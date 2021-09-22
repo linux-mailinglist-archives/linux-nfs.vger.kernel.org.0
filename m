@@ -2,65 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5291C414BC6
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 16:24:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 395D1414BD6
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 16:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235651AbhIVOZl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Sep 2021 10:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56540 "EHLO
+        id S235600AbhIVO20 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Sep 2021 10:28:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236097AbhIVOZj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Sep 2021 10:25:39 -0400
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340A0C06175F
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 07:24:09 -0700 (PDT)
-Received: by mail-ua1-x934.google.com with SMTP id o13so1947302uat.6
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 07:24:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=n9CHWZyWDp9kvdnuR+4lcf8cF9DH3RRu6znx/rfpPqs=;
-        b=AN1Vavbm8tJGsEHHEl+/mzJd9j8Oj9kqpBqxzBdikoBQ9duQtQhCs3a5P+HEgKbxfX
-         m2Cq1/WEtOFVN30IxrSrYWLrouiKx1W9i/TQayO11cG56vgAfzW5dv6C5UXwbv4jQfFz
-         Ipon/rpjAgnNeg3EzD4OS2ODLRXH+vmeZv+kqWCyiDvms51GF+wgBfMQZ2i5NgdYdEAS
-         uZRDMh3ImtbCuznLJGv26gXDxBOZ/taMfYSxZIwMtMRzmd8/NII3XVLASvUx5XN3O02Z
-         u5c9JdVbflju2qFruT5hLVxLZDaBVnUcgCwDdJV5ugeX1OOHXj7cHuK70eqlqVmxqN/k
-         /N/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=n9CHWZyWDp9kvdnuR+4lcf8cF9DH3RRu6znx/rfpPqs=;
-        b=zbdYzhyOiXPQr0uIrXGUqyACnhwby2Kh+JsF0SouIZgt0Eeecq7M08PGglo3LJA2Jh
-         Xe4EWt0C/LVmFIlgYCC/AETgrphzns+5wurswsSvNq7IR0Yk+QfhvLDtgbo0xel6mNag
-         bq2M1glgzcw0Ehdrv7F3wNdL7V4WLIRJX6QamXlFJTypkfNQVrD7A3Oh/KZtTcCTb9m/
-         XQ8TkU/BabAm/Dxvrz+CvZjDYcqWftA9cfawBSf6Dyo83BQ+oZopligPqvyK3c6LR+A1
-         qVpysa4ok0D3Z3t3dRnL7MvnmjWlZn3QxUKEjfzdzwm8nOXsH7cFCve8I8ALgHzhIWro
-         E8XA==
-X-Gm-Message-State: AOAM530xEz7ybBGj79C/LvRDpLCEyJCwO4U6uxyu8BlHLnx0ANXRT+BX
-        xr5jFPc2yh7WbowhgyP7L2mojQqZj5jBkKbHK88=
-X-Google-Smtp-Source: ABdhPJy59oVRkPVEN4voJbLGM7dw89jFQV1IkAbP7w5vIw5ihwPYB/4xUYNNRCMM7AIxLTApxZzhjrsFzU556YaqF8k=
-X-Received: by 2002:a9f:2315:: with SMTP id 21mr21442759uae.143.1632320646151;
- Wed, 22 Sep 2021 07:24:06 -0700 (PDT)
+        with ESMTP id S234359AbhIVO20 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Sep 2021 10:28:26 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D185C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 07:26:56 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1C7A6367; Wed, 22 Sep 2021 10:26:55 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1C7A6367
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1632320815;
+        bh=ze+0jcQBzL6Ulx22ziDKjl/vaKbRclTnC12s+Dg9obI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T71QDNLTYYL0ZvBWv1dAf3PL1HNULmXGqi8nuAnGm49LqLRZTF3bOy6YTcARy5g71
+         FFHY5JzQJl5wMd0J1G8wdrw+oXD2633dS36EL2PaBDJrWG70Jh19Q6ImDzPlSCYSoY
+         dp5V/VIVZ/wRXrpiZyB3oYNauHWsjgAgcyY1dGmI=
+Date:   Wed, 22 Sep 2021 10:26:55 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Daire Byrne <daire@dneg.com>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] nfs: reexport documentation
+Message-ID: <20210922142655.GA22937@fieldses.org>
+References: <20210921143259.GB21704@fieldses.org>
+ <37851433-48C9-4585-9B68-834474AA6E06@oracle.com>
+ <20210921160030.GC21704@fieldses.org>
+ <CAPt2mGOf8orCkOj9hCM_sSu2uucPiRFPEK+yep+kufv-cDvhSA@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a67:ca19:0:0:0:0:0 with HTTP; Wed, 22 Sep 2021 07:24:05
- -0700 (PDT)
-Reply-To: mrs.fedora@yahoo.com
-From:   "Mrs. Fedora Borislav" <nnakhodorkovsky2@gmail.com>
-Date:   Wed, 22 Sep 2021 15:24:05 +0100
-Message-ID: <CANBA4+eg6G54dzBn-sbZnXnTeiVKzfZwJxx=mbXxb1GBBMjQzA@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPt2mGOf8orCkOj9hCM_sSu2uucPiRFPEK+yep+kufv-cDvhSA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-Hello
+On Wed, Sep 22, 2021 at 10:47:35AM +0100, Daire Byrne wrote:
+> We don't use or need crossmnt functionality, but I know from chatting
+> to others within our industry that the fsid/crossmnt limitation causes
+> them the most grief and confusion. I think in the case of Netapps,
+> there are similar problems with trying to re-export a namespace made
+> up of different volumes?
+> 
+> As noted on the wiki, the only way around that is probably to have a
+> "proxy" mode (similar to what ganesha does?).
 
-I am Mrs.Fedora Borislav from Russia, i have a business proposal for
-you. Please reach me on my private email for more information.(
-mrs.fedora1@hotmail.com)
+I'm not sure what Ganesha does.  I spent some time thinking about and
+couldn't figure out how to do it, at least not on my own in a reasonable
+amount of time.
 
-Thank you.
+I liked the idea of limiting the proxy to reexport only one original
+server and reusing the filehandles from the original server without any
+wrapping.  That addresses the fsid/crossmnt limitation and filehandle
+length limitations.  It means proxies all share the same filehandles so
+eventually you could also implement migration and failover between them
+and the original server.
+
+It means when you get a filehandle the only way to find out *anything*
+about it--even what filesystem it's from--is to go ask the server.
+That's slow, so you need a filehandle cache.  You have to deal with the
+case where you get a filehandle for an object that isn't mounted yet.
+Its parents may not be mounted yet either.  If it's a regular file you
+can't call LOOKUPP on it.  I'm not sure how to handle the vfs details in
+that case--how do you fake up a superblock and vfsmount?
+
+Simpler might be to give up on that idea of reusing the original
+server's filehandle, and automatically generate and persistently store
+uuids for new filesystems as you discover them.
+
+I don't know, I'm rambling.
+
+--b.
