@@ -2,64 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A32CF415237
-	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 22:57:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A1641527F
+	for <lists+linux-nfs@lfdr.de>; Wed, 22 Sep 2021 23:14:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238049AbhIVU6d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Sep 2021 16:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34126 "EHLO
+        id S237833AbhIVVQQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Sep 2021 17:16:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237744AbhIVU6W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Sep 2021 16:58:22 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABC1C06175F
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 13:56:35 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id a15so5270358iot.2
-        for <linux-nfs@vger.kernel.org>; Wed, 22 Sep 2021 13:56:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=srf-ext-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=p2+bnwDe8NnQejQwDcKsqilbxGCbNYLi3v9x+JtVwzo=;
-        b=MbKcG4/R5RX+6CXXG7OGSqx4WMKFaCW3VHwfd6ccQy3jTkrUDbgzOLGW+mDovBaZdn
-         IxECEXTuSH98xiuYJgyakW2zIxmSuVog6M1JbWmAndSbs5mSzaEWQWKkZej/hIU646Nt
-         yQkbD5KZTo4zD0kIa/fMw9JUkLuic/HK6tnmIKjgcC9SArQ03vfTSHIj9ZOVk3iZXzm+
-         8Ckv23Rbug3bf1mNoqM1UdcHZBgQghy8cYcSyqsvwNuyhgniwMm4kCx2+P3WRGVEHFfB
-         bmV3G8KbtrRTh+WDefO4cBHAjD0zyuLp7RFKhjq4NeLMwyCRXG6XzavfxlblhkXJMBgX
-         AzkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=p2+bnwDe8NnQejQwDcKsqilbxGCbNYLi3v9x+JtVwzo=;
-        b=Of+dZTTR21PCkOew2UXI8BhrwQV7bcZZqobBY7eJ4KUrkrYZBZgkcHPgfznCM1edac
-         7WiWNMaoC+9kHaKQjLgN4N3wZhho/SxMLI1xyKBUkWsFtTNee8nr4xr31oX9TkfcvUQL
-         Qi+Dgsp0cCWXG3Wng69+5dxaJL/02VISWL1MqU0Cb/N+/bS8fv288Bu0uodBG977suXb
-         2oEkgSBgipidmnBJXgR5y9JByTlhj39FroogX8iIZvjGEx3Q+Okvv0JAEz/6UyXuVNfT
-         ab8TdV4IkGo9WOOhPuMJfKA6r8xnXDHkA1wiI8haoclnjbios1LVzWqn2VAewygMx8cw
-         Y0+Q==
-X-Gm-Message-State: AOAM531vIa229hdpQXHCLp4Vq0qzNAkhITXRr4fo4PGIPgqkSdI+iDXK
-        HImaN90t4p5+2GZeIUr9uDECt/iOKQVxnkHBlaK6ECReTgG+9g==
-X-Google-Smtp-Source: ABdhPJzhQUonEgw+v17s2Wja/goJ1+PI82+eASjeRJPEHWtc+iqhL3EbHYjF5CgRJxtG2yngTrFlsSl8jVlD4zbO/Bo=
-X-Received: by 2002:a5e:c110:: with SMTP id v16mr857064iol.43.1632344194597;
- Wed, 22 Sep 2021 13:56:34 -0700 (PDT)
+        with ESMTP id S237777AbhIVVQQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Sep 2021 17:16:16 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBD1C061574;
+        Wed, 22 Sep 2021 14:14:45 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id B70A0367; Wed, 22 Sep 2021 17:14:44 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B70A0367
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1632345284;
+        bh=COD99wavAMRU46pdqs2noxG8QaEqrAA8YTXdBv0f36s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R8GgiTIghpAPPnljQJ93brr1qXGhHecPy1aFcrm1c+HXRTwEAktBceWkcGFcGTrUB
+         whqhL8/nSL1kFweGy16V3Vzvwf3ZhD39W+nIxIutWnEfy+LtjFpO/sebOj1x95q0A+
+         RDm/RzVV8WeAKpRmIKvY55cOZwV8/8Q78N+9LY7g=
+Date:   Wed, 22 Sep 2021 17:14:44 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] nfsd: Initial implementation of NFSv4 Courteous
+ Server
+Message-ID: <20210922211444.GC22937@fieldses.org>
+References: <20210916182212.81608-1-dai.ngo@oracle.com>
+ <20210916182212.81608-3-dai.ngo@oracle.com>
 MIME-Version: 1.0
-From:   Kazi Anwar <kazia@srf-ext.com>
-Date:   Wed, 22 Sep 2021 15:56:23 -0500
-Message-ID: <CAGw7ksJxiKkOf2F9FUDCa_mSAkoU6U=vCXFcupsu+izKuEE1WA@mail.gmail.com>
-Subject: nfs4err_delay
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210916182212.81608-3-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-We are running nfs v 4.1 on centos 7.6.
-We are seeing an NFS issue where when files/dirs are deleted from a
-client they are occasionally stuck at unlinkat system call(according
-to strace its stuck for 100.5 secs every time). Can anyone explain
-this behavior?
-Running tcp dump shows nfs4err_delay status sent from the server to
-the stuck client.
+On Thu, Sep 16, 2021 at 02:22:11PM -0400, Dai Ngo wrote:
+> @@ -2389,6 +2395,10 @@ static int client_info_show(struct seq_file *m, void *v)
+>  		seq_puts(m, "status: confirmed\n");
+>  	else
+>  		seq_puts(m, "status: unconfirmed\n");
+> +	seq_printf(m, "courtesy client: %s\n",
+> +		test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags) ? "yes" : "no");
+> +	seq_printf(m, "last renew: %lld secs\n",
 
---
-Kazi Anwar
+I'd rather keep any units to the left of the colon.  Also, "last renew"
+suggests to me that it's the absolute time of the last renew.  Maybe
+"seconds since last renew:" ?
+
+> +		ktime_get_boottime_seconds() - clp->cl_time);
+>  	seq_printf(m, "name: ");
+>  	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
+>  	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
+> @@ -4652,6 +4662,42 @@ static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
+>  	nfsd4_run_cb(&dp->dl_recall);
+>  }
+>  
+> +/*
+> + * If the conflict happens due to a NFSv4 request then check for
+> + * courtesy client and set rq_conflict_client so that upper layer
+> + * can destroy the conflict client and retry the call.
+> + */
+> +static bool
+> +nfsd_check_courtesy_client(struct nfs4_delegation *dp)
+> +{
+> +	struct svc_rqst *rqst;
+> +	struct nfs4_client *clp = dp->dl_recall.cb_clp;
+> +	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+> +	bool ret = false;
+> +
+> +	if (!i_am_nfsd()) {
+> +		if (test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags)) {
+> +			set_bit(NFSD4_DESTROY_COURTESY_CLIENT, &clp->cl_flags);
+> +			mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
+> +			return true;
+> +		}
+> +		return false;
+> +	}
+> +	rqst = kthread_data(current);
+> +	if (rqst->rq_prog != NFS_PROGRAM || rqst->rq_vers < 4)
+> +		return false;
+> +	rqst->rq_conflict_client = NULL;
+> +
+> +	spin_lock(&nn->client_lock);
+> +	if (test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags) &&
+> +				!mark_client_expired_locked(clp)) {
+> +		rqst->rq_conflict_client = clp;
+> +		ret = true;
+> +	}
+> +	spin_unlock(&nn->client_lock);
+
+Check whether this is safe; I think the flc_lock may be taken inside of
+this lock elsewhere, resulting in a potential deadlock?
+
+rqst doesn't need any locking as it's only being used by this thread, so
+it's the client expiration stuff that's the problem, I guess.
+
+--b.
