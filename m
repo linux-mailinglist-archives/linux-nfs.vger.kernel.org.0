@@ -2,94 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A5EA415B77
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Sep 2021 11:52:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D8B7416362
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Sep 2021 18:33:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240234AbhIWJyN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Sep 2021 05:54:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:57857 "EHLO
+        id S229913AbhIWQe7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Sep 2021 12:34:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:40433 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S240186AbhIWJyN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Sep 2021 05:54:13 -0400
+        by vger.kernel.org with ESMTP id S229523AbhIWQe5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Sep 2021 12:34:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1632390761;
+        s=mimecast20190719; t=1632414805;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=+F5e/QJCQvTQyfdm+mXX5RdrWpejQYPMUGSZ/zRGUYg=;
-        b=OOwKBC6pC5W1q4k7sQSR5cC+HB5tsCtaBjV9HPd0bhM8OgJ7h7IN/ZQIAqRPVOySRLN1K9
-        dvRUz+Tseiiog2ar1hLAhgNIM62/253E+DJlm2Dqw4rqb149zaFgdGg3KW4pSIH+3072zw
-        iqbtRag0SHFA41azEu0vymaHOpVEv7Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-602-b8s7zVOqPcGr_oqMNXA4HQ-1; Thu, 23 Sep 2021 05:52:40 -0400
-X-MC-Unique: b8s7zVOqPcGr_oqMNXA4HQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E603835DE1;
-        Thu, 23 Sep 2021 09:52:38 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DDEE560C82;
-        Thu, 23 Sep 2021 09:52:26 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH] netfs: Fix READ/WRITE confusion when calling
- iov_iter_xarray()
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        dhowells@redhat.com, linux-kernel@vger.kernel.org
-Date:   Thu, 23 Sep 2021 10:52:26 +0100
-Message-ID: <163239074602.1243337.14154704004485867017.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4RXdXrxyptnL24gu+4oyO5DctCje0Fvz+bRbp7JVEpU=;
+        b=gAiYutdZF2d0jRJXlxZv/kEW5tBrFgxoY6CdOoX4eWgUtzJqLRwV6C4L0jqs9A2QlCXrH2
+        f0M9qVS3iP9zAhww/ezTZ/aBfTHVCsuKSQWQkVa6Ftv9h/HmbqpWrlWwRwSeQcNHEGCPkV
+        KUZkP23ke/UOehkKiU7YdzUA7spRNc0=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-270-pnqVkKOjPa-KgcAHFibI2Q-1; Thu, 23 Sep 2021 12:33:24 -0400
+X-MC-Unique: pnqVkKOjPa-KgcAHFibI2Q-1
+Received: by mail-qt1-f197.google.com with SMTP id f34-20020a05622a1a2200b0029c338949c1so17843917qtb.8
+        for <linux-nfs@vger.kernel.org>; Thu, 23 Sep 2021 09:33:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4RXdXrxyptnL24gu+4oyO5DctCje0Fvz+bRbp7JVEpU=;
+        b=kcuipFoXlBWvinYEbvi52H8H0zO69fIroHTOYtrsRBCKCfj75+WwEl3mXkH4q+TvgT
+         uc84JtUXQHWQKJiD+VNvXwpKcpxJ9VF2IX1sQ13vCIR7Mws6SQHPAFWTBxRDpthl6Q2/
+         fx6MwXGu8UdB8crH5Cb8xMxw/AOBv6MpIKqVwguUpb5Y0Zt3ee1uwf6fJ+eTog1BPn+G
+         lZY1BHmxIQdomDA20Qxnh/X1ve/3T/wA5tyTIUpcaXKR4BDbpC/8Y/ov1kPmn6WJdVpE
+         7w0fBa+bNbTzWPNN/7s3q4RTaQOXiQRImXbUfBFo8eNq/85WJ5Ay3sK1F6MAvViNWluE
+         9noA==
+X-Gm-Message-State: AOAM533BJ4/SS1v5CnVJjZBIMncvXBeZiKM7Tlhj2RXmVB/9A0K88ZPq
+        6kQfe9INkgapKh1RCkUOeclhbcbf7WqDyNNQxGHO+Z9o4CbyBhpAy4GLgVhQtTo5sY0JZPDFTwM
+        GrDLwKXJcZoJduVG2y7uu
+X-Received: by 2002:a0c:c286:: with SMTP id b6mr5387600qvi.9.1632414804320;
+        Thu, 23 Sep 2021 09:33:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwbU0wBWH0y1X4Osqnck4vmbea35IAEfhly5ilOTUZLDu2JCfehRo8mIKMYko0+y7wIYSkHWg==
+X-Received: by 2002:a0c:c286:: with SMTP id b6mr5387586qvi.9.1632414804112;
+        Thu, 23 Sep 2021 09:33:24 -0700 (PDT)
+Received: from madhat.boston.devel.redhat.com ([70.105.255.190])
+        by smtp.gmail.com with ESMTPSA id q12sm4311734qkc.104.2021.09.23.09.33.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Sep 2021 09:33:23 -0700 (PDT)
+Subject: Re: [PATCH 0/2] Allow to to install systemd generators dependend on
+ --with-systemd unit-dir-path location
+To:     Salvatore Bonaccorso <carnil@debian.org>, linux-nfs@vger.kernel.org
+Cc:     NeilBrown <neilb@suse.de>, Scott Mayhew <smayhew@redhat.com>
+References: <20200628191002.136918-1-carnil@debian.org>
+From:   Steve Dickson <steved@redhat.com>
+Message-ID: <30ab5551-ec05-6de1-8071-f55251ef4e90@redhat.com>
+Date:   Thu, 23 Sep 2021 12:33:22 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200628191002.136918-1-carnil@debian.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Fix netfs_clear_unread() to pass READ to iov_iter_xarray() instead of WRITE
-(the flag is about the operation accessing the buffer, not what sort of
-access it is doing to the buffer).
 
-Fixes: 3d3c95046742 ("netfs: Provide readahead and readpage netfs helpers")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-afs@lists.infradead.org
-cc: ceph-devel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/162729351325.813557.9242842205308443901.stgit@warthog.procyon.org.uk/
----
 
- fs/netfs/read_helper.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 6/28/20 3:10 PM, Salvatore Bonaccorso wrote:
+> Currently --with-systemd=unit-dir-path would be ignored to install the
+> systemd generators and they are unconditionally installed in
+> /usr/lib/systemd/system-generators . Distributions installing systemd
+> unit files in /lib/systemd/system would though install the
+> systemd-generators in /lib/systemd/system-generators.
+> 
+> Make the installation of the systemd unit generators relative depending
+> on the unit-dir-path passed for --with-systemd.
+> 
+> Salvatore Bonaccorso (2):
+>    systemd/Makefile: Drop exlicit setting of unit_dir
+>    systemd generators: Install depending on location for systemd unit
+>      files
+> 
+>   systemd/Makefile.am | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+Committed... (tag: nfs-utils-2-5-5-rc3)
 
-diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
-index 2ad91f9e2a45..9320a42dfaf9 100644
---- a/fs/netfs/read_helper.c
-+++ b/fs/netfs/read_helper.c
-@@ -150,7 +150,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
- {
- 	struct iov_iter iter;
- 
--	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
-+	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
- 			subreq->start + subreq->transferred,
- 			subreq->len   - subreq->transferred);
- 	iov_iter_zero(iov_iter_count(&iter), &iter);
+In the future, If have not responded in a month please
+feel free to ping me... because mostly likely it has
+fell off my radar... my apologies for taking so long...
 
+steved.
 
