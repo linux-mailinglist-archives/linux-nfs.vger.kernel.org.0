@@ -2,321 +2,175 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 06E1D416755
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Sep 2021 23:21:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B896F4167BA
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Sep 2021 23:51:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243233AbhIWVWs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Sep 2021 17:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59116 "EHLO
+        id S238517AbhIWVwa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Sep 2021 17:52:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243232AbhIWVWs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Sep 2021 17:22:48 -0400
+        with ESMTP id S230272AbhIWVw3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Sep 2021 17:52:29 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20744C061574
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Sep 2021 14:21:16 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43782C061574;
+        Thu, 23 Sep 2021 14:50:57 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id B7C98702D; Thu, 23 Sep 2021 17:21:14 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org B7C98702D
+        id 61CDD7032; Thu, 23 Sep 2021 17:50:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 61CDD7032
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1632432074;
-        bh=0BOtZ4kXClAFTSW0i9y801T7rp6BbJFqqAfV8Hc/D90=;
+        s=default; t=1632433856;
+        bh=HgXWJ7fIQX5xe6k9zJTR4Q+wC4ChKqdBmSU4vMwSHng=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eCCwSNTJL6lRoL42gLMqFaJx0ldZl7o5mHfWNtXZj1Ax7wXDr+r8SGXmtpWEVzQh0
-         vQZarltc/V8zfWz59vU3U8lE6HH0bt1CZSI8c78F0I0uyP/iSjhqnN/Rp6VlgXKR5A
-         +EluFUGC85MzdPK92fIpZH9/e/5tbPXg+R8Dg2i4=
-Date:   Thu, 23 Sep 2021 17:21:14 -0400
+        b=JuYX+PcuPjqAU4mDvuK8uynAwSAkU9CmvVt35brl+H7Az5+6BQUSkcitNb5nXc8Tw
+         3L6BRY31CCUORfIN4GjU+etkoDJ/dBie3Z2rkQS59Z7G478P8wu6bpjQMurE/v3+wq
+         9SQeN9mhOws/txfi1EPaiJKmKowYUpZPGbCbiYHM=
+Date:   Thu, 23 Sep 2021 17:50:56 -0400
 From:   Bruce Fields <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 1/3 v3] NFSD: move filehandle format declarations out of
- "uapi".
-Message-ID: <20210923212114.GG18334@fieldses.org>
-References: <20210827151505.GA19199@lst.de>
- <163038488360.7591.7865010833762169362@noble.neil.brown.name>
- <20210901074407.GB18673@lst.de>
- <F517668C-DD79-4358-96AE-1566B956025A@oracle.com>
- <163054528774.24419.6639477440713170169@noble.neil.brown.name>
+To:     dai.ngo@oracle.com
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+Subject: Re: Locking issue between NFSv4 and SMB client
+Message-ID: <20210923215056.GH18334@fieldses.org>
+References: <5b7be2c0-95a6-048c-581f-17e5e3750daa@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163054528774.24419.6639477440713170169@noble.neil.brown.name>
+In-Reply-To: <5b7be2c0-95a6-048c-581f-17e5e3750daa@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These 3 still apply after fixing up a couple minor conflicts; queued up
-for 5.16.--b.
+On Thu, Jul 15, 2021 at 04:45:22PM -0700, dai.ngo@oracle.com wrote:
+> Hi Bruce,
 
-On Thu, Sep 02, 2021 at 11:14:47AM +1000, NeilBrown wrote:
+Oops, sorry for neglecting this.
+
+> I'm doing some locking testing between NFSv4 and SMB client and
+> think there are some issues on the server that allows both clients
+> to lock the same file at the same time.
+
+It's not too surprising to me that getting consistent locks between the
+two would be hard.
+
+Did you get any review from a Samba expert?  I seem to recall it having
+a lot of options, and I wonder if it's configured correctly for this
+case.
+
+It sounds like Samba may be giving out oplocks without getting a lease
+from the kernel.
+
+--b.
+
+> Here is what I did:
 > 
-> A small part of the declaration concerning filehandle format are
-> currently in the "uapi" include directory:
->    include/uapi/linux/nfsd/nfsfh.h
+> NOTE: lck is a simple program that use lockf(3) to lock a file from
+> offset 0 to the length specified by '-l'.
 > 
-> There is a lot more to the filehandle format, including "enum fid_type"
-> and "enum nfsd_fsid" which are not exported via "uapi".
+> On NFSv4 client
+> ---------------
 > 
-> This small part of the filehandle definition is of minimal use outside
-> of the kernel, and I can find no evidence that an other code is using
-> it. Certainly nfs-utils and wireshark (The most likely candidates) do not
-> use these declarations.
+> [root@nfsvmd07 ~]# nfsstat -m
+> /tmp/mnt from nfsvmf24:/root/smb_share
+> Flags:	rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,
+>        proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.80.62.47,
+>        local_lock=none,addr=10.80.111.94
+> [root@nfsvmd07 ~]#
 > 
-> So move it out of "uapi" by copying the content from
->   include/uapi/linux/nfsd/nfsfh.h
-> into
->   fs/nfsd/nfsfh.h
 > 
-> A few unnecessary "#include" directives are not copied, and neither is
-> the #define of fh_auth, which is annotated as being for userspace only.
+> [root@nfsvmd07 ~]# ./lck -p /tmp/mnt/messages -W -l 100000000
+> Lck/file: 1, Maxlocks: 10000000
+> Locking[/tmp/mnt/messages] Offset[0] Len[100000000] N[0]...doing F_LOCK..
+> LOCKED...
 > 
-> The copyright claims in the uapi file are identical to those in the nfsd
-> file, so there is no need to copy those.
+> Locks[1] files[1] took[2.000s] sleep waiting...Hit Control-C to stop
 > 
-> The "__u32" style integer types are only needed in "uapi".  In
-> kernel-only code we can use the more familiar "u32" style.
+> [NFS client successfully locks the file]
 > 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfsfh.h                 |  98 ++++++++++++++++++++++++++-
->  include/uapi/linux/nfsd/nfsfh.h | 116 --------------------------------
->  2 files changed, 97 insertions(+), 117 deletions(-)
->  delete mode 100644 include/uapi/linux/nfsd/nfsfh.h
+> On SMB client
+> -------------
 > 
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index 6106697adc04..988e4dfdfbd9 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -10,9 +10,105 @@
->  
->  #include <linux/crc32.h>
->  #include <linux/sunrpc/svc.h>
-> -#include <uapi/linux/nfsd/nfsfh.h>
->  #include <linux/iversion.h>
->  #include <linux/exportfs.h>
-> +#include <linux/nfs4.h>
-> +
-> +
-> +/*
-> + * This is the old "dentry style" Linux NFSv2 file handle.
-> + *
-> + * The xino and xdev fields are currently used to transport the
-> + * ino/dev of the exported inode.
-> + */
-> +struct nfs_fhbase_old {
-> +	u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
-> +	u32		fb_ino;		/* our inode number */
-> +	u32		fb_dirino;	/* dir inode number, 0 for directories */
-> +	u32		fb_dev;		/* our device */
-> +	u32		fb_xdev;
-> +	u32		fb_xino;
-> +	u32		fb_generation;
-> +};
-> +
-> +/*
-> + * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
-> + * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
-> + *
-> + * The file handle starts with a sequence of four-byte words.
-> + * The first word contains a version number (1) and three descriptor bytes
-> + * that tell how the remaining 3 variable length fields should be handled.
-> + * These three bytes are auth_type, fsid_type and fileid_type.
-> + *
-> + * All four-byte values are in host-byte-order.
-> + *
-> + * The auth_type field is deprecated and must be set to 0.
-> + *
-> + * The fsid_type identifies how the filesystem (or export point) is
-> + *    encoded.
-> + *  Current values:
-> + *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte inode number
-> + *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
-> + *              says we mustn't.  We must break it up and reassemble.
-> + *     1  - 4 byte user specified identifier
-> + *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
-> + *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
-> + *     4  - 4 byte inode number and 4 byte uuid
-> + *     5  - 8 byte uuid
-> + *     6  - 16 byte uuid
-> + *     7  - 8 byte inode number and 16 byte uuid
-> + *
-> + * The fileid_type identified how the file within the filesystem is encoded.
-> + *   The values for this field are filesystem specific, exccept that
-> + *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-> + *   in include/linux/exportfs.h for currently registered values.
-> + */
-> +struct nfs_fhbase_new {
-> +	union {
-> +		struct {
-> +			u8		fb_version_aux;	/* == 1, even => nfs_fhbase_old */
-> +			u8		fb_auth_type_aux;
-> +			u8		fb_fsid_type_aux;
-> +			u8		fb_fileid_type_aux;
-> +			u32		fb_auth[1];
-> +		/*	u32		fb_fsid[0]; floating */
-> +		/*	u32		fb_fileid[0]; floating */
-> +		};
-> +		struct {
-> +			u8		fb_version;	/* == 1, even => nfs_fhbase_old */
-> +			u8		fb_auth_type;
-> +			u8		fb_fsid_type;
-> +			u8		fb_fileid_type;
-> +			u32		fb_auth_flex[]; /* flexible-array member */
-> +		};
-> +	};
-> +};
-> +
-> +struct knfsd_fh {
-> +	unsigned int	fh_size;	/* significant for NFSv3.
-> +					 * Points to the current size while building
-> +					 * a new file handle
-> +					 */
-> +	union {
-> +		struct nfs_fhbase_old	fh_old;
-> +		u32			fh_pad[NFS4_FHSIZE/4];
-> +		struct nfs_fhbase_new	fh_new;
-> +	} fh_base;
-> +};
-> +
-> +#define ofh_dcookie		fh_base.fh_old.fb_dcookie
-> +#define ofh_ino			fh_base.fh_old.fb_ino
-> +#define ofh_dirino		fh_base.fh_old.fb_dirino
-> +#define ofh_dev			fh_base.fh_old.fb_dev
-> +#define ofh_xdev		fh_base.fh_old.fb_xdev
-> +#define ofh_xino		fh_base.fh_old.fb_xino
-> +#define ofh_generation		fh_base.fh_old.fb_generation
-> +
-> +#define	fh_version		fh_base.fh_new.fb_version
-> +#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
-> +#define	fh_auth_type		fh_base.fh_new.fb_auth_type
-> +#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
-> +#define	fh_fsid			fh_base.fh_new.fb_auth_flex
->  
->  static inline __u32 ino_t_to_u32(ino_t ino)
->  {
-> diff --git a/include/uapi/linux/nfsd/nfsfh.h b/include/uapi/linux/nfsd/nfsfh.h
-> deleted file mode 100644
-> index 427294dd56a1..000000000000
-> --- a/include/uapi/linux/nfsd/nfsfh.h
-> +++ /dev/null
-> @@ -1,116 +0,0 @@
-> -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> -/*
-> - * This file describes the layout of the file handles as passed
-> - * over the wire.
-> - *
-> - * Copyright (C) 1995, 1996, 1997 Olaf Kirch <okir@monad.swb.de>
-> - */
-> -
-> -#ifndef _UAPI_LINUX_NFSD_FH_H
-> -#define _UAPI_LINUX_NFSD_FH_H
-> -
-> -#include <linux/types.h>
-> -#include <linux/nfs.h>
-> -#include <linux/nfs2.h>
-> -#include <linux/nfs3.h>
-> -#include <linux/nfs4.h>
-> -
-> -/*
-> - * This is the old "dentry style" Linux NFSv2 file handle.
-> - *
-> - * The xino and xdev fields are currently used to transport the
-> - * ino/dev of the exported inode.
-> - */
-> -struct nfs_fhbase_old {
-> -	__u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
-> -	__u32		fb_ino;		/* our inode number */
-> -	__u32		fb_dirino;	/* dir inode number, 0 for directories */
-> -	__u32		fb_dev;		/* our device */
-> -	__u32		fb_xdev;
-> -	__u32		fb_xino;
-> -	__u32		fb_generation;
-> -};
-> -
-> -/*
-> - * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
-> - * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
-> - *
-> - * The file handle starts with a sequence of four-byte words.
-> - * The first word contains a version number (1) and three descriptor bytes
-> - * that tell how the remaining 3 variable length fields should be handled.
-> - * These three bytes are auth_type, fsid_type and fileid_type.
-> - *
-> - * All four-byte values are in host-byte-order.
-> - *
-> - * The auth_type field is deprecated and must be set to 0.
-> - *
-> - * The fsid_type identifies how the filesystem (or export point) is
-> - *    encoded.
-> - *  Current values:
-> - *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte inode number
-> - *        NOTE: we cannot use the kdev_t device id value, because kdev_t.h
-> - *              says we mustn't.  We must break it up and reassemble.
-> - *     1  - 4 byte user specified identifier
-> - *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
-> - *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
-> - *     4  - 4 byte inode number and 4 byte uuid
-> - *     5  - 8 byte uuid
-> - *     6  - 16 byte uuid
-> - *     7  - 8 byte inode number and 16 byte uuid
-> - *
-> - * The fileid_type identified how the file within the filesystem is encoded.
-> - *   The values for this field are filesystem specific, exccept that
-> - *   filesystems must not use the values '0' or '0xff'. 'See enum fid_type'
-> - *   in include/linux/exportfs.h for currently registered values.
-> - */
-> -struct nfs_fhbase_new {
-> -	union {
-> -		struct {
-> -			__u8		fb_version_aux;	/* == 1, even => nfs_fhbase_old */
-> -			__u8		fb_auth_type_aux;
-> -			__u8		fb_fsid_type_aux;
-> -			__u8		fb_fileid_type_aux;
-> -			__u32		fb_auth[1];
-> -			/*	__u32		fb_fsid[0]; floating */
-> -			/*	__u32		fb_fileid[0]; floating */
-> -		};
-> -		struct {
-> -			__u8		fb_version;	/* == 1, even => nfs_fhbase_old */
-> -			__u8		fb_auth_type;
-> -			__u8		fb_fsid_type;
-> -			__u8		fb_fileid_type;
-> -			__u32		fb_auth_flex[]; /* flexible-array member */
-> -		};
-> -	};
-> -};
-> -
-> -struct knfsd_fh {
-> -	unsigned int	fh_size;	/* significant for NFSv3.
-> -					 * Points to the current size while building
-> -					 * a new file handle
-> -					 */
-> -	union {
-> -		struct nfs_fhbase_old	fh_old;
-> -		__u32			fh_pad[NFS4_FHSIZE/4];
-> -		struct nfs_fhbase_new	fh_new;
-> -	} fh_base;
-> -};
-> -
-> -#define ofh_dcookie		fh_base.fh_old.fb_dcookie
-> -#define ofh_ino			fh_base.fh_old.fb_ino
-> -#define ofh_dirino		fh_base.fh_old.fb_dirino
-> -#define ofh_dev			fh_base.fh_old.fb_dev
-> -#define ofh_xdev		fh_base.fh_old.fb_xdev
-> -#define ofh_xino		fh_base.fh_old.fb_xino
-> -#define ofh_generation		fh_base.fh_old.fb_generation
-> -
-> -#define	fh_version		fh_base.fh_new.fb_version
-> -#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
-> -#define	fh_auth_type		fh_base.fh_new.fb_auth_type
-> -#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
-> -#define	fh_fsid			fh_base.fh_new.fb_auth_flex
-> -
-> -/* Do not use, provided for userspace compatiblity. */
-> -#define	fh_auth			fh_base.fh_new.fb_auth
-> -
-> -#endif /* _UAPI_LINUX_NFSD_FH_H */
-> -- 
-> 2.32.0
+> [root@nfsvme24 ~]# mount |grep cifs
+> //nfsvmf24/smb_share on /tmp/mnt type cifs (rw,relatime,vers=3.1.1,cache=strict,username=root,uid=0,noforceuid,gid=0,noforcegid,addr=10.80.111.94,file_mode=0755,dir_mode=0755,soft,nounix,serverino,mapposix,rsize=4194304,wsize=4194304,bsize=1048576,echo_interval=60,actimeo=1)
+> [root@nfsvme24 ~]#
+> 
+> [root@nfsvme24 ~]# smbclient -L nfsvmf24
+> Enter SAMBA\root's password:
+> 
+> 	Sharename       Type      Comment
+> 	---------       ----      -------
+> 	print$          Disk      Printer Drivers
+> 	smb_share       Disk      Test Samba Share       <<===== share to mount
+> 	IPC$            IPC       IPC Service (Samba 4.10.16)
+> 	root            Disk      Home Directories
+> Reconnecting with SMB1 for workgroup listing.
+> 
+> 	Server               Comment
+> 	---------            -------
+> 
+> 	Workgroup            Master
+> 	---------            -------
+> [root@nfsvme24 ~]#
+> 
+> [root@nfsvme24 ~]# ./lck -p /tmp/mnt/messages -W -l 100000000
+> Lck/file: 1, Maxlocks: 10000000
+> Locking[/tmp/mnt/messages] Offset[0] Len[100000000] N[0]...doing F_LOCK..
+> LOCKED...
+> 
+> Locks[1] files[1] took[2.000s] sleep waiting...Hit Control-C to stop
+> 
+> [SMB client successfully locks the file]
+> 
+> The same issue happens when either client locks the file first.
+> I think this is what has happened:
+> 
+> 1. NFSv4 client opens and locks the file first
+> 
+>     . NFSv4 client send OPEN and LOCK to server, server replies
+>       OK on both requests.
+> 
+>     . SMB client sends create request with Oplock==Lease for
+>       the same file.
+> 
+>     . server holds off on replying to SMB client's create request,
+>       recalls delegation from NFSv4 client, waits for NFSv4 client
+>       to return the delegation then replies success to SMB client's
+>       create request with lease granted (Oplock==Lease).
+> 
+>       NOTE: I think SMB server should replies the create request
+>       with Oplock==None to force the SMB client to sends the
+>       lock request.
+>
+>     . Once SMB client receives the reply of the create with
+>       'Oplock==Lease', it assumes it has full control of the file
+>       therefor it does not need to send the lock request.
+> 
+>     . both NFSv4 and SMB client now think they have locked the file.
+> 
+> pcap:  nfs_lock_smb_lock.pcap
+> 
+> 2. SMB client creates the file with 'Oplock==Lease' first
+> 
+>     . SMB sends create request with 'Oplock==Lease' to server,
+>       server replies OK with 'Oplock==Lease'. SMB client skips
+>       sending lock request since it assumes it has full control
+>       of the file with the lease.
+> 
+>     . NFSv4 client sends OPEN to server, server replies OK with
+>       delagation is none. NFSv4 client sends LOCK request, since
+>       no lock was created in the kernel for the SMB client, the
+>       lock was granted to the NFSv4 client.
+> 
+>      NOTE: I think the SMB server should send lease break
+>      notification to the SMB client, wait for the lease break
+>      acknowledgment from SMB client before replying to the
+>      OPEN of the NFSv4 client. This will force the SMB client
+>      to send the lock request to the server.
+> 
+>     . both NFSv4 and SMB client now think they have locked the file.
+> 
+> Your thought?
+> 
+> Thanks,
+> 
+> -Dai
