@@ -2,148 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8025416A72
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Sep 2021 05:35:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDD13416A97
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Sep 2021 05:46:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244021AbhIXDhN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Sep 2021 23:37:13 -0400
-Received: from mail-dm6nam10on2103.outbound.protection.outlook.com ([40.107.93.103]:1377
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S244008AbhIXDhM (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 23 Sep 2021 23:37:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=aS1frjekuejOtkBg6LjJFlUvskh1MU8WTvQ0WjjmLzp0qy5YglfaJX/M6atrI8Aek9njV9CnEoweFGtiFEFXqprNp4S5FTJfIc5HRq2GOwjoeC+k9FH0X67g5tA8p/xn4X3V30XeS4iyzyb4ybO7LpxOPVmZeuwxBMjIUDGrUakiMKt0VgP3LRwXBkFIijA3vckCZBq99tawYCUcxWC1lwo0RKzpq+zcJwMDGvaxg0TLsOqikYfFV7Trt9NPdwhLISZ0jMHHt1LVBzszAQIHa9Cltq72Fs983L3zpJjQ7/YydWzFk5ULJ2zx5jN0LEf6qBHZpQuO5RxPT0Ct9p7LTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V9jMpf8+kNZqIR7QRljc7rVyP1py7GT7uOQJ0XvODnI=;
- b=byBdxKrp6ij2vU7f4tQdaBivPsarthBumCyMLK6vUlAUmC8xmM5WPxlbgJCf5n0dSRjQtiaJsMB05/jXppB7AqHUMe0oFEnursVKFNqLEMoyJxvqdyv88SWJmXSsSkke301hnhGnd2Xu7vMZlQ9eV7FdU4RfKXVQ2JnJxtxPFH8S6ovoYMuUM6b8t8A7iS0L2pV+R1z2Dd7jVBi/WDr1vnmS0r9aYkYgQGLajByEs7f59sOWLGD6KKmpC1Tqycqvy5UtuMwiHJEzb5QH3DjhfAMq56suzQpvcm4YdrqfGM+N9uMURQvN+bWvaFfXUUlwPYnkygWY5FYzlBv7XxuDnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9jMpf8+kNZqIR7QRljc7rVyP1py7GT7uOQJ0XvODnI=;
- b=ZQfRkWB3E2njPCFAK69U8nfEzvKgLVOuEQHFOymgEwGrFpNKiQbny6Oz7VRRear37RYC+ZqiknDDqe4TZpcwkhlotFQwCrfXRdANWQbyJ9e8cyqSbTTWIi/ut1+S1aIuq9QJ6QjiSfDSn670y5LVZFN2rBQyEB89Q6GO7lspi0g=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB3637.namprd13.prod.outlook.com (2603:10b6:610:90::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.6; Fri, 24 Sep
- 2021 03:35:38 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::185b:505d:b35c:a3a2]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::185b:505d:b35c:a3a2%8]) with mapi id 15.20.4544.013; Fri, 24 Sep 2021
- 03:35:38 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
+        id S244020AbhIXDsI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Sep 2021 23:48:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60914 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S244018AbhIXDsG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Sep 2021 23:48:06 -0400
+Received: from hr2.samba.org (hr2.samba.org [IPv6:2a01:4f8:192:486::2:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE476C061574;
+        Thu, 23 Sep 2021 20:46:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+        s=42; h=Date:Message-ID:From:Cc:To;
+        bh=Sbgu+PDdj8sUBBEgHwKfITOQmtfWkyWwRRNn/xC/ppM=; b=J+MmzSzGMejbuE03ZW/RHaUxmS
+        LXHmu88tnWpCCYGkRoGZzn5SSVunyDswNuYq7/XhArr1hx4IEXxaomgOv5KHWHlybIWSjTRNJ76o8
+        CTmxGudXSaiqMrLYxF/9rge/YbWjiTc+fDeWG/4HSlRXYoCoNgiyRYRnz3j9Lg4BfgCsvzOPYtj8J
+        hJ1wokFrAFNqaDxsytzJ/Y5OQM0JmMe2/c8fhEk+B7CBR3cV5xc84fJqaCPxCy3QwzxD2NXXM6Wjd
+        eINALLUsBxUTa8FPH4yszcVgPN1VlEsmVjjDxkDKounjhDv7xEGq8ow8NwKOwxoxz6CI49Lo5qcz3
+        utK8ns2tkSlLbJxTfhRgvRWzSw0qzOwP5yqFirhWDb3kYzuEioggRcEhUVV2wMRth2G9uM66Rgcn9
+        7+LEeb5Bpap4Ivny1EwwrYeTSwRv5VYbyNvxM9a3X/o9nk6TzrYqqyaFnknCK8xyuk8PYZOLfeEve
+        iGwhiGI0Smcjsr8pj65TIDVX;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+        by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+        (Exim)
+        id 1mTcAP-007bo2-38; Fri, 24 Sep 2021 03:46:29 +0000
+Subject: Re: Locking issue between NFSv4 and SMB client
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
         "jra@samba.org" <jra@samba.org>,
         "dai.ngo@oracle.com" <dai.ngo@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
         "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
-Subject: Re: Locking issue between NFSv4 and SMB client
-Thread-Topic: Locking issue between NFSv4 and SMB client
-Thread-Index: AQHXedODTOIDb0BSHkCFWx5UQXQvwauyloUAgABgTQA=
-Date:   Fri, 24 Sep 2021 03:35:38 +0000
-Message-ID: <48b3a41e2dbea7948b0df3fea002208a273409fd.camel@hammerspace.com>
 References: <5b7be2c0-95a6-048c-581f-17e5e3750daa@oracle.com>
-         <20210923215056.GH18334@fieldses.org>
-In-Reply-To: <20210923215056.GH18334@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none
- header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 84f23aed-9424-4fb9-80d4-08d97f0c605d
-x-ms-traffictypediagnostic: CH2PR13MB3637:
-x-microsoft-antispam-prvs: <CH2PR13MB3637658BC8DA069A88506B0FB8A49@CH2PR13MB3637.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cKoPR6P0bJ0pmQVIl/1TuxAx3NbC5atw/aJL3p1zC1djwLUK9VjeOBk5oQhwCi1ApL3oTG+UvnmixPTKN3C9KbNNAI/BTy6pV+V/ISQbFJqa4anTvzE9x9Rn26LUWKf6PIlMqv3loHIC4lBG7kMU5Zdzqa+8eo7y9vKgI2eB6W3TBSY99YueKD+3WZ8qam1D6IOVMHKisR9wWUd5BSdb1XUUw5tl4Kddcz9zEFZe7hinr9/F5mHVx+zxZQeS6hn2yDuuPkSci3FZRxJmntDqitqE0vZPI6R4Roj9AY8p2q51UuHrZ98oBupcvyMNaMF9gE7w5GT74FZQOPM5+KTO8TBSAVtaRf7BEhvEiJ/O8bw4s5nw2qJREzJg/zoBi56RgNYaCuhaVM0SFACfDhpWxTJsd3TEGtjqfwMJPty+l656oCS+UkKKi7g/dIuBmOzaX53xHLM81qfQrwoOkmXhZeKY7M0CRvF/OJwPNlMolyVJKoqY9I65qkY2Q17sAVGX9dKiCvTnS2fA+fbIZfKFyZSxqMHfD2DxJgNCpjeB59tzoPiWjDEYnbvyJKx9r830CryAuBVoxpXfCv1UbkbHV1ZOACPcfB3WrOad54VoT6D8tYYtgrybQo9FmStLh7r5v0tchfxIf/H+D1bqaWitWlQSgDcDMwDZbceGJvON9ZZBiBrkd0mgxMWw6VFgEVrDkb9j5+INE+0QggLEnwjcsg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(346002)(396003)(366004)(136003)(39840400004)(376002)(86362001)(38070700005)(36756003)(508600001)(2906002)(122000001)(83380400001)(66946007)(66476007)(66446008)(76116006)(66556008)(64756008)(6512007)(4326008)(8936002)(6486002)(8676002)(71200400001)(316002)(110136005)(54906003)(26005)(186003)(5660300002)(2616005)(6506007)(45080400002)(38100700002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YUZQTis3Qm1HRlNJMjFvaVg1MUwzY2RxUjY5ZXBsby9MbTZXbDQzRTVBQlE1?=
- =?utf-8?B?ZE9sSmVrK2diN1orQkFiUnEzMXR5bXp4NjdLUzdZaVBEQ3ZldTZRcWlsaG1v?=
- =?utf-8?B?Rk5ZZzI1QWEwVmpsOEkyWlZLVnJGKzBHRjNRZWR2blQwWDJNZURFVGlZdytx?=
- =?utf-8?B?UnV6SXJqT1FtUDg5ZzNpMVlEM0JBUmU5YzdlbUtQL1MwU3hRM0VCenJ4NkNm?=
- =?utf-8?B?QURNdHJodVhUay81NFBQakNka1h1S1RRZGZOcVRyQ1czQUFJaHl0OXNJRXJY?=
- =?utf-8?B?T2xYTDNBZDEyb055c0xoMHhPQ1VUWkIyem1NcmN0Nkhjc0IzWjhHdUhMUGsr?=
- =?utf-8?B?b1dIU1VaN3BGWWlJVWxVczJVQzg5SzUxVmh5L1FuS2xESElnYlk0OUU1MVpv?=
- =?utf-8?B?V1BDdzdqWVM0VTg5Yk5nd0lOQXRZbHdkVGhnY1M2bjNCV1NuR1JBa2JSSDRu?=
- =?utf-8?B?SzZsTHpMdWVMNUE4R2RBSEZOVTM3ZWNPUVdIWHZtRFhaR0lVWFFJUGVaQ3NB?=
- =?utf-8?B?Q2NtTTVxdHhVaTgwR2YwdEZ0MXhhRys4UWgrQzl0NHl2dzFFcDRoZDJ6UGpa?=
- =?utf-8?B?bkN1U04wUUwvWEZiQjdPTlhRNDFwdVhqZExBbk9iZEViS1BiQWFRa0ZnL2Rt?=
- =?utf-8?B?U0pmTFRkU1M0b2hGKzlyV3FLVUhYZUtNaThNcTVkcEk5NEozaVBvMXNaaC9h?=
- =?utf-8?B?SXRDQ2xCK3FYNzJsYjNEbXVsWXJKT1YzT2V4UGlYcGpadFZNbTA5TEoyMVBw?=
- =?utf-8?B?WGNCVlhiSG9UMXVRSXNsVTN3YnRqdkJqTFpGelRyV0N0Qm5SaFNoY0tVS2or?=
- =?utf-8?B?U2dTdzJsdUo1eThvZXhWcTgzVEY1dlRiMkVyUTZGL3RWM082Sm5hSzhkSmQ0?=
- =?utf-8?B?OUMwNnpjT01kWVd1ZzNmUytNc3Z6dWdoWGxYd3RQVnF1OXBhSnhBSzB6Vkky?=
- =?utf-8?B?ZHUzZ1pGTVl6bEpMOUVtRHl2S0hCRnZOQ2ZaMFc0STkvM200TnBxWHNQVy9U?=
- =?utf-8?B?N3lOYjJXd2ZXWHZnS01PazJ5RVJyT3k4dDAzZjNpRVAwaCtGaTZXdTN4aEFY?=
- =?utf-8?B?WE1rOS9SSU5mWHpsYmZ5N2wyWVltc3oxUVQrSEtxNUtJVU5rRXRCKytIWlJX?=
- =?utf-8?B?WTFobXg2b1JGY1lEVGtKZE5EUlhtLzZlRFNHVFNoU050eDZnTWZpNnBUellX?=
- =?utf-8?B?UG8zY2lvdkVkUWtGYkpSbEhsQkU1TkNKb1hJQnFMWUZ6Nlk3MFVqc3hJNGdJ?=
- =?utf-8?B?SUlIQzdVQS9mQTZTK1RZeWUxWnBPN3M0ZUlJTitwa3RHNm9QbnE3anJZZ2xi?=
- =?utf-8?B?OG1FRkZJRTA0alpnZE50SDc0dmVnaktGajgyaDkycDE5aDIvOWJKTXR4a25U?=
- =?utf-8?B?SjU3OTJyNFFhZVU0Yks4K3VZempUUEhVc1ErR2pTUzA3SXFBNGlxckFzcDRU?=
- =?utf-8?B?ZkpMRFhIZytWajhCUXNnS3hpNkVHTmpDNUZHMDRhSHljRzlvOUpUbHVKVlFy?=
- =?utf-8?B?Um1yclJDMXJSazVNbFFxQkN6SnNocFp4S2x3OFB0K25lQWN3cGo1VXpuRHly?=
- =?utf-8?B?WXhxWXJlRGhTbWIzbzUwYnBSbTBzOFdsSmhZMW9iS0s2WThXalRvSkpGazBQ?=
- =?utf-8?B?QlFFa0RmQk9jckV0MTVFUDcyamtRVXY5eUk3MGFSYUFFQlljQVdZalJTVG1S?=
- =?utf-8?B?WFFzZkI0dUU2ampRRndQK25iTFVFR0w3UDM1cWRoWmN0cXFZSVBQU2xjMjhC?=
- =?utf-8?Q?JpBl1FQBT1OC9C18Cx75RTeGzGUNtpdqhUvDiX/?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <F7838CD47590DE4F897BDD28AA990DE1@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <20210923215056.GH18334@fieldses.org>
+ <48b3a41e2dbea7948b0df3fea002208a273409fd.camel@hammerspace.com>
+From:   Ralph Boehme <slow@samba.org>
+Message-ID: <f4b9eb02-73e6-f082-6657-87a007b99198@samba.org>
+Date:   Fri, 24 Sep 2021 05:46:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.11.0
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84f23aed-9424-4fb9-80d4-08d97f0c605d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2021 03:35:38.0939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y8/e32TKcSlJlRNUY7ZVy5SUsJh4TCeEKBoBkAh2m/nfS494tMIJdEuX+2nmIpyADBANB9JdnK+dochHamQSKg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3637
+In-Reply-To: <48b3a41e2dbea7948b0df3fea002208a273409fd.camel@hammerspace.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="FtgIWRAI2xlKZ1VU95BtsQNLaEcX1k27K"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIxLTA5LTIzIGF0IDE3OjUwIC0wNDAwLCBCcnVjZSBGaWVsZHMgd3JvdGU6DQo+
-IE9uIFRodSwgSnVsIDE1LCAyMDIxIGF0IDA0OjQ1OjIyUE0gLTA3MDAsIGRhaS5uZ29Ab3JhY2xl
-LmNvbcKgd3JvdGU6DQo+ID4gSGkgQnJ1Y2UsDQo+IA0KPiBPb3BzLCBzb3JyeSBmb3IgbmVnbGVj
-dGluZyB0aGlzLg0KPiANCj4gPiBJJ20gZG9pbmcgc29tZSBsb2NraW5nIHRlc3RpbmcgYmV0d2Vl
-biBORlN2NCBhbmQgU01CIGNsaWVudCBhbmQNCj4gPiB0aGluayB0aGVyZSBhcmUgc29tZSBpc3N1
-ZXMgb24gdGhlIHNlcnZlciB0aGF0IGFsbG93cyBib3RoIGNsaWVudHMNCj4gPiB0byBsb2NrIHRo
-ZSBzYW1lIGZpbGUgYXQgdGhlIHNhbWUgdGltZS4NCj4gDQo+IEl0J3Mgbm90IHRvbyBzdXJwcmlz
-aW5nIHRvIG1lIHRoYXQgZ2V0dGluZyBjb25zaXN0ZW50IGxvY2tzIGJldHdlZW4NCj4gdGhlDQo+
-IHR3byB3b3VsZCBiZSBoYXJkLg0KPiANCj4gRGlkIHlvdSBnZXQgYW55IHJldmlldyBmcm9tIGEg
-U2FtYmEgZXhwZXJ0P8KgIEkgc2VlbSB0byByZWNhbGwgaXQNCj4gaGF2aW5nDQo+IGEgbG90IG9m
-IG9wdGlvbnMsIGFuZCBJIHdvbmRlciBpZiBpdCdzIGNvbmZpZ3VyZWQgY29ycmVjdGx5IGZvciB0
-aGlzDQo+IGNhc2UuDQo+IA0KPiBJdCBzb3VuZHMgbGlrZSBTYW1iYSBtYXkgYmUgZ2l2aW5nIG91
-dCBvcGxvY2tzIHdpdGhvdXQgZ2V0dGluZyBhDQo+IGxlYXNlDQo+IGZyb20gdGhlIGtlcm5lbC4N
-Cj4gDQoNCk5vdCBpZiB5b3Ugc2V0IHRoZSAia2VybmVsIG9wbG9ja3MiIHBhcmFtZXRlciBpbiB0
-aGUgc21iLmNvbmYgZmlsZS4gV2UNCmp1c3QgYWRkZWQgc3VwcG9ydCBmb3IgdGhpcyBpbiB0aGUg
-TGludXggNS4xNCBrZXJuZWwgTkZTdjQgY2xpZW50Lg0KDQpOb3cgdGhhdCBzYWlkLCAia2VybmVs
-IG9wbG9ja3MiIHdpbGwgY3VycmVudGx5IG9ubHkgc3VwcG9ydCBiYXNpYyBsZXZlbA0KSSBvcGxv
-Y2tzLCBhbmQgY2Fubm90IHN1cHBvcnQgbGV2ZWwgSUkgb3IgbGVhc2VzLiBBY2NvcmRpbmcgdG8g
-dGhlDQpzbWIuY29uZiBtYW5wYWdlLCB0aGlzIGlzIGR1ZSB0byBzb21lIGluY29tcGxldGVuZXNz
-IGluIHRoZSBjdXJyZW50IFZGUw0KbGVhc2UgaW1wbGVtZW50YXRpb24uDQoNCkknZCBsb3ZlIHRv
-IGdldCBzb21lIG1vcmUgaW5mbyBmcm9tIHRoZSBTYW1iYSB0ZWFtIGFib3V0IHdoYXQgaXMNCm1p
-c3NpbmcgZnJvbSB0aGUga2VybmVsIGxlYXNlIGltcGxlbWVudGF0aW9uIHRoYXQgcHJldmVudHMg
-dXMgZnJvbQ0KaW1wbGVtZW50aW5nIHRoZXNlIG1vcmUgYWR2YW5jZWQgb3Bsb2NrL2xlYXNlIGZl
-YXR1cmVzLiBGcm9tIHRoZQ0KZGVzY3JpcHRpb24gaW4gTWljcm9zb2Z0J3MgZG9jcywgSSdtIHBy
-ZXR0eSBzdXJlIHRoYXQgTkZTdjQgZGVsZWdhdGlvbnMNCnNob3VsZCBiZSBhYmxlIHRvIHByb3Zp
-ZGUgYWxsIHRoZSBndWFyYW50ZWVzIHRoYXQgYXJlIHJlcXVpcmVkLg0KDQpKZXJlbXksIHdvdWxk
-IHlvdSBiZSBhYmxlIHRvIGVsYWJvcmF0ZSBvbiB0aGlzIHRvcGljPw0KDQotLSANClRyb25kIE15
-a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--FtgIWRAI2xlKZ1VU95BtsQNLaEcX1k27K
+Content-Type: multipart/mixed; boundary="PhGYvjtXBOG0AOTM71SQRZBZQP0Zn1QFi";
+ protected-headers="v1"
+From: Ralph Boehme <slow@samba.org>
+To: Trond Myklebust <trondmy@hammerspace.com>,
+ "bfields@fieldses.org" <bfields@fieldses.org>, "jra@samba.org"
+ <jra@samba.org>, "dai.ngo@oracle.com" <dai.ngo@oracle.com>
+Cc: "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+ "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>
+Message-ID: <f4b9eb02-73e6-f082-6657-87a007b99198@samba.org>
+Subject: Re: Locking issue between NFSv4 and SMB client
+References: <5b7be2c0-95a6-048c-581f-17e5e3750daa@oracle.com>
+ <20210923215056.GH18334@fieldses.org>
+ <48b3a41e2dbea7948b0df3fea002208a273409fd.camel@hammerspace.com>
+In-Reply-To: <48b3a41e2dbea7948b0df3fea002208a273409fd.camel@hammerspace.com>
+
+--PhGYvjtXBOG0AOTM71SQRZBZQP0Zn1QFi
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+Am 24.09.21 um 05:35 schrieb Trond Myklebust:
+> Not if you set the "kernel oplocks" parameter in the smb.conf file. We
+> just added support for this in the Linux 5.14 kernel NFSv4 client.
+>=20
+> Now that said, "kernel oplocks" will currently only support basic level=
+
+> I oplocks, and cannot support level II or leases. According to the
+> smb.conf manpage, this is due to some incompleteness in the current VFS=
+
+> lease implementation.
+>=20
+> I'd love to get some more info from the Samba team about what is
+> missing from the kernel lease implementation that prevents us from
+> implementing these more advanced oplock/lease features. From the
+> description in Microsoft's docs, I'm pretty sure that NFSv4 delegations=
+
+> should be able to provide all the guarantees that are required.
+
+leases can be shared among file handles. When someone requests a lease=20
+he passes a cookie. Then when he opens the same file with the same=20
+cookie the lease is not broken.
+
+Maybe others can comment on the level II oplock problem. Afaik this was=20
+more a lack of testing.
+
+-slow
+
+--=20
+Ralph Boehme, Samba Team                 https://samba.org/
+SerNet Samba Team Lead      https://sernet.de/en/team-samba
+
+
+--PhGYvjtXBOG0AOTM71SQRZBZQP0Zn1QFi--
+
+--FtgIWRAI2xlKZ1VU95BtsQNLaEcX1k27K
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsF5BAABCAAjFiEE+uLGCIokJSBRxVnkqh6bcSY5nkYFAmFNShQFAwAAAAAACgkQqh6bcSY5nkYF
+lRAAh+16eSQTyw2jfcITG+SkMYbBN1HABsiUnYEoIqylIeJn/n/4f8bJ273Gt1GL85rdaxfl7SrY
+tKKSQvtxYAJcZIX/xx4+6FFXGrNpr/GSPviNZJUgVDnzGJkxMlZW9R1JoEgyA+N21dCeskvjr+hD
+QvpFG7u2iSwJ/fYrxMQsv2x3MdRbnVUAfZkKn037QB9mVY64nVjePBMlwotveYsfoenOQLF/gk7g
+zEoi5i73oJ465Mtms8luN1m49UxapwP91vsIEPy7Nn9ekiTWYTIm1cTs3CvXPx5nbRIxO4V4GgAb
+/ToMy9E2SuNt23ftLgr8NBmRNyHLxs7bF4dG9NIvZwcyxCNZ8cWVCZScfpO9i0/BkZ70spsss3Ka
+Pgw0Jvl/okW2aghQTkvlbYYfIN2YcH/ve8rbu8wJMhHlXnT+1LhuXzYt+8bisLmoJy4wjolNUf0U
+5b1zcDyV3U7qFZmh8oEb5CsbL4BaH2LP3c/uHA49ZjELrO/tjG8uDJg1HB3QG5ambes9NlFn87oU
+KE8QvE584kkZqOyShX83FVA598nguFBqBQKRBa5XUW2RyPlr+W9QkTzXf81oaXq26dhQEoEwlyQd
+uuJiQvj6LeTX2UbNGktiqaX0lyz0CfM7Pdk8HdYRfMt9o6AYOQNZM9EGx4+9AbDRR4WzIbcL6cdu
+Vh8=
+=xm2j
+-----END PGP SIGNATURE-----
+
+--FtgIWRAI2xlKZ1VU95BtsQNLaEcX1k27K--
