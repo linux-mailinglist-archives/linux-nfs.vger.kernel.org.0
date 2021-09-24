@@ -2,63 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FC82417C2E
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Sep 2021 22:11:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 209C3417C94
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Sep 2021 22:53:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346431AbhIXUM5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Sep 2021 16:12:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344434AbhIXUMy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Sep 2021 16:12:54 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34CAC061571;
-        Fri, 24 Sep 2021 13:11:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=7ncpmpQORtbSOxGAPueW+IXlEjJ+gZin6hmVmI/YRoo=; b=dGGkic4Lh01v+IinitCaZlfNiX
-        d4rAidh/lyoGoYykLzOH+ZqCCDk8Rd9+U2sykPbWJ+M502s992XVMWRrHJybdQSfooRjBHScy+C1w
-        OKKUm9gLECJ+3AVuiglpMi9jdz+DFjznSAMmp8qs0tMCPqwAVo2apHHBTTjQGk78PJMJcQgV5QCuD
-        43CmIgXIofEmyz19muuu45gg72RzzbAl5/IYVPVZIGoGw8CxVNi+llf3/o2l4nVRu5wzKaB7dmwJs
-        DD954+B29YKp0MmWLo+gVjrbEzcCft43S2m0mnbwZnG0i4qYwWdQX6OaYnUHOrOWvtoK4Chx6PpaF
-        VimTJydw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mTrWC-007YNw-EY; Fri, 24 Sep 2021 20:10:11 +0000
-Date:   Fri, 24 Sep 2021 21:10:00 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     hch@lst.de, trond.myklebust@primarydata.com,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, ceph-devel@vger.kernel.org,
-        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, darrick.wong@oracle.com,
-        viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/9] mm: Add 'supports' field to the
- address_space_operations to list features
-Message-ID: <YU4wmPyEoOZZfP3l@casper.infradead.org>
-References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
- <163250389458.2330363.17234460134406104577.stgit@warthog.procyon.org.uk>
+        id S239933AbhIXUzA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Sep 2021 16:55:00 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:9576 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232123AbhIXUzA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Sep 2021 16:55:00 -0400
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18OKYBP1030096;
+        Fri, 24 Sep 2021 20:53:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=79H3y/qZlJhAtvutq+xu50k0GeyhKSmUxHTFpikS/ws=;
+ b=0TQpnH9yAvLKQ2H0FZiEMwgalsNgZyhVNEQUWbS+CzpaiOeLqPvJnP5fWudic2ycpBLC
+ D9Lf/8MJQkXndUM+4EjEiC0+JaMsbnmjX4ouJfXW7ZhtNdGC0Ca0tAA05wzc60jXL3xS
+ zNR3+0jaacAPZ5zEijhdoR86+CFxlQSHaTZBmgEEQmxq3YsE3PLvxQ4TmyP5HS8+8Iv6
+ bPhm/BDuEiQJ5o4y8xqSOQRl2EWDPAFfkbTqJLGMUzF+ygYd23qDKdXJbtluPZn6d/VE
+ PzSzHQnHU+uMXPCowYVGCM7GoMvggzEgZGIfuts3n89AIN5qvbHAMXaEBYc46TUft4Jn KQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3b93eq5q64-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Sep 2021 20:53:25 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18OKowGv158395;
+        Fri, 24 Sep 2021 20:53:24 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3020.oracle.com with ESMTP id 3b93fr897g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Sep 2021 20:53:24 +0000
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 18OKrNkR167020;
+        Fri, 24 Sep 2021 20:53:23 GMT
+Received: from userp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by aserp3020.oracle.com with ESMTP id 3b93fr8971-1;
+        Fri, 24 Sep 2021 20:53:23 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     bfields@fieldses.org
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v4 0/2] nfsd: Initial implementation of NFSv4 Courteous Server
+Date:   Fri, 24 Sep 2021 16:52:50 -0400
+Message-Id: <20210924205252.82502-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163250389458.2330363.17234460134406104577.stgit@warthog.procyon.org.uk>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: GwzyUkwke25AVoAxYlI7D8ol9sQLX1OR
+X-Proofpoint-ORIG-GUID: GwzyUkwke25AVoAxYlI7D8ol9sQLX1OR
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 06:18:14PM +0100, David Howells wrote:
-> Rather than depending on .direct_IO to point to something to indicate that
-> direct I/O is supported, add a 'supports' bitmask that we can test, since
-> we only need one bit.
+Hi Bruce,
 
-Why would you add mapping->aops->supports instead of using one of the free
-bits in mapping->flags?  enum mapping_flags in pagemap.h.
+This series of patches implement the NFSv4 Courteous Server.
 
-It could also be a per-fs flag, or per-sb flag, but it's fewer
-dereferences at check time if it's in mapping->flags.
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
+
+The v2 patch includes the following:
+
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
+
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client re-connects, causing the client to keep sending
+  BCTS requests to server.
+
+The v3 patch includes the following:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+The v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+NOTE: I will submit pynfs tests for courteous server including tests
+for share reservation conflicts in a separate patch.
+
 
