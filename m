@@ -2,83 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E362418510
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Sep 2021 00:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A3D6418537
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Sep 2021 01:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230157AbhIYXAS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 25 Sep 2021 19:00:18 -0400
-Received: from smtp-relay-canonical-0.canonical.com ([185.125.188.120]:36486
-        "EHLO smtp-relay-canonical-0.canonical.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230078AbhIYXAS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 25 Sep 2021 19:00:18 -0400
-Received: from localhost (1.general.cking.uk.vpn [10.172.193.212])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id CC33D40186;
-        Sat, 25 Sep 2021 22:58:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1632610721;
-        bh=yUov5c28I0sE0mYEPq2ZwDrAU1S9Y8zUPwsyk26CH2E=;
-        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type;
-        b=q39KU5X/fhlaezBmBn+Gbay2fd5+AoAQ/SikK2/JV+XStyNOG08iYuU8gshZ0L5ex
-         k/BX79gfVZxc0kr6YJipYLWfOXiJ8ghd9rLIu+Sw60oFWoQ+pKUzZ3gkHkXc7U2paE
-         vRL384cMbBH2thLqC6KwJmBH2nOD540XhrX9x/NGU+CrzpVhv+GXxEin9+kuqyAG3f
-         ULp/onRXXuAIkIaPmvWtZXd9nGm9Gn8Ut9be3acLkqoeJMjvfMnMQxrN227XAEcjM/
-         kBtLoEJ0R41WHhfIrrxq7WBmg4gMacsNam2yOqcW/+QyXddWXTHI3hIUhll801gw9H
-         vC4DZ9p8h+C8w==
-From:   Colin King <colin.king@canonical.com>
-To:     "J . Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFSD: Initialize pointer ni with NULL and not plain integer 0
-Date:   Sat, 25 Sep 2021 23:58:41 +0100
-Message-Id: <20210925225841.184101-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.32.0
+        id S230205AbhIYXod (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 25 Sep 2021 19:44:33 -0400
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:34355 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230078AbhIYXob (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 25 Sep 2021 19:44:31 -0400
+Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id 08B668A154;
+        Sun, 26 Sep 2021 09:42:44 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mUHJb-00GjRM-K9; Sun, 26 Sep 2021 09:42:43 +1000
+Date:   Sun, 26 Sep 2021 09:42:43 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     willy@infradead.org, hch@lst.de, trond.myklebust@primarydata.com,
+        Theodore Ts'o <tytso@mit.edu>, linux-block@vger.kernel.org,
+        ceph-devel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Anna Schumaker <anna.schumaker@netapp.com>, linux-mm@kvack.org,
+        Bob Liu <bob.liu@oracle.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Seth Jennings <sjenning@linux.vnet.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-cifs@vger.kernel.org, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Steve French <sfrench@samba.org>, NeilBrown <neilb@suse.de>,
+        Dan Magenheimer <dan.magenheimer@oracle.com>,
+        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        linux-btrfs@vger.kernel.org, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
+Message-ID: <20210925234243.GA1756565@dread.disaster.area>
+References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=YKPhNiOx c=1 sm=1 tr=0
+        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
+        a=kj9zAlcOel0A:10 a=7QKq2e-ADPsA:10 a=7-415B0cAAAA:8
+        a=MUEH3GQPxMcp5Lh2lNUA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Fri, Sep 24, 2021 at 06:17:52PM +0100, David Howells wrote:
+> 
+> Hi Willy, Trond, Christoph,
+> 
+> Here's v3 of a change to make reads and writes from the swapfile use async
+> DIO, adding a new ->swap_rw() address_space method, rather than readpage()
+> or direct_IO(), as requested by Willy.  This allows NFS to bypass the write
+> checks that prevent swapfiles from working, plus a bunch of other checks
+> that may or may not be necessary.
+> 
+> Whilst trying to make this work, I found that NFS's support for swapfiles
+> seems to have been non-functional since Aug 2019 (I think), so the first
+> patch fixes that.  Question is: do we actually *want* to keep this
+> functionality, given that it seems that no one's tested it with an upstream
+> kernel in the last couple of years?
+> 
+> There are additional patches to get rid of noop_direct_IO and replace it
+> with a feature bitmask, to make btrfs, ext4, xfs and raw blockdevs use the
+> new ->swap_rw method and thence remove the direct BIO submission paths from
+> swap.
+> 
+> I kept the IOCB_SWAP flag, using it to enable REQ_SWAP.  I'm not sure if
+> that's necessary, but it seems accounting related.
+> 
+> The synchronous DIO I/O code on NFS, raw blockdev, ext4 swapfile and xfs
+> swapfile all seem to work fine.  Btrfs refuses to swapon because the file
+> might be CoW'd.  I've tried doing "chattr +C", but that didn't help.
 
-Pointer ni is being initialized with plain integer zero. Fix
-this by initializing with NULL.
+Ok, so if the filesystem is doing block mapping in the IO path now,
+why does the swap file still need to map the file into a private
+block mapping now?  i.e all the work that iomap_swapfile_activate()
+does for filesystems like XFS and ext4 - it's this completely
+redundant now that we are doing block mapping during swap file IO
+via iomap_dio_rw()?
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/nfsd/nfs4proc.c  | 2 +-
- fs/nfsd/nfs4state.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Actually, that path does all the "can we use this file as a swap
+file" checking. So the extent iteration can't go away, just the swap
+file mapping part (iomap_swapfile_add_extent()). This is necessary
+to ensure there aren't any holes in the file, and we still need that
+because the DIO write path will allocate into holes, which leads
+me to my main concern here.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 3f7e59ec4e32..3dc40c1d32bc 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1178,7 +1178,7 @@ extern void nfs_sb_deactive(struct super_block *sb);
- static __be32 nfsd4_ssc_setup_dul(struct nfsd_net *nn, char *ipaddr,
- 		struct nfsd4_ssc_umount_item **retwork, struct vfsmount **ss_mnt)
- {
--	struct nfsd4_ssc_umount_item *ni = 0;
-+	struct nfsd4_ssc_umount_item *ni = NULL;
- 	struct nfsd4_ssc_umount_item *work = NULL;
- 	struct nfsd4_ssc_umount_item *tmp;
- 	DEFINE_WAIT(wait);
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 8b7e9b28c109..bfad94c70b84 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5541,7 +5541,7 @@ static void nfsd4_ssc_shutdown_umount(struct nfsd_net *nn)
- static void nfsd4_ssc_expire_umount(struct nfsd_net *nn)
- {
- 	bool do_wakeup = false;
--	struct nfsd4_ssc_umount_item *ni = 0;
-+	struct nfsd4_ssc_umount_item *ni = NULL;
- 	struct nfsd4_ssc_umount_item *tmp;
- 
- 	spin_lock(&nn->nfsd_ssc_lock);
+Using the DIO path opens up the possibility that the filesystem
+could want to run transactions are part of the DIO. Right now we
+support unwritten extents for swap files (so they don't have to be
+written to allocate the backing store before activation) and that
+means we'll be doing DIO to unwritten extents. IO completion of a
+DIO write to an unwritten extent will run a transaction to convert
+that extent to written. A similar problem with sparse files exists,
+because allocation of blocks can be done from the DIO path, and that
+requires transactions. File extension is another potential
+transaction path we open up by using DIO writes dor swap.
+
+The problem is that a transaction run in swap IO context will will
+deadlock the filesystem. Either through the unbound memory demand of
+metadata modification, or from needing log space that can't be freed
+up because the metadata IO that will free the log space is waiting
+on memory allocation that is waiting on swap IO...
+
+I think some more thought needs to be put into controlling the
+behaviour/semantics of the DIO path so that it can be safely used
+by swap IO, because it's not a direct 1:1 behavioural mapping with
+existing DIO and there are potential deadlock vectors we need to
+avoid.
+
+Cheers,
+
+Dave.
 -- 
-2.32.0
-
+Dave Chinner
+david@fromorbit.com
