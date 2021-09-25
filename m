@@ -2,184 +2,363 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D2B9417D86
-	for <lists+linux-nfs@lfdr.de>; Sat, 25 Sep 2021 00:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC46B417F94
+	for <lists+linux-nfs@lfdr.de>; Sat, 25 Sep 2021 06:21:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345011AbhIXWLX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Sep 2021 18:11:23 -0400
-Received: from mail-bn8nam08on2099.outbound.protection.outlook.com ([40.107.100.99]:7904
-        "EHLO NAM04-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1345010AbhIXWLW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 24 Sep 2021 18:11:22 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdUyexaR3SmCZZOVw1Z/AQqFS/GI8Pm3rvA0xizCRFNhdSDOC/vfZqLC+W1GAjprj1nC1G5HIIkshcv5a2/3nneuI9wGGfADLig9wRjOmpUOa0Q6mDjfPVDhyeK2lFrL0PfStDa085XRyET/XCu0X8/GuiFhftt9WdfZzcG/Vq4lF0Q55xKzW7vQAezizwQRi5aP7tlZ5Q/VqpK5a6agbxoliT1X5nRa6bZ/QWlo4jWlvgRG6BglpvUVTu360ZGKMY4zx1zpv1YrsUJRNR7SHkBvb0LreQ5SgbyvYFpuauBJBWRrJCCmbBvtA7zqsToGwSnvsU58fROK/Ezji/sL7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=siYkL0qFHFeLcD2bk7pLbofnTj2ryUU9yqgYcsnME60=;
- b=JIybXCKGEHe2P9QGfeGubiGxebBbuF5hugnucFEo/2sytTyX9Ou7XfXWB84F8IMQjHkuQYhf0M2gF/+DiN49nfBW3tqSMNG6fVn1/5t9GJOD4KIQjN9oHU9ybuJWMNKJkzg7KINVzStG29++Az7zcw4Z2isE0RioUJs8UidHTWElHjQ9zliruHuz+J1Hi9rdrRa7IJTl399QFm5T5+vB4ym2Trr5t7rVOFLd+MuIZ22e0iqenArErUF2br5iuvZEVG/JpLMBEwCM6gHzh4QUqeAXYTSVIcNMdMH8xoa7sc84vZVGARjAo3dxcqRJgSZT26C0CBiYxn3hjYO0s/xhlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=siYkL0qFHFeLcD2bk7pLbofnTj2ryUU9yqgYcsnME60=;
- b=BK6C3/kiypXObaDgfTmYMuHtk07HzrJcIcFdFNQAHdq0a5JdhX38GmGA/1+16BCPOY85yd1K1WNOR4ecVRFzWjgN+reMSDYyJ3f3oLmngLbYPUwXt3ME+NNHDIGurGJTnTn7yoC43sr7W/mpE1byD9vi4i4r/YGtzq9AXR1AJTA=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB3432.namprd13.prod.outlook.com (2603:10b6:610:2e::30) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.11; Fri, 24 Sep
- 2021 22:09:44 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::185b:505d:b35c:a3a2]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::185b:505d:b35c:a3a2%8]) with mapi id 15.20.4544.013; Fri, 24 Sep 2021
- 22:09:44 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: recent intermittent fsx-related failures
-Thread-Topic: recent intermittent fsx-related failures
-Thread-Index: AQHXf/8fcA3+DfY3OUmOk0QnMZuIQ6tRAXuAgFtTrwCAAuCsgIAEfGqAgABvgQA=
-Date:   Fri, 24 Sep 2021 22:09:44 +0000
-Message-ID: <aa2ef2bbb991d693009fb5cf130462a366f5d459.camel@hammerspace.com>
-References: <67E1CF9F-61C5-4BB9-97FE-61B598EFC382@oracle.com>
-         <2e8bce7bc15b02bbd1dcf740f2d993d6e3d58367.camel@hammerspace.com>
-         <680A4FB2-B90D-47E1-A390-36B3081B1464@oracle.com>
-         <da6ef7efef96f126f89a70446eaf643ab0bcbe26.camel@hammerspace.com>
-         <EA26A03F-962E-4561-9A70-C97D19574993@oracle.com>
-In-Reply-To: <EA26A03F-962E-4561-9A70-C97D19574993@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: oracle.com; dkim=none (message not signed)
- header.d=none;oracle.com; dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 16c17625-6998-4ea6-55e5-08d97fa803a5
-x-ms-traffictypediagnostic: CH2PR13MB3432:
-x-microsoft-antispam-prvs: <CH2PR13MB3432D938CD4CFA05828CB2CDB8A49@CH2PR13MB3432.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 0394Zb4RMmXYprXN8bODtlNPzXcQSTNEtUpzlswl5rsetO1aDeMhATHbzMCcaAAWTC0wPgaEiq/uYabiYAoS+SwJ26Nw6nSUjwNZlhrFtltbokjFBeB1lXJ20vNxyrRYavyctGQTbm+zVpOkgkvTeo0nqJK7LdQTDgy+pc6zAvUkai0lhQsjoaH+fnwWU5o5eDnDt3hdM2Ns5OQmLtUThbRvz42ujbTwLGlmgLvo80qKBVyQDI6e5nornajse7i7n6B3xH2fSxHLCfsXy19+847/ubuXHcN1QZvViteFKiYQ4QJuVj6JFSeMLz2Giy/QLsUZGZgEaHH6VaXu2MD3YdadQaVvokCZU4f10U1A3vkQXPkONHj292gwjBDWtHXeiwpyDU5+LeAflKurjNUhAGTA4skQoszI6TW7qg+AWlP2eejVX9mkMLvqgzgkI1Nrdyui3oDJLZzhGpzXL+dCZuQwrHfV3LukEUmwZeyLt6ZmS1DJcCrkPpBqce5cjRvwRoVG1doceNE4h1KSCPh8yDI9sr1vliEkg9GYYkJ5ybZ0uBoNjKDaMLNKO3DFos6Czl6rC5PZu+2MIdAb6YKjFw/NJVKmE4rgCEBT2Cu3ndWhd5pASf/hkKx6gsMDrNEfhc19a3t0qWeIr/xliVnvxolD+pIlfQLJi9FnvgjZzOGiFQRpl/KpDSqpBWeQxOPCMcZM9tWpaJd45RJGSRzKIA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(376002)(136003)(346002)(39840400004)(396003)(5660300002)(83380400001)(316002)(36756003)(6486002)(8676002)(38070700005)(86362001)(76116006)(26005)(6916009)(6506007)(186003)(8936002)(2616005)(6512007)(66946007)(508600001)(4326008)(64756008)(66556008)(2906002)(38100700002)(53546011)(122000001)(66446008)(66476007)(71200400001)(3480700007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eUhGdnl1SkNOalMrOTJKNGtXUUxIZjVKajVTc3U3dHFOS2tIR2ViREF0dGhk?=
- =?utf-8?B?a2cvbFJYeStLNVRPUFFPYjNTbGxpVEVSUUd6ajJhamRuY1JuU2s3VHFrcE5O?=
- =?utf-8?B?cFg3OXdVQ2NDUXBBVU8zdUwzdjMrKzBsczdHanNiSkhJcWlHMERRUFdVUVZD?=
- =?utf-8?B?b254M25zUmdXMWpDcm95VnQ1Z25kVC8rTzJHbklkWVdaSTR2MDVmdUtMY3l5?=
- =?utf-8?B?Zk9qbEVMUlI4dHkvT1ZhR2owRGpiZFpGNHNvOGc5QUhjZTl0KzBBNDZhWjky?=
- =?utf-8?B?dnRNdHNkeWMxNVdlKzU0VEQyYXZSZ1Yrc0ZORVc1OVpkVFd0MW9yeTFhUWth?=
- =?utf-8?B?R0gwY1IySzNVYVFzVVlzcS9vTGtXU24rZ1k2UjZDVlFlQTJJL1EyeTQ3c053?=
- =?utf-8?B?dHBWS2NiZDlnL2tRWjRKTUp6ZFQ5dmpMMklmZnNnUHFWOXFRdzJlQ3Q0L3dw?=
- =?utf-8?B?TUNIZG1xd0U5SXRNR1JjakZHYW41Q1pCVXdpS3I5ZE1mM1QrbEQ4UExKK0h5?=
- =?utf-8?B?YnZOOWJFRktpR0JRT1VUYjZXOTVraHlUOEhPT1E1ZDZvckFFeVdCdmFvY1B6?=
- =?utf-8?B?QkVQTTFtbUU5R2RtaCt1Qlk0RTBPeUJyb1p1QjFyNjhlbzVRRWlmSG5xYXVR?=
- =?utf-8?B?ajRXRDA2R2hCSVQ4Y0M2NDN0T2xNVDhkK21OMk0xaWFpNkZnZjJBWlhWZnZh?=
- =?utf-8?B?ZEFrZGUwdm5xWC9pYk16QWhVZ09DOUMzVHZ6MU5LbGM5YUh4ZnFad2ppdUZn?=
- =?utf-8?B?VG03dDFxd204TmVuQk9NNmd1SnhQeVZlQ1ViRWVrVVdaT3dMdWZXSmxjZ1ZR?=
- =?utf-8?B?TExEdk9EZTZpc0VueDBuN2ZJVWxQakpQeW4ycTVoRitLTzBFM3YzbEg5Z2FC?=
- =?utf-8?B?WFNsbksreDJWZFFKcFFSaWJGeGREN09yeWp1ZXBTV1JBK3VaejBsVXp4Mm1B?=
- =?utf-8?B?emk4Mm5Jdk1lQVJQSkdzOHhGMUdrK2FTNW1KU1BDTys5TWFERFVPV2lKd3Uv?=
- =?utf-8?B?Qk5oemRYUlhma29Odm5QTXU3TzA0dFVCK20rTHNiRFlVYmhUaTkvc1NhaXhV?=
- =?utf-8?B?V0tDdmxoUWRMWU9lcldEalJXR09ub3RxcUJmb1NpVko3MGdRMVB5NXRXb1Jr?=
- =?utf-8?B?Yi9oTzFJQVZneHBPaGp4UHpTRCtjRmkyY1kxaGlkQ0FZMnh2TzFCcWYvZnNJ?=
- =?utf-8?B?TGFKcUZjd0JmckNLQUp4MWRNSGhFRUVsL0ExMVFSRFFqVy9jMmQrd3VuNzJQ?=
- =?utf-8?B?Y0tZV211UnFHNFcyOVVEMjdhZ0ltNis4bGFsVW5SNFpmTzdSL0praXViNGl6?=
- =?utf-8?B?ZDRJNEdhUUVnWWtEclhMZFhYWUMyZDZ4eW93bHB4Q0pWMVROMHAxTjk5ZG5M?=
- =?utf-8?B?amFvejBaQlBDeTBRbUM3aC8yVktKeUFIT0c4aDdGYzZPRi9oQ3FUdFpxay9N?=
- =?utf-8?B?YTFJTFl4WHFpUkZpTjJDRS9Yb0J3WGFTa2gyTkY0bGhzZmxHQWhmb3JyUXdZ?=
- =?utf-8?B?UE9KUUlJNHUwenNqdGdHV3Z5WWZEQVRwdTJ3cGtrZURUd0FqdzJRRXBXS0Jx?=
- =?utf-8?B?Mnovb1pxZC9HN0ErdkNzOCt4K0QxZXRmd09PUlpMMmt4SEdIcjY2alVtWGpm?=
- =?utf-8?B?QVBlMG9rY0hEZC9YYm43b0dBaEJ3QmNOM0JUdnBKZmxNMjF3UHpocm9oOWZN?=
- =?utf-8?B?Q1dkQnUvOEF4Zno5OS9oekFZc3pFaUJXdmNKRU1vU1ZsUkUwR2V4K2pZbkd6?=
- =?utf-8?Q?Tru1893ioN0+mVZdgy3SzlJczW8zH+JZTdi/Dqc?=
-x-ms-exchange-transport-forked: True
+        id S230261AbhIYEXY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 25 Sep 2021 00:23:24 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:56174 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229516AbhIYEXY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 25 Sep 2021 00:23:24 -0400
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 4ACA11FD36;
+        Sat, 25 Sep 2021 04:21:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1632543709; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RgglxUYaHBcz4yJ3KrbtcN6+yZyW0mmp35OrO4G8xF0=;
+        b=GcclGcW2337zWT4npLzZn8kvR1/m3rmrVMY7f/DYGARxTk2B5F6iBwD4UAChBHD2J6TV6P
+        it8t4drrPXoEu5/bAfXMMxpjAVnn775QSG1mF785dkiFFRmP+sCAIIyrlgHtg90DCqb/c5
+        Q+zgNqQOMpk2jYBC3ixFD6TzNG4iILk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1632543709;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RgglxUYaHBcz4yJ3KrbtcN6+yZyW0mmp35OrO4G8xF0=;
+        b=bOSdCDr2irfncpwaDQ8aNrVlhTSIFWgNT537lyJn7YpJqTjfFcQmAZLq0YhYg65Pn2kl8L
+        2AMsLqp4eyM3IBBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B1DA013342;
+        Sat, 25 Sep 2021 04:21:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id GQkiHNujTmHoZwAAMHmgww
+        (envelope-from <neilb@suse.de>); Sat, 25 Sep 2021 04:21:47 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <A6D8EDF3919A11469D1A8D8939786E92@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 16c17625-6998-4ea6-55e5-08d97fa803a5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Sep 2021 22:09:44.0622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yDQ/1IRO0OhbKK+MJDswtRaQRpRNvIUwZB5YJJ4DGdtQ9MMP7zzUiqJQ6K71NFWMOOGHWwpWx2viRzmOBHlmuw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3432
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Bruce Fields" <bfields@fieldses.org>
+Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Christoph Hellwig" <hch@lst.de>
+Subject: Re: [PATCH 1/3 v3] NFSD: move filehandle format declarations out of "uapi".
+In-reply-to: <20210923212114.GG18334@fieldses.org>
+References: <20210827151505.GA19199@lst.de>,
+ <163038488360.7591.7865010833762169362@noble.neil.brown.name>,
+ <20210901074407.GB18673@lst.de>,
+ <F517668C-DD79-4358-96AE-1566B956025A@oracle.com>,
+ <163054528774.24419.6639477440713170169@noble.neil.brown.name>,
+ <20210923212114.GG18334@fieldses.org>
+Date:   Sat, 25 Sep 2021 14:21:44 +1000
+Message-id: <163254370460.2580.2709848247544487538@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIxLTA5LTI0IGF0IDE1OjMwICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IA0KPiANCj4gPiBPbiBTZXAgMjEsIDIwMjEsIGF0IDM6MDAgUE0sIFRyb25kIE15a2xlYnVz
-dA0KPiA+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gU3Vu
-LCAyMDIxLTA5LTE5IGF0IDIzOjAzICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6DQo+ID4g
-PiANCj4gPiA+IA0KPiA+ID4gPiBPbiBKdWwgMjMsIDIwMjEsIGF0IDQ6MjQgUE0sIFRyb25kIE15
-a2xlYnVzdA0KPiA+ID4gPiA8dHJvbmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3RlOg0KPiA+ID4g
-PiANCj4gPiA+ID4gT24gRnJpLCAyMDIxLTA3LTIzIGF0IDIwOjEyICswMDAwLCBDaHVjayBMZXZl
-ciBJSUkgd3JvdGU6DQo+ID4gPiA+ID4gSGktDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSSBub3Rp
-Y2VkIHJlY2VudGx5IHRoYXQgZ2VuZXJpYy8wNzUsIGdlbmVyaWMvMTEyLCBhbmQNCj4gPiA+ID4g
-PiBnZW5lcmljLzEyNw0KPiA+ID4gPiA+IHdlcmUNCj4gPiA+ID4gPiBmYWlsaW5nIGludGVybWl0
-dGVudGx5IG9uIE5GU3YzIG1vdW50cy4gQWxsIHRocmVlIG9mIHRoZXNlDQo+ID4gPiA+ID4gdGVz
-dHMNCj4gPiA+ID4gPiBhcmUNCj4gPiA+ID4gPiBiYXNlZCBvbiBmc3guDQo+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gImdpdCBiaXNlY3QiIGxhbmRlZCBvbiB0aGlzIGNvbW1pdDoNCj4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA3YjI0ZGFjZjA4NDAgKCJORlM6IEFub3RoZXIgaW5vZGUgcmV2YWxpZGF0aW9u
-IGltcHJvdmVtZW50IikNCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBBZnRlciByZXZlcnRpbmcgN2Iy
-NGRhY2YwODQwIG9uIHY1LjE0LXJjMSwgSSBjYW4gbm8gbG9uZ2VyDQo+ID4gPiA+ID4gcmVwcm9k
-dWNlDQo+ID4gPiA+ID4gdGhlIHRlc3QgZmFpbHVyZXMuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4g
-DQo+ID4gPiA+IA0KPiA+ID4gPiBTbyB5b3UgYXJlIHNlZWluZyBmaWxlIG1ldGFkYXRhIHVwZGF0
-ZXMgdGhhdCBlbmQgdXAgbm90DQo+ID4gPiA+IGNoYW5naW5nDQo+ID4gPiA+IHRoZQ0KPiA+ID4g
-PiBjdGltZT8NCj4gPiA+IA0KPiA+ID4gQXMgZmFyIGFzIEkgY2FuIHRlbGwsIGEgV1JJVEUgYW5k
-IHR3byBTRVRBVFRScyBhcmUgaGFwcGVuaW5nIGluDQo+ID4gPiBzZXF1ZW5jZSB0byB0aGUgc2Ft
-ZSBmaWxlIGR1cmluZyB0aGUgc2FtZSBqaWZmeS4gVGhlIFdSSVRFIGRvZXMNCj4gPiA+IG5vdCBy
-ZXBvcnQgcHJlL3Bvc3QgYXR0cmlidXRlcywgYnV0IHRoZSBTRVRBVFRScyBkby4gVGhlIHJlcG9y
-dGVkDQo+ID4gPiBwcmUtIGFuZCBwb3N0LSBtdGltZSBhbmQgY3RpbWUgYXJlIGFsbCB0aGUgc2Ft
-ZSB2YWx1ZSBmb3IgYm90aA0KPiA+ID4gU0VUQVRUUnMsIEkgYmVsaWV2ZSBkdWUgdG8gdGltZXN0
-YW1wX3RydW5jYXRlKCkuDQo+ID4gPiANCj4gPiA+IE15IHRoZW9yeSBpcyB0aGF0IHBlcnNpc3Rl
-bnQtc3RvcmFnZS1iYWNrZWQgZmlsZXN5c3RlbXMgc2VlbSB0bw0KPiA+ID4gZ28gc2xvdyBlbm91
-Z2ggdGhhdCBpdCBkb2Vzbid0IGJlY29tZSBhIHNpZ25pZmljYW50IHByb2JsZW0uIEJ1dA0KPiA+
-ID4gd2l0aCB0bXBmcywgdGhpcyBjYW4gaGFwcGVuIG9mdGVuIGVub3VnaCB0aGF0IHRoZSBjbGll
-bnQgZ2V0cw0KPiA+ID4gY29uZnVzZWQuIEFuZCBJIGNhbiBtYWtlIHRoZSBwcm9ibGVtIHVucmVw
-cm9kdWNhYmxlIGlmIEkgZW5hYmxlDQo+ID4gPiBlbm91Z2ggZGVidWdnaW5nIHBhcmFwaGVybmFs
-aWEgb24gdGhlIHNlcnZlciB0byBzbG93IGl0IGRvd24uDQo+ID4gPiANCj4gPiA+IEknbSBub3Qg
-ZXhhY3RseSBzdXJlIGhvdyB0aGUgY2xpZW50IGJlY29tZXMgY29uZnVzZWQgYnkgdGhpcw0KPiA+
-ID4gYmVoYXZpb3IsIGJ1dCBmc3ggcmVwb3J0cyBhIHN0YWxlIHNpemUgdmFsdWUsIG9yIGl0IGNh
-biBoaXQgYQ0KPiA+ID4gYnVzIGVycm9yLiBJJ20gc2VlaW5nIGF0IGxlYXN0IGZvdXIgb2YgdGhl
-IGZzeC1iYXNlZCB4ZnMgdGVzdHMNCj4gPiA+IGZhaWwgaW50ZXJtaXR0ZW50bHkuDQo+ID4gPiAN
-Cj4gPiANCj4gPiBUaGUgY2xpZW50IG5vIGxvbmdlciByZWxpZXMgb24gcG9zdC1vcCBhdHRyaWJ1
-dGVzIGluIG9yZGVyIHRvDQo+ID4gdXBkYXRlDQo+ID4gdGhlIG1ldGFkYXRhIGFmdGVyIGEgc3Vj
-Y2Vzc2Z1bCBTRVRBVFRSLiBJZiB5b3UgbG9vayBhdA0KPiA+IG5mc19zZXRhdHRyX3VwZGF0ZV9p
-bm9kZSgpIHlvdSdsbCBzZWUgdGhhdCBpdCBwaWNrcyB0aGUgdmFsdWVzIHRoYXQNCj4gPiB3ZXJl
-IHNldCBkaXJlY3RseSBmcm9tIHRoZSBpYXR0ciBhcmd1bWVudC4NCj4gPiANCj4gPiBUaGUgcG9z
-dC1vcCBhdHRyaWJ1dGVzIGFyZSBvbmx5IHVzZWQgdG8gZGV0ZXJtaW5lIHRoZSBpbXBsaWNpdA0K
-PiA+IHRpbWVzdGFtcCB1cGRhdGVzLCBhbmQgdG8gZGV0ZWN0IGFueSBvdGhlciB1cGRhdGVzIHRo
-YXQgbWF5IGhhdmUNCj4gPiBoYXBwZW5lZC4NCj4gDQo+IEkndmUgYmVlbiBhYmxlIHRvIGRpcmVj
-dGx5IGFuZCByZXBlYXRlZGx5IG9ic2VydmUgdGhlIHNpemUgYXR0cmlidXRlDQo+IHJldmVydGlu
-ZyB0byBhIHByZXZpb3VzIHZhbHVlLg0KPiANCj4gVGhlIGlzc3VlIHN0ZW1zIGZyb20gdGhlIE1N
-IGRyaXZpbmcgYSBiYWNrZ3JvdW5kIHJlYWRhaGVhZCBvcGVyYXRpb24NCj4gYXQgdGhlIHNhbWUg
-dGltZSB0aGUgYXBwbGljYXRpb24gdHJ1bmNhdGVzIG9yIGV4dGVuZHMgdGhlIGZpbGUuIFRoZQ0K
-PiBSRUFEIHN0YXJ0cyBiZWZvcmUgdGhlIHNpemUtbXV0YXRpbmcgb3BlcmF0aW9uIGFuZCBjb21w
-bGV0ZXMgYWZ0ZXINCj4gaXQuDQo+IA0KPiBJZiB0aGUgc2VydmVyIGhhcHBlbnMgdG8gaGF2ZSBk
-b25lIHRoZSBSRUFEIGJlZm9yZSB0aGUgc2l6ZS1tdXRhdGluZw0KPiBvcGVyYXRpb24sIHRoZSBS
-RUFEIHJlc3VsdCBjb250YWlucyB0aGUgcHJldmlvdXMgc2l6ZSB2YWx1ZS4gV2hlbg0KPiB0aGUg
-UkVBRCBjb21wbGV0ZXMsIHRoZSBjbGllbnQgb3ZlcndyaXRlcyB0aGUgbW9yZSByZWNlbnQgc2l6
-ZQ0KPiB2YWx1ZSB3aXRoIHRoZSBzdGFsZSBvbmUuDQo+IA0KPiBJJ20gbm90IHlldCBzdXJlIGhv
-dyB0aGlzIHJlbGF0ZXMgdG8NCj4gDQo+IDdiMjRkYWNmMDg0MCAoIk5GUzogQW5vdGhlciBpbm9k
-ZSByZXZhbGlkYXRpb24gaW1wcm92ZW1lbnQiKQ0KPiANCj4gYW5kIG1heWJlIGl0IGRvZXNuJ3Qu
-ICJnaXQgYmlzZWN0IiB3aXRoIGFuIHVucmVsaWFibGUgcmVwcm9kdWNlcg0KPiBnZW5lcmF0ZXMg
-bm90b3Jpb3VzbHkgbm9pc3kgZGF0YS4gDQo+IA0KDQpIbW0uLi4gVGhhdCBtYWtlcyBzZW5zZS4g
-SWYgc28sIHRoZSBpc3N1ZSBpcyB0aGUgYXR0cmlidXRlcyBmcm9tIHRoZQ0KUkVBRCBlbmQgdXAg
-dHJpY2tpbmcgbmZzX2lub2RlX2ZpbmlzaF9wYXJ0aWFsX2F0dHJfdXBkYXRlKCkgaW50byBPS2lu
-Zw0KdGhlIHVwZGF0ZSBiZWNhdXNlIHRoZSBjdGltZSBlbmRzIHVwIGxvb2tpbmcgdGhlIHNhbWUs
-IGFuZCBzbyB0aGUNCmNsaWVudCB0cmllcyB0byBvcHBvcnR1bmlzdGljYWxseSByZXZhbGlkYXRl
-IHRoZSBjYWNoZSB0aGF0IHdhcyAoZm9yDQpzb21lIHJlYXNvbikgYWxyZWFkeSBtYXJrZWQgYXMg
-YmVpbmcgaW52YWxpZC4NCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQg
-bWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20N
-Cg0KDQo=
+On Fri, 24 Sep 2021, Bruce Fields wrote:
+> These 3 still apply after fixing up a couple minor conflicts; queued up
+> for 5.16.--b.
+
+
+Cool, thanks.
+
+NeilBrown
+
+>=20
+> On Thu, Sep 02, 2021 at 11:14:47AM +1000, NeilBrown wrote:
+> >=20
+> > A small part of the declaration concerning filehandle format are
+> > currently in the "uapi" include directory:
+> >    include/uapi/linux/nfsd/nfsfh.h
+> >=20
+> > There is a lot more to the filehandle format, including "enum fid_type"
+> > and "enum nfsd_fsid" which are not exported via "uapi".
+> >=20
+> > This small part of the filehandle definition is of minimal use outside
+> > of the kernel, and I can find no evidence that an other code is using
+> > it. Certainly nfs-utils and wireshark (The most likely candidates) do not
+> > use these declarations.
+> >=20
+> > So move it out of "uapi" by copying the content from
+> >   include/uapi/linux/nfsd/nfsfh.h
+> > into
+> >   fs/nfsd/nfsfh.h
+> >=20
+> > A few unnecessary "#include" directives are not copied, and neither is
+> > the #define of fh_auth, which is annotated as being for userspace only.
+> >=20
+> > The copyright claims in the uapi file are identical to those in the nfsd
+> > file, so there is no need to copy those.
+> >=20
+> > The "__u32" style integer types are only needed in "uapi".  In
+> > kernel-only code we can use the more familiar "u32" style.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  fs/nfsd/nfsfh.h                 |  98 ++++++++++++++++++++++++++-
+> >  include/uapi/linux/nfsd/nfsfh.h | 116 --------------------------------
+> >  2 files changed, 97 insertions(+), 117 deletions(-)
+> >  delete mode 100644 include/uapi/linux/nfsd/nfsfh.h
+> >=20
+> > diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> > index 6106697adc04..988e4dfdfbd9 100644
+> > --- a/fs/nfsd/nfsfh.h
+> > +++ b/fs/nfsd/nfsfh.h
+> > @@ -10,9 +10,105 @@
+> > =20
+> >  #include <linux/crc32.h>
+> >  #include <linux/sunrpc/svc.h>
+> > -#include <uapi/linux/nfsd/nfsfh.h>
+> >  #include <linux/iversion.h>
+> >  #include <linux/exportfs.h>
+> > +#include <linux/nfs4.h>
+> > +
+> > +
+> > +/*
+> > + * This is the old "dentry style" Linux NFSv2 file handle.
+> > + *
+> > + * The xino and xdev fields are currently used to transport the
+> > + * ino/dev of the exported inode.
+> > + */
+> > +struct nfs_fhbase_old {
+> > +	u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
+> > +	u32		fb_ino;		/* our inode number */
+> > +	u32		fb_dirino;	/* dir inode number, 0 for directories */
+> > +	u32		fb_dev;		/* our device */
+> > +	u32		fb_xdev;
+> > +	u32		fb_xino;
+> > +	u32		fb_generation;
+> > +};
+> > +
+> > +/*
+> > + * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
+> > + * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
+> > + *
+> > + * The file handle starts with a sequence of four-byte words.
+> > + * The first word contains a version number (1) and three descriptor byt=
+es
+> > + * that tell how the remaining 3 variable length fields should be handle=
+d.
+> > + * These three bytes are auth_type, fsid_type and fileid_type.
+> > + *
+> > + * All four-byte values are in host-byte-order.
+> > + *
+> > + * The auth_type field is deprecated and must be set to 0.
+> > + *
+> > + * The fsid_type identifies how the filesystem (or export point) is
+> > + *    encoded.
+> > + *  Current values:
+> > + *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte=
+ inode number
+> > + *        NOTE: we cannot use the kdev_t device id value, because kdev_t=
+.h
+> > + *              says we mustn't.  We must break it up and reassemble.
+> > + *     1  - 4 byte user specified identifier
+> > + *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
+> > + *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
+> > + *     4  - 4 byte inode number and 4 byte uuid
+> > + *     5  - 8 byte uuid
+> > + *     6  - 16 byte uuid
+> > + *     7  - 8 byte inode number and 16 byte uuid
+> > + *
+> > + * The fileid_type identified how the file within the filesystem is enco=
+ded.
+> > + *   The values for this field are filesystem specific, exccept that
+> > + *   filesystems must not use the values '0' or '0xff'. 'See enum fid_ty=
+pe'
+> > + *   in include/linux/exportfs.h for currently registered values.
+> > + */
+> > +struct nfs_fhbase_new {
+> > +	union {
+> > +		struct {
+> > +			u8		fb_version_aux;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+> > +			u8		fb_auth_type_aux;
+> > +			u8		fb_fsid_type_aux;
+> > +			u8		fb_fileid_type_aux;
+> > +			u32		fb_auth[1];
+> > +		/*	u32		fb_fsid[0]; floating */
+> > +		/*	u32		fb_fileid[0]; floating */
+> > +		};
+> > +		struct {
+> > +			u8		fb_version;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+> > +			u8		fb_auth_type;
+> > +			u8		fb_fsid_type;
+> > +			u8		fb_fileid_type;
+> > +			u32		fb_auth_flex[]; /* flexible-array member */
+> > +		};
+> > +	};
+> > +};
+> > +
+> > +struct knfsd_fh {
+> > +	unsigned int	fh_size;	/* significant for NFSv3.
+> > +					 * Points to the current size while building
+> > +					 * a new file handle
+> > +					 */
+> > +	union {
+> > +		struct nfs_fhbase_old	fh_old;
+> > +		u32			fh_pad[NFS4_FHSIZE/4];
+> > +		struct nfs_fhbase_new	fh_new;
+> > +	} fh_base;
+> > +};
+> > +
+> > +#define ofh_dcookie		fh_base.fh_old.fb_dcookie
+> > +#define ofh_ino			fh_base.fh_old.fb_ino
+> > +#define ofh_dirino		fh_base.fh_old.fb_dirino
+> > +#define ofh_dev			fh_base.fh_old.fb_dev
+> > +#define ofh_xdev		fh_base.fh_old.fb_xdev
+> > +#define ofh_xino		fh_base.fh_old.fb_xino
+> > +#define ofh_generation		fh_base.fh_old.fb_generation
+> > +
+> > +#define	fh_version		fh_base.fh_new.fb_version
+> > +#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
+> > +#define	fh_auth_type		fh_base.fh_new.fb_auth_type
+> > +#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
+> > +#define	fh_fsid			fh_base.fh_new.fb_auth_flex
+> > =20
+> >  static inline __u32 ino_t_to_u32(ino_t ino)
+> >  {
+> > diff --git a/include/uapi/linux/nfsd/nfsfh.h b/include/uapi/linux/nfsd/nf=
+sfh.h
+> > deleted file mode 100644
+> > index 427294dd56a1..000000000000
+> > --- a/include/uapi/linux/nfsd/nfsfh.h
+> > +++ /dev/null
+> > @@ -1,116 +0,0 @@
+> > -/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > -/*
+> > - * This file describes the layout of the file handles as passed
+> > - * over the wire.
+> > - *
+> > - * Copyright (C) 1995, 1996, 1997 Olaf Kirch <okir@monad.swb.de>
+> > - */
+> > -
+> > -#ifndef _UAPI_LINUX_NFSD_FH_H
+> > -#define _UAPI_LINUX_NFSD_FH_H
+> > -
+> > -#include <linux/types.h>
+> > -#include <linux/nfs.h>
+> > -#include <linux/nfs2.h>
+> > -#include <linux/nfs3.h>
+> > -#include <linux/nfs4.h>
+> > -
+> > -/*
+> > - * This is the old "dentry style" Linux NFSv2 file handle.
+> > - *
+> > - * The xino and xdev fields are currently used to transport the
+> > - * ino/dev of the exported inode.
+> > - */
+> > -struct nfs_fhbase_old {
+> > -	__u32		fb_dcookie;	/* dentry cookie - always 0xfeebbaca */
+> > -	__u32		fb_ino;		/* our inode number */
+> > -	__u32		fb_dirino;	/* dir inode number, 0 for directories */
+> > -	__u32		fb_dev;		/* our device */
+> > -	__u32		fb_xdev;
+> > -	__u32		fb_xino;
+> > -	__u32		fb_generation;
+> > -};
+> > -
+> > -/*
+> > - * This is the new flexible, extensible style NFSv2/v3/v4 file handle.
+> > - * by Neil Brown <neilb@cse.unsw.edu.au> - March 2000
+> > - *
+> > - * The file handle starts with a sequence of four-byte words.
+> > - * The first word contains a version number (1) and three descriptor byt=
+es
+> > - * that tell how the remaining 3 variable length fields should be handle=
+d.
+> > - * These three bytes are auth_type, fsid_type and fileid_type.
+> > - *
+> > - * All four-byte values are in host-byte-order.
+> > - *
+> > - * The auth_type field is deprecated and must be set to 0.
+> > - *
+> > - * The fsid_type identifies how the filesystem (or export point) is
+> > - *    encoded.
+> > - *  Current values:
+> > - *     0  - 4 byte device id (ms-2-bytes major, ls-2-bytes minor), 4byte=
+ inode number
+> > - *        NOTE: we cannot use the kdev_t device id value, because kdev_t=
+.h
+> > - *              says we mustn't.  We must break it up and reassemble.
+> > - *     1  - 4 byte user specified identifier
+> > - *     2  - 4 byte major, 4 byte minor, 4 byte inode number - DEPRECATED
+> > - *     3  - 4 byte device id, encoded for user-space, 4 byte inode number
+> > - *     4  - 4 byte inode number and 4 byte uuid
+> > - *     5  - 8 byte uuid
+> > - *     6  - 16 byte uuid
+> > - *     7  - 8 byte inode number and 16 byte uuid
+> > - *
+> > - * The fileid_type identified how the file within the filesystem is enco=
+ded.
+> > - *   The values for this field are filesystem specific, exccept that
+> > - *   filesystems must not use the values '0' or '0xff'. 'See enum fid_ty=
+pe'
+> > - *   in include/linux/exportfs.h for currently registered values.
+> > - */
+> > -struct nfs_fhbase_new {
+> > -	union {
+> > -		struct {
+> > -			__u8		fb_version_aux;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+> > -			__u8		fb_auth_type_aux;
+> > -			__u8		fb_fsid_type_aux;
+> > -			__u8		fb_fileid_type_aux;
+> > -			__u32		fb_auth[1];
+> > -			/*	__u32		fb_fsid[0]; floating */
+> > -			/*	__u32		fb_fileid[0]; floating */
+> > -		};
+> > -		struct {
+> > -			__u8		fb_version;	/* =3D=3D 1, even =3D> nfs_fhbase_old */
+> > -			__u8		fb_auth_type;
+> > -			__u8		fb_fsid_type;
+> > -			__u8		fb_fileid_type;
+> > -			__u32		fb_auth_flex[]; /* flexible-array member */
+> > -		};
+> > -	};
+> > -};
+> > -
+> > -struct knfsd_fh {
+> > -	unsigned int	fh_size;	/* significant for NFSv3.
+> > -					 * Points to the current size while building
+> > -					 * a new file handle
+> > -					 */
+> > -	union {
+> > -		struct nfs_fhbase_old	fh_old;
+> > -		__u32			fh_pad[NFS4_FHSIZE/4];
+> > -		struct nfs_fhbase_new	fh_new;
+> > -	} fh_base;
+> > -};
+> > -
+> > -#define ofh_dcookie		fh_base.fh_old.fb_dcookie
+> > -#define ofh_ino			fh_base.fh_old.fb_ino
+> > -#define ofh_dirino		fh_base.fh_old.fb_dirino
+> > -#define ofh_dev			fh_base.fh_old.fb_dev
+> > -#define ofh_xdev		fh_base.fh_old.fb_xdev
+> > -#define ofh_xino		fh_base.fh_old.fb_xino
+> > -#define ofh_generation		fh_base.fh_old.fb_generation
+> > -
+> > -#define	fh_version		fh_base.fh_new.fb_version
+> > -#define	fh_fsid_type		fh_base.fh_new.fb_fsid_type
+> > -#define	fh_auth_type		fh_base.fh_new.fb_auth_type
+> > -#define	fh_fileid_type		fh_base.fh_new.fb_fileid_type
+> > -#define	fh_fsid			fh_base.fh_new.fb_auth_flex
+> > -
+> > -/* Do not use, provided for userspace compatiblity. */
+> > -#define	fh_auth			fh_base.fh_new.fb_auth
+> > -
+> > -#endif /* _UAPI_LINUX_NFSD_FH_H */
+> > --=20
+> > 2.32.0
+>=20
+>=20
