@@ -2,100 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F8714185D3
-	for <lists+linux-nfs@lfdr.de>; Sun, 26 Sep 2021 05:11:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1001418A77
+	for <lists+linux-nfs@lfdr.de>; Sun, 26 Sep 2021 20:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230389AbhIZDMt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 25 Sep 2021 23:12:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42454 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230338AbhIZDMs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 25 Sep 2021 23:12:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B67C061570;
-        Sat, 25 Sep 2021 20:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=WwIZ0BhBYA1F8Xahxd7anDpTfWZsBUHuFr6CADROb6c=; b=il8nnVKNIf4P7d1b/wjKSIYSsb
-        tKx4hIRiHaRAIWdEBd4+ppylMZXu8zj+sunMAUv+TAookWSNqbjWCTqQ6xZCbzO9nz8LVRtU5eRkd
-        2qqAe4aZyxP/jMB3vR2gELmqcn/uTa+TTcC9bJxCMyc1jDp4WCD0j5nA2HjcbT5ylZIDLRgBEx6hW
-        wMLm/jdYvre6N0SpLJSED3l2DEVtfQ6kBBvhtgafZactWNTZLdgPPwiyhujYSm5XSi7gR+NN9zIgD
-        gwTymYQIr2WuO3xqn+Mr8tukgD1eRuloL2tYfe754ETp6XoRMgmEDc1lF2Cbj+Eq11zBbRdlOskjB
-        zkACra/Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mUKYt-008bG5-I5; Sun, 26 Sep 2021 03:10:46 +0000
-Date:   Sun, 26 Sep 2021 04:10:43 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     David Howells <dhowells@redhat.com>, hch@lst.de,
-        trond.myklebust@primarydata.com, Theodore Ts'o <tytso@mit.edu>,
-        linux-block@vger.kernel.org, ceph-devel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>, linux-mm@kvack.org,
-        Bob Liu <bob.liu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Seth Jennings <sjenning@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-cifs@vger.kernel.org, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Steve French <sfrench@samba.org>, NeilBrown <neilb@suse.de>,
-        Dan Magenheimer <dan.magenheimer@oracle.com>,
-        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        linux-btrfs@vger.kernel.org, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
-Message-ID: <YU/ks7Sfw5Wj0K1p@casper.infradead.org>
-References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
- <20210925234243.GA1756565@dread.disaster.area>
+        id S229670AbhIZSSA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 26 Sep 2021 14:18:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46138 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229628AbhIZSSA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 26 Sep 2021 14:18:00 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 327CC60FC2;
+        Sun, 26 Sep 2021 18:16:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632680183;
+        bh=DD2tHO1AR+SDG2ewvg4buONJUF9lKXD6gkH4OJ0rNIM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=uJ+P+12oFzR7ao/FCrA1fq0tqpdGwKDxLp3sR8/UApDMOHcQndx3a9R8DeTGev7kt
+         HtAfzniwwvtlJBTnMI0RVb0coRZx4lbFx0uT1zinFWBrtKHtd5eY9y+4js5No4rs1F
+         dbRxzktHoObWo3ehxC8QCzU4xeGswZ6lcFsSwcSafQvByCrNLm39hssyFD4GI9Zokt
+         Es4PllFXDLza0hmjSRWCpFaEOgdUBnrQEookRF2S/DNauqSSnQHor8Fq9fuFVixFfT
+         OhWbqWSpp7LCBqHQ9EEUSDVfMcMaEjDi9BVib3smA7DYihGyoYCt1F2mH/sEWHVY5Z
+         5qkmxHtbHaLAQ==
+From:   trondmy@kernel.org
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Default change_attr_type to NFS4_CHANGE_TYPE_IS_UNDEFINED
+Date:   Sun, 26 Sep 2021 14:16:22 -0400
+Message-Id: <20210926181622.81474-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210925234243.GA1756565@dread.disaster.area>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Sep 26, 2021 at 09:42:43AM +1000, Dave Chinner wrote:
-> Ok, so if the filesystem is doing block mapping in the IO path now,
-> why does the swap file still need to map the file into a private
-> block mapping now?  i.e all the work that iomap_swapfile_activate()
-> does for filesystems like XFS and ext4 - it's this completely
-> redundant now that we are doing block mapping during swap file IO
-> via iomap_dio_rw()?
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Hi Dave,
+Both NFSv3 and NFSv2 generate their change attribute from the ctime
+value that was supplied by the server. However the problem is that there
+are plenty of servers out there with ctime resolutions of 1ms or worse.
+In a modern performance system, this is insufficient when trying to
+decide which is the most recent set of attributes when, for instance, a
+READ or GETATTR call races with a WRITE or SETATTR.
 
-Thanks for bringing up all these points.  I think they all deserve to go
-into the documentation as "things to consider" for people implementing
-->swap_rw for their filesystem.
+For this reason, let's revert to labelling the NFSv2/v3 change
+attributes as NFS4_CHANGE_TYPE_IS_UNDEFINED. This will ensure we protect
+against such races.
 
-Something I don't think David perhaps made sufficiently clear is that
-regular DIO from userspace gets handled by ->read_iter and ->write_iter.
-This ->swap_rw op is used exclusive for, as the name suggests, swap DIO.
-So filesystems don't have to handle swap DIO and regular DIO the same
-way, and can split the allocation work between ->swap_activate and the
-iomap callback as they see fit (as long as they can guarantee the lack
-of deadlocks under memory pressure).
+Fixes: 7b24dacf0840 ("NFS: Another inode revalidation improvement")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs3xdr.c | 2 +-
+ fs/nfs/proc.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-There are several advantages to using the DIO infrastructure for
-swap:
+diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+index e6eca1d7481b..9274c9c5efea 100644
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -2227,7 +2227,7 @@ static int decode_fsinfo3resok(struct xdr_stream *xdr,
+ 
+ 	/* ignore properties */
+ 	result->lease_time = 0;
+-	result->change_attr_type = NFS4_CHANGE_TYPE_IS_TIME_METADATA;
++	result->change_attr_type = NFS4_CHANGE_TYPE_IS_UNDEFINED;
+ 	return 0;
+ }
+ 
+diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
+index ea19dbf12301..ecc4e717808c 100644
+--- a/fs/nfs/proc.c
++++ b/fs/nfs/proc.c
+@@ -91,7 +91,7 @@ nfs_proc_get_root(struct nfs_server *server, struct nfs_fh *fhandle,
+ 	info->dtpref = fsinfo.tsize;
+ 	info->maxfilesize = 0x7FFFFFFF;
+ 	info->lease_time = 0;
+-	info->change_attr_type = NFS4_CHANGE_TYPE_IS_TIME_METADATA;
++	info->change_attr_type = NFS4_CHANGE_TYPE_IS_UNDEFINED;
+ 	return 0;
+ }
+ 
+-- 
+2.31.1
 
- - unify block & net swap paths
- - allow filesystems to _see_ swap IOs instead of being bypassed
- - get rid of the swap extent rbtree
- - allow writing compound pages to swap files instead of splitting
-   them
- - allow ->readpage to be synchronous for better error reporting
- - remove page_file_mapping() and page_file_offset()
-
-I suspect there are several problems with this patchset, but I'm not
-likely to have a chance to read it closely for a few days.  If you
-have time to give the XFS parts a good look, that would be fantastic.
