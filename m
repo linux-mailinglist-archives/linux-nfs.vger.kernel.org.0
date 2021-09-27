@@ -2,236 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3E20419830
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 17:47:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E508419847
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 17:53:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235274AbhI0PtO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Sep 2021 11:49:14 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:55470 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235202AbhI0PtM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Sep 2021 11:49:12 -0400
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18RF5PG7020794;
-        Mon, 27 Sep 2021 15:47:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=6aTvokLc2ax0RfF04L/yRzq+oueKRU6wx/FfZ7aV3Ek=;
- b=lxcPKsgJZ9HnfIKfOmwhUrS8wRFFOkiVHqwDX/rDmykYoPlYR0aVPMWuxw8tF84iPd+5
- ExZ/qXpgNSxq4AB6yUGfPBjGt6KMjBXtZkQqcciKblcyroDQYMLleD+XVKM/YJ5owbQx
- 0u84PPhJ3DiCIXEBM9IhZ27tASzES3XThHoUMqINKaD/qr6stzqubFpzr1zMwtofuefg
- O+Ztibe+ND7xC8QwDZohHAAeC+yqI5hZiQIEGm1rAcNczFU/B1mn/NYiPM3F5cwSh54f
- L+6SdGbXKftpQgR0pEH+8F8ohpN7VcIQkebbrYX6lOGsmRyCZLZcnHEoo06nveG7dga5 +A== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3bbeu11b9t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Sep 2021 15:47:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18RFj7MY085169;
-        Mon, 27 Sep 2021 15:47:29 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2174.outbound.protection.outlook.com [104.47.55.174])
-        by aserp3020.oracle.com with ESMTP id 3b9x50knnk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 Sep 2021 15:47:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AFF/tZszAWXkclF5jfcwzIyy/y0mxkfPbrRV8axdp9thS9p//kJeAkmZNUhjgQBLwix7oeGpSk+VYlvzoL9UQSDaVyNMKOp6wVl0FBg2FcwnJxkjZiQtkGovOxfC+OIUaoa/tnzDlHftLQEk/67OE5I+eemS+XVpfG0vbezply5QPzpnnYTpcXIvL0LvB2zYT5XU0Tdp9eMVheYZvpV4ONRvVlL9lEsEpT7nS0q65Y6gYSkKJskaTamwPTiwjNULQ3I04p05QMoUNenLJQkvw/xAVWjZ6sojBm97mBt6El4TLrWNdC+GeilyRVVnMKMPoxgmPowRiBmX9ToLsnog5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=6aTvokLc2ax0RfF04L/yRzq+oueKRU6wx/FfZ7aV3Ek=;
- b=daKbiRZIeF51rpgLBQJ7qJEc99vRDegxTagzU/Z5hQ/B64oydkHthLByj3VsP3GIFJom3/L1z+FYyCHmxDYo3t2vQOsEb7b1I3RhwbZZbWZyJSYh+WOLy8gZSlbl7E8W+5b4fUDzz2ypLF93sacXt7atR6Buo3WrdAkKtHNrJ7nTbwJ9I30ITazT3SVFnd5bEDhmlG3tamoCe/K4iem0stLMRDgVTZrFAJl2yh/eDvk6CuaiwK42q/zegDNtBPpvsTN8C53j+C6gx983OuK1oKZu56YuD/xG0KBT2ak1gA1smuqKJD2lJ8OllQTM4Bn4cfPi7P8VmahshbIClk2SSw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6aTvokLc2ax0RfF04L/yRzq+oueKRU6wx/FfZ7aV3Ek=;
- b=hGVw+T7h8gCSXU7apaRdsS7A0VaCm7Zq1ZXfmimxZVaenwbtPwQo4O1pc8miht1ijaLkAy/t25VJhL2gW7tMmhm/camBth4EW7sKoozbOq8JvdrSGUU+1SxTSTttdL9Dxjcygs5V9qwATfOWCa+RW2FntdrHMWftTwMI1zAb4ik=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BYAPR10MB2966.namprd10.prod.outlook.com (2603:10b6:a03:8c::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.14; Mon, 27 Sep
- 2021 15:47:27 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b%5]) with mapi id 15.20.4544.021; Mon, 27 Sep 2021
- 15:47:27 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2] NFS: Default change_attr_type to
- NFS4_CHANGE_TYPE_IS_UNDEFINED
-Thread-Topic: [PATCH v2] NFS: Default change_attr_type to
- NFS4_CHANGE_TYPE_IS_UNDEFINED
-Thread-Index: AQHXs6bfMg3A8oydekeHlTQ76MxxXqu4BqIA
-Date:   Mon, 27 Sep 2021 15:47:27 +0000
-Message-ID: <A0636BF4-62A4-4821-BE12-DC846B2CE389@oracle.com>
-References: <20210927135206.4455-1-trondmy@kernel.org>
-In-Reply-To: <20210927135206.4455-1-trondmy@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ee081176-747a-4ddc-dcee-08d981ce1bb6
-x-ms-traffictypediagnostic: BYAPR10MB2966:
-x-microsoft-antispam-prvs: <BYAPR10MB2966ED81E2119A75BD836EC493A79@BYAPR10MB2966.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: XwJaY1e7yuu/wkyNM6SCOtXF0vUd6AKOxt6Tu0SQS0mc3nUT0z62vCSbUueTmvPC7i9X7xQaTcni12WTNRf88Mdpjq3t118pzu5dhKK3b+LvxGE1TWmlqe/Os4VBvvOyLPn+axAu8zc5P8lf5Un8RGkBErITyrqH4ALGXDOaIlTLtYBNkC8Dspb1Sn53IHgAgBS9NWNkVNWUY7Ed57A/x7TxZ+Dvy3Od+FZlrssMQ1faFMGwwKTrMoUkUjk+mpyiB+N6jOfFY2hMQvU+UAIoTgjOEUXiyr8lOfCs9MSjTBh5eognGRyy2zw9YOfvS7wvMe3OLjtYfgSfM+mQeU6s1rMLbdvbWgX7iLrQ+zQZaRFmJiGN5FI0Cu7BcS6OyYEr5yFVc3ADlVNK7wQ9sQm9GHWv2pYNkvue1Lzg0tDctUZH5iX/UcjinvkI9h98SSlB38hlHqVKkR7jEEeeMvGkEXEswqNMDm6zPTcr0LL8q8J57d/wOooU7GmhifWjOLtPbwdatQ7rAjr2geF+1XxuxCUgbgPbAb/O27NMXPAXsR09TdFvmZYgDOhsx8pNe1QLAEsJdMxAt7jGm08mmlsmlucDhXcuhvlzOJZwtF5RVekYaWmim7wtOdaXyX3jhv16yNG6T6HfC2JO+WmdfNknXJi6GAPqOrj3KBtUfoJ8rQtZDCmb6WYp9UJKa3c+hcwIl0W8tYZw8YS+Kz8CKje2AUuMF1QR/GoaIp3BoltK4bmmLjcZEC68MzmgeDVzHMGT
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(64756008)(4326008)(6486002)(36756003)(38100700002)(83380400001)(71200400001)(26005)(38070700005)(6512007)(186003)(66946007)(8936002)(54906003)(122000001)(66446008)(8676002)(66476007)(53546011)(91956017)(76116006)(5660300002)(33656002)(6506007)(2906002)(86362001)(2616005)(316002)(66556008)(6916009)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?jaQMl9+0mWMZxIshlktSuFLoX1B2Uae2lHeNDdUGzAkRWKotalbLU/GzDd2I?=
- =?us-ascii?Q?IubTKjDyFlUxFJNkcX/mCM2IFfdr6gSR4y2vj5RM35DJpIA2AFFFsEVKWOsO?=
- =?us-ascii?Q?Idq+cbfCMmugIqpEebowUaD87QMshlHO7po3l2YuC37qNkfnJ+2V+3tpPmPe?=
- =?us-ascii?Q?LLD8IaR+Wq/fzyVT0eEm6wWSfEiTLu+bHAvLM5zBhWyAOXasuYKMgGXq6Ot0?=
- =?us-ascii?Q?yym3hZboLuwpKCNHYMpA9eB1nq0rdEIw1aa1MMj1zrY9yNMa30yFKzYhfXtE?=
- =?us-ascii?Q?u46ZRtC95heeYf/PNWJyQZPhyfbV9c+yaYXV5uVAEPN0LBaoRgmePZO5Ds/R?=
- =?us-ascii?Q?7jFxyS2RlHMtdULjihJOUGS73d1H8rXMzF8hBS94NwMCUE5zG5SGsbpPFAtO?=
- =?us-ascii?Q?OL4iZsv8DDJXMbqvmEOaDkh2ZFVRr1AoeM3HsIIELhy6j78XM5WQ86puD631?=
- =?us-ascii?Q?V/pdUfgXAzFDDvpxJxnnaLckMGwO6tGAdO/aEuDcdSmCvqv3ZZqlSsdWUkTt?=
- =?us-ascii?Q?NuYkNKMEGpDVOVT8HWSn09tkI0KwlELNmjwZvLYjcZ2JNoinCD287UYUr7Od?=
- =?us-ascii?Q?wdvtWpvyfhTkbjIX3hvX1etTghxUfOZR4WyPbydQtpuXOIbjy/Dod2eDYyC9?=
- =?us-ascii?Q?eJ1F3Uj+Whd3K94FWaIhIjzS/T67kDmIWGWa61zoFE/2mGX/TcmLaT4ElBPR?=
- =?us-ascii?Q?X7vEl1AuuKfynKoy+sptOJFxLcjvCqKcoS1gRZ6YQnZ08nlkuEvlmurqvhYJ?=
- =?us-ascii?Q?GErKlnRbN4gF30ahEEiKn0JmA8slymnNc4AhbCUlFhkWjdB5vx5JEGWSxWsC?=
- =?us-ascii?Q?ErRv9ND/s+I1G1DdA6seUwBNrlmzIgR6AnTKtfu9L8zXUjMr+5ht/feNwh6O?=
- =?us-ascii?Q?ftpKCXxuCgwqsA7ry++1QgbqoHz7ido8cl+mnmwwYzgE1qvddp01EEa55AOM?=
- =?us-ascii?Q?7EcC8pEiJ6/N6fyEzipeari/63g6YlnTBGRpifSl5Tm6mER2FefXJJUTnxr5?=
- =?us-ascii?Q?v7Ebs/7iEx8jQRCgcvHO777877+INmNsKp/n4yBhzD+1ELlqZYFifMGZtcG1?=
- =?us-ascii?Q?vM0m/F3Ua0PoOor/UxHszdAIZ2nT5DOWD6Q7A/JwTo3YDD60IdiylFQMubfK?=
- =?us-ascii?Q?ZNLV2YuzPn/OWkRW3tFpxmzdPBplP0ZQUYF9hol176oseClzGJulIG4mGZoZ?=
- =?us-ascii?Q?BN/ESWnf+malkaJ7rXR5ld2AiVjHezglskfLIfgTnvsIbJenH32AmK5MY99W?=
- =?us-ascii?Q?0cqDG9ryreTOZt4yHTJj0atD2wgyB/1SXXYVZixQC+feR38I8U2tt2JBx0Eh?=
- =?us-ascii?Q?B+hzBudzey8ihKTOQ9Z9mhPd?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0C864EFC9751D844863782A382751F6C@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S235240AbhI0PzU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Sep 2021 11:55:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49242 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235210AbhI0PzR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Sep 2021 11:55:17 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87182C061575
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Sep 2021 08:53:39 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 7B6D15BAF; Mon, 27 Sep 2021 11:53:38 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7B6D15BAF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1632758018;
+        bh=+bel1nRvW7I5E3lUEL5/8DZKyR9UXdyG7VrNRB/ywCk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PghObdxq0ZcmZl29EY66uksbKpdQTry7sz8glKe6TmxdHna6GNSGLt+1nyFA98HJn
+         SVr55XWnF5wFceMuAydjFMNG+Mny8ht9n5GuvaUzPoPbLA2nHTMWZJNIQ7DMt+zlRO
+         LHP0sGue1aANUgl3dYnIaOa/hzx2nTc3daddlrAs=
+Date:   Mon, 27 Sep 2021 11:53:38 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Salvatore Bonaccorso <bonaccos@ee.ethz.ch>
+Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: nfsd4_process_open2 failed to open newly-created file!
+ status=10008 ; warning at fs/nfsd/nfs4proc.c for nfsd4_open
+Message-ID: <20210927155338.GA30593@fieldses.org>
+References: <20210927061025.GA20892@varda.ee.ethz.ch>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee081176-747a-4ddc-dcee-08d981ce1bb6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Sep 2021 15:47:27.6277
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0/X8T6UDROgfQRFboj/F/VOnJ/MMYG0/P2trHcmGk86c83WuYS9/V7aO4Vaev1p9j3wVK1Ak+thp06vZDW0Mlg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2966
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10120 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 adultscore=0
- mlxscore=0 malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
- definitions=main-2109270107
-X-Proofpoint-GUID: G4ypfoyLGIM9gUD2D_GXQuc0TXHJR2h2
-X-Proofpoint-ORIG-GUID: G4ypfoyLGIM9gUD2D_GXQuc0TXHJR2h2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20210927061025.GA20892@varda.ee.ethz.ch>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, Sep 27, 2021 at 08:10:31AM +0200, Salvatore Bonaccorso wrote:
+> We recently got the following traces on a NFS server, but I'm not sure
+> how to further debug this, any hints?
 
+The server creates and opens a file in two steps, though it should
+really be a single atomic operation.
 
-> On Sep 27, 2021, at 9:52 AM, trondmy@kernel.org wrote:
->=20
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->=20
-> Both NFSv3 and NFSv2 generate their change attribute from the ctime
-> value that was supplied by the server. However the problem is that there
-> are plenty of servers out there with ctime resolutions of 1ms or worse.
-> In a modern performance system, this is insufficient when trying to
-> decide which is the most recent set of attributes when, for instance, a
-> READ or GETATTR call races with a WRITE or SETATTR.
->=20
-> For this reason, let's revert to labelling the NFSv2/v3 change
-> attributes as NFS4_CHANGE_TYPE_IS_UNDEFINED. This will ensure we protect
-> against such races.
->=20
-> Fixes: 7b24dacf0840 ("NFS: Another inode revalidation improvement")
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+That means there's a small possibility somebody could intervene and do
+something like change the permissions:
 
-[root@morisot ~]# mount -o vers=3D3,rdma,sec=3Dsys klimt.ib:/export/tmp /mn=
-t
-[root@morisot ~]# (cd /mnt; /home/cel/src/xfstests/ltp/fsx -q -l 262144 -o =
-65536 -S 191110531 -N 1000000 -R -W fsx_std_nommap)
-All 1000000 operations completed A-OK!
-[root@morisot ~]# (cd /mnt; /home/cel/src/xfstests/ltp/fsx -q -l 262144 -o =
-65536 -S 191110531 -N 1000000 -R -W fsx_std_nommap)
-All 1000000 operations completed A-OK!
-[root@morisot ~]# (cd /mnt; /home/cel/src/xfstests/ltp/fsx -q -l 262144 -o =
-65536 -S 191110531 -N 1000000 -R -W fsx_std_nommap)
-All 1000000 operations completed A-OK!
-[root@morisot ~]# umount /mnt
-[root@morisot ~]#
+> 
+> [5746893.904448] ------------[ cut here ]------------
+> [5746893.910050] nfsd4_process_open2 failed to open newly-created file! status=10008
 
-Tested-by: Chuck Lever <chuck.lever@oracle.com>
+10008 is NFS4ERR_DELAY, so maybe somebody managed to get a delegation
+before we finished opening?
 
+We should be able to prevent that....
 
-> ---
-> fs/nfs/inode.c   | 4 +++-
-> fs/nfs/nfs3xdr.c | 2 +-
-> fs/nfs/proc.c    | 2 +-
-> 3 files changed, 5 insertions(+), 3 deletions(-)
->=20
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index 4f45281c47cf..0f092ccb0ca1 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -1777,8 +1777,10 @@ static int nfs_inode_finish_partial_attr_update(co=
-nst struct nfs_fattr *fattr,
-> 		NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_OTHER |
-> 		NFS_INO_INVALID_NLINK;
-> 	unsigned long cache_validity =3D NFS_I(inode)->cache_validity;
-> +	enum nfs4_change_attr_type ctype =3D NFS_SERVER(inode)->change_attr_typ=
-e;
->=20
-> -	if (!(cache_validity & NFS_INO_INVALID_CHANGE) &&
-> +	if (ctype !=3D NFS4_CHANGE_TYPE_IS_UNDEFINED &&
-> +	    !(cache_validity & NFS_INO_INVALID_CHANGE) &&
-> 	    (cache_validity & check_valid) !=3D 0 &&
-> 	    (fattr->valid & NFS_ATTR_FATTR_CHANGE) !=3D 0 &&
-> 	    nfs_inode_attrs_cmp_monotonic(fattr, inode) =3D=3D 0)
-> diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
-> index e6eca1d7481b..9274c9c5efea 100644
-> --- a/fs/nfs/nfs3xdr.c
-> +++ b/fs/nfs/nfs3xdr.c
-> @@ -2227,7 +2227,7 @@ static int decode_fsinfo3resok(struct xdr_stream *x=
-dr,
->=20
-> 	/* ignore properties */
-> 	result->lease_time =3D 0;
-> -	result->change_attr_type =3D NFS4_CHANGE_TYPE_IS_TIME_METADATA;
-> +	result->change_attr_type =3D NFS4_CHANGE_TYPE_IS_UNDEFINED;
-> 	return 0;
-> }
->=20
-> diff --git a/fs/nfs/proc.c b/fs/nfs/proc.c
-> index ea19dbf12301..ecc4e717808c 100644
-> --- a/fs/nfs/proc.c
-> +++ b/fs/nfs/proc.c
-> @@ -91,7 +91,7 @@ nfs_proc_get_root(struct nfs_server *server, struct nfs=
-_fh *fhandle,
-> 	info->dtpref =3D fsinfo.tsize;
-> 	info->maxfilesize =3D 0x7FFFFFFF;
-> 	info->lease_time =3D 0;
-> -	info->change_attr_type =3D NFS4_CHANGE_TYPE_IS_TIME_METADATA;
-> +	info->change_attr_type =3D NFS4_CHANGE_TYPE_IS_UNDEFINED;
-> 	return 0;
-> }
->=20
-> --=20
-> 2.31.1
->=20
+In your setup are there processes quickly opening new files created by
+others?
 
---
-Chuck Lever
+--b.
 
-
-
+> [5746893.918488] WARNING: CPU: 16 PID: 1316 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5746893.927833] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+> [5746894.000592]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+> [5746894.023137] CPU: 16 PID: 1316 Comm: nfsd Not tainted 4.19.0-17-amd64 #1 Debian 4.19.194-3
+> [5746894.031916] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+> [5746894.042198] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5746894.047704] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+> [5746894.067573] RSP: 0018:ffffa5228948fda8 EFLAGS: 00010286
+> [5746894.073487] RAX: 0000000000000000 RBX: ffff97c0669ae3e0 RCX: 0000000000000000
+> [5746894.081317] RDX: ffff97cc8f91efc0 RSI: ffff97cc8f9166b8 RDI: ffff97cc8f9166b8
+> [5746894.089148] RBP: ffff97c0665b0068 R08: 00000000000005e8 R09: 0000000000aaaaaa
+> [5746894.096993] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c0cc1cb400
+> [5746894.104848] R13: ffff97c066aa8000 R14: ffff97c0665a9600 R15: 0000000018270000
+> [5746894.112717] FS:  0000000000000000(0000) GS:ffff97cc8f900000(0000) knlGS:0000000000000000
+> [5746894.121558] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [5746894.128035] CR2: 00007f83d25a68a0 CR3: 00000015b900a002 CR4: 00000000007606e0
+> [5746894.135899] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [5746894.143764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [5746894.151647] PKRU: 55555554
+> [5746894.155117] Call Trace:
+> [5746894.158373]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+> [5746894.164084]  nfsd_dispatch+0x9e/0x210 [nfsd]
+> [5746894.169206]  svc_process_common+0x345/0x750 [sunrpc]
+> [5746894.175017]  ? nfsd_destroy+0x50/0x50 [nfsd]
+> [5746894.180155]  svc_process+0xb7/0xf0 [sunrpc]
+> [5746894.185194]  nfsd+0xe3/0x140 [nfsd]
+> [5746894.189545]  kthread+0x112/0x130
+> [5746894.193618]  ? kthread_bind+0x30/0x30
+> [5746894.198072]  ret_from_fork+0x35/0x40
+> [5746894.202439] ---[ end trace c6400532dff968eb ]---
+> [5768733.993671] ------------[ cut here ]------------
+> [5768733.999711] nfsd4_process_open2 failed to open newly-created file! status=10008
+> [5768734.008148] WARNING: CPU: 9 PID: 1316 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5768734.017448] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+> [5768734.092781]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+> [5768734.115967] CPU: 9 PID: 1316 Comm: nfsd Tainted: G        W         4.19.0-17-amd64 #1 Debian 4.19.194-3
+> [5768734.126331] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+> [5768734.136855] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5768734.142623] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+> [5768734.162998] RSP: 0018:ffffa5228948fda8 EFLAGS: 00010286
+> [5768734.169071] RAX: 0000000000000000 RBX: ffff97c0669ae3e0 RCX: 0000000000000000
+> [5768734.177036] RDX: ffff97c090e9efc0 RSI: ffff97c090e966b8 RDI: ffff97c090e966b8
+> [5768734.184996] RBP: ffff97c0665b0068 R08: 0000000000000608 R09: 0000000000aaaaaa
+> [5768734.192945] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c08698b000
+> [5768734.200885] R13: ffff97c066aa8000 R14: ffff97c0665a9600 R15: 0000000018270000
+> [5768734.208815] FS:  0000000000000000(0000) GS:ffff97c090e80000(0000) knlGS:0000000000000000
+> [5768734.217702] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [5768734.224236] CR2: 00007f9b4006df10 CR3: 00000015b900a002 CR4: 00000000007606e0
+> [5768734.232157] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [5768734.240077] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [5768734.248017] PKRU: 55555554
+> [5768734.251553] Call Trace:
+> [5768734.254867]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+> [5768734.260517]  nfsd_dispatch+0x9e/0x210 [nfsd]
+> [5768734.265570]  svc_process_common+0x345/0x750 [sunrpc]
+> [5768734.271373]  ? nfsd_destroy+0x50/0x50 [nfsd]
+> [5768734.276414]  svc_process+0xb7/0xf0 [sunrpc]
+> [5768734.281370]  nfsd+0xe3/0x140 [nfsd]
+> [5768734.285624]  kthread+0x112/0x130
+> [5768734.289610]  ? kthread_bind+0x30/0x30
+> [5768734.294030]  ret_from_fork+0x35/0x40
+> [5768734.298396] ---[ end trace c6400532dff968ec ]---
+> [5795002.037239] ------------[ cut here ]------------
+> [5795002.044280] nfsd4_process_open2 failed to open newly-created file! status=10008
+> [5795002.053358] WARNING: CPU: 1 PID: 1315 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5795002.063065] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+> [5795002.138537]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+> [5795002.161747] CPU: 1 PID: 1315 Comm: nfsd Tainted: G        W         4.19.0-17-amd64 #1 Debian 4.19.194-3
+> [5795002.172089] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+> [5795002.182668] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+> [5795002.188400] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+> [5795002.208706] RSP: 0018:ffffa52289487da8 EFLAGS: 00010286
+> [5795002.214775] RAX: 0000000000000000 RBX: ffff97c0669a83e0 RCX: 0000000000000000
+> [5795002.222743] RDX: ffff97c090a9efc0 RSI: ffff97c090a966b8 RDI: ffff97c090a966b8
+> [5795002.230710] RBP: ffff97c0669aa068 R08: 0000000000000628 R09: 0000000000aaaaaa
+> [5795002.238684] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c21bb64200
+> [5795002.246670] R13: ffff97c066aae000 R14: ffff97c0665a8000 R15: 0000000018270000
+> [5795002.254611] FS:  0000000000000000(0000) GS:ffff97c090a80000(0000) knlGS:0000000000000000
+> [5795002.263492] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [5795002.270097] CR2: 00007fba9f588590 CR3: 00000015b900a002 CR4: 00000000007606e0
+> [5795002.278100] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [5795002.286091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [5795002.294078] PKRU: 55555554
+> [5795002.297634] Call Trace:
+> [5795002.300910]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+> [5795002.306572]  nfsd_dispatch+0x9e/0x210 [nfsd]
+> [5795002.311617]  svc_process_common+0x345/0x750 [sunrpc]
+> [5795002.317421]  ? nfsd_destroy+0x50/0x50 [nfsd]
+> [5795002.322480]  svc_process+0xb7/0xf0 [sunrpc]
+> [5795002.327433]  nfsd+0xe3/0x140 [nfsd]
+> [5795002.331728]  kthread+0x112/0x130
+> [5795002.335718]  ? kthread_bind+0x30/0x30
+> [5795002.340144]  ret_from_fork+0x35/0x40
+> [5795002.344475] ---[ end trace c6400532dff968ed ]---
+> 
+> But I have as well no reproducing recipe to trigger it.
+> 
+> The kernel is the current Debian buster distro kernel, based on
+> 4.19.194.
+> 
+> This initally looked similar than
+> https://bugzilla.kernel.org/show_bug.cgi?id=195725 but the user did
+> get there status=5, so EIO, so seems different issue.
+> 
+> Regards,
+> Salvatore
