@@ -2,129 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E7B8419FC5
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 22:07:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2A88419FED
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 22:14:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236803AbhI0UJK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Sep 2021 16:09:10 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:39998 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236733AbhI0UJG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Sep 2021 16:09:06 -0400
-Received: from relay1.suse.de (relay1.suse.de [149.44.160.133])
-        by smtp-out2.suse.de (Postfix) with ESMTP id AE35B1FF7C;
-        Mon, 27 Sep 2021 20:07:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1632773245;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kxAIhH1YVtxRZIYXNVbyWMpsZD18tjPURBL8yhlODKY=;
-        b=rqCL/ZfaKLBBJ11Lvyjkmko7G0IT9x86WIcCx9OduTjm1NgsLZkg1W4/Fe1cCG/Qk9Yn8S
-        4UptkV/P2rPm+amFEtaKPN0FQNf0vfitqRtoMdyT/aUQpEjjB27ybGR9tRkeTK0IWi6EvT
-        6Aqpa+pvsMRplJz18xNNO1ZRkBSH1D8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1632773245;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kxAIhH1YVtxRZIYXNVbyWMpsZD18tjPURBL8yhlODKY=;
-        b=QEbbg8qe4mXGT8/Upe6yCLvS822wAxZpuHOGT5K9AL53fjW4hFZgMNlgvVQ4RqvbLrzxR0
-        6bmSu51+HcRz6eCA==
-Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
-        by relay1.suse.de (Postfix) with ESMTP id 389D425D42;
-        Mon, 27 Sep 2021 20:07:24 +0000 (UTC)
-Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 862D3DA799; Mon, 27 Sep 2021 22:07:08 +0200 (CEST)
-Date:   Mon, 27 Sep 2021 22:07:08 +0200
-From:   David Sterba <dsterba@suse.cz>
-To:     David Howells <dhowells@redhat.com>
-Cc:     willy@infradead.org, hch@lst.de, trond.myklebust@primarydata.com,
-        Theodore Ts'o <tytso@mit.edu>, linux-block@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>, linux-mm@kvack.org,
-        Bob Liu <bob.liu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Seth Jennings <sjenning@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-cifs@vger.kernel.org, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Steve French <sfrench@samba.org>, NeilBrown <neilb@suse.de>,
-        Dan Magenheimer <dan.magenheimer@oracle.com>,
-        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        linux-btrfs@vger.kernel.org, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
-Message-ID: <20210927200708.GI9286@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-Mail-Followup-To: dsterba@suse.cz, David Howells <dhowells@redhat.com>,
-        willy@infradead.org, hch@lst.de, trond.myklebust@primarydata.com,
-        Theodore Ts'o <tytso@mit.edu>, linux-block@vger.kernel.org,
-        ceph-devel@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>, linux-mm@kvack.org,
-        Bob Liu <bob.liu@oracle.com>, "Darrick J. Wong" <djwong@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Seth Jennings <sjenning@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-cifs@vger.kernel.org, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>, Minchan Kim <minchan@kernel.org>,
-        Steve French <sfrench@samba.org>, NeilBrown <neilb@suse.de>,
-        Dan Magenheimer <dan.magenheimer@oracle.com>,
-        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        linux-btrfs@vger.kernel.org, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org
-References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
+        id S236951AbhI0UQM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Sep 2021 16:16:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236950AbhI0UQM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Sep 2021 16:16:12 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2240CC061575;
+        Mon, 27 Sep 2021 13:14:34 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 41FCB7032; Mon, 27 Sep 2021 16:14:33 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 41FCB7032
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1632773673;
+        bh=wsQyqetgyPQ16p8Kx4srhVJh5maTmgwfFOWyGq6jxBY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=deCiDdlLAWzn8z5DXIQpQ//0TfGPTDw/nKtkgA7h6SS6ayCRClusSEiE6Vc8qiSwf
+         J6Gxeme7lKyQMSO8UmX1A6JnvLqUabfoLPE8aCx7QpCCl1no/9a8SFboD7WOS2xx+2
+         7mnIL0wsw4oSo1wfx0v1QIOpM6QwzoU3G/TgeMAw=
+Date:   Mon, 27 Sep 2021 16:14:33 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC v4 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Message-ID: <20210927201433.GA1704@fieldses.org>
+References: <20210924205252.82502-1-dai.ngo@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+In-Reply-To: <20210924205252.82502-1-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 24, 2021 at 06:17:52PM +0100, David Howells wrote:
-> 
-> Hi Willy, Trond, Christoph,
-> 
-> Here's v3 of a change to make reads and writes from the swapfile use async
-> DIO, adding a new ->swap_rw() address_space method, rather than readpage()
-> or direct_IO(), as requested by Willy.  This allows NFS to bypass the write
-> checks that prevent swapfiles from working, plus a bunch of other checks
-> that may or may not be necessary.
-> 
-> Whilst trying to make this work, I found that NFS's support for swapfiles
-> seems to have been non-functional since Aug 2019 (I think), so the first
-> patch fixes that.  Question is: do we actually *want* to keep this
-> functionality, given that it seems that no one's tested it with an upstream
-> kernel in the last couple of years?
-> 
-> There are additional patches to get rid of noop_direct_IO and replace it
-> with a feature bitmask, to make btrfs, ext4, xfs and raw blockdevs use the
-> new ->swap_rw method and thence remove the direct BIO submission paths from
-> swap.
-> 
-> I kept the IOCB_SWAP flag, using it to enable REQ_SWAP.  I'm not sure if
-> that's necessary, but it seems accounting related.
-> 
-> The synchronous DIO I/O code on NFS, raw blockdev, ext4 swapfile and xfs
-> swapfile all seem to work fine.  Btrfs refuses to swapon because the file
-> might be CoW'd.  I've tried doing "chattr +C", but that didn't help.
+The file_rwsem is used for /proc/locks; only the code that produces the
+/proc/locks output calls down_write, the rest only calls down_read.
 
-There was probably some step missing. The file must not have holes, so
-either do 'dd' to the right size or use fallocate (which is recommended
-in manual page btrfs(5) SWAPFILE SUPPORT). There are some fstests
-exercising swapfile (grep -l _format_swapfile tests/generic/*) so you
-could try that without having to set up the swapfile manually.
+I assumed that it was OK to nest read acquisitions of a rwsem, but I
+think that's wrong.
+
+I think it should be no big deal to move the lm_expire_lock(.,0) call
+outside of the file_rwsem?
+
+--b.
+
+[  959.807364] ============================================
+[  959.807803] WARNING: possible recursive locking detected
+[  959.808228] 5.15.0-rc2-00009-g4e5af4d2635a #533 Not tainted
+[  959.808675] --------------------------------------------
+[  959.809189] nfsd/5675 is trying to acquire lock:
+[  959.809664] ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: locks_remove_posix+0x37f/0x4e0
+[  959.810647] 
+               but task is already holding lock:
+[  959.811097] ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: nfsd4_lock+0xcb9/0x3850 [nfsd]
+[  959.812147] 
+               other info that might help us debug this:
+[  959.812698]  Possible unsafe locking scenario:
+
+[  959.813189]        CPU0
+[  959.813362]        ----
+[  959.813544]   lock(file_rwsem);
+[  959.813812]   lock(file_rwsem);
+[  959.814078] 
+                *** DEADLOCK ***
+
+[  959.814386]  May be due to missing lock nesting notation
+
+[  959.814968] 3 locks held by nfsd/5675:
+[  959.815315]  #0: ffff888007d42bc8 (&rp->rp_mutex){+.+.}-{3:3}, at: nfs4_preprocess_seqid_op+0x395/0x730 [nfsd]
+[  959.816546]  #1: ffff88800f378b70 (&stp->st_mutex#2){+.+.}-{3:3}, at: nfsd4_lock+0x1f91/0x3850 [nfsd]
+[  959.817697]  #2: ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: nfsd4_lock+0xcb9/0x3850 [nfsd]
+[  959.818755] 
+               stack backtrace:
+[  959.819010] CPU: 2 PID: 5675 Comm: nfsd Not tainted 5.15.0-rc2-00009-g4e5af4d2635a #533
+[  959.819847] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-3.fc34 04/01/2014
+[  959.820637] Call Trace:
+[  959.820759]  dump_stack_lvl+0x45/0x59
+[  959.821016]  __lock_acquire.cold+0x175/0x3a5
+[  959.821316]  ? lockdep_hardirqs_on_prepare+0x400/0x400
+[  959.821741]  lock_acquire+0x1a6/0x4b0
+[  959.821976]  ? locks_remove_posix+0x37f/0x4e0
+[  959.822316]  ? lock_release+0x6d0/0x6d0
+[  959.822591]  ? find_held_lock+0x2c/0x110
+[  959.822852]  ? lock_is_held_type+0xd5/0x130
+[  959.823139]  posix_lock_inode+0x143/0x1ab0
+[  959.823414]  ? locks_remove_posix+0x37f/0x4e0
+[  959.823739]  ? do_raw_spin_unlock+0x54/0x220
+[  959.824031]  ? lockdep_init_map_type+0x2c3/0x7a0
+[  959.824355]  ? locks_remove_flock+0x2e0/0x2e0
+[  959.824681]  locks_remove_posix+0x37f/0x4e0
+[  959.824984]  ? do_lock_file_wait+0x2a0/0x2a0
+[  959.825287]  ? lock_downgrade+0x6a0/0x6a0
+[  959.825584]  ? nfsd_file_put+0x170/0x170 [nfsd]
+[  959.825941]  filp_close+0xed/0x130
+[  959.826191]  nfs4_free_lock_stateid+0xcc/0x190 [nfsd]
+[  959.826625]  free_ol_stateid_reaplist+0x128/0x1f0 [nfsd]
+[  959.827037]  release_openowner+0xee/0x150 [nfsd]
+[  959.827382]  ? release_last_closed_stateid+0x460/0x460 [nfsd]
+[  959.827837]  ? rwlock_bug.part.0+0x90/0x90
+[  959.828115]  __destroy_client+0x39f/0x6f0 [nfsd]
+[  959.828460]  ? nfsd4_cb_recall_release+0x20/0x20 [nfsd]
+[  959.828868]  nfsd4_fl_expire_lock+0x2bc/0x460 [nfsd]
+[  959.829273]  posix_lock_inode+0xa46/0x1ab0
+[  959.829579]  ? lockdep_init_map_type+0x2c3/0x7a0
+[  959.829913]  ? locks_remove_flock+0x2e0/0x2e0
+[  959.830250]  ? __init_waitqueue_head+0x70/0xd0
+[  959.830568]  nfsd4_lock+0xcb9/0x3850 [nfsd]
+[  959.830878]  ? nfsd4_delegreturn+0x3b0/0x3b0 [nfsd]
+[  959.831248]  ? percpu_counter_add_batch+0x77/0x130
+[  959.831594]  nfsd4_proc_compound+0xcee/0x21d0 [nfsd]
+[  959.831973]  ? nfsd4_release_compoundargs+0x140/0x140 [nfsd]
+[  959.832414]  nfsd_dispatch+0x4df/0xc50 [nfsd]
+[  959.832737]  ? nfsd_svc+0xca0/0xca0 [nfsd]
+[  959.833051]  svc_process_common+0xdeb/0x2480 [sunrpc]
+[  959.833462]  ? svc_create+0x20/0x20 [sunrpc]
+[  959.833830]  ? nfsd_svc+0xca0/0xca0 [nfsd]
+[  959.834144]  ? svc_sock_secure_port+0x36/0x40 [sunrpc]
+[  959.834578]  ? svc_recv+0xd9c/0x2490 [sunrpc]
+[  959.834915]  svc_process+0x32e/0x4a0 [sunrpc]
+[  959.835249]  nfsd+0x306/0x530 [nfsd]
+[  959.835499]  ? nfsd_shutdown_threads+0x300/0x300 [nfsd]
+[  959.835899]  kthread+0x391/0x470
+[  959.836094]  ? _raw_spin_unlock_irq+0x24/0x50
+[  959.836394]  ? set_kthread_struct+0x100/0x100
+[  959.836698]  ret_from_fork+0x22/0x30
+[  960.750222] nfsd: last server has exited, flushing export cache
+[  960.880355] NFSD: Using nfsdcld client tracking operations.
+[  960.880956] NFSD: starting 15-second grace period (net f0000098)
+[ 1403.405511] nfsd: last server has exited, flushing export cache
+[ 1403.656335] NFSD: Using nfsdcld client tracking operations.
+[ 1403.657585] NFSD: starting 15-second grace period (net f0000098)
+[ 1445.741596] nfsd: last server has exited, flushing export cache
+[ 1445.981980] NFSD: Using nfsdcld client tracking operations.
+[ 1445.983143] NFSD: starting 15-second grace period (net f0000098)
+[ 1450.025112] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 1472.325551] nfsd: last server has exited, flushing export cache
+[ 1472.583073] NFSD: Using nfsdcld client tracking operations.
+[ 1472.583998] NFSD: starting 15-second grace period (net f0000098)
+[ 1473.175582] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 1494.637499] nfsd: last server has exited, flushing export cache
+[ 1494.885795] NFSD: Using nfsdcld client tracking operations.
+[ 1494.886484] NFSD: starting 15-second grace period (net f0000098)
+[ 1495.393667] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 1516.781474] nfsd: last server has exited, flushing export cache
+[ 1516.902903] NFSD: Using nfsdcld client tracking operations.
+[ 1516.903460] NFSD: starting 15-second grace period (net f0000098)
+[ 1538.045156] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 1559.125362] nfsd: last server has exited, flushing export cache
+[ 1559.362856] NFSD: Using nfsdcld client tracking operations.
+[ 1559.363658] NFSD: starting 15-second grace period (net f0000098)
+[ 1559.480531] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 1583.745353] nfsd: last server has exited, flushing export cache
+[ 1583.876877] NFSD: Using nfsdcld client tracking operations.
+[ 1583.877573] NFSD: starting 15-second grace period (net f0000098)
+[ 1586.401321] nfsd: last server has exited, flushing export cache
+[ 1586.525629] NFSD: Using nfsdcld client tracking operations.
+[ 1586.526388] NFSD: starting 15-second grace period (net f0000098)
+[ 1625.993218] nfsd: last server has exited, flushing export cache
+[ 1626.442627] NFSD: Using nfsdcld client tracking operations.
+[ 1626.444397] NFSD: starting 15-second grace period (net f0000098)
+[ 1627.117214] nfsd: last server has exited, flushing export cache
+[ 1627.351487] NFSD: Using nfsdcld client tracking operations.
+[ 1627.352663] NFSD: starting 15-second grace period (net f0000098)
+[ 1627.854410] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
+[ 3285.818905] clocksource: timekeeping watchdog on CPU3: acpi_pm retried 2 times before success
