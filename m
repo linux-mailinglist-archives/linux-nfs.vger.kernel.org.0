@@ -2,188 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C2FC418D88
-	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 03:41:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD219418EFA
+	for <lists+linux-nfs@lfdr.de>; Mon, 27 Sep 2021 08:17:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232429AbhI0Bmu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 26 Sep 2021 21:42:50 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:20616 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232400AbhI0Bmt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 26 Sep 2021 21:42:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1632706872; x=1664242872;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=xJ0TLHwb9tSGKFai8gOTtlCcwirLmQjZkSZn+OmDpkI=;
-  b=j0BYjf5Ulk8E3mvqPz2nJjLb44kDMpdtH9VujN1fjll4P4q9x70Wq4QV
-   f9BO34L024UP7lDPGaWE4f9Ah934jarjAGe+ifimAOIRNXfVvfsRzUhuw
-   zWOZDM3q0mdivrU63+PY2N16j12jimppqEhpNJXVwUkfLEBJ1cyNdsXa+
-   KFEeKCslN0PV8jrxcyRTDjykfNf+lSZW17vBwLiXtdf9BRr0ZT2zOty+v
-   2bAM4oQpLrSUthxt21OnenU5xWRhYvffVDKkiQXO9Rr/z4J/WD37B49Nt
-   xPdNE00ALDlvVpW9jI5oGGnx0k3d+z5MWmr2wL3ac92dvwqGeg5bMT0bk
-   g==;
-X-IronPort-AV: E=Sophos;i="5.85,325,1624291200"; 
-   d="scan'208";a="180083663"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 27 Sep 2021 09:41:11 +0800
-IronPort-SDR: 5Jfqv9qYeTz0DEvIMjYP9A+FhMKd9pjpiWIyRbBYx9X3LlB0d1WdYC8rSrNyi73i+4iTzcAzHz
- z9ekdEvBIdx/6XS1VIFk64eJxRbFrdoyZetRB7MT8hJXKBoM9HiqkI6XLkX7oLqbIMDGuegRuA
- xp+b5ggQ1IYdAv3CY3lTL7b89EXTtYkEuXjUtJ6McjIIV+xgUdV4q+BvObrJTJRFMk/3shiCoD
- wHJtzFHTLKaHkz1ArD9AY4C8UgrwD8U/cCCOsKp8CiRkx+J419G6/F8aQT4/TLvTsegYPgARk1
- fmbProhGv24w52dOI718/CqW
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2021 18:15:44 -0700
-IronPort-SDR: 2u5Kd+5CA/V+rqpVf6hVfdVbC2nxUyGClnluDquovWzV1Hu+kRoGya1LT5uON1thcana3zHSN5
- /ePjDWo+lr81mu9kp8hfiXQSRIH9rQG06rTLE8K7H1Msko/9hORWGqyTUOehBwi9OG8zCtBKwX
- P1tlzZJET4vRgX9Kb4G+dIi346Lmp5FDkf4e7q/E2uNOWn67r+K94ltUtqSgG4ZDaKoN2N/3+j
- xkl1chK+q/NsWpeCoCo/szDSNKRunk+PunM1zPvIg2aCqXyyBsWcVwrM6qggmyeF0+wxO0QPjC
- Ov4=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Sep 2021 18:41:11 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4HHlj224R2z1Rvlf
-        for <linux-nfs@vger.kernel.org>; Sun, 26 Sep 2021 18:41:10 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1632706869; x=1635298870; bh=xJ0TLHwb9tSGKFai8gOTtlCcwirLmQjZkSZ
-        n+OmDpkI=; b=HN3oMIlc4PuWgWFdu4EY/XuVN0W8MKCvMIm7xDne77yHlFKv2Rz
-        6IZ2P0nYmvVYAcdt0dA/M2RUDjkC5PheQOH4SGJaVKtoWyATP35gmtiyylPJ9bgt
-        yE+GnEiKKNrU3L/xW3temhUlOJFv/d5GBdO1McLsUFAXOZI5os7no8VPJ1+whrSz
-        tO5sZyzNHDzZHcxKyL/f5rA/c2imN/HzjV1ep3/qqbyix2apLOeA0ZeBzmu7iF3w
-        97W18UizbSD2qtiiDiBkDdM4f7hBsMrjSPlnEcwlS6CqN72Nw0dXVeUoNPuJ8ePY
-        3thuGvs1qdVy7pWAwHtLX4nP18HxjrjRKoQ==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id NFl3VnVGBiWA for <linux-nfs@vger.kernel.org>;
-        Sun, 26 Sep 2021 18:41:09 -0700 (PDT)
-Received: from [10.89.85.1] (c02drav6md6t.dhcp.fujisawa.hgst.com [10.89.85.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4HHlhy0bYrz1RvTg;
-        Sun, 26 Sep 2021 18:41:05 -0700 (PDT)
-Message-ID: <2f933d26-541c-06eb-e5d3-336c05f31f1d@opensource.wdc.com>
-Date:   Mon, 27 Sep 2021 10:41:04 +0900
+        id S232950AbhI0GTe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Sep 2021 02:19:34 -0400
+Received: from virgo02.ee.ethz.ch ([129.132.72.10]:52158 "EHLO
+        virgo02.ee.ethz.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232963AbhI0GTe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Sep 2021 02:19:34 -0400
+X-Greylist: delayed 440 seconds by postgrey-1.27 at vger.kernel.org; Mon, 27 Sep 2021 02:19:34 EDT
+Received: from localhost (localhost [127.0.0.1])
+        by virgo02.ee.ethz.ch (Postfix) with ESMTP id 4HHsgw2dBDz15V0b;
+        Mon, 27 Sep 2021 08:10:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at virgo02.ee.ethz.ch
+Received: from virgo02.ee.ethz.ch ([127.0.0.1])
+        by localhost (virgo02.ee.ethz.ch [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id i6KmS8l1ttgs; Mon, 27 Sep 2021 08:10:33 +0200 (CEST)
+X-MtScore: NO score=0
+Received: from varda.ee.ethz.ch (varda.ee.ethz.ch [129.132.3.17])
+        by virgo02.ee.ethz.ch (Postfix) with ESMTP;
+        Mon, 27 Sep 2021 08:10:31 +0200 (CEST)
+Received: by varda.ee.ethz.ch (Postfix, from userid 65212)
+        id 769892A043F; Mon, 27 Sep 2021 08:10:31 +0200 (CEST)
+Date:   Mon, 27 Sep 2021 08:10:31 +0200
+From:   Salvatore Bonaccorso <bonaccos@ee.ethz.ch>
+To:     linux-nfs@vger.kernel.org
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: nfsd4_process_open2 failed to open newly-created file! status=10008
+ ; warning at fs/nfsd/nfs4proc.c for nfsd4_open
+Message-ID: <20210927061025.GA20892@varda.ee.ethz.ch>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.1.1
-Subject: Re: [PATCH v3 9/9] mm: Remove swap BIO paths and only use DIO paths
-Content-Language: en-US
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        David Howells <dhowells@redhat.com>, hch@lst.de,
-        trond.myklebust@primarydata.com, Jens Axboe <axboe@kernel.dk>,
-        "Darrick J. Wong" <djwong@kernel.org>, linux-block@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, darrick.wong@oracle.com,
-        viro@zeniv.linux.org.uk, jlayton@kernel.org,
-        torvalds@linux-foundation.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <YU84rYOyyXDP3wjp@casper.infradead.org>
- <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
- <163250396319.2330363.10564506508011638258.stgit@warthog.procyon.org.uk>
- <2396106.1632584202@warthog.procyon.org.uk>
- <YU9X2o74+aZP4iWV@casper.infradead.org>
- <5fde9167-6f8b-c698-f34d-d7fafd4219f7@opensource.wdc.com>
- <20210927012527.GF1756565@dread.disaster.area>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital
-In-Reply-To: <20210927012527.GF1756565@dread.disaster.area>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 2021/09/27 10:25, Dave Chinner wrote:
-> On Mon, Sep 27, 2021 at 08:08:53AM +0900, Damien Le Moal wrote:
->> On 2021/09/26 2:09, Matthew Wilcox wrote:
->>> On Sat, Sep 25, 2021 at 04:36:42PM +0100, David Howells wrote:
->>>> Matthew Wilcox <willy@infradead.org> wrote:
->>>>
->>>>> On Fri, Sep 24, 2021 at 06:19:23PM +0100, David Howells wrote:
->>>>>> Delete the BIO-generating swap read/write paths and always use ->swap_rw().
->>>>>> This puts the mapping layer in the filesystem.
->>>>>
->>>>> Is SWP_FS_OPS now unused after this patch?
->>>>
->>>> Ummm.  Interesting question - it's only used in swap_set_page_dirty():
->>>>
->>>> int swap_set_page_dirty(struct page *page)
->>>> {
->>>> 	struct swap_info_struct *sis = page_swap_info(page);
->>>>
->>>> 	if (data_race(sis->flags & SWP_FS_OPS)) {
->>>> 		struct address_space *mapping = sis->swap_file->f_mapping;
->>>>
->>>> 		VM_BUG_ON_PAGE(!PageSwapCache(page), page);
->>>> 		return mapping->a_ops->set_page_dirty(page);
->>>> 	} else {
->>>> 		return __set_page_dirty_no_writeback(page);
->>>> 	}
->>>> }
->>>
->>> I suspect that's no longer necessary.  NFS was the only filesystem
->>> using SWP_FS_OPS and ...
->>>
->>> fs/nfs/file.c:  .set_page_dirty = __set_page_dirty_nobuffers,
->>>
->>> so it's not like NFS does anything special to reserve memory to write
->>> back swap pages.
->>>
->>>>> Also, do we still need ->swap_activate and ->swap_deactivate?
->>>>
->>>> f2fs does quite a lot of work in its ->swap_activate(), as does btrfs.  I'm
->>>> not sure how necessary it is.  cifs looks like it intends to use it, but it's
->>>> not fully implemented yet.  zonefs and nfs do some checking, including hole
->>>> checking in nfs's case.  nfs also does some setting up for the sunrpc
->>>> transport.
->>>>
->>>> btrfs, cifs, f2fs and nfs all supply ->swap_deactivate() to undo the effects
->>>> of the activation.
->>>
->>> Right ... so my question really is, now that we're doing I/O through
->>> aops->direct_IO (or ->swap_rw), do those magic things need to be done?
->>> After all, open(O_DIRECT) doesn't do these same magic things.  They're
->>> really there to allow the direct-to-BIO path to work, and you're removing
->>> that here.
->>
->> For zonefs, ->swap_activate() checks that the user is not trying to use a
->> sequential write only file for swap. Swap cannot work on these files as there
->> are no guarantees that the writes will be sequential.
-> 
-> iomap_swapfile_activate() is used by ext4, XFS and zonefs. It checks
-> there are no holes in the file, no shared extents, no inline
-> extents, the swap info block device matches the block device the
-> extent is mapped to (i.e. filesystems can have more than one bdev,
-> swapfile only supports files on sb->s_bdev), etc.
+Hi
 
-OK. But I was referring to the additional check in zonefs_swap_activate() before
-iomap_swapfile_activate() is called. We must prevent that function from being
-called for a full sequential write only zone file since such file will pass all
-checks (no hole, all extents written etc) but cannot be used for swap since it
-is not writtable when full (no overwrites allowed in sequential zones).
+We recently got the following traces on a NFS server, but I'm not sure
+how to further debug this, any hints?
 
-> 
-> Also, I noticed, iomap_swapfile_add_extent() filters out extents
-> that are smaller than PAGE_SIZE, and aligns larger extents to
-> PAGE_SIZE. This allows ensures that when fs block size != PAGE_SIZE
-> that only a single IO per page being swapped is required. i.e. the
-> DIO path may change the "one page, one bio, one IO" behaviour that
-> the current swapfile mapping guarantees.
-> 
-> Cheers,
-> 
-> Dave.
-> 
+[5746893.904448] ------------[ cut here ]------------
+[5746893.910050] nfsd4_process_open2 failed to open newly-created file! status=10008
+[5746893.918488] WARNING: CPU: 16 PID: 1316 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5746893.927833] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+[5746894.000592]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+[5746894.023137] CPU: 16 PID: 1316 Comm: nfsd Not tainted 4.19.0-17-amd64 #1 Debian 4.19.194-3
+[5746894.031916] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[5746894.042198] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5746894.047704] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+[5746894.067573] RSP: 0018:ffffa5228948fda8 EFLAGS: 00010286
+[5746894.073487] RAX: 0000000000000000 RBX: ffff97c0669ae3e0 RCX: 0000000000000000
+[5746894.081317] RDX: ffff97cc8f91efc0 RSI: ffff97cc8f9166b8 RDI: ffff97cc8f9166b8
+[5746894.089148] RBP: ffff97c0665b0068 R08: 00000000000005e8 R09: 0000000000aaaaaa
+[5746894.096993] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c0cc1cb400
+[5746894.104848] R13: ffff97c066aa8000 R14: ffff97c0665a9600 R15: 0000000018270000
+[5746894.112717] FS:  0000000000000000(0000) GS:ffff97cc8f900000(0000) knlGS:0000000000000000
+[5746894.121558] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[5746894.128035] CR2: 00007f83d25a68a0 CR3: 00000015b900a002 CR4: 00000000007606e0
+[5746894.135899] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[5746894.143764] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[5746894.151647] PKRU: 55555554
+[5746894.155117] Call Trace:
+[5746894.158373]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+[5746894.164084]  nfsd_dispatch+0x9e/0x210 [nfsd]
+[5746894.169206]  svc_process_common+0x345/0x750 [sunrpc]
+[5746894.175017]  ? nfsd_destroy+0x50/0x50 [nfsd]
+[5746894.180155]  svc_process+0xb7/0xf0 [sunrpc]
+[5746894.185194]  nfsd+0xe3/0x140 [nfsd]
+[5746894.189545]  kthread+0x112/0x130
+[5746894.193618]  ? kthread_bind+0x30/0x30
+[5746894.198072]  ret_from_fork+0x35/0x40
+[5746894.202439] ---[ end trace c6400532dff968eb ]---
+[5768733.993671] ------------[ cut here ]------------
+[5768733.999711] nfsd4_process_open2 failed to open newly-created file! status=10008
+[5768734.008148] WARNING: CPU: 9 PID: 1316 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5768734.017448] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+[5768734.092781]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+[5768734.115967] CPU: 9 PID: 1316 Comm: nfsd Tainted: G        W         4.19.0-17-amd64 #1 Debian 4.19.194-3
+[5768734.126331] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[5768734.136855] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5768734.142623] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+[5768734.162998] RSP: 0018:ffffa5228948fda8 EFLAGS: 00010286
+[5768734.169071] RAX: 0000000000000000 RBX: ffff97c0669ae3e0 RCX: 0000000000000000
+[5768734.177036] RDX: ffff97c090e9efc0 RSI: ffff97c090e966b8 RDI: ffff97c090e966b8
+[5768734.184996] RBP: ffff97c0665b0068 R08: 0000000000000608 R09: 0000000000aaaaaa
+[5768734.192945] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c08698b000
+[5768734.200885] R13: ffff97c066aa8000 R14: ffff97c0665a9600 R15: 0000000018270000
+[5768734.208815] FS:  0000000000000000(0000) GS:ffff97c090e80000(0000) knlGS:0000000000000000
+[5768734.217702] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[5768734.224236] CR2: 00007f9b4006df10 CR3: 00000015b900a002 CR4: 00000000007606e0
+[5768734.232157] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[5768734.240077] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[5768734.248017] PKRU: 55555554
+[5768734.251553] Call Trace:
+[5768734.254867]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+[5768734.260517]  nfsd_dispatch+0x9e/0x210 [nfsd]
+[5768734.265570]  svc_process_common+0x345/0x750 [sunrpc]
+[5768734.271373]  ? nfsd_destroy+0x50/0x50 [nfsd]
+[5768734.276414]  svc_process+0xb7/0xf0 [sunrpc]
+[5768734.281370]  nfsd+0xe3/0x140 [nfsd]
+[5768734.285624]  kthread+0x112/0x130
+[5768734.289610]  ? kthread_bind+0x30/0x30
+[5768734.294030]  ret_from_fork+0x35/0x40
+[5768734.298396] ---[ end trace c6400532dff968ec ]---
+[5795002.037239] ------------[ cut here ]------------
+[5795002.044280] nfsd4_process_open2 failed to open newly-created file! status=10008
+[5795002.053358] WARNING: CPU: 1 PID: 1315 at fs/nfsd/nfs4proc.c:456 nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5795002.063065] Modules linked in: tcp_diag udp_diag raw_diag inet_diag unix_diag binfmt_misc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache bonding quota_v2 quota_tree intel_rapl ipmi_ssif skx_edac nfit libnvdimm x86_pkg_temp_thermal intel_powerclamp coretemp kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ast ghash_clmulni_intel intel_cstate ttm drm_kms_helper drm intel_uncore pcspkr intel_rapl_perf mei_me ioatdma iTCO_wdt evdev joydev pcc_cpufreq sg i2c_algo_bit iTCO_vendor_support mei dca ipmi_si wmi ipmi_devintf ipmi_msghandler acpi_power_meter acpi_pad button nfsd auth_rpcgss nfs_acl lockd grace sunrpc ip_tables x_tables autofs4 ext4 crc16 mbcache jbd2 fscrypto ecb dm_mod raid10 raid456 async_raid6_recov async_memcpy async_pq async_xor async_tx xor raid6_pq libcrc32c crc32c_generic raid1
+[5795002.138537]  raid0 multipath linear md_mod hid_generic usbhid hid sd_mod crc32c_intel xhci_pci ahci xhci_hcd libahci aesni_intel aes_x86_64 crypto_simd libata arcmsr usbcore cryptd i40e scsi_mod glue_helper lpc_ich i2c_i801 mfd_core usb_common
+[5795002.161747] CPU: 1 PID: 1315 Comm: nfsd Tainted: G        W         4.19.0-17-amd64 #1 Debian 4.19.194-3
+[5795002.172089] Hardware name: DALCO AG S2600WFT/S2600WFT, BIOS SE5C620.86B.02.01.0008.031920191559 03/19/2019
+[5795002.182668] RIP: 0010:nfsd4_open+0x4e0/0x6f0 [nfsd]
+[5795002.188400] Code: 80 88 a8 01 00 00 01 e9 52 fe ff ff 80 bb 15 01 00 00 00 0f 84 ef fe ff ff 44 89 fe 48 c7 c7 f0 10 58 c0 0f ce e8 89 70 3a d0 <0f> 0b e9 d7 fe ff ff 48 8b 83 18 01 00 00 8b 55 00 48 8d 75 04 89
+[5795002.208706] RSP: 0018:ffffa52289487da8 EFLAGS: 00010286
+[5795002.214775] RAX: 0000000000000000 RBX: ffff97c0669a83e0 RCX: 0000000000000000
+[5795002.222743] RDX: ffff97c090a9efc0 RSI: ffff97c090a966b8 RDI: ffff97c090a966b8
+[5795002.230710] RBP: ffff97c0669aa068 R08: 0000000000000628 R09: 0000000000aaaaaa
+[5795002.238684] R10: 0000000000000000 R11: 0000000000000001 R12: ffff97c21bb64200
+[5795002.246670] R13: ffff97c066aae000 R14: ffff97c0665a8000 R15: 0000000018270000
+[5795002.254611] FS:  0000000000000000(0000) GS:ffff97c090a80000(0000) knlGS:0000000000000000
+[5795002.263492] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[5795002.270097] CR2: 00007fba9f588590 CR3: 00000015b900a002 CR4: 00000000007606e0
+[5795002.278100] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[5795002.286091] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[5795002.294078] PKRU: 55555554
+[5795002.297634] Call Trace:
+[5795002.300910]  nfsd4_proc_compound+0x342/0x660 [nfsd]
+[5795002.306572]  nfsd_dispatch+0x9e/0x210 [nfsd]
+[5795002.311617]  svc_process_common+0x345/0x750 [sunrpc]
+[5795002.317421]  ? nfsd_destroy+0x50/0x50 [nfsd]
+[5795002.322480]  svc_process+0xb7/0xf0 [sunrpc]
+[5795002.327433]  nfsd+0xe3/0x140 [nfsd]
+[5795002.331728]  kthread+0x112/0x130
+[5795002.335718]  ? kthread_bind+0x30/0x30
+[5795002.340144]  ret_from_fork+0x35/0x40
+[5795002.344475] ---[ end trace c6400532dff968ed ]---
 
+But I have as well no reproducing recipe to trigger it.
 
--- 
-Damien Le Moal
-Western Digital Research
+The kernel is the current Debian buster distro kernel, based on
+4.19.194.
+
+This initally looked similar than
+https://bugzilla.kernel.org/show_bug.cgi?id=195725 but the user did
+get there status=5, so EIO, so seems different issue.
+
+Regards,
+Salvatore
