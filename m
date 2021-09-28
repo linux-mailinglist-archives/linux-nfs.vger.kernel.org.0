@@ -2,84 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D30D41A6FE
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Sep 2021 07:17:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4656341A75B
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Sep 2021 07:55:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234094AbhI1FTU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Sep 2021 01:19:20 -0400
-Received: from virgo01.ee.ethz.ch ([129.132.2.226]:59152 "EHLO
-        virgo01.ee.ethz.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233681AbhI1FTT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Sep 2021 01:19:19 -0400
-X-Greylist: delayed 356 seconds by postgrey-1.27 at vger.kernel.org; Tue, 28 Sep 2021 01:19:19 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by virgo01.ee.ethz.ch (Postfix) with ESMTP id 4HJSKW2qg6zMl4h;
-        Tue, 28 Sep 2021 07:11:43 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at virgo01.ee.ethz.ch
-Received: from virgo01.ee.ethz.ch ([127.0.0.1])
-        by localhost (virgo01.ee.ethz.ch [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 2XxBrQzb18-a; Tue, 28 Sep 2021 07:11:41 +0200 (CEST)
-X-MtScore: NO score=0
-Received: from email.ee.ethz.ch (webbi10.ee.ethz.ch [129.132.52.168])
-        by virgo01.ee.ethz.ch (Postfix) with ESMTPSA;
-        Tue, 28 Sep 2021 07:11:41 +0200 (CEST)
+        id S238923AbhI1F5J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Sep 2021 01:57:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47480 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S238877AbhI1F5G (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 28 Sep 2021 01:57:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 729FA611CC;
+        Tue, 28 Sep 2021 05:55:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1632808527;
+        bh=8hgJn1Ih+9Ernuswh+NV/WK81g7IXRnOXBF10QK3Gsg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m8lvlS3Ve9VZCLZaAqXmGKwh4s1500vVDahHEB+1xdww9gmReNMKDXcqC+qqamaHT
+         EdNm3KSOANSg5Kcu5T4NYYH6/QZBVipe4l9QzOejSEUR8HKJOAx7smAE1ubuwGN0o8
+         yphJuNgCDhlQQZHZrI37iH8SNyBvyUMXIGud2/StXPAFuAgsqxJ5iX13+R/OIJCi/B
+         s647ejz+iAaw7Sr9ZsZBbAs8dY4XP9+7uFpdae9Y1JaDUD49bUbQF0t6Bk6fEsvywB
+         WYlrBbxGXgGzS1qYeXra1ZPCPceX8TKE5125afKvI+5BtJMdirY1ixszuQUEW+y43h
+         l6Gntqn8txB2w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>,
+        Sasha Levin <sashal@kernel.org>, bfields@fieldses.org,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.14 05/40] nfsd: back channel stuck in SEQ4_STATUS_CB_PATH_DOWN
+Date:   Tue, 28 Sep 2021 01:54:49 -0400
+Message-Id: <20210928055524.172051-5-sashal@kernel.org>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20210928055524.172051-1-sashal@kernel.org>
+References: <20210928055524.172051-1-sashal@kernel.org>
 MIME-Version: 1.0
-Date:   Tue, 28 Sep 2021 07:11:41 +0200
-From:   Salvatore Bonaccorso <bonaccos@ee.ethz.ch>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: nfsd4_process_open2 failed to open newly-created file!
- status=10008 ; warning at fs/nfsd/nfs4proc.c for nfsd4_open
-In-Reply-To: <20210927155338.GA30593@fieldses.org>
-References: <20210927061025.GA20892@varda.ee.ethz.ch>
- <20210927155338.GA30593@fieldses.org>
-User-Agent: Roundcube Webmail/1.4.11
-Message-ID: <cd38d56c6824ac6776df838dfd66bccd@ee.ethz.ch>
-X-Sender: bonaccos@ee.ethz.ch
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
+From: Dai Ngo <dai.ngo@oracle.com>
 
-On 27.09.2021 17:53, J. Bruce Fields wrote:
-> On Mon, Sep 27, 2021 at 08:10:31AM +0200, Salvatore Bonaccorso wrote:
->> We recently got the following traces on a NFS server, but I'm not sure
->> how to further debug this, any hints?
-> 
-> The server creates and opens a file in two steps, though it should
-> really be a single atomic operation.
-> 
-> That means there's a small possibility somebody could intervene and do
-> something like change the permissions:
-> 
->> 
->> [5746893.904448] ------------[ cut here ]------------
->> [5746893.910050] nfsd4_process_open2 failed to open newly-created 
->> file! status=10008
-> 
-> 10008 is NFS4ERR_DELAY, so maybe somebody managed to get a delegation
-> before we finished opening?
-> 
-> We should be able to prevent that....
-> 
-> In your setup are there processes quickly opening new files created by
-> others?
+[ Upstream commit 02579b2ff8b0becfb51d85a975908ac4ab15fba8 ]
 
-This is very possible. The NFS server is used as a "scratch" place 
-accessible from
-compute cluster where people can have multiple jobs simultaneously 
-running through
-Slurm and accessing the data. So it is possible that user create new 
-files from
-one running instance and accessing it quickly from the other nodes.
+When the back channel enters SEQ4_STATUS_CB_PATH_DOWN state, the client
+recovers by sending BIND_CONN_TO_SESSION but the server fails to recover
+the back channel and leaves it as NFSD4_CB_DOWN.
 
-I'm so far was unable to arificially trigger the issue but is there 
-anything I
-can try out to get more information useful for you?
+Fix by enhancing nfsd4_bind_conn_to_session to probe the back channel
+by calling nfsd4_probe_callback.
 
-Regards,
-Salvatore
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 3d805f5b1f5d..1c33a5255893 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -3570,7 +3570,7 @@ static struct nfsd4_conn *__nfsd4_find_conn(struct svc_xprt *xpt, struct nfsd4_s
+ }
+ 
+ static __be32 nfsd4_match_existing_connection(struct svc_rqst *rqst,
+-				struct nfsd4_session *session, u32 req)
++		struct nfsd4_session *session, u32 req, struct nfsd4_conn **conn)
+ {
+ 	struct nfs4_client *clp = session->se_client;
+ 	struct svc_xprt *xpt = rqst->rq_xprt;
+@@ -3593,6 +3593,8 @@ static __be32 nfsd4_match_existing_connection(struct svc_rqst *rqst,
+ 	else
+ 		status = nfserr_inval;
+ 	spin_unlock(&clp->cl_lock);
++	if (status == nfs_ok && conn)
++		*conn = c;
+ 	return status;
+ }
+ 
+@@ -3617,8 +3619,16 @@ __be32 nfsd4_bind_conn_to_session(struct svc_rqst *rqstp,
+ 	status = nfserr_wrong_cred;
+ 	if (!nfsd4_mach_creds_match(session->se_client, rqstp))
+ 		goto out;
+-	status = nfsd4_match_existing_connection(rqstp, session, bcts->dir);
+-	if (status == nfs_ok || status == nfserr_inval)
++	status = nfsd4_match_existing_connection(rqstp, session,
++			bcts->dir, &conn);
++	if (status == nfs_ok) {
++		if (bcts->dir == NFS4_CDFC4_FORE_OR_BOTH ||
++				bcts->dir == NFS4_CDFC4_BACK)
++			conn->cn_flags |= NFS4_CDFC4_BACK;
++		nfsd4_probe_callback(session->se_client);
++		goto out;
++	}
++	if (status == nfserr_inval)
+ 		goto out;
+ 	status = nfsd4_map_bcts_dir(&bcts->dir);
+ 	if (status)
+-- 
+2.33.0
+
