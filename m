@@ -2,367 +2,527 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51D1B41A8BE
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Sep 2021 08:23:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E79241AB0E
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Sep 2021 10:50:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235362AbhI1GYn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Sep 2021 02:24:43 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:4046 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234207AbhI1GYn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Sep 2021 02:24:43 -0400
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 18S5Lhs9011484;
-        Tue, 28 Sep 2021 06:23:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=tYeKp2kQTktGqCz/sM3t/8D7g5AHV/VIHrPHytQluU0=;
- b=xNViB2zWTFkIrHa3XiRT3WkYbowZM/aM/ImrQPZAfH+WuNYCfaCysPNtGDkJKaAfIkLH
- vb5RkF2Q/4PRZU+oL4+i/uTFKhAtqPJA5w9f0wsKQPuTipo7kdTrZ7/7ONpfkPQ5sC7j
- 89wxypjXKcaJmo4Oq8NWt4K4H3M0HTbLkxnmKPR1Awrk4grp2BZ+Xf5SnXO965QP/0pb
- 6mrfdDnOUREmqwiPlKL0pTetPgJi3LplcKVj+dzZ0UORKkUuccHsevQhRKNq57+wVnCj
- KbC4hQyFZIel4BLv9hlmF1QJZ9vhbi4xzQzkY2dFde6naieaAAgcY9jd4mrFigQn703f GQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3bbh6nmmnn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Sep 2021 06:23:02 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 18S69ucN003355;
-        Tue, 28 Sep 2021 06:23:01 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
-        by userp3030.oracle.com with ESMTP id 3b9rvuuqwe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 Sep 2021 06:23:01 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Pqab5DNN1Uos77Gkyb0ptaF870/vRRKlgPG1fo42rMFfBqlClcG0vZv3m0R2HgWtA+dLil4rNcLryzq5YIhQBAUGkgXNqsddkSIvsV36LFHOv1H4pHDkipADSARjDzUOg2HLer1srBp4noY55dX8Gso8Ox26B52sVftvzQy+lUqYYnkjq6Io2A3PJf5HRAU4BQTsfhnDqNN/oKqPdSOVWhmoUaPoSX/j+dQ3urO/0ll3+aNHnHVXVTf6S71qEKPNp8Iycz3iTY81rn/4KTsJhc+nfdVRO5y5nh0bvp9mu4GN3luAzPxWy3NmTSAt+VxV4y9m1ji13uOaiOvnuds5zg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901; h=From:Date:Subject:Message-ID:Content-Type:MIME-Version;
- bh=tYeKp2kQTktGqCz/sM3t/8D7g5AHV/VIHrPHytQluU0=;
- b=CcIqPlpOMpHaLYvIjIf3anxkhPGyI+wFZeUrwwj9goOCtW4zDcNm5H/luSRmickdtxtAHCXktt9rBkvBK52GTWnB2sz/R45moHCgesGBbmWN+6d+GotujMTt02JOifpHG9VEpiQMQeUxOcVLLqLDHUP3V4Ps/H3Pffh1Nyqwy/GOMJC3sAzaS093mzLvupTzAKmypmlw/UBeyrfrL9Hb36A0/MumKdXQpZSRWzThfAVyel3nD9jFL3UvdYxndL5AXvRcHmSDKUb4+/GS9ZhpQl+FTEdJGQ+GIBNGtcSdhNsie418o4uPwquojCScN1AUopWG8YNdRU8atVppbol0WQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tYeKp2kQTktGqCz/sM3t/8D7g5AHV/VIHrPHytQluU0=;
- b=Y5REdVJ/lkA7nN4pYaixdESYT6RSX7wks6Nd7ygXA1svhlt/NFX212XIMxMzcHePv9zA3jfmLeJ07fJ4HxrXLuOP/lGPx9DRsMYXGJjDZHstdIhhqEWRfz4w5xpKu9Lq0CB+RRxZjkHOJdzlUkL7ikS9d2TJOzK+wA8QR9q4hJo=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=oracle.com;
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by SJ0PR10MB4656.namprd10.prod.outlook.com (2603:10b6:a03:2d1::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13; Tue, 28 Sep
- 2021 06:22:59 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::1c92:fda3:604:a90d]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::1c92:fda3:604:a90d%7]) with mapi id 15.20.4544.022; Tue, 28 Sep 2021
- 06:22:59 +0000
-Subject: Re: [PATCH RFC v4 0/2] nfsd: Initial implementation of NFSv4
- Courteous Server
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20210924205252.82502-1-dai.ngo@oracle.com>
- <20210927201433.GA1704@fieldses.org> <20210927203952.GB1704@fieldses.org>
-From:   dai.ngo@oracle.com
-Message-ID: <4f5cdc04-9584-282c-8add-4b0c1e313f1b@oracle.com>
-Date:   Mon, 27 Sep 2021 23:22:54 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0)
- Gecko/20100101 Thunderbird/78.14.0
-In-Reply-To: <20210927203952.GB1704@fieldses.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: SA9PR10CA0002.namprd10.prod.outlook.com
- (2603:10b6:806:a7::7) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        id S239846AbhI1Iv4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Sep 2021 04:51:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49142 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239769AbhI1Ivp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Sep 2021 04:51:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1632819006;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GzDX+vQGQswidEJZ9asw0Hf411IrZwGPqiRkhkcHu/Y=;
+        b=bs07Y54XvWyhnZ75iIkYMAkHdUDGyZLJ6Uw3uKHBKgm6K2U9pBkSgR4l72qqzziELMHzOp
+        ByrQG8q4WiVvUoYuP1YR0ZUH5TG6cEgZAbuCMzntGSz24tH0KlOuSk6F5hI4KzF2y2Rj1Q
+        kwlt9ej0k3ngLrQG1g4Jd4MIssdXYq0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-338-3ueACyZEMPq7Doa0vDnGLA-1; Tue, 28 Sep 2021 04:50:02 -0400
+X-MC-Unique: 3ueACyZEMPq7Doa0vDnGLA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B1411084686;
+        Tue, 28 Sep 2021 08:50:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2C075C1C5;
+        Tue, 28 Sep 2021 08:49:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH v2] fscache, 9p, afs,
+ nfs: Deal with some warnings from W=1
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        dhowells@redhat.com, linux-kernel@vger.kernel.org
+Date:   Tue, 28 Sep 2021 09:49:57 +0100
+Message-ID: <163281899704.2790286.9177774252843775348.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Received: from dhcp-10-65-151-114.vpn.oracle.com (138.3.200.50) by SA9PR10CA0002.namprd10.prod.outlook.com (2603:10b6:806:a7::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4544.13 via Frontend Transport; Tue, 28 Sep 2021 06:22:57 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 488fdc89-c5d8-4b2c-6f62-08d982486ace
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB4656:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SJ0PR10MB46567E883CF57EEB2587DEC287A89@SJ0PR10MB4656.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RSyOLcuZ3x8ukiaiA2CuNIvFrQC679JUpDFzo1wCaASwldwDdrd+PwWYzgtmKFiW5irGnA+YKymqEnNMhMwzR+L7hHEvQUQPOo+JcdkGWlU1aAyQFPdv3NxhxkqtNsZdBp/7s0nG9ys6m6UmubKfTKud3VPp0W9LAyL9SrYE1kmvaCfFOy/NQ5k5hay4adhUMSkcknwwjYrBowoXa4lPwkhS840CTAnZOadDqjdE7SPQlfZUE5QqO53ShYQBaQ4HuLlQvP9pyLlJGEGhUzsrpdlh/Te1OXP+kkvIErgoOvecJKqn2gdpwAfHTAbTswaiIC1s1pLOwcRjG0wc3kildz7+H6uusTP5UPWTmfqbzFqEMXYhLhyE9krNodXady5m4eIKVyDHUF88k0XxDPBzDKkcLeFw3dfbs5vjeGtq/vC+Mm1zYz+cc2Uv1MwLZNlUh8dbOW3itmRIofUOe6in9yHi///YgABO91P/yEGXkxQMZOgZiORrGNLwP9O7btXOdsP8IZ2nBbwp+uzORtE7p1knVwbb0rI5V5wE8X2Ovye89XpKmBpfLakTpCsY1frzUUGetwBFM8mm3un/XBWjdhhqaNxFP/b1Yq60ntS/t94EMEw0nAFeA5qzrvWyEHv2rF6e2G4dFkvP+9nw2KuH4Fe8tjTy1x4aLFTeHe74XfATnkbM1u7hMV2zkuzaTL6ZJACX72Vbd7wIuQDJsbDUCA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(31686004)(4326008)(86362001)(316002)(38100700002)(508600001)(31696002)(66946007)(6916009)(9686003)(66556008)(2906002)(8936002)(66476007)(186003)(7696005)(956004)(30864003)(2616005)(8676002)(83380400001)(6486002)(6666004)(36756003)(26005)(5660300002)(53546011)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cUN0MUVwTS9WK096QzZ6UXovaktCQVBQY1JTVXFONWM0KzlKZGpiblRMSDQv?=
- =?utf-8?B?V01PcjkyUy9HZVRkOWlNOUYrbkhZOXFsY1ZZNEQzVXdzZ0h4cFpERkk0MjJ4?=
- =?utf-8?B?ckNteWpqVmp1TERGY1k3RXZFSThSRVFuYUFtTU4rU1R0U3ZQcWhqSThmd25q?=
- =?utf-8?B?ZXIySlBQeEpkcFQvVyt6aThkQ0kxWjloVEZ2b0hlUUV5ckdjVUFqandDQXVV?=
- =?utf-8?B?blhmRnBiMm8rdDBKUGE4bk1LRFVWbzg5RmpNalljdkpQNnA0WEU2NVB3Vzk0?=
- =?utf-8?B?NzNOVm9Zdk5KS2RtZ1VQVXY4cUp2QkdzWjJ1MmVZUmdGOEFwM1VDUm1DZXFZ?=
- =?utf-8?B?VWpkMWlNcHY0RzliSlFONnZUa1M3UVhTRStvMmFsY3FSSGpVclNJcjE3d1p6?=
- =?utf-8?B?dGhDeU1iZmVSYUx6ZDdnTkEzcWpaVjVIK2tLN29va0ZmY1dUZFE3U2lGelpi?=
- =?utf-8?B?Qnljckxra2MwUFRHLy9oUFBud0h4WlUrLzQvaVJVZWVCcURkbUxMUXVqMlhw?=
- =?utf-8?B?S2JYMnphckdRRkxTbitFTzNLMXZWa3czZE9kMzRrZU5jdEdORStXbXg2LzFX?=
- =?utf-8?B?ZnFuT0Q5ZlgzczZQRHp5aWxzVmxoWGwvMXZZWmNsalVRbElzbkRJQUNjMUwx?=
- =?utf-8?B?eVVRUU5iQmI4SFE4QjZ4c29MRitpZ2tMb3FEYW0yL0pKZlFlWG15SVJkK0Ra?=
- =?utf-8?B?NW42a21SdGh0MWtiSXJOYzNQc1Z2TE56Y2h2Q2NJSmdQRHM4QnNXVGxhSkla?=
- =?utf-8?B?MWdvMFBoLzZXNzBZMUVSbkJ5OE1jNjErMFhMeGVDOExoQTBiUWFnQVFsY3ov?=
- =?utf-8?B?WlkrMldEN0plYWFQRjQzVStodjBaN25pSlNhbVA2Z0hETTEycTBFNjZyWXFZ?=
- =?utf-8?B?aThLZktldHVJaTdaZlhmU1JpQzJleFIxNVFESzFlMUtzTS9TM3lZRVlDUTdZ?=
- =?utf-8?B?eld5M2dqNU1weUwycS9IMlF0Zi9CWFBkMzVMOVlZb21DWUU1RHp6ZU9KY2xz?=
- =?utf-8?B?OUo0RElBalVXaHNkVTE5WEhmWjhLaVFYRUpLbzJtT25ETTVSazM1R1VLMFdI?=
- =?utf-8?B?dTRESzdFaTk5OHpBQUdxcFNrZ1pJUDgrOVlnQ1R4ZkNzTWw0Tjc3RXA0TFBw?=
- =?utf-8?B?Z01tcGplNFlTRHYyTHVNY2dtRm1VcXRrZ0VwM25xOE1zQWxZL1ZhVURrRTVV?=
- =?utf-8?B?NjZoUXNZOUVHbVVGNEtMU1duS1ZvYzYxa201Tno3TERERkdOOWJBekNTd2gy?=
- =?utf-8?B?UUtJcHVVVDlwakVpMlBBSjQyVVdIS0grd0UvZFdYcWtIMDVuWHRpM2lCR1dN?=
- =?utf-8?B?YVQ5RkZqejlidDdhVXJROFlsdVMybFhiTmpndzRiOW1TQ1loNHM1ZzFWNDBW?=
- =?utf-8?B?eVUzU2ZGTmFPc05Eb2cwQXIzWVdqOHRXUGFmSUlZNXlkK3gxK051YW5mS29W?=
- =?utf-8?B?L0tWYzRudWxiK3JxRkxmNHhCK0p1aW9VSExldWQrM3paZ3R4aTNHYnd6U0Uw?=
- =?utf-8?B?M1VxeW5mS1Z3TkQydGxYZG5McitHeC9CY0h2ZE1kRzVQdklLQVpDK3Q2S29T?=
- =?utf-8?B?Z2ZEa2pYVVNKbHlRRVR3UUdrdStpdHN3M2YwVVdRYWNwSVRlYmlVYUpRL0hY?=
- =?utf-8?B?VGRGcHNZU1VJYzJSZW1tbktZRWdYNWtRc0xWT1JMellCQ28rVUlHMHY5dERH?=
- =?utf-8?B?dTFvUlNQa2FvV3AxM2xRc0o5b25VUWxpNzRsSDY0Q1hKcWxndnlrOGprUUF2?=
- =?utf-8?Q?/0PsZ4BfzkYT7qkq+BiuZYIJ9nNbN5MRuJXZSbz?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 488fdc89-c5d8-4b2c-6f62-08d982486ace
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Sep 2021 06:22:59.2418
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2SItQ6D/ZYJjG+Jhp7Qdem9YOkaGdKKzoWG2kqN8n44nmzShB0jxmMmsEwAg3r3EIbOk22q3Ei3X1fL8mNqloA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4656
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10120 signatures=668682
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0 mlxscore=0
- spamscore=0 suspectscore=0 adultscore=0 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
- definitions=main-2109280035
-X-Proofpoint-ORIG-GUID: SCuK_Xstaexl0VnIixjsrGvU-kho7AKj
-X-Proofpoint-GUID: SCuK_Xstaexl0VnIixjsrGvU-kho7AKj
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 9/27/21 1:39 PM, J. Bruce Fields wrote:
-> On Mon, Sep 27, 2021 at 04:14:33PM -0400, J. Bruce Fields wrote:
->> The file_rwsem is used for /proc/locks; only the code that produces the
->> /proc/locks output calls down_write, the rest only calls down_read.
->>
->> I assumed that it was OK to nest read acquisitions of a rwsem, but I
->> think that's wrong.
->>
->> I think it should be no big deal to move the lm_expire_lock(.,0) call
->> outside of the file_rwsem?
-> You probably want to turn on LOCKDEP for any more testing.
+Deal with some warnings generated from make W=1:
 
-I use 'make menuconfig' to turn on LOCKDEP by enabling
-'Kernel hacking/Lock debugging/prove locking correctness'. However
-when I boot this kernel, DHCP failed to get an IP address making
-the system inaccessible from the network. I'm not sure if it's
-related to this error:
+ (1) Add/remove/fix kerneldoc parameters descriptions.
 
-Sep 27 23:14:51 nfsvme24 kernel: unchecked MSR access error: WRMSR to 0xe00 (tried to write 0x0000000000010003) at rIP: 0xffffffff8101584d (wrmsrl+0xb/0x1f)
-Sep 27 23:14:51 nfsvme24 kernel: Call Trace:
-Sep 27 23:14:51 nfsvme24 kernel: uncore_box_ref.part.0+0x60/0x78
-Sep 27 23:14:51 nfsvme24 kernel: ? uncore_pci_pmu_register+0xea/0xea
-Sep 27 23:14:51 nfsvme24 kernel: uncore_event_cpu_online+0x51/0x107
-Sep 27 23:14:51 nfsvme24 kernel: ? uncore_pci_pmu_register+0xea/0xea
-Sep 27 23:14:51 nfsvme24 kernel: cpuhp_invoke_callback+0xb2/0x23d
-Sep 27 23:14:51 nfsvme24 kernel: ? __schedule+0x5d3/0x625
-Sep 27 23:14:51 nfsvme24 kernel: cpuhp_thread_fun+0xc6/0x111
-Sep 27 23:14:51 nfsvme24 kernel: ? smpboot_register_percpu_thread+0xcc/0xcc
-Sep 27 23:14:51 nfsvme24 kernel: smpboot_thread_fn+0x1b1/0x1c6
-Sep 27 23:14:51 nfsvme24 kernel: kthread+0x107/0x10f
-Sep 27 23:14:51 nfsvme24 kernel: ? kthread_flush_worker+0x75/0x75
-Sep 27 23:14:51 nfsvme24 kernel: ret_from_fork+0x22/0x30
+ (2) afs_sillyrename() isn't an API functions, so remove the kerneldoc
+     annotation.
 
-Here is the diff of the working config and non-working (LOCKDEP) config:
+ (3) The fscache object CREATE_OBJECT work state isn't used, so remove it.
 
-[dngo@nfsdev linux]$ diff .config .config-LOCKDEP
-245c245
-< # CONFIG_KALLSYMS_ALL is not set
+ (4) Move __add_fid() from between v9fs_fid_add() and its comment.
+
+ (5) 9p's caches_show() doesn't really make sense as an API function, show
+     remove the kerneldoc annotation.  It's also not prefixed with 'v9fs_'.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+Reviewed-by: Dominique Martinet <asmadeus@codewreck.org>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Marc Dionne <marc.dionne@auristor.com>
+cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+cc: Anna Schumaker <anna.schumaker@netapp.com>
+cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+cc: v9fs-developer@lists.sourceforge.net
+cc: linux-afs@lists.infradead.org
+cc: linux-nfs@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-doc@vger.kernel.org
 ---
-> CONFIG_KALLSYMS_ALL=y
-470a471
-> # CONFIG_LIVEPATCH is not set
-905,909c906
-< CONFIG_INLINE_SPIN_UNLOCK_IRQ=y
-< CONFIG_INLINE_READ_UNLOCK=y
-< CONFIG_INLINE_READ_UNLOCK_IRQ=y
-< CONFIG_INLINE_WRITE_UNLOCK=y
-< CONFIG_INLINE_WRITE_UNLOCK_IRQ=y
----
-> CONFIG_UNINLINE_SPIN_UNLOCK=y
-4463,4470c4460,4475
-< # CONFIG_PROVE_LOCKING is not set
-< # CONFIG_LOCK_STAT is not set
-< # CONFIG_DEBUG_RT_MUTEXES is not set
-< # CONFIG_DEBUG_SPINLOCK is not set
-< # CONFIG_DEBUG_MUTEXES is not set
-< # CONFIG_DEBUG_WW_MUTEX_SLOWPATH is not set
-< # CONFIG_DEBUG_RWSEMS is not set
-< # CONFIG_DEBUG_LOCK_ALLOC is not set
----
-> CONFIG_PROVE_LOCKING=y
-> CONFIG_PROVE_RAW_LOCK_NESTING=y
-> CONFIG_LOCK_STAT=y
-> CONFIG_DEBUG_RT_MUTEXES=y
-> CONFIG_DEBUG_SPINLOCK=y
-> CONFIG_DEBUG_MUTEXES=y
-> CONFIG_DEBUG_WW_MUTEX_SLOWPATH=y
-> CONFIG_DEBUG_RWSEMS=y
-> CONFIG_DEBUG_LOCK_ALLOC=y
-> CONFIG_LOCKDEP=y
-> CONFIG_LOCKDEP_BITS=15
-> CONFIG_LOCKDEP_CHAINS_BITS=16
-> CONFIG_LOCKDEP_STACK_TRACE_BITS=19
-> CONFIG_LOCKDEP_STACK_TRACE_HASH_BITS=14
-> CONFIG_LOCKDEP_CIRCULAR_QUEUE_BITS=12
-> CONFIG_DEBUG_LOCKDEP=y
-4479c4484,4486
-< # CONFIG_DEBUG_IRQFLAGS is not set
----
-> CONFIG_TRACE_IRQFLAGS=y
-> CONFIG_TRACE_IRQFLAGS_NMI=y
-> CONFIG_DEBUG_IRQFLAGS=y
-4498a4506
-> CONFIG_PROVE_RCU=y
-4526a4535
-> CONFIG_PREEMPTIRQ_TRACEPOINTS=y
-[dngo@nfsdev linux]$
 
-can you share your config with LOCKDEP enabled so I can give
-it a try?
+ fs/9p/fid.c            |   14 +++++++-------
+ fs/9p/v9fs.c           |    8 +++-----
+ fs/9p/vfs_addr.c       |   15 ++++++++++-----
+ fs/9p/vfs_file.c       |   33 ++++++++++++---------------------
+ fs/9p/vfs_inode.c      |   24 ++++++++++++++++--------
+ fs/9p/vfs_inode_dotl.c |   11 +++++++++--
+ fs/afs/dir_silly.c     |    4 ++--
+ fs/fscache/object.c    |    2 +-
+ fs/fscache/operation.c |    3 +++
+ fs/nfs_common/grace.c  |    1 -
+ 10 files changed, 63 insertions(+), 52 deletions(-)
 
-Thanks,
--Dai
+diff --git a/fs/9p/fid.c b/fs/9p/fid.c
+index 9d9de62592be..b8863dd0de5c 100644
+--- a/fs/9p/fid.c
++++ b/fs/9p/fid.c
+@@ -19,18 +19,18 @@
+ #include "v9fs_vfs.h"
+ #include "fid.h"
+ 
++static inline void __add_fid(struct dentry *dentry, struct p9_fid *fid)
++{
++	hlist_add_head(&fid->dlist, (struct hlist_head *)&dentry->d_fsdata);
++}
++
++
+ /**
+  * v9fs_fid_add - add a fid to a dentry
+  * @dentry: dentry that the fid is being added to
+  * @fid: fid to add
+  *
+  */
+-
+-static inline void __add_fid(struct dentry *dentry, struct p9_fid *fid)
+-{
+-	hlist_add_head(&fid->dlist, (struct hlist_head *)&dentry->d_fsdata);
+-}
+-
+ void v9fs_fid_add(struct dentry *dentry, struct p9_fid *fid)
+ {
+ 	spin_lock(&dentry->d_lock);
+@@ -67,7 +67,7 @@ static struct p9_fid *v9fs_fid_find_inode(struct inode *inode, kuid_t uid)
+ 
+ /**
+  * v9fs_open_fid_add - add an open fid to an inode
+- * @dentry: inode that the fid is being added to
++ * @inode: inode that the fid is being added to
+  * @fid: fid to add
+  *
+  */
+diff --git a/fs/9p/v9fs.c b/fs/9p/v9fs.c
+index cdb99507ef33..2e0fa7c932db 100644
+--- a/fs/9p/v9fs.c
++++ b/fs/9p/v9fs.c
+@@ -155,6 +155,7 @@ int v9fs_show_options(struct seq_file *m, struct dentry *root)
+ /**
+  * v9fs_parse_options - parse mount options into session structure
+  * @v9ses: existing v9fs session information
++ * @opts: The mount option string
+  *
+  * Return 0 upon success, -ERRNO upon failure.
+  */
+@@ -542,12 +543,9 @@ extern int v9fs_error_init(void);
+ static struct kobject *v9fs_kobj;
+ 
+ #ifdef CONFIG_9P_FSCACHE
+-/**
+- * caches_show - list caches associated with a session
+- *
+- * Returns the size of buffer written.
++/*
++ * List caches associated with a session
+  */
+-
+ static ssize_t caches_show(struct kobject *kobj,
+ 			   struct kobj_attribute *attr,
+ 			   char *buf)
+diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
+index 15017b7ce8f8..cff99f5c05e3 100644
+--- a/fs/9p/vfs_addr.c
++++ b/fs/9p/vfs_addr.c
+@@ -61,7 +61,7 @@ static void v9fs_init_rreq(struct netfs_read_request *rreq, struct file *file)
+ }
+ 
+ /**
+- * v9fs_req_ceanup - Cleanup request initialized by v9fs_init_rreq
++ * v9fs_req_cleanup - Cleanup request initialized by v9fs_init_rreq
+  * @mapping: unused mapping of request to cleanup
+  * @priv: private data to cleanup, a fid, guaranted non-null.
+  */
+@@ -104,7 +104,7 @@ static const struct netfs_read_request_ops v9fs_req_ops = {
+ 
+ /**
+  * v9fs_vfs_readpage - read an entire page in from 9P
+- * @filp: file being read
++ * @file: file being read
+  * @page: structure to page
+  *
+  */
+@@ -124,6 +124,8 @@ static void v9fs_vfs_readahead(struct readahead_control *ractl)
+ 
+ /**
+  * v9fs_release_page - release the private state associated with a page
++ * @page: The page to be released
++ * @gfp: The caller's allocation restrictions
+  *
+  * Returns 1 if the page can be released, false otherwise.
+  */
+@@ -144,9 +146,9 @@ static int v9fs_release_page(struct page *page, gfp_t gfp)
+ 
+ /**
+  * v9fs_invalidate_page - Invalidate a page completely or partially
+- *
+- * @page: structure to page
+- * @offset: offset in the page
++ * @page: The page to be invalidated
++ * @offset: offset of the invalidated region
++ * @length: length of the invalidated region
+  */
+ 
+ static void v9fs_invalidate_page(struct page *page, unsigned int offset,
+@@ -206,6 +208,8 @@ static int v9fs_vfs_writepage(struct page *page, struct writeback_control *wbc)
+ 
+ /**
+  * v9fs_launder_page - Writeback a dirty page
++ * @page: The page to be cleaned up
++ *
+  * Returns 0 on success.
+  */
+ 
+@@ -225,6 +229,7 @@ static int v9fs_launder_page(struct page *page)
+ /**
+  * v9fs_direct_IO - 9P address space operation for direct I/O
+  * @iocb: target I/O control block
++ * @iter: The data/buffer to use
+  *
+  * The presence of v9fs_direct_IO() in the address space ops vector
+  * allowes open() O_DIRECT flags which would have failed otherwise.
+diff --git a/fs/9p/vfs_file.c b/fs/9p/vfs_file.c
+index 7ed76a4c18f1..80052497f00f 100644
+--- a/fs/9p/vfs_file.c
++++ b/fs/9p/vfs_file.c
+@@ -359,14 +359,11 @@ static int v9fs_file_flock_dotl(struct file *filp, int cmd,
+ }
+ 
+ /**
+- * v9fs_file_read - read from a file
+- * @filp: file pointer to read
+- * @udata: user data buffer to read data into
+- * @count: size of buffer
+- * @offset: offset at which to read data
++ * v9fs_file_read_iter - read from a file
++ * @iocb: The operation parameters
++ * @to: The buffer to read into
+  *
+  */
+-
+ static ssize_t
+ v9fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ {
+@@ -388,11 +385,9 @@ v9fs_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ }
+ 
+ /**
+- * v9fs_file_write - write to a file
+- * @filp: file pointer to write
+- * @data: data buffer to write data from
+- * @count: size of buffer
+- * @offset: offset at which to write data
++ * v9fs_file_write_iter - write to a file
++ * @iocb: The operation parameters
++ * @from: The data to write
+  *
+  */
+ static ssize_t
+@@ -574,11 +569,9 @@ v9fs_vm_page_mkwrite(struct vm_fault *vmf)
+ }
+ 
+ /**
+- * v9fs_mmap_file_read - read from a file
+- * @filp: file pointer to read
+- * @data: user data buffer to read data into
+- * @count: size of buffer
+- * @offset: offset at which to read data
++ * v9fs_mmap_file_read_iter - read from a file
++ * @iocb: The operation parameters
++ * @to: The buffer to read into
+  *
+  */
+ static ssize_t
+@@ -589,11 +582,9 @@ v9fs_mmap_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ }
+ 
+ /**
+- * v9fs_mmap_file_write - write to a file
+- * @filp: file pointer to write
+- * @data: data buffer to write data from
+- * @count: size of buffer
+- * @offset: offset at which to write data
++ * v9fs_mmap_file_write_iter - write to a file
++ * @iocb: The operation parameters
++ * @from: The data to write
+  *
+  */
+ static ssize_t
+diff --git a/fs/9p/vfs_inode.c b/fs/9p/vfs_inode.c
+index 795706520b5e..08f48b70a741 100644
+--- a/fs/9p/vfs_inode.c
++++ b/fs/9p/vfs_inode.c
+@@ -218,7 +218,7 @@ v9fs_blank_wstat(struct p9_wstat *wstat)
+ 
+ /**
+  * v9fs_alloc_inode - helper function to allocate an inode
+- *
++ * @sb: The superblock to allocate the inode from
+  */
+ struct inode *v9fs_alloc_inode(struct super_block *sb)
+ {
+@@ -238,7 +238,7 @@ struct inode *v9fs_alloc_inode(struct super_block *sb)
+ 
+ /**
+  * v9fs_free_inode - destroy an inode
+- *
++ * @inode: The inode to be freed
+  */
+ 
+ void v9fs_free_inode(struct inode *inode)
+@@ -343,7 +343,7 @@ int v9fs_init_inode(struct v9fs_session_info *v9ses,
+  * v9fs_get_inode - helper function to setup an inode
+  * @sb: superblock
+  * @mode: mode to setup inode with
+- *
++ * @rdev: The device numbers to set
+  */
+ 
+ struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode, dev_t rdev)
+@@ -369,7 +369,7 @@ struct inode *v9fs_get_inode(struct super_block *sb, umode_t mode, dev_t rdev)
+ }
+ 
+ /**
+- * v9fs_clear_inode - release an inode
++ * v9fs_evict_inode - Remove an inode from the inode cache
+  * @inode: inode to release
+  *
+  */
+@@ -665,14 +665,15 @@ v9fs_create(struct v9fs_session_info *v9ses, struct inode *dir,
+ 
+ /**
+  * v9fs_vfs_create - VFS hook to create a regular file
++ * @mnt_userns: The user namespace of the mount
++ * @dir: The parent directory
++ * @dentry: The name of file to be created
++ * @mode: The UNIX file mode to set
++ * @excl: True if the file must not yet exist
+  *
+  * open(.., O_CREAT) is handled in v9fs_vfs_atomic_open().  This is only called
+  * for mknod(2).
+  *
+- * @dir: directory inode that is being created
+- * @dentry:  dentry that is being deleted
+- * @mode: create permissions
+- *
+  */
+ 
+ static int
+@@ -696,6 +697,7 @@ v9fs_vfs_create(struct user_namespace *mnt_userns, struct inode *dir,
+ 
+ /**
+  * v9fs_vfs_mkdir - VFS mkdir hook to create a directory
++ * @mnt_userns: The user namespace of the mount
+  * @dir:  inode that is being unlinked
+  * @dentry: dentry that is being unlinked
+  * @mode: mode for new directory
+@@ -900,10 +902,12 @@ int v9fs_vfs_rmdir(struct inode *i, struct dentry *d)
+ 
+ /**
+  * v9fs_vfs_rename - VFS hook to rename an inode
++ * @mnt_userns: The user namespace of the mount
+  * @old_dir:  old dir inode
+  * @old_dentry: old dentry
+  * @new_dir: new dir inode
+  * @new_dentry: new dentry
++ * @flags: RENAME_* flags
+  *
+  */
+ 
+@@ -1009,6 +1013,7 @@ v9fs_vfs_rename(struct user_namespace *mnt_userns, struct inode *old_dir,
+ 
+ /**
+  * v9fs_vfs_getattr - retrieve file metadata
++ * @mnt_userns: The user namespace of the mount
+  * @path: Object to query
+  * @stat: metadata structure to populate
+  * @request_mask: Mask of STATX_xxx flags indicating the caller's interests
+@@ -1050,6 +1055,7 @@ v9fs_vfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
+ 
+ /**
+  * v9fs_vfs_setattr - set file metadata
++ * @mnt_userns: The user namespace of the mount
+  * @dentry: file whose metadata to set
+  * @iattr: metadata assignment structure
+  *
+@@ -1285,6 +1291,7 @@ static int v9fs_vfs_mkspecial(struct inode *dir, struct dentry *dentry,
+ 
+ /**
+  * v9fs_vfs_symlink - helper function to create symlinks
++ * @mnt_userns: The user namespace of the mount
+  * @dir: directory inode containing symlink
+  * @dentry: dentry for symlink
+  * @symname: symlink data
+@@ -1340,6 +1347,7 @@ v9fs_vfs_link(struct dentry *old_dentry, struct inode *dir,
+ 
+ /**
+  * v9fs_vfs_mknod - create a special file
++ * @mnt_userns: The user namespace of the mount
+  * @dir: inode destination for new link
+  * @dentry: dentry for file
+  * @mode: mode for creation
+diff --git a/fs/9p/vfs_inode_dotl.c b/fs/9p/vfs_inode_dotl.c
+index e1c0240b51c0..01b9e1281a29 100644
+--- a/fs/9p/vfs_inode_dotl.c
++++ b/fs/9p/vfs_inode_dotl.c
+@@ -37,7 +37,10 @@ v9fs_vfs_mknod_dotl(struct user_namespace *mnt_userns, struct inode *dir,
+ 		    struct dentry *dentry, umode_t omode, dev_t rdev);
+ 
+ /**
+- * v9fs_get_fsgid_for_create - Helper function to get the gid for creating a
++ * v9fs_get_fsgid_for_create - Helper function to get the gid for a new object
++ * @dir_inode: The directory inode
++ *
++ * Helper function to get the gid for creating a
+  * new file system object. This checks the S_ISGID to determine the owning
+  * group of the new file system object.
+  */
+@@ -211,12 +214,13 @@ int v9fs_open_to_dotl_flags(int flags)
+ 
+ /**
+  * v9fs_vfs_create_dotl - VFS hook to create files for 9P2000.L protocol.
++ * @mnt_userns: The user namespace of the mount
+  * @dir: directory inode that is being created
+  * @dentry:  dentry that is being deleted
+  * @omode: create permissions
++ * @excl: True if the file must not yet exist
+  *
+  */
+-
+ static int
+ v9fs_vfs_create_dotl(struct user_namespace *mnt_userns, struct inode *dir,
+ 		     struct dentry *dentry, umode_t omode, bool excl)
+@@ -361,6 +365,7 @@ v9fs_vfs_atomic_open_dotl(struct inode *dir, struct dentry *dentry,
+ 
+ /**
+  * v9fs_vfs_mkdir_dotl - VFS mkdir hook to create a directory
++ * @mnt_userns: The user namespace of the mount
+  * @dir:  inode that is being unlinked
+  * @dentry: dentry that is being unlinked
+  * @omode: mode for new directory
+@@ -537,6 +542,7 @@ static int v9fs_mapped_iattr_valid(int iattr_valid)
+ 
+ /**
+  * v9fs_vfs_setattr_dotl - set file metadata
++ * @mnt_userns: The user namespace of the mount
+  * @dentry: file whose metadata to set
+  * @iattr: metadata assignment structure
+  *
+@@ -816,6 +822,7 @@ v9fs_vfs_link_dotl(struct dentry *old_dentry, struct inode *dir,
+ 
+ /**
+  * v9fs_vfs_mknod_dotl - create a special file
++ * @mnt_userns: The user namespace of the mount
+  * @dir: inode destination for new link
+  * @dentry: dentry for file
+  * @omode: mode for creation
+diff --git a/fs/afs/dir_silly.c b/fs/afs/dir_silly.c
+index dae9a57d7ec0..45cfd50a9521 100644
+--- a/fs/afs/dir_silly.c
++++ b/fs/afs/dir_silly.c
+@@ -86,8 +86,8 @@ static int afs_do_silly_rename(struct afs_vnode *dvnode, struct afs_vnode *vnode
+ 	return afs_do_sync_operation(op);
+ }
+ 
+-/**
+- * afs_sillyrename - Perform a silly-rename of a dentry
++/*
++ * Perform silly-rename of a dentry.
+  *
+  * AFS is stateless and the server doesn't know when the client is holding a
+  * file open.  To prevent application problems when a file is unlinked while
+diff --git a/fs/fscache/object.c b/fs/fscache/object.c
+index d7eab46dd826..86ad941726f7 100644
+--- a/fs/fscache/object.c
++++ b/fs/fscache/object.c
+@@ -77,7 +77,6 @@ static WORK_STATE(INIT_OBJECT,		"INIT", fscache_initialise_object);
+ static WORK_STATE(PARENT_READY,		"PRDY", fscache_parent_ready);
+ static WORK_STATE(ABORT_INIT,		"ABRT", fscache_abort_initialisation);
+ static WORK_STATE(LOOK_UP_OBJECT,	"LOOK", fscache_look_up_object);
+-static WORK_STATE(CREATE_OBJECT,	"CRTO", fscache_look_up_object);
+ static WORK_STATE(OBJECT_AVAILABLE,	"AVBL", fscache_object_available);
+ static WORK_STATE(JUMPSTART_DEPS,	"JUMP", fscache_jumpstart_dependents);
+ 
+@@ -907,6 +906,7 @@ static void fscache_dequeue_object(struct fscache_object *object)
+  * @object: The object to ask about
+  * @data: The auxiliary data for the object
+  * @datalen: The size of the auxiliary data
++ * @object_size: The size of the object according to the server.
+  *
+  * This function consults the netfs about the coherency state of an object.
+  * The caller must be holding a ref on cookie->n_active (held by
+diff --git a/fs/fscache/operation.c b/fs/fscache/operation.c
+index 433877107700..e002cdfaf3cc 100644
+--- a/fs/fscache/operation.c
++++ b/fs/fscache/operation.c
+@@ -22,7 +22,10 @@ static void fscache_operation_dummy_cancel(struct fscache_operation *op)
+ 
+ /**
+  * fscache_operation_init - Do basic initialisation of an operation
++ * @cookie: The cookie to operate on
+  * @op: The operation to initialise
++ * @processor: The function to perform the operation
++ * @cancel: A function to handle operation cancellation
+  * @release: The release function to assign
+  *
+  * Do basic initialisation of an operation.  The caller must still set flags,
+diff --git a/fs/nfs_common/grace.c b/fs/nfs_common/grace.c
+index edec45831585..0a9b72685f98 100644
+--- a/fs/nfs_common/grace.c
++++ b/fs/nfs_common/grace.c
+@@ -42,7 +42,6 @@ EXPORT_SYMBOL_GPL(locks_start_grace);
+ 
+ /**
+  * locks_end_grace
+- * @net: net namespace that this lock manager belongs to
+  * @lm: who this grace period is for
+  *
+  * Call this function to state that the given lock manager is ready to
 
->
-> I wonder if there's any potential issue with the other locks held here
-> (st_mutex, rp_mutex).
->
-> --b.
->
->> --b.
->>
->> [  959.807364] ============================================
->> [  959.807803] WARNING: possible recursive locking detected
->> [  959.808228] 5.15.0-rc2-00009-g4e5af4d2635a #533 Not tainted
->> [  959.808675] --------------------------------------------
->> [  959.809189] nfsd/5675 is trying to acquire lock:
->> [  959.809664] ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: locks_remove_posix+0x37f/0x4e0
->> [  959.810647]
->>                 but task is already holding lock:
->> [  959.811097] ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: nfsd4_lock+0xcb9/0x3850 [nfsd]
->> [  959.812147]
->>                 other info that might help us debug this:
->> [  959.812698]  Possible unsafe locking scenario:
->>
->> [  959.813189]        CPU0
->> [  959.813362]        ----
->> [  959.813544]   lock(file_rwsem);
->> [  959.813812]   lock(file_rwsem);
->> [  959.814078]
->>                  *** DEADLOCK ***
->>
->> [  959.814386]  May be due to missing lock nesting notation
->>
->> [  959.814968] 3 locks held by nfsd/5675:
->> [  959.815315]  #0: ffff888007d42bc8 (&rp->rp_mutex){+.+.}-{3:3}, at: nfs4_preprocess_seqid_op+0x395/0x730 [nfsd]
->> [  959.816546]  #1: ffff88800f378b70 (&stp->st_mutex#2){+.+.}-{3:3}, at: nfsd4_lock+0x1f91/0x3850 [nfsd]
->> [  959.817697]  #2: ffffffff8519e470 (file_rwsem){.+.+}-{0:0}, at: nfsd4_lock+0xcb9/0x3850 [nfsd]
->> [  959.818755]
->>                 stack backtrace:
->> [  959.819010] CPU: 2 PID: 5675 Comm: nfsd Not tainted 5.15.0-rc2-00009-g4e5af4d2635a #533
->> [  959.819847] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.14.0-3.fc34 04/01/2014
->> [  959.820637] Call Trace:
->> [  959.820759]  dump_stack_lvl+0x45/0x59
->> [  959.821016]  __lock_acquire.cold+0x175/0x3a5
->> [  959.821316]  ? lockdep_hardirqs_on_prepare+0x400/0x400
->> [  959.821741]  lock_acquire+0x1a6/0x4b0
->> [  959.821976]  ? locks_remove_posix+0x37f/0x4e0
->> [  959.822316]  ? lock_release+0x6d0/0x6d0
->> [  959.822591]  ? find_held_lock+0x2c/0x110
->> [  959.822852]  ? lock_is_held_type+0xd5/0x130
->> [  959.823139]  posix_lock_inode+0x143/0x1ab0
->> [  959.823414]  ? locks_remove_posix+0x37f/0x4e0
->> [  959.823739]  ? do_raw_spin_unlock+0x54/0x220
->> [  959.824031]  ? lockdep_init_map_type+0x2c3/0x7a0
->> [  959.824355]  ? locks_remove_flock+0x2e0/0x2e0
->> [  959.824681]  locks_remove_posix+0x37f/0x4e0
->> [  959.824984]  ? do_lock_file_wait+0x2a0/0x2a0
->> [  959.825287]  ? lock_downgrade+0x6a0/0x6a0
->> [  959.825584]  ? nfsd_file_put+0x170/0x170 [nfsd]
->> [  959.825941]  filp_close+0xed/0x130
->> [  959.826191]  nfs4_free_lock_stateid+0xcc/0x190 [nfsd]
->> [  959.826625]  free_ol_stateid_reaplist+0x128/0x1f0 [nfsd]
->> [  959.827037]  release_openowner+0xee/0x150 [nfsd]
->> [  959.827382]  ? release_last_closed_stateid+0x460/0x460 [nfsd]
->> [  959.827837]  ? rwlock_bug.part.0+0x90/0x90
->> [  959.828115]  __destroy_client+0x39f/0x6f0 [nfsd]
->> [  959.828460]  ? nfsd4_cb_recall_release+0x20/0x20 [nfsd]
->> [  959.828868]  nfsd4_fl_expire_lock+0x2bc/0x460 [nfsd]
->> [  959.829273]  posix_lock_inode+0xa46/0x1ab0
->> [  959.829579]  ? lockdep_init_map_type+0x2c3/0x7a0
->> [  959.829913]  ? locks_remove_flock+0x2e0/0x2e0
->> [  959.830250]  ? __init_waitqueue_head+0x70/0xd0
->> [  959.830568]  nfsd4_lock+0xcb9/0x3850 [nfsd]
->> [  959.830878]  ? nfsd4_delegreturn+0x3b0/0x3b0 [nfsd]
->> [  959.831248]  ? percpu_counter_add_batch+0x77/0x130
->> [  959.831594]  nfsd4_proc_compound+0xcee/0x21d0 [nfsd]
->> [  959.831973]  ? nfsd4_release_compoundargs+0x140/0x140 [nfsd]
->> [  959.832414]  nfsd_dispatch+0x4df/0xc50 [nfsd]
->> [  959.832737]  ? nfsd_svc+0xca0/0xca0 [nfsd]
->> [  959.833051]  svc_process_common+0xdeb/0x2480 [sunrpc]
->> [  959.833462]  ? svc_create+0x20/0x20 [sunrpc]
->> [  959.833830]  ? nfsd_svc+0xca0/0xca0 [nfsd]
->> [  959.834144]  ? svc_sock_secure_port+0x36/0x40 [sunrpc]
->> [  959.834578]  ? svc_recv+0xd9c/0x2490 [sunrpc]
->> [  959.834915]  svc_process+0x32e/0x4a0 [sunrpc]
->> [  959.835249]  nfsd+0x306/0x530 [nfsd]
->> [  959.835499]  ? nfsd_shutdown_threads+0x300/0x300 [nfsd]
->> [  959.835899]  kthread+0x391/0x470
->> [  959.836094]  ? _raw_spin_unlock_irq+0x24/0x50
->> [  959.836394]  ? set_kthread_struct+0x100/0x100
->> [  959.836698]  ret_from_fork+0x22/0x30
->> [  960.750222] nfsd: last server has exited, flushing export cache
->> [  960.880355] NFSD: Using nfsdcld client tracking operations.
->> [  960.880956] NFSD: starting 15-second grace period (net f0000098)
->> [ 1403.405511] nfsd: last server has exited, flushing export cache
->> [ 1403.656335] NFSD: Using nfsdcld client tracking operations.
->> [ 1403.657585] NFSD: starting 15-second grace period (net f0000098)
->> [ 1445.741596] nfsd: last server has exited, flushing export cache
->> [ 1445.981980] NFSD: Using nfsdcld client tracking operations.
->> [ 1445.983143] NFSD: starting 15-second grace period (net f0000098)
->> [ 1450.025112] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 1472.325551] nfsd: last server has exited, flushing export cache
->> [ 1472.583073] NFSD: Using nfsdcld client tracking operations.
->> [ 1472.583998] NFSD: starting 15-second grace period (net f0000098)
->> [ 1473.175582] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 1494.637499] nfsd: last server has exited, flushing export cache
->> [ 1494.885795] NFSD: Using nfsdcld client tracking operations.
->> [ 1494.886484] NFSD: starting 15-second grace period (net f0000098)
->> [ 1495.393667] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 1516.781474] nfsd: last server has exited, flushing export cache
->> [ 1516.902903] NFSD: Using nfsdcld client tracking operations.
->> [ 1516.903460] NFSD: starting 15-second grace period (net f0000098)
->> [ 1538.045156] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 1559.125362] nfsd: last server has exited, flushing export cache
->> [ 1559.362856] NFSD: Using nfsdcld client tracking operations.
->> [ 1559.363658] NFSD: starting 15-second grace period (net f0000098)
->> [ 1559.480531] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 1583.745353] nfsd: last server has exited, flushing export cache
->> [ 1583.876877] NFSD: Using nfsdcld client tracking operations.
->> [ 1583.877573] NFSD: starting 15-second grace period (net f0000098)
->> [ 1586.401321] nfsd: last server has exited, flushing export cache
->> [ 1586.525629] NFSD: Using nfsdcld client tracking operations.
->> [ 1586.526388] NFSD: starting 15-second grace period (net f0000098)
->> [ 1625.993218] nfsd: last server has exited, flushing export cache
->> [ 1626.442627] NFSD: Using nfsdcld client tracking operations.
->> [ 1626.444397] NFSD: starting 15-second grace period (net f0000098)
->> [ 1627.117214] nfsd: last server has exited, flushing export cache
->> [ 1627.351487] NFSD: Using nfsdcld client tracking operations.
->> [ 1627.352663] NFSD: starting 15-second grace period (net f0000098)
->> [ 1627.854410] NFSD: all clients done reclaiming, ending NFSv4 grace period (net f0000098)
->> [ 3285.818905] clocksource: timekeeping watchdog on CPU3: acpi_pm retried 2 times before success
+
