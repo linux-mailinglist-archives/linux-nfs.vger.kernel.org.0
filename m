@@ -2,113 +2,117 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 579C941DE1E
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 17:54:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B45341DF28
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 18:37:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346989AbhI3P4a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 11:56:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346577AbhI3P42 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 11:56:28 -0400
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0C0AC06176A;
-        Thu, 30 Sep 2021 08:54:45 -0700 (PDT)
-Received: by mail-lf1-x12d.google.com with SMTP id i4so27713049lfv.4;
-        Thu, 30 Sep 2021 08:54:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8LuCj9+8GFiHaMYgM8A65UudQg+qoOQQ2QUvcQ4XJ6s=;
-        b=PXKNBxqcRYxhwIV2v2X64yZJayzFfGuPEaFJcRpO4WCNqMpCZwI1df/zPBhLNhmRG9
-         7YWtoaofqurtGMdx0tYBEI6UfndHKtDaw4PBX49q9qi3J9QTKWYVNSDazJnLhCwGhWpW
-         sQyH53wtu7PQHWXKpw0IKJFLkzoLewsXUWMxyWUFA0GoZc/geWBr365BCc9DFKmEuqTx
-         QD1UXjg8vOB88FTGI55O4xvrqxi80eDmibsD2swnwubvtT8jN+7r24raClw1eWxICIMn
-         Xqc+xF7xzZT7TnBUA1RA5nmOrLjD64wC+WGfBcYeYx3rm7565L5ZdR6xyKgYS9WfGChU
-         NdlA==
+        id S1351988AbhI3Qiz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 12:38:55 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33614 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1352059AbhI3Qiy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 12:38:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633019831;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LTRCkphn2KY4US5x0UBqe8lxMhx2X7b4KiRs1ukZ6cc=;
+        b=TJHJ+OZfBos+ct8eBWrCLqpYpiPIys/t4xQsDs9rmRtwtNuATAjhiU7ilT/nDGffFtB8uY
+        4kDh0dPoHVq5N860hFcOmG+NA6J8cTVWBssML3W+fLPvnZ/nBKCnBtLqRPDZazgauXS9ZV
+        2QTKx9LOddPph8BAj62R4tdt6InDP14=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-9TmD6B-NN0eFxyQ8amPSQA-1; Thu, 30 Sep 2021 12:37:08 -0400
+X-MC-Unique: 9TmD6B-NN0eFxyQ8amPSQA-1
+Received: by mail-qt1-f200.google.com with SMTP id c19-20020ac81e93000000b002a71180fd3dso7502499qtm.1
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:37:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8LuCj9+8GFiHaMYgM8A65UudQg+qoOQQ2QUvcQ4XJ6s=;
-        b=XbBmZKylOYkv9SoXviPKr9BWXkZnTMEhN/fJ51HYr7LvZ50SCBNVHrOfV5SWpjYM2r
-         Y2qiC9CZ/lZsMRA6GQqL2/yNfuvwmt01k+raQ/914z/0iuApGZgUMbKUALfvCbUniGRI
-         gSalxO6Z+kngZPgLhCAU9cS1ehUiZTvEswwuJASnjNdOIUR0Z+riW4QpL82Pr+TXguTS
-         2fDK3wKyn6cI/dVyVPlz5oC6323Y0CaVOJqjzh8gwILnBViU/sGrMjSLtCdVqkbFx6bt
-         8hDoqhoj9aXS9t5aF9sa3JGdoOav5Q8f/6EcjMIWu/mSG6lZ8XF7xAHIVtuMFICV5S9y
-         uQUg==
-X-Gm-Message-State: AOAM530xbUXEPedn3z2RSBSh4SRFgiu7yX3y79mfdsl/iauHJLStOASh
-        TzYK5mmp8+9+DBjHeQ/cTbqVveEdVpYvTtbgkUjRp9WQ
-X-Google-Smtp-Source: ABdhPJyOHnVmMylaeGdsSDUQCs/a7NstziQ8gAm3Iq6Rldf9w/4qe7wGWECjl3a+7RS3TZsUTx6/zgFOVy33MH5VI2M=
-X-Received: by 2002:a05:6512:32c5:: with SMTP id f5mr7091563lfg.234.1633017283958;
- Thu, 30 Sep 2021 08:54:43 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent
+         :content-language:to:cc:from:subject:content-transfer-encoding;
+        bh=LTRCkphn2KY4US5x0UBqe8lxMhx2X7b4KiRs1ukZ6cc=;
+        b=H9y9alZuFfKbHXDEWIyGVxHMpUKN431GLEMlv0XRANoBKauBawXZVQ9xogEkKbkgDb
+         8pxAhUdZRY+vyQZ1BUjP+DaBPj2KYljLMhTs3pBdrOPsmdFsNgpe/ejsVprzEMcghpK4
+         nzd3rQ0nqHnbaggyYMozUIrz8XbMV16OFzLFCpsHEjs3T8SZTDFnqNyyl1x7SpKjvakw
+         1giefd4pCn4XZ7f7GrxpYDwA2PfA3QJ7Uxz02+T8FBYlBhkWrFdBXqlAbJX8/3XQkiI/
+         2Nx8V2/BAm4oDt/Dw8YexL56HAjxnSH1xUbhPKcIfOM7GDfhR23vz6Zu/TFDktkU/KLK
+         sRJg==
+X-Gm-Message-State: AOAM533v5zkqHXwMn8a5wXJl1TCaMlZpRtLEXtmojvKC4aXgCPXgjoct
+        turmWl0IzL7ErT/UuWmVHsHId/4X/kAhiyPaqzmlziUbcSSDp+CUW2+4B040CQ3wk2Vz6/2LY7q
+        bB5gQHdebJGl4rGxVkBPhyg2g1bx/C5iMQVkctoUv982Wm9u7EP4rWvvp7hanXWc31zisEQ==
+X-Received: by 2002:a05:620a:5e5:: with SMTP id z5mr5546916qkg.20.1633019828155;
+        Thu, 30 Sep 2021 09:37:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJy8Cj4L0tVoT5swM/p7VjMb60lYXxrqZDBXFWjg2LMhIjIKY2qjh2+LjoCvlkkENP99F4nnBg==
+X-Received: by 2002:a05:620a:5e5:: with SMTP id z5mr5546881qkg.20.1633019827820;
+        Thu, 30 Sep 2021 09:37:07 -0700 (PDT)
+Received: from [172.31.1.6] ([70.105.255.190])
+        by smtp.gmail.com with ESMTPSA id f34sm563175qtb.10.2021.09.30.09.37.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 30 Sep 2021 09:37:07 -0700 (PDT)
+Message-ID: <7e24d80d-56b2-68af-5351-ad42dc4d0a18@redhat.com>
+Date:   Thu, 30 Sep 2021 12:37:06 -0400
 MIME-Version: 1.0
-References: <163250387273.2330363.13240781819520072222.stgit@warthog.procyon.org.uk>
- <163279868982.18792.10448745714922373194@noble.neil.brown.name>
-In-Reply-To: <163279868982.18792.10448745714922373194@noble.neil.brown.name>
-From:   Steve French <smfrench@gmail.com>
-Date:   Thu, 30 Sep 2021 10:54:32 -0500
-Message-ID: <CAH2r5msHO9HTQGeO6MoR2_U76B9kLeoFS=FRbMuiNsh=YeFdWg@mail.gmail.com>
-Subject: Re: [RFC][PATCH v3 0/9] mm: Use DIO for swap and fix NFS swapfiles
-To:     NeilBrown <neilb@suse.de>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Trond Myklebust <trond.myklebust@primarydata.com>,
-        "Theodore Ts'o" <tytso@mit.edu>, linux-block@vger.kernel.org,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-mm <linux-mm@kvack.org>, Bob Liu <bob.liu@oracle.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Seth Jennings <sjenning@linux.vnet.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Steve French <sfrench@samba.org>,
-        Dan Magenheimer <dan.magenheimer@oracle.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        linux-btrfs <linux-btrfs@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.1.0
+Content-Language: en-US
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Cc:     NFSv4 IETF <nfsv4@ietf.org>
+From:   Steve Dickson <steved@redhat.com>
+Subject: Virtual Bakeathon: Reminder
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 27, 2021 at 10:12 PM NeilBrown <neilb@suse.de> wrote:
->
-> On Sat, 25 Sep 2021, David Howells wrote:
-> > Whilst trying to make this work, I found that NFS's support for swapfiles
-> > seems to have been non-functional since Aug 2019 (I think), so the first
-> > patch fixes that.  Question is: do we actually *want* to keep this
-> > functionality, given that it seems that no one's tested it with an upstream
-> > kernel in the last couple of years?
->
-> SUSE definitely want to keep this functionality.  We have customers
-> using it.
-> I agree it would be good if it was being tested somewhere....
->
+Hello,
 
-I am trying to work through the testing of swap over SMB3 mounts
-since there are use cases where you need to expand the swap
-space to remote storage and so this requirement comes up.  The main difficulty
-I run into is forgetting to mount with the mount options (to store mode bits)
-(so swap file has the right permissions) and debugging some of the
-xfstests relating to swap can be a little confusing.
+Just a quick reminder the VBAT coming up next week
+The details are here [1].
 
--- 
-Thanks,
+We are again going to be using an IPv6
+based VPN as the testing network. Details on
+how to set it up are at [2]. Any question
+reach out to Ben Coddington <bcodding@redhat.com>
 
-Steve
+Here at Red Hat we have been using vm
+in the Digital Ocean cloud [3]...
+I have found them to be really easy to
+work with and relatively inexpensive.
+
+We will again use discord [4] to communicate.
+Look for the VBaT channel. The contact for that is
+Alice Mitchell <ajmitchell@redhat.com>
+
+Finally I would like to propose that every day at
+2:00pm (EST) we get together on the discord voice
+channel 'General Chat' and talk about the topics
+of the day:
+
+* TLS (user vs kernel)
+* FS-cache (Trond's favorite subject)
+* QUIC (Chuck's favorite subject ;-) )
+* Allowing hung mount to reboot
+* re-export
+* Session-Truncking
+* ???
+
+Basically anything we wan to talk about relative
+to what is going on in the community...
+or not... :-)
+
+Ideally, as Rick suggested, reaching out to people
+like Google and MS.. people who  might have a better
+insight of these networking technologies... would
+be good... Just let them where we will be.
+
+If I have forgotten anything... I'm sure you will
+let me know! :-) See you Monday!
+
+steved
+
+[1] http://www.nfsv4bat.org/Events/2021/Oct/BAT/index.html
+[2] https://vpn.nfsv4.dev/
+[3] https://www.digitalocean.com/
+[4] https://discord.com
+
