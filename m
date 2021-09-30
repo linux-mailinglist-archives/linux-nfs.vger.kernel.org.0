@@ -2,117 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B45341DF28
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 18:37:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DD2941DF5B
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 18:42:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351988AbhI3Qiz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 12:38:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33614 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1352059AbhI3Qiy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 12:38:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633019831;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=LTRCkphn2KY4US5x0UBqe8lxMhx2X7b4KiRs1ukZ6cc=;
-        b=TJHJ+OZfBos+ct8eBWrCLqpYpiPIys/t4xQsDs9rmRtwtNuATAjhiU7ilT/nDGffFtB8uY
-        4kDh0dPoHVq5N860hFcOmG+NA6J8cTVWBssML3W+fLPvnZ/nBKCnBtLqRPDZazgauXS9ZV
-        2QTKx9LOddPph8BAj62R4tdt6InDP14=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-9TmD6B-NN0eFxyQ8amPSQA-1; Thu, 30 Sep 2021 12:37:08 -0400
-X-MC-Unique: 9TmD6B-NN0eFxyQ8amPSQA-1
-Received: by mail-qt1-f200.google.com with SMTP id c19-20020ac81e93000000b002a71180fd3dso7502499qtm.1
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:37:08 -0700 (PDT)
+        id S1352247AbhI3QoM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 12:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1352237AbhI3QoJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 12:44:09 -0400
+Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60DCC06176A
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:42:26 -0700 (PDT)
+Received: by mail-ua1-x944.google.com with SMTP id 10so4686093uae.10
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:42:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=MVXGXX3aLHvdEWHCf5XJGaFOufs/PEmNG+RYEO4oTx+QozBBJXVYJaBnJtUB4vE17v
+         l7qyXFAJCbEctdu3sv0yFCoBaT709anRfXTrWJ9LhTtNNTeF1B+O3pLHqUy2QAPvnPSf
+         3IecToNi2HT6Pa8coT6aXrgI9wtYa7BmAid9HW8X8cKcp6oEqxD6jn+NQAgIAJ/uIR8C
+         IIBDMRIctM/mMB+N6Sj6bvfiXlKmuXxbPXR4GO4hFEN9lvqP5/jfJ8FGLJzKy6wn7oVo
+         2mk7x+YQ0Nx9H6ldMnQifpIRNZg0XeefD1+q8eWUCCxe1+/MmkhbycjtfATlCNeof1ow
+         TbpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent
-         :content-language:to:cc:from:subject:content-transfer-encoding;
-        bh=LTRCkphn2KY4US5x0UBqe8lxMhx2X7b4KiRs1ukZ6cc=;
-        b=H9y9alZuFfKbHXDEWIyGVxHMpUKN431GLEMlv0XRANoBKauBawXZVQ9xogEkKbkgDb
-         8pxAhUdZRY+vyQZ1BUjP+DaBPj2KYljLMhTs3pBdrOPsmdFsNgpe/ejsVprzEMcghpK4
-         nzd3rQ0nqHnbaggyYMozUIrz8XbMV16OFzLFCpsHEjs3T8SZTDFnqNyyl1x7SpKjvakw
-         1giefd4pCn4XZ7f7GrxpYDwA2PfA3QJ7Uxz02+T8FBYlBhkWrFdBXqlAbJX8/3XQkiI/
-         2Nx8V2/BAm4oDt/Dw8YexL56HAjxnSH1xUbhPKcIfOM7GDfhR23vz6Zu/TFDktkU/KLK
-         sRJg==
-X-Gm-Message-State: AOAM533v5zkqHXwMn8a5wXJl1TCaMlZpRtLEXtmojvKC4aXgCPXgjoct
-        turmWl0IzL7ErT/UuWmVHsHId/4X/kAhiyPaqzmlziUbcSSDp+CUW2+4B040CQ3wk2Vz6/2LY7q
-        bB5gQHdebJGl4rGxVkBPhyg2g1bx/C5iMQVkctoUv982Wm9u7EP4rWvvp7hanXWc31zisEQ==
-X-Received: by 2002:a05:620a:5e5:: with SMTP id z5mr5546916qkg.20.1633019828155;
-        Thu, 30 Sep 2021 09:37:08 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJy8Cj4L0tVoT5swM/p7VjMb60lYXxrqZDBXFWjg2LMhIjIKY2qjh2+LjoCvlkkENP99F4nnBg==
-X-Received: by 2002:a05:620a:5e5:: with SMTP id z5mr5546881qkg.20.1633019827820;
-        Thu, 30 Sep 2021 09:37:07 -0700 (PDT)
-Received: from [172.31.1.6] ([70.105.255.190])
-        by smtp.gmail.com with ESMTPSA id f34sm563175qtb.10.2021.09.30.09.37.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Sep 2021 09:37:07 -0700 (PDT)
-Message-ID: <7e24d80d-56b2-68af-5351-ad42dc4d0a18@redhat.com>
-Date:   Thu, 30 Sep 2021 12:37:06 -0400
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
+        b=s7cP22fvJy8RabANQuJFJHxAH+j8AiXg+8ItAV5uHHVDLd0Q4CsB1TfZwntuSYHkUO
+         4FiRR6uWA6BYyBXaeIpw51mzyiQfO1AYWB84411it2SdB87zLfRdhQbCA1UC4QPD48FB
+         0Q8D952RlOEVl7+5iXi5Pa2Y9PkEh06dEvW49IT+cNqZixswhDK5yTXy7vnDF3jgbhqA
+         6eubmWVNoeSCN3K9Txv+/qHqiKCJxCugEHO/RtwGOvcDd0susi71qk/JjDi1S5uO4GwM
+         HCvepmPrh73dKp/cjJ62/+apHkTej+wiCgWdvcYpcDmOtQ7XyTn6aJnlDbjiBYkZVuGU
+         gluA==
+X-Gm-Message-State: AOAM530DndLFEVpiQrp1H8XCzUUvbvQOq24nvGziV1qtSth3Y9oGcG4J
+        +HshudNGOUbH4NA/EPwwW2J+/yx4wGMa/i5N4BU=
+X-Google-Smtp-Source: ABdhPJyNAXlGgykPpoSQORoXm4LRDDlaCMAD8cIdikco7Ac1uwVB1jZIpGBr3/yozFCMZ2mvQhCbDywUDvBawknotr0=
+X-Received: by 2002:ab0:5602:: with SMTP id y2mr6742362uaa.120.1633020145964;
+ Thu, 30 Sep 2021 09:42:25 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.0
-Content-Language: en-US
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Cc:     NFSv4 IETF <nfsv4@ietf.org>
-From:   Steve Dickson <steved@redhat.com>
-Subject: Virtual Bakeathon: Reminder
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Received: by 2002:a59:ab2e:0:b0:22d:7f44:603a with HTTP; Thu, 30 Sep 2021
+ 09:42:25 -0700 (PDT)
+Reply-To: irenezakari24@gmail.com
+From:   Irene zakari <irenezakari88@gmail.com>
+Date:   Thu, 30 Sep 2021 09:42:25 -0700
+Message-ID: <CAFT8PFEAnoqXLbEA5pwcgwfbNhA5PiV3sHmraOZdm3n24J86mw@mail.gmail.com>
+Subject: PLEASE I NEED YOUR HELP
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Hello   ..
 
-Just a quick reminder the VBAT coming up next week
-The details are here [1].
+How do you do over there? I hope you are doing well?
 
-We are again going to be using an IPv6
-based VPN as the testing network. Details on
-how to set it up are at [2]. Any question
-reach out to Ben Coddington <bcodding@redhat.com>
+My name is Irene. (24 years), i am single, from Gambia, the only child
+of late Eng. Bernard Bakary Zakaria. the Director of Bajam Enterprise
+(Building Construction Company in The Gambia) also the CEO of Bernard
+Import and Export (GAMBIA).
 
-Here at Red Hat we have been using vm
-in the Digital Ocean cloud [3]...
-I have found them to be really easy to
-work with and relatively inexpensive.
+As a matter of fact my mother died when i was barely 4 years old
+according to my late father and because of the type of love he had for
+my mother made him to remain UN-married till he left the ghost..
 
-We will again use discord [4] to communicate.
-Look for the VBaT channel. The contact for that is
-Alice Mitchell <ajmitchell@redhat.com>
+So after the death of my father as a result of assassinate, his brother (My
+Uncle) who is the purchasing and marketing sale manager of my late
+fathers company named (Mr. James Tokunbo Oriade Zakaria) wanted to
+convert all the properties and resources of my late father into his
+which i quarreled with him and it made him to lay his anger on me to
+the extent of hiring an assassins to kill me but to God be the glory i
+succeeded by making a way to Burkina faso for my dear life.
+Honestly i do live a fearful life even here in Burkina faso because of
+those Assassins coming after me .
 
-Finally I would like to propose that every day at
-2:00pm (EST) we get together on the discord voice
-channel 'General Chat' and talk about the topics
-of the day:
+I would want to live and study in your country for my better future.
+because my father same blood brother wanted to force me into undecided
+marriage, just for me to leave my father home and went and live with
+another man I never know as he want to occupied all my father home
+and maybe to sold it as my father no longer alive, I'm the only child
+daughter my father born, '' but he don't know that i am not
+interesting in any of my father properties or early marriage for now,
+because i still have future to think about and to focus on my studies
+first as i was doing my first year in the University before the death
+of my father.
 
-* TLS (user vs kernel)
-* FS-cache (Trond's favorite subject)
-* QUIC (Chuck's favorite subject ;-) )
-* Allowing hung mount to reboot
-* re-export
-* Session-Truncking
-* ???
+Actually what I want to discuss with you is about my personal issue
+concern funds my late father deposited in a bank outside my country,
+worth $4.5 million united state dollars. i need your assistance to
+receive and invest this funds in your country.
 
-Basically anything we wan to talk about relative
-to what is going on in the community...
-or not... :-)
+Please help me, I am sincere to you and I want to be member of your
+family as well if you wouldn't mind to accept me and lead me to better
+future in your country.
 
-Ideally, as Rick suggested, reaching out to people
-like Google and MS.. people who  might have a better
-insight of these networking technologies... would
-be good... Just let them where we will be.
+All the documents the bank issue to my father during time of deposit
+is with me now.
+I already notify the bank on phone about the death of my father and
+they are surprise for the news and accept that my father is their good
+customer.
+I will be happy if this money can be invested in any business of your
+choice and it will be under your control till i finished my education,
+also I'm assuring you good relationship and I am ready to discuss the
+amount of money to give you from this money for your help.
 
-If I have forgotten anything... I'm sure you will
-let me know! :-) See you Monday!
+Therefore, I shall give you the bank contact and other necessary
+information in my next email if you will only promise me that you will
+not/never betray and disclosed this matter to anybody, because, this
+money is the only hope i have for survival on earth since I have lost
+my parents.
 
-steved
+Moreover I have the FUND PLACEMENT CERTIFICATE and the DEATH
+CERTIFICATE here with me, but before I give you further information, i
+will like to know your full data
 
-[1] http://www.nfsv4bat.org/Events/2021/Oct/BAT/index.html
-[2] https://vpn.nfsv4.dev/
-[3] https://www.digitalocean.com/
-[4] https://discord.com
+1. Full Name: ........................
+2. Address: ..................
+3. Nationality: ........... Sex................
+4. Age:........... Date of Birth:................
+5. Occupation:...................
+.....
+6. Phone: ........... Fax:.........................
+7. State of Origin: .......Country:..............
+8. Occupation:...................
+................
+9. Marital status........... E-mail address's: ............
+10. Scan copy of your ID card or Driving License/Photo:............
+DECLARATION:
 
+so that i will be fully sure that i am not trusting the wrong person.
+and it will also give me the mind to send you the bank contact for you
+to communicate with them for more verification about this money. and
+to know you more better.
+
+Meanwhile, you can reach me through my pastor,his name is Pastor Paul
+any time you call, tell him that you want to speak with me because
+right now i am living in the church here in Burkina faso and i don't
+want to stay here any longer,
+send for me to speak with you his phone number is this(+226 75213646)
+
+I will stop here and i will be waiting for your reply and feel free
+ask any thing you want to know about me.
+Please help me, I would be highly appreciated
+Have nice day.
+From Irene
