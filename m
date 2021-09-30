@@ -2,68 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E15041E357
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 23:25:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 236E741E362
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 23:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239542AbhI3V0u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 17:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
+        id S1343532AbhI3Vc1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 17:32:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344670AbhI3V0u (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 17:26:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF2AAC06176A
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 14:25:06 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 06F5D703E; Thu, 30 Sep 2021 17:25:06 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 06F5D703E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1633037106;
-        bh=PwgG3nAH3LSMg0GY5PStihFB7z3v6AsnXQU7wtFBEC8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XnDilpW51BBEILtkCI0M6FQ4tmrOejoUuHP+g+AGBA9obh4zTikUaJuTiKe3oPL5p
-         bPx+n/knaZQFenA0iLSt+ZCkgYMjJifZc92FtCCBUOFvOU82ffbpFBHEDJl71jb01N
-         DvvTp891LRUzmYT6pomlcH1HP8Sai0TEqkF3Jf1c=
-Date:   Thu, 30 Sep 2021 17:25:06 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Volodymyr Khomenko <volodymyr@vastdata.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: GSSAPI fix for pynfs nfs4.1 client code
-Message-ID: <20210930212506.GB16927@fieldses.org>
-References: <CANkgwetkTUjj-bMrM4XTvk0vhGiJt3wNKPpRvzgTk-u7ZfrdXg@mail.gmail.com>
- <20210930211123.GA16927@fieldses.org>
+        with ESMTP id S237050AbhI3Vc1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 17:32:27 -0400
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCDFC06176A
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
+Received: by mail-vs1-xe2c.google.com with SMTP id o124so9099491vsc.6
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=zLSt58KChb0zKG8PKQh+M0m0Zsjtb879w5vthwngNvk=;
+        b=ffA+Ahm0VIs14W4TMs1RP+eNn9ByJHvI1+hNv82MsKokoGcyuKvppUUqQvnoMjTUx0
+         ArkKNjt6d4hVyNBYHMttRyuqA1t0I9lUdd2KivdalDVZLDflAGvoMWuB4ea4Ma+7+Nl6
+         Dtj8sG3NiUAMdZG92rz1SBX5LXmDRZPGNuAWV9FSyzAclR2MJ3qdZe50KFQkn/P0Khmi
+         1QlwKK39ec8cQdh+j1B4oFJ6HxQYg6FzgblOkFL3evYxW7U7n92R+XpU7RctFRu77WSP
+         w/xwGnuArAqavl8jAvUrKKVpY8nuesZnd13GzU4601qwBIv4asJ5HVY6Fc1ezjhJMp0s
+         U7Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=zLSt58KChb0zKG8PKQh+M0m0Zsjtb879w5vthwngNvk=;
+        b=MWSoZj+bYznMPomfl5Lxsf4jxW2edzHQ7e4zgdgLOPYSMchGfvor8pIYmwmjGiDxr4
+         4n6PeJ3MyLKd0vSNxSTwsGtdPxqll1xINXjEEHoe13fJP9GxVh3P//yacAdTkTwoeKb9
+         tPSMZM+CiPy1RSyfmToLgIim0jxRktjny6crCxBaJbsuM2QOmELXaDi/UOzD1sXY5Srs
+         wiAWOyIi0uYXZ8zRoTZiXcBYDbCgHhwoW0PBrLYoUFoh4TMRg0/71RYmLRYyTTMiLGYo
+         9xDn+BppBaaOD6RqSr6RmrgGHoIfqbQqABRsDdgQ9h+qLi+a2+V6UzeL0EnnwqZthknC
+         YmXQ==
+X-Gm-Message-State: AOAM532lgzyvchun/UQjOqvWnHNpWYMSbxk6ko6N6pOMGN/bHvhWw3gU
+        F1k0phFnusPRtwACPYpX2D/Zi0UFbjR7Rl8Rk1c=
+X-Google-Smtp-Source: ABdhPJxvPPEH2ReZRnySdUuShbE4mttHPhbUIZnGqnlh/aCLqkdpNpDEHRDixrOF21usx72adljy+wmpKwREfNf3y54=
+X-Received: by 2002:a67:2c58:: with SMTP id s85mr1603191vss.35.1633037443093;
+ Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20210930211123.GA16927@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: by 2002:a59:ccc2:0:b0:22c:2b44:1078 with HTTP; Thu, 30 Sep 2021
+ 14:30:42 -0700 (PDT)
+Reply-To: stefanopessaina123@gmail.com
+From:   Stefano Pessina <majoralanedward082@gmail.com>
+Date:   Thu, 30 Sep 2021 14:30:42 -0700
+Message-ID: <CADmPr8ZbjHhahQZVe557oHW1SNqiXZkZyaxN=GoeL7vRDUqN3w@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 05:11:23PM -0400, J. Bruce Fields wrote:
-> On Thu, Sep 30, 2021 at 06:22:09PM +0300, Volodymyr Khomenko wrote:
-> > commit b77dc49c775756f08bdd0c6ebbe67a96f0ffe41f
-> > Author: Volodymyr Khomenko <volodymyr@vastdata.com>
-> > Date:   Thu Sep 30 17:53:04 2021 +0300
-> > 
-> >     Fixed GSSContext to start sequence numbering from 1
-> >     
-> >     GSS sequence number 0 is usually used by NFS4 NULL request
-> >     during GSS context establishment (but ignored by server).
-> >     Client should never reuse GSS sequence number, so using
-> >     0 for the next real operation (EXCHANGE_ID) is possible but
-> >     looks suspicious. Fixed the code so numbering for operations
-> >     is done from 1 to avoid confusion.
-> 
-> So, I can verify that --security=krb5 works after this patch but not
-> before, good.  But why is that?  As you say, the server is supposed to
-> ignore the sequence number on context creation requests.  And 0 is valid
-> sequence number as far as I know.
+--=20
 
-Looking at the network--my server's not responding to the first data
-message.
+Hi, my foundation has chosen to donate $2,000,000.00 USD (Two Million
+dollars) to you in my ongoing charity program. You came out
+victorious. For more details and claims Email:
+stefanopessaina123@gmail.com
 
-I think the Linux server just has a bug.  I'll make a patch....
-
---b.
+Best Regards,
+Mr. Stefano Pessina,
+Copyright =C2=A92020 The Stefano Pessina Foundation All Rights Reserved.
