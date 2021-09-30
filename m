@@ -2,150 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DD2941DF5B
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 18:42:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D41CE41E1E6
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 21:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352247AbhI3QoM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 12:44:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39734 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352237AbhI3QoJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 12:44:09 -0400
-Received: from mail-ua1-x944.google.com (mail-ua1-x944.google.com [IPv6:2607:f8b0:4864:20::944])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60DCC06176A
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:42:26 -0700 (PDT)
-Received: by mail-ua1-x944.google.com with SMTP id 10so4686093uae.10
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 09:42:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
-        b=MVXGXX3aLHvdEWHCf5XJGaFOufs/PEmNG+RYEO4oTx+QozBBJXVYJaBnJtUB4vE17v
-         l7qyXFAJCbEctdu3sv0yFCoBaT709anRfXTrWJ9LhTtNNTeF1B+O3pLHqUy2QAPvnPSf
-         3IecToNi2HT6Pa8coT6aXrgI9wtYa7BmAid9HW8X8cKcp6oEqxD6jn+NQAgIAJ/uIR8C
-         IIBDMRIctM/mMB+N6Sj6bvfiXlKmuXxbPXR4GO4hFEN9lvqP5/jfJ8FGLJzKy6wn7oVo
-         2mk7x+YQ0Nx9H6ldMnQifpIRNZg0XeefD1+q8eWUCCxe1+/MmkhbycjtfATlCNeof1ow
-         TbpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/T9drlD1s9vO6lHEMs4LJzmDo2MKXEHBXvFYaWoQWpk=;
-        b=s7cP22fvJy8RabANQuJFJHxAH+j8AiXg+8ItAV5uHHVDLd0Q4CsB1TfZwntuSYHkUO
-         4FiRR6uWA6BYyBXaeIpw51mzyiQfO1AYWB84411it2SdB87zLfRdhQbCA1UC4QPD48FB
-         0Q8D952RlOEVl7+5iXi5Pa2Y9PkEh06dEvW49IT+cNqZixswhDK5yTXy7vnDF3jgbhqA
-         6eubmWVNoeSCN3K9Txv+/qHqiKCJxCugEHO/RtwGOvcDd0susi71qk/JjDi1S5uO4GwM
-         HCvepmPrh73dKp/cjJ62/+apHkTej+wiCgWdvcYpcDmOtQ7XyTn6aJnlDbjiBYkZVuGU
-         gluA==
-X-Gm-Message-State: AOAM530DndLFEVpiQrp1H8XCzUUvbvQOq24nvGziV1qtSth3Y9oGcG4J
-        +HshudNGOUbH4NA/EPwwW2J+/yx4wGMa/i5N4BU=
-X-Google-Smtp-Source: ABdhPJyNAXlGgykPpoSQORoXm4LRDDlaCMAD8cIdikco7Ac1uwVB1jZIpGBr3/yozFCMZ2mvQhCbDywUDvBawknotr0=
-X-Received: by 2002:ab0:5602:: with SMTP id y2mr6742362uaa.120.1633020145964;
- Thu, 30 Sep 2021 09:42:25 -0700 (PDT)
+        id S1345660AbhI3TB4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 15:01:56 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:40616 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1345318AbhI3TBx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 15:01:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633028407;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=2pk1sHN9IiEVNwyrRIA+irxwkyugDUv380w1Nyihj+s=;
+        b=I4svXZDjLTu9f7mz9Id9snq7Y8o0bSMAE1u6zPUEFM7vn3uPnPYlwx2R1SlVjMf1GFXnUm
+        P6JTw7d3NubPLKW6gB5Qr9LkrcQEjoyYYY2Q7ufyWhprkcZ3u8pmaw2tvKxsc6qUqmOyRT
+        5WG+QbO81Rpl4s9yVlnrRm9pMwgdqGY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-565-_9nMR1BVNSy7EKgIZIIGLA-1; Thu, 30 Sep 2021 15:00:01 -0400
+X-MC-Unique: _9nMR1BVNSy7EKgIZIIGLA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89E2F1007928;
+        Thu, 30 Sep 2021 18:59:33 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.22.17.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BDC260CD1;
+        Thu, 30 Sep 2021 18:59:11 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id D77042201CC; Thu, 30 Sep 2021 14:59:10 -0400 (EDT)
+Date:   Thu, 30 Sep 2021 14:59:10 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, virtio-fs@redhat.com,
+        casey@schaufler-ca.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Daniel J Walsh <dwalsh@redhat.com>, jlayton@kernel.org,
+        idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bfields@fieldses.org,
+        chuck.lever@oracle.com, stephen.smalley.work@gmail.com
+Subject: [PATCH] security: Return xattr name from
+ security_dentry_init_security()
+Message-ID: <YVYI/p1ipDFiQ5OR@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a59:ab2e:0:b0:22d:7f44:603a with HTTP; Thu, 30 Sep 2021
- 09:42:25 -0700 (PDT)
-Reply-To: irenezakari24@gmail.com
-From:   Irene zakari <irenezakari88@gmail.com>
-Date:   Thu, 30 Sep 2021 09:42:25 -0700
-Message-ID: <CAFT8PFEAnoqXLbEA5pwcgwfbNhA5PiV3sHmraOZdm3n24J86mw@mail.gmail.com>
-Subject: PLEASE I NEED YOUR HELP
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello   ..
+Right now security_dentry_init_security() only supports single security
+label and is used by SELinux only. There are two users of of this hook,
+namely ceph and nfs.
 
-How do you do over there? I hope you are doing well?
+NFS does not care about xattr name. Ceph hardcodes the xattr name to
+security.selinux (XATTR_NAME_SELINUX).
 
-My name is Irene. (24 years), i am single, from Gambia, the only child
-of late Eng. Bernard Bakary Zakaria. the Director of Bajam Enterprise
-(Building Construction Company in The Gambia) also the CEO of Bernard
-Import and Export (GAMBIA).
+I am making changes to fuse/virtiofs to send security label to virtiofsd
+and I need to send xattr name as well. I also hardcoded the name of
+xattr to security.selinux.
 
-As a matter of fact my mother died when i was barely 4 years old
-according to my late father and because of the type of love he had for
-my mother made him to remain UN-married till he left the ghost..
+Stephen Smalley suggested that it probably is a good idea to modify
+security_dentry_init_security() to also return name of xattr so that
+we can avoid this hardcoding in the callers.
 
-So after the death of my father as a result of assassinate, his brother (My
-Uncle) who is the purchasing and marketing sale manager of my late
-fathers company named (Mr. James Tokunbo Oriade Zakaria) wanted to
-convert all the properties and resources of my late father into his
-which i quarreled with him and it made him to lay his anger on me to
-the extent of hiring an assassins to kill me but to God be the glory i
-succeeded by making a way to Burkina faso for my dear life.
-Honestly i do live a fearful life even here in Burkina faso because of
-those Assassins coming after me .
+This patch adds a new parameter "const char **xattr_name" to
+security_dentry_init_security() and LSM puts the name of xattr
+too if caller asked for it (xattr_name != NULL).
 
-I would want to live and study in your country for my better future.
-because my father same blood brother wanted to force me into undecided
-marriage, just for me to leave my father home and went and live with
-another man I never know as he want to occupied all my father home
-and maybe to sold it as my father no longer alive, I'm the only child
-daughter my father born, '' but he don't know that i am not
-interesting in any of my father properties or early marriage for now,
-because i still have future to think about and to focus on my studies
-first as i was doing my first year in the University before the death
-of my father.
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
 
-Actually what I want to discuss with you is about my personal issue
-concern funds my late father deposited in a bank outside my country,
-worth $4.5 million united state dollars. i need your assistance to
-receive and invest this funds in your country.
+I have compile tested this patch. Don't know how to setup ceph and
+test it. Its a very simple change. Hopefully ceph developers can
+have a quick look at it.
 
-Please help me, I am sincere to you and I want to be member of your
-family as well if you wouldn't mind to accept me and lead me to better
-future in your country.
+A similar attempt was made three years back.
 
-All the documents the bank issue to my father during time of deposit
-is with me now.
-I already notify the bank on phone about the death of my father and
-they are surprise for the news and accept that my father is their good
-customer.
-I will be happy if this money can be invested in any business of your
-choice and it will be under your control till i finished my education,
-also I'm assuring you good relationship and I am ready to discuss the
-amount of money to give you from this money for your help.
+https://lore.kernel.org/linux-security-module/20180626080429.27304-1-zyan@redhat.com/T/
+---
+ fs/ceph/xattr.c               |    3 +--
+ fs/nfs/nfs4proc.c             |    3 ++-
+ include/linux/lsm_hook_defs.h |    3 ++-
+ include/linux/lsm_hooks.h     |    1 +
+ include/linux/security.h      |    6 ++++--
+ security/security.c           |    7 ++++---
+ security/selinux/hooks.c      |    6 +++++-
+ 7 files changed, 19 insertions(+), 10 deletions(-)
 
-Therefore, I shall give you the bank contact and other necessary
-information in my next email if you will only promise me that you will
-not/never betray and disclosed this matter to anybody, because, this
-money is the only hope i have for survival on earth since I have lost
-my parents.
+Index: redhat-linux/security/selinux/hooks.c
+===================================================================
+--- redhat-linux.orig/security/selinux/hooks.c	2021-09-28 11:36:03.559785943 -0400
++++ redhat-linux/security/selinux/hooks.c	2021-09-30 14:01:05.869195347 -0400
+@@ -2948,7 +2948,8 @@ static void selinux_inode_free_security(
+ }
+ 
+ static int selinux_dentry_init_security(struct dentry *dentry, int mode,
+-					const struct qstr *name, void **ctx,
++					const struct qstr *name,
++					const char **xattr_name, void **ctx,
+ 					u32 *ctxlen)
+ {
+ 	u32 newsid;
+@@ -2961,6 +2962,9 @@ static int selinux_dentry_init_security(
+ 	if (rc)
+ 		return rc;
+ 
++	if (xattr_name)
++		*xattr_name = XATTR_NAME_SELINUX;
++
+ 	return security_sid_to_context(&selinux_state, newsid, (char **)ctx,
+ 				       ctxlen);
+ }
+Index: redhat-linux/security/security.c
+===================================================================
+--- redhat-linux.orig/security/security.c	2021-08-16 10:39:28.518988836 -0400
++++ redhat-linux/security/security.c	2021-09-30 13:54:36.367195347 -0400
+@@ -1052,11 +1052,12 @@ void security_inode_free(struct inode *i
+ }
+ 
+ int security_dentry_init_security(struct dentry *dentry, int mode,
+-					const struct qstr *name, void **ctx,
+-					u32 *ctxlen)
++				  const struct qstr *name,
++				  const char **xattr_name, void **ctx,
++				  u32 *ctxlen)
+ {
+ 	return call_int_hook(dentry_init_security, -EOPNOTSUPP, dentry, mode,
+-				name, ctx, ctxlen);
++				name, xattr_name, ctx, ctxlen);
+ }
+ EXPORT_SYMBOL(security_dentry_init_security);
+ 
+Index: redhat-linux/include/linux/lsm_hooks.h
+===================================================================
+--- redhat-linux.orig/include/linux/lsm_hooks.h	2021-06-02 10:20:27.717485143 -0400
++++ redhat-linux/include/linux/lsm_hooks.h	2021-09-30 13:56:48.440195347 -0400
+@@ -196,6 +196,7 @@
+  *	@dentry dentry to use in calculating the context.
+  *	@mode mode used to determine resource type.
+  *	@name name of the last path component used to create file
++ *	@xattr_name pointer to place the pointer to security xattr name
+  *	@ctx pointer to place the pointer to the resulting context in.
+  *	@ctxlen point to place the length of the resulting context.
+  * @dentry_create_files_as:
+Index: redhat-linux/include/linux/security.h
+===================================================================
+--- redhat-linux.orig/include/linux/security.h	2021-08-16 10:39:28.484988836 -0400
++++ redhat-linux/include/linux/security.h	2021-09-30 13:59:00.288195347 -0400
+@@ -317,8 +317,9 @@ int security_add_mnt_opt(const char *opt
+ 				int len, void **mnt_opts);
+ int security_move_mount(const struct path *from_path, const struct path *to_path);
+ int security_dentry_init_security(struct dentry *dentry, int mode,
+-					const struct qstr *name, void **ctx,
+-					u32 *ctxlen);
++				  const struct qstr *name,
++				  const char **xattr_name, void **ctx,
++				  u32 *ctxlen);
+ int security_dentry_create_files_as(struct dentry *dentry, int mode,
+ 					struct qstr *name,
+ 					const struct cred *old,
+@@ -739,6 +740,7 @@ static inline void security_inode_free(s
+ static inline int security_dentry_init_security(struct dentry *dentry,
+ 						 int mode,
+ 						 const struct qstr *name,
++						 const char **xattr_name,
+ 						 void **ctx,
+ 						 u32 *ctxlen)
+ {
+Index: redhat-linux/include/linux/lsm_hook_defs.h
+===================================================================
+--- redhat-linux.orig/include/linux/lsm_hook_defs.h	2021-07-07 11:54:59.673549151 -0400
++++ redhat-linux/include/linux/lsm_hook_defs.h	2021-09-30 14:02:13.114195347 -0400
+@@ -83,7 +83,8 @@ LSM_HOOK(int, 0, sb_add_mnt_opt, const c
+ LSM_HOOK(int, 0, move_mount, const struct path *from_path,
+ 	 const struct path *to_path)
+ LSM_HOOK(int, 0, dentry_init_security, struct dentry *dentry,
+-	 int mode, const struct qstr *name, void **ctx, u32 *ctxlen)
++	 int mode, const struct qstr *name, const char **xattr_name,
++	 void **ctx, u32 *ctxlen)
+ LSM_HOOK(int, 0, dentry_create_files_as, struct dentry *dentry, int mode,
+ 	 struct qstr *name, const struct cred *old, struct cred *new)
+ 
+Index: redhat-linux/fs/nfs/nfs4proc.c
+===================================================================
+--- redhat-linux.orig/fs/nfs/nfs4proc.c	2021-07-14 14:47:42.732842926 -0400
++++ redhat-linux/fs/nfs/nfs4proc.c	2021-09-30 14:06:02.249195347 -0400
+@@ -127,7 +127,8 @@ nfs4_label_init_security(struct inode *d
+ 		return NULL;
+ 
+ 	err = security_dentry_init_security(dentry, sattr->ia_mode,
+-				&dentry->d_name, (void **)&label->label, &label->len);
++				&dentry->d_name, NULL,
++				(void **)&label->label, &label->len);
+ 	if (err == 0)
+ 		return label;
+ 
+Index: redhat-linux/fs/ceph/xattr.c
+===================================================================
+--- redhat-linux.orig/fs/ceph/xattr.c	2021-09-09 13:05:21.800611264 -0400
++++ redhat-linux/fs/ceph/xattr.c	2021-09-30 14:14:59.892195347 -0400
+@@ -1311,7 +1311,7 @@ int ceph_security_init_secctx(struct den
+ 	int err;
+ 
+ 	err = security_dentry_init_security(dentry, mode, &dentry->d_name,
+-					    &as_ctx->sec_ctx,
++					    &name, &as_ctx->sec_ctx,
+ 					    &as_ctx->sec_ctxlen);
+ 	if (err < 0) {
+ 		WARN_ON_ONCE(err != -EOPNOTSUPP);
+@@ -1335,7 +1335,6 @@ int ceph_security_init_secctx(struct den
+ 	 * It only supports single security module and only selinux has
+ 	 * dentry_init_security hook.
+ 	 */
+-	name = XATTR_NAME_SELINUX;
+ 	name_len = strlen(name);
+ 	err = ceph_pagelist_reserve(pagelist,
+ 				    4 * 2 + name_len + as_ctx->sec_ctxlen);
 
-Moreover I have the FUND PLACEMENT CERTIFICATE and the DEATH
-CERTIFICATE here with me, but before I give you further information, i
-will like to know your full data
-
-1. Full Name: ........................
-2. Address: ..................
-3. Nationality: ........... Sex................
-4. Age:........... Date of Birth:................
-5. Occupation:...................
-.....
-6. Phone: ........... Fax:.........................
-7. State of Origin: .......Country:..............
-8. Occupation:...................
-................
-9. Marital status........... E-mail address's: ............
-10. Scan copy of your ID card or Driving License/Photo:............
-DECLARATION:
-
-so that i will be fully sure that i am not trusting the wrong person.
-and it will also give me the mind to send you the bank contact for you
-to communicate with them for more verification about this money. and
-to know you more better.
-
-Meanwhile, you can reach me through my pastor,his name is Pastor Paul
-any time you call, tell him that you want to speak with me because
-right now i am living in the church here in Burkina faso and i don't
-want to stay here any longer,
-send for me to speak with you his phone number is this(+226 75213646)
-
-I will stop here and i will be waiting for your reply and feel free
-ask any thing you want to know about me.
-Please help me, I would be highly appreciated
-Have nice day.
-From Irene
