@@ -2,69 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 236E741E362
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 23:30:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47D3C41E45A
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Oct 2021 00:58:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343532AbhI3Vc1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 17:32:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        id S1349431AbhI3XAH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 19:00:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237050AbhI3Vc1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 17:32:27 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBCDFC06176A
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id o124so9099491vsc.6
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
+        with ESMTP id S1349422AbhI3XAE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 19:00:04 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF11C061775
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 15:58:20 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id i25so31459054lfg.6
+        for <linux-nfs@vger.kernel.org>; Thu, 30 Sep 2021 15:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zLSt58KChb0zKG8PKQh+M0m0Zsjtb879w5vthwngNvk=;
-        b=ffA+Ahm0VIs14W4TMs1RP+eNn9ByJHvI1+hNv82MsKokoGcyuKvppUUqQvnoMjTUx0
-         ArkKNjt6d4hVyNBYHMttRyuqA1t0I9lUdd2KivdalDVZLDflAGvoMWuB4ea4Ma+7+Nl6
-         Dtj8sG3NiUAMdZG92rz1SBX5LXmDRZPGNuAWV9FSyzAclR2MJ3qdZe50KFQkn/P0Khmi
-         1QlwKK39ec8cQdh+j1B4oFJ6HxQYg6FzgblOkFL3evYxW7U7n92R+XpU7RctFRu77WSP
-         w/xwGnuArAqavl8jAvUrKKVpY8nuesZnd13GzU4601qwBIv4asJ5HVY6Fc1ezjhJMp0s
-         U7Sg==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=AnIUtRQtDgk3YDJAatwz+LXUKRWPbctJNdAprjwvZ5o=;
+        b=R1PvQpCeIannjSb6Yh+ydpk75/C6o8mEtPAzmgaEHIE8+GwbHjyaz9wpB+8x12xrLC
+         5QzliCelgl2NI0J6eAvviXY6NAb0fddKOwm8F0zluWIgQVcCljaROD5vrmiDeSlDLGsK
+         xJB49pSfVQy8S3Pu4kCVcQeq6ZMoa/xhFaIxFdweO35gr4XDAjaXA+zoW+1iWxDz8mxI
+         TYIETMUD6inxlylZ2+5HXNoU+Ej3Yy1phQDEHgefTc6SLcco5OC3x4iNwsBqiDMPoP+P
+         pOk7Fq1FEKBsQAGNBYAce970oQL9Ja1ScWCdUauoISN5YYshWUwov1jp5zGqcxSOFPv4
+         8viw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=zLSt58KChb0zKG8PKQh+M0m0Zsjtb879w5vthwngNvk=;
-        b=MWSoZj+bYznMPomfl5Lxsf4jxW2edzHQ7e4zgdgLOPYSMchGfvor8pIYmwmjGiDxr4
-         4n6PeJ3MyLKd0vSNxSTwsGtdPxqll1xINXjEEHoe13fJP9GxVh3P//yacAdTkTwoeKb9
-         tPSMZM+CiPy1RSyfmToLgIim0jxRktjny6crCxBaJbsuM2QOmELXaDi/UOzD1sXY5Srs
-         wiAWOyIi0uYXZ8zRoTZiXcBYDbCgHhwoW0PBrLYoUFoh4TMRg0/71RYmLRYyTTMiLGYo
-         9xDn+BppBaaOD6RqSr6RmrgGHoIfqbQqABRsDdgQ9h+qLi+a2+V6UzeL0EnnwqZthknC
-         YmXQ==
-X-Gm-Message-State: AOAM532lgzyvchun/UQjOqvWnHNpWYMSbxk6ko6N6pOMGN/bHvhWw3gU
-        F1k0phFnusPRtwACPYpX2D/Zi0UFbjR7Rl8Rk1c=
-X-Google-Smtp-Source: ABdhPJxvPPEH2ReZRnySdUuShbE4mttHPhbUIZnGqnlh/aCLqkdpNpDEHRDixrOF21usx72adljy+wmpKwREfNf3y54=
-X-Received: by 2002:a67:2c58:: with SMTP id s85mr1603191vss.35.1633037443093;
- Thu, 30 Sep 2021 14:30:43 -0700 (PDT)
+         :subject:to;
+        bh=AnIUtRQtDgk3YDJAatwz+LXUKRWPbctJNdAprjwvZ5o=;
+        b=Wjy75drUf4RQlSE8zNHq/I0X1HySqhy/CUy4GshtNW7T0M38Hb4WbdJKqUGKYzxbK1
+         cn+5RmLlGuRC54VaGgd2XvGFLJF0E4c6UTxSAyq9Cs0AufusFLPWVlO9oZT1B28IzUZo
+         mJ98peSw26CMaGg9XpE9QDlXMaLB7B3lC/pl7WmbDbxF3MbQ99rC5MHw+LTVJZhFdmzF
+         pocZThfCu3EyH04gcHN6xPZhyzjkm//K/MqDRdH8RF5IWOMmX/0gNHEz0mkkJ54yr4e1
+         Tf+jizIoV3gVTGtnqfNfTQwPmFKsdNbg9CM+xDPPZUT/72yYG10p18sa6ZgL1nDnvuH0
+         xsVA==
+X-Gm-Message-State: AOAM5329flP2hzbprzo786fiY7de7Gz7Ba0EvrVJyJbZg2m7Ad4M8Z6Z
+        bfA8dpmB9FcDpJWmb+2Uf4Ids+2jlbOH3zDt/2c=
+X-Google-Smtp-Source: ABdhPJyp0GckkyoQimIbcF3/K7wY5JuxQheNi1bdL6NpxgoMO9RxiMuiJeEbVByK85pFkO1bkngH1qS9zgmfyJF8Wlc=
+X-Received: by 2002:ac2:4d91:: with SMTP id g17mr1289553lfe.597.1633042698767;
+ Thu, 30 Sep 2021 15:58:18 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a59:ccc2:0:b0:22c:2b44:1078 with HTTP; Thu, 30 Sep 2021
- 14:30:42 -0700 (PDT)
-Reply-To: stefanopessaina123@gmail.com
-From:   Stefano Pessina <majoralanedward082@gmail.com>
-Date:   Thu, 30 Sep 2021 14:30:42 -0700
-Message-ID: <CADmPr8ZbjHhahQZVe557oHW1SNqiXZkZyaxN=GoeL7vRDUqN3w@mail.gmail.com>
-Subject: 
+Received: by 2002:a05:6512:5d8:0:0:0:0 with HTTP; Thu, 30 Sep 2021 15:58:17
+ -0700 (PDT)
+Reply-To: southwestloanco59@gmail.com
+From:   SOUTHWESTLOANCO <saniabdullahinng2020@gmail.com>
+Date:   Thu, 30 Sep 2021 15:58:17 -0700
+Message-ID: <CA+3X9TxOgUnr17iBEDQumHTT-4sD=94e7Kczm3G2MdEDopz6kQ@mail.gmail.com>
+Subject: Dear owner,
 To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=20
+-- 
+Good day,
+          Do you need a loan ? We offer any kind of loan to repay in
+6months with just 2% interest
 
-Hi, my foundation has chosen to donate $2,000,000.00 USD (Two Million
-dollars) to you in my ongoing charity program. You came out
-victorious. For more details and claims Email:
-stefanopessaina123@gmail.com
+Kindly Reply with below information
 
-Best Regards,
-Mr. Stefano Pessina,
-Copyright =C2=A92020 The Stefano Pessina Foundation All Rights Reserved.
+NAME...............
+ADDRESS..........
+OCCUPATION....
+AGE...................
+PHONE..............
+AMOUNT NEEDED......
+
+Regards
+
+Contact  Mr Gary Edward +13182955380
+
+Remittance Department southwestloanco59@gmail.com
