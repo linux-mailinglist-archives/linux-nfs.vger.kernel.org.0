@@ -2,93 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B20B341DC1E
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 16:16:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF2F141DC49
+	for <lists+linux-nfs@lfdr.de>; Thu, 30 Sep 2021 16:30:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351837AbhI3OSE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Sep 2021 10:18:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32904 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240149AbhI3OSE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 10:18:04 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97018C06176A;
-        Thu, 30 Sep 2021 07:16:21 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BB434703F; Thu, 30 Sep 2021 10:16:20 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BB434703F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1633011380;
-        bh=d+zTKb1U2WCtpOSHtjtEGCRkMq8DHSFqEIy3a/LI1Dg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XXmkX3d58WdggHN44Xy7qNKKfXsKmNHyNMvAAPA2YwcCJioKbVi4kGKwpMhnz/Fom
-         HHTj+Y056Rsqk6sfgEFNHAy33Y9XbGQYPkNOjDtp3qgXi2VXh5KDXGZ+LwWR7CvwZx
-         yQ55umNNVGHORlMHWXZ363pgwhycuzpc+yVZGbig=
-Date:   Thu, 30 Sep 2021 10:16:20 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     "Ho, Patrick" <Patrick.Ho@netapp.com>
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: fix error handling of register_pernet_subsys() in
- init_nfsd()
-Message-ID: <20210930141620.GA9422@fieldses.org>
-References: <SJ0PR06MB8327D188504E0F367C8B4E53F4AA9@SJ0PR06MB8327.namprd06.prod.outlook.com>
+        id S1349724AbhI3Obw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 30 Sep 2021 10:31:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47264 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1348126AbhI3Obu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Sep 2021 10:31:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633012207;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=A09nBnh3+znqPTmyctOPsBC8fydwsZHVz2bjxrS6BRg=;
+        b=Z460mongC9/NRYQPSD0687ALRmyjPInYaThZilibZdORqagpAxxDBcRsw+ZXY0FBuoZurf
+        dGbqQKXWggWhaqwls5gG3iBG/Dre5Oo/GC1B0T0CJFr6Ei2iN++mJddMvsCvJoBtqh1QEN
+        ohl+F0LOyRJ8FLDi1LNmR8fp0AM5kiE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-TJlGUIyeMpaBMoTMQvWhSA-1; Thu, 30 Sep 2021 10:30:01 -0400
+X-MC-Unique: TJlGUIyeMpaBMoTMQvWhSA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6146E804148;
+        Thu, 30 Sep 2021 14:29:26 +0000 (UTC)
+Received: from [10.10.66.66] (ovpn-66-66.rdu2.redhat.com [10.10.66.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0792F5C1A1;
+        Thu, 30 Sep 2021 14:29:25 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 4/5] NFS: Further optimisations for 'ls -l'
+Date:   Thu, 30 Sep 2021 10:29:23 -0400
+Message-ID: <46C79084-3586-4B63-A55F-7A3B9ED547CE@redhat.com>
+In-Reply-To: <558be6c89090b38cc9b679a0893649c5067cff14.camel@hammerspace.com>
+References: <20210929134944.632844-1-trondmy@kernel.org>
+ <20210929134944.632844-2-trondmy@kernel.org>
+ <20210929134944.632844-3-trondmy@kernel.org>
+ <20210929134944.632844-4-trondmy@kernel.org>
+ <C9ED123C-A092-4417-8597-AB6267379E2F@redhat.com>
+ <f09a7c00b70d51a442542dec1e1ba98289ad612c.camel@hammerspace.com>
+ <F6D17359-3190-4A67-9DF7-08BCE61BE075@redhat.com>
+ <558be6c89090b38cc9b679a0893649c5067cff14.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ0PR06MB8327D188504E0F367C8B4E53F4AA9@SJ0PR06MB8327.namprd06.prod.outlook.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 30, 2021 at 03:48:42AM +0000, Ho, Patrick wrote:
-> >From 7417896fcc7aea645fa0b89f39fa55979251dca3 Mon Sep 17 00:00:00 2001
-> From: Patrick Ho <Patrick.Ho@netapp.com>
-> Date: Sat, 21 Aug 2021 02:56:26 -0400
-> Subject: [PATCH] nfsd: fix error handling of register_pernet_subsys() in
->  init_nfsd()
-> 
-> init_nfsd() should not unregister pernet subsys if the register fails
-> but should instead unwind from the last successful operation which is
-> register_filesystem().
-> 
-> Unregistering a failed register_pernet_subsys() call can result in
-> a kernel GPF as revealed by programmatically injecting an error in
-> register_pernet_subsys().
-> 
-> Verified the fix handled failure gracefully with no lingering nfsd
-> entry in /proc/filesystems.  This change was introduced by the commit
-> bd5ae9288d64 ("nfsd: register pernet ops last, unregister first"),
-> the original error handling logic was correct.
+On 29 Sep 2021, at 16:35, Trond Myklebust wrote:
+> It is concerning, and indeed in our test we are seeing READDIR
+> amplification with these multiple process accesses. So scenarios like
+> the one you describe above are exactly the kind of issue I was looking
+> to fix with these patches.
 
-Whoops, thanks for catching this.  I assume Chuck will pick it up.
+I spent some time trying to trigger the scenario I was concerned about, but
+I couldn't generate any op amplifications.  Feel free to add my:
 
-Acked-by: J. Bruce Fields <bfields@redhat.com>
+Tested-by: Benjamin Coddington <bcodding@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
 
---b.
+for the series.
 
-> 
-> Fixes: bd5ae9288d64 ("nfsd: register pernet ops last, unregister first")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Patrick Ho <Patrick.Ho@netapp.com>
-> ---
->  fs/nfsd/nfsctl.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index c2c3d9077dc5..09ae1a0873d0 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1545,7 +1545,7 @@ static int __init init_nfsd(void)
->  		goto out_free_all;
->  	return 0;
->  out_free_all:
-> -	unregister_pernet_subsys(&nfsd_net_ops);
-> +	unregister_filesystem(&nfsd_fs_type);
->  out_free_exports:
->  	remove_proc_entry("fs/nfs/exports", NULL);
->  	remove_proc_entry("fs/nfs", NULL);
-> -- 
-> 2.17.1
+Ben
+
