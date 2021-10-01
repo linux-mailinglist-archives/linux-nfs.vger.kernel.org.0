@@ -2,78 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 33D6641EF03
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Oct 2021 15:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 894EE41EF32
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Oct 2021 16:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353659AbhJAOBJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 Oct 2021 10:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46850 "EHLO
+        id S1354204AbhJAOOv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Oct 2021 10:14:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352999AbhJAOBG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Oct 2021 10:01:06 -0400
+        with ESMTP id S1353676AbhJAOOu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Oct 2021 10:14:50 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 077B0C061775
-        for <linux-nfs@vger.kernel.org>; Fri,  1 Oct 2021 06:59:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4DCBC061775
+        for <linux-nfs@vger.kernel.org>; Fri,  1 Oct 2021 07:13:06 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 69B6525FE; Fri,  1 Oct 2021 09:59:21 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 69B6525FE
+        id 2FCC035BB; Fri,  1 Oct 2021 10:13:06 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2FCC035BB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1633096761;
-        bh=J4jr3ea95gdc9JCScyAYNi3fSnm8ymfSMlAesbr25/8=;
-        h=Date:To:Cc:Subject:From:From;
-        b=phz+VhkBQOo2bFGdYVfB/CCisOdr/zNs9kJ/p7sQpGRX6XemuNInkL5pQfbiTbCSV
-         LgJ+9SejrTrGIG3aEFrlYcyQeiSKuCdWuirL8rHasfUgE+yF4WZTkXjHrTnJXgrvwW
-         G2+OH/pvZy4srvA1x5t88Mb4nIeTxv9Zs4QBIj1I=
-Date:   Fri, 1 Oct 2021 09:59:21 -0400
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Volodymyr Khomenko <volodymyr@vastdata.com>
-Subject: [PATCH] SUNRPC: fix sign error causing rpcsec_gss drops
-Message-ID: <20211001135921.GC959@fieldses.org>
+        s=default; t=1633097586;
+        bh=Po35VI2WR0mijHYgFjs8du/5yXKWXjR3fLwzLdFoLS0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fF4ULZukIifnDTNrYAkBz1aTOGg2hyqonLYKA4bWmg5r/RwD+u3uE9Koj0fJ+XJtj
+         iByMjrEEkNjvp5AYszpU2QbApJCsaZjPHtiQTX+idowO67uBfVqDuPGCEvN0Kj8fLS
+         m7djECghzpjs3d2LI1ZZCjq71KWUOhHTEUEAvuR4=
+Date:   Fri, 1 Oct 2021 10:13:06 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Volodymyr Khomenko <volodymyr@vastdata.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: GSSAPI fix for pynfs nfs4.1 client code
+Message-ID: <20211001141306.GD959@fieldses.org>
+References: <CANkgwetkTUjj-bMrM4XTvk0vhGiJt3wNKPpRvzgTk-u7ZfrdXg@mail.gmail.com>
+ <20210930211123.GA16927@fieldses.org>
+ <CANkgweuuo7VctNLNSGyVE2Unjv_RMdG7+zPYr6_QwSZAQTbPRQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CANkgweuuo7VctNLNSGyVE2Unjv_RMdG7+zPYr6_QwSZAQTbPRQ@mail.gmail.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+On Fri, Oct 01, 2021 at 09:49:50AM +0300, Volodymyr Khomenko wrote:
+> > So, I can verify that --security=krb5 works after this patch but not
+> > before, good.  But why is that?  As you say, the server is supposed to
+> > ignore the sequence number on context creation requests.  And 0 is valid
+> > sequence number as far as I know.
+> 
+> By design of RPCGSS we have a 'last seen seq_number' counter on the
+> server side per each GSS context
+> and we must not accept any packet that was already seen before (we
+> also have a bitmask of several last requests for this).
+> This 'last seen counter' is unsigned int32 (the same as seq_num) so we
+> can't just init it to -1 so next seq_num=0 will be valid.
+> The most obvious implementation is to init it last_seen_seq_num to 0
+> so the very 1st packet after NFS4 NULL must be 1 to differ from last
+> seen seq_number.
 
-If sd_max is unsigned, then sd_max - GSS_SEQ_WIN is a very large number
-whenever sd_max is less than GSS_SEQ_WIN, and the comparison:
+Note in theory gssapi mechanisms can require multiple round trips (in
+the GSS_PROC_CONTINUE_INIT case), so this wouldn't actually avoid
+duplicate sequence numbers.
 
-	seq_num <= sd->sd_max - GSS_SEQ_WIN
+In any case, the rfc is unambiguous here: "In a creation request, the
+seq_num and service fields are undefined and both must be ignored by the
+server."
 
-in gss_check_seq_num is pretty much always true, even when that's
-clearly not what was intended.
+> A better implementation (theoretically) can set this counter to
+> 'undefined' state by additional flag, but this is  more
+> resource-consuming
+> (you need to process is_inited flag + last_seen_seq_num instead of
+> just one counter).
+> If the last seen seq_number is undefined during GSS initialization,
+> then strictly speaking we can send ANY seq_num for the very 1st
+> request after NFS4 NULL.
 
-This was causing pynfs to hang when using krb5, because pynfs uses zero
-as the initial gss sequence number.  That's perfectly legal, but this
-logic error causes knfsd to drop the rpc in that case.  Out-of-order
-sequence IDs in the first GSS_SEQ_WIN (128) calls will also cause this.
+Right, again, from RFC 2203, " The seq_num field can start at any value
+below MAXSEQ."
 
-Fixes: 10b9d99a3dbb ("SUNRPC: Augment server-side rpcgss tracepoints")
-Cc: stable@vger.kernel.org
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- net/sunrpc/auth_gss/svcauth_gss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It can be implemented without the need for an is_inited flag.
 
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 7dba6a9c213a..b87565b64928 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -645,7 +645,7 @@ static bool gss_check_seq_num(const struct svc_rqst *rqstp, struct rsc *rsci,
- 		}
- 		__set_bit(seq_num % GSS_SEQ_WIN, sd->sd_win);
- 		goto ok;
--	} else if (seq_num <= sd->sd_max - GSS_SEQ_WIN) {
-+	} else if (seq_num + GSS_SEQ_WIN <= sd->sd_max) {
- 		goto toolow;
- 	}
- 	if (__test_and_set_bit(seq_num % GSS_SEQ_WIN, sd->sd_win))
--- 
-2.31.1
+The initial sequence number of 0 really did find an actual bug in the
+server, so pynfs is definitely doing its job in this case!
 
+--b.
