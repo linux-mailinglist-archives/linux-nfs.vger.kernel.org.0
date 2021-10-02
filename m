@@ -2,109 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B0A2A41FA06
-	for <lists+linux-nfs@lfdr.de>; Sat,  2 Oct 2021 08:12:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 147A441FB46
+	for <lists+linux-nfs@lfdr.de>; Sat,  2 Oct 2021 13:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232362AbhJBGOY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 2 Oct 2021 02:14:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40990 "EHLO
+        id S232930AbhJBMA2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 2 Oct 2021 08:00:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231952AbhJBGOY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 2 Oct 2021 02:14:24 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A43C061775
-        for <linux-nfs@vger.kernel.org>; Fri,  1 Oct 2021 23:12:38 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id z24so47205461lfu.13
-        for <linux-nfs@vger.kernel.org>; Fri, 01 Oct 2021 23:12:38 -0700 (PDT)
+        with ESMTP id S232909AbhJBMA2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 2 Oct 2021 08:00:28 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CA5FC0613EE
+        for <linux-nfs@vger.kernel.org>; Sat,  2 Oct 2021 04:58:42 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id k13so13306886ilo.7
+        for <linux-nfs@vger.kernel.org>; Sat, 02 Oct 2021 04:58:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4fL5w6Wqh9byUDa7f8JiI3gM4CUxjyJR13EaZ6OeDkk=;
-        b=cEFdnq+PeeC1MMKJa7t1ebp2jTkHfM0mLvcWWwVJmBepJNTEEwFOBDV/G6zUEmYtfH
-         /u91SWqxGVpxCHcu/3P7iv/sPxtPh3ad0yi3aSoihhHTW2VwALYsRDWfAH1Fi0DeZ0OO
-         RSH8SQMurven3Dn9NYyrJdomWUdYmN0t37V4gD+vVih9VQLeDysEzpzA/arHcQfCsm2o
-         mvsrHpT0yirqsyxeRcEjdx9TEZ9zNGMv6AxjIRF9ybm2ERNBDcw0Mbeoa+ms39oihoHJ
-         s6NWsYYoffICY0nH8XtPAUwAqZ1e+es172AjP9JqSNk98f+T/8oBT4qhAGZF5LzEWd2d
-         2mKA==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=QQ8yjdkr3AyTXc1Qd+y5KVQEFJYRzYvpitUt1iUKrzhECN3YOj+oNCW6D9KW/fS04w
+         EdezrgoRMuFIuc9iEqAiRLnI677qcPgh8qEOEdOx+NUZ5MgnqpdmiQE5Rrf9NzlSz7JR
+         jfKmYCbeXC/qnzJGMMzArVeDE2eSpZBlopyklXaKzhrq/VqT743SFYECgl9Td9JQFMJB
+         T1TPujHh2zRQu3k+lFcLGPAIhStmdiJVFGEY8XaS0XXLEJxnuf01ZSBvvVOzqBK5yGO7
+         5+Pv2F9hzigZK+wObaAr77GL/yWUwIDdN6YfVR/r0TQhFtO2oTMcESSxlWkyExKYvcJ2
+         +6jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4fL5w6Wqh9byUDa7f8JiI3gM4CUxjyJR13EaZ6OeDkk=;
-        b=VWKA8XA0u3CTfGAhcdMGORslUSV8E44x0msJ12kVxG7dEL6TsEs0AjGtUaRWNlDOSl
-         XP1kvoXmT3jUVI/f6gzDcgQj8NAqWiS3z/L4k0gNIIcJljMNfAef5iporTPzzfl3lu1w
-         6OJZvF7IJ1kO4JccBIdSEE67RkYVjx0SsWOry1u7qqyAb8AgnSOUgMmPoXoJaMeQ9XdC
-         QHn8TIwx1MLXebOM7hHRygaiVLGMZ5tDRRiYPWHA6HI+mw7uLoxV3pLdYRER3GQOXzpF
-         uwF2G4NnajZTGKW6xdNqQKT1ro5xTMYkelfIkEA9dIxZwuY9/1cdEmu3NpFSJ7Dc1kjL
-         dbDQ==
-X-Gm-Message-State: AOAM531Z9bE+s9egHktuMS2BYW0jGFrF8khYhvqKunYkLTiBCHlpr2cY
-        whhDG97vcEj/gLtBwYSVKOLIQ4H5JpCoGW4C7PPF63wBkgc2PA==
-X-Google-Smtp-Source: ABdhPJwrinravQTXxVe0G6wZHyDa2+yVacnbnui++mqsZ6ukiWb8b5fSvda0REWYLMMxDXKlHQXCrc5k2ymHxHXlpVM=
-X-Received: by 2002:a05:6512:1399:: with SMTP id p25mr2248517lfa.277.1633155157079;
- Fri, 01 Oct 2021 23:12:37 -0700 (PDT)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=nsZbpm1YBoHMpWTnzHLuE/zYZ0yg4jBiKD5Q7oCTPBE=;
+        b=2ZekkwlERRJEz9kO1MXhghj2Fmp0R193lkrmOtCD/UAl1kEoWDWRAZyvAPXWToiiJ+
+         8ONL7MCcj7xYLuYnKNx/Z9yNCTNCa+qmOrI5oYS3FASByNIkTZ9hwRayhqAe+7m0qcX3
+         /74atIlQmM63hCZADo6TJwZSgGKzYj4YVee8EYOYFox8fCekOVkshdhKG/Kuvhxmx9rk
+         eyMGuglKLAp3etJz9vYlP3Sj9OD6MrWkMod9zeAoBixyfBzZzlScQsjfdj1FqwqS4AIt
+         DDS377vsDZbVmOF+1y0aUAGq37S5Dh+Luh0FYwKK9PVjb/X3NLS+ZVc/8jfCp6MjmvAb
+         azaw==
+X-Gm-Message-State: AOAM532SeBx+dDObV7yAvuROsEbqBdEKNuI7+cb897htu3GAqJiW95Tx
+        dPh09B3wWvUjGyNYbNdMfU446touy6hHUxV7rZw=
+X-Google-Smtp-Source: ABdhPJy3OnHCtjWZX2ubyTK+F3JmYyLW1HCLzfAV/gPzoxmWHQJWsZ0bEtoZVkAJJjYKH+3bhFtXs85/D02G5BtuO5U=
+X-Received: by 2002:a92:ca06:: with SMTP id j6mr2317156ils.42.1633175922045;
+ Sat, 02 Oct 2021 04:58:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <CANkgwetkTUjj-bMrM4XTvk0vhGiJt3wNKPpRvzgTk-u7ZfrdXg@mail.gmail.com>
- <20210930211123.GA16927@fieldses.org> <CANkgweuuo7VctNLNSGyVE2Unjv_RMdG7+zPYr6_QwSZAQTbPRQ@mail.gmail.com>
- <20211001141306.GD959@fieldses.org> <CANkgwevJURTVNcs8u3KS_jiZwxQZgGHX=YmU+kvbweQ0PLBHiA@mail.gmail.com>
- <20211001154821.GE959@fieldses.org>
-In-Reply-To: <20211001154821.GE959@fieldses.org>
-From:   Volodymyr Khomenko <volodymyr@vastdata.com>
-Date:   Sat, 2 Oct 2021 09:12:25 +0300
-Message-ID: <CANkgwetH1jzxYcUp5+7AnhE_S8iQBnrG76hrKsUsXUAsUqYNJA@mail.gmail.com>
-Subject: Re: GSSAPI fix for pynfs nfs4.1 client code
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs@vger.kernel.org
+Received: by 2002:a4f:f90d:0:0:0:0:0 with HTTP; Sat, 2 Oct 2021 04:58:41 -0700 (PDT)
+Reply-To: unitednnation0@gmail.com
+From:   "U.n" <wadebaye33@gmail.com>
+Date:   Fri, 1 Oct 2021 23:58:41 -1200
+Message-ID: <CACE0T5WBFyHbiOiVMH8UtgPm6J8Pk05_Uk=Co2EttH7w+J1NKA@mail.gmail.com>
+Subject: Attention
+To:     unitednnation0@gmail.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ok, I see your point - yes, it's better that pynfs has "unusual but
-still RFC-compliant" behaviour to catch the real bugs.
-I will check how this behaviour (using seqid=0 or even something else
-for EXCHANGE_ID) can be controlled from the caller side
-if we want to override it.
+--=20
 
-P.S. Since the very 1st operation after NFS4 NULL is EXCHANGE_ID - it
-should be only single operation
-(client can't send few ECHANGE_ID because clientowner is only one per
-mount) and next CREATE_SESSION can't be sent
-until EXCHANGE_ID is replied from the server.
-So the use-case of 'any of the first 128 rpcs were out of order' is
-just a theoretical one and probably not possible in practice.
 
-And thanks for handling the patch!
+Attention Sir/Madam
+This is the United Nation (UN). We the United Nations (UN) Globally
+has approved (US$2.500,000)( two Million Five hundred thousand
+dollars) compensation as part of our responsibilities for humanitarian
+Aid for fighting against CoronaVirus and you are among the lucky ones.
 
-volodymyr.
 
-On Fri, Oct 1, 2021 at 6:48 PM J. Bruce Fields <bfields@fieldses.org> wrote:
->
-> On Fri, Oct 01, 2021 at 05:38:45PM +0300, Volodymyr Khomenko wrote:
-> > > The seq_num field can start at any value below MAXSEQ
-> > Yes, that's the statement I haven't found before in RFC...
-> > Probably we also need to write a test starting the seq_num from a big
-> > value (more than SEQUENCE_WINDOW)
-> > to make sure that it is really implemented properly without
-> > 'is_inited' flag (so what's the initial value?).
-> >
-> > However I still propose to keep the default behaviour of pynfs to be
-> > the same as for linux NFS4 client.
-> > I think the caller can change it when needed (to 0 or whatever
-> > needed), but the default value should be good...
->
-> That's what I'd choose if I were writing a "real" client.  Everybody
-> already tests with the Linux client, so its behavior is a safe bet.
->
-> But I'd usually prefer a test client do different things than the client
-> everyone already tests with.
->
-> Like I say, the seqid=0 already caught a bug in my server, so I'm a fan.
->
-> (And it's a bug that would also trigger if any of the first 128 rpcs
-> were out of order.  But that would probably manifest as some user
-> reporting "once in a blue moon my krb5 mounts hang" and I think it would
-> take a while to get from that report to this bug as the root cause.  So
-> I'm glad pynfs hit it....)
->
-> --b.
+This compensation is for the most affected countries, communities and
+families across the global. Your funds were deposited with Bank in USA
+to transfer your funds to you via Internet Banking. You have to send
+your full details as state below:with this email Address
+  ( unitednnation0@gmail.com )
+Your full names:
+Address:
+Telephone:
+Occupation:
+
+
+
+Yours Sincerely
+Mr. Ant=C3=B3nio Guterres
+United Nations (UN).
