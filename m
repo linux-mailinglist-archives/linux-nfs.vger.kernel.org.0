@@ -2,32 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C86141FEDB
-	for <lists+linux-nfs@lfdr.de>; Sun,  3 Oct 2021 02:08:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D282141FEDD
+	for <lists+linux-nfs@lfdr.de>; Sun,  3 Oct 2021 02:08:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234248AbhJCAJw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 2 Oct 2021 20:09:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54688 "EHLO mail.kernel.org"
+        id S234301AbhJCAKL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 2 Oct 2021 20:10:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S234236AbhJCAJw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 2 Oct 2021 20:09:52 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6BE8961AA9
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Oct 2021 00:08:05 +0000 (UTC)
+        id S234236AbhJCAKK (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 2 Oct 2021 20:10:10 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3682361AA9
+        for <linux-nfs@vger.kernel.org>; Sun,  3 Oct 2021 00:08:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1633219685;
-        bh=8vRNBmIxbflQsC0Gsd4s5uXvnN4ZrvTwKRf1LikfBhw=;
+        s=k20201202; t=1633219704;
+        bh=mDFl0IAuVfb1sHEObHVutH+9MmnJqyoNzljR8RYwlbI=;
         h=From:To:Subject:Date:From;
-        b=RELbbSfRSV5AnEdxUjxBQgKIEnW/35j6JssK9sCS4NbcJBS/rauEgxNHdUPm+wWMC
-         ArHklHF3lDEI69PZvRZLr48SSNja6o1Q+iUzW9IKwPtisL0L0VkXoeQg9iEsNcRPFI
-         /Z9dgEfYr98UvnGc31tKYTFEPmqV+kM2FA1bj5UHvKLCzfhdFvYYIR1URAFqtZKMGd
-         qjaOvZD1wYP4lwnqI3dKJBS1C3nB/RGN++1KcdO4tK8q0NJYCr2HkOR/FY6dwPoaWB
-         tdWwEUuxX42NQqq9JRHLsB8Oa+Rmyv10chZzTm9Fi4UdsqSvaJZ4C9oOTLFCX8ahEl
-         B8NlXe4qda7zQ==
+        b=Xt/MznQiuZz7zBWdk4E7u+20EhjqLskf5Ci+2vYX0Ox8Chm6uGtaz8cVqxfsx2uxw
+         8aCj+mggECjwAGWZImIFVVCU5/D4RNeHQDYFWEm+5qQ3Tsdn19bGEWMOjkdXGCNna8
+         AdXbe8Kc7HKeZ1mmkrFaxVfIhAS+yJ5Dds3K6VXD7zWaCqtuV9N9kOoVJiNG7RQgrK
+         mC2y4FMuXAxfNSqJam/QgqKnGj0IRiZbzcTORLZNbWxTnMWHEnl6BHiov36BHJPRkz
+         c7keas5yGmTfV50/IBmErSCmoA9UNbMWNHaQpSxNL8HBH85bjsL6BvhyN+aMuTRlZF
+         2ILo38Ry9K0QQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: Do not flush the readdir cache in nfs_dentry_iput()
-Date:   Sat,  2 Oct 2021 20:08:04 -0400
-Message-Id: <20211003000804.65661-1-trondmy@kernel.org>
+Subject: [PATCH] NFS: Remove unnecessary page cache invalidations
+Date:   Sat,  2 Oct 2021 20:08:23 -0400
+Message-Id: <20211003000823.65728-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -37,31 +37,40 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The original premise in commit 83672d392f7b ("NFS: Fix directory caching
-problem - with test case and patch.") was that readdirplus was caching
-attribute information and replaying it later. This is no longer the
-case.
+Remove cache invalidations that are already covered by change attribute
+updates.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c | 4 ----
- 1 file changed, 4 deletions(-)
+ fs/nfs/inode.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 3fafecdb2070..210c5945ac2b 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -1727,10 +1727,6 @@ static void nfs_drop_nlink(struct inode *inode)
-  */
- static void nfs_dentry_iput(struct dentry *dentry, struct inode *inode)
- {
--	if (S_ISDIR(inode->i_mode))
--		/* drop any readdir cache as it could easily be old */
--		nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA);
--
- 	if (dentry->d_flags & DCACHE_NFSFS_RENAMED) {
- 		nfs_complete_unlink(dentry, inode);
- 		nfs_drop_nlink(inode);
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index dcb885b7ad73..3bd0ae438663 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -1451,8 +1451,6 @@ static void nfs_wcc_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			&& (fattr->valid & NFS_ATTR_FATTR_MTIME)
+ 			&& timespec64_equal(&ts, &fattr->pre_mtime)) {
+ 		inode->i_mtime = fattr->mtime;
+-		if (S_ISDIR(inode->i_mode))
+-			nfs_set_cache_invalid(inode, NFS_INO_INVALID_DATA);
+ 	}
+ 	if ((fattr->valid & NFS_ATTR_FATTR_PRESIZE)
+ 			&& (fattr->valid & NFS_ATTR_FATTR_SIZE)
+@@ -2162,11 +2160,8 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			save_cache_validity & NFS_INO_INVALID_OTHER;
+ 
+ 	if (fattr->valid & NFS_ATTR_FATTR_NLINK) {
+-		if (inode->i_nlink != fattr->nlink) {
+-			if (S_ISDIR(inode->i_mode))
+-				invalid |= NFS_INO_INVALID_DATA;
++		if (inode->i_nlink != fattr->nlink)
+ 			set_nlink(inode, fattr->nlink);
+-		}
+ 	} else if (fattr_supported & NFS_ATTR_FATTR_NLINK)
+ 		nfsi->cache_validity |=
+ 			save_cache_validity & NFS_INO_INVALID_NLINK;
 -- 
 2.31.1
 
