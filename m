@@ -2,154 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5A37420609
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 08:50:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04266420927
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 12:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232720AbhJDGwK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Oct 2021 02:52:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232750AbhJDGwJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Oct 2021 02:52:09 -0400
-Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 155F9C061745
-        for <linux-nfs@vger.kernel.org>; Sun,  3 Oct 2021 23:50:21 -0700 (PDT)
-Received: by mail-wr1-x433.google.com with SMTP id t8so28966934wri.1
-        for <linux-nfs@vger.kernel.org>; Sun, 03 Oct 2021 23:50:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=puzzle-itc.de; s=google;
-        h=to:cc:references:from:organization:subject:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b2sz41UKr3wRMVuvl8In0+lVUcPOb9MC2yBBYv71nj8=;
-        b=WjVSq3Kf5i1rR6YpTJKiTx0R6zfyHJ6qxpob/CkBxFAYfzOC6JD/tTGg9th+lzmNNu
-         gNfLZL63/Q2A3tVrrv6ZTXL5v6KA7I6y53JijB0oh1MrN9f0ajSq62NENdPVihCRoO6G
-         OvLIanLHXUKp0WkGsjPzzO1QvZ00VyJFFhqS0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:to:cc:references:from:organization:subject
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=b2sz41UKr3wRMVuvl8In0+lVUcPOb9MC2yBBYv71nj8=;
-        b=QZI4YR19V6n6KIMAXhMEwDvAReC72ES3Mw797H8efF8pf/MRttOGZWAN2WLtbIF+bD
-         QL2AFeUSG9n/0vKz+tCXADqYAXYjs4a3OECsYMgFtmxtD/+dJrbEAhrD78e7L67gH/LH
-         /B980gawbLj808vitOAVKhe2x/0zfpG+Ul4rFBT6qfA3nteZxzeJxmmQseQFLw/wUSvY
-         jLPu9Cvmyc6WvGXhnfbqCDK7vONEWTY0fUf7AAWdHGc4P0EJl9fHH5EpLDRjpPDtiZiR
-         KwvTfiMzeW0fSHnoRbhEZttjiYqGqSWy0myTdIYbEU+dr/RPXkozGTfxshXnGeFMPrBZ
-         J4PA==
-X-Gm-Message-State: AOAM531xbVw/5YkScAi5Ev58NnlG86eGl6NT8GYz1kIwMghlPx4f1Ljo
-        2+LXpXhvn25x+POAZc64MleQzL2wTp0A1X6pvp+MWnPBuWzihKYgA0ysRaD624JvPRfBGSxvyW0
-        cBPy8TrSopOPmXamalWm2MQ==
-X-Google-Smtp-Source: ABdhPJz6YErjhp5eM3CJEkRlO1Bkf0lXhKUIFqZ3XRrtRmsilEv2KWYGdKYH6sHO3E2AnfG+3LfDWg==
-X-Received: by 2002:adf:a38d:: with SMTP id l13mr7694547wrb.103.1633330219605;
-        Sun, 03 Oct 2021 23:50:19 -0700 (PDT)
-Received: from tuedko18.puzzle-itc.de ([2a02:8070:888b:3700:900d:cdcb:2241:176d])
-        by smtp.gmail.com with ESMTPSA id p3sm6671222wmp.43.2021.10.03.23.50.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Oct 2021 23:50:19 -0700 (PDT)
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
-        Volodymyr Khomenko <volodymyr@vastdata.com>
-References: <20211001135921.GC959@fieldses.org>
- <31738001-8f5b-61c9-67b6-810e6f188318@puzzle-itc.de>
- <20211001174429.GH959@fieldses.org>
-From:   Daniel Kobras <kobras@puzzle-itc.de>
-Organization: Puzzle ITC Deutschland GmbH
-Subject: Re: [PATCH] SUNRPC: fix sign error causing rpcsec_gss drops
-Message-ID: <6b93a085-fea3-bf93-ac60-2d19b2694e78@puzzle-itc.de>
-Date:   Mon, 4 Oct 2021 08:50:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.13.0
+        id S232161AbhJDKPH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Oct 2021 06:15:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60678 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231715AbhJDKPE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Oct 2021 06:15:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633342395;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uCf9+2XTU54Gj/OtnQlqxxYbAga8gRYYuCZmIxMpfzQ=;
+        b=K6KeU2ZJIdajIDAYmXLC0jh0Jt/QK4Rs1HKCuQ1GYfQ583XSHB+NdiJ4assLDXvvgrG+6m
+        BrY4GBAMLxPaNWq5Z7LFGi5W36BPXT+GUVcIbXI0skNuZtCXfYBcmLPf1vA1MNE1rp5aAQ
+        +utGnUAzMNhGwxpgWOIR6eD269Uxe40=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-jdCcP78sMda25iVAq9LBIg-1; Mon, 04 Oct 2021 06:13:12 -0400
+X-MC-Unique: jdCcP78sMda25iVAq9LBIg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90A531006AA3;
+        Mon,  4 Oct 2021 10:13:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FC5E5C1BB;
+        Mon,  4 Oct 2021 10:13:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
+        dhowells@redhat.com, linux-kernel@vger.kernel.org
+Subject: Do you want warning quashing patches at this point in the cycle?
 MIME-Version: 1.0
-In-Reply-To: <20211001174429.GH959@fieldses.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <270323.1633342386.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 04 Oct 2021 11:13:06 +0100
+Message-ID: <270324.1633342386@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce!
+Hi Linus,
 
-Am 01.10.21 um 19:44 schrieb J. Bruce Fields:
-> On Fri, Oct 01, 2021 at 06:50:12PM +0200, Daniel Kobras wrote:
->> Am 01.10.21 um 15:59 schrieb J. Bruce Fields:
->>> From: "J. Bruce Fields" <bfields@redhat.com>
->>>
->>> If sd_max is unsigned, then sd_max - GSS_SEQ_WIN is a very large number
->>> whenever sd_max is less than GSS_SEQ_WIN, and the comparison:
->>>
->>> 	seq_num <=3D sd->sd_max - GSS_SEQ_WIN
->>>
->>> in gss_check_seq_num is pretty much always true, even when that's
->>> clearly not what was intended.
->>>
->>> This was causing pynfs to hang when using krb5, because pynfs uses zero
->>> as the initial gss sequence number.  That's perfectly legal, but this
->>> logic error causes knfsd to drop the rpc in that case.  Out-of-order
->>> sequence IDs in the first GSS_SEQ_WIN (128) calls will also cause this.
->>>
->>> Fixes: 10b9d99a3dbb ("SUNRPC: Augment server-side rpcgss tracepoints")
->>
->> I wonder about the Fixes tag: That changeset added tracepoints to the
->> exit path, but the buggy logic seems to have been present since the
->> pre-git ages. Or am I missing something about 10b9d99a3dbb?
->=20
-> The relevant parts of 10b9d99a3dbb were:
->=20
->  struct gss_svc_seq_data {
->         /* highest seq number seen so far: */
-> -       int                     sd_max;
-> +       u32                     sd_max;
->=20
-> and
->=20
-> -gss_check_seq_num(struct rsc *rsci, int seq_num)
-> +static bool gss_check_seq_num(const struct svc_rqst *rqstp, struct rsc *=
-rsci,
-> +                             u32 seq_num)
->=20
-> Together, they mean the comparison
->=20
-> 	seq_num <=3D sd->sd_max - GSS_SEQ_WIN
->=20
-> in the case sd_max is zero, effectively ends up being
->=20
-> 	seq_num <=3D 4294967168
->=20
-> instead of what was intended,
->=20
-> 	seq_num <=3D -128
->=20
-> .
+Do you want patches that quash warnings from W=3D1 (mostly kerneldoc warni=
+ngs in
+comments in this case[1]) at this point in the cycle, or would you rather =
+they
+waited till the next merge window?
 
-Sorry, indeed I had missed the change in signedness. Thanks for elaborating=
-!
+David
 
->> (This might explain some reports of--as you stated elsewhere--"once in
->> a blue moon my krb5 mounts hang" we've investigated, albeit on kernels
->> that predate 10b9d99a3dbb.)
->=20
-> Sounds like it was something else, I'm afraid!
-
-Darn! ;-)
-
-Kind regards,
-
-Daniel
---=20
-Daniel Kobras
-Principal Architect
-Puzzle ITC Deutschland
-+49 7071 14316 0
-www.puzzle-itc.de
-
---=20
-Puzzle ITC Deutschland GmbH
-Sitz der Gesellschaft: Eisenbahnstra=C3=9Fe 1, 72072=20
-T=C3=BCbingen
-
-Eingetragen am Amtsgericht Stuttgart HRB 765802
-Gesch=C3=A4ftsf=C3=BChrer:=20
-Lukas Kallies, Daniel Kobras, Mark Pr=C3=B6hl
+[1] https://lore.kernel.org/r/163281899704.2790286.9177774252843775348.stg=
+it@warthog.procyon.org.uk/
 
