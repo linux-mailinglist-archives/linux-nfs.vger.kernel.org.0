@@ -2,175 +2,254 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AC62E421340
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 17:59:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B0A2421351
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 18:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236134AbhJDQBb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Oct 2021 12:01:31 -0400
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:48988 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234939AbhJDQBa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Oct 2021 12:01:30 -0400
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 194FUHRM001732;
-        Mon, 4 Oct 2021 15:59:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=u+WKC+lG7BiqA0N/wzzlQOEKRjwvn57L2GGHdeGtMV0=;
- b=reieXvKr49NxoRoJxQ+ENvVHjvvXwv3WT/4p7mHxkm+L4mNco4jTASfiJj5XJTLqKNu0
- sCo2z5864u9wU06pYIVDCEk8GZprbPOn90XtB1iV5YEg8c5XqGXFzx/kFOxFSAetpMEl
- gZJch/HRS6+bmuX+YO3ZJVvEy8AwIzGlKgBLvyb1Zme3zrHmainD5O5JOhGBI2uV+6su
- x+eGrw1wrSLO0ri6M9/Bqrj01ffkkwQGEaBWwivvh2ttA+Kf4wlf/VofLJPwU/9UdZuF
- ZL5KokUMNqbmFa3SE8KwndX2CM5dF30pP7x7P7WQVL6EK3Qy9thl1FYNuSwC5MwxkADi cg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3bg3p58m5v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Oct 2021 15:59:36 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 194FucsX104106;
-        Mon, 4 Oct 2021 15:59:34 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2172.outbound.protection.outlook.com [104.47.56.172])
-        by userp3020.oracle.com with ESMTP id 3bf16rm58p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Oct 2021 15:59:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fNI2Uh068Wij5KfG8DOwtUixcEIlnUu3YijDg/sn7LTF2bogkkR0O6j8k5Eb91ebb7NzQqhQpi8JNEskkbf2LqB4S7WlkPIc6p8iqJ7rlaQ/oyOteq8fr0nr8RRa//UysluG/fNb7yM031yg7fN6JaQ7aTslBVO+/rXVrmRCtbK32eFRH7ICzhn3wq9PBmpPQDc+sBU2raraW+pM0ez4JLKXwHWsXGVx9rXTjWmw5NlKSs/vwqDHZO2h2A1YEzUo3HkKvO/hMILODUNVzRRliXEiqTgcAWeeoAK2l6QL+Lnc7UJKcUxdYdalAAUwbXliT6Pw0K6yBmqIvfCwGsuPzA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=u+WKC+lG7BiqA0N/wzzlQOEKRjwvn57L2GGHdeGtMV0=;
- b=X7tDukr6k0njuwftzpvsyQId3EsrdF7JwrEx4gqP5VxrU2YLciukX7fD6/qxpPq0yhGRIK8iUF5XFpe2iYpc6soY09WGKyKJcG+T7dYXplM+HLRE0ILTbLMO0Qicp4dtXFZp2r5BxGvfGIt3QoTwyupvNiLeEtDpOqpr9n1h+uPB7tKs+aw+QiOXUJJ/OYQN9sbubn6/1wg60sumdeXOB6PL2eASw9nqfJRtJaoOqBVWhbpdW74s72yNTbiL3rqsNuOXJYno+ha9gEoPrniWvDsDmhY9YGCIpW/oTPeFDBxcICgkezUGpTKg7BO3y+u0233Eep1oQyv9cQ/rZlBMLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=u+WKC+lG7BiqA0N/wzzlQOEKRjwvn57L2GGHdeGtMV0=;
- b=DLeQf9CcSBrqCuC/sRcV3xItyHxDKm480wo0uDxRvF8vUnzWgONsiERYSmkxAKGBycEYkfajpOigzzz0g657zQB3li0Wq+sjdaEFuYPvh4Yg+Bh5N1Lpq8Ims6KPzJG0ZIo6ROn0PWgFtfhJlOBtbx/GP42Hk80ISCmHPNihCXA=
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
- by BY5PR10MB4212.namprd10.prod.outlook.com (2603:10b6:a03:200::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4566.22; Mon, 4 Oct
- 2021 15:59:32 +0000
-Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
- ([fe80::f4fe:5b4:6bd9:4c5b%6]) with mapi id 15.20.4566.022; Mon, 4 Oct 2021
- 15:59:32 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-CC:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 2/4] SUNRPC: Tracepoints should store tk_pid and cl_clid
- as a signed int
-Thread-Topic: [PATCH 2/4] SUNRPC: Tracepoints should store tk_pid and cl_clid
- as a signed int
-Thread-Index: AQHXuSmMxjFddCeKFUeHXkK0NyQQBavC+icAgAAFKIA=
-Date:   Mon, 4 Oct 2021 15:59:32 +0000
-Message-ID: <8777E390-8C00-413A-969B-5BBC454CBF2D@oracle.com>
-References: <163335628674.1225.6965764965914263799.stgit@morisot.1015granger.net>
- <163335660381.1225.8730120749232774829.stgit@morisot.1015granger.net>
- <ce1a2ef5757fc96c21f2e6402021ca646dfbfa80.camel@hammerspace.com>
-In-Reply-To: <ce1a2ef5757fc96c21f2e6402021ca646dfbfa80.camel@hammerspace.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-authentication-results: hammerspace.com; dkim=none (message not signed)
- header.d=none;hammerspace.com; dmarc=none action=none header.from=oracle.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a809059e-6a88-439a-d98b-08d9874ff486
-x-ms-traffictypediagnostic: BY5PR10MB4212:
-x-microsoft-antispam-prvs: <BY5PR10MB42129E8BE2750696F263C9F993AE9@BY5PR10MB4212.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: H3gbv+jy0fnUi314HajqG78FqEN6qyNDd70x8vkGwrVafTzTYGu54Hee2IwV5uGw9tIJBlPROtOdUjXRYpQgNeSDTWY9YUGbrPeLbvtHzkxtCBPJfEB6iw1db2WxEAalhYOsxtnqWC7t46lx+9CPVXWGCyZTQFGsi3ctUenC0I3KU1TBqJSUNM9tss8KBG/W4ppRC1U6Cu1ExrY2GYjzUg5KjskxT5FhPzMr4lIEboStI2WaozdOF28jtwMlhfkuKMidk6jMRvwE1kvLZQJAP56kqJPAUuWfTEs530P7ffQDsY+2S7ni0IkaiT3FJFHV31Vyv1Hwb/tutHFyUYpuij8OyRD5J+CJJ0RALbtvzmd2nzdtRv3dn0Iq4WZ0L7FZS0PDdWhzFwBB2OOQ1gmQxyOkP58S4zjqe3WVDRnAshyGzpcbmaBxW1IwIjxxQ692hckuGh7WqvBtiCJV+YofemHnhDbLdxp893F9H4/4If5ZKv8n1O70q5ADIVYg7hybW2wKnpO9Aamvro4fV20TL4b98MC4VOhF/hehaWSGEqqXi4pUvaKkhkQFxwrPg2i/nl+5jk+eZpfoGHH+A/NMaSJLYWOOm35/WePclCnt1SC1Pvh9OTZYC4blJIH8PtWNyrKjET8tZ8AntwndwYUIm/3mxC5NG2uFPWFfkMH7lHXZFrn6nq8+i7MhOOn+h94inOERxGhjUFoDF7BBKKk+yE6jb+c07uGVcEDMlsNkGx+iP89yCg4sFcvwTGRxtAy1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(316002)(4326008)(8676002)(5660300002)(38100700002)(54906003)(86362001)(8936002)(71200400001)(2616005)(186003)(122000001)(6512007)(6486002)(508600001)(26005)(4744005)(6506007)(53546011)(38070700005)(91956017)(66556008)(36756003)(66946007)(6916009)(76116006)(64756008)(66476007)(33656002)(66446008)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?J/O7vZFqrwLFQVchaVjG71/DPZpqTBCIImFMpxUvypwW1WPAJNUSgXdjKN9/?=
- =?us-ascii?Q?iV9SvDjB07Mp59DeoJQMkm35Dr+bJo9EUafrnf4quwSgP8kubdZ/3za3U0lR?=
- =?us-ascii?Q?i/3NOPGHysUqvUVxWgdmAcFBj6CyKJ1YBqxMnTAGI9qrTsW9GuZO8rICKb/E?=
- =?us-ascii?Q?zCvwiWYU07KqoUY225tXvHiN9LkQ3xTTixAGHFMQqIFnyJgUnz5jRkU/N5do?=
- =?us-ascii?Q?vTVTl7o64NhCCz/gq3ogYSPJ4WTGBnyKU/wOCPeMBEdZRXqo9F21t35WJJ4S?=
- =?us-ascii?Q?MWlfXV1Le57LfbQthHmai/sTLE70FS9U2K+y8jfIC/n7vNcmTix2JYRlSNIh?=
- =?us-ascii?Q?tIFam2OTTriH0jLSOP672rwbjUTQ9vGD+Cn19FmZf8jdtwca0qb760U33i+0?=
- =?us-ascii?Q?eZiMerDSMk3Yu2Bp9CBr0GHHn12UNeS6M/kccCfPi8wAeP8mO0X/oEnTSPOp?=
- =?us-ascii?Q?xbQorlccnALWXWscs3ZYMf97bhY4ZnEIWGLsENAwO646RwhxGz+EwlilYx7W?=
- =?us-ascii?Q?kBFpwcVjrHN9f3+S8AdbrN0UqJmuT3ana9+Z2tU+0kgwAptt+VVzuww4j5LR?=
- =?us-ascii?Q?yRUE/NLmoKYFv4oRKMg5tXIHMl+ZBHwxtLzzjU6CbP/MI47Fz9XvUIhR6Ec4?=
- =?us-ascii?Q?FM5nDhkG7OHDPFcN3DVB5V5mrc2c++aZ+SAZQaouKyxWkn8K6uzjCP7+Ilxs?=
- =?us-ascii?Q?i7vTTWJTDZFTlzMDWMvrr1WGWmb8pXnTcjSnEa+FZQS1OIVp5eA1pbVzp4x0?=
- =?us-ascii?Q?KE5nllqFCaqQ7tBdIhkpmm70D3SoHvodqrKCEGcJIiAekUnwjKTfft4kgcGN?=
- =?us-ascii?Q?W4G5yoh6anSkckquBK+ZvzPRNdNOBmD/PjeH5F4HE7Zj+P/xQFBC/nxKLJnI?=
- =?us-ascii?Q?bZwWouTQUy5Rn4Ku+lW3uLT5//m0p8vMNQlf7lHNFYLFwRoyAXMkFyWrIYXH?=
- =?us-ascii?Q?f9JcKsdEsLJeNTzK7wr+JDO4tQ9NDNhSnn3ichGLAGr0XfO1DhHLTafReG0/?=
- =?us-ascii?Q?PXumg6VOiZAcka99YdBPvEJbNXhFaNLvSeqBftHQE/4aqVdoMJxmdKbQ4UUS?=
- =?us-ascii?Q?5a9RTQJezQzdDFMZFpvjnacURDA0Y24xuNhwhcYZlH9H1OP0urD3XKj0rda6?=
- =?us-ascii?Q?5JTqUoJTBTIIdYDR+cAM8uazqAwbjWImRXhDcA9+lCQF53w2jCOgjfOksUDU?=
- =?us-ascii?Q?+xkiA7zz5HiNgWAFHxXuy7x73Ba33tyjPoRK9WdfoI4+ETfmlCCGhjidnICE?=
- =?us-ascii?Q?Q80bnI4cgUgSX5eHZHOWO4VdcuuGZjZxNHzycoyiJD8Se2dvClNMrk70Bx05?=
- =?us-ascii?Q?pMoSpMz3uO7rn4Iw87CH4uuV?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2A0C6BE47533804BBBA00432E499E646@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        id S236319AbhJDQDR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Oct 2021 12:03:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236300AbhJDQDP (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 4 Oct 2021 12:03:15 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3D620613DB;
+        Mon,  4 Oct 2021 16:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633363286;
+        bh=KTbo+s/w7AyrU4AEVHl0HuO9gPINXVnH36Enx5dl+wU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Fsf6d+gMrDJXgbpWiLSjXeXr8QV2HKSWSU/MM2+mAxboUM0vnQlfTJ9fnCsfBIObf
+         U/uuuhpo05kDUk4rsU306BM7QUHmW9PdsoOgg/r7xXVzyoVc+BMtJZDzxYFaZqOP2V
+         2LkakCryo2NclbAwSLoR3KYv4uG651VII5XVHMo+eda5PKWnf7yb6Kz6uWFMurnHU3
+         mrkUIhkAFrRTxi5Ya2NuVcqQgDemIzUDtVRni+ZPmRwruScNw5TPSetjpMBCkc/EYW
+         Y1Efcl1Y3ub96I5Pkug8i16NuDJ/r4W79oBJMmxIcy+vrs1ainfrbY1zF9HkWlGYNi
+         kzq4bdbwSkwYg==
+Message-ID: <7404892c92592507506038ef9bdcfc1780311000.camel@kernel.org>
+Subject: Re: [PATCH] security: Return xattr name from
+ security_dentry_init_security()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, virtio-fs@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Daniel J Walsh <dwalsh@redhat.com>, idryomov@gmail.com,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        bfields@fieldses.org, chuck.lever@oracle.com,
+        stephen.smalley.work@gmail.com
+Date:   Mon, 04 Oct 2021 12:01:24 -0400
+In-Reply-To: <06a82de9-1c3e-1102-7738-f40905ea9ee4@schaufler-ca.com>
+References: <YVYI/p1ipDFiQ5OR@redhat.com>
+         <1583ffb057e8442fa7af40dabcb38960982211ba.camel@kernel.org>
+         <06a82de9-1c3e-1102-7738-f40905ea9ee4@schaufler-ca.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.40.4 (3.40.4-1.fc34) 
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a809059e-6a88-439a-d98b-08d9874ff486
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Oct 2021 15:59:32.3513
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: AGZC4ODh8hLBmpdHSLO2b9uXMiYvHtyTdvPYwThYY2X8dsJs97BDbxn5oldcNYMBRKYrL4paFngE1qq2xpP7gA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4212
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10127 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
- phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2109230001 definitions=main-2110040109
-X-Proofpoint-ORIG-GUID: 4VNlpErCpFJA58fefepcvRQNgAF-ZyYy
-X-Proofpoint-GUID: 4VNlpErCpFJA58fefepcvRQNgAF-ZyYy
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Mon, 2021-10-04 at 08:54 -0700, Casey Schaufler wrote:
+> On 10/4/2021 8:20 AM, Jeff Layton wrote:
+> > On Thu, 2021-09-30 at 14:59 -0400, Vivek Goyal wrote:
+> > > Right now security_dentry_init_security() only supports single security
+> > > label and is used by SELinux only. There are two users of of this hook,
+> > > namely ceph and nfs.
+> > > 
+> > > NFS does not care about xattr name. Ceph hardcodes the xattr name to
+> > > security.selinux (XATTR_NAME_SELINUX).
+> > > 
+> > > I am making changes to fuse/virtiofs to send security label to virtiofsd
+> > > and I need to send xattr name as well. I also hardcoded the name of
+> > > xattr to security.selinux.
+> > > 
+> > > Stephen Smalley suggested that it probably is a good idea to modify
+> > > security_dentry_init_security() to also return name of xattr so that
+> > > we can avoid this hardcoding in the callers.
+> > > 
+> > > This patch adds a new parameter "const char **xattr_name" to
+> > > security_dentry_init_security() and LSM puts the name of xattr
+> > > too if caller asked for it (xattr_name != NULL).
+> > > 
+> > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> > > ---
+> > > 
+> > > I have compile tested this patch. Don't know how to setup ceph and
+> > > test it. Its a very simple change. Hopefully ceph developers can
+> > > have a quick look at it.
+> > > 
+> > > A similar attempt was made three years back.
+> > > 
+> > > https://lore.kernel.org/linux-security-module/20180626080429.27304-1-zyan@redhat.com/T/
+> > > ---
+> > >  fs/ceph/xattr.c               |    3 +--
+> > >  fs/nfs/nfs4proc.c             |    3 ++-
+> > >  include/linux/lsm_hook_defs.h |    3 ++-
+> > >  include/linux/lsm_hooks.h     |    1 +
+> > >  include/linux/security.h      |    6 ++++--
+> > >  security/security.c           |    7 ++++---
+> > >  security/selinux/hooks.c      |    6 +++++-
+> > >  7 files changed, 19 insertions(+), 10 deletions(-)
+> > > 
+> > > Index: redhat-linux/security/selinux/hooks.c
+> > > ===================================================================
+> > > --- redhat-linux.orig/security/selinux/hooks.c	2021-09-28 11:36:03.559785943 -0400
+> > > +++ redhat-linux/security/selinux/hooks.c	2021-09-30 14:01:05.869195347 -0400
+> > > @@ -2948,7 +2948,8 @@ static void selinux_inode_free_security(
+> > >  }
+> > >  
+> > I agree with Al that it would be cleaner to just return the string, but
+> > the call_*_hook stuff makes that a bit more tricky. I suppose this is a
+> > reasonable compromise.
+> 
+> call_int_hook() and call_void_hook() were introduced to reduce the monotonous
+> repetition in the source. They are cosmetic and add no real value. They shouldn't
+> be a consideration in the discussion.
+> 
+> There is a problem with Al's suggestion. The interface as used today has two real
+> problems. It returns an attribute value without identifying the attribute. Al's
+> interface would address this issue. The other problem is that the interface can't
+> provide multiple attribute+value pairs. The interface is going to need changed to
+> support that for full module stacking. I don't see a rational way to extend the
+> interface if it returns a string when there are multiple attributes to choose from.
+> 
 
-> On Oct 4, 2021, at 11:41 AM, Trond Myklebust <trondmy@hammerspace.com> wr=
-ote:
->=20
-> On Mon, 2021-10-04 at 10:10 -0400, Chuck Lever wrote:
->> ida_simple_get() returns a signed integer. Negative values are error
->> returns, but this suggests the range of valid client IDs is zero to
->> 2^31 - 1.
->>=20
->> tk_pid is currently an unsigned short, so its range is zero to
->> 65535.
->>=20
->> For certain special cases, RPC-related tracepoints record a -1 as
->> the task ID or the client ID. It's ugly for a trace event to display
->> 4 billion in these cases.
->=20
-> Ugh... I emphatically do not like the idea of an identifier field that
-> is signed, whatever its range of validity may be.
->=20
-> If we're going to change anything, then let's rather turn that
-> identifier into a fixed size hex field in the traces.
+Is that also a problem for the ctx parameter? In the case of full module
+stacking do you get back multiple contexts as well?
 
-A fixed-size field might be more legible for eyeballing large
-complex traces, so I can do that.
+> > >  static int selinux_dentry_init_security(struct dentry *dentry, int mode,
+> > > -					const struct qstr *name, void **ctx,
+> > > +					const struct qstr *name,
+> > > +					const char **xattr_name, void **ctx,
+> > >  					u32 *ctxlen)
+> > >  {
+> > >  	u32 newsid;
+> > > @@ -2961,6 +2962,9 @@ static int selinux_dentry_init_security(
+> > >  	if (rc)
+> > >  		return rc;
+> > >  
+> > > +	if (xattr_name)
+> > > +		*xattr_name = XATTR_NAME_SELINUX;
+> > > +
+> > >  	return security_sid_to_context(&selinux_state, newsid, (char **)ctx,
+> > >  				       ctxlen);
+> > >  }
+> > > Index: redhat-linux/security/security.c
+> > > ===================================================================
+> > > --- redhat-linux.orig/security/security.c	2021-08-16 10:39:28.518988836 -0400
+> > > +++ redhat-linux/security/security.c	2021-09-30 13:54:36.367195347 -0400
+> > > @@ -1052,11 +1052,12 @@ void security_inode_free(struct inode *i
+> > >  }
+> > >  
+> > >  int security_dentry_init_security(struct dentry *dentry, int mode,
+> > > -					const struct qstr *name, void **ctx,
+> > > -					u32 *ctxlen)
+> > > +				  const struct qstr *name,
+> > > +				  const char **xattr_name, void **ctx,
+> > > +				  u32 *ctxlen)
+> > >  {
+> > >  	return call_int_hook(dentry_init_security, -EOPNOTSUPP, dentry, mode,
+> > > -				name, ctx, ctxlen);
+> > > +				name, xattr_name, ctx, ctxlen);
+> > >  }
+> > >  EXPORT_SYMBOL(security_dentry_init_security);
+> > >  
+> > > Index: redhat-linux/include/linux/lsm_hooks.h
+> > > ===================================================================
+> > > --- redhat-linux.orig/include/linux/lsm_hooks.h	2021-06-02 10:20:27.717485143 -0400
+> > > +++ redhat-linux/include/linux/lsm_hooks.h	2021-09-30 13:56:48.440195347 -0400
+> > > @@ -196,6 +196,7 @@
+> > >   *	@dentry dentry to use in calculating the context.
+> > >   *	@mode mode used to determine resource type.
+> > >   *	@name name of the last path component used to create file
+> > > + *	@xattr_name pointer to place the pointer to security xattr name
+> > It might be a good idea to also document the lifetime for xattr_name
+> > here. In particular you're returning a pointer to a static string, and
+> > it would be good to note that the caller needn't free it or anything.
+> > 
+> > >   *	@ctx pointer to place the pointer to the resulting context in.
+> > >   *	@ctxlen point to place the length of the resulting context.
+> > >   * @dentry_create_files_as:
+> > > Index: redhat-linux/include/linux/security.h
+> > > ===================================================================
+> > > --- redhat-linux.orig/include/linux/security.h	2021-08-16 10:39:28.484988836 -0400
+> > > +++ redhat-linux/include/linux/security.h	2021-09-30 13:59:00.288195347 -0400
+> > > @@ -317,8 +317,9 @@ int security_add_mnt_opt(const char *opt
+> > >  				int len, void **mnt_opts);
+> > >  int security_move_mount(const struct path *from_path, const struct path *to_path);
+> > >  int security_dentry_init_security(struct dentry *dentry, int mode,
+> > > -					const struct qstr *name, void **ctx,
+> > > -					u32 *ctxlen);
+> > > +				  const struct qstr *name,
+> > > +				  const char **xattr_name, void **ctx,
+> > > +				  u32 *ctxlen);
+> > >  int security_dentry_create_files_as(struct dentry *dentry, int mode,
+> > >  					struct qstr *name,
+> > >  					const struct cred *old,
+> > > @@ -739,6 +740,7 @@ static inline void security_inode_free(s
+> > >  static inline int security_dentry_init_security(struct dentry *dentry,
+> > >  						 int mode,
+> > >  						 const struct qstr *name,
+> > > +						 const char **xattr_name,
+> > >  						 void **ctx,
+> > >  						 u32 *ctxlen)
+> > >  {
+> > > Index: redhat-linux/include/linux/lsm_hook_defs.h
+> > > ===================================================================
+> > > --- redhat-linux.orig/include/linux/lsm_hook_defs.h	2021-07-07 11:54:59.673549151 -0400
+> > > +++ redhat-linux/include/linux/lsm_hook_defs.h	2021-09-30 14:02:13.114195347 -0400
+> > > @@ -83,7 +83,8 @@ LSM_HOOK(int, 0, sb_add_mnt_opt, const c
+> > >  LSM_HOOK(int, 0, move_mount, const struct path *from_path,
+> > >  	 const struct path *to_path)
+> > >  LSM_HOOK(int, 0, dentry_init_security, struct dentry *dentry,
+> > > -	 int mode, const struct qstr *name, void **ctx, u32 *ctxlen)
+> > > +	 int mode, const struct qstr *name, const char **xattr_name,
+> > > +	 void **ctx, u32 *ctxlen)
+> > >  LSM_HOOK(int, 0, dentry_create_files_as, struct dentry *dentry, int mode,
+> > >  	 struct qstr *name, const struct cred *old, struct cred *new)
+> > >  
+> > > Index: redhat-linux/fs/nfs/nfs4proc.c
+> > > ===================================================================
+> > > --- redhat-linux.orig/fs/nfs/nfs4proc.c	2021-07-14 14:47:42.732842926 -0400
+> > > +++ redhat-linux/fs/nfs/nfs4proc.c	2021-09-30 14:06:02.249195347 -0400
+> > > @@ -127,7 +127,8 @@ nfs4_label_init_security(struct inode *d
+> > >  		return NULL;
+> > >  
+> > >  	err = security_dentry_init_security(dentry, sattr->ia_mode,
+> > > -				&dentry->d_name, (void **)&label->label, &label->len);
+> > > +				&dentry->d_name, NULL,
+> > > +				(void **)&label->label, &label->len);
+> > >  	if (err == 0)
+> > >  		return label;
+> > >  
+> > > Index: redhat-linux/fs/ceph/xattr.c
+> > > ===================================================================
+> > > --- redhat-linux.orig/fs/ceph/xattr.c	2021-09-09 13:05:21.800611264 -0400
+> > > +++ redhat-linux/fs/ceph/xattr.c	2021-09-30 14:14:59.892195347 -0400
+> > > @@ -1311,7 +1311,7 @@ int ceph_security_init_secctx(struct den
+> > >  	int err;
+> > >  
+> > >  	err = security_dentry_init_security(dentry, mode, &dentry->d_name,
+> > > -					    &as_ctx->sec_ctx,
+> > > +					    &name, &as_ctx->sec_ctx,
+> > >  					    &as_ctx->sec_ctxlen);
+> > >  	if (err < 0) {
+> > >  		WARN_ON_ONCE(err != -EOPNOTSUPP);
+> > > @@ -1335,7 +1335,6 @@ int ceph_security_init_secctx(struct den
+> > >  	 * It only supports single security module and only selinux has
+> > >  	 * dentry_init_security hook.
+> > >  	 */
+> > > -	name = XATTR_NAME_SELINUX;
+> > >  	name_len = strlen(name);
+> > >  	err = ceph_pagelist_reserve(pagelist,
+> > >  				    4 * 2 + name_len + as_ctx->sec_ctxlen);
+> > > 
+> > Looks reasonable overall.
+> > 
+> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > 
+> 
 
-Thanks for having a look!
-
-
---
-Chuck Lever
-
-
+-- 
+Jeff Layton <jlayton@kernel.org>
 
