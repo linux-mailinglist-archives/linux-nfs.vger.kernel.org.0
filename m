@@ -2,23 +2,23 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E805E421107
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 16:10:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8924D421108
+	for <lists+linux-nfs@lfdr.de>; Mon,  4 Oct 2021 16:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233179AbhJDOMA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Oct 2021 10:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43520 "EHLO mail.kernel.org"
+        id S233111AbhJDOMG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 4 Oct 2021 10:12:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233159AbhJDOL7 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 4 Oct 2021 10:11:59 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id C23D161216;
-        Mon,  4 Oct 2021 14:10:10 +0000 (UTC)
-Subject: [PATCH 3/4] SUNRPC: Per-rpc_clnt task PIDs
+        id S231216AbhJDOMG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 4 Oct 2021 10:12:06 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id EEA7361216;
+        Mon,  4 Oct 2021 14:10:16 +0000 (UTC)
+Subject: [PATCH 4/4] NFS: Instrument i_size_write()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 04 Oct 2021 10:10:10 -0400
-Message-ID: <163335661005.1225.6870220946398100360.stgit@morisot.1015granger.net>
+Date:   Mon, 04 Oct 2021 10:10:16 -0400
+Message-ID: <163335661619.1225.5861633622925043275.stgit@morisot.1015granger.net>
 In-Reply-To: <163335628674.1225.6965764965914263799.stgit@morisot.1015granger.net>
 References: <163335628674.1225.6965764965914263799.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.3
@@ -29,55 +29,146 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The current range of RPC task PIDs is 0..65535. That's not adequate
-for distinguishing tasks across multiple rpc_clnts running high
-throughput workloads.
+Generate a trace event whenever the NFS client modifies the size of
+a file. These new events aid troubleshooting workloads that trigger
+races around size updates.
 
-To help relieve this situation and to reduce the bottleneck of
-having a single atomic for assigning all RPC task PIDs, assign task
-PIDs per rpc_clnt.
+There are four new trace points, all named nfs_size_something so
+they are easy to grep for or enable as a group with a single glob.
+
+Size updated on the server:
+
+  kworker/u24:10-194   [010]   369.939174: nfs_size_update:      fileid=00:28:2 fhandle=0x36fbbe51 version=1752899344277980615 cursize=250471 newsize=172083
+
+Server-side size update reported via NFSv3 WCC attributes:
+
+             fsx-1387  [006]   380.760686: nfs_size_wcc:         fileid=00:28:2 fhandle=0x36fbbe51 version=1752899355909932456 cursize=146792 newsize=171216
+
+File has been truncated locally:
+
+             fsx-1387  [007]   369.437421: nfs_size_truncate:    fileid=00:28:2 fhandle=0x36fbbe51 version=1752899231200117272 cursize=215244 newsize=0
+
+File has been extended locally:
+
+             fsx-1387  [007]   369.439213: nfs_size_grow:        fileid=00:28:2 fhandle=0x36fbbe51 version=1752899343704248410 cursize=258048 newsize=262144
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/clnt.h |    1 +
- net/sunrpc/sched.c          |   12 ++++++++++--
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ fs/nfs/inode.c    |    9 +++------
+ fs/nfs/nfstrace.h |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfs/write.c    |    1 +
+ 3 files changed, 54 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index bd22f14c4b19..d5860a000806 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -40,6 +40,7 @@ struct rpc_clnt {
- 	int			cl_clid;	/* client id */
- 	struct list_head	cl_clients;	/* Global list of clients */
- 	struct list_head	cl_tasks;	/* List of tasks */
-+	atomic_t		cl_pid;		/* task PID counter */
- 	spinlock_t		cl_lock;	/* spinlock */
- 	struct rpc_xprt __rcu *	cl_xprt;	/* transport */
- 	const struct rpc_procinfo *cl_procinfo;	/* procedure info */
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index c045f63d11fa..b3402aeb8f30 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -277,9 +277,17 @@ static int rpc_wait_bit_killable(struct wait_bit_key *key, int mode)
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
- static void rpc_task_set_debuginfo(struct rpc_task *task)
- {
--	static atomic_t rpc_pid;
-+	struct rpc_clnt *clnt = task->tk_client;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 853213b3a209..7994a3629ccb 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -666,6 +666,7 @@ static int nfs_vmtruncate(struct inode * inode, loff_t offset)
+ 	if (err)
+ 		goto out;
  
--	task->tk_pid = atomic_inc_return(&rpc_pid);
-+	/* Might be a task carrying a reverse-direction operation */
-+	if (!clnt) {
-+		static atomic_t rpc_pid;
-+
-+		task->tk_pid = atomic_inc_return(&rpc_pid);
-+		return;
-+	}
-+
-+	task->tk_pid = atomic_inc_return(&clnt->cl_pid);
++	trace_nfs_size_truncate(inode, offset);
+ 	i_size_write(inode, offset);
+ 	/* Optimisation */
+ 	if (offset == 0)
+@@ -1453,6 +1454,7 @@ static void nfs_wcc_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			&& (fattr->valid & NFS_ATTR_FATTR_SIZE)
+ 			&& i_size_read(inode) == nfs_size_to_loff_t(fattr->pre_size)
+ 			&& !nfs_have_writebacks(inode)) {
++		trace_nfs_size_wcc(inode, fattr->size);
+ 		i_size_write(inode, nfs_size_to_loff_t(fattr->size));
+ 	}
  }
- #else
- static inline void rpc_task_set_debuginfo(struct rpc_task *task)
+@@ -2095,16 +2097,11 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 			/* Do we perhaps have any outstanding writes, or has
+ 			 * the file grown beyond our last write? */
+ 			if (!nfs_have_writebacks(inode) || new_isize > cur_isize) {
++				trace_nfs_size_update(inode, new_isize);
+ 				i_size_write(inode, new_isize);
+ 				if (!have_writers)
+ 					invalid |= NFS_INO_INVALID_DATA;
+ 			}
+-			dprintk("NFS: isize change on server for file %s/%ld "
+-					"(%Ld to %Ld)\n",
+-					inode->i_sb->s_id,
+-					inode->i_ino,
+-					(long long)cur_isize,
+-					(long long)new_isize);
+ 		}
+ 		if (new_isize == 0 &&
+ 		    !(fattr->valid & (NFS_ATTR_FATTR_SPACE_USED |
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index 4094e2856cf9..228bdf010eb6 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -231,6 +231,56 @@ TRACE_EVENT(nfs_access_exit,
+ 		)
+ );
+ 
++DECLARE_EVENT_CLASS(nfs_update_size_class,
++		TP_PROTO(
++			const struct inode *inode,
++			loff_t new_size
++		),
++
++		TP_ARGS(inode, new_size),
++
++		TP_STRUCT__entry(
++			__field(dev_t, dev)
++			__field(u32, fhandle)
++			__field(u64, fileid)
++			__field(u64, version)
++			__field(loff_t, cur_size)
++			__field(loff_t, new_size)
++		),
++
++		TP_fast_assign(
++			const struct nfs_inode *nfsi = NFS_I(inode);
++
++			__entry->dev = inode->i_sb->s_dev;
++			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
++			__entry->fileid = nfsi->fileid;
++			__entry->version = inode_peek_iversion_raw(inode);
++			__entry->cur_size = i_size_read(inode);
++			__entry->new_size = new_size;
++		),
++
++		TP_printk(
++			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu cursize=%lld newsize=%lld",
++			MAJOR(__entry->dev), MINOR(__entry->dev),
++			(unsigned long long)__entry->fileid,
++			__entry->fhandle, __entry->version,
++			__entry->cur_size, __entry->new_size
++		)
++);
++
++#define DEFINE_NFS_UPDATE_SIZE_EVENT(name) \
++	DEFINE_EVENT(nfs_update_size_class, nfs_size_##name, \
++			TP_PROTO( \
++				const struct inode *inode, \
++				loff_t new_size \
++			), \
++			TP_ARGS(inode, new_size))
++
++DEFINE_NFS_UPDATE_SIZE_EVENT(truncate);
++DEFINE_NFS_UPDATE_SIZE_EVENT(wcc);
++DEFINE_NFS_UPDATE_SIZE_EVENT(update);
++DEFINE_NFS_UPDATE_SIZE_EVENT(grow);
++
+ #define show_lookup_flags(flags) \
+ 	__print_flags(flags, "|", \
+ 			{ LOOKUP_FOLLOW, "FOLLOW" }, \
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index eae9bf114041..1ded0d232ece 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -288,6 +288,7 @@ static void nfs_grow_file(struct page *page, unsigned int offset, unsigned int c
+ 	end = page_file_offset(page) + ((loff_t)offset+count);
+ 	if (i_size >= end)
+ 		goto out;
++	trace_nfs_size_grow(inode, end);
+ 	i_size_write(inode, end);
+ 	NFS_I(inode)->cache_validity &= ~NFS_INO_INVALID_SIZE;
+ 	nfs_inc_stats(inode, NFSIOS_EXTENDWRITE);
 
 
