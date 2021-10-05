@@ -2,64 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 05914422C49
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 17:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8B2B422D84
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 18:10:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbhJEPYQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Oct 2021 11:24:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58028 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235090AbhJEPYP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Oct 2021 11:24:15 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C05C061749
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Oct 2021 08:22:25 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8A8EA3F53; Tue,  5 Oct 2021 11:22:24 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8A8EA3F53
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1633447344;
-        bh=xj+QUcgK10iaOv9G1rSXMHiNc9xsEmXGHVd1fVyysc0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WuC76q3nfHqtqkvrIVfJ+h2U2FzHZEnFAdN+/dOV2iKF/6HlPnp7X7Jhjrsf/7Y9/
-         iXk7tvh5cpMVz0P3iFzD20hKRnQCsAgQca61loSapxLtQonz4LpDuKfYKXw/IBErK2
-         Gp4jgqgkP43KQRkEwW4DJ6zQGRDVcZH5W2VeIAdk=
-Date:   Tue, 5 Oct 2021 11:22:24 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Dai Ngo <dai.ngo@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] st_courtesy.py: add more tests for Courteous Server
-Message-ID: <20211005152224.GA23210@fieldses.org>
-References: <20211004225320.25368-1-dai.ngo@oracle.com>
+        id S236285AbhJEQMg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Oct 2021 12:12:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S236227AbhJEQMg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 5 Oct 2021 12:12:36 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 13FF561354
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Oct 2021 16:10:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1633450245;
+        bh=zKwFiq2DF0F7CKkpZ3b8H7IyiJMIJZ3jWAMENIfe1z8=;
+        h=From:To:Subject:Date:From;
+        b=owi1PDiEgTykKhXK6mcprcy6CS6ulL/dwTmzYigWglZEhwPCPkf75GInmNKTtO8IN
+         xIRVY/ortArZQYFNoH6lMXd8eAS8mHAeuftgHY+XS7gQ6DA6jVy4lfa/dnPbvyJHRV
+         rItIzHyYI076/YenjVkmJaUiXRjoDkuj1U6iWwmgD4B+1sJw8BuIJ835i7byVx8QIK
+         Rd7cEVoEqonQ9vZ0bvK9oMhxdS1QRAsxRv99Ukwgq7vio6aMrOwoH0bxQIyKwvKqA5
+         wOT+P6AhduU6KRcxtM8FjVrgMYTTqHnhD56yKCNlK8/cj3iOkKb43w8q8hU8+XlwG5
+         V6vF4kOgR1ynA==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] NFS: Fix deadlocks in nfs_scan_commit_list()
+Date:   Tue,  5 Oct 2021 12:10:35 -0400
+Message-Id: <20211005161036.1054428-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211004225320.25368-1-dai.ngo@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 04, 2021 at 06:53:20PM -0400, Dai Ngo wrote:
-> COUR3: Test OPEN file with OPEN4_SHARE_DENY_WRITE
-> COUR4: Test Share Reservation. Test 2 clients with same deny mode
-> COUR5: Test Share Reservation. Test Courtesy client's file access mode
->        conflicts with deny mode
-> COUR6: Test Share Reservation. Test Courtesy client's deny mode conflicts
->        with file access mode
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Thanks!
+Partially revert commit 2ce209c42c01 ("NFS: Wait for requests that are
+locked on the commit list"), since it can lead to deadlocks between
+commit requests and nfs_join_page_group().
+For now we should assume that any locked requests on the commit list are
+either about to be removed and committed by another task, or the writes
+they describe are about to be retransmitted. In either case, we should
+not need to worry.
 
-> @@ -73,6 +76,8 @@ def testLockSleepLock(t, env):
->  
->      c2 = env.c1.new_client(b"%s_2" % env.testname(t))
->      sess2 = c2.create_session()
-> +    res = sess2.compound([op.reclaim_complete(FALSE)])
-> +    check(res)
+Fixes: 2ce209c42c01 ("NFS: Wait for requests that are locked on the commit list")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/write.c | 17 ++---------------
+ 1 file changed, 2 insertions(+), 15 deletions(-)
 
-Nit: this is a separate bugfix, right?  I'd rather have that kind of
-thing in a separate patch.
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index b89d5ef3af0e..38f181e1343a 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1039,25 +1039,11 @@ nfs_scan_commit_list(struct list_head *src, struct list_head *dst,
+ 	struct nfs_page *req, *tmp;
+ 	int ret = 0;
+ 
+-restart:
+ 	list_for_each_entry_safe(req, tmp, src, wb_list) {
+ 		kref_get(&req->wb_kref);
+ 		if (!nfs_lock_request(req)) {
+-			int status;
+-
+-			/* Prevent deadlock with nfs_lock_and_join_requests */
+-			if (!list_empty(dst)) {
+-				nfs_release_request(req);
+-				continue;
+-			}
+-			/* Ensure we make progress to prevent livelock */
+-			mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
+-			status = nfs_wait_on_request(req);
+ 			nfs_release_request(req);
+-			mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
+-			if (status < 0)
+-				break;
+-			goto restart;
++			continue;
+ 		}
+ 		nfs_request_remove_commit_list(req, cinfo);
+ 		clear_bit(PG_COMMIT_TO_DS, &req->wb_flags);
+@@ -1952,6 +1938,7 @@ static int __nfs_commit_inode(struct inode *inode, int how,
+ 	int may_wait = how & FLUSH_SYNC;
+ 	int ret, nscan;
+ 
++	how &= ~FLUSH_SYNC;
+ 	nfs_init_cinfo_from_inode(&cinfo, inode);
+ 	nfs_commit_begin(cinfo.mds);
+ 	for (;;) {
+-- 
+2.31.1
 
-Also, you could just use new_client_session().
-
---b.
