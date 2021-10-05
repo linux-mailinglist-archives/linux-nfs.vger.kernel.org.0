@@ -2,118 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A2F7422683
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 14:27:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC164226B0
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 14:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234888AbhJEM3j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Oct 2021 08:29:39 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:52934 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234401AbhJEM3i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Oct 2021 08:29:38 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 054E220020;
-        Tue,  5 Oct 2021 12:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1633436866; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S234131AbhJEMdc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Oct 2021 08:33:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:46342 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233602AbhJEMdc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Oct 2021 08:33:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633437101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=JjGOU28aseIxzbgxmKKGBf+lfKA8napnrkp1mk29VtE=;
-        b=Bzpre7weOsXJ/u0YLszAyXJT5NP2OpWOG4HD0n3NXs9HPxWb/XUtF8fVLg5+g0fPQL7LIJ
-        J+ePJ6f5kRNWYMjcrWW79ogSqTmH18OMCLxa5kV7b9ZPYN+22E9C2nckip1BhlQLaiO4EX
-        QPHzankMnoMtHNaLmhKTwWqqdxyCKDk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1633436866;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=JjGOU28aseIxzbgxmKKGBf+lfKA8napnrkp1mk29VtE=;
-        b=JcXixsvED2f4ufImevKRnrpIhO7jiSyFefYaC+44w0N5Nf8Va0GlAZnYmtiF0is3Ufq1tf
-        FDf4ReDNhB2Fa1AQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=oWvs98y6f4dZTabsJw1VEGryB1k64mYr32bRtsWV+bs=;
+        b=WzOnH67RRJ4Mv14GJv07qqlAg9gF6Vih0+d8IpnsejJbOT+tA1Kfkt+jY0KAMn4hkzVkYL
+        8ckTx7iET6oFM6DEOEorgFWInaVPu7TAzD+phfJobIOh2fUYnrhFjMr1kVN0/bQ7P9twMF
+        Yy1POhcclglAyPE3Y0FGiH+u64+k1sM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-125-3tU6qnJIMbqeyyPe7QZ6uQ-1; Tue, 05 Oct 2021 08:31:38 -0400
+X-MC-Unique: 3tU6qnJIMbqeyyPe7QZ6uQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B2EE113C50;
-        Tue,  5 Oct 2021 12:27:45 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id aGXfKsFEXGHXawAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Tue, 05 Oct 2021 12:27:45 +0000
-Message-ID: <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
-Date:   Tue, 5 Oct 2021 14:27:45 +0200
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4CEC801E72;
+        Tue,  5 Oct 2021 12:31:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6BC971036B3A;
+        Tue,  5 Oct 2021 12:31:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <980957.1633427535@warthog.procyon.org.uk>
+References: <980957.1633427535@warthog.procyon.org.uk> <1633288958-8481-1-git-send-email-dwysocha@redhat.com>
+Cc:     dhowells@redhat.com, Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 0/7] Various NFS fscache cleanups
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.1.2
-Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
-Content-Language: en-US
-To:     Michal Hocko <mhocko@suse.com>
-Cc:     NeilBrown <neilb@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>,
-        ". Dave Chinner" <david@fromorbit.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
- <163184741778.29351.16920832234899124642.stgit@noble.brown>
- <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
- <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1077509.1633437094.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 05 Oct 2021 13:31:34 +0100
+Message-ID: <1077510.1633437094@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10/5/21 13:09, Michal Hocko wrote:
-> On Tue 05-10-21 11:20:51, Vlastimil Babka wrote:
-> [...]
->> > --- a/include/linux/gfp.h
->> > +++ b/include/linux/gfp.h
->> > @@ -209,7 +209,11 @@ struct vm_area_struct;
->> >   * used only when there is no reasonable failure policy) but it is
->> >   * definitely preferable to use the flag rather than opencode endless
->> >   * loop around allocator.
->> > - * Using this flag for costly allocations is _highly_ discouraged.
->> > + * Use of this flag may lead to deadlocks if locks are held which would
->> > + * be needed for memory reclaim, write-back, or the timely exit of a
->> > + * process killed by the OOM-killer.  Dropping any locks not absolutely
->> > + * needed is advisable before requesting a %__GFP_NOFAIL allocate.
->> > + * Using this flag for costly allocations (order>1) is _highly_ discouraged.
->> 
->> We define costly as 3, not 1. But sure it's best to avoid even order>0 for
->> __GFP_NOFAIL. Advising order>1 seems arbitrary though?
-> 
-> This is not completely arbitrary. We have a warning for any higher order
-> allocation.
-> rmqueue:
-> 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+David Howells <dhowells@redhat.com> wrote:
 
-Oh, I missed that.
+> > This patchset is on top of David Howells fscache-iter-3 branch, which
+> > he posted v2 recently
+> > https://lore.kernel.org/all/163189104510.2509237.10805032055807259087.=
+stgit@warthog.procyon.org.uk/
+> > =
 
-> I do agree that "Using this flag for higher order allocations is
-> _highly_ discouraged.
+> > The first patch in this series should probably be merged into David Ho=
+wells
+> > 3/8 patch of that series.  Otherwise, these patches are applied on top=
+ of
+> > his series, and this series is mostly orthogonal to fscache-iter-3 bra=
+nch.
+> =
 
-Well, with the warning in place this is effectively forbidden, not just
-discouraged.
+> I've added it to my series, putting it in front of my nfs patch.  Your c=
+hanges
+> there aren't really anything to do with mine, so I don't think they want
+> merging together.
 
->> >   */
->> >  #define __GFP_IO	((__force gfp_t)___GFP_IO)
->> >  #define __GFP_FS	((__force gfp_t)___GFP_FS)
->> > 
->> > 
->> > 
-> 
+Ah - I got confused by the "3/8 patch" bit and took patch 3, not patch 1.
+
+David
 
