@@ -2,124 +2,135 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9922A4227F9
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 15:34:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE4D84228E8
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 15:53:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234983AbhJENgj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Oct 2021 09:36:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:60393 "EHLO
+        id S235590AbhJENyy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Oct 2021 09:54:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:44518 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234103AbhJENgj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Oct 2021 09:36:39 -0400
+        by vger.kernel.org with ESMTP id S235476AbhJENxt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Oct 2021 09:53:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633440888;
+        s=mimecast20190719; t=1633441918;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=KbQMyQ3OBXFxJwor2dj+AzBaJlpfPumA3y+3T9hS3ck=;
-        b=awH4ii2Iobj19PPtL8/6R2syWjOIEVJs1I+apSz3tS6hjc90mIiachyx+sRYdPiMP+LGti
-        7Izz09WN6sJF8RRvVzjsAs93gDMPIHU8b5BdTrDTn49Gu8D5YcP/z9safle7pFSpY75FPm
-        tuEFKQ+H68x++ARBqjPrK9SoBTT0Pj0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-p9vWSj-wP-G3pUDdrQWKnw-1; Tue, 05 Oct 2021 09:34:47 -0400
-X-MC-Unique: p9vWSj-wP-G3pUDdrQWKnw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 50907802921;
-        Tue,  5 Oct 2021 13:34:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7085B2619A;
-        Tue,  5 Oct 2021 13:34:40 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     dhowells@redhat.com, Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [GIT PULL] fscache, 9p, afs, nfs: Fix kerneldoc warnings and one unused variable
+         in-reply-to:in-reply-to:references:references;
+        bh=9Sq+vV3R3P7TQ0AM4JCbd3k08zMbakaHsPP7Xk3nGbs=;
+        b=glChNxZ2PKNPXbE268FadtyNhZdppffwkkV5iL0c7yQFCzvAM1KlSkEybOLK9zugnyqGZY
+        b7lWhQe2eGureJm9VLOWNFtqsecd/YWzW6P/WXYfLIoYoUZlG3NwYz7y9zek3N/JFyuBo0
+        /rNIl8Q/gPz52q6VrsO29FPn7piDGwM=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-pKeyjEY1NOSsiqedh5Kj_A-1; Tue, 05 Oct 2021 09:51:57 -0400
+X-MC-Unique: pKeyjEY1NOSsiqedh5Kj_A-1
+Received: by mail-ed1-f71.google.com with SMTP id c30-20020a50f61e000000b003daf3955d5aso6162290edn.4
+        for <linux-nfs@vger.kernel.org>; Tue, 05 Oct 2021 06:51:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9Sq+vV3R3P7TQ0AM4JCbd3k08zMbakaHsPP7Xk3nGbs=;
+        b=3GpY+Ul1Kyk/zFM1+fDTv9SF9Wv4GQxmFFpO210rGZlvPn8NBj9kSLU5cvBBNyGKGs
+         e249cmAJEpEyEhfIQa8KUZpyrXsx7T/pUQfnHLqlrk/dq6ovnsSsxmwrKCZOZ83PXu/k
+         h2r9hlWpewFEC5YguvLx1NZ6cs9GwXrzI8x/XL7PNkY43QKdSdNjcfcKLkgw4G/IRFR/
+         jUK4scDu2k1YYfxUvoxyvzPetfYBFZ/54K85U8HKXf+XMZSTTgeKjQBuZ5HkKYRSkATV
+         wCphjXKEscVzB5FJZhBkUdKgy6VIGGddgNa4KFdZ6PEXJPdotGoGcjz/J39oQ19lXiLP
+         rvmw==
+X-Gm-Message-State: AOAM533/gWNGU8gc6Zu20hdixgHUhvYlnQpni6PMLMQf7QrUXELRd3xB
+        8A0eT13AseRyiSROkc2WxBcdeRetdzLWqI3vblA/oJ89ziZeGWKZ3J9dp8xgBIURQ3lvnpt3ryH
+        YizpEvFaH8+i95DaTbbPnO8HjKHyfDQIyjmL4
+X-Received: by 2002:a17:906:5e17:: with SMTP id n23mr22244009eju.258.1633441915960;
+        Tue, 05 Oct 2021 06:51:55 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxL6wEA9YAWMunwkkS/VUTXjx+I2mT9GQRM0DPKN/EeeZlMmwcjfLRDyQFDf4hyyBsldiJXbt5FEDnfKDYHMbw=
+X-Received: by 2002:a17:906:5e17:: with SMTP id n23mr22243984eju.258.1633441915769;
+ Tue, 05 Oct 2021 06:51:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1082804.1633440879.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 05 Oct 2021 14:34:39 +0100
-Message-ID: <1082805.1633440879@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <1633288958-8481-1-git-send-email-dwysocha@redhat.com>
+ <1633288958-8481-8-git-send-email-dwysocha@redhat.com> <5fe74c4fb9d54c775c07d0f94d0ea187f72e15fe.camel@hammerspace.com>
+In-Reply-To: <5fe74c4fb9d54c775c07d0f94d0ea187f72e15fe.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Tue, 5 Oct 2021 09:51:18 -0400
+Message-ID: <CALF+zOk=KNmBZ4MoW+Gas0JMvVRJJaQRbBRfnW-sm3NVnekygg@mail.gmail.com>
+Subject: Re: [PATCH v1 7/7] NFS: Remove remaining usages of NFSDBG_FSCACHE
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+On Mon, Oct 4, 2021 at 11:57 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Sun, 2021-10-03 at 15:22 -0400, Dave Wysochanski wrote:
+> > The NFS fscache interface has removed all dfprintks so remove the
+> > NFSDBG_FSCACHE defines.
+> >
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> >  fs/nfs/fscache-index.c      | 2 --
+> >  fs/nfs/fscache.c            | 2 --
+> >  include/uapi/linux/nfs_fs.h | 2 +-
+> >  3 files changed, 1 insertion(+), 5 deletions(-)
+> >
+> > diff --git a/fs/nfs/fscache-index.c b/fs/nfs/fscache-index.c
+> > index 4bd5ce736193..71bb4270641f 100644
+> > --- a/fs/nfs/fscache-index.c
+> > +++ b/fs/nfs/fscache-index.c
+> > @@ -17,8 +17,6 @@
+> >  #include "internal.h"
+> >  #include "fscache.h"
+> >
+> > -#define NFSDBG_FACILITY                NFSDBG_FSCACHE
+> > -
+> >  /*
+> >   * Define the NFS filesystem for FS-Cache.  Upon registration FS-
+> > Cache sticks
+> >   * the cookie for the top-level index object for NFS into here.  The
+> > top-level
+> > diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+> > index d199ee103dc6..016e6cb13d28 100644
+> > --- a/fs/nfs/fscache.c
+> > +++ b/fs/nfs/fscache.c
+> > @@ -21,8 +21,6 @@
+> >  #include "fscache.h"
+> >  #include "nfstrace.h"
+> >
+> > -#define NFSDBG_FACILITY                NFSDBG_FSCACHE
+> > -
+> >  static struct rb_root nfs_fscache_keys = RB_ROOT;
+> >  static DEFINE_SPINLOCK(nfs_fscache_keys_lock);
+> >
+> > diff --git a/include/uapi/linux/nfs_fs.h
+> > b/include/uapi/linux/nfs_fs.h
+> > index 3afe3767c55d..caa8d2234958 100644
+> > --- a/include/uapi/linux/nfs_fs.h
+> > +++ b/include/uapi/linux/nfs_fs.h
+> > @@ -52,7 +52,7 @@
+> >  #define NFSDBG_CALLBACK                0x0100
+> >  #define NFSDBG_CLIENT          0x0200
+> >  #define NFSDBG_MOUNT           0x0400
+> > -#define NFSDBG_FSCACHE         0x0800
+> > +#define NFSDBG_UNUSED          0x0800 /* unused; was FSCACHE */
+>
+> Please leave the name and value unchanged. I'm fine with adding the
+> comment telling people not to bother using it, but this is supposed to
+> be part of a user API so it can't be modified unless we're absolutely
+> certain it isn't being used by anyone.
+>
+Ok I will post a v2 and leave NFSDBG_FSCACHE defined for now but add
+the comment.  But once there's no more usages in the kernel, I'm not sure
+what the proper way to deprecate and remove it would be though.
 
-Could you consider pulling these changes please?
+I can post a nfs-utils patch to deprecate (or remove) the usage of fscache
+in rpcdebug too. What's the proper way to deprecate and remove rpcdebug
+flags, or is there some reason we don't ever want to do it?
 
-The first four patches fix kerneldoc warnings in fscache, afs, 9p and nfs =
--
-they're mostly just comment changes, though there's one place in 9p where =
-a
-comment got detached from the function it was attached to (v9fs_fid_add)
-and has to switch places with a function that got inserted between
-(__add_fid).
 
-The patch on the end removes an unused symbol in fscache - I moved it last
-so you can discard it if you'd rather not pull that one just now.
-
-David
-
-Link: https://lore.kernel.org/r/163214005516.2945267.7000234432243167892.s=
-tgit@warthog.procyon.org.uk/ # rfc v1
-Link: https://lore.kernel.org/r/163281899704.2790286.9177774252843775348.s=
-tgit@warthog.procyon.org.uk/ # rfc v2
-Link: https://lore.kernel.org/r/163342376338.876192.10313278824682848704.s=
-tgit@warthog.procyon.org.uk/ # split up
-
----
-The following changes since commit 9e1ff307c779ce1f0f810c7ecce3d95bbae4089=
-6:
-
-  Linux 5.15-rc4 (2021-10-03 14:08:47 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
-/warning-fixes-20211005
-
-for you to fetch changes up to ef31499a87cf842bdf6719f44473d93e99d09fe2:
-
-  fscache: Remove an unused static variable (2021-10-04 22:13:12 +0100)
-
-----------------------------------------------------------------
-Warning fixes
-
-----------------------------------------------------------------
-David Howells (5):
-      nfs: Fix kerneldoc warning shown up by W=3D1
-      afs: Fix kerneldoc warning shown up by W=3D1
-      9p: Fix a bunch of kerneldoc warnings shown up by W=3D1
-      fscache: Fix some kerneldoc warnings shown up by W=3D1
-      fscache: Remove an unused static variable
-
- fs/9p/cache.c          |  8 ++++----
- fs/9p/fid.c            | 14 +++++++-------
- fs/9p/v9fs.c           |  8 +++-----
- fs/9p/vfs_addr.c       | 14 +++++++++-----
- fs/9p/vfs_file.c       | 33 ++++++++++++---------------------
- fs/9p/vfs_inode.c      | 24 ++++++++++++++++--------
- fs/9p/vfs_inode_dotl.c | 11 +++++++++--
- fs/afs/dir_silly.c     |  4 ++--
- fs/fscache/object.c    |  2 +-
- fs/fscache/operation.c |  3 +++
- fs/nfs_common/grace.c  |  1 -
- 11 files changed, 66 insertions(+), 56 deletions(-)
+> The other changes are fine.
+>
+Thanks for the review.
 
