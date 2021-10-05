@@ -2,33 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C8B2B422D84
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 18:10:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C7BA422D85
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Oct 2021 18:10:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236285AbhJEQMg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S233975AbhJEQMg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 5 Oct 2021 12:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53128 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:53132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S236227AbhJEQMg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        id S236259AbhJEQMg (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
         Tue, 5 Oct 2021 12:12:36 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 13FF561354
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Oct 2021 16:10:44 +0000 (UTC)
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 879716126A
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Oct 2021 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1633450245;
-        bh=zKwFiq2DF0F7CKkpZ3b8H7IyiJMIJZ3jWAMENIfe1z8=;
-        h=From:To:Subject:Date:From;
-        b=owi1PDiEgTykKhXK6mcprcy6CS6ulL/dwTmzYigWglZEhwPCPkf75GInmNKTtO8IN
-         xIRVY/ortArZQYFNoH6lMXd8eAS8mHAeuftgHY+XS7gQ6DA6jVy4lfa/dnPbvyJHRV
-         rItIzHyYI076/YenjVkmJaUiXRjoDkuj1U6iWwmgD4B+1sJw8BuIJ835i7byVx8QIK
-         Rd7cEVoEqonQ9vZ0bvK9oMhxdS1QRAsxRv99Ukwgq7vio6aMrOwoH0bxQIyKwvKqA5
-         wOT+P6AhduU6KRcxtM8FjVrgMYTTqHnhD56yKCNlK8/cj3iOkKb43w8q8hU8+XlwG5
-         V6vF4kOgR1ynA==
+        bh=8FJCMBdaJcwHhmtTOPTDpez9ZiFg+Yirbda9tnIqJpQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=b2qqdGN3iLQwaAG+4n1n48Mj26FBnhP6wAgIjgZ5VVpvCavASl4vE767IMT3uzKpQ
+         lrK0BtNm4h/OwpmDcKy9WijOANC+k0Snes2J82NndP7tEiSrn+2BwUNrwxB7LlBXZS
+         O2/eH6nPn8ZqE0hT6Y5jx3w/9+ETCKz54boqMWKl3wzIuzW+JSVvF+VCzJaySYFPFS
+         +2IEmH69ZVeyt14yQeACarpXrCGFhpfF7QmDCdxO0zWZZp0033dPWdN+LrQ55gcR97
+         Mgang+xN9jxDQMDon5Txc6RO4W7/tbyKB4ruc5XesxluYpMk9+rgRCKYEtCLyawOgc
+         vutGwjfNCh+aQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFS: Fix deadlocks in nfs_scan_commit_list()
-Date:   Tue,  5 Oct 2021 12:10:35 -0400
-Message-Id: <20211005161036.1054428-1-trondmy@kernel.org>
+Subject: [PATCH 2/2] NFS: Fix up commit deadlocks
+Date:   Tue,  5 Oct 2021 12:10:36 -0400
+Message-Id: <20211005161036.1054428-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211005161036.1054428-1-trondmy@kernel.org>
+References: <20211005161036.1054428-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -37,59 +39,99 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Partially revert commit 2ce209c42c01 ("NFS: Wait for requests that are
-locked on the commit list"), since it can lead to deadlocks between
-commit requests and nfs_join_page_group().
-For now we should assume that any locked requests on the commit list are
-either about to be removed and committed by another task, or the writes
-they describe are about to be retransmitted. In either case, we should
-not need to worry.
+If O_DIRECT bumps the commit_info rpcs_out field, then that could lead
+to fsync() hangs. The fix is to ensure that O_DIRECT calls
+nfs_commit_end().
 
-Fixes: 2ce209c42c01 ("NFS: Wait for requests that are locked on the commit list")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/write.c | 17 ++---------------
- 1 file changed, 2 insertions(+), 15 deletions(-)
+ fs/nfs/direct.c        | 2 +-
+ fs/nfs/pnfs_nfs.c      | 2 --
+ fs/nfs/write.c         | 9 ++++++---
+ include/linux/nfs_fs.h | 1 +
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index 2e894fec036b..3c0335c15a73 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -620,7 +620,7 @@ static void nfs_direct_commit_complete(struct nfs_commit_data *data)
+ 		nfs_unlock_and_release_request(req);
+ 	}
+ 
+-	if (atomic_dec_and_test(&cinfo.mds->rpcs_out))
++	if (nfs_commit_end(cinfo.mds))
+ 		nfs_direct_write_complete(dreq);
+ }
+ 
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index 02bd6e83961d..316f68f96e57 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -468,7 +468,6 @@ pnfs_bucket_alloc_ds_commits(struct list_head *list,
+ 				goto out_error;
+ 			data->ds_commit_index = i;
+ 			list_add_tail(&data->list, list);
+-			atomic_inc(&cinfo->mds->rpcs_out);
+ 			nreq++;
+ 		}
+ 		mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
+@@ -520,7 +519,6 @@ pnfs_generic_commit_pagelist(struct inode *inode, struct list_head *mds_pages,
+ 		data->ds_commit_index = -1;
+ 		list_splice_init(mds_pages, &data->pages);
+ 		list_add_tail(&data->list, &list);
+-		atomic_inc(&cinfo->mds->rpcs_out);
+ 		nreq++;
+ 	}
+ 
 diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index b89d5ef3af0e..38f181e1343a 100644
+index 38f181e1343a..465220f47142 100644
 --- a/fs/nfs/write.c
 +++ b/fs/nfs/write.c
-@@ -1039,25 +1039,11 @@ nfs_scan_commit_list(struct list_head *src, struct list_head *dst,
- 	struct nfs_page *req, *tmp;
- 	int ret = 0;
+@@ -1673,10 +1673,13 @@ static void nfs_commit_begin(struct nfs_mds_commit_info *cinfo)
+ 	atomic_inc(&cinfo->rpcs_out);
+ }
  
--restart:
- 	list_for_each_entry_safe(req, tmp, src, wb_list) {
- 		kref_get(&req->wb_kref);
- 		if (!nfs_lock_request(req)) {
--			int status;
--
--			/* Prevent deadlock with nfs_lock_and_join_requests */
--			if (!list_empty(dst)) {
--				nfs_release_request(req);
--				continue;
--			}
--			/* Ensure we make progress to prevent livelock */
--			mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
--			status = nfs_wait_on_request(req);
- 			nfs_release_request(req);
--			mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
--			if (status < 0)
--				break;
--			goto restart;
-+			continue;
- 		}
- 		nfs_request_remove_commit_list(req, cinfo);
- 		clear_bit(PG_COMMIT_TO_DS, &req->wb_flags);
-@@ -1952,6 +1938,7 @@ static int __nfs_commit_inode(struct inode *inode, int how,
- 	int may_wait = how & FLUSH_SYNC;
- 	int ret, nscan;
+-static void nfs_commit_end(struct nfs_mds_commit_info *cinfo)
++bool nfs_commit_end(struct nfs_mds_commit_info *cinfo)
+ {
+-	if (atomic_dec_and_test(&cinfo->rpcs_out))
++	if (atomic_dec_and_test(&cinfo->rpcs_out)) {
+ 		wake_up_var(&cinfo->rpcs_out);
++		return true;
++	}
++	return false;
+ }
  
-+	how &= ~FLUSH_SYNC;
- 	nfs_init_cinfo_from_inode(&cinfo, inode);
- 	nfs_commit_begin(cinfo.mds);
- 	for (;;) {
+ void nfs_commitdata_release(struct nfs_commit_data *data)
+@@ -1776,6 +1779,7 @@ void nfs_init_commit(struct nfs_commit_data *data,
+ 	data->res.fattr   = &data->fattr;
+ 	data->res.verf    = &data->verf;
+ 	nfs_fattr_init(&data->fattr);
++	nfs_commit_begin(cinfo->mds);
+ }
+ EXPORT_SYMBOL_GPL(nfs_init_commit);
+ 
+@@ -1822,7 +1826,6 @@ nfs_commit_list(struct inode *inode, struct list_head *head, int how,
+ 
+ 	/* Set up the argument struct */
+ 	nfs_init_commit(data, head, NULL, cinfo);
+-	atomic_inc(&cinfo->mds->rpcs_out);
+ 	if (NFS_SERVER(inode)->nfs_client->cl_minorversion)
+ 		task_flags = RPC_TASK_MOVEABLE;
+ 	return nfs_initiate_commit(NFS_CLIENT(inode), data, NFS_PROTO(inode),
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 5893b986fa3b..140187b57db8 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -574,6 +574,7 @@ extern int nfs_wb_page_cancel(struct inode *inode, struct page* page);
+ extern int  nfs_commit_inode(struct inode *, int);
+ extern struct nfs_commit_data *nfs_commitdata_alloc(bool never_fail);
+ extern void nfs_commit_free(struct nfs_commit_data *data);
++bool nfs_commit_end(struct nfs_mds_commit_info *cinfo);
+ 
+ static inline int
+ nfs_have_writebacks(struct inode *inode)
 -- 
 2.31.1
 
