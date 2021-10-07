@@ -2,171 +2,261 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5475F4250B2
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Oct 2021 12:07:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3852042547F
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Oct 2021 15:42:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240544AbhJGKJj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Oct 2021 06:09:39 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:34754 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240540AbhJGKJi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Oct 2021 06:09:38 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id A9C7722526;
-        Thu,  7 Oct 2021 10:07:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1633601263; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S241655AbhJGNoT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Oct 2021 09:44:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:33918 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233331AbhJGNoS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Oct 2021 09:44:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633614144;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=H4Ul2HxwLohvq2LxFkQLFFYYgikdgrah0DTLC7cFiY0=;
-        b=quSKVcFrsqj8pOlL7N/kApBS4N4Hnnreq8O3OeVVlo2YqiBeMCubqiCrN23pnvEkGkRujC
-        EbSln1J9I0kGz4w/KXsTVaUpaYrZ9GM4yb5q+leWfbR7h/2lWIE/KwUJw6YVdC1YBVkZ/q
-        lkL9wAvpj+T7f2AX9jcpxm/i65rYKhY=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 5B313A3B81;
-        Thu,  7 Oct 2021 10:07:43 +0000 (UTC)
-Date:   Thu, 7 Oct 2021 12:07:42 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, NeilBrown <neilb@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
-Message-ID: <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
-References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
- <163184741778.29351.16920832234899124642.stgit@noble.brown>
- <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
- <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
- <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
- <20211006231452.GF54211@dread.disaster.area>
+        bh=P5JU8C3BiXtpns0YyWc4B8OVs5rM6VtoDVkoZlDZM7I=;
+        b=bqzv3LkYvwc6JNDe0lJ8qpwVGo2R/tU/eeFf02rqg7xzUjv/IgwMDuaO9LUCJsdAHrLD/R
+        RjCeXJnNnyI8zP/E66aHEES/NoCw9TGv6GAwcCdjRTb2XnPsWLttIHxfOkHv8YardDbzfB
+        RSllFvFijdm0BjHgsfVtx/JdEl6GJAQ=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-562-e_-avvx-Ne-KTcZaR2fhrA-1; Thu, 07 Oct 2021 09:42:09 -0400
+X-MC-Unique: e_-avvx-Ne-KTcZaR2fhrA-1
+Received: by mail-ed1-f72.google.com with SMTP id v9-20020a50d849000000b003db459aa3f5so3335487edj.15
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Oct 2021 06:42:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P5JU8C3BiXtpns0YyWc4B8OVs5rM6VtoDVkoZlDZM7I=;
+        b=SGs3RJVg4FerwurKAYFajxk0nn3RB+nGfElXJAMDjiYf7ZDH9EC9uiT/XodvA/LZpQ
+         bd2YFSq+40R4LcI0/3jdcGvYdsj8WnQSDtKFB7s2oJFgJEoYI11M4j7MGAxrHXC07ziY
+         l2Me7L6k/EBNt5qXkJ4wS2q3mEjnpw5uVb9va1dLPjy6BOeCG0QX6NOOSGhYz//h2Lfe
+         kTUf5P5xtx1PC01Pt8xf7kuQlfwu9Z22fT9gGraFgrYSt+2dCy+6xbk4sNFnphuNB3jV
+         vjCMwbTo0WmM96Vm+FGd9G0HVxvdSeN2gGgK2y/cBn/31gHT/AOhXL4yh+f6SLy8vlUn
+         +0GA==
+X-Gm-Message-State: AOAM531uoJEIsXFHLHh/zj05C+SIpLHtI5sfDDLrVf0/KmDAFVOQ3tH8
+        iU+rTT0Kn40x1esEAorSF8YP64qvqF11ikTMH+LpdscmuummVFk1qQRMdqn5CTUuskQFPR5f6ti
+        sFTUlS9og47ey4ml03UEv1kkVDVICxsZIqMO5
+X-Received: by 2002:a50:d885:: with SMTP id p5mr6301283edj.255.1633614128421;
+        Thu, 07 Oct 2021 06:42:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzcvsxc+y8frXXhP7lqXdbtdnf4NIPXFFBdZ6nyc1k14xRTVCXUWIgFqYn0ldpiqb3SiRBVypusoATbszknLHU=
+X-Received: by 2002:a50:d885:: with SMTP id p5mr6301251edj.255.1633614128211;
+ Thu, 07 Oct 2021 06:42:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211006231452.GF54211@dread.disaster.area>
+References: <1633288958-8481-1-git-send-email-dwysocha@redhat.com> <1633288958-8481-6-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <1633288958-8481-6-git-send-email-dwysocha@redhat.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 7 Oct 2021 09:41:31 -0400
+Message-ID: <CALF+zO=J_W3a89J6BY7FYjSdz0_G04f00Ycgm7H6ax55heufug@mail.gmail.com>
+Subject: Re: [Linux-cachefs] [PATCH v1 5/7] NFS: Replace dfprintks in favor of
+ tracepoints in fscache IO paths
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-cachefs <linux-cachefs@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu 07-10-21 10:14:52, Dave Chinner wrote:
-> On Tue, Oct 05, 2021 at 02:27:45PM +0200, Vlastimil Babka wrote:
-> > On 10/5/21 13:09, Michal Hocko wrote:
-> > > On Tue 05-10-21 11:20:51, Vlastimil Babka wrote:
-> > > [...]
-> > >> > --- a/include/linux/gfp.h
-> > >> > +++ b/include/linux/gfp.h
-> > >> > @@ -209,7 +209,11 @@ struct vm_area_struct;
-> > >> >   * used only when there is no reasonable failure policy) but it is
-> > >> >   * definitely preferable to use the flag rather than opencode endless
-> > >> >   * loop around allocator.
-> > >> > - * Using this flag for costly allocations is _highly_ discouraged.
-> > >> > + * Use of this flag may lead to deadlocks if locks are held which would
-> > >> > + * be needed for memory reclaim, write-back, or the timely exit of a
-> > >> > + * process killed by the OOM-killer.  Dropping any locks not absolutely
-> > >> > + * needed is advisable before requesting a %__GFP_NOFAIL allocate.
-> > >> > + * Using this flag for costly allocations (order>1) is _highly_ discouraged.
-> > >> 
-> > >> We define costly as 3, not 1. But sure it's best to avoid even order>0 for
-> > >> __GFP_NOFAIL. Advising order>1 seems arbitrary though?
-> > > 
-> > > This is not completely arbitrary. We have a warning for any higher order
-> > > allocation.
-> > > rmqueue:
-> > > 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-> > 
-> > Oh, I missed that.
-> > 
-> > > I do agree that "Using this flag for higher order allocations is
-> > > _highly_ discouraged.
-> > 
-> > Well, with the warning in place this is effectively forbidden, not just
-> > discouraged.
-> 
-> Yup, especially as it doesn't obey __GFP_NOWARN.
-> 
-> See commit de2860f46362 ("mm: Add kvrealloc()") as a direct result
-> of unwittingly tripping over this warning when adding __GFP_NOFAIL
-> annotations to replace open coded high-order kmalloc loops that have
-> been in place for a couple of decades without issues.
-> 
-> Personally I think that the way __GFP_NOFAIL is first of all
-> recommended over open coded loops and then only later found to be
-> effectively forbidden and needing to be replaced with open coded
-> loops to be a complete mess.
+On Sun, Oct 3, 2021 at 3:23 PM Dave Wysochanski <dwysocha@redhat.com> wrote:
+>
+> Most of fscache and other NFS IO paths are now using tracepoints,
+> so remove the dfprintks in these code paths and replace with a couple
+> tracepoints to track page IO.
+>
+> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> ---
+>  fs/nfs/fscache.c  | 22 +++----------
+>  fs/nfs/nfstrace.h | 97 +++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 101 insertions(+), 18 deletions(-)
+>
+> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+> index a2b517846787..1db1e298b915 100644
+> --- a/fs/nfs/fscache.c
+> +++ b/fs/nfs/fscache.c
+> @@ -335,22 +335,17 @@ int __nfs_readpage_from_fscache(struct inode *inode, struct page *page)
+>  {
+>         int ret;
+>
+> -       dfprintk(FSCACHE,
+> -                "NFS: readpage_from_fscache(fsc:%p/p:%p(i:%lx f:%lx)/0x%p)\n",
+> -                nfs_i_fscache(inode), page, page->index, page->flags, inode);
+> -
+>         if (PageChecked(page)) {
+> -               dfprintk(FSCACHE, "NFS:    readpage_from_fscache: PageChecked\n");
+>                 ClearPageChecked(page);
+>                 return 1;
+>         }
+>
+> +       trace_nfs_fscache_page_event_read(inode, page);
+>         ret = fscache_fallback_read_page(nfs_i_fscache(inode), page);
+> +       trace_nfs_fscache_page_event_read_done(inode, page, ret);
+>
+>         switch (ret) {
+>         case 0: /* Read completed synchronously */
+> -               dfprintk(FSCACHE,
+> -                        "NFS:    readpage_from_fscache: read successful\n");
+>                 nfs_inc_fscache_stats(inode, NFSIOS_FSCACHE_PAGES_READ_OK);
+>                 SetPageUptodate(page);
+>                 return 0;
+> @@ -358,13 +353,10 @@ int __nfs_readpage_from_fscache(struct inode *inode, struct page *page)
+>         case -ENOBUFS: /* inode not in cache */
+>         case -ENODATA: /* page not in cache */
+>                 nfs_inc_fscache_stats(inode, NFSIOS_FSCACHE_PAGES_READ_FAIL);
+> -               dfprintk(FSCACHE,
+> -                        "NFS:    readpage_from_fscache failed %d\n", ret);
+>                 SetPageChecked(page);
+>                 return 1;
+>
+>         default:
+> -               dfprintk(FSCACHE, "NFS:    readpage_from_fscache %d\n", ret);
+>                 nfs_inc_fscache_stats(inode, NFSIOS_FSCACHE_PAGES_READ_FAIL);
+>                 SetPageChecked(page);
+>         }
+> @@ -378,15 +370,9 @@ void __nfs_readpage_to_fscache(struct inode *inode, struct page *page)
+>  {
+>         int ret;
+>
+> -       dfprintk(FSCACHE,
+> -                "NFS: readpage_to_fscache(fsc:%p/p:%p(i:%lx f:%lx))\n",
+> -                nfs_i_fscache(inode), page, page->index, page->flags);
+> -
+> +       trace_nfs_fscache_page_event_write(inode, page);
+>         ret = fscache_fallback_write_page(nfs_i_fscache(inode), page);
+> -
+> -       dfprintk(FSCACHE,
+> -                "NFS:     readpage_to_fscache: p:%p(i:%lu f:%lx) ret %d\n",
+> -                page, page->index, page->flags, ret);
+> +       trace_nfs_fscache_page_event_write_done(inode, page, ret);
+>
+>         if (ret != 0) {
+>                 nfs_inc_fscache_stats(inode, NFSIOS_FSCACHE_PAGES_WRITTEN_FAIL);
+> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+> index b4177f57f69b..662dddc2eb96 100644
+> --- a/fs/nfs/nfstrace.h
+> +++ b/fs/nfs/nfstrace.h
+> @@ -880,6 +880,103 @@
+>                 )
+>  );
+>
+> +DECLARE_EVENT_CLASS(nfs_fscache_page_event,
+> +               TP_PROTO(
+> +                       const struct inode *inode,
+> +                       const struct page *page
+> +               ),
+> +
+> +               TP_ARGS(inode, page),
+> +
+> +               TP_STRUCT__entry(
+> +                       __field(dev_t, dev)
+> +                       __field(u32, fhandle)
+> +                       __field(u64, fileid)
+> +                       __field(loff_t, offset)
+> +                       __field(u32, count)
+> +               ),
+> +
+> +               TP_fast_assign(
+> +                       const struct nfs_inode *nfsi = NFS_I(inode);
+> +                       const struct nfs_fh *fh = &nfsi->fh;
+> +
+> +                       __entry->offset = page->index << PAGE_SHIFT;
+> +                       __entry->count = 4096;
+> +                       __entry->dev = inode->i_sb->s_dev;
+> +                       __entry->fileid = nfsi->fileid;
+> +                       __entry->fhandle = nfs_fhandle_hash(fh);
+> +               ),
+> +
+> +               TP_printk(
+> +                       "fileid=%02x:%02x:%llu fhandle=0x%08x "
+> +                       "offset=%lld count=%u",
+> +                       MAJOR(__entry->dev), MINOR(__entry->dev),
+> +                       (unsigned long long)__entry->fileid,
+> +                       __entry->fhandle,
+> +                       (long long)__entry->offset, __entry->count
+> +               )
+> +);
+> +
+> +DECLARE_EVENT_CLASS(nfs_fscache_page_event_done,
+> +               TP_PROTO(
+> +                       const struct inode *inode,
+> +                       const struct page *page,
+> +                       int error
+> +               ),
+> +
+> +               TP_ARGS(inode, page, error),
+> +
+> +               TP_STRUCT__entry(
+> +                       __field(int, error)
+> +                       __field(dev_t, dev)
+> +                       __field(u32, fhandle)
+> +                       __field(u64, fileid)
+> +                       __field(loff_t, offset)
+> +                       __field(u32, count)
+> +               ),
+> +
+> +               TP_fast_assign(
+> +                       const struct nfs_inode *nfsi = NFS_I(inode);
+> +                       const struct nfs_fh *fh = &nfsi->fh;
+> +
+> +                       __entry->offset = page->index << PAGE_SHIFT;
+> +                       __entry->count = 4096;
+> +                       __entry->dev = inode->i_sb->s_dev;
+> +                       __entry->fileid = nfsi->fileid;
+> +                       __entry->fhandle = nfs_fhandle_hash(fh);
+> +                       __entry->error = error;
+> +               ),
+> +
+> +               TP_printk(
+> +                       "fileid=%02x:%02x:%llu fhandle=0x%08x "
+> +                       "offset=%lld count=%u error=%d",
+> +                       MAJOR(__entry->dev), MINOR(__entry->dev),
+> +                       (unsigned long long)__entry->fileid,
+> +                       __entry->fhandle,
+> +                       (long long)__entry->offset, __entry->count,
+> +                       __entry->error
+> +               )
+> +);
+> +#define DEFINE_NFS_FSCACHE_PAGE_EVENT(name) \
+> +       DEFINE_EVENT(nfs_fscache_page_event, name, \
+> +                       TP_PROTO( \
+> +                               const struct inode *inode, \
+> +                               const struct page *page \
+> +                       ), \
+> +                       TP_ARGS(inode, page))
+> +#define DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(name) \
+> +       DEFINE_EVENT(nfs_fscache_page_event_done, name, \
+> +                       TP_PROTO( \
+> +                               const struct inode *inode, \
+> +                               const struct page *page, \
+> +                               int error \
+> +                       ), \
+> +                       TP_ARGS(inode, page, error))
+> +DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_page_event_read);
+> +DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_page_event_read_done);
+> +DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_page_event_write);
+> +DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_page_event_write_done);
+> +
+>  TRACE_EVENT(nfs_initiate_read,
+>                 TP_PROTO(
+>                         const struct nfs_pgio_header *hdr
+> --
+> 1.8.3.1
+>
+> --
+> Linux-cachefs mailing list
+> Linux-cachefs@redhat.com
+> https://listman.redhat.com/mailman/listinfo/linux-cachefs
+>
 
-Well, there are two things. Opencoding something that _can_ be replaced
-by __GFP_NOFAIL and those that cannot because the respective allocator
-doesn't really support that semantic. kvmalloc is explicit about that
-IIRC. If you have a better way to consolidate the documentation then I
-am all for it.
+This is unnecessarily complicated.  I'm reworking this to:
+- add a patch that renames nfs_readpage_to_fscache to
+nfs_fscache_read_page and nfs_readpage_from_fscache to
+nfs_fscache_write_page; this matches the fallback API and is clearer
+- add a single tracepoint only at the return point of these two
+functions, printing the return value
 
-> Not to mention on the impossibility of using __GFP_NOFAIL with
-> kvmalloc() calls. Just what do we expect kmalloc_node(__GFP_NORETRY
-> | __GFP_NOFAIL) to do, exactly?
-
-This combination doesn't make any sense. Like others. Do you want us to
-list all combinations that make sense?
-
-> So, effectively, we have to open-code around kvmalloc() in
-> situations where failure is not an option. Even if we pass
-> __GFP_NOFAIL to __vmalloc(), it isn't guaranteed to succeed because
-> of the "we won't honor gfp flags passed to __vmalloc" semantics it
-> has.
-
-yes vmalloc doesn't support nofail semantic and it is not really trivial
-to craft it there.
-
-> Even the API constaints of kvmalloc() w.r.t. only doing the vmalloc
-> fallback if the gfp context is GFP_KERNEL - we already do GFP_NOFS
-> kvmalloc via memalloc_nofs_save/restore(), so this behavioural
-> restriction w.r.t. gfp flags just makes no sense at all.
-
-GFP_NOFS (without using the scope API) has the same problem as NOFAIL in
-the vmalloc. Hence it is not supported. If you use the scope API then
-you can GFP_KERNEL for kvmalloc. This is clumsy but I am not sure how to
-define these conditions in a more sensible way. Special case NOFS if the
-scope api is in use? Why do you want an explicit NOFS then?
-
-> That leads to us having to go back to writing extremely custom open
-> coded loops to avoid awful high-order kmalloc direct reclaim
-> behaviour and still fall back to vmalloc and to still handle NOFAIL
-> semantics we need:
-> 
-> https://lore.kernel.org/linux-xfs/20210902095927.911100-8-david@fromorbit.com/
-
-It would be more productive to get to MM people rather than rant on a
-xfs specific patchse. Anyway, I can see a kvmalloc mode where the
-kmalloc allocation would be really a very optimistic one - like your
-effectively GFP_NOWAIT. Nobody has requested such a mode until now and I
-am not sure how we would sensibly describe that by a gfp mask.
-
-Btw. your GFP_NOWAIT | __GFP_NORETRY combination doesn't make any sense
-in the allocator context as the later is a reclaim mofifier which
-doesn't get applied when the reclaim is disabled (in your case by flags
-&= ~__GFP_DIRECT_RECLAIM).
-
-GFP flags are not that easy to build a coherent and usable apis.
-Something we carry as a baggage for a long time.
-
-> So, really, the problems are much deeper here than just badly
-> documented, catch-22 rules for __GFP_NOFAIL - we can't even use
-> __GFP_NOFAIL consistently across the allocation APIs because it
-> changes allocation behaviours in unusable, self-defeating ways....
-
-GFP_NOFAIL sucks. Not all allocator can follow it for practical
-reasons. You are welcome to help document those awkward corner cases or
-fix them up if you have a good idea how.
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
