@@ -2,130 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D36C1425D14
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Oct 2021 22:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F56F425D15
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Oct 2021 22:17:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233953AbhJGUTU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Oct 2021 16:19:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49828 "EHLO mail.kernel.org"
+        id S233974AbhJGUT0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Oct 2021 16:19:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233019AbhJGUTT (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 7 Oct 2021 16:19:19 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 6273560EE0;
-        Thu,  7 Oct 2021 20:17:25 +0000 (UTC)
+        id S233019AbhJGUT0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 7 Oct 2021 16:19:26 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id CF0D261074;
+        Thu,  7 Oct 2021 20:17:31 +0000 (UTC)
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/2] SUNRPC: Simplify the SVC dispatch code path
-Date:   Thu,  7 Oct 2021 16:17:24 -0400
-Message-Id:  <163363784431.2295.7425775268719807693.stgit@bazille.1015granger.net>
+Subject: [PATCH v2 2/2] SUNRPC: De-duplicate .pc_release() call sites
+Date:   Thu,  7 Oct 2021 16:17:31 -0400
+Message-Id:  <163363785080.2295.1236904079555867824.stgit@bazille.1015granger.net>
 X-Mailer: git-send-email 2.33.0.113.g6c40894d24
 In-Reply-To:  <163363775944.2295.17512762002999927909.stgit@bazille.1015granger.net>
 References:  <163363775944.2295.17512762002999927909.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.1+62.ged16
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3093; h=from:subject:message-id; bh=Bx8EQHVcgEBG6BuCql7S9QqyZaix7P2xw6xFkJjz8YE=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhX1XUTL0Tob/8SVrwYTSO9tci1tb+ImrGFrF+MQNF zw8t3aqJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYV9V1AAKCRAzarMzb2Z/l2QJEA CjT4UZ95+k9QCBohVPChOo27QMlrQMLvWf4UO/BxxL0T3cawmwyjGS32ftK9yjR5EDJzWfy3IF0cIQ h/YGiRRodQkIebwHDRDNvEMQMaphXfu4nmmlhLEYrNHf++l0idQkXiUIUYft/qYWOrEDvI/OAs/1HG Q+II1JBynl4uAyGoflj058hCLIi+/iuVOiONitq5UG9jYqD4jBMH78qEcmFDXrrnbL78CDc0dzUWKX eUfTAbplhZ5hQO8UnZDiRHy8kLaDKjjM6tMxdNAcTwI7XWAM7TFPhgUgNjnUY1V+g/Ua5ybFSpm5K2 NiFpO+gBBW3spaeNfdvfhuNSYnWUG/PHJ8zn+LxTLx9M39pseywRCISckHqM/DEtTpWPDZTOMAMRV7 u+gPtl1heM7xcxmvkV5pYtWB7qud2zhHha/FJDx6OQKQ/Yfw7wOm2kl6H0iYYD3JzHnziSV6ILkuAU zMl6KpctiAcBTYXqDxTGHjqmsSeK2TcYjUygAHSP03yvwIqOyz4pxpu30om4WrYE5tfI9sxvkULEgQ 6ROc02Du0tosZD5RKVfLH4FWLUvolkAw/6OiQgd0sMt7atxrSPaEjNnKvqj+C796UuXgksTL4kPfkk hWzLlqF/MLtJd0/Wfs8IYEa/CajTJD03dpui0wAlM6ExenWtuEultSDK2/sg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2404; h=from:subject:message-id; bh=cm7bsZ4bTu8ZJeV9zTive1b1gCyHFamI2siqYqJZ83Y=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhX1XaJOgfUnwKCWkd/p8V9msPtNoTPeQRvaTZiMT4 xbCHlZKJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYV9V2gAKCRAzarMzb2Z/l904D/ 4iIqXC5FcIYV/+wv+wGgtoK4DuskgyXtzwe6hCb5rohP8TZ3vckS5mGCp/kUzNDp0+s/+dMls2i6F1 70vbFuAUtFOiZr6/YEhaK4J4exipxIFOA1iKu8ckDk8hx2Wwt4fWMXx8fMrJqB2gQLj/i9Vi4ko7Yv soh65DqovAS6XR4Rtk8mDh/Gjeq/o/4WFc/kPtPDoYwVe02ZFCmGG+3IGERWxYLxwwRz5MebJZkiRM JF3+pqd3wKuZrYEBTpwPvd+MIMw143W6IBWDWtIFxfqdeVjlD0YmleVBwksNgoQh2OiurdMp4Rlj7D XnnKGRPjaRBj/jPzYN7Uu5/hgOQWdsL7IP7vYCogMS7JYmynQNPZuoZBkKyapcApYrBEycGNXyEFoU xDaUb3Hc6487qeP+4U6ldzfBJ89yBIppFV17Uub8y3OCKGcGOd0ZLjAFMoJgS1OWFfRLrg0oDE/tAC egVfdOeIn+9N2gP452bVUByK/BjMCEd8n5ZLFZArIDTs5ajH66VREVHAdFMTBQRBv67/tr1Ealhg8l GY15AVsX5BYf284QUbwp3w+9lbThmo3VOUlEUBPkmUkZjfudvdoGDCfx4vEw3k9O2IZquh9UBxKXC2 P6aiEOpfZuzJCBH9D10sSwGgzfxkc3x0ASHRkcnpCols3id4Vj1phTsCuEig==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Micro-optimization: The last user of the generic SVC dispatch code
-path has been removed, so svc_process_common() can be simplified.
-This declutters the hot path so that the by-far most common case
-(a dispatch function exists) is made the /only/ path.
+There was some spaghetti in svc_process_common() that had evolved
+over time such that there was still one case that needed a call
+to .pc_release() but never made it. That issue was removed in
+the previous patch.
+
+As additional insurance against missing this important callout,
+ensure that the .pc_release() method is always called, no matter
+what the reply_stat is.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/svc.h |    5 +---
- net/sunrpc/svc.c           |   51 ++------------------------------------------
- 2 files changed, 3 insertions(+), 53 deletions(-)
+ net/sunrpc/svc.c |   22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 6263410c948a..4205a6ef4770 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -443,10 +443,7 @@ struct svc_version {
- 	/* Need xprt with congestion control */
- 	bool			vs_need_cong_ctrl;
- 
--	/* Override dispatch function (e.g. when caching replies).
--	 * A return value of 0 means drop the request. 
--	 * vs_dispatch == NULL means use default dispatcher.
--	 */
-+	/* Dispatch function */
- 	int			(*vs_dispatch)(struct svc_rqst *, __be32 *);
- };
- 
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 08ca797bb8a4..e0dd6e6a4602 100644
+index e0dd6e6a4602..4292278a9552 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1186,45 +1186,6 @@ void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...)
- static __printf(2,3) void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...) {}
- #endif
+@@ -1252,7 +1252,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 	__be32			*statp;
+ 	u32			prog, vers;
+ 	__be32			rpc_stat;
+-	int			auth_res;
++	int			auth_res, rc;
+ 	__be32			*reply_statp;
  
--static int
--svc_generic_dispatch(struct svc_rqst *rqstp, __be32 *statp)
--{
--	struct kvec *argv = &rqstp->rq_arg.head[0];
--	struct kvec *resv = &rqstp->rq_res.head[0];
--	const struct svc_procedure *procp = rqstp->rq_procinfo;
--
--	/*
--	 * Decode arguments
--	 * XXX: why do we ignore the return value?
--	 */
--	if (procp->pc_decode &&
--	    !procp->pc_decode(rqstp, argv->iov_base)) {
--		*statp = rpc_garbage_args;
--		return 1;
--	}
--
--	*statp = procp->pc_func(rqstp);
--
--	if (*statp == rpc_drop_reply ||
--	    test_bit(RQ_DROPME, &rqstp->rq_flags))
--		return 0;
--
--	if (rqstp->rq_auth_stat != rpc_auth_ok)
--		return 1;
--
--	if (*statp != rpc_success)
--		return 1;
--
--	/* Encode reply */
--	if (procp->pc_encode &&
--	    !procp->pc_encode(rqstp, resv->iov_base + resv->iov_len)) {
--		dprintk("svc: failed to encode reply\n");
--		/* serv->sv_stats->rpcsystemerr++; */
--		*statp = rpc_system_err;
--	}
--	return 1;
--}
--
- __be32
- svc_generic_init_request(struct svc_rqst *rqstp,
- 		const struct svc_program *progp,
-@@ -1392,16 +1353,8 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 	rpc_stat = rpc_success;
+@@ -1353,20 +1353,18 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
  		svc_reserve_auth(rqstp, procp->pc_xdrressize<<2);
  
  	/* Call the function that processes the request. */
--	if (!process.dispatch) {
--		if (!svc_generic_dispatch(rqstp, statp))
--			goto release_dropit;
--		if (*statp == rpc_garbage_args)
--			goto err_garbage;
--	} else {
--		dprintk("svc: calling dispatcher\n");
--		if (!process.dispatch(rqstp, statp))
--			goto release_dropit; /* Release reply info */
--	}
-+	if (!process.dispatch(rqstp, statp))
-+		goto release_dropit;
- 
+-	if (!process.dispatch(rqstp, statp))
+-		goto release_dropit;
+-
++	rc = process.dispatch(rqstp, statp);
++	if (procp->pc_release)
++		procp->pc_release(rqstp);
++	if (!rc)
++		goto dropit;
  	if (rqstp->rq_auth_stat != rpc_auth_ok)
- 		goto err_release_bad_auth;
+-		goto err_release_bad_auth;
++		goto err_bad_auth;
+ 
+ 	/* Check RPC status result */
+ 	if (*statp != rpc_success)
+ 		resv->iov_len = ((void*)statp)  - resv->iov_base + 4;
+ 
+-	/* Release reply info */
+-	if (procp->pc_release)
+-		procp->pc_release(rqstp);
+-
+ 	if (procp->pc_encode == NULL)
+ 		goto dropit;
+ 
+@@ -1375,9 +1373,6 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 		goto close_xprt;
+ 	return 1;		/* Caller can now send it */
+ 
+-release_dropit:
+-	if (procp->pc_release)
+-		procp->pc_release(rqstp);
+  dropit:
+ 	svc_authorise(rqstp);	/* doesn't hurt to call this twice */
+ 	dprintk("svc: svc_process dropit\n");
+@@ -1404,9 +1399,6 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+ 	svc_putnl(resv, 2);
+ 	goto sendit;
+ 
+-err_release_bad_auth:
+-	if (procp->pc_release)
+-		procp->pc_release(rqstp);
+ err_bad_auth:
+ 	dprintk("svc: authentication failed (%d)\n",
+ 		be32_to_cpu(rqstp->rq_auth_stat));
 
