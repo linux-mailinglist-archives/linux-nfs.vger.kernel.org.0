@@ -2,248 +2,303 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B6A18426561
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 09:48:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 33FF7426C7D
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 16:10:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232659AbhJHHui (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Oct 2021 03:50:38 -0400
-Received: from smtp-out2.suse.de ([195.135.220.29]:43608 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbhJHHuh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 03:50:37 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 0BB751FD70;
-        Fri,  8 Oct 2021 07:48:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1633679321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZelD4w9CDZNOGwHQrpHZ9Ow+bu3ULaS3im3bY0kWS+Y=;
-        b=LOEmWf21Avco99a6kn/i9X+G9LI0yHaGGx7uXZgqQ0JWZ5cwogYhWkG1VS2c0mN/9U4m1v
-        BPuFaqnQvJSdwH5lxe0uHuZIqcXMd+ng0EfdoP/67WyjQs7UCqGqCesSj92C7alF7+wzZ+
-        0qEeyR1N9aO7eVwbG+9jtQO6mv2YyjE=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id AFD3DA3B89;
-        Fri,  8 Oct 2021 07:48:40 +0000 (UTC)
-Date:   Fri, 8 Oct 2021 09:48:39 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
+        id S240788AbhJHOMD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Oct 2021 10:12:03 -0400
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:35828 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229756AbhJHOMC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 10:12:02 -0400
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 198DIfaq001319;
+        Fri, 8 Oct 2021 14:09:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=TGBeFY+eHX34cOOt8EaWxMse2NB/lQGBi4o7vHznXUQ=;
+ b=t4PmtcIBJ5cZGwgm6Az5joW1J7DDghZncSSACbxFnlW24Nan5bRvN8RB2YHVwJ5N0TS0
+ 92vEw4fICN0MUOtYtFmEAzqETrxJgUV3pNu6y25ZrYHXcjkT8C4RiAUHQPqOy35z++Og
+ xRjSo73WNt6JDmzMZWNHGDCO89Du+zRKtQpawYLWSvuAAjrazpx4SmF9HtuJBrszKa3G
+ vDp8UcBRG138FFPgX3mTwAqmWaDt7PmhBeuWM4v+EHhIM3oyH3cT4ABczlD2zeDFD5pY
+ uLs544gn1IuYQgl2vOMLh+GPol9tZcucA+daYEi7g9guWTB2+yjQJGyMimg8rnMhchAg YA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3bj1ecqxn6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Oct 2021 14:09:44 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 198E4tHs108042;
+        Fri, 8 Oct 2021 14:09:43 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
+        by userp3020.oracle.com with ESMTP id 3bf16yfbdg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 08 Oct 2021 14:09:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jVRWLNoZ3EucPusp3W1eWE1keaOMxrqUC+Y/7RZacI79F70cn2GnAGoE672Ec21g14TBkOnV4mFXcWOc0A+z1gH8XA665WKCwEm1S+3SPrWwmR0DddwgC3YnRHLM+6gdw/7/Y84sTze5ZfTtbJl4mBB+ukzSwv5bJ2rpBmRV1jdYraon3lWOIFlQvZavD4L6P+Vcf3xzXnJEGTE7Aaf0ZVba7Ryq0YTW+UYEjxzLma8Hqz9FAKj7d1Zeo1Odi+9+kynGXZVbaFPGj7NZGnNq1BQoBtzLQTQbRWapBxRR4iaUCAFo/SKBtKJeRfYprXJAPvpwXjjoaDuepeXOks9mWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TGBeFY+eHX34cOOt8EaWxMse2NB/lQGBi4o7vHznXUQ=;
+ b=NBBBVK8UpH75tTXO0sOaPjelWEXRWxv67aTorvCuo3IcgOxIE0PHzfyo+jzZxmcTafTPL4tPaLivdwyUYuvzV48M4dtSdiVSviTRexo6Bx/3O1vjqidEh3waaT1wI64MZU20LbKDNuFklIxPlw4OluDd6F52aDNOh9/WMdxbrFcxj+30puhfXvFsoOzVOpZk11STsYvozwWbRkD/kzr9+v8HewdzusYWy8oT/sw5xEb9UeP0WxUaeFdfpGfgwNOoIk7i1oiklAXzD96mivk6EOnEIvj4u+TqDVenstgCpNNFhMZvdXa91M1IzTlvvxN9fseq0e+IRmwoGu1PSiz+PQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TGBeFY+eHX34cOOt8EaWxMse2NB/lQGBi4o7vHznXUQ=;
+ b=i//uJ3jm1QRehqq+n9gWikr1GyqOHPWc6+5f9l9JD8qyrsu4F99VXJJRgOKhYHv7Y/ROsmyYKWxphk1mfIXu7WRVv6sg8KPtfqWhR5D5+8PXhWtTStuGGpa8eMeZx1dwsbBD8x6kmZ33f1jikcv8CfbwFPbXvAHfshpwltvtu3A=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BY5PR10MB4147.namprd10.prod.outlook.com (2603:10b6:a03:20e::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4587.19; Fri, 8 Oct
+ 2021 14:09:40 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b%6]) with mapi id 15.20.4587.022; Fri, 8 Oct 2021
+ 14:09:40 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Dave Wysochanski <dwysocha@redhat.com>
+CC:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
         Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
-Message-ID: <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
-References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
- <163184741778.29351.16920832234899124642.stgit@noble.brown>
- <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
- <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
- <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
- <20211006231452.GF54211@dread.disaster.area>
- <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
- <163364854551.31063.4377741712039731672@noble.neil.brown.name>
+        David Howells <dhowells@redhat.com>,
+        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] NFS: Convert from readpages() to readahead()
+Thread-Topic: [PATCH 1/1] NFS: Convert from readpages() to readahead()
+Thread-Index: AQHXu9PCTxWz7e0uNku4Se2Jl0pkd6vJJJuA
+Date:   Fri, 8 Oct 2021 14:09:40 +0000
+Message-ID: <3F1E7B93-EB8D-4744-8143-D44654CA6451@oracle.com>
+References: <1633649528-1321-1-git-send-email-dwysocha@redhat.com>
+ <1633649528-1321-2-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <1633649528-1321-2-git-send-email-dwysocha@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+authentication-results: redhat.com; dkim=none (message not signed)
+ header.d=none;redhat.com; dmarc=none action=none header.from=oracle.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c95f3064-3907-4150-a026-08d98a654557
+x-ms-traffictypediagnostic: BY5PR10MB4147:
+x-microsoft-antispam-prvs: <BY5PR10MB4147185C6F2789172198F60493B29@BY5PR10MB4147.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ACGEUW9wdMI1VpDgKZwAn41b7mQ9/Q8kCLrsWBrQBjwQ63bi8BkyZkF5PYbLzb8OrZCWOdbUUnDQAIxn56xWsPTgJqP/xVs/mu9DxIse43JIoSsf/aHODv10rH8Bne1Pq2l1VAJKrHkVSn4ZXVTaXe68+80+AYCTuTe8AZjh1zWv0Wof0mLW0ERgsU66CbY8wQQW37g7AuKW/T5BlLA5pBPVYMd0nh1ZnP2MgqcQXhx08GzGNQVsPvWqK/aGVmxZIHjOT3hKXvqubRoMzlsCT6xyBPeo+fpCEYwDoIW1/7AftERjaVeILfFywPyhEKkoWw6orUmPEqnzUJI6lhTpkr3onCQE5NKii3VnegOZ8lP8tkupr4yF5uCcPOuFgkPtHjekObZzmw/9iIGEFGJiMMUUfY6Q4f6G8O2K9Fw5/iXpVbTWPiYssfJVRhni4iaPaJI+ysX1U2ZedQ2USvNaXwt9PKZgUDeDennXje/n+SESsTPSNTA0FDp9y0b1iZLoYqPtNOGPPU38ufityuEqSKXIO9hWMl7Tn49C2vJrmSAn0nPzeoZ1JzQfEbzluBD7vkWIAX0ztQ4Q1ZF/14lOYjOyHJ3HNNnd8ozIE2yYkInioCVW7jI3enN7vnjuoeThx/6X6M7h6hsMUVLCzMWz/dOtQUDQVloiMP71FSAPr6mZxPMvlxEHMCwQ4WDET6tuu37xwwFVJuDc8TT1fly8joAkyoKUTBfIXJaUCb1B0s2BnkmvtoQrwrgY3845V2aZ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(4326008)(38100700002)(6506007)(122000001)(8676002)(33656002)(186003)(38070700005)(26005)(2616005)(53546011)(86362001)(8936002)(71200400001)(36756003)(6512007)(6916009)(66556008)(66446008)(91956017)(2906002)(66946007)(66476007)(64756008)(76116006)(6486002)(83380400001)(5660300002)(316002)(54906003)(508600001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?U7CYwaRphin7MIP1gGG0fT5dSxc8OF9AcNj6hGXLKMWaUfPACeMOGUQLdnun?=
+ =?us-ascii?Q?phR1+uPLr3duMa+yBDvoOxfsCQ0e1QDPrd4ZuQz56M8qJ7/r1i8ZAySsNDO0?=
+ =?us-ascii?Q?FYxhg+l70cYZYjwzYtjX69BYiL8u0q/i0mj9IkgbalcajRsOIM0TojTzBilv?=
+ =?us-ascii?Q?D4KXI+66Bn3iVwzO8GhAVesd7EBqmY+eB0nctXVLtGgVsQ6IPX0XFutF4UMc?=
+ =?us-ascii?Q?L51BuWMGS1ko1DydVkM1+02PwB1FPmZhF5xPJnW6+jP/7PpmpeTz2pt4BYAz?=
+ =?us-ascii?Q?gh2oD9Ke9Ald/FNU4C2vhIxidivgo9oz4GCnuHRKK7aRQPZjuocyYUlU0gLD?=
+ =?us-ascii?Q?oPSfQD/c9zUFDchZf9zXQbxqLl0uhb/CDBXTm3hkDWnjgl4qBduNsB+X2n//?=
+ =?us-ascii?Q?GLMT0KV+p0jQyy6+eKtfvBHVLAbCyIHuhiJcwFt+fhgLwvSKEZYlZVdgBs9a?=
+ =?us-ascii?Q?0vUvtcxKHalAzl5FOPmVrIH2j4UMexAgZYu2sPFATSc0T59vUIxCrqBRcIxq?=
+ =?us-ascii?Q?X7+zDGAxuUJGkbKVlYqZBL4donzGfJ8TXT8D4e+bHIDhJ568RITqw3p+mDqH?=
+ =?us-ascii?Q?Qf6dh4IbI3BhXg5DUbEfDlOCTUwcpYynwKb4pX1GCvrbKuXXNS0fcAsg1mXO?=
+ =?us-ascii?Q?HI+FtdGulNtISPN2ouvm3KKTWVzRx95ecwBryUth+ifiL2inwffQ+6bTaWtT?=
+ =?us-ascii?Q?qWMeMRrkdEbVmjJw0PQ5DGNZ6phVg2P+82irgS9uj72AhwQ3BIHoDP0tsp6M?=
+ =?us-ascii?Q?GUl0mT4fAgoIbe0nWDAs0zk/6z0NseRMgRO6MGRK20jCMy0s1UByqxIs0QLk?=
+ =?us-ascii?Q?BhA8OOnN7eUUFVHkdPoRQb+a244gmV0wWPGq/cZU+Hk75LxSZt9Fla29prYd?=
+ =?us-ascii?Q?lZuRD8v1DW+uNb6zyzjJTwsRV5md6eXcgCiOg7zebVogbxg0XyRGeP7/PIEh?=
+ =?us-ascii?Q?n+OQqDRaafETQxViumtP2umq54Wv6d3SJcnedJdKRz/45z5jxsssErs58RKz?=
+ =?us-ascii?Q?7dXivuPJg3JvNaNujImgujJ/f5gZtmBSbdRZfU5VqJZPd87YTVXdWtMbqwbA?=
+ =?us-ascii?Q?CeSzk69uCXUdchGuO4LqKwFSPVEE3ubJdk6kwnaRiPMDpTaqi/39mL8A8R/b?=
+ =?us-ascii?Q?A0+HOuC/aAoYRguOvRhCyrq7uK79Q2x804JskU/zd7Y9TgDA6JeghbP7FjHU?=
+ =?us-ascii?Q?pHK73zU8cKB3cfSSlZ9PMcppYbsV2qtK2zHpY8RlIu+Z9DPhs+XLgLUVroVD?=
+ =?us-ascii?Q?V/0cRWpgPi5Fct/oDo9yI5tp18HZVKuVHAwwTrSdmj3Z7k2u2XdWBrYivzyj?=
+ =?us-ascii?Q?KiJ7HR743gzuJ3nzFE/SxTLd?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <76B9179E6D11D244AAFF5891AB08D910@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163364854551.31063.4377741712039731672@noble.neil.brown.name>
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c95f3064-3907-4150-a026-08d98a654557
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Oct 2021 14:09:40.8579
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: gq3bdS1t/n5Xfi4VVL3HQsrrs06w6IjBBiqtOsz8qtKm7p1ixcC/aYS/DBezWynNh0VlfyWvi6oAYNk/L+U9wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4147
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10130 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ phishscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2109230001 definitions=main-2110080085
+X-Proofpoint-GUID: yC7vW5EJfEGDGEbFjHSa4whIBVoA-awy
+X-Proofpoint-ORIG-GUID: yC7vW5EJfEGDGEbFjHSa4whIBVoA-awy
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri 08-10-21 10:15:45, Neil Brown wrote:
-> On Thu, 07 Oct 2021, Michal Hocko wrote:
-> > On Thu 07-10-21 10:14:52, Dave Chinner wrote:
-> > > On Tue, Oct 05, 2021 at 02:27:45PM +0200, Vlastimil Babka wrote:
-> > > > On 10/5/21 13:09, Michal Hocko wrote:
-> > > > > On Tue 05-10-21 11:20:51, Vlastimil Babka wrote:
-> > > > > [...]
-> > > > >> > --- a/include/linux/gfp.h
-> > > > >> > +++ b/include/linux/gfp.h
-> > > > >> > @@ -209,7 +209,11 @@ struct vm_area_struct;
-> > > > >> >   * used only when there is no reasonable failure policy) but it is
-> > > > >> >   * definitely preferable to use the flag rather than opencode endless
-> > > > >> >   * loop around allocator.
-> > > > >> > - * Using this flag for costly allocations is _highly_ discouraged.
-> > > > >> > + * Use of this flag may lead to deadlocks if locks are held which would
-> > > > >> > + * be needed for memory reclaim, write-back, or the timely exit of a
-> > > > >> > + * process killed by the OOM-killer.  Dropping any locks not absolutely
-> > > > >> > + * needed is advisable before requesting a %__GFP_NOFAIL allocate.
-> > > > >> > + * Using this flag for costly allocations (order>1) is _highly_ discouraged.
-> > > > >> 
-> > > > >> We define costly as 3, not 1. But sure it's best to avoid even order>0 for
-> > > > >> __GFP_NOFAIL. Advising order>1 seems arbitrary though?
-> > > > > 
-> > > > > This is not completely arbitrary. We have a warning for any higher order
-> > > > > allocation.
-> > > > > rmqueue:
-> > > > > 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
-> > > > 
-> > > > Oh, I missed that.
-> > > > 
-> > > > > I do agree that "Using this flag for higher order allocations is
-> > > > > _highly_ discouraged.
-> > > > 
-> > > > Well, with the warning in place this is effectively forbidden, not just
-> > > > discouraged.
-> > > 
-> > > Yup, especially as it doesn't obey __GFP_NOWARN.
-> > > 
-> > > See commit de2860f46362 ("mm: Add kvrealloc()") as a direct result
-> > > of unwittingly tripping over this warning when adding __GFP_NOFAIL
-> > > annotations to replace open coded high-order kmalloc loops that have
-> > > been in place for a couple of decades without issues.
-> > > 
-> > > Personally I think that the way __GFP_NOFAIL is first of all
-> > > recommended over open coded loops and then only later found to be
-> > > effectively forbidden and needing to be replaced with open coded
-> > > loops to be a complete mess.
-> > 
-> > Well, there are two things. Opencoding something that _can_ be replaced
-> > by __GFP_NOFAIL and those that cannot because the respective allocator
-> > doesn't really support that semantic. kvmalloc is explicit about that
-> > IIRC. If you have a better way to consolidate the documentation then I
-> > am all for it.
-> 
-> I think one thing that might help make the documentation better is to
-> explicitly state *why* __GFP_NOFAIL is better than a loop.
-> 
-> It occurs to me that
->   while (!(p = kmalloc(sizeof(*p), GFP_KERNEL));
-> 
-> would behave much the same as adding __GFP_NOFAIL and dropping the
-> 'while'.  So why not? I certainly cannot see the need to add any delay
-> to this loop as kmalloc does a fair bit of sleeping when permitted.
-> 
-> I understand that __GFP_NOFAIL allows page_alloc to dip into reserves,
-> but Mel holds that up as a reason *not* to use __GFP_NOFAIL as it can
-> impact on other subsystems.
 
-__GFP_NOFAIL usage is a risk on its own. It is a hard requirement that
-the allocator cannot back off. So it has to absolutely everything to
-suceed. Whether it cheats and dips into reserves or not is a mere
-implementation detail and a subject to the specific implementation.
 
-> Why not just let the caller decide if they
-> deserve the boost, but oring in __GFP_ATOMIC or __GFP_MEMALLOC as
-> appropriate.
+> On Oct 7, 2021, at 7:32 PM, Dave Wysochanski <dwysocha@redhat.com> wrote:
+>=20
+> Convert to the new VM readahead() API which is the preferred API
+> to read multiple pages, and rename the NFSIOS_* counters and the
+> tracepoint as needed.
+>=20
+> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> ---
+> fs/nfs/file.c              |  2 +-
+> fs/nfs/nfstrace.h          |  2 +-
+> fs/nfs/read.c              | 21 +++++++++++++++------
+> include/linux/nfs_fs.h     |  3 +--
+> include/linux/nfs_iostat.h |  6 +++---
+> 5 files changed, 21 insertions(+), 13 deletions(-)
+>=20
+> diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+> index 209dac208477..cc76d17fa97f 100644
+> --- a/fs/nfs/file.c
+> +++ b/fs/nfs/file.c
+> @@ -519,7 +519,7 @@ static void nfs_swap_deactivate(struct file *file)
+>=20
+> const struct address_space_operations nfs_file_aops =3D {
+> 	.readpage =3D nfs_readpage,
+> -	.readpages =3D nfs_readpages,
+> +	.readahead =3D nfs_readahead,
+> 	.set_page_dirty =3D __set_page_dirty_nobuffers,
+> 	.writepage =3D nfs_writepage,
+> 	.writepages =3D nfs_writepages,
+> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+> index 78b0f649dd09..d2b2080765a6 100644
+> --- a/fs/nfs/nfstrace.h
+> +++ b/fs/nfs/nfstrace.h
+> @@ -915,7 +915,7 @@
+> 		)
+> );
+>=20
+> -TRACE_EVENT(nfs_aops_readpages,
+> +TRACE_EVENT(nfs_aops_readahead,
 
-They can do that. Explicit access to memory reserves is allowed unless
-it is explicitly forbidden by NOMEMALLOC flag.
+In v2 and v3 of my patch, this tracepoint has already been
+renamed to nfs_aop_readahead.
 
-> I assume there is a good reason.  I vaguely remember the conversation
-> that lead to __GFP_NOFAIL being introduced.  I just cannot remember or
-> deduce what the reason is.  So it would be great to have it documented.
 
-The basic reason is that if the allocator knows this is must suceed
-allocation request then it can prioritize it in some way. A dumb kmalloc
-loop as you pictured it is likely much less optimal in that sense, isn't
-it? Compare that to mempool allocator which is non failing as well but
-it has some involved handling and that is certainly not a good fit for
-__GFP_NOFAIL in the page allocator.
- 
-> > > Not to mention on the impossibility of using __GFP_NOFAIL with
-> > > kvmalloc() calls. Just what do we expect kmalloc_node(__GFP_NORETRY
-> > > | __GFP_NOFAIL) to do, exactly?
-> > 
-> > This combination doesn't make any sense. Like others. Do you want us to
-> > list all combinations that make sense?
-> 
-> I've been wondering about that.  There seem to be sets of flags that are
-> mutually exclusive.  It is as though gfp_t is a struct of a few enums.
-> 
-> 0, DMA32, DMA, HIGHMEM
-> 0, FS, IO
-> 0, ATOMIC, MEMALLOC, NOMEMALLOC, HIGH
-> NORETRY, RETRY_MAYFAIL, 0, NOFAIL
-> 0, KSWAPD_RECLAIM, DIRECT_RECLAIM
-> 0, THISNODE, HARDWALL
-> 
-> In a few cases there seem to be 3 bits where there are only 4 possibly
-> combinations, so 2 bits would be enough.  There is probably no real
-> value is squeezing these into 2 bits, but clearly documenting the groups
-> surely wouldn't hurt.  Particularly highlighting the difference between
-> related bits would help.
+> 		TP_PROTO(
+> 			const struct inode *inode,
+> 			unsigned int nr_pages
+> diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+> index 927504605e0f..5c2aab47cf1d 100644
+> --- a/fs/nfs/read.c
+> +++ b/fs/nfs/read.c
+> @@ -395,15 +395,19 @@ int nfs_readpage(struct file *file, struct page *pa=
+ge)
+> 	return ret;
+> }
+>=20
+> -int nfs_readpages(struct file *file, struct address_space *mapping,
+> -		struct list_head *pages, unsigned nr_pages)
+> +void nfs_readahead(struct readahead_control *ractl)
+> {
+> +	struct file *file =3D ractl->file;
+> +	struct address_space *mapping =3D ractl->mapping;
+> +	struct page *page;
+> +	unsigned int nr_pages =3D readahead_count(ractl);
+> +
+> 	struct nfs_readdesc desc;
+> 	struct inode *inode =3D mapping->host;
+> 	int ret;
+>=20
+> -	trace_nfs_aops_readpages(inode, nr_pages);
+> -	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
+> +	trace_nfs_aops_readahead(inode, nr_pages);
+> +	nfs_inc_stats(inode, NFSIOS_VFSREADAHEAD);
+>=20
+> 	ret =3D -ESTALE;
+> 	if (NFS_STALE(inode))
+> @@ -420,13 +424,18 @@ int nfs_readpages(struct file *file, struct address=
+_space *mapping,
+> 	nfs_pageio_init_read(&desc.pgio, inode, false,
+> 			     &nfs_async_read_completion_ops);
+>=20
+> -	ret =3D read_cache_pages(mapping, pages, readpage_async_filler, &desc);
+> +	ret =3D 0;
+> +	while (!ret && (page =3D readahead_page(ractl))) {
+> +		prefetchw(&page->flags);
+> +		ret =3D readpage_async_filler(&desc, page);
+> +		put_page(page);
+> +	}
+>=20
+> 	nfs_pageio_complete_read(&desc.pgio);
+>=20
+> 	put_nfs_open_context(desc.ctx);
+> out:
+> -	return ret;
+> +	return;
+> }
+>=20
+> int __init nfs_init_readpagecache(void)
+> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> index b9a8b925db43..6cbe3f2c5669 100644
+> --- a/include/linux/nfs_fs.h
+> +++ b/include/linux/nfs_fs.h
+> @@ -580,8 +580,7 @@ extern int nfs_access_get_cached(struct inode *inode,=
+ const struct cred *cred, s
+>  * linux/fs/nfs/read.c
+>  */
+> extern int  nfs_readpage(struct file *, struct page *);
+> -extern int  nfs_readpages(struct file *, struct address_space *,
+> -		struct list_head *, unsigned);
+> +extern void nfs_readahead(struct readahead_control *);
+>=20
+> /*
+>  * inline functions
+> diff --git a/include/linux/nfs_iostat.h b/include/linux/nfs_iostat.h
+> index 027874c36c88..418145f23700 100644
+> --- a/include/linux/nfs_iostat.h
+> +++ b/include/linux/nfs_iostat.h
+> @@ -22,7 +22,7 @@
+> #ifndef _LINUX_NFS_IOSTAT
+> #define _LINUX_NFS_IOSTAT
+>=20
+> -#define NFS_IOSTAT_VERS		"1.1"
+> +#define NFS_IOSTAT_VERS		"1.2"
+>=20
+> /*
+>  * NFS byte counters
+> @@ -53,7 +53,7 @@
+>  * NFS page counters
+>  *
+>  * These count the number of pages read or written via nfs_readpage(),
+> - * nfs_readpages(), or their write equivalents.
+> + * nfs_readahead(), or their write equivalents.
+>  *
+>  * NB: When adding new byte counters, please include the measured
+>  * units in the name of each byte counter to help users of this
+> @@ -98,7 +98,7 @@ enum nfs_stat_eventcounters {
+> 	NFSIOS_VFSACCESS,
+> 	NFSIOS_VFSUPDATEPAGE,
+> 	NFSIOS_VFSREADPAGE,
+> -	NFSIOS_VFSREADPAGES,
+> +	NFSIOS_VFSREADAHEAD,
 
-Don't we have that already? We have them grouped by placement,
-watermarks, reclaim and action modifiers. Then we have useful
-combinations. I believe we can always improve on that and I am always
-ready to listen here.
+I'm wondering if you should add NFSIOS_VFSREADAHEAD
+but leave NFSIOS_VFSREADPAGES? I don't remember exactly
+how the mountstats API versioning is supposed to work.
 
-> The set with  'ATOMIC' is hard to wrap my mind around.
-> They relate to ALLOC_HIGH and ALLOC_HARDER, but also to WMARK_NIN,
-> WMARK_LOW, WMARK_HIGH ... I think.
 
-ALLOC* and WMARK* is an internal allocator concept and I believe users
-of gfp flags shouldn't really care or even know those exist.
+> 	NFSIOS_VFSWRITEPAGE,
+> 	NFSIOS_VFSWRITEPAGES,
+> 	NFSIOS_VFSGETDENTS,
+> --=20
+> 1.8.3.1
+>=20
 
-> I wonder if FS,IO is really in the same set as DIRECT_RECLAIM as they
-> all affect reclaim.  Maybe FS and IO are only relevan if DIRECT_RECLAIM
-> is set?
+--
+Chuck Lever
 
-yes, this indeed the case. Page allocator doesn't go outside of its
-proper without the direct reclaim.
 
-> I'd love to know that to expect if neither RETRY_MAYFAIL or NOFAIL is
-> set.  I guess it can fail, but it still tries harder than if
-> RETRY_MAYFAIL is set....
-> Ahhhh...  I found some documentation which mentions
 
-The reclaim behavior is described along with the respective modifiers. I
-believe we can thank you for this structure as you were the primary
-driving force to clarify the behavior.
-
-> that RETRY_MAYFAIL
-> doesn't trigger the oom killer.  Is that it? So RETRY_NOKILLOOM might be
-> a better name?
-
-Again the those are implementation details and I am not sure we really
-want to bother users with all of them. This wold quickly become hairy
-and likely even outdated after some time. The documentation tries to
-describe different levels of involvement. NOWAIT - no direct reclaim,
-NORETRY - only a light attempt to reclaim, RETRY_MAYFAIL - try as hard
-as feasible, NOFAIL - cannot really fail.
-
-If we can improve the wording I am all for it.
- 
-> > > So, effectively, we have to open-code around kvmalloc() in
-> > > situations where failure is not an option. Even if we pass
-> > > __GFP_NOFAIL to __vmalloc(), it isn't guaranteed to succeed because
-> > > of the "we won't honor gfp flags passed to __vmalloc" semantics it
-> > > has.
-> > 
-> > yes vmalloc doesn't support nofail semantic and it is not really trivial
-> > to craft it there.
-> > 
-> > > Even the API constaints of kvmalloc() w.r.t. only doing the vmalloc
-> > > fallback if the gfp context is GFP_KERNEL - we already do GFP_NOFS
-> > > kvmalloc via memalloc_nofs_save/restore(), so this behavioural
-> > > restriction w.r.t. gfp flags just makes no sense at all.
-> > 
-> > GFP_NOFS (without using the scope API) has the same problem as NOFAIL in
-> > the vmalloc. Hence it is not supported. If you use the scope API then
-> > you can GFP_KERNEL for kvmalloc. This is clumsy but I am not sure how to
-> > define these conditions in a more sensible way. Special case NOFS if the
-> > scope api is in use? Why do you want an explicit NOFS then?
-> 
-> It would seem to make sense for kvmalloc to WARN_ON if it is passed
-> flags that does not allow it to use vmalloc.
-
-vmalloc is certainly not the hottest path in the kernel so I wouldn't be
-opposed. One should be careful that WARN_ON is effectively BUG_ON in
-some configurations but we are sinners from that perspective all over
-the place...
-
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
