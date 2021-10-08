@@ -2,185 +2,248 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56506426068
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 01:33:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A18426561
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 09:48:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbhJGXfb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Oct 2021 19:35:31 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:59590 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231513AbhJGXfa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Oct 2021 19:35:30 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633649616;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=Lwr19yU08/Xq7niJ43uaMZQodLgZ46tZlYj6Skt1VDA=;
-        b=e3F4xCYEFpy0XL4hMCQeV0Kesat8Pu+1Ictn0snZA5V19GBiXSgFc0qVeLDjT/nEtMAQIm
-        ENckgnBjquwoPuIL9w+upHINevJKP846J94/VzJq2ZyrbMA8HKL6QPimdd3tOE5CGrmn9E
-        N4yPzfv8TMWJ6yddb5wz87UPDMemZVs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-596-qiKg2VNXNuaoOHLv4I2SWA-1; Thu, 07 Oct 2021 19:33:34 -0400
-X-MC-Unique: qiKg2VNXNuaoOHLv4I2SWA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S232659AbhJHHui (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Oct 2021 03:50:38 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:43608 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229693AbhJHHuh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 03:50:37 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id 0BB751FD70;
+        Fri,  8 Oct 2021 07:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1633679321; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZelD4w9CDZNOGwHQrpHZ9Ow+bu3ULaS3im3bY0kWS+Y=;
+        b=LOEmWf21Avco99a6kn/i9X+G9LI0yHaGGx7uXZgqQ0JWZ5cwogYhWkG1VS2c0mN/9U4m1v
+        BPuFaqnQvJSdwH5lxe0uHuZIqcXMd+ng0EfdoP/67WyjQs7UCqGqCesSj92C7alF7+wzZ+
+        0qEeyR1N9aO7eVwbG+9jtQO6mv2YyjE=
+Received: from suse.cz (unknown [10.100.201.86])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A36FB10D34D9;
-        Thu,  7 Oct 2021 23:32:13 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.139])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD9935D6D5;
-        Thu,  7 Oct 2021 23:32:12 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-cachefs@redhat.com,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] NFS: Convert from readpages() to readahead()
-Date:   Thu,  7 Oct 2021 19:32:08 -0400
-Message-Id: <1633649528-1321-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1633649528-1321-1-git-send-email-dwysocha@redhat.com>
-References: <1633649528-1321-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by relay2.suse.de (Postfix) with ESMTPS id AFD3DA3B89;
+        Fri,  8 Oct 2021 07:48:40 +0000 (UTC)
+Date:   Fri, 8 Oct 2021 09:48:39 +0200
+From:   Michal Hocko <mhocko@suse.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
+Message-ID: <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
+References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
+ <163184741778.29351.16920832234899124642.stgit@noble.brown>
+ <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
+ <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
+ <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
+ <20211006231452.GF54211@dread.disaster.area>
+ <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
+ <163364854551.31063.4377741712039731672@noble.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163364854551.31063.4377741712039731672@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Convert to the new VM readahead() API which is the preferred API
-to read multiple pages, and rename the NFSIOS_* counters and the
-tracepoint as needed.
+On Fri 08-10-21 10:15:45, Neil Brown wrote:
+> On Thu, 07 Oct 2021, Michal Hocko wrote:
+> > On Thu 07-10-21 10:14:52, Dave Chinner wrote:
+> > > On Tue, Oct 05, 2021 at 02:27:45PM +0200, Vlastimil Babka wrote:
+> > > > On 10/5/21 13:09, Michal Hocko wrote:
+> > > > > On Tue 05-10-21 11:20:51, Vlastimil Babka wrote:
+> > > > > [...]
+> > > > >> > --- a/include/linux/gfp.h
+> > > > >> > +++ b/include/linux/gfp.h
+> > > > >> > @@ -209,7 +209,11 @@ struct vm_area_struct;
+> > > > >> >   * used only when there is no reasonable failure policy) but it is
+> > > > >> >   * definitely preferable to use the flag rather than opencode endless
+> > > > >> >   * loop around allocator.
+> > > > >> > - * Using this flag for costly allocations is _highly_ discouraged.
+> > > > >> > + * Use of this flag may lead to deadlocks if locks are held which would
+> > > > >> > + * be needed for memory reclaim, write-back, or the timely exit of a
+> > > > >> > + * process killed by the OOM-killer.  Dropping any locks not absolutely
+> > > > >> > + * needed is advisable before requesting a %__GFP_NOFAIL allocate.
+> > > > >> > + * Using this flag for costly allocations (order>1) is _highly_ discouraged.
+> > > > >> 
+> > > > >> We define costly as 3, not 1. But sure it's best to avoid even order>0 for
+> > > > >> __GFP_NOFAIL. Advising order>1 seems arbitrary though?
+> > > > > 
+> > > > > This is not completely arbitrary. We have a warning for any higher order
+> > > > > allocation.
+> > > > > rmqueue:
+> > > > > 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+> > > > 
+> > > > Oh, I missed that.
+> > > > 
+> > > > > I do agree that "Using this flag for higher order allocations is
+> > > > > _highly_ discouraged.
+> > > > 
+> > > > Well, with the warning in place this is effectively forbidden, not just
+> > > > discouraged.
+> > > 
+> > > Yup, especially as it doesn't obey __GFP_NOWARN.
+> > > 
+> > > See commit de2860f46362 ("mm: Add kvrealloc()") as a direct result
+> > > of unwittingly tripping over this warning when adding __GFP_NOFAIL
+> > > annotations to replace open coded high-order kmalloc loops that have
+> > > been in place for a couple of decades without issues.
+> > > 
+> > > Personally I think that the way __GFP_NOFAIL is first of all
+> > > recommended over open coded loops and then only later found to be
+> > > effectively forbidden and needing to be replaced with open coded
+> > > loops to be a complete mess.
+> > 
+> > Well, there are two things. Opencoding something that _can_ be replaced
+> > by __GFP_NOFAIL and those that cannot because the respective allocator
+> > doesn't really support that semantic. kvmalloc is explicit about that
+> > IIRC. If you have a better way to consolidate the documentation then I
+> > am all for it.
+> 
+> I think one thing that might help make the documentation better is to
+> explicitly state *why* __GFP_NOFAIL is better than a loop.
+> 
+> It occurs to me that
+>   while (!(p = kmalloc(sizeof(*p), GFP_KERNEL));
+> 
+> would behave much the same as adding __GFP_NOFAIL and dropping the
+> 'while'.  So why not? I certainly cannot see the need to add any delay
+> to this loop as kmalloc does a fair bit of sleeping when permitted.
+> 
+> I understand that __GFP_NOFAIL allows page_alloc to dip into reserves,
+> but Mel holds that up as a reason *not* to use __GFP_NOFAIL as it can
+> impact on other subsystems.
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfs/file.c              |  2 +-
- fs/nfs/nfstrace.h          |  2 +-
- fs/nfs/read.c              | 21 +++++++++++++++------
- include/linux/nfs_fs.h     |  3 +--
- include/linux/nfs_iostat.h |  6 +++---
- 5 files changed, 21 insertions(+), 13 deletions(-)
+__GFP_NOFAIL usage is a risk on its own. It is a hard requirement that
+the allocator cannot back off. So it has to absolutely everything to
+suceed. Whether it cheats and dips into reserves or not is a mere
+implementation detail and a subject to the specific implementation.
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 209dac208477..cc76d17fa97f 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -519,7 +519,7 @@ static void nfs_swap_deactivate(struct file *file)
+> Why not just let the caller decide if they
+> deserve the boost, but oring in __GFP_ATOMIC or __GFP_MEMALLOC as
+> appropriate.
+
+They can do that. Explicit access to memory reserves is allowed unless
+it is explicitly forbidden by NOMEMALLOC flag.
+
+> I assume there is a good reason.  I vaguely remember the conversation
+> that lead to __GFP_NOFAIL being introduced.  I just cannot remember or
+> deduce what the reason is.  So it would be great to have it documented.
+
+The basic reason is that if the allocator knows this is must suceed
+allocation request then it can prioritize it in some way. A dumb kmalloc
+loop as you pictured it is likely much less optimal in that sense, isn't
+it? Compare that to mempool allocator which is non failing as well but
+it has some involved handling and that is certainly not a good fit for
+__GFP_NOFAIL in the page allocator.
  
- const struct address_space_operations nfs_file_aops = {
- 	.readpage = nfs_readpage,
--	.readpages = nfs_readpages,
-+	.readahead = nfs_readahead,
- 	.set_page_dirty = __set_page_dirty_nobuffers,
- 	.writepage = nfs_writepage,
- 	.writepages = nfs_writepages,
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 78b0f649dd09..d2b2080765a6 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -915,7 +915,7 @@
- 		)
- );
+> > > Not to mention on the impossibility of using __GFP_NOFAIL with
+> > > kvmalloc() calls. Just what do we expect kmalloc_node(__GFP_NORETRY
+> > > | __GFP_NOFAIL) to do, exactly?
+> > 
+> > This combination doesn't make any sense. Like others. Do you want us to
+> > list all combinations that make sense?
+> 
+> I've been wondering about that.  There seem to be sets of flags that are
+> mutually exclusive.  It is as though gfp_t is a struct of a few enums.
+> 
+> 0, DMA32, DMA, HIGHMEM
+> 0, FS, IO
+> 0, ATOMIC, MEMALLOC, NOMEMALLOC, HIGH
+> NORETRY, RETRY_MAYFAIL, 0, NOFAIL
+> 0, KSWAPD_RECLAIM, DIRECT_RECLAIM
+> 0, THISNODE, HARDWALL
+> 
+> In a few cases there seem to be 3 bits where there are only 4 possibly
+> combinations, so 2 bits would be enough.  There is probably no real
+> value is squeezing these into 2 bits, but clearly documenting the groups
+> surely wouldn't hurt.  Particularly highlighting the difference between
+> related bits would help.
+
+Don't we have that already? We have them grouped by placement,
+watermarks, reclaim and action modifiers. Then we have useful
+combinations. I believe we can always improve on that and I am always
+ready to listen here.
+
+> The set with  'ATOMIC' is hard to wrap my mind around.
+> They relate to ALLOC_HIGH and ALLOC_HARDER, but also to WMARK_NIN,
+> WMARK_LOW, WMARK_HIGH ... I think.
+
+ALLOC* and WMARK* is an internal allocator concept and I believe users
+of gfp flags shouldn't really care or even know those exist.
+
+> I wonder if FS,IO is really in the same set as DIRECT_RECLAIM as they
+> all affect reclaim.  Maybe FS and IO are only relevan if DIRECT_RECLAIM
+> is set?
+
+yes, this indeed the case. Page allocator doesn't go outside of its
+proper without the direct reclaim.
+
+> I'd love to know that to expect if neither RETRY_MAYFAIL or NOFAIL is
+> set.  I guess it can fail, but it still tries harder than if
+> RETRY_MAYFAIL is set....
+> Ahhhh...  I found some documentation which mentions
+
+The reclaim behavior is described along with the respective modifiers. I
+believe we can thank you for this structure as you were the primary
+driving force to clarify the behavior.
+
+> that RETRY_MAYFAIL
+> doesn't trigger the oom killer.  Is that it? So RETRY_NOKILLOOM might be
+> a better name?
+
+Again the those are implementation details and I am not sure we really
+want to bother users with all of them. This wold quickly become hairy
+and likely even outdated after some time. The documentation tries to
+describe different levels of involvement. NOWAIT - no direct reclaim,
+NORETRY - only a light attempt to reclaim, RETRY_MAYFAIL - try as hard
+as feasible, NOFAIL - cannot really fail.
+
+If we can improve the wording I am all for it.
  
--TRACE_EVENT(nfs_aops_readpages,
-+TRACE_EVENT(nfs_aops_readahead,
- 		TP_PROTO(
- 			const struct inode *inode,
- 			unsigned int nr_pages
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index 927504605e0f..5c2aab47cf1d 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -395,15 +395,19 @@ int nfs_readpage(struct file *file, struct page *page)
- 	return ret;
- }
- 
--int nfs_readpages(struct file *file, struct address_space *mapping,
--		struct list_head *pages, unsigned nr_pages)
-+void nfs_readahead(struct readahead_control *ractl)
- {
-+	struct file *file = ractl->file;
-+	struct address_space *mapping = ractl->mapping;
-+	struct page *page;
-+	unsigned int nr_pages = readahead_count(ractl);
-+
- 	struct nfs_readdesc desc;
- 	struct inode *inode = mapping->host;
- 	int ret;
- 
--	trace_nfs_aops_readpages(inode, nr_pages);
--	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
-+	trace_nfs_aops_readahead(inode, nr_pages);
-+	nfs_inc_stats(inode, NFSIOS_VFSREADAHEAD);
- 
- 	ret = -ESTALE;
- 	if (NFS_STALE(inode))
-@@ -420,13 +424,18 @@ int nfs_readpages(struct file *file, struct address_space *mapping,
- 	nfs_pageio_init_read(&desc.pgio, inode, false,
- 			     &nfs_async_read_completion_ops);
- 
--	ret = read_cache_pages(mapping, pages, readpage_async_filler, &desc);
-+	ret = 0;
-+	while (!ret && (page = readahead_page(ractl))) {
-+		prefetchw(&page->flags);
-+		ret = readpage_async_filler(&desc, page);
-+		put_page(page);
-+	}
- 
- 	nfs_pageio_complete_read(&desc.pgio);
- 
- 	put_nfs_open_context(desc.ctx);
- out:
--	return ret;
-+	return;
- }
- 
- int __init nfs_init_readpagecache(void)
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index b9a8b925db43..6cbe3f2c5669 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -580,8 +580,7 @@ extern int nfs_access_get_cached(struct inode *inode, const struct cred *cred, s
-  * linux/fs/nfs/read.c
-  */
- extern int  nfs_readpage(struct file *, struct page *);
--extern int  nfs_readpages(struct file *, struct address_space *,
--		struct list_head *, unsigned);
-+extern void nfs_readahead(struct readahead_control *);
- 
- /*
-  * inline functions
-diff --git a/include/linux/nfs_iostat.h b/include/linux/nfs_iostat.h
-index 027874c36c88..418145f23700 100644
---- a/include/linux/nfs_iostat.h
-+++ b/include/linux/nfs_iostat.h
-@@ -22,7 +22,7 @@
- #ifndef _LINUX_NFS_IOSTAT
- #define _LINUX_NFS_IOSTAT
- 
--#define NFS_IOSTAT_VERS		"1.1"
-+#define NFS_IOSTAT_VERS		"1.2"
- 
- /*
-  * NFS byte counters
-@@ -53,7 +53,7 @@
-  * NFS page counters
-  *
-  * These count the number of pages read or written via nfs_readpage(),
-- * nfs_readpages(), or their write equivalents.
-+ * nfs_readahead(), or their write equivalents.
-  *
-  * NB: When adding new byte counters, please include the measured
-  * units in the name of each byte counter to help users of this
-@@ -98,7 +98,7 @@ enum nfs_stat_eventcounters {
- 	NFSIOS_VFSACCESS,
- 	NFSIOS_VFSUPDATEPAGE,
- 	NFSIOS_VFSREADPAGE,
--	NFSIOS_VFSREADPAGES,
-+	NFSIOS_VFSREADAHEAD,
- 	NFSIOS_VFSWRITEPAGE,
- 	NFSIOS_VFSWRITEPAGES,
- 	NFSIOS_VFSGETDENTS,
+> > > So, effectively, we have to open-code around kvmalloc() in
+> > > situations where failure is not an option. Even if we pass
+> > > __GFP_NOFAIL to __vmalloc(), it isn't guaranteed to succeed because
+> > > of the "we won't honor gfp flags passed to __vmalloc" semantics it
+> > > has.
+> > 
+> > yes vmalloc doesn't support nofail semantic and it is not really trivial
+> > to craft it there.
+> > 
+> > > Even the API constaints of kvmalloc() w.r.t. only doing the vmalloc
+> > > fallback if the gfp context is GFP_KERNEL - we already do GFP_NOFS
+> > > kvmalloc via memalloc_nofs_save/restore(), so this behavioural
+> > > restriction w.r.t. gfp flags just makes no sense at all.
+> > 
+> > GFP_NOFS (without using the scope API) has the same problem as NOFAIL in
+> > the vmalloc. Hence it is not supported. If you use the scope API then
+> > you can GFP_KERNEL for kvmalloc. This is clumsy but I am not sure how to
+> > define these conditions in a more sensible way. Special case NOFS if the
+> > scope api is in use? Why do you want an explicit NOFS then?
+> 
+> It would seem to make sense for kvmalloc to WARN_ON if it is passed
+> flags that does not allow it to use vmalloc.
+
+vmalloc is certainly not the hottest path in the kernel so I wouldn't be
+opposed. One should be careful that WARN_ON is effectively BUG_ON in
+some configurations but we are sinners from that perspective all over
+the place...
+
+Thanks!
 -- 
-1.8.3.1
-
+Michal Hocko
+SUSE Labs
