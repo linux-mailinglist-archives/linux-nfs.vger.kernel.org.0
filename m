@@ -2,232 +2,278 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CE304272E0
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 23:11:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17ED14273CF
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Oct 2021 00:36:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231696AbhJHVNm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Oct 2021 17:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231668AbhJHVNl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 17:13:41 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E514C061570
-        for <linux-nfs@vger.kernel.org>; Fri,  8 Oct 2021 14:11:46 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id CE656A87; Fri,  8 Oct 2021 17:11:44 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CE656A87
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1633727504;
-        bh=hJlY+L2K5VwaPzPQkc4UnL7rBGRQtgsSvRXN9DpPtX0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lINcwZjSYyiPjx//kWMlUUgYKOfP85t9iMHIp5RfDATeVIJNXLymWpcUrSTiYPrQM
-         pOSLhGXEQIBS2UgMeB8iGdeFW7JRXO3X+Jo9pFqWOZFONd8FdTRX/fZFhBikyaQbqc
-         cPHHT2Ag6dlwaJRJ8xTr4lPfqOOEOVw9rBswW3ls=
-Date:   Fri, 8 Oct 2021 17:11:44 -0400
-From:   "J.  Bruce Fields" <bfields@fieldses.org>
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     NeilBrown <neilb@suse.de>,
-        Timothy Pearson <tpearson@raptorengineering.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-nfs@vger.kernel.org, Trond Myklebust <trondmy@gmail.com>
-Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
-Message-ID: <20211008211144.GC30647@fieldses.org>
-References: <281642234.3818.1625478269194.JavaMail.zimbra@raptorengineeringinc.com>
- <162855621114.22632.14151019687856585770@noble.neil.brown.name>
- <20210812144428.GA9536@fieldses.org>
- <162880418532.15074.7140645794203395299@noble.neil.brown.name>
- <YWCpnsdVqssFaLrf@aion.usersys.redhat.com>
+        id S243657AbhJHWiw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Oct 2021 18:38:52 -0400
+Received: from mail110.syd.optusnet.com.au ([211.29.132.97]:33445 "EHLO
+        mail110.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S243505AbhJHWiw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 18:38:52 -0400
+Received: from dread.disaster.area (pa49-195-238-16.pa.nsw.optusnet.com.au [49.195.238.16])
+        by mail110.syd.optusnet.com.au (Postfix) with ESMTPS id 28688108AC6;
+        Sat,  9 Oct 2021 09:36:50 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mYyTx-0042Ma-CL; Sat, 09 Oct 2021 09:36:49 +1100
+Date:   Sat, 9 Oct 2021 09:36:49 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     NeilBrown <neilb@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
+Message-ID: <20211008223649.GJ54211@dread.disaster.area>
+References: <163184698512.29351.4735492251524335974.stgit@noble.brown>
+ <163184741778.29351.16920832234899124642.stgit@noble.brown>
+ <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
+ <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
+ <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
+ <20211006231452.GF54211@dread.disaster.area>
+ <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
+ <163364854551.31063.4377741712039731672@noble.neil.brown.name>
+ <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YWCpnsdVqssFaLrf@aion.usersys.redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=6160c805
+        a=DzKKRZjfViQTE5W6EVc0VA==:117 a=DzKKRZjfViQTE5W6EVc0VA==:17
+        a=kj9zAlcOel0A:10 a=8gfv0ekSlNoA:10 a=7-415B0cAAAA:8
+        a=6S5xgBsxOMK7_jEV4OcA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 08, 2021 at 04:27:10PM -0400, Scott Mayhew wrote:
-> On Fri, 13 Aug 2021, NeilBrown wrote:
-> 
-> > On Fri, 13 Aug 2021, J.  Bruce Fields wrote:
-> > > On Tue, Aug 10, 2021 at 10:43:31AM +1000, NeilBrown wrote:
+On Fri, Oct 08, 2021 at 09:48:39AM +0200, Michal Hocko wrote:
+> On Fri 08-10-21 10:15:45, Neil Brown wrote:
+> > On Thu, 07 Oct 2021, Michal Hocko wrote:
+> > > On Thu 07-10-21 10:14:52, Dave Chinner wrote:
+> > > > On Tue, Oct 05, 2021 at 02:27:45PM +0200, Vlastimil Babka wrote:
+> > > > > On 10/5/21 13:09, Michal Hocko wrote:
+> > > > > > On Tue 05-10-21 11:20:51, Vlastimil Babka wrote:
+> > > > > > [...]
+> > > > > >> > --- a/include/linux/gfp.h
+> > > > > >> > +++ b/include/linux/gfp.h
+> > > > > >> > @@ -209,7 +209,11 @@ struct vm_area_struct;
+> > > > > >> >   * used only when there is no reasonable failure policy) but it is
+> > > > > >> >   * definitely preferable to use the flag rather than opencode endless
+> > > > > >> >   * loop around allocator.
+> > > > > >> > - * Using this flag for costly allocations is _highly_ discouraged.
+> > > > > >> > + * Use of this flag may lead to deadlocks if locks are held which would
+> > > > > >> > + * be needed for memory reclaim, write-back, or the timely exit of a
+> > > > > >> > + * process killed by the OOM-killer.  Dropping any locks not absolutely
+> > > > > >> > + * needed is advisable before requesting a %__GFP_NOFAIL allocate.
+> > > > > >> > + * Using this flag for costly allocations (order>1) is _highly_ discouraged.
+> > > > > >> 
+> > > > > >> We define costly as 3, not 1. But sure it's best to avoid even order>0 for
+> > > > > >> __GFP_NOFAIL. Advising order>1 seems arbitrary though?
+> > > > > > 
+> > > > > > This is not completely arbitrary. We have a warning for any higher order
+> > > > > > allocation.
+> > > > > > rmqueue:
+> > > > > > 	WARN_ON_ONCE((gfp_flags & __GFP_NOFAIL) && (order > 1));
+> > > > > 
+> > > > > Oh, I missed that.
+> > > > > 
+> > > > > > I do agree that "Using this flag for higher order allocations is
+> > > > > > _highly_ discouraged.
+> > > > > 
+> > > > > Well, with the warning in place this is effectively forbidden, not just
+> > > > > discouraged.
 > > > > 
-> > > > The problem here appears to be that a signalled task is being retried
-> > > > without clearing the SIGNALLED flag.  That is causing the infinite loop
-> > > > and the soft lockup.
+> > > > Yup, especially as it doesn't obey __GFP_NOWARN.
 > > > > 
-> > > > This bug appears to have been introduced in Linux 5.2 by
-> > > > Commit: ae67bd3821bb ("SUNRPC: Fix up task signalling")
-> > > 
-> > > I wonder how we arrived here.  Does it require that an rpc task returns
-> > > from one of those rpc_delay() calls just as rpc_shutdown_client() is
-> > > signalling it?  That's the only way async tasks get signalled, I think.
-> > 
-> > I don't think "just as" is needed.
-> > I think it could only happen if rpc_shutdown_client() were called when
-> > there were active tasks - presumably from nfsd4_process_cb_update(), but
-> > I don't know the callback code well.
-> > If any of those active tasks has a ->done handler which might try to
-> > reschedule the task when tk_status == -ERESTARTSYS, then you get into
-> > the infinite loop.
-> 
-> This thread seems to have fizzled out, but I'm pretty sure I hit this
-> during the Virtual Bakeathon yesterday.  My server was unresponsive but
-> I eventually managed to get a vmcore.
-
-Ugh, apologies for dropping this.  I spent some time trying to figure
-out whether there was a fix in the NFS level--I'm skeptical of the logic
-in nfs4callback.c.  But I didn't come up with a fix.
-
---b.
-
-> 
-> [182411.119788] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000f2f40905 xid 5d83adfb
-> [182437.775113] watchdog: BUG: soft lockup - CPU#1 stuck for 26s! [kworker/u4:1:216458]
-> [182437.775633] Modules linked in: nfs_layout_flexfiles nfsv3 nfs_layout_nfsv41_files bluetooth ecdh_generic ecc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache netfs rpcrdma rdma_cm iw_cm ib_cm ib_core tun rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib isofs cdrom nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink xfs intel_rapl_msr intel_rapl_common libcrc32c kvm_intel qxl kvm drm_ttm_helper ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops irqbypass cec joydev virtio_balloon pcspkr i2c_piix4 nfsd auth_rpcgss nfs_acl lockd grace sunrpc drm fuse ext4 mbcache jbd2 ata_generic crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel virtio_net serio_raw ata_piix net_failover libata virtio_blk virtio_scsi failover dm_mirror dm_region_hash dm_log dm_mod
-> [182437.780157] CPU: 1 PID: 216458 Comm: kworker/u4:1 Kdump: loaded Not tainted 5.14.0-5.el9.x86_64 #1
-> [182437.780894] Hardware name: DigitalOcean Droplet, BIOS 20171212 12/12/2017
-> [182437.781567] Workqueue: rpciod rpc_async_schedule [sunrpc]
-> [182437.782500] RIP: 0010:try_to_grab_pending+0x12/0x160
-> [182437.783104] Code: e7 e8 72 f3 ff ff e9 6e ff ff ff 48 89 df e8 65 f3 ff ff eb b7 0f 1f 00 0f 1f 44 00 00 41 55 41 54 55 48 89 d5 53 48 89 fb 9c <58> fa 48 89 02 40 84 f6 0f 85 92 00 00 00 f0 48 0f ba 2b 00 72 09
-> [182437.784261] RSP: 0018:ffffb5b24066fd30 EFLAGS: 00000246
-> [182437.785052] RAX: 0000000000000000 RBX: ffffffffc05e0768 RCX: 00000000000007d0
-> [182437.785760] RDX: ffffb5b24066fd60 RSI: 0000000000000001 RDI: ffffffffc05e0768
-> [182437.786399] RBP: ffffb5b24066fd60 R08: ffffffffc05e0708 R09: ffffffffc05e0708
-> [182437.787010] R10: 0000000000000003 R11: 0000000000000003 R12: ffffffffc05e0768
-> [182437.787621] R13: ffff9daa40312400 R14: 00000000000007d0 R15: 0000000000000000
-> [182437.788235] FS:  0000000000000000(0000) GS:ffff9daa5bd00000(0000) knlGS:0000000000000000
-> [182437.788859] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [182437.789483] CR2: 00007f8f73d5d828 CR3: 000000008a010003 CR4: 00000000001706e0
-> [182437.790188] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [182437.790831] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [182437.791522] Call Trace:
-> [182437.792183]  mod_delayed_work_on+0x3c/0x90
-> [182437.792866]  __rpc_sleep_on_priority_timeout+0x107/0x110 [sunrpc]
-> [182437.793553]  rpc_delay+0x56/0x90 [sunrpc]
-> [182437.794236]  nfsd4_cb_sequence_done+0x202/0x290 [nfsd]
-> [182437.794910]  nfsd4_cb_done+0x18/0xf0 [nfsd]
-> [182437.795974]  rpc_exit_task+0x58/0x100 [sunrpc]
-> [182437.796955]  ? rpc_do_put_task+0x60/0x60 [sunrpc]
-> [182437.797645]  __rpc_execute+0x5e/0x250 [sunrpc]
-> [182437.798375]  rpc_async_schedule+0x29/0x40 [sunrpc]
-> [182437.799043]  process_one_work+0x1e6/0x380
-> [182437.799703]  worker_thread+0x53/0x3d0
-> [182437.800393]  ? process_one_work+0x380/0x380
-> [182437.801029]  kthread+0x10f/0x130
-> [182437.801686]  ? set_kthread_struct+0x40/0x40
-> [182437.802333]  ret_from_fork+0x22/0x30
-> 
-> The process causing the soft lockup warnings:
-> 
-> crash> set 216458
->     PID: 216458
-> COMMAND: "kworker/u4:1"
->    TASK: ffff9da94281e200  [THREAD_INFO: ffff9da94281e200]
->     CPU: 0
->   STATE: TASK_RUNNING (ACTIVE)
-> crash> bt
-> PID: 216458  TASK: ffff9da94281e200  CPU: 0   COMMAND: "kworker/u4:1"
->  #0 [fffffe000000be50] crash_nmi_callback at ffffffffb3055c31
->  #1 [fffffe000000be58] nmi_handle at ffffffffb30268f8
->  #2 [fffffe000000bea0] default_do_nmi at ffffffffb3a36d42
->  #3 [fffffe000000bec8] exc_nmi at ffffffffb3a36f49
->  #4 [fffffe000000bef0] end_repeat_nmi at ffffffffb3c013cb
->     [exception RIP: add_timer]
->     RIP: ffffffffb317c230  RSP: ffffb5b24066fd58  RFLAGS: 00000046
->     RAX: 000000010b3585fc  RBX: 0000000000000000  RCX: 00000000000007d0
->     RDX: ffffffffc05e0768  RSI: ffff9daa40312400  RDI: ffffffffc05e0788
->     RBP: 0000000000002000   R8: ffffffffc05e0770   R9: ffffffffc05e0788
->     R10: 0000000000000003  R11: 0000000000000003  R12: ffffffffc05e0768
->     R13: ffff9daa40312400  R14: 00000000000007d0  R15: 0000000000000000
->     ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
-> --- <NMI exception stack> ---
->  #5 [ffffb5b24066fd58] add_timer at ffffffffb317c230
->  #6 [ffffb5b24066fd58] mod_delayed_work_on at ffffffffb3103247
->  #7 [ffffb5b24066fd98] __rpc_sleep_on_priority_timeout at ffffffffc0580547 [sunrpc]
->  #8 [ffffb5b24066fdc8] rpc_delay at ffffffffc0589ed6 [sunrpc]
->  #9 [ffffb5b24066fde8] nfsd4_cb_sequence_done at ffffffffc06731b2 [nfsd]
-> #10 [ffffb5b24066fe10] nfsd4_cb_done at ffffffffc0673258 [nfsd]
-> #11 [ffffb5b24066fe30] rpc_exit_task at ffffffffc05800a8 [sunrpc]
-> #12 [ffffb5b24066fe40] __rpc_execute at ffffffffc0589fee [sunrpc]
-> #13 [ffffb5b24066fe70] rpc_async_schedule at ffffffffc058a209 [sunrpc]
-> #14 [ffffb5b24066fe88] process_one_work at ffffffffb31026c6
-> #15 [ffffb5b24066fed0] worker_thread at ffffffffb31028b3
-> #16 [ffffb5b24066ff10] kthread at ffffffffb310960f
-> #17 [ffffb5b24066ff50] ret_from_fork at ffffffffb30034f2
-> 
-> Looking at the rpc_task being executed:
-> 
-> crash> rpc_task.tk_status,tk_callback,tk_action,tk_runstate,tk_client,tk_flags ffff9da94120bd00
->   tk_status = 0x0
->   tk_callback = 0xffffffffc057bc60 <__rpc_atrun>
->   tk_action = 0xffffffffc0571f20 <call_start>
->   tk_runstate = 0x47
->   tk_client = 0xffff9da958909c00
->   tk_flags = 0x2281
-> 
-> tk_runstate has the following flags set: RPC_TASK_SIGNALLED, RPC_TASK_ACTIVE,
-> RPC_TASK_QUEUED, and RPC_TASK_RUNNING.
-> 
-> tk_flags is RPC_TASK_NOCONNECT|RPC_TASK_SOFT|RPC_TASK_DYNAMIC|RPC_TASK_ASYNC.
-> 
-> There's another kworker thread calling rpc_shutdown_client() via
-> nfsd4_process_cb_update():
-> 
-> crash> bt 0x342a3
-> PID: 213667  TASK: ffff9daa4fde9880  CPU: 1   COMMAND: "kworker/u4:4"
->  #0 [ffffb5b24077bbe0] __schedule at ffffffffb3a40ec6
->  #1 [ffffb5b24077bc60] schedule at ffffffffb3a4124c
->  #2 [ffffb5b24077bc78] schedule_timeout at ffffffffb3a45058
->  #3 [ffffb5b24077bcd0] rpc_shutdown_client at ffffffffc056fbb3 [sunrpc]
->  #4 [ffffb5b24077bd20] nfsd4_process_cb_update at ffffffffc0672c6c [nfsd]
->  #5 [ffffb5b24077be68] nfsd4_run_cb_work at ffffffffc0672f0f [nfsd]
->  #6 [ffffb5b24077be88] process_one_work at ffffffffb31026c6
->  #7 [ffffb5b24077bed0] worker_thread at ffffffffb31028b3
->  #8 [ffffb5b24077bf10] kthread at ffffffffb310960f
->  #9 [ffffb5b24077bf50] ret_from_fork at ffffffffb30034f2
-> 
-> The rpc_clnt being shut down is:
-> 
-> crash> nfs4_client.cl_cb_client ffff9daa454db808
->   cl_cb_client = 0xffff9da958909c00
-> 
-> Which is the same as the tk_client for the rpc_task being executed by the
-> thread triggering the soft lockup warnings.
-> 
-> -Scott
-> 
-> > 
-> > > 
-> > > > Prior to this commit a flag RPC_TASK_KILLED was used, and it gets
-> > > > cleared by rpc_reset_task_statistics() (called from rpc_exit_task()).
-> > > > After this commit a new flag RPC_TASK_SIGNALLED is used, and it is never
-> > > > cleared.
+> > > > See commit de2860f46362 ("mm: Add kvrealloc()") as a direct result
+> > > > of unwittingly tripping over this warning when adding __GFP_NOFAIL
+> > > > annotations to replace open coded high-order kmalloc loops that have
+> > > > been in place for a couple of decades without issues.
 > > > > 
-> > > > A fix might be to clear RPC_TASK_SIGNALLED in
-> > > > rpc_reset_task_statistics(), but I'll leave that decision to someone
-> > > > else.
+> > > > Personally I think that the way __GFP_NOFAIL is first of all
+> > > > recommended over open coded loops and then only later found to be
+> > > > effectively forbidden and needing to be replaced with open coded
+> > > > loops to be a complete mess.
 > > > 
-> > > Might be worth testing with that change just to verify that this is
-> > > what's happening.
+> > > Well, there are two things. Opencoding something that _can_ be replaced
+> > > by __GFP_NOFAIL and those that cannot because the respective allocator
+> > > doesn't really support that semantic. kvmalloc is explicit about that
+> > > IIRC. If you have a better way to consolidate the documentation then I
+> > > am all for it.
+> > 
+> > I think one thing that might help make the documentation better is to
+> > explicitly state *why* __GFP_NOFAIL is better than a loop.
+> > 
+> > It occurs to me that
+> >   while (!(p = kmalloc(sizeof(*p), GFP_KERNEL));
+> > 
+> > would behave much the same as adding __GFP_NOFAIL and dropping the
+> > 'while'.  So why not? I certainly cannot see the need to add any delay
+> > to this loop as kmalloc does a fair bit of sleeping when permitted.
+> > 
+> > I understand that __GFP_NOFAIL allows page_alloc to dip into reserves,
+> > but Mel holds that up as a reason *not* to use __GFP_NOFAIL as it can
+> > impact on other subsystems.
+> 
+> __GFP_NOFAIL usage is a risk on its own. It is a hard requirement that
+> the allocator cannot back off.
+
+No, "allocator cannot back off" isn't a hard requirement for most
+GFP_NOFAIL uses. *Not failing the allocation* is the hard
+requirement.
+
+How long it takes for the allocation to actually succeed is
+irrelevant to most callers, and given that we are replacing loops
+that do
+
+	while (!(p = kmalloc(sizeof(*p), GFP_KERNEL))
+
+with __GFP_NOFAIL largely indicates that allocation *latency* and/or
+deadlocks are not an issue here.
+
+Indeed, if we deadlock in XFS because there is no memory available,
+that is *not a problem kmalloc() should be trying to solve*. THe
+problem is the caller being unable to handle allocation failure, so
+if allocation cannot make progress, that needs to be fixed by the
+caller getting rid of the unfailable allocation.
+
+The fact is that we've had these loops in production code for a
+couple of decades and these subsystems just aren't failing or
+deadlocking with such loops. IOWs, we don't need __GFP_NOFAIL to dig
+deep into reserves or drive the system to OOM killing - we just need
+to it keep retrying the same allocation until it succeeds.
+
+Put simply, we want "retry forever" semantics to match what
+production kernels have been doing for the past couple of decades,
+but all we've been given are "never fail" semantics that also do
+something different and potentially much more problematic.
+
+Do you see the difference here? __GFP_NOFAIL is not what we
+need in the vast majority of cases where it is used. We don't want
+the failing allocations to drive the machine hard into critical
+reserves, we just want the allocation to -eventually succeed- and if
+it doesn't, that's our problem to handle, not kmalloc()....
+
+> So it has to absolutely everything to
+> suceed. Whether it cheats and dips into reserves or not is a mere
+> implementation detail and a subject to the specific implementation.
+
+My point exactly: that's how the MM interprets __GFP_NOFAIL is supposed to
+provide callers with. What we are trying to tell you is that the
+semantics associated with __GFP_NOFAIL is not actually what we
+require, and it's the current semantics of __GFP_NOFAIL that cause
+all the "can't be applied consistently across the entire allocation
+APIs" problems....
+
+> > > > So, effectively, we have to open-code around kvmalloc() in
+> > > > situations where failure is not an option. Even if we pass
+> > > > __GFP_NOFAIL to __vmalloc(), it isn't guaranteed to succeed because
+> > > > of the "we won't honor gfp flags passed to __vmalloc" semantics it
+> > > > has.
 > > > 
-> > > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > > index c045f63d11fa..caa931888747 100644
-> > > --- a/net/sunrpc/sched.c
-> > > +++ b/net/sunrpc/sched.c
-> > > @@ -813,7 +813,8 @@ static void
-> > >  rpc_reset_task_statistics(struct rpc_task *task)
-> > >  {
-> > >  	task->tk_timeouts = 0;
-> > > -	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SENT);
-> > > +	task->tk_flags &= ~(RPC_CALL_MAJORSEEN|RPC_TASK_SIGNALLED|
-> > > +							RPC_TASK_SENT);
-> > 
-> > NONONONONO.
-> > RPC_TASK_SIGNALLED is a flag in tk_runstate.
-> > So you need
-> > 	clear_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
-> > 
-> > NeilBrown
-> > 
+> > > yes vmalloc doesn't support nofail semantic and it is not really trivial
+> > > to craft it there.
+
+Yet retry-forever is trivial to implement across everything:
+
+kvmalloc(size, gfp_mask)
+{
+	gfp_t	flags = gfp_mask & ~__GFP_RETRY_FOREVER;
+
+	do {
+		p = __kvmalloc(size, flags)
+	} while (!p && (gfp_mask & __GFP_RETRY_FOREVER));
+
+	return p;
+}
+
+That provides "allocation will eventually succeed" semantics just
+fine, yes? It doesn't guarantee forwards progress or success, just
+that *it won't fail*.
+
+It should be obvious what the difference between "retry forever" and
+__GFP_NOFAIL semantics are now, and why we don't actually want
+__GFP_NOFAIL. We just want __GFP_RETRY_FOREVER semantics that can be
+applied consistently across the entire allocation API regardless of
+whatever other flags are passed into the allocation: don't return
+until an allocation with the provided semantics succeeds.
+
+
+
+> > > > Even the API constaints of kvmalloc() w.r.t. only doing the vmalloc
+> > > > fallback if the gfp context is GFP_KERNEL - we already do GFP_NOFS
+> > > > kvmalloc via memalloc_nofs_save/restore(), so this behavioural
+> > > > restriction w.r.t. gfp flags just makes no sense at all.
+> > > 
+> > > GFP_NOFS (without using the scope API) has the same problem as NOFAIL in
+> > > the vmalloc. Hence it is not supported. If you use the scope API then
+> > > you can GFP_KERNEL for kvmalloc. This is clumsy but I am not sure how to
+> > > define these conditions in a more sensible way. Special case NOFS if the
+> > > scope api is in use? Why do you want an explicit NOFS then?
+
+Exactly my point - this is clumsy and a total mess. I'm not asking
+for an explicit GFP_NOFS, just pointing out that the documented
+restrictions that "vmalloc can only do GFP_KERNEL allocations" is
+completely wrong.
+
+vmalloc()
+{
+	if (!(gfp_flags &  __GFP_FS))
+		memalloc_nofs_save();
+	p = __vmalloc(gfp_flags | GFP_KERNEL)
+	if (!(gfp_flags &  __GFP_FS))
+		memalloc_nofs_restore();
+}
+
+Yup, that's how simple it is to support GFP_NOFS support in
+vmalloc().
+
+This goes along with the argument that "it's impossible to do
+GFP_NOFAIL with vmalloc" as I addressed above. These things are not
+impossible, but we hide behind "we don't want people to use vmalloc"
+as an excuse for having shitty behaviour whilst ignoring that
+vmalloc is *heavily used* by core subsystems like filesystems
+because they cannot rely on high order allocations succeeding....
+
+It also points out that the scope API is highly deficient.
+We can do GFP_NOFS via the scope API, but we can't
+do anything else because *there is no scope API for other GFP
+flags*.
+
+Why don't we have a GFP_NOFAIL/__GFP_RETRY_FOREVER scope API? That
+would save us a lot of bother in XFS. What about GFP_DIRECT_RECLAIM?
+I'd really like to turn that off for allocations in the XFS
+transaction commit path (as noted already in this thread) because
+direct reclaim that can make no progress is actively harmful (as
+noted already in this thread)
+
+Like I said - this is more than just bad documentation - the problem
+is that the whole allocation API is an inconsistent mess of control
+mechanisms to begin with...
+
+> > It would seem to make sense for kvmalloc to WARN_ON if it is passed
+> > flags that does not allow it to use vmalloc.
+> 
+> vmalloc is certainly not the hottest path in the kernel so I wouldn't be
+> opposed.
+
+kvmalloc is most certainly becoming one of the hottest paths in XFS.
+IOWs, arguments that "vmalloc is not a hot path" are simply invalid
+these days because they are simply untrue. e.g. the profiles I
+posted in this thread...
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
