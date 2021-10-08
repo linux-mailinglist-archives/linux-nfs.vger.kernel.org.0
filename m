@@ -2,66 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BF5F426E73
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 18:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FCD4426F8B
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Oct 2021 19:27:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229710AbhJHQOS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Oct 2021 12:14:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbhJHQOR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 12:14:17 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35FCFC061755
-        for <linux-nfs@vger.kernel.org>; Fri,  8 Oct 2021 09:12:22 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id y12so25251970eda.4
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Oct 2021 09:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=G+Iq7iy1GRMddIdrCBUu2NHbxR3JoNjA4F7Y0VPhz5I=;
-        b=Rxp/3bhbiNUTejgkKDntUMq2d7gLr5NCyB+q3q94lkhSOPYx9soacaIlVt4MjkboyW
-         JjDGLwjvnkV4RM2Z78eUhKDL6geZtwo+XkT3uG4zMztiljAqn1urYLztVM501i0jf7JY
-         KM3qWzKbaIi2BSS+Sza4BIKYWFYcJ+BzkNiMf6brn19YFTQwQSJyULHNi1XfeEy7Muau
-         xkzVOoIIuRkvujvnwp7zYqFeadTRf5jIaWTP0Ot/9OqcuaWy4fc3AASVBT9Xpoz3AK9c
-         +Lr7/vGjaOp22FMM/OCdb0iTBBg8FeRF6cVvhzua5fZzDQzIzmav4SEgVWw3kXedou+M
-         CHmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=G+Iq7iy1GRMddIdrCBUu2NHbxR3JoNjA4F7Y0VPhz5I=;
-        b=yp/Wpc6cF/m1+51o94QfU4ci8GHskVc0DeLJXdkR12ttpWIgn2B1AD/Ne+fsLgwkLa
-         WEaNSSRexQymDKdLXcqh/NFJM2zhaI8DrsLyxQlTCgvDcDaHKVrppMWFxbVd87QSEbYp
-         +R5MGwU0UNut4y4S6RSJZPkTC2FrMFFM4rv7EhDMNQc/FDJcY52/8WPc844h+LtnKhy/
-         NrKQ2XthX6tegcyR9u+HU5hw47dIkQYp8cIcaGX5uW/D+3ENpN/RQT4rxOQGPV8c80jm
-         p2+EkZ/o4DNbVvNcC6XkMCLPC/Cx7Ns/dhxloq+Iehh87zTQVX4IQwTENzzkDY1CsFYK
-         luhg==
-X-Gm-Message-State: AOAM533SdiA38J/mHJF8cPacn6FrSFl01FCzteuFtyhjpJQkHQwXf7qO
-        GzVD9e8nGtxIfKM21lhCtn03l5ihbUnDeS1FAEA=
-X-Google-Smtp-Source: ABdhPJy36WpZ1PF2SsG4OxaJyYITBB8K13W901io7H+01Z2PKQ7dJvO45LSOZoYKb1l1QCgAQusDF3Gl6YRrdC4abyg=
-X-Received: by 2002:a05:6402:19ba:: with SMTP id o26mr16270263edz.1.1633709540752;
- Fri, 08 Oct 2021 09:12:20 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:a17:906:7809:0:0:0:0 with HTTP; Fri, 8 Oct 2021 09:12:20
- -0700 (PDT)
-Reply-To: alimaanwari48@gmail.com
-From:   Alima Anwari <franmerii42@gmail.com>
-Date:   Fri, 8 Oct 2021 17:12:20 +0100
-Message-ID: <CAOoRhhHRCecQgLPVWoW83C2bLCs1sT4z5n7zDwyjiMrfu844Qg@mail.gmail.com>
-Subject: =?UTF-8?B?QnVlbiBkw61h?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S231217AbhJHR3o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Oct 2021 13:29:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:21860 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231164AbhJHR3o (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Oct 2021 13:29:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633714068;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=kloBSv2DsGFPJBpEDWVi4y8T4BYAAufU4TmNKwDkboI=;
+        b=T7/3ZptTmtGOhUF31rwJZVG8rcxqwhmFrh/Wtqyyib1aiiwN7dTJLHyPVAgRyDcN/FvJq3
+        5GfxU29JTxGtf1ZT72vaoCY9448BKxKpHBDV5GOtrie5Gm4XBBGqs5u3gINIzgS8sPFJgn
+        6bYOL+ry1zSFKax81nGZWyD0EcDAruA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-t00buLk9N22_1SFnghg04Q-1; Fri, 08 Oct 2021 13:27:46 -0400
+X-MC-Unique: t00buLk9N22_1SFnghg04Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BD42C10A8E08;
+        Fri,  8 Oct 2021 17:27:45 +0000 (UTC)
+Received: from dwysocha.rdu.csb (unknown [10.22.8.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 50CFE1007606;
+        Fri,  8 Oct 2021 17:27:45 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     chuck.lever@oracle.com, steved@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsiostat: Handle both readahead counts for statsver >= 1.2
+Date:   Fri,  8 Oct 2021 13:27:42 -0400
+Message-Id: <1633714062-21081-1-git-send-email-dwysocha@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=20
-Hola querido amigo, soy Alima Anwari de Afganist=C3=A1n, por favor responde
-De vuelta a m=C3=AD, tengo un problema urgente que compartir contigo. voy a
-estar esperando
-para su respuesta.
-Gracias.
-Alima.
+Later kernel versions convert NFS readpages to readahead so update
+the counts accordingly.
+
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+---
+ tools/nfs-iostat/nfs-iostat.py | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/tools/nfs-iostat/nfs-iostat.py b/tools/nfs-iostat/nfs-iostat.py
+index 1df74ba822b5..1ddd884faf58 100755
+--- a/tools/nfs-iostat/nfs-iostat.py
++++ b/tools/nfs-iostat/nfs-iostat.py
+@@ -43,7 +43,7 @@ NfsEventCounters = [
+     'vfspermission',
+     'vfsupdatepage',
+     'vfsreadpage',
+-    'vfsreadpages',
++    'vfsreadpages', # or vfsreadahead in statvers=1.2 or above
+     'vfswritepage',
+     'vfswritepages',
+     'vfsreaddir',
+@@ -86,7 +86,7 @@ class DeviceData:
+             self.__nfs_data['export'] = words[1]
+             self.__nfs_data['mountpoint'] = words[4]
+             self.__nfs_data['fstype'] = words[7]
+-            if words[7] == 'nfs':
++            if words[7] == 'nfs' or words[7] == 'nfs4':
+                 self.__nfs_data['statvers'] = words[8]
+         elif 'nfs' in words or 'nfs4' in words:
+             self.__nfs_data['export'] = words[0]
+@@ -294,8 +294,11 @@ class DeviceData:
+         print()
+         print('%d nfs_readpage() calls read %d pages' % \
+             (vfsreadpage, vfsreadpage))
+-        print('%d nfs_readpages() calls read %d pages' % \
+-            (vfsreadpages, pages_read - vfsreadpage))
++        multipageread = "readpages"
++        if float(self.__nfs_data['statvers'].split('=',1)[1]) >= 1.2:
++            multipageread = "readahead"
++        print('%d nfs_%s() calls read %d pages' % \
++            (vfsreadpages, multipageread, pages_read - vfsreadpage))
+         if vfsreadpages != 0:
+             print('(%.1f pages per call)' % \
+                 (float(pages_read - vfsreadpage) / vfsreadpages))
+-- 
+1.8.3.1
+
