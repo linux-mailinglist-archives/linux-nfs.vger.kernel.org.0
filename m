@@ -2,170 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533EB427A29
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Oct 2021 14:36:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CACBD427AA4
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Oct 2021 15:35:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232982AbhJIMiZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 9 Oct 2021 08:38:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20950 "EHLO
+        id S233425AbhJINhe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 9 Oct 2021 09:37:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49889 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232969AbhJIMiY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 9 Oct 2021 08:38:24 -0400
+        by vger.kernel.org with ESMTP id S233288AbhJINhe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 9 Oct 2021 09:37:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1633782987;
+        s=mimecast20190719; t=1633786537;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=cLuvJXDMD0jeMAcloxpMxxpQ8Nwf098Qvo3fOh/EYZM=;
-        b=JP0FkgyG3xAHXxFt5RmNIsyxky3HvHGcWwKFI3zUCZDrsS8aqqm9CmtAoWgs2B/C8oG0jV
-        wInVSmTGdqvfkrIZ0PyRnxr1aCdnAFIaW7uVBZu4+CKmUwP53b80jDMig4JSYH8B2aQBig
-        RsGLPz99U3tG2TdGomZ32JZhabZSg14=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-7_kvV70cO8G6_o5ClRSLfw-1; Sat, 09 Oct 2021 08:36:24 -0400
-X-MC-Unique: 7_kvV70cO8G6_o5ClRSLfw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3F09801AFC;
-        Sat,  9 Oct 2021 12:36:23 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE79010027C4;
-        Sat,  9 Oct 2021 12:36:22 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-cachefs@redhat.com,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] NFS: Convert from readpages() to readahead()
-Date:   Sat,  9 Oct 2021 08:36:02 -0400
-Message-Id: <1633782962-18335-2-git-send-email-dwysocha@redhat.com>
-In-Reply-To: <1633782962-18335-1-git-send-email-dwysocha@redhat.com>
-References: <1633782962-18335-1-git-send-email-dwysocha@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+        bh=ivS7XRKgWFCmcp0qqM9PhriXmSopuUYIDbFcM50lx3Q=;
+        b=WDAKGdouQMlKY4wO0mlxGtvv1iZ7Ld5SdK0AWY/fXObp4QLQCVM51tAFcWsPN4ls4y3YJx
+        OZWvAVNCCN/HnrWgto/RX6gdNzGbescFPha1UzzzSS9bpRnGDMkYfqE7tuHdzk60iaaEwc
+        u7VPTysZrHbp56bUbbji19c2NoCpoJ0=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-SJo6MoQ6PSufdyDO89ybdw-1; Sat, 09 Oct 2021 09:35:35 -0400
+X-MC-Unique: SJo6MoQ6PSufdyDO89ybdw-1
+Received: by mail-ed1-f72.google.com with SMTP id 2-20020a508e02000000b003d871759f5dso11652838edw.10
+        for <linux-nfs@vger.kernel.org>; Sat, 09 Oct 2021 06:35:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=ivS7XRKgWFCmcp0qqM9PhriXmSopuUYIDbFcM50lx3Q=;
+        b=LIznJiwtghbi6GK3Jjsh0gfa0cQtOm5+foNkfcPZY5WYbGVy2g33p0Z3iUGV84PSsf
+         MmgSXQ3Vh1DHOAZNLdw4outQ7gxQHUgVRZzqARlBrvlH9AtlSmAM/s+DPpB5OrfjbEyR
+         f4X9pszcgiKgxayprOjtmgpFq6tNC7KLcxeALlVmbeGXLGIJeXVTPAnj70HsWmruG/zK
+         XWH3zmnluKlYso1ov4vPEcfzt9sSPU1m1/hfCwsc9T0J7P4lk6MWQPqao0vgb+Vk75rB
+         YIhbJ7jtdw06sHWZFE74G3t/wDuCpB/zVR31mrfw3fVSHHcx2KOFaHyTwf9y+sVII14E
+         yaEg==
+X-Gm-Message-State: AOAM5337i0JDxBUF+f+NsxqNgWBr8/BxXuGZVFZ8SMpUHxE721iwcvI4
+        ryqkWJmOK2GAHhKxqjRwLOood17XKZQQK8DKcbCfvjMAgpBILOmGQmacK3NGUQGAFOh/feJjtmp
+        NH5YR3kE50Vp6uTBRTtbUAGyfsp7F0x7TQPLd
+X-Received: by 2002:a17:906:585a:: with SMTP id h26mr11783370ejs.31.1633786534533;
+        Sat, 09 Oct 2021 06:35:34 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwaJ32sUnCQtjKTdriX4AU181fGLRx44VwY7EBbMPNVazdCoCQzclQLxQC0tPuegvAlWPIlR4+RBAP0KFjMgBU=
+X-Received: by 2002:a17:906:585a:: with SMTP id h26mr11783344ejs.31.1633786534316;
+ Sat, 09 Oct 2021 06:35:34 -0700 (PDT)
+MIME-Version: 1.0
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Sat, 9 Oct 2021 09:34:58 -0400
+Message-ID: <CALF+zOmahudY07tTDGcu7GFvKOOYUbboKoKk6dwhuCkGTXCUcA@mail.gmail.com>
+Subject: Oops in nfs_scan_commit running xfstest generic/005 with NFSv4.2 and
+ hammerspace flexfiles server
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Convert to the new VM readahead() API which is the preferred API
-to read multiple pages, and rename the NFSIOS_* counters and the
-tracepoint as needed.
+Trond,
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfs/file.c              |  2 +-
- fs/nfs/read.c              | 18 +++++++++++++-----
- include/linux/nfs_fs.h     |  3 +--
- include/linux/nfs_iostat.h |  6 +++---
- 4 files changed, 18 insertions(+), 11 deletions(-)
+I wonder if you are aware of this or not.
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 209dac208477..cc76d17fa97f 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -519,7 +519,7 @@ static void nfs_swap_deactivate(struct file *file)
- 
- const struct address_space_operations nfs_file_aops = {
- 	.readpage = nfs_readpage,
--	.readpages = nfs_readpages,
-+	.readahead = nfs_readahead,
- 	.set_page_dirty = __set_page_dirty_nobuffers,
- 	.writepage = nfs_writepage,
- 	.writepages = nfs_writepages,
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index d06b91a101d2..296ea9a9b6ce 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -397,15 +397,19 @@ int nfs_readpage(struct file *file, struct page *page)
- 	return ret;
- }
- 
--int nfs_readpages(struct file *file, struct address_space *mapping,
--		struct list_head *pages, unsigned nr_pages)
-+void nfs_readahead(struct readahead_control *ractl)
- {
-+	struct file *file = ractl->file;
-+	struct address_space *mapping = ractl->mapping;
-+	struct page *page;
-+	unsigned int nr_pages = readahead_count(ractl);
-+
- 	struct nfs_readdesc desc;
- 	struct inode *inode = mapping->host;
- 	int ret;
- 
- 	trace_nfs_aop_readahead(inode, nr_pages);
--	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
-+	nfs_inc_stats(inode, NFSIOS_VFSREADAHEAD);
- 
- 	ret = -ESTALE;
- 	if (NFS_STALE(inode))
-@@ -422,14 +426,18 @@ int nfs_readpages(struct file *file, struct address_space *mapping,
- 	nfs_pageio_init_read(&desc.pgio, inode, false,
- 			     &nfs_async_read_completion_ops);
- 
--	ret = read_cache_pages(mapping, pages, readpage_async_filler, &desc);
-+	ret = 0;
-+	while (!ret && (page = readahead_page(ractl))) {
-+		prefetchw(&page->flags);
-+		ret = readpage_async_filler(&desc, page);
-+		put_page(page);
-+	}
- 
- 	nfs_pageio_complete_read(&desc.pgio);
- 
- 	put_nfs_open_context(desc.ctx);
- out:
- 	trace_nfs_aop_readahead_done(inode, nr_pages, ret);
--	return ret;
- }
- 
- int __init nfs_init_readpagecache(void)
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 140187b57db8..a5aef2cbe4ee 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -586,8 +586,7 @@ extern int nfs_access_get_cached(struct inode *inode, const struct cred *cred, s
-  * linux/fs/nfs/read.c
-  */
- extern int  nfs_readpage(struct file *, struct page *);
--extern int  nfs_readpages(struct file *, struct address_space *,
--		struct list_head *, unsigned);
-+extern void nfs_readahead(struct readahead_control *);
- 
- /*
-  * inline functions
-diff --git a/include/linux/nfs_iostat.h b/include/linux/nfs_iostat.h
-index 027874c36c88..418145f23700 100644
---- a/include/linux/nfs_iostat.h
-+++ b/include/linux/nfs_iostat.h
-@@ -22,7 +22,7 @@
- #ifndef _LINUX_NFS_IOSTAT
- #define _LINUX_NFS_IOSTAT
- 
--#define NFS_IOSTAT_VERS		"1.1"
-+#define NFS_IOSTAT_VERS		"1.2"
- 
- /*
-  * NFS byte counters
-@@ -53,7 +53,7 @@
-  * NFS page counters
-  *
-  * These count the number of pages read or written via nfs_readpage(),
-- * nfs_readpages(), or their write equivalents.
-+ * nfs_readahead(), or their write equivalents.
-  *
-  * NB: When adding new byte counters, please include the measured
-  * units in the name of each byte counter to help users of this
-@@ -98,7 +98,7 @@ enum nfs_stat_eventcounters {
- 	NFSIOS_VFSACCESS,
- 	NFSIOS_VFSUPDATEPAGE,
- 	NFSIOS_VFSREADPAGE,
--	NFSIOS_VFSREADPAGES,
-+	NFSIOS_VFSREADAHEAD,
- 	NFSIOS_VFSWRITEPAGE,
- 	NFSIOS_VFSWRITEPAGES,
- 	NFSIOS_VFSGETDENTS,
--- 
-1.8.3.1
+This week I ran a lot of xfstests with hammerspace and other servers
+without any issues and just now seeing this oops (after rebuilding
+from a base of your testing branch at 0abb8895b065).  I then re-built
+with just your testing branch and got the same oops.  Same test passes
+on 5.14.0-rc4 (vanilla), as well as previous kernels I used at
+BakeAthon with the fscache and readahead patches only.  It reliably
+panics for me so let me know if you want any more info or a
+reproduction with tracepoints, etc.  FYI, I don't think the server
+matters because I can also reproduce with a rhel8 server
+(kernel-4.18.0-305.19.1.el8_4) and I can also just run 'generic/005'
+directly - previous tests don't matter.
+
+[   15.767423] nfs4filelayout_init: NFSv4 File Layout Driver Registering...
+[   28.614447] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver
+Registering...
+[   30.024616] run fstests generic/001 at 2021-10-09 09:01:14
+[   37.188167] run fstests generic/002 at 2021-10-09 09:01:21
+[   38.372767] run fstests generic/003 at 2021-10-09 09:01:23
+[   38.713218] run fstests generic/004 at 2021-10-09 09:01:23
+[   39.065705] run fstests generic/005 at 2021-10-09 09:01:23
+[   39.799076] general protection fault, probably for non-canonical
+address 0xffe826e8e8e7897c: 0000 [#1] SMP PTI
+[   39.805058] CPU: 0 PID: 6213 Comm: rm Kdump: loaded Not tainted
+5.15.0-rc4-trond-testing+ #76
+[   39.808300] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.14.0-4.fc34 04/01/2014
+[   39.810819] RIP: 0010:__mutex_lock.constprop.0+0x97/0x3e0
+[   39.812438] Code: 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 48 8b
+04 25 c0 7b 01 00 48 8b 00 a8 08 75 1d 49 8b 06 48 83 e0 f8 0f 84 79
+02 00 00 <8b> 50 34 85 d2 0f 85 5c 02 00 00 e8 59 8f 55 ff 65 48 8b 04
+25 c0
+[   39.817418] RSP: 0018:ffffbb8e4558bcd0 EFLAGS: 00010286
+[   39.818546] RAX: ffe826e8e8e78948 RBX: ffffbb8e4558bd70 RCX: ffff932e89300000
+[   39.820087] RDX: ffff932e89300000 RSI: ffe826e8e8e78948 RDI: ffff932eae01edf0
+[   39.821583] RBP: ffffbb8e4558bd28 R08: 0000000000000001 R09: ffffbb8e4558bca0
+[   39.823091] R10: 000000000000001d R11: ffffffffffffcfcf R12: 0000000000000000
+[   39.824796] R13: 0000000000000000 R14: ffff932eae01edf0 R15: 0000000000000000
+[   39.826318] FS:  00007fac7df09740(0000) GS:ffff932ff7c00000(0000)
+knlGS:0000000000000000
+[   39.828037] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   39.829275] CR2: 0000555f9b7e2018 CR3: 000000011dc96005 CR4: 0000000000770ef0
+[   39.830787] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   39.832275] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   39.833756] PKRU: 55555554
+[   39.834377] Call Trace:
+[   39.836219]  ? security_inode_permission+0x30/0x50
+[   39.837365]  nfs_scan_commit+0x36/0xa0 [nfs]
+[   39.838367]  __nfs_commit_inode+0xf8/0x160 [nfs]
+[   39.839417]  nfs_wb_all+0xa6/0xf0 [nfs]
+[   39.840309]  nfs4_inode_return_delegation+0x58/0x80 [nfsv4]
+[   39.841554]  nfs4_proc_remove+0xd1/0xe0 [nfsv4]
+[   39.842589]  nfs_unlink+0xec/0x2d0 [nfs]
+[   39.843461]  vfs_unlink+0x113/0x230
+[   39.844245]  do_unlinkat+0x170/0x280
+[   39.845040]  __x64_sys_unlinkat+0x33/0x60
+[   39.845922]  do_syscall_64+0x3b/0x90
+[   39.846726]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+
+# ./scripts/faddr2line fs/nfs/nfs.ko nfs_scan_commit+0x36
+nfs_scan_commit+0x36/0xa0:
+nfs_scan_commit at /mnt/build/kernel/fs/nfs/write.c:1078
+(inlined by) nfs_scan_commit at /mnt/build/kernel/fs/nfs/write.c:1070
+
+
+   1060 /*
+   1061  * nfs_scan_commit - Scan an inode for commit requests
+   1062  * @inode: NFS inode to scan
+   1063  * @dst: mds destination list
+   1064  * @cinfo: mds and ds lists of reqs ready to commit
+   1065  *
+   1066  * Moves requests from the inode's 'commit' request list.
+   1067  * The requests are *not* checked to ensure that they form a
+contiguous set.
+   1068  */
+   1069 int
+   1070 nfs_scan_commit(struct inode *inode, struct list_head *dst,
+   1071                 struct nfs_commit_info *cinfo)
+   1072 {
+   1073         int ret = 0;
+   1074
+   1075         if (!atomic_long_read(&cinfo->mds->ncommit))
+   1076                 return 0;
+   1077         mutex_lock(&NFS_I(cinfo->inode)->commit_mutex);
+   1078         if (atomic_long_read(&cinfo->mds->ncommit) > 0) {
+   1079                 const int max = INT_MAX;
+   1080
+   1081                 ret = nfs_scan_commit_list(&cinfo->mds->list, dst,
+   1082                                            cinfo, max);
+   1083                 ret += pnfs_scan_commit_lists(inode, cinfo, max - ret);
+   1084         }
+   1085         mutex_unlock(&NFS_I(cinfo->inode)->commit_mutex);
+   1086         return ret;
+   1087 }
 
