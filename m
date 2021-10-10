@@ -2,210 +2,297 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6DC42801F
-	for <lists+linux-nfs@lfdr.de>; Sun, 10 Oct 2021 11:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8648B4281F4
+	for <lists+linux-nfs@lfdr.de>; Sun, 10 Oct 2021 16:36:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230315AbhJJJGw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 10 Oct 2021 05:06:52 -0400
-Received: from mail-dm6nam10on2104.outbound.protection.outlook.com ([40.107.93.104]:17665
-        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230267AbhJJJGw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 10 Oct 2021 05:06:52 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zr0GTGYZPAIYfphblF1QHiwYOhQLNhhTzjD/vUUuZG8C8URNcc/eZEQHpaNpbn7l5VB0gYPuXJa5jrtuLT11Qp7pWJD9jio95V2r/nFdRVbyfnwkYTpqGcQ2YQycdgHoRQucDUAdXzYfIbULJZUQBjFH7+SMZXvFEF+uaJFXWFl7z7VyJH6AA4M4p2/hTHBDzuWaJLu0YUcSYiuUSkp3YBzhKqgfjooffz1eJY5RTDGADktlDV0cG48aD79Egv9AM+ePw2ewhzcEx5M4PEJpHq0GJs/vTeqsS3E8Vavc6YPnyzcIFH+j+F6mtLzJG1espX3cUiZvR0bzMjrF6nST2w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BHd95GFBBs+9Hs+gBn/f1yB3+JvbGd4rmGBpxL5+AKw=;
- b=dbeCfYqbirqUGPIKfjhoWRX5ge0xn2MkzOHoYv3ljS5PWoxGgktZAkfY9B7HKlD2Cd9kZAkKxW7rvfw0Q5oxSGvZxdMyos3lvmDpG5QHqtYn5CpQyuc5q9ARCxAZTGk+ZbrOtuMj6qZXNeskFYeYQlV/Tebe+OB+/wq0Hj4n2epbeJChkBcnDwJGQO2cLZPkndonpFwSnNhhBjKrfxWv7+HPHrVIK6efld5EOBHjjkxwDuEhG9HYBBSdQMcZmG5UIlhMwsYV3WbAWxNIsQySdl5ZGFUmnfMCx2neKBZMGHmCkSJx0ih5q5gRkIR/QI/HQZbA3ya8guBdIYVOuol4rw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BHd95GFBBs+9Hs+gBn/f1yB3+JvbGd4rmGBpxL5+AKw=;
- b=cj7KPv387oQxmPvWpMnpOQLjGrF/KDLLqlRitaU6qBpDKJoqW4k0TtQcDCiOvH6vjpLWhxcaq+hOwr2fJDcJcqQ/irNAczRKIWymTyUxTNi+2kUiuKlwmkNprp83Id7L2gGM1w1ez0/dBrcraTgT/B9mTKjouOL/9VB7ybiZzmk=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB3879.namprd13.prod.outlook.com (2603:10b6:610:90::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.4; Sun, 10 Oct
- 2021 09:04:51 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486%7]) with mapi id 15.20.4608.013; Sun, 10 Oct 2021
- 09:04:51 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dwysocha@redhat.com" <dwysocha@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        id S231990AbhJJOiB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 10 Oct 2021 10:38:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25802 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231842AbhJJOiA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 10 Oct 2021 10:38:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1633876561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=TDT91PTGGwYVz4JzCliRytM3izQAiqWq+ydaW8Y5/FU=;
+        b=UN7cEbUgWN7NDhc/XNEIDdHPH+9CB72xt/bMPyaNGjrvvyB8wig3nUg+3Gjy3zN6jVuhYC
+        7qK5gzQnlWmXFkQW3+PxkVGswaEr+Is/fONJ+YScFOYDD8kJOOYN2TtrV2A46GvCoJ7JLu
+        1tPIAkKvB3pKDWVRxLLWkOTL2OdT2WU=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-ecXPe2n0P5Sqeomxxx8GMg-1; Sun, 10 Oct 2021 10:36:00 -0400
+X-MC-Unique: ecXPe2n0P5Sqeomxxx8GMg-1
+Received: by mail-ed1-f70.google.com with SMTP id g28-20020a50d0dc000000b003dae69dfe3aso13458355edf.7
+        for <linux-nfs@vger.kernel.org>; Sun, 10 Oct 2021 07:36:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TDT91PTGGwYVz4JzCliRytM3izQAiqWq+ydaW8Y5/FU=;
+        b=gzPh37CCtgDtR5qd3BcFxY7cppesfCLvAPq6l3EJhHoFBsP3hhQdVuKsnLFiaXLErD
+         D7qJCIOiV5WZiOR4hAAZt/2JsdeQp051ymuy7rENLhwT8UA8n9e2VJmx0ismntxZdGf0
+         Lqfpoa9nXhgiUGKiT36mPWO/JwmjtuAabHJSh95cOAvuTc2Nla3+ySugRrAlPxQj3X3V
+         P94e2ME2zdOJxKeNmV5k9XD9NXXlaNc+Mhq+LbBtJ3qYTJPoo5zpgCdq+wXnYel8b7oF
+         JMIvnEcv+NkHCl/CMIS8zNITpFnU/xO90bOQbIRx6VVNuqT7JN64xXgV4s3w3ma9IEmk
+         GpDQ==
+X-Gm-Message-State: AOAM533aQ5JdSK3GIPLXb3Bs6NrXDKJ0SgeBjD34J4v+TREdJJUGYyAU
+        YlzwreTTvNx+uyrjrrDuwj3/lo2oOrBhSzfK3sJiOhrm7ZSaPW35pCVgRLIaEQABSdbxXAJKKsZ
+        QYVu67MkkHaeqqQYhky65X8JYKRGHF7fkN9lo
+X-Received: by 2002:a17:906:a246:: with SMTP id bi6mr19382974ejb.389.1633876559031;
+        Sun, 10 Oct 2021 07:35:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxZ1Y8bDID3YkIu0LBTAx1d/ZHyAFxDr0V3gchiARuev6ZJGvvsEZmH4FfT/8ehnyvaYK/KR8NhePLSKjZUZao=
+X-Received: by 2002:a17:906:a246:: with SMTP id bi6mr19382955ejb.389.1633876558781;
+ Sun, 10 Oct 2021 07:35:58 -0700 (PDT)
+MIME-Version: 1.0
+References: <CALF+zOmahudY07tTDGcu7GFvKOOYUbboKoKk6dwhuCkGTXCUcA@mail.gmail.com>
+ <4c4591fc3e0a76dda77ea7de8ac43457c25fbfbb.camel@hammerspace.com>
+In-Reply-To: <4c4591fc3e0a76dda77ea7de8ac43457c25fbfbb.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Sun, 10 Oct 2021 10:35:21 -0400
+Message-ID: <CALF+zOkcW9Rm271dSfJ-ukB991iLboXLAVRwd-AosALjqb47Vg@mail.gmail.com>
 Subject: Re: Oops in nfs_scan_commit running xfstest generic/005 with NFSv4.2
  and hammerspace flexfiles server
-Thread-Topic: Oops in nfs_scan_commit running xfstest generic/005 with NFSv4.2
- and hammerspace flexfiles server
-Thread-Index: AQHXvRKNIwNNPcEg7kKtVz2BtayiyKvL8XiA
-Date:   Sun, 10 Oct 2021 09:04:51 +0000
-Message-ID: <4c4591fc3e0a76dda77ea7de8ac43457c25fbfbb.camel@hammerspace.com>
-References: <CALF+zOmahudY07tTDGcu7GFvKOOYUbboKoKk6dwhuCkGTXCUcA@mail.gmail.com>
-In-Reply-To: <CALF+zOmahudY07tTDGcu7GFvKOOYUbboKoKk6dwhuCkGTXCUcA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f9236e5b-0e72-4d67-9794-08d98bcd04ed
-x-ms-traffictypediagnostic: CH2PR13MB3879:
-x-microsoft-antispam-prvs: <CH2PR13MB3879D03ED45194A2430AF652B8B49@CH2PR13MB3879.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 2TDAlyeLcWDM9Exhar29weaX4QrHB7Ew1zp2A9ygimG30/cmd7dnjfU5qqEp2m++dM5jjcsMJ0psr5k1HtOEEyW5WaFSgomMS6qPVgonN+LBrNi9Ins1Sfou1GQKPUbIs+gbanlXegHM0CPGsovHGKpYO2vR5fluAiZIupCkMf6E4DIYbFJzdgAMhQb+P7C7RDUAg/lTij6hbJ+86Ty4MNdFhrk1cPxD0lkzA/M3uCLM4Bp4JdOCZNC6eQeqmGYUDpISVS3gauJE09o2kc+sYawbT7QLv8ShldU0/X/eqEFJHv23i8yspiu1mgm67cHWFx2LfX7/GKI0r/VjVNhmhnMHLr3wVhUU/MFfiVxbFBfmx1KWRy6cg/a+hhxxNXJS9l3kFP9hZuwrvnw3bdOhy8fqjCUe/3rG4eJcIupnvgcxY9ThF+QPFitCcxxJ//dXafm/ilD+DCp9W95CKbZMb4hzGGDB9tuC7QSmU79nsR/MkDiI7ua4Im2N4/g3lce9TeFRXabQ/ZtT4g4a3fWynuY6Dl8FtfgRNrU1kniAI0HyGGQOQsndYZ8VQT0G/kZzkNlW/7sx8rY0dSbQwRADByehXzs778YFEJOJXkVCADsweNwXjmBErJPeg9raBVqw/hh49NI/ni6MJHhk1E/40QqDH2DLBvVt8cHTLQYR70AAZTKbaS0dNEztGlObUBgpToVsO3eG4zAHt0VLPFFEodRdh+erbNvrOe9zjdhJWlg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(376002)(346002)(136003)(396003)(366004)(39830400003)(91956017)(6486002)(2906002)(8676002)(5660300002)(4326008)(508600001)(316002)(64756008)(122000001)(86362001)(76116006)(66446008)(6916009)(38100700002)(83380400001)(66476007)(66556008)(66946007)(2616005)(186003)(36756003)(38070700005)(71200400001)(8936002)(6506007)(53546011)(26005)(6512007)(41533002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VmV1WkVGQ3N1VXRQREE4TnVNR1g1cUtva08vMW5BZThRV3V6b2hlTzd1VHh4?=
- =?utf-8?B?N3ZNcmUycU9KaTBlb3U2ZWx5YkdNd3NQU3lIaG5sTGZ0eUk1RDN5VWtRNHlL?=
- =?utf-8?B?dU8xanRqb0w1M0QyQnkxTWRndGdwTVpLeitobFl3YjBVRm1jZ1JjOXlFckFP?=
- =?utf-8?B?QUZyazdhMUJNTFYwQ25YbjNBOSs3YVFhZWdvbWUrMHFMUVBsdVpubjd2MDdH?=
- =?utf-8?B?TG54bXhlUzVxYlBWbFFCRW5DN1lvcnZtalVYcEJrdnpEN05uSHVkRGxkZTVw?=
- =?utf-8?B?azZvWUdaeWgxbkszNTRXSkJqQ0RZS0Y4TmJxR2RHM0ZzSkFONHUxNVR3b3Yw?=
- =?utf-8?B?MHRWUFJZZmlnWW5UdGFCdFRSVHhqQjg4U0VFUE1zRDFDblBVamhQUVZOKytm?=
- =?utf-8?B?R2JHeC85aFVOTTdoUjVlYUx0UVlDYUdoYUFUWmh5WGtScTlLOHEvb3JlbkVx?=
- =?utf-8?B?S2tlTGpwZWpoL00yd29Nam5aK3BjZE5mV2p5bDJXejVDV1lvM2VmNk9jTDk3?=
- =?utf-8?B?RVNYcUkxd3VqVWc1VU5nNlk1dktjQURJMWQ4N0JWSzhDWGVNSWNkODVLOTVQ?=
- =?utf-8?B?RjhGbCs4T3lNd2lLT3JJRDFjbzdaUENzenNYNWtTS0c4K1lZczlzNEtFTUUz?=
- =?utf-8?B?cmJpeXAwS0RFazh6NE1ZTm5BQTNXaVVFZ3RkWGFaSDVTMFlDQmZOSzZXdjI5?=
- =?utf-8?B?VWkxV1h4d0lLNGtyMVhKOG1RZ3dpWmpPM2lGT1Rad2RBQVJaeWZINW11QkJm?=
- =?utf-8?B?RzFPVFhBb3gxaVVzWG9GVldNbkpCazNFaWtvSlFCcWUrSEtZcExISW95eG9H?=
- =?utf-8?B?UU5ZNmdOV05uZDRqek5jb2ZIcTgvQU1ZSHZOMjBCN2w2blVKWUdLSjZGRkJH?=
- =?utf-8?B?Z3kvcmdEWUxhUWVLU3A2dmdVcEJoeVRjd1pKa2ZvVnhVdnBndEI1azY4eG9I?=
- =?utf-8?B?dDBMeWdTRkVIY0MrcnVvc0trNXhlcmlKWnZRQzdDWndEaDU5UzBkS0h2NjlO?=
- =?utf-8?B?czhLOXI2b2lZbGY1Zi9zaE1tN0VpWUpKNXJQeUtKVll0N2NsMFpYc0d6NkFk?=
- =?utf-8?B?WEhHaU1JYUlZQXg3WWtMMm83MDZ4blpDOUk2RE04YStJMWZwMUlDUkdyUzdO?=
- =?utf-8?B?cjkyTHNVUVdXRS9yU1BuR2JpOGc5RXRIZy9RSExiSlF1bXdRaUJhV0w4dGYz?=
- =?utf-8?B?T01vbk5Ta2Nsa2dFRElUMmRLMHppcng1K0oybXkreXVyeUR6WFFab0dKVHp3?=
- =?utf-8?B?OXRqTzNSRjREd2UvaGQ5MDBjVkhHNEhjUmFzbVBpZldKM1VIS1dSY0dJSk9v?=
- =?utf-8?B?SGdad3JQdHhuNFdoWUdINkI3Q1NycTlNMjJtWDM3SHB6ZFI4eHBiaGNEMUtP?=
- =?utf-8?B?YkVucVdjdDN4ci9Oemo5RmorRFRiQ1crc2lsUzJOTGs5K1hBdGVOdHB1b0k1?=
- =?utf-8?B?R0xhK05iYmw5S3VKejBVOFNNOEs4N0phcm5SZnJna25SUEppU1FtWGcrVXVU?=
- =?utf-8?B?b3RNdDJEaHEzYUNEWVZSeEFjZXFtYnhMNGtSdmdteVJsUzEyVms3TGViNS83?=
- =?utf-8?B?SDRPRWg1L2NkU0xwYXNoRVhIVE14MFU5MVYvMEttT2tQSk4zMjBpQ3A4cEw2?=
- =?utf-8?B?eVN5bnJWYmp4TDNqSTF2ZENySFU0aDgxQzhYVHlGTzVPS3lMa2FlZm12Sk5D?=
- =?utf-8?B?TFRJeEVkVDJFTVJPQmtYMU5tQjJDU2k3eHp3YnRUSGxpbStoQldhTFExTFRa?=
- =?utf-8?B?bDFncUdJT1F6R0kzb0NTb29hSnJ4Q3AvMFFYNElFSlFuUEVRclhxZHRSMFFB?=
- =?utf-8?B?MVRsKy8zNlkydEtlcUdmdz09?=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <07CFC96DBA49DC4594289613D592960E@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f9236e5b-0e72-4d67-9794-08d98bcd04ed
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Oct 2021 09:04:51.5478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0HNK9FnpPgdp2eHmtFvCjAKo4D3y9jWzEpTCQaQmrtAPsQUM6jKxTg10BPLkWYs1bJRtN7e/onatWfb+0vCB4Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3879
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gU2F0LCAyMDIxLTEwLTA5IGF0IDA5OjM0IC0wNDAwLCBEYXZpZCBXeXNvY2hhbnNraSB3cm90
-ZToNCj4gVHJvbmQsDQo+IA0KPiBJIHdvbmRlciBpZiB5b3UgYXJlIGF3YXJlIG9mIHRoaXMgb3Ig
-bm90Lg0KPiANCj4gVGhpcyB3ZWVrIEkgcmFuIGEgbG90IG9mIHhmc3Rlc3RzIHdpdGggaGFtbWVy
-c3BhY2UgYW5kIG90aGVyIHNlcnZlcnMNCj4gd2l0aG91dCBhbnkgaXNzdWVzIGFuZCBqdXN0IG5v
-dyBzZWVpbmcgdGhpcyBvb3BzIChhZnRlciByZWJ1aWxkaW5nDQo+IGZyb20gYSBiYXNlIG9mIHlv
-dXIgdGVzdGluZyBicmFuY2ggYXQgMGFiYjg4OTViMDY1KS7CoCBJIHRoZW4gcmUtYnVpbHQNCj4g
-d2l0aCBqdXN0IHlvdXIgdGVzdGluZyBicmFuY2ggYW5kIGdvdCB0aGUgc2FtZSBvb3BzLsKgIFNh
-bWUgdGVzdCBwYXNzZXMNCj4gb24gNS4xNC4wLXJjNCAodmFuaWxsYSksIGFzIHdlbGwgYXMgcHJl
-dmlvdXMga2VybmVscyBJIHVzZWQgYXQNCj4gQmFrZUF0aG9uIHdpdGggdGhlIGZzY2FjaGUgYW5k
-IHJlYWRhaGVhZCBwYXRjaGVzIG9ubHkuwqAgSXQgcmVsaWFibHkNCj4gcGFuaWNzIGZvciBtZSBz
-byBsZXQgbWUga25vdyBpZiB5b3Ugd2FudCBhbnkgbW9yZSBpbmZvIG9yIGENCj4gcmVwcm9kdWN0
-aW9uIHdpdGggdHJhY2Vwb2ludHMsIGV0Yy7CoCBGWUksIEkgZG9uJ3QgdGhpbmsgdGhlIHNlcnZl
-cg0KPiBtYXR0ZXJzIGJlY2F1c2UgSSBjYW4gYWxzbyByZXByb2R1Y2Ugd2l0aCBhIHJoZWw4IHNl
-cnZlcg0KPiAoa2VybmVsLTQuMTguMC0zMDUuMTkuMS5lbDhfNCkgYW5kIEkgY2FuIGFsc28ganVz
-dCBydW4gJ2dlbmVyaWMvMDA1Jw0KPiBkaXJlY3RseSAtIHByZXZpb3VzIHRlc3RzIGRvbid0IG1h
-dHRlci4NCj4gDQo+IFvCoMKgIDE1Ljc2NzQyM10gbmZzNGZpbGVsYXlvdXRfaW5pdDogTkZTdjQg
-RmlsZSBMYXlvdXQgRHJpdmVyDQo+IFJlZ2lzdGVyaW5nLi4uDQo+IFvCoMKgIDI4LjYxNDQ0N10g
-bmZzNGZsZXhmaWxlbGF5b3V0X2luaXQ6IE5GU3Y0IEZsZXhmaWxlIExheW91dCBEcml2ZXINCj4g
-UmVnaXN0ZXJpbmcuLi4NCj4gW8KgwqAgMzAuMDI0NjE2XSBydW4gZnN0ZXN0cyBnZW5lcmljLzAw
-MSBhdCAyMDIxLTEwLTA5IDA5OjAxOjE0DQo+IFvCoMKgIDM3LjE4ODE2N10gcnVuIGZzdGVzdHMg
-Z2VuZXJpYy8wMDIgYXQgMjAyMS0xMC0wOSAwOTowMToyMQ0KPiBbwqDCoCAzOC4zNzI3NjddIHJ1
-biBmc3Rlc3RzIGdlbmVyaWMvMDAzIGF0IDIwMjEtMTAtMDkgMDk6MDE6MjMNCj4gW8KgwqAgMzgu
-NzEzMjE4XSBydW4gZnN0ZXN0cyBnZW5lcmljLzAwNCBhdCAyMDIxLTEwLTA5IDA5OjAxOjIzDQo+
-IFvCoMKgIDM5LjA2NTcwNV0gcnVuIGZzdGVzdHMgZ2VuZXJpYy8wMDUgYXQgMjAyMS0xMC0wOSAw
-OTowMToyMw0KPiBbwqDCoCAzOS43OTkwNzZdIGdlbmVyYWwgcHJvdGVjdGlvbiBmYXVsdCwgcHJv
-YmFibHkgZm9yIG5vbi1jYW5vbmljYWwNCj4gYWRkcmVzcyAweGZmZTgyNmU4ZThlNzg5N2M6IDAw
-MDAgWyMxXSBTTVAgUFRJDQo+IFvCoMKgIDM5LjgwNTA1OF0gQ1BVOiAwIFBJRDogNjIxMyBDb21t
-OiBybSBLZHVtcDogbG9hZGVkIE5vdCB0YWludGVkDQo+IDUuMTUuMC1yYzQtdHJvbmQtdGVzdGlu
-ZysgIzc2DQo+IFvCoMKgIDM5LjgwODMwMF0gSGFyZHdhcmUgbmFtZTogUUVNVSBTdGFuZGFyZCBQ
-QyAoUTM1ICsgSUNIOSwgMjAwOSksDQo+IEJJT1MgMS4xNC4wLTQuZmMzNCAwNC8wMS8yMDE0DQo+
-IFvCoMKgIDM5LjgxMDgxOV0gUklQOiAwMDEwOl9fbXV0ZXhfbG9jay5jb25zdHByb3AuMCsweDk3
-LzB4M2UwDQo+IFvCoMKgIDM5LjgxMjQzOF0gQ29kZTogNjUgZDggNWIgNDEgNWMgNDEgNWQgNDEg
-NWUgNDEgNWYgNWQgYzMgNjUgNDggOGINCj4gMDQgMjUgYzAgN2IgMDEgMDAgNDggOGIgMDAgYTgg
-MDggNzUgMWQgNDkgOGIgMDYgNDggODMgZTAgZjggMGYgODQgNzkNCj4gMDIgMDAgMDAgPDhiPiA1
-MCAzNCA4NSBkMiAwZiA4NSA1YyAwMiAwMCAwMCBlOCA1OSA4ZiA1NSBmZiA2NSA0OCA4YiAwNA0K
-PiAyNSBjMA0KPiBbwqDCoCAzOS44MTc0MThdIFJTUDogMDAxODpmZmZmYmI4ZTQ1NThiY2QwIEVG
-TEFHUzogMDAwMTAyODYNCj4gW8KgwqAgMzkuODE4NTQ2XSBSQVg6IGZmZTgyNmU4ZThlNzg5NDgg
-UkJYOiBmZmZmYmI4ZTQ1NThiZDcwIFJDWDoNCj4gZmZmZjkzMmU4OTMwMDAwMA0KPiBbwqDCoCAz
-OS44MjAwODddIFJEWDogZmZmZjkzMmU4OTMwMDAwMCBSU0k6IGZmZTgyNmU4ZThlNzg5NDggUkRJ
-Og0KPiBmZmZmOTMyZWFlMDFlZGYwDQo+IFvCoMKgIDM5LjgyMTU4M10gUkJQOiBmZmZmYmI4ZTQ1
-NThiZDI4IFIwODogMDAwMDAwMDAwMDAwMDAwMSBSMDk6DQo+IGZmZmZiYjhlNDU1OGJjYTANCj4g
-W8KgwqAgMzkuODIzMDkxXSBSMTA6IDAwMDAwMDAwMDAwMDAwMWQgUjExOiBmZmZmZmZmZmZmZmZj
-ZmNmIFIxMjoNCj4gMDAwMDAwMDAwMDAwMDAwMA0KPiBbwqDCoCAzOS44MjQ3OTZdIFIxMzogMDAw
-MDAwMDAwMDAwMDAwMCBSMTQ6IGZmZmY5MzJlYWUwMWVkZjAgUjE1Og0KPiAwMDAwMDAwMDAwMDAw
-MDAwDQo+IFvCoMKgIDM5LjgyNjMxOF0gRlM6wqAgMDAwMDdmYWM3ZGYwOTc0MCgwMDAwKSBHUzpm
-ZmZmOTMyZmY3YzAwMDAwKDAwMDApDQo+IGtubEdTOjAwMDAwMDAwMDAwMDAwMDANCj4gW8KgwqAg
-MzkuODI4MDM3XSBDUzrCoCAwMDEwIERTOiAwMDAwIEVTOiAwMDAwIENSMDogMDAwMDAwMDA4MDA1
-MDAzMw0KPiBbwqDCoCAzOS44MjkyNzVdIENSMjogMDAwMDU1NWY5YjdlMjAxOCBDUjM6IDAwMDAw
-MDAxMWRjOTYwMDUgQ1I0Og0KPiAwMDAwMDAwMDAwNzcwZWYwDQo+IFvCoMKgIDM5LjgzMDc4N10g
-RFIwOiAwMDAwMDAwMDAwMDAwMDAwIERSMTogMDAwMDAwMDAwMDAwMDAwMCBEUjI6DQo+IDAwMDAw
-MDAwMDAwMDAwMDANCj4gW8KgwqAgMzkuODMyMjc1XSBEUjM6IDAwMDAwMDAwMDAwMDAwMDAgRFI2
-OiAwMDAwMDAwMGZmZmUwZmYwIERSNzoNCj4gMDAwMDAwMDAwMDAwMDQwMA0KPiBbwqDCoCAzOS44
-MzM3NTZdIFBLUlU6IDU1NTU1NTU0DQo+IFvCoMKgIDM5LjgzNDM3N10gQ2FsbCBUcmFjZToNCj4g
-W8KgwqAgMzkuODM2MjE5XcKgID8gc2VjdXJpdHlfaW5vZGVfcGVybWlzc2lvbisweDMwLzB4NTAN
-Cj4gW8KgwqAgMzkuODM3MzY1XcKgIG5mc19zY2FuX2NvbW1pdCsweDM2LzB4YTAgW25mc10NCj4g
-W8KgwqAgMzkuODM4MzY3XcKgIF9fbmZzX2NvbW1pdF9pbm9kZSsweGY4LzB4MTYwIFtuZnNdDQo+
-IFvCoMKgIDM5LjgzOTQxN13CoCBuZnNfd2JfYWxsKzB4YTYvMHhmMCBbbmZzXQ0KPiBbwqDCoCAz
-OS44NDAzMDldwqAgbmZzNF9pbm9kZV9yZXR1cm5fZGVsZWdhdGlvbisweDU4LzB4ODAgW25mc3Y0
-XQ0KPiBbwqDCoCAzOS44NDE1NTRdwqAgbmZzNF9wcm9jX3JlbW92ZSsweGQxLzB4ZTAgW25mc3Y0
-XQ0KPiBbwqDCoCAzOS44NDI1ODldwqAgbmZzX3VubGluaysweGVjLzB4MmQwIFtuZnNdDQo+IFvC
-oMKgIDM5Ljg0MzQ2MV3CoCB2ZnNfdW5saW5rKzB4MTEzLzB4MjMwDQo+IFvCoMKgIDM5Ljg0NDI0
-NV3CoCBkb191bmxpbmthdCsweDE3MC8weDI4MA0KPiBbwqDCoCAzOS44NDUwNDBdwqAgX194NjRf
-c3lzX3VubGlua2F0KzB4MzMvMHg2MA0KPiBbwqDCoCAzOS44NDU5MjJdwqAgZG9fc3lzY2FsbF82
-NCsweDNiLzB4OTANCj4gW8KgwqAgMzkuODQ2NzI2XcKgIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJf
-aHdmcmFtZSsweDQ0LzB4YWUNCj4gDQoNCldob29wcy4uLiBJIGJlbGlldmUgdGhlIGZvbGxvd2lu
-ZyBwYXRjaCBvdWdodCB0byBmaXggaXQuIFRoYW5rcyBmb3INCnJlcG9ydGluZyB0aGlzIQ0KDQo4
-PC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KRnJv
-bSA2NGEwODIwNjRiN2IzNzUyNjM5NjBjNGYwMTFiYzk4NzVlZjUwZjZhIE1vbiBTZXAgMTcgMDA6
-MDA6MDAgMjAwMQ0KRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1c3RAaGFtbWVy
-c3BhY2UuY29tPg0KRGF0ZTogU3VuLCAxMCBPY3QgMjAyMSAxMDo1ODoxMiArMDIwMA0KU3ViamVj
-dDogW1BBVENIXSBORlN2NDogRml4ZXMgZm9yIG5mczRfaW5vZGVfcmV0dXJuX2RlbGVnYXRpb24o
-KQ0KDQpXZSBtdXN0bid0IGNhbGwgbmZzX3diX2FsbCgpIG9uIGFueXRoaW5nIG90aGVyIHRoYW4g
-YSByZWd1bGFyIGZpbGUuDQpGdXJ0aGVybW9yZSwgd2UgY2FuIGV4aXQgZWFybHkgd2hlbiB3ZSBk
-b24ndCBob2xkIGEgZGVsZWdhdGlvbi4NCg0KUmVwb3J0ZWQtYnk6IERhdmlkIFd5c29jaGFuc2tp
-IDxkd3lzb2NoYUByZWRoYXQuY29tPg0KU2lnbmVkLW9mZi1ieTogVHJvbmQgTXlrbGVidXN0IDx0
-cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KLS0tDQogZnMvbmZzL2RlbGVnYXRpb24u
-YyB8IDEwICsrKysrKy0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCA0IGRl
-bGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZnMvbmZzL2RlbGVnYXRpb24uYyBiL2ZzL25mcy9k
-ZWxlZ2F0aW9uLmMNCmluZGV4IDExMTE4Mzk4ZjQ5NS4uN2M5ZWI2NzlkYmRiIDEwMDY0NA0KLS0t
-IGEvZnMvbmZzL2RlbGVnYXRpb24uYw0KKysrIGIvZnMvbmZzL2RlbGVnYXRpb24uYw0KQEAgLTc1
-NSwxMSArNzU1LDEzIEBAIGludCBuZnM0X2lub2RlX3JldHVybl9kZWxlZ2F0aW9uKHN0cnVjdCBp
-bm9kZSAqaW5vZGUpDQogCXN0cnVjdCBuZnNfZGVsZWdhdGlvbiAqZGVsZWdhdGlvbjsNCiANCiAJ
-ZGVsZWdhdGlvbiA9IG5mc19zdGFydF9kZWxlZ2F0aW9uX3JldHVybihuZnNpKTsNCi0JLyogU3lu
-Y2hyb25vdXMgcmVjYWxsIG9mIGFueSBhcHBsaWNhdGlvbiBsZWFzZXMgKi8NCi0JYnJlYWtfbGVh
-c2UoaW5vZGUsIE9fV1JPTkxZIHwgT19SRFdSKTsNCi0JbmZzX3diX2FsbChpbm9kZSk7DQotCWlm
-IChkZWxlZ2F0aW9uICE9IE5VTEwpDQorCWlmIChkZWxlZ2F0aW9uICE9IE5VTEwpIHsNCisJCS8q
-IFN5bmNocm9ub3VzIHJlY2FsbCBvZiBhbnkgYXBwbGljYXRpb24gbGVhc2VzICovDQorCQlicmVh
-a19sZWFzZShpbm9kZSwgT19XUk9OTFkgfCBPX1JEV1IpOw0KKwkJaWYgKFNfSVNSRUcoaW5vZGUt
-PmlfbW9kZSkpDQorCQkJbmZzX3diX2FsbChpbm9kZSk7DQogCQlyZXR1cm4gbmZzX2VuZF9kZWxl
-Z2F0aW9uX3JldHVybihpbm9kZSwgZGVsZWdhdGlvbiwgMSk7DQorCX0NCiAJcmV0dXJuIDA7DQog
-fQ0KIA0KLS0gDQoyLjMxLjENCg0KDQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNs
-aWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNl
-LmNvbQ0KDQoNCg==
+On Sun, Oct 10, 2021 at 5:04 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Sat, 2021-10-09 at 09:34 -0400, David Wysochanski wrote:
+> > Trond,
+> >
+> > I wonder if you are aware of this or not.
+> >
+> > This week I ran a lot of xfstests with hammerspace and other servers
+> > without any issues and just now seeing this oops (after rebuilding
+> > from a base of your testing branch at 0abb8895b065).  I then re-built
+> > with just your testing branch and got the same oops.  Same test passes
+> > on 5.14.0-rc4 (vanilla), as well as previous kernels I used at
+> > BakeAthon with the fscache and readahead patches only.  It reliably
+> > panics for me so let me know if you want any more info or a
+> > reproduction with tracepoints, etc.  FYI, I don't think the server
+> > matters because I can also reproduce with a rhel8 server
+> > (kernel-4.18.0-305.19.1.el8_4) and I can also just run 'generic/005'
+> > directly - previous tests don't matter.
+> >
+> > [   15.767423] nfs4filelayout_init: NFSv4 File Layout Driver
+> > Registering...
+> > [   28.614447] nfs4flexfilelayout_init: NFSv4 Flexfile Layout Driver
+> > Registering...
+> > [   30.024616] run fstests generic/001 at 2021-10-09 09:01:14
+> > [   37.188167] run fstests generic/002 at 2021-10-09 09:01:21
+> > [   38.372767] run fstests generic/003 at 2021-10-09 09:01:23
+> > [   38.713218] run fstests generic/004 at 2021-10-09 09:01:23
+> > [   39.065705] run fstests generic/005 at 2021-10-09 09:01:23
+> > [   39.799076] general protection fault, probably for non-canonical
+> > address 0xffe826e8e8e7897c: 0000 [#1] SMP PTI
+> > [   39.805058] CPU: 0 PID: 6213 Comm: rm Kdump: loaded Not tainted
+> > 5.15.0-rc4-trond-testing+ #76
+> > [   39.808300] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+> > BIOS 1.14.0-4.fc34 04/01/2014
+> > [   39.810819] RIP: 0010:__mutex_lock.constprop.0+0x97/0x3e0
+> > [   39.812438] Code: 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 48 8b
+> > 04 25 c0 7b 01 00 48 8b 00 a8 08 75 1d 49 8b 06 48 83 e0 f8 0f 84 79
+> > 02 00 00 <8b> 50 34 85 d2 0f 85 5c 02 00 00 e8 59 8f 55 ff 65 48 8b 04
+> > 25 c0
+> > [   39.817418] RSP: 0018:ffffbb8e4558bcd0 EFLAGS: 00010286
+> > [   39.818546] RAX: ffe826e8e8e78948 RBX: ffffbb8e4558bd70 RCX:
+> > ffff932e89300000
+> > [   39.820087] RDX: ffff932e89300000 RSI: ffe826e8e8e78948 RDI:
+> > ffff932eae01edf0
+> > [   39.821583] RBP: ffffbb8e4558bd28 R08: 0000000000000001 R09:
+> > ffffbb8e4558bca0
+> > [   39.823091] R10: 000000000000001d R11: ffffffffffffcfcf R12:
+> > 0000000000000000
+> > [   39.824796] R13: 0000000000000000 R14: ffff932eae01edf0 R15:
+> > 0000000000000000
+> > [   39.826318] FS:  00007fac7df09740(0000) GS:ffff932ff7c00000(0000)
+> > knlGS:0000000000000000
+> > [   39.828037] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   39.829275] CR2: 0000555f9b7e2018 CR3: 000000011dc96005 CR4:
+> > 0000000000770ef0
+> > [   39.830787] DR0: 0000000000000000 DR1: 0000000000000000 DR2:
+> > 0000000000000000
+> > [   39.832275] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7:
+> > 0000000000000400
+> > [   39.833756] PKRU: 55555554
+> > [   39.834377] Call Trace:
+> > [   39.836219]  ? security_inode_permission+0x30/0x50
+> > [   39.837365]  nfs_scan_commit+0x36/0xa0 [nfs]
+> > [   39.838367]  __nfs_commit_inode+0xf8/0x160 [nfs]
+> > [   39.839417]  nfs_wb_all+0xa6/0xf0 [nfs]
+> > [   39.840309]  nfs4_inode_return_delegation+0x58/0x80 [nfsv4]
+> > [   39.841554]  nfs4_proc_remove+0xd1/0xe0 [nfsv4]
+> > [   39.842589]  nfs_unlink+0xec/0x2d0 [nfs]
+> > [   39.843461]  vfs_unlink+0x113/0x230
+> > [   39.844245]  do_unlinkat+0x170/0x280
+> > [   39.845040]  __x64_sys_unlinkat+0x33/0x60
+> > [   39.845922]  do_syscall_64+0x3b/0x90
+> > [   39.846726]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> >
+>
+> Whoops... I believe the following patch ought to fix it. Thanks for
+> reporting this!
+>
+> 8<---------------------------------------------------
+> From 64a082064b7b375263960c4f011bc9875ef50f6a Mon Sep 17 00:00:00 2001
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Date: Sun, 10 Oct 2021 10:58:12 +0200
+> Subject: [PATCH] NFSv4: Fixes for nfs4_inode_return_delegation()
+>
+> We mustn't call nfs_wb_all() on anything other than a regular file.
+> Furthermore, we can exit early when we don't hold a delegation.
+>
+> Reported-by: David Wysochanski <dwysocha@redhat.com>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/delegation.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
+> index 11118398f495..7c9eb679dbdb 100644
+> --- a/fs/nfs/delegation.c
+> +++ b/fs/nfs/delegation.c
+> @@ -755,11 +755,13 @@ int nfs4_inode_return_delegation(struct inode *inode)
+>         struct nfs_delegation *delegation;
+>
+>         delegation = nfs_start_delegation_return(nfsi);
+> -       /* Synchronous recall of any application leases */
+> -       break_lease(inode, O_WRONLY | O_RDWR);
+> -       nfs_wb_all(inode);
+> -       if (delegation != NULL)
+> +       if (delegation != NULL) {
+> +               /* Synchronous recall of any application leases */
+> +               break_lease(inode, O_WRONLY | O_RDWR);
+> +               if (S_ISREG(inode->i_mode))
+> +                       nfs_wb_all(inode);
+>                 return nfs_end_delegation_return(inode, delegation, 1);
+> +       }
+>         return 0;
+>  }
+>
+> --
+> 2.31.1
+>
+>
+
+Great, that seems to have fixed it!
+
+Now I get the below WARN_ON pop though indicating
+nfs_have_writebacks() is true when inside nfs_clear_inode() and I
+think I saw this once before.
+I think we need some simple fixup to nfs_have_writebacks() due to the
+union-ization in your patch:
+commit b712e11b99eadba5b4003dd815adb368835fb5d5
+Author: Trond Myklebust <trond.myklebust@hammerspace.com>
+Date:   Tue Sep 28 17:41:41 2021 -0400
+
+    NFS: Save some space in the inode
+
+    Save some space in the nfs_inode by setting up an anonymous union with
+    the fields that are peculiar to a specific type of filesystem object.
+
+    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+
+
+You may want to fold something like this into the above which fixes
+the WARN for me:
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index a5aef2cbe4ee..5a110ecf2d85 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -579,7 +579,9 @@ extern int nfs_access_get_cached(struct inode
+*inode, const struct cred *cred, s
+ static inline int
+ nfs_have_writebacks(struct inode *inode)
+ {
+-       return atomic_long_read(&NFS_I(inode)->nrequests) != 0;
++       if (S_ISREG(inode->i_mode))
++               return atomic_long_read(&NFS_I(inode)->nrequests) != 0;
++       return 0;
+ }
+
+ /*
+
+
+[   77.421040] run fstests generic/001 at 2021-10-10 10:01:29
+[   84.454129] run fstests generic/002 at 2021-10-10 10:01:37
+[   85.578188] run fstests generic/003 at 2021-10-10 10:01:38
+[   85.894748] run fstests generic/004 at 2021-10-10 10:01:38
+[   86.242081] run fstests generic/005 at 2021-10-10 10:01:38
+[   87.054151] ------------[ cut here ]------------
+[   87.056407] WARNING: CPU: 7 PID: 6236 at fs/nfs/inode.c:123
+nfs_clear_inode+0x3b/0x50 [nfs]
+[   87.060392] Modules linked in: nfs_layout_flexfiles rpcsec_gss_krb5
+nfs_layout_nfsv41_files nfsv4 dns_resolver nfsv3 nfs nft_fib_inet
+nft_fib_ipv4 nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4
+nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack
+nf_defrag_ipv6 nf_defrag_ipv4 ip_set rfkill nf_tables nfnetlink
+cachefiles fscache netfs intel_rapl_msr intel_rapl_common
+isst_if_common kvm_intel kvm iTCO_wdt intel_pmc_bxt
+iTCO_vendor_support joydev virtio_balloon irqbypass i2c_i801 i2c_smbus
+lpc_ich nfsd nfs_acl lockd auth_rpcgss grace drm sunrpc fuse zram
+ip_tables xfs crct10dif_pclmul crc32_pclmul crc32c_intel
+ghash_clmulni_intel serio_raw virtio_console virtio_blk virtio_net
+net_failover failover qemu_fw_cfg
+[   87.075262] CPU: 7 PID: 6236 Comm: rm Kdump: loaded Not tainted
+5.15.0-rc4-fscache-remove-old-io-nfs-fixes-trond2-readahead2+ #78
+[   87.077057] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
+BIOS 1.14.0-4.fc34 04/01/2014
+[   87.078376] RIP: 0010:nfs_clear_inode+0x3b/0x50 [nfs]
+[   87.079212] Code: 85 c0 75 26 48 8b 55 88 48 8d 45 88 48 39 c2 75
+28 48 89 ef e8 76 ff ff ff 48 89 ef e8 9e b1 ff ff 48 89 ef 5d e9 f5
+93 01 00 <0f> 0b 48 8b 55 88 48 8d 45 88 48 39 c2 74 d8 0f 0b eb d4 66
+90 0f
+[   87.082029] RSP: 0018:ffffb7a9c5597e80 EFLAGS: 00010286
+[   87.082865] RAX: ffff8b03b8a75078 RBX: ffffffffc0e11fe0 RCX: 0000000000000000
+[   87.083968] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff9c30f8a75138
+[   87.085097] RBP: ffff9c30f8a75138 R08: fffffffffffffffe R09: 0000000000000000
+[   87.086224] R10: ffff9c30c0b43300 R11: 0000000000000003 R12: ffff9c30f8a75250
+[   87.087332] R13: ffff9c30c1657000 R14: ffff9c30f8a75138 R15: ffff9c30f054b3c0
+[   87.088499] FS:  00007f9dd7864740(0000) GS:ffff9c3237dc0000(0000)
+knlGS:0000000000000000
+[   87.089756] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   87.090868] CR2: 000055b8f711f018 CR3: 0000000105a6a005 CR4: 0000000000770ee0
+[   87.091974] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   87.093089] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   87.094207] PKRU: 55555554
+[   87.094661] Call Trace:
+[   87.095080]  nfs4_evict_inode+0x57/0x70 [nfsv4]
+[   87.095853]  evict+0xd1/0x180
+[   87.096357]  do_unlinkat+0x198/0x280
+[   87.096964]  __x64_sys_unlinkat+0x33/0x60
+[   87.097615]  do_syscall_64+0x3b/0x90
+[   87.098218]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+[   87.099008] RIP: 0033:0x7f9dd7959e8b
+[   87.099593] Code: 73 01 c3 48 8b 0d ed ff 0c 00 f7 d8 64 89 01 48
+83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 07 01 00
+00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d bd ff 0c 00 f7 d8 64 89
+01 48
+[   87.102601] RSP: 002b:00007fff2dfde878 EFLAGS: 00000246 ORIG_RAX:
+0000000000000107
+[   87.103771] RAX: ffffffffffffffda RBX: 000055b8f711b7e0 RCX: 00007f9dd7959e8b
+[   87.104871] RDX: 0000000000000000 RSI: 000055b8f711a380 RDI: 00000000ffffff9c
+[   87.106158] RBP: 000055b8f711a2f0 R08: 0000000000000003 R09: 0000000000000000
+[   87.107266] R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000000000
+[   87.108379] R13: 00007fff2dfde9a0 R14: 0000000000000000 R15: 0000000000000002
+[   87.109477] ---[ end trace a1355ed0b42315fa ]---
+[   87.429954] run fstests generic/006 at 2021-10-10 10:01:39
+
+    118 void nfs_clear_inode(struct inode *inode)
+    119 {
+    120         /*
+    121          * The following should never happen...
+    122          */
+    123         WARN_ON_ONCE(nfs_have_writebacks(inode));
+    124         WARN_ON_ONCE(!list_empty(&NFS_I(inode)->open_files));
+    125         nfs_zap_acl_cache(inode);
+    126         nfs_access_zap_cache(inode);
+    127         nfs_fscache_clear_inode(inode);
+    128 }
+
