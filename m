@@ -2,90 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 63A28429079
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Oct 2021 16:07:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD0934291E9
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Oct 2021 16:33:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241322AbhJKOJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Oct 2021 10:09:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S239272AbhJKOGk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 11 Oct 2021 10:06:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id F3F8E61214;
-        Mon, 11 Oct 2021 14:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1633960824;
-        bh=50oME831S3Wg+JzgZ5JeOp45VWeZ+pM3vP9xiNjtWNk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wZqTxlRiBGbc5UDUhm/2VYFvoNcPqasJiUDU2TSf9U2WnPp+CEQTZBMBBVsSmpc27
-         loCHOegMolWHoibcV1lXhszxQQ9q1gb48al9axrK9YK6HUdM4oT5k2dfD3y1shRuvT
-         jhgkqEjuHy3cniWhuqFJMmCTktigYwq7lfSdbLjw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.14 086/151] netfs: Fix READ/WRITE confusion when calling iov_iter_xarray()
-Date:   Mon, 11 Oct 2021 15:45:58 +0200
-Message-Id: <20211011134520.620511034@linuxfoundation.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211011134517.833565002@linuxfoundation.org>
-References: <20211011134517.833565002@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S237467AbhJKOfR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Oct 2021 10:35:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236626AbhJKOea (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Oct 2021 10:34:30 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93024C0619C9
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Oct 2021 07:30:31 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C5D9D6C87; Mon, 11 Oct 2021 10:30:28 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C5D9D6C87
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1633962628;
+        bh=pw94WeFNjbfjtk6jI69r6Y50vS1l1t8fAH0I1Y6NJOU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hj0XCiZ2wA4dU9ULh/oJvt5GqKi7i5C/rfejUEuiFc3/ec/QlWyNPrvTUvAeqoNVj
+         D+noWl4IZrEDy6yCLUm3KAQHNsxNzbv1/F1Q2U2hwd0LB58hda5SUmgY6dmvNeumU9
+         xeZg8AoWx5IPg8euP+Yvr/McefVuco1rsDcOokbY=
+Date:   Mon, 11 Oct 2021 10:30:28 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Scott Mayhew <smayhew@redhat.com>, Neil Brown <neilb@suse.de>,
+        Timothy Pearson <tpearson@raptorengineering.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@gmail.com>
+Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
+Message-ID: <20211011143028.GB22387@fieldses.org>
+References: <281642234.3818.1625478269194.JavaMail.zimbra@raptorengineeringinc.com>
+ <162855621114.22632.14151019687856585770@noble.neil.brown.name>
+ <20210812144428.GA9536@fieldses.org>
+ <162880418532.15074.7140645794203395299@noble.neil.brown.name>
+ <YWCpnsdVqssFaLrf@aion.usersys.redhat.com>
+ <589AFA4F-DF8E-45A3-8299-54E820E33169@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <589AFA4F-DF8E-45A3-8299-54E820E33169@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+On Sat, Oct 09, 2021 at 05:33:18PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Oct 8, 2021, at 4:27 PM, Scott Mayhew <smayhew@redhat.com> wrote:
+> > 
+> > On Fri, 13 Aug 2021, NeilBrown wrote:
+> > 
+> >> On Fri, 13 Aug 2021, J.  Bruce Fields wrote:
+> >>> On Tue, Aug 10, 2021 at 10:43:31AM +1000, NeilBrown wrote:
+> >>>> 
+> >>>> The problem here appears to be that a signalled task is being retried
+> >>>> without clearing the SIGNALLED flag.  That is causing the infinite loop
+> >>>> and the soft lockup.
+> >>>> 
+> >>>> This bug appears to have been introduced in Linux 5.2 by
+> >>>> Commit: ae67bd3821bb ("SUNRPC: Fix up task signalling")
+> >>> 
+> >>> I wonder how we arrived here.  Does it require that an rpc task returns
+> >>> from one of those rpc_delay() calls just as rpc_shutdown_client() is
+> >>> signalling it?  That's the only way async tasks get signalled, I think.
+> >> 
+> >> I don't think "just as" is needed.
+> >> I think it could only happen if rpc_shutdown_client() were called when
+> >> there were active tasks - presumably from nfsd4_process_cb_update(), but
+> >> I don't know the callback code well.
+> >> If any of those active tasks has a ->done handler which might try to
+> >> reschedule the task when tk_status == -ERESTARTSYS, then you get into
+> >> the infinite loop.
+> > 
+> > This thread seems to have fizzled out, but I'm pretty sure I hit this
+> > during the Virtual Bakeathon yesterday.  My server was unresponsive but
+> > I eventually managed to get a vmcore.
+> > 
+> > [182411.119788] receive_cb_reply: Got unrecognized reply: calldir 0x1 xpt_bc_xprt 00000000f2f40905 xid 5d83adfb
+> > [182437.775113] watchdog: BUG: soft lockup - CPU#1 stuck for 26s! [kworker/u4:1:216458]
+> > [182437.775633] Modules linked in: nfs_layout_flexfiles nfsv3 nfs_layout_nfsv41_files bluetooth ecdh_generic ecc rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache netfs rpcrdma rdma_cm iw_cm ib_cm ib_core tun rfkill nft_fib_inet nft_fib_ipv4 nft_fib_ipv6 nft_fib isofs cdrom nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set nf_tables nfnetlink xfs intel_rapl_msr intel_rapl_common libcrc32c kvm_intel qxl kvm drm_ttm_helper ttm drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops irqbypass cec joydev virtio_balloon pcspkr i2c_piix4 nfsd auth_rpcgss nfs_acl lockd grace sunrpc drm fuse ext4 mbcache jbd2 ata_generic crct10dif_pclmul crc32_pclmul crc32c_intel ghash_clmulni_intel virtio_net serio_raw ata_piix net_failover libata virtio_blk virtio_scsi failover dm_mirror dm_region_hash dm_log dm_mod
+> > [182437.780157] CPU: 1 PID: 216458 Comm: kworker/u4:1 Kdump: loaded Not tainted 5.14.0-5.el9.x86_64 #1
+> > [182437.780894] Hardware name: DigitalOcean Droplet, BIOS 20171212 12/12/2017
+> > [182437.781567] Workqueue: rpciod rpc_async_schedule [sunrpc]
+> > [182437.782500] RIP: 0010:try_to_grab_pending+0x12/0x160
+> > [182437.783104] Code: e7 e8 72 f3 ff ff e9 6e ff ff ff 48 89 df e8 65 f3 ff ff eb b7 0f 1f 00 0f 1f 44 00 00 41 55 41 54 55 48 89 d5 53 48 89 fb 9c <58> fa 48 89 02 40 84 f6 0f 85 92 00 00 00 f0 48 0f ba 2b 00 72 09
+> > [182437.784261] RSP: 0018:ffffb5b24066fd30 EFLAGS: 00000246
+> > [182437.785052] RAX: 0000000000000000 RBX: ffffffffc05e0768 RCX: 00000000000007d0
+> > [182437.785760] RDX: ffffb5b24066fd60 RSI: 0000000000000001 RDI: ffffffffc05e0768
+> > [182437.786399] RBP: ffffb5b24066fd60 R08: ffffffffc05e0708 R09: ffffffffc05e0708
+> > [182437.787010] R10: 0000000000000003 R11: 0000000000000003 R12: ffffffffc05e0768
+> > [182437.787621] R13: ffff9daa40312400 R14: 00000000000007d0 R15: 0000000000000000
+> > [182437.788235] FS:  0000000000000000(0000) GS:ffff9daa5bd00000(0000) knlGS:0000000000000000
+> > [182437.788859] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [182437.789483] CR2: 00007f8f73d5d828 CR3: 000000008a010003 CR4: 00000000001706e0
+> > [182437.790188] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [182437.790831] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [182437.791522] Call Trace:
+> > [182437.792183]  mod_delayed_work_on+0x3c/0x90
+> > [182437.792866]  __rpc_sleep_on_priority_timeout+0x107/0x110 [sunrpc]
+> > [182437.793553]  rpc_delay+0x56/0x90 [sunrpc]
+> > [182437.794236]  nfsd4_cb_sequence_done+0x202/0x290 [nfsd]
+> > [182437.794910]  nfsd4_cb_done+0x18/0xf0 [nfsd]
+> > [182437.795974]  rpc_exit_task+0x58/0x100 [sunrpc]
+> > [182437.796955]  ? rpc_do_put_task+0x60/0x60 [sunrpc]
+> > [182437.797645]  __rpc_execute+0x5e/0x250 [sunrpc]
+> > [182437.798375]  rpc_async_schedule+0x29/0x40 [sunrpc]
+> > [182437.799043]  process_one_work+0x1e6/0x380
+> > [182437.799703]  worker_thread+0x53/0x3d0
+> > [182437.800393]  ? process_one_work+0x380/0x380
+> > [182437.801029]  kthread+0x10f/0x130
+> > [182437.801686]  ? set_kthread_struct+0x40/0x40
+> > [182437.802333]  ret_from_fork+0x22/0x30
+> > 
+> > The process causing the soft lockup warnings:
+> > 
+> > crash> set 216458
+> >    PID: 216458
+> > COMMAND: "kworker/u4:1"
+> >   TASK: ffff9da94281e200  [THREAD_INFO: ffff9da94281e200]
+> >    CPU: 0
+> >  STATE: TASK_RUNNING (ACTIVE)
+> > crash> bt
+> > PID: 216458  TASK: ffff9da94281e200  CPU: 0   COMMAND: "kworker/u4:1"
+> > #0 [fffffe000000be50] crash_nmi_callback at ffffffffb3055c31
+> > #1 [fffffe000000be58] nmi_handle at ffffffffb30268f8
+> > #2 [fffffe000000bea0] default_do_nmi at ffffffffb3a36d42
+> > #3 [fffffe000000bec8] exc_nmi at ffffffffb3a36f49
+> > #4 [fffffe000000bef0] end_repeat_nmi at ffffffffb3c013cb
+> >    [exception RIP: add_timer]
+> >    RIP: ffffffffb317c230  RSP: ffffb5b24066fd58  RFLAGS: 00000046
+> >    RAX: 000000010b3585fc  RBX: 0000000000000000  RCX: 00000000000007d0
+> >    RDX: ffffffffc05e0768  RSI: ffff9daa40312400  RDI: ffffffffc05e0788
+> >    RBP: 0000000000002000   R8: ffffffffc05e0770   R9: ffffffffc05e0788
+> >    R10: 0000000000000003  R11: 0000000000000003  R12: ffffffffc05e0768
+> >    R13: ffff9daa40312400  R14: 00000000000007d0  R15: 0000000000000000
+> >    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+> > --- <NMI exception stack> ---
+> > #5 [ffffb5b24066fd58] add_timer at ffffffffb317c230
+> > #6 [ffffb5b24066fd58] mod_delayed_work_on at ffffffffb3103247
+> > #7 [ffffb5b24066fd98] __rpc_sleep_on_priority_timeout at ffffffffc0580547 [sunrpc]
+> > #8 [ffffb5b24066fdc8] rpc_delay at ffffffffc0589ed6 [sunrpc]
+> > #9 [ffffb5b24066fde8] nfsd4_cb_sequence_done at ffffffffc06731b2 [nfsd]
+> > #10 [ffffb5b24066fe10] nfsd4_cb_done at ffffffffc0673258 [nfsd]
+> > #11 [ffffb5b24066fe30] rpc_exit_task at ffffffffc05800a8 [sunrpc]
+> > #12 [ffffb5b24066fe40] __rpc_execute at ffffffffc0589fee [sunrpc]
+> > #13 [ffffb5b24066fe70] rpc_async_schedule at ffffffffc058a209 [sunrpc]
+> > #14 [ffffb5b24066fe88] process_one_work at ffffffffb31026c6
+> > #15 [ffffb5b24066fed0] worker_thread at ffffffffb31028b3
+> > #16 [ffffb5b24066ff10] kthread at ffffffffb310960f
+> > #17 [ffffb5b24066ff50] ret_from_fork at ffffffffb30034f2
+> > 
+> > Looking at the rpc_task being executed:
+> > 
+> > crash> rpc_task.tk_status,tk_callback,tk_action,tk_runstate,tk_client,tk_flags ffff9da94120bd00
+> >  tk_status = 0x0
+> >  tk_callback = 0xffffffffc057bc60 <__rpc_atrun>
+> >  tk_action = 0xffffffffc0571f20 <call_start>
+> >  tk_runstate = 0x47
+> >  tk_client = 0xffff9da958909c00
+> >  tk_flags = 0x2281
+> > 
+> > tk_runstate has the following flags set: RPC_TASK_SIGNALLED, RPC_TASK_ACTIVE,
+> > RPC_TASK_QUEUED, and RPC_TASK_RUNNING.
+> > 
+> > tk_flags is RPC_TASK_NOCONNECT|RPC_TASK_SOFT|RPC_TASK_DYNAMIC|RPC_TASK_ASYNC.
+> > 
+> > There's another kworker thread calling rpc_shutdown_client() via
+> > nfsd4_process_cb_update():
+> > 
+> > crash> bt 0x342a3
+> > PID: 213667  TASK: ffff9daa4fde9880  CPU: 1   COMMAND: "kworker/u4:4"
+> > #0 [ffffb5b24077bbe0] __schedule at ffffffffb3a40ec6
+> > #1 [ffffb5b24077bc60] schedule at ffffffffb3a4124c
+> > #2 [ffffb5b24077bc78] schedule_timeout at ffffffffb3a45058
+> > #3 [ffffb5b24077bcd0] rpc_shutdown_client at ffffffffc056fbb3 [sunrpc]
+> > #4 [ffffb5b24077bd20] nfsd4_process_cb_update at ffffffffc0672c6c [nfsd]
+> > #5 [ffffb5b24077be68] nfsd4_run_cb_work at ffffffffc0672f0f [nfsd]
+> > #6 [ffffb5b24077be88] process_one_work at ffffffffb31026c6
+> > #7 [ffffb5b24077bed0] worker_thread at ffffffffb31028b3
+> > #8 [ffffb5b24077bf10] kthread at ffffffffb310960f
+> > #9 [ffffb5b24077bf50] ret_from_fork at ffffffffb30034f2
+> > 
+> > The rpc_clnt being shut down is:
+> > 
+> > crash> nfs4_client.cl_cb_client ffff9daa454db808
+> >  cl_cb_client = 0xffff9da958909c00
+> > 
+> > Which is the same as the tk_client for the rpc_task being executed by the
+> > thread triggering the soft lockup warnings.
+> 
+> I've seen a similar issue before.
+> 
+> There is a race between shutting down the client (which kills
+> running RPC tasks) and some process starting another RPC task
+> under this client.
 
-[ Upstream commit 330de47d14af0c3995db81cc03cf5ca683d94d81 ]
+Neil's analysis looked pretty convincing:
 
-Fix netfs_clear_unread() to pass READ to iov_iter_xarray() instead of WRITE
-(the flag is about the operation accessing the buffer, not what sort of
-access it is doing to the buffer).
+https://lore.kernel.org/linux-nfs/589AFA4F-DF8E-45A3-8299-54E820E33169@oracle.com/T/#m9c84d4c8f71422f4f10b1e4b0fae442af449366a
 
-Fixes: 3d3c95046742 ("netfs: Provide readahead and readpage netfs helpers")
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
-cc: linux-afs@lists.infradead.org
-cc: ceph-devel@vger.kernel.org
-cc: linux-cifs@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: v9fs-developer@lists.sourceforge.net
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-mm@kvack.org
-Link: https://lore.kernel.org/r/162729351325.813557.9242842205308443901.stgit@warthog.procyon.org.uk/
-Link: https://lore.kernel.org/r/162886603464.3940407.3790841170414793899.stgit@warthog.procyon.org.uk
-Link: https://lore.kernel.org/r/163239074602.1243337.14154704004485867017.stgit@warthog.procyon.org.uk
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/netfs/read_helper.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Assuming this is the same thing--he thought it was a regression due to
+ae67bd3821bb ("SUNRPC: Fix up task signalling").  I'm not sure if the
+bug is in that patch or if it's uncovering a preexisting bug in how nfsd
+reschedules callbacks.
 
-diff --git a/fs/netfs/read_helper.c b/fs/netfs/read_helper.c
-index 0b6cd3b8734c..994ec22d4040 100644
---- a/fs/netfs/read_helper.c
-+++ b/fs/netfs/read_helper.c
-@@ -150,7 +150,7 @@ static void netfs_clear_unread(struct netfs_read_subrequest *subreq)
- {
- 	struct iov_iter iter;
- 
--	iov_iter_xarray(&iter, WRITE, &subreq->rreq->mapping->i_pages,
-+	iov_iter_xarray(&iter, READ, &subreq->rreq->mapping->i_pages,
- 			subreq->start + subreq->transferred,
- 			subreq->len   - subreq->transferred);
- 	iov_iter_zero(iov_iter_count(&iter), &iter);
--- 
-2.33.0
-
-
-
+--b.
