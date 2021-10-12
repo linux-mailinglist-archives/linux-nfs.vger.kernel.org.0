@@ -2,63 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 070AB42A704
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Oct 2021 16:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6317742A8EB
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Oct 2021 17:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230195AbhJLOUA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Oct 2021 10:20:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57178 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236695AbhJLOUA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Oct 2021 10:20:00 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90362C061570
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 07:17:58 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BC87741A2; Tue, 12 Oct 2021 10:17:57 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BC87741A2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1634048277;
-        bh=JJWMEnbd1NP3JhFbdemzAVi/Txh+ZaSSqvzRndElr6A=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=WQeDMtqLDqc9r+1yk9GWyqKa1gIGDs+pbVXg67l26/Kkqig+Lv1/WJqbqtYWUQlvK
-         +cAWF71fYtHCWwmhTtNI6uG/6AGIW0/FKg1SrLrFWsp1N2YiYZKXBkkRpPLv69gW9x
-         rd/NoQvyWwXp8rUYH1cEDiP1skCArGA9WR0ZbdJI=
-Date:   Tue, 12 Oct 2021 10:17:57 -0400
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     bfields@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] Clean up svc scheduler
-Message-ID: <20211012141757.GB6249@fieldses.org>
-References: <163363775944.2295.17512762002999927909.stgit@bazille.1015granger.net>
+        id S237377AbhJLP7T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Oct 2021 11:59:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46224 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234892AbhJLP7S (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Oct 2021 11:59:18 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 03E3160F3A;
+        Tue, 12 Oct 2021 15:57:16 +0000 (UTC)
+Subject: [PATCH v1 0/2] Update synopsis of .pc_decode callback
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     bfields@redhat.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 12 Oct 2021 11:57:15 -0400
+Message-ID: <163405415790.4278.17099842754425799312.stgit@bazille.1015granger.net>
+User-Agent: StGit/1.1+62.ged16
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163363775944.2295.17512762002999927909.stgit@bazille.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 07, 2021 at 04:17:17PM -0400, Chuck Lever wrote:
-> Hi Bruce. I forgot that these two go together. Sorry about that.
-> 
-> "SUNRPC: Simplify the SVC dispatch code path" is unchanged from
-> its initial posting a few minutes ago.
+Hi Bruce-
 
-Looks good to me, thanks; applied.--b.
+As we discussed many moons ago, here are clean-up patches that
+modernize the .pc_decode callback's synopsis, based on the
+recent XDR overhaul work.
 
-> 
-> ---
-> 
-> Chuck Lever (2):
->       SUNRPC: Simplify the SVC dispatch code path
->       SUNRPC: De-duplicate .pc_release() call sites
-> 
-> 
->  include/linux/sunrpc/svc.h |  5 +--
->  net/sunrpc/svc.c           | 69 ++++----------------------------------
->  2 files changed, 8 insertions(+), 66 deletions(-)
-> 
-> --
-> Chuck Lever
+---
+
+Chuck Lever (2):
+      SUNRPC: Replace the "__be32 *p" parameter to .pc_decode
+      SUNRPC: Change return value type of .pc_decode
+
+
+ fs/lockd/svc.c             |   3 +-
+ fs/lockd/xdr.c             | 123 +++++++++++++---------------
+ fs/lockd/xdr4.c            | 124 ++++++++++++++--------------
+ fs/nfsd/nfs2acl.c          |  36 ++++----
+ fs/nfsd/nfs3acl.c          |  26 +++---
+ fs/nfsd/nfs3xdr.c          | 163 +++++++++++++++++--------------------
+ fs/nfsd/nfs4xdr.c          |  28 +++----
+ fs/nfsd/nfsd.h             |   3 +-
+ fs/nfsd/nfssvc.c           |  11 ++-
+ fs/nfsd/nfsxdr.c           |  92 ++++++++++-----------
+ fs/nfsd/xdr.h              |  21 ++---
+ fs/nfsd/xdr3.h             |  31 +++----
+ fs/nfsd/xdr4.h             |   2 +-
+ include/linux/lockd/xdr.h  |  19 +++--
+ include/linux/lockd/xdr4.h |  19 ++---
+ include/linux/sunrpc/svc.h |   3 +-
+ 16 files changed, 334 insertions(+), 370 deletions(-)
+
+--
+Chuck Lever
+
