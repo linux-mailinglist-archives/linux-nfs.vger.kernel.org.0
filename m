@@ -2,39 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AF3342B168
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 02:56:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 791E342B188
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 02:58:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236762AbhJMA6K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Oct 2021 20:58:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41920 "EHLO mail.kernel.org"
+        id S237237AbhJMA6r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Oct 2021 20:58:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S237147AbhJMA5v (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 12 Oct 2021 20:57:51 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id A740860EBB;
-        Wed, 13 Oct 2021 00:55:48 +0000 (UTC)
+        id S237229AbhJMA6R (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 12 Oct 2021 20:58:17 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 3296B60F23;
+        Wed, 13 Oct 2021 00:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1634086549;
-        bh=8w6nCCwfCDCGKC/ESbabK963/M8g6HzQJrjfEqIhZso=;
+        s=k20201202; t=1634086574;
+        bh=0dhrLCYh9Nos2lZr5I3qaAnvM0zdNrr5yPcqiEEmRY8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fgVKmUkFjlrPy6gQjuFvB5WjAVrgw812898QSXwwF0a8blB1Z26+PtMd6bxvlTd+l
-         awM+xzp+Uz+ZGWkWBBu3ekBKvNe9wGq5/i/XwePXtKlcJjoqKiZunzoTD8z4hvKhaR
-         RsxVGDLDt4mrM1X6O4y+BF+iug1upqIUe8dcd0b59hm1ABupRggT5Li0G5xFFkcN51
-         ewPOKLomjUrhYfiUhC8mUkcvPbdMo5KbiDmFORxniutVzRuOte1TNI58o8xbY+Dmds
-         XSXlwx0tzSpZU7zl/ZYh4ZbvVykykoPFRcRyXjhpIfD5YHCnTJe/jcKsvQLy+pG1xD
-         ZAHq5p0aKafVQ==
+        b=oxT+1QiTTxiSHXAM53h2BV8aJJcen5LG7jMnBnDOPBLb8eduML6iGip71FvMrfgZL
+         wFLOBMTy15FRtcPw5QsptdE81oyKffknQ7JHrUKATi4xKwXB52PzEEcZOP7XjFUMrW
+         EtYvlgZll7gCxEX1waQBYtacszDA1/fTAVTG9uo3dR4vPapySANcTTmWDiXQ1jCgZK
+         VQzx7rvXWzPKr/DmAaGAlGYFdsV6c1g1bMq/YBra7dutczlbrR3c0BBNmkLIGB45iE
+         N4/+UfemFEsk6bmT5AG9CKRAGEysHFzQDOBYYzq9fGdPbnkjmEGnrW8QXbyS1tWNbp
+         um9EX8Isi33kw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benjamin Coddington <bcodding@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, bfields@fieldses.org,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 09/11] NFSD: Keep existing listeners on portlist error
-Date:   Tue, 12 Oct 2021 20:55:29 -0400
-Message-Id: <20211013005532.700190-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 5/6] NFSD: Keep existing listeners on portlist error
+Date:   Tue, 12 Oct 2021 20:56:01 -0400
+Message-Id: <20211013005603.700363-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211013005532.700190-1-sashal@kernel.org>
-References: <20211013005532.700190-1-sashal@kernel.org>
+In-Reply-To: <20211013005603.700363-1-sashal@kernel.org>
+References: <20211013005603.700363-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -62,7 +62,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 0759e589ab52..506da1c77bea 100644
+index 7f39d6091dfa..b1da4535733d 100644
 --- a/fs/nfsd/nfsctl.c
 +++ b/fs/nfsd/nfsctl.c
 @@ -792,7 +792,10 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
