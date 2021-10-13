@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A467742B773
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 08:34:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71DA642B79D
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 08:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238002AbhJMGgP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Oct 2021 02:36:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
+        id S238126AbhJMGla (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Oct 2021 02:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237867AbhJMGgN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 02:36:13 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D4DC06174E
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:34:11 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id l6so1107129plh.9
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:34:11 -0700 (PDT)
+        with ESMTP id S238101AbhJMGla (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 02:41:30 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353B3C061749
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:39:27 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id g13-20020a17090a3c8d00b00196286963b9so3646175pjc.3
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:39:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=6VbHD8PBwfaj43ljVUZZGyMj52YEmx4jfqAsGhf6+JQ=;
-        b=AvobKbPMrQUDEUEp6fPFubcGItxc/wnKkqnDSAjF2JOJIzD6GaHgOkeTfLVH2dVkY7
-         athTU5gaBp9pQ5+vN8pGXUoM6NXB9m94GmbcWoYtzrCupD5haSLJb51jgUAYN2bie92y
-         Cw/fWMm7nAHe57gHGr8VcvjTAn4+/uHsWTDDQ=
+        bh=DD/2eDntZRvmYFLabpX6hx1U0eeFdg0nt6CnyRZUcUo=;
+        b=BK3/LJ89flw5mVlU3UcEyxJ6LbnnmcNslFQOP5bfSd/QHd96C82eb1OGM/6y9E9tVZ
+         +RxJ42PRvcA8OnuNTe7jWQrLB4kIfwLscnkVOAeCEBYDFaLLczsrzmikDhrnLSmHevHI
+         DJYQS0KGPHFoIgmlnCi12Zqd0uHHCS6ptE1xE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=6VbHD8PBwfaj43ljVUZZGyMj52YEmx4jfqAsGhf6+JQ=;
-        b=vzinIIxiCIG8k7WaJ4t0XFuzNQkt87xDQuPWWyOwGLMCXpevmZCO3QWyJ/cN+FsaP5
-         AR3VoNsH4+mFBEF40kg4OiIvTJ3YvfNq/cR3G6mKa01smcVPBmoybOuT720zKMNHAmO6
-         5vIy53WejmzqpuphsK8jrkZYRoSO9asvkrX5K3DMzeeRFNZN/LFEp7Wq5PHeC2SPDsNR
-         PTIBA0rFxE2Bd8bEpSXMRgRugSUGc3DvPXO9tM+4fElnDBtz2ItasEDfydTJGmERH+rP
-         szJ4ww+zfvUL4++Pr81JC8+lc4w4oMqqgUyt+d7qt5pWpylTysdKC+Wa1oyCzCg9MTi2
-         s3lw==
-X-Gm-Message-State: AOAM531ucT3bEp11O3Q0v5kpRT+v+p2SuEI2ZFF0GB/j5oX9RDzrxlvz
-        y1+7y+Pxp87+br/a2ecc57GL3A==
-X-Google-Smtp-Source: ABdhPJyCtmPDTqSGxs9iwHCnitZ1F86E6zXvgsm3yviJEZQtBzg0xs5Q4LZVn9iTvPOonDA6xdZ1cg==
-X-Received: by 2002:a17:902:f683:b0:13f:2fbe:498f with SMTP id l3-20020a170902f68300b0013f2fbe498fmr18917273plg.17.1634106850602;
-        Tue, 12 Oct 2021 23:34:10 -0700 (PDT)
+        bh=DD/2eDntZRvmYFLabpX6hx1U0eeFdg0nt6CnyRZUcUo=;
+        b=pRv7PwMV/wWdAJv1Lc89HfuFG0VOlERsE/Vl6yA7So0kiufe/GAwFMeXvzgiIBSg59
+         Jm7ZFNdIYg92TjU4vRtg/bjb2APVDaZTevY+9ptJgBufXOI+slzn+2QfiZFF772bOp1W
+         fIGYZkb1agMqzORVIMm9qbq/I4+bRAvpDItlytvofeuKzr36fTl07v2fnEMdbSnC5AIJ
+         Let6gg9D7MC8nERKcpJFUcQ4753UR99YTKGOaw2FVJQyqdeYoh7qedL8FFbxbCeA0H0V
+         eVtafaAcLCUsrwAgCvac+zAWJ1xtzYRjQbaYjody4dZEUJAiQX6xpAAcYFYwSWUCi8bN
+         c/aQ==
+X-Gm-Message-State: AOAM531Pj23qNpXw/YZSiLF1KRZ5Mxpycu2d4x024RTOQd8skRj4ydjo
+        jefsQubey6loz/imZQ0oFKvpcQ==
+X-Google-Smtp-Source: ABdhPJz6dN+fakHkI4mmw5FMrWYwE5jr866artFMUIcBHqytxUEdEx+T1ampoWpSo+mgvVckvfVoUQ==
+X-Received: by 2002:a17:90b:4b4f:: with SMTP id mi15mr808506pjb.97.1634107166729;
+        Tue, 12 Oct 2021 23:39:26 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t3sm13004045pfb.100.2021.10.12.23.34.10
+        by smtp.gmail.com with ESMTPSA id y17sm9562796pfn.96.2021.10.12.23.39.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 23:34:10 -0700 (PDT)
-Date:   Tue, 12 Oct 2021 23:34:09 -0700
+        Tue, 12 Oct 2021 23:39:26 -0700 (PDT)
+Date:   Tue, 12 Oct 2021 23:39:25 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
@@ -68,24 +68,107 @@ Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
         linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
         linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev,
         reiserfs-devel@vger.kernel.org
-Subject: Re: [PATCH 29/29] udf: use sb_bdev_nr_blocks
-Message-ID: <202110122334.7A3E933D@keescook>
+Subject: Re: don't use ->bd_inode to access the block device size
+Message-ID: <202110122335.19348E8E8@keescook>
 References: <20211013051042.1065752-1-hch@lst.de>
- <20211013051042.1065752-30-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211013051042.1065752-30-hch@lst.de>
+In-Reply-To: <20211013051042.1065752-1-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 07:10:42AM +0200, Christoph Hellwig wrote:
-> Use the sb_bdev_nr_blocks helper instead of open coding it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Wed, Oct 13, 2021 at 07:10:13AM +0200, Christoph Hellwig wrote:
+> I wondered about adding a helper for looking at the size in byte units
+> to avoid the SECTOR_SHIFT shifts in various places.  But given that
+> I could not come up with a good name and block devices fundamentally
+> work in sector size granularity I decided against that.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Without something like bdev_nr_bytes(), this series has 13 of 29 patches
+actually _adding_ an open-coded calculation:
 
--- 
+[PATCH 05/29] mtd/block2mtd: use bdev_nr_sectors instead of open coding it
+[PATCH 06/29] nvmet: use bdev_nr_sectors instead of open coding it
+[PATCH 07/29] target/iblock: use bdev_nr_sectors instead of open coding it
+[PATCH 08/29] fs: use bdev_nr_sectors instead of open coding it in blkdev_max_block
+[PATCH 11/29] btrfs: use bdev_nr_sectors instead of open coding it
+[PATCH 16/29] jfs: use bdev_nr_sectors instead of open coding it
+[PATCH 17/29] nfs/blocklayout: use bdev_nr_sectors instead of open coding it
+[PATCH 18/29] nilfs2: use bdev_nr_sectors instead of open coding it
+[PATCH 19/29] ntfs3: use bdev_nr_sectors instead of open coding it
+[PATCH 20/29] pstore/blk: use bdev_nr_sectors instead of open coding it
+[PATCH 21/29] reiserfs: use bdev_nr_sectors instead of open coding it
+[PATCH 22/29] squashfs: use bdev_nr_sectors instead of open coding it
+[PATCH 23/29] block: use bdev_nr_sectors instead of open coding it in blkdev_fallocate
+
+I think it's well worth having that helper (or at least leaving these
+alone). Otherwise, this is a lot of churn without a clear net benefit,
+IMO.
+
+The others look good to me, though!
+
+-Kees
+
+>
+> Diffstat:
+>  block/fops.c                        |    2 +-
+>  drivers/block/drbd/drbd_int.h       |    3 +--
+>  drivers/md/bcache/super.c           |    2 +-
+>  drivers/md/bcache/util.h            |    4 ----
+>  drivers/md/bcache/writeback.c       |    2 +-
+>  drivers/md/dm-bufio.c               |    2 +-
+>  drivers/md/dm-cache-metadata.c      |    2 +-
+>  drivers/md/dm-cache-target.c        |    2 +-
+>  drivers/md/dm-clone-target.c        |    2 +-
+>  drivers/md/dm-dust.c                |    5 ++---
+>  drivers/md/dm-ebs-target.c          |    2 +-
+>  drivers/md/dm-era-target.c          |    2 +-
+>  drivers/md/dm-exception-store.h     |    2 +-
+>  drivers/md/dm-flakey.c              |    3 +--
+>  drivers/md/dm-integrity.c           |    6 +++---
+>  drivers/md/dm-linear.c              |    3 +--
+>  drivers/md/dm-log-writes.c          |    4 ++--
+>  drivers/md/dm-log.c                 |    2 +-
+>  drivers/md/dm-mpath.c               |    2 +-
+>  drivers/md/dm-raid.c                |    6 +++---
+>  drivers/md/dm-switch.c              |    2 +-
+>  drivers/md/dm-table.c               |    3 +--
+>  drivers/md/dm-thin-metadata.c       |    2 +-
+>  drivers/md/dm-thin.c                |    2 +-
+>  drivers/md/dm-verity-target.c       |    3 +--
+>  drivers/md/dm-writecache.c          |    2 +-
+>  drivers/md/dm-zoned-target.c        |    2 +-
+>  drivers/md/md.c                     |   26 +++++++++++---------------
+>  drivers/mtd/devices/block2mtd.c     |    5 +++--
+>  drivers/nvme/target/io-cmd-bdev.c   |    4 ++--
+>  drivers/target/target_core_iblock.c |    5 +++--
+>  fs/affs/super.c                     |    2 +-
+>  fs/btrfs/dev-replace.c              |    2 +-
+>  fs/btrfs/disk-io.c                  |    3 ++-
+>  fs/btrfs/ioctl.c                    |    4 ++--
+>  fs/btrfs/volumes.c                  |    7 ++++---
+>  fs/buffer.c                         |    4 ++--
+>  fs/cramfs/inode.c                   |    2 +-
+>  fs/ext4/super.c                     |    2 +-
+>  fs/fat/inode.c                      |    5 +----
+>  fs/hfs/mdb.c                        |    2 +-
+>  fs/hfsplus/wrapper.c                |    2 +-
+>  fs/jfs/resize.c                     |    5 ++---
+>  fs/jfs/super.c                      |    5 ++---
+>  fs/nfs/blocklayout/dev.c            |    4 ++--
+>  fs/nilfs2/ioctl.c                   |    2 +-
+>  fs/nilfs2/super.c                   |    2 +-
+>  fs/nilfs2/the_nilfs.c               |    3 ++-
+>  fs/ntfs/super.c                     |    8 +++-----
+>  fs/ntfs3/super.c                    |    3 +--
+>  fs/pstore/blk.c                     |    4 ++--
+>  fs/reiserfs/super.c                 |    7 ++-----
+>  fs/squashfs/super.c                 |    5 +++--
+>  fs/udf/lowlevel.c                   |    5 ++---
+>  fs/udf/super.c                      |    9 +++------
+>  include/linux/genhd.h               |    6 ++++++
+>  56 files changed, 100 insertions(+), 117 deletions(-)
+
+--
 Kees Cook
