@@ -2,125 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA5D42C48C
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 17:12:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACA9A42C4FD
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 17:42:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229903AbhJMPOM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Oct 2021 11:14:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbhJMPOM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 11:14:12 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9BA7C061570
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Oct 2021 08:12:08 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id u21so10109555lff.8
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Oct 2021 08:12:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IEh/Vp3wgG89sElnMDDPQ7oHU5jx1LUOnsP2BSPPsqw=;
-        b=G5OHlvJiGiMG/i4yLgq+lG9sYIOs1wVcxcKHbczzcuZBZQf4UQGU7lzycZXWnbMbHi
-         glyunzYU+jxM8uhOjs4ZiVS0WuLu8h8O/uOtkJBt5Ywe0UWm1fXvwMDYdtMB8uQsqn5D
-         5Kbcixly6AEjaDFeVUIL0sykt9R0Tet2ggpWG8GEsJ5MLEM4jkiJ7goPGkuRbrF65XwU
-         tJ5kG+p6Las4cEbBBLfLKbQRewM0ufl2HybmZbSDrjv9xiOT7U4vcwTuSlCFJaa2lVXX
-         25AgtXSDrIPd1xC3ZQfh4Cz/LeMv8+Qy7A1ainixCIE2He3ksDgATrdJAsxL/uOx9aUk
-         /Hlw==
+        id S229903AbhJMPoC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Oct 2021 11:44:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:53525 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229711AbhJMPoC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 11:44:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634139718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YTsyQy90Y8vr99gRcn4sruIL3K1xPoiLMle2l3qSL3o=;
+        b=AzXqxVhcZv6tqOGnMXDFIQzAZ58NZcl5RBxvjWbqZ0KxPjyraxV9LPCj0qGWSgZJY8vv0n
+        r+CzYLn1nKLZPqxfCWtKoZwvJOvD+J5uECsNN417JSrXc8wYNuhqb8TGZ/s1b3ril83rwu
+        cE1H2iRmNRv6wPkslkWBxHzUYn5+73M=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-387-TGla3GRvOsWY8MUuhut3Iw-1; Wed, 13 Oct 2021 11:41:57 -0400
+X-MC-Unique: TGla3GRvOsWY8MUuhut3Iw-1
+Received: by mail-ed1-f72.google.com with SMTP id z23-20020aa7cf97000000b003db7be405e1so2618004edx.13
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Oct 2021 08:41:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IEh/Vp3wgG89sElnMDDPQ7oHU5jx1LUOnsP2BSPPsqw=;
-        b=tfNh99na49MlP9SaBwN5LcLjm/68QOwxaYwR2/qQZmLu+9GSAz4FCwinjQIxatgcrr
-         ic022sQwXBVTQuSjdGezSoGUuiy0uS2pyk16qRN1TJpIH1JZ7gGWKtPGM84E7OchA6y3
-         RDOwWmh1UEDE2ajlbGdX54RLfsYFaiPhkyifWSWBm6Ms+oyeTx7DSIl8eapaVLY2no/a
-         c9UJRJIfnCwUEWAqqjMbHKBEJcXDl0YxE55r+azprWzb8tgVM892YMOu+FikX0Y8fPnX
-         YUOH9NSGPeEIzXLUCBM9CxL6d4Y9qj1qRPxHgP5reSCO4M551W8FkH9O+F5Q3BwE7HJF
-         2Juw==
-X-Gm-Message-State: AOAM5320iootgAXxA5urKGnuKDnXkacGnqg4Pu/o3+xskYJm4QhjeJfU
-        fNLxC3wwrsDhdX5n6Xfm1Sg=
-X-Google-Smtp-Source: ABdhPJz3L8WvpglDarAnEcVC4jnAVC8Ko7aFEsLGASA8xvKrkMmjvSxsXRyWxwOLaeNjvNYwq+MEqA==
-X-Received: by 2002:a05:651c:12c5:: with SMTP id 5mr38478355lje.130.1634137926084;
-        Wed, 13 Oct 2021 08:12:06 -0700 (PDT)
-Received: from [10.0.3.209] (dsl-kpobng11-58c303-5.dhcp.inet.fi. [88.195.3.5])
-        by smtp.gmail.com with ESMTPSA id a19sm1503436ljb.3.2021.10.13.08.12.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Oct 2021 08:12:05 -0700 (PDT)
-Subject: Re: Stalling NFS reads with "SUNRPC: refresh rq_pages using a bulk
- page allocator"
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Bruce Fields <bfields@fieldses.org>
-References: <2a9bdb23-e10d-1586-7b14-ca32af1939f5@gmail.com>
- <0F6DEA40-409C-46B6-917D-1C588E0D0B8C@oracle.com>
-From:   Jussi Kansanen <jussi.kansanen@gmail.com>
-Message-ID: <aae9ccfc-f2ce-50c5-fdae-e6808b10c22b@gmail.com>
-Date:   Wed, 13 Oct 2021 18:12:04 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YTsyQy90Y8vr99gRcn4sruIL3K1xPoiLMle2l3qSL3o=;
+        b=NnjkEGmQrrihN6Qu8YuejEW/H+o+9U05EkpWStrbB7JxATkW72oSvFbOcGyBwSycQt
+         Hxo0fU8z50HCUzX8Q7Fq8dUdd1eGCk+tsgPeGKNKY5iAQNHU5OV+g2eHJoYjoN5rZLmG
+         w//lujTimPQfjxT9rtgwr84oyO8FRWhmyBg5WqDbdAxkKgBLAyQZLJ5iW71tGnXZHekK
+         8CHWonjoRtSarW7UB6lZFnCRhc17fsqU7IbsEyk1av9Uq3emhRvofHev7doE1mH9w/oK
+         DS/z/IAf8XLTZSXVEYH6V3BGJo2GidlNEuhTQAO6rj4iMQXNZUKART5EHfs0PkKep3ez
+         UzSg==
+X-Gm-Message-State: AOAM530e8aa74FqhorqpcNmEnYD2mdqKFS3WH0WRpYbX6L7ECuqNF9Lz
+        OeDvP2u1kzCoywLt9ERPki40Q9PZsQryoxJS84rGogxYct9iKwlgNnsK7QhvZFIMFpv76IwErAa
+        HVAMVWxTTeWS37b04RQraMf+c197kBCUJdu7c
+X-Received: by 2002:a17:906:5e17:: with SMTP id n23mr286524eju.258.1634139716210;
+        Wed, 13 Oct 2021 08:41:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxS4cVAWJkR7CbLvPFTXBfnS1sSmTtIpe5zZADoFU1ojmR6bmvi0WKIMzEMMmw+1gYr2qY6GVDMz+QhDc7rPLw=
+X-Received: by 2002:a17:906:5e17:: with SMTP id n23mr286493eju.258.1634139715963;
+ Wed, 13 Oct 2021 08:41:55 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <0F6DEA40-409C-46B6-917D-1C588E0D0B8C@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1633645823-31235-1-git-send-email-dwysocha@redhat.com>
+In-Reply-To: <1633645823-31235-1-git-send-email-dwysocha@redhat.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 13 Oct 2021 11:41:19 -0400
+Message-ID: <CALF+zOnyGNG=wUHu2j04RWF0nQaAoQfse5e81a=U3pvdNXL26w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] Various NFS fscache cleanups
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10/12/21 10:51 PM, Chuck Lever III wrote:
-> 
-> 
->> On Oct 12, 2021, at 3:44 PM, Jussi Kansanen <jussi.kansanen@gmail.com> wrote:
->>
->> Hello,
->>
->> I started to get stalling NFS reads after upgrading to 5.13 kernel (from 5.12) and the issue still persist in 5.14. Bisection lead to commit f6e70aab9dfe0c2f79cf7dbcb1e80fa71dc60b09, reverting it from 5.13.19 seems to solve the issue.
-> 
-> Hello Jussi-
-> 
-> There have been several recent fixes in this area. Try v5.14.11.
-> 
-
-Hello Chuck,
-
-Upgrading to 5.14.12 fixed the problem, thanks.
-
-> 
->> The problem is as follows, and seems to be reproducible:
->>
->> - Boot up system.
->>
->> - Run "tar cf - /nfsshare/somelargedir | pv > /dev/null" or just any sequential read on a large enough file.
->>
->> - Stalls start to happen usually after 2-32GB is read, though sometimes it can take up to 200GB of reads.
->>
->> When stalling starts the transfer rate drops to zero and all NFS shares come unresponsive. Stalls usually last between 5-15 seconds and there's no errors logged, though sometimes "nfs server not responding" errors are logged on the client side, but those aren't typical. After the read resumes it only lasts few seconds before stall happens again and keeps repeating ...
->>
->> Tests done with 10Gb network and kernels:
->>
->> client:
->> - 5.14.9
->>
->> server:
->> - 5.12.19 - OK
->> - 5.13.19 - stalls
->> - 5.13.19 - OK with f6e70aab9dfe0c2f79cf7dbcb1e80fa71dc60b09 reverted
->> - 5.14.7  - stalls
->>
->> Server kernel config included as attachment.
->>
->>
->> -Jussi Kansanen
->> <config.gz>
-> 
+On Thu, Oct 7, 2021 at 6:31 PM Dave Wysochanski <dwysocha@redhat.com> wrote:
+>
+> This patchset is on top of David Howells patchset he just posted as
+> v3 of "fscache: Replace and remove old I/O API" and is based on his
+> fscache-remove-old-io branch at
+> https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-remove-old-io
+> NOTE: fscache-remove-old-io was previously "fscache-iter-3" but it's been
+> renamed to better reflect the purpose.
+>
+> The series is also at:
+> https://github.com/DaveWysochanskiRH/kernel.git
+> https://github.com/DaveWysochanskiRH/kernel/tree/fscache-remove-old-io-nfs-fixes
+>
+> Testing is looking ok so far and is still ongoing at BakeAThon and in
+> my local testbed with tracepoints enabled via:
+> trace-cmd start -e fscache:* -e nfs:* -e nfs4:* -e cachefiles:*
+>
+> Changes in v2 of this series
+> - Dropped first patch of v1 series (dhowells updated his patch)
+> - Don't rename or change the value of NFSDBG_FSCACHE (Trond)
+> - Rename nfs_readpage_from_fscache and nfs_readpage_to_fscache
+> - Rename enable/disable tracepoints to start with "nfs_fscache"
+> - Rename fscache IO tracepoints to better reflect the new function names
+> - Place the fscache IO tracepoints at begin and end of the functions
+>
+> Dave Wysochanski (7):
+>   NFS: Use nfs_i_fscache() consistently within NFS fscache code
+>   NFS: Cleanup usage of nfs_inode in fscache interface and handle i_size
+>     properly
+>   NFS: Convert NFS fscache enable/disable dfprintks to tracepoints
+>   NFS: Rename fscache read and write pages functions
+>   NFS: Replace dfprintks with tracepoints in read and write page
+>     functions
+>   NFS: Remove remaining dfprintks related to fscache cookies
+>   NFS: Remove remaining usages of NFSDBG_FSCACHE
+>
+>  fs/nfs/fscache-index.c      |  2 -
+>  fs/nfs/fscache.c            | 76 +++++++++++++----------------------
+>  fs/nfs/fscache.h            | 25 ++++++------
+>  fs/nfs/nfstrace.h           | 98 +++++++++++++++++++++++++++++++++++++++++++++
+>  fs/nfs/read.c               |  4 +-
+>  include/uapi/linux/nfs_fs.h |  2 +-
+>  6 files changed, 140 insertions(+), 67 deletions(-)
+>
 > --
-> Chuck Lever
-> 
-> 
-> 
+> 1.8.3.1
+>
+
+Just a report on the testing of this patchset, which also tested
+dhowells fscache-remove-old-io branch.  Overall this looks very
+stable.
+
+I ran some custom unit tests as well as many xfstest runs.  I saw
+no oops or other significant problems during any of the runs.
+I saw no differences in Failures on xfstest runs between 5.15.0-rc4
+and this set.
+I ran the following configurations of servers and NFS options for the
+runs (5.15.0-rc4, then 5.15.0-rc4 + this patchset).
+1. hammerspace (pnfs flexfiles): vers=4.1,fsc; vers=4.1,nofsc;
+vers=4.2,fsc; vers=4.2,nofsc
+2. ontap9.x (pnfs filelayout): vers=4.1,fsc; vers=4.1,nofsc
+3. rhel7u8 (3.10.0-1127.8.2.el7): vers=3,nofsc; vers=4.0,nofsc;
+vers=4.0,fsc; vers=4.2,fsc; vers=4.2,nofsc
+4. rhel8 (4.18.0-193.28.1.el8): vers=4.2,fsc
 
