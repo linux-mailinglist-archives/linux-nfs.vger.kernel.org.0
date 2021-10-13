@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28CC942B753
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 08:33:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60CAA42B763
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Oct 2021 08:33:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230138AbhJMGfK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Oct 2021 02:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51916 "EHLO
+        id S238008AbhJMGf1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Oct 2021 02:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229777AbhJMGfJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 02:35:09 -0400
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE22FC06174E
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:33:06 -0700 (PDT)
-Received: by mail-pj1-x102f.google.com with SMTP id d13-20020a17090ad3cd00b0019e746f7bd4so3673166pjw.0
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:33:06 -0700 (PDT)
+        with ESMTP id S238001AbhJMGfZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Oct 2021 02:35:25 -0400
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D5B7C061766
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:33:22 -0700 (PDT)
+Received: by mail-pl1-x62b.google.com with SMTP id l6so1105767plh.9
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Oct 2021 23:33:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=WOss03228JS+U0E2OXL79/LG2Z2ctX8IyohOEDd3STQ=;
-        b=SG8eTx4PGHBkPjipBIRHezrGg40X7FKDH3dcqzGEh0ZG/tSW8qND+TAMrNp3f/wqwx
-         MhgHQ6qj4VZF73LZ68/IqBwYNjD0oJqF3VY+z4T9q23FV/6ltSnjivxfcuufOGGKlehP
-         NgIRnRpzLQoV7Ik4Dnr+7MYlEdDMy98DEnQAc=
+        bh=KN0hCxg4qCtDzIgJk5dwSpisgOtLaF48lTZLQMzdZGQ=;
+        b=ZSgj9MSpSxiaNFjR5pl+MhsOPNs6TAo40lkstJ1+NMBhxL+4AoJC++ueHgXgDZsxkL
+         A4rqeGya73qL9mbxIoCLhchn4/FA1cf285nRCQSnbarbdqSIQhxR7IZtW3h248WE8YVx
+         CokTYsr+EOLC9mMcAUh/RiJhbXXJcMY50cpmY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=WOss03228JS+U0E2OXL79/LG2Z2ctX8IyohOEDd3STQ=;
-        b=mwXBGcUFw390+t3D78uye24eJgF5eAOyfafRWMWFqIBw8ukFyy7DXV6CcBTRiq2onQ
-         WTsQ5O0urVeoJHH+hrqpQ/jzzDiNpjfSq4PnMEX6qCSEINHWDVreOQS0SCIlNgnpvf1v
-         wRVQEhgZ6xZfy2C8SdtDzYv35m/T4slXuv/pkryVFBGwcEUXPOoEZ1WM0oAVdpC0y5p3
-         LFbFvbCvLBT6fXS6pm5L+Btuf/9hmuEHAHXxa4oDF1WpvJ2AHZbqz4Yq9dyzazvvcUEc
-         I0pMv9Fs4351zleV4X89EnkZm7N02qxZORuGC602PvPrYj+D5/OfiAmq+vkEQwdP1BAK
-         WJsw==
-X-Gm-Message-State: AOAM533wU2ohsSiPxujCuLed0nXZjKz2qDnkSmYckbOU2iU+eEhrrWvw
-        FNMZSJcD/qeAkEaBNvbwVd7JboqMQP5VFA==
-X-Google-Smtp-Source: ABdhPJznx7wYhVexbMFNDV4dCepvElOzihP1I4t7IwLHfcLc7mdWs+S7z03dgD05iBEaGZ31xHHwig==
-X-Received: by 2002:a17:90b:368a:: with SMTP id mj10mr2200890pjb.201.1634106786111;
-        Tue, 12 Oct 2021 23:33:06 -0700 (PDT)
+        bh=KN0hCxg4qCtDzIgJk5dwSpisgOtLaF48lTZLQMzdZGQ=;
+        b=P2Oo9RC0AgrJ4VNilMRzwdKInQ7iNFjtfhsdXBQqUSAVOeQuVgQLCga6m4BTnv38rD
+         y7HEwvYHezwWQ7lShK7HcilXEkBQNJmnyXVwKZvCGWUnQ+Q/UyqaRCGL5ukKAljMv0xS
+         JGplgJVwoVAyQK7nEWFtMv5ll0svYPpKvPU9MYuCDGOoXjpQRiLU+bJWvlMkp4L1vbtI
+         LvQYTyukOZASnutXjtMBYt34LE5PigZO4bogFpdGFuMraTHyhDh6vENdm+BP0HL4MSxp
+         yS9wzkIKxEv92XtWeJ2CM1zmHLgyhMuR/pbgMTuvw1l5vgfgxeJMDicXewasFYr8tzL1
+         TnlA==
+X-Gm-Message-State: AOAM530J8DpN1AopuRmyFgVP2GjVEL12I3p9+hRBiocTbth37XEOsa9o
+        g1zv6M1NIlISnwpJ7s99e4frhQ==
+X-Google-Smtp-Source: ABdhPJwSbdMnxpZNPs6DEcJzD+WCYFHCQcM73CXxNLIwDuWek8lOvAv7bQAbdyDz750VOQBh4gVb4A==
+X-Received: by 2002:a17:902:e5d2:b0:13f:21c1:b44f with SMTP id u18-20020a170902e5d200b0013f21c1b44fmr23591611plf.30.1634106800893;
+        Tue, 12 Oct 2021 23:33:20 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id r31sm4746519pjg.28.2021.10.12.23.33.05
+        by smtp.gmail.com with ESMTPSA id s8sm8887899pfh.186.2021.10.12.23.33.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Oct 2021 23:33:05 -0700 (PDT)
-Date:   Tue, 12 Oct 2021 23:33:04 -0700
+        Tue, 12 Oct 2021 23:33:20 -0700 (PDT)
+Date:   Tue, 12 Oct 2021 23:33:19 -0700
 From:   Kees Cook <keescook@chromium.org>
 To:     Christoph Hellwig <hch@lst.de>
 Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
@@ -68,68 +68,24 @@ Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
         linux-nfs@vger.kernel.org, linux-nilfs@vger.kernel.org,
         linux-ntfs-dev@lists.sourceforge.net, ntfs3@lists.linux.dev,
         reiserfs-devel@vger.kernel.org
-Subject: Re: [PATCH 27/29] ntfs: use sb_bdev_nr_blocks
-Message-ID: <202110122332.53B5925A@keescook>
+Subject: Re: [PATCH 28/29] reiserfs: use sb_bdev_nr_blocks
+Message-ID: <202110122333.7CE920EB9@keescook>
 References: <20211013051042.1065752-1-hch@lst.de>
- <20211013051042.1065752-28-hch@lst.de>
+ <20211013051042.1065752-29-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211013051042.1065752-28-hch@lst.de>
+In-Reply-To: <20211013051042.1065752-29-hch@lst.de>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 13, 2021 at 07:10:40AM +0200, Christoph Hellwig wrote:
+On Wed, Oct 13, 2021 at 07:10:41AM +0200, Christoph Hellwig wrote:
 > Use the sb_bdev_nr_blocks helper instead of open coding it.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/ntfs/super.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/ntfs/super.c b/fs/ntfs/super.c
-> index 0d7e948cb29c9..5ae8de09b271b 100644
-> --- a/fs/ntfs/super.c
-> +++ b/fs/ntfs/super.c
-> @@ -2772,13 +2772,12 @@ static int ntfs_fill_super(struct super_block *sb, void *opt, const int silent)
->  	ntfs_debug("Set device block size to %i bytes (block size bits %i).",
->  			blocksize, sb->s_blocksize_bits);
->  	/* Determine the size of the device in units of block_size bytes. */
-> -	if (!i_size_read(sb->s_bdev->bd_inode)) {
-> +	vol->nr_blocks = sb_bdev_nr_blocks(sb);
-> +	if (!vol->nr_blocks) {
-
-I might be worth mentioning in the commit log why this is safe (i.e. the
-"side effect" of the assignment doesn't need to be delayed since it will
-be thrown away in the failure path).
-
->  		if (!silent)
->  			ntfs_error(sb, "Unable to determine device size.");
->  		goto err_out_now;
->  	}
-> -	vol->nr_blocks = i_size_read(sb->s_bdev->bd_inode) >>
-> -			sb->s_blocksize_bits;
->  	/* Read the boot sector and return unlocked buffer head to it. */
->  	if (!(bh = read_ntfs_boot_sector(sb, silent))) {
->  		if (!silent)
-> @@ -2816,8 +2815,7 @@ static int ntfs_fill_super(struct super_block *sb, void *opt, const int silent)
->  			goto err_out_now;
->  		}
->  		BUG_ON(blocksize != sb->s_blocksize);
-> -		vol->nr_blocks = i_size_read(sb->s_bdev->bd_inode) >>
-> -				sb->s_blocksize_bits;
-> +		vol->nr_blocks = sb_bdev_nr_blocks(sb);
->  		ntfs_debug("Changed device block size to %i bytes (block size "
->  				"bits %i) to match volume sector size.",
->  				blocksize, sb->s_blocksize_bits);
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
-
-
-> -- 
-> 2.30.2
-> 
 
 -- 
 Kees Cook
