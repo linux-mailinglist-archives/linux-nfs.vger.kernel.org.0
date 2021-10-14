@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0455442E094
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 19:55:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A2AC42E095
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 19:55:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbhJNR5Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Oct 2021 13:57:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59154 "EHLO
+        id S233291AbhJNR5R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Oct 2021 13:57:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233059AbhJNR5Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Oct 2021 13:57:16 -0400
-Received: from mail-qv1-xf36.google.com (mail-qv1-xf36.google.com [IPv6:2607:f8b0:4864:20::f36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E55FC061570
+        with ESMTP id S233059AbhJNR5R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Oct 2021 13:57:17 -0400
+Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F47C061570
         for <linux-nfs@vger.kernel.org>; Thu, 14 Oct 2021 10:55:11 -0700 (PDT)
-Received: by mail-qv1-xf36.google.com with SMTP id n12so4212206qvk.3
+Received: by mail-qk1-x72d.google.com with SMTP id bi9so6187764qkb.11
         for <linux-nfs@vger.kernel.org>; Thu, 14 Oct 2021 10:55:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ISmsyCdA8i0HSR3KkV7dEglqd7mksKGIyfOdhCrrGv8=;
-        b=WbGJATiBYlVMv0MXKEvDyFxurq/EIrR05ZjoGmBL1P7ncKxARcp8/mUULTmt0SkdBN
-         00tnUizMe7m3DtcdtoKGX8PVdrv8glwcXWEyuITJNeE7tvnQsmSkfS94Cqy+YvOiXgIY
-         SVTSZMUs4+zpWf2mGAkD4rjA8CZS7M0+qrYEFVXmusEG89QygHFHEY9Ykx/hDPEPPOaQ
-         iXWGdTpCaIJCKcCIF8f+BwdJCF5kuQGXu5CUD/5pXyy5fTs0qIg/F71KXMWHPBkQEZIU
-         SKaRV/1A/qmmf5hjfbgIUbqESgDpR/EvvbuHktJP4qr6EQ0cqgVznug6R7fA6RZp+X1q
-         f1Rg==
+        bh=hkCl4AhoMlF3zujXe2g18GkqBQoCDlCVA09o/GacXFU=;
+        b=EGR90zMCcmumdmn3OTR4tBZeCYSy2yE1OAQjF8qYxbzuxmHnLnProqZtaQEvoMwHzB
+         ZW3ptzsIaQsOC7nVmyVLEqKxltwn3Z1qRqLc2jLVKKDHJoc/ctlxUC0hApgv7mhdmXW3
+         s1xHi6zTTELHP0rNtIxRRjzJrHKyZcHqXLrwX5c6wFSagUqc4bhlcrasfY8EHAT6qoZB
+         R/kTjscsuHWu6eT8ghmsFz+r9d6pU7HHEWHV481HNiInUcnevEeyH761T80RS8wACXpK
+         OXuj4zJb1ZNc+m74SrXhqcAsG/TNO2OX/C2TG4r6Mfzicuwi+aPabh0pR8tTpeu/rgsI
+         6HNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ISmsyCdA8i0HSR3KkV7dEglqd7mksKGIyfOdhCrrGv8=;
-        b=o2SqoZlw4rFQJ6EiCBmiAy0Y+eMrvk22PKWxBpg3eUuQPv/BeezYOZuKHy/0EDhWF4
-         POUVXY6OBDASmPb1cc9fEkZ6GRkbH5o0yxRqyV05j1uoSCHo2fIzDsi1Win3cxOVHP13
-         ZFQDEWyXoscIUeLuJnJZDXOcjB9A4z8ic9kd4LtjJQ1Y64Plc3drJFace3f2CauXAhoF
-         Eh/XCJY/CktFILASwIyaK5VGNGI+Hhl0Ez2+xOe/R7235w56xrjq9sSTsIFsOHyT+Esf
-         cbDEd+Z+mNF2ALPyd10veguEBocL7xwBlptcxHdZcMntUM+8TXyVX/L/cb63oWgRRZuh
-         Jaiw==
-X-Gm-Message-State: AOAM532a6Y1PgzD1CTmXdMasmzkgDG1MtJvEYvxu04Vn3jLGtLmuNk2F
-        T2CYIOVjn13cKF4IJDSe6BU=
-X-Google-Smtp-Source: ABdhPJyPUNWPCWmXSM8UAmTU6xw5dm80yihGh3fGMlN0RgGvGLnHijg/B54UgfTTl6AnnotrpkCRjQ==
-X-Received: by 2002:ad4:476a:: with SMTP id d10mr6913089qvx.20.1634234110400;
-        Thu, 14 Oct 2021 10:55:10 -0700 (PDT)
+        bh=hkCl4AhoMlF3zujXe2g18GkqBQoCDlCVA09o/GacXFU=;
+        b=gZfYCt6wCA4/eqM48bAssrSK04pdu7L46iDsxSP8LjZ9ZQXw1r041gbboHKx9ge40e
+         tNmzPHg7T1bQ2XZricIDN1E7ZoatWX90dmPmG6ANdzlTfhGVZj9YINy/dy0a3OKksbjv
+         heKWrmW866PEnTLeSDbMdA3Y1BAvJL2UCi4cs7pCvT29WAPK/28gGmw5umbOR5M2sqBE
+         UNEhLmDlQdiNzqr1XvF+CLjEk8zfkk90hZvujypnFR2EUQfG+CaR56nZtCrvCn7Kgt6g
+         d7Xmvc+17aIUo3oAUC7wV5YfEBFj92v6h5DTFtKbo0FiKMe6/8F5zZpvpUWwok1vVa6t
+         Wc3A==
+X-Gm-Message-State: AOAM531B2U1RVf+4XvFC4A7UqiFfDUVO/XrkfkJWpWPbu5YADrUnGj3o
+        +qJixxKVKb+7R9BclqBlwso=
+X-Google-Smtp-Source: ABdhPJylt32tkX5QkqsSart9w8ciW7PHJ8k/pROkhoEBXlu/Abbkc+AoJxornmWmakFwjObcxcDvFQ==
+X-Received: by 2002:a37:44cc:: with SMTP id r195mr6340988qka.77.1634234111004;
+        Thu, 14 Oct 2021 10:55:11 -0700 (PDT)
 Received: from localhost.localdomain ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id m6sm1536131qkh.69.2021.10.14.10.55.09
+        by smtp.gmail.com with ESMTPSA id m6sm1536131qkh.69.2021.10.14.10.55.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 14 Oct 2021 10:55:10 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
@@ -52,9 +52,9 @@ From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 1/5] NFS: Create an nfs4_server_set_init_caps() function
-Date:   Thu, 14 Oct 2021 13:55:04 -0400
-Message-Id: <20211014175508.197313-2-Anna.Schumaker@Netapp.com>
+Subject: [PATCH 2/5] NFS: Move nfs_probe_destination() into the generic client
+Date:   Thu, 14 Oct 2021 13:55:05 -0400
+Message-Id: <20211014175508.197313-3-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20211014175508.197313-1-Anna.Schumaker@Netapp.com>
 References: <20211014175508.197313-1-Anna.Schumaker@Netapp.com>
@@ -66,108 +66,105 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-And call it before doing an FSINFO probe to reset to the baseline
-capabilities before probing.
+And rename it to nfs_probe_server(). I also change it to take the nfs_fh
+as an argument so callers can choose what filehandle to probe.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
+ fs/nfs/client.c     | 24 ++++++++++++++++++++++++
  fs/nfs/internal.h   |  1 +
- fs/nfs/nfs4client.c | 41 +++++++++++++++++++++++------------------
- fs/nfs/nfs4proc.c   |  2 ++
- 3 files changed, 26 insertions(+), 18 deletions(-)
+ fs/nfs/nfs4client.c | 26 +-------------------------
+ 3 files changed, 26 insertions(+), 25 deletions(-)
 
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 7483f196c6ef..690271adb294 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -209,6 +209,7 @@ extern struct nfs_client *
- nfs4_find_client_sessionid(struct net *, const struct sockaddr *,
- 				struct nfs4_sessionid *, u32);
- extern struct nfs_server *nfs_create_server(struct fs_context *);
-+extern void nfs4_server_set_init_caps(struct nfs_server *);
- extern struct nfs_server *nfs4_create_server(struct fs_context *);
- extern struct nfs_server *nfs4_create_referral_server(struct fs_context *);
- extern int nfs4_update_server(struct nfs_server *server, const char *hostname,
-diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-index af57332503be..3fb0ca92377c 100644
---- a/fs/nfs/nfs4client.c
-+++ b/fs/nfs/nfs4client.c
-@@ -1059,31 +1059,15 @@ static void nfs4_session_limit_xasize(struct nfs_server *server)
- #endif
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index 6956079b7741..b7b79a348c2b 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -864,6 +864,30 @@ int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *mntfh, struct nfs
  }
+ EXPORT_SYMBOL_GPL(nfs_probe_fsinfo);
  
--static int nfs4_server_common_setup(struct nfs_server *server,
--		struct nfs_fh *mntfh, bool auth_probe)
-+void nfs4_server_set_init_caps(struct nfs_server *server)
- {
--	struct nfs_fattr *fattr;
--	int error;
--
--	/* data servers support only a subset of NFSv4.1 */
--	if (is_ds_only_client(server->nfs_client))
--		return -EPROTONOSUPPORT;
--
--	fattr = nfs_alloc_fattr();
--	if (fattr == NULL)
--		return -ENOMEM;
--
--	/* We must ensure the session is initialised first */
--	error = nfs4_init_session(server->nfs_client);
--	if (error < 0)
--		goto out;
--
- 	/* Set the basic capabilities */
- 	server->caps |= server->nfs_client->cl_mvops->init_caps;
- 	if (server->flags & NFS_MOUNT_NORDIRPLUS)
- 			server->caps &= ~NFS_CAP_READDIRPLUS;
- 	if (server->nfs_client->cl_proto == XPRT_TRANSPORT_RDMA)
- 		server->caps &= ~NFS_CAP_READ_PLUS;
-+
- 	/*
- 	 * Don't use NFS uid/gid mapping if we're using AUTH_SYS or lower
- 	 * authentication.
-@@ -1091,7 +1075,28 @@ static int nfs4_server_common_setup(struct nfs_server *server,
- 	if (nfs4_disable_idmapping &&
- 			server->client->cl_auth->au_flavor == RPC_AUTH_UNIX)
- 		server->caps |= NFS_CAP_UIDGID_NOMAP;
-+}
- 
-+static int nfs4_server_common_setup(struct nfs_server *server,
-+		struct nfs_fh *mntfh, bool auth_probe)
++/*
++ * Grab the destination's particulars, including lease expiry time.
++ *
++ * Returns zero if probe succeeded and retrieved FSID matches the FSID
++ * we have cached.
++ */
++int nfs_probe_server(struct nfs_server *server, struct nfs_fh *mntfh)
 +{
 +	struct nfs_fattr *fattr;
 +	int error;
-+
-+	/* data servers support only a subset of NFSv4.1 */
-+	if (is_ds_only_client(server->nfs_client))
-+		return -EPROTONOSUPPORT;
 +
 +	fattr = nfs_alloc_fattr();
 +	if (fattr == NULL)
 +		return -ENOMEM;
 +
-+	/* We must ensure the session is initialised first */
-+	error = nfs4_init_session(server->nfs_client);
-+	if (error < 0)
-+		goto out;
++	/* Sanity: the probe won't work if the destination server
++	 * does not recognize the migrated FH. */
++	error = nfs_probe_fsinfo(server, mntfh, fattr);
 +
-+	nfs4_server_set_init_caps(server);
++	nfs_free_fattr(fattr);
++	return error;
++}
++EXPORT_SYMBOL_GPL(nfs_probe_server);
++
+ /*
+  * Copy useful information when duplicating a server record
+  */
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 690271adb294..508cb64c2661 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -194,6 +194,7 @@ extern struct nfs_client *nfs_alloc_client(const struct nfs_client_initdata *);
+ int nfs_create_rpc_client(struct nfs_client *, const struct nfs_client_initdata *, rpc_authflavor_t);
+ struct nfs_client *nfs_get_client(const struct nfs_client_initdata *);
+ int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *, struct nfs_fattr *);
++int nfs_probe_server(struct nfs_server *, struct nfs_fh *);
+ void nfs_server_insert_lists(struct nfs_server *);
+ void nfs_server_remove_lists(struct nfs_server *);
+ void nfs_init_timeout_values(struct rpc_timeout *to, int proto, int timeo, int retrans);
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 3fb0ca92377c..85978ecb727e 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -1293,30 +1293,6 @@ struct nfs_server *nfs4_create_referral_server(struct fs_context *fc)
+ 	return ERR_PTR(error);
+ }
  
- 	/* Probe the root fh to retrieve its FSID and filehandle */
- 	error = nfs4_get_rootfh(server, mntfh, auth_probe);
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index fc0be32b19fc..77bbdced702f 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3923,6 +3923,8 @@ int nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *fhandle)
- 		.interruptible = true,
- 	};
- 	int err;
-+
-+	nfs4_server_set_init_caps(server);
- 	do {
- 		err = nfs4_handle_exception(server,
- 				_nfs4_server_capabilities(server, fhandle),
+-/*
+- * Grab the destination's particulars, including lease expiry time.
+- *
+- * Returns zero if probe succeeded and retrieved FSID matches the FSID
+- * we have cached.
+- */
+-static int nfs_probe_destination(struct nfs_server *server)
+-{
+-	struct inode *inode = d_inode(server->super->s_root);
+-	struct nfs_fattr *fattr;
+-	int error;
+-
+-	fattr = nfs_alloc_fattr();
+-	if (fattr == NULL)
+-		return -ENOMEM;
+-
+-	/* Sanity: the probe won't work if the destination server
+-	 * does not recognize the migrated FH. */
+-	error = nfs_probe_fsinfo(server, NFS_FH(inode), fattr);
+-
+-	nfs_free_fattr(fattr);
+-	return error;
+-}
+-
+ /**
+  * nfs4_update_server - Move an nfs_server to a different nfs_client
+  *
+@@ -1377,5 +1353,5 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
+ 		server->nfs_client->cl_hostname = kstrdup(hostname, GFP_KERNEL);
+ 	nfs_server_insert_lists(server);
+ 
+-	return nfs_probe_destination(server);
++	return nfs_probe_server(server, NFS_FH(d_inode(server->super->s_root)));
+ }
 -- 
 2.33.0
 
