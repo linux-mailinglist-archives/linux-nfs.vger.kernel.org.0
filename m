@@ -2,120 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4633642D67B
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 11:53:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 706C542D83A
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 13:32:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230097AbhJNJzR convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 14 Oct 2021 05:55:17 -0400
-Received: from mgw-01.mpynet.fi ([82.197.21.90]:60924 "EHLO mgw-01.mpynet.fi"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229468AbhJNJzQ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Thu, 14 Oct 2021 05:55:16 -0400
-X-Greylist: delayed 1139 seconds by postgrey-1.27 at vger.kernel.org; Thu, 14 Oct 2021 05:55:13 EDT
-Received: from pps.filterd (mgw-01.mpynet.fi [127.0.0.1])
-        by mgw-01.mpynet.fi (8.16.0.43/8.16.0.43) with SMTP id 19E9Pj42091529;
-        Thu, 14 Oct 2021 12:32:59 +0300
-Received: from ex13.tuxera.com (ex13.tuxera.com [178.16.184.72])
-        by mgw-01.mpynet.fi with ESMTP id 3bphjf80v4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 14 Oct 2021 12:32:59 +0300
-Received: from tuxera-exch.ad.tuxera.com (10.20.48.11) by
- tuxera-exch.ad.tuxera.com (10.20.48.11) with Microsoft SMTP Server (TLS) id
- 15.0.1497.23; Thu, 14 Oct 2021 12:32:59 +0300
-Received: from tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789]) by
- tuxera-exch.ad.tuxera.com ([fe80::552a:f9f0:68c3:d789%12]) with mapi id
- 15.00.1497.023; Thu, 14 Oct 2021 12:32:59 +0300
-From:   Anton Altaparmakov <anton@tuxera.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
-        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
+        id S230496AbhJNLed (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Oct 2021 07:34:33 -0400
+Received: from smtp-out1.suse.de ([195.135.220.28]:54992 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230328AbhJNLec (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Oct 2021 07:34:32 -0400
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 9EA0C2198B;
+        Thu, 14 Oct 2021 11:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1634211146;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/RwKkctM2kYfnsQns9zuzmOBOyPsbRBTF9oUmtbr7Ms=;
+        b=dpiQAn/loFlbz4yWiqf186W/BaqzQq9wvfy5P7pQQ1YrtwhY4ufluqbf2MexpVoslqCG8e
+        MnM3sydeHKUdJc1AbzfqBMzsGW6Ly1Sg+PmPpNgdc7AyB5L6z7/AA6K8BPr3qyzHz+iPBb
+        TP9uHMHgprnT9qOl8YvF76iMrdiV2+g=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1634211146;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/RwKkctM2kYfnsQns9zuzmOBOyPsbRBTF9oUmtbr7Ms=;
+        b=8EZMvlC6qiw4OcFd+TAafSCyudqB11qMFpd0Qesz9Y+PPuSVxGlI/40rwudPGqcnOs/NrS
+        swhsaH/NDSrcMhBA==
+Received: from ds.suse.cz (ds.suse.cz [10.100.12.205])
+        by relay2.suse.de (Postfix) with ESMTP id 7593FA3B81;
+        Thu, 14 Oct 2021 11:32:26 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id CAC6DDA7A3; Thu, 14 Oct 2021 13:32:01 +0200 (CEST)
+Date:   Thu, 14 Oct 2021 13:32:01 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Dave Chinner <david@fromorbit.com>, NeilBrown <neilb@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Theodore Ts'o <tytso@mit.edu>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        "Konstantin Komarov" <almaz.alexandrovich@paragon-software.com>,
-        Kees Cook <keescook@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Jan Kara <jack@suse.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "linux-bcache@vger.kernel.org" <linux-bcache@vger.kernel.org>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "jfs-discussion@lists.sourceforge.net" 
-        <jfs-discussion@lists.sourceforge.net>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-nilfs@vger.kernel.org" <linux-nilfs@vger.kernel.org>,
-        "linux-ntfs-dev@lists.sourceforge.net" 
-        <linux-ntfs-dev@lists.sourceforge.net>,
-        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-        "reiserfs-devel@vger.kernel.org" <reiserfs-devel@vger.kernel.org>
-Subject: Re: don't use ->bd_inode to access the block device size
-Thread-Topic: don't use ->bd_inode to access the block device size
-Thread-Index: AQHXv/D8RnQWsWSgAkyxOdAYku+41KvR10wAgAAzeIA=
-Date:   Thu, 14 Oct 2021 09:32:58 +0000
-Message-ID: <3AB8052D-DD45-478B-85F2-BFBEC1C7E9DF@tuxera.com>
-References: <20211013051042.1065752-1-hch@lst.de>
- <20211014062844.GA25448@lst.de>
-In-Reply-To: <20211014062844.GA25448@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [109.154.241.177]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F1129580E148624C920474BEC9F515C5@ex13.tuxera.com>
-Content-Transfer-Encoding: 8BIT
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
+        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
+Message-ID: <20211014113201.GA19582@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Michal Hocko <mhocko@suse.com>,
+        Dave Chinner <david@fromorbit.com>, NeilBrown <neilb@suse.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>, Mel Gorman <mgorman@suse.de>,
+        Jonathan Corbet <corbet@lwn.net>, linux-xfs@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
+ <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
+ <20211006231452.GF54211@dread.disaster.area>
+ <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
+ <163364854551.31063.4377741712039731672@noble.neil.brown.name>
+ <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
+ <20211008223649.GJ54211@dread.disaster.area>
+ <YWQmsESyyiea0zle@dhcp22.suse.cz>
+ <20211013023231.GV2361455@dread.disaster.area>
+ <YWaYUsXgXS6GXM+M@dhcp22.suse.cz>
 MIME-Version: 1.0
-X-Proofpoint-ORIG-GUID: itBrsNbhZ2FR6MA_DlXhPV1L0UjW3zcs
-X-Proofpoint-GUID: itBrsNbhZ2FR6MA_DlXhPV1L0UjW3zcs
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.790
- definitions=2021-10-14_02:2021-10-14,2021-10-14 signatures=0
-X-Proofpoint-Spam-Details: rule=mpy_notspam policy=mpy score=0 spamscore=0 mlxlogscore=453 bulkscore=0
- malwarescore=0 phishscore=0 mlxscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
- definitions=main-2110140057
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YWaYUsXgXS6GXM+M@dhcp22.suse.cz>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Christoph,
-
-> On 14 Oct 2021, at 07:28, Christoph Hellwig <hch@lst.de> wrote:
+On Wed, Oct 13, 2021 at 10:26:58AM +0200, Michal Hocko wrote:
+> > crap like this (found in btrfs):
+> > 
+> >                 /*                                                               
+> >                  * We're holding a transaction handle, so use a NOFS memory      
+> >                  * allocation context to avoid deadlock if reclaim happens.      
+> >                  */                                                              
+> >                 nofs_flag = memalloc_nofs_save();                                
+> >                 value = kmalloc(size, GFP_KERNEL);                               
+> >                 memalloc_nofs_restore(nofs_flag);                                
 > 
-> On Wed, Oct 13, 2021 at 07:10:13AM +0200, Christoph Hellwig wrote:
->> I wondered about adding a helper for looking at the size in byte units
->> to avoid the SECTOR_SHIFT shifts in various places.  But given that
->> I could not come up with a good name and block devices fundamentally
->> work in sector size granularity I decided against that.
-> 
-> So it seems like the biggest review feedback is that we should have
-> such a helper.  I think the bdev_size name is the worst as size does
-> not imply a particular unit.  bdev_nr_bytes is a little better but I'm
-> not too happy.  Any other suggestions or strong opinions?
+> Yes this looks wrong indeed! If I were to review such a code I would ask
+> why the scope cannot match the transaction handle context. IIRC jbd does
+> that.
 
-bdev_byte_size() would seem to address your concerns?
+Adding the transaction start/end as the NOFS scope is a long term plan
+and going on for years, because it's not a change we would need in
+btrfs, but rather a favor to MM to switch away from "GFP_NOFS everywhere
+because it's easy".
 
-bdev_nr_bytes() would work though - it is analogous to bdev_nr_sectors() after all.
+The first step was to convert the easy cases. Almost all safe cases
+switching GFP_NOFS to GFP_KERNEL have happened. Another step is to
+convert GFP_NOFS to memalloc_nofs_save/GFP_KERNEL/memalloc_nofs_restore
+in contexts where we know we'd rely on the transaction NOFS scope in the
+future. Once this is implemented, the memalloc_nofs_* calls are deleted
+and it works as expected.  Now you may argue that the switch could be
+changing GFP_NOFS to GFP_KERNEL at that time but that is not that easy
+to review or reason about in the whole transaction context in all
+allocations.
 
-No strong opinion here but I do agree with you that bdev_size() is a bad choice for sure.  It is bound to cause bugs down the line when people forget what unit it is in.
+This leads to code that was found in __btrfs_set_acl and called crap
+or wrong, because perhaps the background and the bigger plan is not
+immediately obvious. I hope the explanation above it puts it to the
+right perspective.
 
-Best regards,
+The other class of scoped NOFS protection is around vmalloc-based
+allocations but that's for a different reason, would be solved by the
+same transaction start/end conversion as well.
 
-	Anton
--- 
-Anton Altaparmakov <anton at tuxera.com> (replace at with @)
-Lead in File System Development, Tuxera Inc., http://www.tuxera.com/
-Linux NTFS maintainer
+I'm working on that from time to time but this usually gets pushed down
+in the todo list. It's changing a lot of code, from what I've researched
+so far cannot be done at once and would probably introduce bugs hard to
+hit because of the external conditions (allocator, system load, ...).
 
+I have a plan to do that incrementally, adding assertions and converting
+functions in small batches to be able to catch bugs early, but I'm not
+exactly thrilled to start such endeavour in addition to normal
+development bug hunting.
+
+To get things moving again, I've refreshed the patch adding stubs and
+will try to find the best timing for merg to avoid patch conflicts, but
+no promises.
