@@ -2,50 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EAB442D3DB
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 09:38:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4800942D3E5
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Oct 2021 09:38:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbhJNHkP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Oct 2021 03:40:15 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:45036 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229984AbhJNHkO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Oct 2021 03:40:14 -0400
+        id S230132AbhJNHkx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Oct 2021 03:40:53 -0400
+Received: from smtp-out2.suse.de ([195.135.220.29]:47454 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229967AbhJNHkw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Oct 2021 03:40:52 -0400
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 61DE221A74;
-        Thu, 14 Oct 2021 07:38:09 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2DE522028A;
+        Thu, 14 Oct 2021 07:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1634197089; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1634197127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=x/yt4sFkSwKeiPEwjxKe7RBVr/VqfiPCXjdyC3ZbF5M=;
-        b=lHcnEK/3huHMegP8nt5Na8cJa8CrIa6CUKa+DI5r0g07qUd2BgcKUz55j+SKxebFh2rnxC
-        CXR0X/9qlB3wXNDcrGHzipdgJZoR9IzMgw4SQBDyS77G5uXtJEqmVmdNQq7xzcGU9srVTi
-        qmfno7EhMEiixYsPIrnIfV7hjgdSJlA=
+        bh=z5XxL3qi/gR2OfvAm1+qER5gofhDXBb22QVDWPURgd0=;
+        b=AlhouwFN7+Q4dJrn22v9xdATFbk2wy7uszT32zBaioXK+GQAbdwUZVlcatdY+xiDqNjK8u
+        oRuFkxdie54FbLt/0qK+76OdQeHPPN9PE448Gv4MojnoqqKoVup1DFgdiX8ofTOmEfCqW2
+        mUpKINe6tPA+Bn9vHBLW4FJecu/CJpo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1634197089;
+        s=susede2_ed25519; t=1634197127;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=x/yt4sFkSwKeiPEwjxKe7RBVr/VqfiPCXjdyC3ZbF5M=;
-        b=MOqABLYGbBOGQINqYCatrzMLpKX7wh6h4WWrmvmVHuQcmpi4fsumvvNd+M0F1drc4HnRIh
-        yFP4dZ4yG2H6T3Dw==
+        bh=z5XxL3qi/gR2OfvAm1+qER5gofhDXBb22QVDWPURgd0=;
+        b=3pzc8Q7fDxQO3trhwNiSaFYp+b+GtcJ3Q6r+njfyAiennXj1stX7Bh3RGruHADb3iI+Qf+
+        Lmnn6WoetstgXQBg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2DE5113D3F;
-        Thu, 14 Oct 2021 07:38:09 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 061AD13D3F;
+        Thu, 14 Oct 2021 07:38:46 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4fZNCmHeZ2GbIAAAMHmgww
-        (envelope-from <hare@suse.de>); Thu, 14 Oct 2021 07:38:09 +0000
-Subject: Re: [PATCH 6/7] block: remove the initialize_rq_fn blk_mq_ops method
+        id QWYIOIbeZ2HhIAAAMHmgww
+        (envelope-from <hare@suse.de>); Thu, 14 Oct 2021 07:38:46 +0000
+Subject: Re: [PATCH 7/7] block: remove QUEUE_FLAG_SCSI_PASSTHROUGH
 To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
@@ -53,14 +53,14 @@ Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         target-devel@vger.kernel.org, linux-nfs@vger.kernel.org
 References: <20211012120445.861860-1-hch@lst.de>
- <20211012120445.861860-7-hch@lst.de>
+ <20211012120445.861860-8-hch@lst.de>
 From:   Hannes Reinecke <hare@suse.de>
-Message-ID: <d176a9bd-8d69-4da1-4368-9d6437ccc5b5@suse.de>
-Date:   Thu, 14 Oct 2021 09:38:08 +0200
+Message-ID: <4e155b66-77ad-660a-217f-30e0b82b81cd@suse.de>
+Date:   Thu, 14 Oct 2021 09:38:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.12.0
 MIME-Version: 1.0
-In-Reply-To: <20211012120445.861860-7-hch@lst.de>
+In-Reply-To: <20211012120445.861860-8-hch@lst.de>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -69,52 +69,17 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On 10/12/21 2:04 PM, Christoph Hellwig wrote:
-> Entirely unused now.
+> Export scsi_device_from_queue for use with pktcdvd and use that instead
+> of the otherwise unused QUEUE_FLAG_SCSI_PASSTHROUGH queue flag.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->   block/blk-core.c       | 9 +--------
->   include/linux/blk-mq.h | 5 -----
->   2 files changed, 1 insertion(+), 13 deletions(-)
-> 
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 9b8c706701900..2cc3189aaee35 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -615,16 +615,9 @@ EXPORT_SYMBOL(blk_get_queue);
->   struct request *blk_get_request(struct request_queue *q, unsigned int op,
->   				blk_mq_req_flags_t flags)
->   {
-> -	struct request *req;
-> -
->   	WARN_ON_ONCE(op & REQ_NOWAIT);
->   	WARN_ON_ONCE(flags & ~(BLK_MQ_REQ_NOWAIT | BLK_MQ_REQ_PM));
-> -
-> -	req = blk_mq_alloc_request(q, op, flags);
-> -	if (!IS_ERR(req) && q->mq_ops->initialize_rq_fn)
-> -		q->mq_ops->initialize_rq_fn(req);
-> -
-> -	return req;
-> +	return blk_mq_alloc_request(q, op, flags);
->   }
->   EXPORT_SYMBOL(blk_get_request);
->   
-> diff --git a/include/linux/blk-mq.h b/include/linux/blk-mq.h
-> index 0e941f2175784..d7f70cc79ac7d 100644
-> --- a/include/linux/blk-mq.h
-> +++ b/include/linux/blk-mq.h
-> @@ -571,11 +571,6 @@ struct blk_mq_ops {
->   	void (*exit_request)(struct blk_mq_tag_set *set, struct request *,
->   			     unsigned int);
->   
-> -	/**
-> -	 * @initialize_rq_fn: Called from inside blk_get_request().
-> -	 */
-> -	void (*initialize_rq_fn)(struct request *rq);
-> -
->   	/**
->   	 * @cleanup_rq: Called before freeing one request which isn't completed
->   	 * yet, and usually for freeing the driver private data.
+>   block/blk-mq-debugfs.c   | 1 -
+>   drivers/block/pktcdvd.c  | 5 ++++-
+>   drivers/scsi/scsi_lib.c  | 8 ++++++++
+>   drivers/scsi/scsi_scan.c | 1 -
+>   include/linux/blkdev.h   | 3 ---
+>   5 files changed, 12 insertions(+), 6 deletions(-)
 > 
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 
