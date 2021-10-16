@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5022E430579
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Oct 2021 00:47:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 582B043057A
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Oct 2021 00:47:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237420AbhJPWtk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 16 Oct 2021 18:49:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53776 "EHLO mail.kernel.org"
+        id S237441AbhJPWtq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 Oct 2021 18:49:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235339AbhJPWtk (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 16 Oct 2021 18:49:40 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 3DA7861242;
-        Sat, 16 Oct 2021 22:47:31 +0000 (UTC)
+        id S235339AbhJPWtq (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 16 Oct 2021 18:49:46 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C4B4461242;
+        Sat, 16 Oct 2021 22:47:37 +0000 (UTC)
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     bfields@redhat.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v1 11/14] SUNRPC: Report RPC messages with unknown procedures via a tracepoint
-Date:   Sat, 16 Oct 2021 18:47:30 -0400
-Message-Id:  <163442445010.1001.10719088094457400066.stgit@bazille.1015granger.net>
+Subject: [PATCH v1 12/14] SUNRPC: Report RPC messages that can't be decoded via a tracepoint
+Date:   Sat, 16 Oct 2021 18:47:36 -0400
+Message-Id:  <163442445665.1001.12306562080032764704.stgit@bazille.1015granger.net>
 X-Mailer: git-send-email 2.33.0.113.g6c40894d24
 In-Reply-To:  <163442364683.1001.4500967510037013459.stgit@bazille.1015granger.net>
 References:  <163442364683.1001.4500967510037013459.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.1+62.ged16
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1886; h=from:subject:message-id; bh=aNm6kGLASjw3nZXlX2HI2joHW1vORSE9rnhn7ksUAW0=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBha1aCowXUyg70uDGvvT3+UvcV3cF2DOXXX30qb5kn hTwk/TKJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYWtWggAKCRAzarMzb2Z/lzjQEA CrYNeaT/snhYhz1tbWw3DAqxO6dqbaqS1hx5YLSWDuy4RtO1k4dWX4eSpg5ptHh+N8jCa/vrcs25SP qWs3mjk7u8k4RgKfV3ak9WbVOQLal+6fPMCZEbM/H/Y7/hZMWowW043Yn5lCgk+4vmlpXNMAKyURBe /RjP1w1rj4mfSqAqXUdBKdv4FqEe/IHMN8h6WnWsr43S+zUsjl7CRIvY/rBJntDBeY9Of7leST2Ap5 Hm+vx1btPEWfm9xpcJcG6NVEiy9t+1ESoKqPdr0xiJuw5znajVvXAQeKDhsDgvtU/DLaLYHD1TR8Bl QcqyFAbdKv1ONfSIZr4Arkl5wrpzXs/MfYuSlQekBfjyMtnC1R2b5DmyDOA0RNT1Xh349iLXounVrQ SU5/APogwjMAnbrZhEZ7DrArOGdr3OWrw6fHmlBl6no+JdlByoe2rK+Y1TMAZPr9fZPd4V7KjrPRS4 6zE4HK1yZqFKdaP7v9PKQmGR7eBMGitRIiLCRJdfMIEsv4Sb/c7DvClLZJAoMvfGftTrOW16kN51jz Km7Ld1J6kwIuKkYlsimaGt8drfLN/rN3p9yUoHCO0P/ZPIMiFVNTEB8E1Cbvd2IeUCkDQJQOat/3lV SpJeRT1MlsuGgM3k8Vacg0BPzVD1BU7ZR0s8OO01uHNoAdg4etdwwFU6P04A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2683; h=from:subject:message-id; bh=OWxQlg3RAr67opp/JhqS8r2GtyYYUau4w6Iu0KNv6ic=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBha1aILUROZdXzaFZklU8IJ7sl5vCJV2V69NyqhzJU 3iFsKbiJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYWtWiAAKCRAzarMzb2Z/lyysD/ 4lViBKrZXKUnq5Ow9QprbhlJYf0i/1EgvQwugAq+Kv3myLsKMyjDnULzmwDxP6uijyBFHL5ts7KRaN cqfN+GUZYiufO0E8RcjI3fzE7SmAeSAcbUAHSyMCo5MoyrhObU/WuXEsrPoVu9veszitwCl0mCeOh8 L1xlihRbgAvGR6LBPc9Gct4fDT7MZ9YG7mcwCg7LX3arcUYQ+wuok+MgYDHxlf4hwSpGT3q2FUeXuP Y10aSsrh/kKvxyO81TeVHnIRfZY8Jj8N54vValXYjArMTxgwXhO+vUlYdXmHsmMIJ1tlXBPslfER44 uRpptQHw28GtuMcuZDjcBVn9lIYV523/qa1tsPbrLXRwaHLSgXJkFPGriW1Vi1hEV2Xu1TQ7KX0v9l FJKRtBrpxzRIclQvCNzvgTFIrEDqnV4qz85CP4nR4tvo/rh2uvOxSyD9wdmA91sarXPulWudfRqSzk nWL8koi7CYf9/Jm2nVKxJp/+Wwc1KYn/3jGkhLEYpnrJTKwIfgHYErQFRVLZxNurw/2FheTjRPqCNH 9iOd229h6G5xCjXZizuE8sSWWFpCKK39Z5BpjGXCGyDmWBI+mlWUJnDrIGMp2z+E9RM2sIcHy3/gW5 in+x3xqM3+aO0jzITTaxhZOmOlDwL53+PeFFLrlJ8PqNtJ7WoVOYj+akWTIQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -35,65 +35,98 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 Replace a dprintk call site. The new tracepoint can be left enabled
 persistently to capture problems.
 
+This commit removes the last remaining call site for svc_printk(),
+so that function is removed as well.
+
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |   30 ++++++++++++++++++++++++++++++
- net/sunrpc/svc.c              |    3 +--
- 2 files changed, 31 insertions(+), 2 deletions(-)
+ include/trace/events/sunrpc.h |   20 ++++++++++++++++++++
+ net/sunrpc/svc.c              |   29 +----------------------------
+ 2 files changed, 21 insertions(+), 28 deletions(-)
 
 diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 804912b26abb..85459c40eb35 100644
+index 85459c40eb35..9d0e7904230e 100644
 --- a/include/trace/events/sunrpc.h
 +++ b/include/trace/events/sunrpc.h
-@@ -1716,6 +1716,36 @@ TRACE_EVENT(svc_decode_prog_mismatch_err,
+@@ -1746,6 +1746,26 @@ TRACE_EVENT(svc_decode_proc_unavail_err,
  	)
  );
  
-+TRACE_EVENT(svc_decode_proc_unavail_err,
++TRACE_EVENT(svc_decode_header_err,
 +	TP_PROTO(
-+		const struct svc_rqst *rqst,
-+		const struct svc_program *progp
++		const struct svc_rqst *rqst
 +	),
 +
-+	TP_ARGS(rqst, progp),
++	TP_ARGS(rqst),
 +
 +	TP_STRUCT__entry(
-+		__field(u32, procedure)
-+		__field(u32, version)
-+		__string(progname, progp->pg_name)
 +		__string(addr, rqst->rq_xprt ?
 +			 rqst->rq_xprt->xpt_remotebuf : "(null)")
 +	),
 +
 +	TP_fast_assign(
-+		__entry->version = rqst->rq_vers;
-+		__entry->procedure = rqst->rq_proc;
-+		__assign_str(progname, progp->pg_name)
 +		__assign_str(addr, rqst->rq_xprt ?
 +			     rqst->rq_xprt->xpt_remotebuf : "(null)");
 +	),
 +
-+	TP_printk("addr=%s %sv%u procedure=%u",
-+		__get_str(addr), __get_str(progname),
-+		__entry->version, __entry->procedure
-+	)
++	TP_printk("addr=%s", __get_str(addr))
 +);
 +
  DECLARE_EVENT_CLASS(svc_rqst_event,
  
  	TP_PROTO(
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 66e46d7755e9..a0f37e89393f 100644
+index a0f37e89393f..ae3c2d31d6dc 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1414,8 +1414,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
+@@ -33,8 +33,6 @@
+ 
+ #include "fail.h"
+ 
+-#define RPCDBG_FACILITY	RPCDBG_SVCDSP
+-
+ static void svc_unregister(const struct svc_serv *serv, struct net *net);
+ 
+ #define svc_serv_is_pooled(serv)    ((serv)->sv_ops->svo_function)
+@@ -1156,30 +1154,6 @@ static void svc_unregister(const struct svc_serv *serv, struct net *net)
+ 	spin_unlock_irqrestore(&current->sighand->siglock, flags);
+ }
+ 
+-/*
+- * dprintk the given error with the address of the client that caused it.
+- */
+-#if IS_ENABLED(CONFIG_SUNRPC_DEBUG)
+-static __printf(2, 3)
+-void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...)
+-{
+-	struct va_format vaf;
+-	va_list args;
+-	char 	buf[RPC_MAX_ADDRBUFLEN];
+-
+-	va_start(args, fmt);
+-
+-	vaf.fmt = fmt;
+-	vaf.va = &args;
+-
+-	dprintk("svc: %s: %pV", svc_print_addr(rqstp, buf, sizeof(buf)), &vaf);
+-
+-	va_end(args);
+-}
+-#else
+-static __printf(2,3) void svc_printk(struct svc_rqst *rqstp, const char *fmt, ...) {}
+-#endif
+-
+ __be32
+ svc_generic_init_request(struct svc_rqst *rqstp,
+ 		const struct svc_program *progp,
+@@ -1420,8 +1394,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
  	goto sendit;
  
- err_bad_proc:
--	svc_printk(rqstp, "unknown procedure (%d)\n", rqstp->rq_proc);
+ err_garbage:
+-	svc_printk(rqstp, "failed to decode args\n");
 -
-+	trace_svc_decode_proc_unavail_err(rqstp, progp);
++	trace_svc_decode_header_err(rqstp);
+ 	rpc_stat = rpc_garbage_args;
+ err_bad:
  	serv->sv_stats->rpcbadfmt++;
- 	svc_putnl(resv, RPC_PROC_UNAVAIL);
- 	goto sendit;
 
