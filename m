@@ -2,260 +2,172 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AEF0C430526
-	for <lists+linux-nfs@lfdr.de>; Sun, 17 Oct 2021 00:02:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C15BB430527
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Oct 2021 00:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236924AbhJPWFB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 16 Oct 2021 18:05:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36104 "EHLO mail.kernel.org"
+        id S244675AbhJPWFI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 Oct 2021 18:05:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36170 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S235616AbhJPWFA (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sat, 16 Oct 2021 18:05:00 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 231C060F44;
-        Sat, 16 Oct 2021 22:02:52 +0000 (UTC)
+        id S235616AbhJPWFH (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 16 Oct 2021 18:05:07 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id A4E4660EE9;
+        Sat, 16 Oct 2021 22:02:58 +0000 (UTC)
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v4 5/7] NFS: Replace dprintk callsites in nfs_readpage(s)
-Date:   Sat, 16 Oct 2021 18:02:51 -0400
-Message-Id:  <163442177101.1585.8852378085253353318.stgit@morisot.1015granger.net>
+Subject: [PATCH v4 6/7] SUNRPC: Trace calls to .rpc_call_done
+Date:   Sat, 16 Oct 2021 18:02:57 -0400
+Message-Id:  <163442177754.1585.5840349306714736549.stgit@morisot.1015granger.net>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To:  <163442096873.1585.8967342784030733636.stgit@morisot.1015granger.net>
 References:  <163442096873.1585.8967342784030733636.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.3
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6475; h=from:subject:message-id; bh=QRIi+ucGa28hhEpCKpW5Hvpm8ML8uMSVa6gsQjDQ7qE=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBha0wLHGakPi5LNF6mbd57fy3JZ9quFD295C6wpLev xTRX5v+JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYWtMCwAKCRAzarMzb2Z/l20kEA CTxLYg7k4huyg9UqQ76bThKWhpp5jalJqCxrA3uZcsJK1/vJp470q7jzi1NM0Il0jGsv4RP4w06Mnf +0kBvv919iAsAwfLmwloV9iLcuzR1LD2snBBG3MlxHJ5bsktop9sF3ctWX4qnHop5DG/h4kJfaHVE/ POmKcrrXzOj/19ByWj3Xhij69aJ70VLflABK6iggQdOhW1XA+sTdsGdlng/kZUJOv2kwhEIRhsXdM6 4oOSNNQDlQRGHI7US5iJTp6HmgMAqNDTNEZjaK3g3n0XsJHow0eFV+2hTjfP2A1cEQJyv+a4q0kL2v Tlm9eYp0yH1msJpwA9Uomil4h+lTciEyErKAE1iXiahf1j8b3DAOlrRFHFIpAGsc5eS0Kw3zeV49e/ LCGLK1OwGy3F2I5jXKo/V186TAF1nhwARpNMsdPjoDcfTk/AJzMewJdk3UO5KoJB32B4OI/MeGZ/nv ZT/mqLiDyJtchQqHO35t8PhgfImvkpfIfxdDzhHvDIyzgTh401xIZJLTIwrjCDk/2dU6XtTXy91gEj cged0s8Rzag5ouYiKOg+641UixUloPMrP/4Qm9aXywsUToc3AsHaYdwTwVXeGbXENyVe5tQzQvWPui wM/UX/4FGg7op84CZj6jvPUmeNNPys0GHScSwZm6nFPaWRE1Rnw3hgCCr70w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5603; h=from:subject:message-id; bh=u10Cv/Zc4BbSfP51ipbDMeZmXW6FIPjDZTzR66hjdf8=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBha0wRYMNuy2nqJenhab2+r75jBsGcQ0EZzOGIkeQ7 iWI3IxuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYWtMEQAKCRAzarMzb2Z/l3NZD/ 9G7KRsXNLyUwPJVyUWcOa80uc9tnPxhrBEQ2iWf+EogePflhtPuEJTTUi8atw1rCtdesWAA9zKZmnI b0Ip2lPVFXcxClqjMWC9KSo1Fbf1QXvOdcRmPlntV3alxs3LpI43BCR96qOqbO6QqnX8dXCIM95KBZ jjFmKv0dHVyPHQsawOQHy9PV7mTC0DHlB156LgCTiA6uGyQ/sksnNmkAy0f6Te3sZtMi2PhN1CdCWo x5SxyU5tBQUQvGLoO9UxNtxeEG4CtQdC36/GBUfxVGsd+ITMLfHo36Q7cJw8A55OHWWpMdW0R3lXCF lm85hSLQ35r8h5s7mXzSLJzLz7BAQr5Spt7RxZmeKRWgfH9VFncaLHsRaugeX9KKGOeQ/pMBnHQLeQ 7BUZvxPbPdYHizmUOEs7X0RsfLF6mzfMDRhYPMti1oU9vSKflMZGyU4NHDX5SoirkgK2z6mZS6FXZ0 t5HhwtJCKPwd6+ONfx9LrLK4qC+JBsTJWV/Y41tKmszRClxDrT4Cq4FE9u5D7iAqnAhZNO9TXnoR77 bvGJEE0yICVXgRJX4ndZTImUl2EemcFdL8LgJ+Ji6+eXV/BCtD6YOr8WhBgwydhUZ15esTvnlQd2yr WDgylTClDPrFHPPdWAuvdtzXcCgzzwAFmDYtqwRBs0sILZmxMRsIrUIn8g7Q==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These new events report slightly different information for readpage
-and readpages/readahead.
+Introduce a single tracepoint that can replace simple dprintk call
+sites in upper layer "rpc_call_done" callbacks. Example:
 
-For readpage:
-             fsx-1387  [006]   380.761896: nfs_aop_readpage:    fileid=00:28:2 fhandle=0x36fbbe51 version=1752899355910932437 offset=131072
-             fsx-1387  [006]   380.761900: nfs_aop_readpage_done: fileid=00:28:2 fhandle=0x36fbbe51 version=1752899355910932437 offset=131072 ret=0
-
-The index of a synchronous single-page read is reported.
-
-For readpages:
-
-             fsx-1387  [006]   380.760847: nfs_aop_readahead:   fileid=00:28:2 fhandle=0x36fbbe51 version=1752899355909932456 nr_pages=3
-             fsx-1387  [006]   380.760853: nfs_aop_readahead_done: fileid=00:28:2 fhandle=0x36fbbe51 version=1752899355909932456 nr_pages=3 ret=0
-
-The count of pages requested is reported. nfs_readpages does not
-wait for the READ requests to complete.
+   kworker/u24:2-1254  [001]   771.026677: rpc_stats_latency:    task:00000001@00000002 xid=0x16a6f3c0 rpcbindv2 GETPORT backlog=446 rtt=101 execute=555
+   kworker/u24:2-1254  [001]   771.026677: rpc_task_call_done:   task:00000001@00000002 flags=ASYNC|DYNAMIC|SOFT|SOFTCONN|SENT runstate=RUNNING|ACTIVE status=0 action=rpcb_getport_done
+   kworker/u24:2-1254  [001]   771.026678: rpcb_setport:         task:00000001@00000002 status=0 port=20048
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfs/nfstrace.h |  146 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- fs/nfs/read.c     |   11 ++--
- 2 files changed, 151 insertions(+), 6 deletions(-)
+ fs/lockd/clntproc.c                    |    3 ---
+ fs/lockd/svc4proc.c                    |    2 --
+ fs/lockd/svcproc.c                     |    2 --
+ fs/nfs/filelayout/filelayout.c         |    2 --
+ fs/nfs/flexfilelayout/flexfilelayout.c |    2 --
+ fs/nfs/pagelist.c                      |    3 ---
+ fs/nfs/write.c                         |    3 ---
+ include/trace/events/sunrpc.h          |    1 +
+ net/sunrpc/sched.c                     |    1 +
+ 9 files changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index e9be65b52bfe..898308780df8 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -862,6 +862,152 @@ TRACE_EVENT(nfs_sillyrename_unlink,
- 		)
- );
- 
-+TRACE_EVENT(nfs_aop_readpage,
-+		TP_PROTO(
-+			const struct inode *inode,
-+			struct page *page
-+		),
-+
-+		TP_ARGS(inode, page),
-+
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(u64, fileid)
-+			__field(u64, version)
-+			__field(loff_t, offset)
-+		),
-+
-+		TP_fast_assign(
-+			const struct nfs_inode *nfsi = NFS_I(inode);
-+
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = nfsi->fileid;
-+			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
-+			__entry->version = inode_peek_iversion_raw(inode);
-+			__entry->offset = page_index(page) << PAGE_SHIFT;
-+		),
-+
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu offset=%lld",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle, __entry->version,
-+			__entry->offset
-+		)
-+);
-+
-+TRACE_EVENT(nfs_aop_readpage_done,
-+		TP_PROTO(
-+			const struct inode *inode,
-+			struct page *page,
-+			int ret
-+		),
-+
-+		TP_ARGS(inode, page, ret),
-+
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(int, ret)
-+			__field(u64, fileid)
-+			__field(u64, version)
-+			__field(loff_t, offset)
-+		),
-+
-+		TP_fast_assign(
-+			const struct nfs_inode *nfsi = NFS_I(inode);
-+
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = nfsi->fileid;
-+			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
-+			__entry->version = inode_peek_iversion_raw(inode);
-+			__entry->offset = page_index(page) << PAGE_SHIFT;
-+			__entry->ret = ret;
-+		),
-+
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu offset=%lld ret=%d",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle, __entry->version,
-+			__entry->offset, __entry->ret
-+		)
-+);
-+
-+TRACE_EVENT(nfs_aop_readahead,
-+		TP_PROTO(
-+			const struct inode *inode,
-+			unsigned int nr_pages
-+		),
-+
-+		TP_ARGS(inode, nr_pages),
-+
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(u64, fileid)
-+			__field(u64, version)
-+			__field(unsigned int, nr_pages)
-+		),
-+
-+		TP_fast_assign(
-+			const struct nfs_inode *nfsi = NFS_I(inode);
-+
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = nfsi->fileid;
-+			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
-+			__entry->version = inode_peek_iversion_raw(inode);
-+			__entry->nr_pages = nr_pages;
-+		),
-+
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu nr_pages=%u",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle, __entry->version,
-+			__entry->nr_pages
-+		)
-+);
-+
-+TRACE_EVENT(nfs_aop_readahead_done,
-+		TP_PROTO(
-+			const struct inode *inode,
-+			unsigned int nr_pages,
-+			int ret
-+		),
-+
-+		TP_ARGS(inode, nr_pages, ret),
-+
-+		TP_STRUCT__entry(
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(int, ret)
-+			__field(u64, fileid)
-+			__field(u64, version)
-+			__field(unsigned int, nr_pages)
-+		),
-+
-+		TP_fast_assign(
-+			const struct nfs_inode *nfsi = NFS_I(inode);
-+
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = nfsi->fileid;
-+			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
-+			__entry->version = inode_peek_iversion_raw(inode);
-+			__entry->nr_pages = nr_pages;
-+			__entry->ret = ret;
-+		),
-+
-+		TP_printk(
-+			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu nr_pages=%u ret=%d",
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle, __entry->version,
-+			__entry->nr_pages, __entry->ret
-+		)
-+);
-+
- TRACE_EVENT(nfs_initiate_read,
- 		TP_PROTO(
- 			const struct nfs_pgio_header *hdr
-diff --git a/fs/nfs/read.c b/fs/nfs/read.c
-index 08d6cc57cbc3..c8273d4b12ad 100644
---- a/fs/nfs/read.c
-+++ b/fs/nfs/read.c
-@@ -337,8 +337,7 @@ int nfs_readpage(struct file *file, struct page *page)
- 	struct inode *inode = page_file_mapping(page)->host;
- 	int ret;
- 
--	dprintk("NFS: nfs_readpage (%p %ld@%lu)\n",
--		page, PAGE_SIZE, page_index(page));
-+	trace_nfs_aop_readpage(inode, page);
- 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGE);
- 
- 	/*
-@@ -390,9 +389,11 @@ int nfs_readpage(struct file *file, struct page *page)
+diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
+index b11f2afa84f1..99fffc9cb958 100644
+--- a/fs/lockd/clntproc.c
++++ b/fs/lockd/clntproc.c
+@@ -794,9 +794,6 @@ static void nlmclnt_cancel_callback(struct rpc_task *task, void *data)
+ 		goto retry_cancel;
  	}
- out:
- 	put_nfs_open_context(desc.ctx);
-+	trace_nfs_aop_readpage_done(inode, page, ret);
- 	return ret;
- out_unlock:
- 	unlock_page(page);
-+	trace_nfs_aop_readpage_done(inode, page, ret);
- 	return ret;
+ 
+-	dprintk("lockd: cancel status %u (task %u)\n",
+-			status, task->tk_pid);
+-
+ 	switch (status) {
+ 	case NLM_LCK_GRANTED:
+ 	case NLM_LCK_DENIED_GRACE_PERIOD:
+diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
+index e10ae2c41279..176b468a61c7 100644
+--- a/fs/lockd/svc4proc.c
++++ b/fs/lockd/svc4proc.c
+@@ -269,8 +269,6 @@ nlm4svc_proc_granted(struct svc_rqst *rqstp)
+  */
+ static void nlm4svc_callback_exit(struct rpc_task *task, void *data)
+ {
+-	dprintk("lockd: %5u callback returned %d\n", task->tk_pid,
+-			-task->tk_status);
  }
  
-@@ -403,10 +404,7 @@ int nfs_readpages(struct file *file, struct address_space *mapping,
- 	struct inode *inode = mapping->host;
- 	int ret;
- 
--	dprintk("NFS: nfs_readpages (%s/%Lu %d)\n",
--			inode->i_sb->s_id,
--			(unsigned long long)NFS_FILEID(inode),
--			nr_pages);
-+	trace_nfs_aop_readahead(inode, nr_pages);
- 	nfs_inc_stats(inode, NFSIOS_VFSREADPAGES);
- 
- 	ret = -ESTALE;
-@@ -439,6 +437,7 @@ int nfs_readpages(struct file *file, struct address_space *mapping,
- read_complete:
- 	put_nfs_open_context(desc.ctx);
- out:
-+	trace_nfs_aop_readahead_done(inode, nr_pages, ret);
- 	return ret;
+ static void nlm4svc_callback_release(void *data)
+diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
+index 99696d3f6dd6..4dc1b40a489a 100644
+--- a/fs/lockd/svcproc.c
++++ b/fs/lockd/svcproc.c
+@@ -301,8 +301,6 @@ nlmsvc_proc_granted(struct svc_rqst *rqstp)
+  */
+ static void nlmsvc_callback_exit(struct rpc_task *task, void *data)
+ {
+-	dprintk("lockd: %5u callback returned %d\n", task->tk_pid,
+-			-task->tk_status);
  }
  
+ void nlmsvc_release_call(struct nlm_rqst *call)
+diff --git a/fs/nfs/filelayout/filelayout.c b/fs/nfs/filelayout/filelayout.c
+index d2103852475f..9c96e3e5ed35 100644
+--- a/fs/nfs/filelayout/filelayout.c
++++ b/fs/nfs/filelayout/filelayout.c
+@@ -293,8 +293,6 @@ static void filelayout_read_call_done(struct rpc_task *task, void *data)
+ {
+ 	struct nfs_pgio_header *hdr = data;
+ 
+-	dprintk("--> %s task->tk_status %d\n", __func__, task->tk_status);
+-
+ 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags) &&
+ 	    task->tk_status == 0) {
+ 		nfs41_sequence_done(task, &hdr->res.seq_res);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index d383de00d486..a553d59afa8b 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -1414,8 +1414,6 @@ static void ff_layout_read_call_done(struct rpc_task *task, void *data)
+ {
+ 	struct nfs_pgio_header *hdr = data;
+ 
+-	dprintk("--> %s task->tk_status %d\n", __func__, task->tk_status);
+-
+ 	if (test_bit(NFS_IOHDR_REDO, &hdr->flags) &&
+ 	    task->tk_status == 0) {
+ 		nfs4_sequence_done(task, &hdr->res.seq_res);
+diff --git a/fs/nfs/pagelist.c b/fs/nfs/pagelist.c
+index cc232d1f16f2..9cc057d40ef3 100644
+--- a/fs/nfs/pagelist.c
++++ b/fs/nfs/pagelist.c
+@@ -870,9 +870,6 @@ static void nfs_pgio_result(struct rpc_task *task, void *calldata)
+ 	struct nfs_pgio_header *hdr = calldata;
+ 	struct inode *inode = hdr->inode;
+ 
+-	dprintk("NFS: %s: %5u, (status %d)\n", __func__,
+-		task->tk_pid, task->tk_status);
+-
+ 	if (hdr->rw_ops->rw_done(task, hdr, inode) != 0)
+ 		return;
+ 	if (task->tk_status < 0)
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 1ded0d232ece..dedfdf7ad2ec 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1836,9 +1836,6 @@ static void nfs_commit_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs_commit_data	*data = calldata;
+ 
+-        dprintk("NFS: %5u nfs_commit_done (status %d)\n",
+-                                task->tk_pid, task->tk_status);
+-
+ 	/* Call the NFS version-specific code */
+ 	NFS_PROTO(data->inode)->commit_done(task, data);
+ 	trace_nfs_commit_done(task, data);
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 83c2a1cb2e3a..2345bdfb30b0 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -372,6 +372,7 @@ DEFINE_RPC_RUNNING_EVENT(complete);
+ DEFINE_RPC_RUNNING_EVENT(timeout);
+ DEFINE_RPC_RUNNING_EVENT(signalled);
+ DEFINE_RPC_RUNNING_EVENT(end);
++DEFINE_RPC_RUNNING_EVENT(call_done);
+ 
+ DECLARE_EVENT_CLASS(rpc_task_queued,
+ 
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index b3402aeb8f30..34c71fa95c41 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -837,6 +837,7 @@ void rpc_exit_task(struct rpc_task *task)
+ 	else if (task->tk_client)
+ 		rpc_count_iostats(task, task->tk_client->cl_metrics);
+ 	if (task->tk_ops->rpc_call_done != NULL) {
++		trace_rpc_task_call_done(task, task->tk_ops->rpc_call_done);
+ 		task->tk_ops->rpc_call_done(task, task->tk_calldata);
+ 		if (task->tk_action != NULL) {
+ 			/* Always release the RPC slot and buffer memory */
 
