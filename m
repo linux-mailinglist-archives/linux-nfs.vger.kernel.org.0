@@ -2,121 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F07AD4300EB
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Oct 2021 09:40:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79A85430521
+	for <lists+linux-nfs@lfdr.de>; Sun, 17 Oct 2021 00:02:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243807AbhJPHmV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 16 Oct 2021 03:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243801AbhJPHmU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 16 Oct 2021 03:42:20 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B080CC061765;
-        Sat, 16 Oct 2021 00:40:12 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id n8so51503793lfk.6;
-        Sat, 16 Oct 2021 00:40:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=yeYbTALLt+81wu8WFfyKx0a33Kod/SnDLZRAl1Frm5U=;
-        b=cVnZ6+l+2XB64KtPGPsew2EuurYnsOpcBevvm/IVGVDWp/Lr378D4lUZAb7Ldqn1aU
-         Nechfd+nevnKJt8FFrjsUkhQRsZN4OdAe+y/4UgENJDxkcBm3bvvsqVp0+i7kz/ncskC
-         VTNCGAMRL2zXauGox8hUYH0e6cLX9YNzHMmZx68OgeqDdd/IPTSNwVgM/hhe43XfbD/A
-         Rsr2ngeAq8MwLS8wYqIQpA7q0jGrbmoIHsnPPXNshCS3yofpN7y1D6hLbuTi/3aHu8Hg
-         WHPyyYAgwzwuGQtuqb861mn1fmCGJ4Gxolg4kHeKn8eV14e/nwAYLFHNCnrx2jzkQiPm
-         sdiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=yeYbTALLt+81wu8WFfyKx0a33Kod/SnDLZRAl1Frm5U=;
-        b=1huJ5oysI05xJ1aHtwvlAGyBBPx/KuQAWKBT2mbRy2s/c41Q02EyXPqdoYas7YhLiw
-         aZbl36IYg9/w54HDTlWv4uwV92L/19zz/n+atRnkd5JmwAh2kzomA4aCed4ye4XkwNfx
-         WSvvvAgkB150U5+i7Eleh8RUEYD9u6cQzCrK4rStxxrWjDru8KdQqpcNhWPGLiUUTwg+
-         wFdr2niwD0jSxq5jXhK6t+Vyn/l4eCZUNNNBvs0UsPCami3Ng9vjevcxUAMLmUYIxA3I
-         zf7WZo/4dERpFEWwK9wv8SsuuczE/In0WD4P7RWskmZW1k6qwQKdX2O4YuO2x5Jzxjn8
-         gCMQ==
-X-Gm-Message-State: AOAM532mdIbON8UzZvjWjFYsfzqBlgByhpATVexRGrMZcPUC8hVnqM5c
-        KdHF7iq0yktmgbV/ThcmIrV6DO5XAhPEQA==
-X-Google-Smtp-Source: ABdhPJz42JllLibAuMU4PSsWo9d4pmXBI6FidoZzBNe3/Oe9MjVOfwHK8qKnrFH4pZzBziLDXJNmxQ==
-X-Received: by 2002:a05:6512:3190:: with SMTP id i16mr9019031lfe.224.1634370011048;
-        Sat, 16 Oct 2021 00:40:11 -0700 (PDT)
-Received: from kari-VirtualBox (85-23-89-224.bb.dnainternet.fi. [85.23.89.224])
-        by smtp.gmail.com with ESMTPSA id a19sm827633ljb.3.2021.10.16.00.40.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 16 Oct 2021 00:40:10 -0700 (PDT)
-Date:   Sat, 16 Oct 2021 10:40:08 +0300
-From:   Kari Argillander <kari.argillander@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Coly Li <colyli@suse.de>,
-        Mike Snitzer <snitzer@redhat.com>, Song Liu <song@kernel.org>,
-        David Sterba <dsterba@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Dave Kleikamp <shaggy@kernel.org>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Kees Cook <keescook@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Jan Kara <jack@suse.com>, linux-block@vger.kernel.org,
-        dm-devel@redhat.com, drbd-dev@lists.linbit.com,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, reiserfs-devel@vger.kernel.org
-Subject: Re: [PATCH 20/30] ntfs3: use bdev_nr_bytes instead of open coding it
-Message-ID: <20211016074008.o6wl7uy3vsrz4v3b@kari-VirtualBox>
-References: <20211015132643.1621913-1-hch@lst.de>
- <20211015132643.1621913-21-hch@lst.de>
+        id S244667AbhJPWE3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 Oct 2021 18:04:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S235312AbhJPWE2 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sat, 16 Oct 2021 18:04:28 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4C9F060E98;
+        Sat, 16 Oct 2021 22:02:19 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     trondmy@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v4 0/7] Update RPC task pid as displayed by tracepoints
+Date:   Sat, 16 Oct 2021 18:02:18 -0400
+Message-Id:  <163442096873.1585.8967342784030733636.stgit@morisot.1015granger.net>
+X-Mailer: git-send-email 2.33.0
+User-Agent: StGit/1.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211015132643.1621913-21-hch@lst.de>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1866; h=from:subject:message-id; bh=zxv6h3jkU60Xa4opXKNnXUljyBAso0Zb1hfUMo72epo=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBha0vkTSHtY5H5/7webaGq150vYWPANCIOe5YPpqbu zP+2o3OJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYWtL5AAKCRAzarMzb2Z/l0bzEA CA/mPGoGdvCmzGmie/JUigJOxsKdF5JCK7QocWhH0IqkBtxAg5CEeByXp5OxRAYLQ8LqAzc6zg2fGQ ATw0WBb79LoZ6TvOUcQOQXjClEoPEUw1SstbxaXUV0aS4gXo0jXH9zx2GmmZmf9ksxw02he7cuBVIq PweHuQmyxswxrLl1d2PrDZojzxFksACJLZr7LEKUCQv7629vlGfBXMkHJTlV1RfzvfS8aCS5jIuf63 IBCNX79XvW/9zl0g3Pso+PxSM+NsAC3+C8OTrqPD+O8HwV1qNZ8pv73an6B/hEwQtpN1USyL4xA45S 2q5jVMgDv7MoDVc4cKn8t2U3Byv+qeryWS/GCcnvEy42N6v1fCwzs4ydxEUN17Rv7MYavnEkruOPAd 0p01CdjUrhSKHf0ZAwsc5x0sapoicR9kLLLczj09L+1ZvEQhMP6sGPstiH2ZbkhnFucoXrE/kKaM6s p6+w8GLM1RCYton/Sb0qpv/IpINAcwl2uo06D54FScSLYa+/UmEusMjszyOF6HVTBnNpokd4y6HErK ki3oTXBf47fHEX83j2CgsLroEcb2D9ih4RzHU9dagOYjIC5GjkpLBCLdVkseZQllLQbUugfXbN/Hst 7NtACgUvpqeS5h0auKqWk48FhdpZgisuZ1bE3g33fCzJCMrPs7UsFHLADYlA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 15, 2021 at 03:26:33PM +0200, Christoph Hellwig wrote:
-> Use the proper helper to read the block device size.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  fs/ntfs3/super.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/fs/ntfs3/super.c b/fs/ntfs3/super.c
-> index 55bbc9200a10e..7ed2cb5e8b1d9 100644
-> --- a/fs/ntfs3/super.c
-> +++ b/fs/ntfs3/super.c
-> @@ -918,7 +918,6 @@ static int ntfs_fill_super(struct super_block *sb, void *data, int silent)
->  	int err;
->  	struct ntfs_sb_info *sbi;
->  	struct block_device *bdev = sb->s_bdev;
-> -	struct inode *bd_inode = bdev->bd_inode;
+Reposting this series:
 
-Linus merged latest ntfs3 stuff and this temp variable is not anymore in
-upstream. So this patch will conflict. Just so that you know.
+https://lore.kernel.org/linux-nfs/163345354511.524558.1980332041837428746.stgit@morisot.1015granger.net/
 
->  	struct request_queue *rq = bdev_get_queue(bdev);
->  	struct inode *inode = NULL;
->  	struct ntfs_inode *ni;
-> @@ -967,7 +966,7 @@ static int ntfs_fill_super(struct super_block *sb, void *data, int silent)
->  
->  	/* Parse boot. */
->  	err = ntfs_init_from_boot(sb, rq ? queue_logical_block_size(rq) : 512,
-> -				  bd_inode->i_size);
-> +				  bdev_nr_bytes(bdev));
->  	if (err)
->  		goto out;
->  
-> -- 
-> 2.30.2
-> 
-> 
+with the final patch in that series was updated as it was here:
+
+https://lore.kernel.org/linux-nfs/163370502469.515303.12254136133220397877.stgit@morisot.1015granger.net/
+
+Changes since v3:
+- Repost entire series with updated 5/5
+- Include two more tracepoint-related clean up patches
+
+---
+
+Chuck Lever (7):
+      SUNRPC: Tracepoints should display tk_pid and cl_clid as a fixed-size field
+      SUNRPC: Avoid NULL pointer dereferences in tracepoints
+      SUNRPC: Use BIT() macro in rpc_show_xprt_state()
+      SUNRPC: Don't dereference xprt->snd_task if it's a cookie
+      NFS: Replace dprintk callsites in nfs_readpage(s)
+      SUNRPC: Trace calls to .rpc_call_done
+      NFS: Remove --> and <-- dprintk call sites
+
+
+ fs/lockd/clntproc.c                    |   3 -
+ fs/lockd/svc4proc.c                    |   2 -
+ fs/lockd/svcproc.c                     |   2 -
+ fs/nfs/filelayout/filelayout.c         |   2 -
+ fs/nfs/flexfilelayout/flexfilelayout.c |   2 -
+ fs/nfs/nfs4proc.c                      |  54 +-------
+ fs/nfs/nfs4trace.h                     |  17 +--
+ fs/nfs/nfstrace.h                      | 155 ++++++++++++++++++++-
+ fs/nfs/pagelist.c                      |   3 -
+ fs/nfs/read.c                          |  11 +-
+ fs/nfs/write.c                         |   3 -
+ include/trace/events/rpcgss.h          |  36 ++---
+ include/trace/events/rpcrdma.h         | 104 ++++++--------
+ include/trace/events/sunrpc.h          | 183 +++++++++++--------------
+ include/trace/events/sunrpc_base.h     |  42 ++++++
+ net/sunrpc/sched.c                     |   1 +
+ 16 files changed, 351 insertions(+), 269 deletions(-)
+ create mode 100644 include/trace/events/sunrpc_base.h
+
+--
+Chuck Lever
