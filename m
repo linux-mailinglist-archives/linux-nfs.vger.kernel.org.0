@@ -2,42 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 795C74320C2
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Oct 2021 16:56:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 643664320C6
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Oct 2021 16:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232918AbhJRO6C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Oct 2021 10:58:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:23915 "EHLO
+        id S232490AbhJRO6U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Oct 2021 10:58:20 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:43340 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232944AbhJRO55 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Oct 2021 10:57:57 -0400
+        by vger.kernel.org with ESMTP id S232977AbhJRO6N (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Oct 2021 10:58:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634568945;
+        s=mimecast20190719; t=1634568961;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=vWJr+o5XEJdul/wxaFN3vlOPvUxwAzrbc+cKwab9/Mo=;
-        b=JfUgLOpxirLFJhUidl94tN1NzHG9Pw/hBfI/uCNN45G/oJx7vSYRUd2leYVfMJwj5dbsqS
-        ggncLr4q9vqaySMVlkwGoEzMFXxEofU73mpJmKFKkBRmfQRqtKZJIp/VNAYuC5oc+WgFoJ
-        3uMQd6JyFw1Yl5ABHVhCcpvKbR6rLxM=
+        bh=fXsphGfG84x/qU401g1UBOIjGC8E9APA4ba1XbVairo=;
+        b=JNiHB9hVH+zW9sJPUSehxcOei+lH8tmB72SW9vyrLvSN+eKxyx3LpnWYXToLt5VRpcJxpG
+        TXz55pOcb3o8XO4vWY/IpATCFzHHjplxweRyswj6pZN9Vt+yESUIAI+GRBFdWDM5aSwyN3
+        MONevtZR/kFiWjzya6epHpP/K/Pj2aI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-155-Fg7w_fGOOiS33-k-QeKtrg-1; Mon, 18 Oct 2021 10:55:42 -0400
-X-MC-Unique: Fg7w_fGOOiS33-k-QeKtrg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-119-TDMc0zyxOESI0WALvBsKvQ-1; Mon, 18 Oct 2021 10:55:58 -0400
+X-MC-Unique: TDMc0zyxOESI0WALvBsKvQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7541E806668;
-        Mon, 18 Oct 2021 14:55:40 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1ED1A1006AB3;
+        Mon, 18 Oct 2021 14:55:56 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97EE85D6D7;
-        Mon, 18 Oct 2021 14:55:34 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A7005DF21;
+        Mon, 18 Oct 2021 14:55:46 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 19/67] cachefiles: Don't set an xattr on the root of the cache
+Subject: [PATCH 20/67] cachefiles: Remove some redundant checks on unsigned
+ values
 From:   David Howells <dhowells@redhat.com>
 To:     linux-cachefs@redhat.com
 Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
@@ -53,144 +54,78 @@ Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 18 Oct 2021 15:55:33 +0100
-Message-ID: <163456893374.2614702.11747731163000539462.stgit@warthog.procyon.org.uk>
+Date:   Mon, 18 Oct 2021 15:55:45 +0100
+Message-ID: <163456894569.2614702.11582768897048471845.stgit@warthog.procyon.org.uk>
 In-Reply-To: <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk>
 References: <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-cachefiles_check_object_type() sets an xattr on the root of the cache, but
-it's pointless because it never conveys any useful information, so don't do
-that.
+Remove some redundant checks for unsigned values being >= 0.
 
 Signed-off-by: David Howells <dhowells@redhat.com>
 ---
 
- fs/cachefiles/bind.c     |    4 --
- fs/cachefiles/internal.h |    1 -
- fs/cachefiles/xattr.c    |   76 ----------------------------------------------
- 3 files changed, 81 deletions(-)
+ fs/cachefiles/bind.c   |    6 ++----
+ fs/cachefiles/daemon.c |    6 +++---
+ 2 files changed, 5 insertions(+), 7 deletions(-)
 
 diff --git a/fs/cachefiles/bind.c b/fs/cachefiles/bind.c
-index d463d89f5db8..6720c07f3d85 100644
+index 6720c07f3d85..0bc748081f59 100644
 --- a/fs/cachefiles/bind.c
 +++ b/fs/cachefiles/bind.c
-@@ -199,10 +199,6 @@ static int cachefiles_daemon_add_cache(struct cachefiles_cache *cache)
- 	fsdef->dentry = cachedir;
- 	fsdef->fscache.cookie = NULL;
+@@ -36,13 +36,11 @@ int cachefiles_daemon_bind(struct cachefiles_cache *cache, char *args)
+ 	       args);
  
--	ret = cachefiles_check_object_type(fsdef);
--	if (ret < 0)
--		goto error_unsupported;
--
- 	/* get the graveyard directory */
- 	graveyard = cachefiles_get_directory(cache, root, "graveyard");
- 	if (IS_ERR(graveyard)) {
-diff --git a/fs/cachefiles/internal.h b/fs/cachefiles/internal.h
-index 0515add2b7e8..6464a6821bfb 100644
---- a/fs/cachefiles/internal.h
-+++ b/fs/cachefiles/internal.h
-@@ -169,7 +169,6 @@ static inline void cachefiles_end_secure(struct cachefiles_cache *cache,
- /*
-  * xattr.c
-  */
--extern int cachefiles_check_object_type(struct cachefiles_object *object);
- extern int cachefiles_set_object_xattr(struct cachefiles_object *object,
- 				       unsigned int xattr_flags);
- extern int cachefiles_check_auxdata(struct cachefiles_object *object);
-diff --git a/fs/cachefiles/xattr.c b/fs/cachefiles/xattr.c
-index bcc4a2dfe1e8..8b9f30f9ce21 100644
---- a/fs/cachefiles/xattr.c
-+++ b/fs/cachefiles/xattr.c
-@@ -23,82 +23,6 @@ struct cachefiles_xattr {
- static const char cachefiles_xattr_cache[] =
- 	XATTR_USER_PREFIX "CacheFiles.cache";
+ 	/* start by checking things over */
+-	ASSERT(cache->fstop_percent >= 0 &&
+-	       cache->fstop_percent < cache->fcull_percent &&
++	ASSERT(cache->fstop_percent < cache->fcull_percent &&
+ 	       cache->fcull_percent < cache->frun_percent &&
+ 	       cache->frun_percent  < 100);
  
--/*
-- * check the type label on an object
-- * - done using xattrs
-- */
--int cachefiles_check_object_type(struct cachefiles_object *object)
--{
--	struct dentry *dentry = object->dentry;
--	char type[3], xtype[3];
--	int ret;
--
--	ASSERT(dentry);
--	ASSERT(d_backing_inode(dentry));
--
--	if (!object->fscache.cookie)
--		strcpy(type, "C3");
--	else
--		snprintf(type, 3, "%02x", object->fscache.cookie->type);
--
--	_enter("%x{%s}", object->fscache.debug_id, type);
--
--	/* attempt to install a type label directly */
--	ret = vfs_setxattr(&init_user_ns, dentry, cachefiles_xattr_cache, type,
--			   2, XATTR_CREATE);
--	if (ret == 0) {
--		_debug("SET"); /* we succeeded */
--		goto error;
--	}
--
--	if (ret != -EEXIST) {
--		pr_err("Can't set xattr on %pd [%lu] (err %d)\n",
--		       dentry, d_backing_inode(dentry)->i_ino,
--		       -ret);
--		goto error;
--	}
--
--	/* read the current type label */
--	ret = vfs_getxattr(&init_user_ns, dentry, cachefiles_xattr_cache, xtype,
--			   3);
--	if (ret < 0) {
--		if (ret == -ERANGE)
--			goto bad_type_length;
--
--		pr_err("Can't read xattr on %pd [%lu] (err %d)\n",
--		       dentry, d_backing_inode(dentry)->i_ino,
--		       -ret);
--		goto error;
--	}
--
--	/* check the type is what we're expecting */
--	if (ret != 2)
--		goto bad_type_length;
--
--	if (xtype[0] != type[0] || xtype[1] != type[1])
--		goto bad_type;
--
--	ret = 0;
--
--error:
--	_leave(" = %d", ret);
--	return ret;
--
--bad_type_length:
--	pr_err("Cache object %lu type xattr length incorrect\n",
--	       d_backing_inode(dentry)->i_ino);
--	ret = -EIO;
--	goto error;
--
--bad_type:
--	xtype[2] = 0;
--	pr_err("Cache object %pd [%lu] type %s not %s\n",
--	       dentry, d_backing_inode(dentry)->i_ino,
--	       xtype, type);
--	ret = -EIO;
--	goto error;
--}
--
- /*
-  * set the state xattr on a cache file
-  */
+-	ASSERT(cache->bstop_percent >= 0 &&
+-	       cache->bstop_percent < cache->bcull_percent &&
++	ASSERT(cache->bstop_percent < cache->bcull_percent &&
+ 	       cache->bcull_percent < cache->brun_percent &&
+ 	       cache->brun_percent  < 100);
+ 
+diff --git a/fs/cachefiles/daemon.c b/fs/cachefiles/daemon.c
+index 8a937d6d5e22..e8ab3ab57147 100644
+--- a/fs/cachefiles/daemon.c
++++ b/fs/cachefiles/daemon.c
+@@ -221,7 +221,7 @@ static ssize_t cachefiles_daemon_write(struct file *file,
+ 	if (test_bit(CACHEFILES_DEAD, &cache->flags))
+ 		return -EIO;
+ 
+-	if (datalen < 0 || datalen > PAGE_SIZE - 1)
++	if (datalen > PAGE_SIZE - 1)
+ 		return -EOPNOTSUPP;
+ 
+ 	/* drag the command string into the kernel so we can parse it */
+@@ -378,7 +378,7 @@ static int cachefiles_daemon_fstop(struct cachefiles_cache *cache, char *args)
+ 	if (args[0] != '%' || args[1] != '\0')
+ 		return -EINVAL;
+ 
+-	if (fstop < 0 || fstop >= cache->fcull_percent)
++	if (fstop >= cache->fcull_percent)
+ 		return cachefiles_daemon_range_error(cache, args);
+ 
+ 	cache->fstop_percent = fstop;
+@@ -450,7 +450,7 @@ static int cachefiles_daemon_bstop(struct cachefiles_cache *cache, char *args)
+ 	if (args[0] != '%' || args[1] != '\0')
+ 		return -EINVAL;
+ 
+-	if (bstop < 0 || bstop >= cache->bcull_percent)
++	if (bstop >= cache->bcull_percent)
+ 		return cachefiles_daemon_range_error(cache, args);
+ 
+ 	cache->bstop_percent = bstop;
 
 
