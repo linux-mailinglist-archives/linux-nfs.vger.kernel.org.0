@@ -2,221 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4800E4315F5
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Oct 2021 12:23:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E578443193F
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Oct 2021 14:36:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbhJRKZ7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Oct 2021 06:25:59 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:52972 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbhJRKZ6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Oct 2021 06:25:58 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id 643AE21977;
-        Mon, 18 Oct 2021 10:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1634552626; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S231180AbhJRMid (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Oct 2021 08:38:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60413 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229833AbhJRMic (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Oct 2021 08:38:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634560580;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=5pfBZDoLk4ZpCwseu4wfT52O1HEr2BW47ti2eIQLJ4c=;
-        b=n0iHqSz5Cdj/OTCOaFShvFFM3HOJkLGulYHz3YmOxvsTJQHe4ZBJbT6BZ0PsLhHzC1qK1r
-        XzT1k+43pV+TIW0BeKEK9xAbgn/mfh3rf/l7kVlx0skRtB9V60FHexH00EZqFhijkGP3o3
-        Tx+phI7k6TkIzgV8fV0oJFXiU/Zlsnw=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        bh=5Jv3rNXTm7ES8GL61uhJSQXotnqqkJ8OFeNdlH1Vozk=;
+        b=dstZCLP2vNkawP5mJ9EKZ7Jnyq5dn4qdKmSTmxBrMn21xqCYKfN0NDL85uNTturodYeqGX
+        hQvhWjGZS746E7j6VXnnSnd9TnHh52Sjj75O2paMS4mJS3wO+E4iqQ7hvLjSafi7UHcFh0
+        uNURPn9FNcrgI4ZmzUkmh3RJyDzZQuk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-utP4HSasPUSFGE-MIPnLFQ-1; Mon, 18 Oct 2021 08:36:15 -0400
+X-MC-Unique: utP4HSasPUSFGE-MIPnLFQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id E8622A3B81;
-        Mon, 18 Oct 2021 10:23:45 +0000 (UTC)
-Date:   Mon, 18 Oct 2021 12:23:42 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
-Message-ID: <YW1LLlwjbyv8dcmn@dhcp22.suse.cz>
-References: <b680fb87-439b-0ba4-cf9f-33d729f27941@suse.cz>
- <YVwyhDnE/HEnoLAi@dhcp22.suse.cz>
- <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
- <20211006231452.GF54211@dread.disaster.area>
- <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
- <163364854551.31063.4377741712039731672@noble.neil.brown.name>
- <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
- <20211008223649.GJ54211@dread.disaster.area>
- <YWQmsESyyiea0zle@dhcp22.suse.cz>
- <163398898675.17149.16715168325131099480@noble.neil.brown.name>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF6C51966320;
+        Mon, 18 Oct 2021 12:36:11 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.22.33.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B949BB8551;
+        Mon, 18 Oct 2021 12:35:49 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id D710922045E; Mon, 18 Oct 2021 08:35:48 -0400 (EDT)
+Date:   Mon, 18 Oct 2021 08:35:48 -0400
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     jmorris@namei.org
+Cc:     linux-fsdevel@vger.kernel.org, virtio-fs@redhat.com,
+        Miklos Szeredi <miklos@szeredi.hu>, dwalsh@redhat.com,
+        jlayton@kernel.org, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bfields@fieldses.org,
+        chuck.lever@oracle.com, anna.schumaker@netapp.com,
+        trond.myklebust@hammerspace.com, stephen.smalley.work@gmail.com,
+        casey@schaufler-ca.com, Ondrej Mosnacek <omosnace@redhat.com>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        serge@hallyn.com
+Subject: Re: [PATCH v2] security: Return xattr name from
+ security_dentry_init_security()
+Message-ID: <YW1qJKLHYHWia2Nd@redhat.com>
+References: <YWWMO/ZDrvDZ5X4c@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163398898675.17149.16715168325131099480@noble.neil.brown.name>
+In-Reply-To: <YWWMO/ZDrvDZ5X4c@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue 12-10-21 08:49:46, Neil Brown wrote:
-> On Mon, 11 Oct 2021, Michal Hocko wrote:
-> > On Sat 09-10-21 09:36:49, Dave Chinner wrote:
-> > > 
-> > > Put simply, we want "retry forever" semantics to match what
-> > > production kernels have been doing for the past couple of decades,
-> > > but all we've been given are "never fail" semantics that also do
-> > > something different and potentially much more problematic.
-> > > 
-> > > Do you see the difference here? __GFP_NOFAIL is not what we
-> > > need in the vast majority of cases where it is used. We don't want
-> > > the failing allocations to drive the machine hard into critical
-> > > reserves, we just want the allocation to -eventually succeed- and if
-> > > it doesn't, that's our problem to handle, not kmalloc()....
-> > 
-> > I can see your point. I do have a recollection that there were some
-> > instance involved where an emergency access to memory reserves helped
-> > in OOM situations.
+Hi James,
+
+I am assuming this patch will need to be routed through security tree.
+Can you please consider it for inclusion.
+
+Thanks
+Vivek
+
+On Tue, Oct 12, 2021 at 09:23:07AM -0400, Vivek Goyal wrote:
+> Right now security_dentry_init_security() only supports single security
+> label and is used by SELinux only. There are two users of of this hook,
+> namely ceph and nfs.
 > 
-> It might have been better to annotate those particular calls with
-> __GFP_ATOMIC or similar rather then change GFP_NOFAIL for everyone.
-
-For historical reasons __GFP_ATOMIC is reserved for non sleeping
-allocations. __GFP_HIGH would be an alternative.
-
-> Too late to fix that now though I think.  Maybe the best way forward is
-> to discourage new uses of GFP_NOFAIL.  We would need a well-documented
-> replacement.
-
-I am not sure what that should be. Really if the memory reserves
-behavior of GFP_NOFAIL is really problematic then let's just reap it
-out. I do not see a new nofail like flag is due.
-
-> > Anway as I've tried to explain earlier that this all is an
-> > implementation detail users of the flag shouldn't really care about. If
-> > this heuristic is not doing any good then it should be removed.
+> NFS does not care about xattr name. Ceph hardcodes the xattr name to
+> security.selinux (XATTR_NAME_SELINUX).
 > 
-> Maybe users shouldn't care about implementation details, but they do
-> need to care about semantics and costs.
-> We need to know when it is appropriate to use GFP_NOFAIL, and when it is
-> not.  And what alternatives there are when it is not appropriate.
-> Just saying "try to avoid using it" and "requires careful analysis"
-> isn't acceptable.  Sometimes it is unavoidable and analysis can only be
-> done with a clear understanding of costs.  Possibly analysis can only be
-> done with a clear understanding of the internal implementation details.
-
-What we document currently is this
- * %__GFP_NOFAIL: The VM implementation _must_ retry infinitely: the caller
- * cannot handle allocation failures. The allocation could block
- * indefinitely but will never return with failure. Testing for
- * failure is pointless.
- * New users should be evaluated carefully (and the flag should be
- * used only when there is no reasonable failure policy) but it is
- * definitely preferable to use the flag rather than opencode endless
- * loop around allocator.
- * Using this flag for costly allocations is _highly_ discouraged.
-
-so we tell when to use it - aka no reasonable failure policy. We put
-some discouragind language there. There is some discouraging language
-for high order allocations. Maybe we should suggest an alternative
-there. It seems there are usecases for those as well so we should
-implement a proper NOFAIL kvmalloc and recommend it for that instead.
-
-> > > It also points out that the scope API is highly deficient.
-> > > We can do GFP_NOFS via the scope API, but we can't
-> > > do anything else because *there is no scope API for other GFP
-> > > flags*.
-> > > 
-> > > Why don't we have a GFP_NOFAIL/__GFP_RETRY_FOREVER scope API?
-> > 
-> > NO{FS,IO} where first flags to start this approach. And I have to admit
-> > the experiment was much less successful then I hoped for. There are
-> > still thousands of direct NOFS users so for some reason defining scopes
-> > is not an easy thing to do.
+> I am making changes to fuse/virtiofs to send security label to virtiofsd
+> and I need to send xattr name as well. I also hardcoded the name of
+> xattr to security.selinux.
 > 
-> I'm not certain your conclusion is valid.  It could be that defining
-> scopes is easy enough, but no one feels motivated to do it.
-> We need to do more than provide functionality.  We need to tell people. 
-> Repeatedly.  And advertise widely.  And propose patches to make use of
-> the functionality.  And... and... and...
-
-Been there, done that for the low hanging fruit. Others were much more
-complex for me to follow up and I had other stuff on my table.
- 
-> I think changing to the scope API is a good change, but it is
-> conceptually a big change.  It needs to be driven.
-
-Agreed.
-
-> > I am not against NOFAIL scopes in principle but seeing the nofs
-> > "success" I am worried this will not go really well either and it is
-> > much more tricky as NOFAIL has much stronger requirements than NOFS.
-> > Just imagine how tricky this can be if you just call a library code
-> > that is not under your control within a NOFAIL scope. What if that
-> > library code decides to allocate (e.g. printk that would attempt to do
-> > an optimistic NOWAIT allocation).
+> Stephen Smalley suggested that it probably is a good idea to modify
+> security_dentry_init_security() to also return name of xattr so that
+> we can avoid this hardcoding in the callers.
 > 
-> __GFP_NOMEMALLOC holds a lesson worth learning here.  PF_MEMALLOC
-> effectively adds __GFP_MEMALLOC to all allocations, but some call sites
-> need to over-ride that because there are alternate strategies available.
-> This need-to-over-ride doesn't apply to NOFS or NOIO as that really is a
-> thread-wide state.  But MEMALLOC and NOFAIL are different.  Some call
-> sites can reasonably handle failure locally.
+> This patch adds a new parameter "const char **xattr_name" to
+> security_dentry_init_security() and LSM puts the name of xattr
+> too if caller asked for it (xattr_name != NULL).
 > 
-> I imagine the scope-api would say something like "NO_ENOMEM".  i.e.
-> memory allocations can fail as long as ENOMEM is never returned.
-> Any caller that sets __GFP_RETRY_MAYFAIL or __GFP_NORETRY or maybe some
-> others which not be affected by the NO_ENOMEM scope.  But a plain
-> GFP_KERNEL would.
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> ---
 > 
-> Introducing the scope api would be a good opportunity to drop the
-> priority boost and *just* block until success.  Priority boosts could
-> then be added (possibly as a scope) only where they are measurably needed.
+> Changes since v1:
+> - Updated comment to make it clear caller does not have to free the
+>   xattr_name. (Jeff Layton).
+> - Captured Jeff's Reviewed-by ack.
 > 
-> I think we have 28 process flags in use.  So we can probably afford one
-> more for PF_MEMALLOC_NO_ENOMEM.  What other scope flags might be useful?
-> PF_MEMALLOC_BOOST which added __GFP_ATOMIC but not __GFP_MEMALLOC ??
-> PF_MEMALLOC_NORECLAIM ??
-
-I dunno. PF_MEMALLOC and its GFP_$FOO counterparts are quite hard to
-wrap my head around. I have never liked thos much TBH and building more
-on top sounds like step backward. I might be wrong but this sounds like
-even more work than NOFS scopes.
- 
-> > > That
-> > > would save us a lot of bother in XFS. What about GFP_DIRECT_RECLAIM?
-> > > I'd really like to turn that off for allocations in the XFS
-> > > transaction commit path (as noted already in this thread) because
-> > > direct reclaim that can make no progress is actively harmful (as
-> > > noted already in this thread)
-> > 
-> > As always if you have reasonable usecases then it is best to bring them
-> > up on the MM list and we can discuss them.
+> I have tested this patch with virtiofs and compile tested for ceph and nfs.
 > 
-> We are on the MM lists now... let's discuss :-)
+> NFS changes are trivial. Looking for an ack from NFS maintainers.
+> 
+> ---
+>  fs/ceph/xattr.c               |    3 +--
+>  fs/nfs/nfs4proc.c             |    3 ++-
+>  include/linux/lsm_hook_defs.h |    3 ++-
+>  include/linux/lsm_hooks.h     |    3 +++
+>  include/linux/security.h      |    6 ++++--
+>  security/security.c           |    7 ++++---
+>  security/selinux/hooks.c      |    6 +++++-
+>  7 files changed, 21 insertions(+), 10 deletions(-)
+> 
+> Index: redhat-linux/security/selinux/hooks.c
+> ===================================================================
+> --- redhat-linux.orig/security/selinux/hooks.c	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/security/selinux/hooks.c	2021-10-06 15:20:57.745247170 -0400
+> @@ -2948,7 +2948,8 @@ static void selinux_inode_free_security(
+>  }
+>  
+>  static int selinux_dentry_init_security(struct dentry *dentry, int mode,
+> -					const struct qstr *name, void **ctx,
+> +					const struct qstr *name,
+> +					const char **xattr_name, void **ctx,
+>  					u32 *ctxlen)
+>  {
+>  	u32 newsid;
+> @@ -2961,6 +2962,9 @@ static int selinux_dentry_init_security(
+>  	if (rc)
+>  		return rc;
+>  
+> +	if (xattr_name)
+> +		*xattr_name = XATTR_NAME_SELINUX;
+> +
+>  	return security_sid_to_context(&selinux_state, newsid, (char **)ctx,
+>  				       ctxlen);
+>  }
+> Index: redhat-linux/security/security.c
+> ===================================================================
+> --- redhat-linux.orig/security/security.c	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/security/security.c	2021-10-06 15:20:57.749247170 -0400
+> @@ -1052,11 +1052,12 @@ void security_inode_free(struct inode *i
+>  }
+>  
+>  int security_dentry_init_security(struct dentry *dentry, int mode,
+> -					const struct qstr *name, void **ctx,
+> -					u32 *ctxlen)
+> +				  const struct qstr *name,
+> +				  const char **xattr_name, void **ctx,
+> +				  u32 *ctxlen)
+>  {
+>  	return call_int_hook(dentry_init_security, -EOPNOTSUPP, dentry, mode,
+> -				name, ctx, ctxlen);
+> +				name, xattr_name, ctx, ctxlen);
+>  }
+>  EXPORT_SYMBOL(security_dentry_init_security);
+>  
+> Index: redhat-linux/include/linux/lsm_hooks.h
+> ===================================================================
+> --- redhat-linux.orig/include/linux/lsm_hooks.h	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/include/linux/lsm_hooks.h	2021-10-12 09:05:00.830399245 -0400
+> @@ -196,6 +196,9 @@
+>   *	@dentry dentry to use in calculating the context.
+>   *	@mode mode used to determine resource type.
+>   *	@name name of the last path component used to create file
+> + *	@xattr_name pointer to place the pointer to security xattr name.
+> + *		    Caller does not have to free the resulting pointer. Its
+> + *		    a pointer to static string.
+>   *	@ctx pointer to place the pointer to the resulting context in.
+>   *	@ctxlen point to place the length of the resulting context.
+>   * @dentry_create_files_as:
+> Index: redhat-linux/include/linux/security.h
+> ===================================================================
+> --- redhat-linux.orig/include/linux/security.h	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/include/linux/security.h	2021-10-06 15:20:57.751247170 -0400
+> @@ -317,8 +317,9 @@ int security_add_mnt_opt(const char *opt
+>  				int len, void **mnt_opts);
+>  int security_move_mount(const struct path *from_path, const struct path *to_path);
+>  int security_dentry_init_security(struct dentry *dentry, int mode,
+> -					const struct qstr *name, void **ctx,
+> -					u32 *ctxlen);
+> +				  const struct qstr *name,
+> +				  const char **xattr_name, void **ctx,
+> +				  u32 *ctxlen);
+>  int security_dentry_create_files_as(struct dentry *dentry, int mode,
+>  					struct qstr *name,
+>  					const struct cred *old,
+> @@ -739,6 +740,7 @@ static inline void security_inode_free(s
+>  static inline int security_dentry_init_security(struct dentry *dentry,
+>  						 int mode,
+>  						 const struct qstr *name,
+> +						 const char **xattr_name,
+>  						 void **ctx,
+>  						 u32 *ctxlen)
+>  {
+> Index: redhat-linux/include/linux/lsm_hook_defs.h
+> ===================================================================
+> --- redhat-linux.orig/include/linux/lsm_hook_defs.h	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/include/linux/lsm_hook_defs.h	2021-10-06 15:20:57.752247170 -0400
+> @@ -83,7 +83,8 @@ LSM_HOOK(int, 0, sb_add_mnt_opt, const c
+>  LSM_HOOK(int, 0, move_mount, const struct path *from_path,
+>  	 const struct path *to_path)
+>  LSM_HOOK(int, 0, dentry_init_security, struct dentry *dentry,
+> -	 int mode, const struct qstr *name, void **ctx, u32 *ctxlen)
+> +	 int mode, const struct qstr *name, const char **xattr_name,
+> +	 void **ctx, u32 *ctxlen)
+>  LSM_HOOK(int, 0, dentry_create_files_as, struct dentry *dentry, int mode,
+>  	 struct qstr *name, const struct cred *old, struct cred *new)
+>  
+> Index: redhat-linux/fs/nfs/nfs4proc.c
+> ===================================================================
+> --- redhat-linux.orig/fs/nfs/nfs4proc.c	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/fs/nfs/nfs4proc.c	2021-10-06 15:20:57.754247170 -0400
+> @@ -127,7 +127,8 @@ nfs4_label_init_security(struct inode *d
+>  		return NULL;
+>  
+>  	err = security_dentry_init_security(dentry, sattr->ia_mode,
+> -				&dentry->d_name, (void **)&label->label, &label->len);
+> +				&dentry->d_name, NULL,
+> +				(void **)&label->label, &label->len);
+>  	if (err == 0)
+>  		return label;
+>  
+> Index: redhat-linux/fs/ceph/xattr.c
+> ===================================================================
+> --- redhat-linux.orig/fs/ceph/xattr.c	2021-10-04 15:40:28.978453324 -0400
+> +++ redhat-linux/fs/ceph/xattr.c	2021-10-06 15:20:57.756247170 -0400
+> @@ -1311,7 +1311,7 @@ int ceph_security_init_secctx(struct den
+>  	int err;
+>  
+>  	err = security_dentry_init_security(dentry, mode, &dentry->d_name,
+> -					    &as_ctx->sec_ctx,
+> +					    &name, &as_ctx->sec_ctx,
+>  					    &as_ctx->sec_ctxlen);
+>  	if (err < 0) {
+>  		WARN_ON_ONCE(err != -EOPNOTSUPP);
+> @@ -1335,7 +1335,6 @@ int ceph_security_init_secctx(struct den
+>  	 * It only supports single security module and only selinux has
+>  	 * dentry_init_security hook.
+>  	 */
+> -	name = XATTR_NAME_SELINUX;
+>  	name_len = strlen(name);
+>  	err = ceph_pagelist_reserve(pagelist,
+>  				    4 * 2 + name_len + as_ctx->sec_ctxlen);
+> 
 
-Sure we can but this thread is a mix of so many topics that finding
-something useful will turn to be hard from my past experience.
-
-> Dave: How would you feel about an effort to change xfs to stop using
-> GFP_NOFS, and to use memalloc_nofs_save/restore instead?
-
-xfs is an example of a well behaved scope user. In fact the API has been
-largely based on xfs previous interface. There are still NOFS usesages
-in xfs which would be great to get rid of (e.g. the default mapping NOFS
-which was added due to lockdep false positives but that is unrelated).
-
-> Having a major
-> filesystem make the transition would be a good test-case, and could be
-> used to motivate other filesystems to follow.
-> We could add and use memalloc_no_enomem_save() too.
-
-ext has converted their transaction context to the scope API as well.
-There is still some explicit NOFS usage but I haven't checked details
-recently.
--- 
-Michal Hocko
-SUSE Labs
