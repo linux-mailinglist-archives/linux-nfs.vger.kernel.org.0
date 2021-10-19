@@ -2,300 +2,187 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 894A74337E8
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Oct 2021 15:59:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 245AD433871
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Oct 2021 16:33:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235944AbhJSOBl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Oct 2021 10:01:41 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:44968 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230487AbhJSOBl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Oct 2021 10:01:41 -0400
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out1.suse.de (Postfix) with ESMTP id BC05921A98;
-        Tue, 19 Oct 2021 13:59:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1634651966; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sfqlwk+VcUMh+bOLPZdkXDNbL+XuwCC01NkQcfvVDWg=;
-        b=t3ds4oRWdbI54awak280gkx0hi/8gcb+B5yOlBFsZCx6doySQBmUM6aeqSnovEQ8W8suI3
-        xLWwFO6HyamqFNUiCYMdUNEZorK8Mb37Lz2X27AXVF18fNU+SVq324IO4bqQyoe+dIyYbr
-        lBmaKv9ItwGDCFjmUTnPR1CeFfZMfYI=
-Received: from suse.cz (unknown [10.100.201.86])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 74342A3B84;
-        Tue, 19 Oct 2021 13:59:26 +0000 (UTC)
-Date:   Tue, 19 Oct 2021 15:59:25 +0200
-From:   Michal Hocko <mhocko@suse.com>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mel Gorman <mgorman@suse.de>, Jonathan Corbet <corbet@lwn.net>,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 2/6] MM: improve documentation for __GFP_NOFAIL
-Message-ID: <YW7PPViS0fEdTaKH@dhcp22.suse.cz>
-References: <eba04a07-99da-771a-ab6b-36de41f9f120@suse.cz>
- <20211006231452.GF54211@dread.disaster.area>
- <YV7G7gyfZkmw7/Ae@dhcp22.suse.cz>
- <163364854551.31063.4377741712039731672@noble.neil.brown.name>
- <YV/31+qXwqEgaxJL@dhcp22.suse.cz>
- <20211008223649.GJ54211@dread.disaster.area>
- <YWQmsESyyiea0zle@dhcp22.suse.cz>
- <163398898675.17149.16715168325131099480@noble.neil.brown.name>
- <YW1LLlwjbyv8dcmn@dhcp22.suse.cz>
- <163461794761.17149.1193247176490791274@noble.neil.brown.name>
+        id S229742AbhJSOfy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Oct 2021 10:35:54 -0400
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:34834 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229524AbhJSOfx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Oct 2021 10:35:53 -0400
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 19JEF7jQ004735;
+        Tue, 19 Oct 2021 14:33:39 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=G4O961XxPNtZeSnz2cO2IYP7kxlULfchL8aTc8dG3KA=;
+ b=IsfJPTqu8GZOjRBAGlNCLaof/JI4OM4uTojIAv+HLwEAekDKe4IMh8Y8eiVQgHIytwG2
+ fUQbUQ4YX/+EXFY1iYiypJnkR7AcFeWGy1l4wfR+qOo29nN81iNNiBBB3wDBPjXx7/2Y
+ KYkTqLSAzFW7j9RSElZlgpbjAmwf5jqYfmrraHln2HKLo5ntGhYa8vwZy5C3+j+wDieI
+ VlBHZAGHZVo6TQX1a4eZMTBlcv9d5gDOH201gzS7ZBZblvz9JCnoQZ08g/r8fjBLUTdg
+ xKahjOD0smAOoyvwCT/s4q3bOeQ6Kv71aZP2PYqf/e/5Ds9JVDoriDpkwaqg3wbhhdsj Sg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3bsqgmjw9u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Oct 2021 14:33:39 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 19JEUn7E053877;
+        Tue, 19 Oct 2021 14:33:38 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam08lp2041.outbound.protection.outlook.com [104.47.73.41])
+        by aserp3030.oracle.com with ESMTP id 3bqmseunr1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Oct 2021 14:33:37 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FwNXAJWFxzA+kKKKI4fXngdvfqrNA4IlXjMqwI9frZ16IXpHsp+ugUBR1TBti4NGpCJPis0Prqfr1ptDLZyGCO70JrL/bPmAyjvg6PdNhTtag2ZrU3xffjUN3KgsdZMzOvytSWYfqtIxOoeATpP4nfMncvG2vuDKh6vSh17HDs9VLggScryHT4vvW1BZxHuHb5JI4XG1OFWtSGP83zs5TMWyb0iWdNXvLdpbMyfaR4OtFGXQNu6PITDmAUEooFxRfw5NbX7pQPA7s+Pjunkda/DkTKuipg16YXCHwhrPH4GqIz/2BlC2uieutXUAnGtrrbhNtMYUL4MFg6LNxPmOJA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=G4O961XxPNtZeSnz2cO2IYP7kxlULfchL8aTc8dG3KA=;
+ b=csc9z7DIcWOzLDe01ekxB3EVhCz19jKyyOcPAcLT6G4AkaBR3vpX9ri4bXOfkvrrZoFGWBcAJ0YYhrBZ/C8nEu6tm3z4acAodlTg06aKzH3Iz3Qh6XP/VhtBFy7x8wxQQTmA6DnzcdAxOmS+DEdlJIObbCYN5Pzug5ERm3o5WQ0JuGBZ/i4eRTayhRDxmmZPedP65XLhRnUeixzdzGPA6Q3cklGnSV0C6Cg6feZnAXpikrZUrVgyuTauSgcpNEjzzRLM6dtFLOljQb3YMZQz70s8iCTEaKmBX3kMfe4IjbxW+i9gPE3Y1qXG6bYtnpiPAc3XOP11dlZGrfVNUMUtWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G4O961XxPNtZeSnz2cO2IYP7kxlULfchL8aTc8dG3KA=;
+ b=DwOltxCA3BJuHK64oirdP8q3tPDmdiWd3Kv1/n/3zkN6Jyj3CZvtfjAMLTmQG+g+XczkqBFLXaI95ZnmphizPhdbBU/Hlgt+Y+h+fqbYivJGgTNOqKwUWGrvMAN5+Cy17qEcotT5qA9SwwW+JA8JWE0BZDHS/SSUdp0Ix3yJeQI=
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com (2603:10b6:a03:2db::24)
+ by BY5PR10MB4386.namprd10.prod.outlook.com (2603:10b6:a03:20d::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4608.18; Tue, 19 Oct
+ 2021 14:33:36 +0000
+Received: from SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b]) by SJ0PR10MB4688.namprd10.prod.outlook.com
+ ([fe80::f4fe:5b4:6bd9:4c5b%6]) with mapi id 15.20.4608.018; Tue, 19 Oct 2021
+ 14:33:36 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     "cgel.zte@gmail.com" <cgel.zte@gmail.com>,
+        Bruce Fields <bfields@fieldses.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Changcheng Deng <deng.changcheng@zte.com.cn>,
+        Zeal Robot <zealci@zte.com.cn>
+Subject: Re: [PATCH] NFSD:fix boolreturn.cocci warning
+Thread-Topic: [PATCH] NFSD:fix boolreturn.cocci warning
+Thread-Index: AQHXxJ/Wv9o3Oub3V0qj0+G2Tv5Mg6vaY1iA
+Date:   Tue, 19 Oct 2021 14:33:36 +0000
+Message-ID: <B9D7D22B-EDFA-4144-AFCF-A66E12CB073B@oracle.com>
+References: <20211019041422.975072-1-deng.changcheng@zte.com.cn>
+In-Reply-To: <20211019041422.975072-1-deng.changcheng@zte.com.cn>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+authentication-results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=oracle.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb2e128e-e3ce-4a69-22a5-08d9930d6f5d
+x-ms-traffictypediagnostic: BY5PR10MB4386:
+x-microsoft-antispam-prvs: <BY5PR10MB4386C405E26CC83B8A379EE993BD9@BY5PR10MB4386.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:626;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: vJ1GtcaHC10+xQlBvS0bwnPZvp/HCKGjEewbxVb/0OsFPfHGOajHDnuz9eKOIUu1czxMAmxhPtax/952p4bztBuP4/wdtemrfRNrEVrTinxRku/6OU0YXBv2Z9t/8NOCiAsktSpyfKKVxqrOm9d6GBFUHFWnhK/sFD1gTIi6K+sc6EuHvDxqrYwc6JRSnwa0tYaLfHQtHaMx4pqvsb8OuBJanuOp6viOwbBMRk9RqtBvuhLQBBCXBxVC8gwAKJFDgXktyXjmcURk8jwPpJ6FGFbHCEK/PARlV6xokmDPSgzH19qWl8/BbEA4fxrI8bdJXZUNDHqFTkOo5Q2kImj9uUt8dNndhDkuuzFESQz8c5HFQgIykR7qDoJYyEpL/TGY4TCzW8Td3CokWtzouLBgV+HZ95it3Vbx9VjFYMl6OuLoIlAQ3V6fCgu+GtQ6Z6qO+ZT4UCnKrFEs4SLS3YuDTcCNaeXJQJoSUVZIvLKVeJpl7pK9YUdfnUQEkjXoCnexRWttd7EiwVju6ol/ZQ08zfYHlAg25bml2eBnmpztVtnhK2RQCj8Ozxs+0iltA0rIYMR51c7OGp4wOfCBxLA0RKjrVkwad81VD7jvNF/T2PzS+YfS/Am/KkFJh/GR04ZA5UKYhMxzX7gAcdEv6HL7KAIOCJsHkB+YmD6Ydbi+NxMLBDWMUgTjn/nRtiZiRRLwfx/uCUQZDlUebU+Vchow5alh0hNV3fY6ZrzdRJuVgeMDjLRWh3ZCxYYzTMHWGAf3
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB4688.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(8936002)(26005)(33656002)(508600001)(66446008)(86362001)(64756008)(66556008)(38100700002)(6512007)(66946007)(53546011)(38070700005)(8676002)(66476007)(76116006)(4326008)(4744005)(6486002)(6506007)(186003)(91956017)(122000001)(71200400001)(83380400001)(2906002)(110136005)(36756003)(54906003)(2616005)(316002)(5660300002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?jN/+AU9/kzHgZV7oWie030ngxmQXtNwZVBjkndzmm6tC1Jb7jWNAGXJUWdjm?=
+ =?us-ascii?Q?vjaRDn0Ltg47jCMBYq2q4HoOeO6IBNpyumnN2pg5nufS/f+FM3clhobKJQkf?=
+ =?us-ascii?Q?aPzAbpJ4H6rvpXXj9taRgylD8jn4LulP69CubNBx5yureTjP50VtPFnJExWw?=
+ =?us-ascii?Q?soRLNkPPsJzUgSkI8HKRhRJM0Q/k9gSg/pKnyOSK19eKPvsdi8fcGh4QyRrR?=
+ =?us-ascii?Q?weuKL4mH6nmqll8395dyrc1NKXbZn7yKZ3rdLdQi0vuGwFXZk0enDwxVcjVg?=
+ =?us-ascii?Q?eLMMadxyjdeNhR8aRZTQowgR+84SVAtccN8w0ePGGyGGeKpXscR6Z4hwsMnB?=
+ =?us-ascii?Q?pHynMNdss1yTgL9sS13DB8TVLpW7gHl1qRTEZGh6yWwgrfSIPOeU5Y/UkBjr?=
+ =?us-ascii?Q?J/P8N3+Qd09auq9YzXPs0NIwV7s3HVyakq0DhFcJnG52xlKDgPzgj95zQ1MS?=
+ =?us-ascii?Q?yIw1vN9i+itYiX/i3QoXK2FlcLJ3/eQXf9DZXctuuJmJXraOcH1ChuYTOWND?=
+ =?us-ascii?Q?+fM8YX2gTL7mgR1dhRkSMbKrgozmrEcR6wmAjJNBJJSRqd58QTWvmEbESpvb?=
+ =?us-ascii?Q?Unqb27ZriHU87yd28KnJMcwrJNP1rS6yFuVKsFaTtwRu3oJtl/edLyBOh/Sr?=
+ =?us-ascii?Q?iKFh9K4Wo/GPHhMAJvqJQRqQl0d7a/cUNRcSjFeSaxqv/2ZsJueYMjVLJpDA?=
+ =?us-ascii?Q?0o6embV+6cKi+LIoOspGxW8cgwqx/lQJV9cr2poj8lQu1aZtLE6SF6vZxB3u?=
+ =?us-ascii?Q?+Det5eubOIuA0XqRneSmiqCLO0/UFZKS07Cr0s73sJwf4Kpt0h4wmQP0VU7V?=
+ =?us-ascii?Q?UGQwUNMck78zHfK8J73jMkCaBfsr90bNN02VfQolXX+x1bArYjZt7W9eDONs?=
+ =?us-ascii?Q?x1aGEJvlb+caB6UYqEbQYmZ+TDI5FCA6dDPnHuOiy9UVOceihwXDrNuduUmB?=
+ =?us-ascii?Q?KhsXp9T6gH2de2WySnM2eNxzR7tqJ0gRIThRmzcNeeWZYh+ZYouf9A3DtB+g?=
+ =?us-ascii?Q?9mjveO/IfyJqgEwgnBQACn5mhOjvM75Bd5vb1kBOVh/+3JzyNbabI2UP8Y/c?=
+ =?us-ascii?Q?qsrzHp1D8S8gbuBu3alqNhUmH5fSaHMS8Xu+DuN38NLLtMLibYoaZBKlmw/y?=
+ =?us-ascii?Q?xEmIun+MYtdFlZ2gto2oe9HNByXTGbJlDOXT3gwuzzIHNoXjsWwnyjGJbqJU?=
+ =?us-ascii?Q?jQ6GR2g6QTqRDbh/N+nlyOO/d3G0b/DMvW8dYrFX/XO3SauWkfED8HcJugK7?=
+ =?us-ascii?Q?cp3E56S56vprqU+zqZuIpM6F3wm1qU+XPdnUPq3uwfxrMGDv/fqzaGlQS18w?=
+ =?us-ascii?Q?VjnhGCAvfbS11h4INj7pvJAD?=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <AED33ADF34F73E48BE7149686E9060E8@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163461794761.17149.1193247176490791274@noble.neil.brown.name>
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB4688.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb2e128e-e3ce-4a69-22a5-08d9930d6f5d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Oct 2021 14:33:36.0992
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9WAm2W6o1WYRsepfV9IDKZZcDE6rjs9N/NLRNYYgQErrapn4um317DlJHdy0gwLXIGGnIki5Y6oscgJMRFc8MA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4386
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10142 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 malwarescore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2109230001
+ definitions=main-2110190089
+X-Proofpoint-GUID: wQOmDvM2isZaWARrwysACv7s_-lr2AaH
+X-Proofpoint-ORIG-GUID: wQOmDvM2isZaWARrwysACv7s_-lr2AaH
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue 19-10-21 15:32:27, Neil Brown wrote:
-> On Mon, 18 Oct 2021, Michal Hocko wrote:
-> > On Tue 12-10-21 08:49:46, Neil Brown wrote:
-> > > On Mon, 11 Oct 2021, Michal Hocko wrote:
-> > > > On Sat 09-10-21 09:36:49, Dave Chinner wrote:
-> > > > > 
-> > > > > Put simply, we want "retry forever" semantics to match what
-> > > > > production kernels have been doing for the past couple of decades,
-> > > > > but all we've been given are "never fail" semantics that also do
-> > > > > something different and potentially much more problematic.
-> > > > > 
-> > > > > Do you see the difference here? __GFP_NOFAIL is not what we
-> > > > > need in the vast majority of cases where it is used. We don't want
-> > > > > the failing allocations to drive the machine hard into critical
-> > > > > reserves, we just want the allocation to -eventually succeed- and if
-> > > > > it doesn't, that's our problem to handle, not kmalloc()....
-> > > > 
-> > > > I can see your point. I do have a recollection that there were some
-> > > > instance involved where an emergency access to memory reserves helped
-> > > > in OOM situations.
-> > > 
-> > > It might have been better to annotate those particular calls with
-> > > __GFP_ATOMIC or similar rather then change GFP_NOFAIL for everyone.
-> > 
-> > For historical reasons __GFP_ATOMIC is reserved for non sleeping
-> > allocations. __GFP_HIGH would be an alternative.
-> 
-> Historical reasons certainly shouldn't be ignored.  But they can be
-> questioned.
 
-Agreed. Changing them is a more challenging task though. For example I
-really dislike how access to memory reserves is bound to "no reclaim"
-requirement. Ideally those should be completely orthogonal.
 
-I also do not think we need as many ways to ask for memory reserves as
-we have. Can a "regular" kernel developer tell a difference between
-__GFP_ATOMIC and __GFP_HIGH?
+> On Oct 19, 2021, at 12:14 AM, cgel.zte@gmail.com wrote:
+>=20
+> From: Changcheng Deng <deng.changcheng@zte.com.cn>
+>=20
+> ./fs/nfsd/nfssvc.c: 1072: 8-9: :WARNING return of 0/1 in function
+> 'nfssvc_decode_voidarg' with return type bool
+>=20
+> Return statements in functions returning bool should use true/false
+> instead of 1/0.
+>=20
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-I do not think so, unless one is willing to do ...
+LGTM.
 
-> __GFP_ATOMIC is documented as "the caller cannot reclaim or sleep and is
-> high priority".
-> This seems to over-lap with __GFP_DIRECT_RECLAIM (which permits reclaim
-> and is the only place where page_alloc sleeps ... I think).
-> 
-> The effect of setting __GFP_ATOMIC is:
->   - triggers WARN_ON if  __GFP_DIRECT_RECLAIM is also set.
->   - bypass memcg limits
->   - ignore the watermark_boost_factor effect
->   - clears ALLOC_CPUSET
->   - sets ALLOC_HARDER which provides:
->    - access to nr_reserved_highatomic reserves
->    - access to 1/4 the low-watermark reserves (ALLOC_HIGH gives 1/2)
->      Combine them and you get access to 5/8 of the reserves.
 
-... exactly this. And these are bunch of hacks developed over time and
-the baggage which is hard to change as I've said. Somebody with a
-sufficient time budget should start questioning all those and eventually
-make __GFP_ATOMIC a story of the past.
+> ---
+> fs/nfsd/nfssvc.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> index 362e819ff06a..80431921e5d7 100644
+> --- a/fs/nfsd/nfssvc.c
+> +++ b/fs/nfsd/nfssvc.c
+> @@ -1069,7 +1069,7 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *s=
+tatp)
+>  */
+> bool nfssvc_decode_voidarg(struct svc_rqst *rqstp, struct xdr_stream *xdr=
+)
+> {
+> -	return 1;
+> +	return true;
+> }
+>=20
+> /**
+> --=20
+> 2.25.1
+>=20
 
-> It is also used by driver/iommu/tegra-smmu.c to decide if a spinlock
-> should remain held, or should be dropped over the alloc_page().  That's
-> .... not my favourite code.
+--
+Chuck Lever
 
-Exactly!
 
-> So apart from the tegra thing and the WARN_ON, there is nothing about
-> __GFP_ATOMIC which suggests it should only be used for non-sleeping
-> allocations.
 
-The warning was added when the original GFP_ATOMIC was untangled from the
-reclaim implications to keep the "backward compatibility" IIRC. Mostly
-for IRQ handlers where the GFP_ATOMIC was used the most. My memory might
-fail me though.
-
-> It *should* only be used for allocations with a high failure cost and
-> relatively short time before the memory will be returned and that likely
-> includes many non sleeping allocations.  It isn't clear to me why an
-> allocation that is willing to sleep (if absolutely necessary) shouldn't
-> be able to benefit from the priority boost of __GFP_ATOMIC.  Or at least
-> of ALLOC_HARDER...
-
-I completely agree! As mentioned above memory reserves should be
-completely orthogonal. I am not sure we want an API for many different
-levels of reserves access. Do we need more than __GFP_HIGH? Maybe with a
-more descriptive name.
-
-> Maybe __GFP_HIGH should get the memcg and watermark_boost benefits too? 
-> 
-> Given that we have ALLOC_HARDER and ALLOC_HIGH, it would seem to be
-> sensible to export those two settings in GFP_foo, and not forbid one of
-> them to be used with __GFP_DIRECT_RECLAIM.
-
-I think ALLOC_HARDER should be kept internal implementation detail when
-the allocator needs to give somebody a boost on top of requests for
-internal balancing between requests.
-ALLOC_HIGH already matches __GFP_HIGH and that should be the way to
-ask for a boost explicitly IMO. We also have ALLOC_OOM as another level of
-internal memory reserves for OOM victims. Again something to be in hands
-of the allocator.
- 
-> > > Too late to fix that now though I think.  Maybe the best way forward is
-> > > to discourage new uses of GFP_NOFAIL.  We would need a well-documented
-> > > replacement.
-> > 
-> > I am not sure what that should be. Really if the memory reserves
-> > behavior of GFP_NOFAIL is really problematic then let's just reap it
-> > out. I do not see a new nofail like flag is due.
-> 
-> Presumably there is a real risk of deadlock if we just remove the
-> memory-reserves boosts of __GFP_NOFAIL.  Maybe it would be safe to
-> replace all current users of __GFP_NOFAIL with __GFP_NOFAIL|__GFP_HIGH,
-> and then remove the __GFP_HIGH where analysis suggests there is no risk
-> of deadlocks.
-
-I would much rather not bind those together and go other way around. If
-somebody can actually hit deadlocks (those are quite easy to spot as
-they do not go away) then we can talk about how to deal with them.
-Memory reserves can help only > < this much.
-
-> Or maybe rename the __GFP_NOFAIL flag and #define __GFP_NOFAIL to
-> include __GFP_HIGH?
-
-Wouldn't that lead to the __GFP_ATOMIC story again?
- 
-> This would certainly be a better result than adding a new flag.
-> 
-> > 
-> > > > Anway as I've tried to explain earlier that this all is an
-> > > > implementation detail users of the flag shouldn't really care about. If
-> > > > this heuristic is not doing any good then it should be removed.
-> > > 
-> > > Maybe users shouldn't care about implementation details, but they do
-> > > need to care about semantics and costs.
-> > > We need to know when it is appropriate to use GFP_NOFAIL, and when it is
-> > > not.  And what alternatives there are when it is not appropriate.
-> > > Just saying "try to avoid using it" and "requires careful analysis"
-> > > isn't acceptable.  Sometimes it is unavoidable and analysis can only be
-> > > done with a clear understanding of costs.  Possibly analysis can only be
-> > > done with a clear understanding of the internal implementation details.
-> > 
-> > What we document currently is this
-> >  * %__GFP_NOFAIL: The VM implementation _must_ retry infinitely: the caller
-> >  * cannot handle allocation failures. The allocation could block
-> >  * indefinitely but will never return with failure. Testing for
-> >  * failure is pointless.
-> 
-> This implies it is incompatible with __GFP_NORETRY and (probably)
-> requires __GFP_RECLAIM.  That is worth documenting, and possibly also a
-> WARN_ON.
-
-Yes, I thought this would be obvious as those are reclaim modifiers so
-they require a reclaim. But I do see a point that being explicit here
-cannot hurt. Same with combining them together. It just doesn't make
-much sense to retry for ever and requesting noretry or retry and fail
-at the same time. Again a clarification cannot hurt though.
-
-> >  * New users should be evaluated carefully (and the flag should be
-> >  * used only when there is no reasonable failure policy) but it is
-> >  * definitely preferable to use the flag rather than opencode endless
-> >  * loop around allocator.
-> 
-> How do we perform this evaluation? And why is it preferable to a loop?
-> There are times when a loop makes sense, if there might be some other
-> event that could provide the needed memory ...  or if a SIGKILL might
-> make it irrelevant.
-> slab allocators presumably shouldn't pass __GFP_NOFAIL to alloc_page(),
-> but should instead loop around
->   1/ check if any existing slabs have space
->   2/ if not, try to allocate a new page
-> Providing the latter blocks for a while but not indefinitely that should
-> be optimal.
-> Why is __GFP_NOFAIL better?
-
-Because the allocator can do something if it knows that the allocation
-cannot fail. E.g. give such an allocation a higher priority over those
-that are allowed to fail. This is not limited to memory reserves,
-although this is the only measure that is implemented currently IIRC.
-On the other hand if there is something interesting the caller can do
-directly - e.g. do internal object management like mempool does - then
-it is better to retry at that level.
-
-> >  * Using this flag for costly allocations is _highly_ discouraged.
-> 
-> This is unhelpful.  Saying something is "discouraged" carries an implied
-> threat.  This is open source and threats need to be open.
-> Why is it discouraged? IF it is not forbidden, then it is clearly
-> permitted.  Maybe there are costs  - so a clear statement of those costs
-> would be appropriate.
-> Also, what is a suitable alternative?
-> 
-> Current code will trigger a WARN_ON, so it is effectively forbidden.
-> Maybe we should document that __GFP_NOFAIL is forbidden for orders above
-> 1, and that vmalloc() should be used instead (thanks for proposing that
-> patch!).
-
-I think we want to recommend kvmalloc as an alternative once vmalloc is
-NOFAIL aware.
-
-I will skip over some of the specific regarding SLAB and NOFS usage if
-you do not mind and focus on points that have direct documentation
-consequences. Also I do not feel qualified commenting on neither SLAB
-nor FS internals.
-
-[...]
-> There is a lot of stuff there.... the bits that are important to me are:
-> 
->  - why is __GFP_NOFAIL preferred? It is a valuable convenience, but I
->    don't see that it is necessary
-
-I think it is preferred for one and a half reasons. It tells allocator
-that this allocation cannot really fail and the caller doesn't have a
-very good/clever retry policy (e.g. like mempools mentioned above). The
-half reason would be for tracking purposes (git grep __GFP_NOFAIL) is
-easier than trying to catch all sorts of while loops over allocation
-which do not do anything really interesting.
-
->  - is it reasonable to use __GFP_HIGH when looping if there is a risk of
->    deadlock?
-
-As I've said above. Memory reserves are a finite resource and as such
-they cannot fundamentally solve deadlocks. They can help prioritize
-though.
-
->  - Will __GFP_DIRECT_RECLAIM always result in a delay before failure? In
->    that case it should be safe to loop around allocations using
->    __GFP_DIRECT_RECLAIM without needing congestion_wait() (so it can
->    just be removed.
-
-This is a good question and I do not think we have that documented
-anywhere. We do cond_resched() for sure. I do not think we guarantee a
-sleeping point in general. Maybe we should, I am not really sure.
-
-Thanks for good comments and tough questions
--- 
-Michal Hocko
-SUSE Labs
