@@ -2,65 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 94A3E434035
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Oct 2021 23:11:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 407A9434249
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 01:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231344AbhJSVN0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Oct 2021 17:13:26 -0400
-Received: from namei.org ([65.99.196.166]:52438 "EHLO mail.namei.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S230454AbhJSVN0 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 19 Oct 2021 17:13:26 -0400
-X-Greylist: delayed 499 seconds by postgrey-1.27 at vger.kernel.org; Tue, 19 Oct 2021 17:13:25 EDT
-Received: from localhost (localhost [127.0.0.1])
-        by mail.namei.org (Postfix) with ESMTPS id 3A5781C2;
-        Tue, 19 Oct 2021 20:52:55 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.namei.org 3A5781C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=namei.org; s=2;
-        t=1634676775; bh=eJ38SycwOWDCZsBfSsnUj9RXqKdsL9o4kYObW0CKim0=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=ap83rxBCm0keV5NBaLe8KLpMnIwqcHEq9pgLJI793OJ5Of4PzaUjTwC7Hx5QHGtsH
-         MEK3P9I8WrBZfxX4R/jEcUYZTcTsZxIorz4cKYTfWtAr7yDMIoIFMuIcTchwBChlmk
-         /Zn8v2W44qp6Lts4z9QzcOjQyFUsW82uuihq8CQI=
-Date:   Wed, 20 Oct 2021 07:52:55 +1100 (AEDT)
-From:   James Morris <jmorris@namei.org>
-To:     Vivek Goyal <vgoyal@redhat.com>
-cc:     linux-fsdevel@vger.kernel.org, virtio-fs@redhat.com,
-        Miklos Szeredi <miklos@szeredi.hu>, dwalsh@redhat.com,
-        jlayton@kernel.org, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        id S229890AbhJSXvd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Oct 2021 19:51:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229757AbhJSXvc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Oct 2021 19:51:32 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 900B3C061746
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Oct 2021 16:49:18 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id y30so17317478edi.0
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Oct 2021 16:49:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vpDry/4vppRTdkM/5uTPl5dyLlGXb8npQEXSH8SC3n8=;
+        b=o2GB6bGy73ynHmJi3Gg4hEYN2Dm0AvQJTbKeajulhWdOW5eNjC2JDiAycN4FAXuZVu
+         QOlxhQTFFF3dwFNUX78Dq+3+GI0T8ycd7lmeW4LD/RLJdg1IG204YBu1stQ0sSE9O9aZ
+         slfxNIO+pajQUUZ9zBFJG7CWumjrgZX95S90ugGG52KhNUrFHcQQ3u04lB7OjMz77eNp
+         9x/qAM0TbHBx8bT7bMwuDm1gsvioW83tOrqFUzRWjJC3k1fEh44py+hqvv7OcrHUAbQN
+         /reiwOMaaXdhdTnSDny8pD9reCSgGZKgAes9sIfzb2yFipwOPvP1YYN29F9+X/95xkYK
+         CbLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vpDry/4vppRTdkM/5uTPl5dyLlGXb8npQEXSH8SC3n8=;
+        b=SzT1CMbOSKP6gFM2l5vM/LiroPZqDntE7NUxpL8n/MWnDzA4wgYmYUiDYAR0dTi0EE
+         ay/gQes7RaGqwBelfJBuWg9Fk79EvjQxiSjVNe4dzLp0pvZ0M9VbvQiLn62ydiVoaKGU
+         hIRf3fvVV3uVTGdjwAJ1Ip7oLA7itCCxZ5Fy3DnDyAaoFNHsMseWMCki8bsL6PszZ7sW
+         YkW6DjkaxLNVXvPyR0fMXvgWi3mYfL4uVfEk5OHAySOzZ+ezBucMuWdz31//eLVrt1qk
+         oSs4IFh3b4n1oibYu9yhkH/77vyb1xxJxMr1pVnH1O4FhibfKfXs8UCb4YWwHEIuW0Do
+         rJbQ==
+X-Gm-Message-State: AOAM533k/VT03KyzWzXUdwF5A///6wf8pbMyM1Pc/MY9f7mftwDqJDTA
+        BDyCJCuWqSPsG6mw1ptkG89oQtPqGQQEJ9w4WOyL
+X-Google-Smtp-Source: ABdhPJwbdYmhpXUTSsSR/XIYzH5m1pFEBMpnAv4GFXli0FULWWj6vmRgoYkSQoTjr2PW6RgpGUKOegfQ46qGkGqGzcA=
+X-Received: by 2002:a17:907:629b:: with SMTP id nd27mr40164593ejc.24.1634687357008;
+ Tue, 19 Oct 2021 16:49:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <YWWMO/ZDrvDZ5X4c@redhat.com> <YW1qJKLHYHWia2Nd@redhat.com> <3bd86fa3-b3b0-754f-25a5-5e4f723babe4@namei.org>
+In-Reply-To: <3bd86fa3-b3b0-754f-25a5-5e4f723babe4@namei.org>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 19 Oct 2021 19:49:06 -0400
+Message-ID: <CAHC9VhRZyGYsFziXMfJQ=1OcLO52TGmAGMi5RaA3FXRgREsSeQ@mail.gmail.com>
+Subject: Re: [PATCH v2] security: Return xattr name from security_dentry_init_security()
+To:     James Morris <jmorris@namei.org>
+Cc:     Vivek Goyal <vgoyal@redhat.com>, linux-fsdevel@vger.kernel.org,
+        virtio-fs@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Dan Walsh <dwalsh@redhat.com>, jlayton@kernel.org,
+        idryomov@gmail.com, ceph-devel@vger.kernel.org,
         linux-nfs@vger.kernel.org, bfields@fieldses.org,
         chuck.lever@oracle.com, anna.schumaker@netapp.com,
-        trond.myklebust@hammerspace.com, stephen.smalley.work@gmail.com,
+        trond.myklebust@hammerspace.com,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
         casey@schaufler-ca.com, Ondrej Mosnacek <omosnace@redhat.com>,
         linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        serge@hallyn.com
-Subject: Re: [PATCH v2] security: Return xattr name from
- security_dentry_init_security()
-In-Reply-To: <YW1qJKLHYHWia2Nd@redhat.com>
-Message-ID: <3bd86fa3-b3b0-754f-25a5-5e4f723babe4@namei.org>
-References: <YWWMO/ZDrvDZ5X4c@redhat.com> <YW1qJKLHYHWia2Nd@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Serge Hallyn <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 18 Oct 2021, Vivek Goyal wrote:
+On Tue, Oct 19, 2021 at 5:02 PM James Morris <jmorris@namei.org> wrote:
+>
+> On Mon, 18 Oct 2021, Vivek Goyal wrote:
+>
+> > Hi James,
+> >
+> > I am assuming this patch will need to be routed through security tree.
+> > Can you please consider it for inclusion.
+>
+> I'm happy for this to go via Paul's tree as it impacts SELinux and is
+> fairly minor in scope.
 
-> Hi James,
-> 
-> I am assuming this patch will need to be routed through security tree.
-> Can you please consider it for inclusion.
-> 
-
-I'm happy for this to go via Paul's tree as it impacts SELinux and is 
-fairly minor in scope.
-
-
-Acked-by: James Morris <jamorris@linux.microsoft.com>
-
+I'll take a look tomorrow, I ended up spending most of my day today
+chasing a 32-bit MIPS (!!) bug in libseccomp and now it's dinner time.
 
 -- 
-James Morris
-<jmorris@namei.org>
-
+paul moore
+www.paul-moore.com
