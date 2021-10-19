@@ -2,76 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C84E433EEE
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Oct 2021 21:03:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3E08433F9D
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Oct 2021 22:08:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234961AbhJSTFs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Oct 2021 15:05:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:55321 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231783AbhJSTFq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Oct 2021 15:05:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634670213;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tRaOIrF08dbh2ftF+sxbGCRY/m5+9tQxqmnUi1VRrmU=;
-        b=G8pHfcKfLQ3MvSlhtUbDcRMOlTMXJ72pv0Tg09sl/bOsG1E7SJdoOG57jn0dUWENsTp4e3
-        /zNmoqPw0Pvoo80/Ocn4ZhVuDUojs0UvKZEd3bX/+xY9aAdUgmEWy6Xt0qf9KfsM5CvcO8
-        gH9l+duKJpSt8toNc3sXhLHgErkSyFc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-593-Tw0CSNocOwyVLRRe_70G4A-1; Tue, 19 Oct 2021 15:03:30 -0400
-X-MC-Unique: Tw0CSNocOwyVLRRe_70G4A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7B6F8143FD;
-        Tue, 19 Oct 2021 19:03:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C8D103BAAF;
-        Tue, 19 Oct 2021 19:02:56 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <39bc040e9bb88b47f386baa09ed4a508281ce7d6.camel@redhat.com>
-References: <39bc040e9bb88b47f386baa09ed4a508281ce7d6.camel@redhat.com> <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk> <163456865277.2614702.2064731306330022896.stgit@warthog.procyon.org.uk>
-To:     Jeff Layton <jlayton@redhat.com>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        id S234054AbhJSUKg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Oct 2021 16:10:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58054 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230147AbhJSUKf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Oct 2021 16:10:35 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473AEC06161C;
+        Tue, 19 Oct 2021 13:08:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lULRZJ5d3ao6ySUvWKVx/OK5Yxv64Zr2QB+S9ALbnhk=; b=mIpellGqKkgTzWprx+JB2u19Fn
+        W3XjBye8qaIBsuKD1brinKgUFUgTBnm83lFLOi/DJMldVswrTiZ4aLSPKKmLfiTZpN6Hy40tCEGEA
+        Fpf1fzF7/hEPMwoJdNAvKJUzMMUFe6+tJAB6PVXsIs9GA7vJahbqOecOWTbFXZ4YDmLfwpOHbaIlW
+        t9XhNs1dqMoagIj2giLzCvoUrzHgQqEOFJBCuwQOdhrzLZkofdCn06Uww2O40lmR8kGLTrWTBrNT+
+        jvm8v/4VBD1w9anPxGRNNe76dwmejwwJBWyB0TnXXZJUuqQIlv0GqDDJ/VTYQUgbzh+g3yMKmj3QA
+        u7K/IZCQ==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1mcvLv-00Byg0-2k; Tue, 19 Oct 2021 20:05:31 +0000
+Date:   Tue, 19 Oct 2021 21:04:51 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
         Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
+        Jeff Layton <jlayton@redhat.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Omar Sandoval <osandov@osandov.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 02/67] vfs: Provide S_KERNEL_FILE inode flag
+        v9fs-developer@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/67] mm: Stop filemap_read() from grabbing a
+ superfluous page
+Message-ID: <YW8k4wEpt3Ehz5Hf@casper.infradead.org>
+References: <YW8OMsrEzrY8aSxo@casper.infradead.org>
+ <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk>
+ <163456863216.2614702.6384850026368833133.stgit@warthog.procyon.org.uk>
+ <2971214.1634669295@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2972194.1634670175.1@warthog.procyon.org.uk>
-Date:   Tue, 19 Oct 2021 20:02:55 +0100
-Message-ID: <2972195.1634670175@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2971214.1634669295@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@redhat.com> wrote:
+On Tue, Oct 19, 2021 at 07:48:15PM +0100, David Howells wrote:
+> Matthew Wilcox <willy@infradead.org> wrote:
+> 
+> > > +		isize = i_size_read(inode);
+> > > +		if (unlikely(iocb->ki_pos >= isize))
+> > > +			goto put_pages;
+> > > +
+> > 
+> > Is there a good reason to assign to isize here?  I'd rather not,
+> > because it complicates analysis, and a later change might look at
+> > the isize read here, not realising it was a racy use.  So I'd
+> > rather see:
+> 
+> If we don't set isize, the loop will never end.  Actually, maybe we can just
+> break out at that point rather than going to put_pages.
 
-> It'd be better to fold this in with the patch where the first user is
-> added. That would make it easier to see how you intend to use it.
+Umm, yes, of course.  Sorry.
 
-Yeah - I didn't put it in there because as I zip backwards and forwards
-through the patch stack, applying/deapplying this change triggers a complete
-rebuild.
-
-David
-
+It makes more sense to just break because we haven't got any pages,
+so putting pages that we haven't got seems unnecessary.
+> 
