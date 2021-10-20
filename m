@@ -2,99 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7397243498D
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 12:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 63E26434B1E
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 14:25:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230179AbhJTLAO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Oct 2021 07:00:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:60601 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230106AbhJTLAN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 07:00:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634727478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nznzQGZwFhWi7IrCsZuwpAlnduoRBn7ox7Rs/xNM+f4=;
-        b=bdFPtxKRLIrv1rBcPp6xxNE4mX4VmDH3I7Dc1/qjaX6BU5PbYtsW0zB2j0tNL9XdB2AFcB
-        6XGVZX5gPC6LP4+p9YZXXBT+wtyXKQK9hBz89ThcYGZYT2UYvpIfHjKU5SxTmcIEaIFxQC
-        ZgeGsBiTkpYOhpZxq1f8fu0TTDiFnJg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104-d8OhdiHCN4OcfUmy5JVW4A-1; Wed, 20 Oct 2021 06:57:53 -0400
-X-MC-Unique: d8OhdiHCN4OcfUmy5JVW4A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 09B5D10A8E00;
-        Wed, 20 Oct 2021 10:57:51 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9758360D30;
-        Wed, 20 Oct 2021 10:57:44 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <67f55d920f40bf6c49643af08fe8a5cfc97a9542.camel@kernel.org>
-References: <67f55d920f40bf6c49643af08fe8a5cfc97a9542.camel@kernel.org> <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk> <163456871794.2614702.15398637170877934146.stgit@warthog.procyon.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org, Steve French <sfrench@samba.org>,
-        linux-cifs@vger.kernel.org, Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/67] nfs, cifs, ceph, 9p: Disable use of fscache prior to its rewrite
+        id S229864AbhJTM1U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Oct 2021 08:27:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50976 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229702AbhJTM1U (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 08:27:20 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B16C06161C
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Oct 2021 05:25:05 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id r4so18505763edi.5
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Oct 2021 05:25:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JB7H3ohM5l70AQemzmGYYtizSnnDY/xIC1TQbSPrjbg=;
+        b=rLU0zY3vuETlD8DmXa6icR4V0aZP7SDSFOv0A6gC6PjWLkWUnOXPevqNLUuFKMGfRd
+         P3YPsN0m9K+kbIJpG0XJuYnNvFuqUkKY1tqTd83Dgp/ML8j+TqRT2WMJkVKvMM2DrFXM
+         WMikcrl5blUx0kl36C9sOUF8R+OmPP0b7ult7a5I7yAPYzbbutNNxvHbnOzpKZXsUwE9
+         eFdh2zLJ9aRW5t8WLT6PbcQCcdj6qj3XAZu58vuOl6e5ci73vbDUMrlWroby41Ry7drM
+         qsdaWrj3JDOj8QnhA/ow2VgGlOwItBtfQoQCh8HAmXYot9iY0Lxg6OWLD/ccRlL1kMiI
+         kaDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JB7H3ohM5l70AQemzmGYYtizSnnDY/xIC1TQbSPrjbg=;
+        b=2MgTBA4MtFLZUHH5YnVCf/En22XoeIBrMqofn5IxRj8Y6a8Fr4vfLXjHN+wV3dhMr4
+         NGcOFnJWFq8TDLuEo7ddVBKLpArYg1PBqD8rbNd3nRKXE7ABqqJj+Ez3Fi6pdTUX4edk
+         B19K8C9x6jp0V4+XO+RQW+QPinsC3emELDfvY6YpK5erX/VEX/8D1/JMXN3YdIZamZoP
+         pijmZ9hEHxWQJCRmHPsGFXBCRGnfBCsAVwBMvFv+k7l7JODJrXVSB+zCiZN7lbSWclrE
+         w0rC4psGDlGc2Ky4eLW31zmXWLps5WY6AA4n5HYh9i86r8vmAdAdP2qKrfAO5PtFiPW0
+         poFA==
+X-Gm-Message-State: AOAM530KjKYHn5R85Jh9oC1BspbrwjcQPymrGZtXvgeMdlQ2Zp3JXmFw
+        veQoSdmhDqP46T/VeVV8Hk023Ithj7rW+MC8SykI
+X-Google-Smtp-Source: ABdhPJwXIr+e4+zM4WzBAc+p0tdkWxFt1PkMYpHZJVn7kSklMh9yyHrMX7sFePN1X9RSG+jO5qK0R7JOU1xxwB9QGVw=
+X-Received: by 2002:a05:6402:22d6:: with SMTP id dm22mr63176602edb.209.1634732695469;
+ Wed, 20 Oct 2021 05:24:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3164228.1634727463.1@warthog.procyon.org.uk>
-Date:   Wed, 20 Oct 2021 11:57:43 +0100
-Message-ID: <3164229.1634727463@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <YWWMO/ZDrvDZ5X4c@redhat.com>
+In-Reply-To: <YWWMO/ZDrvDZ5X4c@redhat.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 20 Oct 2021 08:24:44 -0400
+Message-ID: <CAHC9VhRv8xOoPtfpSYSvUrcHUjhqQWw5LiDSfwR2f4VJ=9Qr8Q@mail.gmail.com>
+Subject: Re: [PATCH v2] security: Return xattr name from security_dentry_init_security()
+To:     Vivek Goyal <vgoyal@redhat.com>
+Cc:     James Morris <jmorris@namei.org>,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        Serge Hallyn <serge@hallyn.com>, linux-fsdevel@vger.kernel.org,
+        virtio-fs@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Dan Walsh <dwalsh@redhat.com>, jlayton@kernel.org,
+        idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, bfields@fieldses.org,
+        chuck.lever@oracle.com, anna.schumaker@netapp.com,
+        trond.myklebust@hammerspace.com,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        casey@schaufler-ca.com, Ondrej Mosnacek <omosnace@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> wrote:
+On Tue, Oct 12, 2021 at 9:23 AM Vivek Goyal <vgoyal@redhat.com> wrote:
+>
+> Right now security_dentry_init_security() only supports single security
+> label and is used by SELinux only. There are two users of of this hook,
+> namely ceph and nfs.
+>
+> NFS does not care about xattr name. Ceph hardcodes the xattr name to
+> security.selinux (XATTR_NAME_SELINUX).
+>
+> I am making changes to fuse/virtiofs to send security label to virtiofsd
+> and I need to send xattr name as well. I also hardcoded the name of
+> xattr to security.selinux.
+>
+> Stephen Smalley suggested that it probably is a good idea to modify
+> security_dentry_init_security() to also return name of xattr so that
+> we can avoid this hardcoding in the callers.
+>
+> This patch adds a new parameter "const char **xattr_name" to
+> security_dentry_init_security() and LSM puts the name of xattr
+> too if caller asked for it (xattr_name != NULL).
+>
+> Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+> Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>
+> Changes since v1:
+> - Updated comment to make it clear caller does not have to free the
+>   xattr_name. (Jeff Layton).
+> - Captured Jeff's Reviewed-by ack.
+>
+> I have tested this patch with virtiofs and compile tested for ceph and nfs.
+>
+> NFS changes are trivial. Looking for an ack from NFS maintainers.
+>
+> ---
+>  fs/ceph/xattr.c               |    3 +--
+>  fs/nfs/nfs4proc.c             |    3 ++-
+>  include/linux/lsm_hook_defs.h |    3 ++-
+>  include/linux/lsm_hooks.h     |    3 +++
+>  include/linux/security.h      |    6 ++++--
+>  security/security.c           |    7 ++++---
+>  security/selinux/hooks.c      |    6 +++++-
+>  7 files changed, 21 insertions(+), 10 deletions(-)
 
-> The typical way to do this would be to rebrand the existing FSCACHE
-> Kconfig symbols into FSCACHE_OLD and then build the new fscache
-> structure such that it exists in parallel with the old.
+This looks fine to me and considering the trivial nature of the NFS
+changes I'm okay with merging this without an explicit ACK from the
+NFS folks.  Similarly, I generally dislike merging new functionality
+once we hit -rc6, but this is trivial enough that I think it's okay;
+I'm merging this into selinux/next now, thanks everyone.
 
-That, there, is nub of the problem.
-
-You can't have parallel cachefiles drivers: There's a single userspace
-interface (/dev/cachefiles) and only one driver can register it.  You would
-need to decide at compile time whether you want the converted or the
-unconverted network filesystems to be cached.
-
-> You'd then just drop the old infrastructure once all of the fs's are
-> converted to the new. You could even make them conflict with one another in
-> Kconfig too, so that only one could be built in during the transition period
-> if supporting both at runtime is too difficult.
-> 
-> This approach of disabling everything is much more of an all-or-nothing
-> affair. It may mean less "churn" overall, but it seems less "nice"
-> because you have an interval of commits where fscache is non-functional.
-> 
-> I'm not necessarily opposed to this approach, but I'd like to better
-> understand why doing it this way was preferred.
-
-I'm trying to avoid adding two parallel drivers, but change in place so that I
-can test parts of it as I go along.
-
-David
-
+-- 
+paul moore
+www.paul-moore.com
