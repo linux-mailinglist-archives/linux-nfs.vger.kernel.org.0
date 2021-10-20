@@ -2,119 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFBBA434B2F
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 14:31:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2781434E56
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 16:54:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbhJTMdx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Oct 2021 08:33:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:26388 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229702AbhJTMdv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 08:33:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634733096;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uBksMSRlzVzIRqYRz7FTRO//MQHxY7XrIS8vzdTdH/0=;
-        b=IkReGZAXHw9VG5Qp6Oearv7lY1SLjxqNSA0Y6ms4kbnFeL/yGVMEdFLN+YQWPuUKgfhHO+
-        rPj2wXCs6qFGWl3Ph8VeUh9rhnWVKTFce5RepMa73pyrdrN/qmj6vljmgAFaS72HENPBCe
-        CxUXAxTVfLlYZepR4EchlTZouwK5hwY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-234-H756tWO_PiG8kexqIt7lSA-1; Wed, 20 Oct 2021 08:31:35 -0400
-X-MC-Unique: H756tWO_PiG8kexqIt7lSA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CC578042EF;
-        Wed, 20 Oct 2021 12:31:32 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.22.33.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8177D62A44;
-        Wed, 20 Oct 2021 12:31:28 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id ED5F02256F7; Wed, 20 Oct 2021 08:31:27 -0400 (EDT)
-Date:   Wed, 20 Oct 2021 08:31:27 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     James Morris <jmorris@namei.org>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        Serge Hallyn <serge@hallyn.com>, linux-fsdevel@vger.kernel.org,
-        virtio-fs@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Dan Walsh <dwalsh@redhat.com>, jlayton@kernel.org,
-        idryomov@gmail.com, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, bfields@fieldses.org,
-        chuck.lever@oracle.com, anna.schumaker@netapp.com,
-        trond.myklebust@hammerspace.com,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        casey@schaufler-ca.com, Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: [PATCH v2] security: Return xattr name from
- security_dentry_init_security()
-Message-ID: <YXAMH1nyfM+IA4Ce@redhat.com>
-References: <YWWMO/ZDrvDZ5X4c@redhat.com>
- <CAHC9VhRv8xOoPtfpSYSvUrcHUjhqQWw5LiDSfwR2f4VJ=9Qr8Q@mail.gmail.com>
+        id S230219AbhJTO4d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Oct 2021 10:56:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230106AbhJTO4c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 10:56:32 -0400
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64907C061755
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Oct 2021 07:54:18 -0700 (PDT)
+Received: by mail-ot1-x333.google.com with SMTP id s18-20020a0568301e1200b0054e77a16651so8540325otr.7
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Oct 2021 07:54:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TZZSEfWCStHUfXhWoXkg5KMgJocnV57u5o2CEcJ7HCc=;
+        b=m6t8lcoqFlEuO2YtgUGyJOgTFG9r3gegg328r7yqi7ahbS8ubR2dD0/Pj2EWCTAUuA
+         M02ojT0kPrzHZYYG+nzIM/amlc0aviTrC5h073WmzUsDG5kSpMZnjhuK+i8EoLI8XtFV
+         tAOJI6Dq6RqsaFkY7XaLCF+jWOo8HC09LBuWXmFGMukDr003XnwiD9sz7/I/c5Gdrkja
+         EgQndCGLKNGRW6KF4GgsUvpBI9e/r1wrQDvkfxN5dmsQcuosbJ5bD+47WPJHDtMVt1ox
+         UNh+E6Iq9tCpN0OMN/AP4Ti0h/SP/2gadP9EfeelfLwNwKFK/cs3CzBNoPypeMhUfQ1Q
+         8tNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TZZSEfWCStHUfXhWoXkg5KMgJocnV57u5o2CEcJ7HCc=;
+        b=POW3TojUSMFeCWh5Eizx1Fgk0aFKRgNbgB7owvcCUldqnAExFct1XfQLwKu7QH2ODI
+         zZUZ64x/sTe8se0ppp5YFLpNkiyhy85fCxCIJT83MCzSSCEjhKjJ1M2Ug6a+tyWdx4aw
+         CajUuAP53fuHXfoekWkgs3Hhyyij7nyH3xkfVEQVlTzbiJYbJmo6pMMoL1yi79UhB6uR
+         vlJFxqg3nerqHLpZwUhBoZ3LXTxfvGvQbrJyi7KlvIsE5flNmh9ErNbxm61Kkm7iRR0G
+         L4jxTCE2ZXdF/rY8L8whIbl3aUs1OEilZdzRv8EZFXzKD+dswQkqeIvqNseSWGu+16fb
+         GcFA==
+X-Gm-Message-State: AOAM532Y8KfM7gcY3ciSsdmczXkzGY1R5P8P9H3V49hcYrGhJIpJiqm5
+        bK77EjDp8jLaUho3ZeEJOfSwt/OG1zOHpw==
+X-Google-Smtp-Source: ABdhPJyA70p8IeSf47juIEqV0A0ohyswwqnHS0r02Wg4m/IZ8h7PlFDckmkiOFfwNwbTNzml/h726Q==
+X-Received: by 2002:a9d:4c99:: with SMTP id m25mr294329otf.204.1634741657447;
+        Wed, 20 Oct 2021 07:54:17 -0700 (PDT)
+Received: from [192.168.1.30] ([207.135.234.126])
+        by smtp.gmail.com with ESMTPSA id bc41sm476898oob.2.2021.10.20.07.54.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 20 Oct 2021 07:54:17 -0700 (PDT)
+Subject: Re: remove QUEUE_FLAG_SCSI_PASSTHROUGH v2
+To:     Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org
+References: <20211019075418.2332481-1-hch@lst.de>
+ <yq15ytsbawr.fsf@ca-mkp.ca.oracle.com> <20211020053341.GA25529@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0a70e163-d6cb-9733-a91f-d0bee2c23c69@kernel.dk>
+Date:   Wed, 20 Oct 2021 08:54:16 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhRv8xOoPtfpSYSvUrcHUjhqQWw5LiDSfwR2f4VJ=9Qr8Q@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <20211020053341.GA25529@lst.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 08:24:44AM -0400, Paul Moore wrote:
-> On Tue, Oct 12, 2021 at 9:23 AM Vivek Goyal <vgoyal@redhat.com> wrote:
-> >
-> > Right now security_dentry_init_security() only supports single security
-> > label and is used by SELinux only. There are two users of of this hook,
-> > namely ceph and nfs.
-> >
-> > NFS does not care about xattr name. Ceph hardcodes the xattr name to
-> > security.selinux (XATTR_NAME_SELINUX).
-> >
-> > I am making changes to fuse/virtiofs to send security label to virtiofsd
-> > and I need to send xattr name as well. I also hardcoded the name of
-> > xattr to security.selinux.
-> >
-> > Stephen Smalley suggested that it probably is a good idea to modify
-> > security_dentry_init_security() to also return name of xattr so that
-> > we can avoid this hardcoding in the callers.
-> >
-> > This patch adds a new parameter "const char **xattr_name" to
-> > security_dentry_init_security() and LSM puts the name of xattr
-> > too if caller asked for it (xattr_name != NULL).
-> >
-> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >
-> > Changes since v1:
-> > - Updated comment to make it clear caller does not have to free the
-> >   xattr_name. (Jeff Layton).
-> > - Captured Jeff's Reviewed-by ack.
-> >
-> > I have tested this patch with virtiofs and compile tested for ceph and nfs.
-> >
-> > NFS changes are trivial. Looking for an ack from NFS maintainers.
-> >
-> > ---
-> >  fs/ceph/xattr.c               |    3 +--
-> >  fs/nfs/nfs4proc.c             |    3 ++-
-> >  include/linux/lsm_hook_defs.h |    3 ++-
-> >  include/linux/lsm_hooks.h     |    3 +++
-> >  include/linux/security.h      |    6 ++++--
-> >  security/security.c           |    7 ++++---
-> >  security/selinux/hooks.c      |    6 +++++-
-> >  7 files changed, 21 insertions(+), 10 deletions(-)
+On 10/19/21 11:33 PM, Christoph Hellwig wrote:
+> On Wed, Oct 20, 2021 at 12:05:24AM -0400, Martin K. Petersen wrote:
+>>
+>> Christoph,
+>>
+>>> The changes to support pktcdvd are a bit ugly, but I can't think of
+>>> anything better (except for removing the driver entirely).  If we'd
+>>> want to support packet writing today it would probably live entirely
+>>> inside the sr driver.
+>>
+>> Yeah, I agree.
+>>
+>> Anyway. No major objections from me. Not sure whether it makes most
+>> sense for this to go through block or scsi?
 > 
-> This looks fine to me and considering the trivial nature of the NFS
-> changes I'm okay with merging this without an explicit ACK from the
-> NFS folks.  Similarly, I generally dislike merging new functionality
-> once we hit -rc6, but this is trivial enough that I think it's okay;
-> I'm merging this into selinux/next now, thanks everyone.
+> I'm not sure either, but either tree is fine with me.
 
-Thanks Paul. I agree that this a trivial fix with no functionality
-change and probability of this breaking something is very very low.
+Looks fine to me, outside of the spelling error in patch 1. I can set
+up a topic branch for this one.
 
-Vivek
+Christoph, can you do a resend with the enum naming fixed?
+
+-- 
+Jens Axboe
 
