@@ -2,96 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5250443547B
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 22:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B04643549A
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 22:29:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230020AbhJTUWg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Oct 2021 16:22:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
+        id S231278AbhJTUbZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Oct 2021 16:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230162AbhJTUWf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 16:22:35 -0400
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE145C06161C;
-        Wed, 20 Oct 2021 13:20:20 -0700 (PDT)
-Received: by mail-ua1-x936.google.com with SMTP id i22so8972796ual.10;
-        Wed, 20 Oct 2021 13:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=llHgAnEBBihqnLqsfxJZ95+VA1vbnQXxbNgD4n9tUPo=;
-        b=qpnhmVWSXEyIkwoADcN5lC8AhKEX9g/WADTw+bjSV1eD4KzF3oWVWXiG7SMAnDseXd
-         +KqzZ6ruPBiadC3lqCrPus+jxgPqHFzXsxL1JiBvXtIfiTpCIVSgOU5UIxOpdwh5q9wx
-         xkmf4nBHPTXxDhrELJZL9UY/NQtAQGqbanSkJZJ2Enkys/kHQUHvMPVMWe6qIXR9pwiK
-         KDkEkX63UitsZTPFRhn9cJpEVSFPLDdeGcFxqf97u399yTBsrbptYAfNXC8VJgHpilIo
-         jonKFgPXCBh5dQ6quZKtOH3Cxk762+4IuOmF31aLb+mvqOgeeCMFvBpNmtcxM8/bQl5Y
-         Xy9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=llHgAnEBBihqnLqsfxJZ95+VA1vbnQXxbNgD4n9tUPo=;
-        b=zpjP445V6LM/jq+V2d/LE08mn41wIlpegyJURJwG/xbFtAGJJfKSN/PEHKBMfpJNN6
-         pdLvE00l0d6ezFgoi/fd64v7JmFa6WCoeSl3lVABaSlJyVRXwGeQ12mfI/EJfpGKh4ry
-         IhgJfW7PtKPkWITG2LIgbQ388Gyg0cDL/FJbpi9ONjqGaMfnd+YclO3BIx2+oMkWO0aR
-         qf0CP3FsUoAoRQZ8WzEQGE2OZqVeVyB9DSKXWQxwZoaE2I/V4QkGMnxGTlx0G8WxJp6x
-         yNs9+Te60t4T3KxhDdD37lWY9wz1G4Fxi+WSjliZC595/ChnfOR+6UvAG2IeqgM7ZMWw
-         cYdQ==
-X-Gm-Message-State: AOAM530d6WWAMNBI2+cTUj94AjzydVSgB6/FbwjQE1EHuyR2qwyRw6HG
-        drfXOTCwYb2cKtRnNOtaqb8=
-X-Google-Smtp-Source: ABdhPJwcPtU1ZKGiElJ9EZX/eo+DHMBEfpKWNbn7c9EY1tc5FZrxErIe+jlnWys1Sn2f9TgWQwkaRw==
-X-Received: by 2002:a67:cb0a:: with SMTP id b10mr2327321vsl.9.1634761219749;
-        Wed, 20 Oct 2021 13:20:19 -0700 (PDT)
-Received: from nyarly.rlyeh.local ([179.233.244.167])
-        by smtp.gmail.com with ESMTPSA id h21sm1860289vsl.14.2021.10.20.13.20.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Oct 2021 13:20:19 -0700 (PDT)
-Date:   Wed, 20 Oct 2021 17:20:13 -0300
-From:   Thiago Rafael Becker <trbecker@gmail.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "tbecker@redhat.com" <tbecker@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH] sunrpc: bug on rpc_task_set_client when no client is
- present.
-Message-ID: <YXB5/TnA0qnGB+YA@nyarly.rlyeh.local>
-References: <20211018123812.71482-1-trbecker@gmail.com>
- <f16b2dc1c2fa50cb557b39a9ef83bf83ea6279b5.camel@hammerspace.com>
+        with ESMTP id S231234AbhJTUbW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 16:31:22 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6548C06161C
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Oct 2021 13:29:07 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0E8346CC9; Wed, 20 Oct 2021 16:29:07 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0E8346CC9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1634761747;
+        bh=tRu0EacVe2rJgGtykUTpMj+abm+3+uPVRoZ4reVprH4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wAO4M2LoOi7boSjfRpxVq1PwHPbWJ+9TGZPHTANHg27uOAMF7fXV5+I8ZmBRZvJY/
+         kzgiAyQjW6axvF3pRKiiA4zGgdz7bqrsdlxViQuHpEfAAtj8eIGXKEGTP6wTfzEagO
+         doYDQLvTDgU5X8vq/f/xqgPMl5dGnp8AHObWERWY=
+Date:   Wed, 20 Oct 2021 16:29:07 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     dai.ngo@oracle.com
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Steve Dickson <steved@redhat.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: server-to-server copy by default
+Message-ID: <20211020202907.GF597@fieldses.org>
+References: <20211020155421.GC597@fieldses.org>
+ <18E32DF5-3F1D-4C23-8C2F-A7963103CF8C@oracle.com>
+ <CAN-5tyEL4L2GH=-MDGS4qNTcCLRPFCQzfDQjFAVbG7wMKvHxOg@mail.gmail.com>
+ <8b1eb564-974d-00b6-397a-d92f301df7d8@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f16b2dc1c2fa50cb557b39a9ef83bf83ea6279b5.camel@hammerspace.com>
+In-Reply-To: <8b1eb564-974d-00b6-397a-d92f301df7d8@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 07:04:35PM +0000, Trond Myklebust wrote:
-Hello,
-
-> I'm not seeing the point of this BUG_ON(). Why not just change this
-> code to not check for clnt == NULL, and let the thing Oops when it
-> tries to dereference clnt?
-
-This was changed in 58f9612c6ea85, prior to that, this was not tested. I'm
-not sure why this test exists, the only reason I can imagine is to keep
-the previous task's rpc_client in case the new client is NULL. Decided
-to go conservative on this, and BUG_ON() when no client is available.
-
-Inside the linux source, I don't see how this may happen unless the code
-has a bug, so I think it's possible to remove this test.
-
--- Thiago
- 
-> -- 
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+On Wed, Oct 20, 2021 at 12:03:46PM -0700, dai.ngo@oracle.com wrote:
 > 
+> On 10/20/21 9:33 AM, Olga Kornievskaia wrote:
+> >On Wed, Oct 20, 2021 at 12:00 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >>>2. Security question: with server-to-server copy enabled, you can send
+> >>>the server a COPY call with any random address, and the server will
+> >>>mount that address, open a file, and read from it.  Is that safe?
 > 
+> The client already has write access to the share on the destination
+> server, it can write any data to the destination file.
+
+Agreed.  Please look back at what I said; I'm not thinking about attacks
+on the source server, I'm thinking about attacks on the destination (the
+one that receives the COPY).
+
+--b.
