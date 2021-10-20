@@ -2,49 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B7D524344B2
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 07:33:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8A9F43484F
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Oct 2021 11:49:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbhJTFf6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Oct 2021 01:35:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:40673 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229920AbhJTFf5 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 20 Oct 2021 01:35:57 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 607DE68BEB; Wed, 20 Oct 2021 07:33:41 +0200 (CEST)
-Date:   Wed, 20 Oct 2021 07:33:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: remove QUEUE_FLAG_SCSI_PASSTHROUGH v2
-Message-ID: <20211020053341.GA25529@lst.de>
-References: <20211019075418.2332481-1-hch@lst.de> <yq15ytsbawr.fsf@ca-mkp.ca.oracle.com>
+        id S230187AbhJTJvj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Oct 2021 05:51:39 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35158 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S230061AbhJTJvi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Oct 2021 05:51:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1634723362;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yrwzIKxJLyOlRuVjyH2WuWw8q3AM6f6AtDPiL7a0cJ0=;
+        b=e1d6jJS9q1vFwL5elu4m1sQhJeTNo0YQdIyCVdPCFdKOWVIEyYey2EoR7qm2Tc3RPf0dRe
+        8P83sq/RgDCqEcujye9PIXDSi35fN2g+8qG6VFEWDHWAMeiqNESDQBAyg+v4cjc5eO423N
+        TIaj9jVwUeYPa91VeXEC6dT9nK9k1tM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-ZFkCjXapNaOorQ1nti-2Sg-1; Wed, 20 Oct 2021 05:49:19 -0400
+X-MC-Unique: ZFkCjXapNaOorQ1nti-2Sg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE16F1006AAE;
+        Wed, 20 Oct 2021 09:49:15 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3ED3018A8F;
+        Wed, 20 Oct 2021 09:49:10 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <d58335124c7467703201a9cdba765a46a780c855.camel@redhat.com>
+References: <d58335124c7467703201a9cdba765a46a780c855.camel@redhat.com> <163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk> <163456866523.2614702.2234665737111683988.stgit@warthog.procyon.org.uk>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 03/67] vfs, fscache: Force ->write_inode() to occur if cookie pinned for writeback
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq15ytsbawr.fsf@ca-mkp.ca.oracle.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3087476.1634723349.1@warthog.procyon.org.uk>
+Date:   Wed, 20 Oct 2021 10:49:09 +0100
+Message-ID: <3087477.1634723349@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Oct 20, 2021 at 12:05:24AM -0400, Martin K. Petersen wrote:
-> 
-> Christoph,
-> 
-> > The changes to support pktcdvd are a bit ugly, but I can't think of
-> > anything better (except for removing the driver entirely).  If we'd
-> > want to support packet writing today it would probably live entirely
-> > inside the sr driver.
-> 
-> Yeah, I agree.
-> 
-> Anyway. No major objections from me. Not sure whether it makes most
-> sense for this to go through block or scsi?
+Jeff Layton <jlayton@redhat.com> wrote:
 
-I'm not sure either, but either tree is fine with me.
+> IDGI: how would I_PINNING_FSCACHE_WB get set in the first place? 
+
+This is used by a later patch, but because this modifies a very commonly used
+header file, it was causing mass rebuilds every time I pushed or popped it.  I
+can merge it back in now, I think.
+
+David
+
