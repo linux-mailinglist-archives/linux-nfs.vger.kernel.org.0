@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A58A3435AA5
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Oct 2021 08:06:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCE4F435AAA
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Oct 2021 08:06:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231248AbhJUGIl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Oct 2021 02:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36248 "EHLO
+        id S230526AbhJUGIn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Oct 2021 02:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231208AbhJUGIk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Oct 2021 02:08:40 -0400
+        with ESMTP id S229499AbhJUGIn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Oct 2021 02:08:43 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4178C06161C;
-        Wed, 20 Oct 2021 23:06:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 249BFC06161C;
+        Wed, 20 Oct 2021 23:06:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=ZtmbQu8tFnChql+nwH2seJ2xwSPNVUa6shaSNBkIMzA=; b=WIkWvO3hXVw7TSpR5XULWr6s6h
-        vWavgW1rXJSW2uIOBPCbY2p427q2xDKvUC9kZPcO3p8iD9qBiEdXSRAEBxrkB0nJ487beoDLhvDDp
-        bz4n07XoMKfkJBPa3G7lWgbjPCs6CY6bt3fDZoCa0FFARgIQBDHBnY4AMflaeZWwDJDuOVwcejMBQ
-        arUzeYPV+CXaQ9oNH2fkU5ePftinntzSmKGUubM+XUVyJWriq0j0J16dc1vc8J3kznJgS7UuxKuW7
-        BSJbrDN78UxCNFDOf6PMgAyk4fnVXAJTwebls/ShmO6MPBhoymYqmWSwifkdNcyqP673cA73jOxB+
-        z50zsdGA==;
+        bh=MYhyrOVT/0PMY8ztlZmjKrJbNk0ITh4jn9RKYsQe0s8=; b=4beP7VFfaPhsRUQshauVfCOeBE
+        I+XXYzgikGP+53JSxMy1zHBcTPjwxqkQduUTtfQEWFoFaMRvR+oiyGrJJqFplK9LDQn13ZKoD//NF
+        i8fChcVMf3VLy7Ajq3kdiIbm5Nul2V2FAbYGopoUHfBxcZKFk3Ji+aNq8Xgjhc7Wst8pFB627Y1Gg
+        mZeb99Utg0sRHlA0uooUd9bMWIw/NhS1LWcbeuIOEKD9bHZJ/3SYTh1Bzlp2IhIV9Ec0Ty5qQejaI
+        EXzmWOe9goqb2cfNCeIRHQogLgF6KNUF+c35oVvHoqzd8p/Yv84oh2VOv6igZCjQrM3H2sJVwod3U
+        8HpbXgyA==;
 Received: from [2001:4bb8:180:8777:7df0:a8d8:40cc:3310] (helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mdRDa-006U6S-Qt; Thu, 21 Oct 2021 06:06:23 +0000
+        id 1mdRDd-006U7Q-Mq; Thu, 21 Oct 2021 06:06:26 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Jens Axboe <axboe@kernel.dk>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
@@ -35,9 +35,9 @@ Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         linux-block@vger.kernel.org, linux-scsi@vger.kernel.org,
         target-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
         Hannes Reinecke <hare@suse.de>
-Subject: [PATCH 4/7] bsg-lib: initialize the bsg_job in bsg_transport_sg_io_fn
-Date:   Thu, 21 Oct 2021 08:06:04 +0200
-Message-Id: <20211021060607.264371-5-hch@lst.de>
+Subject: [PATCH 5/7] scsi: add a scsi_alloc_request helper
+Date:   Thu, 21 Oct 2021 08:06:05 +0200
+Message-Id: <20211021060607.264371-6-hch@lst.de>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20211021060607.264371-1-hch@lst.de>
 References: <20211021060607.264371-1-hch@lst.de>
@@ -48,102 +48,239 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Directly initialize the bsg_job structure instead of relying on the
-->.initialize_rq_fn indirection.  This also removes the superflous
-initialization of the second request used for BIDI requests.
+Add a new helper that calls blk_get_request and initializes the
+scsi_request to avoid the indirect call through ->.initialize_rq_fn.
+
+Note that this makes the pktcdvd driver depend on the SCSI core, but
+given that only SCSI devices support SCSI passthrough requests that
+is not a functional change.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Hannes Reinecke <hare@suse.de>
 ---
- block/bsg-lib.c | 32 +++++++++++++-------------------
- 1 file changed, 13 insertions(+), 19 deletions(-)
+ drivers/block/Kconfig              |  2 +-
+ drivers/block/pktcdvd.c            |  2 +-
+ drivers/scsi/scsi_bsg.c            |  4 ++--
+ drivers/scsi/scsi_error.c          |  2 +-
+ drivers/scsi/scsi_ioctl.c          |  4 ++--
+ drivers/scsi/scsi_lib.c            | 19 +++++++++++++------
+ drivers/scsi/sg.c                  |  4 ++--
+ drivers/scsi/sr.c                  |  2 +-
+ drivers/scsi/st.c                  |  2 +-
+ drivers/target/target_core_pscsi.c |  3 +--
+ include/scsi/scsi_cmnd.h           |  3 +++
+ 11 files changed, 28 insertions(+), 19 deletions(-)
 
-diff --git a/block/bsg-lib.c b/block/bsg-lib.c
-index ccb98276c964a..10aa378702fab 100644
---- a/block/bsg-lib.c
-+++ b/block/bsg-lib.c
-@@ -31,6 +31,7 @@ static int bsg_transport_sg_io_fn(struct request_queue *q, struct sg_io_v4 *hdr,
- 	struct bsg_job *job;
+diff --git a/drivers/block/Kconfig b/drivers/block/Kconfig
+index ab3e37aa1830c..9151e8ffba1cf 100644
+--- a/drivers/block/Kconfig
++++ b/drivers/block/Kconfig
+@@ -304,8 +304,8 @@ config BLK_DEV_RAM_SIZE
+ config CDROM_PKTCDVD
+ 	tristate "Packet writing on CD/DVD media (DEPRECATED)"
+ 	depends on !UML
++	depends on SCSI
+ 	select CDROM
+-	select SCSI_COMMON
+ 	help
+ 	  Note: This driver is deprecated and will be removed from the
+ 	  kernel in the near future!
+diff --git a/drivers/block/pktcdvd.c b/drivers/block/pktcdvd.c
+index e48d4771d4c1a..d7d37131ab9dd 100644
+--- a/drivers/block/pktcdvd.c
++++ b/drivers/block/pktcdvd.c
+@@ -703,7 +703,7 @@ static int pkt_generic_packet(struct pktcdvd_device *pd, struct packet_command *
  	struct request *rq;
- 	struct bio *bio;
-+	void *reply;
- 	int ret;
+ 	int ret = 0;
  
- 	if (hdr->protocol != BSG_PROTOCOL_SCSI  ||
-@@ -39,22 +40,28 @@ static int bsg_transport_sg_io_fn(struct request_queue *q, struct sg_io_v4 *hdr,
- 	if (!capable(CAP_SYS_RAWIO))
- 		return -EPERM;
- 
--	rq = blk_get_request(q, hdr->dout_xfer_len ?
-+	rq = blk_mq_alloc_request(q, hdr->dout_xfer_len ?
+-	rq = blk_get_request(q, (cgc->data_direction == CGC_DATA_WRITE) ?
++	rq = scsi_alloc_request(q, (cgc->data_direction == CGC_DATA_WRITE) ?
  			     REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
  	if (IS_ERR(rq))
  		return PTR_ERR(rq);
- 	rq->timeout = timeout;
- 
- 	job = blk_mq_rq_to_pdu(rq);
-+	reply = job->reply;
-+	memset(job, 0, sizeof(*job));
-+	job->reply = reply;
-+	job->reply_len = SCSI_SENSE_BUFFERSIZE;
-+	job->dd_data = job + 1;
-+
- 	job->request_len = hdr->request_len;
- 	job->request = memdup_user(uptr64(hdr->request), hdr->request_len);
- 	if (IS_ERR(job->request)) {
- 		ret = PTR_ERR(job->request);
--		goto out_put_request;
-+		goto out_free_rq;
+diff --git a/drivers/scsi/scsi_bsg.c b/drivers/scsi/scsi_bsg.c
+index 81c3853a2a800..551727a6f6941 100644
+--- a/drivers/scsi/scsi_bsg.c
++++ b/drivers/scsi/scsi_bsg.c
+@@ -25,8 +25,8 @@ static int scsi_bsg_sg_io_fn(struct request_queue *q, struct sg_io_v4 *hdr,
+ 		return -EOPNOTSUPP;
  	}
  
- 	if (hdr->dout_xfer_len && hdr->din_xfer_len) {
--		job->bidi_rq = blk_get_request(rq->q, REQ_OP_DRV_IN, 0);
-+		job->bidi_rq = blk_mq_alloc_request(rq->q, REQ_OP_DRV_IN, 0);
- 		if (IS_ERR(job->bidi_rq)) {
- 			ret = PTR_ERR(job->bidi_rq);
- 			goto out_free_job_request;
-@@ -134,11 +141,11 @@ static int bsg_transport_sg_io_fn(struct request_queue *q, struct sg_io_v4 *hdr,
- 		blk_rq_unmap_user(job->bidi_bio);
- out_free_bidi_rq:
- 	if (job->bidi_rq)
--		blk_put_request(job->bidi_rq);
-+		blk_mq_free_request(job->bidi_rq);
- out_free_job_request:
- 	kfree(job->request);
--out_put_request:
--	blk_put_request(rq);
-+out_free_rq:
-+	blk_mq_free_request(rq);
- 	return ret;
- }
+-	rq = blk_get_request(q, hdr->dout_xfer_len ?
+-			     REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
++	rq = scsi_alloc_request(q, hdr->dout_xfer_len ?
++				REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(rq))
+ 		return PTR_ERR(rq);
+ 	rq->timeout = timeout;
+diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+index b6c86cce57bfa..71d027b94be40 100644
+--- a/drivers/scsi/scsi_error.c
++++ b/drivers/scsi/scsi_error.c
+@@ -1998,7 +1998,7 @@ static void scsi_eh_lock_door(struct scsi_device *sdev)
+ 	struct request *req;
+ 	struct scsi_request *rq;
  
-@@ -302,18 +309,6 @@ static int bsg_init_rq(struct blk_mq_tag_set *set, struct request *req,
- 	return 0;
- }
+-	req = blk_get_request(sdev->request_queue, REQ_OP_DRV_IN, 0);
++	req = scsi_alloc_request(sdev->request_queue, REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(req))
+ 		return;
+ 	rq = scsi_req(req);
+diff --git a/drivers/scsi/scsi_ioctl.c b/drivers/scsi/scsi_ioctl.c
+index 6ff2207bd45a0..0078975e3c07c 100644
+--- a/drivers/scsi/scsi_ioctl.c
++++ b/drivers/scsi/scsi_ioctl.c
+@@ -438,7 +438,7 @@ static int sg_io(struct scsi_device *sdev, struct gendisk *disk,
+ 		at_head = 1;
  
--/* called right before the request is given to the request_queue user */
--static void bsg_initialize_rq(struct request *req)
--{
--	struct bsg_job *job = blk_mq_rq_to_pdu(req);
--	void *reply = job->reply;
--
--	memset(job, 0, sizeof(*job));
--	job->reply = reply;
--	job->reply_len = SCSI_SENSE_BUFFERSIZE;
--	job->dd_data = job + 1;
--}
--
- static void bsg_exit_rq(struct blk_mq_tag_set *set, struct request *req,
- 		       unsigned int hctx_idx)
+ 	ret = -ENOMEM;
+-	rq = blk_get_request(sdev->request_queue, writing ?
++	rq = scsi_alloc_request(sdev->request_queue, writing ?
+ 			     REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(rq))
+ 		return PTR_ERR(rq);
+@@ -561,7 +561,7 @@ static int sg_scsi_ioctl(struct request_queue *q, struct gendisk *disk,
+ 
+ 	}
+ 
+-	rq = blk_get_request(q, in_len ? REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
++	rq = scsi_alloc_request(q, in_len ? REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(rq)) {
+ 		err = PTR_ERR(rq);
+ 		goto error_free_buffer;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 30f7d0b4eb732..a0f801fc8943b 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -216,7 +216,7 @@ int __scsi_execute(struct scsi_device *sdev, const unsigned char *cmd,
+ 	struct scsi_request *rq;
+ 	int ret;
+ 
+-	req = blk_get_request(sdev->request_queue,
++	req = scsi_alloc_request(sdev->request_queue,
+ 			data_direction == DMA_TO_DEVICE ?
+ 			REQ_OP_DRV_OUT : REQ_OP_DRV_IN,
+ 			rq_flags & RQF_PM ? BLK_MQ_REQ_PM : 0);
+@@ -1079,9 +1079,6 @@ EXPORT_SYMBOL(scsi_alloc_sgtables);
+  * This function initializes the members of struct scsi_cmnd that must be
+  * initialized before request processing starts and that won't be
+  * reinitialized if a SCSI command is requeued.
+- *
+- * Called from inside blk_get_request() for pass-through requests and from
+- * inside scsi_init_command() for filesystem requests.
+  */
+ static void scsi_initialize_rq(struct request *rq)
  {
-@@ -350,7 +345,6 @@ static const struct blk_mq_ops bsg_mq_ops = {
- 	.queue_rq		= bsg_queue_rq,
- 	.init_request		= bsg_init_rq,
- 	.exit_request		= bsg_exit_rq,
--	.initialize_rq_fn	= bsg_initialize_rq,
- 	.complete		= bsg_complete,
- 	.timeout		= bsg_timeout,
- };
+@@ -1098,6 +1095,18 @@ static void scsi_initialize_rq(struct request *rq)
+ 	cmd->retries = 0;
+ }
+ 
++struct request *scsi_alloc_request(struct request_queue *q,
++		unsigned int op, blk_mq_req_flags_t flags)
++{
++	struct request *rq;
++
++	rq = blk_get_request(q, op, flags);
++	if (!IS_ERR(rq))
++		scsi_initialize_rq(rq);
++	return rq;
++}
++EXPORT_SYMBOL_GPL(scsi_alloc_request);
++
+ /*
+  * Only called when the request isn't completed by SCSI, and not freed by
+  * SCSI
+@@ -1864,7 +1873,6 @@ static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+ #endif
+ 	.init_request	= scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+-	.initialize_rq_fn = scsi_initialize_rq,
+ 	.cleanup_rq	= scsi_cleanup_rq,
+ 	.busy		= scsi_mq_lld_busy,
+ 	.map_queues	= scsi_map_queues,
+@@ -1894,7 +1902,6 @@ static const struct blk_mq_ops scsi_mq_ops = {
+ #endif
+ 	.init_request	= scsi_mq_init_request,
+ 	.exit_request	= scsi_mq_exit_request,
+-	.initialize_rq_fn = scsi_initialize_rq,
+ 	.cleanup_rq	= scsi_cleanup_rq,
+ 	.busy		= scsi_mq_lld_busy,
+ 	.map_queues	= scsi_map_queues,
+diff --git a/drivers/scsi/sg.c b/drivers/scsi/sg.c
+index 3c98f08dc25d9..85f57ac0b844e 100644
+--- a/drivers/scsi/sg.c
++++ b/drivers/scsi/sg.c
+@@ -1718,13 +1718,13 @@ sg_start_req(Sg_request *srp, unsigned char *cmd)
+ 	 *
+ 	 * With scsi-mq enabled, there are a fixed number of preallocated
+ 	 * requests equal in number to shost->can_queue.  If all of the
+-	 * preallocated requests are already in use, then blk_get_request()
++	 * preallocated requests are already in use, then scsi_alloc_request()
+ 	 * will sleep until an active command completes, freeing up a request.
+ 	 * Although waiting in an asynchronous interface is less than ideal, we
+ 	 * do not want to use BLK_MQ_REQ_NOWAIT here because userspace might
+ 	 * not expect an EWOULDBLOCK from this condition.
+ 	 */
+-	rq = blk_get_request(q, hp->dxfer_direction == SG_DXFER_TO_DEV ?
++	rq = scsi_alloc_request(q, hp->dxfer_direction == SG_DXFER_TO_DEV ?
+ 			REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(rq)) {
+ 		kfree(long_cmdp);
+diff --git a/drivers/scsi/sr.c b/drivers/scsi/sr.c
+index 115f7ef7a5def..7c4d9a9647999 100644
+--- a/drivers/scsi/sr.c
++++ b/drivers/scsi/sr.c
+@@ -967,7 +967,7 @@ static int sr_read_cdda_bpc(struct cdrom_device_info *cdi, void __user *ubuf,
+ 	struct bio *bio;
+ 	int ret;
+ 
+-	rq = blk_get_request(disk->queue, REQ_OP_DRV_IN, 0);
++	rq = scsi_alloc_request(disk->queue, REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(rq))
+ 		return PTR_ERR(rq);
+ 	req = scsi_req(rq);
+diff --git a/drivers/scsi/st.c b/drivers/scsi/st.c
+index 9933722acfd96..1275299f61597 100644
+--- a/drivers/scsi/st.c
++++ b/drivers/scsi/st.c
+@@ -543,7 +543,7 @@ static int st_scsi_execute(struct st_request *SRpnt, const unsigned char *cmd,
+ 	int err = 0;
+ 	struct scsi_tape *STp = SRpnt->stp;
+ 
+-	req = blk_get_request(SRpnt->stp->device->request_queue,
++	req = scsi_alloc_request(SRpnt->stp->device->request_queue,
+ 			data_direction == DMA_TO_DEVICE ?
+ 			REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(req))
+diff --git a/drivers/target/target_core_pscsi.c b/drivers/target/target_core_pscsi.c
+index 75ef52f008ff6..b5705a2bd7618 100644
+--- a/drivers/target/target_core_pscsi.c
++++ b/drivers/target/target_core_pscsi.c
+@@ -980,11 +980,10 @@ pscsi_execute_cmd(struct se_cmd *cmd)
+ 	memcpy(pt->pscsi_cdb, cmd->t_task_cdb,
+ 		scsi_command_size(cmd->t_task_cdb));
+ 
+-	req = blk_get_request(pdv->pdv_sd->request_queue,
++	req = scsi_alloc_request(pdv->pdv_sd->request_queue,
+ 			cmd->data_direction == DMA_TO_DEVICE ?
+ 			REQ_OP_DRV_OUT : REQ_OP_DRV_IN, 0);
+ 	if (IS_ERR(req)) {
+-		pr_err("PSCSI: blk_get_request() failed\n");
+ 		ret = TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+ 		goto fail;
+ 	}
+diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+index eaf04c9a1dfcb..31078063afac2 100644
+--- a/include/scsi/scsi_cmnd.h
++++ b/include/scsi/scsi_cmnd.h
+@@ -396,4 +396,7 @@ static inline unsigned scsi_transfer_length(struct scsi_cmnd *scmd)
+ extern void scsi_build_sense(struct scsi_cmnd *scmd, int desc,
+ 			     u8 key, u8 asc, u8 ascq);
+ 
++struct request *scsi_alloc_request(struct request_queue *q,
++		unsigned int op, blk_mq_req_flags_t flags);
++
+ #endif /* _SCSI_SCSI_CMND_H */
 -- 
 2.30.2
 
