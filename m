@@ -2,71 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B019436478
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Oct 2021 16:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39781436C98
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Oct 2021 23:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231474AbhJUOkZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Oct 2021 10:40:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41340 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231206AbhJUOkY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Oct 2021 10:40:24 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F66C0613B9
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Oct 2021 07:38:08 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 439D96EB2; Thu, 21 Oct 2021 10:38:08 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 439D96EB2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1634827088;
-        bh=/BlsD1gn29gCvSKq9x0SYSGgGj3MZe198VmEE/Bp27U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y7Ak4NENovGHrQHSC7/5wpUQDVtgkwvvORs0gVfOhhAr+vVg+HW2oV9/LVbh3az3i
-         zUpd4fmmMGZS7juE3la2uyUNVutV0b/oIopzZ4ObiwRfXcftCoJmuJgLwuug6WLaCx
-         SEUzfUlXb+ZnWkD/8el4I94yprWUuvfF521v9fwo=
-Date:   Thu, 21 Oct 2021 10:38:08 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "schumakeranna@gmail.com" <schumakeranna@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "dai.ngo@oracle.com" <dai.ngo@oracle.com>,
-        "steved@redhat.com" <steved@redhat.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: server-to-server copy by default
-Message-ID: <20211021143808.GD25711@fieldses.org>
-References: <20211020155421.GC597@fieldses.org>
- <CAN-5tyHuq3wmU1EThrfqv7Mq+F5o0BXXdkAnGXch_sYakv=eqA@mail.gmail.com>
- <0492823C-5F90-494E-8770-D0EC14130846@oracle.com>
- <20211020181512.GE597@fieldses.org>
- <EC5F0B99-7866-4AA6-BF2F-AB1A93C623DF@oracle.com>
- <20211021141329.GC25711@fieldses.org>
- <aec219339d8296b7e9b114d9d247a71fd47423c5.camel@hammerspace.com>
+        id S231961AbhJUVWi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Oct 2021 17:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S232173AbhJUVWh (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 21 Oct 2021 17:22:37 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 1D24860F8F
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Oct 2021 21:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1634851221;
+        bh=B1wOpcPrUzB1INGSeHVom+RA7i6RWA/odgHtokOkci0=;
+        h=From:To:Subject:Date:From;
+        b=Ti1cvVXMAyMovIB1BzHsFhKI+kPwjk2hnAsgviARyXRZZazH3P6MYp4PoCf6SLBae
+         Qs8Bck6R0SwITycuPaf7Of2nY2dyYhG8sw0ch6pNXIg5ymCvf4wNIq8Bi+VNcxh1FV
+         UZ19e8zMYwabqE+lACH+iY5p3k9F6MtqYTsS2kOIKbrsBHdeObdvc/1ONh69zcwGmp
+         AtED2WyhywXMlR5mPMryJvbzmJR5gRXhlslVbIvg5qKY5PcJhA5mgOv8+qWHn5Bgxa
+         4hYgO7jfJ3n/0Aq/x2kgDN44O/izjKuU7GBU5WICXdVMZnJRbdUp16Rtgr6hjCLXmN
+         u75RYqGeMyshQ==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Remove redundant call to __set_page_dirty_nobuffers
+Date:   Thu, 21 Oct 2021 17:13:34 -0400
+Message-Id: <20211021211334.681480-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aec219339d8296b7e9b114d9d247a71fd47423c5.camel@hammerspace.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 02:22:13PM +0000, Trond Myklebust wrote:
-> Yes, that's mostly fixed. As far as I'm concerned, there should be no
-> major obstacles to allowing unprivileged mounts in their own private
-> net namespace.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Do you think it'd be a reasonable thing to turn on now by default in
-distros or something the admin should have to opt-in to only on trusted
-networks?
+Remove a redundant call in nfs_updatepage(). nfs_writepage_setup() will
+have already called nfs_mark_request_dirty() on success.
 
-I'm wondering how much confidence we have in the client's robustness in
-the face of possibly compromised servers.
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/write.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> The one thing to note, though, is that AUTH_SYS still required that the
-> container be given a CAP_NET_BIND_SERVICE privilege to allow binding to
-> a privileged port.
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 82c5b89395f6..9b7619ce17a7 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -1384,8 +1384,6 @@ int nfs_updatepage(struct file *file, struct page *page,
+ 	status = nfs_writepage_setup(ctx, page, offset, count);
+ 	if (status < 0)
+ 		nfs_set_pageerror(mapping);
+-	else
+-		__set_page_dirty_nobuffers(page);
+ out:
+ 	dprintk("NFS:       nfs_updatepage returns %d (isize %lld)\n",
+ 			status, (long long)i_size_read(inode));
+-- 
+2.31.1
 
-Got it, thanks.
-
---b.
