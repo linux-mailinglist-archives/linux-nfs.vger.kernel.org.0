@@ -2,119 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B7204377A1
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 14:58:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A53E8437915
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 16:34:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232381AbhJVNAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Oct 2021 09:00:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
+        id S233143AbhJVOg1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Oct 2021 10:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232825AbhJVNAy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 09:00:54 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E544CC061766
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 05:58:36 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 92FA66EA9; Fri, 22 Oct 2021 08:58:35 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 92FA66EA9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1634907515;
-        bh=YbfDFQQtWifW1h5WhJwtUig/5rSQuLQ2b2Z3alyWrsk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fUr33XcKs0xNZZmfK+vkfkFwEqURRBxyNEWOQB33xjOoGuGn6HwXXVAftMcpjGYWd
-         yGwp08i2rb9pKtbdbRdcR95RpN+dhdvjOCUweBJ5ML4N40XER4KZQIoKOF+4w69H3b
-         Wcv22707veE9ktodInn4aeM8ClpZpek+0ci0cnp4=
-Date:   Fri, 22 Oct 2021 08:58:35 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: server-to-server copy by default
-Message-ID: <20211022125835.GA11434@fieldses.org>
-References: <20211020155421.GC597@fieldses.org>
- <18E32DF5-3F1D-4C23-8C2F-A7963103CF8C@oracle.com>
- <CAN-5tyEL4L2GH=-MDGS4qNTcCLRPFCQzfDQjFAVbG7wMKvHxOg@mail.gmail.com>
- <8b1eb564-974d-00b6-397a-d92f301df7d8@oracle.com>
- <20211020202907.GF597@fieldses.org>
- <a009cbf3-cb83-b7c8-aa86-2eee06962b68@oracle.com>
- <20211021140243.GB25711@fieldses.org>
- <78839450-8095-01ae-53e8-f0ebf941b5a5@oracle.com>
+        with ESMTP id S233139AbhJVOg1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 10:36:27 -0400
+Received: from mail-ot1-x32e.google.com (mail-ot1-x32e.google.com [IPv6:2607:f8b0:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82527C061348
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 07:34:09 -0700 (PDT)
+Received: by mail-ot1-x32e.google.com with SMTP id e59-20020a9d01c1000000b00552c91a99f7so4617609ote.6
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 07:34:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:in-reply-to:references:subject:message-id:date
+         :mime-version:content-transfer-encoding;
+        bh=cVIkN7spVzTPEdd4zRywRhu6vbYcErn5dveld+XryVI=;
+        b=Ur+Mvyqn99O6jN3E0jkVFqf9805z10mp5/40B+7nLv9zqcmQ1CtMADHzRpLs+tQouB
+         UFPUYS2LYRGvo8AWdiDb+XHhO2MccQWADs2k4dUKlDPdMZy0PHYKJ1eb2200+aJVer/W
+         khdLrWcgTb0llVUws46pKoxPwywbciFj/dQ5tBAk3k2FQqiNhaOAqKRzLbMzR4csWDXE
+         iPK6veZxA/M8/py/4GMM7BbTDO4uCb5OC1bskGUgWp9p+RGc7hQeVimEndbnGNIqgUgC
+         missiNglxRjxPfT9+ySwNE7ysOfmHLU8v1nJdgIemhNu7TX2HGYIZc4x6yC8QUF+/fen
+         +keA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:in-reply-to:references:subject
+         :message-id:date:mime-version:content-transfer-encoding;
+        bh=cVIkN7spVzTPEdd4zRywRhu6vbYcErn5dveld+XryVI=;
+        b=Iq3DXcZ2shvDUDackLwAzEk7CIF6K/pYEW2/M8fa4TYwiV/kh1dbFFCyoVI7gpc+E8
+         WD/3s6+Rp7nLeWQZqr2r4i8AHUoJiimdTJd3Jmrw+CKwl+cpyRHyfGyH+AnG3N/x4pBs
+         LYeagL47EjZJOXVNGsWq/lImsgyMIKNNiSikI4KfbrZYOODBdq3DyvkMptaqjgY6UtQ4
+         i5uAeUWTpzuP7Z4HdthO07ozF0ZD1MUKI9yqjc2SjEnfBaE9/DfUCHQb435l6eN6kyXC
+         henVDjpVjtmqy/imQVjr9VbtMLUpQXjir8oKONrZaTgVhj7s7ELUKWz5nfMR37rwOlpz
+         tV+A==
+X-Gm-Message-State: AOAM533+dYKpwSQH61kI1o11lIDla89kWZtkqSyUIXkCsgVD83XnOasv
+        Dz0V0qBk3sU1QFfM5ypDu59AkscGp4RHEQ==
+X-Google-Smtp-Source: ABdhPJyuiPNrRYPNrfo5wVQ8g0bjX6wWrWnAp1uFHcyyQBUjTV6PXzqQvYbvXQUQdeR6vd8WU8y3HQ==
+X-Received: by 2002:a9d:6d03:: with SMTP id o3mr201035otp.87.1634913248614;
+        Fri, 22 Oct 2021 07:34:08 -0700 (PDT)
+Received: from [127.0.1.1] (rrcs-24-173-18-66.sw.biz.rr.com. [24.173.18.66])
+        by smtp.gmail.com with ESMTPSA id w2sm1490386ooa.26.2021.10.22.07.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Oct 2021 07:34:08 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, linux-block@vger.kernel.org,
+        target-devel@vger.kernel.org,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        linux-scsi@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20211021060607.264371-1-hch@lst.de>
+References: <20211021060607.264371-1-hch@lst.de>
+Subject: Re: remove QUEUE_FLAG_SCSI_PASSTHROUGH v3
+Message-Id: <163491324565.82952.710827573154554710.b4-ty@kernel.dk>
+Date:   Fri, 22 Oct 2021 08:34:05 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <78839450-8095-01ae-53e8-f0ebf941b5a5@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 21, 2021 at 11:34:44PM -0700, dai.ngo@oracle.com wrote:
-> On 10/21/21 7:02 AM, Bruce Fields wrote:
-> >Thanks for the persistence:
-> >
-> >On Wed, Oct 20, 2021 at 10:00:41PM -0700, dai.ngo@oracle.com wrote:
-> >>The attack can come from the replies of the source server or requests
-> >>from the source server to the destination server via the back channel.
-> >>One of possible attack in the reply is BAD_STATEID which was handled
-> >>by the client code as mentioned by Olga.
-> >>
-> >>Here is the list of NFS requests made from the destination to the
-> >>source server:
-> >>
-> >>         EXCHANGE_ID
-> >>         CREATE_SESSION
-> >>         RECLAIM_COMLETE
-> >>         SEQUENCE
-> >>         PUTROOTFH
-> >>         PUTHF
-> >>         GETFH
-> >>         GETATTR
-> >>         READ/READ_PLUS
-> >>         DESTROY_SESSION
-> >>         DESTROY_CLIENTID
-> >>
-> >>Do you think we should review all replies from these requests to make
-> >>sure error replies do not cause problems for the destination server?
-> >That's the exactly the sort of analysis I was curious to see, yes.
+On Thu, 21 Oct 2021 08:06:00 +0200, Christoph Hellwig wrote:
+> this series removes the QUEUE_FLAG_SCSI_PASSTHROUGH and thus the last
+> remaining SCSI passthrough concept from the block layer.
 > 
-> I will go through these requests to see if is there is anything that
-> we need to do to ensure the destination does not react negatively
-> on the replies.
+> The changes to support pktcdvd are a bit ugly, but I can't think of
+> anything better (except for removing the driver entirely).
+> If we'd want to support packet writing today it would probably live
+> entirely inside the sr driver.
 > 
-> >
-> >(I doubt the PUTROOTFH, PUTFH, GETFH, and GETATTR are really necessary,
-> >I wonder if there's any way we could just bypass them in our case.  I
-> >don't know, maybe that's more trouble than it's worth.)
-> 
-> I'll take a look but I think we should avoid modifying the client
-> code if possible.
-> 
-> >
-> >>same for the back channel ops:
-> >>
-> >>         OP_CB_GETATTR
-> >>         OP_CB_RECALL
-> >>         OP_CB_LAYOUTRECALL
-> >>         OP_CB_NOTIFY
-> >>         OP_CB_PUSH_DELEG
-> >>         OP_CB_RECALL_ANY
-> >>         OP_CB_RECALLABLE_OBJ_AVAIL
-> >>         OP_CB_RECALL_SLOT
-> >>         OP_CB_SEQUENCE
-> >>         OP_CB_WANTS_CANCELLED
-> >>         OP_CB_NOTIFY_LOCK
-> >>         OP_CB_NOTIFY_DEVICEID
-> >>         OP_CB_OFFLOAD
-> >There shouldn't be any need for callbacks at all.  We might be able to
-> >get away without even setting up a backchannel.  But, yes, if the server
-> >tries to send one anyway, it'd be good to know we do something
-> >reasonable.
-> 
-> or do not specify the back channel when creating the session somehow.
-> I will report back.
+> [...]
 
-Thank you, Dai!
+Applied, thanks!
 
---b.
+[1/7] block: add a ->get_unique_id method
+      commit: 9208d414975895f69e9aca49153060ddd31b18d0
+[2/7] sd: implement ->get_unique_id
+      commit: b83ce214af3885437ff223b3a0c8ec6072a84167
+[3/7] nfsd/blocklayout: use ->get_unique_id instead of sending SCSI commands
+      commit: 8c6aabd1c72bc241c55f5b71a86cea5ef28bceca
+[4/7] bsg-lib: initialize the bsg_job in bsg_transport_sg_io_fn
+      commit: 237ea1602fb4cd14cd31b745a56fd0639c58eea3
+[5/7] scsi: add a scsi_alloc_request helper
+      commit: 68ec3b819a5d600a4ede8b596761dccac9f39ebc
+[6/7] block: remove the initialize_rq_fn blk_mq_ops method
+      commit: 4abafdc4360d993104c2b2f85943938a0c6ad025
+[7/7] block: remove QUEUE_FLAG_SCSI_PASSTHROUGH
+      commit: 4845012eb5b4e56cadb5f484cb55dd4fd9d1df80
+
+Best regards,
+-- 
+Jens Axboe
+
+
