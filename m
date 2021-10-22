@@ -2,125 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BF48437EF0
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 21:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFC22437F3C
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 22:16:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233412AbhJVUAv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Oct 2021 16:00:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44526 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232291AbhJVUAv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 16:00:51 -0400
-Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BF5C061764
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 12:58:33 -0700 (PDT)
-Received: by mail-lf1-x12e.google.com with SMTP id t9so2285195lfd.1
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 12:58:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OyTESXkijXq7pnJGTLADUG+9VskuYUOHv78z9I+1K/4=;
-        b=hM/XQhqnuwClqFHl0xmMUwVFiZI2zWX0Fsvmyov2HtrZf+eht/rZgRbn7tgV6JR5/t
-         oaUf+A7xemNq2BqlSo7CgdMlfz4uNIfFdFMMG/GRhS1ONKFBhEIzCT11CSLKS+TAVP9U
-         qBUMJuZF6FSADRHZc19vWgXXWGONFvtcXh0sM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OyTESXkijXq7pnJGTLADUG+9VskuYUOHv78z9I+1K/4=;
-        b=I2y+jV/wO3NLgArLMnu722AC+uPqd7XzPnJDE7kLkbzeEitI6pEc5ITBwhxeJTI+vR
-         wpXa3wkbbRHN+O2RPcUvyDCfLZaWeXlsCGCf8V5ZUME1CtrGXp9saRqAQyGcLTuoprYV
-         txqYvrUhdkW6jka+84X+mp1zWmg6OOscwlfpbaUrFS1E5XmpGqeXe/FJLZbvAJMW27Z6
-         NX6wtVbISeUnT51rBnQ24WtaHOZeEtDDgh3fXCaKhvvAdPhPF3FXx/7bJbGz9zm3yC+F
-         Uimwk9lsSeK5NxRwQ+Ycs3eA+iOxq2rlrTp4a5y3igYkolDTjSAKmi4JCZmUx3acjt95
-         8OAA==
-X-Gm-Message-State: AOAM532tSJ/Vm+tlz1GIkZoXPdVFM2H7KXI3//W1xZyYGU5dvTzqG5eS
-        BBEVGkVxaf6fpYV2mhwTCgmGwhL/ibgQQ8Bd2lE=
-X-Google-Smtp-Source: ABdhPJwghsYCidoJpz4g9KDqeBKNTS1bouJuGq9ffKmjk1OqVMRxJkFn+X5s8GurwBTAjzTXcKOx1w==
-X-Received: by 2002:a19:674c:: with SMTP id e12mr1665964lfj.679.1634932710796;
-        Fri, 22 Oct 2021 12:58:30 -0700 (PDT)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id bp20sm125775lfb.90.2021.10.22.12.58.28
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Oct 2021 12:58:28 -0700 (PDT)
-Received: by mail-lj1-f177.google.com with SMTP id s19so1262575ljj.11
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 12:58:28 -0700 (PDT)
-X-Received: by 2002:a2e:5cc7:: with SMTP id q190mr2066391ljb.494.1634932708154;
- Fri, 22 Oct 2021 12:58:28 -0700 (PDT)
+        id S234295AbhJVUTJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Oct 2021 16:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S234133AbhJVUTJ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 22 Oct 2021 16:19:09 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 4CE96610CB;
+        Fri, 22 Oct 2021 20:16:51 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     kolga@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 0/2] Refactor trace macro helpers
+Date:   Fri, 22 Oct 2021 16:16:49 -0400
+Message-Id:  <163493357334.45814.12809635386158569619.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.33.0.113.g6c40894d24
+User-Agent: StGit/1.1+62.ged16
 MIME-Version: 1.0
-References: <163492911924.1038219.13107463173777870713.stgit@warthog.procyon.org.uk>
- <CAHk-=wjmx7+PD0hzWj5Bg2b807xYD2KCZApTvFje=ufo+MxBMQ@mail.gmail.com> <1041557.1634931616@warthog.procyon.org.uk>
-In-Reply-To: <1041557.1634931616@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 22 Oct 2021 09:58:12 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wg2LQtWC3e4Z4EGQzEmsLjmk6jm67Ga6UMLY1MH6iDcNQ@mail.gmail.com>
-Message-ID: <CAHk-=wg2LQtWC3e4Z4EGQzEmsLjmk6jm67Ga6UMLY1MH6iDcNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 00/53] fscache: Rewrite index API and management system
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        v9fs-developer@lists.sourceforge.net,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Jeff Layton <jlayton@kernel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        ceph-devel@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=885; h=from:subject:message-id; bh=C6m1Ue0v8hPAHRjfdSc9WMTivs2u7BvkMalyK17UlBw=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhcxwrXn9ucfeoBKyvb+Qfp0gtgP88oyeY4V3dEZAX EdFgSd+JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYXMcKwAKCRAzarMzb2Z/lxP1D/ 9ickAh3tXUpL65ujtF79xXlsULwe7+b/5ST/f1dey4X09Xsh4UcG1P1ER4j+OMFo3USl4nqhSxp8Qe KQkgoAmvUyWos1wD0s7gYnUaW/r0NQAjcZBAr6h9h5d9GHfS4NVpPAdHSg8XH7bk3C8+11T0UsEiLv WaFdfxmLRkdC1gDpUqkN/wQ9ORnVqfjGYa1Aezvbr4lCURjJyZLhCcxnWV+P/5r+yqDaKiIldKnOMp d2Z+h7g+ehy7FhJLpU/g1W1XdZfqlqCdSO7v1SNI3rIjb4ZmthyL6McVq3tar8nPuahTO06PrEgZu2 znX5mXJrx3kStR7NVvfXkf3Vs87A+Zs9dxwbyUkJJJKG7BksL3I8SOujV56YLddT67QsTFNlIcCH9l CJ+H0JykQxw8O7XvtrLxjwOduRwnVPb80oZmfMiySTU+yK0H8eOeIZaJW5MTcm7NkhlrTfZWg0Sb99 Etu5uNH2ozoVZDqlEPkdmdF9NG88ektLpuv5IX+trFFV8BHddCsytbh9acbJJb4bFc4nutoS2+LsLL SWYm3dUzvVyWzdgZvc+fzA//IVziI0kuVfKDNeN7r8dFKadiWwGgP5E+2b8Sm0OgwgicQQv7hjvk2x v31XcoPM/ZYVg7eQsWINkAwuvy8wcRstmOXewrZGTAuZo0+I63F+sl5wSBfw==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 22, 2021 at 9:40 AM David Howells <dhowells@redhat.com> wrote:
->
-> What's the best way to do this?  Is it fine to disable caching in all the
-> network filesystems and then directly remove the fscache and cachefiles
-> drivers and replace them?
+Changes since v1:
+- Rebased on Trond's current "testing" branch
+- Shortened show_fs_fmode macro to prevent pre-processor overflow
 
-So the basic issue with this whole "total rewrite" is that there's no
-way to bisect anything.
+Note that these changed patches compile, but haven't otherwise been
+tested again.
 
-And there's no way for people to say "I don't trust the rewrite, I
-want to keep using the old tested model".
+---
 
-Which makes this all painful and generally the wrong way to do
-anything like this, and there's fundamentally no "best way".
+Chuck Lever (2):
+      NFS: Move generic FS show macros to global header
+      NFS: Move NFS protocol display macros to global header
 
-The real best way would be if the conversion could be done truly
-incrementally. Flag-days simply aren't good for development, because
-even if the patch to enable the new code might be some trivial
-one-liner, that doesn't _help_ anything. The switch-over switches from
-one code-base to another, with no help from "this is where the problem
-started".
 
-So in order of preference:
+ fs/nfs/nfs4trace.h         | 468 +++++--------------------------------
+ fs/nfs/nfstrace.h          | 197 +++-------------
+ fs/nfs/pnfs.h              |   4 -
+ fs/nfsd/trace.h            |   1 +
+ include/linux/nfs4.h       |   4 +
+ include/trace/events/fs.h  | 122 ++++++++++
+ include/trace/events/nfs.h | 375 +++++++++++++++++++++++++++++
+ 7 files changed, 588 insertions(+), 583 deletions(-)
+ create mode 100644 include/trace/events/fs.h
+ create mode 100644 include/trace/events/nfs.h
 
- (a) actual incremental changes where the code keeps working all the
-time, and no flag days
-
- (b) same interfaces, so at least you can do A/B testing and people
-can choose one or the other
-
- (c) total rewrite
-
-and if (c) is the thing that all the network filesystem people want,
-then what the heck is the point in keeping dead code around? At that
-point, all the rename crap is just extra work, extra noise, and only a
-distraction. There's no upside that I can see.
-
-                   Linus
+--
+Chuck Lever
