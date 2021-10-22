@@ -2,56 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DB79437CD9
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 20:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 86514437CED
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 20:59:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232476AbhJVTBO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Oct 2021 15:01:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54499 "EHLO
+        id S233819AbhJVTCH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Oct 2021 15:02:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23541 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231883AbhJVTBN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 15:01:13 -0400
+        by vger.kernel.org with ESMTP id S233831AbhJVTBk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 15:01:40 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1634929135;
+        s=mimecast20190719; t=1634929161;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ZMGLfGhTZyg2hCXUGNR5TokdI2tToWsrzMC3UDrJ/Vk=;
-        b=Y9jFbRr7o4mfY/sdFWqo91CZsrwWgNJ2lH0KDyzPZ3XP5IkxO4MVdtxVqbfvxQxtxGyZc8
-        N7933HEBlhNyosF3ANkYM4Q4GKMYMZqBt0hbKhUJ2S8Ux+CO/fN0IaYNM/SAO85pwkNBBd
-        vG0x2FDMAcUNYSBf/UD1cU1TOsypZqA=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4OcAD/E1FGoKI+vM6y5NNdUST1kBaGZ99sWmiGDdn6E=;
+        b=f/KCNMLIsOjPxF8bvkaYBwh1OnRdJShmzRlU8QofbUi7Bb1LS1dyIMjJ6vpaDAjJOAI6XH
+        7t1vlc8AW25A1OuG41qB+1ztSNke286/gMzsT1il8SI4HqXfYnhKpyEQEvGtzIbfawucTv
+        g0PR5ZU1ZKaNxigXiaCq2Jhv0A3UF8w=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-t5eBudGvNt6zcINrTtdsVw-1; Fri, 22 Oct 2021 14:58:51 -0400
-X-MC-Unique: t5eBudGvNt6zcINrTtdsVw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-418-ZCmLQDUOPZuReETue5VksA-1; Fri, 22 Oct 2021 14:59:18 -0400
+X-MC-Unique: ZCmLQDUOPZuReETue5VksA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CBBDE1005E4D;
-        Fri, 22 Oct 2021 18:58:48 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 42C4E1005E4D;
+        Fri, 22 Oct 2021 18:59:16 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73C871346F;
-        Fri, 22 Oct 2021 18:58:40 +0000 (UTC)
-Subject: [PATCH v2 00/53] fscache: Rewrite index API and management system
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 99CF519D9B;
+        Fri, 22 Oct 2021 18:59:08 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH v2 02/53] fscache_old: Rename CONFIG_FSCACHE* to
+ CONFIG_FSCACHE_OLD*
 From:   David Howells <dhowells@redhat.com>
 To:     linux-cachefs@redhat.com
-Cc:     linux-afs@lists.infradead.org,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        linux-cifs@vger.kernel.org,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Steve French <sfrench@samba.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, Latchesar Ionkov <lucho@ionkov.net>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        v9fs-developer@lists.sourceforge.net,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -64,353 +54,261 @@ Cc:     linux-afs@lists.infradead.org,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 22 Oct 2021 19:58:39 +0100
-Message-ID: <163492911924.1038219.13107463173777870713.stgit@warthog.procyon.org.uk>
+Date:   Fri, 22 Oct 2021 19:59:07 +0100
+Message-ID: <163492914774.1038219.6296963451396706478.stgit@warthog.procyon.org.uk>
+In-Reply-To: <163492911924.1038219.13107463173777870713.stgit@warthog.procyon.org.uk>
+References: <163492911924.1038219.13107463173777870713.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Rename the CONFIG_FSCACHE* config symbols to CONFIG_FSCACHE_OLD*.
 
-Here's a set of patches implements a rewrite of the fscache driver,
-significantly simplifying the code compared to what's upstream, removing
-the complex operation scheduling and object state machine in favour of
-something much smaller and simpler.  It is built on top of the set of
-patches that removes the old API[1].
-
-[!] Note: I've reworked the patches at Jeff Layton's request so that the
-    old fscache and cachefiles drivers are moved aside, but retained, and
-    the new drivers are built up from empty directories.  I've made it so
-    that the end result is practically the same and can be directly diff'd
-    against the first version.
-
-    This allows the filesystems to retain access to the old drivers for the
-    moment, though you have to decide at configuration time whether you
-    want the old drivers or the new.
-
-    The git branch mentioned below also contains a patch to remove the old
-    drivers (and disable ceph as that's the only one I don't have patches
-    for the conversion of - Jeff is working on that).
-
-
-The operation scheduling API was intended to handle sequencing of cache
-operations, which were all required (where possible) to run asynchronously
-in parallel with the operations being done by the network filesystem, while
-allowing the cache to be brought online and offline and interrupt service
-with invalidation.
-
-However, with the advent of the tmpfile capacity in the VFS, an opportunity
-arises to do invalidation much more easily, without having to wait for I/O
-that's actually in progress: Cachefiles can simply cut over its file
-pointer for the backing object attached to a cookie and abandon the
-in-progress I/O, dismissing it upon completion.
-
-Future work there would involve using Omar Sandoval's vfs_link() with
-AT_LINK_REPLACE[2] to allow an extant file to be displaced by a new hard
-link from a tmpfile as currently I have to unlink the old file first.
-
-These patches can also simplify the object state handling as I/O operations
-to the cache don't all have to be brought to a stop in order to invalidate
-a file.  To that end, and with an eye on to writing a new backing cache
-model in the future, I've taken the opportunity to simplify the indexing
-structure.
-
-I've separated the index cookie concept from the file cookie concept by
-type now.  The former is now called a "volume cookie" (struct
-fscache_volume) and there is a container of file cookies.  There are then
-just the two levels.  All the index cookieage is collapsed into a single
-volume cookie, and this has a single printable string as a key.  For
-instance, an AFS volume would have a key of something like
-"afs,example.com,1000555", combining the filesystem name, cell name and
-volume ID.  This is freeform, but must not have '/' chars in it.
-
-I've also eliminated all pointers back from fscache into the network
-filesystem.  This required the duplication of a little bit of data in the
-cookie (cookie key, coherency data and file size), but it's not actually
-that much.  This gets rid of problems with making sure we keep netfs data
-structures around so that the cache can access them.
-
-I have changed afs throughout the patch series, but I also have patches for
-9p, nfs and cifs.  Jeff Layton is handling ceph support.
-
-
-BITS THAT MAY BE CONTROVERSIAL
-==============================
-
-There are some bits I've added that may be controversial:
-
- (1) I've provided a flag, S_KERNEL_FILE, that cachefiles uses to check if
-     a files is already being used by some other kernel service (e.g. a
-     duplicate cachefiles cache in the same directory) and reject it if it
-     is.  This isn't entirely necessary, but it helps prevent accidental
-     data corruption.
-
-     I don't want to use S_SWAPFILE as that has other effects, but quite
-     possibly swapon() should set S_KERNEL_FILE too.
-
-     Note that it doesn't prevent userspace from interfering, though
-     perhaps it should.
-
- (2) Cachefiles wants to keep the backing file for a cookie open whilst we
-     might need to write to it from network filesystem writeback.  The
-     problem is that the network filesystem unuses its cookie when its file
-     is closed, and so we have nothing pinning the cachefiles file open and
-     it will get closed automatically after a short time to avoid
-     EMFILE/ENFILE problems.
-
-     Reopening the cache file, however, is a problem if this is being done
-     due to writeback triggered by exit().  Some filesystems will oops if
-     we try to open a file in that context because they want to access
-     current->fs or suchlike.
-
-     To get around this, I added the following:
-
-     (A) An inode flag, I_PINNING_FSCACHE_WB, to be set on a network
-     	 filesystem inode to indicate that we have a usage count on the
-     	 cookie caching that inode.
-
-     (B) A flag in struct writeback_control, unpinned_fscache_wb, that is
-     	 set when __writeback_single_inode() clears the last dirty page
-     	 from i_pages - at which point it clears I_PINNING_FSCACHE_WB and
-     	 sets this flag.
-
-	 This has to be done here so that clearing I_PINNING_FSCACHE_WB can
-	 be done atomically with the check of PAGECACHE_TAG_DIRTY that
-	 clears I_DIRTY_PAGES.
-
-     (C) A function, fscache_set_page_dirty(), which if it is not set, sets
-     	 I_PINNING_FSCACHE_WB and calls fscache_use_cookie() to pin the
-     	 cache resources.
-
-     (D) A function, fscache_unpin_writeback(), to be called by
-     	 ->write_inode() to unuse the cookie.
-
-     (E) A function, fscache_clear_inode_writeback(), to be called when the
-     	 inode is evicted, before clear_inode() is called.  This cleans up
-     	 any lingering I_PINNING_FSCACHE_WB.
-
-     The network filesystem can then use these tools to make sure that
-     fscache_write_to_cache() can write locally modified data to the cache
-     as well as to the server.
-
-     For the future, I'm working on write helpers for netfs lib that should
-     allow this facility to be removed by keeping track of the dirty
-     regions separately - but that's incomplete at the moment and is also
-     going to be affected by folios, one way or another, since it deals
-     with pages.
-
-
-Changes
-=======
-ver #2)
-  - Fix fscache_unuse_cookie() to use atomic_dec_and_lock() to avoid a
-    potential race.
-  - Fix a number of oopses due to the cache not withdrawing the object by
-    the correct procedure upon lookup failure.
-  - Disable a debugging statement.
-
-
-These patches can be found also on:
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-rewrite-indexing-2
-
-David
-
-Link: https://lore.kernel.org/r/163363935000.1980952.15279841414072653108.stgit@warthog.procyon.org.uk/ [1]
-Link: https://lore.kernel.org/r/cover.1580251857.git.osandov@fb.com/ [2]
-Link: https://lore.kernel.org/r/163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk/ # v1
-
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-cachefs@redhat.com
 ---
-Dave Wysochanski (1):
-      nfs: Convert to new fscache volume/cookie API
 
-David Howells (52):
-      fscache_old: Move the old fscache driver to one side
-      fscache_old: Rename CONFIG_FSCACHE* to CONFIG_FSCACHE_OLD*
-      cachefiles_old:  Move the old cachefiles driver to one side
-      cachefiles_old: Rename CONFIG_CACHEFILES* to CONFIG_CACHEFILES_OLD*
-      netfs: Display the netfs inode number in the netfs_read tracepoint
-      netfs: Pass a flag to ->prepare_write() to say if there's no alloc'd space
-      fscache: Introduce new driver
-      fscache: Implement a hash function
-      fscache: Implement cache registration
-      fscache: Implement volume registration
-      fscache: Implement cookie registration
-      fscache: Implement cache-level access helpers
-      fscache: Implement volume-level access helpers
-      fscache: Implement cookie-level access helpers
-      fscache: Implement functions add/remove a cache
-      fscache: Provide and use cache methods to lookup/create/free a volume
-      fscache: Add a function for a cache backend to note an I/O error
-      fscache: Implement simple cookie state machine
-      fscache: Implement cookie user counting and resource pinning
-      fscache: Implement cookie invalidation
-      fscache: Provide a means to begin an operation
-      fscache: Provide read/write stat counters for the cache
-      fscache: Provide a function to let the netfs update its coherency data
-      fscache: Implement I/O interface
-      fscache: Provide fallback I/O functions
-      vfs, fscache: Implement pinning of cache usage for writeback
-      fscache: Provide a function to note the release of a page
-      fscache: Provide a function to resize a cookie
-      cachefiles: Introduce new driver
-      cachefiles: Add some error injection support
-      cachefiles: Define structs
-      cachefiles: Add a couple of tracepoints for logging errors
-      cachefiles: Add I/O error reporting macros
-      cachefiles: Provide a function to check how much space there is
-      cachefiles: Implement a function to get/create a directory in the cache
-      cachefiles: Implement daemon UAPI and cache registration
-      cachefiles: Implement volume support
-      cachefiles: Implement data storage object handling
-      cachefiles: Implement begin and end I/O
-      cachefiles: Implement the I/O routines
-      afs: Handle len being extending over page end in write_begin/write_end
-      afs: Fix afs_write_end() to handle len > page size
-      afs: Make afs_write_begin() return the THP subpage
-      afs: Convert afs to use the new fscache API
-      afs: Copy local writes to the cache when writing to the server
-      afs: Skip truncation on the server of data we haven't written yet
-      afs: Add synchronous O_DIRECT support
-      9p: Use fscache indexing rewrite and reenable caching
-      9p: Copy local writes to the cache when writing to the server
-      cifs: Support fscache indexing rewrite (untested)
-      fscache, cachefiles: Display stats of no-space events
-      fscache, cachefiles: Display stat of culling events
+ fs/9p/Kconfig             |    2 +-
+ fs/Makefile               |    2 +-
+ fs/afs/Kconfig            |    2 +-
+ fs/cachefiles/Kconfig     |    2 +-
+ fs/ceph/Kconfig           |    2 +-
+ fs/cifs/Kconfig           |    2 +-
+ fs/fscache_old/Kconfig    |   12 ++++++------
+ fs/fscache_old/Makefile   |    4 ++--
+ fs/fscache_old/internal.h |    4 ++--
+ fs/fscache_old/object.c   |    2 +-
+ fs/fscache_old/proc.c     |   12 ++++++------
+ fs/nfs/Kconfig            |    2 +-
+ 12 files changed, 24 insertions(+), 24 deletions(-)
 
-
- fs/9p/cache.c                         |  184 +----
- fs/9p/cache.h                         |   25 +-
- fs/9p/v9fs.c                          |   14 +-
- fs/9p/v9fs.h                          |   13 +-
- fs/9p/vfs_addr.c                      |   55 +-
- fs/9p/vfs_dir.c                       |   11 +
- fs/9p/vfs_file.c                      |    7 +-
- fs/9p/vfs_inode.c                     |   24 +-
- fs/9p/vfs_inode_dotl.c                |    3 +-
- fs/9p/vfs_super.c                     |    3 +
- fs/Kconfig                            |    4 +-
- fs/Makefile                           |    4 +-
- fs/afs/Makefile                       |    3 -
- fs/afs/cache.c                        |   68 --
- fs/afs/cell.c                         |   12 -
- fs/afs/file.c                         |   83 +-
- fs/afs/fsclient.c                     |    2 +-
- fs/afs/inode.c                        |  101 ++-
- fs/afs/internal.h                     |   37 +-
- fs/afs/main.c                         |   14 -
- fs/afs/super.c                        |    1 +
- fs/afs/volume.c                       |   15 +-
- fs/afs/write.c                        |  170 ++++-
- fs/cachefiles/Kconfig                 |    7 +
- fs/cachefiles/Makefile                |    3 +
- fs/cachefiles/bind.c                  |  190 +++--
- fs/cachefiles/daemon.c                |   40 +-
- fs/cachefiles/error_inject.c          |   46 ++
- fs/cachefiles/interface.c             |  662 +++++++---------
- fs/cachefiles/internal.h              |  203 +++--
- fs/cachefiles/io.c                    |  315 +++++---
- fs/cachefiles/key.c                   |  205 +++--
- fs/cachefiles/main.c                  |   22 +-
- fs/cachefiles/namei.c                 |  983 ++++++++++--------------
- fs/cachefiles/security.c              |    2 +-
- fs/cachefiles/volume.c                |  128 ++++
- fs/cachefiles/xattr.c                 |  369 +++------
- fs/cachefiles_old/Kconfig             |   25 +
- fs/cachefiles_old/Makefile            |   17 +
- fs/cachefiles_old/bind.c              |  278 +++++++
- fs/cachefiles_old/daemon.c            |  748 ++++++++++++++++++
- fs/cachefiles_old/interface.c         |  557 ++++++++++++++
- fs/cachefiles_old/internal.h          |  312 ++++++++
- fs/cachefiles_old/io.c                |  446 +++++++++++
- fs/cachefiles_old/key.c               |  155 ++++
- fs/cachefiles_old/main.c              |   94 +++
- fs/cachefiles_old/namei.c             | 1018 +++++++++++++++++++++++++
- fs/cachefiles_old/security.c          |  112 +++
- fs/cachefiles_old/xattr.c             |  324 ++++++++
- fs/ceph/Kconfig                       |    2 +-
- fs/cifs/Makefile                      |    2 +-
- fs/cifs/cache.c                       |  105 ---
- fs/cifs/cifsfs.c                      |   11 +-
- fs/cifs/cifsglob.h                    |    5 +-
- fs/cifs/connect.c                     |    3 -
- fs/cifs/file.c                        |   37 +-
- fs/cifs/fscache.c                     |  201 ++---
- fs/cifs/fscache.h                     |   53 +-
- fs/cifs/inode.c                       |   18 +-
- fs/fs-writeback.c                     |    8 +
- fs/fscache/Kconfig                    |   40 +
- fs/fscache/Makefile                   |   16 +
- fs/fscache/cache.c                    |  353 +++++++++
- fs/fscache/cookie.c                   |  990 ++++++++++++++++++++++++
- fs/fscache/internal.h                 |  249 ++++++
- fs/fscache/io.c                       |  381 +++++++++
- fs/fscache/main.c                     |  120 +++
- fs/fscache/proc.c                     |   54 ++
- fs/fscache/stats.c                    |  106 +++
- fs/fscache/volume.c                   |  449 +++++++++++
- fs/fscache_old/Kconfig                |   16 +-
- fs/fscache_old/Makefile               |    4 +-
- fs/fscache_old/internal.h             |    4 +-
- fs/fscache_old/object.c               |    2 +-
- fs/fscache_old/proc.c                 |   12 +-
- fs/netfs/read_helper.c                |    2 +-
- fs/nfs/Makefile                       |    2 +-
- fs/nfs/client.c                       |    4 -
- fs/nfs/direct.c                       |    2 +
- fs/nfs/file.c                         |    7 +-
- fs/nfs/fscache-index.c                |  114 ---
- fs/nfs/fscache.c                      |  264 +++----
- fs/nfs/fscache.h                      |   91 +--
- fs/nfs/inode.c                        |   11 +-
- fs/nfs/super.c                        |    7 +-
- fs/nfs/write.c                        |    1 +
- include/linux/fs.h                    |    4 +
- include/linux/fscache-cache.h         |  199 +++++
- include/linux/fscache.h               |  680 +++++++++++++++++
- include/linux/fscache_old.h           |    1 +
- include/linux/netfs.h                 |    4 +-
- include/linux/nfs_fs_sb.h             |    9 +-
- include/linux/writeback.h             |    1 +
- include/trace/events/cachefiles.h     |  485 +++++++++---
- include/trace/events/cachefiles_old.h |  321 ++++++++
- include/trace/events/fscache.h        |  448 +++++++++++
- include/trace/events/netfs.h          |    5 +-
- 97 files changed, 11269 insertions(+), 2748 deletions(-)
- delete mode 100644 fs/afs/cache.c
- create mode 100644 fs/cachefiles/error_inject.c
- create mode 100644 fs/cachefiles/volume.c
- create mode 100644 fs/cachefiles_old/Kconfig
- create mode 100644 fs/cachefiles_old/Makefile
- create mode 100644 fs/cachefiles_old/bind.c
- create mode 100644 fs/cachefiles_old/daemon.c
- create mode 100644 fs/cachefiles_old/interface.c
- create mode 100644 fs/cachefiles_old/internal.h
- create mode 100644 fs/cachefiles_old/io.c
- create mode 100644 fs/cachefiles_old/key.c
- create mode 100644 fs/cachefiles_old/main.c
- create mode 100644 fs/cachefiles_old/namei.c
- create mode 100644 fs/cachefiles_old/security.c
- create mode 100644 fs/cachefiles_old/xattr.c
- delete mode 100644 fs/cifs/cache.c
- create mode 100644 fs/fscache/Kconfig
- create mode 100644 fs/fscache/Makefile
- create mode 100644 fs/fscache/cache.c
- create mode 100644 fs/fscache/cookie.c
- create mode 100644 fs/fscache/internal.h
- create mode 100644 fs/fscache/io.c
- create mode 100644 fs/fscache/main.c
- create mode 100644 fs/fscache/proc.c
- create mode 100644 fs/fscache/stats.c
- create mode 100644 fs/fscache/volume.c
- delete mode 100644 fs/nfs/fscache-index.c
- create mode 100644 include/linux/fscache-cache.h
- create mode 100644 include/linux/fscache.h
- create mode 100644 include/trace/events/cachefiles_old.h
- create mode 100644 include/trace/events/fscache.h
+diff --git a/fs/9p/Kconfig b/fs/9p/Kconfig
+index d7bc93447c85..b11c15c30bac 100644
+--- a/fs/9p/Kconfig
++++ b/fs/9p/Kconfig
+@@ -14,7 +14,7 @@ config 9P_FS
+ if 9P_FS
+ config 9P_FSCACHE
+ 	bool "Enable 9P client caching support"
+-	depends on 9P_FS=m && FSCACHE || 9P_FS=y && FSCACHE=y
++	depends on 9P_FS=m && FSCACHE_OLD || 9P_FS=y && FSCACHE_OLD=y
+ 	help
+ 	  Choose Y here to enable persistent, read-only local
+ 	  caching support for 9p clients using FS-Cache
+diff --git a/fs/Makefile b/fs/Makefile
+index 8b87c9406ecc..21cf51dbf8b2 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -67,7 +67,7 @@ obj-$(CONFIG_DLM)		+= dlm/
+  
+ # Do not add any filesystems before this line
+ obj-$(CONFIG_NETFS_SUPPORT)	+= netfs/
+-obj-$(CONFIG_FSCACHE)		+= fscache_old/
++obj-$(CONFIG_FSCACHE_OLD)	+= fscache_old/
+ obj-$(CONFIG_REISERFS_FS)	+= reiserfs/
+ obj-$(CONFIG_EXT4_FS)		+= ext4/
+ # We place ext4 before ext2 so that clean ext3 root fs's do NOT mount using the
+diff --git a/fs/afs/Kconfig b/fs/afs/Kconfig
+index fc8ba9142f2f..dbb1ee5fb261 100644
+--- a/fs/afs/Kconfig
++++ b/fs/afs/Kconfig
+@@ -25,7 +25,7 @@ config AFS_DEBUG
+ 
+ config AFS_FSCACHE
+ 	bool "Provide AFS client caching support"
+-	depends on AFS_FS=m && FSCACHE || AFS_FS=y && FSCACHE=y
++	depends on AFS_FS=m && FSCACHE_OLD || AFS_FS=y && FSCACHE_OLD=y
+ 	help
+ 	  Say Y here if you want AFS data to be cached locally on disk through
+ 	  the generic filesystem cache manager
+diff --git a/fs/cachefiles/Kconfig b/fs/cachefiles/Kconfig
+index 6827b40f7ddc..7f3e1881fb21 100644
+--- a/fs/cachefiles/Kconfig
++++ b/fs/cachefiles/Kconfig
+@@ -2,7 +2,7 @@
+ 
+ config CACHEFILES
+ 	tristate "Filesystem caching on files"
+-	depends on FSCACHE && BLOCK
++	depends on FSCACHE_OLD && BLOCK
+ 	help
+ 	  This permits use of a mounted filesystem as a cache for other
+ 	  filesystems - primarily networking filesystems - thus allowing fast
+diff --git a/fs/ceph/Kconfig b/fs/ceph/Kconfig
+index 94df854147d3..77ad452337ee 100644
+--- a/fs/ceph/Kconfig
++++ b/fs/ceph/Kconfig
+@@ -21,7 +21,7 @@ config CEPH_FS
+ if CEPH_FS
+ config CEPH_FSCACHE
+ 	bool "Enable Ceph client caching support"
+-	depends on CEPH_FS=m && FSCACHE || CEPH_FS=y && FSCACHE=y
++	depends on CEPH_FS=m && FSCACHE_OLD || CEPH_FS=y && FSCACHE_OLD=y
+ 	help
+ 	  Choose Y here to enable persistent, read-only local
+ 	  caching support for Ceph clients using FS-Cache
+diff --git a/fs/cifs/Kconfig b/fs/cifs/Kconfig
+index 3b7e3b9e4fd2..c5477abbcff0 100644
+--- a/fs/cifs/Kconfig
++++ b/fs/cifs/Kconfig
+@@ -188,7 +188,7 @@ config CIFS_SMB_DIRECT
+ 
+ config CIFS_FSCACHE
+ 	bool "Provide CIFS client caching support"
+-	depends on CIFS=m && FSCACHE || CIFS=y && FSCACHE=y
++	depends on CIFS=m && FSCACHE_OLD || CIFS=y && FSCACHE_OLD=y
+ 	help
+ 	  Makes CIFS FS-Cache capable. Say Y here if you want your CIFS data
+ 	  to be cached locally on disk through the general filesystem cache
+diff --git a/fs/fscache_old/Kconfig b/fs/fscache_old/Kconfig
+index b313a978ae0a..a5a657246df8 100644
+--- a/fs/fscache_old/Kconfig
++++ b/fs/fscache_old/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ 
+-config FSCACHE
+-	tristate "General filesystem local caching manager"
++config FSCACHE_OLD
++	tristate "General filesystem local caching manager (old driver)"
+ 	select NETFS_SUPPORT
+ 	help
+ 	  This option enables a generic filesystem caching manager that can be
+@@ -11,9 +11,9 @@ config FSCACHE
+ 
+ 	  See Documentation/filesystems/caching/fscache.rst for more information.
+ 
+-config FSCACHE_STATS
++config FSCACHE_OLD_STATS
+ 	bool "Gather statistical information on local caching"
+-	depends on FSCACHE && PROC_FS
++	depends on FSCACHE_OLD && PROC_FS
+ 	select NETFS_STATS
+ 	help
+ 	  This option causes statistical information to be gathered on local
+@@ -29,9 +29,9 @@ config FSCACHE_STATS
+ 
+ 	  See Documentation/filesystems/caching/fscache.rst for more information.
+ 
+-config FSCACHE_DEBUG
++config FSCACHE_OLD_DEBUG
+ 	bool "Debug FS-Cache"
+-	depends on FSCACHE
++	depends on FSCACHE_OLD
+ 	help
+ 	  This permits debugging to be dynamically enabled in the local caching
+ 	  management module.  If this is set, the debugging output may be
+diff --git a/fs/fscache_old/Makefile b/fs/fscache_old/Makefile
+index 03a871d689bb..55d5ef397e8c 100644
+--- a/fs/fscache_old/Makefile
++++ b/fs/fscache_old/Makefile
+@@ -15,6 +15,6 @@ fscache-y := \
+ 	page.o
+ 
+ fscache-$(CONFIG_PROC_FS) += proc.o
+-fscache-$(CONFIG_FSCACHE_STATS) += stats.o
++fscache-$(CONFIG_FSCACHE_OLD_STATS) += stats.o
+ 
+-obj-$(CONFIG_FSCACHE) := fscache.o
++obj-$(CONFIG_FSCACHE_OLD) := fscache.o
+diff --git a/fs/fscache_old/internal.h b/fs/fscache_old/internal.h
+index 7288622cf2c3..07cc997d6832 100644
+--- a/fs/fscache_old/internal.h
++++ b/fs/fscache_old/internal.h
+@@ -131,7 +131,7 @@ extern void fscache_proc_cleanup(void);
+ /*
+  * stats.c
+  */
+-#ifdef CONFIG_FSCACHE_STATS
++#ifdef CONFIG_FSCACHE_OLD_STATS
+ extern atomic_t fscache_n_ops_processed[FSCACHE_MAX_THREADS];
+ extern atomic_t fscache_n_objs_processed[FSCACHE_MAX_THREADS];
+ 
+@@ -303,7 +303,7 @@ void fscache_update_aux(struct fscache_cookie *cookie, const void *aux_data)
+ #define _leave(FMT, ...) kleave(FMT, ##__VA_ARGS__)
+ #define _debug(FMT, ...) kdebug(FMT, ##__VA_ARGS__)
+ 
+-#elif defined(CONFIG_FSCACHE_DEBUG)
++#elif defined(CONFIG_FSCACHE_OLD_DEBUG)
+ #define _enter(FMT, ...)			\
+ do {						\
+ 	if (__do_kdebug(ENTER))			\
+diff --git a/fs/fscache_old/object.c b/fs/fscache_old/object.c
+index 86ad941726f7..365ba306397a 100644
+--- a/fs/fscache_old/object.c
++++ b/fs/fscache_old/object.c
+@@ -321,7 +321,7 @@ void fscache_object_init(struct fscache_object *object,
+ 	object->cookie = cookie;
+ 	fscache_cookie_get(cookie, fscache_cookie_get_attach_object);
+ 	object->parent = NULL;
+-#ifdef CONFIG_FSCACHE_OBJECT_LIST
++#ifdef CONFIG_FSCACHE_OLD_OBJECT_LIST
+ 	RB_CLEAR_NODE(&object->objlist_link);
+ #endif
+ 
+diff --git a/fs/fscache_old/proc.c b/fs/fscache_old/proc.c
+index 061df8f61ffc..a96f67b57e0c 100644
+--- a/fs/fscache_old/proc.c
++++ b/fs/fscache_old/proc.c
+@@ -25,13 +25,13 @@ int __init fscache_proc_init(void)
+ 			     &fscache_cookies_seq_ops))
+ 		goto error_cookies;
+ 
+-#ifdef CONFIG_FSCACHE_STATS
++#ifdef CONFIG_FSCACHE_OLD_STATS
+ 	if (!proc_create_single("fs/fscache/stats", S_IFREG | 0444, NULL,
+ 			fscache_stats_show))
+ 		goto error_stats;
+ #endif
+ 
+-#ifdef CONFIG_FSCACHE_OBJECT_LIST
++#ifdef CONFIG_FSCACHE_OLD_OBJECT_LIST
+ 	if (!proc_create("fs/fscache/objects", S_IFREG | 0444, NULL,
+ 			 &fscache_objlist_proc_ops))
+ 		goto error_objects;
+@@ -40,10 +40,10 @@ int __init fscache_proc_init(void)
+ 	_leave(" = 0");
+ 	return 0;
+ 
+-#ifdef CONFIG_FSCACHE_OBJECT_LIST
++#ifdef CONFIG_FSCACHE_OLD_OBJECT_LIST
+ error_objects:
+ #endif
+-#ifdef CONFIG_FSCACHE_STATS
++#ifdef CONFIG_FSCACHE_OLD_STATS
+ 	remove_proc_entry("fs/fscache/stats", NULL);
+ error_stats:
+ #endif
+@@ -60,10 +60,10 @@ int __init fscache_proc_init(void)
+  */
+ void fscache_proc_cleanup(void)
+ {
+-#ifdef CONFIG_FSCACHE_OBJECT_LIST
++#ifdef CONFIG_FSCACHE_OLD_OBJECT_LIST
+ 	remove_proc_entry("fs/fscache/objects", NULL);
+ #endif
+-#ifdef CONFIG_FSCACHE_STATS
++#ifdef CONFIG_FSCACHE_OLD_STATS
+ 	remove_proc_entry("fs/fscache/stats", NULL);
+ #endif
+ 	remove_proc_entry("fs/fscache/cookies", NULL);
+diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+index 14a72224b657..a8b73c90aa00 100644
+--- a/fs/nfs/Kconfig
++++ b/fs/nfs/Kconfig
+@@ -170,7 +170,7 @@ config ROOT_NFS
+ 
+ config NFS_FSCACHE
+ 	bool "Provide NFS client caching support"
+-	depends on NFS_FS=m && FSCACHE || NFS_FS=y && FSCACHE=y
++	depends on NFS_FS=m && FSCACHE_OLD || NFS_FS=y && FSCACHE_OLD=y
+ 	help
+ 	  Say Y here if you want NFS data to be cached locally on disc through
+ 	  the general filesystem cache manager
 
 
