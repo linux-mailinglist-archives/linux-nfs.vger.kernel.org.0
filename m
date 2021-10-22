@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CA839437B8F
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 19:11:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0704437B8C
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 19:11:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233890AbhJVRNs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Oct 2021 13:13:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        id S233862AbhJVRNq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Oct 2021 13:13:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233932AbhJVRNe (ORCPT
+        with ESMTP id S233937AbhJVRNe (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 13:13:34 -0400
-Received: from mail-qk1-x736.google.com (mail-qk1-x736.google.com [IPv6:2607:f8b0:4864:20::736])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C8D5C061767
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 10:11:16 -0700 (PDT)
-Received: by mail-qk1-x736.google.com with SMTP id 77so5252902qkh.6
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0111EC061764
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 10:11:17 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id a13so5141410qkg.11
         for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 10:11:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ATXqp+u2xOFY4EmAsSU7YBw6zEz6R5+BwfQfDiixPWE=;
-        b=N1GUZft7Cv4FFBoNwRWK6k95pOtHW5svC8kYNqlrisvve0DMfUmCILz5kczki0Osxy
-         b4GxU1QngdNfgd9Ak6IxNIY7WIx8PeEkgiRol5TSjhhGiNpe8mn7jFCedXBZc4WZXs1X
-         mcCr5nC2ptQPD7gFR/uWS4TEJ1MmCZ0aFWQLxP+icioW59rKi7KKGUHPGWi7hosTI1fX
-         85tHhCRTe1u1Puex/of6HhRfjW3ztXoSwfhNoZD2dOAqkor0iOvss6ID5+E/+uqSfaCI
-         xPLe8nWaZnWrTkt7UheoRlusSCalyxpp2D5OqFaWqi5pjhpvooa1Hzof3/GZ9FAXAgqM
-         nlTQ==
+        bh=u0LCQ2Q01yFPOa55Zc528lPs7tc3fuvW5Z082KuZArM=;
+        b=R5L2y2Jw9ZjUM4vNIcylyvs8OJvn0hIGBDEBjRb528FjV7rpRJ4iyhnwg71EDWCHjc
+         k1uAWI1hDEtiUYfRdU24J5UU0sjNQVejT7iCLBW9X8f6h5N7op897u2BQxTnNKAowMe+
+         vVRd67vd3Fe7vwz7iZreYs1l46JIh9EnMCKmgT66xk0w7pUtIVHT6CT/SfRsA8IrVTCe
+         0Hz9ZdXGcTX2KIo6XEc0LX9Bt+y3MRaTsJUUo3zPxUedUBlQQqhzmVkTJRWI8QXymETU
+         Q1qvXFXE2RIQul9FIyNxgZKToihi//Gf6CvXvfmzNULc41KRLJCoWC9L2XufOO4L9tSw
+         MjNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ATXqp+u2xOFY4EmAsSU7YBw6zEz6R5+BwfQfDiixPWE=;
-        b=oXUCpdOrr/DP2h6LKxesjOdNM51s9a/65z12UlqRkFn11LcAX0IwnxhuF77/J9rbhw
-         /JTJ7+zrfptsK4RcXgtSBH+LkoymL0IfUkWZ8xAUbBlhT4eJzhsN8/7DjyOKbE84AQkA
-         XswREvn2evoAMrTxoZ0QaJGt26FKfGckR46+uR7KkwKCitURVwDsS2ihhZCuovcQgTZf
-         l0xjxlaNw8VX95iMf5Hx6pqxhICxVjF0GKJReKJ0FCheW0dpWh1+Ylf0C2ULHQw8YunT
-         5914iJFqh7ZJBymn1ysExH50jhfcPWYpRpjwVU51C+O9MrStzofXQgiUMUGJVaRQZfl4
-         ck+A==
-X-Gm-Message-State: AOAM532PmJ0qQS/rJTazVuIvCgTkfq9B0ZAc1l/3My5UOEjfGVZcn/hU
-        bZGwR6+qbKDRQw/ZzYvsUSM=
-X-Google-Smtp-Source: ABdhPJwQ5sPokgAvarlKjZz9ddKTMApleheOOx9yOMUbx1IVpP1pu+STbG7ML5Q68fuHEhi0WKB1kg==
-X-Received: by 2002:ae9:de82:: with SMTP id s124mr1120567qkf.182.1634922675503;
-        Fri, 22 Oct 2021 10:11:15 -0700 (PDT)
+        bh=u0LCQ2Q01yFPOa55Zc528lPs7tc3fuvW5Z082KuZArM=;
+        b=yfLOHs0XcIQDXM/vDeBZ/ih/wATckSn9tKoFZq5xhsNTjbEpwdxqAg34DOU+TUMQfK
+         l1kMhmGNrzULXooXvSUc0ImmsBfGBSZ/qHeUYVPwS7ZQAgJ+aUKf16ErRnq4v58rmx/e
+         IdwnzjB77s75NML6uO+hOxujroIPMs/C/xSApXc+nVy1Jcoa07nzz3bO2ScANlnHIU/5
+         Bp0h10A4JfUDiIZAcVn9nYneCst0wETYN6uKMUkKGIZ/c/Otic9gwqKiW9yPXDMCLr09
+         dohqkd/8e8GJfMx4JT4NqngTvFUYtot4OeA7sue3spl065BXm0oHXSnvA1cygx9YSSpx
+         h/Xw==
+X-Gm-Message-State: AOAM531Y/kZD80J68SNjI5Wq6IQ3APqosKisl4SNxp+BXEw/SmODKG2W
+        CmIFFRvy+SHLbNj39NB/gk4=
+X-Google-Smtp-Source: ABdhPJzZtT67cWAQY0IjHaz6f3S27nZvt50/a61FTbk01vnGEejnpF8yvICwEsWxZblLLoeFsM95pw==
+X-Received: by 2002:a05:620a:25c9:: with SMTP id y9mr1101721qko.386.1634922676088;
+        Fri, 22 Oct 2021 10:11:16 -0700 (PDT)
 Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id s22sm4484586qko.135.2021.10.22.10.11.14
+        by smtp.gmail.com with ESMTPSA id s22sm4484586qko.135.2021.10.22.10.11.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Fri, 22 Oct 2021 10:11:15 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
@@ -52,9 +52,9 @@ From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v2 02/14] NFS: Remove the nfs4_label from the nfs_entry struct
-Date:   Fri, 22 Oct 2021 13:11:01 -0400
-Message-Id: <20211022171113.16739-3-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v2 03/14] NFS: Remove the nfs4_label from the nfs4_create_res struct
+Date:   Fri, 22 Oct 2021 13:11:02 -0400
+Message-Id: <20211022171113.16739-4-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211022171113.16739-1-Anna.Schumaker@Netapp.com>
 References: <20211022171113.16739-1-Anna.Schumaker@Netapp.com>
@@ -66,107 +66,94 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-And instead allocate the fattr using nfs_alloc_fattr_with_label()
+Instead, use the label embedded in the attached fattr.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- fs/nfs/dir.c            | 21 +++++++--------------
+ fs/nfs/nfs4proc.c       | 12 +++++-------
  fs/nfs/nfs4xdr.c        |  2 +-
  include/linux/nfs_xdr.h |  1 -
- 3 files changed, 8 insertions(+), 16 deletions(-)
+ 3 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 1a6d2867fba4..3daa1fd60751 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -680,7 +680,8 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
- 			nfs_set_verifier(dentry, dir_verifier);
- 			status = nfs_refresh_inode(d_inode(dentry), entry->fattr);
- 			if (!status)
--				nfs_setsecurity(d_inode(dentry), entry->fattr, entry->label);
-+				nfs_setsecurity(d_inode(dentry), entry->fattr,
-+						entry->fattr->label);
- 			goto out;
- 		} else {
- 			d_invalidate(dentry);
-@@ -694,7 +695,7 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
- 		goto out;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index e1214bb6b7ee..06569a35a6df 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4851,7 +4851,6 @@ struct nfs4_createdata {
+ 	struct nfs4_create_res res;
+ 	struct nfs_fh fh;
+ 	struct nfs_fattr fattr;
+-	struct nfs4_label *label;
+ };
+ 
+ static struct nfs4_createdata *nfs4_alloc_createdata(struct inode *dir,
+@@ -4863,8 +4862,8 @@ static struct nfs4_createdata *nfs4_alloc_createdata(struct inode *dir,
+ 	if (data != NULL) {
+ 		struct nfs_server *server = NFS_SERVER(dir);
+ 
+-		data->label = nfs4_label_alloc(server, GFP_KERNEL);
+-		if (IS_ERR(data->label))
++		data->fattr.label = nfs4_label_alloc(server, GFP_KERNEL);
++		if (IS_ERR(data->fattr.label))
+ 			goto out_free;
+ 
+ 		data->msg.rpc_proc = &nfs4_procedures[NFSPROC4_CLNT_CREATE];
+@@ -4875,12 +4874,11 @@ static struct nfs4_createdata *nfs4_alloc_createdata(struct inode *dir,
+ 		data->arg.name = name;
+ 		data->arg.attrs = sattr;
+ 		data->arg.ftype = ftype;
+-		data->arg.bitmask = nfs4_bitmask(server, data->label);
++		data->arg.bitmask = nfs4_bitmask(server, data->fattr.label);
+ 		data->arg.umask = current_umask();
+ 		data->res.server = server;
+ 		data->res.fh = &data->fh;
+ 		data->res.fattr = &data->fattr;
+-		data->res.label = data->label;
+ 		nfs_fattr_init(data->res.fattr);
  	}
+ 	return data;
+@@ -4902,14 +4900,14 @@ static int nfs4_do_create(struct inode *dir, struct dentry *dentry, struct nfs4_
+ 					      data->res.fattr->time_start,
+ 					      NFS_INO_INVALID_DATA);
+ 		spin_unlock(&dir->i_lock);
+-		status = nfs_instantiate(dentry, data->res.fh, data->res.fattr, data->res.label);
++		status = nfs_instantiate(dentry, data->res.fh, data->res.fattr, data->res.fattr->label);
+ 	}
+ 	return status;
+ }
  
--	inode = nfs_fhget(dentry->d_sb, entry->fh, entry->fattr, entry->label);
-+	inode = nfs_fhget(dentry->d_sb, entry->fh, entry->fattr, entry->fattr->label);
- 	alias = d_splice_alias(inode, dentry);
- 	d_lookup_done(dentry);
- 	if (alias) {
-@@ -730,8 +731,8 @@ static int nfs_readdir_page_filler(struct nfs_readdir_descriptor *desc,
- 	xdr_set_scratch_page(&stream, scratch);
+ static void nfs4_free_createdata(struct nfs4_createdata *data)
+ {
+-	nfs4_label_free(data->label);
++	nfs4_label_free(data->fattr.label);
+ 	kfree(data);
+ }
  
- 	do {
--		if (entry->label)
--			entry->label->len = NFS4_MAXLABELLEN;
-+		if (entry->fattr->label)
-+			entry->fattr->label->len = NFS4_MAXLABELLEN;
- 
- 		status = xdr_decode(desc, entry, &stream);
- 		if (status != 0)
-@@ -836,21 +837,15 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 		return -ENOMEM;
- 	entry->cookie = nfs_readdir_page_last_cookie(page);
- 	entry->fh = nfs_alloc_fhandle();
--	entry->fattr = nfs_alloc_fattr();
-+	entry->fattr = nfs_alloc_fattr_with_label(NFS_SERVER(inode));
- 	entry->server = NFS_SERVER(inode);
- 	if (entry->fh == NULL || entry->fattr == NULL)
- 		goto out;
- 
--	entry->label = nfs4_label_alloc(NFS_SERVER(inode), GFP_NOWAIT);
--	if (IS_ERR(entry->label)) {
--		status = PTR_ERR(entry->label);
--		goto out;
--	}
--
- 	array_size = (dtsize + PAGE_SIZE - 1) >> PAGE_SHIFT;
- 	pages = nfs_readdir_alloc_pages(array_size);
- 	if (!pages)
--		goto out_release_label;
-+		goto out;
- 
- 	do {
- 		unsigned int pglen;
-@@ -873,8 +868,6 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 	} while (!status && nfs_readdir_page_needs_filling(page));
- 
- 	nfs_readdir_free_pages(pages, array_size);
--out_release_label:
--	nfs4_label_free(entry->label);
- out:
- 	nfs_free_fattr(entry->fattr);
- 	nfs_free_fhandle(entry->fh);
 diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index a8cff19c6f00..466b2832de75 100644
+index 466b2832de75..98594a97529d 100644
 --- a/fs/nfs/nfs4xdr.c
 +++ b/fs/nfs/nfs4xdr.c
-@@ -7475,7 +7475,7 @@ int nfs4_decode_dirent(struct xdr_stream *xdr, struct nfs_entry *entry,
- 		return -EAGAIN;
- 
- 	if (decode_getfattr_attrs(xdr, bitmap, entry->fattr, entry->fh,
--			NULL, entry->label, entry->server) < 0)
-+			NULL, entry->fattr->label, entry->server) < 0)
- 		return -EAGAIN;
- 	if (entry->fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
- 		entry->ino = entry->fattr->mounted_on_fileid;
+@@ -6361,7 +6361,7 @@ static int nfs4_xdr_dec_create(struct rpc_rqst *rqstp, struct xdr_stream *xdr,
+ 	status = decode_getfh(xdr, res->fh);
+ 	if (status)
+ 		goto out;
+-	decode_getfattr_label(xdr, res->fattr, res->label, res->server);
++	decode_getfattr_label(xdr, res->fattr, res->fattr->label, res->server);
+ out:
+ 	return status;
+ }
 diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index e9698b6278a5..9960f6628066 100644
+index 9960f6628066..5aba81b74c98 100644
 --- a/include/linux/nfs_xdr.h
 +++ b/include/linux/nfs_xdr.h
-@@ -753,7 +753,6 @@ struct nfs_entry {
- 	int			eof;
- 	struct nfs_fh *		fh;
- 	struct nfs_fattr *	fattr;
--	struct nfs4_label  *label;
- 	unsigned char		d_type;
- 	struct nfs_server *	server;
+@@ -1040,7 +1040,6 @@ struct nfs4_create_res {
+ 	const struct nfs_server *	server;
+ 	struct nfs_fh *			fh;
+ 	struct nfs_fattr *		fattr;
+-	struct nfs4_label		*label;
+ 	struct nfs4_change_info		dir_cinfo;
  };
+ 
 -- 
 2.33.1
 
