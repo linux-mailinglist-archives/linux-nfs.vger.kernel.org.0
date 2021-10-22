@@ -2,89 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 669044376E4
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 14:22:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B7204377A1
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Oct 2021 14:58:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232323AbhJVMY0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Oct 2021 08:24:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53676 "EHLO
+        id S232381AbhJVNAy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Oct 2021 09:00:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232410AbhJVMYV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 08:24:21 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD78CC061227
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 05:22:01 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id w14so2276866edv.11
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 05:22:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=EabbjzyBCsHP1Pqryzjhoy0dM3xlyxLmmpO8ACgMTo8=;
-        b=opUIgqVWyZcHOIldu+LgQVfQLu2JLSm4eq0yRYoR8X3EkJ0jJdtgK1LJrEC4fAYG/u
-         x5QndCavFk6KrgrLKL2M04eWhmo9Ht5gsCUOTzm6BFmYlOhPKCnfQmAWRcGWJ3Kgd+Po
-         dxnzE1GzD0Fe/zdoRYGanqsnNZ7HZwcDd5jvb2P53Z7ySB2eUUW5eKcCwJjvHcLwQW3D
-         hmZMQ0WQ67mADARNZlQPTMDFACAa1pT2f55C5E+z5xU/0SGGI05AA1ys/nk/8Z7QRecx
-         rbFLK51ODld/urTp+hjZ3tCNNEiv03NL8R5n8H4ZVv1sIR3Pcfr4FSd/aUugOrtvCJBK
-         4QUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=EabbjzyBCsHP1Pqryzjhoy0dM3xlyxLmmpO8ACgMTo8=;
-        b=rp0j2WX9cO7jBf9SXMSBHPD4W9s1czE2grPU7uEWwrtLASG36BSyJlwqB0Z3Vgkkdr
-         +ZjD4N3ZKRp5hMmY/ysfO283w9gf/pyDfXppTshoJr9Cfs44p9AkuHRQH0NlClB+kibI
-         VUlQ1rJp6sK+Sm7CUadNGsbbtr1wWTaxuA227IQIUNEHzESj10lvYMnv9wWp4rTCy2CQ
-         k3+t+CYtwkupBJKMjv3MIUGNWRvB3yzjFQKylpBbYL+kEMB7juPphtbPKN9+VKZV31bc
-         BK9ehEffVtXW1jopnb3FmCD0Dxqkbiiwu74Fjcy8Pkf8TCRPa6ZmhddOrFSxw7lVTYsN
-         AQUw==
-X-Gm-Message-State: AOAM532pZ/0aNn+AqOO3ERMIukA1e1y6l6SzscxkaII5fAY0m2okFB+B
-        Lr0xd7QgJRkIV8hot4frC+/1pYldeAIwkwW5hkD9gFr8brExW6/T
-X-Google-Smtp-Source: ABdhPJy2Z+mCK6UsBedDHfuHLqHjOelryE6bx9xZ/OavTEghlxY+bPID2uQBe/oD5nVNF4jHf9BZTkpf3h9vpVXzB08=
-X-Received: by 2002:a17:907:1b0a:: with SMTP id mp10mr15488909ejc.29.1634905309828;
- Fri, 22 Oct 2021 05:21:49 -0700 (PDT)
+        with ESMTP id S232825AbhJVNAy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Oct 2021 09:00:54 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E544CC061766
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Oct 2021 05:58:36 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 92FA66EA9; Fri, 22 Oct 2021 08:58:35 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 92FA66EA9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1634907515;
+        bh=YbfDFQQtWifW1h5WhJwtUig/5rSQuLQ2b2Z3alyWrsk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fUr33XcKs0xNZZmfK+vkfkFwEqURRBxyNEWOQB33xjOoGuGn6HwXXVAftMcpjGYWd
+         yGwp08i2rb9pKtbdbRdcR95RpN+dhdvjOCUweBJ5ML4N40XER4KZQIoKOF+4w69H3b
+         Wcv22707veE9ktodInn4aeM8ClpZpek+0ci0cnp4=
+Date:   Fri, 22 Oct 2021 08:58:35 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     dai.ngo@oracle.com
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Steve Dickson <steved@redhat.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: server-to-server copy by default
+Message-ID: <20211022125835.GA11434@fieldses.org>
+References: <20211020155421.GC597@fieldses.org>
+ <18E32DF5-3F1D-4C23-8C2F-A7963103CF8C@oracle.com>
+ <CAN-5tyEL4L2GH=-MDGS4qNTcCLRPFCQzfDQjFAVbG7wMKvHxOg@mail.gmail.com>
+ <8b1eb564-974d-00b6-397a-d92f301df7d8@oracle.com>
+ <20211020202907.GF597@fieldses.org>
+ <a009cbf3-cb83-b7c8-aa86-2eee06962b68@oracle.com>
+ <20211021140243.GB25711@fieldses.org>
+ <78839450-8095-01ae-53e8-f0ebf941b5a5@oracle.com>
 MIME-Version: 1.0
-Received: by 2002:a17:907:7fa7:0:0:0:0 with HTTP; Fri, 22 Oct 2021 05:21:48
- -0700 (PDT)
-Reply-To: bahadur.rayanby@gmail.com
-From:   Ryan Bahadur <dr.philposman7@gmail.com>
-Date:   Fri, 22 Oct 2021 05:21:48 -0700
-Message-ID: <CAMOT=VQ19xGMh1Soq8rNHNKaBCqZh03d0u+Nrf_Ou9bAtd-seQ@mail.gmail.com>
-Subject: CAN I TRUST YOU
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <78839450-8095-01ae-53e8-f0ebf941b5a5@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-Greetings,
+On Thu, Oct 21, 2021 at 11:34:44PM -0700, dai.ngo@oracle.com wrote:
+> On 10/21/21 7:02 AM, Bruce Fields wrote:
+> >Thanks for the persistence:
+> >
+> >On Wed, Oct 20, 2021 at 10:00:41PM -0700, dai.ngo@oracle.com wrote:
+> >>The attack can come from the replies of the source server or requests
+> >>from the source server to the destination server via the back channel.
+> >>One of possible attack in the reply is BAD_STATEID which was handled
+> >>by the client code as mentioned by Olga.
+> >>
+> >>Here is the list of NFS requests made from the destination to the
+> >>source server:
+> >>
+> >>         EXCHANGE_ID
+> >>         CREATE_SESSION
+> >>         RECLAIM_COMLETE
+> >>         SEQUENCE
+> >>         PUTROOTFH
+> >>         PUTHF
+> >>         GETFH
+> >>         GETATTR
+> >>         READ/READ_PLUS
+> >>         DESTROY_SESSION
+> >>         DESTROY_CLIENTID
+> >>
+> >>Do you think we should review all replies from these requests to make
+> >>sure error replies do not cause problems for the destination server?
+> >That's the exactly the sort of analysis I was curious to see, yes.
+> 
+> I will go through these requests to see if is there is anything that
+> we need to do to ensure the destination does not react negatively
+> on the replies.
+> 
+> >
+> >(I doubt the PUTROOTFH, PUTFH, GETFH, and GETATTR are really necessary,
+> >I wonder if there's any way we could just bypass them in our case.  I
+> >don't know, maybe that's more trouble than it's worth.)
+> 
+> I'll take a look but I think we should avoid modifying the client
+> code if possible.
+> 
+> >
+> >>same for the back channel ops:
+> >>
+> >>         OP_CB_GETATTR
+> >>         OP_CB_RECALL
+> >>         OP_CB_LAYOUTRECALL
+> >>         OP_CB_NOTIFY
+> >>         OP_CB_PUSH_DELEG
+> >>         OP_CB_RECALL_ANY
+> >>         OP_CB_RECALLABLE_OBJ_AVAIL
+> >>         OP_CB_RECALL_SLOT
+> >>         OP_CB_SEQUENCE
+> >>         OP_CB_WANTS_CANCELLED
+> >>         OP_CB_NOTIFY_LOCK
+> >>         OP_CB_NOTIFY_DEVICEID
+> >>         OP_CB_OFFLOAD
+> >There shouldn't be any need for callbacks at all.  We might be able to
+> >get away without even setting up a backchannel.  But, yes, if the server
+> >tries to send one anyway, it'd be good to know we do something
+> >reasonable.
+> 
+> or do not specify the back channel when creating the session somehow.
+> I will report back.
 
-Firstly, I apologize for encroaching into your privacy in this manner
-as it may seem unethical though it is a matter of great importance.
+Thank you, Dai!
 
-I am Mr.Ryan Bahadur, I work with Cayman National Bank (Cayman Islands).
-
-I am contacting you because my status would not permit me to do this
-alone as it is concerning our customer and an investment placed under
-our bank's management over 5 years ago.
-
-I have a proposal I would love to discuss with you which will be very
-beneficial to both of us. It's regarding my late client who has a huge
-deposit with my bank.
-
-He is from your country and shares the same last name with you.
-
-I want to seek your consent to present you as the next of kin to my
-late client who died and left a huge deposit with my bank.
-
-I would respectfully request that you keep the contents of this mail
-confidential and respect the integrity of the information you come by
-as a result of this mail.
-
-Please kindly get back to me for more details if I can TRUST YOU.{
-bahadur.rayanby@gmail.com}
-
-Regards
-Mr.Ryan Bahadur
-Treasury and Deposit Management,
-Cayman National Bank Cayman Islands.
+--b.
