@@ -2,48 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C2E9C43C463
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Oct 2021 09:51:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF13D43CC43
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Oct 2021 16:30:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240654AbhJ0HyD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Oct 2021 03:54:03 -0400
-Received: from mga18.intel.com ([134.134.136.126]:58341 "EHLO mga18.intel.com"
+        id S242575AbhJ0OcX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Oct 2021 10:32:23 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2781 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231572AbhJ0HyC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 27 Oct 2021 03:54:02 -0400
-X-IronPort-AV: E=McAfee;i="6200,9189,10149"; a="217011190"
+        id S242577AbhJ0OcW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 27 Oct 2021 10:32:22 -0400
+X-IronPort-AV: E=McAfee;i="6200,9189,10150"; a="210951305"
 X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
-   d="gz'50?scan'50,208,50";a="217011190"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2021 00:51:36 -0700
+   d="gz'50?scan'50,208,50";a="210951305"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2021 07:29:52 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.87,186,1631602800"; 
-   d="gz'50?scan'50,208,50";a="537433089"
+   d="gz'50?scan'50,208,50";a="465746351"
 Received: from lkp-server01.sh.intel.com (HELO 3b851179dbd8) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 27 Oct 2021 00:51:33 -0700
+  by orsmga002.jf.intel.com with ESMTP; 27 Oct 2021 07:29:48 -0700
 Received: from kbuild by 3b851179dbd8 with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1mfdie-0000Bl-Ca; Wed, 27 Oct 2021 07:51:32 +0000
-Date:   Wed, 27 Oct 2021 15:50:43 +0800
+        id 1mfjw3-0000bx-C8; Wed, 27 Oct 2021 14:29:47 +0000
+Date:   Wed, 27 Oct 2021 22:28:59 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
         trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         steved@redhat.com
 Cc:     kbuild-all@lists.01.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/7] NFSv4.2 add tracepoint to SEEK
-Message-ID: <202110271504.A2fDFLNN-lkp@intel.com>
-References: <20211018220314.85115-2-olga.kornievskaia@gmail.com>
+Subject: Re: [PATCH 3/7] NFSv4.2 add tracepoint to COPY
+Message-ID: <202110272234.0XskNGp8-lkp@intel.com>
+References: <20211018220314.85115-4-olga.kornievskaia@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ZGiS0Q5IWpPtfppv"
+Content-Type: multipart/mixed; boundary="VS++wcV0S1rZb1Fb"
 Content-Disposition: inline
-In-Reply-To: <20211018220314.85115-2-olga.kornievskaia@gmail.com>
+In-Reply-To: <20211018220314.85115-4-olga.kornievskaia@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---ZGiS0Q5IWpPtfppv
+--VS++wcV0S1rZb1Fb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
@@ -52,7 +52,7 @@ Hi Olga,
 Thank you for the patch! Yet something to improve:
 
 [auto build test ERROR on trondmy-nfs/linux-next]
-[also build test ERROR on v5.15-rc7 next-20211026]
+[also build test ERROR on v5.15-rc7 next-20211027]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch]
@@ -64,10 +64,10 @@ compiler: csky-linux-gcc (GCC) 11.2.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/39d7e45f3011c0936f8a56eb73dd1abca1ff448d
+        # https://github.com/0day-ci/linux/commit/829a1d6d8ca869013f86f9f799c735b6f1ff1acf
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review Olga-Kornievskaia/NFSv4-2-add-tracepoints-to-sparse-files-and-copy/20211019-060455
-        git checkout 39d7e45f3011c0936f8a56eb73dd1abca1ff448d
+        git checkout 829a1d6d8ca869013f86f9f799c735b6f1ff1acf
         # save the attached .config to linux build tree
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross ARCH=csky 
 
@@ -76,35 +76,108 @@ Reported-by: kernel test robot <lkp@intel.com>
 
 All error/warnings (new ones prefixed by >>):
 
-   In file included from include/linux/bitops.h:33,
-                    from include/linux/kernel.h:12,
-                    from include/linux/list.h:9,
-                    from include/linux/preempt.h:11,
-                    from include/linux/spinlock.h:55,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:6,
-                    from include/linux/mm.h:10,
-                    from fs/nfs/nfs4proc.c:38:
-   arch/csky/include/asm/bitops.h:77: warning: "__clear_bit" redefined
-      77 | #define __clear_bit(nr, vaddr) clear_bit(nr, vaddr)
-         | 
-   In file included from arch/csky/include/asm/bitops.h:76,
-                    from include/linux/bitops.h:33,
-                    from include/linux/kernel.h:12,
-                    from include/linux/list.h:9,
-                    from include/linux/preempt.h:11,
-                    from include/linux/spinlock.h:55,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:6,
-                    from include/linux/mm.h:10,
-                    from fs/nfs/nfs4proc.c:38:
-   include/asm-generic/bitops/non-atomic.h:34: note: this is the location of the previous definition
-      34 | #define __clear_bit arch___clear_bit
-         | 
-   In file included from fs/nfs/nfs4trace.h:11,
-                    from fs/nfs/nfs4proc.c:72:
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+   fs/nfs/nfs4trace.h:2541:1: note: in expansion of macro 'DEFINE_NFS4_SPARSE_EVENT'
+    2541 | DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/nfs4trace.h: At top level:
+   fs/nfs/nfs4trace.h:2536:46: warning: 'struct nfs42_falloc_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2536 |                                 const struct nfs42_falloc_args *args, \
+         |                                              ^~~~~~~~~~~~~~~~~
+   include/linux/tracepoint.h:260:45: note: in definition of macro '__DECLARE_TRACE'
+     260 |         register_trace_##name(void (*probe)(data_proto), void *data)    \
+         |                                             ^~~~~~~~~~
+   include/linux/tracepoint.h:421:25: note: in expansion of macro 'PARAMS'
+     421 |                         PARAMS(void *__data, proto))
+         |                         ^~~~~~
+   include/linux/tracepoint.h:542:9: note: in expansion of macro 'DECLARE_TRACE'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^~~~~~~~~~~~~
+   include/linux/tracepoint.h:542:29: note: in expansion of macro 'PARAMS'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |                             ^~~~~~
+   fs/nfs/nfs4trace.h:2533:9: note: in expansion of macro 'DEFINE_EVENT'
+    2533 |         DEFINE_EVENT(nfs4_sparse_event, name, \
+         |         ^~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2534:25: note: in expansion of macro 'TP_PROTO'
+    2534 |                         TP_PROTO( \
+         |                         ^~~~~~~~
+   fs/nfs/nfs4trace.h:2541:1: note: in expansion of macro 'DEFINE_NFS4_SPARSE_EVENT'
+    2541 | DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2536:46: warning: 'struct nfs42_falloc_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2536 |                                 const struct nfs42_falloc_args *args, \
+         |                                              ^~~~~~~~~~~~~~~~~
+   include/linux/tracepoint.h:266:50: note: in definition of macro '__DECLARE_TRACE'
+     266 |         register_trace_prio_##name(void (*probe)(data_proto), void *data,\
+         |                                                  ^~~~~~~~~~
+   include/linux/tracepoint.h:421:25: note: in expansion of macro 'PARAMS'
+     421 |                         PARAMS(void *__data, proto))
+         |                         ^~~~~~
+   include/linux/tracepoint.h:542:9: note: in expansion of macro 'DECLARE_TRACE'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^~~~~~~~~~~~~
+   include/linux/tracepoint.h:542:29: note: in expansion of macro 'PARAMS'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |                             ^~~~~~
+   fs/nfs/nfs4trace.h:2533:9: note: in expansion of macro 'DEFINE_EVENT'
+    2533 |         DEFINE_EVENT(nfs4_sparse_event, name, \
+         |         ^~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2534:25: note: in expansion of macro 'TP_PROTO'
+    2534 |                         TP_PROTO( \
+         |                         ^~~~~~~~
+   fs/nfs/nfs4trace.h:2541:1: note: in expansion of macro 'DEFINE_NFS4_SPARSE_EVENT'
+    2541 | DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2536:46: warning: 'struct nfs42_falloc_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2536 |                                 const struct nfs42_falloc_args *args, \
+         |                                              ^~~~~~~~~~~~~~~~~
+   include/linux/tracepoint.h:273:47: note: in definition of macro '__DECLARE_TRACE'
+     273 |         unregister_trace_##name(void (*probe)(data_proto), void *data)  \
+         |                                               ^~~~~~~~~~
+   include/linux/tracepoint.h:421:25: note: in expansion of macro 'PARAMS'
+     421 |                         PARAMS(void *__data, proto))
+         |                         ^~~~~~
+   include/linux/tracepoint.h:542:9: note: in expansion of macro 'DECLARE_TRACE'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^~~~~~~~~~~~~
+   include/linux/tracepoint.h:542:29: note: in expansion of macro 'PARAMS'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |                             ^~~~~~
+   fs/nfs/nfs4trace.h:2533:9: note: in expansion of macro 'DEFINE_EVENT'
+    2533 |         DEFINE_EVENT(nfs4_sparse_event, name, \
+         |         ^~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2534:25: note: in expansion of macro 'TP_PROTO'
+    2534 |                         TP_PROTO( \
+         |                         ^~~~~~~~
+   fs/nfs/nfs4trace.h:2541:1: note: in expansion of macro 'DEFINE_NFS4_SPARSE_EVENT'
+    2541 | DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2536:46: warning: 'struct nfs42_falloc_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2536 |                                 const struct nfs42_falloc_args *args, \
+         |                                              ^~~~~~~~~~~~~~~~~
+   include/linux/tracepoint.h:279:53: note: in definition of macro '__DECLARE_TRACE'
+     279 |         check_trace_callback_type_##name(void (*cb)(data_proto))        \
+         |                                                     ^~~~~~~~~~
+   include/linux/tracepoint.h:421:25: note: in expansion of macro 'PARAMS'
+     421 |                         PARAMS(void *__data, proto))
+         |                         ^~~~~~
+   include/linux/tracepoint.h:542:9: note: in expansion of macro 'DECLARE_TRACE'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |         ^~~~~~~~~~~~~
+   include/linux/tracepoint.h:542:29: note: in expansion of macro 'PARAMS'
+     542 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
+         |                             ^~~~~~
+   fs/nfs/nfs4trace.h:2533:9: note: in expansion of macro 'DEFINE_EVENT'
+    2533 |         DEFINE_EVENT(nfs4_sparse_event, name, \
+         |         ^~~~~~~~~~~~
+   fs/nfs/nfs4trace.h:2534:25: note: in expansion of macro 'TP_PROTO'
+    2534 |                         TP_PROTO( \
+         |                         ^~~~~~~~
+   fs/nfs/nfs4trace.h:2541:1: note: in expansion of macro 'DEFINE_NFS4_SPARSE_EVENT'
+    2541 | DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
+         | ^~~~~~~~~~~~~~~~~~~~~~~~
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -118,14 +191,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -139,14 +212,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:245:41: note: in definition of macro '__DECLARE_TRACE'
      245 |         static inline void trace_##name(proto)                          \
@@ -160,14 +233,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:245:41: note: in definition of macro '__DECLARE_TRACE'
      245 |         static inline void trace_##name(proto)                          \
@@ -181,18 +254,18 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
-   fs/nfs/nfs4trace.h: In function 'trace_nfs4_llseek':
->> fs/nfs/nfs4trace.h:2436:32: error: passing argument 3 of '__traceiter_nfs4_llseek' from incompatible pointer type [-Werror=incompatible-pointer-types]
-    2436 |                 TP_ARGS(inode, args, res, error),
-         |                                ^~~~
-         |                                |
-         |                                const struct nfs42_seek_args *
+   fs/nfs/nfs4trace.h: In function 'trace_nfs4_copy':
+>> fs/nfs/nfs4trace.h:2553:47: error: passing argument 4 of '__traceiter_nfs4_copy' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
+         |                                               ^~~~
+         |                                               |
+         |                                               const struct nfs42_copy_args *
    include/linux/tracepoint.h:177:66: note: in definition of macro '__DO_TRACE_CALL'
      177 | #define __DO_TRACE_CALL(name, args)     __traceiter_##name(NULL, args)
          |                                                                  ^~~~
@@ -217,14 +290,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:44: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                                            ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2436:17: note: in expansion of macro 'TP_ARGS'
-    2436 |                 TP_ARGS(inode, args, res, error),
+   fs/nfs/nfs4trace.h:2553:17: note: in expansion of macro 'TP_ARGS'
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
          |                 ^~~~~~~
-   fs/nfs/nfs4trace.h:2431:55: note: expected 'const struct nfs42_seek_args *' but argument is of type 'const struct nfs42_seek_args *'
-    2431 |                         const struct nfs42_seek_args *args,
+   fs/nfs/nfs4trace.h:2547:55: note: expected 'const struct nfs42_copy_args *' but argument is of type 'const struct nfs42_copy_args *'
+    2547 |                         const struct nfs42_copy_args *args,
          |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -238,17 +311,17 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
-   fs/nfs/nfs4trace.h:2436:38: error: passing argument 4 of '__traceiter_nfs4_llseek' from incompatible pointer type [-Werror=incompatible-pointer-types]
-    2436 |                 TP_ARGS(inode, args, res, error),
-         |                                      ^~~
-         |                                      |
-         |                                      const struct nfs42_seek_res *
+   fs/nfs/nfs4trace.h:2553:53: error: passing argument 5 of '__traceiter_nfs4_copy' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
+         |                                                     ^~~
+         |                                                     |
+         |                                                     const struct nfs42_copy_res *
    include/linux/tracepoint.h:177:66: note: in definition of macro '__DO_TRACE_CALL'
      177 | #define __DO_TRACE_CALL(name, args)     __traceiter_##name(NULL, args)
          |                                                                  ^~~~
@@ -273,14 +346,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:44: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                                            ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2436:17: note: in expansion of macro 'TP_ARGS'
-    2436 |                 TP_ARGS(inode, args, res, error),
+   fs/nfs/nfs4trace.h:2553:17: note: in expansion of macro 'TP_ARGS'
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
          |                 ^~~~~~~
-   fs/nfs/nfs4trace.h:2432:54: note: expected 'const struct nfs42_seek_res *' but argument is of type 'const struct nfs42_seek_res *'
-    2432 |                         const struct nfs42_seek_res *res,
+   fs/nfs/nfs4trace.h:2548:54: note: expected 'const struct nfs42_copy_res *' but argument is of type 'const struct nfs42_copy_res *'
+    2548 |                         const struct nfs42_copy_res *res,
          |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -294,15 +367,15 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
    fs/nfs/nfs4trace.h: At top level:
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:218:51: note: in definition of macro '__DECLARE_TRACE_RCU'
      218 |         static inline void trace_##name##_rcuidle(proto)                \
@@ -322,14 +395,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:218:51: note: in definition of macro '__DECLARE_TRACE_RCU'
      218 |         static inline void trace_##name##_rcuidle(proto)                \
@@ -349,18 +422,18 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
-   fs/nfs/nfs4trace.h: In function 'trace_nfs4_llseek_rcuidle':
->> fs/nfs/nfs4trace.h:2436:32: error: passing argument 3 of '__traceiter_nfs4_llseek' from incompatible pointer type [-Werror=incompatible-pointer-types]
-    2436 |                 TP_ARGS(inode, args, res, error),
-         |                                ^~~~
-         |                                |
-         |                                const struct nfs42_seek_args *
+   fs/nfs/nfs4trace.h: In function 'trace_nfs4_copy_rcuidle':
+>> fs/nfs/nfs4trace.h:2553:47: error: passing argument 4 of '__traceiter_nfs4_copy' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
+         |                                               ^~~~
+         |                                               |
+         |                                               const struct nfs42_copy_args *
    include/linux/tracepoint.h:177:66: note: in definition of macro '__DO_TRACE_CALL'
      177 | #define __DO_TRACE_CALL(name, args)     __traceiter_##name(NULL, args)
          |                                                                  ^~~~
@@ -391,14 +464,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:44: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                                            ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2436:17: note: in expansion of macro 'TP_ARGS'
-    2436 |                 TP_ARGS(inode, args, res, error),
+   fs/nfs/nfs4trace.h:2553:17: note: in expansion of macro 'TP_ARGS'
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
          |                 ^~~~~~~
-   fs/nfs/nfs4trace.h:2431:55: note: expected 'const struct nfs42_seek_args *' but argument is of type 'const struct nfs42_seek_args *'
-    2431 |                         const struct nfs42_seek_args *args,
+   fs/nfs/nfs4trace.h:2547:55: note: expected 'const struct nfs42_copy_args *' but argument is of type 'const struct nfs42_copy_args *'
+    2547 |                         const struct nfs42_copy_args *args,
          |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -412,17 +485,17 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
-   fs/nfs/nfs4trace.h:2436:38: error: passing argument 4 of '__traceiter_nfs4_llseek' from incompatible pointer type [-Werror=incompatible-pointer-types]
-    2436 |                 TP_ARGS(inode, args, res, error),
-         |                                      ^~~
-         |                                      |
-         |                                      const struct nfs42_seek_res *
+   fs/nfs/nfs4trace.h:2553:53: error: passing argument 5 of '__traceiter_nfs4_copy' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
+         |                                                     ^~~
+         |                                                     |
+         |                                                     const struct nfs42_copy_res *
    include/linux/tracepoint.h:177:66: note: in definition of macro '__DO_TRACE_CALL'
      177 | #define __DO_TRACE_CALL(name, args)     __traceiter_##name(NULL, args)
          |                                                                  ^~~~
@@ -453,14 +526,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:44: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                                            ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2436:17: note: in expansion of macro 'TP_ARGS'
-    2436 |                 TP_ARGS(inode, args, res, error),
+   fs/nfs/nfs4trace.h:2553:17: note: in expansion of macro 'TP_ARGS'
+    2553 |                 TP_ARGS(src_inode, dst_inode, args, res, nss, error),
          |                 ^~~~~~~
-   fs/nfs/nfs4trace.h:2432:54: note: expected 'const struct nfs42_seek_res *' but argument is of type 'const struct nfs42_seek_res *'
-    2432 |                         const struct nfs42_seek_res *res,
+   fs/nfs/nfs4trace.h:2548:54: note: expected 'const struct nfs42_copy_res *' but argument is of type 'const struct nfs42_copy_res *'
+    2548 |                         const struct nfs42_copy_res *res,
          |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~
    include/linux/tracepoint.h:242:39: note: in definition of macro '__DECLARE_TRACE'
      242 |         extern int __traceiter_##name(data_proto);                      \
@@ -474,15 +547,15 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
    fs/nfs/nfs4trace.h: At top level:
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:260:45: note: in definition of macro '__DECLARE_TRACE'
      260 |         register_trace_##name(void (*probe)(data_proto), void *data)    \
@@ -496,14 +569,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:260:45: note: in definition of macro '__DECLARE_TRACE'
      260 |         register_trace_##name(void (*probe)(data_proto), void *data)    \
@@ -517,14 +590,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:266:50: note: in definition of macro '__DECLARE_TRACE'
      266 |         register_trace_prio_##name(void (*probe)(data_proto), void *data,\
@@ -538,14 +611,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:266:50: note: in definition of macro '__DECLARE_TRACE'
      266 |         register_trace_prio_##name(void (*probe)(data_proto), void *data,\
@@ -559,14 +632,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:273:47: note: in definition of macro '__DECLARE_TRACE'
      273 |         unregister_trace_##name(void (*probe)(data_proto), void *data)  \
@@ -580,14 +653,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:273:47: note: in definition of macro '__DECLARE_TRACE'
      273 |         unregister_trace_##name(void (*probe)(data_proto), void *data)  \
@@ -601,14 +674,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2432:38: warning: 'struct nfs42_seek_res' declared inside parameter list will not be visible outside of this definition or declaration
-    2432 |                         const struct nfs42_seek_res *res,
+>> fs/nfs/nfs4trace.h:2548:38: warning: 'struct nfs42_copy_res' declared inside parameter list will not be visible outside of this definition or declaration
+    2548 |                         const struct nfs42_copy_res *res,
          |                                      ^~~~~~~~~~~~~~
    include/linux/tracepoint.h:279:53: note: in definition of macro '__DECLARE_TRACE'
      279 |         check_trace_callback_type_##name(void (*cb)(data_proto))        \
@@ -622,14 +695,14 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
->> fs/nfs/nfs4trace.h:2431:38: warning: 'struct nfs42_seek_args' declared inside parameter list will not be visible outside of this definition or declaration
-    2431 |                         const struct nfs42_seek_args *args,
+>> fs/nfs/nfs4trace.h:2547:38: warning: 'struct nfs42_copy_args' declared inside parameter list will not be visible outside of this definition or declaration
+    2547 |                         const struct nfs42_copy_args *args,
          |                                      ^~~~~~~~~~~~~~~
    include/linux/tracepoint.h:279:53: note: in definition of macro '__DECLARE_TRACE'
      279 |         check_trace_callback_type_##name(void (*cb)(data_proto))        \
@@ -643,11 +716,11 @@ All error/warnings (new ones prefixed by >>):
    include/linux/tracepoint.h:553:29: note: in expansion of macro 'PARAMS'
      553 |         DECLARE_TRACE(name, PARAMS(proto), PARAMS(args))
          |                             ^~~~~~
-   fs/nfs/nfs4trace.h:2428:1: note: in expansion of macro 'TRACE_EVENT'
-    2428 | TRACE_EVENT(nfs4_llseek,
+   fs/nfs/nfs4trace.h:2543:1: note: in expansion of macro 'TRACE_EVENT'
+    2543 | TRACE_EVENT(nfs4_copy,
          | ^~~~~~~~~~~
-   fs/nfs/nfs4trace.h:2429:17: note: in expansion of macro 'TP_PROTO'
-    2429 |                 TP_PROTO(
+   fs/nfs/nfs4trace.h:2544:17: note: in expansion of macro 'TP_PROTO'
+    2544 |                 TP_PROTO(
          |                 ^~~~~~~~
    fs/nfs/nfs4proc.c: In function 'nfs4_proc_create_session':
    fs/nfs/nfs4proc.c:9104:19: warning: variable 'ptr' set but not used [-Wunused-but-set-variable]
@@ -657,83 +730,121 @@ All error/warnings (new ones prefixed by >>):
 ..
 
 
-vim +/__traceiter_nfs4_llseek +2436 fs/nfs/nfs4trace.h
+vim +/__traceiter_nfs4_copy +2553 fs/nfs/nfs4trace.h
 
-  2422	
-  2423	#define show_llseek_mode(what)			\
-  2424		__print_symbolic(what,			\
-  2425			{ NFS4_CONTENT_DATA, "DATA" },		\
-  2426			{ NFS4_CONTENT_HOLE, "HOLE" })
-  2427	
-> 2428	TRACE_EVENT(nfs4_llseek,
-  2429			TP_PROTO(
-  2430				const struct inode *inode,
-> 2431				const struct nfs42_seek_args *args,
-> 2432				const struct nfs42_seek_res *res,
-  2433				int error
-  2434			),
-  2435	
-> 2436			TP_ARGS(inode, args, res, error),
-  2437	
-  2438			TP_STRUCT__entry(
-  2439				__field(unsigned long, error)
-  2440				__field(u32, fhandle)
-  2441				__field(u32, fileid)
-  2442				__field(dev_t, dev)
-  2443				__field(int, stateid_seq)
-  2444				__field(u32, stateid_hash)
-  2445				__field(loff_t, offset_s)
-  2446				__field(u32, what)
-  2447				__field(loff_t, offset_r)
-  2448				__field(u32, eof)
-  2449			),
-  2450	
-  2451			TP_fast_assign(
-  2452				const struct nfs_inode *nfsi = NFS_I(inode);
-  2453				const struct nfs_fh *fh = args->sa_fh;
-  2454	
-  2455				__entry->fileid = nfsi->fileid;
-  2456				__entry->dev = inode->i_sb->s_dev;
-  2457				__entry->fhandle = nfs_fhandle_hash(fh);
-  2458				__entry->offset_s = args->sa_offset;
-  2459				__entry->error = error < 0 ? -error : 0;
-  2460				__entry->stateid_seq =
-  2461					be32_to_cpu(args->sa_stateid.seqid);
-  2462				__entry->stateid_hash =
-  2463					nfs_stateid_hash(&args->sa_stateid);
-  2464				__entry->what = args->sa_what;
-  2465				__entry->offset_r = error < 0 ? 0 : res->sr_offset;
-  2466				__entry->eof = error < 0 ? 0 : res->sr_eof;
-  2467			),
-  2468	
-  2469			TP_printk(
-  2470				"error=%ld (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-  2471				"stateid=%d:0x%08x offset_s=%llu what=%s "
-  2472				"offset_r=%llu eof=%u",
-  2473				-__entry->error,
-  2474				show_nfsv4_errors(__entry->error),
-  2475				MAJOR(__entry->dev), MINOR(__entry->dev),
-  2476				(unsigned long long)__entry->fileid,
-  2477				__entry->fhandle,
-  2478				__entry->stateid_seq, __entry->stateid_hash,
-  2479				__entry->offset_s,
-  2480				show_llseek_mode(__entry->what),
-  2481				__entry->offset_r,
-  2482				__entry->eof
-  2483			)
-  2484	);
-  2485	
+  2542	
+  2543	TRACE_EVENT(nfs4_copy,
+  2544			TP_PROTO(
+  2545				const struct inode *src_inode,
+  2546				const struct inode *dst_inode,
+> 2547				const struct nfs42_copy_args *args,
+> 2548				const struct nfs42_copy_res *res,
+  2549				const struct nl4_server *nss,
+  2550				int error
+  2551			),
+  2552	
+> 2553			TP_ARGS(src_inode, dst_inode, args, res, nss, error),
+  2554	
+  2555			TP_STRUCT__entry(
+  2556				__field(unsigned long, error)
+  2557				__field(u32, src_fhandle)
+  2558				__field(u32, src_fileid)
+  2559				__field(u32, dst_fhandle)
+  2560				__field(u32, dst_fileid)
+  2561				__field(dev_t, src_dev)
+  2562				__field(dev_t, dst_dev)
+  2563				__field(int, src_stateid_seq)
+  2564				__field(u32, src_stateid_hash)
+  2565				__field(int, dst_stateid_seq)
+  2566				__field(u32, dst_stateid_hash)
+  2567				__field(loff_t, src_offset)
+  2568				__field(loff_t, dst_offset)
+  2569				__field(bool, sync)
+  2570				__field(loff_t, len)
+  2571				__field(int, res_stateid_seq)
+  2572				__field(u32, res_stateid_hash)
+  2573				__field(loff_t, res_count)
+  2574				__field(bool, res_sync)
+  2575				__field(bool, res_cons)
+  2576				__field(bool, intra)
+  2577			),
+  2578	
+  2579			TP_fast_assign(
+  2580				const struct nfs_inode *src_nfsi = NFS_I(src_inode);
+  2581				const struct nfs_inode *dst_nfsi = NFS_I(dst_inode);
+  2582	
+  2583				__entry->src_fileid = src_nfsi->fileid;
+  2584				__entry->src_dev = src_inode->i_sb->s_dev;
+  2585				__entry->src_fhandle = nfs_fhandle_hash(args->src_fh);
+  2586				__entry->src_offset = args->src_pos;
+  2587				__entry->dst_fileid = dst_nfsi->fileid;
+  2588				__entry->dst_dev = dst_inode->i_sb->s_dev;
+  2589				__entry->dst_fhandle = nfs_fhandle_hash(args->dst_fh);
+  2590				__entry->dst_offset = args->dst_pos;
+  2591				__entry->len = args->count;
+  2592				__entry->sync = args->sync;
+  2593				__entry->error = error < 0 ? -error : 0;
+  2594				__entry->src_stateid_seq =
+  2595					be32_to_cpu(args->src_stateid.seqid);
+  2596				__entry->src_stateid_hash =
+  2597					nfs_stateid_hash(&args->src_stateid);
+  2598				__entry->dst_stateid_seq =
+  2599					be32_to_cpu(args->dst_stateid.seqid);
+  2600				__entry->dst_stateid_hash =
+  2601					nfs_stateid_hash(&args->dst_stateid);
+  2602				__entry->res_stateid_seq = error < 0 ? 0 :
+  2603					be32_to_cpu(res->write_res.stateid.seqid);
+  2604				__entry->res_stateid_hash = error < 0 ? 0 :
+  2605					nfs_stateid_hash(&res->write_res.stateid);
+  2606				__entry->res_count = error < 0 ? 0 :
+  2607					res->write_res.count;
+  2608				__entry->res_sync = error < 0 ? 0 :
+  2609					res->synchronous;
+  2610				__entry->res_cons = error < 0 ? 0 :
+  2611					res->consecutive;
+  2612				__entry->intra = nss ? 0 : 1;
+  2613			),
+  2614	
+  2615			TP_printk(
+  2616				"error=%ld (%s) intra=%d src_fileid=%02x:%02x:%llu "
+  2617				"src_fhandle=0x%08x dst_fileid=%02x:%02x:%llu "
+  2618				"dst_fhandle=0x%08x src_stateid=%d:0x%08x "
+  2619				"dst_stateid=%d:0x%08x src_offset=%llu dst_offset=%llu "
+  2620				"len=%llu sync=%d cb_stateid=%d:0x%08x res_sync=%d "
+  2621				"res_cons=%d res_count=%llu",
+  2622				-__entry->error,
+  2623				show_nfsv4_errors(__entry->error),
+  2624				__entry->intra,
+  2625				MAJOR(__entry->src_dev), MINOR(__entry->src_dev),
+  2626				(unsigned long long)__entry->src_fileid,
+  2627				__entry->src_fhandle,
+  2628				MAJOR(__entry->dst_dev), MINOR(__entry->dst_dev),
+  2629				(unsigned long long)__entry->dst_fileid,
+  2630				__entry->dst_fhandle,
+  2631				__entry->src_stateid_seq, __entry->src_stateid_hash,
+  2632				__entry->dst_stateid_seq, __entry->dst_stateid_hash,
+  2633				__entry->src_offset,
+  2634				__entry->dst_offset,
+  2635				__entry->len,
+  2636				__entry->sync,
+  2637				__entry->res_stateid_seq, __entry->res_stateid_hash,
+  2638				__entry->res_sync,
+  2639				__entry->res_cons,
+  2640				__entry->res_count
+  2641			)
+  2642	);
+  2643	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---ZGiS0Q5IWpPtfppv
+--VS++wcV0S1rZb1Fb
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICK7weGEAAy5jb25maWcAlDxdc9u2su/9FZr25ZyH9lh24rT3jh8gEhRRkQQNkJLsF47i
+H4sICFxMeWEAAy5jb25maWcAlDxdc9u2su/9FZr25ZyH9lh24rT3jh8gEhRRkQQNkJLsF47i
 qKmnjpWR5Z7m399dgB8AuJRzO9OJubsAFovFfgHQTz/8NGOvp8OX3enxYff09G32ef+8P+5O
 +0+zPx6f9v87i+WskNWMx6L6BYizx+fXf/7z8PLXt9n7X+bvf7n4+fjwbrbaH5/3T7Po8PzH
 4+dXaP54eP7hpx8iWSRi2URRs+ZKC1k0Fd9WNz9i85+fsKefPz88zP61jKJ/z+bzXy5/ufjR
@@ -1400,4 +1511,4 @@ OJMXIUHByV3nfAJ3neLClAl36V2BExDTdS3gSPfANepaLRmRXYTv4kpA4Cb8+ayKFFs6cdVY
 g18US69nje6UPGAu8wQEhsoDkzyjHG5qyBkoRQciC3NsWcdYtqfx5appcLmnZdLl/snrKYdz
 pbktb5Pxbg3/D5YZEsqdUgIA
 
---ZGiS0Q5IWpPtfppv--
+--VS++wcV0S1rZb1Fb--
