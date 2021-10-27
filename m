@@ -2,78 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B513843BF5D
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Oct 2021 04:13:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 112EF43BFB7
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Oct 2021 04:23:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238096AbhJ0CPp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Oct 2021 22:15:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236520AbhJ0CPo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Oct 2021 22:15:44 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11B1BC061220
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Oct 2021 19:13:20 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id v10so291917pjr.3
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Oct 2021 19:13:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=EG9Nsjl+Eip141PWF+gaBUl1KOWYkVWkt1OXOEZnqtckn0jrX24eTk8UDRzdanWsjC
-         9yBSsvsQJotknvFKA9EQtwg6TYbjKuB2B6TeA9FpEjuXwfev4spJrb1stelnldSVU05K
-         9gDfyUx9hxjQgXAvSoidRv5/L36SOUZnVcgUrTM9tbDStJSMOyaTK7co10bTYaslWL6G
-         KEMVQ2/UtsJj5Uhe9sAzIbF0NlCUlFDN4b2Grw7CXZCthk66H6QQ7cfpSD7pU+Ay2+Nj
-         Q0QsrrBll0HvZsVEqt8NPrW+XN3K+0FC+b/X0b9b+fJud88cD9kdaePkDe4cxFsTTvDp
-         HYfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to;
-        bh=+OhYyTKGmAf5Y61RBhMkXMlQv+hOjswu4u5NSWPSjMI=;
-        b=4d8Fya43nSyB1CEyTf3B3WccnuBQttpiEYwHfCyszYBvAMrw3RflShV4IQqaHLbm77
-         RNaXkB2U60t5qk9JgggmwW4UalOXL1KLZPcZ4dtxB+AMFEaVhEKzQ6a1n0pNKbH/6lQJ
-         k5pu0NYxd+ZAEGL7PvGNTEFreFBIupEJb40V+mJYSDswoxLFMS3tzAtKHUMU99oYGEkG
-         S8SF8ftblWnRBVYnGJyaZLwxWGOJGXhPVezv2BOzIWcsl3fwvtEwh2IRR5U/CX7spnSX
-         Gq0o3Ch9lrJKGSEXU//McsDT7mwxvDLpvrnue7ihAT3YqkShduellccfs4yN+ZhF8w/n
-         AHug==
-X-Gm-Message-State: AOAM531loqxcoKJjdL4prZKiUZfZHEzTbgMprmrbkNX1CBWt9UnqviV1
-        T1RYC0cioL5QxQc3J7ulUHQkkGrnMdRnbK/WWRo=
-X-Google-Smtp-Source: ABdhPJzwOfSEFC+ZhBFJFbO7cJJvi3wx28mFQEmwNZmSp0wIuhE8auS2ZQZdxDxGrsxbdq14UKAhXuffjqSVAtd5Ev8=
-X-Received: by 2002:a17:90b:1c02:: with SMTP id oc2mr2782635pjb.52.1635300799308;
- Tue, 26 Oct 2021 19:13:19 -0700 (PDT)
+        id S234446AbhJ0CZw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Oct 2021 22:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S233224AbhJ0CZw (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Tue, 26 Oct 2021 22:25:52 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 582976023F
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Oct 2021 02:23:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1635301407;
+        bh=I57E4xwAH+YHfUM/5xdtEvjz9DkMaQIDdLO70onULnc=;
+        h=From:To:Subject:Date:From;
+        b=SBJCT0zWMWJMOV5JK7b9utc93GppS8xLSYOSBYIMIhXuz7FKZ3DIQjjfeeyYux3cB
+         jTIsQN9lm/nXHnkkG95CY1ana5mAcO6pRXbaVNieUjB0HbFlzWzzYMKyFFo0lEgAHg
+         uc0IY2lcRYQKBzKz7Q5/SruZKVq6LRojRuJpAq1GUANB+B/XWlnk4vlvMKvhzkKlSX
+         o2qGnFyA7hfH34DeNaOm2jjJSQ3wuTvv1yI/F4fFGq3yJ2EWs/b4dbEn3SbikvaVIa
+         h5RLMIIfZzzGXNNdiwDLhHuhpZzD4I6Z/NX/Z+87uQmVLOjfJLxDbsl9W0mZLU7NSY
+         hvKzHmsoJLEzg==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Fix a regression in nfs_set_open_stateid_locked()
+Date:   Tue, 26 Oct 2021 22:17:21 -0400
+Message-Id: <20211027021721.58935-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Sender: officedeskofgeneral0@gmail.com
-Received: by 2002:a17:90b:4c11:0:0:0:0 with HTTP; Tue, 26 Oct 2021 19:13:18
- -0700 (PDT)
-From:   "Mr. Mustafa Ali." <muafalia@gmail.com>
-Date:   Wed, 27 Oct 2021 03:13:18 +0100
-X-Google-Sender-Auth: -ap4vRnh22PsKG1mBvTJWKrUl0o
-Message-ID: <CAL=mczUC43H-jvBwTepLgLaj-FOUBZcvw1kdD=RpB4-U2MPw0g@mail.gmail.com>
-Subject: Greetings Dear Friend.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello Friend,
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-This message might meet you in utmost surprise. However, It's just my
-urgent need for a foreign partner that made me contact you for this
-transaction. I assured you of honesty and reliability to champion this
-business opportunity. I am a banker by profession in Turkey, and
-currently holding the post of Auditor in Standard Chartered Bank.
+If we already hold open state on the client, yet the server gives us a
+completely different stateid to the one we already hold, then we
+currently treat it as if it were an out-of-sequence update, and wait for
+5 seconds for other updates to come in.
+This commit fixes the behaviour so that we immediately start processing
+of the new stateid, and then leave it to the call to
+nfs4_test_and_free_stateid() to decide what to do with the old stateid.
 
-I have the opportunity of transferring the leftover funds ($15 Million
-Dollars) of one of my clients who died along with his entire family in
-a crisis in Myanmar Asia. I am inviting you for a business deal where
-this money can be shared between us if you agree to my business
-proposal.
+Fixes: b4868b44c562 ("NFSv4: Wait for stateid updates after CLOSE/OPEN_DOWNGRADE")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4proc.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Further details of the transfer will be forwarded to you immediately
-after I receive your return letter.
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1c485edf1d07..1c94f54cab58 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -1604,15 +1604,16 @@ static bool nfs_stateid_is_sequential(struct nfs4_state *state,
+ {
+ 	if (test_bit(NFS_OPEN_STATE, &state->flags)) {
+ 		/* The common case - we're updating to a new sequence number */
+-		if (nfs4_stateid_match_other(stateid, &state->open_stateid) &&
+-			nfs4_stateid_is_next(&state->open_stateid, stateid)) {
+-			return true;
++		if (nfs4_stateid_match_other(stateid, &state->open_stateid)) {
++			if (nfs4_stateid_is_next(&state->open_stateid, stateid))
++				return true;
++			return false;
+ 		}
+-	} else {
+-		/* This is the first OPEN in this generation */
+-		if (stateid->seqid == cpu_to_be32(1))
+-			return true;
++		/* The server returned a new stateid */
+ 	}
++	/* This is the first OPEN in this generation */
++	if (stateid->seqid == cpu_to_be32(1))
++		return true;
+ 	return false;
+ }
+ 
+-- 
+2.31.1
 
-Best Regards,
-Mr. Mustafa Ali.
-mustafa.ali@rahroco.com
