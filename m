@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5590843E863
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Oct 2021 20:35:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4611F43E864
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Oct 2021 20:35:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231169AbhJ1Sh5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Oct 2021 14:37:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60294 "EHLO
+        id S231203AbhJ1Sh6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Oct 2021 14:37:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231133AbhJ1Sh4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Oct 2021 14:37:56 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E31C061570
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:29 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id h20so6757508qko.13
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:29 -0700 (PDT)
+        with ESMTP id S231133AbhJ1Sh5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Oct 2021 14:37:57 -0400
+Received: from mail-qk1-x734.google.com (mail-qk1-x734.google.com [IPv6:2607:f8b0:4864:20::734])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 200CDC061570
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:30 -0700 (PDT)
+Received: by mail-qk1-x734.google.com with SMTP id x123so6783073qke.7
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=pW5tXAaUICrJYuOC0zQmWxczkFbo232hvbVpGkDJMBo=;
-        b=Ix4Xcdu8u4q9RNOhQXq7WcB7YjAHdxg+riugvpEjI7OVrlyBeNrTrT7jh3F0cZxEC5
-         wuW0WtB/b1CJw8ba5BIFjnxq3J3Up8/2DnYUl4VghF12MP2vaslsmxKJxgj55LKR9j2F
-         XfL+HjTRHMUL5FHk0toewTtpVLFNLTAwU1ls8lMFhKiKtKd4MVLk0WSaqY9o4Ojn9Xss
-         HNEbwYvz1KMmCmAlQDbAl0eXZsmRtaC7rxCrmHJDd/PD/9eqgA2W9PU0Jtvv1l3fMzck
-         mI+G2HuxCJYCy7P2OFQuo6HRsm/v8P7V9+RMwChCRpqqIGFqyGiNmUm603ZIO72SLHeD
-         48mw==
+        bh=BNF21b7o9pVNnDZqS+hsA6oGp6Q443tS/9+eQ33iVAg=;
+        b=H7Ynb4vyBnPCPnciZXnf5C5iEd9GCVhF6LvGwUHGM00if6IMoz/KPOQinC4W24FwDA
+         TCBwE8K5URDkxBtn53WQLHRNJbISgZ+1iBF2Lg2VYN3f0WP95dpfEZ7Td/LxSpfWXhLc
+         6TDtCBNek4NxDGRRyw4UYpv2125SypiLbx21g/OHTR2Qe9qfBPXaWmYr4xUJjaR4DQXR
+         IK47afifxFtX9Fk4vy2us7LnCIKac4TSr6Islc4xxaP0CtTMK+Pt4Bcxj5rZsGUtzfce
+         l7I1Si/V8nTPnS0JySCPQNFGuOy1DfJ24mprqXaP5Lnsegdp2oGX0Ge0bp8wOzXbv5p1
+         2hCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=pW5tXAaUICrJYuOC0zQmWxczkFbo232hvbVpGkDJMBo=;
-        b=Gl/YJt+0JJWXC9qe7aL9MRve/vUM/aNNzJk5GpRnrqtVLDbklIjwuMkfbrHZxFdxIB
-         B94BizFqaqZ6ORpkKUhxXGpFkeq2/ypa5fpQbWXGDCGxINwOb+/mmA+tJUQkYNujkaqs
-         m2jxOn1GYhikk0PfavmK0GD2XvGxADBuPCcTS1ecsMwIx0mXFhtLe8XxaWrUTXo8UdVN
-         RhZxrvWCuCjVX9kBIQRXecRtwk1xctqnzlD/skIm9ij1lb8pf0YUo/+2VsGB9zurE92w
-         Pa4NsyWqFBpQlKant/3beYvSQ5IAqVMUB0UjBNiXl9WFvX6fx7scik/IGX+hDyUxi2fo
-         s4kw==
-X-Gm-Message-State: AOAM5334+/l3tWzaGhR2MDU64yEHVCdOek2sSu1NWn+3krusawJRx04Y
-        I0eHDX4yFUtEtmBZk+uXm5Q=
-X-Google-Smtp-Source: ABdhPJyfMwavi2EAKfj8gMDm0/TypPmrkWv7WUbPditw94VeG3WNScc2kTDUs3SFn7EAuCD15Jwbqg==
-X-Received: by 2002:a05:620a:578:: with SMTP id p24mr5142990qkp.237.1635446128096;
-        Thu, 28 Oct 2021 11:35:28 -0700 (PDT)
+        bh=BNF21b7o9pVNnDZqS+hsA6oGp6Q443tS/9+eQ33iVAg=;
+        b=MXI8qH6hi5HNCRzJlSvFXFd8WkaUM3due24lsqVDmv0LdP7fAyoaAhgUL52r/4SUsy
+         eTiYSUbiyJAGGp/+29fysm93h+id+k71TnvpDJ+CtuK9e8iKI6kbDHDF92Caz/O3lPlp
+         SI7qRef4eGh1LfpU2y8IZH3wRlyXCnYkH3DXi4P4uGmz2NOCOsaTCHEYVbuTkqAABG2r
+         P+HjMP8Hsna/2En4u8bv9jWNAZ4o7RBx5DI2JPvN2VVZZ4QI7SunXyRMw7FztTfcevDo
+         nhx/H6vvV451WV1D9z/NIq/34TMk4xGVbpSCpTAvp9QR4j+WILKkbMSchz6fawy6mOBG
+         lxKQ==
+X-Gm-Message-State: AOAM533pw7Ta+2I1sul6I+o1Sy9H3yp0zjAhpWWhN/QRrjCM07Q/C3k2
+        7E7DVGLs891ZweU+lKuAQGAFDlcTc0Y=
+X-Google-Smtp-Source: ABdhPJyb6g/7pnmvhzhC+kyZJ2bJjNfGLNSsto73AOg73bbQsNS0vNKd6DU+Vw1zFDE5RVRcm5jk8A==
+X-Received: by 2002:a37:9a88:: with SMTP id c130mr5205606qke.494.1635446129050;
+        Thu, 28 Oct 2021 11:35:29 -0700 (PDT)
 Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id q13sm2556476qkl.7.2021.10.28.11.35.27
+        by smtp.gmail.com with ESMTPSA id q13sm2556476qkl.7.2021.10.28.11.35.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Oct 2021 11:35:27 -0700 (PDT)
+        Thu, 28 Oct 2021 11:35:28 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
 From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v5 7/9] rpcctl: Add a command for changing xprt state
-Date:   Thu, 28 Oct 2021 14:35:17 -0400
-Message-Id: <20211028183519.160772-8-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v5 8/9] rpcctl: Add a man page
+Date:   Thu, 28 Oct 2021 14:35:18 -0400
+Message-Id: <20211028183519.160772-9-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211028183519.160772-1-Anna.Schumaker@Netapp.com>
 References: <20211028183519.160772-1-Anna.Schumaker@Netapp.com>
@@ -66,81 +66,106 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-We can set it offline or online, or we can remove an xprt. The kernel
-only supports removing offlined transports, so we make sure to set the
-state to "offline" before sending the remove command.
-
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- tools/rpcctl/xprt.py | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ tools/rpcctl/rpcctl.man | 88 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
+ create mode 100644 tools/rpcctl/rpcctl.man
 
-diff --git a/tools/rpcctl/xprt.py b/tools/rpcctl/xprt.py
-index 1201140ce5af..92db756c8374 100644
---- a/tools/rpcctl/xprt.py
-+++ b/tools/rpcctl/xprt.py
-@@ -9,9 +9,7 @@ class Xprt:
-         self.info = sysfs.read_info_file(path / "xprt_info")
-         self.dstaddr = sysfs.read_addr_file(path / "dstaddr")
-         self.srcaddr = sysfs.read_addr_file(path / "srcaddr")
--
--        with open(path / "xprt_state") as f:
--            self.state = ','.join(f.readline().split()[1:])
-+        self.read_state()
- 
-     def __lt__(self, rhs):
-         return self.id < rhs.id
-@@ -35,9 +33,16 @@ class Xprt:
-                f"backlog {self.info['backlog_q_len']}, tasks {self.info['tasks_queuelen']}"
- 
-     def __str__(self):
-+        if not self.path.exists():
-+            return f"xprt {self.id}: has been removed" % self.id
-         return "\n".join([self._xprt(), self._src_reqs(),
-                           self._cong_slots(), self._queues() ])
- 
-+    def read_state(self):
-+        if self.path.exists():
-+            with open(self.path / "xprt_state") as f:
-+                self.state = ','.join(f.readline().split()[1:])
-+
-     def small_str(self):
-         main = " [main]" if self.info.get("main_xprt") else ""
-         return f"xprt {self.id}: {self.type}, {self.dstaddr}{main}"
-@@ -46,6 +51,11 @@ class Xprt:
-         resolved = socket.gethostbyname(newaddr)
-         self.dstaddr = sysfs.write_addr_file(self.path / "dstaddr", resolved)
- 
-+    def set_state(self, state):
-+        with open(self.path / "xprt_state", 'w') as f:
-+            f.write(state)
-+        self.read_state()
-+
- 
- def list_xprts(args):
-     xprts = [ Xprt(f) for f in (sysfs.SUNRPC / "xprt-switches").glob("**/xprt-*") ]
-@@ -65,6 +75,13 @@ def set_xprt_property(args):
-     try:
-         if args.dstaddr != None:
-             xprt.set_dstaddr(args.dstaddr[0])
-+        if args.offline:
-+            xprt.set_state("offline")
-+        elif args.online:
-+            xprt.set_state("online")
-+        elif args.remove:
-+            xprt.set_state("offline")
-+            xprt.set_state("remove")
-         print(xprt)
-     except Exception as e:
-         print(e)
-@@ -78,4 +95,7 @@ def add_command(subparser):
-     parser = subparser.add_parser("set", help="Set an xprt property")
-     parser.add_argument("--id", metavar="ID", nargs=1, type=int, required=True, help="Id of a specific xprt to modify")
-     parser.add_argument("--dstaddr", metavar="dstaddr", nargs=1, type=str, help="New dstaddr to set")
-+    parser.add_argument("--offline", action="store_true", help="Set an xprt offline")
-+    parser.add_argument("--online", action="store_true", help="Set an offline xprt back online")
-+    parser.add_argument("--remove", action="store_true", help="Remove an xprt")
-     parser.set_defaults(func=set_xprt_property)
+diff --git a/tools/rpcctl/rpcctl.man b/tools/rpcctl/rpcctl.man
+new file mode 100644
+index 000000000000..5da608aa1907
+--- /dev/null
++++ b/tools/rpcctl/rpcctl.man
+@@ -0,0 +1,88 @@
++.\"
++.\" rpcctl(8)
++.\"
++.TH rpcctl 8 "22 Oct 2021"
++.SH NAME
++rpcctl \- Displays SunRPC connection information
++.SH SYNOPSIS
++.B rpcctl
++.RB [ \-h | \-\-help ]
++.P
++.B rpcctl client
++.RB [ \-h | \-\-help ]
++.RB [ \--id
++.IR ID ]
++.P
++.B rpcctl switch
++.RB [ \-h | \-\-help ]
++.RB [ \--id
++.IR ID ]
++.P
++.B rpcctl switch set
++.RB [ \-h | \-\-help ]
++.RB [ \--id
++.IR ID ]
++.RB [ \--dstaddr
++.IR dstaddr]
++.P
++.B rpcctl xprt
++.RB [ \-h | \-\-help ]
++.RB [ \--id
++.IR ID ]
++.P
++.B rpcctl xprt set
++.RB [ \-h | \-\-help ]
++.RB [ \--id
++.IR ID ]
++.RB [ \--dstaddr
++.IR dstaddr]
++.RB [ --offline ]
++.RB [ --online ]
++.RB [ --remove ]
++.P
++.SH DESCRIPTION
++.RB "The " rpcctl " command displays information collected in the SunRPC sysfs files about the system's SunRPC objects.
++.P
++.SS Objects
++Valid
++.BR rpcctl (8)
++objects are:
++.IP "\fBclient\fP"
++Display information about this system's RPC clients.
++.IP "\fBswitch\fP"
++Display information about groups of transports.
++.IP "\fBxprt\fP"
++Display detailed information about each transport that exists on the system.
++.SH OPTIONS
++.SS Options valid for all objects
++.TP
++.B \-h, \-\-help
++Show the help message and exit
++.TP
++.B \-\-id \fIID
++Set or display properties for the object with the given
++.IR ID.
++This option is mandatory for setting properties.
++.SS Options specific to the `switch set` sub-command
++.TP
++.B \-\-dstaddr \fIdstaddr
++Change the destination address of all transports in the switch to
++.IR dstaddr
++.SS Options specific to the `xprt set` sub-command
++.TP
++.B \-\-dstaddr \fIdstaddr
++Change the destination address of this specific transport to
++.TP
++.B \-\-offline
++Change the transport state from online to offline
++.TP
++.B \-\-online
++Change the transport state from offline to online
++.TP
++.B \-\-remove
++Removes the transport from the switch. Note that "main" transports cannot be removed.
++.SH DIRECTORY
++.TP
++.B /sys/kernel/sunrpc/
++.SH AUTHOR
++Anna Schumaker <Anna.Schumaker@Netapp.com>
 -- 
 2.33.1
 
