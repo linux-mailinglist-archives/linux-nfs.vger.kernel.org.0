@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EB9CE43E85D
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Oct 2021 20:35:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F29943E85E
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Oct 2021 20:35:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbhJ1Shv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Oct 2021 14:37:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
+        id S230466AbhJ1Shw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Oct 2021 14:37:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230466AbhJ1Shu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Oct 2021 14:37:50 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6874DC061570
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:23 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id t40so6665194qtc.6
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:23 -0700 (PDT)
+        with ESMTP id S231133AbhJ1Shv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Oct 2021 14:37:51 -0400
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4F8C061570
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:24 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id d6so4695500qvb.3
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Oct 2021 11:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZVRoHY9JRFv/k1KUIzj+9BKZjG6smOlHa2LwVuVuuP4=;
-        b=gQwQH/AWEZDGimIdAkVKMDnLdJMEQzzhkKVsX33YiJI6sFbImtyyb9mkpzNd9DgLI0
-         /PkxusnllDjyhIV0BraDWjb94KLot6iY3C3MTT+jHB7Zy+QaT2k304jYdoaR8yBlK9qk
-         1biq7YGPxMSyFRkD3ZJXYYKqZcRrAzuLBBDOiMKQxyROuMQNyJXBbbNz5kOjEoAks8f+
-         g6j0OI1o+E1NKX/lNMPvXC9g43PrpFDaxGX9OA8mzlzx9YMRXr/OQK+tH5CUw9zMPNSx
-         603f/LdXAsvHHNZzDnujyM56vI6QZZxpRIbN6KfbbJyeU1rhTVY4k0BR5lP6SJtky7Au
-         uY8g==
+        bh=1fl2PgIKZ7d+0Ni8x29K1OlM/fBaw+yfeZ9qVart6y0=;
+        b=XGUDpUJA7FsyAmKiUuqDjL1hdQA0ndiaDQ4FpWcPuHde6iyaWFGRltcIEZwu1IOm/U
+         LxGP4v2X1WolBi61tNDrltvMfC9jcuxzXBNdEJWNed3WVIkL2YpTLPeehjOU2uTujhok
+         YR8lPjx2o0gHlCLqHNkkBYBe8XOvFLLoAj1OgEm1WBs1z13iA1rHMHVlGOEUKxNh1HjM
+         rAY41C+khpLW8g6hw4ol0PWW8OJPX7k3aRoiZewgoG9Yy47Ovxe4+xDqAw0+I412WSTm
+         h/vAuGIVZGS150XST5YMgzbXCBlY9xVTroNeRdazvEAFf4u8YU/HhVHEBl7hSytXbIrs
+         rqdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=ZVRoHY9JRFv/k1KUIzj+9BKZjG6smOlHa2LwVuVuuP4=;
-        b=G8JXrv/ZU4u1D94FFI+h/Y7GPnGmAGyUuMHRmTrR19UQvh2UyuRLE0T2FQVLWDm6oO
-         xp5LEnqMNNY6+knRmFN/+k/e1SlbXYqbEGNLQKmVVi0/ncZLt4YloChKmsTLzNEP0/ut
-         hKFtOna2EOO27GHRi+De28YCAYCL5CoZB3fdcbYmZM08TZUH+G9T4HK2EFTLHaDXMp7g
-         pEirazkNAOZs7Em5O73X4BBSn/eKnkoW7y/TXJN8TsL4Nj7gtMsJXZmCt0dkKdIop1/i
-         8bj3MQJ3MqtzZrYTrGaulZkdWafN4uLalU9tdtRmTPNcXrrr9LNVYQ3MDThbjY1ocgZf
-         ajFg==
-X-Gm-Message-State: AOAM530Fobaicoyyg5NstR4w3QBzUY4PhgHAim2GuIJwUC9z5iCkX6Br
-        b+yfx29NDIGvoNBYgfPuQ3R3/dJgk1M=
-X-Google-Smtp-Source: ABdhPJw7YSuw2xSvY8lKs5ygRIsAEQgCtt8nVI/yIkODKrkHPZ0zhFLlH5A6iYLN+aw7ffZwwrbjRg==
-X-Received: by 2002:ac8:1e06:: with SMTP id n6mr6523660qtl.365.1635446122323;
-        Thu, 28 Oct 2021 11:35:22 -0700 (PDT)
+        bh=1fl2PgIKZ7d+0Ni8x29K1OlM/fBaw+yfeZ9qVart6y0=;
+        b=7JvfsqmMlLG6/+f7mKxBkT7dajPCumCMZv1uopo2oI2EbcO86U13EWFxHqqgZjjTa7
+         d+1I4HHvyelEMGszCxdMQPeiDzRCP3Ey4Ynye1stUxfyWbtTuqFNTYFT7tGxHh8oIOkt
+         uDYnrWfpBJUFzx0UHWaPXGPAslT5veBgGb9WWFtVPzzqG4dL2ncuN3KNHzKAAnE42aoa
+         N9KQw4NNnyItT67KMf6JbY9KKMgnombRgQhaPi05us2t88F1xdzivJXSdWbSE19+PonF
+         YSIdJFyn1v9+GA/dyMVD58ntpThvbeLCpNu5+0vwozo0pbH0Ovz63J2EZCVpfS718Pzf
+         1wgQ==
+X-Gm-Message-State: AOAM531joYa0LW158/ugT73gC8eSAOHPMa03YBm8fHmEksOCrUiGu58E
+        /AzLH26xfs5UfB7c8L602x4=
+X-Google-Smtp-Source: ABdhPJye8XDDOLQi//xlp+2/xgCWp5HuiH7VJ84M8CjXL6PQqSaf1S+0Lxq3KJX7aa1p4U+8jYyZLw==
+X-Received: by 2002:a05:6214:226e:: with SMTP id gs14mr5860713qvb.8.1635446123108;
+        Thu, 28 Oct 2021 11:35:23 -0700 (PDT)
 Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id q13sm2556476qkl.7.2021.10.28.11.35.21
+        by smtp.gmail.com with ESMTPSA id q13sm2556476qkl.7.2021.10.28.11.35.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 28 Oct 2021 11:35:22 -0700 (PDT)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
@@ -52,9 +52,9 @@ From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v5 1/9] rpcctl: Add a rpcctl.py tool
-Date:   Thu, 28 Oct 2021 14:35:11 -0400
-Message-Id: <20211028183519.160772-2-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v5 2/9] rpcctl: Add a command for printing xprt switch information
+Date:   Thu, 28 Oct 2021 14:35:12 -0400
+Message-Id: <20211028183519.160772-3-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.1
 In-Reply-To: <20211028183519.160772-1-Anna.Schumaker@Netapp.com>
 References: <20211028183519.160772-1-Anna.Schumaker@Netapp.com>
@@ -66,73 +66,129 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-This will be used to print and manipulate the sunrpc sysfs directory
-files. Running without arguments prints both usage information and the
-location of the sunrpc sysfs directory.
+This combines the information found in xprt_switch_info with a subset of
+the information found in each xprt subdirectory
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- .gitignore             |  2 ++
- tools/rpcctl/rpcctl.py | 13 +++++++++++++
- tools/rpcctl/sysfs.py  | 19 +++++++++++++++++++
- 3 files changed, 34 insertions(+)
- create mode 100755 tools/rpcctl/rpcctl.py
- create mode 100644 tools/rpcctl/sysfs.py
+v5: Clean up how the XprtSwitch __str__() function works
+    Rename the subcommand to simply "switch"
+---
+ tools/rpcctl/rpcctl.py |  6 ++++++
+ tools/rpcctl/switch.py | 35 +++++++++++++++++++++++++++++++++++
+ tools/rpcctl/sysfs.py  | 18 ++++++++++++++++++
+ tools/rpcctl/xprt.py   | 14 ++++++++++++++
+ 4 files changed, 73 insertions(+)
+ create mode 100644 tools/rpcctl/switch.py
+ create mode 100644 tools/rpcctl/xprt.py
 
-diff --git a/.gitignore b/.gitignore
-index c89d1cd2583d..a476bd20bc3b 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -84,3 +84,5 @@ systemd/rpc-gssd.service
- cscope.*
- # generic editor backup et al
- *~
-+# python bytecode
-+__pycache__
 diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-new file mode 100755
-index 000000000000..8ff59ea9e81b
---- /dev/null
+index 8ff59ea9e81b..90efcbed7ac8 100755
+--- a/tools/rpcctl/rpcctl.py
 +++ b/tools/rpcctl/rpcctl.py
-@@ -0,0 +1,13 @@
-+#!/usr/bin/python
-+import argparse
+@@ -9,5 +9,11 @@ def show_small_help(args):
+     print("sunrpc dir:", sysfs.SUNRPC)
+ parser.set_defaults(func=show_small_help)
+ 
++
++import switch
++subparser = parser.add_subparsers(title="commands")
++switch.add_command(subparser)
++
++
+ args = parser.parse_args()
+ args.func(args)
+diff --git a/tools/rpcctl/switch.py b/tools/rpcctl/switch.py
+new file mode 100644
+index 000000000000..c96e70b7710f
+--- /dev/null
++++ b/tools/rpcctl/switch.py
+@@ -0,0 +1,35 @@
++import sysfs
++import xprt
++
++class XprtSwitch:
++    def __init__(self, path):
++        self.path = path
++        self.id = int(path.stem.split("-")[1])
++        self.info = sysfs.read_info_file(path / "xprt_switch_info")
++
++        self.xprts = [ xprt.Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
++        self.xprts.sort()
++
++    def __lt__(self, rhs):
++        return self.path < rhs.path
++
++    def __str__(self):
++        switch =  f"switch {self.id}: " \
++                  f"xprts {self.info['num_xprts']}, " \
++                  f"active {self.info['num_active']}, " \
++                  f"queue {self.info['queue_len']}"
++        xprts = [ f"	{x.small_str()}" for x in self.xprts ]
++        return "\n".join([ switch ] + xprts)
++
++
++def list_xprt_switches(args):
++    switches = [ XprtSwitch(f) for f in (sysfs.SUNRPC / "xprt-switches").iterdir() ]
++    switches.sort()
++    for xs in switches:
++        if args.id == None or xs.id == args.id[0]:
++            print(xs)
++
++def add_command(subparser):
++    parser = subparser.add_parser("switch", help="Commands for xprt switches")
++    parser.add_argument("--id", metavar="ID", nargs=1, type=int, help="Id of a specific xprt-switch to show")
++    parser.set_defaults(func=list_xprt_switches)
+diff --git a/tools/rpcctl/sysfs.py b/tools/rpcctl/sysfs.py
+index c9d477063585..c05d2d591175 100644
+--- a/tools/rpcctl/sysfs.py
++++ b/tools/rpcctl/sysfs.py
+@@ -1,3 +1,4 @@
++import collections
+ import pathlib
+ import re
+ import sys
+@@ -17,3 +18,20 @@ SUNRPC = pathlib.Path(MOUNT) / "kernel" / "sunrpc"
+ if not SUNRPC.is_dir():
+     print("ERROR: sysfs does not have sunrpc directory")
+     sys.exit(1)
++
++
++def read_addr_file(path):
++    try:
++        with open(path, 'r') as f:
++            return f.readline().strip()
++    except:
++        return "(enoent)"
++
++def read_info_file(path):
++    res = collections.defaultdict(int)
++    try:
++        with open(path) as info:
++            lines = [ l.split("=", 1) for l in info if "=" in l ]
++            res.update({ key:int(val.strip()) for (key, val) in lines })
++    finally:
++        return res
+diff --git a/tools/rpcctl/xprt.py b/tools/rpcctl/xprt.py
+new file mode 100644
+index 000000000000..62859a23ea4d
+--- /dev/null
++++ b/tools/rpcctl/xprt.py
+@@ -0,0 +1,14 @@
 +import sysfs
 +
-+parser = argparse.ArgumentParser()
++class Xprt:
++    def __init__(self, path):
++        self.path = path
++        self.id = int(path.stem.split("-")[1])
++        self.type = path.stem.split("-")[2]
++        self.dstaddr = sysfs.read_addr_file(path / "dstaddr")
 +
-+def show_small_help(args):
-+    parser.print_usage()
-+    print("sunrpc dir:", sysfs.SUNRPC)
-+parser.set_defaults(func=show_small_help)
++    def __lt__(self, rhs):
++        return self.id < rhs.id
 +
-+args = parser.parse_args()
-+args.func(args)
-diff --git a/tools/rpcctl/sysfs.py b/tools/rpcctl/sysfs.py
-new file mode 100644
-index 000000000000..c9d477063585
---- /dev/null
-+++ b/tools/rpcctl/sysfs.py
-@@ -0,0 +1,19 @@
-+import pathlib
-+import re
-+import sys
-+
-+MOUNT = None
-+with open("/proc/mounts", 'r') as f:
-+    for line in f:
-+        if re.search("^sys ", line):
-+            MOUNT = line.split()[1]
-+            break
-+
-+if MOUNT == None:
-+    print("ERROR: sysfs is not mounted")
-+    sys.exit(1)
-+
-+SUNRPC = pathlib.Path(MOUNT) / "kernel" / "sunrpc"
-+if not SUNRPC.is_dir():
-+    print("ERROR: sysfs does not have sunrpc directory")
-+    sys.exit(1)
++    def small_str(self):
++        return f"xprt {self.id}: {self.type}, {self.dstaddr}"
 -- 
 2.33.1
 
