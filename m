@@ -2,86 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BC50C43FE6A
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Oct 2021 16:26:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C47743FE99
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Oct 2021 16:41:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231390AbhJ2O3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Oct 2021 10:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44948 "EHLO
+        id S229635AbhJ2OoQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Oct 2021 10:44:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230036AbhJ2O3I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Oct 2021 10:29:08 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEC4BC061570
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Oct 2021 07:26:39 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 0A9466EC3; Fri, 29 Oct 2021 10:26:39 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0A9466EC3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1635517599;
-        bh=7IS5IiHh+KLxByOcdBTqT7IqkY0CK5tRvK+LRZqyqo0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bUxzS85+9U/olSNX3jLwPCmHf+PyrQ8KxabtBNaFlCZshU5KaQe5HApICbjFQMokl
-         T+tWqfxN0GaxmI04UClyXwC3tDDipKDc+nuphSYyJFgku0JPVYMlD6HA+v5D/gUD/b
-         f0orlGNQKFvvGXIYKOf6NVo1VQ4/72izVTb8JmV0=
-Date:   Fri, 29 Oct 2021 10:26:39 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/1] Enable inter server to server copies on a export
-Message-ID: <20211029142639.GC19967@fieldses.org>
-References: <20211028144851.644018-1-steved@redhat.com>
- <20211029134534.GA19967@fieldses.org>
+        with ESMTP id S229549AbhJ2OoP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Oct 2021 10:44:15 -0400
+Received: from mail-yb1-xb33.google.com (mail-yb1-xb33.google.com [IPv6:2607:f8b0:4864:20::b33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64AF9C061766
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Oct 2021 07:41:47 -0700 (PDT)
+Received: by mail-yb1-xb33.google.com with SMTP id 131so13229409ybc.7
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Oct 2021 07:41:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
+        b=MKETgg8TbLibza8/nA8sbUC5M+zq2jx0NGdLIkKtkILQSgvTmqBD74MvWqIjfMBTAp
+         9+ckPAMgAubFGwQ9Wja7n6Tg79nmAHwyUpqNNHVDIH3KYzJIiQ8FeauyQeDB5Xet+6bV
+         PKLhC4AucgHiM/9FXmkxbMBx2KF7LC9LdYlQOxwRLX/JYmwYLjDfU/rcHKHRtHMnhhiC
+         m5cdHUTGgaDeL4rF1WZsBxwKD5MRou42IdkoStcWgyjztUlal20kAEzxx8NSHiMXMCMG
+         gNpHRiI96Kbl2tTg9W5cmyOBMXEmrLMS7J8FeDzjlRcmNiby/2YJGIlGvd7QpE5pVYuM
+         fvyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=NWKMZ//AyFWFbpFk6FF66OtPadVuan7a1ybZS8hGNR8=;
+        b=VEY3PkN9WHKgTYRpOO4sMlV+x+t+1zJZEQyd0U5LH8TD3Ej2BigpUko2gQyCrhYV0h
+         ITJvKWZO1nta+lEnVCkgT7QDOnQthtZ3ngOGCLBRAKG2INPHVJXMJXK8ux2HwGAPLlXk
+         ELVmrSPfEQovFjCsB602Fz75uVTr8A7+dq9beA1Ac/4fOfO3Lt1fehthc6YtDjXYRfNG
+         rqH74IK7hcLkuErsj1T3kb911Twp+wP0ilv7Ry0x7yqEPwdUdNeC2z+TFfKI/BGDG61J
+         ucMqXi1RpHml/vkuEzHQ5RpJtNAiz5HY9ZoXBM/OAFqi+hSi+4OLmhPOFOAH6gZlBD0B
+         219Q==
+X-Gm-Message-State: AOAM531TeiTPtVdT3Wr0+vQ5wDbjjpKHrwV90/16kldys17p4dezyo+D
+        zWHUfLEEWksS/FNk2H0KXqVaa2swjBWhqiliQX0=
+X-Google-Smtp-Source: ABdhPJwlz9Cy19xfD52gtnmBjMaG0dxo2FThrZ1yTFJOfVIB3e//WHaMQZEoZNdlcYCVEkeNXZBxRWtvVERJmrEYN7o=
+X-Received: by 2002:a25:ba0f:: with SMTP id t15mr12857218ybg.62.1635518506293;
+ Fri, 29 Oct 2021 07:41:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211029134534.GA19967@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: by 2002:a05:7110:700c:b0:fa:6b8d:fe70 with HTTP; Fri, 29 Oct 2021
+ 07:41:45 -0700 (PDT)
+Reply-To: uchennailobitenone@gmail.com
+From:   uhenna <tochiuju11@gmail.com>
+Date:   Fri, 29 Oct 2021 07:41:45 -0700
+Message-ID: <CA+6axKtzZweDpC2m0ECn_Epy5xOKRroM-eJn7rcEZL+j2eBzYQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 09:45:34AM -0400, bfields wrote:
-> On Thu, Oct 28, 2021 at 10:48:50AM -0400, Steve Dickson wrote:
-> > This kernel patch and an upcoming nfs-utils patch
-> > adds a new export option 's2sc' which will allow
-> > inter server to server copies.
-> 
-> They're already allowed by a module option.  Why is an export option
-> better?  And why should it be set on the destination server and not the
-> source server?
-> 
-> Really, first I think we should try to identify what the problem is that
-> we're trying to solve.
+Attention Please,
 
-I guess we're thinking: we expect server-to-server copy to be a win in
-some cases, but not others.
+I am Bar. uchenna ilobi ,  How are you, I hope you are fine and
+healthy? This is to inform you that i have concluded the transaction
+successfully with the help of a new partner from Venezuela and now the
+fund has been transferred to Venezuela into the bank account of the
+new partner.
 
-What would those cases look like?
+Meanwhile, I have decided to compensate you with the sum of
+US$350,000.00 (thiree Hundred and Fifty Thousand United States
+Dollars) due to your past effort, though you disappointed me along the
+line. But nevertheless I am very happy for the successful ending of
+the transaction without any problem and that is the reason why i have
+decided to compensate you with the sum of US$350,000.00 so that you
+will share the joy with me.
 
-Say you've got a client "C" and two servers, "S" and "T", and C is
-copying a file from S to T.
+I advise you to contact my secretary for Atm Card of US$350.000.00,
+which I kept for you. Contact him now without any delay.
 
-I'd expect bandwidth of the traditional read-write-loop copy to be the
-minimum of the network bandwidth between S and C, and the network
-bandwidth between C and T.  Are there common cases were the S-to-T
-bandwidth would be significantly less than both of those?
+Name: solomon brandy
 
-My guess would've been that that's relatively unusual.  So as a first
-pass, just turning on COPY unconditionally doesn't seem so bad.
+Email:solomonbrandyfiveone@gmail.com
 
-I know you're thinking about in cases where S and T are connected by a
-high-performance network not necessarily available to C.
+Kindly reconfirm to him the following below information:
 
-In that case, we know we want to use server-to-server copy for copies
-between S and T.  But is it necessarily a problem to also use it for
-copies between some other server and T?  Also, does knowing the export
-containing the destination file on T really tell you whether or not the
-copy will be coming from S and not from some other server?
+Your full name_________________________
+Your address__________________________
+Your country___________________________
+Your age______________________________
+Your occupation________________________
+Your cell Phone number______________________
 
-I'd think the bigger issue in that case is figuring out how to configure
-S so that it returns the right IP address in the cnr_source_server field
-of the COPY_NOTIFY reply.  Currently we return address that the client
-sent the COPY_NOTIFY, and I don't know if that's correct for that case.
+Note that if you did not send him the above information complete, he
+will not release the Atm card to you because he has to be sure that it
+is you. Ask him to send you the total sum of ($350.000.00 ) Atm card,
+which I kept for you.
 
---b.
+Best regards,
+
+Mr. uchenna ilobi
