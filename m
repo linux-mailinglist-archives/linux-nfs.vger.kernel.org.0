@@ -2,124 +2,206 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 657A343FDD0
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Oct 2021 16:03:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 865C143FDE5
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Oct 2021 16:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231702AbhJ2OFu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Oct 2021 10:05:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20609 "EHLO
+        id S231537AbhJ2OMC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Oct 2021 10:12:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:36152 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231397AbhJ2OFt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Oct 2021 10:05:49 -0400
+        by vger.kernel.org with ESMTP id S231566AbhJ2OLu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Oct 2021 10:11:50 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635516200;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UAO5hlBNRIsi6HHTbgauN8V1YNxASqG4MUTjtXwDRGE=;
-        b=d1DQDsd9nT2TCE3YUj9d+x8z4wVDn6FeGSMX0HU6Nex6Pmp/ZD/791Kt1w6YvgDrtAMRIs
-        Br0NwIPRMiu6K+/7DEF7Wkovk6UjOrRnelN8tqW55nOt2jtgyRiBVTbG94rTJ64X2W8UWu
-        pDIMYrFmcCc2ihdn4Apt1gsGJ4ZWzBw=
+        s=mimecast20190719; t=1635516561;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=gK1f2sX/Nqb18ZiigNY6DjbIw0YlFX88ZN/1XEK2ndo=;
+        b=dfogpFOxUahqotctDOk6zy5BJ53wjIorRE1FWUHEJmGKDLnqoPGxjb8qii/zxsJZz2EXcw
+        BifR/lsQroY+e9mpaEUv7SCbxzQxlq2voAgLKSKbmyqJO0iOx/tXfXHjKQkGNdJTU7FRrT
+        Tzft7GjbpDaS1AH7RBoi8PsWzD86nvM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-6oVbE3goM2C8LodwzHbb4Q-1; Fri, 29 Oct 2021 10:03:15 -0400
-X-MC-Unique: 6oVbE3goM2C8LodwzHbb4Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-450-0LrvafprOD6VQdhjqIpV_A-1; Fri, 29 Oct 2021 10:09:16 -0400
+X-MC-Unique: 0LrvafprOD6VQdhjqIpV_A-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C248236304;
-        Fri, 29 Oct 2021 14:03:11 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2858C80668B;
+        Fri, 29 Oct 2021 14:09:14 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5727F79452;
-        Fri, 29 Oct 2021 14:02:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EDED860936;
+        Fri, 29 Oct 2021 14:08:54 +0000 (UTC)
+Subject: [PATCH v4 00/10] fscache: Replace and remove old I/O API
 From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <163363944839.1980952.3311507543724895463.stgit@warthog.procyon.org.uk>
-References: <163363944839.1980952.3311507543724895463.stgit@warthog.procyon.org.uk> <163363935000.1980952.15279841414072653108.stgit@warthog.procyon.org.uk>
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+To:     Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        linux-cifs@vger.kernel.org, linux-cachefs@redhat.com,
+        Dominique Martinet <asmadeus@codewreck.org>
+Cc:     v9fs-developer@lists.sourceforge.net, linux-cifs@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Shyam Prasad N <nspmangalore@gmail.com>, dhowells@redhat.com,
         Jeff Layton <jlayton@redhat.com>,
         Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 07/10] cifs: (untested) Move to using the alternate fallback fscache I/O API
+Date:   Fri, 29 Oct 2021 15:08:54 +0100
+Message-ID: <163551653404.1877519.12363794970541005441.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1876664.1635516156.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Fri, 29 Oct 2021 15:02:36 +0100
-Message-ID: <1876665.1635516156@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
 
-> Move cifs/smb to using the alternate fallback fscache I/O API instead of
-> the old upstream I/O API as that is about to be deleted.  The alternate =
-API
-> will also be deleted at some point in the future as it's dangerous (as i=
-s
-> the old API) and can lead to data corruption if the backing filesystem c=
-an
-> insert/remove bridging blocks of zeros into its extent list[1].
-> =
+Here's a set of patches that removes the old fscache I/O API by the following
+means:
 
-> The alternate API reads and writes pages synchronously, with the intenti=
-on
-> of allowing removal of the operation management framework and thence the
-> object management framework from fscache.
-> =
+ (1) A simple fallback API is added that can read or write a single page
+     synchronously.  The functions for this have "fallback" in their names
+     as they have to be removed at some point.
 
-> The preferred change would be to use the netfs lib, but the new I/O API =
-can
-> be used directly.  It's just that as the cache now needs to track data f=
-or
-> itself, caching blocks may exceed page size...
-> =
+ (2) An implementation of this is provided in cachefiles.  It creates a kiocb
+     to use DIO to the backing file rather than calling readpage on the
+     backing filesystem page and then snooping the page wait queue.
 
-> Changes
-> =3D=3D=3D=3D=3D=3D=3D
-> ver #2:
->   - Changed "deprecated" to "fallback" in the new function names[2].
+ (3) NFS is switched to use the fallback API.
 
-I've managed to test this now.  There was a bug in it, fixed by the follow=
-ing
-incremental change:
+ (4) CIFS is switched to use the fallback API also for the moment.
 
---- a/fs/cifs/fscache.h
-+++ b/fs/cifs/fscache.h
-@@ -75,7 +75,7 @@ static inline int cifs_readpage_from_fscache(struct inod=
-e *inode,
- static inline void cifs_readpage_to_fscache(struct inode *inode,
- 					    struct page *page)
- {
--	if (PageFsCache(page))
-+	if (CIFS_I(inode)->fscache)
- 		__cifs_readpage_to_fscache(inode, page);
- }
- =
+ (5) 9P is switched to using netfslib.
 
+ (6) The old I/O API is removed from fscache and the page snooping
+     implementation is removed from cachefiles.
 
-It shouldn't be using PageFsCache() here.  That's only used to indicate th=
-at
-an async DIO is in progress on the page, but since we're using the synchro=
-nous
-fallback API, that should not happen.  Also, it's no longer used to indica=
-te
-that a page is being cached and trigger writeback that way.
+The reasons for doing this are:
+
+ (A) Using a kiocb to do asynchronous DIO from/to the pages of the backing
+     file is now a possibility that didn't exist when cachefiles was created.
+     This is much simpler than the snooping mechanism with a proper callback
+     path and it also requires fewer copies and less memory.
+
+ (B) We have to stop using bmap() or SEEK_DATA/SEEK_HOLE to work out what
+     blocks are present in the backing file is dangerous and can lead to data
+     corruption if the backing filesystem can insert or remove blocks of zeros
+     arbitrarily in order to optimise its extent list[1].
+
+     Whilst this patchset doesn't fix that yet, it does simplify the code and
+     the fix for that can be made in a subsequent patchset.
+
+ (C) In order to fix (B), the cache will need to keep track itself of what
+     data is present.  To make this easier to manage, the intention is to
+     increase the cache block granularity to, say, 256KiB - importantly, a
+     size that will span multiple pages - which means the single-page
+     interface will have to go away.  netfslib is designed to deal with
+     that on behalf of a filesystem, though a filesystem could use raw
+     cache calls instead and manage things itself.
+
+These patches can be found also on:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-remove-old-io
 
 David
+
+Changes
+=======
+ver #4:
+  - Fixed cifs to not check PG_fscache before writing a page to the cache.
+
+ver #3:
+  - Added a patch to make fscache_cookie_enabled() handle a NULL cookie.
+  - Added a patch to make cachefiles_prepare_read() indicate that the
+    caller should fill a block with zeros if it's beyond EOF rather than
+    risking the read get marked invalid and trigger a warning.
+  - Merged fixes from Dave Wysochanski for the NFS patch[4].
+
+ver #2:
+  - Changed "deprecated" to "fallback" in the new function names[2].
+  - Cleaned up some kernel test robot warnings[3].
+  - Made the netfs read helpers use NETFS_READ_HOLE_* flags.
+
+
+References
+==========
+
+Link: https://lore.kernel.org/r/YO17ZNOcq+9PajfQ@mit.edu [1]
+Link: https://lore.kernel.org/r/CAHk-=wiVK+1CyEjW8u71zVPK8msea=qPpznX35gnX+s8sXnJTg@mail.gmail.com/ [2]
+Link: https://lore.kernel.org/r/202109150420.QX7dDzSE-lkp@intel.com/ [3]
+Link: https://listman.redhat.com/archives/linux-cachefs/2021-October/msg00011.html [4]
+
+Older postings
+==============
+
+Link: https://lore.kernel.org/r/163162767601.438332.9017034724960075707.stgit@warthog.procyon.org.uk/ # rfc v1
+Link: https://lore.kernel.org/r/163189104510.2509237.10805032055807259087.stgit@warthog.procyon.org.uk/ # rfc v2
+
+Note that some of this was seen in previous patchsets too:
+
+# [RFC PATCH 00/61] fscache, cachefiles: Rewrite the I/O interface in terms of kiocb/iov_iter
+Link: https://lore.kernel.org/r/158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk/
+# [PATCH 00/14] fscache: Rewrite 1: Disable and clean in preparation for rewrite
+Link: https://lore.kernel.org/r/159465766378.1376105.11619976251039287525.stgit@warthog.procyon.org.uk/
+# [RFC PATCH 00/76] fscache: Modernisation
+Link: https://lore.kernel.org/r/160588455242.3465195.3214733858273019178.stgit@warthog.procyon.org.uk/
+
+---
+David Howells (10):
+      fscache: Generalise the ->begin_read_operation method
+      fscache: Fix fscache_cookie_enabled() to handle NULL cookie
+      cachefiles: Always indicate we should fill a post-EOF page with zeros
+      fscache: Implement a fallback I/O interface to replace the old API
+      nfs: Move to using the alternate fallback fscache I/O API
+      9p: Convert to using the netfs helper lib to do reads and caching
+      cifs: Move to using the alternate fallback fscache I/O API
+      fscache: Remove the old I/O API
+      fscache: Remove stats that are no longer used
+      fscache: Update the documentation to reflect I/O API changes
+
+
+ .../filesystems/caching/backend-api.rst       |  138 +--
+ .../filesystems/caching/netfs-api.rst         |  385 +-----
+ fs/9p/Kconfig                                 |    1 +
+ fs/9p/cache.c                                 |  137 ---
+ fs/9p/cache.h                                 |   98 +-
+ fs/9p/v9fs.h                                  |    9 +
+ fs/9p/vfs_addr.c                              |  195 ++-
+ fs/9p/vfs_file.c                              |   21 +-
+ fs/cachefiles/Makefile                        |    1 -
+ fs/cachefiles/interface.c                     |   15 -
+ fs/cachefiles/internal.h                      |   38 -
+ fs/cachefiles/io.c                            |   57 +-
+ fs/cachefiles/main.c                          |    1 -
+ fs/cachefiles/rdwr.c                          |  972 ---------------
+ fs/cifs/file.c                                |   64 +-
+ fs/cifs/fscache.c                             |  105 +-
+ fs/cifs/fscache.h                             |   76 +-
+ fs/fscache/cache.c                            |    6 -
+ fs/fscache/cookie.c                           |   10 -
+ fs/fscache/internal.h                         |   58 +-
+ fs/fscache/io.c                               |  137 ++-
+ fs/fscache/object.c                           |    2 -
+ fs/fscache/page.c                             | 1066 -----------------
+ fs/fscache/stats.c                            |   73 +-
+ fs/netfs/read_helper.c                        |    8 +-
+ fs/nfs/file.c                                 |   14 +-
+ fs/nfs/fscache-index.c                        |   26 -
+ fs/nfs/fscache.c                              |  170 +--
+ fs/nfs/fscache.h                              |   84 +-
+ fs/nfs/read.c                                 |   25 +-
+ fs/nfs/write.c                                |    7 +-
+ include/linux/fscache-cache.h                 |  131 --
+ include/linux/fscache.h                       |  445 ++-----
+ include/linux/netfs.h                         |   17 +-
+ 34 files changed, 569 insertions(+), 4023 deletions(-)
+ delete mode 100644 fs/cachefiles/rdwr.c
+
 
