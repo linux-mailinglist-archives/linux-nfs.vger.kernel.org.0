@@ -2,119 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D8F574409BF
-	for <lists+linux-nfs@lfdr.de>; Sat, 30 Oct 2021 16:54:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1138F440E8E
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Oct 2021 14:08:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230086AbhJ3O5B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 Oct 2021 10:57:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:23094 "EHLO
+        id S229626AbhJaNL1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 31 Oct 2021 09:11:27 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36940 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229993AbhJ3O5B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 Oct 2021 10:57:01 -0400
+        by vger.kernel.org with ESMTP id S230219AbhJaNL0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 31 Oct 2021 09:11:26 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635605670;
+        s=mimecast20190719; t=1635685734;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gfrVunqiJEwzz+TQ9Qe0hb9/y6gm/MNSEewCwtu3OYk=;
-        b=KZLFDlQlJoFRYA8DLnQPz0lWig5LnMiwyy8k+XH0hGP8hawImH8G5ZhLqT3u/qOPupR2ty
-        FifBClgjgVYoAZDieRKlkYz+QmmT8//0wbSWt5rl2Hp0WNucAb6l20kgvS4381tGU8WTAc
-        i7SXrP/p36CjGx3e0Y0RealLcx1ceFY=
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-450-97Iv_dm5N32gjxhhlvRAGw-1; Sat, 30 Oct 2021 10:54:28 -0400
-X-MC-Unique: 97Iv_dm5N32gjxhhlvRAGw-1
-Received: by mail-ed1-f72.google.com with SMTP id q6-20020a056402518600b003dd81fc405eso11810882edd.1
-        for <linux-nfs@vger.kernel.org>; Sat, 30 Oct 2021 07:54:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gfrVunqiJEwzz+TQ9Qe0hb9/y6gm/MNSEewCwtu3OYk=;
-        b=u1O3ReEKKvqfr/kEGkZ+mWmD262cQqox1rwUn9g6tHx+ei3gl3z8VvIfIh9aUp9JZf
-         nFR+1l3sgvI6qAZxgNhPcc7MzTbrth8yTOc6rgy1oDZXjbF3a0GFX9suXSecLT/LUu9G
-         fVaddhT0kjWvpE004Si5STQwNe0K6I26HgNjnfMvkjHfivaK5bWn+Pv9UuNXm/wQ9P3O
-         WPof2attqPN5cMgClPBckYBY/Kvk06SxpHb11KlFI2lYvoQJQstIDwLFnUAjDz/X1ZuN
-         KShAZfvJaqX6ZkhlpkoGEC2FTREx9p27PtLdW+gs5SM4SefQ+Nst4VyjMryTxO/PnWz0
-         7t7A==
-X-Gm-Message-State: AOAM530af97XRn+j1j/1UM0hsclqb1tZ0JwX5wct/ujnz4qQZVEbLULN
-        rdVlnGGX/x9ODPJwEJP0eCrSgAQ3hl+SBT7Fl03bJRT/cvJ/pVCPTeNjG6XZKlC16cb5lUCRBkk
-        /IDXN01QOkNnqf8lActiNPJqWuins4MTI0nAv
-X-Received: by 2002:a05:6402:4245:: with SMTP id g5mr25190844edb.64.1635605667638;
-        Sat, 30 Oct 2021 07:54:27 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJypnIik+leJVO/rMAEBHbWg6THVWlhOr30+7SXtMRXe8noobro7zgctFd00sZt3QISkpKxahPyOOrzsttlGlAA=
-X-Received: by 2002:a05:6402:4245:: with SMTP id g5mr25190819edb.64.1635605667414;
- Sat, 30 Oct 2021 07:54:27 -0700 (PDT)
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=N1hB3q5ZK6TAb5+gzewq1/cgbItPGI6imLRgoRpCUI8=;
+        b=P79Ysk0hRRY9J1PnEn+YuxPTR3ub2D1o+2dLZfYq0dNrZdXdqhwu0eco+iXgWNvCHD4pSm
+        HVxaca3rag7v9eKjMy+LWrbfdoucb4bba+gj0c7X2nTF+1H1Mu4uWBb0kro1gl8jWjomUd
+        L/1Z4lgwNVyhxGfxougzUV+BqLVrKpk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-597-YBjYJgJAPX-5pBLJ0EyppQ-1; Sun, 31 Oct 2021 09:08:50 -0400
+X-MC-Unique: YBjYJgJAPX-5pBLJ0EyppQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4168104ED1A;
+        Sun, 31 Oct 2021 13:08:49 +0000 (UTC)
+Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A497A5F4E1;
+        Sun, 31 Oct 2021 13:08:49 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 3FD5710C30F0; Sun, 31 Oct 2021 09:08:49 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] xprtrdma: Fix a maybe-uninitialized compiler warning
+Date:   Sun, 31 Oct 2021 09:08:49 -0400
+Message-Id: <2b32d41cf6a502918a685447cd749c4b1cb0d16d.1635685588.git.bcodding@redhat.com>
 MIME-Version: 1.0
-References: <20211029200421.65090-1-trondmy@kernel.org>
-In-Reply-To: <20211029200421.65090-1-trondmy@kernel.org>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Sat, 30 Oct 2021 10:53:51 -0400
-Message-ID: <CALF+zOmEbw_fp4wqWJ26K70tNaQVwmEC93pU6WLNUTX23DCPhg@mail.gmail.com>
-Subject: Re: [PATCH 1/4] SUNRPC: Fix races when closing the socket
-To:     trondmy@kernel.org
-Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Oct 29, 2021 at 4:11 PM <trondmy@kernel.org> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> Ensure that we bump the xprt->connect_cookie when we set the
-> XPRT_CLOSE_WAIT flag so that another call to
-> xprt_conditional_disconnect() won't race with the reconnection.
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  net/sunrpc/xprt.c     | 2 ++
->  net/sunrpc/xprtsock.c | 1 +
->  2 files changed, 3 insertions(+)
->
-> diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-> index 48560188e84d..691fe5a682b6 100644
-> --- a/net/sunrpc/xprt.c
-> +++ b/net/sunrpc/xprt.c
-> @@ -735,6 +735,8 @@ static void xprt_autoclose(struct work_struct *work)
->         unsigned int pflags = memalloc_nofs_save();
->
->         trace_xprt_disconnect_auto(xprt);
-> +       xprt->connect_cookie++;
-> +       smp_mb__before_atomic();
->         clear_bit(XPRT_CLOSE_WAIT, &xprt->state);
->         xprt->ops->close(xprt);
->         xprt_release_write(xprt, NULL);
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index 04f1b78bcbca..b18d13479104 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -1134,6 +1134,7 @@ static void xs_run_error_worker(struct sock_xprt *transport, unsigned int nr)
->
->  static void xs_sock_reset_connection_flags(struct rpc_xprt *xprt)
->  {
-> +       xprt->connect_cookie++;
->         smp_mb__before_atomic();
->         clear_bit(XPRT_CLOSE_WAIT, &xprt->state);
->         clear_bit(XPRT_CLOSING, &xprt->state);
-> --
-> 2.31.1
->
+This minor fix-up keeps GCC from complaining that "last' may be used
+uninitialized", which breaks some build workflows that have been running
+with all warnings treated as errors.
 
-Hey Trond,
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ net/sunrpc/xprtrdma/frwr_ops.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Are you working on this "double SYN" problem that Olga / Netapp found
-or something else?
-
-FWIW, late yesterday, I tested these patches on top of your "testing"
-branch and still see "double SYNs".  I have a simple reproducer I'm
-using where I fire off a bunch of "flocks" in parallel then reboot the
-server.
-
-If I can help with testing or something similar, let me know.  I also
-noticed that the tracepoints that would be useful for these reconnect
-problems do not have 'src' TCP port in them, which would be helpful.
-I don't have a patch for that yet but started looking into it.
+diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
+index f700b34a5bfd..de813fa07daa 100644
+--- a/net/sunrpc/xprtrdma/frwr_ops.c
++++ b/net/sunrpc/xprtrdma/frwr_ops.c
+@@ -503,7 +503,7 @@ static void frwr_wc_localinv_wake(struct ib_cq *cq, struct ib_wc *wc)
+  */
+ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ {
+-	struct ib_send_wr *first, **prev, *last;
++	struct ib_send_wr *first, **prev, *last = NULL;
+ 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+ 	const struct ib_send_wr *bad_wr;
+ 	struct rpcrdma_mr *mr;
+@@ -608,7 +608,7 @@ static void frwr_wc_localinv_done(struct ib_cq *cq, struct ib_wc *wc)
+  */
+ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
+ {
+-	struct ib_send_wr *first, *last, **prev;
++	struct ib_send_wr *first, *last = NULL, **prev;
+ 	struct rpcrdma_ep *ep = r_xprt->rx_ep;
+ 	struct rpcrdma_mr *mr;
+ 	int rc;
+-- 
+2.31.1
 
