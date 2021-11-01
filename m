@@ -2,77 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D83C74421A3
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Nov 2021 21:25:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB6034421A9
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Nov 2021 21:28:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbhKAU1u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Nov 2021 16:27:50 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:35255 "EHLO
+        id S229712AbhKAUas (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Nov 2021 16:30:48 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:30576 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229560AbhKAU1u (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Nov 2021 16:27:50 -0400
+        by vger.kernel.org with ESMTP id S229560AbhKAUar (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Nov 2021 16:30:47 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635798316;
+        s=mimecast20190719; t=1635798492;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ob3sIgqP4IvXWqBbNRAUblQNgrtVFSiwlJARNm25Mjg=;
-        b=IberOOyJMeiSpMjFBGg/t8pEW94zyGBr2zgbr1lD86wCSA7EPM4Pb592XGhW9ymwZl6Fst
-        RqtgOUAyzWIvHrkMoZIZumIEqfw8xmOJj+tjJDlY9cAJp1kowExa+UfiwCQiCwnEPGXMrM
-        7c0l69v+vOW0gU5qWLM4KfpkDG1K2LU=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-KLI8lX-YOj-SIkRXRjXtsw-1; Mon, 01 Nov 2021 16:25:15 -0400
-X-MC-Unique: KLI8lX-YOj-SIkRXRjXtsw-1
-Received: by mail-qt1-f199.google.com with SMTP id 90-20020aed3163000000b002a6bd958077so12921119qtg.6
-        for <linux-nfs@vger.kernel.org>; Mon, 01 Nov 2021 13:25:15 -0700 (PDT)
+        bh=52xg5V+afrN7aMS4Vl01yxpXugZhZkBU3cHVpY6lNZk=;
+        b=fDqbF5VtRWmSVCfhYGVx5RLKJTBvNvhylUujLpJCLxBYEQ1T4aG8vDRmFVrXBoAESrqQWT
+        SxUyhC1eL9NxmDjYjtaJLcKuR7zHlCY8VlvRj2ktYiPt2Q67MaKRhRFJAOjCvkHW5p8Qfs
+        UjVrBxz6JTSfacJdjsKf93gcT4uOT6g=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-562-c3NkYI6rOFid2R4-CC7ayw-1; Mon, 01 Nov 2021 16:28:12 -0400
+X-MC-Unique: c3NkYI6rOFid2R4-CC7ayw-1
+Received: by mail-qv1-f72.google.com with SMTP id ib13-20020a0562141c8d00b003958b43bcf2so11337858qvb.1
+        for <linux-nfs@vger.kernel.org>; Mon, 01 Nov 2021 13:28:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=ob3sIgqP4IvXWqBbNRAUblQNgrtVFSiwlJARNm25Mjg=;
-        b=U0YMVJDg24N7tKGYvOFvapyUKXK8GjI3/4jyewSOPEYeHACteBxowlc0M2Nkj2WG4+
-         1qFAHAQ7rlO7juvhL2+L0DcRLmf6feQuj4c+58/Xi255clJm734tBS+8RPZCEugzFhHY
-         G2ssHvpGw7GHJgYhARvGRTujx0B8jjzSq3b2EhArq6GqNiTtW03H5Cv7/uDeOr5DjynS
-         3FbWj9PP0abs2h4ceGzd0LDYZy3SYODPm4nFSBO3mODQ+RNM6oHR4kmSrbdI0wboVsBT
-         uK3DYFOhYZ9lmj09j2kVWqVspGk/TzZdh+nmklD4bpdyXi+hxqjGdes+XZcmrmIOJDc9
-         jCOQ==
-X-Gm-Message-State: AOAM532bsLFotGVrGukS96PbCWRqvKdycFKJuryxlwuPKX6QGRU0QQw2
-        0NXKfIFygKwTusIa1yjeDq/jRUoNHrU5pqlDRYhJd+kAIW50iMZkHK/wVFO5ViwoitjcWNpmoT+
-        M+qboTHtRLEKPo3Vm/DID
-X-Received: by 2002:a05:620a:258a:: with SMTP id x10mr24742116qko.263.1635798314891;
-        Mon, 01 Nov 2021 13:25:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwkJkxXnWseQHlyG639V1zxtJSvXGZtOaqekNR8+u/Ucwgqwb64iHYn6h2crpSGep2N2SBztA==
-X-Received: by 2002:a05:620a:258a:: with SMTP id x10mr24742099qko.263.1635798314661;
-        Mon, 01 Nov 2021 13:25:14 -0700 (PDT)
+        bh=52xg5V+afrN7aMS4Vl01yxpXugZhZkBU3cHVpY6lNZk=;
+        b=VRsPvqphqEGonK/G+9u5vIq/qZYxMJfKGpKpeaXfkaZZOCVSxUKHZYdiIYiFziojKU
+         aVkaUcn1SKnTjrUYG1TteV++Jd0Fg8+B5EtLu2Tp4aJuEcqRZvFSClWSCC0QBUhxYuCj
+         PUJvgmVrMSQTF6a73II8ln50mvcOalq/3puPlpmlPJll9xxFInE/ra6ZAfNu6lqHbO0p
+         pmRcAcZLXcI4uf/IK0nktSZ8nuMSUW81y+fVR6mUPUE/qRI3e9jzQj0wsiJzkqx8av6g
+         5x+HMftv5sGCKvn+JkB3MwgYHyMbYR+E9LDNVybAbfVEmwBBrAIxqd53qDYiM9+yQUAe
+         7x5Q==
+X-Gm-Message-State: AOAM5334wQ+fUMugFvHh8vaD5t0VG+aqIiJY5mqbbzhKP+f/En51UPob
+        sdKAEC5YymZ4t6YqkG7R2U5n0eriXSM0hsv08Tc3uwELyXqs5i6qye18jahBwAa+A5VWo0MKysF
+        kzWTfpxQH1IuBRA1fYgEo
+X-Received: by 2002:a05:6214:2606:: with SMTP id gu6mr27104991qvb.30.1635798491377;
+        Mon, 01 Nov 2021 13:28:11 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzaRvdhgQavt0/7WcQjt/7mb1ZIFw7v/9VBd25GwZHV+2mwpMqIXzyU96Ktw8HrVnV6rI7Ufw==
+X-Received: by 2002:a05:6214:2606:: with SMTP id gu6mr27104979qvb.30.1635798491205;
+        Mon, 01 Nov 2021 13:28:11 -0700 (PDT)
 Received: from [172.31.1.6] ([70.105.245.20])
-        by smtp.gmail.com with ESMTPSA id p15sm5517059qkp.93.2021.11.01.13.25.14
+        by smtp.gmail.com with ESMTPSA id f3sm8924012qtf.55.2021.11.01.13.28.10
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Nov 2021 13:25:14 -0700 (PDT)
-Message-ID: <58571dd3-a711-d720-0411-951a78bd62de@redhat.com>
-Date:   Mon, 1 Nov 2021 16:25:13 -0400
+        Mon, 01 Nov 2021 13:28:10 -0700 (PDT)
+Message-ID: <c66992cb-a063-b226-eb50-7efe61f87ffd@redhat.com>
+Date:   Mon, 1 Nov 2021 16:28:10 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.0
 Subject: Re: [PATCH 0/1] Enable inter server to server copies on a export
 Content-Language: en-US
-To:     "J. Bruce Fields" <bfields@fieldses.org>, dai.ngo@oracle.com
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20211028144851.644018-1-steved@redhat.com>
- <20211029134534.GA19967@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <20211029134534.GA19967@fieldses.org>
  <3e928624-6a7a-8583-7ea4-4eef9c22488e@redhat.com>
  <20211029164058.GE19967@fieldses.org>
  <65b31c94-54aa-5035-546c-75eb0048ba96@redhat.com>
  <20211029191435.GI19967@fieldses.org>
  <ce34c1f2-a0ad-fcb0-99fa-a1ccea8abfd7@redhat.com>
  <20211101154046.GA12965@fieldses.org>
- <badaecc5-2936-4ab7-53e9-fabee0b51493@redhat.com>
- <93c09b22-9439-3404-ed07-e99cbbc12052@oracle.com>
- <20211101192519.GB14427@fieldses.org>
+ <93DAB7C7-D0BB-48BA-9BFF-2821D88582EA@oracle.com>
+ <20211101183916.GA14427@fieldses.org>
+ <79e55dad-7f34-3723-98b0-7c2ef7be9355@redhat.com>
+ <20211101192606.GC14427@fieldses.org>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20211101192519.GB14427@fieldses.org>
+In-Reply-To: <20211101192606.GC14427@fieldses.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -81,69 +82,50 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 11/1/21 15:25, J. Bruce Fields wrote:
-> On Mon, Nov 01, 2021 at 12:22:15PM -0700, dai.ngo@oracle.com wrote:
+On 11/1/21 15:26, Bruce Fields wrote:
+> On Mon, Nov 01, 2021 at 03:10:31PM -0400, Steve Dickson wrote:
 >>
->> On 11/1/21 12:02 PM, Steve Dickson wrote:
+>>
+>> On 11/1/21 14:39, Bruce Fields wrote:
+>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>>> index 91ba391f9b32..14bc3f0b0149 100644
+>>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>>> @@ -3243,6 +3243,19 @@
+>>>   			driver. A non-zero value sets the minimum interval
+>>>   			in seconds between layoutstats transmissions.
+>>> +	nfsd.inter_copy_offload_enable =
+>>> +			[NFSv4.2] When set to 1, the server will support
+>>> +			server-to-server copies for which this server is
+>>> +			the destination of the copy.
+>>> +
+>>> +	nfsd.nfsd4_ssc_umount_timeout =
+>>> +			[NFSv4.2] When used as the destination of a
+>>> +			server-to-server copy, knfsd temporarily mounts
+>>> +			the source server.  It caches the mount in case
+>>> +			it will be needed again, and discards it if not
+>>> +			used for the number of milliseconds specified by
+>>> +			this parameter.
+>>> +
+>>>   	nfsd.nfs4_disable_idmapping=
+>>>   			[NFSv4] When set to the default of '1', the NFSv4
+>>>   			server will return only numeric uids and gids to
+>>> @@ -3250,6 +3263,7 @@
+>>>   			and gids from such clients.  This is intended to ease
+>>>   			migration from NFSv2/v3.
+>>> +
+>>>   	nmi_backtrace.backtrace_idle [KNL]
+>>>   			Dump stacks even of idle CPUs in response to an
+>>>   			NMI stack-backtrace request.
 >>>
->>>
->>> On 11/1/21 11:40, J. Bruce Fields wrote:
->>>> On Mon, Nov 01, 2021 at 11:30:48AM -0400, Steve Dickson wrote:
->>>>> Now that cp will use copy_file_range() when available,
->>>>> what are the steps needed to enable these fast copies?
->>>>
->>>> 1) Make sure client and both servers support NFSv4.2 and
->>>> server-to-server copy.
->>> Something is already figuring this out... The only time
->>> the client sends a COPY_NOTIFY and COPY is when both
->>> mounts are 4.2. I have not looked into but that is what
->>> the network traces are showing.
+>> Interesting... I don't see these in the Linus tree I'm looking at [1]
+>> find Documentation/ -type f  | xargs grep -i inter_copy_offload_enable
 > 
-> Right.  I was thinking what I'd tell an admin who wanted to set up
-> server-to-server copy.  The first thing they'd need to do was check that
-> their clients and servers were new enough.
-Well the code went in over two years ago
-ce0887ac96d35 (Olga Kornievskaia 2019-10-09 11:50:48 -0400 1663)
-so most modern kernel will have the feature.
+> I was suggesting that as a patch.  It's queued up for 5.16 now.
+Sorry I did miss the patch part of the email...
 
-The real question is does the cp command have the
-copy_file_range() support which didn't go in until
-Mar of this year
-* Wed Mar 24 2021 Kamil Dudka <kdudka@redhat.com> - 8.32-20
-- cp: use copy_file_range if available
-
-> 
->>>> 2) Make sure destination server can access (at least for read) any
->>>> exports on the source that you want to be able to copy from.
->>> How can one server know what the other server has exported
->>> or access to??
-> 
-> And the second is to make sure that the destination server is able to
-> read from the source.
-> 
->>>> 3) echo 1 >/sys/module/nfsd/parameters/inter_copy_offload_enable on the
->>>> destination server.
->>> Who would be doing this? Plus this would not survive over a reboot.
->>> An export would as well a /etc/modprobe.d/ file.
->>
->> You can add a line in /etc/modprobe.d/nfsd.conf:
->>
->> options nfsd inter_copy_offload_enable=Y
->>
->> to enable the option.
-Yes... This is what I meant by "a /etc/modprobe.d/ file"
-
-> 
-> Yep, it would be better to document it that way, thanks.
-But the question is who would create this file?
-nfs-utils or the admin?
-
-If it is nfs-utils, it is a global switch unbeknown by
-the admin (but documented). If by the admin, the person
-would know about but it still will not documented.
-
-With a export option, it would be per export switch
-and documented. Just saying... :-)
+Does it make sense to document both nfs and nfsd module
+parameters in a couple man pages?
 
 steved.
 
