@@ -2,253 +2,279 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F4AA442123
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Nov 2021 20:55:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87429442164
+	for <lists+linux-nfs@lfdr.de>; Mon,  1 Nov 2021 21:07:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229725AbhKAT6c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Nov 2021 15:58:32 -0400
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:35812 "EHLO
-        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229596AbhKAT6b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Nov 2021 15:58:31 -0400
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1A1Iu9ho026217;
-        Mon, 1 Nov 2021 19:55:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=CG9v2SG7qpqVFcNUSEgBVbim4kKtb+ohD0rUhD95k94=;
- b=vU38KjYdgYXdwsvF7zrbooDLumU+/I0/A6M+nA6tibX18/2TDVxRwx0vQNM3lKQrE/RV
- Ty3KRyOfEoTeySLfKD6/2I+qn4O9cp94D99y3TvgMt2+yn5Svk1R3HHQPeVz5YgBqAS+
- DFanIUwzs73O5GYSKyj7vKD/DZfkwQqDj5HUjasUWTzxu4iFub8JwzNLB2EpFb1FhUhE
- xq2XAmT5X8RxV0IZ9d2v20RjJgRp53dn08ufVDESNOmlVilYWaclpFNFsTee6xOBoGHG
- Eu0Lbz9H7fQSYDv8YeWoHORjwqfT5vKQ6DQHCZyRnGJuyDT1APhApMqu0sodcGq+QL5q Xg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3c26e8c8tr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Nov 2021 19:55:54 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1A1JkReW049024;
-        Mon, 1 Nov 2021 19:55:53 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
-        by userp3030.oracle.com with ESMTP id 3c27k3ygqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 01 Nov 2021 19:55:53 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kgBmTQ/LQ/5m5XuERsKGkn8If7YCGe55uZMjL9sE7FNesUN8UhtPDoAmydGfDeaZxBVC6HphtkBQyiTpdKgp61SWzAD5rgoVSd11KAtuxoKwzq8zZCYNt7tLfdppbKLVw1FpngOcBvWmlzfkPzmRsDMibeLWLtCf9ul7NmBU9jpvwAgEb9DrP40pdCsXPJg/6pVR6aide0P9PW9IllvJ65wfdWj/V3M6qoU74WCoVwRGN1I/OJu3TkovbmTyx09+zrEObdGp5MnMTAUiEgmcJtrHzjwp3aNDxo+1U+SvLMM8QEmpNrL8D9A/Kqc4ToFHwrWOSH1nGjzbhJG1AOkU5g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CG9v2SG7qpqVFcNUSEgBVbim4kKtb+ohD0rUhD95k94=;
- b=CB6PDCoQmFsV7GK/ydPqwLZvFsXFMobNFSWNc2BMLvRO2Hd9NV3FoYAkgM7S0BoRGdfa0cLJ4gm16UHseGfClVz5wfAy7AVLIWZ5+ANQgyyQr3G5DfQN1rUzuYIqSHlYxSnuvd1MJOfsamIPBQq5tnhZsMlsIlNIg0XuEZbCvF2E/1ovP9mJGH/nDdXGIE//INvCOJ6rf61cGjW0Vu4nZBltQ2kkD5jXSJS3x1rULbYs85BeWpDxHND2PUTzNOwh18mnMia4i7ZW/2k6KaxUiEcTvtm4NS8jv0eXSffHLliAd4c4vK5AlgD1Rz8hUJhpQKx6FiBXvRN85T0dwmeHkg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CG9v2SG7qpqVFcNUSEgBVbim4kKtb+ohD0rUhD95k94=;
- b=LjeEsp6If/bFFPxGIzbyoa2Q6D3+0F4UfZlD/UDP5KtP0s6cTBD/oywNYTMNnEXumSfBC1CXUOllj9EVHIx+wiTEdti2BVXMe9L39++DKWLwokHEyfIoU76JX67MlBRXs/PTKtzf0FWsXSVQtrpvfqKZLg7ko3i5d+pKPOU7hJ8=
-Authentication-Results: fieldses.org; dkim=none (message not signed)
- header.d=none;fieldses.org; dmarc=none action=none header.from=oracle.com;
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BYAPR10MB3032.namprd10.prod.outlook.com (2603:10b6:a03:82::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Mon, 1 Nov
- 2021 19:55:51 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::486b:6917:1bf6:c00e]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::486b:6917:1bf6:c00e%7]) with mapi id 15.20.4649.019; Mon, 1 Nov 2021
- 19:55:51 +0000
-Message-ID: <e49873a0-634c-a954-14f6-af111b5d6adc@oracle.com>
-Date:   Mon, 1 Nov 2021 12:55:46 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.2.1
-Subject: Re: server-to-server copy by default
-Content-Language: en-US
-To:     Bruce Fields <bfields@fieldses.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Steve Dickson <steved@redhat.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-References: <20211020155421.GC597@fieldses.org>
- <18E32DF5-3F1D-4C23-8C2F-A7963103CF8C@oracle.com>
- <CAN-5tyEL4L2GH=-MDGS4qNTcCLRPFCQzfDQjFAVbG7wMKvHxOg@mail.gmail.com>
- <8b1eb564-974d-00b6-397a-d92f301df7d8@oracle.com>
- <20211020202907.GF597@fieldses.org>
- <a009cbf3-cb83-b7c8-aa86-2eee06962b68@oracle.com>
- <20211021140243.GB25711@fieldses.org>
- <78839450-8095-01ae-53e8-f0ebf941b5a5@oracle.com>
- <1500403d-6aa1-3909-d44f-b33c1c1f3ce2@oracle.com>
- <20211101193346.GD14427@fieldses.org>
-From:   dai.ngo@oracle.com
-In-Reply-To: <20211101193346.GD14427@fieldses.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SA0PR11CA0092.namprd11.prod.outlook.com
- (2603:10b6:806:d1::7) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        id S229883AbhKAUJI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Nov 2021 16:09:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:47490 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231836AbhKAUJE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Nov 2021 16:09:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635797188;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=5hS14JrMIxDRXl/y61m81MFkK3srQhCTN7so6aJXY/M=;
+        b=HEnM8+iBSuCyjJ2uLRKynRrITnEkD0DjMmuxZCAFkt1jLZQzfPgEXfT8/T9toTpCUxHdU5
+        OVoB8E4sg0YZtuBuobqw/++iqOEXdLKsoKxfK304ExYW6kdIo71sofa9tGrqDzfTXKcO6R
+        IlKxHzbAiwb9Qu2cXEWlf7bMv4UPz2M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-GJU94SDuPeqIoQwm1eH4GQ-1; Mon, 01 Nov 2021 16:06:26 -0400
+X-MC-Unique: GJU94SDuPeqIoQwm1eH4GQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04B4E5074E;
+        Mon,  1 Nov 2021 20:06:25 +0000 (UTC)
+Received: from aion.usersys.redhat.com (unknown [10.22.9.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A97805C1CF;
+        Mon,  1 Nov 2021 20:06:24 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id 82FD71A0024; Mon,  1 Nov 2021 16:06:23 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/1] Fix nfs4_slot use-after-free by FREE_STATEID
+Date:   Mon,  1 Nov 2021 16:06:22 -0400
+Message-Id: <20211101200623.2635785-1-smayhew@redhat.com>
 MIME-Version: 1.0
-Received: from [10.39.219.222] (138.3.201.30) by SA0PR11CA0092.namprd11.prod.outlook.com (2603:10b6:806:d1::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.14 via Frontend Transport; Mon, 1 Nov 2021 19:55:49 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a50ba012-c134-4303-a8a5-08d99d719b4c
-X-MS-TrafficTypeDiagnostic: BYAPR10MB3032:
-X-Microsoft-Antispam-PRVS: <BYAPR10MB3032B2FA493A23617B74C763878A9@BYAPR10MB3032.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: R59w5DIpOqKcsisVErUUog5wfBFbX0axXOvk8+n1qj/Dl/QrZo3zndtdF01jLQxAZPl6I3sWLO8TwthrQuSHQ0ZrARkjO+dAajwlE8sGogOzfL0cPhrvtakOT/JDmKj8oTe+bvOnzZKRomFNraKja0wxXUB/Or7NuNcNXCG7nBfhjswXpUljiOJ5kmNfAeyqyYi2eZkIA1y66dMbJ2Sok/hG0T3itgcfXRKJa3hsO2DCoEcmWA2WaXa1R+UMJINtsLYjvIzVdqTZT6mGR83vPB15qbvctDpebNC+gC+G6h7b7gfLdQL37ypExc6i/48CmXB9+MUEtnkV/V5MIXUyLmxdsyk7vSnsNa8X0NBZ1KqAq3Y/ihxQij/0u/009+Nbp5ab9nFTeXyDAsoM+eeeqOT/PbRTSQlf2uLEOD/wRnbCR56uvmm6XPb3G3/5Jx9atkRYwcxI2qmLeaYTA7oxEimxhMfxyw6r4Hx4SV3sN2jZXP414Gy7m1A9pfS6hRX4Fme6inY8oe+9JWGo/e1IpyJPumdneewH+x6XjCGqJcySKe2dVTVc4wAsfcFjFXTIpOng93QvqaYaok+zt7t1AxDLSaDPv/4AMtY7W1M7exv43HBOiAmusLO0Js7w5EaFKXp+1zPV45xvxx0gSisl0MzxL24DW9xWoyQJIpfTN+5wXa+5SroMKjMQNLmAVj8SF8WeHErVID6Yuncpagfudg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(31696002)(6666004)(16576012)(4326008)(66946007)(2906002)(6916009)(36756003)(86362001)(8936002)(316002)(54906003)(186003)(956004)(66476007)(66556008)(38100700002)(5660300002)(9686003)(2616005)(6486002)(107886003)(31686004)(26005)(8676002)(83380400001)(53546011)(508600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Zk5lc2VhSk5JaDFqSmZzVmhxUnBmUmYwOThuN080YXNybjZOUFdOUGQ0ZnZv?=
- =?utf-8?B?aTVkckJDSmJzYWs2RTdTcGIxTklIQkVTVFRLOC82WDNDSEY1bHZjQjczek9N?=
- =?utf-8?B?RnlCZ1ZuK3dqZ3ltdDZrZ1NRbFZyRURzd081a25EeXArWDU4cXU1ak84U1Fj?=
- =?utf-8?B?ZS9ldjFrajM2eWFST0pKSGFmcmpKN3hmL1B3VUk4NUVqSU5yOW1KTFAyNVdM?=
- =?utf-8?B?emlzaHFMbVo0eXRwQ2VwbzI0KzJoSkp4TGE5U1dJSjBJQmlRNXhsNXJlNlVm?=
- =?utf-8?B?WnJNVmY4MUVzV3NOS2RsNlpVdkN2bFYycmNsQ2xVQ29OTU5lWEtXbmZnUFQv?=
- =?utf-8?B?eVdmQjFWeXE4enFmMXZXT08zbUJaVC8zbEVENkVzSEhoS3FsTWRIUEwxYUZY?=
- =?utf-8?B?Q2hKV21CbGQyZXZOb1FTRStSZ0pabW5jVVRjN01ITU96WGVKay9UR3VxQ2tq?=
- =?utf-8?B?Q3J4VGlaU1RBRFJZYUpRSW0yNnF1bUduZ08xL1FZdkxDcllHMHF2ZkxxcWZa?=
- =?utf-8?B?WTZMUm55dVJZbm9LeVN6QlJ0M0ZYOHBwdkJHeUh0cG9RNWphTEs5Sk1tYVVx?=
- =?utf-8?B?UkE4cnoxOTJ3b1VJcnZRN3I4V0JDTW5lZlVYc0hwMnozbElMTGJiR3ZiWTEw?=
- =?utf-8?B?T3haQWE1dnZOWVptZ3dJSUQ0T0VBUkVQcmQ4dzh3cE5BZE04Ynp3bW5DaUdQ?=
- =?utf-8?B?dDJDdkxTWVhRNG5RU21JV3JXR2FFTWlWOGRyclAyZUdJTnhnR2VXRFpYbmtj?=
- =?utf-8?B?aEJNUVZ5ekZxblUyK1laVndva0FaTWxDR0R1L0pmdGg2Yjh0OS84WjU5bzBK?=
- =?utf-8?B?RHEzcU1HTkJhS0djOUoyZmVMdnJhaW5jZHI5NUVvYUNwazg5WG5ETU1ERi9V?=
- =?utf-8?B?MHE1SkdCSm1VYjlNa2VRek5vT2VMcXJ5dEkvVmRSRzNtbHVaY3pmcFlPTFMz?=
- =?utf-8?B?ZHpVZEdjY1g2YzdaVjRNTWxGWEZZeDhXQ1Izc3YrbE5ack9HbHNqVlYvM0F6?=
- =?utf-8?B?MVBRZUZVa0h3TkNqMW9NK0hZUzBINHhEaWw1aGkwSjNtYllSL2ZXRGJtZEM2?=
- =?utf-8?B?aWJrU2JvOXZaaE4rUEExclJXd2J4d0t5WjU1NW0rVVdiR1E0RjJjenJ5THZZ?=
- =?utf-8?B?UjFSanVZVjdVRUllQjBYUGYybElOcTZvM0s0R09BV3g0dU4vNnVQOTNsQ2VX?=
- =?utf-8?B?a01OQjhyM2tRV2M2S21DdnV0ck9HdFdJeWgzdFZMNkJ4YlRYMi9mN3NhR2o4?=
- =?utf-8?B?K2xoYVVjQjRiR0JIdXFCbkNoNkhUMUhkNGF6Wm1PUkF0elFNZ0YvK3dtMHJj?=
- =?utf-8?B?dkxrVU1BZ3BPaE5adXNWaXRqa0NJQ1ljbG5kYnVuT204UzFYMGtBZHVZSGN0?=
- =?utf-8?B?bWVhVmJPc210VFhrMDNxN0diMGRLTmVSSnE5YUZxTUJ4WGtTT25pbHVhelYx?=
- =?utf-8?B?TXhHRTJDWTJTQjlzY2JYbkpBOGE0TEhkVnk4R1hZK0tjTElyYndjZWZHSUxC?=
- =?utf-8?B?cFAwVDlnRytrcHNuZEkxbTFGNWpWKzN6M1BrTjg3TDcrRUtiV1JCTHZlRHVj?=
- =?utf-8?B?ZHpVdUdoM2JUUkhjNEFOcGprcnBuVmprRno5WG90aVFQVkJkbDdJYU5CUWtE?=
- =?utf-8?B?VGgzVW1uNVNldWZZS0ZLbTFsYzlZOEdkeGVsME9pMG1sTmRINFQ0QmhmNDg2?=
- =?utf-8?B?M1hiNEFqUkdLKzNUcVU4Qm1mOXcyYUF4WVJKaWdlcXY4MWlhRVQzbnV1VzZu?=
- =?utf-8?B?R0FCK0t2Q3I4dGNlRE42U2ZybE1MQ3BSN3F6Tk9BekZCVjlRQ0JWcGtoejlN?=
- =?utf-8?B?NmxrVUowd1preWkzSkJiVHRRWFkrZTM1cUpUZEdjdithM3RLREtDSDNvaUxL?=
- =?utf-8?B?VW9NR3NIMXYxWkt1ZjVDTWhqT0pJTVJURGQ5SExyYVZ0YUZBbnJWQWF4TnlW?=
- =?utf-8?B?RGlQMGg0SnUrWWRxMjc5d0QrdjlPd20zVjdsNDNTL1BPZEMwT0pBQkZ1bm41?=
- =?utf-8?B?WVdybC92blVzMWpFbFZMRGMrbFlYcEVXcFFhYURKUE1SazVkTFJOd3ZySUwx?=
- =?utf-8?B?ZHQvblArb2xGK1hVNVc3dlh3UU5YV3IyZkJKMmF4NVRTdGpzLytkeTBFRGZK?=
- =?utf-8?B?SmZVT1ovQnY1U2pPaHJzYWdtYXh6NVNQVHdMaGk1TmtvQXRkdTRRN1VHVCt2?=
- =?utf-8?Q?n2HnGXab1CdGUWYTWN0xToA=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a50ba012-c134-4303-a8a5-08d99d719b4c
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Nov 2021 19:55:51.3297
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mqVQDmn/3a7pkRo1n1O5SR475kXsv/UP2PsHTSn4uhK/mAJmo/mUhlAiTb36TQkWhHsfXaZp1+6NRory0ZROVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3032
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10155 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 phishscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2111010105
-X-Proofpoint-GUID: i-RrT-2SoR4_GXBqVxQ5mwRTArKe9lut
-X-Proofpoint-ORIG-GUID: i-RrT-2SoR4_GXBqVxQ5mwRTArKe9lut
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+My attempts at reproducing the nfsd soft-lockups during callback
+processing have been hampered by frequent client panics while testing.
 
-On 11/1/21 12:33 PM, Bruce Fields wrote:
-> On Mon, Nov 01, 2021 at 10:37:11AM -0700, dai.ngo@oracle.com wrote:
->> On 10/21/21 11:34 PM, dai.ngo@oracle.com wrote:
->>> On 10/21/21 7:02 AM, Bruce Fields wrote:
->>>> On Wed, Oct 20, 2021 at 10:00:41PM -0700, dai.ngo@oracle.com wrote:
->>>>> The attack can come from the replies of the source server or requests
->>>> >from the source server to the destination server via the back channel.
->>>>> One of possible attack in the reply is BAD_STATEID which was handled
->>>>> by the client code as mentioned by Olga.
->>>>>
->>>>> Here is the list of NFS requests made from the destination to the
->>>>> source server:
->>>>>
->>>>>           EXCHANGE_ID
->>>>>           CREATE_SESSION
->>>>>           RECLAIM_COMLETE
->>>>>           SEQUENCE
->>>>>           PUTROOTFH
->>>>>           PUTHF
->>>>>           GETFH
->>>>>           GETATTR
->>>>>           READ/READ_PLUS
->>>>>           DESTROY_SESSION
->>>>>           DESTROY_CLIENTID
->>>>>
->>>>> Do you think we should review all replies from these requests to make
->>>>> sure error replies do not cause problems for the destination server?
->>>> That's the exactly the sort of analysis I was curious to see, yes.
->>> I will go through these requests to see if is there is anything that
->>> we need to do to ensure the destination does not react negatively
->>> on the replies.
->> still need to be done.
->>
->>>> (I doubt the PUTROOTFH, PUTFH, GETFH, and GETATTR are really necessary,
->>>> I wonder if there's any way we could just bypass them in our case.  I
->>>> don't know, maybe that's more trouble than it's worth.)
->>> I'll take a look but I think we should avoid modifying the client
->>> code if possible.
->>>
->>>>> same for the back channel ops:
->>>>>
->>>>>           OP_CB_GETATTR
->>>>>           OP_CB_RECALL
->>>>>           OP_CB_LAYOUTRECALL
->>>>>           OP_CB_NOTIFY
->>>>>           OP_CB_PUSH_DELEG
->>>>>           OP_CB_RECALL_ANY
->>>>>           OP_CB_RECALLABLE_OBJ_AVAIL
->>>>>           OP_CB_RECALL_SLOT
->>>>>           OP_CB_SEQUENCE
->>>>>           OP_CB_WANTS_CANCELLED
->>>>>           OP_CB_NOTIFY_LOCK
->>>>>           OP_CB_NOTIFY_DEVICEID
->>>>>           OP_CB_OFFLOAD
->>>> There shouldn't be any need for callbacks at all.  We might be able to
->>>> get away without even setting up a backchannel.  But, yes, if the server
->>>> tries to send one anyway, it'd be good to know we do something
->>>> reasonable.
->>> or do not specify the back channel when creating the session somehow.
->>> I will report back.
->> We can not disable the back channel of the SSC v4.2 mount since it might
->> share the same connection with a regular NFSv4.2 mount from the destination
->> to the source server.
-> Hm.
->
-> Well, now that I think of it, a backchannel is probably required for the
-> SSC case anyway.  (I think CB_RECALL_SLOT is mandatory to support?)
+My reproducer is as follows:
+1. Use netem to add some latency to the connection (without this, the
+panics do not occur):
+# tc qdisc add dev tun0 root netem delay 14ms
+2. Run nfstest_delegation:
+# ./nfstest_delegation --server smayhew-rhel8 --export /export/xfs/smayhew/nfstest --nfsversion 4.2 --sec=krb5 --nconnect 16
 
-I think the back channel is not required. From Sec 13 of RFC 7862:
+The client will typically panic before completing the test run.
 
-    The REQUIRED or OPTIONAL designation for callback operations sent by
-    the server is for both the client and server.  Generally, the client
-    has the option of creating the backchannel and sending the operations
-    on the forechannel that will be a catalyst for the server sending
-    callback operations.  A partial exception is CB_RECALL_SLOT; the only
-    way the client can avoid supporting this operation is by not creating
-    a backchannel.
+This is from a vmcore without SLUB debugging enabled:
 
-I have not found a clean/simple way to not creating the back channel
-for the SSC mount. The reasons is that the SSC mount can be using an
-existing connection of a regular mount to the source server, or a
-regular mount can happen after the SSC mount.
+crash> bt
+PID: 1623   TASK: ffff93fb40294a40  CPU: 0   COMMAND: "kworker/u4:2"
+ #0 [ffffa39f80003d68] machine_kexec at ffffffffac45f898
+ #1 [ffffa39f80003db8] __crash_kexec at ffffffffac59d02d
+ #2 [ffffa39f80003e80] panic at ffffffffacddb718
+ #3 [ffffa39f80003f00] watchdog_timer_fn.cold at ffffffffacde5645
+ #4 [ffffa39f80003f28] __hrtimer_run_queues at ffffffffac57a53a
+ #5 [ffffa39f80003f88] hrtimer_interrupt at ffffffffac57b1ec
+ #6 [ffffa39f80003fd8] __sysvec_apic_timer_interrupt at ffffffffac45687c
+ #7 [ffffa39f80003ff0] sysvec_apic_timer_interrupt at fffffffface24b7d
+--- <IRQ stack> ---
+ #8 [ffffa39f80663cb8] sysvec_apic_timer_interrupt at fffffffface24b7d
+    [exception RIP: unknown or invalid address]
+    RIP: ffff93fb46a0a974  RSP: ffff93fa46924540  RFLAGS: 00001000
+    RAX: ffff93fb41cf5600  RBX: 0000000000000000  RCX: ffff93fb424c0cd0
+    RDX: ffff93fb424c0cd8  RSI: ffffffffc0e3cde0  RDI: 00000000000001aa
+    RBP: fffffffface24b1b   R8: ffff93fa46924540   R9: 0000000000000000
+    R10: ffffffffad000cc2  R11: 0000000000000000  R12: fffffffface23394
+    R13: 0000000000000000  R14: ffff93fb401c8200  R15: ffff93fb40067730
+    ORIG_RAX: 0000000000000007  CS: a58cc9ea96350  SS: 0001
+WARNING: possibly bogus exception frame
+ #9 [ffffa39f80663d78] native_queued_spin_lock_slowpath at ffffffffac54664d
+#10 [ffffa39f80663da0] _raw_spin_lock at fffffffface329da
+#11 [ffffa39f80663da8] rpc_wake_up_first_on_wq at ffffffffc0467341 [sunrpc]
+#12 [ffffa39f80663dd8] nfs41_wake_and_assign_slot at ffffffffc0e3d559 [nfsv4]
+#13 [ffffa39f80663de0] nfs41_release_slot at ffffffffc0e13f77 [nfsv4]
+#14 [ffffa39f80663e18] nfs41_free_stateid_done at ffffffffc0e1c018 [nfsv4]
+#15 [ffffa39f80663e30] rpc_exit_task at ffffffffc045d3b8 [sunrpc]
+#16 [ffffa39f80663e40] __rpc_execute at ffffffffc046708e [sunrpc]
+#17 [ffffa39f80663e70] rpc_async_schedule at ffffffffc04672a9 [sunrpc]
+#18 [ffffa39f80663e88] process_one_work at ffffffffac4fee8b
+#19 [ffffa39f80663ed0] worker_thread at ffffffffac4ff083
+#20 [ffffa39f80663f10] kthread at ffffffffac505dcf
+#21 [ffffa39f80663f50] ret_from_fork at ffffffffac4034f2
 
-It seems that we should support back channel for SSC mount but do a
-due diligent check to make sure the requests come from a trusted source
-and also limit the number of ops supported on the SSC back channel.
+Find the rpc_task so we can find the nfs4_slot:
 
--Dai
+crash> rpc_task.tk_calldata ffff93fb51899e00
+  tk_calldata = 0xffff93fa472b24e0
+crash> nfs_free_stateid_data.res 0xffff93fa472b24e0
+  res = {
+    seq_res = {
+      sr_slot = 0xffff93fa46924540, 
+      sr_timestamp = 0x10017679e, 
+      sr_status = 0x1, 
+      sr_status_flags = 0x0, 
+      sr_highest_slotid = 0x41991000, 
+      sr_target_highest_slotid = 0xffff93fa
+    }, 
+    status = 0x42de63c0
+  }
 
->
-> --b.
+Note the slab has been corrupted ("invalid freepionter" message):
+
+crash> kmem 0xffff93fa46924540
+CACHE             OBJSIZE  ALLOCATED     TOTAL  SLABS  SSIZE  NAME
+ffff93fb40042500       64      13992     14848    232     4k  kmalloc-64
+  SLAB              MEMORY            NODE  TOTAL  ALLOCATED  FREE
+  fffff4adc01a4900  ffff93fa46924000     0     64         24    40
+  FREE / [ALLOCATED]
+kmem: kmalloc-64: slab: fffff4adc01a4900 invalid freepointer: 7a1b527446924a20
+
+      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
+fffff4adc01a4900  6924000 ffff93fb40042500 ffff93fa46924a40  1 fffffc0000200 slab
+
+
+This is from a vmcore captured with "slub_debug=PU,kmalloc-64":
+
+crash> bt
+PID: 8      TASK: ffff8b7d80233180  CPU: 0   COMMAND: "kworker/u4:0"
+ #0 [ffffa7208004bac0] machine_kexec at ffffffffac05f898
+ #1 [ffffa7208004bb10] __crash_kexec at ffffffffac19d02d
+ #2 [ffffa7208004bbd8] crash_kexec at ffffffffac19e234
+ #3 [ffffa7208004bbe0] oops_end at ffffffffac022b47
+ #4 [ffffa7208004bc00] exc_general_protection at ffffffffaca22d09
+ #5 [ffffa7208004bca0] asm_exc_general_protection at ffffffffacc00a0e
+    [exception RIP: nfs4_xdr_dec_free_stateid+0x54]
+    RIP: ffffffffc0e93fb4  RSP: ffffa7208004bd50  RFLAGS: 00010282
+    RAX: 6b6b6b6b6b6b6b6b  RBX: ffff8b7d8551cc90  RCX: 0000000000000000
+    RDX: 0000000000000000  RSI: ffff8b7d89a99f18  RDI: ffff8b7d89a99ef0
+    RBP: ffffa7208004bdd8   R8: 0000000000000000   R9: ffff8b7c84e5e900
+    R10: ffff8b7c82bb8e20  R11: ffff8b7d8994d240  R12: 0000000000000000
+    R13: ffff8b7d8551c300  R14: ffffa7208004bdd8  R15: ffff8b7cb2ea5a80
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #6 [ffffa7208004bd98] gss_unwrap_resp at ffffffffc0640965 [auth_rpcgss]
+ #7 [ffffa7208004bdd0] call_decode at ffffffffc04c4336 [sunrpc]
+ #8 [ffffa7208004be40] __rpc_execute at ffffffffc04dd08e [sunrpc]
+ #9 [ffffa7208004be70] rpc_async_schedule at ffffffffc04dd2a9 [sunrpc]
+#10 [ffffa7208004be88] process_one_work at ffffffffac0fee8b
+#11 [ffffa7208004bed0] worker_thread at ffffffffac0ff083
+#12 [ffffa7208004bf10] kthread at ffffffffac105dcf
+#13 [ffffa7208004bf50] ret_from_fork at ffffffffac0034f2
+crash> rpc_task.tk_calldata ffff8b7d813c1800
+  tk_calldata = 0xffff8b7d8551cc60
+crash> nfs_free_stateid_data.res 0xffff8b7d8551cc60
+  res = {
+    seq_res = {
+      sr_slot = 0xffff8b7d89994d80, 
+      sr_timestamp = 0xffff6ac6, 
+      sr_status = 0x1, 
+      sr_status_flags = 0x0, 
+      sr_highest_slotid = 0x81986c00, 
+      sr_target_highest_slotid = 0xffff8b7d
+    }, 
+    status = 0x8551c120
+  }
+
+Note the slot has been overwritten with POISON_FREE:
+
+crash> nfs4_slot 0xffff8b7d89994d80
+struct nfs4_slot {
+  table = 0x6b6b6b6b6b6b6b6b, 
+  next = 0x6b6b6b6b6b6b6b6b, 
+  generation = 0x6b6b6b6b6b6b6b6b, 
+  slot_nr = 0x6b6b6b6b, 
+  seq_nr = 0x6b6b6b6b, 
+  seq_nr_last_acked = 0x6b6b6b6b, 
+  seq_nr_highest_sent = 0x6b6b6b6b, 
+  privileged = 0x1, 
+  seq_done = 0x1
+}
+
+Let's find the tracking info for who last freed the object:
+
+crash> kmem 0xffff8b7d89994d80
+CACHE             OBJSIZE  ALLOCATED     TOTAL  SLABS  SSIZE  NAME
+ffff8b7d80042500       64      12444     12600    600     8k  kmalloc-64
+  SLAB              MEMORY            NODE  TOTAL  ALLOCATED  FREE
+  ffffceb8c4266500  ffff8b7d89994000     0     21         18     3
+  FREE / [ALLOCATED]
+   ffff8b7d89994d80  
+
+      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
+ffffceb8c4266500 109994000 ffff8b7d80042500 ffff8b7d89994c00  1 17ffffc0010200 slab,head
+
+(See freepointer_outside_object() in mm/slub.c)
+crash> struct kmem_cache.offset,inuse ffff8b7d80042500
+  offset = 0x40
+  inuse = 0x40
+
+(object + s->inuse + sizeof(void *) + sizeof(struct track))
+crash> px 0xffff8b7d89994d80+0x40+0x8+0x98
+$5 = 0xffff8b7d89994e60
+crash> struct track 0xffff8b7d89994e60
+struct track {
+  addr = 0xffffffffc0eadb6f, 
+  addrs = {0xffffffffac3250b1, 0xffffffffc0eadb6f, 0xffffffffc0eabb94, 0xffffffffc0eabfc4, 0xffffffffc0e137e4, 0xffffffffc0e1f62d, 0xffffffffac35f776, 0xffffffffac384081, 0xffffffffac10320f, 0xffffffffac173c92, 0xffffffffac173d29, 0xffffffffaca25822, 0xffffffffaca222f8, 0xffffffffacc0007c, 0x0, 0xffffffffacc0007c}, 
+  cpu = 0x0, 
+  pid = 0x69e, 
+  when = 0xffff6b23
+}
+
+crash> kmem 0xffffffffc0eadb6f
+ffffffffc0eadb6f (T) nfs4_destroy_session+0x7f [nfsv4] /export/xfs/smayhew/linux/fs/nfs/nfs4session.c: 583
+
+   VMAP_AREA         VM_STRUCT                 ADDRESS RANGE                SIZE
+ffff8b7d8995a380  ffff8b7d83cf5500  ffffffffc0e7e000 - ffffffffc0f64000   942080
+
+      PAGE       PHYSICAL      MAPPING       INDEX CNT FLAGS
+ffffceb8c0ca7a80 329ea000                0        0  1 fffffc0000000
+crash> bt 0x69e
+PID: 1694   TASK: ffff8b7d88f4b180  CPU: 0   COMMAND: "umount.nfs4"
+ #0 [ffffa72080657be0] __schedule at ffffffffaca2d730
+ #1 [ffffa72080657c58] schedule at ffffffffaca2dab4
+ #2 [ffffa72080657c70] rpc_wait_bit_killable at ffffffffc04d2fde [sunrpc]
+ #3 [ffffa72080657c88] __wait_on_bit at ffffffffaca2deea
+ #4 [ffffa72080657cc0] out_of_line_wait_on_bit at ffffffffaca2dfe2
+ #5 [ffffa72080657d10] __rpc_execute at ffffffffc04dd0f2 [sunrpc]
+ #6 [ffffa72080657d40] rpc_execute at ffffffffc04dd50f [sunrpc]
+ #7 [ffffa72080657d60] rpc_run_task at ffffffffc04c47f6 [sunrpc]
+ #8 [ffffa72080657da0] rpc_call_sync at ffffffffc04c4f01 [sunrpc]
+ #9 [ffffa72080657e00] nfs4_destroy_clientid at ffffffffc0e8febf [nfsv4]
+#10 [ffffa72080657e50] nfs4_free_client at ffffffffc0eabfc4 [nfsv4]
+#11 [ffffa72080657e60] nfs_free_server at ffffffffc0e137e4 [nfs]
+#12 [ffffa72080657e70] nfs_kill_super at ffffffffc0e1f62d [nfs]
+#13 [ffffa72080657e90] deactivate_locked_super at ffffffffac35f776
+#14 [ffffa72080657ea8] cleanup_mnt at ffffffffac384081
+#15 [ffffa72080657ed0] task_work_run at ffffffffac10320f
+#16 [ffffa72080657ef0] exit_to_user_mode_loop at ffffffffac173c92
+#17 [ffffa72080657f10] exit_to_user_mode_prepare at ffffffffac173d29
+#18 [ffffa72080657f28] syscall_exit_to_user_mode at ffffffffaca25822
+#19 [ffffa72080657f38] do_syscall_64 at ffffffffaca222f8
+#20 [ffffa72080657f50] entry_SYSCALL_64_after_hwframe at ffffffffacc0007c
+    RIP: 00007f64910ef74b  RSP: 00007ffcc98b9088  RFLAGS: 00000202
+    RAX: 0000000000000000  RBX: 000055801513abe0  RCX: 00007f64910ef74b
+    RDX: 0000000000000000  RSI: 0000000000000001  RDI: 0000558015139640
+    RBP: 00005580151382c0   R8: 0000000000000001   R9: 0000000000000000
+    R10: 000055801513aad0  R11: 0000000000000202  R12: 0000000000000001
+    R13: 0000558015139640  R14: 00005580151383d0  R15: 0000558015138410
+    ORIG_RAX: 00000000000000a6  CS: 0033  SS: 002b
+
+So... the application ran 'umount -f' which called
+
+nfs_kill_super  
+  nfs_free_server
+    nfs_put_client
+      nfs4_free_client
+        nfs4_shutdown_client
+          nfs41_shutdown_client
+            nfs4_destroy_session
+              nfs4_destroy_session_slot_tables
+                nfs4_shutdown_slot_table
+                  nfs4_release_slot_table
+                    nfs4_shrink_slot_table <--- all slots freed
+        nfs_free_client
+          rpc_shutdown_client
+            rpc_killall_tasks <--- tasks will call rpc_exit_task which will call rpc_call_done.  For v4.1+ this will call nfs41_sequence_done which will call nfs41_sequence_process and nfs41_sequence_free_slot.
+
+Scott Mayhew (1):
+  nfs4: take a reference on the nfs_client when running FREE_STATEID
+
+ fs/nfs/nfs4proc.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+-- 
+2.31.1
+
