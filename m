@@ -2,105 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7567D443602
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 19:49:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 62C4B44367E
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 20:30:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbhKBSvj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Nov 2021 14:51:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:36045 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229616AbhKBSvi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Nov 2021 14:51:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635878943;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=uKI7LqT1/BPNiy+4ZFolEqhCJtFWB6Y54yXh+bAugos=;
-        b=f7KoGSwG4uWgBJcPgnr+wJ/q5DyBDqth3TTDbTFNqPD8YCef2GhlfMACS+yzqBVwK600U2
-        0RRMceUYcVB9McBaQu1T8HpamK/RT1vIkS561Y6WPvj/y8ECE0WpFkAN3QT4JWZwPcDMcJ
-        QXLCaaguLiC8hJkWTOMAdhCyt9isdUA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-DUMYOB8_M6KSxftLKp5g9Q-1; Tue, 02 Nov 2021 14:49:01 -0400
-X-MC-Unique: DUMYOB8_M6KSxftLKp5g9Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A539A100C612;
-        Tue,  2 Nov 2021 18:49:00 +0000 (UTC)
-Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 70D2BE2C4;
-        Tue,  2 Nov 2021 18:49:00 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id E542F10C30F0; Tue,  2 Nov 2021 14:48:59 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2] xprtrdma: Fix a maybe-uninitialized compiler warning
-Date:   Tue,  2 Nov 2021 14:48:59 -0400
-Message-Id: <ecf7a06938de33cccc8e435929ba4c373eda3639.1635878734.git.bcodding@redhat.com>
+        id S229844AbhKBTck (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Nov 2021 15:32:40 -0400
+Received: from [103.7.64.39] ([103.7.64.39]:60872 "EHLO
+        localhost.slbsrsv.ac.in" rhost-flags-FAIL-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S229791AbhKBTck (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Nov 2021 15:32:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=slbsrsv.ac.in; s=default; h=Date:Message-Id:Reply-To:From:
+        Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:To:Sender:Cc:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lbK0Pvl/NKbS2rYxHQk3UpMt+HVXQewNSQLR+9fzPUw=; b=ZpPuVyiADgY37EpIw0VNVfRNGY
+        DNICp81kxURYH1PssYFQqwyq9s9W55ns+kDvz5H/DPHwjnki28GRYGsW06ELem4eBFbbiOBbtNPj9
+        luogsO14t/b7o5W2FYFZBVeBVCnG1PViU17r4ysQ+qaKqfxl4b+udzvsXZMsS9/lDZ3vWE4soFszP
+        m/KmdfIbks1jQzcuVKs1x80BJmtYsEvUST7/yXA7Kib+zMISEg37DqIVJIpNaMlTInDLRLa55rsPr
+        FVy6xT6hqqj62nKWpYV+3WSWeNU3k/rZmd9ycICU8AXytSw/ANHmutT0nlpn3hTpdZQuS6ENWE/UU
+        fH+UmJpQ==;
+Received: from slbsrsvac by localhost.slbsrsv.ac.in with local (Exim 4.94.2)
+        (envelope-from <slbsrsvac@localhost.slbsrsv.ac.in>)
+        id 1mhzML-0002gK-P5
+        for linux-nfs@vger.kernel.org; Wed, 03 Nov 2021 00:52:13 +0530
+To:     linux-nfs@vger.kernel.org
+Subject: Form submission from: Feedback
+X-PHP-Script: www.slbsrsv.ac.in/index.php for 5.2.67.226
+X-PHP-Originating-Script: 1001:cmf_utility.module
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=UTF-8; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8Bit
+X-Mailer: Drupal Webform (PHP/7.1.33)
+From:   Shri Lal Bahadur Shastri National Sanskrit University 
+        <admin.lbs@aslbsrsv.ac.in>
+X-Drupal-From: "Shri Lal Bahadur Shastri National Sanskrit University" <admin.lbs@aslbsrsv.ac.in>
+Reply-To: "Shri Lal Bahadur Shastri National Sanskrit University" 
+          <admin.lbs@aslbsrsv.ac.in>
+Message-Id: <E1mhzML-0002gK-P5@localhost.slbsrsv.ac.in>
+Date:   Wed, 03 Nov 2021 00:52:13 +0530
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - localhost.slbsrsv.ac.in
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [1001 992] / [47 12]
+X-AntiAbuse: Sender Address Domain - localhost.slbsrsv.ac.in
+X-Get-Message-Sender-Via: localhost.slbsrsv.ac.in: authenticated_id: slbsrsvac/only user confirmed/virtual account not confirmed
+X-Authenticated-Sender: localhost.slbsrsv.ac.in: slbsrsvac
+X-Source: 
+X-Source-Args: /opt/cpanel/ea-php71/root/usr/bin/php-cgi 
+X-Source-Dir: slbsrsv.ac.in:/public_html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This minor fix-up keeps GCC from complaining that "last' may be used
-uninitialized", which breaks some build workflows that have been running
-with all warnings treated as errors.
-
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- net/sunrpc/xprtrdma/frwr_ops.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/net/sunrpc/xprtrdma/frwr_ops.c b/net/sunrpc/xprtrdma/frwr_ops.c
-index f700b34a5bfd..f88d3139b1a2 100644
---- a/net/sunrpc/xprtrdma/frwr_ops.c
-+++ b/net/sunrpc/xprtrdma/frwr_ops.c
-@@ -515,8 +515,8 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	 * a single ib_post_send() call.
- 	 */
- 	prev = &first;
--	while ((mr = rpcrdma_mr_pop(&req->rl_registered))) {
--
-+	mr = rpcrdma_mr_pop(&req->rl_registered);
-+	do {
- 		trace_xprtrdma_mr_localinv(mr);
- 		r_xprt->rx_stats.local_inv_needed++;
- 
-@@ -533,7 +533,8 @@ void frwr_unmap_sync(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 
- 		*prev = last;
- 		prev = &last->next;
--	}
-+	} while ((mr = rpcrdma_mr_pop(&req->rl_registered)));
-+
- 	mr = container_of(last, struct rpcrdma_mr, mr_invwr);
- 
- 	/* Strong send queue ordering guarantees that when the
-@@ -617,8 +618,8 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 	 * a single ib_post_send() call.
- 	 */
- 	prev = &first;
--	while ((mr = rpcrdma_mr_pop(&req->rl_registered))) {
--
-+	mr = rpcrdma_mr_pop(&req->rl_registered);
-+	do {
- 		trace_xprtrdma_mr_localinv(mr);
- 		r_xprt->rx_stats.local_inv_needed++;
- 
-@@ -635,7 +636,7 @@ void frwr_unmap_async(struct rpcrdma_xprt *r_xprt, struct rpcrdma_req *req)
- 
- 		*prev = last;
- 		prev = &last->next;
--	}
-+	} while ((mr = rpcrdma_mr_pop(&req->rl_registered)));
- 
- 	/* Strong send queue ordering guarantees that when the
- 	 * last WR in the chain completes, all WRs in the chain
--- 
-2.31.1
-
+Your mail has been sent successfully.
