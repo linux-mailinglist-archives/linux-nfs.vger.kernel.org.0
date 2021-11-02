@@ -2,190 +2,386 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F2ABE44377E
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 21:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C5619443829
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 23:02:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbhKBUxm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Nov 2021 16:53:42 -0400
-Received: from mail-co1nam11on2094.outbound.protection.outlook.com ([40.107.220.94]:40801
-        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230061AbhKBUxl (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Nov 2021 16:53:41 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dVgAqkMgTriYyrJs1s75bXVR4A8P/Lknq1mamIpAyXHmBcAVkypcv40L3xOsHzJkrFoEH5pFTJKaOXe3PT/Ouk7NOSt/XPMZ0dqYgo8oxftHDO6HX4wquREaFVJfHKPz8b8NXTY6kXJVgQ7n3ygSkysbPDLniHevNtMUSF0vbCRHvy+tF/hloWKSa/rvJ5KpQogsSkIEcQXmVANdPMdhc8Fn1724o72NCvoSQH36sBx7Xsnx937KEJMt3T6FU8v8u605roNRYPzRjSDMfJ62g2UyDVeUmN4qBOUArsYyh5oUahmnK/U6QEt2ReqdhBkbarS7F6KoM3BH6efEiqN0Tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XFDrclzwzyjaiYtF9qMy7IK4vHVlrlhuYEPOYfQdoGg=;
- b=UVk5SjhnXixD3cmF30OZe2hk1qfl0w3OxITC7/98/DJIkq9/lKDa8PINRhgt8ndfgDIBmcj4J2p11irYJQe67NbLUEK/arL8uPzJCf4Ft2Xh36VmHv++6q19Mb+mkIpivmL/BEtD0v9To7i7P0bFBbODZhbfzzGmgnOfoYAYOLNEU8Dv63NBcIflNchQ5RzbrShzk0AiI7cBrsm6AOkzAkxvDRp0MdL1w1xdJATZXK0Cg8A7fTotrcJgi+7B3fBhekt3t9xqQjhuYpSQH+7jJCoUtC0l4/yK+1SEsKLuBtu3jRlhpMg828T1yUdIAzvzWC9UhsDb5hoSx4i8YcVuIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XFDrclzwzyjaiYtF9qMy7IK4vHVlrlhuYEPOYfQdoGg=;
- b=g8P9i5porgu+fdblfT+b0jnvR0vVH/nexUl+c9nTtThAT4WlkL99Esmkfbimh3DXQk/p9PaPdJVdf7jItH6EDzoFyA3wvTWvyFtuBiNUbJ3gzgpNRMcNhhRcfZ27VbapuLY1iEmfNVYBC6JuV3lyNMNpNpc2EfoJPgPOtk4vFf8=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB3304.namprd13.prod.outlook.com (2603:10b6:610:22::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.8; Tue, 2 Nov
- 2021 20:51:04 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486%8]) with mapi id 15.20.4669.010; Tue, 2 Nov 2021
- 20:51:04 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "smayhew@redhat.com" <smayhew@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 1/1] nfs4: take a reference on the nfs_client when running
- FREE_STATEID
-Thread-Topic: [PATCH 1/1] nfs4: take a reference on the nfs_client when
- running FREE_STATEID
-Thread-Index: AQHXz1v4o2sZThDS3Em5oh6bn8aATKvwbq0AgAA+NACAAArfAA==
-Date:   Tue, 2 Nov 2021 20:51:04 +0000
-Message-ID: <517ed553804f9a250bf9b06bdcce71a3cc7805d9.camel@hammerspace.com>
-References: <20211101200623.2635785-1-smayhew@redhat.com>
-         <20211101200623.2635785-2-smayhew@redhat.com>
-         <9c677842d46b95e1ac7011afd44e29229d9efaa9.camel@hammerspace.com>
-         <YYGbaPX3DbQf7FXi@aion.usersys.redhat.com>
-In-Reply-To: <YYGbaPX3DbQf7FXi@aion.usersys.redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6384c718-27e8-4f88-4bf7-08d99e427c7c
-x-ms-traffictypediagnostic: CH2PR13MB3304:
-x-microsoft-antispam-prvs: <CH2PR13MB3304BFEF7840560BD37AA2BBB88B9@CH2PR13MB3304.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iD8Yhojt22QPbr7SUJvVFYylCmj8ffIC5WyYmRp04Gl1TQAv6CZ4SMmTy8q2EBqZVUh4PmxfslGYcjDP+vg6usJyxTXyiLRnmIRGnGFAJzGpzvWDJpG1JvJVJF4eQqMqkq1fTI/Lc0oqkGjW5A53G3W0jlUczhNlpPmFATAPtiOXGWWO4uomEMaGPPbC4JXUVccnfOQGSHVqfmfWGNYYo8Pzl9TB0McWZR7kiAyvuMn1YHrjycr2WjoRDv6SUh6cHbji0s8/LTuhnHlMGZJ2bu4U1Lko8sY4Hpqf4/mNNYiwClxJBCAMBKDpQj57OZmPukBEOfJyeUj7JEn2DwKlCdBGT5jxeToREJQCMSTZSoiYhvx3cxaswPKawfQnb29MG9seC/UigitZiG8x4AA71hdU1KPxQZe0wIifSb1kLDAsjfVGogSF9ibaKoy341E3popMBZ7Rn7zwgPFLzX3blPiQZniLWqyPzGfnHp+cpl2gBy8fLXjT0W/s8+Ol67tGqUUEp6mT0HoIV4Cv2EjYybduT+n4MjD6L9DJ/z8nQ+noxgIhpzhLyMwihp0Rmy2QwbtaxoYSsNe80BLx6IEpOPzeS5vCMfWAebBiTbF1Kgt4jFPA2ZZ7XqwnO9nj8n7STUCjXCQp4QbmUDRAbGK1e1V09YCefxewPI6j686XJnNloqOMuLQRhlFHYABPppM1CB4oi27VikV6BNew4kQ5sw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(6512007)(38070700005)(26005)(38100700002)(83380400001)(186003)(66556008)(76116006)(66476007)(64756008)(66446008)(66946007)(2906002)(6486002)(2616005)(71200400001)(6506007)(6916009)(5660300002)(36756003)(86362001)(54906003)(316002)(122000001)(4326008)(8676002)(8936002)(508600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RzVjeHBKWnVyWDBLVEJqUmZQMEtYcmZ6NlJVajVXclVia3U3ek9EZXZ6bjhk?=
- =?utf-8?B?WHYva0FYWUVMS2M3Y2xIbEFlMTNWSkxCbUZnOXh1NDRBTU01Rzc3MEhxajR0?=
- =?utf-8?B?S1NFZmU0cEhoMmh4Z3RXblZBSnlzWHBjendBVGxzeGFsTEIrYU1KNENjSG10?=
- =?utf-8?B?REhYcWRoQllLVjRhZXlFTTljbFZ1RHRBRjBIaGhKN08wQW55YkMzeHJneHBo?=
- =?utf-8?B?ZHVjTjJsTzVxaFhIUU9xa0FUU1JDdHJKRzFjV25wZm9KNVZTcUp0anJnUEJw?=
- =?utf-8?B?SnE4cmVVZmhrdEtEM0lnaUhPZHhtNWpEN0dMNDdUQUQveDBQUVg3ZHM1ZHFr?=
- =?utf-8?B?c1o0ZEZ3anpvdjRPU3IyOVBiQTZDcHJRYm9tdjRwMGlNZnpXbytKOThwOExa?=
- =?utf-8?B?Wmo3VDRqalIzeW9mNlJ6ZDE4am5IQ0VMbU04R2ppNGRtU0UvYWF6ZWxTci90?=
- =?utf-8?B?cmg5eHdkWUkzUEZXMmwvblliM3lBTEw4RGVmL1lXa3IxZ1B4OENkbG5MRzNU?=
- =?utf-8?B?SzUvRWlMeUV6RDNucUM3UHYxblZZWWVGRlRsRzZuU29uS051bUY1Nm0xYTZj?=
- =?utf-8?B?Q3huU003Rno1M0dnUmJGMTg4NThtcnQrYjByZ014dlhJMnFiaE1SNGZEeHlv?=
- =?utf-8?B?ZGVkQ2FhOWp5SmFmdmd3YXJmRWZ1eWpITnUxRE1HK2xpeW1kQW54VFBoK2V5?=
- =?utf-8?B?dG81TytQUTVUUzZyY1VERVFvZDQvNVRrWk9ick9zRVI2NWJZUW1uVGx5THBy?=
- =?utf-8?B?SWREVHd3UzRqbmVhd2xRaG53UnRjUHZmc2cwRDBrd1Iwei9IcExkcXBuaUxU?=
- =?utf-8?B?OHNDZzNSSW8zV0FwWEYzMGJUS2FuTXVnUDVURG96VGxUeXIzYytCc2NGVHZ6?=
- =?utf-8?B?bTNxK1kvVVJwVGJFRkhGYzNZY01QRlp5NXprcWV5S0EzZUdDUEc0djJ1UVBa?=
- =?utf-8?B?N2lrbGhiVVpLbGNVV0R2aFc2Q0F6bGM4dDNFMXgrTEN0RTNFVHUvaTRlZ040?=
- =?utf-8?B?RTJmUzdZTVVqOU95VGpQRnRMOExsVzc3NUhVREdRcDg3V0tFZTgwU2hMVWJs?=
- =?utf-8?B?Q2FzS0J6bFByT2hvd1FwNXJ5U3hZNmU5dzBFcWMyalRjdEIyb0Zqakk2R0hE?=
- =?utf-8?B?UkNDa2JLRHl5bU5qTllzeC9ZQ29vSFA1RXZXVHlya0VFQWZra2VQaHZjK0xD?=
- =?utf-8?B?MkRYNnZGQ1FyWUY1MVAyK0dFV0ZEREJTeXlxM3ZqVXI2aXAyN25IMjhDd3Ja?=
- =?utf-8?B?RFZvN25KUmh2em11UzA2VzQ0VzZ6LzBua1l0Q05teXduMVhEcEMzRjB6SUNo?=
- =?utf-8?B?L3hLa3I4akNSY3Vyak5zT2lZL09TN3lPQTVMS0huUVR0cFNqUGwzbWUxbWQw?=
- =?utf-8?B?WDRtTU1WRXpOQUgwcjEySWJWQ3FvZjBJcU1oNCtpbkRlUTJVYS9CT3o3ZnEy?=
- =?utf-8?B?MXh4NzFlVVZ2Qjl0eGQyd1gvNk1lL1lveityUnhac1pRM2ZkY0kzVDZZTlg1?=
- =?utf-8?B?ckZvc1VNRHFmaVEwYThwKzZ3QnhBZ3pWNWxkNklENjdOU0hBVWZRYlgyUHhF?=
- =?utf-8?B?RjBybWNxWU1mYkhTVWdqQUNnWGxRU1hrak9NN2FiMWZGa0JzRmx0bTJWT1ox?=
- =?utf-8?B?NWNHLzY5ZFk3TmsyRUEzZmtmQmZuczNSSjArNHQyZjBrMUlUM2Jmc3BJMVQ5?=
- =?utf-8?B?TVREd293S203ZUg2K1diSCtsWnc4anJ3L2w5MElIT0F4N29lU2FSdWg1TERX?=
- =?utf-8?B?aysyQ0FyeWF5Nnd1VEgwMFpRU3BWNVdDZTZmNkJWQVY3akh6cEhUckxvQktI?=
- =?utf-8?B?N24xTVdaUUVPMzI0REhyWmdKRitEZ2M3NnJ5MkdwZHZqTGM4RnJqQm9JMy94?=
- =?utf-8?B?YXFXWUdia2Q3VmRabk1mYTJXM0NudTl1ZDcwckM1R1RPQndiejE2a1BBM1Qv?=
- =?utf-8?B?eFB2Z0ZTQTMzVENlY284dDZyMUNrT2ovdWZXelVjL21XM2VCNVcyZXcvUFBC?=
- =?utf-8?B?aDZGK1V6YXZ3TEFEbFlXWk5sVjVPM1B1djA3MjlsM3dRZ2RxM0pKclMyeXE0?=
- =?utf-8?B?bjZUQUZxUjJCazJ6MTVvSUVvWGZJOGx5bVpGWUM1MUkwd2x3MjRONDdySHZj?=
- =?utf-8?B?cVFsUFgyTXhiNXhncS83Q3RwMHVwSFQ4Vk56VGlNZUZlalVZMHZoY3o5WnlZ?=
- =?utf-8?Q?PmOpO70P6ZZl9bE2yL7ip/g=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <19FEAB566F27214593455BB31F911DA7@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S231335AbhKBWEy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Nov 2021 18:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33826 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231216AbhKBWEy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Nov 2021 18:04:54 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7AEFC061203;
+        Tue,  2 Nov 2021 15:02:18 -0700 (PDT)
+Received: from meer.lwn.net (unknown [IPv6:2601:281:8300:104d::5f6])
+        by ms.lwn.net (Postfix) with ESMTPA id 685CD5EC8;
+        Tue,  2 Nov 2021 22:02:18 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 685CD5EC8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1635890538; bh=zbsiGWfqK5orLR+KEARR8fWOciWx/3Xh24nN8dCoJio=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=k3QxIJTlSxQf1HMp52NCWYPqZabAXtmXXqPjQMLqyRYggLv0blqHN/a4EfBqPpeUV
+         5FjfP/fH0MymT6HMMKUvjnu1H3X97SrdsrQeKx++F7Wj+Lp56vvIaDlWMc+gYOChHH
+         /zLWuOMnt2Uj9i4SndQ2+YV+QRGfr2xY5PVazZcU4SHZbOJdgaH0Y0q/zFulrvUCyF
+         24yl1E65B1rW9870yCxY8mPD1YNX905YWBMiEsYJ52Wa2x+MJdFosYjmdCMOOlq4hc
+         cxNHdhN1t60LMHU8T+X0v4hH33SUQ0H8ROnr3sUa2aqhahcNslB4iOheIkZqQP+Xt6
+         Yn4oPh0DwX5BQ==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     Jonathan Corbet <corbet@lwn.net>, Christoph Hellwig <hch@lst.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH 2/9] nfs: remove unused header <linux/pnfs_osd_xdr.h>
+Date:   Tue,  2 Nov 2021 16:01:56 -0600
+Message-Id: <20211102220203.940290-3-corbet@lwn.net>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20211102220203.940290-1-corbet@lwn.net>
+References: <20211102220203.940290-1-corbet@lwn.net>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6384c718-27e8-4f88-4bf7-08d99e427c7c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2021 20:51:04.1115
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: h4ZAit1YbESc4t3Jbg+WIC3jhrS76jsHpqDUgG320tmiJFKqE/kF5Bi8p/1NkIaGtzxki7PKSPvtpLZS8zYEEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB3304
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIxLTExLTAyIGF0IDE2OjExIC0wNDAwLCBTY290dCBNYXloZXcgd3JvdGU6DQo+
-IE9uIFR1ZSwgMDIgTm92IDIwMjEsIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gDQo+ID4gSGkg
-U2NvdHQsDQo+ID4gDQo+ID4gVGhhbmtzLiBUaGlzIG1vc3RseSBsb29rcyBnb29kLCBidXQgSSBk
-byBoYXZlIDEgY29tbWVudCBiZWxvdy4NCj4gPiANCj4gPiBPbiBNb24sIDIwMjEtMTEtMDEgYXQg
-MTY6MDYgLTA0MDAsIFNjb3R0IE1heWhldyB3cm90ZToNCj4gPiA+IER1cmluZyB1bW91bnQsIHRo
-ZSBzZXNzaW9uIHNsb3QgdGFibGVzIGFyZSBmcmVlZC7CoCBJZiB0aGVyZSBhcmUNCj4gPiA+IG91
-dHN0YW5kaW5nIEZSRUVfU1RBVEVJRCB0YXNrcywgYSB1c2UtYWZ0ZXItZnJlZSBhbmQgc2xhYg0K
-PiA+ID4gY29ycnVwdGlvbg0KPiA+ID4gY2FuDQo+ID4gPiBvY2N1ciB3aGVuIHJwY19leGl0X3Rh
-c2sgY2FsbHMgcnBjX2NhbGxfZG9uZSAtPg0KPiA+ID4gbmZzNDFfc2VxdWVuY2VfZG9uZSAtDQo+
-ID4gPiA+IA0KPiA+ID4gbmZzNF9zZXF1ZW5jZV9wcm9jZXNzL25mczQxX3NlcXVlbmNlX2ZyZWVf
-c2xvdC4NCj4gPiA+IA0KPiA+ID4gUHJldmVudCB0aGF0IGZyb20gaGFwcGVuaW5nIGJ5IHRha2lu
-ZyBhIHJlZmVyZW5jZSBvbiB0aGUNCj4gPiA+IG5mc19jbGllbnQNCj4gPiA+IGluDQo+ID4gPiBu
-ZnM0MV9mcmVlX3N0YXRlaWQgYW5kIHB1dHRpbmcgaXQgaW4gbmZzNDFfZnJlZV9zdGF0ZWlkX3Jl
-bGVhc2UuDQo+ID4gPiANCj4gPiA+IFNpZ25lZC1vZmYtYnk6IFNjb3R0IE1heWhldyA8c21heWhl
-d0ByZWRoYXQuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiDCoGZzL25mcy9uZnM0cHJvYy5jIHwgMTIg
-KysrKysrKysrKystDQo+ID4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAx
-IGRlbGV0aW9uKC0pDQo+ID4gPiANCj4gPiA+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2Mu
-YyBiL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4gPiBpbmRleCBlMTIxNGJiNmI3ZWUuLjc2ZTY3ODZi
-Nzk3ZSAxMDA2NDQNCj4gPiA+IC0tLSBhL2ZzL25mcy9uZnM0cHJvYy5jDQo+ID4gPiArKysgYi9m
-cy9uZnMvbmZzNHByb2MuYw0KPiA+ID4gQEAgLTEwMTQ1LDE4ICsxMDE0NSwyNCBAQCBzdGF0aWMg
-dm9pZA0KPiA+ID4gbmZzNDFfZnJlZV9zdGF0ZWlkX3ByZXBhcmUoc3RydWN0IHJwY190YXNrICp0
-YXNrLCB2b2lkICpjYWxsZGF0YSkNCj4gPiA+IMKgc3RhdGljIHZvaWQgbmZzNDFfZnJlZV9zdGF0
-ZWlkX2RvbmUoc3RydWN0IHJwY190YXNrICp0YXNrLCB2b2lkDQo+ID4gPiAqY2FsbGRhdGEpDQo+
-ID4gPiDCoHsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbmZzX2ZyZWVfc3RhdGVpZF9k
-YXRhICpkYXRhID0gY2FsbGRhdGE7DQo+ID4gPiArwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbmZzX2Ns
-aWVudCAqY2xwID0gZGF0YS0+c2VydmVyLT5uZnNfY2xpZW50Ow0KPiA+ID4gwqANCj4gPiA+IMKg
-wqDCoMKgwqDCoMKgwqBuZnM0MV9zZXF1ZW5jZV9kb25lKHRhc2ssICZkYXRhLT5yZXMuc2VxX3Jl
-cyk7DQo+ID4gPiDCoA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHN3aXRjaCAodGFzay0+dGtfc3Rh
-dHVzKSB7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgY2FzZSAtTkZTNEVSUl9ERUxBWToNCj4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKG5mczRfYXN5bmNfaGFuZGxlX2Vy
-cm9yKHRhc2ssIGRhdGEtPnNlcnZlciwNCj4gPiA+IE5VTEwsDQo+ID4gPiBOVUxMKSA9PSAtRUFH
-QUlOKQ0KPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBycGNfcmVzdGFydF9jYWxsX3ByZXBhcmUodGFzayk7DQo+ID4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChyZWZjb3VudF9yZWFkKCZjbHAtPmNs
-X2NvdW50KSA+IDEpDQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNfcmVzdGFydF9jYWxsX3ByZXBhcmUodGFzayk7
-DQo+ID4gDQo+ID4gRG8gd2UgcmVhbGx5IG5lZWQgdG8gbWFrZSB0aGUgcnBjIHJlc3RhcnQgY2Fs
-bCBjb25kaXRpb25hbCBoZXJlPw0KPiA+IE1vc3QNCj4gPiBzZXJ2ZXJzIHByZWZlciB0aGF0IHlv
-dSBmaW5pc2ggZnJlZWluZyBzdGF0ZSBiZWZvcmUgY2FsbGluZw0KPiA+IERFU1RST1lfQ0xJRU5U
-SUQuDQo+IA0KPiBHb29kIHBvaW50LsKgIE5vLCBpdCdzIG5vdCBuZWNlc3NhcnkuwqAgRG8geW91
-IHdhbnQgbWUgdG8gc2VuZCBhIHYyLCBvcg0KPiBjYW4geW91IGFwcGx5IHRoZSBwYXRjaCB3aXRo
-b3V0IHRoaXMgaHVuaz8NCj4gDQoNCkNhbiB5b3UgcGxlYXNlIHNlbmQgYSB2Mj8gVGhhbmtzIQ0K
-DQo+IC1TY290dA0KPiA+IA0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoH0NCj4gPiA+IMKgfQ0KPiA+
-ID4gwqANCj4gPiA+IMKgc3RhdGljIHZvaWQgbmZzNDFfZnJlZV9zdGF0ZWlkX3JlbGVhc2Uodm9p
-ZCAqY2FsbGRhdGEpDQo+ID4gPiDCoHsNCj4gPiA+ICvCoMKgwqDCoMKgwqDCoHN0cnVjdCBuZnNf
-ZnJlZV9zdGF0ZWlkX2RhdGEgKmRhdGEgPSBjYWxsZGF0YTsNCj4gPiA+ICvCoMKgwqDCoMKgwqDC
-oHN0cnVjdCBuZnNfY2xpZW50ICpjbHAgPSBkYXRhLT5zZXJ2ZXItPm5mc19jbGllbnQ7DQo+ID4g
-PiArDQo+ID4gPiArwqDCoMKgwqDCoMKgwqBuZnNfcHV0X2NsaWVudChjbHApOw0KPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoGtmcmVlKGNhbGxkYXRhKTsNCj4gPiA+IMKgfQ0KPiA+ID4gwqANCj4gPiA+
-IEBAIC0xMDE5Myw2ICsxMDE5OSwxMCBAQCBzdGF0aWMgaW50IG5mczQxX2ZyZWVfc3RhdGVpZChz
-dHJ1Y3QNCj4gPiA+IG5mc19zZXJ2ZXIgKnNlcnZlciwNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqB9
-Ow0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBuZnNfZnJlZV9zdGF0ZWlkX2RhdGEgKmRh
-dGE7DQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IHJwY190YXNrICp0YXNrOw0KPiA+ID4g
-K8KgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19jbGllbnQgKmNscCA9IHNlcnZlci0+bmZzX2NsaWVu
-dDsNCj4gPiA+ICsNCj4gPiA+ICvCoMKgwqDCoMKgwqDCoGlmICghcmVmY291bnRfaW5jX25vdF96
-ZXJvKCZjbHAtPmNsX2NvdW50KSkNCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqByZXR1cm4gLUVJTzsNCj4gPiA+IMKgDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgbmZzNF9zdGF0
-ZV9wcm90ZWN0KHNlcnZlci0+bmZzX2NsaWVudCwNCj4gPiA+IE5GU19TUDRfTUFDSF9DUkVEX1NU
-QVRFSUQsDQo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCZ0YXNrX3NldHVw
-LnJwY19jbGllbnQsICZtc2cpOw0KPiA+IA0KPiA+IC0tIA0KPiA+IFRyb25kIE15a2xlYnVzdA0K
-PiA+IExpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCj4gPiB0cm9uZC5t
-eWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQo+ID4gDQo+ID4gDQo+IA0KDQotLSANClRyb25kIE15
-a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Commit 19fcae3d4f2dd ("scsi: remove the SCSI OSD library") deleted the last
+file that included <linux/pnfs_osd_xdr.h> but left that file behind.  It's
+unused, get rid of it now.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna.schumaker@netapp.com>
+Cc: linux-nfs@vger.kernel.org
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+---
+ include/linux/pnfs_osd_xdr.h | 317 -----------------------------------
+ 1 file changed, 317 deletions(-)
+ delete mode 100644 include/linux/pnfs_osd_xdr.h
+
+diff --git a/include/linux/pnfs_osd_xdr.h b/include/linux/pnfs_osd_xdr.h
+deleted file mode 100644
+index 17d7d0d20eca..000000000000
+--- a/include/linux/pnfs_osd_xdr.h
++++ /dev/null
+@@ -1,317 +0,0 @@
+-/*
+- *  pNFS-osd on-the-wire data structures
+- *
+- *  Copyright (C) 2007 Panasas Inc. [year of first publication]
+- *  All rights reserved.
+- *
+- *  Benny Halevy <bhalevy@panasas.com>
+- *  Boaz Harrosh <ooo@electrozaur.com>
+- *
+- *  This program is free software; you can redistribute it and/or modify
+- *  it under the terms of the GNU General Public License version 2
+- *  See the file COPYING included with this distribution for more details.
+- *
+- *  Redistribution and use in source and binary forms, with or without
+- *  modification, are permitted provided that the following conditions
+- *  are met:
+- *
+- *  1. Redistributions of source code must retain the above copyright
+- *     notice, this list of conditions and the following disclaimer.
+- *  2. Redistributions in binary form must reproduce the above copyright
+- *     notice, this list of conditions and the following disclaimer in the
+- *     documentation and/or other materials provided with the distribution.
+- *  3. Neither the name of the Panasas company nor the names of its
+- *     contributors may be used to endorse or promote products derived
+- *     from this software without specific prior written permission.
+- *
+- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+- *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+- *  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+- *  DISCLAIMED. IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE
+- *  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+- *  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+- *  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+- *  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+- *  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+- *  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+- *  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- */
+-#ifndef __PNFS_OSD_XDR_H__
+-#define __PNFS_OSD_XDR_H__
+-
+-#include <linux/nfs_fs.h>
+-
+-/*
+- * draft-ietf-nfsv4-minorversion-22
+- * draft-ietf-nfsv4-pnfs-obj-12
+- */
+-
+-/* Layout Structure */
+-
+-enum pnfs_osd_raid_algorithm4 {
+-	PNFS_OSD_RAID_0		= 1,
+-	PNFS_OSD_RAID_4		= 2,
+-	PNFS_OSD_RAID_5		= 3,
+-	PNFS_OSD_RAID_PQ	= 4     /* Reed-Solomon P+Q */
+-};
+-
+-/*   struct pnfs_osd_data_map4 {
+- *       uint32_t                    odm_num_comps;
+- *       length4                     odm_stripe_unit;
+- *       uint32_t                    odm_group_width;
+- *       uint32_t                    odm_group_depth;
+- *       uint32_t                    odm_mirror_cnt;
+- *       pnfs_osd_raid_algorithm4    odm_raid_algorithm;
+- *   };
+- */
+-struct pnfs_osd_data_map {
+-	u32	odm_num_comps;
+-	u64	odm_stripe_unit;
+-	u32	odm_group_width;
+-	u32	odm_group_depth;
+-	u32	odm_mirror_cnt;
+-	u32	odm_raid_algorithm;
+-};
+-
+-/*   struct pnfs_osd_objid4 {
+- *       deviceid4       oid_device_id;
+- *       uint64_t        oid_partition_id;
+- *       uint64_t        oid_object_id;
+- *   };
+- */
+-struct pnfs_osd_objid {
+-	struct nfs4_deviceid	oid_device_id;
+-	u64			oid_partition_id;
+-	u64			oid_object_id;
+-};
+-
+-/* For printout. I use:
+- * kprint("dev(%llx:%llx)", _DEVID_LO(pointer), _DEVID_HI(pointer));
+- * BE style
+- */
+-#define _DEVID_LO(oid_device_id) \
+-	(unsigned long long)be64_to_cpup((__be64 *)(oid_device_id)->data)
+-
+-#define _DEVID_HI(oid_device_id) \
+-	(unsigned long long)be64_to_cpup(((__be64 *)(oid_device_id)->data) + 1)
+-
+-enum pnfs_osd_version {
+-	PNFS_OSD_MISSING              = 0,
+-	PNFS_OSD_VERSION_1            = 1,
+-	PNFS_OSD_VERSION_2            = 2
+-};
+-
+-struct pnfs_osd_opaque_cred {
+-	u32 cred_len;
+-	void *cred;
+-};
+-
+-enum pnfs_osd_cap_key_sec {
+-	PNFS_OSD_CAP_KEY_SEC_NONE     = 0,
+-	PNFS_OSD_CAP_KEY_SEC_SSV      = 1,
+-};
+-
+-/*   struct pnfs_osd_object_cred4 {
+- *       pnfs_osd_objid4         oc_object_id;
+- *       pnfs_osd_version4       oc_osd_version;
+- *       pnfs_osd_cap_key_sec4   oc_cap_key_sec;
+- *       opaque                  oc_capability_key<>;
+- *       opaque                  oc_capability<>;
+- *   };
+- */
+-struct pnfs_osd_object_cred {
+-	struct pnfs_osd_objid		oc_object_id;
+-	u32				oc_osd_version;
+-	u32				oc_cap_key_sec;
+-	struct pnfs_osd_opaque_cred	oc_cap_key;
+-	struct pnfs_osd_opaque_cred	oc_cap;
+-};
+-
+-/*   struct pnfs_osd_layout4 {
+- *       pnfs_osd_data_map4      olo_map;
+- *       uint32_t                olo_comps_index;
+- *       pnfs_osd_object_cred4   olo_components<>;
+- *   };
+- */
+-struct pnfs_osd_layout {
+-	struct pnfs_osd_data_map	olo_map;
+-	u32				olo_comps_index;
+-	u32				olo_num_comps;
+-	struct pnfs_osd_object_cred	*olo_comps;
+-};
+-
+-/* Device Address */
+-enum pnfs_osd_targetid_type {
+-	OBJ_TARGET_ANON = 1,
+-	OBJ_TARGET_SCSI_NAME = 2,
+-	OBJ_TARGET_SCSI_DEVICE_ID = 3,
+-};
+-
+-/*   union pnfs_osd_targetid4 switch (pnfs_osd_targetid_type4 oti_type) {
+- *       case OBJ_TARGET_SCSI_NAME:
+- *           string              oti_scsi_name<>;
+- *
+- *       case OBJ_TARGET_SCSI_DEVICE_ID:
+- *           opaque              oti_scsi_device_id<>;
+- *
+- *       default:
+- *           void;
+- *   };
+- *
+- *   union pnfs_osd_targetaddr4 switch (bool ota_available) {
+- *       case TRUE:
+- *           netaddr4            ota_netaddr;
+- *       case FALSE:
+- *           void;
+- *   };
+- *
+- *   struct pnfs_osd_deviceaddr4 {
+- *       pnfs_osd_targetid4      oda_targetid;
+- *       pnfs_osd_targetaddr4    oda_targetaddr;
+- *       uint64_t                oda_lun;
+- *       opaque                  oda_systemid<>;
+- *       pnfs_osd_object_cred4   oda_root_obj_cred;
+- *       opaque                  oda_osdname<>;
+- *   };
+- */
+-struct pnfs_osd_targetid {
+-	u32				oti_type;
+-	struct nfs4_string		oti_scsi_device_id;
+-};
+-
+-/*   struct netaddr4 {
+- *       // see struct rpcb in RFC1833
+- *       string r_netid<>;    // network id
+- *       string r_addr<>;     // universal address
+- *   };
+- */
+-struct pnfs_osd_net_addr {
+-	struct nfs4_string	r_netid;
+-	struct nfs4_string	r_addr;
+-};
+-
+-struct pnfs_osd_targetaddr {
+-	u32				ota_available;
+-	struct pnfs_osd_net_addr	ota_netaddr;
+-};
+-
+-struct pnfs_osd_deviceaddr {
+-	struct pnfs_osd_targetid	oda_targetid;
+-	struct pnfs_osd_targetaddr	oda_targetaddr;
+-	u8				oda_lun[8];
+-	struct nfs4_string		oda_systemid;
+-	struct pnfs_osd_object_cred	oda_root_obj_cred;
+-	struct nfs4_string		oda_osdname;
+-};
+-
+-/* LAYOUTCOMMIT: layoutupdate */
+-
+-/*   union pnfs_osd_deltaspaceused4 switch (bool dsu_valid) {
+- *       case TRUE:
+- *           int64_t     dsu_delta;
+- *       case FALSE:
+- *           void;
+- *   };
+- *
+- *   struct pnfs_osd_layoutupdate4 {
+- *       pnfs_osd_deltaspaceused4    olu_delta_space_used;
+- *       bool                        olu_ioerr_flag;
+- *   };
+- */
+-struct pnfs_osd_layoutupdate {
+-	u32	dsu_valid;
+-	s64	dsu_delta;
+-	u32	olu_ioerr_flag;
+-};
+-
+-/* LAYOUTRETURN: I/O Rrror Report */
+-
+-enum pnfs_osd_errno {
+-	PNFS_OSD_ERR_EIO		= 1,
+-	PNFS_OSD_ERR_NOT_FOUND		= 2,
+-	PNFS_OSD_ERR_NO_SPACE		= 3,
+-	PNFS_OSD_ERR_BAD_CRED		= 4,
+-	PNFS_OSD_ERR_NO_ACCESS		= 5,
+-	PNFS_OSD_ERR_UNREACHABLE	= 6,
+-	PNFS_OSD_ERR_RESOURCE		= 7
+-};
+-
+-/*   struct pnfs_osd_ioerr4 {
+- *       pnfs_osd_objid4     oer_component;
+- *       length4             oer_comp_offset;
+- *       length4             oer_comp_length;
+- *       bool                oer_iswrite;
+- *       pnfs_osd_errno4     oer_errno;
+- *   };
+- */
+-struct pnfs_osd_ioerr {
+-	struct pnfs_osd_objid	oer_component;
+-	u64			oer_comp_offset;
+-	u64			oer_comp_length;
+-	u32			oer_iswrite;
+-	u32			oer_errno;
+-};
+-
+-/* OSD XDR Client API */
+-/* Layout helpers */
+-/* Layout decoding is done in two parts:
+- * 1. First Call pnfs_osd_xdr_decode_layout_map to read in only the header part
+- *    of the layout. @iter members need not be initialized.
+- *    Returned:
+- *             @layout members are set. (@layout->olo_comps set to NULL).
+- *
+- *             Zero on success, or negative error if passed xdr is broken.
+- *
+- * 2. 2nd Call pnfs_osd_xdr_decode_layout_comp() in a loop until it returns
+- *    false, to decode the next component.
+- *    Returned:
+- *       true if there is more to decode or false if we are done or error.
+- *
+- * Example:
+- *	struct pnfs_osd_xdr_decode_layout_iter iter;
+- *	struct pnfs_osd_layout layout;
+- *	struct pnfs_osd_object_cred comp;
+- *	int status;
+- *
+- *	status = pnfs_osd_xdr_decode_layout_map(&layout, &iter, xdr);
+- *	if (unlikely(status))
+- *		goto err;
+- *	while(pnfs_osd_xdr_decode_layout_comp(&comp, &iter, xdr, &status)) {
+- *		// All of @comp strings point to inside the xdr_buffer
+- *		// or scrach buffer. Copy them out to user memory eg.
+- *		copy_single_comp(dest_comp++, &comp);
+- *	}
+- *	if (unlikely(status))
+- *		goto err;
+- */
+-
+-struct pnfs_osd_xdr_decode_layout_iter {
+-	unsigned total_comps;
+-	unsigned decoded_comps;
+-};
+-
+-extern int pnfs_osd_xdr_decode_layout_map(struct pnfs_osd_layout *layout,
+-	struct pnfs_osd_xdr_decode_layout_iter *iter, struct xdr_stream *xdr);
+-
+-extern bool pnfs_osd_xdr_decode_layout_comp(struct pnfs_osd_object_cred *comp,
+-	struct pnfs_osd_xdr_decode_layout_iter *iter, struct xdr_stream *xdr,
+-	int *err);
+-
+-/* Device Info helpers */
+-
+-/* Note: All strings inside @deviceaddr point to space inside @p.
+- * @p should stay valid while @deviceaddr is in use.
+- */
+-extern void pnfs_osd_xdr_decode_deviceaddr(
+-	struct pnfs_osd_deviceaddr *deviceaddr, __be32 *p);
+-
+-/* layoutupdate (layout_commit) xdr helpers */
+-extern int
+-pnfs_osd_xdr_encode_layoutupdate(struct xdr_stream *xdr,
+-				 struct pnfs_osd_layoutupdate *lou);
+-
+-/* osd_ioerror encoding (layout_return) */
+-extern __be32 *pnfs_osd_xdr_ioerr_reserve_space(struct xdr_stream *xdr);
+-extern void pnfs_osd_xdr_encode_ioerr(__be32 *p, struct pnfs_osd_ioerr *ioerr);
+-
+-#endif /* __PNFS_OSD_XDR_H__ */
+-- 
+2.31.1
+
