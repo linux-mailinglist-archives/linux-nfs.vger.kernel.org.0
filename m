@@ -2,98 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 612334425EA
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 04:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 709CF442958
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 09:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229699AbhKBDL3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Nov 2021 23:11:29 -0400
-Received: from smtp-out1.suse.de ([195.135.220.28]:47666 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbhKBDL2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Nov 2021 23:11:28 -0400
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 54D6F21957;
-        Tue,  2 Nov 2021 03:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1635822533; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        id S229852AbhKBIcN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Nov 2021 04:32:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:56608 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229823AbhKBIcM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Nov 2021 04:32:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635841772;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=ohFXz6LKA7GQrxDs90BQYlkOW3EnDYCVyATxfEJ3c1w=;
-        b=yMQvzI7iG0XUdZrZiRz4+FWQK/IxRqTJ460RJLPsXz5v0CELOWNxG/pBJ60PKXBhPZ6gaC
-        JuXbKzOlxHgIw6G8fTjFb/YPcUK23/720USRPuv7n1lBMGKp9bPwS89Gbz3NQFcB5c6kXc
-        lHanziIxpm4imr8BDb8ac0cyrky9to4=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1635822533;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ohFXz6LKA7GQrxDs90BQYlkOW3EnDYCVyATxfEJ3c1w=;
-        b=cxKDvwbCj5bSVSCJwx1SNXptBxi2X3GHk3n/VIMQ8JMbP/o594O3n5OUivOQwc8pkn0Nnm
-        K1uqZgQ/Ir1BOgDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=AGQfQE+y23DXMjkdSWV0LFVA0+D/0EvWkXC0q0Pk3Q4=;
+        b=O8aNkAg2edHIAGY2Lh+YB/iM17V6S1YnUKMfUmISpe5TnC6aVg/ruIVEO7xUfrnASRZSg+
+        cnDCRfOS42dRmMxkYYW5K6DkQlEHhwjtr36xm58TK6Dup9CiHbyaVJTy5G0m/FrL4MPyzr
+        oM7roBbPyGW5hidoJtPUY5Pc0uTpjIQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-231-Yh_WrSB2Pha7tYZorf2u2A-1; Tue, 02 Nov 2021 04:29:31 -0400
+X-MC-Unique: Yh_WrSB2Pha7tYZorf2u2A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7D0B213B6F;
-        Tue,  2 Nov 2021 03:08:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id HUW5DsSrgGHmBwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 02 Nov 2021 03:08:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D23CE8066EF;
+        Tue,  2 Nov 2021 08:29:28 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 29A371017CE3;
+        Tue,  2 Nov 2021 08:29:10 +0000 (UTC)
+Subject: [PATCH v3 0/6] netfs, 9p, afs, ceph: Support folios,
+ at least partially
+From:   David Howells <dhowells@redhat.com>
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     Ilya Dryomov <idryomov@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-cachefs@redhat.com,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>, dhowells@redhat.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        linux-fsdevel@vger.kernel.org, linux-cachefs@redhat.com,
+        v9fs-developer@lists.sourceforge.net,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 02 Nov 2021 08:29:09 +0000
+Message-ID: <163584174921.4023316.8927114426959755223.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH nfs-utils] mount: don't bind a socket needlessly.
-Date:   Tue, 02 Nov 2021 14:08:48 +1100
-Message-id: <163582252847.13683.7467712657489228784@noble.neil.brown.name>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-When clnt_ping() calls get_socket(), get_socket() will create a socket,
-call bind() to choose an unused local port, and then connect to the
-given address.
+Here's a set of patches to convert netfs, 9p and afs to use folios and to
+provide sufficient conversion for ceph that it can continue to use the
+netfs library.  Jeff Layton is working on fully converting ceph.
 
-The "bind()" call is unnecessary and problematic.
-It is unnecessary as the "connect()" call will bind the socket as
-required.
-It is problematic as it requires a completely unused port number, rather
-than just a port number which isn't currently in use for connecting to
-the given remote address.
-If all local ports (net.ipv4.ip_local_port_range) are in use, the bind()
-will fail.  However the connect() call will only fail if all those port
-are in use for connecting to the same address.
+This also contains a patch to split afs symlink readpage from afs file
+readpage to aid with foliation and a patch to convert 9p to netfslib to
+reduce the amount of foliation needed there.
 
-So remove the unnecessary bind() call.
+Changes
+=======
+ver #3:
+ - Rebased on upstream as folios have been pulled.
+ - Imported a patch to convert 9p to netfslib from my
+   fscache-remove-old-api branch[3].
+ - Foliated netfslib.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+ver #2:
+ - Reorder the patches to put both non-folio afs patches to the front.
+ - Use page_offset() rather than manual calculation[1].
+ - Fix folio_inode() to directly access the inode[2].
+
+David
+
+Link: https://lore.kernel.org/r/YST/0e92OdSH0zjg@casper.infradead.org/ [1]
+Link: https://lore.kernel.org/r/YST8OcVNy02Rivbm@casper.infradead.org/ [2]
+Link: https://lore.kernel.org/r/163551653404.1877519.12363794970541005441.stgit@warthog.procyon.org.uk/ [3]
+Link: https://lore.kernel.org/r/2408234.1628687271@warthog.procyon.org.uk/ # v0
+Link: https://lore.kernel.org/r/162981147473.1901565.1455657509200944265.stgit@warthog.procyon.org.uk/ # v1
+Link: https://lore.kernel.org/r/163005740700.2472992.12365214290752300378.stgit@warthog.procyon.org.uk/ # v2
 ---
- utils/mount/network.c | 4 ----
- 1 file changed, 4 deletions(-)
+David Howells (6):
+      afs: Sort out symlink reading
+      9p: Convert to using the netfs helper lib to do reads and caching
+      folio: Add a function to change the private data attached to a folio
+      folio: Add a function to get the host inode for a folio
+      netfs, 9p, afs, ceph: Use folios
+      afs: Use folios in directory handling
 
-diff --git a/utils/mount/network.c b/utils/mount/network.c
-index e803dbbe5a2c..35261171a615 100644
---- a/utils/mount/network.c
-+++ b/utils/mount/network.c
-@@ -429,10 +429,6 @@ static int get_socket(struct sockaddr_in *saddr, unsigne=
-d int p_prot,
- 	if (resvp) {
- 		if (bindresvport(so, &laddr) < 0)
- 			goto err_bindresvport;
--	} else {
--		cc =3D bind(so, SAFE_SOCKADDR(&laddr), namelen);
--		if (cc < 0)
--			goto err_bind;
- 	}
- 	if (type =3D=3D SOCK_STREAM || (conn && type =3D=3D SOCK_DGRAM)) {
- 		cc =3D connect_to(so, SAFE_SOCKADDR(saddr), namelen,
---=20
-2.33.1
+
+ fs/9p/Kconfig              |   1 +
+ fs/9p/cache.c              | 137 ---------------
+ fs/9p/cache.h              |  97 +----------
+ fs/9p/v9fs.h               |   9 +
+ fs/9p/vfs_addr.c           | 253 +++++++++++++--------------
+ fs/9p/vfs_file.c           |  29 ++--
+ fs/afs/dir.c               | 229 ++++++++++--------------
+ fs/afs/dir_edit.c          | 154 +++++++++--------
+ fs/afs/file.c              |  70 ++++----
+ fs/afs/internal.h          |  46 ++---
+ fs/afs/write.c             | 346 ++++++++++++++++++-------------------
+ fs/ceph/addr.c             |  80 +++++----
+ fs/netfs/read_helper.c     | 165 +++++++++---------
+ include/linux/netfs.h      |  12 +-
+ include/linux/pagemap.h    |  33 ++++
+ include/trace/events/afs.h |  21 +--
+ mm/page-writeback.c        |   2 +-
+ 17 files changed, 738 insertions(+), 946 deletions(-)
+
 
