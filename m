@@ -2,137 +2,206 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 88FE34438A8
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Nov 2021 23:42:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30D0B443DE4
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Nov 2021 08:57:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229736AbhKBWpS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Nov 2021 18:45:18 -0400
-Received: from mail-bn8nam12on2101.outbound.protection.outlook.com ([40.107.237.101]:43872
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229685AbhKBWpR (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 2 Nov 2021 18:45:17 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dV/NMn8Srcby7xPtCyeHnAcuXAP69A2fZiDIx1cwG9d+TUVg7JMKZVLeUCApS2QBeOP3HzbCSPXzpuzE8SrNEhZHNweydezMz26QRdLaXL67AEFyExfYtwDGJwbjNOabtTgujf8zzIMBTXTfWsGzakx0uRqMDwjyt6cYUIbbQd5oPbp/4VjY0sAm/6DAgEoqx8IDJzCG1WR19ZluhmrSI9kHNk4zG0RkpX74NqiTKBz5jfHU4HBBpkJXOJEm2GQWGLTkOtsF5ymivGPP8LgeiWWBSyEj6ouuRE8rfRCgz0tQoE2GoEBrb/YdSSoOFhVgS9aHOSFK6HiWika1YKHQLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6ooqMTNWWaw5jRUxmsM5Nvpd75gFWCz4d7ZaXB8OUFM=;
- b=RYXzmQeuXS5mQGejjOHjIFO/d6D+42BmgTa85suzg34U+iXFXn6IylI7ejL5LBJ4VqFqJsPnFFiqhV5pd7f8lVKRmsjVVzCZn8g5wKO2J3jzaEt0kXnzLNIyaP9j1ky2sRGe+VHWWnbS7KSy9IzckVb0o7cZCQygQwY/jIi9S4qNTdx5FA1ZroRSlNG8GQ7GjCCa770Q2sFYoYp2S0G0QKOXS9TxGOWeeAvvTlmE027puIAZhMu1zSD5M4DoHT8TCvKCwTS+ziK0Q/aifoUGaCeGq3zHaE8IqpCgrbhNlnr34H2fu6+vTR+e4H6x8ArbiKsGjXADF1aoJ8I8OJz0sA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6ooqMTNWWaw5jRUxmsM5Nvpd75gFWCz4d7ZaXB8OUFM=;
- b=YRdj+Og7lMgz3G26YQ+sx78rW63SzAZFQidvA2rUcBkjZdihEwZlv6JKcDo4SnFqqhaUA5nvIiV6WiAgqK9/MYZgEHtzsZsU3eytj9ZpjxrErzPPJENEKM69GGGZ9VcFad+VK//8VLv///RTUAVKlIVjNnJ63S99UkJ4h8ySjeY=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB4492.namprd13.prod.outlook.com (2603:10b6:610:64::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4669.6; Tue, 2 Nov
- 2021 22:42:38 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::1533:4550:d876:1486%8]) with mapi id 15.20.4669.010; Tue, 2 Nov 2021
- 22:42:38 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "corbet@lwn.net" <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "hch@lst.de" <hch@lst.de>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 2/9] nfs: remove unused header <linux/pnfs_osd_xdr.h>
-Thread-Topic: [PATCH 2/9] nfs: remove unused header <linux/pnfs_osd_xdr.h>
-Thread-Index: AQHX0DVQ984FywqRDkeU7h4MdEH9Tqvw1XOA
-Date:   Tue, 2 Nov 2021 22:42:38 +0000
-Message-ID: <08d283fbedab1be09a9dd6cf5a296c6a465a9394.camel@hammerspace.com>
-References: <20211102220203.940290-1-corbet@lwn.net>
-         <20211102220203.940290-3-corbet@lwn.net>
-In-Reply-To: <20211102220203.940290-3-corbet@lwn.net>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lwn.net; dkim=none (message not signed)
- header.d=none;lwn.net; dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d39069b4-a313-47c7-cc1a-08d99e521294
-x-ms-traffictypediagnostic: CH2PR13MB4492:
-x-microsoft-antispam-prvs: <CH2PR13MB4492B845A433D1EC75D1820DB88B9@CH2PR13MB4492.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2399;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IB1Aaw0IGXBn2wv7UzwWReJW0CzuEEtSqxeWmOhIFu+6jLZLOS5LMFOrMan1Xyt6ISYBCcmlcOejfcaSdpjFPNfbq9WtpLsZEuDH2aHRHh22B65679kJJJWA5lWYd6AR3rWoKzcW0Ohk9hEL+W6T4p8/kPAbG50MR1ZWhZNKbqLLVWKgYAM0e0lgouCRDj70ytrDE07upsm1ULPlWMU6cPwYn1aAgiaARyY3ZVIFvLo3HhEP72bxyuk92h6esBiJ5QlsKY8F5BINAVAA8cMqhJhS/XVBm+Mn+wl80EMaQvGe4PFPl0zzqiU6H06gWIQ+xqRqICeCdmORzdrqLYQmkABdSAnv9PgqcFQpjxaS8i1bi4KsyBsZdnqPMOgSslQDBFHG+KSqxrQUvKweehpLsBIrnLsnFmWixMsRviY0S5EAg/eyGNnGqiPslPM8Yt2qSupo/C0w0/7GpRAnJOcrik1hKoSPxe2YbHrL7/w1HAOyTBnRe6UgH3KA8mweatVxoium3oGvCqFSyZ2wbZlcqnnL1g9IeQ8002v/muypKUHnVkCupvem4tJ/xDyftJxoNOwF1L3WAQxKavMGu+kyXwOr4d9DEd3wmhhtH2zYjTk+5RrtQHLMu06krwcujgR6p8HDo2NqRmcT1/dGiotUZxB8M/CwHh7Ui4ySwDiDX7tYHISFjNMgPrY+EGYAc3TQGxH9MM//kJV+MzXtKP/G3A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(8936002)(4326008)(6506007)(38100700002)(5660300002)(8676002)(86362001)(36756003)(6486002)(6512007)(4744005)(71200400001)(122000001)(2616005)(26005)(2906002)(66946007)(186003)(76116006)(38070700005)(66476007)(83380400001)(66556008)(64756008)(66446008)(54906003)(110136005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?VnQ1K2pCYVI5NlYzUm9OUWExaHlsTXVZcTVhSGNNa203OEZua0FQQXhqQWVy?=
- =?utf-8?B?M1RrUmdYNUlkak5IaE9FWlRBQ0tHYWtwdXF5TzhSNVF3cG5reFpGUjBjNWZN?=
- =?utf-8?B?VFIvOTJGazl0Q09vYnZvMUNDOTRSRnBUL2ZRVTlIQ1YwNlI2L3VpL0lMMFR4?=
- =?utf-8?B?QjE4KzY4MWhmRkYwdnJVbTFxZ3dOL1hJTDhER2l0NzgvZUplR3c0TUs2bmJp?=
- =?utf-8?B?UkxHL0NmdHNIaW9hZzhNdm9KbG8wVmRiS2RiRjFWR0dLU1FVNmYybzE3UDRx?=
- =?utf-8?B?bE9WUUFTQU9ycnlWakszdDhYSUJJTVdjWWhFcDU3L0ZoWFgyWmpZZUM5cUVU?=
- =?utf-8?B?aDlNOGhuZVllR2VIcXlnaWFOK3pHRzRoM1kyQ3VZZXNWbFVhL1MwbjF6dGRU?=
- =?utf-8?B?SlV4c21wY3NnVk5BRW1yMTdidzV4QWl6b1I2UDlZeVpsR0k0SHlwUnU4dzJJ?=
- =?utf-8?B?YWwyc3hMSm0zanVSNzV6dDk2SmtrVnp4NnE3alNNcDNRS1N4cFZWZEVYbEl1?=
- =?utf-8?B?K1pWbGhHUlFPS1IwWUpEaXQySndmZ043dDArSWN4SWIyeTAvMGhkKys0eGpm?=
- =?utf-8?B?S1pTL0RuQ1hPcGd0U3NVYTIweHozYXl3T3UxaURhNWk5dzE2TFV2MjV3UlQ3?=
- =?utf-8?B?c3hoeHhJZWF6bUg5aUhsc2piYVk5b1JlbGRRY21mb0hOVjUyWEc5RzdGbTN0?=
- =?utf-8?B?RDA0MzI5dEdna29WK05ZWUduQUtZTjVuWG1zaVNxbUkxOVJLWXR2OGdLZDNE?=
- =?utf-8?B?c3lmZWxZa1VVbkUzMTJWMmNHb3RIdm1Sb2huZTFUV0NKNFVET1JRaGwwRnd1?=
- =?utf-8?B?bUF4bi9NTG84Z1Ryb24yRDkxMlB2UW5hRkxBc1UrV0c2ODlTUzlaQm1nN1RB?=
- =?utf-8?B?WTlQeGI1eTZlUFlYbzB2eG1Ya3F5UzF5TEUvM0JRNHlSN1BOQW1HTElJUlUw?=
- =?utf-8?B?RkZnVjg2RWYzMTBLLzZ5R1ljMUF6Q0R0cU1RdnliZENuRGVwUlFpdWhiTklx?=
- =?utf-8?B?YUlCTXVBVmw2K3krTlBHeXhZTVFycENLa2NFMnRXbGxqZDdBOW5HdFdhMWtR?=
- =?utf-8?B?TUJjNEw5U2p2dnFXU3kwMFpMM3ZUcGt5b3l6Qm5Sb25QdHRLaEkzaXk4bjQz?=
- =?utf-8?B?YVdZeWZwT1JrencrVm1xR2N4VFRIYWJrWVMvbWNHaXh6aGVDbEptSXlpTFda?=
- =?utf-8?B?TkRuU2tTNTU2dTdmVVFvRXNzd2hGVmFvSUh6ZlNpdXdiVHU2LzdxYTlaaDBJ?=
- =?utf-8?B?ZkorNTZmZHMySnZCTkZLSjk2YVVrNC94VkpIYUlUaVZqODdrVkJ0OVNDODVk?=
- =?utf-8?B?YmF4Qm1xaGpiUjNBcFdOSTduVHlzSW1PYjFPcFVFZ1J0WTJTKy80UEVjL2Ju?=
- =?utf-8?B?ajZOcnpDZE5FRWlNRDgxU21aUjhyam1YL3k1R1VvTjUwUjd1N2gzZ0E5VEVk?=
- =?utf-8?B?aHpIZFVtMHR5b1JOZi9yRnRIY0psbmhIMlE0UWlQUnplU3E5UlZvczFhOEJU?=
- =?utf-8?B?azVUWDJYSVgrbGFjaTNmTitJVFdHeXBuZnlyU3lMbW5mMXhoZE5ka0sxaVY2?=
- =?utf-8?B?TkxFY1VTbUxPRUVjR1dBdVRxbzBuTXJJRmtXTXhGY3h3Ym9DTTU5QUwwYlJL?=
- =?utf-8?B?dytRZTZBV29HdkVxOUZyd3ozbG1hdVkzVmtCYTU1akp3aXk2b3piMG1CUWVt?=
- =?utf-8?B?QTJTNTVMS0ZuclgySnYyTC92alByMFAyQW10UG1OT1NJRHNvRHhWU3hNU1lX?=
- =?utf-8?B?Q3ZNOE5RQlBCNlJpdTBMS3NHR3Q2b0VRZzdiQUdCS2hPZzJjVmZMQ3psS052?=
- =?utf-8?B?UEgyeVJ6ZHNzTzhwMWRJREVFK1IzNTRHSUpLcFpoQTh5dlpkRTN6YnhBSTh2?=
- =?utf-8?B?RElEMU05Rnd2VDlkQkhHUVZCQnJWZ2hBTEtXbS90TGtYUmZsQWo5dFZuR0pZ?=
- =?utf-8?B?YUNXNTVtMXRPeUFnZWZueGxPaFFielRvRXp2eFdja2t3TmZjMndaYTJlSHNJ?=
- =?utf-8?B?TTVBckZxZVRueTFxWENIQjcxNDN2ODdRVHZxMmtzSVdYd1RKYUErdjdOOEI4?=
- =?utf-8?B?emRTUWpJbVBvRHVKaGFDbkNPbk5NQ1lOY3JtREp1d3VSK3R0NjRyVGxQVFpC?=
- =?utf-8?B?VGtEcndBTGRUZm1tZmM5NVB1RmRmdVlPNnJQaFd0MG9jcFJrdEd5OXRic2I3?=
- =?utf-8?Q?v7WM3vq+xLtdWxIdEAdDgkk=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <941EEC865608A8499C4D5CF003D2DDFB@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S231254AbhKCIAK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Nov 2021 04:00:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:38513 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231425AbhKCIAH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Nov 2021 04:00:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1635926248;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V04PRVMq0Z/UDJz0xLKl1Xoe9Fq20tPJIRoMB0DtmQM=;
+        b=BFqnOTDGAX8wZQWWojNFjrmDMz04R5dMGxGrzleARMpvDPbyLRkx4shl35U7OS5lDa8cvz
+        smmgh81ZTnMD2eMLCkNWLe5PRCXv5dE46hvJdRp/7S/+zmm9fGLlV9zRytb0Z57C581pQO
+        ticBAtQ1xDNPl2VZ+ILCFopsSxR22hU=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-FGIDih-WM2y9ojLCSxI2DA-1; Wed, 03 Nov 2021 03:57:25 -0400
+X-MC-Unique: FGIDih-WM2y9ojLCSxI2DA-1
+Received: by mail-ed1-f71.google.com with SMTP id g3-20020a056402424300b003e2981e1edbso1727997edb.3
+        for <linux-nfs@vger.kernel.org>; Wed, 03 Nov 2021 00:57:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V04PRVMq0Z/UDJz0xLKl1Xoe9Fq20tPJIRoMB0DtmQM=;
+        b=dL1U5x0tvq1w04hh4kpwyzoOS2bdopengyt92lR6duoGUWlq3nB1IGQ1tdAky3NSU4
+         D6s76MK/J2TUf+P00TJoV7bhsqwFyYWV3h48fhj7o3EDTTOYMuzSFhdZkVrUHO7763Rh
+         Nk4a9mHFt54dLI2M8ATUJqgeO3oY+EpWz8Z1kK2KKA76V/M9pdtuTt2c10wbuPjtZxi3
+         YkDM+lCNaOFeiQoWtxyT4+uri/VS8sWwCJ4OmB09J5kttdYrkcI50PQyiPx0IApxzS/6
+         SQJK0z3GS8uH+V+YLbu3M9OSxdu4nbbYd6TijLfl8pL/VmJ01RTQZyLh9tEYANR4G+gQ
+         Uryw==
+X-Gm-Message-State: AOAM532RbZ0Gr39mCt9THRep4ZxQzj288d0fxaGR3Vasgon+YSrZpggK
+        bZ0NhaCAvjwruZtuE3sAlInNTjuP4HlIowGclxPJwNcuvS4pDuBeaDnDcvJREaZ8F6wXPqtXj26
+        9zStoMtgvwPCPixItar4CIfByV5krZfJyZvxI
+X-Received: by 2002:a05:6402:1744:: with SMTP id v4mr48796865edx.366.1635926244381;
+        Wed, 03 Nov 2021 00:57:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwe0XIxTe6tVJf3zXfhb55WCXz0RozpQEQABaBFbqc/OyKjh1IO4qGW8RiN8j1pQ4kbb58QZOOQpmbYpzAvPes=
+X-Received: by 2002:a05:6402:1744:: with SMTP id v4mr48796842edx.366.1635926244113;
+ Wed, 03 Nov 2021 00:57:24 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d39069b4-a313-47c7-cc1a-08d99e521294
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Nov 2021 22:42:38.4838
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FVEskcDCsjMDPxCGLCCxSL97YcqTPUgDIOQ/PVyMd8CLpFdw4tTvnnQZ7I4MxilKoC8K7h4tFq50ZUyFXkrSog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4492
+References: <163413628188.6408.17033105928649076434.stgit@bazille.1015granger.net>
+ <20211013155926.GC6260@fieldses.org> <53AEBF77-7470-4B52-B69E-3CC515C3F393@oracle.com>
+ <CALF+zOmXc+bidhaOMtUE_SOh+brGPuoScPU3E6KYc6tV52EMXg@mail.gmail.com> <8B619507-4BB3-48A8-9124-8501302CAA59@oracle.com>
+In-Reply-To: <8B619507-4BB3-48A8-9124-8501302CAA59@oracle.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 3 Nov 2021 03:56:47 -0400
+Message-ID: <CALF+zOkoQwyr5UFXjQnb-DSRXQeQQs3S4hVfs4ZS9PoSzTyXUA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/6] Deprecate dprintk in svcrdma
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-SGkgSm9uLA0KDQpPbiBUdWUsIDIwMjEtMTEtMDIgYXQgMTY6MDEgLTA2MDAsIEpvbmF0aGFuIENv
-cmJldCB3cm90ZToNCj4gQ29tbWl0IDE5ZmNhZTNkNGYyZGQgKCJzY3NpOiByZW1vdmUgdGhlIFND
-U0kgT1NEIGxpYnJhcnkiKSBkZWxldGVkDQo+IHRoZSBsYXN0DQo+IGZpbGUgdGhhdCBpbmNsdWRl
-ZCA8bGludXgvcG5mc19vc2RfeGRyLmg+IGJ1dCBsZWZ0IHRoYXQgZmlsZSBiZWhpbmQuwqANCj4g
-SXQncw0KPiB1bnVzZWQsIGdldCByaWQgb2YgaXQgbm93Lg0KPiANCj4gQ2M6IENocmlzdG9waCBI
-ZWxsd2lnIDxoY2hAbHN0LmRlPg0KPiBDYzogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tPg0KPiBDYzogQW5uYSBTY2h1bWFrZXIgPGFubmEuc2NodW1ha2Vy
-QG5ldGFwcC5jb20+DQo+IENjOiBsaW51eC1uZnNAdmdlci5rZXJuZWwub3JnDQo+IFNpZ25lZC1v
-ZmYtYnk6IEpvbmF0aGFuIENvcmJldCA8Y29yYmV0QGx3bi5uZXQ+DQoNCkFyZSB5b3Ugc2VuZGlu
-ZyB0aGlzIGRpcmVjdGx5IHRvIExpbnVzIG9yIGRvIHlvdSB3YW50IG1lIHRvIHRha2UgaXQNCnRo
-cm91Z2ggdGhlIE5GUyBjbGllbnQgdHJlZT8gSSdtIGZpbmUgZWl0aGVyIHdheS4NCg0KPiANCg0K
-LS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVy
-c3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Wed, Oct 13, 2021 at 5:03 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Oct 13, 2021, at 2:35 PM, David Wysochanski <dwysocha@redhat.com> wrote:
+> >
+> > On Wed, Oct 13, 2021 at 12:50 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
+> >>
+> >>
+> >>
+> >>> On Oct 13, 2021, at 11:59 AM, J. Bruce Fields <bfields@fieldses.org> wrote:
+> >>>
+> >>> On Wed, Oct 13, 2021 at 10:46:49AM -0400, Chuck Lever wrote:
+> >>>> This patch series moves forward with the removal of dprintk in
+> >>>> SUNRPC in favor of tracepoints. This is the last step for the
+> >>>> svcrdma component.
+> >>>
+> >>> Makes sense to me.
+> >>>
+> >>> I would like some (very short) documentation, somewhere.  Partly just
+> >>> for my sake!  I'm not sure exactly what to recommend to bug reporters.
+> >>>
+> >>> I guess
+> >>>
+> >>>      trace-cmd record -e 'sunrpc:*'
+> >>>      trace-cmd report
+> >>>
+> >>> would be a rough substitute for "rpcdebug -m rpc -s all"?
+> >>
+> >> It would, but tracepoints can be enabled one event
+> >> at a time. If you're looking for a direct replacement
+> >> for a specific rpcdebug invocation, it might be better
+> >> to examine the current sunrpc debug facilities and
+> >> provide specific command lines to mimic those.
+> >>
+> >> "rpcdebug -vh" gives us:
+> >>
+> >> rpc        xprt call debug nfs auth bind sched trans svcsock svcdsp misc cache all
+> >> nfs        vfs dircache lookupcache pagecache proc xdr file root callback client mount fscache pnfs pnfs_ld state all
+> >> nfsd       sock fh export svc proc fileop auth repcache xdr lockd all
+> >> nlm        svc client clntlock svclock monitor clntsubs svcsubs hostcache xdr all
+> >>
+> >>
+> >> If tracepoints are named carefully, we can provide
+> >> specific command lines to enable them as groups. So,
+> >> for instance, I was thinking rpcdebug might display:
+> >>
+> >>        trace-cmd list | grep svcrdma
+> >>
+> >> to list tracepoints related to server side RDMA, or:
+> >>
+> >>        trace-cmd list | grep svcsock
+> >>
+> >> to show tracepoints related to server side sockets.
+> >> Then:
+> >>
+> >>        trace-cmd record -e sunrpc:svcsock\*
+> >>
+> >> enables just the socket-related trace events, which
+> >> coincidentally happens to line up with:
+> >>
+> >>        rpcdebug -m rpc -s svcsock
+> >>
+> >>
+> >>> Do we have a couple examples of issues that could be diagnosed with
+> >>> tracepoints?
+> >>
+> >> Anything you can do with dprintk you can do with trace
+> >> points. Plus because tracepoints are lower overhead, they
+> >> can be enabled and used in production environments,
+> >> unlike dprintk.
+> >>
+> >> Also, tracepoints can trigger specific user space actions
+> >> when they fire. You could for example set up a tracepoint
+> >> in the RPC client that fires when a retransmit timeout
+> >> occurs, and it could trigger a script to start tcpdump.
+> >>
+> >>
+> >>> In the past I don't feel like I've ended up using dprintks
+> >>> all that much; somehow they're not usually where I need them.  But maybe
+> >>> that's just me.  And maybe as we put more thought into where tracepoints
+> >>> should be, they'll get more useful.
+> >>
+> >>> Documentation/filesystems/nfs/, or the linux-nfs wiki, could be easy
+> >>> places to put it.  Though *something* in the man pages would be nice.
+> >>> At a minimum, a warning in rpcdebug(8) that we're gradually phasing out
+> >>> dprintks.
+> >>
+> >> As I understood the conversation last week, SteveD and
+> >> DaveW volunteered to be responsible for changes to
+> >> rpcdebug?
+> >>
+> >
+> > Well I don't remember it exactly like that, but it's probably close.
+> >
+> > I made a suggestion for the last kernel patch that deprecates any
+> > rpcdebug facility, to leave one dfprintk in, stating there is no
+> > information in the kernel anymore for this facility, so not to expect
+> > this rpcdebug flag to produce any meaningful debug output, and
+> > possibly redirect to ftrace facilities.  I brought that idea up
+> > because of my fscache patches which totally removed the last dfprintk
+> > in NFS fscache, and I wasn't sure what the deprecation procedure
+> > was.  As I recall you didn't like that idea as it was never done before
+> > with other rpcdebug flag deprecations, and it was shot down.
+> >
+> > I suppose we could put the same type of userspace patch to rpcdebug
+> > that looks for kernel versions and prints a message if someone tries
+> > to use a deprecated flag?  Would that be better?
+>
+> I don't recall discussing leaving one dprintk in place for
+> each facility. My impression is that changing rpcdebug in
+> this manner is what was decided during that conversation.
+>
+
+Just to follow up on this since I think this was an action item more
+appropriate for me.
+FYI, I have spoken to a couple Red Hat support engineers and asked
+them to work on:
+1. man page update for rpcdebug
+2. rpcdebug warning if a flag is enabled on a kernel that does not
+produce any output
+
+They are making good progress and I hope they will post something to
+the list within week or two.
+
+
+
+>
+> >> So far we haven't had much documentation for dprintk. That
+> >> means we are starting more or less from scratch for
+> >> explaining observability in the NFS stacks. Free rein, and
+> >> all that.
+> >>
+> >> --
+> >> Chuck Lever
+>
+> --
+> Chuck Lever
+>
+>
+>
+
