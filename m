@@ -2,46 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E2C444519
-	for <lists+linux-nfs@lfdr.de>; Wed,  3 Nov 2021 17:00:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C01434445E9
+	for <lists+linux-nfs@lfdr.de>; Wed,  3 Nov 2021 17:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231916AbhKCQDF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 3 Nov 2021 12:03:05 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:42690 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231843AbhKCQDD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Nov 2021 12:03:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1635955226;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xt+1THW0w5czFIQs7JsvecSiF+2xY6v64T7h7rZxRpI=;
-        b=BoD2I2yrbLljA/QIQIqM653yYhnxjcUbA6T9tFd7gs8BSGTPyGWIAQHRgLiCJ/D7PSLFcY
-        2NAH/+6aiuciLJOb/2GyCc0Gjp5YOzez5uPJBGKQQeO0DK3ja8k+VB3wfWRM/ay8MO6Ql+
-        BBVuqjiObzDUzDtIJcsg+FNf3EA0grE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-318-JcHzKTE2MMCGQupL0xZvdg-1; Wed, 03 Nov 2021 12:00:23 -0400
-X-MC-Unique: JcHzKTE2MMCGQupL0xZvdg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 18B111922974;
-        Wed,  3 Nov 2021 16:00:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DC8C05DEFA;
-        Wed,  3 Nov 2021 16:00:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <YYKa3bfQZxK5/wDN@casper.infradead.org>
-References: <YYKa3bfQZxK5/wDN@casper.infradead.org> <163584174921.4023316.8927114426959755223.stgit@warthog.procyon.org.uk> <163584187452.4023316.500389675405550116.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        id S232859AbhKCQcv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 3 Nov 2021 12:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58132 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232762AbhKCQcv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 3 Nov 2021 12:32:51 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5162C061714;
+        Wed,  3 Nov 2021 09:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Cj3Ogsyg3Lz2VHkzTH5tWxtqDLyQrRH//9PvxlJINbM=; b=fzyxYkOmFPj5mYRu0/Oue66U8S
+        mc6O0rW/kmK4juSuHAU3CVAQPNMgm/sfRYX1W3hu9MEF0wdRYKKU+fMwrX6m5CqZ5H9YIcVCkfcsG
+        tYwUkAuyvHDFBxme5tS/H3+Es/qGwxYcpTd7gwU2WwiYAM9FbeA1misue+ng5vVHMjNcJYibRS6HE
+        WIkIM4l8gezYIUYMFZGIcCXKadJJeAR4yJaMhMtwUkrY1uGtwpY6b8RSwIvBFDPLB0QRcCKqv77Tc
+        OmzJM6qWyh30kQ5HqTByWvac7h2bKmAEP9UdCHaANqqkbZa1njQxffyq02IGVOdug+WDpHrY1jdQV
+        lT9xVz4g==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1miJ6W-005Jo8-KL; Wed, 03 Nov 2021 16:27:44 +0000
+Date:   Wed, 3 Nov 2021 16:27:12 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
         Marc Dionne <marc.dionne@auristor.com>,
         Ilya Dryomov <idryomov@gmail.com>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -51,144 +39,56 @@ Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
         linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
         devel@lists.orangefs.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] folio: Add replacements for page_endio()
+Subject: Re: [PATCH v3 5/6] netfs, 9p, afs, ceph: Use folios
+Message-ID: <YYK4YKCnDyoJx5eW@casper.infradead.org>
+References: <YYKa3bfQZxK5/wDN@casper.infradead.org>
+ <163584174921.4023316.8927114426959755223.stgit@warthog.procyon.org.uk>
+ <163584187452.4023316.500389675405550116.stgit@warthog.procyon.org.uk>
+ <1038257.1635951492@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1088662.1635955216.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 03 Nov 2021 16:00:16 +0000
-Message-ID: <1088663.1635955216@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1038257.1635951492@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add three functions to replace page_endio():
+On Wed, Nov 03, 2021 at 02:58:12PM +0000, David Howells wrote:
+> Matthew Wilcox <willy@infradead.org> wrote:
+> 
+> > > +	len = (size >= start + gran) ? gran : size - start;
+> > 
+> > This seems like the most complicated way to write this ... how about:
+> > 
+> >         size_t len = min_t(loff_t, isize - start, folio_size(folio));
+> 
+> I was trying to hedge against isize-start going negative.  Can this code race
+> against truncate?  truncate_setsize() changes i_size *before* invalidating the
+> pages.
 
- (1) folio_end_read().  End a read to a folio.
+We should check for isize < start separately, and skip the writeback
+entirely.
 
- (2) folio_end_write().  End a write from a folio.
+> > >  static int afs_symlink_readpage(struct file *file, struct page *page)
+> > >  {
+> > > -	struct afs_vnode *vnode = AFS_FS_I(page->mapping->host);
+> > > +	struct afs_vnode *vnode = AFS_FS_I(page_mapping(page)->host);
+> > 
+> > How does swap end up calling readpage on a symlink?
+> 
+> Um - readpage is called to read the symlink.
 
- (3) folio_endio().  A switcher that does one or the other of the above.
+But the only reason to use page_mapping() instead of page->mapping
+is if you don't know that the page is in the page cache.  You know
+that here, so I don't understand why you changed it.
 
-Change page_endio() to just call folio_endio().  Note that the parameter
-order is switched so that the folio_endio() stub doesn't have to shuffle
-the params around, but can rather just test and jump.
+> > > -	page_endio(page, false, ret);
+> > > +	page_endio(&folio->page, false, ret);
+> > 
+> > We need a folio_endio() ...
+> 
+> I think we mentioned this before and I think you said you had or would make a
+> patch for it.  I can just create a wrapper for it if that'll do.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
- include/linux/pagemap.h |    9 ++++++
- mm/filemap.c            |   64 ++++++++++++++++++++++++++++++++----------=
-------
- 2 files changed, 51 insertions(+), 22 deletions(-)
-
-
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index e4b98714f763..29b4ee189cb8 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -845,7 +845,14 @@ static inline int __must_check write_one_page(struct =
-page *page)
- int __set_page_dirty_nobuffers(struct page *page);
- int __set_page_dirty_no_writeback(struct page *page);
- =
-
--void page_endio(struct page *page, bool is_write, int err);
-+void folio_end_read(struct folio *folio, int err);
-+void folio_end_write(struct folio *folio, int err);
-+void folio_endio(struct folio *folio, int err, bool is_write);
-+
-+static inline void page_endio(struct page *page, bool is_write, int err)
-+{
-+	folio_endio(page_folio(page), err, is_write);
-+}
- =
-
- void folio_end_private_2(struct folio *folio);
- void folio_wait_private_2(struct folio *folio);
-diff --git a/mm/filemap.c b/mm/filemap.c
-index bfcef6ff7a27..e4e90f96bf1c 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -1596,33 +1596,55 @@ void folio_end_writeback(struct folio *folio)
- }
- EXPORT_SYMBOL(folio_end_writeback);
- =
-
--/*
-- * After completing I/O on a page, call this routine to update the page
-- * flags appropriately
-+/**
-+ * folio_end_read - Update the state of a folio after a read
-+ * @folio: The folio to update
-+ * @err: The error code (or 0) to apply
-  */
--void page_endio(struct page *page, bool is_write, int err)
-+void folio_end_read(struct folio *folio, int err)
- {
--	if (!is_write) {
--		if (!err) {
--			SetPageUptodate(page);
--		} else {
--			ClearPageUptodate(page);
--			SetPageError(page);
--		}
--		unlock_page(page);
-+	if (!err) {
-+		folio_mark_uptodate(folio);
- 	} else {
--		if (err) {
--			struct address_space *mapping;
-+		folio_clear_uptodate(folio);
-+		folio_set_error(folio);
-+	}
-+	folio_unlock(folio);
-+}
-+EXPORT_SYMBOL_GPL(folio_end_read);
- =
-
--			SetPageError(page);
--			mapping =3D page_mapping(page);
--			if (mapping)
--				mapping_set_error(mapping, err);
--		}
--		end_page_writeback(page);
-+/**
-+ * folio_end_write - Update the state of a folio after a write
-+ * @folio: The folio to update
-+ * @err: The error code (or 0) to apply
-+ */
-+void folio_end_write(struct folio *folio, int err)
-+{
-+	if (err) {
-+		struct address_space *mapping =3D folio_mapping(folio);
-+
-+		folio_set_error(folio);
-+		if (mapping)
-+			mapping_set_error(mapping, err);
- 	}
-+	folio_end_writeback(folio);
-+}
-+EXPORT_SYMBOL_GPL(folio_end_write);
-+
-+/**
-+ * folio_endio - Update the state of a folio after a read or write
-+ * @folio: The folio to update
-+ * @err: The error code (or 0) to apply
-+ * @is_write: True if this was a write
-+ */
-+void folio_endio(struct folio *folio, int err, bool is_write)
-+{
-+	if (is_write)
-+		folio_end_write(folio, err);
-+	else
-+		folio_end_read(folio, err);
- }
--EXPORT_SYMBOL_GPL(page_endio);
-+EXPORT_SYMBOL_GPL(folio_endio);
- =
-
- /**
-  * __folio_lock - Get a lock on the folio, assuming we need to sleep to g=
-et it.
-
+Probably better to convert it and put a page_endio wrapper in
+folio-compat.c
