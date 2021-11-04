@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ACDF24455C5
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Nov 2021 15:57:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCE254455C6
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Nov 2021 15:57:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbhKDO76 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Nov 2021 10:59:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50102 "EHLO
+        id S231295AbhKDPAC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Nov 2021 11:00:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230344AbhKDO76 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Nov 2021 10:59:58 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C87C061714
-        for <linux-nfs@vger.kernel.org>; Thu,  4 Nov 2021 07:57:20 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id h23so6446467ila.4
-        for <linux-nfs@vger.kernel.org>; Thu, 04 Nov 2021 07:57:20 -0700 (PDT)
+        with ESMTP id S230344AbhKDPAC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Nov 2021 11:00:02 -0400
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0256DC061714
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Nov 2021 07:57:24 -0700 (PDT)
+Received: by mail-il1-x12c.google.com with SMTP id l19so6506833ilk.0
+        for <linux-nfs@vger.kernel.org>; Thu, 04 Nov 2021 07:57:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=4tAxnw/v2l2V3KwJcHJCQQ+ZoVxVjSCmPO+OTALYGGM=;
-        b=nEZZgoQfb6phY5wGzZqFG17Uw3mv3l/3MD9w+cQSbTlPIBXJnpS2J9Vwx/iKUQH8Eg
-         TpRpBVr4pHlcUBgkhWr0fjaPPU/xIjMzAVHqBwTknxTWC2+eiv/I2JuRmRyFmTESMIvL
-         C0P8n4WFdULreycdDnxAVfSfcWkAht03/RxNGDpTYDqSUzw6XALfVi39vJejT/48VhJs
-         MCzEh4tGnQVwwXf1yD3YoRNuf6Weeri4RDI6qxAgYGsZ/G2EjewBrkzgLCftmxQfUYSJ
-         fTahPEEe3SGW0Csq2EK3GypH+7Boz4ZW3p9gKm6T/DgaBFJu9Pyg42UslsIISk7qy5AF
-         TyCw==
+        bh=mNr5CYTHWJ4RFnVTFiYYlmXsAzABz7rwUHM1bbulcQo=;
+        b=J1hlMh2lrEKjOI4JsvcRTbTFxftrhFMJHQnRBE/JWdJ+9kVLeSXLVL1yW68vipq939
+         acUSqeKP1tNGSpS7a2FeC14RfpYhmXwJMndhOn3d/GKkCxlX8NeZ0u2tuByW0kFFdIHE
+         ae+/3dtlVNqQ8ppAoXEgmdH32bqLd4YbXOnq+X0RZ2Hw4Bk5RM7u7Cb1iQ/tV9BGhTQP
+         lAxvZEm+jTmq2Rf1TJkHD1tlQ5ZH+SltylOgbLN6LufK1SwqZD+4B/BY0iypCq1WUkgw
+         ud5z5xmk5+ZHNDDngaboXDB5jw97+sh7xtTa9ZnNgqEBePw9tjQwseaHrBJn3mQyLPEk
+         FQ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=4tAxnw/v2l2V3KwJcHJCQQ+ZoVxVjSCmPO+OTALYGGM=;
-        b=DRD5ctGNZH9AACVQqWh5uOrhMe6kttXlwd4NIpJFSpFBiB4tAK1NsdmmN3wOaSfOI9
-         pgrAEv7FXTqtw/JINYnM5xP4xafMlJUvMqEfzf+bVVKLXDPEUf2CAJa1et2i9Icfdwr5
-         FOSCSCe/U73eCTmxSyvBPzIn+xwGrtIt95jkf6xB+TSyfynEoh21+hBfAPqBIcnMyWpk
-         VHL62Ym2NjMFbvE5g4HsHKhHQesAT01Vcaj+SKbiiRzVraDvucEGSRnbL1wLg3Ulo4Q+
-         CN+SKraMMtDAwsuAsuHceOIoSXwtzH41XvVbelR50ehQuGAC5710QVxGRCdGVJpXGHlY
-         RguQ==
-X-Gm-Message-State: AOAM530++RSrEeoTm1WulqwEVGQgtXJt08YBJ+ZPZaVHvBWxE5agfX/l
-        Oow9Wm7j0+XPi1XgKE4HZMbT+PN3BJH3IQ==
-X-Google-Smtp-Source: ABdhPJxM+7JsoKn8T+ElU969BTY0D/qJ9yqhutAtg1R34RBphw+GMPUePno7C7IUlK/JH0nCTAgzEA==
-X-Received: by 2002:a92:d411:: with SMTP id q17mr20896086ilm.116.1636037839500;
-        Thu, 04 Nov 2021 07:57:19 -0700 (PDT)
+        bh=mNr5CYTHWJ4RFnVTFiYYlmXsAzABz7rwUHM1bbulcQo=;
+        b=6dEvtvYHrrWedkmluAaiHPufnGJZbZzeDmcFRyw3a9DDScZubJ4YYzg5EsZQE1uWYr
+         TpwTSXNtrXAm6Xk2ZrqnBLKWQijSajyAhvIzlwsug8pw/jSTw8mQYcxjbBVDIOcYaRdS
+         PKbxDLJ8U2U2Hx7Z3UXnKHUB7OK8/3jSSGHk5I8jlqnfMWlEXVRo/BR2nfgo2g6my8hl
+         Ih0syAUEruxqy+ROrsjmGCv5o2TT5/qDJOJJ+vjQ7aD26V23Nwwd5mzy3YkYx7durFha
+         P6oeTV7zpOJjmGZ+07KxgNLyElPTR9lOsIKAG6iklZR5WSeyJ0EOsuW+9sMlaLANhicy
+         C49A==
+X-Gm-Message-State: AOAM531Jh+HVYwfkVzI6Lq2ftvXIucckb78TqAuVskb6IpNIM6aCNgA4
+        l9XJjgYgC3x3JphDkpY0WL6tISyOJVwIHA==
+X-Google-Smtp-Source: ABdhPJxDIHzcZGcECD4vm/BCm84OhKU2ZJ3drho285kXbM6O/oJus/mFTfoNRd9giPlpjhNcJqPF0g==
+X-Received: by 2002:a05:6e02:1bec:: with SMTP id y12mr2382712ilv.74.1636037843455;
+        Thu, 04 Nov 2021 07:57:23 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:886c:a169:fafb:e7cf])
-        by smtp.gmail.com with ESMTPSA id c12sm3007157ils.31.2021.11.04.07.57.18
+        by smtp.gmail.com with ESMTPSA id c12sm3007157ils.31.2021.11.04.07.57.19
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 04 Nov 2021 07:57:18 -0700 (PDT)
+        Thu, 04 Nov 2021 07:57:20 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         chuck.level@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/7] NFSv4.2 add tracepoints to FALLOCATE and DEALLOCATE
-Date:   Thu,  4 Nov 2021 10:57:09 -0400
-Message-Id: <20211104145714.57942-3-olga.kornievskaia@gmail.com>
+Subject: [PATCH v2 3/7] NFSv4.2 add tracepoint to COPY
+Date:   Thu,  4 Nov 2021 10:57:10 -0400
+Message-Id: <20211104145714.57942-4-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20211104145714.57942-1-olga.kornievskaia@gmail.com>
 References: <20211104145714.57942-1-olga.kornievskaia@gmail.com>
@@ -65,93 +65,141 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Add a tracepoint to the FALLOCATE/DEALLOCATE operations.
+Add a tracepoint to the COPY operation.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- fs/nfs/nfs42proc.c |  4 ++++
- fs/nfs/nfs4trace.h | 56 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ fs/nfs/nfs42proc.c |   1 +
+ fs/nfs/nfs4trace.h | 107 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 108 insertions(+)
 
 diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
-index 87c0dcb8823b..c36824888601 100644
+index c36824888601..a072cdaf7bdc 100644
 --- a/fs/nfs/nfs42proc.c
 +++ b/fs/nfs/nfs42proc.c
-@@ -83,6 +83,10 @@ static int _nfs42_proc_fallocate(struct rpc_message *msg, struct file *filep,
- 		status = nfs_post_op_update_inode_force_wcc(inode,
- 							    res.falloc_fattr);
+@@ -367,6 +367,7 @@ static ssize_t _nfs42_proc_copy(struct file *src,
  
-+	if (msg->rpc_proc == &nfs4_procedures[NFSPROC4_CLNT_ALLOCATE])
-+		trace_nfs4_fallocate(inode, &args, status);
-+	else
-+		trace_nfs4_deallocate(inode, &args, status);
- 	kfree(res.falloc_fattr);
- 	return status;
- }
+ 	status = nfs4_call_sync(dst_server->client, dst_server, &msg,
+ 				&args->seq_args, &res->seq_res, 0);
++	trace_nfs4_copy(src_inode, dst_inode, args, res, nss, status);
+ 	if (status == -ENOTSUPP)
+ 		dst_server->caps &= ~NFS_CAP_COPY;
+ 	if (status)
 diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
-index 823ac436a1da..a88464238b88 100644
+index a88464238b88..bdccaec504d8 100644
 --- a/fs/nfs/nfs4trace.h
 +++ b/fs/nfs/nfs4trace.h
-@@ -2127,6 +2127,62 @@ TRACE_EVENT(nfs4_llseek,
- 		)
- );
- 
-+DECLARE_EVENT_CLASS(nfs4_sparse_event,
+@@ -2183,6 +2183,113 @@ DECLARE_EVENT_CLASS(nfs4_sparse_event,
+ 			TP_ARGS(inode, args, error))
+ DEFINE_NFS4_SPARSE_EVENT(nfs4_fallocate);
+ DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
++
++TRACE_EVENT(nfs4_copy,
 +		TP_PROTO(
-+			const struct inode *inode,
-+			const struct nfs42_falloc_args *args,
++			const struct inode *src_inode,
++			const struct inode *dst_inode,
++			const struct nfs42_copy_args *args,
++			const struct nfs42_copy_res *res,
++			const struct nl4_server *nss,
 +			int error
 +		),
 +
-+		TP_ARGS(inode, args, error),
++		TP_ARGS(src_inode, dst_inode, args, res, nss, error),
 +
 +		TP_STRUCT__entry(
 +			__field(unsigned long, error)
-+			__field(loff_t, offset)
++			__field(u32, src_fhandle)
++			__field(u32, src_fileid)
++			__field(u32, dst_fhandle)
++			__field(u32, dst_fileid)
++			__field(dev_t, src_dev)
++			__field(dev_t, dst_dev)
++			__field(int, src_stateid_seq)
++			__field(u32, src_stateid_hash)
++			__field(int, dst_stateid_seq)
++			__field(u32, dst_stateid_hash)
++			__field(loff_t, src_offset)
++			__field(loff_t, dst_offset)
++			__field(bool, sync)
 +			__field(loff_t, len)
-+			__field(dev_t, dev)
-+			__field(u32, fhandle)
-+			__field(u64, fileid)
-+			__field(int, stateid_seq)
-+			__field(u32, stateid_hash)
++			__field(int, res_stateid_seq)
++			__field(u32, res_stateid_hash)
++			__field(loff_t, res_count)
++			__field(bool, res_sync)
++			__field(bool, res_cons)
++			__field(bool, intra)
 +		),
 +
 +		TP_fast_assign(
-+			__entry->error = error < 0 ? -error : 0;
-+			__entry->offset = args->falloc_offset;
-+			__entry->len = args->falloc_length;
-+			__entry->dev = inode->i_sb->s_dev;
-+			__entry->fileid = NFS_FILEID(inode);
-+			__entry->fhandle = nfs_fhandle_hash(NFS_FH(inode));
-+			__entry->stateid_seq =
-+				be32_to_cpu(args->falloc_stateid.seqid);
-+			__entry->stateid_hash =
-+				nfs_stateid_hash(&args->falloc_stateid);
++			const struct nfs_inode *src_nfsi = NFS_I(src_inode);
++			const struct nfs_inode *dst_nfsi = NFS_I(dst_inode);
++
++			__entry->src_fileid = src_nfsi->fileid;
++			__entry->src_dev = src_inode->i_sb->s_dev;
++			__entry->src_fhandle = nfs_fhandle_hash(args->src_fh);
++			__entry->src_offset = args->src_pos;
++			__entry->dst_fileid = dst_nfsi->fileid;
++			__entry->dst_dev = dst_inode->i_sb->s_dev;
++			__entry->dst_fhandle = nfs_fhandle_hash(args->dst_fh);
++			__entry->dst_offset = args->dst_pos;
++			__entry->len = args->count;
++			__entry->sync = args->sync;
++			__entry->src_stateid_seq =
++				be32_to_cpu(args->src_stateid.seqid);
++			__entry->src_stateid_hash =
++				nfs_stateid_hash(&args->src_stateid);
++			__entry->dst_stateid_seq =
++				be32_to_cpu(args->dst_stateid.seqid);
++			__entry->dst_stateid_hash =
++				nfs_stateid_hash(&args->dst_stateid);
++			__entry->intra = nss ? 0 : 1;
++			if (error) {
++				__entry->error = -error;
++				__entry->res_stateid_seq = 0;
++				__entry->res_stateid_hash = 0;
++				__entry->res_count = 0;
++				__entry->res_sync = 0;
++				__entry->res_cons = 0;
++			} else {
++				__entry->error = 0;
++				__entry->res_stateid_seq =
++					be32_to_cpu(res->write_res.stateid.seqid);
++				__entry->res_stateid_hash =
++					nfs_stateid_hash(&res->write_res.stateid);
++				__entry->res_count = res->write_res.count;
++				__entry->res_sync = res->synchronous;
++				__entry->res_cons = res->consecutive;
++			}
 +		),
 +
 +		TP_printk(
-+			"error=%ld (%s) fileid=%02x:%02x:%llu fhandle=0x%08x "
-+			"stateid=%d:0x%08x offset=%llu len=%llu",
++			"error=%ld (%s) intra=%d src_fileid=%02x:%02x:%llu "
++			"src_fhandle=0x%08x dst_fileid=%02x:%02x:%llu "
++			"dst_fhandle=0x%08x src_stateid=%d:0x%08x "
++			"dst_stateid=%d:0x%08x src_offset=%llu dst_offset=%llu "
++			"len=%llu sync=%d cb_stateid=%d:0x%08x res_sync=%d "
++			"res_cons=%d res_count=%llu",
 +			-__entry->error,
 +			show_nfs4_status(__entry->error),
-+			MAJOR(__entry->dev), MINOR(__entry->dev),
-+			(unsigned long long)__entry->fileid,
-+			__entry->fhandle,
-+			__entry->stateid_seq, __entry->stateid_hash,
-+			(long long)__entry->offset,
-+			(long long)__entry->len
++			__entry->intra,
++			MAJOR(__entry->src_dev), MINOR(__entry->src_dev),
++			(unsigned long long)__entry->src_fileid,
++			__entry->src_fhandle,
++			MAJOR(__entry->dst_dev), MINOR(__entry->dst_dev),
++			(unsigned long long)__entry->dst_fileid,
++			__entry->dst_fhandle,
++			__entry->src_stateid_seq, __entry->src_stateid_hash,
++			__entry->dst_stateid_seq, __entry->dst_stateid_hash,
++			__entry->src_offset,
++			__entry->dst_offset,
++			__entry->len,
++			__entry->sync,
++			__entry->res_stateid_seq, __entry->res_stateid_hash,
++			__entry->res_sync,
++			__entry->res_cons,
++			__entry->res_count
 +		)
 +);
-+#define DEFINE_NFS4_SPARSE_EVENT(name) \
-+	DEFINE_EVENT(nfs4_sparse_event, name, \
-+			TP_PROTO( \
-+				const struct inode *inode, \
-+				const struct nfs42_falloc_args *args, \
-+				int error \
-+			), \
-+			TP_ARGS(inode, args, error))
-+DEFINE_NFS4_SPARSE_EVENT(nfs4_fallocate);
-+DEFINE_NFS4_SPARSE_EVENT(nfs4_deallocate);
  #endif /* CONFIG_NFS_V4_2 */
  
  #endif /* CONFIG_NFS_V4_1 */
