@@ -2,114 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C4CC44555B
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Nov 2021 15:32:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E26AC4455C3
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Nov 2021 15:57:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231166AbhKDOfW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Nov 2021 10:35:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:31724 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231270AbhKDOfV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Nov 2021 10:35:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1636036362;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OPjgKPP44SXIrxLx8CNgjbtemUL2QQQynBIl4LnWo2g=;
-        b=XKP5VzBc+qiV5gBJu19WKkqeL4zYU9q8cT1DfLWLJ9Q+DrZ7sfMmorbZGDiVnn9nCeZ/N6
-        PJDq+3KupK33/M6KevTSUhOhxfayT0zVa1hwPmTQuI/fYBtCik8JYLOtRFUyTWicEkO/aI
-        rVpkQ60EREumkOGXNsks9aCtdPG/12k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-jIvx4JasMH27MVkeYdVBDA-1; Thu, 04 Nov 2021 10:32:37 -0400
-X-MC-Unique: jIvx4JasMH27MVkeYdVBDA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5890F87D548;
-        Thu,  4 Nov 2021 14:32:35 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.144])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 22BD856A94;
-        Thu,  4 Nov 2021 14:32:18 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <YYK4YKCnDyoJx5eW@casper.infradead.org>
-References: <YYK4YKCnDyoJx5eW@casper.infradead.org> <YYKa3bfQZxK5/wDN@casper.infradead.org> <163584174921.4023316.8927114426959755223.stgit@warthog.procyon.org.uk> <163584187452.4023316.500389675405550116.stgit@warthog.procyon.org.uk> <1038257.1635951492@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, Jeff Layton <jlayton@kernel.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, ceph-devel@vger.kernel.org,
-        linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        devel@lists.orangefs.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] netfs, 9p, afs, ceph: Use folios
+        id S231270AbhKDO75 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Nov 2021 10:59:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230345AbhKDO7z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Nov 2021 10:59:55 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 936C9C06127A
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Nov 2021 07:57:17 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id f10so6462011ilu.5
+        for <linux-nfs@vger.kernel.org>; Thu, 04 Nov 2021 07:57:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Po/rWnP2OWlGs2oX2RP+Nl8Q9FmGoRi/U1lFMQTgu08=;
+        b=JwOJ0dn4Q5K45qS4u4YNrviYJcFaK75b7ZfdavZ0JvYibJOvf/GnXn6AzDSGIryW2u
+         Z5PXxbohSFP34gqXqgTmk+ZFhTG6bu1c6ekWZiUEddK8PCGGl/4ThXGdOEYiJQqwEKtH
+         WfDEYVf95mUovtebv7J2pxPi+0IqykhR/YTkTG8iO2QrtePV/Ud6cif0Jph5Jkqf5Ozl
+         WGuxZ7I+jyJWeWWnqnHsdXdM2Ixqfx5D7y+mY8ISK3qN/QuTjQx2Fl+feri+FamJ33PQ
+         wBr4WcXwGlDiJ+qsSNTNBpTVwXBHx6F4ZAbuL5jA+OYRNXNogoHsSto15Ed9Ps1QtlKi
+         t/+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Po/rWnP2OWlGs2oX2RP+Nl8Q9FmGoRi/U1lFMQTgu08=;
+        b=DzSbV13HhtX/GkQqe3VXh3gc1hHFazT5qWcMZFMcstLsJPWT0N2LRBtBJY+jSNlhda
+         /2fOTD3XXfXbO0M/3jWsQfcIKYeI2K/Pn7u7mseMJqYMM1enOP6shsnmRiXqgYtShVt2
+         pryrhRsiqEtjMjYguiAiHtARvgbkgmAu3CMUxoDVkDkfj+UJf23nTOJTgDmz4SE2PVyL
+         f6tnJpF2BO98O5icIc7e4vCp6kifMY2oJxu+8T+lJsL/Q8ePUwOADZRT9c24ALgbS23Y
+         R8mCJDk9CDzUn6WTV5e84+timHEliOkvtUPrjfmXUGum4gQMxXto7vnNuikzijBB3FsG
+         D+Ow==
+X-Gm-Message-State: AOAM53244L44rRVz+0/u2dWUOW0FlnBuq8pFRbDPVxrgDZKk+XlxTtVR
+        Q+f2lQpYa53dFZw2e+Yw2k4=
+X-Google-Smtp-Source: ABdhPJzfDIMjUxEgt9G0Qr9MyTKAC4f/pT1FJfhtxepS29QhaPCwgBH7bCL6R4WpXZf0Fc56ljOPiQ==
+X-Received: by 2002:a05:6e02:1588:: with SMTP id m8mr35412744ilu.188.1636037837033;
+        Thu, 04 Nov 2021 07:57:17 -0700 (PDT)
+Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:886c:a169:fafb:e7cf])
+        by smtp.gmail.com with ESMTPSA id c12sm3007157ils.31.2021.11.04.07.57.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 04 Nov 2021 07:57:15 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        chuck.level@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 0/7] NFSv4.2 add tracepoints to sparse files and copy
+Date:   Thu,  4 Nov 2021 10:57:07 -0400
+Message-Id: <20211104145714.57942-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1760414.1636036338.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Thu, 04 Nov 2021 14:32:18 +0000
-Message-ID: <1760415.1636036338@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+From: Olga Kornievskaia <kolga@netapp.com>
 
-> On Wed, Nov 03, 2021 at 02:58:12PM +0000, David Howells wrote:
-> > Matthew Wilcox <willy@infradead.org> wrote:
-> > =
+v2 changes:
+- addressed compile issues with CONFIG_NFS_V4_2 isn't enabled
+- addressed grouping assignment based on the error value
+- addressed reusing show_nfs_stable_how instead of defining new
 
-> > > > +	len =3D (size >=3D start + gran) ? gran : size - start;
-> > > =
+Olga Kornievskaia (7):
+  NFSv4.2 add tracepoint to SEEK
+  NFSv4.2 add tracepoints to FALLOCATE and DEALLOCATE
+  NFSv4.2 add tracepoint to COPY
+  NFSv4.2 add tracepoint to CLONE
+  NFSv4.2 add tracepoint to CB_OFFLOAD
+  NFSv4.2 add tracepoint to COPY_NOTIFY
+  NFSv4.2 add tracepoint to OFFLOAD_CANCEL
 
-> > > This seems like the most complicated way to write this ... how about=
-:
-> > > =
+ fs/nfs/callback_proc.c |   3 +
+ fs/nfs/nfs42proc.c     |   9 +
+ fs/nfs/nfs4trace.h     | 443 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 455 insertions(+)
 
-> > >         size_t len =3D min_t(loff_t, isize - start, folio_size(folio=
-));
-> > =
-
-> > I was trying to hedge against isize-start going negative.  Can this co=
-de race
-> > against truncate?  truncate_setsize() changes i_size *before* invalida=
-ting the
-> > pages.
-> =
-
-> We should check for isize < start separately, and skip the writeback
-> entirely.
-
-So, something like the following
-
-	static int v9fs_vfs_write_folio_locked(struct folio *folio)
-	{
-		struct inode *inode =3D folio_inode(folio);
-		struct v9fs_inode *v9inode =3D V9FS_I(inode);
-		loff_t start =3D folio_pos(folio);
-		loff_t i_size =3D i_size_read(inode);
-		struct iov_iter from;
-		size_t len =3D folio_size(folio);
-		int err;
-
-		if (start >=3D i_size)
-			return 0; /* Simultaneous truncation occurred */
-
-		len =3D min_t(loff_t, i_size - start, len);
-
-		iov_iter_xarray(&from, ..., start, len);
-		...
-	}
-
-David
+-- 
+2.27.0
 
