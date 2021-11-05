@@ -2,69 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A75E5446761
-	for <lists+linux-nfs@lfdr.de>; Fri,  5 Nov 2021 17:54:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B5D5446898
+	for <lists+linux-nfs@lfdr.de>; Fri,  5 Nov 2021 19:44:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233650AbhKEQ5G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Nov 2021 12:57:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60778 "EHLO mail.kernel.org"
+        id S232637AbhKESrY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Nov 2021 14:47:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S233703AbhKEQ5F (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 5 Nov 2021 12:57:05 -0400
-Received: by mail.kernel.org (Postfix) with ESMTPSA id CCDF460E9C;
-        Fri,  5 Nov 2021 16:54:24 +0000 (UTC)
+        id S232619AbhKESrX (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 5 Nov 2021 14:47:23 -0400
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 77B4E61186
+        for <linux-nfs@vger.kernel.org>; Fri,  5 Nov 2021 18:44:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1636131265;
-        bh=ME0jCqFRX/NiwfEsOja6gZmVp/gVjEkqBMvTXUcKzvQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jtOUBcJ6PmQJ2R25tqhiUHux9nwwLcFEue9eZshPnzdXL9U9tfZNYKYPZhWZr6AF8
-         JXWnrDKnKRAamHbR0i3+kdt3t7fFZFoeHrSBZnEN8wjVBn9vSj/Gg33o5PQqf/0o+7
-         yI31NH9eE8Un1z6CVohCn6/x9lNdoTR9HcewpsKy1f4kUUUDJ9rbHo14ihf6dSAh6P
-         4IVar6EuYgt58Lk1XExi8SA95x2lDXXNwjJHg0mMAUP9mN73IdydcXIrafqvgP+lR2
-         uXvs48AFBOtQ0hXat4gmJVIwT0zGtBHKRqUF4/gLKp4zpadQyR2Zd1A2psN9HDtGtQ
-         4OTR9RsLQeUBA==
-Date:   Fri, 5 Nov 2021 09:54:21 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFS: Don't trace an uninitialised value
-Message-ID: <YYVhvS5q3GyuaBAL@archlinux-ax161>
-References: <20211105163852.214665-1-trondmy@kernel.org>
+        s=k20201202; t=1636137883;
+        bh=3RDqdN2G0nKzBtroGJ/k9ErFTzR2FTK+4I4zpSKH8vw=;
+        h=From:To:Subject:Date:From;
+        b=Me3ykOOtvI4tbGk6zPmtO0H9mwhHN0FztZPMIRCoCFfh2nP95fOcGm7hj4iDLQqQN
+         d4xwWQzXWrIAYO3eHU6jnIO4n7DLgwD/n/XiUuHa8VmvVfahRWz4qgVLB8aNJ9Tbdx
+         gsIhc+GKTWfdrFRFR/P4WdaaWmC0iSisOytu9sQignwjplg3QRPfqJGMZdYi3iMLJn
+         bT0xrv2YzIoPjAolgHbAfjEA2Uo/ZwjNcojk+qXXxzJ2E+f9emtmKwO6EngKOWDMPv
+         fpQSBAhkSFbdtMiGjsIfIVXXyOg6zclsE95oXR641XJZ0cQh/fNjuKhQ7qkwJv5ke+
+         iuDZC4upxotvw==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Don't allocate nfs_fattr on the stack in __nfs42_ssc_open()
+Date:   Fri,  5 Nov 2021 14:38:14 -0400
+Message-Id: <20211105183816.328639-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211105163852.214665-1-trondmy@kernel.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 05, 2021 at 12:38:52PM -0400, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> If fhandle is NULL or fattr is NULL, then 'error' is uninitialised.
-> 
-> Reported-by: Nathan Chancellor <nathan@kernel.org>
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Reviewed-by: Nathan Chancellor <nathan@kernel.org>
+The preferred behaviour is always to allocate struct nfs_fattr from the
+slab.
 
-> ---
->  fs/nfs/dir.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 8de99f426183..731d31015b6a 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -1798,7 +1798,7 @@ struct dentry *nfs_lookup(struct inode *dir, struct dentry * dentry, unsigned in
->  	}
->  	nfs_set_verifier(dentry, dir_verifier);
->  out:
-> -	trace_nfs_lookup_exit(dir, dentry, flags, error);
-> +	trace_nfs_lookup_exit(dir, dentry, flags, PTR_ERR_OR_ZERO(res));
->  	nfs_free_fattr(fattr);
->  	nfs_free_fhandle(fhandle);
->  	return res;
-> -- 
-> 2.33.1
-> 
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4file.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
+index c91565227ea2..f9f50fe1f3a4 100644
+--- a/fs/nfs/nfs4file.c
++++ b/fs/nfs/nfs4file.c
+@@ -317,7 +317,7 @@ static int read_name_gen = 1;
+ static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+ 		struct nfs_fh *src_fh, nfs4_stateid *stateid)
+ {
+-	struct nfs_fattr fattr;
++	struct nfs_fattr *fattr = nfs_alloc_fattr();
+ 	struct file *filep, *res;
+ 	struct nfs_server *server;
+ 	struct inode *r_ino = NULL;
+@@ -328,9 +328,10 @@ static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+ 
+ 	server = NFS_SERVER(ss_mnt->mnt_root->d_inode);
+ 
+-	nfs_fattr_init(&fattr);
++	if (!fattr)
++		return ERR_PTR(-ENOMEM);
+ 
+-	status = nfs4_proc_getattr(server, src_fh, &fattr, NULL, NULL);
++	status = nfs4_proc_getattr(server, src_fh, fattr, NULL, NULL);
+ 	if (status < 0) {
+ 		res = ERR_PTR(status);
+ 		goto out;
+@@ -343,7 +344,7 @@ static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+ 		goto out;
+ 	snprintf(read_name, len, SSC_READ_NAME_BODY, read_name_gen++);
+ 
+-	r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, &fattr,
++	r_ino = nfs_fhget(ss_mnt->mnt_root->d_inode->i_sb, src_fh, fattr,
+ 			NULL);
+ 	if (IS_ERR(r_ino)) {
+ 		res = ERR_CAST(r_ino);
+@@ -388,6 +389,7 @@ static struct file *__nfs42_ssc_open(struct vfsmount *ss_mnt,
+ out_free_name:
+ 	kfree(read_name);
+ out:
++	nfs_free_fattr(fattr);
+ 	return res;
+ out_stateowner:
+ 	nfs4_put_state_owner(sp);
+-- 
+2.33.1
+
