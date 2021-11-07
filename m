@@ -2,218 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E08DE447265
-	for <lists+linux-nfs@lfdr.de>; Sun,  7 Nov 2021 10:57:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CADF7447356
+	for <lists+linux-nfs@lfdr.de>; Sun,  7 Nov 2021 15:39:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235335AbhKGKAC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 7 Nov 2021 05:00:02 -0500
-Received: from outgoing-stata.csail.mit.edu ([128.30.2.210]:35451 "EHLO
-        outgoing-stata.csail.mit.edu" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S235332AbhKGKAC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 7 Nov 2021 05:00:02 -0500
-Received: from c-24-60-30-97.hsd1.ct.comcast.net ([24.60.30.97] helo=crash.local)
-        by outgoing-stata.csail.mit.edu with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.82)
-        (envelope-from <rtm@csail.mit.edu>)
-        id 1mjevM-0007xh-IV; Sun, 07 Nov 2021 04:57:16 -0500
-Received: from crash.local (localhost [127.0.0.1])
-        by crash.local (Postfix) with ESMTP id A47C412468F8F;
-        Sun,  7 Nov 2021 04:57:15 -0500 (EST)
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-cc:     linux-nfs@vger.kernel.org
-From:   rtm@csail.mit.edu
-Reply-To: rtm@csail.mit.edu
-Subject: NFS client can use slot after it is kfree()ed
+        id S229544AbhKGOmN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 7 Nov 2021 09:42:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229520AbhKGOmN (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 7 Nov 2021 09:42:13 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id 7D5C561357;
+        Sun,  7 Nov 2021 14:39:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636295970;
+        bh=0nSploVJ1cezL7P1APkmvJ6I/eScWn2MDBWLQvktk7c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=iqepzabM5HYpfpgbakSyA7nFFx2aXYaB6W1BfAmsHoN/JTk5zNOMbnnL746RcnSlr
+         ap93MkTwwlp6rBrR76aak+jhb5OeWeuss4RpxS2igIZQJQSc25uD/GI4OtaUjogQf6
+         VGBptodqiRxJTlCOS7Y6WVR2UIcFLl0DFWIKKIRg7zjk9onAWxkIGcL3tmUg8GJxWl
+         7XMGLzQBS5ArfK4gew7fBdjUO52c2Enc3Xlt8fUAFCJVVsuz7C1zY8qknJXz/x8TCj
+         lEyAve8jfNt8Nn+9qcc9pZ2bErc1AG/CCJldrrGjPUpKfphPPctF9OzCKdz09LldwM
+         lKWaVIpd846Cg==
+From:   trondmy@kernel.org
+To:     rtm@csail.mit.edu
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Sanity check the parameters in nfs41_update_target_slotid()
+Date:   Sun,  7 Nov 2021 09:32:43 -0500
+Message-Id: <20211107143243.22653-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="=-=-="
-Date:   Sun, 07 Nov 2021 04:57:15 -0500
-Message-ID: <33492.1636279035@crash.local>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If the server returns sr_highest_slotid=0xffffffff in an OP_SEQUENCE
-reply, nfs41_set_server_slotid_locked() will cause all the slots to be
-kfree()ed, including the one that's in use. nfs41_release_slot() will
-then dereference pointers extracted from the free'd slot, and possibly
-crash. 0xffffffff is special due to this code:
+Ensure that the values supplied by the server do not exceed the size of
+the largest allowed slot table.
 
-        nfs4_shrink_slot_table(tbl, highest_slotid + 1);
+Reported-by: <rtm@csail.mit.edu>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/nfs4session.c | 12 ++++++++----
+ fs/nfs/nfs4session.h |  1 +
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-I've attached a program that demonstrates the bug. My machine has
-slub_debug=FZP.
+diff --git a/fs/nfs/nfs4session.c b/fs/nfs/nfs4session.c
+index 4145a0138907..5db460476bf2 100644
+--- a/fs/nfs/nfs4session.c
++++ b/fs/nfs/nfs4session.c
+@@ -511,12 +511,16 @@ void nfs41_update_target_slotid(struct nfs4_slot_table *tbl,
+ 		struct nfs4_slot *slot,
+ 		struct nfs4_sequence_res *res)
+ {
++	u32 target_highest_slotid = min(res->sr_target_highest_slotid,
++					NFS4_MAX_SLOTID);
++	u32 highest_slotid = min(res->sr_highest_slotid, NFS4_MAX_SLOTID);
++
+ 	spin_lock(&tbl->slot_tbl_lock);
+-	if (!nfs41_is_outlier_target_slotid(tbl, res->sr_target_highest_slotid))
+-		nfs41_set_target_slotid_locked(tbl, res->sr_target_highest_slotid);
++	if (!nfs41_is_outlier_target_slotid(tbl, target_highest_slotid))
++		nfs41_set_target_slotid_locked(tbl, target_highest_slotid);
+ 	if (tbl->generation == slot->generation)
+-		nfs41_set_server_slotid_locked(tbl, res->sr_highest_slotid);
+-	nfs41_set_max_slotid_locked(tbl, res->sr_target_highest_slotid);
++		nfs41_set_server_slotid_locked(tbl, highest_slotid);
++	nfs41_set_max_slotid_locked(tbl, target_highest_slotid);
+ 	spin_unlock(&tbl->slot_tbl_lock);
+ }
+ 
+diff --git a/fs/nfs/nfs4session.h b/fs/nfs/nfs4session.h
+index 3de425f59b3a..351616c61df5 100644
+--- a/fs/nfs/nfs4session.h
++++ b/fs/nfs/nfs4session.h
+@@ -12,6 +12,7 @@
+ #define NFS4_DEF_SLOT_TABLE_SIZE (64U)
+ #define NFS4_DEF_CB_SLOT_TABLE_SIZE (16U)
+ #define NFS4_MAX_SLOT_TABLE (1024U)
++#define NFS4_MAX_SLOTID (NFS4_MAX_SLOT_TABLE - 1U)
+ #define NFS4_NO_SLOT ((u32)-1)
+ 
+ #if IS_ENABLED(CONFIG_NFS_V4)
+-- 
+2.33.1
 
-# uname -a
-Linux (none) 5.15.0-rc7-dirty #19 SMP Sat Nov 6 12:55:40 UTC 2021 riscv64 riscv64 riscv64 GNU/Linux
-# cc nfs_3.c
-# ./a.out
-...
-[   18.969075] Unable to handle kernel paging request at virtual address 6b6b6b6b6b6b6b68
-[   18.983273] Oops [#1]
-[   18.988716] Modules linked in:
-[   18.996151] CPU: 0 PID: 60 Comm: mount.nfs Not tainted 5.15.0-rc7-dirty #16
-[   19.008294] Hardware name: ucbbar,riscvemu-bare (DT)
-[   19.017541] epc : nfs41_release_slot+0x20/0xc8
-[   19.026918]  ra : nfs41_sequence_done+0x22/0x34
-[   19.036245] epc : ffffffff802206ac ra : ffffffff80225a7a sp : ffffffd00057b7f0
-...
-[   19.183462] status: 0000000200000121 badaddr: 6b6b6b6b6b6b6b68 cause: 000000000000000d
-[   19.198066] [<ffffffff802206ac>] nfs41_release_slot+0x20/0xc8
-[   19.210683] [<ffffffff80225a7a>] nfs41_sequence_done+0x22/0x34
-[   19.223249] [<ffffffff80226b5e>] nfs41_call_sync_done+0xe/0x16
-[   19.235828] [<ffffffff8071a328>] rpc_exit_task+0x26/0x74
-[   19.246807] [<ffffffff8071a4b0>] __rpc_execute+0x76/0x216
-[   19.257785] [<ffffffff8071aace>] rpc_execute+0x58/0x7e
-[   19.268764] [<ffffffff80713358>] rpc_run_task+0x12c/0x16c
-[   19.279683] [<ffffffff80220a52>] nfs4_call_sync_custom+0x12/0x32
-[   19.292304] [<ffffffff8022388a>] _nfs41_proc_secinfo_no_name.isra.0+0xca/0x13a
-[   19.306944] [<ffffffff8022886c>] nfs41_find_root_sec+0xc6/0x228
-[   19.319538] [<ffffffff8022bf2e>] nfs4_proc_get_rootfh+0x26/0x9a
-[   19.332128] [<ffffffff80248396>] nfs4_get_rootfh+0x40/0xbc
-[   19.343070] [<ffffffff80248a5a>] nfs4_server_common_setup+0x1ac/0x1be
-[   19.356076] [<ffffffff802498e6>] nfs4_create_server+0x16c/0x208
-[   19.368654] [<ffffffff8024161e>] nfs4_try_get_tree+0x16/0x4c
-[   19.381247] [<ffffffff80218bac>] nfs_get_tree+0x34a/0x3ac
-[   19.392176] [<ffffffff8012bce4>] vfs_get_tree+0x18/0x88
-[   19.403092] [<ffffffff8014a28e>] path_mount+0x4f4/0x77a
-[   19.414080] [<ffffffff8014a560>] do_mount+0x4c/0x7e
-[   19.424644] [<ffffffff8014a912>] sys_mount+0xca/0x14e
-[   19.435623] [<ffffffff80003046>] ret_from_syscall+0x0/0x2
-
-
---=-=-=
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename=nfs_3.c
-Content-Transfer-Encoding: base64
-
-I2luY2x1ZGUgPHN0ZGlvLmg+CiNpbmNsdWRlIDxzdHJpbmcuaD4KI2luY2x1ZGUgPHN0ZGxpYi5o
-PgojaW5jbHVkZSA8dW5pc3RkLmg+CiNpbmNsdWRlIDxzeXMvc29ja2V0Lmg+CiNpbmNsdWRlIDxz
-eXMvaW9jdGwuaD4KI2luY2x1ZGUgPG5ldGluZXQvaW4uaD4KI2luY2x1ZGUgPHN5cy93YWl0Lmg+
-CiNpbmNsdWRlIDxzeXMvcmVzb3VyY2UuaD4KI2luY2x1ZGUgPGFzc2VydC5oPgoKI2RlZmluZSBO
-QUEgNjQKdW5zaWduZWQgbG9uZyBsb25nIGFhW05BQV0gPSB7IDAsIDAsIDAsIDAsIDB4ZmZmZmZm
-ZmYsIDAgfTsKaW50IGFhaSA9IDA7CgpjaGFyIGlidWZbNDA5Nl07CmludCBpbGVuID0gMDsKaW50
-IGlpID0gMDsKY2hhciBvYnVmWzQwOTZdOwppbnQgb2kgPSAwOwoKaW50IHJlYWRuKGludCBmZCwg
-dm9pZCAqeGJ1ZiwgaW50IG4pIHsKICBjaGFyICpidWYgPSAoY2hhciAqKSB4YnVmOwogIGludCBv
-cmlnID0gbjsKICB3aGlsZShuID4gMCl7CiAgICBpbnQgY2MgPSByZWFkKGZkLCBidWYsIG4pOwog
-ICAgaWYoY2MgPD0gMCkgeyBwZXJyb3IoInJlYWQiKTsgcmV0dXJuIC0xOyB9CiAgICBuIC09IGNj
-OwogICAgYnVmICs9IGNjOwogIH0KICByZXR1cm4gb3JpZzsKfQoKdW5zaWduZWQgaW50CnBhcnNl
-MzIoKQp7CiAgaWYoaWkgPj0gaWxlbil7CiAgICBwcmludGYoInBhcnNlZCBiZXlvbmQgdGhlIGVu
-ZCBvZiB0aGUgaW5wdXRcbiIpOwogICAgcmV0dXJuIDA7CiAgfQogIHVuc2lnbmVkIGludCB4ID0g
-KihpbnQqKShpYnVmK2lpKTsKICBpaSArPSA0OwogIHJldHVybiBudG9obCh4KTsKfQoKdW5zaWdu
-ZWQgbG9uZyBsb25nCnBhcnNlNjQoKQp7CiAgdW5zaWduZWQgbG9uZyBsb25nIGhpID0gcGFyc2Uz
-MigpOwogIHVuc2lnbmVkIGxvbmcgbG9uZyBsbyA9IHBhcnNlMzIoKTsKICByZXR1cm4gKGhpIDw8
-IDMyKSB8IGxvOwp9CgovLyBzZXNzaW9uaWQ0IC0tIDE2IGJ5dGVzCnZvaWQKcGFyc2Vfc2lkKGNo
-YXIgKnNpZCkKewogIGZvcihpbnQgaSA9IDA7IGkgPCAxNjsgaSsrKXsKICAgIGlmKHNpZCkKICAg
-ICAgc2lkW2ldID0gaWJ1ZltpaV07CiAgICBpaSsrOwogIH0KfQoKdW5zaWduZWQgaW50CnBhcnNl
-X29wYXF1ZShjaGFyICpidWYpCnsKICBpZihidWYpCiAgICBidWZbMF0gPSAwOwogIGludCBub21p
-bmFsX24gPSBwYXJzZTMyKCk7CiAgaWYobm9taW5hbF9uID4gNDA5Nil7CiAgICBwcmludGYoImNy
-YXp5IG9wYXF1ZSBsZW5ndGggJWRcbiIsIG5vbWluYWxfbik7CiAgICByZXR1cm4gMDsKICB9CiAg
-aW50IHJlYWxfbiA9IG5vbWluYWxfbjsKICB3aGlsZSgocmVhbF9uJTQpICE9IDApIHJlYWxfbiAr
-PSAxOwogIGZvcihpbnQgaSA9IDA7IGkgPCByZWFsX247IGkrKyl7CiAgICBpZihidWYpCiAgICAg
-IGJ1ZltpXSA9IGlidWZbaWldOwogICAgaWkrKzsKICB9CiAgaWYoYnVmKQogICAgYnVmW25vbWlu
-YWxfbl0gPSAwOwogIHJldHVybiBub21pbmFsX247Cn0KCnZvaWQKcHV0MzIodW5zaWduZWQgaW50
-IHgpCnsKICBhc3NlcnQoKG9pICUgNCkgPT0gMCk7CiAgKihpbnQqKShvYnVmK29pKSA9IGh0b25s
-KHgpOwogIG9pICs9IDQ7Cn0KCnZvaWQKcHV0NjQodW5zaWduZWQgbG9uZyBsb25nIHgpCnsKICBw
-dXQzMih4ID4+IDMyKTsKICBwdXQzMih4KTsKfQoKdm9pZApwdXRfb3BhcXVlKGludCBuLCBjaGFy
-ICpidWYpCnsKICBwdXQzMihuKTsKICBmb3IoaW50IGkgPSAwOyBpIDwgbjsgaSsrKQogICAgb2J1
-ZltvaSsrXSA9IGJ1ZltpXTsKICB3aGlsZSgobiU0KSE9MCl7CiAgICBvYnVmW29pKytdID0gMDsK
-ICAgIG4rKzsKICB9Cn0KCnZvaWQKcHV0X3NpZChjaGFyICpzaWQpCnsKICBmb3IoaW50IGkgPSAw
-OyBpIDwgMTY7IGkrKyl7CiAgICBvYnVmW29pKytdID0gKHNpZCA/IHNpZFtpXSA6IDApOwogIH0K
-fQoKdm9pZApwYXJzZV9ub3AoKQp7Cn0KCnZvaWQKcGFyc2Vfb3BfZXhjaGFuZ2VfaWQoKQp7CiAg
-cGFyc2UzMigpOyAvLyB2ZXJpZmllcjQsIGZpcnN0IGhhbGYKICBwYXJzZTMyKCk7IC8vIHZlcmlm
-aWVyNCwgc2Vjb25kIGhhbGYKICBwYXJzZV9vcGFxdWUoMCk7IC8vIGVpYV9jbGllbnRvd25lcgog
-IGludCBjZmxhZ3MgPSBwYXJzZTMyKCk7IC8vIGVpYV9mbGFncwogIHBhcnNlMzIoKTsgLy8gc3Rh
-dGVfcHJvdGVjdDRfYS5zcGFfaG93LCBhc3N1bWUgU1A0X05PTkUKICBpbnQgbmltcGwgPSBwYXJz
-ZTMyKCk7IC8vIGxlbmd0aCBvZiBjbGllbnRfaW1wbF9pZAogIGZvcihpbnQgaW1wbGkgPSAwOyBp
-bXBsaSA8IG5pbXBsOyBpbXBsaSsrKXsKICAgIGNoYXIganVua1s1MTJdOwogICAgcGFyc2Vfb3Bh
-cXVlKGp1bmspOyAvLyBuaWlfZG9tYWluCiAgICAvLyBwcmludGYoIm5paV9kb21haW46ICVzXG4i
-LCBqdW5rKTsKICAgIHBhcnNlX29wYXF1ZShqdW5rKTsgLy8gbmlpX25hbWUKICAgIC8vIHByaW50
-ZigibmlpX25hbWU6ICVzXG4iLCBqdW5rKTsKICAgIHBhcnNlNjQoKTsgLy8gMS8yIG9mIG5mc3Rp
-bWU0CiAgICBwYXJzZTMyKCk7IC8vIDEvMiBvZiBuZnN0aW1lNAogIH0KCiAgLy8gZmluaXNoIEVY
-Q0hBTkdFX0lENHJlcwogIHB1dDMyKDApOyAvLyBlaXJfc3RhdHVzID0gTkZTNF9PSwogIHB1dDY0
-KDEpOyAvLyBjbGllbnRpZDQKICBwdXQzMigxKTsgLy8gc2VxdWVuY2VpZDQKICBpbnQgc2ZsYWdz
-ID0gMHgxMDMgfCAweDEwMDAwOyAvLyBFWENIR0lENF9GTEFHX1VTRV9OT05fUE5GUwogIHB1dDMy
-KHNmbGFncyk7IC8vIGVpcl9mbGFncwogIHB1dDMyKDApOyAvLyBzdGF0ZV9wcm90ZWN0NF9yLnNw
-cl9ob3cgPSBTUDRfTk9ORQogIHB1dDY0KDEpOyAvLyBzZXJ2ZXJfb3duZXI0LnNvX21pbm9yX2lk
-CiAgcHV0MzIoNCk7IC8vIGxlbmd0aCBvZiBzb19tYWpvcl9pZDw+CiAgcHV0MzIoMHgxMTIyMzM0
-NCk7IC8vIHNvX21ham9yX2lkPD4KICBwdXQzMig0KTsgLy8gbGVuZ3RoIG9mIGVpcl9zZXJ2ZXJf
-c2NvcGUKICBwdXQzMigweDExMjIzMzQ0KTsKICBwdXQzMigxKTsgLy8gbGVuZ3RoIG9mIGVpcl9z
-ZXJ2ZXJfaW1wbF9pZDwxPgogIHB1dDMyKDQpOyAvLyBuZnNfaW1wbF9pZDQubmlpX2RvbWFpbgog
-IHB1dDMyKDB4MTEyMjMzNDQpOwogIHB1dDMyKDQpOyAvLyBuZnNfaW1wbF9pZDQubmlpX25hbWUK
-ICBwdXQzMigweDExMjIzMzQ0KTsKICBwdXQ2NCgwKTsgLy8gbmlpX2RhdGUgMS8yCiAgcHV0MzIo
-MCk7IC8vIG5paV9kYXRlIDIvMgp9Cgp2b2lkCnBhcnNlX29wX2NyZWF0ZV9zZXNzaW9uKCkKewog
-IHBhcnNlNjQoKTsgLy8gY3NhX2NsaWVudGlkCiAgaW50IHNlcSA9IHBhcnNlMzIoKTsgLy8gY3Nh
-X3NlcXVlbmNlCiAgcGFyc2UzMigpOyAvLyBjc2FfZmxhZ3MKICAvLyBjc2FfZm9yZV9jaGFuX2F0
-dHJzLCBjc2FfYmFja19jaGFuX2F0dHJzCiAgaW50IGF0dHJzWzJdWzZdOwogIGZvcihpbnQgaSA9
-IDA7IGkgPCAyOyBpKyspewogICAgZm9yKGludCBqID0gMDsgaiA8IDY7IGorKyl7CiAgICAgIGF0
-dHJzW2ldW2pdID0gcGFyc2UzMigpOwogICAgfQogICAgcGFyc2Vfb3BhcXVlKDApOyAvLyBjYV9y
-ZG1hX2lyZDwxPgogIH0KCiAgcHV0MzIoMCk7IC8vIE9LCiAgZm9yKGludCBpID0gMDsgaSA8IDQ7
-IGkrKykKICAgIHB1dDMyKDEpOyAvLyBjc3Jfc2Vzc2lvbmlkIGkvNAogIHB1dDMyKHNlcSk7IC8v
-IGNzcl9zZXF1ZW5jZQogIHB1dDMyKDB4Myk7IC8vIGNzcl9mbGFncwoKICBmb3IoaW50IGkgPSAw
-OyBpIDwgMjsgaSsrKXsKICAgIGZvcihpbnQgaiA9IDA7IGogPCA2OyBqKyspCiAgICAgIHB1dDMy
-KGF0dHJzW2ldW2pdKTsKICAgIHB1dDMyKDApOyAvLyBjYV9yZG1hX2lyZAogIH0KfQoKdm9pZApw
-YXJzZV9vcF9zZXF1ZW5jZSgpCnsKICBjaGFyIHNpZFsxNl07CgogIHBhcnNlX3NpZChzaWQpOyAv
-LyBzYV9zZXNzaW9uaWQKICBpbnQgc2VxID0gcGFyc2UzMigpOyAvLyBzYV9zZXF1ZW5jZWlkCiAg
-aW50IHNsb3RpZCA9IHBhcnNlMzIoKTsgLy8gc2Ffc2xvdGlkCiAgaW50IGhpc2xvdCA9IHBhcnNl
-MzIoKTsgLy8gc2FfaGlnaGVzdF9zbG90aWQKICBwYXJzZTMyKCk7IC8vIHNhX2NhY2hldGhpcwoK
-ICBwdXQzMigwKTsgLy8gT0sKICBwdXRfc2lkKHNpZCk7IC8vIHNyX3Nlc3Npb25pZAogIHB1dDMy
-KHNlcSk7IC8vIHNyX3NlcXVlbmNlaWQKICBpbnQgeDEgPSBhYVthYWkrK107CiAgaW50IHgyID0g
-YWFbYWFpKytdOwogIGludCB4MyA9IGFhW2FhaSsrXTsKICBwdXQzMih4MSk7IC8vIHNyX3Nsb3Rp
-ZAogIHB1dDMyKHgyKTsgLy8gc3JfaGlnaGVzdF9zbG90aWQKICBwdXQzMih4Myk7IC8vIHNyX3Rh
-cmdldF9oaWdoZXN0X3Nsb3RpZAogIHB1dDMyKDApOyAvLyBzcl9zdGF0dXNfZmxhZ3MKfQoKdm9p
-ZCBwYXJzZV9jb21wb3VuZCgpCnsKICBjaGFyIHRhZ1s1MTJdOwogIGludCB0YWdsZW4gPSBwYXJz
-ZV9vcGFxdWUodGFnKTsgLy8gdGFnCiAgcGFyc2UzMigpOyAvLyBtaW5vciB2ZXJzaW9uCiAgaW50
-IG5vcHMgPSBwYXJzZTMyKCk7CiAgcHJpbnRmKCIlZCBvcHNcbiIsIG5vcHMpOwoKICAvLyBzdGFy
-dCBhIENPTVBPVU5ENHJlcwogIHB1dDMyKDApOyAvLyBuZnNzdGF0NCA9IE5GUzRfT0sKICBwdXRf
-b3BhcXVlKHRhZ2xlbiwgdGFnKTsKICBwdXQzMihub3BzKTsgLy8gbGVuZ3RoIG9mIHJlc2FycmF5
-PD4KICAKICBmb3IoaW50IG9waW5kZXggPSAwOyBvcGluZGV4IDwgbm9wcyAmJiBvaSA8IGlsZW47
-IG9waW5kZXgrKyl7CiAgICBpbnQgb3AgPSBwYXJzZTMyKCk7CiAgICBwcmludGYoIm9wICVkXG4i
-LCBvcCk7CiAgICBwdXQzMihvcCk7IC8vIHJlc29wIGluIG5mc19yZXNvcDQKICAgIGlmKG9wID09
-IDQyKXsKICAgICAgcGFyc2Vfb3BfZXhjaGFuZ2VfaWQoKTsKICAgIH0gZWxzZSBpZihvcCA9PSA0
-Myl7CiAgICAgIHBhcnNlX29wX2NyZWF0ZV9zZXNzaW9uKCk7CiAgICB9IGVsc2UgaWYob3AgPT0g
-NTMpewogICAgICBwYXJzZV9vcF9zZXF1ZW5jZSgpOwogICAgfSBlbHNlIHsKICAgICAgcHJpbnRm
-KCJ1bmtub3duIG9wICVkXG4iLCBvcCk7CiAgICAgIC8vIGNhbm5vdCBjb250aW51ZSB0byB0aGUg
-bmV4dCBvcCBzaW5jZQogICAgICAvLyB3ZSBkb24ndCBrbm93IGhvdyBsb25nIHRoaXMgb25lIGlz
-LgogICAgICBicmVhazsKICAgIH0KICB9Cn0KCnZvaWQKcGFyc2VfcnBjKCkKewogIC8vIFNVTiBS
-UEMKICBpbnQgeGlkID0gcGFyc2UzMigpOwogIHBhcnNlMzIoKTsgLy8gbXR5cGU9Q0FMTAogIHBh
-cnNlMzIoKTsgLy8gcnBjIHZlcnNpb24KICBwYXJzZTMyKCk7IC8vIHByb2cjCiAgcGFyc2UzMigp
-OyAvLyBwcm9nIHZlcnMKICBpbnQgcHJvYyA9IHBhcnNlMzIoKTsKICBwYXJzZTMyKCk7IC8vIGNy
-ZWQgdHlwZQogIHBhcnNlX29wYXF1ZSgwKTsgLy8gY3JlZAogIHBhcnNlMzIoKTsgLy8gdmVyZiB0
-eXBlCiAgcGFyc2Vfb3BhcXVlKDApOyAvLyB2ZXJmCgogIHB1dDMyKHhpZCk7CiAgcHV0MzIoMSk7
-IC8vIFJFUExZCiAgcHV0MzIoMCk7IC8vIE1TR19BQ0NFUFRFRAogIHB1dDMyKDApOyAvLyBvcGFx
-dWVfYXV0aCBmbGF2b3IgPSBBVVRIX05VTEwKICBwdXQzMigwKTsgLy8gb3BhcXVlX2F1dGggbGVu
-Z3RoCiAgcHV0MzIoMCk7IC8vIFNVQ0NFU1MKCiAgaWYocHJvYyA9PSAwKXsKICAgIHBhcnNlX25v
-cCgpOwogIH0gZWxzZSBpZihwcm9jID09IDEpewogICAgcGFyc2VfY29tcG91bmQoKTsKICB9IGVs
-c2UgewogICAgcHJpbnRmKCJ1bmtub3duIHJwYyBwcm9jICVkXG4iLCBwcm9jKTsKICB9Cn0KCmlu
-dAptYWluKCl7CiAgc3RydWN0IHJsaW1pdCByOwogIHIucmxpbV9jdXIgPSByLnJsaW1fbWF4ID0g
-MDsKICBzZXRybGltaXQoUkxJTUlUX0NPUkUsICZyKTsKCiAgaW50IHMgPSBzb2NrZXQoQUZfSU5F
-VCwgU09DS19TVFJFQU0sIDApOwogIHN0cnVjdCBzb2NrYWRkcl9pbiBzaW47CiAgbWVtc2V0KCZz
-aW4sIDAsIHNpemVvZihzaW4pKTsKICBzaW4uc2luX2ZhbWlseSA9IEFGX0lORVQ7CiAgc2luLnNp
-bl9wb3J0ID0gaHRvbnMoMjA0OSk7CiAgaW50IHllcyA9IDE7CiAgc2V0c29ja29wdChzLCBTT0xf
-U09DS0VULCBTT19SRVVTRUFERFIsICZ5ZXMsIHNpemVvZih5ZXMpKTsKICBpZihiaW5kKHMsIChz
-dHJ1Y3Qgc29ja2FkZHIgKikmc2luLCBzaXplb2Yoc2luKSkgPCAwKXsKICAgIHBlcnJvcigiYmlu
-ZCIpOyBleGl0KDEpOwogIH0KICBsaXN0ZW4ocywgMTApOwoKICBpbnQgcGlkMSA9IGZvcmsoKTsK
-ICBpZihwaWQxID09IDApewogICAgY2xvc2Uocyk7CiAgICBpZihzeXN0ZW0oImVjaG8gLW4gbW91
-bnQ6IDsgbW91bnQgMTI3LjAuMC4xOi90bXAgL21udCIpID09IDApewogICAgICBzeXN0ZW0oImVj
-aG8gLW4gbHM6IDsgbHMgLWwgL21udC8uIC9tbnQveiIpOwogICAgICBzeXN0ZW0oImVjaG8gLW4g
-ZWNobzogOyBlY2hvIGhpID4gL21udC94Iik7CiAgICAgIHN5c3RlbSgiZWNobyAtbiB1bW91bnQ6
-IDsgdW1vdW50IC9tbnQiKTsKICAgIH0KICAgIGV4aXQoMCk7CiAgfQoKICBpbnQgcGlkMiA9IGZv
-cmsoKTsKICBpZihwaWQyID09IDApewogICAgc29ja2xlbl90IHNpbmxlbiA9IHNpemVvZihzaW4p
-OwogICAgcHJpbnRmKCJjYWxsaW5nIGFjY2VwdFxuIik7CiAgICBpbnQgczEgPSBhY2NlcHQocywg
-KHN0cnVjdCBzb2NrYWRkciAqKSAmc2luLCAmc2lubGVuKTsKICAgIHByaW50ZigiYWNjZXB0IHJl
-dHVybmVkICVkXG4iLCBzMSk7CiAgICBpZihzMSA8IDApIHsgcGVycm9yKCJhY2NlcHQiKTsgZXhp
-dCgxKTsgfQogICAgY2xvc2Uocyk7CiAgCiAgICB3aGlsZSgxKXsKICAgICAgaWYocmVhZG4oczEs
-ICZpbGVuLCA0KSA8IDApIGJyZWFrOwogICAgICBpbGVuID0gbnRvaGwoaWxlbik7CiAgICAgIGls
-ZW4gJj0gMHg3ZmZmZmZmZjsKICAgICAgaWYocmVhZG4oczEsIGlidWYsIGlsZW4pIDwgMCkgYnJl
-YWs7CiAgICAgIG9pID0gaWkgPSAwOwogICAgICBtZW1zZXQob2J1ZiwgMCwgc2l6ZW9mKG9idWYp
-KTsKICAgICAgcHV0MzIoMCk7IC8vIHBsYWNlLWhvbGRlciBmb3IgbGVuZ3RoCiAgICAgIHBhcnNl
-X3JwYygpOwogICAgICAqKGludCopKG9idWYrMCkgPSBodG9ubCgob2kgLSA0KSB8IDB4ODAwMDAw
-MDApOwogICAgICBpZih3cml0ZShzMSwgb2J1Ziwgb2kpPD0wKSBwZXJyb3IoIndyaXRlIik7CiAg
-ICB9CiAgICBleGl0KDEpOwogIH0KICBjbG9zZShzKTsKICBzbGVlcCg3KTsKICBpZihzeXN0ZW0o
-ImRtZXNnIHwgZ3JlcCAndW5oYW5kbGVkIHNpZyciKSA9PSAwKXsKICAgcHJpbnRmKCJ1bmhhbmRs
-ZWQgc2lnbmFsXG4iKTsgd2hpbGUoMSl7fQogIH0KfQo=
---=-=-=--
