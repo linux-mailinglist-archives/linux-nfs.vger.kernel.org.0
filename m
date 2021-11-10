@@ -2,77 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E611544BDD1
-	for <lists+linux-nfs@lfdr.de>; Wed, 10 Nov 2021 10:33:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9052044C223
+	for <lists+linux-nfs@lfdr.de>; Wed, 10 Nov 2021 14:33:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230475AbhKJJf5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 10 Nov 2021 04:35:57 -0500
-Received: from smtp23.cstnet.cn ([159.226.251.23]:54504 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S230456AbhKJJfz (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 10 Nov 2021 04:35:55 -0500
-Received: from localhost.localdomain (unknown [124.16.141.244])
-        by APP-03 (Coremail) with SMTP id rQCowAC3v6u1kYthkxehBg--.395S2;
-        Wed, 10 Nov 2021 17:32:38 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        bfields@fieldses.org, chuck.lever@oracle.com, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] sunrpc: Remove unneeded null check
-Date:   Wed, 10 Nov 2021 09:32:17 +0000
-Message-Id: <20211110093217.67301-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+        id S231484AbhKJNfv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 10 Nov 2021 08:35:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231460AbhKJNfv (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 10 Nov 2021 08:35:51 -0500
+Received: by mail.kernel.org (Postfix) with ESMTPSA id AA7C6611AD;
+        Wed, 10 Nov 2021 13:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1636551184;
+        bh=2fOPQfcnnYGsAAsZbIczysSMHxsigaGOJywncfgF58U=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=aT56LUYcfryK8afAqwV7QUlb1VOXsox2IRfA9k3CQD+AbWS5WrGR5btKvGGSJw1ls
+         kFhWTJ4+M8oryzYoJ2toZRmUpEUUVvY/UgV9dixyoQyLKeGu8HxPOXYfAyY8pjK0C1
+         E6B6e/oPwiOypZoBEsUDC5OkTlSMrm+mkU9bP9KiJ4CWgTtNjS17BjA5xORv9hQvO6
+         vA2R1gri9i/NKNOZ7ocjQy59+mN4hsXC9+Akms+CiFVvMgCjmjjX2tvvhVrq/MplG2
+         6ZbhmUnzqNdRKoO5KEhCc1jpiUMoqZf5GbU82wKzu98hTjWGLqJ5FgkIKysU9v6qAN
+         RqDtNznsE/6YQ==
+Message-ID: <a0212b723317677e8601b3f58927eab03ef784de.camel@kernel.org>
+Subject: Re: [PATCH v4 0/5] netfs, 9p, afs, ceph: Support folios, at least
+ partially
+From:   Jeff Layton <jlayton@kernel.org>
+To:     David Howells <dhowells@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     kafs-testing@auristor.com, Ilya Dryomov <idryomov@gmail.com>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        ceph-devel@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, devel@lists.orangefs.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Wed, 10 Nov 2021 08:33:01 -0500
+In-Reply-To: <163649323416.309189.4637503793406396694.stgit@warthog.procyon.org.uk>
+References: <163649323416.309189.4637503793406396694.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.42.1 (3.42.1-1.fc35) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: rQCowAC3v6u1kYthkxehBg--.395S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZw47AFWDuFykAry7KrWkCrg_yoW3Jrg_G3
-        9YvF4Dt3Z7CFZ8ur43J3y7A345ua40kF1xWrnFgF9xGa1rtr1rZrZ5Zr4kAryUCrWrGrZ3
-        Ja4ku34Yyw1I9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUb28YjsxI4VWDJwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I
-        8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI
-        64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8Jw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc2xSY4AK67AK6r4fMxAIw28I
-        cxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2
-        IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI
-        42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42
-        IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
-        87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jomhrUUUUU=
-X-Originating-IP: [124.16.141.244]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCgcBA1z4kHlyRAAAs0
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In g_verify_token_header, the null check of 'ret'
-is unneeded to be done twice.
+On Tue, 2021-11-09 at 21:27 +0000, David Howells wrote:
+> Here's a set of patches to convert netfs, 9p and afs to use folios and to
+> provide sufficient conversion for ceph that it can continue to use the
+> netfs library.  Jeff Layton is working on fully converting ceph.
+> 
+> This has been rebased on to the 9p merge in Linus's tree[5] so that it has
+> access to both the 9p conversion to fscache and folios.
+> 
+> Changes
+> =======
+> ver #4:
+>  - Detached and sent the afs symlink split patch separately.
+>  - Handed the 9p netfslibisation patch off to Dominique Martinet.
+>  - Added a patch to foliate page_endio().
+>  - Fixed a bug in afs_redirty_page() whereby it didn't set the next page
+>    index in the loop and returned too early.
+>  - Simplified a check in v9fs_vfs_write_folio_locked()[4].
+>  - Undid a change to afs_symlink_readpage()[4].
+>  - Used offset_in_folio() in afs_write_end()[4].
+>  - Rebased on 9p-folio merge upstream[5].
+> 
+> ver #3:
+>  - Rebased on upstream as folios have been pulled.
+>  - Imported a patch to convert 9p to netfslib from my
+>    fscache-remove-old-api branch[3].
+>  - Foliated netfslib.
+> 
+> ver #2:
+>  - Reorder the patches to put both non-folio afs patches to the front.
+>  - Use page_offset() rather than manual calculation[1].
+>  - Fix folio_inode() to directly access the inode[2].
+> 
+> David
+> 
+> Link: https://lore.kernel.org/r/YST/0e92OdSH0zjg@casper.infradead.org/ [1]
+> Link: https://lore.kernel.org/r/YST8OcVNy02Rivbm@casper.infradead.org/ [2]
+> Link: https://lore.kernel.org/r/163551653404.1877519.12363794970541005441.stgit@warthog.procyon.org.uk/ [3]
+> Link: https://lore.kernel.org/r/YYKa3bfQZxK5/wDN@casper.infradead.org/ [4]
+> Link: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f89ce84bc33330607a782e47a8b19406ed109b15 [5]
+> Link: https://lore.kernel.org/r/2408234.1628687271@warthog.procyon.org.uk/ # v0
+> Link: https://lore.kernel.org/r/162981147473.1901565.1455657509200944265.stgit@warthog.procyon.org.uk/ # v1
+> Link: https://lore.kernel.org/r/163005740700.2472992.12365214290752300378.stgit@warthog.procyon.org.uk/ # v2
+> Link: https://lore.kernel.org/r/163584174921.4023316.8927114426959755223.stgit@warthog.procyon.org.uk>/ # v3
+> ---
+> David Howells (5):
+>       folio: Add a function to change the private data attached to a folio
+>       folio: Add a function to get the host inode for a folio
+>       folio: Add replacements for page_endio()
+>       netfs, 9p, afs, ceph: Use folios
+>       afs: Use folios in directory handling
+> 
+> 
+>  fs/9p/vfs_addr.c           |  83 +++++----
+>  fs/9p/vfs_file.c           |  20 +--
+>  fs/afs/dir.c               | 229 ++++++++++--------------
+>  fs/afs/dir_edit.c          | 154 ++++++++--------
+>  fs/afs/file.c              |  68 ++++----
+>  fs/afs/internal.h          |  46 ++---
+>  fs/afs/write.c             | 347 ++++++++++++++++++-------------------
+>  fs/ceph/addr.c             |  80 +++++----
+>  fs/netfs/read_helper.c     | 165 +++++++++---------
+>  include/linux/netfs.h      |  12 +-
+>  include/linux/pagemap.h    |  23 ++-
+>  include/trace/events/afs.h |  21 +--
+>  mm/filemap.c               |  64 ++++---
+>  mm/page-writeback.c        |   2 +-
+>  14 files changed, 666 insertions(+), 648 deletions(-)
+> 
+> 
+> 
+> Tested-by: Jeff Layton <jlayton@kernel.org>
+> Tested-by: Dominique Martinet <asmadeus@codewreck.org>
+> Tested-by: kafs-testing@auristor.com
+> 
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- net/sunrpc/auth_gss/gss_generic_token.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+I know this already has my Tested-by, but I ran some more tests with
+this series yesterday and it did fine:
 
-diff --git a/net/sunrpc/auth_gss/gss_generic_token.c b/net/sunrpc/auth_gss/gss_generic_token.c
-index fe97f3106536..4a4082bb22ad 100644
---- a/net/sunrpc/auth_gss/gss_generic_token.c
-+++ b/net/sunrpc/auth_gss/gss_generic_token.c
-@@ -222,10 +222,8 @@ g_verify_token_header(struct xdr_netobj *mech, int *body_size,
- 	if (ret)
- 		return ret;
- 
--	if (!ret) {
--		*buf_in = buf;
--		*body_size = toksize;
--	}
-+	*buf_in = buf;
-+	*body_size = toksize;
- 
- 	return ret;
- }
--- 
-2.25.1
-
+(Re-)Tested-by: Jeff Layton <jlayton@kernel.org>
