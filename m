@@ -2,84 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28E2444F57D
-	for <lists+linux-nfs@lfdr.de>; Sat, 13 Nov 2021 22:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C855844F598
+	for <lists+linux-nfs@lfdr.de>; Sat, 13 Nov 2021 22:57:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236065AbhKMVf7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 13 Nov 2021 16:35:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55404 "EHLO
+        id S231416AbhKMWAB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 13 Nov 2021 17:00:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234306AbhKMVf6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 13 Nov 2021 16:35:58 -0500
+        with ESMTP id S231172AbhKMWAB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 13 Nov 2021 17:00:01 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6B8C061766
-        for <linux-nfs@vger.kernel.org>; Sat, 13 Nov 2021 13:33:06 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B4A2C061766
+        for <linux-nfs@vger.kernel.org>; Sat, 13 Nov 2021 13:57:08 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id BCC666F2A; Sat, 13 Nov 2021 16:33:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BCC666F2A
+        id 06BE76EC3; Sat, 13 Nov 2021 16:57:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 06BE76EC3
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1636839185;
-        bh=5ddBuseDbRa7q1QCRlHfg+I6lPAvQfUSnXt9HBqcFew=;
+        s=default; t=1636840627;
+        bh=eBF+mGrrMS8nOirZV57Lc5SibhLR7Rna/kEPBD1tz1s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FkKxHHdus21Z/Mk+N/OY73V5YKsnHqD+ubXqVI0s/vyXwwGkok/yobCArn3uqFAjQ
-         EbxEIlCW6iydC7DENpSanvMaPGtgyAAsYAetKZnrDKOB0MxrD/ESPuuxpx6BMVoXjn
-         rS68UuMQM5bwDo65dnO/QL13hjnUIyDjtGpSnPFI=
-Date:   Sat, 13 Nov 2021 16:33:05 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     rtm@csail.mit.edu
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+        b=vhmHDW0+D446Ai2WZPKSZ72YZssxunr/jUJeIe+Q4hq7fmMzD1KNcP+jnaBQVFl5p
+         yBmTQqkRgkqeqsIV5n0ww4pRqwcVfYGvffnPuh+R33tR9pGYRpikl65ktFHTnUYQm2
+         i9xDHNpsm8pgAcFXaf4MJD7CSJpJHSo7zroxmoSU=
+Date:   Sat, 13 Nov 2021 16:57:07 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     "rtm@csail.mit.edu" <rtm@csail.mit.edu>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Subject: Re: NFS client can crash server due to overrun in
  nfsd4_decode_bitmap4()
-Message-ID: <20211113213305.GC27601@fieldses.org>
+Message-ID: <20211113215707.GE27601@fieldses.org>
 References: <97860.1636837122@crash.local>
+ <11B4530A-C0A0-4779-A9BA-F0E19B62C5A6@oracle.com>
+ <20211113212544.GA27601@fieldses.org>
+ <9A3E5D78-AE3C-4F45-8CB1-10F2EDA1D911@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <97860.1636837122@crash.local>
+In-Reply-To: <9A3E5D78-AE3C-4F45-8CB1-10F2EDA1D911@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-By the way, thanks for this work.  Just out of curiosity: did anything
-in particular prompt this?  And do you have some tool that's finding
-these, or is it manual code inspection, or some combination?
+On Sat, Nov 13, 2021 at 09:31:40PM +0000, Chuck Lever III wrote:
+> This allows the client to send bitmaps larger than bmval[],
+> as the old decoder did,
+
+Oh, thanks, right, I guess rejecting too-large bitmaps outright might
+cause compatibility problems with future implementations.
+
+(Hm, ideally, shouldn't we be checking whether bits are set beyond where
+we expect so that e.g. we can return NFS4ERR_ATTRNOTSUPP on operations
+that set attributes?  Perhaps that's more than is necessary; it's a
+separate issue, anyway.)
 
 --b.
 
-On Sat, Nov 13, 2021 at 03:58:42PM -0500, rtm@csail.mit.edu wrote:
-> nfsd4_decode_bitmap4() will write beyond bmval[bmlen-1] if the RPC
-> directs it to do so. This can cause nfsd4_decode_state_protect4_a() to
-> write client-supplied data beyond the end of
-> nfsd4_exchange_id.spo_must_allow[] when called by
-> nfsd4_decode_exchange_id().
+> and ensures that decode_bitmap()
+> cannot write farther than @bmlen into the bmval array.
 > 
-> I've attached a demo in which the client's EXCHANGE_ID RPC supplies an
-> address (0x400) that nfsd4_decode_bitmap4() writes into
-> nii_domain.data due to overflowing bmval[]. The EXCHANGE_ID RPC also
-> supplies a zero-length eia_client_impl_id<>. The result is that
-> copy_impl_id() (called by nfsd4_exchange_id()) tries to read from
-> address 0x400.
 > 
-> # cc nfsd_1.c
-> # uname -a
-> Linux (none) 5.15.0-rc7-dirty #64 SMP Sat Nov 13 20:10:21 UTC 2021 riscv64 riscv64 riscv64 GNU/Linux
-> # ./nfsd_1
-> ...
-> [   16.600786] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000400
-> [   16.643621] epc : __memcpy+0x3c/0xf8
-> [   16.650154]  ra : kmemdup+0x2c/0x3c
-> [   16.657733] epc : ffffffff803667bc ra : ffffffff800e80fe sp : ffffffd000553c20
-> [   16.777502] status: 0000000200000121 badaddr: 0000000000000400 cause: 000000000000000d
-> [   16.788193] [<ffffffff803667bc>] __memcpy+0x3c/0xf8
-> [   16.796504] [<ffffffff8028cf0e>] nfsd4_exchange_id+0xe6/0x406
-> [   16.806159] [<ffffffff8027c352>] nfsd4_proc_compound+0x2b4/0x4e8
-> [   16.815721] [<ffffffff80266782>] nfsd_dispatch+0x118/0x172
-> [   16.823405] [<ffffffff807633fa>] svc_process_common+0x2de/0x62c
-> [   16.832935] [<ffffffff8076380c>] svc_process+0xc4/0x102
-> [   16.840421] [<ffffffff802661de>] nfsd+0x102/0x16a
-> [   16.848520] [<ffffffff80025b60>] kthread+0xfe/0x110
-> [   16.856648] [<ffffffff80003054>] ret_from_exception+0x0/0xc
+> > 		return nfserr_bad_xdr;
+> > 	p = xdr_inline_decode(argp->xdr, count << 2);
+> > 	if (!p)
 > 
-
-
+> --
+> Chuck Lever
+> 
+> 
