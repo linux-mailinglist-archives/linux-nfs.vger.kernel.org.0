@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 15E10450A5D
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Nov 2021 17:58:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1BDC450A5C
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Nov 2021 17:58:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231500AbhKORBe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Nov 2021 12:01:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33972 "EHLO
+        id S230385AbhKORBb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Nov 2021 12:01:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231845AbhKORBT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 12:01:19 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 957B5C061767
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 08:58:20 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id f20so15906635qtb.4
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 08:58:20 -0800 (PST)
+        with ESMTP id S231872AbhKORBX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 12:01:23 -0500
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A213FC061200
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 08:58:21 -0800 (PST)
+Received: by mail-qk1-x72e.google.com with SMTP id p4so9154340qkm.7
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 08:58:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uRK4hkiTZUWAj8cllnANNjoMKBWhSK9KFUzOvcsNuMo=;
-        b=gRW0T62HV+UT9h6Yk9u86KO0O3WB3c6UhXA/f86Z5X7AptFebxL1MEk69/tiexmBwh
-         ZvzGOXFmPKGSY54l7mNkhTa7Ec3BU/dmtgMMtRdjQ/q7G8NA/OSjdSPk/xkWR7Kugcqn
-         9ORZQtY2a5m43CttZTNfVauM7FxfzMPBVn8DBHyixQf/JZvj7BxQ+NMM6OwhfkH1ml5l
-         FmLbpnemQOv3QQ7JpLiBUQQ+b82R3BW5+zbzpt5Fh577tQQI51gslBJOtFqgucuw556L
-         r+TSRVppHEHcr9AYSmuD2B7ECDirkfzz+qReTmndefTSTHbuh3MbotV9JnK8x4t0nRC4
-         /lTA==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QzVElRvg5LoAVTeE9+Xvz2quw/GX7qMg60dkLCfCGd0=;
+        b=oXNaaq91Bc1ppacy75fl1ulKIVe/UfjxN5S5EstTslz8Ki8Dup3k3z8cT75aykeZyO
+         L89rrYPNbk2w93EpJ9RSpMeTd+7G470CvEEZiJEmeqOdUzofnaC+EeAaR69mkNFJtbLa
+         sRZp6CfQ6CYAOAlxkPlQIFZ8j44Q/vG8J45uvIJ7QbNu2NaHZmH2ppghfm0jRuaoVARH
+         ydCvj7PITgDLEN3hsPBouP8JpQADplH0rSMD9X7E6GXPfS07IBQQWXeNRDaFaP+3UuBb
+         IeHopIVMUtSc4KpfW3vUxRUZjNOBVhFKd6tyGCPyqdTlD6Zww2euPc/C8USGdLjbyIgj
+         5w0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=uRK4hkiTZUWAj8cllnANNjoMKBWhSK9KFUzOvcsNuMo=;
-        b=C+p99S4F8gN22QV1GCWJRce3lMEPRNVVjvV8d/cfS6eM5BeqnziCobNXxYdP64hMUS
-         jNVF3X/M6j1d6PnCfIR412oNcIcEa+xXL0snXnDmXl9c6U5DCikOos4GKratymmx4fOI
-         3RRREHCkDXbDebOia0mwM+gHvVHe6LYBnqstv+EAkYRW5L3PiJWkkEKTEOCZpPshP15n
-         HdKFBammhnaiHKWwCyA+mqeAm7HcixrPZBz97GV0kWTDU6gkrZ1e0vSpcJ6LtuHEEdEb
-         sRDdMOdf12Ai4oRBYICrhEc/bwcnNltQ0lxQbKleSJaM24Ssk6k20GxFVa4eTGe78GPD
-         lE2A==
-X-Gm-Message-State: AOAM533d5NrnSrhFYQPzymkgxDL0ZG27gjHqmVHwPtPr5wnp+OSQptgJ
-        /2REr6MyHIVvNIcpRr220D8PO+KdiiYvWA==
-X-Google-Smtp-Source: ABdhPJy+IfTqyFfTCuPJMAGG1KY5pS7fFY8nW3jZafxG32VtoYNRkGZ4fADB8IxUo9qxJvPqIBGVFw==
-X-Received: by 2002:a05:622a:11d1:: with SMTP id n17mr501421qtk.154.1636995499441;
-        Mon, 15 Nov 2021 08:58:19 -0800 (PST)
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=QzVElRvg5LoAVTeE9+Xvz2quw/GX7qMg60dkLCfCGd0=;
+        b=1v0YxPyxdRgYJ7ayGI3HV4cuhuSUEJ/TJTS/vHCp4hSRjXbcMSnGsT6yzUrTdt7fJQ
+         uNxMsAICQRpiLAeXoawmu3NqJM+Ii/knYggRWKhDA92WBAf/XlbFP6XC6tNPzjxGuGw8
+         lKuy9W/q/vN/vbul+ES80vJ/BDVIqqi3sMMXfnnPM0ip+PpNRtuD0cuiQE5T/29iIVnG
+         uBOPYJDlp/t8nMpo7CebJxiUaMnrkkeS6Pwth4G7a727U2x/8TPwSyA8W94r/T1d8OdO
+         LleasVg4vkK/stuBLho4YeFVzjqO0jfONI+zHER5kpolz2a35Ts6W2MZhiWcaNw1p273
+         IyqA==
+X-Gm-Message-State: AOAM5316Y3kL5Lv7GsjbAr3xM9oCRJrR7uE2kwuFaxGeIAnLx1cEFBJR
+        RhmTslJ/B3NybTkQdS3Dz7g=
+X-Google-Smtp-Source: ABdhPJyAv9xdw9khYfRrpLLQzoP1/K7pAuvmBXBMFKK3ri5tbX42lSOFMFVmhE44geElK6sPV9WI1g==
+X-Received: by 2002:a05:620a:440b:: with SMTP id v11mr407693qkp.160.1636995500278;
+        Mon, 15 Nov 2021 08:58:20 -0800 (PST)
 Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id v7sm6988472qki.98.2021.11.15.08.58.18
+        by smtp.gmail.com with ESMTPSA id v7sm6988472qki.98.2021.11.15.08.58.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 15 Nov 2021 08:58:19 -0800 (PST)
 Sender: Anna Schumaker <schumakeranna@gmail.com>
@@ -52,10 +52,12 @@ From:   schumaker.anna@gmail.com
 X-Google-Original-From: Anna.Schumaker@Netapp.com
 To:     Trond.Myklebust@hammerspace.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH 1/3] sunrpc: Fix potential race conditions in rpc_sysfs_xprt_state_change()
-Date:   Mon, 15 Nov 2021 11:58:16 -0500
-Message-Id: <20211115165818.2583501-1-Anna.Schumaker@Netapp.com>
+Subject: [PATCH 2/3] sunrpc: Provide a helper function for accessing the number of xprts
+Date:   Mon, 15 Nov 2021 11:58:17 -0500
+Message-Id: <20211115165818.2583501-2-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211115165818.2583501-1-Anna.Schumaker@Netapp.com>
+References: <20211115165818.2583501-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -64,63 +66,45 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-We need to use test_and_set_bit() when changing xprt state flags to
-avoid potentially getting xps->xps_nactive out of sync.
-
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- net/sunrpc/sysfs.c | 35 +++++++++++++++++++----------------
- 1 file changed, 19 insertions(+), 16 deletions(-)
+ include/linux/sunrpc/clnt.h |  1 +
+ net/sunrpc/clnt.c           | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 77e7d011c1ab..8f309bcdf84f 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -309,25 +309,28 @@ static ssize_t rpc_sysfs_xprt_state_change(struct kobject *kobj,
- 		goto release_tasks;
- 	}
- 	if (offline) {
--		set_bit(XPRT_OFFLINE, &xprt->state);
--		spin_lock(&xps->xps_lock);
--		xps->xps_nactive--;
--		spin_unlock(&xps->xps_lock);
-+		if (!test_and_set_bit(XPRT_OFFLINE, &xprt->state)) {
-+			spin_lock(&xps->xps_lock);
-+			xps->xps_nactive--;
-+			spin_unlock(&xps->xps_lock);
-+		}
- 	} else if (online) {
--		clear_bit(XPRT_OFFLINE, &xprt->state);
--		spin_lock(&xps->xps_lock);
--		xps->xps_nactive++;
--		spin_unlock(&xps->xps_lock);
-+		if (test_and_clear_bit(XPRT_OFFLINE, &xprt->state)) {
-+			spin_lock(&xps->xps_lock);
-+			xps->xps_nactive++;
-+			spin_unlock(&xps->xps_lock);
-+		}
- 	} else if (remove) {
- 		if (test_bit(XPRT_OFFLINE, &xprt->state)) {
--			set_bit(XPRT_REMOVE, &xprt->state);
--			xprt_force_disconnect(xprt);
--			if (test_bit(XPRT_CONNECTED, &xprt->state)) {
--				if (!xprt->sending.qlen &&
--				    !xprt->pending.qlen &&
--				    !xprt->backlog.qlen &&
--				    !atomic_long_read(&xprt->queuelen))
--					rpc_xprt_switch_remove_xprt(xps, xprt);
-+			if (!test_and_set_bit(XPRT_REMOVE, &xprt->state)) {
-+				xprt_force_disconnect(xprt);
-+				if (test_bit(XPRT_CONNECTED, &xprt->state)) {
-+					if (!xprt->sending.qlen &&
-+					    !xprt->pending.qlen &&
-+					    !xprt->backlog.qlen &&
-+					    !atomic_long_read(&xprt->queuelen))
-+						rpc_xprt_switch_remove_xprt(xps, xprt);
-+				}
- 			}
- 		} else {
- 			count = -EINVAL;
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 267b7aeaf1a6..0a94fe1036a8 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -238,6 +238,7 @@ const char *rpc_proc_name(const struct rpc_task *task);
+ 
+ void rpc_clnt_xprt_switch_put(struct rpc_clnt *);
+ void rpc_clnt_xprt_switch_add_xprt(struct rpc_clnt *, struct rpc_xprt *);
++unsigned int rpc_clnt_xprt_switch_num_xprts(struct rpc_clnt *);
+ bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt *clnt,
+ 			const struct sockaddr *sap);
+ void rpc_cleanup_clids(void);
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index a312ea2bc440..399768a443ea 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2994,6 +2994,16 @@ void rpc_clnt_xprt_switch_add_xprt(struct rpc_clnt *clnt, struct rpc_xprt *xprt)
+ }
+ EXPORT_SYMBOL_GPL(rpc_clnt_xprt_switch_add_xprt);
+ 
++unsigned int rpc_clnt_xprt_switch_num_xprts(struct rpc_clnt *clnt)
++{
++	unsigned int num;
++	rcu_read_lock();
++	num = rcu_dereference(clnt->cl_xpi.xpi_xpswitch)->xps_nxprts;
++	rcu_read_unlock();
++	return num;
++}
++EXPORT_SYMBOL_GPL(rpc_clnt_xprt_switch_num_xprts);
++
+ bool rpc_clnt_xprt_switch_has_addr(struct rpc_clnt *clnt,
+ 				   const struct sockaddr *sap)
+ {
 -- 
 2.33.1
 
