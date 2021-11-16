@@ -2,51 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0880F4527FA
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 03:49:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCDA94527F0
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 03:48:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358054AbhKPCvd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Nov 2021 21:51:33 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:59388 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242402AbhKPCtW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 21:49:22 -0500
+        id S1357082AbhKPCun (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Nov 2021 21:50:43 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:37318 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1357060AbhKPCsl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 21:48:41 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 8CA8F212C9;
-        Tue, 16 Nov 2021 02:46:13 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 60D091FD48;
+        Tue, 16 Nov 2021 02:45:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637030773; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637030744; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=f9JPZARu0omLin5bRQVSgWDU6wAXTb1AVpCm2PGq0QA=;
-        b=atmetXEZDy8cMBJPuxGdsioA9iEEjKYPYqm8r3COaJLFACTYSEnML7mYQBMmGJy6qWq+sX
-        17efbj7aEBJcrchB+nb1mGhfUGNR07Lbzb50Y1OpJ6jJRTv1E1ym8QpibclWvHrVTz6UqJ
-        0VLAHKfisqbII2bdSfpPxKIVMbaS6ng=
+        bh=HAFJQqD66lEKxyMF66YMnhf/bOSH3X44K2KcJkng4Uk=;
+        b=gbCVQ6bDbY22Q4NrW50evrXT7Ds3nDI8NTZ9Io9sBz8NoaC8jFFX4LTn9aA2PckSz94ueJ
+        SvWZN4rSfdqNgtdqvCb3r6IMZTWyB8yR622TKV5wwN3g9rx4EO5seoFCc3Xi4NO3yH5dFZ
+        v5umM8wYEzG+99gUwLsGHV5PyxHV710=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637030773;
+        s=susede2_ed25519; t=1637030744;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=f9JPZARu0omLin5bRQVSgWDU6wAXTb1AVpCm2PGq0QA=;
-        b=QhGRS68RrxSioGc5OYbdql4ol0fghFMX4at/b29RBqkbuBMOvukvloUoM4ifPSimpAdbic
-        4B6GESV1oZ1RaDBQ==
+        bh=HAFJQqD66lEKxyMF66YMnhf/bOSH3X44K2KcJkng4Uk=;
+        b=mqZ30JPHIzdhcGRAwSZF5MRmu7hx8qlwHnCXFyzSJrWYCq8+8g8lNDIo44ZDQDQku5U0lR
+        tfeimJ8vg5wpEbAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 3665113B70;
-        Tue, 16 Nov 2021 02:46:10 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0A16A13B70;
+        Tue, 16 Nov 2021 02:45:41 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 8gWHOXIbk2H0CAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 16 Nov 2021 02:46:10 +0000
-Subject: [PATCH 06/13] SUNRPC/xprt: async tasks mustn't block waiting for
- memory
+        id jzimLlUbk2HNCAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 16 Nov 2021 02:45:41 +0000
+Subject: [PATCH 02/13] NFS: do not take i_rwsem for swap IO
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -56,7 +55,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Tue, 16 Nov 2021 13:44:04 +1100
-Message-ID: <163703064454.25805.13286573055267156315.stgit@noble.brown>
+Message-ID: <163703064452.25805.5738767545414940042.stgit@noble.brown>
 In-Reply-To: <163702956672.25805.16457749992977493579.stgit@noble.brown>
 References: <163702956672.25805.16457749992977493579.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -67,58 +66,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When memory is short, new worker threads cannot be created and we depend
-on the minimum one rpciod thread to be able to handle everything.  So it
-must not block waiting for memory.
+Taking the i_rwsem for swap IO triggers lockdep warnings regarding
+possible deadlocks with "fs_reclaim".  These deadlocks could, I believe,
+eventuate if a buffered read on the swapfile was attempted.
 
-xprt_dynamic_alloc_slot can block indefinitely.  This can tie up all
-workqueue threads and NFS can deadlock.  So when called from a
-workqueue, set __GFP_NORETRY.
+We don't need coherence with the page cache for a swap file, and
+buffered writes are forbidden anyway.  There is no other need for
+i_rwsem during direct IO.
 
-The rdma alloc_slot already does not block.  However it sets the error
-to -EAGAIN suggesting this will trigger a sleep.  It does not.  As we
-can see in call_reserveresult(), only -ENOMEM causes a sleep.  -EAGAIN
-causes immediate retry.
+So don't take the rwsem or set the NFS_INO_ODIRECT flag during IO to the
+swap file.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/xprt.c               |    5 ++++-
- net/sunrpc/xprtrdma/transport.c |    2 +-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ fs/nfs/io.c |    9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index a02de2bddb28..47d207e416ab 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1687,12 +1687,15 @@ static bool xprt_throttle_congested(struct rpc_xprt *xprt, struct rpc_task *task
- static struct rpc_rqst *xprt_dynamic_alloc_slot(struct rpc_xprt *xprt)
+diff --git a/fs/nfs/io.c b/fs/nfs/io.c
+index b5551ed8f648..83b4dfbb826d 100644
+--- a/fs/nfs/io.c
++++ b/fs/nfs/io.c
+@@ -118,11 +118,18 @@ static void nfs_block_buffered(struct nfs_inode *nfsi, struct inode *inode)
+  * NFS_INO_ODIRECT.
+  * Note that buffered writes and truncates both take a write lock on
+  * inode->i_rwsem, meaning that those are serialised w.r.t. O_DIRECT.
++ *
++ * When inode IS_SWAPFILE we ignore the flag and don't take the rwsem
++ * as it triggers lockdep warnings and possible deadlocks.
++ * bufferred writes are forbidden anyway, and buffered reads will not
++ * be coherent.
+  */
+ void
+ nfs_start_io_direct(struct inode *inode)
  {
- 	struct rpc_rqst *req = ERR_PTR(-EAGAIN);
-+	gfp_t gfp_mask = GFP_NOFS;
- 
- 	if (xprt->num_reqs >= xprt->max_reqs)
- 		goto out;
- 	++xprt->num_reqs;
- 	spin_unlock(&xprt->reserve_lock);
--	req = kzalloc(sizeof(struct rpc_rqst), GFP_NOFS);
-+	if (current->flags & PF_WQ_WORKER)
-+		gfp_mask |= __GFP_NORETRY | __GFP_NOWARN;
-+	req = kzalloc(sizeof(struct rpc_rqst), gfp_mask);
- 	spin_lock(&xprt->reserve_lock);
- 	if (req != NULL)
- 		goto out;
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index a52277115500..32df23796747 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -521,7 +521,7 @@ xprt_rdma_alloc_slot(struct rpc_xprt *xprt, struct rpc_task *task)
- 	return;
- 
- out_sleep:
--	task->tk_status = -EAGAIN;
-+	task->tk_status = -ENOMEM;
- 	xprt_add_backlog(xprt, task);
+ 	struct nfs_inode *nfsi = NFS_I(inode);
++	if (IS_SWAPFILE(inode))
++		return;
+ 	/* Be an optimist! */
+ 	down_read(&inode->i_rwsem);
+ 	if (test_bit(NFS_INO_ODIRECT, &nfsi->flags) != 0)
+@@ -144,5 +151,7 @@ nfs_start_io_direct(struct inode *inode)
+ void
+ nfs_end_io_direct(struct inode *inode)
+ {
++	if (IS_SWAPFILE(inode))
++		return;
+ 	up_read(&inode->i_rwsem);
  }
- 
 
 
