@@ -2,148 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C48E4533F4
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 15:18:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C05445342C
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 15:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237234AbhKPOUp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Nov 2021 09:20:45 -0500
-Received: from mail-mw2nam10on2100.outbound.protection.outlook.com ([40.107.94.100]:24096
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S237089AbhKPOUn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 16 Nov 2021 09:20:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OhmwbUal5HOZRu0j7ydG6/9VogzWwFdeUK7i4uUkYNyw3Zeg0dZgQSegkHfvWSWw6X0gfGN7tJuRsM2ZdNbAJl0JkoSGz7FvEtWAj0WRbsQpjZdq7ErfbfOVtXXoBxLGGSuc0esA3vKLxgsiA40Sug/EWNZUnIlAORCMXiAVNwJFniIMrLlgPiyE6Yfvz56rx8QznBe/TD6KqgWTNH0mugH4o8l0ZZONQz5kIg+dxqW/hDAS7rRHTT3tHj9rbaWQHJfVxr/hkW0upATsK6S0RtIR1skyA86RT8INvCxdSgOrLbDUU/7jeSWV266pRu8PR7neCZPwH4YE3bS9u2MkcA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=js+4cN/2xmWvTbughDlAueQ88pCCmPUvvff5e5dJCQs=;
- b=PqGj8YQhZh8cdBy1ZLwmDFg0xBFecMnG3avwwRvY6DUuAPDseH65SG1sOOzMPO+9vluiKj16n/lTvgBBMzRahFF/WdyntepQsFBeKA9C63hqM4nX7j/VRTe9Fn3+Oy5WdS6hoWU0AcLlg1f279/l9/h9z9GwR5yPBjP9B81v+F8Twhj4/dZ5ZBTOUayJihe3DcQMb/bBn+IRLyr2wIvYpZM9d259BuSX6GKz8Ul2L+MDGEsLok29o5gRIpoTC1yJdAOilYzk+GEnS5BmQOR4eS4pHk+p4eI13M1ltVTXgDNJqw/ye4f/kEmgUVgAcP5lSysdO+K5c3EguMrUv9nKLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=js+4cN/2xmWvTbughDlAueQ88pCCmPUvvff5e5dJCQs=;
- b=RRZ4NI4G/veo59FT9imolV3Q2QJpRQdHkaGbKSytkn8F0biLZoRkBTrEp11JiNMf/GivMEpwk3LDFYIN8XUsQNUKzq5EusWEX6HKef4IGeI++j0DkGB/aFHr+rD3Y3QMWWxIj+XB3sKTIDQNbP3vEYRxF44IR+gdBt7J84wjenc=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by CH2PR13MB4521.namprd13.prod.outlook.com (2603:10b6:610:63::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4713.19; Tue, 16 Nov
- 2021 14:17:43 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::288c:e4f1:334a:a08]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::288c:e4f1:334a:a08%3]) with mapi id 15.20.4713.019; Tue, 16 Nov 2021
- 14:17:42 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-Subject: Re: [PATCH 2/3] NFSv42: Don't drop NFS_INO_INVALID_CHANGE if we hold
- a delegation
-Thread-Topic: [PATCH 2/3] NFSv42: Don't drop NFS_INO_INVALID_CHANGE if we hold
- a delegation
-Thread-Index: AQHX2vDLUMHGAI80skqH9d4qS3nyMKwGL5YAgAACgICAAAFwAA==
-Date:   Tue, 16 Nov 2021 14:17:42 +0000
-Message-ID: <879b0f03b5c3b786568aaefd26bc8c714e1d7aae.camel@hammerspace.com>
-References: <cover.1637069577.git.bcodding@redhat.com>
-         <c91e224b847e697e42b25cdc36cd164a61ad1ade.1637069577.git.bcodding@redhat.com>
-         <a06d3d97a865747058c7d1cbcd4f70911c336fce.camel@hammerspace.com>
-         <9FE34DCC-0F28-4960-B25C-B006DA6D9A38@redhat.com>
-In-Reply-To: <9FE34DCC-0F28-4960-B25C-B006DA6D9A38@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 61704150-0c31-4951-504a-08d9a90bdac6
-x-ms-traffictypediagnostic: CH2PR13MB4521:
-x-microsoft-antispam-prvs: <CH2PR13MB4521DE6F4E3D5E2A76143C4BB8999@CH2PR13MB4521.namprd13.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: YptbPH8Q1WOjCNx8AQAFPB9mGCytvfvW7u3FEX2r0BdSMJ1NyEUOBcB9LyNxhSvF08WbDV4yJZe3koFScj7gcgeIIYEYVCA+H2ihSMIxCXQhzN0JgQBT500ddTRnpQEHF8lQGCxzJWTjjVnQ0oiRH5wTtvB/oqrbuVAx+SsV4rtLBaa8Ck2rR8SwPHPjJtt1LsjozJCQAEH4IY7LpdRpdBaAOmHi+ygUTHR0zAJpmsMOi8mnd9+7qkxXYFhckhJWjKW36bicnCGBRdpmi8uDMLR0ynndBPqrZ4K/fS/fij6ZM5BPtXTV/VjaWbcm6LjKIn92Ky9il+w8LR4TBIOMMpmYBmaV+J2vsvvg7mLJXkeCfJo7UuAUFwe9/AcMLLwDbyWUrVtH7ld5vFclKW3j7SzY5fDdB9l9YnkyYyI7hIeB9RuyhB8uIEzRf9l+Tg3UXNP/JfjPrAHqB6hNO89LSodIsxkNkhRgN2AbgJFnVGkcNpFrOTHaSAKcvQ3mF26aS1Qwu5WW39A2tIc2wHZb6v1uJEkoG01/tvT28Fl97RZ/QZbtE548chmMt6hFBatzrK7aY1pqsUsjd1Sukt5Sf4LGTm/mUzL7ZXHkWqQXPKGn71FwAPlJz5SRbUhRFNNnvdhv9326XA0GHL7UodLuDaT5ElVjGnHTzlQmAFWF2Nz77Nm/fclFKxt24JjXbJH1GXmQHWvqJtTk+BNJbWE33A==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(39840400004)(346002)(136003)(396003)(366004)(376002)(38100700002)(6486002)(54906003)(316002)(86362001)(8676002)(5660300002)(38070700005)(2906002)(8936002)(186003)(83380400001)(53546011)(26005)(6916009)(6506007)(36756003)(2616005)(4001150100001)(508600001)(4326008)(66476007)(76116006)(66556008)(64756008)(66446008)(66946007)(71200400001)(122000001)(6512007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eUg2MkhhQUNmVitlbWNvaVZXeHkwbzl4dHZmdGRUYWtTTmNlUmp4Mm53T0xY?=
- =?utf-8?B?bysvYUpCejNlT1NKRFVpNUk4UVBYVnpPN2RSNTVMSWo2YUJEZWZGTXgyK3BJ?=
- =?utf-8?B?RnNoUzIyQ3dSVGNNSEhWQmJKLzFhdExWdmxEY2VtbFBJNFQwcThvRWlldWNQ?=
- =?utf-8?B?Qm9weTF5VE1WWjFOb0NsVmQyU29UUmtvQkhkeGhhVjk1amllSnNCaitWelQ5?=
- =?utf-8?B?ZCtsck9YWkQ4eGVhbXoyMTVoWGIyU2FtbDV6aU15djRaWkxkZnR4aVVoWCtX?=
- =?utf-8?B?N1RScjZ3ZU96RUtsK2Nxd2JURlZLOWJlSUN2VlZUTjEzNHVGS3BxbEdXSDZY?=
- =?utf-8?B?VmdGY1FiWXMyRU9QNDlUUnVEelcrM1paT0pBcUdLNmkxcFFqdlh2MEdLb21x?=
- =?utf-8?B?ZlRJcVkzcWNCMlZXQzQ5cHVZeFFZN1UxS1hFOWVna0ZhWUxyNEtIdW0rWkZT?=
- =?utf-8?B?TEVyc0FtQ1hicUNmYVluUExXR2J0Z2lCVk9YcVp1VHVwV0ZMZ2pjT0ZLczZQ?=
- =?utf-8?B?QjVDeGw2bXUwdUZ4K0lFRml2NlEvY2xsS29XcTBZMXo0NmRRb0d1dlg4NzNB?=
- =?utf-8?B?VVRuZ2RlVGhtVWZwNnNMQlBDSDQ3QkxTc09zaCtrRjFIQmtkTUt1WnpSM3J0?=
- =?utf-8?B?Ti9QR0FkcXZrWmp1dlBZN0JFUzR1Mm5qSmFuNGhSK054WjdwNXR4WjB1UVBB?=
- =?utf-8?B?am56MW80NmMzRktHaDJxMkF5QUxpVjJUTEhpUUl2WVp4T2JTb0hTbzduNUs1?=
- =?utf-8?B?RHV2clpqbUEzU0ZPNkhtYlBEdTNDTElJaklzM0FlTWJJTHR4TmNPQzR3dzN4?=
- =?utf-8?B?YVh0M2ZPSWZGbHNSd2pjcDZHcVVjZmpnZUFweEdUcDREY0pBR1U0SkpDMEhC?=
- =?utf-8?B?d3Yzb2ZwdVU3b0lFN3hvYUxBVnFPc1c5WDluNVR5TU9wV0hiNDZ6VGFzbno1?=
- =?utf-8?B?V1FqY29pajFLeWJQa1FZcjBVQXc3Z0xRSDd1VEYxbkl5QmhhWGJ4ZTRqRzRs?=
- =?utf-8?B?MHNzelozRXZ2QVFyV3dMTXM3WFh0T3IvTGJYOWxyb09qS2ZIVEdIQm5RNmtW?=
- =?utf-8?B?RFovRXJHaEExd0kxeHVCNXVHOW9CN2F0c1RuVzBza3hlOC9YU2NsN2JNSHZ3?=
- =?utf-8?B?WlZDVVJ0bWdET3J4Z3cxZWtmU0VRREZ4UzZOU3ZjYXp2NXNlZVlwYmlJbGlw?=
- =?utf-8?B?UTVOajByd2ZMa2hCZGM5Ynh1NWQ4bUZUNTVOcUVHZ1U3eHVtMUVzYlo1YlZP?=
- =?utf-8?B?eXN6UmhCY3VTRm5HK3ZQY2ZRUEpoWHdBa3BCRTVSNU9lL2ZmZE1UOUJFK3VT?=
- =?utf-8?B?NmF3YXhiR3hQYlEwaFFVRUp6RVBGZ1BVcnpIRXhVRnJ2UHBSb0pOQnB5eGZl?=
- =?utf-8?B?UDkydEQwd3NIdmt4RkVFTHdaeTNDcTZTelNQUVAvTTZaRElXbU1hekJvUFVm?=
- =?utf-8?B?S3IxSHA2MmxiWGo2UWdWS1VjNElYdjJjdnFyYzBLZjJ5K05rYmlYek5vRHI0?=
- =?utf-8?B?SGR0VmdzZHYvcWwxNXlYZDhDTkNJcm16Q2c5TStlUVU4VHdIWTcwYVFtVlll?=
- =?utf-8?B?ZG5ONXNCcjNwVWNKUW9VQ2tvZ283T1NkaWl5Z2hTbW40UUdEa0t3YzFaZjRo?=
- =?utf-8?B?aVFSei84NzJ5WjNCZkpiV1UxZEZWdFJ3WTZzdjVKenZUVzM4OVQ1WHJPMVM1?=
- =?utf-8?B?K0VKNE1BSmJwNnd6YnJZYlhnTU4zdDc1V214REdOTGg5WmNaUXVkOHhzaVdu?=
- =?utf-8?B?eXM5L282emRHbnhON1Frdkg1aTBYSlVZT2REeUl1T0ZoWDBQdUdzZVJFQ1V3?=
- =?utf-8?B?emxodkNvc2xDQTdUeUJXSDQ0M2xmcG10b3J4dGVBd3h5NFh4aTVkVzBCak00?=
- =?utf-8?B?RlJDTTZkcG51SkNtN29pcWlMbCtBNnMzV3VZdDg2QlFwdHV4U01US2tOemRs?=
- =?utf-8?B?VmJvMHlXYjdraVZ3cHNvMUtzVHREaHhFOE81bG9jRnpMdU9lUW1RTjVCWHFM?=
- =?utf-8?B?TXZRT3p0eG5GZFdTOWZkVUpuNDE5K0l3RUxtT3prVmx3T0tTVmtDdHBmTFVO?=
- =?utf-8?B?cFNORnNoMnlsdE5pbGl5LzhsNHlDRDBQQTBDZkVOdFRRVVNVbVd6RGk0T3Fj?=
- =?utf-8?B?QjdYb2tPbUVoS2ZRQ20xTjVtZ29BS2UzR2JLYitBWldDRWFJTUx5akpod3hU?=
- =?utf-8?Q?af825vAFPOJPlqk3Z/ljGK0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9FAFCEFD83F07549BA448AD7DC0B59B9@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        id S233993AbhKPObx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Nov 2021 09:31:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39772 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230076AbhKPObw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 09:31:52 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9FFC061570
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Nov 2021 06:28:54 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1DB0F37C8; Tue, 16 Nov 2021 09:28:54 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1DB0F37C8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1637072934;
+        bh=a0MUmAGD3kAuzr/AOWwaVWs5blPHRTBWWI1S/7huiKU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=j9NQTWtnfn3OfXTggpGV00+MzOBdahgg2ijyPvGv70/p4r83uREX6V/bc/5eg0y/Z
+         Sh3FzfTV6XTeksoRaF7sXRR3Hr9sZOb7PL0tow4ELymdfQChPjWRH6HDp6DOiAo81g
+         WAHVEWV906yMBsDsNoZYufaS1O4fTDTPXaIL+pe8=
+Date:   Tue, 16 Nov 2021 09:28:54 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Volodymyr Khomenko <volodymyr@vastdata.com>
+Cc:     linux-nfs@vger.kernel.org,
+        Ilan Steinberg <ilan.steinberg@vastdata.com>
+Subject: Re: NFS4 RPCGSS state protection (SP4_MACH_CRED) is not handled
+Message-ID: <20211116142854.GB8695@fieldses.org>
+References: <CANkgwevBKzrz_rDt0djguCXLsQWuTj8WwHNia0Bk+LSgDK-aQw@mail.gmail.com>
+ <20211115155058.GA22737@fieldses.org>
+ <CANkgwevkUHSBb7Z4BDNXqazHmVOvLd1vucrZjiWRWxiADcA05A@mail.gmail.com>
+ <20211115194623.GH23884@fieldses.org>
+ <CANkgwesf8pXeYzykoygLKe0nZOq+=qx9xv1ZvcZ+8_9TADAe1Q@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61704150-0c31-4951-504a-08d9a90bdac6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Nov 2021 14:17:42.8983
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: bzJhltsDI6keorEQt+BvcRfM/cB8FLkQNiDcVfM0iJEg/NbpLRwV50z0Ef9YBMOTBWOKL9eF7UN2d9Aju4KIOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR13MB4521
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANkgwesf8pXeYzykoygLKe0nZOq+=qx9xv1ZvcZ+8_9TADAe1Q@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIxLTExLTE2IGF0IDA5OjEyIC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAxNiBOb3YgMjAyMSwgYXQgOTowMywgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0K
-PiA+IE5vLCB3ZSByZWFsbHkgc2hvdWxkbid0IG5lZWQgdG8gY2FyZSB3aGF0IHRoZSBzZXJ2ZXIg
-dGhpbmtzIG9yDQo+ID4gZG9lcy4NCj4gPiBUaGUgY2xpZW50IGlzIGF1dGhvcml0YXRpdmUgZm9y
-IHRoZSBjaGFuZ2UgYXR0cmlidXRlIHdoaWxlIGl0IGhvbGRzDQo+ID4gYQ0KPiA+IGRlbGVnYXRp
-b24sIG5vdCB0aGUgc2VydmVyLg0KPiANCj4gTXkgdW5kZXJzdGFuZGluZyBvZiB0aGUgaW50ZW50
-aW9uIG9mIHRoZSBjb2RlICh3aGljaCBJIGhhZCB0byBzb3J0IG9mDQo+IHB1dA0KPiB0b2dldGhl
-ciBmcm9tIGhpc3RvcmljYWwgcGF0Y2hlcyBpbiB0aGlzIGFyZWEpIGlzIHRoYXQgd2Ugd2FudCB0
-byBzZWUNCj4gY3RpbWUsDQo+IG10aW1lLCBhbmQgYmxvY2sgc2l6ZSB1cGRhdGVzIGFmdGVyIGNv
-cHkvY2xvbmUgZXZlbiBpZiB3ZSBob2xkIGENCj4gZGVsZWdhdGlvbiwNCj4gYnV0IHdpdGhvdXQg
-TkZTX0lOT19JTlZBTElEX0NIQU5HRSwgdGhlIGNsaWVudCB3b24ndCB1cGRhdGUgdGhvc2UNCj4g
-YXR0cmlidXRlcy4NCj4gDQo+IElmIHRoYXQncyBub3QgbmVjZXNzYXJ5LCB3ZSBjYW4gZHJvcCB0
-aGlzIHBhdGNoLg0KPiANCg0KV2Ugd2lsbCBzdGlsbCBzZWUgdGhlIGN0aW1lL210aW1lL2Jsb2Nr
-IHNpemUgdXBkYXRlcyBldmVuIGlmDQpORlNfSU5PX0lOVkFMSURfQ0hBTkdFIGlzIG5vdCBzZXQu
-IFRob3NlIGF0dHJpYnV0ZXMnIGNhY2hlIHN0YXR1cyBhcmUNCnRyYWNrZWQgc2VwYXJhdGVseSB0
-aHJvdWdoIHRoZWlyIG93biBORlNfSU5PX0lOVkFMSURfKiBiaXRzLg0KDQpUaGF0IHNhaWQsIHRo
-ZXJlIHJlYWxseSBpcyBubyByZWFzb24gd2h5IHdlIHNob3VsZG4ndCB0cmVhdCB0aGUgY29weQ0K
-YW5kIGNsb25lIGNvZGUgZXhhY3RseSB0aGUgc2FtZSB3YXkgd2Ugd291bGQgdHJlYXQgYSByZWd1
-bGFyIHdyaXRlLg0KUGVyaGFwcyB3ZSBjYW4gZml4IHVwIHRoZSBhcmd1bWVudHMgb2YgbmZzX3dy
-aXRlYmFja191cGRhdGVfaW5vZGUoKSBzbw0KdGhhdCBpdCBjYW4gYmUgY2FsbGVkIGhlcmU/DQoN
-Ci0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1l
-cnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Tue, Nov 16, 2021 at 10:46:27AM +0200, Volodymyr Khomenko wrote:
+> Well, I tend to agree with you that probably
+> EXCHGID4_FLAG_BIND_PRINC_STATEID is the root-cause of this particular
+> corner-case described by RFC.
+> However I still feel that using the same NFS4 session (established by
+> EXCHANGE_ID from RPCGSS) from an unprotected state is NOT something we
+> want to allow.
+> 
+> I understand that the guarantee of protection can happen only when NFS
+> export allows only RPCGSS flavor (sec=krb5* on export definition and
+> not 'sys/none'),
+> so clients are not allowed to use AUTH_UNIX at all (in terms of
+> security protection).
+> 
+> Bottom line - I still can't find/reproduce some scenario where I can
+> show this security issue due to missing spo_must_allow support:
+> 1. NFS4 export is allowed only for sec=krb5i:krb5p (i.e. safe
+> protection for clients' traffic).
+> 2. Client1 makes NFS4.1 requests with gss_service_integrity (krb5i) to
+> establish client+session and does some operation with a file (stateid
+> is created). Client2 is able to monitor all this traffic (because the
+> traffic is not encoded).
+> 3. Client2 can send some NFS4 request with AUTH_UNIX (or with
+> gss_service_none=krb5 request - leaving RPC header from a packet
+> caught from client1 but replacing NFS4 body)
+> to make a harm/additional information disclosure for client1
+> (offensive action): like close the stateid from the scope of the
+> session by client1, write corrupted data to the same stateid, corrupt
+> the session/client, etc.
+> 
+> In this scenario AUTH_UNIX requests on step3 may be replied by
+> WRONGSEC error from the server if client2 uses put filehandle, lookup
+> or open with a name operation (only in this case server is allowed to
+> use this error).
+> Otherwise, all other operations cannot return WRONGSEC so AUTH_UNIX
+> packet must be accepted and processed. But indeed - it's too hard to
+> find some intrusive/offensive operation without putfh/lookup/open.
+> 
+> Probably I need more time to try it and think a bit more...
+
+You may be able to get the slot sequence numbers out of sync,
+effectively a DoS--though perhaps that's not any worse than you could
+already do at the TCP level.
+
+I don't know, maybe there's something here.
+
+If so, this would be discussion for the ietf working group list, I think
+(nfsv4@ietf.org).  And if we were tighten requirements, we'd also need
+to check that we aren't breaking interoperability with existing clients.
+
+--b.
+
+> 
+> volodymyr.
+> 
+> > On Mon, Nov 15, 2021 at 9:46 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+> >
+> > On Mon, Nov 15, 2021 at 09:35:51PM +0200, Volodymyr Khomenko wrote:
+> > > > Does the spec require that?
+> > >
+> > > Unfortunately the spec is not explicit about this use-case.
+> > > However we have a detailed rationale of the 'spo_must_allow' option there.
+> > > It says that 'The client will be unable to send CLOSE without the
+> > > user's credentials' if users GSS credentials are expired.
+> > > Meaning that AUTH_UNIX credentials (with user UID/GID) is not a valid
+> > > way to solve this issue - from my understanding:
+> >
+> > See the discussion of EXCHGID4_FLAG_BIND_PRINC_STATEID:
+> >
+> >         https://datatracker.ietf.org/doc/html/rfc5661#page-502
+> >
+> >         When EXCHGID4_FLAG_BIND_PRINC_STATEID is set, the client
+> >         indicates that it wants the server to bind the stateid to the
+> >         principal.  This means that when a principal creates a stateid,
+> >         it has to be the one to use the stateid.
+> >
+> > So that's what's forcing the use of GSS in this case.  The OPEN that
+> > created the used a certain GSS principal, so the CLOSE would normally
+> > have to as well; spo_must_allow gives the client an out in this case.
+> >
+> > It's not meant to imply that GSS must be used for all operations
+> > whenever state protection is used.
+> >
+> > --b.
+> >
+> > >
+> > >
+> > > rfc5661:
+> > >
+> > >
+> > >    The purpose of spo_must_allow is to allow clients to solve the
+> > >    following conundrum.  Suppose the client ID is confirmed with
+> > >    EXCHGID4_FLAG_BIND_PRINC_STATEID, and it calls OPEN with the
+> > >    RPCSEC_GSS credentials of a normal user.  Now suppose the user's
+> > >    credentials expire, and cannot be renewed (e.g., a Kerberos ticket
+> > >    granting ticket expires, and the user has logged off and will not be
+> > >    acquiring a new ticket granting ticket).  The client will be unable
+> > >    to send CLOSE without the user's credentials, which is to say the
+> > >    client has to either leave the state on the server or re-send
+> > >    EXCHANGE_ID with a new verifier to clear all state, that is, unless
+> > >    the client includes CLOSE on the list of operations in spo_must_allow
+> > >    and the server agrees.
+> > >
+> > > volodymyr.
+> > >
+> > > On Mon, Nov 15, 2021 at 5:50 PM J. Bruce Fields <bfields@fieldses.org> wrote:
+> > > >
+> > > > On Mon, Nov 15, 2021 at 04:37:10PM +0200, Volodymyr Khomenko wrote:
+> > > > > Hello linux-nfs,
+> > > > >
+> > > > > We have the following NFS4 test (implemented using pynfs framework,
+> > > > > not regular NFS4 client):
+> > > > > 1. NFS4 client wants to use RPCGSS (Kerberos) and starts NFS4 traffic
+> > > > > with NFS4 NULL request to establish RPCGSS context of a machine
+> > > > > account.
+> > > > > 2. During EXCHANGE_ID operation (client establishment), client asks
+> > > > > for SP4_MACH_CRED state protection with
+> > > > > spo_must_enforce/spo_must_allow fields set to values that are usually
+> > > > > used by NFS4 clients (as defined by rfc5661).
+> > > > > 3. CREATE_SESSION and RECLAIM_COMPLETE operations (required for NFS4
+> > > > > session) are also done with RPCGSS and sevice=svc_gss_integrity - as
+> > > > > required by spo_must_enforce option of state protection. If
+> > > > > CREATE_SESSION is done with the wrong protection type, error is
+> > > > > returned to the client (as expected).
+> > > > > 4. However, when operations that are neither in spo_must_enforce nor
+> > > > > in spo_must_allow list are done with the wrong protection type
+> > > > > (flavor=AUTH_UNIX), NFS server accepts the request and replies by
+> > > > > unexpected result (NFS4_OK) instead of error. In our test we used
+> > > > > SEQUENCE + PUTROOTFH + GETFH compound operation with RPC credentials
+> > > > > using flavor=AUTH_UNIX instead of RPCGSS.
+> > > > >
+> > > > > As for me, it looks like a security issue: client asked for state
+> > > > > protection but man-in-the-middle can make unprotected requests for
+> > > > > state-protected client and session. Expected behaviour from my side
+> > > > > is:
+> > > > > if NFS4 operation (like GETFH) from state-protected client is neither
+> > > > > in spo_must_enforce nor in spo_must_allow lists of SP4_MACH_CRED, the
+> > > > > server must fail the request if used credentials has a different
+> > > > > flavor than RPCGSS (neither user GSS context nor machine account GSS
+> > > > > context).
+> > > >
+> > > > There are two separate questions here:
+> > > >
+> > > >         - Does the spec require that?
+> > > >         - Should the server do it anyway?
+> > > >
+> > > > I think the answer to the first question is "no".  If the requirement is
+> > > > in the language you've quoted below, I'm not seeing it.  As far as I can
+> > > > tell, GSS is required only for operations in spo_must_enforce.
+> > > >
+> > > > I haven't thought about #2 very much.  If an operation's not in
+> > > > spo_must_support, I think the server just checks the sec= option on the
+> > > > export.  If we were to require something more than that, I guess that
+> > > > would affect the values returned from SECINFO and friends too.
+> > > >
+> > > > I think the spec's meant to allow the client to use a combination of
+> > > > krb5 and sys, and that current server behavior is correct, though it's
+> > > > always possible there's some case I haven't thought through.
+> > > >
+> > > > --b.
+> > > >
+> > > > >
+> > > > > >From rfc5661 (18.35.3.  DESCRIPTION):
+> > > > >
+> > > > >    o  For SP4_MACH_CRED or SP4_SSV state protection:
+> > > > >
+> > > > >       *  The list of operations (spo_must_enforce) that MUST use the
+> > > > >          specified state protection.  This list comes from the results
+> > > > >          of EXCHANGE_ID.
+> > > > >
+> > > > >       *  The list of operations (spo_must_allow) that MAY use the
+> > > > >          specified state protection.  This list comes from the results
+> > > > >          of EXCHANGE_ID.
+> > > > >
+> > > > > ...
+> > > > >
+> > > > >    o  SP4_MACH_CRED.  If spa_how is SP4_MACH_CRED, then the client MUST
+> > > > >       send the EXCHANGE_ID request with RPCSEC_GSS as the security
+> > > > >       flavor, and with a service of RPC_GSS_SVC_INTEGRITY or
+> > > > >       RPC_GSS_SVC_PRIVACY.  If SP4_MACH_CRED is specified, then the
+> > > > >       client wants to use an RPCSEC_GSS-based machine credential to
+> > > > >       protect its state.  The server MUST note the principal the
+> > > > >       EXCHANGE_ID operation was sent with, and the GSS mechanism used.
+> > > > >       These notes collectively comprise the machine credential.
+> > > > >
+> > > > > Please see pcap file of the traffic (attached) - EXCHANGE_ID with
+> > > > > SP4_MACH_CRED is the packet #41 and problematic PUTROOTFH + GETFH
+> > > > > request is the packet #49.
+> > > > >
+> > > > > User linux NFS4 server was:
+> > > > > [centos@rnd-nfs4-srv01 ~]$ uname -a
+> > > > > Linux rnd-nfs4-srv01 3.10.0-1062.18.1.el7.x86_64 #1 SMP Tue Mar 17
+> > > > > 23:49:17 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux
+> > > > >
+> > > > > [centos@rnd-nfs4-srv01 ~]$ cat /etc/redhat-release
+> > > > > CentOS Linux release 7.7.1908 (Core)
+> > > >
+> > > >
