@@ -2,67 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B1E6453088
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 12:28:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0F6453339
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 14:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235055AbhKPLbQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Nov 2021 06:31:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235009AbhKPLat (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 06:30:49 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA904C0611A6
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Nov 2021 03:26:59 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id d24so36936645wra.0
-        for <linux-nfs@vger.kernel.org>; Tue, 16 Nov 2021 03:26:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=49VN2EPgYHrEXK97OpQX0CxGM5w7EiGtxSfN5GFh/XE=;
-        b=VPSdTQPJ5hxea0d4B/OGzopTdVjRnbFmJz+O0tAMBIW+kVpQPKiYwfvCdPxAiu9RO7
-         oe9kEcogTcLI4iYVrS1eOtN05ZsYHexXSFFQpbbx9c1Ayow9QIMNNWeK3yqQOqbV6uta
-         lYm4w6zcQWO4dqR/GNjN0aurI02r6lW3XO4xQxM/13UYVUY6ET4f0O8Iq4IG8IZUtkwp
-         NHbrha8XPUVMG3Xu1I5WAylPedohg9BtJHXmX/E5I/oVcL5vEd+kv9L+n5IA0SK5OUNr
-         Wzfz9JBOv9okjRvaOWABxHrvDpiLS87CruKZfKxQJvud8svtNp7BgBXzyICxaDFUC026
-         9ZZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=49VN2EPgYHrEXK97OpQX0CxGM5w7EiGtxSfN5GFh/XE=;
-        b=jZ//dGsmxTxd09AxgI+KJopM+7qWZvmArxRoNd7gPlslGH3SAjac14YbSv30QFEEO8
-         1Yrjh4PaNYYVrMBgv2B8Ym1c6TFAq9MuVkZTzkiXVCqM72h/sNxGirOvrWUuiCbzt+XP
-         rHim7d8kcrkRLyXEMeGDhb+UkyD4Bs7vfIvgTCygDcV1MYKbj/7bjOQ2XT7ArDLxX9yM
-         sVhEZSGhoAofX0eu1GuKk6ksZD00s2Oqqg5RKNicipv+VoymVc6z97JwwFJG5cWj0Z6O
-         rICIXDw7epUgKvOJVWIPZEjpGEinESraGR74iJKOoRQAozzQk42VGK9ei9A4v6bzvyux
-         9HQQ==
-X-Gm-Message-State: AOAM5305QOtsXGI22zBaVU7PC0+WiNgyZkE+o/byz4FmGlSvQx2WJNx/
-        ZXAZm5KvYB2c5pPJlKyKOOwxvmfvG8rT1seERf1CSr2BxMJmiw==
-X-Google-Smtp-Source: ABdhPJx7V7Pzab1iLpC1tLfl5XTeFedl5ZB5PcVwW8xnRDThhRI1kD0wWb7jxJL13vcYZKWR942PRdG0Y0xdZFQs61A=
-X-Received: by 2002:a5d:4107:: with SMTP id l7mr8132229wrp.209.1637062018294;
- Tue, 16 Nov 2021 03:26:58 -0800 (PST)
+        id S236861AbhKPNwh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Nov 2021 08:52:37 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:34812 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S236887AbhKPNwa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 08:52:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1637070571;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=HmT/GAUJAsL01/J0gVeRWL4tXpFMY8na2Cvok1D2e8s=;
+        b=Y8HMXv+ncfKercRtuJVE8bucFddnA7108AQOXvRkBdc3ubYCqqaY9K94CCV588NmmTN9++
+        tX8D3xZElJ8JjkCPSaJYAO5MMt8HZYg0wihMxz7PUfWensR2peC/quqX+ychuzg/UhHzbe
+        MVCs71HZvIiacq+1fYSH1ZSjxbMeUCs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-J36JOdg3O8qiNLTy0hPtcw-1; Tue, 16 Nov 2021 08:49:26 -0500
+X-MC-Unique: J36JOdg3O8qiNLTy0hPtcw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10F3583DD17;
+        Tue, 16 Nov 2021 13:49:25 +0000 (UTC)
+Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E2E2860C13;
+        Tue, 16 Nov 2021 13:49:24 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 6823710C30F0; Tue, 16 Nov 2021 08:49:24 -0500 (EST)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] COPY/CLONE pagecache invalidation
+Date:   Tue, 16 Nov 2021 08:49:21 -0500
+Message-Id: <cover.1637069577.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Received: by 2002:a05:600c:3b97:0:0:0:0 with HTTP; Tue, 16 Nov 2021 03:26:57
- -0800 (PST)
-Reply-To: ebodrdickson1020@gmail.com
-From:   "Dr.Dickson Ebo" <drdicksonelo1023@gmail.com>
-Date:   Tue, 16 Nov 2021 03:26:57 -0800
-Message-ID: <CABq-xD7ZFmUMjZ9aWbbAm9nEKVBK1nOq1MtQg6NNJHmUXBtxzg@mail.gmail.com>
-Subject: hi
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Finance and Audit Department, Zenith Bank Plc.
+I found a small issue on the client with generic/432 when testing a server
+that supports COPY/CLONE but doesn't have the open file descriptor cache.
+Our current knfsd server's cache causes the server to not immediately
+hand out a read delegation after a COPY/COMMIT, CLOSE, OPEN, so I suspect
+our normal testing didn't catch this issue.
 
-The President of the Federal Republic of Nigeria through the Zenith
-International Bank Nigeria PLC has released your
-Contract/Inheritance/Compensation Fund.
+The client bug can be exposed by adding 5 second delays after xfs_io
+commands in generic/432, which gives the server enough time to clean up the
+cache and give the delegation.
 
-Kindly get back to us as soon as possible.
+Benjamin Coddington (3):
+  NFSv42: Fix pagecache invalidation after COPY/CLONE
+  NFSv42: Don't drop NFS_INO_INVALID_CHANGE if we hold a delegation
+  NFS: Add a tracepoint to show the results of nfs_set_cache_invalid()
 
-Yours faithfully,
-Dr. Dickson Ebo.
+ fs/nfs/inode.c     | 5 ++++-
+ fs/nfs/nfs42proc.c | 8 ++++++--
+ fs/nfs/nfstrace.h  | 1 +
+ 3 files changed, 11 insertions(+), 3 deletions(-)
+
+-- 
+2.31.1
+
