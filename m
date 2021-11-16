@@ -2,141 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 48DAA452E86
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 10:57:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1E6453088
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 12:28:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233644AbhKPKAI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Nov 2021 05:00:08 -0500
-Received: from de-smtp-delivery-102.mimecast.com ([194.104.109.102]:48456 "EHLO
-        de-smtp-delivery-102.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233524AbhKPKAD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 05:00:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=mimecast20200619;
-        t=1637056624;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=dVA1z/XXLTOQlHUc+JCyZeu7wIlll8EWKhUgPvBkNVg=;
-        b=YNrdV6JGyxEOrrI2bQFK7jT8kMlEqgqmJMPSUOcNgTxodzd5dnK8g6P6t+B3c7HezKPk2X
-        Ne8s7NUITo6ZJc7hlEmNxfimroLDQqLkV1UH/4AZOAo2OPel6pb1lARMTy6frfwmPIc5uj
-        fhGTUZ7TSHmFUE/M1t34HFHJuSAcmK8=
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
- (mail-he1eur04lp2059.outbound.protection.outlook.com [104.47.13.59]) (Using
- TLS) by relay.mimecast.com with ESMTP id de-mta-3-5HjvKAQRMsuHxnRCCaKQiQ-1;
- Tue, 16 Nov 2021 10:57:03 +0100
-X-MC-Unique: 5HjvKAQRMsuHxnRCCaKQiQ-1
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZI6xH7drdvHjCZArjTg2BUCiEEj3aXatuBCEdITMxXtpYqPM9m0yMQRehB1ZN/V5Ov+Pqp3xn4wx6SnjALcT/q45f6CQbeGDIa8NkYQNb6LrZvryJJWdTh8+U+v2b6GqkIMCuq8hmg+OZTHdaGfwK2pBh7Ln5LZVM8y87ffqErTnkcR5Cw/9OYME2MXzKuectpT3A0gbKn+M2VdzC5Cd2wHmlU+sr4TmePx+sg8PF06Oia2IYfl1wkDkGIm7XHafKwT4ciUxTMKR5mAVhq9BUhYvwcnMO2P3yndLLTYC/l+U7JcaplgefMNwR/jz6MjJRJVj5BCwSky/ZWB7ISN5aw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CE/Sd8/ry4RrknwpGMEhxiAXoHliyQ1B8I1JRgiZzEo=;
- b=n3G14vbpvmIiwI8qI/3Q7JwT0/y0kb8RGQJlIkiXy6Hs0y5rB1wb077PLcRKCF5QE4uvMmbvynlUvMIsc5x+Y+/wx70Ur4szo0EqwtXorRVJqkUHQyF7U0bUZgqVg/Ynt3PVzIIf4968QwG3g/beVUY2C6rnIcpsI0LSJDSshB1uxuBjBwuiGldIoAKMoFSvAj2svqRdiej3H5vsFXfS/1Vf8JbYR5IPrPPxTtVBLKRC7eQHPZvjDlJz/6Zv5l3XO+s1gGFStuB5pZe+7C+6ZbbTd8K29PUfK0dsuCkmdYD8Ovmo5jemmw3wNF//jCAnaT/B3+zj5Mh+fLzSZzIQCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
- by AM6PR04MB5847.eurprd04.prod.outlook.com (2603:10a6:20b:ac::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.19; Tue, 16 Nov
- 2021 09:57:02 +0000
-Received: from AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::751c:876b:9fa7:9468]) by AM6PR04MB6630.eurprd04.prod.outlook.com
- ([fe80::751c:876b:9fa7:9468%7]) with mapi id 15.20.4690.027; Tue, 16 Nov 2021
- 09:57:02 +0000
-From:   An Long <lan@suse.com>
-To:     bfields@fieldses.org
-CC:     linux-nfs@vger.kernel.org, An Long <lan@suse.com>
-Subject: [PATCH 2/2] server: Fix t.time_taken type for xml_printresults
-Date:   Tue, 16 Nov 2021 17:56:32 +0800
-Message-ID: <20211116095632.21811-2-lan@suse.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20211116095632.21811-1-lan@suse.com>
-References: <20211116095632.21811-1-lan@suse.com>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR04CA0153.apcprd04.prod.outlook.com (2603:1096:4::15)
- To AM6PR04MB6630.eurprd04.prod.outlook.com (2603:10a6:20b:f4::33)
+        id S235055AbhKPLbQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Nov 2021 06:31:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S235009AbhKPLat (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 06:30:49 -0500
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA904C0611A6
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Nov 2021 03:26:59 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id d24so36936645wra.0
+        for <linux-nfs@vger.kernel.org>; Tue, 16 Nov 2021 03:26:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=49VN2EPgYHrEXK97OpQX0CxGM5w7EiGtxSfN5GFh/XE=;
+        b=VPSdTQPJ5hxea0d4B/OGzopTdVjRnbFmJz+O0tAMBIW+kVpQPKiYwfvCdPxAiu9RO7
+         oe9kEcogTcLI4iYVrS1eOtN05ZsYHexXSFFQpbbx9c1Ayow9QIMNNWeK3yqQOqbV6uta
+         lYm4w6zcQWO4dqR/GNjN0aurI02r6lW3XO4xQxM/13UYVUY6ET4f0O8Iq4IG8IZUtkwp
+         NHbrha8XPUVMG3Xu1I5WAylPedohg9BtJHXmX/E5I/oVcL5vEd+kv9L+n5IA0SK5OUNr
+         Wzfz9JBOv9okjRvaOWABxHrvDpiLS87CruKZfKxQJvud8svtNp7BgBXzyICxaDFUC026
+         9ZZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=49VN2EPgYHrEXK97OpQX0CxGM5w7EiGtxSfN5GFh/XE=;
+        b=jZ//dGsmxTxd09AxgI+KJopM+7qWZvmArxRoNd7gPlslGH3SAjac14YbSv30QFEEO8
+         1Yrjh4PaNYYVrMBgv2B8Ym1c6TFAq9MuVkZTzkiXVCqM72h/sNxGirOvrWUuiCbzt+XP
+         rHim7d8kcrkRLyXEMeGDhb+UkyD4Bs7vfIvgTCygDcV1MYKbj/7bjOQ2XT7ArDLxX9yM
+         sVhEZSGhoAofX0eu1GuKk6ksZD00s2Oqqg5RKNicipv+VoymVc6z97JwwFJG5cWj0Z6O
+         rICIXDw7epUgKvOJVWIPZEjpGEinESraGR74iJKOoRQAozzQk42VGK9ei9A4v6bzvyux
+         9HQQ==
+X-Gm-Message-State: AOAM5305QOtsXGI22zBaVU7PC0+WiNgyZkE+o/byz4FmGlSvQx2WJNx/
+        ZXAZm5KvYB2c5pPJlKyKOOwxvmfvG8rT1seERf1CSr2BxMJmiw==
+X-Google-Smtp-Source: ABdhPJx7V7Pzab1iLpC1tLfl5XTeFedl5ZB5PcVwW8xnRDThhRI1kD0wWb7jxJL13vcYZKWR942PRdG0Y0xdZFQs61A=
+X-Received: by 2002:a5d:4107:: with SMTP id l7mr8132229wrp.209.1637062018294;
+ Tue, 16 Nov 2021 03:26:58 -0800 (PST)
 MIME-Version: 1.0
-Received: from localhost (240e:304:4b82:ab1a:3af0:6301:25e7:1bd1) by SG2PR04CA0153.apcprd04.prod.outlook.com (2603:1096:4::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4690.27 via Frontend Transport; Tue, 16 Nov 2021 09:57:01 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 59ce79c4-6cba-47cc-192f-08d9a8e76ff0
-X-MS-TrafficTypeDiagnostic: AM6PR04MB5847:
-X-Microsoft-Antispam-PRVS: <AM6PR04MB5847574693FC688AB0D1EB1DC6999@AM6PR04MB5847.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2043;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: z5qcONCVxmWpCvzkxI/c2mHoRM0fGTrEbzZN//pN5GIqBg7U+K6YBb/p8m3qRQqyOfCmnI9HDX50y8yQZB7rXYyCAg/2Pkjh+6e7Q49rudEudUBcobYx3q9pT7Hnffwap8qVtDELXxJxc28vFwAzWwD2mVxzHEvPzSzd2r7P9A6ApuCyCxYX+oBd9bU5ncZfJQNDvrSLujICh3QHNt3+V6nWvjFSTboDvZxHQdvAXJqP47z6/xkBZj3dDEd/dzeK2DK3CwIFcPpftvp/1mDpXXWRs7sqrRRYDvcyT79SOh8/jpE/WFzeh0/+UEEJk3pdfi6WtI8SSC9/R/0SchWCJ2TxKl/7TtjD0KNEr5+QHNXyfEqh8AAek55HFyUk/OXVhOsTLgXLtv4vDLL43nS8/1zUiSZm0wa6A7mk/+o7UeulXr7IZzI6A1m/T3fp6pxWAQl5JCed7ueoY2o3gd3q+e8uo3hTBvNx0wDmm+dm3nm1q9OqWxo/Y3DmgLIj8Y7jDq8mvoJO6UKrm4LKaFk4lm+uYh7t+bc+4x2qV8Bla6hgM2bCS0gaM3EOc4V1Bo3poBrVJg+j076ny9oz94HTGhVxyE2+xHSiBjZ7VG0zYBM7XU+GhGXL/jmMLXsJzazQgOufghH4B3CBHVakPvOS7A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB6630.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(1076003)(4744005)(38100700002)(4326008)(6486002)(8936002)(6496006)(508600001)(8676002)(66556008)(2906002)(66476007)(36756003)(66946007)(86362001)(83380400001)(316002)(107886003)(2616005)(6666004)(6916009)(5660300002)(186003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?v6TQNtnecCkr4/3i3380j0CzBF2eIhmiQXRg1Vc7mIbAZRijie98n0cf5rrL?=
- =?us-ascii?Q?uzp/yvfcXBzCZMCe1lPnwTMMc5CY8s2nL+wM8HRErNXZ6zV/vab7ghjcwfTI?=
- =?us-ascii?Q?5jXZbQUueQjEpqfqOHK9tNpJnak/xj/iidBWyO3mH30cEhaDxRzyhFhVdYat?=
- =?us-ascii?Q?rKUvlWuUWeTvlkoAWpg2wtHM0frSkS/CX1time9B3jNQ+j1wPjbJhI0Fwsu9?=
- =?us-ascii?Q?GTqtmq6DyAbZN3JYdHL+ThX9io2ntZp7vzbtlWJcdwsueuCRrWTbbYisHYX7?=
- =?us-ascii?Q?iryl2TfECWex4qomkfFvFBKhh6iotoLNYE+Bz89H9jfTk2qVtvZwccEUMUbx?=
- =?us-ascii?Q?HeaD0atsthe8Crak/2JoX5tchWbUPChOrlbkbD9+ymPf7vCosR/YOb66ewNq?=
- =?us-ascii?Q?GJ9Bz2yzVlqzff66EWySqN7n9I/KkvQqzZQiaTDmUdMAu9aMh2S6NeRX28dg?=
- =?us-ascii?Q?xGmWa844k000dAlG3PWCx+skQbIAHwhGWq1o4fTYmoFgviPKTe0/FsgKG8Bv?=
- =?us-ascii?Q?oZumusgKBFQIKmdAGnNlHbaqw54OAtAX8bZW2CB0JIbdKp/e8um7kcPkkRee?=
- =?us-ascii?Q?IyQ+HUJ3SbWg5J5sNHY0emKPT/+9dfNE288l4X7HWuOwhXGmBj2aoNhERbEt?=
- =?us-ascii?Q?wMOD8vLFWJAUsqcht2plF8aBkxChe4XpmGzHL1A3zDvZw9V44tyaftB9E95g?=
- =?us-ascii?Q?Wm/Yu0kxBlJUNDDDO47pSa54pxI1cwPZxmpUzU74gTnmh16W43bZQTbrd507?=
- =?us-ascii?Q?4shp6dq09HIVSxremkLpmuTnq4djWIj9ygFskOm65b46dv5RuZXOKPRqmCRJ?=
- =?us-ascii?Q?JSohJaCSye4AY2bKQzGXBwSilq7Rpg3KF5Uae5IG5csAqM5CZ4SCr0nWV0JZ?=
- =?us-ascii?Q?g+oczDj3vOBWT5C3g7kPjwNKEA4JKqsC5GLJtbnYG8bPjF7cW9GMzr9tdT6I?=
- =?us-ascii?Q?wy1SNQzKFveEptLMTX6FSjo453iUEjmolt9JIPc8i/64WqpZvadii5uylwCY?=
- =?us-ascii?Q?SV+LGvNn5zN/r1DlQWQyItow4w7sCQkP2W0nrRX2qpNvJasSNpEPwtjWrtnx?=
- =?us-ascii?Q?6HAoQdjQqvZUPNaJ8xnyF2sVdqC0UGGzEkOcJwlih5O3f6pn/7EAdezGcCOM?=
- =?us-ascii?Q?3ElCTObNm4Cnm0uJSKIGO19CTDaqEGPFRQY96vWQDDGlvcEXPHxhV0kAU5ug?=
- =?us-ascii?Q?eDHuWFdmpB7UZJ7yntQFF/riRUlECcqoyoNA8a3UY/GiDWwisCIdZ0IDTP4Z?=
- =?us-ascii?Q?hLrGxXucG6D+nUcn8+6HQvNnCf+pNS3MFav3eTu2IyFGTHyG3BsRY9R0/aWe?=
- =?us-ascii?Q?gfj7/OI6/iVhvUF96MBlgT6KZASGmmLncL3KpfMAoGpXKw3m5NvfXiMNATGI?=
- =?us-ascii?Q?A8+B6W8pHCHHMZnZKB2rD/hbsKDpSgqodcSIV+EH0I7kKBcb74Pp0Gdtpkdt?=
- =?us-ascii?Q?xfBGNDNPh2HQz58dsV5r8VkWDVYCf2bwl8kv76YivQ8rOvgzGy8fS66c+Vbb?=
- =?us-ascii?Q?jdiJ32q6gt1ENcuawrCVdJMRXUkro4FUGuID5JddxmrqIZf0sEwcmrWOfIIt?=
- =?us-ascii?Q?Qtt3F5jLUEsMxLw1Gbs/jZvOw8v7rmzX/DjVwUBiQi3KYwm+1HLVcxkQLM4h?=
- =?us-ascii?Q?y9WP8yNbRMxoOCAzJBMgB4U=3D?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 59ce79c4-6cba-47cc-192f-08d9a8e76ff0
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB6630.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Nov 2021 09:57:02.1781
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3yyUm9BsEa55GPzpD+C1QZJvnh9iBloragQYczpGtuV8MbrIXzQGGIdm5tihZnvF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5847
+Received: by 2002:a05:600c:3b97:0:0:0:0 with HTTP; Tue, 16 Nov 2021 03:26:57
+ -0800 (PST)
+Reply-To: ebodrdickson1020@gmail.com
+From:   "Dr.Dickson Ebo" <drdicksonelo1023@gmail.com>
+Date:   Tue, 16 Nov 2021 03:26:57 -0800
+Message-ID: <CABq-xD7ZFmUMjZ9aWbbAm9nEKVBK1nOq1MtQg6NNJHmUXBtxzg@mail.gmail.com>
+Subject: hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-t.time_taken does replace in _write_data, but 'float' object has no attribu=
-te 'replace'
+Finance and Audit Department, Zenith Bank Plc.
 
-Signed-off-by: An Long <lan@suse.com>
----
- nfs4.1/testmod.py | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The President of the Federal Republic of Nigeria through the Zenith
+International Bank Nigeria PLC has released your
+Contract/Inheritance/Compensation Fund.
 
-diff --git a/nfs4.1/testmod.py b/nfs4.1/testmod.py
-index 47016dd..11e759d 100644
---- a/nfs4.1/testmod.py
-+++ b/nfs4.1/testmod.py
-@@ -524,7 +524,7 @@ def xml_printresults(tests, file_name, suite=3D'all'):
-             testcase.setAttribute("code", t.code)
-             testcase.setAttribute("name", t.name)
-             testcase.setAttribute("classname", t.suite)
--            testcase.setAttribute("time", t.time_taken)
-+            testcase.setAttribute("time", str(t.time_taken))
-=20
-             total_time +=3D t.time_taken
-             if t.result =3D=3D TEST_FAIL:
---=20
-2.31.1
+Kindly get back to us as soon as possible.
 
+Yours faithfully,
+Dr. Dickson Ebo.
