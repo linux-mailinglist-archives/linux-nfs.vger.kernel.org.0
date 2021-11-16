@@ -2,92 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 865F8451719
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Nov 2021 23:02:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 824F54527F5
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 03:48:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348589AbhKOWFI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Nov 2021 17:05:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351086AbhKOWCA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 17:02:00 -0500
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1ADC03AA2D
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 13:30:43 -0800 (PST)
-Received: by mail-il1-x12e.google.com with SMTP id m11so18200718ilh.5
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Nov 2021 13:30:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l84Rs68JQeLKs9TT54ykzpVM8QxmBN1kB7NDp2tzAHE=;
-        b=nF5Pz1uxbfy27JxS3WThkloo9MXRr+tXfgvZdZgfoBbtG/tCPhqMndz7rPygCHxhWy
-         2juqyis3yGiE4owawkDR5ir+KYehK0ZIRbSfWP/Gx+34RLWmOVj1/GrlEpRicMIftibI
-         r0D6H3nDG59NNfjOt9cELQXazSOB3yBZKQIKDdv6XgmF/yeUIbk7xNcSx4JBgpcJiFxB
-         +4uuxa44spq15rr1Orv/G3QeRnEZWCBzd3lhkx1whIR5fV9mRQUkkQYH3NMaBAFecyXZ
-         5Q1FTWoKZPZEgydEsttVAMEU7fbi1k1/HQcCqEVFnwV/2AMLrzYvbBy6HLmYylbTs2zg
-         vCQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=l84Rs68JQeLKs9TT54ykzpVM8QxmBN1kB7NDp2tzAHE=;
-        b=K9NVeFDqUjbPYGIZSpIiBEo+w/itTU5dgz2fI8MaZnqZAaUtMC3wNKH3rHDufUbKx6
-         R21D6j/uTbmsC829b+sg6V8ISWWF3QrIvOc76Yj2oQAnzvp+oTzculAvfKHFHInliN/t
-         XBt3E0Q7et9z0nZJi7zEeKjtKukUs8tAOVUTsczkujiit197C3WtkHpVPvcTyU2JNnzJ
-         Vm4+ZZANm4UlfXW12qSiByJ8sNrH+sTHQmmePDoad6jxDzYEWZY5ZVsg51/pfuwYPhMi
-         eGYSyJ9/zjROYRC7p+0ZVNXgwCRUf5HgytAJ9Zd/4D+RYxdFsruUcEcDhv9lNcyNiBWQ
-         Kaow==
-X-Gm-Message-State: AOAM530r1JILs/QFSYSHRrUMM18VRdlLFFqMv4tD8yWicKN4BQwglAWs
-        9dVRAH1b9Cw/9iGlwjleRRqFx6KH28Unmg==
-X-Google-Smtp-Source: ABdhPJwzroV7Ggjm2BXPtlA7DSuq20vuC/byU2hCw8N5gkmh6MG25GuBaPsC1qOaXVR6/3ELcAT4ag==
-X-Received: by 2002:a05:6e02:174e:: with SMTP id y14mr1289985ill.89.1637011843057;
-        Mon, 15 Nov 2021 13:30:43 -0800 (PST)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:e1ee:4f50:6204:ea99])
-        by smtp.gmail.com with ESMTPSA id q13sm11566676ilo.25.2021.11.15.13.30.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Nov 2021 13:30:42 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/1] NFSv4.1: handle NFS4ERR_NOSPC by CREATE_SESSION
-Date:   Mon, 15 Nov 2021 16:30:40 -0500
-Message-Id: <20211115213040.337-1-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+        id S241543AbhKPCuz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Nov 2021 21:50:55 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:37354 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241059AbhKPCs5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 21:48:57 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7F2D71FD6B;
+        Tue, 16 Nov 2021 02:46:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1637030760; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uJLgBSr+4ac2HtnFPf6KLC0wSgPyRK3wpQcub+LxsjE=;
+        b=JkAmyrxApRyuTBn7vn5Z5g6h1Fw+zu5G/EIQ3HoU4SR6DCkJTc9MQRxY5p+rbbFiopf+Ks
+        DfC0qFsTopsEA3OGsIEL0PyieQTegaqXDMaaPL7gVyaFlhnW1dIbc/ade8zsDKNbivdhIn
+        ENj9yTsm/EJZis0r4Llb018InpIGK5I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1637030760;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uJLgBSr+4ac2HtnFPf6KLC0wSgPyRK3wpQcub+LxsjE=;
+        b=Za/pDRAZdOa2LQNWoKokZQtyi9KJ4nzaePa487hjO6EW2QwB66ceS2eOY+PoOiRooaGF/M
+        PTd0buGgp9HXduDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2896513B70;
+        Tue, 16 Nov 2021 02:45:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Dl4tNmUbk2HiCAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 16 Nov 2021 02:45:57 +0000
+Subject: [PATCH 04/13] SUNRPC/call_alloc: async tasks mustn't block waiting
+ for memory
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>
+Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Date:   Tue, 16 Nov 2021 13:44:04 +1100
+Message-ID: <163703064453.25805.15157255463292733812.stgit@noble.brown>
+In-Reply-To: <163702956672.25805.16457749992977493579.stgit@noble.brown>
+References: <163702956672.25805.16457749992977493579.stgit@noble.brown>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+When memory is short, new worker threads cannot be created and we depend
+on the minimum one rpciod thread to be able to handle everything.
+So it must not block waiting for memory.
 
-When the client receives ERR_NOSPC on reply to CREATE_SESSION
-it leads to a client hanging in nfs_wait_client_init_complete().
-Instead, complete and fail the client initiation with an EIO
-error which allows for the mount command to fail instead of
-hanging.
+mempools are particularly a problem as memory can only be released back
+to the mempool by an async rpc task running.  If all available
+workqueue threads are waiting on the mempool, no thread is available to
+return anything.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+rpc_malloc() can block, and this might cause deadlocks.
+So check RPC_IS_ASYNC(), rather than RPC_IS_SWAPPER() to determine if
+blocking is acceptable.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/nfs4state.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/sunrpc/sched.c              |    4 +++-
+ net/sunrpc/xprtrdma/transport.c |    4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index ecc4594299d6..f63dfa01001c 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1998,6 +1998,10 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
- 		dprintk("%s: exit with error %d for server %s\n",
- 				__func__, -EPROTONOSUPPORT, clp->cl_hostname);
- 		return -EPROTONOSUPPORT;
-+	case -ENOSPC:
-+		if (clp->cl_cons_state == NFS_CS_SESSION_INITING)
-+			nfs_mark_client_ready(clp, -EIO);
-+		return -EIO;
- 	case -NFS4ERR_NOT_SAME: /* FixMe: implement recovery
- 				 * in nfs4_exchange_id */
- 	default:
--- 
-2.27.0
+diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
+index e2c835482791..d5b6e897f5a5 100644
+--- a/net/sunrpc/sched.c
++++ b/net/sunrpc/sched.c
+@@ -1023,8 +1023,10 @@ int rpc_malloc(struct rpc_task *task)
+ 	struct rpc_buffer *buf;
+ 	gfp_t gfp = GFP_NOFS;
+ 
++	if (RPC_IS_ASYNC(task))
++		gfp = GFP_NOWAIT | __GFP_NOWARN;
+ 	if (RPC_IS_SWAPPER(task))
+-		gfp = __GFP_MEMALLOC | GFP_NOWAIT | __GFP_NOWARN;
++		gfp |= __GFP_MEMALLOC;
+ 
+ 	size += sizeof(struct rpc_buffer);
+ 	if (size <= RPC_BUFFER_MAXSIZE)
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 16e5696314a4..a52277115500 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -574,8 +574,10 @@ xprt_rdma_allocate(struct rpc_task *task)
+ 	gfp_t flags;
+ 
+ 	flags = RPCRDMA_DEF_GFP;
++	if (RPC_IS_ASYNC(task))
++		flags = GFP_NOWAIT | __GFP_NOWARN;
+ 	if (RPC_IS_SWAPPER(task))
+-		flags = __GFP_MEMALLOC | GFP_NOWAIT | __GFP_NOWARN;
++		flags |= __GFP_MEMALLOC;
+ 
+ 	if (!rpcrdma_check_regbuf(r_xprt, req->rl_sendbuf, rqst->rq_callsize,
+ 				  flags))
+
 
