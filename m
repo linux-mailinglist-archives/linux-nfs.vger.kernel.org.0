@@ -2,51 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8821F4527EE
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 03:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 412AA452807
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Nov 2021 03:50:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347298AbhKPCug (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Nov 2021 21:50:36 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:59368 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356876AbhKPCsf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 21:48:35 -0500
+        id S1379141AbhKPCwp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Nov 2021 21:52:45 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:37468 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1357079AbhKPCun (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Nov 2021 21:50:43 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 398F321910;
-        Tue, 16 Nov 2021 02:45:35 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 335571FD6C;
+        Tue, 16 Nov 2021 02:47:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637030735; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637030834; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1/BSIu6f8h3udxg/DtgGyKIFrkiRDq54LWgglD0VugE=;
-        b=IplAxp1y0sekl7XcljUnG5z89tZMSeqbWmLOhyGMm6vG+6I7vAkuytzPBU64O7NA+Eh0fk
-        y+rZNiyqm9YhWdNNwTYf9+lssWL3iGI3wRyd2yNX3uVMn7sAg6KKFp4i0ZFKbsZRwsO1P4
-        /BP+n7Jkn6O9I+qUqUoTwbwVKb1J6QE=
+        bh=VVPL+cBsnPcJ/XftWmdbCLVfibDIhJVueSGjUUmK5KU=;
+        b=YUNvL1vzNP6tc4e++3cILebMtiqR5ZyisD+djv+vdV3l2KuqbnoTXfP/nevxDhMdNMbfhA
+        +jyfQOjL4Q6wbJcV8mMQ7Z3CEZiE/h/FB/FxUspS2/4/WQ5Pyp7GdQjb9zwpgUWkKugyYR
+        Itw+wMJ6/XhOxbz2YvQgR/FrGhUR/Xo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637030735;
+        s=susede2_ed25519; t=1637030834;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1/BSIu6f8h3udxg/DtgGyKIFrkiRDq54LWgglD0VugE=;
-        b=AWlfzuqouIRw64bl6P8ib6Gos4ML2cOYA82dE/tQ3Wp7jzocfC+UdQnkeEIwOpvnqpyzwP
-        R2e+lzQOcjNzc6Bw==
+        bh=VVPL+cBsnPcJ/XftWmdbCLVfibDIhJVueSGjUUmK5KU=;
+        b=xpPWJwj/GMiQ5fbX4bXE8GDIPorWPxEGI7Ja2YAVjUnYpTh72JtPZuQYrmI2JOOLWtGgYE
+        fqaBhEG90muNWrDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D80E713B70;
-        Tue, 16 Nov 2021 02:45:32 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D0F8313B70;
+        Tue, 16 Nov 2021 02:47:11 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 1wlgJUwbk2G+CAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 16 Nov 2021 02:45:32 +0000
-Subject: [PATCH 01/13] NFS: move generic_write_checks() call from
- nfs_file_direct_write() to nfs_file_write()
+        id XXShI68bk2FMCQAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 16 Nov 2021 02:47:11 +0000
+Subject: [PATCH 13/13] MM: use AIO for DIO writes to swap
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -56,7 +55,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Tue, 16 Nov 2021 13:44:04 +1100
-Message-ID: <163703064449.25805.2687706207398048223.stgit@noble.brown>
+Message-ID: <163703064458.25805.5272714590032323298.stgit@noble.brown>
 In-Reply-To: <163702956672.25805.16457749992977493579.stgit@noble.brown>
 References: <163702956672.25805.16457749992977493579.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -67,56 +66,187 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-generic_write_checks() is not needed for swap-out writes, and fails if
-they are attempted.
-nfs_file_direct_write() currently calls generic_write_checks() and is in
-turn called from:
-  nfs_direct_IO  - only for swap-out
-  nfs_file_write - for normal O_DIRECT write
+When swap-out goes through the filesystem (as with NFS), we currently
+perform synchronous writes with ->direct_IO.  This serializes swap
+writes and causes kswapd to block waiting for a writes to complete.  This
+is quite different to swap-out to a block device (always async), and
+possibly hurts liveness.
 
-So move the generic_write_checks() call into nfs_file_write().  This
-allows NFS swap-out writes to complete.
+So switch to AIO writes.  If the necessary kiocb structure cannot be
+allocated, fall back to sync writes using a kiocb on the stack.
 
-Fixes: dc617f29dbe5 ("vfs: don't allow writes to swap files")
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/direct.c |    5 +----
- fs/nfs/file.c   |    6 +++++-
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ mm/page_io.c |  136 ++++++++++++++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 103 insertions(+), 33 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 9cff8709c80a..1e80d243ba25 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -905,10 +905,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	dfprintk(FILE, "NFS: direct write(%pD2, %zd@%Ld)\n",
- 		file, iov_iter_count(iter), (long long) iocb->ki_pos);
+diff --git a/mm/page_io.c b/mm/page_io.c
+index 30d613881995..59a2d49e53c3 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -25,6 +25,7 @@
+ #include <linux/psi.h>
+ #include <linux/uio.h>
+ #include <linux/sched/task.h>
++#include "internal.h"
  
--	result = generic_write_checks(iocb, iter);
--	if (result <= 0)
--		return result;
--	count = result;
-+	count = iov_iter_count(iter);
- 	nfs_add_stats(mapping->host, NFSIOS_DIRECTWRITTENBYTES, count);
+ void end_swap_bio_write(struct bio *bio)
+ {
+@@ -288,8 +289,70 @@ struct swap_iocb {
+ 	struct bio_vec		bvec[SWAP_CLUSTER_MAX];
+ 	struct work_struct	work;
+ 	int			pages;
++	bool			on_stack;
+ };
  
- 	pos = iocb->ki_pos;
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 24e7dccce355..45d8180b7be3 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -615,8 +615,12 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 	if (result)
- 		return result;
- 
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (iocb->ki_flags & IOCB_DIRECT) {
-+		result = generic_write_checks(iocb, from);
-+		if (result <= 0)
-+			return result;
- 		return nfs_file_direct_write(iocb, from);
++static void sio_aio_complete(struct kiocb *iocb, long ret)
++{
++	struct swap_iocb *sio = container_of(iocb, struct swap_iocb, iocb);
++	int p;
++
++	if (ret != PAGE_SIZE * sio->pages) {
++		/*
++		 * In the case of swap-over-nfs, this can be a
++		 * temporary failure if the system has limited
++		 * memory for allocating transmit buffers.
++		 * Mark the page dirty and avoid
++		 * rotate_reclaimable_page but rate-limit the
++		 * messages but do not flag PageError like
++		 * the normal direct-to-bio case as it could
++		 * be temporary.
++		 */
++		pr_err_ratelimited("Write error on dio swapfile (%llu - %d pages)\n",
++				   page_file_offset(sio->bvec[0].bv_page),
++				   sio->pages);
++		for (p = 0; p < sio->pages; p++) {
++			set_page_dirty(sio->bvec[p].bv_page);
++			ClearPageReclaim(sio->bvec[p].bv_page);
++		}
 +	}
++	for (p = 0; p < sio->pages; p++)
++		end_page_writeback(sio->bvec[p].bv_page);
++	if (!sio->on_stack)
++		kfree(sio);
++}
++
++static void sio_aio_unplug(struct blk_plug_cb *cb, bool from_schedule);
++
++static void sio_write_unplug_worker(struct work_struct *work)
++{
++	struct swap_iocb *sio = container_of(work, struct swap_iocb, work);
++	sio_aio_unplug(&sio->cb, 0);
++}
++
++static void sio_aio_unplug(struct blk_plug_cb *cb, bool from_schedule)
++{
++	struct swap_iocb *sio = container_of(cb, struct swap_iocb, cb);
++	struct address_space *mapping = sio->iocb.ki_filp->f_mapping;
++	struct iov_iter from;
++	int ret;
++	unsigned int noreclaim_flag;
++
++	if (from_schedule) {
++		INIT_WORK(&sio->work, sio_write_unplug_worker);
++		queue_work(mm_percpu_wq, &sio->work);
++		return;
++	}
++
++	noreclaim_flag = memalloc_noreclaim_save();
++	iov_iter_bvec(&from, WRITE, sio->bvec,
++		      sio->pages, PAGE_SIZE * sio->pages);
++	ret = mapping->a_ops->direct_IO(&sio->iocb, &from);
++	memalloc_noreclaim_restore(noreclaim_flag);
++	if (ret != -EIOCBQUEUED)
++		sio_aio_complete(&sio->iocb, ret);
++}
++
+ int __swap_writepage(struct page *page, struct writeback_control *wbc,
+ 		bio_end_io_t end_write_func)
+ {
+@@ -299,44 +362,51 @@ int __swap_writepage(struct page *page, struct writeback_control *wbc,
  
- 	dprintk("NFS: write(%pD2, %zu@%Ld)\n",
- 		file, iov_iter_count(from), (long long) iocb->ki_pos);
+ 	VM_BUG_ON_PAGE(!PageSwapCache(page), page);
+ 	if (data_race(sis->flags & SWP_FS_OPS)) {
+-		struct kiocb kiocb;
++		struct swap_iocb *sio, sio_on_stack;
++		struct blk_plug_cb *cb;
+ 		struct file *swap_file = sis->swap_file;
+-		struct address_space *mapping = swap_file->f_mapping;
+-		struct bio_vec bv = {
+-			.bv_page = page,
+-			.bv_len  = PAGE_SIZE,
+-			.bv_offset = 0
+-		};
+-		struct iov_iter from;
+-
+-		iov_iter_bvec(&from, WRITE, &bv, 1, PAGE_SIZE);
+-		init_sync_kiocb(&kiocb, swap_file);
+-		kiocb.ki_pos = page_file_offset(page);
++		loff_t pos = page_file_offset(page);
++		int p;
+ 
+ 		set_page_writeback(page);
+ 		unlock_page(page);
+-		ret = mapping->a_ops->direct_IO(&kiocb, &from);
+-		if (ret == PAGE_SIZE) {
+-			count_vm_event(PSWPOUT);
+-			ret = 0;
+-		} else {
+-			/*
+-			 * In the case of swap-over-nfs, this can be a
+-			 * temporary failure if the system has limited
+-			 * memory for allocating transmit buffers.
+-			 * Mark the page dirty and avoid
+-			 * folio_rotate_reclaimable but rate-limit the
+-			 * messages but do not flag PageError like
+-			 * the normal direct-to-bio case as it could
+-			 * be temporary.
+-			 */
+-			set_page_dirty(page);
+-			ClearPageReclaim(page);
+-			pr_err_ratelimited("Write error on dio swapfile (%llu)\n",
+-					   page_file_offset(page));
++		cb = blk_check_plugged(sio_aio_unplug, swap_file, sizeof(*sio));
++		sio = container_of(cb, struct swap_iocb, cb);
++		if (cb && sio->pages &&
++		    sio->iocb.ki_pos + sio->pages * PAGE_SIZE != pos) {
++			/* Not contiguous - hide this sio from lookup */
++			cb->data = NULL;
++			cb = blk_check_plugged(sio_aio_unplug, swap_file,
++					       sizeof(*sio));
++			sio = container_of(cb, struct swap_iocb, cb);
+ 		}
+-		end_page_writeback(page);
+-		return ret;
++		if (!cb) {
++			sio = &sio_on_stack;
++			sio->pages = 0;
++			sio->on_stack = true;
++		}
++
++		if (sio->pages == 0) {
++			init_sync_kiocb(&sio->iocb, swap_file);
++			sio->iocb.ki_pos = pos;
++			if (sio != &sio_on_stack)
++				sio->iocb.ki_complete = sio_aio_complete;
++		}
++		p = sio->pages;
++		sio->bvec[p].bv_page = page;
++		sio->bvec[p].bv_len = PAGE_SIZE;
++		sio->bvec[p].bv_offset = 0;
++		p += 1;
++		sio->pages = p;
++		if (!cb)
++			sio_aio_unplug(&sio->cb, 0);
++		else if (p >= ARRAY_SIZE(sio->bvec))
++			/* Don't try to add to this */
++			cb->data = NULL;
++
++		count_vm_event(PSWPOUT);
++
++		return 0;
+ 	}
+ 
+ 	ret = bdev_write_page(sis->bdev, swap_page_sector(page), page, wbc);
 
 
