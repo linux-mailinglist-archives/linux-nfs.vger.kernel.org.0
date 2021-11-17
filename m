@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 07485453D55
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 01:49:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDFDC453D4E
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 01:48:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbhKQAv2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Nov 2021 19:51:28 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:43476 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232380AbhKQAv2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 19:51:28 -0500
+        id S229696AbhKQAu4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Nov 2021 19:50:56 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:37182 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229611AbhKQAu4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 19:50:56 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D70311FD26;
-        Wed, 17 Nov 2021 00:48:29 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 21EEE212BB;
+        Wed, 17 Nov 2021 00:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637110109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637110078; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=R6Vy7e2dSa1wDkgESXVV84+y2o/2VJ0RFOhjGXSZJTo=;
-        b=RlIbqsih+UNuYvmBntyZCJ9M2g7PR5YZRe+rkFBo2xskG07rNzQ5LA0aAC/mOCcXdS0wcy
-        8uCq1Qxy/h+hVLelfWUirxNJ+wxx2n7EbUsjAm8mjnSkdVx0HeC+U3uFvzeqrYfr7wS0hM
-        R4+lYbh5EGjMf7xLk6goIoSiY4LwEMI=
+        bh=LtR+h2/SHobdjw6xJn7imJnV1Ye8cBQSZWUn0dvaWP0=;
+        b=vfP4mUmIEP0LfbOll5Y1WGIcVmX+SXW1M6coUvxTjRUkQUDh6nkrFYpgxS49ynYx/h5grp
+        3sALXlNjLBAXhicxQHyBj08kzvUZi4p7dt4xwT15A4NJuLRa/oi3Qf8bQJ//dxAkBmlsHH
+        XtCbBV7voqsOUV35UbqKuBdUBgpMmUs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637110109;
+        s=susede2_ed25519; t=1637110078;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=R6Vy7e2dSa1wDkgESXVV84+y2o/2VJ0RFOhjGXSZJTo=;
-        b=J8OmW+QSNUnb4swZciiZapyuUwm3QfIrDrHxHSnm9OfZN8zdeJSnBF9vbEdo+xzAIuUSNS
-        cppgTGAR5jFdGwBg==
+        bh=LtR+h2/SHobdjw6xJn7imJnV1Ye8cBQSZWUn0dvaWP0=;
+        b=/gsn573XaaGP42HwAfTplrJnnQF6eNeTXioJvBJbMq4ni2USV11Wy6THG4awky1rO9Dhsz
+        ETOE9eO5mzAnkJCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BEA7E13BC1;
-        Wed, 17 Nov 2021 00:48:28 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 11F4A13BC1;
+        Wed, 17 Nov 2021 00:47:56 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id av8qH1xRlGGZWgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 17 Nov 2021 00:48:28 +0000
-Subject: [PATCH 13/14] lockd: rename lockd_create_svc() to lockd_get()
+        id AltdMDxRlGFrWgAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 17 Nov 2021 00:47:56 +0000
+Subject: [PATCH 08/14] lockd: introduce nlmsvc_serv
 From:   NeilBrown <neilb@suse.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
 Date:   Wed, 17 Nov 2021 11:46:50 +1100
-Message-ID: <163711001008.5485.232417261192262695.stgit@noble.brown>
+Message-ID: <163711001005.5485.3727128210456208849.stgit@noble.brown>
 In-Reply-To: <163710954700.5485.5622638225352156964.stgit@noble.brown>
 References: <163710954700.5485.5622638225352156964.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -62,62 +62,143 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-lockd_create_svc() already does an svc_get() if the service already
-exists, so it is more like a "get" than a "create".
+lockd has two globals - nlmsvc_task and nlmsvc_rqst - but mostly it
+wants the 'struct svc_serv', and when it doesn't want it exactly it can
+get to what it wants from the serv.
 
-So:
- - Move the increment of nlmsvc_users into the function as well
- - rename to lockd_get().
-
-It is now the inverse of lockd_put().
+This patch is a first step to removing nlmsvc_task and nlmsvc_rqst.  It
+introduces nlmsvc_serv to store the 'struct svc_serv*'.  This is set as
+soon as the serv is created, and cleared only when it is destroyed.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/lockd/svc.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ fs/lockd/svc.c |   36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
 diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index 7f12c280fd30..1a7c11118b32 100644
+index a9669b106dbd..83874878f41d 100644
 --- a/fs/lockd/svc.c
 +++ b/fs/lockd/svc.c
-@@ -396,16 +396,14 @@ static const struct svc_serv_ops lockd_sv_ops = {
+@@ -54,6 +54,7 @@ EXPORT_SYMBOL_GPL(nlmsvc_ops);
+ 
+ static DEFINE_MUTEX(nlmsvc_mutex);
+ static unsigned int		nlmsvc_users;
++static struct svc_serv		*nlmsvc_serv;
+ static struct task_struct	*nlmsvc_task;
+ static struct svc_rqst		*nlmsvc_rqst;
+ unsigned long			nlmsvc_timeout;
+@@ -306,13 +307,12 @@ static int lockd_inetaddr_event(struct notifier_block *this,
+ 	    !atomic_inc_not_zero(&nlm_ntf_refcnt))
+ 		goto out;
+ 
+-	if (nlmsvc_rqst) {
++	if (nlmsvc_serv) {
+ 		dprintk("lockd_inetaddr_event: removed %pI4\n",
+ 			&ifa->ifa_local);
+ 		sin.sin_family = AF_INET;
+ 		sin.sin_addr.s_addr = ifa->ifa_local;
+-		svc_age_temp_xprts_now(nlmsvc_rqst->rq_server,
+-			(struct sockaddr *)&sin);
++		svc_age_temp_xprts_now(nlmsvc_serv, (struct sockaddr *)&sin);
+ 	}
+ 	atomic_dec(&nlm_ntf_refcnt);
+ 	wake_up(&nlm_ntf_wq);
+@@ -336,14 +336,13 @@ static int lockd_inet6addr_event(struct notifier_block *this,
+ 	    !atomic_inc_not_zero(&nlm_ntf_refcnt))
+ 		goto out;
+ 
+-	if (nlmsvc_rqst) {
++	if (nlmsvc_serv) {
+ 		dprintk("lockd_inet6addr_event: removed %pI6\n", &ifa->addr);
+ 		sin6.sin6_family = AF_INET6;
+ 		sin6.sin6_addr = ifa->addr;
+ 		if (ipv6_addr_type(&sin6.sin6_addr) & IPV6_ADDR_LINKLOCAL)
+ 			sin6.sin6_scope_id = ifa->idev->dev->ifindex;
+-		svc_age_temp_xprts_now(nlmsvc_rqst->rq_server,
+-			(struct sockaddr *)&sin6);
++		svc_age_temp_xprts_now(nlmsvc_serv, (struct sockaddr *)&sin6);
+ 	}
+ 	atomic_dec(&nlm_ntf_refcnt);
+ 	wake_up(&nlm_ntf_wq);
+@@ -423,15 +422,17 @@ static const struct svc_serv_ops lockd_sv_ops = {
  	.svo_enqueue_xprt	= svc_xprt_do_enqueue,
  };
  
--static int lockd_create_svc(void)
-+static int lockd_get(void)
+-static struct svc_serv *lockd_create_svc(void)
++static int lockd_create_svc(void)
  {
  	struct svc_serv *serv;
- 	int error;
  
--	/*
--	 * Check whether we're already up and running.
--	 */
- 	if (nlmsvc_serv) {
- 		svc_get(nlmsvc_serv);
-+		nlmsvc_users++;
- 		return 0;
+ 	/*
+ 	 * Check whether we're already up and running.
+ 	 */
+-	if (nlmsvc_rqst)
+-		return svc_get(nlmsvc_rqst->rq_server);
++	if (nlmsvc_serv) {
++		svc_get(nlmsvc_serv);
++		return 0;
++	}
+ 
+ 	/*
+ 	 * Sanity check: if there's no pid,
+@@ -448,14 +449,15 @@ static struct svc_serv *lockd_create_svc(void)
+ 	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, &lockd_sv_ops);
+ 	if (!serv) {
+ 		printk(KERN_WARNING "lockd_up: create service failed\n");
+-		return ERR_PTR(-ENOMEM);
++		return -ENOMEM;
  	}
- 
-@@ -439,6 +437,7 @@ static int lockd_create_svc(void)
++	nlmsvc_serv = serv;
+ 	register_inetaddr_notifier(&lockd_inetaddr_notifier);
+ #if IS_ENABLED(CONFIG_IPV6)
  	register_inet6addr_notifier(&lockd_inet6addr_notifier);
  #endif
  	dprintk("lockd_up: service created\n");
-+	nlmsvc_users++;
- 	return 0;
+-	return serv;
++	return 0;
  }
  
-@@ -472,10 +471,9 @@ int lockd_up(struct net *net, const struct cred *cred)
+ /*
+@@ -468,11 +470,10 @@ int lockd_up(struct net *net, const struct cred *cred)
  
  	mutex_lock(&nlmsvc_mutex);
  
--	error = lockd_create_svc();
-+	error = lockd_get();
- 	if (error)
- 		goto err;
--	nlmsvc_users++;
+-	serv = lockd_create_svc();
+-	if (IS_ERR(serv)) {
+-		error = PTR_ERR(serv);
++	error = lockd_create_svc();
++	if (error)
+ 		goto err_create;
+-	}
++	serv = nlmsvc_serv;
  
- 	error = lockd_up_net(nlmsvc_serv, net, cred);
+ 	error = lockd_up_net(serv, net, cred);
  	if (error < 0) {
+@@ -487,6 +488,8 @@ int lockd_up(struct net *net, const struct cred *cred)
+ 	}
+ 	nlmsvc_users++;
+ err_put:
++	if (nlmsvc_users == 0)
++		nlmsvc_serv = NULL;
+ 	svc_put(serv);
+ err_create:
+ 	mutex_unlock(&nlmsvc_mutex);
+@@ -501,7 +504,7 @@ void
+ lockd_down(struct net *net)
+ {
+ 	mutex_lock(&nlmsvc_mutex);
+-	lockd_down_net(nlmsvc_rqst->rq_server, net);
++	lockd_down_net(nlmsvc_serv, net);
+ 	if (nlmsvc_users) {
+ 		if (--nlmsvc_users)
+ 			goto out;
+@@ -519,6 +522,7 @@ lockd_down(struct net *net)
+ 	dprintk("lockd_down: service stopped\n");
+ 	lockd_svc_exit_thread();
+ 	dprintk("lockd_down: service destroyed\n");
++	nlmsvc_serv = NULL;
+ 	nlmsvc_task = NULL;
+ 	nlmsvc_rqst = NULL;
+ out:
 
 
