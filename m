@@ -2,60 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC78545406D
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 06:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 734C2454079
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 06:53:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233260AbhKQFx1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Nov 2021 00:53:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50680 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230082AbhKQFx0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Nov 2021 00:53:26 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D1C2C061570;
-        Tue, 16 Nov 2021 21:50:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=tgX1lKFHbGYlVIxMybKAUHxepjKR3IBDm4U5W4UN3zo=; b=nzDoS8FSD4/qhGPCItt5A1bJgG
-        3QyU05unbBwcOHdGh7W+8lfiKBqIHXjHH2RL1LGLKQxIxc8uJRdvrZTN+dkp0ZpQcyRkvSz+++cLk
-        wl5PsTufUAAH6Tp+hw65/tgQJ9EsNaWehtD5UuwsOos/u24vrvy8d0kf2JoRqNjJuRtC93WLBzhtk
-        1fFSGfiOTi3+Ao+zQFBuwjyxUUtmiwM9CsBtFIPcrplZO8PFnljTWRm6+TySoMGvrW3g6qkiBXnNQ
-        12aeo7acoLwc1+9NkX69xkq14/xGVz5f4+rIu0QyWeP9GVMiAKtjjicawakNOtlm3x08j9kRnN2b6
-        R+CWF1lw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mnDpx-003Nw2-KE; Wed, 17 Nov 2021 05:50:25 +0000
-Date:   Tue, 16 Nov 2021 21:50:25 -0800
-From:   Christoph Hellwig <hch@infradead.org>
+        id S233438AbhKQF4O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 17 Nov 2021 00:56:14 -0500
+Received: from mail109.syd.optusnet.com.au ([211.29.132.80]:49075 "EHLO
+        mail109.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233348AbhKQF4O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Nov 2021 00:56:14 -0500
+Received: from dread.disaster.area (pa49-195-103-97.pa.nsw.optusnet.com.au [49.195.103.97])
+        by mail109.syd.optusnet.com.au (Postfix) with ESMTPS id EC51AA46A9;
+        Wed, 17 Nov 2021 16:53:13 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1mnDsd-009nSO-AO; Wed, 17 Nov 2021 16:53:11 +1100
+Date:   Wed, 17 Nov 2021 16:53:11 +1100
+From:   Dave Chinner <david@fromorbit.com>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        linux-ext4@vger.kernel.org, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Chao Yu <chao@kernel.org>,
+        "Darrick J. Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
         Chuck Lever <chuck.lever@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 03/13] MM: reclaim mustn't enter FS for swap-over-NFS
-Message-ID: <YZSYIWtVnhqv0Noh@infradead.org>
-References: <163702956672.25805.16457749992977493579.stgit@noble.brown>
- <163703064452.25805.16932817889703270242.stgit@noble.brown>
- <YZNss/ujX3yovr/k@infradead.org>
- <163709852340.13692.16362531894844686350@noble.neil.brown.name>
+        linux-f2fs-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MM: introduce memalloc_retry_wait()
+Message-ID: <20211117055311.GS449541@dread.disaster.area>
+References: <163712329077.13692.12796971766360881401@noble.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163709852340.13692.16362531894844686350@noble.neil.brown.name>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <163712329077.13692.12796971766360881401@noble.neil.brown.name>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=619498ca
+        a=fP9RlOTWD4uZJjPSFnn6Ew==:117 a=fP9RlOTWD4uZJjPSFnn6Ew==:17
+        a=kj9zAlcOel0A:10 a=vIxV3rELxO4A:10 a=7-415B0cAAAA:8
+        a=WAyi4Cf-4lf-hVXyuRgA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 17, 2021 at 08:35:23AM +1100, NeilBrown wrote:
-> +	/* We can "enter_fs" for swap-cache with only __GFP_IO
+On Wed, Nov 17, 2021 at 03:28:10PM +1100, NeilBrown wrote:
+> 
+> Various places in the kernel - largely in filesystems - respond to a
+> memory allocation failure by looping around and re-trying.
+.....
+> diff --git a/include/linux/sched/mm.h b/include/linux/sched/mm.h
+> index aca874d33fe6..f2f2a5b28808 100644
+> --- a/include/linux/sched/mm.h
+> +++ b/include/linux/sched/mm.h
+> @@ -214,6 +214,27 @@ static inline void fs_reclaim_acquire(gfp_t gfp_mask) { }
+>  static inline void fs_reclaim_release(gfp_t gfp_mask) { }
+>  #endif
+>  
+> +/* Any memory-allocation retry loop should use
+> + * memalloc_retry_wait(), and pass the flags for the most
+> + * constrained allocation attempt that might have failed.
+> + * This provides useful documentation of where loops are,
+> + * and a central place to fine tune the waiting as the MM
+> + * implementation changes.
+> + */
+> +static inline void memalloc_retry_wait(gfp_t gfp_flags)
+> +{
+> +	gfp_flags = current_gfp_context(gfp_flags);
+> +	if ((gfp_flags & __GFP_DIRECT_RECLAIM) &&
+> +	    !(gfp_flags & __GFP_NORETRY))
+> +		/* Probably waited already, no need for much more */
+> +		schedule_timeout_uninterruptible(1);
+> +	else
+> +		/* Probably didn't wait, and has now released a lock,
+> +		 * so now is a good time to wait
+> +		 */
+> +		schedule_timeout_uninterruptible(HZ/50);
+> +}
 
-normal kernel style would be the
+The existing congestion_wait() calls io_schedule_timeout() under
+TASK_UNINTERRUPTIBLE conditions.
 
-	/*
+Does changing all these calls just to a plain
+schedule_timeout_uninterruptible() make any difference to behaviour?
+At least process accounting will appear different (uninterruptible
+sleep instead of IO wait), and I suspect that the block plug
+flushing in io_schedule() might be a good idea to retain for all the
+filesystems that call this function from IO-related routines.
 
-on a line of it's own.  But except for this nitpick this looks good.
+Cheers,
+
+Dave.
+
+-- 
+Dave Chinner
+david@fromorbit.com
