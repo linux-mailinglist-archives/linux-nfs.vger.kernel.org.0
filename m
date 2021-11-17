@@ -2,54 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A887A453D46
-	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 01:47:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6252A453D52
+	for <lists+linux-nfs@lfdr.de>; Wed, 17 Nov 2021 01:48:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbhKQAuJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Nov 2021 19:50:09 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:43320 "EHLO
+        id S232388AbhKQAvO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Nov 2021 19:51:14 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:43456 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbhKQAuJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 19:50:09 -0500
+        with ESMTP id S229611AbhKQAvO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Nov 2021 19:51:14 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2A7071FCA3;
-        Wed, 17 Nov 2021 00:47:11 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id ECCFA1FD26;
+        Wed, 17 Nov 2021 00:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637110031; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637110095; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wzpyRjD1OPWOeb4lFIMTHqIABOoJxXFP+Ea8rYkdgSY=;
-        b=Y6nvku9cQ+fshlRvWqASg+lZAIEAtpVHWZxyR8bkW7DGi3U0JBer8bclnLw1TBmLvJRj2A
-        nz2bW1XFMJ5+5taALodRR6hssa0NxkckZ5Z2BNvQdlmD4sxqxU0inZO69JO6/i8WRb4FVH
-        MMzqjavkA5GIWNaWaYrCFBp9IVRaz8k=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/DdyxV03d1CRB6Sivyn6NSZWUBIVAtjE4QQl7RMvgGI=;
+        b=Np25Hx0AxmIuX+XpxuatmG7NuZ8KTAabdCsgExiVO1ocZLmVf9iopgPHNVM4uy4hmrlcsq
+        YHHV6IoWOJ5oDQsPC5VaLS+CIZFVpEuMpd4VJX2Hush6t4Y3UDZy7nzvRw9xQI0wbQxlHz
+        hxs115d+pfKpi+bpNQFrkWCM59qsIb8=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637110031;
+        s=susede2_ed25519; t=1637110095;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=wzpyRjD1OPWOeb4lFIMTHqIABOoJxXFP+Ea8rYkdgSY=;
-        b=3vPuinG1+7u+c/gxnMNv06HDlHUT5J5HpkioVWTQCtjcz1J4uZTkscra3by2U+QcBx8jQJ
-        j4UtvM4GzDny4IDA==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/DdyxV03d1CRB6Sivyn6NSZWUBIVAtjE4QQl7RMvgGI=;
+        b=bawg3JCpHJvSXjHHOUKJsLttB4GFXq+FbqhC3VtlLfLGv44kG3uYCjw8G3yaEqT1HMzBPX
+        hXsdJ891sDN8z3AA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 11C4D13BC1;
-        Wed, 17 Nov 2021 00:47:09 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DC31113BC1;
+        Wed, 17 Nov 2021 00:48:14 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id ffvtLw1RlGEfWgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 17 Nov 2021 00:47:09 +0000
-Subject: [PATCH 00/14] SUNRPC: clean up server thread management.
+        id GYFQJk5RlGGGWgAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 17 Nov 2021 00:48:14 +0000
+Subject: [PATCH 11/14] lockd: move svc_exit_thread() into the thread
 From:   NeilBrown <neilb@suse.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
-Date:   Wed, 17 Nov 2021 11:46:49 +1100
-Message-ID: <163710954700.5485.5622638225352156964.stgit@noble.brown>
+Date:   Wed, 17 Nov 2021 11:46:50 +1100
+Message-ID: <163711001007.5485.13257651859554880196.stgit@noble.brown>
+In-Reply-To: <163710954700.5485.5622638225352156964.stgit@noble.brown>
+References: <163710954700.5485.5622638225352156964.stgit@noble.brown>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -58,58 +62,97 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I have a dream of making nfsd threads start and stop dynamically.
-This would free the admin of having to choose a number of threads to
-start.
-I'm not there yet, and I may never get there, but the current state of
-the thread management code makes it harder to experiment than it needs
-to be.  There is a lot of technical debt that needs to be repaid first.
+The normal place to call svc_exit_thread() is from the thread itself
+just before it exists.
+Do this for lockd.
 
-This series addresses much of this debt.  There are three users of
-service threads: nfsd, lockd, and nfs-callback.
-nfs-callback, the newest, is quite clean.  This patch brings nfsd and
-lockd up to a similar standard, and takes advantage of this increased
-uniformity to simplify some shared interfaces.
+This means that nlmsvc_rqst is not used out side of lockd_start_svc(),
+so it can be made local to that function, and renamed to 'rqst'.
 
-It doesn't introduce any functionality improvements, and (as far as I
-know) only fixes one minor bug (can you spot it?  If not, look at
-c20106944eb6 and if you can see a second place that it could have
-fixed).
-
-Thanks for your review,
-NeilBrown
-
-
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ fs/lockd/svc.c |   23 ++++++++++++-----------
+ 1 file changed, 12 insertions(+), 11 deletions(-)
 
-NeilBrown (14):
-      SUNRPC: stop using ->sv_nrthreads as a refcount
-      nfsd: make nfsd_stats.th_cnt atomic_t
-      NFSD: narrow nfsd_mutex protection in nfsd thread
-      SUNRPC: use sv_lock to protect updates to sv_nrthreads.
-      NFSD: Make it possible to use svc_set_num_threads_sync
-      SUNRPC: discard svo_setup and rename svc_set_num_threads_sync()
-      NFSD: simplify locking for network notifier.
-      lockd: introduce nlmsvc_serv
-      lockd: simplify management of network status notifiers
-      lockd: move lockd_start_svc() call into lockd_create_svc()
-      lockd: move svc_exit_thread() into the thread
-      lockd: introduce lockd_put()
-      lockd: rename lockd_create_svc() to lockd_get()
-      lockd: use svc_set_num_threads() for thread start and stop
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 91e7c839841e..9aa499a76159 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -56,7 +56,6 @@ static DEFINE_MUTEX(nlmsvc_mutex);
+ static unsigned int		nlmsvc_users;
+ static struct svc_serv		*nlmsvc_serv;
+ static struct task_struct	*nlmsvc_task;
+-static struct svc_rqst		*nlmsvc_rqst;
+ unsigned long			nlmsvc_timeout;
+ 
+ unsigned int lockd_net_id;
+@@ -182,6 +181,11 @@ lockd(void *vrqstp)
+ 	nlm_shutdown_hosts();
+ 	cancel_delayed_work_sync(&ln->grace_period_end);
+ 	locks_end_grace(&ln->lockd_manager);
++
++	dprintk("lockd_down: service stopped\n");
++
++	svc_exit_thread(rqstp);
++
+ 	return 0;
+ }
+ 
+@@ -358,13 +362,14 @@ static void lockd_unregister_notifiers(void)
+ static int lockd_start_svc(struct svc_serv *serv)
+ {
+ 	int error;
++	struct svc_rqst *rqst;
+ 
+ 	/*
+ 	 * Create the kernel thread and wait for it to start.
+ 	 */
+-	nlmsvc_rqst = svc_prepare_thread(serv, &serv->sv_pools[0], NUMA_NO_NODE);
+-	if (IS_ERR(nlmsvc_rqst)) {
+-		error = PTR_ERR(nlmsvc_rqst);
++	rqst = svc_prepare_thread(serv, &serv->sv_pools[0], NUMA_NO_NODE);
++	if (IS_ERR(rqst)) {
++		error = PTR_ERR(rqst);
+ 		printk(KERN_WARNING
+ 			"lockd_up: svc_rqst allocation failed, error=%d\n",
+ 			error);
+@@ -374,24 +379,23 @@ static int lockd_start_svc(struct svc_serv *serv)
+ 	svc_sock_update_bufs(serv);
+ 	serv->sv_maxconn = nlm_max_connections;
+ 
+-	nlmsvc_task = kthread_create(lockd, nlmsvc_rqst, "%s", serv->sv_name);
++	nlmsvc_task = kthread_create(lockd, rqst, "%s", serv->sv_name);
+ 	if (IS_ERR(nlmsvc_task)) {
+ 		error = PTR_ERR(nlmsvc_task);
+ 		printk(KERN_WARNING
+ 			"lockd_up: kthread_run failed, error=%d\n", error);
+ 		goto out_task;
+ 	}
+-	nlmsvc_rqst->rq_task = nlmsvc_task;
++	rqst->rq_task = nlmsvc_task;
+ 	wake_up_process(nlmsvc_task);
+ 
+ 	dprintk("lockd_up: service started\n");
+ 	return 0;
+ 
+ out_task:
+-	svc_exit_thread(nlmsvc_rqst);
++	svc_exit_thread(rqst);
+ 	nlmsvc_task = NULL;
+ out_rqst:
+-	nlmsvc_rqst = NULL;
+ 	return error;
+ }
+ 
+@@ -500,9 +504,6 @@ lockd_down(struct net *net)
+ 	}
+ 	lockd_unregister_notifiers();
+ 	kthread_stop(nlmsvc_task);
+-	dprintk("lockd_down: service stopped\n");
+-	svc_exit_thread(nlmsvc_rqst);
+-	nlmsvc_rqst = NULL;
+ 	dprintk("lockd_down: service destroyed\n");
+ 	nlmsvc_serv = NULL;
+ 	nlmsvc_task = NULL;
 
-
- fs/lockd/svc.c             | 190 ++++++++++++-------------------------
- fs/nfs/callback.c          |   8 +-
- fs/nfsd/netns.h            |   6 --
- fs/nfsd/nfsctl.c           |   2 -
- fs/nfsd/nfssvc.c           |  99 +++++++++----------
- fs/nfsd/stats.c            |   2 +-
- fs/nfsd/stats.h            |   4 +-
- include/linux/sunrpc/svc.h |  11 +--
- net/sunrpc/svc.c           |  61 ++----------
- 9 files changed, 128 insertions(+), 255 deletions(-)
-
---
-Signature
 
