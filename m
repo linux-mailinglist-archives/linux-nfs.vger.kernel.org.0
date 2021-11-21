@@ -2,61 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 186D5458639
-	for <lists+linux-nfs@lfdr.de>; Sun, 21 Nov 2021 20:57:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4912D458646
+	for <lists+linux-nfs@lfdr.de>; Sun, 21 Nov 2021 21:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229987AbhKUUAV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Nov 2021 15:00:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53284 "EHLO mail.kernel.org"
+        id S231954AbhKUUVs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Nov 2021 15:21:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229920AbhKUUAV (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Sun, 21 Nov 2021 15:00:21 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id E8B1060F42;
-        Sun, 21 Nov 2021 19:57:15 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     paulmck@kernel.org
-Subject: [PATCH] NFSD: Fix misuse of rcu_assign_pointer
-Date:   Sun, 21 Nov 2021 14:57:14 -0500
-Message-Id:  <163752463469.1397.703567874113623042.stgit@bazille.1015granger.net>
-X-Mailer: git-send-email 2.34.0
-User-Agent: StGit/1.4
+        id S231347AbhKUUVs (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Sun, 21 Nov 2021 15:21:48 -0500
+Received: from rorschach.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BCDC60D07;
+        Sun, 21 Nov 2021 20:18:41 +0000 (UTC)
+Date:   Sun, 21 Nov 2021 15:18:40 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Thiago Rafael Becker <trbecker@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH] sunrpc: fix header include guard in trace header
+Message-ID: <20211121151840.23af5f65@rorschach.local.home>
+In-Reply-To: <3209AFD1-006E-48E6-A3BF-59C76ED6A17E@oracle.com>
+References: <20211117132630.2837733-1-trbecker@gmail.com>
+        <3209AFD1-006E-48E6-A3BF-59C76ED6A17E@oracle.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1086; h=from:subject:message-id; bh=LxmHJecDlD00H9CTv7Fp5Nc9B/eHhqDFF56SXYICuGk=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhmqSa0+05pgAeqxkHBeiX7+bMZyXo9+stw2dgqzmV cwyAjmWJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYZqkmgAKCRAzarMzb2Z/lw9kD/ 97mOPntGlUtUmq1277+NxZQgZYa8DJWSYpP4kbJEf/SIvcv4ocV8zGdlFNghcN6SesgGkFa2GXtHG7 GzId8rHbIpL3Z8yIVNaL4VmQcKjJgbVblQhuqKjqmTWmwuUxa60/DsDwOVcEuA8bUndQ8SbhF+/mA9 Z+Dj8/dmnFaO1630Hm6oIfKvdsiUzc7E9rJhiUKm3UE7LYdfSQWG8IpFR7CHK/2T/VUqUpLMlonXTi 16g3L0WDRp4udzimSWUdIFQmAgfsv58UuiwUZjKWB9UKNCEWNIO8ibTRf20XbehSliZfCv39Bs14I8 1fWRu/h+xcN/vn1bOxkFKi2n6GJTN4l5haSFqFqGVS7GR4LbZyaMe+rs/qnVaJKh+uPOQZ5nErx4KQ MJsitgX3ymlmNPaiIpaLsNjT84gTPfovML5IWvYD/c0N1ziCXGgyYfpz5A21l3wLWbpis21nltYus6 qV4BjWgnDGqcIgHW+Gk8NlEE104XhfO+Oym9yDWhYtpeiIKRvB+OGZzCBW33BAFxep2B4azNSBPOsC G+QEfEIDqbSSM+1SYjE3sxa7du2fA9T/NT1Z63XgIPvj4giPRabrChH04wW1lGVSdunaVCB1GevFnb 1y9nfYMwWKO1WCTzDndORo8J0GeLtb6meIkZjyFeoD8a6MvUw1HblR6+srYA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To address this error:
+On Sun, 21 Nov 2021 19:33:46 +0000
+Chuck Lever III <chuck.lever@oracle.com> wrote:
 
-  CC [M]  fs/nfsd/filecache.o
-  CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible types in comparison expression (different address spaces):
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noderef] __rcu *
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
+> > #include <linux/tracepoint.h>
+> > -- 
+> > 2.31.1
+> >   
+> 
+> I can take this patch for v5.17 if no-one else has already grabbed it.
 
-The "net" field in struct nfsd_fcache_disposal is not annotated as
-requiring an RCU assignment.
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index fdf89fcf1a0c..3fa172f86441 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -772,7 +772,7 @@ nfsd_alloc_fcache_disposal(struct net *net)
- static void
- nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
- {
--	rcu_assign_pointer(l->net, NULL);
-+	l->net = NULL;
- 	cancel_work_sync(&l->work);
- 	nfsd_file_dispose_list(&l->freeme);
- 	kfree_rcu(l, rcu);
-
+-- Steve
