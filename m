@@ -2,173 +2,183 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E06DA45878E
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Nov 2021 01:56:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B7905458792
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Nov 2021 01:59:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233131AbhKVA7t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 21 Nov 2021 19:59:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34420 "EHLO
+        id S229884AbhKVBCI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 21 Nov 2021 20:02:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbhKVA7r (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Nov 2021 19:59:47 -0500
+        with ESMTP id S229594AbhKVBCH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 21 Nov 2021 20:02:07 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CBCAC061574
-        for <linux-nfs@vger.kernel.org>; Sun, 21 Nov 2021 16:56:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0678EC061574
+        for <linux-nfs@vger.kernel.org>; Sun, 21 Nov 2021 16:59:02 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 39AA27352; Sun, 21 Nov 2021 19:56:39 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 39AA27352
+        id 650434B53; Sun, 21 Nov 2021 19:59:01 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 650434B53
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1637542599;
-        bh=r2FrNbOejgUuhVK58vOrJrH1q1cjQEKmBvG0YNNIIho=;
+        s=default; t=1637542741;
+        bh=LiymnSxjCHoLdxflU9eCOplUXDzEl1EOCOG9tuObf7I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JOgk1wpn7F3EU/uqMWit4DSTDFoWCPDyXpErmYoWovdDmrkn21/vUuSpJEo8PmIbN
-         UZZ2DyEPTz9arr3p3cNs89mwpwu5yyTs2QL50H0O2SyIPlU+sP0vCUiaeKICuasTTY
-         Me+WWzIWS9VQao+EEBXIq40NZ+vzBPpZVRhWucG8=
-Date:   Sun, 21 Nov 2021 19:56:39 -0500
+        b=OJ9/oePQEOIQcc4rZ3PqytJ1zj6FuDDkYLU+oCwAhCUa0IZDarXck+U8ZIjL/0UyF
+         z3U8rWCqNDkFbM3rV1jfuuWlcRs9h2OZZnUOISxnsOBZpLihRGXZSeVG8zxkmkWrBG
+         4zY3bnU6pmKgMLH7s/AYD9GfJR3f/LtbANWabLb0=
+Date:   Sun, 21 Nov 2021 19:59:01 -0500
 From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     NeilBrown <neilb@suse.de>
 Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH 00/14] SUNRPC: clean up server thread management.
-Message-ID: <20211122005639.GA12035@fieldses.org>
+Message-ID: <20211122005901.GB12035@fieldses.org>
 References: <163710954700.5485.5622638225352156964.stgit@noble.brown>
  <20211117141231.GA24762@fieldses.org>
  <163753863448.13692.4142092237119935826@noble.neil.brown.name>
+ <20211122005639.GA12035@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163753863448.13692.4142092237119935826@noble.neil.brown.name>
+In-Reply-To: <20211122005639.GA12035@fieldses.org>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 22, 2021 at 10:50:34AM +1100, NeilBrown wrote:
-> On Thu, 18 Nov 2021, J. Bruce Fields wrote:
-> > On Wed, Nov 17, 2021 at 11:46:49AM +1100, NeilBrown wrote:
-> > > I have a dream of making nfsd threads start and stop dynamically.
+On Sun, Nov 21, 2021 at 07:56:39PM -0500, J. Bruce Fields wrote:
+> On Mon, Nov 22, 2021 at 10:50:34AM +1100, NeilBrown wrote:
+> > On Thu, 18 Nov 2021, J. Bruce Fields wrote:
+> > > On Wed, Nov 17, 2021 at 11:46:49AM +1100, NeilBrown wrote:
+> > > > I have a dream of making nfsd threads start and stop dynamically.
+> > > 
+> > > It's a good dream!
+> > > 
+> > > I haven't had a chance to look at these at all yet, I just kicked off
+> > > tests to run overnight, and woke up to the below.
+> > > 
+> > > This happened on the client, probably the first time it attempted to do
+> > > an nfsv4 mount, so something went wrong with setup of the callback
+> > > server.
 > > 
-> > It's a good dream!
-> > 
-> > I haven't had a chance to look at these at all yet, I just kicked off
-> > tests to run overnight, and woke up to the below.
-> > 
-> > This happened on the client, probably the first time it attempted to do
-> > an nfsv4 mount, so something went wrong with setup of the callback
-> > server.
+> > I cannot reproduce this and cannot see any way it could possible happen.
 > 
-> I cannot reproduce this and cannot see any way it could possible happen.
-
-Huh.  Well, it's possible I mixed up the results somehow.  I'll see if I
-can reproduce tonight or tomorrow.
-
-> Could you please confirm the patches were applied on a vanilla 5.1.6-rc1
-> kernel, and that you don't have the "pool_mode" module parameter set.
-
-/sys/module/sunrpc/parameters/pool_mode is "global", the default.
-
-> As I said, serv->sv_nrpools is zero, so either it hasn't been set, or it
-> was set, but the 'serv' has been cleared and free (or freed and
-> reallocated and clearer), or that it was set to zero.
+> Huh.  Well, it's possible I mixed up the results somehow.  I'll see if I
+> can reproduce tonight or tomorrow.
 > 
-> svc_pool_map_get() doesn't explicitly protect against npools==0 (maybe
-> it should), only npools < 0.  But even without that I cannot see it ever
-> setting ->npools to zero.
+> > Could you please confirm the patches were applied on a vanilla 5.1.6-rc1
+> > kernel, and that you don't have the "pool_mode" module parameter set.
 > 
-> I have changed refcounting, so maybe something could get freed early,
-> but all the changes I made happen *before* the point in the code where
-> it is crashing.
+> /sys/module/sunrpc/parameters/pool_mode is "global", the default.
 
-OK, I'll take another look and let you know....
+Oh, and yes, this is what I was testing, should just be 5.16-rc1 plus
+your 14 patches:
+
+	http://git.linux-nfs.org/?p=bfields/linux-topics.git;a=shortlog;h=659e13af1f8702776704676937932f332265d85e
 
 --b.
 
 > 
-> So I'm thoroughly perplexed.
+> > As I said, serv->sv_nrpools is zero, so either it hasn't been set, or it
+> > was set, but the 'serv' has been cleared and free (or freed and
+> > reallocated and clearer), or that it was set to zero.
+> > 
+> > svc_pool_map_get() doesn't explicitly protect against npools==0 (maybe
+> > it should), only npools < 0.  But even without that I cannot see it ever
+> > setting ->npools to zero.
+> > 
+> > I have changed refcounting, so maybe something could get freed early,
+> > but all the changes I made happen *before* the point in the code where
+> > it is crashing.
 > 
-> Thanks,
-> NeilBrown
+> OK, I'll take another look and let you know....
 > 
+> --b.
 > 
 > > 
-> > --b.
+> > So I'm thoroughly perplexed.
 > > 
-> > [  285.585061] divide error: 0000 [#1] PREEMPT SMP KASAN PTI
-> > [  285.585754] CPU: 0 PID: 5864 Comm: mount.nfs Not tainted 5.16.0-rc1-00014-g659e13af1f87 #1017
-> > [  285.586828] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-3.fc34 04/01/2014
-> > [  285.587828] RIP: 0010:svc_pool_for_cpu+0xc7/0x1b0 [sunrpc]
-> > [  285.588501] Code: 8b ab f0 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 0f b6 14 11 84 d2 74 09 80 fa 03 0f 8e 8d 00 00 00 31 d2 <f7> b3 e8 00 00 00 48 83 c4 08 5b 48 8d 04 52 48 c1 e0 06 48 01 e8
-> > [  285.590820] RSP: 0018:ffff88801526f8f8 EFLAGS: 00010246
-> > [  285.591418] RAX: 0000000000000000 RBX: ffff88800db3bc00 RCX: 1ffff11001b6779d
-> > [  285.592267] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800db3bce8
-> > [  285.593145] RBP: 0000000000000010 R08: 0000000000000001 R09: ffff888014b7403f
-> > [  285.594057] R10: ffffed100296e807 R11: 0000000000000001 R12: ffff888014b74038
-> > [  285.594940] R13: ffff888014b74010 R14: ffff888014b74000 R15: ffff88800db3bc00
-> > [  285.595826] FS:  00007f489f68a440(0000) GS:ffff88806d400000(0000) knlGS:0000000000000000
-> > [  285.596851] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  285.597578] CR2: 00007f2dffa0b198 CR3: 000000000c486003 CR4: 0000000000170ef0
-> > [  285.598510] Call Trace:
-> > [  285.598824]  <TASK>
-> > [  285.599097]  svc_xprt_do_enqueue+0x164/0x900 [sunrpc]
-> > [  285.599767]  svc_xprt_received+0x181/0x3a0 [sunrpc]
-> > [  285.600411]  _svc_create_xprt+0x2bd/0x740 [sunrpc]
-> > [  285.601049]  ? svc_add_new_perm_xprt+0x140/0x140 [sunrpc]
-> > [  285.601787]  ? lock_release+0x3b8/0x6d0
-> > [  285.602318]  ? nfs_callback_up+0x7ad/0xdb0 [nfsv4]
-> > [  285.603617]  svc_create_xprt+0x36/0x90 [sunrpc]
-> > [  285.604306]  nfs_callback_up+0x81f/0xdb0 [nfsv4]
-> > [  285.604972]  nfs4_init_client+0x1db/0x450 [nfsv4]
-> > [  285.605605]  ? nfs41_init_client+0x70/0x70 [nfsv4]
-> > [  285.606304]  nfs4_set_client+0x25f/0x410 [nfsv4]
-> > [  285.606912]  ? nfs4_add_trunk.isra.0+0x280/0x280 [nfsv4]
-> > [  285.607606]  nfs4_create_server+0x5f0/0xda0 [nfsv4]
-> > [  285.608250]  ? lock_is_held_type+0xd7/0x130
-> > [  285.608786]  ? nfs4_server_common_setup+0x670/0x670 [nfsv4]
-> > [  285.609505]  ? __module_get+0x47/0x60
-> > [  285.610077]  nfs4_try_get_tree+0xd3/0x250 [nfsv4]
-> > [  285.610690]  vfs_get_tree+0x8a/0x2d0
-> > [  285.611152]  path_mount+0x3f9/0x19e0
-> > [  285.611608]  ? debug_check_no_obj_freed+0x1f3/0x3c0
-> > [  285.612227]  ? lock_is_held_type+0xd7/0x130
-> > [  285.612757]  ? finish_automount+0x8c0/0x8c0
-> > [  285.613281]  ? user_path_at_empty+0x45/0x50
-> > [  285.613832]  ? rcu_read_lock_sched_held+0x3f/0x70
-> > [  285.614456]  ? kmem_cache_free+0xd9/0x1b0
-> > [  285.614965]  __x64_sys_mount+0x1d6/0x240
-> > [  285.615455]  ? path_mount+0x19e0/0x19e0
-> > [  285.615941]  ? syscall_enter_from_user_mode+0x1d/0x50
-> > [  285.616572]  do_syscall_64+0x43/0x90
-> > [  285.617043]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> > [  285.617693] RIP: 0033:0x7f489fd4182e
-> > [  285.618206] Code: 48 8b 0d 4d 16 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1a 16 0c 00 f7 d8 64 89 01 48
-> > [  285.620595] RSP: 002b:00007ffdc3bdd5b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-> > [  285.621532] RAX: ffffffffffffffda RBX: 00007ffdc3bdd750 RCX: 00007f489fd4182e
-> > [  285.622492] RDX: 000055da46c0a510 RSI: 000055da46c0a550 RDI: 000055da46c0c2f0
-> > [  285.623372] RBP: 00007ffdc3bdd750 R08: 000055da46c0d050 R09: 0037332e3232312e
-> > [  285.624271] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-> > [  285.625158] R13: 00007ffdc3bdd660 R14: 000055da46c0ce00 R15: 000055da46c0ce90
-> > [  285.626097]  </TASK>
-> > [  285.626381] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
-> > [  285.627622] ---[ end trace 0ea273cc87891325 ]---
-> > [  285.628222] RIP: 0010:svc_pool_for_cpu+0xc7/0x1b0 [sunrpc]
-> > [  285.628945] Code: 8b ab f0 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 0f b6 14 11 84 d2 74 09 80 fa 03 0f 8e 8d 00 00 00 31 d2 <f7> b3 e8 00 00 00 48 83 c4 08 5b 48 8d 04 52 48 c1 e0 06 48 01 e8
-> > [  285.631830] RSP: 0018:ffff88801526f8f8 EFLAGS: 00010246
-> > [  285.632557] RAX: 0000000000000000 RBX: ffff88800db3bc00 RCX: 1ffff11001b6779d
-> > [  285.634319] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800db3bce8
-> > [  285.635430] RBP: 0000000000000010 R08: 0000000000000001 R09: ffff888014b7403f
-> > [  285.636408] R10: ffffed100296e807 R11: 0000000000000001 R12: ffff888014b74038
-> > [  285.637369] R13: ffff888014b74010 R14: ffff888014b74000 R15: ffff88800db3bc00
-> > [  285.638346] FS:  00007f489f68a440(0000) GS:ffff88806d400000(0000) knlGS:0000000000000000
-> > [  285.639434] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > [  285.640233] CR2: 00007f2dffa0b198 CR3: 000000000c486003 CR4: 0000000000170ef0
-> > [  285.641194] note: mount.nfs[5864] exited with preempt_count 1
-> > [  562.003788] kworker/dying (773) used greatest stack depth: 23128 bytes left
-> > [ 1356.888419] clocksource: timekeeping watchdog on CPU1: acpi_pm retried 2 times before success
-> > [ 2396.888656] clocksource: timekeeping watchdog on CPU1: acpi_pm retried 2 times before success
-> > [ 3071.387007] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
-> > [ 3074.395010] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
-> > [ 3082.395298] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
-> > [ 5736.389488] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
-> > [root@test3 ~]# uname -a
-> > Linux test3.fieldses.org 5.16.0-rc1-00014-g659e13af1f87 #1017 SMP PREEMPT Tue Nov 16 20:51:49 EST 2021 x86_64 x86_64 x86_64 GNU/Linux
+> > Thanks,
+> > NeilBrown
 > > 
 > > 
+> > > 
+> > > --b.
+> > > 
+> > > [  285.585061] divide error: 0000 [#1] PREEMPT SMP KASAN PTI
+> > > [  285.585754] CPU: 0 PID: 5864 Comm: mount.nfs Not tainted 5.16.0-rc1-00014-g659e13af1f87 #1017
+> > > [  285.586828] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.14.0-3.fc34 04/01/2014
+> > > [  285.587828] RIP: 0010:svc_pool_for_cpu+0xc7/0x1b0 [sunrpc]
+> > > [  285.588501] Code: 8b ab f0 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 0f b6 14 11 84 d2 74 09 80 fa 03 0f 8e 8d 00 00 00 31 d2 <f7> b3 e8 00 00 00 48 83 c4 08 5b 48 8d 04 52 48 c1 e0 06 48 01 e8
+> > > [  285.590820] RSP: 0018:ffff88801526f8f8 EFLAGS: 00010246
+> > > [  285.591418] RAX: 0000000000000000 RBX: ffff88800db3bc00 RCX: 1ffff11001b6779d
+> > > [  285.592267] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800db3bce8
+> > > [  285.593145] RBP: 0000000000000010 R08: 0000000000000001 R09: ffff888014b7403f
+> > > [  285.594057] R10: ffffed100296e807 R11: 0000000000000001 R12: ffff888014b74038
+> > > [  285.594940] R13: ffff888014b74010 R14: ffff888014b74000 R15: ffff88800db3bc00
+> > > [  285.595826] FS:  00007f489f68a440(0000) GS:ffff88806d400000(0000) knlGS:0000000000000000
+> > > [  285.596851] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [  285.597578] CR2: 00007f2dffa0b198 CR3: 000000000c486003 CR4: 0000000000170ef0
+> > > [  285.598510] Call Trace:
+> > > [  285.598824]  <TASK>
+> > > [  285.599097]  svc_xprt_do_enqueue+0x164/0x900 [sunrpc]
+> > > [  285.599767]  svc_xprt_received+0x181/0x3a0 [sunrpc]
+> > > [  285.600411]  _svc_create_xprt+0x2bd/0x740 [sunrpc]
+> > > [  285.601049]  ? svc_add_new_perm_xprt+0x140/0x140 [sunrpc]
+> > > [  285.601787]  ? lock_release+0x3b8/0x6d0
+> > > [  285.602318]  ? nfs_callback_up+0x7ad/0xdb0 [nfsv4]
+> > > [  285.603617]  svc_create_xprt+0x36/0x90 [sunrpc]
+> > > [  285.604306]  nfs_callback_up+0x81f/0xdb0 [nfsv4]
+> > > [  285.604972]  nfs4_init_client+0x1db/0x450 [nfsv4]
+> > > [  285.605605]  ? nfs41_init_client+0x70/0x70 [nfsv4]
+> > > [  285.606304]  nfs4_set_client+0x25f/0x410 [nfsv4]
+> > > [  285.606912]  ? nfs4_add_trunk.isra.0+0x280/0x280 [nfsv4]
+> > > [  285.607606]  nfs4_create_server+0x5f0/0xda0 [nfsv4]
+> > > [  285.608250]  ? lock_is_held_type+0xd7/0x130
+> > > [  285.608786]  ? nfs4_server_common_setup+0x670/0x670 [nfsv4]
+> > > [  285.609505]  ? __module_get+0x47/0x60
+> > > [  285.610077]  nfs4_try_get_tree+0xd3/0x250 [nfsv4]
+> > > [  285.610690]  vfs_get_tree+0x8a/0x2d0
+> > > [  285.611152]  path_mount+0x3f9/0x19e0
+> > > [  285.611608]  ? debug_check_no_obj_freed+0x1f3/0x3c0
+> > > [  285.612227]  ? lock_is_held_type+0xd7/0x130
+> > > [  285.612757]  ? finish_automount+0x8c0/0x8c0
+> > > [  285.613281]  ? user_path_at_empty+0x45/0x50
+> > > [  285.613832]  ? rcu_read_lock_sched_held+0x3f/0x70
+> > > [  285.614456]  ? kmem_cache_free+0xd9/0x1b0
+> > > [  285.614965]  __x64_sys_mount+0x1d6/0x240
+> > > [  285.615455]  ? path_mount+0x19e0/0x19e0
+> > > [  285.615941]  ? syscall_enter_from_user_mode+0x1d/0x50
+> > > [  285.616572]  do_syscall_64+0x43/0x90
+> > > [  285.617043]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+> > > [  285.617693] RIP: 0033:0x7f489fd4182e
+> > > [  285.618206] Code: 48 8b 0d 4d 16 0c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 1a 16 0c 00 f7 d8 64 89 01 48
+> > > [  285.620595] RSP: 002b:00007ffdc3bdd5b8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+> > > [  285.621532] RAX: ffffffffffffffda RBX: 00007ffdc3bdd750 RCX: 00007f489fd4182e
+> > > [  285.622492] RDX: 000055da46c0a510 RSI: 000055da46c0a550 RDI: 000055da46c0c2f0
+> > > [  285.623372] RBP: 00007ffdc3bdd750 R08: 000055da46c0d050 R09: 0037332e3232312e
+> > > [  285.624271] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> > > [  285.625158] R13: 00007ffdc3bdd660 R14: 000055da46c0ce00 R15: 000055da46c0ce90
+> > > [  285.626097]  </TASK>
+> > > [  285.626381] Modules linked in: nfsv4 rpcsec_gss_krb5 nfsv3 nfs_acl nfs lockd grace auth_rpcgss sunrpc
+> > > [  285.627622] ---[ end trace 0ea273cc87891325 ]---
+> > > [  285.628222] RIP: 0010:svc_pool_for_cpu+0xc7/0x1b0 [sunrpc]
+> > > [  285.628945] Code: 8b ab f0 00 00 00 48 ba 00 00 00 00 00 fc ff df 48 89 f9 48 c1 e9 03 0f b6 14 11 84 d2 74 09 80 fa 03 0f 8e 8d 00 00 00 31 d2 <f7> b3 e8 00 00 00 48 83 c4 08 5b 48 8d 04 52 48 c1 e0 06 48 01 e8
+> > > [  285.631830] RSP: 0018:ffff88801526f8f8 EFLAGS: 00010246
+> > > [  285.632557] RAX: 0000000000000000 RBX: ffff88800db3bc00 RCX: 1ffff11001b6779d
+> > > [  285.634319] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88800db3bce8
+> > > [  285.635430] RBP: 0000000000000010 R08: 0000000000000001 R09: ffff888014b7403f
+> > > [  285.636408] R10: ffffed100296e807 R11: 0000000000000001 R12: ffff888014b74038
+> > > [  285.637369] R13: ffff888014b74010 R14: ffff888014b74000 R15: ffff88800db3bc00
+> > > [  285.638346] FS:  00007f489f68a440(0000) GS:ffff88806d400000(0000) knlGS:0000000000000000
+> > > [  285.639434] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > > [  285.640233] CR2: 00007f2dffa0b198 CR3: 000000000c486003 CR4: 0000000000170ef0
+> > > [  285.641194] note: mount.nfs[5864] exited with preempt_count 1
+> > > [  562.003788] kworker/dying (773) used greatest stack depth: 23128 bytes left
+> > > [ 1356.888419] clocksource: timekeeping watchdog on CPU1: acpi_pm retried 2 times before success
+> > > [ 2396.888656] clocksource: timekeeping watchdog on CPU1: acpi_pm retried 2 times before success
+> > > [ 3071.387007] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
+> > > [ 3074.395010] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
+> > > [ 3082.395298] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
+> > > [ 5736.389488] clocksource: timekeeping watchdog on CPU0: acpi_pm retried 2 times before success
+> > > [root@test3 ~]# uname -a
+> > > Linux test3.fieldses.org 5.16.0-rc1-00014-g659e13af1f87 #1017 SMP PREEMPT Tue Nov 16 20:51:49 EST 2021 x86_64 x86_64 x86_64 GNU/Linux
+> > > 
+> > > 
