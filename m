@@ -2,108 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9185A45912F
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Nov 2021 16:18:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9828945941B
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Nov 2021 18:42:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238837AbhKVPVb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Nov 2021 10:21:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57208 "EHLO
+        id S240105AbhKVRpV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Nov 2021 12:45:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232194AbhKVPVa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 10:21:30 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34913C061574
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Nov 2021 07:18:24 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8707D6F29; Mon, 22 Nov 2021 10:18:23 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8707D6F29
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1637594303;
-        bh=p6veJeO2y8V6X9BcmqRfnYox/+l7MpVyNNt4TLLwsuk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BXeVlheh9FRpZ5MffV30ArkGDms5CIBkOHuoHIiONfhzXhSuASqk4jEnViCbxwsFA
-         9asLP5RYXmS8qn3i5KMWRGwEY0PzrVeNO/AjSuPAn2yYNHqtnctrRJ+Ji2FTiXbWHB
-         1zuapekGBM11AObgUVK3klLYLB+pd39wcNCa4XfY=
-Date:   Mon, 22 Nov 2021 10:18:23 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 00/14] SUNRPC: clean up server thread management.
-Message-ID: <20211122151823.GA22802@fieldses.org>
-References: <163710954700.5485.5622638225352156964.stgit@noble.brown>
- <20211117141231.GA24762@fieldses.org>
- <163753863448.13692.4142092237119935826@noble.neil.brown.name>
- <20211122005639.GA12035@fieldses.org>
- <20211122005901.GB12035@fieldses.org>
- <163754358887.13692.5665882865660886756@noble.neil.brown.name>
- <20211122023753.GC12035@fieldses.org>
- <20211122033840.GD12035@fieldses.org>
+        with ESMTP id S240086AbhKVRpV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 12:45:21 -0500
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6E5C061574
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Nov 2021 09:42:13 -0800 (PST)
+Received: by mail-io1-xd41.google.com with SMTP id v23so24435593iom.12
+        for <linux-nfs@vger.kernel.org>; Mon, 22 Nov 2021 09:42:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=9/Qa7fXwugLSrItQXbBJAQoVGnoVU6ujQrnaBadW/LQ=;
+        b=dWXgRyq3nc6mEFAEgYdP0D4vcX9iFEJrgV3nV0912n+hndvp7vj3lYiZpvou2lH6cf
+         YRfvvgbW0l00Tia0HCPVcBHYjlBe7vJpkxrSQITdD3Hwz6FZ0l6ti7tBT+qDoTT2+ACe
+         94GGJ+VgoHgbyfiYpRNj1sZLDnDP5tbxyAxAg1Ijz48O11HtY8OlKGM4lT7HeshzUgk8
+         vGcqBpUOJXZyeRw+NU47seGd9Gn/f1BqPlrkCcFK0HHlnjmh5jqoWSv3X3FNMHmjFu91
+         3PyulesHvcxYpzHG/3zAssMiva0Mm2bHMO/DqNkC4Z+fhYE/fsvY9w/8XkC/Cyg4dflz
+         Tg8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=9/Qa7fXwugLSrItQXbBJAQoVGnoVU6ujQrnaBadW/LQ=;
+        b=jHZY/qxn1GPoY82/UwjwXeOK2gZQw6hqcLBHNrWTm6sbvooQyFT5SS4LLA/G5oZvfC
+         K49WmaLXFZp5rCu+W5KWZOT1I5lMv8ygKKO7kpj65PpjJdoCOEWLmnbDgpo/G6oEG78G
+         xJogWL8ER36T/CR9ej3/UMRb48JXdHvbmIwhXQ37yV0TOHmcAu6CJC9V7GDTitFHr6+Q
+         xjMjiOZnf2Mo/nncPOQQ2dBBgy7EZ2M+VXCj63+zxayIZ+DAr97o1h+mH1Gn6lP/q91f
+         FEk2Tvb8/8jl19aQ3hmZhwhJSStk48/4r6bn0P7+MkMlI7nmRr9WLGGVo+O+R2zwtgG6
+         W1vA==
+X-Gm-Message-State: AOAM530emnsSAyL0xR0OCJ3yKqMs+q0pc3g7nrkJfo4oUhMu6JyKqrUC
+        HjU8O2eOoTjadcKNlflUspuaspIzCv/K6VvkrC4=
+X-Google-Smtp-Source: ABdhPJy6hTiHH0SwaPbC1iRnozCzgYBLiSnXOIpPN3kiL7Fb2ZMNaZ2dUbAKJgIOAy+OKLrg10WvBzbcg1w1T0T7QvM=
+X-Received: by 2002:a02:7053:: with SMTP id f80mr50597079jac.28.1637602933109;
+ Mon, 22 Nov 2021 09:42:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20211122033840.GD12035@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Sender: kokouhum@gmail.com
+Received: by 2002:a4f:2a83:0:0:0:0:0 with HTTP; Mon, 22 Nov 2021 09:42:12
+ -0800 (PST)
+From:   Jenny Ross <jrs61644@gmail.com>
+Date:   Mon, 22 Nov 2021 17:42:12 +0000
+X-Google-Sender-Auth: d6IL59YzmVNMswzJuL6-Wr59Rco
+Message-ID: <CA+WWGsu2SzUCJHqm12dTBw1yBmhAbfLox5UvgGi+wpDZ=PDVjw@mail.gmail.com>
+Subject: Hi
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Nov 21, 2021 at 10:38:40PM -0500, J. Bruce Fields wrote:
-> On Sun, Nov 21, 2021 at 09:37:53PM -0500, J. Bruce Fields wrote:
-> > On Mon, Nov 22, 2021 at 12:13:08PM +1100, NeilBrown wrote:
-> > > On Mon, 22 Nov 2021, J. Bruce Fields wrote:
-> > > > On Sun, Nov 21, 2021 at 07:56:39PM -0500, J. Bruce Fields wrote:
-> > > > > On Mon, Nov 22, 2021 at 10:50:34AM +1100, NeilBrown wrote:
-> > > > > > On Thu, 18 Nov 2021, J. Bruce Fields wrote:
-> > > > > > > On Wed, Nov 17, 2021 at 11:46:49AM +1100, NeilBrown wrote:
-> > > > > > > > I have a dream of making nfsd threads start and stop dynamically.
-> > > > > > > 
-> > > > > > > It's a good dream!
-> > > > > > > 
-> > > > > > > I haven't had a chance to look at these at all yet, I just kicked off
-> > > > > > > tests to run overnight, and woke up to the below.
-> > > > > > > 
-> > > > > > > This happened on the client, probably the first time it attempted to do
-> > > > > > > an nfsv4 mount, so something went wrong with setup of the callback
-> > > > > > > server.
-> > > > > > 
-> > > > > > I cannot reproduce this and cannot see any way it could possible happen.
-> > > > > 
-> > > > > Huh.  Well, it's possible I mixed up the results somehow.  I'll see if I
-> > > > > can reproduce tonight or tomorrow.
-> > > > > 
-> > > > > > Could you please confirm the patches were applied on a vanilla 5.1.6-rc1
-> > > > > > kernel, and that you don't have the "pool_mode" module parameter set.
-> > > > > 
-> > > > > /sys/module/sunrpc/parameters/pool_mode is "global", the default.
-> > > > 
-> > > > Oh, and yes, this is what I was testing, should just be 5.16-rc1 plus
-> > > > your 14 patches:
-> > > > 
-> > > > 	http://git.linux-nfs.org/?p=bfields/linux-topics.git;a=shortlog;h=659e13af1f8702776704676937932f332265d85e
-> > 
-> > OK, tried again and it did indeed reproduce in the same spot.
-> > 
-> > > I did find a possible problem.  Very first patch.
-> > > in fs/nfsd/nfsctl.c, in _write_ports_addfd()
-> > >   if (!err && !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
-> > > 
-> > > should be "err >= 0" rather than "!err".  That could result in a
-> > > use-after free, which can make anything explode.
-> > > If not too much trouble, could you just tweek that line and see what
-> > > happens?
-> > 
-> > Like the following?  Same divide-by-zero, I'm afraid.
-> 
-> Hm, playing with reproducer; it takes more than one mount.  My simplest
-> reproducer is:
-> 
-> 	mount -overs=3 server:/path /mnt/
-> 	umount /mnt/
-> 	mount -overs=4.0 server:/path /mnt/
-> 
-> ... and the client crashes here.
+How are you?
 
-Also: the problem starts with the last patch ("lockd: use
-svc_set_num_threads() for thread start and stop").
+My name is Jenny Ross, i came across your email address on Linkedin
+is your email address valid?  please your attention is needed, i have
+something very important to share with you.
 
---b.
+Regards
+Jenny
