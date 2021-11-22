@@ -2,126 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0591F4597CD
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Nov 2021 23:41:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DBCB459863
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 00:25:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233665AbhKVWoV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Nov 2021 17:44:21 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:52326 "EHLO
+        id S229779AbhKVX2w (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Nov 2021 18:28:52 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:53546 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232042AbhKVWoU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 17:44:20 -0500
+        with ESMTP id S229575AbhKVX2w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 18:28:52 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 464E4218EF;
-        Mon, 22 Nov 2021 22:41:12 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 32F26218F6;
+        Mon, 22 Nov 2021 23:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637620872; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637623544; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oBkp+hwS/JudsCzX1ijuhZk3OD6D4G9Ht76rA32ehsM=;
-        b=ksbg9O+uiQymjcYAiW6xu55NtrHTWhVVcq4PWYlBIw0Fcmx8qB4qwMo2oCIwXLPk0O+plP
-        3eNulyNiuODkpsRB/8Dxkfe4auPEwpTeXcG93tiHiuD6s3jISrw0uhAgRPhI9U9c5vi67U
-        dbDEmoQM1+3uTJl5dPohGnXSRWDvjqg=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1E0YuGxnUAcZpMw6uOKCWgD08nS2Xx8zFvQY9xcd8H8=;
+        b=FqBlZG069tMztXHUTD2oIyo6Tkt2bhKNQhttW6XDsBqz9QEK8y8w1GwbBg64ukO9q9b/q6
+        euRPtcbZC4OgLj+DxweNkOQjOxC2EUXBPdFhuvk6uJLSebq30yQ0b6MASJw682HxpC9220
+        OwNVaGDapSBQeGhFI+aUCN62m1G/8gc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637620872;
+        s=susede2_ed25519; t=1637623544;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oBkp+hwS/JudsCzX1ijuhZk3OD6D4G9Ht76rA32ehsM=;
-        b=Na3gL0pvDTVYdNtVCbSLVM801suBQOaMl84eWd1reAX8PP/TjlVdi3WPGjriXCYKsn3Wm+
-        HLgkT9UetBDziIAQ==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1E0YuGxnUAcZpMw6uOKCWgD08nS2Xx8zFvQY9xcd8H8=;
+        b=N6upfFtHtY47rSMSvjOwl+acLW2m/kAdEGJM0Uc8Uu0NmohfQEk515T1lrw4b8Xxz0qhXv
+        dlEy9BLVlcf7ypAw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5447013BD4;
-        Mon, 22 Nov 2021 22:41:10 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 102F713BAB;
+        Mon, 22 Nov 2021 23:25:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id nLBCBIYcnGHvPgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 22 Nov 2021 22:41:10 +0000
+        id khNpLvYmnGHKTQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 22 Nov 2021 23:25:42 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: use different lock keys for INET6 and LOCAL
-Date:   Tue, 23 Nov 2021 09:40:35 +1100
-Message-id: <163762083586.7248.14250896786965372828@noble.neil.brown.name>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 00/14] SUNRPC: clean up server thread management.
+In-reply-to: <20211122151823.GA22802@fieldses.org>
+References: <163710954700.5485.5622638225352156964.stgit@noble.brown>,
+ <20211117141231.GA24762@fieldses.org>,
+ <163753863448.13692.4142092237119935826@noble.neil.brown.name>,
+ <20211122005639.GA12035@fieldses.org>, <20211122005901.GB12035@fieldses.org>,
+ <163754358887.13692.5665882865660886756@noble.neil.brown.name>,
+ <20211122023753.GC12035@fieldses.org>, <20211122033840.GD12035@fieldses.org>,
+ <20211122151823.GA22802@fieldses.org>
+Date:   Tue, 23 Nov 2021 10:25:40 +1100
+Message-id: <163762354003.7248.5982295057216919621@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, 23 Nov 2021, J. Bruce Fields wrote:
+> > 
+> > Hm, playing with reproducer; it takes more than one mount.  My simplest
+> > reproducer is:
+> > 
+> > 	mount -overs=3 server:/path /mnt/
+> > 	umount /mnt/
+> > 	mount -overs=4.0 server:/path /mnt/
+> > 
+> > ... and the client crashes here.
+> 
+> Also: the problem starts with the last patch ("lockd: use
+> svc_set_num_threads() for thread start and stop").
 
-xprtsock.c reclassifies sock locks based on the protocol.
-However there are 3 protocols and only 2 classification keys.
-The same key is used for both INET6 and LOCAL.
+That helps.  It points to lockd, and so to lockd stopping.
+Lockd wasn't stopping for me because I had nfsd running.
+I disabled nfsd and tried again - and got the crash.
 
-This causes lockdep complaints.  The complaints started since Commit
-ea9afca88bbe ("SUNRPC: Replace use of socket sk_callback_lock with
-sock_lock") which resulted in the sock locks beings used more.
+The problem is 
+#define svc_serv_is_pooled(serv)    ((serv)->sv_ops->svo_function)
 
-So add another key, and renumber them slightly.
+Why does the presence of a svo_function mark the serv as being
+'pooled'???
 
-Fixes: ea9afca88bbe ("SUNRPC: Replace use of socket sk_callback_lock with soc=
-k_lock")
-Fixes: 176e21ee2ec8 ("SUNRPC: Support for RPC over AF_LOCAL transports")
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- net/sunrpc/xprtsock.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+That last patch gave lockd an svo_function, so when threats were
+stopped, the pool was released.  But as lockd doesn't create a pooled
+service, the pool was never claimed.  So the pool_map->npools was set
+to zero even though it should have still been active.
+I'll probably change svc_serv_is_pooled() to test serv->sv_nrpools, and
+allow that to be zero for non-pooled services.
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index ae48c9c84ee1..d8ee06a9650a 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1720,15 +1720,15 @@ static void xs_local_set_port(struct rpc_xprt *xprt, =
-unsigned short port)
- }
-=20
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
--static struct lock_class_key xs_key[2];
--static struct lock_class_key xs_slock_key[2];
-+static struct lock_class_key xs_key[3];
-+static struct lock_class_key xs_slock_key[3];
-=20
- static inline void xs_reclassify_socketu(struct socket *sock)
- {
- 	struct sock *sk =3D sock->sk;
-=20
- 	sock_lock_init_class_and_name(sk, "slock-AF_LOCAL-RPC",
--		&xs_slock_key[1], "sk_lock-AF_LOCAL-RPC", &xs_key[1]);
-+		&xs_slock_key[0], "sk_lock-AF_LOCAL-RPC", &xs_key[0]);
- }
-=20
- static inline void xs_reclassify_socket4(struct socket *sock)
-@@ -1736,7 +1736,7 @@ static inline void xs_reclassify_socket4(struct socket =
-*sock)
- 	struct sock *sk =3D sock->sk;
-=20
- 	sock_lock_init_class_and_name(sk, "slock-AF_INET-RPC",
--		&xs_slock_key[0], "sk_lock-AF_INET-RPC", &xs_key[0]);
-+		&xs_slock_key[1], "sk_lock-AF_INET-RPC", &xs_key[1]);
- }
-=20
- static inline void xs_reclassify_socket6(struct socket *sock)
-@@ -1744,7 +1744,7 @@ static inline void xs_reclassify_socket6(struct socket =
-*sock)
- 	struct sock *sk =3D sock->sk;
-=20
- 	sock_lock_init_class_and_name(sk, "slock-AF_INET6-RPC",
--		&xs_slock_key[1], "sk_lock-AF_INET6-RPC", &xs_key[1]);
-+		&xs_slock_key[2], "sk_lock-AF_INET6-RPC", &xs_key[2]);
- }
-=20
- static inline void xs_reclassify_socket(int family, struct socket *sock)
---=20
-2.33.1
-
+Thanks for your testing help,
+NeilBrown
