@@ -2,57 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 99C354599C4
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 02:31:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F2A24599BF
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 02:31:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229776AbhKWBev (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Nov 2021 20:34:51 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:37120 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbhKWBeu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 20:34:50 -0500
+        id S229982AbhKWBeS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Nov 2021 20:34:18 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:57838 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229484AbhKWBeS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 20:34:18 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 7E4A01FD39;
-        Tue, 23 Nov 2021 01:31:42 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 340D1218B2;
+        Tue, 23 Nov 2021 01:31:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637631102; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637631070; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SDmTbPDwa5E0x4TGMnc+iOuJ54NJ5XIf5V3R6S6BAIs=;
-        b=G44XSsFGT1aM7Ocn6mT8L7rn8AuoE48cxUmDb/OFw3z/QeLtRuBx1nTp5SnC2XBbMz6T8n
-        o2UnCW9Hueuub4b+Q1qpj/Hz7I1m0jkoPcjRKxkTVtA/VEGuZBnstOwExn2yM+5ax4v7WF
-        3+0h5HrrTVgNYjyI4Y6RgADwQNSXxls=
+        bh=IzHrYL3gcN0tH5YdAWN1ZcYCdP1RBiH0ObDWhJxlcbM=;
+        b=nGD8RxmG2ZpFkPiwmK4cN7sxbWfz8YB3bus29c/CbGnsl6gqrzMIUeA1dvMDaIOpXBVK/d
+        tZ3KqD9KK1BzG5BJ4UQ3nN19NE4/80iBAl3nfFUYFf8K0GMeNBlTwgHdVOgmPvc0HnS5pD
+        grPwNboH9fqkrHeC1BacUP/fJVQxBjE=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637631102;
+        s=susede2_ed25519; t=1637631070;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SDmTbPDwa5E0x4TGMnc+iOuJ54NJ5XIf5V3R6S6BAIs=;
-        b=MUscU5ma62S/qEOysHW+19TH2wVXLRplQn9I1Wnyc9Uh7CU3TSNuNEQzppZw7Q50+II0tR
-        tMk9Vd3y+oSYr0Dw==
+        bh=IzHrYL3gcN0tH5YdAWN1ZcYCdP1RBiH0ObDWhJxlcbM=;
+        b=aKK4+Wk2/cSzOEKd3WkrhLHjNvPKjENz7wKYKt510vQGpAB5HoOUeF2mbAFdX5OdKTXOFW
+        7Rz8fCJufg+Kx+DA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6410C13BD4;
-        Tue, 23 Nov 2021 01:31:41 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CBF5213BD4;
+        Tue, 23 Nov 2021 01:31:08 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6tEMCX1EnGHkcwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 23 Nov 2021 01:31:41 +0000
-Subject: [PATCH 08/19] SUNRPC: discard svo_setup and rename
- svc_set_num_threads_sync()
+        id VZOqIVxEnGGycwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 23 Nov 2021 01:31:08 +0000
+Subject: [PATCH 03/19] SUNRPC: stop using ->sv_nrthreads as a refcount
 From:   NeilBrown <neilb@suse.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
 Date:   Tue, 23 Nov 2021 12:29:35 +1100
-Message-ID: <163763097546.7284.17574156274358076119.stgit@noble.brown>
+Message-ID: <163763097543.7284.5781149029646373584.stgit@noble.brown>
 In-Reply-To: <163763078330.7284.10141477742275086758.stgit@noble.brown>
 References: <163763078330.7284.10141477742275086758.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -63,206 +62,347 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The ->svo_setup callback serves no purpose.  It is always called from
-within the same module that chooses which callback is needed.  So
-discard it and call the relevant function directly.
+The use of sv_nrthreads as a general refcount results in clumsy code, as
+is seen by various comments needed to explain the situation.
 
-Now that svc_set_num_threads() is no longer used remove it and rename
-svc_set_num_threads_sync() to remove the "_sync" suffix.
+This patch introduces a 'struct kref' and uses that for reference
+counting, leaving sv_nrthreads to be a pure count of threads.  The kref
+is managed particularly in svc_get() and svc_put(), and also nfsd_put();
+
+svc_destroy() now takes a pointer to the embedded kref, rather than to
+the serv.
+
+nfsd allows the svc_serv to exist with ->sv_nrhtreads being zero.  This
+happens when a transport is created before the first thread is started.
+To support this, a 'keep_active' flag is introduced which holds a ref on
+the svc_serv.  This is set when any listening socket is successfully
+added (unless there are running threads), and cleared when the number of
+threads is set.  So when the last thread exits, the nfs_serv will be
+destroyed.
+The use of 'keep_active' replaces previous code which checked if there
+were any permanent sockets.
+
+We no longer clear ->rq_server when nfsd() exits.  This was done
+to prevent svc_exit_thread() from calling svc_destroy().
+Instead we take an extra reference to the svc_serv to prevent
+svc_destroy() from being called.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/callback.c          |    8 +++----
- fs/nfsd/nfssvc.c           |   11 ++++------
- include/linux/sunrpc/svc.h |    4 ----
- net/sunrpc/svc.c           |   49 ++------------------------------------------
- 4 files changed, 10 insertions(+), 62 deletions(-)
+ fs/lockd/svc.c             |    4 ----
+ fs/nfs/callback.c          |    2 +-
+ fs/nfsd/netns.h            |    7 +++++++
+ fs/nfsd/nfsctl.c           |   22 ++++++++++------------
+ fs/nfsd/nfssvc.c           |   42 ++++++++++++++++++++++++++----------------
+ include/linux/sunrpc/svc.h |   14 ++++----------
+ net/sunrpc/svc.c           |   22 +++++++++++-----------
+ 7 files changed, 59 insertions(+), 54 deletions(-)
 
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index 135bd86ed3ad..a9669b106dbd 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -486,10 +486,6 @@ int lockd_up(struct net *net, const struct cred *cred)
+ 		goto err_put;
+ 	}
+ 	nlmsvc_users++;
+-	/*
+-	 * Note: svc_serv structures have an initial use count of 1,
+-	 * so we exit through here on both success and failure.
+-	 */
+ err_put:
+ 	svc_put(serv);
+ err_create:
 diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index d9d78ffd1d65..6cdc9d18a7dd 100644
+index edbc7579b4aa..d9d78ffd1d65 100644
 --- a/fs/nfs/callback.c
 +++ b/fs/nfs/callback.c
-@@ -172,9 +172,9 @@ static int nfs_callback_start_svc(int minorversion, struct rpc_xprt *xprt,
- 	if (serv->sv_nrthreads == nrservs)
+@@ -169,7 +169,7 @@ static int nfs_callback_start_svc(int minorversion, struct rpc_xprt *xprt,
+ 	if (nrservs < NFS4_MIN_NR_CALLBACK_THREADS)
+ 		nrservs = NFS4_MIN_NR_CALLBACK_THREADS;
+ 
+-	if (serv->sv_nrthreads-1 == nrservs)
++	if (serv->sv_nrthreads == nrservs)
  		return 0;
  
--	ret = serv->sv_ops->svo_setup(serv, NULL, nrservs);
-+	ret = svc_set_num_threads(serv, NULL, nrservs);
- 	if (ret) {
--		serv->sv_ops->svo_setup(serv, NULL, 0);
-+		svc_set_num_threads(serv, NULL, 0);
- 		return ret;
- 	}
- 	dprintk("nfs_callback_up: service started\n");
-@@ -235,14 +235,12 @@ static int nfs_callback_up_net(int minorversion, struct svc_serv *serv,
- static const struct svc_serv_ops nfs40_cb_sv_ops = {
- 	.svo_function		= nfs4_callback_svc,
- 	.svo_enqueue_xprt	= svc_xprt_do_enqueue,
--	.svo_setup		= svc_set_num_threads_sync,
- 	.svo_module		= THIS_MODULE,
- };
- #if defined(CONFIG_NFS_V4_1)
- static const struct svc_serv_ops nfs41_cb_sv_ops = {
- 	.svo_function		= nfs41_callback_svc,
- 	.svo_enqueue_xprt	= svc_xprt_do_enqueue,
--	.svo_setup		= svc_set_num_threads_sync,
- 	.svo_module		= THIS_MODULE,
- };
+ 	ret = serv->sv_ops->svo_setup(serv, NULL, nrservs);
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index 935c1028c217..08bcd8f23b01 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -123,6 +123,13 @@ struct nfsd_net {
+ 	u32 clverifier_counter;
  
-@@ -357,7 +355,7 @@ void nfs_callback_down(int minorversion, struct net *net)
- 	cb_info->users--;
- 	if (cb_info->users == 0) {
- 		svc_get(serv);
--		serv->sv_ops->svo_setup(serv, NULL, 0);
-+		svc_set_num_threads(serv, NULL, 0);
- 		svc_put(serv);
- 		dprintk("nfs_callback_down: service destroyed\n");
- 		cb_info->serv = NULL;
+ 	struct svc_serv *nfsd_serv;
++	/* When a listening socket is added to nfsd, keep_active is set
++	 * and this justifies a reference on nfsd_serv.  This stops
++	 * nfsd_serv from being freed.  When the number of threads is
++	 * set, keep_active is cleared and the reference is dropped.  So
++	 * when the last thread exits, the service will be destroyed.
++	 */
++	int keep_active;
+ 
+ 	wait_queue_head_t ntf_wq;
+ 	atomic_t ntf_refcnt;
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 93d417871302..2bbc26fbdae8 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -742,13 +742,12 @@ static ssize_t __write_ports_addfd(char *buf, struct net *net, const struct cred
+ 		return err;
+ 
+ 	err = svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, cred);
+-	if (err < 0 && list_empty(&nn->nfsd_serv->sv_permsocks)) {
+-		nfsd_put(net);
+-		return err;
+-	}
+ 
+-	/* Decrease the count, but don't shut down the service */
+-	nn->nfsd_serv->sv_nrthreads--;
++	if (err >= 0 &&
++	    !nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
++		svc_get(nn->nfsd_serv);
++
++	nfsd_put(net);
+ 	return err;
+ }
+ 
+@@ -783,8 +782,10 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
+ 	if (err < 0 && err != -EAFNOSUPPORT)
+ 		goto out_close;
+ 
+-	/* Decrease the count, but don't shut down the service */
+-	nn->nfsd_serv->sv_nrthreads--;
++	if (!nn->nfsd_serv->sv_nrthreads && !xchg(&nn->keep_active, 1))
++		svc_get(nn->nfsd_serv);
++
++	nfsd_put(net);
+ 	return 0;
+ out_close:
+ 	xprt = svc_find_xprt(nn->nfsd_serv, transport, net, PF_INET, port);
+@@ -793,10 +794,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
+ 		svc_xprt_put(xprt);
+ 	}
+ out_err:
+-	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
+-		nn->nfsd_serv->sv_nrthreads--;
+-	 else
+-		nfsd_put(net);
++	nfsd_put(net);
+ 	return err;
+ }
+ 
 diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index d0d9107a1b93..020156e96bdb 100644
+index 2ab0e650a0e2..5f605e7e8091 100644
 --- a/fs/nfsd/nfssvc.c
 +++ b/fs/nfsd/nfssvc.c
-@@ -593,7 +593,6 @@ static const struct svc_serv_ops nfsd_thread_sv_ops = {
- 	.svo_shutdown		= nfsd_last_thread,
- 	.svo_function		= nfsd,
- 	.svo_enqueue_xprt	= svc_xprt_do_enqueue,
--	.svo_setup		= svc_set_num_threads_sync,
- 	.svo_module		= THIS_MODULE,
- };
- 
-@@ -611,7 +610,7 @@ void nfsd_shutdown_threads(struct net *net)
- 
- 	svc_get(serv);
- 	/* Kill outstanding nfsd threads */
--	serv->sv_ops->svo_setup(serv, NULL, 0);
-+	svc_set_num_threads(serv, NULL, 0);
- 	nfsd_put(net);
- 	mutex_unlock(&nfsd_mutex);
+@@ -60,13 +60,13 @@ static __be32			nfsd_init_request(struct svc_rqst *,
+  * extent ->sv_temp_socks and ->sv_permsocks. It also protects nfsdstats.th_cnt
+  *
+  * If (out side the lock) nn->nfsd_serv is non-NULL, then it must point to a
+- * properly initialised 'struct svc_serv' with ->sv_nrthreads > 0. That number
+- * of nfsd threads must exist and each must listed in ->sp_all_threads in each
+- * entry of ->sv_pools[].
++ * properly initialised 'struct svc_serv' with ->sv_nrthreads > 0 (unless
++ * nn->keep_active is set).  That number of nfsd threads must
++ * exist and each must be listed in ->sp_all_threads in some entry of
++ * ->sv_pools[].
+  *
+- * Transitions of the thread count between zero and non-zero are of particular
+- * interest since the svc_serv needs to be created and initialized at that
+- * point, or freed.
++ * Each active thread holds a counted reference on nn->nfsd_serv, as does
++ * the nn->keep_active flag and various transient calls to svc_get().
+  *
+  * Finally, the nfsd_mutex also protects some of the global variables that are
+  * accessed when nfsd starts and that are settable via the write_* routines in
+@@ -700,14 +700,22 @@ int nfsd_get_nrthreads(int n, int *nthreads, struct net *net)
+ 	return 0;
  }
-@@ -750,8 +749,9 @@ int nfsd_set_nrthreads(int n, int *nthreads, struct net *net)
- 	/* apply the new numbers */
- 	svc_get(nn->nfsd_serv);
- 	for (i = 0; i < n; i++) {
--		err = nn->nfsd_serv->sv_ops->svo_setup(nn->nfsd_serv,
--				&nn->nfsd_serv->sv_pools[i], nthreads[i]);
-+		err = svc_set_num_threads(nn->nfsd_serv,
-+					  &nn->nfsd_serv->sv_pools[i],
-+					  nthreads[i]);
- 		if (err)
- 			break;
+ 
++/* This is the callback for kref_put() below.
++ * There is no code here as the first thing to be done is
++ * call svc_shutdown_net(), but we cannot get the 'net' from
++ * the kref.  So do all the work when kref_put returns true.
++ */
++static void nfsd_noop(struct kref *ref)
++{
++}
++
+ void nfsd_put(struct net *net)
+ {
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+-	nn->nfsd_serv->sv_nrthreads --;
+-	if (nn->nfsd_serv->sv_nrthreads == 0) {
++	if (kref_put(&nn->nfsd_serv->sv_refcnt, nfsd_noop)) {
+ 		svc_shutdown_net(nn->nfsd_serv, net);
+-		svc_destroy(nn->nfsd_serv);
++		svc_destroy(&nn->nfsd_serv->sv_refcnt);
+ 		nfsd_complete_shutdown(net);
  	}
-@@ -793,8 +793,7 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
- 	error = nfsd_startup_net(net, cred);
- 	if (error)
- 		goto out_put;
--	error = nn->nfsd_serv->sv_ops->svo_setup(nn->nfsd_serv,
--			NULL, nrservs);
-+	error = svc_set_num_threads(nn->nfsd_serv, NULL, nrservs);
+ }
+@@ -803,15 +811,14 @@ nfsd_svc(int nrservs, struct net *net, const struct cred *cred)
+ 			NULL, nrservs);
  	if (error)
  		goto out_shutdown;
- 	error = nn->nfsd_serv->sv_nrthreads;
+-	/* We are holding a reference to nn->nfsd_serv which
+-	 * we don't want to count in the return value,
+-	 * so subtract 1
+-	 */
+-	error = nn->nfsd_serv->sv_nrthreads - 1;
++	error = nn->nfsd_serv->sv_nrthreads;
+ out_shutdown:
+ 	if (error < 0 && !nfsd_up_before)
+ 		nfsd_shutdown_net(net);
+ out_put:
++	/* Threads now hold service active */
++	if (xchg(&nn->keep_active, 0))
++		nfsd_put(net);
+ 	nfsd_put(net);
+ out:
+ 	mutex_unlock(&nfsd_mutex);
+@@ -980,11 +987,15 @@ nfsd(void *vrqstp)
+ 	nfsdstats.th_cnt --;
+ 
+ out:
+-	rqstp->rq_server = NULL;
++	/* Take an extra ref so that the svc_put in svc_exit_thread()
++	 * doesn't call svc_destroy()
++	 */
++	svc_get(nn->nfsd_serv);
+ 
+ 	/* Release the thread */
+ 	svc_exit_thread(rqstp);
+ 
++	/* Now if needed we call svc_destroy in appropriate context */
+ 	nfsd_put(net);
+ 
+ 	/* Release module */
+@@ -1099,7 +1110,6 @@ int nfsd_pool_stats_open(struct inode *inode, struct file *file)
+ 		mutex_unlock(&nfsd_mutex);
+ 		return -ENODEV;
+ 	}
+-	/* bump up the psudo refcount while traversing */
+ 	svc_get(nn->nfsd_serv);
+ 	ret = svc_pool_stats_open(nn->nfsd_serv, file);
+ 	mutex_unlock(&nfsd_mutex);
 diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 36bfc0281988..0b38c6eaf985 100644
+index d87c3392a1e9..3903b4ae8ac5 100644
 --- a/include/linux/sunrpc/svc.h
 +++ b/include/linux/sunrpc/svc.h
-@@ -64,9 +64,6 @@ struct svc_serv_ops {
- 	/* queue up a transport for servicing */
- 	void		(*svo_enqueue_xprt)(struct svc_xprt *);
- 
--	/* set up thread (or whatever) execution context */
--	int		(*svo_setup)(struct svc_serv *, struct svc_pool *, int);
--
- 	/* optional module to count when adding threads (pooled svcs only) */
- 	struct module	*svo_module;
- };
-@@ -541,7 +538,6 @@ void		   svc_pool_map_put(void);
- struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
- 			const struct svc_serv_ops *);
- int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
--int		   svc_set_num_threads_sync(struct svc_serv *, struct svc_pool *, int);
- int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
- void		   svc_shutdown_net(struct svc_serv *, struct net *);
- int		   svc_process(struct svc_rqst *);
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 2b2042234e4b..5513f8c9a8d6 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -743,58 +743,13 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 	return 0;
- }
- 
--
--/* destroy old threads */
--static int
--svc_signal_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
--{
--	struct task_struct *task;
--	unsigned int state = serv->sv_nrthreads-1;
--
--	/* destroy old threads */
--	do {
--		task = choose_victim(serv, pool, &state);
--		if (task == NULL)
--			break;
--		send_sig(SIGINT, task, 1);
--		nrservs++;
--	} while (nrservs < 0);
--
--	return 0;
--}
--
- /*
-  * Create or destroy enough new threads to make the number
-  * of threads the given number.  If `pool' is non-NULL, applies
-  * only to threads in that pool, otherwise round-robins between
-  * all pools.  Caller must ensure that mutual exclusion between this and
-  * server startup or shutdown.
+@@ -85,6 +85,7 @@ struct svc_serv {
+ 	struct svc_program *	sv_program;	/* RPC program */
+ 	struct svc_stat *	sv_stats;	/* RPC statistics */
+ 	spinlock_t		sv_lock;
++	struct kref		sv_refcnt;
+ 	unsigned int		sv_nrthreads;	/* # of server threads */
+ 	unsigned int		sv_maxconn;	/* max connections allowed or
+ 						 * '0' causing max to be based
+@@ -119,19 +120,14 @@ struct svc_serv {
+  * @serv:  the svc_serv to have count incremented
+  *
+  * Returns: the svc_serv that was passed in.
 - *
-- * Destroying threads relies on the service threads filling in
-- * rqstp->rq_task, which only the nfs ones do.  Assumes the serv
-- * has been created using svc_create_pooled().
-- *
-- * Based on code that used to be in nfsd_svc() but tweaked
-- * to be pool-aware.
+- * We use sv_nrthreads as a reference count.  svc_put() drops
+- * this refcount, so we need to bump it up around operations that
+- * change the number of threads.  Horrible, but there it is.
+- * Should be called with the "service mutex" held.
   */
--int
--svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
--{
--	if (pool == NULL) {
--		nrservs -= serv->sv_nrthreads;
--	} else {
--		spin_lock_bh(&pool->sp_lock);
--		nrservs -= pool->sp_nrthreads;
--		spin_unlock_bh(&pool->sp_lock);
--	}
--
--	if (nrservs > 0)
--		return svc_start_kthreads(serv, pool, nrservs);
--	if (nrservs < 0)
--		return svc_signal_kthreads(serv, pool, nrservs);
--	return 0;
--}
--EXPORT_SYMBOL_GPL(svc_set_num_threads);
- 
- /* destroy old threads */
- static int
-@@ -815,7 +770,7 @@ svc_stop_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- }
- 
- int
--svc_set_num_threads_sync(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
-+svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ static inline struct svc_serv *svc_get(struct svc_serv *serv)
  {
- 	if (pool == NULL) {
- 		nrservs -= serv->sv_nrthreads;
-@@ -831,7 +786,7 @@ svc_set_num_threads_sync(struct svc_serv *serv, struct svc_pool *pool, int nrser
- 		return svc_stop_kthreads(serv, pool, nrservs);
- 	return 0;
+-	serv->sv_nrthreads++;
++	kref_get(&serv->sv_refcnt);
+ 	return serv;
  }
--EXPORT_SYMBOL_GPL(svc_set_num_threads_sync);
-+EXPORT_SYMBOL_GPL(svc_set_num_threads);
+ 
+-void svc_destroy(struct svc_serv *serv);
++void svc_destroy(struct kref *);
  
  /**
-  * svc_rqst_replace_page - Replace one page in rq_pages[]
+  * svc_put - decrement reference count on a SUNRPC serv
+@@ -142,9 +138,7 @@ void svc_destroy(struct svc_serv *serv);
+  */
+ static inline void svc_put(struct svc_serv *serv)
+ {
+-	serv->sv_nrthreads --;
+-	if (serv->sv_nrthreads == 0)
+-		svc_destroy(serv);
++	kref_put(&serv->sv_refcnt, svc_destroy);
+ }
+ 
+ /*
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 55a1bf0d129f..acddc6e12e9e 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -435,7 +435,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
+ 		return NULL;
+ 	serv->sv_name      = prog->pg_name;
+ 	serv->sv_program   = prog;
+-	serv->sv_nrthreads = 1;
++	kref_init(&serv->sv_refcnt);
+ 	serv->sv_stats     = prog->pg_stats;
+ 	if (bufsize > RPCSVC_MAXPAYLOAD)
+ 		bufsize = RPCSVC_MAXPAYLOAD;
+@@ -526,10 +526,11 @@ EXPORT_SYMBOL_GPL(svc_shutdown_net);
+  * protect the sv_nrthreads, sv_permsocks and sv_tempsocks.
+  */
+ void
+-svc_destroy(struct svc_serv *serv)
++svc_destroy(struct kref *ref)
+ {
+-	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
++	struct svc_serv *serv = container_of(ref, struct svc_serv, sv_refcnt);
+ 
++	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
+ 	del_timer_sync(&serv->sv_temptimer);
+ 
+ 	/*
+@@ -637,6 +638,7 @@ svc_prepare_thread(struct svc_serv *serv, struct svc_pool *pool, int node)
+ 	if (!rqstp)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	svc_get(serv);
+ 	serv->sv_nrthreads++;
+ 	spin_lock_bh(&pool->sp_lock);
+ 	pool->sp_nrthreads++;
+@@ -776,8 +778,7 @@ int
+ svc_set_num_threads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ {
+ 	if (pool == NULL) {
+-		/* The -1 assumes caller has done a svc_get() */
+-		nrservs -= (serv->sv_nrthreads-1);
++		nrservs -= serv->sv_nrthreads;
+ 	} else {
+ 		spin_lock_bh(&pool->sp_lock);
+ 		nrservs -= pool->sp_nrthreads;
+@@ -814,8 +815,7 @@ int
+ svc_set_num_threads_sync(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
+ {
+ 	if (pool == NULL) {
+-		/* The -1 assumes caller has done a svc_get() */
+-		nrservs -= (serv->sv_nrthreads-1);
++		nrservs -= serv->sv_nrthreads;
+ 	} else {
+ 		spin_lock_bh(&pool->sp_lock);
+ 		nrservs -= pool->sp_nrthreads;
+@@ -880,12 +880,12 @@ svc_exit_thread(struct svc_rqst *rqstp)
+ 		list_del_rcu(&rqstp->rq_all);
+ 	spin_unlock_bh(&pool->sp_lock);
+ 
++	serv->sv_nrthreads -= 1;
++	svc_sock_update_bufs(serv);
++
+ 	svc_rqst_free(rqstp);
+ 
+-	if (!serv)
+-		return;
+-	svc_sock_update_bufs(serv);
+-	svc_destroy(serv);
++	svc_put(serv);
+ }
+ EXPORT_SYMBOL_GPL(svc_exit_thread);
+ 
 
 
