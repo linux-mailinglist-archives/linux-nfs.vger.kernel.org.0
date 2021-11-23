@@ -2,80 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE99F45A277
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 13:22:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02EFE45A610
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 15:49:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233437AbhKWMZe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Nov 2021 07:25:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229948AbhKWMZc (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 23 Nov 2021 07:25:32 -0500
-Received: by mail.kernel.org (Postfix) with ESMTPSA id 87C3261002;
-        Tue, 23 Nov 2021 12:22:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1637670144;
-        bh=1jxFLUnE7hAw9XO4ad7+VcW/xFs46+nC6nnZhu74Jr0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UYdti6bM78RKalRsnRQZ/aK6zG/E+gjddIK6PzhPJQGl8xdge+BCF1AZAVJ+hPrVe
-         ZK9SZEfOYLQfCRMoR+xGTzEOZ/bbXewdTPtnvr9InCWQo4IGu2mcd8KTBQ0qTuV7P1
-         OAFGJ/I3jmJ5ZATUa2tcfnKacVlMA4/k41rAiCb2Fx/bvzK9tDh8B8eYrcZIthf7K2
-         P4FYvfvUJdb4qFI6vCwPsrK9rnEImzrV3tDxi3q+gd5W8XishgA49TEGyIUGeM0uYN
-         /7gDCnQW+SMOmVDd/hNlmvBQk+sS6xUSnGGrLFJTZXg/UCf+ne5MGjS6OoHjxTa0JS
-         2P3IYxzlimicg==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     chuck.lever@oracle.com, bfields@fieldses.org,
-        Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH] nfsd: don't put blocked locks on LRU until after vfs_lock_file returns
-Date:   Tue, 23 Nov 2021 07:22:23 -0500
-Message-Id: <20211123122223.69236-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.33.1
+        id S235586AbhKWOxF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Nov 2021 09:53:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39736 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234126AbhKWOxF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Nov 2021 09:53:05 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8173BC061574
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Nov 2021 06:49:57 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4157832EC; Tue, 23 Nov 2021 09:49:56 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 4157832EC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1637678996;
+        bh=oW3+zy8J0lwbotUqbynLTKo85SyUQ3edRIRxuxlprwc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=St6k8F9D0Ov31cb6xgZRtkVg5eudl1hofSbWiwcowNwUXfIaAI/+Amt5CFnj6latO
+         gWNwu9Rg2i0t23R7tG0NJaG90BIScKDLPfNqlTEqUet21GG5p2rH81jm2ODh59upDE
+         ZcaWXV+npirVEr1ZitCAxT/CBS6FascMojaiEdHA=
+Date:   Tue, 23 Nov 2021 09:49:56 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 00/19 v2] SUNRPC: clean up server thread management
+Message-ID: <20211123144956.GA8978@fieldses.org>
+References: <163763078330.7284.10141477742275086758.stgit@noble.brown>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163763078330.7284.10141477742275086758.stgit@noble.brown>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Vasily reported a case where vfs_lock_file took a very long time to
-return (longer than a lease period). The laundromat eventually ran and
-reaped the thing and when the vfs_lock_file returned, it ended up
-accessing freed memory.
+On Tue, Nov 23, 2021 at 12:29:35PM +1100, NeilBrown wrote:
+> This is a revision of my series for cleaning up server thread
+> management.
 
-Don't put entries onto the LRU until vfs_lock_file returns.
+For what it's worth, this version now passes my usual regression tests.
 
-Reported-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+--b.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bfad94c70b84..8cfef84b9355 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6966,10 +6966,8 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	}
- 
- 	if (fl_flags & FL_SLEEP) {
--		nbl->nbl_time = ktime_get_boottime_seconds();
- 		spin_lock(&nn->blocked_locks_lock);
- 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
--		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
- 		spin_unlock(&nn->blocked_locks_lock);
- 	}
- 
-@@ -6982,6 +6980,10 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			nn->somebody_reclaimed = true;
- 		break;
- 	case FILE_LOCK_DEFERRED:
-+		nbl->nbl_time = ktime_get_boottime_seconds();
-+		spin_lock(&nn->blocked_locks_lock);
-+		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
-+		spin_unlock(&nn->blocked_locks_lock);
- 		nbl = NULL;
- 		fallthrough;
- 	case -EAGAIN:		/* conflock holds conflicting lock */
--- 
-2.33.1
-
+> Currently lockd, nfsd, and nfs-callback all manage threads slightly
+> differently.  This series unifies them.
+> 
+> Changes since first series include:
+>   - minor bug fixes
+>   - kernel-doc comments for new functions
+>   - split first patch into 3, and make the bugfix a separate patch
+>   - fix management of pool_maps so lockd can usse svc_set_num_threads
+>     safely
+>   - switch nfs-callback to not request a 'pooled' service.
+> 
+> NeilBrown
+> 
+> 
+> ---
+> 
+> NeilBrown (19):
+>       SUNRPC/NFSD: clean up get/put functions.
+>       NFSD: handle error better in write_ports_addfd()
+>       SUNRPC: stop using ->sv_nrthreads as a refcount
+>       nfsd: make nfsd_stats.th_cnt atomic_t
+>       SUNRPC: use sv_lock to protect updates to sv_nrthreads.
+>       NFSD: narrow nfsd_mutex protection in nfsd thread
+>       NFSD: Make it possible to use svc_set_num_threads_sync
+>       SUNRPC: discard svo_setup and rename svc_set_num_threads_sync()
+>       NFSD: simplify locking for network notifier.
+>       lockd: introduce nlmsvc_serv
+>       lockd: simplify management of network status notifiers
+>       lockd: move lockd_start_svc() call into lockd_create_svc()
+>       lockd: move svc_exit_thread() into the thread
+>       lockd: introduce lockd_put()
+>       lockd: rename lockd_create_svc() to lockd_get()
+>       SUNRPC: move the pool_map definitions (back) into svc.c
+>       SUNRPC: always treat sv_nrpools==1 as "not pooled"
+>       lockd: use svc_set_num_threads() for thread start and stop
+>       NFS: switch the callback service back to non-pooled.
+> 
+> 
+>  fs/lockd/svc.c             | 194 ++++++++++++-------------------------
+>  fs/nfs/callback.c          |  12 +--
+>  fs/nfsd/netns.h            |  13 +--
+>  fs/nfsd/nfsctl.c           |  24 ++---
+>  fs/nfsd/nfssvc.c           | 139 +++++++++++++-------------
+>  fs/nfsd/stats.c            |   2 +-
+>  fs/nfsd/stats.h            |   4 +-
+>  include/linux/sunrpc/svc.h |  58 ++++-------
+>  net/sunrpc/svc.c           | 166 ++++++++++++++-----------------
+>  9 files changed, 248 insertions(+), 364 deletions(-)
+> 
+> --
+> Signature
