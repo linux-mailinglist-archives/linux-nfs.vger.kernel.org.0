@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B92A64599C5
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 02:31:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFC3F4599C6
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Nov 2021 02:31:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231601AbhKWBe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Nov 2021 20:34:57 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:37138 "EHLO
+        id S231666AbhKWBfE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Nov 2021 20:35:04 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:37146 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbhKWBe5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 20:34:57 -0500
+        with ESMTP id S229484AbhKWBfD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Nov 2021 20:35:03 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 512541FD39;
-        Tue, 23 Nov 2021 01:31:49 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C33151FD39;
+        Tue, 23 Nov 2021 01:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1637631109; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1637631115; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=T2s6b5kduBrx/FLQYHde/UjGKIUafDNxbBloTAKLa70=;
-        b=KSThibDRbq9H2VtEISKTdh0UELCRcouIv5h1AORYJiuQOaCcNRPFQABbli8yfqAbrijiN2
-        igh/zR1YeHLu6BgRmsrfYjV3t4zpJoZt3DT1EGpYJHHlsnV6tveq4d/zC6CaFyy3IxDh0b
-        ejDk52CuAjG1AuB2XQCpyz94iQANYNs=
+        bh=LtR+h2/SHobdjw6xJn7imJnV1Ye8cBQSZWUn0dvaWP0=;
+        b=1wE+Hz64io3doMFsE20ksU8FEnbMPYk81v6fgkhfhbL6XZJrcW3WKYoqaYSpNzHEXIk4El
+        kGpgp01bf6q6AZLsiY5xGPM6lIBX6FAnsZirJPYOYrHyyAidy8mDcu1lu6x1xKpOc+nMvd
+        iEZNBEu8GSDuoumE1r2TnQ6UWC9fKWM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1637631109;
+        s=susede2_ed25519; t=1637631115;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=T2s6b5kduBrx/FLQYHde/UjGKIUafDNxbBloTAKLa70=;
-        b=GsqGv7vJyIjkXLoyy7fdR0P0cXRgQyduOJiRASO/DwDVszj9M4LI2ymAPaf+rPbkQAjFf1
-        fJFLJM9rneQ59bDQ==
+        bh=LtR+h2/SHobdjw6xJn7imJnV1Ye8cBQSZWUn0dvaWP0=;
+        b=r2qHKE8SpiDY5C2MYeCXe+/v4tS2OjgpCTU9gYpDmJATWGAGVXwh9M9ITDkrG71wq99QHQ
+        zb2ke9Rc6QclAoBQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 438A113BD4;
-        Tue, 23 Nov 2021 01:31:48 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9C85613BD4;
+        Tue, 23 Nov 2021 01:31:54 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id JYErAYREnGHqcwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 23 Nov 2021 01:31:48 +0000
-Subject: [PATCH 09/19] NFSD: simplify locking for network notifier.
+        id QrBzFYpEnGHwcwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 23 Nov 2021 01:31:54 +0000
+Subject: [PATCH 10/19] lockd: introduce nlmsvc_serv
 From:   NeilBrown <neilb@suse.de>
 To:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
 Date:   Tue, 23 Nov 2021 12:29:35 +1100
-Message-ID: <163763097547.7284.1138288029197434533.stgit@noble.brown>
+Message-ID: <163763097547.7284.4982400127908906020.stgit@noble.brown>
 In-Reply-To: <163763078330.7284.10141477742275086758.stgit@noble.brown>
 References: <163763078330.7284.10141477742275086758.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -62,178 +62,143 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd currently maintains an open-coded read/write semaphore (refcount
-and wait queue) for each network namespace to ensure the nfs service
-isn't shut down while the notifier is running.
+lockd has two globals - nlmsvc_task and nlmsvc_rqst - but mostly it
+wants the 'struct svc_serv', and when it doesn't want it exactly it can
+get to what it wants from the serv.
 
-This is excessive.  As there is unlikely to be contention between
-notifiers and they run without sleeping, a single spinlock is sufficient
-to avoid problems.
+This patch is a first step to removing nlmsvc_task and nlmsvc_rqst.  It
+introduces nlmsvc_serv to store the 'struct svc_serv*'.  This is set as
+soon as the serv is created, and cleared only when it is destroyed.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/netns.h  |    3 ---
- fs/nfsd/nfsctl.c |    2 --
- fs/nfsd/nfssvc.c |   38 ++++++++++++++++++++------------------
- 3 files changed, 20 insertions(+), 23 deletions(-)
+ fs/lockd/svc.c |   36 ++++++++++++++++++++----------------
+ 1 file changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 1fd59eb0730b..021acdc0d03b 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -131,9 +131,6 @@ struct nfsd_net {
- 	 */
- 	int keep_active;
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index a9669b106dbd..83874878f41d 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -54,6 +54,7 @@ EXPORT_SYMBOL_GPL(nlmsvc_ops);
  
--	wait_queue_head_t ntf_wq;
--	atomic_t ntf_refcnt;
--
- 	/*
- 	 * clientid and stateid data for construction of net unique COPY
- 	 * stateids.
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 2bbc26fbdae8..376862cf2f14 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1483,8 +1483,6 @@ static __net_init int nfsd_init_net(struct net *net)
- 	nn->clientid_counter = nn->clientid_base + 1;
- 	nn->s2s_cp_cl_id = nn->clientid_counter++;
- 
--	atomic_set(&nn->ntf_refcnt, 0);
--	init_waitqueue_head(&nn->ntf_wq);
- 	seqlock_init(&nn->boot_lock);
- 
- 	return 0;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 020156e96bdb..070525fbc1ad 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -434,6 +434,7 @@ static void nfsd_shutdown_net(struct net *net)
- 	nfsd_shutdown_generic();
- }
- 
-+DEFINE_SPINLOCK(nfsd_notifier_lock);
- static int nfsd_inetaddr_event(struct notifier_block *this, unsigned long event,
- 	void *ptr)
- {
-@@ -443,18 +444,17 @@ static int nfsd_inetaddr_event(struct notifier_block *this, unsigned long event,
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct sockaddr_in sin;
- 
--	if ((event != NETDEV_DOWN) ||
--	    !atomic_inc_not_zero(&nn->ntf_refcnt))
-+	if (event != NETDEV_DOWN || !nn->nfsd_serv)
+ static DEFINE_MUTEX(nlmsvc_mutex);
+ static unsigned int		nlmsvc_users;
++static struct svc_serv		*nlmsvc_serv;
+ static struct task_struct	*nlmsvc_task;
+ static struct svc_rqst		*nlmsvc_rqst;
+ unsigned long			nlmsvc_timeout;
+@@ -306,13 +307,12 @@ static int lockd_inetaddr_event(struct notifier_block *this,
+ 	    !atomic_inc_not_zero(&nlm_ntf_refcnt))
  		goto out;
  
-+	spin_lock(&nfsd_notifier_lock);
- 	if (nn->nfsd_serv) {
- 		dprintk("nfsd_inetaddr_event: removed %pI4\n", &ifa->ifa_local);
+-	if (nlmsvc_rqst) {
++	if (nlmsvc_serv) {
+ 		dprintk("lockd_inetaddr_event: removed %pI4\n",
+ 			&ifa->ifa_local);
  		sin.sin_family = AF_INET;
  		sin.sin_addr.s_addr = ifa->ifa_local;
- 		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin);
+-		svc_age_temp_xprts_now(nlmsvc_rqst->rq_server,
+-			(struct sockaddr *)&sin);
++		svc_age_temp_xprts_now(nlmsvc_serv, (struct sockaddr *)&sin);
  	}
--	atomic_dec(&nn->ntf_refcnt);
--	wake_up(&nn->ntf_wq);
-+	spin_unlock(&nfsd_notifier_lock);
- 
- out:
- 	return NOTIFY_DONE;
-@@ -474,10 +474,10 @@ static int nfsd_inet6addr_event(struct notifier_block *this,
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
- 	struct sockaddr_in6 sin6;
- 
--	if ((event != NETDEV_DOWN) ||
--	    !atomic_inc_not_zero(&nn->ntf_refcnt))
-+	if (event != NETDEV_DOWN || !nn->nfsd_serv)
+ 	atomic_dec(&nlm_ntf_refcnt);
+ 	wake_up(&nlm_ntf_wq);
+@@ -336,14 +336,13 @@ static int lockd_inet6addr_event(struct notifier_block *this,
+ 	    !atomic_inc_not_zero(&nlm_ntf_refcnt))
  		goto out;
  
-+	spin_lock(&nfsd_notifier_lock);
- 	if (nn->nfsd_serv) {
- 		dprintk("nfsd_inet6addr_event: removed %pI6\n", &ifa->addr);
+-	if (nlmsvc_rqst) {
++	if (nlmsvc_serv) {
+ 		dprintk("lockd_inet6addr_event: removed %pI6\n", &ifa->addr);
  		sin6.sin6_family = AF_INET6;
-@@ -486,8 +486,8 @@ static int nfsd_inet6addr_event(struct notifier_block *this,
+ 		sin6.sin6_addr = ifa->addr;
+ 		if (ipv6_addr_type(&sin6.sin6_addr) & IPV6_ADDR_LINKLOCAL)
  			sin6.sin6_scope_id = ifa->idev->dev->ifindex;
- 		svc_age_temp_xprts_now(nn->nfsd_serv, (struct sockaddr *)&sin6);
+-		svc_age_temp_xprts_now(nlmsvc_rqst->rq_server,
+-			(struct sockaddr *)&sin6);
++		svc_age_temp_xprts_now(nlmsvc_serv, (struct sockaddr *)&sin6);
  	}
--	atomic_dec(&nn->ntf_refcnt);
--	wake_up(&nn->ntf_wq);
-+	spin_unlock(&nfsd_notifier_lock);
-+
- out:
- 	return NOTIFY_DONE;
- }
-@@ -504,7 +504,6 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 	atomic_dec(&nlm_ntf_refcnt);
+ 	wake_up(&nlm_ntf_wq);
+@@ -423,15 +422,17 @@ static const struct svc_serv_ops lockd_sv_ops = {
+ 	.svo_enqueue_xprt	= svc_xprt_do_enqueue,
+ };
  
--	atomic_dec(&nn->ntf_refcnt);
- 	/* check if the notifier still has clients */
- 	if (atomic_dec_return(&nfsd_notifier_refcount) == 0) {
- 		unregister_inetaddr_notifier(&nfsd_inetaddr_notifier);
-@@ -512,7 +511,6 @@ static void nfsd_last_thread(struct svc_serv *serv, struct net *net)
- 		unregister_inet6addr_notifier(&nfsd_inet6addr_notifier);
- #endif
- 	}
--	wait_event(nn->ntf_wq, atomic_read(&nn->ntf_refcnt) == 0);
+-static struct svc_serv *lockd_create_svc(void)
++static int lockd_create_svc(void)
+ {
+ 	struct svc_serv *serv;
  
  	/*
- 	 * write_ports can create the server without actually starting
-@@ -624,6 +622,7 @@ int nfsd_create_serv(struct net *net)
- {
- 	int error;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	struct svc_serv *serv;
+ 	 * Check whether we're already up and running.
+ 	 */
+-	if (nlmsvc_rqst)
+-		return svc_get(nlmsvc_rqst->rq_server);
++	if (nlmsvc_serv) {
++		svc_get(nlmsvc_serv);
++		return 0;
++	}
  
- 	WARN_ON(!mutex_is_locked(&nfsd_mutex));
- 	if (nn->nfsd_serv) {
-@@ -633,21 +632,23 @@ int nfsd_create_serv(struct net *net)
- 	if (nfsd_max_blksize == 0)
- 		nfsd_max_blksize = nfsd_get_default_max_blksize();
- 	nfsd_reset_versions(nn);
--	nn->nfsd_serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize,
--						&nfsd_thread_sv_ops);
--	if (nn->nfsd_serv == NULL)
-+	serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize,
-+				 &nfsd_thread_sv_ops);
-+	if (serv == NULL)
- 		return -ENOMEM;
- 
--	nn->nfsd_serv->sv_maxconn = nn->max_connections;
--	error = svc_bind(nn->nfsd_serv, net);
-+	serv->sv_maxconn = nn->max_connections;
-+	error = svc_bind(serv, net);
- 	if (error < 0) {
- 		/* NOT nfsd_put() as notifiers (see below) haven't
- 		 * been set up yet.
- 		 */
--		svc_put(nn->nfsd_serv);
--		nn->nfsd_serv = NULL;
-+		svc_put(serv);
- 		return error;
+ 	/*
+ 	 * Sanity check: if there's no pid,
+@@ -448,14 +449,15 @@ static struct svc_serv *lockd_create_svc(void)
+ 	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, &lockd_sv_ops);
+ 	if (!serv) {
+ 		printk(KERN_WARNING "lockd_up: create service failed\n");
+-		return ERR_PTR(-ENOMEM);
++		return -ENOMEM;
  	}
-+	spin_lock(&nfsd_notifier_lock);
-+	nn->nfsd_serv = serv;
-+	spin_unlock(&nfsd_notifier_lock);
- 
- 	set_max_drc();
- 	/* check if the notifier is already set */
-@@ -657,7 +658,6 @@ int nfsd_create_serv(struct net *net)
- 		register_inet6addr_notifier(&nfsd_inet6addr_notifier);
++	nlmsvc_serv = serv;
+ 	register_inetaddr_notifier(&lockd_inetaddr_notifier);
+ #if IS_ENABLED(CONFIG_IPV6)
+ 	register_inet6addr_notifier(&lockd_inet6addr_notifier);
  #endif
- 	}
--	atomic_inc(&nn->ntf_refcnt);
- 	nfsd_reset_boot_verifier(nn);
- 	return 0;
- }
-@@ -701,7 +701,9 @@ void nfsd_put(struct net *net)
- 	if (kref_put(&nn->nfsd_serv->sv_refcnt, nfsd_noop)) {
- 		svc_shutdown_net(nn->nfsd_serv, net);
- 		svc_destroy(&nn->nfsd_serv->sv_refcnt);
-+		spin_lock(&nfsd_notifier_lock);
- 		nn->nfsd_serv = NULL;
-+		spin_unlock(&nfsd_notifier_lock);
- 	}
+ 	dprintk("lockd_up: service created\n");
+-	return serv;
++	return 0;
  }
  
+ /*
+@@ -468,11 +470,10 @@ int lockd_up(struct net *net, const struct cred *cred)
+ 
+ 	mutex_lock(&nlmsvc_mutex);
+ 
+-	serv = lockd_create_svc();
+-	if (IS_ERR(serv)) {
+-		error = PTR_ERR(serv);
++	error = lockd_create_svc();
++	if (error)
+ 		goto err_create;
+-	}
++	serv = nlmsvc_serv;
+ 
+ 	error = lockd_up_net(serv, net, cred);
+ 	if (error < 0) {
+@@ -487,6 +488,8 @@ int lockd_up(struct net *net, const struct cred *cred)
+ 	}
+ 	nlmsvc_users++;
+ err_put:
++	if (nlmsvc_users == 0)
++		nlmsvc_serv = NULL;
+ 	svc_put(serv);
+ err_create:
+ 	mutex_unlock(&nlmsvc_mutex);
+@@ -501,7 +504,7 @@ void
+ lockd_down(struct net *net)
+ {
+ 	mutex_lock(&nlmsvc_mutex);
+-	lockd_down_net(nlmsvc_rqst->rq_server, net);
++	lockd_down_net(nlmsvc_serv, net);
+ 	if (nlmsvc_users) {
+ 		if (--nlmsvc_users)
+ 			goto out;
+@@ -519,6 +522,7 @@ lockd_down(struct net *net)
+ 	dprintk("lockd_down: service stopped\n");
+ 	lockd_svc_exit_thread();
+ 	dprintk("lockd_down: service destroyed\n");
++	nlmsvc_serv = NULL;
+ 	nlmsvc_task = NULL;
+ 	nlmsvc_rqst = NULL;
+ out:
 
 
