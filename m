@@ -2,101 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F179F462616
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:43:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F04B7462505
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234820AbhK2Wq7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 17:46:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        id S232498AbhK2WeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 17:34:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234889AbhK2Wo3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:44:29 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5220C03AD68
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:04 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id x15so75524008edv.1
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=A1KpMLhPpZ3DtBAJ2H7WA1+eK6RBPvYL8JCpapFonpw=;
-        b=hYrTDwhmtIHMqqbXGO1Kse+Z0mztn57tvq1yPxTQ6q8If5SiUN3r2mIlQQuhqQ5Ciu
-         K5ZjiwPNhDNHwoG8b/skXzWnqGGnw5Xo6Kz7rDlvP/WRSBwiwJnbIMXZ+5EJLE2YnPsh
-         8oCcdh7mNJuIoeX8m73ktIFQqXot2Q8wW5BQM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=A1KpMLhPpZ3DtBAJ2H7WA1+eK6RBPvYL8JCpapFonpw=;
-        b=JL4D7P3mofCzSfBb3M8x7wgkubU4eZOwbzIYOP5yCubC2g/5pp28l8L9oOLMOmL77U
-         3XJY+gmEfy/Zqt1ntahl9xDruyErOehlEWqavf7QZyckMuIDSL7ihFQ1JUSLaBJFpBff
-         zwG+hlUc7ONgIxh8Z2iu3R8M4e8C5DWk7hKfABsh8x1D70bX3oz3WnR/1+CJVlDUpR8L
-         6J8NEUWREEz+3PB46g1M7Ce2MPMUCFjT4bpGGtNwJzWB8xaO4v9laYgUYJVt6FfXdxRe
-         cDJKr4uFkbpIwIawXHqDUf+4shPNgYTZSUD5jnIqiM/oYNYzjFc1lj65vR84vquqv2FP
-         Z4uA==
-X-Gm-Message-State: AOAM530TvYzeYpqPq//n87rO7oEtdVppkMO4xm2LBzsGLSRd7E7sD1KI
-        dlL4tYqC7WuibnC/7/0T6mCffR3tyhsGP2rG
-X-Google-Smtp-Source: ABdhPJxWbE/xpc8OmIVaYaqTEzyymcyfBUhDcqPpPU22EW004MByz6KgbE9zw/HWvQnc3fgWifNixQ==
-X-Received: by 2002:a17:907:3f19:: with SMTP id hq25mr59805152ejc.225.1638209582947;
-        Mon, 29 Nov 2021 10:13:02 -0800 (PST)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
-        by smtp.gmail.com with ESMTPSA id w22sm10513353edd.49.2021.11.29.10.13.01
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Nov 2021 10:13:01 -0800 (PST)
-Received: by mail-wr1-f44.google.com with SMTP id o13so38634686wrs.12
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:01 -0800 (PST)
-X-Received: by 2002:adf:9d88:: with SMTP id p8mr36748101wre.140.1638209581186;
- Mon, 29 Nov 2021 10:13:01 -0800 (PST)
+        with ESMTP id S232637AbhK2WdX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:33:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E159DC133F57
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:46:11 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A5866B815C3
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 18:46:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4041C53FCF;
+        Mon, 29 Nov 2021 18:46:08 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     paulmck@kernel.org
+Subject: [PATCH v2] NFSD: Fix RCU-related sparse splat
+Date:   Mon, 29 Nov 2021 13:46:07 -0500
+Message-Id:  <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-References: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Nov 2021 10:12:45 -0800
-X-Gmail-Original-Message-ID: <CAHk-=whGOEEb4n2_y3mnrmeNx4HYjRA-m=xMPDQD=bHWfB5chw@mail.gmail.com>
-Message-ID: <CAHk-=whGOEEb4n2_y3mnrmeNx4HYjRA-m=xMPDQD=bHWfB5chw@mail.gmail.com>
-Subject: Re: [PATCH 00/64] fscache, cachefiles: Rewrite
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-afs@lists.infradead.org, Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        v9fs-developer@lists.sourceforge.net,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        ceph-devel@vger.kernel.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1203; h=from:subject:message-id; bh=x5MVCZwZoUhlgwaj3CPu5w6BlSXTBCu9vYGSA6VNi2U=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhpR/p3ux4DVCDSVMpkFq5Jwrm6ijiEu0pLsBceSiF 9Dr2iyyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYaUf6QAKCRAzarMzb2Z/l5tfEA CFsdXX7mmvJaKjUzaPqLW6oukM6K1dT9tamcKf6gEABQvNZrigSJiV1VqYcqg9JtMy3aretGqr6oGr LeMCPs2b4gUWLccp3Gs4UIDZ9WksZL/1W1Xw6tKPW4qF3+Vq8XrkIBUXtMk26lRVQu2YqS8HcKIz6C LAc3kJGpF3k8xPwGIYRUfnMsddlYU7NNC8vnuZlJAG5O8Ezv9Bkufc0dJv4aeorqRvJsIwabduSK06 PA+z3qcJIRGgtMLFFG3ThlEzp6jrCiwORqRNoCefXsaD7RQQV2XTJJC+7JZsixbynzGIMadzE2iyze KPMlwh3lHUAqvxVF6BiUVUZDwN1S2N7v2gg4JZ+4oIDXTgLV2UvwaEysz94AeBPcTN2H/xc1vLuIrF NUMeZbAHDxQEnFoH6iNgwL048Cknqhzkv+WiN7cqTRPVcO00OGhCZKLYqyFGgB+FKV1FJ/p+VvbDO4 O53WJ/8Hz/HD67VGb3b6sbwIDNJtH5kI8PiqVfN4eJzShxM76qRdGqZrsnEl67tIBxewKYBU+E8Pal KXERoXYcruLQThmfDFhrkZFfDy8SR2yZr5CN6VmW5rJcbUr2+wAVnY/ASFxRxcsnRinF0aynUsMao5 0AydCDDTlsh122Cfutl9I1Utq5hNk68glYwmYkRstsy/TeryN1hPSFCPhDfA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 6:22 AM David Howells <dhowells@redhat.com> wrote:
->
-> The patchset is structured such that the first few patches disable fscache
-> use by the network filesystems using it, remove the cachefiles driver
-> entirely and as much of the fscache driver as can be got away with without
-> causing build failures in the network filesystems.  The patches after that
-> recreate fscache and then cachefiles, attempting to add the pieces in a
-> logical order.  Finally, the filesystems are reenabled and then the very
-> last patch changes the documentation.
+To address this error:
 
-Thanks, this all looks conceptually sane to me.
+  CC [M]  fs/nfsd/filecache.o
+  CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
+/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible types in comparison expression (different address spaces):
+/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noderef] __rcu *
+/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
 
-But I only really scanned the commit messages, not the actual new
-code. That obviously needs all the usual testing and feedback from the
-users of this all..
+The "net" field in struct nfsd_fcache_disposal is not annotated as
+requiring an RCU assignment, so replace the macro that includes an
+invocation of rcu_check_sparse() with an equivalent that does not.
 
-                    Linus
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/filecache.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index fdf89fcf1a0c..3b172eda0e9a 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -772,7 +772,7 @@ nfsd_alloc_fcache_disposal(struct net *net)
+ static void
+ nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
+ {
+-	rcu_assign_pointer(l->net, NULL);
++	WRITE_ONCE(l->net, NULL);
+ 	cancel_work_sync(&l->work);
+ 	nfsd_file_dispose_list(&l->freeme);
+ 	kfree_rcu(l, rcu);
+
