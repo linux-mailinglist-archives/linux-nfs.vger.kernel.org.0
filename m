@@ -2,1156 +2,224 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4511E4619FD
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 15:41:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DB94461C8E
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 18:15:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344470AbhK2OoH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 09:44:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22739 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345713AbhK2OmB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 09:42:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638196723;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NiVuxVcG/F7XFn9OXHyrkWOqskN86jL2bQUEur1eh3g=;
-        b=NdHTL42icD31BEHzeI3A2IMQ81DpPl6/OmDZzHwJVuX/VeN1/ujwGTdfMOqmbQNFqOo2zp
-        JYm++79bQcLO7SXYnxziJ9vebK8KD6tkR+MbI7PL+y7A8gE2K5h02dGxo69FeD6WWZi/05
-        BOKER3+PAk/qdFIEoR4ohfhJumVAdLg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-15--VH6jQPIMtChxqkSuoLM8g-1; Mon, 29 Nov 2021 09:38:39 -0500
-X-MC-Unique: -VH6jQPIMtChxqkSuoLM8g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C21719251A0;
-        Mon, 29 Nov 2021 14:38:37 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E3BF267849;
-        Mon, 29 Nov 2021 14:38:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 63/64] cifs: Support fscache indexing rewrite (untested)
-From:   David Howells <dhowells@redhat.com>
-To:     linux-cachefs@redhat.com
-Cc:     Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        linux-cifs@vger.kernel.org, dhowells@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 29 Nov 2021 14:38:30 +0000
-Message-ID: <163819671009.215744.11230627184193298714.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
-References: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        id S242837AbhK2RSp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 12:18:45 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:11808 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1347600AbhK2RQo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 12:16:44 -0500
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1ATHC8TB025094;
+        Mon, 29 Nov 2021 17:13:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : from : to : cc : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=WJDKOCIbgGcpKwRJDyIhjIXftlhKpFXYubTv8SeHzqM=;
+ b=ib6n2VYwlg0truG4npxNBiniMhVaGG3542IrHPQje2ruoeWVuRV00HEXxNzvL//5eDWB
+ 0tvBdfX+vfFcPhQFpzwOM7wUf+ot9Jea1mQwoKC4ikoHA5/vkiQe2EdeQexfdMiaA2l+
+ YqAUHkkyJMP9qReODT+2NPuJv5JBzWEFDCZVnBcoJ4JuQgtrdGV7im+ow2RyecnplThu
+ YuaFgz4V1+Fw488VgWywHLjDgnSU0Vs+BjzSj8JmsS3U3BnDqj2S7nVix8PmDroQ94ux
+ Jqdz6RbQigzm7hOOKcTgYbE2jLPwo04uzGhv81VnNuD9UuNqcTvo7prkSsk0DC1IqbFC qg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3cmrt7uh68-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Nov 2021 17:13:22 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1ATGtguc187376;
+        Mon, 29 Nov 2021 17:13:21 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2103.outbound.protection.outlook.com [104.47.58.103])
+        by userp3030.oracle.com with ESMTP id 3ck9swqsjn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Nov 2021 17:13:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AmVLHo0aRbfqNe3Braev83TxoYY95CSEaUoQRk/bD91EC7r5epC0TgWBDS0tiEJojf8y9mDh23X/TKWUc8+cRI9eROuKh92WVTFiVEfkAOifS22vAk63c6aD2mMKy9Hh+4DqA3yzg3UGzKNJGJt9yd+69UNZPEThKqU0OzYJOKwdZXEOeURuZ/Uqv1JmeArnZZl0TUJEJrcKYB0gx3YAwS8w8HgqH9nV0lb9lmdN3YdbzQXmjCTYusR7ZgcXTbF1oABWkbDZcMNdaLWqKaVeHVCipw/sRlpb7w29et7ReRqyOg0SWe7+yc3NFXlcE8KXGQ2fdDUuRHzub+wQNeHOHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WJDKOCIbgGcpKwRJDyIhjIXftlhKpFXYubTv8SeHzqM=;
+ b=bHWF5exizNkBdvvKrrfznxJ/fdGvrucQJmLSoge0l2thp0juIzHpEDCEchJjK30YVjUzR2uz5fUwscXYt4YQvybixeND1c7xc8KDFvs2j4JlYdpILd/i4PSKChtGp/tnd7P5kNFfaKrxONdjBIfshaRgfMkmzLb6SP/8ccD0Zh5QlK/enRAPyTBIOZOl77TJUoSi29gnizvk8y6EpK7XiYGZ/AyxvWaLPYr+K+mXRQEjKepPOBMoSbM8n5VpeLqosptnP6/3oqwypb2LWAhKJ6fSvfqCwUWyUDdTGfhZaqozNi8F6Rt4uc9MmOMKCWxv0XKtrRViaSF+cI7eM/Ehkg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJDKOCIbgGcpKwRJDyIhjIXftlhKpFXYubTv8SeHzqM=;
+ b=Rvk6qWHLsIhcbfZY5iaerbXAvMErFGRUHQs3ucUc6weXu2PYLvvyglcvMt/17j4w09RewARa6U1VqI3LUD4rgKWCwYtr2srQ9O8pIo+akwREQEfOox/csQH6bmM45w2GAp7kTUK2sfHLmHveYXOLYGez1n1M0yb7NNhZtMCnhEc=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by SJ0PR10MB4656.namprd10.prod.outlook.com (2603:10b6:a03:2d1::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Mon, 29 Nov
+ 2021 17:13:19 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::486b:6917:1bf6:c00e]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::486b:6917:1bf6:c00e%7]) with mapi id 15.20.4690.029; Mon, 29 Nov 2021
+ 17:13:19 +0000
+Message-ID: <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
+Date:   Mon, 29 Nov 2021 09:13:16 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Content-Language: en-US
+From:   dai.ngo@oracle.com
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <20210929005641.60861-1-dai.ngo@oracle.com>
+ <20211001205327.GN959@fieldses.org>
+ <a6c9ba13-43d7-4ea9-e05d-f454c2c9f4c2@oracle.com>
+ <33c8ea5a-4187-a9fa-d507-a2dcec06416c@oracle.com>
+ <20211117141433.GB24762@fieldses.org>
+ <400143c8-c12a-6224-1b36-3e19f20a7ee4@oracle.com>
+ <908ded64-6412-66d3-6ad5-429700610660@oracle.com>
+ <20211118003454.GA29787@fieldses.org>
+ <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
+In-Reply-To: <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-ClientProxiedBy: SN1PR12CA0104.namprd12.prod.outlook.com
+ (2603:10b6:802:21::39) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
+MIME-Version: 1.0
+Received: from [10.65.137.41] (138.3.200.41) by SN1PR12CA0104.namprd12.prod.outlook.com (2603:10b6:802:21::39) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.22 via Frontend Transport; Mon, 29 Nov 2021 17:13:18 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 735e454a-059d-4518-22bb-08d9b35b8a1c
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4656:
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB4656B9B2DB4DA0A5F0DF621B87669@SJ0PR10MB4656.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Xd1Rv8C93hRYh0NIoy6wbSbG3Z+1UdgXMRekoLbQ1NFU4d7h8tShu/J0avTvp9AK+2n18QinZrklV9JBfgcKHV0GLhCq2/wLISDmkqomhDn9PLxb2t08Y2XbrTbzGB8wapXX0ebzV/2Dgb2EODpDFHa8W2bySFA/k5DlJUrwDdWKuGdYAbqsnARV2Ox6w+mW/Q2kuCdvGH9h4geENINmKBlRyf1Sd5LSza4xMSFB7QtANg+eGEmKGsKxHzmkBblZrOYpbAzyCSx+cIb6MmW0m290DzBUjx2c8QqDSLOkoWEZkP8D2HBiDpOl33FNX1N+Fv9E4L8NpyGhgK2Z7kXlA1NC75fXlElyFH8nA7Li8z83ly0xLwGSL8VtbIhBz7WykKhLGv3soLp9ZoBVWUlUqSWA7h/c1VWlWq9bI7Xs96AdJARYlmZOyGq0iWgKPKr4aq6F+pPf6ufHtKTO1gz8uzeUY7Fr6qkHVWbDoZWy1g7g5nnW4kiLpDjNTN8SNI0mCySwyk6NlbBo++Rp0/bkygNFsRE3bi8Eca+93bhsgOzJ2j43gnJm1DSmWyTVjWAYOp3knP/ohQsUboATmn2wF3L7N4xVkgIU5LBNwQI1mYHWvF40qfWlaqXJWi+c3KbJTKFu8oXJZxELzj863LyHqtid6LwWX3LSWvm0LdQPcLoKo9cziNYxnc+YR8U1t6m00r05NPt0QcUAzPELSz1LXQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66556008)(66946007)(956004)(508600001)(31686004)(38100700002)(4326008)(6916009)(66476007)(5660300002)(31696002)(316002)(16576012)(9686003)(53546011)(2906002)(36756003)(8936002)(86362001)(8676002)(26005)(186003)(6486002)(83380400001)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?V2VmZUtqL2xGbGo5NTJFa0dZNldMNkk1SmdXZURsUDVrdDg3UldJclBzMlFn?=
+ =?utf-8?B?RnpnTzJBTDZjVzBjT2w5bjNTQzR2TGNONmxDWUkrV2VJc0l0R1JKR2FFY21K?=
+ =?utf-8?B?N1ZLNGNtTVYzYlZOSDFValAxV0RDc25UVWQ2K3JMUTdjOUVnOHNSQXd4MWYz?=
+ =?utf-8?B?WUNPRFFnM25BNVhPWVNiWjNvM1F3TG9KeXFYSVdickpPSDQyRDF1am5wSUtq?=
+ =?utf-8?B?RDBnQWtyY0VVbU8zcjhjR0JBRFJPYmJ0UEJoamp3Ti9kaTlib1lhT0NPN0VC?=
+ =?utf-8?B?Yis3SWxqbWpoc05iUkV4ZTZZSktLQjJJNm04Wm9Jc3dTY2ZQTk9BRjJXOEUy?=
+ =?utf-8?B?Y09pdXc4Z2J4b1RpR0hwYTFvNXpRRmlFRTB5UTFYZnZVYmhia200ZTljVW1i?=
+ =?utf-8?B?bTlyVEpicGhyeWdvM2RDSThQNDI3bzNGZytkNGhFRkdrYVJDR2JRWVBhSG9s?=
+ =?utf-8?B?OXJwYktlSGNVZDRxMWY2dzhaZEd1TkdhblhnN1ZmTXZZdWEvbVZxbm9iZkxw?=
+ =?utf-8?B?KzJPUmZXQkZSdXF1Nzd4SndpeEFFbDNKcDcrTDUrbW4rVGUzYnZxZi9iL2xP?=
+ =?utf-8?B?MmRMNVZGc0ZienhKN3c0dzJiVzkwQTErd20reTQyWUc1ZzBLTDJJUThKU3R1?=
+ =?utf-8?B?dUhjRnFYYWh5ZXRGQTJoTEJsMkc0bXIrWENZVHh6WlJieTJ6a3YyNzZGU1RR?=
+ =?utf-8?B?bFNFMlJmSS9ZOXpuRE1HNTNYc3ByTklFRzBaTGRPV21xNjkwNDBnb1I0TUpl?=
+ =?utf-8?B?VW5DSS9JSUNQNG5GejgrK0hoSUIvQndybVZpMEJrQ0x6UEllaHpiMnpXOVpr?=
+ =?utf-8?B?RU9tdjd5VUJicGYzcS96bTM4L1BQcnF5Mm5PNzRPYnhmenhwa1FtSVNIcng0?=
+ =?utf-8?B?TmFaa1F2Z05uUXJURTFkRERKQ1VGUGU4UDlna1hJWHI3YVZFSld1a0x1ZEtz?=
+ =?utf-8?B?SkQ4SXY1a3FKSi9mbzd2ZGlUZ0g5YjQvVmk5eW1lY2FuWHJkcWczaVRpQjBo?=
+ =?utf-8?B?aHBaTCtvd2NVcXdoK0V3SHVidlpWeUNIRU9yTzdUSkZMLytER2NKR3NsNHVi?=
+ =?utf-8?B?UGFqMkVwNjM2SFNUUCtqYkxBTnhDT1NXYnhnaDdlMXhWaVduRG9NYSs5RDdv?=
+ =?utf-8?B?citzSTlOYVBOQ0sxY3duNnZjM0JWT3BPeXFteTRoRjU5dmJLM1VWWUt0TGJV?=
+ =?utf-8?B?N3ZvWm1FeHdtMjllNzI4MTBxNGt1OFpyeTdPSjVnUGRLTXgzdkFET3RZYmN5?=
+ =?utf-8?B?RFE3OHJ1Q1NjMzNzclBPdFhYdXFjVS9oZmdIZXJ1cHdGSEdvV3ZCT2JTRGNN?=
+ =?utf-8?B?S2EwYWVUS0xoV1NuQ2JCSTFVMG0zM2NvSUJnbkhiUFVJbVN2RHhsdXEwNUdu?=
+ =?utf-8?B?THpncnpyYUtISmpmYjlOTnZrdzFpekhwVFFYcXk4VHpGL1pQM210OUhPOVZx?=
+ =?utf-8?B?WDZmVGJGMGIyYjY1eGM0WHlnOTB4RytOZkJSRHJldWs4eHdLYnVvTjE2R2Ju?=
+ =?utf-8?B?OGpUUTBxeCtscmVxbTNWOFNYdndTK3hsREpNLzQrUFRKU1QraGw1MVFxbzZC?=
+ =?utf-8?B?aWdXSkFnQXdQallURlFtdlFPMGpWRGJOSzcvZXUrSDJmLzVqdUZOZTIzSXhK?=
+ =?utf-8?B?ZjdBelh6QS9QZUhCSTJBQlB2U2RiVTFKbEhjQW0vN0JKK0NFaDZiTEovSitP?=
+ =?utf-8?B?TFdlTkFWSlQwNUsvRW9QM2hEaDgwVkR6Q0JkOXF5Y1B4cVVadTJtYm9ZOWxn?=
+ =?utf-8?B?WC9maEhiMTRyRmZkaHdhQ3RGb1NDUFBaV29NNXYrR1RyYXJXQ2d4VVAwLzdV?=
+ =?utf-8?B?NHNkYSt5aEtCUitVbGx4K2d4SWMyU3RTWWpIajliMzVOeENTWm81eDNaak4z?=
+ =?utf-8?B?ZDBualgzaThBTFh5SjRJaVh0WnM1VGVOcHZHVnJFYWppMkdBdktsaVBrQ01k?=
+ =?utf-8?B?eUROa0dIZTY5TWZWNUR1dGR0bDIrUHdOalRJcHNxWHRzdnIxb0JOQkZCcDV2?=
+ =?utf-8?B?VlNOUHgzSFFDRE96OEd1c1hVTWkrdDQ1MHkvQ1dXLyt0Rmh5ZlQrZ3ZVelBS?=
+ =?utf-8?B?TWFEYzdBVHZ4M1ZxUUF4TkVXYjdOSTNlWTUrdTdnYXhUWWhxRk8yanFIZ3lm?=
+ =?utf-8?B?VGs4eTFZVkhRZDdpVEhyeUh2Tjk4RUhrTXdveG9sVm5pS0tZVExTN1hucEg4?=
+ =?utf-8?Q?Hq/k0JXHgCOabWIu2fEmuZE=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 735e454a-059d-4518-22bb-08d9b35b8a1c
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Nov 2021 17:13:19.5836
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xGFoV1xVYz9jxikWOE+EmjU9hcoM0VybXT1TCn1O4z/kc/uLN18iGHTyS3Xbtd2gAWELZfxQo7fbrR1iUGpR5w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4656
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10183 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2111290081
+X-Proofpoint-ORIG-GUID: WVUrHGUr3Fsbrzf_z1pl1p4jQIfirzHG
+X-Proofpoint-GUID: WVUrHGUr3Fsbrzf_z1pl1p4jQIfirzHG
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the cifs filesystem to take account of the changes to fscache's
-indexing rewrite and reenable caching in cifs.
+Hi Bruce,
 
-The following changes have been made:
+On 11/21/21 7:04 PM, dai.ngo@oracle.com wrote:
+>
+> On 11/17/21 4:34 PM, J. Bruce Fields wrote:
+>> On Wed, Nov 17, 2021 at 01:46:02PM -0800, dai.ngo@oracle.com wrote:
+>>> On 11/17/21 9:59 AM, dai.ngo@oracle.com wrote:
+>>>> On 11/17/21 6:14 AM, J. Bruce Fields wrote:
+>>>>> On Tue, Nov 16, 2021 at 03:06:32PM -0800, dai.ngo@oracle.com wrote:
+>>>>>> Just a reminder that this patch is still waiting for your review.
+>>>>> Yeah, I was procrastinating and hoping yo'ud figure out the pynfs
+>>>>> failure for me....
+>>>> Last time I ran 4.0 OPEN18 test by itself and it passed. I will run
+>>>> all OPEN tests together with 5.15-rc7 to see if the problem you've
+>>>> seen still there.
+>>> I ran all tests in nfsv4.1 and nfsv4.0 with courteous and non-courteous
+>>> 5.15-rc7 server.
+>>>
+>>> Nfs4.1 results are the same for both courteous and non-courteous 
+>>> server:
+>>>> Of those: 0 Skipped, 0 Failed, 0 Warned, 169 Passed
+>>> Results of nfs4.0 with non-courteous server:
+>>>> Of those: 8 Skipped, 1 Failed, 0 Warned, 577 Passed
+>>> test failed: LOCK24
+>>>
+>>> Results of nfs4.0 with courteous server:
+>>>> Of those: 8 Skipped, 3 Failed, 0 Warned, 575 Passed
+>>> tests failed: LOCK24, OPEN18, OPEN30
+>>>
+>>> OPEN18 and OPEN30 test pass if each is run by itself.
+>> Could well be a bug in the tests, I don't know.
+>
+> The reason OPEN18 failed was because the test timed out waiting for
+> the reply of an OPEN call. The RPC connection used for the test was
+> configured with 15 secs timeout. Note that OPEN18 only fails when
+> the tests were run with 'all' option, this test passes if it's run
+> by itself.
+>
+> With courteous server, by the time OPEN18 runs, there are about 1026
+> courtesy 4.0 clients on the server and all of these clients have opened
+> the same file X with WRITE access. These clients were created by the
+> previous tests. After each test completed, since 4.0 does not have
+> session, the client states are not cleaned up immediately on the
+> server and are allowed to become courtesy clients.
+>
+> When OPEN18 runs (about 20 minutes after the 1st test started), it
+> sends OPEN of file X with OPEN4_SHARE_DENY_WRITE which causes the
+> server to check for conflicts with courtesy clients. The loop that
+> checks 1026 courtesy clients for share/access conflict took less
+> than 1 sec. But it took about 55 secs, on my VM, for the server
+> to expire all 1026 courtesy clients.
+>
+> I modified pynfs to configure the 4.0 RPC connection with 60 seconds
+> timeout and OPEN18 now consistently passed. The 4.0 test results are
+> now the same for courteous and non-courteous server:
+>
+> 8 Skipped, 1 Failed, 0 Warned, 577 Passed
+>
+> Note that 4.1 tests do not suffer this timeout problem because the
+> 4.1 clients and sessions are destroyed after each test completes.
 
- (1) The fscache_netfs struct is no more, and there's no need to register
-     the filesystem as a whole.
+Do you want me to send the patch to increase the timeout for pynfs?
+or is there any other things you think we should do?
 
- (2) The session cookie is now an fscache_volume cookie, allocated with
-     fscache_acquire_volume().  That takes three parameters: a string
-     representing the "volume" in the index, a string naming the cache to
-     use (or NULL) and a u64 that conveys coherency metadata for the
-     volume.
-
-     For cifs, I've made it render the volume name string as:
-
-	"cifs,<ipaddress>,<sharename>"
-
-     where the sharename has '/' characters replaced with ';'.
-
-     This probably needs rethinking a bit as the total name could exceed
-     the maximum filename component length.
-
-     Further, the coherency data is currently just set to 0.  It needs
-     something else doing with it - I wonder if it would suffice simply to
-     sum the resource_id, vol_create_time and vol_serial_number or maybe
-     hash them.
-
- (3) The fscache_cookie_def is no more and needed information is passed
-     directly to fscache_acquire_cookie().  The cache no longer calls back
-     into the filesystem, but rather metadata changes are indicated at
-     other times.
-
-     fscache_acquire_cookie() is passed the same keying and coherency
-     information as before.
-
- (4) The functions to set/reset cookies are removed and
-     fscache_use_cookie() and fscache_unuse_cookie() are used instead.
-
-     fscache_use_cookie() is passed a flag to indicate if the cookie is
-     opened for writing.  fscache_unuse_cookie() is passed updates for the
-     metadata if we changed it (ie. if the file was opened for writing).
-
-     These are called when the file is opened or closed.
-
- (5) cifs_setattr_*() are made to call fscache_resize() to change the size
-     of the cache object.
-
- (6) The functions to read and write data are stubbed out pending a
-     conversion to use netfslib.
-
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <sfrench@samba.org>
-cc: Shyam Prasad N <nspmangalore@gmail.com>
-cc: linux-cifs@vger.kernel.org
-cc: linux-cachefs@redhat.com
----
-
- fs/cifs/Kconfig    |    2 
- fs/cifs/Makefile   |    2 
- fs/cifs/cache.c    |  105 -----------------
- fs/cifs/cifsfs.c   |   11 --
- fs/cifs/cifsglob.h |    5 -
- fs/cifs/connect.c  |    8 -
- fs/cifs/file.c     |   64 +++++++----
- fs/cifs/fscache.c  |  315 ++++++++--------------------------------------------
- fs/cifs/fscache.h  |  102 ++++-------------
- fs/cifs/inode.c    |   18 ++-
- 10 files changed, 138 insertions(+), 494 deletions(-)
- delete mode 100644 fs/cifs/cache.c
-
-diff --git a/fs/cifs/Kconfig b/fs/cifs/Kconfig
-index 346ae8716deb..3b7e3b9e4fd2 100644
---- a/fs/cifs/Kconfig
-+++ b/fs/cifs/Kconfig
-@@ -188,7 +188,7 @@ config CIFS_SMB_DIRECT
- 
- config CIFS_FSCACHE
- 	bool "Provide CIFS client caching support"
--	depends on CIFS=m && FSCACHE_OLD_API || CIFS=y && FSCACHE_OLD_API=y
-+	depends on CIFS=m && FSCACHE || CIFS=y && FSCACHE=y
- 	help
- 	  Makes CIFS FS-Cache capable. Say Y here if you want your CIFS data
- 	  to be cached locally on disk through the general filesystem cache
-diff --git a/fs/cifs/Makefile b/fs/cifs/Makefile
-index 87fcacdf3de7..cc8fdcb35b71 100644
---- a/fs/cifs/Makefile
-+++ b/fs/cifs/Makefile
-@@ -25,7 +25,7 @@ cifs-$(CONFIG_CIFS_DFS_UPCALL) += cifs_dfs_ref.o dfs_cache.o
- 
- cifs-$(CONFIG_CIFS_SWN_UPCALL) += netlink.o cifs_swn.o
- 
--cifs-$(CONFIG_CIFS_FSCACHE) += fscache.o cache.o
-+cifs-$(CONFIG_CIFS_FSCACHE) += fscache.o
- 
- cifs-$(CONFIG_CIFS_SMB_DIRECT) += smbdirect.o
- 
-diff --git a/fs/cifs/cache.c b/fs/cifs/cache.c
-deleted file mode 100644
-index 8be57aaedab6..000000000000
---- a/fs/cifs/cache.c
-+++ /dev/null
-@@ -1,105 +0,0 @@
--// SPDX-License-Identifier: LGPL-2.1
--/*
-- *   CIFS filesystem cache index structure definitions
-- *
-- *   Copyright (c) 2010 Novell, Inc.
-- *   Authors(s): Suresh Jayaraman (sjayaraman@suse.de>
-- *
-- */
--#include "fscache.h"
--#include "cifs_debug.h"
--
--/*
-- * CIFS filesystem definition for FS-Cache
-- */
--struct fscache_netfs cifs_fscache_netfs = {
--	.name = "cifs",
--	.version = 0,
--};
--
--/*
-- * Register CIFS for caching with FS-Cache
-- */
--int cifs_fscache_register(void)
--{
--	return fscache_register_netfs(&cifs_fscache_netfs);
--}
--
--/*
-- * Unregister CIFS for caching
-- */
--void cifs_fscache_unregister(void)
--{
--	fscache_unregister_netfs(&cifs_fscache_netfs);
--}
--
--/*
-- * Server object for FS-Cache
-- */
--const struct fscache_cookie_def cifs_fscache_server_index_def = {
--	.name = "CIFS.server",
--	.type = FSCACHE_COOKIE_TYPE_INDEX,
--};
--
--static enum
--fscache_checkaux cifs_fscache_super_check_aux(void *cookie_netfs_data,
--					      const void *data,
--					      uint16_t datalen,
--					      loff_t object_size)
--{
--	struct cifs_fscache_super_auxdata auxdata;
--	const struct cifs_tcon *tcon = cookie_netfs_data;
--
--	if (datalen != sizeof(auxdata))
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.resource_id = tcon->resource_id;
--	auxdata.vol_create_time = tcon->vol_create_time;
--	auxdata.vol_serial_number = tcon->vol_serial_number;
--
--	if (memcmp(data, &auxdata, datalen) != 0)
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	return FSCACHE_CHECKAUX_OKAY;
--}
--
--/*
-- * Superblock object for FS-Cache
-- */
--const struct fscache_cookie_def cifs_fscache_super_index_def = {
--	.name = "CIFS.super",
--	.type = FSCACHE_COOKIE_TYPE_INDEX,
--	.check_aux = cifs_fscache_super_check_aux,
--};
--
--static enum
--fscache_checkaux cifs_fscache_inode_check_aux(void *cookie_netfs_data,
--					      const void *data,
--					      uint16_t datalen,
--					      loff_t object_size)
--{
--	struct cifs_fscache_inode_auxdata auxdata;
--	struct cifsInodeInfo *cifsi = cookie_netfs_data;
--
--	if (datalen != sizeof(auxdata))
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.eof = cifsi->server_eof;
--	auxdata.last_write_time_sec = cifsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.last_change_time_sec = cifsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.last_write_time_nsec = cifsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.last_change_time_nsec = cifsi->vfs_inode.i_ctime.tv_nsec;
--
--	if (memcmp(data, &auxdata, datalen) != 0)
--		return FSCACHE_CHECKAUX_OBSOLETE;
--
--	return FSCACHE_CHECKAUX_OKAY;
--}
--
--const struct fscache_cookie_def cifs_fscache_inode_object_def = {
--	.name		= "CIFS.uniqueid",
--	.type		= FSCACHE_COOKIE_TYPE_DATAFILE,
--	.check_aux	= cifs_fscache_inode_check_aux,
--};
-diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-index dca42aa87d30..d3f3acf340f1 100644
---- a/fs/cifs/cifsfs.c
-+++ b/fs/cifs/cifsfs.c
-@@ -396,6 +396,8 @@ static void
- cifs_evict_inode(struct inode *inode)
- {
- 	truncate_inode_pages_final(&inode->i_data);
-+	if (inode->i_state & I_PINNING_FSCACHE_WB)
-+		cifs_fscache_unuse_inode_cookie(inode, true);
- 	clear_inode(inode);
- }
- 
-@@ -1624,13 +1626,9 @@ init_cifs(void)
- 		goto out_destroy_cifsoplockd_wq;
- 	}
- 
--	rc = cifs_fscache_register();
--	if (rc)
--		goto out_destroy_deferredclose_wq;
--
- 	rc = cifs_init_inodecache();
- 	if (rc)
--		goto out_unreg_fscache;
-+		goto out_destroy_deferredclose_wq;
- 
- 	rc = cifs_init_mids();
- 	if (rc)
-@@ -1692,8 +1690,6 @@ init_cifs(void)
- 	cifs_destroy_mids();
- out_destroy_inodecache:
- 	cifs_destroy_inodecache();
--out_unreg_fscache:
--	cifs_fscache_unregister();
- out_destroy_deferredclose_wq:
- 	destroy_workqueue(deferredclose_wq);
- out_destroy_cifsoplockd_wq:
-@@ -1729,7 +1725,6 @@ exit_cifs(void)
- 	cifs_destroy_request_bufs();
- 	cifs_destroy_mids();
- 	cifs_destroy_inodecache();
--	cifs_fscache_unregister();
- 	destroy_workqueue(deferredclose_wq);
- 	destroy_workqueue(cifsoplockd_wq);
- 	destroy_workqueue(decrypt_wq);
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index be74606724c7..ba6fbb1ad8f3 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -659,9 +659,6 @@ struct TCP_Server_Info {
- 	unsigned int total_read; /* total amount of data read in this pass */
- 	atomic_t in_send; /* requests trying to send */
- 	atomic_t num_waiters;   /* blocked waiting to get in sendrecv */
--#ifdef CONFIG_CIFS_FSCACHE
--	struct fscache_cookie   *fscache; /* client index cache cookie */
--#endif
- #ifdef CONFIG_CIFS_STATS2
- 	atomic_t num_cmds[NUMBER_OF_SMB2_COMMANDS]; /* total requests by cmd */
- 	atomic_t smb2slowcmd[NUMBER_OF_SMB2_COMMANDS]; /* count resps > 1 sec */
-@@ -1117,7 +1114,7 @@ struct cifs_tcon {
- 	__u32 max_bytes_copy;
- #ifdef CONFIG_CIFS_FSCACHE
- 	u64 resource_id;		/* server resource id */
--	struct fscache_cookie *fscache;	/* cookie for share */
-+	struct fscache_volume *fscache;	/* cookie for share */
- #endif
- 	struct list_head pending_opens;	/* list of incomplete opens */
- 	struct cached_fid crfid; /* Cached root fid */
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 67e4c5548e9d..cd2704559370 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -1398,10 +1398,6 @@ cifs_put_tcp_session(struct TCP_Server_Info *server, int from_reconnect)
- 
- 	cifs_crypto_secmech_release(server);
- 
--	/* fscache server cookies are based on primary channel only */
--	if (!CIFS_SERVER_IS_CHAN(server))
--		cifs_fscache_release_client_cookie(server);
--
- 	kfree(server->session_key.response);
- 	server->session_key.response = NULL;
- 	server->session_key.len = 0;
-@@ -1558,10 +1554,6 @@ cifs_get_tcp_session(struct smb3_fs_context *ctx,
- 	list_add(&tcp_ses->tcp_ses_list, &cifs_tcp_ses_list);
- 	spin_unlock(&cifs_tcp_ses_lock);
- 
--	/* fscache server cookies are based on primary channel only */
--	if (!CIFS_SERVER_IS_CHAN(tcp_ses))
--		cifs_fscache_get_client_cookie(tcp_ses);
--
- 	/* queue echo request delayed work */
- 	queue_delayed_work(cifsiod_wq, &tcp_ses->echo, tcp_ses->echo_interval);
- 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 9fee3af83a73..882b3212f4de 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -632,7 +632,18 @@ int cifs_open(struct inode *inode, struct file *file)
- 		goto out;
- 	}
- 
--	cifs_fscache_set_inode_cookie(inode, file);
-+
-+	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
-+			   file->f_mode & FMODE_WRITE);
-+	if (file->f_flags & O_DIRECT &&
-+	    (!((file->f_flags & O_ACCMODE) != O_RDONLY) ||
-+	     file->f_flags & O_APPEND)) {
-+		struct cifs_fscache_inode_auxdata auxdata;
-+		cifs_fscache_fill_auxdata(file_inode(file), &auxdata);
-+		fscache_invalidate(cifs_inode_cookie(file_inode(file)),
-+				   &auxdata, i_size_read(file_inode(file)),
-+				   FSCACHE_INVAL_DIO_WRITE);
-+	}
- 
- 	if ((oplock & CIFS_CREATE_ACTION) && !posix_open_ok && tcon->unix_ext) {
- 		/*
-@@ -876,6 +887,8 @@ int cifs_close(struct inode *inode, struct file *file)
- 	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
- 	struct cifs_deferred_close *dclose;
- 
-+	cifs_fscache_unuse_inode_cookie(inode, file->f_mode & FMODE_WRITE);
-+
- 	if (file->private_data != NULL) {
- 		cfile = file->private_data;
- 		file->private_data = NULL;
-@@ -886,7 +899,6 @@ int cifs_close(struct inode *inode, struct file *file)
- 		    dclose) {
- 			if (test_and_clear_bit(CIFS_INO_MODIFIED_ATTR, &cinode->flags)) {
- 				inode->i_ctime = inode->i_mtime = current_time(inode);
--				cifs_fscache_update_inode_cookie(inode);
- 			}
- 			spin_lock(&cinode->deferred_lock);
- 			cifs_add_deferred_close(cfile, dclose);
-@@ -4198,10 +4210,12 @@ static vm_fault_t
- cifs_page_mkwrite(struct vm_fault *vmf)
- {
- 	struct page *page = vmf->page;
--	struct file *file = vmf->vma->vm_file;
--	struct inode *inode = file_inode(file);
- 
--	cifs_fscache_wait_on_page_write(inode, page);
-+#ifdef CONFIG_CIFS_FSCACHE
-+	if (PageFsCache(page) &&
-+	    wait_on_page_fscache_killable(page) < 0)
-+		return VM_FAULT_RETRY;
-+#endif
- 
- 	lock_page(page);
- 	return VM_FAULT_LOCKED;
-@@ -4275,8 +4289,6 @@ cifs_readv_complete(struct work_struct *work)
- 		if (rdata->result == 0 ||
- 		    (rdata->result == -EAGAIN && got_bytes))
- 			cifs_readpage_to_fscache(rdata->mapping->host, page);
--		else
--			cifs_fscache_uncache_page(rdata->mapping->host, page);
- 
- 		got_bytes -= min_t(unsigned int, PAGE_SIZE, got_bytes);
- 
-@@ -4593,11 +4605,6 @@ static int cifs_readpages(struct file *file, struct address_space *mapping,
- 		kref_put(&rdata->refcount, cifs_readdata_release);
- 	}
- 
--	/* Any pages that have been shown to fscache but didn't get added to
--	 * the pagecache must be uncached before they get returned to the
--	 * allocator.
--	 */
--	cifs_fscache_readpages_cancel(mapping->host, page_list);
- 	free_xid(xid);
- 	return rc;
- }
-@@ -4801,17 +4808,19 @@ static int cifs_release_page(struct page *page, gfp_t gfp)
- {
- 	if (PagePrivate(page))
- 		return 0;
--
--	return cifs_fscache_release_page(page, gfp);
-+	if (PageFsCache(page)) {
-+		if (!(gfp & __GFP_DIRECT_RECLAIM) || !(gfp & __GFP_FS))
-+			return false;
-+		wait_on_page_fscache(page);
-+	}
-+	fscache_note_page_release(cifs_inode_cookie(page->mapping->host));
-+	return true;
- }
- 
- static void cifs_invalidate_page(struct page *page, unsigned int offset,
- 				 unsigned int length)
- {
--	struct cifsInodeInfo *cifsi = CIFS_I(page->mapping->host);
--
--	if (offset == 0 && length == PAGE_SIZE)
--		cifs_fscache_invalidate_page(page, &cifsi->vfs_inode);
-+	wait_on_page_fscache(page);
- }
- 
- static int cifs_launder_page(struct page *page)
-@@ -4831,7 +4840,7 @@ static int cifs_launder_page(struct page *page)
- 	if (clear_page_dirty_for_io(page))
- 		rc = cifs_writepage_locked(page, &wbc);
- 
--	cifs_fscache_invalidate_page(page, page->mapping->host);
-+	wait_on_page_fscache(page);
- 	return rc;
- }
- 
-@@ -4988,6 +4997,19 @@ static void cifs_swap_deactivate(struct file *file)
- 	/* do we need to unpin (or unlock) the file */
- }
- 
-+/*
-+ * Mark a page as having been made dirty and thus needing writeback.  We also
-+ * need to pin the cache object to write back to.
-+ */
-+#ifdef CONFIG_CIFS_FSCACHE
-+static int cifs_set_page_dirty(struct page *page)
-+{
-+	return fscache_set_page_dirty(page, cifs_inode_cookie(page->mapping->host));
-+}
-+#else
-+#define cifs_set_page_dirty __set_page_dirty_nobuffers
-+#endif
-+
- const struct address_space_operations cifs_addr_ops = {
- 	.readpage = cifs_readpage,
- 	.readpages = cifs_readpages,
-@@ -4995,7 +5017,7 @@ const struct address_space_operations cifs_addr_ops = {
- 	.writepages = cifs_writepages,
- 	.write_begin = cifs_write_begin,
- 	.write_end = cifs_write_end,
--	.set_page_dirty = __set_page_dirty_nobuffers,
-+	.set_page_dirty = cifs_set_page_dirty,
- 	.releasepage = cifs_release_page,
- 	.direct_IO = cifs_direct_io,
- 	.invalidatepage = cifs_invalidate_page,
-@@ -5020,7 +5042,7 @@ const struct address_space_operations cifs_addr_ops_smallbuf = {
- 	.writepages = cifs_writepages,
- 	.write_begin = cifs_write_begin,
- 	.write_end = cifs_write_end,
--	.set_page_dirty = __set_page_dirty_nobuffers,
-+	.set_page_dirty = cifs_set_page_dirty,
- 	.releasepage = cifs_release_page,
- 	.invalidatepage = cifs_invalidate_page,
- 	.launder_page = cifs_launder_page,
-diff --git a/fs/cifs/fscache.c b/fs/cifs/fscache.c
-index 7e409a38a2d7..f030ad2abd52 100644
---- a/fs/cifs/fscache.c
-+++ b/fs/cifs/fscache.c
-@@ -12,276 +12,122 @@
- #include "cifs_fs_sb.h"
- #include "cifsproto.h"
- 
--/*
-- * Key layout of CIFS server cache index object
-- */
--struct cifs_server_key {
--	struct {
--		uint16_t	family;		/* address family */
--		__be16		port;		/* IP port */
--	} hdr;
--	union {
--		struct in_addr	ipv4_addr;
--		struct in6_addr	ipv6_addr;
--	};
--} __packed;
--
--/*
-- * Get a cookie for a server object keyed by {IPaddress,port,family} tuple
-- */
--void cifs_fscache_get_client_cookie(struct TCP_Server_Info *server)
-+void cifs_fscache_get_super_cookie(struct cifs_tcon *tcon)
- {
--	const struct sockaddr *sa = (struct sockaddr *) &server->dstaddr;
--	const struct sockaddr_in *addr = (struct sockaddr_in *) sa;
--	const struct sockaddr_in6 *addr6 = (struct sockaddr_in6 *) sa;
--	struct cifs_server_key key;
--	uint16_t key_len = sizeof(key.hdr);
--
--	memset(&key, 0, sizeof(key));
-+	struct cifs_fscache_super_auxdata auxdata;
-+	struct TCP_Server_Info *server = tcon->ses->server;
-+	const struct sockaddr *sa = (struct sockaddr *)&server->dstaddr;
-+	size_t slen, i;
-+	char *sharename;
-+	char *key;
- 
--	/*
--	 * Should not be a problem as sin_family/sin6_family overlays
--	 * sa_family field
--	 */
--	key.hdr.family = sa->sa_family;
-+	tcon->fscache = NULL;
- 	switch (sa->sa_family) {
- 	case AF_INET:
--		key.hdr.port = addr->sin_port;
--		key.ipv4_addr = addr->sin_addr;
--		key_len += sizeof(key.ipv4_addr);
--		break;
--
- 	case AF_INET6:
--		key.hdr.port = addr6->sin6_port;
--		key.ipv6_addr = addr6->sin6_addr;
--		key_len += sizeof(key.ipv6_addr);
- 		break;
--
- 	default:
- 		cifs_dbg(VFS, "Unknown network family '%d'\n", sa->sa_family);
--		server->fscache = NULL;
- 		return;
- 	}
- 
--	server->fscache =
--		fscache_acquire_cookie(cifs_fscache_netfs.primary_index,
--				       &cifs_fscache_server_index_def,
--				       &key, key_len,
--				       NULL, 0,
--				       server, 0, true);
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n",
--		 __func__, server, server->fscache);
--}
--
--void cifs_fscache_release_client_cookie(struct TCP_Server_Info *server)
--{
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n",
--		 __func__, server, server->fscache);
--	fscache_relinquish_cookie(server->fscache, NULL, false);
--	server->fscache = NULL;
--}
--
--void cifs_fscache_get_super_cookie(struct cifs_tcon *tcon)
--{
--	struct TCP_Server_Info *server = tcon->ses->server;
--	char *sharename;
--	struct cifs_fscache_super_auxdata auxdata;
--
--	/*
--	 * Check if cookie was already initialized so don't reinitialize it.
--	 * In the future, as we integrate with newer fscache features,
--	 * we may want to instead add a check if cookie has changed
--	 */
--	if (tcon->fscache == NULL)
--		return;
--
- 	sharename = extract_sharename(tcon->treeName);
- 	if (IS_ERR(sharename)) {
- 		cifs_dbg(FYI, "%s: couldn't extract sharename\n", __func__);
--		tcon->fscache = NULL;
- 		return;
- 	}
- 
-+	slen = strlen(sharename);
-+	for (i = 0; i < slen; i++)
-+		if (sharename[i] == '/')
-+			sharename[i] = ';';
-+
-+	key = kasprintf(GFP_KERNEL, "cifs,%pISpc,%s", sa, sharename);
-+	if (!key)
-+		goto out;
-+
- 	memset(&auxdata, 0, sizeof(auxdata));
- 	auxdata.resource_id = tcon->resource_id;
- 	auxdata.vol_create_time = tcon->vol_create_time;
- 	auxdata.vol_serial_number = tcon->vol_serial_number;
-+	// TODO: Do something with the volume coherency data
- 
--	tcon->fscache =
--		fscache_acquire_cookie(server->fscache,
--				       &cifs_fscache_super_index_def,
--				       sharename, strlen(sharename),
--				       &auxdata, sizeof(auxdata),
--				       tcon, 0, true);
-+	tcon->fscache = fscache_acquire_volume(key,
-+					       NULL, /* preferred_cache */
-+					       0 /* coherency_data */);
-+	cifs_dbg(FYI, "%s: (%s/0x%p)\n", __func__, key, tcon->fscache);
-+
-+	kfree(key);
-+out:
- 	kfree(sharename);
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n",
--		 __func__, server->fscache, tcon->fscache);
- }
- 
- void cifs_fscache_release_super_cookie(struct cifs_tcon *tcon)
- {
- 	struct cifs_fscache_super_auxdata auxdata;
- 
-+	cifs_dbg(FYI, "%s: (0x%p)\n", __func__, tcon->fscache);
-+
- 	memset(&auxdata, 0, sizeof(auxdata));
- 	auxdata.resource_id = tcon->resource_id;
- 	auxdata.vol_create_time = tcon->vol_create_time;
- 	auxdata.vol_serial_number = tcon->vol_serial_number;
-+	// TODO: Do something with the volume coherency data
- 
--	cifs_dbg(FYI, "%s: (0x%p)\n", __func__, tcon->fscache);
--	fscache_relinquish_cookie(tcon->fscache, &auxdata, false);
-+	fscache_relinquish_volume(tcon->fscache,
-+				  0, /* coherency_data */
-+				  false);
- 	tcon->fscache = NULL;
- }
- 
--static void cifs_fscache_acquire_inode_cookie(struct cifsInodeInfo *cifsi,
--					      struct cifs_tcon *tcon)
-+void cifs_fscache_get_inode_cookie(struct inode *inode)
- {
-+	struct cifsInodeInfo *cifsi = CIFS_I(inode);
-+	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
-+	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
- 	struct cifs_fscache_inode_auxdata auxdata;
- 
--	memset(&auxdata, 0, sizeof(auxdata));
--	auxdata.eof = cifsi->server_eof;
--	auxdata.last_write_time_sec = cifsi->vfs_inode.i_mtime.tv_sec;
--	auxdata.last_change_time_sec = cifsi->vfs_inode.i_ctime.tv_sec;
--	auxdata.last_write_time_nsec = cifsi->vfs_inode.i_mtime.tv_nsec;
--	auxdata.last_change_time_nsec = cifsi->vfs_inode.i_ctime.tv_nsec;
-+	cifs_fscache_fill_auxdata(&cifsi->vfs_inode, &auxdata);
- 
- 	cifsi->fscache =
--		fscache_acquire_cookie(tcon->fscache,
--				       &cifs_fscache_inode_object_def,
-+		fscache_acquire_cookie(tcon->fscache, 0,
- 				       &cifsi->uniqueid, sizeof(cifsi->uniqueid),
- 				       &auxdata, sizeof(auxdata),
--				       cifsi, cifsi->vfs_inode.i_size, true);
-+				       cifsi->vfs_inode.i_size);
- }
- 
--static void cifs_fscache_enable_inode_cookie(struct inode *inode)
-+void cifs_fscache_unuse_inode_cookie(struct inode *inode, bool update)
- {
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
-+	if (update) {
-+		struct cifs_fscache_inode_auxdata auxdata;
-+		loff_t i_size = i_size_read(inode);
- 
--	if (cifsi->fscache)
--		return;
--
--	if (!(cifs_sb->mnt_cifs_flags & CIFS_MOUNT_FSCACHE))
--		return;
--
--	cifs_fscache_acquire_inode_cookie(cifsi, tcon);
--
--	cifs_dbg(FYI, "%s: got FH cookie (0x%p/0x%p)\n",
--		 __func__, tcon->fscache, cifsi->fscache);
-+		cifs_fscache_fill_auxdata(inode, &auxdata);
-+		fscache_unuse_cookie(cifs_inode_cookie(inode), &auxdata, &i_size);
-+	} else {
-+		fscache_unuse_cookie(cifs_inode_cookie(inode), NULL, NULL);
-+	}
- }
- 
- void cifs_fscache_release_inode_cookie(struct inode *inode)
- {
--	struct cifs_fscache_inode_auxdata auxdata;
- 	struct cifsInodeInfo *cifsi = CIFS_I(inode);
- 
- 	if (cifsi->fscache) {
--		memset(&auxdata, 0, sizeof(auxdata));
--		auxdata.eof = cifsi->server_eof;
--		auxdata.last_write_time_sec = cifsi->vfs_inode.i_mtime.tv_sec;
--		auxdata.last_change_time_sec = cifsi->vfs_inode.i_ctime.tv_sec;
--		auxdata.last_write_time_nsec = cifsi->vfs_inode.i_mtime.tv_nsec;
--		auxdata.last_change_time_nsec = cifsi->vfs_inode.i_ctime.tv_nsec;
--
- 		cifs_dbg(FYI, "%s: (0x%p)\n", __func__, cifsi->fscache);
--		/* fscache_relinquish_cookie does not seem to update auxdata */
--		fscache_update_cookie(cifsi->fscache, &auxdata);
--		fscache_relinquish_cookie(cifsi->fscache, &auxdata, false);
-+		fscache_relinquish_cookie(cifsi->fscache, false);
- 		cifsi->fscache = NULL;
- 	}
- }
- 
--void cifs_fscache_update_inode_cookie(struct inode *inode)
--{
--	struct cifs_fscache_inode_auxdata auxdata;
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--
--	if (cifsi->fscache) {
--		memset(&auxdata, 0, sizeof(auxdata));
--		auxdata.eof = cifsi->server_eof;
--		auxdata.last_write_time_sec = cifsi->vfs_inode.i_mtime.tv_sec;
--		auxdata.last_change_time_sec = cifsi->vfs_inode.i_ctime.tv_sec;
--		auxdata.last_write_time_nsec = cifsi->vfs_inode.i_mtime.tv_nsec;
--		auxdata.last_change_time_nsec = cifsi->vfs_inode.i_ctime.tv_nsec;
--
--		cifs_dbg(FYI, "%s: (0x%p)\n", __func__, cifsi->fscache);
--		fscache_update_cookie(cifsi->fscache, &auxdata);
--	}
--}
--
--void cifs_fscache_set_inode_cookie(struct inode *inode, struct file *filp)
--{
--	cifs_fscache_enable_inode_cookie(inode);
--}
--
--void cifs_fscache_reset_inode_cookie(struct inode *inode)
--{
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
--	struct cifs_tcon *tcon = cifs_sb_master_tcon(cifs_sb);
--	struct fscache_cookie *old = cifsi->fscache;
--
--	if (cifsi->fscache) {
--		/* retire the current fscache cache and get a new one */
--		fscache_relinquish_cookie(cifsi->fscache, NULL, true);
--
--		cifs_fscache_acquire_inode_cookie(cifsi, tcon);
--		cifs_dbg(FYI, "%s: new cookie 0x%p oldcookie 0x%p\n",
--			 __func__, cifsi->fscache, old);
--	}
--}
--
--int cifs_fscache_release_page(struct page *page, gfp_t gfp)
--{
--	if (PageFsCache(page)) {
--		struct inode *inode = page->mapping->host;
--		struct cifsInodeInfo *cifsi = CIFS_I(inode);
--
--		cifs_dbg(FYI, "%s: (0x%p/0x%p)\n",
--			 __func__, page, cifsi->fscache);
--		if (!fscache_maybe_release_page(cifsi->fscache, page, gfp))
--			return 0;
--	}
--
--	return 1;
--}
--
--static void cifs_readpage_from_fscache_complete(struct page *page, void *ctx,
--						int error)
--{
--	cifs_dbg(FYI, "%s: (0x%p/%d)\n", __func__, page, error);
--	if (!error)
--		SetPageUptodate(page);
--	unlock_page(page);
--}
--
- /*
-  * Retrieve a page from FS-Cache
-  */
- int __cifs_readpage_from_fscache(struct inode *inode, struct page *page)
- {
--	int ret;
--
- 	cifs_dbg(FYI, "%s: (fsc:%p, p:%p, i:0x%p\n",
- 		 __func__, CIFS_I(inode)->fscache, page, inode);
--	ret = fscache_read_or_alloc_page(CIFS_I(inode)->fscache, page,
--					 cifs_readpage_from_fscache_complete,
--					 NULL,
--					 GFP_KERNEL);
--	switch (ret) {
--
--	case 0: /* page found in fscache, read submitted */
--		cifs_dbg(FYI, "%s: submitted\n", __func__);
--		return ret;
--	case -ENOBUFS:	/* page won't be cached */
--	case -ENODATA:	/* page not in cache */
--		cifs_dbg(FYI, "%s: %d\n", __func__, ret);
--		return 1;
--
--	default:
--		cifs_dbg(VFS, "unknown error ret = %d\n", ret);
--	}
--	return ret;
-+	return -ENOBUFS; // Needs conversion to using netfslib
- }
- 
- /*
-@@ -292,78 +138,19 @@ int __cifs_readpages_from_fscache(struct inode *inode,
- 				struct list_head *pages,
- 				unsigned *nr_pages)
- {
--	int ret;
--
- 	cifs_dbg(FYI, "%s: (0x%p/%u/0x%p)\n",
- 		 __func__, CIFS_I(inode)->fscache, *nr_pages, inode);
--	ret = fscache_read_or_alloc_pages(CIFS_I(inode)->fscache, mapping,
--					  pages, nr_pages,
--					  cifs_readpage_from_fscache_complete,
--					  NULL,
--					  mapping_gfp_mask(mapping));
--	switch (ret) {
--	case 0:	/* read submitted to the cache for all pages */
--		cifs_dbg(FYI, "%s: submitted\n", __func__);
--		return ret;
--
--	case -ENOBUFS:	/* some pages are not cached and can't be */
--	case -ENODATA:	/* some pages are not cached */
--		cifs_dbg(FYI, "%s: no page\n", __func__);
--		return 1;
--
--	default:
--		cifs_dbg(FYI, "unknown error ret = %d\n", ret);
--	}
--
--	return ret;
-+	return -ENOBUFS; // Needs conversion to using netfslib
- }
- 
- void __cifs_readpage_to_fscache(struct inode *inode, struct page *page)
- {
- 	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	int ret;
- 
- 	WARN_ON(!cifsi->fscache);
- 
- 	cifs_dbg(FYI, "%s: (fsc: %p, p: %p, i: %p)\n",
- 		 __func__, cifsi->fscache, page, inode);
--	ret = fscache_write_page(cifsi->fscache, page,
--				 cifsi->vfs_inode.i_size, GFP_KERNEL);
--	if (ret != 0)
--		fscache_uncache_page(cifsi->fscache, page);
--}
--
--void __cifs_fscache_readpages_cancel(struct inode *inode, struct list_head *pages)
--{
--	cifs_dbg(FYI, "%s: (fsc: %p, i: %p)\n",
--		 __func__, CIFS_I(inode)->fscache, inode);
--	fscache_readpages_cancel(CIFS_I(inode)->fscache, pages);
--}
--
--void __cifs_fscache_invalidate_page(struct page *page, struct inode *inode)
--{
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	struct fscache_cookie *cookie = cifsi->fscache;
--
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n", __func__, page, cookie);
--	fscache_wait_on_page_write(cookie, page);
--	fscache_uncache_page(cookie, page);
--}
--
--void __cifs_fscache_wait_on_page_write(struct inode *inode, struct page *page)
--{
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	struct fscache_cookie *cookie = cifsi->fscache;
--
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n", __func__, page, cookie);
--	fscache_wait_on_page_write(cookie, page);
--}
--
--void __cifs_fscache_uncache_page(struct inode *inode, struct page *page)
--{
--	struct cifsInodeInfo *cifsi = CIFS_I(inode);
--	struct fscache_cookie *cookie = cifsi->fscache;
- 
--	cifs_dbg(FYI, "%s: (0x%p/0x%p)\n", __func__, page, cookie);
--	fscache_uncache_page(cookie, page);
-+	// Needs conversion to using netfslib
- }
-diff --git a/fs/cifs/fscache.h b/fs/cifs/fscache.h
-index 9baa1d0f22bd..a3e300cdd133 100644
---- a/fs/cifs/fscache.h
-+++ b/fs/cifs/fscache.h
-@@ -13,8 +13,6 @@
- 
- #include "cifsglob.h"
- 
--#ifdef CONFIG_CIFS_FSCACHE
--
- /*
-  * Auxiliary data attached to CIFS superblock within the cache
-  */
-@@ -32,65 +30,45 @@ struct cifs_fscache_inode_auxdata {
- 	u64 last_change_time_sec;
- 	u32 last_write_time_nsec;
- 	u32 last_change_time_nsec;
--	u64 eof;
- };
- 
--/*
-- * cache.c
-- */
--extern struct fscache_netfs cifs_fscache_netfs;
--extern const struct fscache_cookie_def cifs_fscache_server_index_def;
--extern const struct fscache_cookie_def cifs_fscache_super_index_def;
--extern const struct fscache_cookie_def cifs_fscache_inode_object_def;
--
--extern int cifs_fscache_register(void);
--extern void cifs_fscache_unregister(void);
-+#ifdef CONFIG_CIFS_FSCACHE
- 
- /*
-  * fscache.c
-  */
--extern void cifs_fscache_get_client_cookie(struct TCP_Server_Info *);
--extern void cifs_fscache_release_client_cookie(struct TCP_Server_Info *);
- extern void cifs_fscache_get_super_cookie(struct cifs_tcon *);
- extern void cifs_fscache_release_super_cookie(struct cifs_tcon *);
- 
-+extern void cifs_fscache_get_inode_cookie(struct inode *);
- extern void cifs_fscache_release_inode_cookie(struct inode *);
--extern void cifs_fscache_update_inode_cookie(struct inode *inode);
--extern void cifs_fscache_set_inode_cookie(struct inode *, struct file *);
--extern void cifs_fscache_reset_inode_cookie(struct inode *);
-+extern void cifs_fscache_unuse_inode_cookie(struct inode *, bool);
-+
-+static inline
-+void cifs_fscache_fill_auxdata(struct inode *inode,
-+			       struct cifs_fscache_inode_auxdata *auxdata)
-+{
-+	struct cifsInodeInfo *cifsi = CIFS_I(inode);
-+
-+	memset(&auxdata, 0, sizeof(auxdata));
-+	auxdata->last_write_time_sec   = cifsi->vfs_inode.i_mtime.tv_sec;
-+	auxdata->last_write_time_nsec  = cifsi->vfs_inode.i_mtime.tv_nsec;
-+	auxdata->last_change_time_sec  = cifsi->vfs_inode.i_ctime.tv_sec;
-+	auxdata->last_change_time_nsec = cifsi->vfs_inode.i_ctime.tv_nsec;
-+}
-+
- 
--extern void __cifs_fscache_invalidate_page(struct page *, struct inode *);
--extern void __cifs_fscache_wait_on_page_write(struct inode *inode, struct page *page);
--extern void __cifs_fscache_uncache_page(struct inode *inode, struct page *page);
- extern int cifs_fscache_release_page(struct page *page, gfp_t gfp);
- extern int __cifs_readpage_from_fscache(struct inode *, struct page *);
- extern int __cifs_readpages_from_fscache(struct inode *,
- 					 struct address_space *,
- 					 struct list_head *,
- 					 unsigned *);
--extern void __cifs_fscache_readpages_cancel(struct inode *, struct list_head *);
--
- extern void __cifs_readpage_to_fscache(struct inode *, struct page *);
- 
--static inline void cifs_fscache_invalidate_page(struct page *page,
--					       struct inode *inode)
-+static inline struct fscache_cookie *cifs_inode_cookie(struct inode *inode)
- {
--	if (PageFsCache(page))
--		__cifs_fscache_invalidate_page(page, inode);
--}
--
--static inline void cifs_fscache_wait_on_page_write(struct inode *inode,
--						   struct page *page)
--{
--	if (PageFsCache(page))
--		__cifs_fscache_wait_on_page_write(inode, page);
--}
--
--static inline void cifs_fscache_uncache_page(struct inode *inode,
--						   struct page *page)
--{
--	if (PageFsCache(page))
--		__cifs_fscache_uncache_page(inode, page);
-+	return CIFS_I(inode)->fscache;
- }
- 
- static inline int cifs_readpage_from_fscache(struct inode *inode,
-@@ -120,41 +98,20 @@ static inline void cifs_readpage_to_fscache(struct inode *inode,
- 		__cifs_readpage_to_fscache(inode, page);
- }
- 
--static inline void cifs_fscache_readpages_cancel(struct inode *inode,
--						 struct list_head *pages)
-+#else /* CONFIG_CIFS_FSCACHE */
-+static inline
-+void cifs_fscache_fill_auxdata(struct inode *inode,
-+			       struct cifs_fscache_inode_auxdata *auxdata)
- {
--	if (CIFS_I(inode)->fscache)
--		return __cifs_fscache_readpages_cancel(inode, pages);
- }
- 
--#else /* CONFIG_CIFS_FSCACHE */
--static inline int cifs_fscache_register(void) { return 0; }
--static inline void cifs_fscache_unregister(void) {}
--
--static inline void
--cifs_fscache_get_client_cookie(struct TCP_Server_Info *server) {}
--static inline void
--cifs_fscache_release_client_cookie(struct TCP_Server_Info *server) {}
- static inline void cifs_fscache_get_super_cookie(struct cifs_tcon *tcon) {}
--static inline void
--cifs_fscache_release_super_cookie(struct cifs_tcon *tcon) {}
-+static inline void cifs_fscache_release_super_cookie(struct cifs_tcon *tcon) {}
- 
-+static inline void cifs_fscache_get_inode_cookie(struct inode *inode) {}
- static inline void cifs_fscache_release_inode_cookie(struct inode *inode) {}
--static inline void cifs_fscache_update_inode_cookie(struct inode *inode) {}
--static inline void cifs_fscache_set_inode_cookie(struct inode *inode,
--						 struct file *filp) {}
--static inline void cifs_fscache_reset_inode_cookie(struct inode *inode) {}
--static inline int cifs_fscache_release_page(struct page *page, gfp_t gfp)
--{
--	return 1; /* May release page */
--}
--
--static inline void cifs_fscache_invalidate_page(struct page *page,
--			struct inode *inode) {}
--static inline void cifs_fscache_wait_on_page_write(struct inode *inode,
--						   struct page *page) {}
--static inline void cifs_fscache_uncache_page(struct inode *inode,
--						   struct page *page) {}
-+static inline void cifs_fscache_unuse_inode_cookie(struct inode *inode, bool update) {}
-+static inline struct fscache_cookie *cifs_inode_cookie(struct inode *inode) { return NULL; }
- 
- static inline int
- cifs_readpage_from_fscache(struct inode *inode, struct page *page)
-@@ -173,11 +130,6 @@ static inline int cifs_readpages_from_fscache(struct inode *inode,
- static inline void cifs_readpage_to_fscache(struct inode *inode,
- 			struct page *page) {}
- 
--static inline void cifs_fscache_readpages_cancel(struct inode *inode,
--						 struct list_head *pages)
--{
--}
--
- #endif /* CONFIG_CIFS_FSCACHE */
- 
- #endif /* _CIFS_FSCACHE_H */
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index 82848412ad85..384d7b8686b1 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1298,10 +1298,7 @@ cifs_iget(struct super_block *sb, struct cifs_fattr *fattr)
- 			inode->i_flags |= S_NOATIME | S_NOCMTIME;
- 		if (inode->i_state & I_NEW) {
- 			inode->i_ino = hash;
--#ifdef CONFIG_CIFS_FSCACHE
--			/* initialize per-inode cache cookie pointer */
--			CIFS_I(inode)->fscache = NULL;
--#endif
-+			cifs_fscache_get_inode_cookie(inode);
- 			unlock_new_inode(inode);
- 		}
- 	}
-@@ -2263,6 +2260,8 @@ cifs_dentry_needs_reval(struct dentry *dentry)
- int
- cifs_invalidate_mapping(struct inode *inode)
- {
-+	struct cifs_fscache_inode_auxdata auxdata;
-+	struct cifsInodeInfo *cifsi = CIFS_I(inode);
- 	int rc = 0;
- 
- 	if (inode->i_mapping && inode->i_mapping->nrpages != 0) {
-@@ -2272,7 +2271,8 @@ cifs_invalidate_mapping(struct inode *inode)
- 				 __func__, inode);
- 	}
- 
--	cifs_fscache_reset_inode_cookie(inode);
-+	cifs_fscache_fill_auxdata(&cifsi->vfs_inode, &auxdata);
-+	fscache_invalidate(cifs_inode_cookie(inode), &auxdata, i_size_read(inode), 0);
- 	return rc;
- }
- 
-@@ -2777,8 +2777,10 @@ cifs_setattr_unix(struct dentry *direntry, struct iattr *attrs)
- 		goto out;
- 
- 	if ((attrs->ia_valid & ATTR_SIZE) &&
--	    attrs->ia_size != i_size_read(inode))
-+	    attrs->ia_size != i_size_read(inode)) {
- 		truncate_setsize(inode, attrs->ia_size);
-+		fscache_resize_cookie(cifs_inode_cookie(inode), attrs->ia_size);
-+	}
- 
- 	setattr_copy(&init_user_ns, inode, attrs);
- 	mark_inode_dirty(inode);
-@@ -2973,8 +2975,10 @@ cifs_setattr_nounix(struct dentry *direntry, struct iattr *attrs)
- 		goto cifs_setattr_exit;
- 
- 	if ((attrs->ia_valid & ATTR_SIZE) &&
--	    attrs->ia_size != i_size_read(inode))
-+	    attrs->ia_size != i_size_read(inode)) {
- 		truncate_setsize(inode, attrs->ia_size);
-+		fscache_resize_cookie(cifs_inode_cookie(inode), attrs->ia_size);
-+	}
- 
- 	setattr_copy(&init_user_ns, inode, attrs);
- 	mark_inode_dirty(inode);
-
+Thanks,
+-Dai
 
