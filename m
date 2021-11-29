@@ -2,133 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24E8E462317
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 22:16:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D55F5462390
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 22:43:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbhK2VTU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 16:19:20 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:52441 "EHLO
+        id S232457AbhK2Vq0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 16:46:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:51425 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233090AbhK2VRT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 16:17:19 -0500
+        by vger.kernel.org with ESMTP id S232285AbhK2VoZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 16:44:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638220440;
+        s=mimecast20190719; t=1638222067;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=w1QFQIuQNhLDTpR/YSm65NA3I3OujckW6OT+ph1+HVQ=;
-        b=iByvbn+/xorQ1evIjVD0ND354WKBqQtE4pqWeyjJlBO8Fsm5IcZarzVnhA56qRkSW/i+gk
-        xcgYhBD9wnaoXgR4dDDIVySmJjyN9yzKPfLIKkyfdLGgyNFSYF6nBI9R6BoLKT1mOnzpgZ
-        kQ10PvAaeWAm42P9LngWOTDutlr/yWw=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=QCFD7Ah5IiTcd1a6Gpk3m6ibgmYONE5XP5yWvVfmZ5A=;
+        b=d8KZdRNeWbkx/snx57lR+PNe+zpdjw1dwmtdRrIunFkxeGf0XHjbuXaZPrVsW39KDk8nR2
+        XBQcR4qbVlmLxoMQCMMUlFMFdKXLD+OWrd8dePPLcufW0qycMUOPYlnEsRdg034lv5zo3W
+        yqd8DrWOVFyFQqZJctPFxStasdw7AHU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-JH9XPRtvOS-T0I_-LtI-ew-1; Mon, 29 Nov 2021 16:13:59 -0500
-X-MC-Unique: JH9XPRtvOS-T0I_-LtI-ew-1
-Received: by mail-qt1-f199.google.com with SMTP id h13-20020ac87d4d000000b002af9c496444so24949608qtb.22
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 13:13:59 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=w1QFQIuQNhLDTpR/YSm65NA3I3OujckW6OT+ph1+HVQ=;
-        b=yTSYJPHzZGeGPHuzxiOlIW449IUqZzjkAX4VBMAdyVAAbE1cOnCRUKusfmO2xL6OJf
-         1JBiKW7L51KQSiHUNXBfy43gWfNLXxxq/lzcMtfybcLwt5XVmyCNtICrejVWCnAFN0FU
-         YJbH7SSeXtMsUlsDJ2mpSNHnNfGL3FPFE8kYzoM5cXNkvMLfKH1QaZiV/CIbUYrTBGqw
-         pm8JyP6Nb3iqa2Q0+2bDhn6A+V9CKxN/6+mqbpPeLg7nW7rdl3F4KcrZwSYAVS7oUqdf
-         YmBjCts/V1I9q/0PJQ7lSNRf0nWR4kuhxgdLOu1Dm5HR3S8D5S4EPlDLvANKAZSFEib6
-         YjDw==
-X-Gm-Message-State: AOAM533Nns1vQf5iBd5arPh/8tG/my4po6mwh35/XY0HnYetuTfUORYB
-        47z+cF29c/4YFyuWOP/WWS7pAOTmyNiNxeGoaY8DZ1MWHP8QuD8SaOhJMalqOflJRppC0/5I0uQ
-        Y7QmFvhWsTbeY7A4Ys17C
-X-Received: by 2002:ac8:570b:: with SMTP id 11mr49292479qtw.128.1638220438627;
-        Mon, 29 Nov 2021 13:13:58 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJztlQIcK1loISJVeAgrlStLoymTbzGuXDPIp2wIwHf+AYeQjzF2zllxdm9SaL6JJMBLP/jPdA==
-X-Received: by 2002:ac8:570b:: with SMTP id 11mr49292450qtw.128.1638220438404;
-        Mon, 29 Nov 2021 13:13:58 -0800 (PST)
-Received: from [172.31.1.6] ([70.109.163.47])
-        by smtp.gmail.com with ESMTPSA id bq36sm8994637qkb.6.2021.11.29.13.13.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Nov 2021 13:13:58 -0800 (PST)
-Message-ID: <56de55c4-d3f2-4671-f7b4-912d872315fd@redhat.com>
-Date:   Mon, 29 Nov 2021 16:13:57 -0500
+ us-mta-115-5Dz_xYvhN12pm6HYXYz0Bg-1; Mon, 29 Nov 2021 16:41:02 -0500
+X-MC-Unique: 5Dz_xYvhN12pm6HYXYz0Bg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83E5C1927807;
+        Mon, 29 Nov 2021 21:40:59 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21F1160BF4;
+        Mon, 29 Nov 2021 21:40:55 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <163819627469.215744.3603633690679962985.stgit@warthog.procyon.org.uk>
+References: <163819627469.215744.3603633690679962985.stgit@warthog.procyon.org.uk> <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
+To:     linux-cachefs@redhat.com
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 35/64] cachefiles: Add security derivation
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.0
-Subject: Re: [PATCH RFC 0/3] Remove NFS v2 support from the client and server
-Content-Language: en-US
-To:     NeilBrown <neilb@suse.de>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20211129192731.783466-1-steved@redhat.com>
- <163821829080.26075.9477835708436642432@noble.neil.brown.name>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <163821829080.26075.9477835708436642432@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <302430.1638222055.1@warthog.procyon.org.uk>
+Date:   Mon, 29 Nov 2021 21:40:55 +0000
+Message-ID: <302431.1638222055@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey!
+I missed out the patch description:
 
-On 11/29/21 15:38, NeilBrown wrote:
-> On Tue, 30 Nov 2021, Steve Dickson wrote:
->> These patches will remove the all references and
->> support of NFS v2 in both the server and client.
-> 
-> What is the motivation for this?
-> I don't necessarily disagree, but I'm curious as to what you hope to
-> gain.
-Just to eliminate v2 support once and for all...
-It is a dead version, IMHO, so I'm just trying
-to clean things up by remove it from the man pages
-and error out (on the client), if a v2 mount is tried...
+    cachefiles: Add security derivation
+    
+    Implement code to derive a new set of creds for the cachefiles to use when
+    making VFS or I/O calls and to change the auditing info since the
+    application interacting with the network filesystem is not accessing the
+    cache directly.  Cachefiles uses override_creds() to change the effective
+    creds temporarily.
+    
+    set_security_override_from_ctx() is called to derive the LSM 'label' that
+    the cachefiles driver will act with.  set_create_files_as() is called to
+    determine the LSM 'label' that will be applied to files and directories
+    created in the cache.  These functions alter the new creds.
+    
+    Also implement a couple of functions to wrap the calls to begin/end cred
+    overriding.
+    
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: linux-cachefs@redhat.com
 
-We are coming out with a major fairly soon, so
-I'm just trying make it clear v2 is no longer
-an option... So I wanted to more eyes on what
-we are thinking of doing.
-
-steved.
-
-> 
-> Thanks,
-> NeilBrown
-> 
->>
->> On server side the support has been off, by default,
->> since 2013 (6b4e4965a6b). With this server patch the
->> ability to enable v2 will be remove.
->>
->> Currently even with CONFIG_NFS_V2 not set
->> v2 mounts are still tied (over-the-wire). I looked at creating
->> a kernel parameter module so support could re-enabled
->> but that got ugly quick.
->>
->> So I just decided to make all V2 mounts fail with
->> EOPNOTSUPP, with no way of turn them back on.
->>
->> Steve Dickson (3):
->>    nfsd: Remove the ability to enable NFS v2.
->>    nfs.man: Remove references to NFS v2 from the man pages
->>    mount: Remove NFS v2 support from mount.nfs
->>
->>   nfs.conf                  |  1 -
->>   utils/mount/configfile.c  |  2 +-
->>   utils/mount/mount.nfs.man |  2 +-
->>   utils/mount/network.c     |  4 ++--
->>   utils/mount/nfs.man       | 20 +++-----------------
->>   utils/mount/nfsmount.conf |  2 +-
->>   utils/mount/stropts.c     |  3 +++
->>   utils/nfsd/nfsd.c         |  2 --
->>   utils/nfsd/nfsd.man       |  4 ++--
->>   9 files changed, 13 insertions(+), 27 deletions(-)
->>
->> -- 
->> 2.31.1
->>
->>
-> 
+David
 
