@@ -2,70 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F04B7462505
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:31:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02A44462485
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:19:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232498AbhK2WeG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 17:34:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60698 "EHLO
+        id S234179AbhK2WUH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 17:20:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232637AbhK2WdX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:33:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E159DC133F57
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:46:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A5866B815C3
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 18:46:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4041C53FCF;
-        Mon, 29 Nov 2021 18:46:08 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     paulmck@kernel.org
-Subject: [PATCH v2] NFSD: Fix RCU-related sparse splat
-Date:   Mon, 29 Nov 2021 13:46:07 -0500
-Message-Id:  <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
-X-Mailer: git-send-email 2.34.0
-User-Agent: StGit/1.4
+        with ESMTP id S234248AbhK2WSK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:18:10 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584E5C200871;
+        Mon, 29 Nov 2021 11:13:34 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id A752F506D; Mon, 29 Nov 2021 14:13:33 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org A752F506D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1638213213;
+        bh=nkUbylggLsjyDS70dHqAQl5G/jJWiH1XIk2TRER67nI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Hy6U+Fcs/QEsiV6feOlySSNyNqlP141HKkBAo1vFwlnuzOaNATI2t3YWWtfccyFDk
+         gtbJId+7uTk1YwcpZc8hn3n/ZtMF8aGd9SsGOm+WAu9h1nJNbb0WjvfmtlI3wtXsWd
+         FAXf176CmjcwMFR2O5TYwjRzsy/Y6YJLd/rt2nUc=
+Date:   Mon, 29 Nov 2021 14:13:33 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Dai Ngo <dai.ngo@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Message-ID: <20211129191333.GE24258@fieldses.org>
+References: <33c8ea5a-4187-a9fa-d507-a2dcec06416c@oracle.com>
+ <20211117141433.GB24762@fieldses.org>
+ <400143c8-c12a-6224-1b36-3e19f20a7ee4@oracle.com>
+ <908ded64-6412-66d3-6ad5-429700610660@oracle.com>
+ <20211118003454.GA29787@fieldses.org>
+ <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
+ <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
+ <20211129173058.GD24258@fieldses.org>
+ <da7394e0-26f6-b243-ce9a-d669e51c1a5e@oracle.com>
+ <1285F7E2-5D5F-4971-9195-BA664CAFF65F@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1203; h=from:subject:message-id; bh=x5MVCZwZoUhlgwaj3CPu5w6BlSXTBCu9vYGSA6VNi2U=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhpR/p3ux4DVCDSVMpkFq5Jwrm6ijiEu0pLsBceSiF 9Dr2iyyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYaUf6QAKCRAzarMzb2Z/l5tfEA CFsdXX7mmvJaKjUzaPqLW6oukM6K1dT9tamcKf6gEABQvNZrigSJiV1VqYcqg9JtMy3aretGqr6oGr LeMCPs2b4gUWLccp3Gs4UIDZ9WksZL/1W1Xw6tKPW4qF3+Vq8XrkIBUXtMk26lRVQu2YqS8HcKIz6C LAc3kJGpF3k8xPwGIYRUfnMsddlYU7NNC8vnuZlJAG5O8Ezv9Bkufc0dJv4aeorqRvJsIwabduSK06 PA+z3qcJIRGgtMLFFG3ThlEzp6jrCiwORqRNoCefXsaD7RQQV2XTJJC+7JZsixbynzGIMadzE2iyze KPMlwh3lHUAqvxVF6BiUVUZDwN1S2N7v2gg4JZ+4oIDXTgLV2UvwaEysz94AeBPcTN2H/xc1vLuIrF NUMeZbAHDxQEnFoH6iNgwL048Cknqhzkv+WiN7cqTRPVcO00OGhCZKLYqyFGgB+FKV1FJ/p+VvbDO4 O53WJ/8Hz/HD67VGb3b6sbwIDNJtH5kI8PiqVfN4eJzShxM76qRdGqZrsnEl67tIBxewKYBU+E8Pal KXERoXYcruLQThmfDFhrkZFfDy8SR2yZr5CN6VmW5rJcbUr2+wAVnY/ASFxRxcsnRinF0aynUsMao5 0AydCDDTlsh122Cfutl9I1Utq5hNk68glYwmYkRstsy/TeryN1hPSFCPhDfA==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1285F7E2-5D5F-4971-9195-BA664CAFF65F@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To address this error:
+On Mon, Nov 29, 2021 at 07:03:12PM +0000, Chuck Lever III wrote:
+> Hello Dai!
+> 
+> 
+> > On Nov 29, 2021, at 1:32 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+> > 
+> > 
+> > On 11/29/21 9:30 AM, J. Bruce Fields wrote:
+> >> On Mon, Nov 29, 2021 at 09:13:16AM -0800, dai.ngo@oracle.com wrote:
+> >>> Hi Bruce,
+> >>> 
+> >>> On 11/21/21 7:04 PM, dai.ngo@oracle.com wrote:
+> >>>> On 11/17/21 4:34 PM, J. Bruce Fields wrote:
+> >>>>> On Wed, Nov 17, 2021 at 01:46:02PM -0800, dai.ngo@oracle.com wrote:
+> >>>>>> On 11/17/21 9:59 AM, dai.ngo@oracle.com wrote:
+> >>>>>>> On 11/17/21 6:14 AM, J. Bruce Fields wrote:
+> >>>>>>>> On Tue, Nov 16, 2021 at 03:06:32PM -0800, dai.ngo@oracle.com wrote:
+> >>>>>>>>> Just a reminder that this patch is still waiting for your review.
+> >>>>>>>> Yeah, I was procrastinating and hoping yo'ud figure out the pynfs
+> >>>>>>>> failure for me....
+> >>>>>>> Last time I ran 4.0 OPEN18 test by itself and it passed. I will run
+> >>>>>>> all OPEN tests together with 5.15-rc7 to see if the problem you've
+> >>>>>>> seen still there.
+> >>>>>> I ran all tests in nfsv4.1 and nfsv4.0 with courteous and non-courteous
+> >>>>>> 5.15-rc7 server.
+> >>>>>> 
+> >>>>>> Nfs4.1 results are the same for both courteous and
+> >>>>>> non-courteous server:
+> >>>>>>> Of those: 0 Skipped, 0 Failed, 0 Warned, 169 Passed
+> >>>>>> Results of nfs4.0 with non-courteous server:
+> >>>>>>> Of those: 8 Skipped, 1 Failed, 0 Warned, 577 Passed
+> >>>>>> test failed: LOCK24
+> >>>>>> 
+> >>>>>> Results of nfs4.0 with courteous server:
+> >>>>>>> Of those: 8 Skipped, 3 Failed, 0 Warned, 575 Passed
+> >>>>>> tests failed: LOCK24, OPEN18, OPEN30
+> >>>>>> 
+> >>>>>> OPEN18 and OPEN30 test pass if each is run by itself.
+> >>>>> Could well be a bug in the tests, I don't know.
+> >>>> The reason OPEN18 failed was because the test timed out waiting for
+> >>>> the reply of an OPEN call. The RPC connection used for the test was
+> >>>> configured with 15 secs timeout. Note that OPEN18 only fails when
+> >>>> the tests were run with 'all' option, this test passes if it's run
+> >>>> by itself.
+> >>>> 
+> >>>> With courteous server, by the time OPEN18 runs, there are about 1026
+> >>>> courtesy 4.0 clients on the server and all of these clients have opened
+> >>>> the same file X with WRITE access. These clients were created by the
+> >>>> previous tests. After each test completed, since 4.0 does not have
+> >>>> session, the client states are not cleaned up immediately on the
+> >>>> server and are allowed to become courtesy clients.
+> >>>> 
+> >>>> When OPEN18 runs (about 20 minutes after the 1st test started), it
+> >>>> sends OPEN of file X with OPEN4_SHARE_DENY_WRITE which causes the
+> >>>> server to check for conflicts with courtesy clients. The loop that
+> >>>> checks 1026 courtesy clients for share/access conflict took less
+> >>>> than 1 sec. But it took about 55 secs, on my VM, for the server
+> >>>> to expire all 1026 courtesy clients.
+> >>>> 
+> >>>> I modified pynfs to configure the 4.0 RPC connection with 60 seconds
+> >>>> timeout and OPEN18 now consistently passed. The 4.0 test results are
+> >>>> now the same for courteous and non-courteous server:
+> >>>> 
+> >>>> 8 Skipped, 1 Failed, 0 Warned, 577 Passed
+> >>>> 
+> >>>> Note that 4.1 tests do not suffer this timeout problem because the
+> >>>> 4.1 clients and sessions are destroyed after each test completes.
+> >>> Do you want me to send the patch to increase the timeout for pynfs?
+> >>> or is there any other things you think we should do?
+> >> I don't know.
+> >> 
+> >> 55 seconds to clean up 1026 clients is about 50ms per client, which is
+> >> pretty slow.  I wonder why.  I guess it's probably updating the stable
+> >> storage information.  Is /var/lib/nfs/ on your server backed by a hard
+> >> drive or an SSD or something else?
+> > 
+> > My server is a virtualbox VM that has 1 CPU, 4GB RAM and 64GB of hard
+> > disk. I think a production system that supports this many clients should
+> > have faster CPUs, faster storage.
+> > 
+> >> 
+> >> I wonder if that's an argument for limiting the number of courtesy
+> >> clients.
+> > 
+> > I think we might want to treat 4.0 clients a bit different from 4.1
+> > clients. With 4.0, every client will become a courtesy client after
+> > the client is done with the export and unmounts it.
+> 
+> It should be safe for a server to purge a client's lease immediately
+> if there is no open or lock state associated with it.
+> 
+> When an NFSv4.0 client unmounts, all files should be closed at that
+> point, so the server can wait for the lease to expire and purge it
+> normally. Or am I missing something?
 
-  CC [M]  fs/nfsd/filecache.o
-  CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible types in comparison expression (different address spaces):
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noderef] __rcu *
-/home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
+Makes sense to me!
 
-The "net" field in struct nfsd_fcache_disposal is not annotated as
-requiring an RCU assignment, so replace the macro that includes an
-invocation of rcu_check_sparse() with an equivalent that does not.
+> > Since there is
+> > no destroy session/client with 4.0, the courteous server allows the
+> > client to be around and becomes a courtesy client. So after awhile,
+> > even with normal usage, there will be lots 4.0 courtesy clients
+> > hanging around and these clients won't be destroyed until 24hrs
+> > later, or until they cause conflicts with other clients.
+> > 
+> > We can reduce the courtesy_client_expiry time for 4.0 clients from
+> > 24hrs to 15/20 mins, enough for most network partition to heal?,
+> > or limit the number of 4.0 courtesy clients. Or don't support 4.0
+> > clients at all which is my preference since I think in general users
+> > should skip 4.0 and use 4.1 instead.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I'm also totally fine with leaving out 4.0, at least to start.
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index fdf89fcf1a0c..3b172eda0e9a 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -772,7 +772,7 @@ nfsd_alloc_fcache_disposal(struct net *net)
- static void
- nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
- {
--	rcu_assign_pointer(l->net, NULL);
-+	WRITE_ONCE(l->net, NULL);
- 	cancel_work_sync(&l->work);
- 	nfsd_file_dispose_list(&l->freeme);
- 	kfree_rcu(l, rcu);
-
+--b.
