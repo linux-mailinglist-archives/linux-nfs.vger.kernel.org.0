@@ -2,89 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D55F5462390
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 22:43:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 400B14627DF
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 00:12:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232457AbhK2Vq0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 16:46:26 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:51425 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232285AbhK2VoZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 16:44:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638222067;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=QCFD7Ah5IiTcd1a6Gpk3m6ibgmYONE5XP5yWvVfmZ5A=;
-        b=d8KZdRNeWbkx/snx57lR+PNe+zpdjw1dwmtdRrIunFkxeGf0XHjbuXaZPrVsW39KDk8nR2
-        XBQcR4qbVlmLxoMQCMMUlFMFdKXLD+OWrd8dePPLcufW0qycMUOPYlnEsRdg034lv5zo3W
-        yqd8DrWOVFyFQqZJctPFxStasdw7AHU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-115-5Dz_xYvhN12pm6HYXYz0Bg-1; Mon, 29 Nov 2021 16:41:02 -0500
-X-MC-Unique: 5Dz_xYvhN12pm6HYXYz0Bg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 83E5C1927807;
-        Mon, 29 Nov 2021 21:40:59 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 21F1160BF4;
-        Mon, 29 Nov 2021 21:40:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <163819627469.215744.3603633690679962985.stgit@warthog.procyon.org.uk>
-References: <163819627469.215744.3603633690679962985.stgit@warthog.procyon.org.uk> <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
-To:     linux-cachefs@redhat.com
-Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 35/64] cachefiles: Add security derivation
+        id S234763AbhK2XOT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 18:14:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41498 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233781AbhK2XOE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 18:14:04 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1443C048F5A
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 14:40:00 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 330656F29; Mon, 29 Nov 2021 17:40:00 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 330656F29
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1638225600;
+        bh=n+60GEqPir8T1/Wn6LnfSAJAfnVHXseEUWWrIGpLuio=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=ZHbg8u4Ut4Tv4s0fehPFMnNwhRBSoix/ImjnUGE6tgR0wqhS6VAL5f5VL69PI8Nt/
+         oJYdaq8GaJaijBEpC7a05QNHsctOXkzpRoM840Y/YTDFAo0dlvDSdkm37Vjp8LL+WM
+         FK+G1smo2iterwg07fcBbxsnftsl3pfXCl4iwlN4=
+Date:   Mon, 29 Nov 2021 17:40:00 -0500
+To:     Steve Dickson <steved@redhat.com>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC 0/3] Remove NFS v2 support from the client and server
+Message-ID: <20211129224000.GF24258@fieldses.org>
+References: <20211129192731.783466-1-steved@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <302430.1638222055.1@warthog.procyon.org.uk>
-Date:   Mon, 29 Nov 2021 21:40:55 +0000
-Message-ID: <302431.1638222055@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211129192731.783466-1-steved@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I missed out the patch description:
+On Mon, Nov 29, 2021 at 02:27:28PM -0500, Steve Dickson wrote:
+> These patches will remove the all references and 
+> support of NFS v2 in both the server and client.
+> 
+> On server side the support has been off, by default, 
+> since 2013 (6b4e4965a6b). With this server patch the
+> ability to enable v2 will be remove.
+> 
+> Currently even with CONFIG_NFS_V2 not set
+> v2 mounts are still tied (over-the-wire).
 
-    cachefiles: Add security derivation
-    
-    Implement code to derive a new set of creds for the cachefiles to use when
-    making VFS or I/O calls and to change the auditing info since the
-    application interacting with the network filesystem is not accessing the
-    cache directly.  Cachefiles uses override_creds() to change the effective
-    creds temporarily.
-    
-    set_security_override_from_ctx() is called to derive the LSM 'label' that
-    the cachefiles driver will act with.  set_create_files_as() is called to
-    determine the LSM 'label' that will be applied to files and directories
-    created in the cache.  These functions alter the new creds.
-    
-    Also implement a couple of functions to wrap the calls to begin/end cred
-    overriding.
-    
-    Signed-off-by: David Howells <dhowells@redhat.com>
-    cc: linux-cachefs@redhat.com
+So the client is running a kernel built with CONFIG_NFS_V2 not set, and
+you're still seeing it send NFSv2 calls?
 
-David
+That's very weird.
 
+> I looked at creating a kernel parameter module so support could
+> re-enabled but that got ugly quick.
+
+I don't think there's much point to a module parameter.
+
+One other thing we might want to do is provide a way for distros to
+configure out support on the server side too.  That'd help confirm that
+people really aren't using it before we tear it out completely.
+
+E.g., untested, and should probably remove more than this, but as a
+start:
+
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index 3d1d17256a91..7b9e9afc5fcb 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -35,6 +35,16 @@ config NFSD_V2_ACL
+ 	bool
+ 	depends on NFSD
+ 
++config NFSD_V2
++	bool "NFS server support for NFS version 2"
++	depends on NFSD
++	help
++	  This option enables server support for version 2 of the NFS
++	  protocol.  This version has significant limitations and is no
++	  longer widely used.
++
++	  If unsure, say N.
++
+ config NFSD_V3
+ 	bool "NFS server support for NFS version 3"
+ 	depends on NFSD
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 80431921e5d7..09c376063ff0 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -116,7 +116,9 @@ static struct svc_stat	nfsd_acl_svcstats = {
+ #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
+ 
+ static const struct svc_version *nfsd_version[] = {
++#if defined(CONFIG_NFSD_V2)
+ 	[2] = &nfsd_version2,
++#endif
+ #if defined(CONFIG_NFSD_V3)
+ 	[3] = &nfsd_version3,
+ #endif
