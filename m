@@ -2,128 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 35B89462627
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:44:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F179F462616
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:43:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234801AbhK2Wrz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 17:47:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        id S234820AbhK2Wq7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 17:46:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234828AbhK2WrE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:47:04 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB5BC0C20EF;
-        Mon, 29 Nov 2021 09:30:59 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 67FB26EFB; Mon, 29 Nov 2021 12:30:58 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 67FB26EFB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1638207058;
-        bh=J8hR9aJ4MN8Gx0xzcg4OJxlfhFJutINDOp1oyILDLoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ay5XorAWY3HUbZuO2Qwa/BKQ+jUJZBw43cxSLKzNKPVtgRbOW0gN9YM4TX/YSXonN
-         3mgGisA9HOogdga6ZPsLJ3QJsFPrxywzzkmmrpRPc6HQvV5Q9uhxw4pjK7OawYBn+N
-         Gvb8LZ7vNCtKc4vKO3kM97ger7v+3kYrHn/BhRWc=
-Date:   Mon, 29 Nov 2021 12:30:58 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
- Courteous Server
-Message-ID: <20211129173058.GD24258@fieldses.org>
-References: <20210929005641.60861-1-dai.ngo@oracle.com>
- <20211001205327.GN959@fieldses.org>
- <a6c9ba13-43d7-4ea9-e05d-f454c2c9f4c2@oracle.com>
- <33c8ea5a-4187-a9fa-d507-a2dcec06416c@oracle.com>
- <20211117141433.GB24762@fieldses.org>
- <400143c8-c12a-6224-1b36-3e19f20a7ee4@oracle.com>
- <908ded64-6412-66d3-6ad5-429700610660@oracle.com>
- <20211118003454.GA29787@fieldses.org>
- <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
- <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
+        with ESMTP id S234889AbhK2Wo3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:44:29 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5220C03AD68
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:04 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id x15so75524008edv.1
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A1KpMLhPpZ3DtBAJ2H7WA1+eK6RBPvYL8JCpapFonpw=;
+        b=hYrTDwhmtIHMqqbXGO1Kse+Z0mztn57tvq1yPxTQ6q8If5SiUN3r2mIlQQuhqQ5Ciu
+         K5ZjiwPNhDNHwoG8b/skXzWnqGGnw5Xo6Kz7rDlvP/WRSBwiwJnbIMXZ+5EJLE2YnPsh
+         8oCcdh7mNJuIoeX8m73ktIFQqXot2Q8wW5BQM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A1KpMLhPpZ3DtBAJ2H7WA1+eK6RBPvYL8JCpapFonpw=;
+        b=JL4D7P3mofCzSfBb3M8x7wgkubU4eZOwbzIYOP5yCubC2g/5pp28l8L9oOLMOmL77U
+         3XJY+gmEfy/Zqt1ntahl9xDruyErOehlEWqavf7QZyckMuIDSL7ihFQ1JUSLaBJFpBff
+         zwG+hlUc7ONgIxh8Z2iu3R8M4e8C5DWk7hKfABsh8x1D70bX3oz3WnR/1+CJVlDUpR8L
+         6J8NEUWREEz+3PB46g1M7Ce2MPMUCFjT4bpGGtNwJzWB8xaO4v9laYgUYJVt6FfXdxRe
+         cDJKr4uFkbpIwIawXHqDUf+4shPNgYTZSUD5jnIqiM/oYNYzjFc1lj65vR84vquqv2FP
+         Z4uA==
+X-Gm-Message-State: AOAM530TvYzeYpqPq//n87rO7oEtdVppkMO4xm2LBzsGLSRd7E7sD1KI
+        dlL4tYqC7WuibnC/7/0T6mCffR3tyhsGP2rG
+X-Google-Smtp-Source: ABdhPJxWbE/xpc8OmIVaYaqTEzyymcyfBUhDcqPpPU22EW004MByz6KgbE9zw/HWvQnc3fgWifNixQ==
+X-Received: by 2002:a17:907:3f19:: with SMTP id hq25mr59805152ejc.225.1638209582947;
+        Mon, 29 Nov 2021 10:13:02 -0800 (PST)
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com. [209.85.221.44])
+        by smtp.gmail.com with ESMTPSA id w22sm10513353edd.49.2021.11.29.10.13.01
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Nov 2021 10:13:01 -0800 (PST)
+Received: by mail-wr1-f44.google.com with SMTP id o13so38634686wrs.12
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Nov 2021 10:13:01 -0800 (PST)
+X-Received: by 2002:adf:9d88:: with SMTP id p8mr36748101wre.140.1638209581186;
+ Mon, 29 Nov 2021 10:13:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
+In-Reply-To: <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 29 Nov 2021 10:12:45 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whGOEEb4n2_y3mnrmeNx4HYjRA-m=xMPDQD=bHWfB5chw@mail.gmail.com>
+Message-ID: <CAHk-=whGOEEb4n2_y3mnrmeNx4HYjRA-m=xMPDQD=bHWfB5chw@mail.gmail.com>
+Subject: Re: [PATCH 00/64] fscache, cachefiles: Rewrite
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-afs@lists.infradead.org, Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        v9fs-developer@lists.sourceforge.net,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        ceph-devel@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 09:13:16AM -0800, dai.ngo@oracle.com wrote:
-> Hi Bruce,
-> 
-> On 11/21/21 7:04 PM, dai.ngo@oracle.com wrote:
-> >
-> >On 11/17/21 4:34 PM, J. Bruce Fields wrote:
-> >>On Wed, Nov 17, 2021 at 01:46:02PM -0800, dai.ngo@oracle.com wrote:
-> >>>On 11/17/21 9:59 AM, dai.ngo@oracle.com wrote:
-> >>>>On 11/17/21 6:14 AM, J. Bruce Fields wrote:
-> >>>>>On Tue, Nov 16, 2021 at 03:06:32PM -0800, dai.ngo@oracle.com wrote:
-> >>>>>>Just a reminder that this patch is still waiting for your review.
-> >>>>>Yeah, I was procrastinating and hoping yo'ud figure out the pynfs
-> >>>>>failure for me....
-> >>>>Last time I ran 4.0 OPEN18 test by itself and it passed. I will run
-> >>>>all OPEN tests together with 5.15-rc7 to see if the problem you've
-> >>>>seen still there.
-> >>>I ran all tests in nfsv4.1 and nfsv4.0 with courteous and non-courteous
-> >>>5.15-rc7 server.
-> >>>
-> >>>Nfs4.1 results are the same for both courteous and
-> >>>non-courteous server:
-> >>>>Of those: 0 Skipped, 0 Failed, 0 Warned, 169 Passed
-> >>>Results of nfs4.0 with non-courteous server:
-> >>>>Of those: 8 Skipped, 1 Failed, 0 Warned, 577 Passed
-> >>>test failed: LOCK24
-> >>>
-> >>>Results of nfs4.0 with courteous server:
-> >>>>Of those: 8 Skipped, 3 Failed, 0 Warned, 575 Passed
-> >>>tests failed: LOCK24, OPEN18, OPEN30
-> >>>
-> >>>OPEN18 and OPEN30 test pass if each is run by itself.
-> >>Could well be a bug in the tests, I don't know.
-> >
-> >The reason OPEN18 failed was because the test timed out waiting for
-> >the reply of an OPEN call. The RPC connection used for the test was
-> >configured with 15 secs timeout. Note that OPEN18 only fails when
-> >the tests were run with 'all' option, this test passes if it's run
-> >by itself.
-> >
-> >With courteous server, by the time OPEN18 runs, there are about 1026
-> >courtesy 4.0 clients on the server and all of these clients have opened
-> >the same file X with WRITE access. These clients were created by the
-> >previous tests. After each test completed, since 4.0 does not have
-> >session, the client states are not cleaned up immediately on the
-> >server and are allowed to become courtesy clients.
-> >
-> >When OPEN18 runs (about 20 minutes after the 1st test started), it
-> >sends OPEN of file X with OPEN4_SHARE_DENY_WRITE which causes the
-> >server to check for conflicts with courtesy clients. The loop that
-> >checks 1026 courtesy clients for share/access conflict took less
-> >than 1 sec. But it took about 55 secs, on my VM, for the server
-> >to expire all 1026 courtesy clients.
-> >
-> >I modified pynfs to configure the 4.0 RPC connection with 60 seconds
-> >timeout and OPEN18 now consistently passed. The 4.0 test results are
-> >now the same for courteous and non-courteous server:
-> >
-> >8 Skipped, 1 Failed, 0 Warned, 577 Passed
-> >
-> >Note that 4.1 tests do not suffer this timeout problem because the
-> >4.1 clients and sessions are destroyed after each test completes.
-> 
-> Do you want me to send the patch to increase the timeout for pynfs?
-> or is there any other things you think we should do?
+On Mon, Nov 29, 2021 at 6:22 AM David Howells <dhowells@redhat.com> wrote:
+>
+> The patchset is structured such that the first few patches disable fscache
+> use by the network filesystems using it, remove the cachefiles driver
+> entirely and as much of the fscache driver as can be got away with without
+> causing build failures in the network filesystems.  The patches after that
+> recreate fscache and then cachefiles, attempting to add the pieces in a
+> logical order.  Finally, the filesystems are reenabled and then the very
+> last patch changes the documentation.
 
-I don't know.
+Thanks, this all looks conceptually sane to me.
 
-55 seconds to clean up 1026 clients is about 50ms per client, which is
-pretty slow.  I wonder why.  I guess it's probably updating the stable
-storage information.  Is /var/lib/nfs/ on your server backed by a hard
-drive or an SSD or something else?
+But I only really scanned the commit messages, not the actual new
+code. That obviously needs all the usual testing and feedback from the
+users of this all..
 
-I wonder if that's an argument for limiting the number of courtesy
-clients.
-
---b.
+                    Linus
