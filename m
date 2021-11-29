@@ -2,105 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39822462250
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 21:40:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35B89462627
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Nov 2021 23:44:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230249AbhK2Unh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Nov 2021 15:43:37 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:52918 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232848AbhK2Ulg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 15:41:36 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 36B9421763;
-        Mon, 29 Nov 2021 20:38:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1638218295; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SROKhClUE5M+stT1rSAKj8ObPyk7ZGavo+PmTtzQKGI=;
-        b=bKJ8g6XlP5qu0FHD4X6iVsaZr9VARAhFPtVBpuJZmXG0AtRaU9MQENkuHEHE35843s+gtX
-        BPQUb+UR7lASc5oR1mD75SoInTAyLnS9k7bbn4k5tHjCwLiZbUu8gQKHuZzC6DAddHBzLe
-        GGADrqimo+Lu7u7+FiuyJyZmjt422cE=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1638218295;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SROKhClUE5M+stT1rSAKj8ObPyk7ZGavo+PmTtzQKGI=;
-        b=aCmmJi0KGyPzd+eFoMAEqOH48fGgyZkAp4pclHQ/Wwzsq6S2Ap1cOW3HQ4yRyMuusM/Och
-        kDEwjwdvV03gv2Cw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 560A713BB8;
-        Mon, 29 Nov 2021 20:38:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Q7I+BDY6pWFnKAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 29 Nov 2021 20:38:14 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S234801AbhK2Wrz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Nov 2021 17:47:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234828AbhK2WrE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Nov 2021 17:47:04 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAB5BC0C20EF;
+        Mon, 29 Nov 2021 09:30:59 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 67FB26EFB; Mon, 29 Nov 2021 12:30:58 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 67FB26EFB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1638207058;
+        bh=J8hR9aJ4MN8Gx0xzcg4OJxlfhFJutINDOp1oyILDLoU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ay5XorAWY3HUbZuO2Qwa/BKQ+jUJZBw43cxSLKzNKPVtgRbOW0gN9YM4TX/YSXonN
+         3mgGisA9HOogdga6ZPsLJ3QJsFPrxywzzkmmrpRPc6HQvV5Q9uhxw4pjK7OawYBn+N
+         Gvb8LZ7vNCtKc4vKO3kM97ger7v+3kYrHn/BhRWc=
+Date:   Mon, 29 Nov 2021 12:30:58 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     dai.ngo@oracle.com
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Message-ID: <20211129173058.GD24258@fieldses.org>
+References: <20210929005641.60861-1-dai.ngo@oracle.com>
+ <20211001205327.GN959@fieldses.org>
+ <a6c9ba13-43d7-4ea9-e05d-f454c2c9f4c2@oracle.com>
+ <33c8ea5a-4187-a9fa-d507-a2dcec06416c@oracle.com>
+ <20211117141433.GB24762@fieldses.org>
+ <400143c8-c12a-6224-1b36-3e19f20a7ee4@oracle.com>
+ <908ded64-6412-66d3-6ad5-429700610660@oracle.com>
+ <20211118003454.GA29787@fieldses.org>
+ <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
+ <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Steve Dickson" <steved@redhat.com>
-Cc:     "Linux NFS Mailing list" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC 0/3] Remove NFS v2 support from the client and server
-In-reply-to: <20211129192731.783466-1-steved@redhat.com>
-References: <20211129192731.783466-1-steved@redhat.com>
-Date:   Tue, 30 Nov 2021 07:38:10 +1100
-Message-id: <163821829080.26075.9477835708436642432@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 30 Nov 2021, Steve Dickson wrote:
-> These patches will remove the all references and 
-> support of NFS v2 in both the server and client.
+On Mon, Nov 29, 2021 at 09:13:16AM -0800, dai.ngo@oracle.com wrote:
+> Hi Bruce,
+> 
+> On 11/21/21 7:04 PM, dai.ngo@oracle.com wrote:
+> >
+> >On 11/17/21 4:34 PM, J. Bruce Fields wrote:
+> >>On Wed, Nov 17, 2021 at 01:46:02PM -0800, dai.ngo@oracle.com wrote:
+> >>>On 11/17/21 9:59 AM, dai.ngo@oracle.com wrote:
+> >>>>On 11/17/21 6:14 AM, J. Bruce Fields wrote:
+> >>>>>On Tue, Nov 16, 2021 at 03:06:32PM -0800, dai.ngo@oracle.com wrote:
+> >>>>>>Just a reminder that this patch is still waiting for your review.
+> >>>>>Yeah, I was procrastinating and hoping yo'ud figure out the pynfs
+> >>>>>failure for me....
+> >>>>Last time I ran 4.0 OPEN18 test by itself and it passed. I will run
+> >>>>all OPEN tests together with 5.15-rc7 to see if the problem you've
+> >>>>seen still there.
+> >>>I ran all tests in nfsv4.1 and nfsv4.0 with courteous and non-courteous
+> >>>5.15-rc7 server.
+> >>>
+> >>>Nfs4.1 results are the same for both courteous and
+> >>>non-courteous server:
+> >>>>Of those: 0 Skipped, 0 Failed, 0 Warned, 169 Passed
+> >>>Results of nfs4.0 with non-courteous server:
+> >>>>Of those: 8 Skipped, 1 Failed, 0 Warned, 577 Passed
+> >>>test failed: LOCK24
+> >>>
+> >>>Results of nfs4.0 with courteous server:
+> >>>>Of those: 8 Skipped, 3 Failed, 0 Warned, 575 Passed
+> >>>tests failed: LOCK24, OPEN18, OPEN30
+> >>>
+> >>>OPEN18 and OPEN30 test pass if each is run by itself.
+> >>Could well be a bug in the tests, I don't know.
+> >
+> >The reason OPEN18 failed was because the test timed out waiting for
+> >the reply of an OPEN call. The RPC connection used for the test was
+> >configured with 15 secs timeout. Note that OPEN18 only fails when
+> >the tests were run with 'all' option, this test passes if it's run
+> >by itself.
+> >
+> >With courteous server, by the time OPEN18 runs, there are about 1026
+> >courtesy 4.0 clients on the server and all of these clients have opened
+> >the same file X with WRITE access. These clients were created by the
+> >previous tests. After each test completed, since 4.0 does not have
+> >session, the client states are not cleaned up immediately on the
+> >server and are allowed to become courtesy clients.
+> >
+> >When OPEN18 runs (about 20 minutes after the 1st test started), it
+> >sends OPEN of file X with OPEN4_SHARE_DENY_WRITE which causes the
+> >server to check for conflicts with courtesy clients. The loop that
+> >checks 1026 courtesy clients for share/access conflict took less
+> >than 1 sec. But it took about 55 secs, on my VM, for the server
+> >to expire all 1026 courtesy clients.
+> >
+> >I modified pynfs to configure the 4.0 RPC connection with 60 seconds
+> >timeout and OPEN18 now consistently passed. The 4.0 test results are
+> >now the same for courteous and non-courteous server:
+> >
+> >8 Skipped, 1 Failed, 0 Warned, 577 Passed
+> >
+> >Note that 4.1 tests do not suffer this timeout problem because the
+> >4.1 clients and sessions are destroyed after each test completes.
+> 
+> Do you want me to send the patch to increase the timeout for pynfs?
+> or is there any other things you think we should do?
 
-What is the motivation for this?
-I don't necessarily disagree, but I'm curious as to what you hope to
-gain.
+I don't know.
 
-Thanks,
-NeilBrown
+55 seconds to clean up 1026 clients is about 50ms per client, which is
+pretty slow.  I wonder why.  I guess it's probably updating the stable
+storage information.  Is /var/lib/nfs/ on your server backed by a hard
+drive or an SSD or something else?
 
-> 
-> On server side the support has been off, by default, 
-> since 2013 (6b4e4965a6b). With this server patch the
-> ability to enable v2 will be remove.
-> 
-> Currently even with CONFIG_NFS_V2 not set
-> v2 mounts are still tied (over-the-wire). I looked at creating 
-> a kernel parameter module so support could re-enabled 
-> but that got ugly quick.
-> 
-> So I just decided to make all V2 mounts fail with
-> EOPNOTSUPP, with no way of turn them back on.
-> 
-> Steve Dickson (3):
->   nfsd: Remove the ability to enable NFS v2.
->   nfs.man: Remove references to NFS v2 from the man pages
->   mount: Remove NFS v2 support from mount.nfs
-> 
->  nfs.conf                  |  1 -
->  utils/mount/configfile.c  |  2 +-
->  utils/mount/mount.nfs.man |  2 +-
->  utils/mount/network.c     |  4 ++--
->  utils/mount/nfs.man       | 20 +++-----------------
->  utils/mount/nfsmount.conf |  2 +-
->  utils/mount/stropts.c     |  3 +++
->  utils/nfsd/nfsd.c         |  2 --
->  utils/nfsd/nfsd.man       |  4 ++--
->  9 files changed, 13 insertions(+), 27 deletions(-)
-> 
-> -- 
-> 2.31.1
-> 
-> 
+I wonder if that's an argument for limiting the number of courtesy
+clients.
+
+--b.
