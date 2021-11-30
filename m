@@ -2,106 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 77272463FA1
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 22:06:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 407D44641CC
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 23:52:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343868AbhK3VJd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Nov 2021 16:09:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:35563 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1343846AbhK3VJc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 16:09:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638306372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ovfGlfFYOBiNEdFFUCvznobAjXbygpnoFNwMXB/Sg+Q=;
-        b=Mojq/3f57P3vL35aj0nv84JsD8o1gdi/mvMS4s3oIAKQNqVI1DKWLUjsPCF4fEvU4+q9B0
-        p59jxUNYO/y5c78ctC9Gp5RIB8W0pOINOvXsCan3498p6r8ady8nmZMKsE7RDeswDeuwRT
-        AfcN6HALZ+h75ElLBwp2+1xzPZqx3/Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-503-ojpTxzvvOhGXgffSsKK03g-1; Tue, 30 Nov 2021 16:06:08 -0500
-X-MC-Unique: ojpTxzvvOhGXgffSsKK03g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1344681AbhK3W4O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Nov 2021 17:56:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233731AbhK3W4N (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 17:56:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D135C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Nov 2021 14:52:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 712C91853026;
-        Tue, 30 Nov 2021 21:06:05 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BABF910013D7;
-        Tue, 30 Nov 2021 21:05:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <YaZOCk9zxApPattb@archlinux-ax161>
-References: <YaZOCk9zxApPattb@archlinux-ax161> <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk> <163819647945.215744.17827962047487125939.stgit@warthog.procyon.org.uk>
-To:     Nathan Chancellor <nathan@kernel.org>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH 51/64] cachefiles: Implement the I/O routines
+        by ams.source.kernel.org (Postfix) with ESMTPS id 552FCB81D7B
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Nov 2021 22:52:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6D6C53FC7;
+        Tue, 30 Nov 2021 22:52:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1638312771;
+        bh=YxX1zYCLD+GtsUEGeuvDJsPNckaW9l6VxVyq9Ak9Cns=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=SvxrQCy84ou9dB0fOASBkHyzW7M27Q+KWbD6wvXajomu/JNeGFKW0Sxb78/eJTdfo
+         YnGy64WCXZBbMePN+iByTcJh6BKDafzdFFeBkZJTAD69hJew2uQGI+6FG2PYO8By0r
+         aqx2ZOxF/Hbo++2tA9fYKxo4CqD/OgImJ/DkYcTGe4mr6622sasOZvytXt7tmi8rSh
+         3o0wUyRh93SVe0fBMejmmRngaxEyCVZiqKal/ASGcpxfwdVcPclrITsRnFQMX+PZPB
+         /zYMLiH+h6kP6eBBXy8SMUqNXzoVK4p3oQqevrV5yiA2eKp98CoAWrVWCOcdCblnr9
+         kEc2LRlOtxheA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id D4BDA5C0367; Tue, 30 Nov 2021 14:52:50 -0800 (PST)
+Date:   Tue, 30 Nov 2021 14:52:50 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] NFSD: Fix RCU-related sparse splat
+Message-ID: <20211130225250.GC641268@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <503521.1638306348.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 30 Nov 2021 21:05:48 +0000
-Message-ID: <503522.1638306348@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Nathan Chancellor <nathan@kernel.org> wrote:
+On Mon, Nov 29, 2021 at 01:46:07PM -0500, Chuck Lever wrote:
+> To address this error:
+> 
+>   CC [M]  fs/nfsd/filecache.o
+>   CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
+> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible types in comparison expression (different address spaces):
+> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noderef] __rcu *
+> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
+> 
+> The "net" field in struct nfsd_fcache_disposal is not annotated as
+> requiring an RCU assignment, so replace the macro that includes an
+> invocation of rcu_check_sparse() with an equivalent that does not.
+> 
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 
-> This patch as commit 0443b01eccbb ("cachefiles: Implement the I/O
-> routines") in -next causes the following clang warning/error:
-> =
+From an RCU perspective:
 
-> fs/cachefiles/io.c:489:6: error: variable 'ret' is used uninitialized wh=
-enever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
->         if (pos =3D=3D 0)
->             ^~~~~~~~
-> fs/cachefiles/io.c:492:6: note: uninitialized use occurs here
->         if (ret < 0) {
->             ^~~
-> fs/cachefiles/io.c:489:2: note: remove the 'if' if its condition is alwa=
-ys true
->         if (pos =3D=3D 0)
->         ^~~~~~~~~~~~~
-> fs/cachefiles/io.c:440:9: note: initialize the variable 'ret' to silence=
- this warning
->         int ret;
->                ^
->                 =3D 0
-> 1 error generated.
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-	pos =3D cachefiles_inject_remove_error();
-	if (pos =3D=3D 0)
-		ret =3D vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
+But it would be good to get someone more familiar with the code to
+look at this.
 
-That should be:
+							Thanx, Paul
 
-	ret =3D cachefiles_inject_remove_error();
-	if (ret =3D=3D 0)
-		ret =3D vfs_fallocate(file, FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
-
-David
-
+> ---
+>  fs/nfsd/filecache.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index fdf89fcf1a0c..3b172eda0e9a 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -772,7 +772,7 @@ nfsd_alloc_fcache_disposal(struct net *net)
+>  static void
+>  nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
+>  {
+> -	rcu_assign_pointer(l->net, NULL);
+> +	WRITE_ONCE(l->net, NULL);
+>  	cancel_work_sync(&l->work);
+>  	nfsd_file_dispose_list(&l->freeme);
+>  	kfree_rcu(l, rcu);
+> 
