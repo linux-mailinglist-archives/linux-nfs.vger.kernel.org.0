@@ -2,87 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 89CEC4638BF
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 16:02:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 30A56463A1B
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 16:32:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244397AbhK3PFu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Nov 2021 10:05:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
+        id S234785AbhK3Pfe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Nov 2021 10:35:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244777AbhK3PCl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 10:02:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59281C08EACA;
-        Tue, 30 Nov 2021 06:54:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22B7CB81A21;
-        Tue, 30 Nov 2021 14:54:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31A71C53FCD;
-        Tue, 30 Nov 2021 14:54:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638284045;
-        bh=E/EVtFc/E/hc4xg0Tm1/JXdr6VWklKGBiUjYr0QDf1M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u4QhsvGzoqGBFJNUs2kLXL1TWSfSPwtBJR8uY/SvQDM5fZ8pFuzF3a/pWC81lMaBP
-         cmtGIju/k7cJSrwXBx+90aoPSicfL+O22HcUeMd3KMoVmOXBTfw3XEs0gemohTIdkz
-         8zms8QIRpaYaVRQo/G94FNdWMVxGlL1MtOZGZ6VM7D22HGbI2+4CUa1vNjhsd00ksV
-         KPkZC6mJV+8fuMQY3YZYrAkMjD58gtPmRbPnkH/9VxEJrTCs9kdenUYSCeE3lKcoxy
-         +bkxhtxdSefy1huOvw+z4quGyIV9CS9EHw4kQKRjCSobhsfz+/GCt2R1NEqta/hD2N
-         ElWu+EW6yxwAg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <kolga@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Sasha Levin <sashal@kernel.org>, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 2/9] NFSv4.1: handle NFS4ERR_NOSPC by CREATE_SESSION
-Date:   Tue, 30 Nov 2021 09:53:55 -0500
-Message-Id: <20211130145402.947049-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211130145402.947049-1-sashal@kernel.org>
-References: <20211130145402.947049-1-sashal@kernel.org>
+        with ESMTP id S234669AbhK3Pfd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 10:35:33 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F8B8C061574;
+        Tue, 30 Nov 2021 07:32:12 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id E0E70A99; Tue, 30 Nov 2021 10:32:11 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E0E70A99
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1638286331;
+        bh=qqABRgVwut/6j2ygnX0Ggz9doH/B2bLsnWU7YYW1h6Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IgNLGS5Fw5qXpRl69BjETxRHp8DiPxHcWqns+ob44XNqqwW4g81k+htt++H248xqW
+         +SzwLeBOHiiOe3Wgaeop46R2vqGpqjCzkFTh2WuxSMneiLyeWMDWyJzeatyLNI4JhQ
+         agQeFcZx2nLyy3RyuKK93s1hupSA46GnlDubtQWs=
+Date:   Tue, 30 Nov 2021 10:32:11 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     dai.ngo@oracle.com
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Message-ID: <20211130153211.GB8837@fieldses.org>
+References: <bef516d0-19cf-3f30-00cd-8359daeff6ab@oracle.com>
+ <b7e3aee5-9496-7ede-ca88-34287876e2f4@oracle.com>
+ <20211129173058.GD24258@fieldses.org>
+ <da7394e0-26f6-b243-ce9a-d669e51c1a5e@oracle.com>
+ <1285F7E2-5D5F-4971-9195-BA664CAFF65F@oracle.com>
+ <e1093e42-2871-8810-de76-58d1ea357898@oracle.com>
+ <C9C6AEC1-641C-4614-B149-5275EFF81C3D@oracle.com>
+ <22000fe0-9b17-3d88-1730-c8704417cb92@oracle.com>
+ <B42B0F9C-57E2-4F58-8DBD-277636B92607@oracle.com>
+ <6f5a060d-17f6-ee46-6546-1217ac5dfa9c@oracle.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6f5a060d-17f6-ee46-6546-1217ac5dfa9c@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+On Mon, Nov 29, 2021 at 11:13:34PM -0800, dai.ngo@oracle.com wrote:
+> Just to be clear, the problem of pynfs with 4.0 is that the server takes
+> ~55 secs to expire 1026 4.0 courteous clients, which comes out to ~50ms
+> per client. This causes the test to time out in waiting for RPC reply of
+> the OPEN that triggers the conflicts.
+> 
+> I don't know exactly where the time spent in the process of expiring a
+> client. But as Bruce mentioned, it could be related to the time to access
+> /var/lib/nfs to remove the client's persistent record.
 
-[ Upstream commit ea027cb2e1b59c76582af867b71d5c037fa6bb8e ]
+Could you try something like
 
-When the client receives ERR_NOSPC on reply to CREATE_SESSION
-it leads to a client hanging in nfs_wait_client_init_complete().
-Instead, complete and fail the client initiation with an EIO
-error which allows for the mount command to fail instead of
-hanging.
+	strace -r -$(pidof) -oTRACE
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/nfs/nfs4state.c | 4 ++++
- 1 file changed, 4 insertions(+)
+and maybe we could take a look at TRACE?  My hope would be that there'd
+be a clear set of syscalls whose time, multiplied by 1026, explains most
+of that 55 seconds.  Then it might be worth checking whether there are
+any easy optimizations possible.
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index ef3ed2b1fd278..9e872db0f70ea 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1843,6 +1843,10 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
- 		dprintk("%s: exit with error %d for server %s\n",
- 				__func__, -EPROTONOSUPPORT, clp->cl_hostname);
- 		return -EPROTONOSUPPORT;
-+	case -ENOSPC:
-+		if (clp->cl_cons_state == NFS_CS_SESSION_INITING)
-+			nfs_mark_client_ready(clp, -EIO);
-+		return -EIO;
- 	case -NFS4ERR_NOT_SAME: /* FixMe: implement recovery
- 				 * in nfs4_exchange_id */
- 	default:
--- 
-2.33.0
-
+--b.
