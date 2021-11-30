@@ -2,47 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9358C4638BD
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 16:02:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E34154638B7
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 16:02:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244355AbhK3PFp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Nov 2021 10:05:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34014 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244273AbhK3PAz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 10:00:55 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DEFC08E897;
-        Tue, 30 Nov 2021 06:52:57 -0800 (PST)
+        id S244298AbhK3PFn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Nov 2021 10:05:43 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:58866 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S243227AbhK3O4o (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 09:56:44 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 847DDCE1A75;
-        Tue, 30 Nov 2021 14:52:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 124FAC53FC1;
-        Tue, 30 Nov 2021 14:52:52 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 2DC5CCE1A5F;
+        Tue, 30 Nov 2021 14:53:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE84DC53FC7;
+        Tue, 30 Nov 2021 14:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638283973;
-        bh=bre7RblZoSfVOr55CtnCl7Br91THpqJoV/u6ZRzAZM4=;
+        s=k20201202; t=1638284002;
+        bh=6twH5+TpWJnPN7F7KBiM85o+hDSCWp2TFCGV04d+MoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gg7/CHawAlsmrxBy6L5kBD6GaaZK6T7kOeOpyUiCE2sfWsylQ4XehW40IUt1+RFM0
-         hRfSXninPEws4V/ADTWlewQMs3fC+jwlvFh1RIU35J++hk7rgl/rQDP2H3Sy2zhzjD
-         tmI3MiNmVCsX9Sn5CI4+r9ZJhpJYFTH+10BdofRV4Tsi+Ti2qr4iGmsh4INtawo74D
-         ntyTShJpBL9OsdG89PiCsPMf+DLRx0u+CLtrIyG8C1ngxiRqBBJmwyg4QL8bHYcmDd
-         DWBVi3P/eubQCbbh0o3VZ2MlKVbft81FxOVRAobwj1ob2GnMQv8zZxJNTVMMtTXenW
-         Ay0Rj5mTVGiiQ==
+        b=QWlwx3Eq/4Yz3p77cGfIpIhx/23tXbpAz6hhnMxtB6SKuAGs44KNHBEKSITG2KbEf
+         myEXk2enTwHxPJpK9VLs53GqwIEOf8hdYIAEMi1+FTffdE+D5CtYxGHeEqRdtywSM4
+         xx/Va/+Gg13P6KtaDacxgJrTjDfIQlvlGi0oy1tRnqaYvwBLq16RXm+xmc/wX+Tgz5
+         Eeyk6FbIEjDNVQwQ1tsfHc8vUzLJOLcCwad0zP1itD5KweaD8INO/rD8nwG83c7Vym
+         0+jwIMdbHN1nMoOzXXrcicTPYsUMPw9bDr6iPK14j55QHOeqGv/4lADzSTTghCH5Er
+         kWCduFttIz10A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olga Kornievskaia <kolga@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Sasha Levin <sashal@kernel.org>, anna.schumaker@netapp.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 05/17] NFSv4.1: handle NFS4ERR_NOSPC by CREATE_SESSION
-Date:   Tue, 30 Nov 2021 09:52:29 -0500
-Message-Id: <20211130145243.946407-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 03/14] NFSv4.1: handle NFS4ERR_NOSPC by CREATE_SESSION
+Date:   Tue, 30 Nov 2021 09:53:04 -0500
+Message-Id: <20211130145317.946676-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20211130145243.946407-1-sashal@kernel.org>
-References: <20211130145243.946407-1-sashal@kernel.org>
+In-Reply-To: <20211130145317.946676-1-sashal@kernel.org>
+References: <20211130145317.946676-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+)
 
 diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index b3086e99420c7..25ebb99e77c82 100644
+index f92bfc787c5fe..2bdeb212045fd 100644
 --- a/fs/nfs/nfs4state.c
 +++ b/fs/nfs/nfs4state.c
-@@ -1962,6 +1962,10 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
+@@ -1901,6 +1901,10 @@ static int nfs4_handle_reclaim_lease_error(struct nfs_client *clp, int status)
  		dprintk("%s: exit with error %d for server %s\n",
  				__func__, -EPROTONOSUPPORT, clp->cl_hostname);
  		return -EPROTONOSUPPORT;
