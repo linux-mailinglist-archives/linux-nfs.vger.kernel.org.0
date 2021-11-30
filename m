@@ -2,92 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 407D44641CC
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Nov 2021 23:52:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC8F446438D
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 00:36:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344681AbhK3W4O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Nov 2021 17:56:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233731AbhK3W4N (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 17:56:13 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D135C061574
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Nov 2021 14:52:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S237496AbhK3Xjn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Nov 2021 18:39:43 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:43302 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1345209AbhK3Xjl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Nov 2021 18:39:41 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 552FCB81D7B
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Nov 2021 22:52:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6D6C53FC7;
-        Tue, 30 Nov 2021 22:52:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1638312771;
-        bh=YxX1zYCLD+GtsUEGeuvDJsPNckaW9l6VxVyq9Ak9Cns=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=SvxrQCy84ou9dB0fOASBkHyzW7M27Q+KWbD6wvXajomu/JNeGFKW0Sxb78/eJTdfo
-         YnGy64WCXZBbMePN+iByTcJh6BKDafzdFFeBkZJTAD69hJew2uQGI+6FG2PYO8By0r
-         aqx2ZOxF/Hbo++2tA9fYKxo4CqD/OgImJ/DkYcTGe4mr6622sasOZvytXt7tmi8rSh
-         3o0wUyRh93SVe0fBMejmmRngaxEyCVZiqKal/ASGcpxfwdVcPclrITsRnFQMX+PZPB
-         /zYMLiH+h6kP6eBBXy8SMUqNXzoVK4p3oQqevrV5yiA2eKp98CoAWrVWCOcdCblnr9
-         kEc2LRlOtxheA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id D4BDA5C0367; Tue, 30 Nov 2021 14:52:50 -0800 (PST)
-Date:   Tue, 30 Nov 2021 14:52:50 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2] NFSD: Fix RCU-related sparse splat
-Message-ID: <20211130225250.GC641268@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 706C5212B9;
+        Tue, 30 Nov 2021 23:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1638315379; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zuFDZwrz6rfCvh8MSAFZWF9YhsNDb7zqLBQgBH3ZLn8=;
+        b=ezElJ8zIdAUg+nZkgE4GaWbtAbw3kxklQ3/LaSz+ZVp9FPskhpeBHdLl0tHPc156I7drfB
+        62ENjfKbOP4yt5hwj/PVuMYg3h0gPL9IVv0e4+hSTIvYeQMTqGvH8zKAbVOkZyRtucHWyF
+        7KXGbOfM4MCXG4B9dZn2P09f49wbYNQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1638315379;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zuFDZwrz6rfCvh8MSAFZWF9YhsNDb7zqLBQgBH3ZLn8=;
+        b=uqURaKHnb0DgC3j7a9DZZ1614xyeTJdNQLvImacie/zxDdS8rR7sffsuhFVo3OPLcPxQYc
+        NCPigdAvawWznVBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 55F1013D6F;
+        Tue, 30 Nov 2021 23:36:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id STUFBXK1pmG4FAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 30 Nov 2021 23:36:18 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>
+From:   "NeilBrown" <neilb@suse.de>
+To:     paulmck@kernel.org
+Cc:     "Chuck Lever" <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] NFSD: Fix RCU-related sparse splat
+In-reply-to: <20211130225250.GC641268@paulmck-ThinkPad-P17-Gen-1>
+References: <163821156142.90770.4019362941494014139.stgit@bazille.1015granger.net>,
+ <20211130225250.GC641268@paulmck-ThinkPad-P17-Gen-1>
+Date:   Wed, 01 Dec 2021 10:36:15 +1100
+Message-id: <163831537509.26075.12859361728901873347@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Nov 29, 2021 at 01:46:07PM -0500, Chuck Lever wrote:
-> To address this error:
-> 
->   CC [M]  fs/nfsd/filecache.o
->   CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
-> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible types in comparison expression (different address spaces):
-> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noderef] __rcu *
-> /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
-> 
-> The "net" field in struct nfsd_fcache_disposal is not annotated as
-> requiring an RCU assignment, so replace the macro that includes an
-> invocation of rcu_check_sparse() with an equivalent that does not.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+On Wed, 01 Dec 2021, paulmck@kernel.org wrote:
+> On Mon, Nov 29, 2021 at 01:46:07PM -0500, Chuck Lever wrote:
+> > To address this error:
+> >=20
+> >   CC [M]  fs/nfsd/filecache.o
+> >   CHECK   /home/cel/src/linux/linux/fs/nfsd/filecache.c
+> > /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9: error: incompatible =
+types in comparison expression (different address spaces):
+> > /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net [noder=
+ef] __rcu *
+> > /home/cel/src/linux/linux/fs/nfsd/filecache.c:772:9:    struct net *
+> >=20
+> > The "net" field in struct nfsd_fcache_disposal is not annotated as
+> > requiring an RCU assignment, so replace the macro that includes an
+> > invocation of rcu_check_sparse() with an equivalent that does not.
+> >=20
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+>=20
+> From an RCU perspective:
+>=20
+> Acked-by: Paul E. McKenney <paulmck@kernel.org>
+>=20
+> But it would be good to get someone more familiar with the code to
+> look at this.
 
-From an RCU perspective:
+There is a global list of 'struct nfsd_fcache_disposal', potentially one
+for each network namespace.  Each contains a '*net' which is effectively
+an opaque lookup key.  It is never dereferenced - only used to find the
+nfsd_fcache_disposal which matches a given 'struct net *'.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+The lookup happens under rcu_read_lock().  A 'struct net' is freed after
+a grace period (see cleanup_net() in net_namespace.c) so to ensure the
+lookup doesn't find a false positive - caused by a 'struct net' being
+deallocated and reallocated, it is sufficient to clear the ->net pointer
+while the the net is known to still be active.  At most, a write-barrier
+might be justified.  i.e. smp_store_release(l->net, NULL);
 
-But it would be good to get someone more familiar with the code to
-look at this.
+However ... the list of nfsd_fcache_disposal seems unnecessary.
+nfsd has a 'struct nfsd_net' which parallels any interesting 'struct
+net' using the net_generic() framework.
+If the nfs_fcache_disposal were linked from the nfsd_net, there would be
+no need for the list, no need to record the ->net, and not need for the
+code in question here.
+The nfsd_fcache_disposal is destroyed (nfsd_file_cache_shutdown_new())
+before the nfsd_net is destroyed, so there are no lifetime issues with
+keeping the separate list.
 
-							Thanx, Paul
+So I think this patch is not the best fix for the problem highlighted by
+the warning...  it's not wrong though.
 
-> ---
->  fs/nfsd/filecache.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index fdf89fcf1a0c..3b172eda0e9a 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -772,7 +772,7 @@ nfsd_alloc_fcache_disposal(struct net *net)
->  static void
->  nfsd_free_fcache_disposal(struct nfsd_fcache_disposal *l)
->  {
-> -	rcu_assign_pointer(l->net, NULL);
-> +	WRITE_ONCE(l->net, NULL);
->  	cancel_work_sync(&l->work);
->  	nfsd_file_dispose_list(&l->freeme);
->  	kfree_rcu(l, rcu);
-> 
+NeilBrown
