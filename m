@@ -2,132 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 384D446497F
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 09:21:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 871624649A6
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 09:29:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241909AbhLAIYk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Dec 2021 03:24:40 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:32862 "EHLO
-        szxga01-in.huawei.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229564AbhLAIYk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 03:24:40 -0500
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4J3sVb0kYkzcbgp;
-        Wed,  1 Dec 2021 16:21:11 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 1 Dec 2021 16:21:17 +0800
-Received: from [10.174.179.176] (10.174.179.176) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.20; Wed, 1 Dec 2021 16:21:17 +0800
-To:     <steved@redhat.com>, <linux-nfs@vger.kernel.org>
-CC:     "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        linfeilong <linfeilong@huawei.com>
-From:   lixiaokeng <lixiaokeng@huawei.com>
-Subject: [PATCH] blkmapd: fix coredump in bl_add_disk
-Message-ID: <77a09978-a5aa-ea7f-04b8-a8d398ee325f@huawei.com>
-Date:   Wed, 1 Dec 2021 16:21:16 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        id S1347971AbhLAIc6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Dec 2021 03:32:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:58834 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229618AbhLAIc6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 03:32:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1638347377;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4tUl7G8alL78nfbRo0WLNZl+gkt+X3mS2JKYOztBaCw=;
+        b=Q9HTm2UK5n3YyPaocpbkGIT5GvvKs130tSBFOthRPS0We8O5q0q0Gtc4w75CTKqDgE3WFO
+        XuiW0kuCl7iVjNlOLHIFV88qNNb/vS9d4TEqc7XK5Qct8yo1YZZqEMGiBh0QBVcXI8iuwp
+        //esibe6Ljr4T6St26rp7mdaj0s+muY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-521-AnOULJD2MFCLO_7J_kL0gQ-1; Wed, 01 Dec 2021 03:29:34 -0500
+X-MC-Unique: AnOULJD2MFCLO_7J_kL0gQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B2A42190B2A1;
+        Wed,  1 Dec 2021 08:29:30 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A14EB4D73A;
+        Wed,  1 Dec 2021 08:29:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <bcefb8f2-576a-b3fc-cc29-89808ebfd7c1@linux.alibaba.com>
+References: <bcefb8f2-576a-b3fc-cc29-89808ebfd7c1@linux.alibaba.com> <163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk> <163819640393.215744.15212364106412961104.stgit@warthog.procyon.org.uk>
+To:     JeffleXu <jefflexu@linux.alibaba.com>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 44/64] cachefiles: Implement key to filename encoding
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.176]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <571667.1638347365.1@warthog.procyon.org.uk>
+Date:   Wed, 01 Dec 2021 08:29:25 +0000
+Message-ID: <571668.1638347365@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The serial->data is not malloced separately (just part of
-the serial), so it can't be freed. The bl_serial has its
-own free function. Use it.
+JeffleXu <jefflexu@linux.alibaba.com> wrote:
 
-Signed-off-by: Lixiaokeng <lixiaokeng@huawei.com>
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
----
- utils/blkmapd/device-discovery.c | 15 +++------------
- utils/blkmapd/device-discovery.h |  2 ++
- utils/blkmapd/device-inq.c       |  4 ++--
- 3 files changed, 7 insertions(+), 14 deletions(-)
+> > +	/* If the path is usable ASCII, then we render it directly */
+> > +	if (print) {
+> > +		len = 1 + keylen + 1;
+> > +		name = kmalloc(len, GFP_KERNEL);
+> > +		if (!name)
+> > +			return false;
+> > +
+> > +		name[0] = 'D'; /* Data object type, string encoding */
+> > +		name[1 + keylen] = 0;
+> > +		memcpy(name + 1, key, keylen);
+> > +		goto success;
+> 			^
+> If we goto success from here,
+> ...
+> > +
+> > +success:
+> > +	name[len] = 0;
+> 	     ^
+> then it seems that this will cause an out-of-boundary access.
 
-diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
-index 2736ac89..cea33496 100644
---- a/utils/blkmapd/device-discovery.c
-+++ b/utils/blkmapd/device-discovery.c
-@@ -187,10 +187,7 @@ static void bl_add_disk(char *filepath)
- 	}
+You're right.  I'll change that to:
 
- 	if (disk && diskpath) {
--		if (serial) {
--			free(serial->data);
--			free(serial);
--		}
-+		bl_free_scsi_string(serial);
- 		return;
- 	}
+		len = 1 + keylen;
+		name = kmalloc(len + 1, GFP_KERNEL);
 
-@@ -228,10 +225,7 @@ static void bl_add_disk(char *filepath)
- 			disk->size = size;
- 			disk->valid_path = path;
- 		}
--		if (serial) {
--			free(serial->data);
--			free(serial);
--		}
-+		bl_free_scsi_string(serial);
- 	}
- 	return;
+and I shouldn't need:
 
-@@ -241,10 +235,7 @@ static void bl_add_disk(char *filepath)
- 			free(path->full_path);
- 		free(path);
- 	}
--	if (serial) {
--		free(serial->data);
--		free(serial);
--	}
-+	bl_free_scsi_string(serial);
- 	return;
- }
+		name[1 + keylen] = 0;
 
-diff --git a/utils/blkmapd/device-discovery.h b/utils/blkmapd/device-discovery.h
-index a86eed99..462aa943 100644
---- a/utils/blkmapd/device-discovery.h
-+++ b/utils/blkmapd/device-discovery.h
-@@ -151,6 +151,8 @@ uint64_t process_deviceinfo(const char *dev_addr_buf,
+as that's also done after the success label.
 
- extern ssize_t atomicio(ssize_t(*f) (int, void *, size_t),
- 			int fd, void *_s, size_t n);
-+extern struct bl_serial *bl_create_scsi_string(int len, const char *bytes);
-+extern void bl_free_scsi_string(struct bl_serial *str);
- extern struct bl_serial *bldev_read_serial(int fd, const char *filename);
- extern enum bl_path_state_e bldev_read_ap_state(int fd);
- extern int bl_discover_devices(void);
-diff --git a/utils/blkmapd/device-inq.c b/utils/blkmapd/device-inq.c
-index c7952c3e..9e5749ef 100644
---- a/utils/blkmapd/device-inq.c
-+++ b/utils/blkmapd/device-inq.c
-@@ -53,7 +53,7 @@
- #define DEF_ALLOC_LEN	255
- #define MX_ALLOC_LEN	(0xc000 + 0x80)
+David
 
--static struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
-+struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
- {
- 	struct bl_serial *s;
-
-@@ -66,7 +66,7 @@ static struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
- 	return s;
- }
-
--static void bl_free_scsi_string(struct bl_serial *str)
-+void bl_free_scsi_string(struct bl_serial *str)
- {
- 	if (str)
- 		free(str);
--- 
