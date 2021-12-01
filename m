@@ -2,231 +2,169 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 82A844655A1
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 19:37:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55ADF4655CB
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 19:47:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240735AbhLASkc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Dec 2021 13:40:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:20820 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238768AbhLASk0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 13:40:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638383821;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qdlXIL1oxqSEL+ebyFN2jLlKbWWYDq0EPV7e1T8jiiY=;
-        b=DjWmyGr8+wrSJWKX+EhYeMvtLwIuKyt0sC+z7kBA49syOjFEM5uUMgJkpQ15jlpxvCSIFJ
-        wmnHvQeysm7mTdUW545Ay+J68DlwWUFDEqaulYCSEM1GPavVEEFc90iIyIxpGvYxFYD42q
-        f/PTWZ+l8YZ2JKol2KngOVHacnz6vB4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-446-xS6-1ofzO7ykuBMgx6GhKA-1; Wed, 01 Dec 2021 13:37:00 -0500
-X-MC-Unique: xS6-1ofzO7ykuBMgx6GhKA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A453E801B00;
-        Wed,  1 Dec 2021 18:36:58 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.16.148])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B6B35C22B;
-        Wed,  1 Dec 2021 18:36:57 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 18D141A0032; Wed,  1 Dec 2021 13:36:57 -0500 (EST)
-Date:   Wed, 1 Dec 2021 13:36:57 -0500
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "neilb@suse.de" <neilb@suse.de>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "tpearson@raptorengineering.com" <tpearson@raptorengineering.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: CPU stall, eventual host hang with BTRFS + NFS under heavy load
-Message-ID: <YafAyS/0AQS1QBKy@aion.usersys.redhat.com>
-References: <162880418532.15074.7140645794203395299@noble.neil.brown.name>
- <YWCpnsdVqssFaLrf@aion.usersys.redhat.com>
- <589AFA4F-DF8E-45A3-8299-54E820E33169@oracle.com>
- <20211011143028.GB22387@fieldses.org>
- <34A4C7EB-2798-4482-A786-90161F5F9E34@oracle.com>
- <163398946770.17149.14605560717849885454@noble.neil.brown.name>
- <d795d4d7caaeebbf2f2260b7e739e9dc2f8a1de0.camel@hammerspace.com>
- <163425187213.17149.4082212844733494965@noble.neil.brown.name>
- <f2ebce6afe1d01b529a9373ecfba1dc8b3009b4c.camel@hammerspace.com>
- <8bc8cad158234aca0448ab1c8410880daff3c278.camel@hammerspace.com>
+        id S229673AbhLASvG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Dec 2021 13:51:06 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:33936 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244775AbhLASvF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 13:51:05 -0500
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B1Hv3iL032521;
+        Wed, 1 Dec 2021 18:47:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=nGQfgadPfIjuNKUVpJDUxgVrwlEd4lv3moXfzCpqgcc=;
+ b=eK5kzdOwTp7/FkIZoSxL/PXs0E9d/lRDhrWoSxRsik3HG9/50OHusDsnuig1yKmdRlvb
+ 6uZ4hIFp2ytvgLaIKzKvoshKirs9LMBX9K/mPaohVuXhXx0/wDtPurSDjC87pcoefPx6
+ SnH7Y0EDJzvJYJ0Np8/f0/tNEATMm4W5Hv6zfSUW9ey6p5tnScA3eTF4XIl7bqM5LERq
+ xsTK0xtcO+C78D/jiYtaT5iBm2nMa6AH/MToINx5EJCM5PvqAh5aLU06iMnOEwLIikJ7
+ a4SiAWn3h70XqVbJvsG+s0lPO7v68vDSXQFULH26P2fbOCwLNypMw6Xp+qsQKD7b5ySD 2A== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3cpb701qqp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Dec 2021 18:47:39 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1B1IUtGq074897;
+        Wed, 1 Dec 2021 18:47:38 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by userp3030.oracle.com with ESMTP id 3ck9t2bkrk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 01 Dec 2021 18:47:38 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DPnbhrx6BjpaPweLzr4KHJpG2bXgupqAQvRPrbusViUe/wqhOpXQn1KESVogKiN2j6oFuZy2JU5bNhBU3fMUlQrampikYXOsO1eFwJ7Lx0aCZqUsJqzGAyp5doENzBEh9lyGBu2C0X4YlGT1MNvT/dGu18axDiMkl47KvxEn1SIpZJIc+UFwpPvsxS5EGjs4GLqVI9rhvD/ev0L/FZgQQHGYrHhKO+fLKhi3xySV/jxrE5c+7/1SM4M3DML+JiW2anP3w2V1csB8q5BPUmcIHyIj53HvbzTfW2cquTgxOBPTpT17iaemtOO1Qp2Ql2gPSjr1KCkuvKb9P4whcNQD6g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nGQfgadPfIjuNKUVpJDUxgVrwlEd4lv3moXfzCpqgcc=;
+ b=laCRxCvQZwybdCHp/JFWBb2mGgfDUzMX5TMoviSJB3grigJjVWHaozQj/KhwJ1AjnGNLwa8t2n1oSfkKR3dVZo0acE9564AvRHqc9QhC3XZ8Y9UTABlPFlHW9iqEw7nMajbErxiekniEF7IxkgdUsxCsQpcmnjmTPpW/SdRtFuxDqBALEIGyL4eJu9tHxfjrMq74OMzszoyEj4nPGzDg2fUtExMt0uZTpAw6ixuEZkN3fKnpN16eDVSZw29OroaYF+T+SEiN6kShxDC0Rrn0dcRkxDLdO9Y/N9pX+EiZ9vWMv0pDBo/ZBNSjxLt05M0StX5De2B21Qh/wg05TnrKMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nGQfgadPfIjuNKUVpJDUxgVrwlEd4lv3moXfzCpqgcc=;
+ b=o82TiIKkgdRbOgcJroFAeLzk4VB9MIu9QUpU9FntT1kwZDhKtmqGbEzwOROlAOM0ih/flDtZAGpwMyi42zVeHa5IbDKWG7Rp+eru9x/IDsaCGHETGCuEWsthz2fw974xBl6FsVTZgGkC0eUkTcsfwAG8UyZinzz+XEnUXnvsF3w=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by SJ0PR10MB4575.namprd10.prod.outlook.com (2603:10b6:a03:2da::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4734.23; Wed, 1 Dec
+ 2021 18:47:36 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::486b:6917:1bf6:c00e]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::486b:6917:1bf6:c00e%7]) with mapi id 15.20.4690.029; Wed, 1 Dec 2021
+ 18:47:36 +0000
+Message-ID: <dbe51234-3e85-fb1d-ceb5-31b2ab9d829d@oracle.com>
+Date:   Wed, 1 Dec 2021 10:47:28 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.3.2
+Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
+ Courteous Server
+Content-Language: en-US
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <da7394e0-26f6-b243-ce9a-d669e51c1a5e@oracle.com>
+ <1285F7E2-5D5F-4971-9195-BA664CAFF65F@oracle.com>
+ <e1093e42-2871-8810-de76-58d1ea357898@oracle.com>
+ <C9C6AEC1-641C-4614-B149-5275EFF81C3D@oracle.com>
+ <22000fe0-9b17-3d88-1730-c8704417cb92@oracle.com>
+ <B42B0F9C-57E2-4F58-8DBD-277636B92607@oracle.com>
+ <6f5a060d-17f6-ee46-6546-1217ac5dfa9c@oracle.com>
+ <20211130153211.GB8837@fieldses.org>
+ <f6a948a7-32d6-da9a-6808-9f2f77d5f792@oracle.com>
+ <20211201143630.GB24991@fieldses.org> <20211201145118.GA26415@fieldses.org>
+From:   dai.ngo@oracle.com
+In-Reply-To: <20211201145118.GA26415@fieldses.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH0P220CA0017.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:d3::24) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <8bc8cad158234aca0448ab1c8410880daff3c278.camel@hammerspace.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: from [192.168.1.116] (72.219.112.78) by PH0P220CA0017.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:d3::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.14 via Frontend Transport; Wed, 1 Dec 2021 18:47:36 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: ae97f5e2-8a59-4c20-ddba-08d9b4fb0af8
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4575:
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB45753D5A9CE88CB55868D3D387689@SJ0PR10MB4575.namprd10.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1360;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 3mOvUKeuzML4ZC5VSTpM9YqRYmT9zAN/LcSX01NorhMyVKwPQQLj/v1Tv0gKHa88WJnUIbMuSMrqQE47vvXxjHPkwRg85yoe+MlTpKKNI/Iq1OI4sD93J80/rNa2d6hY42pPuHe+Y4skiycvX3E6zXscNv6EylE3CIAmi9QkMt5VcLE/njZOdqUjqDkIJekjCQjHN8DomYrwbcJ+7fC+AkvO0WiXpVG/O776nAg3QNpPQ7DZ2eR74Ihbo//KBLZF8l5mBv4H/4lG//O1Vbrr4oAWpRWFlOTCT+PpeL60Vf3ar4+y2yJbSGZRqSGyUrUugddQ/Oz5a922o5uQOh38U27bBl6adjE2/bG6me7xrup1/bMLMrIYzk6LHIQgcHTYY70fxMwtNKvWYjpZb0FnqyTWmUB9Vw6D9F1kTWVpEsSDZLCAcVXBkGCnTDtmcQndTENWEy9HHlKAtYO5AyVRqX68GpkzPeDnj1KnO7rx9ckqN4+dTWlCkvh34H83Va+5KRkBbc0v9kaYD+8IxBwX8uHUt3eSs1/Pg39yx+C2iU0EsOSmxaV4oD5fMN1DgJy0Pe+en1cWVgoWV+PcBmJtu8fIMYQO1FWuFkvpftsRluJ0HcVJMGtGvxX7pF6AWA/6EKVMmPIE8D57BK5b6I6caXUuSq2Zb2/jaht3dRdIw+X7wnQqgUnkOAsDWu55ffTbqH8CCnBHxNnRhioPK5M48g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(8936002)(38100700002)(16576012)(316002)(54906003)(36756003)(66946007)(558084003)(508600001)(53546011)(26005)(4326008)(66476007)(66556008)(186003)(8676002)(6666004)(31696002)(5660300002)(83380400001)(2906002)(956004)(2616005)(9686003)(6486002)(86362001)(6916009)(31686004)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a0lFVmp5U0toeCtmTGpWK1Z1VHVyRmpvY241RlFucjN2a200TEVFQ1lSWUkw?=
+ =?utf-8?B?NlF6c2lBRXIrK09BcnlxM0Vpd0xGZGNQV1VKSUdYVUpUdWo1NHFVNVpVcnJ1?=
+ =?utf-8?B?THBqRkJoQm9oOFlOTGxJTVNkekdMOHRKbU5TdU12THg5a1RmNnliV2dHOGtI?=
+ =?utf-8?B?SEh4ajNreTI5OGdUQXl4cHVBT3EzVnVXTWFiNFNzR0N1UjBWSytWbkQ3czdw?=
+ =?utf-8?B?MjI2WlJ4VmJlcVBNMXdaYmJSRjNtcE42TS9GOHYxQStwd2F5dlhoZldxaEhw?=
+ =?utf-8?B?eGlieUxxRk0xMm51a0JSbk5sL3M3dHJPTkt1UWFtaXZpenQ4bG41TSt4bFpY?=
+ =?utf-8?B?TjNBekJOU2RxMG5JK2dIbVlWYkxTZTBiTXVrc0VuS3haVGJOZFN2a2JSVVdC?=
+ =?utf-8?B?NGhEUUNvSXlWRWNnRDFNQUVHK1RvaXoxdURzSVJFV1lCT1UzSFZEYUNvOHp4?=
+ =?utf-8?B?NU1kdGpEVHg3VTVFbVAra2t5K0tXdjY1cXlDcGRleTdkYmh5bDBwNHF1dG42?=
+ =?utf-8?B?aUFzejIxOEdrb0hCS3dibEdmVUFEUk5EbmRvR0VUa0ZVbDdpSjUvVXRqVDFm?=
+ =?utf-8?B?N01la3ZIY0FibFArcXo0LzBjVStXYm96bG5hZUVOUERIcXVXc0ZtRlk2dWRP?=
+ =?utf-8?B?Z1F4WHJFQnlnWURvZ0pRY2ZhSUZtVDZEQTBxK1NCckY1UC9FSkZON1BQWGdr?=
+ =?utf-8?B?VW15RlptTU8vcFE5RlVNZk1VYlNYeElMQ0p4RXpTQlRyVEdsMzc0VlMra3Rv?=
+ =?utf-8?B?djc2Y3BKUzQ1bTliUzNJYmtDRXl6NWphNXRRdjFIUzBYN3ovN1B1WCtNL1lm?=
+ =?utf-8?B?b3o4N21PdHJYZWJyb1UyZlEzRWVrRzVYWDlhVWkraVFGSnRuMTRRZ1ZLWTNW?=
+ =?utf-8?B?UXpSZDA2d0d1Vm14UE1xQzFrYWlIdWZLWDl3MzVIaHFWKzRzaE5rc1U3MDBX?=
+ =?utf-8?B?Y3diYWx1S3JpNmNiaW5tNlBBdXBNdjc4YXNlVzRGcC9sUG9TakRRZlVKUGU1?=
+ =?utf-8?B?YTY3SExISWFzQ0NoRWQ4TUx6akpybHUzNGtPTnRzOHhua0xXSXpZWFdmU25N?=
+ =?utf-8?B?QisrS2FUOFl2eEhsSVBUbHRkMnJmYkZYQVNVSzdGdk1uelduejkyZ0g3MzFs?=
+ =?utf-8?B?ZElwOWJrZjA0RmZQWWpLbkoyN2FEa2R2UU9FK2Yydk56RmlCMHR5b0w3R2lS?=
+ =?utf-8?B?YnNIRXFoNFdidUVlcDFBbERTVnBjR3lIczZQR0QzVEIyUUtSUnQrQmM0MnRv?=
+ =?utf-8?B?TmdPTXhwYWxMVXlmVjB4eW55Zm5Vc2hKUVQ3Z29vTFpRQXpQVnp5WVAvNGhE?=
+ =?utf-8?B?NDZLK0x6cyt5MFZiaUtaSzZWb1dMaXdkNGdWQ1JUelZRYTN5ellWZWlsazdB?=
+ =?utf-8?B?N1dWRGxaajV5N09XM0YvemhsZnBpeFVaYyt0M0p4T2NYNmh3QlFxT2gzWUtD?=
+ =?utf-8?B?dGEvbkRxU1lvZ1YrZWZxc1ZoTWRPaS9zZm4zWEQ0SE5NNU5QSjdHRzl0dElB?=
+ =?utf-8?B?NCtxbkxnZU4zdDB5TlMrdFNUUFdMMUVIc0tON2IwSFR3TGVqeFpDQmoxMHBo?=
+ =?utf-8?B?RmV6d0hjclJ1OUw5dS9saVA2V1U4QllzNXBSWHA0OGlHYzBOYXAvQStQV1I3?=
+ =?utf-8?B?YmRNWWZ4bVFMNkNaYlluYWhtMENkbC8rQmhBWjl2eUdUMDAzdjU3TXBmNjBo?=
+ =?utf-8?B?Y1pnOGU5ZXExRE9XQXBjN1ZZTGNZZTJ2S3ZxcFFpVHhJeHgwNnRzTmJrcDVt?=
+ =?utf-8?B?bHpZRXFaTGgrY0psaE1FL2g3dlYyRzlYbER2emh2enFoVysyTDRrc2ZRbTds?=
+ =?utf-8?B?Q2Nxb25CSnJTWEF0ekxSeUxYcGJIWlpQS01rN3dMRWxYVnhzcWgxUWphUnI2?=
+ =?utf-8?B?aHJDY0VPandMMXJTZzdkdjdXVXlucVgrR25namdWSXo5d0N4RzhOR3U3aW5G?=
+ =?utf-8?B?MDAyNS9EWXAxalpQazRmS1lnUy8rZnZPNDc4bStOQWV6ay8wWkg2NE1kY25W?=
+ =?utf-8?B?V3IxdmRIZ1BjYnFCdnNFR3NVdVNoVHMxajBFWnpqSWpRVlkrVGIwWHVOcnI4?=
+ =?utf-8?B?QTc1Wk5MZ0djRG8wTE9mckRQaHdFV3J5MkwzSDd5Mm9KSkVmOGtKNjNQQkpG?=
+ =?utf-8?B?L2x2VU4zeEpxQkVoSDVORmQ5bzBtdHJMeis2dHo4SEMxTnZpOWEyaTRKcHg2?=
+ =?utf-8?Q?ZpgetZyxcFQjlLTLbeZcY+o=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae97f5e2-8a59-4c20-ddba-08d9b4fb0af8
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Dec 2021 18:47:36.5241
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CrwTM7v/y/INZg7uU89/kGKm0if7dYyDtjwHpIKe4Qos8towsCxeHnC8tAcLq9QmTI9X1JvD+vzUV1rb4tIPWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4575
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10185 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 malwarescore=0
+ spamscore=0 bulkscore=0 mlxlogscore=999 suspectscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2112010100
+X-Proofpoint-ORIG-GUID: yBqNCUn70d1ytur_HgsHMsHZc5g2750F
+X-Proofpoint-GUID: yBqNCUn70d1ytur_HgsHMsHZc5g2750F
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 15 Oct 2021, Trond Myklebust wrote:
 
-> On Fri, 2021-10-15 at 08:03 +0000, Trond Myklebust wrote:
-> > On Fri, 2021-10-15 at 09:51 +1100, NeilBrown wrote:
-> > > On Fri, 15 Oct 2021, Trond Myklebust wrote:
-> > > > On Tue, 2021-10-12 at 08:57 +1100, NeilBrown wrote:
-> > > > > On Tue, 12 Oct 2021, Chuck Lever III wrote:
-> > > > > >=20
-> > > > > > Scott seems well positioned to identify a reproducer. Maybe
-> > > > > > we
-> > > > > > can give him some likely candidates for possible bugs to
-> > > > > > explore
-> > > > > > first.
-> > > > >=20
-> > > > > Has this patch been tried?
-> > > > >=20
-> > > > > NeilBrown
-> > > > >=20
-> > > > >=20
-> > > > > diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-> > > > > index c045f63d11fa..308f5961cb78 100644
-> > > > > --- a/net/sunrpc/sched.c
-> > > > > +++ b/net/sunrpc/sched.c
-> > > > > @@ -814,6 +814,7 @@ rpc_reset_task_statistics(struct rpc_task
-> > > > > *task)
-> > > > > =A0{
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0task->tk_timeouts =3D 0;
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0task->tk_flags &=3D ~(RPC_CALL_MAJORSEEN|=
-RPC_TASK_SENT);
-> > > > > +=A0=A0=A0=A0=A0=A0=A0clear_bit(RPC_TASK_SIGNALLED, &task->tk_run=
-state);
-> > > > > =A0=A0=A0=A0=A0=A0=A0=A0rpc_init_task_st
-> > > >=20
-> > > > We shouldn't automatically "unsignal" a task once it has been
-> > > > told
-> > > > to
-> > > > die. The correct thing to do here should rather be to change
-> > > > rpc_restart_call() to exit early if the task was signalled.
-> > > >=20
-> > >=20
-> > > Maybe.=A0 It depends on exactly what the signal meant
-> > > (rpc_killall_tasks()
-> > > is a bit different from getting a SIGKILL), and exactly what the
-> > > task
-> > > is
-> > > trying to achieve.
-> > >=20
-> > > Before Commit ae67bd3821bb ("SUNRPC: Fix up task signalling")
-> > > that is exactly what we did.
-> > > If we want to change the behaviour of a task responding to
-> > > rpc_killall_tasks(), we should clearly justify it in a patch doing
-> > > exactly that.
-> > >=20
-> >=20
-> > The intention behind rpc_killall_tasks() never changed, which is why
-> > it
->=20
-> ("it" being the error ERESTARTSYS)
->=20
-> > is listed in nfs_error_is_fatal(). I'm not aware of any case where we
-> > deliberately override in order to restart the RPC call on an
-> > ERESTARTSYS error.
-> >=20
-Update: I'm not able to reproduce this with an upstream kernel.  I
-bisected it down to commit 2ba5acfb3495 "SUNRPC: fix sign error causing
-rpcsec_gss drops" as the commit that "fixed" the issue (but really just
-makes the issue less likely to occur, I think).
+On 12/1/21 6:51 AM, Bruce Fields wrote:
+> Do you have a public git tree with your latest patches?
 
-I also tested commit 10b9d99a3dbb "SUNRPC: Augment server-side rpcgss
-tracepoints" (the commit in the Fixes: tag of 2ba5acfb3495) as well as
-commit 0e885e846d96 "nfsd: add fattr support for user extended attributes"
-(the parent of commit 10b9d99a3dbb) and verified that commit
-10b9d99a3dbb is where the issue started occurring.
+No, I don't but I can push it to Chuck's public tree. I need to prepare the patch.
 
-I think what is happening is that the NFS server gets a request that it
-thinks is outside of the GSS sequence window and drops the request,
-closes the connection and calls nfsd4_conn_lost(), which calls
-nfsd4_probe_callback() which sets NFSD4_CLIENT_CB_UPDATE in
-clp->cl_flags.  Then the client reestablishes the connection on that
-port, sends another request which receives
-NFS4ERR_CONN_NOT_BOUND_TO_SESSION.  The client runs the state manager
-which calls nfs4_bind_conn_to_session(), which calls
-nfs4_begin_drain_session(), which sets NFS4_SLOT_TBL_DRAINING in
-tbl->slot_tbl_state.  Meanwhile a conflicting request comes in that
-causes the server to recall the delegation.  Since
-NFS4_SLOT_TBL_DRAINING is set, the client responds to the CB_SEQUENCE
-with NFS4ERR_DELAY.  At the same time, the BIND_CONN_TO_SESSION requests
-=66rom the client are causing the server to call
-nfsd4_process_cb_update(), since NFSD4_CLIENT_CB_UPDATE flag is set.
-nfsd4_process_cb_update() calls rpc_shutdown_client() which signals the
-CB_RECALL task, which the server is trying re-send due to the
-NFS4ERR_DELAY, and we get into the soft-lockup.
+-Dai
 
-I tried this patch
-
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 20db98679d6b..187f7f1cc02a 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -803,6 +803,7 @@ rpc_reset_task_statistics(struct rpc_task *task)
- {
-        task->tk_timeouts =3D 0;
-        task->tk_flags &=3D ~(RPC_CALL_MAJORSEEN|RPC_TASK_SENT);
-+       clear_bit(RPC_TASK_SIGNALLED, &task->tk_runstate);
-        rpc_init_task_statistics(task);
- }
-=20
-but instead of fixing the soft-lockup I just wind up with a hung task:
-
-INFO: task nfsd:1367 blocked for more than 120 seconds.
-[ 3195.902559]       Not tainted 4.18.0-353.el8.jsm.test.1.x86_64 #1
-[ 3195.905411] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables =
-this message.
-[ 3195.908076] task:nfsd            state:D stack:    0 pid: 1367 ppid:    =
- 2 flags:0x80004080
-[ 3195.910906] Call Trace:
-[ 3195.911915]  __schedule+0x2d1/0x830
-[ 3195.913211]  schedule+0x35/0xa0
-[ 3195.914377]  schedule_timeout+0x274/0x300
-[ 3195.915919]  ? check_preempt_wakeup+0x113/0x230
-[ 3195.916907]  wait_for_completion+0x96/0x100
-[ 3195.917629]  flush_workqueue+0x14d/0x440
-[ 3195.918342]  nfsd4_destroy_session+0x198/0x230 [nfsd]
-[ 3195.919277]  nfsd4_proc_compound+0x388/0x6d0 [nfsd]
-[ 3195.920144]  nfsd_dispatch+0x108/0x210 [nfsd]
-[ 3195.920922]  svc_process_common+0x2b3/0x700 [sunrpc]
-[ 3195.921871]  ? svc_xprt_received+0x45/0x80 [sunrpc]
-[ 3195.922722]  ? nfsd_svc+0x2e0/0x2e0 [nfsd]
-[ 3195.923441]  ? nfsd_destroy+0x50/0x50 [nfsd]
-[ 3195.924199]  svc_process+0xb7/0xf0 [sunrpc]
-[ 3195.924971]  nfsd+0xe3/0x140 [nfsd]
-[ 3195.925596]  kthread+0x10a/0x120
-[ 3195.926383]  ? set_kthread_struct+0x40/0x40
-[ 3195.927100]  ret_from_fork+0x35/0x40
-
-I then tried this patch:
-
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 0e212ac0fe44..5667fd15f157 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1573,6 +1573,8 @@ __rpc_restart_call(struct rpc_task *task, void (*acti=
-on)(struct rpc_task *))
- int
- rpc_restart_call(struct rpc_task *task)
- {
-+       if (RPC_SIGNALLED(task))
-+               return 0;
-        return __rpc_restart_call(task, call_start);
- }
- EXPORT_SYMBOL_GPL(rpc_restart_call);
-
-and that seems to work.
-
--Scott
-> >=20
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->=20
->=20
-
+>
+> --b.
