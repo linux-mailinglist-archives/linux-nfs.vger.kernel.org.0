@@ -2,80 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C50B0464F7A
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 15:19:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BA2A465012
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Dec 2021 15:39:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349835AbhLAOWo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Dec 2021 09:22:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42828 "EHLO
+        id S1350836AbhLAOmZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Dec 2021 09:42:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242777AbhLAOWn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 09:22:43 -0500
+        with ESMTP id S1350832AbhLAOkm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Dec 2021 09:40:42 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16AB6C061574;
-        Wed,  1 Dec 2021 06:19:23 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F19BC061A24;
+        Wed,  1 Dec 2021 06:36:31 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 302451C81; Wed,  1 Dec 2021 09:19:22 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 302451C81
+        id DF7FB6EAA; Wed,  1 Dec 2021 09:36:30 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org DF7FB6EAA
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1638368362;
-        bh=ef0lWJ1KHbkF8kaGqezNMByFapxUluMxd+gu/NTLFkE=;
+        s=default; t=1638369390;
+        bh=Mi0YTO7jXgCawJ7A8Jk1KSYKuu3ECxMFpM2C6z6a15A=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hdApsnCj4gC8WFADuokQBND2GAH8h0WguW1KF8gQHuckhOwxqG6N9iT6ZG4Py4joE
-         Yjemr+RceXTxcX4IrgCuA332Iop2CcenLeinQD1Fk6VH/EVGpSC1rrGTG9B0CvlgO1
-         6X5WJ2erKOSDwrx5zM1BnXt7je51PKgWGp9AluC8=
-Date:   Wed, 1 Dec 2021 09:19:22 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
+        b=Go7WszeALwRwDlQdqEtszjJFYo/x/+2Qp5ETJRTM46/nVVVSLUxojtjlLLiAcJ7ze
+         M3s2doR1u2SPdHAI3kKKQL0tfqLUHGLKvtx70fubqBerWYMi42G15dsynT2RGKZa84
+         BKDZibznWoTk/klGK0oxyP+TwYcGzb1dCN/vXP2c=
+Date:   Wed, 1 Dec 2021 09:36:30 -0500
+From:   Bruce Fields <bfields@fieldses.org>
 To:     dai.ngo@oracle.com
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 Subject: Re: [PATCH RFC v5 0/2] nfsd: Initial implementation of NFSv4
  Courteous Server
-Message-ID: <20211201141922.GA24991@fieldses.org>
-References: <e1093e42-2871-8810-de76-58d1ea357898@oracle.com>
+Message-ID: <20211201143630.GB24991@fieldses.org>
+References: <20211129173058.GD24258@fieldses.org>
+ <da7394e0-26f6-b243-ce9a-d669e51c1a5e@oracle.com>
+ <1285F7E2-5D5F-4971-9195-BA664CAFF65F@oracle.com>
+ <e1093e42-2871-8810-de76-58d1ea357898@oracle.com>
  <C9C6AEC1-641C-4614-B149-5275EFF81C3D@oracle.com>
  <22000fe0-9b17-3d88-1730-c8704417cb92@oracle.com>
  <B42B0F9C-57E2-4F58-8DBD-277636B92607@oracle.com>
- <c8eef4ab9cb7acdf506d35b7910266daa9ded18c.camel@hammerspace.com>
- <0B58F7BC-A946-4FE6-8AC2-4C694A2120A3@oracle.com>
- <3afa1db55ccdf52eff7afb7b684eb961f878b68a.camel@hammerspace.com>
- <7548c291-cc0a-ed7a-ca37-63afe1d88c27@oracle.com>
- <3302102abac40bfbbd861f6ed942b2536db2e59a.camel@hammerspace.com>
- <9cfd81cc-aee9-bcf3-a4be-bb9a39992ae8@oracle.com>
+ <6f5a060d-17f6-ee46-6546-1217ac5dfa9c@oracle.com>
+ <20211130153211.GB8837@fieldses.org>
+ <f6a948a7-32d6-da9a-6808-9f2f77d5f792@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <9cfd81cc-aee9-bcf3-a4be-bb9a39992ae8@oracle.com>
+In-Reply-To: <f6a948a7-32d6-da9a-6808-9f2f77d5f792@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 30, 2021 at 07:52:10PM -0800, dai.ngo@oracle.com wrote:
-> On 11/30/21 5:37 AM, Trond Myklebust wrote:
-> >Then kick off a thread or work item to do that asynchronously in the
-> >background, and return NFS4ERR_DELAY to the clients that were trying to
-> >grab locks in the meantime.
+On Tue, Nov 30, 2021 at 07:50:13PM -0800, dai.ngo@oracle.com wrote:
 > 
-> Thanks Trond, I think this is a reasonable approach. The behavior would
-> be similar to a delegation recall during the OPEN.
-> 
-> My plan is:
-> 
-> 1. If the number of conflict clients is less than 100 (some numbers that
-> cover realistic usage) then release all their state synchronously in
-> the OPEN call, and returns NFS4_OK to the NFS client. Most of conflicts
-> should be handled by this case.
-> 
-> 2. If the number of conflict clients is more than 100 then release the
-> state of the 1st 100 clients as in (1) and trigger the laundromat thread
-> to release state of the rest of the conflict clients, and return
-> NFS4ERR_DELAY to the NFS client. This should be a rare condition.
+> On 11/30/21 7:32 AM, Bruce Fields wrote:
+> >On Mon, Nov 29, 2021 at 11:13:34PM -0800, dai.ngo@oracle.com wrote:
+> >>Just to be clear, the problem of pynfs with 4.0 is that the server takes
+> >>~55 secs to expire 1026 4.0 courteous clients, which comes out to ~50ms
+> >>per client. This causes the test to time out in waiting for RPC reply of
+> >>the OPEN that triggers the conflicts.
+> >>
+> >>I don't know exactly where the time spent in the process of expiring a
+> >>client. But as Bruce mentioned, it could be related to the time to access
+> >>/var/lib/nfs to remove the client's persistent record.
+> >Could you try something like
+> >
+> >	strace -r -$(pidof) -oTRACE
 
-Honestly, conflict with a courtesy client is itself not going to be that
-common, so personally I'd start simple and handle everything with the
-asynchronous approach.
+Oops, I mean $(pidof nfsdcld).  But, your system isn't using that:
+
+> 
+> Strace does not have any info that shows where the server spent time when
+> expiring client state. The client record is removed by nfsd4_umh_cltrack_remove
+> doing upcall to user space helper /sbin/nfsdcltrack to do the job.  I used
+> the low-tech debug tool, printk, to measure the time spent by
+> nfsd4_client_record_remove. Here is a sample of the output, START and END
+> are in milliseconds:
+> 
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: START [0x15d418] clp[ffff888119206040] client_tracking_ops[ffffffffa04bc2e0]
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: END [0x15d459] clp[ffff888119206040] client_tracking_ops[ffffffffa04bc2e0]
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: START [0x15d461] clp[ffff888119206740] client_tracking_ops[ffffffffa04bc2e0]
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: END [0x15d48e] clp[ffff888119206740] client_tracking_ops[ffffffffa04bc2e0]
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: START [0x15d49c] clp[ffff88811b54e000] client_tracking_ops[ffffffffa04bc2e0]
+> Nov 30 12:31:04 localhost kernel: nfsd4_client_record_remove: END [0x15d4c5] clp[ffff88811b54e000] client_tracking_ops[ffffffffa04bc2e0]
+> 
+> The average time spent to remove the client record is about ~50ms, matches
+> with the time reported by pynfs test. This confirms what Bruce suspected
+> earlier.
+
+OK, good to know.  It'd be interesting to dig into where nfsdcltrack is
+spending its time, which we could do by replacing it with a wrapper that
+runs the real nfsdcltrack under strace.
+
+Though maybe it'd be better to do this on a system using nfsdcld, since
+that's what we're transitioning to.
 
 --b.
