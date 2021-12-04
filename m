@@ -2,142 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DAA554681C7
-	for <lists+linux-nfs@lfdr.de>; Sat,  4 Dec 2021 02:24:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B181D4681D4
+	for <lists+linux-nfs@lfdr.de>; Sat,  4 Dec 2021 02:37:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1383955AbhLDB12 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 3 Dec 2021 20:27:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60812 "EHLO
+        id S1384014AbhLDBkc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 3 Dec 2021 20:40:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237601AbhLDB12 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Dec 2021 20:27:28 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE661C061751
-        for <linux-nfs@vger.kernel.org>; Fri,  3 Dec 2021 17:24:03 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id F206B5FF7; Fri,  3 Dec 2021 20:24:02 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org F206B5FF7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1638581042;
-        bh=nAS39s0Cl0xEl8NOVCiELpdd2r76k98dUEV5AHOKla0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QRrPrFBbARq4pmpge2SWq+dYcU+7GUU0KqCIaIhWp/tYhzGCpG6J6iyN92bATOXpp
-         mKmPQerR51NpALubz4YAPD+CEJ639ts2cUjOhOby56eVsypQV8Ijq2u7hjdtnoJ9f5
-         hVR7AnY8UhXX6UjQ9DQ0bEC9L/XJTC9QFOz/T6Fk=
-Date:   Fri, 3 Dec 2021 20:24:02 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Steve Dickson <SteveD@redhat.com>, Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsdcld: use WAL journal for faster commits
-Message-ID: <20211204012402.GA7805@fieldses.org>
-References: <f6a948a7-32d6-da9a-6808-9f2f77d5f792@oracle.com>
- <20211201143630.GB24991@fieldses.org>
- <20211201174205.GB26415@fieldses.org>
- <20211201180339.GC26415@fieldses.org>
- <20211201195050.GE26415@fieldses.org>
- <20211203212200.GB3930@fieldses.org>
- <20211203215531.GC3930@fieldses.org>
- <469DF1ED-C2AB-43CE-AB70-BFD2AFC2A68D@oracle.com>
- <20211203223921.GA6151@fieldses.org>
- <915221EC-387C-4F50-83C6-8DCF02DD2A5D@oracle.com>
+        with ESMTP id S1384003AbhLDBkb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 3 Dec 2021 20:40:31 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDFABC061751
+        for <linux-nfs@vger.kernel.org>; Fri,  3 Dec 2021 17:37:06 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id z5so18869370edd.3
+        for <linux-nfs@vger.kernel.org>; Fri, 03 Dec 2021 17:37:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:sender:from:date:message-id:subject:to;
+        bh=sGzC16ildBUiCeAy4EW1K8Z5D3OZQgv5hVrXzFRnr0U=;
+        b=YYyESI9OKsPBt9MXFk/clnv3imOO0K3UtPo1TeKSMvI8VmkcInDKjBu8lN+7HljWfF
+         sTMCbariLlD+/0HyOLETlEusf7k8640XjGdcVQfQdvYZlUnv06GqotZlSPr2gCCbMZ59
+         ZtQy/OiQ1XXHJt/hwT3JyGCL/HNk6ny0Mz5bu7O8P1sguLffk3BZk7QvttFEQk84lIIV
+         WfuODtitNHYdTCha+HilhuDulgiAHnSD1fCpqUEZQFTWXSlVuiqnyCbXAMh1ojDTcE/U
+         QrwBAvgtHKT7eQf1wMvQVqzKn49argA7Kngg0DCX7yI1opwH3WSUiztzBsrLzbXbBW0/
+         d2Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
+         :to;
+        bh=sGzC16ildBUiCeAy4EW1K8Z5D3OZQgv5hVrXzFRnr0U=;
+        b=lYihp1qU+BsajvR9F8htrEX9k4ecN6n8HT4khyNYpw3380VcsXzjKqrsZxIpzKMjBp
+         K0yZFFhOAFnkKBp4qk5kypOaqS3n/BCrTzOVs4t9U3KAjQk/SFCaQHjP8T7o7tKcdtOf
+         0kf9SJFJbtgR/C8ZyO35/rIqzzs2QT2mN35btQEjRvk2K5gTa8O+CeQpGKk5Vaz9gPud
+         LfsO/BN1NHGXnPcXI+KaC28bjyF5VgVDwRxGajfCcyLVm4QSMqR7R/USgiJrMiYUKTMo
+         76bjUedW5VMejVaFckdbFevMA/CmqcXqcH3vdH4EdkOmfuWIw2hRC55ZdXJts4gYJw2T
+         e1pA==
+X-Gm-Message-State: AOAM533npgzOWS5bVpIQFT4C2yZ7wk8AhQ/uKWjBJHeb8bczyTnFedWZ
+        Ls8/arf4hqVQ6LmJqlBs5tLH9nyN5DSuZ26X62M=
+X-Google-Smtp-Source: ABdhPJwwhsPoS7LEIiT2NStcZuSuF4AwnVkW89gRtpXezp75CsfkBvtdiMTGlWQX0VpAxqRaNczMxIExXI35fuCiuwA=
+X-Received: by 2002:a17:907:96a9:: with SMTP id hd41mr28288683ejc.413.1638581825099;
+ Fri, 03 Dec 2021 17:37:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <915221EC-387C-4F50-83C6-8DCF02DD2A5D@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Sender: jb234756@gmail.com
+Received: by 2002:a05:6402:4307:0:0:0:0 with HTTP; Fri, 3 Dec 2021 17:37:04
+ -0800 (PST)
+From:   "Mrs. Rita Hassan" <ritahassan02@gmail.com>
+Date:   Sat, 4 Dec 2021 01:37:04 +0000
+X-Google-Sender-Auth: 6kCCB8HyiZcRMglczXn9NTFdYOw
+Message-ID: <CAK8T09PrKHjTB0b5zm2CZhWrTtEvaBUW=ZQkkQK6A6oZiBKibQ@mail.gmail.com>
+Subject: urgent respond.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Dec 04, 2021 at 12:35:11AM +0000, Chuck Lever III wrote:
-> 
-> > On Dec 3, 2021, at 5:39 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > ﻿On Fri, Dec 03, 2021 at 10:07:19PM +0000, Chuck Lever III wrote:
-> >> 
-> >> 
-> >>>> On Dec 3, 2021, at 4:55 PM, Bruce Fields <bfields@fieldses.org> wrote:
-> >>> 
-> >>> From: "J. Bruce Fields" <bfields@redhat.com>
-> >>> 
-> >>> Currently nfsdcld is doing three fdatasyncs for each upcall.  Based on
-> >>> SQLite documentation, WAL mode should also be safe, and I can confirm
-> >>> from an strace that it results in only one fdatasync each.
-> >>> 
-> >>> This may be a bottleneck e.g. when lots of clients are being created or
-> >>> expired at once (e.g. on reboot).
-> >>> 
-> >>> Not bothering with error checking, as this is just an optimization and
-> >>> nfsdcld will still function without.  (Might be better to log something
-> >>> on failure, though.)
-> >> 
-> >> I'm in full philosophical agreement for performance improvements
-> >> in this area. There are some caveats for WAL:
-> >> 
-> >> - It requires SQLite v3.7.0 (2010). configure.ac may need to be
-> >>   updated.
-> > 
-> > Makes sense.  But I dug around a bit, and how to do this is a total
-> > mystery to me....
-> 
-> aclocal/libsqlite3.m4 has an SQLITE_VERSION_NUMBER check.
+Please I need your help,
 
-I looked got stuck trying to figure out why the #%^ it's comparing to
-SQLITE_VERSION_NUMBER.  OK, I see now, it's just some sanity check.
-Here's take 2.
+My name is Mrs.Rita,I am a woman and also a cancer patient who has
+decided to donate what I have to you for God's works.I want to donate
+$5.5 million to you so that you will use 70% of this fund to help the
+poor ones,while you use the rest 30%  for your family.If you are
+interested,Respond now for more details on how to receive this fund.
 
---b.
+please contact me for more details on this email. ( ritahassan02@gmail.com )
 
-From c22d3a2d8576273934773fefac933d4f8e04776b Mon Sep 17 00:00:00 2001
-From: "J. Bruce Fields" <bfields@redhat.com>
-Date: Fri, 3 Dec 2021 10:27:53 -0500
-Subject: [PATCH] nfsdcld: use WAL journal for faster commits
+Yours Faithfully
 
-Currently nfsdcld is doing three fdatasyncs for each upcall.  Based on
-SQLite documentation, WAL mode should also be safe, and I can confirm
-from an strace that it results in only one fdatasync each.
-
-This may be a bottleneck e.g. when lots of clients are being created or
-expired at once (e.g. on reboot).
-
-Not bothering with error checking, as this is just an optimization and
-nfsdcld will still function without.  (Might be better to log something
-on failure, though.)
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- aclocal/libsqlite3.m4  | 2 +-
- utils/nfsdcld/sqlite.c | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/aclocal/libsqlite3.m4 b/aclocal/libsqlite3.m4
-index 8c38993cbba8..c3beb4d56f0c 100644
---- a/aclocal/libsqlite3.m4
-+++ b/aclocal/libsqlite3.m4
-@@ -22,7 +22,7 @@ AC_DEFUN([AC_SQLITE3_VERS], [
- 		int vers = sqlite3_libversion_number();
- 
- 		return vers != SQLITE_VERSION_NUMBER ||
--			vers < 3003000;
-+			vers < 3007000;
- 	}
-        ], [libsqlite3_cv_is_recent=yes], [libsqlite3_cv_is_recent=no],
-        [libsqlite3_cv_is_recent=unknown])
-diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
-index 03016fb95823..eabb0daa95f5 100644
---- a/utils/nfsdcld/sqlite.c
-+++ b/utils/nfsdcld/sqlite.c
-@@ -826,6 +826,8 @@ sqlite_prepare_dbh(const char *topdir)
- 		goto out_close;
- 	}
- 
-+	sqlite3_exec(dbh, "PRAGMA journal_mode = WAL;", NULL, NULL, NULL);
-+
- 	ret = sqlite_query_schema_version();
- 	switch (ret) {
- 	case CLD_SQLITE_LATEST_SCHEMA_VERSION:
--- 
-2.33.1
-
+Mrs. Rita Hassan.
