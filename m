@@ -2,549 +2,266 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1830B46A38D
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Dec 2021 18:59:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F43146A4C9
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Dec 2021 19:39:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344292AbhLFSDZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Dec 2021 13:03:25 -0500
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:37706 "EHLO
+        id S1345430AbhLFSn0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Dec 2021 13:43:26 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:30952 "EHLO
         mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229714AbhLFSDY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Dec 2021 13:03:24 -0500
+        by vger.kernel.org with ESMTP id S233656AbhLFSnZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Dec 2021 13:43:25 -0500
 Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B6GnLAs027660;
-        Mon, 6 Dec 2021 17:59:53 GMT
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B6GnLrK027649;
+        Mon, 6 Dec 2021 18:39:54 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=corp-2021-07-09;
- bh=LSMjg14JSuP5RZex8qp9Q1y8EuUh0wIwHB0AdBvVRko=;
- b=0DWJkb2/7Nqhn7k83ZnhhucH0DH0j8Alf9WHFi4+/uOtEyRZ5UA9BIwg5vOG83YXKTr3
- gDVO3cYQ0PWbDuILvp7t9n9lJUDYFmQ4Ch0Qx7l+RJIvytPoo3hGfSc6/0VUuQDYze7A
- hiQcEPV6R34zEiv1GSMV1k2Kspi21ygi5gZugKL9bnyJTUrkQ1i6rKpGZwb9V0oB8fyh
- XCaN75tpN/suFNa7GTSq0h/bBBLlWhBTn8BfupqCW0cvsxxt1PlD6LNj9CU3nR4nkYSd
- fm3LdS70KlD/PFlGFcb2tWYxMFLh3XGdSvgn+fC6ByJd1dbatxl3yPXss/ZxcrgL985o aA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3csc72b15u-1
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=P0QD1TuEhAtXKJrdOtfGT1XNqn77ADHHXGeNn6RUF8Y=;
+ b=z6uCiJqbc2QvtEXxXd/mjARFD+xKqdBo0lGkCPLHJbzyv3mfdvfBwVfZ7wr/5WQ3ts77
+ A1+XOtT9KG5oIrc0Txn/4Vp3ZdFf7hspK8B3BUE/WVDBpcGntB+aNI349sjQSFj9I9hm
+ cL0WiLkvo1ryFU6wieXnbWFvrnbVY2ui7DZ2Q55W5cldSMDp2Latg2tUB1Vz1Bok29yv
+ 4x3ChnJNMrI/qfjacTLuhHEWUxTizWyOarzjg0Dp3RapBvELSie1LRiRIsme0Acx6oVW
+ lJukwddGcNF290yzMVjfPq4RDu5mIuGGmcg081Ir7SHgN6MGCbxfjMhRH61lScUMJeWB Mg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3csc72b4cs-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Dec 2021 17:59:52 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1B6Hudw2072369;
-        Mon, 6 Dec 2021 17:59:51 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 3cr1smf1sr-1
+        Mon, 06 Dec 2021 18:39:54 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1B6Ia4fc193539;
+        Mon, 6 Dec 2021 18:39:53 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
+        by aserp3020.oracle.com with ESMTP id 3cr053tce3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 06 Dec 2021 17:59:51 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1B6Hxnab081234;
-        Mon, 6 Dec 2021 17:59:51 GMT
-Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
-        by userp3020.oracle.com with ESMTP id 3cr1smf1rt-3;
-        Mon, 06 Dec 2021 17:59:51 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     bfields@fieldses.org
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH RFC v6 2/2] nfsd: Initial implementation of NFSv4 Courteous Server
-Date:   Mon,  6 Dec 2021 12:59:42 -0500
-Message-Id: <20211206175942.47326-3-dai.ngo@oracle.com>
-X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
-In-Reply-To: <20211206175942.47326-1-dai.ngo@oracle.com>
+        Mon, 06 Dec 2021 18:39:53 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MUEUDjLe9wR9w/jhhAlCvictyURriceWfT1pImga7fbfl13QtGbovBzSSHOELUYuVE60jQo3hLiLqYKImMfI3L0k9w8fQY9a70ssw7seVyfO6fTZfZvHcMYKxKPyn5ZTH3qVLafobTzlN0cM5eMe2Cm4k6aRmi5b9nvZxYxAjNOjYxomKcTK9Am7yMIvkKe/+UENKekq0PZarTMT23BMSWBuvOfYwPyv5cwivDGCoGCzjqK2PSKXx/FzZQoTlQQ/Wlo6zo8ardipt6RDjgLPU648hxzlt6knLLvPzQ68FFvdOrKB/mS/4ZJAZm3fln/a75K0t0lVKuSO92zi6KwYfg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=P0QD1TuEhAtXKJrdOtfGT1XNqn77ADHHXGeNn6RUF8Y=;
+ b=Zx2f/ciUnScn6PuyUWbiIfqqaMzDdZJryFrL2/W1vemn69oqfN4BafJbfVjPavZLktd5Z4NGLRCnlvErC71aRYPxH2cfDtc2GFgt3DjQWLZ0TLCdEw3sDxOvcoDaisAygBEYH16bTmAnfLW1KCdTTE7B+R9ut7MztucKMHAgQ4jn4QRuLKwZUGgGHeo7y1P/HtjInNYAJgf/hLxXC6kBCXRbEPkxxKtTmMnRI6iYyfebiIKWhOlSUci+G97oQt99IOXAjdDN5dq2EfCmCn+FEfORUUvyBeDckFNXScQIN4qB5JBz7pw/z+d2ONeBLB2XAeOctsQ/27wz4uxJkA+exg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P0QD1TuEhAtXKJrdOtfGT1XNqn77ADHHXGeNn6RUF8Y=;
+ b=BDFMwnbNWivQyo96dx5RzxQw8q0q8+9Ok98XzOZZ3RHuwRgxvNUJySvvZsFAx3gA+2H98mGH9Y0bQENDhdewOerIcxIrg57kzPBi66KAX8U3IWh+zIeVLvVDfIYkTTI3vugRvbjBRoSFh0z99QmynmpQHet7yy551umy45+wUXQ=
+Received: from CH0PR10MB4858.namprd10.prod.outlook.com (2603:10b6:610:cb::17)
+ by CH0PR10MB5340.namprd10.prod.outlook.com (2603:10b6:610:c1::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4755.20; Mon, 6 Dec
+ 2021 18:39:51 +0000
+Received: from CH0PR10MB4858.namprd10.prod.outlook.com
+ ([fe80::a4f2:aef4:d02b:9bde]) by CH0PR10MB4858.namprd10.prod.outlook.com
+ ([fe80::a4f2:aef4:d02b:9bde%9]) with mapi id 15.20.4755.021; Mon, 6 Dec 2021
+ 18:39:51 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>
+CC:     Bruce Fields <bfields@fieldses.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Dai Ngo <dai.ngo@oracle.com>
+Subject: Re: [PATCH RFC v6 1/2] fs/lock: add new callback, lm_expire_lock, to
+ lock_manager_operations
+Thread-Topic: [PATCH RFC v6 1/2] fs/lock: add new callback, lm_expire_lock, to
+ lock_manager_operations
+Thread-Index: AQHX6ssSX8kmzDHzL0ydpUvZWW9YQKwly7cA
+Date:   Mon, 6 Dec 2021 18:39:51 +0000
+Message-ID: <133AE467-0990-469D-A8A9-497C1C1BD09A@oracle.com>
 References: <20211206175942.47326-1-dai.ngo@oracle.com>
+ <20211206175942.47326-2-dai.ngo@oracle.com>
+In-Reply-To: <20211206175942.47326-2-dai.ngo@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: afd2b830-678f-4600-0e12-08d9b8e7ca36
+x-ms-traffictypediagnostic: CH0PR10MB5340:EE_
+x-microsoft-antispam-prvs: <CH0PR10MB5340190423C49C18886FD505936D9@CH0PR10MB5340.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8vGnQ5eTQdFL9XWUdWnVU/lB7jTonC39o8ngu3J5MDYa/VWa0VoLUHyUN3CZF94KDxXhSyL+jvsTR9Rhbt9tq90phCMphxt7emBc/gqPj2FcfzwHUrMwawDAAi+WZEcbYNbnUa3F9BYP7BndZ3cewZfBw7kPQtK69bOIJ5RYKzRxvbeGvfG6db68cExBvbkzt9+kpIwex+2pkA90MQjltVJKH8zY/uWBJGgtQc9tf+rXKcZGVtfPSr60W44ds51VwbElGMDtA/JaGU2rzOo1xbX+yw8OLtp51dssj5UJnImvGKTHbIs2h4d6dJyybtiXnMO8DIq0R0F/S6XDe4brc+VaoWIyxeN93XqAjG2MZ8c0xRYsl56Dhgf0f6Cf9xVi4hMq9H0YRPiRhKWhJkEK5U/815dEaEZ/s61OMM8V09nyfGPDJBQFoFCFBDh61xII6tSSPUe5r6y+2tp+F8yjnIkInNUhO29+zDn3OcSyIZTHIxJVHqCxptRKz+hRbHK8NFbGjJFiGI4Ow05wamQrKBliZs6tiFS6/ZfYHHoF19jCwxUIGhOp+PXbgqyvJlCyFYfQUgFG9iy3Le5t7gaF1zJx4XLzDi8weyHI5iFgb/Gf/MsWquBRXo/JuPW4O8UkRL9YxThxu6FF2USasXPhqO1O2iLuE2/7c+ofATN1ZAHfxzwNTbRnMa4GGbwetj2jGDCZjWV+NgZfNxgs+Gjmq/KFOd6hzMtGzD7Q2wfual+4uYBNb7FUMOAG7gaYNQUh
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(5660300002)(110136005)(71200400001)(122000001)(8676002)(107886003)(54906003)(6506007)(4326008)(2906002)(508600001)(33656002)(53546011)(6486002)(6512007)(66946007)(86362001)(38070700005)(2616005)(316002)(64756008)(26005)(66446008)(38100700002)(66556008)(66476007)(76116006)(186003)(36756003)(83380400001)(8936002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?EZt8A1mTjNJv48pV1TAvQvCEE5tBif7x+BYqRPiLusYafsEOzjxPOOc4PcTR?=
+ =?us-ascii?Q?tIU9Jhli2Ol4mA5ws2SLFOwRPGiYIiUVWSuG++xQptLKqx0aLounmjidBI3M?=
+ =?us-ascii?Q?g+gLxLF1rftSvFLsYcV4QwZL2LicBECC/LA1QzlIQkTlw1wt0G2HJVxYyhD/?=
+ =?us-ascii?Q?j5N9V5REmlTJ2jFRbGPbcFOGumZ46CHt+aWdEA7RIDI7TO9a0XQYVFCrc2hy?=
+ =?us-ascii?Q?/3Oe0fBzJgyYtNbOjN8ZYXspwSjQ1KZRExN15REIReFfT0kV+qgy+ocR8Z8n?=
+ =?us-ascii?Q?C2sOtOUH3PIkWzWmIrmuAp6V7JPahupvmpxciOzNoIRtKslkB8aYuE8kn31j?=
+ =?us-ascii?Q?R4CVM033/JCwh8DxXQ5w3zBP7BaqqHNAUYRzktCr9KPgVqkYRBJXFXav5Uh4?=
+ =?us-ascii?Q?WyHg+YO+uCQn3BTI2L3H4Xo7oFxHyuEYyW420bYX3iQcfLnJoSK93t6G/8Zq?=
+ =?us-ascii?Q?4zIkL/snNCYrKxFP2N3tFqjwM85URt0gFRXiP9HVBGYIl4UCSr65fBIyphua?=
+ =?us-ascii?Q?x9T/ejHOnU6uj8j77gNTMrcfshRvJS2HfNxi9e0v87/g0KFrfkoJZgbtldUT?=
+ =?us-ascii?Q?+BiObyss2vVNrTrkh5WEB5LjYcM4G+hilLMj/PNU7/kc42g87a/pt6UZ/7Jr?=
+ =?us-ascii?Q?NAqEr2xkIwgKCxbKIo60Wvf8ywjqwQZKKWPnwnBB4Braz3BJPdZ8ZRR/f5by?=
+ =?us-ascii?Q?zaSjC5aPtXO8ff/+Fwe4TKxkvh6JUdrAEhTx93Xb/EpBvvSndarDWt/Z6fyk?=
+ =?us-ascii?Q?5LyS3X443/VBqOh3FWXeao7eOkb/aOd1fYkRDtKt1UHgztwx4SXF5RevJjA8?=
+ =?us-ascii?Q?Qko2+L4nau1qXsnQxGEGynyh6Cl6nuTZGZGw9LikOeUJc/53fbKQKvxTZ1JB?=
+ =?us-ascii?Q?QTB3nSUHzSSGfgjjkwIwQNqb/gJQcVKRR4bc98FEx7xp52le339/I2svGi0Q?=
+ =?us-ascii?Q?kCSR4SvlDTS3ZCTQ3iBidQDe1L0LKz/SaGZ5hUJCu99bfzajw98ZMkN4AcIc?=
+ =?us-ascii?Q?dMBqtWFgFlC+6+YC8p3XTF9fCkUSbLEJAXCWZHuDXRwVBJysdHZphtxV4rnl?=
+ =?us-ascii?Q?6aWz/0IxDcHOnyyUfRWyIoOI2M+UR2YBpy0Z1Shkd5bUa1S1sT/AzgiIEgdX?=
+ =?us-ascii?Q?1L8ZLu8bJM9XkLIT8C3SCNrqhSnZRNnC00rVZxm5fZx3XOI709/aT8Hrgx7q?=
+ =?us-ascii?Q?ePp2dYjR8bBg4brh9Kyl+DJ43F7txGpZuP1yFk4yG7VdqpiOJgk8jopDNSXv?=
+ =?us-ascii?Q?ngc8kVW3KyYEnC/Y/wseB6Gut4znOuh9fdPcipBU2sBmcQuR7Kn2ZsBeGpiU?=
+ =?us-ascii?Q?P4ZXPlN4NX5/FQn+FBgzleCxYfqjH5dH5tFiwEEmrHQ5mz20elvryFd5Q3Wz?=
+ =?us-ascii?Q?vscy1RTm22ZyPMYldI36WI4x6gZGlPE46r7m8eOsUI8r0ChpWH77H/SSRu/F?=
+ =?us-ascii?Q?g+cpzEE3TXvnkQy6eWP3Qvcy2+pCp4dpszYuA+HN+OItGsE0KnNGUJwlSdQN?=
+ =?us-ascii?Q?wJjeP5Nk+nY7IHEYRe7END2DNGU84RsdHsS5HXj55nFfTxCW4RMQd9gxNyMt?=
+ =?us-ascii?Q?D/8TVNSkz5BRJDaJAAqI2wHDqRLt1/YirdN9aPjgwjrq2Eu5gfedcgNxiA9g?=
+ =?us-ascii?Q?QMqlFV7Q6zWiduvEUSwPCrY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <914631708601C44688B5265C29B5E8B3@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: 7H7uhidLY-LGowb430ci_3CW10QDc514
-X-Proofpoint-GUID: 7H7uhidLY-LGowb430ci_3CW10QDc514
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB4858.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: afd2b830-678f-4600-0e12-08d9b8e7ca36
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Dec 2021 18:39:51.8684
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9PKZVqOewDQ2Jchc/ABl7MUb7N6oZtFZr5lE4oZG8BfE4VDCwMPndSO22z0LouGTsPE51qsFxv4HrPmyCk5UPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5340
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10190 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
+ definitions=main-2112060111
+X-Proofpoint-ORIG-GUID: HHiUM23jVUgNWxlHcGse3dr0iOB5I4gL
+X-Proofpoint-GUID: HHiUM23jVUgNWxlHcGse3dr0iOB5I4gL
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently an NFSv4 client must maintain its lease by using the at least
-one of the state tokens or if nothing else, by issuing a RENEW (4.0), or
-a singleton SEQUENCE (4.1) at least once during each lease period. If the
-client fails to renew the lease, for any reason, the Linux server expunges
-the state tokens immediately upon detection of the "failure to renew the
-lease" condition and begins returning NFS4ERR_EXPIRED if the client should
-reconnect and attempt to use the (now) expired state.
 
-The default lease period for the Linux server is 90 seconds.  The typical
-client cuts that in half and will issue a lease renewing operation every
-45 seconds. The 90 second lease period is very short considering the
-potential for moderately long term network partitions.  A network partition
-refers to any loss of network connectivity between the NFS client and the
-NFS server, regardless of its root cause.  This includes NIC failures, NIC
-driver bugs, network misconfigurations & administrative errors, routers &
-switches crashing and/or having software updates applied, even down to
-cables being physically pulled.  In most cases, these network failures are
-transient, although the duration is unknown.
 
-A server which does not immediately expunge the state on lease expiration
-is known as a Courteous Server.  A Courteous Server continues to recognize
-previously generated state tokens as valid until conflict arises between
-the expired state and the requests from another client, or the server
-reboots.
+> On Dec 6, 2021, at 12:59 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>=20
+> Add new callback, lm_expire_lock, to lock_manager_operations to allow
+> the lock manager to take appropriate action to resolve the lock conflict
+> if possible. The callback takes 2 arguments, file_lock of the blocker
+> and a testonly flag:
+>=20
+> testonly =3D 1  check and return true if lock conflict can be resolved
+>              else return false.
+> testonly =3D 0  resolve the conflict if possible, return true if conflict
+>              was resolved esle return false.
+>=20
+> Lock manager, such as NFSv4 courteous server, uses this callback to
+> resolve conflict by destroying lock owner, or the NFSv4 courtesy client
+> (client that has expired but allowed to maintains its states) that owns
+> the lock.
+>=20
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 
-The initial implementation of the Courteous Server will do the following:
+Al, Jeff, as co-maintainers of record for fs/locks.c, can you give
+an Ack or Reviewed-by? I'd like to take this patch through the nfsd
+tree for v5.17. Thanks for your time!
 
-. when the laundromat thread detects an expired client and if that client
-still has established states on the Linux server and there is no waiters
-for the client's locks then mark the client as a COURTESY_CLIENT and skip
-destroying the client and all its states, otherwise destroy the client as
-usual.
 
-. detects conflict of OPEN request with COURTESY_CLIENT, destroys the
-expired client and all its states, skips the delegation recall then allows
-the conflicting request to succeed.
+> ---
+> fs/locks.c         | 28 +++++++++++++++++++++++++---
+> include/linux/fs.h |  1 +
+> 2 files changed, 26 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/fs/locks.c b/fs/locks.c
+> index 3d6fb4ae847b..0fef0a6322c7 100644
+> --- a/fs/locks.c
+> +++ b/fs/locks.c
+> @@ -954,6 +954,7 @@ posix_test_lock(struct file *filp, struct file_lock *=
+fl)
+> 	struct file_lock *cfl;
+> 	struct file_lock_context *ctx;
+> 	struct inode *inode =3D locks_inode(filp);
+> +	bool ret;
+>=20
+> 	ctx =3D smp_load_acquire(&inode->i_flctx);
+> 	if (!ctx || list_empty_careful(&ctx->flc_posix)) {
+> @@ -962,11 +963,20 @@ posix_test_lock(struct file *filp, struct file_lock=
+ *fl)
+> 	}
+>=20
+> 	spin_lock(&ctx->flc_lock);
+> +retry:
+> 	list_for_each_entry(cfl, &ctx->flc_posix, fl_list) {
+> -		if (posix_locks_conflict(fl, cfl)) {
+> -			locks_copy_conflock(fl, cfl);
+> -			goto out;
+> +		if (!posix_locks_conflict(fl, cfl))
+> +			continue;
+> +		if (cfl->fl_lmops && cfl->fl_lmops->lm_expire_lock &&
+> +				cfl->fl_lmops->lm_expire_lock(cfl, 1)) {
+> +			spin_unlock(&ctx->flc_lock);
+> +			ret =3D cfl->fl_lmops->lm_expire_lock(cfl, 0);
+> +			spin_lock(&ctx->flc_lock);
+> +			if (ret)
+> +				goto retry;
+> 		}
+> +		locks_copy_conflock(fl, cfl);
+> +		goto out;
+> 	}
+> 	fl->fl_type =3D F_UNLCK;
+> out:
+> @@ -1140,6 +1150,7 @@ static int posix_lock_inode(struct inode *inode, st=
+ruct file_lock *request,
+> 	int error;
+> 	bool added =3D false;
+> 	LIST_HEAD(dispose);
+> +	bool ret;
+>=20
+> 	ctx =3D locks_get_lock_context(inode, request->fl_type);
+> 	if (!ctx)
+> @@ -1166,9 +1177,20 @@ static int posix_lock_inode(struct inode *inode, s=
+truct file_lock *request,
+> 	 * blocker's list of waiters and the global blocked_hash.
+> 	 */
+> 	if (request->fl_type !=3D F_UNLCK) {
+> +retry:
+> 		list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
+> 			if (!posix_locks_conflict(request, fl))
+> 				continue;
+> +			if (fl->fl_lmops && fl->fl_lmops->lm_expire_lock &&
+> +					fl->fl_lmops->lm_expire_lock(fl, 1)) {
+> +				spin_unlock(&ctx->flc_lock);
+> +				percpu_up_read(&file_rwsem);
+> +				ret =3D fl->fl_lmops->lm_expire_lock(fl, 0);
+> +				percpu_down_read(&file_rwsem);
+> +				spin_lock(&ctx->flc_lock);
+> +				if (ret)
+> +					goto retry;
+> +			}
+> 			if (conflock)
+> 				locks_copy_conflock(conflock, fl);
+> 			error =3D -EAGAIN;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index e7a633353fd2..1a76b6451398 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -1071,6 +1071,7 @@ struct lock_manager_operations {
+> 	int (*lm_change)(struct file_lock *, int, struct list_head *);
+> 	void (*lm_setup)(struct file_lock *, void **);
+> 	bool (*lm_breaker_owns_lease)(struct file_lock *);
+> +	bool (*lm_expire_lock)(struct file_lock *fl, bool testonly);
+> };
+>=20
+> struct lock_manager {
+> --=20
+> 2.9.5
+>=20
 
-. detects conflict of LOCK/LOCKT, NLM LOCK and TEST, and local locks
-requests with COURTESY_CLIENT, destroys the expired client and all its
-states then allows the conflicting request to succeed.
+--
+Chuck Lever
 
-. detects conflict of LOCK/LOCKT, NLM LOCK and TEST, and local locks
-requests with COURTESY_CLIENT, destroys the expired client and all its
-states then allows the conflicting request to succeed.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 293 +++++++++++++++++++++++++++++++++++++++++++++++++++-
- fs/nfsd/state.h     |   3 +
- 2 files changed, 293 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 3f4027a5de88..759f61dc6685 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -125,6 +125,11 @@ static void free_session(struct nfsd4_session *);
- static const struct nfsd4_callback_ops nfsd4_cb_recall_ops;
- static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops;
- 
-+static struct workqueue_struct *laundry_wq;
-+static void laundromat_main(struct work_struct *);
-+
-+static int courtesy_client_expiry = (24 * 60 * 60);	/* in secs */
-+
- static bool is_session_dead(struct nfsd4_session *ses)
- {
- 	return ses->se_flags & NFS4_SESSION_DEAD;
-@@ -172,6 +177,7 @@ renew_client_locked(struct nfs4_client *clp)
- 
- 	list_move_tail(&clp->cl_lru, &nn->client_lru);
- 	clp->cl_time = ktime_get_boottime_seconds();
-+	clear_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags);
- }
- 
- static void put_client_renew_locked(struct nfs4_client *clp)
-@@ -2389,6 +2395,10 @@ static int client_info_show(struct seq_file *m, void *v)
- 		seq_puts(m, "status: confirmed\n");
- 	else
- 		seq_puts(m, "status: unconfirmed\n");
-+	seq_printf(m, "courtesy client: %s\n",
-+		test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags) ? "yes" : "no");
-+	seq_printf(m, "seconds from last renew: %lld\n",
-+		ktime_get_boottime_seconds() - clp->cl_time);
- 	seq_printf(m, "name: ");
- 	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
- 	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
-@@ -4662,6 +4672,33 @@ static void nfsd_break_one_deleg(struct nfs4_delegation *dp)
- 	nfsd4_run_cb(&dp->dl_recall);
- }
- 
-+/*
-+ * This function is called when a file is opened and there is a
-+ * delegation conflict with another client. If the other client
-+ * is a courtesy client then kick start the laundromat to destroy
-+ * it.
-+ */
-+static bool
-+nfsd_check_courtesy_client(struct nfs4_delegation *dp)
-+{
-+	struct svc_rqst *rqst;
-+	struct nfs4_client *clp = dp->dl_recall.cb_clp;
-+	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
-+
-+	if (!i_am_nfsd())
-+		goto out;
-+	rqst = kthread_data(current);
-+	if (rqst->rq_prog != NFS_PROGRAM || rqst->rq_vers < 4)
-+		return false;
-+out:
-+	if (test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags)) {
-+		set_bit(NFSD4_DESTROY_COURTESY_CLIENT, &clp->cl_flags);
-+		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-+		return true;
-+	}
-+	return false;
-+}
-+
- /* Called from break_lease() with i_lock held. */
- static bool
- nfsd_break_deleg_cb(struct file_lock *fl)
-@@ -4670,6 +4707,8 @@ nfsd_break_deleg_cb(struct file_lock *fl)
- 	struct nfs4_delegation *dp = (struct nfs4_delegation *)fl->fl_owner;
- 	struct nfs4_file *fp = dp->dl_stid.sc_file;
- 
-+	if (nfsd_check_courtesy_client(dp))
-+		return false;
- 	trace_nfsd_cb_recall(&dp->dl_stid);
- 
- 	/*
-@@ -4912,6 +4951,136 @@ nfsd4_truncate(struct svc_rqst *rqstp, struct svc_fh *fh,
- 	return nfsd_setattr(rqstp, fh, &iattr, 0, (time64_t)0);
- }
- 
-+static bool
-+__nfs4_check_deny_bmap(struct nfs4_ol_stateid *stp, u32 access,
-+			bool share_access)
-+{
-+	if (share_access) {
-+		if (!stp->st_deny_bmap)
-+			return false;
-+
-+		if ((stp->st_deny_bmap & (1 << NFS4_SHARE_DENY_BOTH)) ||
-+			(access & NFS4_SHARE_ACCESS_READ &&
-+				stp->st_deny_bmap & (1 << NFS4_SHARE_DENY_READ)) ||
-+			(access & NFS4_SHARE_ACCESS_WRITE &&
-+				stp->st_deny_bmap & (1 << NFS4_SHARE_DENY_WRITE))) {
-+			return true;
-+		}
-+		return false;
-+	}
-+	if ((access & NFS4_SHARE_DENY_BOTH) ||
-+		(access & NFS4_SHARE_DENY_READ &&
-+			stp->st_access_bmap & (1 << NFS4_SHARE_ACCESS_READ)) ||
-+		(access & NFS4_SHARE_DENY_WRITE &&
-+			stp->st_access_bmap & (1 << NFS4_SHARE_ACCESS_WRITE))) {
-+		return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * access: if share_access is true then check access mode else check deny mode
-+ */
-+static bool
-+nfs4_check_deny_bmap(struct nfs4_client *clp, struct nfs4_file *fp,
-+		struct nfs4_ol_stateid *st, u32 access, bool share_access)
-+{
-+	int i;
-+	struct nfs4_openowner *oo;
-+	struct nfs4_stateowner *so, *tmp;
-+	struct nfs4_ol_stateid *stp, *stmp;
-+
-+	spin_lock(&clp->cl_lock);
-+	for (i = 0; i < OWNER_HASH_SIZE; i++) {
-+		list_for_each_entry_safe(so, tmp, &clp->cl_ownerstr_hashtbl[i],
-+					so_strhash) {
-+			if (!so->so_is_open_owner)
-+				continue;
-+			oo = openowner(so);
-+			list_for_each_entry_safe(stp, stmp,
-+				&oo->oo_owner.so_stateids, st_perstateowner) {
-+				if (stp == st || stp->st_stid.sc_file != fp)
-+					continue;
-+				if (__nfs4_check_deny_bmap(stp, access,
-+							share_access)) {
-+					spin_unlock(&clp->cl_lock);
-+					return true;
-+				}
-+			}
-+		}
-+	}
-+	spin_unlock(&clp->cl_lock);
-+	return false;
-+}
-+
-+/*
-+ * Function to check if the nfserr_share_denied error for 'fp' resulted
-+ * from conflict with courtesy clients then release their state to resolve
-+ * the conflict.
-+ *
-+ * Function returns:
-+ *	 0 -  no conflict with courtesy clients
-+ *	>0 -  conflict with courtesy clients resolved, try access/deny check again
-+ *	-1 -  conflict with courtesy clients being resolved in background
-+ *            return nfserr_jukebox to NFS client
-+ */
-+static int
-+nfs4_destroy_clnts_with_sresv_conflict(struct svc_rqst *rqstp,
-+			struct nfs4_file *fp, struct nfs4_ol_stateid *stp,
-+			u32 access, bool share_access)
-+{
-+	int cnt = 0;
-+	int async_cnt = 0;
-+	bool no_retry = false;
-+	struct nfs4_client *cl;
-+	struct list_head *pos, *next, reaplist;
-+	struct nfsd_net *nn = net_generic(SVC_NET(rqstp), nfsd_net_id);
-+
-+	INIT_LIST_HEAD(&reaplist);
-+	spin_lock(&nn->client_lock);
-+	list_for_each_safe(pos, next, &nn->client_lru) {
-+		cl = list_entry(pos, struct nfs4_client, cl_lru);
-+		/*
-+		 * check all nfs4_ol_stateid of this client
-+		 * for conflicts with 'access'mode.
-+		 */
-+		if (nfs4_check_deny_bmap(cl, fp, stp, access, share_access)) {
-+			if (!test_bit(NFSD4_COURTESY_CLIENT, &cl->cl_flags)) {
-+				/* conflict with non-courtesy client */
-+				no_retry = true;
-+				cnt = 0;
-+				goto out;
-+			}
-+			/*
-+			 * if too many to resolve synchronously
-+			 * then do the rest in background
-+			 */
-+			if (cnt > 100) {
-+				set_bit(NFSD4_DESTROY_COURTESY_CLIENT, &cl->cl_flags);
-+				async_cnt++;
-+				continue;
-+			}
-+			if (mark_client_expired_locked(cl))
-+				continue;
-+			cnt++;
-+			list_add(&cl->cl_lru, &reaplist);
-+		}
-+	}
-+out:
-+	spin_unlock(&nn->client_lock);
-+	list_for_each_safe(pos, next, &reaplist) {
-+		cl = list_entry(pos, struct nfs4_client, cl_lru);
-+		list_del_init(&cl->cl_lru);
-+		expire_client(cl);
-+	}
-+	if (async_cnt) {
-+		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-+		if (!no_retry)
-+			cnt = -1;
-+	}
-+	return cnt;
-+}
-+
- static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
- 		struct svc_fh *cur_fh, struct nfs4_ol_stateid *stp,
- 		struct nfsd4_open *open)
-@@ -4921,6 +5090,7 @@ static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
- 	int oflag = nfs4_access_to_omode(open->op_share_access);
- 	int access = nfs4_access_to_access(open->op_share_access);
- 	unsigned char old_access_bmap, old_deny_bmap;
-+	int cnt = 0;
- 
- 	spin_lock(&fp->fi_lock);
- 
-@@ -4928,16 +5098,38 @@ static __be32 nfs4_get_vfs_file(struct svc_rqst *rqstp, struct nfs4_file *fp,
- 	 * Are we trying to set a deny mode that would conflict with
- 	 * current access?
- 	 */
-+chk_deny:
- 	status = nfs4_file_check_deny(fp, open->op_share_deny);
- 	if (status != nfs_ok) {
- 		spin_unlock(&fp->fi_lock);
-+		if (status != nfserr_share_denied)
-+			goto out;
-+		cnt = nfs4_destroy_clnts_with_sresv_conflict(rqstp, fp,
-+				stp, open->op_share_deny, false);
-+		if (cnt > 0) {
-+			spin_lock(&fp->fi_lock);
-+			goto chk_deny;
-+		}
-+		if (cnt == -1)
-+			status = nfserr_jukebox;
- 		goto out;
- 	}
- 
- 	/* set access to the file */
-+get_access:
- 	status = nfs4_file_get_access(fp, open->op_share_access);
- 	if (status != nfs_ok) {
- 		spin_unlock(&fp->fi_lock);
-+		if (status != nfserr_share_denied)
-+			goto out;
-+		cnt = nfs4_destroy_clnts_with_sresv_conflict(rqstp, fp,
-+				stp, open->op_share_access, true);
-+		if (cnt > 0) {
-+			spin_lock(&fp->fi_lock);
-+			goto get_access;
-+		}
-+		if (cnt == -1)
-+			status = nfserr_jukebox;
- 		goto out;
- 	}
- 
-@@ -5289,6 +5481,22 @@ static void nfsd4_deleg_xgrade_none_ext(struct nfsd4_open *open,
- 	 */
- }
- 
-+static bool
-+nfs4_destroy_courtesy_client(struct nfs4_client *clp)
-+{
-+	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
-+
-+	spin_lock(&nn->client_lock);
-+	if (!test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags) ||
-+			mark_client_expired_locked(clp)) {
-+		spin_unlock(&nn->client_lock);
-+		return false;
-+	}
-+	spin_unlock(&nn->client_lock);
-+	expire_client(clp);
-+	return true;
-+}
-+
- __be32
- nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nfsd4_open *open)
- {
-@@ -5572,6 +5780,47 @@ static void nfsd4_ssc_expire_umount(struct nfsd_net *nn)
- }
- #endif
- 
-+static
-+bool nfs4_anylock_conflict(struct nfs4_client *clp)
-+{
-+	int i;
-+	struct nfs4_stateowner *so, *tmp;
-+	struct nfs4_lockowner *lo;
-+	struct nfs4_ol_stateid *stp;
-+	struct nfs4_file *nf;
-+	struct inode *ino;
-+	struct file_lock_context *ctx;
-+	struct file_lock *fl;
-+
-+	for (i = 0; i < OWNER_HASH_SIZE; i++) {
-+		/* scan each lock owner */
-+		list_for_each_entry_safe(so, tmp, &clp->cl_ownerstr_hashtbl[i],
-+				so_strhash) {
-+			if (so->so_is_open_owner)
-+				continue;
-+
-+			/* scan lock states of this lock owner */
-+			lo = lockowner(so);
-+			list_for_each_entry(stp, &lo->lo_owner.so_stateids,
-+					st_perstateowner) {
-+				nf = stp->st_stid.sc_file;
-+				ino = nf->fi_inode;
-+				ctx = ino->i_flctx;
-+				if (!ctx)
-+					continue;
-+				/* check each lock belongs to this lock state */
-+				list_for_each_entry(fl, &ctx->flc_posix, fl_list) {
-+					if (fl->fl_owner != lo)
-+						continue;
-+					if (!list_empty(&fl->fl_blocked_requests))
-+						return true;
-+				}
-+			}
-+		}
-+	}
-+	return false;
-+}
-+
- static time64_t
- nfs4_laundromat(struct nfsd_net *nn)
- {
-@@ -5587,7 +5836,9 @@ nfs4_laundromat(struct nfsd_net *nn)
- 	};
- 	struct nfs4_cpntf_state *cps;
- 	copy_stateid_t *cps_t;
-+	struct nfs4_stid *stid;
- 	int i;
-+	int id = 0;
- 
- 	if (clients_still_reclaiming(nn)) {
- 		lt.new_timeo = 0;
-@@ -5608,8 +5859,33 @@ nfs4_laundromat(struct nfsd_net *nn)
- 	spin_lock(&nn->client_lock);
- 	list_for_each_safe(pos, next, &nn->client_lru) {
- 		clp = list_entry(pos, struct nfs4_client, cl_lru);
-+		if (test_bit(NFSD4_DESTROY_COURTESY_CLIENT, &clp->cl_flags)) {
-+			clear_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags);
-+			goto exp_client;
-+		}
-+		if (test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags)) {
-+			if (ktime_get_boottime_seconds() >= clp->courtesy_client_expiry)
-+				goto exp_client;
-+			/*
-+			 * after umount, v4.0 client is still
-+			 * around waiting to be expired
-+			 */
-+			if (clp->cl_minorversion)
-+				continue;
-+		}
- 		if (!state_expired(&lt, clp->cl_time))
- 			break;
-+		spin_lock(&clp->cl_lock);
-+		stid = idr_get_next(&clp->cl_stateids, &id);
-+		spin_unlock(&clp->cl_lock);
-+		if (stid && !nfs4_anylock_conflict(clp)) {
-+			/* client still has states */
-+			clp->courtesy_client_expiry =
-+				ktime_get_boottime_seconds() + courtesy_client_expiry;
-+			set_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags);
-+			continue;
-+		}
-+exp_client:
- 		if (mark_client_expired_locked(clp))
- 			continue;
- 		list_add(&clp->cl_lru, &reaplist);
-@@ -5689,9 +5965,6 @@ nfs4_laundromat(struct nfsd_net *nn)
- 	return max_t(time64_t, lt.new_timeo, NFSD_LAUNDROMAT_MINTIMEOUT);
- }
- 
--static struct workqueue_struct *laundry_wq;
--static void laundromat_main(struct work_struct *);
--
- static void
- laundromat_main(struct work_struct *laundry)
- {
-@@ -6496,6 +6769,19 @@ nfs4_transform_lock_offset(struct file_lock *lock)
- 		lock->fl_end = OFFSET_MAX;
- }
- 
-+/* return true if lock was expired else return false */
-+static bool
-+nfsd4_fl_expire_lock(struct file_lock *fl, bool testonly)
-+{
-+	struct nfs4_lockowner *lo = (struct nfs4_lockowner *)fl->fl_owner;
-+	struct nfs4_client *clp = lo->lo_owner.so_client;
-+
-+	if (testonly)
-+		return test_bit(NFSD4_COURTESY_CLIENT, &clp->cl_flags) ?
-+			true : false;
-+	return nfs4_destroy_courtesy_client(clp);
-+}
-+
- static fl_owner_t
- nfsd4_fl_get_owner(fl_owner_t owner)
- {
-@@ -6543,6 +6829,7 @@ static const struct lock_manager_operations nfsd_posix_mng_ops  = {
- 	.lm_notify = nfsd4_lm_notify,
- 	.lm_get_owner = nfsd4_fl_get_owner,
- 	.lm_put_owner = nfsd4_fl_put_owner,
-+	.lm_expire_lock = nfsd4_fl_expire_lock,
- };
- 
- static inline void
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index e73bdbb1634a..93e30b101578 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -345,6 +345,8 @@ struct nfs4_client {
- #define NFSD4_CLIENT_UPCALL_LOCK	(5)	/* upcall serialization */
- #define NFSD4_CLIENT_CB_FLAG_MASK	(1 << NFSD4_CLIENT_CB_UPDATE | \
- 					 1 << NFSD4_CLIENT_CB_KILL)
-+#define NFSD4_COURTESY_CLIENT		(6)	/* be nice to expired client */
-+#define NFSD4_DESTROY_COURTESY_CLIENT	(7)
- 	unsigned long		cl_flags;
- 	const struct cred	*cl_cb_cred;
- 	struct rpc_clnt		*cl_cb_client;
-@@ -385,6 +387,7 @@ struct nfs4_client {
- 	struct list_head	async_copies;	/* list of async copies */
- 	spinlock_t		async_lock;	/* lock for async copies */
- 	atomic_t		cl_cb_inflight;	/* Outstanding callbacks */
-+	int			courtesy_client_expiry;
- };
- 
- /* struct nfs4_client_reset
--- 
-2.9.5
 
