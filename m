@@ -2,178 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 436C046D8A8
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Dec 2021 17:39:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B82C46D8F5
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Dec 2021 17:54:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234717AbhLHQnK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Dec 2021 11:43:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
+        id S237368AbhLHQ5m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Dec 2021 11:57:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234715AbhLHQnJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Dec 2021 11:43:09 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEAE6C061746;
-        Wed,  8 Dec 2021 08:39:37 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6132C6214; Wed,  8 Dec 2021 11:39:37 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6132C6214
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1638981577;
-        bh=Q6vFzrWeE9t9ubeT9gGU4ImXIj+9fjWbNpeuIbsfxAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=p5bUP7LPhcYRWgzH5r8y9uyqgolrqMpiZoem/rPjBfEGRZ0asORgX4g+9mUG5YT/q
-         +ZGhf9vJiV474GAFte4B41urcLm6xSNnjzOgDut+/GyUkQiBJW4GjEAao7AOhQwBMA
-         GQHUnuZEOLOYiCf4U1XqYwbb3zXwRKtQtlmA31yI=
-Date:   Wed, 8 Dec 2021 11:39:37 -0500
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH RFC v6 2/2] nfsd: Initial implementation of NFSv4
- Courteous Server
-Message-ID: <20211208163937.GA29555@fieldses.org>
-References: <20211206175942.47326-1-dai.ngo@oracle.com>
- <20211206175942.47326-3-dai.ngo@oracle.com>
- <4025C4F6-258F-4A2E-8715-05FD77052275@oracle.com>
- <f6d65309-6679-602a-19b8-414ce29c691a@oracle.com>
- <ba637e0c64b6a2b53c8b5bf197ce02d239cdc0d2.camel@hammerspace.com>
- <605c2aef-3140-6e1a-4953-fd318dbcc277@oracle.com>
+        with ESMTP id S231596AbhLHQ5l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Dec 2021 11:57:41 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD573C061746
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Dec 2021 08:54:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D5513CE225E
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Dec 2021 16:54:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E751EC00446
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Dec 2021 16:54:03 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/5] SUNRPC: Remove low signal-to-noise tracepoints
+Date:   Wed,  8 Dec 2021 11:54:02 -0500
+Message-Id:  <163898243636.1640.16855750027301323187.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2978; h=from:subject:message-id; bh=D19s+a/lLBFIwEGkwt6aIwB669VbJEErVsgPJHeM4i4=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhsOMkUtnQo9eMQ588t/Onjk8oC+C+X2KEIQcyEzMK SI3ELiSJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYbDjJAAKCRAzarMzb2Z/l//TD/ 96xlZuTd51Oi8cgb6tzyOz1LVHrWL727qumHcqPdgW7ECuGPy24kUVkJCkHCgi4/YnWFWXzk7WC1s9 OeNm36u9oSWjVx6ut7beIepbvMozBPbcUG31Cr7+/psbVZzK4eK4PkxR/t7wQ36QOY7khnFb54v0n1 94+SZZrP38j9j2cDAmzqUUKWbEu5bL6gvKk2p0Dv6wjd7UP+1N1mKGSmyC+xDUZGQTpBAoFDuiJN7s scaH6rFH7MrT/kAgIbKikV9AH2xZEdrTZbjRglmLmXR0Ga+tjmTxuuWacVcpJ+q1tu1Iuw2GutOLnK Pc8I5Fswxrkdg+yz3Eya+JAFOmFVEobfYBN3ze3rC4xt+qSHibz6reK5JI+qD2CRbePN00bryVf0yA 8rMn8gVf4idbyXyHTNxZdDIQ+XDYHYbyA+XjXHAmnS5i0lzbuz7Gotqn69xCeJlr+cAx/RdDgKucTp ncE3ESbC/Ukm/P5lqx436+dsgHlZHY/pA6AruHUPqNk2blJ1/XHiVVuYHBCyrONm/20D4ReR+SAgkj m69NhB3ocs0WS3Bvaxc7bb2EQyNzm9xzkxDk/2sYtaT0/z39+uGyPZiO9eXw/pT9O1A58654Ltup0f KA6L17PB9GEZ1bD6u2UFKOGEHJugETIVVioHoaTjI5PzxHf4dFxap4jVkg8g==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <605c2aef-3140-6e1a-4953-fd318dbcc277@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Dec 08, 2021 at 08:25:28AM -0800, dai.ngo@oracle.com wrote:
-> 
-> On 12/8/21 8:16 AM, Trond Myklebust wrote:
-> >On Wed, 2021-12-08 at 07:54 -0800, dai.ngo@oracle.com wrote:
-> >>On 12/6/21 11:55 AM, Chuck Lever III wrote:
-> >>
-> >>>>+
-> >>>>+/*
-> >>>>+ * Function to check if the nfserr_share_denied error for 'fp'
-> >>>>resulted
-> >>>>+ * from conflict with courtesy clients then release their state to
-> >>>>resolve
-> >>>>+ * the conflict.
-> >>>>+ *
-> >>>>+ * Function returns:
-> >>>>+ *      0 -  no conflict with courtesy clients
-> >>>>+ *     >0 -  conflict with courtesy clients resolved, try
-> >>>>access/deny check again
-> >>>>+ *     -1 -  conflict with courtesy clients being resolved in
-> >>>>background
-> >>>>+ *            return nfserr_jukebox to NFS client
-> >>>>+ */
-> >>>>+static int
-> >>>>+nfs4_destroy_clnts_with_sresv_conflict(struct svc_rqst *rqstp,
-> >>>>+                       struct nfs4_file *fp, struct
-> >>>>nfs4_ol_stateid *stp,
-> >>>>+                       u32 access, bool share_access)
-> >>>>+{
-> >>>>+       int cnt = 0;
-> >>>>+       int async_cnt = 0;
-> >>>>+       bool no_retry = false;
-> >>>>+       struct nfs4_client *cl;
-> >>>>+       struct list_head *pos, *next, reaplist;
-> >>>>+       struct nfsd_net *nn = net_generic(SVC_NET(rqstp),
-> >>>>nfsd_net_id);
-> >>>>+
-> >>>>+       INIT_LIST_HEAD(&reaplist);
-> >>>>+       spin_lock(&nn->client_lock);
-> >>>>+       list_for_each_safe(pos, next, &nn->client_lru) {
-> >>>>+               cl = list_entry(pos, struct nfs4_client, cl_lru);
-> >>>>+               /*
-> >>>>+                * check all nfs4_ol_stateid of this client
-> >>>>+                * for conflicts with 'access'mode.
-> >>>>+                */
-> >>>>+               if (nfs4_check_deny_bmap(cl, fp, stp, access,
-> >>>>share_access)) {
-> >>>>+                       if (!test_bit(NFSD4_COURTESY_CLIENT, &cl-
-> >>>>>cl_flags)) {
-> >>>>+                               /* conflict with non-courtesy
-> >>>>client */
-> >>>>+                               no_retry = true;
-> >>>>+                               cnt = 0;
-> >>>>+                               goto out;
-> >>>>+                       }
-> >>>>+                       /*
-> >>>>+                        * if too many to resolve synchronously
-> >>>>+                        * then do the rest in background
-> >>>>+                        */
-> >>>>+                       if (cnt > 100) {
-> >>>>+                               set_bit(NFSD4_DESTROY_COURTESY_CLIE
-> >>>>NT, &cl->cl_flags);
-> >>>>+                               async_cnt++;
-> >>>>+                               continue;
-> >>>>+                       }
-> >>>>+                       if (mark_client_expired_locked(cl))
-> >>>>+                               continue;
-> >>>>+                       cnt++;
-> >>>>+                       list_add(&cl->cl_lru, &reaplist);
-> >>>>+               }
-> >>>>+       }
-> >>>Bruce suggested simply returning NFS4ERR_DELAY for all cases.
-> >>>That would simplify this quite a bit for what is a rare edge
-> >>>case.
-> >>If we always do this asynchronously by returning NFS4ERR_DELAY
-> >>for all cases then the following pynfs tests need to be modified
-> >>to handle the error:
-> >>
-> >>RENEW3   st_renew.testExpired                                     :
-> >>FAILURE
-> >>LKU10    st_locku.testTimedoutUnlock                              :
-> >>FAILURE
-> >>CLOSE9   st_close.testTimedoutClose2                              :
-> >>FAILURE
-> >>
-> >>and any new tests that opens file have to be prepared to handle
-> >>NFS4ERR_DELAY due to the lack of destroy_clientid in 4.0.
-> >>
-> >>Do we still want to take this approach?
-> >NFS4ERR_DELAY is a valid error for both CLOSE and LOCKU (see RFC7530
-> >section 13.2 https://urldefense.com/v3/__https://datatracker.ietf.org/doc/html/rfc7530*section-13.2__;Iw!!ACWV5N9M2RV99hQ!f8vZHAJophxXdSSJvnxDCSBSRpWFxEOZBo2ZLvjPzXLVrvMYR8RKcc0_Jvjhng$
-> >) so if pynfs complains, then it needs fixing regardless.
-> >
-> >RENEW, on the other hand, cannot return NFS4ERR_DELAY, but why would it
-> >need to? Either the lease is still valid, or else someone is already
-> >trying to tear it down due to an expiration event. I don't see why
-> >courtesy locks need to add any further complexity to that test.
-> 
-> RENEW fails in the 2nd open:
-> 
->     c.create_confirm(t.word(), access=OPEN4_SHARE_ACCESS_BOTH,
->                      deny=OPEN4_SHARE_DENY_BOTH)     <<======   DENY_BOTH
->     sleeptime = c.getLeaseTime() * 2
->     env.sleep(sleeptime)
->     c2 = env.c2
->     c2.init_connection()
->     c2.open_confirm(t.word(), access=OPEN4_SHARE_ACCESS_READ,    <<=== needs to handle NFS4ERR_DELAY
->                     deny=OPEN4_SHARE_DENY_NONE)
-> 
-> CLOSE and LOCKU also fail in the OPEN, similar to the RENEW test.
-> Any new pynfs 4.0 test that does open might get NFS4ERR_DELAY.
+I'm about to add more information to the server-side SUNRPC
+tracepoints, so I'm going to offset the increased trace log
+consumption by getting rid of some tracepoints that fire frequently
+but don't offer much value.
 
-So it's a RENEW test, not the RENEW operation.
+trace_svc_xprt_received() was useful for debugging, perhaps, but
+is not generally informative.
 
-A general-purpose client always has to be prepared for DELAY on OPEN.
-But pynfs isn't a general-purpose client, and it assumes that it's the
-only one touching the files and directories it creates.
+trace_svc_handle_xprt() reports largely the same information as
+trace_svc_xdr_recvfrom().
 
-Within pynfs we've got a problem that the tests don't necessarily clean
-up after themselves completely, so in theory a test could interfere with
-later results.
+As a clean-up, rename trace_svc_xprt_do_enqueue() to match
+svc_xprt_dequeue().
 
-But each test uses its own files--e.g. in the fragment above note that
-the file it's testing gets the name t.word(), which is by design unique
-to that test.  So it shouldn't be hitting any conflicts with state held
-by previous tests.  Am I missing something?
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/sunrpc.h |   24 +-----------------------
+ net/sunrpc/svc_xprt.c         |    6 ++----
+ 2 files changed, 3 insertions(+), 27 deletions(-)
 
---b.
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 3a99358c262b..684cc0e322fa 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1768,7 +1768,7 @@ TRACE_EVENT(svc_xprt_create_err,
+ 		__entry->error)
+ );
+ 
+-TRACE_EVENT(svc_xprt_do_enqueue,
++TRACE_EVENT(svc_xprt_enqueue,
+ 	TP_PROTO(struct svc_xprt *xprt, struct svc_rqst *rqst),
+ 
+ 	TP_ARGS(xprt, rqst),
+@@ -1815,7 +1815,6 @@ DECLARE_EVENT_CLASS(svc_xprt_event,
+ 			), \
+ 			TP_ARGS(xprt))
+ 
+-DEFINE_SVC_XPRT_EVENT(received);
+ DEFINE_SVC_XPRT_EVENT(no_write_space);
+ DEFINE_SVC_XPRT_EVENT(close);
+ DEFINE_SVC_XPRT_EVENT(detach);
+@@ -1902,27 +1901,6 @@ TRACE_EVENT(svc_alloc_arg_err,
+ 	TP_printk("pages=%u", __entry->pages)
+ );
+ 
+-TRACE_EVENT(svc_handle_xprt,
+-	TP_PROTO(struct svc_xprt *xprt, int len),
+-
+-	TP_ARGS(xprt, len),
+-
+-	TP_STRUCT__entry(
+-		__field(int, len)
+-		__field(unsigned long, flags)
+-		__string(addr, xprt->xpt_remotebuf)
+-	),
+-
+-	TP_fast_assign(
+-		__entry->len = len;
+-		__entry->flags = xprt->xpt_flags;
+-		__assign_str(addr, xprt->xpt_remotebuf);
+-	),
+-
+-	TP_printk("addr=%s len=%d flags=%s", __get_str(addr),
+-		__entry->len, show_svc_xprt_flags(__entry->flags))
+-);
+-
+ TRACE_EVENT(svc_stats_latency,
+ 	TP_PROTO(const struct svc_rqst *rqst),
+ 
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 1e99ba1b9d72..b1744432489e 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -264,8 +264,6 @@ void svc_xprt_received(struct svc_xprt *xprt)
+ 		return;
+ 	}
+ 
+-	trace_svc_xprt_received(xprt);
+-
+ 	/* As soon as we clear busy, the xprt could be closed and
+ 	 * 'put', so we need a reference to call svc_enqueue_xprt with:
+ 	 */
+@@ -466,7 +464,7 @@ void svc_xprt_do_enqueue(struct svc_xprt *xprt)
+ out_unlock:
+ 	rcu_read_unlock();
+ 	put_cpu();
+-	trace_svc_xprt_do_enqueue(xprt, rqstp);
++	trace_svc_xprt_enqueue(xprt, rqstp);
+ }
+ EXPORT_SYMBOL_GPL(svc_xprt_do_enqueue);
+ 
+@@ -842,8 +840,8 @@ static int svc_handle_xprt(struct svc_rqst *rqstp, struct svc_xprt *xprt)
+ 		atomic_add(rqstp->rq_reserved, &xprt->xpt_reserved);
+ 	} else
+ 		svc_xprt_received(xprt);
++
+ out:
+-	trace_svc_handle_xprt(xprt, len);
+ 	return len;
+ }
+ 
+
