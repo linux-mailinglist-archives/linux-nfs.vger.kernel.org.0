@@ -2,126 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FD6646C794
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Dec 2021 23:35:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7852D46CE3F
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Dec 2021 08:20:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238026AbhLGWjO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Dec 2021 17:39:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49298 "EHLO
+        id S244481AbhLHHYI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Dec 2021 02:24:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237959AbhLGWjO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Dec 2021 17:39:14 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1466C061574;
-        Tue,  7 Dec 2021 14:35:43 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 58B206EE1; Tue,  7 Dec 2021 17:35:42 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 58B206EE1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1638916542;
-        bh=DSAGTK/ZALvwunOEhrseEkKuVAe4HsOu0EXKehGC8NQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d5Z0YMw5qQ4ma0iDFy96xQdc83FtN/jZAzQxDVC9Yk4v57X9QKB39ZpfXAZfu+333
-         rVIdZCBFO/dCcaXGRnRWi6wOWg5HXbqbGiiP2mIuaidWc9PEn5jJzcutUty78h0F+6
-         7oSktqMO7NXoAA5KtpwmmrAjMW7K09mHUYY6In8U=
-Date:   Tue, 7 Dec 2021 17:35:42 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH RFC v6 2/2] nfsd: Initial implementation of NFSv4
- Courteous Server
-Message-ID: <20211207223542.GA14522@fieldses.org>
-References: <20211206175942.47326-1-dai.ngo@oracle.com>
- <20211206175942.47326-3-dai.ngo@oracle.com>
- <4025C4F6-258F-4A2E-8715-05FD77052275@oracle.com>
- <01923a7c-bb49-c004-8a35-dbbae718e374@oracle.com>
- <242C2259-2CF0-406F-B313-23D6D923C76F@oracle.com>
- <20211206225249.GE20244@fieldses.org>
- <DEB6A7B8-0772-487F-8861-BEB924259860@oracle.com>
+        with ESMTP id S236023AbhLHHYH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Dec 2021 02:24:07 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE67C061574;
+        Tue,  7 Dec 2021 23:20:36 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id y13so5036272edd.13;
+        Tue, 07 Dec 2021 23:20:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBpAD7jEKe2G1MwcYvVjyMRGls4uJp0G38l20vYCwQM=;
+        b=jHNy8ht5kF9gCRcKBtKsIxfTb+5iUV5iKKUIhfEVuUyylOFHOTkfClS6zLm4dve3qn
+         QkvOo0XrEx4GWI8hqHja9ruRmvxpf/QdzfgNs4LMpCAPUDOdnZy4NHKMLIerLYtSlgzf
+         yNQ3dMmBy87ynqJOTYZWeqbTrGL7hSiRLYR+hqZRr0+u/WT+ZorEp4bq/DjLT0BLCoym
+         M7wcct3LvGsKcbiWcq9dzBPv88t2AEgLrzkbqXN6U9EtuuUdLdGGmqxHD19hrZHwgRx1
+         kYey89TxHwoGL59SeGLgCYDE6mnbtfbjFJUwJsU/wigKNIPa7hmvUh7v/7yRac/xp87j
+         bgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBpAD7jEKe2G1MwcYvVjyMRGls4uJp0G38l20vYCwQM=;
+        b=dhaCq9BlIjQfldCXedupIxdUJuVaanpbBi5oDjxeY4XmiU7E0rmDp33pyb1zDs92eL
+         EioAoQhPCmSN2ckhSXLPUGsgJt2hpuJWPwmF4oUTdza5Oc77/MfVtjdk8QtdhlFPo9zc
+         BdQIBf/ZAQSiv24oJyPtsdAMl04ZtZ9hSdWivui7kHdZvm6Bj7l7wYjw7/0WjSVS1RNg
+         sxuZ6GRjcgyGbR2HUZcajlnwpjj6G/9Ex1ruvdNouz01Ymue1Rrm9ML7WUO8pYDQd5o3
+         fDEo+lvPGON6hPvSniCzlXHVQIkKxSG4rCPdA+um7FCF/+KJTzF5N8MlOjPrrkZCs+CW
+         N7WA==
+X-Gm-Message-State: AOAM531j90ASrzBenNhim1xEmAD1LR3tXf8/8kglr6uMy3ga7rZ7Tj3E
+        TDG9Qn/xVeIeDRxDWPwOoF4=
+X-Google-Smtp-Source: ABdhPJxE2CzsVTyETJoEw9wE4Xxk+c3JantvsBlgR3t3ak9VleOm98XWgOLVci7maV45EzUfaCqDgQ==
+X-Received: by 2002:a05:6402:3551:: with SMTP id f17mr16341832edd.129.1638948034949;
+        Tue, 07 Dec 2021 23:20:34 -0800 (PST)
+Received: from localhost ([81.17.18.62])
+        by smtp.gmail.com with ESMTPSA id he14sm969306ejc.55.2021.12.07.23.20.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Dec 2021 23:20:34 -0800 (PST)
+From:   =?UTF-8?q?J=CE=B5an=20Sacren?= <sakiwit@gmail.com>
+To:     bfields@fieldses.org, chuck.lever@oracle.com,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        davem@davemloft.net, kuba@kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH net-next] net: sunrpc: fix code indentation
+Date:   Wed,  8 Dec 2021 00:20:22 -0700
+Message-Id: <20211208024732.142541-2-sakiwit@gmail.com>
+X-Mailer: git-send-email 2.32.0
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DEB6A7B8-0772-487F-8861-BEB924259860@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 07, 2021 at 10:00:22PM +0000, Chuck Lever III wrote:
-> Thanks for clarifying! If you are feeling industrious, it would be nice
-> for this to be documented somewhere in the source code....
+From: Jean Sacren <sakiwit@gmail.com>
 
-I did that, then noticed I was duplicating a comment I'd already written
-elsewhere, so, how about the following?
+Remove the extra space to the left of if branch.
 
---b.
-
-From 2e3f00c5f29f033fd5db05ef713d0d9fa27d6db1 Mon Sep 17 00:00:00 2001
-From: "J. Bruce Fields" <bfields@redhat.com>
-Date: Tue, 7 Dec 2021 17:32:21 -0500
-Subject: [PATCH] nfsd: improve stateid access bitmask documentation
-
-The use of the bitmaps is confusing.  Add a cross-reference to make it
-easier to find the existing comment.  Add an updated reference with URL
-to make it quicker to look up.  And a bit more editorializing about the
-value of this.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Jean Sacren <sakiwit@gmail.com>
 ---
- fs/nfsd/nfs4state.c | 14 ++++++++++----
- fs/nfsd/state.h     |  4 ++++
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ net/sunrpc/xprtsock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 0031e006f4dc..f07fe7562d4d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -360,11 +360,13 @@ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops = {
-  * st_{access,deny}_bmap field of the stateid, in order to track not
-  * only what share bits are currently in force, but also what
-  * combinations of share bits previous opens have used.  This allows us
-- * to enforce the recommendation of rfc 3530 14.2.19 that the server
-- * return an error if the client attempt to downgrade to a combination
-- * of share bits not explicable by closing some of its previous opens.
-+ * to enforce the recommendation in
-+ * https://datatracker.ietf.org/doc/html/rfc7530#section-16.19.4 that
-+ * the server return an error if the client attempt to downgrade to a
-+ * combination of share bits not explicable by closing some of its
-+ * previous opens.
-  *
-- * XXX: This enforcement is actually incomplete, since we don't keep
-+ * This enforcement is arguably incomplete, since we don't keep
-  * track of access/deny bit combinations; so, e.g., we allow:
-  *
-  *	OPEN allow read, deny write
-@@ -372,6 +374,10 @@ static const struct nfsd4_callback_ops nfsd4_cb_notify_lock_ops = {
-  *	DOWNGRADE allow read, deny none
-  *
-  * which we should reject.
-+ *
-+ * But you could also argue that what our current code is already
-+ * overkill, since it only exists to return NFS4ERR_INVAL on incorrect
-+ * client behavior.
-  */
- static unsigned int
- bmap_to_share_mode(unsigned long bmap)
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index e73bdbb1634a..6eb3c7157214 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -568,6 +568,10 @@ struct nfs4_ol_stateid {
- 	struct list_head		st_locks;
- 	struct nfs4_stateowner		*st_stateowner;
- 	struct nfs4_clnt_odstate	*st_clnt_odstate;
-+/*
-+ * These bitmasks use 3 separate bits for READ, ALLOW, and BOTH; see the
-+ * comment above bmap_to_share_mode() for explanation:
-+ */
- 	unsigned char			st_access_bmap;
- 	unsigned char			st_deny_bmap;
- 	struct nfs4_ol_stateid		*st_openstp;
--- 
-2.33.1
-
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index d8ee06a9650a..69b6ee5a5fd1 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1910,7 +1910,7 @@ static void xs_local_connect(struct rpc_xprt *xprt, struct rpc_task *task)
+ 	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
+ 	int ret;
+ 
+-	 if (RPC_IS_ASYNC(task)) {
++	if (RPC_IS_ASYNC(task)) {
+ 		/*
+ 		 * We want the AF_LOCAL connect to be resolved in the
+ 		 * filesystem namespace of the process making the rpc
