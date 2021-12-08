@@ -2,283 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 189D646DB06
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Dec 2021 19:25:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C075546DB65
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Dec 2021 19:41:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236304AbhLHS3I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 8 Dec 2021 13:29:08 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:34437 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S238878AbhLHS3H (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Dec 2021 13:29:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1638987935;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bMKCdfWmXK1Xx/to19LdBkTiL74h7TTZ7Ov53pEuONo=;
-        b=ckRtTsENuWi6Ci1CHnbn36ZKe+qh/X6WYpxXUDQb9TeD7oQyr/ZylsxtavHQJQLbtzXgV2
-        OTtfnIyF3QgRETIMt8AheHztE648tZYrXISFDnmboWm/f8sgn6/6r0yhH0en01/SNxqAzZ
-        YuRVsF1YsqDAx8QF/Mu/AeqBDuLkjag=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-438--usnr8ZkPY-Bn85PjVjPQA-1; Wed, 08 Dec 2021 13:25:30 -0500
-X-MC-Unique: -usnr8ZkPY-Bn85PjVjPQA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93CFA80BCAC;
-        Wed,  8 Dec 2021 18:25:28 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 77F4E694C0;
-        Wed,  8 Dec 2021 18:25:16 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 2/2] security,
- nfs: Provide a hook for fs_context security initialisation
-From:   David Howells <dhowells@redhat.com>
-To:     viro@zeniv.linux.org.uk, paul@paul-moore.com,
-        Anna.Schumaker@Netapp.com, kolga@netapp.com
-Cc:     dhowells@redhat.com, casey@schaufler-ca.com,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 08 Dec 2021 18:25:15 +0000
-Message-ID: <163898791564.2840238.17416630708291992227.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163898788970.2840238.15026995173472005588.stgit@warthog.procyon.org.uk>
-References: <163898788970.2840238.15026995173472005588.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        id S235794AbhLHSpR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 8 Dec 2021 13:45:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229496AbhLHSpQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 8 Dec 2021 13:45:16 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50DDFC061746
+        for <linux-nfs@vger.kernel.org>; Wed,  8 Dec 2021 10:41:44 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id r25so11429115edq.7
+        for <linux-nfs@vger.kernel.org>; Wed, 08 Dec 2021 10:41:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=skLeJaSpw0/vsaEY+mYw5f7GsY+8sigTDomXYlalyaQ=;
+        b=DSkFahY5Mhcqkm7rNA6F7ey2SgnwCSizMEsMeQOOFZyoz0th8u0eISTZuR6GwnR7iE
+         ajgFF5IMY6zf6XTGXSQJcB7WyYcBmvFwWuMPtjmWHjuGDtvkI1SX5cIOJKlHm166Ka/2
+         mNurd9yCZ4ewoRxcgjGVg4BiOyEmskpd4mnsGs21hFqF+Am2O1DBExT+WzjJdErNsmn8
+         SYoVC2VzsYfUCdujQ2FGePWL70ds7Y7VLWG99EtzyZDRfeTcCun+Cozf+RDdMoskksiH
+         jMN4ZdavDJ6j2F5rrIfasj0Q9rAf4ZQ9W2VoFWv+rKkcvAh1PrZ0DlfEob+8aTQcqp3s
+         on8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=skLeJaSpw0/vsaEY+mYw5f7GsY+8sigTDomXYlalyaQ=;
+        b=uP6fIuKYcunTvM67IEPAEf2OBlX3ec6A9R+uvmXWxMGM2rGdx2kOrfQ75xI/GH/0f0
+         TZ1WCze97axIEI/trLWKVl9pR7+1cmrLhVfhsVflmBX2/gIi0E+lHAP/5b75BFsz0Q2Z
+         SkaKRITMV9n08EH2yxRL0mQzT35uvB6vJih0j4mF5sA03MK8zYRm1y3Pmdm9uWggzvVu
+         95RIuCXi79yBfLPK1C7ArQhqhg9tXNYg4LW5KjIk0nV8BY18z5Uz7YbPyF0B+D8nH2eh
+         WXQfsQgSptEOw0GvIqf4Vpk+3pgz+ineocrB9AxnCTBzpNpZzoXaX82iq/HIW1CA8e9z
+         CuTQ==
+X-Gm-Message-State: AOAM530bb+d7Geg0IbWuLmsX2Un7fU/RJteQCpeZWP1peGNWn2B1aGdM
+        0nBo/W6NR73hemu774ZmKbPiTK4+JIUSF+o511+v
+X-Google-Smtp-Source: ABdhPJwzd+X2ZmGvjAeJGgn47kj3o0CAYIlLFGj0DvXH6heL09BQOS+lXEPboLTYzGvb5vpWRpawKty9Cs5cHbwwnEU=
+X-Received: by 2002:a17:907:629b:: with SMTP id nd27mr9460277ejc.24.1638988902834;
+ Wed, 08 Dec 2021 10:41:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <163898788970.2840238.15026995173472005588.stgit@warthog.procyon.org.uk>
+In-Reply-To: <163898788970.2840238.15026995173472005588.stgit@warthog.procyon.org.uk>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 8 Dec 2021 13:41:31 -0500
+Message-ID: <CAHC9VhTP-HbRU1z66MOkSyw9w7vhK7Vq8p0FrxVfEX-+tSD43A@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] security: Remove security_add_mnt_opt() as it's unused
+To:     David Howells <dhowells@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, anna.schumaker@netapp.com,
+        kolga@netapp.com, casey@schaufler-ca.com, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Provide a security hook through which an LSM can initialise its bit of the
-fs_context struct set up during mount.  This provides a way to fix the
-problem of an NFS automount not getting to share superblocks because the
-security label from its parent doesn't propagate to the automount request.
+On Wed, Dec 8, 2021 at 1:25 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Remove the add_mnt_opt LSM hook as it's not actually used.  This makes it
+> easier to make the context pointers in selinux_mnt_opts non-const.
+>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> cc: Paul Moore <paul@paul-moore.com>
+> cc: Casey Schaufler <casey@schaufler-ca.com>
+> cc: selinux@vger.kernel.org
+> cc: linux-security-module@vger.kernel.org
+> cc: linux-nfs@vger.kernel.org
+> cc: linux-cachefs@redhat.com
+> ---
+>
+>  include/linux/lsm_hook_defs.h |    2 --
+>  include/linux/lsm_hooks.h     |    2 --
+>  include/linux/security.h      |    8 --------
+>  security/security.c           |    8 --------
+>  security/selinux/hooks.c      |   39 ---------------------------------------
+>  5 files changed, 59 deletions(-)
 
-Implement this hook for SELinux so that it copies the security labels from
-the reference dentry (the mountpoint) into the fs_context LSM parameter
-block.
+There is already a patch in the selinux/next tree which does this.
 
-Note that this may also be required for Smack.
+  commit 52f982f00b220d097a71a23c149a1d18efc08e63
+  Author: Ondrej Mosnacek <omosnace@redhat.com>
+  Date:   Mon Dec 6 14:24:06 2021 +0100
 
-Without this, fscache may fail to correctly bind the cache to the
-superblock because it sees multiple superblocks with the same key when it
-should only see one.
+   security,selinux: remove security_add_mnt_opt()
 
-I think this behaviour is caused by the patch that added the
-sb_mnt_opts_compat hook as this checks to see if the parameters match.
+   Its last user has been removed in commit f2aedb713c28 ("NFS: Add
+   fs_context support.").
 
-Fixes: 69c4a42d72eb ("lsm,selinux: add new hook to compare new mount to an existing mount")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Olga Kornievskaia <kolga@netapp.com>
-cc: Anna Schumaker <Anna.Schumaker@Netapp.com>
-cc: Paul Moore <paul@paul-moore.com>
-cc: Casey Schaufler <casey@schaufler-ca.com>
-cc: Alexander Viro <viro@zeniv.linux.org.uk>
-cc: selinux@vger.kernel.org
-cc: linux-security-module@vger.kernel.org
-cc: linux-nfs@vger.kernel.org
-cc: linux-cachefs@redhat.com
----
+   Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+   Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+   Signed-off-by: Paul Moore <paul@paul-moore.com>
 
- fs/fs_context.c               |    4 +++
- include/linux/lsm_hook_defs.h |    1 +
- include/linux/lsm_hooks.h     |    6 ++++
- include/linux/security.h      |    8 ++++++
- security/security.c           |    5 ++++
- security/selinux/hooks.c      |   57 ++++++++++++++++++++++++++++++++++++++++-
- 6 files changed, 78 insertions(+), 3 deletions(-)
-
-diff --git a/fs/fs_context.c b/fs/fs_context.c
-index b7e43a780a62..e411826127f3 100644
---- a/fs/fs_context.c
-+++ b/fs/fs_context.c
-@@ -282,6 +282,10 @@ static struct fs_context *alloc_fs_context(struct file_system_type *fs_type,
- 		break;
- 	}
- 
-+	ret = security_fs_context_init(fc, reference);
-+	if (ret < 0)
-+		goto err_fc;
-+
- 	/* TODO: Make all filesystems support this unconditionally */
- 	init_fs_context = fc->fs_type->init_fs_context;
- 	if (!init_fs_context)
-diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
-index 7f5c35d72082..f1eddaf2cd93 100644
---- a/include/linux/lsm_hook_defs.h
-+++ b/include/linux/lsm_hook_defs.h
-@@ -54,6 +54,7 @@ LSM_HOOK(int, 0, bprm_creds_from_file, struct linux_binprm *bprm, struct file *f
- LSM_HOOK(int, 0, bprm_check_security, struct linux_binprm *bprm)
- LSM_HOOK(void, LSM_RET_VOID, bprm_committing_creds, struct linux_binprm *bprm)
- LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
-+LSM_HOOK(int, 0, fs_context_init, struct fs_context *fc, struct dentry *reference)
- LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
- 	 struct fs_context *src_sc)
- LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
-diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
-index 73cb0ab2bc03..6b43f5f22fff 100644
---- a/include/linux/lsm_hooks.h
-+++ b/include/linux/lsm_hooks.h
-@@ -87,8 +87,12 @@
-  * Security hooks for mount using fs_context.
-  *	[See also Documentation/filesystems/mount_api.rst]
-  *
-+ * @fs_context_init:
-+ *	Initialises a new security context.
-+ *	@fc indicates the new filesystem context.
-+ *	@reference points to a reference dentry for a submount (or is NULL).
-  * @fs_context_dup:
-- *	Allocate and attach a security structure to sc->security.  This pointer
-+ *	Allocate and attach a security structure to fc->security.  This pointer
-  *	is initialised to NULL by the caller.
-  *	@fc indicates the new filesystem context.
-  *	@src_fc indicates the original filesystem context.
-diff --git a/include/linux/security.h b/include/linux/security.h
-index a4f0c421dd0c..647f43d464f0 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -289,6 +289,7 @@ int security_bprm_creds_from_file(struct linux_binprm *bprm, struct file *file);
- int security_bprm_check(struct linux_binprm *bprm);
- void security_bprm_committing_creds(struct linux_binprm *bprm);
- void security_bprm_committed_creds(struct linux_binprm *bprm);
-+int security_fs_context_init(struct fs_context *fc, struct dentry *reference);
- int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc);
- int security_fs_context_parse_param(struct fs_context *fc, struct fs_parameter *param);
- int security_sb_alloc(struct super_block *sb);
-@@ -618,11 +619,18 @@ static inline void security_bprm_committed_creds(struct linux_binprm *bprm)
- {
- }
- 
-+static inline int security_fs_context_init(struct fs_context *fc,
-+					   struct dentry *reference)
-+{
-+	return 0;
-+}
-+
- static inline int security_fs_context_dup(struct fs_context *fc,
- 					  struct fs_context *src_fc)
- {
- 	return 0;
- }
-+
- static inline int security_fs_context_parse_param(struct fs_context *fc,
- 						  struct fs_parameter *param)
- {
-diff --git a/security/security.c b/security/security.c
-index 0c49a1f05ac4..50bd3cd77a49 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -879,6 +879,11 @@ void security_bprm_committed_creds(struct linux_binprm *bprm)
- 	call_void_hook(bprm_committed_creds, bprm);
- }
- 
-+int security_fs_context_init(struct fs_context *fc, struct dentry *reference)
-+{
-+	return call_int_hook(fs_context_init, 0, fc, reference);
-+}
-+
- int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
- {
- 	return call_int_hook(fs_context_dup, 0, fc, src_fc);
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index 8ea92f08e6bd..170ed9854153 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -354,7 +354,7 @@ static void inode_free_security(struct inode *inode)
- }
- 
- struct selinux_mnt_opts {
--	const char *fscontext, *context, *rootcontext, *defcontext;
-+	char *fscontext, *context, *rootcontext, *defcontext;
- };
- 
- static void selinux_free_mnt_opts(void *mnt_opts)
-@@ -980,7 +980,7 @@ static int selinux_sb_clone_mnt_opts(const struct super_block *oldsb,
- 	return rc;
- }
- 
--static int selinux_add_opt(int token, const char *s, void **mnt_opts)
-+static int selinux_add_opt(int token, char *s, void **mnt_opts)
- {
- 	struct selinux_mnt_opts *opts = *mnt_opts;
- 
-@@ -2800,6 +2800,58 @@ static int selinux_umount(struct vfsmount *mnt, int flags)
- 				   FILESYSTEM__UNMOUNT, NULL);
- }
- 
-+static int selinux_fs_context_init(struct fs_context *fc,
-+				   struct dentry *reference)
-+{
-+	const struct superblock_security_struct *ref_sbsec;
-+	struct inode_security_struct *ref_isec;
-+	struct selinux_mnt_opts *opts;
-+	u32 len;
-+	int ret;
-+
-+	if (fc->purpose != FS_CONTEXT_FOR_SUBMOUNT)
-+		return 0;
-+
-+	ref_sbsec = selinux_superblock(reference->d_sb);
-+	if (!ref_sbsec)
-+		return 0;
-+
-+	opts = kzalloc(sizeof(struct selinux_mnt_opts), GFP_KERNEL);
-+	if (!opts)
-+		return -ENOMEM;
-+
-+	fc->security = opts;
-+
-+	if (ref_sbsec->flags & FSCONTEXT_MNT) {
-+		ret = security_sid_to_context(&selinux_state, ref_sbsec->sid,
-+					      &opts->fscontext, &len);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	if (ref_sbsec->flags & CONTEXT_MNT) {
-+		ret = security_sid_to_context(&selinux_state, ref_sbsec->mntpoint_sid,
-+					      &opts->context, &len);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	if (ref_sbsec->flags & DEFCONTEXT_MNT) {
-+		ret = security_sid_to_context(&selinux_state, ref_sbsec->def_sid,
-+					      &opts->defcontext, &len);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	/* Should we use the mountpoint context or the root inode context? */
-+	if (ref_sbsec->flags & ROOTCONTEXT_MNT) {
-+		ref_isec = backing_inode_security(reference);
-+		ret = security_sid_to_context(&selinux_state, ref_isec->sid,
-+					      &opts->rootcontext, &len);
-+		if (ret < 0)
-+			return ret;
-+	}
-+	return 0;
-+}
-+
- static int selinux_fs_context_dup(struct fs_context *fc,
- 				  struct fs_context *src_fc)
- {
-@@ -7267,6 +7319,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
- 	/*
- 	 * PUT "ALLOCATING" HOOKS HERE
- 	 */
-+	LSM_HOOK_INIT(fs_context_init, selinux_fs_context_init),
- 	LSM_HOOK_INIT(msg_msg_alloc_security, selinux_msg_msg_alloc_security),
- 	LSM_HOOK_INIT(msg_queue_alloc_security,
- 		      selinux_msg_queue_alloc_security),
-
-
+-- 
+paul moore
+www.paul-moore.com
