@@ -2,158 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD8B46F455
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 20:53:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4FC246F5B3
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 22:12:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230503AbhLIT5X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Dec 2021 14:57:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56384 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231187AbhLIT5U (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 14:57:20 -0500
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0246EC061746
-        for <linux-nfs@vger.kernel.org>; Thu,  9 Dec 2021 11:53:47 -0800 (PST)
-Received: by mail-io1-xd32.google.com with SMTP id x10so7949257ioj.9
-        for <linux-nfs@vger.kernel.org>; Thu, 09 Dec 2021 11:53:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AsRhowv9GS1BKrI5gLUKrzXf/xeqD8Q3rmF2XHzw6BY=;
-        b=nxtp/Y6SruBNWzzF3mxw+BpDtxyJ3nmA38o2BTE4uqJ89CHbnxDbOOGhJtE0VvGAze
-         VpjOIHKyLuP8OxUuG6bN9WT84fY/AHWvvxf09IMWySC5+UaBnneIP30IhlvkIZmEIcBT
-         ntHPkcU9Gw+9zxkDXQAiwUoj1/x18QX/jfzJcCCPl53/xkwLk0w1YbCKkwCubq65+zBN
-         uBvuJwkf07D+PDibvKwdnDfcYMsv7VD4VMR0ofcF0YvSW+grPmCtMRBRol5JOnQCnXf8
-         8lt/JQa0sblWdJnNxgdsWF693XU+3nI9qHKB0w9nUai5nMJPbMZr8HZdcfXztQcTHL83
-         7Qzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AsRhowv9GS1BKrI5gLUKrzXf/xeqD8Q3rmF2XHzw6BY=;
-        b=25kKUE5D10nIpeIzNUYPfW1nd0nhrS9tBaOOsxV999Dya30OjvFoqnmnj17p8fEL3w
-         KfLNQIc1/TZtRYNRxhhCFg+d9B79F/WcCItT2BrDBhbJ9d6dAQDQ0+lduOceS3TJ/Yii
-         tldduNmi5vpGnEGldEWNOKKhN+l1X8IuLJNfWMgPS6Ib/DnFfm+NylopKIjiw77BpE9p
-         blZfdzTCjN2gd9vNZMpbeRRZHnG0vpGvjG8gb3+tfUS0v3tw1YA8fm+26GnQzyyj3+K/
-         OHQvo9feg2qp/Ozsmgyqq18CuRNDOikwoFeSWTr0teE2+E06kkGUc/fcCuolxQZwxB5B
-         aZTQ==
-X-Gm-Message-State: AOAM531ScMFjESiZI92JuBqeaTO4Wpih7/QLnzBHv0j6hSQH6AOyPJi1
-        u3XmSR+nFLz+1az+tAadeFBM24oJ8Ss=
-X-Google-Smtp-Source: ABdhPJwrfxKWzSlOOJYpZDFhMegFEzxUiZeRbSlDD5nSxEHRD188dmMXxsYli5D/dufV56QiSC9x5A==
-X-Received: by 2002:a05:6602:2d84:: with SMTP id k4mr17200622iow.168.1639079626397;
-        Thu, 09 Dec 2021 11:53:46 -0800 (PST)
-Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:554d:272f:69a0:1745])
-        by smtp.gmail.com with ESMTPSA id k9sm383541ilv.61.2021.12.09.11.53.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 Dec 2021 11:53:45 -0800 (PST)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 7/7] NFSv4.1 test and add 4.1 trunking transport
-Date:   Thu,  9 Dec 2021 14:53:35 -0500
-Message-Id: <20211209195335.32404-8-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20211209195335.32404-1-olga.kornievskaia@gmail.com>
-References: <20211209195335.32404-1-olga.kornievskaia@gmail.com>
+        id S232702AbhLIVPk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Dec 2021 16:15:40 -0500
+Received: from lithops.sigma-star.at ([195.201.40.130]:35416 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232657AbhLIVPk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 16:15:40 -0500
+X-Greylist: delayed 375 seconds by postgrey-1.27 at vger.kernel.org; Thu, 09 Dec 2021 16:15:40 EST
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id B845562EB58A;
+        Thu,  9 Dec 2021 22:05:49 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id MFhJh1SoPAm1; Thu,  9 Dec 2021 22:05:49 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 2876262EB595;
+        Thu,  9 Dec 2021 22:05:49 +0100 (CET)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id mve3MJ0sVjve; Thu,  9 Dec 2021 22:05:49 +0100 (CET)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id E8A7162EB58A;
+        Thu,  9 Dec 2021 22:05:48 +0100 (CET)
+Date:   Thu, 9 Dec 2021 22:05:48 +0100 (CET)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-nfs@vger.kernel.org
+Cc:     luis.turcitu@appsbroker.com, chris.chilvers@appsbroker.com,
+        david.young@appsbroker.com, david <david@sigma-star.at>,
+        bfields@fieldses.org,
+        david oberhollenzer <david.oberhollenzer@sigma-star.at>
+Message-ID: <1576494286.153679.1639083948872.JavaMail.zimbra@nod.at>
+Subject: Improving NFS re-export
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF94 (Linux)/8.8.12_GA_3809)
+Thread-Index: DIlIQMBpkOIKFedlU9SceqK8F8UnKA==
+Thread-Topic: Improving NFS re-export
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Olga Kornievskaia <kolga@netapp.com>
+Hello NFS list,
 
-For each location returned in FS_LOCATION query, establish a
-transport to the server, send EXCHANGE_ID and test for trunking,
-if successful, add the transport to the exiting client.
+I'd like to improve the NFS re-export feature, especially wrt. crossmounts.
+Currently a NFS client will face EIO when crossing a mount point on the re-exporting server.
+This was discussed here[0]. While in that discussion the assumption was that check_export()
+in fs/nfsd/export.c emits EIO I did further experiments and realized that EIO actually
+comes from the NFS client side of the re-exporting server.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs4proc.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+nfs_encode_fh() in fs/nfs/export.c checks for IS_AUTOMOUNT(inode), if this is the case
+it refuses to create a new file handle.
+So while accessing /files/disk2 directly on the re-exporting server triggers an automount,
+accessing via nfsd the export function of the client side gives up.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 9a6b53ec0eaa..0529c60c27e9 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3933,6 +3933,56 @@ int nfs4_server_capabilities(struct nfs_server *server, struct nfs_fh *fhandle)
- 	return err;
- }
- 
-+static void test_fs_location_for_trunking(struct nfs4_fs_location *location,
-+					  struct nfs_client *clp,
-+					  struct nfs_server *server)
-+{
-+	int i;
-+
-+	for (i = 0; i < location->nservers; i++) {
-+		struct nfs4_string *srv_loc = &location->servers[i];
-+		struct sockaddr addr;
-+		size_t addrlen;
-+		struct xprt_create xprt_args = {
-+			.ident = 0,
-+			.net = clp->cl_net,
-+		};
-+		struct nfs4_add_xprt_data xprtdata = {
-+			.clp = clp,
-+		};
-+		struct rpc_add_xprt_test rpcdata = {
-+			.add_xprt_test = clp->cl_mvops->session_trunk,
-+			.data = &xprtdata,
-+		};
-+		char *servername = NULL;
-+
-+		if (!srv_loc->len)
-+			continue;
-+
-+		addrlen = nfs_parse_server_name(srv_loc->data, srv_loc->len,
-+						&addr, sizeof(addr),
-+						clp->cl_net, server->port);
-+		if (!addrlen)
-+			return;
-+		xprt_args.dstaddr = &addr;
-+		xprt_args.addrlen = addrlen;
-+		servername = kmalloc(srv_loc->len + 1, GFP_KERNEL);
-+		if (!servername)
-+			return;
-+		memcpy(servername, srv_loc->data, srv_loc->len);
-+		servername[srv_loc->len] = '\0';
-+		xprt_args.servername = servername;
-+
-+		xprtdata.cred = nfs4_get_clid_cred(clp);
-+		rpc_clnt_add_xprt(clp->cl_rpcclient, &xprt_args,
-+				  rpc_clnt_setup_test_and_add_xprt,
-+				  &rpcdata);
-+		if (xprtdata.cred)
-+			put_cred(xprtdata.cred);
-+		kfree(servername);
-+	}
-+}
-+
- static int _nfs4_discover_trunking(struct nfs_server *server,
- 				   struct nfs_fh *fhandle)
- {
-@@ -3942,7 +3992,7 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
- 	struct nfs_client *clp = server->nfs_client;
- 	const struct nfs4_state_maintenance_ops *ops =
- 		clp->cl_mvops->state_renewal_ops;
--	int status = -ENOMEM;
-+	int status = -ENOMEM, i;
- 
- 	cred = ops->get_state_renewal_cred(clp);
- 	if (cred == NULL) {
-@@ -3960,6 +4010,10 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
- 					 cred);
- 	if (status)
- 		goto out;
-+
-+	for (i = 0; i < locations->nlocations; i++)
-+		test_fs_location_for_trunking(&locations->locations[i], clp,
-+					      server);
- out:
- 	if (page)
- 		__free_page(page);
--- 
-2.27.0
+AFAIU the suggested proxy-only-mode[1] will not address this problem, right?
 
+One workaround is manually adding an export for each volume on the re-exporting server.
+This kinda works but is tedious and error prone.
+
+I have a crazy idea how to automate this:
+Since nfs_encode_fh() in the NFS client side of the re-exporting server can detect
+crossing mounts, we could install a new export on the sever side as soon the
+IS_AUTOMOUNT(inode) case arises. We could even use the same fsid.
+What do you think?
+
+Another obstacle is file handle wrapping.
+When re-exporting, the NFS client side adds inode and file information to each file handle,
+the server side also adds information. In my test setup this enlarges a 16 bytes file handle
+to 40 bytes.
+The proxy-only-mode won't help us either here.
+
+Did you consider using the opaque file handle from the server as lookup key in a
+(persisted) data structure?
+That way at least the client side of the re-exporting server no longer has to enlarge
+the file handle with inode and file type information.
+If the re-exporting server re-exports just one server (proxy-only-mode) we could also
+skip adding the fsid to the handle.
+What do you think?
+
+I'm looking forward to hear your comments.
+
+Thanks,
+//richard
+
+[0] https://marc.info/?l=linux-nfs&m=161670807413876&w=2
+[1] https://linux-nfs.org/wiki/index.php/NFS_proxy-only_mode
