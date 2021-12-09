@@ -2,127 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 374D246F669
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 23:03:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F20046F677
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 23:07:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230332AbhLIWHA convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Thu, 9 Dec 2021 17:07:00 -0500
-Received: from lithops.sigma-star.at ([195.201.40.130]:36084 "EHLO
-        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbhLIWHA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 17:07:00 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 90CF4614E2D5;
-        Thu,  9 Dec 2021 23:03:25 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id tTdmplOcseml; Thu,  9 Dec 2021 23:03:25 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 0985C60F6B7D;
-        Thu,  9 Dec 2021 23:03:25 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id qn1uXTZblCSN; Thu,  9 Dec 2021 23:03:24 +0100 (CET)
-Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id D7CB962EB595;
-        Thu,  9 Dec 2021 23:03:24 +0100 (CET)
-Date:   Thu, 9 Dec 2021 23:03:24 +0100 (CET)
-From:   Richard Weinberger <richard@nod.at>
-To:     bfields <bfields@fieldses.org>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>,
-        luis turcitu <luis.turcitu@appsbroker.com>,
-        chris chilvers <chris.chilvers@appsbroker.com>,
-        david young <david.young@appsbroker.com>,
-        david <david@sigma-star.at>,
-        david oberhollenzer <david.oberhollenzer@sigma-star.at>
-Message-ID: <763412597.153709.1639087404752.JavaMail.zimbra@nod.at>
-In-Reply-To: <20211209214139.GA23483@fieldses.org>
-References: <1576494286.153679.1639083948872.JavaMail.zimbra@nod.at> <20211209214139.GA23483@fieldses.org>
-Subject: Re: Improving NFS re-export
+        id S232190AbhLIWL2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Dec 2021 17:11:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59192 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230506AbhLIWL2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 17:11:28 -0500
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62433C061746
+        for <linux-nfs@vger.kernel.org>; Thu,  9 Dec 2021 14:07:54 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id r11so23650988edd.9
+        for <linux-nfs@vger.kernel.org>; Thu, 09 Dec 2021 14:07:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RHArNxFMHgs9P3JmMQUjRcZVsX1YeVD3wW/DAeZt5nA=;
+        b=JhUfOUJjxhGRzHwksR/Q8zG3IINBIKaphSkRwJzWYADLahSsN6d7219QvbpoEd8Y7k
+         Ufk/H24zbV7UnfRzWnZtmEkNZrNUh/75SD5YVhHcTNkE8nvjcjbuV/8uU1FIxASJeztH
+         4gA4ykWichWHKmWefAIY/la0fzYo0je1n6xY0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RHArNxFMHgs9P3JmMQUjRcZVsX1YeVD3wW/DAeZt5nA=;
+        b=VO9P8+F+qYLT7pPySw1Y4QchTc1jjDrfol/liHLnbIkN4l6S4m4VpHwqK++cGQfCpB
+         D0oapUzDNtRRFvxsm8tk433T00EYjmU5PPfGuHhlDcLd27xgbig1bLqERoU44uwOdqBT
+         kW8vd+dk1DLWQ+Ywrc+ts7HRtqCeKpK1h/TlRY6bSwZJHi1VXbXcrCYSH38P5H4pUF2M
+         GNtw/CYmsd4FFnezUHHP058FxgGFOuGbPPgs/ESoOgYTzg2OI3qUxm/8XEV/LbFNMiGc
+         dhUH1wxkcLFfOLzOPE1tqD4lmujjJiZS87NKyyEK1CaSeAM8ZisksXgZ1aU2KOIFDsf0
+         qE/w==
+X-Gm-Message-State: AOAM531sfn5glCa5+9JGlKzxYBtL7H/YdupTLVYUJI1Ks5nLJzTXA+4c
+        OcitUa79B2M5SJopyF+NHI9gNLq/5FT/uCoFZyA=
+X-Google-Smtp-Source: ABdhPJyBoVk/lWLr7Wli37UebSAm8098b5djAxyozp4ImR0t8NRb3LknltXhpm3tqjFJH9I2KUCSvw==
+X-Received: by 2002:a17:906:1be2:: with SMTP id t2mr19292183ejg.399.1639087671998;
+        Thu, 09 Dec 2021 14:07:51 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id q17sm479720edd.10.2021.12.09.14.07.49
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 Dec 2021 14:07:50 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id u1so12013770wru.13
+        for <linux-nfs@vger.kernel.org>; Thu, 09 Dec 2021 14:07:49 -0800 (PST)
+X-Received: by 2002:adf:f8c3:: with SMTP id f3mr9535285wrq.495.1639087669394;
+ Thu, 09 Dec 2021 14:07:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [195.201.40.130]
-X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF94 (Linux)/8.8.12_GA_3809)
-Thread-Topic: Improving NFS re-export
-Thread-Index: ymrsw2Mi5hdsodFOjqZy6pPZSY2Pjg==
+References: <163906878733.143852.5604115678965006622.stgit@warthog.procyon.org.uk>
+ <163906888735.143852.10944614318596881429.stgit@warthog.procyon.org.uk>
+ <CAHk-=wiTquFUu-b5ME=rbGEF8r2Vh1TXGfaZZuXyOutVrgRzfw@mail.gmail.com> <159180.1639087053@warthog.procyon.org.uk>
+In-Reply-To: <159180.1639087053@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 9 Dec 2021 14:07:33 -0800
+X-Gmail-Original-Message-ID: <CAHk-=whtkzB446+hX0zdLsdcUJsJ=8_-0S1mE_R+YurThfUbLA@mail.gmail.com>
+Message-ID: <CAHk-=whtkzB446+hX0zdLsdcUJsJ=8_-0S1mE_R+YurThfUbLA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/67] fscache: Implement a hash function
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
------ Ursprüngliche Mail -----
-> On Thu, Dec 09, 2021 at 10:05:48PM +0100, Richard Weinberger wrote:
->> nfs_encode_fh() in fs/nfs/export.c checks for IS_AUTOMOUNT(inode), if this is
->> the case
->> it refuses to create a new file handle.
->> So while accessing /files/disk2 directly on the re-exporting server triggers an
->> automount,
->> accessing via nfsd the export function of the client side gives up.
->> 
->> AFAIU the suggested proxy-only-mode[1] will not address this problem, right?
-> 
-> That's how I was thinking of addressing the problem, actually.  I
-> haven't figured out how to make that proxy-only mode work, though.
-> 
->> One workaround is manually adding an export for each volume on the re-exporting
->> server.
->> This kinda works but is tedious and error prone.
->> 
->> I have a crazy idea how to automate this:
->> Since nfs_encode_fh() in the NFS client side of the re-exporting server can
->> detect
->> crossing mounts, we could install a new export on the sever side as soon the
->> IS_AUTOMOUNT(inode) case arises. We could even use the same fsid.
->> What do you think?
-> 
-> Something like that might work.
-> 
-> I'm not sure what you mean by the same fsid.  I think you'd need to make
-> up a new fsid each time you encounter a new filesystem.  And you'd also
-> want to persist it on disk if you want this to keep working across
-> reboots of the proxy.
+On Thu, Dec 9, 2021 at 1:57 PM David Howells <dhowells@redhat.com> wrote:
+>
+> What I'm trying to get at is that the hash needs to be consistent, no matter
+> the endianness of the cpu, for any particular input blob.
 
-By same fsid I meant reusing the fsid from the backend server.
- 
-> I think you could patch rpc.mountd to do that.
+Yeah, if that's the case, then you should probably make that "unsigned
+int *data" argument probably just be "void *" and then:
 
-Okay, I need to dig into this.
+>                 a = *data++;   <<<<<<<
+>                 HASH_MIX(x, y, a);
+>         }
+>         return fold_hash(x, y);
+> }
+>
+> The marked line should probably use something like le/be32_to_cpu().
 
->> Another obstacle is file handle wrapping.
->> When re-exporting, the NFS client side adds inode and file information to each
->> file handle,
->> the server side also adds information. In my test setup this enlarges a 16 bytes
->> file handle
->> to 40 bytes.
->> The proxy-only-mode won't help us either here.
-> 
-> Part of my motivation for a proxy-only mode was to remove that wrapping.
-> 
-> Since you're dedicating the host to reexporting one single backend
-> server, in theory you don't need any of the information in the wrapper.
-> When you (the proxy) get a filehandle from a client, you know which
-> server that filehandle originally came from, so you can go ask that
-> server for whatever you need to know about the filehandle (like an
-> fsid).
+Yes, it should be using a '__le32 *' inside that function and you
+should use l32_to_cpu(). Obviously, BE would work too, but cause
+unnecessary work on common hardware.
 
-I see. That way we could get rid of file handle wrapping but loose the
-NFS clinet inode cache on the re-exporting server, I think.
- 
->> Did you consider using the opaque file handle from the server as
->> lookup key in a (persisted) data structure?
-> 
-> A little, but I don't think it works.
-> 
-> If you do this, you do need to require that you only export one server.
-> Otherwise there may be collisions (two different servers could return
-> filehandles that happen to have the same value).
-> 
-> The database would store every filehandle the client has ever seen.
-> That could be a lot.  It may also include filehandles for since-deleted
-> files.  The only way to prune such entries would be to try using them
-> and see if the server gives you STALE errors.
+But as mentioned for the other patches, you should then also be a lot
+more careful about always using the end result as an 'unsigned int'
+(or maybe 'u32') too, and when comparing hashes for binary search or
+other, you should always do th4e compare in some stable format.
 
-True. I didn't think about the pruning case.
+Because doing
 
-Thanks a lot for the prompt reply and your valuable input.
-//richard
+        return (long)hash_a - (long)hash_b;
+
+and looking at the sign doesn't actually result in a stable ordering
+on 32-bit architectures. You don't get a transitive ordering (ie a < b
+and b < c doesn't imply a < c).
+
+And presumably if the hashes are meaningful across machines, then hash
+comparisons should also be meaningful across machines.
+
+So when comparing hashes, you need to compare them either in a truly
+bigger signed type (and make sure that doesn't get truncated) - kind
+of like how a lot of 'memcmp()' functions do 'unsigned char'
+subtractions in an 'int' - or you need to compare them _as_ 'unsigned
+int'.
+
+Otherwise the comparisons will be all kinds of messed up.
+
+          Linus
