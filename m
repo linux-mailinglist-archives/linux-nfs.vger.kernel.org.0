@@ -2,125 +2,125 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6137C46F61C
-	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 22:41:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8542046F64C
+	for <lists+linux-nfs@lfdr.de>; Thu,  9 Dec 2021 22:57:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbhLIVpP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 9 Dec 2021 16:45:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53168 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbhLIVpO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 16:45:14 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0BFEC061746
-        for <linux-nfs@vger.kernel.org>; Thu,  9 Dec 2021 13:41:40 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7CA7B6EB4; Thu,  9 Dec 2021 16:41:39 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7CA7B6EB4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1639086099;
-        bh=BGO1yhjcOAF8nLUWdiqVyxgsIz4EUuW1Ymd4DVUawow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hdZWbYKr1hkzgHg/Q+9yFlKprvE1T38uQCBqTFCqQHuH2gpgCr584m8uDn2z8jsLF
-         +Y2uYm3iDtF7wB/jBfafDfqXu2lrpmpd9/EFtgGifX3WmUHirva2cTV+bbxpiaskR9
-         yLCpk9dIJfVqyrZgLb/Sebzfu3CCiBnFleKjisd4=
-Date:   Thu, 9 Dec 2021 16:41:39 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-nfs@vger.kernel.org, luis.turcitu@appsbroker.com,
-        chris.chilvers@appsbroker.com, david.young@appsbroker.com,
-        david <david@sigma-star.at>,
-        david oberhollenzer <david.oberhollenzer@sigma-star.at>
-Subject: Re: Improving NFS re-export
-Message-ID: <20211209214139.GA23483@fieldses.org>
-References: <1576494286.153679.1639083948872.JavaMail.zimbra@nod.at>
+        id S232950AbhLIWBW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 9 Dec 2021 17:01:22 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:49466 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S233102AbhLIWBV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 9 Dec 2021 17:01:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639087067;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Nq1sf+kzjWsZVde2j+/s8Puw8BjH1Oy3rw3I3uvxMHo=;
+        b=gO2xhcbRn6ypuBaxacQhTl9nW37tlg8LvRn2/rXcZZ9vhBWU+XB4qJ3PKv7m1wHuSkV8MB
+        Hao7gQUtPGzAuMl3OU5vlVLlgEorsTBQMZ257uzv+7cdik2pl6rQUWKF8cTELgD7xxVFtw
+        hO79vqSKgzMtKSrdPbwhngR37ty5kxw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-562-goLxjqsmOXuXZtknWwaRCA-1; Thu, 09 Dec 2021 16:57:42 -0500
+X-MC-Unique: goLxjqsmOXuXZtknWwaRCA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A8D3760C0;
+        Thu,  9 Dec 2021 21:57:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB9EB1017E27;
+        Thu,  9 Dec 2021 21:57:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wiTquFUu-b5ME=rbGEF8r2Vh1TXGfaZZuXyOutVrgRzfw@mail.gmail.com>
+References: <CAHk-=wiTquFUu-b5ME=rbGEF8r2Vh1TXGfaZZuXyOutVrgRzfw@mail.gmail.com> <163906878733.143852.5604115678965006622.stgit@warthog.procyon.org.uk> <163906888735.143852.10944614318596881429.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        linux-afs@lists.infradead.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 07/67] fscache: Implement a hash function
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1576494286.153679.1639083948872.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <159179.1639087053.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 09 Dec 2021 21:57:33 +0000
+Message-ID: <159180.1639087053@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 09, 2021 at 10:05:48PM +0100, Richard Weinberger wrote:
-> Hello NFS list,
-> 
-> I'd like to improve the NFS re-export feature, especially wrt. crossmounts.
-> Currently a NFS client will face EIO when crossing a mount point on the re-exporting server.
-> This was discussed here[0]. While in that discussion the assumption was that check_export()
-> in fs/nfsd/export.c emits EIO I did further experiments and realized that EIO actually
-> comes from the NFS client side of the re-exporting server.
-> 
-> nfs_encode_fh() in fs/nfs/export.c checks for IS_AUTOMOUNT(inode), if this is the case
-> it refuses to create a new file handle.
-> So while accessing /files/disk2 directly on the re-exporting server triggers an automount,
-> accessing via nfsd the export function of the client side gives up.
-> 
-> AFAIU the suggested proxy-only-mode[1] will not address this problem, right?
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-That's how I was thinking of addressing the problem, actually.  I
-haven't figured out how to make that proxy-only mode work, though.
+> > Implement a function to generate hashes.  It needs to be stable over t=
+ime
+> > and endianness-independent as the hashes will appear on disk in future
+> > patches.
+> =
 
-> One workaround is manually adding an export for each volume on the re-exporting server.
-> This kinda works but is tedious and error prone.
-> 
-> I have a crazy idea how to automate this:
-> Since nfs_encode_fh() in the NFS client side of the re-exporting server can detect
-> crossing mounts, we could install a new export on the sever side as soon the
-> IS_AUTOMOUNT(inode) case arises. We could even use the same fsid.
-> What do you think?
+> I'm not actually seeing this being endianness-independent.
+> =
 
-Something like that might work.
+> Is the input just regular 32-bit data in native word order? Because
+> then it's not endianness-independent, it's purely that there *is* no
+> endianness to the data at all and it is purely native data.
+>
+> So the code may be correct, but the explanation is confusing. There is
+> absolutely nothing here that is about endianness.
 
-I'm not sure what you mean by the same fsid.  I think you'd need to make
-up a new fsid each time you encounter a new filesystem.  And you'd also
-want to persist it on disk if you want this to keep working across
-reboots of the proxy.
+What I'm trying to get at is that the hash needs to be consistent, no matt=
+er
+the endianness of the cpu, for any particular input blob.  The hashing
+function shouldn't need to know the structure of the input blob.  In the c=
+ase
+of the volume key, it's a padded printable string; in the case of the cook=
+ie
+key, it's probably some sort of structured blob, quite possibly an actual
+array of be32.
 
-I think you could patch rpc.mountd to do that.
+The reason it needs to be consistent is that people seem to like seeding t=
+he
+cache by tarring up the cache from one machine and untarring it on another=
+.
 
-> Another obstacle is file handle wrapping.
-> When re-exporting, the NFS client side adds inode and file information to each file handle,
-> the server side also adds information. In my test setup this enlarges a 16 bytes file handle
-> to 40 bytes.
-> The proxy-only-mode won't help us either here.
+And looking again at my code:
 
-Part of my motivation for a proxy-only mode was to remove that wrapping.
+unsigned int fscache_hash(unsigned int salt, unsigned int *data, unsigned =
+int n)
+{
+	unsigned int a, x =3D 0, y =3D salt;
 
-Since you're dedicating the host to reexporting one single backend
-server, in theory you don't need any of the information in the wrapper.
-When you (the proxy) get a filehandle from a client, you know which
-server that filehandle originally came from, so you can go ask that
-server for whatever you need to know about the filehandle (like an
-fsid).
+	for (; n; n--) {
+		a =3D *data++;   <<<<<<<
+		HASH_MIX(x, y, a);
+	}
+	return fold_hash(x, y);
+}
 
-> Did you consider using the opaque file handle from the server as
-> lookup key in a (persisted) data structure?
+The marked line should probably use something like le/be32_to_cpu().
 
-A little, but I don't think it works.
+I also need to fix 9p to canonicalise its cookie key.
 
-If you do this, you do need to require that you only export one server.
-Otherwise there may be collisions (two different servers could return
-filehandles that happen to have the same value).
+Thanks for catching that,
+David
 
-The database would store every filehandle the client has ever seen.
-That could be a lot.  It may also include filehandles for since-deleted
-files.  The only way to prune such entries would be to try using them
-and see if the server gives you STALE errors.
-
---b.
-
-> That way at least the client side of the re-exporting server no longer has to enlarge
-> the file handle with inode and file type information.
-> If the re-exporting server re-exports just one server (proxy-only-mode) we could also
-> skip adding the fsid to the handle.
-> What do you think?
-> 
-> I'm looking forward to hear your comments.
-> 
-> Thanks,
-> //richard
-> 
-> [0] https://marc.info/?l=linux-nfs&m=161670807413876&w=2
-> [1] https://linux-nfs.org/wiki/index.php/NFS_proxy-only_mode
