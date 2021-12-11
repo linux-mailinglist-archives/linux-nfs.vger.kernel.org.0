@@ -2,77 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6257471049
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Dec 2021 03:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB4DC471101
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Dec 2021 03:52:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345687AbhLKCFw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Dec 2021 21:05:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48228 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345671AbhLKCFv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Dec 2021 21:05:51 -0500
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D88F5C061A32
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Dec 2021 18:02:15 -0800 (PST)
-Received: by mail-ed1-x543.google.com with SMTP id w1so35037298edc.6
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Dec 2021 18:02:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=UB8HPXfiFrSS8lJHVD9imqT8IM8lXgQeVTQMVTTdoew=;
-        b=YLFlW2EU3wC14KpVTk+IM58oSghSYLjMmVu6zQ/IYCwgsR5Sf12xJCL/5+CVpbXsnt
-         22KfNqT06o98mhCtfoOfWNh/4tfFmj2AFDjLdssqJs8+fwuuzWeqstsrP9Eqc87OlMHn
-         TvZYh66KNDgDYMOMzV+7fqlsVNnsPbs5tbKal0uE5CTp2Rk7sipJ65nnPaJWW6urjiYG
-         yjhaQr0+DsLsyIMnaiNd6rjtUc7yQgIo65YEuBLpX5cuMOVjNiZW8dTCMF1ZcQmI8lLg
-         ts2zRNIssQ7WVu8YEQseHp9elEHPuA+qDafMGck3ipNTcw1LcoccQXJFJcltFVTtty4m
-         33gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=UB8HPXfiFrSS8lJHVD9imqT8IM8lXgQeVTQMVTTdoew=;
-        b=OwE81JJPX93aq+MAjI5pkYDwQIy5DUzP1Fdy/d6OLBuYyeStzh+/g6w2G0eShFqt2k
-         Q7X1CisD0vnHLWCuc/sSok+Z1TdjBJDqnWhuoGnTVr9RKlNuZudwiKMZHupkGwRlzljk
-         o0df9PhZSlN7k2q7X1tTEdGeKg3Si6ryZvTdscD7djQLwo2QYDucg3IWr3xdIfSYISRQ
-         Zx2SQRIhPqryLu9A615D56kttoL+KfGCPknpxcglbUhhCFyzQGRGOyruvaS52w/3QrTt
-         PN5Nq1Gf5pXvrbirogFfq9IWSNu4hwKb2v3pMif5EOXj54RFEHgcmiWmmhHthrJq3s/A
-         FojA==
-X-Gm-Message-State: AOAM5337bPH07BBkTajt0Vo2MhxOsNhZlP5/JewVTe6VRDE3lYYEyeP3
-        Cf5EeFhG3oN7knn3hEI8bc8Nc9R3Hrs8RLBlp3UTsBGNJxMgJR5B
-X-Google-Smtp-Source: ABdhPJxBVYZ26kuukI+qghu2oEbePULLlY8UzOvy8Thh2XI49DVZF++TlN5eyoWkvajWnohXM36KonRfGTJC1IRe82w=
-X-Received: by 2002:a2e:9d8f:: with SMTP id c15mr17452679ljj.477.1639188123220;
- Fri, 10 Dec 2021 18:02:03 -0800 (PST)
+        id S234539AbhLKC42 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Dec 2021 21:56:28 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:56636 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229886AbhLKC42 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Dec 2021 21:56:28 -0500
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BANhaGe030101;
+        Sat, 11 Dec 2021 02:52:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=D9tDQtP9zrlPbhcL5dm5WV01+aXbMH58LQGVhH63uog=;
+ b=u083oXrduzo1wxWIpbUBz7xI74GX3gL8H27bbsfiO/NkPH/wJRO/resdi460FlyA0+UO
+ wKXJCmlMUfptQ+uU8bdU2JCTpu2EYZgmAdbuxbwpZ398GMxmRNC/j6ctmp9ZKHTkIpvf
+ A/ZCbLlgsjUXrWsoGdGcKrfY3R0hTLaUIzmr/qzzckiYZTzSm2yD7FjfrDYk6bsb+uq3
+ gtpHkFWoWbZgv/nyfyhDEMEH4co2+RwHmBG/V5yb6eIMONQvs47FXcy67M/y/lXJ62JV
+ aJ553Kwp8wzqOBJ9+TZZccWq6jVgS7Dv0wSDcj9UIfXy3yrSKH05ZE0bCy57RSxvn2xc 1g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3cve1ugd3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 Dec 2021 02:52:51 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BB2jjdD034095;
+        Sat, 11 Dec 2021 02:52:51 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 3cvj1a27yj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 Dec 2021 02:52:50 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1BB2qoOs063865;
+        Sat, 11 Dec 2021 02:52:50 GMT
+Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by aserp3030.oracle.com with ESMTP id 3cvj1a27yd-1;
+        Sat, 11 Dec 2021 02:52:50 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH RFC v2] nfs4.0 enhance open_confirm to work with courteous server.
+Date:   Fri, 10 Dec 2021 21:52:45 -0500
+Message-Id: <20211211025245.53863-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
 MIME-Version: 1.0
-Received: by 2002:a05:6512:12c7:0:0:0:0 with HTTP; Fri, 10 Dec 2021 18:02:02
- -0800 (PST)
-Reply-To: internationallmonetary695@gmail.com
-From:   International Monetary fund <abubakarsadiq1297@gmail.com>
-Date:   Fri, 10 Dec 2021 18:02:02 -0800
-Message-ID: <CAHXNoSg3Z7iK4ieUWhau28hUaL637ztb2vgqOT3oZCxEMRC3RQ@mail.gmail.com>
-Subject: Dear Beneficiary,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: KKZMdVWM7G_B1IuL05Pg_Qb7XyK7cjUr
+X-Proofpoint-ORIG-GUID: KKZMdVWM7G_B1IuL05Pg_Qb7XyK7cjUr
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Linux NFSv4 courteous server resolves share reservation conflicts
+with courtesy clients asynchronously and returning NFS4ERR_DELAY
+to the client.
+
+v2:
+stop test after timed out on NFS4ERR_DELAY
+
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ nfs4.0/nfs4lib.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+index 934def3b7333..1feb103e20d9 100644
+--- a/nfs4.0/nfs4lib.py
++++ b/nfs4.0/nfs4lib.py
+@@ -723,8 +723,19 @@ class NFS4Client(rpc.RPCClient):
+     def open_confirm(self, owner, path=None,
+                      access=OPEN4_SHARE_ACCESS_READ,
+                      deny=OPEN4_SHARE_DENY_WRITE):
+-        res = self.open_file(owner, path, access, deny)
+-        check_result(res, "Opening file %s" % _getname(owner, path))
++        while 1:
++            res = self.open_file(owner, path, access, deny)
++            cnt = 0
++            try:
++                 check_result(res, "Opening file %s" % _getname(owner, path))
++                 break
++            except BadCompoundRes:
++                if res.status != NFS4ERR_DELAY: raise
++                cnt += 1
++                if cnt <= 5:
++                    time.sleep(2)
++                else:
++                    raise UnexpectedCompoundRes("OPEN timed out on NFS4ERR_DELAY")
+         return self.confirm(owner, res)
+ 
+ ##     def xxxopen_claim_prev(self, owner, fh, seqid=None,
 -- 
- I.M.F Head Office
-#1900 Pennsylvania Ave NW,
-Washington, DC 20431
-INTERNATIONAL MONETARY FUND.
-REF:-XVGNN82010
-internationallmonetary695@gmail.com
-Telephone : +12062785473
+2.27.0
 
-This message is from International Monetary fund (IMF) I am Mr Bo Li
-deputy to  Kristalina Georgieva the current president of International
-  Monetary fund (IMF) We are aware of the stress you have been passing
-through and how you have lost your money trying to claim your fund ,
-you have to worry no more for the international monetary fund is fully
- in-charge of your fund now, contact  me for more info on how you will
-receive your fund( internationallmonetary695@gmail.com) or call me
-on-Telephone : +12062785473 for more info.
-
-Regards,
-Mr Bo Li
