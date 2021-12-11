@@ -2,65 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 01085470FF0
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Dec 2021 02:39:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E88F5471005
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Dec 2021 02:58:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345586AbhLKBma (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Dec 2021 20:42:30 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:47216 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345585AbhLKBm3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Dec 2021 20:42:29 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5C628B82A90;
-        Sat, 11 Dec 2021 01:38:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 261E5C341C6;
-        Sat, 11 Dec 2021 01:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639186731;
-        bh=/m8hd0KlZwF+D9ew/IDvZW6FvzK6heN9E7Ms3hk5/Ns=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=B6l8dmpn3KKJCZzP210okw6DhjFiLDiaQ/oWSrpc8JKEfrvtbP86yYhpjG2QkC58D
-         irF46dTTzEQXIA2hsqBg9T/pfSmSCOzWLFynTKjK2p/0TbWoE2ITai7waI2brgD/Fv
-         BCxzOyG23hJBHvp68/kJn8POqMTg9wZHsdU+5v614o0pYusVrSh6d0MYhky4X/m7v+
-         4Sae3Ng+dG/eNA3/VwlW1bvrVV3l0w7+RWmsELQM+MCmqsRkE+5e60C0RDWCNDo45O
-         qfjvqI+Fr1MUjsK2hWaqvSrvPLAVbA/lAXql5vKufS2IATJPW6Kd/7C3Y041GxLAjh
-         iY2sPbC1DzMRQ==
-Received: from pdx-korg-docbuild-2.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by pdx-korg-docbuild-2.ci.codeaurora.org (Postfix) with ESMTP id 1163A60A4D;
-        Sat, 11 Dec 2021 01:38:51 +0000 (UTC)
-Subject: Re: [GIT PULL] more nfsd bugfixes for 5.16
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20211210203601.GA4596@fieldses.org>
-References: <20211210203601.GA4596@fieldses.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20211210203601.GA4596@fieldses.org>
-X-PR-Tracked-Remote: git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.16-2
-X-PR-Tracked-Commit-Id: 548ec0805c399c65ed66c6641be467f717833ab5
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e80bdc5ed065091ef664a5ee91cd0a15f9bd6994
-Message-Id: <163918673106.12736.3389026885070364493.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Dec 2021 01:38:51 +0000
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>
+        id S231609AbhLKCCb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Dec 2021 21:02:31 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:43566 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229462AbhLKCCa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Dec 2021 21:02:30 -0500
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BANhcru030122;
+        Sat, 11 Dec 2021 01:58:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2021-07-09; bh=wEDmKxVKejqFcS4LfW3qOHrn7F414S3PVl1q2Lbn/6w=;
+ b=B19VJZnR48aWI6agBX3nAPAfk/9KSX+2cHFCPY4c2I0VMCT/NyfYd8sCsGll4ExrjE8N
+ EqQ1bx6q1e6nqOj8GJQHrpJkfOxa8ZifhP0SErjvGCDVQzTEqSPAF5dKhm+1eb4mNGPE
+ F9KqgwJLFEQMiWLTPn1LHCCJrgXOh9xHt+oJHh6lifkXbXCv4Nq3+yI/20VQ4cVbD7sI
+ Au0MBqSw8huxsXVDSIQVz5rbyqhKFy8fzgU0aWNWVL8CJ7ZIGd6DGCpgJGlslfUlSfg1
+ WY+fXsscffPgoe1/gy0CafCaw7giMCZeYr+ZAB8QPkImoMnh3lxiY3RpQaqOUj1OSNCz 3g== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3cve1ugc3x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 Dec 2021 01:58:54 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BB1vSes077245;
+        Sat, 11 Dec 2021 01:58:53 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3cvh3scbe4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 11 Dec 2021 01:58:53 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 1BB1wqNB079783;
+        Sat, 11 Dec 2021 01:58:52 GMT
+Received: from aserp3020.oracle.com (ksplice-shell2.us.oracle.com [10.152.118.36])
+        by userp3030.oracle.com with ESMTP id 3cvh3scbdh-1;
+        Sat, 11 Dec 2021 01:58:52 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     bfields@fieldses.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH RFC 1/1] nfs4.0 enhance open_confirm to work with courteous server.
+Date:   Fri, 10 Dec 2021 20:58:45 -0500
+Message-Id: <20211211015845.49508-1-dai.ngo@oracle.com>
+X-Mailer: git-send-email 2.20.1.1226.g1595ea5.dirty
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: 7b2n2munQofyAxhqXTb9L7uGU0Wt7Ncx
+X-Proofpoint-ORIG-GUID: 7b2n2munQofyAxhqXTb9L7uGU0Wt7Ncx
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 10 Dec 2021 15:36:01 -0500:
+Linux NFSv4 courteous server resolves share reservation conflicts
+with courtesy clients asynchronously and returning NFS4ERR_DELAY
+to the client.
 
-> git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.16-2
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ nfs4.0/nfs4lib.py | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e80bdc5ed065091ef664a5ee91cd0a15f9bd6994
-
-Thank you!
-
+diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+index 934def3b7333..60c833478ec3 100644
+--- a/nfs4.0/nfs4lib.py
++++ b/nfs4.0/nfs4lib.py
+@@ -723,8 +723,17 @@ class NFS4Client(rpc.RPCClient):
+     def open_confirm(self, owner, path=None,
+                      access=OPEN4_SHARE_ACCESS_READ,
+                      deny=OPEN4_SHARE_DENY_WRITE):
+-        res = self.open_file(owner, path, access, deny)
+-        check_result(res, "Opening file %s" % _getname(owner, path))
++        while 1:
++            res = self.open_file(owner, path, access, deny)
++            cnt = 0
++            try:
++                 check_result(res, "Opening file %s" % _getname(owner, path))
++                 break
++            except BadCompoundRes:
++                if res.status != NFS4ERR_DELAY: raise
++                cnt += 1
++                if cnt < 5:
++                    time.sleep(2)
+         return self.confirm(owner, res)
+ 
+ ##     def xxxopen_claim_prev(self, owner, fh, seqid=None,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.27.0
+
