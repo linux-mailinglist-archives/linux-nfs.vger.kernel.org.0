@@ -2,87 +2,272 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A5C5047319C
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Dec 2021 17:23:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FFBD473248
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Dec 2021 17:54:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235420AbhLMQXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Dec 2021 11:23:00 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50050 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234563AbhLMQXA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 11:23:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639412578;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+7tw6CacjHpoJ+4+RJN7+YJ1xW4fzNGqGBz5JPgltyk=;
-        b=HpbAm3cUpAlJHPNTu66Wkxvpccr2JtUpzWtI97w2DYuD7pdxp7aXMUu4a7UDp2P9jtiXj7
-        vPHX+1ZsGen58USKmLDmC223FVgbWhvD7BJ6PzEcXdjiIueYjK5+E6y3gzv1zviZkxRXY+
-        nypPwX5Q/uelPRFWQjC0RlRoGzdxpLc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-538-08poFCnQMx6bfRqkwyXIcQ-1; Mon, 13 Dec 2021 11:22:57 -0500
-X-MC-Unique: 08poFCnQMx6bfRqkwyXIcQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E30B08015CD
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 16:22:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC50B60C9F;
-        Mon, 13 Dec 2021 16:22:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <599331.1639410068@warthog.procyon.org.uk>
-References: <599331.1639410068@warthog.procyon.org.uk> <CALF+zOnmJ0=j8pEMikpxYgLrS10gVZiXfCjBhDz9Je0Qip7wnw@mail.gmail.com> <163906878733.143852.5604115678965006622.stgit@warthog.procyon.org.uk> <CALF+zOnA2U6LjDTE8m2REDTMmFVnWkcBkn0ZJQRGULPUjeQW4Q@mail.gmail.com>
-Cc:     dhowells@redhat.com, David Wysochanski <dwysocha@redhat.com>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] fscache: Need to go round again after processing LRU_DISCARDING state
+        id S241047AbhLMQyS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Dec 2021 11:54:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241041AbhLMQyS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 11:54:18 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38289C06173F
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 08:54:18 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id l10so4102909pgm.7
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 08:54:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqjSN5Zf68fDFKSv1YC0dtDeC2MHBxNuGQn4JvLKQpU=;
+        b=MYZQ1oXTn5YhzAhbHSKzhDte1Z1gE+M1dwIod9vuuytj0SAaYXmayPvGCtAhFt+ydY
+         vRxj3wF33ym/r+p9LiXTOFqS0m5GnJtRlzwxpNiUhipl81MOB212ybfVdSgBEPtAFCrT
+         tq1am/fBB7tLByx7qRlMh5A81fn3uUjqUQAvMuu1PRlupNZ0JaIjOTQOzx9MgJ7KEwxo
+         h3AZnqjyQ9Jgo51C+85INnW6fxNhBVPpqdiO5wPe0ew2Z3MxgdLPlbE74BDsBdEsbXl5
+         JrJkFPA24BUEDd34SPBdymXyZsD4PED/EG8coHRs+ZDjszZ2jbTPeyptW8RQJJijNC4r
+         ot7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqjSN5Zf68fDFKSv1YC0dtDeC2MHBxNuGQn4JvLKQpU=;
+        b=YYRvkbuwjgnTCczWGDmgQ2qDzMFwBb/cEIABENcKfBmMzJrewvOitH+qJneyhfA59r
+         g/b7WKRbm2w7zm0etrXlqOb7bKPUQaaQ1HK8erxRhkG9Cxlbb1skD5qRxmp1PVsdYwM8
+         MpAF88U8WJLAF5J4SjO9NImYj88jpcdStQ8JW7X/5xHKQYZrFu4//cPIF6Oi7i9q92dC
+         sb5ig0AKC+fyOBZIZZnWCd7BwXSfmAHvcF71EHRZLkIFc2NSjjRIdrx1Dpl1/3iTGx0A
+         4rseeFJ9GeN2n4gvo91DUyJJhkrkk0sIBBpyg6a4SDhRwi6rJvLd+mRyreK17olmEt3t
+         NHBA==
+X-Gm-Message-State: AOAM531gE7rMwTv7Scr79y4YX1uKOFCZInFgg20/L2Xvl00YxhBX05MY
+        fQ5ZDvyllXGoLB8uMwjMWwHNKw==
+X-Google-Smtp-Source: ABdhPJyJWKTSuYCj5LBirqVQPTSh2Tb5D3YLHBN5B9T+/njJbhxKak2vo5R7P3pqm3ctL3LFEU5kBQ==
+X-Received: by 2002:a63:6cc8:: with SMTP id h191mr53922737pgc.76.1639414457586;
+        Mon, 13 Dec 2021 08:54:17 -0800 (PST)
+Received: from localhost.localdomain ([139.177.225.254])
+        by smtp.gmail.com with ESMTPSA id n11sm10430992pgp.15.2021.12.13.08.54.08
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 13 Dec 2021 08:54:17 -0800 (PST)
+From:   Muchun Song <songmuchun@bytedance.com>
+To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
+        mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
+        guro@fb.com, shy828301@gmail.com, alexs@kernel.org,
+        richard.weiyang@gmail.com, david@fromorbit.com,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        jaegeuk@kernel.org, chao@kernel.org, kari.argillander@gmail.com
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
+        fam.zheng@bytedance.com, smuchun@gmail.com,
+        Muchun Song <songmuchun@bytedance.com>
+Subject: [PATCH v4 00/17] Optimize list lru memory consumption
+Date:   Tue, 14 Dec 2021 00:53:25 +0800
+Message-Id: <20211213165342.74704-1-songmuchun@bytedance.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <604660.1639412575.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Mon, 13 Dec 2021 16:22:55 +0000
-Message-ID: <604661.1639412575@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-To:     unlisted-recipients:; (no To-header on input)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-David Howells <dhowells@redhat.com> wrote:
+This series is based on Linux 5.16-rc3.
 
-> However, if both LRU discard and relinquishment happen *before* the SM
-> runs, one of the queue events will get discarded, along with the ref tha=
-t
-> would be associated with it.  The last ref is then discarded and the coo=
-kie
-> is removed without completing the relinquishment process - leaving the
-> cookie hashed.
+In our server, we found a suspected memory leak problem. The kmalloc-32
+consumes more than 6GB of memory. Other kmem_caches consume less than 2GB
+memory.
 
-This can be seen in a trace, e.g.:
+After our in-depth analysis, the memory consumption of kmalloc-32 slab
+cache is the cause of list_lru_one allocation.
 
-  kworker/u16:97-5939    [000] .....   639.403740: fscache_cookie: c=3D000=
-071a9 -   lrudo r=3D3
-  kworker/u16:97-5939    [000] .....   639.403741: fscache_cookie: c=3D000=
-071a9 GQ  endac r=3D4
-  kworker/u16:97-5939    [000] .....   639.403745: fscache_cookie: c=3D000=
-071a9 PUT lru   r=3D3
-       dirstress-7027    [002] .....   639.427220: fscache_relinquish: c=3D=
-000071a9 V=3D00000001 r=3D3 U=3D0 f=3Dbd rt=3D0
-       dirstress-7027    [002] .....   639.427222: fscache_cookie: c=3D000=
-071a9 GQ  endac r=3D4
-       dirstress-7027    [002] .....   639.427223: fscache_cookie: c=3D000=
-071a9 PQ  overq r=3D3
+  crash> p memcg_nr_cache_ids
+  memcg_nr_cache_ids = $2 = 24574
 
-where the "overq" line marks the discarded event and ref.
+memcg_nr_cache_ids is very large and memory consumption of each list_lru
+can be calculated with the following formula.
 
-David
+  num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
+
+There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
+
+  crash> list super_blocks | wc -l
+  952
+
+Every mount will register 2 list lrus, one is for inode, another is for
+dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
+MB (~5.6GB). But now the number of memory cgroups is less than 500. So I
+guess more than 12286 memory cgroups have been created on this machine (I
+do not know why there are so many cgroups, it may be a user's bug or
+the user really want to do that). Because memcg_nr_cache_ids has not been
+reduced to a suitable value. It leads to waste a lot of memory. If we want
+to reduce memcg_nr_cache_ids, we have to *reboot* the server. This is not
+what we want.
+
+In order to reduce memcg_nr_cache_ids, I had posted a patchset [1] to do
+this. But this did not fundamentally solve the problem.
+
+We currently allocate scope for every memcg to be able to tracked on every
+superblock instantiated in the system, regardless of whether that superblock
+is even accessible to that memcg.
+
+These huge memcg counts come from container hosts where memcgs are confined
+to just a small subset of the total number of superblocks that instantiated
+at any given point in time.
+
+For these systems with huge container counts, list_lru does not need the
+capability of tracking every memcg on every superblock.
+
+What it comes down to is that the list_lru is only needed for a given memcg
+if that memcg is instatiating and freeing objects on a given list_lru.
+
+As Dave said, "Which makes me think we should be moving more towards 'add the
+memcg to the list_lru at the first insert' model rather than 'instantiate
+all at memcg init time just in case'."
+
+This patchset aims to optimize the list lru memory consumption from different
+aspects.
+
+I had done a easy test to show the optimization. I create 10k memory cgroups
+and mount 10k filesystems in the systems. We use free command to show how many
+memory does the systems comsumes after this operation (There are 2 numa nodes
+in the system).
+
+        +-----------------------+------------------------+
+        |      condition        |   memory consumption   |
+        +-----------------------+------------------------+
+        | without this patchset |        24464 MB        |
+        +-----------------------+------------------------+
+        |     after patch 1     |        21957 MB        | <--------+
+        +-----------------------+------------------------+          |
+        |     after patch 11    |         6895 MB        |          |
+        +-----------------------+------------------------+          |
+        |     after patch 13    |         4367 MB        |          |
+        +-----------------------+------------------------+          |
+                                                                    |
+        The more the number of nodes, the more obvious the effect---+
+
+BTW, there was a recent discussion [2] on the same issue.
+
+[1] https://lore.kernel.org/linux-fsdevel/20210428094949.43579-1-songmuchun@bytedance.com/
+[2] https://lore.kernel.org/linux-fsdevel/20210405054848.GA1077931@in.ibm.com/
+
+This series not only optimizes the memory usage of list_lru but also
+simplifies the code.
+
+Changelog in v4:
+  - Remove some code cleanup patches since they are already merged.
+  - Collect Acked-by from Theodore.
+  - Fix ntfs3 (Thanks Argillander).
+
+Changelog in v3:
+  - Fix mixing advanced and normal XArray concepts (Thanks to Matthew).
+  - Split one patch into per-filesystem patches.
+
+Changelog in v2:
+  - Update Documentation/filesystems/porting.rst suggested by Dave.
+  - Add a comment above alloc_inode_sb() suggested by Dave.
+  - Rework some patch's commit log.
+  - Add patch 18-21.
+
+  Thanks Dave.
+
+Muchun Song (17):
+  mm: list_lru: optimize memory consumption of arrays of per cgroup
+    lists
+  mm: introduce kmem_cache_alloc_lru
+  fs: introduce alloc_inode_sb() to allocate filesystems specific inode
+  fs: allocate inode by using alloc_inode_sb()
+  f2fs: allocate inode by using alloc_inode_sb()
+  nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
+  mm: dcache: use kmem_cache_alloc_lru() to allocate dentry
+  xarray: use kmem_cache_alloc_lru to allocate xa_node
+  mm: workingset: use xas_set_lru() to pass shadow_nodes
+  mm: memcontrol: move memcg_online_kmem() to mem_cgroup_css_online()
+  mm: list_lru: allocate list_lru_one only when needed
+  mm: list_lru: rename memcg_drain_all_list_lrus to
+    memcg_reparent_list_lrus
+  mm: list_lru: replace linear array with xarray
+  mm: memcontrol: reuse memory cgroup ID for kmem ID
+  mm: memcontrol: fix cannot alloc the maximum memcg ID
+  mm: list_lru: rename list_lru_per_memcg to list_lru_memcg
+  mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
+
+ Documentation/filesystems/porting.rst |   5 +
+ block/bdev.c                          |   2 +-
+ drivers/dax/super.c                   |   2 +-
+ fs/9p/vfs_inode.c                     |   2 +-
+ fs/adfs/super.c                       |   2 +-
+ fs/affs/super.c                       |   2 +-
+ fs/afs/super.c                        |   2 +-
+ fs/befs/linuxvfs.c                    |   2 +-
+ fs/bfs/inode.c                        |   2 +-
+ fs/btrfs/inode.c                      |   2 +-
+ fs/ceph/inode.c                       |   2 +-
+ fs/cifs/cifsfs.c                      |   2 +-
+ fs/coda/inode.c                       |   2 +-
+ fs/dcache.c                           |   3 +-
+ fs/ecryptfs/super.c                   |   2 +-
+ fs/efs/super.c                        |   2 +-
+ fs/erofs/super.c                      |   2 +-
+ fs/exfat/super.c                      |   2 +-
+ fs/ext2/super.c                       |   2 +-
+ fs/ext4/super.c                       |   2 +-
+ fs/f2fs/super.c                       |   8 +-
+ fs/fat/inode.c                        |   2 +-
+ fs/freevxfs/vxfs_super.c              |   2 +-
+ fs/fuse/inode.c                       |   2 +-
+ fs/gfs2/super.c                       |   2 +-
+ fs/hfs/super.c                        |   2 +-
+ fs/hfsplus/super.c                    |   2 +-
+ fs/hostfs/hostfs_kern.c               |   2 +-
+ fs/hpfs/super.c                       |   2 +-
+ fs/hugetlbfs/inode.c                  |   2 +-
+ fs/inode.c                            |   2 +-
+ fs/isofs/inode.c                      |   2 +-
+ fs/jffs2/super.c                      |   2 +-
+ fs/jfs/super.c                        |   2 +-
+ fs/minix/inode.c                      |   2 +-
+ fs/nfs/inode.c                        |   2 +-
+ fs/nfs/nfs42xattr.c                   |  95 ++++----
+ fs/nilfs2/super.c                     |   2 +-
+ fs/ntfs/inode.c                       |   2 +-
+ fs/ntfs3/super.c                      |   2 +-
+ fs/ocfs2/dlmfs/dlmfs.c                |   2 +-
+ fs/ocfs2/super.c                      |   2 +-
+ fs/openpromfs/inode.c                 |   2 +-
+ fs/orangefs/super.c                   |   2 +-
+ fs/overlayfs/super.c                  |   2 +-
+ fs/proc/inode.c                       |   2 +-
+ fs/qnx4/inode.c                       |   2 +-
+ fs/qnx6/inode.c                       |   2 +-
+ fs/reiserfs/super.c                   |   2 +-
+ fs/romfs/super.c                      |   2 +-
+ fs/squashfs/super.c                   |   2 +-
+ fs/sysv/inode.c                       |   2 +-
+ fs/ubifs/super.c                      |   2 +-
+ fs/udf/super.c                        |   2 +-
+ fs/ufs/super.c                        |   2 +-
+ fs/vboxsf/super.c                     |   2 +-
+ fs/xfs/xfs_icache.c                   |   2 +-
+ fs/zonefs/super.c                     |   2 +-
+ include/linux/fs.h                    |  11 +
+ include/linux/list_lru.h              |  17 +-
+ include/linux/memcontrol.h            |  42 ++--
+ include/linux/slab.h                  |   3 +
+ include/linux/swap.h                  |   5 +-
+ include/linux/xarray.h                |   9 +-
+ ipc/mqueue.c                          |   2 +-
+ lib/xarray.c                          |  10 +-
+ mm/list_lru.c                         | 423 ++++++++++++++++------------------
+ mm/memcontrol.c                       | 164 +++----------
+ mm/shmem.c                            |   2 +-
+ mm/slab.c                             |  39 +++-
+ mm/slab.h                             |  25 +-
+ mm/slob.c                             |   6 +
+ mm/slub.c                             |  42 ++--
+ mm/workingset.c                       |   2 +-
+ net/socket.c                          |   2 +-
+ net/sunrpc/rpc_pipe.c                 |   2 +-
+ 76 files changed, 486 insertions(+), 539 deletions(-)
+
+-- 
+2.11.0
 
