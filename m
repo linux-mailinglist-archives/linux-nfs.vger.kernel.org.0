@@ -2,152 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 437B4473294
+	by mail.lfdr.de (Postfix) with ESMTP id D30BC473295
 	for <lists+linux-nfs@lfdr.de>; Mon, 13 Dec 2021 17:58:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234200AbhLMQ6H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Dec 2021 11:58:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47760 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241315AbhLMQ44 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 11:56:56 -0500
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A74C061748
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 08:56:54 -0800 (PST)
-Received: by mail-pj1-x102e.google.com with SMTP id nh10-20020a17090b364a00b001a69adad5ebso13843610pjb.2
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 08:56:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=m98RC8bY9ry625Z8i2nXVNyOqqfMLEW5ul5yLfq7Yzk=;
-        b=hR6fGZqCqI8yFwwU5LToWe8M1UCp5xIdyt8/AVOUEJ/WBqoxOqIpJsNjjVEgdYI7jp
-         PwVPRjbkz/8KsoV+eb6BeHYNBF6ZdUKrRFwh1uk+LiFLg7yubTp8nkoyzbCnrclWW28m
-         2ZY5czGQCEghFBQaUd4jvRpWoZlhdOmShL8OTDBnlp0TyrE1R9bEHqS9TlhoVRfL/pbd
-         GyTQEhIU30vJpxh8f2vlBgAC9fvBHsQWyRjcfp6pHARd0jKlSMptuxtj0rwXaGpV5/OB
-         0omsd2/p1eEkMHfceqVmgwvKngpT8ObD87J/CEjplAzO5GuLhX1JlEvEhf59cOlq9uPf
-         QPsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=m98RC8bY9ry625Z8i2nXVNyOqqfMLEW5ul5yLfq7Yzk=;
-        b=t1eeDqUVL7sI0wmUsTP8Z7l/DWxHDghpvsL2gx1ciSzM5U05Wy2PMa139Nmi3dvRVk
-         aYwL2zfl1Eeem1fqdHwef7KqHEdOPwF8hTPPoSo+irk/HUqwoHVn43bz4cOcPtOj+Wi+
-         1mSgeD7V90MvFrxI1sxwav2ZS7BCeKLerUPqeWLhkcYLxPWsz8wuoSXhFy+W+DoDDe70
-         bLI5SES8aUY1rT1YpA5bbnLKA/oq4Z55gk/9/n7CTr7mvg6GJ40QMlpCuEo6KloRzJ2c
-         QRa5fG6SJ3CgpVUdb6TN/cC2CBbE43rjVrVxY7+7Ai4/1EEw3mEjSpSyPhc9CTG2MWWK
-         5a8Q==
-X-Gm-Message-State: AOAM531h+9iazn1RTL68IUip3Nre0+GAXFDVi+PVsnMRq7OpYr3qLTHh
-        EGnm/l759er7tjDUuZyjPMaWPA==
-X-Google-Smtp-Source: ABdhPJzqSJg9VWLkIG3uPnAi/6ZEdCkfsvwI9s4dHakptKaLRcr2lvcthKwpEtEYSIlgy7Onx7sgvg==
-X-Received: by 2002:a17:902:ee95:b0:141:f28f:7296 with SMTP id a21-20020a170902ee9500b00141f28f7296mr97113270pld.50.1639414613627;
-        Mon, 13 Dec 2021 08:56:53 -0800 (PST)
-Received: from localhost.localdomain ([139.177.225.254])
-        by smtp.gmail.com with ESMTPSA id n11sm10430992pgp.15.2021.12.13.08.56.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 13 Dec 2021 08:56:53 -0800 (PST)
-From:   Muchun Song <songmuchun@bytedance.com>
-To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
-        mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
-        guro@fb.com, shy828301@gmail.com, alexs@kernel.org,
-        richard.weiyang@gmail.com, david@fromorbit.com,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        jaegeuk@kernel.org, chao@kernel.org, kari.argillander@gmail.com
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
-        fam.zheng@bytedance.com, smuchun@gmail.com,
-        Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v4 17/17] mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
-Date:   Tue, 14 Dec 2021 00:53:42 +0800
-Message-Id: <20211213165342.74704-18-songmuchun@bytedance.com>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122)
-In-Reply-To: <20211213165342.74704-1-songmuchun@bytedance.com>
-References: <20211213165342.74704-1-songmuchun@bytedance.com>
+        id S237516AbhLMQ6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Dec 2021 11:58:08 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:51098 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237909AbhLMQ6H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 11:58:07 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A168EB811D7
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 16:58:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53ED2C34602
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 16:58:04 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSD: De-duplicate nfsd4_decode_bitmap4()
+Date:   Mon, 13 Dec 2021 11:58:02 -0500
+Message-Id:  <163941438065.1156.4689848046690033429.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1546; h=from:subject:message-id; bh=RVIfCzb9AbBqbXb+eP3GqfTxbiXkfGWUf2Z5KfH+lLY=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBht3uS9mDz8NdKNJOfo4iVnOP6wY4pifLdVr3C0ykT FGXlCQyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYbd7kgAKCRAzarMzb2Z/l97OD/ oCmszCs2nu2iAQlpNGulXkCInW5OTV5WBQHSVOHlWy4EUbgoJw3Rq7fIfLeyOY2yuLu35HaDChnttN /QMZXaRKe0gKMLlHstiF6HT6NSRLAaBsgSG5x2OouuA+cRR/Gky/aQkue/M7xdkqKzk/hyADOYCIaY TW6/SoZA8GdnCwWtHAdn10sOWJ402EYD1/DcjxtAn57vvjwuNNQKeLCJ7bMzHSuiJU8WkHpwQDsGhm ZeUuwHyVS3HKFaVRtTrbQXj0q1AvHwkVSgC4ocspIRbqsKfCglBvBawFu14xP5L8/ulaadMy7lN5YS DWpKy4LJg1neIdU3qwFYLOYbLQsr877h+Cq37DPapCvvfRj7coI+DgfR1edkV7DxsoogrLjCoU8n9A EcpXe7npJd3cj8ZbZ1TYhdck1BGm0gLSLAXQfStuP0wtpKz1Yluma17KsXZYdpDTTM6MJvM89SHoSf /V0OVsSm5o7XHfR7VSfXMYjD8ItIavqk7cMYu7m6Ne/eLlu8vFsIy03SoEEi4Ae6C0Qsy6jqEqhGnx 7mfFt/mnSKQiBmQ7eyjjxtvpNLLYW2lAGnbs7I4nEAtePR0kGW98rQMskP4iM+2s8Vg2lh2FTalzoF TdvbMnt8XKy83kRXlqbel6Ijb+8FoMA07Ip1C+3CDKPZPi0hEwpW+9tVSdRA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The memcg_cache_id() introduced by commit 2633d7a02823 ("slab/slub:
-consider a memcg parameter in kmem_create_cache") is used to index
-in the kmem_cache->memcg_params->memcg_caches array. Since
-kmem_cache->memcg_params.memcg_caches has been removed by commit
-9855609bde03 ("mm: memcg/slab: use a single set of kmem_caches for
-all accounted allocations"). So the name does not need to reflect
-cache related. Just rename it to memcg_kmem_id. And it can reflect
-kmem related.
+Clean up. Trond points out that xdr_stream_decode_uint32_array()
+does the same thing as nfsd4_decode_bitmap4().
 
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/memcontrol.h | 4 ++--
- mm/list_lru.c              | 8 ++++----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ fs/nfsd/nfs4xdr.c |   17 +++--------------
+ 1 file changed, 3 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index 7b472f805d77..94ed3a124191 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -1735,7 +1735,7 @@ static inline void memcg_kmem_uncharge_page(struct page *page, int order)
-  * A helper for accessing memcg's kmem_id, used for getting
-  * corresponding LRU lists.
-  */
--static inline int memcg_cache_id(struct mem_cgroup *memcg)
-+static inline int memcg_kmem_id(struct mem_cgroup *memcg)
+This patch replaces "NFSD: Replace nfsd4_decode_bitmap4()". Changes
+since that version:
+
+- My copy of pynfs was out of date. I've updated to the latest
+- I reproduced Bruce's BADXDR report with the latest pynfs
+- I tested this version likewise and could not reproduce the issue
+- The nice documenting comment is preserved
+
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 5a93a5db4fb0..df5a4c7ea8ec 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -277,21 +277,10 @@ nfsd4_decode_verifier4(struct nfsd4_compoundargs *argp, nfs4_verifier *verf)
+ static __be32
+ nfsd4_decode_bitmap4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen)
  {
- 	return memcg ? memcg->kmemcg_id : -1;
+-	u32 i, count;
+-	__be32 *p;
+-
+-	if (xdr_stream_decode_u32(argp->xdr, &count) < 0)
+-		return nfserr_bad_xdr;
+-	/* request sanity */
+-	if (count > 1000)
+-		return nfserr_bad_xdr;
+-	p = xdr_inline_decode(argp->xdr, count << 2);
+-	if (!p)
+-		return nfserr_bad_xdr;
+-	for (i = 0; i < bmlen; i++)
+-		bmval[i] = (i < count) ? be32_to_cpup(p++) : 0;
++	ssize_t status;
+ 
+-	return nfs_ok;
++	status = xdr_stream_decode_uint32_array(argp->xdr, bmval, bmlen);
++	return status == -EBADMSG ? nfserr_bad_xdr : nfs_ok;
  }
-@@ -1773,7 +1773,7 @@ static inline bool memcg_kmem_enabled(void)
- 	return false;
- }
  
--static inline int memcg_cache_id(struct mem_cgroup *memcg)
-+static inline int memcg_kmem_id(struct mem_cgroup *memcg)
- {
- 	return -1;
- }
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 589146fd3770..9c0682ed9dda 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -74,7 +74,7 @@ list_lru_from_kmem(struct list_lru *lru, int nid, void *ptr,
- 	if (!memcg)
- 		goto out;
- 
--	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
-+	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
- out:
- 	if (memcg_ptr)
- 		*memcg_ptr = memcg;
-@@ -181,7 +181,7 @@ unsigned long list_lru_count_one(struct list_lru *lru,
- 	long count;
- 
- 	rcu_read_lock();
--	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
-+	l = list_lru_from_memcg_idx(lru, nid, memcg_kmem_id(memcg));
- 	count = l ? READ_ONCE(l->nr_items) : 0;
- 	rcu_read_unlock();
- 
-@@ -272,7 +272,7 @@ list_lru_walk_one(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
- 	unsigned long ret;
- 
- 	spin_lock(&nlru->lock);
--	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
-+	ret = __list_lru_walk_one(lru, nid, memcg_kmem_id(memcg), isolate,
- 				  cb_arg, nr_to_walk);
- 	spin_unlock(&nlru->lock);
- 	return ret;
-@@ -288,7 +288,7 @@ list_lru_walk_one_irq(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
- 	unsigned long ret;
- 
- 	spin_lock_irq(&nlru->lock);
--	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
-+	ret = __list_lru_walk_one(lru, nid, memcg_kmem_id(memcg), isolate,
- 				  cb_arg, nr_to_walk);
- 	spin_unlock_irq(&nlru->lock);
- 	return ret;
--- 
-2.11.0
+ static __be32
 
