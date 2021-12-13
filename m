@@ -2,169 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 134E34722C7
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Dec 2021 09:39:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6313F4730B5
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Dec 2021 16:41:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233043AbhLMIjE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Dec 2021 03:39:04 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:45986 "EHLO
+        id S234728AbhLMPlN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Dec 2021 10:41:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:51202 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230198AbhLMIjB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 03:39:01 -0500
+        by vger.kernel.org with ESMTP id S232268AbhLMPlN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Dec 2021 10:41:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639384739;
+        s=mimecast20190719; t=1639410072;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=MC6PhOhzyAWel18CMB5k4w0y1BBwQhFcaDtNxNx1FpA=;
-        b=e5NvlCSaUpDxQYstEID6iBSV3vaQgbqcQRtraNLplrfdWtjt4KdmtFZc2+RRyx3mwgZkRF
-        BF3RJDj5jjDY9HXGoqTT/dwlAX9fIwJVMt7BdWDAegx8k4riO8EFErZMFWM5WMKttcG9e4
-        wWF+jC6+g6rv8VsRE4Npmsx33vE8eU4=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W7DzTVpkIqn64HN9Q3U4e/f5j/0v+uj84vskNyCJC8o=;
+        b=AWnygIsF02Gmjqv2RznA9tYu28LaC5gr5RDjU6T8KPbbhp6FZh9GtuLZTBjW3nlOCtBQiY
+        3vnOEvt8xbsA9cHUZ7lS0OfDAxU5OY0FZPevqfd+cy414g1CJ+yJUfCGAz6WppIf5TCOdr
+        PQTAEIZCnWtjKJpP407WZC+0XId/KrA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-145-OB6CZRmHOSic9_RHVL497Q-1; Mon, 13 Dec 2021 03:38:54 -0500
-X-MC-Unique: OB6CZRmHOSic9_RHVL497Q-1
+ us-mta-506-9Gh-_YGWMbmIPACHCpfFyw-1; Mon, 13 Dec 2021 10:41:11 -0500
+X-MC-Unique: 9Gh-_YGWMbmIPACHCpfFyw-1
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBC79801ADC;
-        Mon, 13 Dec 2021 08:38:51 +0000 (UTC)
-Received: from plambri-desk.redhat.com (unknown [10.33.36.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4BF265ED33;
-        Mon, 13 Dec 2021 08:38:50 +0000 (UTC)
-From:   Pierguido Lambri <plambri@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Subject: [PATCH v2] SUNRPC: Add source address/port to rpc_socket* traces
-Date:   Mon, 13 Dec 2021 08:38:48 +0000
-Message-Id: <20211213083848.43930-1-plambri@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 466B5100CCC1
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Dec 2021 15:41:10 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6F35D5DF4B;
+        Mon, 13 Dec 2021 15:41:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CALF+zOnmJ0=j8pEMikpxYgLrS10gVZiXfCjBhDz9Je0Qip7wnw@mail.gmail.com>
+References: <CALF+zOnmJ0=j8pEMikpxYgLrS10gVZiXfCjBhDz9Je0Qip7wnw@mail.gmail.com> <163906878733.143852.5604115678965006622.stgit@warthog.procyon.org.uk> <CALF+zOnA2U6LjDTE8m2REDTMmFVnWkcBkn0ZJQRGULPUjeQW4Q@mail.gmail.com>
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     dhowells@redhat.com, linux-cachefs <linux-cachefs@redhat.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: [PATCH] fscache: Need to go round again after processing LRU_DISCARDING state
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <599330.1639410068.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 13 Dec 2021 15:41:08 +0000
+Message-ID: <599331.1639410068@warthog.procyon.org.uk>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The rpc_socket* traces now show also the source address
-and port. An example is:
+David Wysochanski <dwysocha@redhat.com> wrote:
 
-kworker/u17:1-951   [005] 134218.925343: rpc_socket_close:
-   socket:[46913] srcaddr=192.168.100.187:793 dstaddr=192.168.100.129:2049
-   state=4 (DISCONNECTING) sk_state=7 (CLOSE)
-kworker/u17:0-242   [006] 134360.841370: rpc_socket_connect:
-   error=-115 socket:[56322] srcaddr=192.168.100.187:769
-   dstaddr=192.168.100.129:2049 state=2 (CONNECTING) sk_state=2 (SYN_SENT)
-       <idle>-0     [006] 134360.841859: rpc_socket_state_change: socket:[56322]
-   srcaddr=192.168.100.187:769 dstaddr=192.168.100.129:2049 state=2 (CONNECTING)
-   sk_state=1 (ESTABLISHED)
+> > [  432.921382] BUG: KASAN: use-after-free in
+> > fscache_unhash_cookie+0x9e/0x160 [fscache]^M
 
-Signed-off-by: Pierguido Lambri <plambri@redhat.com>
+I think the patch below is the way to fix this.
+
+David
 ---
- include/trace/events/sunrpc.h | 52 +++++++++++++++++++++--------------
- 1 file changed, 32 insertions(+), 20 deletions(-)
+fscache: Need to go round again after processing LRU_DISCARDING state
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 3a99358c262b..a6af347c935d 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -794,6 +794,9 @@ RPC_SHOW_SOCKET
- 
- RPC_SHOW_SOCK
- 
-+
-+#include <trace/events/net_probe_common.h>
-+
- /*
-  * Now redefine the EM() and EMe() macros to map the enums to the strings
-  * that will be printed in the output.
-@@ -816,27 +819,32 @@ DECLARE_EVENT_CLASS(xs_socket_event,
- 			__field(unsigned int, socket_state)
- 			__field(unsigned int, sock_state)
- 			__field(unsigned long long, ino)
--			__string(dstaddr,
--				xprt->address_strings[RPC_DISPLAY_ADDR])
--			__string(dstport,
--				xprt->address_strings[RPC_DISPLAY_PORT])
-+			__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+			__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 		),
- 
- 		TP_fast_assign(
- 			struct inode *inode = SOCK_INODE(socket);
-+			const struct sock *sk = socket->sk;
-+			const struct inet_sock *inet = inet_sk(sk);
-+
-+			memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+			memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+
-+			TP_STORE_ADDR_PORTS(__entry, inet, sk);
-+
- 			__entry->socket_state = socket->state;
- 			__entry->sock_state = socket->sk->sk_state;
- 			__entry->ino = (unsigned long long)inode->i_ino;
--			__assign_str(dstaddr,
--				xprt->address_strings[RPC_DISPLAY_ADDR]);
--			__assign_str(dstport,
--				xprt->address_strings[RPC_DISPLAY_PORT]);
-+
- 		),
- 
- 		TP_printk(
--			"socket:[%llu] dstaddr=%s/%s "
-+			"socket:[%llu] srcaddr=%pISpc dstaddr=%pISpc "
- 			"state=%u (%s) sk_state=%u (%s)",
--			__entry->ino, __get_str(dstaddr), __get_str(dstport),
-+			__entry->ino,
-+			__entry->saddr,
-+			__entry->daddr,
- 			__entry->socket_state,
- 			rpc_show_socket_state(__entry->socket_state),
- 			__entry->sock_state,
-@@ -866,29 +874,33 @@ DECLARE_EVENT_CLASS(xs_socket_event_done,
- 			__field(unsigned int, socket_state)
- 			__field(unsigned int, sock_state)
- 			__field(unsigned long long, ino)
--			__string(dstaddr,
--				xprt->address_strings[RPC_DISPLAY_ADDR])
--			__string(dstport,
--				xprt->address_strings[RPC_DISPLAY_PORT])
-+			__array(__u8, saddr, sizeof(struct sockaddr_in6))
-+			__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 		),
- 
- 		TP_fast_assign(
- 			struct inode *inode = SOCK_INODE(socket);
-+			const struct sock *sk = socket->sk;
-+			const struct inet_sock *inet = inet_sk(sk);
-+
-+			memset(__entry->saddr, 0, sizeof(struct sockaddr_in6));
-+			memset(__entry->daddr, 0, sizeof(struct sockaddr_in6));
-+
-+			TP_STORE_ADDR_PORTS(__entry, inet, sk);
-+
- 			__entry->socket_state = socket->state;
- 			__entry->sock_state = socket->sk->sk_state;
- 			__entry->ino = (unsigned long long)inode->i_ino;
- 			__entry->error = error;
--			__assign_str(dstaddr,
--				xprt->address_strings[RPC_DISPLAY_ADDR]);
--			__assign_str(dstport,
--				xprt->address_strings[RPC_DISPLAY_PORT]);
- 		),
- 
- 		TP_printk(
--			"error=%d socket:[%llu] dstaddr=%s/%s "
-+			"error=%d socket:[%llu] srcaddr=%pISpc dstaddr=%pISpc "
- 			"state=%u (%s) sk_state=%u (%s)",
- 			__entry->error,
--			__entry->ino, __get_str(dstaddr), __get_str(dstport),
-+			__entry->ino,
-+			__entry->saddr,
-+			__entry->daddr,
- 			__entry->socket_state,
- 			rpc_show_socket_state(__entry->socket_state),
- 			__entry->sock_state,
--- 
-2.33.1
+There's a race between the LRU discard and relinquishment actions.  In the
+state machine, fscache_cookie_state_machine(), the ACTIVE state transits t=
+o
+the LRU_DISCARD state in preference to transiting to the RELINQUISHING or
+WITHDRAWING states.
+
+This should be fine, but the LRU_DISCARDING state just breaks out the
+bottom of the function without going round again after transiting to the
+QUIESCENT state.
+
+However, if both LRU discard and relinquishment happen *before* the SM
+runs, one of the queue events will get discarded, along with the ref that
+would be associated with it.  The last ref is then discarded and the cooki=
+e
+is removed without completing the relinquishment process - leaving the
+cookie hashed.
+
+The fix is to make sure that the SM always goes back around after changing
+the state.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+
+diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
+index d7e825d636e2..8d0769a5ee2b 100644
+--- a/fs/fscache/cookie.c
++++ b/fs/fscache/cookie.c
+@@ -755,7 +755,7 @@ static void fscache_cookie_state_machine(struct fscach=
+e_cookie *cookie)
+ 		set_bit(FSCACHE_COOKIE_NO_DATA_TO_READ, &cookie->flags);
+ 		__fscache_set_cookie_state(cookie, FSCACHE_COOKIE_STATE_QUIESCENT);
+ 		wake =3D true;
+-		break;
++		goto again_locked;
+ =
+
+ 	case FSCACHE_COOKIE_STATE_DROPPED:
+ 		break;
 
