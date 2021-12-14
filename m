@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 505E84743A3
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Dec 2021 14:38:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE404743D8
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Dec 2021 14:50:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234484AbhLNNiq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Dec 2021 08:38:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48798 "EHLO
+        id S234541AbhLNNu5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Dec 2021 08:50:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234479AbhLNNiq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Dec 2021 08:38:46 -0500
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5C82C06173F
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Dec 2021 05:38:45 -0800 (PST)
-Received: by mail-qt1-x832.google.com with SMTP id q14so18311537qtx.10
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Dec 2021 05:38:45 -0800 (PST)
+        with ESMTP id S230387AbhLNNu4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Dec 2021 08:50:56 -0500
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E770C061574
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Dec 2021 05:50:56 -0800 (PST)
+Received: by mail-qv1-xf32.google.com with SMTP id s9so17217797qvk.12
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Dec 2021 05:50:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cmpxchg-org.20210112.gappssmtp.com; s=20210112;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=PYw3dTNxx1w6/rYOsPCI3bE5Vdi4GI8AS7An95Gx17o=;
-        b=tUe3gF9yl7uvFOGJXnZDGunLrwNeHUsuozlge/NZ0esl2wmx+9OuT9twoBCrogJXHR
-         U+wazLt8k85qXcdVdlEr2QiWsHWjffFixl9JczbvlcYNtmeYAEmWFswwvrf2w87ZZrvq
-         WrBqfJpvjakwAHIhRNOhg18W8LuPvroIdKQoOQRnU++rANlMZ6I+El/IZfP6vNfWdiK8
-         G8BcYPbMdTezYk0AYApyD6ptaX+f18/ftVFujPLH6n561NNxDfTrp22U3edtVm0zJLLY
-         M4kfHx2yE/xcYoqfmDuL+bzlIOAfap6ttSGzkp6IZ6XE2t7BnJ//QLefREQAx5CEcwRp
-         97+A==
+        bh=Rx+hqR5BLDytRmc1k+qRylCXkJ+6AQ7elY7tUqHK8RA=;
+        b=SAn4jhcDHzoZJgY6lNfz1wDtjhMMGbgWvc0lPp7zZX7SuNOLZF+4qB4Ky040g04jVZ
+         xzMHRnnCINKQEcs6YvsOWKPpXyj9FidivDBbfCEzj/PbELvdznhM0sKgL4YmEZJlIo+n
+         KUmcaQT76EqQI5jsUrshYIfS28FPn4nvLmbOOjACQ5tLrpXYwpVnsv8tC6M4gJXFrrXj
+         4GHfTbdKjqLNERoy9OCH0WdYGV+IrpdndDDYITNl57sFm+XGTuVTi0jOIy2CUNoTjzXu
+         Gbs1xM2qzeapIYvRFeiedU155eAv2wfclcaONKwzBjxndW3piEWPi2Mlr/c7IAarZUhC
+         nRoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=PYw3dTNxx1w6/rYOsPCI3bE5Vdi4GI8AS7An95Gx17o=;
-        b=i/nbYaaWyxt6eIpe1S6EFqKpb4JbnUjmxZBJBFO6WJiY0mhFE5QgJlW+Cl2NtR9sc9
-         zC7q0RHqWqc2IBzgHaenlZggN7DWv9aqblMiEdIK8bDc9m34CZf1KhWk4cvro7dRyV6l
-         aVjR7FfVOPfhP1tD6B9GgpScqN+w0mtlaodC/cS46n8R/xTNNjt3eAdHz9Ewx4GgjNbZ
-         8OX8a7Z8d0LGy56gftEAosa6iNiReQIxtE+FX9ecwHVKQr08l9qiUNgAddgb5Q+50SUK
-         e36+O5Q17CjzOTGdP1veP5Iuq0FUWJy7rEJ03EZbwH80Fknx152L1KM6aJlLyQBVM2sF
-         LY4A==
-X-Gm-Message-State: AOAM5334rV23jVQ969/fwVoXxmI+4ziDGoACpXpGUjTALP5BD2UVt4Lu
-        KBfr3Yzf/MCOKbIL46esC/74XQ==
-X-Google-Smtp-Source: ABdhPJwe1RWdhQKAzec7IHklUmwTSxvNcuVGOWbGkmTG1+fmiDw0JM0mWzPgit/4twx8SXN+ZSxh3Q==
-X-Received: by 2002:ac8:5ccd:: with SMTP id s13mr5995548qta.510.1639489125026;
-        Tue, 14 Dec 2021 05:38:45 -0800 (PST)
+        bh=Rx+hqR5BLDytRmc1k+qRylCXkJ+6AQ7elY7tUqHK8RA=;
+        b=xGajjiAwCv4yn/7f+wAbHi2+K5J9uE5mRrQo8++6JxhBUGKKNosn/lzEj3OheQ+RBB
+         5og7e4gLiUeCVbKkKQl3knxFk/lIPlW7RlkMBLXZJ/4YJCkb8G0UlrAl6BJh0wwy9VX9
+         IK2stoRdP8VqBKJXi/Sce23XwWpO4ICworu2dqTYOhiBXScIO6SOkBrIGCwSH8xAuEZE
+         zr6+rvAzkV2mo7dK/b8EoiMOeGC6rrSRdm3tAQIQ6sww7WIDRmKXkfGgdyD/pi8Cytoa
+         bH5XhlxgzvsrGEgg2gP1OdBvW7gWMhyaHbmvVPQ5jUwOePtCgAG01Oo+G719mtuNBDtm
+         FwbQ==
+X-Gm-Message-State: AOAM530OfHXipUrsI/NIYFsAQ7va0fCvHRyhN9S0sZTiNR4RY3CFU9eq
+        cDz0vA+/FSCwYXgIcD/Hf5pE/Q==
+X-Google-Smtp-Source: ABdhPJyY3iPu7+f980O6CZq77edRBaM323uDa1Fe74X6ayyglYZzYoBacLC4AtJ5fzzQ6Ldvs3bcXQ==
+X-Received: by 2002:a05:6214:1631:: with SMTP id e17mr5489515qvw.58.1639489855166;
+        Tue, 14 Dec 2021 05:50:55 -0800 (PST)
 Received: from localhost ([2620:10d:c091:480::1:e1e4])
-        by smtp.gmail.com with ESMTPSA id ay42sm7612729qkb.40.2021.12.14.05.38.43
+        by smtp.gmail.com with ESMTPSA id y15sm7671961qko.74.2021.12.14.05.50.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Dec 2021 05:38:44 -0800 (PST)
-Date:   Tue, 14 Dec 2021 14:38:39 +0100
+        Tue, 14 Dec 2021 05:50:53 -0800 (PST)
+Date:   Tue, 14 Dec 2021 14:50:48 +0100
 From:   Johannes Weiner <hannes@cmpxchg.org>
 To:     Muchun Song <songmuchun@bytedance.com>
 Cc:     willy@infradead.org, akpm@linux-foundation.org, mhocko@kernel.org,
@@ -60,43 +60,42 @@ Cc:     willy@infradead.org, akpm@linux-foundation.org, mhocko@kernel.org,
         linux-nfs@vger.kernel.org, zhengqi.arch@bytedance.com,
         duanxiongchun@bytedance.com, fam.zheng@bytedance.com,
         smuchun@gmail.com
-Subject: Re: [PATCH v4 01/17] mm: list_lru: optimize memory consumption of
- arrays of per cgroup lists
-Message-ID: <YbieX3WCUt7hdZlW@cmpxchg.org>
+Subject: Re: [PATCH v4 02/17] mm: introduce kmem_cache_alloc_lru
+Message-ID: <YbihOFJHqvQ9hsjO@cmpxchg.org>
 References: <20211213165342.74704-1-songmuchun@bytedance.com>
- <20211213165342.74704-2-songmuchun@bytedance.com>
+ <20211213165342.74704-3-songmuchun@bytedance.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20211213165342.74704-2-songmuchun@bytedance.com>
+In-Reply-To: <20211213165342.74704-3-songmuchun@bytedance.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 12:53:26AM +0800, Muchun Song wrote:
-> The list_lru uses an array (list_lru_memcg->lru) to store pointers
-> which point to the list_lru_one. And the array is per memcg per node.
-> Therefore, the size of the arrays will be 10K * number_of_node * 8 (
-> a pointer size on 64 bits system) when we run 10k containers in the
-> system. The memory consumption of the arrays becomes significant. The
-> more numa node, the more memory it consumes.
+On Tue, Dec 14, 2021 at 12:53:27AM +0800, Muchun Song wrote:
+> +/*
+> + * The allocated list lru pointers array is not accounted directly.
+> + * Moreover, it should not come from DMA buffer and is not readily
+> + * reclaimable. So those GFP bits should be masked off.
+> + */
+> +#define LRUS_CLEAR_MASK	(__GFP_DMA | __GFP_RECLAIMABLE | __GFP_ACCOUNT | __GFP_ZERO)
 
-The complexity for the lists themselves is still nrmemcgs * nrnodes
-right? But the rcu_head goes from that to nrmemcgs.
+There is already GFP_RECLAIM_MASK for this purpose, you can use that.
 
-> I have done a simple test, which creates 10K memcg and mount point
-> each in a two-node system. The memory consumption of the list_lru
-> will be 24464MB. After converting the array from per memcg per node
-> to per memcg, the memory consumption is going to be 21957MB. It is
-> reduces by 2.5GB. In our AMD servers, there are 8 numa nodes in
-> those system, the memory consumption could be more significant.
+> +int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
+> +			 gfp_t gfp)
+> +{
+> +	int i;
+> +	unsigned long flags;
+> +	struct list_lru_memcg *mlrus;
+> +	struct list_lru_memcg_table {
+> +		struct list_lru_per_memcg *mlru;
+> +		struct mem_cgroup *memcg;
+> +	} *table;
+> +
+> +	if (!list_lru_memcg_aware(lru) || memcg_list_lru_allocated(memcg, lru))
+> +		return 0;
+> +
+> +	gfp &= ~LRUS_CLEAR_MASK;
 
-The code looks good to me, but it would be useful to include a
-high-level overview of the new scheme, explain that the savings come
-from the rcu heads, that it simplifies the alloc/dealloc path etc.
-
-With that,
-
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+	gfp &= GFP_RECLAIM_MASK;
