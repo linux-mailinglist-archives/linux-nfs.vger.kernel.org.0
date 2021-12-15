@@ -2,55 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 531BA4758EA
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Dec 2021 13:35:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E32F84758F6
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Dec 2021 13:37:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242538AbhLOMfX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Dec 2021 07:35:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52238 "EHLO
+        id S242571AbhLOMhG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Dec 2021 07:37:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242528AbhLOMfW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Dec 2021 07:35:22 -0500
-Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCAA9C06173F
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Dec 2021 04:35:21 -0800 (PST)
-Received: by mail-yb1-xb29.google.com with SMTP id v64so54744971ybi.5
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Dec 2021 04:35:21 -0800 (PST)
+        with ESMTP id S242564AbhLOMhF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Dec 2021 07:37:05 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E101CC06173E
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Dec 2021 04:37:04 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id e136so54706661ybc.4
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Dec 2021 04:37:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=/PPAsdJy1fvI4IOk7fwhrZPqTZxBHd9OaF3oRGCQhSE=;
-        b=W044lgVz7oRByJHiznLwmwuOhHSsIr9WupRS5mvk2WZ9VbtiG5EK3x8N6zldAG079F
-         SkUvnhF2zswp6UvcJZEDGkw5ZzrBd8tPuevXvcjR8WZGRP0Vek4u6zRY/B78EnA/w9fl
-         vaUDkKJ3IED9TBzE4j+Cm1JI8UHqEUKxfDIc11VzejXBcZlmwf28OLn3zljG5QT29JUq
-         c5l/9c8WEz+Btspj0KgGAln22fEFaBV3WhjcDEHAb98qIlJyFPxSoawx5vWbhvY98CLr
-         tM3/p0ZROCe+YBgg4vEAL5AmEH0kV4Rr94PT63I9CBl/M4IuUeWl+ZrdpNS4QyK/0/6V
-         B0jA==
+        bh=K8r8XSvSuYu3ZxgnX8Iq0jqKYxog5KOUtPtLKnhEkEw=;
+        b=4AghxD+KT7s9yyElNwN0c1w4aNYag2FvFgEPc3cpIfezoxE3NZoiARw3vAa2yfY3hS
+         mw4n3mu7LS8hUEQJdwZdCZrpAhDjhD85Tj79vszagcjseK8hZnI2rN28Gqc1wGXyTzRM
+         71tD+sziOM3stmstau3gQY+2HNKAUpGP2vlVtzaGEP+V2HHCS4Aqc4j2dmP/AV6QFx/2
+         jI1B3buJphwPACrGU5LRR5B2i2jKjCRGf3koV/uPKRBOZQhGbcsiyFf4Y6v2l5yW+ejD
+         DL9TjdFNqQg9FyhizICVZK1xqnOkJGODiQmuC/1oesPvmXMbI4vBBAyuO4GGaukq+0LM
+         EuzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/PPAsdJy1fvI4IOk7fwhrZPqTZxBHd9OaF3oRGCQhSE=;
-        b=o/CdPMA/prtGiClutJ/u3xLHDX5GObQ2kTsNz3fAKs2BZY7mcA0eJaha8285q44Ebj
-         OC5yFLDZYQDzGWMGCXzOCiXnsaulFJlVEKOAE5mx70D+lVy0fPjdhojSF4WUGOLgWfKe
-         rbp27FlkLvfliHMOxf4uKS5B+3vwyl1HvMmP5Uq5qllvZbhtHDXsL5DiiaEmx8W4M+9W
-         rLzqzJjPNdU8q1cN7Za4iAkqH8+twhhOr0Xp1ccOQocoHsfLV3f6Wxh8VYOQXP7MN/gT
-         kSR3bK5t5G9v9OLZ1ry2ocMocmYQaSM3hs+oeve0cSGpocj1FU+6qsde5Rs2pBjsscKW
-         iNMQ==
-X-Gm-Message-State: AOAM533X2RnDW65GWExuiv9sPCtgGwS+Yhol+cDhBlnhHC/nSom+GQAR
-        gJeUkgbQzAkcIFB8IdNgLFoZ6fhHHvt7E9fmD07jpw==
-X-Google-Smtp-Source: ABdhPJyxflIhvpUmrJZ5mUXlnXimvj20RtQWT1adLFErhhGflKCG4cbZFFkiqSaQvpBKD6qVNrEcGYUKSk146eY/mL8=
-X-Received: by 2002:a25:d157:: with SMTP id i84mr5541033ybg.703.1639571720913;
- Wed, 15 Dec 2021 04:35:20 -0800 (PST)
+        bh=K8r8XSvSuYu3ZxgnX8Iq0jqKYxog5KOUtPtLKnhEkEw=;
+        b=6j6uFJlu5m2T9swztA5d8aj2jUxR2Bvnwb1K9B11OYojaLrSXZHNa8ZWdaNrOPiG4J
+         blmQLU7lpXddZxq+dMPQbePihJomdAZuNNs1rJNlHZmEhTagEu6BZoa4KmceiKtyThh9
+         s9ClxdA8/3pluR8Jd8XuqCrKpjKYxW4qKnHfRo/aW2zbzpnP00dpuHhilHG4olx/MiP3
+         8kmoYH2X/IoORZkUlf2Mtx3rafMp+MEABI57w7GzQ9LqFfTm9EH5H7CV7wKcF7ys8o93
+         48TSwIUr9Zof55ejUz5DSDQ+dUQHkJS9762J40Lg9jHqMVyNflxjssEtZ5U3SPJ2YXeU
+         QMaQ==
+X-Gm-Message-State: AOAM533VvmY3Z6oY96yUZYgimBFGL2F6O3Y0nNqhbouJR/RVmZ1sBkgS
+        tNxU4dn2J2Oel9bROHv+cgN2tBMQxtmnksu/9F4LvA==
+X-Google-Smtp-Source: ABdhPJy7XuDUBZjUXayR4SOS35Xzmwel1sEN2LoYxG/u2Rr6YggD031pTlQUTqN+7t/G1Dw+lmYcEL/VApAhalHOoWY=
+X-Received: by 2002:a25:b285:: with SMTP id k5mr6012330ybj.132.1639571824184;
+ Wed, 15 Dec 2021 04:37:04 -0800 (PST)
 MIME-Version: 1.0
 References: <20211213165342.74704-1-songmuchun@bytedance.com>
- <20211213165342.74704-3-songmuchun@bytedance.com> <YbihOFJHqvQ9hsjO@cmpxchg.org>
-In-Reply-To: <YbihOFJHqvQ9hsjO@cmpxchg.org>
+ <20211213165342.74704-10-songmuchun@bytedance.com> <YbilqnwnuTiQ2FEB@cmpxchg.org>
+In-Reply-To: <YbilqnwnuTiQ2FEB@cmpxchg.org>
 From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Wed, 15 Dec 2021 20:34:45 +0800
-Message-ID: <CAMZfGtVTztinpOTCAAWW+0Q7SAcGfFW4PVW+bHnFQLN-nDBwSg@mail.gmail.com>
-Subject: Re: [PATCH v4 02/17] mm: introduce kmem_cache_alloc_lru
+Date:   Wed, 15 Dec 2021 20:36:28 +0800
+Message-ID: <CAMZfGtXng-X2LPZ3CHwNuyT6LtnkWcHsd_3FZiQpchwtKhR5JQ@mail.gmail.com>
+Subject: Re: [PATCH v4 09/17] mm: workingset: use xas_set_lru() to pass shadow_nodes
 To:     Johannes Weiner <hannes@cmpxchg.org>
 Cc:     Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -75,35 +75,25 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 14, 2021 at 9:50 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Tue, Dec 14, 2021 at 10:09 PM Johannes Weiner <hannes@cmpxchg.org> wrote:
 >
-> On Tue, Dec 14, 2021 at 12:53:27AM +0800, Muchun Song wrote:
-> > +/*
-> > + * The allocated list lru pointers array is not accounted directly.
-> > + * Moreover, it should not come from DMA buffer and is not readily
-> > + * reclaimable. So those GFP bits should be masked off.
-> > + */
-> > +#define LRUS_CLEAR_MASK      (__GFP_DMA | __GFP_RECLAIMABLE | __GFP_ACCOUNT | __GFP_ZERO)
+> On Tue, Dec 14, 2021 at 12:53:34AM +0800, Muchun Song wrote:
+> > The workingset will add the xa_node to shadow_nodes, so we should use
+> > xas_set_lru() to pass the list_lru which we want to insert xa_node
+> > into to set up the xa_node reclaim context correctly.
+> >
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 >
-> There is already GFP_RECLAIM_MASK for this purpose, you can use that.
+> Ah, you can't instantiate the list on-demand in list_lru_add() because
+> that's happening in an atomic context. So you need the lru available
+> in the broader xa update context and group the lru setup in with the
+> other pre-atomic node allocation bits. Fair enough. I think it would
+> be a bit easier to read if this patch and the previous one were
+> squashed (workingset is the only user of xa_lru anyway) and you added
+> that explanation. But other than that, the changes make sense to me;
+> to a combined patch, please add:
+>
 
-Cool. Thanks.
+Great. I'll do it. Thanks for your review.
 
->
-> > +int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
-> > +                      gfp_t gfp)
-> > +{
-> > +     int i;
-> > +     unsigned long flags;
-> > +     struct list_lru_memcg *mlrus;
-> > +     struct list_lru_memcg_table {
-> > +             struct list_lru_per_memcg *mlru;
-> > +             struct mem_cgroup *memcg;
-> > +     } *table;
-> > +
-> > +     if (!list_lru_memcg_aware(lru) || memcg_list_lru_allocated(memcg, lru))
-> > +             return 0;
-> > +
-> > +     gfp &= ~LRUS_CLEAR_MASK;
->
->         gfp &= GFP_RECLAIM_MASK;
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
