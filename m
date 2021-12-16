@@ -2,85 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22CAF4770A6
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 12:42:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4438F477517
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 15:57:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233242AbhLPLmo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Dec 2021 06:42:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60208 "EHLO
+        id S238152AbhLPO5P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Dec 2021 09:57:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbhLPLmk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 06:42:40 -0500
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3167C0617A0
-        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 03:42:29 -0800 (PST)
-Received: by mail-qt1-x835.google.com with SMTP id l8so25103273qtk.6
-        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 03:42:29 -0800 (PST)
+        with ESMTP id S238149AbhLPO5O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 09:57:14 -0500
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 667F7C06173F
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 06:57:14 -0800 (PST)
+Received: by mail-yb1-xb2d.google.com with SMTP id v203so65295674ybe.6
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 06:57:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
-        b=XAiY5JQCbKhUV3kfV68NxknTY8076aQ+jZiIG+NNSnrj8SbWsLA5ZyVis9Hv7MDsX5
-         Wp1aJ8rEmDfQ1U3vhA+W5Q6fUW0sQxhqwaHiosPbQFbyYijHt4Icvm/T0vEK5/kKmBc+
-         QqELCOAj0es+5TzRQyWwGBhwQGehjbOewfhMN3/S4hQw7QoR6Y3+tDzh1TbUcqm1TT9t
-         NYT2/qpfB6ahTcpnyVYoBu/0br0EmuZ66fyA68h0ieuZcBkGcxPgfheRqd2GHCJMPyzP
-         6QgpFUXd/uCVTtz1/hZUUGudKd9Q0ZImcSJeB1tjd8lIsCPvJkt1eKVnbTcB60Kk9v0/
-         CoRA==
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lulanwG+A5JAL3xQCFNVjbLKzAgLtNz5V19bludNqIs=;
+        b=SzdtLi0IuKeee2Yj0Oj0WYBvbxz5uRe7IzYpJ6iZnQ13r2w/wmamIlao1Pozbbhrck
+         LST2F1W1PoUbyv6I23z1SK3PbpESgDHB2ee8R9LgZ8TvjGVNB45gXYyGecpRsDqt/vFZ
+         gjb+oS7XpSDLMmqSOYmASK8ILCZD1aEqVdfcv37B5NHQwrobqA2cQrVWNP/B0V33nkIH
+         9wNeJUyj+SSL38KveDHJaz5cmAF5guNoMXZOA5wIRkqLal8xnb2LCluVYm59Q6ryfSYZ
+         z+nBIG+5AyXvRxVNt+bVaQXRL6JUlCMcFrWTrwIni82NoB0FyRCyZo8tGqSKAAUHM307
+         NORA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=xre5um49Rnqa1tZMCD58Cd6UlD4MleswKAp3tzt2gjo=;
-        b=ALcVvnl0AJ6vsVnnxIlK0ZzpbvcHUjQSIsgaDmCKXYIMPsz4utkIBoUdR9sMcCMILB
-         jCuVIK9WxPLdtMabyojTqwdcpZyT+GmXxS7wcspWqr92znDYqu2yQAupsYMykUYntvZq
-         dOhO/lSCzwHXqQ50KGQ6Avi/ZCDzm6XDsitZL37LaoYGiUplPdpm0jjGgyQLroHqUegr
-         EKgE7EYoYwZ3semrDIdeKIT2ahE/O1kIZ7tnbZOSE2KhCxH6EmZq4DvUOWHisrr/fR1G
-         0HqoJI4BMkdUzGpJihqS4Sc9SbCfS4RJ8oz/0SRmSFE7OmQZp2fwHc8KtNMWn3fLDk+4
-         mUUg==
-X-Gm-Message-State: AOAM531GVqe1xm2aLfA7fB+ApMmP6MaQvPVU6aovYYKjcyI/uiDho7Lr
-        KEbJ5Vgp1Sr/2DbBcmv8xE39gg6j3OIlXw9Dm9c=
-X-Google-Smtp-Source: ABdhPJxzAaV5DauAecsJzqBWmheSvDxk3ghiLfb6YRovClVg4kL4yUlGwYUFAnV+1q8jYrfo3AT6l8iJutzsg/2jTPA=
-X-Received: by 2002:a05:622a:1d4:: with SMTP id t20mr16497208qtw.84.1639654948506;
- Thu, 16 Dec 2021 03:42:28 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lulanwG+A5JAL3xQCFNVjbLKzAgLtNz5V19bludNqIs=;
+        b=q4SGzd02PvPMiSPSu55HdoPTEcIWBHRUobuFD/iodAR+MnJmJc2uoHQZFt0FKI3FOx
+         9gslwsq4DonM5wkc4b0m9HxhKdrMzaLGacF1aeabaAYKJ5EGYDScxcrT1QNKYXhacqaL
+         RLKAm26kbN3lXXq9to2laHzGKE9wXRBsxNjkiXuTKLL2C1DZOGEHvdLJl5OJX//O2vLb
+         d6BVU+jI7U6HuHZr8/TYsH7KrhuXeaweTHhwNPMYwrAYDMaU0Sogw2iXbemKJl/ZvH8Z
+         uL+r0XZsjTNTjowWHcwWkd6GW97EkN/T3GSioifh+Z+hAGu1VLRzs/d0GlV3kJlCY0iB
+         poqQ==
+X-Gm-Message-State: AOAM530I5Z6xJfxoYVfIYdZRBxWzpdprNEju7aEminLhDmut8VbkI83x
+        PdzOQisyerWnNzsqBIw1ldXZzLuQqLgYs+MviuN56w==
+X-Google-Smtp-Source: ABdhPJzYeQMUUARZJBbO6PTOx54PIlWKKuY7ZV++iWN0NFXdp7DjEmoFpv1n1p0impJjhfvPCYi3Vhl4GJBy4iMFMuQ=
+X-Received: by 2002:a25:b285:: with SMTP id k5mr13984870ybj.132.1639666633294;
+ Thu, 16 Dec 2021 06:57:13 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:a05:622a:199c:0:0:0:0 with HTTP; Thu, 16 Dec 2021 03:42:28
- -0800 (PST)
-Reply-To: selviasantiago1@gmail.com
-From:   Selvia Santiago <mariamatinez119@gmail.com>
-Date:   Thu, 16 Dec 2021 11:42:28 +0000
-Message-ID: <CAONDhKOtxcgjB1YEPd0RXNOVbbQ8k-9k32v_cdFxEKFzk62kJg@mail.gmail.com>
-Subject: Urgent
-To:     undisclosed-recipients:;
+References: <20211213165342.74704-12-songmuchun@bytedance.com> <20211216130102.GE10708@xsang-OptiPlex-9020>
+In-Reply-To: <20211216130102.GE10708@xsang-OptiPlex-9020>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Thu, 16 Dec 2021 22:56:36 +0800
+Message-ID: <CAMZfGtVgmudUJWtmA68h3fVD3ThHP_Rq70Dj7h7hGx74ZCUFcQ@mail.gmail.com>
+Subject: Re: [External] [mm] 86cda95957: BUG:sleeping_function_called_from_invalid_context_at_include/linux/sched/mm.h
+To:     kernel test robot <oliver.sang@intel.com>
+Cc:     0day robot <lkp@intel.com>, LKML <linux-kernel@vger.kernel.org>,
+        lkp@lists.01.org, willy@infradead.org, akpm@linux-foundation.org,
+        hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
+        shakeelb@google.com, guro@fb.com, shy828301@gmail.com,
+        alexs@kernel.org, richard.weiyang@gmail.com, david@fromorbit.com,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        jaegeuk@kernel.org, chao@kernel.org, kari.argillander@gmail.com,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, zhengqi.arch@bytedance.com,
+        duanxiongchun@bytedance.com, fam.zheng@bytedance.com,
+        smuchun@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-Urgent
+On Thu, Dec 16, 2021 at 9:01 PM kernel test robot <oliver.sang@intel.com> wrote:
+>
+>
+>
+> Greeting,
+>
+> FYI, we noticed the following commit (built with gcc-9):
+>
+> commit: 86cda9595796e709c444b93df1f27a2343c5fa06 ("[PATCH v4 11/17] mm: list_lru: allocate list_lru_one only when needed")
+> url: https://github.com/0day-ci/linux/commits/Muchun-Song/Optimize-list-lru-memory-consumption/20211214-010208
+> base: https://git.kernel.org/cgit/linux/kernel/git/jaegeuk/f2fs.git dev-test
+> patch link: https://lore.kernel.org/linux-fsdevel/20211213165342.74704-12-songmuchun@bytedance.com
+>
+> in testcase: xfstests
+> version: xfstests-x86_64-972d710-1_20211215
+> with following parameters:
+>
+>         disk: 4HDD
+>         fs: xfs
+>         test: xfs-reflink-25
+>         ucode: 0x28
+>
+> test-description: xfstests is a regression test suite for xfs and other files ystems.
+> test-url: git://git.kernel.org/pub/scm/fs/xfs/xfstests-dev.git
+>
+>
+> on test machine: 8 threads 1 sockets Intel(R) Core(TM) i7-4790 v3 @ 3.60GHz with 6G memory
+>
+> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>
+>
+>
+> If you fix the issue, kindly add following tag
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+>
+>
+> erial console /d[   14.815233][  T356] BUG: sleeping function called from invalid context at include/linux/sched/mm.h:230
+> [   14.827152][  T356] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 356, name: useradd
+> [   14.835607][  T356] preempt_count: 1, expected: 0
+> [   14.840274][  T356] CPU: 4 PID: 356 Comm: useradd Not tainted 5.16.0-rc1-00032-g86cda9595796 #1
+> ev/ttyS0
+> [   14.848903][  T356] Hardware name: Dell Inc. OptiPlex 9020/03CPWF, BIOS A11 04/01/2015
+> [   14.857606][  T356] Call Trace:
+> [   14.860732][  T356]  <TASK>
+> [ 14.863515][ T356] dump_stack_lvl (lib/dump_stack.c:107)
+> [ 14.867859][ T356] __might_resched.cold (kernel/sched/core.c:9543 kernel/sched/core.c:9496)
+> [ 14.872889][ T356] ? memcg_list_lru_alloc (include/linux/slab.h:598 mm/list_lru.c:354 mm/list_lru.c:586)
+> [ 14.878083][ T356] __kmalloc (include/linux/sched/mm.h:230 mm/slab.h:509 mm/slub.c:3148 mm/slub.c:3242 mm/slub.c:4433)
+> [ 14.882177][ T356] ? is_bpf_text_address (arch/x86/include/asm/preempt.h:85 include/linux/rcupdate.h:73 include/linux/rcupdate.h:720 kernel/bpf/core.c:717)
+> [ 14.887129][ T356] memcg_list_lru_alloc (include/linux/slab.h:598 mm/list_lru.c:354 mm/list_lru.c:586)
+> [ 14.892166][ T356] ? xas_alloc (lib/xarray.c:374)
+> [ 14.896421][ T356] kmem_cache_alloc_lru (include/linux/cgroup.h:403 mm/slab.h:295 mm/slab.h:514 mm/slub.c:3148 mm/slub.c:3242 mm/slub.c:3249 mm/slub.c:3266)
+> [ 14.901367][ T356] xas_alloc (lib/xarray.c:374)
 
-I am Mrs. Selvia Santiago from Abidjan, Cote D'Ivoire, I am a widow
-suffering from long time illness (Cancer), there is funds I inherited
-from my late loving husband Mr. Santiago Carlos, the sum of (US$2.7
-Million Dollars) which he deposited in bank before his death, I need a
-honest and Faithful person that can use these funds for humanity work.
-
-I took this decision because I don't have any child that will inherit
-this money and I don't want a situation where this money will be used
-in an ungodly way. That is why I am taking this decision, and my
-doctor has confirmed to me that I have less than two weeks to live,
-having known my condition I decided to donate this fund to a charity
-or individual that will utilize this money to assist the poor and the
-needy in accordance to my instructions.
-
-I want you to use 70% of this funds for orphanages, school, church,
-widows, propagating the word and other humanity works,The remaining
-30% should be yours for your efforts as the new beneficiary.
-
-Please if you would be able to use these funds for humanity work
-kindly reply me. As soon as I have received your response, I will give
-you further directives on how you are to go about the claims of the
-said funds.
-
-Remain blessed.
-Mrs Selvia Santiago.
+Thanks for reporting this. It was caused when rebasing the code.
+Will fix.
