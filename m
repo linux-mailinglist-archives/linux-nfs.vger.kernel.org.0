@@ -2,79 +2,114 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C9BD5477966
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 17:39:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D143E477990
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 17:47:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233552AbhLPQj4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Dec 2021 11:39:56 -0500
-Received: from mail-yb1-f171.google.com ([209.85.219.171]:34679 "EHLO
-        mail-yb1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233473AbhLPQj4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 11:39:56 -0500
-Received: by mail-yb1-f171.google.com with SMTP id y68so66158695ybe.1;
-        Thu, 16 Dec 2021 08:39:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eEPEGGb1aR8D1SabPjTY1nd05keyniIz1b6jYSVPbm0=;
-        b=Hj3A+K0LD6lFKlpqKBfbSF22UO2VLWDi7JcluQ5EIHi/s1C1UTsWd7A/Y+sOQ1bsRx
-         4VmN+RyWsMkJv25JbjlktQyYZvzDxnVof8Q9/RHWI5dkkaTMYxYf/kEkOSBSPLgP9SEc
-         Kgmd+Odp8yTDu7eIJzcBzjBoZ+htaT78R8ckZWRvSpPgkujBUgQ39mX6pqxWXf7eIoz+
-         khFZlUgtsdkCQmf7czWBpokCIjtkZ5tydmjE55hHM3pyyymWBj5J3dgr5LsAHLPD/GJJ
-         kwouqmiXhbVUd3ySGWUhaKwu6pzXBm23P98n001WctGNCQO7iQa7WLqornEi0Xb+8U+7
-         JC9A==
-X-Gm-Message-State: AOAM531Kj4kJ8SPOYz9RpZFLomI5nJiRjvf2ua+KfO1nw2inpZys29r/
-        Zd5J5Zmzbea4BFBmSGmkpTH9lQCQeCPPgzA6v0Rf5x4q
-X-Google-Smtp-Source: ABdhPJx3uhMKaoI0zA68RqhtsVYo8vhXs4JKxCyeBDG0Ckx6tNJ0VMLxa38S05bvKO+VTn+5h4V0Wbnh5eLsqL1lciE=
-X-Received: by 2002:a25:f305:: with SMTP id c5mr4313857ybs.194.1639672795013;
- Thu, 16 Dec 2021 08:39:55 -0800 (PST)
-MIME-Version: 1.0
-References: <tencent_CE0F8701456CB89F92C73F28480EF3552E06@qq.com>
-In-Reply-To: <tencent_CE0F8701456CB89F92C73F28480EF3552E06@qq.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Thu, 16 Dec 2021 11:39:39 -0500
-Message-ID: <CAFX2Jfk-gH5V2PL3UkSw=QLDDuzSgbKuzUeh8-ir-VpO0BzMpg@mail.gmail.com>
-Subject: Re: [PATCH] nfs: nfs4clinet: check the return value of kstrdup()
-To:     Xiaoke Wang <xkernel.wang@foxmail.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        id S239610AbhLPQrs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Dec 2021 11:47:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37934 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S239362AbhLPQrr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 11:47:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639673266;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H4QQrv5yHw8uvREotMjEQW9H2R0fBtaao4kUBQhmBFY=;
+        b=ShUoagyzoXq1A3uSaQjY8ZLWIgz9nIrO80DAZlOEtfKTEOmoxCiWf5ScC3RyXDvRKAe265
+        JSdx79ZU3h0bOBuviqZndtyn5CfFeAdrplEdA80v0koCs1xPMG1W6LM0sSjkJNDbiiATly
+        1/294mMLXGfP5nvmsPg/ot/QvapGGAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-263-6-Ukhu7bM6ieiGRqMNkqew-1; Thu, 16 Dec 2021 11:47:42 -0500
+X-MC-Unique: 6-Ukhu7bM6ieiGRqMNkqew-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75392801ADC;
+        Thu, 16 Dec 2021 16:47:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8E6B51037F51;
+        Thu, 16 Dec 2021 16:47:33 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wi0H5vmka1_iWe0+Yc6bwtgWn_bEEHCMYsPHYtNJKZHCQ@mail.gmail.com>
+References: <CAHk-=wi0H5vmka1_iWe0+Yc6bwtgWn_bEEHCMYsPHYtNJKZHCQ@mail.gmail.com> <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk> <163967169723.1823006.2868573008412053995.stgit@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        linux-afs@lists.infradead.org,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH v3 56/68] afs: Handle len being extending over page end in write_begin/write_end
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1828148.1639673252.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Thu, 16 Dec 2021 16:47:32 +0000
+Message-ID: <1828149.1639673252@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Xiaoke,
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-On Mon, Dec 13, 2021 at 2:54 AM Xiaoke Wang <xkernel.wang@foxmail.com> wrote:
->
-> kstrdup() returns NULL when some internal memory errors happen, it is
-> better to check the return value of it so to catch the memory error in
-> time.
->
-> Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
-> ---
->  fs/nfs/nfs4client.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index af57332..89f13e0 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -1372,5 +1372,8 @@ int nfs4_update_server(struct nfs_server *server, const char *hostname,
->                 server->nfs_client->cl_hostname = kstrdup(hostname, GFP_KERNEL);
->         nfs_server_insert_lists(server);
->
-> +       if (server->nfs_client->cl_hostname == NULL)
-> +               return -ENOMEM;
-> +
+> > With transparent huge pages, in the future, write_begin() and write_en=
+d()
+> > may be passed a length parameter that, in combination with the offset =
+into
+> > the page, exceeds the length of that page.  This allows
+> > grab_cache_page_write_begin() to better choose the size of THP to allo=
+cate.
+> =
 
-Checking the return of kstrdup() makes sense, but I think this should
-right after the kstrdup() call and still under that if block.
+> I still think this is a fundamental bug in the caller. That
+> "explanation" is weak, and the whole concept smells like week-old fish
+> to me.
 
-Anna
+You really should ask Willy about this as it's multipage folio-related.
 
->         return nfs_probe_destination(server);
->  }
-> --
+AIUI, because the page/folio may be allocated inside ->write_begin(),
+generic_perform_write() tells the filesystem how much it has been asked to
+write and then the folio allocation can be made to fit that.
+
+However, at this time, ->write_begin() and ->write_end() have a page point=
+er
+(or pointer-to-pointer), not a folio pointer, in their signature, so the
+filesystem has to convert between them.
+
+I'm working on write helpers for netfslib that absorb this out of the
+filesystems that use it into its own take on generic_perform_write(), ther=
+eby
+eliminating the need for ->write_begin and ->write_end.  I have this kind =
+of
+working for afs and 9p at the moment and am looking at ceph, but there's a=
+ way
+to go yet.  I believe iomap does the same for block-based filesystems that=
+ use
+it (such as xfs).
+
+I think Willy's aim is to get rid of ->write_begin and ->write_end entirel=
+y.
+
+David
+
