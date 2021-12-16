@@ -2,245 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 945584778E4
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 17:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4206447794A
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 17:36:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230119AbhLPQZm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Dec 2021 11:25:42 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:33529 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S239713AbhLPQZk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 11:25:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639671939;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=vYv4iNilzKgmm2oDZnFOAqjOZ3AX6qs6zw0AidzbHUo=;
-        b=PEb1GW2HuHGXcSjb5fKsSkMnC55q44AoIlbCJkeDoKb9Qzr8l1jai54PXhO9WSyxoM8vDh
-        cSV05rfru3DjPVswEMt0/O35jK+XHwxzLOAtHRCWGDohXcRC2sCPpXorfn1KmzuT8pvqgX
-        DzZsJPFEsWUmMpPG5kCdw0AEFN9OWRg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-223-PUZmUhnBNhaR0PIz18VvFw-1; Thu, 16 Dec 2021 11:25:36 -0500
-X-MC-Unique: PUZmUhnBNhaR0PIz18VvFw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E2281015216;
-        Thu, 16 Dec 2021 16:25:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 607BA4E2D0;
-        Thu, 16 Dec 2021 16:25:03 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH v3 67/68] ceph: add fscache writeback support
-From:   David Howells <dhowells@redhat.com>
-To:     linux-cachefs@redhat.com
-Cc:     Jeff Layton <jlayton@kernel.org>, dhowells@redhat.com,
+        id S231150AbhLPQga (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Dec 2021 11:36:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46978 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229962AbhLPQga (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 11:36:30 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65A9C061574
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 08:36:29 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id z7so27344840edc.11
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 08:36:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fkh9SA21WJAwLXrex3D5hDMvc6XDF8J0dz4irJ+Ae9Y=;
+        b=TZ91WtmX33bYGxQ28DYuwMlA4L/Ykfses9BBTD3iJ52Q9qh/2tU+S4awSqTTbNIEfO
+         NIVIGXtvrTssU7E/Ib+EszfgqaQI3Ug/c2E/ITq3PkTvuJKpkp8KHKAP+FyMLrxxfyHm
+         7LDKJiXUmfROJo2atlx1zLIBfA58BXXUjM6Yc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fkh9SA21WJAwLXrex3D5hDMvc6XDF8J0dz4irJ+Ae9Y=;
+        b=p6LK4HCAC1Q5Ay23AhEO7yi2usbelJ7MwPYwVhmI+MiF1hJs0UYjNLsJoLOUFJS0eI
+         5CZ2v2/GxjkDXCS8osWXZvFTrGiUrt75PKsawHOvRzPnduSem6R00lIMuIdMEK4tJbr/
+         MvLnjtilw2KSzuRb4hcXLy2dWYy6+sEaO8q+0I/6LkUr7F90SuJ9zCF43pB7OI+jFgbm
+         oBbyAPuihWMSX6nDqUS59wnLDJAtpFkUiB7c+Zrv486R3g11jBAD7bjNoYY+W7odvHlB
+         GEO0WT80dvbOSWHciRS8aNGnPVxAFi/XXv82NHOnLg1ZxDilc/zdXfyui2bapwTWMkEi
+         /2qA==
+X-Gm-Message-State: AOAM533P6sZrc4vCTm3kdu0Z1XvFxanHCdPe2lDtk62w1487ep30nVi8
+        fVwUjQm7jj+olWRRlsMbSU+f5cJhCctkyavgA1A=
+X-Google-Smtp-Source: ABdhPJyJ+O4jT0nlfqNW54EZZR/mHLNMDFTqQRk2nP4JH6w67pl1qX7ey5Ev33VEeepaVYMDwlgheg==
+X-Received: by 2002:a17:906:58d5:: with SMTP id e21mr17110529ejs.540.1639672573086;
+        Thu, 16 Dec 2021 08:36:13 -0800 (PST)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id n8sm2620011edy.4.2021.12.16.08.36.12
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Dec 2021 08:36:12 -0800 (PST)
+Received: by mail-wr1-f46.google.com with SMTP id j9so13120632wrc.0
+        for <linux-nfs@vger.kernel.org>; Thu, 16 Dec 2021 08:36:12 -0800 (PST)
+X-Received: by 2002:a5d:6211:: with SMTP id y17mr9727999wru.97.1639672086343;
+ Thu, 16 Dec 2021 08:28:06 -0800 (PST)
+MIME-Version: 1.0
+References: <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk>
+ <163967172373.1823006.6118195970180365070.stgit@warthog.procyon.org.uk>
+In-Reply-To: <163967172373.1823006.6118195970180365070.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 16 Dec 2021 08:27:50 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wjiba2VRKKjOYAiCZn1Tk9H1tiXcOvjekdo3wPHHmedyQ@mail.gmail.com>
+Message-ID: <CAHk-=wjiba2VRKKjOYAiCZn1Tk9H1tiXcOvjekdo3wPHHmedyQ@mail.gmail.com>
+Subject: Re: [PATCH v3 57/68] afs: Fix afs_write_end() to handle len > page size
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-afs@lists.infradead.org,
         Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
         Omar Sandoval <osandov@osandov.com>,
         JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 16 Dec 2021 16:25:02 +0000
-Message-ID: <163967190257.1823006.16713609520911954804.stgit@warthog.procyon.org.uk>
-In-Reply-To: <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk>
-References: <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+On Thu, Dec 16, 2021 at 8:22 AM David Howells <dhowells@redhat.com> wrote:
+>
+> It is possible for the len argument to afs_write_end() to overrun the end
+> of the page (len is used to key the size of the page in afs_write_start()
+> when compound pages become a regular thing).
 
-When updating the backing store from the pagecache (a'la writepage or
-writepages), write to the cache first. This allows us to keep caching
-files even when they are being written, as long as we have appropriate
-caps.
+This smells like a bug in the caller.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/20211129162907.149445-3-jlayton@kernel.org/ # v1
-Link: https://lore.kernel.org/r/20211207134451.66296-3-jlayton@kernel.org/ # v2
-Link: https://lore.kernel.org/r/163906985808.143852.1383891557313186623.stgit@warthog.procyon.org.uk/ # v2
----
+It's just insane to call "write_end()" with a range that doesn't
+actually fit in the page provided.
 
- fs/ceph/addr.c |   67 +++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 59 insertions(+), 8 deletions(-)
+Exactly how does that happen, and why should AFS deal with it, not
+whoever called write_end()?
 
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 0ffc4c8d7c10..e836f8f1d4f8 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -5,7 +5,6 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/pagemap.h>
--#include <linux/writeback.h>	/* generic_writepages */
- #include <linux/slab.h>
- #include <linux/pagevec.h>
- #include <linux/task_io_accounting_ops.h>
-@@ -384,6 +383,38 @@ static void ceph_readahead(struct readahead_control *ractl)
- 	netfs_readahead(ractl, &ceph_netfs_read_ops, (void *)(uintptr_t)got);
- }
- 
-+#ifdef CONFIG_CEPH_FSCACHE
-+static void ceph_set_page_fscache(struct page *page)
-+{
-+	set_page_fscache(page);
-+}
-+
-+static void ceph_fscache_write_terminated(void *priv, ssize_t error, bool was_async)
-+{
-+	struct inode *inode = priv;
-+
-+	if (IS_ERR_VALUE(error) && error != -ENOBUFS)
-+		ceph_fscache_invalidate(inode, false);
-+}
-+
-+static void ceph_fscache_write_to_cache(struct inode *inode, u64 off, u64 len, bool caching)
-+{
-+	struct ceph_inode_info *ci = ceph_inode(inode);
-+	struct fscache_cookie *cookie = ceph_fscache_cookie(ci);
-+
-+	fscache_write_to_cache(cookie, inode->i_mapping, off, len, i_size_read(inode),
-+			       ceph_fscache_write_terminated, inode, caching);
-+}
-+#else
-+static inline void ceph_set_page_fscache(struct page *page)
-+{
-+}
-+
-+static inline void ceph_fscache_write_to_cache(struct inode *inode, u64 off, u64 len, bool caching)
-+{
-+}
-+#endif /* CONFIG_CEPH_FSCACHE */
-+
- struct ceph_writeback_ctl
- {
- 	loff_t i_size;
-@@ -499,6 +530,7 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
- 	struct ceph_writeback_ctl ceph_wbc;
- 	struct ceph_osd_client *osdc = &fsc->client->osdc;
- 	struct ceph_osd_request *req;
-+	bool caching = ceph_is_cache_enabled(inode);
- 
- 	dout("writepage %p idx %lu\n", page, page->index);
- 
-@@ -537,16 +569,17 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
- 	    CONGESTION_ON_THRESH(fsc->mount_options->congestion_kb))
- 		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
- 
--	set_page_writeback(page);
- 	req = ceph_osdc_new_request(osdc, &ci->i_layout, ceph_vino(inode), page_off, &len, 0, 1,
- 				    CEPH_OSD_OP_WRITE, CEPH_OSD_FLAG_WRITE, snapc,
- 				    ceph_wbc.truncate_seq, ceph_wbc.truncate_size,
- 				    true);
--	if (IS_ERR(req)) {
--		redirty_page_for_writepage(wbc, page);
--		end_page_writeback(page);
-+	if (IS_ERR(req))
- 		return PTR_ERR(req);
--	}
-+
-+	set_page_writeback(page);
-+	if (caching)
-+		ceph_set_page_fscache(page);
-+	ceph_fscache_write_to_cache(inode, page_off, len, caching);
- 
- 	/* it may be a short write due to an object boundary */
- 	WARN_ON_ONCE(len > thp_size(page));
-@@ -605,6 +638,9 @@ static int ceph_writepage(struct page *page, struct writeback_control *wbc)
- 	struct inode *inode = page->mapping->host;
- 	BUG_ON(!inode);
- 	ihold(inode);
-+
-+	wait_on_page_fscache(page);
-+
- 	err = writepage_nounlock(page, wbc);
- 	if (err == -ERESTARTSYS) {
- 		/* direct memory reclaimer was killed by SIGKILL. return 0
-@@ -726,6 +762,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 	struct ceph_writeback_ctl ceph_wbc;
- 	bool should_loop, range_whole = false;
- 	bool done = false;
-+	bool caching = ceph_is_cache_enabled(inode);
- 
- 	dout("writepages_start %p (mode=%s)\n", inode,
- 	     wbc->sync_mode == WB_SYNC_NONE ? "NONE" :
-@@ -849,7 +886,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				unlock_page(page);
- 				break;
- 			}
--			if (PageWriteback(page)) {
-+			if (PageWriteback(page) || PageFsCache(page)) {
- 				if (wbc->sync_mode == WB_SYNC_NONE) {
- 					dout("%p under writeback\n", page);
- 					unlock_page(page);
-@@ -857,6 +894,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				}
- 				dout("waiting on writeback %p\n", page);
- 				wait_on_page_writeback(page);
-+				wait_on_page_fscache(page);
- 			}
- 
- 			if (!clear_page_dirty_for_io(page)) {
-@@ -989,9 +1027,19 @@ static int ceph_writepages_start(struct address_space *mapping,
- 		op_idx = 0;
- 		for (i = 0; i < locked_pages; i++) {
- 			u64 cur_offset = page_offset(pages[i]);
-+			/*
-+			 * Discontinuity in page range? Ceph can handle that by just passing
-+			 * multiple extents in the write op.
-+			 */
- 			if (offset + len != cur_offset) {
-+				/* If it's full, stop here */
- 				if (op_idx + 1 == req->r_num_ops)
- 					break;
-+
-+				/* Kick off an fscache write with what we have so far. */
-+				ceph_fscache_write_to_cache(inode, offset, len, caching);
-+
-+				/* Start a new extent */
- 				osd_req_op_extent_dup_last(req, op_idx,
- 							   cur_offset - offset);
- 				dout("writepages got pages at %llu~%llu\n",
-@@ -1002,14 +1050,17 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				osd_req_op_extent_update(req, op_idx, len);
- 
- 				len = 0;
--				offset = cur_offset; 
-+				offset = cur_offset;
- 				data_pages = pages + i;
- 				op_idx++;
- 			}
- 
- 			set_page_writeback(pages[i]);
-+			if (caching)
-+				ceph_set_page_fscache(pages[i]);
- 			len += thp_size(page);
- 		}
-+		ceph_fscache_write_to_cache(inode, offset, len, caching);
- 
- 		if (ceph_wbc.size_stable) {
- 			len = min(len, ceph_wbc.i_size - offset);
-
-
+              Linus
