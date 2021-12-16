@@ -2,35 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ED7A3477D5B
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 21:21:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB56B477E99
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Dec 2021 22:18:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241305AbhLPUVH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Dec 2021 15:21:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232814AbhLPUVE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 15:21:04 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59047C061574;
-        Thu, 16 Dec 2021 12:21:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=XqnUXa9RW7uRpASlJT6RfFyTUcif6Eix1YgAPYLKeT8=; b=MX6WDKLG1OL6cTeGQdGY+wgibY
-        Ll9mC56eOlFh37FPX41YNMduoufYqbHvKzG37ydlx6UrCUQlo3fsxYKXTB8XSfeJih3eLvh2ulurZ
-        UAq+weJj9S1y75jcgGgTlW+pZlugSZvh0gdBNPYCHZomHQ88c5LVGSUc5ZdP8W4wArLoqs4ITVUxK
-        sQ/pssRK0WSdbasQQD8ktK/KjuTBnt0Yp8Vq5EwJX78mf6XlTgI4EsJsZ++2N1rSxRmKV2sguuD4g
-        XN2WFfsDXEyr3sGDX+3E0wEj1hINEP9R8QYGpzjbfP3vM/db1mMd2vQa8eUB/JcEkQh9ZW77Y1ApP
-        JLe01syQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1mxxEx-00FvEE-Bh; Thu, 16 Dec 2021 20:20:35 +0000
-Date:   Thu, 16 Dec 2021 20:20:35 +0000
-From:   Matthew Wilcox <willy@infradead.org>
+        id S229818AbhLPVSD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Dec 2021 16:18:03 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:22413 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234284AbhLPVSD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 16:18:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1639689482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Szv2WCpyhjVjn4Fey8iXx2Wp1kssTkyePEeP3VFIu8g=;
+        b=Wqhz+1VjysPv6qtGeVkqx5q7QkXamXrvEH2bo8u2fCb2MwiB+sFFHmtVwbaM5PZTGZ/v5Y
+        HGGKLh8SKSu8/5nGGZFXPTeKBoAbYfb1AQ0kgSxeINo3qn3aRcIdWj/rrst3sIQi2Qplia
+        l5lOOHvRaSEPgDiCrGfOWeNIvkkmImo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-65-9OVE1SGIPOa1lU4pLKOZTQ-1; Thu, 16 Dec 2021 16:17:57 -0500
+X-MC-Unique: 9OVE1SGIPOa1lU4pLKOZTQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 91DAA1937FC0;
+        Thu, 16 Dec 2021 21:17:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 85D2C6E96B;
+        Thu, 16 Dec 2021 21:17:48 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wh2dr=NgVSVj0sw-gSuzhxhLRV5FymfPS146zGgF4kBjA@mail.gmail.com>
+References: <CAHk-=wh2dr=NgVSVj0sw-gSuzhxhLRV5FymfPS146zGgF4kBjA@mail.gmail.com> <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk> <163967169723.1823006.2868573008412053995.stgit@warthog.procyon.org.uk> <CAHk-=wi0H5vmka1_iWe0+Yc6bwtgWn_bEEHCMYsPHYtNJKZHCQ@mail.gmail.com> <YbuTaRbNUAJx5xOA@casper.infradead.org>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
-        Jeff Layton <jlayton@kernel.org>,
+Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
+        linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
         Marc Dionne <marc.dionne@auristor.com>,
         linux-afs@lists.infradead.org,
         Trond Myklebust <trondmy@hammerspace.com>,
@@ -45,82 +57,26 @@ Cc:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 56/68] afs: Handle len being extending over page end
- in write_begin/write_end
-Message-ID: <YbufkzMCoxssd6Vi@casper.infradead.org>
-References: <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk>
- <163967169723.1823006.2868573008412053995.stgit@warthog.procyon.org.uk>
- <CAHk-=wi0H5vmka1_iWe0+Yc6bwtgWn_bEEHCMYsPHYtNJKZHCQ@mail.gmail.com>
- <YbuTaRbNUAJx5xOA@casper.infradead.org>
- <CAHk-=wh2dr=NgVSVj0sw-gSuzhxhLRV5FymfPS146zGgF4kBjA@mail.gmail.com>
+Subject: Re: [PATCH v3 56/68] afs: Handle len being extending over page end in write_begin/write_end
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wh2dr=NgVSVj0sw-gSuzhxhLRV5FymfPS146zGgF4kBjA@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1840346.1639689467.1@warthog.procyon.org.uk>
+Date:   Thu, 16 Dec 2021 21:17:47 +0000
+Message-ID: <1840347.1639689467@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Dec 16, 2021 at 11:46:18AM -0800, Linus Torvalds wrote:
-> On Thu, Dec 16, 2021 at 11:28 AM Matthew Wilcox <willy@infradead.org> wrote:
-> >
-> > Since ->write_begin is the place where we actually create folios, it
-> > needs to know what size folio to create.  Unless you'd rather we do
-> > something to actually create the folio before calling ->write_begin?
-> 
-> I don't think we can create a folio before that, because the
-> filesystem may not even want a folio (think persistent memory or
-> whatever).
-> 
-> Honestly, I think you need to describe more what you actually want to
-> happen. Because generic_perform_write() has already decided to use a
-> PAGE_SIZE by the time write_begin() is called,
-> 
-> Right now the world order is "we chunk things by PAGE_SIZE", and
-> that's just how it is.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Right.  And we could leave it like that.  There's a huge amount of win
-that comes from just creating large folios as part of readahead, and
-anything we do for writes is going to be a smaller win.
+> So I will NAK these patches by David, because they are fundamentally
+> wrong, whichever way we turn. Any "write in bigger chunks" patch will
+> be something else entirely.
 
-That said, I would like it if a program which does:
+I'll just drop patches 56 and 57 for now, then.  I think the problem only
+manifests if I set the flag saying the filesystem/inode/whatever supports
+multipage folios.
 
-fd = creat("foo", 0644);
-write(fd, buf, 64 * 1024);
-close(fd);
-
-uses a single 64k page.
-
-> I can see other options - like the filesystem passing in the chunk
-> size when it calls generic_perform_write().
-
-I'm hoping to avoid that.  Ideally filesystems don't know what the
-"chunk size" is that's being used; they'll see a mixture of sizes
-being used for any given file (potentially).  Depends on access
-patterns, availability of higher-order memory, etc.
-
-> Or we make the rule be that ->write_begin() simply always is given the
-> whole area, and the filesystem can decide how it wants to chunk things
-> up, and return the size of the write chunk in the status (rather than
-> the current "success or error").
-
-We do need to be slightly more limiting than "always gets the whole
-area", because we do that fault_in_iov_iter_readable() call first,
-and if the user has been mean and asked to write() 2GB of memory on
-a (virtual) machine with 256MB, I'd prefer it if we didn't swap our way
-through 2GB of address space before calling into ->write_begin.
-
-> But at no point will this *EVER* be a "afs will limit the size to the
-> folio size" issue. Nothing like that will ever make sense. Allowing
-> bigger chunks will not be about any fscache issues, it will be about
-> every single filesystem that uses generic_perform_write().
-
-I agree that there should be nothing here that is specific to fscache.
-David has in the past tried to convince me that he should always get
-256kB folios, and I've done my best to explain that the MM just isn't
-going to make that guarantee.
-
-That said, this patch seems to be doing the right thing; it passes
-the entire length into netfs_write_begin(), and is then truncating
-the length to stop at the end of the folio that it got back.
+David
 
