@@ -2,155 +2,251 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A262478538
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 07:41:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70235478546
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 07:49:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233295AbhLQGlI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 01:41:08 -0500
-Received: from mail-eopbgr50091.outbound.protection.outlook.com ([40.107.5.91]:21825
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        id S232239AbhLQGto (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 01:49:44 -0500
+Received: from mail-vi1eur05on2139.outbound.protection.outlook.com ([40.107.21.139]:10720
+        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S233294AbhLQGlI (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Dec 2021 01:41:08 -0500
+        id S229757AbhLQGtn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 17 Dec 2021 01:49:43 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KG6GDb7qk7jW/mJt5NET5Sii/TuywJ/KnKZjPUEuUxVBsb+83HQY//hT7qvs0ggITGT7D0bUhUudbqdsdgr4+WjXcPNSuLRIbHfNB8+iyB6Syi81Bfk/qf0vbxN07l7Omp+xuqx3G9DpjpLHbrSxKdpOwTwQ1eTQlEL9uWxH1Ogc/0k/qlHjSjaAZwb6F1LNXY70IKkD0XBra/2t06SvWkoLpfrJ625rXxWCy++ugkXbpXLO72mUzarcd/eEp/KxfPXh25XVSjJXrXpmY3LWNAgX5Iuf5cfjyhwJWCus30mZAZadJb1dXsdHV2cW//8x3FNtCub9sFkJYf8Pjws4jA==
+ b=fdxlREcOmjzEQDBwOynC4tC60RlhBdRSNd3lVvJmZDiPmZgepG3tGnR39ZA4Ws3A0cuobsRi7t2TM4NYE9EJ726ZGgdARgRC4MhzYUDQx1/VusDsvWFIXWeos5teuB9ubxwMnMQIf6KagpNf02d9BcfaTtlmVUz/s3tN0tjCeL4zQPa76HD43N7Gf9XaATUnWTE8S/nvCmLinCdreMtuKGPjRj8F+uMNyaO4llgYfeDNPcmHxoBvzh9SwNuysnctIb+8ofVYJ+1hvx0+66mG9p3DO7qBhjuImAJZOPcXiUBsDSTnt4Zs9hyzejFk13g8s9BvPhnWiD7PPi+dkK9+Ag==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gaw662dgSd13F4Go5AbBAMP4+FGVfdNa4fh64LgkQ5U=;
- b=etLtVo3Bud7Jje2/O0iIcvN75uSiieakQsUbjESUEv8uxMShcyp7fi+2RtYHjNhqM7zGEKZW6K1ta3X/WdyF5AUbGqlxqNzhXG99dpP7PoZo1do5oRJ2Ejhc3BNTSPhSILXL9/h6CsBkEy65BsQz0bYmLuH9cRcl/OcrHk8z4KrJe6tc/WEhYeX23Zafc9n+1OTmhnNZRpPe3P/aniOJJQerrqA0zjdhI7wqx8PHTWan5W5erItGtPen4DrmQv2MaPQSsOXJLOUHKQCAEpOKk4B8tJ0y51gBNpbfHXEwvdvtHdeQlzyqCRrr3tgT8A38GPPSeXNkxWLTC6E/c2gibQ==
+ bh=LcQfSMXMXaNGvv84bfkYV9JzK7qfWrQQAwsVRZEwsaU=;
+ b=KaST1VShAdOiHtqARTFnyL+9xx3akWhlqlAjDCv5gOEOWlVs0pzaiRUhq5BJ6g//KdPz1fWyHHyb9SqlYfLgNuJqy25qpmnFpuqQuQEWCo7iqpTec8fWaEqovvRJG7CsRkltRgSDspJl9/XPxZvMXEucQQG77wgUNrY6SaKuwRon9qmjJ6Dia2l+Ws/+epQ3tvvPf5oaeyS6nP+pbrwQa9GK9INHJX0oYD4ZE7cbfgJrHE4aywYTHMdXfabppGfNEQBrUu1lAE/+3nQh1038UyB2kpK1C6iC4wSftiS5YiURJuDveKDe/2JewRr8cIhk37dZJCCOZMsKKlOwQr//AQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
  header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gaw662dgSd13F4Go5AbBAMP4+FGVfdNa4fh64LgkQ5U=;
- b=RyZkvMbMHTbi5k68QUC1R4jytRe3ZJfuQXpQEEFTQcdQE5jzWxo7irRvr03JBOHvhUIwhFi6qH9CcBuz7lKLOeS+q3siQBWwCRIRhA/EsD27FC1Tez7I+eBnnDjVIaHJomr4XYG5dziZU+5uik6B3fG2DDuDDuTuXYRuUong5vw=
+ bh=LcQfSMXMXaNGvv84bfkYV9JzK7qfWrQQAwsVRZEwsaU=;
+ b=BhoV0EabcIzh293MzQtaKq/SWm+RWjUFucYgXln+ozP6LWJDpKMhTHiONKywy1dt2X5JUS1FJsJ9elOo+sEbtYcdOSOeka3DFHH+mRCPBfYTkHrkVVgx3XZti/OnSFSWMmsnILxp8Gm1ukJC0J1hs0lTflHUz2AL7GBbnm8UoWE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=virtuozzo.com;
 Received: from DB9PR08MB6619.eurprd08.prod.outlook.com (2603:10a6:10:257::21)
- by DBBPR08MB4727.eurprd08.prod.outlook.com (2603:10a6:10:f2::15) with
+ by DBBPR08MB6108.eurprd08.prod.outlook.com (2603:10a6:10:1f4::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.16; Fri, 17 Dec
- 2021 06:41:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.12; Fri, 17 Dec
+ 2021 06:49:41 +0000
 Received: from DB9PR08MB6619.eurprd08.prod.outlook.com
  ([fe80::347f:d385:ec53:75aa]) by DB9PR08MB6619.eurprd08.prod.outlook.com
  ([fe80::347f:d385:ec53:75aa%7]) with mapi id 15.20.4801.015; Fri, 17 Dec 2021
- 06:41:05 +0000
-Subject: Re: [PATCH] nfs: block notification on fs with its own ->lock
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
+ 06:49:41 +0000
+From:   Vasily Averin <vvs@virtuozzo.com>
+Subject: [PATCH] nfsd4: add refcount for nfsd4_blocked_lock
+To:     Bruce Fields <bfields@redhat.com>,
         Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
         "Denis V. Lunev" <den@virtuozzo.com>,
         Cyrill Gorcunov <gorcunov@virtuozzo.com>,
-        Konstantin Khorenko <khorenko@virtuozzo.com>
-References: <20211216172013.GA13418@fieldses.org>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <bb7b5a71-6ddf-5e22-e555-8ae22e5930fe@virtuozzo.com>
-Date:   Fri, 17 Dec 2021 09:41:03 +0300
+        Jeff Layton <jlayton@kernel.org>, kernel@openvz.org,
+        linux-nfs@vger.kernel.org
+References: <CAPL3RVGBN4SMCBbJcrdgpdZfsfb+AFiHiLhDOFmjkD0ua+XpNQ@mail.gmail.com>
+Message-ID: <943cfe47-d48a-4a55-3738-e93370160508@virtuozzo.com>
+Date:   Fri, 17 Dec 2021 09:49:39 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
  Thunderbird/78.14.0
-In-Reply-To: <20211216172013.GA13418@fieldses.org>
+In-Reply-To: <CAPL3RVGBN4SMCBbJcrdgpdZfsfb+AFiHiLhDOFmjkD0ua+XpNQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM6PR01CA0049.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:e0::26) To DB9PR08MB6619.eurprd08.prod.outlook.com
+X-ClientProxiedBy: AS9PR06CA0231.eurprd06.prod.outlook.com
+ (2603:10a6:20b:45e::28) To DB9PR08MB6619.eurprd08.prod.outlook.com
  (2603:10a6:10:257::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 25c5cbf0-d9c2-4557-6254-08d9c1283305
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4727:EE_
-X-Microsoft-Antispam-PRVS: <DBBPR08MB472796627078FEFF94825330AA789@DBBPR08MB4727.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Office365-Filtering-Correlation-Id: ba5d04e5-4a5f-41c8-f967-08d9c1296690
+X-MS-TrafficTypeDiagnostic: DBBPR08MB6108:EE_
+X-Microsoft-Antispam-PRVS: <DBBPR08MB6108F427C53D6E47E42169C5AA789@DBBPR08MB6108.eurprd08.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xsnRNBsPsWRd2IH8B/LLDlO5npCOQXmI6pIdy2iHiOgYacVmhaBM+6E74RxucCWVAgLvkskEdB1YSNDVT2GmRMllv34DVlAEEpG8yzoEG4ZOdN9bDowkGRXcwvzeQuWyhnjyocrLVycZlT57zmV8UfvGq1VZ24AniQaJpR9lDMngL177wbxa2aKdqU6M9fmKjDdb4VyhggcIrbUMiK5GH3x2Q5Te8K/y/1a8irT2/8l+p9gYKKMYUyQ2uZ6sTUcSm0elY/f3+4EBDKMKQV7NmOTiAt9w4nKXfNTRtmDVdL4+kA585/M6Q0nv6w6CHFI29IgbywH677ksQrpSi3+kYm0dczrNJc2mz+wIMsUUAYefuPutX7TgX8T73rZ0aMX5y/wxn2xVBAkokSh7sIv7xbldyv/7MLPeOze9g9zZW+n6Brkvx2VPG6EEzEqh/xQH4CC11lDiiuSiILAz+BiUliNhSvI9MLliJK1e6+FDCn5t7ZPWa472eLQgPIDdSsx/jseLsHwRi8wK+e2nIUxRWgnlRKIkfx78GDUI0SvsrFUSqPiggiKKCAhXt89EPUKoEM8POiaTDC6d1WatiQg/fYvSbkEap1mSBUp1Ze7TPijWe6ZTxZ2eMtXwxPwOYG7Vy4WGangoD7X6a0MXC9UslLYANTOPyCjSkjTM0tl/+W7pcB+yRWZMgJEL1rSyfn6TcRU0N+haxnkXBtgn7r8b9xrMDdkY25Ph23Em0Z/p5U4+24QbveaqDfTp28ud9PIOXBs9Hq0C05Cri7/yLjeolQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB6619.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(86362001)(316002)(66946007)(8676002)(54906003)(66476007)(38100700002)(2906002)(52116002)(5660300002)(66556008)(4326008)(6486002)(107886003)(508600001)(186003)(2616005)(31696002)(38350700002)(26005)(110136005)(8936002)(6512007)(36756003)(31686004)(15650500001)(53546011)(6506007)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: ihTEA3HFBGHWOwz2LcKsvSf2KFGKmuWpsntxigQY3M/e7v4oBdK/OMqEBpH0i65woUV0kVYWrrvyy3RlOauRkcYNEFXs8ZreIReH/p73uhCtNU/ZPTmcIngrFFwwF9Gsb1vB7XTOGzaAwIHTCSGNegWnPh4mqNmxNfXlNP7qm+nI+T30oRpg3BVsooUWpq/PnagFIWgTTg3GGkJFaVq89Z0MfUbLFpjxLXWWX2zdyAPtWP9uvWcAw3rhP+nePA4dv5lsfkOvMO/SUcJb4YxjaGEDQErM9gqsnsET+n2D5vsnHNSsZuu04M8yW0L9CArEZp1qtFZQkrNEVtvwsCLX2+FjgW0MpbvJewZAgucOUDw5VswyndbHxY+wtk+gGWuJND2RFcw4ecZkqxeq8u8JCOzH9Z+54lLxxWfOL2OM2Qsvy7wDagWrGEzsuTooag9/6UR3hxJwP4/CzW4eLH/eAQMrsfDv4hWV6VOtAfCFRdDeekSN1G45CoMVGjDB7isKMqHOYewbSRbC72Tmm8Q8tAeTkmlkbQMIKtEyvdZP8LZ0GOCMuEvbub3vdrCgVZfFkx/0b0r0u1elbiiaxB3hwgBTaJfIHBTAg6c1Lba9VyQ8yFqAhJCS4spfoQImbLPLJpNEDYtn85+38QOCIVWrxbbnkBNjhEOLN1HaGvWnP7/fy9t9SUU12Nc2U7o7sGtB9uMC7bg5Mc7UVO2+kplvUkaGrVZBFe1B0GDq1zo72SvbksN8x8s6FU/fhFCY+T5XMCv3PGYP0XzWq2Ap9lR6YA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB6619.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(6486002)(6512007)(2616005)(316002)(66946007)(66476007)(66556008)(38100700002)(8936002)(38350700002)(31696002)(4326008)(8676002)(2906002)(508600001)(83380400001)(31686004)(86362001)(36756003)(26005)(52116002)(110136005)(186003)(6506007)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c2tJdHlMR3dmWUN0NFl5b2xHb0pNTE9tcXJQUHAvV1dBSlc0L3pxNWllTWlo?=
- =?utf-8?B?eldobzM0eVdyMDZxT0dCV1dDcDNOanp0MzNRR1NsckJ5VlllZUJwQnQyTFg0?=
- =?utf-8?B?dTN2Z1ZlUmtDNTdROEg4SG5NSGlhZ2RLVEJpaGtQYWZJbzhHTW16SU1oTDg3?=
- =?utf-8?B?ZC9TZDA4aURpYWw1MjZhQWhpSHpzK0ZsTmhvc0VzTm9uQXRUd29ZRExIMG14?=
- =?utf-8?B?cXNKbTVHeWJnZHhWL1lNYkkzNWR3VE1BSVVRMzc0TG42ZlZOYStWY2lKa3pP?=
- =?utf-8?B?M2czRWk4aDkvZ1VYRXVWZytVdFRZRzVhaDA3cEgvQTdhN3c0S0pqby9aeEI3?=
- =?utf-8?B?bHZGcVBNSFNzMkJrTzVERmwyakNtZldSWENSSG44emJabVVJWS9FRHlVNFZp?=
- =?utf-8?B?ODJBYVB2ZTlzaktYaU93U0FHYzhSUlBXenpPVDlqU29vYVFwc2RSY2RKd011?=
- =?utf-8?B?M3NrZFp3SHVPZ043VnNIaW5tYVNUank1RWFCaWh3UWZxMTIwZG96eUs1RVhx?=
- =?utf-8?B?NUkrQVBGVVZiZUdabjNXVHBUMkg0MzMwNEt0TnJFRG41NGpTTXhJQzZnOHZn?=
- =?utf-8?B?dVV3TE84eGczdEVxTkJKSjJtbDRtSkpXME9JWmp4SHVuSlhZcXBSNllvWkh3?=
- =?utf-8?B?Q3VEaHpTWmlXSm9VL3hQQXI4TDJZcmlTZkk2TjlwMlkraVRYVGZoclJ0N0F1?=
- =?utf-8?B?TXhVUDFSdFJXOENKVTk5UjBoN1BNZ3FIdkJaOC9FeVk0QVp5elAzQkdFVEdr?=
- =?utf-8?B?ZDBnUitKOFQxWnNsS280ZFdmM2dJWVo2eWZtUmRXdGZmWDR6Tm4rZnI5SDRj?=
- =?utf-8?B?Vi81aUhDTmk2UXBOS24wZE5vd21yS1U3SHAwTnpPaVJHNm1UN0lwUWczVi9s?=
- =?utf-8?B?QXRLY0tWYXk4NzZoK29aRW81Y01FbzNjckNmRkdKRWs4Ykc3NS85L1BlY1l2?=
- =?utf-8?B?MXpZanh3M3A0RysxS3FvbG9OeXZZZ2I5Q1oweWJGWFNzd0NiOUJ5SWdvS3Rh?=
- =?utf-8?B?aFV4Y2xvZWRPN1A4Q2YzUkttZ28rUUZKSVJYSnE5LzhzTUhBSUV6Y0Zkd1FQ?=
- =?utf-8?B?Z3BXRS9sV1R1bWNVRDlOb3RSSnFYUFJvbzNETThBVHFDcm01dW1sWktaQWFz?=
- =?utf-8?B?S25LaTZlV09ZelVMcUJzc01mN1hZV3B3eG1SajE5d24yaTgwbFNVUGpGcjVx?=
- =?utf-8?B?NjBnMGZnNXlBdVVFMXNwazhFZ3I5bHdpb3lNTHI5STF3MDgvVmRXOHF3VXlj?=
- =?utf-8?B?bGl4WTY1MjNjZUhSZFdDeHhQbWtiN2lJYWF6VFRja3QxVWs5RUpURk1mdDBp?=
- =?utf-8?B?SkMzVjFPaXZSS080UklFQitBRFMwK01Hc05PSjgyeVI3Q0dpMHcxelRQWnFG?=
- =?utf-8?B?OERRQzRaaTk4ZkNnV3VNQ0c2enRkbUErUG0vTmt1RVN6aUh6SEdKSU00VzVq?=
- =?utf-8?B?bGt5R2ljMFRReGNkOXVCSzJIMi82cjBQdGJFTm1aQ0pjaENGUzl4bzUyRDRP?=
- =?utf-8?B?SnZhSFZtdlkzekxzRjFVUlJWQnZvZWhwdmg4bVJsc0pNcy9meTVYNnQ5ZTRr?=
- =?utf-8?B?S3BrYXNkdVBDeWpEeUV6TlFiVS9FV2x1ZnpJZG9QVXVYdjJDRWNRNjNCSk41?=
- =?utf-8?B?M3N6YjIrNC9PcHZpRlVya012SzZ1SVdhUUhRRWtnaGtKc3hjQS9CdkFTdW9B?=
- =?utf-8?B?aGNrM3dkWjd1SWhGUHJjY09tQ0ZtN3ZCSjRDVWQvbjJBT0UxRnVydWV3YjR2?=
- =?utf-8?B?M0ZzQ0VjVXdNSmNYamw2VXArenlUcnRERVlTaXZXSjBGc3dJdjFINlVvY01z?=
- =?utf-8?B?aVgyVldDOTlTWHRCWStPRURyajVHRDc2OVZ1LzMzY3lqc3pXU3F3QU1iNjdC?=
- =?utf-8?B?UG1udG1TWWxvQTZyd3M3LzVIc1U1aXg2R0ZwdGs5Y2c3Qmk2cFhUQm14MTlx?=
- =?utf-8?B?RVVKQmFna3k3cE9GWkZOZTlFek5NVzRETHJmZWtXME81czFzTkN5N0p0T1FL?=
- =?utf-8?B?djBoOWM1Z0dkbGg5bzhyWjVtbWtwWkJwRjJKV3g2d1EwRnUzR0Y4S3NEcHMy?=
- =?utf-8?B?VmV5ci93ZkprcnBQd0w3T1E1QjZ0Z2hIWkdxQXRubkZFOXNrOGg5QTlpd2l2?=
- =?utf-8?B?SlpZWWhjNm51L243ZnhKTDJxK2NJYk9QN0ZpNXl4SWt3L0pSV2cyTjVqQWM2?=
- =?utf-8?Q?JRRmFA4VsieT5JDemHnXCfM=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1NmdGhDMlErZGlTbjZMdlFFREVIalVzN0lmTUlNQzIxSmFTK2ZzVzdETHFK?=
+ =?utf-8?B?b1pNNnFKd1Q2VTBQWjVtOERiMGdPWHN3YzVUd3FvRkM3UGdmMWl2b0xFclBa?=
+ =?utf-8?B?UzhQWE45K08yWkRyTEtnTDE5WGN4aXR4cE1xaFJkdTBUKzVMeTExbkwrRnE4?=
+ =?utf-8?B?a2MxTFQreTRpazFQNUVaRFI1MnhEYzlONzEvMWtFMCtuWTFUeEE0VEpDYmor?=
+ =?utf-8?B?ZlQybUNMajhmTmxVcjJNQnliTnNDcmlZakYyeDIxL1p5M20zV3E1azI0eTRu?=
+ =?utf-8?B?dG9SYjY3K3pmcE1GWWd5eHRQeU4zbFRBdFhwZ2JjN1ZUamlMN0NNeXFTVWJ4?=
+ =?utf-8?B?MkVFZW9EOU5mNVA1WnEwQStaWDZYTkw0YUdZWTZwMzQ4NkdISWtwTGRmd3Z1?=
+ =?utf-8?B?UXVUMzBOZTBrOFJ0T0RUREtDUXY5UGxOSGJ0dStsYVloVGlmMFpnTU9rbTU5?=
+ =?utf-8?B?c0xPNFlwYWh0VGoyaGkwbmJleUJzci9sZE5QR0lPR3dIQTlLTjZFUHNFS3FN?=
+ =?utf-8?B?eEdsVERXaTlsVktPR2lBUjJyZkdIeDRCMDFJdnVhd0laMjZUYkpLamtsV0V0?=
+ =?utf-8?B?Z1RCTHlhK1JxMTJzNkEzQ1lHdVdMQlVKdnZrUVpYOUxPMnRqSWM2MXgydGI3?=
+ =?utf-8?B?Rlh6bWZCenpUVE9PNVloMGlieDJ5M2tnU0cvcGZXTlBFTjMxSGtTbUxRQWRm?=
+ =?utf-8?B?a3dGVStGN2twaXBnUVZFRkcyeW92cXpGbzN4UzBDNEpFbWlkSkpaTnZhTlRv?=
+ =?utf-8?B?SnZ3RUFIRVpDYWdXS2xRQURMZ1orOTFibGlEby9wSEFVbW15a3MxeEZKNlFE?=
+ =?utf-8?B?SlN2WDR3NXc3N3M4U0JaUkNkTjMwMkFXaWx2NHVKSUkvVXlLQ3dqNTRIYXRI?=
+ =?utf-8?B?RGNuaHpGOWNpckRLakNnU2c3TXExa0U2RS9Nc1pFUFhKcDhOYXMxZldvSVJa?=
+ =?utf-8?B?NlcyR1R2RGpXSG9uY0hweVRyUWQwRnFhVEV6M1VValhjZkJ1WCt5bzcxa1NF?=
+ =?utf-8?B?UzNoUFRxL2s4QkMzTUE0WWJrbzVhV0wyZ1ZBaHZNS25XMXN6UjR6a0Nldk8v?=
+ =?utf-8?B?NmlDOE1HYU9GWmEvUmp1K3NwbmhmWjZlaldsR041OWgxSk14ejBSRWdYSmhH?=
+ =?utf-8?B?a0M1VUhBUE1yRVg4ZmdjZnNxdk1CSDRYajgwTEhrQzJ6NzZRaFhRd0tzZTJw?=
+ =?utf-8?B?SEpvcTZtYmpiRDdicDZOby9UR0ZqYnBOSnd6aldqY3A3OVFzRFlBOVhuYUF5?=
+ =?utf-8?B?aWM3TTl5V2hVV0RqR1hEQjV6OHFiU2dWQ0lwam4zWlRISHZHd1ZnSlllMGF1?=
+ =?utf-8?B?MytlWStXUlNybU5VbG8rVE1VZ3BKWDExNmtOTkRUd3NkdGkvenNCQisvTXZ2?=
+ =?utf-8?B?Mzl2Z1VlTCtELzJhZEhSVElWOG5DR1owNFBnSGFOQ2FoTlpxME5PaEF3KzI0?=
+ =?utf-8?B?bSswRHQvS1RsRTBhUVNuZHFVODI2eGhLTmE4V1ZRKzhmRnhlaXBSSC9PSnlD?=
+ =?utf-8?B?dWxUNnJyMmtMTFlzSmpyckRZZjFVa3hldVhYWEF0a1cwT1BpbFZOSnA0TnUw?=
+ =?utf-8?B?YWhTMXdOV05tNXBJQlJVS0FhbU9vc0t0QTJBOVdhZ29iUkd5czArRlJBc2JH?=
+ =?utf-8?B?RXlEaWJYRjR4MzUwL3UyaHlVN3o0ejlUK1lJcFpESnYxRHhXd0J1TlpvOXox?=
+ =?utf-8?B?dGVKbFRORHpQeXlJQXpGOG5iQTJldUpnc2orZjJRM0hMWm83VzRuS0ZiTFJm?=
+ =?utf-8?B?MFpaVUgyZzRBck1uc0tQMFJCaHBFa1RlNThoYnRqK05wek50d1QwaE9NdXZG?=
+ =?utf-8?B?KzI3L0oySHdBZXRRVkxPbnFLMWlMOUVFeXNWNEkrMlVPWExyWmJaR05ZU2Qx?=
+ =?utf-8?B?MFcraVFyTnhpcnFrTnY2SVhkQ2RnbEVlRCtXZWhpRWFzTk4yVVRHUDBhaTFa?=
+ =?utf-8?B?UGhZRzV0Vmd6c2hlNXRFbmhXYldwWVFmVmhHK25WNzFoaXBHY3BaTUxtbWFW?=
+ =?utf-8?B?amxYd09wNFA2dVJueEpHeS9tbHVLUVlPTTkwdEllZFdnbWJCa1o0NXBwNFhG?=
+ =?utf-8?B?WGNQdFdrdklyRG4zUmxBVGJURU1hZWdCQnQ0MmRxcmpDTXFCNy9HMnNyZFZ6?=
+ =?utf-8?B?L25hb3piTHF3VDRRN2U3dk4rVjFiOXBuYkhpKzNoazVkN3J2MFBHT29ac1dM?=
+ =?utf-8?Q?U3y54hwZpomLNSf2L96LhUk=3D?=
 X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 25c5cbf0-d9c2-4557-6254-08d9c1283305
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba5d04e5-4a5f-41c8-f967-08d9c1296690
 X-MS-Exchange-CrossTenant-AuthSource: DB9PR08MB6619.eurprd08.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2021 06:41:05.1964
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2021 06:49:40.9188
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: T8r6DJpsQw5In+YeV17PtBTeGcPV3zYU4ZBjZu8Gc4dIUPYxxqjAsbL7lCOiH2jqayulZeSN9ktKi9xr+nBNHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4727
+X-MS-Exchange-CrossTenant-UserPrincipalName: cz8SVZO99iMVczn5C4/Dg/sO5nK3TATjqDevY3xmwez73kBsY3UiEQFKYFnts/uy1i3K3rUCc9qA4Sb4iAiL0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6108
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 16.12.2021 20:20, J. Bruce Fields wrote:
-> From: "J. Bruce Fields" <bfields@redhat.com>
-> 
-> NFSv4.1 supports an optional lock notification feature which notifies
-> the client when a lock comes available.  (Normally NFSv4 clients just
-> poll for locks if necessary.)  To make that work, we need to request a
-> blocking lock from the filesystem.
-> 
-> We turned that off for NFS in f657f8eef3ff "nfs: don't atempt blocking
-> locks on nfs reexports" because it actually blocks the nfsd thread while
-> waiting for the lock.
-> 
-> Thanks to Vasily Averin for pointing out that NFS isn't the only
-> filesystem with that problem.
-> 
-> Any filesystem that leaves ->lock NULL will use posix_lock_file(), which
-> does the right thing.  Simplest is just to assume that any filesystem
-> that defines its own ->lock is not safe to request a blocking lock from.
-> 
-> So, this patch mostly reverts f657f8eef3ff and b840be2f00c0, and instead
-> uses a check of ->lock (Vasily's suggestion) to decide whether to
-> support blocking lock notifications on a given filesystem.  Also add a
-> little documentation.
-> 
-> Perhaps someday we could add back an export flag later to allow
-> filesystems with "good" ->lock methods to support blocking lock
-> notifications.
-> 
-> Reported-by: Vasily Averin <vvs@virtuozzo.com>
-> Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+nbl allocated in nfsd4_lock can be released by a several ways:
+directly in nfsd4_lock(), via nfs4_laundromat(), via another nfs
+command RELEASE_LOCKOWNER or via nfsd4_callback.
+This structure should be refcounted to be used and released correctly
+in all these cases.
 
-Reviewed-by: Vasily  Averin <vvs@virtuozzo.com>
+Refcount is initialized to 1 during allocation and is incremented
+when nbl is added into nbl_list/nbl_lru lists.
+
+Usually nbl is linked into both lists together, so only one refcount
+is used for both lists.
+
+However nfsd4_lock() should keep in mind that nbl can be present
+in one of lists only. This can happen if nbl was handled already
+by nfs4_laundromat/nfsd4_callback/etc.
+
+Refcount is decremented if vfs_lock_file() returns FILE_LOCK_DEFERRED,
+because nbl can be handled already by nfs4_laundromat/nfsd4_callback/etc.
+
+Refcount is not changed in find_blocked_lock() because of it reuses counter
+released after removing nbl from lists.
+
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++++---
+ fs/nfsd/state.h     |  1 +
+ 2 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index d75e1235c4f5..b74f36e9901c 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -246,6 +246,7 @@ find_blocked_lock(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
+ 	list_for_each_entry(cur, &lo->lo_blocked, nbl_list) {
+ 		if (fh_match(fh, &cur->nbl_fh)) {
+ 			list_del_init(&cur->nbl_list);
++			WARN_ON(list_empty(&cur->nbl_lru));
+ 			list_del_init(&cur->nbl_lru);
+ 			found = cur;
+ 			break;
+@@ -271,6 +272,7 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
+ 			INIT_LIST_HEAD(&nbl->nbl_lru);
+ 			fh_copy_shallow(&nbl->nbl_fh, fh);
+ 			locks_init_lock(&nbl->nbl_lock);
++			kref_init(&nbl->nbl_kref);
+ 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
+ 					&nfsd4_cb_notify_lock_ops,
+ 					NFSPROC4_CLNT_CB_NOTIFY_LOCK);
+@@ -279,12 +281,21 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
+ 	return nbl;
+ }
+ 
++static void
++free_nbl(struct kref *kref)
++{
++	struct nfsd4_blocked_lock *nbl;
++
++	nbl = container_of(kref, struct nfsd4_blocked_lock, nbl_kref);
++	kfree(nbl);
++}
++
+ static void
+ free_blocked_lock(struct nfsd4_blocked_lock *nbl)
+ {
+ 	locks_delete_block(&nbl->nbl_lock);
+ 	locks_release_private(&nbl->nbl_lock);
+-	kfree(nbl);
++	kref_put(&nbl->nbl_kref, free_nbl);
+ }
+ 
+ static void
+@@ -302,6 +313,7 @@ remove_blocked_locks(struct nfs4_lockowner *lo)
+ 					struct nfsd4_blocked_lock,
+ 					nbl_list);
+ 		list_del_init(&nbl->nbl_list);
++		WARN_ON(list_empty(&nbl->nbl_lru));
+ 		list_move(&nbl->nbl_lru, &reaplist);
+ 	}
+ 	spin_unlock(&nn->blocked_locks_lock);
+@@ -6976,6 +6988,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		spin_lock(&nn->blocked_locks_lock);
+ 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+ 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
++		kref_get(&nbl->nbl_kref);
+ 		spin_unlock(&nn->blocked_locks_lock);
+ 	}
+ 
+@@ -6988,6 +7001,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 			nn->somebody_reclaimed = true;
+ 		break;
+ 	case FILE_LOCK_DEFERRED:
++		kref_put(&nbl->nbl_kref, free_nbl);
+ 		nbl = NULL;
+ 		fallthrough;
+ 	case -EAGAIN:		/* conflock holds conflicting lock */
+@@ -7008,8 +7022,13 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		/* dequeue it if we queued it before */
+ 		if (fl_flags & FL_SLEEP) {
+ 			spin_lock(&nn->blocked_locks_lock);
+-			list_del_init(&nbl->nbl_list);
+-			list_del_init(&nbl->nbl_lru);
++			if (!list_empty(&nbl->nbl_list) &&
++			    !list_empty(&nbl->nbl_lru)) {
++				list_del_init(&nbl->nbl_list);
++				list_del_init(&nbl->nbl_lru);
++				kref_put(&nbl->nbl_kref, free_nbl);
++			}
++			/* nbl can use one of lists to be linked to reaplist */
+ 			spin_unlock(&nn->blocked_locks_lock);
+ 		}
+ 		free_blocked_lock(nbl);
+diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+index e73bdbb1634a..ab61dc102300 100644
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -629,6 +629,7 @@ struct nfsd4_blocked_lock {
+ 	struct file_lock	nbl_lock;
+ 	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
++	struct kref		nbl_kref;
+ };
+ 
+ struct nfsd4_compound_state;
+-- 
+2.25.1
+
