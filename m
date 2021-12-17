@@ -2,97 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 161A14795CE
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 21:55:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 363784795D0
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 21:55:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237279AbhLQUzC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 15:55:02 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:40046 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234597AbhLQUzB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 15:55:01 -0500
+        id S234597AbhLQUzD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 15:55:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48666 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237288AbhLQUzC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 15:55:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52507C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 12:55:02 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 77340623AA
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DF4FC623B9
         for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 20:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C9BC36AE5;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0783FC36AE8;
         Fri, 17 Dec 2021 20:55:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639774500;
-        bh=XMjgZvkiHJrooydYRiWDd0QzZhLLk7tiOf/0TKkXaHE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=StIHM9e2TyIulGXQl0zp6n03QzOugUPTz0FJJB9FJZhyi0X7HwIADaTddqpBLdhQB
-         6AfP4pfqGkDnIthHxmmRCYpcW+HR5GjHnm9uMKB1vLKkSveVKYYWjI0nfLcIEh5pAA
-         5mJY0PwTt949K/WaeRL3lxkLygtZD+nxPuFPUI68Aj04q7oaK1Xtyfxqx/X7RFEzRV
-         JnK6ry9mqDjPad1J7zEUd1U35weRHmwpUCOADNjYXbgx3jlTvkl3pMqxmQvBFqITTy
-         Lo9kFYJl5Lz3KIoUjYklggo2ohsg3sJobqJeAV0NAM7wD1ZrjrfIj2fbILblTedDZU
-         2iMSfchD2ieTw==
+        s=k20201202; t=1639774501;
+        bh=hBJ1UQv02K9npEMQWt8oKO9KyTPgkm4XWK2uGF5ehDo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JWg/7xtyYQb212pMwn8hpyoURdQeZhAobp1nRUDnvDda17nCmKEFh1/wdi6Z4nH3o
+         2yYT+BCrEFN0dCAAN2lTpnQweT3KM8IIqfHRC8eCNbiPLS03T7dnbVYRdoDtRJApUy
+         1zMRo/reDOvOne2moL8oL3USSDLCffhT7gJpAX+uyTXeNfHwBKm6eU4XMXXkn4q59p
+         940JUmscUAV/BMSF1zwMutEmRCr1SF5Ux8ne4TbbLg7SShPKdOrJp8KfdqqkXGlXER
+         3oRBiH2Z3+9Lb4dalN1c/UW1m/nNWv0TPHxcM9wXd5NIQAebJJ0Q2ooWAFpv1zw5wg
+         /1xN3/UFxJprA==
 From:   trondmy@kernel.org
 To:     Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 0/8] Support btime and other NFSv4 specific attributes
-Date:   Fri, 17 Dec 2021 15:48:46 -0500
-Message-Id: <20211217204854.439578-1-trondmy@kernel.org>
+Subject: [PATCH 1/8] NFS: Expand the type of nfs_fattr->valid
+Date:   Fri, 17 Dec 2021 15:48:47 -0500
+Message-Id: <20211217204854.439578-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211217204854.439578-1-trondmy@kernel.org>
+References: <20211217204854.439578-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Trond Myklebust <trond.myklebust@primarydata.com>
 
-NFSv4 has support for a number of extra attributes that are of interest
-to Samba when it is used to re-export a filesystem to Windows clients.
-Aside from the btime, which is of interest in statx(), Windows clients
-have an interest in determining the status of the 'hidden', and 'system'
-flags.
-Backup programs want to read the 'archive' flags and the 'time backup'
-attribute.
-Finally, the 'offline' flag can tell whether or not a file needs to be
-staged by an HSM system before it can be read or written to.
+We need to be able to track more than 32 attributes per inode.
 
-The patch series also adds an ioctl() to allow userspace retrieval and
-setting of these attributes where appropriate. It also adds an ioctl()
-to allow retrieval of the raw NFSv4 ACCESS information, to allow more
-fine grained determination of the user's access rights to a file or
-directory. All of this information is of use for Samba.
+Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
+Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/inode.c            |  5 ++--
+ include/linux/nfs_fs_sb.h |  2 +-
+ include/linux/nfs_xdr.h   | 54 +++++++++++++++++++--------------------
+ 3 files changed, 31 insertions(+), 30 deletions(-)
 
-Anne Marie Merritt (3):
-  nfs: Add timecreate to nfs inode
-  nfs: Add 'archive', 'hidden' and 'system' fields to nfs inode
-  nfs: Add 'time backup' to nfs inode
-
-Richard Sharpe (1):
-  NFS: Support statx_get and statx_set ioctls
-
-Trond Myklebust (4):
-  NFS: Expand the type of nfs_fattr->valid
-  NFS: Return the file btime in the statx results when appropriate
-  NFSv4: Support the offline bit
-  NFSv4: Add an ioctl to allow retrieval of the NFS raw ACCESS mask
-
- fs/nfs/dir.c              |  71 ++---
- fs/nfs/getroot.c          |   3 +-
- fs/nfs/inode.c            | 147 +++++++++-
- fs/nfs/internal.h         |  10 +
- fs/nfs/nfs3proc.c         |   1 +
- fs/nfs/nfs4_fs.h          |  31 +++
- fs/nfs/nfs4file.c         | 550 ++++++++++++++++++++++++++++++++++++++
- fs/nfs/nfs4proc.c         | 175 +++++++++++-
- fs/nfs/nfs4trace.h        |   8 +-
- fs/nfs/nfs4xdr.c          | 240 +++++++++++++++--
- fs/nfs/nfstrace.c         |   5 +
- fs/nfs/nfstrace.h         |   9 +-
- fs/nfs/proc.c             |   1 +
- include/linux/nfs4.h      |   1 +
- include/linux/nfs_fs.h    |  15 ++
- include/linux/nfs_fs_sb.h |   2 +-
- include/linux/nfs_xdr.h   |  80 ++++--
- include/uapi/linux/nfs.h  | 101 +++++++
- 18 files changed, 1356 insertions(+), 94 deletions(-)
-
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index fda530d5e764..897dec07cf4b 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -2001,10 +2001,11 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 	bool attr_changed = false;
+ 	bool have_delegation;
+ 
+-	dfprintk(VFS, "NFS: %s(%s/%lu fh_crc=0x%08x ct=%d info=0x%x)\n",
++	dfprintk(VFS, "NFS: %s(%s/%lu fh_crc=0x%08x ct=%d info=0x%lx)\n",
+ 			__func__, inode->i_sb->s_id, inode->i_ino,
+ 			nfs_display_fhandle_hash(NFS_FH(inode)),
+-			atomic_read(&inode->i_count), fattr->valid);
++			atomic_read(&inode->i_count),
++			(unsigned long)fattr->valid);
+ 
+ 	if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+ 		/* Only a mounted-on-fileid? Just exit */
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index 2a9acbfe00f0..8468206fb535 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -157,8 +157,8 @@ struct nfs_server {
+ #define NFS_MOUNT_WRITE_EAGER		0x01000000
+ #define NFS_MOUNT_WRITE_WAIT		0x02000000
+ 
+-	unsigned int		fattr_valid;	/* Valid attributes */
+ 	unsigned int		caps;		/* server capabilities */
++	__u64			fattr_valid;	/* Valid attributes */
+ 	unsigned int		rsize;		/* read size */
+ 	unsigned int		rpages;		/* read size (in pages) */
+ 	unsigned int		wsize;		/* write size */
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 967a0098f0a9..d0722269b392 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -45,7 +45,7 @@ struct nfs4_threshold {
+ };
+ 
+ struct nfs_fattr {
+-	unsigned int		valid;		/* which fields are valid */
++	__u64			valid;		/* which fields are valid */
+ 	umode_t			mode;
+ 	__u32			nlink;
+ 	kuid_t			uid;
+@@ -80,32 +80,32 @@ struct nfs_fattr {
+ 	struct nfs4_label	*label;
+ };
+ 
+-#define NFS_ATTR_FATTR_TYPE		(1U << 0)
+-#define NFS_ATTR_FATTR_MODE		(1U << 1)
+-#define NFS_ATTR_FATTR_NLINK		(1U << 2)
+-#define NFS_ATTR_FATTR_OWNER		(1U << 3)
+-#define NFS_ATTR_FATTR_GROUP		(1U << 4)
+-#define NFS_ATTR_FATTR_RDEV		(1U << 5)
+-#define NFS_ATTR_FATTR_SIZE		(1U << 6)
+-#define NFS_ATTR_FATTR_PRESIZE		(1U << 7)
+-#define NFS_ATTR_FATTR_BLOCKS_USED	(1U << 8)
+-#define NFS_ATTR_FATTR_SPACE_USED	(1U << 9)
+-#define NFS_ATTR_FATTR_FSID		(1U << 10)
+-#define NFS_ATTR_FATTR_FILEID		(1U << 11)
+-#define NFS_ATTR_FATTR_ATIME		(1U << 12)
+-#define NFS_ATTR_FATTR_MTIME		(1U << 13)
+-#define NFS_ATTR_FATTR_CTIME		(1U << 14)
+-#define NFS_ATTR_FATTR_PREMTIME		(1U << 15)
+-#define NFS_ATTR_FATTR_PRECTIME		(1U << 16)
+-#define NFS_ATTR_FATTR_CHANGE		(1U << 17)
+-#define NFS_ATTR_FATTR_PRECHANGE	(1U << 18)
+-#define NFS_ATTR_FATTR_V4_LOCATIONS	(1U << 19)
+-#define NFS_ATTR_FATTR_V4_REFERRAL	(1U << 20)
+-#define NFS_ATTR_FATTR_MOUNTPOINT	(1U << 21)
+-#define NFS_ATTR_FATTR_MOUNTED_ON_FILEID (1U << 22)
+-#define NFS_ATTR_FATTR_OWNER_NAME	(1U << 23)
+-#define NFS_ATTR_FATTR_GROUP_NAME	(1U << 24)
+-#define NFS_ATTR_FATTR_V4_SECURITY_LABEL (1U << 25)
++#define NFS_ATTR_FATTR_TYPE		BIT_ULL(0)
++#define NFS_ATTR_FATTR_MODE		BIT_ULL(1)
++#define NFS_ATTR_FATTR_NLINK		BIT_ULL(2)
++#define NFS_ATTR_FATTR_OWNER		BIT_ULL(3)
++#define NFS_ATTR_FATTR_GROUP		BIT_ULL(4)
++#define NFS_ATTR_FATTR_RDEV		BIT_ULL(5)
++#define NFS_ATTR_FATTR_SIZE		BIT_ULL(6)
++#define NFS_ATTR_FATTR_PRESIZE		BIT_ULL(7)
++#define NFS_ATTR_FATTR_BLOCKS_USED	BIT_ULL(8)
++#define NFS_ATTR_FATTR_SPACE_USED	BIT_ULL(9)
++#define NFS_ATTR_FATTR_FSID		BIT_ULL(10)
++#define NFS_ATTR_FATTR_FILEID		BIT_ULL(11)
++#define NFS_ATTR_FATTR_ATIME		BIT_ULL(12)
++#define NFS_ATTR_FATTR_MTIME		BIT_ULL(13)
++#define NFS_ATTR_FATTR_CTIME		BIT_ULL(14)
++#define NFS_ATTR_FATTR_PREMTIME		BIT_ULL(15)
++#define NFS_ATTR_FATTR_PRECTIME		BIT_ULL(16)
++#define NFS_ATTR_FATTR_CHANGE		BIT_ULL(17)
++#define NFS_ATTR_FATTR_PRECHANGE	BIT_ULL(18)
++#define NFS_ATTR_FATTR_V4_LOCATIONS	BIT_ULL(19)
++#define NFS_ATTR_FATTR_V4_REFERRAL	BIT_ULL(20)
++#define NFS_ATTR_FATTR_MOUNTPOINT	BIT_ULL(21)
++#define NFS_ATTR_FATTR_MOUNTED_ON_FILEID BIT_ULL(22)
++#define NFS_ATTR_FATTR_OWNER_NAME	BIT_ULL(23)
++#define NFS_ATTR_FATTR_GROUP_NAME	BIT_ULL(24)
++#define NFS_ATTR_FATTR_V4_SECURITY_LABEL BIT_ULL(25)
+ 
+ #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
+ 		| NFS_ATTR_FATTR_MODE \
 -- 
 2.33.1
 
