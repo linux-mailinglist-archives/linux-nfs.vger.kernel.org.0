@@ -2,90 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1433D478C65
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 14:34:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48EDD478C69
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 14:35:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234317AbhLQNej (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 08:34:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36552 "EHLO
+        id S234087AbhLQNfy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 08:35:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:49038 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234307AbhLQNei (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 08:34:38 -0500
+        by vger.kernel.org with ESMTP id S234079AbhLQNfx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 08:35:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639748078;
+        s=mimecast20190719; t=1639748153;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=L/4V3fSn58a1gWnecg4Vr8ZqaKf1a0EGk12hvBWCTkM=;
-        b=bQFKbefwUZRi7ZvmpqruxJ5vhyyhdfdCz9MVaAlaQ9SjoJ8kGAEasvwhKx0LRhHFvo77Ju
-        vN/9mRzl8LFibP2iZOVLgkS+zfgLuRcij79u4iRHhXWQt/JQZfkrwgFOkAxa80ivG9Fo38
-        ilHe7D35xcR5X7Zwgrilb8Yk7umF8Vk=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=8ZE5+T9FIA/LsIMrDz4C7mJhlzQ37jyiywuLPjaXdaE=;
+        b=QTQgowyvDaEZ/yKgJU8BC5pWHSZfVQANmkaDCODEmCDV6FMmidSrIxxxchyYmJrC20wDy3
+        NXyoqy92LoP7/+ptMww0824hXCOVnthq6H1tz6Jak0VaYYQn0Bv9v2VkjyVjCqiwJGCi/c
+        MZ+HqfqHU27ml1WXVEeILOFvzDhJJV8=
+Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
+ [209.85.208.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-401-OPXqg972Nw60dcste79H5A-1; Fri, 17 Dec 2021 08:34:37 -0500
-X-MC-Unique: OPXqg972Nw60dcste79H5A-1
-Received: by mail-ed1-f71.google.com with SMTP id l15-20020a056402124f00b003e57269ab87so1950603edw.6
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 05:34:36 -0800 (PST)
+ us-mta-445-TkdXDH4FOQWE-AHudQPU-g-1; Fri, 17 Dec 2021 08:35:52 -0500
+X-MC-Unique: TkdXDH4FOQWE-AHudQPU-g-1
+Received: by mail-ed1-f72.google.com with SMTP id r26-20020aa7cfda000000b003f7fbbd9b5dso1895740edy.19
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 05:35:51 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=L/4V3fSn58a1gWnecg4Vr8ZqaKf1a0EGk12hvBWCTkM=;
-        b=ePijp0klLkbd7J2+Jdm9LiyBdwfGIxjvHnMIjxhdphBDQu54PIebZCZtvXGsoRKyJC
-         fJxwVwubjRbnPxhSsrjVabWkBhXGLQKjdGLrfO+KbEYB2rCfLDZcVpH6sJhxPd7mBJQi
-         60NMDnxT0xLlMeEfUrhx4zb2zpeKJsEkuVeS3pNc2Cm2cffXrY90OqfEzs5RF2Wb95/z
-         qsBJHjbcyEGpl3lPQB2wfFCUiZIkTLVJlTgN+Pp3iE9lqvi494yxEvKqFnlmIBgwiuyy
-         dcvQzwhagM7qrt3aCbZoWVd68kzRqJNbEQn8RolS7Xjbx/1aksDETIqOK8hK3ayvoPSo
-         nMkw==
-X-Gm-Message-State: AOAM533iSzbd80k5ihJiBw05ASp32mtcRuR13PEr+Qh0bdLVhau3UGfN
-        9rpaTmavdPGAcmlSa2gaORP1uD1JNmIyk3Tz1IzHs582vukY7QLNpkRFuC7RdLmlVg5PJG33YMZ
-        AHvZm3ddD+U2tNxO5cT0fbiC3f6xIXO2wcFHy
-X-Received: by 2002:a17:906:58d5:: with SMTP id e21mr2717198ejs.540.1639748075941;
-        Fri, 17 Dec 2021 05:34:35 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzfCuAPtEgHBTr7q3MGwDVaFX/Fg0EWtDvOdr4UgrWss0B7EdpNUGmjSmVfPvodIYtapCLIGbKSCqQwhQUojqQ=
-X-Received: by 2002:a17:906:58d5:: with SMTP id e21mr2717185ejs.540.1639748075730;
- Fri, 17 Dec 2021 05:34:35 -0800 (PST)
+        bh=8ZE5+T9FIA/LsIMrDz4C7mJhlzQ37jyiywuLPjaXdaE=;
+        b=OL/cEdgP+7fyz5LIo8YXkX5T5S3hP2wxjCVESSWvMAJGxJlrLTQk93FsAIKTmhrZme
+         w4AIfC334xdYiXJy3ZgsLb2USCB2HSS50+NwmKpXpupNfbJt50O4o92i7eOIYlLiBuX5
+         abg/iMbY7xvDu3pkEzYhmSoq2Zqu6hElsH+cVksSD0gA13cWaJkkBrviMTJ8unGA2I4Q
+         b3azp19cHG1dtnKRT/9BaGopkfrZQhk8eH6CF40HCzxPPyMeUocUM7yrkGdrRF3A5js4
+         dexc8DPAH9rltnwLH9C1kJzY8aZSzhBNPbOs+VSE1Ayq0YaUE++s5CeDdniDruAM8vVD
+         ra0Q==
+X-Gm-Message-State: AOAM530gVeIY8+Zwy85uYMctfg60mkqfiI5lBS5bAKKR2gLV8jOx+hYg
+        2J+J9Y6qimoayBlFR+NolDkBvsdckoN8L04+DhVojFPNe7EtoyCHi9x+nTgrsc/bGcKeM1w0CYm
+        koi9Wq7dmOVh8kNqoz7IusPv9Sb6VLgFcXLLY
+X-Received: by 2002:a17:906:58d5:: with SMTP id e21mr2721157ejs.540.1639748150915;
+        Fri, 17 Dec 2021 05:35:50 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJxoiXFGOR4vgjI+ETFq9+5QOetUKZgoPnG9oL5+z8WVRV0/CPuIW6GrT+M51W3JOyXloa+NW5h0jgzKL/ll9Ps=
+X-Received: by 2002:a17:906:58d5:: with SMTP id e21mr2721144ejs.540.1639748150663;
+ Fri, 17 Dec 2021 05:35:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20211217113507.76f852f2@canb.auug.org.au> <CALF+zO=zDrRzPkpgjRQNYbxQ8j3qNVJjo9Ub=tCqFtT32sr-KQ@mail.gmail.com>
- <1957083.1639746671@warthog.procyon.org.uk>
-In-Reply-To: <1957083.1639746671@warthog.procyon.org.uk>
+References: <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk>
+ <163967182112.1823006.7791504655391213379.stgit@warthog.procyon.org.uk>
+ <CALF+zOkvC7kZ9LFQyjsRduQq+-gmaD4bLWc7H=AtVi6=NuC_dA@mail.gmail.com> <1958026.1639747261@warthog.procyon.org.uk>
+In-Reply-To: <1958026.1639747261@warthog.procyon.org.uk>
 From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Fri, 17 Dec 2021 08:33:59 -0500
-Message-ID: <CALF+zOnZ4v7DaZ6ymh28MPeeDYDLg06mWKxhB0xOVE2P8LGZ+w@mail.gmail.com>
-Subject: Re: linux-next: manual merge of the nfs-anna tree with the fscache tree
+Date:   Fri, 17 Dec 2021 08:35:14 -0500
+Message-ID: <CALF+zOnerPWd7wYD0sC_v8rTeN0KHgP2abkDWWVGLr4QVrbSzg@mail.gmail.com>
+Subject: Re: [PATCH v3 63/68] nfs: Convert to new fscache volume/cookie API
 To:     David Howells <dhowells@redhat.com>
-Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Trond Myklebust <trondmy@gmail.com>,
-        NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     linux-cachefs <linux-cachefs@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Dec 17, 2021 at 8:11 AM David Howells <dhowells@redhat.com> wrote:
+On Fri, Dec 17, 2021 at 8:21 AM David Howells <dhowells@redhat.com> wrote:
 >
 > David Wysochanski <dwysocha@redhat.com> wrote:
 >
-> > Anna, feel free to drop these from your tree to avoid the conflicts
-> > with the rest of your tree and dhowells fscache-rewrite patchset.
+> > >
+> > >  (4) fscache_enable/disable_cookie() have been removed.
+> > >
+> > >      Call fscache_use_cookie() and fscache_unuse_cookie() when a file is
+> > >      opened or closed to prevent a cache file from being culled and to keep
+> > >      resources to hand that are needed to do I/O.
+> > >
+> > >      Unuse the cookie when a file is opened for writing.  This is gated by
+> > >      the NFS_INO_FSCACHE flag on the nfs_inode.
+> > >
+> > >      A better way might be to invalidate it with FSCACHE_INVAL_DIO_WRITE
+> > >      which will keep it unused until all open files are closed.
+> > >
+> >
+> > Comment still out of date here, reference
+> > https://marc.info/?l=linux-nfs&m=163922984027745&w=4
 >
-> Would it help to take some bits through my tree?  (Or, at least, alter my NFS
-> patches)
+> Okay, how about:
+>
+>  (4) fscache_enable/disable_cookie() have been removed.
+>
+>      Call fscache_use_cookie() and fscache_unuse_cookie() when a file is
+>      opened or closed to prevent a cache file from being culled and to keep
+>      resources to hand that are needed to do I/O.
+>
+>      If a file is opened for writing, we invalidate it with
+>      FSCACHE_INVAL_DIO_WRITE in lieu of doing writeback to the cache,
+>      thereby making it cease caching until all currently open files are
+>      closed.  This should give the same behaviour as the uptream code.
+>      Making the cache store local modifications isn't straightforward for
+>      NFS, so that's left for future patches.
 >
 
-I think so.  If Anna is ok with it, she can drop them from her tree.
-And I'm looking at these 7 patches to see which ones make sense on top
-of your tree (the v3 patches you just sent).
-
-Mainly my patches were cleanups, plus converting from dfprintk to tracepoints.
-Some patches may no longer be needed.
-As one example, this may be better done with tracepoints inside
-__fscache_use_cookie and __fscache_unuse_cookie
-
-3b779545aa01 ("NFS: Convert NFS fscache enable/disable dfprintks to
-tracepoints")
+Yes, that is more accurate.
 
