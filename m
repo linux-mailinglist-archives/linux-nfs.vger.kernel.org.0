@@ -2,87 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 39DEC4795B0
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 21:44:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 161A14795CE
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 21:55:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240909AbhLQUoH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 15:44:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:33704 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231770AbhLQUoG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 15:44:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1639773846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HhXCW/gkgebaf8J387KILDsdSIH5KpfDKz809CKCWyo=;
-        b=eft0JoXDVzKrDmpkVzFwj8Ui1tuQEdzj8oWdk5ugmKhUzdHRTPzAvUC6q1hPg+XRMmGF17
-        tm8FGZC3PfjlE7aakh6O6KY6e8Z87X8J/h+PnXTneCllIKj+pPbj+RtPF2zsx/UKvJpltm
-        t2aN6AYl81JiE3dPOGVCOoZ4W718nUY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-473-r3psBnitNDePrXJsjLMkbA-1; Fri, 17 Dec 2021 15:44:02 -0500
-X-MC-Unique: r3psBnitNDePrXJsjLMkbA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S237279AbhLQUzC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 15:55:02 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:40046 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234597AbhLQUzB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 15:55:01 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 64B781006AA2;
-        Fri, 17 Dec 2021 20:43:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 97E16610AE;
-        Fri, 17 Dec 2021 20:43:49 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <310b791fc8afde2a108af4eb06bbe678f4141fac.camel@kernel.org>
-References: <310b791fc8afde2a108af4eb06bbe678f4141fac.camel@kernel.org> <163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk> <163967106467.1823006.6790864931048582667.stgit@warthog.procyon.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 18/68] fscache: Implement cookie user counting and resource pinning
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77340623AA
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 20:55:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80C9BC36AE5;
+        Fri, 17 Dec 2021 20:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1639774500;
+        bh=XMjgZvkiHJrooydYRiWDd0QzZhLLk7tiOf/0TKkXaHE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=StIHM9e2TyIulGXQl0zp6n03QzOugUPTz0FJJB9FJZhyi0X7HwIADaTddqpBLdhQB
+         6AfP4pfqGkDnIthHxmmRCYpcW+HR5GjHnm9uMKB1vLKkSveVKYYWjI0nfLcIEh5pAA
+         5mJY0PwTt949K/WaeRL3lxkLygtZD+nxPuFPUI68Aj04q7oaK1Xtyfxqx/X7RFEzRV
+         JnK6ry9mqDjPad1J7zEUd1U35weRHmwpUCOADNjYXbgx3jlTvkl3pMqxmQvBFqITTy
+         Lo9kFYJl5Lz3KIoUjYklggo2ohsg3sJobqJeAV0NAM7wD1ZrjrfIj2fbILblTedDZU
+         2iMSfchD2ieTw==
+From:   trondmy@kernel.org
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/8] Support btime and other NFSv4 specific attributes
+Date:   Fri, 17 Dec 2021 15:48:46 -0500
+Message-Id: <20211217204854.439578-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.33.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2084363.1639773828.1@warthog.procyon.org.uk>
-Date:   Fri, 17 Dec 2021 20:43:48 +0000
-Message-ID: <2084364.1639773828@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> wrote:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-> > +unsigned int fscache_lru_cookie_timeout = 10 * HZ;
-> >  
-> 
-> Looks like it only pops after 10s? That's a bit more than the "couple of
-> seconds" mentioned in the changelog. In fact, that seems like quite a
-> long time.
-> 
-> Did you arrive at this value empirically somehow?
+NFSv4 has support for a number of extra attributes that are of interest
+to Samba when it is used to re-export a filesystem to Windows clients.
+Aside from the btime, which is of interest in statx(), Windows clients
+have an interest in determining the status of the 'hidden', and 'system'
+flags.
+Backup programs want to read the 'archive' flags and the 'time backup'
+attribute.
+Finally, the 'offline' flag can tell whether or not a file needs to be
+staged by an HSM system before it can be read or written to.
 
-It was 2s originally, but I upped for some reason I don't remember.  I've left
-it as it seems to work, but it is arbitrary.  I should make this configurable
-perhaps and/or maybe make it based on the number of cookies on the LRU since
-the number of open files is what matters.
+The patch series also adds an ioctl() to allow userspace retrieval and
+setting of these attributes where appropriate. It also adds an ioctl()
+to allow retrieval of the raw NFSv4 ACCESS information, to allow more
+fine grained determination of the user's access rights to a file or
+directory. All of this information is of use for Samba.
 
-I don't have a good heuristic, so I'll just fix the commit message for now.
+Anne Marie Merritt (3):
+  nfs: Add timecreate to nfs inode
+  nfs: Add 'archive', 'hidden' and 'system' fields to nfs inode
+  nfs: Add 'time backup' to nfs inode
 
-David
+Richard Sharpe (1):
+  NFS: Support statx_get and statx_set ioctls
+
+Trond Myklebust (4):
+  NFS: Expand the type of nfs_fattr->valid
+  NFS: Return the file btime in the statx results when appropriate
+  NFSv4: Support the offline bit
+  NFSv4: Add an ioctl to allow retrieval of the NFS raw ACCESS mask
+
+ fs/nfs/dir.c              |  71 ++---
+ fs/nfs/getroot.c          |   3 +-
+ fs/nfs/inode.c            | 147 +++++++++-
+ fs/nfs/internal.h         |  10 +
+ fs/nfs/nfs3proc.c         |   1 +
+ fs/nfs/nfs4_fs.h          |  31 +++
+ fs/nfs/nfs4file.c         | 550 ++++++++++++++++++++++++++++++++++++++
+ fs/nfs/nfs4proc.c         | 175 +++++++++++-
+ fs/nfs/nfs4trace.h        |   8 +-
+ fs/nfs/nfs4xdr.c          | 240 +++++++++++++++--
+ fs/nfs/nfstrace.c         |   5 +
+ fs/nfs/nfstrace.h         |   9 +-
+ fs/nfs/proc.c             |   1 +
+ include/linux/nfs4.h      |   1 +
+ include/linux/nfs_fs.h    |  15 ++
+ include/linux/nfs_fs_sb.h |   2 +-
+ include/linux/nfs_xdr.h   |  80 ++++--
+ include/uapi/linux/nfs.h  | 101 +++++++
+ 18 files changed, 1356 insertions(+), 94 deletions(-)
+
+-- 
+2.33.1
 
