@@ -2,129 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 76A1F4780FD
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 00:54:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E642478161
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 01:35:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbhLPXyh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 16 Dec 2021 18:54:37 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:56504 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbhLPXyg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 18:54:36 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        id S230435AbhLQAfM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Dec 2021 19:35:12 -0500
+Received: from gandalf.ozlabs.org ([150.107.74.76]:34379 "EHLO
+        gandalf.ozlabs.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230354AbhLQAfM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Dec 2021 19:35:12 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C4E1B1F37F;
-        Thu, 16 Dec 2021 23:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1639698875; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UN33ikAoXajq5CI0zBofFyR8XobeBM2LQz3kaqJLOi8=;
-        b=MMSyLL6EF220adA5CA7TM22/UFSkJZQp7lQ587G2eUT03U+MWSVZSJyHVvp8XRqgvDsAtw
-        XA+OKQsqNAtxoMxbnWkGTNbrzvSlwjaLb3+NhHC8ivAno2ISM0cBHfsW0lUnJ7McAof59g
-        VvXnaleXzF5dNuLkqYvN4cgISEnzPDQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1639698875;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UN33ikAoXajq5CI0zBofFyR8XobeBM2LQz3kaqJLOi8=;
-        b=typf5Kg/zxn17ZRHbU5b5gPIy954GXSE/v+Cgz6k3Ej6zydN26iNuVGaNYCcRxa8wo7Pu+
-        3xBdXpDQJ8itDmBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6180A13EFD;
-        Thu, 16 Dec 2021 23:54:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 0EWWB7jRu2EXXAAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 16 Dec 2021 23:54:32 +0000
-Subject: [PATCH 18/18] NFS: swap-out must always use STABLE writes.
-From:   NeilBrown <neilb@suse.de>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mel Gorman <mgorman@suse.de>,
-        Christoph Hellwig <hch@infradead.org>,
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4JFVPT5Xlcz4xd4;
+        Fri, 17 Dec 2021 11:35:08 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+        s=201702; t=1639701310;
+        bh=f59MqEjdpDiaMSk9feD9W71l2ca5f0HhNgFwo3sFh1o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=qpOlxGTscwSR+ICoPqjUU4zTxI4JFFa6AGkR7Xf1yE3E6TVkrtzshSMA97DQLr6l8
+         fMfVnYS6FTgokvhEVLBLHPrNDBNjSMJTRzLkxgNXhbJvmYmpqVV2lpWF0VplO3lLpR
+         r3GO2+gLlZggDc77YIS8B3dRpAh8jwGccGc7UdCmXYHn9zm9K0IeHrQ+NfIPefnaLp
+         2Gp/+k/bPMwjYHTHHrrTWV24yjS2k4plYcTuVYdWC2Gc+hiaWAKCO9qy5MBldF5jlc
+         ABGvNhDHO8DYwh9cas4je+pf2PD91WqnIECLeTBhhL9SYlXN4QZ04HulMtm7v0cMuo
+         lVMDKR6ih5vkQ==
+Date:   Fri, 17 Dec 2021 11:35:07 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>,
         David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 17 Dec 2021 10:48:23 +1100
-Message-ID: <163969850347.20885.5566025433915169963.stgit@noble.brown>
-In-Reply-To: <163969801519.20885.3977673503103544412.stgit@noble.brown>
-References: <163969801519.20885.3977673503103544412.stgit@noble.brown>
-User-Agent: StGit/0.23
+Cc:     Dave Wysochanski <dwysocha@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: manual merge of the nfs-anna tree with the fscache tree
+Message-ID: <20211217113507.76f852f2@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/9suRLOcL.ahdpGHmrQBnKrn";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The commit handling code is not safe against memory-pressure deadlocks
-when writing to swap.  In particular, nfs_commitdata_alloc() blocks
-indefinitely waiting for memory, and this can consume all available
-workqueue threads.
+--Sig_/9suRLOcL.ahdpGHmrQBnKrn
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-swap-out most likely uses STABLE writes anyway as COND_STABLE indicates
-that a stable write should be used if the write fits in a single
-request, and it normally does.  However if we ever swap with a small
-wsize, or gather unusually large numbers of pages for a single write,
-this might change.
+Hi all,
 
-For safety, make it explicit in the code that direct writes used for swap
-must always use FLUSH_COND_STABLE.
+Today's linux-next merge of the nfs-anna tree got conflicts in:
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/nfs/direct.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+  fs/nfs/fscache.c
+  fs/nfs/fscache.h
+  fs/nfs/fscache-index.c
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index eeff1b4e1a7c..1317465150a6 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -790,7 +790,7 @@ static const struct nfs_pgio_completion_ops nfs_direct_write_completion_ops = {
-  */
- static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 					       struct iov_iter *iter,
--					       loff_t pos)
-+					       loff_t pos, int ioflags)
- {
- 	struct nfs_pageio_descriptor desc;
- 	struct inode *inode = dreq->inode;
-@@ -798,7 +798,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	size_t requested_bytes = 0;
- 	size_t wsize = max_t(size_t, NFS_SERVER(inode)->wsize, PAGE_SIZE);
- 
--	nfs_pageio_init_write(&desc, inode, FLUSH_COND_STABLE, false,
-+	nfs_pageio_init_write(&desc, inode, ioflags, false,
- 			      &nfs_direct_write_completion_ops);
- 	desc.pg_dreq = dreq;
- 	get_dreq(dreq);
-@@ -904,6 +904,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter,
- 	struct nfs_direct_req *dreq;
- 	struct nfs_lock_context *l_ctx;
- 	loff_t pos, end;
-+	int ioflags = swap ? FLUSH_COND_STABLE : FLUSH_STABLE;
- 
- 	dfprintk(FILE, "NFS: direct write(%pD2, %zd@%Ld)\n",
- 		file, iov_iter_count(iter), (long long) iocb->ki_pos);
-@@ -946,7 +947,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter,
- 	if (!swap)
- 		nfs_start_io_direct(inode);
- 
--	requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
-+	requested = nfs_direct_write_schedule_iovec(dreq, iter, pos, ioflags);
- 
- 	if (mapping->nrpages) {
- 		invalidate_inode_pages2_range(mapping,
+between commit:
 
+  882ff66585ec ("nfs: Convert to new fscache volume/cookie API")
 
+from the fscache tree and commits:
+
+  e89edabcb3d4 ("NFS: Remove remaining usages of NFSDBG_FSCACHE")
+  0d20bd7faac9 ("NFS: Cleanup usage of nfs_inode in fscache interface and h=
+andle i_size properly")
+  4a0574909596 ("NFS: Rename fscache read and write pages functions")
+  3b779545aa01 ("NFS: Convert NFS fscache enable/disable dfprintks to trace=
+points")
+  b9077ca60a13 ("NFS: Replace dfprintks with tracepoints in fscache read an=
+d write page functions")
+  416de7e7eeb6 ("NFS: Remove remaining dfprintks related to fscache cookies=
+")
+  fcb692b98976 ("NFS: Use nfs_i_fscache() consistently within NFS fscache c=
+ode")
+
+from the nfs-anna tree.
+
+I had no idea how to fix this all up, so I just dropped the nfs-anna
+tree for today.   Please get together and coordinate thses changes.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9suRLOcL.ahdpGHmrQBnKrn
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmG72zsACgkQAVBC80lX
+0GxTtQgAlXs/tim2HNpeEzj/e8+Jz9pCDPihLehMzRMomGS9i3oDZ9IHUAuYKex0
+NQkY57aOXQ3+VnqQAZh3ry9Fq7056tKZt6/pZz42wswHA9yroaPXDklNPV6G3xwx
+Rg+gNgkPsJj/IOiO27Lt+0NQ9p0o8MEUUCmSxQCWq4oZnQP4aPLsrChv9jAX2v8E
+N+OnJhzIPZYRnXEiyJU9uAM7O9qGZKHuN0rOXI1C0pZbvcKJLfj1fPiBLIItuTrE
+yBPgtCzM1dNEkkpPBZFLt043o6ckF442t1zRAanC1CqeVn/q9PcgZ+mMltBRfIbK
+DypTi5Nnv+5WixM0l6YI0cTv24hkGw==
+=sgBE
+-----END PGP SIGNATURE-----
+
+--Sig_/9suRLOcL.ahdpGHmrQBnKrn--
