@@ -2,46 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7627B4796A3
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 22:57:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 838F04796A6
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 22:57:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230364AbhLQV5R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 16:57:17 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:48624 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230314AbhLQV5Q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 16:57:16 -0500
+        id S230398AbhLQV5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 16:57:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230399AbhLQV5R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 16:57:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C671C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 13:57:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4CC72623EA
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DC5B5623EF
         for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 21:57:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62FE4C36AE5;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF408C36AE2;
         Fri, 17 Dec 2021 21:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1639778235;
-        bh=Qoe4yenVzXa2m1jsiUD/mTu8Gvks+yzrcxCq6ohZs5U=;
+        s=k20201202; t=1639778236;
+        bh=Jiy0uxdc8XYXeU3WQ1Tp6LFVSfFJNYjZhenKirx8r/8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QMd6LyLF+88zKv3QMPTq2meLnhDyqv1kXWjvtgq3I1lIDWx4C55+Nt1Q7w2XPnU1W
-         O4mHNV8RMfBGVc+XFZuijjKvCcp7Db6/0K8zpGCapkoCAkn2TLn5wQyUWctyk0EEdi
-         E4RSMiJw4CEKM/a9qXOVZUPMZidxfRVFau6D6yNZRHNWy4pEbA9X5xt1aCEOSwEGGP
-         IEZHKLXptVsxtU3qim9KtFOMiFT605GaIn7O7fYJ5HSiuftYLoQ2v3MJRe0Vmf8k6D
-         pKiooRZBHBqZ71YBiwM9DYbpcQAwfMTLhClr53e5Yc1PvTR3ycpgTJU/fUznczp3Nn
-         Gf8myaAEkM1lw==
+        b=FThjeW0KKONYSAxKL3yn/dW5jjLq+l+MdR0f2KSpaPT9IImIM4TvB7GL/d6t/BZ0X
+         OAQLUIfJ9sfRI1pWznfPF1b0R8RzwhqN5ztB68xZtlNGWrkhsfwfSaw/3+M6i2ALNx
+         mYRQQn5IQUuwQFBPOVBuOFEzMGoH6TGG5Y2jwbBFGc4BeSFLbiVKq5zGASJdr8+giP
+         UdA3Hx5eTJwg2NkfFDT6TsKzd1Qmi6FqSvkrrlrkD6RVJm7TJ3YcqpDYxQBzItjV8I
+         pa9zBI3fYFjEaa84wvzJjVAtL64AmdblnIYwlKoGSmBLAKjWLf/ynBOLFzMSs9eaft
+         ZTDfMTzC/fZQA==
 From:   trondmy@kernel.org
 To:     Chuck Lever <chuck.lever@oracle.com>,
         "J. Bruce Fields" <bfields@redhat.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 5/9] nfsd: NFSv3 should allow zero length writes
-Date:   Fri, 17 Dec 2021 16:50:42 -0500
-Message-Id: <20211217215046.40316-6-trondmy@kernel.org>
+Subject: [PATCH 6/9] nfsd: Add a tracepoint for errors in nfsd4_clone_file_range()
+Date:   Fri, 17 Dec 2021 16:50:43 -0500
+Message-Id: <20211217215046.40316-7-trondmy@kernel.org>
 X-Mailer: git-send-email 2.33.1
-In-Reply-To: <20211217215046.40316-5-trondmy@kernel.org>
+In-Reply-To: <20211217215046.40316-6-trondmy@kernel.org>
 References: <20211217215046.40316-1-trondmy@kernel.org>
  <20211217215046.40316-2-trondmy@kernel.org>
  <20211217215046.40316-3-trondmy@kernel.org>
  <20211217215046.40316-4-trondmy@kernel.org>
  <20211217215046.40316-5-trondmy@kernel.org>
+ <20211217215046.40316-6-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -50,42 +54,148 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-According to RFC1813: "If count is 0, the WRITE will succeed
-and return a count of 0, barring errors due to permissions checking."
+Since a clone error commit can cause the boot verifier to change,
+we should trace those errors.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfsd/vfs.c    | 3 +++
- net/sunrpc/svc.c | 2 +-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4proc.c |  2 +-
+ fs/nfsd/trace.h    | 50 ++++++++++++++++++++++++++++++++++++++++++++++
+ fs/nfsd/vfs.c      | 18 +++++++++++++++--
+ fs/nfsd/vfs.h      |  3 ++-
+ 4 files changed, 69 insertions(+), 4 deletions(-)
 
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index 486c5dba4b65..53c2a8f0d627 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -1102,7 +1102,7 @@ nfsd4_clone(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		goto out;
+ 
+-	status = nfsd4_clone_file_range(src, clone->cl_src_pos,
++	status = nfsd4_clone_file_range(rqstp, src, clone->cl_src_pos,
+ 			dst, clone->cl_dst_pos, clone->cl_count,
+ 			EX_ISSYNC(cstate->current_fh.fh_export));
+ 
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index f1e0d3c51bc2..001444d9829d 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -413,6 +413,56 @@ TRACE_EVENT(nfsd_dirent,
+ 	)
+ )
+ 
++DECLARE_EVENT_CLASS(nfsd_copy_err_class,
++	TP_PROTO(struct svc_rqst *rqstp,
++		 struct svc_fh	*src_fhp,
++		 loff_t		src_offset,
++		 struct svc_fh	*dst_fhp,
++		 loff_t		dst_offset,
++		 u64		count,
++		 int		status),
++	TP_ARGS(rqstp, src_fhp, src_offset, dst_fhp, dst_offset, count, status),
++	TP_STRUCT__entry(
++		__field(u32, xid)
++		__field(u32, src_fh_hash)
++		__field(loff_t, src_offset)
++		__field(u32, dst_fh_hash)
++		__field(loff_t, dst_offset)
++		__field(u64, count)
++		__field(int, status)
++	),
++	TP_fast_assign(
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++		__entry->src_fh_hash = knfsd_fh_hash(&src_fhp->fh_handle);
++		__entry->src_offset = src_offset;
++		__entry->dst_fh_hash = knfsd_fh_hash(&dst_fhp->fh_handle);
++		__entry->dst_offset = dst_offset;
++		__entry->count = count;
++		__entry->status = status;
++	),
++	TP_printk("xid=0x%08x src_fh_hash=0x%08x src_offset=%lld "
++			"dst_fh_hash=0x%08x dst_offset=%lld "
++			"count=%llu status=%d",
++		  __entry->xid, __entry->src_fh_hash, __entry->src_offset,
++		  __entry->dst_fh_hash, __entry->dst_offset,
++		  (unsigned long long)__entry->count,
++		  __entry->status)
++)
++
++#define DEFINE_NFSD_COPY_ERR_EVENT(name)		\
++DEFINE_EVENT(nfsd_copy_err_class, nfsd_##name,		\
++	TP_PROTO(struct svc_rqst	*rqstp,		\
++		 struct svc_fh		*src_fhp,	\
++		 loff_t			src_offset,	\
++		 struct svc_fh		*dst_fhp,	\
++		 loff_t			dst_offset,	\
++		 u64			count,		\
++		 int			status),	\
++	TP_ARGS(rqstp, src_fhp, src_offset, dst_fhp, dst_offset, \
++		count, status))
++
++DEFINE_NFSD_COPY_ERR_EVENT(clone_file_range_err);
++
+ #include "state.h"
+ #include "filecache.h"
+ #include "vfs.h"
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 4d57befdac6e..38fdfcbb079e 100644
+index 38fdfcbb079e..e761b2eff415 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -969,6 +969,9 @@ nfsd_vfs_write(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
+@@ -40,6 +40,7 @@
+ #include "../internal.h"
+ #include "acl.h"
+ #include "idmap.h"
++#include "xdr4.h"
+ #endif /* CONFIG_NFSD_V4 */
  
- 	trace_nfsd_write_opened(rqstp, fhp, offset, *cnt);
+ #include "nfsd.h"
+@@ -516,8 +517,15 @@ __be32 nfsd4_set_nfs4_label(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ }
+ #endif
  
-+	if (!*cnt)
-+		return nfs_ok;
+-__be32 nfsd4_clone_file_range(struct nfsd_file *nf_src, u64 src_pos,
+-		struct nfsd_file *nf_dst, u64 dst_pos, u64 count, bool sync)
++static struct nfsd4_compound_state *nfsd4_get_cstate(struct svc_rqst *rqstp)
++{
++	return &((struct nfsd4_compoundres *)rqstp->rq_resp)->cstate;
++}
 +
- 	if (sb->s_export_op)
- 		exp_op_flags = sb->s_export_op->flags;
- 
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index a3bbe5ce4570..d1ccf37a4588 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -1692,7 +1692,7 @@ unsigned int svc_fill_write_vector(struct svc_rqst *rqstp, struct page **pages,
- 	 * entirely in rq_arg.pages. In this case, @first is empty.
- 	 */
- 	i = 0;
--	if (first->iov_len) {
-+	if (first->iov_len || !total) {
- 		vec[i].iov_base = first->iov_base;
- 		vec[i].iov_len = min_t(size_t, total, first->iov_len);
- 		total -= vec[i].iov_len;
++__be32 nfsd4_clone_file_range(struct svc_rqst *rqstp,
++		struct nfsd_file *nf_src, u64 src_pos,
++		struct nfsd_file *nf_dst, u64 dst_pos,
++		u64 count, bool sync)
+ {
+ 	struct file *src = nf_src->nf_file;
+ 	struct file *dst = nf_dst->nf_file;
+@@ -541,6 +549,12 @@ __be32 nfsd4_clone_file_range(struct nfsd_file *nf_src, u64 src_pos,
+ 		if (!status)
+ 			status = commit_inode_metadata(file_inode(src));
+ 		if (status < 0) {
++			trace_nfsd_clone_file_range_err(rqstp,
++					&nfsd4_get_cstate(rqstp)->save_fh,
++					src_pos,
++					&nfsd4_get_cstate(rqstp)->current_fh,
++					dst_pos,
++					count, status);
+ 			nfsd_reset_boot_verifier(net_generic(nf_dst->nf_net,
+ 						 nfsd_net_id));
+ 			ret = nfserrno(status);
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index 6edae1b9a96e..3dba6397d452 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -57,7 +57,8 @@ __be32          nfsd4_set_nfs4_label(struct svc_rqst *, struct svc_fh *,
+ 		    struct xdr_netobj *);
+ __be32		nfsd4_vfs_fallocate(struct svc_rqst *, struct svc_fh *,
+ 				    struct file *, loff_t, loff_t, int);
+-__be32		nfsd4_clone_file_range(struct nfsd_file *nf_src, u64 src_pos,
++__be32		nfsd4_clone_file_range(struct svc_rqst *,
++				       struct nfsd_file *nf_src, u64 src_pos,
+ 				       struct nfsd_file *nf_dst, u64 dst_pos,
+ 				       u64 count, bool sync);
+ #endif /* CONFIG_NFSD_V4 */
 -- 
 2.33.1
 
