@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CC1B0478680
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 09:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98E16478851
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 11:03:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230407AbhLQIwG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 03:52:06 -0500
-Received: from mga11.intel.com ([192.55.52.93]:6659 "EHLO mga11.intel.com"
+        id S231980AbhLQKD0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 05:03:26 -0500
+Received: from mga02.intel.com ([134.134.136.20]:31526 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229893AbhLQIwG (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Dec 2021 03:52:06 -0500
+        id S231968AbhLQKDZ (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 17 Dec 2021 05:03:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1639731125; x=1671267125;
+  t=1639735405; x=1671271405;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=x+I5rE7VNY12BhYU+2TspOP4sX4P36nu1hjhpz7qMZc=;
-  b=Ooj/0FrQe9+mT/XJyQTKHKcBfx7UxZ+xDBWtrR8ek1szgI4gdaSU+jg/
-   miLUB0WxJo4VBt+s53u7LhMYk/YI68kXLrnPOVxHvIIV3Xn4BVs7PmVH1
-   qbFR8BEZZBJ/exthrrS7OPVVr/7Z9nBZz3fmSwL4WKlpSOyso6fYwoR9C
-   tRDysKTEpD0hNwMIKuW1wJX28mrkQv6eCa2c0QNP25H1kc8NoVc/HJZs3
-   W7+sWIXWOqmz+T3I1oALkNNTrmQmMnTRg/tz2i8g58dWr0Q/9v/TFHc87
-   nFx5fFDH6sBAf023Xii6sSF6l8v5USRJ9litWj/hMJFRE/QnYitFPNKW+
-   g==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="237253469"
+  bh=difKERNCUGT+yNj8Ji0RjwMEgrFy7uvw5aDaT8WIo6c=;
+  b=PVM1cPAHDHSDT8QzmYdiQDcHGnsqkt+M45g1nHYpZ2/H3Hl7LA1bLvzJ
+   G6B2DjEhqjpA9IKafQf482yKA0gPOpE1LF24bOYzCgsHLx29dBn5p17v/
+   HBEeH45aaJpT+VM7itnGRJ5tUgJ8NSqSstgzjUrNH+e8JMWFb1zlbeAvb
+   Zcmb/izIp9J57RiFTziXxtqA/KQNmcnY2Mhg1CxBd0QREH4dtK/D7FtGE
+   aC3dWKYn5lyZVvtiTOLB+OFl349Fe8FEx4imLtkuBnBm/D6EU/mxKUfyC
+   EfLhgPRFD9GI0yI3ThAEBZPLw5nA9InhUm19PuCM6JeDQ2N7JwveHjNV8
+   Q==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="227010841"
 X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="237253469"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 00:52:05 -0800
+   d="scan'208";a="227010841"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Dec 2021 02:03:20 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
-   d="scan'208";a="662788992"
+   d="scan'208";a="615512643"
 Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Dec 2021 00:52:00 -0800
+  by orsmga004.jf.intel.com with ESMTP; 17 Dec 2021 02:03:09 -0800
 Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1my8y8-0004VB-1I; Fri, 17 Dec 2021 08:52:00 +0000
-Date:   Fri, 17 Dec 2021 16:51:33 +0800
+        id 1myA4y-0004Yr-EB; Fri, 17 Dec 2021 10:03:08 +0000
+Date:   Fri, 17 Dec 2021 18:03:02 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     NeilBrown <neilb@suse.de>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
@@ -50,14 +50,13 @@ To:     NeilBrown <neilb@suse.de>,
 Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
         Linux Memory Management List <linux-mm@kvack.org>,
         linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 05/18] MM: reclaim mustn't enter FS for SWP_FS_OPS
- swap-space
-Message-ID: <202112171635.JUIRMzHQ-lkp@intel.com>
-References: <163969850295.20885.4255989535187500085.stgit@noble.brown>
+Subject: Re: [PATCH 02/18] MM: create new mm/swap.h header file.
+Message-ID: <202112171739.uSeLyZ1M-lkp@intel.com>
+References: <163969850279.20885.7172996032577523902.stgit@noble.brown>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <163969850295.20885.4255989535187500085.stgit@noble.brown>
+In-Reply-To: <163969850279.20885.7172996032577523902.stgit@noble.brown>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
@@ -69,94 +68,57 @@ Thank you for the patch! Yet something to improve:
 
 [auto build test ERROR on cifs/for-next]
 [also build test ERROR on axboe-block/for-next rostedt-trace/for-next linus/master v5.16-rc5]
-[cannot apply to trondmy-nfs/linux-next hnaz-mm/master mszeredi-vfs/overlayfs-next next-20211216]
+[cannot apply to trondmy-nfs/linux-next hnaz-mm/master next-20211216]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch]
 
 url:    https://github.com/0day-ci/linux/commits/NeilBrown/Repair-SWAP-over-NFS/20211217-075659
 base:   git://git.samba.org/sfrench/cifs-2.6.git for-next
-config: arm-randconfig-r006-20211216 (https://download.01.org/0day-ci/archive/20211217/202112171635.JUIRMzHQ-lkp@intel.com/config)
+config: hexagon-randconfig-r045-20211216 (https://download.01.org/0day-ci/archive/20211217/202112171739.uSeLyZ1M-lkp@intel.com/config)
 compiler: clang version 14.0.0 (https://github.com/llvm/llvm-project 9043c3d65b11b442226015acfbf8167684586cfa)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # install arm cross compiling tool for clang build
-        # apt-get install binutils-arm-linux-gnueabi
-        # https://github.com/0day-ci/linux/commit/a8e1b1ffec6ade1545df519d254eae0400b7ec37
+        # https://github.com/0day-ci/linux/commit/3dd9e64650d0340fd6469ba4f8abc183bb2eea15
         git remote add linux-review https://github.com/0day-ci/linux
         git fetch --no-tags linux-review NeilBrown/Repair-SWAP-over-NFS/20211217-075659
-        git checkout a8e1b1ffec6ade1545df519d254eae0400b7ec37
+        git checkout 3dd9e64650d0340fd6469ba4f8abc183bb2eea15
         # save the config file to linux build tree
         mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=hexagon SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All errors (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
->> mm/vmscan.c:1480:20: error: implicit declaration of function 'page_swap_info' [-Werror,-Wimplicit-function-declaration]
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ^
-   mm/vmscan.c:1480:20: note: did you mean 'swp_swap_info'?
-   include/linux/swap.h:487:40: note: 'swp_swap_info' declared here
-   static inline struct swap_info_struct *swp_swap_info(swp_entry_t entry)
-                                          ^
->> mm/vmscan.c:1480:42: error: member reference type 'int' is not a pointer
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ~~~~~~~~~~~~~~~~~~~~  ^
-   include/linux/compiler.h:216:28: note: expanded from macro 'data_race'
-           __unqual_scalar_typeof(({ expr; })) __v = ({                    \
-                                     ^~~~
-   include/linux/compiler_types.h:291:13: note: expanded from macro '__unqual_scalar_typeof'
-                   _Generic((x),                                           \
-                             ^
->> mm/vmscan.c:1480:20: error: implicit declaration of function 'page_swap_info' [-Werror,-Wimplicit-function-declaration]
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ^
->> mm/vmscan.c:1480:42: error: member reference type 'int' is not a pointer
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ~~~~~~~~~~~~~~~~~~~~  ^
-   include/linux/compiler.h:216:28: note: expanded from macro 'data_race'
-           __unqual_scalar_typeof(({ expr; })) __v = ({                    \
-                                     ^~~~
-   include/linux/compiler_types.h:298:15: note: expanded from macro '__unqual_scalar_typeof'
-                            default: (x)))
-                                      ^
->> mm/vmscan.c:1480:20: error: implicit declaration of function 'page_swap_info' [-Werror,-Wimplicit-function-declaration]
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ^
->> mm/vmscan.c:1480:42: error: member reference type 'int' is not a pointer
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                             ~~~~~~~~~~~~~~~~~~~~  ^
-   include/linux/compiler.h:218:3: note: expanded from macro 'data_race'
-                   expr;                                                   \
-                   ^~~~
->> mm/vmscan.c:1480:9: error: invalid argument type 'void' to unary expression
-           return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   7 errors generated.
+>> mm/memcontrol.c:5532:9: error: implicit declaration of function 'find_get_incore_page' [-Werror,-Wimplicit-function-declaration]
+           return find_get_incore_page(vma->vm_file->f_mapping,
+                  ^
+>> mm/memcontrol.c:5532:9: warning: incompatible integer to pointer conversion returning 'int' from a function with result type 'struct page *' [-Wint-conversion]
+           return find_get_incore_page(vma->vm_file->f_mapping,
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 warning and 1 error generated.
 
 
-vim +/page_swap_info +1480 mm/vmscan.c
+vim +/find_get_incore_page +5532 mm/memcontrol.c
 
-  1467	
-  1468	static bool test_may_enter_fs(struct page *page, gfp_t gfp_mask)
-  1469	{
-  1470		if (gfp_mask & __GFP_FS)
-  1471			return true;
-  1472		if (!PageSwapCache(page) || !(gfp_mask & __GFP_IO))
-  1473			return false;
-  1474		/* We can "enter_fs" for swap-cache with only __GFP_IO
-  1475		 * providing this isn't SWP_FS_OPS.
-  1476		 * ->flags can be updated non-atomicially (scan_swap_map_slots),
-  1477		 * but that will never affect SWP_FS_OPS, so the data_race
-  1478		 * is safe.
-  1479		 */
-> 1480		return !data_race(page_swap_info(page)->flags & SWP_FS_OPS);
-  1481	}
-  1482	
+90254a65833b67 Daisuke Nishimura       2010-05-26  5521  
+87946a72283be3 Daisuke Nishimura       2010-05-26  5522  static struct page *mc_handle_file_pte(struct vm_area_struct *vma,
+48384b0b76f366 Peter Xu                2021-11-05  5523  			unsigned long addr, pte_t ptent)
+87946a72283be3 Daisuke Nishimura       2010-05-26  5524  {
+87946a72283be3 Daisuke Nishimura       2010-05-26  5525  	if (!vma->vm_file) /* anonymous vma */
+87946a72283be3 Daisuke Nishimura       2010-05-26  5526  		return NULL;
+1dfab5abcdd404 Johannes Weiner         2015-02-11  5527  	if (!(mc.flags & MOVE_FILE))
+87946a72283be3 Daisuke Nishimura       2010-05-26  5528  		return NULL;
+87946a72283be3 Daisuke Nishimura       2010-05-26  5529  
+87946a72283be3 Daisuke Nishimura       2010-05-26  5530  	/* page is moved even if it's not RSS of this task(page-faulted). */
+aa3b189551ad8e Hugh Dickins            2011-08-03  5531  	/* shmem/tmpfs may report page out on swap: account for that too. */
+f5df8635c5a3c9 Matthew Wilcox (Oracle  2020-10-13 @5532) 	return find_get_incore_page(vma->vm_file->f_mapping,
+f5df8635c5a3c9 Matthew Wilcox (Oracle  2020-10-13  5533) 			linear_page_index(vma, addr));
+87946a72283be3 Daisuke Nishimura       2010-05-26  5534  }
+87946a72283be3 Daisuke Nishimura       2010-05-26  5535  
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
