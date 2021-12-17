@@ -2,251 +2,352 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 70235478546
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 07:49:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99082478568
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 08:10:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232239AbhLQGto (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 01:49:44 -0500
-Received: from mail-vi1eur05on2139.outbound.protection.outlook.com ([40.107.21.139]:10720
-        "EHLO EUR05-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229757AbhLQGtn (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Fri, 17 Dec 2021 01:49:43 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdxlREcOmjzEQDBwOynC4tC60RlhBdRSNd3lVvJmZDiPmZgepG3tGnR39ZA4Ws3A0cuobsRi7t2TM4NYE9EJ726ZGgdARgRC4MhzYUDQx1/VusDsvWFIXWeos5teuB9ubxwMnMQIf6KagpNf02d9BcfaTtlmVUz/s3tN0tjCeL4zQPa76HD43N7Gf9XaATUnWTE8S/nvCmLinCdreMtuKGPjRj8F+uMNyaO4llgYfeDNPcmHxoBvzh9SwNuysnctIb+8ofVYJ+1hvx0+66mG9p3DO7qBhjuImAJZOPcXiUBsDSTnt4Zs9hyzejFk13g8s9BvPhnWiD7PPi+dkK9+Ag==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LcQfSMXMXaNGvv84bfkYV9JzK7qfWrQQAwsVRZEwsaU=;
- b=KaST1VShAdOiHtqARTFnyL+9xx3akWhlqlAjDCv5gOEOWlVs0pzaiRUhq5BJ6g//KdPz1fWyHHyb9SqlYfLgNuJqy25qpmnFpuqQuQEWCo7iqpTec8fWaEqovvRJG7CsRkltRgSDspJl9/XPxZvMXEucQQG77wgUNrY6SaKuwRon9qmjJ6Dia2l+Ws/+epQ3tvvPf5oaeyS6nP+pbrwQa9GK9INHJX0oYD4ZE7cbfgJrHE4aywYTHMdXfabppGfNEQBrUu1lAE/+3nQh1038UyB2kpK1C6iC4wSftiS5YiURJuDveKDe/2JewRr8cIhk37dZJCCOZMsKKlOwQr//AQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LcQfSMXMXaNGvv84bfkYV9JzK7qfWrQQAwsVRZEwsaU=;
- b=BhoV0EabcIzh293MzQtaKq/SWm+RWjUFucYgXln+ozP6LWJDpKMhTHiONKywy1dt2X5JUS1FJsJ9elOo+sEbtYcdOSOeka3DFHH+mRCPBfYTkHrkVVgx3XZti/OnSFSWMmsnILxp8Gm1ukJC0J1hs0lTflHUz2AL7GBbnm8UoWE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=virtuozzo.com;
-Received: from DB9PR08MB6619.eurprd08.prod.outlook.com (2603:10a6:10:257::21)
- by DBBPR08MB6108.eurprd08.prod.outlook.com (2603:10a6:10:1f4::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.12; Fri, 17 Dec
- 2021 06:49:41 +0000
-Received: from DB9PR08MB6619.eurprd08.prod.outlook.com
- ([fe80::347f:d385:ec53:75aa]) by DB9PR08MB6619.eurprd08.prod.outlook.com
- ([fe80::347f:d385:ec53:75aa%7]) with mapi id 15.20.4801.015; Fri, 17 Dec 2021
- 06:49:41 +0000
-From:   Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH] nfsd4: add refcount for nfsd4_blocked_lock
-To:     Bruce Fields <bfields@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
-        "Denis V. Lunev" <den@virtuozzo.com>,
-        Cyrill Gorcunov <gorcunov@virtuozzo.com>,
-        Jeff Layton <jlayton@kernel.org>, kernel@openvz.org,
-        linux-nfs@vger.kernel.org
-References: <CAPL3RVGBN4SMCBbJcrdgpdZfsfb+AFiHiLhDOFmjkD0ua+XpNQ@mail.gmail.com>
-Message-ID: <943cfe47-d48a-4a55-3738-e93370160508@virtuozzo.com>
-Date:   Fri, 17 Dec 2021 09:49:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <CAPL3RVGBN4SMCBbJcrdgpdZfsfb+AFiHiLhDOFmjkD0ua+XpNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS9PR06CA0231.eurprd06.prod.outlook.com
- (2603:10a6:20b:45e::28) To DB9PR08MB6619.eurprd08.prod.outlook.com
- (2603:10a6:10:257::21)
+        id S233546AbhLQHKD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 02:10:03 -0500
+Received: from mga12.intel.com ([192.55.52.136]:61939 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229503AbhLQHKC (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 17 Dec 2021 02:10:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1639725002; x=1671261002;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ix1MLGs2iQBvH41yLtq1HDNUa2s5pR3C+iSNwiUOCsQ=;
+  b=W0/lrhkC/FZcMNY1LaE6NVIw7CcMqmT0sy8eHtVZeGS7ITDgmIexZFgk
+   mFgFBf/XUYzdfFoMzE5JwOcAt2aiNeszuNXPLuNcP9udic74kbwyKD3sE
+   FyYVUJd9U1Py/9cMR2kL35b6AvqQTrjQlxPf1YJ4YJgk1AAPSpARMvbjD
+   iYDjZpY7VDjX4wg6CM5X2ZQk6aDn7WhbheCzHZJj1jUPASrigXE0MSM+v
+   Yijp6BCXeLyg8x6Ru5a9DDS7/F1dk/cy3S1Cr1cgP5cNa6JTTggV2uzSh
+   mNy7jl1OAHd88ejYmHHphd1DYPrM76OiUm710jKLNwmjtNHB8MOjA7yeg
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10200"; a="219712095"
+X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
+   d="scan'208";a="219712095"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2021 23:10:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,213,1635231600"; 
+   d="scan'208";a="465029821"
+Received: from lkp-server02.sh.intel.com (HELO 9f38c0981d9f) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 16 Dec 2021 23:09:57 -0800
+Received: from kbuild by 9f38c0981d9f with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1my7NN-0004OD-49; Fri, 17 Dec 2021 07:09:57 +0000
+Date:   Fri, 17 Dec 2021 15:09:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/18] MM: submit multipage reads for SWP_FS_OPS
+ swap-space
+Message-ID: <202112171515.XWCl9bpF-lkp@intel.com>
+References: <163969850296.20885.16043920355602134308.stgit@noble.brown>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ba5d04e5-4a5f-41c8-f967-08d9c1296690
-X-MS-TrafficTypeDiagnostic: DBBPR08MB6108:EE_
-X-Microsoft-Antispam-PRVS: <DBBPR08MB6108F427C53D6E47E42169C5AA789@DBBPR08MB6108.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ihTEA3HFBGHWOwz2LcKsvSf2KFGKmuWpsntxigQY3M/e7v4oBdK/OMqEBpH0i65woUV0kVYWrrvyy3RlOauRkcYNEFXs8ZreIReH/p73uhCtNU/ZPTmcIngrFFwwF9Gsb1vB7XTOGzaAwIHTCSGNegWnPh4mqNmxNfXlNP7qm+nI+T30oRpg3BVsooUWpq/PnagFIWgTTg3GGkJFaVq89Z0MfUbLFpjxLXWWX2zdyAPtWP9uvWcAw3rhP+nePA4dv5lsfkOvMO/SUcJb4YxjaGEDQErM9gqsnsET+n2D5vsnHNSsZuu04M8yW0L9CArEZp1qtFZQkrNEVtvwsCLX2+FjgW0MpbvJewZAgucOUDw5VswyndbHxY+wtk+gGWuJND2RFcw4ecZkqxeq8u8JCOzH9Z+54lLxxWfOL2OM2Qsvy7wDagWrGEzsuTooag9/6UR3hxJwP4/CzW4eLH/eAQMrsfDv4hWV6VOtAfCFRdDeekSN1G45CoMVGjDB7isKMqHOYewbSRbC72Tmm8Q8tAeTkmlkbQMIKtEyvdZP8LZ0GOCMuEvbub3vdrCgVZfFkx/0b0r0u1elbiiaxB3hwgBTaJfIHBTAg6c1Lba9VyQ8yFqAhJCS4spfoQImbLPLJpNEDYtn85+38QOCIVWrxbbnkBNjhEOLN1HaGvWnP7/fy9t9SUU12Nc2U7o7sGtB9uMC7bg5Mc7UVO2+kplvUkaGrVZBFe1B0GDq1zo72SvbksN8x8s6FU/fhFCY+T5XMCv3PGYP0XzWq2Ap9lR6YA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB6619.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(5660300002)(6486002)(6512007)(2616005)(316002)(66946007)(66476007)(66556008)(38100700002)(8936002)(38350700002)(31696002)(4326008)(8676002)(2906002)(508600001)(83380400001)(31686004)(86362001)(36756003)(26005)(52116002)(110136005)(186003)(6506007)(54906003)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K1NmdGhDMlErZGlTbjZMdlFFREVIalVzN0lmTUlNQzIxSmFTK2ZzVzdETHFK?=
- =?utf-8?B?b1pNNnFKd1Q2VTBQWjVtOERiMGdPWHN3YzVUd3FvRkM3UGdmMWl2b0xFclBa?=
- =?utf-8?B?UzhQWE45K08yWkRyTEtnTDE5WGN4aXR4cE1xaFJkdTBUKzVMeTExbkwrRnE4?=
- =?utf-8?B?a2MxTFQreTRpazFQNUVaRFI1MnhEYzlONzEvMWtFMCtuWTFUeEE0VEpDYmor?=
- =?utf-8?B?ZlQybUNMajhmTmxVcjJNQnliTnNDcmlZakYyeDIxL1p5M20zV3E1azI0eTRu?=
- =?utf-8?B?dG9SYjY3K3pmcE1GWWd5eHRQeU4zbFRBdFhwZ2JjN1ZUamlMN0NNeXFTVWJ4?=
- =?utf-8?B?MkVFZW9EOU5mNVA1WnEwQStaWDZYTkw0YUdZWTZwMzQ4NkdISWtwTGRmd3Z1?=
- =?utf-8?B?UXVUMzBOZTBrOFJ0T0RUREtDUXY5UGxOSGJ0dStsYVloVGlmMFpnTU9rbTU5?=
- =?utf-8?B?c0xPNFlwYWh0VGoyaGkwbmJleUJzci9sZE5QR0lPR3dIQTlLTjZFUHNFS3FN?=
- =?utf-8?B?eEdsVERXaTlsVktPR2lBUjJyZkdIeDRCMDFJdnVhd0laMjZUYkpLamtsV0V0?=
- =?utf-8?B?Z1RCTHlhK1JxMTJzNkEzQ1lHdVdMQlVKdnZrUVpYOUxPMnRqSWM2MXgydGI3?=
- =?utf-8?B?Rlh6bWZCenpUVE9PNVloMGlieDJ5M2tnU0cvcGZXTlBFTjMxSGtTbUxRQWRm?=
- =?utf-8?B?a3dGVStGN2twaXBnUVZFRkcyeW92cXpGbzN4UzBDNEpFbWlkSkpaTnZhTlRv?=
- =?utf-8?B?SnZ3RUFIRVpDYWdXS2xRQURMZ1orOTFibGlEby9wSEFVbW15a3MxeEZKNlFE?=
- =?utf-8?B?SlN2WDR3NXc3N3M4U0JaUkNkTjMwMkFXaWx2NHVKSUkvVXlLQ3dqNTRIYXRI?=
- =?utf-8?B?RGNuaHpGOWNpckRLakNnU2c3TXExa0U2RS9Nc1pFUFhKcDhOYXMxZldvSVJa?=
- =?utf-8?B?NlcyR1R2RGpXSG9uY0hweVRyUWQwRnFhVEV6M1VValhjZkJ1WCt5bzcxa1NF?=
- =?utf-8?B?UzNoUFRxL2s4QkMzTUE0WWJrbzVhV0wyZ1ZBaHZNS25XMXN6UjR6a0Nldk8v?=
- =?utf-8?B?NmlDOE1HYU9GWmEvUmp1K3NwbmhmWjZlaldsR041OWgxSk14ejBSRWdYSmhH?=
- =?utf-8?B?a0M1VUhBUE1yRVg4ZmdjZnNxdk1CSDRYajgwTEhrQzJ6NzZRaFhRd0tzZTJw?=
- =?utf-8?B?SEpvcTZtYmpiRDdicDZOby9UR0ZqYnBOSnd6aldqY3A3OVFzRFlBOVhuYUF5?=
- =?utf-8?B?aWM3TTl5V2hVV0RqR1hEQjV6OHFiU2dWQ0lwam4zWlRISHZHd1ZnSlllMGF1?=
- =?utf-8?B?MytlWStXUlNybU5VbG8rVE1VZ3BKWDExNmtOTkRUd3NkdGkvenNCQisvTXZ2?=
- =?utf-8?B?Mzl2Z1VlTCtELzJhZEhSVElWOG5DR1owNFBnSGFOQ2FoTlpxME5PaEF3KzI0?=
- =?utf-8?B?bSswRHQvS1RsRTBhUVNuZHFVODI2eGhLTmE4V1ZRKzhmRnhlaXBSSC9PSnlD?=
- =?utf-8?B?dWxUNnJyMmtMTFlzSmpyckRZZjFVa3hldVhYWEF0a1cwT1BpbFZOSnA0TnUw?=
- =?utf-8?B?YWhTMXdOV05tNXBJQlJVS0FhbU9vc0t0QTJBOVdhZ29iUkd5czArRlJBc2JH?=
- =?utf-8?B?RXlEaWJYRjR4MzUwL3UyaHlVN3o0ejlUK1lJcFpESnYxRHhXd0J1TlpvOXox?=
- =?utf-8?B?dGVKbFRORHpQeXlJQXpGOG5iQTJldUpnc2orZjJRM0hMWm83VzRuS0ZiTFJm?=
- =?utf-8?B?MFpaVUgyZzRBck1uc0tQMFJCaHBFa1RlNThoYnRqK05wek50d1QwaE9NdXZG?=
- =?utf-8?B?KzI3L0oySHdBZXRRVkxPbnFLMWlMOUVFeXNWNEkrMlVPWExyWmJaR05ZU2Qx?=
- =?utf-8?B?MFcraVFyTnhpcnFrTnY2SVhkQ2RnbEVlRCtXZWhpRWFzTk4yVVRHUDBhaTFa?=
- =?utf-8?B?UGhZRzV0Vmd6c2hlNXRFbmhXYldwWVFmVmhHK25WNzFoaXBHY3BaTUxtbWFW?=
- =?utf-8?B?amxYd09wNFA2dVJueEpHeS9tbHVLUVlPTTkwdEllZFdnbWJCa1o0NXBwNFhG?=
- =?utf-8?B?WGNQdFdrdklyRG4zUmxBVGJURU1hZWdCQnQ0MmRxcmpDTXFCNy9HMnNyZFZ6?=
- =?utf-8?B?L25hb3piTHF3VDRRN2U3dk4rVjFiOXBuYkhpKzNoazVkN3J2MFBHT29ac1dM?=
- =?utf-8?Q?U3y54hwZpomLNSf2L96LhUk=3D?=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba5d04e5-4a5f-41c8-f967-08d9c1296690
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR08MB6619.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Dec 2021 06:49:40.9188
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cz8SVZO99iMVczn5C4/Dg/sO5nK3TATjqDevY3xmwez73kBsY3UiEQFKYFnts/uy1i3K3rUCc9qA4Sb4iAiL0g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6108
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <163969850296.20885.16043920355602134308.stgit@noble.brown>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nbl allocated in nfsd4_lock can be released by a several ways:
-directly in nfsd4_lock(), via nfs4_laundromat(), via another nfs
-command RELEASE_LOCKOWNER or via nfsd4_callback.
-This structure should be refcounted to be used and released correctly
-in all these cases.
+Hi NeilBrown,
 
-Refcount is initialized to 1 during allocation and is incremented
-when nbl is added into nbl_list/nbl_lru lists.
+Thank you for the patch! Yet something to improve:
 
-Usually nbl is linked into both lists together, so only one refcount
-is used for both lists.
+[auto build test ERROR on cifs/for-next]
+[also build test ERROR on axboe-block/for-next rostedt-trace/for-next linus/master v5.16-rc5]
+[cannot apply to trondmy-nfs/linux-next hnaz-mm/master mszeredi-vfs/overlayfs-next next-20211216]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-However nfsd4_lock() should keep in mind that nbl can be present
-in one of lists only. This can happen if nbl was handled already
-by nfs4_laundromat/nfsd4_callback/etc.
+url:    https://github.com/0day-ci/linux/commits/NeilBrown/Repair-SWAP-over-NFS/20211217-075659
+base:   git://git.samba.org/sfrench/cifs-2.6.git for-next
+config: nds32-allnoconfig (https://download.01.org/0day-ci/archive/20211217/202112171515.XWCl9bpF-lkp@intel.com/config)
+compiler: nds32le-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/d34716a962c31e9e0a6e40a702e581a02b7e29f7
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review NeilBrown/Repair-SWAP-over-NFS/20211217-075659
+        git checkout d34716a962c31e9e0a6e40a702e581a02b7e29f7
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=nds32 SHELL=/bin/bash
 
-Refcount is decremented if vfs_lock_file() returns FILE_LOCK_DEFERRED,
-because nbl can be handled already by nfs4_laundromat/nfsd4_callback/etc.
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-Refcount is not changed in find_blocked_lock() because of it reuses counter
-released after removing nbl from lists.
+All errors (new ones prefixed by >>):
 
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+   mm/memory.c: In function 'do_swap_page':
+>> mm/memory.c:3541:33: error: too many arguments to function 'swap_readpage'
+    3541 |                                 swap_readpage(page, true, NULL);
+         |                                 ^~~~~~~~~~~~~
+   In file included from mm/memory.c:88:
+   mm/swap.h:61:19: note: declared here
+      61 | static inline int swap_readpage(struct page *page, bool do_poll)
+         |                   ^~~~~~~~~~~~~
+
+
+vim +/swap_readpage +3541 mm/memory.c
+
+  3462	
+  3463	/*
+  3464	 * We enter with non-exclusive mmap_lock (to exclude vma changes,
+  3465	 * but allow concurrent faults), and pte mapped but not yet locked.
+  3466	 * We return with pte unmapped and unlocked.
+  3467	 *
+  3468	 * We return with the mmap_lock locked or unlocked in the same cases
+  3469	 * as does filemap_fault().
+  3470	 */
+  3471	vm_fault_t do_swap_page(struct vm_fault *vmf)
+  3472	{
+  3473		struct vm_area_struct *vma = vmf->vma;
+  3474		struct page *page = NULL, *swapcache;
+  3475		struct swap_info_struct *si = NULL;
+  3476		swp_entry_t entry;
+  3477		pte_t pte;
+  3478		int locked;
+  3479		int exclusive = 0;
+  3480		vm_fault_t ret = 0;
+  3481		void *shadow = NULL;
+  3482	
+  3483		if (!pte_unmap_same(vmf))
+  3484			goto out;
+  3485	
+  3486		entry = pte_to_swp_entry(vmf->orig_pte);
+  3487		if (unlikely(non_swap_entry(entry))) {
+  3488			if (is_migration_entry(entry)) {
+  3489				migration_entry_wait(vma->vm_mm, vmf->pmd,
+  3490						     vmf->address);
+  3491			} else if (is_device_exclusive_entry(entry)) {
+  3492				vmf->page = pfn_swap_entry_to_page(entry);
+  3493				ret = remove_device_exclusive_entry(vmf);
+  3494			} else if (is_device_private_entry(entry)) {
+  3495				vmf->page = pfn_swap_entry_to_page(entry);
+  3496				ret = vmf->page->pgmap->ops->migrate_to_ram(vmf);
+  3497			} else if (is_hwpoison_entry(entry)) {
+  3498				ret = VM_FAULT_HWPOISON;
+  3499			} else {
+  3500				print_bad_pte(vma, vmf->address, vmf->orig_pte, NULL);
+  3501				ret = VM_FAULT_SIGBUS;
+  3502			}
+  3503			goto out;
+  3504		}
+  3505	
+  3506		/* Prevent swapoff from happening to us. */
+  3507		si = get_swap_device(entry);
+  3508		if (unlikely(!si))
+  3509			goto out;
+  3510	
+  3511		delayacct_set_flag(current, DELAYACCT_PF_SWAPIN);
+  3512		page = lookup_swap_cache(entry, vma, vmf->address);
+  3513		swapcache = page;
+  3514	
+  3515		if (!page) {
+  3516			if (data_race(si->flags & SWP_SYNCHRONOUS_IO) &&
+  3517			    __swap_count(entry) == 1) {
+  3518				/* skip swapcache */
+  3519				page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
+  3520								vmf->address);
+  3521				if (page) {
+  3522					__SetPageLocked(page);
+  3523					__SetPageSwapBacked(page);
+  3524	
+  3525					if (mem_cgroup_swapin_charge_page(page,
+  3526						vma->vm_mm, GFP_KERNEL, entry)) {
+  3527						ret = VM_FAULT_OOM;
+  3528						goto out_page;
+  3529					}
+  3530					mem_cgroup_swapin_uncharge_swap(entry);
+  3531	
+  3532					shadow = get_shadow_from_swap_cache(entry);
+  3533					if (shadow)
+  3534						workingset_refault(page_folio(page),
+  3535									shadow);
+  3536	
+  3537					lru_cache_add(page);
+  3538	
+  3539					/* To provide entry to swap_readpage() */
+  3540					set_page_private(page, entry.val);
+> 3541					swap_readpage(page, true, NULL);
+  3542					set_page_private(page, 0);
+  3543				}
+  3544			} else {
+  3545				page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE,
+  3546							vmf);
+  3547				swapcache = page;
+  3548			}
+  3549	
+  3550			if (!page) {
+  3551				/*
+  3552				 * Back out if somebody else faulted in this pte
+  3553				 * while we released the pte lock.
+  3554				 */
+  3555				vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+  3556						vmf->address, &vmf->ptl);
+  3557				if (likely(pte_same(*vmf->pte, vmf->orig_pte)))
+  3558					ret = VM_FAULT_OOM;
+  3559				delayacct_clear_flag(current, DELAYACCT_PF_SWAPIN);
+  3560				goto unlock;
+  3561			}
+  3562	
+  3563			/* Had to read the page from swap area: Major fault */
+  3564			ret = VM_FAULT_MAJOR;
+  3565			count_vm_event(PGMAJFAULT);
+  3566			count_memcg_event_mm(vma->vm_mm, PGMAJFAULT);
+  3567		} else if (PageHWPoison(page)) {
+  3568			/*
+  3569			 * hwpoisoned dirty swapcache pages are kept for killing
+  3570			 * owner processes (which may be unknown at hwpoison time)
+  3571			 */
+  3572			ret = VM_FAULT_HWPOISON;
+  3573			delayacct_clear_flag(current, DELAYACCT_PF_SWAPIN);
+  3574			goto out_release;
+  3575		}
+  3576	
+  3577		locked = lock_page_or_retry(page, vma->vm_mm, vmf->flags);
+  3578	
+  3579		delayacct_clear_flag(current, DELAYACCT_PF_SWAPIN);
+  3580		if (!locked) {
+  3581			ret |= VM_FAULT_RETRY;
+  3582			goto out_release;
+  3583		}
+  3584	
+  3585		/*
+  3586		 * Make sure try_to_free_swap or reuse_swap_page or swapoff did not
+  3587		 * release the swapcache from under us.  The page pin, and pte_same
+  3588		 * test below, are not enough to exclude that.  Even if it is still
+  3589		 * swapcache, we need to check that the page's swap has not changed.
+  3590		 */
+  3591		if (unlikely((!PageSwapCache(page) ||
+  3592				page_private(page) != entry.val)) && swapcache)
+  3593			goto out_page;
+  3594	
+  3595		page = ksm_might_need_to_copy(page, vma, vmf->address);
+  3596		if (unlikely(!page)) {
+  3597			ret = VM_FAULT_OOM;
+  3598			page = swapcache;
+  3599			goto out_page;
+  3600		}
+  3601	
+  3602		cgroup_throttle_swaprate(page, GFP_KERNEL);
+  3603	
+  3604		/*
+  3605		 * Back out if somebody else already faulted in this pte.
+  3606		 */
+  3607		vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
+  3608				&vmf->ptl);
+  3609		if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte)))
+  3610			goto out_nomap;
+  3611	
+  3612		if (unlikely(!PageUptodate(page))) {
+  3613			ret = VM_FAULT_SIGBUS;
+  3614			goto out_nomap;
+  3615		}
+  3616	
+  3617		/*
+  3618		 * The page isn't present yet, go ahead with the fault.
+  3619		 *
+  3620		 * Be careful about the sequence of operations here.
+  3621		 * To get its accounting right, reuse_swap_page() must be called
+  3622		 * while the page is counted on swap but not yet in mapcount i.e.
+  3623		 * before page_add_anon_rmap() and swap_free(); try_to_free_swap()
+  3624		 * must be called after the swap_free(), or it will never succeed.
+  3625		 */
+  3626	
+  3627		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+  3628		dec_mm_counter_fast(vma->vm_mm, MM_SWAPENTS);
+  3629		pte = mk_pte(page, vma->vm_page_prot);
+  3630		if ((vmf->flags & FAULT_FLAG_WRITE) && reuse_swap_page(page, NULL)) {
+  3631			pte = maybe_mkwrite(pte_mkdirty(pte), vma);
+  3632			vmf->flags &= ~FAULT_FLAG_WRITE;
+  3633			ret |= VM_FAULT_WRITE;
+  3634			exclusive = RMAP_EXCLUSIVE;
+  3635		}
+  3636		flush_icache_page(vma, page);
+  3637		if (pte_swp_soft_dirty(vmf->orig_pte))
+  3638			pte = pte_mksoft_dirty(pte);
+  3639		if (pte_swp_uffd_wp(vmf->orig_pte)) {
+  3640			pte = pte_mkuffd_wp(pte);
+  3641			pte = pte_wrprotect(pte);
+  3642		}
+  3643		set_pte_at(vma->vm_mm, vmf->address, vmf->pte, pte);
+  3644		arch_do_swap_page(vma->vm_mm, vma, vmf->address, pte, vmf->orig_pte);
+  3645		vmf->orig_pte = pte;
+  3646	
+  3647		/* ksm created a completely new copy */
+  3648		if (unlikely(page != swapcache && swapcache)) {
+  3649			page_add_new_anon_rmap(page, vma, vmf->address, false);
+  3650			lru_cache_add_inactive_or_unevictable(page, vma);
+  3651		} else {
+  3652			do_page_add_anon_rmap(page, vma, vmf->address, exclusive);
+  3653		}
+  3654	
+  3655		swap_free(entry);
+  3656		if (mem_cgroup_swap_full(page) ||
+  3657		    (vma->vm_flags & VM_LOCKED) || PageMlocked(page))
+  3658			try_to_free_swap(page);
+  3659		unlock_page(page);
+  3660		if (page != swapcache && swapcache) {
+  3661			/*
+  3662			 * Hold the lock to avoid the swap entry to be reused
+  3663			 * until we take the PT lock for the pte_same() check
+  3664			 * (to avoid false positives from pte_same). For
+  3665			 * further safety release the lock after the swap_free
+  3666			 * so that the swap count won't change under a
+  3667			 * parallel locked swapcache.
+  3668			 */
+  3669			unlock_page(swapcache);
+  3670			put_page(swapcache);
+  3671		}
+  3672	
+  3673		if (vmf->flags & FAULT_FLAG_WRITE) {
+  3674			ret |= do_wp_page(vmf);
+  3675			if (ret & VM_FAULT_ERROR)
+  3676				ret &= VM_FAULT_ERROR;
+  3677			goto out;
+  3678		}
+  3679	
+  3680		/* No need to invalidate - it was non-present before */
+  3681		update_mmu_cache(vma, vmf->address, vmf->pte);
+  3682	unlock:
+  3683		pte_unmap_unlock(vmf->pte, vmf->ptl);
+  3684	out:
+  3685		if (si)
+  3686			put_swap_device(si);
+  3687		return ret;
+  3688	out_nomap:
+  3689		pte_unmap_unlock(vmf->pte, vmf->ptl);
+  3690	out_page:
+  3691		unlock_page(page);
+  3692	out_release:
+  3693		put_page(page);
+  3694		if (page != swapcache && swapcache) {
+  3695			unlock_page(swapcache);
+  3696			put_page(swapcache);
+  3697		}
+  3698		if (si)
+  3699			put_swap_device(si);
+  3700		return ret;
+  3701	}
+  3702	
+
 ---
- fs/nfsd/nfs4state.c | 25 ++++++++++++++++++++++---
- fs/nfsd/state.h     |  1 +
- 2 files changed, 23 insertions(+), 3 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index d75e1235c4f5..b74f36e9901c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -246,6 +246,7 @@ find_blocked_lock(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
- 	list_for_each_entry(cur, &lo->lo_blocked, nbl_list) {
- 		if (fh_match(fh, &cur->nbl_fh)) {
- 			list_del_init(&cur->nbl_list);
-+			WARN_ON(list_empty(&cur->nbl_lru));
- 			list_del_init(&cur->nbl_lru);
- 			found = cur;
- 			break;
-@@ -271,6 +272,7 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
- 			INIT_LIST_HEAD(&nbl->nbl_lru);
- 			fh_copy_shallow(&nbl->nbl_fh, fh);
- 			locks_init_lock(&nbl->nbl_lock);
-+			kref_init(&nbl->nbl_kref);
- 			nfsd4_init_cb(&nbl->nbl_cb, lo->lo_owner.so_client,
- 					&nfsd4_cb_notify_lock_ops,
- 					NFSPROC4_CLNT_CB_NOTIFY_LOCK);
-@@ -279,12 +281,21 @@ find_or_allocate_block(struct nfs4_lockowner *lo, struct knfsd_fh *fh,
- 	return nbl;
- }
- 
-+static void
-+free_nbl(struct kref *kref)
-+{
-+	struct nfsd4_blocked_lock *nbl;
-+
-+	nbl = container_of(kref, struct nfsd4_blocked_lock, nbl_kref);
-+	kfree(nbl);
-+}
-+
- static void
- free_blocked_lock(struct nfsd4_blocked_lock *nbl)
- {
- 	locks_delete_block(&nbl->nbl_lock);
- 	locks_release_private(&nbl->nbl_lock);
--	kfree(nbl);
-+	kref_put(&nbl->nbl_kref, free_nbl);
- }
- 
- static void
-@@ -302,6 +313,7 @@ remove_blocked_locks(struct nfs4_lockowner *lo)
- 					struct nfsd4_blocked_lock,
- 					nbl_list);
- 		list_del_init(&nbl->nbl_list);
-+		WARN_ON(list_empty(&nbl->nbl_lru));
- 		list_move(&nbl->nbl_lru, &reaplist);
- 	}
- 	spin_unlock(&nn->blocked_locks_lock);
-@@ -6976,6 +6988,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		spin_lock(&nn->blocked_locks_lock);
- 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
- 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
-+		kref_get(&nbl->nbl_kref);
- 		spin_unlock(&nn->blocked_locks_lock);
- 	}
- 
-@@ -6988,6 +7001,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			nn->somebody_reclaimed = true;
- 		break;
- 	case FILE_LOCK_DEFERRED:
-+		kref_put(&nbl->nbl_kref, free_nbl);
- 		nbl = NULL;
- 		fallthrough;
- 	case -EAGAIN:		/* conflock holds conflicting lock */
-@@ -7008,8 +7022,13 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		/* dequeue it if we queued it before */
- 		if (fl_flags & FL_SLEEP) {
- 			spin_lock(&nn->blocked_locks_lock);
--			list_del_init(&nbl->nbl_list);
--			list_del_init(&nbl->nbl_lru);
-+			if (!list_empty(&nbl->nbl_list) &&
-+			    !list_empty(&nbl->nbl_lru)) {
-+				list_del_init(&nbl->nbl_list);
-+				list_del_init(&nbl->nbl_lru);
-+				kref_put(&nbl->nbl_kref, free_nbl);
-+			}
-+			/* nbl can use one of lists to be linked to reaplist */
- 			spin_unlock(&nn->blocked_locks_lock);
- 		}
- 		free_blocked_lock(nbl);
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index e73bdbb1634a..ab61dc102300 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -629,6 +629,7 @@ struct nfsd4_blocked_lock {
- 	struct file_lock	nbl_lock;
- 	struct knfsd_fh		nbl_fh;
- 	struct nfsd4_callback	nbl_cb;
-+	struct kref		nbl_kref;
- };
- 
- struct nfsd4_compound_state;
--- 
-2.25.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
