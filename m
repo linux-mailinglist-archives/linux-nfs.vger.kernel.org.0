@@ -2,76 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D596D478CAB
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 14:48:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFB6B47900C
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Dec 2021 16:35:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231431AbhLQNsr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Dec 2021 08:48:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234468AbhLQNsr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 08:48:47 -0500
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9441C061574
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 05:48:46 -0800 (PST)
-Received: by mail-qt1-x82b.google.com with SMTP id n15so2660874qta.0
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Dec 2021 05:48:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=XiCIGO4Fdl9T125uNCRGraey3eRl8koOFDJ28EvvLos=;
-        b=WpXG4+grHcfjopZg5GVOk/ssbCZysxLwZP/qye0VEVCDJQIZwP7DVbR1Z3hb5hn3b6
-         ybPT08bh/JdooNfpls51viKRhhYNMqBg+rQ9lOwKZy6QS9KGiI046tAttmYpopaK8knT
-         QrrqbsKelyOXjAv1JLzrcnJriycIGjhVQMktGdHoYAWVkZplOvDU/Xtobgd9e0JDrkg1
-         ToUa+8brQRf3LMvkV7Zdel9u7/uFyW7W+T/My+1SW1Bt9PbDsaQa8NyUw4LqOoNVxc4W
-         Yijw62K6LGNNK1x/VJPO1CaqtrF4mqV/AlUxQIOg6NyY01bTWzweyjOGzzWZRvb9Frt+
-         RCVQ==
+        id S231665AbhLQPfC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Dec 2021 10:35:02 -0500
+Received: from mail-yb1-f178.google.com ([209.85.219.178]:34741 "EHLO
+        mail-yb1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229608AbhLQPfB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Dec 2021 10:35:01 -0500
+Received: by mail-yb1-f178.google.com with SMTP id y68so7601046ybe.1;
+        Fri, 17 Dec 2021 07:35:01 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=XiCIGO4Fdl9T125uNCRGraey3eRl8koOFDJ28EvvLos=;
-        b=UUAA1n/cukwWr8HI10n7KYhwNwgK8E2uSzN3LpUM3z+g0qDWtjIHRLMmn7dUawCgp0
-         LPv+zRcmOULl61mmc1wQWU7Qvkx/SOLZf7xQ0jbzoSgxkagpcJQzcA/eEWurBx7+2eq7
-         mWS+noGERJ+J1MgTCZIxDaIk0dfEZQ1aPTuFj3rejAZLCbC0WYO1hIgxOfTu5jFTG5XB
-         AAir/TZxKcxEB+rJrBGl+Tzd0jTiyg170SMBXPiwpi3GOljfkdw+ER0m0G4tONt0esAK
-         uLHqAwRHAqWrvhtNF0Z0G0Mcjox1Q+hSMfXACrZ8RHmVoGd+JcQgcuDcDIzshp8zNGIU
-         uusg==
-X-Gm-Message-State: AOAM531f9zMNZzWzYUu18UUfrd+ci6sHeD7Kgl8QmmGL/H8Zp9ojNNUF
-        Bkh3qCilCXZUV4PFB6Jxu8vZxwFueB2LhJ4wcQ==
-X-Google-Smtp-Source: ABdhPJw+gN4Muwl1tNeQWhMhsrOq0XsUNyawzqq9kQzApaFgJZ6Oql69am2BDnzhAPVpdrz/JK3l5wUuBEtjqPkw6zM=
-X-Received: by 2002:a05:622a:190a:: with SMTP id w10mr2379455qtc.224.1639748926141;
- Fri, 17 Dec 2021 05:48:46 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rHvaBv4PYSAKLTFMldRjskrDRAXeDmdEOAfE2F2dx5g=;
+        b=q5fQSd4+tSglIbXpMufyeDJwgS4OqXZXProwHGhmZBTb8LHTSW2A7SaeynvqD7SLDv
+         Fij9EA4vX3+Kl5Zk/w7L964vcrNZTJGWiz1tNpjGuOZzcKigwKT4PGHw7dPoNd318PRT
+         a5wX0dm3VfloD7K3l4w7573Y7n4xvtLC4Wh5s2tcGWuiKUSSj1SDhsT17lrsErlTWpZ6
+         HnDj3l4S8UAHrW9uO692v0Fmowj1rIhd105w3vsXgTT2JgRi3pJcA5Pbz8vY5vyjLfiZ
+         hIHFfa8/yqQUSWyy2kuQ0Sv7siQ5DAtUly9k5DFocZUHnECZlonFfWLC0klMojIeJsbB
+         /eVQ==
+X-Gm-Message-State: AOAM530lq82Omb5RmjTx/dCUmooShhNiLq5iytUghEW7JHVVt8KlgWPW
+        iv5H4HGeUnJAjC+qS7FU0RIQS0qw6BnxRwqDZRc=
+X-Google-Smtp-Source: ABdhPJz1fmLP/ELLYouLtz0roYyH+z2JKMMajZ2xQublLIzf/tlxoBLeXBqKhVGTV6sjgdAA6S177iBW6O57QEFUGV0=
+X-Received: by 2002:a25:b9c7:: with SMTP id y7mr4955331ybj.276.1639755300615;
+ Fri, 17 Dec 2021 07:35:00 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:ad4:4bc4:0:0:0:0:0 with HTTP; Fri, 17 Dec 2021 05:48:45
- -0800 (PST)
-Reply-To: r042lewis@gmail.com
-From:   Richard Lewis <dav22scott@gmail.com>
-Date:   Fri, 17 Dec 2021 13:48:45 +0000
-Message-ID: <CAN3mbPSkPztOGnjvydacOb9hUEGu7XvqVjb-dH8FZydheR1J1A@mail.gmail.com>
-Subject: Partnership...
-To:     undisclosed-recipients:;
+References: <20211217113507.76f852f2@canb.auug.org.au> <CALF+zO=zDrRzPkpgjRQNYbxQ8j3qNVJjo9Ub=tCqFtT32sr-KQ@mail.gmail.com>
+In-Reply-To: <CALF+zO=zDrRzPkpgjRQNYbxQ8j3qNVJjo9Ub=tCqFtT32sr-KQ@mail.gmail.com>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Fri, 17 Dec 2021 10:34:44 -0500
+Message-ID: <CAFX2Jfk3bnVVEwPXghGLXL-Nw1bcb_g1asJ6eWPVv6j6iDCG8w@mail.gmail.com>
+Subject: Re: linux-next: manual merge of the nfs-anna tree with the fscache tree
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Good Day,
+On Fri, Dec 17, 2021 at 10:34 AM David Wysochanski <dwysocha@redhat.com> wrote:
+>
+> On Thu, Dec 16, 2021 at 7:35 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Hi all,
+> >
+> > Today's linux-next merge of the nfs-anna tree got conflicts in:
+> >
+> >   fs/nfs/fscache.c
+> >   fs/nfs/fscache.h
+> >   fs/nfs/fscache-index.c
+> >
+> > between commit:
+> >
+> >   882ff66585ec ("nfs: Convert to new fscache volume/cookie API")
+> >
+> > from the fscache tree and commits:
+> >
+> >   e89edabcb3d4 ("NFS: Remove remaining usages of NFSDBG_FSCACHE")
+> >   0d20bd7faac9 ("NFS: Cleanup usage of nfs_inode in fscache interface and handle i_size properly")
+> >   4a0574909596 ("NFS: Rename fscache read and write pages functions")
+> >   3b779545aa01 ("NFS: Convert NFS fscache enable/disable dfprintks to tracepoints")
+> >   b9077ca60a13 ("NFS: Replace dfprintks with tracepoints in fscache read and write page functions")
+> >   416de7e7eeb6 ("NFS: Remove remaining dfprintks related to fscache cookies")
+> >   fcb692b98976 ("NFS: Use nfs_i_fscache() consistently within NFS fscache code")
+> >
+> Anna, feel free to drop these from your tree to avoid the conflicts
+> with the rest of your tree and dhowells fscache-rewrite patchset.
 
-I know this email might come to you as a surprise. First coming from
-one you haven=E2=80=99t met before. I am Mr. Richard Lewis, bank manager wi=
-th
-one of the banks here in the USA,  and a personal banker of Dr.Mohamed
-Farouk Ibrahim, an Egyptian who happened to be a medical contractor
-attached to the overthrown Afghan government by the Taliban
-government. Dr.Mohamed Farouk Ibrahim deposited some sum of money with
-our bank but passed away with his family while trying to escape from
-Kandahar. The said sum can be used for an investment if you are
-interested.  Details relating to the funds are in my position and will
-present you as the Next-of-Kin because there was none, and I shall
-furnish you with more detail once your response.
+Sounds good!
 
-Yours Sincerely,
-Richard Lewis
+Anna
+>
+>
+>
+> > from the nfs-anna tree.
+> >
+> > I had no idea how to fix this all up, so I just dropped the nfs-anna
+> > tree for today.   Please get together and coordinate thses changes.
+> >
+> > --
+> > Cheers,
+> > Stephen Rothwell
+>
