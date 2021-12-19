@@ -2,106 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 73A9F47A01C
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Dec 2021 10:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 044B947A0B1
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Dec 2021 14:38:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232641AbhLSJ7J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Dec 2021 04:59:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
+        id S232097AbhLSNiv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Dec 2021 08:38:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbhLSJ7I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Dec 2021 04:59:08 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9932C061574;
-        Sun, 19 Dec 2021 01:59:07 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id gj24so6507308pjb.0;
-        Sun, 19 Dec 2021 01:59:07 -0800 (PST)
+        with ESMTP id S230077AbhLSNiv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Dec 2021 08:38:51 -0500
+Received: from mail-ua1-x92b.google.com (mail-ua1-x92b.google.com [IPv6:2607:f8b0:4864:20::92b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51ACFC061574;
+        Sun, 19 Dec 2021 05:38:51 -0800 (PST)
+Received: by mail-ua1-x92b.google.com with SMTP id p2so13010183uad.11;
+        Sun, 19 Dec 2021 05:38:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=dG68qbbN9Wct+UUNDOZqFZ/544NhXHzV1/15tPR+FZQ=;
-        b=qxHxo7P4Hmn3Co0lx+drz0KAQB5rS9kl7ZYFcZdRRbb7g8xE1kzNS9GNUyxxCrMfQT
-         RfAJN7vWYS9skka5kzDB1Rk7Gqe+jr7H7ZR4rCq/iR+ldQ+zl0mhhqv5TJNPGxfrRFup
-         VJIghQje4LiOG7OwXFupSwLFgvyJcmRjHr5QJnyogq9MtAhlEcNzqC+YKsVkw7lirTfN
-         sryZgZcqIQjPiWa+p0CLYu3O/jGddC88jYvKOATqcgJMdsv/mwwY1LpZIPhNB1OWkZh6
-         f1tP3fFcrEzCu8G/Id+li3Q7c0//Ank/PSro7DjAkv/7Er1Q8IW0Oc7NlqTRQoC9YKL6
-         bA+w==
+        d=googlemail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bI280telFaJwUWnCTGOVucNdMzF/wNLC2jH94KdWJvI=;
+        b=JpNScKqHuNhoreNPYO3wb82lyjROJo4t2vTiX77Jix5VbXKk0rOpa7GTo9alx/+85T
+         WA1IgEQA3CQKXvwAasmtRDiLJeygPacKT8cCXg5gjcyl1k5SxWBARyUFHKTi3boJTYz/
+         c7lliYvdxYtqn9jpPRLp/av4cMGOy3uxVtcF9uwwHMAYSu9wAmysBXiA3DjowJ4EkacG
+         4r3Zeiil9KnLoRtiKkaC850p9Ho14wq6V+n4pTmyBs9SMzh/df/NrgQCxSEeHFm3St7W
+         ANpiQQXQBck31bgUfHTQjdIbP0ZGCNUKi6kRUfidBGCH54gyLpOpWousev/gx3I18Hfj
+         +ovA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=dG68qbbN9Wct+UUNDOZqFZ/544NhXHzV1/15tPR+FZQ=;
-        b=QVUYrwd9bvSQ63Ke2hmBcTPBAKII75ghBMYb2a/mfo4Qt3gAJd9TlSZLGwfYUalIkb
-         81zH7YvS3896f5Di0KfCg37lazSxO217WfLyGsEZXtDVzMPxxhPXHkzGlOt5xrn7ejyk
-         T9AjsmVqIfQhC76YbShYVWSuj/dHtZu2OFjb+JbEjExjQe7fZRCZmBZalI2zb7syhN5N
-         oBuvC6+7oQ3pzbxN1NMnv4wR24kaZyqk7eDGVoEGGjmV+HZqiUksQhrW0tJ5AYsCZsHp
-         V/fvs4S0v8kZe7rarAu0jr7BNQultJrcqklrwycb+u6iWxHuETQcttawpmLvTot8BbBV
-         L9fQ==
-X-Gm-Message-State: AOAM532YTl0Ula1wzvw7VzaNV5rl3J9r7ggC5WuLCDAijcvml1UGLl31
-        y1SUOn4Ig4NHt0R/u1e178c=
-X-Google-Smtp-Source: ABdhPJwzUCgNcdoLqJpWlON/LozZCUZMCGAOfGDxUBk0PHq7KdOUOS95eg7rsJ8IVKUG17BiUM2tnQ==
-X-Received: by 2002:a17:90b:3850:: with SMTP id nl16mr13879309pjb.190.1639907947026;
-        Sun, 19 Dec 2021 01:59:07 -0800 (PST)
-Received: from smtpclient.apple ([123.114.22.133])
-        by smtp.gmail.com with ESMTPSA id lb12sm1924537pjb.27.2021.12.19.01.59.01
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 19 Dec 2021 01:59:06 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 15.0 \(3693.40.0.1.81\))
-Subject: Re: [PATCH v4 00/17] Optimize list lru memory consumption
-From:   xiaoqiang zhao <zhaoxiaoqiang007@gmail.com>
-In-Reply-To: <YbyM17OMHlEmLfhH@casper.infradead.org>
-Date:   Sun, 19 Dec 2021 17:58:55 +0800
-Cc:     Muchun Song <songmuchun@bytedance.com>, akpm@linux-foundation.org,
-        hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        shakeelb@google.com, guro@fb.com, shy828301@gmail.com,
-        alexs@kernel.org, richard.weiyang@gmail.com, david@fromorbit.com,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        jaegeuk@kernel.org, chao@kernel.org, kari.argillander@gmail.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-nfs@vger.kernel.org,
-        zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
-        fam.zheng@bytedance.com, smuchun@gmail.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <0AF1C950-FA7A-4D70-9E92-72C7BE32293A@gmail.com>
-References: <20211213165342.74704-1-songmuchun@bytedance.com>
- <745ddcd6-77e3-22e0-1f8e-e6b05c644eb4@gmail.com>
- <YbyM17OMHlEmLfhH@casper.infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-X-Mailer: Apple Mail (2.3693.40.0.1.81)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bI280telFaJwUWnCTGOVucNdMzF/wNLC2jH94KdWJvI=;
+        b=TAO48BqEBd3+1DTnHO8YFVC6QGrsOaYHJDaE11ok6HXsrq48pSK1//qPdVEQHPXXQD
+         WEKerrNlI1+B5Lpnj0Vbd0BLu7EX5McY0N8ltYaK9vn1wuYBHIhjPBoweTuzVg4R98dE
+         cFhoqa/EcpAs6t3wLJVPpIp2obwfgsZDUTBVGy0+25BJm3KEKM6RjrRRyoJCB0ldGFh9
+         ftfgSwl11rTATqTw0o8GCORkafCa57ivq47ApFWI4aS7wXyPzevEpfQBC+fN5h34r8PK
+         DqZ3aRNH4UptL9hgY2NRi10PywfIx9MxGmyo66m1yFvQTjzFzEGsSuPrqefYlZ/FLgKh
+         HmQQ==
+X-Gm-Message-State: AOAM533ge+wg2uzuCvQB55+HS0UZjDOyNEuPQ32SautiymSair7Vp5iE
+        dSNYDipS7c1tqcvsAUD8bIhsukzb3PIPi6EiZkQ=
+X-Google-Smtp-Source: ABdhPJy9Ga6BKjziaeH527tlGnmVQhnHJH5VjPeSXHOyfvXjirVq8zXYRKZ1l3kq7oXqglnplsiwqyIMYNfuA9h9eSI=
+X-Received: by 2002:a05:6102:1613:: with SMTP id cu19mr3426842vsb.25.1639921130249;
+ Sun, 19 Dec 2021 05:38:50 -0800 (PST)
+MIME-Version: 1.0
+References: <163969801519.20885.3977673503103544412.stgit@noble.brown> <163969850302.20885.17124747377211907111.stgit@noble.brown>
+In-Reply-To: <163969850302.20885.17124747377211907111.stgit@noble.brown>
+From:   Mark Hemment <markhemm@googlemail.com>
+Date:   Sun, 19 Dec 2021 13:38:39 +0000
+Message-ID: <CANe_+Uj0ooR2QzNQLXihuoaWMCJMpo3yJNhP_9DyPaCzeO7v7w@mail.gmail.com>
+Subject: Re: [PATCH 08/18] MM: Add AS_CAN_DIO mapping flag
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Thu, 16 Dec 2021 at 23:57, NeilBrown <neilb@suse.de> wrote:
+>
+> Currently various places test if direct IO is possible on a file by
+> checking for the existence of the direct_IO address space operation.
+> This is a poor choice, as the direct_IO operation may not be used - it is
+> only used if the generic_file_*_iter functions are called for direct IO
+> and some filesystems - particularly NFS - don't do this.
+>
+> Instead, introduce a new mapping flag: AS_CAN_DIO and change the various
+> places to check this (avoiding a pointer dereference).
+> unlock_new_inode() will set this flag if ->direct_IO is present, so
+> filesystems do not need to be changed.
+...
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 6b80a51129d5..bae65ccecdb1 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1008,6 +1008,9 @@ EXPORT_SYMBOL(lockdep_annotate_inode_mutex_key);
+>  void unlock_new_inode(struct inode *inode)
+>  {
+>         lockdep_annotate_inode_mutex_key(inode);
+> +       if (inode->i_mapping->a_ops &&
+> +           inode->i_mapping->a_ops->direct_IO)
+> +               set_bit(AS_CAN_DIO, &inode->i_mapping->flags);
+>         spin_lock(&inode->i_lock);
+>         WARN_ON(!(inode->i_state & I_NEW));
+>         inode->i_state &= ~I_NEW & ~I_CREATING;
 
+Does d_instantiate_new() also need to set AS_CAN_DIO?
 
-> 2021=E5=B9=B412=E6=9C=8817=E6=97=A5 =E4=B8=8B=E5=8D=889:12=EF=BC=8CMatth=
-ew Wilcox <willy@infradead.org> =E5=86=99=E9=81=93=EF=BC=9A
->=20
-> On Fri, Dec 17, 2021 at 06:05:00PM +0800, xiaoqiang zhao wrote:
->>=20
->>=20
->> =E5=9C=A8 2021/12/14 0:53, Muchun Song =E5=86=99=E9=81=93:
->>> This series is based on Linux 5.16-rc3.
->>>=20
->>> In our server, we found a suspected memory leak problem. The =
-kmalloc-32
->>> consumes more than 6GB of memory. Other kmem_caches consume less =
-than 2GB
->>> memory.
->>>=20
->>> After our in-depth analysis, the memory consumption of kmalloc-32 =
-slab
->>> cache is the cause of list_lru_one allocation.
->>=20
->> IIUC, you mean: "the memory consumption of kmalloc-32 slab cache is
->> caused by list_lru_one allocation"
->>=20
->=20
-> Please trim the unnecessary parts.  You quoted almost 200 extra lines
-> after this that I (and everybody else reading) have to look through
-> to see if you said anything else.
-
-Sorry for the inconvenience, WILL do next time ;-)=
+Mark
