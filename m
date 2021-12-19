@@ -2,71 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D45147A1B5
-	for <lists+linux-nfs@lfdr.de>; Sun, 19 Dec 2021 19:15:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B2DDE47A1C4
+	for <lists+linux-nfs@lfdr.de>; Sun, 19 Dec 2021 19:34:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236280AbhLSSPW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 19 Dec 2021 13:15:22 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:37074 "EHLO
+        id S236311AbhLSSeX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 19 Dec 2021 13:34:23 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:10490 "EHLO
         mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S236260AbhLSSPV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Dec 2021 13:15:21 -0500
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BJBCCh8031795;
-        Sun, 19 Dec 2021 18:15:10 GMT
+        by vger.kernel.org with ESMTP id S236304AbhLSSeX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 19 Dec 2021 13:34:23 -0500
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BJ9KE8w022691;
+        Sun, 19 Dec 2021 18:34:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=SLjgP9d/6D7nTa8S3fZVgpuqWYlggwXBT5z+91h+mf8=;
- b=CZJHS5Zfo+0ZPqH0hJQmO8k4/O+BRb8R+HckEEttpbKu3jBpETyDDOwUjLipaDFwJQAy
- InY6/zUMWKvZZybZz+6EC1G3dHVeELia8cJRdS3zN1xHMUzUXCtJ8BZeEO1R1TLaakw+
- hVTVA0OjVJUmHAj3F1TOS91m6xa5ZCaQP+2NkmQfB+q9ZWSLB0jSpocsCmvQNAnQTaKh
- 41CuMbCh19M6CG0yFuxZ1HiDye1dQai53n2q7NhT4UrJUbypi0raA47VuczfUi2o2cIi
- GaiyTVi3GhEOrJrVHRK1injelfKKylB8dUO/MX5f/vSjcstNnuPdMjbOomqJbLC9zGj/ tw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3d186ssw5x-1
+ bh=sBbX5DfUrxF3ot8Ua2EZ3VmFcAUu3LKcr8M6nm8AtBY=;
+ b=JgXhaMcQJr/ZENCzmFcPwzHiBkIWedtg3ShNFZJ4AMRXh+0nJg2WAf9iKXozhy8xWCNM
+ iirIpctu9cNxXEgZ7RCocJQgV8dHNBbwtST7nkPLilKhHKgCMwaTxOZawJgvzs9zOO+Z
+ cimrHmc0IFH0k6Zf7Hzw7Z4RXEJpyhqDCV/UzJHwYpefCjC+RM1QePYyjBAynJKfk6Yo
+ fn/YrlSKg0G7ZrYoGrc14an3i53b7xFFYeGZDXSgRlFqwiTa55cuPNichMgmehfKQC8+
+ cqBqqUBZxK8Y5vWtaSaeUScLQPvYOGkPJomkVsNiouxYwe9OZ8h507ZkXxZPnwpjHSXZ Sw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3d1680207n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 19 Dec 2021 18:15:10 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BJIApnX078148;
-        Sun, 19 Dec 2021 18:15:09 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2046.outbound.protection.outlook.com [104.47.66.46])
-        by aserp3020.oracle.com with ESMTP id 3d17f1t6d3-1
+        Sun, 19 Dec 2021 18:34:19 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BJIQUPr138711;
+        Sun, 19 Dec 2021 18:34:18 GMT
+Received: from nam04-mw2-obe.outbound.protection.outlook.com (mail-mw2nam08lp2172.outbound.protection.outlook.com [104.47.73.172])
+        by userp3020.oracle.com with ESMTP id 3d193jtvce-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 19 Dec 2021 18:15:09 +0000
+        Sun, 19 Dec 2021 18:34:17 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VtPD+sH0ASKrXlzzo5N5bM3mRptUy/t5WhGraEFCSQ/q6nywuleGr+jYzAPWVx+dWF6zKYO87IwGrEcI4/R3iEd6fziKh8/mWh/gawT2GoCl/EbmOyxYxTwFZtq1FV96SKDR30F9jH3B4qBBDHxrbbrvnVfc0A7GAcLH9byPgqoy9fyxZJOVFfRTTJTpsDV4bk8TrhBy1nTtA3RYp0ngRDJV0wLj/B6VNrJh11+THQv86sRfsTdsqNzDlpm2LFJlpidte8yA4V9Noe0X5pGTniJ6Y4HR4eqRs+BsLkBy1fZyDbnjLDa84YyM9/kI9g8TePK2P6LzXJuqdrXTGXEZaw==
+ b=SGZAtj+9V/kqWFxTyyNM3cJMxiD1r9OsThNfTCy2uOhAr6zZLuRzKWgEMrI+kY/eVqKTehP9/8Y/rx/8m4wjiPfbkwXfhdY9WYLfcUgPkEL15JfyNdy1Uh2NLOAq3rVGTiDdpiRtii8HIFWV3rQeWeeOamVfWrmfwUWf1f6JkxhuW7/HfnMQmdxEYmOGF0BLEmR0aPA8yuaCQ7boLtoZWhGYfWWNjBRenLljErqIZKy4mfMoTpbUxl/Aqe8k7hj/t5A+QBRxh9YysXGz2Aqn7dN9AprB8iXleDsmjyvc/SRk6SUqr6QSwwXrCjCwtExRQnssTHfm/hEWX0676ye5ww==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SLjgP9d/6D7nTa8S3fZVgpuqWYlggwXBT5z+91h+mf8=;
- b=WuM+AaIv6tgJcoI6AT7FZjwLxGfUh0RR2ErHnz3ip9gIs9/F5Oy+RQTIdiYJmSZzO96jdrvPQDAyV1LmfNg8RVVeWXsx3wcvlhuEinmV44CVqiDGFRZUVG8ZXXT7yqU4d1F7X+6txrvwIDmzWz4CNuYjYG+Hx032vXpapu1Cj5gZqjGDcho8acCZcKJgtPKxztqckbYn4TNrGFQpbgOBo2TudhgiyfBYNcrGUpbHGyhXxLdWUzRBNs+vd0zC9Y3uu19+aEGGKZTm6cUE96o8Cj8pji+VoAzzls5QAeRcOQzWzQ7JwALtacQlJHevBZe35pIGKO2h9oVS6kauynCrDg==
+ bh=sBbX5DfUrxF3ot8Ua2EZ3VmFcAUu3LKcr8M6nm8AtBY=;
+ b=BRE5BGMF1MHUHpEZd36Y5S4EzluIy2ee9LfjTbCJWp9DDvT7a78umL5daxPncBDyqWMM64pj0Bu1cxrC5ztH8W/N127aDZc8O7NgrUCMljpz5LuXfctAaHqs9u7hAO6+CEPh/nGUanbVhr4E684+53cklxQ2NbARPm9JTBJmxhbYNqMF3DqIK+q8S1QoLCsZD6Pjt5kfuTcoEikBIda1L4GmXAGGMivwZsTUfTyy0drpPT721W9oEbrUonPz4Ozoqv7yG9oXI4LRH9LfYKZFh47zYgyd36hg6uQARcmPzxEvYPalp0JGfCHvvomfbpL8lemQXksHKsq/12tUHZvyiQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SLjgP9d/6D7nTa8S3fZVgpuqWYlggwXBT5z+91h+mf8=;
- b=YLRO2p89bnJxOiA3N4onDkHQ5FydE05hyw37sYCV/BMryPNJHrseXallwhjpVbO/z8RTK3giPeE9tJvEXerHTLtMp2hbrGttzAZfGZ5Cb9V/p+B0PVFzxeqF0t70IeD7s6AZUv/wMKoTMctCKNP+hT05X4PND4eTKAn/x+kTNRs=
+ bh=sBbX5DfUrxF3ot8Ua2EZ3VmFcAUu3LKcr8M6nm8AtBY=;
+ b=ZJLFDrxHNUB7FB81Pdm8zUF/5l5o3mSqlThV+q7DED9SLelS2NpZM6vt1K57Ihf7IAsq+GbEzyzKX1lGh82dZQW8BbsLmd+l/vd5gRPhi7iWLOPeltikgVXjGqScdwr6qLRopLdrOvCmUC1pQmFB5S9hT4X2f3BQnpbA/ohM5II=
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com (2603:10b6:610:cb::17)
- by CH2PR10MB3784.namprd10.prod.outlook.com (2603:10b6:610:3::25) with
+ by CH0PR10MB5035.namprd10.prod.outlook.com (2603:10b6:610:c2::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4801.19; Sun, 19 Dec
- 2021 18:15:07 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4778.17; Sun, 19 Dec
+ 2021 18:34:15 +0000
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::241e:15fa:e7d8:dea7]) by CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::241e:15fa:e7d8:dea7%6]) with mapi id 15.20.4801.020; Sun, 19 Dec 2021
- 18:15:07 +0000
+ 18:34:15 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
 To:     "trondmy@kernel.org" <trondmy@kernel.org>
 CC:     Bruce Fields <bfields@redhat.com>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] nfsd: Ignore rpcbind errors on nfsd startup
-Thread-Topic: [PATCH v2 10/10] nfsd: Ignore rpcbind errors on nfsd startup
-Thread-Index: AQHX9HoJf0UrhpbILEawWnDLCGoAp6w6H74A
-Date:   Sun, 19 Dec 2021 18:15:07 +0000
-Message-ID: <831659F6-3005-459B-92ED-933BBCEE6FE9@oracle.com>
+Subject: Re: [PATCH v2 09/10] nfsd: allow lockd to be forcibly disabled
+Thread-Topic: [PATCH v2 09/10] nfsd: allow lockd to be forcibly disabled
+Thread-Index: AQHX9HoJhWnJgEOGdUmX2SRgV5Jy6aw6JRcA
+Date:   Sun, 19 Dec 2021 18:34:14 +0000
+Message-ID: <12FA08AD-3F5B-4E7B-91F7-E2EFAC680A3E@oracle.com>
 References: <20211219013803.324724-1-trondmy@kernel.org>
  <20211219013803.324724-2-trondmy@kernel.org>
  <20211219013803.324724-3-trondmy@kernel.org>
@@ -77,265 +77,130 @@ References: <20211219013803.324724-1-trondmy@kernel.org>
  <20211219013803.324724-8-trondmy@kernel.org>
  <20211219013803.324724-9-trondmy@kernel.org>
  <20211219013803.324724-10-trondmy@kernel.org>
- <20211219013803.324724-11-trondmy@kernel.org>
-In-Reply-To: <20211219013803.324724-11-trondmy@kernel.org>
+In-Reply-To: <20211219013803.324724-10-trondmy@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3654.120.0.1.13)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 863b112d-6a0b-47f0-ff56-08d9c31b7cbd
-x-ms-traffictypediagnostic: CH2PR10MB3784:EE_
-x-microsoft-antispam-prvs: <CH2PR10MB3784519D5F50C94EACBB4117937A9@CH2PR10MB3784.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: 250f7d60-cfe3-4d6b-34c4-08d9c31e28dd
+x-ms-traffictypediagnostic: CH0PR10MB5035:EE_
+x-microsoft-antispam-prvs: <CH0PR10MB503520878F21A236BAFE7A88937A9@CH0PR10MB5035.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JUwuMhsHbR5eeWecM3oPwjhvNDZ2O1/u/33nS7LObPyTyO7AVMse4BHX+zH7v/2+K+A60oahJvdOL5s7gUrxxSgu+Gwn8WJV9/Hn1vVs0YIweCXlwS3hWVwYAvcYlpwkwWHjaC6N1hMZTb9BXY8wt5t14RM1Dfe1H9cx6ujeYY7Cchn25HuerPQYlt3HFe6h+aoU1DF6fBPRddF/yAlpJWfl//AxISKKS2+pUlZzHlKBKY7tX/T4CWCcVabJzuMZvAAxhxxnjLbE6O0BpBBzOR60kVgudfD5nCd7SfP8ONgv2Qi6+Z45gWsJAiHXkHmLcuOjjYA3lDS1zYrSSibhsPsmpqnLnzew5R3AC8ArfR6qne9u97iO0TEKrQntpEocxJ0dJmwbPMTIPeLLysRiQmCX6+j1luwCzvauPkwOKHIKpXLuRV97SE6+c+xBgtP1PtfmqnL0beBs5b8VU7uQCnkxzlyNGRYjcfQFB8s6PiFMVcupcPKyQc/K/b8DQvccnTEYCneMGm5w3NM1bX9GWLtbJNBseHAu+3b8EHdVkTZr1jxK0XaXbU76ethBNMP7ZTXP/1FpXULHs076AV7Urypi1JfFYOR/v5kiYbIrz8Rqes0F0J/rQUDV+HJM3ixgiw/6IiJ6Y+l/N41nMmGYZpfG3IJKZHhZu6MNCkqiMZtdaF3W6p+aJ7javu3MfnjCX9m8ahBVsYKyeTB+OKwL64+aaaFnEgejdRrxPQRKNaMZgIazlpo6QCnR8+5YfP5i
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(76116006)(71200400001)(86362001)(38070700005)(4326008)(64756008)(66556008)(66446008)(66946007)(6512007)(66476007)(6486002)(36756003)(2906002)(2616005)(83380400001)(33656002)(508600001)(8676002)(8936002)(186003)(26005)(122000001)(316002)(6916009)(38100700002)(5660300002)(53546011)(6506007)(54906003)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: HRIBh4ThWxqm17h6PZz7xhqDNNVzoQQKfWaFAsoEEb3eukaEMe0a8gTfwHLrVK2kxeh3YjqbWuTr1oo9LgZk17CA6hf2Ivia07AF13rO1pjtFzOFlB2vXzSQR2HRfU4EPoTqBpYe5cMAIMQ+IKuQd9UtAODSBlYLqs4q8D6lOv7bTEbd+bDbZF5znmvunZMEl2/k1J26zb8jjQo5+ZklvLKnQNxtPfO6P35nmgJylK4BG2ADmSpd+2Svkjnwy3D0ge6hAAWS4UEF046RXf6mL2ogUwVfT0jW//m2KQNkLa7XuCZqzpE5tgV7xR/ZMpaKgSeeLDLemZhwYjVKXuTZ2aBsSS8A7L2a/vWRU9SZvjhkdXS1hvgIS+QLAdsxAa0qsP8eFN56DoZ77bVGJbHU83BFJzbpDCCZX3sOaqrUww4eg9FzbfFfA70adHXItUWi4b/NiAQqVnF5Bje3s2dLUUB7ZhDIezkbeVq8YHPi/Qc16INGTXvyb7svQfS33PsTiLWtgaSBU+uvrEmd0SOvf8Q2VosQcejD4gy35OhYbRkXslHpR96ov4kmyqnGuw5t241mha545rU53vId1By6XsihqrSYaamz1s46+RgyTaAcB+eMS/Rcyn20lRamOseHwG8miq9SVfpx+ea9l6n3HfHCLw6C5XfikIDyZ+tEgMvKcI+KQT4USnk5LsYMfCHglkotsw/DQqwKkC0p3OeLHrTG1nq+dMemvyTGv7pTtU1B8c+3MrsMpDrNjRRAzbPk
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(38070700005)(6486002)(6506007)(36756003)(5660300002)(66556008)(76116006)(66446008)(66946007)(64756008)(122000001)(53546011)(186003)(508600001)(4326008)(8936002)(83380400001)(2616005)(33656002)(38100700002)(86362001)(6512007)(66476007)(8676002)(26005)(54906003)(71200400001)(6916009)(316002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?rTPn3jAnKxF4+Ry3Yu5y5cBCpjuu3iv/8TpG1ys0WWMFIduaXU4KN6Rznm0z?=
- =?us-ascii?Q?mmwpd63qD1f9eP6NhYiGHXcijrq4xce7XBbXGLMWt75LbO5kJjVOoZRnSUP5?=
- =?us-ascii?Q?aPJPKxnk6vdaYL5GDducejxzzSnZm6OT24wrbpQWUksT5Bx2svByySaaBegG?=
- =?us-ascii?Q?Zv/SQnzEx+Qmd39vsJoN3VW2CWjOLChl7rDee/xpjBkjJR5ddUTHDtbKuaG9?=
- =?us-ascii?Q?6h5J7CBOwXr0fP+0ClZbGhZnopA8uHgHI6LuYZ6h2Ani/5zC+EEx0LVUqr+k?=
- =?us-ascii?Q?+5yZjTfLrSnFzrd30oQIeiQGhXUgqw/kZR6eqXNhE/IZKX4q3KXDHI5e9yGs?=
- =?us-ascii?Q?Wma4kLkwX4QMqvIlWKlCoz9fP2cliDMOcAS3wFEosgDtNk1ZBF8y6x3xiBtZ?=
- =?us-ascii?Q?XRJqpFtm6PYstwKwt2X5RD027Ez0l1NIR9KYpnGATxi7SuADj2cSDEa8e+tP?=
- =?us-ascii?Q?G8sxLbg6uc3IBn5pzywZLuyxYUN5o1RO2ahMjmkgosxEjdC7HG07SQdH8yt3?=
- =?us-ascii?Q?itAP+prDBI7GhvLnP/nqD2F0ByhvLV/rpY6mz5HhFHFjwB4mntkMXdZJvt0D?=
- =?us-ascii?Q?9Niu8vLFCVtzBTyzvgNJvfy8/K2YaMJBhrWLOqoaolPQU9TQOacvhMSYgfu2?=
- =?us-ascii?Q?buypAh7RSAOH31PNZfU/2usTkkdV0z/2A1G/J2CRr+efFK30hhAYLOPYZxAJ?=
- =?us-ascii?Q?iEXACeMtZ5AOsg0O8nDSoC9j18FnCwvGSmI7IVuX4JSjncthQXb21EKfeZhn?=
- =?us-ascii?Q?ryO3+iMnX55EtQesEmw3kIkIQJsgFumVm3iDeU5ZH3ehF9vCvCw4vl+/bTrM?=
- =?us-ascii?Q?6XuFOn/WkLJMln39VXy6+VbGeTEoj/mcfPptTEP5EPegx+11Jo3WWAEEDXOy?=
- =?us-ascii?Q?VJhYE07w/xdLfYJ/TLIhBEWelAccHYlRjCBxv1au6uCpraOMM1oRClMRGqZa?=
- =?us-ascii?Q?em7/tlYyJvmaITB+vyoZBuVkbHFlagJ1TZy9LyKrVjjg+bpfqAAfw3v5V202?=
- =?us-ascii?Q?eT+ZAskxVOlx8zneEMrhAib9rrYwh29Boa6JhQqPmkQPVKriUdN4P8iIMNf6?=
- =?us-ascii?Q?EaWDlRMooF7C4QNSt1ZZLBTYb+KxQPfMelSl3D2q5dEQlBH4vHplNJmR5PKt?=
- =?us-ascii?Q?zULjsKzsCXLv90U5Y92ipQQ1CpK+lBbh1WAt3U7R3S212Z58lHqlaawVqAKv?=
- =?us-ascii?Q?lUBhQ1iSPj7IUIZZFAheStceolRVrqbOq2oGiE3rl2lKRAJ+nZQvLvmH/1L1?=
- =?us-ascii?Q?03xTDp8BxLZE1NZK2V5uQ3BlQdk5qWrgqf011J4Sfcw2AkzstAd0aJQ5DP7y?=
- =?us-ascii?Q?brb6Y8dT4CiXE2hCmG32LSXU3t/Gc/boMJ2eXRDa7rvqhuSsjI1inX9cuWSm?=
- =?us-ascii?Q?ymKGb5Jix1bOHtK1JTt4PoO/feMn2SbTrUlgBREsJWyl7B/7PIFASlfZVs4A?=
- =?us-ascii?Q?lBqC1598IMrTkImjBbNfF7BLDzMLABW+nM4isP0Qhy147cRCLoUtLkFc8K18?=
- =?us-ascii?Q?SlCB0lC/b5IOMVwusLEaU/qCvP3EBzcqbI0Pe7QZF8kiDEyMDHeNTZWqjdoc?=
- =?us-ascii?Q?KTTsa4cEpahdg4ZTyv+oi1i58uQwFwSld3AcqAW1O0rdHwX4s1BNnyVps9MK?=
- =?us-ascii?Q?lAHVICYUZlkGgNmZ/tGuCHQ=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aunY7m33VnUgJ9QUZPdXrAFOKvCbxhHeorT2D1/DZ3UJWBMvK4Nj6df5ChxL?=
+ =?us-ascii?Q?8/y0NZ3Shv3pSj+ag3QMh0ullQ5fISdLUPaFIog6vWtiUrpxYNdF6FYu9q2t?=
+ =?us-ascii?Q?Q5b0r676rOD2raY6ljaX97pG+5Y/I57PM11XMAarR3zmDFh4GRu+9S3Pcgkk?=
+ =?us-ascii?Q?T5pMKtaUx7NsrqkDiMudu7giKYBqudXeY1s5DouMT2kYsooeVIvBCVrXMEAN?=
+ =?us-ascii?Q?XG7hDO3JyfeepG0gxVTWdO6F5k2qI9+JEH8lqKtYIQAzPTvQfPUDh3fAQYb7?=
+ =?us-ascii?Q?ndDpqSMvgl4ExVjJ9Vy850dEmKlWu6Y17TKpiq5pcVT5jTgBAdv70ys1RMhS?=
+ =?us-ascii?Q?a+8fPmFOTC/LbVOTkRcBLy1wQMg0TvzNze5vB+/XsyLrzjmdLNoC+/dqF9Ap?=
+ =?us-ascii?Q?o0SqQDZLWXybr7kPua6hbFTvPFCN8R0FT6LK/a0iG3XNOW4t+wUoPG0I0zDr?=
+ =?us-ascii?Q?C7hXahw8Jt7o4ZA5+V+ikQD2gQ1FlHoyEeSfIyt1Ns5BSbvrbPeed+cGNxKg?=
+ =?us-ascii?Q?NxLJnD0aMi8RJrcCVj2CYLt+s+b/d7EFUDA2tfKqACciL2SjwQz3A2tHbNpk?=
+ =?us-ascii?Q?c7h4UHcv+3u0pQ9pH9S+QYPhIh6sZIIldY5zTfXWHUfsU8GWXg/6vJaoSOlD?=
+ =?us-ascii?Q?geDGPIJMx4elvTwmw1p4P7VZ+zYZKWqjXS8+eQT+JE0JU95S1WMPFuOAWRn3?=
+ =?us-ascii?Q?6eQM42lcGCHjvXJgEpECUqITJeJ/iIDXYVIv3xyxbUqjt3JxiVKB8Z/mXWsX?=
+ =?us-ascii?Q?9FPEMl2iMSPERik2L1RhaUZlz+GGXsjfYVO0c/XoNRJ8EIG+HiD8YgHIQJvc?=
+ =?us-ascii?Q?2csHe16KDFIbc4wf3JeQfucuE2DuPdkHycrzW2OWGZxy4S9jqQGLOKStAndy?=
+ =?us-ascii?Q?fE+NCmmY8t/kRQ9GYW7OOYWZbiVVtQzeFeFLZsJYZYeoXEkpHgBrB+cRgR7z?=
+ =?us-ascii?Q?MWeTdeWCGbmCCHvVmw7cu7Xgp65XtvymRfY6C/I/rfjcB3C8FsROubZxGNrB?=
+ =?us-ascii?Q?5+SYMfr7eI/DJ9y/OpOoPJw7dwnx7y+BVJMXTXd7bDMTAsGlC+A1VODuJux4?=
+ =?us-ascii?Q?aY5zTqvS5SqbiS2vYmSvd+TB2M5yPTN00vBwrN/9UO5i5cvxNdBKzmtvN8Ii?=
+ =?us-ascii?Q?RIbQLUayEtvvVBdyrhus4dv4/Q+1/eYV6emCAsL9ZmnD0j2+NsH4h2at58e3?=
+ =?us-ascii?Q?Ca9sJzwMA0Xz4e8ppGBVdEF8Xy8THqGiye35bLW83hR9rtMeONs7D1mhgeG5?=
+ =?us-ascii?Q?YSe5Uoa7wdqiwaT9YDoRhR5tQsXWbppuec3IlhpDx2ag3zKQGZq9/yVPJU7Q?=
+ =?us-ascii?Q?J48RTX9+eHch53ESY2tXccL9rwHEJPtmvPk88+KDnQRJ38FeJd45/weSSzEw?=
+ =?us-ascii?Q?L3H6Xqw6EN+j39kKMomMLipWz+tOYDZsys3NZXPokvzP1Y5jTijfWBy62eYl?=
+ =?us-ascii?Q?Z5ZFfJkPrfV/LEeGf/JkPQpajaUj6ixoWg0eojXRvqA909GVWKl2DGXxhnjX?=
+ =?us-ascii?Q?XQX6WMkMBwdNnSdXmxn7RMgE2i1JalIB5+V07N1gM8ZagoU0MiFsrRngDRFG?=
+ =?us-ascii?Q?+ZNLzwBM3n6hWm9gDj748G97gIFPBAf4hHxbCcJUWWn+odZq73Z+d8lRu9TS?=
+ =?us-ascii?Q?MDmAb5Mi1G48XNeZEZmkBlw=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C73087796AEA3E4F8AEDB6868ABF16ED@namprd10.prod.outlook.com>
+Content-ID: <CFA9F76FF744C243B0B06A6D36254ADC@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB4858.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 863b112d-6a0b-47f0-ff56-08d9c31b7cbd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2021 18:15:07.3058
+X-MS-Exchange-CrossTenant-Network-Message-Id: 250f7d60-cfe3-4d6b-34c4-08d9c31e28dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Dec 2021 18:34:14.9469
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oWNsdYuQyKYolwC3DnbU1NslvulH4PY/TTMNBdazlehnXhJBAkk1AflhmTC7NNDpfbkVi1/tgIbb+sY73a1IOQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB3784
+X-MS-Exchange-CrossTenant-userprincipalname: erJKtm7npj6NYjUgzwRsjPBGVm1B44i5+aoq8uRi1ycERo6ZNg7FuUm9UNWcp6IIiVzrpLCCCwktOEPpFdrkEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5035
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10203 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- spamscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2112190114
-X-Proofpoint-GUID: -BcKmiIgBLi5biAWIimiV_cTXVlD0Ob8
-X-Proofpoint-ORIG-GUID: -BcKmiIgBLi5biAWIimiV_cTXVlD0Ob8
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112190115
+X-Proofpoint-GUID: VGtfwQdeyuWZClx4E5OvoN-AfKALXRnW
+X-Proofpoint-ORIG-GUID: VGtfwQdeyuWZClx4E5OvoN-AfKALXRnW
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+
 > On Dec 18, 2021, at 8:38 PM, trondmy@kernel.org wrote:
 >=20
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> From: Jeff Layton <jeff.layton@primarydata.com>
 >=20
-> NFSv4 doesn't need rpcbind, so let's not refuse to start up just because
-> the rpcbind registration failed.
-
-Commit 7e55b59b2f32 ("SUNRPC/NFSD: Support a new option for ignoring
-the result of svc_register") added vs_rpcb_optnl, which is already
-set for nfsd4_version4. Is that not adequate?
-
-
+> In some cases, we may want to use a userland NLM server which will
+> require that we turn off lockd.
+>=20
+> Signed-off-by: Jeff Layton <jeff.layton@primarydata.com>
+> Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
 > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > ---
-> fs/nfsd/nfsctl.c               |  7 ++++++-
-> fs/nfsd/nfsd.h                 |  1 +
-> fs/nfsd/nfssvc.c               | 18 ++++++++++++++++--
-> include/linux/sunrpc/svcsock.h |  5 +++--
-> net/sunrpc/svcsock.c           | 14 ++++++++------
-> 5 files changed, 34 insertions(+), 11 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 51a49e0cfe37..da9760479acd 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -727,6 +727,7 @@ static ssize_t __write_ports_addfd(char *buf, struct =
-net *net, const struct cred
-> 	char *mesg =3D buf;
-> 	int fd, err;
-> 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> +	int flags =3D SVC_SOCK_DEFAULTS;
->=20
-> 	err =3D get_int(&mesg, &fd);
-> 	if (err !=3D 0 || fd < 0)
-> @@ -741,7 +742,11 @@ static ssize_t __write_ports_addfd(char *buf, struct=
- net *net, const struct cred
-> 	if (err !=3D 0)
-> 		return err;
->=20
-> -	err =3D svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT, c=
-red);
-> +	if (!nfsd_rpcbind_error_is_fatal())
-> +		flags |=3D SVC_SOCK_RPCBIND_NOERR;
-> +
-> +	err =3D svc_addsock(nn->nfsd_serv, fd, buf, SIMPLE_TRANSACTION_LIMIT,
-> +			  flags, cred);
-> 	if (err < 0) {
-> 		nfsd_destroy(net);
-> 		return err;
-> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> index 498e5a489826..e0356d3ecf65 100644
-> --- a/fs/nfsd/nfsd.h
-> +++ b/fs/nfsd/nfsd.h
-> @@ -134,6 +134,7 @@ int nfsd_vers(struct nfsd_net *nn, int vers, enum ver=
-s_op change);
-> int nfsd_minorversion(struct nfsd_net *nn, u32 minorversion, enum vers_op=
- change);
-> void nfsd_reset_versions(struct nfsd_net *nn);
-> int nfsd_create_serv(struct net *net);
-> +extern bool nfsd_rpcbind_error_is_fatal(void);
->=20
-> extern int nfsd_max_blksize;
+> fs/nfsd/nfssvc.c | 11 +++++++++++
+> 1 file changed, 11 insertions(+)
 >=20
 > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-> index 6815c70b06af..6f22c72f340d 100644
+> index 80431921e5d7..6815c70b06af 100644
 > --- a/fs/nfsd/nfssvc.c
 > +++ b/fs/nfsd/nfssvc.c
-> @@ -289,17 +289,21 @@ static int nfsd_init_socks(struct net *net, const s=
-truct cred *cred)
-> {
-> 	int error;
-> 	struct nfsd_net *nn =3D net_generic(net, nfsd_net_id);
-> +	int flags =3D SVC_SOCK_DEFAULTS;
->=20
-> 	if (!list_empty(&nn->nfsd_serv->sv_permsocks))
-> 		return 0;
->=20
-> +	if (!nfsd_rpcbind_error_is_fatal())
-> +		flags |=3D SVC_SOCK_RPCBIND_NOERR;
-> +
-> 	error =3D svc_create_xprt(nn->nfsd_serv, "udp", net, PF_INET, NFS_PORT,
-> -					SVC_SOCK_DEFAULTS, cred);
-> +				flags, cred);
-> 	if (error < 0)
-> 		return error;
->=20
-> 	error =3D svc_create_xprt(nn->nfsd_serv, "tcp", net, PF_INET, NFS_PORT,
-> -					SVC_SOCK_DEFAULTS, cred);
-> +				flags, cred);
-> 	if (error < 0)
-> 		return error;
->=20
-> @@ -340,6 +344,16 @@ static void nfsd_shutdown_generic(void)
+> @@ -340,8 +340,19 @@ static void nfsd_shutdown_generic(void)
 > 	nfsd_file_cache_shutdown();
 > }
 >=20
-> +static bool nfsd_rpcbind_error_fatal =3D false;
-> +module_param(nfsd_rpcbind_error_fatal, bool, 0644);
-> +MODULE_PARM_DESC(nfsd_rpcbind_error_fatal,
-> +		 "rpcbind errors are fatal when starting nfsd.");
+> +/*
+> + * Allow admin to disable lockd. This would typically be used to allow (=
+e.g.)
+> + * a userspace NLM server of some sort to be used.
+> + */
+> +static bool nfsd_disable_lockd =3D false;
+> +module_param(nfsd_disable_lockd, bool, 0644);
+> +MODULE_PARM_DESC(nfsd_disable_lockd, "Allow lockd to be manually disable=
+d.");
 > +
-> +bool nfsd_rpcbind_error_is_fatal(void)
-> +{
-> +	return nfsd_rpcbind_error_fatal;
-> +}
-> +
-> /*
->  * Allow admin to disable lockd. This would typically be used to allow (e=
-.g.)
->  * a userspace NLM server of some sort to be used.
-> diff --git a/include/linux/sunrpc/svcsock.h b/include/linux/sunrpc/svcsoc=
-k.h
-> index bcc555c7ae9c..f34c222cee9d 100644
-> --- a/include/linux/sunrpc/svcsock.h
-> +++ b/include/linux/sunrpc/svcsock.h
-> @@ -61,8 +61,8 @@ void		svc_drop(struct svc_rqst *);
-> void		svc_sock_update_bufs(struct svc_serv *serv);
-> bool		svc_alien_sock(struct net *net, int fd);
-> int		svc_addsock(struct svc_serv *serv, const int fd,
-> -					char *name_return, const size_t len,
-> -					const struct cred *cred);
-> +			    char *name_return, const size_t len, int flags,
-> +			    const struct cred *cred);
-> void		svc_init_xprt_sock(void);
-> void		svc_cleanup_xprt_sock(void);
-> struct svc_xprt *svc_sock_create(struct svc_serv *serv, int prot);
-> @@ -74,5 +74,6 @@ void		svc_sock_destroy(struct svc_xprt *);
-> #define SVC_SOCK_DEFAULTS	(0U)
-> #define SVC_SOCK_ANONYMOUS	(1U << 0)	/* don't register with pmap */
-> #define SVC_SOCK_TEMPORARY	(1U << 1)	/* flag socket as temporary */
-> +#define SVC_SOCK_RPCBIND_NOERR	(1U << 2)	/* Ignore pmap errors */
->=20
-> #endif /* SUNRPC_SVCSOCK_H */
-> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-> index 478f857cdaed..7f5b12a50bf9 100644
-> --- a/net/sunrpc/svcsock.c
-> +++ b/net/sunrpc/svcsock.c
-> @@ -1309,14 +1309,15 @@ static struct svc_sock *svc_setup_socket(struct s=
-vc_serv *serv,
-> 	inet =3D sock->sk;
->=20
-> 	/* Register socket with portmapper */
-> -	if (pmap_register)
-> +	if (pmap_register) {
-> 		err =3D svc_register(serv, sock_net(sock->sk), inet->sk_family,
-> 				     inet->sk_protocol,
-> 				     ntohs(inet_sk(inet)->inet_sport));
->=20
-> -	if (err < 0) {
-> -		kfree(svsk);
-> -		return ERR_PTR(err);
-> +		if (err < 0 && !(flags & SVC_SOCK_RPCBIND_NOERR)) {
-> +			kfree(svsk);
-> +			return ERR_PTR(err);
-> +		}
-> 	}
->=20
-> 	svsk->sk_sock =3D sock;
-> @@ -1364,6 +1365,7 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
->  * @fd: file descriptor of the new listener
->  * @name_return: pointer to buffer to fill in with name of listener
->  * @len: size of the buffer
-> + * @flags: flags argument for svc_setup_socket()
->  * @cred: credential
->  *
->  * Fills in socket name and returns positive length of name if successful=
-.
-> @@ -1371,7 +1373,7 @@ EXPORT_SYMBOL_GPL(svc_alien_sock);
->  * value.
->  */
-> int svc_addsock(struct svc_serv *serv, const int fd, char *name_return,
-> -		const size_t len, const struct cred *cred)
-> +		const size_t len, int flags, const struct cred *cred)
+> static bool nfsd_needs_lockd(struct nfsd_net *nn)
+
+                              ^^^^^^^^^^^^^^^^^^^^
+
+An nfsd_net * is passed to nfsd_needs_lockd(), therefore the
+availability of the lockd service needs to be aware of net namespaces,
+right?
+
+NAK for now, but I'm open to more dialog about how to support the "no
+lockd" use case. That's intriguing.
+
+
 > {
-> 	int err =3D 0;
-> 	struct socket *so =3D sockfd_lookup(fd, &err);
-> @@ -1395,7 +1397,7 @@ int svc_addsock(struct svc_serv *serv, const int fd=
-, char *name_return,
-> 	err =3D -ENOENT;
-> 	if (!try_module_get(THIS_MODULE))
-> 		goto out;
-> -	svsk =3D svc_setup_socket(serv, so, SVC_SOCK_DEFAULTS);
-> +	svsk =3D svc_setup_socket(serv, so, flags);
-> 	if (IS_ERR(svsk)) {
-> 		module_put(THIS_MODULE);
-> 		err =3D PTR_ERR(svsk);
+> +	if (nfsd_disable_lockd)
+> +		return false;
+> +
+> 	return nfsd_vers(nn, 2, NFSD_TEST) || nfsd_vers(nn, 3, NFSD_TEST);
+> }
+>=20
 > --=20
 > 2.33.1
 >=20
