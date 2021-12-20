@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 16DDE47A67F
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 09:59:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 347C047A681
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 10:00:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232355AbhLTI7r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Dec 2021 03:59:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
+        id S232321AbhLTI76 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Dec 2021 03:59:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231855AbhLTI7r (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 03:59:47 -0500
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3508EC061401
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:59:47 -0800 (PST)
-Received: by mail-pl1-x633.google.com with SMTP id m24so7547786pls.10
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:59:47 -0800 (PST)
+        with ESMTP id S232934AbhLTI76 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 03:59:58 -0500
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF605C06173F
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:59:57 -0800 (PST)
+Received: by mail-pj1-x1031.google.com with SMTP id rj2-20020a17090b3e8200b001b1944bad25so3869584pjb.5
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:59:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kLFOwVFiZIjw3RVJm6qr/zBDVNSCqLZEWF5PJy3+HZY=;
-        b=1m1uipmyXDVKXnb/j83XSckTtYI/vWJY+8BsxopX4OSiNiDP+urm0WN/C/haMxrDI+
-         0MnF3qDqBtBh1Rscr+qsKFHU4osXfIYZUo/iPFn1THWNtnyyIHZdG87Fa3p6jy+pxK8h
-         4UtpPN5vnDvJysuRkEfB7mf+LkGkxjzifGGjiKkkPPd5nBHVveADhXUSzP/z+lqRVYE/
-         obkCs6GuNpTLTy+G81CMMg9Q5BNV/HakZKn8w/JLJaHt13hDOGu4FF4H6Z4M7bUGY0SI
-         8F1orSxIT5IAhepsD91tdQpVP0m+eeAlhuPovFXskKkyHPXNA5W4ZFwZkYmDbhO4QNVE
-         LC8g==
+        bh=O7Mg/f9nLeyIWPXNcJvDRJ+Jd7WL7Il017lo2NLhARI=;
+        b=AObXVaMCAZp1YSpU+N0pd6b07yZsOB0gSHwjRit7kLVYIZYiRfeQ/spzZXewRhTyMr
+         9zaGnTPCpA/zmFjGnY68cgU+xL9qQL2htZp6Zqeie2XKwUyKx+VcuYh2HoGW5CyLZ3tl
+         6+l07WxDwkKR8yn284XkR8CoQyeCnFyTm49lYj8Vbe8ajOJxOSJOwAwp/x0vmAyNVmnj
+         xQlZ64Oqvv4P6iAYhMcwyxRDd6nnNevokyhdHMcfYrW8fxUL8nLJXNGWZbPVETcy4pFO
+         WjtaCCOEuv+cJ5O7aRdjkwL2gP/mrZnl5CdjsHZIOrJ8Ltn+Cp51WsJpIqNHM106kMNj
+         0/wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kLFOwVFiZIjw3RVJm6qr/zBDVNSCqLZEWF5PJy3+HZY=;
-        b=wQH1X3d+R2d0MJpLHmLowBf5Agc/ieYPMVtX9rYZJhvkx2FsqkqHvdqzRtTqNPYlDD
-         63D1FpoJg0tIZoXAQJFPLfxQxxbg1xhkyDhjYHDC2xnx2G/t+Y8mEa48zv5KVdjX+mQ8
-         OXs+qxqPsKIKzshm9xceVCzfnXR1w0f1h6VIjlFLBRBxl3sr8cBnAp5tKRCts3PqBJPY
-         c2dftXpscjY8r4D2Hsmoeo/gcgmiG5Cm9LzEF+F2Yh+nbz84rw3Ow58LbkEqdW5uk9mR
-         i4yZrVmAFWEjSLpYZbYW38uaL0fyE4xFBJpd5oo9nrK1F7bx17B0mzTZr6rkseGcsFEd
-         lQ6w==
-X-Gm-Message-State: AOAM532DDE8EJ6+j6gyiEJKO0NsaBeOv1/HYWSqs0tv68iBao2OQ0Mdw
-        8rrfvo/fFyS/mrpBFr/vYrRBhA==
-X-Google-Smtp-Source: ABdhPJw5ehYc9OocA6HcKwZyTrKBWh/AB+57172S/Xshm39KLQ+cdNqTHwRjWsexAMIpf2bGpEy3hA==
-X-Received: by 2002:a17:902:8645:b0:142:8c0d:3f4a with SMTP id y5-20020a170902864500b001428c0d3f4amr16069379plt.3.1639990786755;
-        Mon, 20 Dec 2021 00:59:46 -0800 (PST)
+        bh=O7Mg/f9nLeyIWPXNcJvDRJ+Jd7WL7Il017lo2NLhARI=;
+        b=mpxIFwnvEsX1xIfIvfhBkOjU0mqsrP7yNICEVJ7rNQ7HjrucBZZ+E1NEODamxgza82
+         BPUr3FTieIUwpgfrSo2PpwtAaGb1QSAXfoBinvYxCBuFhkORgKK4U/srcVD88Du1GU2j
+         q5vRD4wcZ5v0QjEJO17jt1YC6FrrI66p67Hsw38IoXvgiTLOeyQca+jaswQGRwyKf4ck
+         V2+KOIU8UB5Y4d5AvdnC1kSgKVlTCt59nIA53CQ7qFqGnvSEIom2Is12NIYs71JRF2Oy
+         Td1Fl7bOaQUmbWVVMPAs97llv0QnQlRuG8ond92SJyUZmaKRw5QpBh2kM4uBeESEsdLc
+         RVQA==
+X-Gm-Message-State: AOAM532SiWzXkmTwwuVFipq1Nd4MkjjSBnljZ49YBamEDd/OUc6ZiAzR
+        VtBUwx0H48Yykq3QZfBs4C4vnQ==
+X-Google-Smtp-Source: ABdhPJxnxSChBfXQZtFai6mG8NPSe+Q2tN3yMmFqcabRYLbf40MvRwYGGO1kMR6ED42RJ5L/OKu9aw==
+X-Received: by 2002:a17:90a:d792:: with SMTP id z18mr1922586pju.182.1639990797245;
+        Mon, 20 Dec 2021 00:59:57 -0800 (PST)
 Received: from localhost.localdomain ([61.120.150.70])
-        by smtp.gmail.com with ESMTPSA id m11sm18441647pfk.27.2021.12.20.00.59.35
+        by smtp.gmail.com with ESMTPSA id m11sm18441647pfk.27.2021.12.20.00.59.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Dec 2021 00:59:46 -0800 (PST)
+        Mon, 20 Dec 2021 00:59:56 -0800 (PST)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -59,9 +59,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, smuchun@gmail.com,
         Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v5 14/16] mm: memcontrol: fix cannot alloc the maximum memcg ID
-Date:   Mon, 20 Dec 2021 16:56:47 +0800
-Message-Id: <20211220085649.8196-15-songmuchun@bytedance.com>
+Subject: [PATCH v5 15/16] mm: list_lru: rename list_lru_per_memcg to list_lru_memcg
+Date:   Mon, 20 Dec 2021 16:56:48 +0800
+Message-Id: <20211220085649.8196-16-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 In-Reply-To: <20211220085649.8196-1-songmuchun@bytedance.com>
 References: <20211220085649.8196-1-songmuchun@bytedance.com>
@@ -71,27 +71,108 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The idr_alloc() does not include @max ID. So in the current implementation,
-the maximum memcg ID is 65534 instead of 65535. It seems a bug. So fix this.
+The name of list_lru_memcg was occupied before and became free since last
+commit. Rename list_lru_per_memcg to list_lru_memcg since the name is brief.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 ---
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/list_lru.h |  2 +-
+ mm/list_lru.c            | 18 +++++++++---------
+ 2 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 04f75055f518..fdd0007554a0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5013,7 +5013,7 @@ static struct mem_cgroup *mem_cgroup_alloc(void)
- 		return ERR_PTR(error);
+diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
+index 572c263561ac..b35968ee9fb5 100644
+--- a/include/linux/list_lru.h
++++ b/include/linux/list_lru.h
+@@ -32,7 +32,7 @@ struct list_lru_one {
+ 	long			nr_items;
+ };
  
- 	memcg->id.id = idr_alloc(&mem_cgroup_idr, NULL,
--				 MEM_CGROUP_ID_MIN, MEM_CGROUP_ID_MAX,
-+				 MEM_CGROUP_ID_MIN, MEM_CGROUP_ID_MAX + 1,
- 				 GFP_KERNEL);
- 	if (memcg->id.id < 0) {
- 		error = memcg->id.id;
+-struct list_lru_per_memcg {
++struct list_lru_memcg {
+ 	struct rcu_head		rcu;
+ 	/* array of per cgroup per node lists, indexed by node id */
+ 	struct list_lru_one	node[];
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 8dc1dabb9f05..38f711e9b56e 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -53,7 +53,7 @@ static inline struct list_lru_one *
+ list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
+ {
+ 	if (list_lru_memcg_aware(lru) && idx >= 0) {
+-		struct list_lru_per_memcg *mlru = xa_load(&lru->xa, idx);
++		struct list_lru_memcg *mlru = xa_load(&lru->xa, idx);
+ 
+ 		return mlru ? &mlru->node[nid] : NULL;
+ 	}
+@@ -306,7 +306,7 @@ unsigned long list_lru_walk_node(struct list_lru *lru, int nid,
+ 
+ #ifdef CONFIG_MEMCG_KMEM
+ 	if (*nr_to_walk > 0 && list_lru_memcg_aware(lru)) {
+-		struct list_lru_per_memcg *mlru;
++		struct list_lru_memcg *mlru;
+ 		unsigned long index;
+ 
+ 		xa_for_each(&lru->xa, index, mlru) {
+@@ -335,10 +335,10 @@ static void init_one_lru(struct list_lru_one *l)
+ }
+ 
+ #ifdef CONFIG_MEMCG_KMEM
+-static struct list_lru_per_memcg *memcg_init_list_lru_one(gfp_t gfp)
++static struct list_lru_memcg *memcg_init_list_lru_one(gfp_t gfp)
+ {
+ 	int nid;
+-	struct list_lru_per_memcg *mlru;
++	struct list_lru_memcg *mlru;
+ 
+ 	mlru = kmalloc(struct_size(mlru, node, nr_node_ids), gfp);
+ 	if (!mlru)
+@@ -352,7 +352,7 @@ static struct list_lru_per_memcg *memcg_init_list_lru_one(gfp_t gfp)
+ 
+ static void memcg_list_lru_free(struct list_lru *lru, int src_idx)
+ {
+-	struct list_lru_per_memcg *mlru = xa_erase_irq(&lru->xa, src_idx);
++	struct list_lru_memcg *mlru = xa_erase_irq(&lru->xa, src_idx);
+ 
+ 	/*
+ 	 * The __list_lru_walk_one() can walk the list of this node.
+@@ -374,7 +374,7 @@ static inline void memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+ static void memcg_destroy_list_lru(struct list_lru *lru)
+ {
+ 	XA_STATE(xas, &lru->xa, 0);
+-	struct list_lru_per_memcg *mlru;
++	struct list_lru_memcg *mlru;
+ 
+ 	if (!list_lru_memcg_aware(lru))
+ 		return;
+@@ -476,7 +476,7 @@ int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
+ 	unsigned long flags;
+ 	struct list_lru_memcg *mlrus;
+ 	struct list_lru_memcg_table {
+-		struct list_lru_per_memcg *mlru;
++		struct list_lru_memcg *mlru;
+ 		struct mem_cgroup *memcg;
+ 	} *table;
+ 	XA_STATE(xas, &lru->xa, 0);
+@@ -492,7 +492,7 @@ int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
+ 	/*
+ 	 * Because the list_lru can be reparented to the parent cgroup's
+ 	 * list_lru, we should make sure that this cgroup and all its
+-	 * ancestors have allocated list_lru_per_memcg.
++	 * ancestors have allocated list_lru_memcg.
+ 	 */
+ 	for (i = 0; memcg; memcg = parent_mem_cgroup(memcg), i++) {
+ 		if (memcg_list_lru_allocated(memcg, lru))
+@@ -511,7 +511,7 @@ int memcg_list_lru_alloc(struct mem_cgroup *memcg, struct list_lru *lru,
+ 	xas_lock_irqsave(&xas, flags);
+ 	while (i--) {
+ 		int index = READ_ONCE(table[i].memcg->kmemcg_id);
+-		struct list_lru_per_memcg *mlru = table[i].mlru;
++		struct list_lru_memcg *mlru = table[i].mlru;
+ 
+ 		xas_set(&xas, index);
+ retry:
 -- 
 2.11.0
 
