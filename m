@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FBB47A94C
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 13:16:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F00C47A968
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 13:21:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231428AbhLTMQl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Dec 2021 07:16:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54926 "EHLO
+        id S231482AbhLTMVx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Dec 2021 07:21:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229633AbhLTMQl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 07:16:41 -0500
+        with ESMTP id S230038AbhLTMVw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 07:21:52 -0500
 Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3763BC061574;
-        Mon, 20 Dec 2021 04:16:41 -0800 (PST)
-Received: by mail-ua1-x929.google.com with SMTP id o63so4988988uao.5;
-        Mon, 20 Dec 2021 04:16:41 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E790C061574;
+        Mon, 20 Dec 2021 04:21:52 -0800 (PST)
+Received: by mail-ua1-x929.google.com with SMTP id t13so17245135uad.9;
+        Mon, 20 Dec 2021 04:21:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=BnyBbvTY2/pKI2NR4Gal0C7RZeDcNiAJl2jICNilH6I=;
-        b=Bt6YGTCXwGNAvirMEQP0AHRNRy/2/wJsw+vCNB9m5TwvJprBiSnybgi+QyPQah7jC6
-         EV13TvSBJIHYQA4igync1RezOtGeAZwejzeXIMoPrGjRmQuRVndHAd5A3H9f/FKLfcak
-         MVDrVusk5HGLpsyQd4fWmGP131p0MMewzuOmWFTcjyA4eBxaWdYDoUAV7pDx4Q8ZfKhj
-         qkG312tYJuvuO7yzXFQBQ7sz1Yx8uZAWBtnn/H/kSzcf8hn/bVYgCpKmnE9Y4ud2aFCD
-         hkdHWNgYWIfCc+YTxqezEUkDymtk7sLoGEAUrQ8SbnbWww1+o4jxXvDrIXkrjdn98Wtl
-         CJ2A==
+        bh=kQFMqdREYbA6pMmlCdr5tqLXzt6JY03eIdDvlj4irPg=;
+        b=lOxIjH2sPXo7lH1pv+9xqI6q77X5toldoYNan7hBf0t4eykMEXCKFBwZHism4a8i9I
+         2u/qKd6G1p/iqZJOlJRARn9dpuxJKsL9QfTSbV6vaeKYMmq4ad6pPvdtgv3P7R9xDlMO
+         gjJof3eUpIiltLOttwIrFQhicAjUfkWj/eHf16bc9CGrnyFBHCgbQ5mfvVXSGng+GnST
+         9e9jFhkvF53lBIOUOklUKUZSbggo+GyQs5crxQ7SZOmcuo0CqRAhtCnz7EZiHg0koJZN
+         GY8qx5Y86N1YWaBisYlM4eMY6SEy7KAf76gxgF9QemzyevIua4uibmFuJxsyfGLWYcHW
+         IfGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=BnyBbvTY2/pKI2NR4Gal0C7RZeDcNiAJl2jICNilH6I=;
-        b=cUc24mO1DRCEU2J1u5DBfBkcPfmSwnBLSg/uIkAdtDr9nxbgipdrWi1YnI3njBVs6c
-         LB0ecnXiEnb+6OPF10130WqLtduTjdj1nRgC/Gry0PbUuIryVsjaecMDs+7UJNDs8o17
-         9D2ucm0ufEn4r6Wau2Iidr0YzrRJfOr+H1Coik9ZKaWAktoXGarCV/84d2kdx+QCBAyp
-         RsDGRD9xpSvw88UClAIBZ4QuLNpMGu8ASc+E97xwmfQq3nDxTm0S7ub+1nZ1cM6a+VCR
-         JtURfzZeWpzUi2tH7WvKrGLlG2ueXjRhJ+R4DjxA3a0VZuqrAuynxNN2WGnlD64BjVa7
-         Pl1g==
-X-Gm-Message-State: AOAM532N+DAVL8scikv0tpLjL3FXtCdO+YIwhPPq5fblhN8CThd0mIaC
-        9h6IuV7ru1QdgCrlZjQVJBUcI9JLhbRopKVUcNvVZKYR9MFoVw==
-X-Google-Smtp-Source: ABdhPJyWy6U0BNJoQtTswaImkgCV1g1YpfkFneizSDMyZR6deqY5q9HDiX+0l0BAJ8fr4qzA9Ca5F2oXXh1jejM02BM=
-X-Received: by 2002:a9f:35ad:: with SMTP id t42mr4912618uad.105.1640002600402;
- Mon, 20 Dec 2021 04:16:40 -0800 (PST)
+        bh=kQFMqdREYbA6pMmlCdr5tqLXzt6JY03eIdDvlj4irPg=;
+        b=C/TKRgXNBF2BEDp7CC0UdPmXKrHvneYjIWxrcbCWboANZCveoNcG+U79xx7LjwfWlj
+         YcawXf/sm5z+3OTVpD+mx5dfqlA0FkAP0AuN29zwg7ubDY+KcRCaF6PNl4bDgcAHIrYT
+         scRL81pcNohTEyScMQSNQGj7vuI180yTD8FCpLX6uLONbbWMa5yNwdRiI/Gp7RQ7U3sT
+         2b+setqxF8SZocftpg9aaiA3iCQd1gfJBEU+iJt8XVzCxNXnhcATgWqbNvHfuncSjmDa
+         yMPERQ6Tf0k6TCrxBtAaG3jb31BwUTa6l3lG/DU0TB1wZdkpp0oIGd7pepa4SrJzNr3A
+         RCQA==
+X-Gm-Message-State: AOAM532xOWfGgHi0n9UxqhJdP2f4hMm/+sjV5h4psee/WdAL+BHke1p9
+        8HZxI+0WAIqK8LQ938OPoz5hz8Qvnbelheg8TBfNLmUbiOo=
+X-Google-Smtp-Source: ABdhPJy5Yr3VSqOfKSJ2+mLWwF2Sf8WB3Mmlsk+ujRLez8Z6FA6BEhzJG/7MZDhGMxB65PxZq+Q/hqMvFjYAiTYSnm0=
+X-Received: by 2002:a05:6102:1613:: with SMTP id cu19mr4463931vsb.25.1640002911522;
+ Mon, 20 Dec 2021 04:21:51 -0800 (PST)
 MIME-Version: 1.0
-References: <163969801519.20885.3977673503103544412.stgit@noble.brown> <163969850289.20885.1044395970457169316.stgit@noble.brown>
-In-Reply-To: <163969850289.20885.1044395970457169316.stgit@noble.brown>
+References: <163969801519.20885.3977673503103544412.stgit@noble.brown> <163969850299.20885.11549845125423716814.stgit@noble.brown>
+In-Reply-To: <163969850299.20885.11549845125423716814.stgit@noble.brown>
 From:   Mark Hemment <markhemm@googlemail.com>
-Date:   Mon, 20 Dec 2021 12:16:29 +0000
-Message-ID: <CANe_+Ui+1wyC8XS-9BsGKUCtzgEA0DuFMVbE95Y3QitEkF5jyA@mail.gmail.com>
-Subject: Re: [PATCH 03/18] MM: use ->swap_rw for reads from SWP_FS_OPS swap-space
+Date:   Mon, 20 Dec 2021 12:21:40 +0000
+Message-ID: <CANe_+UiH-1uJPRE2CWAiu=h=JG97aGD-QtvaaRvcAYOfCB8CuQ@mail.gmail.com>
+Subject: Re: [PATCH 07/18] MM: submit multipage write for SWP_FS_OPS swap-space
 To:     NeilBrown <neilb@suse.de>
 Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -64,37 +64,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 16 Dec 2021 at 23:54, NeilBrown <neilb@suse.de> wrote:
+On Thu, 16 Dec 2021 at 23:56, NeilBrown <neilb@suse.de> wrote:
 >
-> To submit an async read with ->swap_rw() we need to allocate
-> a structure to hold the kiocb and other details.  swap_readpage() cannot
-> handle transient failure, so create a mempool to provide the structures.
+> swap_writepage() is given one page at a time, but may be called repeatedly
+> in succession.
+> For block-device swapspace, the blk_plug functionality allows the
+> multiple pages to be combined together at lower layers.
+> That cannot be used for SWP_FS_OPS as blk_plug may not exist - it is
+> only active when CONFIG_BLOCK=y.  Consequently all swap reads over NFS
+> are single page reads.
+>
+> With this patch we pass a pointer-to-pointer via the wbc.
+> swap_writepage can store state between calls - much like the pointer
+> passed explicitly to swap_readpage.  After calling swap_writepage() some
+> number of times, the state will be passed to swap_write_unplug() which
+> can submit the combined request.
 >
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  mm/page_io.c  |   58 +++++++++++++++++++++++++++++++++++++++++++++++++++------
->  mm/swap.h     |    1 +
->  mm/swapfile.c |    5 +++++
->  3 files changed, 58 insertions(+), 6 deletions(-)
+>  include/linux/writeback.h |    7 +++
+>  mm/page_io.c              |   98 ++++++++++++++++++++++++++++++---------------
+>  mm/swap.h                 |    1
+>  mm/vmscan.c               |    9 +++-
+>  4 files changed, 80 insertions(+), 35 deletions(-)
 ...
-> diff --git a/mm/swapfile.c b/mm/swapfile.c
-> index f23d9ff21cf8..43539be38e68 100644
-> --- a/mm/swapfile.c
-> +++ b/mm/swapfile.c
-> @@ -2401,6 +2401,11 @@ static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
->                 if (ret < 0)
->                         return ret;
->                 sis->flags |= SWP_ACTIVATED;
-> +               if ((sis->flags & SWP_FS_OPS) &&
-> +                   sio_pool_init() != 0) {
-> +                       destroy_swap_extents(sis);
-> +                       return -ENOMEM;
-> +               }
->                 return ret;
->         }
+> +void swap_write_unplug(struct swap_iocb *sio)
+> +{
+> +       struct iov_iter from;
+> +       struct address_space *mapping = sio->iocb.ki_filp->f_mapping;
+> +       int ret;
+> +
+> +       iov_iter_bvec(&from, WRITE, sio->bvec, sio->pages,
+> +                     PAGE_SIZE * sio->pages);
+> +       ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
+> +       if (ret != -EIOCBQUEUED)
+> +               sio_write_complete(&sio->iocb, ret);
+> +}
+> +
 
-This code is called before 'swapon_mutex' is taken in the swapon code
-path, so possible for multiple swapons to race here creating two (or
-more) memory pools.
+As swap_write_unplug() is called from vmscan.c, need an 'no-op'
+version (in "swap.h") for when !CONFIG_SWAP
 
 Mark
