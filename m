@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A80A47A66D
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 09:58:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 485F347A671
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 09:58:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238184AbhLTI6n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Dec 2021 03:58:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37550 "EHLO
+        id S238196AbhLTI6z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Dec 2021 03:58:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238178AbhLTI6n (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 03:58:43 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 085EFC061574
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:58:43 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id u16so1498358plg.9
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:58:43 -0800 (PST)
+        with ESMTP id S232645AbhLTI6x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 03:58:53 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5A7C06173F
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:58:53 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id o63-20020a17090a0a4500b001b1c2db8145so1357304pjo.5
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 00:58:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZrLB05wu75xtprEgkWCOZKZLcRJIsJQvvD7shKptZC8=;
-        b=p75duGBHD+hgKaVEl9+L5IXqWpMUnqqbaTE/oyZCHx69y4q+9TfwEzSkT6+AxDMZua
-         9AvQflMkkj5S9Qkw9ZSAD+Dh0v72TS4p+rZXc1DsaIySlZ8+IlGOAfBKjs4uXTFa18Mr
-         RaCmkpN8pOW3zcxdid4hA5au2Mwogr+tedqOIBtfSD30eGZ+ESsT7DgZeSBg25Aowrb1
-         DPhavswlObDAqkXM3G0dgy8iNjMvg5yzVw5396JoDpZFzMvxS1855wqUOtWoNy6qtVw5
-         R4j7KoXEaR3A5HOnGG0b1Ea79G5dnd3iebDBhOixd2XPesajczf1TgKqH2WPImoBmE4Q
-         i76A==
+        bh=rMvcBVwXnNFX2TRf33ZNs6lKAej6Dsa2gPzCzMJOYCg=;
+        b=g8WXPdWnN0qRnYI+vDliaVn5biyV21O8OhvDzPWXyPHSbR+iL6Bh65Fo+eiMhRISdj
+         K+xGefT/f2xFvTJfYqA/BM+J03Cj8rmdViKVf76lrJrXs5bYixre2h7mh9yUEyOVwbGP
+         VXJW+vqH0L7KLSLuNoY9lZnbUWzeIFagV7xnXrsczlCqtB9Rj+MIotGtbgE0QvR12zjS
+         rM5cJsSJ2vesMsXUBBTHvPIaBq0AN5kt4sFNQXobgR6lYI7+uoaPrf5tJpzXybpMpRRh
+         xpYy65flBjlzH652NTxy0tp7dyusBTNmONgSh5WzNN3bJ+mf3WkZDFBc/zCZfI4/ZbvP
+         yc1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZrLB05wu75xtprEgkWCOZKZLcRJIsJQvvD7shKptZC8=;
-        b=t/aBzaWP7XwWWZjXiGmWbkSPF9b7sL/QmJ+lK0ujS/swCy7JBrWCkRfQUROc5PEx+6
-         0d4a6BSRvzRMoy0PVYsQITJRRf1tlO+p6MBp0r3+5j+LfBWVFqtKhtr4kRD5rQaESMdG
-         M27cB/CllNo5rlxSCdgoVdb9eIezcSw+Y6+GwQ4gBahy15rSqFLXpIZUCK0UV47IW1Kz
-         Q+Pj7oppK623Dmxm+oFczPBawBsdXJzy4NJEpWU+7M/eWF282z1MDAhC0nxn8hmUeJAn
-         HWjOwFJKmvP04kV6Kv3j1EL9WWoYD4X8cg+zyUXYX42YkA9MLhjABfqY7/2dRn28B16d
-         Q+dQ==
-X-Gm-Message-State: AOAM533uiPmgfA8qLFhpVX4e6IiNwAVq865MxUNeN/mGHRHVbACiRHAT
-        SBh69huGEcCGTAP88P/i7vZ2Ng==
-X-Google-Smtp-Source: ABdhPJxY/dg4Nptrmuy7cfP9oqGxE6ii/4/y1M4sUYuSr+7yNONpRSggWvhJsU16nw1CXt3VUH25Qw==
-X-Received: by 2002:a17:90a:2a8f:: with SMTP id j15mr27155484pjd.204.1639990722630;
-        Mon, 20 Dec 2021 00:58:42 -0800 (PST)
+        bh=rMvcBVwXnNFX2TRf33ZNs6lKAej6Dsa2gPzCzMJOYCg=;
+        b=uT8ZfGuwdJz2YdpdityvvRUReQHCP8KZw12/U2OySpyRKKJdQimPy+SOkCHNRSG17m
+         IMVwDiqAscVX5GqDIQw4MV5ITZ0ZGbUhss2LQ5NEFLwCNjVDWGyrMrqOj6t6JPc/R+NH
+         4TSNPGZ96ryy/DB/5Wjyp8Vv6FZa9qjE+SKnrfSG6u5yGSZqUB0AyDG5Jh9koDUF0dWC
+         r5g9HLjQq6wRWgiKCYDmA27PjjpmhX/M0fS4u9CO532mLtg9v73tfFqMAuXTZ+7WLXe7
+         gFKQw0Dv5YYGq5drjOwcjH59IQq3zMknl9f1mA2Ikvgl4DdLg+oUrvLw5fBRHRwXyowi
+         6Mcg==
+X-Gm-Message-State: AOAM530PyEiYkG/6EoeuCh/8m4Pkd2OuwyLlTuiIt4C3pKMX7ryZNDKw
+        i3xQqK1iUR2RDxJVsagguFMZ6g==
+X-Google-Smtp-Source: ABdhPJy7kSK/AMCHCx5fZ5LpzmHWwGlHbQWWLpAP0yPvc2IX+lwQp+aENkkzbM/BgcYMy839TxPHgw==
+X-Received: by 2002:a17:90b:388b:: with SMTP id mu11mr6387529pjb.21.1639990733033;
+        Mon, 20 Dec 2021 00:58:53 -0800 (PST)
 Received: from localhost.localdomain ([61.120.150.70])
-        by smtp.gmail.com with ESMTPSA id m11sm18441647pfk.27.2021.12.20.00.58.30
+        by smtp.gmail.com with ESMTPSA id m11sm18441647pfk.27.2021.12.20.00.58.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Dec 2021 00:58:42 -0800 (PST)
+        Mon, 20 Dec 2021 00:58:52 -0800 (PST)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -59,9 +59,9 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, smuchun@gmail.com,
         Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v5 08/16] xarray: use kmem_cache_alloc_lru to allocate xa_node
-Date:   Mon, 20 Dec 2021 16:56:41 +0800
-Message-Id: <20211220085649.8196-9-songmuchun@bytedance.com>
+Subject: [PATCH v5 09/16] mm: memcontrol: move memcg_online_kmem() to mem_cgroup_css_online()
+Date:   Mon, 20 Dec 2021 16:56:42 +0800
+Message-Id: <20211220085649.8196-10-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 In-Reply-To: <20211220085649.8196-1-songmuchun@bytedance.com>
 References: <20211220085649.8196-1-songmuchun@bytedance.com>
@@ -71,129 +71,129 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The workingset will add the xa_node to the shadow_nodes list. So the
-allocation of xa_node should be done by kmem_cache_alloc_lru(). Using
-xas_set_lru() to pass the list_lru which we want to insert xa_node
-into to set up the xa_node reclaim context correctly.
+It will simplify the code if moving memcg_online_kmem() to
+mem_cgroup_css_online() and do not need to set ->kmemcg_id
+to -1 to indicate the memcg is offline. In the next patch,
+->kmemcg_id will be used to sync list lru reparenting which
+requires not to change ->kmemcg_id.
 
 Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 ---
- include/linux/swap.h   |  5 ++++-
- include/linux/xarray.h |  9 ++++++++-
- lib/xarray.c           | 10 +++++-----
- mm/workingset.c        |  2 +-
- 4 files changed, 18 insertions(+), 8 deletions(-)
+ mm/memcontrol.c | 37 ++++++++++++++++---------------------
+ 1 file changed, 16 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index d1ea44b31f19..1ae9d3473c02 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -334,9 +334,12 @@ void workingset_activation(struct folio *folio);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d505b43d5f3b..ec7a62f39326 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3604,7 +3604,8 @@ static int memcg_online_kmem(struct mem_cgroup *memcg)
+ 	if (cgroup_memory_nokmem)
+ 		return 0;
  
- /* Only track the nodes of mappings with shadow entries */
- void workingset_update_node(struct xa_node *node);
-+extern struct list_lru shadow_nodes;
- #define mapping_set_update(xas, mapping) do {				\
--	if (!dax_mapping(mapping) && !shmem_mapping(mapping))		\
-+	if (!dax_mapping(mapping) && !shmem_mapping(mapping)) {		\
- 		xas_set_update(xas, workingset_update_node);		\
-+		xas_set_lru(xas, &shadow_nodes);			\
-+	}								\
- } while (0)
+-	BUG_ON(memcg->kmemcg_id >= 0);
++	if (unlikely(mem_cgroup_is_root(memcg)))
++		return 0;
  
- /* linux/mm/page_alloc.c */
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index a91e3d90df8a..31f3e5ef3c7b 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1317,6 +1317,7 @@ struct xa_state {
- 	struct xa_node *xa_node;
- 	struct xa_node *xa_alloc;
- 	xa_update_node_t xa_update;
-+	struct list_lru *xa_lru;
- };
+ 	memcg_id = memcg_alloc_cache_id();
+ 	if (memcg_id < 0)
+@@ -3630,7 +3631,10 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 	struct mem_cgroup *parent;
+ 	int kmemcg_id;
  
- /*
-@@ -1336,7 +1337,8 @@ struct xa_state {
- 	.xa_pad = 0,					\
- 	.xa_node = XAS_RESTART,				\
- 	.xa_alloc = NULL,				\
--	.xa_update = NULL				\
-+	.xa_update = NULL,				\
-+	.xa_lru = NULL,					\
- }
- 
- /**
-@@ -1613,6 +1615,11 @@ static inline void xas_set_update(struct xa_state *xas, xa_update_node_t update)
- 	xas->xa_update = update;
- }
- 
-+static inline void xas_set_lru(struct xa_state *xas, struct list_lru *lru)
-+{
-+	xas->xa_lru = lru;
-+}
+-	if (memcg->kmemcg_id == -1)
++	if (cgroup_memory_nokmem)
++		return;
 +
- /**
-  * xas_next_entry() - Advance iterator to next present entry.
-  * @xas: XArray operation state.
-diff --git a/lib/xarray.c b/lib/xarray.c
-index f5d8f54907b4..e9b818abc823 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -302,7 +302,7 @@ bool xas_nomem(struct xa_state *xas, gfp_t gfp)
- 	}
- 	if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
- 		gfp |= __GFP_ACCOUNT;
--	xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+	xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 	if (!xas->xa_alloc)
- 		return false;
- 	xas->xa_alloc->parent = NULL;
-@@ -334,10 +334,10 @@ static bool __xas_nomem(struct xa_state *xas, gfp_t gfp)
- 		gfp |= __GFP_ACCOUNT;
- 	if (gfpflags_allow_blocking(gfp)) {
- 		xas_unlock_type(xas, lock_type);
--		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		xas_lock_type(xas, lock_type);
- 	} else {
--		xas->xa_alloc = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		xas->xa_alloc = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 	}
- 	if (!xas->xa_alloc)
- 		return false;
-@@ -371,7 +371,7 @@ static void *xas_alloc(struct xa_state *xas, unsigned int shift)
- 		if (xas->xa->xa_flags & XA_FLAGS_ACCOUNT)
- 			gfp |= __GFP_ACCOUNT;
++	if (unlikely(mem_cgroup_is_root(memcg)))
+ 		return;
  
--		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		if (!node) {
- 			xas_set_err(xas, -ENOMEM);
- 			return NULL;
-@@ -1014,7 +1014,7 @@ void xas_split_alloc(struct xa_state *xas, void *entry, unsigned int order,
- 		void *sibling = NULL;
- 		struct xa_node *node;
+ 	parent = parent_mem_cgroup(memcg);
+@@ -3640,7 +3644,6 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 	memcg_reparent_objcgs(memcg, parent);
  
--		node = kmem_cache_alloc(radix_tree_node_cachep, gfp);
-+		node = kmem_cache_alloc_lru(radix_tree_node_cachep, xas->xa_lru, gfp);
- 		if (!node)
- 			goto nomem;
- 		node->array = xas->xa;
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 8c03afe1d67c..979c7130c266 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -429,7 +429,7 @@ void workingset_activation(struct folio *folio)
-  * point where they would still be useful.
-  */
+ 	kmemcg_id = memcg->kmemcg_id;
+-	BUG_ON(kmemcg_id < 0);
  
--static struct list_lru shadow_nodes;
-+struct list_lru shadow_nodes;
+ 	/*
+ 	 * After we have finished memcg_reparent_objcgs(), all list_lrus
+@@ -3651,7 +3654,6 @@ static void memcg_offline_kmem(struct mem_cgroup *memcg)
+ 	memcg_drain_all_list_lrus(kmemcg_id, parent);
  
- void workingset_update_node(struct xa_node *node)
+ 	memcg_free_cache_id(kmemcg_id);
+-	memcg->kmemcg_id = -1;
+ }
+ #else
+ static int memcg_online_kmem(struct mem_cgroup *memcg)
+@@ -5159,7 +5161,6 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
  {
+ 	struct mem_cgroup *parent = mem_cgroup_from_css(parent_css);
+ 	struct mem_cgroup *memcg, *old_memcg;
+-	long error = -ENOMEM;
+ 
+ 	old_memcg = set_active_memcg(parent);
+ 	memcg = mem_cgroup_alloc();
+@@ -5188,34 +5189,26 @@ mem_cgroup_css_alloc(struct cgroup_subsys_state *parent_css)
+ 		return &memcg->css;
+ 	}
+ 
+-	/* The following stuff does not apply to the root */
+-	error = memcg_online_kmem(memcg);
+-	if (error)
+-		goto fail;
+-
+ 	if (cgroup_subsys_on_dfl(memory_cgrp_subsys) && !cgroup_memory_nosocket)
+ 		static_branch_inc(&memcg_sockets_enabled_key);
+ 
+ 	return &memcg->css;
+-fail:
+-	mem_cgroup_id_remove(memcg);
+-	mem_cgroup_free(memcg);
+-	return ERR_PTR(error);
+ }
+ 
+ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
+ {
+ 	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
+ 
++	if (memcg_online_kmem(memcg))
++		goto remove_id;
++
+ 	/*
+ 	 * A memcg must be visible for expand_shrinker_info()
+ 	 * by the time the maps are allocated. So, we allocate maps
+ 	 * here, when for_each_mem_cgroup() can't skip it.
+ 	 */
+-	if (alloc_shrinker_info(memcg)) {
+-		mem_cgroup_id_remove(memcg);
+-		return -ENOMEM;
+-	}
++	if (alloc_shrinker_info(memcg))
++		goto offline_kmem;
+ 
+ 	/* Online state pins memcg ID, memcg ID pins CSS */
+ 	refcount_set(&memcg->id.ref, 1);
+@@ -5225,6 +5218,11 @@ static int mem_cgroup_css_online(struct cgroup_subsys_state *css)
+ 		queue_delayed_work(system_unbound_wq, &stats_flush_dwork,
+ 				   2UL*HZ);
+ 	return 0;
++offline_kmem:
++	memcg_offline_kmem(memcg);
++remove_id:
++	mem_cgroup_id_remove(memcg);
++	return -ENOMEM;
+ }
+ 
+ static void mem_cgroup_css_offline(struct cgroup_subsys_state *css)
+@@ -5282,9 +5280,6 @@ static void mem_cgroup_css_free(struct cgroup_subsys_state *css)
+ 	cancel_work_sync(&memcg->high_work);
+ 	mem_cgroup_remove_from_trees(memcg);
+ 	free_shrinker_info(memcg);
+-
+-	/* Need to offline kmem if online_css() fails */
+-	memcg_offline_kmem(memcg);
+ 	mem_cgroup_free(memcg);
+ }
+ 
 -- 
 2.11.0
 
