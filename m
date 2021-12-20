@@ -2,78 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5123747B2D4
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 19:27:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DAA47B2E4
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Dec 2021 19:34:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233700AbhLTS1t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Dec 2021 13:27:49 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36127 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233685AbhLTS1t (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 13:27:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640024868;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Eo3PKtw1L761aiISGa6jWzJcqIXJLNEgiul4itzHnM=;
-        b=gDtFMDyjmk7di16/nZ9bwXMFY6Pe0Y+RKgd9cVE0mV3TNnpFGMOOuE8Qx9vPX83dL6d1zk
-        RX2mBKQuZSz01DXebwRcjwibt/HyLMJrLbanhgPv1uqsLPNgcqDpSyyVSCaF8nx7X5KGdQ
-        TfqSN8Vj1M4etoVKnO97+UFEVQIX3fU=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-647-WI40orooN0CuOrjwzQKWBw-1; Mon, 20 Dec 2021 13:27:46 -0500
-X-MC-Unique: WI40orooN0CuOrjwzQKWBw-1
-Received: by mail-ed1-f71.google.com with SMTP id z8-20020a056402274800b003f8580bfb99so2886106edd.11
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 10:27:46 -0800 (PST)
+        id S232319AbhLTSeB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Dec 2021 13:34:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S240365AbhLTSeA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Dec 2021 13:34:00 -0500
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA85C06173E
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 10:34:00 -0800 (PST)
+Received: by mail-wm1-x336.google.com with SMTP id g191-20020a1c9dc8000000b0032fbf912885so509371wme.4
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Dec 2021 10:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=UtoF0r4yG8U/T8UOLxn8dacSd49m7zi2Qvhr7fGOaoo=;
+        b=IDrVy9T0fig+zHXcl/v7eeKHyLwe57nRQyXVBI7ekg95BHJf2T4dexcZRrdAyCDni9
+         3LWP1xhWndLyVIppLzIJtznI1VyPZH2aquK1k9w94FK54SqPcKyJ9bR5hw94XF9XuRlz
+         Mcsr9cH7BYUOw7e5yX6deosOAomcmFlDc7e3llo6sq1qUB0KwiMuPQ3fm7GWLes8X100
+         w44YqZFgf+r/XO2Sd5+t82m9sfabJ6G6N/Ip2DYauBCL9FO7T4rBl6f9/UZdX4eHyT+j
+         1il5MgCa1Cbqjknx2fqYzkfyCMZC5n05slrKl0RtBhHBpBtjMB20I78v/ToQ8LztWS7l
+         vKNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1Eo3PKtw1L761aiISGa6jWzJcqIXJLNEgiul4itzHnM=;
-        b=HIuBQEOHT3tpvt6niLGYO95eX+9HiaOouXaiP3LOjYn1ZYfKWuRkrbEsTmSPmdfe8T
-         xTjCjuVYYBiJ6G7iD2gS8VMEQb4QG8wg0N+x8zMdoi6RYB+EI6dGgEgB6bDPjZcrJ7Pv
-         tBJu0vKWwMtGMQuZ5IqhoB3KWvDqp5KUaj5QEjdBcsOTXDb7ovHMEkywur1J4YoBBNvI
-         apv7MFOJZqglSDdME1ny9jV6zapFPM7nQUgCwur3wDVde+N4r3kbzFiW/egRvVWgqFoV
-         ypKu1C5B0LVloDz7TZZ49wY8/DAl7nkIl57vwAEB+q0rIJDdRtquSrwX6o/dHCVs9VA7
-         46fw==
-X-Gm-Message-State: AOAM531039QDaD8TZ3TJj1OdxjghfSCuyNuzjv/vovV2/c1bKCocYfdH
-        F/TmKrzp+Kiv8XI4OF3KqIMaO9hhcrhiDnj/qIjvflwMioFEul6n7MM1ZFuHpyoy9buSfJqi0Za
-        UO85ByvmkdsFOE8qxwlntVQ6DzgsIvtXveVc6
-X-Received: by 2002:a17:907:d0b:: with SMTP id gn11mr2941564ejc.379.1640024865091;
-        Mon, 20 Dec 2021 10:27:45 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwsb7294ZUyIi9Ku5TPRgq/C5Xg9zgKzsM3DjhBoNTNnq5uCNEf+0Wayg03IyqowxVtm4R3bnrYvm1EQxblzk8=
-X-Received: by 2002:a17:907:d0b:: with SMTP id gn11mr2941555ejc.379.1640024864936;
- Mon, 20 Dec 2021 10:27:44 -0800 (PST)
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=UtoF0r4yG8U/T8UOLxn8dacSd49m7zi2Qvhr7fGOaoo=;
+        b=zj+tMVBYaah/N4H7GfsbB+/Q83aLIurGyFSbvlTBHZi9+9KWeUgJ0kItkwKVu5VgyX
+         sKymM8bxUTIesRAwKAzn6k55+BJIzGzkjFmPrupVZ9FPido5LswvCFHPJemm1ZHKLf6N
+         XG3xvGB6JkcrtiJyGWD+3eubInyedPduN+Fcybh4BYW3DowvNMV5K2/durCM8ye08e4m
+         66XeqTEq8fOt8X+BdETzlisx7/bWisDt/dNc21sgWS81OGrioevtk/O+peZCeirotve8
+         Tat0fIIz5mtiweejg9qJyopP/5v4ASnIJogihtnzcZcghPXPyDnJ3wJZe4/vbYabZWXd
+         09WQ==
+X-Gm-Message-State: AOAM533Rp2DDDZqQJalyCxtIEtAZZujp4jh2r25AYGE+AnbEY+NE0QS3
+        C+ylaTTrz/YByGGo5MwVOjo=
+X-Google-Smtp-Source: ABdhPJzOp4CIYop0S7ZB3+G0/tpgUNcSPdei2RzUSknBrIo/tZJPbkoWjhtN263jyGlK30gApVre1Q==
+X-Received: by 2002:a1c:ac46:: with SMTP id v67mr223476wme.182.1640025239144;
+        Mon, 20 Dec 2021 10:33:59 -0800 (PST)
+Received: from [192.168.9.102] ([129.205.112.56])
+        by smtp.gmail.com with ESMTPSA id i9sm14455869wrb.84.2021.12.20.10.33.54
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Mon, 20 Dec 2021 10:33:58 -0800 (PST)
+Message-ID: <61c0cc96.1c69fb81.58d21.9166@mx.google.com>
+From:   Margaret Leung KO May-y <kshirsha16@gmail.com>
+X-Google-Original-From: Margaret Leung KO May-y
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-References: <1639763665-4917-1-git-send-email-dwysocha@redhat.com>
- <1639763665-4917-3-git-send-email-dwysocha@redhat.com> <2512433.1640021388@warthog.procyon.org.uk>
-In-Reply-To: <2512433.1640021388@warthog.procyon.org.uk>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Mon, 20 Dec 2021 13:27:08 -0500
-Message-ID: <CALF+zOnx8iAoOrOdmYZOaVB--EdfD8-ijM3iT0w4F+kn4p7rSw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] NFS: Rename fscache read and write pages functions
-To:     David Howells <dhowells@redhat.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-cachefs <linux-cachefs@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Gesch=C3=A4ftsvorschlag?=
+To:     Recipients <Margaret@vger.kernel.org>
+Date:   Mon, 20 Dec 2021 19:33:51 +0100
+Reply-To: la67737777@gmail.com
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Dec 20, 2021 at 12:30 PM David Howells <dhowells@redhat.com> wrote:
->
-> Dave Wysochanski <dwysocha@redhat.com> wrote:
->
-> > Rename NFS fscache functions in a more consistent fashion
-> > to better reflect when we read from and write to fscache.
->
-> Do you want me to merge this into my patch that rewrites the nfs cache I/O?
->
+Bin Frau Margaret Leung Ich habe einen Gesch=E4ftsvorschlag f=FCr Sie, erre=
+ichen Sie mich unter: la67737777@gmail.com
 
-Yes, I think it makes sense to merge this patch with the following
-patch from your series:
-[PATCH v3 64/68] nfs: Implement cache I/O by accessing the cache directly
-
+Margaret Leung
+Managing Director of Chong Hing Bank
