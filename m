@@ -2,47 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 11C9147DB66
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Dec 2021 00:31:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EDC1B47DB6F
+	for <lists+linux-nfs@lfdr.de>; Thu, 23 Dec 2021 00:32:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235351AbhLVXbG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 22 Dec 2021 18:31:06 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:53641 "EHLO
+        id S1345475AbhLVXbu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 22 Dec 2021 18:31:50 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:55642 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1345459AbhLVXbE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Dec 2021 18:31:04 -0500
+        by vger.kernel.org with ESMTP id S242197AbhLVXbs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 22 Dec 2021 18:31:48 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640215863;
+        s=mimecast20190719; t=1640215908;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=SsxjmiBG3s/RiZ1cKU32UcLBLkEapVo/dBju34wf7uQ=;
-        b=Iv+1cdzLJIZDmDxhFX324j5jgkQ4jQ2QJW3liFTJh96j2RO5WNLrUzogyL9etjB3sGl/ox
-        In0gUBF4yaNy24BQfcdogGASZdi2QYpQ9ZmqVHWw+lgpemr+xxp6ICXHpe+xLEX2pq7cc6
-        PQbcKbd3QdbcXHxg6NdK2xZEu/gh08A=
+        bh=6Ei/BkM/HJ1j4nncmgfL05Lirnm7dvMyEthdyELl/08=;
+        b=QaRCl2lh+yS6MjMQ0uUu9dsffYSISzx4jjaTeEzPpI+xZ4u9P267aEWh6RH3lXVintZPut
+        DiPI+vj6cGmY0PvC16haXAKpfxrUyER9W6q4ZxWrmNbsXhsLKzveZ6E2SsZmR53ojAMZ+3
+        SQKRD242QqhRjGrNyyLuQ31v/u7Si1Y=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-491-ufE9uJVCOI29J8og0LT_LQ-1; Wed, 22 Dec 2021 18:30:58 -0500
-X-MC-Unique: ufE9uJVCOI29J8og0LT_LQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-527-sMsOBAdZNky_UxhIxqaMBQ-1; Wed, 22 Dec 2021 18:31:44 -0500
+X-MC-Unique: sMsOBAdZNky_UxhIxqaMBQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75E201006AA4;
-        Wed, 22 Dec 2021 23:30:54 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B8B8801ADB;
+        Wed, 22 Dec 2021 23:31:42 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0ED718476B;
-        Wed, 22 Dec 2021 23:30:50 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B70E7A3F6;
+        Wed, 22 Dec 2021 23:31:27 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH v4 65/68] ceph: add fscache writeback support
+Subject: [PATCH v4 67/68] fscache: Add a tracepoint for cookie use/unuse
 From:   David Howells <dhowells@redhat.com>
 To:     linux-cachefs@redhat.com
-Cc:     Jeff Layton <jlayton@kernel.org>, dhowells@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
+Cc:     dhowells@redhat.com, Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -56,192 +55,155 @@ Cc:     Jeff Layton <jlayton@kernel.org>, dhowells@redhat.com,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 Dec 2021 23:30:50 +0000
-Message-ID: <164021585020.640689.6765214932458435472.stgit@warthog.procyon.org.uk>
+Date:   Wed, 22 Dec 2021 23:31:26 +0000
+Message-ID: <164021588628.640689.12942919367404043608.stgit@warthog.procyon.org.uk>
 In-Reply-To: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
 References: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+Add a tracepoint to track fscache_use/unuse_cookie().
 
-When updating the backing store from the pagecache (a'la writepage or
-writepages), write to the cache first. This allows us to keep caching
-files even when they are being written, as long as we have appropriate
-caps.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
-Link: https://lore.kernel.org/r/20211129162907.149445-3-jlayton@kernel.org/ # v1
-Link: https://lore.kernel.org/r/20211207134451.66296-3-jlayton@kernel.org/ # v2
-Link: https://lore.kernel.org/r/163906985808.143852.1383891557313186623.stgit@warthog.procyon.org.uk/ # v2
-Link: https://lore.kernel.org/r/163967190257.1823006.16713609520911954804.stgit@warthog.procyon.org.uk/ # v3
+cc: linux-cachefs@redhat.com
 ---
 
- fs/ceph/addr.c |   67 +++++++++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 59 insertions(+), 8 deletions(-)
+ fs/fscache/cookie.c            |   29 +++++++++++++++++++++++---
+ include/trace/events/fscache.h |   44 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 69 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 0ffc4c8d7c10..e836f8f1d4f8 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -5,7 +5,6 @@
- #include <linux/fs.h>
- #include <linux/mm.h>
- #include <linux/pagemap.h>
--#include <linux/writeback.h>	/* generic_writepages */
- #include <linux/slab.h>
- #include <linux/pagevec.h>
- #include <linux/task_io_accounting_ops.h>
-@@ -384,6 +383,38 @@ static void ceph_readahead(struct readahead_control *ractl)
- 	netfs_readahead(ractl, &ceph_netfs_read_ops, (void *)(uintptr_t)got);
- }
- 
-+#ifdef CONFIG_CEPH_FSCACHE
-+static void ceph_set_page_fscache(struct page *page)
-+{
-+	set_page_fscache(page);
-+}
-+
-+static void ceph_fscache_write_terminated(void *priv, ssize_t error, bool was_async)
-+{
-+	struct inode *inode = priv;
-+
-+	if (IS_ERR_VALUE(error) && error != -ENOBUFS)
-+		ceph_fscache_invalidate(inode, false);
-+}
-+
-+static void ceph_fscache_write_to_cache(struct inode *inode, u64 off, u64 len, bool caching)
-+{
-+	struct ceph_inode_info *ci = ceph_inode(inode);
-+	struct fscache_cookie *cookie = ceph_fscache_cookie(ci);
-+
-+	fscache_write_to_cache(cookie, inode->i_mapping, off, len, i_size_read(inode),
-+			       ceph_fscache_write_terminated, inode, caching);
-+}
-+#else
-+static inline void ceph_set_page_fscache(struct page *page)
-+{
-+}
-+
-+static inline void ceph_fscache_write_to_cache(struct inode *inode, u64 off, u64 len, bool caching)
-+{
-+}
-+#endif /* CONFIG_CEPH_FSCACHE */
-+
- struct ceph_writeback_ctl
+diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
+index a7ea7d1db032..9bb1ab5fe5ed 100644
+--- a/fs/fscache/cookie.c
++++ b/fs/fscache/cookie.c
+@@ -556,6 +556,7 @@ void __fscache_use_cookie(struct fscache_cookie *cookie, bool will_modify)
  {
- 	loff_t i_size;
-@@ -499,6 +530,7 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
- 	struct ceph_writeback_ctl ceph_wbc;
- 	struct ceph_osd_client *osdc = &fsc->client->osdc;
- 	struct ceph_osd_request *req;
-+	bool caching = ceph_is_cache_enabled(inode);
+ 	enum fscache_cookie_state state;
+ 	bool queue = false;
++	int n_active;
  
- 	dout("writepage %p idx %lu\n", page, page->index);
+ 	_enter("c=%08x", cookie->debug_id);
  
-@@ -537,16 +569,17 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
- 	    CONGESTION_ON_THRESH(fsc->mount_options->congestion_kb))
- 		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
+@@ -565,7 +566,11 @@ void __fscache_use_cookie(struct fscache_cookie *cookie, bool will_modify)
  
--	set_page_writeback(page);
- 	req = ceph_osdc_new_request(osdc, &ci->i_layout, ceph_vino(inode), page_off, &len, 0, 1,
- 				    CEPH_OSD_OP_WRITE, CEPH_OSD_FLAG_WRITE, snapc,
- 				    ceph_wbc.truncate_seq, ceph_wbc.truncate_size,
- 				    true);
--	if (IS_ERR(req)) {
--		redirty_page_for_writepage(wbc, page);
--		end_page_writeback(page);
-+	if (IS_ERR(req))
- 		return PTR_ERR(req);
--	}
+ 	spin_lock(&cookie->lock);
+ 
+-	atomic_inc(&cookie->n_active);
++	n_active = atomic_inc_return(&cookie->n_active);
++	trace_fscache_active(cookie->debug_id, refcount_read(&cookie->ref),
++			     n_active, atomic_read(&cookie->n_accesses),
++			     will_modify ?
++			     fscache_active_use_modify : fscache_active_use);
+ 
+ again:
+ 	state = fscache_cookie_state(cookie);
+@@ -638,13 +643,29 @@ static void fscache_unuse_cookie_locked(struct fscache_cookie *cookie)
+ void __fscache_unuse_cookie(struct fscache_cookie *cookie,
+ 			    const void *aux_data, const loff_t *object_size)
+ {
++	unsigned int debug_id = cookie->debug_id;
++	unsigned int r = refcount_read(&cookie->ref);
++	unsigned int a = atomic_read(&cookie->n_accesses);
++	unsigned int c;
 +
-+	set_page_writeback(page);
-+	if (caching)
-+		ceph_set_page_fscache(page);
-+	ceph_fscache_write_to_cache(inode, page_off, len, caching);
+ 	if (aux_data || object_size)
+ 		__fscache_update_cookie(cookie, aux_data, object_size);
  
- 	/* it may be a short write due to an object boundary */
- 	WARN_ON_ONCE(len > thp_size(page));
-@@ -605,6 +638,9 @@ static int ceph_writepage(struct page *page, struct writeback_control *wbc)
- 	struct inode *inode = page->mapping->host;
- 	BUG_ON(!inode);
- 	ihold(inode);
+-	if (atomic_dec_and_lock(&cookie->n_active, &cookie->lock)) {
+-		fscache_unuse_cookie_locked(cookie);
+-		spin_unlock(&cookie->lock);
++	/* Subtract 1 from counter unless that drops it to 0 (ie. it was 1) */
++	c = atomic_fetch_add_unless(&cookie->n_active, -1, 1);
++	if (c != 1) {
++		trace_fscache_active(debug_id, r, c - 1, a, fscache_active_unuse);
++		return;
+ 	}
 +
-+	wait_on_page_fscache(page);
++	spin_lock(&cookie->lock);
++	r = refcount_read(&cookie->ref);
++	a = atomic_read(&cookie->n_accesses);
++	c = atomic_dec_return(&cookie->n_active);
++	trace_fscache_active(debug_id, r, c, a, fscache_active_unuse);
++	if (c == 0)
++		fscache_unuse_cookie_locked(cookie);
++	spin_unlock(&cookie->lock);
+ }
+ EXPORT_SYMBOL(__fscache_unuse_cookie);
+ 
+diff --git a/include/trace/events/fscache.h b/include/trace/events/fscache.h
+index 1594aefadeac..cb3fb337e880 100644
+--- a/include/trace/events/fscache.h
++++ b/include/trace/events/fscache.h
+@@ -71,6 +71,12 @@ enum fscache_cookie_trace {
+ 	fscache_cookie_see_work,
+ };
+ 
++enum fscache_active_trace {
++	fscache_active_use,
++	fscache_active_use_modify,
++	fscache_active_unuse,
++};
 +
- 	err = writepage_nounlock(page, wbc);
- 	if (err == -ERESTARTSYS) {
- 		/* direct memory reclaimer was killed by SIGKILL. return 0
-@@ -726,6 +762,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 	struct ceph_writeback_ctl ceph_wbc;
- 	bool should_loop, range_whole = false;
- 	bool done = false;
-+	bool caching = ceph_is_cache_enabled(inode);
+ enum fscache_access_trace {
+ 	fscache_access_acquire_volume,
+ 	fscache_access_acquire_volume_end,
+@@ -146,6 +152,11 @@ enum fscache_access_trace {
+ 	EM(fscache_cookie_see_withdraw,		"-   x-wth")		\
+ 	E_(fscache_cookie_see_work,		"-   work ")
  
- 	dout("writepages_start %p (mode=%s)\n", inode,
- 	     wbc->sync_mode == WB_SYNC_NONE ? "NONE" :
-@@ -849,7 +886,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				unlock_page(page);
- 				break;
- 			}
--			if (PageWriteback(page)) {
-+			if (PageWriteback(page) || PageFsCache(page)) {
- 				if (wbc->sync_mode == WB_SYNC_NONE) {
- 					dout("%p under writeback\n", page);
- 					unlock_page(page);
-@@ -857,6 +894,7 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				}
- 				dout("waiting on writeback %p\n", page);
- 				wait_on_page_writeback(page);
-+				wait_on_page_fscache(page);
- 			}
- 
- 			if (!clear_page_dirty_for_io(page)) {
-@@ -989,9 +1027,19 @@ static int ceph_writepages_start(struct address_space *mapping,
- 		op_idx = 0;
- 		for (i = 0; i < locked_pages; i++) {
- 			u64 cur_offset = page_offset(pages[i]);
-+			/*
-+			 * Discontinuity in page range? Ceph can handle that by just passing
-+			 * multiple extents in the write op.
-+			 */
- 			if (offset + len != cur_offset) {
-+				/* If it's full, stop here */
- 				if (op_idx + 1 == req->r_num_ops)
- 					break;
++#define fscache_active_traces		\
++	EM(fscache_active_use,			"USE          ")	\
++	EM(fscache_active_use_modify,		"USE-m        ")	\
++	E_(fscache_active_unuse,		"UNUSE        ")
 +
-+				/* Kick off an fscache write with what we have so far. */
-+				ceph_fscache_write_to_cache(inode, offset, len, caching);
+ #define fscache_access_traces		\
+ 	EM(fscache_access_acquire_volume,	"BEGIN acq_vol")	\
+ 	EM(fscache_access_acquire_volume_end,	"END   acq_vol")	\
+@@ -264,6 +275,39 @@ TRACE_EVENT(fscache_cookie,
+ 		      __entry->ref)
+ 	    );
+ 
++TRACE_EVENT(fscache_active,
++	    TP_PROTO(unsigned int cookie_debug_id,
++		     int ref,
++		     int n_active,
++		     int n_accesses,
++		     enum fscache_active_trace why),
 +
-+				/* Start a new extent */
- 				osd_req_op_extent_dup_last(req, op_idx,
- 							   cur_offset - offset);
- 				dout("writepages got pages at %llu~%llu\n",
-@@ -1002,14 +1050,17 @@ static int ceph_writepages_start(struct address_space *mapping,
- 				osd_req_op_extent_update(req, op_idx, len);
- 
- 				len = 0;
--				offset = cur_offset; 
-+				offset = cur_offset;
- 				data_pages = pages + i;
- 				op_idx++;
- 			}
- 
- 			set_page_writeback(pages[i]);
-+			if (caching)
-+				ceph_set_page_fscache(pages[i]);
- 			len += thp_size(page);
- 		}
-+		ceph_fscache_write_to_cache(inode, offset, len, caching);
- 
- 		if (ceph_wbc.size_stable) {
- 			len = min(len, ceph_wbc.i_size - offset);
++	    TP_ARGS(cookie_debug_id, ref, n_active, n_accesses, why),
++
++	    TP_STRUCT__entry(
++		    __field(unsigned int,		cookie		)
++		    __field(int,			ref		)
++		    __field(int,			n_active	)
++		    __field(int,			n_accesses	)
++		    __field(enum fscache_active_trace,	why		)
++			     ),
++
++	    TP_fast_assign(
++		    __entry->cookie	= cookie_debug_id;
++		    __entry->ref	= ref;
++		    __entry->n_active	= n_active;
++		    __entry->n_accesses	= n_accesses;
++		    __entry->why	= why;
++			   ),
++
++	    TP_printk("c=%08x %s r=%d a=%d c=%d",
++		      __entry->cookie,
++		      __print_symbolic(__entry->why, fscache_active_traces),
++		      __entry->ref,
++		      __entry->n_accesses,
++		      __entry->n_active)
++	    );
++
+ TRACE_EVENT(fscache_access_cache,
+ 	    TP_PROTO(unsigned int cache_debug_id,
+ 		     int ref,
 
 
