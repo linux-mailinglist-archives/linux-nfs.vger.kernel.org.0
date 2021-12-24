@@ -2,424 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A17047F060
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Dec 2021 18:25:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD4547F061
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Dec 2021 18:28:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353298AbhLXRZy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 24 Dec 2021 12:25:54 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:10848 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229539AbhLXRZx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Dec 2021 12:25:53 -0500
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BOEww3O002489;
-        Fri, 24 Dec 2021 17:25:52 GMT
+        id S1353302AbhLXR2z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 24 Dec 2021 12:28:55 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:52610 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229539AbhLXR2z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 24 Dec 2021 12:28:55 -0500
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BOEwoKd012182;
+        Fri, 24 Dec 2021 17:28:51 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=6pPXoPHz6CyMzo6TIMux5Sd6slT6bM4baJCHSd/xmec=;
- b=JdJ+MAazKntwAlHN2/8cBck3K3SB4vJg7J8e/Mt1aHbW0pwaMAUqR6kQhQ/IfibU2jSS
- wU5KY7rWSrLKpJ4YHkBn8C7flfdCDZiGfzpDBDArC/vxeOryDgVCzrjun2hdDUObvBiL
- xGRN4fkwD235jaWPxwuqozXKSx20YauS/f8jG0rUlUqrZ+xbBROrk0XQeYHudAy6SkGc
- u+eC0mV8BmFb3lzBnMB2UKHb3We7LAdaujQ0vJ7BB3AsiUKFcEGt2x2oY8H9yPbesBa7
- NygF3IkQqXWRdlpfZe16M7vg6/H4WOmEe9wb4/Sjo5hnVx8yL9wVy3VkpvSQlCKp1lxf 9w== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3d4f6w3nw7-1
+ bh=mga4J6bZXbF1RJWxOHHpA6z84vXaewFc77Y+AOCCRNI=;
+ b=v1S39nrHxNAED/oY7O4cCnc73f8LrrUIt8SCLYmyNFfNqCecAoM/AhGQrrM22VnHj6fx
+ MFarhQk8ZW8lwD+aMLXpcMB5wNK3get8L0C/gs7vgVhl/kno18ZI8aWSY8Ud9vgqaJOq
+ iFbTD2DEgKcILCWuLi9nPbP+VSX+odKDnQrKAJkjDwMkofkHryszoGl5eSXL4HE45yNN
+ 91TGBQk5fPJoeIxgXpCafwjUg64qRLInDc4Ylw/cyEehBIl4YdFbhtoDbqlsS2Kr7ZY1
+ 8l+IoY/Re4F2xW9K0+1NQs/62B8eMHI1sIojNKnZkeXKQBvahWSSavgaXVrd7Blot3cS bg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3d5fj506u3-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Dec 2021 17:25:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BOHL28o042252;
-        Fri, 24 Dec 2021 17:25:51 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2172.outbound.protection.outlook.com [104.47.58.172])
-        by aserp3020.oracle.com with ESMTP id 3d17f80tph-1
+        Fri, 24 Dec 2021 17:28:51 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BOHKdYF014319;
+        Fri, 24 Dec 2021 17:28:50 GMT
+Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
+        by userp3020.oracle.com with ESMTP id 3d193tdegf-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Dec 2021 17:25:50 +0000
+        Fri, 24 Dec 2021 17:28:50 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jiI+DkrTWeR7tpfEiplT9zah/ul3SOt00aZ/uaMID/U/DdBCkZTIQshJBpt1KoAWOPGxQXWNKk0nJaY8lByUhF/I2ce2asnp1MtM+EUU1xaMo02JIZI7Zz8Fc21FY3fVdu2tqKH1/3GoSjyXnkU8TLXTaIXA8mh2vnJ81QUBcnw3gpvWVWkhRVDjQU2bOVmKU0KZY2h1tYulVWspI4RQTOCx2XH7Klx/YqvLshOpIA/pQgQIXqfAXZ7RdmgkyFHS0nA3gzZhdFMYFW0mZpvrKZTWFFpPhTTRLPrGheqH0n/FLWniWFNKuGhxUAy7QfAkw+U+zcSWaFvufUZEXY3U9A==
+ b=ePJxCoRsXkoIFggzHZQ6wc7hNHewJ4wcnc4XAYdk+k6NTWusaIVWvfquk9noGaAmx5NFW5FSMX2XoTQdS1zpIwajWtfs8tw1cOW/VGldrivKCRP4T/3iO7vUrnwXTONtbA21ZRFIXpGailrbN0ZsODgNW7vOmYxR2AteztKXKs5EWHteaL2HLSix/no5cStu2HPvI8fMj2/PzWmotUYMT/1CiIUztXBsbE2pKOkoGMht4MDM/1W32hO5c/MIIRZ+SqIgEmivnNPTXd3unLW96eENVS5MnRAdvWy+vUKTC0xmZcyMPuWOV0+xLzYuNvqxJbhWNZ8rNcVCXN2UXCDlMQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6pPXoPHz6CyMzo6TIMux5Sd6slT6bM4baJCHSd/xmec=;
- b=fKtWkRoN9i+L8JSftNfuLBRodOHtlWOswyHJtWH3wBmTW84eqLhUNsJI47E6+mu73Nkwq+j0znUaj5tgMbw8AY+nQBhk4NJlwNfznTPp3rwRubncs/xGp0ya3gqV4Lcvirjr1VTSwtkFhsO9Pi7iUD0c9aVJ2Pg6PIj25CDi0PqGSy+pLr0rekixwV/9ZNAfQ7Uep7eckUSSst4Nd10xOOkaIxiruEol+hLezpysab5W4ZzSUFGhflhkF/RPVGsTycXkWi/PqdoETbDJtCEvcQEhlo6VdCEPYvqW6ZPGEWfpZMvXo6wdFXOEhDUl4K7EpdRgvnvdwECyzvgi6NLgig==
+ bh=mga4J6bZXbF1RJWxOHHpA6z84vXaewFc77Y+AOCCRNI=;
+ b=D8in31pPrxQpPCOJjm3FNMS/2pryHGA4uU4S2JJHGdyzvQc325MmIq+ZbHuqEm/JJKis2DoHgats5PplEqkYmLOHhgFu7bd+WzgTydf3w1+ximkHYwH8D2GlzHIF28+UMEfnlkCTsPyhH4XIZCsDkSUqNh+tDGPL+rATFs2izeXKoZtJ/ThGTAuM5ugs15SeeD5PPr9f1arV5v9eaoXNGlC9USItPu2v5O7vArpgyruQyWF0IYtBlf7/LihC40W0I0QwYh7WjOTE3RM0H2MR3b4oqXqy6XkU8gT7rvKVqJwDruysi2tliZP/CS07VcL1ibUFp7Lr4LfE7TA1W4PvaA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6pPXoPHz6CyMzo6TIMux5Sd6slT6bM4baJCHSd/xmec=;
- b=yapoDtr92dhj+GJPao4WXn7TFflsaf3R3mVTL7KnSejFjfBlPO2ubs+WC5bu3qTVfOjZBTnan7p4bS5Y7J5tNT9uJPtbFrf/k8AMP7izb0znUZmP2DN+X52hC7ICFMwv+3oP+7MVYMtUbId5pjIL6tHGyWhP+MH5UErr+w9yBXI=
+ bh=mga4J6bZXbF1RJWxOHHpA6z84vXaewFc77Y+AOCCRNI=;
+ b=Z+Wz2fTWWnritXvhDwjvKUmpERfbPDmNOLGacfAi3VuMartaeZMfbBxI+lmnFIRMhCiSrQzR9aPF2LxQJIHEekovVp9jayTYL0OycucLlPxTfb9EzZSCEcKP2tBoJmU1IC49EXiw9FLSDn2KKvgLQ1txchtl1IoYkIKYoYXwiTo=
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com (2603:10b6:610:cb::17)
- by CH0PR10MB4988.namprd10.prod.outlook.com (2603:10b6:610:c8::20) with
+ by CH0PR10MB5257.namprd10.prod.outlook.com (2603:10b6:610:df::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4823.19; Fri, 24 Dec
- 2021 17:25:49 +0000
+ 2021 17:28:48 +0000
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::241e:15fa:e7d8:dea7]) by CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::241e:15fa:e7d8:dea7%6]) with mapi id 15.20.4823.021; Fri, 24 Dec 2021
- 17:25:49 +0000
+ 17:28:48 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Stefan Roesch <shr@fb.com>
+To:     Dorian Taylor <hi@doriantaylor.com>
 CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v7 1/3] add offset parameter to iterate_dir function
-Thread-Topic: [PATCH v7 1/3] add offset parameter to iterate_dir function
-Thread-Index: AQHX+OtLQT+7Nk4IB0WFiJn+eviOuw==
-Date:   Fri, 24 Dec 2021 17:25:49 +0000
-Message-ID: <06BA4A1A-2C07-446B-93F6-095D61A41A22@oracle.com>
-References: <20211222210708.983429-1-shr@fb.com>
- <20211222210708.983429-2-shr@fb.com>
-In-Reply-To: <20211222210708.983429-2-shr@fb.com>
+Subject: Re: GSSAPI as it relates to NFS
+Thread-Topic: GSSAPI as it relates to NFS
+Thread-Index: AQHX+ExsNLi86uwBekq6KICGDicKsaxB5tIA
+Date:   Fri, 24 Dec 2021 17:28:48 +0000
+Message-ID: <48DBBF53-7CE3-4DDA-B697-B14F8C382E78@oracle.com>
+References: <234CDB6C-C565-4BB4-AE38-92F4B05AB4BD@doriantaylor.com>
+In-Reply-To: <234CDB6C-C565-4BB4-AE38-92F4B05AB4BD@doriantaylor.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3654.120.0.1.13)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5feb8e11-da06-4cbe-5791-08d9c7026d97
-x-ms-traffictypediagnostic: CH0PR10MB4988:EE_
-x-microsoft-antispam-prvs: <CH0PR10MB4988FBCA0644ADDE84AFA528937F9@CH0PR10MB4988.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-ms-office365-filtering-correlation-id: 43d3ff29-c269-42c9-c07e-08d9c702d897
+x-ms-traffictypediagnostic: CH0PR10MB5257:EE_
+x-microsoft-antispam-prvs: <CH0PR10MB52577626BA8CEB111759A467937F9@CH0PR10MB5257.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nuw24hNaB9Ba3aXeMhZlKuV0A3pFXltr/rfPIfJVQVRtnZQQ8dtpsMzoDro5wDJcdu+E/llIiVr3qgDjnwpueXXrrceimY/kdE+/pDBJqzpnlz2ZcyiEMtB0qJaTt0cvG2i76i0Eo7NxyLLz1upIJUikLQOi3xlM7IkwXOyFBId4pNS6Sn4mwAI13H+Jg6LiKMn2gaxu3NvQwu4RgfYC+DHz4wTJNWrBR0wbDOwBHf6+5cJ3zUTY8+REdxriWEKTq0HNc21agQIrbw5V0eP/8KKIuvM33EKhu/rskHU0lVzDLMS8jxHBH+5EJhBzLxWtyl3hMIO4xjA7fVIXaV4Yvn54lCUIuKhPf3RgPe9TGIE5yhxiO7Ap7CuU12P+UbOYlQWDRYXS+igCmYETaYtW/NzlF81be4MygzO1MPumIXu8KYdk3H9nvbOZjENidXBrGyvUEJ16d1XZ9nCXVU+/shtXjjw6YrA2++15a4KUwRwZbEQSMA03U5LkafrT8Q+v5MUOMEV/jXt0pmSEx/4J2v1IWV2rtRTzNLXBp7GzRYwNSozLSDFc6nz5uheOg8UCUy4XMkUggfK08Ilnov2E7SNfe/iFPMaPSDkn9BxFOTakvJ/dGMhPhf/LvgiZqXyVdolYdYqRSjUAmA0xPXpJdStl4SqyU1Dxq0+WEgElpIvnXEyTOf8PV66H72FYIgBZfJO5vi09yutuN3IXuAXmM9IPw/l2vbswe5LJ8bdyibsO2CTS2DN5vDpcr9rw/yTe
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(2906002)(33656002)(83380400001)(6486002)(316002)(53546011)(122000001)(6506007)(8936002)(8676002)(2616005)(26005)(66446008)(186003)(6512007)(76116006)(4326008)(38070700005)(5660300002)(66946007)(86362001)(64756008)(36756003)(6916009)(38100700002)(71200400001)(66476007)(66556008)(508600001)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: MEbsH6tyHKYe4+nkFTHMxVRAiVp9ChsaVdXAuJ6/d0Y7T0Jn8IrbKhfq+sRV0F5GNHiigu0dfukfNVjyctEpcd5zsKk4xJqqFiyCzAhxZrLdzJEO5PN3zEp6QxMltNJDTKzbv46bXJQyZHstdTUabHXwih+wlTm4CYL1OplEcHzLp6CsRrXQ9RzMtO16J82pC4TRK82l7xbmfq+yk4wPrEIFDAkvZUpH1BT7dcUS56+8lyC+QBRIZCtcB7n88rDhP/sn93PIJYK+zx3UwbgTQKydJRzy7RtcM6WvInn5LZjmBeA50kfRlCMG5Qtb29ADbXUNR/OarOjajzF+InYOv46FN9Ewb1FhjFeCqo/B+zfg2NmnfvsrFyL+NHeTA649032Qn96s+DhGMTU72IfBw+s8hX4TCiUW65xl4EuToi+J0JI3VoGjIuWIzpcX7k0FfZ6U2nntMtLB07lSE3MZq3oAXzI5d67xP10O+fkE0I8zi4cpF8nPvmmeQMmVTeB/HH95acvf/6FafxUbXxm4tS+fefpC+8g+kmCE99ZAC9RfrKTTvrQEDkARwCBwr6UrS4ydoOK4IA9IiZHJ9QYi1Yz4usne6hdjc6TWRwMEbaKza3hVL3Ehm/FiKisSTpiIzBLsOd2eQ6d7xNmjHKqa2JEafKKWTEnPjhPLVdqsLbZRkF5+RxUK6YuTBZSGMdYaYHiuQEi3MfACb/TORiA/ZWrvStSMnFZF0wWU/8DVcxDEm+jOA6baQXQC/wTUJm9JFrULPERE8RrkmR1hffE+IWfFR7j5d6lpFsHqcbo76OY+FchNgXOdEOik9sUGfPLjYbNqCzy56ubGS1dhqcdSmA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(508600001)(36756003)(83380400001)(6486002)(38070700005)(316002)(38100700002)(2906002)(122000001)(6916009)(66476007)(64756008)(66446008)(71200400001)(76116006)(2616005)(8676002)(66556008)(26005)(86362001)(186003)(8936002)(53546011)(6506007)(33656002)(6512007)(66946007)(5660300002)(966005)(4326008)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?PTyIY8w7Sl9ZOiMTojODMhNlpVeHn8WpLGrpiHr98VnnrPf1l14SRwGpBbmb?=
- =?us-ascii?Q?Ze4oFiiidoCuDB0rwCUeLYjM56pr8BtogYvnDNniuyqMR7UR98uRnQnYed32?=
- =?us-ascii?Q?UFNzx0q97CiSiQtGyPRu5bm22s9w1CUBnr90fS9O2mCwemZZIe6TQJJuQohE?=
- =?us-ascii?Q?FLdrpqMgalCO6RhOB4Lo6ms93WFZ5rg0aIq2/EmhWT4qqpHoioZwoh7SSa7R?=
- =?us-ascii?Q?a25uQrMidpeHANwh6jeg8wj30ONRe6MDZTC6W/W+rEX2r++nOlyeOQooAGAY?=
- =?us-ascii?Q?07SE48rvdJ6jWyeD1UOV9Wh2Ezyzhf2dicL7JwyFG0G67zeXaRm3oev6rcP+?=
- =?us-ascii?Q?8o0YdhiAzBnHnTU09j8BEy3PB+FAllBNHS6wX9djhNdMWGZSB5Gv4i0G7B3j?=
- =?us-ascii?Q?+EXkMwsCRfDNKScX4Np1r4fehdTTdCicEK0xgA7HrNdHwFSKVyFNYceU6FqM?=
- =?us-ascii?Q?tBLxpAUcC+xTCJSEzrnNfum8J1/gcKJIUrpG7TyeZ+uvfJU50NOBUXYaOl3o?=
- =?us-ascii?Q?whAWJClne4lk5gizAJjXDYEJa7MDYaseWnSal4nVTvRyvtjMnrWZlTLX855M?=
- =?us-ascii?Q?ARBN1v0DQk9bonSbQSB0wjMwZwqpPDMk636OI2BOw2quaG8fYppIsEfB126a?=
- =?us-ascii?Q?P9OJDbhj+mg5jHQsVyXM6hsyxSsIDVG/8HnJrIcslhApOQzm9/RwU5U9RV+a?=
- =?us-ascii?Q?ttVaBupCYB6rCLPtPUL4GoTYNowaAGVb6slyRztEIqMOJ1lgffB81RUsLImr?=
- =?us-ascii?Q?iSAFjUcYgUPFRImKAWwJfm3E5MF4pUgwNsVAhs8PikP2w+JSegIaLoE/6WG9?=
- =?us-ascii?Q?MQVhonAXNvrBWRpWacOJTVjJJ1F/29Io2vG10A9s50pWCBiVrEi6CSMzLnm2?=
- =?us-ascii?Q?bwcMyBPYC3KrbibwzgkNDpRzJNndynjv8PjOMgzU5RHmtRSKLrBX1zSUdagZ?=
- =?us-ascii?Q?DcIkUbKq2o+Q52Z4t0heAlpg+x1cXAZLhn2qek2baIoeOC74ZR/ybgn7iDv/?=
- =?us-ascii?Q?neshmhimH7/kxFR5rz3dEBkAuTW7j20RCqR0zmV8llKn+CXU+BuKKq7FsnDC?=
- =?us-ascii?Q?8O1HbWcyb/pE1J1+TjPXhYzsDbREltAYeVwTSbQc8VOL8Ozf9u9CvtlTCNEL?=
- =?us-ascii?Q?tBzDCqVCrlLpH/ERoqokv13jyKFjnD75XGyByLl/ggumyq3TdzVVCDGkYE8d?=
- =?us-ascii?Q?M6SHWN02Qvea/rn2F84hhPBXhouJSAIXYhRVtPD31hfOBO/fLk9DcIfl/oCB?=
- =?us-ascii?Q?knDYstF55ubTURmzC2LrivomPLJOpvG51/HT9oc5wOFp2GabOP2/vhqlN8K3?=
- =?us-ascii?Q?ZMK8T021qdlixcHgm8k32HkQMgvsnMoa5MUDOpL2hhndUMPYDG06FEqb8dgA?=
- =?us-ascii?Q?4wHLC1/GaXrkmUEyHO1Ee8Z87fchYNqk9h0RGVvNwdNV83BhXcxPgkue1PIA?=
- =?us-ascii?Q?iNjFPUPR9lGNIRnlu64fIPJHN2KLAMaGTqOihd+BKajkmovDbfvn51HCxlId?=
- =?us-ascii?Q?WX9pCSFEkGuiIdm/qvCt1QKKdIxohWS4dbU5yjLd5DAxf8Nzr0XRb3U/6p3/?=
- =?us-ascii?Q?Hcd1MO6c/BmCqEn4OxQnnjhtMiVHiWl+t+mXZ3DvyVz8Ys1/xdKdQY7E9QHu?=
- =?us-ascii?Q?DOo28/krcR/+oWrA+lD6WRM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E095B96F37164E4B96A752E7847168CB@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?bWVmZHlrTnlvSHVCendBaUo4Q1JqdDJwMkxyRm84MHB1QmJ6YU9XQVRaQklJ?=
+ =?utf-8?B?bXZTbXUxaUFXWTRNdkM4cXl5TkZNMU1LYkw0ZDJmMTJENjBEOXZuR3RkcFFm?=
+ =?utf-8?B?V1BBdjRiNTB1ckEwcWN4ZE1mK0ppMmw5NVl4Nk83ZjFUOGp2a2l4ZmRLQndK?=
+ =?utf-8?B?YzcrOXdHNGQ1UHh1UXRDb2RNQUc2OHBTU2RPenJ4eXRSanFkVG1OcldvZVVZ?=
+ =?utf-8?B?NmVQU250aDJHQmJFNE1qelZUakMvRWhXdzZTSHJmeEhCNUJzbTBFUldyMFJM?=
+ =?utf-8?B?U3VKUWJSbUwrK1M5ZGRHK1dqb28zUE1aNjZBcUhHTXFMRm5ZeFd1ZnRyVjlj?=
+ =?utf-8?B?SExxL3JKRi9ST3BCRFhYQzErZjdXc2ZZNXVWcmF5VWNIWmFIRDB5dXRla2I2?=
+ =?utf-8?B?NzJFZUJvVWFXMUZtWE5CSGV1Y1FWdklrVWVQdkRhUzBlNWFVR1FMTjhiL0t2?=
+ =?utf-8?B?c3V5YnI1czhxZGZsalE4end2ZHVaSk5QTXNDRXhOcGlTSDVjUyt3ZU5rNitY?=
+ =?utf-8?B?NFFGYUkwZEtGNGhlR2R6MVh6MDVuZEdoclFNYkR5VEFVZzJXMmdjMVBzS2c4?=
+ =?utf-8?B?MktwQ3JsVGVHMGFEMjgrY1dVQ2xCNDc2ZFdSRUsyamtFMEpDYnJnSDVBNHFD?=
+ =?utf-8?B?cmx4UjFlOFZYR25mMFh0NUVweXpRek9nMTUwSnk3VzI1bFZyNnFzMFJza0RE?=
+ =?utf-8?B?QWVyNmhhTFVnVko4M3pWSnhoK0ZtM0tGTHY4VWl0MURaUmVMMSsyeURoK2c1?=
+ =?utf-8?B?RTJyVGFtcUFUTndVcDZFSW9mLzNHc2VuWU5SLzdwbWloUFZKUG95TTJzbytE?=
+ =?utf-8?B?UEpqdnowd0xsUE5DU2o2VWZiRm5iVDRDQ3BFdFlGMkd4UytONTQ4KzZsdkFW?=
+ =?utf-8?B?d1F3cVFFSEZXdTc4R1EyWEZTNmJ3WFp3R1FvTVBZWCt1czA5U01qeUpabXVB?=
+ =?utf-8?B?UXh1N2k1dWhlaVJLakVhNlZvN1NoT2hPMmUyZW5rTEZVaTVqa0VsT1VHUXhQ?=
+ =?utf-8?B?RVN3cktiM2JqK3B2TjNJRHpaSWREUW0wb09nK0owQXhqV1hFRnFjZjQ2dFpY?=
+ =?utf-8?B?Y0tmLzZqRmVzU1dhbWpnNkZkKzdXdHAyT2tPSTU5WTkvaFkvWVRTY2JxUS9W?=
+ =?utf-8?B?MjQzL2dpTVRZOW9kR0phdUlNWWltaGxNUXduOFY0Yi94cWxQaytzTVNZK2lC?=
+ =?utf-8?B?Y0h0bUYxL29ZTEUyL1VQcTdnQUhTRS9mK29uOW0rb1FrV2Q3YmJodmY5R2pV?=
+ =?utf-8?B?SmhROEZCcEhOdEJjSmhSUlBEd0R5WlpDSTQwTWFqQTJnRkhJRVBUTXRkR0xx?=
+ =?utf-8?B?L2RkVStaTTluRWlTTGp4M2t0em96Y0R4OWlZcXRHUVIyMnBGN1pqRld2TUF5?=
+ =?utf-8?B?TFd4c2tDcHB5cEpZS0licWF1U21NZFpZRW9Ud1BLVmFsQm5QSVJUaEtieHpu?=
+ =?utf-8?B?VEsvUDFOOTZzTkozTjVUeklJazU3L0NnQ2J5dm15L2M4QU5iSDVFdlBaOHBq?=
+ =?utf-8?B?Yk5YTWxnb1N3UVhRZ1dMZVR4UmJaZXZIa2JVbTdNNTc4TFpjdkxxaU5McnJr?=
+ =?utf-8?B?UHNaNlZ6T212RU8ydkJUZ3FPRlQveC9SZUQ3K2JRVUdtOC9uRkxUMklRVVlV?=
+ =?utf-8?B?QTFvQ29hcmtJTVhJUHFONWJpOGpubEVmNldtcmtmUEd1Q1FnajE0b0hwekhk?=
+ =?utf-8?B?Mi9hTkxaOHo3WDk2QXMrRFNGcmp1N2lacW9vbkpGcG40UWhLNGhubWlqSmh6?=
+ =?utf-8?B?MDgrUlJsV3RHaHpUcVFrWWtkQ21rbEpzQ1JRdi9BalVhVFBpOUpCYzZZS2pQ?=
+ =?utf-8?B?RW9sMFA0MmVySmNob1d4eEQwVnArQ0VPTUgzaHdncTJKK3ZpMmxGSEk5Sjgv?=
+ =?utf-8?B?UjdCQzlJT3VueEtBQnhFbkpsdGNrKzgvQ1A4bWY4eElGT2poUkNPTG1HYVJk?=
+ =?utf-8?B?TXFBU1VHWXg1SERCYi96c1dmOXl1M3dCVVQycmt0RFZTc09obGsyVll2azY0?=
+ =?utf-8?B?SXhqNWovZGdQOHI5ZkV1b0g3K24rb0oxZ3dRMFJPbmFsZUdqRk9uWkdPdG94?=
+ =?utf-8?B?WWk4VUxYbHhFNEFUMXZIU3dncmFTU1VUekl2dUJKWUNOV0ltbU1HMys1Qjd1?=
+ =?utf-8?B?TzRkZGc4QmlpN2FuWDV2ckxoV0x0YUhWbzZjOUI0TXJOS0wzNTNSNVFraHJi?=
+ =?utf-8?Q?efALwGFXpFA+5R9kdBclzWE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6ECF8787AE90094A89A57944A4A542E3@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB4858.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5feb8e11-da06-4cbe-5791-08d9c7026d97
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2021 17:25:49.1507
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43d3ff29-c269-42c9-c07e-08d9c702d897
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2021 17:28:48.6540
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /a2S7KCNqhLWFMfRVe1uOE94Cq89fpHCh4gjSseM0oT2cKLDoo5vDofrzlbwHzia1nUjxmo/jinNr3D0EiHYgA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4988
+X-MS-Exchange-CrossTenant-userprincipalname: ComULIx1FxssrGrZFmgG8owpX/ad3pijRrlSTr+JqNsfUSCt3peCV29YSYYCv3U4rQm8jWPWTCsO2rOFi+1k1w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5257
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10208 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
- spamscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2110150000 definitions=main-2112240084
-X-Proofpoint-GUID: BZrdAcWHsZE7uHXSILuJ-Z01zY_rM6--
-X-Proofpoint-ORIG-GUID: BZrdAcWHsZE7uHXSILuJ-Z01zY_rM6--
+X-Proofpoint-GUID: xz1qze7WBbQ2I-ZNGIS95GPF8BSQRBJW
+X-Proofpoint-ORIG-GUID: xz1qze7WBbQ2I-ZNGIS95GPF8BSQRBJW
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-> On Dec 22, 2021, at 4:07 PM, Stefan Roesch <shr@fb.com> wrote:
->=20
-> This change adds the offset parameter to the iterate_dir
-> function. The offset paramater allows the caller to specify
-> the offset position.
->=20
-> This change is required to support getdents in io_uring.
->=20
-> Signed-off-by: Stefan Roesch <shr@fb.com>
-> ---
-> arch/alpha/kernel/osf_sys.c |  2 +-
-> fs/ecryptfs/file.c          |  2 +-
-> fs/exportfs/expfs.c         |  2 +-
-> fs/ksmbd/smb2pdu.c          |  3 ++-
-> fs/ksmbd/vfs.c              |  4 ++--
-> fs/nfsd/nfs4recover.c       |  2 +-
-> fs/nfsd/vfs.c               |  2 +-
-> fs/overlayfs/readdir.c      |  6 +++---
-> fs/readdir.c                | 28 ++++++++++++++++++----------
-> include/linux/fs.h          |  2 +-
-> 10 files changed, 31 insertions(+), 22 deletions(-)
-
-Thanks for posting. The nfsd changes seem sensible to me.
-
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
-
-> diff --git a/arch/alpha/kernel/osf_sys.c b/arch/alpha/kernel/osf_sys.c
-> index 8bbeebb73cf0..cf68c459bca6 100644
-> --- a/arch/alpha/kernel/osf_sys.c
-> +++ b/arch/alpha/kernel/osf_sys.c
-> @@ -162,7 +162,7 @@ SYSCALL_DEFINE4(osf_getdirentries, unsigned int, fd,
-> 	if (!arg.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(arg.file, &buf.ctx);
-> +	error =3D iterate_dir(arg.file, &buf.ctx, &arg.file->f_pos);
-> 	if (error >=3D 0)
-> 		error =3D buf.error;
-> 	if (count !=3D buf.count)
-> diff --git a/fs/ecryptfs/file.c b/fs/ecryptfs/file.c
-> index 18d5b91cb573..b68f1945e615 100644
-> --- a/fs/ecryptfs/file.c
-> +++ b/fs/ecryptfs/file.c
-> @@ -109,7 +109,7 @@ static int ecryptfs_readdir(struct file *file, struct=
- dir_context *ctx)
-> 		.sb =3D inode->i_sb,
-> 	};
-> 	lower_file =3D ecryptfs_file_to_lower(file);
-> -	rc =3D iterate_dir(lower_file, &buf.ctx);
-> +	rc =3D iterate_dir(lower_file, &buf.ctx, &lower_file->f_pos);
-> 	ctx->pos =3D buf.ctx.pos;
-> 	if (rc < 0)
-> 		goto out;
-> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-> index 0106eba46d5a..654e2d4b1d4f 100644
-> --- a/fs/exportfs/expfs.c
-> +++ b/fs/exportfs/expfs.c
-> @@ -323,7 +323,7 @@ static int get_name(const struct path *path, char *na=
-me, struct dentry *child)
-> 	while (1) {
-> 		int old_seq =3D buffer.sequence;
->=20
-> -		error =3D iterate_dir(file, &buffer.ctx);
-> +		error =3D iterate_dir(file, &buffer.ctx, &file->f_pos);
-> 		if (buffer.found) {
-> 			error =3D 0;
-> 			break;
-> diff --git a/fs/ksmbd/smb2pdu.c b/fs/ksmbd/smb2pdu.c
-> index 49c9da37315c..fd4cb995d06d 100644
-> --- a/fs/ksmbd/smb2pdu.c
-> +++ b/fs/ksmbd/smb2pdu.c
-> @@ -3925,7 +3925,8 @@ int smb2_query_dir(struct ksmbd_work *work)
-> 	dir_fp->readdir_data.private		=3D &query_dir_private;
-> 	set_ctx_actor(&dir_fp->readdir_data.ctx, __query_dir);
->=20
-> -	rc =3D iterate_dir(dir_fp->filp, &dir_fp->readdir_data.ctx);
-> +	rc =3D iterate_dir(dir_fp->filp, &dir_fp->readdir_data.ctx,
-> +			&dir_fp->filp->f_pos);
-> 	if (rc =3D=3D 0)
-> 		restart_ctx(&dir_fp->readdir_data.ctx);
-> 	if (rc =3D=3D -ENOSPC)
-> diff --git a/fs/ksmbd/vfs.c b/fs/ksmbd/vfs.c
-> index 19d36393974c..5b8e23d3c846 100644
-> --- a/fs/ksmbd/vfs.c
-> +++ b/fs/ksmbd/vfs.c
-> @@ -1136,7 +1136,7 @@ int ksmbd_vfs_empty_dir(struct ksmbd_file *fp)
-> 	set_ctx_actor(&readdir_data.ctx, __dir_empty);
-> 	readdir_data.dirent_count =3D 0;
->=20
-> -	err =3D iterate_dir(fp->filp, &readdir_data.ctx);
-> +	err =3D iterate_dir(fp->filp, &readdir_data.ctx, &fp->filp->f_pos);
-> 	if (readdir_data.dirent_count > 2)
-> 		err =3D -ENOTEMPTY;
-> 	else
-> @@ -1186,7 +1186,7 @@ static int ksmbd_vfs_lookup_in_dir(struct path *dir=
-, char *name, size_t namelen)
-> 	if (IS_ERR(dfilp))
-> 		return PTR_ERR(dfilp);
->=20
-> -	ret =3D iterate_dir(dfilp, &readdir_data.ctx);
-> +	ret =3D iterate_dir(dfilp, &readdir_data.ctx, &dfilp->f_pos);
-> 	if (readdir_data.dirent_count > 0)
-> 		ret =3D 0;
-> 	fput(dfilp);
-> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
-> index 6fedc49726bf..79a2799891e4 100644
-> --- a/fs/nfsd/nfs4recover.c
-> +++ b/fs/nfsd/nfs4recover.c
-> @@ -307,7 +307,7 @@ nfsd4_list_rec_dir(recdir_func *f, struct nfsd_net *n=
-n)
-> 		return status;
-> 	}
->=20
-> -	status =3D iterate_dir(nn->rec_file, &ctx.ctx);
-> +	status =3D iterate_dir(nn->rec_file, &ctx.ctx, &nn->rec_file->f_pos);
-> 	inode_lock_nested(d_inode(dir), I_MUTEX_PARENT);
->=20
-> 	list_for_each_entry_safe(entry, tmp, &ctx.names, list) {
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index c99857689e2c..085864c25318 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1980,7 +1980,7 @@ static __be32 nfsd_buffered_readdir(struct file *fi=
-le, struct svc_fh *fhp,
-> 		buf.used =3D 0;
-> 		buf.full =3D 0;
->=20
-> -		host_err =3D iterate_dir(file, &buf.ctx);
-> +		host_err =3D iterate_dir(file, &buf.ctx, &file->f_pos);
-> 		if (buf.full)
-> 			host_err =3D 0;
->=20
-> diff --git a/fs/overlayfs/readdir.c b/fs/overlayfs/readdir.c
-> index 150fdf3bc68d..52167ff9e513 100644
-> --- a/fs/overlayfs/readdir.c
-> +++ b/fs/overlayfs/readdir.c
-> @@ -306,7 +306,7 @@ static inline int ovl_dir_read(struct path *realpath,
-> 	do {
-> 		rdd->count =3D 0;
-> 		rdd->err =3D 0;
-> -		err =3D iterate_dir(realfile, &rdd->ctx);
-> +		err =3D iterate_dir(realfile, &rdd->ctx, &realfile->f_pos);
-> 		if (err >=3D 0)
-> 			err =3D rdd->err;
-> 	} while (!err && rdd->count);
-> @@ -722,7 +722,7 @@ static int ovl_iterate_real(struct file *file, struct=
- dir_context *ctx)
-> 			return PTR_ERR(rdt.cache);
-> 	}
->=20
-> -	err =3D iterate_dir(od->realfile, &rdt.ctx);
-> +	err =3D iterate_dir(od->realfile, &rdt.ctx, &od->realfile->f_pos);
-> 	ctx->pos =3D rdt.ctx.pos;
->=20
-> 	return err;
-> @@ -753,7 +753,7 @@ static int ovl_iterate(struct file *file, struct dir_=
-context *ctx)
-> 		      OVL_TYPE_MERGE(ovl_path_type(dentry->d_parent))))) {
-> 			err =3D ovl_iterate_real(file, ctx);
-> 		} else {
-> -			err =3D iterate_dir(od->realfile, ctx);
-> +			err =3D iterate_dir(od->realfile, ctx, &od->realfile->f_pos);
-> 		}
-> 		goto out;
-> 	}
-> diff --git a/fs/readdir.c b/fs/readdir.c
-> index 09e8ed7d4161..c1e6612e0f47 100644
-> --- a/fs/readdir.c
-> +++ b/fs/readdir.c
-> @@ -36,8 +36,13 @@
-> 	unsafe_copy_to_user(dst, src, len, label);		\
-> } while (0)
->=20
-> -
-> -int iterate_dir(struct file *file, struct dir_context *ctx)
-> +/**
-> + * iterate_dir - iterate over directory
-> + * @file    : pointer to file struct of directory
-> + * @ctx     : pointer to directory ctx structure
-> + * @pos     : file offset
-> + */
-> +int iterate_dir(struct file *file, struct dir_context *ctx, loff_t *pos)
-> {
-> 	struct inode *inode =3D file_inode(file);
-> 	bool shared =3D false;
-> @@ -60,12 +65,15 @@ int iterate_dir(struct file *file, struct dir_context=
- *ctx)
->=20
-> 	res =3D -ENOENT;
-> 	if (!IS_DEADDIR(inode)) {
-> -		ctx->pos =3D file->f_pos;
-> +		ctx->pos =3D *pos;
-> +
-> 		if (shared)
-> 			res =3D file->f_op->iterate_shared(file, ctx);
-> 		else
-> 			res =3D file->f_op->iterate(file, ctx);
-> -		file->f_pos =3D ctx->pos;
-> +
-> +		*pos =3D ctx->pos;
-> +
-> 		fsnotify_access(file);
-> 		file_accessed(file);
-> 	}
-> @@ -190,7 +198,7 @@ SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
-> 	if (!f.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(f.file, &buf.ctx);
-> +	error =3D iterate_dir(f.file, &buf.ctx, &f.file->f_pos);
-> 	if (buf.result)
-> 		error =3D buf.result;
->=20
-> @@ -283,7 +291,7 @@ SYSCALL_DEFINE3(getdents, unsigned int, fd,
-> 	if (!f.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(f.file, &buf.ctx);
-> +	error =3D iterate_dir(f.file, &buf.ctx, &f.file->f_pos);
-> 	if (error >=3D 0)
-> 		error =3D buf.error;
-> 	if (buf.prev_reclen) {
-> @@ -366,7 +374,7 @@ SYSCALL_DEFINE3(getdents64, unsigned int, fd,
-> 	if (!f.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(f.file, &buf.ctx);
-> +	error =3D iterate_dir(f.file, &buf.ctx, &f.file->f_pos);
-> 	if (error >=3D 0)
-> 		error =3D buf.error;
-> 	if (buf.prev_reclen) {
-> @@ -379,7 +387,7 @@ SYSCALL_DEFINE3(getdents64, unsigned int, fd,
-> 		else
-> 			error =3D count - buf.count;
-> 	}
-> -	fdput_pos(f);
-> +
-> 	return error;
-> }
->=20
-> @@ -448,7 +456,7 @@ COMPAT_SYSCALL_DEFINE3(old_readdir, unsigned int, fd,
-> 	if (!f.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(f.file, &buf.ctx);
-> +	error =3D iterate_dir(f.file, &buf.ctx, &f.file->f_pos);
-> 	if (buf.result)
-> 		error =3D buf.result;
->=20
-> @@ -534,7 +542,7 @@ COMPAT_SYSCALL_DEFINE3(getdents, unsigned int, fd,
-> 	if (!f.file)
-> 		return -EBADF;
->=20
-> -	error =3D iterate_dir(f.file, &buf.ctx);
-> +	error =3D iterate_dir(f.file, &buf.ctx, &f.file->f_pos);
-> 	if (error >=3D 0)
-> 		error =3D buf.error;
-> 	if (buf.prev_reclen) {
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 6b8dc1a78df6..e1becbe86b07 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3340,7 +3340,7 @@ const char *simple_get_link(struct dentry *, struct=
- inode *,
-> 			    struct delayed_call *);
-> extern const struct inode_operations simple_symlink_inode_operations;
->=20
-> -extern int iterate_dir(struct file *, struct dir_context *);
-> +extern int iterate_dir(struct file *, struct dir_context *, loff_t *pos)=
-;
->=20
-> int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
-> 		int flags);
-> --=20
-> 2.30.2
->=20
-
---
-Chuck Lever
-
-
-
+DQoNCj4gT24gRGVjIDIzLCAyMDIxLCBhdCA1OjI3IFBNLCBEb3JpYW4gVGF5bG9yIDxoaUBkb3Jp
+YW50YXlsb3IuY29tPiB3cm90ZToNCj4gDQo+IEdyZWV0aW5ncyBsaXN0LA0KPiANCj4gSSBoYXZl
+IGJlZW4gc2NvdXJpbmcgdGhlIFdlYiAoYW5kIG5mcy11dGlscywga2VybmVsLCBhbmQgbGlibW91
+bnQgc291cmNlIHRyZWVzKSBmb3Igc2V2ZXJhbCBkYXlzIG5vdyB0byB0cnkgdG8gdW5kZXJzdGFu
+ZCB3aGF0IGhhcHBlbnMgZHVyaW5nIHRoZSBtb3VudCBwcm9jZWR1cmUgd2hlbiB0aGUgKE5GU3Y0
+KSBzaGFyZSBpcyBhdXRoZW50aWNhdGVkIGJ5IEdTUyAob3IgcmF0aGVyLCBLZXJiZXJvcykuIFdo
+YXQgSSBhbSB0cnlpbmcgdG8gZG8gaXMgbW91bnQgYW4gTkZTIHNoYXJlIGFzIG15c2VsZiAoYSBy
+ZWd1bGFyIHVzZXIpIHdpdGggbXkgb3duIEtlcmJlcm9zIGNyZWRlbnRpYWxzLiBXaGF0IEkgYW0g
+c2VlaW5nIGlzIGFuIGluc2lzdGVuY2Ugb24gdGhlIHBhcnQgb2Ygc29tZSBwYXJ0IG9mIHRoZSBz
+eXN0ZW0gdG8gcG9wdWxhdGUgdGhlICRSUENfUElQRUZTL25mcy8kQ0xJRU5UL2tyYjUgcHNldWRv
+LWZpbGUgd2l0aCDigJxtZWNoPWtyYjUgdWlkPTAgc2VydmljZT0qIGVuY3R5cGVzPeKApuKAnSwg
+d2hpY2ggdGhlbiBnZXRzIGZlcnJpZWQgb24gdG8gcnBjLmdzc2QsIHdoaWNoIGR1dGlmdWxseSBn
+b2VzIGxvb2tpbmcgZm9yIG1hY2hpbmUgY3JlZGVudGlhbHMgdGhhdCBkbyBub3QgZXhpc3QuIElu
+c3RlYWQgKGF0IGxlYXN0IGJ5IG15IHJlYWRpbmcgb2YgdGhlIHNvdXJjZSBjb2RlIGZvciB3aGF0
+IGtpbmQgb2Ygb3V0Y29tZSBJIHdhbnQpLCB0aGF0IHBzZXVkby1maWxlIHNob3VsZCBzYXkg4oCc
+bWVjaD1rcmI1IHVpZD0xMDAwIGVuY3R5cGVzPeKApuKAnSAoaWUgbm8gc2VydmljZT3igKYpIGV0
+Yy4gSWYgaXQgc2FpZCB0aGF0IHRoZW4gcnBjLmdzc2Qgd291bGQgKGxpa2VseSkgZG8gdGhlIHJp
+Z2h0IHRoaW5nLg0KPiANCj4gTXkgcXVlc3Rpb24gdGhlbjogd2hhdCBpcyBwb3B1bGF0aW5nIHRo
+YXQgcHNldWRvLWZpbGUgaW4gdGhlIHJwY19waXBlZnMgZmlsZXN5c3RlbT8gKGFuZCB3aGVuIGlz
+IGl0IGRvaW5nIGl0PykgSG93IGNvbWUgaXQgaW5zaXN0cyBvbiBkaXJlY3RpbmcgcnBjLmdzc2Qg
+dG8gbG9vayBmb3IgbWFjaGluZSBjcmVkZW50aWFscyBmb3Igcm9vdCBpbnN0ZWFkIG9mIHRoZSB1
+aWQgb2YgdGhlIGNhbGxlciAobWUpPyBJIGhhdmUgYmVlbiB1bmFibGUgdG8gbG9jYXRlIGFueSBp
+bmZvcm1hdGlvbiBvbiB0aGUgcm9sZSBvZiBycGNfcGlwZWZzIGJleW9uZCBhIGJsdXJiIGluIHRo
+ZSBrZXJuZWwgc291cmNlIGNvZGUsIG5vciBoYXZlIEkgYmVlbiBhYmxlIHRvIGxvY2F0ZSBhbnl0
+aGluZyB0aGF0IGxvb2tzIHJlbW90ZWx5IGxpa2UgYSBwcm90b2NvbCBkaWFncmFtIGZvciB0aGUg
+TkZTdjQoK2dzcy9rcmI1KSBtb3VudGluZyBwcm9jZXNzLCBzbyBJIGd1ZXNzIG15IHF1ZXN0aW9u
+IHJlZHVjZXMgdG86IHdoZXJlIGRvIEkgZ28gbG9va2luZyBmb3IgYSBzb2x1dGlvbiB0byB0aGlz
+IHByb2JsZW0/DQoNCm1hbiA4IHJwYy5nc3NkDQoNClRoZSAiLW4iIG9wdGlvbiBtaWdodCBiZSBo
+ZWxwZnVsLg0KDQoNCj4gKE5vdGUgdGhpcyBpcyBhbGwgcmVjZW50IFVidW50dSwgMjAuMDQgYW5k
+IG5ld2VyLCBhbmQgSSBhbHJlYWR5IGhhdmUgTWFjIGNsaWVudHMgY29ubmVjdGluZyB0byB0aGUg
+c2VydmVyLiBNb3JlIGNvbnRleHQgYW5kIGRldGFpbHMgaGVyZTogaHR0cHM6Ly9hc2t1YnVudHUu
+Y29tL3F1ZXN0aW9ucy8xMzgyNzAyLzIxLTEwLWNsaWVudC1nc3NkLWNhbnQtc2VlbS10by1zZWUt
+dXNlci1jcmVkZW50aWFscy1jYWNoZS13aGVuLW1vdW50aW5nLW5mc3Y0KQ0KDQoNCi0tDQpDaHVj
+ayBMZXZlcg0KDQoNCg0K
