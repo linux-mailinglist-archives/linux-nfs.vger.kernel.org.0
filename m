@@ -2,132 +2,230 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C61747E986
-	for <lists+linux-nfs@lfdr.de>; Thu, 23 Dec 2021 23:28:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CBD247EB71
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Dec 2021 05:46:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350431AbhLWW22 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Dec 2021 17:28:28 -0500
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:41611 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S234802AbhLWW17 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Dec 2021 17:27:59 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 2D46A5C004D
-        for <linux-nfs@vger.kernel.org>; Thu, 23 Dec 2021 17:27:59 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Thu, 23 Dec 2021 17:27:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:message-id
-        :mime-version:subject:to:x-me-proxy:x-me-proxy:x-me-sender
-        :x-me-sender:x-sasl-enc; s=fm1; bh=3g7iDYJehwluc9cgkj64GPzKpwDsB
-        A28lAPMMLigrU4=; b=fGboMObBXW3gyXnjOZS+h1qx6wn8eUjahj2lQmM2xi1c9
-        OBFSDa7J6YQJM/RRFaAH0xc0w0v1wZCasSrqfR/HP/JQ/9ECec3lHZ3Len6oL9o8
-        1Kxk+w06w2izFpfenR9UutZSqvfYxcvr2LQHzDnrvFkPxa24iPaLOJuXe87bUQWj
-        e4Yr8DaardSwjwbfQd8bJALrVF6ofxT+2teX6Q4vrIY9XIm8SCvTBuFA9TBOYMJW
-        uEdtOqlkbQW60i+J/lSjXzDLMuyQhmxikEy0QaLdy9GV+QJB4WGVemn94RyXKtdy
-        csTGstz2Yf7MrSeW10Ko4odx5KxahFHgWZZ8Dh3qg==
-X-ME-Sender: <xms:7vfEYW7dgriKJXDiAkgA_jFaH7HqRWIdIifd6Rm6MdVI84ncV0GEPA>
-    <xme:7vfEYf43B_DpKIFva_wx6JBhgiTTtPP7YXRfWaF6YWwVDlR52yjsqlRNVgK1osnHq
-    0fYihqVMHSeOV0fvw>
-X-ME-Received: <xmr:7vfEYVdj6Ygk3jVGmy927wqpQ2CUjj-PALb8HtBIerVRFfwJWXDfdInhoMDyoh2wRRp_VtMd7cLrBKDFcw90FmNKFWqtcE3sDJu81AJTFa9uivlUJILYZ1F25dM5uEhlENfZ4r0yklkYp4YH_Wefk0vbpB-N-_oO>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvuddruddtkedgudehiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecunecujfgurhephfgtggfukfffvffosehgtdhmre
-    hhtdejnecuhfhrohhmpeffohhrihgrnhcuvfgrhihlohhruceohhhiseguohhrihgrnhht
-    rgihlhhorhdrtghomheqnecuggftrfgrthhtvghrnhepiefghffgveelfeevudevleffff
-    efvdeljeelgfdvleekuddvkeejjefhgfefhffgnecuffhomhgrihhnpegrshhkuhgsuhhn
-    thhurdgtohhmpdguohhrihgrnhhtrgihlhhorhdrtghomhenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehhihesughorhhirghnthgrhihlohhr
-    rdgtohhm
-X-ME-Proxy: <xmx:7_fEYTLitkXnDNe0rFKb2zBG9m0Asb-EH1RT7OlaP-wa2DhMISDfnw>
-    <xmx:7_fEYaL_chzxkvs1rNx07qKT8PuIX_7MJ_RdRq71g9AxhI_ap-btLA>
-    <xmx:7_fEYUwA4RREXli_iVXVuXJT_r8YBzYt06Q2rgZTCTLeX6yduEOceQ>
-    <xmx:7_fEYRWfzWQuwtEIkd3NbqsUzkEyH9w-Tvy0_bLle31rtg5zLfy6Qw>
-Received: by mail.messagingengine.com (Postfix) with ESMTPA for
- <linux-nfs@vger.kernel.org>; Thu, 23 Dec 2021 17:27:58 -0500 (EST)
-From:   Dorian Taylor <hi@doriantaylor.com>
-Content-Type: multipart/signed;
-        boundary="Apple-Mail=_8244C879-04D7-46E2-AF33-6DBBDC9DCE90";
-        protocol="application/pgp-signature";
-        micalg=pgp-sha512
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.120.23.2.7\))
-Subject: GSSAPI as it relates to NFS
-Message-Id: <234CDB6C-C565-4BB4-AE38-92F4B05AB4BD@doriantaylor.com>
-Date:   Thu, 23 Dec 2021 17:27:57 -0500
-To:     linux-nfs@vger.kernel.org
-X-Mailer: Apple Mail (2.3608.120.23.2.7)
+        id S1351297AbhLXEqd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Dec 2021 23:46:33 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:8286 "EHLO
+        mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S240362AbhLXEqd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Dec 2021 23:46:33 -0500
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1BO4hkGW002453;
+        Fri, 24 Dec 2021 04:46:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=K7/7jBvKLg1ZBo1PXvwksdsrDTopfO5E2wEY71ZZsKk=;
+ b=vRLt39tJ+8iqp37RerSSs/vr+TBVZISYO7ZORm0+TyYh8mE+MJ7vMQsqBcNkPpdqPKd6
+ o6DhqGFFWnCOV1wH/RrKn7eC2NGlPY1mv9tj5nYLXN03ciVBySXqvaF/1JqHImgFp28I
+ Yfzmc/u0iAZXIG1moWLttj+MtxdFde9nrXRa76inNd1nYygke3te0rG0Hx167cUCOyAB
+ 0b/qyZ2skdESTBkPzgnxBDh9PI+OQoruIDk5yHOhcEcjcsW7WUi3Tyw1Lvo5gtt7l5E2
+ FpXdqLKT+bYNssjMP3olIh00p3c9wA0B8oB35Vkqt4VbjR2Ujl9IzhC6XNzRUjOScbOR mQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3d46qn4kh9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Dec 2021 04:46:29 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 1BO4fBpH188617;
+        Fri, 24 Dec 2021 04:46:29 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by aserp3030.oracle.com with ESMTP id 3d15pgtv1c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Dec 2021 04:46:28 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xn9ODSm/3Im1fZ2t2mGtYGtRjtD6uzvPm9/eVNbzL+M+zQY66rTxZNVBalDIFWvr3O2vgVOu2w+vpj5z5hjvn0WWLDzOwwZV5D0A8VUrXuhbgQJf5MAXagqlnjn0HVcN2rh8UrFBRY6C3QVsSDxUpaFbbA8WSS7vviEvoIEinQKCGF+lssQf5BxNbU0QGNJaQy6ThPKMCjQkAAeeFsCrmWSrBNcRPfk8XC/zMx5VZqIWNkTaE/VpH2YUSlFQ5W57ng/Cx1dPHYQVqwrw+zQLRMMuO8OeeMrtL8A8TyKk1mrltk+zxoZFJ8KikhVz8VeGounGWMkNP5TKSRFIObl3Cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=K7/7jBvKLg1ZBo1PXvwksdsrDTopfO5E2wEY71ZZsKk=;
+ b=UJ0yVDJ4x5ItM8OHWoXw5hrkBR/58jPH83dTuweZRmZHd4SG4S7SRMnrirTzjt69JY44q+SQJQ+duLiLuiAevBnOsNaJ1UFIl47EJYtjqchMSO17NeUgsfYAQGF/1qFHwv0hlnZY9aYhyOvK13O8YzRQNJgdKRE+cYnYB7/svAPcDnCE0CyJpe0a54P7yzMVjlnmsl/+edFpmxgy5OJjS2vSJPkK3i3SEWBlFBnOhpAQMcaJGxeiPE/xVwbRV0eNu9MF39q2utHOq5WqW6ZKeZUWNZu6eATPHYPa6IwXlXu+18UOar3I5nAmEzrtwVFPfuEFHA/le6oYATB6WjYiJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=K7/7jBvKLg1ZBo1PXvwksdsrDTopfO5E2wEY71ZZsKk=;
+ b=ezqWfAbnjn+bbF8FbFuwlxodADy/JhFtoDjZgerKIWmpuwQnghqgRJJ+TE9iw1OwE9sdzubEvJ5IpQ07Af8mvXpNHRSU1kkgbuO6no6iNuhJ+QjIJBhyRre+SQKRAaJ1MkCMXTb+WGVtj8Hpuqq7I1Pv+b2tlM2a7HxafddlYPI=
+Received: from CH0PR10MB4858.namprd10.prod.outlook.com (2603:10b6:610:cb::17)
+ by CH2PR10MB3991.namprd10.prod.outlook.com (2603:10b6:610:e::25) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4823.19; Fri, 24 Dec
+ 2021 04:46:27 +0000
+Received: from CH0PR10MB4858.namprd10.prod.outlook.com
+ ([fe80::241e:15fa:e7d8:dea7]) by CH0PR10MB4858.namprd10.prod.outlook.com
+ ([fe80::241e:15fa:e7d8:dea7%6]) with mapi id 15.20.4823.021; Fri, 24 Dec 2021
+ 04:46:26 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Bruce Fields <bfields@fieldses.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: NFSv4 OPEN returns a zero cinfo.after on tmpfs
+Thread-Topic: NFSv4 OPEN returns a zero cinfo.after on tmpfs
+Thread-Index: AQHX+IE1tzJIenJvnUOCaxDdhxb2kA==
+Date:   Fri, 24 Dec 2021 04:46:26 +0000
+Message-ID: <49640909-A7F0-4004-AF55-859621B26D38@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 53607efb-ee12-43d2-3d6d-08d9c698584f
+x-ms-traffictypediagnostic: CH2PR10MB3991:EE_
+x-microsoft-antispam-prvs: <CH2PR10MB39912358C287366BAB854C3F937F9@CH2PR10MB3991.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: jIC4UdbvPDC4bLptopgJvcklYPV2TObC6zoPhzmixlbqPVLsIg+YX/c33Y2YfeMYcs5hRQwWwznnIGBULlsYQ1Vj3RkgzRR3vDkqqwHJFUazyol4zAKfGoFw56cFsuutB3tzIN6e2jZ7YND5SKThU6bud9hwaKeXVFSHMlrcZOcZyIjww0bZFJViGc8UcM5bCDAsitQPtnMv6P8z8jAsoQVb3uWY6qrnW4jyessg3LBYKf7wi43SlrjAQANS03Da3DKImCP2WKgr33h5DJmkrUJ+OtkemCeSXgsJgcFuFXOp3t7vB07qSOprWzREjwETSNHNt4U5LW/1VyO2fwq327V/88cX8Umj8Lwv+aDxxLaUI2RGsWtP///byyRjvuRSt992SD4primgDywhZcUcMedDe3BT2Wuyd/PR4FU4u2nWQZXn0Sf3bc0fWaxRLdbxI6db0yVLltaD/uEP+L4VgdBOxjkMrf3Iu7oij3oQ8HbEUjGD1gbZ7qcfvlKlAnsqBC3jjbJq7i4UZM4crB8yqUHPwUq/vttIhyk1m8esFuP0PFXnVu/x/6eb/p+A2xtu6r4gm40tTieMBQ1yEcxxUUK+khf421F3XVb3FScEsgOWBCGGrJIeITdektZGgZ17/qFKOb6BnFO8HBcJIn/uVqn42xz57Y+SjCt8rPtgcEELFkWXOLnh1eqp2CV230kQaP8Ppm1EfRYTPYz3eJnqI+ozV3SM1zeld34mzjfGf3RUjYhFSgQs6JlRzduP1fJlm5CI40vkTeuQerFF3c8m/Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66556008)(76116006)(6916009)(26005)(2906002)(36756003)(38070700005)(64756008)(86362001)(66476007)(5660300002)(508600001)(71200400001)(66446008)(83380400001)(66946007)(4326008)(316002)(186003)(38100700002)(8676002)(6512007)(2616005)(6486002)(8936002)(33656002)(6506007)(122000001)(17423001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?lPKvQ6ew8akaUZGFTPIj/Wn1wnpTqZmF1KDis5IjWhy9i78sC59ko8EwXfuX?=
+ =?us-ascii?Q?KlJYdlLxB+coyva3m5KQLLJZx7oUEkjYaUetU3STjqxBT5IO2EKMzMulBM2k?=
+ =?us-ascii?Q?YO2hZrfkToBCL5SR/ONfbJKRvoZEg05BNw1yqQNRaqaUf2bQgrW9ftl0cCKY?=
+ =?us-ascii?Q?hzYv/fNbhB8lYsh2VqUmaRuq54/7OghqdPCpdJJG1ZJ6/Ubz8qTcDCjFvAIJ?=
+ =?us-ascii?Q?Add3DxGmEQzztodFjsHmSaPW/5qK7ku5OICw3za53tz8C4VBqcWETYOSpLo1?=
+ =?us-ascii?Q?7M81AkIGnyljqQlDjZfq1XJq1Uxd51cHSi9iaxgCb8bfVABPEJqd+Qesqhub?=
+ =?us-ascii?Q?ZL0cHZcF6Li5WmfW2RqYmRMEappPObMokEeQ2NAbmIOdPK7Vf8/o3dBR3ZPC?=
+ =?us-ascii?Q?ql02WGAVtjpSSvA54Tz/KkW0HzKywdWCCPijR46ExlaNQLkt/knWPKmkhtuH?=
+ =?us-ascii?Q?pQOzejKBdUzuUpI0VVGS6TnjA1XJIqhQ9r1mZmKqXylle2zRFdfuDXAUCWSS?=
+ =?us-ascii?Q?g6YWgPa4unWEmv2bXoir80qKI031vrkHUvVXJH1LeZEB65O6vM5kWD7H5ACp?=
+ =?us-ascii?Q?G7/xHXbrd96s1fsLhUViaYKUCNanPOsWNC7zF6am1C5VQcxT2OIf1ivfAIV+?=
+ =?us-ascii?Q?TVtRkWnfh5JPsApdMlbWOxPtd/HnM6TJdiBIRLkMdVovTy2DBJ74JdjHQ38K?=
+ =?us-ascii?Q?9UdOY74byrkLvfmdq3JxASovpf8WIvrv09RU6YEnhBj6k2BY7jmGJIw76Q4x?=
+ =?us-ascii?Q?xTaO/rQUp1/TchsrQnz/ETmK0K9YN7YA8vjOWZdXgIIgpTOtPj5LDfnZJ69x?=
+ =?us-ascii?Q?E5H5u9fyAI9gdMp5JzyGOQWPmlPjuTrwVA5LCYpEr7aziX3TRPUPLT3PhEMJ?=
+ =?us-ascii?Q?NXWOEbulLrZkdtm+Ao/mWwocy6J+xeLIBP4GtdezZ/cnb7XDDaV1yL69EU/C?=
+ =?us-ascii?Q?GPZlNU7hiYKLa64jUhQFdvlselqHg2Fwy1iZcbo10zXtAoP5f6MmFKgqCpnn?=
+ =?us-ascii?Q?1ecEtsEphX2v2QKB4z30TPTikf6veBEW/uSnpTKVQbYpbyh/HlfAWRHvYHJF?=
+ =?us-ascii?Q?a2sL5mdP4Txq3zX8JlRYuTTV2+j6m+Wx0zWDdzrEdty4Qq9sYmmV1Rcxe0za?=
+ =?us-ascii?Q?jgpsrLf2ktmgq/HVSo3dJDNZJ2IZ2TrC+K89IeJ+G3eGsF4i9Sh596+Mhby4?=
+ =?us-ascii?Q?vVaNKXc+4w2vKRQwxhCx8MajWCBB+T9GufbxM8yYeUct061W9Kz0TjH2U0lQ?=
+ =?us-ascii?Q?NfuohHw0gR+vhFuBQqz4/hKKrHEi4uiL/UVAYDCsnINTL08poXQGyfaZoJ2o?=
+ =?us-ascii?Q?gJQHj6FH8Jw9yCXYmjWobovhUsnT+GUL2DWkIyBOsIVb7KaHWRWCf2FITt1i?=
+ =?us-ascii?Q?BGue5V4iQr4hUJ7Mqv7e/9IUWznp+eLWQCvrNWaK0CebQoZX4A2ZHVzde+iQ?=
+ =?us-ascii?Q?k7dOmMWCAQeKBiglRXyu5fr1ot/D5hDplaMt7LZm2RF/8K9DJNq+EoS7+KrM?=
+ =?us-ascii?Q?DD6xu3FghML6cM7cdOW4lJpAtWWTOyUVxvzfRzaCkDCwZ4a+vpCDByzl5RqK?=
+ =?us-ascii?Q?j4B7bFcnJvAlMULKqD8/EA/NpqW/GsagLI6l8PuebeA12oCjJmC6z6PFDuS9?=
+ =?us-ascii?Q?rVnDAHjJqezoJ0Y8z/Gr2JY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FDDA501A6E5D4242821A7FC4F48A1A44@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB4858.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 53607efb-ee12-43d2-3d6d-08d9c698584f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Dec 2021 04:46:26.7927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N2IqoyZ+hjDZlkKS7GX8YnjhFq9lDVt0NHjn5bdXi7DyAcf41t9mvV3Iy3I4gdcgXIl7HvY57d3s00ILMZDTBg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB3991
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10207 signatures=668683
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 malwarescore=0
+ mlxscore=0 spamscore=0 adultscore=0 bulkscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2110150000 definitions=main-2112240021
+X-Proofpoint-ORIG-GUID: 4wv8CCd-S6OStwawqlfsfDbg30f3gadw
+X-Proofpoint-GUID: 4wv8CCd-S6OStwawqlfsfDbg30f3gadw
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Bruce-
 
---Apple-Mail=_8244C879-04D7-46E2-AF33-6DBBDC9DCE90
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=utf-8
+During some testing I noticed that OPEN frequently returns a
+zero in the cinfo.after field on my test share, which is tmpfs.
+Does not seem to be an issue for xfs.
 
-Greetings list,
+For xfs, we take the 2nd arm in nfsd4_change_attribute(), and
+for tmpfs, we take the 3rd arm:
 
-I have been scouring the Web (and nfs-utils, kernel, and libmount source =
-trees) for several days now to try to understand what happens during the =
-mount procedure when the (NFSv4) share is authenticated by GSS (or =
-rather, Kerberos). What I am trying to do is mount an NFS share as =
-myself (a regular user) with my own Kerberos credentials. What I am =
-seeing is an insistence on the part of some part of the system to =
-populate the $RPC_PIPEFS/nfs/$CLIENT/krb5 pseudo-file with =E2=80=9Cmech=3D=
-krb5 uid=3D0 service=3D* enctypes=3D=E2=80=A6=E2=80=9D, which then gets =
-ferried on to rpc.gssd, which dutifully goes looking for machine =
-credentials that do not exist. Instead (at least by my reading of the =
-source code for what kind of outcome I want), that pseudo-file should =
-say =E2=80=9Cmech=3Dkrb5 uid=3D1000 enctypes=3D=E2=80=A6=E2=80=9D (ie no =
-service=3D=E2=80=A6) etc. If it said that then rpc.gssd would (likely) =
-do the right thing.
+309 static inline u64 nfsd4_change_attribute(struct kstat *stat,
+310                                          struct inode *inode)
+311 {
+312         if (inode->i_sb->s_export_op->fetch_iversion)
+313                 return inode->i_sb->s_export_op->fetch_iversion(inode);
+314         else if (IS_I_VERSION(inode)) {
+315                 u64 chattr;
+316=20
+317                 chattr =3D  stat->ctime.tv_sec;
+318                 chattr <<=3D 30;
+319                 chattr +=3D stat->ctime.tv_nsec;
+320                 chattr +=3D inode_query_iversion(inode);
+321                 return chattr;
+322         } else
+323                 return time_to_chattr(&stat->ctime);
+324 }
 
-My question then: what is populating that pseudo-file in the rpc_pipefs =
-filesystem? (and when is it doing it?) How come it insists on directing =
-rpc.gssd to look for machine credentials for root instead of the uid of =
-the caller (me)? I have been unable to locate any information on the =
-role of rpc_pipefs beyond a blurb in the kernel source code, nor have I =
-been able to locate anything that looks remotely like a protocol diagram =
-for the NFSv4(+gss/krb5) mounting process, so I guess my question =
-reduces to: where do I go looking for a solution to this problem?
+Thus for tmpfs, ->fetch_iversion() is NULL and IS_I_VERSION is false.
 
-(Note this is all recent Ubuntu, 20.04 and newer, and I already have Mac =
-clients connecting to the server. More context and details here: =
-https://askubuntu.com/questions/1382702/21-10-client-gssd-cant-seem-to-see=
--user-credentials-cache-when-mounting-nfsv4)
+Since commit 428a23d2bf0c ("nfsd: skip some unnecessary stats in
+the v4 case"), fill_post_wcc() looks like this:
 
-Thanks in advance for any insight,
+518 static bool fs_supports_change_attribute(struct super_block *sb)
+519 {
+520         return sb->s_flags & SB_I_VERSION || sb->s_export_op->fetch_ive=
+rsion;
+521 }
+
+...
+
+557 void fill_post_wcc(struct svc_fh *fhp)
+558 {
+559         bool v4 =3D (fhp->fh_maxsize =3D=3D NFS4_FHSIZE);
+560         struct inode *inode =3D d_inode(fhp->fh_dentry);
+561=20
+562         if (fhp->fh_no_wcc)
+563                 return;
+564=20
+565         if (fhp->fh_post_saved)
+566                 printk("nfsd: inode locked twice during operation.\n");
+567=20
+568         fhp->fh_post_saved =3D true;
+569=20
+570         if (fs_supports_change_attribute(inode->i_sb) || !v4) {
+571                 __be32 err =3D fh_getattr(fhp, &fhp->fh_post_attr);
+572=20
+573                 if (err) {
+574                         fhp->fh_post_saved =3D false;
+575                         fhp->fh_post_attr.ctime =3D inode->i_ctime;
+576                 }
+577         }
+578         if (v4)
+579                 fhp->fh_post_change =3D
+580                         nfsd4_change_attribute(&fhp->fh_post_attr, inod=
+e);
+581 }
+
+fs_support_change_attribute() returns false for tmpfs, and !v4
+evaluates to false for OPEN operations. That means the fs_getattr()
+is never invoked and nfsd4_change_attribute() is called with an
+uninitialized fh_post_attr.
+
+It appears that the same problem exists in fill_pre_wcc() but the
+symptoms are different. This is because for tmpfs, the local variable
+@stat is not initialized -- it contains whatever was on the stack
+before fill_pre_wcc() was invoked. In other words, the on-the-wire
+cinfo.before field contains old stack contents.
+
+So both OPEN result cinfo fields are junk on tmpfs exports.
+
+I haven't checked if "fs_supports_change_attribute(inode->i_sb) || !v4"
+happens to evaluate to false for other filesystem types.
+
+An easy way to address this would be to revert 428a23d2bf0c. But I
+wonder if there are any particular regression tests in the pynfs
+suite that could detect this kind of misbehavior, in case someone
+would like to try to re-implement the optimization in 428a23d2bf0c.
+
 
 --
-Dorian Taylor
-Make things. Make sense.
-https://doriantaylor.com
+Chuck Lever
 
 
---Apple-Mail=_8244C879-04D7-46E2-AF33-6DBBDC9DCE90
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename=signature.asc
-Content-Type: application/pgp-signature;
-	name=signature.asc
-Content-Description: Message signed with OpenPGP
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEQCibkUxMA9OSsNh/irFKO32Nr6MFAmHE9+0ACgkQirFKO32N
-r6P6zw/+IOrMgJ6mtzgP/05EiO8GXopvKH9lbFg1jt2ZX8ad/PkANLE9pdYI45AP
-ti16K6ybk3USEys/oE05+HhVygE4emccg/touq6i9yn+0udUBf9egsY7rAFiNptx
-paCyQMa0w4xC2KCzBses89KwCh5nOIekyESooBZbAMtASMJWh2mj4XMDCEEBew90
-hZCpBFnySHkrZSAaQ8YnVwOxMi0zFId10ZwxIO45E+6/ZH++INpNJMDzN6a1K8xc
-2on2nFLLZ0WhMkWZ7gvcqxzJ/XEV8Yx8hxF/mSqmJ9EBKMZSYMSPltwo8UcmK53w
-qNlQ3DjUSWc0/KEA7UgVnwhwzXLf+OvZwlTWE2tfwm47Sa7kgRj0S2nle+SQ5R3J
-37TqppWhFUyY0iawb388dS3Rb00UTmvBCxhcsEd8tttYyLiX5OezwT2SxA5hQ9be
-2KeMoO4FGywnTf2BNiyHOEJ+Y3xUtwL4l34ciB7GyCHOzO4muEk5CimZPMOKqQ33
-rv7vcVKqrWb/dagn9y41Q8CZg37MAqky0dowT+iTu6ryBNuwBkaCAsfdircp80YG
-LrmVEx1VByGqGAjJf/PGkpQAtgCd3gjJNDMRPOwNklKwIQocJrWoHgypLVz3HtEA
-uH1YFfIqptnpivHla92qlekRhPpjNZ02+oZ7XvBRdp4aEugAz1Q=
-=vseO
------END PGP SIGNATURE-----
-
---Apple-Mail=_8244C879-04D7-46E2-AF33-6DBBDC9DCE90--
