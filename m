@@ -2,42 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AB3348046D
+	by mail.lfdr.de (Postfix) with ESMTP id 8946B48046E
 	for <lists+linux-nfs@lfdr.de>; Mon, 27 Dec 2021 20:47:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232429AbhL0TrV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Dec 2021 14:47:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38050 "EHLO
+        id S232422AbhL0TrW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Dec 2021 14:47:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232422AbhL0TrV (ORCPT
+        with ESMTP id S232426AbhL0TrV (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Dec 2021 14:47:21 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B90DCC06173E
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Dec 2021 11:47:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D1D7C061401
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Dec 2021 11:47:21 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 56CA4B8113A
+        by ams.source.kernel.org (Postfix) with ESMTPS id EA908B81144
         for <linux-nfs@vger.kernel.org>; Mon, 27 Dec 2021 19:47:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D037BC36AEA;
-        Mon, 27 Dec 2021 19:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58448C36AEB;
+        Mon, 27 Dec 2021 19:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1640634438;
-        bh=XN4Dz6hNttV1tZeFHFXjSdFmePMym08qe5huMilWSfI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HbQVFFnQ4v6rGDbqYzZAcuVCGdizicDKmynHaBSyh3Fma5+rOnabiIjGUHX+ces70
-         OEtv0Ks12+gmRKyx7lE+cXsEGiz5bXrrysUYCBrfPgi6SpctWncNrQuvZ1e+U+ylpy
-         qZ9UHPKoLji+XXTie2I4FsPdCxOfax+VxVcGVcVTjh2AFC2eakKaxbRvtI7x1tSF0Z
-         anPG7AXNNEgyzsS2NJa7zdB/e3r7yNtp/LPI3odT5sQ6P0CmEh+xADXIP3NmoLuLHt
-         HxcqJswvZ5CmHlGdwJ2XaIV+ls4/gl1L+gMLeWGk8D5YhdNEc4jtetj79P1Tv5BMjv
-         Oat1iVYur78aA==
+        bh=3bCHbqqwvgIF/fYEkHPvAEzi84mmhLtO6P8W8CQzifE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dd/K27skFKYHAwkySOq9hQSiTSxZMnNi9VzbSxirw0hLo0JqxAeq8VnF7TXlqV6k/
+         pzAJBJkqhFmgB53JqMFtjPPJyZxnU3aj0yXPeeY+FzPi1mHIzV+q4Bi2ob1hhuhKvv
+         v7Yg/yeO8GLuwwu7cnMy2659Jzk//v7SOseSvNlW9xuGy8ilpLInWLJA8UKPhgf+I5
+         pKez19xrBjQ4Z5O1++4lxRZypuUYaMa7KpRiy5kYB2gsgjUY8HcRFSpqnhgIF3XpVN
+         99Lh0vsJPxgTWfaL1t5xkxf26tBw2hUCDl4eyeGYrjcl2lcsVxeeAgk2RmHk4ifXrW
+         wjfQukCvyy1Qg==
 From:   trondmy@kernel.org
 To:     Anna Schumaker <Anna.Schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFSv4: Allow writebacks to request 'blocks used'
-Date:   Mon, 27 Dec 2021 14:40:51 -0500
-Message-Id: <20211227194052.309898-1-trondmy@kernel.org>
+Subject: [PATCH 2/2] NFSv42: Fallocate and clone should also request 'blocks used'
+Date:   Mon, 27 Dec 2021 14:40:52 -0500
+Message-Id: <20211227194052.309898-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.33.1
+In-Reply-To: <20211227194052.309898-1-trondmy@kernel.org>
+References: <20211227194052.309898-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -46,99 +48,64 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When doing a non-pNFS write, allow the writeback code to specify that it
-also needs to update 'blocks used'.
+Both fallocate and clone can end up updating the blocks used attribute.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4_fs.h  |  2 ++
- fs/nfs/nfs4proc.c | 21 +++++++--------------
- 2 files changed, 9 insertions(+), 14 deletions(-)
+ fs/nfs/nfs42proc.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index ed5eaca6801e..89076dd32334 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -315,6 +315,8 @@ extern int nfs4_set_rw_stateid(nfs4_stateid *stateid,
- 		const struct nfs_open_context *ctx,
- 		const struct nfs_lock_context *l_ctx,
- 		fmode_t fmode);
-+extern void nfs4_bitmask_set(__u32 bitmask[], const __u32 src[],
-+			     struct inode *inode, unsigned long cache_validity);
- extern int nfs4_proc_getattr(struct nfs_server *server, struct nfs_fh *fhandle,
- 			     struct nfs_fattr *fattr, struct inode *inode);
- extern int update_open_stateid(struct nfs4_state *state,
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 535436dbdc9a..ad6076ca7f1e 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -108,10 +108,6 @@ static int nfs41_test_stateid(struct nfs_server *, nfs4_stateid *,
- static int nfs41_free_stateid(struct nfs_server *, const nfs4_stateid *,
- 		const struct cred *, bool);
- #endif
--static void nfs4_bitmask_set(__u32 bitmask[NFS4_BITMASK_SZ],
--			     const __u32 *src, struct inode *inode,
--			     struct nfs_server *server,
--			     struct nfs4_label *label);
- 
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- static inline struct nfs4_label *
-@@ -3669,7 +3665,7 @@ static void nfs4_close_prepare(struct rpc_task *task, void *data)
- 		if (!nfs4_have_delegation(inode, FMODE_READ)) {
- 			nfs4_bitmask_set(calldata->arg.bitmask_store,
- 					 server->cache_consistency_bitmask,
--					 inode, server, NULL);
-+					 inode, 0);
- 			calldata->arg.bitmask = calldata->arg.bitmask_store;
- 		} else
- 			calldata->arg.bitmask = NULL;
-@@ -5421,14 +5417,14 @@ bool nfs4_write_need_cache_consistency_data(struct nfs_pgio_header *hdr)
- 	return nfs4_have_delegation(hdr->inode, FMODE_READ) == 0;
- }
- 
--static void nfs4_bitmask_set(__u32 bitmask[NFS4_BITMASK_SZ], const __u32 *src,
--			     struct inode *inode, struct nfs_server *server,
--			     struct nfs4_label *label)
-+void nfs4_bitmask_set(__u32 bitmask[], const __u32 src[],
-+		      struct inode *inode, unsigned long cache_validity)
+diff --git a/fs/nfs/nfs42proc.c b/fs/nfs/nfs42proc.c
+index 8b21ff1be717..32129446beca 100644
+--- a/fs/nfs/nfs42proc.c
++++ b/fs/nfs/nfs42proc.c
+@@ -46,7 +46,7 @@ static int _nfs42_proc_fallocate(struct rpc_message *msg, struct file *filep,
  {
--	unsigned long cache_validity = READ_ONCE(NFS_I(inode)->cache_validity);
-+	struct nfs_server *server = NFS_SERVER(inode);
- 	unsigned int i;
- 
- 	memcpy(bitmask, src, sizeof(*bitmask) * NFS4_BITMASK_SZ);
-+	cache_validity |= READ_ONCE(NFS_I(inode)->cache_validity);
- 
- 	if (cache_validity & NFS_INO_INVALID_CHANGE)
- 		bitmask[0] |= FATTR4_WORD0_CHANGE;
-@@ -5440,8 +5436,6 @@ static void nfs4_bitmask_set(__u32 bitmask[NFS4_BITMASK_SZ], const __u32 *src,
- 		bitmask[1] |= FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP;
- 	if (cache_validity & NFS_INO_INVALID_NLINK)
- 		bitmask[1] |= FATTR4_WORD1_NUMLINKS;
--	if (label && label->len && cache_validity & NFS_INO_INVALID_LABEL)
--		bitmask[2] |= FATTR4_WORD2_SECURITY_LABEL;
- 	if (cache_validity & NFS_INO_INVALID_CTIME)
- 		bitmask[1] |= FATTR4_WORD1_TIME_METADATA;
- 	if (cache_validity & NFS_INO_INVALID_MTIME)
-@@ -5468,7 +5462,7 @@ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
- 	} else {
- 		nfs4_bitmask_set(hdr->args.bitmask_store,
- 				 server->cache_consistency_bitmask,
--				 hdr->inode, server, NULL);
-+				 hdr->inode, NFS_INO_INVALID_BLOCKS);
- 		hdr->args.bitmask = hdr->args.bitmask_store;
+ 	struct inode *inode = file_inode(filep);
+ 	struct nfs_server *server = NFS_SERVER(inode);
+-	u32 bitmask[3];
++	u32 bitmask[NFS_BITMASK_SZ];
+ 	struct nfs42_falloc_args args = {
+ 		.falloc_fh	= NFS_FH(inode),
+ 		.falloc_offset	= offset,
+@@ -69,9 +69,8 @@ static int _nfs42_proc_fallocate(struct rpc_message *msg, struct file *filep,
+ 		return status;
  	}
  
-@@ -6506,8 +6500,7 @@ static int _nfs4_proc_delegreturn(struct inode *inode, const struct cred *cred,
- 	data->args.fhandle = &data->fh;
- 	data->args.stateid = &data->stateid;
- 	nfs4_bitmask_set(data->args.bitmask_store,
--			 server->cache_consistency_bitmask, inode, server,
--			 NULL);
-+			 server->cache_consistency_bitmask, inode, 0);
- 	data->args.bitmask = data->args.bitmask_store;
- 	nfs_copy_fh(&data->fh, NFS_FH(inode));
- 	nfs4_stateid_copy(&data->stateid, stateid);
+-	memcpy(bitmask, server->cache_consistency_bitmask, sizeof(bitmask));
+-	if (server->attr_bitmask[1] & FATTR4_WORD1_SPACE_USED)
+-		bitmask[1] |= FATTR4_WORD1_SPACE_USED;
++	nfs4_bitmask_set(bitmask, server->cache_consistency_bitmask, inode,
++			 NFS_INO_INVALID_BLOCKS);
+ 
+ 	res.falloc_fattr = nfs_alloc_fattr();
+ 	if (!res.falloc_fattr)
+@@ -1044,13 +1043,14 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
+ 	struct inode *src_inode = file_inode(src_f);
+ 	struct inode *dst_inode = file_inode(dst_f);
+ 	struct nfs_server *server = NFS_SERVER(dst_inode);
++	__u32 dst_bitmask[NFS_BITMASK_SZ];
+ 	struct nfs42_clone_args args = {
+ 		.src_fh = NFS_FH(src_inode),
+ 		.dst_fh = NFS_FH(dst_inode),
+ 		.src_offset = src_offset,
+ 		.dst_offset = dst_offset,
+ 		.count = count,
+-		.dst_bitmask = server->cache_consistency_bitmask,
++		.dst_bitmask = dst_bitmask,
+ 	};
+ 	struct nfs42_clone_res res = {
+ 		.server	= server,
+@@ -1079,6 +1079,9 @@ static int _nfs42_proc_clone(struct rpc_message *msg, struct file *src_f,
+ 	if (!res.dst_fattr)
+ 		return -ENOMEM;
+ 
++	nfs4_bitmask_set(dst_bitmask, server->cache_consistency_bitmask,
++			 dst_inode, NFS_INO_INVALID_BLOCKS);
++
+ 	status = nfs4_call_sync(server->client, server, msg,
+ 				&args.seq_args, &res.seq_res, 0);
+ 	trace_nfs4_clone(src_inode, dst_inode, &args, status);
 -- 
 2.33.1
 
