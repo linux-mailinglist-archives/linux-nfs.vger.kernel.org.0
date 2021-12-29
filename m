@@ -2,183 +2,228 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A88644810E9
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Dec 2021 09:24:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E903F48122B
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Dec 2021 12:46:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239287AbhL2IY5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Dec 2021 03:24:57 -0500
-Received: from mail-eopbgr50124.outbound.protection.outlook.com ([40.107.5.124]:37187
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        id S235657AbhL2Lqt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Dec 2021 06:46:49 -0500
+Received: from mail-bn1nam07on2066.outbound.protection.outlook.com ([40.107.212.66]:25614
+        "EHLO NAM02-BN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S239288AbhL2IY4 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 29 Dec 2021 03:24:56 -0500
+        id S231320AbhL2Lqr (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 29 Dec 2021 06:46:47 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W/oeqWSIe1VtLmxkNF1YSx26nwrLByke0A7myNErp65NELw6tcgo/Ykf9pZFAKI7QAdueCuftjfH+M0x8nszBrbKEoMP5YZWI9dw24i7LLFq7XGqko/Fkx13zBL69r0wzAjUzj9IJWki73SSW1akvhWJ2Ou+KzM9X5+8iAelVxEYN3ojRF9oeQ6/VOw8An1AzlW4V+rGCudgY8eEgJn2uphYG3je7AuuHEESEH0I5A40c28pCdI2iMh3XmHQW6iv7WrQf0Pe0uxjOGxhI3JVUVE7J+IM9EYJ39TpbJ8gooey2Lr8g3oxwnx1XAqUiKOemvPsa0PULeGxwOcfJUHNHw==
+ b=B27YtRPqSyXqyRZRYuySzTjQukpDdk28Idw4NFLbtRJo6lq7C3QBPJz7idPXz7mnb3cU+Y5VVqu4LOdBAaBF/psU9bKH0y2/fGcWVks1KtHTB9cqtnP9sdJ3uk5akntflU8jscUVedb9Ey62HZdyuVps5H8zCZ5y8tRa3y4Pr5Oli9TvnIvFlQta/OgoWFhT67wy5NYRp0/aZMOXKwAUl7BqK0p6PryVr/MRd9zOB+wFv8LYO/mnRLTq8xp3XKIjS5MsDBGALg8di3+q5B5vYeraCn5lGoH7PpVE/Stlr1jKb8UJSxlWlOe/T0EfZiifwDoeqrKUDDzNDua3SDvSew==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dFtYv61gifHj2eYDE2zO5bD/6CRdCAwwtdrXtaH2uOI=;
- b=HfwyvuB4dHywF19yKgCvBOhz9g40gQYJ92kHMme2AxHD0pG/ntKzSFnnOCvO4QNdUWQEoSxEduu+41fGO8Klhe5TnTyq2P1VXsl4mBPsdDAOf1o1dfvpfruMUhzk/tYYvP7ZF1Yro3mYOcCWJN0K6rtGtC05pP9A4GNL6wIzBFshB30b5oFBtd5s//Lk2/31GAqqNTpFyDLliWqNZFSibY8FrEa74phoQLElKqVhAIiPtpASLaaOybOfNg1dk1Nt4MH0UFpNMDxLtccJGrlgh3L1pi8H6L/I7i2myb3niR2tqfgpn6oyYMOVtzuHzyTriwpADME2j00ZOz5sdg2G1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
+ bh=h4Nym9iSieGcRP9Mc66kiluCyjNY8rcebbwh7mTxWaw=;
+ b=Nzq1/WgcMPNyC75otVRhD2RjzMfSPu9AiIbPp8avy1E4wO0qynUHLlo2hzTZudAcCt8NpvNvjvdjQAdpmUYECp1BOZrT/KfjWOp31U0UAuewOr2wTE9eeEX16WHqsKv/wKkRMTJ0vOPqF1c83DSS5W2W7nn5Vhag1CI0/pj8JmOwnVjKOjZOBpV7CEPqumVsprnYCB1Y562l65y74D68tGIFZSNlj9s8xNFNi2NniNiiE+jt198O5VglP5su4ga0Bx+4+x7I9ut1Bw/MrnDuCvfwU18TQSO2gq0WHOGwysD7zJOvGsNuBAFsLgIAg89MmoZTKcwy9G1+/QJtsymLGw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 12.22.5.238) smtp.rcpttodomain=pengutronix.de smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dFtYv61gifHj2eYDE2zO5bD/6CRdCAwwtdrXtaH2uOI=;
- b=FYff8gJCKHlrI6VqJTiW5cITuxrSvevsSlJSIj2RcntKVmtmhZggaq0Yw8k3Xu/B2Jy5mahYuXD2UBd6/FJiDSymkoA4RwIfABJe3j0vMVlp1lRcOF60Ag3DgtlCiNMOmzYHyl2K3ilSG9bZGO2Va0yaGBuZuSZqKbq3DbGcOwE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=virtuozzo.com;
-Received: from AM9PR08MB6241.eurprd08.prod.outlook.com (2603:10a6:20b:281::21)
- by AM0PR08MB2964.eurprd08.prod.outlook.com (2603:10a6:208:5d::28) with
+ bh=h4Nym9iSieGcRP9Mc66kiluCyjNY8rcebbwh7mTxWaw=;
+ b=XC/M3TZKS/h18UtS9kKeIzXFvrGIZAjXiMXIWJm4sWr976CNfhU0zEUEX/R/LFQMMb5RvoBLcsn6mD3DbHrTbQcg9AH4fb4esQ7utkAUE5LtUFYl6mUmDM7s6Z0q7RWCa0MasfYFORmA2kK3ZiRrtzkTJwuyUzBvQQNfWrvLDTLNK2iKsHRMCYgS8ox4/gAGDxxgUyqlf+nbMqPSzse/dtAMKlkxd8uvNx2RwtHQXyoEVmCAeCmIl6v3W5f7dvgWCd2ASnxoQlPhbcFiO7La9MVLuHILWjk8b4UXXPQqQrXa/lwrHG09PWd2VJbjqybd5pYk1qVSOuZnJlAsp3KKGw==
+Received: from DS7PR06CA0021.namprd06.prod.outlook.com (2603:10b6:8:2a::23) by
+ BN9PR12MB5276.namprd12.prod.outlook.com (2603:10b6:408:101::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.13; Wed, 29 Dec
- 2021 08:24:54 +0000
-Received: from AM9PR08MB6241.eurprd08.prod.outlook.com
- ([fe80::f9ca:fe00:10da:a62f]) by AM9PR08MB6241.eurprd08.prod.outlook.com
- ([fe80::f9ca:fe00:10da:a62f%4]) with mapi id 15.20.4844.014; Wed, 29 Dec 2021
- 08:24:54 +0000
-From:   Vasily Averin <vvs@virtuozzo.com>
-Subject: [PATCH v3 3/3] nfs v2/3: nlmclnt_lock: handle async processing of
- F_SETLK with FL_SLEEP
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     kernel@openvz.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-References: <1f354cec-d2d6-ddf5-56e0-325c10fe26ee@virtuozzo.com>
-Message-ID: <dc99ce3c-d73f-b21b-b92f-d0b1025c4567@virtuozzo.com>
-Date:   Wed, 29 Dec 2021 11:24:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.14.0
-In-Reply-To: <1f354cec-d2d6-ddf5-56e0-325c10fe26ee@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AS9PR06CA0066.eurprd06.prod.outlook.com
- (2603:10a6:20b:464::11) To AM9PR08MB6241.eurprd08.prod.outlook.com
- (2603:10a6:20b:281::21)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4823.17; Wed, 29 Dec
+ 2021 11:46:44 +0000
+Received: from DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:8:2a:cafe::86) by DS7PR06CA0021.outlook.office365.com
+ (2603:10b6:8:2a::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14 via Frontend
+ Transport; Wed, 29 Dec 2021 11:46:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 12.22.5.238)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 12.22.5.238 as permitted sender) receiver=protection.outlook.com;
+ client-ip=12.22.5.238; helo=mail.nvidia.com;
+Received: from mail.nvidia.com (12.22.5.238) by
+ DM6NAM11FT027.mail.protection.outlook.com (10.13.172.205) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.4844.14 via Frontend Transport; Wed, 29 Dec 2021 11:46:44 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by DRHQMAIL105.nvidia.com
+ (10.27.9.14) with Microsoft SMTP Server (TLS) id 15.0.1497.18; Wed, 29 Dec
+ 2021 11:46:43 +0000
+Received: from [172.27.12.139] (172.20.187.5) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.986.9; Wed, 29 Dec 2021
+ 03:46:18 -0800
+Message-ID: <081437ff-a69d-faf5-0981-389156a90668@nvidia.com>
+Date:   Wed, 29 Dec 2021 13:46:14 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.0
+Subject: Re: [PATCH bpf-next v2] net: don't include filter.h from net/sock.h
+Content-Language: en-US
+To:     Jakub Kicinski <kuba@kernel.org>, <ast@kernel.org>,
+        <daniel@iogearbox.net>
+CC:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>, <marcel@holtmann.org>,
+        <johan.hedberg@gmail.com>, <luiz.dentz@gmail.com>,
+        <dledford@redhat.com>, <jgg@ziepe.ca>, <mustafa.ismail@intel.com>,
+        <shiraz.saleem@intel.com>, <leon@kernel.org>, <ap420073@gmail.com>,
+        <wg@grandegger.com>, <woojung.huh@microchip.com>, <andrew@lunn.ch>,
+        <vivien.didelot@gmail.com>, <f.fainelli@gmail.com>,
+        <olteanv@gmail.com>, <george.mccollister@gmail.com>,
+        <michael.chan@broadcom.com>, <jesse.brandeburg@intel.com>,
+        <anthony.l.nguyen@intel.com>, <hawk@kernel.org>,
+        <john.fastabend@gmail.com>, <tariqt@nvidia.com>,
+        <saeedm@nvidia.com>, <ecree.xilinx@gmail.com>,
+        <habetsm.xilinx@gmail.com>, <jreuter@yaina.de>,
+        <dsahern@kernel.org>, <kvalo@codeaurora.org>, <pkshih@realtek.com>,
+        <trond.myklebust@hammerspace.com>, <anna.schumaker@netapp.com>,
+        <viro@zeniv.linux.org.uk>, <andrii@kernel.org>,
+        <mcgrof@kernel.org>, <keescook@chromium.org>, <yzaikin@google.com>,
+        <jiri@nvidia.com>, <wintera@linux.ibm.com>, <wenjia@linux.ibm.com>,
+        <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>,
+        <ralf@linux-mips.org>, <jhs@mojatatu.com>,
+        <xiyou.wangcong@gmail.com>, <kgraul@linux.ibm.com>,
+        <sgarzare@redhat.com>, <steffen.klassert@secunet.com>,
+        <herbert@gondor.apana.org.au>, <arnd@arndb.de>,
+        <linux-bluetooth@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-can@vger.kernel.org>, <intel-wired-lan@lists.osuosl.org>,
+        <linux-hams@vger.kernel.org>, <ath11k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>,
+        <linux-decnet-user@lists.sourceforge.net>,
+        <linux-s390@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
+        <coreteam@netfilter.org>,
+        <virtualization@lists.linux-foundation.org>
+References: <20211229004913.513372-1-kuba@kernel.org>
+From:   Nikolay Aleksandrov <nikolay@nvidia.com>
+In-Reply-To: <20211229004913.513372-1-kuba@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.20.187.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4ca2f042-71bf-4f6c-561e-08d9caa4b132
-X-MS-TrafficTypeDiagnostic: AM0PR08MB2964:EE_
-X-Microsoft-Antispam-PRVS: <AM0PR08MB2964C65FD548265EACCEE8ACAA449@AM0PR08MB2964.eurprd08.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1775;
+X-MS-Office365-Filtering-Correlation-Id: b8c542b6-9062-40bb-7c97-08d9cac0e325
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5276:EE_
+X-Microsoft-Antispam-PRVS: <BN9PR12MB527648D3B3FBFB4ED3D895B8DF449@BN9PR12MB5276.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9O9+EkdgNSQfvTZc16ChL8KBeVAKUF3544epYl1d3v3kfszANKYO6C8XKKv5aQNUEszemNCcbGZjfGLUHnlyzWSdML27eddaQyaSfcHKX6xAYWjiPwMetimnJTVKMVDqjsbEcXLP3MY6KPrhWh7lGVVWWucGHulMb2v6SkxAE61kRSVogXZhmykdCbkHC+qRKMR1E16S72up3x8WeUTohNge3EbvnygCZM5wHwRB9x+gcvN3k02OmYx1zv47j6HBsQnTBGiFSckpZjaINmjlZxIBmlxyuZ62bsiV9OAyLC0KH9Qzsa/vnsmrS/OAGY63X2S6dw0RPL7pkdYKiW49mmsmQGdsqPFkB+FjbRD7bzsJrRpwsWAxANdiESVZ6wDAz/U973BqfQUhNwJb6Ae5kAL+RCcR/rJLfu3AyuLrroqjZjP6Perv1rxJ4mL4aCfcnvzRyg3wW02FIlByGexeDq2uWnWQ2UyH0m/E6wg5km264QKagFAzocIZtiBTT34k5U/2188Uzr6mrh6fTezOyndgZ7j+jyL4jEAgz231FCMv8fJyXlN8rhu6yC1VSkQAuZfKPgW90QMNOtmty8YNkTXBQX62U8AkxFpr8xoQ70PILHMvOO+Hfig8bK2bbUik/Xnomt3qgCa95aQ5oyMs1W1wgpXTgQLcYR3nkPf0wcG50ehyin486cEOQZReN6+p/tBKZzgEkVO1UAGOLQhXXaiyYH9qFpnIDhNbT3tZkIirP05+FQS5zMxbARXmZ2kdTZgOW67ea5AaXF/j8sNahQCPmUS+RiZ4ygiwncVeCreZB5kKWe33LVHtuVf+RmThww9nLG5DKF1od+Pzfe8fqyNBy3jU+8auhAfDmh3vqTc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB6241.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38350700002)(38100700002)(2616005)(8936002)(6486002)(31696002)(2906002)(8676002)(6506007)(5660300002)(4326008)(86362001)(110136005)(83380400001)(66476007)(52116002)(66946007)(26005)(508600001)(966005)(66556008)(31686004)(36756003)(316002)(186003)(6512007)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NVV1YXhqamxmYTF6eUdZTnFrY0VOeXFzejZDaS9vdFRlWEp1OEw4TC9STUpQ?=
- =?utf-8?B?VkdPTUlUOG81VlFvNEYrUkJZK1RzSnpRWjdUVWNTcm4xbDJoU2lmUkJ1cFFv?=
- =?utf-8?B?NjdSWTZLQWxwYXNxS0R5eXdZRlRISU5xOTUvWVNDb1Y3S1JuMmNtMC9sTkp5?=
- =?utf-8?B?b1huQ0gvVDY2WTFyODNpc2txekEyb2pqQTlKRis0cWs0SGdyUW12Q3BXOWkz?=
- =?utf-8?B?N0hpZHNOQ1AyREpHTXFWTUU0UzJxY3h1SEVnckJXOUEvcDg2clVmQktaU0dK?=
- =?utf-8?B?NmRveTRaSkh2VEFDVHpyZHZ4QityMEZFM2E5d2VKczRrYXY0VXFwMjJnb0wx?=
- =?utf-8?B?aUFaYzhyYk8wQWdmZGlyRFhPQ01KdmlNNHN1dzM1NEcyUmdQWnlCa0FOL2du?=
- =?utf-8?B?SXVlSEMwQmtBMTB6STlEbTJzQ1NicTRDdUc5dWJXL0lKWEppUmg5MTBvN3U4?=
- =?utf-8?B?Qit5QWp0SGdhc1RrN2p1akdYUjBrMWR1WUM2UHJVc2FERGYrVmdodWo4THJy?=
- =?utf-8?B?dnRxV3RpY2FxbmM4OFN4ZTJWS1pPY3BPTGJONExnSjZaZFhBN0g2aXJjb29z?=
- =?utf-8?B?MXlRMEVGay90eXcxNVFnd1RydGVIQTNla05SZUh5T1hNRmFhaWRFblBFc3lU?=
- =?utf-8?B?YzJxTndkWjZ0K0o3TXo0Y2lEZG0zek9CbUM4bEhMM3JDZWRQMWxYSTRkamRG?=
- =?utf-8?B?R29xT0hlaHlTOFJUcS9DSkNuMzZVdkVPcmxncFZxMlhjZDFVd2RTODUxNTd3?=
- =?utf-8?B?M25BZk1tbFFFRWx5QlcyRW5LeE1GZEZGVmd4ekE0d04vbHFqY0FuUjdqTlBO?=
- =?utf-8?B?N1ZVMG5oeTlVZzE3LzJiU254ZDlnODVIUU1pQVFGTXFvQjZKOHA5YTFlM2kr?=
- =?utf-8?B?MWlrTmp0Znh1YlgzaVNLV2ZiZnd1MGUrWmQ3enA1dThSMTk2K25YTnpzNE41?=
- =?utf-8?B?d0R0RDRqNzJ4b0V2MXZOQXNHMU8zdHM0QmNZeXYrRW1SS3JEMzhjWnhaRDg0?=
- =?utf-8?B?SUxJd2pON3VCQ01tUFpOc1JCZXFnSHBoOFdaU2I3OW1wMDYwc3JnOXdRcU1G?=
- =?utf-8?B?SHhMdVpJTkEwVUpWR0FDdlN2ZlZkc3h6OFduT0xmUHhYdDFpTU5Wdi9QaE1I?=
- =?utf-8?B?bWRLenIzMklkV1BvZmlHNUovVTZkVDBycVQ1cWlDTGsybk84SVZJN0NJL3ZK?=
- =?utf-8?B?NHVhVnViZmFtNjRxRUFhZXo3RHp3eGEvcnVZditqRUZSblVwWWlHYzVOU2Jl?=
- =?utf-8?B?TElUdjlySHJScVRkaDUyQk5HSWRXOTVJQzRwQk9nVEo3c2VPRjNoNmZ1ZHZG?=
- =?utf-8?B?SzcvNTVYVklrTG5rMk15Z2F1SjlYZ09RODdYNVEyS0xVTUZQNy9SZ1E3WWdQ?=
- =?utf-8?B?OXlwZjc5VTRjZFFHNGZGYzI2RnRreUNKdDBpNXpmU09jeGpyK2MxRVpFRkl3?=
- =?utf-8?B?dFNlNFhpekNGd05OU0MvZUwrYXZBd1Q5STJMK2Y5Q3N5cCtGNGpvNGZVSUJ2?=
- =?utf-8?B?ajhvTUxlTDVlUTFwVkZCVVdhc3VzSFIycDBPZ3lXK2JBbUZ0TzA2MkJCbURu?=
- =?utf-8?B?QXJESU03aE9tbC84MmU4d0ZkVG9ySmJDVGNBaVAyWEFNZVYxMWxvQUVZZ0kv?=
- =?utf-8?B?aFNoQmZPWkJlaGRFWm85b0N0eVJwcnhXNUJheVprM1loa2UxQ1ptSkRBMXI2?=
- =?utf-8?B?akV4Q3FGRmt3WlVKWSt1K0d1TWhSaEQ4WHpINHNnVFZDQTVEc3FYbDFsWmk0?=
- =?utf-8?B?cFc5dUtXRk93V250elFielFwTTd2OTBtRk5CeFNSSXdEWVlmWlFHMG5PVXp2?=
- =?utf-8?B?Qm5tSEp1Ymd3QWd5VGU5eGhCbmF0aGJ1NVZYUTNIZjlQd1dWYVQ5Q0JxOVZr?=
- =?utf-8?B?R0ErcUZuVXRscTRpNkl0ZEs4THVzWXpVTUs4eDRjSXZ6SEpNNG42N21aOGww?=
- =?utf-8?B?WVBXeFIzVUhkbDJYSzBYSTA2YzdwYytMd3l6ZjRmRTcyVXMwSEdoYUVqQlB6?=
- =?utf-8?B?MnVCbmdGY1FNVUh0dHFLTlJxZzZBQysrTkpBaTdPbUNDVEhOdnZ1UnBWa0tw?=
- =?utf-8?B?K0VMSG94Q00yQnhMOGNrYVhCa3IxM2M2enFmNHZELzBIVFQzRFAvYWd2YVgy?=
- =?utf-8?B?SnpZVkk5dm1mN3phWDd2Q3NyYjBkNXJZM3dMK1ZwWWp6WHAwSjduMmswUEFy?=
- =?utf-8?Q?GNOCFjKIET+Dh0zJHAGLJBc=3D?=
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ca2f042-71bf-4f6c-561e-08d9caa4b132
-X-MS-Exchange-CrossTenant-AuthSource: AM9PR08MB6241.eurprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2021 08:24:54.6886
+X-Microsoft-Antispam-Message-Info: CHm9/2IYfUvVN7VgvWnjrJ/+tPBB8AURqCy6xtk6DQUt5CVGCBFPaym5DNTG0w2xcqnuI4Va4jvuNVJbSrVurSR93fU6t7ghCyRB+QPJHjAoQewDCndULQ4RAWxs2UJCidmRhHWckKiUqjO9CvF4xoV0P9aSn+wkcOy6orWJenx6XQRUeoa5DIkUuos6+WG00eze6M+Ml+1KgTamt1XLZ3qBY5UONBguDhIpZIieWpEDSq3g2/JEzRH0HhHhnH2KW0LfMKSKQg44rArOLJ7Wo4ml9frCBrBcUsX2Rkd7PSrq2W7k+kt/fxCMyPT/IQScI/EWxp+VhMRnTmo4LSQ/XQPDGJGI7lUKTjZqUrKhhPp/EhuF+1e+nxvj+oetKwZzuaRfqIM9xOqM1ahz8ieX7S5X4x6OUXzPv2BI1eWLlP/Z6y/SsCfzCqKss7w7+syKDPEowp/ViBNDCIQlddptXu2i9fRyG0h336IhkjxRyhEi3LWnq0flD/E/d7DmyDcnOvHfxDtSy4Wgd651Qm8hgb5StB7KE6XnghNYfAHxSwIfA3BUkeJlIZYCP7AWN6BuFXc2JeDzCpXaOImxezIqoxZhEumxaLjJJhbAdj0L+WTWlICT6U6XTI6I0WvF1HfdGgHEJRuUAsForvDjMiv37lsIxdhCGGgpUpJI/I+jdzu3CbwE3aXpZvLsCrFYGKGf8ximQHcC2aBkvdTUuRrbzcwu+i906bsr/P3mqloN6A4vtqVrMQGJUuZ3LC8RpwAETjC0QOKJalvNL9KFdK6RPfezi2a5sGId2vJNDxlRT/ESFvjrpzVWtmuBR2OiaUS6f8c2Totgzxw1J9vEGsN11ZQRhhhCIJhSTv7kfsMWluu1ODu2+uTVP0dQTiLzurNGAzOeqNn2UkhaZb/i/2mMdfmYIn4QI/thXDIuTsamMyM=
+X-Forefront-Antispam-Report: CIP:12.22.5.238;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:mail.nvidia.com;PTR:InfoNoRecords;CAT:NONE;SFS:(4636009)(46966006)(40470700002)(36840700001)(426003)(966005)(36860700001)(508600001)(4326008)(36756003)(356005)(2906002)(8676002)(316002)(81166007)(7406005)(336012)(2616005)(53546011)(31686004)(40460700001)(70206006)(110136005)(6666004)(86362001)(47076005)(26005)(82310400004)(83380400001)(186003)(16526019)(54906003)(31696002)(5660300002)(7416002)(7366002)(8936002)(16576012)(70586007)(36900700001)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Dec 2021 11:46:44.2114
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: prgjBVC0Nv3DG/8oPhkuQPcPQkEUaeGBkA+RuBuEKd8TlaTROeRCbgWxQqMJ5VgaHsoXeybNOtIEE7NX6Xtwyw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB2964
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8c542b6-9062-40bb-7c97-08d9cac0e325
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[12.22.5.238];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5276
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd and lockd use F_SETLK cmd with the FL_SLEEP flag set to request
-asynchronous processing of blocking locks.
+On 29/12/2021 02:49, Jakub Kicinski wrote:
+> sock.h is pretty heavily used (5k objects rebuilt on x86 after
+> it's touched). We can drop the include of filter.h from it and
+> add a forward declaration of struct sk_filter instead.
+> This decreases the number of rebuilt objects when bpf.h
+> is touched from ~5k to ~1k.
+> 
+> There's a lot of missing includes this was masking. Primarily
+> in networking tho, this time.
+> 
+> Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+> v2: https://lore.kernel.org/all/20211228192519.386913-1-kuba@kernel.org/
+>  - fix build in bond on ia64
+>  - fix build in ip6_fib with randconfig
+> 
+> CC: marcel@holtmann.org
+> CC: johan.hedberg@gmail.com
+> CC: luiz.dentz@gmail.com
+> CC: dledford@redhat.com
+> CC: jgg@ziepe.ca
+> CC: mustafa.ismail@intel.com
+> CC: shiraz.saleem@intel.com
+> CC: leon@kernel.org
+> CC: ap420073@gmail.com
+> CC: wg@grandegger.com
+> CC: woojung.huh@microchip.com
+> CC: andrew@lunn.ch
+> CC: vivien.didelot@gmail.com
+> CC: f.fainelli@gmail.com
+> CC: olteanv@gmail.com
+> CC: george.mccollister@gmail.com
+> CC: michael.chan@broadcom.com
+> CC: jesse.brandeburg@intel.com
+> CC: anthony.l.nguyen@intel.com
+> CC: ast@kernel.org
+> CC: daniel@iogearbox.net
+> CC: hawk@kernel.org
+> CC: john.fastabend@gmail.com
+> CC: tariqt@nvidia.com
+> CC: saeedm@nvidia.com
+> CC: ecree.xilinx@gmail.com
+> CC: habetsm.xilinx@gmail.com
+> CC: jreuter@yaina.de
+> CC: dsahern@kernel.org
+> CC: kvalo@codeaurora.org
+> CC: pkshih@realtek.com
+> CC: trond.myklebust@hammerspace.com
+> CC: anna.schumaker@netapp.com
+> CC: viro@zeniv.linux.org.uk
+> CC: andrii@kernel.org
+> CC: mcgrof@kernel.org
+> CC: keescook@chromium.org
+> CC: yzaikin@google.com
+> CC: nikolay@nvidia.com
+> CC: jiri@nvidia.com
+> CC: wintera@linux.ibm.com
+> CC: wenjia@linux.ibm.com
+> CC: pablo@netfilter.org
+> CC: kadlec@netfilter.org
+> CC: fw@strlen.de
+> CC: ralf@linux-mips.org
+> CC: jhs@mojatatu.com
+> CC: xiyou.wangcong@gmail.com
+> CC: kgraul@linux.ibm.com
+> CC: sgarzare@redhat.com
+> CC: steffen.klassert@secunet.com
+> CC: herbert@gondor.apana.org.au
+> CC: arnd@arndb.de
+> CC: linux-bluetooth@vger.kernel.org
+> CC: linux-rdma@vger.kernel.org
+> CC: linux-can@vger.kernel.org
+> CC: intel-wired-lan@lists.osuosl.org
+> CC: bpf@vger.kernel.org
+> CC: linux-hams@vger.kernel.org
+> CC: ath11k@lists.infradead.org
+> CC: linux-wireless@vger.kernel.org
+> CC: linux-nfs@vger.kernel.org
+> CC: linux-fsdevel@vger.kernel.org
+> CC: bridge@lists.linux-foundation.org
+> CC: linux-decnet-user@lists.sourceforge.net
+> CC: linux-s390@vger.kernel.org
+> CC: netfilter-devel@vger.kernel.org
+> CC: coreteam@netfilter.org
+> CC: virtualization@lists.linux-foundation.org
+> ---
+[snip]
+>  net/bridge/br_ioctl.c                             | 1 +
+[snip
+>  70 files changed, 80 insertions(+), 1 deletion(-)
+> 
 
-Currently nfs v2/3 handles such requests by using nlmclnt_lock() ->
-do_vfs_lock() -> locks_lock_inode_wait() function which is blocked
-if request have FL_SLEEP flag set.
+For the bridge:
+Acked-by: Nikolay Aleksandrov <nikolay@nvidia.com>
 
-To handle them correctly FL_SLEEP flag should be temporarily reset
-before executing the locks_lock_inode_wait() function.
-
-Additionally block flag is forced to set, to translate blocking lock to
-remote nfs server, expecting it supports async processing of the blocking
-locks too.
-
-https://bugzilla.kernel.org/show_bug.cgi?id=215383
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
----
- fs/lockd/clntproc.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/fs/lockd/clntproc.c b/fs/lockd/clntproc.c
-index 99fffc9cb958..5941aa7c9cc9 100644
---- a/fs/lockd/clntproc.c
-+++ b/fs/lockd/clntproc.c
-@@ -519,11 +519,18 @@ nlmclnt_lock(struct nlm_rqst *req, struct file_lock *fl)
- 	unsigned char fl_flags = fl->fl_flags;
- 	unsigned char fl_type;
- 	int status = -ENOLCK;
-+	bool async = false;
- 
- 	if (nsm_monitor(host) < 0)
- 		goto out;
- 	req->a_args.state = nsm_local_state;
- 
-+	async = !req->a_args.block &&
-+		((fl_flags & FL_SLEEP_POSIX) == FL_SLEEP_POSIX);
-+	if (async) {
-+		fl->fl_flags &= ~FL_SLEEP;
-+		req->a_args.block = 1;
-+	}
- 	fl->fl_flags |= FL_ACCESS;
- 	status = do_vfs_lock(fl);
- 	fl->fl_flags = fl_flags;
-@@ -573,8 +580,11 @@ nlmclnt_lock(struct nlm_rqst *req, struct file_lock *fl)
- 			up_read(&host->h_rwsem);
- 			goto again;
- 		}
--		/* Ensure the resulting lock will get added to granted list */
--		fl->fl_flags |= FL_SLEEP;
-+		if (async)
-+			fl->fl_flags &= ~FL_SLEEP;
-+		else
-+			/* Ensure the resulting lock will get added to granted list */
-+			fl->fl_flags |= FL_SLEEP;
- 		if (do_vfs_lock(fl) < 0)
- 			printk(KERN_WARNING "%s: VFS is out of sync with lock manager!\n", __func__);
- 		up_read(&host->h_rwsem);
--- 
-2.25.1
 
