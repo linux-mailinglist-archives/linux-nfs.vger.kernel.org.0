@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F68A480CC6
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Dec 2021 20:25:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B56DD480E57
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Dec 2021 01:49:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237151AbhL1TZf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 28 Dec 2021 14:25:35 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:45876 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236062AbhL1TZe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Dec 2021 14:25:34 -0500
+        id S238073AbhL2AtV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 28 Dec 2021 19:49:21 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:33882 "EHLO
+        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231881AbhL2AtU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 28 Dec 2021 19:49:20 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D1A89B8125E;
-        Tue, 28 Dec 2021 19:25:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CADC36AEC;
-        Tue, 28 Dec 2021 19:25:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0B1F6116C;
+        Wed, 29 Dec 2021 00:49:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D64DC36AEB;
+        Wed, 29 Dec 2021 00:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1640719530;
-        bh=OiUkchb5cjAHs/7wjwgee5V8uvmcMDpNzAiPy9t9pDs=;
+        s=k20201202; t=1640738959;
+        bh=Dhya06A0fsx6OYnJ8Pjm6y+72X0rTVqijoy15oG2628=;
         h=From:To:Cc:Subject:Date:From;
-        b=OS6kekIbWoYJtLQ99sfUZtotdPiuG1fAxDRiQhUwCmrjG6NK5/ixB0D9tWkP0tsvX
-         hGFDNCsk+QqWWJx2dNgsa9NI4Zk8IFpCikH1NRO1mmzEGc5mqrBUM8iyLCDWRDcRwa
-         cMgqcyBDr8TadEv6ZYkbssKMEKlDgtq++au67/kWxvNT6/xR4XvXTmOxXnSCujPw4e
-         60CvMZVs+iI987teAxgIsijpd+TW/axRp+h909WvFaitxYF/vmCLjf452GN5dS5zDc
-         ODZhAN1yxLJiPIgn5uii3i8PQGU4z0BF1HOz0D8Dszx6vfh1f8vbO6QPoXASUxQEnK
-         vIL98jXdKJNKg==
+        b=Dch51jiREzZYD523mD7zioHHOComr1ilsab6W7ZGkrFBwWG0AuJoH5Jc+5mSAZ3bf
+         9F6WwefnUarYiyfh8KnJSfn1SiHhDiy6Wf+kyGfNREEbhQUVbg7QoNd3JOHs1NsF95
+         BB7jmzOeGW1P6hCtZ8qj4BZA3YyljGiG9kMBYfuvDoeEK2LZZpErMnraqhKqYPvzPx
+         tmx3FO6askTKzUqfZzrqadeuupl/hkduOGCOUWK2d3Sto2/QLPrZ8VYlxlx4ykGi7p
+         BK4gSMUwI5tnThp1QBt7wlffSUIy1ufVXFFokrYblqtBv+bvmLyVWRU6DhRX1mn6Bh
+         iXWWVXMXEp0mg==
 From:   Jakub Kicinski <kuba@kernel.org>
 To:     ast@kernel.org, daniel@iogearbox.net
 Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>, marcel@holtmann.org,
+        Jakub Kicinski <kuba@kernel.org>,
+        Marc Kleine-Budde <mkl@pengutronix.de>, marcel@holtmann.org,
         johan.hedberg@gmail.com, luiz.dentz@gmail.com, dledford@redhat.com,
         jgg@ziepe.ca, mustafa.ismail@intel.com, shiraz.saleem@intel.com,
         leon@kernel.org, ap420073@gmail.com, wg@grandegger.com,
-        mkl@pengutronix.de, woojung.huh@microchip.com,
-        UNGLinuxDriver@microchip.com, andrew@lunn.ch,
+        woojung.huh@microchip.com, andrew@lunn.ch,
         vivien.didelot@gmail.com, f.fainelli@gmail.com, olteanv@gmail.com,
         george.mccollister@gmail.com, michael.chan@broadcom.com,
         jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
@@ -61,9 +61,9 @@ Cc:     bpf@vger.kernel.org, netdev@vger.kernel.org,
         linux-decnet-user@lists.sourceforge.net,
         linux-s390@vger.kernel.org, netfilter-devel@vger.kernel.org,
         coreteam@netfilter.org, virtualization@lists.linux-foundation.org
-Subject: [PATCH bpf-next] net: don't include filter.h from net/sock.h
-Date:   Tue, 28 Dec 2021 11:25:19 -0800
-Message-Id: <20211228192519.386913-1-kuba@kernel.org>
+Subject: [PATCH bpf-next v2] net: don't include filter.h from net/sock.h
+Date:   Tue, 28 Dec 2021 16:49:13 -0800
+Message-Id: <20211229004913.513372-1-kuba@kernel.org>
 X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -80,8 +80,13 @@ is touched from ~5k to ~1k.
 There's a lot of missing includes this was masking. Primarily
 in networking tho, this time.
 
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
+v2: https://lore.kernel.org/all/20211228192519.386913-1-kuba@kernel.org/
+ - fix build in bond on ia64
+ - fix build in ip6_fib with randconfig
+
 CC: marcel@holtmann.org
 CC: johan.hedberg@gmail.com
 CC: luiz.dentz@gmail.com
@@ -92,9 +97,7 @@ CC: shiraz.saleem@intel.com
 CC: leon@kernel.org
 CC: ap420073@gmail.com
 CC: wg@grandegger.com
-CC: mkl@pengutronix.de
 CC: woojung.huh@microchip.com
-CC: UNGLinuxDriver@microchip.com
 CC: andrew@lunn.ch
 CC: vivien.didelot@gmail.com
 CC: f.fainelli@gmail.com
@@ -162,6 +165,7 @@ CC: virtualization@lists.linux-foundation.org
  drivers/infiniband/hw/mlx5/qp.c                   | 1 +
  drivers/net/amt.c                                 | 1 +
  drivers/net/appletalk/ipddp.c                     | 1 +
+ drivers/net/bonding/bond_main.c                   | 1 +
  drivers/net/can/usb/peak_usb/pcan_usb.c           | 1 +
  drivers/net/dsa/microchip/ksz8795.c               | 1 +
  drivers/net/dsa/xrs700x/xrs700x.c                 | 1 +
@@ -206,6 +210,7 @@ CC: virtualization@lists.linux-foundation.org
  net/dsa/dsa_priv.h                                | 1 +
  net/ethtool/ioctl.c                               | 1 +
  net/ipv4/nexthop.c                                | 1 +
+ net/ipv6/ip6_fib.c                                | 1 +
  net/ipv6/seg6_local.c                             | 1 +
  net/iucv/af_iucv.c                                | 1 +
  net/kcm/kcmsock.c                                 | 1 +
@@ -222,7 +227,7 @@ CC: virtualization@lists.linux-foundation.org
  net/xdp/xskmap.c                                  | 1 +
  net/xfrm/xfrm_state.c                             | 1 +
  net/xfrm/xfrm_user.c                              | 1 +
- 68 files changed, 78 insertions(+), 1 deletion(-)
+ 70 files changed, 80 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
 index be04d74037d2..f7bf311d7910 100644
@@ -320,6 +325,18 @@ index 5566daefbff4..d558535390f9 100644
  #include <linux/module.h>
  #include <linux/kernel.h>
  #include <linux/init.h>
+diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+index 0f39ad2af81c..d483f1102a9e 100644
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -35,6 +35,7 @@
+ #include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/fcntl.h>
++#include <linux/filter.h>
+ #include <linux/interrupt.h>
+ #include <linux/ptrace.h>
+ #include <linux/ioport.h>
 diff --git a/drivers/net/can/usb/peak_usb/pcan_usb.c b/drivers/net/can/usb/peak_usb/pcan_usb.c
 index 876218752766..ac6772fe9746 100644
 --- a/drivers/net/can/usb/peak_usb/pcan_usb.c
@@ -860,6 +877,18 @@ index 1319d093cdda..eeafeccebb8d 100644
  #include <net/arp.h>
  #include <net/ipv6_stubs.h>
  #include <net/lwtunnel.h>
+diff --git a/net/ipv6/ip6_fib.c b/net/ipv6/ip6_fib.c
+index 0371d2c14145..463c37dea449 100644
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -15,6 +15,7 @@
+ 
+ #define pr_fmt(fmt) "IPv6: " fmt
+ 
++#include <linux/bpf.h>
+ #include <linux/errno.h>
+ #include <linux/types.h>
+ #include <linux/net.h>
 diff --git a/net/ipv6/seg6_local.c b/net/ipv6/seg6_local.c
 index 2dc40b3f373e..a5eea182149d 100644
 --- a/net/ipv6/seg6_local.c
