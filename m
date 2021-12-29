@@ -2,114 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B10714813C5
-	for <lists+linux-nfs@lfdr.de>; Wed, 29 Dec 2021 15:06:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8DD3481431
+	for <lists+linux-nfs@lfdr.de>; Wed, 29 Dec 2021 15:45:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239808AbhL2OGd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 29 Dec 2021 09:06:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:22217 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233228AbhL2OGc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Dec 2021 09:06:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1640786792;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aO/4Yp6T43XLmNMDQP+OwTqaYv7whlIlyBDq4dbPFsg=;
-        b=cIKLPwvkNFjDmUgRNlTNSevOZIBBFlut6kEpMOFbQCxhZU69gSHGNYnoRflhGuMChScNM8
-        MLLIYy1Jlu4IaaAOR1/o9cyYzvZDtsUr3P0CyuY6juobcOPXCitDDK0ZZO06bxnwR6prVQ
-        6vzpTZjOkHWBIWOV7rNOYbKxvNXjFuU=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-176-q_FeUEFePgOGhE28yZnLQg-1; Wed, 29 Dec 2021 09:06:31 -0500
-X-MC-Unique: q_FeUEFePgOGhE28yZnLQg-1
-Received: by mail-qk1-f199.google.com with SMTP id o4-20020a05620a2a0400b0046dbce64beaso12858148qkp.1
-        for <linux-nfs@vger.kernel.org>; Wed, 29 Dec 2021 06:06:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aO/4Yp6T43XLmNMDQP+OwTqaYv7whlIlyBDq4dbPFsg=;
-        b=dXG9lqxhMYi1TbceC5rk4+gNz5EY0Mmb/tOIUHh/Ghelcd+tiq/rrnHxrDXxMHXgBF
-         tW+etiIRrXd9uLWBQjROVLgzfxR6KVaOCOOaFV9LqYs1DpMvnQuJDHCVUJFOme/08K2D
-         eJgGTaObazNs5EEM6W2oA4cKVFg+2u5t0poKGp2ZHmhIK9qkrY2lV1dqxwOvsXoqBzfM
-         cUtHVmNy8bmEaDd710J5pA/7fstmYW2RJoHIdWz25gqf0tOWfIvIzeAI9T8/llL0bECY
-         d8cX3jfbWhALvXththUTx/XMJnrylI2wWFuyXbwYiS21VqXKk9G+YtsDsCYZxe5eOLEV
-         rmgA==
-X-Gm-Message-State: AOAM533JgfwnT4RtlnXSgb2AD26ojR2AXZ3Q2Czxwd6bWT5Nt+o+P/Wy
-        pkj6L/0OFLHEypFj/S8nQ6Vz70IqNT9rMydlrie5X9bsxLdMO3eJw24bvsPoGSITqSlPmSbyW5i
-        1d+9S0MDQUW+pp38gnoRX
-X-Received: by 2002:a05:620a:4003:: with SMTP id h3mr18549128qko.153.1640786790471;
-        Wed, 29 Dec 2021 06:06:30 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJyimHrQiLRtzxiuwvtJVztliA6HApJnsXsaqWdLb9ltPripN76oNC87N68Zld9IushfHCBQfg==
-X-Received: by 2002:a05:620a:4003:: with SMTP id h3mr18549076qko.153.1640786790152;
-        Wed, 29 Dec 2021 06:06:30 -0800 (PST)
-Received: from steredhat (host-87-10-236-9.retail.telecomitalia.it. [87.10.236.9])
-        by smtp.gmail.com with ESMTPSA id h2sm18124352qkn.136.2021.12.29.06.06.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Dec 2021 06:06:29 -0800 (PST)
-Date:   Wed, 29 Dec 2021 15:05:57 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     ast@kernel.org, daniel@iogearbox.net, bpf@vger.kernel.org,
-        netdev@vger.kernel.org, Marc Kleine-Budde <mkl@pengutronix.de>,
-        marcel@holtmann.org, johan.hedberg@gmail.com, luiz.dentz@gmail.com,
-        dledford@redhat.com, jgg@ziepe.ca, mustafa.ismail@intel.com,
-        shiraz.saleem@intel.com, leon@kernel.org, ap420073@gmail.com,
-        wg@grandegger.com, woojung.huh@microchip.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, olteanv@gmail.com,
-        george.mccollister@gmail.com, michael.chan@broadcom.com,
-        jesse.brandeburg@intel.com, anthony.l.nguyen@intel.com,
-        hawk@kernel.org, john.fastabend@gmail.com, tariqt@nvidia.com,
-        saeedm@nvidia.com, ecree.xilinx@gmail.com,
-        habetsm.xilinx@gmail.com, jreuter@yaina.de, dsahern@kernel.org,
-        kvalo@codeaurora.org, pkshih@realtek.com,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        viro@zeniv.linux.org.uk, andrii@kernel.org, mcgrof@kernel.org,
-        keescook@chromium.org, yzaikin@google.com, nikolay@nvidia.com,
-        jiri@nvidia.com, wintera@linux.ibm.com, wenjia@linux.ibm.com,
-        pablo@netfilter.org, kadlec@netfilter.org, fw@strlen.de,
-        ralf@linux-mips.org, jhs@mojatatu.com, xiyou.wangcong@gmail.com,
-        kgraul@linux.ibm.com, steffen.klassert@secunet.com,
-        herbert@gondor.apana.org.au, arnd@arndb.de,
-        linux-bluetooth@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-can@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-hams@vger.kernel.org, ath11k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, bridge@lists.linux-foundation.org,
-        linux-decnet-user@lists.sourceforge.net,
-        linux-s390@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH bpf-next v2] net: don't include filter.h from net/sock.h
-Message-ID: <20211229140557.cuap5jjqz47yevda@steredhat>
-References: <20211229004913.513372-1-kuba@kernel.org>
+        id S237461AbhL2Op5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 29 Dec 2021 09:45:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38412 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236856AbhL2Opz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 29 Dec 2021 09:45:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EE41C061574
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Dec 2021 06:45:55 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD8B7614F0
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Dec 2021 14:45:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEA45C36AE9
+        for <linux-nfs@vger.kernel.org>; Wed, 29 Dec 2021 14:45:53 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/2] Fix cinfo on FS's that do not support IVERSION
+Date:   Wed, 29 Dec 2021 09:45:52 -0500
+Message-Id:  <164078891040.2414.11995954842150988952.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20211229004913.513372-1-kuba@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=783; h=from:subject:message-id; bh=hyxAWtKKiI6wKIURiVWPWSI0pC7tUg9oBkIpfiCdAF8=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBhzHSanlc4tYpnKnZq7DEcgsBKmrOjbvutg++vKGm+ 8NdQnQaJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYcx0mgAKCRAzarMzb2Z/l8gdD/ wJPH8pGDLjtR3zbx7bZMNOTmAgW9JqRUEabehRFzF/g/SWUcwOud5qOUT9vrs7o9pA8I03U6/Mt1rM CvnVgeCrlf5NzLjCW3/WnJNNjVZM2BQLgKQ7iuAeuraqRdTb+dWwpbwRKJ+NvxiZ/GXO/ksW9JtuO2 3YMt1tpYYgbgHwNO2gDbF++GCWapFEYOhfJnhOxBvejZDcsEtppMnONOCOJP5B0YdTaiTt84SD5zmH KuPsfHJu6P7ugpExMYcfqshgYq6JxpGMbwocm4qksj+0BreCOTcUFpcu3U/4BQcgX11puuYkmgEFps amff6pFF8E52seNs4oSzlvv92nUCnNXdqxtkWka/c2lt5zUkVOgS5DHx9hbTr67MDQr9dAHZo5w36z N+BxiuYHJoTdL4dxsPYpfGSIZdT0fJU0YFK2Cu/ji03fZl00x+6BH87FI6x/3xKPvxAVPdK89ivK0B XVCD+oQPG2iojNhUF7OB55vTaYQA3EAmPu+AJu2tEaicpk8GQJVUeLAok2A4PoeEN1VG7JLTqGMw0o 0ZQvUwARrI/oJkvxqUHlFiz6qDVHjadyqFx4HauoaebiD2Y2rfNs+hhTBPElvu5oDnqxVSfzkcnvXx dIq6REm7PMxNXTvSBfbhnlgkcOLYmpd7EvnirvPUOaScrkOpCOOlgtzR1gXg==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 28, 2021 at 04:49:13PM -0800, Jakub Kicinski wrote:
->sock.h is pretty heavily used (5k objects rebuilt on x86 after
->it's touched). We can drop the include of filter.h from it and
->add a forward declaration of struct sk_filter instead.
->This decreases the number of rebuilt objects when bpf.h
->is touched from ~5k to ~1k.
->
->There's a lot of missing includes this was masking. Primarily
->in networking tho, this time.
->
->Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
->Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->---
->v2: https://lore.kernel.org/all/20211228192519.386913-1-kuba@kernel.org/
-> - fix build in bond on ia64
-> - fix build in ip6_fib with randconfig
+To address the problem reported here:
 
-For AF_VSOCK:
-Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+https://lore.kernel.org/linux-nfs/49640909-A7F0-4004-AF55-859621B26D38@oracle.com/T/#u
 
+I'd like to revert 428a23d2bf0c ("nfsd: skip some unnecessary stats
+in the v4 case"). The first patch in this series does that. The
+second patch is related clean-up.
+
+---
+
+Chuck Lever (2):
+      Revert "nfsd: skip some unnecessary stats in the v4 case"
+      NFSD: Move fill_pre_wcc() and fill_post_wcc()
+
+
+ fs/nfsd/nfs3xdr.c  | 65 ---------------------------------------------
+ fs/nfsd/nfs4proc.c |  2 +-
+ fs/nfsd/nfsfh.c    | 66 +++++++++++++++++++++++++++++++++++++++++++++-
+ fs/nfsd/nfsfh.h    | 40 ++++++++++++++++++----------
+ fs/nfsd/vfs.c      |  8 +++---
+ 5 files changed, 96 insertions(+), 85 deletions(-)
+
+--
+Chuck Lever
