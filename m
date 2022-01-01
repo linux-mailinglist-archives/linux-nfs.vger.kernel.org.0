@@ -2,150 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CF92848215E
-	for <lists+linux-nfs@lfdr.de>; Fri, 31 Dec 2021 03:00:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 734FD48273F
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Jan 2022 11:29:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237496AbhLaCA0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Dec 2021 21:00:26 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:60681 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229890AbhLaCAZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Dec 2021 21:00:25 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=cuibixuan@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0V0OEF90_1640916021;
-Received: from 30.43.68.129(mailfrom:cuibixuan@linux.alibaba.com fp:SMTPD_---0V0OEF90_1640916021)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 31 Dec 2021 10:00:22 +0800
-Message-ID: <b94123d2-5a39-b635-4471-8962ba2a69fb@linux.alibaba.com>
-Date:   Fri, 31 Dec 2021 10:00:20 +0800
+        id S232227AbiAAK3g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 1 Jan 2022 05:29:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45164 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229624AbiAAK3e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 1 Jan 2022 05:29:34 -0500
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81354C061574;
+        Sat,  1 Jan 2022 02:29:34 -0800 (PST)
+Received: by mail-pf1-x441.google.com with SMTP id 8so25413636pfo.4;
+        Sat, 01 Jan 2022 02:29:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=message-id:from:mime-version:content-transfer-encoding
+         :content-description:subject:to:date:reply-to;
+        bh=dhFaFNGf9P/hgzfpigNOAcNefTeR7Csml9+Bh/hdy/w=;
+        b=RUle+AxccERI8y3Ampl+Xw8lK92dfFS34zw6/xR6UPtEv37L9pd4f2P9TPUYUDEphL
+         kddufZcHbPxs/oGTkDXWjPIZsP6Jc/MPHm4n8dXgMuj+QrGdS+ISnLJaCCEN81L99HkX
+         i9/JU34DGB74gWHGXBiOdxt9VVDgMpJa9I/tdCbjmztHZOSbnr/WeLfdpiEEfqcO0qPP
+         lsE4pkfdbmg4UxHGR+Q0TNpMuUuHT1XmwBUQwfFBYQAuYubCkJvW0UIcTaUMWwTnTI+b
+         x3Y+TnvYRFNQcuJ0aixpceDVLEQ2a7x3ekNF56tYcrALkal/aRAfUJsbglXJ8scejc2i
+         0e2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:from:mime-version
+         :content-transfer-encoding:content-description:subject:to:date
+         :reply-to;
+        bh=dhFaFNGf9P/hgzfpigNOAcNefTeR7Csml9+Bh/hdy/w=;
+        b=OzxfzBJgUCgEaB4U+3OEykbdH5uo5CHIW5fw241IeHBiB+MYQptgG1aYTZPMrGZhEs
+         BBXk7c2JF7S72dbomzMR7acv3hCNfvbebqekewJhHgOXb4AWbFC/qq+xvEYdQ98orKjo
+         i0MwR/zeU0TKrYAURbPLTZiBoTIemvva+TnrGqD3wTGgxSMXz4I09XyacuIAY07RvHLu
+         AtFPJLZ2ApffGSFXbVjZPcWsraRP/N+ROq4Bg6sQAaZSk238kgSz/svcB1A4YIB0Kuy6
+         2ORxkWAB0ChukKy0sS0qNY0z5zZmYDElC2vF6ARWt3NFGrP3mYr324KLXf1clA0mDTLV
+         s6lg==
+X-Gm-Message-State: AOAM532h+FNbk9sI3HajbQG12I/Wovj7cwc0WQ2nwhgqttL7cJ/tPNkI
+        1JpmVzzfYwUw6uTgeuvYRsE=
+X-Google-Smtp-Source: ABdhPJwwEhY8a/AO6uKH5qwRILyNzOg9yQpn9XIop9rLoCjC3lrxPsVi+rtzhBqglJeZRM6qtg6ehw==
+X-Received: by 2002:a05:6a00:1485:b0:4bb:317a:a909 with SMTP id v5-20020a056a00148500b004bb317aa909mr39221873pfu.29.1641032974126;
+        Sat, 01 Jan 2022 02:29:34 -0800 (PST)
+Received: from [192.168.0.153] ([143.244.48.136])
+        by smtp.gmail.com with ESMTPSA id e9sm27443407pgp.39.2022.01.01.02.29.26
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Sat, 01 Jan 2022 02:29:33 -0800 (PST)
+Message-ID: <61d02d0d.1c69fb81.ff6c2.deb3@mx.google.com>
+From:   vipiolpeace@gmail.com
+X-Google-Original-From: suport.prilend@gmail.com
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: [PATCH -next] SUNRPC: Clean XPRT_CONGESTED of xprt->state when
- rpc task is killed
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Cc:     "pete.wl@alibaba-inc.com" <pete.wl@alibaba-inc.com>,
-        "xiaoh.peixh@alibaba-inc.com" <xiaoh.peixh@alibaba-inc.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "weipu.zy@alibaba-inc.com" <weipu.zy@alibaba-inc.com>,
-        "wenan.mwa@alibaba-inc.com" <wenan.mwa@alibaba-inc.com>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
-References: <1639490018-128451-1-git-send-email-cuibixuan@linux.alibaba.com>
- <1639490018-128451-2-git-send-email-cuibixuan@linux.alibaba.com>
- <c5c17989-4c1e-35d2-5a75-a27e58cf6673@linux.alibaba.com>
- <c5d8fa4cfe87800afe588c4c3d54cd3178e04b47.camel@hammerspace.com>
- <efbf73f3-c6cd-90f6-ef22-bde14be708cc@linux.alibaba.com>
- <b8c236d99fd0f4e08dd0ee12a81274bd643a7690.camel@hammerspace.com>
-From:   Bixuan Cui <cuibixuan@linux.alibaba.com>
-In-Reply-To: <b8c236d99fd0f4e08dd0ee12a81274bd643a7690.camel@hammerspace.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: RE:
+To:     Recipients <suport.prilend@gmail.com>
+Date:   Sat, 01 Jan 2022 12:29:18 +0200
+Reply-To: andres.stemmet1@gmail.com
+X-Mailer: TurboMailer 2
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+I want to confide in you to finalize this transaction of mutual benefits. I=
+t may seem strange to you, but it is real. This is a transaction that has n=
+o risk at all, due process shall be followed and it shall be carried out un=
+der the ambit of the financial laws. Being the Chief Financial Officer, BP =
+Plc. I want to trust and put in your care Eighteen Million British Pounds S=
+terling, The funds were acquired from an over-invoiced payment from a past =
+contract executed in one of my departments. I can't successfully achieve th=
+is transaction without presenting you as foreign contractor who will provid=
+e a bank account to receive the funds.
 
-在 2021/12/22 下午11:02, Trond Myklebust 写道:
-> On Wed, 2021-12-22 at 10:55 +0800, Bixuan Cui wrote:
->> 在 2021/12/21 上午2:22, Trond Myklebust 写道:
->>   
->>> On Mon, 2021-12-20 at 11:39 +0800, Bixuan Cui wrote:
->>>   
->>>> ping~
->>>>
->>>> 在 2021/12/14 下午9:53, Bixuan Cui 写道:
->>>>   
->>>>> When the values of tcp_max_slot_table_entries and
->>>>> sunrpc.tcp_slot_table_entries are lower than the number of rpc
->>>>> tasks,
->>>>> xprt_dynamic_alloc_slot() in xprt_alloc_slot() will return -
->>>>> EAGAIN,
->>>>> and
->>>>> then set xprt->state to XPRT_CONGESTED:
->>>>>     xprt_retry_reserve
->>>>>       ->xprt_do_reserve
->>>>>         ->xprt_alloc_slot
->>>>>           ->xprt_dynamic_alloc_slot // return -EAGAIN and task-
->>>>>   
->>>>>> tk_rqstp is NULL
->>>>>             ->xprt_add_backlog // set_bit(XPRT_CONGESTED, &xprt-
->>>>>   
->>>>>> state);
->>>>> When rpc task is killed, XPRT_CONGESTED bit of xprt->state will
->>>>> not
->>>>> be
->>>>> cleaned up and nfs hangs:
->>>>>     rpc_exit_task
->>>>>       ->xprt_release // if (req == NULL) is true, then
->>>>> XPRT_CONGESTED
->>>>>                     // bit not clean
->>>>>
->>>>> Add xprt_wake_up_backlog(xprt) to clean XPRT_CONGESTED bit in
->>>>> xprt_release().
->>> I'm not seeing how this explanation makes sense. If the task
->>> doesn't
->>> hold a slot, then freeing that task isn't going to clear the
->>> congestion
->>> caused by all the slots being in use.
->> Hi，
->> If the rpc task is free, call xprt_release() :
->> void xprt_release(struct rpc_task *task)
->>   {
->>        if (req == NULL) {
->>                    if (task->tk_client) {
->>                            xprt = task->tk_xprt;
->>                            xprt_release_write(xprt, task); // 1.
->> release xprt
->>                    }
->>                    return;
->>            }
->>        ....
->>        if (likely(!bc_prealloc(req)))
->>                    xprt->ops->free_slot(xprt, req); // 2. release slot
->> and call xprt_wake_up_backlog(xprt, req) to wakeup next task(clear
->> XPRT_CONGESTED bit if next is NULL) in xprt_free_slot()
->>            else
->>                    xprt_free_bc_request(req);
->>   }
->>   I mean that in step 1, xprt was only released, but
->> xprt_wake_up_backlog was not called (I don’t know if it is necessary,
->> but xprt->state may still be XPRT_CONGESTED), which causes xprt to
->> hold up. I think it happens when the task that does not hold a slot
->> is the last released task，xprt_wake_up_backlog(clear XPRT_CONGESTED)
->> will not be executed. :-)
->> Thanks，
->> Bixuan Cui
->>
->>   
-> My point is that in that case 1, there is no slot to free, so there is
-> no change to the congestion state.
->
-> IOW: your patch is incorrect because it is trying to assign a slot in a
-> case where there is no slot to assign.
-Hi，
-I found the correct way to fix it, that is, do not free the request when 
-there are tasks in the xprt->backlog :-)
-And it has been fixed by e877a88d1f06 (SUNRPC in case of backlog, hand 
-free slots directly to waiting task)
-     commit e877a88d1f069edced4160792f42c2a8e2dba942
-     Author: NeilBrown <neilb@suse.de>
-     Date:   Mon May 17 09:59:10 2021 +1000
+Documentation for the claim of the funds will be legally processed and docu=
+mented, so I will need your full cooperation on this matter for our mutual =
+benefits. We will discuss details if you are interested to work with me to =
+secure this funds. I will appreciate your prompt response in every bit of o=
+ur communication. Stay Blessed and Stay Safe.
 
-     SUNRPC in case of backlog, hand free slots directly to waiting task
+Best Regards
 
-     If sunrpc.tcp_max_slot_table_entries is small and there are tasks
-     on the backlog queue, then when a request completes it is freed and the
-     first task on the queue is woken.  The expectation is that it will wake
-     and claim that request.  However if it was a sync task and the waiting
-     process was killed at just that moment, it will wake and NOT claim the
-     request.
-Thanks for your advice.
 
-Thanks,
-Bixuan Cui
+Tel: +44 7537 185910
+Andres  Stemmet
+Email: andres.stemmet1@gmail.com  =
+
+Chief financial officer
+BP Petroleum p.l.c.
+
+                                                                           =
+                        Copyright =A9 1996-2021
 
