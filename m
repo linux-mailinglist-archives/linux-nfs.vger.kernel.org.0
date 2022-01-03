@@ -2,130 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 91D4A483828
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jan 2022 22:00:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DDA648385D
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jan 2022 22:32:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbiACVAO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jan 2022 16:00:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44256 "EHLO
+        id S229917AbiACVca (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jan 2022 16:32:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51468 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiACVAO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 16:00:14 -0500
+        with ESMTP id S229688AbiACVca (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 16:32:30 -0500
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDBCCC061761
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Jan 2022 13:00:13 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEEDCC061761
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Jan 2022 13:32:29 -0800 (PST)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 69C3C72F7; Mon,  3 Jan 2022 16:00:13 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 69C3C72F7
+        id 29CA35FFF; Mon,  3 Jan 2022 16:32:29 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 29CA35FFF
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1641243613;
-        bh=bHfdBBvHoz6KaCgdxNxjOCCstQDTEYE8MdM0oQqLue8=;
+        s=default; t=1641245549;
+        bh=lCahynYwMpJIERC0nf/icp6k9guu1Gy/YE5JP+wisLM=;
         h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=rm8PrZKGhxeIRCZ3PWre2pt+b58fLvs+MZ7JYZ5rcaPVzAlXSfU7dUebfIrIfdKeW
-         ooLvh5CC2259in4vJaCzY2ccjaFsrw+8uFnNcK2AfwB7QwgT4cC+i9uX33wFlxW+3J
-         Ry5KRu8mtJumhDpfZ8m+yXxm9nh+OxskICs/o1kg=
-Date:   Mon, 3 Jan 2022 16:00:13 -0500
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC] NFSD: Fix zero-length NFSv3 WRITEs
-Message-ID: <20220103210013.GK21514@fieldses.org>
-References: <164010014140.6448.18108343631467243001.stgit@klimt.1015granger.net>
+        b=M/VLjdvph2tGbekkilDGt4kcx1nllx9Dj0N8M2Ti+Z/4ClRAUOhD7l1uHhRtRXyQ6
+         BB5v4FUanMbmDxMjg9u5+N/7QnWkGFGeS6l68c3eIarurGdj194zi4ic/Z8zre3m+g
+         Ywd0z3j2dnfCWh+pXWFzCGTR6yrdSsuUiVVw7cKk=
+Date:   Mon, 3 Jan 2022 16:32:29 -0500
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     "Dorian Taylor (Lists)" <lists@doriantaylor.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: GSSAPI as it relates to NFS
+Message-ID: <20220103213229.GL21514@fieldses.org>
+References: <234CDB6C-C565-4BB4-AE38-92F4B05AB4BD@doriantaylor.com>
+ <48DBBF53-7CE3-4DDA-B697-B14F8C382E78@oracle.com>
+ <AF7243DE-250E-4CCB-86C0-40C69BB71C88@doriantaylor.com>
+ <9DA49FE9-F4AF-44CC-8BCF-86F4D2D984AA@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164010014140.6448.18108343631467243001.stgit@klimt.1015granger.net>
+In-Reply-To: <9DA49FE9-F4AF-44CC-8BCF-86F4D2D984AA@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Dec 21, 2021 at 10:23:25AM -0500, Chuck Lever wrote:
-> The Linux NFS server currently responds to a zero-length NFSv3 WRITE
-> request with NFS3ERR_IO. It responds to a zero-length NFSv4 WRITE
-> with NFS4_OK and count of zero.
+On Sat, Dec 25, 2021 at 10:53:33PM +0000, Chuck Lever III wrote:
+> IIRC Linux requires that a mount operation be done by root. If you run
+> gssd with "-n", become root, then kinit as yourself, I think it should
+> work.
 > 
-> RFC 1813 says of the WRITE procedure's @count argument:
-> 
-> count
->          The number of bytes of data to be written. If count is
->          0, the WRITE will succeed and return a count of 0,
->          barring errors due to permissions checking.
-> 
-> RFC 8881 has similar language for NFSv4, though NFSv4 removed the
-> explicit @count argument because that value is already contained in
-> the opaque payload array.
-> 
-> The synthetic client pynfs's WRT4 and WRT15 tests do emit zero-
-> length WRITEs to exercise this spec requirement, but interestingly
-> the Linux NFS client does not appear to emit zero-length WRITEs,
-> instead squelching them.
-> 
-> I'm not aware of a test that can generate such WRITEs for NFSv3, so
-> I wrote a naive C program to generate a zero-length WRITE and test
-> this fix.
+> There has been some discussion about enabling a non-privileged user to
+> perform a mount... it's a bit tricky because the function of mount is
+> to alter the file namespace, which traditionally requires extra
+> privilege to do.
 
-I know it's probably only a few lines, but still may be worth posting
-somewhere and making it the start of a collection of protocol-level v3
-tests.
+The core VFS code is quite happy to allow you to make unprivileged
+mounts in your own namespace, but the particular filesystem being
+mounted also gets a veto.
+
+I think we're expecting NFS will be patched to allow unprivileged mounts
+some time.  See e.g.
+
+	https://lore.kernel.org/linux-nfs/aec219339d8296b7e9b114d9d247a71fd47423c5.camel@hammerspace.com/
 
 --b.
-
-> 
-> Fixes: 14168d678a0f ("NFSD: Remove the RETURN_STATUS() macro")
-> Reported-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
-> 
-> Here's an alternate approach to addressing the zero-length NFSv3
-> WRITE failures.
-> 
-> 
->  fs/nfsd/nfs3proc.c |    6 +-----
->  fs/nfsd/nfsproc.c  |    5 -----
->  2 files changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index 4418517f6f12..2c681785186f 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -202,15 +202,11 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
->  	fh_copy(&resp->fh, &argp->fh);
->  	resp->committed = argp->stable;
->  	nvecs = svc_fill_write_vector(rqstp, &argp->payload);
-> -	if (!nvecs) {
-> -		resp->status = nfserr_io;
-> -		goto out;
-> -	}
-> +
->  	resp->status = nfsd_write(rqstp, &resp->fh, argp->offset,
->  				  rqstp->rq_vec, nvecs, &cnt,
->  				  resp->committed, resp->verf);
->  	resp->count = cnt;
-> -out:
->  	return rpc_success;
->  }
->  
-> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-> index eea5b59b6a6c..1743ed04197e 100644
-> --- a/fs/nfsd/nfsproc.c
-> +++ b/fs/nfsd/nfsproc.c
-> @@ -235,10 +235,6 @@ nfsd_proc_write(struct svc_rqst *rqstp)
->  		argp->len, argp->offset);
->  
->  	nvecs = svc_fill_write_vector(rqstp, &argp->payload);
-> -	if (!nvecs) {
-> -		resp->status = nfserr_io;
-> -		goto out;
-> -	}
->  
->  	resp->status = nfsd_write(rqstp, fh_copy(&resp->fh, &argp->fh),
->  				  argp->offset, rqstp->rq_vec, nvecs,
-> @@ -247,7 +243,6 @@ nfsd_proc_write(struct svc_rqst *rqstp)
->  		resp->status = fh_getattr(&resp->fh, &resp->stat);
->  	else if (resp->status == nfserr_jukebox)
->  		return rpc_drop_reply;
-> -out:
->  	return rpc_success;
->  }
->  
