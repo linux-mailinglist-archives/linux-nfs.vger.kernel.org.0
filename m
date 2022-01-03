@@ -2,139 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 78CD44837CF
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jan 2022 20:56:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 732E24837C4
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Jan 2022 20:53:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233297AbiACT4Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jan 2022 14:56:25 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:39460 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230228AbiACT4Z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 14:56:25 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 78D35B8109D
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Jan 2022 19:56:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9313C36AE9;
-        Mon,  3 Jan 2022 19:56:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641239783;
-        bh=z4PurGPupYocyZ8Wl4EKp0AqYlYv3BNFg3QN5mF5cyk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lO4VhCpxqbIFMOS/4iTtTvk41GPmAQHTo749Mt7S9f4dGs1lMpE5bbvXiT1GLKwm3
-         QlDJOIfuswoI/Q3/hECCfwGsV9PIq8WAAO6bpLQPy7w2Lte1niBSDJm+8FQNNXuEC9
-         dysV4zTz65UGqCBxUcXouSfqqGSpaHsYiYlT5+uePAQ+6/ULVZ1a2n47oAAfNmc1Tc
-         OTxzzcKusnEErbtGV2ibbOS3SR8KuEHJ0I3QU41+DcAmH7Yb6kP0Bb9yl2SPyl/vaU
-         VCvaRiMsljcHXztnRvHKuQc5yLDEN62JvI7HRFEAvmpx2POgvwGpvdh8JTYvKp4vPl
-         O4bNdFUfpJ+Pg==
-From:   trondmy@kernel.org
-To:     Anna Schumaker <Anna.Schumaker@netapp.com>
-Cc:     rtm@csail.mit.edu, linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSv4.1: Fix uninitialised variable in devicenotify
-Date:   Mon,  3 Jan 2022 14:50:16 -0500
-Message-Id: <20220103195016.17095-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.33.1
+        id S236198AbiACTxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jan 2022 14:53:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57856 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232657AbiACTxe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 14:53:34 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3852FC061761;
+        Mon,  3 Jan 2022 11:53:34 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 9E34E4C7F; Mon,  3 Jan 2022 14:53:33 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9E34E4C7F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1641239613;
+        bh=3MbLFj9rzrXHI8T5NRoT34vt+2y7QqBgVGUi0Oa5xJE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UfD1tvXiuQ03zPYRguomRZ7WqyDpx4bLW1sc3ZzvqXlUV7DK5txtIBouXEhkCtBca
+         Ghf7ZyWRIaQ45o08m0wvCRSpOS+eYB8BsYLWYIX3yaQLkFooWrLhze4Tpny+1PCxrY
+         T8Dpa+rTvrQblqZInBYojlhkHyUYIKSihkNtB8UA=
+Date:   Mon, 3 Jan 2022 14:53:33 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Vasily Averin <vvs@virtuozzo.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>, kernel@openvz.org,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>
+Subject: Re: [PATCH v3 2/3] nfs4: handle async processing of F_SETLK with
+ FL_SLEEP
+Message-ID: <20220103195333.GG21514@fieldses.org>
+References: <1f354cec-d2d6-ddf5-56e0-325c10fe26ee@virtuozzo.com>
+ <00d1e0fa-55dd-82a5-2607-70d4552cc7f4@virtuozzo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00d1e0fa-55dd-82a5-2607-70d4552cc7f4@virtuozzo.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, Dec 29, 2021 at 11:24:43AM +0300, Vasily Averin wrote:
+> nfsd and lockd use F_SETLK cmd with the FL_SLEEP flag set to request
+> asynchronous processing of blocking locks.
+> 
+> Currently nfs4 use locks_lock_inode_wait() function which is blocked
+> for such requests. To handle them correctly FL_SLEEP flag should be
+> temporarily reset before executing the locks_lock_inode_wait() function.
+> 
+> Additionally block flag is forced to set, to translate blocking lock to
+> remote nfs server, expecting it supports async processing of the blocking
+> locks too.
 
-When decode_devicenotify_args() exits with no entries, we need to
-ensure that the struct cb_devicenotifyargs is initialised to
-{ 0, NULL } in order to avoid problems in
-nfs4_callback_devicenotify().
+But this on its own isn't enough for the client to support asynchronous
+blocking locks, right?  Don't we also need the logic that calls knfsd's
+lm_notify when it gets a CB_NOTIFY_LOCK from the server?
 
-Reported-by: <rtm@csail.mit.edu>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/callback.h      |  2 +-
- fs/nfs/callback_proc.c |  2 +-
- fs/nfs/callback_xdr.c  | 18 +++++++++---------
- 3 files changed, 11 insertions(+), 11 deletions(-)
+--b.
 
-diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
-index 6a2033131c06..ccd4f245cae2 100644
---- a/fs/nfs/callback.h
-+++ b/fs/nfs/callback.h
-@@ -170,7 +170,7 @@ struct cb_devicenotifyitem {
- };
- 
- struct cb_devicenotifyargs {
--	int				 ndevs;
-+	uint32_t			 ndevs;
- 	struct cb_devicenotifyitem	 *devs;
- };
- 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index 09c5b1cb3e07..c343666d9a42 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -358,7 +358,7 @@ __be32 nfs4_callback_devicenotify(void *argp, void *resp,
- 				  struct cb_process_state *cps)
- {
- 	struct cb_devicenotifyargs *args = argp;
--	int i;
-+	uint32_t i;
- 	__be32 res = 0;
- 	struct nfs_client *clp = cps->clp;
- 	struct nfs_server *server = NULL;
-diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-index 4c48d85f6517..ce3d1d5b1291 100644
---- a/fs/nfs/callback_xdr.c
-+++ b/fs/nfs/callback_xdr.c
-@@ -258,11 +258,9 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 				void *argp)
- {
- 	struct cb_devicenotifyargs *args = argp;
-+	uint32_t tmp, n, i;
- 	__be32 *p;
- 	__be32 status = 0;
--	u32 tmp;
--	int n, i;
--	args->ndevs = 0;
- 
- 	/* Num of device notifications */
- 	p = xdr_inline_decode(xdr, sizeof(uint32_t));
-@@ -271,7 +269,7 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 		goto out;
- 	}
- 	n = ntohl(*p++);
--	if (n <= 0)
-+	if (n == 0)
- 		goto out;
- 	if (n > ULONG_MAX / sizeof(*args->devs)) {
- 		status = htonl(NFS4ERR_BADXDR);
-@@ -330,19 +328,21 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 			dev->cbd_immediate = 0;
- 		}
- 
--		args->ndevs++;
--
- 		dprintk("%s: type %d layout 0x%x immediate %d\n",
- 			__func__, dev->cbd_notify_type, dev->cbd_layout_type,
- 			dev->cbd_immediate);
- 	}
-+	args->ndevs = n;
-+	dprintk("%s: ndevs %d\n", __func__, args->ndevs);
-+	return 0;
-+err:
-+	kfree(args->devs);
- out:
-+	args->devs = NULL;
-+	args->ndevs = 0;
- 	dprintk("%s: status %d ndevs %d\n",
- 		__func__, ntohl(status), args->ndevs);
- 	return status;
--err:
--	kfree(args->devs);
--	goto out;
- }
- 
- static __be32 decode_sessionid(struct xdr_stream *xdr,
--- 
-2.33.1
-
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=215383
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> ---
+>  fs/nfs/nfs4proc.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index ee3bc79f6ca3..9b1380c4223c 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -7094,7 +7094,7 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
+>  			recovery_type == NFS_LOCK_NEW ? GFP_KERNEL : GFP_NOFS);
+>  	if (data == NULL)
+>  		return -ENOMEM;
+> -	if (IS_SETLKW(cmd))
+> +	if (IS_SETLKW(cmd) || (fl->fl_flags & FL_SLEEP))
+>  		data->arg.block = 1;
+>  	nfs4_init_sequence(&data->arg.seq_args, &data->res.seq_res, 1,
+>  				recovery_type > NFS_LOCK_NEW);
+> @@ -7200,6 +7200,9 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
+>  	int status;
+>  
+>  	request->fl_flags |= FL_ACCESS;
+> +	if (((fl_flags & FL_SLEEP_POSIX) == FL_SLEEP_POSIX) && IS_SETLK(cmd))
+> +		request->fl_flags &= ~FL_SLEEP;
+> +
+>  	status = locks_lock_inode_wait(state->inode, request);
+>  	if (status < 0)
+>  		goto out;
+> -- 
+> 2.25.1
