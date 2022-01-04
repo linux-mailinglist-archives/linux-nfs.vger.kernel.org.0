@@ -2,66 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3BF24839F9
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 02:51:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D8629483ACE
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 04:07:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbiADBvA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Jan 2022 20:51:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51606 "EHLO
+        id S232480AbiADDHJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Jan 2022 22:07:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbiADBu6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 20:50:58 -0500
-Received: from zeniv-ca.linux.org.uk (zeniv-ca.linux.org.uk [IPv6:2607:5300:60:148a::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88668C061761;
-        Mon,  3 Jan 2022 17:50:58 -0800 (PST)
-Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n4YxK-00H3st-Q5; Tue, 04 Jan 2022 01:49:42 +0000
-Date:   Tue, 4 Jan 2022 01:49:42 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Walt Drummond <walt@drummond.us>
-Cc:     aacraid@microsemi.com, anna.schumaker@netapp.com, arnd@arndb.de,
-        bsegall@google.com, bp@alien8.de, chuck.lever@oracle.com,
-        bristot@redhat.com, dave.hansen@linux.intel.com,
-        dwmw2@infradead.org, dietmar.eggemann@arm.com, dinguyen@kernel.org,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-        idryomov@gmail.com, mingo@redhat.com, yzaikin@google.com,
-        ink@jurassic.park.msu.ru, jejb@linux.ibm.com, jmorris@namei.org,
-        bfields@fieldses.org, jlayton@kernel.org, jirislaby@kernel.org,
-        john.johansen@canonical.com, juri.lelli@redhat.com,
-        keescook@chromium.org, mcgrof@kernel.org,
-        martin.petersen@oracle.com, mattst88@gmail.com, mgorman@suse.de,
-        oleg@redhat.com, pbonzini@redhat.com, peterz@infradead.org,
-        rth@twiddle.net, richard@nod.at, serge@hallyn.com,
-        rostedt@goodmis.org, tglx@linutronix.de,
-        trond.myklebust@hammerspace.com, vincent.guittot@linaro.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-m68k@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [RFC PATCH 0/8] signals: Support more than 64 signals
-Message-ID: <YdOntksAAhc/oaU1@zeniv-ca.linux.org.uk>
-References: <20220103181956.983342-1-walt@drummond.us>
- <YdNE6UXRT02135Pd@zeniv-ca.linux.org.uk>
- <CADCN6nx4VWtR79TBDTENRExjsa=KAGuUpyz06iu2EGmSTPyc+Q@mail.gmail.com>
- <YdOf4WBwR1H93GAt@zeniv-ca.linux.org.uk>
+        with ESMTP id S232440AbiADDHJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Jan 2022 22:07:09 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CBEC061761
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Jan 2022 19:07:08 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 356475FFF; Mon,  3 Jan 2022 22:07:08 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 356475FFF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1641265628;
+        bh=Ljr74Mpy6047k/ssN9PrzYH7/OGimGYeCn3g3N4VyrY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kVx8ptMFHgjZSLWIZvp0MSVaiNojmqTda+I2CQY4HqV3tm/ouHd9BLxk5dJyA+jka
+         Oo66XCdGWtIm4E0x568HgONX9CMxVpZkkifnG320iwSILFOV//aNxxIyLPH8h/+DqM
+         TtGCzN8+AjfUc5IvvgvE+aQE62AzpY6b0U8AGxfs=
+Date:   Mon, 3 Jan 2022 22:07:08 -0500
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH RFC] NFSD: Fix zero-length NFSv3 WRITEs
+Message-ID: <20220104030708.GC27642@fieldses.org>
+References: <164010014140.6448.18108343631467243001.stgit@klimt.1015granger.net>
+ <20220103210013.GK21514@fieldses.org>
+ <BAA88CD4-C692-4AEE-9A8D-F62F8CBEA2F5@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <YdOf4WBwR1H93GAt@zeniv-ca.linux.org.uk>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <BAA88CD4-C692-4AEE-9A8D-F62F8CBEA2F5@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 04, 2022 at 01:16:17AM +0000, Al Viro wrote:
-> On Mon, Jan 03, 2022 at 05:00:58PM -0800, Walt Drummond wrote:
-> > I simply wanted SIGINFO and VSTATUS, and that necessitated this.
+On Tue, Jan 04, 2022 at 01:12:40AM +0000, Chuck Lever III wrote:
+> > but still may be worth posting
+> > somewhere and making it the start of a collection of protocol-level v3
+> > tests.
 > 
-> Elaborate, please.  What exactly requires more than 32 rt signals?
+> ... I question whether it's worth posting anything until there
+> is a framework for collecting and maintaining such things. I
+> do agree that the community should be working up a set of NFSv3
+> specific tests like this. I like Frank's idea of making them a
+> part of pynfs, fwiw.
 
-More to the point, which system had SIGINFO >= SIGRTMIN?  Or signals
-with numbers greater than SIGRTMAX, for that matter?
+Somebody did actually do a v3 pynfs that I never got around to merging,
+it'd be worth revisiting:
 
-I really don't get it...
+	https://github.com/sthaber/pynfs
+
+--b.
