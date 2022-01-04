@@ -2,103 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D203484AA5
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 23:24:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EEA24484ABB
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 23:32:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235396AbiADWYq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Jan 2022 17:24:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51492 "EHLO
+        id S235525AbiADWb6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Jan 2022 17:31:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234157AbiADWYq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jan 2022 17:24:46 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E85E1C061761
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Jan 2022 14:24:45 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 2A12872F7; Tue,  4 Jan 2022 17:24:45 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 2A12872F7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1641335085;
-        bh=gnlPJfVq0juSsFwdAVk5gsjcd5RsGD159xB2VHLYKLE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EQy9NJoLl1L/otkRtkiI2dn7arlIAavefelZY3z1mPGq25m18wW0XPwVEZGzCd+O/
-         Bw0ACngkbUDwrdQgHPYd9qjMQ2YlXNBq1Bgjt8qFoHCRmpX0sNO7iUi+0Jey2u4RSo
-         y0oVyy+3XmZkIblp5knNYNR8J13DKwmr01E1l0k8=
-Date:   Tue, 4 Jan 2022 17:24:45 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Steve Dickson <SteveD@redhat.com>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH] nfsdcld: use WAL journal for faster commits
-Message-ID: <20220104222445.GF12040@fieldses.org>
-References: <20211201174205.GB26415@fieldses.org>
- <20211201180339.GC26415@fieldses.org>
- <20211201195050.GE26415@fieldses.org>
- <20211203212200.GB3930@fieldses.org>
- <20211203215531.GC3930@fieldses.org>
- <469DF1ED-C2AB-43CE-AB70-BFD2AFC2A68D@oracle.com>
- <20211203223921.GA6151@fieldses.org>
- <915221EC-387C-4F50-83C6-8DCF02DD2A5D@oracle.com>
- <20211204012402.GA7805@fieldses.org>
- <57EA2D75-823E-4164-9000-E7C7C970C60B@oracle.com>
+        with ESMTP id S235100AbiADWb6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jan 2022 17:31:58 -0500
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFFDCC06179C
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Jan 2022 14:31:57 -0800 (PST)
+Received: by mail-lf1-x12a.google.com with SMTP id r4so41666138lfe.7
+        for <linux-nfs@vger.kernel.org>; Tue, 04 Jan 2022 14:31:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=drummond.us; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WCROm2fnDVp3gJHoFF4FSh0CLwqqTwPGgd5WC3cykAE=;
+        b=SpNAIy18+a+BDF8ohbOhhPTgn+rzzWGPHdpXue1Z95/qQvcACFPfls+EhsBOb9bJ5I
+         J4obAOpt6rzp6Cc6ysV/HzbOKr1fr3e+TeLO6bRMnYdo3Gyh9nb1rzv1ICxH2cvlIvP1
+         O7zLwOaJVfjhHVFevNE78XtRHOJLnOt4OvZNOrtO4+Qth9yQuKO3Y0zMqJxHhe1sPN68
+         AsVbfWMCG2xnfSZ0gRMgCWFuQi9faGM0w08EmIWjCfBZLojXQfuuYl5i08TleIW/7b/n
+         nzMZzBq9PSmCXV2xi+HfGLAjucKoCMHpfD9Bcb6PeCRSN1t/e4GZt0e33JDtOpwXUI3r
+         +ijA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WCROm2fnDVp3gJHoFF4FSh0CLwqqTwPGgd5WC3cykAE=;
+        b=HEt22Bca41TmjQQ4MY2dtfJWxHa1h3US47uVbZPGBKG8Pc7PUW++k5B32brxqsOu5U
+         tmlqTWKph4rZwa+ZrXozGmY7ORlEUmSh+6JOI4tb+iOhtJvsW8D/1IylKCfijDDOPsAi
+         HLtoMm6GyvMojHr6+qQxs8f87fhEuNqe9IHO6iwyivH2wK5MN424TS3P2uPuOSxGh1i8
+         UcLS1hzXzG/tKhO1RFeBbNWA3mH0XDu2/SxEcIcg2gTO/SmkCp9Q/YVzXuWRQD4V1WOa
+         A1Xh8XnK5690weYnjvioeDmw0iqe5+JLHt/OXuKo0ZtSJiq9nWYsb2Y914g5y+BlVNs8
+         9dNg==
+X-Gm-Message-State: AOAM530UAXQSoJN9YI6glhNCC2xNWIx40BeKtM/lY6TkOKLIxrainQbT
+        CT858xwJFpC4aL9AIpTpE0DDwRk1m3LTJgDjA7qkiA==
+X-Google-Smtp-Source: ABdhPJx1kX6sFLTseOkg2YWGeBhi1W6ClRmDNwQ/+U2YIr6vghHpml3Y6bKghVPjgaFOMW5MDitHq9bLobHNxLYmId8=
+X-Received: by 2002:a05:6512:ba9:: with SMTP id b41mr43938123lfv.529.1641335515666;
+ Tue, 04 Jan 2022 14:31:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57EA2D75-823E-4164-9000-E7C7C970C60B@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20220103181956.983342-1-walt@drummond.us> <87iluzidod.fsf@email.froward.int.ebiederm.org>
+ <YdSzjPbVDVGKT4km@mit.edu> <87pmp79mxl.fsf@email.froward.int.ebiederm.org> <YdTI16ZxFFNco7rH@mit.edu>
+In-Reply-To: <YdTI16ZxFFNco7rH@mit.edu>
+From:   Walt Drummond <walt@drummond.us>
+Date:   Tue, 4 Jan 2022 14:31:44 -0800
+Message-ID: <CADCN6nzT-Dw-AabtwWrfVRDd5HzMS3EOy8WkeomicJF07nQyoA@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/8] signals: Support more than 64 signals
+To:     "Theodore Ts'o" <tytso@mit.edu>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>, aacraid@microsemi.com,
+        viro@zeniv.linux.org.uk, anna.schumaker@netapp.com, arnd@arndb.de,
+        bsegall@google.com, bp@alien8.de, chuck.lever@oracle.com,
+        bristot@redhat.com, dave.hansen@linux.intel.com,
+        dwmw2@infradead.org, dietmar.eggemann@arm.com, dinguyen@kernel.org,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        idryomov@gmail.com, mingo@redhat.com, yzaikin@google.com,
+        ink@jurassic.park.msu.ru, jejb@linux.ibm.com, jmorris@namei.org,
+        bfields@fieldses.org, jlayton@kernel.org, jirislaby@kernel.org,
+        john.johansen@canonical.com, juri.lelli@redhat.com,
+        keescook@chromium.org, mcgrof@kernel.org,
+        martin.petersen@oracle.com, mattst88@gmail.com, mgorman@suse.de,
+        oleg@redhat.com, pbonzini@redhat.com, peterz@infradead.org,
+        rth@twiddle.net, richard@nod.at, serge@hallyn.com,
+        rostedt@goodmis.org, tglx@linutronix.de,
+        trond.myklebust@hammerspace.com, vincent.guittot@linaro.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: "J. Bruce Fields" <bfields@redhat.com>
+The only standard tools that support SIGINFO are sleep, dd and ping,
+(and kill, for obvious reasons) so it's not like there's a vast hole
+in the tooling or something, nor is there a large legacy software base
+just waiting for SIGINFO to appear.   So while I very much enjoyed
+figuring out how to make SIGINFO work ...
 
-Currently nfsdcld is doing three fdatasyncs for each upcall.  Based on
-SQLite documentation, WAL mode should also be safe, and I can confirm
-from an strace that it results in only one fdatasync each.
+I'll have the VSTATUS patch out in a little bit.
 
-This may be a bottleneck e.g. when lots of clients are being created or
-expired at once (e.g. on reboot).
+I also think there might be some merit in consolidating the 10
+'sigsetsize != sizeof(sigset_t)' checks in a macro and adding comments
+that wave people off on trying to do what I did.  If that would be
+useful, happy to provide the patch.
 
-Not bothering with error checking, as this is just an optimization and
-nfsdcld will still function without.  (Might be better to log something
-on failure, though.)
-
-Reviewed-by: Chuck Lever <chuck.lever@oracle.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
----
- aclocal/libsqlite3.m4  | 2 +-
- utils/nfsdcld/sqlite.c | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-Resending to make sure SteveD saw this....--b.
-
-diff --git a/aclocal/libsqlite3.m4 b/aclocal/libsqlite3.m4
-index 8c38993cbba8..c3beb4d56f0c 100644
---- a/aclocal/libsqlite3.m4
-+++ b/aclocal/libsqlite3.m4
-@@ -22,7 +22,7 @@ AC_DEFUN([AC_SQLITE3_VERS], [
- 		int vers = sqlite3_libversion_number();
- 
- 		return vers != SQLITE_VERSION_NUMBER ||
--			vers < 3003000;
-+			vers < 3007000;
- 	}
-        ], [libsqlite3_cv_is_recent=yes], [libsqlite3_cv_is_recent=no],
-        [libsqlite3_cv_is_recent=unknown])
-diff --git a/utils/nfsdcld/sqlite.c b/utils/nfsdcld/sqlite.c
-index 03016fb95823..eabb0daa95f5 100644
---- a/utils/nfsdcld/sqlite.c
-+++ b/utils/nfsdcld/sqlite.c
-@@ -826,6 +826,8 @@ sqlite_prepare_dbh(const char *topdir)
- 		goto out_close;
- 	}
- 
-+	sqlite3_exec(dbh, "PRAGMA journal_mode = WAL;", NULL, NULL, NULL);
-+
- 	ret = sqlite_query_schema_version();
- 	switch (ret) {
- 	case CLD_SQLITE_LATEST_SCHEMA_VERSION:
--- 
-2.33.1
-
+On Tue, Jan 4, 2022 at 2:23 PM Theodore Ts'o <tytso@mit.edu> wrote:
+>
+> On Tue, Jan 04, 2022 at 04:05:26PM -0600, Eric W. Biederman wrote:
+> >
+> > That is all as expected, and does not demonstrate a regression would
+> > happen if SIGPWR were to treat SIG_DFL as SIG_IGN, as SIGWINCH, SIGCONT,
+> > SIGCHLD, SIGURG do.  It does show there is the possibility of problems.
+> >
+> > The practical question is does anything send SIGPWR to anything besides
+> > init, and expect the process to handle SIGPWR or terminate?
+>
+> So if I *cared* about SIGINFO, what I'd do is ask the systemd
+> developers and users list if there are any users of the sigpwr.target
+> feature that they know of.  And I'd also download all of the open
+> source UPS monitoring applications (and perhaps documentation of
+> closed-source UPS applications, such as for example APC's program) and
+> see if any of them are trying to send the SIGPWR signal.
+>
+> I don't personally think it's worth the effort to do that research,
+> but maybe other people care enough to do the work.
+>
+> > > I claim, though, that we could implement VSTATUS without implenting
+> > > the SIGINFO part of the feature.
+> >
+> > I agree that is the place to start.  And if we aren't going to use
+> > SIGINFO perhaps we could have an equally good notification method
+> > if anyone wants one.  Say call an ioctl and get an fd that can
+> > be read when a VSTATUS request comes in.
+> >
+> > SIGINFO vs SIGCONT vs a fd vs something else is something we can sort
+> > out when people get interested in modifying userspace.
+>
+>
+> Once VSTATUS support lands in the kernel, we can wait and see if there
+> is anyone who shows up wanting the SIGINFO functionality.  Certainly
+> we have no shortage of userspace notification interfaces in Linux.  :-)
+>
+>                                               - Ted
