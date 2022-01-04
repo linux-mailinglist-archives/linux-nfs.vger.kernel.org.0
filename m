@@ -2,248 +2,563 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C1B9483F3B
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 10:33:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C3CF484021
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Jan 2022 11:50:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbiADJdd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Jan 2022 04:33:33 -0500
-Received: from esa18.fujitsucc.c3s2.iphmx.com ([216.71.158.38]:58739 "EHLO
-        esa18.fujitsucc.c3s2.iphmx.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S229689AbiADJdc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jan 2022 04:33:32 -0500
-X-Greylist: delayed 429 seconds by postgrey-1.27 at vger.kernel.org; Tue, 04 Jan 2022 04:33:31 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj1;
-  t=1641288812; x=1672824812;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=j1sPLJujV+hu2kRWXq7d6S0cUiDrGq176R48nYXCZvE=;
-  b=WACRjDeExtVYiIP5Zp6x3GZD62ThgGkKQ/thyWe3oSQvLO0pzZ7BGHSV
-   j2tu5wCHuQe70ZxNQhnyrnIKdh/s/K2wuDMWtG49ExG0i6dnrzkU33dkk
-   E54Z8wHGc/hnhG20xAEH7g0xQdfNQlJqPWlNN9Qs75WCxAZZ1IqbSSwe7
-   +/hGATP1FYouWQPbIsC1WT2mpv8T59t47cN9fFUcoyZKiUil2YAphOLh+
-   SzRNSpDm+ygK9RM3kpRa4yyqC9GtdVGzF1MX718VA60onbqFg6hpBw19T
-   MtT0P3QeSI953EpN5ukcoLixxdutUeuWh+tVRcX0Jdpnu5T9ReqgRMg9+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10216"; a="47930214"
-X-IronPort-AV: E=Sophos;i="5.88,260,1635174000"; 
-   d="scan'208";a="47930214"
-Received: from mail-os0jpn01lp2112.outbound.protection.outlook.com (HELO JPN01-OS0-obe.outbound.protection.outlook.com) ([104.47.23.112])
-  by ob1.fujitsucc.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jan 2022 18:26:21 +0900
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oaszxtMfjBaov3oDPFF1lwUaz3pqC6/fWYC+vMZj7SuwGZSY54eq/dx+ogpF26mT22milQdo7M+7SpbV7AQiGf41b4F2nYQtKGjVZKxCYX4cbel642WSFI3J2xHqI3C0gk1zOlD7OV/C/MxfVWiRohemhxRm8K8USrpkzZEOjDLadcn+OMOxFaxXDMmrcB5jZLjst2Uq4/tyaRR7tt/LmxoOgOD1ZIZ/+pvSZpBYaJ6QaHs38vc0HTq60tioiA7lJMGiK6ssWyMnNiFG2L3hCNF4ynzM8K2FjdGISUn9UAcv7MpLcDjCgcq876FMZlGVVtzxolLXDjgopRJLi64RKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WYlLLGgbX/PP7nm2OuJ3T+GqnkgJ9XFGfVQFGIj+cFc=;
- b=Gk54ppt6oRyGs1xknjVMUA8B2v5UBovh6hXoy1CkpefDMqbBGH1IwUMYz/shA/jfaUWQeweOE0LzRURlij6MFAUok+JRUjvUmDMakT2Y7pKqeP7AGo274b7pKoxKXmzeapigiTNrPAVUF/8ooYxaeblQDX5jWpXnYMCAh8z8uH52y5cPIGqSESQSem7Yy8fP11AD5ttGEnz9a2AFCOuISe2SjvAAStQ7zoh+xHlHBtTnVEyFA+g5rjXl1e5PT2fV54crJRBVJg9LIU9r9sZI4sxVJJ0D0R813hI+WXYyuNSgs1kY3guXGyZBg3o7kZ9fsyUdwkjVp7UCqhgGwqoYiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fujitsu.com; dmarc=pass action=none header.from=fujitsu.com;
- dkim=pass header.d=fujitsu.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=fujitsu.onmicrosoft.com; s=selector2-fujitsu-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WYlLLGgbX/PP7nm2OuJ3T+GqnkgJ9XFGfVQFGIj+cFc=;
- b=lnTZct8IS8YEA105H3yPIgMzAJzUIIHbaB6Cgke5TyxRuLJ0gU8DzlsPfBaave5YT3TMXATFiGHhD0GMtlWlXihcNRvAK4KCVpSLGAywCzBsg+8PbM94p8G5iZMPyb+hO+Rp6tLQaVNKfWM2n0Hj1lQsuqhJ7gQ2dGxFJrRvZ98=
-Received: from OSZPR01MB7050.jpnprd01.prod.outlook.com (2603:1096:604:13e::5)
- by OSBPR01MB4629.jpnprd01.prod.outlook.com (2603:1096:604:7a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4844.14; Tue, 4 Jan
- 2022 09:26:17 +0000
-Received: from OSZPR01MB7050.jpnprd01.prod.outlook.com
- ([fe80::7d7d:1bbf:1f8b:6667]) by OSZPR01MB7050.jpnprd01.prod.outlook.com
- ([fe80::7d7d:1bbf:1f8b:6667%4]) with mapi id 15.20.4844.016; Tue, 4 Jan 2022
- 09:26:17 +0000
-From:   "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>
-To:     "'bfields@fieldses.org'" <bfields@fieldses.org>,
-        'NeilBrown' <neilb@suse.de>
-CC:     'Matt Benjamin' <mbenjami@redhat.com>,
-        'Trond Myklebust' <trondmy@hammerspace.com>,
-        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>
-Subject: RE: client caching and locks
-Thread-Topic: client caching and locks
-Thread-Index: AQHWPdqMcAycEC0/pke1JkGmPD8pPKjeL0EwgABO2QCAAF7SgIAF4BMAgJ9AToCAAArJgIAHh8GAgr9HWraACijNgIABG0Cg
-Date:   Tue, 4 Jan 2022 09:24:56 +0000
-Deferred-Delivery: Tue, 4 Jan 2022 09:19:14 +0000
-Message-ID: <OSZPR01MB7050F9737016E8E3F0FD5255EF4A9@OSZPR01MB7050.jpnprd01.prod.outlook.com>
-References: <20200608211945.GB30639@fieldses.org>
- <22b841f7a8979f19009c96f31a7be88dd177a47a.camel@hammerspace.com>
- <20200618200905.GA10313@fieldses.org> <20200622135222.GA6075@fieldses.org>
- <20201001214749.GK1496@fieldses.org>
- <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>
- <20201006172607.GA32640@fieldses.org>
- <164066831190.25899.16641224253864656420@noble.neil.brown.name>
- <20220103162041.GC21514@fieldses.org>
-In-Reply-To: <20220103162041.GC21514@fieldses.org>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-securitypolicycheck: OK by SHieldMailChecker v2.6.3
-x-shieldmailcheckermailid: 0aa0b8609baa4ab8ae4d6396c1862283
-msip_labels: =?iso-2022-jp?B?TVNJUF9MYWJlbF9hNzI5NWNjMS1kMjc5LTQyYWMtYWI0ZC0zYjBmNGZl?=
- =?iso-2022-jp?B?Y2UwNTBfQWN0aW9uSWQ9Y2NlZWE5YmQtMjcxNi00ZGMxLWJjODYtZjg1?=
- =?iso-2022-jp?B?NTU0YzcyOTNkO01TSVBfTGFiZWxfYTcyOTVjYzEtZDI3OS00MmFjLWFi?=
- =?iso-2022-jp?B?NGQtM2IwZjRmZWNlMDUwX0NvbnRlbnRCaXRzPTA7TVNJUF9MYWJlbF9h?=
- =?iso-2022-jp?B?NzI5NWNjMS1kMjc5LTQyYWMtYWI0ZC0zYjBmNGZlY2UwNTBfRW5hYmxl?=
- =?iso-2022-jp?B?ZD10cnVlO01TSVBfTGFiZWxfYTcyOTVjYzEtZDI3OS00MmFjLWFiNGQt?=
- =?iso-2022-jp?B?M2IwZjRmZWNlMDUwX01ldGhvZD1TdGFuZGFyZDtNU0lQX0xhYmVsX2E3?=
- =?iso-2022-jp?B?Mjk1Y2MxLWQyNzktNDJhYy1hYjRkLTNiMGY0ZmVjZTA1MF9OYW1lPUZV?=
- =?iso-2022-jp?B?SklUU1UtUkVTVFJJQ1RFRBskQiJMJT8lUhsoQjtNU0lQX0xhYmVsX2E3?=
- =?iso-2022-jp?B?Mjk1Y2MxLWQyNzktNDJhYy1hYjRkLTNiMGY0ZmVjZTA1MF9TZXREYXRl?=
- =?iso-2022-jp?B?PTIwMjItMDEtMDRUMDk6MTQ6MjhaO01TSVBfTGFiZWxfYTcyOTVjYzEt?=
- =?iso-2022-jp?B?ZDI3OS00MmFjLWFiNGQtM2IwZjRmZWNlMDUwX1NpdGVJZD1hMTlmMTIx?=
- =?iso-2022-jp?B?ZC04MWUxLTQ4NTgtYTlkOC03MzZlMjY3ZmQ0Yzc7?=
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=fujitsu.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bca3d007-a58b-4264-904b-08d9cf6442d8
-x-ms-traffictypediagnostic: OSBPR01MB4629:EE_
-x-microsoft-antispam-prvs: <OSBPR01MB462941ED2559C52DB14869F5EF4A9@OSBPR01MB4629.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /2JTbX0tGc0KOU2zqzRmZL0CgqNWGAzFLSHw9I7esFhdr+B7DHx261dOnXDUa/7fK1rIYF5NjHdG19nULyHt/miStq2PAvTM2jAnyhQFJEMEGNugvfvdknkmcqFK67YmeXLyuZ31KuibRVEDArfQJoAHL2dsaqvOO2gBLDahjRTqN6hg1+OJdvsRCCnIZgJqIbBkAG29Bd1EvC8512STAWQIZdh32HCUSg7KKlUSgnUPrwWkWdZHtADMApVNtQKl4khDDKkkT0J6EQWoaaz5RVoh6/P8hHS4dpcoZ/HPCrcfWzlRba1I6P546xld+iU+nKAhVLpoXjxJRY3aW2Yxzx9BvexctmohpyYOUo7HGX+dcyMkTp04REjSesV+wuVu95bOLJqssNezWHjRTMYoeaDIz/scyCIrtvsKEPg73iGNHvVdT6wFYoZfu7/YmKb07fFm28xFkzrD7PxnSwsXu9AyXJkvHv41t+QtKHoHr60BsUcHPsRwvm4LZ+1R+omXudk2bNI7l7NbqRsQnfC1FFLOOBCjj91bK6b7oOg6xCMhEMxl5sGETrGKfeGYKuGDjXhFiesoH957jJdb/ja5XmhbTJWYgZrDmeSdkwBsiZ0GvGdtca1cIi2c6g/rQSNXNAUJWi0NbnTuM2azZj+DJKPvYZn/zoOSxi+D0r5/MMP4qrY6hc0Zt9lFNRfRff4e6jKCNCayqrbD+N6TP+Tuqf8jics6Sn5bzZKDPPAtFDOOgD7WSFTSIHqT7HlK5XHqhHU5BiWx2w1P8hzsvTTM8BTb61u+z2HUA0T3JcxaAooDcDyPuMCCOcHnthMuOkpaS7t3+gVCM8c0r12JEyCjrgYqAKOHBZyfE0TZtu0pgU4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:OSZPR01MB7050.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(38070700005)(53546011)(71200400001)(6506007)(2906002)(38100700002)(66446008)(83380400001)(52536014)(33656002)(122000001)(26005)(82960400001)(5660300002)(85182001)(55016003)(186003)(66556008)(66946007)(8676002)(9686003)(966005)(66476007)(64756008)(6666004)(7696005)(110136005)(8936002)(3480700007)(76116006)(86362001)(316002)(508600001)(4326008)(54906003)(491001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-2022-jp?B?TkgyTU9qeUtuamUvQWdUcTJrRTRlL1RBdnVjWU5JdWVXajcxL2FxSGZM?=
- =?iso-2022-jp?B?K0pORkxBNmZ5R1JJL2RGWWhYbEVyNTJxRUVVT3Vqclg5ZEhvL3AzdDY1?=
- =?iso-2022-jp?B?cjQ5ZlZZWWxxcU5nNGpyS3plOFd4TWdkek4xQStNS3JDSTRNTW1RcFdV?=
- =?iso-2022-jp?B?WnQ3TzNrMlMyTXJ2VzMzd1hYODhKbVJLaG51MmhMNXhRSW8weVk5THJY?=
- =?iso-2022-jp?B?UXZ2aTl4c09UUGN0cnV0TFdBSDdqTEdCY3RWbUdJSFoyNlcwbUZiZnBM?=
- =?iso-2022-jp?B?YUM0SnhKQTZKdFJUWWU3V0VFOFNmYldJMDI5NlJxVlQ2U2tmZHFoajdN?=
- =?iso-2022-jp?B?ZTJ1amVocFdKekhGT0Vsa1RBZ0hTS2x1QTkycjcwaFU5aWlqeGtuQzEz?=
- =?iso-2022-jp?B?bVBYMnRDbjlPSWhyWG9DcG5vQmVxa2NXcFZMOEZNTlNQK2p4VTFtNU8v?=
- =?iso-2022-jp?B?QjdkcVRaaDBMcDExYkVCVW9iR0JHRVJXQWNYcXBnNmNENGQxVXNmVmFv?=
- =?iso-2022-jp?B?Q3luRXZrdFRleE4yN2lZOVFFa0F0cisvV2ptZDFRTEtDSTdpODR3KzBn?=
- =?iso-2022-jp?B?clIyaXkrZk9ubWtIa0xTS1NmbmZJdWQ0b29WL3VHRDltakFLYUtpakJS?=
- =?iso-2022-jp?B?ekh6eGpmZXM4aExRakJEMzkvZ3BEeDJXcmVDandaakRZU2ZwbmppeXBY?=
- =?iso-2022-jp?B?WGxEem9BeStaU0FmREU3SmRLTzcrM1pRaEpYN2R3VGdzdFdybXViWkZO?=
- =?iso-2022-jp?B?czZwL1BqSmI1bjltQ0RWZjMxMjFpemVYTnBXdEI5Q2c2YzRoSWtUR1Fq?=
- =?iso-2022-jp?B?R3FVN0Y5SlpPTCtlNWxlS2VTT2Y1b1FSak16ZnBkci9hMys0NDFwSDdj?=
- =?iso-2022-jp?B?NkF1L2ZqdmhjRnlCc0F4aE5CR2o0ZElUUVNOQkUyZXc3aTdlSGdnVEZR?=
- =?iso-2022-jp?B?aFdzQkxrdk1TNk04eHNGOUFSYlpPa3dkQXBvWFo4ZmlxbXo5QVQrbEtI?=
- =?iso-2022-jp?B?eFd5YndubUw2aDd6ekVSa0pkUFlZN0xNcXhFTDBqQXFqU3k0V1piUEgv?=
- =?iso-2022-jp?B?M0NXTzFESy9wSWVyZlpCaFdkemFtakFCN0R1Mi9LeWNSMW9ncU82bFhl?=
- =?iso-2022-jp?B?blQvWGx5dElQVEZZZHZFak53Z2ZWbVljK21EVVlBQ1RCTEY4dGNYQXgz?=
- =?iso-2022-jp?B?bSs1ODZibnZZQzVSaGd3eldyVjNsYWlwYmRiYlhMdUlJZktlQWUzUmx4?=
- =?iso-2022-jp?B?bnRheUc2UWllRHFRT0o2dnVMMU5KQ2t3UTlRQ09rb0lrWXArcmMyU3RT?=
- =?iso-2022-jp?B?N0JTNm5zL2ZNb2JjSmlZdmtSMzdVZU85cVVyYXVwSnFkY0cxQVNjSVJk?=
- =?iso-2022-jp?B?eWJSZ2Y3d0lLQlA3WDUyYVVqbHVRZ1V6N3RSTDRacStDandjaWg0NkF6?=
- =?iso-2022-jp?B?SGtMRG1nLzI1Qmc3ZWE2aHpFdEF0b1YrcU1BRGpGK3NTdlZpM1ByZEtx?=
- =?iso-2022-jp?B?VW0wM05oRGp5UEwxazZGTjVxTi9IT2JiVlRTR3dCTVBCOHpWNE1YWHhG?=
- =?iso-2022-jp?B?WTZpVXFyamRwb3NCaDdHS2w1NDJSWW5SRGpubHNydDJ5Z05PcmY3eitk?=
- =?iso-2022-jp?B?UklxbnZxeDhQYUJOckExVnlrWmxpdFV2Y0ZXd3h5cU9LTTJsL1JvRit2?=
- =?iso-2022-jp?B?OVdGN0lzWHNhSDlzUWRSOCtWM2dHTmRLeTRHejVncVpTWFM0NTdWU1Fu?=
- =?iso-2022-jp?B?RnZFSjAxek5zcHlZbVc0dCtmR0Nvc08rUkpHQngyOUNNZ1FmazN2Yk9W?=
- =?iso-2022-jp?B?OGNmZytxY0RPSXJzd3U4VlZTMytRRm1UczZidVVXWWJBaXptYkxOUmRo?=
- =?iso-2022-jp?B?ZC9RaWlmNUlNMUpuZmFuNUFvTjhvVkNPbUJVVjQ1V3ovY0JNTzFRbXF0?=
- =?iso-2022-jp?B?Z3FWTHAxQys5c1ZZR2VObC91SFpKRzhjekYvMmpwb0ZMcDhQcW14VjdN?=
- =?iso-2022-jp?B?aWwxenBQSk12ZGxXS1FPVzJ0WkxPTE9ENFlMT1QrZ2REZFJLMDg3b2Iv?=
- =?iso-2022-jp?B?TW1nRk5GUWFkd1g0R2tjaHRCNEpUZ04zN0Y4S2hEMFU4bHlSWGI3Nlg3?=
- =?iso-2022-jp?B?OVlQM2E2M2Z6ek42WGNFSVdpNkRaNitvYjFMVWwweko3c3VQRFl1TXpk?=
- =?iso-2022-jp?B?cGRSRGFWSnQ2RCt1L1djWDI3ZHFVSmUzUWpMd3lORHNxTi9BYW5yY2Rj?=
- =?iso-2022-jp?B?SHNYTFdwVmpQZ2ZmTDJTek1uSGZNa2o1WlFxSDF1NDRId2JodFNTWjBR?=
- =?iso-2022-jp?B?L1dpMzIwMzNiWUpxT1FjYUNxUXFQendGL1JiRllsWHRXUHcxZGlkTllM?=
- =?iso-2022-jp?B?UDVCcGJVNStpY21sNUpaZ1FiUnE3K3o3dUVUQm12TzBtOHlRMTZ0V1hR?=
- =?iso-2022-jp?B?N3BqbGd3PT0=?=
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-Transfer-Encoding: quoted-printable
+        id S231629AbiADKu0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Jan 2022 05:50:26 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:47952 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230076AbiADKu0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Jan 2022 05:50:26 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 36845B8119E;
+        Tue,  4 Jan 2022 10:50:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7D5FC36AEB;
+        Tue,  4 Jan 2022 10:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1641293423;
+        bh=b7caZoSvhF6DIOohOd5kWFh6CIsZ87H49inezYjoww4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=sdpPUa8zowZQz8zDA/FVG1hQuS23vQAn6vgIHAB0yZ602tFNxNKCQs6kYdAEk0eJi
+         6FlbtZ6R9kb4DDRv17OjZ1ZQnQeSso0Ebu47NqXY9njdjhG4ric18bcnCXgsUyiFDx
+         B/Bw/aWx482lNcbSF/BiYBrncU0aOK5Pxl6y/wXN9/F2oYIkfOMojHyLMmCR64d5nj
+         0zPf98SNzdCYko1h8ITPibFyrwi9WtopFOBkWmp6rQFxD54G7TbQIKE7wvfp3Ts9gj
+         HyopAzJT8EvVp8yttF/1hN1WUtyr7RXGJVlz81PtgdIjmh4rdRS0dhInFJtgbv5KyD
+         WGL9+GlQr0nKw==
+Message-ID: <1f25d125ffee734644abfe5c63ca4c90d95104aa.camel@kernel.org>
+Subject: Re: [PATCH v4 00/68] fscache, cachefiles: Rewrite
+From:   Jeff Layton <jlayton@kernel.org>
+To:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
+Cc:     ceph-devel@vger.kernel.org, Marc Dionne <marc.dionne@auristor.com>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-cifs@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        Shyam Prasad N <nspmangalore@gmail.com>, linux-mm@kvack.org,
+        linux-afs@lists.infradead.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 04 Jan 2022 05:50:19 -0500
+In-Reply-To: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+References: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.42.2 (3.42.2-1.fc35) 
 MIME-Version: 1.0
-X-OriginatorOrg: fujitsu.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: OSZPR01MB7050.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bca3d007-a58b-4264-904b-08d9cf6442d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2022 09:26:17.3479
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a19f121d-81e1-4858-a9d8-736e267fd4c7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WqoHVuKwEhYDXBKBafpGlosGq3/PjhJcReB46QYeSsBaxQVmBjmX1YjaNQqDOfIh1di+uyB6TVugJ9yaehxaPD1ryZmKEojBThxVX/CbpmM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSBPR01MB4629
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil and Bruce,
+On Wed, 2021-12-22 at 23:13 +0000, David Howells wrote:
+> Here's a set of patches implements a rewrite of the fscache driver and a
+> matching rewrite of the cachefiles driver, significantly simplifying the
+> code compared to what's upstream, removing the complex operation scheduling
+> and object state machine in favour of something much smaller and simpler.
+> 
+> The patchset is structured such that the first few patches disable fscache
+> use by the network filesystems using it, remove the cachefiles driver
+> entirely and as much of the fscache driver as can be got away with without
+> causing build failures in the network filesystems.  The patches after that
+> recreate fscache and then cachefiles, attempting to add the pieces in a
+> logical order.  Finally, the filesystems are reenabled and then the very
+> last patch changes the documentation.
+> 
+> 
+> WHY REWRITE?
+> ============
+> 
+> Fscache's operation scheduling API was intended to handle sequencing of
+> cache operations, which were all required (where possible) to run
+> asynchronously in parallel with the operations being done by the network
+> filesystem, whilst allowing the cache to be brought online and offline and
+> to interrupt service for invalidation.
+> 
+> With the advent of the tmpfile capacity in the VFS, however, an opportunity
+> arises to do invalidation much more simply, without having to wait for I/O
+> that's actually in progress: Cachefiles can simply create a tmpfile, cut
+> over the file pointer for the backing object attached to a cookie and
+> abandon the in-progress I/O, dismissing it upon completion.
+> 
+> Future work here would involve using Omar Sandoval's vfs_link() with
+> AT_LINK_REPLACE[1] to allow an extant file to be displaced by a new hard
+> link from a tmpfile as currently I have to unlink the old file first.
+> 
+> These patches can also simplify the object state handling as I/O operations
+> to the cache don't all have to be brought to a stop in order to invalidate
+> a file.  To that end, and with an eye on to writing a new backing cache
+> model in the future, I've taken the opportunity to simplify the indexing
+> structure.
+> 
+> I've separated the index cookie concept from the file cookie concept by C
+> type now.  The former is now called a "volume cookie" (struct
+> fscache_volume) and there is a container of file cookies.  There are then
+> just the two levels.  All the index cookie levels are collapsed into a
+> single volume cookie, and this has a single printable string as a key.  For
+> instance, an AFS volume would have a key of something like
+> "afs,example.com,1000555", combining the filesystem name, cell name and
+> volume ID.  This is freeform, but must not have '/' chars in it.
+> 
+> I've also eliminated all pointers back from fscache into the network
+> filesystem.  This required the duplication of a little bit of data in the
+> cookie (cookie key, coherency data and file size), but it's not actually
+> that much.  This gets rid of problems with making sure we keep netfs data
+> structures around so that the cache can access them.
+> 
+> These patches mean that most of the code that was in the drivers before is
+> simply gone and those drivers are now almost entirely new code.  That being
+> the case, there doesn't seem any particular reason to try and maintain
+> bisectability across it.  Further, there has to be a point in the middle
+> where things are cut over as there's a single point everything has to go
+> through (ie. /dev/cachefiles) and it can't be in use by two drivers at
+> once.
+> 
+> 
+> ISSUES YET OUTSTANDING
+> ======================
+> 
+> There are some issues still outstanding, unaddressed by this patchset, that
+> will need fixing in future patchsets, but that don't stop this series from
+> being usable:
+> 
+>  (1) The cachefiles driver needs to stop using the backing filesystem's
+>      metadata to store information about what parts of the cache are
+>      populated.  This is not reliable with modern extent-based filesystems.
+> 
+>      Fixing this is deferred to a separate patchset as it involves
+>      negotiation with the network filesystem and the VM as to how much data
+>      to download to fulfil a read - which brings me on to (2)...
+> 
+>  (2) NFS and CIFS do not take account of how the cache would like I/O to be
+>      structured to meet its granularity requirements.  Previously, the
+>      cache used page granularity, which was fine as the network filesystems
+>      also dealt in page granularity, and the backing filesystem (ext4, xfs
+>      or whatever) did whatever it did out of sight.  However, we now have
+>      folios to deal with and the cache will now have to store its own
+>      metadata to track its contents.
+> 
+>      The change I'm looking at making for cachefiles is to store content
+>      bitmaps in one or more xattrs and making a bit in the map correspond
+>      to something like a 256KiB block.  However, the size of an xattr and
+>      the fact that they have to be read/updated in one go means that I'm
+>      looking at covering 1GiB of data per 512-byte map and storing each map
+>      in an xattr.  Cachefiles has the potential to grow into a fully
+>      fledged filesystem of its very own if I'm not careful.
+> 
+>      However, I'm also looking at changing things even more radically and
+>      going to a different model of how the cache is arranged and managed -
+>      one that's more akin to the way, say, openafs does things - which
+>      brings me on to (3)...
+> 
+>  (3) The way cachefilesd does culling is very inefficient for large caches
+>      and it would be better to move it into the kernel if I can as
+>      cachefilesd has to keep asking the kernel if it can cull a file.
+>      Changing the way the backend works would allow this to be addressed.
+> 
+> 
+> BITS THAT MAY BE CONTROVERSIAL
+> ==============================
+> 
+> There are some bits I've added that may be controversial:
+> 
+>  (1) I've provided a flag, S_KERNEL_FILE, that cachefiles uses to check if
+>      a files is already being used by some other kernel service (e.g. a
+>      duplicate cachefiles cache in the same directory) and reject it if it
+>      is.  This isn't entirely necessary, but it helps prevent accidental
+>      data corruption.
+> 
+>      I don't want to use S_SWAPFILE as that has other effects, but quite
+>      possibly swapon() should set S_KERNEL_FILE too.
+> 
+>      Note that it doesn't prevent userspace from interfering, though
+>      perhaps it should.  (I have made it prevent a marked directory from
+>      being rmdir-able).
+> 
+>  (2) Cachefiles wants to keep the backing file for a cookie open whilst we
+>      might need to write to it from network filesystem writeback.  The
+>      problem is that the network filesystem unuses its cookie when its file
+>      is closed, and so we have nothing pinning the cachefiles file open and
+>      it will get closed automatically after a short time to avoid
+>      EMFILE/ENFILE problems.
+> 
+>      Reopening the cache file, however, is a problem if this is being done
+>      due to writeback triggered by exit().  Some filesystems will oops if
+>      we try to open a file in that context because they want to access
+>      current->fs or suchlike.
+> 
+>      To get around this, I added the following:
+> 
+>      (A) An inode flag, I_PINNING_FSCACHE_WB, to be set on a network
+>      	 filesystem inode to indicate that we have a usage count on the
+>      	 cookie caching that inode.
+> 
+>      (B) A flag in struct writeback_control, unpinned_fscache_wb, that is
+>      	 set when __writeback_single_inode() clears the last dirty page
+>      	 from i_pages - at which point it clears I_PINNING_FSCACHE_WB and
+>      	 sets this flag.
+> 
+> 	 This has to be done here so that clearing I_PINNING_FSCACHE_WB can
+> 	 be done atomically with the check of PAGECACHE_TAG_DIRTY that
+> 	 clears I_DIRTY_PAGES.
+> 
+>      (C) A function, fscache_set_page_dirty(), which if it is not set, sets
+>      	 I_PINNING_FSCACHE_WB and calls fscache_use_cookie() to pin the
+>      	 cache resources.
+> 
+>      (D) A function, fscache_unpin_writeback(), to be called by
+>      	 ->write_inode() to unuse the cookie.
+> 
+>      (E) A function, fscache_clear_inode_writeback(), to be called when the
+>      	 inode is evicted, before clear_inode() is called.  This cleans up
+>      	 any lingering I_PINNING_FSCACHE_WB.
+> 
+>      The network filesystem can then use these tools to make sure that
+>      fscache_write_to_cache() can write locally modified data to the cache
+>      as well as to the server.
+> 
+>      For the future, I'm working on write helpers for netfs lib that should
+>      allow this facility to be removed by keeping track of the dirty
+>      regions separately - but that's incomplete at the moment and is also
+>      going to be affected by folios, one way or another, since it deals
+>      with pages.
+> 
+> 
+> These patches can be found also on:
+> 
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-rewrite
+> 
+> David
+> 
+> 
+> Changes
+> =======
+> ver #4:
+>  - Dropped a pair of patches to try and cope with multipage folios in
+>    afs_write_begin/end() - it should really be done in the caller[7].
+>  - Fixed the use of sizeof with memset in cifs.
+>  - Removed an extraneous kdoc param.
+>  - Added a patch to add a tracepoint for fscache_use/unuse_cookie().
+>  - In cifs, tcon->vol_create_time is __le64 so doesn't need cpu_to_le64().
+>  - Add an expanded version of a patch to use current_is_kswapd() instead of
+>    !gfpflags_allow_blocking()[8].
+>  - Removed a couple of debugging print statements.
+> 
+> ver #3:
+>  - Fixed a race in the cookie state machine between LRU discard and
+>    relinquishment[4].
+>  - Fixed up the hashing to make it portable[5].
+>  - Fixed up some netfs coherency data to make it portable.
+>  - Fixed some missing NFS_FSCACHE=n fallback functions in nfs[6].
+>  - Added a patch to store volume coherency data in an xattr.
+>  - Added a check that the cookie is unhashed before being freed.
+>  - Fixed fscache to use remove_proc_subtree() to remove /proc/fs/fscache/.
+> 
+> ver #2:
+>  - Fix an unused-var warning due to CONFIG_9P_FSCACHE=n.
+>  - Use gfpflags_allow_blocking() rather than using flag directly.
+>  - Fixed some error logging in a couple of cachefiles functions.
+>  - Fixed an error check in the fscache volume allocation.
+>  - Need to unmark an inode we've moved to the graveyard before unlocking.
+>  - Upgraded to -rc4 to allow for upstream changes to cifs.
+>  - Should only change to inval state if can get access to cache.
+>  - Don't hold n_accesses elevated whilst cache is bound to a cookie, but
+>    rather add a flag that prevents the state machine from being queued when
+>    n_accesses reaches 0.
+>  - Remove the unused cookie pointer field from the fscache_acquire
+>    tracepoint.
+>  - Added missing transition to LRU_DISCARDING state.
+>  - Added two ceph patches from Jeff Layton[2].
+>  - Remove NFS_INO_FSCACHE as it's no longer used.
+>  - In NFS, need to unuse a cookie on file-release, not inode-clear.
+>  - Filled in the NFS cache I/O routines, borrowing from the previously posted
+>    fallback I/O code[3].
+> 
+> 
+> Link: https://lore.kernel.org/r/cover.1580251857.git.osandov@fb.com/ [1]
+> Link: https://lore.kernel.org/r/20211207134451.66296-1-jlayton@kernel.org/ [2]
+> Link: https://lore.kernel.org/r/163189108292.2509237.12615909591150927232.stgit@warthog.procyon.org.uk/ [3]
+> Link: https://lore.kernel.org/r/599331.1639410068@warthog.procyon.org.uk/ [4]
+> Link: https://lore.kernel.org/r/CAHk-=whtkzB446+hX0zdLsdcUJsJ=8_-0S1mE_R+YurThfUbLA@mail.gmail.com [5]
+> Link: https://lore.kernel.org/r/61b90f3d.H1IkoeQfEsGNhvq9%lkp@intel.com/ [6]
+> Link: https://lore.kernel.org/r/CAHk-=wh2dr=NgVSVj0sw-gSuzhxhLRV5FymfPS146zGgF4kBjA@mail.gmail.com/ [7]
+> Link: https://lore.kernel.org/r/1638952658-20285-1-git-send-email-huangzhaoyang@gmail.com/ [8]
+> 
+> 
+> References
+> ==========
+> 
+> These patches have been published for review before, firstly as part of a
+> larger set:
+> 
+> Link: https://lore.kernel.org/r/158861203563.340223.7585359869938129395.stgit@warthog.procyon.org.uk/
+> 
+> Link: https://lore.kernel.org/r/159465766378.1376105.11619976251039287525.stgit@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/159465784033.1376674.18106463693989811037.stgit@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/159465821598.1377938.2046362270225008168.stgit@warthog.procyon.org.uk/
+> 
+> Link: https://lore.kernel.org/r/160588455242.3465195.3214733858273019178.stgit@warthog.procyon.org.uk/
+> 
+> Then as a cut-down set:
+> 
+> Link: https://lore.kernel.org/r/161118128472.1232039.11746799833066425131.stgit@warthog.procyon.org.uk/ # v1
+> Link: https://lore.kernel.org/r/161161025063.2537118.2009249444682241405.stgit@warthog.procyon.org.uk/ # v2
+> Link: https://lore.kernel.org/r/161340385320.1303470.2392622971006879777.stgit@warthog.procyon.org.uk/ # v3
+> Link: https://lore.kernel.org/r/161539526152.286939.8589700175877370401.stgit@warthog.procyon.org.uk/ # v4
+> Link: https://lore.kernel.org/r/161653784755.2770958.11820491619308713741.stgit@warthog.procyon.org.uk/ # v5
+> 
+> I split out a set to just restructure the I/O, which got merged back in to
+> this one:
+> 
+> Link: https://lore.kernel.org/r/163363935000.1980952.15279841414072653108.stgit@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/163189104510.2509237.10805032055807259087.stgit@warthog.procyon.org.uk/ # v2
+> Link: https://lore.kernel.org/r/163363935000.1980952.15279841414072653108.stgit@warthog.procyon.org.uk/ # v3
+> Link: https://lore.kernel.org/r/163551653404.1877519.12363794970541005441.stgit@warthog.procyon.org.uk/ # v4
+> 
+> ... and a larger set to do the conversion, also merged back into this one:
+> 
+> Link: https://lore.kernel.org/r/163456861570.2614702.14754548462706508617.stgit@warthog.procyon.org.uk/ # v1
+> Link: https://lore.kernel.org/r/163492911924.1038219.13107463173777870713.stgit@warthog.procyon.org.uk/ # v2
+> 
+> Older versions of this one:
+> 
+> Link: https://lore.kernel.org/r/163819575444.215744.318477214576928110.stgit@warthog.procyon.org.uk/ # v1
+> Link: https://lore.kernel.org/r/163906878733.143852.5604115678965006622.stgit@warthog.procyon.org.uk/ # v2
+> Link: https://lore.kernel.org/r/163967073889.1823006.12237147297060239168.stgit@warthog.procyon.org.uk/ # v3
+> 
+> Proposals/information about the design have been published here:
+> 
+> Link: https://lore.kernel.org/r/24942.1573667720@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/2758811.1610621106@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/1441311.1598547738@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/160655.1611012999@warthog.procyon.org.uk/
+> 
+> And requests for information:
+> 
+> Link: https://lore.kernel.org/r/3326.1579019665@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/4467.1579020509@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/3577430.1579705075@warthog.procyon.org.uk/
+> 
+> I've posted partial patches to try and help 9p and cifs along:
+> 
+> Link: https://lore.kernel.org/r/1514086.1605697347@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/1794123.1605713481@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/241017.1612263863@warthog.procyon.org.uk/
+> Link: https://lore.kernel.org/r/270998.1612265397@warthog.procyon.org.uk/
+> 
+> ---
+> Dave Wysochanski (1):
+>       nfs: Convert to new fscache volume/cookie API
+> 
+> David Howells (65):
+>       fscache, cachefiles: Disable configuration
+>       cachefiles: Delete the cachefiles driver pending rewrite
+>       fscache: Remove the contents of the fscache driver, pending rewrite
+>       netfs: Display the netfs inode number in the netfs_read tracepoint
+>       netfs: Pass a flag to ->prepare_write() to say if there's no alloc'd space
+>       fscache: Introduce new driver
+>       fscache: Implement a hash function
+>       fscache: Implement cache registration
+>       fscache: Implement volume registration
+>       fscache: Implement cookie registration
+>       fscache: Implement cache-level access helpers
+>       fscache: Implement volume-level access helpers
+>       fscache: Implement cookie-level access helpers
+>       fscache: Implement functions add/remove a cache
+>       fscache: Provide and use cache methods to lookup/create/free a volume
+>       fscache: Add a function for a cache backend to note an I/O error
+>       fscache: Implement simple cookie state machine
+>       fscache: Implement cookie user counting and resource pinning
+>       fscache: Implement cookie invalidation
+>       fscache: Provide a means to begin an operation
+>       fscache: Count data storage objects in a cache
+>       fscache: Provide read/write stat counters for the cache
+>       fscache: Provide a function to let the netfs update its coherency data
+>       netfs: Pass more information on how to deal with a hole in the cache
+>       fscache: Implement raw I/O interface
+>       fscache: Implement higher-level write I/O interface
+>       vfs, fscache: Implement pinning of cache usage for writeback
+>       fscache: Provide a function to note the release of a page
+>       fscache: Provide a function to resize a cookie
+>       cachefiles: Introduce rewritten driver
+>       cachefiles: Define structs
+>       cachefiles: Add some error injection support
+>       cachefiles: Add a couple of tracepoints for logging errors
+>       cachefiles: Add cache error reporting macro
+>       cachefiles: Add security derivation
+>       cachefiles: Register a miscdev and parse commands over it
+>       cachefiles: Provide a function to check how much space there is
+>       vfs, cachefiles: Mark a backing file in use with an inode flag
+>       cachefiles: Implement a function to get/create a directory in the cache
+>       cachefiles: Implement cache registration and withdrawal
+>       cachefiles: Implement volume support
+>       cachefiles: Add tracepoints for calls to the VFS
+>       cachefiles: Implement object lifecycle funcs
+>       cachefiles: Implement key to filename encoding
+>       cachefiles: Implement metadata/coherency data storage in xattrs
+>       cachefiles: Mark a backing file in use with an inode flag
+>       cachefiles: Implement culling daemon commands
+>       cachefiles: Implement backing file wrangling
+>       cachefiles: Implement begin and end I/O operation
+>       cachefiles: Implement cookie resize for truncate
+>       cachefiles: Implement the I/O routines
+>       fscache, cachefiles: Store the volume coherency data
+>       cachefiles: Allow cachefiles to actually function
+>       fscache, cachefiles: Display stats of no-space events
+>       fscache, cachefiles: Display stat of culling events
+>       afs: Convert afs to use the new fscache API
+>       afs: Copy local writes to the cache when writing to the server
+>       afs: Skip truncation on the server of data we haven't written yet
+>       9p: Use fscache indexing rewrite and reenable caching
+>       9p: Copy local writes to the cache when writing to the server
+>       nfs: Implement cache I/O by accessing the cache directly
+>       cifs: Support fscache indexing rewrite (untested)
+>       fscache: Rewrite documentation
+>       fscache: Add a tracepoint for cookie use/unuse
+>       9p, afs, ceph, cifs, nfs: Use current_is_kswapd() rather than gfpflags_allow_blocking()
+> 
+> Jeff Layton (2):
+>       ceph: conversion to new fscache API
+>       ceph: add fscache writeback support
+> 
+> 
+>  .../filesystems/caching/backend-api.rst       |  850 ++++------
+>  .../filesystems/caching/cachefiles.rst        |    6 +-
+>  Documentation/filesystems/caching/fscache.rst |  525 ++----
+>  Documentation/filesystems/caching/index.rst   |    4 +-
+>  .../filesystems/caching/netfs-api.rst         | 1136 ++++---------
+>  Documentation/filesystems/caching/object.rst  |  313 ----
+>  .../filesystems/caching/operations.rst        |  210 ---
+>  Documentation/filesystems/netfs_library.rst   |   16 +-
+>  fs/9p/Kconfig                                 |    2 +-
+>  fs/9p/cache.c                                 |  195 +--
+>  fs/9p/cache.h                                 |   25 +-
+>  fs/9p/v9fs.c                                  |   17 +-
+>  fs/9p/v9fs.h                                  |   13 +-
+>  fs/9p/vfs_addr.c                              |   57 +-
+>  fs/9p/vfs_dir.c                               |   13 +
+>  fs/9p/vfs_file.c                              |    3 +-
+>  fs/9p/vfs_inode.c                             |   26 +-
+>  fs/9p/vfs_inode_dotl.c                        |    3 +-
+>  fs/9p/vfs_super.c                             |    3 +
+>  fs/afs/Kconfig                                |    2 +-
+>  fs/afs/Makefile                               |    3 -
+>  fs/afs/cache.c                                |   68 -
+>  fs/afs/cell.c                                 |   12 -
+>  fs/afs/file.c                                 |   38 +-
+>  fs/afs/inode.c                                |  101 +-
+>  fs/afs/internal.h                             |   37 +-
+>  fs/afs/main.c                                 |   14 -
+>  fs/afs/super.c                                |    1 +
+>  fs/afs/volume.c                               |   29 +-
+>  fs/afs/write.c                                |   88 +-
+>  fs/cachefiles/Kconfig                         |    7 +
+>  fs/cachefiles/Makefile                        |    6 +-
+>  fs/cachefiles/bind.c                          |  278 ----
+>  fs/cachefiles/cache.c                         |  378 +++++
+>  fs/cachefiles/daemon.c                        |  180 +-
+>  fs/cachefiles/error_inject.c                  |   46 +
+>  fs/cachefiles/interface.c                     |  747 ++++-----
+>  fs/cachefiles/internal.h                      |  270 +--
+>  fs/cachefiles/io.c                            |  330 +++-
+>  fs/cachefiles/key.c                           |  201 ++-
+>  fs/cachefiles/main.c                          |   22 +-
+>  fs/cachefiles/namei.c                         | 1223 ++++++--------
+>  fs/cachefiles/rdwr.c                          |  972 -----------
+>  fs/cachefiles/security.c                      |    2 +-
+>  fs/cachefiles/volume.c                        |  139 ++
+>  fs/cachefiles/xattr.c                         |  421 ++---
+>  fs/ceph/Kconfig                               |    2 +-
+>  fs/ceph/addr.c                                |  102 +-
+>  fs/ceph/cache.c                               |  218 +--
+>  fs/ceph/cache.h                               |   97 +-
+>  fs/ceph/caps.c                                |    3 +-
+>  fs/ceph/file.c                                |   13 +-
+>  fs/ceph/inode.c                               |   22 +-
+>  fs/ceph/super.c                               |   10 +-
+>  fs/ceph/super.h                               |    3 +-
+>  fs/cifs/Kconfig                               |    2 +-
+>  fs/cifs/Makefile                              |    2 +-
+>  fs/cifs/cache.c                               |  105 --
+>  fs/cifs/cifsfs.c                              |   11 +-
+>  fs/cifs/cifsglob.h                            |    5 +-
+>  fs/cifs/connect.c                             |   12 -
+>  fs/cifs/file.c                                |   64 +-
+>  fs/cifs/fscache.c                             |  333 +---
+>  fs/cifs/fscache.h                             |  126 +-
+>  fs/cifs/inode.c                               |   36 +-
+>  fs/fs-writeback.c                             |    8 +
+>  fs/fscache/Makefile                           |    6 +-
+>  fs/fscache/cache.c                            |  618 +++----
+>  fs/fscache/cookie.c                           | 1448 +++++++++--------
+>  fs/fscache/fsdef.c                            |   98 --
+>  fs/fscache/internal.h                         |  317 +---
+>  fs/fscache/io.c                               |  376 ++++-
+>  fs/fscache/main.c                             |  147 +-
+>  fs/fscache/netfs.c                            |   74 -
+>  fs/fscache/object.c                           | 1125 -------------
+>  fs/fscache/operation.c                        |  633 -------
+>  fs/fscache/page.c                             | 1242 --------------
+>  fs/fscache/proc.c                             |   47 +-
+>  fs/fscache/stats.c                            |  293 +---
+>  fs/fscache/volume.c                           |  517 ++++++
+>  fs/namei.c                                    |    3 +-
+>  fs/netfs/read_helper.c                        |   10 +-
+>  fs/nfs/Kconfig                                |    2 +-
+>  fs/nfs/Makefile                               |    2 +-
+>  fs/nfs/client.c                               |    4 -
+>  fs/nfs/direct.c                               |    2 +
+>  fs/nfs/file.c                                 |   13 +-
+>  fs/nfs/fscache-index.c                        |  140 --
+>  fs/nfs/fscache.c                              |  490 ++----
+>  fs/nfs/fscache.h                              |  180 +-
+>  fs/nfs/inode.c                                |   11 +-
+>  fs/nfs/nfstrace.h                             |    1 -
+>  fs/nfs/read.c                                 |   25 +-
+>  fs/nfs/super.c                                |   28 +-
+>  fs/nfs/write.c                                |    8 +-
+>  include/linux/fs.h                            |    4 +
+>  include/linux/fscache-cache.h                 |  614 ++-----
+>  include/linux/fscache.h                       | 1021 +++++-------
+>  include/linux/netfs.h                         |   15 +-
+>  include/linux/nfs_fs.h                        |    1 -
+>  include/linux/nfs_fs_sb.h                     |    9 +-
+>  include/linux/writeback.h                     |    1 +
+>  include/trace/events/cachefiles.h             |  527 ++++--
+>  include/trace/events/fscache.h                |  642 ++++----
+>  include/trace/events/netfs.h                  |    5 +-
+>  105 files changed, 7396 insertions(+), 13509 deletions(-)
+>  delete mode 100644 Documentation/filesystems/caching/object.rst
+>  delete mode 100644 Documentation/filesystems/caching/operations.rst
+>  delete mode 100644 fs/afs/cache.c
+>  delete mode 100644 fs/cachefiles/bind.c
+>  create mode 100644 fs/cachefiles/cache.c
+>  create mode 100644 fs/cachefiles/error_inject.c
+>  delete mode 100644 fs/cachefiles/rdwr.c
+>  create mode 100644 fs/cachefiles/volume.c
+>  delete mode 100644 fs/cifs/cache.c
+>  delete mode 100644 fs/fscache/fsdef.c
+>  delete mode 100644 fs/fscache/netfs.c
+>  delete mode 100644 fs/fscache/object.c
+>  delete mode 100644 fs/fscache/operation.c
+>  delete mode 100644 fs/fscache/page.c
+>  create mode 100644 fs/fscache/volume.c
+>  delete mode 100644 fs/nfs/fscache-index.c
+> 
+> 
 
-Thank you for your comments.
-Now I have understood that this behavior is by design.
+I tested these on ceph with the caches both enabled and disabled and
+everything looks good.
 
-> > With NFSv4 there is no atomicity guarantees relating to writes and
-> > changeid.
-> > There is provision for atomicity around directory operations, but not
-> > around data operations.
-
-So I feel like clients cannot always trust changeid in NFSv4.=20
-Should it be described in the spec?
-
-For example, the following section refers about the usage of changeid:
-https://datatracker.ietf.org/doc/html/draft-dnoveck-nfsv4-rfc5661bis#sectio=
-n-14.3.1
-
-It says clients use change attribute " to ensure that the data for the OPEN=
-ed file is still=20
-correctly reflected in the client's cache." But in fact, it could be wrong.
-
-Yuki Inoguchi
-
-> -----Original Message-----
-> From: 'bfields@fieldses.org' <bfields@fieldses.org>
-> Sent: Tuesday, January 4, 2022 1:21 AM
-> To: NeilBrown <neilb@suse.de>
-> Cc: Inoguchi, Yuki/=1B$B0f%N8}=1B(B =1B$BM:@8=1B(B <inoguchi.yuki@fujitsu=
-.com>; 'Matt Benjamin'
-> <mbenjami@redhat.com>; 'Trond Myklebust' <trondmy@hammerspace.com>;
-> 'linux-nfs@vger.kernel.org' <linux-nfs@vger.kernel.org>
-> Subject: Re: client caching and locks
->=20
-> On Tue, Dec 28, 2021 at 04:11:51PM +1100, NeilBrown wrote:
-> > This is due to an (arguable) weakness in the NFSv4 protocol.
-> > In NFSv3 the reply to the WRITE request had "wcc" data which would
-> > report change information before and after the write and, if present, i=
-t
-> > was required to be atomic.  So, providing timestamps had a high
-> > resolution, the client0 would see change information from *before* the
-> > write from client1 completed.  So it would know it needed to refresh
-> > after that write became visible.
-> >
-> > With NFSv4 there is no atomicity guarantees relating to writes and
-> > changeid.
-> > There is provision for atomicity around directory operations, but not
-> > around data operations.
-> >
-> > This means that if different clients access a file concurrently, then
-> > their cache can become incorrect.  The only way to ensure uncorrupted
-> > data is to use locking for ALL reads and writes.  The above 'od -i' doe=
-s
-> > not perform a locked read, so can give incorrect data.
-> > If you got a whole-file lock before reading, then you should get correc=
-t
-> > data.
->=20
-> You'd also have to get a whole-file write lock on every write, wouldn't
-> you, to prevent your own write from obscuring the change-attribute
-> update caused by a concurrent writer?
->=20
-> > You could argue that this requirement (always lock if there is any risk=
-)
-> > is by design, and so this aspect of the protocl is not a weakness.
->=20
-> The spec discussion of byte-range locking and caching is here:
-> https://datatracker.ietf.org/doc/html/rfc7530#section-10.3.2
->=20
-> The nfs man page, under ac/noac, says "Using the noac option provides
-> greater  cache  coherence among  NFS  clients accessing the same files,
-> but it extracts a significant performance penalty.  As such,  judicious
-> use of file locking is encouraged instead.  The DATA AND METADATA
-> COHERENCE section contains a detailed discussion of these trade-offs."
->=20
-> That section does have a "Using file locks with NFS" subsection, but
-> that subsection doesn't actually discuss the interaction of file locks
-> with client caching.
->=20
-> It's a confusing and under-documented area.
->=20
-> --b.
+Tested-by: Jeff Layton <jlayton@kernel.org>
