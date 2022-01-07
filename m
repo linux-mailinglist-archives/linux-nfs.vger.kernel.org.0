@@ -2,167 +2,384 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA653487D69
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 21:02:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86EB3487DCB
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 21:36:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231377AbiAGUCF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jan 2022 15:02:05 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:37076 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S233856AbiAGUCF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jan 2022 15:02:05 -0500
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 207HaxVW021187;
-        Fri, 7 Jan 2022 20:02:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=+8vToFNyR3rTveaCy5aH/BjQlMHhOplswC8JvqIC+IY=;
- b=ZqAJBm16jNpMoV7csaZUBbLxKHA0bosuGHwd7srracTPP9Kar+3ckXWYKhLnPpbu4AxQ
- KeQbhIR11TJaLtCiM4aYiSfCafSCcN0+EuS5VJC4PB625SAap08dNlpdpp+ZwKSuW7Bt
- y5vMfx4nwgm4egutj30HLO5neQZSxmSRoHBYb1yF/mrgm7SPhuRZza/neqSFSn0bron+
- uUx6FaYBTAeHN7EsBIAUB9Au1O1YPuBT+wCBacPTWHsRNDdlcKnNuTvvGKuIKpWv4dyt
- 9t8KD0Tsslse9uAGL9wsMh7yf+bw7iKD2EVGoX2KZ82x41eGh+RnnBP5loiLdH8V8J4u Pg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3de4va2v4t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jan 2022 20:02:03 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 207K1kC7151504;
-        Fri, 7 Jan 2022 20:02:02 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
-        by aserp3020.oracle.com with ESMTP id 3dej4t8cr3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jan 2022 20:02:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a/0acxRYjbBX3iNyMOHC3LHfh1Yd4X4PZy7a10ZxEoa+vNWjk1tvUlymjwwNhGl2KNKXW3rFlBQj7nW9g2gseN1ZG709H/BkPmZGKifVqXh0APKLymzcRPcQ7NuvH9Lms2i4s4c7mQsGVC/FcWnhEu2CMkWgzxH54zM+PWqa581Dkh84aAL1HVW1AFkANeQbwhFvDosYAy7i6lsNpZy1u/kFXCqKb+3iGejDA9Bl1e5mP1e4CC5HuWnac9gEpEUrdltp/5RpI46jdExGUns5G+zLkG21WV73lsdaRcdLqzZYNKwWkmQaBNUuQuxRUWGaw6jxKreTaIF5/Kp+ZZDpuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+8vToFNyR3rTveaCy5aH/BjQlMHhOplswC8JvqIC+IY=;
- b=TyRIPTIYbBOTC6KOx1c3w0w9QnO2Mpg6P7oBLR4rBgc/A5kFtI3LMqRye8enoDGVpbMX572hMLZD1ElDpxxDquJ+ZA/YPeno8VRbRJtKkhLvBuU9jVmGS2QHD1zNs2R3U0iXswiz13pu5HOyTYa7PbxB5m15APB0uXf5qVXMbxrJ7V7Ihg2r2MbxUn5BOuoVynoSUnpwnTKpW0bE6tKKHvykyQXJIQs7HTlzlWZfV1juBEn2+Pf6RoSSMKcchRUDSZbIB4qPL56i9vpQjYKiUeCm/SZuc13gP/BM+uqnaF+dDhgkxVtzOgsTduKwsKVRyC37IrmZY2TszAwZgJKAsw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+8vToFNyR3rTveaCy5aH/BjQlMHhOplswC8JvqIC+IY=;
- b=OqEJ5m6tz0L5g0s5UJah9waAhDcJn5kGPKYkl1d06Vdr+s+HMhtufzTjMkh6R7sQL2usYV1i0zYOte+wPknMkPgYj9U9XtRrzZ5cGLJBoYrZ+cXKJ9hxOqJMDXw2/MjLhKhIdqgZDs3DjWRu9PJGiEiy04jtORYJPbNllDjiMww=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BY5PR10MB3954.namprd10.prod.outlook.com (2603:10b6:a03:1ff::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Fri, 7 Jan
- 2022 20:01:59 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2531:1146:ae58:da29]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2531:1146:ae58:da29%7]) with mapi id 15.20.4867.011; Fri, 7 Jan 2022
- 20:01:59 +0000
-Message-ID: <91f66c99-aac7-e47d-4c4e-b02d4b4778a3@oracle.com>
-Date:   Fri, 7 Jan 2022 12:01:57 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: Re: pynfs regression with nfs4.1 RNM18, RNM19 and RNM20 with ext4
-Content-Language: en-US
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <CAPt2mGNF=iZkXGa93yjKQG5EsvUucun1TMhN5zM-6Gp07Bni2g@mail.gmail.com>
- <20220107171755.GD26961@fieldses.org>
- <46407a8e-8011-9cdc-4db5-5679e2b59957@oracle.com>
- <3D2F2375-DDF0-424F-925A-B3BF4457FFE2@oracle.com>
-From:   dai.ngo@oracle.com
-In-Reply-To: <3D2F2375-DDF0-424F-925A-B3BF4457FFE2@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR06CA0042.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::19) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        id S229897AbiAGUg1 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 7 Jan 2022 15:36:27 -0500
+Received: from mail-yb1-f178.google.com ([209.85.219.178]:42554 "EHLO
+        mail-yb1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229532AbiAGUg1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jan 2022 15:36:27 -0500
+Received: by mail-yb1-f178.google.com with SMTP id m6so9679474ybc.9
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jan 2022 12:36:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Vx3qpyq+p6ftJ+grMKGqsRiAp6nGK7888NDK8CfMRmo=;
+        b=NSLSMcybPmsK08yr2xH7VQAn7GegJ5vCxT6eKZbGDQulUr/UMWU1iDzSoLYvUn9zai
+         N28MbBK9yOY2oaEO8p3iIzzfbYmAvZyBzGzYr6xvBuqaBl0vfKwiru3159oQ8U7Tbnpe
+         y0q52gZBhVbBo0wxGIkkI86/ZuAEGRAGb49+5dc++6RrB5TNHxQ7QjTW7Oy9JpqqJX7Q
+         HAWQsKldkwt9xAMaviEYSfGxmUoqXrN/cE2o5FxlxKhDr4QHixAT025YYnV9nOBWaE0U
+         DO29Pvn85hpsberFXglzwagMklz6cKeNN6F7t4nNQKekNXMT1ObgW6jSvkfRr+74E0t7
+         011g==
+X-Gm-Message-State: AOAM531YEV5gNox9+9d7HvOBr1xylhn3bNvbY4lCNSR95Uz7H1uwGVMH
+        59f3iS3IIpIlvNaxTHVnlVFP7tcpeS6H2L7nVGRPwk7H
+X-Google-Smtp-Source: ABdhPJxnGCZfLC31Ol7IY8nHAbTo1er03rSHWIc1ATtUeMTXW6gK8L3rVP1WuN3O8XrsRSXWQDz/McdnEokV42By1oU=
+X-Received: by 2002:a25:37d6:: with SMTP id e205mr34369124yba.434.1641587786371;
+ Fri, 07 Jan 2022 12:36:26 -0800 (PST)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 14c75bda-8c0a-4a81-9da1-08d9d218906d
-X-MS-TrafficTypeDiagnostic: BY5PR10MB3954:EE_
-X-Microsoft-Antispam-PRVS: <BY5PR10MB39543CE6C348621DC99F969E874D9@BY5PR10MB3954.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: h7F324/y2yghWES4pkYg9tYwvRCNK1rluTjg7W76xgaOgCjsVlKwKi0+yKXIFmMBtNCM9qa7BviAOG2ROQdy6Hn7vSjz4ar1HFIiQnT2bCnO8SH8rKuuZvYzRiu5ItwqNwy7VjceWMg3SeqrndETMd8NL10RsyljWInZyPR16Qj5Yd4rfu1kgOsi00CMMYP/NG3ELeYqgL6YO3Xm1NfPLGdx70tgjjCVlSumdjx6UdH5X/dkz0QZI8dxL13mvbLMNbSFFziNSCtzLU//jeoQC6nUhSxtYoDIGLMpsrpB6npme8w3coYai+70Xg7enbNwuA3o/I5Vt9gYW9FGDcmCck7kXoglRir5XXdseOT+sKejHf93fG2HxLgYTK1njPEHeW8zFx1Fn+Pch87f/TEej0E5NCbpsjo8rrte9tp78fUETO9oDCXtNX1Wo4+3SplWl65fGETp/01SUPLXsKZUhAi8i1I6CWSJNLo5pe9a6xWUwaFE0t5mRqAYfZGTl9auBa28Sp7Qf/HhvpUaMjNP7iVKYbmBY89aMIDPyfEk4UBy7FtaBo+llFjX9JA+Xp20dDj0WbQIogiu+JdrdL+IvI1dfQofAMTMPmozsMfn+drfoAbn2FYbwNvmRFELnh5EzWANVUZ739b7Fv5kN5RI0M0sdPTvfS2qqolSYJ/id6rIiEmDJDq/hRLpNvcoJ+byJh9aCz8+xFaDbN401XVBeA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(54906003)(37006003)(8676002)(186003)(6506007)(53546011)(31696002)(26005)(83380400001)(36756003)(2906002)(8936002)(86362001)(31686004)(316002)(508600001)(66556008)(4326008)(2616005)(66476007)(66946007)(4744005)(5660300002)(6862004)(38100700002)(6486002)(6512007)(9686003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VTRNQ0NOWE1xZnZEbjdnRTRJRXVQTjQrR2RURE5vWHpHSzV6TERQLzVpVVEw?=
- =?utf-8?B?ZGtiRUVGZEtVVk5wNDREY3d6VkZFZ2hFMFo3N2phSG90UGdmNXNTT24zUGsr?=
- =?utf-8?B?ZW9vRVNtUkFiQXczcXlTQU4wNVpCUFdXTy9qK1BoRHlzZVowRkVpL2JKTmZn?=
- =?utf-8?B?Q01pNWhXMk5BMEp6Y0VYblc5MGNScGYrMFhZOU9XYkwwRTdOSDgzYUxPWktv?=
- =?utf-8?B?MVdVWkJVSHBRdzMwWVBBSjBNQTE1L1BVaWQ3VGZJcTVTUk85bFlHbmxHeCtZ?=
- =?utf-8?B?ZnUwV2c0NXZVU09QTCtINFpjcm83WmNDMlpLU0NIVmF3eDBxR1VUdXp3UHN2?=
- =?utf-8?B?MUxPTzFiTHJDRWtqMnlBNHFCalJZVmtrVXR0L1N6d3paVkpHSUJLSGhZUklJ?=
- =?utf-8?B?MkZ5VlorZlN3WUpNVUt0M1R6SVFTSzdETTdYTFVoKzh5bEVoZFJTM1NqMmVU?=
- =?utf-8?B?eGZUcUpSK0FQOUR6MzNuOVZ4ME9tMHgzK1dOU0RWeXBqUTBxQ3ZNR1pDeHdW?=
- =?utf-8?B?OGxDazV6Qmo1SzBJbU1nQXhCMmJDODlKV2JlblRWK0FKZVEvUSs1VzNCc1pj?=
- =?utf-8?B?MmgvVHE1dGtkZWI3aTRqK0Z0ampWWU0wL3YzN1Z6cEtmOGNBMFZRVjM4b0Jr?=
- =?utf-8?B?YVdzUVM1ZGRzMENGQUYyWEo4MWJHM1lVenFVNldYRXBMak9XbnZpYUpSZU9t?=
- =?utf-8?B?NUNXN2pOaC83NjlGc3U3TUttL1NMMkpEekE0aVlSK0NxaVJxRExaYXUyS1Y5?=
- =?utf-8?B?eTRYNzlYY1RmbytDUEQ0eW04TW0zb250VU9UWXlvbEtHVHdCWDFVeUFZbGFK?=
- =?utf-8?B?M21NQ1gzM0VYSjZqZmdkc2k4UUgwOWdSSFVzR0NDbEhxZEtXSk1QYnFBYzVs?=
- =?utf-8?B?czNNSmFxSVJCS21EaWg5VUtrZlZ2MmFVVGZtTWZVbWVJTkJaNzk0c2FFSVBB?=
- =?utf-8?B?ejF5d0M2MExENU9waUZ6UEFlaG1CWkVtNlhGbGl0L3pObWdTenhPa0JZeWNX?=
- =?utf-8?B?UXZpYWRRNVhQMG1lQlkvQjJuUks5Qm1DOGFxSThxQUFoTmdCbW1CeFhXNlgv?=
- =?utf-8?B?OVBGQzZZNHUzaENWOExVUUxqMWVrditrcnFUeFExZ2swSk1WSEVpckZKNDRI?=
- =?utf-8?B?RlF4b3lyUk1wV1JHNmxhQmdrUVczY3kwQkUyWmIrUDVqN25nZFlRTzBGTm96?=
- =?utf-8?B?eVk5bkhsV1dBYVRlVklUVGpyRFUvcHgxS3VERFlJRElGeG8yK3ZYM296OWJ2?=
- =?utf-8?B?dWY2d3cvQXJSMU93RjZhSW9ubzV5TjVyZ28yUUlqQ2tma214QTFEWXRLOGlM?=
- =?utf-8?B?aWFyeFpDQzh3eERKemJJckd0K2hQOE9mMUkzVFVHeHM2UmpYUWlIWkd1TTY5?=
- =?utf-8?B?cnUvRjEvN2o2NG96c090MWZYajJVYXgwdXNyVnpHZWJyd2JQekRPSThUczFv?=
- =?utf-8?B?dGpGNW5QZ0JBbUdDVW01ZjhBV29FTnh5Q0lVeU80OWx5bDVYdWE4SkJyeHN0?=
- =?utf-8?B?c3UvQlZjN3BpUEhjMmpWTm1pVnVMTlhCK0hzYUZkQlNvWHFtRElpZ0w1b2Fh?=
- =?utf-8?B?SUQ2YTQyZ0ZUazIrbGxDcjFmbjBoTStsSGMrTXJNU1ZuV3I1bVVJSFpUUUdC?=
- =?utf-8?B?ZUJXMkxVT21IVlFSOWRSRFd0b1RBQmxEWjhnU1FxUkNnK2Y0ZlVqUk5oMEVE?=
- =?utf-8?B?MXhaN0hMLzMxVXJZOGlMWU1DYWhWOFkxeXlFTTY4WGYrYUJXR25xd0Uwampw?=
- =?utf-8?B?dklvazQ3MFFMNVlSQU5tNFVhTk9sRnVPbHdSSFhYZElXb0RtVVREK0tDU1p3?=
- =?utf-8?B?djJlWmlmcFluclI3S2tKNmJhN3MxSVd5QjBQY2wwZUw5cmdQanJmYTh1b1Js?=
- =?utf-8?B?VFVkOW83aWZheUZZUmc3RDdzNHBtVkl6R250K2RoOXRXT1hMclhDY3M3MSti?=
- =?utf-8?B?V1JhR2lwY1I1ODI3NFkyTG02eFFodDlHMDY0RzFYblh3Wk5lTHNTcTVYSk9a?=
- =?utf-8?B?OXl1cFFyQ29UQmZ1TmM2Z2YyUlQrUXBzZDQ4dXc4N3Jway9VN0JzWldabUF2?=
- =?utf-8?B?bHVEM2FQWWtQOHQ4Vmlwa01QS0E2c3JYVlhMd0F0UXN6OXc4L2JBenB3K1lH?=
- =?utf-8?B?TTB3WHdDR2tsOFZXdjBUbTFjV3pPWWVFdzBvOGFvRDdTNjllVnVxNEpNYmUv?=
- =?utf-8?Q?Vgwd1mN/6JJDdQh8p1PRM/U=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14c75bda-8c0a-4a81-9da1-08d9d218906d
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 20:01:59.5348
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eude74lUAdQx9WnxaNWPMCulrlg+msffXUdwUhrLNKpDKpcAegyWjKqHIHUO4R7zzGwX+E425kqp6Js41wlbqQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB3954
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10220 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- phishscore=0 malwarescore=0 spamscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2110150000
- definitions=main-2201070123
-X-Proofpoint-ORIG-GUID: Z_jNVAPwomhtFECrKgzkiSUSt2UJSfX8
-X-Proofpoint-GUID: Z_jNVAPwomhtFECrKgzkiSUSt2UJSfX8
+References: <20211227190504.309612-1-trondmy@kernel.org> <20211227190504.309612-2-trondmy@kernel.org>
+ <20211227190504.309612-3-trondmy@kernel.org> <20211227190504.309612-4-trondmy@kernel.org>
+ <20211227190504.309612-5-trondmy@kernel.org> <20211227190504.309612-6-trondmy@kernel.org>
+ <20211227190504.309612-7-trondmy@kernel.org> <CAFX2JfnXtm90Tn7Y4h04Ca+fxqxjesP1CjOpEHOKBRVPNPum5A@mail.gmail.com>
+ <CAFX2Jfn-yQcGgTuU_09LMdQaVXOA7H7jBEJCZ=jVnSGmruJP1Q@mail.gmail.com> <d8c8c92c2fc68469a1f4f5aba267cb1dfac0babf.camel@hammerspace.com>
+In-Reply-To: <d8c8c92c2fc68469a1f4f5aba267cb1dfac0babf.camel@hammerspace.com>
+From:   Anna Schumaker <anna.schumaker@netapp.com>
+Date:   Fri, 7 Jan 2022 15:36:10 -0500
+Message-ID: <CAFX2JfnA8rOGjszB+TXMzURS8cNTgh0SqYV8mJCWWKNKNifd+g@mail.gmail.com>
+Subject: Re: [PATCH v2 6/8] NFSv4: Support the offline bit
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "trondmy@kernel.org" <trondmy@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-On 1/7/22 11:41 AM, Chuck Lever III wrote:
-> Hi Dai-
+On Fri, Jan 7, 2022 at 3:17 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
 >
->> On Jan 7, 2022, at 2:15 PM, dai.ngo@oracle.com wrote:
->>
->> Hi Bruce,
->>
->> Commit428a23d2bf0ca 'nfsd: skip some unnecessary stats in the v4 case' causes these tests to fail when the filesystem is ext4. It works fine with btrfs and xfs. The reason it fails with EXT4 is because ext4 does not have i_version-supporting. The SB_I_VERSION is not set in the super block so we skip the fh_getattr and just use fh_post_attr which is 0 to fill fh_post_change. I'm not quite sure what's the fix for this. If we skip the fs_getattr
->> for v4 thenfh_post_attr is 0 which causes the returned change attribute to be 0. -Dai
-> I've got a fix for this issue scheduled for v5.17, and hopefully
-> it can be back-ported to stable kernels too.
+> On Fri, 2022-01-07 at 09:31 -0500, Anna Schumaker wrote:
+> > On Fri, Jan 7, 2022 at 9:23 AM Anna Schumaker
+> > <anna.schumaker@netapp.com> wrote:
+> > >
+> > > Hi Trond,
+> > >
+> > > On Tue, Dec 28, 2021 at 3:03 AM <trondmy@kernel.org> wrote:
+> > > >
+> > > > From: Trond Myklebust <trond.myklebust@primarydata.com>
+> > > >
+> > > > Add tracking of the NFSv4 'offline' attribute.
+> > > >
+> > > > Signed-off-by: Trond Myklebust <trond.myklebust@primarydata.com>
+> > > > Signed-off-by: Lance Shelton <lance.shelton@hammerspace.com>
+> > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > ---
+> > > >  fs/nfs/inode.c          | 11 +++++++++++
+> > > >  fs/nfs/nfs4proc.c       |  6 ++++++
+> > > >  fs/nfs/nfs4trace.h      |  3 ++-
+> > > >  fs/nfs/nfs4xdr.c        | 31 ++++++++++++++++++++++++++++++-
+> > > >  include/linux/nfs4.h    |  1 +
+> > > >  include/linux/nfs_fs.h  |  1 +
+> > > >  include/linux/nfs_xdr.h |  5 ++++-
+> > > >  7 files changed, 55 insertions(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+> > > > index 4673b091ea31..33f4410190b6 100644
+> > > > --- a/fs/nfs/inode.c
+> > > > +++ b/fs/nfs/inode.c
+> > > > @@ -528,6 +528,7 @@ nfs_fhget(struct super_block *sb, struct
+> > > > nfs_fh *fh, struct nfs_fattr *fattr)
+> > > >                 nfsi->archive = 0;
+> > > >                 nfsi->hidden = 0;
+> > > >                 nfsi->system = 0;
+> > > > +               nfsi->offline = 0;
+> > > >                 inode_set_iversion_raw(inode, 0);
+> > > >                 inode->i_size = 0;
+> > > >                 clear_nlink(inode);
+> > > > @@ -606,6 +607,10 @@ nfs_fhget(struct super_block *sb, struct
+> > > > nfs_fh *fh, struct nfs_fattr *fattr)
+> > > >                 } else if (fattr_supported &
+> > > > NFS_ATTR_FATTR_SPACE_USED &&
+> > > >                            fattr->size != 0)
+> > > >                         nfs_set_cache_invalid(inode,
+> > > > NFS_INO_INVALID_BLOCKS);
+> > > > +               if (fattr->valid & NFS_ATTR_FATTR_OFFLINE)
+> > > > +                       nfsi->offline = (fattr->hsa_flags &
+> > > > NFS_HSA_OFFLINE) ? 1 : 0;
+> > > > +               else if (fattr_supported &
+> > > > NFS_ATTR_FATTR_OFFLINE)
+> > > > +                       nfs_set_cache_invalid(inode,
+> > > > NFS_INO_INVALID_WINATTR);
+> > > >
+> > > >                 nfs_setsecurity(inode, fattr);
+> > > >
+> > > > @@ -2274,6 +2279,12 @@ static int nfs_update_inode(struct inode
+> > > > *inode, struct nfs_fattr *fattr)
+> > > >                 nfsi->cache_validity |=
+> > > >                         save_cache_validity &
+> > > > NFS_INO_INVALID_BLOCKS;
+> > > >
+> > > > +       if (fattr->valid & NFS_ATTR_FATTR_OFFLINE)
+> > > > +               nfsi->offline = (fattr->hsa_flags &
+> > > > NFS_HSA_OFFLINE) ? 1 : 0;
+> > > > +       else if (fattr_supported & NFS_ATTR_FATTR_OFFLINE)
+> > > > +               nfsi->cache_validity |=
+> > > > +                       save_cache_validity &
+> > > > NFS_INO_INVALID_WINATTR;
+> > > > +
+> > > >         /* Update attrtimeo value if we're out of the unstable
+> > > > period */
+> > > >         if (attr_changed) {
+> > > >                 nfs_inc_stats(inode, NFSIOS_ATTRINVALIDATE);
+> > > > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > > > index 4e6cc54016ba..713a71fb3020 100644
+> > > > --- a/fs/nfs/nfs4proc.c
+> > > > +++ b/fs/nfs/nfs4proc.c
+> > > > @@ -219,6 +219,7 @@ const u32 nfs4_fattr_bitmap[3] = {
+> > > >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+> > > >         FATTR4_WORD2_SECURITY_LABEL
+> > > >  #endif
+> > > > +       | FATTR4_WORD2_OFFLINE
+> > > >  };
+> > >
+> > > This won't compile if CONFIG_NFS_V4_SECURITY_LABEL=n:
+> > >
+> > > fs/nfs/nfs4proc.c:218:9: error: expected expression before ‘|’
+> > > token
+> > >   218 |         | FATTR4_WORD2_OFFLINE
+> > >       |         ^
+> > > make[2]: *** [scripts/Makefile.build:287: fs/nfs/nfs4proc.o] Error
+> > > 1
+> > > make[1]: *** [scripts/Makefile.build:549: fs/nfs] Error 2
+> > > make: *** [Makefile:1846: fs] Error 2
+> > > make: *** Waiting for unfinished jobs....
+> >
+> > I can fix it up by doing:
+> >
+> > diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> > index 5d3dd647dbf6..9bd7a785eb1b 100644
+> > --- a/fs/nfs/nfs4proc.c
+> > +++ b/fs/nfs/nfs4proc.c
+> > @@ -212,10 +212,10 @@ const u32 nfs4_fattr_bitmap[3] = {
+> >         | FATTR4_WORD1_TIME_METADATA
+> >         | FATTR4_WORD1_TIME_MODIFY
+> >         | FATTR4_WORD1_MOUNTED_ON_FILEID,
+> > +       FATTR4_WORD2_OFFLINE
+> >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+> > -       FATTR4_WORD2_SECURITY_LABEL
+> > +       | FATTR4_WORD2_SECURITY_LABEL
+> >  #endif
+> > -       | FATTR4_WORD2_OFFLINE
+> >  };
+> >
+> >  static const u32 nfs4_pnfs_open_bitmap[3] = {
+> >
+> > If that works for you I can squash it into your patch in my tree
+>
+> Sure. I was thinking the opposite, but this works too.
+>
+> i.e. my suggestion was just
+>
+> #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+>         FATTR4_WORD2_SECURITY_LABEL |
+> #endif
+>         FATTR4_WORD2_OFFLINE
+>
+> However there is no functional difference between the two, so let's go
+> with yours.
 
-Thank you Chuck,
+Thanks for taking a quick look!
 
--Dai
+Anna
 
+>
+> >
+> > Anna
+> >
+> > >
+> > > Anna
+> > >
+> > > >
+> > > >  static const u32 nfs4_pnfs_open_bitmap[3] = {
+> > > > @@ -245,6 +246,7 @@ static const u32 nfs4_pnfs_open_bitmap[3] = {
+> > > >  #ifdef CONFIG_NFS_V4_SECURITY_LABEL
+> > > >         | FATTR4_WORD2_SECURITY_LABEL
+> > > >  #endif
+> > > > +       | FATTR4_WORD2_OFFLINE
+> > > >  };
+> > > >
+> > > >  static const u32 nfs4_open_noattr_bitmap[3] = {
+> > > > @@ -325,6 +327,7 @@ static void nfs4_bitmap_copy_adjust(__u32
+> > > > *dst, const __u32 *src,
+> > > >         if (!(cache_validity & NFS_INO_INVALID_WINATTR)) {
+> > > >                 dst[0] &= ~(FATTR4_WORD0_ARCHIVE |
+> > > > FATTR4_WORD0_HIDDEN);
+> > > >                 dst[1] &= ~(FATTR4_WORD1_SYSTEM |
+> > > > FATTR4_WORD1_TIME_BACKUP);
+> > > > +               dst[2] &= ~FATTR4_WORD2_OFFLINE;
+> > > >         }
+> > > >  }
+> > > >
+> > > > @@ -3927,6 +3930,8 @@ static int _nfs4_server_capabilities(struct
+> > > > nfs_server *server, struct nfs_fh *f
+> > > >                 memcpy(server->attr_bitmask_nl, res.attr_bitmask,
+> > > >                                 sizeof(server->attr_bitmask));
+> > > >                 server->attr_bitmask_nl[2] &=
+> > > > ~FATTR4_WORD2_SECURITY_LABEL;
+> > > > +               if (!(res.attr_bitmask[2] &
+> > > > FATTR4_WORD2_OFFLINE))
+> > > > +                       server->fattr_valid &=
+> > > > ~NFS_ATTR_FATTR_OFFLINE;
+> > > >
+> > > >                 memcpy(server->cache_consistency_bitmask,
+> > > > res.attr_bitmask, sizeof(server->cache_consistency_bitmask));
+> > > >                 server->cache_consistency_bitmask[0] &=
+> > > > FATTR4_WORD0_CHANGE|FATTR4_WORD0_SIZE;
+> > > > @@ -5486,6 +5491,7 @@ static void nfs4_bitmask_set(__u32
+> > > > bitmask[NFS4_BITMASK_SZ], const __u32 *src,
+> > > >         if (cache_validity & NFS_INO_INVALID_WINATTR) {
+> > > >                 bitmask[0] |= FATTR4_WORD0_ARCHIVE |
+> > > > FATTR4_WORD0_HIDDEN;
+> > > >                 bitmask[1] |= FATTR4_WORD1_SYSTEM |
+> > > > FATTR4_WORD1_TIME_BACKUP;
+> > > > +               bitmask[2] |= FATTR4_WORD2_OFFLINE;
+> > > >         }
+> > > >
+> > > >         if (cache_validity & NFS_INO_INVALID_SIZE)
+> > > > diff --git a/fs/nfs/nfs4trace.h b/fs/nfs/nfs4trace.h
+> > > > index 5e72639b469e..02c78d66c36d 100644
+> > > > --- a/fs/nfs/nfs4trace.h
+> > > > +++ b/fs/nfs/nfs4trace.h
+> > > > @@ -35,7 +35,8 @@
+> > > >                 { NFS_ATTR_FATTR_HIDDEN, "HIDDEN" }, \
+> > > >                 { NFS_ATTR_FATTR_SYSTEM, "SYSTEM" }, \
+> > > >                 { NFS_ATTR_FATTR_ARCHIVE, "ARCHIVE" }, \
+> > > > -               { NFS_ATTR_FATTR_TIME_BACKUP, "TIME_BACKUP" })
+> > > > +               { NFS_ATTR_FATTR_TIME_BACKUP, "TIME_BACKUP" }, \
+> > > > +               { NFS_ATTR_FATTR_OFFLINE, "OFFLINE" })
+> > > >
+> > > >  DECLARE_EVENT_CLASS(nfs4_clientid_event,
+> > > >                 TP_PROTO(
+> > > > diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+> > > > index 280df43c5bf2..a45872f860ec 100644
+> > > > --- a/fs/nfs/nfs4xdr.c
+> > > > +++ b/fs/nfs/nfs4xdr.c
+> > > > @@ -1623,7 +1623,7 @@ static void encode_readdir(struct
+> > > > xdr_stream *xdr, const struct nfs4_readdir_arg
+> > > >                             FATTR4_WORD1_TIME_CREATE |
+> > > >                             FATTR4_WORD1_TIME_METADATA |
+> > > >                             FATTR4_WORD1_TIME_MODIFY;
+> > > > -               attrs[2] |= FATTR4_WORD2_SECURITY_LABEL;
+> > > > +               attrs[2] |= FATTR4_WORD2_SECURITY_LABEL |
+> > > > FATTR4_WORD2_OFFLINE;
+> > > >                 dircount >>= 1;
+> > > >         }
+> > > >         /* Use mounted_on_fileid only if the server supports it
+> > > > */
+> > > > @@ -4354,6 +4354,29 @@ static int decode_attr_xattrsupport(struct
+> > > > xdr_stream *xdr, uint32_t *bitmap,
+> > > >         return 0;
+> > > >  }
+> > > >
+> > > > +static int decode_attr_offline(struct xdr_stream *xdr, uint32_t
+> > > > *bitmap,
+> > > > +                              uint32_t *res, uint64_t *flags)
+> > > > +{
+> > > > +       int status = 0;
+> > > > +       __be32 *p;
+> > > > +
+> > > > +       if (unlikely(bitmap[2] & (FATTR4_WORD2_OFFLINE - 1U)))
+> > > > +               return -EIO;
+> > > > +       if (likely(bitmap[2] & FATTR4_WORD2_OFFLINE)) {
+> > > > +               p = xdr_inline_decode(xdr, 4);
+> > > > +               if (unlikely(!p))
+> > > > +                       return -EIO;
+> > > > +               if (be32_to_cpup(p))
+> > > > +                       *res |= NFS_HSA_OFFLINE;
+> > > > +               else
+> > > > +                       *res &= ~NFS_HSA_OFFLINE;
+> > > > +               bitmap[2] &= ~FATTR4_WORD2_OFFLINE;
+> > > > +               *flags |= NFS_ATTR_FATTR_OFFLINE;
+> > > > +       }
+> > > > +       dprintk("%s: system file: =%s\n", __func__, (*res &
+> > > > NFS_HSA_OFFLINE) == 0 ? "false" : "true");
+> > > > +       return status;
+> > > > +}
+> > > > +
+> > > >  static int verify_attr_len(struct xdr_stream *xdr, unsigned int
+> > > > savep, uint32_t attrlen)
+> > > >  {
+> > > >         unsigned int attrwords = XDR_QUADLEN(attrlen);
+> > > > @@ -4842,6 +4865,12 @@ static int decode_getfattr_attrs(struct
+> > > > xdr_stream *xdr, uint32_t *bitmap,
+> > > >                 fattr->valid |= status;
+> > > >         }
+> > > >
+> > > > +       status = decode_attr_offline(xdr, bitmap, &fattr-
+> > > > >hsa_flags,
+> > > > +                                    &fattr->valid);
+> > > > +       if (status < 0)
+> > > > +               goto xdr_error;
+> > > > +
+> > > > +       status = 0;
+> > > >  xdr_error:
+> > > >         dprintk("%s: xdr returned %d\n", __func__, -status);
+> > > >         return status;
+> > > > diff --git a/include/linux/nfs4.h b/include/linux/nfs4.h
+> > > > index 5662d8be04eb..817b349c24ca 100644
+> > > > --- a/include/linux/nfs4.h
+> > > > +++ b/include/linux/nfs4.h
+> > > > @@ -460,6 +460,7 @@ enum lock_type4 {
+> > > >  #define FATTR4_WORD2_SECURITY_LABEL     (1UL << 16)
+> > > >  #define FATTR4_WORD2_MODE_UMASK                (1UL << 17)
+> > > >  #define FATTR4_WORD2_XATTR_SUPPORT     (1UL << 18)
+> > > > +#define FATTR4_WORD2_OFFLINE           (1UL << 19)
+> > > >
+> > > >  /* MDS threshold bitmap bits */
+> > > >  #define THRESHOLD_RD                    (1UL << 0)
+> > > > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> > > > index 1839fed16b18..61f852ebb0a4 100644
+> > > > --- a/include/linux/nfs_fs.h
+> > > > +++ b/include/linux/nfs_fs.h
+> > > > @@ -148,6 +148,7 @@ struct nfs_inode {
+> > > >         unsigned char           archive : 1;
+> > > >         unsigned char           hidden : 1;
+> > > >         unsigned char           system : 1;
+> > > > +       unsigned char           offline : 1;
+> > > >
+> > > >         /*
+> > > >          * read_cache_jiffies is when we started read-caching
+> > > > this inode.
+> > > > diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+> > > > index dedc7e0bf2b9..f5588bc22cb1 100644
+> > > > --- a/include/linux/nfs_xdr.h
+> > > > +++ b/include/linux/nfs_xdr.h
+> > > > @@ -21,6 +21,7 @@
+> > > >  #define NFS_HSA_HIDDEN         BIT(0)
+> > > >  #define NFS_HSA_SYSTEM         BIT(1)
+> > > >  #define NFS_HSA_ARCHIVE                BIT(2)
+> > > > +#define NFS_HSA_OFFLINE                BIT(3)
+> > > >
+> > > >  struct nfs4_string {
+> > > >         unsigned int len;
+> > > > @@ -119,6 +120,7 @@ struct nfs_fattr {
+> > > >  #define NFS_ATTR_FATTR_SYSTEM           BIT_ULL(28)
+> > > >  #define NFS_ATTR_FATTR_ARCHIVE          BIT_ULL(29)
+> > > >  #define NFS_ATTR_FATTR_TIME_BACKUP      BIT_ULL(30)
+> > > > +#define NFS_ATTR_FATTR_OFFLINE          BIT_ULL(31)
+> > > >
+> > > >  #define NFS_ATTR_FATTR (NFS_ATTR_FATTR_TYPE \
+> > > >                 | NFS_ATTR_FATTR_MODE \
+> > > > @@ -144,7 +146,8 @@ struct nfs_fattr {
+> > > >                 | NFS_ATTR_FATTR_SYSTEM \
+> > > >                 | NFS_ATTR_FATTR_ARCHIVE \
+> > > >                 | NFS_ATTR_FATTR_TIME_BACKUP \
+> > > > -               | NFS_ATTR_FATTR_V4_SECURITY_LABEL)
+> > > > +               | NFS_ATTR_FATTR_V4_SECURITY_LABEL \
+> > > > +               | NFS_ATTR_FATTR_OFFLINE)
+> > > >
+> > > >  /*
+> > > >   * Maximal number of supported layout drivers.
+> > > > --
+> > > > 2.33.1
+> > > >
+>
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
