@@ -2,157 +2,271 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4438E487CE1
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 20:15:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 41F9C487D24
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 20:34:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230159AbiAGTPu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jan 2022 14:15:50 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:6514 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S230056AbiAGTPt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jan 2022 14:15:49 -0500
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 207Haw4c027170;
-        Fri, 7 Jan 2022 19:15:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=Xo4tuD8UN9/Q4GczxPIGJXgNdk0wnLPYnLttQRCQYp0=;
- b=YMc+yaGANaCvbevadb178dYKFjfAkqT6Dj6tLGcTIkkBlyEclLuJ4u60v7h5bLu68lfO
- w3wGaIVPtS9hcahry6eod01NS/bMB8mv9eIrMO05GR6l+Ik6PLqkgNiHWZngYHknQvBe
- CNAR6PZDZQFVPswRzpcHfgxvznqX+GZDRO4jdVTiuBMB4yRdD/wt9A1TJUYD3RP9KyqX
- FjJKCwB4WQl9lxEjTrWSKIXSG5M5fc7El+fNt5HGu8FNRC0iRP8oUBbFPp1fgzyI1Hf6
- LzQ7lJNFbQIwS9/aH5NN9n39jXCvfHKaUTf6RUV51fGwAIoeOBPyoMytfZFch99GSdnu 4w== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3de4vhanm5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jan 2022 19:15:47 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 207JAEPj002969;
-        Fri, 7 Jan 2022 19:15:46 GMT
-Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2048.outbound.protection.outlook.com [104.47.51.48])
-        by aserp3030.oracle.com with ESMTP id 3de4w3fccc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Jan 2022 19:15:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=C2iS/SYlDT0RmlRfTAKCWpAtnuuOeuVxKJCCn9pNmcMFp2rjZRhNad5cXy2Sw0pQaKtrQlgiSTjAuDUoPiAsKMavsWUI0wV8RS+HVTC/vHzQ71LTnIno0nSDqoBSnyYmo+Oqdc51elUb6Pu7k+69hvs6OanbTUM8UbrXUsTW14vhrAmIdTiX8nsEz1z/0oYqb5gC0AFp/pxdOzbuJLAXGeqff/soBG4IZx2S+uovGKLNcT+2PlL4g7ey0FSDQmpTNF/UGqwLrUNE6fFakaAmaK6n4quSRhN7mw1bfR67VEmeQvin4Oou+Qxh2HMC2W5U4QTQKXxN6peYE1XUSw6uGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Xo4tuD8UN9/Q4GczxPIGJXgNdk0wnLPYnLttQRCQYp0=;
- b=MWnxrvYL4lBl8EubPAL2bxEI1brm1+ZjzoL4KbPfCiJJYGt8ZRxRg0NTyrVNaSJTjHUpP5SjIWioBA3QX3A+t3y2VvkBIVwohQiZO/LGQguJQlqU9E7edGX3V6gg/L9SG/52OCpAwyOPPmEtm/KO0pmx5+MKbMaWjmG+IE+weSJWnVzu5AfuIp99iOgF6jne8KgOwDtDvFQwJmicCFApymwOFdy92PGJi5/xQUvRr5zaLqgSjwOz+j/HeESBKuP1ykYNYuTy5CT3zEzq0uQFOUg+37NK2BpIUYROFymsgHXKbyRKxJVpiEwBwNWc2dHfcKO5BgCeUTPSCMltTaseYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Xo4tuD8UN9/Q4GczxPIGJXgNdk0wnLPYnLttQRCQYp0=;
- b=RVlmG89lZRmjt6UQZkHRZgrIhC8Ao4Z2jLWKYwprgWHm7N8iOMk7HSJ5nApz1AaLDxVtUhs1+3CB5Xx7pMPoiIRyPg0qW2m1xG1Ap0PjOdV4F9eCqs5WAtES/l8qXHSrd8kNmW8oVbP3m1RdxXza8Iczfg63YUHnouOPXbpJhSY=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BY5PR10MB4386.namprd10.prod.outlook.com (2603:10b6:a03:20d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Fri, 7 Jan
- 2022 19:15:45 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2531:1146:ae58:da29]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::2531:1146:ae58:da29%7]) with mapi id 15.20.4867.011; Fri, 7 Jan 2022
- 19:15:45 +0000
-Message-ID: <46407a8e-8011-9cdc-4db5-5679e2b59957@oracle.com>
-Date:   Fri, 7 Jan 2022 11:15:43 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.4.1
-Subject: pynfs regression with nfs4.1 RNM18, RNM19 and RNM20 with ext4
-Content-Language: en-US
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-References: <CAPt2mGNF=iZkXGa93yjKQG5EsvUucun1TMhN5zM-6Gp07Bni2g@mail.gmail.com>
- <20220107171755.GD26961@fieldses.org>
-From:   dai.ngo@oracle.com
-In-Reply-To: <20220107171755.GD26961@fieldses.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0058.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::33) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        id S232743AbiAGTel (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Jan 2022 14:34:41 -0500
+Received: from mx.cs.msu.ru ([188.44.42.42]:53954 "EHLO mail.cs.msu.ru"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S232688AbiAGTej (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Fri, 7 Jan 2022 14:34:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=cs.msu.ru;
+        s=dkim; h=Subject:In-Reply-To:Content-Type:MIME-Version:References:Message-ID
+        :Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=OCmqg7hdVMRDf9S2TRzQcyQTVURjWWjA2U66wZsX9xE=; b=GZTN5nPrZajSo0Dsw8ti3k+ewF
+        w1M5DO8uta92yExxmpRX1irxHJV5CazVnzyUy/i9UXyucK+gf9zJtvBGsOPrIVuPj7Ip48EqV8PBE
+        qazaFFVv9YUZnYw0PIDKesYTg2I3YuLVS8PvQZkPGEMHmqbpaEboMRKWIWE4mU++TrxxcN7YXgzgQ
+        ouTjjURG2hZtWJyIMWlmT+BlDYSsZgLf88F0m10ZJkuYyXoEcn5Q7IRNgCBR3mWnvTtJcsnbRWoFs
+        LM/bPMRKrMRgVRcM9UZNHpJj3bznRqeLBk/YUH54uF9sVNrmZGQwYPNskpZ40XKn4YDGguOE9+l+j
+        hNV7XitQ==;
+Received: from [37.204.119.143] (port=58122 helo=cello)
+        by mail.cs.msu.ru with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2 (FreeBSD))
+        (envelope-from <ar@cs.msu.ru>)
+        id 1n5um6-000CP7-UJ; Fri, 07 Jan 2022 22:19:44 +0300
+Date:   Fri, 7 Jan 2022 22:19:36 +0300
+From:   Arseny Maslennikov <ar@cs.msu.ru>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Walt Drummond <walt@drummond.us>, aacraid@microsemi.com,
+        viro@zeniv.linux.org.uk, anna.schumaker@netapp.com, arnd@arndb.de,
+        bsegall@google.com, bp@alien8.de, chuck.lever@oracle.com,
+        bristot@redhat.com, dave.hansen@linux.intel.com,
+        dwmw2@infradead.org, dietmar.eggemann@arm.com, dinguyen@kernel.org,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org, hpa@zytor.com,
+        idryomov@gmail.com, mingo@redhat.com, yzaikin@google.com,
+        ink@jurassic.park.msu.ru, jejb@linux.ibm.com, jmorris@namei.org,
+        bfields@fieldses.org, jlayton@kernel.org, jirislaby@kernel.org,
+        john.johansen@canonical.com, juri.lelli@redhat.com,
+        keescook@chromium.org, mcgrof@kernel.org,
+        martin.petersen@oracle.com, mattst88@gmail.com, mgorman@suse.de,
+        oleg@redhat.com, pbonzini@redhat.com, peterz@infradead.org,
+        rth@twiddle.net, richard@nod.at, serge@hallyn.com,
+        rostedt@goodmis.org, tglx@linutronix.de,
+        trond.myklebust@hammerspace.com, vincent.guittot@linaro.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-m68k@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-security-module@vger.kernel.org
+Message-ID: <YdiSSGLinhOVqS8a@cello>
+References: <20220103181956.983342-1-walt@drummond.us>
+ <87iluzidod.fsf@email.froward.int.ebiederm.org>
+ <YdSzjPbVDVGKT4km@mit.edu>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 247c8868-3e8d-481d-dcd2-08d9d2121ab3
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4386:EE_
-X-Microsoft-Antispam-PRVS: <BY5PR10MB43860BA6CEBBD09994D8A5E2874D9@BY5PR10MB4386.namprd10.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: nQHr5FYjTGLdS0ySHPoEkiv4X7/PSHkH8IGoR2O0dYqZTk56o2hJz7EHnGKOPmQMqRsuRfE6Oq1nWpPEmSEl4NEKkl/pc8lfmy1sX1ZrTy6kkBvAnqQDGyKYqahtUmLiHVQz7TuEk7hiV9ls1Ya6lm0YXe0dcobj+7ORdHVeZtZLc+P6mqYGU6CQ2OdUI6VjRS4p9ecBQ1wFoJMMjFeRjsoOXtDiyfRJYt2Ev3vrbm/uuidbd8EqoyLTCW0QXThT/I6+wC7G+EAmXy2TMKiZC/dW2etW30EoAOvs+Tsu9QOWEdvnljjL5F7s+xX61P+059Lr7tEjVQXvZ/NLlDFdznGBW/gEAxnk19tco0lb07PeYStWGAaVb9dksrEJDo7640VL82O0KT4Hg/dJTQoxAv+gYaEEMr2Sv+uKLg9guYcwutR89w0zqPbVXKC01DhlneSRxHISJYq2Cs02eBbpkOiQqH10CLYGs/Dkw/46EfTJXreqQnfCxOhRq76MJViewwWMGlKHWbLxQP00OZbn316Z+MaZkz+2BhECmTgAKRUD/gYW43px9SefYw8yHCNhdlVAQ6X/oP+ZjziJWIKDFrtYxmarn16g3/2BhqrF6kD8GoDXALMR7XmRlqmzhlGlChe+KW9RjkUsZhr4kX29aZEOs+jFClN5h9X+TnESZv76BMhdSMBL1J5dcfz5f4oqMenUPqrExZH0WkrU+9R2WQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(5660300002)(83380400001)(4744005)(66946007)(36756003)(66556008)(66476007)(31686004)(38100700002)(31696002)(6486002)(6916009)(8676002)(8936002)(316002)(2906002)(2616005)(4326008)(86362001)(508600001)(6506007)(9686003)(6512007)(186003)(26005)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dFpjNUtKK0lKUjMwTjI2YlFSeldCWWIrcGVaeHFQclViQmdCUjJFcHljRTFp?=
- =?utf-8?B?NnJqZUhCdEQ4NEt0Qkc2Zm5oK0xkQ1BPSW9OY09Za0dCNEJJL2Q4bjRTcFVp?=
- =?utf-8?B?RGdLRXo2aVRadTFnbTBRYjIvVXVjK0s4SmRVWDVsakRZcmJiZkRWdkVJTGhR?=
- =?utf-8?B?cmV3dlRjbXlUTHprdGFONE5CaERkWXNmWUo1YUs1cVBXUmdoWVR2VldDVmpW?=
- =?utf-8?B?SHRNYkpVTlpPeFg5Mk50aWFCc1NacnN2bkVFSW5qbDl5TmsrTTRaMVc2WVNX?=
- =?utf-8?B?bFBJSlNBNEthT25XKzhzcjJDWWtVMHNMZmJwUnVvMzIxdGtaaFovRk5LcElF?=
- =?utf-8?B?aUR4R0lPNzJhYU1DUVNoZk94NCtlNU94M2thUW1lWU43cHpwZjRUbFpsTWJh?=
- =?utf-8?B?cWp5ekNaTkp5K0FkRXZXaWhPZUVMSEZCRStTMGpjV1phRm5lb2NvQzF1ZWdq?=
- =?utf-8?B?ak5MQlplNXRyTytWTHk0YWVibE5tL2QwaldvbUhmNUUvQVl6QTQ2em85cUZk?=
- =?utf-8?B?WnVGTDgwSmQyUVpVMUpyZzhYTUd0RkFyTHpVcDF6c003M2lVM2dHT3VyVHJh?=
- =?utf-8?B?dG9yRFErMTAyaXFqL1BvQXduMzFFVERrSTR6QWdYMWRJUVpzL1JYQ1AvSDkr?=
- =?utf-8?B?bWpOME5PRkpiTmFGL095NWQ3dmd6N1hZdEE4SUVDMHptRUlmOEg4ekhMY1BQ?=
- =?utf-8?B?WnV5ay9aM2d5Znl4T3N3UVZWczhCRGlYTzFtMU9FR2d1QXNjbXlMcndrWlZT?=
- =?utf-8?B?M3BxV3E1ZC8rUVBXdDhHOFU5VFJoUERJR1IxelRSaU9HSGZibU1pNXFBYTVT?=
- =?utf-8?B?VjQ5aHE1aGpJZlpFcUlCL2J5d1RVcDZ0ckgvU3Z3RkxBdnBKMXFWdlFTSXM2?=
- =?utf-8?B?L2Q3cGN4Y2FUM2htOFhHaVV0UWVwOFMxVk1xOFRUc21qN0ZBS041c3FFSlNs?=
- =?utf-8?B?eVlEdmp1N1I3VUlZcDV0Q0FRUk4zdDByMFNuaFg1ZGhmYUtqQWFxWGtsYmJo?=
- =?utf-8?B?dkdpU1hPWmhRaGFZaFdOYjE0aUNKYUlLMGo0V3ZEVnhYNTYwY0E2bUNybkxr?=
- =?utf-8?B?RHoxRnErQWZuKzN3Y0luejZBQVdjZWJ4dVFrVFhGd3JhNGd6NVdKTzh3YzFR?=
- =?utf-8?B?Q3drUDZwbW1PakRLSmdVNU11b3k1VUtVZjVMcnozZExBc2R3VUswU2Jnb2RS?=
- =?utf-8?B?ekpMbHlhRWVoMmNZWHhiN01mWXBJOW9NeTQxbC84bjlKK2F5R1V6WFVIMTgz?=
- =?utf-8?B?SHJsdUZSSERVYUZqVmU3bEhUZE9CTzhkRUdXeVdrTW0rc29GaklTY1N2S09t?=
- =?utf-8?B?M09HZlNuRnR3cHRYRWhlZXVkek5WSUtiSWx2amdQc3JiRmFpRElUWXRCUXo4?=
- =?utf-8?B?M3NJM0dpeDhIRE5XM2tRSTRrazI1b3E2bUR5RjUrNUdqanZFd0ZwUjhOc1Ux?=
- =?utf-8?B?aVJteVQ5SGFTOUhuSWJRdC9NTG5UeENSYzZPdWc4ZG9xalFmZXJaUk5MUmJs?=
- =?utf-8?B?Z2JSbW5NQ3FxRkpmbnZzZWI0T3V2ZGMrRmlZUyt2b29HNFJzemRIYXZsOHBn?=
- =?utf-8?B?NmttcDJXbUV2Y2k1UmRhQy9UcWw0YnNkU25oK0tuMklRY2VrVkpsNVM0ci9x?=
- =?utf-8?B?K3dOaWNqa0RhT0RiRUppZEFMZUw0YWZrcE95QzlnUjN0cm1RVFgxSFB5SHBG?=
- =?utf-8?B?SzV4K0haL2YxWGRtM3Z0TTF0NGNrTVFkR1E0OFhCeFQwSnRqTDd2MkgrQy9P?=
- =?utf-8?B?UWtRRGdlR3ZuLzRydFRVdlFxSE85Z3hpZ013eUtmejdDdmpnc0FWRmtrTnhY?=
- =?utf-8?B?SGxibk9TU3hDTkduYjhwZ3Bqa3B3SGJ2TGh0eGlpQnB2VGI4LzNTSktxb2dt?=
- =?utf-8?B?V3QwZ0ZIaDFKZzZxdHZjaElpNEdPZGsyeTJFNiszNkk2VXJSYjlTUmNmR1Bv?=
- =?utf-8?B?TXU1Tmo2T0M5TDEwalFsaURZeUMvNmtyR3Z0SFQzMURHdXVKelBvZTRxUXVq?=
- =?utf-8?B?ZUg4WUZzelRqZVF0ZVdQMzUxK2p0eGxFby94VjZuWFIwLzFXUnRUWU9jeTl6?=
- =?utf-8?B?UVpCT3pwcHNXc1JFbytnWDg0TS9nSUZYT2daT1R6QUM5SUNWWGlvc25HSjJZ?=
- =?utf-8?B?VUpSQTdDZVNnNjJiZklqOGdFeHlmYmpOSDJnV003NHNDWThEendWQWg3OXFt?=
- =?utf-8?Q?K0vz+RyIeHHLf2hdjlgRIGA=3D?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 247c8868-3e8d-481d-dcd2-08d9d2121ab3
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2022 19:15:45.1218
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: nDrlnM99ZTkc336LQjb33+iI8bd6HrhZ0CTJtGGk0xxtVfAoKzpJTtx9xMCREBVgcJXqrVMIZzx05obehMnYvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4386
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10220 signatures=668683
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 adultscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2110150000 definitions=main-2201070120
-X-Proofpoint-ORIG-GUID: 0dLlMAMGXztUttCJzGIW2SCJ_XBSP6a1
-X-Proofpoint-GUID: 0dLlMAMGXztUttCJzGIW2SCJ_XBSP6a1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="qWnueR4sTyTaRsaN"
+Content-Disposition: inline
+In-Reply-To: <YdSzjPbVDVGKT4km@mit.edu>
+OpenPGP: url=http://grep.cs.msu.ru/~ar/pgp-key.asc
+X-SA-Exim-Connect-IP: 37.204.119.143
+X-SA-Exim-Mail-From: ar@cs.msu.ru
+Subject: Re: [RFC PATCH 0/8] signals: Support more than 64 signals
+X-SA-Exim-Version: 4.2.1
+X-SA-Exim-Scanned: No (on mail.cs.msu.ru); Unknown failure
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce,
 
-Commit428a23d2bf0ca 'nfsd: skip some unnecessary stats in the v4 case' causes 
-these tests to fail when the filesystem is ext4. It works fine with 
-btrfs and xfs. The reason it fails with EXT4 is because ext4 does not 
-have i_version-supporting. The SB_I_VERSION is not set in the super 
-block so we skip the fh_getattr and just use fh_post_attr which is 0 to 
-fill fh_post_change. I'm not quite sure what's the fix for this. If we skip the fs_getattr
-for v4 thenfh_post_attr is 0 which causes the returned change attribute to be 0. -Dai
+--qWnueR4sTyTaRsaN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+I generally agree with Ted's suggestion that we could merge the
+easy-to-design part =E2=80=94 the VSTATUS+kerninfo =E2=80=94 first and deal=
+ with the
+SIGINFO part later. The only concern I have here is that the "later"
+part might never practically arrive... :)
+
+Still, some notes on the SIGINFO/userspace-status
+part:
+
+On Tue, Jan 04, 2022 at 03:52:28PM -0500, Theodore Ts'o wrote:
+> On Tue, Jan 04, 2022 at 12:00:34PM -0600, Eric W. Biederman wrote:
+> > I dug through the previous conversations and there is a little debate
+> > about what makes sense for SIGPWR to do by default.  Alan Cox remembered
+> > SIGPWR was sent when the power was restored, so ignoring SIGPWR by
+> > default made sense.  Ted Tso pointed out a different scenario where it
+> > was reasonable for SIGPWR to be a terminating signal.
+> >=20
+> > So far no one has actually found any applications that will regress if
+> > SIGPWR becomes ignored by default.
+
+Some folks from linux-api@ claimed otherwise, but unfortunately didn't elab=
+orate.
+
+> > Furthermore on linux SIGPWR is only
+> > defined to be sent to init, and init ignores all signals by default so
+> > in practice SIGPWR is ignored by the only process that receives it
+> > currently.
+>=20
+> As it turns out, systemd does *not* ignore SIGPWR.  Instead, it will
+> initiate the sigpwr target.  From the systemd.special man page:
+>=20
+>        sigpwr.target
+>            A special target that is started when systemd receives the
+>            SIGPWR process signal, which is normally sent by the kernel
+>            or UPS daemons when power fails.
+
+Not sure what you had in mind; in case you're suggesting that systemd has
+to drop the sigpwr.target semantics =E2=80=94 it doesn't.
+We don't need to ask systemd to drop sigpwr.target semantics.
+
+To introduce SIGINFO =3D=3D SIGPWR to the kernel, the only "breaking" change
+we have to do is to change the default disposition for SIGPWR, i. e. the
+behaviour if the signal is set to SIG_DFL. If a process (including PID
+1) installs its own signal handler for SIGPWR to do something when PWR
+is received (or blocks the signal and handles it via signalfd
+notifications), then the default disposition does not matter at all, as
+Eric notes further in this thread.
+
+=46rom a quick glance at systemd code, pid1's main() function calls
+manager_new() calls manager_setup_signals(); this function, in turn,
+blocks a set of signals, including PWR, and sets up a signalfd(2) on
+that set. No changes have to be made in systemd, no need to remove the
+sigpwr.target semantics.
+
+The target activation does not send SIGPWR to anyone, it results in
+systemd services being started and possibly stopped; the exact
+consequences are out of scope for systemd.
+
+There could be another concern: a VSTATUS keypress could result in
+SIGINFO =3D=3D SIGPWR being sent to pid1. In a correct implementation this
+will not ever happen, because a sane PID 1 does not have (and never
+acquires) a controlling terminal.
+
+> And child processes of systemd are not ignoring SIGPWR.  Instead, they
+> are getting terminated.
+>=20
+> <tytso@cwcc>
+> 41% /bin/sleep 50 &
+> [1] 180671
+> <tytso@cwcc>
+> 42% kill -PWR 180671
+> [1]+  Power failure           /bin/sleep 50
+
+All the possible surprises with the SIGINFO =3D=3D SIGPWR approach we might
+get stem from here, not from the sigpwr.target.
+
+> > Where I saw the last conversation falter was in making a persuasive
+> > case of why SIGINFO was interesting to add.  Given a world of ssh
+> > connections I expect a persuasive case can be made.  Especially if there
+> > are a handful of utilities where it is already implemented that just
+> > need to be built with SIGINFO defined.
+>=20
+> One thing that's perhaps worth disentangling is the value of
+> supporting VSTATUS --- which is a control character much like VINTR
+> (^C) or VQUIT (control backslash) which is set via the c_cc[] array in
+> termios structure.  Quoting from the termios man page:
+>=20
+>        VSTATUS
+>               (not in POSIX; not supported under Linux; status
+>               request: 024, DC4, Ctrl-T).  Status character (STATUS).
+>               Display status information at terminal, including state
+>               of foreground process and amount of CPU time it has
+>               consumed.  Also sends a SIGINFO signal (not supported on
+>               Linux) to the foreground process group.
+>=20
+> The basic idea is that when you type C-t, you can find out information
+> about the currently running process.  This is a feature that
+> originally comes from TOPS-10's TENEX operating system, and it is
+> supported today on FreeBSD and Mac OS.  For example, it might display
+> something like this:
+>=20
+> load: 2.39  cmd: ping 5374 running 0.00u 0.00s
+>=20
+> The reason why SIGINFO is sent to the foreground process group is that
+> it gives the process an opportunity print application specific
+> information about currently running process.  For example, maybe the C
+> compiler could print something like "parsing 2042 of 5000 header
+> files", or some such.  :-)
+>=20
+> There are people who wish that Linux supported Control-T / VSTATUS,
+> for example, just last week, on TUHS, the Unix greybeards list, there
+> were two such heartfelt wishes for Control-T support from two such
+> greybeards:
+>=20
+>     "It's my biggest annoyance with Linux that it doesn't [support
+>     control-t]
+>     - https://minnie.tuhs.org/pipermail/tuhs/2021-December/024849.html
+>=20
+>     "I personally can't stand using Linux, even casually for a very
+>      short sys-admin task, because of this missing feature"
+>     - https://minnie.tuhs.org/pipermail/tuhs/2021-December/024898.html
+>=20
+> I claim, though, that we could implement VSTATUS without implenting
+> the SIGINFO part of the feature.  Previous few applications *ever*
+> implemented SIGINFO signal handlers so they could give status
+> information, it's the hard one, since we don't have any spare signals
+> left.  If we were to repurpose some lesser used signal, whether it be
+> SIGPWR, SIGLOST, or SIGSTKFLT, the danger is that there might be some
+> userspace program (such as a UPS monitoring program which wants to
+> trigger power fail handling, or a userspace NFSv4 process that wants
+> to signal that it was unable to recover a file's file lock after a
+> server reboot), and if we try to take over the signal assignment, it's
+> possible that we might get surprised.  Furthermore, all of the
+> possibly unused signals that we might try to reclaim terminate the
+> process by default, and SIGINFO *has* to have a default signal
+> handling action of Ignore, since otherwise typing Control-T will end
+> up killing the current foreground application.
+>=20
+> Personally, I don't care all that much about VSTATUS support --- I
+> used it when I was in university, but honestly, I've never missed it.
+> But if there is someone who wants to try to implement VSTATUS, and
+> make some Unix greybeards happy, and maybe even switch from FreeBSD to
+> Linux as a result, go wild.  I'm not convinced, though, that adding
+> the SIGINFO part of the support is worth the effort.
+>=20
+> Not only do almost no programs implement SIGINFO support, a lot of CPU
+
+To be fair, many programs are a lot younger than 4.3BSD, and with the
+current ubiquity of Linux without VSTATUS, it's kind of a chicken-egg
+problem. :)
+
+> bound programs where this might be actually useful, end up running a
+> large number of processes in parallel.  Take the "parsing 2042 of 5000
+> header files" example I gave above.  Consider what would happen if gcc
+> implemented support for SIGINFO, but the user was running a "make -j
+> 16" and typed Control-T.   The result would be chaos!
+>=20
+> So if you really miss Control-T, and it's the only thing holding back
+> a few FreeBSD users from Linux, I don't see the problem with
+> implementing that part of the feature.  Why not just do the easy part
+> of the feature which is perhaps 5% of the work, and might provide 99%
+> of the benefit (at least for those people who care).
+>=20
+> > Without seeing the persuasive case for more signals I have to say that
+> > adding more signals to the kernel sounds like a bad idea.
+>=20
+> Concur, 100%.
+>=20
+> 						- Ted
+
+--qWnueR4sTyTaRsaN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE56JD3UKTLEu/ddrm9dQjyAYL01AFAmHYkkIACgkQ9dQjyAYL
+01CKqw//fRo598+oG7eu1P/GUZQ6vFoTL0kGRWMTenBGAe6d/mxq+VqE65I7oxSp
+WuoYr65MDc+0jQxkykcyJonrsLORM1VYyceFSWc8oIaeoLz6Hota5v2mqSZoVouO
+shRoPTDm/FfaHd9QEz8goK87gv3SRz/3yzcZMt+Ezt8/5MAry1Hej17EsWeWK+DL
+25AgQpnZiqalF/99rUMTxGRoZh2oAE6oUMaaCMj6rgWM/wWgGTiL89gFbz96DVVf
+ZRxTVR4/wkU+xGKHu8g9rskEJMPiP96CdQ42ApxgIqGCZHLq5g6TsrS1vB9Kym5Z
+tZJettnHQke4IQ8F28i7429Ya7LJuBhc9K27YqoPaRnqbkpH0ULkRR0vHRGMapTr
+tVlWaRKrgfOBpo0Ozyd8sMYgwatbO/9avkv4Al/+RDaBYDvkbscL0yidy3d8mFPO
+6dzpeuDFlAMX9rZWMd+cGm/GG2VBv6VbKQuFbzY59cfxoXHkQB3RvJCEiE1oZUPk
+tPT5hqzF525Sfy9VqnjW9/9lDfl5/n6Ip6uI+3vWiPfFypmmuDHQAH5D5wA5hGJg
+615nXgANcr/YxxQ+Tq6ErKbnx+8GzQVinkhMgGuzVpaU5hfnDZ3xOQ1oitTKoTBl
+9zNo2aZN1OSddJtCpq0PROCGQOLNnZ45TqEAbWEuDn24fypRBjE=
+=ut2q
+-----END PGP SIGNATURE-----
+
+--qWnueR4sTyTaRsaN--
