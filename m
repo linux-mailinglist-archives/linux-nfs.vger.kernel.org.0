@@ -2,77 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C339487672
-	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 12:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D87F487798
+	for <lists+linux-nfs@lfdr.de>; Fri,  7 Jan 2022 13:26:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347091AbiAGLZo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 7 Jan 2022 06:25:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:26245 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1347092AbiAGLZm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jan 2022 06:25:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641554741;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LihP/f7kkQcoH5EB358WZj2ActRS2QGX7JqNWfqK9rU=;
-        b=gFvKGa1wWIPYVY+Frs5OfyVJxbZzmB3ATD13/EuvOAiFFafKl1AfK946JVFd1zwa5OPAtj
-        fbLK/terXisLsMuLBD2G3Zudyxz6daLbIx29vbsFnA9yjntGE8S+uEsRCqI1xZLQeChNIF
-        RhFw0UpnYPeZTJo/NZ8JfOFhyPBHvxg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-25-ujFKLBTZNaCuaYSpYvGkxQ-1; Fri, 07 Jan 2022 06:25:33 -0500
-X-MC-Unique: ujFKLBTZNaCuaYSpYvGkxQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C3041800D50;
-        Fri,  7 Jan 2022 11:25:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C1DF02A189;
-        Fri,  7 Jan 2022 11:25:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <94b5163b0652c6106aa01a0f4c03bdf57c0a7e71.camel@kernel.org>
-References: <94b5163b0652c6106aa01a0f4c03bdf57c0a7e71.camel@kernel.org> <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk> <164021552299.640689.10578652796777392062.stgit@warthog.procyon.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 46/68] cachefiles: Mark a backing file in use with an inode flag
+        id S231148AbiAGM0q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 7 Jan 2022 07:26:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45154 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231397AbiAGM0q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 7 Jan 2022 07:26:46 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FFA1C061212
+        for <linux-nfs@vger.kernel.org>; Fri,  7 Jan 2022 04:26:45 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id z9so21433250edm.10
+        for <linux-nfs@vger.kernel.org>; Fri, 07 Jan 2022 04:26:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=jsU3SSUo8r6yYxjmEqMQ9dwixM8I3+71bek2ZCdoTT0=;
+        b=dtiNIYWpPJDH9HhhAXH8XwVI7D3XKfJohUMwuPkKejNhDK3CtuJZF2O6lSZW7qOTXT
+         ZG7FhZL1JTHyFrYXEDd+P4yFwPpkOILruIs8qiA3c+GPaPJJ8dblLs0YK4hsCQ1ER7qx
+         eethBdnOdX+OBOsOS9KBYxQ61KK3NWkROLLKosePh0mfUOSf96pd3GDjhWnbKHl07MeT
+         jC6PXu6oojYZ9SSI6hB8Zj0HCuD3e8nCFRmBmrMu7oe1gUCw1x90zU2xOpV7uYvw1QSP
+         IZaSJD+eMR4Ed514AFWXHWa7kdBpoKTd1Q/dHKjr8fO+y08OT8CidY8ZsVIHqbLcO9eb
+         wsrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=jsU3SSUo8r6yYxjmEqMQ9dwixM8I3+71bek2ZCdoTT0=;
+        b=1BKZBNzW5HWZ7eYadr36uDbIyLLH3+YahTUTcIQKpajll7fNAgzpuOycKRo0t3F81i
+         QWLgSatT75axJwqXNtwanw4NBtpAbvxdWd7B2mQLMSW4GHk7ih5OzwI8DoOv2yrvCIwJ
+         mowJzisaDQgdsTEBnSALiAruL6Id72wcGdviDNiwAZAexxt5qUJq6sCehRzweJdrV1nh
+         sryEDUk+Ud2Yp/KnaIkCcdp/a5sK1kCn06dnjuWhMdYVdoHKTM8KP6CMFeLFib9KweLX
+         iHicrV98zXWPQA6kukpIpnNXnC7JD7eYsj5rLU7lgERbxeSsGc1Sd18epWx/4hkY0esa
+         cHjw==
+X-Gm-Message-State: AOAM5301dudxSbNSsSnIfIN2QCty71iyGDz1fKjor+bYorVCW1ifJnyz
+        ciUcz7qCicOTBsq3intdp4MpH189Ed8kq3NqJuZD2iP+1bzp7TDU
+X-Google-Smtp-Source: ABdhPJxl+MxtQXRXOKLItEDuvVr8uLPocDE52yQM/6SlEfFiHmV9Hfh+3BpYWEbq+Z6X/X4ME7JuECpvejVnxoU8+Og=
+X-Received: by 2002:a17:907:9809:: with SMTP id ji9mr41700314ejc.539.1641558403728;
+ Fri, 07 Jan 2022 04:26:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3149601.1641554716.1@warthog.procyon.org.uk>
-Date:   Fri, 07 Jan 2022 11:25:16 +0000
-Message-ID: <3149602.1641554716@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+From:   Daire Byrne <daire@dneg.com>
+Date:   Fri, 7 Jan 2022 12:26:07 +0000
+Message-ID: <CAPt2mGNF=iZkXGa93yjKQG5EsvUucun1TMhN5zM-6Gp07Bni2g@mail.gmail.com>
+Subject: nconnect & repeating BIND_CONN_TO_SESSION?
+To:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Jeff Layton <jlayton@kernel.org> wrote:
+Hi,
 
-> Probably, this patch should be merged with #38. The commit logs are the
-> same, and they are at least somewhat related.
+I have been playing around with NFSv4.2 over very high latency
+networks (200ms - nocto,actimeo=3600,nconnect) and I noticed that
+lookups were much slower than expected.
 
-That's not so simple, unfortunately.  Patch 46 requires bits of patches 43 and
-45 in addition to patch 38 and patch 39 depends on patch 38.
+Looking at a normal stat, at first with simple workloads, I see the
+expected LOOKUP/ACCESS pairs for each directory and file in a path.
+But after some period of time and with extra load on the client host
+(I am also re-exporting these mounts but I don't think that's
+relevant), I start to see a BIND_CONN_TO_SESSION call for every
+nconnect connection before every LOOKUP & ACCESS. In the case of a
+high latency network, these extra roundtrips kill performance.
 
-David
+I am using nconnect because it has some clear performance benefits
+when doing sequential reads and writes over high latency connections.
+If I use nconnect=16 then I end up with an extra 16
+BIND_CONN_TO_SESSION roundtrips before every operation. And once it
+gets into this state, there seems to be no way to stop it.
 
+Now this client is actually mounting ~22 servers all with nconnect and
+if I reduce the nconnect for all of them to "8" then I am less likely
+to see these repeating BIND_CONN_TO_SESSION calls (although I still
+see some). If I reduce the nconnect for each mount to 4, then I don't
+see the BIND_CONN_TO_SESSION appear (yet) with our workloads. So I'm
+wondering if there is some limit like the number of client mounts of
+unique server (22) times the total number of TCP connections to each?
+So in this case 22 servers x nconnect=8 = 176 client connections.
+
+Or are there some sequence errors that trigger a BIND_CONN_TO_SESSION
+and increasing the number of nconnect threads increases the chances of
+triggering it? The remote servers are a mix of RHEL7 and RHEL8 and
+seem to show the same behaviour.
+
+I tried watching the rpcdebug stream but I'll admit I wasn't really
+sure what to look for. I see the same thing on a bunch of recent
+kernels (I've only tested from 5.12 upwards). This has probably been
+happening for our workloads for quite some time but it's only when the
+latency became so large that I noticed all these extra round trips.
+
+Any pointers as to why this might be happening?
+
+Cheers,
+
+Daire
