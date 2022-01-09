@@ -2,177 +2,106 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 363A9488A2F
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 16:27:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0439488BA0
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 19:26:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234198AbiAIP1e (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jan 2022 10:27:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234160AbiAIP1b (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 10:27:31 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64ED9C06173F;
-        Sun,  9 Jan 2022 07:27:31 -0800 (PST)
+        id S234400AbiAIS0z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Jan 2022 13:26:55 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:40666 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229544AbiAIS0z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 13:26:55 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C4A0B80C72;
-        Sun,  9 Jan 2022 15:27:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EEB8C36AED;
-        Sun,  9 Jan 2022 15:27:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1641742048;
-        bh=3b6/4NoAXJJWUq2gsg5iKUmGqebtBOvDSo33LeKf8cI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=a1hj3BUPWWcC7naVx2AqX6O5K4Bl3I+t2LBa9cQpCeBaYAyBwaQn/PS+HGCeidy8q
-         V59tCbLL4SVGkupihAebTzDinf84wfBOUo5fKOH7h3X5A0HUfBNkBat2GC2klEJeJY
-         z+IrlZGIg9r8ZNjuzIUxUmJMEv6GlWlOIoflShkFfNhrr3x3ss7+217Fc1LcujWwRm
-         7pL1r7FXe40v8cxvGgS62Sd7KvDKkZkLRU+AyfWhS4/bR++UNpoDXsTk0iczsBxVVz
-         WuIg7JKBR2T5fTONlCI3jYhT3vWzHFWf9ioixoaAQwvW7eDBJGFhPbJuSq/hJfW7C+
-         gd+Ip0LdKRERQ==
-Message-ID: <6e44856a8711bf1eb95c16de9efdb1bb108cf25c.camel@kernel.org>
-Subject: Re: [PATCH v4 63/68] cifs: Support fscache indexing rewrite
- (untested)
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
-        Steve French <sfrench@samba.org>
-Cc:     Shyam Prasad N <nspmangalore@gmail.com>,
-        linux-cifs@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Sun, 09 Jan 2022 10:27:25 -0500
-In-Reply-To: <3419813.1641592362@warthog.procyon.org.uk>
-References: <164021579335.640689.2681324337038770579.stgit@warthog.procyon.org.uk>
-         <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
-         <3419813.1641592362@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.2 (3.42.2-1.fc35) 
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6C269B80D99
+        for <linux-nfs@vger.kernel.org>; Sun,  9 Jan 2022 18:26:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D865CC36AE3;
+        Sun,  9 Jan 2022 18:26:52 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     rostedt@goodmis.org
+Subject: [PATCH v1] SUNRPC: Fix sockaddr handling in the svc_xprt_create_error trace point
+Date:   Sun,  9 Jan 2022 13:26:51 -0500
+Message-Id:  <164175281165.5206.17055902557192579968.stgit@morisot.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2850; h=from:subject:message-id; bh=XbxrKGdmuQ3Owdpcy4NQJb05NYBDRwIULWABV9MajLA=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh2yjrCpqH8inEYzmN2Azku7qcsUVoajGrjMtn6Yv9 AG8mRUuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYdso6wAKCRAzarMzb2Z/l6XxD/ 4s3hbNKp6Vo1BjyQBi/RiOOTTum+vrqoloski6IJ7of6WEMGQgPgG+L4Lk7z20bx5L9mNWxGaS1lly XISxvZyXhKnmVJO27jzggpL4jK11c7Cpdo2FIfH01As2xJzWVOb2uzHNGZZWVmN1/RH5x5gS1VvIgv OCKTwBMQ6MNtZxooUEQbOOYUw6oHbwk7t6zbhUy+O4dj/tOjjnfcEgCuSD/Y0WpmxN6etIKOs31/Bk yWy2RHtSDlEW7frJV4FSqxLWdpCKoCWyvDE88k7jl0V1z+072MYXvpbRcZB6ICBTL5/DL262f5s3iK 1ZPrKZWjKrVPMpbA80Y1Bo9ElGbCGJF3vEZLVfEj1mG/bNt+uJbPdxB7fHyEWmJRe0v34zlwzceBXU G4V4gtBi0f/Q0GlFXjAFraB2FxFL3p0Wn0wuk9cWsTqlNwAxG+tTQcXqnHvl1sxpcs6tCkwF+UHin4 fbQ1unI4dJlCfM0ZAQ5BspDrTISSuO0GIL6o1iIGA9aOU+r8m4GlDlMefoz6Xt/vtNr/gax8AtGhMV 9bsQr7pHVRQyzW9hXa18GpU6Hzs5oW1KTgObaLnHvBEGyuvZ9tVjntuyxzhjS2q5zuLukz2pcPBpv/ wk43SAuZn6d0OBqw8K6Z8KYaYAe/1aNAPByQB9gXAMEo082pZMn8OkPAZESw==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-01-07 at 21:52 +0000, David Howells wrote:
-> This patch isn't quite right and needs a fix.  The attached patch fixes it.
-> I'll fold that in and post a v5 of this patch.
-> 
-> David
-> ---
-> cifs: Fix the fscache cookie management
-> 
-> Fix the fscache cookie management in cifs in the following ways:
-> 
->  (1) The cookie should be released in cifs_evict_inode() after it has been
->      unused from being pinned by cifs_set_page_dirty().
-> 
->  (2) The cookie shouldn't be released in cifsFileInfo_put_final().  That's
->      dealing with closing a file, not getting rid of an inode.  The cookie
->      needs to persist beyond the last file close because writepages may
->      happen after closure.
-> 
->  (3) The cookie needs to be used in cifs_atomic_open() to match
->      cifs_open().  As yet unknown files being opened for writing seem to go
->      by the former route rather than the latter.
-> 
-> This can be triggered by something like:
-> 
->         # systemctl start cachefilesd
->         # mount //carina/test /xfstest.test -o user=shares,pass=xxxx.fsc
->         # bash 5</xfstest.test/bar
->         # echo hello >/xfstest.test/bar
-> 
-> The key is to open the file R/O and then open it R/W and write to it whilst
-> it's still open for R/O.  A cookie isn't acquired if it's just opened R/W
-> as it goes through the atomic_open method rather than the open method.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> ---
->  fs/cifs/cifsfs.c |    8 ++++++++
->  fs/cifs/dir.c    |    4 ++++
->  fs/cifs/file.c   |    2 --
->  3 files changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/cifs/cifsfs.c b/fs/cifs/cifsfs.c
-> index d3f3acf340f1..26cf2193c9a2 100644
-> --- a/fs/cifs/cifsfs.c
-> +++ b/fs/cifs/cifsfs.c
-> @@ -398,6 +398,7 @@ cifs_evict_inode(struct inode *inode)
->  	truncate_inode_pages_final(&inode->i_data);
->  	if (inode->i_state & I_PINNING_FSCACHE_WB)
->  		cifs_fscache_unuse_inode_cookie(inode, true);
-> +	cifs_fscache_release_inode_cookie(inode);
->  	clear_inode(inode);
->  }
->  
-> @@ -722,6 +723,12 @@ static int cifs_show_stats(struct seq_file *s, struct dentry *root)
->  }
->  #endif
->  
-> +static int cifs_write_inode(struct inode *inode, struct writeback_control *wbc)
-> +{
-> +	fscache_unpin_writeback(wbc, cifs_inode_cookie(inode));
-> +	return 0;
-> +}
-> +
->  static int cifs_drop_inode(struct inode *inode)
->  {
->  	struct cifs_sb_info *cifs_sb = CIFS_SB(inode->i_sb);
-> @@ -734,6 +741,7 @@ static int cifs_drop_inode(struct inode *inode)
->  static const struct super_operations cifs_super_ops = {
->  	.statfs = cifs_statfs,
->  	.alloc_inode = cifs_alloc_inode,
-> +	.write_inode	= cifs_write_inode,
->  	.free_inode = cifs_free_inode,
->  	.drop_inode	= cifs_drop_inode,
->  	.evict_inode	= cifs_evict_inode,
-> diff --git a/fs/cifs/dir.c b/fs/cifs/dir.c
-> index 6e8e7cc26ae2..6186824b366e 100644
-> --- a/fs/cifs/dir.c
-> +++ b/fs/cifs/dir.c
-> @@ -22,6 +22,7 @@
->  #include "cifs_unicode.h"
->  #include "fs_context.h"
->  #include "cifs_ioctl.h"
-> +#include "fscache.h"
->  
->  static void
->  renew_parental_timestamps(struct dentry *direntry)
-> @@ -509,6 +510,9 @@ cifs_atomic_open(struct inode *inode, struct dentry *direntry,
->  		rc = -ENOMEM;
->  	}
->  
-> +	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
-> +			   file->f_mode & FMODE_WRITE);
-> +
->  out:
->  	cifs_put_tlink(tlink);
->  out_free_xid:
-> diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-> index d872f6fe8e7d..44da7646f789 100644
-> --- a/fs/cifs/file.c
-> +++ b/fs/cifs/file.c
-> @@ -376,8 +376,6 @@ static void cifsFileInfo_put_final(struct cifsFileInfo *cifs_file)
->  	struct cifsLockInfo *li, *tmp;
->  	struct super_block *sb = inode->i_sb;
->  
-> -	cifs_fscache_release_inode_cookie(inode);
-> -
->  	/*
->  	 * Delete any outstanding lock records. We'll lose them when the file
->  	 * is closed anyway.
-> 
+While testing, I got an unexpected KASAN splat:
 
-Looks good.
+Jan 08 13:50:27 oracle-102.nfsv4.dev kernel: BUG: KASAN: stack-out-of-bounds in trace_event_raw_event_svc_xprt_create_err+0x190/0x210 [sunrpc]
+Jan 08 13:50:27 oracle-102.nfsv4.dev kernel: Read of size 28 at addr ffffc9000008f728 by task mount.nfs/4628
 
-Acked-by: Jeff Layton <jlayton@kernel.org>
+The memcpy() in the TP_fast_assign section copies the size of the
+destination buffer in order that the buffer won't be overrun. In
+many other trace points, the source buffer is a "struct
+sockaddr_storage" so the actual length of the source buffer is
+always long enough to prevent reading from uninitialized or
+unallocated memory.
+
+However, for this trace point, the source buffer can be as small as
+a "struct sockaddr_in". For AF_INET sockaddrs, the memcpy() reads
+memory that follows source buffer, which is not always valid memory.
+
+To avoid copying past the end of the passed-in sockaddr, make the
+source address's length available to the memcpy(). It would be a
+little nicer if the tracing infrastructure was more friendly about
+storing socket addresses that are not AF_INET, but I could not find
+a way to make "%pIS" work with a dynamic array.
+
+Reported-by: KASAN
+Fixes: 4b8f380e46e4 ("SUNRPC: Tracepoint to record errors in svc_xpo_create()")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/sunrpc.h |    5 +++--
+ net/sunrpc/svc_xprt.c         |    2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index 3a99358c262b..dd4cfd117844 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1744,10 +1744,11 @@ TRACE_EVENT(svc_xprt_create_err,
+ 		const char *program,
+ 		const char *protocol,
+ 		struct sockaddr *sap,
++		size_t saplen,
+ 		const struct svc_xprt *xprt
+ 	),
+ 
+-	TP_ARGS(program, protocol, sap, xprt),
++	TP_ARGS(program, protocol, sap, saplen, xprt),
+ 
+ 	TP_STRUCT__entry(
+ 		__field(long, error)
+@@ -1760,7 +1761,7 @@ TRACE_EVENT(svc_xprt_create_err,
+ 		__entry->error = PTR_ERR(xprt);
+ 		__assign_str(program, program);
+ 		__assign_str(protocol, protocol);
+-		memcpy(__entry->addr, sap, sizeof(__entry->addr));
++		memcpy(__entry->addr, sap, min(saplen, sizeof(__entry->addr)));
+ 	),
+ 
+ 	TP_printk("addr=%pISpc program=%s protocol=%s error=%ld",
+diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
+index 1e99ba1b9d72..008f1b05a7a9 100644
+--- a/net/sunrpc/svc_xprt.c
++++ b/net/sunrpc/svc_xprt.c
+@@ -243,7 +243,7 @@ static struct svc_xprt *__svc_xpo_create(struct svc_xprt_class *xcl,
+ 	xprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
+ 	if (IS_ERR(xprt))
+ 		trace_svc_xprt_create_err(serv->sv_program->pg_name,
+-					  xcl->xcl_name, sap, xprt);
++					  xcl->xcl_name, sap, len, xprt);
+ 	return xprt;
+ }
+ 
+
