@@ -2,56 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AE88D4887A7
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 05:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E751488836
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 07:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235154AbiAIEue (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 8 Jan 2022 23:50:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40254 "EHLO
+        id S235203AbiAIGWA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Jan 2022 01:22:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235151AbiAIEue (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 8 Jan 2022 23:50:34 -0500
-Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF1C5C061746
-        for <linux-nfs@vger.kernel.org>; Sat,  8 Jan 2022 20:50:33 -0800 (PST)
-Received: by mail-yb1-xb2f.google.com with SMTP id d1so29063113ybh.6
-        for <linux-nfs@vger.kernel.org>; Sat, 08 Jan 2022 20:50:33 -0800 (PST)
+        with ESMTP id S235199AbiAIGWA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 01:22:00 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05003C061401
+        for <linux-nfs@vger.kernel.org>; Sat,  8 Jan 2022 22:21:59 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id d1so29459820ybh.6
+        for <linux-nfs@vger.kernel.org>; Sat, 08 Jan 2022 22:21:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=sTZpxUej1WV035yAJtohiVvLExaKbKUenCSLiOyFQAA=;
-        b=aqRON71E4TpjVhVCmbsvwLBooQ5QVh+ZtuwD7CWK2QhGySXMwcaxQ/m/0djGwFwgov
-         A2tlufrTFIFL4g1bi+jMWgGDRzuMcsLH9iXozDUjBqa+wBI2xhlJXR7xoBV8oBkfdmgm
-         TVPPwrdvVCgcHHlQCrWf+RpmZnlPhZX23GLnAzxpubduArd/PB4qaNnO9w2ymktAMbru
-         BJjTOL7M8a2OKMOhsC+Xxp8TVVIYLIEAnhesXP9IPrPwu9nDM8v5KIk93F9vJ4WnUD3r
-         5kkDrCy1CrG9lBPP+qg0nUyOVRhTkRzfHFH75IF12oERYbixYM8C1KGKqRuq2EFn2smm
-         DVEA==
+        bh=7MHOoZalZ4yzdXRz8I2/T4uac/wUxMGeLB4SbnbuPrk=;
+        b=E0CjwfS0akiynM70MG+cOaaLmR+MLPa5cimWRH++WIDvhMf8SNXD6+Ce+k86NXuhHe
+         Bpjc/YIFX0whSU8iyb5UwnoIqPW0+KheS1Ta0solvIEE/OXwqcLbeSLi2ynZm6JX5uZK
+         r43biAwgdy2lKh9uqKPl+Wcpux/0SwkCI+ZaI8upAedJ2QX2Dg0VtaXtCsofOk7pSVoa
+         av18a9k08ZqjeCsmIAhlqZIPUz4wnApQ8DCMjG6jSeothuRUF9Hgn/rVvkyY8SnAOLIX
+         ZRaP8hTxlaH+RVc4hXGQGT3UVPHzAMIOs9v4HAr6wXJm35qWlalg3XFz21lJCLIoj4RW
+         VwmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=sTZpxUej1WV035yAJtohiVvLExaKbKUenCSLiOyFQAA=;
-        b=LvCoDqBTY4J6pV+UFLmQjvAa2jPJuPQuF/FsThZuu7VPIGP6u2PXEf9UqBQfdbniRb
-         okrbStxDmIvzbqvC5tWtaYrzl80pQofAAgJC/Nr9wdjc2Gei4rOhRpFd+uogZ0hI4xxq
-         I08d5WXiGzCxtCFewTvdjGIUknPmlfbiMs5IE0OlqoIX/CJubUne+E55rpVrwEcU7fWr
-         F9xWp90Zr7cWr542GISXAiU7TuCmboSI0CJ+MF7uCrJPc1U0IskiXV7TtomXwmdebh48
-         2maVZhrXzbFTz+VSJN/Y7r4pcAw/2jjwt4QBVuNbtCFwLK1GPEnwQFaOAGTzpBIZVSRm
-         fqYw==
-X-Gm-Message-State: AOAM532BKEUsZ4d/h3hk5RBptbLH2tGBW7Dej2UVcHBUftAsbgn1jV7S
-        3j9wMUpGkmfA+Ml+9If6jjQ2ciAgT3Qq8d9Y/qSxug==
-X-Google-Smtp-Source: ABdhPJyI2p9fJXUmNrwKfQpdp0yuDuQ3zFxLKcu1BudZqfd3OH5/4mKyOocVNopKghFkw/D4n0prPwhmuzIwcp7yHAE=
-X-Received: by 2002:a25:b97:: with SMTP id 145mr80561142ybl.132.1641703832755;
- Sat, 08 Jan 2022 20:50:32 -0800 (PST)
+        bh=7MHOoZalZ4yzdXRz8I2/T4uac/wUxMGeLB4SbnbuPrk=;
+        b=1zYrnFWjWE/Dhs3DiqaZ/yccC0Vm2YLdP9FimVwhy7DFspupzMhf8e1UPPE5MxpVBv
+         UTdMBQr6vk8RdUwSgIoW4mACb0h3HbfLwtHcMsU7FUlQxcmRLmwHTJ4bTC55/97qty9g
+         Vf5EcPNUdPNJIDcSaIt79eDj5m3WG69G2rRgq/6Na9Wq222t7nlrmxluUnHyi/jVDDIl
+         N2TfuoQfJ45jxWIyTa60bysMeCZnj0uSrtcBUr41yasOrl/t2ZnMBV7dxmH7VSzfjcoB
+         YCN/MRT0uIxGtWjMDmhLw84ICaQspyTydp9KGbO3zA2IdZsR2MfoyFIUYeCd+ncm6Kh/
+         AdKg==
+X-Gm-Message-State: AOAM5337jddSC07yNG+FV462OFK6J66JYhOKWZuNtvH7CeDUnX4620RL
+        7PYJns1kLNT32m5Fv3t1MzQAIT0Mt9hOKJQHTDxv7A==
+X-Google-Smtp-Source: ABdhPJyZ+bU4mbb0+w9+kdvDUEc5jYGIsxWWLUHnc0CSRRjhs5Oh0+esW/JLryFaRopClBiW67hA/1+sdioiJ76IOfs=
+X-Received: by 2002:a25:3890:: with SMTP id f138mr79980398yba.703.1641709318562;
+ Sat, 08 Jan 2022 22:21:58 -0800 (PST)
 MIME-Version: 1.0
 References: <20211220085649.8196-1-songmuchun@bytedance.com>
- <20211220085649.8196-2-songmuchun@bytedance.com> <YdeDym9IUghnagrK@carbon.dhcp.thefacebook.com>
-In-Reply-To: <YdeDym9IUghnagrK@carbon.dhcp.thefacebook.com>
+ <20211220085649.8196-3-songmuchun@bytedance.com> <Ydet1XmiY8SZPLUx@carbon.dhcp.thefacebook.com>
+In-Reply-To: <Ydet1XmiY8SZPLUx@carbon.dhcp.thefacebook.com>
 From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Sun, 9 Jan 2022 12:49:56 +0800
-Message-ID: <CAMZfGtV2G=R9nTuSYGAeqv+RkJsCVVACc3h47OeWA7n3mWbqsA@mail.gmail.com>
-Subject: Re: [PATCH v5 01/16] mm: list_lru: optimize memory consumption of
- arrays of per cgroup lists
+Date:   Sun, 9 Jan 2022 14:21:22 +0800
+Message-ID: <CAMZfGtWmwTLHdO6acx9_+nR68j-v9SKjMsq-0v4ZDeQORgaQ=w@mail.gmail.com>
+Subject: Re: [PATCH v5 02/16] mm: introduce kmem_cache_alloc_lru
 To:     Roman Gushchin <guro@fb.com>
 Cc:     Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -71,100 +70,44 @@ Cc:     Matthew Wilcox <willy@infradead.org>,
         linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
         Xiongchun duan <duanxiongchun@bytedance.com>,
         Fam Zheng <fam.zheng@bytedance.com>,
-        Muchun Song <smuchun@gmail.com>
+        Muchun Song <smuchun@gmail.com>,
+        Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Vlastimil Babka <vbabka@suse.cz>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 7, 2022 at 8:05 AM Roman Gushchin <guro@fb.com> wrote:
+On Fri, Jan 7, 2022 at 11:05 AM Roman Gushchin <guro@fb.com> wrote:
 >
-> On Mon, Dec 20, 2021 at 04:56:34PM +0800, Muchun Song wrote:
-> > The list_lru uses an array (list_lru_memcg->lru) to store pointers
-> > which point to the list_lru_one. And the array is per memcg per node.
-> > Therefore, the size of the arrays will be 10K * number_of_node * 8 (
-> > a pointer size on 64 bits system) when we run 10k containers in the
-> > system. The memory consumption of the arrays becomes significant. The
-> > more numa node, the more memory it consumes.
+[...]
+> >  /*
+> >   * struct kmem_cache related prototypes
+> > @@ -425,6 +426,8 @@ static __always_inline unsigned int __kmalloc_index(size_t size,
 > >
-> > I have done a simple test, which creates 10K memcg and mount point
-> > each in a two-node system. The memory consumption of the list_lru
-> > will be 24464MB. After converting the array from per memcg per node
-> > to per memcg, the memory consumption is going to be 21957MB. It is
-> > reduces by 2.5GB. In our AMD servers with 8 numa nodes in those
-> > sysuem, the memory consumption could be more significant. The savings
-> > come from the list_lru_one heads, that it also simplifies the
-> > alloc/dealloc path.
-> >
-> > The new scheme looks like the following.
-> >
-> >   +----------+   mlrus   +----------------+   mlru   +----------------------+
-> >   | list_lru +---------->| list_lru_memcg +--------->|  list_lru_per_memcg  |
-> >   +----------+           +----------------+          +----------------------+
-> >                                                      |  list_lru_per_memcg  |
-> >                                                      +----------------------+
-> >                                                      |          ...         |
-> >                           +--------------+   node    +----------------------+
-> >                           | list_lru_one |<----------+  list_lru_per_memcg  |
-> >                           +--------------+           +----------------------+
-> >                           | list_lru_one |
-> >                           +--------------+
-> >                           |      ...     |
-> >                           +--------------+
-> >                           | list_lru_one |
-> >                           +--------------+
-> >
-> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> >  void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
+> >  void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
+> > +void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+> > +                        gfp_t gfpflags) __assume_slab_alignment __malloc;
 >
-> As much as I like the code changes (there is indeed a significant simplification!),
-> I don't like the commit message and title, because I wasn't able to understand
-> what the patch is doing and some parts look simply questionable. Overall it
-> sounds like you reduce the number of list_lru_one structures, which is not true.
+> I'm not a big fan of this patch: I don't see why preparing the lru
+> infrastructure has to be integrated that deep into the slab code.
 >
-> How about something like this?
->
-> --
-> mm: list_lru: transpose the array of per-node per-memcg lru lists
->
-> The current scheme of maintaining per-node per-memcg lru lists looks like:
->   struct list_lru {
->     struct list_lru_node *node;           (for each node)
->       struct list_lru_memcg *memcg_lrus;
->         struct list_lru_one *lru[];       (for each memcg)
+> Why can't kmem_cache_alloc_lru() be a simple wrapper like (pseudo-code):
+>   void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+>                            gfp_t gfpflags) {
+>         if (necessarily)
+>            prepare_lru_infra();
+>         return kmem_cache_alloc();
 >   }
->
-> By effectively transposing the two-dimension array of list_lru_one's structures
-> (per-node per-memcg => per-memcg per-node) it's possible to save some memory
-> and simplify alloc/dealloc paths. The new scheme looks like:
->   struct list_lru {
->     struct list_lru_memcg *mlrus;
->       struct list_lru_per_memcg *mlru[];  (for each memcg)
->         struct list_lru_one node[0];      (for each node)
->   }
->
-> Memory savings are coming from having fewer list_lru_memcg structures, which
-> contain an extra struct rcu_head to handle the destruction process.
 
-My bad English. Actually, the saving is coming from not only 'struct rcu_head'
-but also some pointer arrays used to store the pointer to 'struct list_lru_one'.
-The array is per node and its size is 8 (a pointer) * num_memcgs. So the total
-size of the arrays is  8 * num_nodes * memcg_nr_cache_ids. After this patch,
-the size becomes 8 * memcg_nr_cache_ids. So the saving is
+Hi Roman,
 
-   8 * (num_nodes - 1) * memcg_nr_cache_ids.
+Actually, it can. But there is going to be some redundant code similar
+like memcg_slab_pre_alloc_hook() does to detect the necessity of
+prepare_lru_infra() in the new scheme of kmem_cache_alloc_lru().
+I just want to reduce the redundant overhead.
 
-> --
->
-> But what worries me is that memory savings numbers you posted don't do up.
-> In theory we can save
-> 16 (size of struct rcu_head) * 10000 (number of cgroups) * 2 (number of numa nodes) = 320k
-> per slab cache. Did you have a ton of mount points? Otherwise I don't understand
-> where these 2.5Gb are coming from.
-
-memcg_nr_cache_ids is 12286 when creating 10k memcgs. So the saving
-of arrays of one list_lru is 8 * 1 (number of numa nodes - 1) * 12286 = 96k.
-There will be 2 * 10k list_lru when mounting 10k points. So the total
-saving is 96k * 2 * 10k = 1920 M.
-
-Thanks Roman.
+Thanks.
