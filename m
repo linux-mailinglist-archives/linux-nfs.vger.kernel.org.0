@@ -2,106 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F0439488BA0
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 19:26:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39002488CC3
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 22:59:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234400AbiAIS0z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jan 2022 13:26:55 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:40666 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229544AbiAIS0z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 13:26:55 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S234647AbiAIV7D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Jan 2022 16:59:03 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:47472 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234756AbiAIV7C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 16:59:02 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6C269B80D99
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jan 2022 18:26:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D865CC36AE3;
-        Sun,  9 Jan 2022 18:26:52 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     rostedt@goodmis.org
-Subject: [PATCH v1] SUNRPC: Fix sockaddr handling in the svc_xprt_create_error trace point
-Date:   Sun,  9 Jan 2022 13:26:51 -0500
-Message-Id:  <164175281165.5206.17055902557192579968.stgit@morisot.1015granger.net>
-X-Mailer: git-send-email 2.34.0
-User-Agent: StGit/1.4
-MIME-Version: 1.0
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 2FFF51F396;
+        Sun,  9 Jan 2022 21:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1641765541; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=99UIg0rRVsByfRiE9jJXgOCzoMPPZU7FxCfsVahoP/c=;
+        b=pNNg2jz5JIIZ9vbCBcqly/bGm0D/VaamWG2bSSdB3rhEbkpKhzSMiwdzYgpSUr1lY4cjn3
+        tWFChaFEbLk3rf6MoO/qIUtRkqnOFiPLhGljBnwi29LBK1Rpki7nA2lpKpPS7gaPEaxkKi
+        SY66Ezut42yagSsH6ch5dZUkovVcR7c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1641765541;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=99UIg0rRVsByfRiE9jJXgOCzoMPPZU7FxCfsVahoP/c=;
+        b=gsZUfx0VtolJAjnyU1iuq5ZaDNtPu4NIXm8vvwsuXxOzrB/7Jo8d3Ey2ft7QY6drEP2bjy
+        gxKnMXDLrHi5ZSBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7074713316;
+        Sun,  9 Jan 2022 21:58:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 0JrzCaNa22FLYwAAMHmgww
+        (envelope-from <neilb@suse.de>); Sun, 09 Jan 2022 21:58:59 +0000
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2850; h=from:subject:message-id; bh=XbxrKGdmuQ3Owdpcy4NQJb05NYBDRwIULWABV9MajLA=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh2yjrCpqH8inEYzmN2Azku7qcsUVoajGrjMtn6Yv9 AG8mRUuJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYdso6wAKCRAzarMzb2Z/l6XxD/ 4s3hbNKp6Vo1BjyQBi/RiOOTTum+vrqoloski6IJ7of6WEMGQgPgG+L4Lk7z20bx5L9mNWxGaS1lly XISxvZyXhKnmVJO27jzggpL4jK11c7Cpdo2FIfH01As2xJzWVOb2uzHNGZZWVmN1/RH5x5gS1VvIgv OCKTwBMQ6MNtZxooUEQbOOYUw6oHbwk7t6zbhUy+O4dj/tOjjnfcEgCuSD/Y0WpmxN6etIKOs31/Bk yWy2RHtSDlEW7frJV4FSqxLWdpCKoCWyvDE88k7jl0V1z+072MYXvpbRcZB6ICBTL5/DL262f5s3iK 1ZPrKZWjKrVPMpbA80Y1Bo9ElGbCGJF3vEZLVfEj1mG/bNt+uJbPdxB7fHyEWmJRe0v34zlwzceBXU G4V4gtBi0f/Q0GlFXjAFraB2FxFL3p0Wn0wuk9cWsTqlNwAxG+tTQcXqnHvl1sxpcs6tCkwF+UHin4 fbQ1unI4dJlCfM0ZAQ5BspDrTISSuO0GIL6o1iIGA9aOU+r8m4GlDlMefoz6Xt/vtNr/gax8AtGhMV 9bsQr7pHVRQyzW9hXa18GpU6Hzs5oW1KTgObaLnHvBEGyuvZ9tVjntuyxzhjS2q5zuLukz2pcPBpv/ wk43SAuZn6d0OBqw8K6Z8KYaYAe/1aNAPByQB9gXAMEo082pZMn8OkPAZESw==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "'bfields@fieldses.org'" <bfields@fieldses.org>
+Cc:     "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>,
+        "'Trond Myklebust'" <trondmy@hammerspace.com>,
+        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>,
+        "'mbenjami@redhat.com'" <mbenjami@redhat.com>
+Subject: Re: client caching and locks
+In-reply-to: <20220105220353.GF25384@fieldses.org>
+References: <20201001214749.GK1496@fieldses.org>,
+ <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>,
+ <20201006172607.GA32640@fieldses.org>,
+ <164066831190.25899.16641224253864656420@noble.neil.brown.name>,
+ <20220103162041.GC21514@fieldses.org>, =?utf-8?q?=3COSZPR01MB7050F9737016E8?=
+ =?utf-8?q?E3F0FD5255EF4A9=40OSZPR01MB7050=2Ejpnprd01=2Eprod=2Eoutlook=2Ecom?=
+ =?utf-8?q?=3E=2C?=
+ <03e4cc01e9e66e523474c10846ee22147b78addf.camel@hammerspace.com>,
+ <20220104153205.GA7815@fieldses.org>,
+ <1257915fc5fd768e6c1c70fd3e8e3ed3fa1dc33e.camel@hammerspace.com>, 
+ =?utf-8?q?=3COSZPR01MB7050C5098D47514FFEC2DA82EF4B9=40OSZPR01MB7050=2Ejpnpr?=
+ =?utf-8?q?d01=2Eprod=2Eoutlook=2Ecom=3E=2C?=
+ <20220105220353.GF25384@fieldses.org>
+Date:   Mon, 10 Jan 2022 08:58:55 +1100
+Message-id: <164176553564.25899.8328729314072677083@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-While testing, I got an unexpected KASAN splat:
+On Thu, 06 Jan 2022, 'bfields@fieldses.org' wrote:
 
-Jan 08 13:50:27 oracle-102.nfsv4.dev kernel: BUG: KASAN: stack-out-of-bounds in trace_event_raw_event_svc_xprt_create_err+0x190/0x210 [sunrpc]
-Jan 08 13:50:27 oracle-102.nfsv4.dev kernel: Read of size 28 at addr ffffc9000008f728 by task mount.nfs/4628
+> +Locking can also provide cache consistency:
+>  .P
+> -NLM supports advisory file locks only.
+> -To lock NFS files, use
+> -.BR fcntl (2)
+> -with the F_GETLK and F_SETLK commands.
+> -The NFS client converts file locks obtained via
+> -.BR flock (2)
+> -to advisory locks.
+> +Before acquiring a file lock, the client revalidates its cached data for
+> +the file.  Before releasing a write lock, the client flushes to the
+> +server's stable storage any data in the locked range.
 
-The memcpy() in the TP_fast_assign section copies the size of the
-destination buffer in order that the buffer won't be overrun. In
-many other trace points, the source buffer is a "struct
-sockaddr_storage" so the actual length of the source buffer is
-always long enough to prevent reading from uninitialized or
-unallocated memory.
+Surely the client revalidates *after* acquiring the lock on the server. 
+Otherwise the revalidation has now value.
 
-However, for this trace point, the source buffer can be as small as
-a "struct sockaddr_in". For AF_INET sockaddrs, the memcpy() reads
-memory that follows source buffer, which is not always valid memory.
+>  .P
+> -When mounting servers that do not support the NLM protocol,
+> -or when mounting an NFS server through a firewall
+> -that blocks the NLM service port,
+> -specify the
+> -.B nolock
+> -mount option. NLM locking must be disabled with the
+> -.B nolock
+> -option when using NFS to mount
+> -.I /var
+> -because
+> -.I /var
+> -contains files used by the NLM implementation on Linux.
+> +A distributed application running on multiple NFS clients can take a
+> +read lock for each range that it reads and a write lock for each range that
+> +it writes.  On its own, however, that is insufficient to ensure that
+> +reads get up-to-date data.
+>  .P
+> -Specifying the
+> -.B nolock
+> -option may also be advised to improve the performance
+> -of a proprietary application which runs on a single client
+> -and uses file locks extensively.
+> +When revalidating caches, the client is unable to reliably determine the
+> +difference between changes made by other clients and changes it made
+> +itself.  Therefore, such an application would also need to prevent
+> +concurrent writes from multiple clients, either by taking whole-file
+> +locks on every write or by some other method.
 
-To avoid copying past the end of the passed-in sockaddr, make the
-source address's length available to the memcpy(). It would be a
-little nicer if the tracing infrastructure was more friendly about
-storing socket addresses that are not AF_INET, but I could not find
-a way to make "%pIS" work with a dynamic array.
+This looks like it is documenting a bug - I would much rather the bug be
+fixed.
 
-Reported-by: KASAN
-Fixes: 4b8f380e46e4 ("SUNRPC: Tracepoint to record errors in svc_xpo_create()")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/trace/events/sunrpc.h |    5 +++--
- net/sunrpc/svc_xprt.c         |    2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+If a client opens/reads/closes a file while no other client has the file
+open, then it *must* return current data.  Currently (according to
+reports) it does not reliably do this.
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index 3a99358c262b..dd4cfd117844 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1744,10 +1744,11 @@ TRACE_EVENT(svc_xprt_create_err,
- 		const char *program,
- 		const char *protocol,
- 		struct sockaddr *sap,
-+		size_t saplen,
- 		const struct svc_xprt *xprt
- 	),
- 
--	TP_ARGS(program, protocol, sap, xprt),
-+	TP_ARGS(program, protocol, sap, saplen, xprt),
- 
- 	TP_STRUCT__entry(
- 		__field(long, error)
-@@ -1760,7 +1761,7 @@ TRACE_EVENT(svc_xprt_create_err,
- 		__entry->error = PTR_ERR(xprt);
- 		__assign_str(program, program);
- 		__assign_str(protocol, protocol);
--		memcpy(__entry->addr, sap, sizeof(__entry->addr));
-+		memcpy(__entry->addr, sap, min(saplen, sizeof(__entry->addr)));
- 	),
- 
- 	TP_printk("addr=%pISpc program=%s protocol=%s error=%ld",
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 1e99ba1b9d72..008f1b05a7a9 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -243,7 +243,7 @@ static struct svc_xprt *__svc_xpo_create(struct svc_xprt_class *xcl,
- 	xprt = xcl->xcl_ops->xpo_create(serv, net, sap, len, flags);
- 	if (IS_ERR(xprt))
- 		trace_svc_xprt_create_err(serv->sv_program->pg_name,
--					  xcl->xcl_name, sap, xprt);
-+					  xcl->xcl_name, sap, len, xprt);
- 	return xprt;
- }
- 
+If a write from this client races with a write from another client
+(whether or not locking is used), the fact that fetching the change attr
+is not atomic w.r.t IO means that the client *cannot* trust any cached
+data after it has closed a file to which it wrote to - unless it had a
+delegation.
+Hmm.. that sounds a bit convoluted.
 
+1/ If a client opens a file for write but does not get a delegation, and
+   then writes to the file, then when it closes the file it *must*
+   invalidate any cached data as there could have been a concurrent
+   write from another client which is not visible in the changeid
+   information. CTO consistency rules allow the client to keep cached
+   data up to the close.
+2/ If a client opens a file for write and *does* get a delegation, then
+   providing it gets a changeid from the server after final write and
+   before returning the delegation, it can keep all cached data (until
+   the server reports a new changeid).
+
+Note that the inability to cache in '1' *should* *not* be a performance
+problem in practice.
+a/ if locking is used, cached data is not trusted anyway, so no loss
+b/ if locking is not used, then no concurrency is expected, so
+   delegations are to be expected, so case '1' doesn't apply.
+
+NeilBrown
