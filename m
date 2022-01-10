@@ -2,85 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D0935489816
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 12:53:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5050B489960
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 14:11:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245124AbiAJLxz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jan 2022 06:53:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
+        id S231473AbiAJNLr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jan 2022 08:11:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239775AbiAJLwc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 06:52:32 -0500
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0B6C061245
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 03:52:31 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id m4so10985164edb.10
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 03:52:31 -0800 (PST)
+        with ESMTP id S230460AbiAJNLq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 08:11:46 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1926CC06175B
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id v6so26606371wra.8
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 05:11:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oZjgw8dNYz+IuIPHh62asjXeqka/jIRSHm/Gv196S1g=;
-        b=UhgojjQSFhnWV3ovNC4gDPJbyTnVrEWFuk4ma8zoGEM8bzubBAjZitYdLTedzKjvfx
-         hJbmS+xF2yDXX5It1jRe5EtqBtjt8wB+RQhZPoHgVsZscgfa5gcFINtQVKFqHhZD5UOd
-         Lb3+MfyZwbxm23qpBb5iSQ0Atiwbnh14LYMgkKcSiBaKVj8d246xRmjkqMtZa1YPWrbM
-         ugACVcmSQu1V/0/ZUza3R97wmijkjczH6CRn8/IfPidkP/ZiDDCC2odttEmMhSCeTplq
-         4pEDr1uKeN7L2v0T4Ac5dvFNcolSJ6trLBx5+eHlmYL7dMq/ypso0ndcyVsK8TS7AIVd
-         QoJQ==
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=Bgie3w5lZXcUpEJsNUNnYT9D80sz6831OKMgWSWMpAMR4c04HQM1hwHkoZ1AqHgJ5M
+         pQJfhFBsNTGc+jfMsWTuSDXhNBe5XPwJ8/UQZKbYcWTDQ68Eu4MBBVsHf0V3Baa+27Pp
+         IUJW/950IUGNsTto2NnsTW49/Cy4Vf+KfgzDT0+KZ2gcb/QkEKg3LEIj8qPJpiII0Qbk
+         buE3CbPl0T8T6omQLXT3KYJBxN98pPIrfxDam1Qs0diPFN43pWVugWbd8LU8WaIGviK3
+         O/t/NLMKhR03EdE8rMi5c8T5epCw09Yzc4YmAU5QrO9ZaREbayNwAtpm1SWYSR1IiBuY
+         5w9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oZjgw8dNYz+IuIPHh62asjXeqka/jIRSHm/Gv196S1g=;
-        b=FtYzX6WerfzjExN2eUMuyJgmBvY/7KDinb7gtUMHUY+wNR29g9ASapabDBmciUddFW
-         jZ1FieFj9jY7gChZyGMb1WlMbH/eGm0be1VmXtH2KTTDdauGIlmAzM5ywEq8AtV3O0UV
-         Qnm9k+vOzQd7oSRAeW0i9h209MyYqGBWoC+1HTyvag+/Ap2sy3EjEkM687KeD3QQFFFP
-         4nYzTgYdhXi+nuy6twSXoKf3mGwkdd144itGUSk65Ylj8x4R2X+VozBNAT4elEO4q/vE
-         G8vlDzOsOXIxgE8C3NLBAWHLwNlWTC/NLohrgoN8nBC1E6PDQURG8qa00ex7u8xbjXYe
-         vdMg==
-X-Gm-Message-State: AOAM531Ssmko91PHkRj6IOVELDJPA33TC1hb+SKyp9GXeq4Nb+Eryh8q
-        z+63IHCnuIGRZi5KBqVBGwy1XAmTr5ZvuF6+W7ULcA==
-X-Google-Smtp-Source: ABdhPJwZ9oxJoUEpzejwoVPTMjuryy43ggbQjrZPgP0wqIocQqkRl8Zoc2HuZnLb8F8WHDRduantAe4kZfDfeiBwjAs=
-X-Received: by 2002:a50:d710:: with SMTP id t16mr74631953edi.50.1641815550234;
- Mon, 10 Jan 2022 03:52:30 -0800 (PST)
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=STst/NZz7XpLuhkw/fjT1YooCLQUEgoChj9j28RAYfs=;
+        b=M8NSLWrOJOaOsgStwWuFsda8oWJ9UbwpPgJLH0BuZOsWnrn6iInDHqa1EJKqcK5NBx
+         WxihYP+P6DppmVeI1P5au/5tD+UE337e1koxa89mclZkJj4/8SUUAGwYr/fNFjoehmzG
+         j3w8Wl8TAnie6kdaKxw+sRRwYKNacpbbz8nsGH5mGzT98qe4yUQ1F/EG4OPzT2LIJmnU
+         i50MLI5vkIyilZ9lMAUofBv4mMXTe/DnqZkSe8lHrRqKBHT923XzlYWsUy5s8JMic7r4
+         ED+j49CTw3kUCgN4gj5HW93d04z+IfdE9ssWdsaZWT6Bfy1nduAty4OvLTSx9rUC1+7Z
+         7Zlw==
+X-Gm-Message-State: AOAM5306Dz3ktilPpzZ3W6IQgt+jSVxpJG0uRLY8kKHYQDF7r0wNvP6u
+        6t4is1QIvuNV6OSJnbCAv3WU1RcvDqVaez2AL67i4YPnkY0=
+X-Google-Smtp-Source: ABdhPJyUuzfRq9+VAp3YIslVsNF7E8r6u+SDvjtiaFw6sfTA9uOxrmlrl9JDay/jDh10uqplhgk07a+YHTpM3Ge0znw=
+X-Received: by 2002:ac2:4c51:: with SMTP id o17mr60639917lfk.558.1641820293776;
+ Mon, 10 Jan 2022 05:11:33 -0800 (PST)
 MIME-Version: 1.0
-References: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
-In-Reply-To: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
-From:   Daire Byrne <daire@dneg.com>
-Date:   Mon, 10 Jan 2022 11:51:54 +0000
-Message-ID: <CAPt2mGNt0shT7xmvCKb-G+gpza_eTrVqPhcVGx_7+smtGOHECw@mail.gmail.com>
-Subject: Re: [PATCH v4 00/68] fscache, cachefiles: Rewrite
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org
+Received: by 2002:a05:6504:15d1:0:0:0:0 with HTTP; Mon, 10 Jan 2022 05:11:32
+ -0800 (PST)
+Reply-To: gtbank107@yahoo.com
+From:   Barr Robert Richter <westernunion.benin982@gmail.com>
+Date:   Mon, 10 Jan 2022 14:11:32 +0100
+Message-ID: <CAP=nHBK9zHzp_=-EVswWQiLxEoc+HV4oqddgtnEqf-9qYab_4Q@mail.gmail.com>
+Subject: Contact GT Bank-Benin to receive your transfer amount of $18.5m US Dollars.
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 22 Dec 2021 at 23:13, David Howells <dhowells@redhat.com> wrote:
-> These patches can be found also on:
->
->         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-rewrite
+Attn,Dear
+I need you to know that the fear of the LORD is
+the beginning of wisdom, and knowledge of the Holy One is
+understanding. As power of God Most High. And This is the confidence
+we have in approaching God, that if we ask anything according to his
+will, he hears us. I will make you know that Slow and steady wins the race.
+It is your turn to receive your overdue compensation funds total
+amount $18.5Milion  USD.
+I actualized that you will receive your transfer today without any more delay
+No More fee OK, Believe me , I am your Attorney standing here on your favor.
+I just concluded conversation with the Gt Bank Director, Mrs Mary Gate
+And She told me that your transfer is ready today
 
-I have run this through our production workloads without issue. There
-were no recorded performance or stability differences between this and
-the old fscache/cachefiles.
+So the Bank Asked you to contact them immediately by re-confirming
+your Bank details asap.
+Because this is the Only thing holding this transfer
+If you did not trust me and Mrs Mary Gate,Who Else will you Trust?
+For we are the ones trying to protect your funds here
+and make sure that your funds is secure.
+So Promisingly, I am here to assure you, that Grate Miracle is coming on
+your way, and this funds total amount of $18.500,000 is your
+compensation, entitlement inheritance overdue funds on your name.
+Which you cannot let anything delay you from receiving your funds now,
 
-Our workload comprises mounting ~20 remote servers with "-o fsc" over
-the WAN and then re-exporting those to 500 local client instances.
-This production workload churns the fscache backing filesystem (EXT4)
-pretty well (hundreds of MB/s) across all of the mount points
-simultaneously.
+Finally i advised you to try your possible best and contact Gt Bank Benin
+once you get this message to receive your transfer $18.5 USD today.
+I know that a journey of thousand miles begins with a single step.
+Always put your best foot forward
+Try as hard as you can, God give you best.
+take my advice and follow the due process of your payment, the
+transfer will be released to
+you smoothly without any hitches or hindrance.
 
-I tested with both NFSv4.2 and NFSv3 mounts. Previously written cache
-data was correctly reused between reboots and remounts.
+Contact DR.MRS MARY GATE, Director Gt bank-Benin to receive your
+transfer amount of $18.5m US Dollars
+It was deposited and registered to your name this morning.
+Contact the Bank now to know when they will transfer to your
+country today
 
-Tested-by: Daire Byrne <daire@dneg.com>
+Email id: gtbank107@yahoo.com
+Tel/mobile, +229 99069872
+Contact person, Mrs Mary Gate,Director Gt bank-Benin.
+Among the blind the one-eyed man is king
 
-Cheers,
+As you sow, so you shall reap, i want you to receive your funds
+Best things in life are free
+Send to her your Bank Details as i listed here.
 
-Daire
+Your account name-------------
+Your Bank Name----------------
+Account Number----------
+your Bank address----------
+Country-----------
+Your private phone number---------
+Routing Numbers-------------
+Swift Code-----------
+
+Note, Your funds is %100 Percent ready for
+transfer.
+Everything you do remember that Good things come to those who wait.
+I have done this work for you with my personally effort, Honesty is
+the best policy.
+now your transfer is currently deposited with paying bank this morning.
+It is by the grace of God that I received Christ, having known the truth.
+I had no choice than to do what is lawful and justice in the
+sight of God for eternal life and in the sight of man for witness of
+God & His Mercies and glory upon my life.
+
+send this needed bank details to the bank today, so that you receive
+your transfer today as
+it is available for your confirmation today.
+Please do your best as a serious person and send the fee urgent, Note
+that this transfer of $18.500.000 M USD is a Gift from God to Bless
+you.
+
+If you did not contact the bank urgent, finally the Bank will release
+your transfer of $18.500.000M USD to  Mr. David Bollen as your
+representative.
+So not allow another to claim your Money.
+Thanks For your Understanding.
+
+Barr Robert Richter, UN Attorney At Law Court-Benin
