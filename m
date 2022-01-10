@@ -2,67 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DE81489BC7
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 16:05:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE3E1489BCD
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 16:06:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233627AbiAJPF6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jan 2022 10:05:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:25008 "EHLO
+        id S235899AbiAJPGv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jan 2022 10:06:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:37036 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231803AbiAJPFz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 10:05:55 -0500
+        by vger.kernel.org with ESMTP id S235119AbiAJPGu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 10:06:50 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641827154;
+        s=mimecast20190719; t=1641827210;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=cQgM+cU0wUYydtJ1f/sBrB9AQ1WGxdEqco1mpg+KpEo=;
-        b=LVrWGcGFOvTEbpBnYHxiGojv6lmvFWPRv9nLT8x4QQ7pIK875TtIa7ZZ6RDbVk92p9E7Rk
-        AheDEtS6dgvx6wPED4KegQN16v5oQQNZYBkr/5axhJiJKi9TpWOTWBNTUORDYWowlqA/td
-        ennNJ0RmeOfCTBCGqduAmXYkLKnXs20=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=TdhaTLJGXHcFCh/fggcjKoyARfbGd5BhGZALmvztP9g=;
+        b=Asy78koMAEpDGj3IwU5hH3u7t3+S3dpvz8Ta95bhuV52X/lCZYg6kSqbpwBCSSS8MZTqmY
+        C+628NjCad6YKJ8ahAioVzCXwh9fAY8A6e6QDAsrUSAZBrtfb9g8xpYdafcByzOFh88u4t
+        a8IFqPbzohmVNrRf4Fgr1Zf8BD5OqYQ=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-61-YYaOG7t7Mza46YRMQakaCw-1; Mon, 10 Jan 2022 10:05:53 -0500
-X-MC-Unique: YYaOG7t7Mza46YRMQakaCw-1
-Received: by mail-qk1-f197.google.com with SMTP id g66-20020a379d45000000b0047792ef05a1so6464092qke.11
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 07:05:53 -0800 (PST)
+ us-mta-343-mbXpmLE2Pj2vy02xC2vVjw-1; Mon, 10 Jan 2022 10:06:49 -0500
+X-MC-Unique: mbXpmLE2Pj2vy02xC2vVjw-1
+Received: by mail-qk1-f200.google.com with SMTP id t8-20020a05620a0b0800b004764cabb1daso8093865qkg.12
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 07:06:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
+         :content-language:from:to:references:in-reply-to
          :content-transfer-encoding;
-        bh=cQgM+cU0wUYydtJ1f/sBrB9AQ1WGxdEqco1mpg+KpEo=;
-        b=V9A4uq7/yqZ3h65LAFSNEwfBpY4y+1NNLQmsGE/r9CT5OB9euXq5IPSDz8GQHzkMzJ
-         dUn5yeTXekmCy/tMOJqxAtPgLpT0zV3hZsJnw+J64BYIbHDvprZOgLMl3kaR3ThT0eaM
-         lkMNYRJvYRPdbpmFT5G6UpOHVLzC+nuosD3TXl+QRTpYriZnup96VTyX31Ue9/892xuX
-         C+7NfuprJj9SaDrrFM8YUTv/uhjpSIwyMAqVpYjx9cByOkLchcVioaM2Gan61RKS6hyh
-         sv1ij/mzXGa0teoaRCnj3DGnFH4XDJ11Ml7HSjdbs9f3upZpGhrXWs0cufFuj+ZKIdkE
-         tRog==
-X-Gm-Message-State: AOAM531rLyhvmluNHPx3Y74YgbyUZEoLQcfGthUz1OCGEbjTFJ8UUnZi
-        z83MJZ+RauKu1HDUll9XYbjucEsaTKevgyVZd6mJUKqcRpCwzG8jZtOiC298RWzdVxdt2SaXOaB
-        lTH9hUxgp9z34yd9OvqxN
-X-Received: by 2002:a05:622a:1a0d:: with SMTP id f13mr83963qtb.468.1641827152451;
-        Mon, 10 Jan 2022 07:05:52 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJz8q0l9+6ZnlkVJpNK/Dy9u3+nVzTOrmZPd29tszLD75D3DjoQjq8AdM32RyxOwUPIBKn22Pw==
-X-Received: by 2002:a05:622a:1a0d:: with SMTP id f13mr83942qtb.468.1641827152208;
-        Mon, 10 Jan 2022 07:05:52 -0800 (PST)
+        bh=TdhaTLJGXHcFCh/fggcjKoyARfbGd5BhGZALmvztP9g=;
+        b=qHuhQ3hNTDL7ACg2BY1PGoZGM//8TxW3IZec95tApcODK0mcuPoRmb8m+ouMqphQvD
+         6bO86jJG/iyxZrhdpG3Jr4k0EfCWQb+3Gz07hoee2u2Hubs8/Zpns/qqPkZs88i1iV+z
+         GE/Fi2g3B0nSizpFAtubC7CrYz28bdSEYCUixd020oI4R3qbyAq5Yo/n6/1Ty/qS4Y8r
+         M98cd8MHP1cYMVqa2j6rC7hvwboLCNrvwpooWnTQzCXT3gBxV17Y6aElv5r0DJQqSi2O
+         cbQy3XL5neRFMOI7M2sr338tmW5V2kelFUEchN6sdmnRJ38FecmBBFnnJbu73VzQebp7
+         Md+g==
+X-Gm-Message-State: AOAM533U3kph5FcsWEgtktPBWQGYwBEqm9Iu3dnSRzxiRmwjZjS/1Fec
+        XS6iZryzu0/+9PUk/jRQhevQOZI9IEaQWtl5CveF8+6PWlMOUuF9nBwnPbeMIXrdF87Dxkdw6kv
+        Bu48jnS8rfT5MMfi/Ir/jXIioIwP0I9/9gQlPJ1PlCFS0DToxtuTGNyNtAoYsXUvWa8Ai5g==
+X-Received: by 2002:a05:6214:519c:: with SMTP id kl28mr69203940qvb.48.1641827208586;
+        Mon, 10 Jan 2022 07:06:48 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJzpxRI12hlPnCeDRfLiXdMeF4jdtwfIr1lp43bt9OimvYb/Fk+Ykjo6InceXiel6siakVmlpg==
+X-Received: by 2002:a05:6214:519c:: with SMTP id kl28mr69203920qvb.48.1641827208321;
+        Mon, 10 Jan 2022 07:06:48 -0800 (PST)
 Received: from [172.31.1.6] ([70.105.247.147])
-        by smtp.gmail.com with ESMTPSA id l10sm4824383qtk.18.2022.01.10.07.05.51
+        by smtp.gmail.com with ESMTPSA id h4sm4691719qkp.54.2022.01.10.07.06.47
+        for <linux-nfs@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Jan 2022 07:05:52 -0800 (PST)
-Message-ID: <71767c2a-7eaf-12cd-fa56-f7a37397e145@redhat.com>
-Date:   Mon, 10 Jan 2022 10:05:50 -0500
+        Mon, 10 Jan 2022 07:06:48 -0800 (PST)
+Message-ID: <47ee3efc-8c25-4bd2-e6dc-c03d25e4f568@redhat.com>
+Date:   Mon, 10 Jan 2022 10:06:47 -0500
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.3.0
-Subject: Re: [PATCH] tools/rpcgen: fix build on macos arm64 (stat64 issue)
+Subject: Re: [PATCH v2 0/3] Remove NFS v2 support from the client and server
 Content-Language: en-US
-To:     "Sergey V. Lobanov" <sergey@lobanov.in>, linux-nfs@vger.kernel.org
-References: <20211214165544.40403-1-sergey@lobanov.in>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20211214165544.40403-1-sergey@lobanov.in>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20211208163057.954500-1-steved@redhat.com>
+In-Reply-To: <20211208163057.954500-1-steved@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -71,35 +72,49 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 12/14/21 11:55, Sergey V. Lobanov wrote:
-> __DARWIN_ONLY_64_BIT_INO_T is true on macos arm64 so struct stat64
-> and stat64() are not available. This patch defines stat64 as stat if
-> __DARWIN_ONLY_64_BIT_INO_T is true
+On 12/8/21 11:30, Steve Dickson wrote:
+> These patches will remove the all references and
+> support of NFS v2 in both the server and client.
 > 
-> Signed-off-by: Sergey V. Lobanov <sergey@lobanov.in>
-Committed... (tag: nfs-utils-2-5-5-rc5)
+> On server side the support has been off, by default,
+> since 2013 (6b4e4965a6b). With this server patch the
+> ability to enable v2 will be remove.
+> 
+> Currently even with CONFIG_NFS_V2 not set
+> v2 mounts are still tied (over-the-wire). I looked at creating
+> a kernel parameter module so support could re-enabled
+> but that got ugly quick.
+> 
+> On the client, the -o v2 option is still a
+> valid option because unknown mount options
+> are passed to the kernel which will cause an
+> actual mount to happen.
+> 
+> But the option has been removed from the man
+> pages will cause the mount to fail with
+> "NFS version is not supported"
+> 
+> I guess the only question left is does there
+> need some type compilation flag or config flag
+> that would re-enable the support. I'm thinking not.
+> 
+> Steve Dickson (3):
+>    nfsd: Remove the ability to enable NFS v2.
+>    nfs.man: Remove references to NFS v2 from the man pages
+>    mount: Remove NFS v2 support from mount.nfs
+> 
+>   nfs.conf                  |  1 -
+>   utils/mount/configfile.c  |  2 +-
+>   utils/mount/mount.nfs.man |  2 +-
+>   utils/mount/network.c     |  4 ++--
+>   utils/mount/nfs.man       | 20 +++-----------------
+>   utils/mount/nfsmount.conf |  2 +-
+>   utils/mount/stropts.c     | 10 +++++++++-
+>   utils/nfsd/nfsd.c         |  2 --
+>   utils/nfsd/nfsd.man       |  4 ++--
+>   9 files changed, 19 insertions(+), 28 deletions(-)
+> 
+Committed.... (tag: nfs-utils-2-5-5-rc5)
 
 steved.
-> ---
->   tools/rpcgen/rpc_main.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/tools/rpcgen/rpc_main.c b/tools/rpcgen/rpc_main.c
-> index e97940b9..277adc6b 100644
-> --- a/tools/rpcgen/rpc_main.c
-> +++ b/tools/rpcgen/rpc_main.c
-> @@ -62,6 +62,12 @@
->   #define EXTEND	1		/* alias for TRUE */
->   #define DONT_EXTEND	0	/* alias for FALSE */
->   
-> +#ifdef __APPLE__
-> +# if __DARWIN_ONLY_64_BIT_INO_T
-> +#  define stat64 stat
-> +# endif
-> +#endif
-> +
->   struct commandline
->     {
->       int cflag;			/* xdr C routines */
-> 
 
