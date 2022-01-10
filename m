@@ -2,80 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D3D4B489780
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 12:32:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0935489816
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 12:53:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244797AbiAJLcc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Jan 2022 06:32:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:25875 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244757AbiAJLcP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 06:32:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641814334;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hrEu87EnXQ6Fg7UvjXggUKw0Jcqes+nBaSmxrmpEEwU=;
-        b=RwLLNVKszlImAFDlZuJa0wx98kI1MAfRxIcK6fGCwqXPbA0Vm1vo7ojR5Jl3SfDpdG/NhI
-        CFv1/h+Mfrdwq1PzXLkJaRTsiFyNUizyepOMpjeITQXbrTDlAgj51LSJhuGlR9htUB1+y3
-        l+0kUI94odfB+wHg5onJ3pWNPBwB9Vg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-54-MsPtVj76MgWGNWERMB4MZg-1; Mon, 10 Jan 2022 06:32:09 -0500
-X-MC-Unique: MsPtVj76MgWGNWERMB4MZg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E8BB1898292;
-        Mon, 10 Jan 2022 11:32:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F9507B6C9;
-        Mon, 10 Jan 2022 11:31:55 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <Ydvl8Dk8z0mF0KFl@infradead.org>
-References: <Ydvl8Dk8z0mF0KFl@infradead.org> <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk> <164021541207.640689.564689725898537127.stgit@warthog.procyon.org.uk> <CAOQ4uxjEcvffv=rNXS-r+NLz+=6yk4abRuX_AMq9v-M4nf_PtA@mail.gmail.com> <Ydk6jWmFH6TZLPZq@casper.infradead.org>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     dhowells@redhat.com, Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, linux-cachefs@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 38/68] vfs, cachefiles: Mark a backing file in use with an inode flag
+        id S245124AbiAJLxz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jan 2022 06:53:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54280 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239775AbiAJLwc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 06:52:32 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0B6C061245
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 03:52:31 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id m4so10985164edb.10
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Jan 2022 03:52:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oZjgw8dNYz+IuIPHh62asjXeqka/jIRSHm/Gv196S1g=;
+        b=UhgojjQSFhnWV3ovNC4gDPJbyTnVrEWFuk4ma8zoGEM8bzubBAjZitYdLTedzKjvfx
+         hJbmS+xF2yDXX5It1jRe5EtqBtjt8wB+RQhZPoHgVsZscgfa5gcFINtQVKFqHhZD5UOd
+         Lb3+MfyZwbxm23qpBb5iSQ0Atiwbnh14LYMgkKcSiBaKVj8d246xRmjkqMtZa1YPWrbM
+         ugACVcmSQu1V/0/ZUza3R97wmijkjczH6CRn8/IfPidkP/ZiDDCC2odttEmMhSCeTplq
+         4pEDr1uKeN7L2v0T4Ac5dvFNcolSJ6trLBx5+eHlmYL7dMq/ypso0ndcyVsK8TS7AIVd
+         QoJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oZjgw8dNYz+IuIPHh62asjXeqka/jIRSHm/Gv196S1g=;
+        b=FtYzX6WerfzjExN2eUMuyJgmBvY/7KDinb7gtUMHUY+wNR29g9ASapabDBmciUddFW
+         jZ1FieFj9jY7gChZyGMb1WlMbH/eGm0be1VmXtH2KTTDdauGIlmAzM5ywEq8AtV3O0UV
+         Qnm9k+vOzQd7oSRAeW0i9h209MyYqGBWoC+1HTyvag+/Ap2sy3EjEkM687KeD3QQFFFP
+         4nYzTgYdhXi+nuy6twSXoKf3mGwkdd144itGUSk65Ylj8x4R2X+VozBNAT4elEO4q/vE
+         G8vlDzOsOXIxgE8C3NLBAWHLwNlWTC/NLohrgoN8nBC1E6PDQURG8qa00ex7u8xbjXYe
+         vdMg==
+X-Gm-Message-State: AOAM531Ssmko91PHkRj6IOVELDJPA33TC1hb+SKyp9GXeq4Nb+Eryh8q
+        z+63IHCnuIGRZi5KBqVBGwy1XAmTr5ZvuF6+W7ULcA==
+X-Google-Smtp-Source: ABdhPJwZ9oxJoUEpzejwoVPTMjuryy43ggbQjrZPgP0wqIocQqkRl8Zoc2HuZnLb8F8WHDRduantAe4kZfDfeiBwjAs=
+X-Received: by 2002:a50:d710:: with SMTP id t16mr74631953edi.50.1641815550234;
+ Mon, 10 Jan 2022 03:52:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3735738.1641814315.1@warthog.procyon.org.uk>
-Date:   Mon, 10 Jan 2022 11:31:55 +0000
-Message-ID: <3735739.1641814315@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+References: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+In-Reply-To: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Mon, 10 Jan 2022 11:51:54 +0000
+Message-ID: <CAPt2mGNt0shT7xmvCKb-G+gpza_eTrVqPhcVGx_7+smtGOHECw@mail.gmail.com>
+Subject: Re: [PATCH v4 00/68] fscache, cachefiles: Rewrite
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Christoph Hellwig <hch@infradead.org> wrote:
+On Wed, 22 Dec 2021 at 23:13, David Howells <dhowells@redhat.com> wrote:
+> These patches can be found also on:
+>
+>         https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-rewrite
 
-> So let's name it that way.  We have plenty of files in kernel use using
-> filp_open and this flag very obviously means something else.
+I have run this through our production workloads without issue. There
+were no recorded performance or stability differences between this and
+the old fscache/cachefiles.
 
-S_KERNEL_LOCK?
+Our workload comprises mounting ~20 remote servers with "-o fsc" over
+the WAN and then re-exporting those to 500 local client instances.
+This production workload churns the fscache backing filesystem (EXT4)
+pretty well (hundreds of MB/s) across all of the mount points
+simultaneously.
 
-David
+I tested with both NFSv4.2 and NFSv3 mounts. Previously written cache
+data was correctly reused between reboots and remounts.
 
+Tested-by: Daire Byrne <daire@dneg.com>
+
+Cheers,
+
+Daire
