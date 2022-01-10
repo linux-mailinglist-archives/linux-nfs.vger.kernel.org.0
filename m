@@ -2,89 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C72B8488CE3
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Jan 2022 23:41:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C03C94892ED
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Jan 2022 09:00:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235588AbiAIWlZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Jan 2022 17:41:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46320 "EHLO
+        id S241660AbiAJIAZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Jan 2022 03:00:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235362AbiAIWlZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Jan 2022 17:41:25 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB672C06173F
-        for <linux-nfs@vger.kernel.org>; Sun,  9 Jan 2022 14:41:24 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7E55770C2; Sun,  9 Jan 2022 17:41:24 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7E55770C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1641768084;
-        bh=n1vCz0iegtMXkMGLa63IkSZ8kZVjQJANJUm2yqYyhwA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t85c+Idy3tNE9XxrPfDCH9+cLrMfcRgn2BSfYkTUm9q9rWHIjq4h2RsBevOXhmbUJ
-         sdIT6+00wKTiwAkMyTIOGUxsXfLoND2o9yhVJ5DvNWLNK1yR06w8BHJhM8DJheStwx
-         mxFqwF8IYPaPxq4gmUVjghYHq1lCXcxBpF+ryrRo=
-Date:   Sun, 9 Jan 2022 17:41:24 -0500
-From:   "'bfields@fieldses.org'" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>,
-        'Trond Myklebust' <trondmy@hammerspace.com>,
-        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>,
-        "'mbenjami@redhat.com'" <mbenjami@redhat.com>
-Subject: Re: client caching and locks
-Message-ID: <20220109224124.GC1589@fieldses.org>
-References: <20201001214749.GK1496@fieldses.org>
- <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>
- <20201006172607.GA32640@fieldses.org>
- <164066831190.25899.16641224253864656420@noble.neil.brown.name>
- <20220103162041.GC21514@fieldses.org>
- <03e4cc01e9e66e523474c10846ee22147b78addf.camel@hammerspace.com>
- <20220104153205.GA7815@fieldses.org>
- <1257915fc5fd768e6c1c70fd3e8e3ed3fa1dc33e.camel@hammerspace.com>
- <20220105220353.GF25384@fieldses.org>
- <164176553564.25899.8328729314072677083@noble.neil.brown.name>
+        with ESMTP id S241519AbiAJH7O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Jan 2022 02:59:14 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9A01C025481;
+        Sun,  9 Jan 2022 23:53:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ck+GCTXTq6vx0+UGObJZ+hDxsPyCcfaXptvnTMJa0B0=; b=2fXREzZXspdztwjUGN/nEr1V70
+        ULFZg+uWcgCbVkT9RJ99GqDgBw03zzhprDIvLyzvZ7qRVO9+vpG3FpKNTtBLHUdI9wLAcco3KVtxU
+        FmAawMv8GbYeU0N7j7B/Biz03mtuJx5DEGglJ9/5CKfI7DrqrZ/czk6IuLzylhKySlqk0Z8M9x2B9
+        CL1qFxrETDgCNuBKXP/FrfvkiFauss03mL7R/dx00Aq6l+KQYF/bcCTcc/XaFeXO9wNYnLfNlrQgC
+        YYkQXrYpcLMG3JuaGDp0ZnslXqFynsyaAfJUGtIboPtq2WUvjyLVSa5+1X7l7Sna31kLM21NjUxyO
+        AHqQxnZQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n6pUW-009jUS-SL; Mon, 10 Jan 2022 07:53:20 +0000
+Date:   Sun, 9 Jan 2022 23:53:20 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>,
+        David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 38/68] vfs, cachefiles: Mark a backing file in use
+ with an inode flag
+Message-ID: <Ydvl8Dk8z0mF0KFl@infradead.org>
+References: <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+ <164021541207.640689.564689725898537127.stgit@warthog.procyon.org.uk>
+ <CAOQ4uxjEcvffv=rNXS-r+NLz+=6yk4abRuX_AMq9v-M4nf_PtA@mail.gmail.com>
+ <Ydk6jWmFH6TZLPZq@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164176553564.25899.8328729314072677083@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <Ydk6jWmFH6TZLPZq@casper.infradead.org>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 10, 2022 at 08:58:55AM +1100, NeilBrown wrote:
-> On Thu, 06 Jan 2022, 'bfields@fieldses.org' wrote:
+On Sat, Jan 08, 2022 at 07:17:33AM +0000, Matthew Wilcox wrote:
+> On Sat, Jan 08, 2022 at 09:08:57AM +0200, Amir Goldstein wrote:
+> > > +#define S_KERNEL_FILE  (1 << 17) /* File is in use by the kernel (eg. fs/cachefiles) */
+> > 
+> > Trying to brand this flag as a generic "in use by kernel" is misleading.
+> > Modules other than cachefiles cannot set/clear this flag, because then
+> > cachefiles won't know that it is allowed to set/clear the flag.
 > 
-> > +Locking can also provide cache consistency:
-> >  .P
-> > -NLM supports advisory file locks only.
-> > -To lock NFS files, use
-> > -.BR fcntl (2)
-> > -with the F_GETLK and F_SETLK commands.
-> > -The NFS client converts file locks obtained via
-> > -.BR flock (2)
-> > -to advisory locks.
-> > +Before acquiring a file lock, the client revalidates its cached data for
-> > +the file.  Before releasing a write lock, the client flushes to the
-> > +server's stable storage any data in the locked range.
+> Huh?  If some other kernel module sets it, cachefiles will try to set it,
+> see it's already set, and fail.  Presumably cachefiles does not go round
+> randomly "unusing" files that it has not previously started using.
 > 
-> Surely the client revalidates *after* acquiring the lock on the server. 
-> Otherwise the revalidation has now value.
+> I mean, yes, obviously, it's a kernel module, it can set and clear
+> whatever flags it likes on any inode in the system, but conceptually,
+> it's an advisory whole-file lock.
 
-Gah.
-
-@@ -1489,9 +1493,9 @@ locks.
- .P
- Locking can also provide cache consistency:
- .P
--Before acquiring a file lock, the client revalidates its cached data for
--the file.  Before releasing a write lock, the client flushes to the
--server's stable storage any data in the locked range.
-+After acquiring a file lock and before using any cached data, the client
-+revalidates its cache.  Before releasing a write lock, the client flushes to
-+the server's stable storage any data in the locked range.
- .P
- A distributed application running on multiple NFS clients can take a
- read lock for each range that it reads and a write lock for each range that
-
---b.
+So let's name it that way.  We have plenty of files in kernel use using
+filp_open and this flag very obviously means something else.
