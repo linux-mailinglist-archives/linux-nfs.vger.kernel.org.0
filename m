@@ -2,147 +2,276 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 132AA48B648
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jan 2022 19:59:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B54748B649
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Jan 2022 19:59:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350304AbiAKS7a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jan 2022 13:59:30 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:56374 "EHLO
+        id S1350344AbiAKS7m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jan 2022 13:59:42 -0500
+Received: from dfw.source.kernel.org ([139.178.84.217]:56430 "EHLO
         dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242717AbiAKS7a (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 13:59:30 -0500
+        with ESMTP id S242717AbiAKS7g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 13:59:36 -0500
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BED1A616DB;
-        Tue, 11 Jan 2022 18:59:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D5DC36AE9;
-        Tue, 11 Jan 2022 18:59:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D022616DB;
+        Tue, 11 Jan 2022 18:59:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDC5C36AE3;
+        Tue, 11 Jan 2022 18:59:35 +0000 (UTC)
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-trace-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH RFC 1/2] trace: Introduce helpers to safely handle dynamic-sized sockaddrs
-Date:   Tue, 11 Jan 2022 13:59:27 -0500
-Message-Id:  <164192756765.1149.13872546013201834510.stgit@klimt.1015granger.net>
+Subject: [PATCH RFC 2/2] NFSD: Use __sockaddr field to store socket addresses
+Date:   Tue, 11 Jan 2022 13:59:34 -0500
+Message-Id:  <164192757439.1149.13280600903390427167.stgit@klimt.1015granger.net>
 X-Mailer: git-send-email 2.34.0
 In-Reply-To:  <164192738510.1149.7614903005271825552.stgit@klimt.1015granger.net>
 References:  <164192738510.1149.7614903005271825552.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4111; h=from:subject:message-id; bh=6osr5wh6WcD4WAY+kseGgBHzYS0YheQhzabd71O4rvk=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh3dOPX2MFGDcp5Qj0p1voUzY6PbACVSD+4urXCTTY s1j4c82JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYd3TjwAKCRAzarMzb2Z/l9J2D/ 98KPJItI7tfMD0iyxr4jJpAvEnwOzeyu1xLXs1tHdmSJ7HxtmvG4ek1Br7XlIfhekD8k+DVrQX0GN+ hGWpjw2zL06FQEuZBNqR6bR8nL0qJIGdQxugsI37ySs97fO/pDy96OS/TXUjrSWhVqSjTQtReBwCXa AW2Hy+qqztA9cE4vJo2RisHnXtDYWiLAgiHFUldRVhAzNOadMDLk8SG0Ot/lqjG2l1LZJXNjiWqxun 7okaB+q6zFezyGjXIlSMqwyJsta4jTHC8Jw1k92UZ6djI+u2ZFP+BLDWiga8ueNfpnbqeoNC+uhxj4 9w13jPZ3KqoY2Y/z4NyIU0kHkQC3t3OSu/f9rXpL2ZwhHPWlIDrEmMhVaRfkwr3PJqX0epn1+kWRSR 5EzsDPrZvYs4HiYKleJk8E8oG+zEpfylVsdRGowz1l8FNpBvxXdjF/lP2qP4eE1DvYO0Uy4+fsiikH oeaeZLhXC6PeFEctioKts7ugLY4VQ87zLWW5pwHw2KCP2mKtXy+QfBTON9vUXWIPk1/E6l9fcidV/d 01wU3bMGY5zl2NdGI1b5cKr7PVHmbciPKW3CyhCsgR/Xv9UMsPvkchR8FEy74L3JBp8AhnjUNSrSKz uOvZxYvQbbw4WzICemDSI5H/rM2FAVzLrM7XEPz4Mr8E9XKhZfQFJzRRYHlw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=8865; h=from:subject:message-id; bh=zvT+dhaVeWaUTx1YCoCvz9OW/eaaPo/WGozW5KXzACs=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh3dOWoERpcVvKO5UkibFzIW4P4DuxipN1By6qbrvS eN7QHG+JAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYd3TlgAKCRAzarMzb2Z/l94ED/ 45tk1nwLufB724OixeQLhwBn6FvGa2sXXSo8BM9jLmiNieB/vmBjWO/wRLopLdYvgkxAiQOE0LI+SS LLNAy9T1PDSlz8ZRtmm+6VToMB0EMcw7042/zQ9BnZPFeM7sexvb5DAOjAPrNoXifrnDXj1ujNM8Rt 7TInQ76JCWcq2kSQPZYq+tLraVOuVPZg9VK/vScW5DbFZZo7yUOtGZCz14HLyV00HaU+33qxsO/qyX n5grDsjzfBxNt9sLF/ma2+76cUfcPCWKG6cqb+DnFE7Z5241QTFeYioDraiM3u6cIzSICnExSOvE54 SD3x2rM80rRhUgwMqLeu5T7YhTp0e6t5fB4FMnFmPkHMFwOQb5TEC6ltJS42O7Hj0BonqzIkgftJzp Iuh/Drsse6InysnGBI8x4Nq2tNh84d/yijC5i4EqbljcBtK8Xll1NMY+lFObWmqKqAmsZKVeSMAw8n nAiDRYy+f+1HbQWZ7WqGN7GBsbhBQPjcXrmA/FhESRZoCgHukDk/Y7dWdXgGOJvEnF47tQHloLkFFw pJ+e/80vnpRTs3tofTcFb2lkF+51iUJylpSD//fyNXLunKXOs2fvjxh9rF+H42+YSxJYZIpUMqSX5A CAvsAJJCKVOZvNAfaFQ4UG8NggDokFHcttqwmWk20el0RZUkQJa9DsN3+nmA==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Enable a struct sockaddr to be stored in a trace record as a
-dynamically-sized field. The common cases are AF_INET and AF_INET6
-which are different sizes, and are vastly smaller than a struct
-sockaddr_storage.
+As an example usage of the new __sockaddr field, convert some NFSD
+trace points to use it.
 
-These are safer because, when used properly, the size of the
-sockaddr destination field in each trace record is now guaranteed
-to be the same as the source address that is being copied into it.
-
-Link: https://lore.kernel.org/all/164182978641.8391.8277203495236105391.stgit@bazille.1015granger.net/
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/bpf_probe.h    |    3 +++
- include/trace/perf.h         |    3 +++
- include/trace/trace_events.h |   18 ++++++++++++++++++
- 3 files changed, 24 insertions(+)
+ fs/nfsd/trace.h |   79 +++++++++++++++++++++++++++----------------------------
+ 1 file changed, 39 insertions(+), 40 deletions(-)
 
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index a8e97f84b652..74068d7b3103 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -21,6 +21,9 @@
- #undef __get_bitmask
- #define __get_bitmask(field) (char *)__get_dynamic_array(field)
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index f1e0d3c51bc2..1ade489458fc 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -549,20 +549,21 @@ TRACE_EVENT(nfsd_clid_cred_mismatch,
+ 		__field(u32, cl_id)
+ 		__field(unsigned long, cl_flavor)
+ 		__field(unsigned long, new_flavor)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, rqstp->rq_xprt->xpt_remotelen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+ 		__entry->cl_flavor = clp->cl_cred.cr_flavor;
+ 		__entry->new_flavor = rqstp->rq_cred.cr_flavor;
+-		memcpy(__entry->addr, &rqstp->rq_xprt->xpt_remote,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &rqstp->rq_xprt->xpt_remote,
++				  rqstp->rq_xprt->xpt_remotelen);
+ 	),
+ 	TP_printk("client %08x:%08x flavor=%s, conflict=%s from addr=%pISpc",
+ 		__entry->cl_boot, __entry->cl_id,
+ 		show_nfsd_authflavor(__entry->cl_flavor),
+-		show_nfsd_authflavor(__entry->new_flavor), __entry->addr
++		show_nfsd_authflavor(__entry->new_flavor),
++		__get_sockaddr(addr)
+ 	)
+ )
  
-+#undef __get_sockaddr
-+#define __get_sockaddr(field) ((struct sockaddr *)__get_dynamic_array(field))
-+
- #undef __perf_count
- #define __perf_count(c)	(c)
+@@ -578,7 +579,7 @@ TRACE_EVENT(nfsd_clid_verf_mismatch,
+ 		__field(u32, cl_id)
+ 		__array(unsigned char, cl_verifier, NFS4_VERIFIER_SIZE)
+ 		__array(unsigned char, new_verifier, NFS4_VERIFIER_SIZE)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, rqstp->rq_xprt->xpt_remotelen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+@@ -587,14 +588,14 @@ TRACE_EVENT(nfsd_clid_verf_mismatch,
+ 		       NFS4_VERIFIER_SIZE);
+ 		memcpy(__entry->new_verifier, (void *)verf,
+ 		       NFS4_VERIFIER_SIZE);
+-		memcpy(__entry->addr, &rqstp->rq_xprt->xpt_remote,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &rqstp->rq_xprt->xpt_remote,
++				  rqstp->rq_xprt->xpt_remotelen);
+ 	),
+ 	TP_printk("client %08x:%08x verf=0x%s, updated=0x%s from addr=%pISpc",
+ 		__entry->cl_boot, __entry->cl_id,
+ 		__print_hex_str(__entry->cl_verifier, NFS4_VERIFIER_SIZE),
+ 		__print_hex_str(__entry->new_verifier, NFS4_VERIFIER_SIZE),
+-		__entry->addr
++		__get_sockaddr(addr)
+ 	)
+ );
  
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index dbc6c74defc3..953ff4a25691 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -21,6 +21,9 @@
- #undef __get_bitmask
- #define __get_bitmask(field) (char *)__get_dynamic_array(field)
+@@ -844,18 +845,17 @@ TRACE_EVENT(nfsd_cb_args,
+ 		__field(u32, cl_id)
+ 		__field(u32, prog)
+ 		__field(u32, ident)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, conn->cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+ 		__entry->prog = conn->cb_prog;
+ 		__entry->ident = conn->cb_ident;
+-		memcpy(__entry->addr, &conn->cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &conn->cb_addr, conn->cb_addrlen);
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x prog=%u ident=%u",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		__entry->prog, __entry->ident)
+ );
  
-+#undef __get_sockaddr
-+#define __get_sockaddr(field) ((struct sockaddr *)__get_dynamic_array(field))
-+
- #undef __perf_count
- #define __perf_count(c)	(__count = (c))
+@@ -887,17 +887,17 @@ DECLARE_EVENT_CLASS(nfsd_cb_class,
+ 		__field(unsigned long, state)
+ 		__field(u32, cl_boot)
+ 		__field(u32, cl_id)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->state = clp->cl_cb_state;
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+-		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x state=%s",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		show_cb_state(__entry->state))
+ );
  
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index 08810a463880..003104159087 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -108,6 +108,9 @@ TRACE_MAKE_SYSTEM_STR();
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(char, item, -1)
+@@ -937,7 +937,7 @@ TRACE_EVENT(nfsd_cb_setup,
+ 		__field(u32, cl_boot)
+ 		__field(u32, cl_id)
+ 		__field(unsigned long, authflavor)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+ 		__array(unsigned char, netid, 8)
+ 	),
+ 	TP_fast_assign(
+@@ -945,11 +945,11 @@ TRACE_EVENT(nfsd_cb_setup,
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+ 		strlcpy(__entry->netid, netid, sizeof(__entry->netid));
+ 		__entry->authflavor = authflavor;
+-		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x proto=%s flavor=%s",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		__entry->netid, show_nfsd_authflavor(__entry->authflavor))
+ );
  
-+#undef __sockaddr
-+#define __sockaddr(field, len) __dynamic_array(u8, field, len)
-+
- #undef TP_STRUCT__entry
- #define TP_STRUCT__entry(args...) args
+@@ -963,30 +963,32 @@ TRACE_EVENT(nfsd_cb_setup_err,
+ 		__field(long, error)
+ 		__field(u32, cl_boot)
+ 		__field(u32, cl_id)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->error = error;
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+-		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x error=%ld",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id, __entry->error)
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
++		__entry->error)
+ );
  
-@@ -206,6 +209,9 @@ TRACE_MAKE_SYSTEM_STR();
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
+-TRACE_EVENT(nfsd_cb_recall,
++TRACE_EVENT_CONDITION(nfsd_cb_recall,
+ 	TP_PROTO(
+ 		const struct nfs4_stid *stid
+ 	),
+ 	TP_ARGS(stid),
++	TP_CONDITION(stid->sc_client),
+ 	TP_STRUCT__entry(
+ 		__field(u32, cl_boot)
+ 		__field(u32, cl_id)
+ 		__field(u32, si_id)
+ 		__field(u32, si_generation)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, stid->sc_client->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		const stateid_t *stp = &stid->sc_stateid;
+@@ -996,14 +998,11 @@ TRACE_EVENT(nfsd_cb_recall,
+ 		__entry->cl_id = stp->si_opaque.so_clid.cl_id;
+ 		__entry->si_id = stp->si_opaque.so_id;
+ 		__entry->si_generation = stp->si_generation;
+-		if (clp)
+-			memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-				sizeof(struct sockaddr_in6));
+-		else
+-			memset(__entry->addr, 0, sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x stateid %08x:%08x",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		__entry->si_id, __entry->si_generation)
+ );
  
-+#undef __sockaddr
-+#define __sockaddr(field, len) __dynamic_array(u8, field, len)
-+
- #undef DECLARE_EVENT_CLASS
- #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
- 	struct trace_event_data_offsets_##call {			\
-@@ -302,6 +308,9 @@ TRACE_MAKE_SYSTEM_STR();
- 		trace_print_bitmask_seq(p, __bitmask, __bitmask_size);	\
- 	})
+@@ -1017,7 +1016,7 @@ TRACE_EVENT(nfsd_cb_notify_lock,
+ 		__field(u32, cl_boot)
+ 		__field(u32, cl_id)
+ 		__field(u32, fh_hash)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, lo->lo_owner.so_client->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		const struct nfs4_client *clp = lo->lo_owner.so_client;
+@@ -1025,11 +1024,11 @@ TRACE_EVENT(nfsd_cb_notify_lock,
+ 		__entry->cl_boot = clp->cl_clientid.cl_boot;
+ 		__entry->cl_id = clp->cl_clientid.cl_id;
+ 		__entry->fh_hash = knfsd_fh_hash(&nbl->nbl_fh);
+-		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x fh_hash=0x%08x",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		__entry->fh_hash)
+ );
  
-+#undef __get_sockaddr
-+#define __get_sockaddr(field)	((struct sockaddr *)__get_dynamic_array(field))
-+
- #undef __print_flags
- #define __print_flags(flag, delim, flag_array...)			\
- 	({								\
-@@ -471,6 +480,9 @@ static struct trace_event_functions trace_event_type_funcs_##call = {	\
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
- 
-+#undef __sockaddr
-+#define __sockaddr(field, len) __dynamic_array(u8, field, len)
-+
- #undef DECLARE_EVENT_CLASS
- #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, func, print)	\
- static struct trace_event_fields trace_event_fields_##call[] = {	\
-@@ -542,6 +554,9 @@ static struct trace_event_fields trace_event_fields_##call[] = {	\
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item,	\
- 					 __bitmask_size_in_longs(nr_bits))
- 
-+#undef __sockaddr
-+#define __sockaddr(field, len) __dynamic_array(u8, field, len)
-+
- #undef DECLARE_EVENT_CLASS
- #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
- static inline notrace int trace_event_get_offsets_##call(		\
-@@ -706,6 +721,9 @@ static inline notrace int trace_event_get_offsets_##call(		\
- #define __assign_bitmask(dst, src, nr_bits)					\
- 	memcpy(__get_bitmask(dst), (src), __bitmask_size_in_bytes(nr_bits))
- 
-+#define __assign_sockaddr(dest, src, len)					\
-+	memcpy(__get_dynamic_array(dest), src, len)
-+
- #undef TP_fast_assign
- #define TP_fast_assign(args...) args
- 
+@@ -1050,7 +1049,7 @@ TRACE_EVENT(nfsd_cb_offload,
+ 		__field(u32, fh_hash)
+ 		__field(int, status)
+ 		__field(u64, count)
+-		__array(unsigned char, addr, sizeof(struct sockaddr_in6))
++		__sockaddr(addr, clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_fast_assign(
+ 		__entry->cl_boot = stp->si_opaque.so_clid.cl_boot;
+@@ -1060,11 +1059,11 @@ TRACE_EVENT(nfsd_cb_offload,
+ 		__entry->fh_hash = knfsd_fh_hash(fh);
+ 		__entry->status = be32_to_cpu(status);
+ 		__entry->count = count;
+-		memcpy(__entry->addr, &clp->cl_cb_conn.cb_addr,
+-			sizeof(struct sockaddr_in6));
++		__assign_sockaddr(addr, &clp->cl_cb_conn.cb_addr,
++				  clp->cl_cb_conn.cb_addrlen)
+ 	),
+ 	TP_printk("addr=%pISpc client %08x:%08x stateid %08x:%08x fh_hash=0x%08x count=%llu status=%d",
+-		__entry->addr, __entry->cl_boot, __entry->cl_id,
++		__get_sockaddr(addr), __entry->cl_boot, __entry->cl_id,
+ 		__entry->si_id, __entry->si_generation,
+ 		__entry->fh_hash, __entry->count, __entry->status)
+ );
 
