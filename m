@@ -2,156 +2,149 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F1B48BEF0
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 08:21:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A39B48BF63
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 08:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351185AbiALHU6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jan 2022 02:20:58 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28533 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1351175AbiALHU4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 02:20:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1641972056;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=FtIbmDuJfaFcyPVq4lejO1YQT8JqBoet7CpPdE4P+Vs=;
-        b=fjJ0xsynsk5eXCw2cnqb8kVizQjnUDAV065WDY03JJT3dKjjEBhBK5dpo793WAcHV4T3Hv
-        nc/HWOlQwjD4fDC4obVRDTfbB2G3k/Q67GJcf5l8+Q09mw+3/g36BMiEq3GgqUNNY77Adl
-        hNBjME4kZn8cm2ziSnBq2eOf2tX1R3k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-664-iG6Fe2TPNT6yCUhnGs8TxA-1; Wed, 12 Jan 2022 02:20:50 -0500
-X-MC-Unique: iG6Fe2TPNT6yCUhnGs8TxA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 158141023F50;
-        Wed, 12 Jan 2022 07:20:48 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 914407B9D2;
-        Wed, 12 Jan 2022 07:20:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <3462849.1641593783@warthog.procyon.org.uk>
-References: <3462849.1641593783@warthog.procyon.org.uk> <164021579335.640689.2681324337038770579.stgit@warthog.procyon.org.uk> <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
-To:     Steve French <smfrench@gmail.com>
-Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        linux-cifs@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 63/68] cifs: Support fscache indexing rewrite
+        id S1351317AbiALH6K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 02:58:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42452 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S237500AbiALH6K (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 02:58:10 -0500
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22ADCC06173F;
+        Tue, 11 Jan 2022 23:58:10 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id d3so1544233ilr.10;
+        Tue, 11 Jan 2022 23:58:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dVQHC0GxTkVqAfD+KHCO6cWHLTOb4XHRFU2PnvbvOvM=;
+        b=d5xRdIanQ2tq7k14loEE90bkerVEyih10QULvUdYkZrIJRS6CBKA3PsAg/i90aPeS6
+         v2tR9OBFWTjrK9SodH+labYJD4Oib5tDw+GL2xDq6/ZRRS7kC4yaC1CU6nwVyouOTmot
+         1ImFEuol8PxFJYlprhPPgpKGNy+iH15DJcqAhi6vpzRv1MQqOQYkpz+ObjBGsfV4TJ8G
+         7Kgdo5f8r9A/xVkkQ/tgzzpAC+/Xyh7JqiEzPY5IL2MGJzKS91VCI6xdE/Irug1baLCE
+         WMbfZ4oGcINBVPvEgnUndJUQsUAtysVnxbQQid1KXbg3LjOKuDr8pK0VkqWGkjwYFZvX
+         6qeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dVQHC0GxTkVqAfD+KHCO6cWHLTOb4XHRFU2PnvbvOvM=;
+        b=ypDN2pviiJY2jAVZXsS2qULf6ePUQ81AGtlMmp8cFPFsSbVAsKAwE959YV/umXg6t+
+         1WLkWbVzUwBs3fFeOnWbzPFcOjIAHL/KOVpoLfLp2VnC0g9RGOITB/+6OaDKXRdW9ema
+         6VTl0Pgs4zTuA6ykZOI287cxkuFug+flalyw1kcsSlyRG99lQoe5LnM3uVmZ6/EmC2Vx
+         LmYMzFBLsisg/Wd+ZAjpu+g44FNKedUH0XnvuAzBRCLLMBG8JKJ2t2HuE9r6KGLxkFc9
+         ZBo7410Q1eB+HEwkmZ/djM/mErZBX1Rbqi/gUEFhziPTHna4vYqoaCegSHZ64PpTM1eD
+         n0+A==
+X-Gm-Message-State: AOAM531varrTt4WXNu2LW30Ua3CeFYNrbs1XzalprVwQS80rX5VsWByg
+        s3t1/wsog/IrXsNVmKAkWMWxPHWAKNvMIb3eySY=
+X-Google-Smtp-Source: ABdhPJxj9W6HbPxWl7TmaDWpcZBQYEtjUpLThUvKEIVgKtoBq96Xsi2ow12ffnF5FTKzaa3lubY4jIyqZphvUBcd/Xk=
+X-Received: by 2002:a05:6e02:b21:: with SMTP id e1mr4511683ilu.254.1641974289495;
+ Tue, 11 Jan 2022 23:58:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <534839.1641972040.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 12 Jan 2022 07:20:40 +0000
-Message-ID: <534840.1641972040@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20220111074309.GA12918@kili> <Yd1ETmx/HCigOrzl@infradead.org>
+In-Reply-To: <Yd1ETmx/HCigOrzl@infradead.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 12 Jan 2022 09:57:58 +0200
+Message-ID: <CAOQ4uxg9V4Jsg3jRPnsk2AN7gPrNY8jRAc87tLvGW+TqH9OU-A@mail.gmail.com>
+Subject: Re: [bug report] NFS: Support statx_get and statx_set ioctls
+To:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        richard.sharpe@primarydata.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        lance.shelton@hammerspace.com,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ntfs3@lists.linux.dev,
+        Steve French <sfrench@samba.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
+On Wed, Jan 12, 2022 at 4:10 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Tue, Jan 11, 2022 at 10:43:09AM +0300, Dan Carpenter wrote:
+> > Hello Richard Sharpe,
+> >
+> > This is a semi-automatic email about new static checker warnings.
+> >
+> > The patch bc66f6805766: "NFS: Support statx_get and statx_set ioctls"
+> > from Dec 27, 2021, leads to the following Smatch complaint:
+>
+> Yikes, how did that crap get merged?
 
-I think this needs the further changes below, which I will fold in.  The
-issues are:
+Did it? The bots are scanning through patches on ML:
 
- (1) One of the error paths in cifs_atomic_open() uses the cookie when it
-     should jump around that.
+https://lore.kernel.org/linux-nfs/20211227190504.309612-1-trondmy@kernel.org/
 
- (2) There's an additional successful return from the middle of cifs_open(=
-)
-     that I mistook for an error path, but does need to use the cookie on
-     the way out.
+> Why the f**k does a remote file system need to duplicate stat?
+> This kind of stuff needs a proper discussion on linux-fsdevel.
 
-David
----
-diff --git a/fs/cifs/dir.c b/fs/cifs/dir.c
-index 6186824b366e..bf3b4c9901b9 100644
---- a/fs/cifs/dir.c
-+++ b/fs/cifs/dir.c
-@@ -508,6 +508,7 @@ cifs_atomic_open(struct inode *inode, struct dentry *d=
-irentry,
- 			server->ops->close(xid, tcon, &fid);
- 		cifs_del_pending_open(&open);
- 		rc =3D -ENOMEM;
-+		goto out;
- 	}
- =
++ntfs3 +linux-cifs +linux-api
 
- 	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 44da7646f789..47333730c963 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -568,7 +568,7 @@ int cifs_open(struct inode *inode, struct file *file)
- 			spin_lock(&CIFS_I(inode)->deferred_lock);
- 			cifs_del_deferred_close(cfile);
- 			spin_unlock(&CIFS_I(inode)->deferred_lock);
--			goto out;
-+			goto use_cache;
- 		} else {
- 			_cifsFileInfo_put(cfile, true, false);
- 		}
-@@ -630,19 +630,6 @@ int cifs_open(struct inode *inode, struct file *file)
- 		goto out;
- 	}
- =
+The proposal of statx_get() is very peculiar.
+statx() was especially designed to be extended and accommodate
+a diversity of filesystem attributes.
 
--
--	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
--			   file->f_mode & FMODE_WRITE);
--	if (file->f_flags & O_DIRECT &&
--	    (!((file->f_flags & O_ACCMODE) !=3D O_RDONLY) ||
--	     file->f_flags & O_APPEND)) {
--		struct cifs_fscache_inode_coherency_data cd;
--		cifs_fscache_fill_coherency(file_inode(file), &cd);
--		fscache_invalidate(cifs_inode_cookie(file_inode(file)),
--				   &cd, i_size_read(file_inode(file)),
--				   FSCACHE_INVAL_DIO_WRITE);
--	}
--
- 	if ((oplock & CIFS_CREATE_ACTION) && !posix_open_ok && tcon->unix_ext) {
- 		/*
- 		 * Time to set mode which we can not set earlier due to
-@@ -661,6 +648,19 @@ int cifs_open(struct inode *inode, struct file *file)
- 				       cfile->pid);
- 	}
- =
+Moreover, NFSv4 is not the only fs that supports those extra attributes.
+ntfs3 supports set/get of dos attrib bits via xattr SYSTEM_NTFS_ATTRIB.
+cifs support set/get of CIFS_XATTR_ATTRIB and CIFS_XATTR_CREATETIME.
 
-+use_cache:
-+	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
-+			   file->f_mode & FMODE_WRITE);
-+	if (file->f_flags & O_DIRECT &&
-+	    (!((file->f_flags & O_ACCMODE) !=3D O_RDONLY) ||
-+	     file->f_flags & O_APPEND)) {
-+		struct cifs_fscache_inode_coherency_data cd;
-+		cifs_fscache_fill_coherency(file_inode(file), &cd);
-+		fscache_invalidate(cifs_inode_cookie(file_inode(file)),
-+				   &cd, i_size_read(file_inode(file)),
-+				   FSCACHE_INVAL_DIO_WRITE);
-+	}
-+
- out:
- 	free_dentry_path(page);
- 	free_xid(xid);
+Not only that, but Linux now has ksmbd which actually emulates
+those attributes on the server side (like samba) by storing a samba
+formatted blob in user.DOSATTRIB xattr.
+It should have a way to get/set them on filesystems that support them
+natively.
 
+The whole thing shouts for standardization.
+
+Samba should be able to get/set the extra attributes by statx() and
+ksmbd should be able to get them from the filesystem by vfs_getattr().
+
+WRT statx_set(), standardization is also in order, both for userspace
+API and for vfs API to be used by ksmbd and nfsd v4.
+
+The new-ish vfs API fileattr_get/set() comes to mind when considering
+a method to set the dos attrib bits.
+Heck, FS_NODUMP_FL is the same as FILE_ATTRIBUTE_ARCHIVE.
+That will also make it easy for filesystems that support the fileattr flags
+to add support for FS_SYSTEM_FL, FS_HIDDEN_FL.
+
+There is a use case for that. It can be inferred from samba config options
+"map hidden/system/archive" that are used to avoid the cost of getxattr
+per file during a "readdirplus" query. I recently quantified this cost on a
+standard file server and it was very high.
+
+Which leaves us with an API to set the 'time backup' attribute, which
+is a "mutable creation time" [*].
+cifs supports setting it via setxattr and I guess ntfs3 could use an
+API to set it as well.
+
+One natural interface that comes to mind is:
+
+struct timespec times[3] = {/* atime, mtime, crtime */}
+utimensat(dirfd, path, times, AT_UTIMES_ARCHIVE);
+
+and add ia_crtime with ATTR_CRTIME to struct iattr.
+
+Trond,
+
+Do you agree to rework your patches in this direction?
+Perhaps as the first stage, just use statx() and ioctls to set the
+attributes to give enough time for bikeshedding the set APIs
+and follow up with the generic set API patches later?
+
+Thanks,
+Amir.
+
+[*] I find it convenient to use the statx() terminology of "btime"
+to refer to the immutable birth time provided by some filesystems
+and to use "crtime" for the mutable creation time for archiving,
+so that at some point, some filesystems may provide both of
+these times independently.
