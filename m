@@ -2,42 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 470DF48C40C
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 13:32:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 973AB48C413
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 13:33:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240523AbiALMcp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jan 2022 07:32:45 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12209 "EHLO mga17.intel.com"
+        id S1353187AbiALMdp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 07:33:45 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12290 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S240219AbiALMco (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Wed, 12 Jan 2022 07:32:44 -0500
+        id S240219AbiALMdp (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jan 2022 07:33:45 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1641990764; x=1673526764;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=17feNRCWxaaCotEaxWchhHxpKB2++aseGYBTFYm3A1E=;
-  b=f0WcNd0Ntzfy2JSRxx59uutoPn0041jOsv4R0J5EYpwyFyKnWz4Rro6Y
-   Rqj6TOZXRIlEOptwwymqBuMMnzwJW+scTNlxey4AF8jyOTbEHoa1y9Ima
-   +gf8YTPVJjT0CxeyJ+/fl2nLFfIy3KWGY+UbM2zoY6OQ/OaZo9bdE4/YE
-   59LVQVSB9lbjbnt8Ypbk3Zs/9Oxj7iRasuQvqLCJHYSlzMCRcJ5Ewcz9x
-   osFdM+5EU2DXyoWbri8iWrftotMnx9bhW7pTQULo9NK4UVVGA/mvWTFzz
-   Xi2e4Nrcb1nbeJtW+o4AB7XHx4qH41SB8IOZ4de0G4hYpr9I6sgfqqvZy
+  t=1641990825; x=1673526825;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Vvh6IIGBSYSmjaCnGq3TAQf6swL7PGPQ3vOcYGZvUw0=;
+  b=KnQe3wyXZrzRChBsPmX7VqCeOfw4if3O654MUqBuZxl8NsvGbUBoztcE
+   QYQtbtKltM7Co5IpUb7NoK3635t/ZAdDMiKMBAcSo7OoFdlswgvph9TW/
+   pgafY8n2nWNIah+QyafWdektuGt7a30TjDQex0emxSylIm4/a6zB2JKpq
+   HYUhtuVrL5IHBlAxhNQU6wmFLJiW2cROYTRX+VLNzwd2rCHClVtr9s/D7
+   Umy8u6CtiCqWQVAFyAHIQGK/j1u8BL3LseYNbyJtG78uRZ9ITm7Yw0fPf
+   VYi4NfLJ/XRIGZiKGxxDJlLqqtis9ULFXQLS/aaS1HvqMXLku43MoJUvo
    w==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="224418034"
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="224418168"
 X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
-   d="scan'208";a="224418034"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 04:32:44 -0800
+   d="scan'208";a="224418168"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 04:33:44 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
-   d="scan'208";a="592990198"
+   d="scan'208";a="529156514"
 Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 12 Jan 2022 04:32:42 -0800
+  by orsmga008.jf.intel.com with ESMTP; 12 Jan 2022 04:33:42 -0800
 Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
         (envelope-from <lkp@intel.com>)
-        id 1n7cny-0005mi-6L; Wed, 12 Jan 2022 12:32:42 +0000
-Date:   Wed, 12 Jan 2022 20:32:18 +0800
+        id 1n7cow-0005mw-9L; Wed, 12 Jan 2022 12:33:42 +0000
+Date:   Wed, 12 Jan 2022 20:33:28 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Olga Kornievskaia <kolga@netapp.com>
 Cc:     kbuild-all@lists.01.org,
@@ -45,37 +44,43 @@ Cc:     kbuild-all@lists.01.org,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH linux-next] nfs4_discover_trunking() can be static
-Message-ID: <20220112123218.GA25976@65a275238185>
-References: <202201122012.9sn7Q8EF-lkp@intel.com>
+Subject: [linux-next:master 11662/12034] fs/nfs/nfs4proc.c:4008:5: sparse:
+ sparse: symbol 'nfs4_discover_trunking' was not declared. Should it be
+ static?
+Message-ID: <202201122012.9sn7Q8EF-lkp@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202201122012.9sn7Q8EF-lkp@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-fs/nfs/nfs4proc.c:4008:5: warning: symbol 'nfs4_discover_trunking' was not declared. Should it be static?
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+head:   32ce2abb03cfae17a9eb42bd6b1b619b72f23f20
+commit: 82ebfb0d633383ee00156e2b5bfa9ddf8c550b65 [11662/12034] NFSv4.1 query for fs_location attr on a new file system
+config: x86_64-randconfig-s022 (https://download.01.org/0day-ci/archive/20220112/202201122012.9sn7Q8EF-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-dirty
+        # https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=82ebfb0d633383ee00156e2b5bfa9ddf8c550b65
+        git remote add linux-next https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+        git fetch --no-tags linux-next master
+        git checkout 82ebfb0d633383ee00156e2b5bfa9ddf8c550b65
+        # save the config file to linux build tree
+        mkdir build_dir
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/nfs/
 
-Fixes: 82ebfb0d6333 ("NFSv4.1 query for fs_location attr on a new file system")
+If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: kernel test robot <lkp@intel.com>
----
- nfs4proc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index a93deeca0c86f..7a59ec2d7dacc 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4005,7 +4005,7 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
- 	return status;
- }
- 
--int nfs4_discover_trunking(struct nfs_server *server, struct nfs_fh *fhandle)
-+static int nfs4_discover_trunking(struct nfs_server *server, struct nfs_fh *fhandle)
- {
- 	struct nfs4_exception exception = {
- 		.interruptible = true,
+
+sparse warnings: (new ones prefixed by >>)
+>> fs/nfs/nfs4proc.c:4008:5: sparse: sparse: symbol 'nfs4_discover_trunking' was not declared. Should it be static?
+
+Please review and possibly fold the followup patch.
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
