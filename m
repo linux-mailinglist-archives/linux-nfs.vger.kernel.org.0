@@ -2,56 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 296CC48BD76
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 03:55:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F64F48BD79
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 03:56:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348962AbiALCzK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jan 2022 21:55:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
+        id S1348992AbiALC4c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jan 2022 21:56:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236410AbiALCzK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 21:55:10 -0500
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35280C06173F
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:55:10 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id z22so2006040ybi.11
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:55:10 -0800 (PST)
+        with ESMTP id S1348988AbiALC4c (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 21:56:32 -0500
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91417C061751
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:56:31 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id n68so2499757ybg.6
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:56:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=DjG0MxzMFp+mXx/fhnGFPP77MfipZrWjEmzToKHDYMs=;
-        b=6ayrnxbcnFPPUmYvOduF6Pq8fL2AVcsSL/nubUFKSkA7/WgCyNwQdZQdDzMwsZ4Iu0
-         OXroeHV85F09Q6q2lr0/5r/gpbOga2pzMo6oV1EFUARsGfTa7BYSHl4xZ5wzJL6CIduH
-         iT6L6X2WXlOe27ZoL3BpfdmLF0LpMmSfe49ksQFPud2lkCL/06AcTkpTmknzS5a+8rbI
-         kPfm6lvx1fQEUzj3n84koZ6w71PtBk2WY7ahFYrFnZaAJulE3yCNpyVKFLjDhM6Mj1TJ
-         QsbPEC7V7dg1O7Y+iEtXb9UGx4ExjcJRz9aecVvHlJMyUxUym4J32jZsUqWkt9dpnHPY
-         FKnw==
+        bh=zdgI3Zt03Z9yu5gw1AVJ9FZ0coQfTSlXMvH0cNGXvgo=;
+        b=obpEDlbTBNVc0ialZgTqwmfTDtdmvE9nkCFctdSCLRHt41Kf7zO8z/PUVdUnyMkRqs
+         5MIb1HRW+bE2l/qRgtUHe7YNjxYAIfUEPhngcYd3bDzozP+HiYM8BOH4dS222yZp1SKx
+         ikHECaW7xeMH6R3LmlhaGwC2r0uvbPax53uE/cwEm4OKAlH+hLpeamBQiOOeGr9t6bvB
+         koskXZ64keEmaP620oo7bzAv3FL8oEFZS+hXNMGhzySlygLOlEA2hxuZ/RenGzwk8v+6
+         VMUnFAt4zkp3/KkOA3vXcpJjhNCrNG0eXUfW0WewAVvSQz7pJnxwxf14Tq8Na93pbTuV
+         8luA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=DjG0MxzMFp+mXx/fhnGFPP77MfipZrWjEmzToKHDYMs=;
-        b=8LmauktM6c4ZKomTwCLT6A2cc7dzq3Hwu7BCwST3xZ1Kt4PvzPcXjqVPZ8gKsD3QDK
-         l+CENANy2AbrWz7ykBIO/r97qY3FDSP5ttvRdqaQGLNTNisU8tCqDx1/5S9MDxP4nwMV
-         R9MhNPGFa8kbFM508ZGt6Q2pGpdMiTw4E81qANjZ68HBF80LrMiTNkagsDyyyCQhoxY3
-         heg6tye6nap9iQEqjayssWWSjO/DzTJ3VzkVoR3jrlFS8xgyuThdMYMD62rkUacsshvf
-         l5FnrvJAW0srESWIjNLktIosfCHU5BP5BMtfNrgmcPbBWNr522CcGGg3OCu6FUkIizle
-         IsJg==
-X-Gm-Message-State: AOAM533nIO8Ee+jZZ8hFP21ti7ZTYzqv0kwwNNt495h3tz7+y/8f9FwR
-        BDyZYjzh0JQGvlxqIBuKukN/E23tY5EI7PIp+7EgfQ==
-X-Google-Smtp-Source: ABdhPJwHIWCaocHbRKCDyMX3VTIF7z/62FPkM6VJ/tLncpXUrm6uc9D4GQFcLEa7fX824hQsBn3XLLVsBaDv2Ms1ps4=
-X-Received: by 2002:a25:abcb:: with SMTP id v69mr10514951ybi.317.1641956109479;
- Tue, 11 Jan 2022 18:55:09 -0800 (PST)
+        bh=zdgI3Zt03Z9yu5gw1AVJ9FZ0coQfTSlXMvH0cNGXvgo=;
+        b=m3J0KlrEdbFjVZ5t/sACvWtzJpNk8MngEQvrV2jocXD3RJ6T5cA8JndGG1B1LvRC0g
+         RIgYQhUz5bYGGXxVC6asqZkzdluWgA6gost9GZGycNFsEckW22o1wgtQwQTqSV2J16UW
+         AV0T4aXWxDDImPTI8rDNVZIA97tJm20/I9RLg5BkaxpVzEz08+ZVrtCNsmiwpVlhCk76
+         88tNG2DFYGFtkuIYumtUSac9bv/jJBzGioRlVYyy4Q0L9lAQtfairJR1SkL83yGghy3w
+         mEzzjlGSXlDLY9LWFYpPuJPXmIQhL+ZqC7CFxosi3psdIRximjfbiOdBN5iP7h8uXASl
+         zCkQ==
+X-Gm-Message-State: AOAM532HK/XVj8BCRGV8YVPNioiNXeMfkOgOqbGRK2xPwE7YHZiLiRpA
+        HqQ1oEQUmBedb2Hu952O9CMuLmkZrWzDTqrq1aAwfQ==
+X-Google-Smtp-Source: ABdhPJxjYC1WaBKd1/OkWaghbsu4OSs2IYGS94HFmYSGQsFxRIfiLwnY3TJvgShBoOtj9pIN381fuSYp6loOYXf2PQA=
+X-Received: by 2002:a25:7312:: with SMTP id o18mr3742934ybc.485.1641956190618;
+ Tue, 11 Jan 2022 18:56:30 -0800 (PST)
 MIME-Version: 1.0
 References: <20211220085649.8196-1-songmuchun@bytedance.com>
- <20211220085649.8196-4-songmuchun@bytedance.com> <Yd3SoypOW0EBZj6K@carbon.dhcp.thefacebook.com>
-In-Reply-To: <Yd3SoypOW0EBZj6K@carbon.dhcp.thefacebook.com>
+ <20211220085649.8196-5-songmuchun@bytedance.com> <Yd3TVKpvsBmZM51k@carbon.dhcp.thefacebook.com>
+In-Reply-To: <Yd3TVKpvsBmZM51k@carbon.dhcp.thefacebook.com>
 From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Wed, 12 Jan 2022 10:54:32 +0800
-Message-ID: <CAMZfGtU7qw4C3SaF=D5NYpn5oyo4mc5o=Y8TCOkG5a58W5DYRA@mail.gmail.com>
-Subject: Re: [PATCH v5 03/16] fs: introduce alloc_inode_sb() to allocate
- filesystems specific inode
+Date:   Wed, 12 Jan 2022 10:55:54 +0800
+Message-ID: <CAMZfGtXcGv_ZcNZZDGhj=O4pXGOsnftLZpYS2qrNsQqOFuh3ZA@mail.gmail.com>
+Subject: Re: [PATCH v5 04/16] fs: allocate inode by using alloc_inode_sb()
 To:     Roman Gushchin <guro@fb.com>
 Cc:     Matthew Wilcox <willy@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>,
@@ -71,51 +70,24 @@ Cc:     Matthew Wilcox <willy@infradead.org>,
         linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
         Xiongchun duan <duanxiongchun@bytedance.com>,
         Fam Zheng <fam.zheng@bytedance.com>,
-        Muchun Song <smuchun@gmail.com>
+        Muchun Song <smuchun@gmail.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 2:55 AM Roman Gushchin <guro@fb.com> wrote:
+On Wed, Jan 12, 2022 at 2:58 AM Roman Gushchin <guro@fb.com> wrote:
 >
-> On Mon, Dec 20, 2021 at 04:56:36PM +0800, Muchun Song wrote:
-> > The allocated inode cache is supposed to be added to its memcg list_lru
-> > which should be allocated as well in advance. That can be done by
-> > kmem_cache_alloc_lru() which allocates object and list_lru. The file
-> > systems is main user of it. So introduce alloc_inode_sb() to allocate
-> > file system specific inodes and set up the inode reclaim context
-> > properly. The file system is supposed to use alloc_inode_sb() to
-> > allocate inodes. In the later patches, we will convert all users to the
-> > new API.
+> On Mon, Dec 20, 2021 at 04:56:37PM +0800, Muchun Song wrote:
+> > The inode allocation is supposed to use alloc_inode_sb(), so convert
+> > kmem_cache_alloc() of all filesystems to alloc_inode_sb().
 > >
 > > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> > ---
-> >  Documentation/filesystems/porting.rst |  5 +++++
-> >  fs/inode.c                            |  2 +-
-> >  include/linux/fs.h                    | 11 +++++++++++
-> >  3 files changed, 17 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
-> > index bf19fd6b86e7..c9c157d7b7bb 100644
-> > --- a/Documentation/filesystems/porting.rst
-> > +++ b/Documentation/filesystems/porting.rst
-> > @@ -45,6 +45,11 @@ typically between calling iget_locked() and unlocking the inode.
-> >
-> >  At some point that will become mandatory.
-> >
-> > +**mandatory**
-> > +
-> > +The foo_inode_info should always be allocated through alloc_inode_sb() rather
-> > +than kmem_cache_alloc() or kmalloc() related.
+> > Acked-by: Theodore Ts'o <tytso@mit.edu>               [ext4]
 >
-> I'd add a couple of words on why it has to be allocated this way.
-
-Will do.
-
-> > +
-> >  ---
+> LGTM
 >
-> Reviewed-by: Roman Gushchin <guro@fb.com>
+> Acked-by: Roman Gushchin <guro@fb.com>
 
-Thanks.
+Thanks Roman.
