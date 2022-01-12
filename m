@@ -2,77 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C773E48BF7F
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 09:06:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47BF748C3A4
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 13:01:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351403AbiALIGm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jan 2022 03:06:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        id S1353022AbiALMBP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 07:01:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351400AbiALIGm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 03:06:42 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88571C06173F;
-        Wed, 12 Jan 2022 00:06:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=5SYRKrelbUcT8UDzxAN+Nb5s1/112dY1hzNg3RG1SRc=; b=i7QUF05Al2ZZ8uol13811H1waT
-        57T14Zi6fBxmF5qfsR6p6ZXZbzwjS44de2ALjymVVtwbHrTSdIfRnkoItkO82yApcDMPfersxvjSY
-        KK4DPNkZhbdoIz9OTeFHh3p3At0fiOI3rRSy8oquFDfm3lKMv7tYpcksZpbNILbX5VITPk5JwaTNF
-        lajusbsobFHnVAvc/Q/wwMVazB8RussDWqoZVQaXf8XO6IyFv+hNXXTAPWJznDJScHOdwcbwnAeDG
-        NFj9FJ0qFpglPlYX6bZdQaUrVIWV25D8qDu8Do95n9PfuIraXvu4Gi4rzIZXkNp/FYQMfiZXMzp70
-        WjFB0MuQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n7YeU-001T4W-Hv; Wed, 12 Jan 2022 08:06:38 +0000
-Date:   Wed, 12 Jan 2022 00:06:38 -0800
-From:   "hch@infradead.org" <hch@infradead.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "hch@infradead.org" <hch@infradead.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        Lance Shelton <Lance.Shelton@hammerspace.com>,
-        Richard Sharpe <Richard.Sharpe@hammerspace.com>,
-        "Anna.Schumaker@netapp.com" <Anna.Schumaker@netapp.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [bug report] NFS: Support statx_get and statx_set ioctls
-Message-ID: <Yd6MDkMJaU0ACMEH@infradead.org>
-References: <20220111074309.GA12918@kili>
- <Yd1ETmx/HCigOrzl@infradead.org>
- <56202063c1eba6020b356a393178b9626652198e.camel@hammerspace.com>
+        with ESMTP id S1353017AbiALMBO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 07:01:14 -0500
+Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DEDC06173F
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jan 2022 04:01:13 -0800 (PST)
+Received: by mail-io1-xd35.google.com with SMTP id j1so3302110iob.1
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Jan 2022 04:01:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KalP7pqUldn0owlfQ20Q8VvgpD4qNB4+Il7bEQ6jfBE=;
+        b=SggCxYop4x6AUz17YPeViEFXSiHUpJbn2eaOZ321yQBtSKHfZAU/OqkhXSvsfitNjL
+         /fDKDIua+t8340kyX9OQG1Cw5hx7n1g/hnjZdKr3+3PdMeXUcMCIK/jY/iYq2ePu1Kgh
+         jDVr8hAZCgtM8GweWCFZUEB8bccOXPwQNxijDuZHpEfK5QC/zvAA/+jOsU+0UVBXefYZ
+         uy0xae1hwt4k5uGYnYOi9If5f75ZGFGnDlBirlKiKlzjyhuOWrY5y82NmpIQqGFjpNro
+         IDbVwHGaRdqaczp166km7o/py16TeS5RQToQ6lyiTnWw70/47Olmv5Ad9Ixn4CjPqdmA
+         WSnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KalP7pqUldn0owlfQ20Q8VvgpD4qNB4+Il7bEQ6jfBE=;
+        b=yfDHj0YjnWw9UdMisFvthoL8EnosIR6Dwu8FS9Ay2qlq+Oy1770ENjJGHB+EKYsJmK
+         PI9fNVq7tt8XfX9hyKnwNE/51aRypun1wmWkRmRjP2TSZNnAbg+3L11MK86W8DC7V+wu
+         5ZE6t6NqsP1ls3L4fJVD7c9z/BEBuSSTaNlXazr6OhHWT0BWtp3S6whMB8/+0kIFUefh
+         1qhxwDqZcclee0cBZo1qXZF6rqeiUQfPi1i7U1aVYhAjveVJ7eJkoSaNQDUOLLZtYO8b
+         uz/qqnvTQRoKaeBOJVojNZVzB7Pv8Hlf2S+7lzaXMqhlUij8FJQqJk0LoGodP2m79vmw
+         Cs8g==
+X-Gm-Message-State: AOAM532Dy5/g9wxI2C+PyOS7Y+3KT0SkAdfn/6xitBnALZ5u0ZoGIrSf
+        sdB1h1mFKdM2IqhedCNHxflN7Js+hHlNQgXjo5c=
+X-Google-Smtp-Source: ABdhPJyz9uewAPOviRNb9lRbFMWmlKfe4MEc5Ch/CVVPk6ELko+U94XVx8kNxQbapC+qnyfGx6fLLQuaR/dlD1GXwiQ=
+X-Received: by 2002:a6b:c891:: with SMTP id y139mr2810100iof.63.1641988873190;
+ Wed, 12 Jan 2022 04:01:13 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <56202063c1eba6020b356a393178b9626652198e.camel@hammerspace.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Received: by 2002:a05:6e04:131c:0:0:0:0 with HTTP; Wed, 12 Jan 2022 04:01:12
+ -0800 (PST)
+Reply-To: mrsaishag45@gmail.com
+From:   Mrs Aisha Al-Qaddafi <gaddafia487@gmail.com>
+Date:   Wed, 12 Jan 2022 04:01:12 -0800
+Message-ID: <CAJbXPF1_M37_ppjiRuoQx3HTV1DdfvDwaHYjjH88ioohRUTBTQ@mail.gmail.com>
+Subject: Dear Friend,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 11, 2022 at 06:08:27PM +0000, Trond Myklebust wrote:
-> So firstly, there already has been a discussion of this on linux-
-> fsdevel (and linux-kernel):
-> https://lore.kernel.org/lkml/20160429125813.23636.49830.stgit@warthog.procyon.org.uk/
-> and the consensus at the time was that these attributes were not needed
-> in statx.
+Dear Friend,
 
-And apparently someone now has a different opinion, so we should restart
-it.
+I came across your e-mail contact prior a private search while in need
+of your assistance. My name is Aisha Gaddafi a single
 
-> 
-> The other issue is that this is not a duplicate of stat. It's adding
-> support for both _setting_ and reading back these attributes. The
-> ability to supporting reading the archive bit / backup time, for
-> example, is completely useless unless you can also set those values
-> after backing up the file. Right now, there is no support in the VFS
-> for setting any attributes that are not part of the standard POSIX set.
+Mother and a Widow with three Children. I am the only biological
+Daughter of late Libyan President (Late Colonel Muammar
 
-Either way this has no business being private in NFS.  We need to
-come to an agreement to have a proper interface for CIFS, fat, exfat
-and the 2 ntfs drivers as welŀ.  With the first three being the most
-important ones.
+Gaddafi).
 
-So big fat nack for stashing something like this into nfs without proper
-review and coordination.
+I have investment funds worth Twenty Seven Million Five Hundred
+Thousand United State Dollar ($27.500.000.00 ) and i need a
+
+trusted investment Manager/Partner because of my current refugee
+status, however, I am interested in you for investment
+
+project assistance in your country, may be from there, we can build
+business relationship in the nearest future.
+
+I am willing to negotiate investment/business profit sharing ratio
+with you base on the future investment earning profits.
+If you are willing to handle this project on my behalf kindly reply
+urgent to enable me provide you more information about
+Mrs Aisha Gaddafi
