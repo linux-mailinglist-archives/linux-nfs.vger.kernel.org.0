@@ -2,135 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8383C48BDF5
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 05:48:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4F1B48BEF0
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 08:21:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346072AbiALEsi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jan 2022 23:48:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57302 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233079AbiALEsi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 23:48:38 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF360C061748
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 20:48:37 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id p5so2933016ybd.13
-        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 20:48:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zLZAC3CMSCIXpnQURW0tWmpIOKmVcmIrl+Z52NxTeuQ=;
-        b=LCIkAOvJVwWFouI+xP+uISMFfHNgU9FxU3p7BFxfiPXa+M0vBPwjMymrSUDgziWttR
-         p144ZmbB3+yXZm0rpBTHosOYbFVunyGfkCsGwtkDPSkwJwQnfeXAKLxiob6mpjH/1qnr
-         ZFIvxkOPQh3H2G2HUVdqapmUPxUsyAJcsLEYGgC1KBGfLGl0gmadY8XUorqu6xa5fihw
-         xN5juk8uCbIX47eUEFIAhfe+y9Idl6gNJlzF3gnriES26RuyD3SYMZS281eEmMpgUspK
-         l72b5hAJplFcyjP5xYy4kh62C4EQIjBpkW+ileNPV9Ak7yAp3Yp+Bxpawtqe2zIBZYoE
-         N3mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zLZAC3CMSCIXpnQURW0tWmpIOKmVcmIrl+Z52NxTeuQ=;
-        b=KQLyXuZLcNPSQwbJbhCYjiXdmUpGLOUHXSj6O/pmJkfjlyk1uPkMOOkynpxaxjn3YE
-         ZXGkeoms5kmTWSTMRGBSH9yPtyR2IRsVfAmafqltHJzChXRe21gqrv4z0WPW6wnJ2NVA
-         8+g0OHFemhqhUDljOARADfJK2ux8Rdub6M/h1KaOaQZIL5WRuhQ0KkqmXWZCmyHirNMZ
-         4gGaZ/Lyh6XCSW8yWubimlGkypOzGAEhhaJNJd5a6B2YY+DxJb1bIAP4BRzePQro9EYT
-         WX0wc3OXjZHire3I0L1vC3uVXbAkSGYKkkX5NB5oQx74avc/WZwigqudjJIjen5KsJhi
-         qCXQ==
-X-Gm-Message-State: AOAM531N84Kt/w5MUxM9PIuL3cuC0LQkf0QEMJN7Uor5DSc08RFS96F9
-        cGEmtba/SvSSFsyT8hrAmWwXuCrveajaVYDltIiDS5WTTt+em1x+4+Y=
-X-Google-Smtp-Source: ABdhPJzM6r3HV7zixUCi+df2G19UeRviY+iC+6vrvYNbRVy+qhG00MN449rGwCohBbkIGf44mBkrBtf62rcRCnOCTUs=
-X-Received: by 2002:a25:abcb:: with SMTP id v69mr10868130ybi.317.1641962916903;
- Tue, 11 Jan 2022 20:48:36 -0800 (PST)
+        id S1351185AbiALHU6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 02:20:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:28533 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1351175AbiALHU4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 02:20:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1641972056;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FtIbmDuJfaFcyPVq4lejO1YQT8JqBoet7CpPdE4P+Vs=;
+        b=fjJ0xsynsk5eXCw2cnqb8kVizQjnUDAV065WDY03JJT3dKjjEBhBK5dpo793WAcHV4T3Hv
+        nc/HWOlQwjD4fDC4obVRDTfbB2G3k/Q67GJcf5l8+Q09mw+3/g36BMiEq3GgqUNNY77Adl
+        hNBjME4kZn8cm2ziSnBq2eOf2tX1R3k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-664-iG6Fe2TPNT6yCUhnGs8TxA-1; Wed, 12 Jan 2022 02:20:50 -0500
+X-MC-Unique: iG6Fe2TPNT6yCUhnGs8TxA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 158141023F50;
+        Wed, 12 Jan 2022 07:20:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 914407B9D2;
+        Wed, 12 Jan 2022 07:20:41 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <3462849.1641593783@warthog.procyon.org.uk>
+References: <3462849.1641593783@warthog.procyon.org.uk> <164021579335.640689.2681324337038770579.stgit@warthog.procyon.org.uk> <164021479106.640689.17404516570194656552.stgit@warthog.procyon.org.uk>
+To:     Steve French <smfrench@gmail.com>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        linux-cifs@vger.kernel.org,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 63/68] cifs: Support fscache indexing rewrite
 MIME-Version: 1.0
-References: <20211220085649.8196-1-songmuchun@bytedance.com>
- <20211220085649.8196-11-songmuchun@bytedance.com> <Yd3h2YwGIZs1A+2s@carbon.dhcp.thefacebook.com>
-In-Reply-To: <Yd3h2YwGIZs1A+2s@carbon.dhcp.thefacebook.com>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Wed, 12 Jan 2022 12:48:00 +0800
-Message-ID: <CAMZfGtVYX=SoHsqRPFeqY4JK=M3cq2VuXJrkns=Q2rQGVZnCnA@mail.gmail.com>
-Subject: Re: [PATCH v5 10/16] mm: list_lru: allocate list_lru_one only when needed
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Yang Shi <shy828301@gmail.com>, Alex Shi <alexs@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        jaegeuk@kernel.org, chao@kernel.org,
-        Kari Argillander <kari.argillander@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
-        Xiongchun duan <duanxiongchun@bytedance.com>,
-        Fam Zheng <fam.zheng@bytedance.com>,
-        Muchun Song <smuchun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <534839.1641972040.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 12 Jan 2022 07:20:40 +0000
+Message-ID: <534840.1641972040@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jan 12, 2022 at 4:00 AM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Dec 20, 2021 at 04:56:43PM +0800, Muchun Song wrote:
-> > In our server, we found a suspected memory leak problem. The kmalloc-32
-> > consumes more than 6GB of memory. Other kmem_caches consume less than
-> > 2GB memory.
-> >
-> > After our in-depth analysis, the memory consumption of kmalloc-32 slab
-> > cache is the cause of list_lru_one allocation.
-> >
-> >   crash> p memcg_nr_cache_ids
-> >   memcg_nr_cache_ids = $2 = 24574
-> >
-> > memcg_nr_cache_ids is very large and memory consumption of each list_lru
-> > can be calculated with the following formula.
-> >
-> >   num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
-> >
-> > There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
-> >
-> >   crash> list super_blocks | wc -l
-> >   952
-> >
-> > Every mount will register 2 list lrus, one is for inode, another is for
-> > dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
-> > MB (~5.6GB). But the number of memory cgroup is less than 500. So I
-> > guess more than 12286 containers have been deployed on this machine (I
-> > do not know why there are so many containers, it may be a user's bug or
-> > the user really want to do that). And memcg_nr_cache_ids has not been
-> > reduced to a suitable value. This can waste a lot of memory.
->
-> But on the other side you increase the size of struct list_lru_per_memcg,
-> so if number of cgroups is close to memcg_nr_cache_ids, we can actually
-> waste more memory.
+Hi Steve,
 
-The saving comes from the fact that we currently allocate scope for every
-memcg to be able to be tracked on every superblock instantiated in the system,
-regardless of whether that superblock is even accessible to that memcg.
+I think this needs the further changes below, which I will fold in.  The
+issues are:
 
-In theory, increasing struct list_lru_per_memcg is not significant, most
-savings is from decreasing the number of allocations of struct
-list_lru_per_memcg.
+ (1) One of the error paths in cifs_atomic_open() uses the cookie when it
+     should jump around that.
 
-> I'm not saying the change is not worth it, but would be
-> nice to add some real-world numbers.
+ (2) There's an additional successful return from the middle of cifs_open(=
+)
+     that I mistook for an error path, but does need to use the cookie on
+     the way out.
 
-OK. I will do a test.
+David
+---
+diff --git a/fs/cifs/dir.c b/fs/cifs/dir.c
+index 6186824b366e..bf3b4c9901b9 100644
+--- a/fs/cifs/dir.c
++++ b/fs/cifs/dir.c
+@@ -508,6 +508,7 @@ cifs_atomic_open(struct inode *inode, struct dentry *d=
+irentry,
+ 			server->ops->close(xid, tcon, &fid);
+ 		cifs_del_pending_open(&open);
+ 		rc =3D -ENOMEM;
++		goto out;
+ 	}
+ =
 
->
-> Or it's all irrelevant and is done as a preparation to the conversion to xarray?
+ 	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index 44da7646f789..47333730c963 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -568,7 +568,7 @@ int cifs_open(struct inode *inode, struct file *file)
+ 			spin_lock(&CIFS_I(inode)->deferred_lock);
+ 			cifs_del_deferred_close(cfile);
+ 			spin_unlock(&CIFS_I(inode)->deferred_lock);
+-			goto out;
++			goto use_cache;
+ 		} else {
+ 			_cifsFileInfo_put(cfile, true, false);
+ 		}
+@@ -630,19 +630,6 @@ int cifs_open(struct inode *inode, struct file *file)
+ 		goto out;
+ 	}
+ =
 
-Right. It's also a preparation to transfer to xarray.
+-
+-	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
+-			   file->f_mode & FMODE_WRITE);
+-	if (file->f_flags & O_DIRECT &&
+-	    (!((file->f_flags & O_ACCMODE) !=3D O_RDONLY) ||
+-	     file->f_flags & O_APPEND)) {
+-		struct cifs_fscache_inode_coherency_data cd;
+-		cifs_fscache_fill_coherency(file_inode(file), &cd);
+-		fscache_invalidate(cifs_inode_cookie(file_inode(file)),
+-				   &cd, i_size_read(file_inode(file)),
+-				   FSCACHE_INVAL_DIO_WRITE);
+-	}
+-
+ 	if ((oplock & CIFS_CREATE_ACTION) && !posix_open_ok && tcon->unix_ext) {
+ 		/*
+ 		 * Time to set mode which we can not set earlier due to
+@@ -661,6 +648,19 @@ int cifs_open(struct inode *inode, struct file *file)
+ 				       cfile->pid);
+ 	}
+ =
 
-> If so, please, make it clear.
++use_cache:
++	fscache_use_cookie(cifs_inode_cookie(file_inode(file)),
++			   file->f_mode & FMODE_WRITE);
++	if (file->f_flags & O_DIRECT &&
++	    (!((file->f_flags & O_ACCMODE) !=3D O_RDONLY) ||
++	     file->f_flags & O_APPEND)) {
++		struct cifs_fscache_inode_coherency_data cd;
++		cifs_fscache_fill_coherency(file_inode(file), &cd);
++		fscache_invalidate(cifs_inode_cookie(file_inode(file)),
++				   &cd, i_size_read(file_inode(file)),
++				   FSCACHE_INVAL_DIO_WRITE);
++	}
++
+ out:
+ 	free_dentry_path(page);
+ 	free_xid(xid);
 
-Will do.
-
-Thanks.
