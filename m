@@ -2,107 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E2A48BB6D
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 00:32:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 296CC48BD76
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 03:55:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346830AbiAKXcE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 11 Jan 2022 18:32:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43188 "EHLO
+        id S1348962AbiALCzK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 11 Jan 2022 21:55:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233873AbiAKXcC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 18:32:02 -0500
-Received: from gandalf.ozlabs.org (gandalf.ozlabs.org [IPv6:2404:9400:2:0:216:3eff:fee2:21ea])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC41C06173F;
-        Tue, 11 Jan 2022 15:32:01 -0800 (PST)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4JYRmM5gZ5z4xmx;
-        Wed, 12 Jan 2022 10:31:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-        s=201702; t=1641943919;
-        bh=4Z3sqpGIFVL84J+SH3/JqcsCmk3/t539vZt80mjQAn0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CAL+VhB7tnGuerjBXg+KBrIXNM5L47Grr2Z7MctVembeA/rhXP/4Qlff+eCDzsasV
-         m07b4UblcBcm43Gt6g+CJaaPiTBASmT/8BpIYuXG0NheZif123+Jx3mSG4ghjD5Bnr
-         vKKAPvQRgL6gxoRfQc3w+t52HyU2Os/2DuZKOZTS1fOqFAoDtgP7C2312g4o2oCT9E
-         ERz+u6FsuLxtJw9CYnZASZbrKyZ1A31xsC+V69GzuN44Trb8RVnjGBHrbSpTbGiYjQ
-         FJEC1IE7aJxnO2oJnV8uNmJItDD1jVnRm6IH/ot9+21m/9tIAwlSSUqFWNTrs1TqXI
-         8mSVssM+Jlbjw==
-Date:   Wed, 12 Jan 2022 10:31:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Daire Byrne <daire@dneg.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Omar Sandoval <osandov@osandov.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] fscache, cachefiles: Rewrite
-Message-ID: <20220112103146.03c88319@canb.auug.org.au>
-In-Reply-To: <510611.1641942444@warthog.procyon.org.uk>
-References: <510611.1641942444@warthog.procyon.org.uk>
+        with ESMTP id S236410AbiALCzK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 11 Jan 2022 21:55:10 -0500
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35280C06173F
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:55:10 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id z22so2006040ybi.11
+        for <linux-nfs@vger.kernel.org>; Tue, 11 Jan 2022 18:55:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DjG0MxzMFp+mXx/fhnGFPP77MfipZrWjEmzToKHDYMs=;
+        b=6ayrnxbcnFPPUmYvOduF6Pq8fL2AVcsSL/nubUFKSkA7/WgCyNwQdZQdDzMwsZ4Iu0
+         OXroeHV85F09Q6q2lr0/5r/gpbOga2pzMo6oV1EFUARsGfTa7BYSHl4xZ5wzJL6CIduH
+         iT6L6X2WXlOe27ZoL3BpfdmLF0LpMmSfe49ksQFPud2lkCL/06AcTkpTmknzS5a+8rbI
+         kPfm6lvx1fQEUzj3n84koZ6w71PtBk2WY7ahFYrFnZaAJulE3yCNpyVKFLjDhM6Mj1TJ
+         QsbPEC7V7dg1O7Y+iEtXb9UGx4ExjcJRz9aecVvHlJMyUxUym4J32jZsUqWkt9dpnHPY
+         FKnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DjG0MxzMFp+mXx/fhnGFPP77MfipZrWjEmzToKHDYMs=;
+        b=8LmauktM6c4ZKomTwCLT6A2cc7dzq3Hwu7BCwST3xZ1Kt4PvzPcXjqVPZ8gKsD3QDK
+         l+CENANy2AbrWz7ykBIO/r97qY3FDSP5ttvRdqaQGLNTNisU8tCqDx1/5S9MDxP4nwMV
+         R9MhNPGFa8kbFM508ZGt6Q2pGpdMiTw4E81qANjZ68HBF80LrMiTNkagsDyyyCQhoxY3
+         heg6tye6nap9iQEqjayssWWSjO/DzTJ3VzkVoR3jrlFS8xgyuThdMYMD62rkUacsshvf
+         l5FnrvJAW0srESWIjNLktIosfCHU5BP5BMtfNrgmcPbBWNr522CcGGg3OCu6FUkIizle
+         IsJg==
+X-Gm-Message-State: AOAM533nIO8Ee+jZZ8hFP21ti7ZTYzqv0kwwNNt495h3tz7+y/8f9FwR
+        BDyZYjzh0JQGvlxqIBuKukN/E23tY5EI7PIp+7EgfQ==
+X-Google-Smtp-Source: ABdhPJwHIWCaocHbRKCDyMX3VTIF7z/62FPkM6VJ/tLncpXUrm6uc9D4GQFcLEa7fX824hQsBn3XLLVsBaDv2Ms1ps4=
+X-Received: by 2002:a25:abcb:: with SMTP id v69mr10514951ybi.317.1641956109479;
+ Tue, 11 Jan 2022 18:55:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TSD_6X.o4QL4mtle5E/6NvU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+References: <20211220085649.8196-1-songmuchun@bytedance.com>
+ <20211220085649.8196-4-songmuchun@bytedance.com> <Yd3SoypOW0EBZj6K@carbon.dhcp.thefacebook.com>
+In-Reply-To: <Yd3SoypOW0EBZj6K@carbon.dhcp.thefacebook.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Wed, 12 Jan 2022 10:54:32 +0800
+Message-ID: <CAMZfGtU7qw4C3SaF=D5NYpn5oyo4mc5o=Y8TCOkG5a58W5DYRA@mail.gmail.com>
+Subject: Re: [PATCH v5 03/16] fs: introduce alloc_inode_sb() to allocate
+ filesystems specific inode
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Yang Shi <shy828301@gmail.com>, Alex Shi <alexs@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        jaegeuk@kernel.org, chao@kernel.org,
+        Kari Argillander <kari.argillander@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
+        Xiongchun duan <duanxiongchun@bytedance.com>,
+        Fam Zheng <fam.zheng@bytedance.com>,
+        Muchun Song <smuchun@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---Sig_/TSD_6X.o4QL4mtle5E/6NvU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi David,
-
-On Tue, 11 Jan 2022 23:07:24 +0000 David Howells <dhowells@redhat.com> wrot=
-e:
+On Wed, Jan 12, 2022 at 2:55 AM Roman Gushchin <guro@fb.com> wrote:
 >
->     I think also that a conflict[10] spotted by Stephen Rothwell between =
-my
->     series and some changes that went in since the branching point
->     shouldn't be an issue with this removed.
+> On Mon, Dec 20, 2021 at 04:56:36PM +0800, Muchun Song wrote:
+> > The allocated inode cache is supposed to be added to its memcg list_lru
+> > which should be allocated as well in advance. That can be done by
+> > kmem_cache_alloc_lru() which allocates object and list_lru. The file
+> > systems is main user of it. So introduce alloc_inode_sb() to allocate
+> > file system specific inodes and set up the inode reclaim context
+> > properly. The file system is supposed to use alloc_inode_sb() to
+> > allocate inodes. In the later patches, we will convert all users to the
+> > new API.
+> >
+> > Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> > ---
+> >  Documentation/filesystems/porting.rst |  5 +++++
+> >  fs/inode.c                            |  2 +-
+> >  include/linux/fs.h                    | 11 +++++++++++
+> >  3 files changed, 17 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/filesystems/porting.rst b/Documentation/filesystems/porting.rst
+> > index bf19fd6b86e7..c9c157d7b7bb 100644
+> > --- a/Documentation/filesystems/porting.rst
+> > +++ b/Documentation/filesystems/porting.rst
+> > @@ -45,6 +45,11 @@ typically between calling iget_locked() and unlocking the inode.
+> >
+> >  At some point that will become mandatory.
+> >
+> > +**mandatory**
+> > +
+> > +The foo_inode_info should always be allocated through alloc_inode_sb() rather
+> > +than kmem_cache_alloc() or kmalloc() related.
+>
+> I'd add a couple of words on why it has to be allocated this way.
 
-There is also this conflict against the pifdf tree (which may or may
-not be merged before this):
+Will do.
 
-https://lore.kernel.org/all/20211206090755.3c6f6fe4@canb.auug.org.au/
+> > +
+> >  ---
+>
+> Reviewed-by: Roman Gushchin <guro@fb.com>
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TSD_6X.o4QL4mtle5E/6NvU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmHeE2IACgkQAVBC80lX
-0GykKgf+LY4OWHMyvWj+UkQIEcaKG5r9OhPcLyt0zfDe0PRZQmlxXnY3gTri4emO
-7Fj3IMkvEOSOP3VZlIRTpYauhwuCpB+yQDB/8X303z+a2aF9f/K1wrt0wvfGAqUY
-qlGXd0zwWB9XPkGCkYEMi5oVP6TbMKajCMkq5rFhZcQS7YfHrWS/uJhpcmeVU0gn
-BYKtZyQ5RBY8RImGGBnhGjQLxhXBn90mi729iNaFVPzeonasUxYQzZaiWSMGxWov
-a2RcKHhg+dwlj1BTgB3lEnny9EM57priTBX8HnJwconRDhrWaGBv+k973nnHHZq0
-x1fteziRSjCPvg4mlWtvA8XrBSjL1g==
-=alke
------END PGP SIGNATURE-----
-
---Sig_/TSD_6X.o4QL4mtle5E/6NvU--
+Thanks.
