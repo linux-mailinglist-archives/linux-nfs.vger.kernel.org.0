@@ -2,81 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47BF748C3A4
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 13:01:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 470DF48C40C
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Jan 2022 13:32:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353022AbiALMBP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jan 2022 07:01:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353017AbiALMBO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 07:01:14 -0500
-Received: from mail-io1-xd35.google.com (mail-io1-xd35.google.com [IPv6:2607:f8b0:4864:20::d35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8DEDC06173F
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jan 2022 04:01:13 -0800 (PST)
-Received: by mail-io1-xd35.google.com with SMTP id j1so3302110iob.1
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Jan 2022 04:01:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=KalP7pqUldn0owlfQ20Q8VvgpD4qNB4+Il7bEQ6jfBE=;
-        b=SggCxYop4x6AUz17YPeViEFXSiHUpJbn2eaOZ321yQBtSKHfZAU/OqkhXSvsfitNjL
-         /fDKDIua+t8340kyX9OQG1Cw5hx7n1g/hnjZdKr3+3PdMeXUcMCIK/jY/iYq2ePu1Kgh
-         jDVr8hAZCgtM8GweWCFZUEB8bccOXPwQNxijDuZHpEfK5QC/zvAA/+jOsU+0UVBXefYZ
-         uy0xae1hwt4k5uGYnYOi9If5f75ZGFGnDlBirlKiKlzjyhuOWrY5y82NmpIQqGFjpNro
-         IDbVwHGaRdqaczp166km7o/py16TeS5RQToQ6lyiTnWw70/47Olmv5Ad9Ixn4CjPqdmA
-         WSnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=KalP7pqUldn0owlfQ20Q8VvgpD4qNB4+Il7bEQ6jfBE=;
-        b=yfDHj0YjnWw9UdMisFvthoL8EnosIR6Dwu8FS9Ay2qlq+Oy1770ENjJGHB+EKYsJmK
-         PI9fNVq7tt8XfX9hyKnwNE/51aRypun1wmWkRmRjP2TSZNnAbg+3L11MK86W8DC7V+wu
-         5ZE6t6NqsP1ls3L4fJVD7c9z/BEBuSSTaNlXazr6OhHWT0BWtp3S6whMB8/+0kIFUefh
-         1qhxwDqZcclee0cBZo1qXZF6rqeiUQfPi1i7U1aVYhAjveVJ7eJkoSaNQDUOLLZtYO8b
-         uz/qqnvTQRoKaeBOJVojNZVzB7Pv8Hlf2S+7lzaXMqhlUij8FJQqJk0LoGodP2m79vmw
-         Cs8g==
-X-Gm-Message-State: AOAM532Dy5/g9wxI2C+PyOS7Y+3KT0SkAdfn/6xitBnALZ5u0ZoGIrSf
-        sdB1h1mFKdM2IqhedCNHxflN7Js+hHlNQgXjo5c=
-X-Google-Smtp-Source: ABdhPJyz9uewAPOviRNb9lRbFMWmlKfe4MEc5Ch/CVVPk6ELko+U94XVx8kNxQbapC+qnyfGx6fLLQuaR/dlD1GXwiQ=
-X-Received: by 2002:a6b:c891:: with SMTP id y139mr2810100iof.63.1641988873190;
- Wed, 12 Jan 2022 04:01:13 -0800 (PST)
+        id S240523AbiALMcp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 07:32:45 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12209 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S240219AbiALMco (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Wed, 12 Jan 2022 07:32:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1641990764; x=1673526764;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=17feNRCWxaaCotEaxWchhHxpKB2++aseGYBTFYm3A1E=;
+  b=f0WcNd0Ntzfy2JSRxx59uutoPn0041jOsv4R0J5EYpwyFyKnWz4Rro6Y
+   Rqj6TOZXRIlEOptwwymqBuMMnzwJW+scTNlxey4AF8jyOTbEHoa1y9Ima
+   +gf8YTPVJjT0CxeyJ+/fl2nLFfIy3KWGY+UbM2zoY6OQ/OaZo9bdE4/YE
+   59LVQVSB9lbjbnt8Ypbk3Zs/9Oxj7iRasuQvqLCJHYSlzMCRcJ5Ewcz9x
+   osFdM+5EU2DXyoWbri8iWrftotMnx9bhW7pTQULo9NK4UVVGA/mvWTFzz
+   Xi2e4Nrcb1nbeJtW+o4AB7XHx4qH41SB8IOZ4de0G4hYpr9I6sgfqqvZy
+   w==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10224"; a="224418034"
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="224418034"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2022 04:32:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,282,1635231600"; 
+   d="scan'208";a="592990198"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 12 Jan 2022 04:32:42 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1n7cny-0005mi-6L; Wed, 12 Jan 2022 12:32:42 +0000
+Date:   Wed, 12 Jan 2022 20:32:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Olga Kornievskaia <kolga@netapp.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH linux-next] nfs4_discover_trunking() can be static
+Message-ID: <20220112123218.GA25976@65a275238185>
+References: <202201122012.9sn7Q8EF-lkp@intel.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6e04:131c:0:0:0:0 with HTTP; Wed, 12 Jan 2022 04:01:12
- -0800 (PST)
-Reply-To: mrsaishag45@gmail.com
-From:   Mrs Aisha Al-Qaddafi <gaddafia487@gmail.com>
-Date:   Wed, 12 Jan 2022 04:01:12 -0800
-Message-ID: <CAJbXPF1_M37_ppjiRuoQx3HTV1DdfvDwaHYjjH88ioohRUTBTQ@mail.gmail.com>
-Subject: Dear Friend,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202201122012.9sn7Q8EF-lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dear Friend,
+fs/nfs/nfs4proc.c:4008:5: warning: symbol 'nfs4_discover_trunking' was not declared. Should it be static?
 
-I came across your e-mail contact prior a private search while in need
-of your assistance. My name is Aisha Gaddafi a single
+Fixes: 82ebfb0d6333 ("NFSv4.1 query for fs_location attr on a new file system")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
+ nfs4proc.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Mother and a Widow with three Children. I am the only biological
-Daughter of late Libyan President (Late Colonel Muammar
-
-Gaddafi).
-
-I have investment funds worth Twenty Seven Million Five Hundred
-Thousand United State Dollar ($27.500.000.00 ) and i need a
-
-trusted investment Manager/Partner because of my current refugee
-status, however, I am interested in you for investment
-
-project assistance in your country, may be from there, we can build
-business relationship in the nearest future.
-
-I am willing to negotiate investment/business profit sharing ratio
-with you base on the future investment earning profits.
-If you are willing to handle this project on my behalf kindly reply
-urgent to enable me provide you more information about
-Mrs Aisha Gaddafi
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a93deeca0c86f..7a59ec2d7dacc 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4005,7 +4005,7 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
+ 	return status;
+ }
+ 
+-int nfs4_discover_trunking(struct nfs_server *server, struct nfs_fh *fhandle)
++static int nfs4_discover_trunking(struct nfs_server *server, struct nfs_fh *fhandle)
+ {
+ 	struct nfs4_exception exception = {
+ 		.interruptible = true,
