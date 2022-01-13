@@ -2,66 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C29F548D06B
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jan 2022 03:26:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2101848D122
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Jan 2022 04:53:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231630AbiAMC0K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Jan 2022 21:26:10 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:36146 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231593AbiAMC0I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 21:26:08 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0V1hG1CA_1642040765;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0V1hG1CA_1642040765)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 13 Jan 2022 10:26:06 +0800
-From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     kolga@netapp.com, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yang Li <yang.lee@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] NFS: Fix nfs4_proc_get_locations() kernel-doc comment
-Date:   Thu, 13 Jan 2022 10:26:04 +0800
-Message-Id: <20220113022604.25617-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        id S232384AbiAMDwx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Jan 2022 22:52:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32986 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232376AbiAMDww (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Jan 2022 22:52:52 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218CBC06173F;
+        Wed, 12 Jan 2022 19:52:52 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id h23so6652070iol.11;
+        Wed, 12 Jan 2022 19:52:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IkTW/f1btDdtmebJOs9va1brO9n2byvbc/TGFMyWGVA=;
+        b=D4dKKHpgBJu2/atbonwXBGxVJ6n560QSSx4z9Bf9BPfse7wy1LFez2vTj7XNQS++EJ
+         YsPHn0Yi3PgCr8YyGKKNWCjLJcnzyIux8ggWkwc2v/AySv+7EY/Eqv8mnjjxNTnjnB2y
+         F+Zg4PqzXHV3AggNVy4Nl/b26Wczp2qUBY13R6iUrO7wuqQvnna7veM+nnI/RYBtowJu
+         hDffD8cI5EcgbIl7OeOGoZQ8HIdJfDlv9DWQHUwKB2YhzoUQ2i04M+XsshSitl4jPN4h
+         k1EUTr7xHgaye4gjMXc2G0UzBm0IZ4ZOAPogopZv3b9csUn9VuhQJ4AaMSAF8gdGPL2B
+         JvAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IkTW/f1btDdtmebJOs9va1brO9n2byvbc/TGFMyWGVA=;
+        b=ALAaP3rR4MciCRmFBi6LftcEB/0bDXF8VDgsQprovk7Tl3MQLDKZ+EcVhJ5EOOeOyz
+         9GCIJkg0gDE9tD5PMwPFK8CPYFNvWPUCP9a4LIdnUCwUwDofGjlVplbo/APtqci5Oo5l
+         F6HkW9RfTox6rFefkxOVvI5HyMoyek4p6hMdvyEvrUBuYCWxgg3aIJImEvBYb0pWWlsz
+         xqZviXWlOgPAjXT06LbBo1aQxqxi6JQ3T9XAlo84YtKwnn4qZcgMngdrIDa5G6YuvHoN
+         8c3fvACoMlkw31KkOcizkN6xXi445/I9PRGveDmZ707IUsZxppsFy0+0MlsMvQR+bBBq
+         LBfA==
+X-Gm-Message-State: AOAM530KxdnXqbF+F2c/ovaL/VG7qi7vrF6jsqT4Xd2tBDpEhSjBUEzf
+        t4N3kyRby907g1f1K4l7O9NiCRu3SfYqknvxyFs=
+X-Google-Smtp-Source: ABdhPJwgMuCPjLMe0KKbmpitTjVZUuTLSsyhB1hPisBBTzYcZ/TPIDnRp9aDvCtWNvEoMorQRff/QkX80COOvac4y80=
+X-Received: by 2002:a5d:9155:: with SMTP id y21mr1264833ioq.112.1642045971472;
+ Wed, 12 Jan 2022 19:52:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220111074309.GA12918@kili> <Yd1ETmx/HCigOrzl@infradead.org>
+ <CAOQ4uxg9V4Jsg3jRPnsk2AN7gPrNY8jRAc87tLvGW+TqH9OU-A@mail.gmail.com> <20220112174301.GB19154@magnolia>
+In-Reply-To: <20220112174301.GB19154@magnolia>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 13 Jan 2022 05:52:40 +0200
+Message-ID: <CAOQ4uxh7wpxx2H6Vpm26OdigXbWCCLO1xbFapupvLCn8xOiL=w@mail.gmail.com>
+Subject: Re: [bug report] NFS: Support statx_get and statx_set ioctls
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        richard.sharpe@primarydata.com,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        lance.shelton@hammerspace.com,
+        Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ntfs3@lists.linux.dev,
+        Steve French <sfrench@samba.org>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Ralph Boehme <slow@samba.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add the description of @server and @fhandle, and remove the excess
-@inode in nfs4_proc_get_locations() kernel-doc comment to remove
-warnings found by running scripts/kernel-doc, which is caused by
-using 'make W=1'.
+> > Which leaves us with an API to set the 'time backup' attribute, which
+> > is a "mutable creation time" [*].
+> > cifs supports setting it via setxattr and I guess ntfs3 could use an
+> > API to set it as well.
+> >
+> > One natural interface that comes to mind is:
+> >
+> > struct timespec times[3] = {/* atime, mtime, crtime */}
+> > utimensat(dirfd, path, times, AT_UTIMES_ARCHIVE);
+> >
+> > and add ia_crtime with ATTR_CRTIME to struct iattr.
+> >
+> > Trond,
+> >
+> > Do you agree to rework your patches in this direction?
+> > Perhaps as the first stage, just use statx() and ioctls to set the
+> > attributes to give enough time for bikeshedding the set APIs
+> > and follow up with the generic set API patches later?
+> >
+> > Thanks,
+> > Amir.
+> >
+> > [*] I find it convenient to use the statx() terminology of "btime"
+> > to refer to the immutable birth time provided by some filesystems
+> > and to use "crtime" for the mutable creation time for archiving,
+> > so that at some point, some filesystems may provide both of
+> > these times independently.
+>
+> I disagree because XFS and ext4 both use 'crtime' for the immutable
+> birth time, not a mutable creation time for archiving.  I think we'd
+> need to be careful about wording here if there is interest in adding a
+> user-modifiable file creation time (as opposed to creation time for a
+> specific instance of an inode) to filesystems.
+>
+> Once a year or so we get a question/complaint from a user about how they
+> can't change the file creation time and we have to explain to them
+> what's really going on.
+>
 
-fs/nfs/nfs4proc.c:8219: warning: Function parameter or member 'server'
-not described in 'nfs4_proc_get_locations'
-fs/nfs/nfs4proc.c:8219: warning: Function parameter or member 'fhandle'
-not described in 'nfs4_proc_get_locations'
-fs/nfs/nfs4proc.c:8219: warning: Excess function parameter 'inode'
-description in 'nfs4_proc_get_locations'
+To add one more terminology to the mix - when Samba needed to cope
+with these two terminologies they came up with itime for "instantiation time"
+(one may also consider it "immutable time").
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
----
- fs/nfs/nfs4proc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Another issue besides wording, is that statx btime can be either of those
+things depending on the filesystem, so if we ever add mutable btime to
+ext4/xfs, what's statx btime going to return?
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index e6b49d6318bc..2fc814185fba 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -8197,7 +8197,8 @@ int nfs4_set_nfs4_statx(struct inode *inode,
- 
- /**
-  * nfs4_proc_get_locations - discover locations for a migrated FSID
-- * @inode: inode on FSID that is migrating
-+ * @server: pointer to nfs_server to process
-+ * @fhandle: pointer to the kernel NFS client file handle
-  * @locations: result of query
-  * @page: buffer
-  * @cred: credential to use for this operation
--- 
-2.20.1.7.g153144c
+One more question to ask, if we were to add mutable btime to ext4/xfs
+should it be an additional attribute at all or should we allow with explicit
+filesystem flag and maybe also mount option to modify the existing crtime
+inode field? if we can accept that some users are willing to trade the
+immutable crtime with mutable btime, then we can settle with a flag
+indicating "warranty seal removed" from the existing crtime field.
+At least one advantage of this approach is that it simplifies terminology.
 
+Thanks,
+Amir.
