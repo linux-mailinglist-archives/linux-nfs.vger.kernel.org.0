@@ -2,99 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 540FD48E974
-	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jan 2022 12:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC47248E9FC
+	for <lists+linux-nfs@lfdr.de>; Fri, 14 Jan 2022 13:36:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240878AbiANLvA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 14 Jan 2022 06:51:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42222 "EHLO
+        id S236045AbiANMgg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 14 Jan 2022 07:36:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234329AbiANLu7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jan 2022 06:50:59 -0500
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0FA0C06161C
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jan 2022 03:50:59 -0800 (PST)
-Received: by mail-pj1-x1035.google.com with SMTP id l10-20020a17090a384a00b001b22190e075so21711740pjf.3
-        for <linux-nfs@vger.kernel.org>; Fri, 14 Jan 2022 03:50:59 -0800 (PST)
+        with ESMTP id S230379AbiANMgg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 14 Jan 2022 07:36:36 -0500
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC043C061574
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Jan 2022 04:36:35 -0800 (PST)
+Received: by mail-lf1-x133.google.com with SMTP id m3so15788887lfu.0
+        for <linux-nfs@vger.kernel.org>; Fri, 14 Jan 2022 04:36:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:reply-to:sender:from:date:message-id:subject:to;
-        bh=h0ot/9Bfj6gbigRp33fTwcN2wrGdo9obxY37DOqaflo=;
-        b=UqaivxmB0ISUX7Oxm9jowEz7vblhwOxA6yBvmSDo63xyf/A9m05dwaef2H4hQG//ih
-         52izJHQLYd+2oefALvskRy5Vl77l3MUx05aT6BRXnQJQsQkXUPWKzi/qYh/aSrlFZl9T
-         dBucxfQUaHE07JxQV+b+BWJkqt+5MNGZO7RZhoer/IrbC+vEclQlM72ZqdipGTpjLRuA
-         Mi7ix5BUEN5M3tl7597uZvhJYMalDWN+mHr9EOLo6r+DRRCO99haSvC6JCTDSnQk8HTV
-         m26VAn2IRX15EzbSClg9rKz0UclD+6UcaaIVBRRF3gfoGAU/P/0EbF+lH3pyAIRiJWNi
-         n5Pw==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=bBQsqu4hoFKDggD3Ah73gFjsiwr155j9ZaPwmpMVfeU=;
+        b=dINfUmD2r5tO/Z+aqI8mEyH33zCvvGZGRtaOfQRPJ3QKpe3AE4j3qjIL5JRbMy2BFU
+         4F46GQxBZmKjQP+/Ih+yIYJcSmyhRKkmqMXJT3E1RYFCOhwN9mMD3BtIOtNLUOu7T0Uw
+         fPYaf23/gPpWFHZ5hxM0d97z3mLLAefioscAzi2F6lIclIduo6WD0yrlWRgjM9WF+T5J
+         6Rqscj/mzT/Bj34yjrVsljkT55zTvtL/eWL8EbaS/O/mgZGZO1ishG9Kniu9r7W0uptK
+         otdieJcdmVUuXWNI9kAwsdHQb4ZOEbPYBbnx90nPe57eOd0OxRFHvnqcmmVbzdYpVWdi
+         eVMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:sender:from:date
-         :message-id:subject:to;
-        bh=h0ot/9Bfj6gbigRp33fTwcN2wrGdo9obxY37DOqaflo=;
-        b=c+m3tIG/dHkzfRDxf3ijNuFQCVf5naCnkTO9NwEwcuPOo9VdvI3nfJvKC6tweSobL1
-         RmCR/bGgs4e46NEvvxaI5dz8kjbsCH8QzcMUoP40ZPMLHpIOCKOx804292gSkxXKiBVn
-         xx+5OqoSQPJ9NtBqafD/OsvD1Whcbduuc+3g9FRM+D0IzoWa8v0DNMbLRoCYLPKaHw1c
-         lYnYJnqUfLwSPv7M/6/7v5OPKHIo0yL6F936151XbvP+fkm5O1CMxBM5sCWjs1JQe2im
-         fweMnFdTOLyUg3vIcKe4vl8DhS38NxJlZ8NeAo9v7PpsbRPouRV3ttODkJ38m8fvwFXs
-         G95Q==
-X-Gm-Message-State: AOAM532clOJhfJPEdXCz6DuHghmS3zIPZ6QQQWM25LT9GPQseIo6grs9
-        QNs0nYLzLnwmY+gt9Koq3Mot82PvjwIYlmH00WI=
-X-Google-Smtp-Source: ABdhPJxvzUq2BojFr3GJ3LgW3yay0UwwoxyQkCZqJ6B8tvdUcX7m3Ub9ENjMg5OHsf+d2rMGMMbwcs69dKf48Q1Ap9U=
-X-Received: by 2002:a17:902:bd94:b0:149:c926:7c26 with SMTP id
- q20-20020a170902bd9400b00149c9267c26mr9198996pls.64.1642161058998; Fri, 14
- Jan 2022 03:50:58 -0800 (PST)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=bBQsqu4hoFKDggD3Ah73gFjsiwr155j9ZaPwmpMVfeU=;
+        b=JfdTa8zEn6jSNKrJ6r1UkH+4zsVhQ67gQN/gq12EHQsLS/tC+aJmZAS0SlGKljKqcC
+         6Umw3CaX1C7Fx0zwWrauo8ukdIG2+RuzjvwasPtdMPTFxaSgU7M4Em4fkM0wSx7femH2
+         ud6RC4idJ4Q7mlwN2GLJatyrUJ8veNqFWqyDTKn0eWhNagMHNU6b3wgoTXcHh1FcC3nW
+         o5vLYi1I7nzkfWuFxWpQBDTik8F8FptPQ/eKYp7a5IyFCCzT3Ss5auN24ZPG4MOq5msr
+         tgu5fHAvea7NgmmOzaBHSYVyiJnxObWQbSHnQQLUr9WjatuFUEr5tMcr8ea8PcW79wNl
+         0u9Q==
+X-Gm-Message-State: AOAM5330plNS6kL5F6x17bQ5lvOGRgmdFcfPDeS0enorMDC0vu0I/Gho
+        unM6EC9SdvkOIlWXKcS9TKgeGg47Erzkj5IlFUBKHtpVRrk=
+X-Google-Smtp-Source: ABdhPJycRFUgrn559KrfCtSyrleTOMPJtq/iXdKOxIRMUSQGrirp56Vzc0UMlAbeWzDc1Tlkpvmfcjbu9U4iuZcxRsA=
+X-Received: by 2002:a2e:8550:: with SMTP id u16mr6394751ljj.208.1642163794072;
+ Fri, 14 Jan 2022 04:36:34 -0800 (PST)
 MIME-Version: 1.0
-Reply-To: ymrzerbo@gmail.com
-Sender: dr.siaokabore@gmail.com
-Received: by 2002:a05:6a20:2318:b0:6b:2327:c203 with HTTP; Fri, 14 Jan 2022
- 03:50:58 -0800 (PST)
-From:   "Mr.Zerbo Yameogo" <ymrzerbo@gmail.com>
-Date:   Fri, 14 Jan 2022 03:50:58 -0800
-X-Google-Sender-Auth: 4JEhKKPWrxVMzx4GWmhnHzqfkaI
-Message-ID: <CA+rg4NvygDH0MsaEZ4VPLEaXMsuK0GX+qEtefiM-HFqpwSpg4w@mail.gmail.com>
-Subject: VERY VERY URGENT.
-To:     undisclosed-recipients:;
+From:   Chris Chilvers <chilversc@gmail.com>
+Date:   Fri, 14 Jan 2022 12:36:23 +0000
+Message-ID: <CAAmbk-f7B4jfmhe-aH26E0eRQnOxGGFPr3yHZMv0F4KQc6FVdg@mail.gmail.com>
+Subject: [bug report] Resolving symlinks ignores rootdir setting
+To:     linux-nfs@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+I was testing using the rootdir setting in nfs.config to allow using export
+paths that would normally conflict with local systems directories with NFS v3.
 
-My Name is Mr.Zerbo Yameogo the Chief Operating Officer of  Bank of
-Africa and I am in need of a reliable foreigner to carry out this
-important deal.
+The idea was to support re-exporting a source NFS server such as NetApp that
+might exports arbitrary paths such as /home without overwriting the /home
+directory on the NFS server, and even support exporting a root directory similar
+to NFS v4.
 
-An account was opened in my bank by one of my customers in the name of
-MR. THOMAS BAHIA a Dutch National from Germany who made a fixed
-deposit of $18,500,000.00 (Eighteen Million, Five Hundred Thousand
-United States Dollars) and never show up again and I later discovered
-that he died with his entire family members on a plane crash that
-occurred in Libya on the 12th of May 2010 and below is a link for your
-view.
+While testing I ran into an issue where the NFS server would fail to start.
+During start up, the NFS server would log the error:
 
-http://www.nytimes.com/2010/05/13/world/middleeast/13libya.html
+  $ systemctl status nfs-server.service
+  systemd[1]: Starting NFS server and services...
+  exportfs[2307]: exportfs: Failed to stat /srv/nfs/usr/bin: No such
+file or directory
+  systemd[1]: nfs-server.service: Control process exited, code=exited,
+status=1/FAILURE
 
-Now I want to present a foreigner as next of kin to late Thomas so we
-can make the claim and you can contact me if you are interested so I
-can give you more detailed information about this transaction. For the
-sharing of the money will be shared in the ratio of 50% for me, 40%
-for you and 10% to cover our expenses after the deal.
+  $ cat nfs.config
+  [exports]
+  rootdir=/srv/nfs
 
-Please for further information and inquires feel free to contact me back
-immediately for more explanation and better understanding I want you to
-assure me your capability of handling this project with trust by providing
-me your following information details such as:
+  $ cat /etc/exports
+  /         10.0.0.0/8(rw,sync,wdelay,no_root_squash,no_all_squash,no_subtree_check,sec=sys,secure,fsid=0,nohide)
+  /assets   10.0.0.0/8(rw,sync,wdelay,no_root_squash,no_all_squash,no_subtree_check,sec=sys,secure,fsid=10,nohide)
+  /bin      10.0.0.0/8(rw,sync,wdelay,no_root_squash,no_all_squash,no_subtree_check,sec=sys,secure,fsid=30,nohide)
+  /software 10.0.0.0/8(rw,sync,wdelay,no_root_squash,no_all_squash,no_subtree_check,sec=sys,secure,fsid=40,nohide)
 
-(1)NAME..............
-(2)AGE:................
-(3)SEX:.....................
-(4)PHONE NUMBER:.................
-(5)OCCUPATION:................ .....
-(6)YOUR COUNTRY:.....................
+If I create the directory /srv/nfs/usr/bin then the NFS server will start.
+Listing the actual exports shows that a different path was exported compared to
+the path from /etc/exports.
 
-Please keep this absolutely confidential weather interested or not.
+  $ exportfs -s
+  / 10.0.0.0/8(sync,wdelay,nohide,no_subtree_check,fsid=0,sec=sys,rw,secure,no_root_squash,no_all_squ>
+  /assets 10.0.0.0/8(sync,wdelay,nohide,no_subtree_check,fsid=10,sec=sys,rw,secure,no_root_squash,no_>
+  /usr/bin 10.0.0.0/8(sync,wdelay,nohide,no_subtree_check,fsid=30,sec=sys,rw,secure,no_root_squash,no>
+  /software 10.0.0.0/8(sync,wdelay,nohide,no_subtree_check,fsid=40,sec=sys,rw,secure,no_root_squash,n>
 
-Thanks.
+To test this further I create a symlink from /software to /usr/lib. Once again
+the server failed to start because it could not find /srv/nfs/usr/lib.
 
-Mr.Zerbo Yameogo.
+Reading through the source, I think the issue is in the getexportent function in
+support/nfs/exports.c.
+
+    /* resolve symlinks */
+    if (realpath(ee.e_path, rpath) != NULL) {
+        rpath[sizeof (rpath) - 1] = '\0';
+        strncpy(ee.e_path, rpath, sizeof (ee.e_path) - 1);
+        ee.e_path[sizeof (ee.e_path) - 1] = '\0';
+    }
+
+It appears this function does not take into account the rootdir property when
+resolving e_path.
+
+This was tested on Ubuntu 20.04 with the 5.11.8-051108-generic kernel. nfs-utils
+version is 2.5.3.
