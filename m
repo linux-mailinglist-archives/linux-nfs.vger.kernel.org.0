@@ -2,97 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45DC3490993
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jan 2022 14:31:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 070E8490B33
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jan 2022 16:11:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234304AbiAQNao (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jan 2022 08:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53202 "EHLO
+        id S232187AbiAQPLX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jan 2022 10:11:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234121AbiAQNan (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jan 2022 08:30:43 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9E1C061574;
-        Mon, 17 Jan 2022 05:30:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DEDlOvAxf5W8MkgN2U6MW75EWRQeMQMQaovnQRcgffo=; b=sWeOK+ACOkqqrSHFGcOcHtqNUt
-        affW2E23Y5H4gus5QTI9RNzR2H8EFMA+ssyXPEH7r0ChvHKzzQZMM6GhvSo9Y6sSIYLuUHknRms35
-        r4m4Ukllxqdjth6/xEcNDXSsNRIKty4SfiLeQ8WlVQaGLQ9nHIgFuvZKcOEU2QaAvMn3xKQx8Is36
-        wrlnbO+VINuUCt6Ifo4R91YldO2uIRPsLZbnaqNcpdpZpstOVzNqmwYWKYxnovCJ0GDEMR54Ffti6
-        jldfxY4Dt7+NOyW8Fv26ursPmOgw9jR1Mp4KN89hlw3J5Uicwo4lbSZWBnUkV7lQwn2lq4D66VNBa
-        0SAtDMtw==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n9S5F-008EUB-2d; Mon, 17 Jan 2022 13:30:05 +0000
-Date:   Mon, 17 Jan 2022 13:30:05 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dave Wysochanski <dwysocha@redhat.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Omar Sandoval <osandov@osandov.com>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        ceph-devel@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-cachefs@redhat.com, CIFS <linux-cifs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        v9fs-developer@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Out of order read() completion and buffer filling beyond
- returned amount
-Message-ID: <YeVvXToTxCsMzHZv@casper.infradead.org>
-References: <2752208.1642413437@warthog.procyon.org.uk>
- <CAHk-=wjQG5HnwQD98z8de1EvRzDnebZxh=gQUVTKCn0DOp7PQw@mail.gmail.com>
+        with ESMTP id S230202AbiAQPLX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jan 2022 10:11:23 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88A6DC061574
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Jan 2022 07:11:23 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 13242792D; Mon, 17 Jan 2022 10:11:22 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 13242792D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1642432282;
+        bh=0Q1B+g1+FzZc7SsR51pQWYJ6h+f3r7sa1YevEmg3Kt4=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=jLQHwJK4Z/XR8enltTT3XT1SL4WjeqwgyGnadmM6f7aSuPi8sIX6jeiVNOHp5P4dt
+         olLhOOXpIHiVY8LwDSIv6op2F/wqoMqSG48gywqqTbhg5zEiimyPr9U6F+knYiCZbJ
+         WCPFAyTz5w2zMA34UnIuWGmwM38JU6LVG6qbsx34=
+Date:   Mon, 17 Jan 2022 10:11:22 -0500
+To:     "Dorian Taylor (Lists)" <lists@doriantaylor.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: strange activity on otherwise idle linux client
+Message-ID: <20220117151122.GB28708@fieldses.org>
+References: <439CFB33-94AC-4F60-B737-A0F596B815E3@doriantaylor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wjQG5HnwQD98z8de1EvRzDnebZxh=gQUVTKCn0DOp7PQw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <439CFB33-94AC-4F60-B737-A0F596B815E3@doriantaylor.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 17, 2022 at 12:19:29PM +0200, Linus Torvalds wrote:
-> On Mon, Jan 17, 2022 at 11:57 AM David Howells <dhowells@redhat.com> wrote:
-> >
-> > Do you have an opinion on whether it's permissible for a filesystem to write
-> > into the read() buffer beyond the amount it claims to return, though still
-> > within the specified size of the buffer?
-> 
-> I'm pretty sure that would seriously violate POSIX in the general
-> case, and maybe even break some programs that do fancy buffer
-> management (ie I could imagine some circular buffer thing that expects
-> any "unwritten" ('unread'?) parts to stay with the old contents)
-> 
-> That said, that's for generic 'read()' cases for things like tty's or
-> pipes etc that can return partial reads in the first place.
-> 
-> If it's a regular file, then any partial read *already* violates
-> POSIX, and nobody sane would do any such buffer management because
-> it's supposed to be a 'can't happen' thing.
-> 
-> And since you mention DIO, that's doubly true, and is already outside
-> basic POSIX, and has already violated things like "all or nothing"
-> rules for visibility of writes-vs-reads (which admittedly most Linux
-> filesystems have violated even outside of DIO, since the strictest
-> reading of the rules are incredibly nasty anyway). But filesystems
-> like XFS which took some of the strict rules more seriously already
-> ignored them for DIO, afaik.
+On Sun, Jan 16, 2022 at 08:35:38AM -0500, Dorian Taylor (Lists) wrote:
+> I noticed yesterday that my Linux (Ubuntu 21.10 x86_64, kernel 5.13.0)
+> NFS4 mount was causing load on the (also Ubuntu, 20.04 LTS) server and
+> when I went to investigate, it seemed like the client was polling the
+> server at about 200 operations per second (100 ops read and the other
+> 100 `nfsiostat` didn’t specify). When I looked at `nfsstat` on the
+> server, I saw a profusion of `putfh` (32%), `sequence` (30%),
+> `layoutget` (15%), and `layoutreturn` (15%)
 
-I think for DIO, you're sacrificing the entire buffer with any filesystem.
-If the underlying file is split across multiple drives, or is even
-just fragmented on a single drive, we'll submit multiple BIOs which
-will complete independently (even for SCSI which writes sequentially;
-never mind NVMe which can DMA blocks asynchronously).  It might be
-more apparent in a networking situation where errors are more common,
-but it's always been a possibility since Linux introduced DIO.
+The client is trying to use pnfs, which our server doesn't really have
+much support for.  So probably either the server's returning
+inconsistent results (making it look like it supports pnfs and then
+failing when the client actually tries to use it), and/or the client is
+failing to give up on pnfs when it should.
+
+If you have the "pnfs" option set on any export, turn it off.
+
+If it's not that, I'm not sure what's happening.  Looking at the traffic
+in wireshark might be interesting.
+
+--b.
+
+> (`getattr` and `lookup`
+> took another 3% between them, and the rest fell below the 1%
+> threshold, even though the total number of operations recorded was on
+> the order of 100 million for a day or so of uptime with two clients
+> connected).
+> 
+> The chatty client was had a couple files open in Emacs but I closed
+> them and determined that they weren’t being accessed with `lost`, but
+> the polling continued. The strangely round number of the polling rate
+> is suspicious. Is this normal behaviour?
+> 
+> It looks like the NFS version on the client is 1.3.4-6ubuntu1 and
+> server is 1.3.4-2.5ubuntu3.4.
+> 
+> Regards,
+> 
+> -- Dorian Taylor Make things. Make sense.  https://doriantaylor.com
+> 
+
+
