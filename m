@@ -2,43 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A0E074927B4
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 14:55:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 952F34927BA
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 14:55:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243825AbiARNyi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jan 2022 08:54:38 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41629 "EHLO
+        id S243652AbiARNyy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jan 2022 08:54:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:43123 "EHLO
         us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244326AbiARNy1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 08:54:27 -0500
+        by vger.kernel.org with ESMTP id S244100AbiARNyw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 08:54:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1642514067;
+        s=mimecast20190719; t=1642514092;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GZzU3Qzlz4du0HJk3pIy88pOD0oFL5+7cfgc4MIvSjc=;
-        b=BK/G/ycy7N/KSzzb8T5rcgjcVH5qrQwpx0+weZD3kbp7QUh+CInao3WO7KLMU2IX42ibA/
-        Zg1D7rcAupk4j/4fHnSm2EBFL4ddFN1YGesG1Gd7GUktxtpVbGtIvnyTgbp1bSalOthjOe
-        leIH+lenmFSI2wnMZX7mg2yHOWUQ7LY=
+        bh=0H8i+DlKXoFlzGfONMzGSVnFQYHwXgV1sPpYBX+8jJE=;
+        b=JGsKuu2vDoNVChUdgHTN5nbZBM++1TdIDPcCq7xwhun/HNg3lUc77sbYNeeqel7aIE3eQx
+        HSU/LDylnigcxaFdQmCMM+iNQZIgYZWLGHmysgKVT4JO4qnXp1iszUz77qexVhfmdWjzN/
+        yk8sFWhs5zbS12Mkb7h2IiWfwMJxEpI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-562-iXKYrVelNbCgNPklJReXeg-1; Tue, 18 Jan 2022 08:54:26 -0500
-X-MC-Unique: iXKYrVelNbCgNPklJReXeg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-404-KRPhdvaOOrG7W_oVkauJ3A-1; Tue, 18 Jan 2022 08:54:49 -0500
+X-MC-Unique: KRPhdvaOOrG7W_oVkauJ3A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56DF0100C625;
-        Tue, 18 Jan 2022 13:54:20 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8FE8A101AFD6;
+        Tue, 18 Jan 2022 13:54:39 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12AF77A3F9;
-        Tue, 18 Jan 2022 13:54:16 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6CD9D7E2EA;
+        Tue, 18 Jan 2022 13:54:26 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 06/11] cachefiles: Explain checks in a comment
+Subject: [PATCH 07/11] cachefiles: Check that the backing filesystem supports
+ tmpfiles
 From:   David Howells <dhowells@redhat.com>
 To:     linux-cachefs@redhat.com
 Cc:     Jeff Layton <jlayton@kernel.org>, Jeff Layton <jlayton@kernel.org>,
@@ -56,21 +57,21 @@ Cc:     Jeff Layton <jlayton@kernel.org>, Jeff Layton <jlayton@kernel.org>,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 18 Jan 2022 13:54:16 +0000
-Message-ID: <164251405621.3435901.771439791811515914.stgit@warthog.procyon.org.uk>
+Date:   Tue, 18 Jan 2022 13:54:25 +0000
+Message-ID: <164251406558.3435901.1249023136670058162.stgit@warthog.procyon.org.uk>
 In-Reply-To: <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk>
 References: <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a comment to explain the checks that cachefiles is making of the
-backing filesystem[1].
+Add a check that the backing filesystem supports the creation of
+tmpfiles[1].
 
 Suggested-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: David Howells <dhowells@redhat.com>
@@ -79,27 +80,28 @@ cc: linux-cachefs@redhat.com
 Link: https://lore.kernel.org/r/568749bd7cc02908ecf6f3d6a611b6f9cf5c4afd.camel@kernel.org/ [1]
 ---
 
- fs/cachefiles/cache.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ fs/cachefiles/cache.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/fs/cachefiles/cache.c b/fs/cachefiles/cache.c
-index 1e9c71666c6a..2b2879c5d1d2 100644
+index 2b2879c5d1d2..7077f72e6f47 100644
 --- a/fs/cachefiles/cache.c
 +++ b/fs/cachefiles/cache.c
-@@ -49,7 +49,13 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
- 		goto error_unsupported;
- 	}
+@@ -51,6 +51,7 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
  
--	/* check parameters */
-+	/* Check features of the backing filesystem:
-+	 * - Directories must support looking up and directory creation
-+	 * - We use xattrs to store metadata
-+	 * - We need to be able to query the amount of space available
-+	 * - We want to be able to sync the filesystem when stopping the cache
-+	 * - We use DIO to/from pages, so the blocksize mustn't be too big.
-+	 */
- 	ret = -EOPNOTSUPP;
+ 	/* Check features of the backing filesystem:
+ 	 * - Directories must support looking up and directory creation
++	 * - We create tmpfiles to handle invalidation
+ 	 * - We use xattrs to store metadata
+ 	 * - We need to be able to query the amount of space available
+ 	 * - We want to be able to sync the filesystem when stopping the cache
+@@ -60,6 +61,7 @@ int cachefiles_add_cache(struct cachefiles_cache *cache)
  	if (d_is_negative(root) ||
  	    !d_backing_inode(root)->i_op->lookup ||
+ 	    !d_backing_inode(root)->i_op->mkdir ||
++	    !d_backing_inode(root)->i_op->tmpfile ||
+ 	    !(d_backing_inode(root)->i_opflags & IOP_XATTR) ||
+ 	    !root->d_sb->s_op->statfs ||
+ 	    !root->d_sb->s_op->sync_fs ||
 
 
