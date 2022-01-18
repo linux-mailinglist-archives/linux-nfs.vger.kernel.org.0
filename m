@@ -2,98 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 811664911D0
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Jan 2022 23:38:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CB14491EB0
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 05:52:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243645AbiAQWh7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jan 2022 17:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232161AbiAQWh6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jan 2022 17:37:58 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C53C061574
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Jan 2022 14:37:58 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 8510D6214; Mon, 17 Jan 2022 17:37:57 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8510D6214
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1642459077;
-        bh=HWXOySzTesOCkNmgc0zsrIXi2KkHFJTM8RONB7hMfdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gs1CrRkQgG5aFqASU6pRgEEdjZJbIXpvuqCcm0K5bpQhLCCPbdTQtpB27P7EdZwCn
-         AgL1jsX23Em+EP7TDboFyHb2qwfOzP63PxeDiAMEE/6ZF/zYwKAsPX0U+FM4tdV6oI
-         tps798sS3OOUDgvgA4TUj53CAf6eBs1OvZ2KDvpg=
-Date:   Mon, 17 Jan 2022 17:37:57 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chris Chilvers <chilversc@gmail.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [bug report] Resolving symlinks ignores rootdir setting
-Message-ID: <20220117223757.GC3090@fieldses.org>
-References: <CAAmbk-f7B4jfmhe-aH26E0eRQnOxGGFPr3yHZMv0F4KQc6FVdg@mail.gmail.com>
- <20220114151022.GA17563@fieldses.org>
- <CAAmbk-e1Pd0JaAVM8PFbeepj=tdL8qcyS-DaSA1u42=S_EySSQ@mail.gmail.com>
+        id S236903AbiAREw3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Jan 2022 23:52:29 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:42642 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236679AbiAREwY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jan 2022 23:52:24 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 14037212CC;
+        Tue, 18 Jan 2022 04:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1642481543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sw4hfNGr5x6TscU5Ve4P2U3Ue6tHFD6HnJJdmmDa7uI=;
+        b=CUZ7rJao7YLWLjic6AMcW8yJToIJhjeJOa9NRZjbWPeltwNq5Ifv/VnWCnDqwOOb3yRMPd
+        BMsGlUlfdd6o1S9bnkbcVJjxKhuIJR0cSikMQO9/pb0/0Yb3TcH5cYspWh+YEJ6vvuCJXN
+        p41hQEMvgKXU6GgGoINFJnE/8LPkHfs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1642481543;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sw4hfNGr5x6TscU5Ve4P2U3Ue6tHFD6HnJJdmmDa7uI=;
+        b=LO1RAiXr+E8tPvUCtthwKjetsY7tLvQoSUEqGeYzpxw2lXwS9paB3P4eboeslMoHGjYQ46
+        j7z1YmUb11mZWJAg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AD27413A81;
+        Tue, 18 Jan 2022 04:52:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id vbRQGoVH5mFVDgAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 18 Jan 2022 04:52:21 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAmbk-e1Pd0JaAVM8PFbeepj=tdL8qcyS-DaSA1u42=S_EySSQ@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   "NeilBrown" <neilb@suse.de>
+To:     "J. Bruce Fields" <bfields@redhat.com>
+Cc:     "Petr Vorel" <pvorel@suse.cz>, linux-nfs@vger.kernel.org,
+        "Yong Sun" <yosun@suse.com>
+Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+In-reply-to: <YLZS1iMJR59n4hue@pick.fieldses.org>
+References: <YLY9pKu38lEWaXxE@pevik>, <YLZS1iMJR59n4hue@pick.fieldses.org>
+Date:   Tue, 18 Jan 2022 15:52:18 +1100
+Message-id: <164248153844.24166.16775550865302060652@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 14, 2022 at 03:57:03PM +0000, Chris Chilvers wrote:
-> > I'm probably just reading too quickly, but I'm not seeing how this
-> > explains the problems with your original configuration.
-> >
-> > Is it that /sr/nfs/bin on you system is a symlink?  (And what exactly is
-> > the content of that symlink?)
-> 
-> No, all the directories under /srv/nfs are ordinary directories. The symlinks
-> are in the root of the real file system.
+On Wed, 02 Jun 2021, J. Bruce Fields wrote:
+> On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
+>=20
+> > LOCK24   st_lock.testOpenUpgradeLock                              : FAILU=
+RE
+> >            OP_LOCK should return NFS4_OK, instead got
+> >            NFS4ERR_BAD_SEQID
+>=20
+> I suspect the server's actually OK here, but I need to look more
+> closely.
+>=20
+I agree.
+I think this patch fixes the test.
 
-Oh, got it, thanks for the explanation.
+NeilBrown
 
-> So I have:
->   /bin -> /usr/bin
->   /software -> /usr/lib (created to test the hypothesis)
->   /srv/nfs/
->   /srv/nfs/assets
->   /srv/nfs/bin
->   /srv/nfs/software
-> 
-> Because exportfs is not taking into account the rootdir setting, when it tries
-> to resolve the path from /etc/exports, it sees the path /bin, and matches that
-> with the real /bin, and resolves it to /usr/bin.
-> 
-> Later exportfs errors when trying to resolve the real path (e_realpath) in the
-> exportent_mkrealpath function, as this function does prepend the rootdir. This
-> causes exportfs to look for /srv/nfs/usr/bin instead of the expected
-> /srv/nfs/bin.
-> 
-> At best this causes an error, but if that does happen to match an existing path
-> under /srv/nfs then it would export the wrong directory.
-> 
-> This will happen for any export that happens to match an existing symlink.
-> 
-> There are two issues though that I'm not sure how best to handle:
-> * Should the symlink be considered relative to the local system or relative to
->   the rootdir?
-> * What happens if the symlink points to a directory outside the rootdir?
+From: NeilBrown <neilb@suse.de>
+Date: Tue, 18 Jan 2022 15:50:37 +1100
+Subject: [PATCH] Fix NFSv4.0 LOCK24 test
 
-Yes, I'm not sure off hand what the right behavior is, but the existing
-behavior certainly seems to violate the principal of least surprise.
+Only the first lock request for a given open-owner can use lock_file.
+Subsequent lock request must use relock_file.
 
---b.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ nfs4.0/servertests/st_lock.py | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-> 
-> In my case I think the symlink would need to be resolved relative to the
-> rootdir. This is because we're re-exporting an existing NFS server, so if the
-> existing NFS server is exporting some kind of symlink tree, the symlinks would
-> be relative to the existing mounts.
-> 
-> One option that would be valid for my case would be an setting to disable
-> symlink resolution and just consider it an error if an export is a symlink.
-> Since I'm re-exporting an existing NFS server, they can't be symlinks anyway.
-> 
-> -- Chris
+diff --git a/nfs4.0/servertests/st_lock.py b/nfs4.0/servertests/st_lock.py
+index 468672403ffe..db08fbeedac4 100644
+--- a/nfs4.0/servertests/st_lock.py
++++ b/nfs4.0/servertests/st_lock.py
+@@ -886,6 +886,7 @@ class open_sequence:
+         self.client =3D client
+         self.owner =3D owner
+         self.lockowner =3D lockowner
++        self.lockseq =3D 0
+     def open(self, access):
+         self.fh, self.stateid =3D self.client.create_confirm(self.owner,
+ 						access=3Daccess,
+@@ -899,15 +900,21 @@ class open_sequence:
+     def close(self):
+         self.client.close_file(self.owner, self.fh, self.stateid)
+     def lock(self, type):
+-        res =3D self.client.lock_file(self.owner, self.fh, self.stateid,
+-                    type=3Dtype, lockowner=3Dself.lockowner)
++        if self.lockseq =3D=3D 0:
++            res =3D self.client.lock_file(self.owner, self.fh, self.stateid,
++                                        type=3Dtype, lockowner=3Dself.lockow=
+ner)
++        else:
++            res =3D self.client.relock_file(self.lockseq, self.fh, self.lock=
+stateid,
++                                        type=3Dtype)
+         check(res)
+         if res.status =3D=3D NFS4_OK:
+             self.lockstateid =3D res.lockid
++            self.lockseq =3D self.lockseq + 1
+     def unlock(self):
+         res =3D self.client.unlock_file(1, self.fh, self.lockstateid)
+         if res.status =3D=3D NFS4_OK:
+             self.lockstateid =3D res.lockid
++            self.lockseq =3D self.lockseq + 1
+=20
+ def testOpenUpgradeLock(t, env):
+     """Try open, lock, open, downgrade, close
+--=20
+2.34.1
+
