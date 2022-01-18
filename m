@@ -2,131 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CB14491EB0
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 05:52:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A4D0A491FBB
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 08:20:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236903AbiAREw3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Jan 2022 23:52:29 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:42642 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236679AbiAREwY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Jan 2022 23:52:24 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 14037212CC;
-        Tue, 18 Jan 2022 04:52:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642481543; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sw4hfNGr5x6TscU5Ve4P2U3Ue6tHFD6HnJJdmmDa7uI=;
-        b=CUZ7rJao7YLWLjic6AMcW8yJToIJhjeJOa9NRZjbWPeltwNq5Ifv/VnWCnDqwOOb3yRMPd
-        BMsGlUlfdd6o1S9bnkbcVJjxKhuIJR0cSikMQO9/pb0/0Yb3TcH5cYspWh+YEJ6vvuCJXN
-        p41hQEMvgKXU6GgGoINFJnE/8LPkHfs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642481543;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sw4hfNGr5x6TscU5Ve4P2U3Ue6tHFD6HnJJdmmDa7uI=;
-        b=LO1RAiXr+E8tPvUCtthwKjetsY7tLvQoSUEqGeYzpxw2lXwS9paB3P4eboeslMoHGjYQ46
-        j7z1YmUb11mZWJAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AD27413A81;
-        Tue, 18 Jan 2022 04:52:21 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id vbRQGoVH5mFVDgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 18 Jan 2022 04:52:21 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S244602AbiARHUE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jan 2022 02:20:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229661AbiARHUE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 02:20:04 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E651C061574;
+        Mon, 17 Jan 2022 23:20:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=ScaZLB316TNMvWwlnv9wxx+Nw6Jl5Gr2bEFrm1gsbik=; b=BupyQ2oy6Mma4oohnbl5wchvqn
+        3INPpJTxm/BBRl/t9RkPSLYcWQ6Tvy9mp7Gzpm+0XfdyXm9hy+6uiWuICZ0q1Htk22k/y8teJsmRy
+        nw8Hc+t8NG4FQ9e2WfSH1NeRblFTaCCb+c/YF/d96imGOThenihSDQYboiaLfULXj4JsMClr6UIC2
+        s11FIUZL0uM0O8ZekMG/XIa8RcIHxEdXx1AN/Gr2+nctRFbtEvw5nrOcHvfJbu44bXeZ4pqAcEen2
+        6t9X9ewQ0wSnc8nb+GPTsZ14BMHsGKj3UtRC/RIttaD3ZIJbgV3w5SGL7zPOcrWkOSQ9ru5hPGHW9
+        ILp/Ph/Q==;
+Received: from [2001:4bb8:184:72a4:a4a9:19c0:5242:7768] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1n9imY-000ZMt-Pw; Tue, 18 Jan 2022 07:19:55 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Md . Haris Iqbal " <haris.iqbal@ionos.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        =?UTF-8?q?Roger=20Pau=20Monn=C3=A9?= <roger.pau@citrix.co>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
+Subject: improve the bio allocation interface
+Date:   Tue, 18 Jan 2022 08:19:33 +0100
+Message-Id: <20220118071952.1243143-1-hch@lst.de>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@redhat.com>
-Cc:     "Petr Vorel" <pvorel@suse.cz>, linux-nfs@vger.kernel.org,
-        "Yong Sun" <yosun@suse.com>
-Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
-In-reply-to: <YLZS1iMJR59n4hue@pick.fieldses.org>
-References: <YLY9pKu38lEWaXxE@pevik>, <YLZS1iMJR59n4hue@pick.fieldses.org>
-Date:   Tue, 18 Jan 2022 15:52:18 +1100
-Message-id: <164248153844.24166.16775550865302060652@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 02 Jun 2021, J. Bruce Fields wrote:
-> On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
->=20
-> > LOCK24   st_lock.testOpenUpgradeLock                              : FAILU=
-RE
-> >            OP_LOCK should return NFS4_OK, instead got
-> >            NFS4ERR_BAD_SEQID
->=20
-> I suspect the server's actually OK here, but I need to look more
-> closely.
->=20
-I agree.
-I think this patch fixes the test.
+Hi Jens,
 
-NeilBrown
+this series is posted early because it has wide-ranging changes and could use some
+early ACKs before -rc1.
 
-From: NeilBrown <neilb@suse.de>
-Date: Tue, 18 Jan 2022 15:50:37 +1100
-Subject: [PATCH] Fix NFSv4.0 LOCK24 test
+It changes the interface to the bio allocators to always pass a block_device and
+the operation, which is information needed for every bio submitted through
+bio_submit.  This means the fields can be directly initialized in bio_init instead
+of first being zeroed and thus should help to micro-optimize even better than the
+__bio_set_dev that Pavel proposed while also cleaning up code.
 
-Only the first lock request for a given open-owner can use lock_file.
-Subsequent lock request must use relock_file.
+I have a follow on series to also deal with the bio cloning interfaces that need
+even more love, and additional cleanups for the callers which might be material
+for the next merge window.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- nfs4.0/servertests/st_lock.py | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/nfs4.0/servertests/st_lock.py b/nfs4.0/servertests/st_lock.py
-index 468672403ffe..db08fbeedac4 100644
---- a/nfs4.0/servertests/st_lock.py
-+++ b/nfs4.0/servertests/st_lock.py
-@@ -886,6 +886,7 @@ class open_sequence:
-         self.client =3D client
-         self.owner =3D owner
-         self.lockowner =3D lockowner
-+        self.lockseq =3D 0
-     def open(self, access):
-         self.fh, self.stateid =3D self.client.create_confirm(self.owner,
- 						access=3Daccess,
-@@ -899,15 +900,21 @@ class open_sequence:
-     def close(self):
-         self.client.close_file(self.owner, self.fh, self.stateid)
-     def lock(self, type):
--        res =3D self.client.lock_file(self.owner, self.fh, self.stateid,
--                    type=3Dtype, lockowner=3Dself.lockowner)
-+        if self.lockseq =3D=3D 0:
-+            res =3D self.client.lock_file(self.owner, self.fh, self.stateid,
-+                                        type=3Dtype, lockowner=3Dself.lockow=
-ner)
-+        else:
-+            res =3D self.client.relock_file(self.lockseq, self.fh, self.lock=
-stateid,
-+                                        type=3Dtype)
-         check(res)
-         if res.status =3D=3D NFS4_OK:
-             self.lockstateid =3D res.lockid
-+            self.lockseq =3D self.lockseq + 1
-     def unlock(self):
-         res =3D self.client.unlock_file(1, self.fh, self.lockstateid)
-         if res.status =3D=3D NFS4_OK:
-             self.lockstateid =3D res.lockid
-+            self.lockseq =3D self.lockseq + 1
-=20
- def testOpenUpgradeLock(t, env):
-     """Try open, lock, open, downgrade, close
---=20
-2.34.1
-
+Diffstat:
+ block/bio.c                         |   73 ++++++++++++++++++++++++------------
+ block/blk-flush.c                   |    4 -
+ block/blk-lib.c                     |   32 ++-------------
+ block/blk-zoned.c                   |   14 +-----
+ block/blk.h                         |    2 
+ block/bounce.c                      |    6 --
+ block/fops.c                        |   35 +++++++----------
+ drivers/block/drbd/drbd_actlog.c    |    5 --
+ drivers/block/drbd/drbd_bitmap.c    |    7 +--
+ drivers/block/drbd/drbd_receiver.c  |   31 +++------------
+ drivers/block/floppy.c              |    4 -
+ drivers/block/pktcdvd.c             |    8 ---
+ drivers/block/rnbd/rnbd-srv-dev.c   |   61 ------------------------------
+ drivers/block/rnbd/rnbd-srv-dev.h   |   18 --------
+ drivers/block/rnbd/rnbd-srv.c       |   45 ++++++++--------------
+ drivers/block/rnbd/rnbd-srv.h       |    1 
+ drivers/block/xen-blkback/blkback.c |   25 ++----------
+ drivers/block/zram/zram_drv.c       |   16 ++-----
+ drivers/md/bcache/io.c              |    3 -
+ drivers/md/bcache/journal.c         |   16 ++-----
+ drivers/md/bcache/movinggc.c        |    4 -
+ drivers/md/bcache/request.c         |   18 +++-----
+ drivers/md/bcache/super.c           |    8 +--
+ drivers/md/bcache/writeback.c       |    4 -
+ drivers/md/dm-crypt.c               |   27 ++++---------
+ drivers/md/dm-io.c                  |    5 --
+ drivers/md/dm-log-writes.c          |   39 +++----------------
+ drivers/md/dm-snap.c                |   21 ----------
+ drivers/md/dm-thin.c                |   41 +++++---------------
+ drivers/md/dm-writecache.c          |    7 +--
+ drivers/md/dm-zoned-metadata.c      |   26 ++----------
+ drivers/md/dm.c                     |   12 ++---
+ drivers/md/md-multipath.c           |    2 
+ drivers/md/md.c                     |   24 +++++------
+ drivers/md/raid1.c                  |    8 +--
+ drivers/md/raid10.c                 |   14 ++----
+ drivers/md/raid5-cache.c            |   19 +++------
+ drivers/md/raid5-ppl.c              |   13 ++----
+ drivers/md/raid5.c                  |   12 ++---
+ drivers/nvdimm/nd_virtio.c          |    6 +-
+ drivers/nvme/target/io-cmd-bdev.c   |   18 +++-----
+ drivers/nvme/target/passthru.c      |    7 +--
+ drivers/nvme/target/zns.c           |   14 +++---
+ drivers/scsi/ufs/ufshpb.c           |    4 -
+ drivers/target/target_core_iblock.c |   11 +----
+ fs/btrfs/disk-io.c                  |   10 +---
+ fs/btrfs/extent_io.c                |    2 
+ fs/buffer.c                         |   14 ++----
+ fs/crypto/bio.c                     |   13 ++----
+ fs/direct-io.c                      |    5 --
+ fs/erofs/zdata.c                    |    5 --
+ fs/ext4/page-io.c                   |    3 -
+ fs/ext4/readpage.c                  |    8 +--
+ fs/f2fs/data.c                      |    7 +--
+ fs/gfs2/lops.c                      |    8 +--
+ fs/gfs2/meta_io.c                   |    4 -
+ fs/gfs2/ops_fstype.c                |    4 -
+ fs/hfsplus/wrapper.c                |    4 -
+ fs/iomap/buffered-io.c              |   26 +++++-------
+ fs/iomap/direct-io.c                |    8 ---
+ fs/jfs/jfs_logmgr.c                 |   11 -----
+ fs/jfs/jfs_metapage.c               |    9 +---
+ fs/mpage.c                          |   34 ++--------------
+ fs/nfs/blocklayout/blocklayout.c    |   26 +-----------
+ fs/nilfs2/segbuf.c                  |   31 +--------------
+ fs/ntfs3/fsntfs.c                   |   27 -------------
+ fs/ocfs2/cluster/heartbeat.c        |    4 -
+ fs/squashfs/block.c                 |   11 ++---
+ fs/xfs/xfs_bio_io.c                 |   14 ++----
+ fs/xfs/xfs_buf.c                    |    4 -
+ fs/xfs/xfs_log.c                    |   14 +++---
+ fs/zonefs/super.c                   |    9 +---
+ include/linux/bio.h                 |   30 ++++++--------
+ kernel/power/swap.c                 |    5 --
+ mm/page_io.c                        |   10 +---
+ 75 files changed, 372 insertions(+), 758 deletions(-)
