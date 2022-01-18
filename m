@@ -2,34 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4ACD3492B20
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 17:24:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD1FF492CC8
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 18:54:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238510AbiARQYD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jan 2022 11:24:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235878AbiARQYC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 11:24:02 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1153C061574;
-        Tue, 18 Jan 2022 08:24:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jhVRXbKHsK5/+VUWx8p4vGxs4G6MvUWC+Xam2qsrUoE=; b=B8L/4HBkD4afSUo3u1LAzrrP2t
-        q8E5GkLH53P9rQfA62suEcPUjnSLlnYuFQ98fuuil6qNWtXVBg7kqKwOia0sJByKWJ9pVTPpX19VZ
-        /6fqUXVdLAxhTI9t06zRdMQhjNaxrUn4ABt5KgoooVH7rlx07IBIob7BEKJ5z59dZSP7C7Ti2ly/U
-        gkAMZW5YhxoZwnd1aWUsp46fJbCq76LM543tiLUnj43CYV3Lf0PIrjloqr6d0T3BsNXcu4WpLdW5t
-        igzmwLo/Ex2fL/Ssmy4mSMCfB9qQGG4XLW9fypo+nYutWP3oSxrlA4ICjuZTpp8gXHCx2NB8a1KHB
-        3r/VkXjQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1n9rGs-002EPo-4r; Tue, 18 Jan 2022 16:23:46 +0000
-Date:   Tue, 18 Jan 2022 08:23:46 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
+        id S244314AbiARRyM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jan 2022 12:54:12 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:41740 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S244247AbiARRyL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 12:54:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642528451;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nPPBU7fRyyAQC3IqAePmc/y5C5VKzN6r/ufwnOhkpIs=;
+        b=iE3uhSSDdIuO00kVaKVJLqcK0SL7Qojtwarw4xnZst3SEooCMXgh2tOhpaj4ViyhmLbR93
+        p21ZX7GL7VYHH22/xALm8VF4BLjJVb3y9oMNTYvneXtxjRXiB+1u13CHWf4ObHCTRcXFYu
+        brRsTsRlGPjIf2XOLPsri8WXYmky7D8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-654-dYizNdE7Pt6DN4j2koeeug-1; Tue, 18 Jan 2022 12:54:08 -0500
+X-MC-Unique: dYizNdE7Pt6DN4j2koeeug-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8231109455A;
+        Tue, 18 Jan 2022 17:40:23 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.165])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A82257ED93;
+        Tue, 18 Jan 2022 17:40:15 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <YebpktrcUZOlBHkZ@infradead.org>
+References: <YebpktrcUZOlBHkZ@infradead.org> <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk> <164251409447.3435901.10092442643336534999.stgit@warthog.procyon.org.uk>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        Jeff Layton <jlayton@kernel.org>,
         Trond Myklebust <trondmy@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <smfrench@gmail.com>,
@@ -43,23 +56,27 @@ Cc:     linux-cachefs@redhat.com, Jeff Layton <jlayton@kernel.org>,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] vfs, fscache: Add an IS_KERNEL_FILE() macro for
- the S_KERNEL_FILE flag
-Message-ID: <YebpktrcUZOlBHkZ@infradead.org>
-References: <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk>
- <164251409447.3435901.10092442643336534999.stgit@warthog.procyon.org.uk>
+Subject: Re: [PATCH 09/11] vfs, fscache: Add an IS_KERNEL_FILE() macro for the S_KERNEL_FILE flag
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164251409447.3435901.10092442643336534999.stgit@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3613680.1642527614.1@warthog.procyon.org.uk>
+Date:   Tue, 18 Jan 2022 17:40:14 +0000
+Message-ID: <3613681.1642527614@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 01:54:54PM +0000, David Howells wrote:
-> Add an IS_KERNEL_FILE() macro to test the S_KERNEL_FILE inode flag as is
-> common practice for the other inode flags[1].
+Christoph Hellwig <hch@infradead.org> wrote:
 
-Please fix the flag to have a sensible name first, as the naming of the
-flag and this new helper is utterly wrong as we already discussed.
+> On Tue, Jan 18, 2022 at 01:54:54PM +0000, David Howells wrote:
+> > Add an IS_KERNEL_FILE() macro to test the S_KERNEL_FILE inode flag as is
+> > common practice for the other inode flags[1].
+> 
+> Please fix the flag to have a sensible name first, as the naming of the
+> flag and this new helper is utterly wrong as we already discussed.
+
+And I suggested a new name, which you didn't comment on.
+
+David
+
