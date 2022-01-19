@@ -2,135 +2,222 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 641D24930D5
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Jan 2022 23:35:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1B244931C3
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jan 2022 01:21:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349995AbiARWfI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Jan 2022 17:35:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56152 "EHLO
+        id S1350407AbiASAVI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Jan 2022 19:21:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237457AbiARWfH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 17:35:07 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DC7AC061574;
-        Tue, 18 Jan 2022 14:35:06 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BDC453DDA; Tue, 18 Jan 2022 17:35:05 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BDC453DDA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1642545305;
-        bh=t2AsXyVLAWmqYQGBLsOjhjyKdu16wtjBmE5q6ZDtIgI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Dl7RqCM/OQvD2DSoj+7Ntl1r4n7BRlbqZIXAkO7Fg/cg5U/MzRV9bQXFI7SFKSleW
-         rWh0BVNfsEpLSmQN4XpDXIKdi0FT4IJiPZoM7kwHomtE9q01dhmycP/LudlMVz23S9
-         bR+XxAlemLZU9B9qo3Bu7w2jdZQyQCJPue8Feyp4=
-Date:   Tue, 18 Jan 2022 17:35:05 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Vasily Averin <vvs@virtuozzo.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>, kernel@openvz.org,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: [PATCH v3 2/3] nfs4: handle async processing of F_SETLK with
- FL_SLEEP
-Message-ID: <20220118223505.GE16108@fieldses.org>
-References: <1f354cec-d2d6-ddf5-56e0-325c10fe26ee@virtuozzo.com>
- <00d1e0fa-55dd-82a5-2607-70d4552cc7f4@virtuozzo.com>
- <20220103195333.GG21514@fieldses.org>
- <7666958f-6215-a8eb-3412-b613158406db@virtuozzo.com>
+        with ESMTP id S1350405AbiASAVH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Jan 2022 19:21:07 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FB5CC06173E
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Jan 2022 16:21:07 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id q25so3045684edb.2
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Jan 2022 16:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bmeqfE1RuOXde41Zr3CQ/9tcb+03J/6w+lG9hJ7A4Ho=;
+        b=Ybqt4L8XARDalF5U3jxiomW7vn0XAjkMf9MRDY2CLKnxrl9ZFVPOy45252iZ/ahaBE
+         Uul8Do3DwK3+IhjDQEsQqZ25qhbKav+CsP+D/VRz8S/JP1MCrWjpPNAT2T6HpwQO2Kaj
+         U+mXSh1wrYynaFmrl3R954SKWovO2KgQQwMuFgk3bN6254exjP5wW45dCjMVUb5YwN8a
+         VxuJ4073q87irF35SwVs1OSriqyn3iO2/rrlt98SROIN6upeJLmrkKzh1HvDiSu1wNK0
+         Osy4+7YgQ8hN9QPHR4VjTrEWqZipRE0LQfv8aN/2JjfC3ryAYgT+7fuyuH/QIVRL+JSD
+         L94g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bmeqfE1RuOXde41Zr3CQ/9tcb+03J/6w+lG9hJ7A4Ho=;
+        b=ZJ4doi0d0uwUIoRUgKrPNX1tXz/8LdSaoa2ae/wqrF2pPTWVnyywkvUSvIWel6WZeO
+         qsI5y62hsKraQVh036GDmLU3+9xXwXn2JTeTkdW1xgYLT36TJTd9coXqeARE7oIojud4
+         o5bi04nVMDwry2xMeglt6iJDv7LErEg5y1YNNDNV03XqfqmlQ+hCTstkd0Qp3Ccz2j6A
+         TG2BAAv6ORie4lBLqjt/LgU1IpiZysrMYxuUlIvPgb8uYwkilt8kizC5Kk1fwQzcOsoN
+         2bZIpEIPqXVSTpgVlEUr/+IEFBMwg/HFPMz73+iZocR+F0ZBAYX59StsdzsfVetcxB9D
+         mmvA==
+X-Gm-Message-State: AOAM532lqI4JocxhnOWTxhapLC9DFncrTi+IRuHIGT+wKAd6/4B/6h03
+        z49SUEKlQy23/eyw/gIblCFbzZnsQyk7RkDB6Os7cw==
+X-Google-Smtp-Source: ABdhPJzX/FVgzC0EPKMvsUUn84DEffG26tohBKCZtOfTfxVCmLokcVuYpKW6O9EGM43LUqr04D+DAH09ngv7yEmd1xc=
+X-Received: by 2002:a05:6402:14f:: with SMTP id s15mr27553335edu.118.1642551665549;
+ Tue, 18 Jan 2022 16:21:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7666958f-6215-a8eb-3412-b613158406db@virtuozzo.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20220118071952.1243143-1-hch@lst.de> <20220118071952.1243143-11-hch@lst.de>
+In-Reply-To: <20220118071952.1243143-11-hch@lst.de>
+From:   Jinpu Wang <jinpu.wang@ionos.com>
+Date:   Wed, 19 Jan 2022 01:20:54 +0100
+Message-ID: <CAMGffEmFZB1PPE09bfxQjKw-tJhdprEkF-OWrVF4Kjsf1OwQ_g@mail.gmail.com>
+Subject: Re: [PATCH 10/19] rnbd-srv: simplify bio mapping in process_rdma
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Md . Haris Iqbal" <haris.iqbal@ionos.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.co>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Jan 16, 2022 at 03:44:21PM +0300, Vasily Averin wrote:
-> On 03.01.2022 22:53, J. Bruce Fields wrote:
-> > On Wed, Dec 29, 2021 at 11:24:43AM +0300, Vasily Averin wrote:
-> >> nfsd and lockd use F_SETLK cmd with the FL_SLEEP flag set to request
-> >> asynchronous processing of blocking locks.
-> >>
-> >> Currently nfs4 use locks_lock_inode_wait() function which is blocked
-> >> for such requests. To handle them correctly FL_SLEEP flag should be
-> >> temporarily reset before executing the locks_lock_inode_wait() function.
-> >>
-> >> Additionally block flag is forced to set, to translate blocking lock to
-> >> remote nfs server, expecting it supports async processing of the blocking
-> >> locks too.
-> > 
-> > But this on its own isn't enough for the client to support asynchronous
-> > blocking locks, right?  Don't we also need the logic that calls knfsd's
-> > lm_notify when it gets a CB_NOTIFY_LOCK from the server?
-> 
-> No, I think this should be enough.
-> We are here a nfs client,
-> we can get F_SETLK with FL_SLEEP from nfsd only (i.e. in re-export case)
-> we need to avoid blocking if lock is already taken, 
-> so we need to call locks_lock_inode_wait without FL_SLEEP,
-> then we submit _sleeping_ request to NFS server (i.e. set )data->arg.block = 1)
-> and waiting for reply from server.
-> 
-> Here we rely that server will NOT block on such request too, so our reply wel not be blocked too.
+Hi Christoph,
 
-Just on that one point: if there's a lock conflict, an NFSv4 server will
-return NFS4ERR_DENIED immediately and leave it to the client to poll.
-Or if you're using NFS version >= 4.1, the server has the option of
-calling back to the client with a CB_NOTIFY_LOCK to let the client know
-when the lock might be available.  (See
-https://datatracker.ietf.org/doc/html/rfc8881#section-20.11 for
-details.)  But if a server that blocked and didn't reply to the original
-LOCK request until the lock became available, that would be a bug.
+Thanks for the patch.
 
-(Apologies for responding just to that one point, I'm also trying to get
-caught back up again here....).
+On Tue, Jan 18, 2022 at 8:20 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> The memory mapped in process_rdma is contiguous, so there is no need
+> to loop over bio_add_page.  Remove rnbd_bio_map_kern and just open code
+> the bio allocation and mapping in the caller.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/block/rnbd/rnbd-srv-dev.c | 57 -------------------------------
+>  drivers/block/rnbd/rnbd-srv-dev.h |  5 ---
+>  drivers/block/rnbd/rnbd-srv.c     | 20 ++++++++---
+>  3 files changed, 15 insertions(+), 67 deletions(-)
+>
+> diff --git a/drivers/block/rnbd/rnbd-srv-dev.c b/drivers/block/rnbd/rnbd-srv-dev.c
+> index b241a099aeae2..98d3e591a0885 100644
+> --- a/drivers/block/rnbd/rnbd-srv-dev.c
+> +++ b/drivers/block/rnbd/rnbd-srv-dev.c
+> @@ -44,60 +44,3 @@ void rnbd_dev_close(struct rnbd_dev *dev)
+>         blkdev_put(dev->bdev, dev->blk_open_flags);
+>         kfree(dev);
+>  }
+> -
+> -void rnbd_dev_bi_end_io(struct bio *bio)
+> -{
+> -       struct rnbd_dev_blk_io *io = bio->bi_private;
+> -
+> -       rnbd_endio(io->priv, blk_status_to_errno(bio->bi_status));
+> -       bio_put(bio);
+> -}
+> -
+> -/**
+> - *     rnbd_bio_map_kern       -       map kernel address into bio
+> - *     @data: pointer to buffer to map
+> - *     @bs: bio_set to use.
+> - *     @len: length in bytes
+> - *     @gfp_mask: allocation flags for bio allocation
+> - *
+> - *     Map the kernel address into a bio suitable for io to a block
+> - *     device. Returns an error pointer in case of error.
+> - */
+> -struct bio *rnbd_bio_map_kern(void *data, struct bio_set *bs,
+> -                             unsigned int len, gfp_t gfp_mask)
+> -{
+> -       unsigned long kaddr = (unsigned long)data;
+> -       unsigned long end = (kaddr + len + PAGE_SIZE - 1) >> PAGE_SHIFT;
+> -       unsigned long start = kaddr >> PAGE_SHIFT;
+> -       const int nr_pages = end - start;
+> -       int offset, i;
+> -       struct bio *bio;
+> -
+> -       bio = bio_alloc_bioset(gfp_mask, nr_pages, bs);
+> -       if (!bio)
+> -               return ERR_PTR(-ENOMEM);
+> -
+> -       offset = offset_in_page(kaddr);
+> -       for (i = 0; i < nr_pages; i++) {
+> -               unsigned int bytes = PAGE_SIZE - offset;
+> -
+> -               if (len <= 0)
+> -                       break;
+> -
+> -               if (bytes > len)
+> -                       bytes = len;
+> -
+> -               if (bio_add_page(bio, virt_to_page(data), bytes,
+> -                                   offset) < bytes) {
+> -                       /* we don't support partial mappings */
+> -                       bio_put(bio);
+> -                       return ERR_PTR(-EINVAL);
+> -               }
+> -
+> -               data += bytes;
+> -               len -= bytes;
+> -               offset = 0;
+> -       }
+> -
+> -       return bio;
+> -}
+> diff --git a/drivers/block/rnbd/rnbd-srv-dev.h b/drivers/block/rnbd/rnbd-srv-dev.h
+> index 0eb23850afb95..1a14ece0be726 100644
+> --- a/drivers/block/rnbd/rnbd-srv-dev.h
+> +++ b/drivers/block/rnbd/rnbd-srv-dev.h
+> @@ -41,11 +41,6 @@ void rnbd_dev_close(struct rnbd_dev *dev);
+>
+>  void rnbd_endio(void *priv, int error);
+>
+> -void rnbd_dev_bi_end_io(struct bio *bio);
+> -
+> -struct bio *rnbd_bio_map_kern(void *data, struct bio_set *bs,
+> -                             unsigned int len, gfp_t gfp_mask);
+> -
+>  static inline int rnbd_dev_get_max_segs(const struct rnbd_dev *dev)
+>  {
+>         return queue_max_segments(bdev_get_queue(dev->bdev));
+> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+> index 1ee808fc600cf..65c670e96075b 100644
+> --- a/drivers/block/rnbd/rnbd-srv.c
+> +++ b/drivers/block/rnbd/rnbd-srv.c
+> @@ -114,6 +114,14 @@ rnbd_get_sess_dev(int dev_id, struct rnbd_srv_session *srv_sess)
+>         return sess_dev;
+>  }
+>
+> +static void rnbd_dev_bi_end_io(struct bio *bio)
+> +{
+> +       struct rnbd_dev_blk_io *io = bio->bi_private;
+> +
+> +       rnbd_endio(io->priv, blk_status_to_errno(bio->bi_status));
+> +       bio_put(bio);
+> +}
+> +
+>  static int process_rdma(struct rnbd_srv_session *srv_sess,
+>                         struct rtrs_srv_op *id, void *data, u32 datalen,
+>                         const void *usr, size_t usrlen)
+> @@ -144,11 +152,11 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>         priv->sess_dev = sess_dev;
+>         priv->id = id;
+>
+> -       /* Generate bio with pages pointing to the rdma buffer */
+> -       bio = rnbd_bio_map_kern(data, sess_dev->rnbd_dev->ibd_bio_set, datalen, GFP_KERNEL);
+> -       if (IS_ERR(bio)) {
+> -               err = PTR_ERR(bio);
+> -               rnbd_srv_err(sess_dev, "Failed to generate bio, err: %d\n", err);
+> +       bio = bio_alloc_bioset(GFP_KERNEL, 1, sess_dev->rnbd_dev->ibd_bio_set);
+> +       if (bio_add_page(bio, virt_to_page(data), datalen,
+> +                       offset_in_page(data))) {
+this changes lead to IO error all the time, because bio_add_page return len.
+We need  if (bio_add_page(bio, virt_to_page(data), datalen,
+                     offset_in_page(data)) < datalen)
 
---b.
-
-> Under "block" I mean that handler can sleep or process request for a very long time 
-> but it will NOT BE BLOCKED if lock is taken already, it WILL NOT WAIT when lock will be released,
-> it just return some error in this case.
-> 
-> I think it is correct.
-> Do you think I am wrong or maybe I missed something? 
-> 
-> Thank you,
-> 	Vasily Averin
-> 
-> However I noticed now that past is incorrect, 
-> temporally dropped FL_SLEEP should be restored back in _nfs4_proc_setlk before _nfs4_do_setlk() call.
-> I'll fix it in next version of this patch-set.
-> 
-> >> https://bugzilla.kernel.org/show_bug.cgi?id=215383
-> >> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-> >> ---
-> >>  fs/nfs/nfs4proc.c | 5 ++++-
-> >>  1 file changed, 4 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> >> index ee3bc79f6ca3..9b1380c4223c 100644
-> >> --- a/fs/nfs/nfs4proc.c
-> >> +++ b/fs/nfs/nfs4proc.c
-> >> @@ -7094,7 +7094,7 @@ static int _nfs4_do_setlk(struct nfs4_state *state, int cmd, struct file_lock *f
-> >>  			recovery_type == NFS_LOCK_NEW ? GFP_KERNEL : GFP_NOFS);
-> >>  	if (data == NULL)
-> >>  		return -ENOMEM;
-> >> -	if (IS_SETLKW(cmd))
-> >> +	if (IS_SETLKW(cmd) || (fl->fl_flags & FL_SLEEP))
-> >>  		data->arg.block = 1;
-> >>  	nfs4_init_sequence(&data->arg.seq_args, &data->res.seq_res, 1,
-> >>  				recovery_type > NFS_LOCK_NEW);
-> >> @@ -7200,6 +7200,9 @@ static int _nfs4_proc_setlk(struct nfs4_state *state, int cmd, struct file_lock
-> >>  	int status;
-> >>  
-> >>  	request->fl_flags |= FL_ACCESS;
-> >> +	if (((fl_flags & FL_SLEEP_POSIX) == FL_SLEEP_POSIX) && IS_SETLK(cmd))
-> >> +		request->fl_flags &= ~FL_SLEEP;
-> >> +
-> >>  	status = locks_lock_inode_wait(state->inode, request);
-> >>  	if (status < 0)
-> >>  		goto out;
-> >> -- 
-> >> 2.25.1
+Thanks!
+> +               rnbd_srv_err(sess_dev, "Failed to map data to bio\n");
+> +               err = -EINVAL;
+>                 goto sess_dev_put;
+>         }
+>
+> @@ -170,6 +178,8 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>
+>         return 0;
+>
+> +bio_put:
+> +       bio_put(bio);
+>  sess_dev_put:
+>         rnbd_put_sess_dev(sess_dev);
+>  err:
+> --
+> 2.30.2
+>
