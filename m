@@ -2,129 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C89E493956
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jan 2022 12:16:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16C9D493B12
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Jan 2022 14:27:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354057AbiASLQH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Jan 2022 06:16:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57390 "EHLO
+        id S1354765AbiASN1H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Jan 2022 08:27:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1353333AbiASLQF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jan 2022 06:16:05 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E7F9C061574;
-        Wed, 19 Jan 2022 03:16:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D189061544;
-        Wed, 19 Jan 2022 11:16:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07EC8C004E1;
-        Wed, 19 Jan 2022 11:15:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642590964;
-        bh=2yjBD4Zacw+5slFq4LLTP2+0CVP0ahv0ykBSsfMZgFY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sWcBQNL3jsVDx8fbC4Tu3Z7AAaVmBxjdgAxC1FcAS8Ufemm9lwqE+FjUw8YobL0g5
-         maE0aFh0Blr15dbPkx6ryoeImGeucYTTcsECJx1mt0+jq0oQ6FQ5rulN3uruRj5DR9
-         7iDa/u8UQ46Ll1d02g4BzWZus5gttImEBP/RPvToowP4cEwiueV36Qa+mbLXKiKF1P
-         TDpAHrbrWHnvi/TfuAgEy+otbPNTxTNLfZLBje9IVSfCKF2Ngao1yFiRVXJhZg4UCw
-         U4FwtkiJsQmV/NTjtIL3341Q+Mvi5YeltCuHtB2mLD/ESo335mZI38irwhrXsAf0Se
-         tjihvN1DWwviQ==
-Date:   Wed, 19 Jan 2022 12:15:57 +0100
-From:   Christian Brauner <brauner@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-cachefs@redhat.com,
-        Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <smfrench@gmail.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>,
-        JeffleXu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/11] vfs, fscache: Add an IS_KERNEL_FILE() macro for
- the S_KERNEL_FILE flag
-Message-ID: <20220119111557.gjrjwgib2wgteir6@wittgenstein>
-References: <YeefizLOGt1Qf35o@infradead.org>
- <YebpktrcUZOlBHkZ@infradead.org>
- <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk>
- <164251409447.3435901.10092442643336534999.stgit@warthog.procyon.org.uk>
- <3613681.1642527614@warthog.procyon.org.uk>
- <3765724.1642583885@warthog.procyon.org.uk>
+        with ESMTP id S1350345AbiASN1H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Jan 2022 08:27:07 -0500
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838A0C06161C
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jan 2022 05:27:06 -0800 (PST)
+Received: by mail-il1-x130.google.com with SMTP id d3so2128571ilr.10
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Jan 2022 05:27:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bOtjTSupMPdLeWMiVKrD7jaORGYKT+sk6BwRJT6YH5k=;
+        b=7BEfqJqRzXAE088B+2bHOpvIL0UUVYOZUvHjaUycgtIQCZS6qJSTGhtIwa1Xa6EPfk
+         oV2YXPGcxgiVF5LaQHluLKvgATLLAeZKgM3nn6DNYQRh6ifI6cdJPU7ZNOAzZ5g1fFkO
+         MWYcErn30fkxjWY45t9Yboy2jcExTsCrzys7xQCWMUAHOZ2PvIOKEUon3RlzTMdRHOFW
+         W8Ams8MdRsSgkRcx2W8R30267oa8zRJAWTCRB6MNRYIPNawBrTjM+yr6IoXc6oDoeZjs
+         ao5paPXCdk//Rx9HxN4miEoGhchTg9VDu7RK7HyILmak+tgC3BqPCX5DU7MxKWRj66d8
+         cjpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bOtjTSupMPdLeWMiVKrD7jaORGYKT+sk6BwRJT6YH5k=;
+        b=acPoFYicwEnV/TrmOn7ladH8c4X9/boKTFwVfguaZuzQldG/RkE5YbadTvgHekggmp
+         Md0ZLBZh7J6NsHUGFleAiAiK4xBuepmTxWrrUlP6xTDW/DBkW4tWnzbYRsEadw797P3C
+         44ftJ63hd5jJAnxoc84QNiM7Rrv2nKMb1zyxYEuNQfRg9WNkJ3tCGuK6J5EeUmuRtKjz
+         Vn6yDRddMcgCfrgNX3ucBZn7QR+cMGS6V0O7O51YIn6lTJSzI2SDgRv7J+wJ17N4lDuw
+         EM6/OgtSJecpbYG3i2y3/KMbGa/YSfZSVwUjjxi+d2xIUt0bi6okI3daLSSoGSBZEL/v
+         2hGQ==
+X-Gm-Message-State: AOAM533XG/GPPSv9PlcyAE62e/N2HE125643IBr9keKIIdgVKSddxRK9
+        iS4aj+KT+fMlVGF89sBrK1cb6Q==
+X-Google-Smtp-Source: ABdhPJy/gK+ACUkzeActiCIlSLAxm2cSY3hrzhU1AqADv9+8T7xomkwrCDZtFgg9hB/5uCyhH7Qi5A==
+X-Received: by 2002:a05:6e02:144a:: with SMTP id p10mr9326688ilo.152.1642598825847;
+        Wed, 19 Jan 2022 05:27:05 -0800 (PST)
+Received: from [192.168.1.116] ([66.219.217.159])
+        by smtp.gmail.com with ESMTPSA id c7sm4569815ioi.18.2022.01.19.05.27.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Jan 2022 05:27:05 -0800 (PST)
+Subject: Re: improve the bio allocation interface
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Pavel Begunkov <asml.silence@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Md . Haris Iqbal" <haris.iqbal@ionos.com>,
+        Jack Wang <jinpu.wang@ionos.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=c3=a9?= <roger.pau@citrix.co>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
+References: <20220118071952.1243143-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <2b9aedb6-4531-91fe-3493-133470ebee80@kernel.dk>
+Date:   Wed, 19 Jan 2022 06:27:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20220118071952.1243143-1-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3765724.1642583885@warthog.procyon.org.uk>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 09:18:05AM +0000, David Howells wrote:
-> Christoph Hellwig <hch@infradead.org> wrote:
+On 1/18/22 12:19 AM, Christoph Hellwig wrote:
+> Hi Jens,
 > 
-> > On Tue, Jan 18, 2022 at 05:40:14PM +0000, David Howells wrote:
-> > > Christoph Hellwig <hch@infradead.org> wrote:
-> > > 
-> > > > On Tue, Jan 18, 2022 at 01:54:54PM +0000, David Howells wrote:
-> > > > > Add an IS_KERNEL_FILE() macro to test the S_KERNEL_FILE inode flag as is
-> > > > > common practice for the other inode flags[1].
-> > > > 
-> > > > Please fix the flag to have a sensible name first, as the naming of the
-> > > > flag and this new helper is utterly wrong as we already discussed.
-> > > 
-> > > And I suggested a new name, which you didn't comment on.
-> > 
-> > Again, look at the semantics of the flag:  The only thing it does in the
-> > VFS is to prevent a rmdir.  So you might want to name it after that.
-> > 
-> > Or in fact drop the flag entirely.  We don't have that kind of
-> > protection for other in-kernel file use or important userspace daemons
-> > either.  I can't see why cachefiles is the magic snowflake here that
-> > suddenly needs semantics no one else has.
+> this series is posted early because it has wide-ranging changes and
+> could use some early ACKs before -rc1.
 > 
-> The flag cannot just be dropped - it's an important part of the interaction
-> with cachefilesd with regard to culling.  Culling to free up space is
-> offloaded to userspace rather than being done within the kernel.
-> 
-> Previously, cachefiles, the kernel module, had to maintain a huge tree of
-> records of every backing inode that it was currently using so that it could
-> forbid cachefilesd to cull one when cachefilesd asked.  I've reduced that to a
-> single bit flag on the inode struct, thereby saving both memory and time.  You
-> can argue whether it's worth sacrificing an inode flag bit for that, but the
-> flag can be reused for any other kernel service that wants to similarly mark
-> an inode in use.
-> 
-> Further, it's used as a mark to prevent cachefiles accidentally using an inode
-> twice - say someone misconfigures a second cache overlapping the first - and,
-> again, this works if some other kernel driver wants to mark inode it is using
-> in use.  Cachefiles will refuse to use them if it ever sees them, so no
-> problem there.
-> 
-> And it's not true that we don't have that kind of protection for other
-> in-kernel file use.  See S_SWAPFILE.  I did consider using that, but that has
-> other side effects.  I mentioned that perhaps I should make swapon set
-> S_KERNEL_FILE also.  Also blockdevs have some exclusion also, I think.
-> 
-> The rmdir thing should really apply to rename and unlink also.  That's to
-> prevent someone, cachefilesd included, causing cachefiles to malfunction by
-> removing the directories it created.  Possibly this should be a separate bit
-> to S_KERNEL_FILE, maybe S_NO_DELETE.
-> 
-> So I could change S_KERNEL_FILE to S_KERNEL_LOCK, say, or maybe S_EXCLUSIVE.
+> It changes the interface to the bio allocators to always pass a
+> block_device and the operation, which is information needed for every
+> bio submitted through bio_submit.  This means the fields can be
+> directly initialized in bio_init instead of first being zeroed and
+> thus should help to micro-optimize even better than the __bio_set_dev
+> that Pavel proposed while also cleaning up code.
 
-[ ] S_REMOVE_PROTECTED
-[ ] S_UNREMOVABLE
-[ ] S_HELD_BUSY
-[ ] S_KERNEL_BUSY
-[ ] S_BUSY_INTERNAL
-[ ] S_BUSY
-[ ] S_HELD
+Looks pretty straight forward from the block core point of view. Didn't
+look too closely at the fs/driver changes yet.
 
-?
+-- 
+Jens Axboe
+
