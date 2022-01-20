@@ -2,86 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA6904949CF
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jan 2022 09:46:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C384494A62
+	for <lists+linux-nfs@lfdr.de>; Thu, 20 Jan 2022 10:10:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1359351AbiATIqg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Jan 2022 03:46:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37536 "EHLO
+        id S232707AbiATJKL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Jan 2022 04:10:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359359AbiATIqg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jan 2022 03:46:36 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5641C061574
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Jan 2022 00:46:35 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id a18so25497559edj.7
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Jan 2022 00:46:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cgwK+h4TcKTuzoMVgpyjaT6hqJgZPgeFi9/82jcEytw=;
-        b=bSaFa+URfbmU/MszEXVOlamjch2d/bVKLmiJuU4jZJRaWnRGqGHrY9tAQfmQRbRXiV
-         uc/9kTk3/S5l1jHMLdTRmVU57otES44XeerqdTVprmM6I9EDUZQLX+yH0h63YbxWR9mE
-         9nbGRPoufn7nse+dFWj62siY9k2GshoKLCrxbi33+uXmG5HvTOiNXAwJCNJOjjOHmaSp
-         XOP01luyWgvqHzNdBA4wIYoRQp0k9Ft6zqCX+Ra/R90oY2R7/AxbMlg/sS1PwZuWZg03
-         Z3JDZLtjXW1ZdUyTLOQOdSV8iGdn5zWa6hPXzsGCHlb9LWK1Z0CByscOqozFwyTfAd7X
-         /t3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cgwK+h4TcKTuzoMVgpyjaT6hqJgZPgeFi9/82jcEytw=;
-        b=RrOFYhOqm4KXvgMDD1zXrqdvMa++A/LlMFuylseeenUTBxerV0BRMtSO/j+FRiE/5C
-         Uk6W42bJPnzlJ0I3u8dZVmLQ5NZuptFxnANyqZ8VYwmmRYnTbYn3Hg+lRwMqvPUOpA5J
-         MbQtVf+/MxUYm4eWvQXSv/OVfpOxnzpECq1+iRM9whKcjCrPdZ7BSue2B8EJQekGLHm5
-         aABUJaX5yYSHa4ywtW9XNVm/GADzzO1yyJpbeILHU7aFK7jsuqzth1EzKvX4E9mIylBH
-         AZlhR3HxipSDQZ8VQI4jshv3Fkl1VGn8WTsrn43UofUR5ZYhboZUY2amkbqkdgi3UogX
-         8jGA==
-X-Gm-Message-State: AOAM532KzmoxtMvq/YX9MP+PFhX/opo3ZDqL2Wp9fzla9UGi82R5PGRo
-        fJWmS56jh0lhzxt2+rd6Jms00Tn+SwCFUEBN8krXiw==
-X-Google-Smtp-Source: ABdhPJxuyj+5hYqiz1QG79H/zXO6tZsV+Dq+Pw3BW6UC4M2lhhCbPthTcTo8B1M9EwB4FqJ6g90lXSpEfvPIb7w08Cw=
-X-Received: by 2002:a05:6402:195:: with SMTP id r21mr34247351edv.174.1642668394471;
- Thu, 20 Jan 2022 00:46:34 -0800 (PST)
+        with ESMTP id S231761AbiATJJL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Jan 2022 04:09:11 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F08C061574;
+        Thu, 20 Jan 2022 01:09:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ojH90duUrlg/GDFel8G8XOOeQrX2zbxUTaKAoe1bGvs=; b=tCO5lD4il6m52dcPk+/cYpHidp
+        +onLjblS0VrPFPxS9ZGJUQvdyNeZPPGHNAfF+5peIslo4QgfZyN8BmETycomdYalpvi6wzkvq4RyL
+        xpk6fgqFhh41z7Jecw/dPJnI+IIgRJgrJPksZWbTPWwU8R3QsvMLuMlkPHQ3yTy59btCClyFa50/d
+        T+CHX9m/pw3Xmdpesim/0kl6EPfhr0hcZN+/djS0aMkWwifGzbSVu6YPpYkiUaN68OlmHsaX3qOtf
+        0RJQrwayc+fmmfjAoqUshIAxqNkE7rnwubq99z+oFJjmVHdfhSYo6uk3OXvGjR9gwacmvJ57xP/KY
+        f83fZOtA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nATR7-00A4wf-Az; Thu, 20 Jan 2022 09:08:53 +0000
+Date:   Thu, 20 Jan 2022 01:08:53 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@infradead.org>, linux-cachefs@redhat.com,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <smfrench@gmail.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>,
+        JeffleXu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/11] vfs, fscache: Add an IS_KERNEL_FILE() macro for
+ the S_KERNEL_FILE flag
+Message-ID: <YekmpeQvNlGlMvNY@infradead.org>
+References: <YeefizLOGt1Qf35o@infradead.org>
+ <YebpktrcUZOlBHkZ@infradead.org>
+ <164251396932.3435901.344517748027321142.stgit@warthog.procyon.org.uk>
+ <164251409447.3435901.10092442643336534999.stgit@warthog.procyon.org.uk>
+ <3613681.1642527614@warthog.procyon.org.uk>
+ <3765724.1642583885@warthog.procyon.org.uk>
 MIME-Version: 1.0
-References: <20220118071952.1243143-1-hch@lst.de> <20220118071952.1243143-11-hch@lst.de>
- <CAMGffEmFZB1PPE09bfxQjKw-tJhdprEkF-OWrVF4Kjsf1OwQ_g@mail.gmail.com> <20220120083746.GA5622@lst.de>
-In-Reply-To: <20220120083746.GA5622@lst.de>
-From:   Jinpu Wang <jinpu.wang@ionos.com>
-Date:   Thu, 20 Jan 2022 09:46:23 +0100
-Message-ID: <CAMGffE=+ENBdRfugG4k3yB_ca3rqwnaKFXC4+8=CZ=LGvggA6w@mail.gmail.com>
-Subject: Re: [PATCH 10/19] rnbd-srv: simplify bio mapping in process_rdma
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Md . Haris Iqbal" <haris.iqbal@ionos.com>,
-        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.co>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3765724.1642583885@warthog.procyon.org.uk>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 20, 2022 at 9:37 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Wed, Jan 19, 2022 at 01:20:54AM +0100, Jinpu Wang wrote:
-> > this changes lead to IO error all the time, because bio_add_page return len.
-> > We need  if (bio_add_page(bio, virt_to_page(data), datalen,
-> >                      offset_in_page(data)) < datalen)
->
-> Does this version look good to you?
->
-> http://git.infradead.org/users/hch/block.git/commitdiff/62adb08e765b889dd8db4227cad33a710e36d631
+On Wed, Jan 19, 2022 at 09:18:05AM +0000, David Howells wrote:
+> The flag cannot just be dropped - it's an important part of the interaction
+> with cachefilesd with regard to culling.  Culling to free up space is
+> offloaded to userspace rather than being done within the kernel.
+> 
+> Previously, cachefiles, the kernel module, had to maintain a huge tree of
+> records of every backing inode that it was currently using so that it could
+> forbid cachefilesd to cull one when cachefilesd asked.  I've reduced that to a
+> single bit flag on the inode struct, thereby saving both memory and time.  You
+> can argue whether it's worth sacrificing an inode flag bit for that, but the
+> flag can be reused for any other kernel service that wants to similarly mark
+> an inode in use.
 
-Yes, lgtm, thank you!
-Reviewed-by: Jack Wang <jinpu.wang@ionons.com>
-Tested-by: Jack Wang <jinpu.wang@ionos.com>
+Which is a horrible interface.   But you tricked Linus into merging this
+crap, so let's not pretent it is a "kernel file".  We have plenty of
+those, basically every caller of filp_open is one.
+
+It is something like "pinned for fscache/cachefiles", so name it that
+way and add a big fat comment expaining the atrocities.
