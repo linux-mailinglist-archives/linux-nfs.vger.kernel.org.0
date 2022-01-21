@@ -2,137 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 31C59495976
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 06:28:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27013495979
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 06:30:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348599AbiAUF2t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jan 2022 00:28:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35290 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348559AbiAUF2p (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 00:28:45 -0500
-Received: from mail-yb1-xb2c.google.com (mail-yb1-xb2c.google.com [IPv6:2607:f8b0:4864:20::b2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F438C061401
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Jan 2022 21:28:45 -0800 (PST)
-Received: by mail-yb1-xb2c.google.com with SMTP id g14so24324143ybs.8
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Jan 2022 21:28:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=oLfplAHSJpoJoro49dxV+IqhVZCDx28Jwklvx67FrF8=;
-        b=nYs10YR6ocJHBHrLUw73ps3g3PLSvZRhMinzM7yDV+hDZbTjOND8oCKxMyT7zy/s6G
-         tMcswUlEq+K9VtnMpJY8Xe3qmK/c1WZ9QqmGTojYfVkIdyJLSktRljR0K344YxrVYsho
-         MGaOplQaamQhQjtxmTuX0r5hMqG+z7HJAKD/xjQcVsT+9Rt98UEiiqDM96vc1p4plXhh
-         s+y4/thwlfHz5n1UEfgYRc+Ya43KcxPrf6NoyTTXhWIhs8F1sdwuJWe3djxrPQXheYmt
-         hNhNIxcu/lF+d/J/Mw7B90xjkN4AdX9GUzOTS4wopMsCv309Ogv7RLpi322UUxcI4Bhf
-         XRIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oLfplAHSJpoJoro49dxV+IqhVZCDx28Jwklvx67FrF8=;
-        b=KAZnsWSVpwzb2SkvNFo8ZIbCnRdjBKqgGaDYLPtlII4lUceMfG43fXwpmpwkkjMFIe
-         KDRmMDjaUUXIMWvVnZ6WKK/VFJ1I2cwmzGgXqU25MJKEUSYqBSp//253b5piIzqRCi9e
-         jnJQOkSw2OblC5ISKJD2DcaCEsD4BgqXOtLEq9YMbM9lwo+VTaHXLrC0fHkyopbQwCKZ
-         Fkjko7Z9gAXFQF/GqWu+b0MVX6VHjjHj/X/g7/bQ0dZQK+ywRPpOaB+OAP1+94CqbNBQ
-         veU+TornidD6qjtVE9qxI+Oa+2VrweC3c5F7zW/CWyOjNHFnwlY3P/UzB61nfBrjAVYa
-         3xkw==
-X-Gm-Message-State: AOAM531l7+7/+EzBPc2RtvEY+SrVJWFasYa3ydf/kHF2rj4HO5VkVnXC
-        gLkI/iZnEaqV1rI5ycwkDC1gJvyO2fY8UVkMiATb3w==
-X-Google-Smtp-Source: ABdhPJw4xKwty2ZweVj6NPuQV3OZbnRuxyMndGlPkKNDC99atTPudj3h6vdLwZZaESLpVyhSeONa9YZMWMdxCxOzFiM=
-X-Received: by 2002:a25:6186:: with SMTP id v128mr3977526ybb.485.1642742924405;
- Thu, 20 Jan 2022 21:28:44 -0800 (PST)
+        id S1348556AbiAUFaH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jan 2022 00:30:07 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:45682 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1348719AbiAUF36 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 00:29:58 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 3CC3B1F395;
+        Fri, 21 Jan 2022 05:29:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1642742997;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Qrw2tBXZw6BLb51GobWaXyO72dke3+oxt8WFKSSsdI=;
+        b=K042C3kcNuCBQxUvzEQgw+gNVNf+M6JJQi9ggO3WMMgOCiiU4TKvKoB3sVeinWbuvlTEqN
+        8x8WRrXKetlPU6JEQmsJ1XkRbIZ76PugBlPL07dtMPqlr9d9UdeqAcUepxa+EUrTgH2jcp
+        zGGfjDQmC2R6XhVAogCo1f49Vc24+hE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1642742997;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5Qrw2tBXZw6BLb51GobWaXyO72dke3+oxt8WFKSSsdI=;
+        b=SuSVz97N0JBfHOdVfNxRYhsadDJnh2l2udOIbpj3Ssl0I3jzBzWZhur/xow6N4Cn1LWU8S
+        sqlhn+O+iNUG3CCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E8255139C3;
+        Fri, 21 Jan 2022 05:29:56 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id SqeuNtRE6mFgdgAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Fri, 21 Jan 2022 05:29:56 +0000
+Date:   Fri, 21 Jan 2022 06:29:55 +0100
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>
+Cc:     ltp@lists.linux.it, kernel@openvz.org, linux-nfs@vger.kernel.org,
+        Steve Dickson <SteveD@redhat.com>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH] rpc_lib.sh: fix portmapper detection in case of socket
+ activation
+Message-ID: <YepE066MwWSf7wAK@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20220120143727.27057-1-nikita.yushchenko@virtuozzo.com>
+ <YenNsuS1gcA9tDe3@pevik>
+ <da777e8f-ca8a-e1c6-d005-792114b78f84@virtuozzo.com>
 MIME-Version: 1.0
-References: <20211220085649.8196-1-songmuchun@bytedance.com>
- <20211220085649.8196-11-songmuchun@bytedance.com> <20220106110051.GA470@blackbody.suse.cz>
- <CAMZfGtXZA+rLMUw5yLSW=eUncT0BjH++Dpi1EzKwXvV9zwqF1w@mail.gmail.com>
- <20220113133213.GA28468@blackbody.suse.cz> <CAMZfGtWJeov9XD_MEkDJwTK5b73OKPYxJBQi=D5-NSyNSSKLCw@mail.gmail.com>
- <20220119093311.GD15686@blackbody.suse.cz>
-In-Reply-To: <20220119093311.GD15686@blackbody.suse.cz>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Fri, 21 Jan 2022 13:28:05 +0800
-Message-ID: <CAMZfGtV4mxn0pqna0BsNAP4eLA7UD-gOJ2XCPU2O0C7VcUJa0g@mail.gmail.com>
-Subject: Re: [PATCH v5 10/16] mm: list_lru: allocate list_lru_one only when needed
-To:     =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Roman Gushchin <guro@fb.com>, Yang Shi <shy828301@gmail.com>,
-        Alex Shi <alexs@kernel.org>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Dave Chinner <david@fromorbit.com>,
-        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        jaegeuk@kernel.org, chao@kernel.org,
-        Kari Argillander <kari.argillander@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
-        Xiongchun duan <duanxiongchun@bytedance.com>,
-        Fam Zheng <fam.zheng@bytedance.com>,
-        Muchun Song <smuchun@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da777e8f-ca8a-e1c6-d005-792114b78f84@virtuozzo.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jan 19, 2022 at 5:33 PM Michal Koutn=C3=BD <mkoutny@suse.com> wrote=
-:
->
-> On Tue, Jan 18, 2022 at 08:05:44PM +0800, Muchun Song <songmuchun@bytedan=
-ce.com> wrote:
-> > I have thought about this. It's a little different to rely on objcg
-> > reparenting since the user can get memcg from objcg and
-> > then does not realize the memcg has reparented.
->
-> When you pointed that out, I'm now also wondering how
-> memcg_list_lru_alloc() would be synchronized against
-> reparenting/renumbering of kmemcg_ids. What I suspect is that newly
-> allocated mlru may be stored into the xarray with a stale kmemcg_id.
+Hi Nikita,
 
-The synchronization is based on the lock of list_lru->lock.
-memcg_list_lru_free() will help us do housekeeping.
+> 21.01.2022 00:01, Petr Vorel wrote:
+> > Hi Nikita,
 
->
-> > Maybe holding css_set_lock can do that. I do not think this
-> > is a good choice.
->
-> I agree, it doesn't sound well.
->
-> > Do you have any thoughts about this?
->
-> Thoughts / questions of what I don't undestand well:
-> - Why do you allocate mlrus for all ancestors in memcg_list_lru_alloc()?
+> > [ Cc: Steve as user-space maintainer, also Neil and whole linux-nfs ]
 
-It's because we need to be reparenting.
+> > > On systemd-based linux hosts, rpcbind service is typically started via
+> > > socket activation, when the first client connects. If no client has
+> > > connected before LTP rpc test starts, rpcbind process will not be
+> > > running at the time of check_portmap_rpcbind() execution, causing
+> > > check_portmap_rpcbind() to report TCONF error.
 
->   - It'd be sufficient to allocate just for the current memcg.
->   - Possibly allocate ancestors upon reparenting (to simplify the
->     allocation from slab_pre_alloc_hook itself).
+> > > Fix that by adding a quiet invocation of 'rpcinfo' before checking for
+> > > rpcbind.
 
-I agree it is nice to only allocate for current memcg, but
-reparenting cannot handle failure of memory allocation.
+> > Looks reasonable, but I'd prefer to have confirmation from NFS experts.
 
->
-> - What is the per-kmemcg_id lookup good for?
->   - I observe most calls of list_lru_from_memcg_idx() come from callers
->     that know memcg (or even objcg).
->   - The non-specific use case seems list_lru_walk_node() working with
->     per-node and not per-memcg projection.
->     - Consequently that is only used over all nodes anyway
->       (list_lru_walk().
->   - The idea behind this question is -- attach the list_lrus to
->     obj_cgroup (and decommission the kmemcg_id completely).
->     (Not necessarily part of this series but independent approach.)
->
+> NFS is not involved here, this is about sunrpc tests.
+Sure. Just tirpc (in libtirpc or the the old SUN-RPC already removed from glibc)
+are used in NFS. Steve is the libtirpc maintainer.
 
-I have some questions about this thought.
-We would attach more than one list_lrus to obj_cgroup,
-right? How to arrange those list_lrus, array or linked-list?
+> I had to add this patch to make 'runltp -f net.rpc' pass just after
+> container is started - that happens in container autotests here.
+Yep, I suspected this. Because on normal linux distro it's working right after
+boot (tested on rpc01.sh). Can't this be a setup issue?
 
-Thanks.
+Kind regards,
+Petr
+
+> Nikita
