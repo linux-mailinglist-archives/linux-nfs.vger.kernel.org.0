@@ -2,125 +2,157 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2606E496688
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 21:45:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12E204967A5
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 22:57:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbiAUUo7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jan 2022 15:44:59 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:42320 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbiAUUo7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 15:44:59 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        id S232446AbiAUV5s (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jan 2022 16:57:48 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:35820 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232398AbiAUV5r (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 16:57:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642802267;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=LbdPydri53Ys0YI/ksP8tcx8qE6UcE8forSIwOZlU4M=;
+        b=U9n2EofyAOsAjly7aYJnBzkl3S39PLGgGi6Pa4k4zISVYFwjCUNL1cgzOckrPXM8cuXO3k
+        vWkfwjfODh/J7NP1fh8aRBHpJDpEMlXTH0MvkFlIKAR77WiCcBtaF4sPYuPrpTTRyQjVma
+        6Iv0mw96RHUgP9cgI5cRqT+RX4zqnpk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-496-Va8Qp28gP3G0ynu2Pd9lOg-1; Fri, 21 Jan 2022 16:57:43 -0500
+X-MC-Unique: Va8Qp28gP3G0ynu2Pd9lOg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 615BC1F37D;
-        Fri, 21 Jan 2022 20:44:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642797897; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0UoJNm8/P0M9Dl+haSgiXy8MmyWzhrLLwFnIgMKkJcM=;
-        b=qZxyY5O/GNcNhI8dN/FHi9je7s68xtPz67gvLD+EkDyFSVZw3qAAxE24NrqFZwzP+TY9ZH
-        G4VM43rKx5uGupc8awVopzE6Mp4d302a2215qooKcm8S3BftxUG66vC1HZYGHo8ZIYMJJF
-        IS7isDFUSYG/G2EJ+EqRIF8YfVd/TRM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642797897;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0UoJNm8/P0M9Dl+haSgiXy8MmyWzhrLLwFnIgMKkJcM=;
-        b=N3QoIhx8U/xs1naDA+3LUpExA70xH1zSgJpMGmnUFQdGt6OG7onYGPKekD0eQlbTlibVhL
-        HOqHLqr9taFFi8AA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6053313A98;
-        Fri, 21 Jan 2022 20:44:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id RxcAB0cb62G/AgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 21 Jan 2022 20:44:55 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 739B419251A0;
+        Fri, 21 Jan 2022 21:57:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.5])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4A28712E1C;
+        Fri, 21 Jan 2022 21:57:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Shyam Prasad N <nspmangalore@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-cifs@vger.kernel.org,
+        Steve French <smfrench@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Omar Sandoval <osandov@osandov.com>, linux-cachefs@redhat.com,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] fscache: Fixes and minor updates for rewrite
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Petr Vorel" <pvorel@suse.cz>
-Cc:     "Nikita Yushchenko" <nikita.yushchenko@virtuozzo.com>,
-        ltp@lists.linux.it, kernel@openvz.org, linux-nfs@vger.kernel.org,
-        "Steve Dickson" <SteveD@redhat.com>
-Subject: Re: [PATCH] rpc_lib.sh: fix portmapper detection in case of socket activation
-In-reply-to: <YenNsuS1gcA9tDe3@pevik>
-References: <20220120143727.27057-1-nikita.yushchenko@virtuozzo.com>,
- <YenNsuS1gcA9tDe3@pevik>
-Date:   Sat, 22 Jan 2022 07:44:51 +1100
-Message-id: <164279789186.8775.7075880084961337149@noble.neil.brown.name>
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1339461.1642802244.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 21 Jan 2022 21:57:24 +0000
+Message-ID: <1339462.1642802244@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 21 Jan 2022, Petr Vorel wrote:
-> Hi Nikita,
->=20
-> [ Cc: Steve as user-space maintainer, also Neil and whole linux-nfs ]
->=20
-> > On systemd-based linux hosts, rpcbind service is typically started via
-> > socket activation, when the first client connects. If no client has
-> > connected before LTP rpc test starts, rpcbind process will not be
-> > running at the time of check_portmap_rpcbind() execution, causing
-> > check_portmap_rpcbind() to report TCONF error.
->=20
-> > Fix that by adding a quiet invocation of 'rpcinfo' before checking for
-> > rpcbind.
->=20
-> Looks reasonable, but I'd prefer to have confirmation from NFS experts.
->=20
-> > For portmap, similar step is likely not needed, because portmap is used
-> > only on old systemd and those don't use systemd.
->=20
-> > Signed-off-by: Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>
-> > ---
-> >  testcases/network/rpc/basic_tests/rpc_lib.sh | 6 ++++++
-> >  1 file changed, 6 insertions(+)
->=20
-> > diff --git a/testcases/network/rpc/basic_tests/rpc_lib.sh b/testcases/net=
-work/rpc/basic_tests/rpc_lib.sh
-> > index c7c868709..e882e41b3 100644
-> > --- a/testcases/network/rpc/basic_tests/rpc_lib.sh
-> > +++ b/testcases/network/rpc/basic_tests/rpc_lib.sh
-> > @@ -8,6 +8,12 @@ check_portmap_rpcbind()
-> >  	if pgrep portmap > /dev/null; then
-> >  		PORTMAPPER=3D"portmap"
-> >  	else
-> > +		# In case of systemd socket activation, rpcbind could be
-> > +		# not started until somebody tries to connect to it's socket.
-> > +		#
-> > +		# To handle that case properly, run a client now.
-> > +		rpcinfo >/dev/null 2>&1
+Hi Linus,
 
-If it were me, I would remove the 'pgrep's and just call "rpcbind -p"
-and make sure something responds.
+Could you pull this set of fixes and minor updates for the fscache
+rewrite[1] please?
 
-NeilBrown
+ (1) Fix mishandling of volume collisions (the wait condition is inverted
+     and so it was only waiting if the volume collision was already
+     resolved).
+
+ (2) Fix miscalculation of whether there's space available in cachefiles.
+
+ (3) Make sure a default cache name is set on a cache if the user hasn't
+     set one by the time they bind the cache.
+
+ (4) Adjust the way the backing inode is presented in tracepoints, add a
+     tracepoint for mkdir and trace directory lookup.
+
+ (5) Add a tracepoint for failure to set the active file mark.
+
+ (6) Add an explanation of the checks made on the backing filesystem.
+
+ (7) Check that the backing filesystem supports tmpfile.
+
+ (8) Document how the page-release cancellation of the read-skip
+     optimisation works.
+
+And I've included a change for netfslib:
+
+ (9) Make ops->init_rreq() optional.
+
+Note that I dropped the patch that I had to add IS_KERNEL_FILE() as the
+naming of S_KERNEL_FILE is undergoing late discussion[2] and I dropped the
+patch to rewrite cifs's fscache indexing as SteveF has taken that into his
+tree.
+
+Thanks,
+David
 
 
+Link: https://lore.kernel.org/r/510611.1641942444@warthog.procyon.org.uk/ =
+[1]
+Link: https://lore.kernel.org/r/CAOQ4uxjEcvffv=3DrNXS-r+NLz+=3D6yk4abRuX_A=
+Mq9v-M4nf_PtA@mail.gmail.com/ [2]
+Link: https://lore.kernel.org/r/164251396932.3435901.344517748027321142.st=
+git@warthog.procyon.org.uk/ # v1
+---
+The following changes since commit 455e73a07f6e288b0061dfcf4fcf54fa9fe0645=
+8:
 
-> nit: Shouldn't we keep stderr? In LTP we put required commands into
-> $TST_NEEDS_CMDS. It'd be better not require rpcinfo (not a hard dependency),
-> and thus it'd be better to see "command not found" when rpcinfo missing and=
- test
-> fails.
->=20
-> Kind regards,
-> Petr
->=20
-> > +
-> >  		pgrep rpcbind > /dev/null && PORTMAPPER=3D"rpcbind" || \
-> >  			tst_brk TCONF "portmap or rpcbind is not running"
-> >  	fi
->=20
->=20
+  Merge tag 'clk-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/g=
+it/clk/linux (2022-01-12 17:02:27 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags=
+/fscache-fixes-20220121
+
+for you to fetch changes up to cef0223191452b3c493a1070baad9ffe806babac:
+
+  netfs: Make ops->init_rreq() optional (2022-01-21 21:36:28 +0000)
+
+----------------------------------------------------------------
+fscache fixes
+
+----------------------------------------------------------------
+David Howells (7):
+      fscache: Fix the volume collision wait condition
+      cachefiles: Calculate the blockshift in terms of bytes, not pages
+      cachefiles: Make some tracepoint adjustments
+      cachefiles: Trace active-mark failure
+      cachefiles: Explain checks in a comment
+      cachefiles: Check that the backing filesystem supports tmpfiles
+      fscache: Add a comment explaining how page-release optimisation work=
+s
+
+Jeffle Xu (2):
+      cachefiles: set default tag name if it's unspecified
+      netfs: Make ops->init_rreq() optional
+
+ fs/cachefiles/cache.c             |  17 ++++---
+ fs/cachefiles/daemon.c            |  11 ++++
+ fs/cachefiles/internal.h          |   2 +-
+ fs/cachefiles/io.c                |   2 +-
+ fs/cachefiles/namei.c             |  12 +++--
+ fs/ceph/addr.c                    |   5 --
+ fs/fscache/volume.c               |   4 +-
+ fs/netfs/read_helper.c            |   3 +-
+ include/linux/fscache.h           |   5 ++
+ include/trace/events/cachefiles.h | 103 ++++++++++++++++++++++++++-------=
+-----
+ 10 files changed, 113 insertions(+), 51 deletions(-)
+
