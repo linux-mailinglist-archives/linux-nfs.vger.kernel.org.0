@@ -2,191 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 71168496526
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 19:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C219496540
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Jan 2022 19:50:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351279AbiAUSfp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Jan 2022 13:35:45 -0500
-Received: from mail-yb1-f181.google.com ([209.85.219.181]:33498 "EHLO
-        mail-yb1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1382152AbiAUSem (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 13:34:42 -0500
-Received: by mail-yb1-f181.google.com with SMTP id l68so29471752ybl.0
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Jan 2022 10:34:41 -0800 (PST)
+        id S229871AbiAUSuq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Jan 2022 13:50:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S230217AbiAUSu3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Jan 2022 13:50:29 -0500
+Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37558C061744
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jan 2022 10:50:27 -0800 (PST)
+Received: by mail-wm1-x32a.google.com with SMTP id r187so223325wma.0
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Jan 2022 10:50:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vastdata.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QzwXz4OCrvfFZ3/TGNeC9Jj5eqEDnWOIs9bPsoJq4X4=;
+        b=f7o2tLUFNZ1FfRj+Nc3Wr4lSyWT3Dupaca9lu5FQYRcmIJQ2Wfuv0SURexlN8f8UjV
+         Rx2qNhPrVK45dgw63jVGUZ+WpOcWpyUqDGqY3Y/DhTZh+Y/7qfaJjWKAw3Gt4FlBu1zp
+         WG1lvLtlxw4yV46SVUSueL95sWVlyffcaapP/S4Fvfy7W80EEFgZftCNaXhKGpWlgm7b
+         IXrpingJAxzMP7cNT75CLyHdfElOUO/3DqyZ4D8roakLefFZmb5Iy6nCF08oYS1nC6La
+         La+mbsJkwADO/12GUIna7eytgZNdHZIDWeUcKVsYKZFmp5yIRMDA6DcAFHFZyGe7nCKt
+         p0rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5w/9Myye9fnAODkwpWUCayrJn9vZLoxJl+kmUF1Bk3M=;
-        b=S2RXQ1AQzFXC0hwlH1E4NO3CxCuIT6rlx0mnmNFPOAm5mhyswnUSt76Lvhn3LxKhyO
-         Oc+wGJTIes8aDlSmIHlTx2/9+zUGr0AjMtyJMivGK/5gxkVrKxNgf5rKJVBxq+0PexLc
-         K/gj4jXU4B6IAWMJf4SxTaSNskJuSnsI+qFjCf3uMxC+hUnwaPT1A0IzgOIWPSWozrwG
-         hDpUBzUI9wwrWA6OYCw8lrYhwPzPueiLZJoY+lUNtwF2/T7e1SkvyfjPvEJmKKqwMfF0
-         MdwmyZIdA2mNtZoDvDf9x2ew61Tp7Nv2B3gb++keemLoPr6lKIgp9oUm3bcG4/bLMHgE
-         9/8w==
-X-Gm-Message-State: AOAM532+5kLngjBqxLOYIcdjzgtyCV9qgxRza4I6DXgxE0rVDWfCo19U
-        RJvcmLVDLAsO+o+DZb1jRVwXgzK1XM7pmQZvjDs+DHby
-X-Google-Smtp-Source: ABdhPJxjaVa/qwnhi8eVzYegonHlNkDgf6nlSvEf+UQTfbq8u4NvtrFJivVfG0t1jM9bwBtQwmK68wUv10MkaCHtYwQ=
-X-Received: by 2002:a05:6902:1504:: with SMTP id q4mr8307585ybu.357.1642790080759;
- Fri, 21 Jan 2022 10:34:40 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QzwXz4OCrvfFZ3/TGNeC9Jj5eqEDnWOIs9bPsoJq4X4=;
+        b=3sm9/+lnQWy2aCvV3rwa1Z0hUKn21TcDg7KuEa1wh2EMkofo43DagaHTvo/zcFLlHQ
+         G+GhQbk8toc/NO+8F8KXUlw9+vumLOYYLf1AaalreGxHzKR/I9OGnxtcO7Xfx4APidty
+         9EiOjLJB8ubghx2CoHlAqR+HVKsWP87OZsW8RfVONH2C+1QuJ28vgOeocwW3HHXjLK1e
+         g/IVJpinGkwmwEsbuy2rPDebzz2YX9jB1+6Bkhi4hxYAF/rYqPBfCjckOT8MDkIx1SBZ
+         Pja+Ibe588LBUuqevyUD/1lILMQjPqOll5i9p4as24gIvJ8Exvvazl+uombNOO2xjxnl
+         dhww==
+X-Gm-Message-State: AOAM532H6p7CNE13EdWaG+NP2CQUx/aaNHfIrryV97gffOhiqVXSXNDc
+        456JtTbDA/3J57Wdl3APGpy9nM4+1YgGag==
+X-Google-Smtp-Source: ABdhPJxJi0le0iMeKqV+c/ZRKPYexdJd7wBI7vvjApd20EBCgW0AqvSc4Nk2wc6okiKD/E6HXCGvfw==
+X-Received: by 2002:a7b:cc13:: with SMTP id f19mr1915548wmh.57.1642791025807;
+        Fri, 21 Jan 2022 10:50:25 -0800 (PST)
+Received: from jupiter.lan ([77.125.69.23])
+        by smtp.gmail.com with ESMTPSA id i8sm10536479wry.45.2022.01.21.10.50.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jan 2022 10:50:25 -0800 (PST)
+From:   Dan Aloni <dan.aloni@vastdata.com>
+To:     trondmy@kernel.org
+Cc:     Anna Schumaker <Anna.Schumaker@netapp.com>,
+        linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSD: trim reads past NFS_OFFSET_MAX
+Date:   Fri, 21 Jan 2022 20:50:23 +0200
+Message-Id: <20220121185023.260128-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <fa9974724216c43f9bdb3fd39555d398fde11e59.camel@hammerspace.com>
+References: <fa9974724216c43f9bdb3fd39555d398fde11e59.camel@hammerspace.com>
 MIME-Version: 1.0
-References: <CAFX2Jf=8s+rrwgGxm1FsaPUvEHygLFaUCNeFh989v4MXmLJFSg@mail.gmail.com>
-In-Reply-To: <CAFX2Jf=8s+rrwgGxm1FsaPUvEHygLFaUCNeFh989v4MXmLJFSg@mail.gmail.com>
-From:   Anna Schumaker <anna.schumaker@netapp.com>
-Date:   Fri, 21 Jan 2022 13:34:24 -0500
-Message-ID: <CAFX2JfmEBhRF63o8ZwuUjwJ7aOUJLb+h8oidrq8kVUsnsq5vcA@mail.gmail.com>
-Subject: Re: [GIT PULL] Please pull NFS Client Updates for 5.17
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+Due to change 8cfb9015280d ("NFS: Always provide aligned buffers to the
+RPC read layers"), a read of 0xfff is aligned up to server rsize of
+0x1000.
 
-On Wed, Jan 19, 2022 at 3:47 PM Anna Schumaker
-<anna.schumaker@netapp.com> wrote:
->
-> Hi Linus,
->
-> The following changes since commit c9e6606c7fe92b50a02ce51dda82586ebdf99b48:
->
->   Linux 5.16-rc8 (2022-01-02 14:23:25 -0800)
->
-> are available in the Git repository at:
->
->   git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.17-1
->
-> for you to fetch changes up to aed28b7a2d620cb5cd0c554cb889075c02e25e8e:
->
->   SUNRPC: Don't dereference xprt->snd_task if it's a cookie
-> (2022-01-14 10:37:00 -0500)
+As a result, in a test where the server has a file of size
+0x7fffffffffffffff, and the client tries to read from the offset
+0x7ffffffffffff000, the read causes loff_t overflow in the server and it
+returns an NFS code of EINVAL to the client. The client as a result
+indefinitely retries the request.
 
-I just wanted to make sure you saw my pull request since we're getting
-towards the end of the week. I remember last year there was some issue
-where the mailer didn't deliver it to you, so I'm worried that's
-happened again.
+This fixes the issue at server side by trimming reads past NFS_OFFSET_MAX.
 
-Anna
->
-> ----------------------------------------------------------------
-> - New Features:
->   - Basic handling for case insensitive filesystems
->   - Initial support for fs_locations and server trunking
->
-> - Bugfixes and Cleanups:
->   - Cleanups to how the "struct cred *" is handled for the nfs_access_entry
->   - Ensure the server has an up to date ctimes before hardlinking or renaming
->   - Update 'blocks used' after writeback, fallocate, and clone
->   - nfs_atomic_open() fixes
->   - Improvements to sunrpc tracing
->   - Various null check & indenting related cleanups
->   - Some improvements to the sunrpc sysfs code
->     - Use default_groups in kobj_type
->     - Fix some potential races and reference leaks
->   - A few tracepoint cleanups in xprtrdma
->
-> I had to drop a few patches at the end of last week when some last
-> minute objections came in, but everything else should be ready.
->
-> Thanks,
-> Anna
-> ----------------------------------------------------------------
-> Anna Schumaker (1):
->       sunrpc: Fix potential race conditions in rpc_sysfs_xprt_state_change()
->
-> Chuck Lever (3):
->       xprtrdma: Remove final dprintk call sites from xprtrdma
->       xprtrdma: Remove definitions of RPCDBG_FACILITY
->       SUNRPC: Don't dereference xprt->snd_task if it's a cookie
->
-> Greg Kroah-Hartman (2):
->       NFS: use default_groups in kobj_type
->       SUNRPC: use default_groups in kobj_type
->
-> Gustavo A. R. Silva (1):
->       nfs41: pnfs: filelayout: Replace one-element array with
-> flexible-array member
->
-> Jiapeng Chong (1):
->       SUNRPC: clean up some inconsistent indenting
->
-> NeilBrown (3):
->       NFS: change nfs_access_get_cached to only report the mask
->       NFS: pass cred explicitly for access tests
->       NFS: don't store 'struct cred *' in struct nfs_access_entry
->
-> Olga Kornievskaia (8):
->       NFSv4 only print the label when its queried
->       NFSv4 remove zero number of fs_locations entries error check
->       NFSv4 store server support for fs_location attribute
->       NFSv4.1 query for fs_location attr on a new file system
->       NFSv4 expose nfs_parse_server_name function
->       NFSv4 handle port presence in fs_location server string
->       SUNRPC allow for unspecified transport time in rpc_clnt_add_xprt
->       NFSv4.1 test and add 4.1 trunking transport
->
-> Pierguido Lambri (1):
->       SUNRPC: Add source address/port to rpc_socket* traces
->
-> Trond Myklebust (12):
->       NFS: Ensure the server has an up to date ctime before hardlinking
->       NFS: Ensure the server has an up to date ctime before renaming
->       NFSv4.1: Fix uninitialised variable in devicenotify
->       NFSv4: Add some support for case insensitive filesystems
->       NFSv4: Just don't cache negative dentries on case insensitive servers
->       NFS: Invalidate negative dentries on all case insensitive
-> directory changes
->       NFS: Add a helper to remove case-insensitive aliases
->       NFS: Fix the verifier for case sensitive filesystem in nfs_atomic_open()
->       NFSv4: Allow writebacks to request 'blocks used'
->       NFSv42: Fallocate and clone should also request 'blocks used'
->       NFSv4: Handle case where the lookup of a directory fails
->       NFSv4: nfs_atomic_open() can race when looking up a non-regular file
->
-> Xiaoke Wang (1):
->       nfs: nfs4clinet: check the return value of kstrdup()
->
-> Xiyu Yang (1):
->       net/sunrpc: fix reference count leaks in rpc_sysfs_xprt_state_change
->
-> Xu Wang (1):
->       sunrpc: Remove unneeded null check
->
->  fs/nfs/callback.h                       |   2 +-
->  fs/nfs/callback_proc.c                  |   2 +-
->  fs/nfs/callback_xdr.c                   |  22 +++++++++++-----------
->  fs/nfs/client.c                         |   7 +++++++
->  fs/nfs/dir.c                            | 146
-> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++----------------------------
->  fs/nfs/filelayout/filelayout.h          |   2 +-
->  fs/nfs/filelayout/filelayoutdev.c       |   4 +---
->  fs/nfs/internal.h                       |   1 +
->  fs/nfs/nfs3proc.c                       |   5 +++--
->  fs/nfs/nfs42proc.c                      |  13 ++++++++-----
->  fs/nfs/nfs4_fs.h                        |  14 +++++++++-----
->  fs/nfs/nfs4client.c                     |   5 ++++-
->  fs/nfs/nfs4namespace.c                  |  19 ++++++++++++-------
->  fs/nfs/nfs4proc.c                       | 197
-> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------
->  fs/nfs/nfs4state.c                      |   6 +++++-
->  fs/nfs/nfs4xdr.c                        |  49
-> ++++++++++++++++++++++++++++++++++++++++++++-----
->  fs/nfs/sysfs.c                          |   3 ++-
->  include/linux/nfs_fs.h                  |  10 ++++++----
->  include/linux/nfs_fs_sb.h               |   4 +++-
->  include/linux/nfs_xdr.h                 |   5 ++++-
->  include/trace/events/sunrpc.h           |  70
-> +++++++++++++++++++++++++++++++++++++++++++++-------------------------
->  net/sunrpc/auth_gss/gss_generic_token.c |   6 ++----
->  net/sunrpc/clnt.c                       |   5 ++++-
->  net/sunrpc/sysfs.c                      |  47
-> +++++++++++++++++++++++++++--------------------
->  net/sunrpc/xprtrdma/backchannel.c       |   4 ----
->  net/sunrpc/xprtrdma/frwr_ops.c          |   4 ----
->  net/sunrpc/xprtrdma/rpc_rdma.c          |   4 ----
->  net/sunrpc/xprtrdma/transport.c         |   4 ----
->  net/sunrpc/xprtrdma/verbs.c             |  23 -----------------------
->  net/sunrpc/xprtsock.c                   |   2 +-
->  30 files changed, 476 insertions(+), 209 deletions(-)
+Fixes: 8cfb9015280d ("NFS: Always provide aligned buffers to the RPC read layers")
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+---
+ fs/nfsd/vfs.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 738d564ca4ce..754f4e9ff4a2 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1046,6 +1046,10 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	__be32 err;
+ 
+ 	trace_nfsd_read_start(rqstp, fhp, offset, *count);
++
++	if (unlikely(offset + *count > NFS_OFFSET_MAX))
++		*count = NFS_OFFSET_MAX - offset;
++
+ 	err = nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
+ 	if (err)
+ 		return err;
+-- 
+2.23.0
+
