@@ -2,117 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7395E496DB0
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jan 2022 20:50:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49662496DDD
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jan 2022 21:06:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234833AbiAVTuV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 Jan 2022 14:50:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36666 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbiAVTuU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jan 2022 14:50:20 -0500
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB7DBC06173B
-        for <linux-nfs@vger.kernel.org>; Sat, 22 Jan 2022 11:50:19 -0800 (PST)
-Received: by mail-lj1-x22d.google.com with SMTP id z7so2531519ljj.4
-        for <linux-nfs@vger.kernel.org>; Sat, 22 Jan 2022 11:50:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=joEcAm6FEppBk6vSXt/6xsL1pjGawWUzoE2Kp7Bgaj0=;
-        b=a16vp1dVqQtBMXJ/X4AfLFJDZJjkr1WEJrlJkBqoDbliRzQxlEPMmxZbcvliANiNNP
-         YiQhlusGLXXRaRkheXm0pdoyestYgVwMiD+1AEB1ieEYBWf0sIy2PFWNBHzxg1wNu+v5
-         iwpeRTTTuPwssKUMNHM8ckE9qH+qInFQIiyi88B5kmQHCV/mOLw5zhBGTAJAyQbBBPXg
-         jt+RvW/O7h4mcz/Th6TbvqYzbUklhI+Xi1k3AAwFLBG4/u4O/NzKKVjD8v2lNictNggx
-         k60vjRbRpu7FiBWtHXAT0X5Fo4OAOAs6U5SXkeJhCRy/ojHyxeWfvXwW6WhPvUw8Ucjf
-         SMOA==
+        id S229803AbiAVUGB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Jan 2022 15:06:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:39406 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S229517AbiAVUGA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jan 2022 15:06:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1642881960;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AGVQS4sccssewquBFfnz8CDiFUEe9PmxYPu5F/G0PQM=;
+        b=adfoqF2uVZL4bd8OpLgzSqtC0VNEBzIdPRKzYhhG1bhUZdI4SAf10adw/zpIw7VZ+LRPsa
+        BzXbTvvMeB8hAtVpZTt5BBsvYoDaJl9fR3n2hoVLMsPJ9ej7Ti8Jyb4K1nS7lXPZgP0edG
+        +xX1fflu0s4cd+GjhIXKZQvm7NVR18I=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-201-h6WiZnBJMCq8wPRHIzsljA-1; Sat, 22 Jan 2022 15:05:58 -0500
+X-MC-Unique: h6WiZnBJMCq8wPRHIzsljA-1
+Received: by mail-qv1-f72.google.com with SMTP id f7-20020a056214076700b0041c20941155so13439449qvz.15
+        for <linux-nfs@vger.kernel.org>; Sat, 22 Jan 2022 12:05:58 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :mime-version:content-transfer-encoding;
-        bh=joEcAm6FEppBk6vSXt/6xsL1pjGawWUzoE2Kp7Bgaj0=;
-        b=1jxRasYLusaC6UkE3VEJsES4zuZAH7LcECKJ/udMfxps+f8K9xUrQAiOUy1/W9rP/A
-         7e73cAeHavBxWF4uA2M26TKFGJloZdC48lNq3Rqy1BawJu5o4o52aGZOqxly6ZBvmQHJ
-         lj7OtSyFkxAKbXcvKZkb70Gpuzv+byZthe6g62qZCRt1uHJwb7gr0VI3R0lVbU5mQSRC
-         TrLQYSn78UUZLybDpVWPvV2lhXCSHKy237chtMnG6AXQ8DTkazrBZMxX7GK+2n3blFUM
-         UUJuYvD+T0bkb2eoOgdbd1bvSl9ZbDKkgITl8jq6bmckZW3UaX6lhpE3WsV3qHlvVtuv
-         HA8Q==
-X-Gm-Message-State: AOAM532M81VfsCGgYTqvkOzMfvf0iS01koVmDESwORd5bU+Mo2/5Ovig
-        N3DbcFGsGPWLoRYWuxmUiO4=
-X-Google-Smtp-Source: ABdhPJzvTP8DTXZSZ8u+IcqbBm4nSQwkSJc5o4xWkY7xXDqj3Da7I932+e+ivnMRrDQXatnsx6zKNw==
-X-Received: by 2002:a2e:3c06:: with SMTP id j6mr6923600lja.484.1642881018146;
-        Sat, 22 Jan 2022 11:50:18 -0800 (PST)
-Received: from elende (elende.valinor.li. [2a01:4f9:6a:1c47::2])
-        by smtp.gmail.com with ESMTPSA id x9sm78624lfn.282.2022.01.22.11.50.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Jan 2022 11:50:17 -0800 (PST)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
-        Ben Hutchings <benh@debian.org>,
-        Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH] nfs-utils: tests: Skip test if /dev/log is missing
-Date:   Sat, 22 Jan 2022 20:49:33 +0100
-Message-Id: <20220122194932.118951-1-carnil@debian.org>
-X-Mailer: git-send-email 2.34.1
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=AGVQS4sccssewquBFfnz8CDiFUEe9PmxYPu5F/G0PQM=;
+        b=i5BHr0LuzB7g09DCNJhyuYzgZiRzt1HvGKwRfJ0kYxlFgwJGWvPZ34iRe6J50bzGlw
+         kFGmduJtnMVjSqo72Uk/gBdvYdmZ0DNTCQNkezFR8z/W66TfBDOc6jzBUJunj6m6EtfP
+         K9ghgXPiV50z4bltMQkdq3SxVL26YXTi4sOFFX9lwjmWyGz86/2pPGdoxWe//VcUryaB
+         bYABdgXbwy54pxK3veYPrcoShRaoLA8VZQmD4PPb0TLiEvNvPj7kOtSRSne2XXeB2Np2
+         sIhXYXrKVWDeiRGdGAL8e+EYGI+gtl8duah1UD4RPnod2T/OWDTr8H4Hw/HdXrxk+uqP
+         7prQ==
+X-Gm-Message-State: AOAM532C8Rg6dgILVoiPIwE9RD5BjU/KwFHF7hBer1QEtu7vWA3UGJ+N
+        xGXp0wYMSzFgP5RI1u/wZzOBMQ+7hb2Ny9dO/IeLjbJ4VKM4FRUZJVdxQqkvzRDpz1lhiSIOlGr
+        rEqPYtUgT/jthQzLEcZuB
+X-Received: by 2002:a05:620a:31a7:: with SMTP id bi39mr6975126qkb.226.1642881958253;
+        Sat, 22 Jan 2022 12:05:58 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyNPckFPyiaBuF5kpRXiuMgtkoIhZr7e9+tXnWFL0bwQpPO4nqh4KhegwTwk/NVPlZnQ8l2/Q==
+X-Received: by 2002:a05:620a:31a7:: with SMTP id bi39mr6975115qkb.226.1642881957970;
+        Sat, 22 Jan 2022 12:05:57 -0800 (PST)
+Received: from [172.31.1.6] ([70.109.152.127])
+        by smtp.gmail.com with ESMTPSA id j186sm4836188qkd.32.2022.01.22.12.05.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 22 Jan 2022 12:05:57 -0800 (PST)
+Message-ID: <67d7bba1-d4e5-00be-c198-8501df6e61e1@redhat.com>
+Date:   Sat, 22 Jan 2022 15:05:56 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH 1/1] utils: Fix left debug info
+Content-Language: en-US
+To:     Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org
+Cc:     Yongcheng Yang <yongcheng.yang@gmail.com>
+References: <20220122180243.19355-1-pvorel@suse.cz>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220122180243.19355-1-pvorel@suse.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Ben Hutchings <benh@debian.org>
+Hey!
 
-Some build environments don't have a /dev/log, without which
-the daemons will fail to run.
+This patch is pretty messed up.
 
-* Add a check_dev_log function to skip a test if it's missing
-* Call it in t0001-statd-basic-mon-unmon.sh
+On 1/22/22 13:02, Petr Vorel wrote:
+> Patch for 497ffdf8 ('manpage: remove the no longer supported value
+> "vers2"') [1] didn't contain printf in exportfs.c (looks like debugging
+> info) and errno handling in stropts.c (maybe work on other patch) which
+> were applied. Thus removing it.
+Someone pointed it to me that  with 2 v3 auto-negotiation
+on the same mount the is error EPROTONOSUPPORT
+instead of EBUSY so this test
+      if (errno != EBUSY)
+	errno = olderrno;
 
-Signed-off-by: Ben Hutchings <benh@debian.org>
-Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
----
- tests/t0001-statd-basic-mon-unmon.sh | 3 ++-
- tests/test-lib.sh                    | 9 +++++++++
- 2 files changed, 11 insertions(+), 1 deletion(-)
+seemed to work but unfortunately I can
+not find the patch/bz or thread we were
+communicating in... So I am going to
+remove the test until I get (or find) the
+official patch
 
-diff --git a/tests/t0001-statd-basic-mon-unmon.sh b/tests/t0001-statd-basic-mon-unmon.sh
-index 92517a144851..e1065e766ccc 100755
---- a/tests/t0001-statd-basic-mon-unmon.sh
-+++ b/tests/t0001-statd-basic-mon-unmon.sh
-@@ -21,8 +21,9 @@
- 
- . ./test-lib.sh
- 
--# This test needs root privileges
-+# This test needs root privileges and /dev/log
- check_root
-+check_dev_log
- 
- start_statd
- if [ $? -ne 0 ]; then
-diff --git a/tests/test-lib.sh b/tests/test-lib.sh
-index e47ad13539ac..b62ac2a6db4d 100644
---- a/tests/test-lib.sh
-+++ b/tests/test-lib.sh
-@@ -37,6 +37,15 @@ check_root() {
- 	fi
- }
- 
-+# Most tests require /dev/log. Skip the test if it doesn't exist in this
-+# environment.
-+check_dev_log() {
-+	if ! [ -e /dev/log ]; then
-+		echo "*** Skipping this tests as it requires /dev/log ***"
-+		exit 77
-+	fi
-+}
-+
- # is lockd registered as a service?
- lockd_registered() {
- 	rpcinfo -p | grep -q nlockmgr
--- 
-2.34.1
+Committed!
+
+thanks,
+
+steved.
+
+> 
+> [1] https://lore.kernel.org/linux-nfs/20220117031356.13361-1-yoyang@redhat.com/raw
+> 
+> Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> ---
+>   utils/exportfs/exportfs.c | 2 --
+>   utils/mount/stropts.c     | 3 +--
+>   2 files changed, 1 insertion(+), 4 deletions(-)
+> 
+> diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
+> index c247425b..6ba615d1 100644
+> --- a/utils/exportfs/exportfs.c
+> +++ b/utils/exportfs/exportfs.c
+> @@ -307,14 +307,12 @@ static int exportfs_generic(char *arg, char *options, int verbose)
+>   {
+>   	char *path;
+>   
+> -printf("exportfs_generic: arg '%s'\n", arg);
+>   	if ((path = strchr(arg, ':')) != NULL)
+>   		*path++ = '\0';
+>   
+>   	if (!path || *path != '/')
+>   		return 1;
+>   
+> -printf("exportfs_generic: path '%s'\n", path);
+>   	exportfs_parsed(arg, path, options, verbose);
+>   	return 0;
+>   }
+> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+> index 3ca69862..3c4e218a 100644
+> --- a/utils/mount/stropts.c
+> +++ b/utils/mount/stropts.c
+> @@ -973,8 +973,7 @@ fall_back:
+>   	if ((result = nfs_try_mount_v3v2(mi, FALSE)))
+>   		return result;
+>   
+> -	if (errno != EBUSY)
+> -		errno = olderrno;
+> +	errno = olderrno;
+>   	return result;
+>   }
+>   
 
