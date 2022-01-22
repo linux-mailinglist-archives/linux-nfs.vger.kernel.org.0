@@ -2,79 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D504496B77
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jan 2022 10:40:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB360496C58
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Jan 2022 13:35:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233231AbiAVJkJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 22 Jan 2022 04:40:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45942 "EHLO
+        id S231145AbiAVMfQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Jan 2022 07:35:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbiAVJkI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jan 2022 04:40:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75CA7C06173B;
-        Sat, 22 Jan 2022 01:40:08 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AE813B81785;
-        Sat, 22 Jan 2022 09:40:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 44C43C004E1;
-        Sat, 22 Jan 2022 09:40:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1642844405;
-        bh=henkmRl3HfTRAowTOP/RK23Q67yuCV3HA56VhpKoBks=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=NKM6qjRQaQm4rNU9/RrE7JODEuKQEHJpghqkSS1311lLhHxtdUZm4BSjgz+h8z2zQ
-         QSVYgZs739kQqWfPYOZDTRxBUjgy7GeH/n1McqDHhBOWT21dqXVsuyyGty53wWjvOQ
-         TSPqLmRCdBD3sU8D1PqbcKdPA1skGg89V0ZLvieurJbQjRbaa79MvZDYTxQcWJ8d/L
-         Ym3D/50s55/IJ2MkUuZxH9Z4ppCLnNkOeAFoKvpxj3hLFn2yiYOHqY5PNTkquUSmK8
-         fk5jmGpQN7/QEagAqziftFzzvkIN8iBFWOjl20RuaR7K8NCcZCZEiB+X+REN4HBN6H
-         uNehTqqPl+qVA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 23234F60796;
-        Sat, 22 Jan 2022 09:40:05 +0000 (UTC)
-Subject: Re: [GIT PULL] fscache: Fixes and minor updates for rewrite
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1339462.1642802244@warthog.procyon.org.uk>
-References: <1339462.1642802244@warthog.procyon.org.uk>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1339462.1642802244@warthog.procyon.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/fscache-fixes-20220121
-X-PR-Tracked-Commit-Id: cef0223191452b3c493a1070baad9ffe806babac
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7fd350f6ff846f788ba5f6668bacf2ce4257ed8f
-Message-Id: <164284440509.7666.8294766242390570357.pr-tracker-bot@kernel.org>
-Date:   Sat, 22 Jan 2022 09:40:05 +0000
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>, linux-cifs@vger.kernel.org,
-        Steve French <smfrench@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Omar Sandoval <osandov@osandov.com>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+        with ESMTP id S230360AbiAVMfQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Jan 2022 07:35:16 -0500
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13038C06173D
+        for <linux-nfs@vger.kernel.org>; Sat, 22 Jan 2022 04:35:16 -0800 (PST)
+Received: by mail-io1-xd2e.google.com with SMTP id r204so10190815iod.10
+        for <linux-nfs@vger.kernel.org>; Sat, 22 Jan 2022 04:35:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=2iWP8dND/hBdoQEpMTeRlZ2WLJHbeFPxHgpL541vuc0=;
+        b=SgzcCsTqw1Kk8TkwJL7WqwK9Nc+Sl5W8avV2a9rtLD2Ts6rLq86JGakQfy2qSHJ1uX
+         78QxH1/txDatt15PFZG31o/yKOlLVE4YlmR4qEMYyayjk/rnXbygalCO/Vo9NYceDiak
+         xREd/8KRBIDXVxLpS/zdNpCfvCTKc7rJrq/H2VauZElKkC4k+LJZI8RTCCBMGqDwSssK
+         gPIw5lhyOVu25z2befa6kwfgO1Ctg+6i18nPxiS2prj9jZTJjob4ToRLrl7pT5SItK55
+         P8qwv4ueJWh7FiSWw/+u/AS1G6+EKimsV1dh8D7FgiXCUWxLTwbS+esvWDYndRxSX5ny
+         Q27w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=2iWP8dND/hBdoQEpMTeRlZ2WLJHbeFPxHgpL541vuc0=;
+        b=YzJB00Zv012WklH3IZB76wBhIfZ1z/g8bCg3vSHJqgiVc/YdiRHb7Xa6COZD/ls2Ut
+         fc8BOJOExAjgmnznl/kyCo0cRjH43HaqRvAIWMFbx3A6H34Wt07LJDOP9E706Yzd7l/6
+         rIqqqeWgnRemyXwgjkMyW7noSIDJbjlgCy7OBzls5v8iiFkr58sC3y4hKN69IcZU0WSG
+         VdSjuLmNcdbYgqIQ2uXzhzYVxrI9/Jmr2316rrkjYz0OMcvE9rMiQKsTzvHd6D/V64xL
+         LAiA10vtgqsuLq/vwh27wjriusngLbpw+OGJdk9YYL57wd1uMxh68rHObn1Us1WvK6Jd
+         69XA==
+X-Gm-Message-State: AOAM531IMcGf0/kThg9nxoy7+gOzVCmmsVY7tyMqJkBya3pKL2MUFCIh
+        QG8DkY1j074FvTR2IpxzNWqXIupUrjKdKfCSJDA=
+X-Google-Smtp-Source: ABdhPJzsTZ+LUQb9V/L/dk3NKulUcpqO+pOfUavGcWqfW1uQcuk3M8fmi43rCMinMkVHyjPE+r1i0/a0VtRpQNNOzms=
+X-Received: by 2002:a6b:f111:: with SMTP id e17mr4127812iog.143.1642854915411;
+ Sat, 22 Jan 2022 04:35:15 -0800 (PST)
+MIME-Version: 1.0
+Received: by 2002:a05:6e02:1707:0:0:0:0 with HTTP; Sat, 22 Jan 2022 04:35:14
+ -0800 (PST)
+Reply-To: anthonyloanfunds@gmail.com
+From:   "Mr. Anthony Rolle" <tumwiinebrians@gmail.com>
+Date:   Sat, 22 Jan 2022 04:35:14 -0800
+Message-ID: <CAFjafY0rOR0Ah-1GduR6LnfnZwFq=6q-vnbqA+D5d0PjVvVSCA@mail.gmail.com>
+Subject: FINANZIELLE HILFE
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 21 Jan 2022 21:57:24 +0000:
+--=20
+BEN=C3=96TIGEN SIE EIN PERS=C3=96NLICHES DARLEHEN ODER EIN GESCH=C3=84FTSDA=
+RLEHEN,
+EIN DARLEHEN VON =E2=82=AC5000 BIS =E2=82=AC90.000.000? WENN JA, KONTAKTIER=
+EN SIE UNS
+PER E-MAIL: anthonyloanfunds@gmail.com MIT DEN UNTENSTEHENDEN
+INFORMATIONEN.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git tags/fscache-fixes-20220121
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7fd350f6ff846f788ba5f6668bacf2ce4257ed8f
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Ihr vollst=C3=A4ndiger Name: ...
+Ben=C3=B6tigte Menge:...
+Dauer: ..
+Telefon: ....
+Land: ..
+Kontakt =C3=BCber: anthonyloanfunds@gmail.com
