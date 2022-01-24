@@ -2,104 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A834249798E
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 08:36:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4F0B497A4B
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 09:26:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241907AbiAXHgB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jan 2022 02:36:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53580 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236029AbiAXHgA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 02:36:00 -0500
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F115C06173D
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Jan 2022 23:36:00 -0800 (PST)
-Received: by mail-ot1-x332.google.com with SMTP id x52-20020a05683040b400b0059ea92202daso5185932ott.7
-        for <linux-nfs@vger.kernel.org>; Sun, 23 Jan 2022 23:36:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:sender:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
-        b=nnn9LtLwXfk7cnMsheBf/i/NrLocB5ZH4T6337Dpv82Oj2Low4So95DhYusrDqfQgr
-         ZrLtE7d2iUqFHmJDVdjrO2lhVt84Rj3bVKKjPcdlzLgauycE0b8EIJKKuAmdJ4unjYYn
-         7LZiBTfpZ06IW4qOFLzIvb+X+r0FDlTMkNqwBORskjKlVZFUi3Mbw7YG/3W7xT95PB1G
-         gEucmzF7XRcFKikid2+aCrVKzSZJxXvj3lNKDY6VjjwJKCjEjiYizx7yXNl8Ju3zMgUb
-         qbwzpRhjz4zunCqbBLFND+/0JzIkiV06okLrB6LSyHL1PcDAH1lKt3t06T48eImwZJ+U
-         ieHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:sender:from:date:message-id:subject
-         :to:content-transfer-encoding;
-        bh=zOHJbgxEeKcTUS1M3dbg/CCHL8zxNc7o7Y1pwSiNVNQ=;
-        b=W7hGzMPh2Id0AuwWqqdWbyU4NjOTpLGpU0qsJMxyZv7dCcRAffAzN9cl1Luy0UtxrE
-         x3SQPYjZsmWPxPD8Zb2JyNAWsJtD55e8fegJJdrRljfcbINyc8qxjqJGXyMgjtSUZR5y
-         Rv4axEwM7XluSZc+GFWLI7VNM7g4GidzOkjXTWVmo2PEYpv+zJ5qWxUBF4nkNcyZuXcP
-         h13E3QURDE0b3qzI+A4dlqF+tYmeeHsgBN566SYoqK24N76h73fB0Hmh1KwYSZCyfW29
-         yWysfLgK1aBCujM6ajrxKfNJtmMC4Y5uszn9QjQCvhDnYyIVR9D9RscXZ8AyuchYTZXX
-         KC+Q==
-X-Gm-Message-State: AOAM533QThAQNc57bnOmeAF4YGft/vBpQW1cXL/oVh/MGrsNBT7ySu90
-        jdzHChdYyCDsNuU4IdbMeEbY/OxnOjGZf3kac6c=
-X-Google-Smtp-Source: ABdhPJxU32YNupNleWFwExE5RevdgxxJdX62CTXPJWdkWrogcDbY/DYawRwnrsfoV4yZFjQ3D3ASXj0PQ/lX2NfdHp4=
-X-Received: by 2002:a9d:64c3:: with SMTP id n3mr6167493otl.49.1643009759871;
- Sun, 23 Jan 2022 23:35:59 -0800 (PST)
+        id S236234AbiAXI0a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jan 2022 03:26:30 -0500
+Received: from mga03.intel.com ([134.134.136.65]:16043 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S229800AbiAXI00 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Mon, 24 Jan 2022 03:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1643012786; x=1674548786;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Rux9J+VSLdbgWUxsBOOX1krXPu5RScfzXKkMHtGrIAA=;
+  b=jpDLzkj8skj+gKVyVCN7U1hrF+56398B9fX5G10KlwDgpAqvBHTO/j0M
+   abJPDe8LZGPhEgMdJgYv/s0MIUmKVUyceW2Z7vXUDj4D6Z60B4/MesQkM
+   A4TVO9YdbrYiwD0+ilHkY1FZ11xfOyHfsGZpXB5L+bDHroJ49foxaXL76
+   kt+WvEUisxH/Z6XKya5Xc+OEoGeTehNA8ZBhTxnlcTxs2FmO3O3cifRdV
+   2XeMNH5K4PdreMpONeEuWDuY70IiKf/MvRwol7fMH7vVOI7njkjXhf72S
+   ecZAcKPdutYK454pRlkGMW+goFcWgUyjkvfcK7i66LMHI/QPHA8C7PHaF
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="245940051"
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="245940051"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 00:26:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
+   d="scan'208";a="695340539"
+Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
+  by orsmga005.jf.intel.com with ESMTP; 24 Jan 2022 00:26:23 -0800
+Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nBugA-000Hzt-GI; Mon, 24 Jan 2022 08:26:22 +0000
+Date:   Mon, 24 Jan 2022 16:25:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Howells <dhowells@redhat.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 09/23] MM: submit multipage reads for SWP_FS_OPS
+ swap-space
+Message-ID: <202201241613.8J5z5arQ-lkp@intel.com>
+References: <164299611278.26253.14950274629759580371.stgit@noble.brown>
 MIME-Version: 1.0
-Sender: blessmegod87@gmail.com
-Received: by 2002:a05:6838:441f:0:0:0:0 with HTTP; Sun, 23 Jan 2022 23:35:59
- -0800 (PST)
-From:   DINA MCKENNA <dinamckennahowley@gmail.com>
-Date:   Mon, 24 Jan 2022 07:35:59 +0000
-X-Google-Sender-Auth: wXyhnIu9y8GFI4qBrYQUoqbJ-7s
-Message-ID: <CACOw96=7fxdoYVHW5DfJjR3jV3BmUng0T67PKJYsv4-uH9ZOzQ@mail.gmail.com>
-Subject: Calvary greetings.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164299611278.26253.14950274629759580371.stgit@noble.brown>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello my dear,
+Hi NeilBrown,
 
- I sent this mail praying it will get to you in a good condition of
-health, since I myself are in a very critical health condition in
-which I sleep every night without knowing if I may be alive to see the
-next day. I bring peace and love to you. It is by the grace of God, I
-had no choice than to do what is lawful and right in the sight of God
-for eternal life and in the sight of man, for witness of God=E2=80=99s merc=
-y
-and glory upon my life. I am Mrs. Dina. Howley Mckenna, a widow. I am
-suffering from a long time brain tumor, It has defiled all forms of
-medical treatment, and right now I have about a few months to leave,
-according to medical experts. The situation has gotten complicated
-recently with my inability to hear proper, am communicating with you
-with the help of the chief nurse herein the hospital, from all
-indication my conditions is really deteriorating and it is quite
-obvious that, according to my doctors they have advised me that I may
-not live too long, Because this illness has gotten to a very bad
-stage. I plead that you will not expose or betray this trust and
-confidence that I am about to repose on you for the mutual benefit of
-the orphans and the less privilege. I have some funds I inherited from
-my late husband, the sum of ($ 11,000,000.00, Eleven Million Dollars).
-Having known my condition, I decided to donate this fund to you
-believing that you will utilize it the way i am going to instruct
-herein. I need you to assist me and reclaim this money and use it for
-Charity works therein your country  for orphanages and gives justice
-and help to the poor, needy and widows says The Lord." Jeremiah
-22:15-16.=E2=80=9C and also build schools for less privilege that will be
-named after my late husband if possible and to promote the word of God
-and the effort that the house of God is maintained. I do not want a
-situation where this money will be used in an ungodly manner. That's
-why I'm taking this decision. I'm not afraid of death, so I know where
-I'm going. I accept this decision because I do not have any child who
-will inherit this money after I die.. Please I want your sincerely and
-urgent answer to know if you will be able to execute this project for
-the glory of God, and I will give you more information on how the fund
-will be transferred to your bank account. May the grace, peace, love
-and the truth in the Word of God be with you and all those that you
-love and care for.
+Thank you for the patch! Yet something to improve:
 
-I'm waiting for your immediate reply..
+[auto build test ERROR on linus/master]
+[also build test ERROR on v5.17-rc1 next-20220124]
+[cannot apply to trondmy-nfs/linux-next cifs/for-next hnaz-mm/master]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-May God Bless you,
-Mrs. Dina. Howley Mckenna.
+url:    https://github.com/0day-ci/linux/commits/NeilBrown/Repair-SWAP-over_NFS/20220124-115716
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0
+config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20220124/202201241613.8J5z5arQ-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/63bff668aa0537d7ccef9ed428809fc16c1a6b6c
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review NeilBrown/Repair-SWAP-over_NFS/20220124-115716
+        git checkout 63bff668aa0537d7ccef9ed428809fc16c1a6b6c
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=powerpc SHELL=/bin/bash
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from mm/vmscan.c:61:
+   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
+      66 |                                 struct swap_iocb **plug);
+         |                                        ^~~~~~~~~
+>> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
+      67 | {
+         | ^
+   mm/swap.h:65:19: warning: 'swap_readpage' declared 'static' but never defined [-Wunused-function]
+      65 | static inline int swap_readpage(struct page *page, bool do_poll,
+         |                   ^~~~~~~~~~~~~
+--
+   In file included from mm/memory.c:89:
+   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
+      66 |                                 struct swap_iocb **plug);
+         |                                        ^~~~~~~~~
+>> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
+      67 | {
+         | ^
+>> mm/swap.h:65:19: warning: 'swap_readpage' used but never defined
+      65 | static inline int swap_readpage(struct page *page, bool do_poll,
+         |                   ^~~~~~~~~~~~~
+--
+   In file included from mm/page_alloc.c:84:
+   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
+      66 |                                 struct swap_iocb **plug);
+         |                                        ^~~~~~~~~
+>> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
+      67 | {
+         | ^
+   mm/page_alloc.c:3821:15: warning: no previous prototype for 'should_fail_alloc_page' [-Wmissing-prototypes]
+    3821 | noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
+         |               ^~~~~~~~~~~~~~~~~~~~~~
+   In file included from mm/page_alloc.c:84:
+   mm/swap.h:65:19: warning: 'swap_readpage' declared 'static' but never defined [-Wunused-function]
+      65 | static inline int swap_readpage(struct page *page, bool do_poll,
+         |                   ^~~~~~~~~~~~~
+
+
+vim +67 mm/swap.h
+
+50dceef273a619 NeilBrown 2022-01-24  45  
+50dceef273a619 NeilBrown 2022-01-24  46  struct page *read_swap_cache_async(swp_entry_t, gfp_t,
+50dceef273a619 NeilBrown 2022-01-24  47  				   struct vm_area_struct *vma,
+50dceef273a619 NeilBrown 2022-01-24  48  				   unsigned long addr,
+63bff668aa0537 NeilBrown 2022-01-24  49  				   bool do_poll,
+63bff668aa0537 NeilBrown 2022-01-24  50  				   struct swap_iocb **plug);
+50dceef273a619 NeilBrown 2022-01-24  51  struct page *__read_swap_cache_async(swp_entry_t, gfp_t,
+50dceef273a619 NeilBrown 2022-01-24  52  				     struct vm_area_struct *vma,
+50dceef273a619 NeilBrown 2022-01-24  53  				     unsigned long addr,
+50dceef273a619 NeilBrown 2022-01-24  54  				     bool *new_page_allocated);
+50dceef273a619 NeilBrown 2022-01-24  55  struct page *swap_cluster_readahead(swp_entry_t entry, gfp_t flag,
+50dceef273a619 NeilBrown 2022-01-24  56  				    struct vm_fault *vmf);
+50dceef273a619 NeilBrown 2022-01-24  57  struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
+50dceef273a619 NeilBrown 2022-01-24  58  			      struct vm_fault *vmf);
+50dceef273a619 NeilBrown 2022-01-24  59  
+12cf545fe71035 NeilBrown 2022-01-24  60  static inline unsigned int page_swap_flags(struct page *page)
+12cf545fe71035 NeilBrown 2022-01-24  61  {
+12cf545fe71035 NeilBrown 2022-01-24  62  	return page_swap_info(page)->flags;
+12cf545fe71035 NeilBrown 2022-01-24  63  }
+50dceef273a619 NeilBrown 2022-01-24  64  #else /* CONFIG_SWAP */
+63bff668aa0537 NeilBrown 2022-01-24 @65  static inline int swap_readpage(struct page *page, bool do_poll,
+63bff668aa0537 NeilBrown 2022-01-24 @66  				struct swap_iocb **plug);
+50dceef273a619 NeilBrown 2022-01-24 @67  {
+50dceef273a619 NeilBrown 2022-01-24  68  	return 0;
+50dceef273a619 NeilBrown 2022-01-24  69  }
+50dceef273a619 NeilBrown 2022-01-24  70  
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
