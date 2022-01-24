@@ -2,51 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 795664977F2
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 04:55:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABAF44977DB
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 04:52:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235251AbiAXDzL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 23 Jan 2022 22:55:11 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:47116 "EHLO
+        id S231803AbiAXDwj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 23 Jan 2022 22:52:39 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:46964 "EHLO
         smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241275AbiAXDzK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Jan 2022 22:55:10 -0500
+        with ESMTP id S241192AbiAXDwj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Jan 2022 22:52:39 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 2C38F1F3A0;
-        Mon, 24 Jan 2022 03:55:09 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 0CEDE1F3B1;
+        Mon, 24 Jan 2022 03:52:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1642996509; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1642996358; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dgOkz6W/cidFRu6Z7vRoQz377B/ORzg2mf3Oot+kE/k=;
-        b=p3Qi5VyHXRKwZaQ6Ik9tGw6PE7oVR8Agw0MxDwze5ZGev6qfFo4kyLM26G3CL3u8i5Voo0
-        yTygC32RJ05gST1pBsAG36kc3J7zPivusmvwW/1gNebDNekBsqSEL4EQ8EAF440a5W09uw
-        gg+5tsVndwuzicfbmRGZRVwZNOLpmEU=
+        bh=ilA7OZh9lH4lfKt0EXiI3v3DOr+k3/ZmJc6w2w8IIto=;
+        b=TUDcaGrH3IQ4jbI1LjGtfJCbku6HgfJ1SA/e6tbwpuxhP2zeP7roeBtqcf29FStJv3t1kA
+        JOxNBGux+SkxQBPCG4okM7MhzqvdeTyyO4puxMZp2QQgWOQETuLMe+PB8FmMINrXEIGO5T
+        vod7VaeEvCsdi4n6uSwxs8g5GqZUM74=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1642996509;
+        s=susede2_ed25519; t=1642996358;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dgOkz6W/cidFRu6Z7vRoQz377B/ORzg2mf3Oot+kE/k=;
-        b=WRM+aasJXrBXkRhLlzEShYpctxrAf4oRBDeUyZciDIYtotpuNY/+O4A4LbifhuaU38dpZn
-        GbVA6Uc1mbd2PqBQ==
+        bh=ilA7OZh9lH4lfKt0EXiI3v3DOr+k3/ZmJc6w2w8IIto=;
+        b=nhz08CByEzBnGB2LFv8iQj+QHte3XP0ue/V1xUBzjFDMFI8LovcXTXc5TKw/QFIcbkrbAf
+        mEcxnij1qU2BYLAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2F3EC13305;
-        Mon, 24 Jan 2022 03:55:05 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B5DED13305;
+        Mon, 24 Jan 2022 03:52:34 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id +bEWNxkj7mE3RgAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 24 Jan 2022 03:55:05 +0000
-Subject: [PATCH 21/23] NFSv4: keep state manager thread active if swap is
- enabled
+        id UruJHIIi7mFkRQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 24 Jan 2022 03:52:34 +0000
+Subject: [PATCH 10/23] MM: submit multipage write for SWP_FS_OPS swap-space
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -58,7 +57,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Mon, 24 Jan 2022 14:48:32 +1100
-Message-ID: <164299611286.26253.4223340247208710012.stgit@noble.brown>
+Message-ID: <164299611279.26253.12350012848236496937.stgit@noble.brown>
 In-Reply-To: <164299573337.26253.7538614611220034049.stgit@noble.brown>
 References: <164299573337.26253.7538614611220034049.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -69,216 +68,240 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If we are swapping over NFSv4, we may not be able to allocate memory to
-start the state-manager thread at the time when we need it.
-So keep it always running when swap is enabled, and just signal it to
-start.
+swap_writepage() is given one page at a time, but may be called repeatedly
+in succession.
+For block-device swapspace, the blk_plug functionality allows the
+multiple pages to be combined together at lower layers.
+That cannot be used for SWP_FS_OPS as blk_plug may not exist - it is
+only active when CONFIG_BLOCK=y.  Consequently all swap reads over NFS
+are single page reads.
 
-This requires updating and testing the cl_swapper count on the root
-rpc_clnt after following all ->cl_parent links.
+With this patch we pass a pointer-to-pointer via the wbc.
+swap_writepage can store state between calls - much like the pointer
+passed explicitly to swap_readpage.  After calling swap_writepage() some
+number of times, the state will be passed to swap_write_unplug() which
+can submit the combined request.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/file.c           |   15 ++++++++++++---
- fs/nfs/nfs4_fs.h        |    1 +
- fs/nfs/nfs4proc.c       |   20 ++++++++++++++++++++
- fs/nfs/nfs4state.c      |   39 +++++++++++++++++++++++++++++++++------
- include/linux/nfs_xdr.h |    2 ++
- net/sunrpc/clnt.c       |    2 ++
- 6 files changed, 70 insertions(+), 9 deletions(-)
+ include/linux/writeback.h |    7 +++
+ mm/page_io.c              |  103 +++++++++++++++++++++++++++++----------------
+ mm/swap.h                 |    1 
+ mm/vmscan.c               |    9 +++-
+ 4 files changed, 82 insertions(+), 38 deletions(-)
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 04ba56f223d3..ceacae8e7a38 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -486,8 +486,9 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
- 	unsigned long blocks;
- 	long long isize;
+diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+index fec248ab1fec..6dcaa0639c0d 100644
+--- a/include/linux/writeback.h
++++ b/include/linux/writeback.h
+@@ -80,6 +80,13 @@ struct writeback_control {
+ 
+ 	unsigned punt_to_cgroup:1;	/* cgrp punting, see __REQ_CGROUP_PUNT */
+ 
++	/* To enable batching of swap writes to non-block-device backends,
++	 * "plug" can be set point to a 'struct swap_iocb *'.  When all swap
++	 * writes have been submitted, if with swap_iocb is not NULL,
++	 * swap_write_unplug() should be called.
++	 */
++	struct swap_iocb **plug;
++
+ #ifdef CONFIG_CGROUP_WRITEBACK
+ 	struct bdi_writeback *wb;	/* wb this writeback is issued under */
+ 	struct inode *inode;		/* inode being written out */
+diff --git a/mm/page_io.c b/mm/page_io.c
+index bcf655d650c8..b61c2cafc4f9 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -307,56 +307,74 @@ int sio_pool_init(void)
+ static void sio_write_complete(struct kiocb *iocb, long ret)
+ {
+ 	struct swap_iocb *sio = container_of(iocb, struct swap_iocb, iocb);
+-	struct page *page = sio->bvec[0].bv_page;
++	int p;
+ 
+-	if (ret != 0 && ret != PAGE_SIZE) {
+-		/*
+-		 * In the case of swap-over-nfs, this can be a
+-		 * temporary failure if the system has limited
+-		 * memory for allocating transmit buffers.
+-		 * Mark the page dirty and avoid
+-		 * folio_rotate_reclaimable but rate-limit the
+-		 * messages but do not flag PageError like
+-		 * the normal direct-to-bio case as it could
+-		 * be temporary.
+-		 */
+-		set_page_dirty(page);
+-		ClearPageReclaim(page);
+-		pr_err_ratelimited("Write error %ld on dio swapfile (%llu)\n",
+-				   ret, page_file_offset(page));
+-	} else
+-		count_vm_event(PSWPOUT);
+-	end_page_writeback(page);
++	for (p = 0; p < sio->pages; p++) {
++		struct page *page = sio->bvec[p].bv_page;
++
++		if (ret != 0 && ret != PAGE_SIZE * sio->pages) {
++			/*
++			 * In the case of swap-over-nfs, this can be a
++			 * temporary failure if the system has limited
++			 * memory for allocating transmit buffers.
++			 * Mark the page dirty and avoid
++			 * folio_rotate_reclaimable but rate-limit the
++			 * messages but do not flag PageError like
++			 * the normal direct-to-bio case as it could
++			 * be temporary.
++			 */
++			set_page_dirty(page);
++			ClearPageReclaim(page);
++			pr_err_ratelimited("Write error %ld on dio swapfile (%llu)\n",
++					   ret, page_file_offset(page));
++		} else
++			count_vm_event(PSWPOUT);
++		end_page_writeback(page);
++	}
+ 	mempool_free(sio, sio_pool);
+ }
+ 
+ static int swap_writepage_fs(struct page *page, struct writeback_control *wbc)
+ {
+-	struct swap_iocb *sio;
++	struct swap_iocb *sio = NULL;
+ 	struct swap_info_struct *sis = page_swap_info(page);
+ 	struct file *swap_file = sis->swap_file;
+-	struct address_space *mapping = swap_file->f_mapping;
+-	struct iov_iter from;
+-	int ret;
++	loff_t pos = page_file_offset(page);
+ 
+ 	set_page_writeback(page);
+ 	unlock_page(page);
+-	sio = mempool_alloc(sio_pool, GFP_NOIO);
+-	init_sync_kiocb(&sio->iocb, swap_file);
+-	sio->iocb.ki_complete = sio_write_complete;
+-	sio->iocb.ki_pos = page_file_offset(page);
+-	sio->bvec[0].bv_page = page;
+-	sio->bvec[0].bv_len = PAGE_SIZE;
+-	sio->bvec[0].bv_offset = 0;
+-	iov_iter_bvec(&from, WRITE, &sio->bvec[0], 1, PAGE_SIZE);
+-	ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
+-	if (ret != -EIOCBQUEUED)
+-		sio_write_complete(&sio->iocb, ret);
+-	return ret;
++	if (wbc->plug)
++		sio = *wbc->plug;
++	if (sio) {
++		if (sio->iocb.ki_filp != swap_file ||
++		    sio->iocb.ki_pos + sio->pages * PAGE_SIZE != pos) {
++			swap_write_unplug(sio);
++			sio = NULL;
++		}
++	}
++	if (!sio) {
++		sio = mempool_alloc(sio_pool, GFP_NOIO);
++		init_sync_kiocb(&sio->iocb, swap_file);
++		sio->iocb.ki_complete = sio_write_complete;
++		sio->iocb.ki_pos = pos;
++		sio->pages = 0;
++	}
++	sio->bvec[sio->pages].bv_page = page;
++	sio->bvec[sio->pages].bv_len = PAGE_SIZE;
++	sio->bvec[sio->pages].bv_offset = 0;
++	sio->pages += 1;
++	if (sio->pages == ARRAY_SIZE(sio->bvec) || !wbc->plug) {
++		swap_write_unplug(sio);
++		sio = NULL;
++	}
++	if (wbc->plug)
++		*wbc->plug = sio;
++
++	return 0;
+ }
+ 
+ int __swap_writepage(struct page *page, struct writeback_control *wbc,
+-		bio_end_io_t end_write_func)
++		     bio_end_io_t end_write_func)
+ {
+ 	struct bio *bio;
  	int ret;
--	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
--	struct inode *inode = file->f_mapping->host;
-+	struct inode *inode = file_inode(file);
-+	struct rpc_clnt *clnt = NFS_CLIENT(inode);
-+	struct nfs_client *cl = NFS_SERVER(inode)->nfs_client;
- 
- 	spin_lock(&inode->i_lock);
- 	blocks = inode->i_blocks;
-@@ -508,14 +509,22 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
- 	}
- 	*span = sis->pages;
- 	sis->flags |= SWP_FS_OPS;
-+
-+	if (cl->rpc_ops->enable_swap)
-+		cl->rpc_ops->enable_swap(inode);
-+
- 	return ret;
- }
- 
- static void nfs_swap_deactivate(struct file *file)
- {
--	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
-+	struct inode *inode = file_inode(file);
-+	struct rpc_clnt *clnt = NFS_CLIENT(inode);
-+	struct nfs_client *cl = NFS_SERVER(inode)->nfs_client;
- 
- 	rpc_clnt_swap_deactivate(clnt);
-+	if (cl->rpc_ops->disable_swap)
-+		cl->rpc_ops->disable_swap(file_inode(file));
- }
- 
- const struct address_space_operations nfs_file_aops = {
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index ed5eaca6801e..8a9ce0f42efd 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -42,6 +42,7 @@ enum nfs4_client_state {
- 	NFS4CLNT_LEASE_MOVED,
- 	NFS4CLNT_DELEGATION_EXPIRED,
- 	NFS4CLNT_RUN_MANAGER,
-+	NFS4CLNT_MANAGER_AVAILABLE,
- 	NFS4CLNT_RECALL_RUNNING,
- 	NFS4CLNT_RECALL_ANY_LAYOUT_READ,
- 	NFS4CLNT_RECALL_ANY_LAYOUT_RW,
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index ee3bc79f6ca3..ab6382f9cbf0 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -10347,6 +10347,24 @@ static ssize_t nfs4_listxattr(struct dentry *dentry, char *list, size_t size)
- 	return error + error2 + error3;
- }
- 
-+static void nfs4_enable_swap(struct inode *inode)
-+{
-+	/* The state manager thread must always be running.
-+	 * It will notice the client is a swapper, and stay put.
-+	 */
-+	struct nfs_client *clp = NFS_SERVER(inode)->nfs_client;
-+
-+	nfs4_schedule_state_manager(clp);
-+}
-+
-+static void nfs4_disable_swap(struct inode *inode)
-+{
-+	/* The state manager thread will now exit once it is
-+	 * woken.
-+	 */
-+	wake_up_var(&NFS_SERVER(inode)->nfs_client->cl_state);
-+}
-+
- static const struct inode_operations nfs4_dir_inode_operations = {
- 	.create		= nfs_create,
- 	.lookup		= nfs_lookup,
-@@ -10423,6 +10441,8 @@ const struct nfs_rpc_ops nfs_v4_clientops = {
- 	.free_client	= nfs4_free_client,
- 	.create_server	= nfs4_create_server,
- 	.clone_server	= nfs_clone_server,
-+	.enable_swap	= nfs4_enable_swap,
-+	.disable_swap	= nfs4_disable_swap,
- };
- 
- static const struct xattr_handler nfs4_xattr_nfs4_acl_handler = {
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index d88b779f9dd0..05d53c8a2ddb 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1205,10 +1205,17 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
- {
- 	struct task_struct *task;
- 	char buf[INET6_ADDRSTRLEN + sizeof("-manager") + 1];
-+	struct rpc_clnt *cl = clp->cl_rpcclient;
-+
-+	while (cl != cl->cl_parent)
-+		cl = cl->cl_parent;
- 
- 	set_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state);
--	if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) != 0)
-+	if (test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state) != 0) {
-+		wake_up_var(&clp->cl_state);
- 		return;
-+	}
-+	set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
- 	__module_get(THIS_MODULE);
- 	refcount_inc(&clp->cl_count);
- 
-@@ -1224,6 +1231,7 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
- 		printk(KERN_ERR "%s: kthread_run: %ld\n",
- 			__func__, PTR_ERR(task));
- 		nfs4_clear_state_manager_bit(clp);
-+		clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
- 		nfs_put_client(clp);
- 		module_put(THIS_MODULE);
- 	}
-@@ -2665,11 +2673,8 @@ static void nfs4_state_manager(struct nfs_client *clp)
- 			clear_bit(NFS4CLNT_RECALL_RUNNING, &clp->cl_state);
- 		}
- 
--		/* Did we race with an attempt to give us more work? */
--		if (!test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state))
--			return;
--		if (test_and_set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state) != 0)
--			return;
-+		return;
-+
- 	} while (refcount_read(&clp->cl_count) > 1 && !signalled());
- 	goto out_drain;
- 
-@@ -2689,9 +2694,31 @@ static void nfs4_state_manager(struct nfs_client *clp)
- static int nfs4_run_state_manager(void *ptr)
- {
- 	struct nfs_client *clp = ptr;
-+	struct rpc_clnt *cl = clp->cl_rpcclient;
-+
-+	while (cl != cl->cl_parent)
-+		cl = cl->cl_parent;
- 
- 	allow_signal(SIGKILL);
-+again:
-+	set_bit(NFS4CLNT_MANAGER_RUNNING, &clp->cl_state);
- 	nfs4_state_manager(clp);
-+	if (atomic_read(&cl->cl_swapper)) {
-+		wait_var_event_interruptible(&clp->cl_state,
-+					     test_bit(NFS4CLNT_RUN_MANAGER,
-+						      &clp->cl_state));
-+		if (atomic_read(&cl->cl_swapper) &&
-+		    test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state))
-+			goto again;
-+		/* Either no longer a swapper, or were signalled */
-+	}
-+	clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
-+
-+	if (refcount_read(&clp->cl_count) > 1 && !signalled() &&
-+	    test_bit(NFS4CLNT_RUN_MANAGER, &clp->cl_state) &&
-+	    !test_and_set_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state))
-+		goto again;
-+
- 	nfs_put_client(clp);
- 	module_put_and_kthread_exit(0);
+@@ -388,6 +406,19 @@ int __swap_writepage(struct page *page, struct writeback_control *wbc,
  	return 0;
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 967a0098f0a9..04cf3a8fb949 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1795,6 +1795,8 @@ struct nfs_rpc_ops {
- 	struct nfs_server *(*create_server)(struct fs_context *);
- 	struct nfs_server *(*clone_server)(struct nfs_server *, struct nfs_fh *,
- 					   struct nfs_fattr *, rpc_authflavor_t);
-+	void	(*enable_swap)(struct inode *inode);
-+	void	(*disable_swap)(struct inode *inode);
- };
+ }
  
- /*
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index cb76fbea3ed5..4cb403a0f334 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -3066,6 +3066,8 @@ rpc_clnt_swap_activate_callback(struct rpc_clnt *clnt,
- int
- rpc_clnt_swap_activate(struct rpc_clnt *clnt)
++void swap_write_unplug(struct swap_iocb *sio)
++{
++	struct iov_iter from;
++	struct address_space *mapping = sio->iocb.ki_filp->f_mapping;
++	int ret;
++
++	iov_iter_bvec(&from, WRITE, sio->bvec, sio->pages,
++		      PAGE_SIZE * sio->pages);
++	ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
++	if (ret != -EIOCBQUEUED)
++		sio_write_complete(&sio->iocb, ret);
++}
++
+ static void sio_read_complete(struct kiocb *iocb, long ret)
  {
-+	while (clnt != clnt->cl_parent)
-+		clnt = clnt->cl_parent;
- 	if (atomic_inc_return(&clnt->cl_swapper) == 1)
- 		return rpc_clnt_iterate_for_each_xprt(clnt,
- 				rpc_clnt_swap_activate_callback, NULL);
+ 	struct swap_iocb *sio = container_of(iocb, struct swap_iocb, iocb);
+diff --git a/mm/swap.h b/mm/swap.h
+index 0c79b2478f3f..0194ac153d40 100644
+--- a/mm/swap.h
++++ b/mm/swap.h
+@@ -13,6 +13,7 @@ static inline void swap_read_unplug(struct swap_iocb *plug)
+ 	if (unlikely(plug))
+ 		__swap_read_unplug(plug);
+ }
++void swap_write_unplug(struct swap_iocb *sio);
+ int swap_writepage(struct page *page, struct writeback_control *wbc);
+ void end_swap_bio_write(struct bio *bio);
+ int __swap_writepage(struct page *page, struct writeback_control *wbc,
+diff --git a/mm/vmscan.c b/mm/vmscan.c
+index ad5026d06aa8..f75c71490921 100644
+--- a/mm/vmscan.c
++++ b/mm/vmscan.c
+@@ -1164,7 +1164,8 @@ typedef enum {
+  * pageout is called by shrink_page_list() for each dirty page.
+  * Calls ->writepage().
+  */
+-static pageout_t pageout(struct page *page, struct address_space *mapping)
++static pageout_t pageout(struct page *page, struct address_space *mapping,
++			 struct swap_iocb **plug)
+ {
+ 	/*
+ 	 * If the page is dirty, only perform writeback if that write
+@@ -1211,6 +1212,7 @@ static pageout_t pageout(struct page *page, struct address_space *mapping)
+ 			.range_start = 0,
+ 			.range_end = LLONG_MAX,
+ 			.for_reclaim = 1,
++			.plug = plug,
+ 		};
+ 
+ 		SetPageReclaim(page);
+@@ -1537,6 +1539,7 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 	unsigned int nr_reclaimed = 0;
+ 	unsigned int pgactivate = 0;
+ 	bool do_demote_pass;
++	struct swap_iocb *plug = NULL;
+ 
+ 	memset(stat, 0, sizeof(*stat));
+ 	cond_resched();
+@@ -1817,7 +1820,7 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 			 * starts and then write it out here.
+ 			 */
+ 			try_to_unmap_flush_dirty();
+-			switch (pageout(page, mapping)) {
++			switch (pageout(page, mapping, &plug)) {
+ 			case PAGE_KEEP:
+ 				goto keep_locked;
+ 			case PAGE_ACTIVATE:
+@@ -1971,6 +1974,8 @@ static unsigned int shrink_page_list(struct list_head *page_list,
+ 	list_splice(&ret_pages, page_list);
+ 	count_vm_events(PGACTIVATE, pgactivate);
+ 
++	if (plug)
++		swap_write_unplug(plug);
+ 	return nr_reclaimed;
+ }
+ 
 
 
