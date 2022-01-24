@@ -2,134 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC2A84978CC
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 07:09:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F75F497961
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 08:27:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241549AbiAXGJK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jan 2022 01:09:10 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:38552 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232076AbiAXGJK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 01:09:10 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 52E4E21972;
-        Mon, 24 Jan 2022 06:09:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1643004549;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yJTO1ntaNYhfyc0kwrRnaOw0Kj/PjR12jA28uu4oRjU=;
-        b=gkPkSkrJxktYRo5q8bkBxLgOYgT5VoQHIhqHZSdHacQKj6NGb+C8+kic2E+psiUok5bstx
-        ZvPX95MKQPn+oyqaut2ncBvKOgfe8gnNwyGTM2SljWTAKQYtk/YpH8BEPSS7NIzceEiw3C
-        z3JYPzp3m3VQzgAyxKUBJx8IXwwGDPc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1643004549;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=yJTO1ntaNYhfyc0kwrRnaOw0Kj/PjR12jA28uu4oRjU=;
-        b=6IFR7wiLjWPDNg5P8yroLS6y3C9ic/AUuldwLcgG0UHmREBHw6x5Mx1a0vQAOYeKXLniJM
-        8cxXY4DKiFaZAbDA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 13FFD1331A;
-        Mon, 24 Jan 2022 06:09:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id vZreAoVC7mHabgAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Mon, 24 Jan 2022 06:09:09 +0000
-Date:   Mon, 24 Jan 2022 07:09:07 +0100
-From:   Petr Vorel <pvorel@suse.cz>
+        id S241736AbiAXH1U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jan 2022 02:27:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51572 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S241713AbiAXH1T (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 02:27:19 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A5CC06173B;
+        Sun, 23 Jan 2022 23:27:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=j+tH6nHEGujTdaJ2n2+WPQs1USsQeUND+saT792MFaY=; b=H7V5NazfCuRpqJD2ZyOZ7qzuHy
+        phksDlX5d097UBUrD3C1Pc6dIaRL3blyFjQPUDWBN+o/HC71o4JBUKo7iAAMn/o8aEi+348M3Nejt
+        E5wozVTblU1Pe3bYYemVEiPRnWcySUIZ0lV0P2v2Q5v8GBPEVldsLBIHplO15aFkVZW3A9HigYQdN
+        4N8Ay0SrPRCyI2LM78tG36kXrIo1MH7gXgQ5PQwNDMdhx8TKW+Z3ewo7bZ0v4e6bUr08YHlCvZJyH
+        H+hTD30ZWqXFATKQzOw4W6DLQKlOzAUweV6IfVc7fGfuauV3SpslRqZ+WBCB7ijsYUg95RBlZEH61
+        vq1P7G8g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nBtkq-002U44-LS; Mon, 24 Jan 2022 07:27:08 +0000
+Date:   Sun, 23 Jan 2022 23:27:08 -0800
+From:   Christoph Hellwig <hch@infradead.org>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>,
-        ltp@lists.linux.it, kernel@openvz.org, linux-nfs@vger.kernel.org,
-        Steve Dickson <SteveD@redhat.com>
-Subject: Re: [PATCH] rpc_lib.sh: fix portmapper detection in case of socket
- activation
-Message-ID: <Ye5Cg7biIyXQOIDn@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20220120143727.27057-1-nikita.yushchenko@virtuozzo.com>
- <YenNsuS1gcA9tDe3@pevik>
- <164279789186.8775.7075880084961337149@noble.neil.brown.name>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/23] MM: extend block-plugging to cover all swap reads
+ with read-ahead
+Message-ID: <Ye5UzEzvN8WWMNBn@infradead.org>
+References: <164299573337.26253.7538614611220034049.stgit@noble.brown>
+ <164299611274.26253.13900771841681128440.stgit@noble.brown>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164279789186.8775.7075880084961337149@noble.neil.brown.name>
+In-Reply-To: <164299611274.26253.13900771841681128440.stgit@noble.brown>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> On Fri, 21 Jan 2022, Petr Vorel wrote:
-> > Hi Nikita,
+On Mon, Jan 24, 2022 at 02:48:32PM +1100, NeilBrown wrote:
+> Code that does swap read-ahead uses blk_start_plug() and
+> blk_finish_plug() to allow lower levels to combine multiple read-ahead
+> pages into a single request, but calls blk_finish_plug() *before*
+> submitting the original (non-ahead) read request.
+> This missed an opportunity to combine read requests.
+> 
+> This patch moves the blk_finish_plug to *after* all the reads.
+> This will likely combine the primary read with some of the "ahead"
+> reads, and that may slightly increase the latency of that read, but it
+> should more than make up for this by making more efficient use of the
+> storage path.
+> 
+> The patch mostly makes the code look more consistent.  Performance
+> change is unlikely to be noticeable.
 
-> > [ Cc: Steve as user-space maintainer, also Neil and whole linux-nfs ]
+Looks good:
 
-> > > On systemd-based linux hosts, rpcbind service is typically started via
-> > > socket activation, when the first client connects. If no client has
-> > > connected before LTP rpc test starts, rpcbind process will not be
-> > > running at the time of check_portmap_rpcbind() execution, causing
-> > > check_portmap_rpcbind() to report TCONF error.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-> > > Fix that by adding a quiet invocation of 'rpcinfo' before checking for
-> > > rpcbind.
+> Fixes-no-auto-backport: 3fb5c298b04e ("swap: allow swap readahead to be merged")
 
-> > Looks reasonable, but I'd prefer to have confirmation from NFS experts.
-
-> > > For portmap, similar step is likely not needed, because portmap is used
-> > > only on old systemd and those don't use systemd.
-
-> > > Signed-off-by: Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>
-> > > ---
-> > >  testcases/network/rpc/basic_tests/rpc_lib.sh | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-
-> > > diff --git a/testcases/network/rpc/basic_tests/rpc_lib.sh b/testcases/network/rpc/basic_tests/rpc_lib.sh
-> > > index c7c868709..e882e41b3 100644
-> > > --- a/testcases/network/rpc/basic_tests/rpc_lib.sh
-> > > +++ b/testcases/network/rpc/basic_tests/rpc_lib.sh
-> > > @@ -8,6 +8,12 @@ check_portmap_rpcbind()
-> > >  	if pgrep portmap > /dev/null; then
-> > >  		PORTMAPPER="portmap"
-> > >  	else
-> > > +		# In case of systemd socket activation, rpcbind could be
-> > > +		# not started until somebody tries to connect to it's socket.
-> > > +		#
-> > > +		# To handle that case properly, run a client now.
-> > > +		rpcinfo >/dev/null 2>&1
-
-> If it were me, I would remove the 'pgrep's and just call "rpcbind -p"
-> and make sure something responds.
-
-Hi Neil,
-
-I guess you mean: rpcinfo -p
-
-Good idea, thanks!
-
-Kind regards,
-Petr
-
-> NeilBrown
-
-
-
-> > nit: Shouldn't we keep stderr? In LTP we put required commands into
-> > $TST_NEEDS_CMDS. It'd be better not require rpcinfo (not a hard dependency),
-> > and thus it'd be better to see "command not found" when rpcinfo missing and test
-> > fails.
-
-> > Kind regards,
-> > Petr
-
-> > > +
-> > >  		pgrep rpcbind > /dev/null && PORTMAPPER="rpcbind" || \
-> > >  			tst_brk TCONF "portmap or rpcbind is not running"
-> > >  	fi
-
-
+Is this really a thing?
