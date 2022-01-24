@@ -2,107 +2,236 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E6B64499E72
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 00:09:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 092A4499F6C
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 00:19:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382665AbiAXWeK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jan 2022 17:34:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37598 "EHLO
+        id S1841246AbiAXW6G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jan 2022 17:58:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1584563AbiAXWVZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 17:21:25 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5915AC0424D8
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Jan 2022 12:50:47 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id E6AAC6EF7; Mon, 24 Jan 2022 15:50:45 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org E6AAC6EF7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643057445;
-        bh=kMJeqI0CP/y4AB+VmAmapV6G+LoxVuefctntM2q7Tag=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fGo0ghGhJytMAWJNrfn+K9o3N39gOdFLlXT0ntqTyqFJMXKr270M1ABT23GA6OF0G
-         A+CB3vmWm9VRrkdtBdvHTF/jn8JUVxuSwks46vKW4I4d3Cab48vUafpaEb+EPHsyWR
-         LbIYfKbTeRFJE/GxhV5bjA873GBrelAKxgSxosVU=
-Date:   Mon, 24 Jan 2022 15:50:45 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: parallel file create rates (+high latency)
-Message-ID: <20220124205045.GB4975@fieldses.org>
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
- <20220124193759.GA4975@fieldses.org>
- <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
+        with ESMTP id S1839098AbiAXWtw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 17:49:52 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABADC06809E
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jan 2022 13:07:39 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id ah7so24862984ejc.4
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jan 2022 13:07:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ionos.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ePWzg4KksjRUDSjqr+o9tEK0DbR7L8NzVM+5lIUlDPo=;
+        b=UryOzKtTd2BAlxPDRNgCwCESf13lD5IW6bNOSpBDepFbuH7r9fjbsT6cE5x5Ghft6m
+         mvPNVWtkz01mVJrSqeC/gB7JTH8T6qFvFS/VnIIFZHW5/gP/sOhhcnNoyYhFzrPdUaVF
+         FvDL8M4vNuURIqj/n/AdjkvXl39lYlpRohMIl+wO54x442N5Kx3ijGlQ972NHhWQkaPM
+         2PB2Ht3BymPWofX9NOCMsDhYcC+73YD1E+ldRp1Zbpzgc9ITLFFrLh5PDvAi6v8hFREw
+         ZBIZaScnPoiVR8zI3lCx6RkrB7DD23Vmu/ZR3nC2SK8GmSX6IQ39leUg3dHZiL44CE+y
+         QY2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ePWzg4KksjRUDSjqr+o9tEK0DbR7L8NzVM+5lIUlDPo=;
+        b=1ycS38Fl9nv8sKGeiJEvj7dcFjJMaVkXAbShM2YLA3tWvjnLepDt/4P4u8iCIcrXGU
+         VVpVSmZtW5rTj7mE/0c8b/R0d+hs+m49rS1e6PkOpeMggntAabCe/1BlDgrR2ZuPQef6
+         VVP2UDfzP0SR6mSSRMls3OWLFx9kNSW8eCCA2zJ2sH0Lqwfe1VjCBqh6/UVLMkvVHSle
+         2StLIq+uDw2I4YoxwlzyW1nJn50hGHhOO4JmhWWSXXkeKzwvqw0qZ1GT5cVbyRcDYSbv
+         kwptfyetlE3kMWolW8o55/wNRpSHlR49WLb0IIuIDwhxXHPmzPqZzbW2vU+mQ7a+9UCD
+         n10w==
+X-Gm-Message-State: AOAM533RP80fJbfO5Vbl8WZs4oOxYfvdkQpP5l6SKbcfZ75TCKNQ3eC2
+        9zUlHQvz7Ptp4sp/7HUyIAmtXFV4JLf66AMtJ9UWFw==
+X-Google-Smtp-Source: ABdhPJxclIDTBsv4yYQkMf2IKJZoaAKnmKikCbThIVE5NKI9QkHybFZsTLU/0wfsssiMKHH11b6mrHEUsG/59h5Yi1w=
+X-Received: by 2002:a17:907:1c23:: with SMTP id nc35mr11335786ejc.624.1643058458017;
+ Mon, 24 Jan 2022 13:07:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20220124091107.642561-1-hch@lst.de> <20220124091107.642561-12-hch@lst.de>
+In-Reply-To: <20220124091107.642561-12-hch@lst.de>
+From:   Jinpu Wang <jinpu.wang@ionos.com>
+Date:   Mon, 24 Jan 2022 22:07:26 +0100
+Message-ID: <CAMGffEknV3j8nm__Bc_q7QUra+MV2kj-CMcq8O2ZdEK+B3om_Q@mail.gmail.com>
+Subject: Re: [PATCH 11/19] rnbd-srv: remove struct rnbd_dev_blk_io
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Md . Haris Iqbal" <haris.iqbal@ionos.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.co>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        linux-block@vger.kernel.org, dm-devel@redhat.com,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
+        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 24, 2022 at 08:10:07PM +0000, Daire Byrne wrote:
-> On Mon, 24 Jan 2022 at 19:38, J. Bruce Fields <bfields@fieldses.org> wrote:
-> >
-> > On Sun, Jan 23, 2022 at 11:53:08PM +0000, Daire Byrne wrote:
-> > > I've been experimenting a bit more with high latency NFSv4.2 (200ms).
-> > > I've noticed a difference between the file creation rates when you
-> > > have parallel processes running against a single client mount creating
-> > > files in multiple directories compared to in one shared directory.
-> >
-> > The Linux VFS requires an exclusive lock on the directory while you're
-> > creating a file.
-> 
-> Right. So when I mounted the same server/dir multiple times using
-> namespaces, all I was really doing was making the VFS *think* I wanted
-> locks on different directories even though the remote server directory
-> was actually the same?
-
-In that scenario the client-side locks are probably all different, but
-they'd all have to wait for the same lock on the server side, yes.
-
-> > So, if L is the time in seconds required to create a single file, you're
-> > never going to be able to create more than 1/L files per second, because
-> > there's no parallelism.
-> 
-> And things like directory delegations can't help with this kind of
-> workload? You can't batch directories locks or file creates I guess.
-
-Alas, there are directory delegations specified in RFC 8881, but they
-are read-only, and nobody's implemented them.
-
-Directory write delegations could help a lot, if they existed.
-
-> > So, it's not surprising you'd get a higher rate when creating in
-> > multiple directories.
-> >
-> > Also, that lock's taken on both client and server.  So it makes sense
-> > that you might get a little more parallelism from multiple clients.
-> >
-> > So the usual advice is just to try to get that latency number as low as
-> > possible, by using a low-latency network and storage that can commit
-> > very quickly.  (An NFS server isn't permitted to reply to the RPC
-> > creating the new file until the new file actually hits stable storage.)
-> >
-> > Are you really seeing 200ms in production?
-> 
-> Yea, it's just a (crazy) test for now. This is the latency between two
-> of our offices. Running batch jobs over this kind of latency with a
-> NFS re-export server doing all the caching works surprisingly well.
-> 
-> It's just these file creations that's the deal breaker. A batch job
-> might create 100,000+ files in a single directory across many clients.
-> 
-> Maybe many containerised re-export servers in round-robin with a
-> common cache is the only way to get more directory locks and file
-> creates in flight at the same time.
-
-ssh into the original server and crate the files there?
-
-I've got no help, sorry.
-
-The client-side locking does seem redundant to some degree, but I don't
-know what to do about it.
-
---b.
+On Mon, Jan 24, 2022 at 10:11 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Only the priv field of rnbd_dev_blk_io is used, so store the value of
+> that in bio->bi_private directly and remove the entire bio_set overhead.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jack Wang <jinpu.wang@ionos.com>
+Thanks!
+> ---
+>  drivers/block/rnbd/rnbd-srv-dev.c |  4 +---
+>  drivers/block/rnbd/rnbd-srv-dev.h | 13 ++-----------
+>  drivers/block/rnbd/rnbd-srv.c     | 27 ++++-----------------------
+>  drivers/block/rnbd/rnbd-srv.h     |  1 -
+>  4 files changed, 7 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/block/rnbd/rnbd-srv-dev.c b/drivers/block/rnbd/rnbd-srv-dev.c
+> index 98d3e591a0885..c5d0a03911659 100644
+> --- a/drivers/block/rnbd/rnbd-srv-dev.c
+> +++ b/drivers/block/rnbd/rnbd-srv-dev.c
+> @@ -12,8 +12,7 @@
+>  #include "rnbd-srv-dev.h"
+>  #include "rnbd-log.h"
+>
+> -struct rnbd_dev *rnbd_dev_open(const char *path, fmode_t flags,
+> -                              struct bio_set *bs)
+> +struct rnbd_dev *rnbd_dev_open(const char *path, fmode_t flags)
+>  {
+>         struct rnbd_dev *dev;
+>         int ret;
+> @@ -30,7 +29,6 @@ struct rnbd_dev *rnbd_dev_open(const char *path, fmode_t flags,
+>
+>         dev->blk_open_flags = flags;
+>         bdevname(dev->bdev, dev->name);
+> -       dev->ibd_bio_set = bs;
+>
+>         return dev;
+>
+> diff --git a/drivers/block/rnbd/rnbd-srv-dev.h b/drivers/block/rnbd/rnbd-srv-dev.h
+> index 1a14ece0be726..2c3df02b5e8ec 100644
+> --- a/drivers/block/rnbd/rnbd-srv-dev.h
+> +++ b/drivers/block/rnbd/rnbd-srv-dev.h
+> @@ -14,25 +14,16 @@
+>
+>  struct rnbd_dev {
+>         struct block_device     *bdev;
+> -       struct bio_set          *ibd_bio_set;
+>         fmode_t                 blk_open_flags;
+>         char                    name[BDEVNAME_SIZE];
+>  };
+>
+> -struct rnbd_dev_blk_io {
+> -       struct rnbd_dev *dev;
+> -       void             *priv;
+> -       /* have to be last member for front_pad usage of bioset_init */
+> -       struct bio      bio;
+> -};
+> -
+>  /**
+>   * rnbd_dev_open() - Open a device
+> + * @path:      path to open
+>   * @flags:     open flags
+> - * @bs:                bio_set to use during block io,
+>   */
+> -struct rnbd_dev *rnbd_dev_open(const char *path, fmode_t flags,
+> -                              struct bio_set *bs);
+> +struct rnbd_dev *rnbd_dev_open(const char *path, fmode_t flags);
+>
+>  /**
+>   * rnbd_dev_close() - Close a device
+> diff --git a/drivers/block/rnbd/rnbd-srv.c b/drivers/block/rnbd/rnbd-srv.c
+> index 6d228af1dcc35..ff9b389976078 100644
+> --- a/drivers/block/rnbd/rnbd-srv.c
+> +++ b/drivers/block/rnbd/rnbd-srv.c
+> @@ -116,9 +116,7 @@ rnbd_get_sess_dev(int dev_id, struct rnbd_srv_session *srv_sess)
+>
+>  static void rnbd_dev_bi_end_io(struct bio *bio)
+>  {
+> -       struct rnbd_dev_blk_io *io = bio->bi_private;
+> -
+> -       rnbd_endio(io->priv, blk_status_to_errno(bio->bi_status));
+> +       rnbd_endio(bio->bi_private, blk_status_to_errno(bio->bi_status));
+>         bio_put(bio);
+>  }
+>
+> @@ -131,7 +129,6 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>         struct rnbd_srv_sess_dev *sess_dev;
+>         u32 dev_id;
+>         int err;
+> -       struct rnbd_dev_blk_io *io;
+>         struct bio *bio;
+>         short prio;
+>
+> @@ -152,7 +149,7 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>         priv->sess_dev = sess_dev;
+>         priv->id = id;
+>
+> -       bio = bio_alloc_bioset(GFP_KERNEL, 1, sess_dev->rnbd_dev->ibd_bio_set);
+> +       bio = bio_alloc(GFP_KERNEL, 1);
+>         if (bio_add_page(bio, virt_to_page(data), datalen,
+>                         offset_in_page(data)) != datalen) {
+>                 rnbd_srv_err(sess_dev, "Failed to map data to bio\n");
+> @@ -160,12 +157,8 @@ static int process_rdma(struct rnbd_srv_session *srv_sess,
+>                 goto bio_put;
+>         }
+>
+> -       io = container_of(bio, struct rnbd_dev_blk_io, bio);
+> -       io->dev = sess_dev->rnbd_dev;
+> -       io->priv = priv;
+> -
+>         bio->bi_end_io = rnbd_dev_bi_end_io;
+> -       bio->bi_private = io;
+> +       bio->bi_private = priv;
+>         bio->bi_opf = rnbd_to_bio_flags(le32_to_cpu(msg->rw));
+>         bio->bi_iter.bi_sector = le64_to_cpu(msg->sector);
+>         bio->bi_iter.bi_size = le32_to_cpu(msg->bi_size);
+> @@ -260,7 +253,6 @@ static void destroy_sess(struct rnbd_srv_session *srv_sess)
+>
+>  out:
+>         xa_destroy(&srv_sess->index_idr);
+> -       bioset_exit(&srv_sess->sess_bio_set);
+>
+>         pr_info("RTRS Session %s disconnected\n", srv_sess->sessname);
+>
+> @@ -289,16 +281,6 @@ static int create_sess(struct rtrs_srv_sess *rtrs)
+>                 return -ENOMEM;
+>
+>         srv_sess->queue_depth = rtrs_srv_get_queue_depth(rtrs);
+> -       err = bioset_init(&srv_sess->sess_bio_set, srv_sess->queue_depth,
+> -                         offsetof(struct rnbd_dev_blk_io, bio),
+> -                         BIOSET_NEED_BVECS);
+> -       if (err) {
+> -               pr_err("Allocating srv_session for path %s failed\n",
+> -                      pathname);
+> -               kfree(srv_sess);
+> -               return err;
+> -       }
+> -
+>         xa_init_flags(&srv_sess->index_idr, XA_FLAGS_ALLOC);
+>         INIT_LIST_HEAD(&srv_sess->sess_dev_list);
+>         mutex_init(&srv_sess->lock);
+> @@ -747,8 +729,7 @@ static int process_msg_open(struct rnbd_srv_session *srv_sess,
+>                 goto reject;
+>         }
+>
+> -       rnbd_dev = rnbd_dev_open(full_path, open_flags,
+> -                                &srv_sess->sess_bio_set);
+> +       rnbd_dev = rnbd_dev_open(full_path, open_flags);
+>         if (IS_ERR(rnbd_dev)) {
+>                 pr_err("Opening device '%s' on session %s failed, failed to open the block device, err: %ld\n",
+>                        full_path, srv_sess->sessname, PTR_ERR(rnbd_dev));
+> diff --git a/drivers/block/rnbd/rnbd-srv.h b/drivers/block/rnbd/rnbd-srv.h
+> index e5604bce123ab..be2ae486d407e 100644
+> --- a/drivers/block/rnbd/rnbd-srv.h
+> +++ b/drivers/block/rnbd/rnbd-srv.h
+> @@ -23,7 +23,6 @@ struct rnbd_srv_session {
+>         struct rtrs_srv_sess    *rtrs;
+>         char                    sessname[NAME_MAX];
+>         int                     queue_depth;
+> -       struct bio_set          sess_bio_set;
+>
+>         struct xarray           index_idr;
+>         /* List of struct rnbd_srv_sess_dev */
+> --
+> 2.30.2
+>
