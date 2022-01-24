@@ -2,107 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A2F1E497898
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 06:35:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DC2A84978CC
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 07:09:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241104AbiAXFf3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jan 2022 00:35:29 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:50028 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbiAXFf3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 00:35:29 -0500
+        id S241549AbiAXGJK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jan 2022 01:09:10 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:38552 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232076AbiAXGJK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 01:09:10 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 351051F380;
-        Mon, 24 Jan 2022 05:35:28 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 52E4E21972;
+        Mon, 24 Jan 2022 06:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1643002528;
+        t=1643004549;
         h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
          cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=OTyPEQDRmkQ+qcAPzVDveelCYqDuxJTJRFqBr095D38=;
-        b=j3/KALv4ndNRWJBl8lDzFTKaVLwjLhs2zwVHfRpqBvAkojo2ETZIbxWKxGh5fxz1p1rpnc
-        Af8vpqTY/6WqoL+GhIFreujuciP4nIoyZZ96ojK1zJBXa3WE1VgdLYjWrSiXUJCxRmzTy7
-        J6lqWAgGg5YyLx7ONlHQPooxMebcXhw=
+        bh=yJTO1ntaNYhfyc0kwrRnaOw0Kj/PjR12jA28uu4oRjU=;
+        b=gkPkSkrJxktYRo5q8bkBxLgOYgT5VoQHIhqHZSdHacQKj6NGb+C8+kic2E+psiUok5bstx
+        ZvPX95MKQPn+oyqaut2ncBvKOgfe8gnNwyGTM2SljWTAKQYtk/YpH8BEPSS7NIzceEiw3C
+        z3JYPzp3m3VQzgAyxKUBJx8IXwwGDPc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1643002528;
+        s=susede2_ed25519; t=1643004549;
         h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
          cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=OTyPEQDRmkQ+qcAPzVDveelCYqDuxJTJRFqBr095D38=;
-        b=6kQFbu1FyhQJvxwF9kvQXbdKtD05MpH8mDUNoyKS2VmDM+hdZLQ5do3xEHaHBWykPKPDs1
-        ZgU9D+RiiJV0FDDw==
+        bh=yJTO1ntaNYhfyc0kwrRnaOw0Kj/PjR12jA28uu4oRjU=;
+        b=6IFR7wiLjWPDNg5P8yroLS6y3C9ic/AUuldwLcgG0UHmREBHw6x5Mx1a0vQAOYeKXLniJM
+        8cxXY4DKiFaZAbDA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 044D01331A;
-        Mon, 24 Jan 2022 05:35:27 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 13FFD1331A;
+        Mon, 24 Jan 2022 06:09:09 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id ljVjOp867mGoYwAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Mon, 24 Jan 2022 05:35:27 +0000
-Date:   Mon, 24 Jan 2022 06:35:26 +0100
+        id vZreAoVC7mHabgAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Mon, 24 Jan 2022 06:09:09 +0000
+Date:   Mon, 24 Jan 2022 07:09:07 +0100
 From:   Petr Vorel <pvorel@suse.cz>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org,
-        Yongcheng Yang <yongcheng.yang@gmail.com>
-Subject: Re: [PATCH 1/1] utils: Fix left debug info
-Message-ID: <Ye46npjOSzvqdXc2@pevik>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>,
+        ltp@lists.linux.it, kernel@openvz.org, linux-nfs@vger.kernel.org,
+        Steve Dickson <SteveD@redhat.com>
+Subject: Re: [PATCH] rpc_lib.sh: fix portmapper detection in case of socket
+ activation
+Message-ID: <Ye5Cg7biIyXQOIDn@pevik>
 Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20220122180243.19355-1-pvorel@suse.cz>
- <67d7bba1-d4e5-00be-c198-8501df6e61e1@redhat.com>
+References: <20220120143727.27057-1-nikita.yushchenko@virtuozzo.com>
+ <YenNsuS1gcA9tDe3@pevik>
+ <164279789186.8775.7075880084961337149@noble.neil.brown.name>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <67d7bba1-d4e5-00be-c198-8501df6e61e1@redhat.com>
+In-Reply-To: <164279789186.8775.7075880084961337149@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> Hey!
+> On Fri, 21 Jan 2022, Petr Vorel wrote:
+> > Hi Nikita,
 
-> This patch is pretty messed up.
+> > [ Cc: Steve as user-space maintainer, also Neil and whole linux-nfs ]
 
-> On 1/22/22 13:02, Petr Vorel wrote:
-> > Patch for 497ffdf8 ('manpage: remove the no longer supported value
-> > "vers2"') [1] didn't contain printf in exportfs.c (looks like debugging
-> > info) and errno handling in stropts.c (maybe work on other patch) which
-> > were applied. Thus removing it.
-> Someone pointed it to me that  with 2 v3 auto-negotiation
-> on the same mount the is error EPROTONOSUPPORT
-> instead of EBUSY so this test
->      if (errno != EBUSY)
-> 	errno = olderrno;
+> > > On systemd-based linux hosts, rpcbind service is typically started via
+> > > socket activation, when the first client connects. If no client has
+> > > connected before LTP rpc test starts, rpcbind process will not be
+> > > running at the time of check_portmap_rpcbind() execution, causing
+> > > check_portmap_rpcbind() to report TCONF error.
 
-> seemed to work but unfortunately I can
-> not find the patch/bz or thread we were
-> communicating in... So I am going to
-> remove the test until I get (or find) the
-> official patch
+> > > Fix that by adding a quiet invocation of 'rpcinfo' before checking for
+> > > rpcbind.
 
-Hi Steve,
+> > Looks reasonable, but I'd prefer to have confirmation from NFS experts.
 
-thanks a lot for explanation.
+> > > For portmap, similar step is likely not needed, because portmap is used
+> > > only on old systemd and those don't use systemd.
 
-Also not sure if it needs to be removed, but there are at least few places which
-mention NFS version 2.
+> > > Signed-off-by: Nikita Yushchenko <nikita.yushchenko@virtuozzo.com>
+> > > ---
+> > >  testcases/network/rpc/basic_tests/rpc_lib.sh | 6 ++++++
+> > >  1 file changed, 6 insertions(+)
 
-$ git grep -i nfs.version.2
-utils/mountd/mountd.man:an NFS side protocol used by NFS version 2 [RFC1094] and NFS version 3 [RFC1813].
-utils/mountd/mountd.man:can support both NFS version 2, 3 and 4. If the
-utils/mountd/mountd.man:can support both NFS version 2 and the newer version 3.
-utils/nfsstat/nfsstat.c:  -2                    Show NFS version 2 statistics\n\
-utils/statd/sm-notify.man:For NFS version 2 and version 3, the
-utils/statd/statd.man:For NFS version 2 [RFC1094] and NFS version 3 [RFC1813], the
+> > > diff --git a/testcases/network/rpc/basic_tests/rpc_lib.sh b/testcases/network/rpc/basic_tests/rpc_lib.sh
+> > > index c7c868709..e882e41b3 100644
+> > > --- a/testcases/network/rpc/basic_tests/rpc_lib.sh
+> > > +++ b/testcases/network/rpc/basic_tests/rpc_lib.sh
+> > > @@ -8,6 +8,12 @@ check_portmap_rpcbind()
+> > >  	if pgrep portmap > /dev/null; then
+> > >  		PORTMAPPER="portmap"
+> > >  	else
+> > > +		# In case of systemd socket activation, rpcbind could be
+> > > +		# not started until somebody tries to connect to it's socket.
+> > > +		#
+> > > +		# To handle that case properly, run a client now.
+> > > +		rpcinfo >/dev/null 2>&1
+
+> If it were me, I would remove the 'pgrep's and just call "rpcbind -p"
+> and make sure something responds.
+
+Hi Neil,
+
+I guess you mean: rpcinfo -p
+
+Good idea, thanks!
 
 Kind regards,
 Petr
 
-> Committed!
+> NeilBrown
 
-> thanks,
 
-> steved.
+
+> > nit: Shouldn't we keep stderr? In LTP we put required commands into
+> > $TST_NEEDS_CMDS. It'd be better not require rpcinfo (not a hard dependency),
+> > and thus it'd be better to see "command not found" when rpcinfo missing and test
+> > fails.
+
+> > Kind regards,
+> > Petr
+
+> > > +
+> > >  		pgrep rpcbind > /dev/null && PORTMAPPER="rpcbind" || \
+> > >  			tst_brk TCONF "portmap or rpcbind is not running"
+> > >  	fi
+
+
