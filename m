@@ -2,165 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B4F0B497A4B
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 09:26:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3980497A98
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Jan 2022 09:48:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236234AbiAXI0a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Jan 2022 03:26:30 -0500
-Received: from mga03.intel.com ([134.134.136.65]:16043 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S229800AbiAXI00 (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Mon, 24 Jan 2022 03:26:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1643012786; x=1674548786;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Rux9J+VSLdbgWUxsBOOX1krXPu5RScfzXKkMHtGrIAA=;
-  b=jpDLzkj8skj+gKVyVCN7U1hrF+56398B9fX5G10KlwDgpAqvBHTO/j0M
-   abJPDe8LZGPhEgMdJgYv/s0MIUmKVUyceW2Z7vXUDj4D6Z60B4/MesQkM
-   A4TVO9YdbrYiwD0+ilHkY1FZ11xfOyHfsGZpXB5L+bDHroJ49foxaXL76
-   kt+WvEUisxH/Z6XKya5Xc+OEoGeTehNA8ZBhTxnlcTxs2FmO3O3cifRdV
-   2XeMNH5K4PdreMpONeEuWDuY70IiKf/MvRwol7fMH7vVOI7njkjXhf72S
-   ecZAcKPdutYK454pRlkGMW+goFcWgUyjkvfcK7i66LMHI/QPHA8C7PHaF
-   A==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10236"; a="245940051"
-X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="245940051"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2022 00:26:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.88,311,1635231600"; 
-   d="scan'208";a="695340539"
-Received: from lkp-server01.sh.intel.com (HELO 276f1b88eecb) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 24 Jan 2022 00:26:23 -0800
-Received: from kbuild by 276f1b88eecb with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nBugA-000Hzt-GI; Mon, 24 Jan 2022 08:26:22 +0000
-Date:   Mon, 24 Jan 2022 16:25:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        id S242242AbiAXIsZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Jan 2022 03:48:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41764 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242234AbiAXIsY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Jan 2022 03:48:24 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB37C06173B;
+        Mon, 24 Jan 2022 00:48:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=l2WBiCb5duYJRA9nKpihqrJOH1Qjg6utSrFiu8qAdtc=; b=VZbyWcIRUzokvqgNgSVwmMAL96
+        U+car1lMPlLEYJNySRz/NOk4rcD7FtOJkkU6hwlVgppF05qVN1QiRsXJVgVFgHEUDkDBOJDJP9PKC
+        HtBfYTu0mlzOeSwc2S7frisatyDsADkFgpSPjw4d4J86U0i4F65/u4KESuzOujkmf63ccM3SVf1hd
+        Wv0qGV9OfatCZJksyVh5tu26rXp7NQVjwpoGdwkSeutreWPnu2ZPZ4pnoJj2bhjU+tE1GO6+3QLLT
+        Cma8bA1NKNhZZuRhzGOdl9/49GNPk73wWDET7zh6FZ/2IB3IunqsKcHFhn6xL+Xw6ctkcrjspdrfL
+        BDsu1zqA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nBv1L-002dmD-Ep; Mon, 24 Jan 2022 08:48:15 +0000
+Date:   Mon, 24 Jan 2022 00:48:15 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Chuck Lever <chuck.lever@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Mel Gorman <mgorman@suse.de>,
         Christoph Hellwig <hch@infradead.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     kbuild-all@lists.01.org,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 09/23] MM: submit multipage reads for SWP_FS_OPS
- swap-space
-Message-ID: <202201241613.8J5z5arQ-lkp@intel.com>
-References: <164299611278.26253.14950274629759580371.stgit@noble.brown>
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/23] MM: introduce ->swap_rw and use it for reads from
+ SWP_FS_OPS swap-space
+Message-ID: <Ye5nz0e54s1I19T7@infradead.org>
+References: <164299573337.26253.7538614611220034049.stgit@noble.brown>
+ <164299611276.26253.13667789323141516970.stgit@noble.brown>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <164299611278.26253.14950274629759580371.stgit@noble.brown>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <164299611276.26253.13667789323141516970.stgit@noble.brown>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi NeilBrown,
+Looks good,
 
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v5.17-rc1 next-20220124]
-[cannot apply to trondmy-nfs/linux-next cifs/for-next hnaz-mm/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/NeilBrown/Repair-SWAP-over_NFS/20220124-115716
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git dd81e1c7d5fb126e5fbc5c9e334d7b3ec29a16a0
-config: powerpc-allnoconfig (https://download.01.org/0day-ci/archive/20220124/202201241613.8J5z5arQ-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 11.2.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/0day-ci/linux/commit/63bff668aa0537d7ccef9ed428809fc16c1a6b6c
-        git remote add linux-review https://github.com/0day-ci/linux
-        git fetch --no-tags linux-review NeilBrown/Repair-SWAP-over_NFS/20220124-115716
-        git checkout 63bff668aa0537d7ccef9ed428809fc16c1a6b6c
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=powerpc SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from mm/vmscan.c:61:
-   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
-      66 |                                 struct swap_iocb **plug);
-         |                                        ^~~~~~~~~
->> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
-      67 | {
-         | ^
-   mm/swap.h:65:19: warning: 'swap_readpage' declared 'static' but never defined [-Wunused-function]
-      65 | static inline int swap_readpage(struct page *page, bool do_poll,
-         |                   ^~~~~~~~~~~~~
---
-   In file included from mm/memory.c:89:
-   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
-      66 |                                 struct swap_iocb **plug);
-         |                                        ^~~~~~~~~
->> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
-      67 | {
-         | ^
->> mm/swap.h:65:19: warning: 'swap_readpage' used but never defined
-      65 | static inline int swap_readpage(struct page *page, bool do_poll,
-         |                   ^~~~~~~~~~~~~
---
-   In file included from mm/page_alloc.c:84:
-   mm/swap.h:66:40: warning: 'struct swap_iocb' declared inside parameter list will not be visible outside of this definition or declaration
-      66 |                                 struct swap_iocb **plug);
-         |                                        ^~~~~~~~~
->> mm/swap.h:67:1: error: expected identifier or '(' before '{' token
-      67 | {
-         | ^
-   mm/page_alloc.c:3821:15: warning: no previous prototype for 'should_fail_alloc_page' [-Wmissing-prototypes]
-    3821 | noinline bool should_fail_alloc_page(gfp_t gfp_mask, unsigned int order)
-         |               ^~~~~~~~~~~~~~~~~~~~~~
-   In file included from mm/page_alloc.c:84:
-   mm/swap.h:65:19: warning: 'swap_readpage' declared 'static' but never defined [-Wunused-function]
-      65 | static inline int swap_readpage(struct page *page, bool do_poll,
-         |                   ^~~~~~~~~~~~~
-
-
-vim +67 mm/swap.h
-
-50dceef273a619 NeilBrown 2022-01-24  45  
-50dceef273a619 NeilBrown 2022-01-24  46  struct page *read_swap_cache_async(swp_entry_t, gfp_t,
-50dceef273a619 NeilBrown 2022-01-24  47  				   struct vm_area_struct *vma,
-50dceef273a619 NeilBrown 2022-01-24  48  				   unsigned long addr,
-63bff668aa0537 NeilBrown 2022-01-24  49  				   bool do_poll,
-63bff668aa0537 NeilBrown 2022-01-24  50  				   struct swap_iocb **plug);
-50dceef273a619 NeilBrown 2022-01-24  51  struct page *__read_swap_cache_async(swp_entry_t, gfp_t,
-50dceef273a619 NeilBrown 2022-01-24  52  				     struct vm_area_struct *vma,
-50dceef273a619 NeilBrown 2022-01-24  53  				     unsigned long addr,
-50dceef273a619 NeilBrown 2022-01-24  54  				     bool *new_page_allocated);
-50dceef273a619 NeilBrown 2022-01-24  55  struct page *swap_cluster_readahead(swp_entry_t entry, gfp_t flag,
-50dceef273a619 NeilBrown 2022-01-24  56  				    struct vm_fault *vmf);
-50dceef273a619 NeilBrown 2022-01-24  57  struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
-50dceef273a619 NeilBrown 2022-01-24  58  			      struct vm_fault *vmf);
-50dceef273a619 NeilBrown 2022-01-24  59  
-12cf545fe71035 NeilBrown 2022-01-24  60  static inline unsigned int page_swap_flags(struct page *page)
-12cf545fe71035 NeilBrown 2022-01-24  61  {
-12cf545fe71035 NeilBrown 2022-01-24  62  	return page_swap_info(page)->flags;
-12cf545fe71035 NeilBrown 2022-01-24  63  }
-50dceef273a619 NeilBrown 2022-01-24  64  #else /* CONFIG_SWAP */
-63bff668aa0537 NeilBrown 2022-01-24 @65  static inline int swap_readpage(struct page *page, bool do_poll,
-63bff668aa0537 NeilBrown 2022-01-24 @66  				struct swap_iocb **plug);
-50dceef273a619 NeilBrown 2022-01-24 @67  {
-50dceef273a619 NeilBrown 2022-01-24  68  	return 0;
-50dceef273a619 NeilBrown 2022-01-24  69  }
-50dceef273a619 NeilBrown 2022-01-24  70  
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
