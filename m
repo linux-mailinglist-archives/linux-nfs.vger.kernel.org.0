@@ -2,179 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 704CD49B76D
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 16:18:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1043549B78B
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 16:27:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234647AbiAYPSC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 10:18:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48586 "EHLO
+        id S1345552AbiAYP1D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 10:27:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357926AbiAYPPY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 10:15:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50DF0C061772
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 07:15:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1851BB81819
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 15:15:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE73BC340E0
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 15:15:19 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH RFC] NFSD: COMMIT operations must not return NFS?ERR_INVAL
-Date:   Tue, 25 Jan 2022 10:15:18 -0500
-Message-Id:  <164312364841.2592.937810018356237855.stgit@bazille.1015granger.net>
-X-Mailer: git-send-email 2.34.0
-User-Agent: StGit/1.4
+        with ESMTP id S1349626AbiAYPYq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 10:24:46 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4EA5C06173D
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 07:24:42 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id ah7so30930485ejc.4
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 07:24:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FmCu5q/9cyd6jLwDAKHOnptOvmHmNnDiPHpjTLMqXXc=;
+        b=FYMmG0bW7AcVJozcIb4UL5jaq8gx/U3N8bfYx6LTr8RR0tl5lC7CI/OgS+3IA4EHwS
+         V/5uM0CkfAtvMvBW0hbzxYMfl0HnSZQ3/o7F65e/NJzgkO6ffIWPdtCuKAtBDp4vR9RP
+         GaE93WvFVGl3kyFEf0jbkwOKBp6YyQOMA7ta5GO3Q/UNQt7gLYhQY+sITf0fNXiD7VTS
+         JFJCHKkp9mvtq7lfMvLRBiLgAR+qnRo5tQEFNtl1RC/wgVtzdu50rdBVstykoaXzpLfo
+         88VTt+lfnBAGE5/a4bBhINihqjbz+X1jUrA78EmCPlYttwEe/6yUCxs85gbYf2BOHtq9
+         qm/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FmCu5q/9cyd6jLwDAKHOnptOvmHmNnDiPHpjTLMqXXc=;
+        b=kZ8pM0SGamRmXToqfv/2Q5cMDLP01OMMuATilmzGCXKAKELBs5KrVPPUpCrVpWm3cA
+         3dMk+KKkZdg6T516KgYvELPpvG/BycOIs8z+X2X2/EKF6JMjymeSrQKDTDyfSJ67paMv
+         xbNv4yY+RIusvyUY5rAckt/JT6hUtJhRm54mQSH7ftIK8l1j0wtp2G/ki0jJvwTHjIzt
+         HlI2+/JkFUSZPa1phkwhJsKuQP02S4A6XUaY8dinYcwnH038b4cUWXpsutX1ktsp6bv0
+         yTvfCx/ZEkJkC8oEOyOKTEDrEhnFSH7XuMYigEFCQDy808YBI3klEHCjE/ddm56Mwbp7
+         gOFA==
+X-Gm-Message-State: AOAM533K2hzbft3sQzGhwGp/Xcn5olbfXFV5Wq1mYerb4rKziYQmRGYU
+        EpjvPF7mnUA/U+7vc2o8KJFZAHjo8Uwgv3OafBSTm8C3vEJ1Kg==
+X-Google-Smtp-Source: ABdhPJwnjBgXzawV5S0lMccZQeXYSktLqE1xynuyEvx5K8yUSwynd6AtcjQ1OhW1Ym4F9sKhhgxMCPc54V4eFUs3KSU=
+X-Received: by 2002:a17:906:2ec8:: with SMTP id s8mr16699667eji.746.1643124281229;
+ Tue, 25 Jan 2022 07:24:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4634; h=from:subject:message-id; bh=lC+kXELpO0ApahkcWVRWQlhqdZfCHRkyEdHu0ffHKqg=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh8BQALl6CruC0+/GKZBL65M4gabV6VgsYzoh6Rnek TjzS0AaJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYfAUAAAKCRAzarMzb2Z/l8VuEA CyLE/4xkliYhH2biRYVwdcaET1eDdl50g92CgrCiyeL2drOdB9GGq4Po9oVlk5n/UtvsSPqfXa3dbB X70sV0mZlPqOBMfwYBC5NN2yfq2pBumu3ohf4+fiB6CtYoXqCgY2pGWQkoY5W2ay7Ev9blMSP1Yy59 PeBUlWMyT/cbDmUJh7cwqAd9769AkWEo5DQBs9n3eAlzfYH3iVQj0nvfiH5LnhEwQC0rhvGSdl6UIf IsqreUR1TCtwZANS+Ibsd+EFZ8tIlSnCg6KW6Dvl6P12mmZo8peuSv+Qk0NF0dr9pd8ymaHm4noKX8 0mjwospqUNt29IE2y6R42piEkq1ziDhUQBjpF06bN3Vf3X1CbtWFkTWCR8X/Wp9hdwedIlbpzWLQC/ DajU4mtFxUhunNNXW9uhkDJI29NQg6pcDvB1zYDTccsydnpDZHw4+nvmsidMQanYlp8S00A2t49gq3 zSPtvmVfuI+9gUzrVPc7TW3OrjAsVd8IRv1mm5h1OqjLupkzLRQX736WIoMFnA5xIxV4xVz/8gKMQL 6ZuUgp3HrtZ+bJbSgeMO0+Ktp6GzJvBL+KuMfDKh8dBAoYgtrw2+h9feO2yshRQ2wfZ334YIvGf/WJ KQdetHB2R+oA5ZnUO08khXHEmU8Wu+5yoaKb5ziLEKNaEbgRgcjMl1itt7lg==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
+ <20220124193759.GA4975@fieldses.org> <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
+ <20220124205045.GB4975@fieldses.org> <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
+ <20220125135959.GA15537@fieldses.org>
+In-Reply-To: <20220125135959.GA15537@fieldses.org>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Tue, 25 Jan 2022 15:24:05 +0000
+Message-ID: <CAPt2mGMKqPDaH3U=frrONX0V0aae0A=KDQhUd2GYO78u8FNyJQ@mail.gmail.com>
+Subject: Re: parallel file create rates (+high latency)
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since, well, forever, the Linux NFS server's nfsd_commit() function
-has returned nfserr_inval when the passed-in byte range arguments
-were non-sensical.
+On Tue, 25 Jan 2022 at 14:00, J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Tue, Jan 25, 2022 at 12:52:46PM +0000, Daire Byrne wrote:
+> > Yea, it does seem like the server is the ultimate arbitrar and the
+> > fact that multiple clients can achieve much higher rates of
+> > parallelism does suggest that the VFS locking per client is somewhat
+> > redundant and limiting (in this super niche case).
+>
+> It doesn't seem *so* weird to have a server with fast storage a long
+> round-trip time away, in which case the client-side operation could take
+> several orders of magnitude longer than the server.
 
-However, according to RFC 1813 section 3.3.21, NFSv3 COMMIT requests
-are permitted to return only the following non-zero status codes:
+Yea, I'm fine with the speed of light constraints for a single process
+far away. But the best way to achieve aggregate performance in such
+environments is to have multiple parallel streams in flight at once
+(preferably bulk transfers).
 
-      NFS3ERR_IO
-      NFS3ERR_STALE
-      NFS3ERR_BADHANDLE
-      NFS3ERR_SERVERFAULT
+Because I am writing through a single re-export server, I just so
+happen to be killing any parallelism for single directory files
+creates even though it works reasonably well for opens, reads, writes
+and stat (and anything cacheable) which all retain a certain amount of
+useful parallelism over a high latency network (nconnect helps too).
+Each of our batch jobs all read 95% of the same files each time and
+they all tend to run within the same short (hour) time periods so
+highly cacheable.
 
-NFS3ERR_INVAL is not included in that list. Likewise, NFS4ERR_INVAL
-is not listed in the COMMIT row of Table 6 in RFC 8881.
+> Though even if the client locking wasn't a factor, you might still have
+> to do some work to take advantage of that.  (E.g. if your workload is
+> just a single "untar"--it still waits for one create before doing the
+> next one).
 
-Instead of dropping or failing a COMMIT request in a byte range that
-is not supported, turn it into a valid request by treating one or
-both arguments as zero.
+Yep. Again I'm okay with each client of a re-export server doing 3
+creates per second, my problem is that all N instances together do 3
+creates per second aggregate (in a single directory).
 
-As a clean-up, I replaced the signed v. unsigned integer comparisons
-because I found that logic difficult to reason about.
+But I guess for this kind of workload, win some lose some. I just need
+to figure out if I can engineer it to be less of a loser...
 
-Reported-by: Dan Aloni <dan.aloni@vastdata.com>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs3proc.c |    6 ------
- fs/nfsd/vfs.c      |   43 ++++++++++++++++++++++++++++---------------
- fs/nfsd/vfs.h      |    4 ++--
- 3 files changed, 30 insertions(+), 23 deletions(-)
+Of course, Hammerspace have a different approach to this kind of
+problem with their global namespace and replicated MDT servers. And
+that is probably a much more sensible way of going about this kind of
+thing.
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 8ef53f6726ec..8cd2953f53c7 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -651,15 +651,9 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
- 				argp->count,
- 				(unsigned long long) argp->offset);
- 
--	if (argp->offset > NFS_OFFSET_MAX) {
--		resp->status = nfserr_inval;
--		goto out;
--	}
--
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->status = nfsd_commit(rqstp, &resp->fh, argp->offset,
- 				   argp->count, resp->verf);
--out:
- 	return rpc_success;
- }
- 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 99c2b9dfbb10..384c62591f45 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1110,42 +1110,55 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
- }
- 
- #ifdef CONFIG_NFSD_V3
--/*
-- * Commit all pending writes to stable storage.
-+/**
-+ * nfsd_commit - Commit pending writes to stable storage
-+ * @rqstp: RPC request being processed
-+ * @fhp: NFS filehandle
-+ * @offset: offset from beginning of file
-+ * @count: count of bytes to sync
-+ * @verf: filled in with the server's current write verifier
-  *
-  * Note: we only guarantee that data that lies within the range specified
-  * by the 'offset' and 'count' parameters will be synced.
-  *
-  * Unfortunately we cannot lock the file to make sure we return full WCC
-  * data to the client, as locking happens lower down in the filesystem.
-+ *
-+ * Return values:
-+ *   An nfsstat value in network byte order.
-  */
- __be32
--nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp,
--               loff_t offset, unsigned long count, __be32 *verf)
-+nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, u64 offset,
-+	    u32 count, __be32 *verf)
- {
-+	u64			maxbytes;
-+	loff_t			start, end;
- 	struct nfsd_net		*nn;
- 	struct nfsd_file	*nf;
--	loff_t			end = LLONG_MAX;
--	__be32			err = nfserr_inval;
--
--	if (offset < 0)
--		goto out;
--	if (count != 0) {
--		end = offset + (loff_t)count - 1;
--		if (end < offset)
--			goto out;
--	}
-+	__be32			err;
- 
- 	err = nfsd_file_acquire(rqstp, fhp,
- 			NFSD_MAY_WRITE|NFSD_MAY_NOT_BREAK_LEASE, &nf);
- 	if (err)
- 		goto out;
-+
-+	start = 0;
-+	end = LLONG_MAX;
-+	/* NB: s_maxbytes is a (signed) loff_t, thus @maxbytes always
-+	 * contains a value that is less than LLONG_MAX. */
-+	maxbytes = fhp->fh_dentry->d_sb->s_maxbytes;
-+	if (offset < maxbytes) {
-+		start = offset;
-+		if (count && (offset + count - 1 < maxbytes))
-+			end = offset + count - 1;
-+	}
-+
- 	nn = net_generic(nf->nf_net, nfsd_net_id);
- 	if (EX_ISSYNC(fhp->fh_export)) {
- 		errseq_t since = READ_ONCE(nf->nf_file->f_wb_err);
- 		int err2;
- 
--		err2 = vfs_fsync_range(nf->nf_file, offset, end, 0);
-+		err2 = vfs_fsync_range(nf->nf_file, start, end, 0);
- 		switch (err2) {
- 		case 0:
- 			nfsd_copy_write_verifier(verf, nn);
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 9f56dcb22ff7..2c43d10e3cab 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -74,8 +74,8 @@ __be32		do_nfsd_create(struct svc_rqst *, struct svc_fh *,
- 				char *name, int len, struct iattr *attrs,
- 				struct svc_fh *res, int createmode,
- 				u32 *verifier, bool *truncp, bool *created);
--__be32		nfsd_commit(struct svc_rqst *, struct svc_fh *,
--				loff_t, unsigned long, __be32 *verf);
-+__be32		nfsd_commit(struct svc_rqst *rqst, struct svc_fh *fhp,
-+				u64 offset, u32 count, __be32 *verf);
- #endif /* CONFIG_NFSD_V3 */
- #ifdef CONFIG_NFSD_V4
- __be32		nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
-
+Daire
