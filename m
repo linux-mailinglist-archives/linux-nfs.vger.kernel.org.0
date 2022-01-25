@@ -2,126 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D1BC149BBD1
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 20:10:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BBC49BBEA
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 20:17:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229605AbiAYTJ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 14:09:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46274 "EHLO
+        id S229714AbiAYTRX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 14:17:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbiAYTJ4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 14:09:56 -0500
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADE2C06173B
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:09:56 -0800 (PST)
-Received: by mail-qv1-xf2b.google.com with SMTP id s6so19083342qvv.11
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:09:56 -0800 (PST)
+        with ESMTP id S229732AbiAYTRV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 14:17:21 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF67C06173D
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:17:20 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id s18so21711095wrv.7
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:17:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=pZQBiAFLbs2VhJ1f3T2tO0THO1pm036aexkSZmTc8zE=;
-        b=mRixsWEtbcn13onoKBaGFPQZdl0WWFEO/Y3MZcXbaxhGswKqriN9CpjiJvUlVxt8BW
-         HfYRncRf7vWOv2M9MsIGdPP3Ey7RnOwimmLgYXwR93YRXXMLmG/acinRoGm8TAT4pH4r
-         fU4Tt052N/KsnkephGdgJ44dhtOrWbLTec1GNiUWn0mDbDuaQMUrows/RlzFm6ZgNscr
-         54ZBCBkUT69TaFQjnP3YP37k4zjRwuHd4kI7W9pXJLItX1QJBnsy5r3nTJVPWERfaD2o
-         Loa/7yu/c7b+hNeHPBBFnr653hfRc4sgTONTgW5iksqOA6Y05nlyl6zAxPz0/QLLtRPV
-         /igg==
+        d=vastdata.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SmvWx14eAhy3pe3g3Tx/t4BuExsjjc5XxE2U64XG7T8=;
+        b=LuEM7YNmtZzEJWdGuYQA8ha6rk0vHFi0F67a0JH+91/b+j2BwnIImJm/wZoeDLznbl
+         luOUJLZU3bIRC4znGmPQBYBeKwulcGyW1hXkPkt1Zq62CAWzV907Lk+r30e4jyJvHRnx
+         Cz8lhcpT7KFg765nC7EGu5gOZIkuxuxvHFONZjZN9s8/qhufwhaiqRA3ay6Al6rwGzHu
+         8u8KxmD0xyu6jF7g2Q9p0XG3cva0F/3GtoqACM6EcUpkccZ3tmciHb8qLrGnbMBbPiQ3
+         2vYGX4t6PRg+ymkiZydfSkoeC5Mpdn5vbbtUDxLCSQNpt1Xx9BfmhrWqDYhRH8abaEBh
+         CjMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=pZQBiAFLbs2VhJ1f3T2tO0THO1pm036aexkSZmTc8zE=;
-        b=K8rfitw65s6hbxvAuEFPQoqRU6L6ryMjteVe5gKZg6tY+qLwwBWKdGeSSFSOaJYFB0
-         cQYydjLH98ddve8KCGIAaHosdbzhCt5XWH3TUapXZrXdWfOkhnE3M7mLnSBRlJpx4DU+
-         BgpsT2hz9uyyRKoYttSUthLGFwyGGICkOnS2GMi/S8bXS9GYV5QCKQDsyA9Rwh0hQXyH
-         nM5I/u54iHtihumtNC9aotDiNUb86VQqaNdinbQQSlq9dRh6uE6irSZKwnIaiWV6SfPb
-         uEgpHbUhbzwmas1fW77MdUR0N1p8NHx3WQFeDMJSWIC1y0lGQbh0C+gbtifLAhdv0u2k
-         NH1A==
-X-Gm-Message-State: AOAM530ZNLsAgodKhHggl/Uxxie4KXttjCrEhSx0+Dv5F2nYTisYTJuu
-        wotxlk4xvCrwdhM3R8Mn/KY=
-X-Google-Smtp-Source: ABdhPJwZA2EuxS7R8WtwE51iDm3buSmRIif63R3OefMrbmvHXJSLsuu7HDDdmI8Vr+3QU+S2amhvuA==
-X-Received: by 2002:a05:6214:1c8a:: with SMTP id ib10mr21050967qvb.12.1643137795625;
-        Tue, 25 Jan 2022 11:09:55 -0800 (PST)
-Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
-        by smtp.gmail.com with ESMTPSA id n6sm34802qtx.23.2022.01.25.11.09.54
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=SmvWx14eAhy3pe3g3Tx/t4BuExsjjc5XxE2U64XG7T8=;
+        b=s9tRMwYG9V3ikDyYlDuY4SOGk3mM1LZyWFclcr8/RE5GUgxfzuDkkc7DgyEUq5jHMf
+         3MPTDf8gQFXQnof5I3F6dERwDESPuUPirPqOymv/KSTJja0JJrEBtzSpc3Yont//Yu8+
+         moupYzCXfhq7LE2RWDsP9CEwFspVxVvGTrEVuUMd/PtkUFbISTz7gBE5C+yQWt4FpUG9
+         tfyA6Z5fGQ4AvNxt1nkKakzro3+9e7688fWgH/JlpWHcBjre5ajqcNEo77UoXjz/BJsu
+         7UPesabx8jmwP78j3O/1uDC42tNpdh1H2+kRYnkJL/A5Mz7+12Wji1JBzp2xEYnaA1wl
+         gPLQ==
+X-Gm-Message-State: AOAM532/4LvjOedVWrUXZ6EJxzvadBstX7vZYKGYDjpcdHTLNbvl8Ae5
+        0UIciKwQGWasoXLNnajoo2vcsjSfCOWc+w==
+X-Google-Smtp-Source: ABdhPJy0xF2Nms0x9uxvfJv3r321RpYZaioY6aGOpfgnDwAdsAnsCNaJQS+y/BymVndyfBKtlt9+Sw==
+X-Received: by 2002:a5d:4944:: with SMTP id r4mr19725863wrs.550.1643138239522;
+        Tue, 25 Jan 2022 11:17:19 -0800 (PST)
+Received: from jupiter.lan ([2a0d:6fc2:4951:4400:aa5e:45ff:fee1:90a8])
+        by smtp.gmail.com with ESMTPSA id t17sm17847069wrs.10.2022.01.25.11.17.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 11:09:55 -0800 (PST)
-Sender: Anna Schumaker <schumakeranna@gmail.com>
-From:   schumaker.anna@gmail.com
-X-Google-Original-From: Anna.Schumaker@Netapp.com
-To:     steved@redhat.com, linux-nfs@vger.kernel.org
-Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v6 9/9] rpcctl: Add installation to the Makefile
-Date:   Tue, 25 Jan 2022 14:09:46 -0500
-Message-Id: <20220125190946.23586-10-Anna.Schumaker@Netapp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220125190946.23586-1-Anna.Schumaker@Netapp.com>
-References: <20220125190946.23586-1-Anna.Schumaker@Netapp.com>
+        Tue, 25 Jan 2022 11:17:19 -0800 (PST)
+From:   Dan Aloni <dan.aloni@vastdata.com>
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] xrpcrdma: add missing error checks in rpcrdma_ep_destroy
+Date:   Tue, 25 Jan 2022 21:17:17 +0200
+Message-Id: <20220125191717.2945308-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+These pointers can be non-NULL and contain errors if initialization is
+aborted early.  This is similar to how `__svc_rdma_free` takes care of
+it.
 
-And create a shell script that launches the python program from the
-$(libdir)
-
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
 ---
-v6: Fix up the Makefile to account for this being a single file tool now
----
- configure.ac             |  1 +
- tools/Makefile.am        |  2 +-
- tools/rpcctl/Makefile.am | 13 +++++++++++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
- create mode 100644 tools/rpcctl/Makefile.am
+ net/sunrpc/xprtrdma/verbs.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/configure.ac b/configure.ac
-index 93626d62be40..dcd3be0c8a8b 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -737,6 +737,7 @@ AC_CONFIG_FILES([
- 	tools/rpcgen/Makefile
- 	tools/mountstats/Makefile
- 	tools/nfs-iostat/Makefile
-+	tools/rpcctl/Makefile
- 	tools/nfsdclnts/Makefile
- 	tools/nfsconf/Makefile
- 	tools/nfsdclddb/Makefile
-diff --git a/tools/Makefile.am b/tools/Makefile.am
-index 9b4b0803db39..c3feabbec681 100644
---- a/tools/Makefile.am
-+++ b/tools/Makefile.am
-@@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
- OPTDIRS += nfsdclddb
- endif
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index f172d1298013..7f3173073e72 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -336,14 +336,14 @@ static void rpcrdma_ep_destroy(struct kref *kref)
+ 		ep->re_id->qp = NULL;
+ 	}
  
--SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat nfsdclnts $(OPTDIRS)
-+SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat rpcctl nfsdclnts $(OPTDIRS)
+-	if (ep->re_attr.recv_cq)
++	if (ep->re_attr.recv_cq && !IS_ERR(ep->re_attr.recv_cq))
+ 		ib_free_cq(ep->re_attr.recv_cq);
+ 	ep->re_attr.recv_cq = NULL;
+-	if (ep->re_attr.send_cq)
++	if (ep->re_attr.send_cq && !IS_ERR(ep->re_attr.send_cq))
+ 		ib_free_cq(ep->re_attr.send_cq);
+ 	ep->re_attr.send_cq = NULL;
  
- MAINTAINERCLEANFILES = Makefile.in
-diff --git a/tools/rpcctl/Makefile.am b/tools/rpcctl/Makefile.am
-new file mode 100644
-index 000000000000..33fb431fe7d4
---- /dev/null
-+++ b/tools/rpcctl/Makefile.am
-@@ -0,0 +1,13 @@
-+## Process this file with automake to produce Makefile.in
-+PYTHON_FILES =  rpcctl.py
-+
-+man8_MANS = rpcctl.man
-+
-+EXTRA_DIST = $(man8_MANS) $(PYTHON_FILES)
-+
-+all-local: $(PYTHON_FILES)
-+
-+install-data-hook:
-+	$(INSTALL) -m 755 rpcctl.py $(DESTDIR)$(sbindir)/rpcctl
-+
-+MAINTAINERCLEANFILES=Makefile.in
+-	if (ep->re_pd)
++	if (ep->re_pd && !IS_ERR(ep->re_pd))
+ 		ib_dealloc_pd(ep->re_pd);
+ 	ep->re_pd = NULL;
+ 
 -- 
-2.34.1
+2.23.0
 
