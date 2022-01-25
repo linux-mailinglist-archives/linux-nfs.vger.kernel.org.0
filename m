@@ -2,122 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA67449BE91
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 23:33:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1872749BEBC
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 23:42:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233881AbiAYWdH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 17:33:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
+        id S233981AbiAYWme (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 17:42:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233863AbiAYWdH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 17:33:07 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1619C061744
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:33:06 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id o12so34047115eju.13
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:33:06 -0800 (PST)
+        with ESMTP id S233979AbiAYWmd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 17:42:33 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C0CC06173B
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:42:33 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id o12so34098018eju.13
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:42:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        d=dneg.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oeeJHO8TMWJMimBDwT2b+COdmax7x8vmymErPKX3jxc=;
-        b=DzijtXi0FpfwwMBwStqu3UmmHy6WLI6KJjaJCTw5TVkmEqNdXft9MrLSeXBntoO7Mw
-         fWSvmO7h/R5mQ/yU+34k8tfHIU5T7UxRE0tWGCE66lLTfaILezBkt/1UkJvP9pVH0Yzb
-         HHNrjbdaOKT86FyOQ4Jf88N4t5t/R3zJhuJwDslag8fbYnvwj1+kSYMm+Az5xDFrSoYc
-         knCjS+ili0zFQfE5Tfu8zpiesGviybOMiD+yOzaswnbUAmmPC8T35oz+wE4i8da9xo9A
-         Cxn3uNaT3ALpZ+5PyJS8v8W9GaSLLCJqkiGKhzgIDTWBp7Qme5nzQ2I/BzjbPf8Vhkt1
-         p03Q==
+        bh=ntr0sCiNW2z2e+gHeKwLD+eLLVEq/Dsnqy0JTonJxzM=;
+        b=F+8ubOom2ZwoFZh7OoYgt8K1UU321gmSh+f0kRkO49FJKJ8X6Wzol3MRgnGEHvEfK+
+         uKqvhPO6HPO0LxW+oq2ISWL6QgfIVlolTOsRnBPz5jlSe7abfl55dJydaiRcbV5hS87j
+         HVFe4hiV1gxENrMtArB0GlLT8JWtbzrwW9DmVEXWno8ebRrfIGExanbGkq3toMHkP5Ju
+         LIszd3oYa0L1pZgDSP271yNoqDzTyHsvmXS/882+OKV9fEI6BtPlu+WKejZtkt+d349f
+         z/LTp/0M9vd27DsYhJWMtHo/5hMay4xmwUgaAbMTlGTWqD1fZ5edW11/QPNnoxAmeixO
+         VLQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oeeJHO8TMWJMimBDwT2b+COdmax7x8vmymErPKX3jxc=;
-        b=Aua3nCvkcV4YufoL4VOJYVPcS/WMagMe6PFvjssuFrjZe9eLV9+ZQrUZutWY0qnLJA
-         +AcRbTKZAc/zuiSGIiHTs7HdN25SU8uk2Us0HsLbThixoz35VUpyEPe7+rtLWVvKQf7h
-         Qs1s/U/E8qDtQjbOE/DF2O09HDbgx07NnV062ijpPK8oGh/vvbDc34Ojk0ywNWYrfAWV
-         Qezs48YMVNy1/E2ufwfdGNWizpE9qYJumcBywZst1oWNoIvfPBI2cKHHmP/RWAGrpA8O
-         Yfjjbf0/2cGkfMnSOt47R+lzsMyoxoD4GsvwVI/v7QuJWKMnTN8+Ycy1D0eDHIcFjtlX
-         qEbA==
-X-Gm-Message-State: AOAM532ZoG8yBmB/WkqsJw/5c3Iee76006NkcKLWxSqmanbsQboHnPQ1
-        4ZhP9YWxHS2sfvXmrX4aKLQucz5WMFHCmFfHQZlb
-X-Google-Smtp-Source: ABdhPJwzCS4uLiZK6VG/8/+4YA+LVnkgPcisQkj57oqNq+GSah4sXm1jFpQGtsy59McG8IOvdIVYqDfpF+TVv9/mvao=
-X-Received: by 2002:a17:907:6d03:: with SMTP id sa3mr4722991ejc.517.1643149985174;
- Tue, 25 Jan 2022 14:33:05 -0800 (PST)
+        bh=ntr0sCiNW2z2e+gHeKwLD+eLLVEq/Dsnqy0JTonJxzM=;
+        b=5ikJRZf+vIr1P0pQHQuwa1pu4T8ZiF78vQ7aJ/7EUf1wxsRQSE9bd3GtlOeEtF9oM6
+         Uf3V1jxW8aa4m8gR/LX4GusxwbT5m9ouSfFqlN9MiwQ6JbvqYcJ80VWKR/1klzx84kBK
+         Zp/hDmkZie97inad+Hx10Gc8wYw7ORTauadvPXACf8+3OCLYN5mnV1vkqXjBiKqwlSco
+         sqKv3kq/qKdr0H/v389E/1r8ogpU4CU0eRGwTFW208Cyye/5eBbZq1aFSGyx/BD8kIbB
+         ztZXdffL7oTl8tqzYw4DIfrRYCdQGXbkuKKbwUY66dtXSqD++48XrQsbPPOUA/BtJeNz
+         WjRQ==
+X-Gm-Message-State: AOAM532ZysFh9sN8I7JXOtIWwatL4MtRNK1iDJK5FvvwwQktYiVytrgB
+        e3QOgWMleiPYoXBblwRV/Pe0s7PQM0zbirVrXGM0UeDhdtk5ze2k
+X-Google-Smtp-Source: ABdhPJzB0EML5+AvwSdHsWzPZsxeOT5Pz8dOhBJekDNJf5tGajrvKAiZfI6N8Dawr/D5YGPnV8ON7/hU95dip4nOxcI=
+X-Received: by 2002:a17:906:3819:: with SMTP id v25mr17476353ejc.539.1643150551789;
+ Tue, 25 Jan 2022 14:42:31 -0800 (PST)
 MIME-Version: 1.0
-References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
- <CAHC9VhT2RhnXtK3aQuDCFUr5qayH25G8HHjRTJzhWM3H41YNog@mail.gmail.com>
- <YfAz0EAim7Q9ifGI@aion.usersys.redhat.com> <CAHC9VhTwXUE9dYBHrkA3Xkr=AgXvcnfSzLLBJ4QqYd4R+kFbbA@mail.gmail.com>
- <YfBGx+M9jQZa80rZ@aion.usersys.redhat.com>
-In-Reply-To: <YfBGx+M9jQZa80rZ@aion.usersys.redhat.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 25 Jan 2022 17:32:54 -0500
-Message-ID: <CAHC9VhRoWbnV-cs2HzmiTEd7_kP914stdVpN9Tm2-6uua2-ELA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     selinux@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
+ <20220124193759.GA4975@fieldses.org> <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
+ <20220124205045.GB4975@fieldses.org> <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
+ <20220125135959.GA15537@fieldses.org> <F7C721F7-D906-426F-814F-4D3F34AD6FB1@oracle.com>
+ <42867c2c-1ab3-9bb6-0e5a-57d13d667bc6@math.utexas.edu> <20220125215942.GC17638@fieldses.org>
+ <7256e781-5ab8-2b39-cb69-58a73ae48786@math.utexas.edu>
+In-Reply-To: <7256e781-5ab8-2b39-cb69-58a73ae48786@math.utexas.edu>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Tue, 25 Jan 2022 22:41:55 +0000
+Message-ID: <CAPt2mGNMGjq+i=k_6oYBYPFPCTR2UdeEtWfyeTU9uUC0OC=T4w@mail.gmail.com>
+Subject: Re: parallel file create rates (+high latency)
+To:     Patrick Goetz <pgoetz@math.utexas.edu>
+Cc:     Bruce Fields <bfields@fieldses.org>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 1:51 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> On Tue, 25 Jan 2022, Paul Moore wrote:
-> > On Tue, Jan 25, 2022 at 12:31 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> > > On Mon, 24 Jan 2022, Paul Moore wrote:
-> > > > On Thu, Jan 20, 2022 at 4:50 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> > > > >
-> > > > > selinux_sb_mnt_opts_compat() is called under the sb_lock spinlock and
-> > > > > shouldn't be performing any memory allocations.  Fix this by parsing the
-> > > > > sids at the same time we're chopping up the security mount options
-> > > > > string and then using the pre-parsed sids when doing the comparison.
-> > > > >
-> > > > > Fixes: cc274ae7763d ("selinux: fix sleeping function called from invalid context")
-> > > > > Fixes: 69c4a42d72eb ("lsm,selinux: add new hook to compare new mount to an existing mount")
-> > > > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > > > > ---
-> > > > >  security/selinux/hooks.c | 112 ++++++++++++++++++++++++++-------------
-> > > > >  1 file changed, 76 insertions(+), 36 deletions(-)
-> >
-> > ...
-> >
-> > > > >         switch (token) {
-> > > > >         case Opt_context:
-> > > > >                 if (opts->context || opts->defcontext)
-> > > > >                         goto err;
-> > > > >                 opts->context = s;
-> > > > > +               if (preparse_sid) {
-> > > > > +                       rc = parse_sid(NULL, s, &sid);
-> > > > > +                       if (rc == 0) {
-> > > > > +                               opts->context_sid = sid;
-> > > > > +                               opts->preparsed |= CONTEXT_MNT;
-> > > > > +                       }
-> > > > > +               }
-> > > >
-> > > > Is there a reason why we need a dedicated sid variable as opposed to
-> > > > passing opt->context_sid as the parameter?  For example:
-> > > >
-> > > >   rc = parse_sid(NULL, s, &opts->context_sid);
-> > >
-> > > We don't need a dedicated sid variable.  Should I make similar changes
-> > > in the second patch (get rid of the local sid variable in
-> > > selinux_sb_remount() and the *context_sid variables in
-> > > selinux_set_mnt_opts())?
-> >
-> > Yes please, I should have explicitly mentioned that.
+On Tue, 25 Jan 2022 at 22:11, Patrick Goetz <pgoetz@math.utexas.edu> wrote:
 >
-> Actually, delayed_superblock_init() calls selinux_set_mnt_opts() with
-> mnt_opts == NULL, so there would have to be a lot of checks like
->
->         if (opts && opts->fscontext_sid) {
->
-> in the later parts of that function, which is kind of clunky.  I can
-> still do it if you want though.
+> IDK, 4000 images per collection, with hundreds of collections on disk?
+> Say at least 500,000 files?  Maybe a million? With most files about 1GB
+> in size.  I was trying to just rsync it all from the data server to a
+> ZFS-based backup server in our data center, but the backup started
+> failing constantly because the filesystem would change after rsync had
+> already constructed an index. Even after an initial copy, a backup like
+> that runs for over a week.  The strategy I'm about to try and implement
+> is to NFS mount the data server's data partition to the backup server
+> and then have a script walk through the directory hierarchy, rsyncing
+> collections one at a time.  ZFS send/receive would probably be better,
+> but the data server isn't configured with ZFS.
 
-I might be misunderstanding your concern, but in
-selinux_set_mnt_opts() all of the "opts->XXX" if-conditionals are
-protected by being inside an if-statement that checks to ensure "opts"
-is not NULL.  Am I missing something?
+We've strayed slightly off topic (even if we are talking about file
+creates over NFS) because you can get good parallel performance
+(creates, read, writes etc) over NFS with simultaneous copies using
+lots of processes if distributed across lots of directories.
 
--- 
-paul-moore.com
+Well "good" being subjective. I get 1,500 creates/s in a single
+directory on a LAN NFS server from a single client and 160 creates/s
+aggregate over my extreme 200ms using 10 clients & 10 different
+directories. It seems fair all things considered.
+
+But seeing as I do a lot of these kinds of big data moves (TBs) across
+both the LAN and WAN, I can perhaps offer some advice from experience
+that might be useful:
+
+* walk the filesystem (locally) first to build a file list, split it
+and then use rsync --files-from (e.g. https://github.com/jbd/msrsync)
+to feed multiple simultaneous rsyncs.
+* avoid NFS and use rsyncd directly between the servers (no ssh) so
+filesystem walks are "local".
+
+The advantage of rsync is that it will do the filesystem walks at both
+ends locally and compare the directory trees as it goes along. The
+other nice thing it does is open a connection between sender and
+receiver and stream all the file data down it so it works really well
+even for lists of small files. The TCP connection and window scaling
+can sit at it's maximum without any slow remote file metadata latency
+disrupting it. Avoid the encapsulation of  sshand use rsyncd instead
+as it just speeds everything up.
+
+And as always with any WAN connection, large buffers, window scaling,
+no firewall DPI and maybe some fancy congestion control like BBR/2
+helps.
+
+Daire
