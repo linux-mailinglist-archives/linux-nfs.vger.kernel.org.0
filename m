@@ -2,61 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2877449B59C
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 15:03:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D15049B72E
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 16:05:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385744AbiAYODL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 09:03:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377618AbiAYOAI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 09:00:08 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 601ECC06175F
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 06:00:00 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 887AFAA2; Tue, 25 Jan 2022 08:59:59 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 887AFAA2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643119199;
-        bh=wJYCTI1cNAvb6V/2HzymzKxCbRQvolrwzqNItLNYiKA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ijxh+/FHh0pWJCA7g+sMtK0VQZqYKVDMVOGdl1OPCViipaqrr3yxx6zlXBlbbr5Te
-         q456YussCnQe6+rBhZ+u+T5R0VYfA4oRn9BFCVwJBHf9fNVbQRgKvVHI04ttjkv6q2
-         5Zpo43+CWY7+KPQscfC8HSWfjQITrCAWJvygsC+8=
-Date:   Tue, 25 Jan 2022 08:59:59 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: parallel file create rates (+high latency)
-Message-ID: <20220125135959.GA15537@fieldses.org>
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
- <20220124193759.GA4975@fieldses.org>
- <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
- <20220124205045.GB4975@fieldses.org>
- <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
+        id S1388423AbiAYPET (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 10:04:19 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:43930 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1358068AbiAYPB5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 10:01:57 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4D02BB81814;
+        Tue, 25 Jan 2022 15:01:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44222C340E0;
+        Tue, 25 Jan 2022 15:01:40 +0000 (UTC)
+Date:   Tue, 25 Jan 2022 10:01:38 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Trond Myklebust <trondmy@gmail.com>,
+        NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: linux-next: runtime warning in next-20220125
+Message-ID: <20220125100138.0d19c8ca@gandalf.local.home>
+In-Reply-To: <20220125162146.13872bdb@canb.auug.org.au>
+References: <20220125160505.068dbb52@canb.auug.org.au>
+        <20220125162146.13872bdb@canb.auug.org.au>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 12:52:46PM +0000, Daire Byrne wrote:
-> Yea, it does seem like the server is the ultimate arbitrar and the
-> fact that multiple clients can achieve much higher rates of
-> parallelism does suggest that the VFS locking per client is somewhat
-> redundant and limiting (in this super niche case).
+On Tue, 25 Jan 2022 16:21:46 +1100
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-It doesn't seem *so* weird to have a server with fast storage a long
-round-trip time away, in which case the client-side operation could take
-several orders of magnitude longer than the server.
+> Hi all,
+> 
+> On Tue, 25 Jan 2022 16:05:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > My qemu boot test of a powerpc pseries_le_defconfig kernel produces the
+> > following trace:
+> > 
+> > ------------[ cut here ]------------
+> > WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:417 trace_event_raw_init+0x194/0x730
+> > Modules linked in:
+> > CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.17.0-rc1 #2
+> > NIP:  c0000000002bdbb4 LR: c0000000002bdcb0 CTR: c0000000002bdb70
+> > 
+> > I have no idea what has caused this :-(  Maybe commit
+> > 
+> >   5544d5318802 ("SUNRPC: Same as SVC_RQST_ENDPOINT, but without the xid")  
+> 
+> Actually, reverting commits
+> 
+>   6ff851d98af8 ("SUNRPC: Improve sockaddr handling in the svc_xprt_create_error trace point")
+>   5544d5318802 ("SUNRPC: Same as SVC_RQST_ENDPOINT, but without the xid")
+>   e2d3613db12a ("SUNRPC: Record endpoint information in trace log")
+> 
+> makes the warning go away.
+> 
 
-Though even if the client locking wasn't a factor, you might still have
-to do some work to take advantage of that.  (E.g. if your workload is
-just a single "untar"--it still waits for one create before doing the
-next one).
+We added a new way to save items on the ring buffer, but did not update the
+safety checks to know about them. I'll fix this shortly.
 
---b.
+-- Steve
+
+
