@@ -2,113 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1872749BEBC
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 23:42:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA47049BED5
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 23:46:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233981AbiAYWme (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 17:42:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233979AbiAYWmd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 17:42:33 -0500
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42C0CC06173B
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:42:33 -0800 (PST)
-Received: by mail-ej1-x62d.google.com with SMTP id o12so34098018eju.13
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:42:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ntr0sCiNW2z2e+gHeKwLD+eLLVEq/Dsnqy0JTonJxzM=;
-        b=F+8ubOom2ZwoFZh7OoYgt8K1UU321gmSh+f0kRkO49FJKJ8X6Wzol3MRgnGEHvEfK+
-         uKqvhPO6HPO0LxW+oq2ISWL6QgfIVlolTOsRnBPz5jlSe7abfl55dJydaiRcbV5hS87j
-         HVFe4hiV1gxENrMtArB0GlLT8JWtbzrwW9DmVEXWno8ebRrfIGExanbGkq3toMHkP5Ju
-         LIszd3oYa0L1pZgDSP271yNoqDzTyHsvmXS/882+OKV9fEI6BtPlu+WKejZtkt+d349f
-         z/LTp/0M9vd27DsYhJWMtHo/5hMay4xmwUgaAbMTlGTWqD1fZ5edW11/QPNnoxAmeixO
-         VLQg==
+        id S234097AbiAYWqw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 17:46:52 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:45425 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S234071AbiAYWqv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 17:46:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643150811;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jBppPkwSy/vM41RL2L/gnKARInPVcNL6jVjDfCgabzo=;
+        b=bMv5r503zctDozz9LobV4sJamkZLktSPZud49Taoa0HMzDxTOApKPmbv6bqh15Q2QiaPJ+
+        eOjU5wunA5IhmAQqxGmeI5Ysy8sA9B1ESORpx0hUP+f9BxikcNORzYPGkVCmiaBjEIQYZO
+        dZU/pBy0GA5HZdcxUfzlp78dwFWNOW8=
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com
+ [209.85.166.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-27-dDYBGFMrNtCyj11bEY8ftw-1; Tue, 25 Jan 2022 17:46:49 -0500
+X-MC-Unique: dDYBGFMrNtCyj11bEY8ftw-1
+Received: by mail-il1-f197.google.com with SMTP id t18-20020a92ca92000000b002b952c60bfbso11614852ilo.15
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 14:46:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ntr0sCiNW2z2e+gHeKwLD+eLLVEq/Dsnqy0JTonJxzM=;
-        b=5ikJRZf+vIr1P0pQHQuwa1pu4T8ZiF78vQ7aJ/7EUf1wxsRQSE9bd3GtlOeEtF9oM6
-         Uf3V1jxW8aa4m8gR/LX4GusxwbT5m9ouSfFqlN9MiwQ6JbvqYcJ80VWKR/1klzx84kBK
-         Zp/hDmkZie97inad+Hx10Gc8wYw7ORTauadvPXACf8+3OCLYN5mnV1vkqXjBiKqwlSco
-         sqKv3kq/qKdr0H/v389E/1r8ogpU4CU0eRGwTFW208Cyye/5eBbZq1aFSGyx/BD8kIbB
-         ztZXdffL7oTl8tqzYw4DIfrRYCdQGXbkuKKbwUY66dtXSqD++48XrQsbPPOUA/BtJeNz
-         WjRQ==
-X-Gm-Message-State: AOAM532ZysFh9sN8I7JXOtIWwatL4MtRNK1iDJK5FvvwwQktYiVytrgB
-        e3QOgWMleiPYoXBblwRV/Pe0s7PQM0zbirVrXGM0UeDhdtk5ze2k
-X-Google-Smtp-Source: ABdhPJzB0EML5+AvwSdHsWzPZsxeOT5Pz8dOhBJekDNJf5tGajrvKAiZfI6N8Dawr/D5YGPnV8ON7/hU95dip4nOxcI=
-X-Received: by 2002:a17:906:3819:: with SMTP id v25mr17476353ejc.539.1643150551789;
- Tue, 25 Jan 2022 14:42:31 -0800 (PST)
+        bh=jBppPkwSy/vM41RL2L/gnKARInPVcNL6jVjDfCgabzo=;
+        b=4nJAs7wrJv5Cgbr/YHRQ2nQFVs0ia6supNiJFRk0B8vnUyxQtJGyrfmP3qlIUZ7Z3d
+         TLC3TsuU7ZTcaIPf+pSBNst6QueOAiBvrii3DH96rn1NB0MTAwcx+bgAdOsPts21mMwl
+         4fCLqk3kHLSROL1uJfzesKgdcsD6B1jhMRzUv0GipcPS3UX0IxfKG/eGgDov+7/0CFRG
+         gCBsviXQwjiw3h13AjPgYGgmQwRRCdNeSklMBatJkzOk+APdeP27nfiJ5214B2tj4B9x
+         ikVetSllcqOACg0VGOgH5/55duklTkJYWo1keRqUkJJQA16tnPOuQPj6dgIv+mt3++Fh
+         o+Gw==
+X-Gm-Message-State: AOAM530dAqlSrMjAp49tkkdk5nlhx06GkezSG5wjqnAgniK5WVDbnXf+
+        Ql0sSbK6zUt7DXGnCQSZWLnnYG5h8FZ/wUhpt9tQaf3yWb4v12I56x44lEUtMnrPHOz8tOvy62y
+        sO+GDParQGyttQMiSbaOigFDlVT9AHmkrXTtZ
+X-Received: by 2002:a5e:9709:: with SMTP id w9mr12201204ioj.86.1643150809083;
+        Tue, 25 Jan 2022 14:46:49 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJy8jmhq/jj20NC3GXEAJ4rIxEGsh6Ac0CBVLtVrUFmS/V4inTnhidWihmWEFMlCjLXFlvU6KT6kSQJ3JU/onXU=
+X-Received: by 2002:a5e:9709:: with SMTP id w9mr12201191ioj.86.1643150808912;
+ Tue, 25 Jan 2022 14:46:48 -0800 (PST)
 MIME-Version: 1.0
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
- <20220124193759.GA4975@fieldses.org> <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
- <20220124205045.GB4975@fieldses.org> <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
- <20220125135959.GA15537@fieldses.org> <F7C721F7-D906-426F-814F-4D3F34AD6FB1@oracle.com>
- <42867c2c-1ab3-9bb6-0e5a-57d13d667bc6@math.utexas.edu> <20220125215942.GC17638@fieldses.org>
- <7256e781-5ab8-2b39-cb69-58a73ae48786@math.utexas.edu>
-In-Reply-To: <7256e781-5ab8-2b39-cb69-58a73ae48786@math.utexas.edu>
-From:   Daire Byrne <daire@dneg.com>
-Date:   Tue, 25 Jan 2022 22:41:55 +0000
-Message-ID: <CAPt2mGNMGjq+i=k_6oYBYPFPCTR2UdeEtWfyeTU9uUC0OC=T4w@mail.gmail.com>
-Subject: Re: parallel file create rates (+high latency)
-To:     Patrick Goetz <pgoetz@math.utexas.edu>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <YLY9pKu38lEWaXxE@pevik> <YLZS1iMJR59n4hue@pick.fieldses.org> <164248153844.24166.16775550865302060652@noble.neil.brown.name>
+In-Reply-To: <164248153844.24166.16775550865302060652@noble.neil.brown.name>
+From:   Bruce Fields <bfields@redhat.com>
+Date:   Tue, 25 Jan 2022 17:46:38 -0500
+Message-ID: <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+To:     NeilBrown <neilb@suse.de>
+Cc:     Petr Vorel <pvorel@suse.cz>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Yong Sun <yosun@suse.com>,
+        "Frank S. Filz" <ffilzlnx@mindspring.com>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 25 Jan 2022 at 22:11, Patrick Goetz <pgoetz@math.utexas.edu> wrote:
+Frank added this test in 4299316fb357, and I don't really understand
+his description, but it *sounds* like he really wanted it to do the
+new-lockowner case.  Frank?
+
+--b.
+
+On Tue, Jan 18, 2022 at 12:01 AM NeilBrown <neilb@suse.de> wrote:
 >
-> IDK, 4000 images per collection, with hundreds of collections on disk?
-> Say at least 500,000 files?  Maybe a million? With most files about 1GB
-> in size.  I was trying to just rsync it all from the data server to a
-> ZFS-based backup server in our data center, but the backup started
-> failing constantly because the filesystem would change after rsync had
-> already constructed an index. Even after an initial copy, a backup like
-> that runs for over a week.  The strategy I'm about to try and implement
-> is to NFS mount the data server's data partition to the backup server
-> and then have a script walk through the directory hierarchy, rsyncing
-> collections one at a time.  ZFS send/receive would probably be better,
-> but the data server isn't configured with ZFS.
+> On Wed, 02 Jun 2021, J. Bruce Fields wrote:
+> > On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
+> >
+> > > LOCK24   st_lock.testOpenUpgradeLock                              : FAILURE
+> > >            OP_LOCK should return NFS4_OK, instead got
+> > >            NFS4ERR_BAD_SEQID
+> >
+> > I suspect the server's actually OK here, but I need to look more
+> > closely.
+> >
+> I agree.
+> I think this patch fixes the test.
+>
+> NeilBrown
+>
+> From: NeilBrown <neilb@suse.de>
+> Date: Tue, 18 Jan 2022 15:50:37 +1100
+> Subject: [PATCH] Fix NFSv4.0 LOCK24 test
+>
+> Only the first lock request for a given open-owner can use lock_file.
+> Subsequent lock request must use relock_file.
+>
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  nfs4.0/servertests/st_lock.py | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+>
+> diff --git a/nfs4.0/servertests/st_lock.py b/nfs4.0/servertests/st_lock.py
+> index 468672403ffe..db08fbeedac4 100644
+> --- a/nfs4.0/servertests/st_lock.py
+> +++ b/nfs4.0/servertests/st_lock.py
+> @@ -886,6 +886,7 @@ class open_sequence:
+>          self.client = client
+>          self.owner = owner
+>          self.lockowner = lockowner
+> +        self.lockseq = 0
+>      def open(self, access):
+>          self.fh, self.stateid = self.client.create_confirm(self.owner,
+>                                                 access=access,
+> @@ -899,15 +900,21 @@ class open_sequence:
+>      def close(self):
+>          self.client.close_file(self.owner, self.fh, self.stateid)
+>      def lock(self, type):
+> -        res = self.client.lock_file(self.owner, self.fh, self.stateid,
+> -                    type=type, lockowner=self.lockowner)
+> +        if self.lockseq == 0:
+> +            res = self.client.lock_file(self.owner, self.fh, self.stateid,
+> +                                        type=type, lockowner=self.lockowner)
+> +        else:
+> +            res = self.client.relock_file(self.lockseq, self.fh, self.lockstateid,
+> +                                        type=type)
+>          check(res)
+>          if res.status == NFS4_OK:
+>              self.lockstateid = res.lockid
+> +            self.lockseq = self.lockseq + 1
+>      def unlock(self):
+>          res = self.client.unlock_file(1, self.fh, self.lockstateid)
+>          if res.status == NFS4_OK:
+>              self.lockstateid = res.lockid
+> +            self.lockseq = self.lockseq + 1
+>
+>  def testOpenUpgradeLock(t, env):
+>      """Try open, lock, open, downgrade, close
+> --
+> 2.34.1
+>
 
-We've strayed slightly off topic (even if we are talking about file
-creates over NFS) because you can get good parallel performance
-(creates, read, writes etc) over NFS with simultaneous copies using
-lots of processes if distributed across lots of directories.
-
-Well "good" being subjective. I get 1,500 creates/s in a single
-directory on a LAN NFS server from a single client and 160 creates/s
-aggregate over my extreme 200ms using 10 clients & 10 different
-directories. It seems fair all things considered.
-
-But seeing as I do a lot of these kinds of big data moves (TBs) across
-both the LAN and WAN, I can perhaps offer some advice from experience
-that might be useful:
-
-* walk the filesystem (locally) first to build a file list, split it
-and then use rsync --files-from (e.g. https://github.com/jbd/msrsync)
-to feed multiple simultaneous rsyncs.
-* avoid NFS and use rsyncd directly between the servers (no ssh) so
-filesystem walks are "local".
-
-The advantage of rsync is that it will do the filesystem walks at both
-ends locally and compare the directory trees as it goes along. The
-other nice thing it does is open a connection between sender and
-receiver and stream all the file data down it so it works really well
-even for lists of small files. The TCP connection and window scaling
-can sit at it's maximum without any slow remote file metadata latency
-disrupting it. Avoid the encapsulation of  sshand use rsyncd instead
-as it just speeds everything up.
-
-And as always with any WAN connection, large buffers, window scaling,
-no firewall DPI and maybe some fancy congestion control like BBR/2
-helps.
-
-Daire
