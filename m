@@ -2,120 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id ABAAA49BB88
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 19:52:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EF7B49BBA1
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 19:56:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232471AbiAYSwD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 13:52:03 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:50709 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232381AbiAYSwA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 13:52:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643136715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MFNBLU9fi1/P19BC1N9d+ep2tphTew1fPzk0R1jaXnE=;
-        b=LTlkfhFw0VkYuzzXF2NSUJ5rfwydhuU6fhD2JiAOqaD0IEq78GZpdY3RMXa8lpqkX2H7SV
-        dfMCXS92NWtU+aLwVETnlyLHDmgXAtiyTlpPsIdQKNciy6pGVxgy28IWA24w6vurl1VPkx
-        EGu6ykyG/jmu4ahshfpJHTOWgVgDw2E=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-146-Aku6xU8LOGO17Wb6B0WNoA-1; Tue, 25 Jan 2022 13:51:53 -0500
-X-MC-Unique: Aku6xU8LOGO17Wb6B0WNoA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S233838AbiAYS43 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 13:56:29 -0500
+Received: from sin.source.kernel.org ([145.40.73.55]:55548 "EHLO
+        sin.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233783AbiAYS4T (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 13:56:19 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 961ED8519E3;
-        Tue, 25 Jan 2022 18:51:52 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.17.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75B7572FA5;
-        Tue, 25 Jan 2022 18:51:52 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id 98B171A001F; Tue, 25 Jan 2022 13:51:51 -0500 (EST)
-Date:   Tue, 25 Jan 2022 13:51:51 -0500
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     selinux@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
-Message-ID: <YfBGx+M9jQZa80rZ@aion.usersys.redhat.com>
-References: <20220120214948.3637895-1-smayhew@redhat.com>
- <20220120214948.3637895-2-smayhew@redhat.com>
- <CAHC9VhT2RhnXtK3aQuDCFUr5qayH25G8HHjRTJzhWM3H41YNog@mail.gmail.com>
- <YfAz0EAim7Q9ifGI@aion.usersys.redhat.com>
- <CAHC9VhTwXUE9dYBHrkA3Xkr=AgXvcnfSzLLBJ4QqYd4R+kFbbA@mail.gmail.com>
+        by sin.source.kernel.org (Postfix) with ESMTPS id 8F72DCE0AC3
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 18:56:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FB82C340E0
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 18:56:13 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 0/3] Simple NFSD reply cache clean-ups
+Date:   Tue, 25 Jan 2022 13:56:11 -0500
+Message-Id:  <164313689644.3172.6086810615126935434.stgit@bazille.1015granger.net>
+X-Mailer: git-send-email 2.34.0
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhTwXUE9dYBHrkA3Xkr=AgXvcnfSzLLBJ4QqYd4R+kFbbA@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=443; h=from:subject:message-id; bh=G7kQwOKYGPY3yFulY80laUuR5jUEPuT82LON9WXyet4=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh8EfG42ZWEjGBGf3zg8OLGI9w2jVk788uF6H9sO2K ud80GXCJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYfBHxgAKCRAzarMzb2Z/lx4OD/ sE9ZxYznLzcFy+Zk3DTgcwL+WdJpyaYU4/uoPqdu6KlwMZuMwCQn9j1MV1xCuI7SunAzGTnmCEF8kl 91aOHdfKX0bjr3MVe/0n08UZYrGvkZbudO8NzVA0YZrLlw9+aldpyoqIfSDxXSZ8sWgJCEALviIRpW S6wkyvSxT2IyLsnQmyR8htmLhy4muKPUB+XivR2p3vqZwns7dYTZ68m2t1w2Jj/gv8OnLAC5fVrZpb SYMvplJAc72JqkOj1ebi/wB2zBmXcI2ZRe4XyzU8iV8cKbnO3MEC2M8xIXA9uX7hF8jqwQnC+k8/FP BEXSWVAYKthcut7Bx3FnmAvmatJcV0gZpKruQEjeQFBi5Gc9qlOrcZlYcnxlKZ6dsRdB3xuOXW47vl JCz8CUmww/e9XSHpnw+3/T98e5sAvR0F8UBz/b9A678yZffftx/LBGcmYYz2Ua8Des2ZkRW/gM8Z8G 5/0W8HzIMYZUPtgT6BUgImFC8asLZnbtL94hR1x5vba7aS9hBdoTbObUHFLb+sFOJY1VQdyqu7gOjL +7ldOLCz1Vo7e5CeqgPhu2Zru28UuPl1Kpm0zFMAZlDCt6iN2YB205WmNgTHNWd9/VWQ4XsdSMPkkD 7ffcDbzNdLWinEnxDNZUMhKiKQYwwgkltkjY9cJFILh1jYxcHMiCRnDhMSEA==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 25 Jan 2022, Paul Moore wrote:
+I'm not sure I've posted these for review yet. These are simple
+clean-ups I noticed while playing with a per-bucket Bloom filter.
 
-> On Tue, Jan 25, 2022 at 12:31 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> > On Mon, 24 Jan 2022, Paul Moore wrote:
-> > > On Thu, Jan 20, 2022 at 4:50 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> > > >
-> > > > selinux_sb_mnt_opts_compat() is called under the sb_lock spinlock and
-> > > > shouldn't be performing any memory allocations.  Fix this by parsing the
-> > > > sids at the same time we're chopping up the security mount options
-> > > > string and then using the pre-parsed sids when doing the comparison.
-> > > >
-> > > > Fixes: cc274ae7763d ("selinux: fix sleeping function called from invalid context")
-> > > > Fixes: 69c4a42d72eb ("lsm,selinux: add new hook to compare new mount to an existing mount")
-> > > > Signed-off-by: Scott Mayhew <smayhew@redhat.com>
-> > > > ---
-> > > >  security/selinux/hooks.c | 112 ++++++++++++++++++++++++++-------------
-> > > >  1 file changed, 76 insertions(+), 36 deletions(-)
-> 
-> ...
-> 
-> > > >         switch (token) {
-> > > >         case Opt_context:
-> > > >                 if (opts->context || opts->defcontext)
-> > > >                         goto err;
-> > > >                 opts->context = s;
-> > > > +               if (preparse_sid) {
-> > > > +                       rc = parse_sid(NULL, s, &sid);
-> > > > +                       if (rc == 0) {
-> > > > +                               opts->context_sid = sid;
-> > > > +                               opts->preparsed |= CONTEXT_MNT;
-> > > > +                       }
-> > > > +               }
-> > >
-> > > Is there a reason why we need a dedicated sid variable as opposed to
-> > > passing opt->context_sid as the parameter?  For example:
-> > >
-> > >   rc = parse_sid(NULL, s, &opts->context_sid);
-> >
-> > We don't need a dedicated sid variable.  Should I make similar changes
-> > in the second patch (get rid of the local sid variable in
-> > selinux_sb_remount() and the *context_sid variables in
-> > selinux_set_mnt_opts())?
-> 
-> Yes please, I should have explicitly mentioned that.
+---
 
-Actually, delayed_superblock_init() calls selinux_set_mnt_opts() with
-mnt_opts == NULL, so there would have to be a lot of checks like
+Chuck Lever (3):
+      NFSD: De-duplicate hash bucket indexing
+      NFSD: Skip extra computation for RC_NOCACHE case
+      NFSD: Streamline the rare "found" case
 
-        if (opts && opts->fscontext_sid) {
 
-in the later parts of that function, which is kind of clunky.  I can
-still do it if you want though.
+ fs/nfsd/nfscache.c | 33 ++++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 17 deletions(-)
 
--Scott
-
-> 
-> Thanks.
-> 
-> -- 
-> paul moore
-> paul-moore.com
-> 
-
+--
+Chuck Lever
