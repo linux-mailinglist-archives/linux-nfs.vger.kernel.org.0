@@ -2,186 +2,262 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 51ADA49BCD5
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 21:17:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3BA649BDD2
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 22:22:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbiAYURX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 15:17:23 -0500
-Received: from mail-mw2nam10on2061.outbound.protection.outlook.com ([40.107.94.61]:34656
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S229540AbiAYURW (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
-        Tue, 25 Jan 2022 15:17:22 -0500
+        id S233045AbiAYVW4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 16:22:56 -0500
+Received: from esa10.utexas.iphmx.com ([216.71.150.156]:30134 "EHLO
+        esa10.utexas.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233025AbiAYVWy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 16:22:54 -0500
+X-Greylist: delayed 427 seconds by postgrey-1.27 at vger.kernel.org; Tue, 25 Jan 2022 16:22:54 EST
+X-Utexas-Sender-Group: RELAYLIST-O365
+X-IronPort-MID: 315837872
+X-IPAS-Result: =?us-ascii?q?A2ETAAC4Z/Bhh7E5L2hSCBsBAQEBAQEBAQUBAQESAQEBA?=
+ =?us-ascii?q?wMBAQFAgUkDAQEBCwGBUVaBVmqESoNIAQGFOYUOgwIDnXUDGDwCCQEBAQEBA?=
+ =?us-ascii?q?QEBAQcCQQQBAQMEhH4Cg10mNwYOAQIEAQEBAQMCAwEBAQEBAQMBAQYBAQEBA?=
+ =?us-ascii?q?QEFBAICEAEBAQELDQ4ICwYOFSKFLwwGJw2DU007AQEBAQEBAQEBAQEBAQEBA?=
+ =?us-ascii?q?QEBAQEBAQEBAQEBAQEBAQEBAQEBBQKBCD0BAQEBAgESERUIAQE3AQ8LGAICJ?=
+ =?us-ascii?q?gICMiUGAQwIAQEegmKCZgMNIQGhIQGBEwEWPgIjAUABAQuBCIkMeoExgQGCC?=
+ =?us-ascii?q?AEBBgQEhQ0YRgkNgVsJCQGBBioBgw2HHYQIQ4FJRIE8DAOCdD6EHAIPAoMug?=
+ =?us-ascii?q?kMikQGBewFLLQIFJwUFDDw1AgE2oUhgnFKBLoNPn0IGDwUug3KDVY8Wil+GP?=
+ =?us-ascii?q?ZZHIIIlo3YCBAIEBQIOAQEGgXeCADMaCB0TgyRRGQ+KC4QVGYNYin0jMjgCB?=
+ =?us-ascii?q?gsBAQMJjWUBgkUBAQ?=
+IronPort-PHdr: A9a23:rT80cBzqdPll6tDXCzPTngc9DxPP8534PQ8Qv5wgjb8GMqGu5I/rM
+ 0GX4/JxxETIUoPW57Mh6aLWvqnsVHZG7cOHt3YPI5BJXgUO3MMRmQFoCcWZCEr9efjtaSFyH
+ MlLWFJ/uX+hNk0AHc/iZxvPvnCi5CVUFxniZmJI
+IronPort-Data: A9a23:h+9ah6kS+IZQ6gk3OAXh90To5gwaJkRdPkR7XQ2eYbSJt1+Wr1Gzt
+ xIcXmmHbviNMTD9c4p2a9/l8h4HsZ+By9Y2SwtppX1nE1tH+JHPbTi7wuccHM8zwunrFh8PA
+ xA2N4GowPjZyhYwnz/1WlTbhSAUOZqgG/ysWIYoBggrHVU+EH571Eo58wIEqtcAbeaRUlvlV
+ eza/pW31G+Ng1aY5UpNtspvADs21BjDkGtwUm4WPJinj3eC/5UhN6/zEInqR5fOrii4KcbhL
+ wrL5OnREmo0ZH7BAPv9+lrwWhVirrI/oWFiI5eZMkSvqkEqm8A87ko0HPNFZEZvi26opf1Om
+ O5zicD3RVYFNYSZzYzxUzEAe81/FYtv3eaeZFSa74mUxUCAdGbwyfJzCk1wJZcf5ut8HWBJ8
+ 7ofNSwJaReAwemxxdpXSME13phlcJatYdxZ4y4/pd3aJa9OrZTrW6rN6MNK9DI5msAIAOrTd
+ 8MCLzdjcXwsZjUUYwpHU81uw73Aan/XMBNgqmy0/44M4Cvy6wIp4YnQNfXfU4nfLSlSth3B/
+ TmZl4jjOTkQOt2SzTae2nyti+vDhi7gHoUIG9WQ+vdrmlC7ymoeB1sdUl7Tif24jFOuHtRRM
+ GQK9Sc066s/7kqmSp/6RRLQnZKflhsVWt4VH+hk7giIk/PQ+1zAWTdCSSNdYts7ssNwXSYty
+ lKCg9LuA3poraGRTnWesLyTqFteJBT5M0cLPCIFdQtewuPOn9EIsC6TCdoyPKWc24id9S7L/
+ xiGqy03hrM2hMEN1rmm8V2vv95KjsiWJuLSzlWINl9J/j+Vd6b5PtLwswGzAeJoadfCEADb5
+ xDojuDHtLhWZaxhghBhVwnk8FuBy/ueeBjbgFhiBPHNHBzwoyX7Iui8DNxuTXqF3+4BcD7tJ
+ UPW5wVY4cYKOGPwNPAoJYWsF84t0K7sU8z/UezZZcZPZZ43cxKb+CZpZgib2GWFfKkQfUMXZ
+ svznSWEVCly5UFbINyeGrt1PVgDm3pW+I8rbcqnpylLKJLHDJJvdZ8LMUGVcscy576erQPe/
+ r53bpXWkEwEDbGmOnKLqub/yGzmy1BrVfgaTOQHJoa+zvZOQz1J5wL5ne59KtE9w/w9ehngp
+ y/lAxYHoLYAuZE3AV7TMSs8AF8edZN+pmg8JisiIR6j3GI7Zpym8KYYcfMKkUoPpYReIQpPZ
+ 6BdIa2oW6wfIhyeomh1RcSj8ORKKUr67SrTbnLNSGVuJPZIGl2ZkuIIiyO0qUHi+ALs6ZBhy
+ 1BhvyuHKac+q/NKVZaPN6n3ngrv5BDwWotaBiP1HzWaQ220mKACFsA7pqZfzx0kQfkb+gan6
+ g==
+IronPort-HdrOrdr: A9a23:nji8bKsaXVI9N6pwGZxB08ot7skC9oMji2hC6mlwRA09TyXGra
+ 2TdaUgvyMc1gx7ZJhBo7+90We7MBXhHO1OkO0s1NCZLXTbUQqTXftfBO7ZrwEIdBeOldK1uZ
+ 0QC5SWTeeAdmSS7vyKnjVQcexB/DDvysnB64bjJjVWPHhXgslbnnhE422gYyhLrWd9dP0E/d
+ anl6h6T23KQwVqUi33PAhPY8Hz4/nw0L72ax8PABAqrCGIkDOT8bb/VzyVxA0XXT9jyaortT
+ GtqX212oyT99WAjjPM3W7a6Jpb3PPn19t4HcSJzuwYMC/lhAqEbJloH5eCoDc2iuey70tCqq
+ iHnz4Qe+BIr1/BdGC8phXgnyHmzTYV8nfnjWSVhHPyyPaJMg4SOo5kv8Z0YxHZ400vsJVXy6
+ RQxV+UsJJREFfpgDn9z8KgbWAqqmOE5V4Z1cIDhX1WVoUTLJVLq5YEwU9TGJAcWArn9YEcFv
+ V0Bs203ocZTbqjVQGbgoBT+q3vYpxqdS32B3Tq+/blnAS+pUoJj3fxn6ck7zM9HJFUcegy2w
+ 2LCNUuqFh0dL5nUUtKPpZ0fSKGMB29ffvyChPgHb3GLtBPB5ufke++3F0KjNvaCqDgiqFC1K
+ jpYRdlqGIic1irJtaJ2Nlm4zalehTJYQjQ
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="5.88,315,1635224400"; 
+   d="scan'208";a="315837872"
+X-Utexas-Seen-Outbound: true
+Received: from mail-dm6nam11lp2177.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.177])
+  by esa10.utexas.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jan 2022 15:15:47 -0600
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MrhDK5QMk4Xnrazd3PaBTVL/pBhnYyzYce+uK7aE+0cp5IZgizd1srEaIAFErZD9Jmt+D3dNiSJ/T+exrhqhiDawUE3HPwX134hRwlaU5IpCfBpUUwRMUTHtpE+8n6EIaIoam3XVTGJSsjI3/TgoBOM2jZ6umV2Gg2NOPQxeDTi1wvQufKblK2s6SzjeD+0b8lH3vogDqBjvqh1se2iIUPZmE8vjlojr14s23jjw4C0pCEZc0I7y1T9sO4L5So+8WzB9M+u7AJmK0wju4yohmWxXALDTWIBtdPQWy7D9l2PTCjqCYHwTqydHq/u0e6J/jXK9jtCmTOUjGPYJiyoDJg==
+ b=aztOp3T1Yzmuvzsvdpx4qqBRySKJ/EqkvJTisdBuxngLCRf62Sboo5FY+j4qxin23ixtLuoDII3OkpqO6osmbRUeSuzvGKnHzIE3hxpRzeNAVtVOyQOVMB7ptJWPLroxpH0e6a+Q+k2b1P4X8bWoVZXz+2APwu0jlPXtFJQBmhM62OyPZ/z3pr2jrGBt3V8WqNmtEPSpA0h9LyhSPP6pjctfQuIgdNXYiN4w40ZqdhNr2NbZ5/KLxIgw/L/IaV2GK8U0YgGdLcQoDa9xgJ9ZtEtsQmCM2ZQvAAJMak9IVOF0vb0h7pXIn0/DRu689IzMr/m6BHMTZqSuXVOQmueKLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3464V9B7Tld8auXUqyfqTK9GxHvV+X75/6W1yZalio4=;
- b=QONTP3GScGBXU++XPfeMC044TLtq2mcR6YWb6A/vLW0JgKW0UtswCducM0bieijaYNPcSDbAs061mBQKHnrWHdW2lypxZUy9f5h6RAkeFJpxz8sAj1/hg4829Cal6KEFkmAgfXexj4c2R6PaLD8RHP/KwLKh09pPbLILiHsTBrNxwT1rq8kYDrggrnJnb2OUJvzYHO3nCUsgT0EGNsu/W0elG3YnfCnfFKeAOOcjc6CIDGPgKzPy2vdsxqjc+uoF1k9+Cn1JtC4cZGWvJfjl/9OdS0RUIv1H+NAh97CooswzCg3MDVQEMMay5iMBwNqEyapEAeRVYpbqjJnVUn7u0A==
+ bh=XLDWGixtNg8PnkGLxmR/2asPbGPdrEdb5CJ2X1Bcw00=;
+ b=Ii8SVtNQrNA7E1owEdic4KAGQOu1bMUo/dbXQgDk5yMsHIbL9prooxdigJWCueV7tDqXLsymccnXNgVlbVJw9udz7OIitoJzacqDjz7D4yqOCtpmhQD/hLNGR4iD+q6nhaBXOkULDvEuduPOJB2x6HNdIt5neFI/1wmTV5Y+2lUBri+Sn9pu1EVjEX8LulHDErOLiagxY1O7YLGnvOfvp6mugf/CZ9dCNzx0fwfJGNHAXNJcaT9RZbzCpJUG0fsyDIPUeruEIA5X/3Gm2x4FMHoLOJSqj49z6tRuY2mnn+UGwrPv5Ddk/iGQJ6iQ5HY4EvHL3dq5boHZLer7NYm1NQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netapp.com;
- s=selector1;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=utexas.onmicrosoft.com; s=selector1-utexas-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3464V9B7Tld8auXUqyfqTK9GxHvV+X75/6W1yZalio4=;
- b=pIUAU5R8vbnX1IMwBH/lgkdZVn4HV0g0ztTp+M9MOWYKHLx5MdGJUE3ROa+SBA1kpLLtSQP+245MfeKvJp4a58oylpeiTnqXiMyD/oeCw59aQCYLJg5JXfkxqWlIB3f+enPI5nZyz9H2HDF8jlPH0RH4jJbFuFXGuJ+sC53dlySLCfPC2Q5O0htXGPgvGZqbM8cc8BXkBiaCghWn7v4PeMkjcfW3vKI71R96EBhpjW1rUIPyZsPiG27DjxXd/ArQSn4efNLaeCfl0YVDw/3xy5MZeg6C6cIo5QIvWn9V4SZq0dWehTP0Q/08gUm7ia0iwRXsIs137DRbBDiP3ez6wA==
-Received: from DM6PR06MB6026.namprd06.prod.outlook.com (2603:10b6:5:1af::12)
- by CO1PR06MB8171.namprd06.prod.outlook.com (2603:10b6:303:ee::5) with
+ bh=XLDWGixtNg8PnkGLxmR/2asPbGPdrEdb5CJ2X1Bcw00=;
+ b=c1JayCQfBjYjAgq83k6g0PuqyPe3dZGGj51XkQR6u5LEpkjQWB1RrjkaGqjeuNWKRC2kA8mViqnYYP/rpAdVKAOTq3qzO/cZMSWR53/MiCq1bViddWR3hMG3IUVTPpE+1rMis+bOeVeVy5tpXkpaWyhdOc1xnpOKJbi8kwZ4Qxo=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=math.utexas.edu;
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com (2603:10b6:a02:8c::15)
+ by PH0PR06MB8319.namprd06.prod.outlook.com (2603:10b6:510:bd::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Tue, 25 Jan
- 2022 20:17:20 +0000
-Received: from DM6PR06MB6026.namprd06.prod.outlook.com
- ([fe80::bc64:1dac:860b:1e33]) by DM6PR06MB6026.namprd06.prod.outlook.com
- ([fe80::bc64:1dac:860b:1e33%5]) with mapi id 15.20.4909.017; Tue, 25 Jan 2022
- 20:17:20 +0000
-From:   "Schumaker, Anna" <Anna.Schumaker@netapp.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [GIT PULL] Please pull NFS Client Updates for 5.17
-Thread-Topic: [GIT PULL] Please pull NFS Client Updates for 5.17
-Thread-Index: AQHYEhirrA6t7fQW5k6D/BNOVpqV9qx0K9X3
-Date:   Tue, 25 Jan 2022 20:17:20 +0000
-Message-ID: <DM6PR06MB6026834F259E3B09436286F3F85F9@DM6PR06MB6026.namprd06.prod.outlook.com>
-References: <CAFX2Jf=8s+rrwgGxm1FsaPUvEHygLFaUCNeFh989v4MXmLJFSg@mail.gmail.com>
- <CAFX2JfmEBhRF63o8ZwuUjwJ7aOUJLb+h8oidrq8kVUsnsq5vcA@mail.gmail.com>
- <CAFX2Jfm=theSU4ey9hqBhAX5VEJe7p7QG1M7+946G96BqyOZng@mail.gmail.com>
- <CAADWXX-B6q-MA2FHuQvxrnEkbxsmQ+5miWtEr+yZhsyjuiF9ig@mail.gmail.com>
-In-Reply-To: <CAADWXX-B6q-MA2FHuQvxrnEkbxsmQ+5miWtEr+yZhsyjuiF9ig@mail.gmail.com>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.8; Tue, 25 Jan
+ 2022 21:15:44 +0000
+Received: from BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::7949:fab0:e011:12f2]) by BYAPR06MB3848.namprd06.prod.outlook.com
+ ([fe80::7949:fab0:e011:12f2%4]) with mapi id 15.20.4930.015; Tue, 25 Jan 2022
+ 21:15:44 +0000
+Message-ID: <adce2b72-ed5c-3056-313c-caea9bad4e15@math.utexas.edu>
+Date:   Tue, 25 Jan 2022 15:15:42 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: parallel file create rates (+high latency)
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=netapp.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5239dd27-a5df-4a8d-fda6-08d9e03fb0c6
-x-ms-traffictypediagnostic: CO1PR06MB8171:EE_
-x-microsoft-antispam-prvs: <CO1PR06MB81714EA566584058970A83EFF85F9@CO1PR06MB8171.namprd06.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /acuoOAWaVNZCvtNrGQU1Glr32TDNVbNkxbg1YOgl6d2/ZR8heGhrAYwLNIRX1mgfD7uK57Kmb30lxxk6La3WF36TB8Nj2jPHk/ES6sZhsuZGu0O94Jd0bGwwxjMIYA7fbVn2fnHzw4nVsfbjnZX2NFNrTe1gs157NVb2RosqQk1sE/mEIlDfRmROd+Dc9dCDFNcXrm9F/+lWcswW1wT9D4HHbKD7rUowWdJf7M74nWTuqGxfGKpF6KO+jb7Wc591nJuDe/isOncEOnlwq18AXT+JUF8k3SJLC2SEGUPWmtNndbI5o2Pim/JwtZuA0tepIn+iNpjswNKsgB+UfkOIWqXtHUYyHWvQEVdr/MzpLX/DW4S/XP8hpxmCncgo2+o/I4eorL6WrQkpUJhm2q+q11y1TBj5a0uKsQQCF0bggMzA8ZFXpKby3ukl3YNLlxuRiUXLyyE1MFmo2RCoVZHyPRL4mycWpZMdeWZhkPE5FXTaQmlyY2AAxvxu6s4X/kFSzVLqmHRB5HJerfkfl8AeFzWuF5bsFQJMe99HEmgq6adNrW0zf2wEkdhpYZf9m110PclsBSWZ+P7aXL1jI4/ePYWXQnMQ0ATPMQLu2Gq5LMciNnA3v7BrLg+ZTt15qtBJ/iCHJCsWSEjGDltk8xGqb2woVb488urFYI3Vf1de5k8/PBw4UjlP4kpYSu+BNEVphlv5YGxHr5N/jnmphY+rw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR06MB6026.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(8676002)(6506007)(66946007)(53546011)(122000001)(83380400001)(86362001)(38100700002)(71200400001)(55016003)(45080400002)(2906002)(508600001)(91956017)(66476007)(15650500001)(4326008)(7696005)(76116006)(64756008)(66446008)(186003)(52536014)(9686003)(6916009)(38070700005)(316002)(66556008)(8936002)(5660300002)(33656002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?AVb2vQu0LQfjuLdgkhi7XaJy+vXLIXACCY39pO71dXQjJfo0hRJcYfNzFq?=
- =?iso-8859-1?Q?bTZlgt0dZxiMsLEJzsXYbFqlHiT+jsw+s4O1LJXg6m0k0F8WGtgq+m4AnN?=
- =?iso-8859-1?Q?4nfL0BJc2UrbDydwUrkpYxD7ZJR/zvCKbH2XYrmSpvgzH/EE6/zNE+tims?=
- =?iso-8859-1?Q?qdtekBXw9cZp2A0WxQm/oX6n9JUr6JasmQ2SNszikU5cFDx4KLCS/C465J?=
- =?iso-8859-1?Q?k10bzQqf1OEWgnmHXggUMXMAVI9i+K1lpJHlUuKHTodGm6NMHxKinGzGDr?=
- =?iso-8859-1?Q?DFQv7bfmkXgHxAGYBQRXp/B5SD0wsJJcYfTCgyNMhX5fPStWtdxJl4pR7Y?=
- =?iso-8859-1?Q?U0c3eHPpt0qohGEQ1nOPVyi8zMToV/Xg+ZPXshCNJeAPzc7nWz8oMVDY4K?=
- =?iso-8859-1?Q?QXUeInE7FVHueR3A60381M2jG/xQ4wu2urm7Smj42KkoPYe1RUWv7MOvMn?=
- =?iso-8859-1?Q?7bp1Ms64vna09Pop80V2keUwc/RLN9TSWD3kzSkqcJx3Iz7Si+mIUq11M0?=
- =?iso-8859-1?Q?J1/5wZKrrJtVtB+pRBo7eUmJEugYUPUNZn7GdPu6Fv0/x6BzdVLCc79qec?=
- =?iso-8859-1?Q?YFdu6mA+Q14j106Oh1OHR4thXyiukobsQ/+RkEsMSH8+jhZEoNVJ0/6+lE?=
- =?iso-8859-1?Q?iCO1ZNVjGgiGvF9UPaJBE9YxsvKiCcp5ykZp2ycIRbr61gBo1rGGp4ek9E?=
- =?iso-8859-1?Q?xZmqLanC8wGJ1S1jmfaNaYDtf4RmqR/HTgnzgrPrIoJOuTbKP8OTL4CllF?=
- =?iso-8859-1?Q?fQvaGxgYYBnJklOylh6KoUe6gnG1VEd0XT+6vsSciYU+Kv8O/tbIkn6ifz?=
- =?iso-8859-1?Q?pWdb8zfMGAQZ08/i73usGVahF3d9YsDcsX3mtXdDJfuUlKA8rP4poW//cx?=
- =?iso-8859-1?Q?KV7adlEbWSovrUBySANKoOfV5qyx9nH3anwPVO4YK5qDtCtj8kekcU0qe8?=
- =?iso-8859-1?Q?/XCJGOspbtvPwRzcf8MPd0i5W5TOHQ8BHksNkqdCp/VY15iEAhJEQKylcy?=
- =?iso-8859-1?Q?Vpcp9il0k3+2+HX60z6w1Y63iJtSOO+zqSk+cdH/YcGeYwViSB+jddqpYW?=
- =?iso-8859-1?Q?ttq2b/uH/vyTojSSQugtUUO/3x0Y9UVrDaE7m3RU8ZizkyWXVjl+EMVNrG?=
- =?iso-8859-1?Q?kCQqProdYJxmiQ1wNSK1Y8BkVYbBZViGPtoZNy7LOILWo6AN991xNCITeU?=
- =?iso-8859-1?Q?4MgkT/k4AfdF7HrFPdtIJayGBvi/G72ztkh96CQo4x6SpG4gsVJKWEredX?=
- =?iso-8859-1?Q?S5ef4sAzVjk7AmUkP3KKRwp4JgMdhYdeUQLeRjNwTl0pilzLiCo0v+Pyqj?=
- =?iso-8859-1?Q?bFmcA0ehElDJ24s3nT9iT2cTF6Q7U2h+XSKLz45EptQRIGc+k18UdYR94w?=
- =?iso-8859-1?Q?fAzpgFImO6++FGwY1owqrlcNlXdI1R0pgonA9pSpSZSYSZm7euYDOMRtgJ?=
- =?iso-8859-1?Q?synYLnwXBsHpwrMOFYq2y/xEvGyk5sl0Yl2vtjl3UN1/+SzucEWD79DQWC?=
- =?iso-8859-1?Q?HYKV3smTncR4gCx0Jo7GWNbXqG/wtfcrDL0qAh4li+e7HZTUBCRVKf1vTF?=
- =?iso-8859-1?Q?eUN1SIDjYycylBDVrJhe3kHGtT6QdxlyxR3+5KwFgOQ844QmcQn1WJAiRY?=
- =?iso-8859-1?Q?yme/N6nNqPR7AjqPH+c0E/bVNwEFs9O4KPI6GklXqEFOC9ZK8uwh73ax+N?=
- =?iso-8859-1?Q?fNg86Jk0CfxrcFkBwD2hYk+91StrEKKqKTkPh5rxifI2/emlTwrDhL8o72?=
- =?iso-8859-1?Q?JCZQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+To:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Daire Byrne <daire@dneg.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
+ <20220124193759.GA4975@fieldses.org>
+From:   Patrick Goetz <pgoetz@math.utexas.edu>
+In-Reply-To: <20220124193759.GA4975@fieldses.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN6PR01CA0006.prod.exchangelabs.com (2603:10b6:805:b6::19)
+ To BYAPR06MB3848.namprd06.prod.outlook.com (2603:10b6:a02:8c::15)
 MIME-Version: 1.0
-X-OriginatorOrg: netapp.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5966e905-a3f2-4527-cbad-08d9e047d966
+X-MS-TrafficTypeDiagnostic: PH0PR06MB8319:EE_
+X-Microsoft-Antispam-PRVS: <PH0PR06MB831960C4EB23154F8EA3627B835F9@PH0PR06MB8319.namprd06.prod.outlook.com>
+X-Utexas-From-ExO: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:2887;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: xnzjROxPB7Jsqms8diNReUG2YdQPSsMCbwAsiza1+4HBUHvucWfRJz5udzoe0QM4bmjQzSjqKtH7SLGeVZ2LUAFo0ZSryQkphtSYFktIioczQY/4Ae4ucDYOfFNzUp7/lMWQ7wVfAsBFqHe9l8EveP8jpiZHCxdXXhCDV536t4NuSOEpg8WguypwDdoYli2vn8pNQtoHTeFTqE2OFbquu4sGDgzji95gDHzeKum9f+hl/bNjT6SUKJgh0DnE2s6PdNv0ba3t7QarVnLpcFTCLe9xxJjEiIz6y+ZqXQVtIygJwYncwOVmS7F2GL7kyyuxnYFnLNVhS87KZRgaEFSL6VrCrcdYBOP9uqEpKJsJIHF6JTeoIznU0q9iOIKbyMt+yYP0VQ89jRxOE6otUjdBs71G25MJc+TNAx+7sw3NCPgnoOuUVzk1hk2gJ3yw/wmfCr/p9hckqcpsRbXYjKazBQYFL6S9I8p/Uo9ev1+E6y8MOfKTCytzUFUlx7k7IXLvCKYyeFOrbTCj8KG5Al+Tm6gTI0JlgG+ZV5swUoAKhI4x5yX2hq7dfZ8jfAmIHzRJnn+scr82yNgm96GiV2qk4WOVh0E256uYG91fH8G4U8UjpedM3NgqqbrrioIIm6rMYRdqSuh/+GfbyAGnYLRJFnkYk8RHmoYorlEl4FZ1iQIb0Z9uFQSGMHKzDMmATNxOUEO/nKZUcRkYS326zUvTcSCrXHb8ZNs/6xkB08/dU6NhTgu9peFGxOldOHqu4wVziv+A4wmWyKzzsGbQJkh3Tw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR06MB3848.namprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(66946007)(53546011)(66556008)(66476007)(2616005)(5660300002)(4326008)(508600001)(31686004)(8676002)(6506007)(8936002)(38100700002)(6512007)(86362001)(31696002)(186003)(2906002)(316002)(52116002)(6486002)(26005)(75432002)(38350700002)(110136005)(83380400001)(786003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MXlCRmtOd3NBRXJ6MDEycHE5aUl1VFpOMElLWDVYK0ZQUDA5QmZzejJGREpr?=
+ =?utf-8?B?OWdrYXhQc0JuWDNnY3RKSzRRVW9rbkh2L0ZYbmdHa2xPTXRmNWZ2MDEwbzEy?=
+ =?utf-8?B?ZlRqVGM2UGdJaUN2b2tqN2NTMWUxbjVDVkFWejNQZFFlSUEvZ1ZPOG1DYlNq?=
+ =?utf-8?B?NC9YREptUnNIbjZxemZBeTVLTkc2Sm1qOTVPSmFFWER2VDRRU2d4dEIrcHAz?=
+ =?utf-8?B?NkxrWUtDdkRRZCtWVWhWMmZhMzd0UEVsbEZCR3BUNklGU3loN2RHbzllb0Rt?=
+ =?utf-8?B?VFFWZ1RCSytFQnF5SGFMZEtTSEhndUJQcGVOSHVueGFBamRTSEh0Nm0zTW5Y?=
+ =?utf-8?B?T0dHQThTdzBTaFJEL0FqeXB2cCtYbDAxSjNKVk1KV3l5K3FFekZRa0NIK3E3?=
+ =?utf-8?B?OHdPeE5YbFRydWJrTm9ZejgxNDdQZlFDTWg5bFlkazVDaW1zQjhNbEZuWll2?=
+ =?utf-8?B?em9OS2YrY1RPY1QxajRKVkRrYTQ5QjJDQkRodkRVdDAyNHdiaU5BajMveUFJ?=
+ =?utf-8?B?K0xVMW9uZGh3UDJ0RE1iYnNkd2Z3Y0o1TytRYXVnRzVCWlZZUUpGMjdhZ0py?=
+ =?utf-8?B?RXYwdytnSURzSFQzc2F3a09TemFBV2hPeGZBaW4wa051MGgzdUR0S2dzRHh0?=
+ =?utf-8?B?ZTNwWUcxMEZvZlVRUmx3Rm0ySUYwc2toY1FFdW45OFhvT3VoTmRncjZadVlt?=
+ =?utf-8?B?Um9mSlRya1I5cmo4aW5tRjZBZHE2SW1tNzA0RGxGbUJ4Z0lJWUFKTW0xcUtB?=
+ =?utf-8?B?ZzhSM21BVHZ2S0NQcWVJS0kvMVJDR2xzT09MYWJlOEVkelc5a1FCSUxwTVFH?=
+ =?utf-8?B?Uy9xaGJnRWk2dnlZcjhobzc5eGI1VXV0dWtoVU5FZkNHMDh6N3M1b0ltNkhV?=
+ =?utf-8?B?MlZhUS85Q3FYeWwwL0RiWURBV2JURkdRWlJWMm1ZUjYzS3dXVVJNVlNBMmdT?=
+ =?utf-8?B?WGF4L0JraDI5RzRmT05qSDhOTDVXa25VV3JleUh3ayttZ0NYcmFiMHdqRkky?=
+ =?utf-8?B?S2syRVNwTy9ENzZMZXFIK2h1YzYvYXZKRkV0Rm9qM0RkdmVIMml4MU5JNURj?=
+ =?utf-8?B?cjBkRVlhRHF4RGVrNFNNZmJMVXFJcTF0Ky9RbkN1eS9vb0FybVJEVWt2L2lO?=
+ =?utf-8?B?U0kxY2pXb0ZDKzRuZVBIcUZ4TmNkc1IvN25QWDFyQTBMZ1JFS3hqZFZ0ejhS?=
+ =?utf-8?B?SktjcWg3cHBHaVlrOEtjbnFxQ3Y2aXp6RDdMYTVoN0R5RDZMVUZYOUN1c3RO?=
+ =?utf-8?B?bzNZWnBoYWdJZWhBRTM1bDl2NDRnaS9mRm9VTUdxYmJPL1hrQmc1Q2d5QU5Y?=
+ =?utf-8?B?QWM2OFBhWWpLRmc4M3F4RTZuWlM1eUdHNjl5QWhRcFdFcGRuWExBclNUSTV4?=
+ =?utf-8?B?ZloxVjBUc2QxTlJscDdZZ1c5VXZjaFRqRHlpaWIvK3pHNCtqZ1dqRWxzY3ox?=
+ =?utf-8?B?QWtYYy9US2pBb3d5OTBuM2tTdE1zTDUySEZKYU1Kc2pNVmcxKzA5elA2Q1BD?=
+ =?utf-8?B?aDRpTy9tS2tDYlpxdmlCeVBhbVRQOVRkcnVEWStlMmwvRWZZL2hCcnZseUJK?=
+ =?utf-8?B?RWt0amZ6VUNGUnhoSDlnVkoyazIxbHdpWDhycDlKMlFIVjRqdE4yK0xBaUpl?=
+ =?utf-8?B?MmVJdENvQzNyejEvSHk3N2x4SVlKc3lGbHF5UFZ3KzlIVjU0YnpXWmhUMXNV?=
+ =?utf-8?B?RE5FS3BKZHN3RmZZRE85c1Y0ZEs0bGtPRmNCUytqb0EwOHdIYjdSUjczTHdv?=
+ =?utf-8?B?MmYwQ1ovaWp6MVIrWWxyRHFVU1ZmZ2swUFFqclYyTWxOaEhBZThBcnNtYkl6?=
+ =?utf-8?B?c0t0Zmhtdk9zR1UyZVBBbGRBVWhBb0tCb3A0d3NLNHlqMStMV3FWT2lBTEN5?=
+ =?utf-8?B?V0NuaHQxaU5vYlNHZWVRQ2N0aW4wa3c1dmpjUG0ydVk0VHIxM1hDbEpZaVl0?=
+ =?utf-8?B?WDBQOGN0bzByYWdscTJWR2hWaGlza3VCcVJlZC9TQVdLRUoxVWxtMXFaWVJW?=
+ =?utf-8?B?UHdocGd0Mm5EYWRZNXRhMDdORFZxL0xURGlGamJQTHZuTVZUU1FPQllXekZa?=
+ =?utf-8?B?SmorcitJRFZTVENyK2pqdVZ2NHB0aTVFQy9NYWFvUmhZTGVUMTNwZ0YydnJK?=
+ =?utf-8?B?aVc4N25mTGxYUHB4bys2WVkxbTVwNklGMC96MnBOUGpDZFY5VTFHaHBqaU43?=
+ =?utf-8?Q?YnwYp1IZg9Ll5u8qmLG/6qQ=3D?=
+X-OriginatorOrg: math.utexas.edu
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5966e905-a3f2-4527-cbad-08d9e047d966
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR06MB3848.namprd06.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR06MB6026.namprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5239dd27-a5df-4a8d-fda6-08d9e03fb0c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jan 2022 20:17:20.2403
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2022 21:15:44.5578
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4b0911a0-929b-4715-944b-c03745165b3a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tPFAlRxMjgxXWSb1HxflvxoEQINSwr3iJm7QJETYsdIhqoPJHhm5gLrjPJ8oMgX8xquAqBn17hNQt4QHYbP5yg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR06MB8171
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 31d7e2a5-bdd8-414e-9e97-bea998ebdfe1
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: esDxeqMFDDuwRygT1owKUyzdGloxyuSclcKIRa/TtDOv1xhJM6CiFRo90n61256vq6yaaQmrm1RXhpjU131uwA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR06MB8319
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,=0A=
-=0A=
-=0A=
-> From: Linus Torvalds <torvalds@linux-foundation.org>=0A=
-> Sent: Tuesday, January 25, 2022 1:23 PM=0A=
-> To: Schumaker, Anna <Anna.Schumaker@netapp.com>=0A=
-> Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>=0A=
-> Subject: Re: [GIT PULL] Please pull NFS Client Updates for 5.17 =0A=
-> =A0=0A=
-> NetApp Security WARNING: This is an external email. Do not click links or=
- open attachments unless you recognize the sender and know the content is s=
-afe.=0A=
-> =0A=
-> =0A=
-> =0A=
-> =0A=
-> On Tue, Jan 25, 2022 at 8:01 PM Anna Schumaker=0A=
-> <anna.schumaker@netapp.com> wrote:=0A=
-> >=0A=
-> > I'm still not seeing this in your tree. Was there something wrong with=
-=0A=
-> > the pull request? What can I do to fix it?=0A=
-> =0A=
-> Hmm. It looks like these were all caught in the gmail spam filter, and=0A=
-> while I go look at my spam folder regularly, I don't exactly go=0A=
-> through it with a fine comb. If nothing stands out to me, it all goes=0A=
-> into the great big bit-bucket in the sky.=0A=
-> =0A=
-> And the reason gmail considers it spam seems to be that your email is=0A=
-> misconfigured. You have a "from:" field using netapp.com, but you=0A=
-> don't seem to use the proper netapp smtp server, so you don't get the=0A=
-> netapp DKIM signature, resulting in=0A=
-> =0A=
-> =A0=A0=A0=A0=A0=A0 dmarc=3Dfail (p=3DQUARANTINE sp=3DQUARANTINE dis=3DQUA=
-RANTINE)=0A=
-> header.from=3Dnetapp.com=0A=
-> =0A=
-> and that's quite the spam-trigger.=0A=
-> =0A=
-> In fact, from the headers it looks like you're using gmail to deliver=0A=
-> the email using your schumakeranna@gmail.com gmail account, but then=0A=
-> you have that "From:"=A0 having that "netapp.com" from address. Naughty,=
-=0A=
-> naughty.=0A=
-> =0A=
-> Even if gmail receives it, gmail will then notice that the from=0A=
-> address has been faked, and will not deliver it to me.=0A=
-> =0A=
-> That whole "send email using another delivery thing than the one you=0A=
-> claim it is from" is how most spam is sent, and it used to work. It=0A=
-> doesn't work any more in a world where people actually check DKIM=0A=
-> information, and netapp.com does have DKIM enabled.=0A=
-=0A=
-I hadn't heard of DKIM before, so thanks for educating me! I've deleted my =
-netapp email from my gmail's "send email as" list so I won't make this mist=
-ake again in the future and I'll just send from my gmail directly. I hoped =
-it would would be as easy way to make it look as if it came from my work em=
-ail without needing to deal with the web version of outlook (which I don't =
-trust at all to send email properly).=0A=
-=0A=
-Thank you so much for still pulling it!=0A=
-Anna=0A=
-=0A=
-> =0A=
-> So you have to use the real netapp SMPT server if you send emails that=0A=
-> claim to come from netapp.=0A=
-> =0A=
-> You could just use your actual normal gmail.com address - that works=0A=
-> fine, and I'll see the signed tag, and the kernel.org address, and=0A=
-> I'll trust it that way.=0A=
-> =0A=
-> =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 Linus=
+
+
+On 1/24/22 13:37, J. Bruce Fields wrote:
+> On Sun, Jan 23, 2022 at 11:53:08PM +0000, Daire Byrne wrote:
+>> I've been experimenting a bit more with high latency NFSv4.2 (200ms).
+>> I've noticed a difference between the file creation rates when you
+>> have parallel processes running against a single client mount creating
+>> files in multiple directories compared to in one shared directory.
+> 
+> The Linux VFS requires an exclusive lock on the directory while you're
+> creating a file.
+> 
+> So, if L is the time in seconds required to create a single file, you're
+> never going to be able to create more than 1/L files per second, because
+> there's no parallelism.
+
+
+So the directory is locked while the inode is created, or something like 
+this, which makes sense.  File creation means the directory "file" is 
+being updated. Just to be clear, though, from your ssh suggestion below, 
+this limitation does not exist if an existing file is being updated?
+
+
+> 
+> So, it's not surprising you'd get a higher rate when creating in
+> multiple directories.
+> 
+> Also, that lock's taken on both client and server.  So it makes sense
+> that you might get a little more parallelism from multiple clients.
+> 
+> So the usual advice is just to try to get that latency number as low as
+> possible, by using a low-latency network and storage that can commit
+> very quickly.  (An NFS server isn't permitted to reply to the RPC
+> creating the new file until the new file actually hits stable storage.)
+> 
+> Are you really seeing 200ms in production?
+> 
+> --b.
+> 
+>>
+>> If I start 100 processes on the same client creating unique files in a
+>> single shared directory (with 200ms latency), the rate of new file
+>> creates is limited to around 3 files per second. Something like this:
+>>
+>> # add latency to the client
+>> sudo tc qdisc replace dev eth0 root netem delay 200ms
+>>
+>> sudo mount -o vers=4.2,nocto,actimeo=3600 server:/data /tmp/data
+>> for x in {1..10000}; do
+>>      echo /tmp/data/dir1/touch.$x
+>> done | xargs -n1 -P 100 -iX -t touch X 2>&1 | pv -l -a > /dev/null
+>>
+>> It's a similar (slow) result for NFSv3. If we run it again just to
+>> update the existing files, it's a lot faster because of the
+>> nocto,actimeo and open file caching (32 files/s).
+>>
+>> Then if I switch it so that each process on the client creates
+>> hundreds of files in a unique directory per process, the aggregate
+>> file create rate increases to 32 per second. For NFSv3 it's 162
+>> aggregate new files per second. So much better parallelism is possible
+>> when the creates are spread across multiple remote directories on the
+>> same client.
+>>
+>> If I then take the slow 3 creates per second example again and instead
+>> use 10 client hosts (all with 200ms latency) and set them all creating
+>> in the same remote server directory, then we get 3 x 10 = 30 creates
+>> per second.
+>>
+>> So we can achieve some parallel file create performance in the same
+>> remote directory but just not from a single client running multiple
+>> processes. Which makes me think it's more of a client limitation
+>> rather than a server locking issue?
+>>
+>> My interest in this (as always) is because while having hundreds of
+>> processes creating files in the same directory might not be a common
+>> workload, it is if you are re-exporting a filesystem and multiple
+>> clients are creating new files for writing. For example a batch job
+>> creating files in a common output directory.
+>>
+>> Re-exporting is a useful way of caching mostly read heavy workloads
+>> but then performance suffers for these metadata heavy or writing
+>> workloads. The parallel performance (nfsd threads) with a single
+>> client mountpoint just can't compete with directly connected clients
+>> to the originating server.
+>>
+>> Does anyone have any idea what the specific bottlenecks are here for
+>> parallel file creates from a single client to a single directory?
+>>
+>> Cheers,
+>>
+>> Daire
