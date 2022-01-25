@@ -2,101 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D93EE49AC33
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 07:16:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C38349AD13
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 08:08:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231665AbiAYGQ0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 01:16:26 -0500
-Received: from gandalf.ozlabs.org ([150.107.74.76]:58115 "EHLO
-        gandalf.ozlabs.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S256366AbiAYFWA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 00:22:00 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4JjZwC20rDz4xNm;
-        Tue, 25 Jan 2022 16:21:47 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-        s=201702; t=1643088108;
-        bh=EXHDGMBkz/WT0lNUnQj7KDfXlPwfDl9vmteB2k6cJ3g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EdnIAN3Dje7TsR0qLc+kvP3CKJZXsiXEiv5aBCcj083DxKac3+abPPCAhie1cgZYw
-         cT6dqjqE84E/qHpW/3nph5OmiAPelmoPcwV3Rg05oMi5OLIpBGhxN0jTCsiHFJ2/+u
-         /roc9Spb+C0aH61oZQuBc+cfkoZ1O5OTT7kSadLv8xBDcpvFqpgDsOBDjEsKA0Mb2+
-         YXWT6GKw1+XGHVNF/YiP8srvXlfIZoQGe/8e/undAt9RVWTqJSUZlDNj4bjsg2e3ou
-         pDdTJ0ODV2qNfkoBpOy5XPygYoFAbe2cr09gq4TX7fqu48RujXWOohUm/SFv67xOj6
-         R/VYHrcEkzfuQ==
-Date:   Tue, 25 Jan 2022 16:21:46 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Trond Myklebust <trondmy@gmail.com>,
-        NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: linux-next: runtime warning in next-20220125
-Message-ID: <20220125162146.13872bdb@canb.auug.org.au>
-In-Reply-To: <20220125160505.068dbb52@canb.auug.org.au>
-References: <20220125160505.068dbb52@canb.auug.org.au>
+        id S1442247AbiAYHGn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 02:06:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45578 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1392067AbiAYHDK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 02:03:10 -0500
+Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91A9EC02B86D
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+Received: by mail-ua1-x935.google.com with SMTP id c36so35317030uae.13
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Jan 2022 21:41:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=omchJdYJcVvbnbx3iWDsqNfzfvgFxRY5UV8d5JFHFd0Qxp4Fs99oOTWbnsLJvmkGLO
+         KJ9h0aIZipzZCxLYUC1EbKJQXjsTnrYD4skWPu5L6KEa7WwksJ/DgfAKn2I//FvNz16e
+         yvRSMjBJIkfJOiN7QosmIFzfX6t0OymUxXq/kzoldmt5Tk4SMXy3poAlzZfnj4tLqkCO
+         r1uVZjBjIcfKcTHUm4yIRwmNGijXGA0OAhFYRol/6hiAAZJ37V1K6a3bLM+XpGdFXGos
+         hPiIHyT9XSW8aiVFGjIdHRgRcnWLHkX21ZW87GvspRwlXlL9xuI6dXFZXWxBZnRTJWgA
+         Bk5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=KeMi8W+p20zdR41YZoRj2EapY7imNsLYkAgQIQsIzqY=;
+        b=7CUwwQKBLNHKeLUXZtfwCy4LODUnxSaENkGkmSvDDV5wcRM2NbFTDAFyhzB3K1snvY
+         bcn9ycmSs3Xprz15YGo/2rqww0Ba3fmJfEi93vdwtUiZ73E6t55D8zBhEWlq02fbnWbV
+         tB8D1ftXf5k1dKpNkgjGee/CPBeigptwGVHoSUB6YRL3cef7sx5Ndy4PK0zAgRAE0DrK
+         MsM3PHS2mF+RhX22o/RMtCdTOsLuVhcsQGdCALVPzK5Z1aOlkeR/ijXCaLwAsvFdUF/6
+         lfEZOXvDECqKybzTSYCV/JKrJily01FPspbor+THidiLJW8xwHwJJT7lyJlkQJA3abu1
+         aCYQ==
+X-Gm-Message-State: AOAM531PiAIOH6iwV4VmsdG8ifaDgmzC0NXshfPWKSzsbw4TZxnqpXrM
+        Mh0FS53Tr9n67ik1NaknMBqy1b3AhLdLR0E5oRZ+I4yICc4=
+X-Google-Smtp-Source: ABdhPJwywiwyTtOCXfovmJIEM7Vqt+PFDzMW3tzxRj90P3fJDPhIlV2jOd/vI9WPw47eCab8Z7S4n4qldrLRD5Ly+Sc=
+X-Received: by 2002:a25:d783:: with SMTP id o125mr27594671ybg.710.1643089301256;
+ Mon, 24 Jan 2022 21:41:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/GcmYL3f6WLHjIlgotq6pgNq";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Received: by 2002:a05:7000:ad9d:0:0:0:0 with HTTP; Mon, 24 Jan 2022 21:41:40
+ -0800 (PST)
+Reply-To: danielseyba@yahoo.com
+From:   Seyba Daniel <mrssuzaramaling19@gmail.com>
+Date:   Tue, 25 Jan 2022 06:41:40 +0100
+Message-ID: <CAKN-9XgQjuMspSnu-F01fv+Bgr6eZEygpsR3pZ-5cF=m78av-Q@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---Sig_/GcmYL3f6WLHjIlgotq6pgNq
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hello,
 
-Hi all,
+I am so sorry contacting you in this means especially when we have never
+met before. I urgently seek your service to represent me in investing in
+your region / country and you will be rewarded for your service without
+affecting your present job with very little time invested in it.
 
-On Tue, 25 Jan 2022 16:05:05 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> My qemu boot test of a powerpc pseries_le_defconfig kernel produces the
-> following trace:
->=20
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 0 at kernel/trace/trace_events.c:417 trace_event_raw=
-_init+0x194/0x730
-> Modules linked in:
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.17.0-rc1 #2
-> NIP:  c0000000002bdbb4 LR: c0000000002bdcb0 CTR: c0000000002bdb70
->=20
-> I have no idea what has caused this :-(  Maybe commit
->=20
->   5544d5318802 ("SUNRPC: Same as SVC_RQST_ENDPOINT, but without the xid")
+My interest is in buying real estate, private schools or companies with
+potentials for rapid growth in long terms.
 
-Actually, reverting commits
+So please confirm interest by responding back.
 
-  6ff851d98af8 ("SUNRPC: Improve sockaddr handling in the svc_xprt_create_e=
-rror trace point")
-  5544d5318802 ("SUNRPC: Same as SVC_RQST_ENDPOINT, but without the xid")
-  e2d3613db12a ("SUNRPC: Record endpoint information in trace log")
+My dearest regards
 
-makes the warning go away.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/GcmYL3f6WLHjIlgotq6pgNq
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmHviOoACgkQAVBC80lX
-0Gys6QgAlGSkaap9eq9MYZ7vSaG4FckU4s2yeO0WuT8ESDW3LLEhh5QMs74MqdRH
-5H9ZftfOAQnzEsyboKAJC6heWbxpHG2yJ+NlKtMWviIRSm4TYPvL3fxxueq0KDiY
-Peo16xh4yyERxGOHHU2u77mQGy1Qi77bJJtt0eL5b7Ur95yfG86EoRpRp3uzi7F4
-ESCZ/UYPTN0lexyafnZzI6TAThwnyq1bHdXCvPyinibryzNwbrEjwibtdlaAkzdL
-AICl655j7ya/rzkWMkS/MWdW18L1af8vagM87+i9ynA7QRbT0JY9l/c+BMOYE81I
-Fv5BdzURvzJe7qqdNsNgwudRnn63wA==
-=6Eui
------END PGP SIGNATURE-----
-
---Sig_/GcmYL3f6WLHjIlgotq6pgNq--
+Seyba Daniel
