@@ -2,90 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C21F49BFAB
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 00:40:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C9F049BFB9
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 00:48:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234946AbiAYXkD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 18:40:03 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:48736 "EHLO
+        id S234973AbiAYXsl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 18:48:41 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:49118 "EHLO
         smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234947AbiAYXkC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 18:40:02 -0500
+        with ESMTP id S232112AbiAYXsl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 18:48:41 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7F053212BC;
-        Tue, 25 Jan 2022 23:40:01 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 238F1212BC;
+        Tue, 25 Jan 2022 23:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643154001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1643154520; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DUXSTv0zie1Gw+/Ys3ssqa9vSAam43Yqv+gF5PPtx0E=;
-        b=NqXsbbXL8sPw6U91d+8s5fij5haeSfocEpXYL31OuoRONz+CovUOu2Ci9b+jt+TvXuIWsn
-        Oyn18g7Mr4OFCsgne0fiLVfLLi4NxDT4SamNQ0sxQuBDsCK+LTvnbrVk494AmMAGFFLoFD
-        Z3d/UmuMm9l4lbzY/mtpYLcAyBZCVZk=
+        bh=szKKP58FaOHSHo7lNIll7CEj9TD2wqk0M0TB49wzSEg=;
+        b=Ij1U2hK/x6RPlzKyMLhJkrb2OIATBUXg5eAAPBwAv+v5AyXv7TQjKI2Uc7VCtkPEB0MyBd
+        aArTXFWQAYSVKOnHlhdctA7NyyWhNaeTxfbiggqLByFaBHbBewr0IYrNEUFZ2epVsBEP4B
+        9lmEWn/cXHGR1gqeDeMyMke4ZPYrVbU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643154001;
+        s=susede2_ed25519; t=1643154520;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DUXSTv0zie1Gw+/Ys3ssqa9vSAam43Yqv+gF5PPtx0E=;
-        b=QxGZy3hSX2V0rbfSvJ3fnUR0Ea1hP83+x5CHfmPUyDsPUUpwV9EoukwdWGSyyl3YLpYsgh
-        MfycqnEU55JWXxAA==
+        bh=szKKP58FaOHSHo7lNIll7CEj9TD2wqk0M0TB49wzSEg=;
+        b=JEEDn8pjIFSemAAxJgelXy+Kd7ywaka+SwRyLJsq9ZEf6du/rU8g2iDYKqCnwHlqXEa1MR
+        m5bzkry5vZ4spvDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9799413EF6;
-        Tue, 25 Jan 2022 23:40:00 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 793CA13EF2;
+        Tue, 25 Jan 2022 23:48:38 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id Sr0dFFCK8GHzaQAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 25 Jan 2022 23:40:00 +0000
+        id tNiaDVaM8GEBbQAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 25 Jan 2022 23:48:38 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] SUNRPC: Remove svo_shutdown method
-In-reply-to: <E1C5753E-6061-41CC-930F-1565488FC799@oracle.com>
-References: <164313706374.3285.4265550102084857832.stgit@bazille.1015granger.net>,
- <164313725230.3285.5420060785593218794.stgit@bazille.1015granger.net>,
- <164314763348.5493.760625882164316264@noble.neil.brown.name>,
- <E1C5753E-6061-41CC-930F-1565488FC799@oracle.com>
-Date:   Wed, 26 Jan 2022 10:39:57 +1100
-Message-id: <164315399729.5493.8755514018709100922@noble.neil.brown.name>
+To:     "Bruce Fields" <bfields@redhat.com>
+Cc:     "Petr Vorel" <pvorel@suse.cz>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Yong Sun" <yosun@suse.com>,
+        "Frank S. Filz" <ffilzlnx@mindspring.com>
+Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+In-reply-to: <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+References: <YLY9pKu38lEWaXxE@pevik>, <YLZS1iMJR59n4hue@pick.fieldses.org>,
+ <164248153844.24166.16775550865302060652@noble.neil.brown.name>,
+ <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+Date:   Wed, 26 Jan 2022 10:48:35 +1100
+Message-id: <164315451558.5493.17782132429187259258@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 26 Jan 2022, Chuck Lever III wrote:
-> 
-> > On Jan 25, 2022, at 4:53 PM, NeilBrown <neilb@suse.de> wrote:
-> > 
-> > 
-> > Could we rename svc_close_net() to svc_shutdown_net() and drop this
-> > function?
-> 
-> I considered that, but svc_close_net() seems to be transport-related,
-> whereas svc_shutdown_net() seems to be generic to the NFS server, so
-> I left them separate. A better rationale might push me into merging
-> them. :-)
-> 
+On Wed, 26 Jan 2022, Bruce Fields wrote:
+> Frank added this test in 4299316fb357, and I don't really understand
+> his description, but it *sounds* like he really wanted it to do the
+> new-lockowner case.  Frank?
 
-svc_close_net() is effectively the inverse of svc_create_xprt(), though
-the later can be called several times, and the former cleans up them
-all.
+The way I read that commit message, there needs to be a second lock
+owner (as you suggest), but there clearly isn't one.
+Maybe there needs to be a second open_sequence() created ...  I'm not
+sure.
 
-So maybe rename svc_close_net() to svc_close_xprts() (plural), and call
-it from the places which currently call svc_close_net().  Those places
-(nfsd, lockd, nfs/callback) already call svc_create_xprt().  Having them
-explicitly call svc_close_xprts() to balance that would arguably make
-the code clearer.
-
-Thanks,
 NeilBrown
