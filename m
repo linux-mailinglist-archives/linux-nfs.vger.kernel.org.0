@@ -2,92 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 507B149BF83
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 00:26:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C21F49BFAB
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 00:40:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234706AbiAYX0O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 18:26:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48998 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234780AbiAYX0K (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 18:26:10 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A74C06173B
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 15:26:10 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id s5so34258794ejx.2
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 15:26:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jmZvxjTm3Zm/yuEFMFhabb14g7w2JRRBo3QS+6a3Il4=;
-        b=S6YBkt5XbYrW+u+CmAI27ZzRjDscQa7ektMYs8AbJrXSq2OvBUHdviC1VkEbm2sWqc
-         RkYPH5Xyg1qr97nPnjgrCErM73lLR2l3crdLAjXbbXluIy9Yzca+3ngLq97/cy6/pLVs
-         1l3breXdF59rq3XUUG9OE79gzAJGW4YVjVuGPYXjpGPt2i5XmLeSNYh6gUlFTAkkpgdr
-         9r7SbrFsMXS35BeA6EeyJfB6cc01Ti7opTdCkdrmfdOGaiuZgnG++VEjlxHdGoVdQHOM
-         2IT5zDFdaKUwxeSHZ4cZwP2Um5c/OMMn+X24qIxpWwlbBjVmWHBEXHg0ZLKJuBxLkKG8
-         jjiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jmZvxjTm3Zm/yuEFMFhabb14g7w2JRRBo3QS+6a3Il4=;
-        b=XTEGr6W08/cqHWBv/iPDuyuAPBBnZyNo+3ghofWPva4LuofRSw23iTMoaKE8KL+Jsv
-         KPqImeyaebhzfVT7qvTwe/DpTcq14bCeU9GWLRCsn1cjomhfGcl0eep4t03hwPlavKOb
-         BdVqBDzr/i1sjLjfpcARs1OufwEeQ0MSBaCF8DJYuPnWpj/dEujfFyfzH62gPpK4uCWt
-         RGPiUHjeJLG3Hin8Jb1Vcm0H6hKv0mqNRh5sEHHDYugVqtYzpUcDTfi2Zk+GpGLiIxhw
-         WH08KwwzUkdsCU906/+skoav+Z1FNr2u2nc02XYOJAlPOqOPYKUap8c+R7KTB6APUD0M
-         k1Zw==
-X-Gm-Message-State: AOAM532EpQ43YJVxZVk0ZZDKYO8QpcynEtUfPtxRaG8df8/2dPC2rdOd
-        0bQiiag3XsOWHvS+pCUaijThpXmDmYJfETMUPhMG1g==
-X-Google-Smtp-Source: ABdhPJy5sU7OHtcy0bYCjhvhUK/md3cVQo3BE9wqRlJiZ9PtpfNctnAs4nP/+1V5ghaI5pKj74NMuXBP6M+MjNQO7Vc=
-X-Received: by 2002:a17:906:3819:: with SMTP id v25mr17574281ejc.539.1643153169137;
- Tue, 25 Jan 2022 15:26:09 -0800 (PST)
+        id S234946AbiAYXkD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 18:40:03 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:48736 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S234947AbiAYXkC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 18:40:02 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7F053212BC;
+        Tue, 25 Jan 2022 23:40:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643154001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DUXSTv0zie1Gw+/Ys3ssqa9vSAam43Yqv+gF5PPtx0E=;
+        b=NqXsbbXL8sPw6U91d+8s5fij5haeSfocEpXYL31OuoRONz+CovUOu2Ci9b+jt+TvXuIWsn
+        Oyn18g7Mr4OFCsgne0fiLVfLLi4NxDT4SamNQ0sxQuBDsCK+LTvnbrVk494AmMAGFFLoFD
+        Z3d/UmuMm9l4lbzY/mtpYLcAyBZCVZk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643154001;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DUXSTv0zie1Gw+/Ys3ssqa9vSAam43Yqv+gF5PPtx0E=;
+        b=QxGZy3hSX2V0rbfSvJ3fnUR0Ea1hP83+x5CHfmPUyDsPUUpwV9EoukwdWGSyyl3YLpYsgh
+        MfycqnEU55JWXxAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9799413EF6;
+        Tue, 25 Jan 2022 23:40:00 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Sr0dFFCK8GHzaQAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 25 Jan 2022 23:40:00 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
- <20220124193759.GA4975@fieldses.org> <CAPt2mGOCn5OaeZm24+zh92qRcWTF8h-H2WXqScz9RMfo4r_-Qw@mail.gmail.com>
- <20220124205045.GB4975@fieldses.org> <CAPt2mGPTGgXztawDJfAKsiYqnm6P_mn1rtquSDKjpnSgvJH1YA@mail.gmail.com>
- <20220125135959.GA15537@fieldses.org> <F7C721F7-D906-426F-814F-4D3F34AD6FB1@oracle.com>
- <42867c2c-1ab3-9bb6-0e5a-57d13d667bc6@math.utexas.edu> <20220125215942.GC17638@fieldses.org>
- <7256e781-5ab8-2b39-cb69-58a73ae48786@math.utexas.edu> <CAPt2mGNMGjq+i=k_6oYBYPFPCTR2UdeEtWfyeTU9uUC0OC=T4w@mail.gmail.com>
- <a5627c80-4b03-29f2-1432-6e0f0b5197ef@math.utexas.edu>
-In-Reply-To: <a5627c80-4b03-29f2-1432-6e0f0b5197ef@math.utexas.edu>
-From:   Daire Byrne <daire@dneg.com>
-Date:   Tue, 25 Jan 2022 23:25:33 +0000
-Message-ID: <CAPt2mGMsd1q1B42bgdKciaWjB9O+9wezr_vU9JRpzzYEc6m+3g@mail.gmail.com>
-Subject: Re: parallel file create rates (+high latency)
-To:     Patrick Goetz <pgoetz@math.utexas.edu>
-Cc:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v1 2/2] SUNRPC: Remove svo_shutdown method
+In-reply-to: <E1C5753E-6061-41CC-930F-1565488FC799@oracle.com>
+References: <164313706374.3285.4265550102084857832.stgit@bazille.1015granger.net>,
+ <164313725230.3285.5420060785593218794.stgit@bazille.1015granger.net>,
+ <164314763348.5493.760625882164316264@noble.neil.brown.name>,
+ <E1C5753E-6061-41CC-930F-1565488FC799@oracle.com>
+Date:   Wed, 26 Jan 2022 10:39:57 +1100
+Message-id: <164315399729.5493.8755514018709100922@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 25 Jan 2022 at 23:01, Patrick Goetz <pgoetz@math.utexas.edu> wrote:
-> On 1/25/22 16:41, Daire Byrne wrote:
-> > On Tue, 25 Jan 2022 at 22:11, Patrick Goetz <pgoetz@math.utexas.edu> wrote:
-> Thanks for this suggestion! This option didn't even occur to me.  The
-> only downside is that this server gets really busy during image
-> processing, so I'm a bit worried about loading it down with dozens of
-> simultaneous rsync processes. Also, the biggest performance problem in
-> this system (which includes multiple GPU-laden workstations and 2 other
-> NFS servers) is always I/O bottlenecks.  I suppose the solution is to
-> nice all the rsync processes to 19.
+On Wed, 26 Jan 2022, Chuck Lever III wrote:
+> 
+> > On Jan 25, 2022, at 4:53 PM, NeilBrown <neilb@suse.de> wrote:
+> > 
+> > 
+> > Could we rename svc_close_net() to svc_shutdown_net() and drop this
+> > function?
+> 
+> I considered that, but svc_close_net() seems to be transport-related,
+> whereas svc_shutdown_net() seems to be generic to the NFS server, so
+> I left them separate. A better rationale might push me into merging
+> them. :-)
+> 
 
-Yea, that's always the problem with backups - when do you slow down
-production because backups are more important? :)
+svc_close_net() is effectively the inverse of svc_create_xprt(), though
+the later can be called several times, and the former cleans up them
+all.
 
-You could also have another NFS client close (latency) to the server
-which would free CPU but it's hard to limit IO. You can still use
-rsync+rsyncd for the higher latency hop.
+So maybe rename svc_close_net() to svc_close_xprts() (plural), and call
+it from the places which currently call svc_close_net().  Those places
+(nfsd, lockd, nfs/callback) already call svc_create_xprt().  Having them
+explicitly call svc_close_xprts() to balance that would arguably make
+the code clearer.
 
-> Question: given that I usually run backups from cron, and given that
-> they can take a long time, how does msrsync avoid stepping on itself?
-
-I guess you would need a lockfile or pgrep for a running instance.
-TBH, I wrote a simpler version of msrsync in bash that was more suited
-to our environment but the principle is the same.
-
-Daire
+Thanks,
+NeilBrown
