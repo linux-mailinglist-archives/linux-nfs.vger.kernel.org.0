@@ -2,87 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EBC9649BC73
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 20:47:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F0B349BCB0
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Jan 2022 21:07:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbiAYTrJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 14:47:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54844 "EHLO
+        id S231390AbiAYUHD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 15:07:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230523AbiAYTrC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 14:47:02 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 928B3C06173B
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:47:00 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id f17so21847867wrx.1
-        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 11:47:00 -0800 (PST)
+        with ESMTP id S231377AbiAYUGu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 15:06:50 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEC68C06173B
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 12:06:49 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id f17so21931707wrx.1
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Jan 2022 12:06:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=vastdata.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VdQ4OcdaFo1OdIRdPpuKmdGVl8dBaZyqXzidha8Uhts=;
-        b=esYRwDBUDbt5EzIOZG2Ib4BDK40tKD/fuXAjpPCafF055kfeLO4OzZHL6jTWr2XCJg
-         amt/PGK5mD+LQU+BXLx2ppevkjZ+5IajKW8WjPxudEWHk9k7SmDm56uOcXmrjtnLKawB
-         74FHTu3VLJHYztrrzrNe2NLRXQoke3htDFU+5y+xGcbHyZTnCeCnpZKv1eqV5XGUM3yL
-         lkplux0eGpSijbo+9t8ylVIwkWXSnPI16bZV3+IQpSwdj88eaHDM39il3ntOzkpTGXUS
-         cKjyH9eR/H1+mVcmkPNmdXCyJ3bjKa6UqQBPJCdmD/AEtSy7GLZVsiQatyCgA/nST9Vo
-         18Cg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Rln4rWzvCej/YAv0AvXkJ8OfIT+mtQHHPMzyqYlpo6E=;
+        b=AHaWSJa+s8WkvaZwiapwK3WUMTVv2lqpkkpsQeR8K25JujH/WQE+t99AWLHI1b9NEt
+         9ZChqFPvHj01Gyb/j/khsYiMqLwx4ro6qPWoYlm2VcQ8x2MN6ejptfLglwsjCtSA+gZW
+         CB646NLBq8c13jR/tkdmcUe/yHoj55knWfTcmBXG0CH1RYjiYZFldQQmU86Qvs9o2n8t
+         /cjap10gRHNsReyVMeILTjRIKtGmL43QbZy3qt7ZFo7ID/7dTZnHnrBcBaVg/uPQso/H
+         p4AAFK/wfErmXIFmJofxnzPBNRbOc4J9qcrybpWix9Wu6cNUvplpPkX7uy4QSkm/516C
+         cOKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VdQ4OcdaFo1OdIRdPpuKmdGVl8dBaZyqXzidha8Uhts=;
-        b=MpstRM6qiHheLYW/TUE+mModbOdibtp3Vy50EB0u//LS70CetrQUhpJJBGHPUYUru0
-         QAoHdepWaYscHd0/q3U6XsDuEPdTYI5CxoeJaVU+5KavXjbwBM0xbVUeBMbXB04bSzyx
-         +P9Eeg1DYhMGoPnVBkccaXB7DtwfHBQV+5Nd2xZNqTiZyCaAgCajNohq32CpSoVq37M3
-         4YvPoKEnxFOvJfHcRSvluTkFFMc7euRO2np3EBzBohemdjGxKFhTN+w0pRARchNpkYZ7
-         aROydxer2rMVHnpxN1UtqVLEWSSSqJ9bM20k2py7+ScRBoHCwbxJTCOJ4zhXz6Wu7PDl
-         bZLg==
-X-Gm-Message-State: AOAM531CbJxkpdC3eSBco5HY4/QgX3+0q+bpxho3VcSHFsw2WoWSz/Em
-        C63ylz/3vLaVPygw62eb8CGAPc9iZeeoqA==
-X-Google-Smtp-Source: ABdhPJx/9hJc1eP9ZeWMhsk5nx0E/VJIbymgaGALk6gd2CCRhEbf8fC001yN3lJlkVKJTqRUDh60Qw==
-X-Received: by 2002:adf:f512:: with SMTP id q18mr16260690wro.216.1643140019171;
-        Tue, 25 Jan 2022 11:46:59 -0800 (PST)
-Received: from gmail.com ([77.125.69.23])
-        by smtp.gmail.com with ESMTPSA id a14sm18975355wri.25.2022.01.25.11.46.58
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Rln4rWzvCej/YAv0AvXkJ8OfIT+mtQHHPMzyqYlpo6E=;
+        b=3ex6YkMpbZuyxJ8GpLttXTgMyRllkfxsPhbBwISG+mRfagG84F4Gu3L9A6mSeD+lcU
+         x5B5Teq1gPY4RatUc17n6LJ0RruyQK9PsVUrAel35oyIekCurW+ScsWlO6IvTc9esNFc
+         WDwzjK+IIOSfqW+QIfoS+xkqeMP6Hcd9X2N+w23wTMmjwBTZ7nvTy9XY8qJUnj80B6DS
+         zpw1Uf4M9WYLbd5vu5Ba1P3vqgy5M8pjVZsB/MVeBxdqXv6KjpQ6J5u6e5ysDivOINWc
+         zjPHVujMAFx20w5L9uq2dmeGeL02quME9PT8Qr9/4O4qdxMJ9kiRVlYx8qJyCTNJJiSN
+         1pAw==
+X-Gm-Message-State: AOAM533CNOVYKyHwLN5/GUg5jU2Dt3C2TazOye4YA+2oxwc3W8zgv/J+
+        wgM5d1xtwcEvZLIKfMnmp9JEonpXidpxxw==
+X-Google-Smtp-Source: ABdhPJyX6UcEBahzMjM+n/DdT6j9tpZeqg1gGAQeuDBhjyuCOmofuuxzCoo9xG0jEKUz/Pda08JmCA==
+X-Received: by 2002:adf:fc8e:: with SMTP id g14mr19527855wrr.260.1643141208504;
+        Tue, 25 Jan 2022 12:06:48 -0800 (PST)
+Received: from jupiter.lan ([77.125.69.23])
+        by smtp.gmail.com with ESMTPSA id 31sm22133924wrl.27.2022.01.25.12.06.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jan 2022 11:46:58 -0800 (PST)
-Date:   Tue, 25 Jan 2022 21:46:56 +0200
+        Tue, 25 Jan 2022 12:06:48 -0800 (PST)
 From:   Dan Aloni <dan.aloni@vastdata.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] xrpcrdma: add missing error checks in rpcrdma_ep_destroy
-Message-ID: <20220125194656.njd7r22stkrtk6fk@gmail.com>
-References: <20220125191717.2945308-1-dan.aloni@vastdata.com>
- <48846140-72B7-4B4A-8948-6F35F1670FCD@oracle.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] xprtrdma: fix pointer derefs in error cases of rpcrdma_ep_create
+Date:   Tue, 25 Jan 2022 22:06:46 +0200
+Message-Id: <20220125200646.3002061-1-dan.aloni@vastdata.com>
+X-Mailer: git-send-email 2.23.0
 In-Reply-To: <48846140-72B7-4B4A-8948-6F35F1670FCD@oracle.com>
+References: <48846140-72B7-4B4A-8948-6F35F1670FCD@oracle.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 25, 2022 at 07:30:05PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Jan 25, 2022, at 2:17 PM, Dan Aloni <dan.aloni@vastdata.com> wrote:
-> > 
-> > These pointers can be non-NULL and contain errors if initialization is
-> > aborted early.  This is similar to how `__svc_rdma_free` takes care of
-> > it.
-> 
-> IIUC the only place that can set these values to an
-> ERR_PTR is rpcrdma_ep_create() ? I think I'd rather
-> have rpcrdma_ep_create() set the fields to NULL in
-> the error cases.
+If there are failures then we must not leave the non-NULL pointers with
+the error value, otherwise `rpcrdma_ep_destroy` gets confused and tries
+free them, resulting in an Oops.
 
-Actually that was my initialization draft but then I saw
-`__svc_rdma_free`. Will send over.
+Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
+---
+ net/sunrpc/xprtrdma/verbs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Good catch. I'm afraid to ask how you found this.
-
-Just some adapter entering error state in firmware.
-
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 3d3673ba9e1e..2a2e1514ac79 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -436,6 +436,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 					      IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(ep->re_attr.send_cq)) {
+ 		rc = PTR_ERR(ep->re_attr.send_cq);
++		ep->re_attr.send_cq = NULL;
+ 		goto out_destroy;
+ 	}
+ 
+@@ -444,6 +445,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 					      IB_POLL_WORKQUEUE);
+ 	if (IS_ERR(ep->re_attr.recv_cq)) {
+ 		rc = PTR_ERR(ep->re_attr.recv_cq);
++		ep->re_attr.recv_cq = NULL;
+ 		goto out_destroy;
+ 	}
+ 	ep->re_receive_count = 0;
+@@ -482,6 +484,7 @@ static int rpcrdma_ep_create(struct rpcrdma_xprt *r_xprt)
+ 	ep->re_pd = ib_alloc_pd(device, 0);
+ 	if (IS_ERR(ep->re_pd)) {
+ 		rc = PTR_ERR(ep->re_pd);
++		ep->re_pd = NULL;
+ 		goto out_destroy;
+ 	}
+ 
 -- 
-Dan Aloni
+2.23.0
+
