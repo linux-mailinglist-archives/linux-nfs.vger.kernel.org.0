@@ -2,118 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 02FE549D5B3
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 23:51:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87B8249D5EB
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 00:09:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230110AbiAZWvt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Jan 2022 17:51:49 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:42266 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbiAZWvt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 17:51:49 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 49CB321136;
-        Wed, 26 Jan 2022 22:51:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643237508; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UrpK9gFVFFc3QEQ0Z3ktR9+zqmiOMW06uKnM7Gq/rtU=;
-        b=pAyw+3sw1FfhAD1ZWWHHuEeStuC30D7GteS6mR1nWLYRZ64TTpPAphVnQOaLSJqyyxPaIH
-        O72QLqPlvAxrwC4B02VEC/Cha98JW9DMqBNKT3e0UXQaoV5YsnvDbgV6sLpuxkuBXKVzaa
-        +2jaoKmu038KUFc/OApkq5FBZFhW+44=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643237508;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UrpK9gFVFFc3QEQ0Z3ktR9+zqmiOMW06uKnM7Gq/rtU=;
-        b=g6oTCe+TW9F8H+pLJP+hn85cjDcYsDtLn7iJPBKjmCxLVTb/PrZ/k4QHNmgMH+7RBJLcoD
-        Cm5Et4QDp6ahfCDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 242ED13E40;
-        Wed, 26 Jan 2022 22:51:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Btj7NIDQ8WG/WgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 26 Jan 2022 22:51:44 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Mark Hemment" <markhemm@googlemail.com>
-Cc:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Anna Schumaker" <anna.schumaker@netapp.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Mel Gorman" <mgorman@suse.de>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "David Howells" <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        id S231775AbiAZXJ6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Jan 2022 18:09:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231240AbiAZXJ5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 18:09:57 -0500
+Received: from mail-qk1-x733.google.com (mail-qk1-x733.google.com [IPv6:2607:f8b0:4864:20::733])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20B01C06161C
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 15:09:57 -0800 (PST)
+Received: by mail-qk1-x733.google.com with SMTP id o12so1068403qke.5
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 15:09:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=IVxNWH/QKGOB3lBXSiTvC5/myLAVD8oMrbCJbkN8fLI=;
+        b=lwW5yJNzRuS7LA0HVMmPlkxlFXrgLJLHSmf++01SgGkwUYEjuu3hhD7Pas0rcQaY8C
+         Mj+m8EWSylqe08j5KDrsT51qFkms+qhF14tzMeUxBgrtBaGzu7fgqLdpbTiFYDho4pgh
+         Bv+VeiLJxs+z41wBFEwZMSgZIJQVX1QeOMHCAx3E7A1siJcyImMcYbOoltgc3pv8oqXa
+         VLC/imZ1nAvWGajj0Yk/yJXRVPl/7iuaKrgG7+cOvkY2MEOKrZX50WdcZwea6yw4Ihsy
+         DLuN3KHFg7eTPJWUtnFPi4dOYiyrn8O1qFafJ4Fk4hRCLmHIrXGOr9kjqgctyR4ChLHw
+         4WeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=IVxNWH/QKGOB3lBXSiTvC5/myLAVD8oMrbCJbkN8fLI=;
+        b=WfbdDQ26ZXyjYTRZFg+czouTF++XRBgHvmnK+qYXmHP0PHUa0rU7ewm+ZPEtDoXk7c
+         tE4T55kKRmiCjONDps3SFIx09Ts+jPK0EXu8xHSxypL15vhMrqHbUetLBQaiSt+CtThT
+         mEcnI4nyOGSnU71EVw9oHbsb25RP02NwapO0mLkW3hlTO9TBzXDok9e8TSAk+vZOdhmq
+         eqgy4n+474jJwjF+tuu4afmxt8YCscVDOFvITyEoST+if6riS0jP4puNeww/nxyRMuPm
+         c/LugKAbICc76Fee8dlXbH6fjQ+KA3dClbi7gy8KV52VCkF2biqHNeAXbXlBH7yF9c+A
+         ioJA==
+X-Gm-Message-State: AOAM531L7OkzeW6dzoA9ZUa8OoYf1nOcUxqO4RFlCq4aKuntqrju+dBC
+        vQn6lUrjwhQvthl4k9CKC1MkVVGR+IeR4g==
+X-Google-Smtp-Source: ABdhPJx0PSz7sx70cDEfKSN/XtlqIkthxJ42AWV4poLFgw2ZAXxGtaO8trHaQfIunIbj5iJyvr+gZw==
+X-Received: by 2002:a37:9f45:: with SMTP id i66mr785036qke.205.1643238596073;
+        Wed, 26 Jan 2022 15:09:56 -0800 (PST)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id i13sm475717qko.91.2022.01.26.15.09.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jan 2022 15:09:55 -0800 (PST)
+Date:   Wed, 26 Jan 2022 15:09:43 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.anvils
+To:     NeilBrown <neilb@suse.de>
+cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 14/23] NFS: swap IO handling is slightly different for O_DIRECT IO
-In-reply-to: <CANe_+UgUNS81Jho8gLc956LArQk9SzGETusRpzRW-_uPF-fqbg@mail.gmail.com>
-References: <164299573337.26253.7538614611220034049.stgit@noble.brown>,
- <164299611281.26253.15560926531007295753.stgit@noble.brown>,
- <CANe_+UgUNS81Jho8gLc956LArQk9SzGETusRpzRW-_uPF-fqbg@mail.gmail.com>
-Date:   Thu, 27 Jan 2022 09:51:41 +1100
-Message-id: <164323750168.5493.12090358551960276049@noble.neil.brown.name>
+Subject: Re: [PATCH 02/23] MM: extend block-plugging to cover all swap reads
+ with read-ahead
+In-Reply-To: <164323362698.5493.8309546969459514762@noble.neil.brown.name>
+Message-ID: <eeec206a-d255-a3e4-ec1e-e51a13e5118c@google.com>
+References: <164299573337.26253.7538614611220034049.stgit@noble.brown>, <164299611274.26253.13900771841681128440.stgit@noble.brown>, <Ye5UzEzvN8WWMNBn@infradead.org> <164323362698.5493.8309546969459514762@noble.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 25 Jan 2022, Mark Hemment wrote:
-> On Mon, 24 Jan 2022 at 03:53, NeilBrown <neilb@suse.de> wrote:
-> >
-> > 1/ Taking the i_rwsem for swap IO triggers lockdep warnings regarding
-> >    possible deadlocks with "fs_reclaim".  These deadlocks could, I believ=
-e,
-> >    eventuate if a buffered read on the swapfile was attempted.
-> >
-> >    We don't need coherence with the page cache for a swap file, and
-> >    buffered writes are forbidden anyway.  There is no other need for
-> >    i_rwsem during direct IO.  So never take it for swap_rw()
-> >
-> > 2/ generic_write_checks() explicitly forbids writes to swap, and
-> >    performs checks that are not needed for swap.  So bypass it
-> >    for swap_rw().
-> >
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfs/direct.c        |   30 +++++++++++++++++++++---------
-> >  fs/nfs/file.c          |    4 ++--
-> >  include/linux/nfs_fs.h |    4 ++--
-> >  3 files changed, 25 insertions(+), 13 deletions(-)
-> >
-> ...
-> > @@ -943,7 +954,8 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, str=
-uct iov_iter *iter)
-> >                                               pos >> PAGE_SHIFT, end);
-> >         }
-> >
-> > -       nfs_end_io_direct(inode);
-> > +       if (!swap)
-> > +               nfs_end_io_direct(inode);
->=20
-> Just above this code diff, there is;
->     if (mapping->nrpages) {
->         invalidate_inode_pages2_range(mapping,
->              pos >> PAGE_SHIFT, end);
->     }
->=20
-> This invalidation looks strange/wrong for a NFS swap write.  Should it
-> be disabled for the swap case?
+On Thu, 27 Jan 2022, NeilBrown wrote:
+> On Mon, 24 Jan 2022, Christoph Hellwig wrote:
+> > On Mon, Jan 24, 2022 at 02:48:32PM +1100, NeilBrown wrote:
+> > > Code that does swap read-ahead uses blk_start_plug() and
+> > > blk_finish_plug() to allow lower levels to combine multiple read-ahead
+> > > pages into a single request, but calls blk_finish_plug() *before*
+> > > submitting the original (non-ahead) read request.
+> > > This missed an opportunity to combine read requests.
 
-Yes, I think it should - particularly as we don't take the mutex in the
-swap case.  Thanks!
-This change improves the look of the code too :-)
+No, you're misunderstanding there.  All the necessary reads are issued
+within the loop, between the plug and unplug: it does not skip over
+the target page in the loop, but issues its read along with the rest.
 
-Thanks,
-NeilBrown
+But it has not kept any of those pages locked, nor even kept any
+refcounts raised: so at the end has to look up the target page again
+with the final read_swap_cache_async() (which also copes with the
+highly unlikely case that the page got swapped out again meanwhile).
+
+> > > 
+> > > This patch moves the blk_finish_plug to *after* all the reads.
+> > > This will likely combine the primary read with some of the "ahead"
+> > > reads, and that may slightly increase the latency of that read, but it
+> > > should more than make up for this by making more efficient use of the
+> > > storage path.
+> > > 
+> > > The patch mostly makes the code look more consistent.  Performance
+> > > change is unlikely to be noticeable.
+> > 
+> > Looks good:
+> > 
+> > Reviewed-by: Christoph Hellwig <hch@lst.de>
+> 
+> Thanks.
+> > 
+> > > Fixes-no-auto-backport: 3fb5c298b04e ("swap: allow swap readahead to be merged")
+> > 
+> > Is this really a thing?
+> Maybe it should be.....
+> As I'm sure you guessed, I think it is valuable to record this
+> connection between commits, but I don't like it hasty automatic
+> backporting of patches where the (unknown) risk might exceed the (known)
+> value.  This is how I choose to state my displeasure.
+
+I don't suppose your patch does any actual harm (beyond propagating a
+misunderstanding), but it's certainly not a fix, and I think should
+simply be dropped from the series.
+
+(But please don't expect any comment from me on the rest:
+SWP_FS_OPS has always been beyond my understanding.)
+
+Hugh
