@@ -2,177 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0937C49BFD1
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 01:02:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18F7249C006
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 01:14:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235076AbiAZACX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 25 Jan 2022 19:02:23 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:42784 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235042AbiAZACW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 19:02:22 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B901B1F3A8;
-        Wed, 26 Jan 2022 00:02:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643155341; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/XM3QhY2fjGwDoRLOed1rinLYL3Ehp3WMR2L3NJp//o=;
-        b=QFSLb+M3mkY574E0OCvEemuy1kbmoMtONEWhW6CA1Vm7jlwVXxXMIPs3ZYqn+s5WrFlcIF
-        lSqVlqr8615IwjJ3tsNmAwm0R+JM7/M7J9+y9EJTrJe8O8LkmlfHc0ArTcPzzP+Ae3qiwd
-        Lw8PMYpiLc1RZm7sgpP8e+PCyLYeqSQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643155341;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/XM3QhY2fjGwDoRLOed1rinLYL3Ehp3WMR2L3NJp//o=;
-        b=RxRUpozeZsQkJmSYA9eFMd38ZlKXwGDwqBxomvycAH7UBUwb2wWePk8N4MThY7VUCDnIA3
-        IpxwY4IDdHFhtcCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5146B13EFD;
-        Wed, 26 Jan 2022 00:02:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 7SsaA4yP8GGDcwAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 26 Jan 2022 00:02:20 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        id S233962AbiAZAOp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Jan 2022 19:14:45 -0500
+Received: from mta-202a.oxsus-vadesecure.net ([51.81.232.240]:44537 "EHLO
+        nmtao202.oxsus-vadesecure.net" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S232124AbiAZAOo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Jan 2022 19:14:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; bh=GwwZTIQ9wswcFEeUmNnAJEqvsFRZV319ZAEwFT
+ eWBXA=; c=relaxed/relaxed; d=earthlink.net; h=from:reply-to:subject:
+ date:to:cc:resent-date:resent-from:resent-to:resent-cc:in-reply-to:
+ references:list-id:list-help:list-unsubscribe:list-subscribe:list-post:
+ list-owner:list-archive; q=dns/txt; s=dk12062016; t=1643156082;
+ x=1643760882; b=Qr0XNuIPKQSQ1RHgCsBykvrfVmaJ0b1rLd7NtQDemoTv+CdHwtqwuQG
+ C7pntOYucuF4Ob+orPvtM6oISt7673yaYWW2ngIMqfnEmmI8DrUCt7pvfd+2UhRktYDfNL4
+ 1Gw/ZZnZuSxXIWUPDsBgWoL3Vyu1UCotqGW+OdESZrEmYiwWmg0BplMtNjmkTsARHQCHoDv
+ NGivdHqn8BAiwHm2NJgUAHs7yTSpQT8qvLvhTNQ4VY16Gh97gQqwaBPcZZz46mtQvV4h7kO
+ xYoDLX1EpZaJ3I1zXxKiFlbKnXjSq0azi0UgSw0FDttIxgbiqd9AsBBhWmyen1fsVy5lhc5
+ 5RA==
+Received: from FRANKSTHINKPAD ([76.105.143.216])
+ by smtp.oxsus-vadesecure.net ESMTP oxsus2nmtao02p with ngmta
+ id 141a7bf2-16cda9c042a37204; Wed, 26 Jan 2022 00:14:42 +0000
+From:   "Frank Filz" <ffilzlnx@mindspring.com>
+To:     "'Bruce Fields'" <bfields@redhat.com>,
+        "'NeilBrown'" <neilb@suse.de>
+Cc:     "'Petr Vorel'" <pvorel@suse.cz>,
+        "'Linux NFS Mailing List'" <linux-nfs@vger.kernel.org>,
+        "'Yong Sun'" <yosun@suse.com>
+References: <YLY9pKu38lEWaXxE@pevik> <YLZS1iMJR59n4hue@pick.fieldses.org> <164248153844.24166.16775550865302060652@noble.neil.brown.name> <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+In-Reply-To: <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+Subject: RE: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+Date:   Tue, 25 Jan 2022 16:14:42 -0800
+Message-ID: <0b8e01d81249$b7c4f300$274ed900$@mindspring.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     "Patrick Goetz" <pgoetz@math.utexas.edu>,
-        "Daire Byrne" <daire@dneg.com>,
-        "linux-nfs" <linux-nfs@vger.kernel.org>
-Subject: Re: parallel file create rates (+high latency)
-In-reply-to: <20220125212055.GB17638@fieldses.org>
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>,
- <20220124193759.GA4975@fieldses.org>,
- <adce2b72-ed5c-3056-313c-caea9bad4e15@math.utexas.edu>,
- <20220125212055.GB17638@fieldses.org>
-Date:   Wed, 26 Jan 2022 11:02:16 +1100
-Message-id: <164315533676.5493.13243313269022942124@noble.neil.brown.name>
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 15.0
+Content-Language: en-us
+Thread-Index: AQI9qwG/Gn+aGzx22KdRvijo3WxbYgIwI6tiAZArGOQBpS72xKt+Dldw
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 26 Jan 2022, J. Bruce Fields wrote:
-> On Tue, Jan 25, 2022 at 03:15:42PM -0600, Patrick Goetz wrote:
-> > So the directory is locked while the inode is created, or something
-> > like this, which makes sense.
+Yes, I believe I wrote this test to recreate a condition we saw in the =
+wild. There is no guarantee the client doesn't send LOCK with an OPEN =
+stateid and requesting new lock owner when you already have a LOCK =
+stateid for that lock owner. This test case forces that condition.
+
+It looks like we were having troubles with FREE_STATEID racing with =
+LOCK. A LOCK following a FREE_STATEID MUST use the OPEN stateid and ask =
+for a new lock owner (since the LOCK stateid was freed), but if the LOCK =
+wins the race, the old LOCK stateid still exists, so we get an LOCK with =
+OPEN stateid requesting new lock owner where the STATEID will already =
+exist.
+
+Now maybe there's a different way to resolve the race, but if the LOCK =
+truly arrives before Ganesha even sees the FREE_STATEID then it has no =
+knowledge that would allow it to delay the LOCK request. Before we made =
+changes to allow this I believe we replied with an error that broke =
+things client side.
+
+Here's a Ganesha patch trying to resolve the race and creating the =
+condition that LOCK24 was then written to test:
+
+https://github.com/nfs-ganesha/nfs-ganesha/commit/7d0fb8e9328c40fcfae03ac=
+950a854f56689bb44
+
+Of course the client may have changed to eliminate the race...
+
+If need be, just change this from an "all" test to a "ganesha" test.
+
+Frank
+
+> -----Original Message-----
+> From: Bruce Fields [mailto:bfields@redhat.com]
+> Sent: Tuesday, January 25, 2022 2:47 PM
+> To: NeilBrown <neilb@suse.de>
+> Cc: Petr Vorel <pvorel@suse.cz>; Linux NFS Mailing List <linux-
+> nfs@vger.kernel.org>; Yong Sun <yosun@suse.com>; Frank S. Filz
+> <ffilzlnx@mindspring.com>
+> Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
 >=20
-> It accomplishes a number of things, details in
-> https://www.kernel.org/doc/html/latest/filesystems/directory-locking.html
-
-Just in case anyone is interested, I wrote this a while back:
-
-http://lists.lustre.org/pipermail/lustre-devel-lustre.org/2018-November/00817=
-7.html
-
-it includes a patch to allow parallel creates/deletes over NFS (and any
-other filesystem which adds support).
-I doubt it still applies, but it wouldn't be hard to make it work if
-anyone was willing to make a strong case that we would benefit from
-this.
-
-NeilBrown
-
-
->=20
-> > File creation means the directory
-> > "file" is being updated. Just to be clear, though, from your ssh
-> > suggestion below, this limitation does not exist if an existing file
-> > is being updated?
->=20
-> You don't need to take the exclusive i_rwsem lock on the directory to
-> update an existing file, no.
->=20
-> (But I was only suggesting that creating a bunch of files by ssh'ing
-> into the server first and doing the create there would be faster,
-> because the latency of each file create is less when you're running it
-> directly on the server, as opposed to over a wide-area network
-> connection.)
+> Frank added this test in 4299316fb357, and I don't really understand =
+his
+> description, but it *sounds* like he really wanted it to do the =
+new-lockowner
+> case.  Frank?
 >=20
 > --b.
 >=20
-> >=20
-> >=20
+> On Tue, Jan 18, 2022 at 12:01 AM NeilBrown <neilb@suse.de> wrote:
+> >
+> > On Wed, 02 Jun 2021, J. Bruce Fields wrote:
+> > > On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
 > > >
-> > >So, it's not surprising you'd get a higher rate when creating in
-> > >multiple directories.
+> > > > LOCK24   st_lock.testOpenUpgradeLock                             =
+ : FAILURE
+> > > >            OP_LOCK should return NFS4_OK, instead got
+> > > >            NFS4ERR_BAD_SEQID
 > > >
-> > >Also, that lock's taken on both client and server.  So it makes sense
-> > >that you might get a little more parallelism from multiple clients.
+> > > I suspect the server's actually OK here, but I need to look more
+> > > closely.
 > > >
-> > >So the usual advice is just to try to get that latency number as low as
-> > >possible, by using a low-latency network and storage that can commit
-> > >very quickly.  (An NFS server isn't permitted to reply to the RPC
-> > >creating the new file until the new file actually hits stable storage.)
-> > >
-> > >Are you really seeing 200ms in production?
-> > >
-> > >--b.
-> > >
-> > >>
-> > >>If I start 100 processes on the same client creating unique files in a
-> > >>single shared directory (with 200ms latency), the rate of new file
-> > >>creates is limited to around 3 files per second. Something like this:
-> > >>
-> > >># add latency to the client
-> > >>sudo tc qdisc replace dev eth0 root netem delay 200ms
-> > >>
-> > >>sudo mount -o vers=3D4.2,nocto,actimeo=3D3600 server:/data /tmp/data
-> > >>for x in {1..10000}; do
-> > >>     echo /tmp/data/dir1/touch.$x
-> > >>done | xargs -n1 -P 100 -iX -t touch X 2>&1 | pv -l -a > /dev/null
-> > >>
-> > >>It's a similar (slow) result for NFSv3. If we run it again just to
-> > >>update the existing files, it's a lot faster because of the
-> > >>nocto,actimeo and open file caching (32 files/s).
-> > >>
-> > >>Then if I switch it so that each process on the client creates
-> > >>hundreds of files in a unique directory per process, the aggregate
-> > >>file create rate increases to 32 per second. For NFSv3 it's 162
-> > >>aggregate new files per second. So much better parallelism is possible
-> > >>when the creates are spread across multiple remote directories on the
-> > >>same client.
-> > >>
-> > >>If I then take the slow 3 creates per second example again and instead
-> > >>use 10 client hosts (all with 200ms latency) and set them all creating
-> > >>in the same remote server directory, then we get 3 x 10 =3D 30 creates
-> > >>per second.
-> > >>
-> > >>So we can achieve some parallel file create performance in the same
-> > >>remote directory but just not from a single client running multiple
-> > >>processes. Which makes me think it's more of a client limitation
-> > >>rather than a server locking issue?
-> > >>
-> > >>My interest in this (as always) is because while having hundreds of
-> > >>processes creating files in the same directory might not be a common
-> > >>workload, it is if you are re-exporting a filesystem and multiple
-> > >>clients are creating new files for writing. For example a batch job
-> > >>creating files in a common output directory.
-> > >>
-> > >>Re-exporting is a useful way of caching mostly read heavy workloads
-> > >>but then performance suffers for these metadata heavy or writing
-> > >>workloads. The parallel performance (nfsd threads) with a single
-> > >>client mountpoint just can't compete with directly connected clients
-> > >>to the originating server.
-> > >>
-> > >>Does anyone have any idea what the specific bottlenecks are here for
-> > >>parallel file creates from a single client to a single directory?
-> > >>
-> > >>Cheers,
-> > >>
-> > >>Daire
->=20
->=20
+> > I agree.
+> > I think this patch fixes the test.
+> >
+> > NeilBrown
+> >
+> > From: NeilBrown <neilb@suse.de>
+> > Date: Tue, 18 Jan 2022 15:50:37 +1100
+> > Subject: [PATCH] Fix NFSv4.0 LOCK24 test
+> >
+> > Only the first lock request for a given open-owner can use =
+lock_file.
+> > Subsequent lock request must use relock_file.
+> >
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  nfs4.0/servertests/st_lock.py | 11 +++++++++--
+> >  1 file changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/nfs4.0/servertests/st_lock.py
+> > b/nfs4.0/servertests/st_lock.py index 468672403ffe..db08fbeedac4
+> > 100644
+> > --- a/nfs4.0/servertests/st_lock.py
+> > +++ b/nfs4.0/servertests/st_lock.py
+> > @@ -886,6 +886,7 @@ class open_sequence:
+> >          self.client =3D client
+> >          self.owner =3D owner
+> >          self.lockowner =3D lockowner
+> > +        self.lockseq =3D 0
+> >      def open(self, access):
+> >          self.fh, self.stateid =3D =
+self.client.create_confirm(self.owner,
+> >                                                 access=3Daccess, @@
+> > -899,15 +900,21 @@ class open_sequence:
+> >      def close(self):
+> >          self.client.close_file(self.owner, self.fh, self.stateid)
+> >      def lock(self, type):
+> > -        res =3D self.client.lock_file(self.owner, self.fh, =
+self.stateid,
+> > -                    type=3Dtype, lockowner=3Dself.lockowner)
+> > +        if self.lockseq =3D=3D 0:
+> > +            res =3D self.client.lock_file(self.owner, self.fh, =
+self.stateid,
+> > +                                        type=3Dtype, =
+lockowner=3Dself.lockowner)
+> > +        else:
+> > +            res =3D self.client.relock_file(self.lockseq, self.fh, =
+self.lockstateid,
+> > +                                        type=3Dtype)
+> >          check(res)
+> >          if res.status =3D=3D NFS4_OK:
+> >              self.lockstateid =3D res.lockid
+> > +            self.lockseq =3D self.lockseq + 1
+> >      def unlock(self):
+> >          res =3D self.client.unlock_file(1, self.fh, =
+self.lockstateid)
+> >          if res.status =3D=3D NFS4_OK:
+> >              self.lockstateid =3D res.lockid
+> > +            self.lockseq =3D self.lockseq + 1
+> >
+> >  def testOpenUpgradeLock(t, env):
+> >      """Try open, lock, open, downgrade, close
+> > --
+> > 2.34.1
+> >
+
