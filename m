@@ -2,90 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 22C6749D457
-	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 22:13:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98CC949D4AA
+	for <lists+linux-nfs@lfdr.de>; Wed, 26 Jan 2022 22:42:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232113AbiAZVNx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Jan 2022 16:13:53 -0500
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:7752 "EHLO
-        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S231972AbiAZVNw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 16:13:52 -0500
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20QKZM2e022462
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 21:13:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2021-07-09;
- bh=n+/KhuY3zJ8ueAuxcoQnSAnKUeY7prGE407rUzQHjhA=;
- b=l43qtiWzRLico/ogV2cIgPvQVZta5/oiUb+Wn4rXfc3t/YuCR9EnYpg1D0nqLa0XmgR7
- +HSQay7/DyP304O67lppoXo0no5LaoD3ld32z/CM9ilcZ9wSjLqNLZJLFV4kmPDeO7Of
- 3eI74V5WqFTPGTx1aDua3m/mPg/n1VzYXkcP4COv8rBdqry6lTrEjb5IG8oeDExeW+oh
- VWNlGlz2vcyHaMxeYIdZHGMo1E1Tnqjb02nqeANfhDERxDDtDG8JM512cPBCaeRoxA10
- 9+qthFgHlwjAVUGBN7Xmov/0yuEgEa/do5hpS2SXIm4UEGLnC7/DSSZpZP/QOXE0HqFg KQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3dsxvfq3ye-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 21:13:52 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20QL6op3049987
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 21:13:45 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 3dtax94wqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 21:13:45 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 20QLDjP4070092
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Jan 2022 21:13:45 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by aserp3020.oracle.com with ESMTP id 3dtax94wq8-1;
-        Wed, 26 Jan 2022 21:13:45 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] nfsd: nfsd4_setclientid_confirm mistakenly expires confirmed client.
-Date:   Wed, 26 Jan 2022 13:13:38 -0800
-Message-Id: <1643231618-24342-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-GUID: sb3omM7jdUTLiqkcfFlM5f46uN18jqBB
-X-Proofpoint-ORIG-GUID: sb3omM7jdUTLiqkcfFlM5f46uN18jqBB
+        id S232697AbiAZVm5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Jan 2022 16:42:57 -0500
+Received: from smtp-out1.suse.de ([195.135.220.28]:39174 "EHLO
+        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232672AbiAZVm5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 16:42:57 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id D8054218E8;
+        Wed, 26 Jan 2022 21:42:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643233375; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j8D3/iSgudTfOpodQ4uNAeH04etbukj0qfZT65VmtRY=;
+        b=O77jZ50FJkC7iNzTXGMDV2hNmUTIPLrSyjOFTujn+j9nacM71F+7k27HTvyaeMEKkwzru+
+        2Mbd4AF5ug1FWf9/Vx/2VBe49pXR9L+CVG86KHUcw7kIEUsfCudpe5UgY4o/DinWN4/tZb
+        pYsAHN+VjSqUL6htxeDYd5g9NSlfX9c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643233375;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=j8D3/iSgudTfOpodQ4uNAeH04etbukj0qfZT65VmtRY=;
+        b=dqNYRcFwnQNpOkMjkxCrgrcqfv6bp+DnkNy/sKad0ob00MRP4UtF3/ApM09Uktzou9AKH2
+        URcoL9hBtUB7e6AA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0089B13E3C;
+        Wed, 26 Jan 2022 21:42:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id hRo/LFzA8WFDQgAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 26 Jan 2022 21:42:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "mgorman@suse.de" <mgorman@suse.de>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 22/23] NFS: swap-out must always use STABLE writes.
+In-reply-to: <e50bf6286a89d60ee0879e55a30b15d84e97d9a4.camel@hammerspace.com>
+References: <164299573337.26253.7538614611220034049.stgit@noble.brown>,
+ <164299611287.26253.13462969110743208198.stgit@noble.brown>,
+ <e50bf6286a89d60ee0879e55a30b15d84e97d9a4.camel@hammerspace.com>
+Date:   Thu, 27 Jan 2022 08:42:49 +1100
+Message-id: <164323336953.5493.18342144609889647048@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From RFC 7530 Section 16.34.5:
+On Wed, 26 Jan 2022, Trond Myklebust wrote:
+> On Mon, 2022-01-24 at 14:48 +1100, NeilBrown wrote:
+> > The commit handling code is not safe against memory-pressure
+> > deadlocks
+> > when writing to swap.=C2=A0 In particular, nfs_commitdata_alloc() blocks
+> > indefinitely waiting for memory, and this can consume all available
+> > workqueue threads.
+> >=20
+> > swap-out most likely uses STABLE writes anyway as COND_STABLE
+> > indicates
+> > that a stable write should be used if the write fits in a single
+> > request, and it normally does.=C2=A0 However if we ever swap with a small
+> > wsize, or gather unusually large numbers of pages for a single write,
+> > this might change.
+> >=20
+> > For safety, make it explicit in the code that direct writes used for
+> > swap
+> > must always use FLUSH_COND_STABLE.
+>=20
+> OK. Your explanation above has me extremely confused.
+>=20
+> If you want to avoid commit, then you should be using FLUSH_STABLE,
+> since that forces the writes to be synchronous. FLUSH_COND_STABLE can
+> and will use unstable writes if it sees that there are more writes to
+> come.
+>=20
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> > =C2=A0fs/nfs/direct.c |=C2=A0=C2=A0=C2=A0 7 ++++---
+> > =C2=A01 file changed, 4 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+> > index 43a956d7fd62..29c007b2a17a 100644
+> > --- a/fs/nfs/direct.c
+> > +++ b/fs/nfs/direct.c
+> > @@ -791,7 +791,7 @@ static const struct nfs_pgio_completion_ops
+> > nfs_direct_write_completion_ops =3D {
+> > =C2=A0 */
+> > =C2=A0static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req
+> > *dreq,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct iov_iter *iter,
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 loff_t pos)
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 loff_t pos, int
+> > ioflags)
+> > =C2=A0{
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs_pageio_descrip=
+tor desc;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct inode *inode =3D d=
+req->inode;
+> > @@ -799,7 +799,7 @@ static ssize_t
+> > nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0size_t requested_bytes =
+=3D 0;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0size_t wsize =3D max_t(si=
+ze_t, NFS_SERVER(inode)->wsize,
+> > PAGE_SIZE);
+> > =C2=A0
+> > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_pageio_init_write(&desc, i=
+node, FLUSH_COND_STABLE, false,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_pageio_init_write(&desc, i=
+node, ioflags, false,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 &nfs_direct_write_completion_ops);
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0desc.pg_dreq =3D dreq;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0get_dreq(dreq);
+> > @@ -905,6 +905,7 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb,
+> > struct iov_iter *iter,
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs_direct_req *dr=
+eq;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs_lock_context *=
+l_ctx;
+> > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0loff_t pos, end;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ioflags =3D swap ? FLUSH_C=
+OND_STABLE : FLUSH_STABLE;
+>=20
+> This is an unacceptable change in behaviour for the non-swap case, so
+> NACK.
+>=20
 
-o  The server has not recorded an unconfirmed { v, x, c, *, * } and
-   has recorded a confirmed { v, x, c, *, s }.  If the principals of
-   the record and of SETCLIENTID_CONFIRM do not match, the server
-   returns NFS4ERR_CLID_INUSE without removing any relevant leased
-   client state, and without changing recorded callback and
-   callback_ident values for client { x }.
+Hi Trond,
+ thanks for the review.
+ You are right - I had that test exactly backwards.  I've fixed for the
+ next version.
 
-The current code intents to do what the spec describes above but
-it forgot to set 'old' to NULL resulting to the confirmed client
-to be expired.
-
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 72900b89cf84..32063733443d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4130,8 +4130,10 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
- 			status = nfserr_clid_inuse;
- 			if (client_has_state(old)
- 					&& !same_creds(&unconf->cl_cred,
--							&old->cl_cred))
-+							&old->cl_cred)) {
-+				old = NULL;
- 				goto out;
-+			}
- 			status = mark_client_expired_locked(old);
- 			if (status) {
- 				old = NULL;
--- 
-2.9.5
-
+Thanks,
+NeilBrown
