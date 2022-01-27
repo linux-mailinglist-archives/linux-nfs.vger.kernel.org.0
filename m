@@ -2,102 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AF849EB35
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 20:42:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60B4A49EB50
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 20:49:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235493AbiA0TmK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 14:42:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
+        id S239816AbiA0Tt4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 14:49:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245642AbiA0TmJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 14:42:09 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C67EC061714
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 11:42:09 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id EBE82608A; Thu, 27 Jan 2022 14:42:07 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EBE82608A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643312527;
-        bh=T9iBe/wUpXbJVucrY4lsUNK3tBVT9rgR0Z3HQ5eOm+0=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=I/TUJmY8pPRtPZ7LR1znGzLoo8Oo9boQbayiPbQwwhSGYRbiGhhexzXSJUZBIefVe
-         IMuH4/AwDiVlD1wvE1Fd48ykV4L/JJui58G3K2wtK/SyVcBZXo1sLRU4X8tiYN4YBc
-         c2D5vg7VOjdUgdb6aaBSFw7co6ur906vzktK/zg4=
-Date:   Thu, 27 Jan 2022 14:42:07 -0500
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: nfsd4_setclientid_confirm mistakenly expires
- confirmed client.
-Message-ID: <20220127194207.GA3459@fieldses.org>
-References: <1643231618-24342-1-git-send-email-dai.ngo@oracle.com>
- <5D07AA4C-D6ED-4E53-AFFE-D0B91B11622C@oracle.com>
+        with ESMTP id S235210AbiA0Ttz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 14:49:55 -0500
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10745C061714
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 11:49:55 -0800 (PST)
+Received: by mail-qv1-xf2d.google.com with SMTP id hu2so3811072qvb.8
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 11:49:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3e8h6kKbAzstWQQgLI0QPxCAZT5om4JOr3OSWjN3bUk=;
+        b=JRCF7TWhZTW/JUGUfSZbJgoXK++JD1TpqI53h9gPjYUCseSe1R0kufsSFeA+3K8KJ7
+         2vTSWE89nJdoJIm/LiluOp+m0Ts2EJJRdUjsHlPmVopjPAHYMSW56Uh1hY21uzKK9j/R
+         hd9TmIges8710T9Rvq2OT0rsuHCGq80WQbuO1jdtNzdh2Zkr+ugGMB9rq2CJ4V8Fhl+w
+         qLcwq9xeLIFTWIXD1OOd57WTtPslzvacFiP2jCYziqx/kInUabLHHSwsfdSMB4IvvzZQ
+         114wt8fyjglveplV/3iOn1dYjRv8NXXT7o+BEhTp/CXe45ltrBNEmlIIDZqbMl1dCx4o
+         BpXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=3e8h6kKbAzstWQQgLI0QPxCAZT5om4JOr3OSWjN3bUk=;
+        b=7TAWe64oUdWdmNW1aP709zlRN3PJ9D2D01yqYF1F/CjpCFHNaLHV6SXtESOm3LIQS1
+         3bxTDhR1jXoAw+aK+R2LGdGNa6n4AxXYL899Z0nINQybqyb557dVUMqUKSZp+ofKrim9
+         PI9fnOnVLZG4WkwEQ+Zhpb9+8SK0QFlXj94PNF8jWc+aNK4h52WeDH/ArZFtf8dBUUud
+         eq4zoBIDrdf0U8/PdN5szcYl8FP0auLvXa3jMNXdnq9E/sN7V4IKpnTJWUDXeqgb2xq9
+         k4euenyL11Te7p60fsO0icjwz2OMTd3YT61+yq23cbC9lkXVq36je9rdNqBcMYovF0Ee
+         uvGg==
+X-Gm-Message-State: AOAM530mL9l7iWEo9+2PjXRymXU2UUaSoRTdcnvbeR60DmX0zrL18RoJ
+        CXrAYYRAq08aRarR7H5lpAI=
+X-Google-Smtp-Source: ABdhPJyrzjM4ozas4DPNFpGJKvEtcfzgAfiQ3K0uCooZ7rP6ou1IXZD6DJi44JejfsNDd0+yMW/Tow==
+X-Received: by 2002:a05:6214:20e7:: with SMTP id 7mr5125284qvk.48.1643312994067;
+        Thu, 27 Jan 2022 11:49:54 -0800 (PST)
+Received: from gouda.nowheycreamery.com ([2601:401:100:a3a:aa6d:aaff:fe2e:8a6a])
+        by smtp.gmail.com with ESMTPSA id g7sm1836483qkc.104.2022.01.27.11.49.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jan 2022 11:49:53 -0800 (PST)
+Sender: Anna Schumaker <schumakeranna@gmail.com>
+From:   schumaker.anna@gmail.com
+X-Google-Original-From: Anna.Schumaker@Netapp.com
+To:     steved@redhat.com, linux-nfs@vger.kernel.org
+Cc:     Anna.Schumaker@Netapp.com
+Subject: [PATCH v7 0/9] Add a tool for using the new sysfs files
+Date:   Thu, 27 Jan 2022 14:49:43 -0500
+Message-Id: <20220127194952.63033-1-Anna.Schumaker@Netapp.com>
+X-Mailer: git-send-email 2.35.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5D07AA4C-D6ED-4E53-AFFE-D0B91B11622C@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 03:51:54PM +0000, Chuck Lever III wrote:
-> Hi Dai-
-> 
-> > On Jan 26, 2022, at 4:13 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
-> > 
-> > From RFC 7530 Section 16.34.5:
-> > 
-> > o  The server has not recorded an unconfirmed { v, x, c, *, * } and
-> >   has recorded a confirmed { v, x, c, *, s }.  If the principals of
-> >   the record and of SETCLIENTID_CONFIRM do not match, the server
-> >   returns NFS4ERR_CLID_INUSE without removing any relevant leased
-> >   client state, and without changing recorded callback and
-> >   callback_ident values for client { x }.
-> > 
-> > The current code intents to do what the spec describes above but
-> > it forgot to set 'old' to NULL resulting to the confirmed client
-> > to be expired.
-> > 
-> > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> 
-> On it's face, this seems like the correct thing to do.
-> 
-> I believe the issue was introduced in commit 2b63482185e6 ("nfsd:
-> fix clid_inuse on mount with security change") in 2015. I can
-> add a Fixes: tag and apply this for 5.17-rc.
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Looks right to me too--thanks, Dai.
+These patches implement a tool that can be used to read and write the
+sysfs files, with subcommands!
 
---b.
+The following subcommands are implemented:
+	rpcctl client
+ 	rpcctl switch
+ 	rpcctl switch set
+ 	rpcctl xprt
+ 	rpcctl xprt set
 
-> > ---
-> > fs/nfsd/nfs4state.c | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > index 72900b89cf84..32063733443d 100644
-> > --- a/fs/nfsd/nfs4state.c
-> > +++ b/fs/nfsd/nfs4state.c
-> > @@ -4130,8 +4130,10 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp,
-> > 			status = nfserr_clid_inuse;
-> > 			if (client_has_state(old)
-> > 					&& !same_creds(&unconf->cl_cred,
-> > -							&old->cl_cred))
-> > +							&old->cl_cred)) {
-> > +				old = NULL;
-> > 				goto out;
-> > +			}
-> > 			status = mark_client_expired_locked(old);
-> > 			if (status) {
-> > 				old = NULL;
-> > -- 
-> > 2.9.5
-> > 
-> 
-> --
-> Chuck Lever
-> 
-> 
+So you can print out information about every switch with:
+	anna@client ~ % rpcctl switch
+	switch 0: xprts 1, active 1, queue 0
+		xprt 0: local, /var/run/gssproxy.sock [main]
+	switch 1: xprts 1, active 1, queue 0
+		xprt 1: local, /var/run/rpcbind.sock [main]
+	switch 2: xprts 1, active 1, queue 0
+		xprt 2: tcp, 192.168.111.1 [main]
+	switch 3: xprts 4, active 4, queue 0
+		xprt 3: tcp, 192.168.111.188 [main]
+		xprt 4: tcp, 192.168.111.188
+		xprt 5: tcp, 192.168.111.188
+		xprt 6: tcp, 192.168.111.188
+
+And information about each xprt:
+	anna@client ~ % rpcctl xprt
+	xprt 0: local, /var/run/gssproxy.sock, port 0, state <CONNECTED,BOUND>, main
+		Source: (einval), port 0, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 1: local, /var/run/rpcbind.sock, port 0, state <CONNECTED,BOUND>, main
+		Source: (einval), port 0, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 2: tcp, 192.168.111.1, port 2049, state <CONNECTED,BOUND>, main
+		Source: 192.168.111.222, port 959, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 3: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>, main
+		Source: 192.168.111.222, port 921, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 4: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 5: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 671, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	xprt 6: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 934, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+
+You can use the `set` subcommand to change the dstaddr of individual xprts:
+	anna@client ~ % sudo rpcctl xprt --id 4 
+	xprt 4: tcp, 192.168.111.188, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+	anna@client ~ % sudo rpcctl xprt set --id 4 --dstaddr server2.nowheycreamery.com
+	xprt 4: tcp, 192.168.111.186, port 2049, state <CONNECTED,BOUND>
+		Source: 192.168.111.222, port 726, Requests: 2
+		Congestion: cur 0, win 256, Slots: min 2, max 65536
+		Queues: binding 0, sending 0, pending 0, backlog 0, tasks 0
+
+Or for changing the dstaddr of all xprts attached to a switch:
+	anna@client % rpcctl switch --id 3
+	switch 3: xprts 4, active 4, queue 0
+		xprt 3: tcp, 192.168.111.188 [main]
+		xprt 4: tcp, 192.168.111.188
+		xprt 5: tcp, 192.168.111.188
+		xprt 6: tcp, 192.168.111.188
+	anna@client % sudo rpcctl switch set --id 4 --dstaddr server2.nowheycreamery.vm
+	switch 3: xprts 4, active 4, queue 0
+		xprt 2: tcp, 192.168.111.186 [main]
+		xprt 3: tcp, 192.168.111.186
+		xprt 5: tcp, 192.168.111.186
+		xprt 6: tcp, 192.168.111.186
+
+Changes in v7:
+- Fix up detecting if sysfs is mounted
+
+Thoughts?
+Anna
+
+
+Anna Schumaker (9):
+  rpcctl: Add a rpcctl.py tool
+  rpcctl: Add a command for printing xprt switch information
+  rpcctl: Add a command for printing individual xprts
+  rpcctl: Add a command for printing rpc client information
+  rpcctl: Add a command for changing xprt dstaddr
+  rpcctl: Add a command for changing xprt switch dstaddrs
+  rpcctl: Add a command for changing xprt state
+  rpcctl: Add a man page
+  rpcctl: Add installation to the Makefile
+
+ configure.ac             |   1 +
+ tools/Makefile.am        |   2 +-
+ tools/rpcctl/Makefile.am |  13 +++
+ tools/rpcctl/rpcctl.man  |  88 +++++++++++++++
+ tools/rpcctl/rpcctl.py   | 230 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 333 insertions(+), 1 deletion(-)
+ create mode 100644 tools/rpcctl/Makefile.am
+ create mode 100644 tools/rpcctl/rpcctl.man
+ create mode 100755 tools/rpcctl/rpcctl.py
+
+-- 
+2.35.0
+
