@@ -2,91 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C30F449E88E
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 18:11:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A51849E8B8
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 18:19:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238765AbiA0RLo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 12:11:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:29716 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S244389AbiA0RLo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 12:11:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643303503;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xtKZnu3m4MJ1lsPgVyhgN06mFCH9uLK+At7c0q3e4j8=;
-        b=LN8FAamK45sm6noJKUN6tg+JuKEjFXTHjCz0Gz3hQXd7xEnG8vCRHb6CYG8/0sito9KieR
-        EoA3uFroRZoPvlL+SDdS4cbDbrpWlWUd6YK5HZdf/U3wzh4GlyqcSS/9tB/oQEndPVNawx
-        37imUkamyk+Z/2GOH1G55UuYiAToeOc=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-499-V2Hfe1hpPn6rrwYsQFnvTg-1; Thu, 27 Jan 2022 12:11:42 -0500
-X-MC-Unique: V2Hfe1hpPn6rrwYsQFnvTg-1
-Received: by mail-qk1-f197.google.com with SMTP id p20-20020a05620a22b400b0047ecab0db4fso2879426qkh.2
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 09:11:42 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xtKZnu3m4MJ1lsPgVyhgN06mFCH9uLK+At7c0q3e4j8=;
-        b=IeyHfkkRaVfM06twoqo15UbIJBIsNx5GigJowuaV7CQfgTU+NYU+JjeHOxi7yiKVP5
-         VUk9JFUE+yN0R3yVNEC5TrSGoEv2cTXfZZpGYovypwza+J7J/rwuCIS6+vT6We4GTukV
-         q8LUbAntEUPRUHlioHWMCKGg3MDZfjNUPF27KmOdP1ZNea+xhknkjJvrwEuB2z3/jtH5
-         Jw06PXkAaC4MirTqSPhdvGkMrn7C1Co2Z4Y066KJh82CtykW1F3muatjtmP5uf6sQ5PO
-         8Ek/AGBKwcyQ25bsYeVuFxD8EWs7qDP5Jjk+d4mHb7/cUa2cyjmMRq315ieq59iIriUq
-         Kafg==
-X-Gm-Message-State: AOAM531f4qMfNpuEVs2RPlmiUh3v5lsTYqaTxQj3tjvauySZ39zI6M1X
-        mzUNygX2JignbK7bptN1e9Ck0gMzhtkS7weI8DbqWhhDq2IXmw3NUdMrngsUowOoJSVGVG8L2os
-        AC1HBE9BLngKxVd6sgEk=
-X-Received: by 2002:ad4:5968:: with SMTP id eq8mr3808168qvb.80.1643303501889;
-        Thu, 27 Jan 2022 09:11:41 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJztPCW/ls/HGsD9xe/WMaahh4UjrJsfEVpwqwRI5tHMnXcgyiZLuuvrhgvmY/MRUsNQeYYfvQ==
-X-Received: by 2002:ad4:5968:: with SMTP id eq8mr3808154qvb.80.1643303501730;
-        Thu, 27 Jan 2022 09:11:41 -0800 (PST)
-Received: from localhost (pool-68-160-176-52.bstnma.fios.verizon.net. [68.160.176.52])
-        by smtp.gmail.com with ESMTPSA id w8sm119796qti.21.2022.01.27.09.11.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jan 2022 09:11:41 -0800 (PST)
-Date:   Thu, 27 Jan 2022 12:11:40 -0500
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Md . Haris Iqbal " <haris.iqbal@ionos.com>,
-        Jack Wang <jinpu.wang@ionos.com>,
-        Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.co>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        linux-block@vger.kernel.org, dm-devel@redhat.com,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, ntfs3@lists.linux.dev,
-        xen-devel@lists.xenproject.org, drbd-dev@lists.linbit.com
-Subject: Re: [PATCH 08/19] dm-thin: use blkdev_issue_flush instead of open
- coding it
-Message-ID: <YfLSTPB7UUZKqQKL@redhat.com>
-References: <20220124091107.642561-1-hch@lst.de>
- <20220124091107.642561-9-hch@lst.de>
+        id S229483AbiA0RT1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 12:19:27 -0500
+Received: from ams.source.kernel.org ([145.40.68.75]:44050 "EHLO
+        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S242179AbiA0RT1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 12:19:27 -0500
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5DCE9B81366
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 17:19:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 294E1C340E4
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 17:19:25 +0000 (UTC)
+Subject: [PATCH] nfsv4.0/setattr: Check behavior of setting a large file size
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Thu, 27 Jan 2022 12:19:24 -0500
+Message-ID: <164330361583.2340756.18437536986986631991.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220124091107.642561-9-hch@lst.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 24 2022 at  4:10P -0500,
-Christoph Hellwig <hch@lst.de> wrote:
+Many POSIX systems internally use a signed file size. The NFS
+server has to correctly handle the conversion from a u64 size
+to the internal size value.
 
-> Use blkdev_issue_flush, which uses an on-stack bio instead of an
-> opencoded version with a bio embedded into struct pool.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ nfs4.0/servertests/st_setattr.py |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Acked-by: Mike Snitzer <snitzer@redhat.com>
+Just something to consider... "It's my first ray gun" so I'm sure
+I got something wrong here.
+
+diff --git a/nfs4.0/servertests/st_setattr.py b/nfs4.0/servertests/st_setattr.py
+index c3ecee3fbcfb..5d51054c29b4 100644
+--- a/nfs4.0/servertests/st_setattr.py
++++ b/nfs4.0/servertests/st_setattr.py
+@@ -562,6 +562,25 @@ def testUnsupportedSocket(t, env):
+     check(res)
+     _try_unsupported(t, env, path)
+ 
++def testMaxSizeFile(t, env):
++    """SETATTR(U64_MAX) of a file should return NFS4_OK or NFS4ERR_FBIG
++
++    FLAGS: setattr all
++    DEPEND: INIT
++    CODE: SATT12x
++    """
++    maxsize = 0xffffffffffffffff
++    c = env.c1
++    fh, stateid = c.create_confirm(t.word(), deny=OPEN4_SHARE_DENY_NONE)
++    dict = {FATTR4_SIZE: maxsize}
++    ops = c.use_obj(fh) + [c.setattr(dict, stateid)]
++    res = c.compound(ops)
++    check(res, [NFS4_OK, NFS4ERR_FBIG], "SETATTR(U64_MAX) of a file")
++    newsize = c.do_getattr(FATTR4_SIZE, fh)
++    if newsize != maxsize:
++        check(res, [NFS4ERR_INVAL, NFS4ERR_FBIG],
++                "File size is %i; SETATTR" % newsize)
++
+ def testSizeDir(t, env):
+     """SETATTR(_SIZE) of a directory should return NFS4ERR_ISDIR or NFS4ERR_BAD_STATEID
+ 
+
 
