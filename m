@@ -2,181 +2,185 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CD2149DE81
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 10:54:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D19149E05A
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 12:12:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238069AbiA0Jyy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 04:54:54 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124]:54647 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237979AbiA0Jyy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 04:54:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643277293;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=rDdQPcDy/BXM/pP3P0TjV4ib8OmOcmrz0QfWKeXF3XU=;
-        b=K0YroP/mRfDYFSt7rbYoHydoDTh/pSHL4OW5NOo1+hmYzeAWDtPOo+PSKK9TJT1LxBDLzR
-        GoZeTd2IFLzOM331iZV1SGgIuKwvLjSPKo+nuuAIFQ7QxlHy93mF1GH141U2ih2mmstUya
-        K6knec7dT57eKOxJHVSHnIPGOWW6mgw=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-182-m3na3BaHOuuoIWsYEeq96w-1; Thu, 27 Jan 2022 04:54:52 -0500
-X-MC-Unique: m3na3BaHOuuoIWsYEeq96w-1
-Received: by mail-yb1-f199.google.com with SMTP id n198-20020a2540cf000000b00614c2ee23b7so5050773yba.9
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 01:54:52 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rDdQPcDy/BXM/pP3P0TjV4ib8OmOcmrz0QfWKeXF3XU=;
-        b=zJL6wlVjM+OX3hvIkuDxG+vnuxYczisfN11dR7HYTK1W3a6LZuM3zs0LfD/Gpj8oBK
-         ae1fFU+nsm0twujGyaNca//GsbXiKsfcsv16ioEGXUu5mbfoNuaAlhmMFRdnW7weHtto
-         M3Yv/ntv/SVV6oUC9R3hbI+oLB3C8W4uzsr3ApTwDsM6uzS5Ji5Tr675HQGkf7crd63A
-         2p++Sf08n4Sxu7eJqagVcTaqPGa1CyLyB45qa7QOmB/3SWQ8l4NoNGLxI6QBSlRGs1ob
-         SpMEwRdaR3vVwS8t+PYi0+zS22UaNz9KWybptu7wsf81qQNbLQktQdIliq3x6TRuNGMK
-         MDHA==
-X-Gm-Message-State: AOAM530yeWPs35zPqSBp2vwwWeJkrZQ7sh50YNiZI6wQsE8CQZ/Snu4s
-        xSMYLzpjohPVFguJJSzyRdMXxa1j4ZZUgatNuB73JmupGEpHDBugiA5reJpcIZ920Ek9TPO0G7V
-        xab6tagidGhqEoHjOKh58INeu1X3meAPvNY7K
-X-Received: by 2002:a25:b003:: with SMTP id q3mr4101554ybf.767.1643277291804;
-        Thu, 27 Jan 2022 01:54:51 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJxIUAhfn61houAngphIKxZWb+8qIDFd2Y+AxEj9EvOc+Kbl9jUki4ydOR8JkmOT4urcd1J7Cnw9TB1/ZvP+Wqg=
-X-Received: by 2002:a25:b003:: with SMTP id q3mr4101543ybf.767.1643277291583;
- Thu, 27 Jan 2022 01:54:51 -0800 (PST)
+        id S239953AbiA0LMX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 06:12:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59310 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229484AbiA0LMW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 06:12:22 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01ECBC061714;
+        Thu, 27 Jan 2022 03:12:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 55F3DB821EE;
+        Thu, 27 Jan 2022 11:12:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0ECC340E4;
+        Thu, 27 Jan 2022 11:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643281939;
+        bh=V5HYgTWJFQ5JJsKuBtDbntq5jM8gqYnHqlB+WwVQUg0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=qs+oygNUvOkZojCS4tbIHBbHNnN2c83jSwVTtC+PXReiKpUgTryV/Jn9i4kA11TCx
+         wQIA8T/xXWysKr5FVnBsdp7s6T57gZuXoA8b+6AKW4GBWhPcMDiC878wFDfjGOUfSX
+         5ddnmsg5pr+FfS6jpyfRuWWfH+qIetrTGJZM1PAYwXCjUJyQB7D1Wcs5o++QKht+ze
+         N6Qaj6XKvoxOKPWxiTmKIzgNkaDO61bAS7aaPRXf+qfG+7pz/a1932PlgtYdjIokd4
+         zXshthMZgvLd9Pe0iKyNgu1FzP9P91fWoKA6y5OydLOCZNYRF9sJ2Iz0TLFNBDx5FN
+         vYRqTrnWEMhKw==
+Message-ID: <2e66ef3e8f5df0529d3c289f8ed0be6a051d95ea.camel@kernel.org>
+Subject: Re: [PATCH 5/9] cephfs: don't set/clear bdi_congestion
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
+Date:   Thu, 27 Jan 2022 06:12:15 -0500
+In-Reply-To: <164325158958.29787.8840004338500709466.stgit@noble.brown>
+References: <164325106958.29787.4865219843242892726.stgit@noble.brown>
+         <164325158958.29787.8840004338500709466.stgit@noble.brown>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.42.3 (3.42.3-1.fc35) 
 MIME-Version: 1.0
-References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
-In-Reply-To: <20220120214948.3637895-2-smayhew@redhat.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Thu, 27 Jan 2022 10:54:35 +0100
-Message-ID: <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
-To:     Scott Mayhew <smayhew@redhat.com>
-Cc:     SElinux list <selinux@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 20, 2022 at 10:50 PM Scott Mayhew <smayhew@redhat.com> wrote:
-> selinux_sb_mnt_opts_compat() is called under the sb_lock spinlock and
-> shouldn't be performing any memory allocations.  Fix this by parsing the
-> sids at the same time we're chopping up the security mount options
-> string and then using the pre-parsed sids when doing the comparison.
->
-> Fixes: cc274ae7763d ("selinux: fix sleeping function called from invalid context")
-> Fixes: 69c4a42d72eb ("lsm,selinux: add new hook to compare new mount to an existing mount")
-> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+On Thu, 2022-01-27 at 13:46 +1100, NeilBrown wrote:
+> The bdi congestion framework is no-longer used - writeback uses other
+> mechanisms to manage throughput.
+> 
+> So remove calls to set_bdi_congested() and clear_bdi_congested(), and
+> remove the writeback_count which is used only to guide the setting and
+> clearing.
+> 
+> The congestion_kb mount option is no longer meaningful, but as it is
+> visible to user-space, removing it needs more consideration.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  security/selinux/hooks.c | 112 ++++++++++++++++++++++++++-------------
->  1 file changed, 76 insertions(+), 36 deletions(-)
->
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 5b6895e4fc29..f27ca9e870c0 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -342,6 +342,11 @@ static void inode_free_security(struct inode *inode)
->
->  struct selinux_mnt_opts {
->         const char *fscontext, *context, *rootcontext, *defcontext;
-> +       u32 fscontext_sid;
-> +       u32 context_sid;
-> +       u32 rootcontext_sid;
-> +       u32 defcontext_sid;
-> +       unsigned short preparsed;
->  };
->
->  static void selinux_free_mnt_opts(void *mnt_opts)
-> @@ -598,12 +603,11 @@ static int bad_option(struct superblock_security_struct *sbsec, char flag,
->         return 0;
+>  fs/ceph/addr.c  |   27 ---------------------------
+>  fs/ceph/super.c |    2 --
+>  fs/ceph/super.h |    2 --
+>  3 files changed, 31 deletions(-)
+> 
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index c98e5238a1b6..9147667f8cd5 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -57,11 +57,6 @@
+>   * accounting is preserved.
+>   */
+>  
+> -#define CONGESTION_ON_THRESH(congestion_kb) (congestion_kb >> (PAGE_SHIFT-10))
+> -#define CONGESTION_OFF_THRESH(congestion_kb)				\
+> -	(CONGESTION_ON_THRESH(congestion_kb) -				\
+> -	 (CONGESTION_ON_THRESH(congestion_kb) >> 2))
+> -
+>  static int ceph_netfs_check_write_begin(struct file *file, loff_t pos, unsigned int len,
+>  					struct folio *folio, void **_fsdata);
+>  
+> @@ -561,10 +556,6 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
+>  	dout("writepage %p page %p index %lu on %llu~%llu snapc %p seq %lld\n",
+>  	     inode, page, page->index, page_off, len, snapc, snapc->seq);
+>  
+> -	if (atomic_long_inc_return(&fsc->writeback_count) >
+> -	    CONGESTION_ON_THRESH(fsc->mount_options->congestion_kb))
+> -		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
+> -
+>  	req = ceph_osdc_new_request(osdc, &ci->i_layout, ceph_vino(inode), page_off, &len, 0, 1,
+>  				    CEPH_OSD_OP_WRITE, CEPH_OSD_FLAG_WRITE, snapc,
+>  				    ceph_wbc.truncate_seq, ceph_wbc.truncate_size,
+> @@ -621,10 +612,6 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
+>  	ceph_put_wrbuffer_cap_refs(ci, 1, snapc);
+>  	ceph_put_snap_context(snapc);  /* page's reference */
+>  
+> -	if (atomic_long_dec_return(&fsc->writeback_count) <
+> -	    CONGESTION_OFF_THRESH(fsc->mount_options->congestion_kb))
+> -		clear_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
+> -
+>  	return err;
 >  }
->
-> -static int parse_sid(struct super_block *sb, const char *s, u32 *sid,
-> -                    gfp_t gfp)
-> +static int parse_sid(struct super_block *sb, const char *s, u32 *sid)
->  {
->         int rc = security_context_str_to_sid(&selinux_state, s,
-> -                                            sid, gfp);
-> -       if (rc)
-> +                                            sid, GFP_KERNEL);
-> +       if (rc && sb != NULL)
->                 pr_warn("SELinux: security_context_str_to_sid"
->                        "(%s) failed for (dev %s, type %s) errno=%d\n",
->                        s, sb->s_id, sb->s_type->name, rc);
-> @@ -673,8 +677,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->          */
->         if (opts) {
->                 if (opts->fscontext) {
-> -                       rc = parse_sid(sb, opts->fscontext, &fscontext_sid,
-> -                                       GFP_KERNEL);
-> +                       rc = parse_sid(sb, opts->fscontext, &fscontext_sid);
->                         if (rc)
->                                 goto out;
->                         if (bad_option(sbsec, FSCONTEXT_MNT, sbsec->sid,
-> @@ -683,8 +686,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->                         sbsec->flags |= FSCONTEXT_MNT;
->                 }
->                 if (opts->context) {
-> -                       rc = parse_sid(sb, opts->context, &context_sid,
-> -                                       GFP_KERNEL);
-> +                       rc = parse_sid(sb, opts->context, &context_sid);
->                         if (rc)
->                                 goto out;
->                         if (bad_option(sbsec, CONTEXT_MNT, sbsec->mntpoint_sid,
-> @@ -693,8 +695,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->                         sbsec->flags |= CONTEXT_MNT;
->                 }
->                 if (opts->rootcontext) {
-> -                       rc = parse_sid(sb, opts->rootcontext, &rootcontext_sid,
-> -                                       GFP_KERNEL);
-> +                       rc = parse_sid(sb, opts->rootcontext, &rootcontext_sid);
->                         if (rc)
->                                 goto out;
->                         if (bad_option(sbsec, ROOTCONTEXT_MNT, root_isec->sid,
-> @@ -703,8 +704,7 @@ static int selinux_set_mnt_opts(struct super_block *sb,
->                         sbsec->flags |= ROOTCONTEXT_MNT;
->                 }
->                 if (opts->defcontext) {
-> -                       rc = parse_sid(sb, opts->defcontext, &defcontext_sid,
-> -                                       GFP_KERNEL);
-> +                       rc = parse_sid(sb, opts->defcontext, &defcontext_sid);
->                         if (rc)
->                                 goto out;
->                         if (bad_option(sbsec, DEFCONTEXT_MNT, sbsec->def_sid,
-> @@ -976,6 +976,9 @@ static int selinux_add_opt(int token, const char *s, void **mnt_opts)
->  {
->         struct selinux_mnt_opts *opts = *mnt_opts;
->         bool is_alloc_opts = false;
-> +       bool preparse_sid = false;
-> +       u32 sid;
-> +       int rc;
->
->         if (token == Opt_seclabel)
->                 /* eaten and completely ignored */
-> @@ -991,26 +994,57 @@ static int selinux_add_opt(int token, const char *s, void **mnt_opts)
->                 is_alloc_opts = true;
->         }
->
-> +       if (selinux_initialized(&selinux_state))
-> +               preparse_sid = true;
-> +
+>  
+> @@ -704,12 +691,6 @@ static void writepages_finish(struct ceph_osd_request *req)
+>  			BUG_ON(!page);
+>  			WARN_ON(!PageUptodate(page));
+>  
+> -			if (atomic_long_dec_return(&fsc->writeback_count) <
+> -			     CONGESTION_OFF_THRESH(
+> -					fsc->mount_options->congestion_kb))
+> -				clear_bdi_congested(inode_to_bdi(inode),
+> -						    BLK_RW_ASYNC);
+> -
+>  			ceph_put_snap_context(detach_page_private(page));
+>  			end_page_writeback(page);
+>  			dout("unlocking %p\n", page);
+> @@ -952,14 +933,6 @@ static int ceph_writepages_start(struct address_space *mapping,
+>  			dout("%p will write page %p idx %lu\n",
+>  			     inode, page, page->index);
+>  
+> -			if (atomic_long_inc_return(&fsc->writeback_count) >
+> -			    CONGESTION_ON_THRESH(
+> -				    fsc->mount_options->congestion_kb)) {
+> -				set_bdi_congested(inode_to_bdi(inode),
+> -						  BLK_RW_ASYNC);
+> -			}
+> -
+> -
+>  			pages[locked_pages++] = page;
+>  			pvec.pages[i] = NULL;
+>  
+> diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+> index bf79f369aec6..b2f38af9fca8 100644
+> --- a/fs/ceph/super.c
+> +++ b/fs/ceph/super.c
+> @@ -801,8 +801,6 @@ static struct ceph_fs_client *create_fs_client(struct ceph_mount_options *fsopt,
+>  	fsc->filp_gen = 1;
+>  	fsc->have_copy_from2 = true;
+>  
+> -	atomic_long_set(&fsc->writeback_count, 0);
+> -
+>  	err = -ENOMEM;
+>  	/*
+>  	 * The number of concurrent works can be high but they don't need
+> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> index 67f145e1ae7a..fc58adf1d36a 100644
+> --- a/fs/ceph/super.h
+> +++ b/fs/ceph/super.h
+> @@ -120,8 +120,6 @@ struct ceph_fs_client {
+>  
+>  	struct ceph_mds_client *mdsc;
+>  
+> -	atomic_long_t writeback_count;
+> -
+>  	struct workqueue_struct *inode_wq;
+>  	struct workqueue_struct *cap_wq;
+>  
+> 
+> 
 
-I wonder if we could make this all much simpler by *always* doing the
-label parsing in selinux_add_opt() and just returning an error when
-!selinux_initialized(&selinux_state). Before the new mount API, mount
-options were always passed directly to the mount(2) syscall, so it
-wasn't possible to pass any SELinux mount options before the SELinux
-policy was loaded. I don't see why we need to jump through hoops here
-just to support this pseudo-feature of stashing an unparsed label into
-an fs_context before policy is loaded... Userspace should never need
-to do that.
+Thanks Neil.
 
+I'll plan to pull this into the ceph testing branch and do some testing
+with it, but at a quick glance I don't forsee any issues. This should
+make v5.18, but we may be able to get it in sooner.
 -- 
-Ondrej Mosnacek
-Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
-
+Jeff Layton <jlayton@kernel.org>
