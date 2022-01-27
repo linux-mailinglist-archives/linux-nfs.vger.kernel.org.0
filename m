@@ -2,97 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1707049EC25
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 21:06:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D51449EC40
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 21:09:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbiA0UGj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 15:06:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
+        id S231156AbiA0UJn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 15:09:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231156AbiA0UGj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 15:06:39 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D0DC061714
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 12:06:39 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id D9C69608A; Thu, 27 Jan 2022 15:06:38 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org D9C69608A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643313998;
-        bh=9959/BUjXBc0N1kAx1oAXJkrpAQZJaAofqwFZinX6B8=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=CQD8GoTUZ3wmFGqrwCjvfq0Brjy4gCSjMqo8phoz6J852H5MxoYMrtQrlIqqOhMb9
-         X9x8Hb0hzUU4+GrEbVq5dfv0lZIZ4/FiQzTGP0iSTWxzAOK8UXOlFbT0g+kf1LbtrG
-         o2ZndjiKrRMg72rJLO30ZQVTGR4PdzOTTNTgjXGY=
-Date:   Thu, 27 Jan 2022 15:06:38 -0500
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
-Message-ID: <20220127200638.GB3459@fieldses.org>
-References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
+        with ESMTP id S240073AbiA0UJm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 15:09:42 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCCD6C06173B;
+        Thu, 27 Jan 2022 12:09:42 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id f8so3243577pgf.8;
+        Thu, 27 Jan 2022 12:09:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fT+b6INOFgJpXVBYjD5AMsoOSZs+vb7kY64VrdFYpaY=;
+        b=TYtLS1/y6ThrmGYt1q1IzcYKPbR90vwqzWo+pM+CTK4Nlkk5Zb+znVPcMFtLvN9Svy
+         7jp2M1VBbn+OvoCWCvDtVlAMqua2f6U7vQaxmoKol/Uyxsu1cp0r88GGF6/Mqgy5OxNY
+         pop2BzP+THuOiqSr30uvlHShKmEaTh/iSxxa/vIck3XXMlxfnAHWV0G8dklk9Q2Jewx2
+         6WXgRZloICnG2opaf1ZDuWuqmAyJiZnOx4MU3rjbvfR4rISCMCXqXhuJCeMyDr8tAKDy
+         V6CZ3Dm+jxoJwoRi3iAn6fOWps12OZ3QNYRe6qDkynnImWbUyvmb2NhJJRNgOHWUZCgf
+         Gblg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fT+b6INOFgJpXVBYjD5AMsoOSZs+vb7kY64VrdFYpaY=;
+        b=2Gr/s7IpkX6FJ2oE2XvsltYLG7cvK89u2IKsG45z+ZqpTATFVb/8rKA0fzZqFkhQbh
+         MfaqAXTF74XPIbkBjUFnUonKzOIUA55xA4XA1QY+SdQM7sFam/9+ESrDCsheqw+l0wye
+         oDkbqDwqevtcAXJmFiMAJaYwIgHibLXde/d7TzDrBKQjwos4VwtJFdaNZBDsMvaS8yXL
+         NZBB808nHb9upaLlH0UNWhM/m367PEn/RhlNn4tT2xoGCDzZufHqJrBsgxfwqnjQoJXV
+         6zPggIKBeWIhjAXH4NB5vbwbXkxGzuCN7KCs14xTJbnxA3yQzbJ1ZgZqrfQyh52RgOkX
+         FBbg==
+X-Gm-Message-State: AOAM5310a0kLbqKjwqRRRhfZhl4kp+7b9PApiLZFrTJAW8grcJmN0wOV
+        o06y+b2IW4EkKr04LxP3f9E=
+X-Google-Smtp-Source: ABdhPJysb9sobuVpahnTZixlk0tt6y/UUUPKWfb7qZyU5UTWjtc1x1+4Ubet5CgeWKi1okgrhJ2C/g==
+X-Received: by 2002:aa7:88c9:: with SMTP id k9mr4446913pff.58.1643314182421;
+        Thu, 27 Jan 2022 12:09:42 -0800 (PST)
+Received: from edumazet1.svl.corp.google.com ([2620:15c:2c4:201:ab5e:9016:8c9e:ba75])
+        by smtp.gmail.com with ESMTPSA id y42sm5697892pfw.157.2022.01.27.12.09.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jan 2022 12:09:42 -0800 (PST)
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+To:     "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>
+Subject: [PATCH net-next 0/3] SUNRPC: add some netns refcount trackers
+Date:   Thu, 27 Jan 2022 12:09:34 -0800
+Message-Id: <20220127200937.2157402-1-eric.dumazet@gmail.com>
+X-Mailer: git-send-email 2.35.0.rc0.227.g00780c9af4-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164325908579.23133.4781039121536248752.stgit@noble.brown>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 03:58:10PM +1100, NeilBrown wrote:
-> If a filesystem is exported to a client with NFSv4 and that client holds
-> a file open, the filesystem cannot be unmounted without either stopping the
-> NFS server completely, or blocking all access from that client
-> (unexporting all filesystems) and waiting for the lease timeout.
-> 
-> For NFSv3 - and particularly NLM - it is possible to revoke all state by
-> writing the path to the filesystem into /proc/fs/nfsd/unlock_filesystem.
-> 
-> This series extends this functionality to NFSv4.  With this, to unmount
-> an exported filesystem is it sufficient to disable export of that
-> filesystem, and then write the path to unlock_filesystem.
+From: Eric Dumazet <edumazet@google.com>
 
-It's always been weird that /proc/fs/nfsd/unlock_filesystem was v3-only,
-so thanks for looking into extending it to v4.
+Effort started in linux-5.17
 
-You can accomplish the same by stopping the server, unexporting, then
-restarting, but then applications may see grace-period-length delays.
-So in a way this is just an optimization for what's probably a rare
-operation.  Probably worth it, but I'd still be curious if there's any
-specific motivating cases you can share.
+Our goal is to replace get_net()/put_net() pairs with
+get_net_track()/put_net_track() to get instant notifications
+of imbalance bugs in the future.
 
-I guess the procedure would be to unexport and then write to
-/proc/fs/nfsd/unlock_filesystem?  An option to exportfs to do both might
-be handy.
+Patches were split from a bigger series sent one month ago.
 
-> I've cursed mainly on NFSv4.1
+Eric Dumazet (3):
+  SUNRPC: add netns refcount tracker to struct svc_xprt
+  SUNRPC: add netns refcount tracker to struct gss_auth
+  SUNRPC: add netns refcount tracker to struct rpc_xprt
 
-It does inspire strong feelings sometimes.
+ include/linux/sunrpc/svc_xprt.h |  1 +
+ include/linux/sunrpc/xprt.h     |  1 +
+ net/sunrpc/auth_gss/auth_gss.c  | 10 ++++++----
+ net/sunrpc/svc_xprt.c           |  4 ++--
+ net/sunrpc/xprt.c               |  4 ++--
+ 5 files changed, 12 insertions(+), 8 deletions(-)
 
---b.
+-- 
+2.35.0.rc0.227.g00780c9af4-goog
 
-> and later for this.  I haven't tested
-> yet with NFSv4.0 which has different mechanisms for state management.
-> 
-> If this series is seen as a general acceptable approach, I'll look into
-> the NFSv4.0 aspects properly and make sure it works there.
-> 
-> Thanks,
-> NeilBrown
-> 
-> 
-> ---
-> 
-> NeilBrown (4):
->       nfsd: prepare for supporting admin-revocation of state
->       nfsd: allow open state ids to be revoked and then freed
->       nfsd: allow lock state ids to be revoked and then freed
->       nfsd: allow delegation state ids to be revoked and then freed
-> 
-> 
->  fs/nfsd/nfs4state.c | 105 ++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 96 insertions(+), 9 deletions(-)
-> 
-> --
-> Signature
