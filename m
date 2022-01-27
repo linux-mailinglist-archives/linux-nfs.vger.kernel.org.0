@@ -2,104 +2,146 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E96DA49EDF5
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 23:10:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DD72F49EE2F
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 23:41:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235693AbiA0WK0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 17:10:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiA0WKZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 17:10:25 -0500
-Received: from mail-lj1-x22c.google.com (mail-lj1-x22c.google.com [IPv6:2a00:1450:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0EDC061714;
-        Thu, 27 Jan 2022 14:10:25 -0800 (PST)
-Received: by mail-lj1-x22c.google.com with SMTP id b14so6432113ljb.0;
-        Thu, 27 Jan 2022 14:10:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkUjSb/fdfaa3FAu68ePw4JIYSvRfOC6qyjCilb3MLA=;
-        b=RZypLcBcYIUdWY9vV42TppO4LaQPblBv+kCbhi7sSIeity0kCuHxjxBkOW+017vQfl
-         mGJzLUkiIibnMnTTVFBLt50VetVg1KzsVDl5jUao0XF5T7oAmS+N8pzAB7j2FNpZGYiq
-         xbHy2XvQvsScldzehtVeFOoApJ3rHFqpSLvhJxxrFdkCY4SBOyNaqvrt+GIQFpxxuFFh
-         CmyJh/SQOY6vLReOapEDPt77zxgz4JT8F/AZF2zWXE0KCoQ1ChkpEBN24khQj5g1i9qq
-         aguCWoq8pgm51d0p5z0SrS13R+0j/TGLyIS5NFK+7PHw2xgpowySjWS1of9EUGPSq6jn
-         /AOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkUjSb/fdfaa3FAu68ePw4JIYSvRfOC6qyjCilb3MLA=;
-        b=tfMmVXe40SSgzi1gp75b3U8T5saZ6sZiNg6gAv2dC0KikkIBgFISBUuR2tThVGspTw
-         aravKdUXGq3zPkeylhkxfFugDTTrTL9ovBFHJLqlb8fMIAdVxzWnSPEdQS0Qorlj+E4F
-         Ja+j24Fsky1MVRHsiUPpT5ZHbtv3ukeE3lqaEc6HyQ6TIgrNcu9eE7nlGWLNHXEiu5Tk
-         sErDd5tW7ug4rKwW6CNTObgMD4y7GmuXnbUJLG0uCMMkNrWQUoN+50B5RSAfy6ZCY5Nf
-         +5iovHwdqhSShoYvqEc4tNqacTehQMnkPclg2xrwupMRELVCN8LXcoYM+AUVBXZ3dUpR
-         09vQ==
-X-Gm-Message-State: AOAM530D/tqL6MhFDKXFf5sG2IzJRcf+9Bzs1m3Acmw814enhXbrSQDO
-        3v5uoIek5bVj0cso6gM9x41dbZxlExK4LW4hSGw=
-X-Google-Smtp-Source: ABdhPJy9dJl6L/bnRQi8tK1Am+5DPjPBZvatcTyLSMpbpD4vy19hTtp8mGF/Cl1TBx2f3Cw7TL+lgScx4mlljQ4behg=
-X-Received: by 2002:a2e:5d3:: with SMTP id 202mr3981304ljf.330.1643321423317;
- Thu, 27 Jan 2022 14:10:23 -0800 (PST)
+        id S237959AbiA0Wlc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 17:41:32 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:50364 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231520AbiA0Wlb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 17:41:31 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 992D91F391;
+        Thu, 27 Jan 2022 22:41:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643323289; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7jeK6qAfgdjs0c4Od3y+Dw74C4BYLxtyDSaeA4UomaQ=;
+        b=fP0BRp3F9o6JkMlBVvlIjhIF3+qvnlMnmj36Wt8ZzhTuonAkPZeRFi4G5rJZ06UbQuhyMr
+        f17VAk92A4A7f7vf63mPaC4ITIxBeVURE12FEyhznpCl71d8ulT7RP6AaUrvWTU5aKpRFZ
+        5c50hBdkziB9zauxnjf5prYtmzYbnLw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643323289;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7jeK6qAfgdjs0c4Od3y+Dw74C4BYLxtyDSaeA4UomaQ=;
+        b=d67QifSuoGDJWOO8TbtDTy+Gt5gu8yfgXwQ6PaEyBYUZZ+K/DJesollW/6Em3ElUuGBG1P
+        mWE2kFfODUnXq0BA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C68E113CFF;
+        Thu, 27 Jan 2022 22:41:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id y8YBIZgf82GyGAAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 22:41:28 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <164325106958.29787.4865219843242892726.stgit@noble.brown> <164325158955.29787.4769373293473421057.stgit@noble.brown>
-In-Reply-To: <164325158955.29787.4769373293473421057.stgit@noble.brown>
-From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date:   Fri, 28 Jan 2022 07:10:11 +0900
-Message-ID: <CAKFNMom4Z76ti4fp69UeKYf0d4x635OR7Q_CjVnBj+vQSuhESg@mail.gmail.com>
-Subject: Re: [PATCH 2/9] Remove bdi_congested() and wb_congested() and related functions
-To:     NeilBrown <neilb@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, Linux MM <linux-mm@kvack.org>,
-        linux-nilfs <linux-nilfs@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        LKML <linux-kernel@vger.kernel.org>, linux-block@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
+In-reply-to: <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
+References: <164325908579.23133.4781039121536248752.stgit@noble.brown>,
+ <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
+Date:   Fri, 28 Jan 2022 09:41:24 +1100
+Message-id: <164332328424.5493.16812905543405189867@noble.neil.brown.name>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 11:47 AM NeilBrown <neilb@suse.de> wrote:
->
-> These functions are no longer useful as the only bdis that report
-> congestion are in ceph, fuse, and nfs.  None of those bdis can be the
-> target of the calls in drbd, ext2, nilfs2, or xfs.
->
-> Removing the test on bdi_write_contested() in current_may_throttle()
-> could cause a small change in behaviour, but only when PF_LOCAL_THROTTLE
-> is set.
->
-> So replace the calls by 'false' and simplify the code - and remove the
-> functions.
->
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->  drivers/block/drbd/drbd_int.h |    3 ---
->  drivers/block/drbd/drbd_req.c |    3 +--
->  fs/ext2/ialloc.c              |    2 --
->  fs/nilfs2/segbuf.c            |   11 -----------
->  fs/xfs/xfs_buf.c              |    3 ---
->  include/linux/backing-dev.h   |   26 --------------------------
->  mm/vmscan.c                   |    4 +---
->  7 files changed, 2 insertions(+), 50 deletions(-)
+On Fri, 28 Jan 2022, Chuck Lever III wrote:
+> Hi Neil-
+>=20
+> > On Jan 26, 2022, at 11:58 PM, NeilBrown <neilb@suse.de> wrote:
+> >=20
+> > If a filesystem is exported to a client with NFSv4 and that client holds
+> > a file open, the filesystem cannot be unmounted without either stopping t=
+he
+> > NFS server completely, or blocking all access from that client
+> > (unexporting all filesystems) and waiting for the lease timeout.
+> >=20
+> > For NFSv3 - and particularly NLM - it is possible to revoke all state by
+> > writing the path to the filesystem into /proc/fs/nfsd/unlock_filesystem.
+> >=20
+> > This series extends this functionality to NFSv4.  With this, to unmount
+> > an exported filesystem is it sufficient to disable export of that
+> > filesystem, and then write the path to unlock_filesystem.
+> >=20
+> > I've cursed mainly on NFSv4.1 and later for this.  I haven't tested
+> > yet with NFSv4.0 which has different mechanisms for state management.
+> >=20
+> > If this series is seen as a general acceptable approach, I'll look into
+> > the NFSv4.0 aspects properly and make sure it works there.
+>=20
+> I've browsed this series and need to think about:
+> - whether we want to enable administrative state revocation and
+> - whether NFSv4.0 can support that reasonably
+>=20
+> In particular, are there security consequences for revoking
+> state? What would applications see, and would that depend on
+> which minor version is in use? Are there data corruption risks
+> if this facility were to be misused?
 
-for nilfs2 bits,
+The expectation is that this would only be used after unexporting the
+filesystem.  In that case, the client wouldn't notice any difference
+from the act of writing to unlock_filesystem, as the entire filesystem
+would already be inaccessible.
 
-Acked-by: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+If we did unlock_filesystem a filesystem that was still exported, the
+client would see similar behaviour to a network partition that was of
+longer duration than the lease time.   Locks would be lost.
+
+>=20
+> Also, Dai's courteous server work is something that potentially
+> conflicts with some of this, and I'd like to see that go in
+> first.
+
+I'm perfectly happy to wait for the courteous server work to land before
+pursuing this.
+
+>=20
+> Do you have specific user requests for this feature, and if so,
+> what are the particular usage scenarios?
+
+It's complicated....
+
+The customer has an HA config with multiple filesystem resource which
+they want to be able to migrate independently.  I don't think we really
+support that, but they seem to want to see if they can make it work (and
+it should be noted that I talk to an L2 support technician who talks to
+the customer representative, so I might be getting the full story).
+
+Customer reported that even after unexporting a filesystem, they cannot
+then unmount it.  Whether or not we think that independent filesystem
+resources is supportable, I do think that the customer should have a
+clear path for unmounting a filesystem without interfering with service
+provided from other filesystems.  Stopping nfsd would interfere with
+that service by forcing a grace-period on all filesystems.
+The RFC explicitly supports admin-revocation of state, and that would
+address this specific need, so it seemed completely appropriate to
+provide it.
+
+As an aside ...  I'd like to be able to suggest that the customer use
+network namespaces for the different filesystem resources.  Each could
+be in its own namespace and managed independently.  However I don't
+think we have good admin infrastructure for that do we?
+
+I'd like to be able to say "set up these 2 or 3 config files and run=20
+systemctl start nfs-server@foo and the 'foo' network namespace will be
+created, configured, and have an nfs server running".
+Do we have anything approaching that?  Even a HOWTO ??
 
 Thanks,
-Ryusuke Konishi
+NeilBrown
