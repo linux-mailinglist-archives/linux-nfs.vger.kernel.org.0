@@ -2,93 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1512B49E71A
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 17:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A992349E7B1
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 17:37:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235080AbiA0QJH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 11:09:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
+        id S235234AbiA0Qhr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 11:37:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232851AbiA0QJG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 11:09:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 242C7C061714;
-        Thu, 27 Jan 2022 08:09:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B3F3C618A8;
-        Thu, 27 Jan 2022 16:09:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE8FDC340E8;
-        Thu, 27 Jan 2022 16:09:04 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH RFC 6/6] NFSD: Clamp WRITE offsets
-Date:   Thu, 27 Jan 2022 11:09:04 -0500
-Message-Id:  <164329974386.5879.9570306264604837233.stgit@bazille.1015granger.net>
-X-Mailer: git-send-email 2.34.0
-In-Reply-To:  <164329914731.5879.7791856151631542523.stgit@bazille.1015granger.net>
-References:  <164329914731.5879.7791856151631542523.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.4
+        with ESMTP id S243897AbiA0Qhq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 11:37:46 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 896C3C061714
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 08:37:46 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 3937C608A; Thu, 27 Jan 2022 11:37:45 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 3937C608A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1643301465;
+        bh=ZxzDd8iKBk/5li5TdrjofPiohZul4qOeuoFYkgcwHnA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=A/rLF1VNOAdRd4tKHU+vjY5AvPtwWjheumk6/k7/8nvLoHdlbtIA1goqOsrElD8kR
+         h4Ph8szRcV0g5bahTZVRG859pAtsc7gD8fptzFABwBB1qlepNvoa9kK1eKjpXqIeVl
+         Xcel/bFaX1s3h9NJNSyNGLo4SEqPMDQoDpL+TnWk=
+Date:   Thu, 27 Jan 2022 11:37:45 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>, chuck.lever@oracle.com,
+        david <david@sigma-star.at>, luis.turcitu@appsbroker.com,
+        chris.chilvers@appsbroker.com, david.young@appsbroker.com
+Subject: Re: NFSD export parsing issue
+Message-ID: <20220127163745.GB1233@fieldses.org>
+References: <1986873600.300036.1643286151703.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1764; h=from:subject:message-id; bh=GTLq72CbZ2YKLEMKSvDESFVcQNdG1hLyX3YuhtlMYXY=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBh8sOfOwpoBVkKovhUsUkE5Ib8gOUmIEsFzKgqxNDI CAtJCRyJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYfLDnwAKCRAzarMzb2Z/l/bAD/ 4wStVMzb4aek3np1pM4E9ybdY8naM+MLh7qcDp2Cm2xLa5LEu245UYoDIGbxNwRPQpRq45zQuinDeu 5wCCGrRkzLr0FAoMCBB2/knrHIVbqmEjvzHnky5rOneCoIrMDUlmbo1ZKF0EE+cSXLjR2X/n+4cWlj P4d9XFDq3dCThRx3t7EBbVIkuFpoD6T5iWYZZIIdvLODw/qFXB3LgElSCcNzmt+Na5MfnbcSNr2Rr8 0oiEheFTxYQroTAWRBFHq/AYxUlSCPLn5oBnjDQmMj1Z1j2DbIGxsI3BFBayeoaK3ITWB8BSGvb27e HZMGkiww1DCeBp57UGbnLE5mYnazIIfxZ9+admV5KhD+vqu1jLFWVPlZC1mHpjxWT6tM7gjO4ezvyf rPtyEn8ZGyDKkaEZNZ3IFQgLGKpxKUvfSjYaeeC0G77+VVp2Ruux7/liKpBdxe7lGH5e5UfKBVsdwg ZwZNYCd7Ox6JdpL+kXn85i3FfuX2w6ZlwyFR7aTg8YdU90FyYMQsDRwxUXScp4tvyS3dc3TYfjbMBa vwTlW5tlkUrw7r9413jLyqDHCaFyRJaIPUuRUW83rzCdExaRSNxjiwnGUFp2DoT8P6M/fWr5qsujxR 1RZ0XmmX9ruWw0v8tD7ern3Ws2HkbJWN01mTu6oKnoEBMSPBnztUBvdrPIhw==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1986873600.300036.1643286151703.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Ensure that a client cannot specify a WRITE range that falls in a
-byte range outside what the kernel's internal types (such as loff_t,
-which is signed) can represent. The kiocb iterators, invoked in
-nfsd_vfs_write(), should properly limit write operations to within
-the underlying file system's s_maxbytes.
+On Thu, Jan 27, 2022 at 01:22:31PM +0100, Richard Weinberger wrote:
+> Hi!
+> 
+> while experimenting with various modifications in mountd to deal better with crossmounts
+> I noticed a problem in fs/nfsd/export.c svc_export_parse(), it always ignores the uuid
+> as provided by my mountd.
+> 
+> If CONFIG_NFSD_V4 is not enabled, both fsloc_parse() and secinfo_parse() are a no-op.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs3proc.c |    7 +++++++
- fs/nfsd/nfs4proc.c |    4 +++-
- 2 files changed, 10 insertions(+), 1 deletion(-)
+Ugh, yeah, that's totally wrong.  The secinfo applies to v3 too, and in
+the fsloc case you still want to parse the stuff even if you're only
+going to ignore it.
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 7bca219a8146..ba72bbff53a5 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -216,6 +216,12 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
- 				(unsigned long long) argp->offset,
- 				argp->stable? " stable" : "");
+> So I'm not sure where to address the problem. Should we fix mountd or
+> change both fsloc_parse() and secinfo_parse() to consume all their
+> data even in the !CONFIG_NFSD_V4 case?
+
+Yeah, the latter.  So, maybe the remove the ifdefs.
+
+(Should we remove CONFIG_NFSD_V4?  I doubt v3-only kernels get much
+testing.)
+
+--b.
+
+diff --git a/fs/nfsd/export.c b/fs/nfsd/export.c
+index 9421dae22737..9bdb5e102ba5 100644
+--- a/fs/nfsd/export.c
++++ b/fs/nfsd/export.c
+@@ -442,8 +442,6 @@ static int check_export(struct path *path, int *flags, unsigned char *uuid)
  
-+	resp->status = nfserr_fbig;
-+	if (argp->offset >= OFFSET_MAX)
-+		goto out;
-+	if (argp->offset + argp->len >= OFFSET_MAX)
-+		goto out;
-+
- 	fh_copy(&resp->fh, &argp->fh);
- 	resp->committed = argp->stable;
- 	nvecs = svc_fill_write_vector(rqstp, &argp->payload);
-@@ -224,6 +230,7 @@ nfsd3_proc_write(struct svc_rqst *rqstp)
- 				  rqstp->rq_vec, nvecs, &cnt,
- 				  resp->committed, resp->verf);
- 	resp->count = cnt;
-+out:
- 	return rpc_success;
  }
  
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index b8ac2b9bce74..2baf547b344f 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1022,7 +1022,9 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	int nvecs;
+-#ifdef CONFIG_NFSD_V4
+-
+ static int
+ fsloc_parse(char **mesg, char *buf, struct nfsd4_fs_locations *fsloc)
+ {
+@@ -539,13 +537,6 @@ static int secinfo_parse(char **mesg, char *buf, struct svc_export *exp)
+ 	return 0;
+ }
  
- 	if (write->wr_offset >= OFFSET_MAX)
--		return nfserr_inval;
-+		return nfserr_fbig;
-+	if (write->wr_offset + write->wr_buflen >= OFFSET_MAX)
-+		return nfserr_fbig;
- 
- 	cnt = write->wr_buflen;
- 	trace_nfsd_write_start(rqstp, &cstate->current_fh,
-
+-#else /* CONFIG_NFSD_V4 */
+-static inline int
+-fsloc_parse(char **mesg, char *buf, struct nfsd4_fs_locations *fsloc){return 0;}
+-static inline int
+-secinfo_parse(char **mesg, char *buf, struct svc_export *exp) { return 0; }
+-#endif
+-
+ static inline int
+ nfsd_uuid_parse(char **mesg, char *buf, unsigned char **puuid)
+ {
