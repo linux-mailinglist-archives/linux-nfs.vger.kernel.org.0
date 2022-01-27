@@ -2,55 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1458149D9BA
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 05:59:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EAFA49D9BC
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Jan 2022 05:59:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236095AbiA0E7t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Jan 2022 23:59:49 -0500
-Received: from smtp-out1.suse.de ([195.135.220.28]:44080 "EHLO
-        smtp-out1.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236089AbiA0E7s (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 23:59:48 -0500
+        id S236096AbiA0E76 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Jan 2022 23:59:58 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:44512 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S236089AbiA0E75 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Jan 2022 23:59:57 -0500
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 4D1DA218E8;
-        Thu, 27 Jan 2022 04:59:47 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E65561F76C;
+        Thu, 27 Jan 2022 04:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643259587; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1643259596; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GAyYFRFbqVs3ttE0Jk7k2AtafmN+5suCAaIm4G6c5tw=;
-        b=t9EQEs7W2KGsC5CHJNjgXIM7w1R70D0UOTY4yVSaFj3xH1KMh1WzBCb3dNLu5CU5Its7zK
-        DW+FrtRqCCbIB80vA7NDpwhLcd04VB++McwyrM2U8mPeOqqHtIlvEf00isHphFqtRP0zs8
-        ZwMj2vTRq0dZqiyP3ph6a5KlRXufjek=
+        bh=214MWV4/ujoXspMn/NBhkpmz5/Of2CqMEcAdw8yB8MI=;
+        b=GaycZBcm/ALgeug1VIuZMqwfD6R3xJRcZCZ43rq0LcZ014nILzaxIsI5zP4JBYAQGvAtRz
+        dwbkHX6L9H7k5dFXttMhhaqugiyJLvz0cS2qcKEI3cfCxPFwkDpV3T5HvHI0Yvyz4ghR+v
+        QPlF+ByP8w0Nsu7JMfUr4OIM6g+lIxI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643259587;
+        s=susede2_ed25519; t=1643259596;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GAyYFRFbqVs3ttE0Jk7k2AtafmN+5suCAaIm4G6c5tw=;
-        b=tJX87Npq1XHSHtbMO0/Ln7bwvWkisZY9b28PBOSzrvgHlg6VMvGZO31gavIPB89uqVS5CD
-        qk06RxnysdG2RXBQ==
+        bh=214MWV4/ujoXspMn/NBhkpmz5/Of2CqMEcAdw8yB8MI=;
+        b=+1cUAFyDiBfFArZiCWWsbbu+RNLq7Wj5hhTrZr8osYsv+GjaNzrSGQL2KOo5uaAGDtuBMP
+        +tNGkAPqxWhQ+BAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 74C3C13BCF;
-        Thu, 27 Jan 2022 04:59:46 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1BEB413BCF;
+        Thu, 27 Jan 2022 04:59:55 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id f3N0DMIm8mE2VgAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 04:59:46 +0000
-Subject: [PATCH 2/4] nfsd: allow open state ids to be revoked and then freed
+        id IrJdMssm8mFPVgAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 27 Jan 2022 04:59:55 +0000
+Subject: [PATCH 4/4] nfsd: allow delegation state ids to be revoked and then
+ freed
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
 Date:   Thu, 27 Jan 2022 15:58:10 +1100
-Message-ID: <164325949070.23133.8692722614255991208.stgit@noble.brown>
+Message-ID: <164325949071.23133.1986695063796663253.stgit@noble.brown>
 In-Reply-To: <164325908579.23133.4781039121536248752.stgit@noble.brown>
 References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -61,109 +62,117 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Revoking state through 'unlock_filesystem' now revokes any open states
-found.  When the stateids are then freed by the client, the revoked
-stateids will be cleaned up correctly.
+Revoking state through 'unlock_filesystem' now revokes any delegation
+states found.  When the stateids are then freed by the client, the
+revoked stateids will be cleaned up correctly.
 
-Possibly the related lock states should be revoked too, but a
-subsequent patch will do that for all lock state on the superblock.
+As there is already support for revoking delegations, we build on that
+for admin-revoking.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c |   37 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ fs/nfsd/nfs4state.c |   35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index ad02b4ebe1b6..6854546ebd08 100644
+index b1dc8ed1d356..30177554a77b 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -1113,6 +1113,9 @@ nfs4_put_stid(struct nfs4_stid *s)
- 		return;
- 	}
- 	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-+	if (s->sc_type == NFS4_ADMIN_REVOKED_STID)
-+		atomic_dec(&clp->cl_admin_revoked);
-+	s->sc_type = 0;
- 	nfs4_free_cpntf_statelist(clp->net, s);
- 	spin_unlock(&clp->cl_lock);
- 	s->sc_free(s);
-@@ -1165,6 +1168,9 @@ static void destroy_unhashed_deleg(struct nfs4_delegation *dp)
+@@ -1270,14 +1270,15 @@ static void destroy_delegation(struct nfs4_delegation *dp)
+ 		destroy_unhashed_deleg(dp);
+ }
  
- void nfs4_unhash_stid(struct nfs4_stid *s)
+-static void revoke_delegation(struct nfs4_delegation *dp)
++static void revoke_delegation(struct nfs4_delegation *dp,
++			      unsigned short sc_type)
  {
-+	struct nfs4_client *clp = s->sc_client;
-+	if (s->sc_type == NFS4_ADMIN_REVOKED_STID)
-+		atomic_dec(&clp->cl_admin_revoked);
- 	s->sc_type = 0;
- }
+ 	struct nfs4_client *clp = dp->dl_stid.sc_client;
  
-@@ -1431,6 +1437,9 @@ static void put_ol_stateid_locked(struct nfs4_ol_stateid *stp,
- 	}
+ 	WARN_ON(!list_empty(&dp->dl_recall_lru));
  
- 	idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-+	if (s->sc_type == NFS4_ADMIN_REVOKED_STID)
-+		atomic_dec(&clp->cl_admin_revoked);
-+	s->sc_type = 0;
- 	list_add(&stp->st_locks, reaplist);
- }
- 
-@@ -1601,7 +1610,7 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
+-	if (clp->cl_minorversion) {
+-		dp->dl_stid.sc_type = NFS4_REVOKED_DELEG_STID;
++	if (clp->cl_minorversion || sc_type == NFS4_ADMIN_REVOKED_DELEG_STID) {
++		dp->dl_stid.sc_type = sc_type;
+ 		refcount_inc(&dp->dl_stid.sc_count);
+ 		spin_lock(&clp->cl_lock);
+ 		list_add(&dp->dl_recall_lru, &clp->cl_revoked);
+@@ -1613,7 +1614,7 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
  	unsigned int idhashval;
  	unsigned short sc_types;
  
--	sc_types = 0;
-+	sc_types = NFS4_OPEN_STID;
+-	sc_types = NFS4_OPEN_STID | NFS4_LOCK_STID;
++	sc_types = NFS4_OPEN_STID | NFS4_LOCK_STID | NFS4_DELEG_STID;
  
  	spin_lock(&nn->client_lock);
  	for (idhashval = 0; idhashval < CLIENT_HASH_MASK; idhashval++) {
-@@ -1612,8 +1621,23 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
- 			struct nfs4_stid *stid = find_one_sb_stid(clp, sb,
+@@ -1625,6 +1626,7 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
  								  sc_types);
  			if (stid) {
-+				struct nfs4_ol_stateid *stp;
-+
+ 				struct nfs4_ol_stateid *stp;
++				struct nfs4_delegation *dp;
+ 
  				spin_unlock(&nn->client_lock);
  				switch (stid->sc_type) {
-+				case NFS4_OPEN_STID:
-+					stp = openlockstateid(stid);
-+					mutex_lock_nested(&stp->st_mutex,
-+							  OPEN_STATEID_MUTEX);
-+					if (stid->sc_type == NFS4_OPEN_STID) {
-+						release_all_access(stp);
-+						stid->sc_type =
-+							NFS4_ADMIN_REVOKED_STID;
-+						atomic_inc(&clp->cl_admin_revoked);
-+						/* FIXME revoke the locks */
+@@ -1663,6 +1665,18 @@ void nfsd4_revoke_states(struct net *net, struct super_block *sb)
+ 					}
+ 					mutex_unlock(&stp->st_mutex);
+ 					break;
++				case NFS4_DELEG_STID:
++					dp = delegstateid(stid);
++					spin_lock(&state_lock);
++					if (!unhash_delegation_locked(dp))
++						dp = NULL;
++					spin_unlock(&state_lock);
++					if (dp) {
++						list_del_init(&dp->dl_recall_lru);
++						revoke_delegation(
++							dp, NFS4_ADMIN_REVOKED_DELEG_STID);
 +					}
-+					mutex_unlock(&stp->st_mutex);
 +					break;
  				}
  				nfs4_put_stid(stid);
  				spin_lock(&nn->client_lock);
-@@ -6235,6 +6259,8 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	stateid_t *stateid = &free_stateid->fr_stateid;
- 	struct nfs4_stid *s;
- 	struct nfs4_delegation *dp;
-+	struct nfs4_ol_stateid *stp;
-+	LIST_HEAD(reaplist);
- 	struct nfs4_client *cl = cstate->clp;
- 	__be32 ret = nfserr_bad_stateid;
+@@ -4742,8 +4756,9 @@ static int nfsd4_cb_recall_done(struct nfsd4_callback *cb,
+ 	struct nfs4_delegation *dp = cb_to_delegation(cb);
  
-@@ -6259,6 +6285,15 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		spin_unlock(&cl->cl_lock);
- 		ret = nfsd4_free_lock_stateid(stateid, s);
+ 	if (dp->dl_stid.sc_type == NFS4_CLOSED_DELEG_STID ||
+-	    dp->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID)
+-	        return 1;
++	    dp->dl_stid.sc_type == NFS4_REVOKED_DELEG_STID ||
++	    dp->dl_stid.sc_type == NFS4_ADMIN_REVOKED_DELEG_STID)
++		return 1;
+ 
+ 	switch (task->tk_status) {
+ 	case 0:
+@@ -5770,7 +5785,7 @@ nfs4_laundromat(struct nfsd_net *nn)
+ 		dp = list_first_entry(&reaplist, struct nfs4_delegation,
+ 					dl_recall_lru);
+ 		list_del_init(&dp->dl_recall_lru);
+-		revoke_delegation(dp);
++		revoke_delegation(dp, NFS4_REVOKED_DELEG_STID);
+ 	}
+ 
+ 	spin_lock(&nn->client_lock);
+@@ -5988,8 +6003,9 @@ nfsd4_lookup_stateid(struct nfsd4_compound_state *cstate,
+ 	 */
+ 	if (typemask & NFS4_REVOKED_DELEG_STID)
+ 		return_revoked = true;
+-	else if (typemask & NFS4_DELEG_STID)
+-		typemask |= NFS4_REVOKED_DELEG_STID;
++	if (typemask & NFS4_DELEG_STID)
++		typemask |= NFS4_REVOKED_DELEG_STID |
++			NFS4_ADMIN_REVOKED_DELEG_STID;
+ 
+ 	if (ZERO_STATEID(stateid) || ONE_STATEID(stateid) ||
+ 		CLOSE_STATEID(stateid))
+@@ -6330,6 +6346,7 @@ nfsd4_free_stateid(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		ret = nfs_ok;
  		goto out;
-+	case NFS4_ADMIN_REVOKED_STID:
-+		stp = openlockstateid(s);
-+		spin_unlock(&s->sc_lock);
-+		if (unhash_open_stateid(stp, &reaplist))
-+			put_ol_stateid_locked(stp, &reaplist);
-+		spin_unlock(&cl->cl_lock);
-+		free_ol_stateid_reaplist(&reaplist);
-+		ret = nfs_ok;
-+		goto out;
  	case NFS4_REVOKED_DELEG_STID:
++	case NFS4_ADMIN_REVOKED_DELEG_STID:
  		spin_unlock(&s->sc_lock);
  		dp = delegstateid(s);
+ 		list_del_init(&dp->dl_recall_lru);
 
 
