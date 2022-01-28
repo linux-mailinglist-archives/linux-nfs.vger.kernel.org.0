@@ -2,240 +2,246 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 970B049F277
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 05:24:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FDD49F289
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 05:35:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230064AbiA1EYg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 23:24:36 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:33870 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230321AbiA1EYg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 23:24:36 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 392331F391;
-        Fri, 28 Jan 2022 04:24:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643343875; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gq9eU9YsXGrKsC+D+sKGffel8O7NHbV0mlPNWpT7Rlw=;
-        b=koMDVRG8/n22seSQN/vTrmH9jyLKV+D4CRoE8blFyLMWgbPknZgBrWZllKD2qMtc5m6GkJ
-        zYaby4OvQzGJuiMjMJ4N5x0EJGwqzj+ZyP9fHI0WWeXgAEXXxFARwlzDcs92bNhiy5VuTH
-        4uRyyUx2NU4hP9vLzDfoQNYri5sjR7g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643343875;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gq9eU9YsXGrKsC+D+sKGffel8O7NHbV0mlPNWpT7Rlw=;
-        b=pLYeg9mEujjZyLlBh+UL+GIYhIPV4QGA3fTsJJurX6w+GvHeGTvx51u0L0tZoj8shZ0BVa
-        +cdpw8TkZ0igFgDQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CD72B13780;
-        Fri, 28 Jan 2022 04:24:32 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id TMclIgBw82GQCwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 28 Jan 2022 04:24:32 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+        id S1346064AbiA1Efb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 23:35:31 -0500
+Received: from mail-co1nam11on2102.outbound.protection.outlook.com ([40.107.220.102]:49303
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1346063AbiA1Efa (ORCPT <rfc822;linux-nfs@vger.kernel.org>);
+        Thu, 27 Jan 2022 23:35:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DhRJbbwC4227ITuIkzbD8taMBS0o+D7mBQDu10QOyKr8BvuzV98D0A+da9pkHGcIgEcWmzi3Lv1D/RFR59H1hbrBqHzHUv+9eUcSJR+4+6z8DTYflaEaiBvfMgmiQKYaWcFZ6LpWNPizxa8CJ1XmS9NW9l+EsLbIxM7IxhLhWAhqLp1jv7xuHzZU0E7fM+YQPg0gJBPuQZr623sKP7rn5jtWGME98e5Wd+aGsVzzn2o4sguaEH1vppHYmYGMAR3C0LkEYgMT7cF5algV7tbu4qYFCYd+L0Hhq5Z2ltr/qV0MtNC2er4UPUXVYVLDo8sVqz46PJ5FALVBmpnUDuA0ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rp2UD0I8uCnsqhKRUe2sC/8FALrnneATqop1xM8JgCw=;
+ b=S4j5UdznCku/MFByeYATxXKHFw6PXzkwOzK77s/UWA9BjuVktC7sIm1AZECs8zcIOY6lKvp55ta3olrzbEjkZFE8ehuI2eGja3c+GmuOl+QcZnEPxPjkJ4kqu3C8rngoklAafwlew4h1PJ3UkJcdu6hGLE5RCvGAX+8YrZ3agtEpn3565Pp87vPAN0vXwuNO30ARXVPKCqy1Zxspxak+cH7c04GaL7nGKJEjP9u5wtrSjT6Bl0u7SCl3/NKixUXolF3cs9fe9O2L5+Izze2Et67Z9mIf8qmhTM+XUP1FxuWHdjfabcRswZI/Ym6L5H4iXDK+fQKN8lLm/ghIopMb9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rp2UD0I8uCnsqhKRUe2sC/8FALrnneATqop1xM8JgCw=;
+ b=K/BKbAK9lRx2hKmhHDId7LefJRGOr9DCcLr3hvXDYQeoKHHh76rrqfxQ2U4I7Pkb0pIG7b6KKURyPlXBY83ulIy2RJJc+Jg8D/0gxdoGt5HSw8FulnakRW4Q3wnsn6D7vvnMB7cjRAEmUkMWDVUaMbTl0VszKCfxDehQwavTlQY=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by DM5PR13MB1034.namprd13.prod.outlook.com (2603:10b6:3:75::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4951.5; Fri, 28 Jan
+ 2022 04:35:27 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::ecb4:77ee:a645:9bae]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::ecb4:77ee:a645:9bae%5]) with mapi id 15.20.4930.019; Fri, 28 Jan 2022
+ 04:35:26 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "neilb@suse.de" <neilb@suse.de>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
-In-reply-to: <A933D67A-0C1B-4700-97E7-0DBEF4458A77@oracle.com>
-References: <164325908579.23133.4781039121536248752.stgit@noble.brown>,
- <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>,
- <164332328424.5493.16812905543405189867@noble.neil.brown.name>,
+Thread-Topic: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
+Thread-Index: AQHYEzq1ixm303BAI0SIMFjU1pyk/Kx3GDwAgABfVACAABgegIAAR7uAgAADDIA=
+Date:   Fri, 28 Jan 2022 04:35:26 +0000
+Message-ID: <0a469761ce894c91df23b48a5e93a51229f5c542.camel@hammerspace.com>
+References: <164325908579.23133.4781039121536248752.stgit@noble.brown>  ,
+ <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>      ,
+ <164332328424.5493.16812905543405189867@noble.neil.brown.name> ,
  <A933D67A-0C1B-4700-97E7-0DBEF4458A77@oracle.com>
-Date:   Fri, 28 Jan 2022 15:24:27 +1100
-Message-id: <164334386787.5493.637178363398104896@noble.neil.brown.name>
+         <164334386787.5493.637178363398104896@noble.neil.brown.name>
+In-Reply-To: <164334386787.5493.637178363398104896@noble.neil.brown.name>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c8018f6c-514f-4dca-2e6a-08d9e2179b62
+x-ms-traffictypediagnostic: DM5PR13MB1034:EE_
+x-microsoft-antispam-prvs: <DM5PR13MB1034A8256FA4951C2B59688CB8229@DM5PR13MB1034.namprd13.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gXTiOhJvpMdJ9Od70UY4ubwOMzEgOj24gcrW3tFLLyIOMezMHur8tOo/DiW1aR4SPz+0usydtQUCTqQWwzFQxoVY0AicB6KhRdXL2D1ozwWo9M/dhY3YqfoV8vHp795m6dLEC2AgcPjG7UjR51SEJRWzJGAVq0MBvHsgdh167sKR/h5NhgV60b71889KAIUIxFeUwOFUGxC6GcANDh2yD/T8eHPl/6TM0kCXRmilQlM99TbmaXwUtP9sNp/vGSQLcs2KL1Zfi5HQtbZCoSf9eeJF8RXCZjF/Sy3zvxJqNaeRGimKjLC3PxiCRN0hi1Igepm/GgH02cGYzKIweVd4X0kH5pg7zy+MwQLoro5XVwVw7ReCQAdKnktdwKKataiSEb3XE3SA6Nztm4EAqlDp10eTMqiv4rlLsx0NRnWbGfYIWN8CgPjaoywqXgqvTp1O9hpIjptTNea9OEeXyEl0+spq5c/FOCTJHgE6CxerNTUQQJDSqxU0kj08w2bArKYEp2qfyFl0ppKqoq2LRsPs3qr7gbujUSEpNdTGRl3FrSwGzeDKjCt0ENJOMORaPSryyPtKkWD1zGtGL03xmdBmIkVwsGu72E3nTXNeCRjk88JGfB+8irB6z5nZpcCdwGTHqrQ2KOzfA5FSCveOIzi7Zq9VV6EASsWA3W7R7TcYMl8XF7Xm1Ny3amJ6mCpKal9LoqjycOfJm39TaooxPkR4QA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(39840400004)(346002)(136003)(366004)(396003)(376002)(5660300002)(6512007)(316002)(2906002)(26005)(6486002)(2616005)(186003)(508600001)(6506007)(53546011)(110136005)(71200400001)(38070700005)(122000001)(86362001)(66446008)(66556008)(38100700002)(83380400001)(8936002)(36756003)(64756008)(66476007)(66946007)(76116006)(8676002)(4326008)(20210929001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?NERqajBVRUdwcks2QWpmT1duWTRiZlhjNm5NUjI1TzB0SWtFWURGSU1iR29J?=
+ =?utf-8?B?TjZPSWxWa0hKWVpNSEQ0UXl3WHhXVExwazZUZWpYcTVRSE9kUzBLYUdlWUt1?=
+ =?utf-8?B?cXNiL2E2WVl5SW5JQTZlU3cxcnhJR3lQa2dFN1lTRHlJMmU3VCtVSVhLL3Fv?=
+ =?utf-8?B?NmVaZWkycTJXM3FOSFNrdmMvVy8ya0t5dWl5QkZ5S3NmZGlHaTRKMGVQRmNk?=
+ =?utf-8?B?cytqK0RBbWpON3Z3SDVKUXZSdW5pZG9nQ3RJaHpmQVlHKytIbFNYNDVDamhM?=
+ =?utf-8?B?a0RWQXdGMG1XVktQYzk1R0EvbXk1aFdvaWw1dDdJY29IeUZ5SUt2SksyWjBY?=
+ =?utf-8?B?a2xyaTNQWkdOQWNRNTdSeE8vRkRSNFpBU09oOVEzWWtOazhqRjZxQUNpbjcx?=
+ =?utf-8?B?Z2h2V3VhSjVFQ1dabmZIbVFFWUFDTVNyZkUxYXJiUU5vNFRESXZSQktaeHdz?=
+ =?utf-8?B?K2xpL3hiOVdid0FRVEFGdnRRN3hEY0srL1dENWZRTjNnSHBSclQ4d3QzTy9w?=
+ =?utf-8?B?T1Y2YXpiTHpaN2U0aUZna21mcG5XY1N0cW1ISHlWT2xjK1crMnNralhEcWNl?=
+ =?utf-8?B?OGFzWE9PbjYxRzlwc1FZUWVXUFI1cUR6NmY3aTAvZjBNOUV0cXNrVU02VEwz?=
+ =?utf-8?B?dVAyZmpGcGZiL2hRT1REWExZdGVlZCtIR3NtZkZIUXF6NHVGY1d3TW04Y1g5?=
+ =?utf-8?B?UUp2MEJ3emJ6bHV5MURabkRjSXFVUzNWT28xSVVweVg5WDd0MVB6T1NYOVhG?=
+ =?utf-8?B?dzVEemp0eXZQMUpyWU1wS1BvclMrdWUzMTc0eG10NS9TbStydXo1bGRSbmUy?=
+ =?utf-8?B?bXdXTm5rWTkyY3JTdytiQXY5d1BiNXdFRHROaFFaWFJZU2JxSUxjbXlQWG1Q?=
+ =?utf-8?B?VXBydUxNTU1XQjJRQmRIT2FQSXRMSS9sTmI1OUV2aGludkplMnBxT1d6QzRD?=
+ =?utf-8?B?dWROUUFlWmFGWXhwbUNHNWJjdW1UT0R6RUhwT1c4YmZESzJpanlEbmFLYzlp?=
+ =?utf-8?B?ZndaODZPUTkrdWJHVmZpZ1E5bjdCRTdnczZIMVBtWHFNejBuZTJNdzd3U0JY?=
+ =?utf-8?B?ajlPbEVuZmw5VWtJOW91TEhXUXlPS2VKZzJqYk9MbFhMeHlEeS9ZTDMwSHl0?=
+ =?utf-8?B?cVYxTkhOamNtYXlLcXR3NnJOaHp1eStqU0ZlNkNuRWFJcXZ0ZUxaVlVUNTJT?=
+ =?utf-8?B?ZVUzdlpLRmp5L1FBaDl6RUR2SFhveTQ3Qm5YMmcyWCswWDUzUUNKS0s0elpJ?=
+ =?utf-8?B?Q0J6bThLNzNQWGJIb3FFZVdMZzAwdElUNVQwS0dEYjJUME1jWUVUb09ZZllr?=
+ =?utf-8?B?WHBzMXhzYVpuWnhkTzhhaHp6c3lxVlJCTFFXbmRFR0hnV0FvSVZsdHEreHlM?=
+ =?utf-8?B?YWdCVlpPR1FHM0tjenRCZ0Ntbnc1N3Z0RjBOakI3cWFKVWJHbkErQXNLZUJ2?=
+ =?utf-8?B?S2NJSFdkN09uc1k4Q2hlSFdEUjNrMWU2QWdMcURRMmlNbXU2Ky9TWGdjUmQ4?=
+ =?utf-8?B?N0R4RGZPUWNCdWdLbkFhOXJOdkIvUWJuakxEMVVWVHFaa3laTzJVQlJWOG1O?=
+ =?utf-8?B?WHl4a3VMd0R3cW95eGtyV3I4UldROVEzMU1uTk1zMGdXMVBjL2VqNGJoMk1H?=
+ =?utf-8?B?cGtvOWc5SUFqOTNRZ1Ezcy9Id3ZtQTI4TXg1MStkYkNCeUdNcCt4NXg1UU1Y?=
+ =?utf-8?B?T2xQamUwd3VtOEk0bXFSbUNQT0hWazFYbktHUE5TZTJHaVg0Y3FDcTB1Q2JV?=
+ =?utf-8?B?bmI3TWh0eEZZei94ZnpPVnRxcGlUZVFBOFJKanZHTE5FY0pLelJ6WmxFRVdp?=
+ =?utf-8?B?TEVKZnVZaEVnVWNqeVN0Q284T1h4OTNpYzRQeVNjekJlMGxxVzZHLzd2cEpw?=
+ =?utf-8?B?UlhTSTVCTWEyUDNEWXZUSXE4KzhVRjh1cEVQdzFidWxhVC9OOWNTbklGdkdp?=
+ =?utf-8?B?eXFJQ0hOb3k3bEQvSmY2SDRiRExBSXgzbVQzMUNMS2hTd1R6RkVpTStsY0dT?=
+ =?utf-8?B?QldWQWVVRkRNMy9kTGUxblVPQlBJbmdialBJdnE1akU5dWFrcFdOUnVKS3hu?=
+ =?utf-8?B?NjRodktrbFp4dTlVcFhpYzc2d3hKME9HamFHcTc4S0pZallMRFRsMlhLditI?=
+ =?utf-8?B?VnZNYXU0ZXViOWFrRituNVJNNC9wZEdXVm0rSkRxb3FoZ1REcFRCNnQ2M0tU?=
+ =?utf-8?Q?Wne4BapRZYPMBh8TA68b8x8=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8C9E9F82C825DC4080D17E7B561008FA@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8018f6c-514f-4dca-2e6a-08d9e2179b62
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2022 04:35:26.5383
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y+tUt8/KihWNQvPte4ZH2ppjSisnk8G0BTlaGSee3loDaZF5rjBt17ax4kajwsHZBaXo7x+gq2eCIPoOBmBcAA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1034
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 28 Jan 2022, Chuck Lever III wrote:
->=20
-> > On Jan 27, 2022, at 5:41 PM, NeilBrown <neilb@suse.de> wrote:
-> >=20
-> > On Fri, 28 Jan 2022, Chuck Lever III wrote:
-> >> Hi Neil-
-> >>=20
-> >>> On Jan 26, 2022, at 11:58 PM, NeilBrown <neilb@suse.de> wrote:
-> >>>=20
-> >>> If a filesystem is exported to a client with NFSv4 and that client holds
-> >>> a file open, the filesystem cannot be unmounted without either stopping=
- the
-> >>> NFS server completely, or blocking all access from that client
-> >>> (unexporting all filesystems) and waiting for the lease timeout.
-> >>>=20
-> >>> For NFSv3 - and particularly NLM - it is possible to revoke all state by
-> >>> writing the path to the filesystem into /proc/fs/nfsd/unlock_filesystem.
-> >>>=20
-> >>> This series extends this functionality to NFSv4.  With this, to unmount
-> >>> an exported filesystem is it sufficient to disable export of that
-> >>> filesystem, and then write the path to unlock_filesystem.
-> >>>=20
-> >>> I've cursed mainly on NFSv4.1 and later for this.  I haven't tested
-> >>> yet with NFSv4.0 which has different mechanisms for state management.
-> >>>=20
-> >>> If this series is seen as a general acceptable approach, I'll look into
-> >>> the NFSv4.0 aspects properly and make sure it works there.
-> >>=20
-> >> I've browsed this series and need to think about:
-> >> - whether we want to enable administrative state revocation and
-> >> - whether NFSv4.0 can support that reasonably
-> >>=20
-> >> In particular, are there security consequences for revoking
-> >> state? What would applications see, and would that depend on
-> >> which minor version is in use? Are there data corruption risks
-> >> if this facility were to be misused?
-> >=20
-> > The expectation is that this would only be used after unexporting the
-> > filesystem.  In that case, the client wouldn't notice any difference
-> > from the act of writing to unlock_filesystem, as the entire filesystem
-> > would already be inaccessible.
-> >=20
-> > If we did unlock_filesystem a filesystem that was still exported, the
-> > client would see similar behaviour to a network partition that was of
-> > longer duration than the lease time.   Locks would be lost.
-> >=20
-> >>=20
-> >> Also, Dai's courteous server work is something that potentially
-> >> conflicts with some of this, and I'd like to see that go in
-> >> first.
-> >=20
-> > I'm perfectly happy to wait for the courteous server work to land before
-> > pursuing this.
-> >=20
-> >>=20
-> >> Do you have specific user requests for this feature, and if so,
-> >> what are the particular usage scenarios?
-> >=20
-> > It's complicated....
-> >=20
-> > The customer has an HA config with multiple filesystem resource which
-> > they want to be able to migrate independently.  I don't think we really
-> > support that,
->=20
-> With NFSv4, the protocol has mechanisms to indicate to clients that
-> a shared filesystem has migrated, and to indicate that the clients'
-> state has been migrated too. Clients can reclaim their state if the
-> servers did not migrate that state with the data. It deals with the
-> edge cases to prevent clients from stealing open/lock state during
-> the migration.
->=20
-> Unexporting doesn't seem like the right approach to that.
-
-No, but it something that should work, and should allow the filesystem
-to be unmounted.  You get to keep both halves.
-
->=20
->=20
-> > but they seem to want to see if they can make it work (and
-> > it should be noted that I talk to an L2 support technician who talks to
-> > the customer representative, so I might be getting the full story).
-> >=20
-> > Customer reported that even after unexporting a filesystem, they cannot
-> > then unmount it.
->=20
-> My first thought is that probably clients are still pinning
-> resources on that shared filesystem. I guess that's what the
-> unlock_ interface is supposed to deal with. But that suggests
-> to me that unexporting first is not as risk-free as you
-> describe above. I think applications would notice and there
-> would be edge cases where other clients might be able to
-> grab open/lock state before the original holders could
-> re-establish their lease.
-
-Unexporting isn't risk free.  It just absorbs all the risks - none are
-left of unlock_filesystem to be blamed for.
-
-Expecting an application to recover if you unexport a filesystem and
-later re-export it is certainly not guaranteed.  That isn't the use-case
-I particularly want to fix.  I want to be able to unmount a filesystem
-without visiting call clients and killing off applications.
-
->=20
->=20
-> > Whether or not we think that independent filesystem
-> > resources is supportable, I do think that the customer should have a
-> > clear path for unmounting a filesystem without interfering with service
-> > provided from other filesystems.
->=20
-> Maybe. I guess I put that in the "last resort" category
-> rather than "this is something safe that I want to do as
-> part of daily operation" category.
-
-Agree.  Definitely "last resort".
-
->=20
->=20
-> > Stopping nfsd would interfere with
-> > that service by forcing a grace-period on all filesystems.
->=20
-> Yep. We have discussed implementing a per-filesystem
-> grace period in the past. That is probably a pre-requisite
-> to enabling filesystem migration.
->=20
->=20
-> > The RFC explicitly supports admin-revocation of state, and that would
-> > address this specific need, so it seemed completely appropriate to
-> > provide it.
->=20
-> Well the RFC also provides for migrating filesystems without
-> stopping the NFS service. If that's truly the goal, then I
-> think we want to encourage that direction instead of ripping
-> out open and lock state.
-
-I suspect that virtual IPs and network namespaces is the better approach
-for migrating exported filesystems.  It isn't clear to me that
-integrated migration support in NFS would add anything of value.
-
-But as I think I said to Bruce - seamless migration support is not my
-goal here.  In the context where a site has multiple filesystems that
-are all NFS exported, there is a case for being able to forcibly
-unexport/unmount one filesystem without affecting the others.  That is
-my aim here.
-
-Thanks,
-NeilBrown
-
-
->=20
-> Also, it's not clear to me that clients support administrative
-> revocation as broadly as we might like. The Linux NFS client
-> does have support for NFSv4 migration, though it's a bit
-> fallow these days.
->=20
->=20
-> > As an aside ...  I'd like to be able to suggest that the customer use
-> > network namespaces for the different filesystem resources.  Each could
-> > be in its own namespace and managed independently.  However I don't
-> > think we have good admin infrastructure for that do we?
->=20
-> None that I'm aware of. SteveD is the best person to ask.
->=20
->=20
-> > I'd like to be able to say "set up these 2 or 3 config files and run=20
-> > systemctl start nfs-server@foo and the 'foo' network namespace will be
-> > created, configured, and have an nfs server running".
-> > Do we have anything approaching that?  Even a HOWTO ??
->=20
-> Interesting idea! But doesn't ring a bell.
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
->=20
+T24gRnJpLCAyMDIyLTAxLTI4IGF0IDE1OjI0ICsxMTAwLCBOZWlsQnJvd24gd3JvdGU6DQo+IE9u
+IEZyaSwgMjggSmFuIDIwMjIsIENodWNrIExldmVyIElJSSB3cm90ZToNCj4gPiANCj4gPiA+IE9u
+IEphbiAyNywgMjAyMiwgYXQgNTo0MSBQTSwgTmVpbEJyb3duIDxuZWlsYkBzdXNlLmRlPiB3cm90
+ZToNCj4gPiA+IA0KPiA+ID4gT24gRnJpLCAyOCBKYW4gMjAyMiwgQ2h1Y2sgTGV2ZXIgSUlJIHdy
+b3RlOg0KPiA+ID4gPiBIaSBOZWlsLQ0KPiA+ID4gPiANCj4gPiA+ID4gPiBPbiBKYW4gMjYsIDIw
+MjIsIGF0IDExOjU4IFBNLCBOZWlsQnJvd24gPG5laWxiQHN1c2UuZGU+DQo+ID4gPiA+ID4gd3Jv
+dGU6DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYgYSBmaWxlc3lzdGVtIGlzIGV4cG9ydGVkIHRv
+IGEgY2xpZW50IHdpdGggTkZTdjQgYW5kIHRoYXQNCj4gPiA+ID4gPiBjbGllbnQgaG9sZHMNCj4g
+PiA+ID4gPiBhIGZpbGUgb3BlbiwgdGhlIGZpbGVzeXN0ZW0gY2Fubm90IGJlIHVubW91bnRlZCB3
+aXRob3V0DQo+ID4gPiA+ID4gZWl0aGVyIHN0b3BwaW5nIHRoZQ0KPiA+ID4gPiA+IE5GUyBzZXJ2
+ZXIgY29tcGxldGVseSwgb3IgYmxvY2tpbmcgYWxsIGFjY2VzcyBmcm9tIHRoYXQNCj4gPiA+ID4g
+PiBjbGllbnQNCj4gPiA+ID4gPiAodW5leHBvcnRpbmcgYWxsIGZpbGVzeXN0ZW1zKSBhbmQgd2Fp
+dGluZyBmb3IgdGhlIGxlYXNlDQo+ID4gPiA+ID4gdGltZW91dC4NCj4gPiA+ID4gPiANCj4gPiA+
+ID4gPiBGb3IgTkZTdjMgLSBhbmQgcGFydGljdWxhcmx5IE5MTSAtIGl0IGlzIHBvc3NpYmxlIHRv
+IHJldm9rZQ0KPiA+ID4gPiA+IGFsbCBzdGF0ZSBieQ0KPiA+ID4gPiA+IHdyaXRpbmcgdGhlIHBh
+dGggdG8gdGhlIGZpbGVzeXN0ZW0gaW50bw0KPiA+ID4gPiA+IC9wcm9jL2ZzL25mc2QvdW5sb2Nr
+X2ZpbGVzeXN0ZW0uDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhpcyBzZXJpZXMgZXh0ZW5kcyB0
+aGlzIGZ1bmN0aW9uYWxpdHkgdG8gTkZTdjQuwqAgV2l0aCB0aGlzLA0KPiA+ID4gPiA+IHRvIHVu
+bW91bnQNCj4gPiA+ID4gPiBhbiBleHBvcnRlZCBmaWxlc3lzdGVtIGlzIGl0IHN1ZmZpY2llbnQg
+dG8gZGlzYWJsZSBleHBvcnQgb2YNCj4gPiA+ID4gPiB0aGF0DQo+ID4gPiA+ID4gZmlsZXN5c3Rl
+bSwgYW5kIHRoZW4gd3JpdGUgdGhlIHBhdGggdG8gdW5sb2NrX2ZpbGVzeXN0ZW0uDQo+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gSSd2ZSBjdXJzZWQgbWFpbmx5IG9uIE5GU3Y0LjEgYW5kIGxhdGVyIGZv
+ciB0aGlzLsKgIEkgaGF2ZW4ndA0KPiA+ID4gPiA+IHRlc3RlZA0KPiA+ID4gPiA+IHlldCB3aXRo
+IE5GU3Y0LjAgd2hpY2ggaGFzIGRpZmZlcmVudCBtZWNoYW5pc21zIGZvciBzdGF0ZQ0KPiA+ID4g
+PiA+IG1hbmFnZW1lbnQuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gSWYgdGhpcyBzZXJpZXMgaXMg
+c2VlbiBhcyBhIGdlbmVyYWwgYWNjZXB0YWJsZSBhcHByb2FjaCwgSSdsbA0KPiA+ID4gPiA+IGxv
+b2sgaW50bw0KPiA+ID4gPiA+IHRoZSBORlN2NC4wIGFzcGVjdHMgcHJvcGVybHkgYW5kIG1ha2Ug
+c3VyZSBpdCB3b3JrcyB0aGVyZS4NCj4gPiA+ID4gDQo+ID4gPiA+IEkndmUgYnJvd3NlZCB0aGlz
+IHNlcmllcyBhbmQgbmVlZCB0byB0aGluayBhYm91dDoNCj4gPiA+ID4gLSB3aGV0aGVyIHdlIHdh
+bnQgdG8gZW5hYmxlIGFkbWluaXN0cmF0aXZlIHN0YXRlIHJldm9jYXRpb24gYW5kDQo+ID4gPiA+
+IC0gd2hldGhlciBORlN2NC4wIGNhbiBzdXBwb3J0IHRoYXQgcmVhc29uYWJseQ0KPiA+ID4gPiAN
+Cj4gPiA+ID4gSW4gcGFydGljdWxhciwgYXJlIHRoZXJlIHNlY3VyaXR5IGNvbnNlcXVlbmNlcyBm
+b3IgcmV2b2tpbmcNCj4gPiA+ID4gc3RhdGU/IFdoYXQgd291bGQgYXBwbGljYXRpb25zIHNlZSwg
+YW5kIHdvdWxkIHRoYXQgZGVwZW5kIG9uDQo+ID4gPiA+IHdoaWNoIG1pbm9yIHZlcnNpb24gaXMg
+aW4gdXNlPyBBcmUgdGhlcmUgZGF0YSBjb3JydXB0aW9uIHJpc2tzDQo+ID4gPiA+IGlmIHRoaXMg
+ZmFjaWxpdHkgd2VyZSB0byBiZSBtaXN1c2VkPw0KPiA+ID4gDQo+ID4gPiBUaGUgZXhwZWN0YXRp
+b24gaXMgdGhhdCB0aGlzIHdvdWxkIG9ubHkgYmUgdXNlZCBhZnRlciB1bmV4cG9ydGluZw0KPiA+
+ID4gdGhlDQo+ID4gPiBmaWxlc3lzdGVtLsKgIEluIHRoYXQgY2FzZSwgdGhlIGNsaWVudCB3b3Vs
+ZG4ndCBub3RpY2UgYW55DQo+ID4gPiBkaWZmZXJlbmNlDQo+ID4gPiBmcm9tIHRoZSBhY3Qgb2Yg
+d3JpdGluZyB0byB1bmxvY2tfZmlsZXN5c3RlbSwgYXMgdGhlIGVudGlyZQ0KPiA+ID4gZmlsZXN5
+c3RlbQ0KPiA+ID4gd291bGQgYWxyZWFkeSBiZSBpbmFjY2Vzc2libGUuDQo+ID4gPiANCj4gPiA+
+IElmIHdlIGRpZCB1bmxvY2tfZmlsZXN5c3RlbSBhIGZpbGVzeXN0ZW0gdGhhdCB3YXMgc3RpbGwg
+ZXhwb3J0ZWQsDQo+ID4gPiB0aGUNCj4gPiA+IGNsaWVudCB3b3VsZCBzZWUgc2ltaWxhciBiZWhh
+dmlvdXIgdG8gYSBuZXR3b3JrIHBhcnRpdGlvbiB0aGF0DQo+ID4gPiB3YXMgb2YNCj4gPiA+IGxv
+bmdlciBkdXJhdGlvbiB0aGFuIHRoZSBsZWFzZSB0aW1lLsKgwqAgTG9ja3Mgd291bGQgYmUgbG9z
+dC4NCj4gPiA+IA0KPiA+ID4gPiANCj4gPiA+ID4gQWxzbywgRGFpJ3MgY291cnRlb3VzIHNlcnZl
+ciB3b3JrIGlzIHNvbWV0aGluZyB0aGF0IHBvdGVudGlhbGx5DQo+ID4gPiA+IGNvbmZsaWN0cyB3
+aXRoIHNvbWUgb2YgdGhpcywgYW5kIEknZCBsaWtlIHRvIHNlZSB0aGF0IGdvIGluDQo+ID4gPiA+
+IGZpcnN0Lg0KPiA+ID4gDQo+ID4gPiBJJ20gcGVyZmVjdGx5IGhhcHB5IHRvIHdhaXQgZm9yIHRo
+ZSBjb3VydGVvdXMgc2VydmVyIHdvcmsgdG8gbGFuZA0KPiA+ID4gYmVmb3JlDQo+ID4gPiBwdXJz
+dWluZyB0aGlzLg0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiBEbyB5b3UgaGF2ZSBzcGVjaWZp
+YyB1c2VyIHJlcXVlc3RzIGZvciB0aGlzIGZlYXR1cmUsIGFuZCBpZiBzbywNCj4gPiA+ID4gd2hh
+dCBhcmUgdGhlIHBhcnRpY3VsYXIgdXNhZ2Ugc2NlbmFyaW9zPw0KPiA+ID4gDQo+ID4gPiBJdCdz
+IGNvbXBsaWNhdGVkLi4uLg0KPiA+ID4gDQo+ID4gPiBUaGUgY3VzdG9tZXIgaGFzIGFuIEhBIGNv
+bmZpZyB3aXRoIG11bHRpcGxlIGZpbGVzeXN0ZW0gcmVzb3VyY2UNCj4gPiA+IHdoaWNoDQo+ID4g
+PiB0aGV5IHdhbnQgdG8gYmUgYWJsZSB0byBtaWdyYXRlIGluZGVwZW5kZW50bHkuwqAgSSBkb24n
+dCB0aGluayB3ZQ0KPiA+ID4gcmVhbGx5DQo+ID4gPiBzdXBwb3J0IHRoYXQsDQo+ID4gDQo+ID4g
+V2l0aCBORlN2NCwgdGhlIHByb3RvY29sIGhhcyBtZWNoYW5pc21zIHRvIGluZGljYXRlIHRvIGNs
+aWVudHMgdGhhdA0KPiA+IGEgc2hhcmVkIGZpbGVzeXN0ZW0gaGFzIG1pZ3JhdGVkLCBhbmQgdG8g
+aW5kaWNhdGUgdGhhdCB0aGUgY2xpZW50cycNCj4gPiBzdGF0ZSBoYXMgYmVlbiBtaWdyYXRlZCB0
+b28uIENsaWVudHMgY2FuIHJlY2xhaW0gdGhlaXIgc3RhdGUgaWYgdGhlDQo+ID4gc2VydmVycyBk
+aWQgbm90IG1pZ3JhdGUgdGhhdCBzdGF0ZSB3aXRoIHRoZSBkYXRhLiBJdCBkZWFscyB3aXRoIHRo
+ZQ0KPiA+IGVkZ2UgY2FzZXMgdG8gcHJldmVudCBjbGllbnRzIGZyb20gc3RlYWxpbmcgb3Blbi9s
+b2NrIHN0YXRlIGR1cmluZw0KPiA+IHRoZSBtaWdyYXRpb24uDQo+ID4gDQo+ID4gVW5leHBvcnRp
+bmcgZG9lc24ndCBzZWVtIGxpa2UgdGhlIHJpZ2h0IGFwcHJvYWNoIHRvIHRoYXQuDQo+IA0KPiBO
+bywgYnV0IGl0IHNvbWV0aGluZyB0aGF0IHNob3VsZCB3b3JrLCBhbmQgc2hvdWxkIGFsbG93IHRo
+ZQ0KPiBmaWxlc3lzdGVtDQo+IHRvIGJlIHVubW91bnRlZC7CoCBZb3UgZ2V0IHRvIGtlZXAgYm90
+aCBoYWx2ZXMuDQo+IA0KPiA+IA0KPiA+IA0KPiA+ID4gYnV0IHRoZXkgc2VlbSB0byB3YW50IHRv
+IHNlZSBpZiB0aGV5IGNhbiBtYWtlIGl0IHdvcmsgKGFuZA0KPiA+ID4gaXQgc2hvdWxkIGJlIG5v
+dGVkIHRoYXQgSSB0YWxrIHRvIGFuIEwyIHN1cHBvcnQgdGVjaG5pY2lhbiB3aG8NCj4gPiA+IHRh
+bGtzIHRvDQo+ID4gPiB0aGUgY3VzdG9tZXIgcmVwcmVzZW50YXRpdmUsIHNvIEkgbWlnaHQgYmUg
+Z2V0dGluZyB0aGUgZnVsbA0KPiA+ID4gc3RvcnkpLg0KPiA+ID4gDQo+ID4gPiBDdXN0b21lciBy
+ZXBvcnRlZCB0aGF0IGV2ZW4gYWZ0ZXIgdW5leHBvcnRpbmcgYSBmaWxlc3lzdGVtLCB0aGV5DQo+
+ID4gPiBjYW5ub3QNCj4gPiA+IHRoZW4gdW5tb3VudCBpdC4NCj4gPiANCj4gPiBNeSBmaXJzdCB0
+aG91Z2h0IGlzIHRoYXQgcHJvYmFibHkgY2xpZW50cyBhcmUgc3RpbGwgcGlubmluZw0KPiA+IHJl
+c291cmNlcyBvbiB0aGF0IHNoYXJlZCBmaWxlc3lzdGVtLiBJIGd1ZXNzIHRoYXQncyB3aGF0IHRo
+ZQ0KPiA+IHVubG9ja18gaW50ZXJmYWNlIGlzIHN1cHBvc2VkIHRvIGRlYWwgd2l0aC4gQnV0IHRo
+YXQgc3VnZ2VzdHMNCj4gPiB0byBtZSB0aGF0IHVuZXhwb3J0aW5nIGZpcnN0IGlzIG5vdCBhcyBy
+aXNrLWZyZWUgYXMgeW91DQo+ID4gZGVzY3JpYmUgYWJvdmUuIEkgdGhpbmsgYXBwbGljYXRpb25z
+IHdvdWxkIG5vdGljZSBhbmQgdGhlcmUNCj4gPiB3b3VsZCBiZSBlZGdlIGNhc2VzIHdoZXJlIG90
+aGVyIGNsaWVudHMgbWlnaHQgYmUgYWJsZSB0bw0KPiA+IGdyYWIgb3Blbi9sb2NrIHN0YXRlIGJl
+Zm9yZSB0aGUgb3JpZ2luYWwgaG9sZGVycyBjb3VsZA0KPiA+IHJlLWVzdGFibGlzaCB0aGVpciBs
+ZWFzZS4NCj4gDQo+IFVuZXhwb3J0aW5nIGlzbid0IHJpc2sgZnJlZS7CoCBJdCBqdXN0IGFic29y
+YnMgYWxsIHRoZSByaXNrcyAtIG5vbmUNCj4gYXJlDQo+IGxlZnQgb2YgdW5sb2NrX2ZpbGVzeXN0
+ZW0gdG8gYmUgYmxhbWVkIGZvci4NCj4gDQo+IEV4cGVjdGluZyBhbiBhcHBsaWNhdGlvbiB0byBy
+ZWNvdmVyIGlmIHlvdSB1bmV4cG9ydCBhIGZpbGVzeXN0ZW0gYW5kDQo+IGxhdGVyIHJlLWV4cG9y
+dCBpdCBpcyBjZXJ0YWlubHkgbm90IGd1YXJhbnRlZWQuwqAgVGhhdCBpc24ndCB0aGUgdXNlLQ0K
+PiBjYXNlDQo+IEkgcGFydGljdWxhcmx5IHdhbnQgdG8gZml4LsKgIEkgd2FudCB0byBiZSBhYmxl
+IHRvIHVubW91bnQgYQ0KPiBmaWxlc3lzdGVtDQo+IHdpdGhvdXQgdmlzaXRpbmcgY2FsbCBjbGll
+bnRzIGFuZCBraWxsaW5nIG9mZiBhcHBsaWNhdGlvbnMuDQo+IA0KPiA+IA0KPiA+IA0KPiA+ID4g
+V2hldGhlciBvciBub3Qgd2UgdGhpbmsgdGhhdCBpbmRlcGVuZGVudCBmaWxlc3lzdGVtDQo+ID4g
+PiByZXNvdXJjZXMgaXMgc3VwcG9ydGFibGUsIEkgZG8gdGhpbmsgdGhhdCB0aGUgY3VzdG9tZXIg
+c2hvdWxkDQo+ID4gPiBoYXZlIGENCj4gPiA+IGNsZWFyIHBhdGggZm9yIHVubW91bnRpbmcgYSBm
+aWxlc3lzdGVtIHdpdGhvdXQgaW50ZXJmZXJpbmcgd2l0aA0KPiA+ID4gc2VydmljZQ0KPiA+ID4g
+cHJvdmlkZWQgZnJvbSBvdGhlciBmaWxlc3lzdGVtcy4NCj4gPiANCj4gPiBNYXliZS4gSSBndWVz
+cyBJIHB1dCB0aGF0IGluIHRoZSAibGFzdCByZXNvcnQiIGNhdGVnb3J5DQo+ID4gcmF0aGVyIHRo
+YW4gInRoaXMgaXMgc29tZXRoaW5nIHNhZmUgdGhhdCBJIHdhbnQgdG8gZG8gYXMNCj4gPiBwYXJ0
+IG9mIGRhaWx5IG9wZXJhdGlvbiIgY2F0ZWdvcnkuDQo+IA0KPiBBZ3JlZS7CoCBEZWZpbml0ZWx5
+ICJsYXN0IHJlc29ydCIuDQo+IA0KPiA+IA0KPiA+IA0KPiA+ID4gU3RvcHBpbmcgbmZzZCB3b3Vs
+ZCBpbnRlcmZlcmUgd2l0aA0KPiA+ID4gdGhhdCBzZXJ2aWNlIGJ5IGZvcmNpbmcgYSBncmFjZS1w
+ZXJpb2Qgb24gYWxsIGZpbGVzeXN0ZW1zLg0KPiA+IA0KPiA+IFllcC4gV2UgaGF2ZSBkaXNjdXNz
+ZWQgaW1wbGVtZW50aW5nIGEgcGVyLWZpbGVzeXN0ZW0NCj4gPiBncmFjZSBwZXJpb2QgaW4gdGhl
+IHBhc3QuIFRoYXQgaXMgcHJvYmFibHkgYSBwcmUtcmVxdWlzaXRlDQo+ID4gdG8gZW5hYmxpbmcg
+ZmlsZXN5c3RlbSBtaWdyYXRpb24uDQo+ID4gDQo+ID4gDQo+ID4gPiBUaGUgUkZDIGV4cGxpY2l0
+bHkgc3VwcG9ydHMgYWRtaW4tcmV2b2NhdGlvbiBvZiBzdGF0ZSwgYW5kIHRoYXQNCj4gPiA+IHdv
+dWxkDQo+ID4gPiBhZGRyZXNzIHRoaXMgc3BlY2lmaWMgbmVlZCwgc28gaXQgc2VlbWVkIGNvbXBs
+ZXRlbHkgYXBwcm9wcmlhdGUNCj4gPiA+IHRvDQo+ID4gPiBwcm92aWRlIGl0Lg0KPiA+IA0KPiA+
+IFdlbGwgdGhlIFJGQyBhbHNvIHByb3ZpZGVzIGZvciBtaWdyYXRpbmcgZmlsZXN5c3RlbXMgd2l0
+aG91dA0KPiA+IHN0b3BwaW5nIHRoZSBORlMgc2VydmljZS4gSWYgdGhhdCdzIHRydWx5IHRoZSBn
+b2FsLCB0aGVuIEkNCj4gPiB0aGluayB3ZSB3YW50IHRvIGVuY291cmFnZSB0aGF0IGRpcmVjdGlv
+biBpbnN0ZWFkIG9mIHJpcHBpbmcNCj4gPiBvdXQgb3BlbiBhbmQgbG9jayBzdGF0ZS4NCj4gDQo+
+IEkgc3VzcGVjdCB0aGF0IHZpcnR1YWwgSVBzIGFuZCBuZXR3b3JrIG5hbWVzcGFjZXMgaXMgdGhl
+IGJldHRlcg0KPiBhcHByb2FjaA0KPiBmb3IgbWlncmF0aW5nIGV4cG9ydGVkIGZpbGVzeXN0ZW1z
+LsKgIEl0IGlzbid0IGNsZWFyIHRvIG1lIHRoYXQNCj4gaW50ZWdyYXRlZCBtaWdyYXRpb24gc3Vw
+cG9ydCBpbiBORlMgd291bGQgYWRkIGFueXRoaW5nIG9mIHZhbHVlLg0KDQpObywgYnV0IHJlZmVy
+cmFscyBhbGxvdyB5b3UgdG8gY3JlYXRlIGFuIGFyYml0cmFyeSBuYW1lc3BhY2Ugb3V0IG9mIGEN
+CnNldCBvZiBjb250YWluZXJpc2VkIGtuZnNkIGluc3RhbmNlcy4gSXQgcmVhbGx5IHdvdWxkbid0
+IGJlIGhhcmQgdG8NCmNvbnZlcnQgYW4gZXhpc3Rpbmcgc2V0dXAgaW50byBzb21ldGhpbmcgdGhh
+dCBnaXZlcyB5b3UgdGhlIHNpbmdsZS0NCmZpbGVzeXN0ZW0gbWlncmF0aW9uIGNhcGFiaWxpdGll
+cyB5b3UncmUgYXNraW5nIGZvci4NCg0KPiANCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4
+IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1t
+ZXJzcGFjZS5jb20NCg0KDQo=
