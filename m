@@ -2,339 +2,209 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 533B549FB07
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 14:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E04A049FB2C
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 15:03:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239256AbiA1Nqw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jan 2022 08:46:52 -0500
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:62084 "EHLO
+        id S244789AbiA1ODC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jan 2022 09:03:02 -0500
+Received: from mx0b-00069f02.pphosted.com ([205.220.177.32]:37578 "EHLO
         mx0b-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S232870AbiA1Nqv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 08:46:51 -0500
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20SCx002023376;
-        Fri, 28 Jan 2022 13:46:49 GMT
+        by vger.kernel.org with ESMTP id S244828AbiA1ODC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 09:03:02 -0500
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20SCwvJw031190;
+        Fri, 28 Jan 2022 14:03:01 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=CMFkUujYyDqY/wh74PdJfJq2p3QJFVSVLuYcMyb1K3w=;
- b=nCae72ppf0fsvwnjBiECbh7NDwHs5axQAkgzarOZaFw0n2o9kzIs1sIbR5TBoIV2miAx
- BKmY3cMTXmIZhwxVVQKFEQ1MvJvbRbWZ9yUS1xVgKjPu6P/MtWdIp/X+fA5E7FSI0fD5
- T1nBvZ5HoKRxVub6byV0dPPb4GSGdqKL7kwgoxgKRX7IF1CNW2L6sj9imsPIvaMLt8pu
- utI72N5WQSo+bsbnncgdK0Rzi4BxU7hfsadGXeihPsWbVTGRkjpN/3Nn7/T7GnOpygoQ
- LuW9dCZiKjIUXH2GO63NL6SVBY8gwW6/j6Oj3tm0fAeWPwlHwcZGLkyaXf9iHb7IpE7C Ww== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3duvquubqk-1
+ bh=Lc+hyLckV3NHm66qwIoLGmbtD17+yM8KYQBjLfuDIYg=;
+ b=ogGFxzOGAOI9q9Gd1ohI1F83jbz5w75k5xHaQ734k8So85zpXGhu4x9bxagmxl2PB+gW
+ mhAnP9R3N9FQIa6q1UNYkxymRHvMnCs4uxXMG7gttJIYj7l4zY2CIBuzrM997NLw8tA/
+ ESq/kQVIDPUkq7SDE/lMlmxgZyH2jMcLXftI03JZFR8FpzAPXzvr/coKPaMxsPBAysGQ
+ P8/GEZr0cfRUVcuoMY/kwFamKhUcLc4qdqqwplM0qQ0ZzzTbJ1gxfkUGKnhBYn+Ookn5
+ DTedWibZpq70EUdKQuHsKUtFGRqsURYUkQGjM5mUErym2HKSfSOKIVlgnsMWoNesDR2W gQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3duvsj38kw-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jan 2022 13:46:49 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20SDfp1J134091;
-        Fri, 28 Jan 2022 13:46:48 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by userp3020.oracle.com with ESMTP id 3dv6e4v0mw-1
+        Fri, 28 Jan 2022 14:03:00 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20SDtYLg119542;
+        Fri, 28 Jan 2022 14:02:59 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2174.outbound.protection.outlook.com [104.47.57.174])
+        by aserp3030.oracle.com with ESMTP id 3dr7ynttp9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Jan 2022 13:46:47 +0000
+        Fri, 28 Jan 2022 14:02:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IKVy4GEbRZ9QPbNpTvOFC+WC6m7TNv+QbRvoOqUx4Pvy7QzmPXoTXqzVhKEcjEIMNWHm5SUXqXDVzhJzTe4NLCfCtXT3Yte7KtQTikG0YxheWdpEJ/MGyau4MbOXSY1Yj7kRTbysu8AjEzVAEYqw3mzYwMfrSkMGffX0xliBECh0aEzl9yVXjSbP4F0VdfnFtlFzqDLonb3Tj14/q311FvPpwvBLFU9yL5Bkj/sUO54wccYzlWJG/VJr58CIKOCgvcJ2DR2KgWaI81lRaXO+2YNagdxWiz+E9gSf9AvzvROZ9atVlTFYg305OdR6HFAKCzN9SVxXaYQ7uoiT3YViNQ==
+ b=is8LE3Iy6lFswA58nyMUOuSQZczMondWEq20GNdp/rGAFTC31/UYGGyiOpyj1DC4a+WxCGU6XLaj/dPqItqP87j0H/dPAzraOazTwQJ4vla4XDZF3VSU5FFkc7Dgy1CPJZaUV0Z0+SWJSnDQ9bzYY57E7WI2v16rLjHMAl/5JEpyByBhJJL1S/ExMopdQI4Ze4DFe0W311YTu/bQYpS6xi4/B1WOfnzDLWJaFmmboakqbhaSdK/R3jFxHAT3BfZ+lFVW9E2uQhhK8T+HWwZSMZzB+GfxSDaGiuT9Cm5RSkn8S0ei4ZdgJzZsgkcxydXrmAEavBje75kLEZuggzR5jA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CMFkUujYyDqY/wh74PdJfJq2p3QJFVSVLuYcMyb1K3w=;
- b=baA93eUCLqS8JZ7bJDOF14o/wDLZ1MTwWd/5+aynKsbMbgkOtgtzFbMfIApHvuh1Kg5wgoLdGNbbzNB6EiJ+ktZ/07ctOTM2kP1dJ/eJE5+UywK3ajGGhbHW3qhDkYki2BcEXlvSKAMrEUYBEaG5WVXjlJ2q+R2K5NPTNrjaITcB6wOgJLIZWYi/4q5e6VL93/388bfyL82R9UzlWCk4HCHG+gFvReSfzS7/BTjNSutCPazsFFug6wXe5EeAi80kf/lowhvO4Wt5unZ3RI+6xD009zFgcdSDHl9VNskqo2omhSWZJbJ8Bl9HsNbzkURFm9+pjOc5zwOxQ97zyNgJ4Q==
+ bh=Lc+hyLckV3NHm66qwIoLGmbtD17+yM8KYQBjLfuDIYg=;
+ b=Q6rw0DykUK5kqsi9F3AHSGVQi418epcbdwIc+llDqYbVRR7RrnanODdlrmlgKn6VzWL5hXsmtM2o2m9efEoRmhq+qKBiCkA5NkrUGO/HGF3rGeCW3fvVkOFjLGfKb7TkXFovUQ37PizpEjhh7yfuJlSTgEJGDKY7G9eyl0ivIW9UTVL//eclDAAdiZJ/hKeZOLz4+VoppFJaTYgKuvGZUWHWEJI3FZGBSmcdMIZ5siDyQ1jbeG3k/7jcwYv3/WD0UEF6cqZQzwFhntZEsIfkYlASQoXuFoTODsHcsR3JE+pzZCLIQdeBjCxUpzEkgVRZZfoQ5eX6MnrA4duKWIZvBw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
  dkim=none; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CMFkUujYyDqY/wh74PdJfJq2p3QJFVSVLuYcMyb1K3w=;
- b=qvBmzeZC3nlDuZTQRVkSneGUWiLFiM0V82TMj5Z7rPgV5/+tMGAKiNZNv/X63vVUv3XkOCxRbZKXEnVx0KOPKYCGZUyvzUnIMLElUw7zyIY4HDtQ6O9XchsJt2FCqBveh4k8kRsPKH/dk172netgPe0X/RZ/nF8RAtrkCpPQ7gk=
+ bh=Lc+hyLckV3NHm66qwIoLGmbtD17+yM8KYQBjLfuDIYg=;
+ b=ckwo9x7Kvf5n6RyBE/1uVftSUPMEXLfaMHCn8wxSOdX+iSHyWP5RFJoaQbiFZh9Nutm4eiF+K9C8dU+zIOvVpL0fGkzkk8r4PF4ON2181V5Ivg9ZOvsWCRs9B+2dLaz6SQGXVBaEqsovE3SVUkaCIpUQ2R4iFMAUMlPFWazm0MY=
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com (2603:10b6:610:cb::17)
- by BL0PR10MB3444.namprd10.prod.outlook.com (2603:10b6:208:73::24) with
+ by SA2PR10MB4793.namprd10.prod.outlook.com (2603:10b6:806:110::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.13; Fri, 28 Jan
- 2022 13:46:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.11; Fri, 28 Jan
+ 2022 14:02:57 +0000
 Received: from CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::1490:125c:62cd:6082]) by CH0PR10MB4858.namprd10.prod.outlook.com
  ([fe80::1490:125c:62cd:6082%4]) with mapi id 15.20.4930.019; Fri, 28 Jan 2022
- 13:46:45 +0000
+ 14:02:57 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Neil Brown <neilb@suse.de>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
-Thread-Topic: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
-Thread-Index: AQHYEzqzINafEUb13kObHCDc0cTYeKx3GDuAgABfVQCAABgdAIAAR7yAgACdGgA=
-Date:   Fri, 28 Jan 2022 13:46:45 +0000
-Message-ID: <C462D2BB-BD5B-4372-B644-FD4D6D877072@oracle.com>
-References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
- <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
- <164332328424.5493.16812905543405189867@noble.neil.brown.name>
- <A933D67A-0C1B-4700-97E7-0DBEF4458A77@oracle.com>
- <164334386787.5493.637178363398104896@noble.neil.brown.name>
-In-Reply-To: <164334386787.5493.637178363398104896@noble.neil.brown.name>
+To:     Bruce Fields <bfields@fieldses.org>
+CC:     Dai Ngo <dai.ngo@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 1/1] nfsd: nfsd4_setclientid_confirm mistakenly expires
+ confirmed client.
+Thread-Topic: [PATCH 1/1] nfsd: nfsd4_setclientid_confirm mistakenly expires
+ confirmed client.
+Thread-Index: AQHYEvmbADEY/zrdTE+MH1u87Jmysax3BaiAgABAU4CAATOSgA==
+Date:   Fri, 28 Jan 2022 14:02:57 +0000
+Message-ID: <B5EB68E1-E930-4EE0-8994-04674F7C8C30@oracle.com>
+References: <1643231618-24342-1-git-send-email-dai.ngo@oracle.com>
+ <5D07AA4C-D6ED-4E53-AFFE-D0B91B11622C@oracle.com>
+ <20220127194207.GA3459@fieldses.org>
+In-Reply-To: <20220127194207.GA3459@fieldses.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3654.120.0.1.13)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ffbaeb1e-438f-4d84-d84b-08d9e2649fd2
-x-ms-traffictypediagnostic: BL0PR10MB3444:EE_
-x-microsoft-antispam-prvs: <BL0PR10MB3444137F081C72F0E1B7EB2893229@BL0PR10MB3444.namprd10.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
+x-ms-office365-filtering-correlation-id: 145d0b90-3d35-4331-d9c6-08d9e266e365
+x-ms-traffictypediagnostic: SA2PR10MB4793:EE_
+x-microsoft-antispam-prvs: <SA2PR10MB4793D78E71A7CC44ECF9129B93229@SA2PR10MB4793.namprd10.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2201;
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WxyecLrGIpavDauAbfExXOPWdMNK1Gd424z1qGBgrybFqfHVBnP1ghReIFeE81B7tV7FS3jBDRdE//2KOY+IJm57aGkLqlefOb90nDgqjXRYS9Y7nim1I6riIHFGhMi1lV+bfn67zhF3a4yZ/i9vy96rP/ryKpwuA3R6l05FqSUpxZSHBYOPALY/k74Yk3CwaHQaM9uQOwAcdX2cSs9Z0NGB3VAF5gNFbRuJu905PpuvrdDmSMRa4n3DLFowBQOrqt4XhWllyJCwNPbbiPlmpIEkbbMCb4piI3OUZ7g/+ckxQktofGVoJxxvS4nNvHgG+lrRHGlpW+MxgFoNMwbp9rMK3Q2aHm1YzHrzvWELYQv5eEMTaMkTgCXhVgMldntUXdketiyTwOMeV8OoZNTLYaUE01u5D2Hcg1F1a6BYGH6VaZ1f63DCXnsX2i0RtGvZxjCM5LNJPhnUNskfxt2BIOOpiQCOvaC/0DeIpHanM9S3Xr4Gj3vfy0UNeBfCjdHeBp6nbIzGDhWxpG5O2MPMcZ0cd12v5EwZGe3CDPA7875iA94/JhsaY+xCr0HIcWHI68zSH9nvb0I81Uxa41faZfRbqoop3Je5OKOmeiVfxY8ThF115Ks2GNAfAE75OovhvMnwths0PxhkAxr3eHIwDACMMKPVIAptAJiISrlNEicl5pBDGrg/fha4Io9quXCBQdfgklfyV5RtkhxdpToG5YchKloBjurxVCPqzzPMu3PDSCZX2foXVu98sbS31qkZ
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(38100700002)(2616005)(122000001)(83380400001)(186003)(316002)(26005)(71200400001)(66476007)(66946007)(36756003)(66446008)(66556008)(38070700005)(64756008)(5660300002)(76116006)(4326008)(6512007)(508600001)(53546011)(6506007)(2906002)(6916009)(8936002)(6486002)(86362001)(33656002)(8676002)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: deLrrs81obf8eWT1CnWk6F6iTPfNwE3i823wSr+TRCXXi/ShgP6UKUMrpVXyQJ+9SQCk10856I2cVUjhHLe9renyN9sW9u6B9EMdCUqSA5KYHpVlWHhtCc1AC61rLU9eoCtQEgTaXAUAIyqYG7wtH3df4d3VsyXIe/CbrHouVHGUlgVzs1N6pfvrQK2Ibgx48Vx5+830zl+VHGm7RHmv9M5KWAfeobOITnd6LWixEvjMXc4SO1CNjgJO2/CR+U78eTQz9cmM+Iqb8kKUV8Yghq3CA5JOPdb9hDVvlnGT+DCHBe3MpPruO2E4mC++g67wgTgqS5CfylfPTxYxQBEoFTGrF3wJZvdoEsgDjWI8TNT1eNz9y/r3AUsdENbdpqZW+aVjMQAJDHLx9M+p5RgpLfsPyttg0ON0tcekK/cfabnnAa8RQq0uXaQsTVcGAKmGF1hppaCn2n1jGcwZ9rJCnxV1U4dSN1bGhjdY60ssihy4sk2DRiFuqlBbc6YIF/qlStDXAe96yg5kiSYEbTH7X02VAeG/3GD8dS58dfAomivJu1/tVSUTSYRcKNfImhKDFo1VsjGphrJHrgKfOLsCP9iUGvcbwpcslbv5MqIinsFxqgPdzcNKZIkaesAd2G00NhZRWQx8WSieypIrk7pktqh00y6xvC6BBl7nRTvTctPmDl47K7ZgzVIzfXbCmEPmS8r3r0SvWjPO344f9PJ2xYyJ6GyZ7haudMhn3P2a79hclygl8ImL+WiyRfJiqj21
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR10MB4858.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(66476007)(6486002)(86362001)(2906002)(186003)(122000001)(53546011)(316002)(6512007)(54906003)(33656002)(76116006)(8676002)(26005)(38100700002)(71200400001)(38070700005)(6916009)(2616005)(5660300002)(4326008)(8936002)(64756008)(66946007)(66556008)(66446008)(6506007)(36756003)(508600001)(83380400001)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?VfGJwhXdIOZDSfU6N6WNcE1SNZ7ZZVDwYt82ftCDCQ+Sorv/K6zTFrmhfpvo?=
- =?us-ascii?Q?eq1S2uRxi5poXSkGgT5bAfPfze1GLwZn6uRcrJ7/cXEDwwryH7KPyr30B47w?=
- =?us-ascii?Q?LBsj44+fXnD7u7OLuBqN3VzoG4djTNPijc3xef30yKRBF26xz3Ln3QMTajYD?=
- =?us-ascii?Q?k513/5FKrGD+HJMMMUsq7pQCLm/0vV42VaCCeiry6Av5KThEnxVx9wm2fqRm?=
- =?us-ascii?Q?QFYBh01UX8qBB2QsLNJnchJBXXteWYCm9jDXH48hLpvRuaCV6lOfNYyzEegT?=
- =?us-ascii?Q?voOmQv48/HLOjJXTXaDMt+pEVXazWnpFivrtvGS5GSvIecQLnDEwi9RTia54?=
- =?us-ascii?Q?eCCm+tGwlQk/91OWBgJTd3fE6GcuByGWPpP7hp9uGRHJsT76kIigbMPT3rja?=
- =?us-ascii?Q?C/5IXoKfeJrBZFYmyXVEc41sIVubjXRccW32HThhcLmKITYjVki+1PzY3yeO?=
- =?us-ascii?Q?FxlFeIT96MrzhAlKINbQt1NnfCDYlwPfLS3aOmLxzI/G0Nn9r75sbyg5J3iV?=
- =?us-ascii?Q?s7IJDlZRzP2ks9DHPRJKVJ1w41ouqk6/+VOgpWUiLod/KkydkjRy5hVDtEe0?=
- =?us-ascii?Q?eXtpPQbhjMMGip9+y/ozOCCM0OJQfiYqhL+kfjb1fEWBU65IR9ob3xlWlbu8?=
- =?us-ascii?Q?mWEI34D+y6N4jtjK6zm6UOmz7v+/CPRgc6xMFWXuKkfiefn8h0tgjxfChYDA?=
- =?us-ascii?Q?XEY4XT0pqyvypGwBZDg+S4djZtsZrAp1G6zhB9KpiUPLkgSzXu0ASJJwlBSl?=
- =?us-ascii?Q?tyMSOvf4hsEKEGdxuBI7QGGNC894VVsMBauNdc2iN05PyPOrDCAHI9ydl+/S?=
- =?us-ascii?Q?VKiulUxLFT5s2ePk2tCOGr53rUdWsFMJcFPEnDbjARjA6aVROsV1fBE6AiVV?=
- =?us-ascii?Q?CRVB3HzsD1sBXsFDfIlYgwLEf+tEQxIdukIRUCtRcCuYWYFm2sBK9NKHMh7M?=
- =?us-ascii?Q?dH5uIY8CnUgBxD0XoTWkUSxkt1ZuPZj3mpxlxA8KwvorVm5PLNYmSBlioXjF?=
- =?us-ascii?Q?PWdfdJy7eiWXBrTeqGmNfNYC+fyAkbnxuWiBCWDfg4B8iRcoryniZb4A/TAn?=
- =?us-ascii?Q?2FPVdgooD1ic2GB1gIpHv2aBpE3V+Mmw0HYSKTfaQJRwi3kDJ374Oc6tbpFs?=
- =?us-ascii?Q?bloGPqnFU4SFJmNV/7xrVrp5P53uSPb0n3zR0wQjmXzB+corV3sdy0x4W/P4?=
- =?us-ascii?Q?RTzVXbE2B0VdW7RjvtzMzJMG6XgDefLoYBHkIvN9s4QXa3WYidswIHNMVmiA?=
- =?us-ascii?Q?Sca5dVJp1LcERaSFeQd5RWIvHVlQxUFLl+nfhtqYlFLKJw2WdDwa681VKEWY?=
- =?us-ascii?Q?+vueMOsPl4Dmd8RWB2dtK164oM14Nw9qDpbzgX8Qh/7b8j4oxvPdQz06mBGG?=
- =?us-ascii?Q?GYO4BbwaWnPwJhx6VCLoWhZFYfyC1xEj5zaVp1CDWs8F8Sfe6c98GRoaVLUj?=
- =?us-ascii?Q?G6AO6aNgwVD23CY+BvWnf9KLllX6wnpRWtGoWgHiJpnt93G0GPDj/tyVw7Vu?=
- =?us-ascii?Q?cev76bnpAGbSlXJkCxgwsiFtuzSZOZdwI2xzqOu3IF9mVJ3o6Qe02IYHddqa?=
- =?us-ascii?Q?Hm8cCcNvdoo/oG5Q1yTQXsZNhuC5GKZROEYPkeYyGpw8qmGOe0s+jruOqgTN?=
- =?us-ascii?Q?TxfT3zGw2dwkQZpVzU5CeyU=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?gkxWBlxT/Welx2cIGoeDFLPBZ2nrjJWt6ex+lR7FEdoK1Mel6/frJJ0qhYuL?=
+ =?us-ascii?Q?7KIyBPHuqnaJ4q8XAuFyLdB9erpICgcwAFp2cXkaheK2LzvhJmG2PGttLGEv?=
+ =?us-ascii?Q?8ePQg23Cs9TQcc7GWKYlrk1qGua7VqUoCMCF8i0/1u9jkv3mvxbj/JOBO7/e?=
+ =?us-ascii?Q?kntwg0YwPAivDIhyzrFFnqiwVGZj2uXLKXcEAC7XZ7QaZImfrz7470ndrrOU?=
+ =?us-ascii?Q?HfjfJnW7/BfMDyy2NbthrpEwFrePcoJXpe3tN8/2E6kIa45leeFhREL/ZGaY?=
+ =?us-ascii?Q?nlxlSwP8ZJJPtsE3bHualky3ReyXpt25hBTBF2Ux35aCJDPMwaNqblF/iUjS?=
+ =?us-ascii?Q?eO43WBFH1JmUIrSFm+AUKRNnCuNyVjEjdMEgFKD/s+EdMdc3NSHDat/oScsC?=
+ =?us-ascii?Q?eHO3PQE21CDLW0YHKq7IEBHriZVTxBaAoUJEd53i+1PLicNtzJvVUXdbdMMU?=
+ =?us-ascii?Q?gaAhJheQch5IKTEi+CSIlSlLVs/moNIuXxkqpgbNkItds2owsTlpWVI+E31Z?=
+ =?us-ascii?Q?Spvw+MyP7lWl09k7HuqCvTHGUFfXRKeQVDLKxDN0GAiyCUtiRgmEyJ9wzQpU?=
+ =?us-ascii?Q?1XLokeFtC8z5ssjIFCeYu1SASFI4Of/pLdCRhybHeqdk2UTOX1iKpaoufms8?=
+ =?us-ascii?Q?aVWa/Esu8FD5KwMg7Zb9bz7AcK5IDcHc248to+28rPbrZy7+d5i0BfL6Qf6a?=
+ =?us-ascii?Q?BA+aXdiqn6frRuiMvs2VD4bXxyCHjmM2qZYn/jCAh07ewzkuiCmmefZ/OsoQ?=
+ =?us-ascii?Q?1ey9bet0yFZkZVkKv0Lw9QTUxuMtkPtM1b87dLOJno0hBDUdWG0K4qDxZpaC?=
+ =?us-ascii?Q?xJX67wLkn2o962ljosz5iM5ST/YAo4KavPJ/iixAi+d0bD54QCarnADKowN2?=
+ =?us-ascii?Q?VyhmhoA9a8lHj71huPP0kS0Vv92QzFiX2GWltEscpf3Zbdd8pUKhIVoiI7xC?=
+ =?us-ascii?Q?sHxIKXULFn0uE5KNbw2nZ1S8OSlOVV0dUSv3uRjFtRFyXtD3aabTboO/r/mh?=
+ =?us-ascii?Q?SYzDZQYQnbHvo4Lp3+FHwlpVdG6d/e2H5dqwITEcMmm6H9N0VBNFoH9Bav4g?=
+ =?us-ascii?Q?EO6DTCJ/PtNGbZAT4TtoTXI0+l5lF51CQQo9Yob/dgPLVpDrIhxm4XPctNla?=
+ =?us-ascii?Q?BTe6U9ZJr5y11Zd3kyMYEpk3+BGteO1tLuKhVi6vJzirXIgu70phPa+3SV2a?=
+ =?us-ascii?Q?YC5tdF7qbk1dWJyUn2Mi9e/XFG1fXXqu2gcS1GanLS6c99nThMFvBfIt32Qd?=
+ =?us-ascii?Q?N0eOOTqHma937T6YnYlbv2plU9Tvd6Rbl4p1qeGw1ZMN4P2LCqZOXpIcZP7Q?=
+ =?us-ascii?Q?C0/u/wy/tiWMHnwhKuewbfBxhtkl14tfoc/MVuxBamfuD0AGnB7bG6eZXdfA?=
+ =?us-ascii?Q?SBUddI+crLX+MYH5B62w3APLE0DiZnC/v+4UbG/TYL8vFyizFIL1OIs8Ubn/?=
+ =?us-ascii?Q?9BuLjW13CysXlHZ9L4n/Uc8NvgTbMOhQ5Cl4rQUGINH6r7q6XE9j3k7NU9dx?=
+ =?us-ascii?Q?+29Z/n7J4CeWAn54KvS/QaSkCk3CXCoRpra/u1kSSHAmEPLeEf5WYlLdF8fw?=
+ =?us-ascii?Q?D2JcssiHhZcjXfm2ss4KZyYy9yPvatGaN+INP30W+zjCreADrtiDEFJUfSGp?=
+ =?us-ascii?Q?IYh1nhw17eA8bE4jIGVZ7Hk=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BBF92D005D0FCB479520CBB373DB4DF0@namprd10.prod.outlook.com>
+Content-ID: <E1E930C376E9BF44A8E21B95C20F5D2F@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: CH0PR10MB4858.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ffbaeb1e-438f-4d84-d84b-08d9e2649fd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2022 13:46:45.4232
+X-MS-Exchange-CrossTenant-Network-Message-Id: 145d0b90-3d35-4331-d9c6-08d9e266e365
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jan 2022 14:02:57.7874
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 94ZIp4aoTsPrm/ZichYiQhMbyV7LxWcJHEqkyMrXsVNm1o0dkX/YU7Q0G7Ok0H2AedzeKBODAAffJYrR9cI4HA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR10MB3444
+X-MS-Exchange-CrossTenant-userprincipalname: BlTFKxeB4saTj9G4BJylS4iF6I/M3NFTkWv92wBe8fRkzM3rVp9k+cvur2UBVVpkM6kwnEu72Kl0XjjKFLGD6Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR10MB4793
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10240 signatures=669575
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- mlxlogscore=999 mlxscore=0 adultscore=0 bulkscore=0 malwarescore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2201110000 definitions=main-2201280087
-X-Proofpoint-GUID: tyXu4ZOwW1PcZ29d-AOQ33no0rV-8Tds
-X-Proofpoint-ORIG-GUID: tyXu4ZOwW1PcZ29d-AOQ33no0rV-8Tds
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2201280089
+X-Proofpoint-ORIG-GUID: BrS42H05JGL9gzfRZuY8zY3fYkr_jTqT
+X-Proofpoint-GUID: BrS42H05JGL9gzfRZuY8zY3fYkr_jTqT
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Jan 27, 2022, at 11:24 PM, NeilBrown <neilb@suse.de> wrote:
+> On Jan 27, 2022, at 2:42 PM, J. Bruce Fields <bfields@fieldses.org> wrote=
+:
 >=20
-> On Fri, 28 Jan 2022, Chuck Lever III wrote:
+> On Thu, Jan 27, 2022 at 03:51:54PM +0000, Chuck Lever III wrote:
+>> Hi Dai-
 >>=20
->>> On Jan 27, 2022, at 5:41 PM, NeilBrown <neilb@suse.de> wrote:
+>>> On Jan 26, 2022, at 4:13 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
 >>>=20
->>> On Fri, 28 Jan 2022, Chuck Lever III wrote:
->>>> Hi Neil-
->>>>=20
->>>>> On Jan 26, 2022, at 11:58 PM, NeilBrown <neilb@suse.de> wrote:
->>>>>=20
->>>>> If a filesystem is exported to a client with NFSv4 and that client ho=
-lds
->>>>> a file open, the filesystem cannot be unmounted without either stoppi=
-ng the
->>>>> NFS server completely, or blocking all access from that client
->>>>> (unexporting all filesystems) and waiting for the lease timeout.
->>>>>=20
->>>>> For NFSv3 - and particularly NLM - it is possible to revoke all state=
- by
->>>>> writing the path to the filesystem into /proc/fs/nfsd/unlock_filesyst=
-em.
->>>>>=20
->>>>> This series extends this functionality to NFSv4.  With this, to unmou=
-nt
->>>>> an exported filesystem is it sufficient to disable export of that
->>>>> filesystem, and then write the path to unlock_filesystem.
->>>>>=20
->>>>> I've cursed mainly on NFSv4.1 and later for this.  I haven't tested
->>>>> yet with NFSv4.0 which has different mechanisms for state management.
->>>>>=20
->>>>> If this series is seen as a general acceptable approach, I'll look in=
-to
->>>>> the NFSv4.0 aspects properly and make sure it works there.
->>>>=20
->>>> I've browsed this series and need to think about:
->>>> - whether we want to enable administrative state revocation and
->>>> - whether NFSv4.0 can support that reasonably
->>>>=20
->>>> In particular, are there security consequences for revoking
->>>> state? What would applications see, and would that depend on
->>>> which minor version is in use? Are there data corruption risks
->>>> if this facility were to be misused?
+>>> From RFC 7530 Section 16.34.5:
 >>>=20
->>> The expectation is that this would only be used after unexporting the
->>> filesystem.  In that case, the client wouldn't notice any difference
->>> from the act of writing to unlock_filesystem, as the entire filesystem
->>> would already be inaccessible.
+>>> o  The server has not recorded an unconfirmed { v, x, c, *, * } and
+>>>  has recorded a confirmed { v, x, c, *, s }.  If the principals of
+>>>  the record and of SETCLIENTID_CONFIRM do not match, the server
+>>>  returns NFS4ERR_CLID_INUSE without removing any relevant leased
+>>>  client state, and without changing recorded callback and
+>>>  callback_ident values for client { x }.
 >>>=20
->>> If we did unlock_filesystem a filesystem that was still exported, the
->>> client would see similar behaviour to a network partition that was of
->>> longer duration than the lease time.   Locks would be lost.
+>>> The current code intents to do what the spec describes above but
+>>> it forgot to set 'old' to NULL resulting to the confirmed client
+>>> to be expired.
 >>>=20
->>>>=20
->>>> Also, Dai's courteous server work is something that potentially
->>>> conflicts with some of this, and I'd like to see that go in
->>>> first.
->>>=20
->>> I'm perfectly happy to wait for the courteous server work to land befor=
-e
->>> pursuing this.
->>>=20
->>>>=20
->>>> Do you have specific user requests for this feature, and if so,
->>>> what are the particular usage scenarios?
->>>=20
->>> It's complicated....
->>>=20
->>> The customer has an HA config with multiple filesystem resource which
->>> they want to be able to migrate independently.  I don't think we really
->>> support that,
+>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 >>=20
->> With NFSv4, the protocol has mechanisms to indicate to clients that
->> a shared filesystem has migrated, and to indicate that the clients'
->> state has been migrated too. Clients can reclaim their state if the
->> servers did not migrate that state with the data. It deals with the
->> edge cases to prevent clients from stealing open/lock state during
->> the migration.
+>> On it's face, this seems like the correct thing to do.
 >>=20
->> Unexporting doesn't seem like the right approach to that.
+>> I believe the issue was introduced in commit 2b63482185e6 ("nfsd:
+>> fix clid_inuse on mount with security change") in 2015. I can
+>> add a Fixes: tag and apply this for 5.17-rc.
 >=20
-> No, but it something that should work, and should allow the filesystem
-> to be unmounted.  You get to keep both halves.
->=20
->>=20
->>=20
->>> but they seem to want to see if they can make it work (and
->>> it should be noted that I talk to an L2 support technician who talks to
->>> the customer representative, so I might be getting the full story).
->>>=20
->>> Customer reported that even after unexporting a filesystem, they cannot
->>> then unmount it.
->>=20
->> My first thought is that probably clients are still pinning
->> resources on that shared filesystem. I guess that's what the
->> unlock_ interface is supposed to deal with. But that suggests
->> to me that unexporting first is not as risk-free as you
->> describe above. I think applications would notice and there
->> would be edge cases where other clients might be able to
->> grab open/lock state before the original holders could
->> re-establish their lease.
->=20
-> Unexporting isn't risk free.  It just absorbs all the risks - none are
-> left of unlock_filesystem to be blamed for.
->=20
-> Expecting an application to recover if you unexport a filesystem and
-> later re-export it is certainly not guaranteed.  That isn't the use-case
-> I particularly want to fix.  I want to be able to unmount a filesystem
-> without visiting call clients and killing off applications.
+> Looks right to me too--thanks, Dai.
 
-OK. The top level goal then is simply to provide another
-arrow in the administrator's quiver to manage a large
-NFS server. It brings NFSv4 closer to par with the NFSv3
-toolset.
-
-I say we have enough motivation for a full proof of
-concept. I would like to see support for minor version 0
-added, and a fuller discussion of the consequences for
-clients and applications will be needed (at least for
-the purpose of administrator documentation).
+May I add a Reviewed-by: Bruce ?
 
 
->>> Whether or not we think that independent filesystem
->>> resources is supportable, I do think that the customer should have a
->>> clear path for unmounting a filesystem without interfering with service
->>> provided from other filesystems.
->>=20
->> Maybe. I guess I put that in the "last resort" category
->> rather than "this is something safe that I want to do as
->> part of daily operation" category.
 >=20
-> Agree.  Definitely "last resort".
+> --b.
 >=20
->>=20
->>=20
->>> Stopping nfsd would interfere with
->>> that service by forcing a grace-period on all filesystems.
->>=20
->> Yep. We have discussed implementing a per-filesystem
->> grace period in the past. That is probably a pre-requisite
->> to enabling filesystem migration.
->>=20
->>=20
->>> The RFC explicitly supports admin-revocation of state, and that would
->>> address this specific need, so it seemed completely appropriate to
->>> provide it.
->>=20
->> Well the RFC also provides for migrating filesystems without
->> stopping the NFS service. If that's truly the goal, then I
->> think we want to encourage that direction instead of ripping
->> out open and lock state.
->=20
-> I suspect that virtual IPs and network namespaces is the better approach
-> for migrating exported filesystems.  It isn't clear to me that
-> integrated migration support in NFS would add anything of value.
->=20
-> But as I think I said to Bruce - seamless migration support is not my
-> goal here.  In the context where a site has multiple filesystems that
-> are all NFS exported, there is a case for being able to forcibly
-> unexport/unmount one filesystem without affecting the others.  That is
-> my aim here.
-
-My initial impulse is to better understand what is preventing
-the unexported filesystem from being unmounted. Better
-observability there could potentially be of value.
-
-
-> Thanks,
-> NeilBrown
->=20
->=20
->>=20
->> Also, it's not clear to me that clients support administrative
->> revocation as broadly as we might like. The Linux NFS client
->> does have support for NFSv4 migration, though it's a bit
->> fallow these days.
->>=20
->>=20
->>> As an aside ...  I'd like to be able to suggest that the customer use
->>> network namespaces for the different filesystem resources.  Each could
->>> be in its own namespace and managed independently.  However I don't
->>> think we have good admin infrastructure for that do we?
->>=20
->> None that I'm aware of. SteveD is the best person to ask.
->>=20
->>=20
->>> I'd like to be able to say "set up these 2 or 3 config files and run=20
->>> systemctl start nfs-server@foo and the 'foo' network namespace will be
->>> created, configured, and have an nfs server running".
->>> Do we have anything approaching that?  Even a HOWTO ??
->>=20
->> Interesting idea! But doesn't ring a bell.
+>>> ---
+>>> fs/nfsd/nfs4state.c | 4 +++-
+>>> 1 file changed, 3 insertions(+), 1 deletion(-)
+>>>=20
+>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>>> index 72900b89cf84..32063733443d 100644
+>>> --- a/fs/nfsd/nfs4state.c
+>>> +++ b/fs/nfsd/nfs4state.c
+>>> @@ -4130,8 +4130,10 @@ nfsd4_setclientid_confirm(struct svc_rqst *rqstp=
+,
+>>> 			status =3D nfserr_clid_inuse;
+>>> 			if (client_has_state(old)
+>>> 					&& !same_creds(&unconf->cl_cred,
+>>> -							&old->cl_cred))
+>>> +							&old->cl_cred)) {
+>>> +				old =3D NULL;
+>>> 				goto out;
+>>> +			}
+>>> 			status =3D mark_client_expired_locked(old);
+>>> 			if (status) {
+>>> 				old =3D NULL;
+>>> --=20
+>>> 2.9.5
+>>>=20
 >>=20
 >> --
 >> Chuck Lever
