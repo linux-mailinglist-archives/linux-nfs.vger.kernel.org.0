@@ -2,100 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EA1D449FDEC
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 17:23:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 769524A00FA
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 20:40:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350057AbiA1QXm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jan 2022 11:23:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350055AbiA1QXl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 11:23:41 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7485FC061714
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Jan 2022 08:23:41 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 6682364B9; Fri, 28 Jan 2022 11:23:40 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6682364B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643387020;
-        bh=VVV7ZV580xy59xOYR6GX91arbMOrJMN9CRssSDqyfkw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RVPXM62/wW4iJK3AFfGLjQfINbPpC+dP/WPNmhONO5nYGhVs0qM+LS2Ls+SigB65S
-         9BizoWS57miJWO6LiR0LIBR4AB3xeCV6rprXo6jMJbppbjM+xtqG7YKBHkX/laMu0v
-         bG+hz0pGdc4K9mQsxgDZnddlVkqxmr7Bq3NrCpKw=
-Date:   Fri, 28 Jan 2022 11:23:40 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
-Message-ID: <20220128162340.GF14908@fieldses.org>
-References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
- <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
- <164332328424.5493.16812905543405189867@noble.neil.brown.name>
- <20220128025152.GA7473@fieldses.org>
- <164334329191.5493.6897436011766354666@noble.neil.brown.name>
- <20220128133843.GA14908@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220128133843.GA14908@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S1344185AbiA1TkA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jan 2022 14:40:00 -0500
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32]:29868 "EHLO
+        mx0a-00069f02.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S232304AbiA1TkA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 14:40:00 -0500
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 20SItquU019302;
+        Fri, 28 Jan 2022 19:39:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=w57ebnZv3nBqxRSF3HIlHsOJB8qZZ3rSQqEOHWZj1ZU=;
+ b=VocLEda/JZamtlPe4lc0kbr7Jml8JAZD0xZxMYsOucTxWS6xsvr/L1p4I8Yeczsbfhm3
+ NJfMcxV6SSwOwflowaqaYd1xGR8/SFo2D63ryjNRFf9t74wu+NPDb5Pr+iFiCuaZbPuW
+ g19gOax8N1CtS0sHRynT5ZsdsmhU5W/BlGyNELgd71wQ/qHL8zJHC/8XtmDP0bXFufUC
+ ErY5LnUTuoY3/ndGX97kPVBlcbbAbl+rvsekcbrUu90BBLsSrxn766HtcieGvIiB1W0n
+ C366ldURtBP4W5rmk1Ir8jE2s0pWnLOVKGfLDfB7Zx14ElepxKg6RSDSOS9Pg+d6tEF7 pw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3duxnp3uc1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jan 2022 19:39:56 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 20SJRAXj192157;
+        Fri, 28 Jan 2022 19:39:55 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3030.oracle.com with ESMTP id 3dr726eqvt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jan 2022 19:39:55 +0000
+Received: from userp3030.oracle.com (userp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 20SJdsjK038315;
+        Fri, 28 Jan 2022 19:39:54 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by userp3030.oracle.com with ESMTP id 3dr726eqv5-1;
+        Fri, 28 Jan 2022 19:39:54 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v10 0/3] nfsd: Initial implementation of NFSv4 Courteous Server
+Date:   Fri, 28 Jan 2022 11:39:30 -0800
+Message-Id: <1643398773-29149-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-GUID: q7vR6Ejc_y6NQ0vdvc0h8FS3pYYvFGou
+X-Proofpoint-ORIG-GUID: q7vR6Ejc_y6NQ0vdvc0h8FS3pYYvFGou
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 08:38:43AM -0500, J. Bruce Fields wrote:
-> On Fri, Jan 28, 2022 at 03:14:51PM +1100, NeilBrown wrote:
-> > On Fri, 28 Jan 2022, J. Bruce Fields wrote:
-> > > I don't see how it's going to work.  You've got clients that hold locks
-> > > an opens on the unexported filesystem.  So maybe you can use an NFSv4
-> > > referral to point them to the new server.  Are they going to try to
-> > > issue reclaims to the new server?  There's more to do before this works.
-> > 
-> > As I hope I implied, I'm not at all sure that the specific problem that
-> > the customer raised (cannot unmount a filesystem) directly related to
-> > the general solution that the customer is trying to create.  Some
-> > customers like us to hold their hand the whole way, others like to (feel
-> > that they) have more control.  In general I like to encourage
-> > independence (but I have to consciously avoid trusting the results).
-> > 
-> > We have an "unlock_filesystem" interface.  I want it to work for NFSv4. 
-> > The HA config was background, not a complete motivation.
-> 
-> I think people do occasionally need to just rip a filesystem out even if
-> it means IO errors to applications.  And we already do this for NFSv3.
-> So, I'm inclined to support the idea.
-> 
-> (I also wonder whether some of the code could be a useful step towards
-> other functionality.)
 
-For example, AFS-like read-only replica update: unmount a filesystem,
-mount a new version in its place.  "Reconnecting" locks after the open
-would be difficult, I think, but opens should be doable?  And in the
-read-only case nobody should care about locks.
+Hi Chuck, Bruce
 
---b.
+This series of patches implement the NFSv4 Courteous Server.
 
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
 
-> 
-> > > > However I don't think we have good admin infrastructure for that do
-> > > > we?
-> > > > 
-> > > > I'd like to be able to say "set up these 2 or 3 config files and run
-> > > > systemctl start nfs-server@foo and the 'foo' network namespace will be
-> > > > created, configured, and have an nfs server running".  Do we have
-> > > > anything approaching that?  Even a HOWTO ??
-> > > 
-> > > But I don't think we've got anything that simple yet?
-> > 
-> > I guess I have some work to do....
-> 
-> RHEL HA does support NFS failover using containers.  I think it's a bit
-> more complicated than you're looking for.  Let me go dig that up....
-> 
-> With a KVM VM and shared backend storage I think it's pretty easy: just
-> shut down the VM on one machine and bring it up on another.
-> 
-> --b.
+The v2 patch includes the following:
+
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
+
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+The v3 patch includes the following:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+The v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+The v5 patch includes:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+The v6 patch includes:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+The v7 patch includes:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+The v8 patch includes:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+The V9 patch include:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+The V10 patch include:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
