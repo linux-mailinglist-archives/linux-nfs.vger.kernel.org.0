@@ -2,64 +2,101 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 3025D49F3F4
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 08:05:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F4B449F680
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 10:38:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346628AbiA1HFU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jan 2022 02:05:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        id S1347687AbiA1JiO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jan 2022 04:38:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229759AbiA1HFU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 02:05:20 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39F5BC061714;
-        Thu, 27 Jan 2022 23:05:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jf2E0pUG3GOZxihUHfPlYjorrQluw3AZrzDbcNera34=; b=bSrIeDjXe0kg3MTDdcQumiTEIp
-        IksleX6eyErXVnT1iLyg1ZCBmqioCp3PbXMjc4sPeR6DRewgGFgE2ZVEcAtuYigTyTrHP7MGldcHY
-        DK1hD72+iajXZTdIOh8pl9YauMSILSaOKfTXVGdHUpl7eLvRA/R3fTs3EtACH/zV3wM6ElH3axvdr
-        jntQAzojiTkRqldKzjaW7gL0vWEVXNzSaAHifzk/8BLge541m44TJeD/r/QHhvwsv5sfOnh1a5gKd
-        IdvOl27Th9lgeKoP5kDcX7tZhRBeVpUIcOgw9ncKRTrfCBQFbTM9b8lK+y5YiDzJoaaeXfF95lTBg
-        iW3L+a/Q==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nDLJg-000iLD-EQ; Fri, 28 Jan 2022 07:05:04 +0000
-Date:   Thu, 27 Jan 2022 23:05:04 -0800
-From:   Christoph Hellwig <hch@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        JeffleXu <jefflexu@linux.alibaba.com>, linux-cachefs@redhat.com,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC][PATCH] cachefiles: Split and rename S_KERNEL_FILE and
- extend effects
-Message-ID: <YfOVoIQqaXkzDju5@infradead.org>
-References: <1079106.1642772886@warthog.procyon.org.uk>
+        with ESMTP id S1347684AbiA1JiN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 04:38:13 -0500
+Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65983C061751
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jan 2022 01:38:08 -0800 (PST)
+Received: by mail-vs1-xe36.google.com with SMTP id az20so2274467vsb.8
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jan 2022 01:38:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E/VIyc5JpK2Sy5loT9a2HcHWg2TrorJJxRaogeKP25w=;
+        b=EibPllimp8WZIwxJdUGUIFAlIuZdyznPvrXJ7caP5EDkiBNUVM4ihiUoIfNxC6TVSx
+         YE207qfvpl7N/VHWz1SefuMcAFD5mqGieRSegzXNyYGWfyIdkPkwWByrIvqWimbKQ8Un
+         /lbUGxvPlDX06Jf/32nPUu5Q90vZSrQ0/ovfo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E/VIyc5JpK2Sy5loT9a2HcHWg2TrorJJxRaogeKP25w=;
+        b=UJpTN0HnQSO3RN4ZO778+bDiTeZhTwbw8ek56fDsOLr2CUsBhOLMoE0u/jbZRTSpxh
+         dnzzvBSwvcDHnv/txQ1tISK0Jn7j1rr5rvvaM1/aXwgkGemEw4KYXNgLd/nbkCM7j9qK
+         QXyzNG+CCSKChRawDJ/qN64cYxNjOoRkXxRcwAcxWCZXZdLfdBThEYl3RnkmxjJe1szI
+         w2K3M5z/iWl4ThEsqoxVSWPdEL3oyvYgZsN19SWP+fLnFhKt0FA1vtssAPY001mApv8H
+         /WASZxz1aAhRvQRZ80ixumlDD0+QwD0DFxJernSMK7JaPMbMkoHhjJwhDJLqddbq0nwV
+         s5TQ==
+X-Gm-Message-State: AOAM533v69bUqpCC92tEnxZ0ftPKxRmZXLJlJpmlWoVS6e1Abx1BTE4U
+        mgEm50nBiIEXyNZjgFMRRdEfXXZrCyhUA2b2oQN3Gg==
+X-Google-Smtp-Source: ABdhPJwGf3F8vVWMx/hAPOM/tzuC6mlnTkkNvV3zFtYKADK7sTRpnxjvKNE9DMzHauL+NEVwnl4j38I6/K9jRDhQk7E=
+X-Received: by 2002:a67:c390:: with SMTP id s16mr3769368vsj.61.1643362687362;
+ Fri, 28 Jan 2022 01:38:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1079106.1642772886@warthog.procyon.org.uk>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <164325106958.29787.4865219843242892726.stgit@noble.brown> <164325158954.29787.7856652136298668100.stgit@noble.brown>
+In-Reply-To: <164325158954.29787.7856652136298668100.stgit@noble.brown>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Fri, 28 Jan 2022 10:37:56 +0100
+Message-ID: <CAJfpegt-igF8HqsDUcMzfU0jYv8WpofLy0Uv0YnXLzsfx=tkGg@mail.gmail.com>
+Subject: Re: [PATCH 1/9] Remove inode_congested()
+To:     NeilBrown <neilb@suse.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-mm <linux-mm@kvack.org>,
+        linux-nilfs@vger.kernel.org,
+        Linux NFS list <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Ext4 <linux-ext4@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 21, 2022 at 01:48:06PM +0000, David Howells wrote:
-> Split S_KERNEL_FILE into two separate flags to do two separate jobs and give
-> them new names[1][2]:
+On Thu, 27 Jan 2022 at 03:47, NeilBrown <neilb@suse.de> wrote:
+>
+> inode_congested() reports if the backing-device for the inode is
+> congested.  Few bdi report congestion any more, only ceph, fuse, and
+> nfs.  Having support just for those is unlikely to be useful.
+>
+> The places which test inode_congested() or it variants like
+> inode_write_congested(), avoid initiating IO if congestion is present.
+> We now have to rely on other places in the stack to back off, or abort
+> requests - we already do for everything except these 3 filesystems.
+>
+> So remove inode_congested() and related functions, and remove the call
+> sites, assuming that inode_congested() always returns 'false'.
 
-I strong disagreewith this.  The flag is a horrible hack that does not
-have any business to exist to start with.  Splitting it an potentially
-proliferating the use is not a good.
+Looks to me this is going to "break" fuse; e.g. readahead path will go
+ahead and try to submit more requests, even if the queue is getting
+congested.   In this case the readahead submission will eventually
+block, which is counterproductive.
 
-The proper fix would be to fix the cachefiles design to not rely on it
-at all.
+I think we should *first* make sure all call sites are substituted
+with appropriate mechanisms in the affected filesystems and as a last
+step remove the superfluous bdi congestion mechanism.
+
+You are saying that all fs except these three already have such
+mechanisms in place, right?  Can you elaborate on that?
+
+Thanks,
+Miklos
