@@ -2,81 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1070649F0F0
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 03:25:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFBD049F14C
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 03:51:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345327AbiA1CZa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Jan 2022 21:25:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45866 "EHLO
+        id S241932AbiA1Cvy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Jan 2022 21:51:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345322AbiA1CZa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 21:25:30 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8278BC061747
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 18:25:29 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id m11so6724315edi.13
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 18:25:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TIM/9YxONk8z0lexlFGrsOXlsM+mXoPlWV7GxMGCHPU=;
-        b=mINAVHjXaAFiquQLI+M15IWJaVPPEA6dLZ3Zm9VgsWOTI5Pfl5KjdqSgvZGS70G9vY
-         dywxPdd1gcSy9qY+TqvgtEJyZFm755lGxQ7gs1+9z7bIrObl3EVT175ZusPCi2pceHNr
-         XbKd1hQkPit95lQVUqkiZOYC5JatCLaZdAfvbGi5SBanfAbkRoOlT1EU4IV8OZGT0tlz
-         va69LKX7VRAB1tqFPGbg84kwTYMt+g+Tohb1mnBwhuC0rl35gtLxhf4l8EMor/3VzCta
-         QAe6NUmz8BqmmVB/f7DElWtwol3tE7uSmYP7JK+aEZpGteRWHVb2+cgpXGmRe/wRmxxS
-         Z4Nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TIM/9YxONk8z0lexlFGrsOXlsM+mXoPlWV7GxMGCHPU=;
-        b=Ac8qZOMGXIDseee53QTgoifpbFLgyRxg6ydlcYmS5AQnzc59jMICSrFkARLB+jxtH+
-         kzVTU2EINpybnCjJLBE35Ve3dVLRp8ousnGZBINPwplacND131eVY5bPmNgf1B60DIJ7
-         DXh8+d9KegAmogUN4zoZ7qeUbvKMtbCL3zGkissFe5/JWLtWL/740BlCe31BDF722VGg
-         2eRkOZLU7lZQKy9a83r0EXEkrki7p0ZFqVlG00zl/onvZn8aeCBMA1XTqa2IbM+TOOuU
-         rdQShLCxCn2q7sBMtj/RHwRFYgpyqGY+Q4zivzKsF8SgywiveBCJN0rTGaFjtH3zrV1n
-         JvOg==
-X-Gm-Message-State: AOAM530mAM7MHwcT/ISlLwvX2n/31+l//gRSpGrVAMAfvJ806XyksaRj
-        yXiZ9B3xQ9wU61THLf1kU24cs20B5TPKWGvIbPIcXm/H4w==
-X-Google-Smtp-Source: ABdhPJztDA6NHlQTDRr8lUOhYNr117WJE7+PhFHDKCmhuZCVk44RzyaYKVEHbANIS0iugGjghRQzs4AdEUVNSwDvFqE=
-X-Received: by 2002:a50:ef16:: with SMTP id m22mr6093537eds.340.1643336728063;
- Thu, 27 Jan 2022 18:25:28 -0800 (PST)
+        with ESMTP id S241793AbiA1Cvx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Jan 2022 21:51:53 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F2DC061714
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Jan 2022 18:51:53 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id EDBDA5BD0; Thu, 27 Jan 2022 21:51:52 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org EDBDA5BD0
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1643338312;
+        bh=odXSBSzeHZNbsTY6h4fv2j22HYjGCJ5oRAkr7P5P9f0=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=ErX5aSUmdC852nUeZGnnvXYKemUoxpLZ+PzYyUtw9xblrH19IKg45UtwTgyjBFfyj
+         CgQK1KVU07DMxtq4hpmQBmfH9DVCqVuoCLtR98ycLCEFBrxu77hhTV6O6t29DVuG6s
+         2H3tAKaVURgc5Tl1UOKMOcxKhQgauDOJiiL4Nh3I=
+Date:   Thu, 27 Jan 2022 21:51:52 -0500
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
+Message-ID: <20220128025152.GA7473@fieldses.org>
+References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
+ <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
+ <164332328424.5493.16812905543405189867@noble.neil.brown.name>
 MIME-Version: 1.0
-References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
- <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
-In-Reply-To: <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Thu, 27 Jan 2022 21:25:17 -0500
-Message-ID: <CAHC9VhQKVdbLNn=eOqebWaktDVeq5bjTjXea68MmcAhKoSa09w@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Scott Mayhew <smayhew@redhat.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164332328424.5493.16812905543405189867@noble.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 4:54 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> I wonder if we could make this all much simpler by *always* doing the
-> label parsing in selinux_add_opt() and just returning an error when
-> !selinux_initialized(&selinux_state). Before the new mount API, mount
-> options were always passed directly to the mount(2) syscall, so it
-> wasn't possible to pass any SELinux mount options before the SELinux
-> policy was loaded. I don't see why we need to jump through hoops here
-> just to support this pseudo-feature of stashing an unparsed label into
-> an fs_context before policy is loaded... Userspace should never need
-> to do that.
+On Fri, Jan 28, 2022 at 09:41:24AM +1100, NeilBrown wrote:
+> It's complicated....
+> 
+> The customer has an HA config with multiple filesystem resource which
+> they want to be able to migrate independently.  I don't think we really
+> support that, but they seem to want to see if they can make it work (and
+> it should be noted that I talk to an L2 support technician who talks to
+> the customer representative, so I might be getting the full story).
+> 
+> Customer reported that even after unexporting a filesystem, they cannot
+> then unmount it.  Whether or not we think that independent filesystem
+> resources is supportable, I do think that the customer should have a
+> clear path for unmounting a filesystem without interfering with service
+> provided from other filesystems.  Stopping nfsd would interfere with
+> that service by forcing a grace-period on all filesystems.
+> The RFC explicitly supports admin-revocation of state, and that would
+> address this specific need, so it seemed completely appropriate to
+> provide it.
 
-I could agree with that, although part of my mind is a little nervous
-about the "userspace should *never* ..." because that always seems to
-bite us.  Although I'm struggling to think of a case where userspace
-would need to set explicit SELinux mount options without having a
-policy loaded.
+I was little worried that might be the use-case.
 
--- 
-paul-moore.com
+I don't see how it's going to work.  You've got clients that hold locks
+an opens on the unexported filesystem.  So maybe you can use an NFSv4
+referral to point them to the new server.  Are they going to try to
+issue reclaims to the new server?  There's more to do before this works.
+
+> As an aside ...  I'd like to be able to suggest that the customer use
+> network namespaces for the different filesystem resources.  Each could
+> be in its own namespace and managed independently.
+
+Yeah.  Then you're basically migrating the whole server, not just the
+one export, and that's more of a solved problem.
+
+> However I don't think we have good admin infrastructure for that do
+> we?
+> 
+> I'd like to be able to say "set up these 2 or 3 config files and run
+> systemctl start nfs-server@foo and the 'foo' network namespace will be
+> created, configured, and have an nfs server running".  Do we have
+> anything approaching that?  Even a HOWTO ??
+
+But I don't think we've got anything that simple yet?
+
+--b.
