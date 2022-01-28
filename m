@@ -2,82 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 1808649FC75
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 16:10:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA1D449FDEC
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 17:23:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349394AbiA1PKV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jan 2022 10:10:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
+        id S1350057AbiA1QXm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jan 2022 11:23:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349498AbiA1PKU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 10:10:20 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41CAC061747;
-        Fri, 28 Jan 2022 07:10:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9662CB82617;
-        Fri, 28 Jan 2022 15:10:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 52E85C340EA;
-        Fri, 28 Jan 2022 15:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643382617;
-        bh=P7jhgsDVzLo3bAxyICm5NwEgWC5an3mQxnsCQRTuqMk=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=d70XSm4hHNisdQbrfmHeAQ9nSWW0x3/WFHzjStsQLo5vlLyTs8OiAxt1CqACwsg6N
-         r5bMG+vJG6+lc7vINbZ67ejZLPJ0hv914qmsuuKwtvf82LauU91tykYkhQiIRLJnO+
-         iLE11P3jmw4CxGRfEqWVL4WtRbN2+uSmzsa3i9ELXlnSxr7DRTnTSWJgAf8GNVaRZx
-         vdCXxJwRhyOtxpGsqMVjCx9dt8awsNiJUfb7ghzsvxNBi3ijaHpCt77wXlYMsAi0yr
-         r4XDfJVnZH36gL/k/iwMu76fRUspHPhRggS/MKQSluDhg29AoR5WdssY+JUJQn8Io8
-         D0MTmLcEFRvIw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3430AE5D089;
-        Fri, 28 Jan 2022 15:10:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S1350055AbiA1QXl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 11:23:41 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7485FC061714
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Jan 2022 08:23:41 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6682364B9; Fri, 28 Jan 2022 11:23:40 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6682364B9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1643387020;
+        bh=VVV7ZV580xy59xOYR6GX91arbMOrJMN9CRssSDqyfkw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RVPXM62/wW4iJK3AFfGLjQfINbPpC+dP/WPNmhONO5nYGhVs0qM+LS2Ls+SigB65S
+         9BizoWS57miJWO6LiR0LIBR4AB3xeCV6rprXo6jMJbppbjM+xtqG7YKBHkX/laMu0v
+         bG+hz0pGdc4K9mQsxgDZnddlVkqxmr7Bq3NrCpKw=
+Date:   Fri, 28 Jan 2022 11:23:40 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC PATCH 0/4] nfsd: allow NFSv4 state to be revoked.
+Message-ID: <20220128162340.GF14908@fieldses.org>
+References: <164325908579.23133.4781039121536248752.stgit@noble.brown>
+ <7B388FE8-1109-4EDD-B716-661870B446C7@oracle.com>
+ <164332328424.5493.16812905543405189867@noble.neil.brown.name>
+ <20220128025152.GA7473@fieldses.org>
+ <164334329191.5493.6897436011766354666@noble.neil.brown.name>
+ <20220128133843.GA14908@fieldses.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/3] SUNRPC: add some netns refcount trackers
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <164338261720.2420.9086184599946096191.git-patchwork-notify@kernel.org>
-Date:   Fri, 28 Jan 2022 15:10:17 +0000
-References: <20220127200937.2157402-1-eric.dumazet@gmail.com>
-In-Reply-To: <20220127200937.2157402-1-eric.dumazet@gmail.com>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     davem@davemloft.net, kuba@kernel.org, chuck.lever@oracle.com,
-        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        edumazet@google.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220128133843.GA14908@fieldses.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello:
-
-This series was applied to netdev/net-next.git (master)
-by David S. Miller <davem@davemloft.net>:
-
-On Thu, 27 Jan 2022 12:09:34 -0800 you wrote:
-> From: Eric Dumazet <edumazet@google.com>
+On Fri, Jan 28, 2022 at 08:38:43AM -0500, J. Bruce Fields wrote:
+> On Fri, Jan 28, 2022 at 03:14:51PM +1100, NeilBrown wrote:
+> > On Fri, 28 Jan 2022, J. Bruce Fields wrote:
+> > > I don't see how it's going to work.  You've got clients that hold locks
+> > > an opens on the unexported filesystem.  So maybe you can use an NFSv4
+> > > referral to point them to the new server.  Are they going to try to
+> > > issue reclaims to the new server?  There's more to do before this works.
+> > 
+> > As I hope I implied, I'm not at all sure that the specific problem that
+> > the customer raised (cannot unmount a filesystem) directly related to
+> > the general solution that the customer is trying to create.  Some
+> > customers like us to hold their hand the whole way, others like to (feel
+> > that they) have more control.  In general I like to encourage
+> > independence (but I have to consciously avoid trusting the results).
+> > 
+> > We have an "unlock_filesystem" interface.  I want it to work for NFSv4. 
+> > The HA config was background, not a complete motivation.
 > 
-> Effort started in linux-5.17
+> I think people do occasionally need to just rip a filesystem out even if
+> it means IO errors to applications.  And we already do this for NFSv3.
+> So, I'm inclined to support the idea.
 > 
-> Our goal is to replace get_net()/put_net() pairs with
-> get_net_track()/put_net_track() to get instant notifications
-> of imbalance bugs in the future.
+> (I also wonder whether some of the code could be a useful step towards
+> other functionality.)
+
+For example, AFS-like read-only replica update: unmount a filesystem,
+mount a new version in its place.  "Reconnecting" locks after the open
+would be difficult, I think, but opens should be doable?  And in the
+read-only case nobody should care about locks.
+
+--b.
+
+
 > 
-> [...]
-
-Here is the summary with links:
-  - [net-next,1/3] SUNRPC: add netns refcount tracker to struct svc_xprt
-    https://git.kernel.org/netdev/net-next/c/6cdef8a6ee74
-  - [net-next,2/3] SUNRPC: add netns refcount tracker to struct gss_auth
-    https://git.kernel.org/netdev/net-next/c/9b1831e56c7f
-  - [net-next,3/3] SUNRPC: add netns refcount tracker to struct rpc_xprt
-    https://git.kernel.org/netdev/net-next/c/b9a0d6d143ec
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> > > > However I don't think we have good admin infrastructure for that do
+> > > > we?
+> > > > 
+> > > > I'd like to be able to say "set up these 2 or 3 config files and run
+> > > > systemctl start nfs-server@foo and the 'foo' network namespace will be
+> > > > created, configured, and have an nfs server running".  Do we have
+> > > > anything approaching that?  Even a HOWTO ??
+> > > 
+> > > But I don't think we've got anything that simple yet?
+> > 
+> > I guess I have some work to do....
+> 
+> RHEL HA does support NFS failover using containers.  I think it's a bit
+> more complicated than you're looking for.  Let me go dig that up....
+> 
+> With a KVM VM and shared backend storage I think it's pretty easy: just
+> shut down the VM on one machine and bring it up on another.
+> 
+> --b.
