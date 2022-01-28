@@ -2,82 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D36F49FC65
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 16:04:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1808649FC75
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Jan 2022 16:10:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347423AbiA1PER (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Jan 2022 10:04:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51224 "EHLO
+        id S1349394AbiA1PKV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Jan 2022 10:10:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346152AbiA1PEP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 10:04:15 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D503EC061714
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Jan 2022 07:04:15 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 73B73720F; Fri, 28 Jan 2022 10:04:15 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 73B73720F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1643382255;
-        bh=QDjzUwFwKV9bFhUhJG4MpMVshZ0+rssvKJUM2bxa7A4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lh1n3Rl/KoHwbWp4n7LIeh3+gm9kg6RqTv2YOMb/ncltCJcbPgtzoGJP3DKoQd0FQ
-         RGhKYqM7nHMpSNt0yJ4/LzmMzj3TNgqn88hYLz/G9iMLASklmFk+wBU0U6UTVV4GIQ
-         UwE15TNpEgebsZKemHtYHMdMRhWKEctk/QAMljRQ=
-Date:   Fri, 28 Jan 2022 10:04:15 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Dai Ngo <dai.ngo@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] nfsd: nfsd4_setclientid_confirm mistakenly expires
- confirmed client.
-Message-ID: <20220128150415.GE14908@fieldses.org>
-References: <1643231618-24342-1-git-send-email-dai.ngo@oracle.com>
- <5D07AA4C-D6ED-4E53-AFFE-D0B91B11622C@oracle.com>
- <20220127194207.GA3459@fieldses.org>
- <B5EB68E1-E930-4EE0-8994-04674F7C8C30@oracle.com>
+        with ESMTP id S1349498AbiA1PKU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Jan 2022 10:10:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D41CAC061747;
+        Fri, 28 Jan 2022 07:10:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9662CB82617;
+        Fri, 28 Jan 2022 15:10:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 52E85C340EA;
+        Fri, 28 Jan 2022 15:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1643382617;
+        bh=P7jhgsDVzLo3bAxyICm5NwEgWC5an3mQxnsCQRTuqMk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=d70XSm4hHNisdQbrfmHeAQ9nSWW0x3/WFHzjStsQLo5vlLyTs8OiAxt1CqACwsg6N
+         r5bMG+vJG6+lc7vINbZ67ejZLPJ0hv914qmsuuKwtvf82LauU91tykYkhQiIRLJnO+
+         iLE11P3jmw4CxGRfEqWVL4WtRbN2+uSmzsa3i9ELXlnSxr7DRTnTSWJgAf8GNVaRZx
+         vdCXxJwRhyOtxpGsqMVjCx9dt8awsNiJUfb7ghzsvxNBi3ijaHpCt77wXlYMsAi0yr
+         r4XDfJVnZH36gL/k/iwMu76fRUspHPhRggS/MKQSluDhg29AoR5WdssY+JUJQn8Io8
+         D0MTmLcEFRvIw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3430AE5D089;
+        Fri, 28 Jan 2022 15:10:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <B5EB68E1-E930-4EE0-8994-04674F7C8C30@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] SUNRPC: add some netns refcount trackers
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <164338261720.2420.9086184599946096191.git-patchwork-notify@kernel.org>
+Date:   Fri, 28 Jan 2022 15:10:17 +0000
+References: <20220127200937.2157402-1-eric.dumazet@gmail.com>
+In-Reply-To: <20220127200937.2157402-1-eric.dumazet@gmail.com>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, chuck.lever@oracle.com,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        edumazet@google.com
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Jan 28, 2022 at 02:02:57PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Jan 27, 2022, at 2:42 PM, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > 
-> > On Thu, Jan 27, 2022 at 03:51:54PM +0000, Chuck Lever III wrote:
-> >> Hi Dai-
-> >> 
-> >>> On Jan 26, 2022, at 4:13 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
-> >>> 
-> >>> From RFC 7530 Section 16.34.5:
-> >>> 
-> >>> o  The server has not recorded an unconfirmed { v, x, c, *, * } and
-> >>>  has recorded a confirmed { v, x, c, *, s }.  If the principals of
-> >>>  the record and of SETCLIENTID_CONFIRM do not match, the server
-> >>>  returns NFS4ERR_CLID_INUSE without removing any relevant leased
-> >>>  client state, and without changing recorded callback and
-> >>>  callback_ident values for client { x }.
-> >>> 
-> >>> The current code intents to do what the spec describes above but
-> >>> it forgot to set 'old' to NULL resulting to the confirmed client
-> >>> to be expired.
-> >>> 
-> >>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> >> 
-> >> On it's face, this seems like the correct thing to do.
-> >> 
-> >> I believe the issue was introduced in commit 2b63482185e6 ("nfsd:
-> >> fix clid_inuse on mount with security change") in 2015. I can
-> >> add a Fixes: tag and apply this for 5.17-rc.
-> > 
-> > Looks right to me too--thanks, Dai.
-> 
-> May I add a Reviewed-by: Bruce ?
+Hello:
 
-Sure.--b.
+This series was applied to netdev/net-next.git (master)
+by David S. Miller <davem@davemloft.net>:
+
+On Thu, 27 Jan 2022 12:09:34 -0800 you wrote:
+> From: Eric Dumazet <edumazet@google.com>
+> 
+> Effort started in linux-5.17
+> 
+> Our goal is to replace get_net()/put_net() pairs with
+> get_net_track()/put_net_track() to get instant notifications
+> of imbalance bugs in the future.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/3] SUNRPC: add netns refcount tracker to struct svc_xprt
+    https://git.kernel.org/netdev/net-next/c/6cdef8a6ee74
+  - [net-next,2/3] SUNRPC: add netns refcount tracker to struct gss_auth
+    https://git.kernel.org/netdev/net-next/c/9b1831e56c7f
+  - [net-next,3/3] SUNRPC: add netns refcount tracker to struct rpc_xprt
+    https://git.kernel.org/netdev/net-next/c/b9a0d6d143ec
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
