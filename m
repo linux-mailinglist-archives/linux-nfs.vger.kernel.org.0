@@ -2,99 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 24D224A3AC4
-	for <lists+linux-nfs@lfdr.de>; Sun, 30 Jan 2022 23:44:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 645774A3CCF
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 05:04:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233616AbiA3WoO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 30 Jan 2022 17:44:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231132AbiA3WoN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 30 Jan 2022 17:44:13 -0500
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40D8CC061714;
-        Sun, 30 Jan 2022 14:44:13 -0800 (PST)
-Received: by mail-wm1-x32a.google.com with SMTP id c192so8938436wma.4;
-        Sun, 30 Jan 2022 14:44:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hHc8NLN3sQxn1fc1CRrB+PP5SmjSJqCvIJwFqRlprAU=;
-        b=Ky96IH+Gp2o2rsAOAQrDenlj7zQfEvCZjxSRSIecl0TgRG6fGIL4bATaPJOPl/lArZ
-         4KLi4Ur4IRLJvk2erhoW6R0L4ZCpWeo2hC5D15nEZG100DrhdQSoD2TW6q1WEUy5rUj8
-         0ZXpmUf0Z3eB7IIOHaj8uPgQ2tjXm/riSQFvX0OSqObKDvjWOBC0jl8rJU3OX0MSa4WV
-         VVg0NXmERa92NWlcS4qKr6swQ2JKADlJxmBJjO3zzQbucBvRTmrlndd3ah9a6AE2+2Od
-         Y+hoSYWXzfwGn0Q+6f/S70M1znoWDwuQ5uTPndFa5DePgctDcBl+7/Sf0JBnDEaeNOvX
-         q4VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hHc8NLN3sQxn1fc1CRrB+PP5SmjSJqCvIJwFqRlprAU=;
-        b=2al8eFRD0ugeMnm2IbFpNovfAvUvLIcQQmjBUAqPL5BebeMfhD2598NX+Ius3rGBJr
-         n+TiTdwSbZBC5evDpSVf/4JY6ppdtiHOWmM8h64VKIprvbwNeHkeN/na/PfxR9cVJaNR
-         A1R1GAByXSX6/iN/C/qJyAWmP99TC9rRi0O1pBQXwADfJmcHuFCoj3t3HhF6R5Ct5Nko
-         ryIsVkjD/WMCHYdlVcw4AwXLH+6H+GYEsiWMMQrbnT6K1kA7M2G2RVykKSqvdSdtFo6i
-         XB6XpDUchlWtjSf/V23Mkla/aFM2pdibtQHRpmd3/ug454t4UM3w0iKN/CPvhZacym5m
-         /o1g==
-X-Gm-Message-State: AOAM532EJV+GylXPZeivf5Q8GW7UbweOVY14D3vnJDQEWDMJh52vn/+W
-        4lOCotwKEtAmWa27qu7JtIE=
-X-Google-Smtp-Source: ABdhPJyDsialffTft+TXEZaBWa7hxUp3o/10YNMp5A1jlF6BgnZRvnuqI7R/DOGu6e+IKOWV8xe5xw==
-X-Received: by 2002:a05:600c:4f87:: with SMTP id n7mr24979573wmq.133.1643582651901;
-        Sun, 30 Jan 2022 14:44:11 -0800 (PST)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id c14sm11018219wri.56.2022.01.30.14.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Jan 2022 14:44:11 -0800 (PST)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] SUNRPC: remove redundant pointer plainhdr
-Date:   Sun, 30 Jan 2022 22:44:10 +0000
-Message-Id: <20220130224410.7269-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        id S1357566AbiAaEEX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 30 Jan 2022 23:04:23 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:38114 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1357535AbiAaEEV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 30 Jan 2022 23:04:21 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E18DD1F37B;
+        Mon, 31 Jan 2022 04:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643601859; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TvEfPPeht+6m2tsZLWgUEFf5HAsVvo5FwysookxUClM=;
+        b=pWLJsZQNiOZbmu3eHyMn/kzxEXxEDEFjwUaAFNCgalKi2l2pg/Kyz1XB4Ug4fvmkcYL69j
+        MZqqyni/ZnMvg3P9IUpG5zl6SYCa8+Pm4oyJppurBjd8a0Ssqu1z0Kcg5i3XbqQbZOu7Wh
+        rITudZlWMGA2T0ZLrgSx5ys/XVr3KfY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643601859;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=TvEfPPeht+6m2tsZLWgUEFf5HAsVvo5FwysookxUClM=;
+        b=u+H/QuonS17YLO3VoRbzj2f8Ql1DJ8PA4qG9qwIyYO3JFIvSJsBoYhRdZUsgK2hLzNwIDz
+        iTGQ7ht98k8zONDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BFA8A133A4;
+        Mon, 31 Jan 2022 04:04:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id spA/H8Bf92GcCQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 31 Jan 2022 04:04:16 +0000
+Subject: [PATCH 2/3] nfs: remove reliance on bdi congestion
+From:   NeilBrown <neilb@suse.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-mm@kvack.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 31 Jan 2022 15:03:53 +1100
+Message-ID: <164360183350.4233.691070075155620959.stgit@noble.brown>
+In-Reply-To: <164360127045.4233.2606812444285122570.stgit@noble.brown>
+References: <164360127045.4233.2606812444285122570.stgit@noble.brown>
+User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Pointer plainhdr is being assigned a value that is never read, the
-pointer is redundant and can be removed.
+The bdi congestion tracking in not widely used and will be removed.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+NFS is one of a small number of filesystems that uses it, setting just
+the async (write) congestion flag at what it determines are appropriate
+times.
+
+The only remaining effect of the async flag is to cause (some)
+WB_SYNC_NONE writes to be skipped.
+
+So instead of setting the flag, set an internal flag and change:
+ - .writepages to do nothing if WB_SYNC_NONE and the flag is set
+ - .writepage to return AOP_WRITEPAGE_ACTIVATE if WB_SYNC_NONE
+    and the flag is set.
+
+The writepages change causes a behavioural change in that pageout() can
+now return PAGE_ACTIVATE instead of PAGE_KEEP, so SetPageActive() will
+be called on the page which (I think) wil further delay the next attempt
+at writeout.  This might be a good thing.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- net/sunrpc/auth_gss/gss_krb5_wrap.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfs/write.c            |   12 ++++++++++--
+ include/linux/nfs_fs_sb.h |    1 +
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-index e95c009bb869..5f96e75f9eec 100644
---- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
-+++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
-@@ -409,7 +409,7 @@ static u32
- gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
- 		     struct xdr_buf *buf, struct page **pages)
- {
--	u8		*ptr, *plainhdr;
-+	u8		*ptr;
- 	time64_t	now;
- 	u8		flags = 0x00;
- 	__be16		*be16ptr;
-@@ -426,7 +426,7 @@ gss_wrap_kerberos_v2(struct krb5_ctx *kctx, u32 offset,
- 		return GSS_S_FAILURE;
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 987a187bd39a..b7c6721dd36d 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -417,7 +417,7 @@ static void nfs_set_page_writeback(struct page *page)
  
- 	/* construct gss token header */
--	ptr = plainhdr = buf->head[0].iov_base + offset;
-+	ptr = buf->head[0].iov_base + offset;
- 	*ptr++ = (unsigned char) ((KG2_TOK_WRAP>>8) & 0xff);
- 	*ptr++ = (unsigned char) (KG2_TOK_WRAP & 0xff);
+ 	if (atomic_long_inc_return(&nfss->writeback) >
+ 			NFS_CONGESTION_ON_THRESH)
+-		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
++		nfss->write_congested = 1;
+ }
  
--- 
-2.34.1
+ static void nfs_end_page_writeback(struct nfs_page *req)
+@@ -433,7 +433,7 @@ static void nfs_end_page_writeback(struct nfs_page *req)
+ 
+ 	end_page_writeback(req->wb_page);
+ 	if (atomic_long_dec_return(&nfss->writeback) < NFS_CONGESTION_OFF_THRESH)
+-		clear_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
++		nfss->write_congested = 0;
+ }
+ 
+ /*
+@@ -672,6 +672,10 @@ static int nfs_writepage_locked(struct page *page,
+ 	struct inode *inode = page_file_mapping(page)->host;
+ 	int err;
+ 
++	if (wbc->sync_mode == WB_SYNC_NONE &&
++	    NFS_SERVER(inode)->write_congested)
++		return AOP_WRITEPAGE_ACTIVATE;
++
+ 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+ 	nfs_pageio_init_write(&pgio, inode, 0,
+ 				false, &nfs_async_write_completion_ops);
+@@ -719,6 +723,10 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 	int priority = 0;
+ 	int err;
+ 
++	if (wbc->sync_mode == WB_SYNC_NONE &&
++	    NFS_SERVER(inode)->write_congested)
++		return 0;
++
+ 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGES);
+ 
+ 	if (!(mntflags & NFS_MOUNT_WRITE_EAGER) || wbc->for_kupdate ||
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ca0959e51e81..6aa2a200676a 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -138,6 +138,7 @@ struct nfs_server {
+ 	struct nlm_host		*nlm_host;	/* NLM client handle */
+ 	struct nfs_iostats __percpu *io_stats;	/* I/O statistics */
+ 	atomic_long_t		writeback;	/* number of writeback pages */
++	unsigned int		write_congested;/* flag set when writeback gets too high */
+ 	unsigned int		flags;		/* various flags */
+ 
+ /* The following are for internal use only. Also see uapi/linux/nfs_mount.h */
+
 
