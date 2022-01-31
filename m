@@ -2,147 +2,212 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D6D74A4C98
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 17:57:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74F954A4CAA
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 18:01:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380683AbiAaQ5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jan 2022 11:57:18 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:33000 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1380673AbiAaQ45 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 11:56:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643648216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vz5ju24P3wWvNjFVw0ZZsQrj1PLrbocHGxHkxNRUs7I=;
-        b=h3er9XJWBakHx9NvHusQV8as4sMUU6TiX5WeMg8ublA5D+zpDpbbRLMCwc/pTfVi7D85aa
-        AONVP3omnNJGZ6nX5nE5+TuzZ26yTEA2d2jvwVJ8FCtXNgIU9ijB1UsAe7bc3IAm0Jqp75
-        c0AaPJoALtF707u7NEGGkaVXmMhjyek=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-263-hm_gaPsROpWWiG5kZrwmHw-1; Mon, 31 Jan 2022 11:56:55 -0500
-X-MC-Unique: hm_gaPsROpWWiG5kZrwmHw-1
-Received: by mail-qv1-f71.google.com with SMTP id u15-20020a0cec8f000000b00425d89d8be0so10769359qvo.20
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:56:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=Vz5ju24P3wWvNjFVw0ZZsQrj1PLrbocHGxHkxNRUs7I=;
-        b=S2p50Qa9GclNopIglFF8+Yppx0KdAUmeCBB/LlAE7OwTGJ1I8eN5JgJrxr9AX7tqRe
-         7qQmN/HCChuYfNfrHPgSFD0oxswQiTe07e3gK+h3SUm9DrKpuX0UEyywkN80/DRYYsR3
-         2ix0ayTq0jTHxKKwOY0v6MwpMqmf9V1YZNX+WkCEbFGEfeMh/9WZu97xNl5fkT+dLpNc
-         bCk0mYDvSt2y/lyIHp6AMQSDkkN0cAXGl3zoKnrS+v6NOiNsutJ54nMa0+Ytc7LOnRjx
-         87wsrvs3Glk9doV2ARkvKZbmUW2b1YgzlKeo6q+XjmbVfvnNnk4gPpW5og0u7xXeVqKJ
-         Nk2Q==
-X-Gm-Message-State: AOAM532P9XOJRi7+uWcDSV204bLiYO329PuTxzJMcoQL6999Juf+9fi9
-        VObSHlZS/72Q/cgICZZx1CUGqo9p4gWbsuv0EanC0J+uyUPisSlWhbW9kZAj0hyhQKP5hgreruS
-        BIkm4ZSqo181q8B1SeNL8
-X-Received: by 2002:a37:6783:: with SMTP id b125mr1044106qkc.730.1643648214821;
-        Mon, 31 Jan 2022 08:56:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx3TTYj2rwnHCrJLdA6SdlDWDkAkGXoQ6fWT44s9VtlCE3jdmIe1OJs3oddVCLS8zDposXtJQ==
-X-Received: by 2002:a37:6783:: with SMTP id b125mr1044091qkc.730.1643648214577;
-        Mon, 31 Jan 2022 08:56:54 -0800 (PST)
-Received: from [172.31.1.6] ([71.161.85.11])
-        by smtp.gmail.com with ESMTPSA id i5sm9287210qkn.19.2022.01.31.08.56.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Jan 2022 08:56:54 -0800 (PST)
-Message-ID: <6c39ba93-8c77-ed4f-5420-56732d582f30@redhat.com>
-Date:   Mon, 31 Jan 2022 11:56:53 -0500
+        id S1380145AbiAaRB1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jan 2022 12:01:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43968 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1380092AbiAaRB0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 12:01:26 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88429C061714
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 09:01:26 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1D28314DC; Mon, 31 Jan 2022 12:01:25 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1D28314DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1643648485;
+        bh=0SybmjnBwnrCwUiB2lYfHyeGbQk686HDypIrrNpHcdY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Szv+/1SUsgCODzMM53eagQi3p1rizgzPAIRmtDoX18xXozkn4IlgSXuRnrgISjixz
+         b3OA6WIXygKcw+hzIvbBJuycwRKuictWmI9InTCDHDlb1EIodnR5Zjlinj4lQNLV+h
+         yiYoOM1KaO6+dGFdYdRQCFvOduOfu+roL8/CLBsQ=
+Date:   Mon, 31 Jan 2022 12:01:25 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-nfs@vger.kernel.org, luis.turcitu@appsbroker.com,
+        chris.chilvers@appsbroker.com, david.young@appsbroker.com,
+        daire@dneg.com, david.oberhollenzer@sigma-star.at,
+        david@sigma-star.at, goliath@sigma-star.at,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Subject: Re: [RFC PATCH] mountd: export: Deal with NFS filesystems
+Message-ID: <20220131170125.GB30119@fieldses.org>
+References: <20220131104316.10357-1-richard@nod.at>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH] nfs-utils: Fix man page syntax errors
-Content-Language: en-US
-To:     Salvatore Bonaccorso <carnil@debian.org>
-Cc:     linux-nfs@vger.kernel.org, Stefan Walter <walteste@inf.ethz.ch>,
-        Ben Hutchings <benh@debian.org>
-References: <20220122194537.118609-1-carnil@debian.org>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20220122194537.118609-1-carnil@debian.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20220131104316.10357-1-richard@nod.at>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Thanks for continuing to look into this, it's interesting work.
 
+On Mon, Jan 31, 2022 at 11:43:16AM +0100, Richard Weinberger wrote:
+> When a NFS filesystem is exported usually NFSD refuses
+> to export the filesystem because mountd was unable to provide
+> an UUID and the kernel cannot derive a dev id from the NFS client
+> super block.
+> 
+> To deal with this situation, teach uuid_by_path() how to generate
+> an UUID from a NFS filesystem.
+> 
+> Using /proc/fs/nfsfs/volumes it is possible to find the NFS fsid
+> from the backend and use it as seed for mountd's UUID mechanism.
 
-On 1/22/22 14:45, Salvatore Bonaccorso wrote:
-> From: Ben Hutchings <benh@debian.org>
-> 
-> In idmapd.conf.5, there is a line of what should be literal text
-> beginning with ".", which makes it an (invalid) command.  It can be
-> escaped, but then there will be a space before it.  Instead, Move it
-> to the previous line and use the .BR macro so there's no space.
-> 
-> In idmapd.man, the .I (italic) macro is used.  However, this manual
-> page uses the mdoc macro package that does not include it.  Use the
-> .Em (emphasis) macro instead.
-> 
-> In nfsmount.conf.man, the first line should be a comment but it is
-> actually an invalid command.  Fix it to be a comment.
-> 
-> Signed-off-by: Ben Hutchings <benh@debian.org>
-> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
-Committed... (tag: nfs-utils-2-6-2-rc1)
+Sorry, I haven't checked--what is that number, really?  It's probably
+not the fsid returned from the server, as that wouldn't be guaranteed
+unique across multiple servers.  But that means it's probably generated
+in a way that doesn't guarantee it's stable across reboots.  And we need
+filehandles to work across reboots.
 
-steved.
+I think we've got to generate fsid's ourself and keep an on-disk
+database.
 
+> This is the userspace side to make cross mounts work for NFS re-exports.
+> The basic idea is that mountd takes the NFS fsid from the backend server
+> and feeds into mountd'd existing UUID mechanism.
+> 
+> Getting the NFS fsid is currently a bit clumsy, mountd has to scan
+> /proc/fs/nfsfs/volumes. With the upcoming fsinfo() system call this
+> information could be transferred in a much simpler way.
+> e.g. NFS client stores the fsid in its sb->s_uuid and fsinfo() exposes
+> sb->s_uuid to userspace.
+> 
+> This approach works for v3-to-v4 and v4-to-v4 re-exports.
+> v3-to-v3 does *not* work, the reason is that nfs_encode_fh() aborts due
+> to not enough space in the fhandle.
+> I'm still investigating on how to improve this case.
+
+We might be able to do better, but I think a v4-only solution to start
+would be OK.
+
+> Currently I’m toying around with a NFS fsid to export FSID_NUM mappings
+> scheme which are stored to disk.
+
+I think something like that's more like what we need.
+
+> Another possibility is a new fsid type for NFSD, where the raw NFS fsid
+> from the backend server is mirrored. Although such a mirror mode makes
+> local exports impossible.
+> At the end of the day this is something the admin has to decide.
+> I don't think there will be a generic solution which satisfies all needs.
+
+We can provide options if we need to, but the costs of options can be
+underestimated.  Ideally we'd at least have a default that's safe and
+works for most cases.
+
+--b.
+
+> 
+> Looking forward for your feedback. :-)
+> 
+> Thanks,
+> //richard
 > ---
->   support/nfsidmap/idmapd.conf.5 | 4 ++--
->   utils/idmapd/idmapd.man        | 4 ++--
->   utils/mount/nfsmount.conf.man  | 2 +-
->   3 files changed, 5 insertions(+), 5 deletions(-)
+>  support/export/cache.c | 65 +++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 61 insertions(+), 4 deletions(-)
 > 
-> diff --git a/support/nfsidmap/idmapd.conf.5 b/support/nfsidmap/idmapd.conf.5
-> index f5b181670ddb..87e39bb41ab1 100644
-> --- a/support/nfsidmap/idmapd.conf.5
-> +++ b/support/nfsidmap/idmapd.conf.5
-> @@ -198,8 +198,8 @@ With this group names of a central directory can be shortened for an isolated or
->   .TP
->   .B Group-Name-No-Prefix-Regex
->   Case-insensitive regular expression to exclude groups from adding and removing the prefix set by
-> -.B Group-Name-Prefix
-> -. The regular expression must match both the remote and local group names. Multiple expressions may be concatenated with '|'.
-> +.BR Group-Name-Prefix .
-> +The regular expression must match both the remote and local group names. Multiple expressions may be concatenated with '|'.
->   (Default: none)
->   .\"
->   .\" -------------------------------------------------------------------
-> diff --git a/utils/idmapd/idmapd.man b/utils/idmapd/idmapd.man
-> index 5f34d2bff860..8215d2594bfa 100644
-> --- a/utils/idmapd/idmapd.man
-> +++ b/utils/idmapd/idmapd.man
-> @@ -24,13 +24,13 @@ the NFSv4 kernel client and server, to which it communicates via
->   upcalls, by translating user and group IDs to names, and vice versa.
->   .Pp
->   The system derives the
-> -.I user
-> +.Em user
->   part of the string by performing a password or group lookup.
->   The lookup mechanism is configured in
->   .Pa /etc/idmapd.conf
->   .Pp
->   By default, the
-> -.I domain
-> +.Em domain
->   part of the string is the system's DNS domain name.
->   It can also be specified in
->   .Pa /etc/idmapd.conf
-> diff --git a/utils/mount/nfsmount.conf.man b/utils/mount/nfsmount.conf.man
-> index 73c3e1188541..34879c8d63c7 100644
-> --- a/utils/mount/nfsmount.conf.man
-> +++ b/utils/mount/nfsmount.conf.man
-> @@ -1,4 +1,4 @@
-> -."@(#)nfsmount.conf.5"
-> +.\" @(#)nfsmount.conf.5"
->   .TH NFSMOUNT.CONF 5 "16 December 2020"
->   .SH NAME
->   nfsmount.conf - Configuration file for NFS mounts
-
+> diff --git a/support/export/cache.c b/support/export/cache.c
+> index a5823e92e9f2..053ad86619b8 100644
+> --- a/support/export/cache.c
+> +++ b/support/export/cache.c
+> @@ -331,6 +331,51 @@ static const unsigned long nonblkid_filesystems[] = {
+>      0        /* last */
+>  };
+>  
+> +static int get_uuid_from_fsid(char *path, char *uuid_str, size_t len)
+> +{
+> +	unsigned int min_dev, maj_dev, min_fsid, maj_fsid;
+> +	int rc, n, found = 0, header_seen = 0;
+> +	struct stat stb;
+> +	FILE *nfsfs_fd;
+> +	char line[128];
+> +
+> +	rc = nfsd_path_stat(path, &stb);
+> +	if (rc) {
+> +		xlog(L_WARNING, "Unable to stat %s", path);
+> +		return 0;
+> +	}
+> +
+> +	nfsfs_fd = fopen("/proc/fs/nfsfs/volumes", "r");
+> +	if (nfsfs_fd == NULL) {
+> +		xlog(L_WARNING, "Unable to open nfsfs volume file: %m");
+> +		return 0;
+> +	}
+> +
+> +	while (fgets(line, sizeof(line), nfsfs_fd) != NULL) {
+> +		if (!header_seen) {
+> +			header_seen = 1;
+> +			continue;
+> +		}
+> +		n = sscanf(line, "v%*u %*x %*u %u:%u %x:%x %*s", &maj_dev,
+> +			   &min_dev, &maj_fsid, &min_fsid);
+> +
+> +		if (n != 4) {
+> +			xlog(L_WARNING, "Unable to parse nfsfs volume line: %d, %s", n, line);
+> +			continue;
+> +		}
+> +
+> +		if (makedev(maj_dev, min_dev) == stb.st_dev) {
+> +			found = 1;
+> +			snprintf(uuid_str, len, "%08x%08x", maj_fsid, min_fsid);
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(nfsfs_fd);
+> +
+> +	return found;
+> +}
+> +
+>  static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid)
+>  {
+>  	/* get a uuid for the filesystem found at 'path'.
+> @@ -362,7 +407,7 @@ static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid)
+>  	 */
+>  	struct statfs64 st;
+>  	char fsid_val[17];
+> -	const char *blkid_val = NULL;
+> +	const char *fsuuid_val = NULL;
+>  	const char *val;
+>  	int rc;
+>  
+> @@ -375,7 +420,19 @@ static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid)
+>  				break;
+>  		}
+>  		if (*bad == 0)
+> -			blkid_val = get_uuid_blkdev(path);
+> +			fsuuid_val = get_uuid_blkdev(path);
+> +		else if (*bad == 0x6969 /* NFS_SUPER_MAGIC */) {
+> +			char tmp[17];
+> +			int ret = get_uuid_from_fsid(path, tmp, sizeof(tmp));
+> +
+> +			if (ret < 0) {
+> +				xlog(L_WARNING, "Unable to read nfsfs volume file: %i", ret);
+> +			} else if (ret == 0) {
+> +				xlog(L_WARNING, "Unable to find nfsfs volume entry for %s", path);
+> +			} else {
+> +				fsuuid_val = tmp;
+> +			}
+> +		}
+>  	}
+>  
+>  	if (rc == 0 &&
+> @@ -385,8 +442,8 @@ static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid)
+>  	else
+>  		fsid_val[0] = 0;
+>  
+> -	if (blkid_val && (type--) == 0)
+> -		val = blkid_val;
+> +	if (fsuuid_val && (type--) == 0)
+> +		val = fsuuid_val;
+>  	else if (fsid_val[0] && (type--) == 0)
+>  		val = fsid_val;
+>  	else
+> -- 
+> 2.26.2
