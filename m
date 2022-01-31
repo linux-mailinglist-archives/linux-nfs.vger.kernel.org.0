@@ -2,50 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 439184A4977
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 15:39:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0966A4A4BA2
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 17:16:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237948AbiAaOjX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jan 2022 09:39:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
+        id S1380196AbiAaQQV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jan 2022 11:16:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236963AbiAaOjW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 09:39:22 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CEAC061714;
-        Mon, 31 Jan 2022 06:39:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:To:From:Date:Sender:Reply-To:Cc:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=64GM3aeGmnYGSAoPVpZyjdgL6Jwc3lNO37u/YY0MNaQ=; b=SEyFDIRmSSjAdYm2D7gbhH9NDv
-        IPSXWRTkhCri4BeWlk33tjx2Zq2swhI30nMnXhm6u1lZaFbgWZVOQYjjlrZwQR4TZrhfxXDEqIxP8
-        JOMcYDWdJW5u3ztcWSCC3QTG/fseCGqNAO0D0K4KHllR37NsDkd85pzG5eQA/7kPtSJ8gOBI78kpR
-        DWPuLFGNCIA6vLqV0F5p+mRXzJTM71/q6vT61OA7Ss5ftqOrUEJZnaFXxoKzz7JDKj4P8mTnmqTBf
-        Li0H6iwhlPM2arEHMtIVbPmEkzZCdJne7BZ2Xh9VMHqXj2nBLnPQT4TIXs1+OwDMK8/oFzx+8VlQn
-        hfBtcKTQ==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1nEXpt-009ylI-FJ; Mon, 31 Jan 2022 14:39:17 +0000
-Date:   Mon, 31 Jan 2022 14:39:17 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: Re: [PATCH 1/2] Convert NFS from readpages to readahead
-Message-ID: <Yff0la2VAOewGrhI@casper.infradead.org>
-References: <20220122205453.3958181-1-willy@infradead.org>
+        with ESMTP id S1380199AbiAaQQO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 11:16:14 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B4FC061741
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:16:14 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id p15so44538969ejc.7
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:16:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UmMfeMOSCoAqBhA7BUwY3tTWcLdWTL1PSKYY7qnHSNo=;
+        b=GRVTCtzu9/MyTVuHPjTnQ0zxTS6EdpUso5MVxp1FHPJAu+cQfMtGjsj1EGc053Re66
+         HJw78dmJitgpCkRH2aNJ79u+EOoEtA475Pp0mIDQRgpMvUauy7YdyKBf1LyvFL9iBpuq
+         dVkCxouvtRDEFM5eN6A38VlYveIKLSMqWpJSOacxAwyxO9jptgAi5E6yqr1yGSQXZBpx
+         TXQ6z4K8eSo7miaPpr1Mfo0C7GdRius8EJM0YqnCK1WRdRyHuX0jw76vxH18QVaPfOcs
+         8Mx91M/OXiYQnO2wAtw7rLcdRF+51Vn/SJafIABc4WKLX6zN9UJ06Ku91Gd/ZTEvj9+X
+         KJ8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UmMfeMOSCoAqBhA7BUwY3tTWcLdWTL1PSKYY7qnHSNo=;
+        b=ihfZXGEvDpp7F07Fo7iFLMuilAki+Xce+giSR38Seej2/H8JFiYn11XV3YeMGzk79U
+         Gr88G6kdya32OreTbNww3lgiwNc/YSXpezRKfptvp+Mql6ZoVtolO3xDXAQXjT8DH3oj
+         0KZWDqWqa8Lt8eEdZqC2eWNegFsZyKcrObqbdHGw0RHp3O3FhueNIvvb3iwYVLk4TUR2
+         DGcOJcmPGUStxDel3DK7iYo9+9sz0lU+WCFGaQuMQeexCgUl78etfZ9vDCrwbRgqwsFc
+         vZ9ViyFLwwrR4yI/YWjHdFZA7MOI8RSPX7R/S+e9vw6Qutl9p5KEQk1lQGz+/cqTwxRk
+         OhkQ==
+X-Gm-Message-State: AOAM5307zhWAHdLhllxrtVMUtBob4+rpUqxXWtNFrbK5oZfufzo/m3Ui
+        kWnzP27lVanlJv0vsOzKagdVEyzqupKWpU5S8FaO
+X-Google-Smtp-Source: ABdhPJxq72VkfEyMRdYvqdL8DBh09y6vJc7UuNH+cjMYMvqj8xzzu7N5A30X1zKYjBRhbE33sZLKMDvkmFkjAMIsqsA=
+X-Received: by 2002:a17:906:1e06:: with SMTP id g6mr17519185ejj.517.1643645772623;
+ Mon, 31 Jan 2022 08:16:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220122205453.3958181-1-willy@infradead.org>
+References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
+ <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
+ <CAHC9VhQKVdbLNn=eOqebWaktDVeq5bjTjXea68MmcAhKoSa09w@mail.gmail.com> <CAFqZXNvny0zJmEMzFeMFuy0DzjAAaB5uqRpQoSMbZwVcUxTDAQ@mail.gmail.com>
+In-Reply-To: <CAFqZXNvny0zJmEMzFeMFuy0DzjAAaB5uqRpQoSMbZwVcUxTDAQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 31 Jan 2022 11:16:01 -0500
+Message-ID: <CAHC9VhQE4JPhTjkKwV3ovRSuPceiHDrP3MDW4RPDcNtLkb7tAQ@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        SElinux list <selinux@vger.kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Jan 22, 2022 at 08:54:52PM +0000, Matthew Wilcox (Oracle) wrote:
-> NFS is one of the last two users of the deprecated ->readpages aop.
-> This conversion looks straightforward, but I have only compile-tested
-> it.
+On Mon, Jan 31, 2022 at 7:46 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Fri, Jan 28, 2022 at 3:28 AM Paul Moore <paul@paul-moore.com> wrote:
+> > On Thu, Jan 27, 2022 at 4:54 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > > I wonder if we could make this all much simpler by *always* doing the
+> > > label parsing in selinux_add_opt() and just returning an error when
+> > > !selinux_initialized(&selinux_state). Before the new mount API, mount
+> > > options were always passed directly to the mount(2) syscall, so it
+> > > wasn't possible to pass any SELinux mount options before the SELinux
+> > > policy was loaded. I don't see why we need to jump through hoops here
+> > > just to support this pseudo-feature of stashing an unparsed label into
+> > > an fs_context before policy is loaded... Userspace should never need
+> > > to do that.
+> >
+> > I could agree with that, although part of my mind is a little nervous
+> > about the "userspace should *never* ..." because that always seems to
+> > bite us.  Although I'm struggling to think of a case where userspace
+> > would need to set explicit SELinux mount options without having a
+> > policy loaded.
+>
+> I get that, but IMO this is enough of an odd "use case" that I
+> wouldn't worry too much ...
 
-These patches still apply to -rc2.
+I understand, but seeing as I'm the only one that defends these things
+with Linus and others lets do this:
+
+1. Fix what we have now using Scott's patches once he incorporates the feedback.
+2. Merge another patch (separate patch(set) please!) which does the
+parsing in selinux_add_opt().
+
+... this was if we have to revert #2 we still have the fixes in #1.
+
+-- 
+paul-moore.com
