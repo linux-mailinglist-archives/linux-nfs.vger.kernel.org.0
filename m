@@ -2,96 +2,129 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0966A4A4BA2
-	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 17:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0325D4A4C91
+	for <lists+linux-nfs@lfdr.de>; Mon, 31 Jan 2022 17:56:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380196AbiAaQQV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 31 Jan 2022 11:16:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1380199AbiAaQQO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 11:16:14 -0500
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B4FC061741
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:16:14 -0800 (PST)
-Received: by mail-ej1-x629.google.com with SMTP id p15so44538969ejc.7
-        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:16:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UmMfeMOSCoAqBhA7BUwY3tTWcLdWTL1PSKYY7qnHSNo=;
-        b=GRVTCtzu9/MyTVuHPjTnQ0zxTS6EdpUso5MVxp1FHPJAu+cQfMtGjsj1EGc053Re66
-         HJw78dmJitgpCkRH2aNJ79u+EOoEtA475Pp0mIDQRgpMvUauy7YdyKBf1LyvFL9iBpuq
-         dVkCxouvtRDEFM5eN6A38VlYveIKLSMqWpJSOacxAwyxO9jptgAi5E6yqr1yGSQXZBpx
-         TXQ6z4K8eSo7miaPpr1Mfo0C7GdRius8EJM0YqnCK1WRdRyHuX0jw76vxH18QVaPfOcs
-         8Mx91M/OXiYQnO2wAtw7rLcdRF+51Vn/SJafIABc4WKLX6zN9UJ06Ku91Gd/ZTEvj9+X
-         KJ8Q==
+        id S1380672AbiAaQ4Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 31 Jan 2022 11:56:25 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:36054 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1380670AbiAaQ4V (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 31 Jan 2022 11:56:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643648181;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6gFlOGrQ0+/V4uPnCD9DruwfragnZ2iJCbNxgm+F1GE=;
+        b=SjuRb24TMM2mfGCvcOgD6zhcBVZ5670x/6tJJRzSEUW5CfXJU73dmOegTYRs7hY9KWpEun
+        c62yTYN/gWqudx2vOJJoqgBvO181M9it5nCP4SWHJDyL4vW4N4D57xfPVIAtgSFNkapi3w
+        p7AqoEgHwLX8oo2hKHTkP+bgT+RNw+8=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-193-4h8sziObPkWlNyM4PVLJjQ-1; Mon, 31 Jan 2022 11:56:19 -0500
+X-MC-Unique: 4h8sziObPkWlNyM4PVLJjQ-1
+Received: by mail-qv1-f69.google.com with SMTP id d5-20020a0cffa5000000b004257627bf5fso13084729qvv.23
+        for <linux-nfs@vger.kernel.org>; Mon, 31 Jan 2022 08:56:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UmMfeMOSCoAqBhA7BUwY3tTWcLdWTL1PSKYY7qnHSNo=;
-        b=ihfZXGEvDpp7F07Fo7iFLMuilAki+Xce+giSR38Seej2/H8JFiYn11XV3YeMGzk79U
-         Gr88G6kdya32OreTbNww3lgiwNc/YSXpezRKfptvp+Mql6ZoVtolO3xDXAQXjT8DH3oj
-         0KZWDqWqa8Lt8eEdZqC2eWNegFsZyKcrObqbdHGw0RHp3O3FhueNIvvb3iwYVLk4TUR2
-         DGcOJcmPGUStxDel3DK7iYo9+9sz0lU+WCFGaQuMQeexCgUl78etfZ9vDCrwbRgqwsFc
-         vZ9ViyFLwwrR4yI/YWjHdFZA7MOI8RSPX7R/S+e9vw6Qutl9p5KEQk1lQGz+/cqTwxRk
-         OhkQ==
-X-Gm-Message-State: AOAM5307zhWAHdLhllxrtVMUtBob4+rpUqxXWtNFrbK5oZfufzo/m3Ui
-        kWnzP27lVanlJv0vsOzKagdVEyzqupKWpU5S8FaO
-X-Google-Smtp-Source: ABdhPJxq72VkfEyMRdYvqdL8DBh09y6vJc7UuNH+cjMYMvqj8xzzu7N5A30X1zKYjBRhbE33sZLKMDvkmFkjAMIsqsA=
-X-Received: by 2002:a17:906:1e06:: with SMTP id g6mr17519185ejj.517.1643645772623;
- Mon, 31 Jan 2022 08:16:12 -0800 (PST)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=6gFlOGrQ0+/V4uPnCD9DruwfragnZ2iJCbNxgm+F1GE=;
+        b=5bAk4LD3COwMyGvqA07GgqxsfQ+01cB11zcP0s6G+Xnr0tgwtBSYSoD+IYWKJ3O5HD
+         qtIamrqJ9qQNQ3nlHjViTQkr4RlcSDEnlXzS4ZR/erCFqWQnr8aS6XOpL88+jtqCeo9K
+         tOq0uQWs7SJaG3pr2yEiuhxiw2re4pCgA0Lu1ax/A3DlLAKazLFsKqXwDO3wb281RhtU
+         GR8iWRF3+3XVVXSomAMS2LSorK2DqSYoCouw3I6ldUjBkeVOfktNqLsXr5JHhJ/xiWkl
+         wLWeyTl4wasOyVzl5BHYEb8CWYT4Nqli/bgANlKAbNAyINwej5IuiNuLB+jiyhV5q3/5
+         HyaQ==
+X-Gm-Message-State: AOAM533lBWP5ROYcCDNnJ3irrNdHOSr0MTpDSvrxDHbRV1cPgzq7Eo1W
+        mNfNtxHCk8z0pyhjUrk3wE1mdQz82B3+sVCF/obbclSvcGWb9uAn0Qx5xW0DyKHfjUKQabRJ+sq
+        Zy8vZWrOMyQhEhWpLUbtm
+X-Received: by 2002:ac8:5c96:: with SMTP id r22mr10329898qta.228.1643648179335;
+        Mon, 31 Jan 2022 08:56:19 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwdFsgzSSF5gzbWdRjil6Lj2XO3rQpRNO3OMM186PlnCjUdmWFwjsZgsq2KaxG7+fNQoL7Ycw==
+X-Received: by 2002:ac8:5c96:: with SMTP id r22mr10329882qta.228.1643648179071;
+        Mon, 31 Jan 2022 08:56:19 -0800 (PST)
+Received: from [172.31.1.6] ([71.161.85.11])
+        by smtp.gmail.com with ESMTPSA id x18sm8807916qtw.93.2022.01.31.08.56.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Jan 2022 08:56:18 -0800 (PST)
+Message-ID: <93005ced-1b8d-b769-e30c-b4f8b7375d2e@redhat.com>
+Date:   Mon, 31 Jan 2022 11:56:17 -0500
 MIME-Version: 1.0
-References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
- <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
- <CAHC9VhQKVdbLNn=eOqebWaktDVeq5bjTjXea68MmcAhKoSa09w@mail.gmail.com> <CAFqZXNvny0zJmEMzFeMFuy0DzjAAaB5uqRpQoSMbZwVcUxTDAQ@mail.gmail.com>
-In-Reply-To: <CAFqZXNvny0zJmEMzFeMFuy0DzjAAaB5uqRpQoSMbZwVcUxTDAQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 31 Jan 2022 11:16:01 -0500
-Message-ID: <CAHC9VhQE4JPhTjkKwV3ovRSuPceiHDrP3MDW4RPDcNtLkb7tAQ@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
-To:     Ondrej Mosnacek <omosnace@redhat.com>
-Cc:     Scott Mayhew <smayhew@redhat.com>,
-        SElinux list <selinux@vger.kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH] nfs-utils: tests: Skip test if /dev/log is missing
+Content-Language: en-US
+To:     Salvatore Bonaccorso <carnil@debian.org>
+Cc:     linux-nfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>,
+        Ben Hutchings <benh@debian.org>
+References: <20220122194932.118951-1-carnil@debian.org>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220122194932.118951-1-carnil@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jan 31, 2022 at 7:46 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Fri, Jan 28, 2022 at 3:28 AM Paul Moore <paul@paul-moore.com> wrote:
-> > On Thu, Jan 27, 2022 at 4:54 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > > I wonder if we could make this all much simpler by *always* doing the
-> > > label parsing in selinux_add_opt() and just returning an error when
-> > > !selinux_initialized(&selinux_state). Before the new mount API, mount
-> > > options were always passed directly to the mount(2) syscall, so it
-> > > wasn't possible to pass any SELinux mount options before the SELinux
-> > > policy was loaded. I don't see why we need to jump through hoops here
-> > > just to support this pseudo-feature of stashing an unparsed label into
-> > > an fs_context before policy is loaded... Userspace should never need
-> > > to do that.
-> >
-> > I could agree with that, although part of my mind is a little nervous
-> > about the "userspace should *never* ..." because that always seems to
-> > bite us.  Although I'm struggling to think of a case where userspace
-> > would need to set explicit SELinux mount options without having a
-> > policy loaded.
->
-> I get that, but IMO this is enough of an odd "use case" that I
-> wouldn't worry too much ...
 
-I understand, but seeing as I'm the only one that defends these things
-with Linus and others lets do this:
 
-1. Fix what we have now using Scott's patches once he incorporates the feedback.
-2. Merge another patch (separate patch(set) please!) which does the
-parsing in selinux_add_opt().
+On 1/22/22 14:49, Salvatore Bonaccorso wrote:
+> From: Ben Hutchings <benh@debian.org>
+> 
+> Some build environments don't have a /dev/log, without which
+> the daemons will fail to run.
+> 
+> * Add a check_dev_log function to skip a test if it's missing
+> * Call it in t0001-statd-basic-mon-unmon.sh
+> 
+> Signed-off-by: Ben Hutchings <benh@debian.org>
+> Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
+Committed... (tag: nfs-utils-2-6-2-rc1)
 
-... this was if we have to revert #2 we still have the fixes in #1.
+steved.
+> ---
+>   tests/t0001-statd-basic-mon-unmon.sh | 3 ++-
+>   tests/test-lib.sh                    | 9 +++++++++
+>   2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tests/t0001-statd-basic-mon-unmon.sh b/tests/t0001-statd-basic-mon-unmon.sh
+> index 92517a144851..e1065e766ccc 100755
+> --- a/tests/t0001-statd-basic-mon-unmon.sh
+> +++ b/tests/t0001-statd-basic-mon-unmon.sh
+> @@ -21,8 +21,9 @@
+>   
+>   . ./test-lib.sh
+>   
+> -# This test needs root privileges
+> +# This test needs root privileges and /dev/log
+>   check_root
+> +check_dev_log
+>   
+>   start_statd
+>   if [ $? -ne 0 ]; then
+> diff --git a/tests/test-lib.sh b/tests/test-lib.sh
+> index e47ad13539ac..b62ac2a6db4d 100644
+> --- a/tests/test-lib.sh
+> +++ b/tests/test-lib.sh
+> @@ -37,6 +37,15 @@ check_root() {
+>   	fi
+>   }
+>   
+> +# Most tests require /dev/log. Skip the test if it doesn't exist in this
+> +# environment.
+> +check_dev_log() {
+> +	if ! [ -e /dev/log ]; then
+> +		echo "*** Skipping this tests as it requires /dev/log ***"
+> +		exit 77
+> +	fi
+> +}
+> +
+>   # is lockd registered as a service?
+>   lockd_registered() {
+>   	rpcinfo -p | grep -q nlockmgr
 
--- 
-paul-moore.com
