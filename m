@@ -2,242 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 21D584A60D9
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Feb 2022 16:58:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 094314A6142
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Feb 2022 17:19:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240742AbiBAP6a (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Feb 2022 10:58:30 -0500
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:23839 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S237158AbiBAP63 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Feb 2022 10:58:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1643731109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZypiyxpCcuEyM1ySNhbfCIbOxAuGxHr+z3CxNGHnfjY=;
-        b=Jj700g1OYIjy6mGWwZvq+vNdkmVO4Wge1hQUGg8xCF5cZOD4PyKfcXdxKJ0eyP6uKh38V+
-        PC+S/nPdvVDYy1x0/nC2gy8oS6IF+S3G1RQYcWvGJmcTxUhxgKU+7vR34/l+isXaPSBctK
-        7wp3tgteL59LVIYkrFwNFqAtlMPiu3s=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-627-lHUZM5_SNsKzIfdytcskqw-1; Tue, 01 Feb 2022 10:58:28 -0500
-X-MC-Unique: lHUZM5_SNsKzIfdytcskqw-1
-Received: by mail-ed1-f69.google.com with SMTP id k10-20020a50cb8a000000b00403c8326f2aso8929351edi.6
-        for <linux-nfs@vger.kernel.org>; Tue, 01 Feb 2022 07:58:12 -0800 (PST)
+        id S241015AbiBAQTv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Feb 2022 11:19:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50960 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S238531AbiBAQTu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Feb 2022 11:19:50 -0500
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EE36C061714
+        for <linux-nfs@vger.kernel.org>; Tue,  1 Feb 2022 08:19:50 -0800 (PST)
+Received: by mail-ej1-x629.google.com with SMTP id jx6so56219728ejb.0
+        for <linux-nfs@vger.kernel.org>; Tue, 01 Feb 2022 08:19:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=H/EA0AhkWiFaOwwty7mH2hCCiTOvQntxOFT+Uv9r6mI=;
+        b=lmzPqOHdxn0hc7dFBLY3SQkUuN8/E5zgkhWuFYNNCZY80fRqKvZZiHLjCZFSELf5wt
+         fBfAaoq3b5L6sfZamRJ4r9as5w9m2yn2x5kjVQH91u5qzkU4B0X3l8pb4YSIgvY2YQoU
+         hLYOHsig6gFhE8uLZXKQjCQGUZdYl3Z4dWDXS94KelY+TVFaf6ZQT+FTU8h0b8OgyVSF
+         +vMc/E1jLaqNPkoLezOjgnDMC9VeuCZPuSrCLTTlT2tOaNLt4ZbNIDH7tRFJJF+KWag/
+         wG5J3E4/omZOqv7+krqB1k+rt7bzjHGeCvrcOEBpozUkZsDcRNHQwrGH26s3VqMOjExc
+         cGoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ZypiyxpCcuEyM1ySNhbfCIbOxAuGxHr+z3CxNGHnfjY=;
-        b=V/fFRIG+daCDqiZM7zyTgYZcOZzCdPogdbokMKWlREgw7gcq3FVHI96DMKNYP7RERl
-         dFC5bncRDJ09yZwxdmntOiTbcL3dNstZ5ETi3VPpZVlxssOxg4SyttHo08aF1XoPhl/t
-         7+R90j3MsL0LbBSgYQI3sFZGAbD2mWQk4PRnuHCzC8EMVtujUhgKTzoFCqjsB04MJW/A
-         p6VidP6Pn0iHKiWCXQi6JhpavBQOLraw1SXidTDQtsPw4zniRLEfhZQw14kB4GYbWShu
-         kxQIDy4FePTYOLAuLdDtOGHi+Nn1uoKg7N/BHmvaF0+VzZ0pGe7i3YtRt30dZa/nz8+M
-         DGKw==
-X-Gm-Message-State: AOAM531CMzRcJi5fdUxrgCc2OiXIsrDpxQWa82WymEzqQUJkjHgNk7l4
-        Wceg00xe4HA+BIh4gh4O2TRDdWMWHb/MbLegQtZdGp13aQqHO3ZCnom8VVO90p+pWiZ1N6hSq8h
-        RLmpVOqDa9A2zOQYBpQ30wrW/H5GRr+VRYwNk
-X-Received: by 2002:a17:907:7412:: with SMTP id gj18mr20670572ejc.379.1643731089947;
-        Tue, 01 Feb 2022 07:58:09 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJwAXXRNfi79z+IRrxEZ6ehC7ctExBt43WBCgEzdheEe3PjVycV4BiR0wCaq9ljqrYVmp//CcLshb8N0YYFDsBw=
-X-Received: by 2002:a17:907:7412:: with SMTP id gj18mr20670541ejc.379.1643731089374;
- Tue, 01 Feb 2022 07:58:09 -0800 (PST)
+        bh=H/EA0AhkWiFaOwwty7mH2hCCiTOvQntxOFT+Uv9r6mI=;
+        b=mQj2wdfKbjGCcWPmCQbm2fCZ+FvMecvu9gZ0Gv2r9GSBSLyaK9we3Q5ojpu2RoK5L5
+         Vm9CIy84kOHzSwhgbSL/28bKMKtar2wo1q5Psml4VrN+pvEDGIeFe6BK95OBw9CqObCx
+         qCP6NvYsaKVK6Hnj6PHSb/TEPq3NmO4KoKJqItjIRBrWTaKhCs/XHGr2NW6TgDuRrb+h
+         ICxiz7I9WMWRtJjveA7DVSDhLP2RvpJ82+dwkjL8WEqKuX/ONh9O0Ly6Rs/kSZGKxCP3
+         YFpwfsNewpBGQuwoDW+nwzP96fb/QSNlzS9BHh9yqMrZMVDrgWFvWvsdtB92UceZ9hLN
+         yMDg==
+X-Gm-Message-State: AOAM532i17v1tLxeijSchZ/3WHrnCxlgBl3K+B3aM5uywKnq7qz7wLBe
+        RrM6DlusvIXt3R/+B4t5WxKNXxpbkJY+XeI25Ftl
+X-Google-Smtp-Source: ABdhPJyY2QWbw9iTiEYwXUoRKlv8CqDxjUmVAK+5MN19fpdlGU198KTmUcBPwAV5FDqPW4wyhtc7GkW+of0Vio0Kkrg=
+X-Received: by 2002:a17:906:2ed0:: with SMTP id s16mr21589608eji.327.1643732388897;
+ Tue, 01 Feb 2022 08:19:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20220127194952.63033-1-Anna.Schumaker@Netapp.com> <20220127194952.63033-2-Anna.Schumaker@Netapp.com>
-In-Reply-To: <20220127194952.63033-2-Anna.Schumaker@Netapp.com>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Tue, 1 Feb 2022 10:57:31 -0500
-Message-ID: <CALF+zOmodpOP4HqNZykYQVCcr+i11r6bNSWpGViAnfJzVwHsbw@mail.gmail.com>
-Subject: Re: [PATCH v7 1/9] rpcctl: Add a rpcctl.py tool
-To:     schumaker.anna@gmail.com
-Cc:     "Dickson, Steve" <steved@redhat.com>,
+References: <20220120214948.3637895-1-smayhew@redhat.com> <20220120214948.3637895-2-smayhew@redhat.com>
+ <CAFqZXNv7=ROfyzZGojy2DQvY0xp4Dd5oHW_0KG6BLiD7A8zeKQ@mail.gmail.com>
+ <CAHC9VhQKVdbLNn=eOqebWaktDVeq5bjTjXea68MmcAhKoSa09w@mail.gmail.com>
+ <CAFqZXNvny0zJmEMzFeMFuy0DzjAAaB5uqRpQoSMbZwVcUxTDAQ@mail.gmail.com>
+ <CAHC9VhQE4JPhTjkKwV3ovRSuPceiHDrP3MDW4RPDcNtLkb7tAQ@mail.gmail.com> <CAFqZXNs7P+p0B-uZ2owMH1qa04unbq870tMqQ4Kwup7dXJ9z=g@mail.gmail.com>
+In-Reply-To: <CAFqZXNs7P+p0B-uZ2owMH1qa04unbq870tMqQ4Kwup7dXJ9z=g@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 1 Feb 2022 11:19:37 -0500
+Message-ID: <CAHC9VhRAPb8PV08fYd-GOY+ZeKX6r+rmGw_Okrwwj6ESTVDYmA@mail.gmail.com>
+Subject: Re: [PATCH RFC v2 1/2] selinux: Fix selinux_sb_mnt_opts_compat()
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Scott Mayhew <smayhew@redhat.com>,
+        SElinux list <selinux@vger.kernel.org>,
         linux-nfs <linux-nfs@vger.kernel.org>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jan 27, 2022 at 2:50 PM <schumaker.anna@gmail.com> wrote:
+On Tue, Feb 1, 2022 at 9:38 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Mon, Jan 31, 2022 at 5:16 PM Paul Moore <paul@paul-moore.com> wrote:
+> > On Mon, Jan 31, 2022 at 7:46 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > > On Fri, Jan 28, 2022 at 3:28 AM Paul Moore <paul@paul-moore.com> wrote:
+> > > > On Thu, Jan 27, 2022 at 4:54 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> > > > > I wonder if we could make this all much simpler by *always* doing the
+> > > > > label parsing in selinux_add_opt() and just returning an error when
+> > > > > !selinux_initialized(&selinux_state). Before the new mount API, mount
+> > > > > options were always passed directly to the mount(2) syscall, so it
+> > > > > wasn't possible to pass any SELinux mount options before the SELinux
+> > > > > policy was loaded. I don't see why we need to jump through hoops here
+> > > > > just to support this pseudo-feature of stashing an unparsed label into
+> > > > > an fs_context before policy is loaded... Userspace should never need
+> > > > > to do that.
+> > > >
+> > > > I could agree with that, although part of my mind is a little nervous
+> > > > about the "userspace should *never* ..." because that always seems to
+> > > > bite us.  Although I'm struggling to think of a case where userspace
+> > > > would need to set explicit SELinux mount options without having a
+> > > > policy loaded.
+> > >
+> > > I get that, but IMO this is enough of an odd "use case" that I
+> > > wouldn't worry too much ...
+> >
+> > I understand, but seeing as I'm the only one that defends these things
+> > with Linus and others lets do this:
 >
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->
-> This will be used to print and manipulate the sunrpc sysfs directory
-> files. Running without arguments prints both usage information and the
-> location of the sunrpc sysfs directory.
->
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> --
-> v7: Check entire line for "sysfs" instead of just the start of the line
-> ---
->  tools/rpcctl/rpcctl.py | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100755 tools/rpcctl/rpcctl.py
->
-> diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-> new file mode 100755
-> index 000000000000..9737ac4a9740
-> --- /dev/null
-> +++ b/tools/rpcctl/rpcctl.py
-> @@ -0,0 +1,25 @@
-> +#!/usr/bin/python3
-> +import argparse
-> +import pathlib
-> +import sys
-> +
-> +with open("/proc/mounts", 'r') as f:
-> +    mount = [ line.split()[1] for line in f if "sysfs" in line ]
-> +    if len(mount) == 0:
-> +        print("ERROR: sysfs is not mounted")
-> +        sys.exit(1)
-> +
-> +sunrpc = pathlib.Path(mount[0]) / "kernel" / "sunrpc"
-> +if not sunrpc.is_dir():
-> +    print("ERROR: sysfs does not have sunrpc directory")
-> +    sys.exit(1)
-> +
-> +parser = argparse.ArgumentParser()
-> +
-> +def show_small_help(args):
-> +    parser.print_usage()
-> +    print("sunrpc dir:", sunrpc)
-> +parser.set_defaults(func=show_small_help)
-> +
-> +args = parser.parse_args()
-> +args.func(args)
-> --
-> 2.35.0
->
+> It's not all black and white:
+> https://lore.kernel.org/lkml/Pine.LNX.4.64.0512291322560.3298@g5.osdl.org/
 
-Might want to rework some of the directory related code to ensure you
-handle disappearing entries.  Got Tracebacks (see below) while running
-a series of tests that would:
-- mount
-- run some IO
-- umount
+I made my statement above not to ask your opinion, but rather to make a point.
 
-
-[root@dwysocha-fedora-node1 nfs-utils]# while true; do
-./tools/rpcctl/rpcctl.py xprt; done | grep -B 5 -A 5 Traceback
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 112, in list_all
-    xprts = [ Xprt(f) for f in (sunrpc / "xprt-switches").glob("**/xprt-*") ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 112, in <listcomp>
-    xprts = [ Xprt(f) for f in (sunrpc / "xprt-switches").glob("**/xprt-*") ]
-  File "/usr/lib64/python3.10/pathlib.py", line 1032, in glob
-    for p in selector.select_from(self):
-  File "/usr/lib64/python3.10/pathlib.py", line 492, in _select_from
-    for starting_point in self._iterate_directories(parent_path,
-is_dir, scandir):
-  File "/usr/lib64/python3.10/pathlib.py", line 482, in _iterate_directories
-    for p in self._iterate_directories(path, is_dir, scandir):
-  File "/usr/lib64/python3.10/pathlib.py", line 471, in _iterate_directories
-    with scandir(parent_path) as scandir_it:
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/xprt-switches/switch-4'
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 112, in list_all
-    xprts = [ Xprt(f) for f in (sunrpc / "xprt-switches").glob("**/xprt-*") ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 112, in <listcomp>
-    xprts = [ Xprt(f) for f in (sunrpc / "xprt-switches").glob("**/xprt-*") ]
-  File "/usr/lib64/python3.10/pathlib.py", line 1032, in glob
-    for p in selector.select_from(self):
-  File "/usr/lib64/python3.10/pathlib.py", line 492, in _select_from
-    for starting_point in self._iterate_directories(parent_path,
-is_dir, scandir):
-  File "/usr/lib64/python3.10/pathlib.py", line 482, in _iterate_directories
-    for p in self._iterate_directories(path, is_dir, scandir):
-  File "/usr/lib64/python3.10/pathlib.py", line 471, in _iterate_directories
-    with scandir(parent_path) as scandir_it:
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/xprt-switches/switch-2'
-
-
-
-
-[root@dwysocha-fedora-node1 nfs-utils]# while true; do
-./tools/rpcctl/rpcctl.py client; done | grep -B 10 -A 10 Traceback
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in list_all
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in <listcomp>
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 195, in __init__
-    self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
-  File "/usr/lib64/python3.10/pathlib.py", line 1159, in readlink
-    path = self._accessor.readlink(self)
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/rpc-clients/clnt-3/switch'
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in list_all
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in <listcomp>
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 195, in __init__
-    self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
-  File "/usr/lib64/python3.10/pathlib.py", line 1159, in readlink
-    path = self._accessor.readlink(self)
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/rpc-clients/clnt-7/switch'
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in list_all
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in <listcomp>
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 195, in __init__
-    self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 148, in __init__
-    self.xprts = [ Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 148, in <listcomp>
-    self.xprts = [ Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 49, in __init__
-    self.read_state()
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 81, in read_state
-    self.state = ','.join(f.readline().split()[1:])
-OSError: [Errno 19] No such device
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in list_all
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in <listcomp>
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 195, in __init__
-    self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 148, in __init__
-    self.xprts = [ Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 148, in <listcomp>
-    self.xprts = [ Xprt(p) for p in self.path.iterdir() if p.is_dir() ]
-  File "/usr/lib64/python3.10/pathlib.py", line 1015, in iterdir
-    for name in self._accessor.listdir(self):
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/rpc-clients/clnt-9/../../xprt-switches/switch-2'
-Traceback (most recent call last):
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 230, in <module>
-    args.func(args)
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in list_all
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 209, in <listcomp>
-    clients = [ RpcClient(f) for f in (sunrpc / "rpc-clients").iterdir() ]
-  File "/mnt/build/nfs-utils/./tools/rpcctl/rpcctl.py", line 195, in __init__
-    self.switch = XprtSwitch(path / (path / "switch").readlink(), sep=",")
-  File "/usr/lib64/python3.10/pathlib.py", line 1159, in readlink
-    path = self._accessor.readlink(self)
-FileNotFoundError: [Errno 2] No such file or directory:
-'/sys/kernel/sunrpc/rpc-clients/clnt-5/switch'
-^C
-
+-- 
+paul-moore.com
