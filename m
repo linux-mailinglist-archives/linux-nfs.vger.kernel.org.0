@@ -1,139 +1,60 @@
 Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D77CB4A6B03
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 05:44:24 +0100 (CET)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id A95664A6E18
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 10:50:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbiBBEoX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Feb 2022 23:44:23 -0500
-Received: from smtp-out2.suse.de ([195.135.220.29]:42426 "EHLO
-        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232035AbiBBEoU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Feb 2022 23:44:20 -0500
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id D96521F37C;
-        Wed,  2 Feb 2022 04:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1643777059; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BDiQOBR4POP3s9FAkg18U5MsJgq2aSf0QTjjYdD3Pao=;
-        b=fcvuvmatr5yfMT3sd9qNK8zL1locQ33Ddb4SQUx73da88dkLOHmQ1ckM6v74ev5D6o9JuF
-        8j44MU8uZebQm0aohw4KO5dTyW9QiRCRH2uYlRXvqcmXO1RjKZ6gnL6dRXfgke0/ulQ2Kv
-        r0qavW7xs2xIaUaTFFTuJ7nv6cj/Rpc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1643777059;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BDiQOBR4POP3s9FAkg18U5MsJgq2aSf0QTjjYdD3Pao=;
-        b=SLjAi/T9FJJ9gPzg9eWn+rG0brKkdy8LEqKdeiKprAcq681tR9z1P7L0KokwNHjCWquH0f
-        ChPAb8o3gLaNQ/Dg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 379DE13B92;
-        Wed,  2 Feb 2022 04:44:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id mNhyOCEM+mEMWAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 02 Feb 2022 04:44:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        id S239810AbiBBJu2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Feb 2022 04:50:28 -0500
+Received: from mail.trueanalyze24.com ([149.154.157.156]:58504 "EHLO
+        mail.trueanalyze24.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S232164AbiBBJu2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 04:50:28 -0500
+Received: by mail.trueanalyze24.com (Postfix, from userid 1001)
+        id 33ACB43855; Wed,  2 Feb 2022 10:31:46 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trueanalyze24.com;
+        s=mail; t=1643795404;
+        bh=EGenFkmmv/iHCwB4AbTzX8IXCMu1xRW+9eep7HJGZMM=;
+        h=Date:From:To:Subject:From;
+        b=tWB+6pCD4sTlaBxBmC1/RhES8Pev2T3ilCfCdCI/bZp4AfFXmf6XGA4cPd/oJ26NB
+         vrkMLK61UqAUZoa838lNC4wIHS9YZnVjHPLvqeCoeKCut8nlIEMs+EExD7eDcIJ2rw
+         SzvbKTpiz3VWVS5y5AYjZllG+YsRGfVuwgMlRehV3xARKUEU5xFiONjszs9fOuM0H0
+         2cOhnmxAaXkxw1tdB7G4ONo1pKwXuEug4GxY+GaU1KcVpMrY+UvWB91f83rCuhML5e
+         Zs14uW8gA0pOYZmTF7VB5gqtcUMEmiVTTm+ufUw+6ZjrROCkwrKC9zSB5y+iBY1CmQ
+         LX3sl7YEW6lLg==
+Received: by mail.trueanalyze24.com for <linux-nfs@vger.kernel.org>; Wed,  2 Feb 2022 09:28:42 GMT
+Message-ID: <20220202084511-0.1.1h.h5kz.0.lkjzhpzpx9@trueanalyze24.com>
+Date:   Wed,  2 Feb 2022 09:28:42 GMT
+From:   "Mateusz Talaga" <mateusz.talaga@trueanalyze24.com>
+To:     <linux-nfs@vger.kernel.org>
+Subject: Prezentacja
+X-Mailer: mail.trueanalyze24.com
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "inoguchi.yuki@fujitsu.com" <inoguchi.yuki@fujitsu.com>
-Cc:     "'bfields@fieldses.org'" <bfields@fieldses.org>,
-        "'Trond Myklebust'" <trondmy@hammerspace.com>,
-        "'linux-nfs@vger.kernel.org'" <linux-nfs@vger.kernel.org>,
-        "'mbenjami@redhat.com'" <mbenjami@redhat.com>
-Subject: RE: client caching and locks
-In-reply-to: =?utf-8?q?=3COSZPR01MB7050DF6073AB2EC4F82A589AEF279=40OSZPR01MB?=
- =?utf-8?q?7050=2Ejpnprd01=2Eprod=2Eoutlook=2Ecom=3E?=
-References: <20201001214749.GK1496@fieldses.org>,
- <CAKOnarndL1-u5jGG2VAENz2bEc9wsERH6rGTbZeYZy+WyAUk-w@mail.gmail.com>,
- <20201006172607.GA32640@fieldses.org>,
- <164066831190.25899.16641224253864656420@noble.neil.brown.name>,
- <20220103162041.GC21514@fieldses.org>, =?utf-8?q?=3COSZPR01MB7050F9737016E8?=
- =?utf-8?q?E3F0FD5255EF4A9=40OSZPR01MB7050=2Ejpnprd01=2Eprod=2Eoutlook=2Ecom?=
- =?utf-8?q?=3E=2C?=
- <03e4cc01e9e66e523474c10846ee22147b78addf.camel@hammerspace.com>,
- <20220104153205.GA7815@fieldses.org>,
- <1257915fc5fd768e6c1c70fd3e8e3ed3fa1dc33e.camel@hammerspace.com>, 
- =?utf-8?q?=3COSZPR01MB7050C5098D47514FFEC2DA82EF4B9=40OSZPR01MB7050=2Ejpnpr?=
- =?utf-8?q?d01=2Eprod=2Eoutlook=2Ecom=3E=2C?=
- <20220105220353.GF25384@fieldses.org>,
- <164176553564.25899.8328729314072677083@noble.neil.brown.name>, =?utf-8?q??=
- =?utf-8?q?=3COSZPR01MB7050A3B0D15D38420532CD31EF579=40OSZPR01MB7050=2Ejpnpr?=
- =?utf-8?q?d01=2Eprod=2Eoutlook=2Ecom=3E=2C?=
- <164245842205.24166.5326728089527364990@noble.neil.brown.name>, =?utf-8?q??=
- =?utf-8?q?=3COSZPR01MB7050DF6073AB2EC4F82A589AEF279=40OSZPR01MB7050=2Ejpnpr?=
- =?utf-8?q?d01=2Eprod=2Eoutlook=2Ecom=3E?=
-Date:   Wed, 02 Feb 2022 15:44:14 +1100
-Message-id: <164377705404.1660.1273338182990772730@noble.neil.brown.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 02 Feb 2022, inoguchi.yuki@fujitsu.com wrote:
-> > I don't think that case adds anything interesting.  When the file is
-> > closed, the lock is dropped.  If there were any writes without a
-> > delegation, then the changeid isn't a reliable indication that no other
-> > client wrote.  So the cache must be dropped.
-> 
-> I've understood it. 
-> 
-> I've made the patch based on your idea. It invalidates the cache
-> after a client without write-delegation sends CLOSE call.
-> My Open MPI test program confirmed that this fix resolves the problem.
-> 
-> The patch is as follows. What do you think?
+Dzie=C5=84 dobry!
 
-This is a bit too heavy-handed.  It invalidates too often.
+Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
+=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
+zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
 
-I would make 2 changes.
- 1/ invalidate when opening a file, rather than when closing.
-   This fits better with the understanding of close-to-open consistency
-   that we flush writes when closing and verify the cache when opening
- 2/ I would be more careful about determining exactly when the
-   invalidation might be needed.
+Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
+=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
+dostaw.
 
-In nfs_post_op_updatE_inode() there is the code:
+Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
+nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
+ co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
 
-	if ((fattr->valid & NFS_ATTR_FATTR_CHANGE) != 0 &&
-			(fattr->valid & NFS_ATTR_FATTR_PRECHANGE) == 0) {
-		fattr->pre_change_attr = inode_peek_iversion_raw(inode);
-		fattr->valid |= NFS_ATTR_FATTR_PRECHANGE;
-	}
+Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
+=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
+zania w Pa=C5=84stwa firmie.
 
-This effectively says "if we don't have the PRECHANGE number, then take
-the current version number, and pretend that we do have the PRECHANGE
-number.
 
-NFSv3 can provide a PRECHANGE number because the protocol allows
-pre/post attrs to be atomic.  NFSv4 never sets PRECHANGE because the
-protocol never guarantees atomicity of pre/post attrs (For files).
-
-So it is at the point in the code where the cache on the client might
-become inconsistent with the data on the server.  This is not a serious
-inconsistency and doesn't need to be resolved immediately.  But I think
-it should be handled the next time some application opens the file.
-
-I think that when this branch of code is run, we should set a flag on
-the inode "NFS_ATTR_MIGHT_BE_INCONSISTENT" (or something like that).
-Then when we open a file, if that flag is set then we clear it and set
-NFS_INO_INVALID_DATA and maybe NFS_INO_REVAL_PAGECACHE (I don't recall how
-those two relate to each other).
-
-I assume that code doesn't end up running when you write to a file for
-which you have a delegation, but I'm not at all certain - we would have
-to check.
-
-NeilBrown
+Z powa=C5=BCaniem,
+Mateusz Talaga
