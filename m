@@ -2,59 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A95664A6E18
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 10:50:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BA56A4A7087
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 13:13:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239810AbiBBJu2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Feb 2022 04:50:28 -0500
-Received: from mail.trueanalyze24.com ([149.154.157.156]:58504 "EHLO
-        mail.trueanalyze24.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232164AbiBBJu2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 04:50:28 -0500
-Received: by mail.trueanalyze24.com (Postfix, from userid 1001)
-        id 33ACB43855; Wed,  2 Feb 2022 10:31:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trueanalyze24.com;
-        s=mail; t=1643795404;
-        bh=EGenFkmmv/iHCwB4AbTzX8IXCMu1xRW+9eep7HJGZMM=;
-        h=Date:From:To:Subject:From;
-        b=tWB+6pCD4sTlaBxBmC1/RhES8Pev2T3ilCfCdCI/bZp4AfFXmf6XGA4cPd/oJ26NB
-         vrkMLK61UqAUZoa838lNC4wIHS9YZnVjHPLvqeCoeKCut8nlIEMs+EExD7eDcIJ2rw
-         SzvbKTpiz3VWVS5y5AYjZllG+YsRGfVuwgMlRehV3xARKUEU5xFiONjszs9fOuM0H0
-         2cOhnmxAaXkxw1tdB7G4ONo1pKwXuEug4GxY+GaU1KcVpMrY+UvWB91f83rCuhML5e
-         Zs14uW8gA0pOYZmTF7VB5gqtcUMEmiVTTm+ufUw+6ZjrROCkwrKC9zSB5y+iBY1CmQ
-         LX3sl7YEW6lLg==
-Received: by mail.trueanalyze24.com for <linux-nfs@vger.kernel.org>; Wed,  2 Feb 2022 09:28:42 GMT
-Message-ID: <20220202084511-0.1.1h.h5kz.0.lkjzhpzpx9@trueanalyze24.com>
-Date:   Wed,  2 Feb 2022 09:28:42 GMT
-From:   "Mateusz Talaga" <mateusz.talaga@trueanalyze24.com>
-To:     <linux-nfs@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.trueanalyze24.com
+        id S239241AbiBBMNr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Feb 2022 07:13:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124]:29622 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S231929AbiBBMNq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 07:13:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1643804026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7gaU2Z9cpWAmzMDzFx0jFF5c+fnzCN369K/gfMxI7y8=;
+        b=a29Oz0Vzar3WG2Hc7NeZk7ZUy38uL4Fg1LI9gIGkize47N83u0sjUcDkW+CD5db2x4KGdg
+        aOCd9gD+z+1OkLj7+SMVFWUoPIBxUF5h6j5IAXQm2IeOOGGjfYf3Cg+on4Lqy2DmJP4cTs
+        ZJTVID+FviB96xN2aKgQ8soEsrWGD0o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-651-7oS90jDmPJG3y7k8eFN1eg-1; Wed, 02 Feb 2022 07:13:45 -0500
+X-MC-Unique: 7oS90jDmPJG3y7k8eFN1eg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A4431006AA3;
+        Wed,  2 Feb 2022 12:13:44 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CC1772376E;
+        Wed,  2 Feb 2022 12:13:43 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Simon Kirby" <sim@hostway.ca>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: Cache flush on file lock
+Date:   Wed, 02 Feb 2022 07:13:42 -0500
+Message-ID: <C5E4C867-7156-453E-B22C-75FAF5246D92@redhat.com>
+In-Reply-To: <20220202014111.GA7467@hostway.ca>
+References: <20220202014111.GA7467@hostway.ca>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry!
+On 1 Feb 2022, at 20:41, Simon Kirby wrote:
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+> Hello!
+>
+> I noticed high traffic in an NFS environment and tracked it down to some
+> users who moved SQLite databases over from previously-local storage.
+>
+> The usage pattern of SQLite here seems particularly bad on NFSv3 clients,
+> where a combination of F_RDLCK to F_WRLCK upgrading and locking polling
+> is entirely discarding the cache for other processes on the same client.
+>
+> Our load balancing configuration typically sticks most file accesses to
+> individual hosts (NFS clients), so I figured it was time to re-evaluate
+> the status of NFSv4 and file delegations here, since the files could be
+> delegated to one client, and then maybe the page cache could work as it
+> does on a local file system. It turns out this isn't happening...
+>
+> First, it seems that SQLite always opens the file O_RDWR. knfsd does not
+> seem to create a delegation in this case; I see it only for O_RDONLY.
+>
+> Second, it seems that do_setlk() in fs/nfs/file.c always nfs_zap_caches()
+> unless there's a ->have_delegation(inode, FMODE_READ). That condition has
+> changed slightly over the years, but the basic concept of invalidating
+> the cache in do_setlk has been around since pre-git.
+>
+> Since it seems like there's the intention to preserve cache with a read
+> delegation, I wrote a simplified testcase to simulate SQLite locking.
+>
+> With the open changed to O_RDONY (and F_RDLCK only), the v3 mount and
+> server show "POSIX ADVISORY READ" in /proc/locks. The v4 mount shows
+> "DELEG ACTIVE READ" on the server and "POSIX ADVISORY READ" on the
+> client.
+>
+> With O_RDONLY, I can see that cache is zapped following F_RDLCK on v3 and
+> not zapped on v4, so this appears to be working as expected.
+>
+> With O_RDWR restored, both server and client show "POSIX ADVISORY READ"
+> with v3 or v4 mounts, and since there is no read delegation, the cache
+> gets zapped.
+>
+> RFC 8881 10.4.2 seems to talk about locking when an OPEN_DELEGATE_WRITE
+> delegation is present, so it seems this was perhaps intended to work.
+>
+> How far off would we be from write delegations happening here?
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+The linux server doesn't have write delegations implemented yet, I suspect
+that's why you're not seeing them.
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+Ben
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
-
-
-Z powa=C5=BCaniem,
-Mateusz Talaga
