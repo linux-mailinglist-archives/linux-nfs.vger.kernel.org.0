@@ -2,66 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 829D54A77C2
-	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 19:19:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 402514A77F3
+	for <lists+linux-nfs@lfdr.de>; Wed,  2 Feb 2022 19:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346592AbiBBSTW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Feb 2022 13:19:22 -0500
-Received: from dfw.source.kernel.org ([139.178.84.217]:45492 "EHLO
-        dfw.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346577AbiBBSTS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 13:19:18 -0500
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S235259AbiBBSaW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Feb 2022 13:30:22 -0500
+Received: from smtp-out2.suse.de ([195.135.220.29]:36340 "EHLO
+        smtp-out2.suse.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S233050AbiBBSaW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 13:30:22 -0500
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BE58618CF;
-        Wed,  2 Feb 2022 18:19:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C423EC340EC;
-        Wed,  2 Feb 2022 18:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643825957;
-        bh=cbxZgb2YNmSAHnZX1h4JYthsSFVuHb3TbalabBodBE0=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=E7EpREp8z/ttX5Nq2dAwfw5dtmFcR/8v5BKASkQvttNFUu3Jq/4oWkatnYeQUMhIN
-         xNwm1Fnz5CwMymJKwKQvOh1lZBR7ms9lGDmc9VdjbyPDrS21ENf2oskCbLDvEI4zla
-         fmoi7CnW7gF6w/k9tfmEDId9rEWyQEBDl/fMgHKAbJ2jgUtgNWqoDXG5eIxxn3Aa4d
-         cg74BZiafok+dYfAtAZ+GYLWlW0MlLIZFnZtFI2W/T1e4YD91b52XkQ0Whqv2ai+ct
-         LUsB+0+pULEgQQ2Nk6cK/wD6hliuoBHb6r5/TPObMrNG+igtkN3CriqB2Z48XmBC6g
-         REHFhFMz2+6zw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id B2F87E5D07E;
-        Wed,  2 Feb 2022 18:19:17 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd changes for 5.17-rc
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <F1000CFA-4575-4BBA-8640-4BF09A3F0811@oracle.com>
-References: <F1000CFA-4575-4BBA-8640-4BF09A3F0811@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <F1000CFA-4575-4BBA-8640-4BF09A3F0811@oracle.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.17-1
-X-PR-Tracked-Commit-Id: ab451ea952fe9d7afefae55ddb28943a148247fe
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 88808fbbead481aedb46640a5ace69c58287f56a
-Message-Id: <164382595772.967.9681331585981638857.pr-tracker-bot@kernel.org>
-Date:   Wed, 02 Feb 2022 18:19:17 +0000
+        by smtp-out2.suse.de (Postfix) with ESMTPS id DAA3B1F37C;
+        Wed,  2 Feb 2022 18:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1643826620; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ofv7V/MQVvyAB2zyifMmag7SP5keFFOIeiBWbFRtzaU=;
+        b=JNMlzSCbec767vPRfVpOmFvG5C2r21R69LEV1Qn56i6rTVQ3Lwth4L9j7j0MV/VkVj8srM
+        5MskiOlqBcuDF6khSSZt32NSIcnX+jKC4Mkav605vBUWT7M4YwbHu9GRqTJzO3nc5H9Gkt
+        uZSpqMnA6eOZMJ7PzgqTzom0CvVqYXY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1643826620;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ofv7V/MQVvyAB2zyifMmag7SP5keFFOIeiBWbFRtzaU=;
+        b=7+W85VwULlaftlUvRleNHXP3k2CPXLAWirjTWTR285341BYHOdCH9dRQqyfdO3p5IuWxO/
+        o45sC6oCwTlXfOBw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5419C13E25;
+        Wed,  2 Feb 2022 18:30:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 2dCVBrzN+mG6awAAMHmgww
+        (envelope-from <ematsumiya@suse.de>); Wed, 02 Feb 2022 18:30:20 +0000
+Date:   Wed, 2 Feb 2022 15:30:17 -0300
+From:   Enzo Matsumiya <ematsumiya@suse.de>
 To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Bruce Fields <bfields@fieldses.org>,
+Cc:     "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        CIFS <linux-cifs@vger.kernel.org>
+Subject: Re: [LSF/MM/BPF TOPIC][LSF/MM/BPF ATTEND] TLS handshake for
+ in-kernel consumers
+Message-ID: <20220202183017.ryv43nebh4ane42u@cyberdelia>
+References: <3a066f81-a53d-4d39-5efb-bd957443e7e2@suse.de>
+ <C4E94EAA-7452-4D69-9C06-E5AD5B7A1F14@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <C4E94EAA-7452-4D69-9C06-E5AD5B7A1F14@oracle.com>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Wed, 2 Feb 2022 16:32:22 +0000:
+On 02/02, Chuck Lever III wrote:
+>[ ... adding NFS and CIFS ... ]
+>
+>> Required attendees:
+>>
+>> Chuck Lever
+>> James Bottomley
+>> Sagi Grimberg
+>> Keith Busch
+>> Christoph Hellwig
+>> David Howells
+>
+>Anyone from the CIFS team? Enzo? How about Dave Miller?
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.17-1
+I'll be attending representing the CIFS side. I hope to have my
+prototype more solid and public by then.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/88808fbbead481aedb46640a5ace69c58287f56a
 
-Thank you!
+Cheers,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Enzo
