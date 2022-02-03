@@ -2,44 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 944DD4A8E94
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 21:38:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8594C4A8ED0
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 21:39:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355536AbiBCUiA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Feb 2022 15:38:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57960 "EHLO
+        id S1355731AbiBCUjB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Feb 2022 15:39:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355503AbiBCUf4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Feb 2022 15:35:56 -0500
+        with ESMTP id S1355013AbiBCUhA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Feb 2022 15:37:00 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90C74C061401;
-        Thu,  3 Feb 2022 12:34:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ECA0C06134C;
+        Thu,  3 Feb 2022 12:34:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3078161B0D;
-        Thu,  3 Feb 2022 20:34:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBCE1C340EB;
-        Thu,  3 Feb 2022 20:34:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5193261B0D;
+        Thu,  3 Feb 2022 20:34:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEA61C340EF;
+        Thu,  3 Feb 2022 20:34:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643920493;
-        bh=mYXwYZjv48YdTVJBj6NFznd2NYDFoaanaF1gYz+8OA8=;
+        s=k20201202; t=1643920496;
+        bh=zfKL74C9P9xxo2vZoT+VWgv6AeaT2EL9L1gQ53CIxTw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQWlU0GBGx8ySkhRV51MDtz/LcPIjjeWYibvnt05o8A0ZMEd0OVQaAFs5TWYQ/QBY
-         zEEdwJUBdhG5bydERDyqzo+KjIGKX2N1lRTTRvpXCr0DuK0fGpHhkljcnV7hWQBgfN
-         sSL/Q0HQxO95jF6Hf3ExDJKzKy3TaZPXkIf55JZC5iXMQNeovZ99gq6tyf353qlaMQ
-         q67q6Y1G21PKlIlFk51zf6AQ7g3k8XUtm0M5WDrQYMLre/o4zHBcwywIcaqz0jldY6
-         AUarhZ5sCV84fghY1W2EDxLw1EZftS9mjzBBAAhC1mJBZoi4P2loXwu78HZQ97Aat9
-         u7ddkXX21LQPA==
+        b=a3gmS97/FDXOXTLfHFAIkhea3OwpGHCaHQkTn0Qq2BFkEUUPgkiWljERQAV06h20f
+         gXlawpcPX9iZnFHodM2ULEp72OtuL835qPsQHYGwdU/y4POobXeFgM6u1PJEJHLiXb
+         lH4dRfmLFzVPIMCM2jMYek7A0+8mmm2c601vDaQ5mZsuQPA+rM8INFmHtvX3PSX7mC
+         plfB6oI5KB2ZI8stFLnBt1wNIsDkUcy14v6YFUO944wsdekiXOcAFeHn9yLvAMizQG
+         YDwEkWarxPyXV2aRhIgf2r0KJsaHfl5Squ4msHod+Fq2SNimDhteaiyIsxCNarzwPv
+         Z/e1GBzlA+2eQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        rtm@csail.mit.edu, Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, anna.schumaker@netapp.com,
+Cc:     Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 04/25] NFSv4.1: Fix uninitialised variable in devicenotify
-Date:   Thu,  3 Feb 2022 15:34:25 -0500
-Message-Id: <20220203203447.3570-4-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 06/25] NFSv4 remove zero number of fs_locations entries error check
+Date:   Thu,  3 Feb 2022 15:34:27 -0500
+Message-Id: <20220203203447.3570-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220203203447.3570-1-sashal@kernel.org>
 References: <20220203203447.3570-1-sashal@kernel.org>
@@ -51,104 +52,48 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit b05bf5c63b326ce1da84ef42498d8e0e292e694c ]
+[ Upstream commit 90e12a3191040bd3854d3e236c35921e4e92a044 ]
 
-When decode_devicenotify_args() exits with no entries, we need to
-ensure that the struct cb_devicenotifyargs is initialised to
-{ 0, NULL } in order to avoid problems in
-nfs4_callback_devicenotify().
+Remove the check for the zero length fs_locations reply in the
+xdr decoding, and instead check for that in the migration code.
 
-Reported-by: <rtm@csail.mit.edu>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/callback.h      |  2 +-
- fs/nfs/callback_proc.c |  2 +-
- fs/nfs/callback_xdr.c  | 18 +++++++++---------
- 3 files changed, 11 insertions(+), 11 deletions(-)
+ fs/nfs/nfs4state.c | 3 +++
+ fs/nfs/nfs4xdr.c   | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfs/callback.h b/fs/nfs/callback.h
-index 6a2033131c068..ccd4f245cae24 100644
---- a/fs/nfs/callback.h
-+++ b/fs/nfs/callback.h
-@@ -170,7 +170,7 @@ struct cb_devicenotifyitem {
- };
- 
- struct cb_devicenotifyargs {
--	int				 ndevs;
-+	uint32_t			 ndevs;
- 	struct cb_devicenotifyitem	 *devs;
- };
- 
-diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
-index be546ece383f5..b44219ce60b86 100644
---- a/fs/nfs/callback_proc.c
-+++ b/fs/nfs/callback_proc.c
-@@ -353,7 +353,7 @@ __be32 nfs4_callback_devicenotify(void *argp, void *resp,
- 				  struct cb_process_state *cps)
- {
- 	struct cb_devicenotifyargs *args = argp;
--	int i;
-+	uint32_t i;
- 	__be32 res = 0;
- 	struct nfs_client *clp = cps->clp;
- 	struct nfs_server *server = NULL;
-diff --git a/fs/nfs/callback_xdr.c b/fs/nfs/callback_xdr.c
-index 79ff172eb1c81..1725079a05276 100644
---- a/fs/nfs/callback_xdr.c
-+++ b/fs/nfs/callback_xdr.c
-@@ -259,11 +259,9 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 				void *argp)
- {
- 	struct cb_devicenotifyargs *args = argp;
-+	uint32_t tmp, n, i;
- 	__be32 *p;
- 	__be32 status = 0;
--	u32 tmp;
--	int n, i;
--	args->ndevs = 0;
- 
- 	/* Num of device notifications */
- 	p = xdr_inline_decode(xdr, sizeof(uint32_t));
-@@ -272,7 +270,7 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 		goto out;
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 4bf10792cb5b1..cbeec29e9f21a 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2104,6 +2104,9 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
  	}
- 	n = ntohl(*p++);
+ 
+ 	result = -NFS4ERR_NXIO;
++	if (!locations->nlocations)
++		goto out;
++
+ 	if (!(locations->fattr.valid & NFS_ATTR_FATTR_V4_LOCATIONS)) {
+ 		dprintk("<-- %s: No fs_locations data, migration skipped\n",
+ 			__func__);
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 9f8bd45379e72..e2f0e3446e22a 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -3680,8 +3680,6 @@ static int decode_attr_fs_locations(struct xdr_stream *xdr, uint32_t *bitmap, st
+ 	if (unlikely(!p))
+ 		goto out_eio;
+ 	n = be32_to_cpup(p);
 -	if (n <= 0)
-+	if (n == 0)
- 		goto out;
- 	if (n > ULONG_MAX / sizeof(*args->devs)) {
- 		status = htonl(NFS4ERR_BADXDR);
-@@ -331,19 +329,21 @@ __be32 decode_devicenotify_args(struct svc_rqst *rqstp,
- 			dev->cbd_immediate = 0;
- 		}
- 
--		args->ndevs++;
--
- 		dprintk("%s: type %d layout 0x%x immediate %d\n",
- 			__func__, dev->cbd_notify_type, dev->cbd_layout_type,
- 			dev->cbd_immediate);
- 	}
-+	args->ndevs = n;
-+	dprintk("%s: ndevs %d\n", __func__, args->ndevs);
-+	return 0;
-+err:
-+	kfree(args->devs);
- out:
-+	args->devs = NULL;
-+	args->ndevs = 0;
- 	dprintk("%s: status %d ndevs %d\n",
- 		__func__, ntohl(status), args->ndevs);
- 	return status;
--err:
--	kfree(args->devs);
--	goto out;
- }
- 
- static __be32 decode_sessionid(struct xdr_stream *xdr,
+-		goto out_eio;
+ 	for (res->nlocations = 0; res->nlocations < n; res->nlocations++) {
+ 		u32 m;
+ 		struct nfs4_fs_location *loc;
 -- 
 2.34.1
 
