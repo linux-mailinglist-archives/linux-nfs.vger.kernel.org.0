@@ -2,217 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 067654A7C80
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 01:13:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E757D4A7E66
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 04:40:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348392AbiBCANN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Feb 2022 19:13:13 -0500
-Received: from sonic317-39.consmr.mail.ne1.yahoo.com ([66.163.184.50]:41107
-        "EHLO sonic317-39.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1348372AbiBCANJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 19:13:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1643847188; bh=mhX/VBeW0lVGdMxFK2mQQuDfWQxxDoChypEujsb8qRw=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=feNXvHdiYkhkplp3/Gw+eQZATI084WCoOfRBoUZEdvZwdPaCMmpXk3ceAge8BdDX4mfppPzltp9bi52jY0TFhwt4cl7rfSNVKzX5egiejx1jMbSGXSYb4QpbiN1ZsK/vibPbhyPYhJfZuN9KHpS+NVISBPT/xNdJ8zu32mwhf91WDJSUcTP2pfd3tcX2BxV8HUvqqUzPbBgAGKbDkAyhdZNouFKlHaIeChOJk4DZpgo0SpQl3b8S3AlIhZ68BCL70qnkTyqDB592hN1iumvvnfg25c5cm+UiuPpZ5f4DNTWpBngCWUpKEpgwVZ1AMYnb1GmNDzkD53SbBSx/q0mTCQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1643847188; bh=r9SzrBljv72NJrqBADS7VSqK3WhopGtY2ltSCGBMb31=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=Za4WC27T69ox4znVlAOM8cKtrbyuN719f8UGrjKZIeXPvVBNWp9DsWsTQEGScsTGaCLErJlU6V9+j3Ph8XxcK2ZOO9Ao8jadu7WcxEsoUS03NIyiglqSp4R5+0S1c4f8aRP2LTkO65iakhlHh7kHmvSToOGG8hpl7bNafYxdWv/OahIFWmwxCEm0pRYrnVDUgj2dzjtH8pKxN5lPrLCgKsif7kfuLLx70YjoSMiP+dNWXk1RlzE0dOp5s2KAcIfYBTywJam2hjd3FuOIfDc3zc1K+sF+9JK7bErjv8teXxf2V/xSfL33x3aw6boF7XYKC4vnofgCUKbwvjqA/f2jaA==
-X-YMail-OSG: j233Q3IVM1lBunzWVszbLWqiiveKFLN5.xMfOLuOWlGuVTNyuDujHlVU7BCUPF4
- I_INXX3Ec1YarRHvfwsz1OLQs8GNG7M.x2HSJM.oDiauU7WmubKBItuNrbmt68ZaMcqsDWObiS12
- 4kAzb_JC2wxMkW1FKY_fW7uW2gClSWvrBh6Tv.P0Y4sGj6_dJs3ZLEF0X2rK8NIvBCFN_ON1C8LX
- mIaXywvNVbPUoZuNbCrLvIn0r.m0VjLOUeLejCmW940S1KAmD34fb92qXAMu4M_xKaLbbdIKWMAd
- KOx9iIdV2yZGDze6LMHmQTJadN5lV8DnHMFCZocK82AhB.7mfOnOycSwx1xsnBE41awk79OpapzQ
- rOLFmgvtHxLeJN1td2gq62n_quq3wNTln5TmC79H3gRAV6ihT7x4BlXWz0JMX90V4VU.116Tz7Gy
- cbZAu5ogA.TMH93HJQNmeAVx8dhp201V5RWxUQNCNkzwe.16klKn2ARdZ7NYZb6hwM2G_AiRp269
- K6uWYx3.9SZySL2Pkdy5_1IlR0kKjft1llXljqfdLgupsg2eioxeKR1iX4qpp8al9yo.3_Mn.BoE
- fhpwXay9zqdCv7efQ._diUSMNDSvvGhjr4GTuAXew_7bxwA7jEQCw.HXiV0EsQ6AhivqGh6qu_Ef
- v_mBocGYwtFh6sCHZGbnWbCE5NnwZRtgKYq_bA8Pcu.3bs00OIx9J1KM3LLN7fulGeSKcTER6aG6
- BQPwp0.ZjP79FVM0TIfMANbCcFqM4JJnaBasDxuuUQDdGCq394OmRdrwWbEiAPhiA0SFG6yzRwuz
- 9w85ZN3G2o.07I0GkqF_Lprp7m0IRTnLFQWtBRRTWyxz2Iqs_yAATtRBknZxN45f4VnBNw3TIcAF
- n0vZIKu.nIbvjsbVcO7fV2qleKUYCt1fKa37p.UvH_bLp_fiEvSN_q4aTwiA4p2mIx1TCuMSLqH1
- Cv2yeZ_UMuPy0ZgHKEYu9_GvUyPjaKzMcYLUAV9tac2uYMQFKNxo9tbwoI0OLL4f3RvhUIOqk7bf
- 5vxRbCi69s4io2dE6aS2GFAW3I34RignBPTesRsZhWb2KhPurmUZYFACwoMCtP4Bz.9gcNLkYYTe
- BzZWfY_qXOmazarHAQ3o9vnGVq4Co10qhIlu0fFzhfLzDxmXnE7kG_yYKQh__yNxyaQ9Sso1we6n
- GgNHRuLKTm.BX7UHeAfF5Ddp39tlX12kgC0q7lSgfrzuWQ6SF9mQY6hqTO.y0df706zQD95z2u56
- 1RNvppIt0LBlz.YNbKHKCPU0ST6zYk9mHXU8Du5Sju8I0yWaA2dibH5slGmSqy1u1waVOfhpivDR
- EQHnQ9MLnp2aBIys44zP9giM_dbbw12Y09a564z4dzZBpTZEmSHsCmUdfqJFbXDFs7RSCyrvhadT
- WnXS4woug.bOf63zyiHeLAjUgh9plIhKJbdihUKgVMy9kZq.h5ppW7uCHnTFjohYBEDnNCDHoLpU
- Cdzgw2x1FrXdsW_V79iWFH4pCmNUZ8ZbHxcvGgEdPgiei5Mo2pALyuVzeWpbE5bvI.1BGt94MKpY
- jqhjMiEFDRnb6NVyBsq5OUVQa12e2MsFARcK9zFclwV0aThYj2DKUhyUZ72e2uHjYK6QOfu7jaL9
- SkX8HI5AbFrgSToR36V4eKpTh7j7mBc4khtYaTMDbYRXBh_lhNKiFTDMOPOu255S.jt2hmlSbiUz
- 1EGCJXVzy0C2kghR55j3q6b_IlY_8VZ1r8.4L4Khk0RJE1wulfDz0wTuuSsGtUbQMKgpEm8Nia6g
- 0I4kB.8WxYV9w8YKDvM8lSQO66JH6icVMDV9FXLQM72iIKe2wYrvLCwqG0enSb7oUKTYwrGH1tqB
- 0WwQZ.BkovEMctxaMLGszdeSwOcwi.061ymQ67rrCTNla_ESWCaUOeyaZHaTBxcJSXOGRDw8KNut
- e6BTp5nJ9M86Ng8QS4KGwS_wa.ECbeH7NPjpPKYEXu0VaVxsJk1ImI0I7f.a0jnS5OUtiTFtw6xY
- n74KFvgHqFlKSONWNPY28n9JSvxh3CC6EidZuIqILD2LLrThV_2Phpxz6Zrn3.1cgocBTXlqUIYY
- X5LIC2P7PBPM6kmaimpZy6spGhNj8kLsXGbGGtRw6T8A8GY8tqrlhOorlL655Sdqj_BqcjL7Maii
- dYTpHB9bjjlOOg.esSn3g5baGoOKPK7l2Y09f5snqH9.TvlbLXxzlggTQIZ8mYW963g0KXjcX8.t
- BfEK2FTGarmwggL95.LXHE3WUEkBdU_gPcGRz0dMTTNrOoItfpUA-
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic317.consmr.mail.ne1.yahoo.com with HTTP; Thu, 3 Feb 2022 00:13:08 +0000
-Received: by kubenode539.mail-prod1.omega.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID b85f0384c0ae4c0e2c35d3e6082c3b09;
-          Thu, 03 Feb 2022 00:13:04 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-To:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        sds@tycho.nsa.gov, linux-kernel@vger.kernel.org,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v32 17/28] LSM: Use lsmcontext in security_inode_getsecctx
-Date:   Wed,  2 Feb 2022 15:53:12 -0800
-Message-Id: <20220202235323.23929-18-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220202235323.23929-1-casey@schaufler-ca.com>
-References: <20220202235323.23929-1-casey@schaufler-ca.com>
+        id S235611AbiBCDkw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Feb 2022 22:40:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54172 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S231564AbiBCDkv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Feb 2022 22:40:51 -0500
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A68EBC061714;
+        Wed,  2 Feb 2022 19:40:51 -0800 (PST)
+Received: by mail-lf1-x130.google.com with SMTP id z4so3221308lft.3;
+        Wed, 02 Feb 2022 19:40:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uyEDTT7UWcx0aQYR+EyAeRErzTRFuEJTWicokIyg/X8=;
+        b=Cp35ItJkrFPCC1+ZfrNG4XN0hg6G4Yoy2CzfSRy2FWJCu4ia08qfUbOlOIeGcSjDK5
+         yVYxu3JN/E8ii1sk5h/UmG3QBO085GTVOSo6/DdsGFUwfV0KpwW4Gz8jTQsDVfSIRP7A
+         ClHkgzujvx8Gsi9gIufTJA9oaCJJafzXlHOkWX8L8PE2dwpNi6WRoO9fNiJRKoMssL35
+         pJqvekbdwqSOkUfPGsu07XLlvEDoeNyuLMZTexRwkfUHKX64IVjLsu/BWWQG4bDHnjhP
+         QLxwOaDWplkfF1MbfLZAxJlfeYWictcUCYDrgmug8bjBMXQNSHp6gVQKiX6eqoaCx8Xh
+         Z3Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uyEDTT7UWcx0aQYR+EyAeRErzTRFuEJTWicokIyg/X8=;
+        b=0aYJfSvMTbex6Q1bTvlJB+cHGbr8ijNltl1y8zIRl9bX42Tub7mIhaoSd4hW7z0O+/
+         WMJKgtShGhdLH1RIByh8WGJPtsgQiCxFeME0LewQkZeGpBkeKXIOiz2/1F5mdsXRZ++1
+         rUF7amC65kWivFtiy1wmIGTddCkCAG9NVLnqKEJomMeIsdWyvFiV5D6QuebGvhkZl0il
+         r7ujmZaGNyxhFrAn6Zi3D8ONZL6vW/wLpWeWO689f1O8VHibt3HcqasXsSKk/h53fae1
+         B+ZRSc+UbQcTO+sE9g+c6M0DH2xZJJRF+WF60+z/wVRLcpJqvHcELuDGOqvU3n+Rdz36
+         J7Cg==
+X-Gm-Message-State: AOAM531g+xBcA6ZwhuhD7bJSptxgctDfV29m9hH5B6eygp0e/ETeO+ky
+        Z3ztbeuyEf+8mXuqIxzJYR+y/3CMTpQbdawJUFgcUa2R
+X-Google-Smtp-Source: ABdhPJzPg+zSnT0SKrtipmoLp2+mt0UbTrXwpd0OYsdp8nW2Rksld9GezBee71wcQB0o2Ra72WaOst/UsAeYF0J+Cn8=
+X-Received: by 2002:a19:ae04:: with SMTP id f4mr24353648lfc.667.1643859649878;
+ Wed, 02 Feb 2022 19:40:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <3a066f81-a53d-4d39-5efb-bd957443e7e2@suse.de> <C4E94EAA-7452-4D69-9C06-E5AD5B7A1F14@oracle.com>
+In-Reply-To: <C4E94EAA-7452-4D69-9C06-E5AD5B7A1F14@oracle.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 2 Feb 2022 21:40:39 -0600
+Message-ID: <CAH2r5msVxenATfo+7iu7kjsQXXXT0dq2jp2JSxrY5Qm2PEde5w@mail.gmail.com>
+Subject: Re: [LSF/MM/BPF TOPIC][LSF/MM/BPF ATTEND] TLS handshake for in-kernel consumers
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     "lsf-pc@lists.linux-foundation.org" 
+        <lsf-pc@lists.linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the security_inode_getsecctx() interface to fill
-a lsmcontext structure instead of data and length pointers.
-This provides the information about which LSM created the
-context so that security_release_secctx() can use the
-correct hook.
+This is an interesting question - and got me thinking about whether
+also could be helpful to the critical question we have been asked
+about multiple times for SMB, about how to get QUIC in the kernel (see
+the various Storage Developer Conference presentations etc), while
+putting as much as possible of the session establishment in userspace
+accessed via upcalls.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Cc: linux-nfs@vger.kernel.org
----
- fs/nfsd/nfs4xdr.c        | 23 +++++++++--------------
- include/linux/security.h |  5 +++--
- security/security.c      | 13 +++++++++++--
- 3 files changed, 23 insertions(+), 18 deletions(-)
+I don't mind discussing this in detail at LSF (or at SambaXP a few
+weeks after LSF), and since there are some SMB servers that support
+QUIC already we could probably do at least some prototyping if there
+is overlap between these two efforts.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index fedc4b0292d6..4b77e6a13e78 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2713,11 +2713,11 @@ nfsd4_encode_layout_types(struct xdr_stream *xdr, u32 layout_types)
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- {
- 	__be32 *p;
- 
--	p = xdr_reserve_space(xdr, len + 4 + 4 + 4);
-+	p = xdr_reserve_space(xdr, context->len + 4 + 4 + 4);
- 	if (!p)
- 		return nfserr_resource;
- 
-@@ -2727,13 +2727,13 @@ nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
- 	 */
- 	*p++ = cpu_to_be32(0); /* lfs */
- 	*p++ = cpu_to_be32(0); /* pi */
--	p = xdr_encode_opaque(p, context, len);
-+	p = xdr_encode_opaque(p, context->context, context->len);
- 	return 0;
- }
- #else
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- { return 0; }
- #endif
- 
-@@ -2830,9 +2830,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	int err;
- 	struct nfs4_acl *acl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	struct lsmcontext scaff; /* scaffolding */
--	void *context = NULL;
--	int contextlen;
-+	struct lsmcontext context = { };
- #endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
-@@ -2890,7 +2888,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						       &context);
- 		else
- 			err = -EOPNOTSUPP;
- 		contextsupport = (err == 0);
-@@ -3310,8 +3308,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
-+		status = nfsd4_encode_security_label(xdr, rqstp, &context);
- 		if (status)
- 			goto out;
- 	}
-@@ -3332,10 +3329,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context) {
--		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
--		security_release_secctx(&scaff);
--	}
-+	if (context.context)
-+		security_release_secctx(&context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(acl);
- 	if (tempfh) {
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 79554e5adb4c..e2939418789f 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -603,7 +603,7 @@ void security_release_secctx(struct lsmcontext *cp);
- void security_inode_invalidate_secctx(struct inode *inode);
- int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
- int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp);
- int security_locked_down(enum lockdown_reason what);
- #else /* CONFIG_SECURITY */
- 
-@@ -1478,7 +1478,8 @@ static inline int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32
- {
- 	return -EOPNOTSUPP;
- }
--static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+static inline int security_inode_getsecctx(struct inode *inode,
-+					   struct lsmcontext *cp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/security/security.c b/security/security.c
-index d56fcb794ff4..c9459c4754f3 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2421,9 +2421,18 @@ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
- }
- EXPORT_SYMBOL(security_inode_setsecctx);
- 
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp)
- {
--	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
-+	struct security_hook_list *hp;
-+
-+	memset(cp, 0, sizeof(*cp));
-+
-+	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecctx, list) {
-+		cp->slot = hp->lsmid->slot;
-+		return hp->hook.inode_getsecctx(inode, (void **)&cp->context,
-+						&cp->len);
-+	}
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
- 
+On Wed, Feb 2, 2022 at 10:04 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
+>
+> [ ... adding NFS and CIFS ... ]
+>
+> > On Feb 2, 2022, at 9:12 AM, Hannes Reinecke <hare@suse.de> wrote:
+> >
+> > Hi all,
+> >
+> > nvme-over-tcp has the option to utilize TLS for encrypted traffic, but due to the internal design of the nvme-over-fabrics stack we cannot initiate the TLS connection from userspace (as the current in-kernel TLS implementation is designed).
+> >
+> > This leaves us with two options:
+> > 1) Put TLS handshake into the kernel (which will be quite some
+> >  discussion as it's arguably a userspace configuration)
+> > 2) Pass an in-kernel socket to userspace and have a userspace
+> >  application to run the TLS handshake.
+> >
+> > None of these options are quiet clear cut, as we will be have to put
+> > quite some complexity into the kernel to do full TLS handshake (if we
+> > were to go with option 1) or will have to design a mechanism to pass
+> > an in-kernel socket to userspace as we don't do that currently (if we were going with option 2).
+> >
+> > We have been discussing some ideas on how to implement option 2 (together with Chuck Lever and the NFS crowd), but so far haven't been able to come up with a decent design.
+> >
+> > So I would like to discuss with interested parties on how TLS handshake could be facilitated, and what would be the best design options here.
+>
+> IMO we are a bit farther along than Hannes suggests, and I had
+> the impression that we have already agreed on a "decent design"
+> (see Ben Coddington's earlier post).
+>
+> We currently have several prototypes we can discuss, and there
+> are some important issues on the table.
+>
+> First, from the start we have recognized that we have a range
+> of potential in-kernel TLS consumers. To name a few: NVMe/TLS,
+> RPC-with-TLS (for in-transit NFS encryption), CIFS/SMB, and,
+> when it arrives, the QUICv1 transport. We don't intend to
+> build something that works for only one of these, thus it
+> will not be based on existing security infrastructure like
+> rpc.gssd.
+>
+> Second, we believe in-kernel consumers will hitch onto the
+> existing kTLS infrastructure to handle payload encryption and
+> decryption. This transparently enables both software-based
+> and offload, and in the latter case, we hope for quite
+> reasonable performance.
+>
+> As Hannes said, the missing piece is support for the TLS
+> handshake protocol to boot strap each TLS session.
+>
+> The security community has demanded that we stick with user
+> space handshake implementations because they view the TLS
+> handshake as complex and a broad attack surface. I question
+> those assumptions, but even so...
+>
+> We will need to have in-kernel handshake to support NFSROOT
+> and NVMe/TLS with a root filesystem, which are requirements
+> for the storage community.
+>
+> We have an in-kernel prototype based on Tempesta's TLSv1.2
+> offload in the works. See the "topic-rpc-with-tls" branch:
+>
+>  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>
+> We also have three promising user space upcall implementations
+> that are helping us with architectural choices. The main issue
+> here is how to set the correct peer authentication parameters
+> for each handshake. As Ben said, key rings can play a critical
+> part (as might netlink, but perhaps that can be avoided). We
+> are sensitive to containerization requirements as well.
+>
+> One (not-yet-working) user space prototype is published in
+> the "topic-rpc-with-tls-upcall" branch in the repo above.
+>
+>
+> > The proposed configd would be an option, but then we don't have that, either :-)
+> >
+> > Required attendees:
+> >
+> > Chuck Lever
+> > James Bottomley
+> > Sagi Grimberg
+> > Keith Busch
+> > Christoph Hellwig
+> > David Howells
+>
+> Anyone from the CIFS team? Enzo? How about Dave Miller?
+>
+> Actually I think we need to have security and network folks
+> at the table. LSF/MM might not be the right venue for a
+> full-scale discussion of alternatives. We have been waiting
+> for an opportunity to bring this to a broad community event
+> such as Plumbers but the pandemic has interfered.
+>
+> However, I am happy to discuss alternative upcall mechanisms,
+> new requirements, and anything related to securing an
+> in-kernel handshake against remote attack.
+>
+> --
+> Chuck Lever
+>
+>
+>
+
+
 -- 
-2.31.1
+Thanks,
 
+Steve
