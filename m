@@ -2,32 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8D424A8EC2
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 21:39:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE0964A8F30
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Feb 2022 21:42:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354421AbiBCUio (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Feb 2022 15:38:44 -0500
-Received: from ams.source.kernel.org ([145.40.68.75]:38810 "EHLO
-        ams.source.kernel.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1354445AbiBCUgq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Feb 2022 15:36:46 -0500
+        id S1351006AbiBCUmp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Feb 2022 15:42:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59094 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1356029AbiBCUk5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Feb 2022 15:40:57 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F088AC0619D1;
+        Thu,  3 Feb 2022 12:36:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 01A78B835B2;
-        Thu,  3 Feb 2022 20:36:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E20C340E8;
-        Thu,  3 Feb 2022 20:36:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 916D460A77;
+        Thu,  3 Feb 2022 20:36:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 366F2C340E8;
+        Thu,  3 Feb 2022 20:36:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1643920603;
-        bh=NpZm3yFy3Z1UNqbMTXkFjMGIfCtrlF8R0qEN3T7AHQA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g4Vb2US30qd0XVuiU4aObVD5EFV2p/6Wcj3YPoit8MeeNZrsU66ZRPDk6iWLj6GF+
-         qNcVXCnBNF1KEjDpB3oEnT/WwfMy2fS92PNU5zhfPwDnPeWsp5YBCBwgrsIPImOKSz
-         9TnRIipCP2EfxcZtZmAV9Cx19bZezTIpDRLah+bD75dT+mPdURRLjlrKR5gLGbzH8Y
-         IxzhQOc7BjE/z4sT1aFTtluKy1wCUxTiNF1MlwRv2pCiFekdUXKe3U8Rhgyf64NDDQ
-         Fl1ltFp3guaq43usbh5nomOMcdVDUP6XAnuRItiHQzMsBKely+fxqYFp5DzVz7VZRv
-         yPM79VeIYme1Q==
+        s=k20201202; t=1643920614;
+        bh=czRuVdm4hdL5Ea907Q1CqurNlQHpEw3Smw/F2cDltok=;
+        h=From:To:Cc:Subject:Date:From;
+        b=HtuaJ84qLOEeppnDuviEAPoj71SeEfs92NC5cYqb8AZzwvzjO8vHM1GuWIwSRfchG
+         40t+2NHTVxmvFbNktjJQPxdGJX9tpYIB1lnVS8ebP4xRWVjaPiyftzYG+GmG7Dinbh
+         L9oppg0bSKlnNWVumgv3MOb/zojQRVYe9TtJ5GHc6qUNWwYEggt+rHq1nGn5Pg6GZK
+         2btcra/JLcdBPOahVVNOFbOCWavK2Cq3FIUyRN2PQvUkLXyIvq78zrzZ81biDhEQQA
+         8+CM9uxiQhL37TTAAeUwnJU2z27gvNqpLQ9RRCByDKPmsXoCqlpRgbVFP9XehAwyKn
+         EqcDsGRTDSZgg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Olga Kornievskaia <kolga@netapp.com>,
@@ -35,12 +38,10 @@ Cc:     Olga Kornievskaia <kolga@netapp.com>,
         Sasha Levin <sashal@kernel.org>,
         trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/9] NFSv4 expose nfs_parse_server_name function
-Date:   Thu,  3 Feb 2022 15:36:30 -0500
-Message-Id: <20220203203633.4685-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 1/7] NFSv4 only print the label when its queried
+Date:   Thu,  3 Feb 2022 15:36:45 -0500
+Message-Id: <20220203203651.5158-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220203203633.4685-1-sashal@kernel.org>
-References: <20220203203633.4685-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -51,47 +52,38 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-[ Upstream commit f5b27cc6761e27ee6387a24df1a99ca77b360fea ]
+[ Upstream commit 2c52c8376db7160a1dd8a681c61c9258405ef143 ]
 
-Make nfs_parse_server_name available outside of nfs4namespace.c.
+When the bitmask of the attributes doesn't include the security label,
+don't bother printing it. Since the label might not be null terminated,
+adjust the printing format accordingly.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/nfs4_fs.h       | 3 ++-
- fs/nfs/nfs4namespace.c | 4 ++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ fs/nfs/nfs4xdr.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
-index 22cff39cca29a..c9ca2237c3fec 100644
---- a/fs/nfs/nfs4_fs.h
-+++ b/fs/nfs/nfs4_fs.h
-@@ -242,7 +242,8 @@ struct vfsmount *nfs4_submount(struct nfs_server *, struct dentry *,
- 			       struct nfs_fh *, struct nfs_fattr *);
- int nfs4_replace_transport(struct nfs_server *server,
- 				const struct nfs4_fs_locations *locations);
--
-+size_t nfs_parse_server_name(char *string, size_t len, struct sockaddr *sa,
-+			     size_t salen, struct net *net);
- /* nfs4proc.c */
- extern int nfs4_handle_exception(struct nfs_server *, int, struct nfs4_exception *);
- extern int nfs4_call_sync(struct rpc_clnt *, struct nfs_server *,
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index 8c3f327d858d5..b36361ca0d36b 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -121,8 +121,8 @@ static int nfs4_validate_fspath(struct dentry *dentry,
- 	return 0;
- }
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 0a7c4e30a385e..29dbb14b6fd11 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4177,10 +4177,11 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 		} else
+ 			printk(KERN_WARNING "%s: label too long (%u)!\n",
+ 					__func__, len);
++		if (label && label->label)
++			dprintk("%s: label=%.*s, len=%d, PI=%d, LFS=%d\n",
++				__func__, label->len, (char *)label->label,
++				label->len, label->pi, label->lfs);
+ 	}
+-	if (label && label->label)
+-		dprintk("%s: label=%s, len=%d, PI=%d, LFS=%d\n", __func__,
+-			(char *)label->label, label->len, label->pi, label->lfs);
+ 	return status;
  
--static size_t nfs_parse_server_name(char *string, size_t len,
--		struct sockaddr *sa, size_t salen, struct net *net)
-+size_t nfs_parse_server_name(char *string, size_t len, struct sockaddr *sa,
-+			     size_t salen, struct net *net)
- {
- 	ssize_t ret;
- 
+ out_overflow:
 -- 
 2.34.1
 
