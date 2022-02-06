@@ -2,43 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 949D74AAC63
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Feb 2022 21:07:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A9354AB210
+	for <lists+linux-nfs@lfdr.de>; Sun,  6 Feb 2022 21:28:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243653AbiBEUHE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 5 Feb 2022 15:07:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36328 "EHLO
+        id S242835AbiBFU2K (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 6 Feb 2022 15:28:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241415AbiBEUHE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Feb 2022 15:07:04 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FC40C061348
-        for <linux-nfs@vger.kernel.org>; Sat,  5 Feb 2022 12:07:00 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 63DA16090; Sat,  5 Feb 2022 15:06:59 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 63DA16090
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1644091619;
-        bh=ssKO79FCJxXy/cXHiPB3a0WldTS4m/ijjegINeDmiHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i8lirWU7z3qrDC5hnoXGz7ALKzGa+c99ccGTKTyNYcKjMSmlZLZRm/sjVO7z5jpJh
-         bwzYgMPRUay9n4jeuuT3djbWa6dm6O8Sby2O2m2QS8vszsFdR438xvGkssqQVuSUcy
-         waxUEpXmlryn/oScVJTf+h2HzmgI1Gn+WHXpQhbY=
-Date:   Sat, 5 Feb 2022 15:06:59 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] nfsv4.0/read: Test the behavior of reading near
- OFFSET_MAX
-Message-ID: <20220205200659.GA13548@fieldses.org>
-References: <164408072927.1028772.2263116854233914910.stgit@morisot.1015granger.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <164408072927.1028772.2263116854233914910.stgit@morisot.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        with ESMTP id S229983AbiBFU2K (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 15:28:10 -0500
+X-Greylist: delayed 5006 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 06 Feb 2022 12:28:09 PST
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A280C06173B;
+        Sun,  6 Feb 2022 12:28:08 -0800 (PST)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 216EWqD1007379;
+        Sun, 6 Feb 2022 19:04:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=9jTqfFCwE4fGNtzJpi+OgSR++seou8hgWkB3ESLqqdE=;
+ b=I+BM3AuQoSFd7O0ek1bEb+Ko2+brnbKs3c+FJXA7UPbwKvtl1uDBqti/qvCciBD/y5Z3
+ adXFIqXlu4aDG/iTlnQX1US1cc59I3jctd3EfzjQs6TDQ/CMqZtM3Y88RM1L0odwI04d
+ ItgRkCv+CeKgPVL/AuhOeLj4Hpn4+z7zU86ifI7Rdb/9/tu0D9dSfQx7FqgDy3ydAuD1
+ aLQCiYCcAvGFNr5SyKguCqQ9eXuUGgvkVigXQkz3RWZzVskLMpjuvQ1/sKjE0EhunPeD
+ c4hCDmlyT0ZFgZwPMbdYhXy0hwzRaWHsj3/bz1Xq/wQ9vRNrUh3hyvghYYn/YdwIF174 6A== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3e1gusutpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 06 Feb 2022 19:04:41 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 216J1w0l035741;
+        Sun, 6 Feb 2022 19:04:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 3e1f9cedug-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 06 Feb 2022 19:04:40 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 216J4dFR044049;
+        Sun, 6 Feb 2022 19:04:39 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by aserp3030.oracle.com with ESMTP id 3e1f9cedtx-1;
+        Sun, 06 Feb 2022 19:04:39 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v10 0/3] nfsd: Initial implementation of NFSv4 Courteous Server
+Date:   Sun,  6 Feb 2022 11:04:27 -0800
+Message-Id: <1644174270-20681-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-ORIG-GUID: gcuyH-yIGKusRvgEqGrcmLWAV67NCWzB
+X-Proofpoint-GUID: gcuyH-yIGKusRvgEqGrcmLWAV67NCWzB
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -46,42 +63,169 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Applied, thanks!--b.
 
-On Sat, Feb 05, 2022 at 12:05:29PM -0500, Chuck Lever wrote:
-> On many systems, the internal representation of a file offset or
-> file size is a signed 64-bit value. NFS, however, uses an unsigned
-> value for these quantities. The server must convert incoming offsets
-> and file sizes properly or risk an underflow.
-> 
-> Add a test which exercises this corner case.
-> 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  nfs4.0/servertests/st_read.py |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/nfs4.0/servertests/st_read.py b/nfs4.0/servertests/st_read.py
-> index 1b27f5d06f2f..f75b753d61c7 100644
-> --- a/nfs4.0/servertests/st_read.py
-> +++ b/nfs4.0/servertests/st_read.py
-> @@ -91,6 +91,18 @@ def testLargeOffset(t, env):
->      check(res, msg="Reading file /%s" % b'/'.join(env.opts.usefile))
->      _compare(t, res, b'', True)
->  
-> +def testVeryLargeOffset(t, env):
-> +    """READ with offset far outside file
-> +
-> +    FLAGS: read all
-> +    DEPEND: LOOKFILE
-> +    CODE: RD5a
-> +    """
-> +    c = env.c1
-> +    res = c.read_file(env.opts.usefile, 0x7ffffffffffffffc, 10)
-> +    check(res, msg="Reading file /%s" % b'/'.join(env.opts.usefile))
-> +    _compare(t, res, b'', True)
-> +
->  def testZeroCount(t, env):
->      """READ with count=0
->  
-> 
+Hi Chuck, Bruce
+
+This series of patches implement the NFSv4 Courteous Server.
+
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
+
+v2 patch includes:
+
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
+
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+v3 patch includes:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v5 patch includes:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+v6 patch includes:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+v7 patch includes:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+v8 patch includes:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+v9 patch includes:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+v10 patch includes:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
+
+v11 patch includes:
+
+  Add comment for lm_lock_conflict callback.
+
+  Replace static const courtesy_client_expiry with macro.
+
+  Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
+  Caller uses nfs4_client->cl_cs_client boolean to determined if
+  it's the courtesy client and takes appropriate actions.
+
+  Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
+  with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
