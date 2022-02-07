@@ -2,285 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD514AC727
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 18:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 347804AC81D
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 19:02:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233574AbiBGRTW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Feb 2022 12:19:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32900 "EHLO
+        id S241500AbiBGSBr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Feb 2022 13:01:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358152AbiBGREk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Feb 2022 12:04:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9586AC0401D1
-        for <linux-nfs@vger.kernel.org>; Mon,  7 Feb 2022 09:04:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 089EDB81625
-        for <linux-nfs@vger.kernel.org>; Mon,  7 Feb 2022 17:04:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0A19C004E1
-        for <linux-nfs@vger.kernel.org>; Mon,  7 Feb 2022 17:04:36 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH RFC] NFSD: Remove CONFIG_NFSD_V3
-Date:   Mon,  7 Feb 2022 12:04:35 -0500
-Message-Id:  <164425347004.187955.6630130018785430850.stgit@klimt.1015granger.net>
-X-Mailer: git-send-email 2.35.0
-User-Agent: StGit/1.5
+        with ESMTP id S1344515AbiBGR4D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Feb 2022 12:56:03 -0500
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F09C0401DA;
+        Mon,  7 Feb 2022 09:56:02 -0800 (PST)
+Received: by mail-vk1-f175.google.com with SMTP id w17so8285239vko.9;
+        Mon, 07 Feb 2022 09:56:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q2jFTN2u074XzT8suGCUZz+zCtO41192wV4ApDRi8Ns=;
+        b=JkalXYSqFISfJim092/HrQmPxPWEQ5IUfsQHmX0zZMnKh+5PXiMMRlt+d7S2oujxC0
+         DIWnoRb6BUeJvVhE18/2Wyvl+2YNhIirsyvpekH42iFD6MZEt29H4AaFXDAjYQb6IbOZ
+         PPfzN3b1UUUeClpCvog9gb4lf47eKA03LnU3CcU+IoQy8S/OW9RO02Pc3ux01Tg9NvX6
+         rfZJOe7LwJYnHEAPqHKMDfVaWHHywwLMmnkfbpFjTxTUAxrqrBUocHPAAr+ynzwsCq1r
+         CeUYGvEOw+ZnhQwwN4EjAFWOcIxRLg4g/zHfna7J0isXf9Mqjwfpc32Wn0wL3PKttqEX
+         S6Hw==
+X-Gm-Message-State: AOAM531l1+PmQn0uPDzPd6IGlI9MbY6Uopq3jJ+l8Bv89rwtaMSs6HN6
+        lLBBoi7tb6Ae3+IkoaqMjQhQhwX3iHfE3g==
+X-Google-Smtp-Source: ABdhPJwQrPwvpg/kMYycNB9eHrcRCtAtOgEEvjUQGDsUEHj1fwlJ/JoInV2SeLkWvQ3Y+WuuygD6fQ==
+X-Received: by 2002:a05:6122:1692:: with SMTP id 18mr344596vkl.25.1644256560903;
+        Mon, 07 Feb 2022 09:56:00 -0800 (PST)
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
+        by smtp.gmail.com with ESMTPSA id w15sm14031vso.32.2022.02.07.09.55.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 07 Feb 2022 09:56:00 -0800 (PST)
+Received: by mail-vs1-f44.google.com with SMTP id b2so521803vso.9;
+        Mon, 07 Feb 2022 09:55:59 -0800 (PST)
+X-Received: by 2002:a67:a401:: with SMTP id n1mr161631vse.38.1644256559395;
+ Mon, 07 Feb 2022 09:55:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7410; h=from:subject:message-id; bh=1WdQ6X3Bl98gFyPdRgf8jiqiHyf0CYMBXVJXiNt6tdI=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiAVEex08Zr+S6/iyQtY7C1kXSDgKpwwnPsUQptvJ9 riQPP0uJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYgFRHgAKCRAzarMzb2Z/l473EA CyxFiy8LQ5nNpus896ZIOGpQ8S2cd9QLE5CqLHRtwXB3bcSCWskZ9fz9kRcavAdtDgF+plOaDl3+Im XemtoGiFUWhtKPXSdBr0AJR79kuv0XPM/IjsMsLgj55HYH77CxaTexCSEXomSN29C5ITlix53mUGTv o2Bafgt1vAG7afB6ONRR8AJpvr9vLtRUtAIXXT1IkeDW/nW04fZhoZpEs4yn8cxOFoUD2sNyldatll TuJPUuPz8I+ZpqCBhovZHDTB1wvnxLSl9NvTv47f+YrOdVC4lk0+y5I+NxgTjxHkhrX6CT6tuVIlMc wPGsUgsMak8XDC5hUsC/KCdkqWaE0O6h3xhLa5cNrn1X7n9jg+jRCnll9gvT9HAeIfSGuepUff4ge8 wW0vYtSqc+OPNF4uHBFVftEYHaS5igkUM25CMvGjnLXb+Aiz2ql790a9MOrxbsjxEKywW8btar/AzY vna2zPoSHBMZnfcF5WfkE1RBLaaGe2QfqAKbX9QYduKLSkATzHC3nlGrnqbe6mQJw6REvS7fln3Q/X v3abEUUQEnVDT0PE1kYZONYxS9sSkRe4MHU38HD4Vb9Ycz1Ek1WoAsFsnZpa42xg2/Sj3QcLEOAABm Efh8Up2DP5IrexbDvEjmMC2HB/q01dBIWuvWsZslnA9e2LMt3YJWFy8pSiKg==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <164299573337.26253.7538614611220034049.stgit@noble.brown>
+In-Reply-To: <164299573337.26253.7538614611220034049.stgit@noble.brown>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 7 Feb 2022 18:55:48 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXw6bhOf8BMWzje1h_gaBg8TxZXWAQgL0cpdYBkZ+LwXw@mail.gmail.com>
+Message-ID: <CAMuHMdXw6bhOf8BMWzje1h_gaBg8TxZXWAQgL0cpdYBkZ+LwXw@mail.gmail.com>
+Subject: Re: [PATCH 00/23 V3] Repair SWAP-over_NFS
+To:     NeilBrown <neilb@suse.de>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@suse.de>,
+        Christoph Hellwig <hch@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Eventually support for NFSv2 in the Linux NFS server is to be
-deprecated and then removed.
+Hi Neil,
 
-However, NFSv2 is the "always supported" version that is available
-as soon as CONFIG_NFSD is set.  Before NFSv2 support can be removed,
-we need to choose a different "always supported" version.
+On Mon, Jan 24, 2022 at 5:40 PM NeilBrown <neilb@suse.de> wrote:
+> swap-over-NFS currently has a variety of problems.
+>
+> swap writes call generic_write_checks(), which always fails on a swap
+> file, so it completely fails.
+> Even without this, various deadlocks are possible - largely due to
+> improvements in NFS memory allocation (using NOFS instead of ATOMIC)
+> which weren't tested against swap-out.
+>
+> NFS is the only filesystem that has supported fs-based swap IO, and it
+> hasn't worked for several releases, so now is a convenient time to clean
+> up the swap-via-filesystem interfaces - we cannot break anything !
+>
+> So the first few patches here clean up and improve various parts of the
+> swap-via-filesystem code.  ->activate_swap() is given a cleaner
+> interface, a new ->swap_rw is introduced instead of burdening
+> ->direct_IO, etc.
+>
+> Current swap-to-filesystem code only ever submits single-page reads and
+> writes.  These patches change that to allow multi-page IO when adjacent
+> requests are submitted.  Writes are also changed to be async rather than
+> sync.  This substantially speeds up write throughput for swap-over-NFS.
+>
+> Some of the NFS patches can land independently of the MM patches.  A few
+> require the MM patches to land first.
 
-This patch removes CONFIG_NFSD_V3 so that NFSv3 is always supported,
-as NFSv2 is today. When NFSv2 support is removed, NFSv3 will become
-the only "always supported" NFS version.
+Thanks for your series!
+Swap over NFS was indeed broken last time I tried[1], but with your
+series, it's working again on arm32 (RZ/A1 with 32 MiB of RAM, 100Mbps
+Ethernet and Debian 9 nfsroot). My system was exercised using "apt
+update", and the subsequent "apt upgrade" is still running, though
+(it took more than 6 hours to build the apt dependency tree, now it's
+trying hard to create a list of packages...).
 
-The defconfigs still need to be updated to remove CONFIG_NFSD_V3=y.
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/Kconfig  |   11 -----------
- fs/nfsd/Makefile |    3 +--
- fs/nfsd/nfsfh.c  |    4 ----
- fs/nfsd/nfsfh.h  |   20 --------------------
- fs/nfsd/nfssvc.c |    2 --
- fs/nfsd/vfs.c    |    9 ---------
- fs/nfsd/vfs.h    |    2 --
- 7 files changed, 1 insertion(+), 50 deletions(-)
+BTW, I think you do want to run scripts/checkpatch.pl on your series,
+and improve it by fixing a few of the reported warnings (function
+definition arguments should also have an identifier name, missing
+data_race() comment, missing SPDX-License-Identifier tag).
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index 3d1d17256a91..c8446663109c 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -35,18 +35,8 @@ config NFSD_V2_ACL
- 	bool
- 	depends on NFSD
- 
--config NFSD_V3
--	bool "NFS server support for NFS version 3"
--	depends on NFSD
--	help
--	  This option enables support in your system's NFS server for
--	  version 3 of the NFS protocol (RFC 1813).
--
--	  If unsure, say Y.
--
- config NFSD_V3_ACL
- 	bool "NFS server support for the NFSv3 ACL protocol extension"
--	depends on NFSD_V3
- 	select NFSD_V2_ACL
- 	help
- 	  Solaris NFS servers support an auxiliary NFSv3 ACL protocol that
-@@ -70,7 +60,6 @@ config NFSD_V3_ACL
- config NFSD_V4
- 	bool "NFS server support for NFS version 4"
- 	depends on NFSD && PROC_FS
--	select NFSD_V3
- 	select FS_POSIX_ACL
- 	select SUNRPC_GSS
- 	select CRYPTO
-diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-index 3f0983e93a99..805c06d5f1b4 100644
---- a/fs/nfsd/Makefile
-+++ b/fs/nfsd/Makefile
-@@ -12,9 +12,8 @@ nfsd-y			+= trace.o
- 
- nfsd-y 			+= nfssvc.o nfsctl.o nfsproc.o nfsfh.o vfs.o \
- 			   export.o auth.o lockd.o nfscache.o nfsxdr.o \
--			   stats.o filecache.o
-+			   stats.o filecache.o nfs3proc.o nfs3xdr.o
- nfsd-$(CONFIG_NFSD_V2_ACL) += nfs2acl.o
--nfsd-$(CONFIG_NFSD_V3)	+= nfs3proc.o nfs3xdr.o
- nfsd-$(CONFIG_NFSD_V3_ACL) += nfs3acl.o
- nfsd-$(CONFIG_NFSD_V4)	+= nfs4proc.o nfs4xdr.o nfs4state.o nfs4idmap.o \
- 			   nfs4acl.o nfs4callback.o nfs4recover.o
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 145208bcb9bd..c29baa03dfaf 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -611,8 +611,6 @@ fh_update(struct svc_fh *fhp)
- 	return nfserr_serverfault;
- }
- 
--#ifdef CONFIG_NFSD_V3
--
- /**
-  * fh_fill_pre_attrs - Fill in pre-op attributes
-  * @fhp: file handle to be updated
-@@ -673,8 +671,6 @@ void fh_fill_post_attrs(struct svc_fh *fhp)
- 			nfsd4_change_attribute(&fhp->fh_post_attr, inode);
- }
- 
--#endif /* CONFIG_NFSD_V3 */
--
- /*
-  * Release a file handle.
-  */
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index 434930d8a946..fb9d358a267e 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -90,7 +90,6 @@ typedef struct svc_fh {
- 						 * operation
- 						 */
- 	int			fh_flags;	/* FH flags */
--#ifdef CONFIG_NFSD_V3
- 	bool			fh_post_saved;	/* post-op attrs saved */
- 	bool			fh_pre_saved;	/* pre-op attrs saved */
- 
-@@ -107,7 +106,6 @@ typedef struct svc_fh {
- 	/* Post-op attributes saved in fh_unlock */
- 	struct kstat		fh_post_attr;	/* full attrs after operation */
- 	u64			fh_post_change; /* nfsv4 change; see above */
--#endif /* CONFIG_NFSD_V3 */
- } svc_fh;
- #define NFSD4_FH_FOREIGN (1<<0)
- #define SET_FH_FLAG(c, f) ((c)->fh_flags |= (f))
-@@ -283,8 +281,6 @@ static inline u32 knfsd_fh_hash(const struct knfsd_fh *fh)
- }
- #endif
- 
--#ifdef CONFIG_NFSD_V3
--
- /**
-  * fh_clear_pre_post_attrs - Reset pre/post attributes
-  * @fhp: file handle to be updated
-@@ -327,22 +323,6 @@ static inline u64 nfsd4_change_attribute(struct kstat *stat,
- extern void fh_fill_pre_attrs(struct svc_fh *fhp);
- extern void fh_fill_post_attrs(struct svc_fh *fhp);
- 
--#else /* !CONFIG_NFSD_V3 */
--
--static inline void fh_clear_pre_post_attrs(struct svc_fh *fhp)
--{
--}
--
--static inline void fh_fill_pre_attrs(struct svc_fh *fhp)
--{
--}
--
--static inline void fh_fill_post_attrs(struct svc_fh *fhp)
--{
--}
--
--#endif /* !CONFIG_NFSD_V3 */
--
- 
- /*
-  * Lock a file handle/inode
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index b92d272f4ba6..e48d5135a81c 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -117,9 +117,7 @@ static struct svc_stat	nfsd_acl_svcstats = {
- 
- static const struct svc_version *nfsd_version[] = {
- 	[2] = &nfsd_version2,
--#if defined(CONFIG_NFSD_V3)
- 	[3] = &nfsd_version3,
--#endif
- #if defined(CONFIG_NFSD_V4)
- 	[4] = &nfsd_version4,
- #endif
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 99c2b9dfbb10..761a99c0dff3 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -32,9 +32,7 @@
- #include <linux/writeback.h>
- #include <linux/security.h>
- 
--#ifdef CONFIG_NFSD_V3
- #include "xdr3.h"
--#endif /* CONFIG_NFSD_V3 */
- 
- #ifdef CONFIG_NFSD_V4
- #include "../internal.h"
-@@ -604,7 +602,6 @@ __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
- }
- #endif /* defined(CONFIG_NFSD_V4) */
- 
--#ifdef CONFIG_NFSD_V3
- /*
-  * Check server access rights to a file system object
-  */
-@@ -716,7 +713,6 @@ nfsd_access(struct svc_rqst *rqstp, struct svc_fh *fhp, u32 *access, u32 *suppor
-  out:
- 	return error;
- }
--#endif /* CONFIG_NFSD_V3 */
- 
- int nfsd_open_break_lease(struct inode *inode, int access)
- {
-@@ -1109,7 +1105,6 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
- 	return err;
- }
- 
--#ifdef CONFIG_NFSD_V3
- /*
-  * Commit all pending writes to stable storage.
-  *
-@@ -1167,7 +1162,6 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp,
- out:
- 	return err;
- }
--#endif /* CONFIG_NFSD_V3 */
- 
- static __be32
- nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *resfhp,
-@@ -1357,8 +1351,6 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 					rdev, resfhp);
- }
- 
--#ifdef CONFIG_NFSD_V3
--
- /*
-  * NFSv3 and NFSv4 version of nfsd_create
-  */
-@@ -1524,7 +1516,6 @@ do_nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	err = nfserrno(host_err);
- 	goto out;
- }
--#endif /* CONFIG_NFSD_V3 */
- 
- /*
-  * Read a symlink. On entry, *lenp must contain the maximum path length that
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 9f56dcb22ff7..ffb540bb6d58 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -68,7 +68,6 @@ __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
- __be32		nfsd_create(struct svc_rqst *, struct svc_fh *,
- 				char *name, int len, struct iattr *attrs,
- 				int type, dev_t rdev, struct svc_fh *res);
--#ifdef CONFIG_NFSD_V3
- __be32		nfsd_access(struct svc_rqst *, struct svc_fh *, u32 *, u32 *);
- __be32		do_nfsd_create(struct svc_rqst *, struct svc_fh *,
- 				char *name, int len, struct iattr *attrs,
-@@ -76,7 +75,6 @@ __be32		do_nfsd_create(struct svc_rqst *, struct svc_fh *,
- 				u32 *verifier, bool *truncp, bool *created);
- __be32		nfsd_commit(struct svc_rqst *, struct svc_fh *,
- 				loff_t, unsigned long, __be32 *verf);
--#endif /* CONFIG_NFSD_V3 */
- #ifdef CONFIG_NFSD_V4
- __be32		nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 			    char *name, void **bufp, int *lenp);
+[1] https://lore.kernel.org/all/20191230153238.29878-1-geert+renesas@glider.be/
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
