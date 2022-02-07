@@ -2,58 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 336A64AC110
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 15:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D33F4AC3F5
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 16:40:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1357412AbiBGOVN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Feb 2022 09:21:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56312 "EHLO
+        id S229744AbiBGPeK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Feb 2022 10:34:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1390891AbiBGOFQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Feb 2022 09:05:16 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D4E2C0401C0
-        for <linux-nfs@vger.kernel.org>; Mon,  7 Feb 2022 06:05:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644242714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A2/fmerVPt7y2ERI1So+E+crT6TP6+7VOIkGaD46kU4=;
-        b=QltT3wq/0rLrwwhB6I6fQEdnP0PVaq7CO6zDP9LZO75DblDzYnaGsQxmb083MobQeywQkR
-        u5LG47iA0i92SjKJyYEV9CPg/FHVYBhH/kgxAoS/5YOVhvFiVj5QU4E8v412jIw1t8DRN9
-        gpM4trLliVS63SEO2RW7gWA2l3Rw9/w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-509-gKD3qXVYMLSCEaPZmyKpAA-1; Mon, 07 Feb 2022 09:05:13 -0500
-X-MC-Unique: gKD3qXVYMLSCEaPZmyKpAA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12F3A18A083B;
-        Mon,  7 Feb 2022 14:05:12 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B8F1F5BC47;
-        Mon,  7 Feb 2022 14:05:11 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: v4 clientid uniquifiers in containers/namespaces
-Date:   Mon, 07 Feb 2022 09:05:10 -0500
-Message-ID: <596C2475-76AA-4616-919C-9C22B6658CA7@redhat.com>
-In-Reply-To: <439C77F9-D5AD-4388-B954-3B413C1DF0E2@redhat.com>
-References: <6CEC5101-0512-4082-81F8-BDFEC5B6DF3A@redhat.com>
- <6ac83db82e838d9d4e1ac10cb13e43c5c12b2660.camel@hammerspace.com>
- <439C77F9-D5AD-4388-B954-3B413C1DF0E2@redhat.com>
+        with ESMTP id S237887AbiBGPWU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Feb 2022 10:22:20 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B9BAC0401C1
+        for <linux-nfs@vger.kernel.org>; Mon,  7 Feb 2022 07:22:19 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id u18so30481774edt.6
+        for <linux-nfs@vger.kernel.org>; Mon, 07 Feb 2022 07:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xG2PTqPQIy4xTSQWDcoSwjnaM4ib/qNpiBdxqfrXLqg=;
+        b=Hv+yz2rAxKtkqAj9+u+PcpBNokTp9G6v/qNQvdnOe206TtHMpCV1g11s+RXa9X+dXH
+         HFCByqJNwy9gb+oiCPyWX59ssBvIi0zk9tqMa4Yytt0nLYlHOQPAspaLV4l+dC1An1am
+         ohyZW9QkJaFucKvdpLShxEGPrDPowlxM1NTAtfGqkLO/1FGMxo7d9nLCHAplriFxDDhy
+         M2CLTYMRhEDo0DXQBV82CWizjiSy+YKYXyT/nORSQS4M8sSC9geydvDsxirqiM6+19s+
+         75DcK7VIYo/qtpCuxxnHn2LAhwMo1JMeOklvYEMHTgPj+6Rm+qnqdXuC3Nd+SdRx9OOS
+         yJNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xG2PTqPQIy4xTSQWDcoSwjnaM4ib/qNpiBdxqfrXLqg=;
+        b=x20A4XhB0uOgcm8HsdrXSPI+7Tn+W6rBY1flDSANq0A2SabXr4caxKJv9VcOtFN8RE
+         wu7I6n0y5yV+Lm9XTJT8oZg9uH5C2iuwcAnniksFYu8q/ikTj3xWwp3J+Xz0q3sdmcf9
+         ReGj1EXVmb2WNCstj/C2oUGVopLSQ+7WfyXaMLlTL87h3Xx6QGs8j5lz46pB4lE8MOw0
+         VcGzLmj95rr1ylATSF7SPO48pG9FX7BooFRY3npBmYkiUZo0JXSuSoUkpeFqs6fqQz+k
+         5Dnbz3LH/JZgGq/BlknNuMgM/2VWNSn2n+N0y/K8MMAzPjzLHUix13MZVMasLorhwOfs
+         2qMw==
+X-Gm-Message-State: AOAM530BMsF1Hvlbr41M9v6z5dc9s9nAGYPlIOcwyMeI+YTbjV+ZuLQw
+        FJUZ9y1/1UZGrnVZ8knNLHBOSRv+easgqCMXzAUGJqHgIChWMbeU
+X-Google-Smtp-Source: ABdhPJyViZPrx+8IZkJOntm9sSklAM/LPE2xOf2flS9O91M2ez1K2NfKEri2tdXZAkNpoKkkSzqRus7rduOZdWuOtew=
+X-Received: by 2002:a05:6402:3594:: with SMTP id y20mr15073616edc.386.1644247337859;
+ Mon, 07 Feb 2022 07:22:17 -0800 (PST)
 MIME-Version: 1.0
+References: <CAPt2mGNF=iZkXGa93yjKQG5EsvUucun1TMhN5zM-6Gp07Bni2g@mail.gmail.com>
+ <20220107171755.GD26961@fieldses.org> <CAPt2mGPtxNzigMEYXKFX0ayVc__gyJcQJVHU51CKqU+ujqh7Cg@mail.gmail.com>
+ <20220110145210.GA18213@fieldses.org> <20220110172106.GC18213@fieldses.org>
+ <CAPt2mGPUa_VHHshXwLLCH=wvdrd6Hyb4gttMeEqKdgFV4GJY7g@mail.gmail.com>
+ <20220123224238.GA9255@fieldses.org> <CAPt2mGMXHqBtWJhuEM76MY5tm0V=uAghKT21KRsHBQAfgkuJpg@mail.gmail.com>
+In-Reply-To: <CAPt2mGMXHqBtWJhuEM76MY5tm0V=uAghKT21KRsHBQAfgkuJpg@mail.gmail.com>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Mon, 7 Feb 2022 15:21:41 +0000
+Message-ID: <CAPt2mGN-fqG3nMnrtaa8jWQpkTZYqQuWAR+EseD0d7CCfEPmzw@mail.gmail.com>
+Subject: Re: nconnect & repeating BIND_CONN_TO_SESSION?
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,54 +67,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5 Feb 2022, at 14:50, Benjamin Coddington wrote:
+Trond kindly posted a patch to fix the noresvport mount issue with
+v4.2 and recent kernels.
 
-> On 5 Feb 2022, at 13:24, Trond Myklebust wrote:
+I tested it quickly and verified ports greater than 1024 were being
+used as expected, but it seems the same issue persists. It still feels
+like it's related to the total number of server + nconnect pairings.
+
+So I can have 20 servers mounted with nconnect=4 or 10 servers mounted
+with nconnect=8 but any combination that increases the total
+connection on the client past that and at least one of the servers
+ends up in a state such that it's just sending a bind_conn_to_session
+with every operation.
+
+I'll see if I can discern anything from any packet capture (as
+suggested earlier by Rick), but it's hard to reproduce exactly in time
+and on demand. My theory is that maybe there is a timeout on the
+callback and that adding more connections is just adding more
+load/throughput and making a timeout more likely.
+
+My workaround atm is to simply use NFSv3 instead of NFSv4 which might
+be a better choice for this kind of workload anyway.
+
+Daire
+
+
+On Mon, 24 Jan 2022 at 12:33, Daire Byrne <daire@dneg.com> wrote:
 >
->> On Sat, 2022-02-05 at 10:03 -0500, Benjamin Coddington wrote:
->>> Hi all,
->>>
->>> Is anyone using a udev(-like) implementation with
->>> NETLINK_LISTEN_ALL_NSID?
->>> It looks like that is at least necessary to allow the init namespaced
->>> udev
->>> to receive notifications on /sys/fs/nfs/net/nfs_client/identifier,
->>> which
->>> would be a pre-req to automatically uniquify in containers.
->>>
->>> I'md interested since it will inform whether I need to send patches
->>> to
->>> systemd's udev, and potentially open the can of worms over there. 
->>> Yet its
->>> not yet clear to me how an init namespaced udev process can write to
->>> a netns
->>> sysfs path.
->>>
->>> Another option might be to create yet another daemon/tool that would
->>> listen
->>> specifically for these notifications.  Ugh.
->>>
->>> Ben
->>>
->>
->> I don't understand. Why do you need a new daemon/tool?
-
-Because what we've got only works for the init namespace.
-
-Udev won't get kobject notifications because its not using
-NETLINK_LISTEN_ALL_NSIDs.
-
-We need to figure out if we want:
-
- 1) the init namespace udevd to handle all client_id uniquifiers
- 2) we expect network namespaces to run their own udevd
- 3) or both.
-
-I think 2 violates "least surprise", and 3 might not be something anyone
-ever wants.  If they do, we can fix it at that point.
-
-So to make 1 work, we can try to change udevd, or maybe just hacking about
-with nfs_netns_object_child_ns_type will be sufficient.
-
-Ben
-
+> On Sun, 23 Jan 2022 at 22:42, J. Bruce Fields <bfields@fieldses.org> wrote:
+> > > I suspect it's just more recent kernels that has lost the ability to
+> > > use v4+noresvport
+> >
+> > Yes, thanks for checking that.  Let us know if you narrow down the
+> > kernel any more.
+>
+> https://bugzilla.kernel.org/show_bug.cgi?id=215526
+>
+> I think it stopped working somewhere between v5.11 and v5.12. I'll try
+> and bisect it this week.
+>
+> Daire
