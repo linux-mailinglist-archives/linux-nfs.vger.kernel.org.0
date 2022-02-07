@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D16B34AB48A
+	by mail.lfdr.de (Postfix) with ESMTP id 831E04AB489
 	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 07:16:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244830AbiBGGPw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S244733AbiBGGPw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Mon, 7 Feb 2022 01:15:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50784 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352089AbiBGEtJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:49:09 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D62D2C043181;
-        Sun,  6 Feb 2022 20:49:08 -0800 (PST)
+        with ESMTP id S1352032AbiBGErK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:47:10 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18B0BC043181;
+        Sun,  6 Feb 2022 20:47:10 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 8AA5A1F37E;
-        Mon,  7 Feb 2022 04:49:07 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id C173D210EA;
+        Mon,  7 Feb 2022 04:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644209347; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1644209228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E23xUbeV6J41TMiR7CnKzUTjVG3PkIHbIUyHUCQmcCM=;
-        b=DQV/jOLzgYJmX7dA9MU+4JDWUtKP8wz/wJe6qbSqgmBqKXJ6eVZAKFYVip7GuG3sg3fBnQ
-        wt0TvsfTYlMLV3dbF5dMYc5ZEX9gzSfjTgeezWXv4hUdUHsL3igXaq8oMjAR1ciTFq16Ub
-        rpL6oOaWIQv/kuuLWh8qWX1+NkAVKl4=
+        bh=jIwc70WfyZePk+M4TY2KFFjSotnhhDywYz77GPeU54I=;
+        b=ikz+i/JzVV65yxb2LUs6PuJG5e71Z8cf0FCBCTwmQXIBBaWz7WzKAfUY7+5dxqv3EeamNP
+        vpVguyYOVN3GdY74xr7qwgFI/YZ2d0mfWArhal/iwFqps1IacbWE5EGygBB7cXVhUTyGXV
+        TxOxx4jDPhTUzTesTOJxRzKEX5wg/aY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644209347;
+        s=susede2_ed25519; t=1644209228;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E23xUbeV6J41TMiR7CnKzUTjVG3PkIHbIUyHUCQmcCM=;
-        b=m4KQ4C12YdWdLAG1uGn6XelqJS2eHedV7cweGciC7jVETHpTpXYPuIhUbod3bEBp5S2QN9
-        dDhBtSiePirgGlBA==
+        bh=jIwc70WfyZePk+M4TY2KFFjSotnhhDywYz77GPeU54I=;
+        b=TDjRpTiE1Vmtdb2gZ+xE1034/7dr8Wq8HP7cTr9R85FgeZ86lrzm4X7/YxOcgW/9zP4kQi
+        jZERoqE82s77CkDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A523B1330E;
-        Mon,  7 Feb 2022 04:49:04 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DF1A91330E;
+        Mon,  7 Feb 2022 04:47:05 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id TKTZGMCkAGKaNQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:49:04 +0000
-Subject: [PATCH 20/21] NFS: swap IO handling is slightly different for
- O_DIRECT IO
+        id O7oOJ0mkAGIXNQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:47:05 +0000
+Subject: [PATCH 03/21] MM: move responsibility for setting SWP_FS_OPS to
+ ->swap_activate
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -61,7 +61,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Mon, 07 Feb 2022 15:46:01 +1100
-Message-ID: <164420916125.29374.6888726725038584805.stgit@noble.brown>
+Message-ID: <164420916113.29374.18179900562061291108.stgit@noble.brown>
 In-Reply-To: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 References: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -78,175 +78,115 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-1/ Taking the i_rwsem for swap IO triggers lockdep warnings regarding
-   possible deadlocks with "fs_reclaim".  These deadlocks could, I believe,
-   eventuate if a buffered read on the swapfile was attempted.
+If a filesystem wishes to handle all swap IO itself (via ->direct_IO and
+->readpage), rather than just providing devices addresses for
+submit_bio(), SWP_FS_OPS must be set.
+Currently the protocol for setting this it to have ->swap_activate
+return zero.  In that case SWP_FS_OPS is set, and add_swap_extent()
+is called for the entire file.
 
-   We don't need coherence with the page cache for a swap file, and
-   buffered writes are forbidden anyway.  There is no other need for
-   i_rwsem during direct IO.  So never take it for swap_rw()
+This is a little clumsy as different return values for ->swap_activate
+have quite different meanings, and it makes it hard to search for which
+filesystems require SWP_FS_OPS to be set.
 
-2/ generic_write_checks() explicitly forbids writes to swap, and
-   performs checks that are not needed for swap.  So bypass it
-   for swap_rw().
+So remove the special meaning of a zero return, and require the
+filesystem to set SWP_FS_OPS if it so desires, and to always call
+add_swap_extent() as required.
 
+Currently only NFS and CIFS return zero for add_swap_extent().
+
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/direct.c        |   42 ++++++++++++++++++++++++++++--------------
- fs/nfs/file.c          |    4 ++--
- include/linux/nfs_fs.h |    8 ++++----
- 3 files changed, 34 insertions(+), 20 deletions(-)
+ fs/cifs/file.c       |    3 ++-
+ fs/nfs/file.c        |   13 +++++++++++--
+ include/linux/swap.h |    6 ++++++
+ mm/swapfile.c        |   10 +++-------
+ 4 files changed, 22 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index b929dd5b0c3a..c5c53219beeb 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -166,9 +166,9 @@ int nfs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
- 	VM_BUG_ON(iov_iter_count(iter) != PAGE_SIZE);
+diff --git a/fs/cifs/file.c b/fs/cifs/file.c
+index e7af802dcfa6..fe49f1cab018 100644
+--- a/fs/cifs/file.c
++++ b/fs/cifs/file.c
+@@ -4917,7 +4917,8 @@ static int cifs_swap_activate(struct swap_info_struct *sis,
+ 	 * from reading or writing the file
+ 	 */
  
- 	if (iov_iter_rw(iter) == READ)
--		ret = nfs_file_direct_read(iocb, iter);
-+		ret = nfs_file_direct_read(iocb, iter, true);
- 	else
--		ret = nfs_file_direct_write(iocb, iter);
-+		ret = nfs_file_direct_write(iocb, iter, true);
- 	if (ret < 0)
- 		return ret;
- 	return 0;
-@@ -422,6 +422,7 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
-  * nfs_file_direct_read - file direct read operation for NFS files
-  * @iocb: target I/O control block
-  * @iter: vector of user buffers into which to read data
-+ * @swap: flag indicating this is swap IO, not O_DIRECT IO
-  *
-  * We use this function for direct reads instead of calling
-  * generic_file_aio_read() in order to avoid gfar's check to see if
-@@ -437,7 +438,8 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
-  * client must read the updated atime from the server back into its
-  * cache.
-  */
--ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
-+ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter,
-+			     bool swap)
- {
- 	struct file *file = iocb->ki_filp;
- 	struct address_space *mapping = file->f_mapping;
-@@ -479,12 +481,14 @@ ssize_t nfs_file_direct_read(struct kiocb *iocb, struct iov_iter *iter)
- 	if (iter_is_iovec(iter))
- 		dreq->flags = NFS_ODIRECT_SHOULD_DIRTY;
+-	return 0;
++	sis->flags |= SWP_FS_OPS;
++	return add_swap_extent(sis, 0, sis->max, 0);
+ }
  
--	nfs_start_io_direct(inode);
-+	if (!swap)
-+		nfs_start_io_direct(inode);
- 
- 	NFS_I(inode)->read_io += count;
- 	requested = nfs_direct_read_schedule_iovec(dreq, iter, iocb->ki_pos);
- 
--	nfs_end_io_direct(inode);
-+	if (!swap)
-+		nfs_end_io_direct(inode);
- 
- 	if (requested > 0) {
- 		result = nfs_direct_wait(dreq);
-@@ -873,6 +877,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
-  * nfs_file_direct_write - file direct write operation for NFS files
-  * @iocb: target I/O control block
-  * @iter: vector of user buffers from which to write data
-+ * @swap: flag indicating this is swap IO, not O_DIRECT IO
-  *
-  * We use this function for direct writes instead of calling
-  * generic_file_aio_write() in order to avoid taking the inode
-@@ -889,7 +894,8 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
-  * Note that O_APPEND is not supported for NFS direct writes, as there
-  * is no atomic O_APPEND write facility in the NFS protocol.
-  */
--ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
-+ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter,
-+			      bool swap)
- {
- 	ssize_t result, requested;
- 	size_t count;
-@@ -903,7 +909,11 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 	dfprintk(FILE, "NFS: direct write(%pD2, %zd@%Ld)\n",
- 		file, iov_iter_count(iter), (long long) iocb->ki_pos);
- 
--	result = generic_write_checks(iocb, iter);
-+	if (swap)
-+		/* bypass generic checks */
-+		result =  iov_iter_count(iter);
-+	else
-+		result = generic_write_checks(iocb, iter);
- 	if (result <= 0)
- 		return result;
- 	count = result;
-@@ -934,16 +944,20 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter)
- 		dreq->iocb = iocb;
- 	pnfs_init_ds_commit_info_ops(&dreq->ds_cinfo, inode);
- 
--	nfs_start_io_direct(inode);
-+	if (swap) {
-+		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
-+	} else {
-+		nfs_start_io_direct(inode);
- 
--	requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
-+		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
- 
--	if (mapping->nrpages) {
--		invalidate_inode_pages2_range(mapping,
--					      pos >> PAGE_SHIFT, end);
--	}
-+		if (mapping->nrpages) {
-+			invalidate_inode_pages2_range(mapping,
-+						      pos >> PAGE_SHIFT, end);
-+		}
- 
--	nfs_end_io_direct(inode);
-+		nfs_end_io_direct(inode);
-+	}
- 
- 	if (requested > 0) {
- 		result = nfs_direct_wait(dreq);
+ static void cifs_swap_deactivate(struct file *file)
 diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 7d42117b210d..ceacae8e7a38 100644
+index 76d76acbc594..d5aa55c7edb0 100644
 --- a/fs/nfs/file.c
 +++ b/fs/nfs/file.c
-@@ -159,7 +159,7 @@ nfs_file_read(struct kiocb *iocb, struct iov_iter *to)
- 	ssize_t result;
+@@ -488,6 +488,7 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+ {
+ 	unsigned long blocks;
+ 	long long isize;
++	int ret;
+ 	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
+ 	struct inode *inode = file->f_mapping->host;
  
- 	if (iocb->ki_flags & IOCB_DIRECT)
--		return nfs_file_direct_read(iocb, to);
-+		return nfs_file_direct_read(iocb, to, false);
+@@ -500,9 +501,17 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
+ 		return -EINVAL;
+ 	}
  
- 	dprintk("NFS: read(%pD2, %zu@%lu)\n",
- 		iocb->ki_filp,
-@@ -634,7 +634,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- 		return result;
++	ret = rpc_clnt_swap_activate(clnt);
++	if (ret)
++		return ret;
++	ret = add_swap_extent(sis, 0, sis->max, 0);
++	if (ret < 0) {
++		rpc_clnt_swap_deactivate(clnt);
++		return ret;
++	}
+ 	*span = sis->pages;
+-
+-	return rpc_clnt_swap_activate(clnt);
++	sis->flags |= SWP_FS_OPS;
++	return ret;
+ }
  
- 	if (iocb->ki_flags & IOCB_DIRECT)
--		return nfs_file_direct_write(iocb, from);
-+		return nfs_file_direct_write(iocb, from, false);
+ static void nfs_swap_deactivate(struct file *file)
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index a43929f7033e..b57cff3c5ac2 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -573,6 +573,12 @@ static inline swp_entry_t get_swap_page(struct page *page)
+ 	return entry;
+ }
  
- 	dprintk("NFS: write(%pD2, %zu@%Ld)\n",
- 		file, iov_iter_count(from), (long long) iocb->ki_pos);
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 58807406aff6..22aa5c08e3ed 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -507,10 +507,10 @@ static inline const struct cred *nfs_file_cred(struct file *file)
-  * linux/fs/nfs/direct.c
-  */
- int nfs_swap_rw(struct kiocb *, struct iov_iter *);
--extern ssize_t nfs_file_direct_read(struct kiocb *iocb,
--			struct iov_iter *iter);
--extern ssize_t nfs_file_direct_write(struct kiocb *iocb,
--			struct iov_iter *iter);
-+ssize_t nfs_file_direct_read(struct kiocb *iocb,
-+			     struct iov_iter *iter, bool swap);
-+ssize_t nfs_file_direct_write(struct kiocb *iocb,
-+			      struct iov_iter *iter, bool swap);
++static inline int add_swap_extent(struct swap_info_struct *sis,
++				  unsigned long start_page,
++				  unsigned long nr_pages, sector_t start_block)
++{
++	return -EINVAL;
++}
+ #endif /* CONFIG_SWAP */
  
- /*
-  * linux/fs/nfs/dir.c
+ #ifdef CONFIG_THP_SWAP
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 71c7a31dd291..ed6028aea8bf 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -2347,13 +2347,9 @@ static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
+ 
+ 	if (mapping->a_ops->swap_activate) {
+ 		ret = mapping->a_ops->swap_activate(sis, swap_file, span);
+-		if (ret >= 0)
+-			sis->flags |= SWP_ACTIVATED;
+-		if (!ret) {
+-			sis->flags |= SWP_FS_OPS;
+-			ret = add_swap_extent(sis, 0, sis->max, 0);
+-			*span = sis->pages;
+-		}
++		if (ret < 0)
++			return ret;
++		sis->flags |= SWP_ACTIVATED;
+ 		return ret;
+ 	}
+ 
 
 
