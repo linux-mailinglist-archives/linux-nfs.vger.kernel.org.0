@@ -2,54 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22B404AB48E
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 07:16:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0665C4AB47A
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 07:16:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245074AbiBGGPy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Feb 2022 01:15:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50696 "EHLO
+        id S237448AbiBGGPl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Feb 2022 01:15:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352080AbiBGEst (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:48:49 -0500
+        with ESMTP id S1352029AbiBGErD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:47:03 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C9E6C043181;
-        Sun,  6 Feb 2022 20:48:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A78C043181;
+        Sun,  6 Feb 2022 20:47:02 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 9A4A7210E8;
-        Mon,  7 Feb 2022 04:48:47 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 39DA0210EA;
+        Mon,  7 Feb 2022 04:47:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644209327; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1644209221; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NiDP9RcSA5ZHYXdBK498Y6AaH3rCTlt+B3aX1Ji9K8c=;
-        b=yFQcY7p2U+yMBieYQ9Ap5kiuPCxStsoseCRC/zR9E8aD0xHJbjesBUcCSH2xeK28Xr+qra
-        dBFVvzDjLz+SJR7Iz4DHuuW4NfNXt/7NY9lNVgM8wxG8miIeReC8BtVti8+5AsmJdOPQjI
-        qhhGKn3Dig0Sw1MKlQQ6CBz1NZmWp3I=
+        bh=3r8zsBbPzlbUX6ihPzKY8ExxG48IN+l0THpUms1TqYM=;
+        b=UtZfd3blxXJDljhegPqUt1T8a0XNn86n8kcT10KrYnlGH5mPQ9EbVWk9J+FFYsJoeL3hGl
+        UD17NrMjxiyR2BQJTe+Iz7tXl4JNwmaVyVcPmskjhGF/6Siwd6+Bq9eMbymlMRm1hJDgzC
+        YeVz/60dCfGVtNKQud3BFbvUY8iIDlY=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644209327;
+        s=susede2_ed25519; t=1644209221;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NiDP9RcSA5ZHYXdBK498Y6AaH3rCTlt+B3aX1Ji9K8c=;
-        b=aKDca+HVCXocFEMyCBbTi5HaOEdAbBSDpju6By0CvJgdLM20DtD9hw8g8NZToqQcESJ+Hg
-        g/+Hg4IWfhZVLSAA==
+        bh=3r8zsBbPzlbUX6ihPzKY8ExxG48IN+l0THpUms1TqYM=;
+        b=NUMtiBtL6cZig7Sxd4ypS7Jn0vCqv1VQV9qag2wwmvgvOS+6PR4aq/Pz9mKtlWCmqrcSOo
+        Axz4qktLGCHSLrDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9D0F91330E;
-        Mon,  7 Feb 2022 04:48:44 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AAA1F1330E;
+        Mon,  7 Feb 2022 04:46:57 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id WBpCFqykAGKKNQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:48:44 +0000
-Subject: [PATCH 17/21] SUNRPC: improve 'swap' handling: scheduling and
- PF_MEMALLOC
+        id 0ALXGUGkAGIRNQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:46:57 +0000
+Subject: [PATCH 02/21] MM: drop swap_set_page_dirty
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -61,7 +60,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Mon, 07 Feb 2022 15:46:01 +1100
-Message-ID: <164420916122.29374.8760841832230503670.stgit@noble.brown>
+Message-ID: <164420916112.29374.16921074216162707434.stgit@noble.brown>
 In-Reply-To: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 References: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -78,228 +77,75 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-rpc tasks can be marked as RPC_TASK_SWAPPER.  This causes GFP_MEMALLOC
-to be used for some allocations.  This is needed in some cases, but not
-in all where it is currently provided, and in some where it isn't
-provided.
+Pages that are written to swap are owned by the MM subsystem - not any
+filesystem.
 
-Currently *all* tasks associated with a rpc_client on which swap is
-enabled get the flag and hence some GFP_MEMALLOC support.
+When such a page is passed to a filesystem to be written out to a
+swap-file, the filesystem handles the data, but the page itself does not
+belong to the filesystem.  So calling the filesystem's set_page_dirty
+address_space operation makes no sense.  This is for pages in the given
+address space, and a page to be written to swap does not exist in the
+given address space.
 
-GFP_MEMALLOC is provided for ->buf_alloc() but only swap-writes need it.
-However xdr_alloc_bvec does not get GFP_MEMALLOC - though it often does
-need it.
+So drop swap_set_page_dirty() which calls the address-space's
+set_page_dirty, and alway use __set_page_dirty_no_writeback, which is
+appropriate for pages being swapped out.
 
-xdr_alloc_bvec is called while the XPRT_LOCK is held.  If this blocks,
-then it blocks all other queued tasks.  So this allocation needs
-GFP_MEMALLOC for *all* requests, not just writes, when the xprt is used
-for any swap writes.
-
-Similarly, if the transport is not connected, that will block all
-requests including swap writes, so memory allocations should get
-GFP_MEMALLOC if swap writes are possible.
-
-So with this patch:
- 1/ we ONLY set RPC_TASK_SWAPPER for swap writes.
- 2/ __rpc_execute() sets PF_MEMALLOC while handling any task
-    with RPC_TASK_SWAPPER set, or when handling any task that
-    holds the XPRT_LOCKED lock on an xprt used for swap.
-    This removes the need for the RPC_IS_SWAPPER() test
-    in ->buf_alloc handlers.
- 3/ xprt_prepare_transmit() sets PF_MEMALLOC after locking
-    any task to a swapper xprt.  __rpc_execute() will clear it.
- 3/ PF_MEMALLOC is set for all the connect workers.
-
+Fixes-no-auto-backport: 62c230bc1790 ("mm: add support for a filesystem to activate swap files and use direct_IO for writing swap pages")
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/write.c                  |    2 ++
- net/sunrpc/clnt.c               |    2 --
- net/sunrpc/sched.c              |   20 +++++++++++++++++---
- net/sunrpc/xprt.c               |    3 +++
- net/sunrpc/xprtrdma/transport.c |    6 ++++--
- net/sunrpc/xprtsock.c           |    8 ++++++++
- 6 files changed, 34 insertions(+), 7 deletions(-)
+ include/linux/swap.h |    1 -
+ mm/page_io.c         |   14 --------------
+ mm/swap_state.c      |    2 +-
+ 3 files changed, 1 insertion(+), 16 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 987a187bd39a..9f7176745fef 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1409,6 +1409,8 @@ static void nfs_initiate_write(struct nfs_pgio_header *hdr,
- {
- 	int priority = flush_task_priority(how);
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 3f54a8941c9d..a43929f7033e 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -419,7 +419,6 @@ extern void kswapd_stop(int nid);
  
-+	if (IS_SWAPFILE(hdr->inode))
-+		task_setup_data->flags |= RPC_TASK_SWAPPER;
- 	task_setup_data->priority = priority;
- 	rpc_ops->write_setup(hdr, msg, &task_setup_data->rpc_client);
- 	trace_nfs_initiate_write(hdr);
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index d1fb7c0c7685..842366a2fc57 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1085,8 +1085,6 @@ void rpc_task_set_client(struct rpc_task *task, struct rpc_clnt *clnt)
- 		task->tk_flags |= RPC_TASK_TIMEOUT;
- 	if (clnt->cl_noretranstimeo)
- 		task->tk_flags |= RPC_TASK_NO_RETRANS_TIMEOUT;
--	if (atomic_read(&clnt->cl_swapper))
--		task->tk_flags |= RPC_TASK_SWAPPER;
- 	/* Add to the client's list of all tasks */
- 	spin_lock(&clnt->cl_lock);
- 	list_add_tail(&task->tk_task, &clnt->cl_tasks);
-diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 256302bf6557..9020cedb7c95 100644
---- a/net/sunrpc/sched.c
-+++ b/net/sunrpc/sched.c
-@@ -869,6 +869,15 @@ void rpc_release_calldata(const struct rpc_call_ops *ops, void *calldata)
- 		ops->rpc_release(calldata);
+ #ifdef CONFIG_SWAP
+ 
+-extern int swap_set_page_dirty(struct page *page);
+ int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
+ 		unsigned long nr_pages, sector_t start_block);
+ int generic_swapfile_activate(struct swap_info_struct *, struct file *,
+diff --git a/mm/page_io.c b/mm/page_io.c
+index f8c26092e869..34b12d6f94d7 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -438,17 +438,3 @@ int swap_readpage(struct page *page, bool synchronous)
+ 	delayacct_swapin_end();
+ 	return ret;
  }
- 
-+static bool xprt_needs_memalloc(struct rpc_xprt *xprt, struct rpc_task *tk)
-+{
-+	if (!xprt)
-+		return false;
-+	if (!atomic_read(&xprt->swapper))
-+		return false;
-+	return test_bit(XPRT_LOCKED, &xprt->state) && xprt->snd_task == tk;
-+}
-+
- /*
-  * This is the RPC `scheduler' (or rather, the finite state machine).
+-
+-int swap_set_page_dirty(struct page *page)
+-{
+-	struct swap_info_struct *sis = page_swap_info(page);
+-
+-	if (data_race(sis->flags & SWP_FS_OPS)) {
+-		struct address_space *mapping = sis->swap_file->f_mapping;
+-
+-		VM_BUG_ON_PAGE(!PageSwapCache(page), page);
+-		return mapping->a_ops->set_page_dirty(page);
+-	} else {
+-		return __set_page_dirty_no_writeback(page);
+-	}
+-}
+diff --git a/mm/swap_state.c b/mm/swap_state.c
+index bb38453425c7..514b86b05488 100644
+--- a/mm/swap_state.c
++++ b/mm/swap_state.c
+@@ -31,7 +31,7 @@
   */
-@@ -877,6 +886,7 @@ static void __rpc_execute(struct rpc_task *task)
- 	struct rpc_wait_queue *queue;
- 	int task_is_async = RPC_IS_ASYNC(task);
- 	int status = 0;
-+	unsigned long pflags = current->flags;
- 
- 	WARN_ON_ONCE(RPC_IS_QUEUED(task));
- 	if (RPC_IS_QUEUED(task))
-@@ -899,6 +909,10 @@ static void __rpc_execute(struct rpc_task *task)
- 		}
- 		if (!do_action)
- 			break;
-+		if (RPC_IS_SWAPPER(task) ||
-+		    xprt_needs_memalloc(task->tk_xprt, task))
-+			current->flags |= PF_MEMALLOC;
-+
- 		trace_rpc_task_run_action(task, do_action);
- 		do_action(task);
- 
-@@ -936,7 +950,7 @@ static void __rpc_execute(struct rpc_task *task)
- 		rpc_clear_running(task);
- 		spin_unlock(&queue->lock);
- 		if (task_is_async)
--			return;
-+			goto out;
- 
- 		/* sync task: sleep here */
- 		trace_rpc_task_sync_sleep(task, task->tk_action);
-@@ -960,6 +974,8 @@ static void __rpc_execute(struct rpc_task *task)
- 
- 	/* Release all resources associated with the task */
- 	rpc_release_task(task);
-+out:
-+	current_restore_flags(pflags, PF_MEMALLOC);
- }
- 
- /*
-@@ -1018,8 +1034,6 @@ int rpc_malloc(struct rpc_task *task)
- 
- 	if (RPC_IS_ASYNC(task))
- 		gfp = GFP_NOWAIT | __GFP_NOWARN;
--	if (RPC_IS_SWAPPER(task))
--		gfp |= __GFP_MEMALLOC;
- 
- 	size += sizeof(struct rpc_buffer);
- 	if (size <= RPC_BUFFER_MAXSIZE)
-diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index a0a2583fe941..0614e7463d4b 100644
---- a/net/sunrpc/xprt.c
-+++ b/net/sunrpc/xprt.c
-@@ -1492,6 +1492,9 @@ bool xprt_prepare_transmit(struct rpc_task *task)
- 		return false;
- 
- 	}
-+	if (atomic_read(&xprt->swapper))
-+		/* This will be clear in __rpc_execute */
-+		current->flags |= PF_MEMALLOC;
- 	return true;
- }
- 
-diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-index 923e4b512ee9..6b7e10e5a141 100644
---- a/net/sunrpc/xprtrdma/transport.c
-+++ b/net/sunrpc/xprtrdma/transport.c
-@@ -235,8 +235,11 @@ xprt_rdma_connect_worker(struct work_struct *work)
- 	struct rpcrdma_xprt *r_xprt = container_of(work, struct rpcrdma_xprt,
- 						   rx_connect_worker.work);
- 	struct rpc_xprt *xprt = &r_xprt->rx_xprt;
-+	unsigned int pflags = current->flags;
- 	int rc;
- 
-+	if (atomic_read(&xprt->swapper))
-+		current->flags |= PF_MEMALLOC;
- 	rc = rpcrdma_xprt_connect(r_xprt);
- 	xprt_clear_connecting(xprt);
- 	if (!rc) {
-@@ -250,6 +253,7 @@ xprt_rdma_connect_worker(struct work_struct *work)
- 		rpcrdma_xprt_disconnect(r_xprt);
- 	xprt_unlock_connect(xprt, r_xprt);
- 	xprt_wake_pending_tasks(xprt, rc);
-+	current_restore_flags(pflags, PF_MEMALLOC);
- }
- 
- /**
-@@ -572,8 +576,6 @@ xprt_rdma_allocate(struct rpc_task *task)
- 	flags = RPCRDMA_DEF_GFP;
- 	if (RPC_IS_ASYNC(task))
- 		flags = GFP_NOWAIT | __GFP_NOWARN;
--	if (RPC_IS_SWAPPER(task))
--		flags |= __GFP_MEMALLOC;
- 
- 	if (!rpcrdma_check_regbuf(r_xprt, req->rl_sendbuf, rqst->rq_callsize,
- 				  flags))
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 69b6ee5a5fd1..c461a0ce9531 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -2047,7 +2047,10 @@ static void xs_udp_setup_socket(struct work_struct *work)
- 	struct rpc_xprt *xprt = &transport->xprt;
- 	struct socket *sock;
- 	int status = -EIO;
-+	unsigned int pflags = current->flags;
- 
-+	if (atomic_read(&xprt->swapper))
-+		current->flags |= PF_MEMALLOC;
- 	sock = xs_create_sock(xprt, transport,
- 			xs_addr(xprt)->sa_family, SOCK_DGRAM,
- 			IPPROTO_UDP, false);
-@@ -2067,6 +2070,7 @@ static void xs_udp_setup_socket(struct work_struct *work)
- 	xprt_clear_connecting(xprt);
- 	xprt_unlock_connect(xprt, transport);
- 	xprt_wake_pending_tasks(xprt, status);
-+	current_restore_flags(pflags, PF_MEMALLOC);
- }
- 
- /**
-@@ -2226,7 +2230,10 @@ static void xs_tcp_setup_socket(struct work_struct *work)
- 	struct socket *sock = transport->sock;
- 	struct rpc_xprt *xprt = &transport->xprt;
- 	int status;
-+	unsigned int pflags = current->flags;
- 
-+	if (atomic_read(&xprt->swapper))
-+		current->flags |= PF_MEMALLOC;
- 	if (!sock) {
- 		sock = xs_create_sock(xprt, transport,
- 				xs_addr(xprt)->sa_family, SOCK_STREAM,
-@@ -2291,6 +2298,7 @@ static void xs_tcp_setup_socket(struct work_struct *work)
- 	xprt_clear_connecting(xprt);
- out_unlock:
- 	xprt_unlock_connect(xprt, transport);
-+	current_restore_flags(pflags, PF_MEMALLOC);
- }
- 
- /**
+ static const struct address_space_operations swap_aops = {
+ 	.writepage	= swap_writepage,
+-	.set_page_dirty	= swap_set_page_dirty,
++	.set_page_dirty	= __set_page_dirty_no_writeback,
+ #ifdef CONFIG_MIGRATION
+ 	.migratepage	= migrate_page,
+ #endif
 
 
