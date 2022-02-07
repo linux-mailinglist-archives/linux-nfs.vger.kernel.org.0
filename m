@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0665C4AB47A
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 07:16:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 171284AB485
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Feb 2022 07:16:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237448AbiBGGPl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Feb 2022 01:15:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50218 "EHLO
+        id S244029AbiBGGPv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Feb 2022 01:15:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352029AbiBGErD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:47:03 -0500
+        with ESMTP id S1352095AbiBGEtQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Feb 2022 23:49:16 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2A78C043181;
-        Sun,  6 Feb 2022 20:47:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A94C043181;
+        Sun,  6 Feb 2022 20:49:15 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 39DA0210EA;
-        Mon,  7 Feb 2022 04:47:01 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id F1FD3210E8;
+        Mon,  7 Feb 2022 04:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644209221; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1644209353; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3r8zsBbPzlbUX6ihPzKY8ExxG48IN+l0THpUms1TqYM=;
-        b=UtZfd3blxXJDljhegPqUt1T8a0XNn86n8kcT10KrYnlGH5mPQ9EbVWk9J+FFYsJoeL3hGl
-        UD17NrMjxiyR2BQJTe+Iz7tXl4JNwmaVyVcPmskjhGF/6Siwd6+Bq9eMbymlMRm1hJDgzC
-        YeVz/60dCfGVtNKQud3BFbvUY8iIDlY=
+        bh=8RjmMA1NrNB1dcX8VlrCIeURT/zjbUyKgTSkkvTTrZ4=;
+        b=eH4GEA19qQ07ImRUOY2A8Sm2l4231phSU/9mIfpFmNGSBtN/OXjXOLrrPmN7/7gZBO9LOU
+        znkMvj6r5hd7Bp8KTHQm/KjMzjhkUiPV9Q3+bx8G1KBxzb65nFaj4VRcI6tZcCQtbMR76J
+        8TPio5UkYLoXB+d/+vSet5L5w5cH1FU=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644209221;
+        s=susede2_ed25519; t=1644209353;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=3r8zsBbPzlbUX6ihPzKY8ExxG48IN+l0THpUms1TqYM=;
-        b=NUMtiBtL6cZig7Sxd4ypS7Jn0vCqv1VQV9qag2wwmvgvOS+6PR4aq/Pz9mKtlWCmqrcSOo
-        Axz4qktLGCHSLrDQ==
+        bh=8RjmMA1NrNB1dcX8VlrCIeURT/zjbUyKgTSkkvTTrZ4=;
+        b=gg+Xt3GS+NULgkfMEQ5/eDYBs276HjW/e20Y9e5NxQtC0tLeRLB/8gCLHZiJqdYdH5eMew
+        OACLY5ZojWUu/3Bw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AAA1F1330E;
-        Mon,  7 Feb 2022 04:46:57 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EA35D1330E;
+        Mon,  7 Feb 2022 04:49:10 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 0ALXGUGkAGIRNQAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:46:57 +0000
-Subject: [PATCH 02/21] MM: drop swap_set_page_dirty
+        id PnInKcakAGKgNQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 07 Feb 2022 04:49:10 +0000
+Subject: [PATCH 21/21] NFS: swap-out must always use STABLE writes.
 From:   NeilBrown <neilb@suse.de>
 To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna.schumaker@netapp.com>,
@@ -60,7 +60,7 @@ To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
 Date:   Mon, 07 Feb 2022 15:46:01 +1100
-Message-ID: <164420916112.29374.16921074216162707434.stgit@noble.brown>
+Message-ID: <164420916125.29374.15563574398247024921.stgit@noble.brown>
 In-Reply-To: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 References: <164420889455.29374.17958998143835612560.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -77,75 +77,62 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Pages that are written to swap are owned by the MM subsystem - not any
-filesystem.
+The commit handling code is not safe against memory-pressure deadlocks
+when writing to swap.  In particular, nfs_commitdata_alloc() blocks
+indefinitely waiting for memory, and this can consume all available
+workqueue threads.
 
-When such a page is passed to a filesystem to be written out to a
-swap-file, the filesystem handles the data, but the page itself does not
-belong to the filesystem.  So calling the filesystem's set_page_dirty
-address_space operation makes no sense.  This is for pages in the given
-address space, and a page to be written to swap does not exist in the
-given address space.
+swap-out most likely uses STABLE writes anyway as COND_STABLE indicates
+that a stable write should be used if the write fits in a single
+request, and it normally does.  However if we ever swap with a small
+wsize, or gather unusually large numbers of pages for a single write,
+this might change.
 
-So drop swap_set_page_dirty() which calls the address-space's
-set_page_dirty, and alway use __set_page_dirty_no_writeback, which is
-appropriate for pages being swapped out.
+For safety, make it explicit in the code that direct writes used for swap
+must always use FLUSH_STABLE.
 
-Fixes-no-auto-backport: 62c230bc1790 ("mm: add support for a filesystem to activate swap files and use direct_IO for writing swap pages")
-Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- include/linux/swap.h |    1 -
- mm/page_io.c         |   14 --------------
- mm/swap_state.c      |    2 +-
- 3 files changed, 1 insertion(+), 16 deletions(-)
+ fs/nfs/direct.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 3f54a8941c9d..a43929f7033e 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -419,7 +419,6 @@ extern void kswapd_stop(int nid);
- 
- #ifdef CONFIG_SWAP
- 
--extern int swap_set_page_dirty(struct page *page);
- int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
- 		unsigned long nr_pages, sector_t start_block);
- int generic_swapfile_activate(struct swap_info_struct *, struct file *,
-diff --git a/mm/page_io.c b/mm/page_io.c
-index f8c26092e869..34b12d6f94d7 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -438,17 +438,3 @@ int swap_readpage(struct page *page, bool synchronous)
- 	delayacct_swapin_end();
- 	return ret;
- }
--
--int swap_set_page_dirty(struct page *page)
--{
--	struct swap_info_struct *sis = page_swap_info(page);
--
--	if (data_race(sis->flags & SWP_FS_OPS)) {
--		struct address_space *mapping = sis->swap_file->f_mapping;
--
--		VM_BUG_ON_PAGE(!PageSwapCache(page), page);
--		return mapping->a_ops->set_page_dirty(page);
--	} else {
--		return __set_page_dirty_no_writeback(page);
--	}
--}
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index bb38453425c7..514b86b05488 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -31,7 +31,7 @@
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index c5c53219beeb..4eb2a8380a28 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -791,7 +791,7 @@ static const struct nfs_pgio_completion_ops nfs_direct_write_completion_ops = {
   */
- static const struct address_space_operations swap_aops = {
- 	.writepage	= swap_writepage,
--	.set_page_dirty	= swap_set_page_dirty,
-+	.set_page_dirty	= __set_page_dirty_no_writeback,
- #ifdef CONFIG_MIGRATION
- 	.migratepage	= migrate_page,
- #endif
+ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 					       struct iov_iter *iter,
+-					       loff_t pos)
++					       loff_t pos, int ioflags)
+ {
+ 	struct nfs_pageio_descriptor desc;
+ 	struct inode *inode = dreq->inode;
+@@ -799,7 +799,7 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	size_t requested_bytes = 0;
+ 	size_t wsize = max_t(size_t, NFS_SERVER(inode)->wsize, PAGE_SIZE);
+ 
+-	nfs_pageio_init_write(&desc, inode, FLUSH_COND_STABLE, false,
++	nfs_pageio_init_write(&desc, inode, ioflags, false,
+ 			      &nfs_direct_write_completion_ops);
+ 	desc.pg_dreq = dreq;
+ 	get_dreq(dreq);
+@@ -945,11 +945,13 @@ ssize_t nfs_file_direct_write(struct kiocb *iocb, struct iov_iter *iter,
+ 	pnfs_init_ds_commit_info_ops(&dreq->ds_cinfo, inode);
+ 
+ 	if (swap) {
+-		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
++		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos,
++							    FLUSH_STABLE);
+ 	} else {
+ 		nfs_start_io_direct(inode);
+ 
+-		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos);
++		requested = nfs_direct_write_schedule_iovec(dreq, iter, pos,
++							    FLUSH_COND_STABLE);
+ 
+ 		if (mapping->nrpages) {
+ 			invalidate_inode_pages2_range(mapping,
 
 
