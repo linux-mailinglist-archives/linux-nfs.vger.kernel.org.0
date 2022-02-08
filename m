@@ -2,47 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 387354AE14F
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Feb 2022 19:46:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26BA94AE170
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Feb 2022 19:49:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1385313AbiBHSpK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Feb 2022 13:45:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
+        id S1385506AbiBHSta (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Feb 2022 13:49:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1385321AbiBHSpB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Feb 2022 13:45:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC38CC03FEDC
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 10:44:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8757960DFF
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 18:44:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96F9AC004E1;
-        Tue,  8 Feb 2022 18:44:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644345889;
-        bh=bcwD14xEuE8U1chEKjNelzR9KFTDCtuFVC8COole5gA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=mJNbAXJ1eY9oKDJgdwAnyHB79lBTLTIjFXwDxOvsLjZfF5w6tKroey7FR1X2B1npp
-         WjObu6HwR3L3RYjWdDun0a2gObR8AjCZCULq9T7WwJVo86V+BXkIrFeYkO4+LMhHx9
-         ap3vfq3d6J/gfUU88OGfnkgOHJHxZnCMGVNQG2GLNn3hIPr8Z+WtXu4xC/v6PALBdI
-         YpKI86Ni2nwKBdDz38VvostRw6TEjGAON2M/gnFWfWblrED14Oiw23jf/7meMtZFgJ
-         8Cwbn0Hui1EuSSOx/MhiPpGQXJSKD297LPK0peUD2Iz5+cd7BEOj4FiR5RLfGii83N
-         aGYvjsAzroy8A==
-From:   trondmy@kernel.org
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: LOOKUP_DIRECTORY is also ok with symlinks
-Date:   Tue,  8 Feb 2022 13:38:23 -0500
-Message-Id: <20220208183823.1391397-1-trondmy@kernel.org>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S1385498AbiBHSt1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Feb 2022 13:49:27 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 650A5C0612C0
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 10:49:26 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id m4so316376ejb.9
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Feb 2022 10:49:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s14TajN291sD1YxLCHXolCM3fi20R+bTdbrd5rqKyF4=;
+        b=iyXGzXfoL0JpbP06eJjrzryVUDtWOks4c6WGlA8VSZcxeOXh7EesROhmVgp1lKsh2X
+         mLox0sePMLEpyXiekeIfMzM8egoDhr06QlgjddtPCaHVfk6DqmlfeAR12wQH8EfLn4Yt
+         bu42AzJrVCkkJFvbbBpzBu1vJoEgayO/7U328R+67QSbMIPpWN+x3LqaoIJGLpX3Qgan
+         sjSs0VnL/uFjRvAYboGJpGfRtxpZHb0YyqY+2iy3k9K7QRh6/UEkz687lpDyExHxb/Ns
+         3bYFI478zKOA2aWe3y1b38xepMzJs5bWiB/NTxnAlp3cpUb/2OVBIJDtkF0IyRJvfmr8
+         i4NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s14TajN291sD1YxLCHXolCM3fi20R+bTdbrd5rqKyF4=;
+        b=Va9LKAYdowDbk8XWTPsUT0x0gLEneOKtBLMk6vtwTKT3Q4Zns/yzGbTNbmLV2Jb34z
+         pJKqsDuuP/AxbSOnBybjtkdtE5Stzdid5TN0h4TQk51UGKU7L1UYDCBHmRA0UeUVLgFL
+         P+g8lDAOqtV9CAwG13qF4/hwQuLQQBmd1+j/Xwa8XcnYMFf6HIdbL1+4dlK7YF+q0PI4
+         kTfWWo2H5B1uzCttOMv1IknHxuuJIr80jrUJvj+LUz+G+sSu/oDGZSz8Zo4AKKzm/9OI
+         OKs0DMn4Egkm2V9e74CRvlOxF5RiklhXegEE8yL26q37PEft1ZtOhrwQ06Oq61CDBuU4
+         v/Vw==
+X-Gm-Message-State: AOAM533k5UYEKft/hZivHz+8aqb29svBpuCJ+I7gCO6qP9axlhHR7/dV
+        +1lGVChzuRN+NDduA+T9bMnNny7bKd4nPTw4x/sHSA==
+X-Google-Smtp-Source: ABdhPJxU3Fjik7jAIeaEoDKzzZOcq1WLjRjPx3NV3wMnFmubirLfobMi1lG3KbeglZIkIfrNU5mb0MdSphgnwp6fB6M=
+X-Received: by 2002:a17:906:3b42:: with SMTP id h2mr4944788ejf.647.1644346164898;
+ Tue, 08 Feb 2022 10:49:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
+ <20220124193759.GA4975@fieldses.org> <adce2b72-ed5c-3056-313c-caea9bad4e15@math.utexas.edu>
+ <20220125212055.GB17638@fieldses.org> <164315533676.5493.13243313269022942124@noble.neil.brown.name>
+ <20220126025722.GD17638@fieldses.org>
+In-Reply-To: <20220126025722.GD17638@fieldses.org>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Tue, 8 Feb 2022 18:48:49 +0000
+Message-ID: <CAPt2mGP2guMMf1C9VoQ0AvZ819jPuz0vDoEzJJhtL8q5DJ300A@mail.gmail.com>
+Subject: Re: parallel file create rates (+high latency)
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     NeilBrown <neilb@suse.de>, Patrick Goetz <pgoetz@math.utexas.edu>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -51,41 +67,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Wed, 26 Jan 2022 at 02:57, J. Bruce Fields <bfields@fieldses.org> wrote:
+>
+> On Wed, Jan 26, 2022 at 11:02:16AM +1100, NeilBrown wrote:
+> > On Wed, 26 Jan 2022, J. Bruce Fields wrote:
+> > > On Tue, Jan 25, 2022 at 03:15:42PM -0600, Patrick Goetz wrote:
+> > > > So the directory is locked while the inode is created, or something
+> > > > like this, which makes sense.
+> > >
+> > > It accomplishes a number of things, details in
+> > > https://www.kernel.org/doc/html/latest/filesystems/directory-locking.html
+> >
+> > Just in case anyone is interested, I wrote this a while back:
+> >
+> > http://lists.lustre.org/pipermail/lustre-devel-lustre.org/2018-November/008177.html
+> >
+> > it includes a patch to allow parallel creates/deletes over NFS (and any
+> > other filesystem which adds support).
+> > I doubt it still applies, but it wouldn't be hard to make it work if
+> > anyone was willing to make a strong case that we would benefit from
+> > this.
 
-Commit ac795161c936 (NFSv4: Handle case where the lookup of a directory
-fails) [1], part of Linux since 5.17-rc2, introduced a regression, where
-a symbolic link on an NFS mount to a directory on another NFS does not
-resolve(?) the first time it is accessed:
+Well, I couldn't resist quickly testing Neil's patch. I found it
+applied okay to v5.6.19 with minimal edits.
 
-Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
-Fixes: ac795161c936 ("NFSv4: Handle case where the lookup of a directory fails")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/dir.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+As before, without the patch, parallel file creates in a single
+directory with 1000 threads topped out at an aggregate of 3 creates/s
+over a 200ms link. With the patch it jumps up to 1,200 creates/s.
 
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index e128503728f2..6dee4e12d381 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2051,14 +2051,14 @@ int nfs_atomic_open(struct inode *dir, struct dentry *dentry,
- 	if (!res) {
- 		inode = d_inode(dentry);
- 		if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
--		    !S_ISDIR(inode->i_mode))
-+		    !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode)))
- 			res = ERR_PTR(-ENOTDIR);
- 		else if (inode && S_ISREG(inode->i_mode))
- 			res = ERR_PTR(-EOPENSTALE);
- 	} else if (!IS_ERR(res)) {
- 		inode = d_inode(res);
- 		if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
--		    !S_ISDIR(inode->i_mode)) {
-+		    !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))) {
- 			dput(res);
- 			res = ERR_PTR(-ENOTDIR);
- 		} else if (inode && S_ISREG(inode->i_mode)) {
--- 
-2.34.1
+So a pretty dramatic difference. I can't say if there are any other
+side effects or regressions as I only did this simple test.
 
+It's great for our super niche workloads and use case anyway.
+
+Daire
+
+
+> Neato.
+>
+> Removing the need to hold an exclusive lock on the directory across
+> server round trips seems compelling to me....
+>
+> I also wonder: why couldn't you fire off the RPC without any locks, then
+> wait till you get a reply to take locks and update your local cache?
+>
+> OK, for one thing, calls and replies and server processing could all get
+> reordered.  We'd need to know what order the server processed operations
+> in, so we could process replies in the same order.
+>
+> --b.
