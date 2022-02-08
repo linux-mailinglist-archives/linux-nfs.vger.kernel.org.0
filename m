@@ -2,102 +2,102 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 673534ADF5F
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Feb 2022 18:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 377B54ADFDB
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Feb 2022 18:47:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243067AbiBHRUz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Feb 2022 12:20:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
+        id S1384382AbiBHRpc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Feb 2022 12:45:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1359306AbiBHRUy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Feb 2022 12:20:54 -0500
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBC67C061578
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 09:20:53 -0800 (PST)
-Received: by mail-qt1-x82c.google.com with SMTP id l14so3023958qtp.7
-        for <linux-nfs@vger.kernel.org>; Tue, 08 Feb 2022 09:20:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cgrS1yZYeAwNAn9ocXquWQBwkXeVl2RWfwPW6c8S0+8=;
-        b=TD/bicTa+RN3hX3ebjIyA5GZd0rVwscfDfxL1BMVlRN+hzBcSPPEyacvTDnhSiqXu4
-         1wDulHpCuUfMDzCDL9soHx0rLKSCXbJBAPCvMBAZq1l3Z3hIwMSVVSAVtdbYVwUsiUlE
-         TZ+rsGnkbArl7hkDZFuyt+3vDV32v+CybqhOho37NmzO+smGAlRJScZTi4fs6k5tzzXl
-         2LIaJH3Kt2amlszAApDEByeTIbIToFxVwrppl/yZc70Jj4I8dtwzHCkAPmsI3HVl7pSh
-         T+Ml3ilQ8afQdPksgM88vYLy5CYNrYZgVm/u0NlbkhoW6b++2IkpKOoPhovi67v6LHeG
-         ruCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cgrS1yZYeAwNAn9ocXquWQBwkXeVl2RWfwPW6c8S0+8=;
-        b=lDbIPt1P+NoAdEXyBmfAicwi6QP3LawXl7DbGwu7FBoY9MOm15Wl1oo63dRE8yS3ur
-         5yiLu9mJZhRVmhCDR6T06tVQcoD1oIgz5SKtjQY2Itmtk0Bc+bJdlnkrIIXFmOxVInU7
-         UnRmuSsIB38LHIbe66CP4JKvl79cy83oxzOj7+P0p/2O2P6+PCV1BDsdPiC83+H+ibPN
-         WZgwyR6sRAvRPUXj5FN/Tpx1toOGCxqxpHMSW6NURnGsmvAjyf7hvhwzB+qdVNFXRZSo
-         KPUiAz2/tv9LOC7cvDFaZvr0W+XzVHbiojx4aOxb0R5RXCKQaBvbtcDdbErLrX6J2jW8
-         JwNQ==
-X-Gm-Message-State: AOAM530TueOlM1+QXVsYtojhD977PrGu7SGQeX2ZQCtQ6awVDFtN8JAi
-        XUxymLOeqXlRR7LklrTxHvuJOQWPZg==
-X-Google-Smtp-Source: ABdhPJxiDMStBaNleR1daF3+0gxONwslKwHViUWFfaHMZFsNna8j6tloMxmT2eMAYmjsgdDWu+3eKg==
-X-Received: by 2002:ac8:7f4d:: with SMTP id g13mr3784391qtk.173.1644340852293;
-        Tue, 08 Feb 2022 09:20:52 -0800 (PST)
-Received: from localhost.localdomain (c-68-56-145-227.hsd1.mi.comcast.net. [68.56.145.227])
-        by smtp.gmail.com with ESMTPSA id z19sm7951918qtj.77.2022.02.08.09.20.51
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Feb 2022 09:20:51 -0800 (PST)
-From:   trondmy@gmail.com
-X-Google-Original-From: trond.myklebust@hammerspace.com
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: Remove an incorrect revalidation in nfs4_update_changeattr_locked()
-Date:   Tue,  8 Feb 2022 12:14:44 -0500
-Message-Id: <20220208171444.1388246-1-trond.myklebust@hammerspace.com>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S234672AbiBHRpb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Feb 2022 12:45:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 14205C061576
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 09:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644342330;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1O1IXSyj0L+GkXb7ky4C9YVpjwRWp8nCNDif/13E+jQ=;
+        b=CkUyOo2Iwa2oAREl6ITJtNxQeg5EloTQckaAaEi5fs2t9XparECkfgEW7TcEfcjfeWzih3
+        crv2VSZS3sk24pgeaifELAYTaTGOI5jFjZoK+r7dhKA/6Yy1NDaaQoQjuUdZg4Xo63uKmG
+        GsNDeYPlYE8wFFZLilnBfI+gPjYwK/o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-124-AZOsrG7oMMuJyZbNiYN7NQ-1; Tue, 08 Feb 2022 12:45:27 -0500
+X-MC-Unique: AZOsrG7oMMuJyZbNiYN7NQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DCA8A51082;
+        Tue,  8 Feb 2022 17:45:25 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 76FA6838D2;
+        Tue,  8 Feb 2022 17:45:25 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: v4 clientid uniquifiers in containers/namespaces
+Date:   Tue, 08 Feb 2022 12:45:23 -0500
+Message-ID: <16BCC862-88A3-46EB-9E8C-8C27E8536D2C@redhat.com>
+In-Reply-To: <573bd3329d0dc2f73986d4c2cf3060c0298ac970.camel@hammerspace.com>
+References: <6CEC5101-0512-4082-81F8-BDFEC5B6DF3A@redhat.com>
+ <6ac83db82e838d9d4e1ac10cb13e43c5c12b2660.camel@hammerspace.com>
+ <439C77F9-D5AD-4388-B954-3B413C1DF0E2@redhat.com>
+ <596C2475-76AA-4616-919C-9C22B6658CA7@redhat.com>
+ <DB8B60C8-B772-4604-A841-47F789723D5D@oracle.com>
+ <b192022ce73ea690a117d7710b492e83be99df31.camel@hammerspace.com>
+ <43990B9C-013C-4E77-AADA-F274ACBE4757@oracle.com>
+ <8CCCD806-A467-432C-B7FF-9E83981533EF@redhat.com>
+ <573bd3329d0dc2f73986d4c2cf3060c0298ac970.camel@hammerspace.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On 8 Feb 2022, at 11:47, Trond Myklebust wrote:
 
-In nfs4_update_changeattr_locked(), we don't need to set the
-NFS_INO_REVAL_PAGECACHE flag, because we already know the value of the
-change attribute, and we're already flagging the size. In fact, this
-forces us to revalidate the change attribute a second time for no good
-reason.
-This extra flag appears to have been introduced as part of the xattr
-feature, when update_changeattr_locked() was converted for use by the
-xattr code.
+> On Tue, 2022-02-08 at 06:32 -0500, Benjamin Coddington wrote:
+>>
+>> There's a bit of a chicken and egg problem with 2, though.  If the
+>> nfs
+>> module is loaded, the kernel notification gets sent as soon as you
+>> create
+>> the namespace.  Its not going to wait for you to move or exec udev
+>> into
+>> that
+>> network namespace, and the notification is lost.
+>
+>
+> Wait a minute... I missed this comment earlier, but it definitely
+> points to a misunderstanding.
+>
+> The notification is _not_ sent by the act of loading a module. It is
+> sent by the call to kobject_uevent() in nfs_netns_sysfs_setup(). That
+> again is called as part of nfs_net_init() when the net namespace gets
+> created.
 
-Fixes: 1b523ca972ed ("nfs: modify update_changeattr to deal with regular files")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfs4proc.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+My communication was poor.  The first notification is sent to udev when the
+nfs module is loaded.  That is the initial creation of the sysfs, the
+notification in the init namespace.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 62b7e27d825b..0add19a814fd 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -1229,8 +1229,7 @@ nfs4_update_changeattr_locked(struct inode *inode,
- 				NFS_INO_INVALID_ACCESS | NFS_INO_INVALID_ACL |
- 				NFS_INO_INVALID_SIZE | NFS_INO_INVALID_OTHER |
- 				NFS_INO_INVALID_BLOCKS | NFS_INO_INVALID_NLINK |
--				NFS_INO_INVALID_MODE | NFS_INO_INVALID_XATTR |
--				NFS_INO_REVAL_PAGECACHE;
-+				NFS_INO_INVALID_MODE | NFS_INO_INVALID_XATTR;
- 		nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
- 	}
- 	nfsi->attrtimeo_timestamp = jiffies;
--- 
-2.34.1
+After that, if a network namespace is created and "the nfs module is
+[already] loaded", the notification is immediately sent.
+
+I think we're both understanding it and our understanding matches how it
+works.
+
+Ben
 
