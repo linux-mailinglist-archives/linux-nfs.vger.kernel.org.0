@@ -2,41 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BEF4AF9F9
+	by mail.lfdr.de (Postfix) with ESMTP id 8BAB04AF9FA
 	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 19:33:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237472AbiBISdS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Feb 2022 13:33:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50552 "EHLO
+        id S234259AbiBISdV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Feb 2022 13:33:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234259AbiBISdR (ORCPT
+        with ESMTP id S236954AbiBISdR (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 13:33:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17492C0613C9
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D8B3C05CB82
         for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 10:33:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A69B961B7F
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1948061B54
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:33:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BA99C340E9
         for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:33:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67DDC340E7
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1644431599;
-        bh=I1c94OKssf61miANbbpys7mGxAspozv+fqccX6h8z0k=;
-        h=From:To:Subject:Date:From;
-        b=Amv4okRu3DGql737pRuNh1H584pCzHlevIDrNdNnYg4uVD37/FSx8SneptV+2rryi
-         tsfESLJI5q8I+pP4uaIzvfMqZawxEQmJxhjX1WnPnzXUla9gcJcec5F5nwgxHJZgvJ
-         IDvaRJ6y54jVE8+QsAYCfeHedBCW7SMId0P96L+81TiFyb3QmvXnR5dVzyLiz1Lsg+
-         vEqJ7/kFEdzKFSP9IQDRQu+znt0kbAtPXD0YWaBZZ6PHpF5mJi2M5PYO6BXJ4/G7Nh
-         y8gSoC8lfRvkw6AjbhObPOD0sm6GPhJh8rpTTH7XnEoOClJcdJ8bvnMwEh0nkB6JKy
-         Z9gOiJ7w1fdrw==
+        bh=LT3oiE2s5w2MuFuDkkyDXRTGEM63nKhWEzYxuFdHwzU=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=Hr2fsOPqOY9QwudFfJQHdJDc2H+S17EU30/Z+aAXlOXDIVdvUMfrc7CPSm7xtVw38
+         BNzKkBj3RlVup0OH6WWt6a9C1UgT3ptl4WAnAWTgNvLos4K90B1gri/RxTRBQw4Kj2
+         +UvucqrspzZwjlvzXF88pbSbJB/YwH8obZqofZ2NhXTO+L+ad3QmEJYfGjKXIl2ao+
+         jiSVLeAgFHGZV+7WF2tJwtbc1WoguTWentJNVTqpRFfuYqOBL135e9zDJRQ7s/Fj6X
+         jfryjSTVKC9gLJMfdQic55At7FIj2aPu3YzauWbz+5LWiYhhxr00O3WNg7z9TeFH44
+         Q67/XODZb8dVg==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] NFS: Replace last uses of NFS_INO_REVAL_PAGECACHE
-Date:   Wed,  9 Feb 2022 13:27:11 -0500
-Message-Id: <20220209182712.23306-1-trondmy@kernel.org>
+Subject: [PATCH 2/2] NFS: Remove unused flag NFS_INO_REVAL_PAGECACHE
+Date:   Wed,  9 Feb 2022 13:27:12 -0500
+Message-Id: <20220209182712.23306-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220209182712.23306-1-trondmy@kernel.org>
+References: <20220209182712.23306-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -51,83 +53,58 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Now that we have more fine grained attribute revalidation, let's just
-get rid of NFS_INO_REVAL_PAGECACHE.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/inode.c         | 24 +++++++++++-------------
- fs/nfs/write.c         |  2 +-
- include/linux/nfs_fs.h |  8 +++-----
- 3 files changed, 15 insertions(+), 19 deletions(-)
+ fs/nfs/inode.c         | 5 ++---
+ fs/nfs/nfstrace.h      | 1 -
+ include/linux/nfs_fs.h | 1 -
+ 3 files changed, 2 insertions(+), 5 deletions(-)
 
 diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index dce96289e474..5eab46e9cbc0 100644
+index 5eab46e9cbc0..90432fc389a0 100644
 --- a/fs/nfs/inode.c
 +++ b/fs/nfs/inode.c
-@@ -236,19 +236,17 @@ static void nfs_zap_caches_locked(struct inode *inode)
- 	nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
- 	nfsi->attrtimeo_timestamp = jiffies;
+@@ -203,14 +203,13 @@ void nfs_set_cache_invalid(struct inode *inode, unsigned long flags)
+ 				   NFS_INO_INVALID_OTHER |
+ 				   NFS_INO_INVALID_XATTR);
+ 		flags &= ~(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE);
+-	} else if (flags & NFS_INO_REVAL_PAGECACHE)
+-		flags |= NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_SIZE;
++	}
  
--	if (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode)) {
--		nfs_set_cache_invalid(inode, NFS_INO_INVALID_ATTR
--					| NFS_INO_INVALID_DATA
--					| NFS_INO_INVALID_ACCESS
--					| NFS_INO_INVALID_ACL
--					| NFS_INO_INVALID_XATTR
--					| NFS_INO_REVAL_PAGECACHE);
--	} else
--		nfs_set_cache_invalid(inode, NFS_INO_INVALID_ATTR
--					| NFS_INO_INVALID_ACCESS
--					| NFS_INO_INVALID_ACL
--					| NFS_INO_INVALID_XATTR
--					| NFS_INO_REVAL_PAGECACHE);
-+	if (S_ISREG(mode) || S_ISDIR(mode) || S_ISLNK(mode))
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_ATTR |
-+						     NFS_INO_INVALID_DATA |
-+						     NFS_INO_INVALID_ACCESS |
-+						     NFS_INO_INVALID_ACL |
-+						     NFS_INO_INVALID_XATTR);
-+	else
-+		nfs_set_cache_invalid(inode, NFS_INO_INVALID_ATTR |
-+						     NFS_INO_INVALID_ACCESS |
-+						     NFS_INO_INVALID_ACL |
-+						     NFS_INO_INVALID_XATTR);
- 	nfs_zap_label_cache_locked(nfsi);
- }
+ 	if (!nfs_has_xattr_cache(nfsi))
+ 		flags &= ~NFS_INO_INVALID_XATTR;
+ 	if (flags & NFS_INO_INVALID_DATA)
+ 		nfs_fscache_invalidate(inode, 0);
+-	flags &= ~(NFS_INO_REVAL_PAGECACHE | NFS_INO_REVAL_FORCED);
++	flags &= ~NFS_INO_REVAL_FORCED;
  
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 987a187bd39a..f88b0eb9b18e 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -306,7 +306,7 @@ static void nfs_set_pageerror(struct address_space *mapping)
- 	/* Force file size revalidation */
- 	spin_lock(&inode->i_lock);
- 	nfs_set_cache_invalid(inode, NFS_INO_REVAL_FORCED |
--					     NFS_INO_REVAL_PAGECACHE |
-+					     NFS_INO_INVALID_CHANGE |
- 					     NFS_INO_INVALID_SIZE);
- 	spin_unlock(&inode->i_lock);
- }
+ 	nfsi->cache_validity |= flags;
+ 
+diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
+index 4611aa3a21a4..45a310b586ce 100644
+--- a/fs/nfs/nfstrace.h
++++ b/fs/nfs/nfstrace.h
+@@ -21,7 +21,6 @@
+ 			{ NFS_INO_INVALID_ATIME, "INVALID_ATIME" }, \
+ 			{ NFS_INO_INVALID_ACCESS, "INVALID_ACCESS" }, \
+ 			{ NFS_INO_INVALID_ACL, "INVALID_ACL" }, \
+-			{ NFS_INO_REVAL_PAGECACHE, "REVAL_PAGECACHE" }, \
+ 			{ NFS_INO_REVAL_FORCED, "REVAL_FORCED" }, \
+ 			{ NFS_INO_INVALID_LABEL, "INVALID_LABEL" }, \
+ 			{ NFS_INO_INVALID_CHANGE, "INVALID_CHANGE" }, \
 diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 0842364ab784..afb66281afd5 100644
+index afb66281afd5..98120f2d7e0b 100644
 --- a/include/linux/nfs_fs.h
 +++ b/include/linux/nfs_fs.h
-@@ -357,11 +357,9 @@ static inline void nfs_mark_for_revalidate(struct inode *inode)
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 
- 	spin_lock(&inode->i_lock);
--	nfsi->cache_validity |= NFS_INO_REVAL_PAGECACHE
--		| NFS_INO_INVALID_ACCESS
--		| NFS_INO_INVALID_ACL
--		| NFS_INO_INVALID_CHANGE
--		| NFS_INO_INVALID_CTIME;
-+	nfsi->cache_validity |= NFS_INO_INVALID_ACCESS | NFS_INO_INVALID_ACL |
-+				NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
-+				NFS_INO_INVALID_SIZE;
- 	if (S_ISDIR(inode->i_mode))
- 		nfsi->cache_validity |= NFS_INO_INVALID_DATA;
- 	spin_unlock(&inode->i_lock);
+@@ -248,7 +248,6 @@ struct nfs4_copy_state {
+ #define NFS_INO_INVALID_ATIME	BIT(2)		/* cached atime is invalid */
+ #define NFS_INO_INVALID_ACCESS	BIT(3)		/* cached access cred invalid */
+ #define NFS_INO_INVALID_ACL	BIT(4)		/* cached acls are invalid */
+-#define NFS_INO_REVAL_PAGECACHE	BIT(5)		/* must revalidate pagecache */
+ #define NFS_INO_REVAL_FORCED	BIT(6)		/* force revalidation ignoring a delegation */
+ #define NFS_INO_INVALID_LABEL	BIT(7)		/* cached label is invalid */
+ #define NFS_INO_INVALID_CHANGE	BIT(8)		/* cached change is invalid */
 -- 
 2.34.1
 
