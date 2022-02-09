@@ -1,96 +1,141 @@
 Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53C954AE6B2
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 03:40:20 +0100 (CET)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id 785284AF0E2
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 13:08:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234859AbiBICkM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Feb 2022 21:40:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53628 "EHLO
+        id S232227AbiBIMHJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Feb 2022 07:07:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242813AbiBIBZG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Feb 2022 20:25:06 -0500
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3232AC061576
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Feb 2022 17:25:05 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id C30071F390;
-        Wed,  9 Feb 2022 01:25:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644369903; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xoW8U8zcEYvAqQoD9FkpsjPntqyxVzO40+GN+Jmlz1M=;
-        b=cQCvJSgfGTONdvdDa00vfhvi345AEOFYY1a6E0btXrDNQeVO24bvNy0CjShhVEFTO3/eUu
-        w9Z62BoAVe7k+oXpxPaLxrQoPR4PWSuzcd+2+m8tHlGNSMC2oXpa3LW/3v5xjDOhOV1oOy
-        PSImIzQuerVCCJyfwCjMyL5ndGmiTec=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644369903;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xoW8U8zcEYvAqQoD9FkpsjPntqyxVzO40+GN+Jmlz1M=;
-        b=edzngP+IRICeStiIoPshdK3OI9jdJBACsTfBm7UnxRPZfx8mFxe8UWW7prUFzflKvk3XKw
-        ofKRZq7aLIaKODAg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A6009132DB;
-        Wed,  9 Feb 2022 01:25:02 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id o58WGO4XA2JvEQAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 09 Feb 2022 01:25:02 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S232470AbiBIMFy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 07:05:54 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CA0BDF8E3FC
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 03:28:06 -0800 (PST)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4JtyF34zn2zZfPL;
+        Wed,  9 Feb 2022 19:23:51 +0800 (CST)
+Received: from [10.174.176.83] (10.174.176.83) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Wed, 9 Feb 2022 19:28:03 +0800
+Subject: Re: Question about CVE-2022-24448
+To:     Lyu Tao <tao.lyu@epfl.ch>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+CC:     ChenXiaoSong <chenxiaosong2@huawei.com>,
+        yanaijie <yanaijie@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Kashyap Sanidhya <sanidhya.kashyap@epfl.ch>,
+        "mathias.payer@nebelwelt.net" <mathias.payer@nebelwelt.net>
+References: <1bb42908-8f58-bf56-c2da-42739ee48d16@huawei.com>
+ <4e965ca75c4c4b70ac3322c39873d418@epfl.ch>
+From:   "zhangxiaoxu (A)" <zhangxiaoxu5@huawei.com>
+Message-ID: <6aba4c65-36df-62ab-e6c2-500489b61d6d@huawei.com>
+Date:   Wed, 9 Feb 2022 19:28:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.7.1
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     "bcodding@redhat.com" <bcodding@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: v4 clientid uniquifiers in containers/namespaces
-In-reply-to: <06e2a692e587d1ffcccd14d465136df228149e4c.camel@hammerspace.com>
-References: <6CEC5101-0512-4082-81F8-BDFEC5B6DF3A@redhat.com>,
- <164428557862.27779.17375354328525752842@noble.neil.brown.name>,
- <A677D8A9-FD0B-43E5-82D6-E660CCB8B185@redhat.com>,
- <164435376000.27779.4059629372785561121@noble.neil.brown.name>,
- <06e2a692e587d1ffcccd14d465136df228149e4c.camel@hammerspace.com>
-Date:   Wed, 09 Feb 2022 12:24:59 +1100
-Message-id: <164436989902.27779.4490909869062483924@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <4e965ca75c4c4b70ac3322c39873d418@epfl.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: base64
+X-Originating-IP: [10.174.176.83]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500023.china.huawei.com (7.185.36.114)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 09 Feb 2022, Trond Myklebust wrote:
-> On Wed, 2022-02-09 at 07:56 +1100, NeilBrown wrote:
-> > 
-> > So I still STRONGLY think that the identity should be set by
-> > mount.nfs
-> > reading (and writing) some file in /etc or /etc/netnfs/NAME, and I
-> > weakly think that the file should be in /etc/nfs.conf.d/ so that the
-> > reading is automagic.
-> > 
-> 
-> No. It's not a per-mount setting, so it has no business being in the
-> mount protocol.
-
-I agree that it is not different for different mounts, but every mount
-needs it, and without any mounts it is not needed.
-
-Much like statd really, which is started by mount.nfs when it is
-determined that it is needed, but not running.
-
-NeilBrown
+DQoNCuWcqCAyMDIyLzIvOCAyMDozMSwgTHl1IFRhbyDlhpnpgZM6DQo+IA0KPiBIaSBYaWFv
+eHUsDQo+IA0KPiBJIG9ubHkga25vdyBhYm91dCB0aGUgcXVlc3Rpb24gMiBhbmQgNC4NCj4g
+DQo+IDIuIFdoZW4gdGhlIGtlcm5lbCBleGVjdXRlcyBuZnM0X3ZhbGlkX29wZW5fc3RhdGVp
+ZCwgdGhlIHN0YXRlIGlzIHplcm8uIFRoZW4gaXQgZW50ZXJzIGludG8gdGhlIGlubGluZSBm
+dW5jdGlvbiBuZnM0X3ZhbGlkX29wZW5fc3RhdGVpZCwgYW5kIGV4ZWN1dGVzIGEgZGVyZWZl
+cmVuY2Ugb3BlcmF0aW9uLg0KPiANCj4gL2ludCBuZnM0X3NlbGVjdF9yd19zdGF0ZWlkKHN0
+cnVjdCBuZnM0X3N0YXRlICpzdGF0ZSwNCj4gIMKgwqDCoMKgwqDCoMKgIGZtb2RlX3QgZm1v
+ZGUsIGNvbnN0IHN0cnVjdCBuZnNfbG9ja19jb250ZXh0ICpsX2N0eCwNCj4gIMKgwqDCoMKg
+wqDCoMKgIG5mczRfc3RhdGVpZCAqZHN0LCBjb25zdCBzdHJ1Y3QgY3JlZCAqKmNyZWQpDQo+
+IHsNCj4gIMKgwqDCoCAuLi4NCj4gIMKgwqDCoCBpZiAoIW5mczRfdmFsaWRfb3Blbl9zdGF0
+ZWlkKHN0YXRlKSkNCj4gIMKgwqDCoMKgwqDCoMKgIHJldHVybiAtRUlPOw0KPiAgwqDCoMKg
+IC4uLg0KPiB9DQo+IA0KPiBzdGF0aWMgaW5saW5lIGJvb2wgbmZzNF92YWxpZF9vcGVuX3N0
+YXRlaWQoY29uc3Qgc3RydWN0IG5mczRfc3RhdGUgKnN0YXRlKQ0KPiB7DQo+ICDCoMKgwqAg
+cmV0dXJuIHRlc3RfYml0KE5GU19TVEFURV9SRUNPVkVSWV9GQUlMRUQsICZzdGF0ZS0+Zmxh
+Z3MpID09IDA7DQo+IH0vDQoNCmhvdyBpdCBoYXBwZW5kPyBkbyB5b3UgaGF2ZSB0aGUgcGFu
+aWMgc3RhY2tzPw0Kd2hlbiAnbmZzX2F0b21pY19vcGVuJyByZXR1cm5lZCwgdGhlICdkb19v
+cGVuJyBhbHdheXMgY2hlY2tlZCB0aGUgZGVudHJ5IHR5cGUsDQppZiBub3QgZGlyZWN0b3J5
+LCBpdCB3aWxsIHJldHVybiAtRU5PVERJUi4NCg0KcGF0aF9vcGVuYXQNCiAgIGFsbG9jX2Vt
+cHR5X2ZpbGUNCiAgICAgX19hbGxvY19maWxlDQogICAgICAgYXRvbWljX2xvbmdfc2V0KCZm
+LT5mX2NvdW50LCAxKTsNCiAgIG9wZW5fbGFzdF9sb29rdXBzDQogICAgIGxvb2t1cF9vcGVu
+DQogICAgICAgZmlsZS0+Zl9tb2RlICY9IH5GTU9ERV9DUkVBVEVEOw0KICAgICAgIGF0b21p
+Y19vcGVuDQogICAgICAgICBuZnNfYXRvbWljX29wZW4NCiAgICAgICAgICAgZ290byBub19v
+cGVuOyAjIG9wZW5fZmxhZ3MgJiBPX0RJUkVDVE9SWQ0KICAgICAgICAgICBuZnNfbG9va3Vw
+DQogICBkb19vcGVuDQogICAgIGlmICgobmQtPmZsYWdzICYgTE9PS1VQX0RJUkVDVE9SWSkg
+JiYgIWRfY2FuX2xvb2t1cChuZC0+cGF0aC5kZW50cnkpKQ0KICAgICAgIHJldHVybiAtRU5P
+VERJUjsNCiAgICAgICAjIHdpbGwgcmV0dXJuIGVycm9yIGhlcmUsIGhvdyBjYWxsIHRoZSAn
+bmZzNF9zZWxlY3Rfcndfc3RhdGVpZCcgd2l0aCBjdHgtPnN0YXRlID0gTlVMTD8NCiAgIGZw
+dXQNCg0KDQo+IA0KPiA0LiBUaGUgUG9DIGlzIGF0dGFjaGVkLg0KaSBjcmVhdGUgZmlsZTEg
+b24gbmZzIG1vdW50IHBvaW50IGFuZCBydW4gdGhlIHBvYywgbm8gbnVsbHB0ciBkZXJmZXJl
+bmNlIG9jY3VyZWQuDQpBbHNvLCB0aGVyZSBubyBPX0RJUkVDVE9SWSBmbGFnIHNldCB3aGVu
+IGNhbGwgJ29wZW4vb3BlbmF0JyBzeXNjYWxsLg0KDQpbcm9vdEBmZWRvcmEgbW50XSMgbGwN
+CnRvdGFsIDI0DQotLS0tLS0tLS0tIDEgcm9vdCByb290ICAgICAwIEZlYiAgOSAwNjoxMSBm
+aWxlMQ0KLXJ3eHIteHIteCAxIHJvb3Qgcm9vdCAyNDQ0MCBGZWIgIDkgMDY6MDUgcG9jDQoN
+Cltyb290QGZlZG9yYSBtbnRdIyBzdHJhY2UgLWUgdHJhY2U9b3BlbixvcGVuYXQgLi9wb2MN
+Cm9wZW5hdChBVF9GRENXRCwgIi9ldGMvbGQuc28uY2FjaGUiLCBPX1JET05MWXxPX0NMT0VY
+RUMpID0gMw0Kb3BlbmF0KEFUX0ZEQ1dELCAiL2xpYjY0L2xpYmMuc28uNiIsIE9fUkRPTkxZ
+fE9fQ0xPRVhFQykgPSAzDQpvcGVuYXQoQVRfRkRDV0QsICIuL2ZpbGUxIiwgT19SRFdSfE9f
+Q1JFQVQsIDAwMCkgPSAzDQpvcGVuKCIuL2ZpbGUxIiwgT19BQ0NNT0RFfE9fQ1JFQVR8T19E
+SVJFQ1R8T19MQVJHRUZJTEV8T19OT0ZPTExPV3xPX05PQVRJTUV8T19DTE9FWEVDfEZBU1lO
+Q3wweGIzMDAwMDA4LCAwMDEpID0gNA0KKysrIGV4aXRlZCB3aXRoIDAgKysrDQoNCj4gDQo+
+IEJlc3QsDQo+IFRhbw0KPiANCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICpGcm9tOiogemhh
+bmd4aWFveHUgKEEpIDx6aGFuZ3hpYW94dTVAaHVhd2VpLmNvbT4NCj4gKlNlbnQ6KiBUdWVz
+ZGF5LCBGZWJydWFyeSA4LCAyMDIyIDEyOjQ4OjU4IFBNDQo+ICpUbzoqIEx5dSBUYW87IFRy
+b25kIE15a2xlYnVzdA0KPiAqQ2M6KiBDaGVuWGlhb1Nvbmc7IHlhbmFpamllOyB6aGFuZ3lp
+IChGKTsgTGludXggTkZTIE1haWxpbmcgTGlzdA0KPiAqU3ViamVjdDoqIFF1ZXN0aW9uIGFi
+b3V0IENWRS0yMDIyLTI0NDQ4DQo+IEhpIFRyb25kIGFuZCBUYW8sDQo+IA0KPiBJIGhhdmUg
+c29tZSBxdWVzdGlvbiBhYm91dCBDVkUtMjAyMi0yNDQ0OFsxXS4NCj4gDQo+IEl0J3MgZGVz
+Y3JpcHRpb24gYXM6DQo+ICDCoMKgIEFuIGlzc3VlIHdhcyBkaXNjb3ZlcmVkIGluIGZzL25m
+cy9kaXIuYyBpbiB0aGUgTGludXgga2VybmVsIGJlZm9yZSA1LjE2LjUuDQo+ICDCoMKgIElm
+IGFuIGFwcGxpY2F0aW9uIHNldHMgdGhlIE9fRElSRUNUT1JZIGZsYWcsIGFuZCB0cmllcyB0
+byBvcGVuIGEgcmVndWxhcg0KPiAgwqDCoCBmaWxlLCBuZnNfYXRvbWljX29wZW4oKSBwZXJm
+b3JtcyBhIHJlZ3VsYXIgbG9va3VwLiBJZiBhIHJlZ3VsYXIgZmlsZSBpcw0KPiAgwqDCoCBm
+b3VuZCwgRU5PVERJUiBzaG91bGQgb2NjdXIsIGJ1dCB0aGUgc2VydmVyIGluc3RlYWQgcmV0
+dXJucyB1bmluaXRpYWxpemVkDQo+ICDCoMKgIGRhdGEgaW4gdGhlIGZpbGUgZGVzY3JpcHRv
+ci4NCj4gDQo+IEl0J3MgZml4ZWQgYnkgYWM3OTUxNjFjOTM2ICgiTkZTdjQ6IEhhbmRsZSBj
+YXNlIHdoZXJlIHRoZSBsb29rdXAgb2YgYSBkaXJlY3RvcnkgZmFpbHMiKQ0KPiANCj4gV2hl
+biB0cnkgdG8gb3BlbiBhIHJlZ3VsYXIgZmlsZSB3aXRoIE9fRElSRUNUT1JZIGZsYWcsDQo+
+IGl0IGFsd2F5cyByZXR1cm4gLUVOT1RESVIgdG8gdXNlcnNwYWNlIHJhdGhlciB0aGFuIGEN
+Cj4gdmFsaWQgZmlsZSBkZXNjcmlwdG9yIGJlY2F1c2UgdGhlICdkb19vcGVuJyBjaGVjayB0
+aGUNCj4gZGVudHJ5IHR5cGUuDQo+IA0KPiBNeSBxdWVzdGlvbnMgYXJlOg0KPiAxLiB3aGlj
+aCB1bmluaXRpYWxpemVkIGRhdGEgaW4gdGhlIGZpbGUgZGVzY3JpcHRpb24gYXJlIHJldHVy
+bmVkIGZyb20gJ25mc19hdG9taWNfb3Blbic/DQo+IDIuIHdoZXJlIHVzZSB0aGUgdW5pbml0
+aWFsaXplZCBkYXRhPw0KPiAzLiB3aGljaCB1bmluaXRpYWxpemVkIGRhdGEgYXJlIHJldHVy
+bmVkIGZyb20gc2VydmVyPw0KPiA0LiBpcyB0aGVyZSBhIFBvQyByZXByb2R1Y2VyIG9yIGhv
+dyB0byB0cmlnZ2VyIGl0Pw0KPiANCj4gDQo+IFsxXSBodHRwczovL252ZC5uaXN0Lmdvdi92
+dWxuL2RldGFpbC9DVkUtMjAyMi0yNDQ0OCA8aHR0cHM6Ly9udmQubmlzdC5nb3YvdnVsbi9k
+ZXRhaWwvQ1ZFLTIwMjItMjQ0NDg+DQo=
