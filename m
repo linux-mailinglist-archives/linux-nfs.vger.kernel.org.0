@@ -2,186 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 369D44AF529
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 16:24:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE6064AF7F4
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 18:20:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235111AbiBIPXp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Feb 2022 10:23:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41578 "EHLO
+        id S237948AbiBIRUs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Feb 2022 12:20:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233738AbiBIPXo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 10:23:44 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F703C0613C9
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 07:23:47 -0800 (PST)
+        with ESMTP id S238138AbiBIRUr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 12:20:47 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 09659C0613C9
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 09:20:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1644420226;
+        s=mimecast20190719; t=1644427250;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=iPOQPL3LVsCtZsnW6MwBH0oDhNAkd01tDs0N/m1ShBU=;
-        b=Pj1Le5yozb+8LKDYHHnxxBiuGSyZtkpTw0UvEaaUhuI2bEEiay0h9rkNK0e5WDyzK+XpsE
-        jL1R8k7JZqyKI2bWaemDlwxEnp1eackLOkzwCK11iWH3A+txbbAGJ4qVWIG6ZxGxd1GcNL
-        2gA6IDRrKThmmd6GHWzTbTgR+chCVvE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=E2sQk+BSHMdIadozFsPY/pS58Mm8cpvmOPkpVuhseZI=;
+        b=SzFLcdCrhfldhYT2QPBqQ966tNuGkacfIR/FK3GkVaV5Pc863/yo5NmRQ7VF6ltFH/uGJE
+        Oz1TFD5k/iAZQEAuSiNZjogyE3QIeW1Pt/o3pXCUlri5cSCS/ogwB8h4jaNiPxqI5k2gS3
+        XA5SZAjmxCeaHDp213tK5cyyF2zOz70=
+Received: from mail-lf1-f71.google.com (mail-lf1-f71.google.com
+ [209.85.167.71]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-580-jyxT9A7oPeypHZDpiNki4A-1; Wed, 09 Feb 2022 10:23:45 -0500
-X-MC-Unique: jyxT9A7oPeypHZDpiNki4A-1
-Received: by mail-qt1-f198.google.com with SMTP id y1-20020ac87041000000b002c3db9c25f8so1960825qtm.5
-        for <linux-nfs@vger.kernel.org>; Wed, 09 Feb 2022 07:23:44 -0800 (PST)
+ us-mta-675-gmdXO4NwMkSDsjqN5nIhxg-1; Wed, 09 Feb 2022 12:20:49 -0500
+X-MC-Unique: gmdXO4NwMkSDsjqN5nIhxg-1
+Received: by mail-lf1-f71.google.com with SMTP id w42-20020a0565120b2a00b00432f6a227e0so724829lfu.3
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Feb 2022 09:20:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=iPOQPL3LVsCtZsnW6MwBH0oDhNAkd01tDs0N/m1ShBU=;
-        b=p5eehPIt13pkoJMypnKWdEPNG+/vTXv+zUgqtKe8FzYY4t9QBJvugKvPedeDk+iyE4
-         PALael8v3REjLhM+Yv3/wcVfHTSPMCsMRH5nbpmT4RGD32gJ2c1k9fkxNB3P7Y1JFuvK
-         7en30snUDUBHS3plDvFxoVPbAj1NYEpFu5Xq7ic7goM/tjafEZe4KvXkNdzn2WD/Zbhe
-         M+yBsGYiNlDuTMMvDycSUpW14j9vFd6jGDipDI47gSbLQuBgelmWuTH7S70+W0JL05wJ
-         1JHcp0XqhlBARiMR7c2Jy5Fm9konWN16QCJwHBQ+V086IsTwes9RFv3IxclXvxQMo371
-         84lA==
-X-Gm-Message-State: AOAM531VoKBecmvvTrpNQA0GDynf3C6i+4jwrlobCu63seQrES3VH9ka
-        p4rU9CLePy5DcuBFC/mkCcBdsv2JQZp0aqAq0ZXELDgUv+eFPiKgQQ0DM8TBAvzai7NJuB2qZ7J
-        p30vLYHZOPdoGAGHp9z/O
-X-Received: by 2002:a05:6214:2a49:: with SMTP id jf9mr1847988qvb.127.1644420223925;
-        Wed, 09 Feb 2022 07:23:43 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx4Liapky7mw+QLftSPxrfmq+D3Z6Pi7hXDG8guFqVPnbhv1nLf7TKPB2hXSbn1VzboGNvOKQ==
-X-Received: by 2002:a05:6214:2a49:: with SMTP id jf9mr1847978qvb.127.1644420223668;
-        Wed, 09 Feb 2022 07:23:43 -0800 (PST)
-Received: from [172.31.1.6] ([70.105.253.180])
-        by smtp.gmail.com with ESMTPSA id v14sm9480219qtk.5.2022.02.09.07.23.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Feb 2022 07:23:43 -0800 (PST)
-Message-ID: <8e374243-e4c8-3131-07e6-24bae8714d15@redhat.com>
-Date:   Wed, 9 Feb 2022 10:23:42 -0500
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=E2sQk+BSHMdIadozFsPY/pS58Mm8cpvmOPkpVuhseZI=;
+        b=rPSZoM0d3cHfgFJny9aZ9mTqf36owIYI4t32is/3tyLVS01EGZnUnEnBg7GttAXWfL
+         zTCcBZx8UpwAa43FeMeKmuCHtF1rk6EqJtEQjibXS4AXwCPkg2+008WrvjD4Z7N/VuCC
+         /OoWd17PXcRa0m3ZtKdZPESD1PNy6EMYR0lJEqvChSUdgf47HTJXcTN/UZPTIDp2vNvI
+         YAlLTehnM89HEfX/rwjmcRoVHqqiOz6wqsOXrkiNJXA8qf3uL7w+nE8G6Vmk09zXBpj1
+         ZEZ8IxsSrwjz/q7dlDixkYvarqHcI2ryKl0h9KzTzldB6dFou5pot5c35Q6Q44O+aLr9
+         z7fQ==
+X-Gm-Message-State: AOAM533AU3SBUtVbqGl06iTVvp5tGaKY+LVhdMZSwGf1ZAVF8s9NFI3t
+        1lUJ4UJd/xKrOkioRiXtNXYyGzXYaTieg6/MB1ZUCPPtvyqe0zub+BnPrAhTI3a/WNXqK43iQgx
+        3/ZfQBzTKYRB0iW6asQu+GMGehYnB1sQnkm+n
+X-Received: by 2002:a05:6512:31ca:: with SMTP id j10mr2272681lfe.363.1644427247128;
+        Wed, 09 Feb 2022 09:20:47 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJycGK8LYZ1H8yWBx2dTGUQZjizEruwa1lF6oxMhNWSAhkSAyy8YddWNIZqrseV4ySdgVKNrzjRH2gBgyODomUg=
+X-Received: by 2002:a05:6512:31ca:: with SMTP id j10mr2272661lfe.363.1644427246767;
+ Wed, 09 Feb 2022 09:20:46 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Subject: Re: [nfs-utils PATCH] nfs4id: a tool to create and persist nfs4
- client uniquifiers
-Content-Language: en-US
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-References: <c2e8b7c06352d3cad3454de096024fff80e638af.1643979161.git.bcodding@redhat.com>
- <6f01c382-8da5-5673-30db-0c0099d820b5@redhat.com>
- <0AB20C82-6200-46E0-A76C-62345DAF8A3A@redhat.com>
- <6cfb516d-0747-a749-b310-1368a2186307@redhat.com>
- <E013276C-7605-4E2B-A650-C61C6FC5BADF@redhat.com>
- <778c3e11-62e1-00b1-0cbc-514abe1d1eac@redhat.com>
- <E646BDFC-0422-4052-AC7A-9103696013A9@redhat.com>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <E646BDFC-0422-4052-AC7A-9103696013A9@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <CA+-cMpFmMr8FQKODmR5JAB8rZhzptZ_KPX5DasLM_sbvbko+GA@mail.gmail.com>
+ <CA+-cMpHHeK1zSMTQiYtd5GuL2UVp8n-BY228aeUUrQq5KCOc2A@mail.gmail.com>
+ <CAFX2Jfk4QquitkteegAXBfF0HMM0cGiCgLJPfdhESPBuDswrbw@mail.gmail.com>
+ <CA+-cMpG8pbARdWSHyQG0mcg8ZJi6UntZSJk8555+OE5Ra5C2aw@mail.gmail.com> <CA+-cMpGC5r7poAjQ65Tm97cEcyjMoZUzYCdfBnD-CziS-yKsOA@mail.gmail.com>
+In-Reply-To: <CA+-cMpGC5r7poAjQ65Tm97cEcyjMoZUzYCdfBnD-CziS-yKsOA@mail.gmail.com>
+From:   Rahul Rathore <rrathore@redhat.com>
+Date:   Wed, 9 Feb 2022 22:50:35 +0530
+Message-ID: <CA+-cMpH3D2YjE8cc_JPHdeW451WZaSN9seZUR4L-9Jre1VgToA@mail.gmail.com>
+Subject: Re: Testing Results - Add a tool for using the new sysfs files - rpcctl
+To:     Anna Schumaker <schumaker.anna@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello Anna,
+
+I am yet to do more tests.
+
+However, I will share what I have done till now.
+
+I have upgraded to 5.16.5-200.fc35.x86_64 and some of the problems have
+disappeared.
+
+However, some still exist.
+
+1- I am still unable to run xprt commands.
+
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py xprt set
+--id 3 --offline
+[Errno 22] Invalid argument
+[root@rrathore-upstream-sysfs nfs-utils]#
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py xprt set
+--id 3 192.168.122.29 --offline
+usage: rpcctl.py [-h] {client,switch,xprt} ...
+rpcctl.py: error: unrecognized arguments: 192.168.122.29
+[root@rrathore-upstream-sysfs nfs-utils]#
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py xprt set
+--id 3 --dstaddr 192.168.122.29 --offline
+[Errno 22] Invalid argument
+[root@rrathore-upstream-sysfs nfs-utils]#
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py xprt set
+--id 3 192.168.122.127 --offline
+usage: rpcctl.py [-h] {client,switch,xprt} ...
+rpcctl.py: error: unrecognized arguments: 192.168.122.127
+[root@rrathore-upstream-sysfs nfs-utils]#
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py xprt set
+--id 1 --dstaddr 192.168.122.29 --offline
+[Errno 95] Operation not supported
+[root@rrathore-upstream-sysfs nfs-utils]#
+
+If I am doing something wrong, kindly provide some examples.
+
+2- However, the switch command worked.
+
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py switch
+set --id 2 --dstaddr 192.168.122.30
+switch 2: xprts 1, active 1, queue 1
+xprt 3: tcp, 192.168.122.30
+[root@rrathore-upstream-sysfs nfs-utils]# ./tools/rpcctl/rpcctl.py switch
+switch 0: xprts 1, active 1, queue 0
+xprt 0: local, /var/run/rpcbind.sock [main]
+switch 1: xprts 1, active 1, queue 0
+xprt 1: local, /var/run/gssproxy.sock [main]
+switch 2: xprts 1, active 1, queue 1
+xprt 3: tcp, 192.168.122.30
+
+Now I see:-
+[root@rrathore-upstream-sysfs nfs-utils]# ss | grep -i nfs
+tcp   SYN-SENT 0      1                        192.168.122.125:883
+192.168.122.30:nfs
+
+This is picking correct info:-
+
+cat /sys/kernel/debug/sunrpc/rpc_clnt/*/xprt/info
+addr:  192.168.122.30
+port:  2049
+state: 0x15
+netid: tcp
+addr:  192.168.122.30
+port:  2049
+state: 0x15
 
 
-On 2/9/22 8:55 AM, Benjamin Coddington wrote:
-> On 8 Feb 2022, at 17:30, Steve Dickson wrote:
-> 
->> Hey!
->>
->> On 2/8/22 3:00 PM, Benjamin Coddington wrote:
->>> On 8 Feb 2022, at 14:52, Steve Dickson wrote:
->>>
->>>> On 2/8/22 11:22 AM, Benjamin Coddington wrote:
->>>>> On 8 Feb 2022, at 11:04, Steve Dickson wrote:
->>>>>
->>>>>> Hello,
->>>>>>
->>>>>> On 2/4/22 7:56 AM, Benjamin Coddington wrote:
->>>>>>> The nfs4id program will either create a new UUID from a random 
->>>>>>> source or
->>>>>>> derive it from /etc/machine-id, else it returns a UUID that has 
->>>>>>> already
->>>>>>> been written to /etc/nfs4-id.  This small, lightweight tool is 
->>>>>>> suitable for
->>>>>>> execution by systemd-udev in rules to populate the nfs4 client 
->>>>>>> uniquifier.
->>>>>>>
->>>>>>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
->>>>>>> ---
->>>>>>>   .gitignore               |   1 +
->>>>>>>   configure.ac             |   4 +
->>>>>>>   tools/Makefile.am        |   1 +
->>>>>>>   tools/nfs4id/Makefile.am |   8 ++
->>>>>>>   tools/nfs4id/nfs4id.c    | 184 
->>>>>>> +++++++++++++++++++++++++++++++++++++++
->>>>>>>   tools/nfs4id/nfs4id.man  |  29 ++++++
->>>>>>>   6 files changed, 227 insertions(+)
->>>>>>>   create mode 100644 tools/nfs4id/Makefile.am
->>>>>>>   create mode 100644 tools/nfs4id/nfs4id.c
->>>>>>>   create mode 100644 tools/nfs4id/nfs4id.man
->>>>>> Just a nit... naming convention... In the past
->>>>>> we never put the protocol version in the name.
->>>>>> Do a ls tools and utils directory and you
->>>>>> see what I mean....
->>>>>>
->>>>>> Would it be a problem to change the name from
->>>>>> nfs4id to nfsid?
->>>>>
->>>>> Not at all..
->>>> Good...
->>>
->>> I didn't orginally do that because I thought it might be confusing 
->>> for some
->>> folks who want `nfsid` to display their kerberos identity.  There's a BZ
->>> open for that!
->>>
->>> Do you think that's a problem?  I feel like it's a problem.
->>>
->>>>> and I think there's a lot of room for naming discussions about
->>>>> the file to store the id too:
->>>>>
->>>>> Trond sent /etc/nfs4_uuid
->>>>> Neil suggests /etc/netns/NAME/nfs.conf.d/identity.conf
->>>>> Ben sent /etc/nfs4-id (to match /etc/machine-id)
->>>> Question... is it kosher to be writing /etc which is
->>>> generally on the root filesystem?
->>>
->>> Sure, why not?
->> In general, writes to /etc are only happen when packages
->> are installed and removed... any real time writes go
->> to /var or /run (which is not persistent).
-> 
-> I use `passwd` and `usermod`, which write to etc.  I can think of other
-> examples.  For me, /etc is fair game.
-> 
-> There's three of us that think /etc is a good place.  You're the maintainer
-> though, tell us what's acceptable.  If we add an -f option to specify the
-> file, I'd like there to be a sane default if -f is absent.
-/etc is fine...
+I am not sure of the motive of this command. Is the motive to set IP of NFS
+Server to set/change from Client.
 
-steved,
+Though the current O/P and all is correct. But in this manner NFS will
+suffer. cd / ls or any other operation over nfs will hang like below:-
 
-> 
->>>> By far Neil suggestion is the most intriguing... but
->>>> on the containers I'm looking at there no /etc/netns
->>>> directory.
->>>
->>> Not yet -- you can create it.
->> "you" meaning who? the nfs-utils install or network
->> namespace env? Or is it, when /etc/netns exists
->> there is a network namespace and we should use
->> that dir?
-> 
-> Anyone that wants to create network namespace specific configuration can
-> create /etc/netns/NAME, and the iproute2 tools will bind-mount 
-> configuration
-> from there over /etc/ when doing `ip netns exec`.
-> 
-> Ben
-> 
+[root@rrathore-upstream-sysfs nfs-utils]# df -h
+
+^C
+
+If the motive was to set NFS Server IP, then it fails to do so as my NFS
+Server IP is still an old one and not 192.168.122.30.
+
+
+Just a suggestion, if you can post some examples in your man page it will
+be great.
+
+
+I am still performing some tests. Will keep you posted.
+
+Regards,
+Rahul
 
