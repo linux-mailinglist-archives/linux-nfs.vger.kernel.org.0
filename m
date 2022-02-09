@@ -2,41 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 899E54AFC1C
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 19:55:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73CD74AFC16
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Feb 2022 19:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240898AbiBISyY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S241286AbiBISyY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 9 Feb 2022 13:54:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59418 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241186AbiBISyI (ORCPT
+        with ESMTP id S241173AbiBISyI (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 13:54:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C62DC1038D2
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C39C1038D3
         for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 10:49:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9110B82385
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:49:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FCC8C340F1
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3EB96B82384
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:49:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1A1C340E7
         for <linux-nfs@vger.kernel.org>; Wed,  9 Feb 2022 18:49:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1644432578;
-        bh=l1cJW970K7Bm+hlEhwk5/9VkO6UwIAWTDsCdKUxx6pM=;
-        h=From:To:Subject:Date:From;
-        b=hyJbV9W4/Fom5je4G11Bxdi6An40AESsIwbgGulIN0OwT62VusWa5gCKzhM+b0++i
-         xj+jU6WPTpMrz9bU3QK+x5rpi9r9/TMI2tA6Y0865xycCGOBAQQ3X7nS+taiLD3glV
-         5HlR0OPubBoRsZ3XjqmXg3xVujxJcCCB4Vx4KtWYFB8zDswwDKkYXPFllrx13+qGVv
-         CT/DBav1dO3iC9CUBG71Rv9dODFmTwhfef8lTGlgeTratfu6BaCrIv9DH+i5KdVml9
-         SAYjCszy3ook98IAUesVZxRWk5TAAydMs5k+JLHyfPYuxleM/hh3pxGnIaTCtc2UAd
-         ssA+Q3CW5SB2w==
+        bh=5+CVVaeilXukvinn/cQ50dVTffooXSiBsulgngtDGFw=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=tT+6rEUneU0HG6wWI1eiozMyP/JPzLF9DmFfNDxqfi7oHdY49qBAESO1Km07icNsl
+         r2TX81vWbtOTZc38Hos8o6w91yEzPEMZW5e9Hbz4iAr/rfhlANb3GVCqDRwRq9iONU
+         IS3TfLQUwyCTd7PriZmbqQAxtKhD5vT2luL2p8/g2i88Va6q8zzdqO5es4gvzeS0AT
+         LEVyZJTF5f72sKqKTPuwrDG9ZrO54NhThg7ThbHkYBfCRpp2TlfjOg9nAw67NdMy1T
+         wewmK2Lx5JGgoI1y7n6XbstAptrYelCiRCDYg8mEFNiFGIWBjRB5gxNpieJ0+LkelL
+         NDfs5rzX1vy8A==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 0/2] Adaptive readdir readahead
-Date:   Wed,  9 Feb 2022 13:42:49 -0500
-Message-Id: <20220209184251.23909-1-trondmy@kernel.org>
+Subject: [PATCH v3 1/2] NFS: Adjust the amount of readahead performed by NFS readdir
+Date:   Wed,  9 Feb 2022 13:42:50 -0500
+Message-Id: <20220209184251.23909-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220209184251.23909-1-trondmy@kernel.org>
+References: <20220209184251.23909-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -58,18 +60,202 @@ There are several cases where this assumption breaks down, including
 when the 'ls -l' heuristic kicks in to try to force use of readdirplus
 as a batch replacement for lookup/getattr.
 
---
-v2: Remove reset of dtsize when NFS_INO_FORCE_READDIR is set
-v3: Avoid excessive window shrinking in uncached_readdir case
+This patch therefore tries to tone down the amount of readahead we
+perform, and adjust it to try to match the amount of data being
+requested by user space.
 
-Trond Myklebust (2):
-  NFS: Adjust the amount of readahead performed by NFS readdir
-  NFS: Simplify nfs_readdir_xdr_to_array()
-
- fs/nfs/dir.c           | 82 ++++++++++++++++++++++++++++++++----------
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/dir.c           | 55 +++++++++++++++++++++++++++++++++++++++++-
  include/linux/nfs_fs.h |  1 +
- 2 files changed, 65 insertions(+), 18 deletions(-)
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 993725b95df6..1323eef34f7e 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -69,6 +69,8 @@ const struct address_space_operations nfs_dir_aops = {
+ 	.freepage = nfs_readdir_clear_array,
+ };
+ 
++#define NFS_INIT_DTSIZE	PAGE_SIZE
++
+ static struct nfs_open_dir_context *alloc_nfs_open_dir_context(struct inode *dir)
+ {
+ 	struct nfs_inode *nfsi = NFS_I(dir);
+@@ -80,6 +82,7 @@ static struct nfs_open_dir_context *alloc_nfs_open_dir_context(struct inode *dir
+ 		ctx->dir_cookie = 0;
+ 		ctx->dup_cookie = 0;
+ 		ctx->page_index = 0;
++		ctx->dtsize = NFS_INIT_DTSIZE;
+ 		ctx->eof = false;
+ 		spin_lock(&dir->i_lock);
+ 		if (list_empty(&nfsi->open_files) &&
+@@ -155,6 +158,7 @@ struct nfs_readdir_descriptor {
+ 	struct page	*page;
+ 	struct dir_context *ctx;
+ 	pgoff_t		page_index;
++	pgoff_t		page_index_max;
+ 	u64		dir_cookie;
+ 	u64		last_cookie;
+ 	u64		dup_cookie;
+@@ -167,12 +171,36 @@ struct nfs_readdir_descriptor {
+ 	unsigned long	gencount;
+ 	unsigned long	attr_gencount;
+ 	unsigned int	cache_entry_index;
++	unsigned int	buffer_fills;
++	unsigned int	dtsize;
+ 	signed char duped;
+ 	bool plus;
+ 	bool eob;
+ 	bool eof;
+ };
+ 
++static void nfs_set_dtsize(struct nfs_readdir_descriptor *desc, unsigned int sz)
++{
++	struct nfs_server *server = NFS_SERVER(file_inode(desc->file));
++	unsigned int maxsize = server->dtsize;
++
++	if (sz > maxsize)
++		sz = maxsize;
++	if (sz < NFS_MIN_FILE_IO_SIZE)
++		sz = NFS_MIN_FILE_IO_SIZE;
++	desc->dtsize = sz;
++}
++
++static void nfs_shrink_dtsize(struct nfs_readdir_descriptor *desc)
++{
++	nfs_set_dtsize(desc, desc->dtsize >> 1);
++}
++
++static void nfs_grow_dtsize(struct nfs_readdir_descriptor *desc)
++{
++	nfs_set_dtsize(desc, desc->dtsize << 1);
++}
++
+ static void nfs_readdir_array_init(struct nfs_cache_array *array)
+ {
+ 	memset(array, 0, sizeof(struct nfs_cache_array));
+@@ -759,6 +787,7 @@ static int nfs_readdir_page_filler(struct nfs_readdir_descriptor *desc,
+ 				break;
+ 			arrays++;
+ 			*arrays = page = new;
++			desc->page_index_max++;
+ 		} else {
+ 			new = nfs_readdir_page_get_next(mapping,
+ 							page->index + 1,
+@@ -768,6 +797,7 @@ static int nfs_readdir_page_filler(struct nfs_readdir_descriptor *desc,
+ 			if (page != *arrays)
+ 				nfs_readdir_page_unlock_and_put(page);
+ 			page = new;
++			desc->page_index_max = new->index;
+ 		}
+ 		status = nfs_readdir_add_to_array(entry, page);
+ 	} while (!status && !entry->eof);
+@@ -833,7 +863,7 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
+ 	struct nfs_entry *entry;
+ 	size_t array_size;
+ 	struct inode *inode = file_inode(desc->file);
+-	size_t dtsize = NFS_SERVER(inode)->dtsize;
++	unsigned int dtsize = desc->dtsize;
+ 	int status = -ENOMEM;
+ 
+ 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
+@@ -869,6 +899,7 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
+ 
+ 		status = nfs_readdir_page_filler(desc, entry, pages, pglen,
+ 						 arrays, narrays);
++		desc->buffer_fills++;
+ 	} while (!status && nfs_readdir_page_needs_filling(page) &&
+ 		 page_mapping(page));
+ 
+@@ -916,6 +947,7 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+ 	if (!desc->page)
+ 		return -ENOMEM;
+ 	if (nfs_readdir_page_needs_filling(desc->page)) {
++		desc->page_index_max = desc->page_index;
+ 		res = nfs_readdir_xdr_to_array(desc, nfsi->cookieverf, verf,
+ 					       &desc->page, 1);
+ 		if (res < 0) {
+@@ -1047,6 +1079,7 @@ static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+ 	desc->cache_entry_index = 0;
+ 	desc->last_cookie = desc->dir_cookie;
+ 	desc->duped = 0;
++	desc->page_index_max = 0;
+ 
+ 	status = nfs_readdir_xdr_to_array(desc, desc->verf, verf, arrays, sz);
+ 
+@@ -1056,10 +1089,22 @@ static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+ 	}
+ 	desc->page = NULL;
+ 
++	/*
++	 * Grow the dtsize if we have to go back for more pages,
++	 * or shrink it if we're reading too many.
++	 */
++	if (!desc->eof) {
++		if (!desc->eob)
++			nfs_grow_dtsize(desc);
++		else if (desc->buffer_fills == 1 &&
++			 i < (desc->page_index_max >> 1))
++			nfs_shrink_dtsize(desc);
++	}
+ 
+ 	for (i = 0; i < sz && arrays[i]; i++)
+ 		nfs_readdir_page_array_free(arrays[i]);
+ out:
++	desc->page_index_max = -1;
+ 	kfree(arrays);
+ 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n", __func__, status);
+ 	return status;
+@@ -1102,6 +1147,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	desc->file = file;
+ 	desc->ctx = ctx;
+ 	desc->plus = nfs_use_readdirplus(inode, ctx);
++	desc->page_index_max = -1;
+ 
+ 	spin_lock(&file->f_lock);
+ 	desc->dir_cookie = dir_ctx->dir_cookie;
+@@ -1110,6 +1156,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	page_index = dir_ctx->page_index;
+ 	desc->attr_gencount = dir_ctx->attr_gencount;
+ 	desc->eof = dir_ctx->eof;
++	nfs_set_dtsize(desc, dir_ctx->dtsize);
+ 	memcpy(desc->verf, dir_ctx->verf, sizeof(desc->verf));
+ 	spin_unlock(&file->f_lock);
+ 
+@@ -1151,6 +1198,11 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 
+ 		nfs_do_filldir(desc, nfsi->cookieverf);
+ 		nfs_readdir_page_unlock_and_put_cached(desc);
++		if (desc->eob || desc->eof)
++			break;
++		/* Grow the dtsize if we have to go back for more pages */
++		if (desc->page_index == desc->page_index_max)
++			nfs_grow_dtsize(desc);
+ 	} while (!desc->eob && !desc->eof);
+ 
+ 	spin_lock(&file->f_lock);
+@@ -1160,6 +1212,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
+ 	dir_ctx->attr_gencount = desc->attr_gencount;
+ 	dir_ctx->page_index = desc->page_index;
+ 	dir_ctx->eof = desc->eof;
++	dir_ctx->dtsize = desc->dtsize;
+ 	memcpy(dir_ctx->verf, desc->verf, sizeof(dir_ctx->verf));
+ 	spin_unlock(&file->f_lock);
+ out_free:
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 333ea05e2531..034d95809b97 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -106,6 +106,7 @@ struct nfs_open_dir_context {
+ 	__u64 dir_cookie;
+ 	__u64 dup_cookie;
+ 	pgoff_t page_index;
++	unsigned int dtsize;
+ 	signed char duped;
+ 	bool eof;
+ };
 -- 
 2.34.1
 
