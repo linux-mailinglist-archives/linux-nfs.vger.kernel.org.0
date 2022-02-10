@@ -2,97 +2,181 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CDC64B118F
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 16:22:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1B14B1203
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 16:47:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243552AbiBJPWe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Feb 2022 10:22:34 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56114 "EHLO
+        id S243736AbiBJPrp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Feb 2022 10:47:45 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243551AbiBJPWd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Feb 2022 10:22:33 -0500
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8EEADB1;
-        Thu, 10 Feb 2022 07:22:34 -0800 (PST)
-Received: by mail-vs1-f47.google.com with SMTP id t22so6811036vsa.4;
-        Thu, 10 Feb 2022 07:22:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IDMSUmX7DHXQDjg3TPns4S8y9XUJrbzGeRPn74cCH1o=;
-        b=zOuRQ+FLa7McPU9bO8Z1FlpSNqwHiLGOui3vOK/x95qOevGdI1ULzn7yM1uY9M3xiK
-         vTpXVTJULZmFgf4zMi4RpwiLy1TkVjNty9SPMr+1Ylhlg4mgqK6vS/TKOtZD0j4oPXkL
-         MPBZPr34uZs1poHz0g8DAubSvdU0VkDcE0Hs7ovJGN7J7eWOqw5ZaUegdhwlIRViqkSZ
-         Q9/JKpJh2HW0rzq6JohkNUzuSNgb7ivGvCwJJSPNiYAc6z1rWL73ndDmRRpNGyoQW23n
-         OineDssPnZRWEhDk+z8xKdZTCJCyJ5jTqWahEt4Kd9s5bUXmLLKjB1ASHnZxXQyO7O5N
-         D2WA==
-X-Gm-Message-State: AOAM533nb/XvCghTx06TR6ZEF8LeTYDxrIEmDG/l5Msu0xJO0s+Mu7oA
-        KNrKU53pgMP6Pe2kI2LuIe/wvFKudfgwaw==
-X-Google-Smtp-Source: ABdhPJwVCxUBTTfQm4A5OxaqroM/IYw5CftjaTKDDD7IAS5BX2jPw9lmE8QCdKqFGtDkQvlrhPMlXw==
-X-Received: by 2002:a05:6102:304c:: with SMTP id w12mr2505291vsa.54.1644506553866;
-        Thu, 10 Feb 2022 07:22:33 -0800 (PST)
-Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
-        by smtp.gmail.com with ESMTPSA id e17sm3847348vsl.21.2022.02.10.07.22.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 10 Feb 2022 07:22:33 -0800 (PST)
-Received: by mail-vs1-f53.google.com with SMTP id g10so6835299vss.1;
-        Thu, 10 Feb 2022 07:22:32 -0800 (PST)
-X-Received: by 2002:a05:6102:34d9:: with SMTP id a25mr2567699vst.68.1644506552564;
- Thu, 10 Feb 2022 07:22:32 -0800 (PST)
+        with ESMTP id S243733AbiBJPro (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Feb 2022 10:47:44 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A98AA5
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Feb 2022 07:47:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644508059;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=YJxdWqnZo8Q+NqjKZUCZO933Of5+jtLtkOJEhDPu1gk=;
+        b=PfanVr7Ra7RjTVzBZopRjoQpQHOizVLe2ZPCZzjzmF33loTUVxvQDsPY8iowbcVgBOX3pY
+        aHE1wE+hFAc4XhgBv/aIX5yqUeH4gLVUbkdleE5CYURfAb/dN0bzhXz5yFd6P9NgjGIVXu
+        D4hVLmFhm8kq9TL+ylshP3uuwJoJFcE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-320-lNcqZa0pPUSQm1hZ6Hxopw-1; Thu, 10 Feb 2022 10:47:38 -0500
+X-MC-Unique: lNcqZa0pPUSQm1hZ6Hxopw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9636A10875CB;
+        Thu, 10 Feb 2022 15:47:25 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 19F3110AFF03;
+        Thu, 10 Feb 2022 15:47:24 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Steve Dickson" <steved@redhat.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [nfs-utils PATCH] nfs4id: a tool to create and persist nfs4
+ client uniquifiers
+Date:   Thu, 10 Feb 2022 10:47:24 -0500
+Message-ID: <E0B72831-1575-41CC-BB61-752F9CD0367C@redhat.com>
+In-Reply-To: <10D2854A-310D-44DD-A31D-83385AD7D87C@oracle.com>
+References: <c2e8b7c06352d3cad3454de096024fff80e638af.1643979161.git.bcodding@redhat.com>
+ <6f01c382-8da5-5673-30db-0c0099d820b5@redhat.com>
+ <33B10EBB-3DD1-45FE-B7D2-D5EA21DFB172@oracle.com>
+ <839b09ed-fd21-bda1-0502-d7c6f1fa9e88@redhat.com>
+ <32D8EBC9-652A-49D7-B763-A82E2AEF6282@oracle.com>
+ <281b1976-9b40-fc53-301a-2846c2ead5aa@redhat.com>
+ <13069AB1-28EB-43F6-83BF-41E9B9501C75@redhat.com>
+ <10D2854A-310D-44DD-A31D-83385AD7D87C@oracle.com>
 MIME-Version: 1.0
-References: <164420889455.29374.17958998143835612560.stgit@noble.brown>
-In-Reply-To: <164420889455.29374.17958998143835612560.stgit@noble.brown>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 10 Feb 2022 16:22:21 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWtRd22FnP5+Ey+d+Zi6OenE17C37F-NbKKkGSzQKtYEg@mail.gmail.com>
-Message-ID: <CAMuHMdWtRd22FnP5+Ey+d+Zi6OenE17C37F-NbKKkGSzQKtYEg@mail.gmail.com>
-Subject: Re: [PATCH 00/21 V4] Repair SWAP-over_NFS
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Hemment <markhemm@googlemail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil,
+On 10 Feb 2022, at 10:21, Chuck Lever III wrote:
 
-On Wed, Feb 9, 2022 at 11:29 AM NeilBrown <neilb@suse.de> wrote:
-> This 4th version of the series address review comment, particularly
-> tidying up "NFS: swap IO handling is slightly different for O_DIRECT IO"
-> and collect reviewed-by etc.
+>> On Feb 10, 2022, at 8:28 AM, Benjamin Coddington 
+>> <bcodding@redhat.com> wrote:
+>>
+>> On 8 Feb 2022, at 17:39, Steve Dickson wrote:
+>>
+>>> On 2/8/22 4:18 PM, Chuck Lever III wrote:
+>>>>
+>>>>
+>>>>> On Feb 8, 2022, at 2:29 PM, Steve Dickson <steved@redhat.com> 
+>>>>> wrote:
+>>>>>
+>>>>>
+>>>>>
+>>>>> On 2/8/22 11:21 AM, Chuck Lever III wrote:
+>>>>>>> On Feb 8, 2022, at 11:04 AM, Steve Dickson <steved@redhat.com> 
+>>>>>>> wrote:
+>>>>>>>
+>>>>>>> Hello,
+>>>>>>>
+>>>>>>> On 2/4/22 7:56 AM, Benjamin Coddington wrote:
+>>>>>>>> The nfs4id program will either create a new UUID from a random 
+>>>>>>>> source or
+>>>>>>>> derive it from /etc/machine-id, else it returns a UUID that has 
+>>>>>>>> already
+>>>>>>>> been written to /etc/nfs4-id.  This small, lightweight tool is 
+>>>>>>>> suitable for
+>>>>>>>> execution by systemd-udev in rules to populate the nfs4 client 
+>>>>>>>> uniquifier.
+>>>>>>>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+>>>>>>>> ---
+>>>>>>>>  .gitignore               |   1 +
+>>>>>>>>  configure.ac             |   4 +
+>>>>>>>>  tools/Makefile.am        |   1 +
+>>>>>>>>  tools/nfs4id/Makefile.am |   8 ++
+>>>>>>>>  tools/nfs4id/nfs4id.c    | 184 
+>>>>>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>>>>>  tools/nfs4id/nfs4id.man  |  29 ++++++
+>>>>>>>>  6 files changed, 227 insertions(+)
+>>>>>>>>  create mode 100644 tools/nfs4id/Makefile.am
+>>>>>>>>  create mode 100644 tools/nfs4id/nfs4id.c
+>>>>>>>>  create mode 100644 tools/nfs4id/nfs4id.man
+>>>>>>> Just a nit... naming convention... In the past
+>>>>>>> we never put the protocol version in the name.
+>>>>>>> Do a ls tools and utils directory and you
+>>>>>>> see what I mean....
+>>>>>>>
+>>>>>>> Would it be a problem to change the name from
+>>>>>>> nfs4id to nfsid?
+>>>>>> nfs4id is pretty generic, too.
+>>>>>> Can we go with nfs-client-id ?
+>>>>> I'm never been big with putting '-'
+>>>>> in command names... nfscltid would
+>>>>> be better IMHO... if we actually
+>>>>> need the 'clt' in the name.
+>>>>
+>>>> We have nfsidmap already. IMO we need some distinction
+>>>> with user ID mapping tools... and some day we might
+>>>> want to manage server IDs too (see EXCHANGE_ID).
+>>> Hmm... So we could not use the same tool to do
+>>> both the server and client, via flags?
+>>>
+>>>>
+>>>> nfsclientid then?
+>>> You like to type more than I do... You always have... :-)
+>>>
+>>> But like I started the conversation... the naming is
+>>> a nit... but I would like to see one tool to set the
+>>> ids for both the server and client... how about
+>>> nfsid -s and nfsid -c
+>>
+>> The tricky thing here is that this little binary isn't going to set
+>> anything, and we probably never want people to run it from the 
+>> command line.
+>>
+>> A 'nfsid -s' and 'nfsid -c' seem to want to do much more.  I feel 
+>> they are
+>> out of scope for the problem I'm trying to solve:  I need something 
+>> that
+>> will generate a unique value, and persist it, suitable for execution 
+>> in a
+>> udevd rule.
+>>
+>> Perhaps we can stop worrying so much about the name of this as I 
+>> don't think
+>> it should be a first-class nfs-utils command, rather just a helper 
+>> for udev.
+>>
+>> And maybe the name can reflect that - "nfsuuid" ?
 >
-> I've also move 3 NFS patches which depend on the MM patches to the end
-> in case they helps maintainers land the patches in a consistent order.
-> Those three patches might go through the NFS free after the next merge
-> window.
+> The client ID can be an arbitrary string, so I think not.
 
-Thanks for the update!
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
-(on Renesas RSK+RZA1 with 32 MiB of SDRAM)
+I feel like we might all be missing the fact that this tool doesn't 
+create
+client IDs.  The tool only creates uuids, and returns what may have 
+already
+been set by something somewhere else.  It's not supposed to ever get 
+typed
+out or run by people.  Any other suggestions?  Here's where we are:
 
-Gr{oetje,eeting}s,
+nfs4id - no: we dislike the number 4
+nfsuuid - no: it doesn't have to be a uuid
+nfsid - no: too ambiguous
+nfscltid - no: also too ambiguous
+nfsclientid - no: too much typing
 
-                        Geert
+Since I've already re-written it, I'm going to send it again as nfsuuid 
+-
+and let's bikeshed on it again over there, and see if we can make
+suggestions that might make everyone happy.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Ben
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
