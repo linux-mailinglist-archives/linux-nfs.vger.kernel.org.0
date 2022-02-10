@@ -2,54 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B011E4B0586
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 06:44:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 801234B0572
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 06:41:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234604AbiBJFmh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Feb 2022 00:42:37 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38538 "EHLO
+        id S234514AbiBJFkK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Feb 2022 00:40:10 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:36096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234390AbiBJFmX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Feb 2022 00:42:23 -0500
+        with ESMTP id S234078AbiBJFjy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Feb 2022 00:39:54 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D15081174;
-        Wed,  9 Feb 2022 21:41:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CACD25DD;
+        Wed,  9 Feb 2022 21:39:44 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 8D1C9210F6;
-        Thu, 10 Feb 2022 05:41:46 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BE7C2210F6;
+        Thu, 10 Feb 2022 05:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644471706; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1644471582; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zUXE+p4nU0NR3LK33keTKiC3MiGpqHZzDnhCV/FYFVc=;
-        b=1iOjcBu6oE+BXqXEFHtabUHK7sZNNAt+F9BXNB5uV7m3v4yti6KzGXBiLv7VLruTI3nEpR
-        RzUf48rnigX5xLwZY9cqLSfPrG7m7EbPedvqO83z8P0IJauCacL1yhTk9JKT9feAU1DqJI
-        KUpM8T9cgXJ5IztxA4OlP16a8F1IH8w=
+        bh=CRQpTl6gU6MaBAdfwSalgYu+ynBw18B3JAwgtU5P7zs=;
+        b=ChcdrxYihvrPbp5PVjckJeU5yNZ5WNA9eaF6g57ACzDLD8aukwAyGJrE1Dhoh0nTjp4vt2
+        nDZOwS43Pd9e6ZAdWcXKM87utZEcMZseQwKBd8oSmVwF8lztvA4i8ChJRD3pTLDlnc1Nh1
+        YE2K6gLKx5L2TOpAPctUhAL+S56F5Aw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644471706;
+        s=susede2_ed25519; t=1644471582;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=zUXE+p4nU0NR3LK33keTKiC3MiGpqHZzDnhCV/FYFVc=;
-        b=0ZiiWmrlykQukuniHTdmeJDPxTmHcRtiUSrL0vXadFeW3t9RQIDNXluXWa7JinzIWwJ++B
-        zkp5vHuwQfZju0DQ==
+        bh=CRQpTl6gU6MaBAdfwSalgYu+ynBw18B3JAwgtU5P7zs=;
+        b=GFA0nCwwuMbxx5Xi7mI/VTbiRQlokeaPReGyF7/os614XAwf1Ti7o9FLajEb3ztekE66ra
+        kxZ9tHN6H4q9aqDQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D113C13519;
-        Thu, 10 Feb 2022 05:41:38 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 844C313519;
+        Thu, 10 Feb 2022 05:39:35 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id wj+/IpKlBGLHOQAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 10 Feb 2022 05:41:38 +0000
-Subject: [PATCH 10/11] block/bfq-iosched.c: use "false" rather than
- "BLK_RW_ASYNC"
+        id TtwLERelBGIEOQAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 10 Feb 2022 05:39:35 +0000
+Subject: [PATCH 05/11] nfs: remove reliance on bdi congestion
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>,
         Wu Fengguang <fengguang.wu@intel.com>,
@@ -72,7 +71,7 @@ Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
         ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-kernel@vger.kernel.org, linux-block@vger.kernel.org
 Date:   Thu, 10 Feb 2022 16:37:52 +1100
-Message-ID: <164447147264.23354.2763356897218946255.stgit@noble.brown>
+Message-ID: <164447147259.23354.17010890548107181818.stgit@noble.brown>
 In-Reply-To: <164447124918.23354.17858831070003318849.stgit@noble.brown>
 References: <164447124918.23354.17858831070003318849.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -89,27 +88,95 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-bfq_get_queue() expects a "bool" for the third arg, so pass "false"
-rather than "BLK_RW_ASYNC" which will soon be removed.
+The bdi congestion tracking in not widely used and will be removed.
 
-Acked-by: Jens Axboe <axboe@kernel.dk>
+NFS is one of a small number of filesystems that uses it, setting just
+the async (write) congestion flag at what it determines are appropriate
+times.
+
+The only remaining effect of the async flag is to cause (some)
+WB_SYNC_NONE writes to be skipped.
+
+So instead of setting the flag, set an internal flag and change:
+ - .writepages to do nothing if WB_SYNC_NONE and the flag is set
+ - .writepage to return AOP_WRITEPAGE_ACTIVATE if WB_SYNC_NONE
+    and the flag is set.
+
+The writepages change causes a behavioural change in that pageout() can
+now return PAGE_ACTIVATE instead of PAGE_KEEP, so SetPageActive() will
+be called on the page which (I think) wil further delay the next attempt
+at writeout.  This might be a good thing.
+
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- block/bfq-iosched.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/write.c            |   14 +++++++++++---
+ include/linux/nfs_fs_sb.h |    1 +
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 0c612a911696..4e645ae1e066 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -5448,7 +5448,7 @@ static void bfq_check_ioprio_change(struct bfq_io_cq *bic, struct bio *bio)
- 	bfqq = bic_to_bfqq(bic, false);
- 	if (bfqq) {
- 		bfq_release_process_ref(bfqd, bfqq);
--		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic, true);
-+		bfqq = bfq_get_queue(bfqd, bio, false, bic, true);
- 		bic_set_bfqq(bic, bfqq, false);
- 	}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 987a187bd39a..7c986164018e 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -417,7 +417,7 @@ static void nfs_set_page_writeback(struct page *page)
  
+ 	if (atomic_long_inc_return(&nfss->writeback) >
+ 			NFS_CONGESTION_ON_THRESH)
+-		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
++		nfss->write_congested = 1;
+ }
+ 
+ static void nfs_end_page_writeback(struct nfs_page *req)
+@@ -433,7 +433,7 @@ static void nfs_end_page_writeback(struct nfs_page *req)
+ 
+ 	end_page_writeback(req->wb_page);
+ 	if (atomic_long_dec_return(&nfss->writeback) < NFS_CONGESTION_OFF_THRESH)
+-		clear_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
++		nfss->write_congested = 0;
+ }
+ 
+ /*
+@@ -672,6 +672,10 @@ static int nfs_writepage_locked(struct page *page,
+ 	struct inode *inode = page_file_mapping(page)->host;
+ 	int err;
+ 
++	if (wbc->sync_mode == WB_SYNC_NONE &&
++	    NFS_SERVER(inode)->write_congested)
++		return AOP_WRITEPAGE_ACTIVATE;
++
+ 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGE);
+ 	nfs_pageio_init_write(&pgio, inode, 0,
+ 				false, &nfs_async_write_completion_ops);
+@@ -719,6 +723,10 @@ int nfs_writepages(struct address_space *mapping, struct writeback_control *wbc)
+ 	int priority = 0;
+ 	int err;
+ 
++	if (wbc->sync_mode == WB_SYNC_NONE &&
++	    NFS_SERVER(inode)->write_congested)
++		return 0;
++
+ 	nfs_inc_stats(inode, NFSIOS_VFSWRITEPAGES);
+ 
+ 	if (!(mntflags & NFS_MOUNT_WRITE_EAGER) || wbc->for_kupdate ||
+@@ -1893,7 +1901,7 @@ static void nfs_commit_release_pages(struct nfs_commit_data *data)
+ 	}
+ 	nfss = NFS_SERVER(data->inode);
+ 	if (atomic_long_read(&nfss->writeback) < NFS_CONGESTION_OFF_THRESH)
+-		clear_bdi_congested(inode_to_bdi(data->inode), BLK_RW_ASYNC);
++		nfss->write_congested = 0;
+ 
+ 	nfs_init_cinfo(&cinfo, data->inode, data->dreq);
+ 	nfs_commit_end(cinfo.mds);
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ca0959e51e81..6aa2a200676a 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -138,6 +138,7 @@ struct nfs_server {
+ 	struct nlm_host		*nlm_host;	/* NLM client handle */
+ 	struct nfs_iostats __percpu *io_stats;	/* I/O statistics */
+ 	atomic_long_t		writeback;	/* number of writeback pages */
++	unsigned int		write_congested;/* flag set when writeback gets too high */
+ 	unsigned int		flags;		/* various flags */
+ 
+ /* The following are for internal use only. Also see uapi/linux/nfs_mount.h */
 
 
