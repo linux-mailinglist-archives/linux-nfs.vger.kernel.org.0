@@ -1,76 +1,61 @@
 Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
-Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AA60B4B03E0
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 04:25:08 +0100 (CET)
+Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA764B04A5
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Feb 2022 05:52:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbiBJDY2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Feb 2022 22:24:28 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53950 "EHLO
+        id S232918AbiBJEwP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Feb 2022 23:52:15 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230140AbiBJDY1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 22:24:27 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 264841EAE2;
-        Wed,  9 Feb 2022 19:24:29 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id BAE6121100;
-        Thu, 10 Feb 2022 03:24:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644463467; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xwqKw/x7M7OBcPmkuJ2rpe3zrxSATDoZ5IdU4ehVYHQ=;
-        b=RKh1X/1fvVK0TdOjwh3Y5kGcg6ZZZovFUrcRfGuoDTMz6vGQQdTYQuFVy80O+HmZ+cro1K
-        Jm1BXdHFYtPM8nDSIntxOajLEJRT5rcf4sZzWrjO2AkmhysJiAGCzbm+VmOYY435K3X94I
-        yKOIWch7O1m2jOjDdRX9TjGOFYalfJg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644463467;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xwqKw/x7M7OBcPmkuJ2rpe3zrxSATDoZ5IdU4ehVYHQ=;
-        b=DAkw0YYoO4GkxdPbXWZPLbQKRn/JDU8x5+Jf57ZJ0Ypc4t7M1Gh72wsMaz84uR1Q58zj5N
-        7w3oWA7dUfeoilCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8092C13AF0;
-        Thu, 10 Feb 2022 03:24:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id v49LD2iFBGKgFAAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 10 Feb 2022 03:24:24 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Anna Schumaker" <anna.schumaker@netapp.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Mark Hemment" <markhemm@googlemail.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "David Howells" <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 01/21 -  revised] MM: create new mm/swap.h header file.
-In-reply-to: <164420916109.29374.8959231877111146366.stgit@noble.brown>
-References: <164420889455.29374.17958998143835612560.stgit@noble.brown>,
- <164420916109.29374.8959231877111146366.stgit@noble.brown>
-Date:   Thu, 10 Feb 2022 14:24:21 +1100
-Message-id: <164446346124.27779.17090116810760017647@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232519AbiBJEwP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Feb 2022 23:52:15 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C832C1B2;
+        Wed,  9 Feb 2022 20:52:16 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21A4SvsY020151;
+        Thu, 10 Feb 2022 04:52:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=O5GZcFi0IIiquyYsl+XQYXWmvPZcYmYFvrVrCg3GjEk=;
+ b=npD9qJEl6kCx8gPEI8qmrCrgRBXNi7vJpe7soonjqzF0s7Na6+V5H1e88DJgGIfdiJeL
+ j6Ryoj66x4/bQ8QvaZlN31gLK+GLEcCkQvNzw+8oqjw98qyra5DTlVnDSnYW8S4Wxgi5
+ OCZaQD+LGBZZZxcvklxAROhv17wmN49NMcw+BlEnpw47T539DzAqQCDYcVfKbj+P24is
+ fRcSnb3G9DItbabVTelBH+6oOAaoMqhntI9QXRKyNwIKTBloeQeAwl1U0+Ja1MKOylTt
+ iC+7//kk9HTaKGxEqwxwCkRwnKk+cBPuy1Xt0W0Sz0Wro/5XBk2e4tOJeTihOafL2Gw8 bQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3e366x024e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Feb 2022 04:52:14 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 21A4oCTA015420;
+        Thu, 10 Feb 2022 04:52:13 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 3e1f9jk1yt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Feb 2022 04:52:13 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 21A4qC5M020851;
+        Thu, 10 Feb 2022 04:52:12 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by aserp3030.oracle.com with ESMTP id 3e1f9jk1y6-1;
+        Thu, 10 Feb 2022 04:52:12 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v12 0/3] nfsd: Initial implementation of NFSv4 Courteous Server
+Date:   Wed,  9 Feb 2022 20:52:06 -0800
+Message-Id: <1644468729-30383-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-GUID: iFKX4ARG2cZ1g4m-1XKW32QFuqT6GwUD
+X-Proofpoint-ORIG-GUID: iFKX4ARG2cZ1g4m-1XKW32QFuqT6GwUD
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -78,515 +63,180 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-Many functions declared in include/linux/swap.h are only used within mm/
+Hi Chuck, Bruce
 
-Create a new "mm/swap.h" and move some of these declarations there.
-Remove the redundant 'extern' from the function declarations.
+This series of patches implement the NFSv4 Courteous Server.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: NeilBrown <neilb@suse.de>
----
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
 
-Added missing include in mm/huge_memory.c
+v2 patch includes:
 
- include/linux/swap.h | 121 ----------------------------------------
- mm/huge_memory.c     |   1 +
- mm/madvise.c         |   1 +
- mm/memcontrol.c      |   1 +
- mm/memory.c          |   1 +
- mm/mincore.c         |   1 +
- mm/page_alloc.c      |   1 +
- mm/page_io.c         |   1 +
- mm/shmem.c           |   1 +
- mm/swap.h            | 129 +++++++++++++++++++++++++++++++++++++++++++
- mm/swap_state.c      |   1 +
- mm/swapfile.c        |   1 +
- mm/util.c            |   1 +
- mm/vmscan.c          |   1 +
- mm/zswap.c           |   2 +
- 15 files changed, 143 insertions(+), 121 deletions(-)
- create mode 100644 mm/swap.h
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index 1d38d9475c4d..3f54a8941c9d 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -419,62 +419,19 @@ extern void kswapd_stop(int nid);
-=20
- #ifdef CONFIG_SWAP
-=20
--#include <linux/blk_types.h> /* for bio_end_io_t */
--
--/* linux/mm/page_io.c */
--extern int swap_readpage(struct page *page, bool do_poll);
--extern int swap_writepage(struct page *page, struct writeback_control *wbc);
--extern void end_swap_bio_write(struct bio *bio);
--extern int __swap_writepage(struct page *page, struct writeback_control *wbc,
--	bio_end_io_t end_write_func);
- extern int swap_set_page_dirty(struct page *page);
--
- int add_swap_extent(struct swap_info_struct *sis, unsigned long start_page,
- 		unsigned long nr_pages, sector_t start_block);
- int generic_swapfile_activate(struct swap_info_struct *, struct file *,
- 		sector_t *);
-=20
--/* linux/mm/swap_state.c */
--/* One swap address space for each 64M swap space */
--#define SWAP_ADDRESS_SPACE_SHIFT	14
--#define SWAP_ADDRESS_SPACE_PAGES	(1 << SWAP_ADDRESS_SPACE_SHIFT)
--extern struct address_space *swapper_spaces[];
--#define swap_address_space(entry)			    \
--	(&swapper_spaces[swp_type(entry)][swp_offset(entry) \
--		>> SWAP_ADDRESS_SPACE_SHIFT])
- static inline unsigned long total_swapcache_pages(void)
- {
- 	return global_node_page_state(NR_SWAPCACHE);
- }
-=20
--extern void show_swap_cache_info(void);
--extern int add_to_swap(struct page *page);
--extern void *get_shadow_from_swap_cache(swp_entry_t entry);
--extern int add_to_swap_cache(struct page *page, swp_entry_t entry,
--			gfp_t gfp, void **shadowp);
--extern void __delete_from_swap_cache(struct page *page,
--			swp_entry_t entry, void *shadow);
--extern void delete_from_swap_cache(struct page *);
--extern void clear_shadow_from_swap_cache(int type, unsigned long begin,
--				unsigned long end);
--extern void free_swap_cache(struct page *);
- extern void free_page_and_swap_cache(struct page *);
- extern void free_pages_and_swap_cache(struct page **, int);
--extern struct page *lookup_swap_cache(swp_entry_t entry,
--				      struct vm_area_struct *vma,
--				      unsigned long addr);
--struct page *find_get_incore_page(struct address_space *mapping, pgoff_t ind=
-ex);
--extern struct page *read_swap_cache_async(swp_entry_t, gfp_t,
--			struct vm_area_struct *vma, unsigned long addr,
--			bool do_poll);
--extern struct page *__read_swap_cache_async(swp_entry_t, gfp_t,
--			struct vm_area_struct *vma, unsigned long addr,
--			bool *new_page_allocated);
--extern struct page *swap_cluster_readahead(swp_entry_t entry, gfp_t flag,
--				struct vm_fault *vmf);
--extern struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
--				struct vm_fault *vmf);
--
- /* linux/mm/swapfile.c */
- extern atomic_long_t nr_swap_pages;
- extern long total_swap_pages;
-@@ -528,12 +485,6 @@ static inline void put_swap_device(struct swap_info_stru=
-ct *si)
- }
-=20
- #else /* CONFIG_SWAP */
--
--static inline int swap_readpage(struct page *page, bool do_poll)
--{
--	return 0;
--}
--
- static inline struct swap_info_struct *swp_swap_info(swp_entry_t entry)
- {
- 	return NULL;
-@@ -548,11 +499,6 @@ static inline void put_swap_device(struct swap_info_stru=
-ct *si)
- {
- }
-=20
--static inline struct address_space *swap_address_space(swp_entry_t entry)
--{
--	return NULL;
--}
--
- #define get_nr_swap_pages()			0L
- #define total_swap_pages			0L
- #define total_swapcache_pages()			0UL
-@@ -567,14 +513,6 @@ static inline struct address_space *swap_address_space(s=
-wp_entry_t entry)
- #define free_pages_and_swap_cache(pages, nr) \
- 	release_pages((pages), (nr));
-=20
--static inline void free_swap_cache(struct page *page)
--{
--}
--
--static inline void show_swap_cache_info(void)
--{
--}
--
- /* used to sanity check ptes in zap_pte_range when CONFIG_SWAP=3D0 */
- #define free_swap_and_cache(e) is_pfn_swap_entry(e)
-=20
-@@ -600,65 +538,6 @@ static inline void put_swap_page(struct page *page, swp_=
-entry_t swp)
- {
- }
-=20
--static inline struct page *swap_cluster_readahead(swp_entry_t entry,
--				gfp_t gfp_mask, struct vm_fault *vmf)
--{
--	return NULL;
--}
--
--static inline struct page *swapin_readahead(swp_entry_t swp, gfp_t gfp_mask,
--			struct vm_fault *vmf)
--{
--	return NULL;
--}
--
--static inline int swap_writepage(struct page *p, struct writeback_control *w=
-bc)
--{
--	return 0;
--}
--
--static inline struct page *lookup_swap_cache(swp_entry_t swp,
--					     struct vm_area_struct *vma,
--					     unsigned long addr)
--{
--	return NULL;
--}
--
--static inline
--struct page *find_get_incore_page(struct address_space *mapping, pgoff_t ind=
-ex)
--{
--	return find_get_page(mapping, index);
--}
--
--static inline int add_to_swap(struct page *page)
--{
--	return 0;
--}
--
--static inline void *get_shadow_from_swap_cache(swp_entry_t entry)
--{
--	return NULL;
--}
--
--static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
--					gfp_t gfp_mask, void **shadowp)
--{
--	return -1;
--}
--
--static inline void __delete_from_swap_cache(struct page *page,
--					swp_entry_t entry, void *shadow)
--{
--}
--
--static inline void delete_from_swap_cache(struct page *page)
--{
--}
--
--static inline void clear_shadow_from_swap_cache(int type, unsigned long begi=
-n,
--				unsigned long end)
--{
--}
-=20
- static inline int page_swapcount(struct page *page)
- {
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index 406a3c28c026..dae090f09038 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -38,6 +38,7 @@
- #include <asm/tlb.h>
- #include <asm/pgalloc.h>
- #include "internal.h"
-+#include "swap.h"
-=20
- /*
-  * By default, transparent hugepage support is disabled in order to avoid
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 5604064df464..1ee4b7583379 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -35,6 +35,7 @@
- #include <asm/tlb.h>
-=20
- #include "internal.h"
-+#include "swap.h"
-=20
- struct madvise_walk_private {
- 	struct mmu_gather *tlb;
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 09d342c7cbd0..9b7c8181a207 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -66,6 +66,7 @@
- #include <net/sock.h>
- #include <net/ip.h>
- #include "slab.h"
-+#include "swap.h"
-=20
- #include <linux/uaccess.h>
-=20
-diff --git a/mm/memory.c b/mm/memory.c
-index c125c4969913..d25372340107 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -86,6 +86,7 @@
-=20
- #include "pgalloc-track.h"
- #include "internal.h"
-+#include "swap.h"
-=20
- #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
- #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for =
-last_cpupid.
-diff --git a/mm/mincore.c b/mm/mincore.c
-index 9122676b54d6..f4f627325e12 100644
---- a/mm/mincore.c
-+++ b/mm/mincore.c
-@@ -20,6 +20,7 @@
- #include <linux/pgtable.h>
-=20
- #include <linux/uaccess.h>
-+#include "swap.h"
-=20
- static int mincore_hugetlb(pte_t *pte, unsigned long hmask, unsigned long ad=
-dr,
- 			unsigned long end, struct mm_walk *walk)
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3589febc6d31..221aa3c10b78 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -81,6 +81,7 @@
- #include "internal.h"
- #include "shuffle.h"
- #include "page_reporting.h"
-+#include "swap.h"
-=20
- /* Free Page Internal flags: for internal, non-pcp variants of free_pages().=
- */
- typedef int __bitwise fpi_t;
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 0bf8e40f4e57..f8c26092e869 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -26,6 +26,7 @@
- #include <linux/uio.h>
- #include <linux/sched/task.h>
- #include <linux/delayacct.h>
-+#include "swap.h"
-=20
- void end_swap_bio_write(struct bio *bio)
- {
-diff --git a/mm/shmem.c b/mm/shmem.c
-index a09b29ec2b45..c8b8819fe2e6 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -38,6 +38,7 @@
- #include <linux/hugetlb.h>
- #include <linux/fs_parser.h>
- #include <linux/swapfile.h>
-+#include "swap.h"
-=20
- static struct vfsmount *shm_mnt;
-=20
-diff --git a/mm/swap.h b/mm/swap.h
-new file mode 100644
-index 000000000000..13e72a5023aa
---- /dev/null
-+++ b/mm/swap.h
-@@ -0,0 +1,129 @@
-+
-+#ifdef CONFIG_SWAP
-+#include <linux/blk_types.h> /* for bio_end_io_t */
-+
-+/* linux/mm/page_io.c */
-+int swap_readpage(struct page *page, bool do_poll);
-+int swap_writepage(struct page *page, struct writeback_control *wbc);
-+void end_swap_bio_write(struct bio *bio);
-+int __swap_writepage(struct page *page, struct writeback_control *wbc,
-+		     bio_end_io_t end_write_func);
-+
-+/* linux/mm/swap_state.c */
-+/* One swap address space for each 64M swap space */
-+#define SWAP_ADDRESS_SPACE_SHIFT	14
-+#define SWAP_ADDRESS_SPACE_PAGES	(1 << SWAP_ADDRESS_SPACE_SHIFT)
-+extern struct address_space *swapper_spaces[];
-+#define swap_address_space(entry)			    \
-+	(&swapper_spaces[swp_type(entry)][swp_offset(entry) \
-+		>> SWAP_ADDRESS_SPACE_SHIFT])
-+
-+void show_swap_cache_info(void);
-+int add_to_swap(struct page *page);
-+void *get_shadow_from_swap_cache(swp_entry_t entry);
-+int add_to_swap_cache(struct page *page, swp_entry_t entry,
-+		      gfp_t gfp, void **shadowp);
-+void __delete_from_swap_cache(struct page *page,
-+			      swp_entry_t entry, void *shadow);
-+void delete_from_swap_cache(struct page *);
-+void clear_shadow_from_swap_cache(int type, unsigned long begin,
-+				  unsigned long end);
-+void free_swap_cache(struct page *);
-+struct page *lookup_swap_cache(swp_entry_t entry,
-+			       struct vm_area_struct *vma,
-+			       unsigned long addr);
-+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t ind=
-ex);
-+
-+struct page *read_swap_cache_async(swp_entry_t, gfp_t,
-+				   struct vm_area_struct *vma,
-+				   unsigned long addr,
-+				   bool do_poll);
-+struct page *__read_swap_cache_async(swp_entry_t, gfp_t,
-+				     struct vm_area_struct *vma,
-+				     unsigned long addr,
-+				     bool *new_page_allocated);
-+struct page *swap_cluster_readahead(swp_entry_t entry, gfp_t flag,
-+				    struct vm_fault *vmf);
-+struct page *swapin_readahead(swp_entry_t entry, gfp_t flag,
-+			      struct vm_fault *vmf);
-+
-+#else /* CONFIG_SWAP */
-+static inline int swap_readpage(struct page *page, bool do_poll)
-+{
-+	return 0;
-+}
-+
-+static inline struct address_space *swap_address_space(swp_entry_t entry)
-+{
-+	return NULL;
-+}
-+
-+static inline void free_swap_cache(struct page *page)
-+{
-+}
-+
-+static inline void show_swap_cache_info(void)
-+{
-+}
-+
-+static inline struct page *swap_cluster_readahead(swp_entry_t entry,
-+				gfp_t gfp_mask, struct vm_fault *vmf)
-+{
-+	return NULL;
-+}
-+
-+static inline struct page *swapin_readahead(swp_entry_t swp, gfp_t gfp_mask,
-+			struct vm_fault *vmf)
-+{
-+	return NULL;
-+}
-+
-+static inline int swap_writepage(struct page *p, struct writeback_control *w=
-bc)
-+{
-+	return 0;
-+}
-+
-+static inline struct page *lookup_swap_cache(swp_entry_t swp,
-+					     struct vm_area_struct *vma,
-+					     unsigned long addr)
-+{
-+	return NULL;
-+}
-+
-+static inline
-+struct page *find_get_incore_page(struct address_space *mapping, pgoff_t ind=
-ex)
-+{
-+	return find_get_page(mapping, index);
-+}
-+
-+static inline int add_to_swap(struct page *page)
-+{
-+	return 0;
-+}
-+
-+static inline void *get_shadow_from_swap_cache(swp_entry_t entry)
-+{
-+	return NULL;
-+}
-+
-+static inline int add_to_swap_cache(struct page *page, swp_entry_t entry,
-+					gfp_t gfp_mask, void **shadowp)
-+{
-+	return -1;
-+}
-+
-+static inline void __delete_from_swap_cache(struct page *page,
-+					swp_entry_t entry, void *shadow)
-+{
-+}
-+
-+static inline void delete_from_swap_cache(struct page *page)
-+{
-+}
-+
-+static inline void clear_shadow_from_swap_cache(int type, unsigned long begi=
-n,
-+				unsigned long end)
-+{
-+}
-+
-+#endif /* CONFIG_SWAP */
-diff --git a/mm/swap_state.c b/mm/swap_state.c
-index 8d4104242100..bb38453425c7 100644
---- a/mm/swap_state.c
-+++ b/mm/swap_state.c
-@@ -23,6 +23,7 @@
- #include <linux/huge_mm.h>
- #include <linux/shmem_fs.h>
- #include "internal.h"
-+#include "swap.h"
-=20
- /*
-  * swapper_space is a fiction, retained to simplify the path through
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index bf0df7aa7158..71c7a31dd291 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -44,6 +44,7 @@
- #include <asm/tlbflush.h>
- #include <linux/swapops.h>
- #include <linux/swap_cgroup.h>
-+#include "swap.h"
-=20
- static bool swap_count_continued(struct swap_info_struct *, pgoff_t,
- 				 unsigned char);
-diff --git a/mm/util.c b/mm/util.c
-index 7e43369064c8..619697e3d935 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -27,6 +27,7 @@
- #include <linux/uaccess.h>
-=20
- #include "internal.h"
-+#include "swap.h"
-=20
- /**
-  * kfree_const - conditionally free memory
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 090bfb605ecf..5c734ffc6057 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -58,6 +58,7 @@
- #include <linux/balloon_compaction.h>
-=20
- #include "internal.h"
-+#include "swap.h"
-=20
- #define CREATE_TRACE_POINTS
- #include <trace/events/vmscan.h>
-diff --git a/mm/zswap.c b/mm/zswap.c
-index cdf6950fcb2e..9192dc5f678f 100644
---- a/mm/zswap.c
-+++ b/mm/zswap.c
-@@ -36,6 +36,8 @@
- #include <linux/pagemap.h>
- #include <linux/workqueue.h>
-=20
-+#include "swap.h"
-+
- /*********************************
- * statistics
- **********************************/
---=20
-2.35.1
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+v3 patch includes:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v5 patch includes:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+v6 patch includes:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+v7 patch includes:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+v8 patch includes:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+v9 patch includes:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+v10 patch includes:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
+
+v11 patch includes:
+
+  Add comment for lm_lock_conflict callback.
+
+  Replace static const courtesy_client_expiry with macro.
+
+  Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
+  Callers use nfs4_client->cl_cs_client boolean to determined if
+  it's the courtesy client and take appropriate actions.
+
+  Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
+  with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
+
+v12 patch includes:
+
+  Remove unnecessary comment in nfs4_get_client_reaplist.
+
+  Replace nfs4_client->cl_cs_client boolean with
+  NFSD4_CLIENT_COURTESY_CLNT flag.
+
+  Remove courtesy_clnt argument from find_client_in_id_table and
+  find_clp_in_name_tree. Callers use NFSD4_CLIENT_COURTESY_CLNT to
+  determined if it's the courtesy client and take appropriate actions.
 
