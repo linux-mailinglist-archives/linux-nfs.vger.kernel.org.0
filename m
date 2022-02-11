@@ -2,44 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B63A24B2498
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Feb 2022 12:40:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52DC14B2747
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Feb 2022 14:37:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233008AbiBKLkO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Feb 2022 06:40:14 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:53074 "EHLO
+        id S235942AbiBKNfc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Feb 2022 08:35:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232547AbiBKLkN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Feb 2022 06:40:13 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72728E9B
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Feb 2022 03:40:10 -0800 (PST)
-Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1nIUHY-0000YI-63; Fri, 11 Feb 2022 12:40:08 +0100
-Message-ID: <f7a7d0e1-41ab-f648-97a3-9fd92e0e2eb2@leemhuis.info>
-Date:   Fri, 11 Feb 2022 12:40:07 +0100
+        with ESMTP id S238948AbiBKNfb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Feb 2022 08:35:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1701195
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Feb 2022 05:35:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644586529;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=rqeu3eThxTPmeQzAZMXsDvnBJB6+wwYnSvqyBSvG8us=;
+        b=ZugT43Gh6qIl40bTjDgJcu1bMI1pSFwoOJrUKgsG/jruGCsbvFU72pZgHmcuqWPAHYYaBA
+        y1Awa1Y703DwslUlJ4JRh2hPKof2mT0OzBW7Z4j1to8Asdo7BF5H0uN50IvX4wfBOUKpR/
+        IEvnsqwVJOimYegWx57R6bNYqTuonIU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-665-KonA7kfhOT2Hm3AybxysAQ-1; Fri, 11 Feb 2022 08:35:26 -0500
+X-MC-Unique: KonA7kfhOT2Hm3AybxysAQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0159190B2D6;
+        Fri, 11 Feb 2022 13:35:23 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1C0B17901B;
+        Fri, 11 Feb 2022 13:35:23 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     NeilBrown <neilb@suse.de>
+Cc:     "Trond Myklebust" <trondmy@hammerspace.com>, steved@redhat.com,
+        linux-nfs@vger.kernel.org
+Subject: Re: [nfs-utils PATCH] nfs4id: a tool to create and persist nfs4
+ client uniquifiers
+Date:   Fri, 11 Feb 2022 08:35:22 -0500
+Message-ID: <299337F3-E83F-49EC-BB24-C9B859C9FB6D@redhat.com>
+In-Reply-To: <164453369792.27779.10668875903268728405@noble.neil.brown.name>
+References: <c2e8b7c06352d3cad3454de096024fff80e638af.1643979161.git.bcodding@redhat.com>
+ <6f01c382-8da5-5673-30db-0c0099d820b5@redhat.com>
+ <0AB20C82-6200-46E0-A76C-62345DAF8A3A@redhat.com>
+ <6cfb516d-0747-a749-b310-1368a2186307@redhat.com>
+ <164444169523.27779.10904328736784652852@noble.neil.brown.name>
+ <39e7bba4243eb2f16d99fefb43fef6b3ff741f87.camel@hammerspace.com>
+ <164445109064.27779.13269022853115063257@noble.neil.brown.name>
+ <6BAAA0D0-7212-480F-9C33-DA1F656FF09F@redhat.com>
+ <164453369792.27779.10668875903268728405@noble.neil.brown.name>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-BS
-To:     Paul Menzel <pmenzel@molgen.mpg.de>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org, it+linux-nfs@molgen.mpg.de,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        regressions@lists.linux.dev
-References: <20220208183823.1391397-1-trondmy@kernel.org>
- <d16aac1e-a3aa-309a-0130-c60147c980d1@molgen.mpg.de>
- <82dffa3e-1b14-e590-aaf6-f9f8570e616c@molgen.mpg.de>
-From:   Thorsten Leemhuis <linux@leemhuis.info>
-Subject: Re: [PATCH] NFS: LOOKUP_DIRECTORY is also ok with symlinks
-In-Reply-To: <82dffa3e-1b14-e590-aaf6-f9f8570e616c@molgen.mpg.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1644579610;a36ff182;
-X-HE-SMSGID: 1nIUHY-0000YI-63
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,92 +67,56 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 11.02.22 11:55, Paul Menzel wrote:
-> #regzbot monitor:
-> https://lore.kernel.org/linux-nfs/20220208183823.1391397-1-trondmy@kernel.org/
+On 10 Feb 2022, at 17:54, NeilBrown wrote:
 
-Thx for trying, but that failed (as is unneeded, see below): regzbot
-can't determine which of the tracked regression might be meant here, so
-it can't associate it with your report.
-
-> Am 09.02.22 um 23:02 schrieb Paul Menzel:
-> 
->> Am 08.02.22 um 19:38 schrieb trondmy@kernel.org:
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> Commit ac795161c936 (NFSv4: Handle case where the lookup of a directory
->>> fails) [1], part of Linux since 5.17-rc2, introduced a regression, where
->>> a symbolic link on an NFS mount to a directory on another NFS does not
->>> resolve(?) the first time it is accessed:
->>>
->>> Reported-by: Paul Menzel <pmenzel@molgen.mpg.de>
->>> Fixes: ac795161c936 ("NFSv4: Handle case where the lookup of a
->>> directory fails")
->>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> On Thu, 10 Feb 2022, Benjamin Coddington wrote:
 >>
->> Thank you for fixing it so quickly. My colleague verified, that it
->> fixes our issue.
->>
->> Tested-by: Donald Buczek <buczek@molgen.mpg.de>
-> 
-> Also for regzbot:
-> 
-> Link:
-> https://lore.kernel.org/linux-nfs/0235e04a-18aa-ccbf-f520-38a2d55e8b54@molgen.mpg.de/
+>> Yes, but even better than having the tool do the writing is to have 
+>> udev do
+>> it, because udev makes the problem of when and who will execute this 
+>> tool go
+>> away, and the entire process is configurable for anyone that needs to 
+>> change
+>> any part of it or use their own methods of generating/storing ids.
+>
+> I really don't understand the focus on udev.
+>
+> Something, somewhere, deliberately creates the new network namespace.
+> It then deliberately configures that namespace - creating a virtual
+> device maybe, adding an IP address, setting a default route or 
+> whatever.
+> None of that is done by udev rules (is it)?
+> Setting the NFS identity is just another part of configuring the new
+> network namespace.
+>
+> udev is great when we don't know exactly when an event will happen, 
+> but
+> we want to respond when it does.
+> That doesn't match the case of creating a new network namespace.  Some
+> code deliberately creates it and is perfectly positioned to then
+> configure it.
 
-Hmmm, regzbot from this could in theory be modified to determine which
-regression was meant, but right now regzbot processes commands
-sequentially, so in this order it wouldn't work anyway.
+I think there's so many ways to create a new network namespace that we 
+can't
+reasonably be expected to try to insert out problem into all of them.
+Handling the event from the kernel allows us to make a best-effort 
+default
+attempt.
 
-But there is a bigger problem: that link points to a reply to your
-report, not the report. I guess I can modify regzbot to handle such
-cases, but I have more pressing issue right now, sorry. But I'll keep it
-in mind.
+> udev is async.  How certain can we be that the udev event will be 
+> fully
+> handled before the first mount attempt?
 
-The right link tag one would have been:
+Good point.  We can't at all be certain.
 
-Link:
-https://lore.kernel.org/r/bd2075f0-2343-5bfa-83bf-0e916303727d@molgen.mpg.de/
+We can start over completely from here..
 
-(s!/r/!/linux-nfs/! would have worked for regzbot as well)
+We can have mount.nfs /also/ try to configure the id.. this is more 
+robust.
 
-Trond, can you please add this tag to your patch in case you respin it,
-as explained, as explained in
-'Documentation/process/submitting-patches.rst' and
-'Documentation/process/5.Posting.rst'.
+We can have mount.nfs do a round of udev settle..
 
-BTW, paul: Regzbot will monitor every subthread with a proper link tag
-(like I gave above), so there is no need for a "#regzbot monitor" in
-anyway if developers would just place the tags as the documentation states.
+Are there other options?
 
-Ciao, Thorsten
+Ben
 
-
->>> ---
->>>   fs/nfs/dir.c | 4 ++--
->>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
->>> index e128503728f2..6dee4e12d381 100644
->>> --- a/fs/nfs/dir.c
->>> +++ b/fs/nfs/dir.c
->>> @@ -2051,14 +2051,14 @@ int nfs_atomic_open(struct inode *dir, struct
->>> dentry *dentry,
->>>       if (!res) {
->>>           inode = d_inode(dentry);
->>>           if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
->>> -            !S_ISDIR(inode->i_mode))
->>> +            !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode)))
->>>               res = ERR_PTR(-ENOTDIR);
->>>           else if (inode && S_ISREG(inode->i_mode))
->>>               res = ERR_PTR(-EOPENSTALE);
->>>       } else if (!IS_ERR(res)) {
->>>           inode = d_inode(res);
->>>           if ((lookup_flags & LOOKUP_DIRECTORY) && inode &&
->>> -            !S_ISDIR(inode->i_mode)) {
->>> +            !(S_ISDIR(inode->i_mode) || S_ISLNK(inode->i_mode))) {
->>>               dput(res);
->>>               res = ERR_PTR(-ENOTDIR);
->>>           } else if (inode && S_ISREG(inode->i_mode)) {
-> 
-> 
