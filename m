@@ -2,141 +2,136 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 403C24B2983
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Feb 2022 16:59:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E0F84B2CF7
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Feb 2022 19:29:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345213AbiBKP7x (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Feb 2022 10:59:53 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:34602 "EHLO
+        id S243192AbiBKS2b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Feb 2022 13:28:31 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344108AbiBKP7v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Feb 2022 10:59:51 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603F31CF
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Feb 2022 07:59:50 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7898FBC3; Fri, 11 Feb 2022 10:59:49 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7898FBC3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1644595189;
-        bh=7S7MJdh4l+onksxIgdY0DmRBb7eYRS2JPKa2rr8vIZk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cTfBl2YTiJNVLqj7QivhtH1Yqfzc7UqgZr/ktIXbIqIxZLzxMTTuyrS5BAlj9j09h
-         tAsFTvoNL5Uv1gsgp0nlGvStGZc3Il7Xye0K/Qar9fRYLPiw+I7rITlI85Y2m6GGdO
-         PFgLUxVWSJRUM5IjpIPsWiaSsVoyHKH1ecE4rSR0=
-Date:   Fri, 11 Feb 2022 10:59:49 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Daire Byrne <daire@dneg.com>
-Cc:     NeilBrown <neilb@suse.de>, Patrick Goetz <pgoetz@math.utexas.edu>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: parallel file create rates (+high latency)
-Message-ID: <20220211155949.GA4941@fieldses.org>
-References: <CAPt2mGOaRsKOiL_wuSK_D5oYYnn0R-pvVsZc5HYGdEbT2FngtQ@mail.gmail.com>
- <20220124193759.GA4975@fieldses.org>
- <adce2b72-ed5c-3056-313c-caea9bad4e15@math.utexas.edu>
- <20220125212055.GB17638@fieldses.org>
- <164315533676.5493.13243313269022942124@noble.neil.brown.name>
- <20220126025722.GD17638@fieldses.org>
- <CAPt2mGP2guMMf1C9VoQ0AvZ819jPuz0vDoEzJJhtL8q5DJ300A@mail.gmail.com>
- <CAPt2mGNXq==1KUskF3U6-CDeoX57=d7NW4Qn_esDqarf9bTBaw@mail.gmail.com>
+        with ESMTP id S232312AbiBKS2a (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Feb 2022 13:28:30 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 46DA6184
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Feb 2022 10:28:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1644604108;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5S+rjG7tdU8Apt4E4h3CLt4KaTYjTfeukO8xDuEGqMU=;
+        b=Kf+w9tvyHKQQacTWFsjr8Kp3sMbTOt6IbIDBMRyW6YipRc2YMj1cs3mybW7ilP3mmq9Unl
+        1f0xmsInmJcL9ykJRzsyiqklQmspMnJN/yZvkpdjGgcLWVf82OJivPtT88cpT3uM6mRpB1
+        U3QozhL1yKPrdYg13gJmg69S0LqDBB0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-251-gswUaO7yOgOl8axrxjG2Ww-1; Fri, 11 Feb 2022 13:28:27 -0500
+X-MC-Unique: gswUaO7yOgOl8axrxjG2Ww-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 787788DEB01;
+        Fri, 11 Feb 2022 18:28:18 +0000 (UTC)
+Received: from [10.10.66.2] (ovpn-66-2.rdu2.redhat.com [10.10.66.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1A3B25E248;
+        Fri, 11 Feb 2022 18:28:18 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Steve Dickson" <SteveD@RedHat.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] nfsuuid: a tool to create and persist nfs4 client
+ uniquifiers
+Date:   Fri, 11 Feb 2022 13:28:16 -0500
+Message-ID: <D0908E76-C163-4DBF-A93C-665492EB9DB2@redhat.com>
+In-Reply-To: <DDB59BD9-8C29-45C3-ABAF-B25EDDB63E09@oracle.com>
+References: <cover.1644515977.git.bcodding@redhat.com>
+ <9c046648bfd9c8260ec7bd37e0a93f7821e0842f.1644515977.git.bcodding@redhat.com>
+ <7642FA55-F3F2-4813-86E2-1B65185E6B36@oracle.com>
+ <3d2992df-7ef7-50ba-4f11-f4de588620d2@redhat.com>
+ <DDB59BD9-8C29-45C3-ABAF-B25EDDB63E09@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPt2mGNXq==1KUskF3U6-CDeoX57=d7NW4Qn_esDqarf9bTBaw@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 10, 2022 at 06:19:09PM +0000, Daire Byrne wrote:
-> I had a quick attempt at updating Neil's patch for mainline but I
-> quickly got stuck and confused. It looks like fs/namei.c in particular
-> underwent major changes and refactoring from v5.7+.
-> 
-> If there is ever any interest in updating this and getting it into
-> mainline, I'm more than willing to test it with production loads. I
-> just lack the skills to update it myself.
-> 
-> It definitely solves a big problem for us, but I also suspect we may
-> be the only ones with this problem.
+On 11 Feb 2022, at 10:48, Chuck Lever III wrote:
 
-It benefits anyone trying to do a lot of creates in a on an NFS
-filesystem where the network round trip time is significant.  That
-doesn't seem so weird.  And even if the case is a little weird, just
-having a case and clear numbers to show the improvement is a big help.
+>> On Feb 11, 2022, at 8:44 AM, Steve Dickson <SteveD@RedHat.com> wrote:
+>>
+>> On 2/10/22 1:15 PM, Chuck Lever III wrote:
+>>>> On Feb 10, 2022, at 1:01 PM, Benjamin Coddington 
+>>>> <bcodding@redhat.com> wrote:
+>>>>
+>>>> The nfsuuid program will either create a new UUID from a random 
+>>>> source or
+>>>> derive it from /etc/machine-id, else it returns a UUID that has 
+>>>> already
+>>>> been written to /etc/nfsuuid or the file specified.  This small,
+>>>> lightweight tool is suitable for execution by systemd-udev in rules 
+>>>> to
+>>>> populate the nfs4 client uniquifier.
+>>> I like everything but the name. Without context, even if
+>>> I read NFS protocol specifications, I have no idea what
+>>> "nfsuuid" does.
+>> man nfsuuid :-)
+>
+> Any time an administrator has to stop to read documentation
+> is an unnecessary interruption in their flow of attention.
+> It wastes their time.
+>
+>
+>>> Possible alternatives:
+>>> nfshostuniquifier
+>>> nfsuniquehost
+>>> nfshostuuid
+>> I'm good with the name... short sweet and easy to type.
+>
+> I'll happily keep it short so it is readable and does not
+> unnecessarily inflate the length of a line in a bash script.
+> But almost no-one will ever type this command. Especially
+> if they don't have to find its man page ;-p
+>
+> My last serious offers: nfsmachineid nfshostid
+>
+> I strongly prefer not having uuid in the name. A UUID is
+> essentially a data type, it does not explain the purpose of
+> the content.
 
-I haven't had the chance to read Neil's patch or work out what the issue
-with the namei changes.
+How do you feel about these suggestions being misleading since the 
+output is
+not the nfs client's id?  Should we put that information in the man 
+page?
+Do sysadmins need to know that the output of this command is (if it is 
+even
+used at all) merely possibility of being a part of the client's id, the
+other parts come from other places in the system: the hostname and 
+possibly
+the ip address?  That's my worry.  If we name it nfsmachineid or 
+nfshostid,
+do you feel like we ought to have it do the much more complicated job of
+accurately outputting the actual client id?
 
-Al Viro is the expert on VFS locking.  I was sure I'd seen him speculate
-about what would be needed to make parallel directory modifications
-possible, but I spent some time mining old mail and didn't find that.
+Right now nfsuuid outputs uuids (or whatever was previously stored, up 
+to 64
+chars).  It generates uuids, like uuidgen.  Without something external 
+to
+itself (a udev rule, for example), it doesn't have any relationship to 
+an
+NFS client's id.  It could plausably be used in the future for other 
+parts
+of NFS to generate persitent uuids.  The only reason we don't just use
+`uuidgen` is that we want to wrap it with some persistence.  A would a 
+name
+like stickyuuid be better?
 
-I think the path forward would be to update Neil's patch, add your
-performance data, send it to Al and linux-fsdevel, and see if we can get
-some idea what remains to be done to get this right.
+Ben
 
---b.
-
-> 
-> Cheers,
-> 
-> Daire
-> 
-> 
-> On Tue, 8 Feb 2022 at 18:48, Daire Byrne <daire@dneg.com> wrote:
-> >
-> > On Wed, 26 Jan 2022 at 02:57, J. Bruce Fields <bfields@fieldses.org> wrote:
-> > >
-> > > On Wed, Jan 26, 2022 at 11:02:16AM +1100, NeilBrown wrote:
-> > > > On Wed, 26 Jan 2022, J. Bruce Fields wrote:
-> > > > > On Tue, Jan 25, 2022 at 03:15:42PM -0600, Patrick Goetz wrote:
-> > > > > > So the directory is locked while the inode is created, or something
-> > > > > > like this, which makes sense.
-> > > > >
-> > > > > It accomplishes a number of things, details in
-> > > > > https://www.kernel.org/doc/html/latest/filesystems/directory-locking.html
-> > > >
-> > > > Just in case anyone is interested, I wrote this a while back:
-> > > >
-> > > > http://lists.lustre.org/pipermail/lustre-devel-lustre.org/2018-November/008177.html
-> > > >
-> > > > it includes a patch to allow parallel creates/deletes over NFS (and any
-> > > > other filesystem which adds support).
-> > > > I doubt it still applies, but it wouldn't be hard to make it work if
-> > > > anyone was willing to make a strong case that we would benefit from
-> > > > this.
-> >
-> > Well, I couldn't resist quickly testing Neil's patch. I found it
-> > applied okay to v5.6.19 with minimal edits.
-> >
-> > As before, without the patch, parallel file creates in a single
-> > directory with 1000 threads topped out at an aggregate of 3 creates/s
-> > over a 200ms link. With the patch it jumps up to 1,200 creates/s.
-> >
-> > So a pretty dramatic difference. I can't say if there are any other
-> > side effects or regressions as I only did this simple test.
-> >
-> > It's great for our super niche workloads and use case anyway.
-> >
-> > Daire
-> >
-> >
-> > > Neato.
-> > >
-> > > Removing the need to hold an exclusive lock on the directory across
-> > > server round trips seems compelling to me....
-> > >
-> > > I also wonder: why couldn't you fire off the RPC without any locks, then
-> > > wait till you get a reply to take locks and update your local cache?
-> > >
-> > > OK, for one thing, calls and replies and server processing could all get
-> > > reordered.  We'd need to know what order the server processed operations
-> > > in, so we could process replies in the same order.
-> > >
-> > > --b.
