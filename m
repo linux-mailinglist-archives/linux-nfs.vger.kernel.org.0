@@ -2,75 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AD854B3E61
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Feb 2022 00:24:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95C924B3E8E
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Feb 2022 01:14:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbiBMXYd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 13 Feb 2022 18:24:33 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:50432 "EHLO
+        id S238838AbiBNAOi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 13 Feb 2022 19:14:38 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238790AbiBMXYc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Feb 2022 18:24:32 -0500
+        with ESMTP id S230195AbiBNAOh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Feb 2022 19:14:37 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43AD151E5D
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Feb 2022 15:24:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9A651E6A
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Feb 2022 16:14:30 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id CCBC0210F4;
-        Sun, 13 Feb 2022 23:24:24 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 84CFD210E7;
+        Mon, 14 Feb 2022 00:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1644794664; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1644797076; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=v3fEGTSGi3WrS4/MPB8Rqzty4YwV1UK/QASq/pPCy6U=;
-        b=KNMfjkab5EOGgNnPVqiW+1HfhOGiJ+H5DmZvWxi1RovgVvT3gWd2Jbk4XIXeH0NB4WuJGF
-        U5sqZ+n9N/kT3wwKIidxhO7J/PDkRMLDXTLA/YK4km7TROv8ERpIO+iJt3eLv+nmx4+fI7
-        cG40+iWLi+Pb2DRuhvqCaB8K/ZfJ+X4=
+        bh=MIFGCWUAAmOp8g9RG4N/12LBHUJUvHF/3M6woarOslI=;
+        b=YCQ47JElyGvJlMoqbB2x6y/l7AGBKITJcb+Js1wWlq6WtwXbfyjBUXW4+fgLPv6UbpKbSJ
+        rNVI/bl09hO3cxXSgZtwQi8qRogUV35HvXzHiNtq1PqakY+eSVNhbpjTtmawkqU3C9MnRW
+        0jvIrrWQ+Ugd0i+cjQQ007jKEyQjtlc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1644794664;
+        s=susede2_ed25519; t=1644797076;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=v3fEGTSGi3WrS4/MPB8Rqzty4YwV1UK/QASq/pPCy6U=;
-        b=Vn8z2HRAvS6v6uasq2t2Nh2QNL5A0ucBtZSfGutmY4rjl3AiOXcButMWDqg6z565wOIRgl
-        j3Qt/nCxOVg8XjAw==
+        bh=MIFGCWUAAmOp8g9RG4N/12LBHUJUvHF/3M6woarOslI=;
+        b=EjfTSMRN1mmcuSw7+I2JKpvcd2iXEOJou1uQ3D426rCl8Emu3EkTneqddVB0rvLAEUPb0H
+        gecdum7BWwGFuaCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 773AD1331E;
-        Sun, 13 Feb 2022 23:24:23 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1C88D134CD;
+        Mon, 14 Feb 2022 00:04:34 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id ATX+DCeTCWKVZgAAMHmgww
-        (envelope-from <neilb@suse.de>); Sun, 13 Feb 2022 23:24:23 +0000
+        id 60qlMZKcCWLUcQAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 14 Feb 2022 00:04:34 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Benjamin Coddington" <bcodding@redhat.com>
-Cc:     "Trond Myklebust" <trondmy@hammerspace.com>, steved@redhat.com,
-        linux-nfs@vger.kernel.org
-Subject: Re: [nfs-utils PATCH] nfs4id: a tool to create and persist nfs4
- client uniquifiers
-In-reply-to: <299337F3-E83F-49EC-BB24-C9B859C9FB6D@redhat.com>
-References: =?utf-8?q?=3Cc2e8b7c06352d3cad3454de096024fff80e638af=2E16439791?=
- =?utf-8?q?61=2Egit=2Ebcodding=40redhat=2Ecom=3E=2C?=
- <6f01c382-8da5-5673-30db-0c0099d820b5@redhat.com>,
- <0AB20C82-6200-46E0-A76C-62345DAF8A3A@redhat.com>,
- <6cfb516d-0747-a749-b310-1368a2186307@redhat.com>,
- <164444169523.27779.10904328736784652852@noble.neil.brown.name>,
- <39e7bba4243eb2f16d99fefb43fef6b3ff741f87.camel@hammerspace.com>,
- <164445109064.27779.13269022853115063257@noble.neil.brown.name>,
- <6BAAA0D0-7212-480F-9C33-DA1F656FF09F@redhat.com>,
- <164453369792.27779.10668875903268728405@noble.neil.brown.name>,
- <299337F3-E83F-49EC-BB24-C9B859C9FB6D@redhat.com>
-Date:   Mon, 14 Feb 2022 10:24:18 +1100
-Message-id: <164479465866.27779.3680126986096452561@noble.neil.brown.name>
+Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
+        "Steve Dickson" <SteveD@RedHat.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] nfsuuid: a tool to create and persist nfs4 client
+ uniquifiers
+In-reply-to: <948D8123-E310-4A35-BF04-C030F20EA83C@redhat.com>
+References: <cover.1644515977.git.bcodding@redhat.com>, =?utf-8?q?=3C9c04664?=
+ =?utf-8?q?8bfd9c8260ec7bd37e0a93f7821e0842f=2E1644515977=2Egit=2Ebcodding?=
+ =?utf-8?q?=40redhat=2Ecom=3E=2C?=
+ <7642FA55-F3F2-4813-86E2-1B65185E6B36@oracle.com>,
+ <3d2992df-7ef7-50ba-4f11-f4de588620d2@redhat.com>,
+ <DDB59BD9-8C29-45C3-ABAF-B25EDDB63E09@oracle.com>,
+ <D0908E76-C163-4DBF-A93C-665492EB9DB2@redhat.com>,
+ <E2C56D5B-AC77-48D1-9AF6-268406648657@oracle.com>,
+ <4657F9AE-3B9E-4992-9334-3FF1CF18EF31@redhat.com>,
+ <C7533D80-25B3-4722-94A9-0440C48B8574@oracle.com>,
+ <945849B4-BE30-434C-88E9-8E901AAFA638@redhat.com>,
+ <06B01290-E375-455E-A6D7-419CA653A0D1@oracle.com>,
+ <948D8123-E310-4A35-BF04-C030F20EA83C@redhat.com>
+Date:   Mon, 14 Feb 2022 11:04:31 +1100
+Message-id: <164479707170.27779.15384523062754338136@noble.neil.brown.name>
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -82,104 +85,90 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Sat, 12 Feb 2022, Benjamin Coddington wrote:
-> On 10 Feb 2022, at 17:54, NeilBrown wrote:
+> On 11 Feb 2022, at 15:51, Chuck Lever III wrote:
 > 
-> > On Thu, 10 Feb 2022, Benjamin Coddington wrote:
+> >> On Feb 11, 2022, at 3:16 PM, Benjamin Coddington 
+> >> <bcodding@redhat.com> wrote:
 > >>
-> >> Yes, but even better than having the tool do the writing is to have 
-> >> udev do
-> >> it, because udev makes the problem of when and who will execute this 
-> >> tool go
-> >> away, and the entire process is configurable for anyone that needs to 
-> >> change
-> >> any part of it or use their own methods of generating/storing ids.
+> >> On 11 Feb 2022, at 15:00, Chuck Lever III wrote:
+> >>
+> >>>> On Feb 11, 2022, at 2:30 PM, Benjamin Coddington 
+> >>>> <bcodding@redhat.com> wrote:
+> >>>>
+> >>>> All the arguments for exacting tolerances on how it should be named 
+> >>>> apply
+> >>>> equally well to anything that implies its output will be used for 
+> >>>> nfs client
+> >>>> ids, or host ids.
+> >>>
+> >>> I completely disagree with this assessment.
+> >>
+> >> But how, and in what way?  The tool just generates uuids, and spits 
+> >> them
+> >> out, or it spits out whatever's in the file you specify, up to 64 
+> >> chars.  If
+> >> we can't have uuid in the name, how can we have NFS or machine-id or
+> >> host-id?
 > >
-> > I really don't understand the focus on udev.
+> > We don't have a tool called "string" to get and set the DNS name of
+> > the local host. It's called "hostname".
 > >
-> > Something, somewhere, deliberately creates the new network namespace.
-> > It then deliberately configures that namespace - creating a virtual
-> > device maybe, adding an IP address, setting a default route or 
-> > whatever.
-> > None of that is done by udev rules (is it)?
-> > Setting the NFS identity is just another part of configuring the new
-> > network namespace.
+> > The purpose of the proposed tool is to persist a unique string to be
+> > used as part of an NFS client ID. I would like to name the tool based
+> > on that purpose, not based on the way the content of the persistent
+> > file happens to be arranged some of the time.
 > >
-> > udev is great when we don't know exactly when an event will happen, 
-> > but
-> > we want to respond when it does.
-> > That doesn't match the case of creating a new network namespace.  Some
-> > code deliberately creates it and is perfectly positioned to then
-> > configure it.
+> > When the tool generates the string, it just happens to be a UUID. It
+> > doesn't have to be. The tool could generate a digest of the boot time
+> > or the current time. In fact, one of those is usually part of certain
+> > types of a UUID anyway. The fact that it is a UUID is totally not
+> > relevant. We happen to use a UUID because it has certain global
+> > uniqueness properties. (By the way, perhaps the man page could mention
+> > that global uniqueness is important for this identifier. Anything with
+> > similar guaranteed global uniqueness could be used).
+> >
+> > You keep admitting that the tool can output something that isn't a
+> > UUID. Doesn't that make my argument for me: that the tool doesn't
+> > generate a UUID, it manages a persistent host identifier. Just like
+> > "hostname." Therefore "nfshostid". I really don't see how nfshostid
+> > is just as miserable as nfsuuid -- hence, I completely disagree
+> > that "all arguments ... apply equally well".
 > 
-> I think there's so many ways to create a new network namespace that we 
-> can't
-> reasonably be expected to try to insert out problem into all of them.
-
-I 100% agree.  Similarly there are lots of init systems and we don't try
-to provide configuration for each one to ensure - e.g.  - that sm-notify
-is run at the correct time.
-But we *do* provide configuration for one - systemd.  This is partly
-because it is widely used, but largely because the distro that I
-personally help maintain uses it.  So I added those systemd/* files.
-(and then others helped improve them).
-
-> Handling the event from the kernel allows us to make a best-effort 
-> default attempt.
-
-That "best" effort is not actually very good.
-
-Might I suggest that we take a similar approach to the systemd config.
-You choose whatever container system is important to you are the moment,
-determine how best to integrate the required support with that system,
-make sure the tool works well for that case, provide any config files
-that might be generally useful for anyone using that container system,
-and in the documentation for the tool explain generally when it must run
-and why, and give an example for the system that you know.
-
-If someone else uses a different container system, they are free to
-create a solution based on your example, and welcome to submit patches -
-either to nfs-utils or to that container system.
-
-Obviously you make the tool reasonably general without over-engineering,
-but don't try to solve problems that you don't even know really exist.
-I would suggest the tool be passed one of:
- - a unique string 
- - a file containing a unique string
- - a file in which a randomly generated unique string may be stored if
-   it doesn't already contain one
- - (maybe) nothing, in which case a new random identity is generate each
-   time.  This could be useful for older kernels.
-
+> Yes - your arguement is a good one.   I wasn't clear enough admitting 
+> you
+> were right two emails ago, sorry about that.
 > 
-> > udev is async.  How certain can we be that the udev event will be 
-> > fully
-> > handled before the first mount attempt?
+> However, I still feel the same argument applied to "nfshostid" 
+> disqualifies
+> it as well.  It doesn't output the nfshostid.  That, if it even contains 
+> the
+> part outputted, is more than what's written out.
 > 
-> Good point.  We can't at all be certain.
+> In my experience with linux tools, nfshostid sounds like something I can 
+> use
+> to set or retrieve the identifier for an NFS host, and this little tool 
+> does
+> not do that.
 > 
-> We can start over completely from here..
-> 
-> We can have mount.nfs /also/ try to configure the id.. this is more 
-> robust.
 
-If mount.nfs is going to do it, then the "also" is pointless.  There
-would be no point in any other code doing it.  However I'm no longer as
-keen on mount.nfs as I was.
+I agree.  This tool primarily does 1 thing - it sets a string which will
+be the uniquifier using the the client_owner4.  So I think the word
+"set" should appear in the name.  I also think the name should start "nfs".
+I don't much care whether it is
+  nfssetid
+  nfs-set-uuid
+  nfssetowner
+  nfssetuniquifier
+  nfssetidentity
+  nfsidset
+though perhaps I'd prefer
+  nfs=set=id
 
-> 
-> We can have mount.nfs do a round of udev settle..
+If not given any args, it should probably print a usage message rather
+than perform a default action, to reduce the number of holes in feet.
 
-My experience with "udev settle" with md does not make me want to depend
-on it.  It has it's place and does useful things, but not always quite
-what I want.
+.... Naming  - THE hard problem of computer engineering ....
 
-> 
-> Are there other options?
-
-Document the requirement and make it "someone elses problem".
-Your kernel patch to provide a random default mean a lack of
-configuration will only hurt the container which lacks it - which nicely
-localises the problem.
-
-Thanks,
 NeilBrown
+
+  
