@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7840F4B75D8
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Feb 2022 21:48:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50EEB4B77F2
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Feb 2022 21:51:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240215AbiBOTWK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S239247AbiBOTWK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 15 Feb 2022 14:22:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56802 "EHLO
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:56804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239959AbiBOTWJ (ORCPT
+        with ESMTP id S240165AbiBOTWJ (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Feb 2022 14:22:09 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760D178064
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6CB477A9B
         for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 11:21:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 24B38B81C69
+        by ams.source.kernel.org (Postfix) with ESMTPS id 991E2B81C82
         for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 19:21:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7AFC340EC;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFED8C340F0;
         Tue, 15 Feb 2022 19:21:55 +0000 (UTC)
 From:   Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v8 7/9] rpcctl: Add a command for changing xprt state
-Date:   Tue, 15 Feb 2022 14:21:48 -0500
-Message-Id: <20220215192150.53811-8-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v8 8/9] rpcctl: Add a man page
+Date:   Tue, 15 Feb 2022 14:21:49 -0500
+Message-Id: <20220215192150.53811-9-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20220215192150.53811-1-Anna.Schumaker@Netapp.com>
 References: <20220215192150.53811-1-Anna.Schumaker@Netapp.com>
@@ -43,92 +43,88 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-We can set it offline or online, or we can remove an xprt. The kernel
-only supports removing offlined transports, so we make sure to set the
-state to "offline" before sending the remove command.
-
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- tools/rpcctl/rpcctl.py | 30 +++++++++++++++++++++++++++---
- 1 file changed, 27 insertions(+), 3 deletions(-)
+v8: Updates for the new command structure
+    Add examples
+---
+ tools/rpcctl/rpcctl.man | 67 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100644 tools/rpcctl/rpcctl.man
 
-diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
-index 0fbce99fff5b..b8df556b682c 100755
---- a/tools/rpcctl/rpcctl.py
-+++ b/tools/rpcctl/rpcctl.py
-@@ -48,9 +48,7 @@ class Xprt:
-         self.info = read_info_file(path / "xprt_info")
-         self.dstaddr = read_addr_file(path / "dstaddr")
-         self.srcaddr = read_addr_file(path / "srcaddr")
--
--        with open(path / "xprt_state") as f:
--            self.state = ','.join(f.readline().split()[1:])
-+        self.read_state()
- 
-     def __lt__(self, rhs):
-         return self.name < rhs.name
-@@ -74,9 +72,16 @@ class Xprt:
-                f"backlog {self.info['backlog_q_len']}, tasks {self.info['tasks_queuelen']}"
- 
-     def __str__(self):
-+        if not self.path.exists():
-+            return f"{self.name}: has been removed"
-         return "\n".join([self._xprt(), self._src_reqs(),
-                           self._cong_slots(), self._queues() ])
- 
-+    def read_state(self):
-+        if self.path.exists():
-+            with open(self.path / "xprt_state") as f:
-+                self.state = ','.join(f.readline().split()[1:])
-+
-     def small_str(self):
-         main = " [main]" if self.info.get("main_xprt") else ""
-         return f"{self.name}: {self.type}, {self.dstaddr}{main}"
-@@ -84,11 +89,21 @@ class Xprt:
-     def set_dstaddr(self, newaddr):
-         self.dstaddr = write_addr_file(self.path / "dstaddr", newaddr)
- 
-+    def set_state(self, state):
-+        with open(self.path / "xprt_state", 'w') as f:
-+            f.write(state)
-+        self.read_state()
-+
-     def add_command(subparser):
-         parser = subparser.add_parser("xprt", help="Commands for individual xprts")
-         parser.set_defaults(func=Xprt.show, xprt=None)
-         subparser = parser.add_subparsers()
- 
-+        remove = subparser.add_parser("remove", help="Remove an xprt")
-+        remove.add_argument("xprt", metavar="XPRT", nargs=1,
-+                            help="Name of the xprt to remove")
-+        remove.set_defaults(func=Xprt.set_property, property="remove")
-+
-         show = subparser.add_parser("show", help="Show xprts")
-         show.add_argument("xprt", metavar="XPRT", nargs='?',
-                           help="Name of a specific xprt to show")
-@@ -98,6 +113,10 @@ class Xprt:
-         set.add_argument("xprt", metavar="XPRT", nargs=1,
-                          help="Name of a specific xprt to modify")
-         subparser = set.add_subparsers(required=True)
-+        online = subparser.add_parser("online", help="Set an xprt online")
-+        online.set_defaults(func=Xprt.set_property, property="online")
-+        offline = subparser.add_parser("offline", help="Set an xprt offline")
-+        offline.set_defaults(func=Xprt.set_property, property="offline")
-         dstaddr = subparser.add_parser("dstaddr", help="Change an xprt's dstaddr")
-         dstaddr.add_argument("newaddr", metavar="NEWADDR", nargs=1,
-                              help="The new address for the xprt")
-@@ -119,6 +138,11 @@ class Xprt:
-         for xprt in Xprt.get_by_name(args.xprt[0]):
-             if args.property == "dstaddr":
-                 xprt.set_dstaddr(socket.gethostbyname(args.newaddr[0]))
-+            elif args.property == "remove":
-+                xprt.set_state("offline")
-+                xprt.set_state("remove")
-+            else:
-+                args.set_state(args.property)
-         print(xprt)
- 
- 
+diff --git a/tools/rpcctl/rpcctl.man b/tools/rpcctl/rpcctl.man
+new file mode 100644
+index 000000000000..b87ba0df41c0
+--- /dev/null
++++ b/tools/rpcctl/rpcctl.man
+@@ -0,0 +1,67 @@
++.\"
++.\" rpcctl(8)
++.\"
++.TH rpcctl 8 "15 Feb 2022"
++.SH NAME
++rpcctl \- Displays SunRPC connection information
++.SH SYNOPSIS
++.nf
++.BR rpcctl " [ \fB\-h \fR| \fB\-\-help \fR] { \fBclient \fR| \fBswitch \fR| \fBxprt \fR}"
++.P
++.BR "rpcctl client" " \fR[ \fB\-h \fR| \fB\-\-help \fR] { \fBshow \fR}"
++.BR "rpcctl client show " "\fR[ \fB\-h \f| \fB\-\-help \fR] [ \fIXPRT \fR]"
++.P
++.BR "rpcctl switch" " \fR[ \fB\-h \fR| \fB\-\-help \fR] { \fBset \fR| \fBshow \fR}"
++.BR "rpcctl switch set" " \fR[ \fB\-h \fR| \fB\-\-help \fR] \fISWITCH \fBdstaddr \fINEWADDR"
++.BR "rpcctl switch show" " \fR[ \fB\-h \fR| \fB\-\-help \fR] [ \fISWITCH \fR]"
++.P
++.BR "rpcctl xprt" " \fR[ \fB\-h \fR| \fB\-\-help \fR] { \fBremove \fR| \fBset \fR| \fBshow \fR}"
++.BR "rpcctl xprt remove" " \fR[ \fB\-h \fR| \fB\-\-help \fR] \fIXPRT"
++.BR "rpcctl xprt set" " \fR[ \fB\-h \fR| \fB\-\-help \fR] \fIXPRT \fR{ \fBdstaddr \fINEWADDR \fR| \fBoffline \fR| \fBonline \fR}"
++.BR "rpcctl xprt show" " \fR[ \fB\-h \fR| \fB\-\-help \fR] [ \fIXPRT \fR]"
++.fi
++.SH DESCRIPTION
++.RB "The " rpcctl " command displays information collected in the SunRPC sysfs files about the system's SunRPC objects.
++.P
++.SS rpcctl client \fR- \fBCommands operating on RPC clients
++.IP "\fBshow \fR[ \fICLIENT \fR] \fB(default)"
++Show detailed information about the RPC clients on this system.
++If \fICLIENT \fRwas provided, then only show information about a single RPC client.
++.P
++.SS rpcctl switch \fR- \fBCommands operating on groups of transports
++.IP "\fBset \fISWITCH \fBdstaddr \fINEWADDR"
++Change the destination address of all transports in the \fISWITCH \fRto \fINEWADDR\fR.
++\fINEWADDR \fRcan be an IP address, DNS name, or anything else resolvable by \fBgethostbyname\fR(3).
++.IP "\fBshow \fR[ \fISWITCH \fR] \fB(default)"
++Show detailed information about groups of transports on this system.
++If \fISWITCH \fRwas provided, then only show information about a single transport group.
++.P
++.SS rpcctl xprt \fR- \fBCommands operating on individual transports
++.IP "\fBremove \fIXPRT"
++Removes the specified \fIXPRT \fRfrom the system.
++Note that "main" transports cannot be removed.
++.P
++.IP "\fBset \fIXPRT \fBdstaddr \fINEWADDR"
++Change the destination address of the specified \fIXPRT \fR to \fINEWADDR\fR.
++\fINEWADDR \fRcan be an IP address, DNS name, or anything else resolvable by \fBgethostbyname\fR(3).
++.P
++.IP "\fBset \fIXPRT \fBoffline"
++Sets the specified \fIXPRT\fR's state to offline.
++.P
++.IP "\fBset \fIXPRT \fBonline"
++Sets the specified \fIXPRT\fR's state to online.
++.IP "\fBshow \fR[ \fIXPRT \fR] \fB(default)"
++Show detailed information about this system's transports.
++If \fIXPRT \fRwas provided, then only show information about a single transport.
++.SH EXAMPLES
++.IP "\fBrpcctl switch show switch-2"
++Show details about the RPC switch named "switch-2".
++.IP "\fBrpcctl xprt remove xprt-4"
++Remove the xprt named "xprt-4" from the system.
++.IP "\fBrpcctl xprt set xprt-3 dstaddr https://linux-nfs.org
++Change the dstaddr of the xprt named "xprt-3" to point to linux-nfs.org
++.SH DIRECTORY
++.TP
++.B /sys/kernel/sunrpc/
++.SH AUTHOR
++Anna Schumaker <Anna.Schumaker@Netapp.com>
 -- 
 2.35.1
 
