@@ -2,45 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A6644B72F1
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Feb 2022 17:42:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FE34B7192
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Feb 2022 17:40:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240550AbiBOPgb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Feb 2022 10:36:31 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:45210 "EHLO
+        id S240816AbiBOPhx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Feb 2022 10:37:53 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:43346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240689AbiBOPf1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Feb 2022 10:35:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 268631275E2;
-        Tue, 15 Feb 2022 07:31:02 -0800 (PST)
+        with ESMTP id S240745AbiBOPfa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Feb 2022 10:35:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6177B82D8;
+        Tue, 15 Feb 2022 07:31:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D07B1B8185B;
-        Tue, 15 Feb 2022 15:31:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08EA4C340F1;
-        Tue, 15 Feb 2022 15:30:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 44A80615CE;
+        Tue, 15 Feb 2022 15:31:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19D6BC340ED;
+        Tue, 15 Feb 2022 15:31:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644939059;
-        bh=MIJPmwim3A/3JWC/apyrNa0p77Qn/Rdwy0Wfo9mLmZ4=;
+        s=k20201202; t=1644939078;
+        bh=vi1pWizM0FJogMNRkq0gEXrW2C3iMGDw32et93d5HmA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNzKmdxj7x9kgiDfg0uRbJvAOrATQSCnAw2+Vj/ATY71eswbHEVEILK6ETvIq1BaE
-         oX99DHhDdGw2somS8KRVGCzJZYxzZWv3/pDUH3rm7zmv+oL5HkqzMcIwCaiLOC9PW3
-         7ETJ+yjb/qO/r5KplX7RVUE766ZOuW7bbYR5s8w8vQIcLxdzg0yf5qzmMN18BevB+p
-         w686TLOZf4R2XeO/YjxLWilvzN4deEJP8sOiMmXF1XSHxHM8hDRCAhmN/p3yicqcft
-         44CrUggs40l3/XgXwBIPODLRuXmH5r98AOAzq2r28vN4eLyZa0QJVRq8o9kBfm9yjh
-         I2Js8w98ugodg==
+        b=sBlngUbEqhCnKm8WcOC8XPC1qlp7Wupt6m07+15O5ZPU6CUarZO2ELL/AuLKDsg0y
+         l1FL0+ZVcYXnBVhDRDj9qwA1JO9iaQn2ueGcBBN78sqo2qOfu/WE72BwL8F134JJpX
+         RUq7Y/lOGzm/9j0BB3/kCopk8+RGMVKPGPrW6ffGZnq/UTCCXi2Vwc4/e88npb7V5y
+         3QcRjQicNdLLdqGSjicgMAMCBWyAWJn2yhnt761Usml1byJyC9wdwBHqIzQy1GR7AT
+         BJztp3il6cFWL2ksj2bljAvq5YAG65gDHupUOx9yMCBATPR1fgp1WW9pIC60RmIUVr
+         70hFTfaDOIq0Q==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 14/17] NFSD: Fix offset type in I/O trace points
-Date:   Tue, 15 Feb 2022 10:30:34 -0500
-Message-Id: <20220215153037.581579-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 09/11] NFSD: Fix offset type in I/O trace points
+Date:   Tue, 15 Feb 2022 10:31:02 -0500
+Message-Id: <20220215153104.581786-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220215153037.581579-1-sashal@kernel.org>
-References: <20220215153037.581579-1-sashal@kernel.org>
+In-Reply-To: <20220215153104.581786-1-sashal@kernel.org>
+References: <20220215153104.581786-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index b073bdc2e6e89..127db5351d016 100644
+index 80933e4334d84..5b2ef30a8ac06 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
 @@ -53,14 +53,14 @@ TRACE_EVENT(nfsd_compound_status,
