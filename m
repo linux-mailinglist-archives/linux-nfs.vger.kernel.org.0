@@ -2,91 +2,198 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC2BC4B8DFA
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 17:28:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1E874B8F7F
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 18:42:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234553AbiBPQ2l (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Feb 2022 11:28:41 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:55968 "EHLO
+        id S234931AbiBPRmV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Feb 2022 12:42:21 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:38526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233074AbiBPQ2j (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Feb 2022 11:28:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E0682AE71A
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 08:28:26 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S233585AbiBPRmV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Feb 2022 12:42:21 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67B55125505
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 09:42:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645033327;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UEcDWyCAAK6xb7ogc+elUoLUwJfh9zufJO2dRxptpHg=;
+        b=MjAKjDv6ZTzI+DaAx1MqAwiciPrbqdQfjyfYLaIgkKmDqcGUyCbFLvA5957YUwPyNCi+WB
+        ReO9AOqeHAlfH5Le0kVi6YnJNPmkXs1/KoNPC4xL9BQE4qUlIRK6Vhv8TretI91N5LB4Ja
+        +YJhv4W2IEkzat7tfigtLj0I0MqdSBM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-189-oyy11l4DOT6OFofhefsJiQ-1; Wed, 16 Feb 2022 12:42:03 -0500
+X-MC-Unique: oyy11l4DOT6OFofhefsJiQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5AB2AB81E61
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 16:28:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02C2FC004E1
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 16:28:23 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFSD: Clean up _lm_ operation names
-Date:   Wed, 16 Feb 2022 11:28:22 -0500
-Message-Id:  <164502889689.39081.3337081158232370849.stgit@klimt.1015granger.net>
-X-Mailer: git-send-email 2.35.0
-User-Agent: StGit/1.5
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF27F8144E0;
+        Wed, 16 Feb 2022 17:42:00 +0000 (UTC)
+Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8B671838D1;
+        Wed, 16 Feb 2022 17:42:00 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 09BDB10C30F0; Wed, 16 Feb 2022 12:42:00 -0500 (EST)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Tune the race to set and use the client id uniquifier
+Date:   Wed, 16 Feb 2022 12:42:00 -0500
+Message-Id: <61a5993a1f9bbed2ba1227bd3376e92232e0530a.1645033262.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1506; h=from:subject:message-id; bh=81XFPntv811TARMKyTPkiHah54EUXWjx+qP/bXWSVKQ=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiDSYhcBrSs6t7zGSUDzLOJdBy0oRPbHAMUdDGDrai v4nNTPSJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYg0mIQAKCRAzarMzb2Z/l/R9D/ 9Iph9x1Em5A+wjRhTl0Qn3BMbOhpheierOpfd+72p5CA6UDoB/VbYujgVcQBBRDyJf2KZog75j7aGW uIm/XGj07CVTYoGrOUagwTNHiSx+JGxvTIMZQDiWI+eCJheFITT/gX3LH7EcpqdyMN5CprLQtKu/D/ ZG6Xha8mPbrD8D7s4WUXnYfXXfeR5J3kYdnGFH668ElrUsZzAK5owckK0dBLJvnDO9tbe5zfgt2LIv zlbH76XWgbXyTLWYhONXS7DXVV2dOHvHf43UNSZNJkAgTzMg7DpCkRi67eLFQ2DT/HZ/aTE0q7NPLn mbMAgmy8ssN5t6EjG1XWMBR+GuQQGYDW80ZPiwG0CNrtS5x4kOer4USFoUEu9yFUW2PLvvAtd8jElT 2mBF637tAUe+kr9qOO+lbjkRQgmcgfA6tpI1NgXqu1QiOjQDsDdhxAHltvdpJ6fxHEszi1vfOjFfrm oYwxYLwacLH+B85mxmZj/FagDZJaeIzaGd5mhZy+TGUP9LDjDs+EJdtoFlPiuTQsUlbuEuFrZT2p5+ PChdUZth14hlFmw7N0MrKWqKUKhF3Jp+oS7MgilfGJfpAmKJY/UVvwlQQRfvKmDt2bj3kSLrJ3ayPK 1hNBqCBaeSVgbF/c7Gq8pANWzTRWrBOyY8Ypd4r/ABiD3EHBlh8FJcw0dLDg==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The common practice is to name function instances the same as the
-method names, but with a uniquifying prefix. Commit aef9583b234a
-("NFSD: Get reference of lockowner when coping file_lock") missed
-this -- the new function names should both have been of the form
-"nfsd4_lm_*".
+In order to set a unique but persistent value for the nfs client's ID, the
+client exposes a per-network-namespace sysfs file that can be used to
+configure a "uniquifier" for this value.
 
-Before more _lm_ functions are added in NFSD, rename these two
-functions for consistency.
+However any userspace mechanism used to configure this value must do so in
+the potentially small window between either (1) the nfs module getting
+loaded or (2) the creation of a new network namespace, and the client
+sending SETCLIENTID or EXCHANGE_ID.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+In (1) the time between these events can be very small if the kernel loads
+the nfs module as triggered by the first mount request.  That leaves little
+time for another process such as a userspace helper to lookup or generate a
+uniquifier and write it to the kernel before the kernel attempts to create
+and use the identifier.
+
+In (2) the network namespace may be created but network configuration and
+processes within that namespace that may trigger on the creation of the
+sysfs file are not ready, or the setup of filesystems and tools for that
+namespace may happen in parallel.
+
+Fix this by creating a new nfs module parameter "nfs4_unique_id_timeout"
+that will allow userspace a tunable window of time to uniquify the client.
+When set, the client waits for a uniquifier to be set before sending
+SETCLIENTID or EXCHANGE_ID.  The parameter defaults to 500ms. Setting the
+parameter to zero reverts any waiting for a uniquifier.
+
+A tunable delay can accommodate situations where the size of the race
+window needs to be modified due to hardware differences or various
+approaches to container initialization with respect to the use of NFS
+within those containers.
+
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- fs/nfsd/nfs4state.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ fs/nfs/nfs4_fs.h  | 1 +
+ fs/nfs/nfs4proc.c | 4 ++++
+ fs/nfs/super.c    | 4 ++++
+ fs/nfs/sysfs.c    | 3 +++
+ fs/nfs/sysfs.h    | 2 ++
+ 5 files changed, 14 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index f3b71fd1d134..234e852fcdfa 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6534,7 +6534,7 @@ nfs4_transform_lock_offset(struct file_lock *lock)
+diff --git a/fs/nfs/nfs4_fs.h b/fs/nfs/nfs4_fs.h
+index 3e344bec3647..052805c3cfc0 100644
+--- a/fs/nfs/nfs4_fs.h
++++ b/fs/nfs/nfs4_fs.h
+@@ -544,6 +544,7 @@ extern bool recover_lost_locks;
+ 
+ #define NFS4_CLIENT_ID_UNIQ_LEN		(64)
+ extern char nfs4_client_id_uniquifier[NFS4_CLIENT_ID_UNIQ_LEN];
++extern unsigned int nfs4_client_id_uniquifier_timeout;
+ 
+ extern int nfs4_try_get_tree(struct fs_context *);
+ extern int nfs4_get_referral_tree(struct fs_context *);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 3106bd28b113..2ddffd799c7f 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -6135,6 +6135,10 @@ nfs4_get_uniquifier(struct nfs_client *clp, char *buf, size_t buflen)
+ 	buf[0] = '\0';
+ 
+ 	if (nn_clp) {
++		if (!nn_clp->user_uniquified && nfs4_client_id_uniquifier_timeout)
++			wait_for_completion_interruptible_timeout(&nn_clp->uniquified,
++				msecs_to_jiffies(nfs4_client_id_uniquifier_timeout));
++
+ 		rcu_read_lock();
+ 		id = rcu_dereference(nn_clp->identifier);
+ 		if (id)
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 4034102010f0..cad5acd1f79d 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1329,6 +1329,7 @@ unsigned short max_session_slots = NFS4_DEF_SLOT_TABLE_SIZE;
+ unsigned short max_session_cb_slots = NFS4_DEF_CB_SLOT_TABLE_SIZE;
+ unsigned short send_implementation_id = 1;
+ char nfs4_client_id_uniquifier[NFS4_CLIENT_ID_UNIQ_LEN] = "";
++unsigned int nfs4_client_id_uniquifier_timeout = 500;
+ bool recover_lost_locks = false;
+ 
+ EXPORT_SYMBOL_GPL(nfs_callback_nr_threads);
+@@ -1339,6 +1340,7 @@ EXPORT_SYMBOL_GPL(max_session_slots);
+ EXPORT_SYMBOL_GPL(max_session_cb_slots);
+ EXPORT_SYMBOL_GPL(send_implementation_id);
+ EXPORT_SYMBOL_GPL(nfs4_client_id_uniquifier);
++EXPORT_SYMBOL_GPL(nfs4_client_id_uniquifier_timeout);
+ EXPORT_SYMBOL_GPL(recover_lost_locks);
+ 
+ #define NFS_CALLBACK_MAXPORTNR (65535U)
+@@ -1370,6 +1372,7 @@ module_param(nfs_idmap_cache_timeout, int, 0644);
+ module_param(nfs4_disable_idmapping, bool, 0644);
+ module_param_string(nfs4_unique_id, nfs4_client_id_uniquifier,
+ 			NFS4_CLIENT_ID_UNIQ_LEN, 0600);
++module_param_named(nfs4_unique_id_timeout, nfs4_client_id_uniquifier_timeout, int, 0644);
+ MODULE_PARM_DESC(nfs4_disable_idmapping,
+ 		"Turn off NFSv4 idmapping when using 'sec=sys'");
+ module_param(max_session_slots, ushort, 0644);
+@@ -1382,6 +1385,7 @@ module_param(send_implementation_id, ushort, 0644);
+ MODULE_PARM_DESC(send_implementation_id,
+ 		"Send implementation ID with NFSv4.1 exchange_id");
+ MODULE_PARM_DESC(nfs4_unique_id, "nfs_client_id4 uniquifier string");
++MODULE_PARM_DESC(nfs4_unique_id_timeout, "msecs to wait for nfs_client_id4 uniquifier string");
+ 
+ module_param(recover_lost_locks, bool, 0644);
+ MODULE_PARM_DESC(recover_lost_locks,
+diff --git a/fs/nfs/sysfs.c b/fs/nfs/sysfs.c
+index be05522a2c8b..a54d342bc381 100644
+--- a/fs/nfs/sysfs.c
++++ b/fs/nfs/sysfs.c
+@@ -117,6 +117,8 @@ static ssize_t nfs_netns_identifier_store(struct kobject *kobj,
+ 		synchronize_rcu();
+ 		kfree(old);
+ 	}
++	c->user_uniquified = true;
++	complete(&c->uniquified);
+ 	return count;
  }
  
- static fl_owner_t
--nfsd4_fl_get_owner(fl_owner_t owner)
-+nfsd4_lm_get_owner(fl_owner_t owner)
- {
- 	struct nfs4_lockowner *lo = (struct nfs4_lockowner *)owner;
- 
-@@ -6543,7 +6543,7 @@ nfsd4_fl_get_owner(fl_owner_t owner)
- }
- 
- static void
--nfsd4_fl_put_owner(fl_owner_t owner)
-+nfsd4_lm_put_owner(fl_owner_t owner)
- {
- 	struct nfs4_lockowner *lo = (struct nfs4_lockowner *)owner;
- 
-@@ -6578,8 +6578,8 @@ nfsd4_lm_notify(struct file_lock *fl)
- 
- static const struct lock_manager_operations nfsd_posix_mng_ops  = {
- 	.lm_notify = nfsd4_lm_notify,
--	.lm_get_owner = nfsd4_fl_get_owner,
--	.lm_put_owner = nfsd4_fl_put_owner,
-+	.lm_get_owner = nfsd4_lm_get_owner,
-+	.lm_put_owner = nfsd4_lm_put_owner,
+@@ -171,6 +173,7 @@ static struct nfs_netns_client *nfs_netns_client_alloc(struct kobject *parent,
+ 	if (p) {
+ 		if (net != &init_net)
+ 			assign_unique_clientid(p);
++		init_completion(&p->uniquified);
+ 		p->net = net;
+ 		p->kobject.kset = nfs_client_kset;
+ 		if (kobject_init_and_add(&p->kobject, &nfs_netns_client_type,
+diff --git a/fs/nfs/sysfs.h b/fs/nfs/sysfs.h
+index 5501ef573c32..f733439a1084 100644
+--- a/fs/nfs/sysfs.h
++++ b/fs/nfs/sysfs.h
+@@ -12,6 +12,8 @@ struct nfs_netns_client {
+ 	struct kobject kobject;
+ 	struct net *net;
+ 	const char __rcu *identifier;
++	bool user_uniquified;
++	struct completion uniquified;
  };
  
- static inline void
+ extern struct kobject *nfs_client_kobj;
+-- 
+2.31.1
 
