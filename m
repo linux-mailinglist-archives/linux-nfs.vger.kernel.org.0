@@ -2,238 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 788824B90DC
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 20:01:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E3C14B9119
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 20:22:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237891AbiBPTB6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Feb 2022 14:01:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:35826 "EHLO
+        id S230238AbiBPTWd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Feb 2022 14:22:33 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:49522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237823AbiBPTB5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Feb 2022 14:01:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CD02E1CFC8
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 11:01:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645038102;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=U6oR9r0KiYK9Pu6eS91cggax3SeEDZriA07CUQtbYMw=;
-        b=R/wujvaY5AULfy95xMTYTKvsgLkd5fVM/8a/gj7NFui/9sWwvbwiJBBdlrrfz9waHbYUdX
-        FrfqbUcBRzPmSUflc7Fz/lQNU68JOO/VOdaQpkMYZPQI+PGndlt9vaKkefpliX8RPqYgHy
-        zlQ9VkO7M4cftfsw0d++olfeY8G+56U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-159-e8T5NgrWPomWDuB52aDt3Q-1; Wed, 16 Feb 2022 14:01:40 -0500
-X-MC-Unique: e8T5NgrWPomWDuB52aDt3Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AC6C363A4;
-        Wed, 16 Feb 2022 19:01:36 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 67B2010013D0;
-        Wed, 16 Feb 2022 19:01:35 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Neil Brown" <neilb@suse.de>, "Steve Dickson" <SteveD@RedHat.com>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] nfsuuid: a tool to create and persist nfs4 client
- uniquifiers
-Date:   Wed, 16 Feb 2022 14:01:32 -0500
-Message-ID: <3AF29DC6-2EEB-4C3E-BD6C-BE31910921AE@redhat.com>
-In-Reply-To: <42AAFEDD-F4EE-4A91-BD23-E08B1149EF1C@oracle.com>
-References: <cover.1644515977.git.bcodding@redhat.com>
- <9c046648bfd9c8260ec7bd37e0a93f7821e0842f.1644515977.git.bcodding@redhat.com>
- <7642FA55-F3F2-4813-86E2-1B65185E6B36@oracle.com>
- <3d2992df-7ef7-50ba-4f11-f4de588620d2@redhat.com>
- <DDB59BD9-8C29-45C3-ABAF-B25EDDB63E09@oracle.com>
- <D0908E76-C163-4DBF-A93C-665492EB9DB2@redhat.com>
- <E2C56D5B-AC77-48D1-9AF6-268406648657@oracle.com>
- <4657F9AE-3B9E-4992-9334-3FF1CF18EF31@redhat.com>
- <C7533D80-25B3-4722-94A9-0440C48B8574@oracle.com>
- <945849B4-BE30-434C-88E9-8E901AAFA638@redhat.com>
- <06B01290-E375-455E-A6D7-419CA653A0D1@oracle.com>
- <948D8123-E310-4A35-BF04-C030F20EA83C@redhat.com>
- <164479707170.27779.15384523062754338136@noble.neil.brown.name>
- <863AB69A-D5D6-4F22-950C-E5F468CD4552@redhat.com>
- <42AAFEDD-F4EE-4A91-BD23-E08B1149EF1C@oracle.com>
+        with ESMTP id S229995AbiBPTWa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Feb 2022 14:22:30 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E82CE24F1A
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Feb 2022 11:22:16 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BD8CE6CD5; Wed, 16 Feb 2022 14:22:15 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BD8CE6CD5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1645039335;
+        bh=+84qCiDFIAKwdzWF/m9U2KjRUazhunK359ZX+y8pQwU=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=aJ6R0daAr3D/z0NfNtEmhxusRUKvaJLTMxfzVDI0Zz+KfMna3QW+oCs4Sp743WzT7
+         Fiux3QpstNxuFYNEimIg1DaASk2M4+b346R9DtIZ6UJoi+2/PvMiPxT8hOsRLcJTKl
+         QX6X45TmvloOBRYKq9B+39sq9tUN9Jk3pgMEHRd0=
+Date:   Wed, 16 Feb 2022 14:22:15 -0500
+To:     Patrick Goetz <pgoetz@math.utexas.edu>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: How are client requests load balanced across multiple nfsd
+ processes?
+Message-ID: <20220216192215.GB29074@fieldses.org>
+References: <19e14932-ed88-60a1-844a-0e17deee269d@math.utexas.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <19e14932-ed88-60a1-844a-0e17deee269d@math.utexas.edu>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 14 Feb 2022, at 10:39, Chuck Lever III wrote:
+On Tue, Feb 15, 2022 at 04:13:25PM -0600, Patrick Goetz wrote:
+> When I set
+> 
+>   RPCNFSDCOUNT=16
+> 
+> what I thought this did was spin up an nfsd thread master with 15
+> threads and the thread master would pass out client requests to the
+> threads, but looking at /proc/$PID/status -> TGID clearly indicates
+> these are all entirely separate processes. (I wasn't sure if ps
+> showed threads as separate processes; apparently it doesn't.)
 
->> On Feb 14, 2022, at 6:15 AM, Benjamin Coddington 
->> <bcodding@redhat.com> wrote:
->>
->> On 13 Feb 2022, at 19:04, NeilBrown wrote:
->>
->>> On Sat, 12 Feb 2022, Benjamin Coddington wrote:
->>>> On 11 Feb 2022, at 15:51, Chuck Lever III wrote:
->>>>
->>>>>> On Feb 11, 2022, at 3:16 PM, Benjamin Coddington
->>>>>> <bcodding@redhat.com> wrote:
->>>>>>
->>>>>> On 11 Feb 2022, at 15:00, Chuck Lever III wrote:
->>>>>>
->>>>>>>> On Feb 11, 2022, at 2:30 PM, Benjamin Coddington
->>>>>>>> <bcodding@redhat.com> wrote:
->>>>>>>>
->>>>>>>> All the arguments for exacting tolerances on how it should be 
->>>>>>>> named
->>>>>>>> apply
->>>>>>>> equally well to anything that implies its output will be used 
->>>>>>>> for
->>>>>>>> nfs client
->>>>>>>> ids, or host ids.
->>>>>>>
->>>>>>> I completely disagree with this assessment.
->>>>>>
->>>>>> But how, and in what way?  The tool just generates uuids, and 
->>>>>> spits
->>>>>> them
->>>>>> out, or it spits out whatever's in the file you specify, up to 64
->>>>>> chars.  If
->>>>>> we can't have uuid in the name, how can we have NFS or machine-id 
->>>>>> or
->>>>>> host-id?
->>>>>
->>>>> We don't have a tool called "string" to get and set the DNS name 
->>>>> of
->>>>> the local host. It's called "hostname".
->>>>>
->>>>> The purpose of the proposed tool is to persist a unique string to 
->>>>> be
->>>>> used as part of an NFS client ID. I would like to name the tool 
->>>>> based
->>>>> on that purpose, not based on the way the content of the 
->>>>> persistent
->>>>> file happens to be arranged some of the time.
->>>>>
->>>>> When the tool generates the string, it just happens to be a UUID. 
->>>>> It
->>>>> doesn't have to be. The tool could generate a digest of the boot 
->>>>> time
->>>>> or the current time. In fact, one of those is usually part of 
->>>>> certain
->>>>> types of a UUID anyway. The fact that it is a UUID is totally not
->>>>> relevant. We happen to use a UUID because it has certain global
->>>>> uniqueness properties. (By the way, perhaps the man page could 
->>>>> mention
->>>>> that global uniqueness is important for this identifier. Anything 
->>>>> with
->>>>> similar guaranteed global uniqueness could be used).
->>>>>
->>>>> You keep admitting that the tool can output something that isn't a
->>>>> UUID. Doesn't that make my argument for me: that the tool doesn't
->>>>> generate a UUID, it manages a persistent host identifier. Just 
->>>>> like
->>>>> "hostname." Therefore "nfshostid". I really don't see how 
->>>>> nfshostid
->>>>> is just as miserable as nfsuuid -- hence, I completely disagree
->>>>> that "all arguments ... apply equally well".
->>>>
->>>> Yes - your arguement is a good one.   I wasn't clear enough 
->>>> admitting
->>>> you
->>>> were right two emails ago, sorry about that.
->>>>
->>>> However, I still feel the same argument applied to "nfshostid"
->>>> disqualifies
->>>> it as well.  It doesn't output the nfshostid.  That, if it even 
->>>> contains
->>>> the
->>>> part outputted, is more than what's written out.
->>>>
->>>> In my experience with linux tools, nfshostid sounds like something 
->>>> I can
->>>> use
->>>> to set or retrieve the identifier for an NFS host, and this little 
->>>> tool
->>>> does
->>>> not do that.
->>>>
->>>
->>> I agree.  This tool primarily does 1 thing - it sets a string which 
->>> will
->>> be the uniquifier using the the client_owner4.  So I think the word
->>> "set" should appear in the name.  I also think the name should start 
->>> "nfs".
->>> I don't much care whether it is
->>>  nfssetid
->>>  nfs-set-uuid
->>>  nfssetowner
->>>  nfssetuniquifier
->>>  nfssetidentity
->>>  nfsidset
->>> though perhaps I'd prefer
->>>  nfs=set=id
->>>
->>> If not given any args, it should probably print a usage message 
->>> rather
->>> than perform a default action, to reduce the number of holes in 
->>> feet.
->>>
->>> .... Naming  - THE hard problem of computer engineering ....
->>
->> No, it does NOT set the uniquifier string.  It returns it on stdout.  
->> If
->> you run it without args it just prints the string.  Its completely 
->> harmless.
->
-> OK, my understanding was that if you run it as root, and the
-> string isn't already set, it does indeed set a value in the
-> persistence file.
->
-> That should be harmless, though. Once it is set, it is always
-> the same afterwards, and that's fine. Someone who just types
-> in the command to see what it does can't damage their
-> metatarsals; the worst that happens is the persistence file
-> is never used again.
->
-> I agree that's not very "set"-like.
->
->  nfsgetuniquifier
->  nfsguestuniquifier
->  nfsnsuniquifier
->  ns-uniquifier
->
-> Use with copious amounts of tab completion.
+They're all kernel tasks, which makes the distinction between "thread"
+and "process" a little vague.
 
-Coming back to this.. so it seems at least part of our disagreement 
-about
-the name had to do with a misunderstanding of what the tool did.
+> So the question is how do different client requests get farmed out
+> to different nfsd daemons for service? Who's actually listening on
+> port 2049?
 
-Just to finally clear the air about it: the tool does not write to 
-sysfs, it
-doesn't try to modify the client in any way.  I'm going to leave it up 
-to
-the distros.
+There's no user process that calls "listen"; knfsd's normal rpc handling
+is all in-kernel.  Incoming rpc's may be handed to any of those 16 tasks
+for processing.  A single task just runs a loop where it receives an
+rpc, handles it, and sends a response back.
 
-Considering this, I think your only remaining objection to "nfsuuid" is 
-that it
-might return data other than a uuid if someone points it at a file that
-contains data other than a uuid.
+> This was all prompted by some vendor trying to sell me an EC
+> (Erasure Coding) n+m system who commented "NFS isn't multi-threaded,
+> NFS can only communicate with one server, for a shared/mounted
+> filesystem, so it will always be limited to the speed of that NFS
+> Server. POSIX/Multi-threaded means the filesystem is parallel and
+> can be reading/writing to multiple nodes at once in a storage
+> cluster/setup. The opposite of NFS."
 
-I can fix that.  And its probably not a bad idea either.  The nfsuuid 
-tool
-can ensure that the persisted data is a uuid.
+That explanation is a little muddled.  NFS clients and servers both
+typically have lots of parallelism.  Whether it's sufficient for your
+purposes depends on exactly what you need.
 
-Maybe I also need to change the man page or description of the patch to 
-be
-clearer about what the tool does.  Any suggestions there?
+But, yes, they're mostly correct to say that, in the absence of pNFS,
+"NFS can only communicate with one server, for a shared/mounted
+filesystem, so it will always be limited to the speed of that NFS
+Server".
 
-Ben
+> I think pNFS addresses this, but then how does one implement pNFS?
 
+So, right, pNFS can let you perform IO to multiple servers
+simultaneously, if that's what you need.
+
+The Linux NFS client has support for pNFS, but the kernel server
+doesn't, so you'd need to look elsewhere for a pNFS server.
+
+Whether any of this is useful to you depends on exactly what problem
+you're trying to solve.
+
+--b.
