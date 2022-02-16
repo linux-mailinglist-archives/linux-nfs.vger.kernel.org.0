@@ -2,87 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 671574B7B0D
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 00:11:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31CE04B80F9
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Feb 2022 08:08:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229729AbiBOXL6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Feb 2022 18:11:58 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:46776 "EHLO
+        id S229531AbiBPHH0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Feb 2022 02:07:26 -0500
+Received: from gmail-smtp-in.l.google.com ([23.128.96.19]:34264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238786AbiBOXL5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Feb 2022 18:11:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC2D013CF6
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 15:11:46 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6641161502
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 23:11:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AA7FC340F0
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 23:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1644966705;
-        bh=UCn/QnjNhOcTDfq8uqDXDR/GNHqDfhklFjWfMyBMeV8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=lrOcH27EOdlPgor7/m8dqXGmS2FbjDbdQAUL4RLGDwS4hSDBtiMsz2DES0+lFhaz+
-         s/WEA105TMeFjIyhbA2vFtiNkFV9lMCIqjigyb4iNHcNecgH9q9fchLo+mx52EY8ZU
-         2TPL3bHHSY0pBA7YvEl7mny0CmJm05HiZd05Ro6ZfykT7nMfopiabVxxRjNPM6BbTO
-         CWViNlX/EhXNsWp6wVBGbCxyY0QXpkzLyPKboJy8XAdp7dxx4ZYvE7/WjsFqFP3jye
-         UDO4KvVisrEareG4bOKyhYj3huKFdAne7KXiadStYBBIl6Z6kCfeyjwrQmCQcCv5t2
-         rZoCX6ezrtSdg==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFS: Do not report writeback errors in nfs_getattr()
-Date:   Tue, 15 Feb 2022 18:05:18 -0500
-Message-Id: <20220215230518.24923-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220215230518.24923-1-trondmy@kernel.org>
-References: <20220215230518.24923-1-trondmy@kernel.org>
+        with ESMTP id S229506AbiBPHHZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Feb 2022 02:07:25 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52862C8C6A
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 23:06:37 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id v6-20020a05683024a600b005ac1754342fso952338ots.5
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Feb 2022 23:06:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=lStkJgqPNIm74m5PFcb5ov0JOOgwce0nMHo0QlooSyQ=;
+        b=QryzrThaJ3b+V/TNybsYrr6CVRepN6bUHJ8nBx2E0huQC/0AAQ9ApNE2fH62lLEkEb
+         0YOUU+UEZPUwHGQMEc4ONQoQCcwLPbfkVHtxgkyTtMs2rJi+LQBITwSUx/VJ5dx+q1Vw
+         yKXxciGzI0yqkseTBTrZYB96qLA2GqJrOstfARU3sP1146SLTBBV32raoo6bFSYs9sn0
+         A59t/rhpLr9FjICqSGSWo0R21ND8HnnFTgmsjYn+ob3Aj3yZyKO/vQluzHLWI4p/SMUd
+         Za9YZioRccstUI9H8a/MOdr8WbcKDWAteXZIqEfoloBeNmVrnFeweCtQQHd1/EL3v0W0
+         JAvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=lStkJgqPNIm74m5PFcb5ov0JOOgwce0nMHo0QlooSyQ=;
+        b=w/Ol9nqxClNvCHu7kIAX9TaNZ9gnfH9Ei8BkRvWsYjWAC1vnVQb9QtcgKTDuw7XM7e
+         i/NR5R/tlqcd3345LP8A+jCazjr1rt6u+TPKBjcpXyypjHD9Hp88MMSSmqBUXFkybKQn
+         pdffrM6Ux/RUpzftlNxha2A5YL6pRAk4JZ9lbKeLo6D/4RPoI6839XC/cV2vuXLW19vF
+         XCcXyxx6FI6daYBoPOKyqRHHclUVu0sQRvy14yIPLjVDgROyCEs/OVmlQd8n1kjQNAtQ
+         0U3xo4jhSFuWGDiUu1OW1AByl5dkxpROomKm4O2HMwi8UZKS938yMoXyD7YPtQDyxOy7
+         9HVg==
+X-Gm-Message-State: AOAM5318DDUcsL8v5rq9IXN6JCTZbd7NpH9KzMdr/z2m/jixkQSrUeHG
+        lpSUoSegbS+OXJnlQPxx9JcX8EfONXPC84N40htGgT5GAjd5wWkj
+X-Google-Smtp-Source: ABdhPJwR8GVtYbJ13tNXRvz+Uvihxs7BOACR0Aoq6f7DZ2sPBgW+fP2dfraRSLkXZdDaX1AoC3r76c1cMeNHdUN5kaI=
+X-Received: by 2002:a25:820e:0:b0:61d:fe85:5ca3 with SMTP id
+ q14-20020a25820e000000b0061dfe855ca3mr1037828ybk.212.1644993984917; Tue, 15
+ Feb 2022 22:46:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:7010:8da9:b0:208:e95c:8015 with HTTP; Tue, 15 Feb 2022
+ 22:46:24 -0800 (PST)
+Reply-To: wbuffett1930@vipmail.hu
+From:   Warren Buffett <wb29505@gmail.com>
+Date:   Wed, 16 Feb 2022 07:46:24 +0100
+Message-ID: <CAM34SHsWkrt_=uk-0UXW4x6fRZFD=JPnfx7=kqrDAtX8Q6UtFw@mail.gmail.com>
+Subject: Congratulations to you
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=3.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,LOTS_OF_MONEY,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Level: ***
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Congratulations!
 
-The result of the writeback, whether it is an ENOSPC or an EIO, or
-anything else, does not inhibit the NFS client from reporting the
-correct file timestamps.
+You have successfully been granted the cumulative sum of US$4.8
+Million as family donation from Warren Edward Buffett, We decided to
+give this amount to randomly selected of individuals worldwide to help
+fight against poverty and COVID -19, your email was selected online
+while searching for random.
 
-Fixes: 79566ef018f5 ("NFS: Getattr doesn't require data sync semantics")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/inode.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Kindly get back to me at your earliest convenience so I know your
+email is still valid, Thank you for accepting our family donation, we
+are indeed grateful as we believe you will use the money wisely.
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index 90432fc389a0..f9fc506ebb29 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -850,12 +850,9 @@ int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
- 	}
- 
- 	/* Flush out writes to the server in order to update c/mtime.  */
--	if ((request_mask & (STATX_CTIME|STATX_MTIME)) &&
--			S_ISREG(inode->i_mode)) {
--		err = filemap_write_and_wait(inode->i_mapping);
--		if (err)
--			goto out;
--	}
-+	if ((request_mask & (STATX_CTIME | STATX_MTIME)) &&
-+	    S_ISREG(inode->i_mode))
-+		filemap_write_and_wait(inode->i_mapping);
- 
- 	/*
- 	 * We may force a getattr if the user cares about atime.
--- 
-2.35.1
-
+Regards,
+Warren Edward Buffett
+Investor, and philanthropist
