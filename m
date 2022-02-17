@@ -2,32 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3051D4BA0FD
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 14:23:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D0604BA101
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 14:23:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240666AbiBQNXK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Feb 2022 08:23:10 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51032 "EHLO
+        id S230153AbiBQNXL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Feb 2022 08:23:11 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238854AbiBQNXJ (ORCPT
+        with ESMTP id S240747AbiBQNXJ (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Feb 2022 08:23:09 -0500
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA91799ECF
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1C398F7A
         for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 05:22:52 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id C33CA608898A;
-        Thu, 17 Feb 2022 14:16:39 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id D6A1760ED821;
+        Thu, 17 Feb 2022 14:16:40 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id GlwiPVsXDZHd; Thu, 17 Feb 2022 14:16:39 +0100 (CET)
+        with ESMTP id 8HEKE043ZNLK; Thu, 17 Feb 2022 14:16:39 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id F33DE608A38A;
-        Thu, 17 Feb 2022 14:16:38 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 7408E60765A3;
+        Thu, 17 Feb 2022 14:16:39 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 86VoNR_wcpn6; Thu, 17 Feb 2022 14:16:38 +0100 (CET)
+        with ESMTP id w30w7zKvo9uz; Thu, 17 Feb 2022 14:16:39 +0100 (CET)
 Received: from blindfold.corp.sigma-star.at (213-47-184-186.cable.dynamic.surfer.at [213.47.184.186])
-        by lithops.sigma-star.at (Postfix) with ESMTPSA id 8A069605DEBB;
+        by lithops.sigma-star.at (Postfix) with ESMTPSA id EAC65608898A;
         Thu, 17 Feb 2022 14:16:38 +0100 (CET)
 From:   Richard Weinberger <richard@nod.at>
 To:     linux-nfs@vger.kernel.org
@@ -36,9 +36,9 @@ Cc:     david@sigma-star.at, bfields@fieldses.org,
         david.oberhollenzer@sigma-star.at, trond.myklebust@hammerspace.com,
         anna.schumaker@netapp.com, chris.chilvers@appsbroker.com,
         Richard Weinberger <richard@nod.at>
-Subject: [RFC PATCH 2/6] exports: Implement new export option reexport=
-Date:   Thu, 17 Feb 2022 14:15:27 +0100
-Message-Id: <20220217131531.2890-3-richard@nod.at>
+Subject: [RFC PATCH 3/6] export: Implement logic behind reexport=
+Date:   Thu, 17 Feb 2022 14:15:28 +0100
+Message-Id: <20220217131531.2890-4-richard@nod.at>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20220217131531.2890-1-richard@nod.at>
 References: <20220217131531.2890-1-richard@nod.at>
@@ -53,243 +53,351 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When re-exporting a NFS volume it is mandatory to specify
-either a UUID or numerical fsid=3D option because nfsd is unable
-to derive a identifier on its own.
-
-For NFS cross mounts this becomes a problem because nfsd also
-needs a identifier for every crossed mount.
-A common workaround is stating every single subvolume in the
-exports list too.
-But this defeats the purpose of the crossmnt option and is tedious.
-
-This is where the reexport=3D tries to help.
-It offers various strategies to automatically derive a identifier
-for NFS volumes and sub volumes.
-Each have their pros and cons.
-
-Currently three modes are implemented:
-
-1. auto-fsidnum
-   In this mode mountd/exportd will create a new numerical fsid
-   for a NFS volume and subvolume. The numbers are stored in a database
-   such that the server will always use the same fsid.
-   The entry in the exports file allowed to skip fsid=3D entiry but
-   stating a UUID is allowed, if needed.
-
-   This mode has the obvious downside that load balancing is not
-   possible since multiple re-exporting NFS servers would generate
-   different ids.
-
-2. predefined-fsidnum
-   This mode works just like auto-fsidnum but does not generate ids
-   for you. It helps in the load balancing case. A system administrator
-   has to manually maintain the database and install it on all re-exporti=
-ng
-   NFS servers. If you have a massive amount of subvolumes this mode
-   will help because you don't have to bloat the exports list.
-
-3. remote-devfsid
-   If this mode is selected mountd/exportd will derive an UUID from the
-   re-exported NFS volume's fsid (rfc7530 section-5.8.1.9).
-   No further local state is needed on the re-exporting server.
-   The export list entry still needs a fsid=3D setting because while
-   parsing the exports file the NFS mounts might be not there yet.
-   This mode is dangerous, use only of you're absolutely sure that the
-   NFS server you're re-exporting has a stable fsid. Chances are good
-   that it can change.
-   Since an UUID is derived, reexporting from NFSv3 to NFSv3 is not
-   possible. The file handle space is too small.
-   NFSv3 to NFSv4 works, though.
+This covers the cross mount case. When mountd/exportd detect
+a cross mount on a re-exported NFS volume a identifier has to
+be found to make nfsd happy.
 
 Signed-off-by: Richard Weinberger <richard@nod.at>
 ---
- support/include/nfslib.h   |  1 +
- support/nfs/Makefile.am    |  1 +
- support/nfs/exports.c      | 73 ++++++++++++++++++++++++++++++++++++++
- utils/exportfs/Makefile.am |  4 +++
- utils/mount/Makefile.am    |  6 ++++
- 5 files changed, 85 insertions(+)
+ support/export/Makefile.am |   2 +
+ support/export/cache.c     | 140 +++++++++++++++++++++++++++++++++----
+ utils/exportd/Makefile.am  |   8 ++-
+ utils/exportd/exportd.c    |   2 +
+ utils/mountd/Makefile.am   |   6 ++
+ 5 files changed, 144 insertions(+), 14 deletions(-)
 
-diff --git a/support/include/nfslib.h b/support/include/nfslib.h
-index 6faba71b..0465a1ff 100644
---- a/support/include/nfslib.h
-+++ b/support/include/nfslib.h
-@@ -85,6 +85,7 @@ struct exportent {
- 	struct sec_entry e_secinfo[SECFLAVOR_COUNT+1];
- 	unsigned int	e_ttl;
- 	char *		e_realpath;
-+	int		e_reexport;
- };
+diff --git a/support/export/Makefile.am b/support/export/Makefile.am
+index eec737f6..90109b1e 100644
+--- a/support/export/Makefile.am
++++ b/support/export/Makefile.am
+@@ -14,6 +14,8 @@ libexport_a_SOURCES =3D client.c export.c hostname.c \
+ 		      xtab.c mount_clnt.c mount_xdr.c \
+ 		      cache.c auth.c v4root.c fsloc.c \
+ 		      v4clients.c
++libexport_a_CPPFLAGS =3D -I$(top_srcdir)/support/reexport
++
+ BUILT_SOURCES 	=3D $(GENFILES)
 =20
- struct rmtabent {
-diff --git a/support/nfs/Makefile.am b/support/nfs/Makefile.am
-index 67e3a8e1..c4357e7d 100644
---- a/support/nfs/Makefile.am
-+++ b/support/nfs/Makefile.am
-@@ -9,6 +9,7 @@ libnfs_la_SOURCES =3D exports.c rmtab.c xio.c rpcmisc.c r=
-pcdispatch.c \
- 		   svc_socket.c cacheio.c closeall.c nfs_mntent.c \
- 		   svc_create.c atomicio.c strlcat.c strlcpy.c
- libnfs_la_LIBADD =3D libnfsconf.la
-+libnfs_la_CPPFLAGS =3D -I$(top_srcdir)/support/reexport
-=20
- libnfsconf_la_SOURCES =3D conffile.c xlog.c
-=20
-diff --git a/support/nfs/exports.c b/support/nfs/exports.c
-index 2c8f0752..13129d68 100644
---- a/support/nfs/exports.c
-+++ b/support/nfs/exports.c
-@@ -31,6 +31,7 @@
- #include "xlog.h"
- #include "xio.h"
+ noinst_HEADERS =3D mount.h
+diff --git a/support/export/cache.c b/support/export/cache.c
+index a5823e92..6039745e 100644
+--- a/support/export/cache.c
++++ b/support/export/cache.c
+@@ -33,6 +33,7 @@
+ #include "export.h"
  #include "pseudoflavors.h"
+ #include "xcommon.h"
 +#include "reexport.h"
 =20
- #define EXPORT_DEFAULT_FLAGS	\
-   (NFSEXP_READONLY|NFSEXP_ROOTSQUASH|NFSEXP_GATHERED_WRITES|NFSEXP_NOSUB=
-TREECHECK)
-@@ -103,6 +104,7 @@ static void init_exportent (struct exportent *ee, int=
- fromkernel)
- 	ee->e_nsqgids =3D 0;
- 	ee->e_uuid =3D NULL;
- 	ee->e_ttl =3D default_ttl;
-+	ee->e_reexport =3D REEXP_NONE;
+ #ifdef HAVE_JUNCTION_SUPPORT
+ #include "fsloc.h"
+@@ -235,6 +236,16 @@ static void auth_unix_gid(int f)
+ 		xlog(L_ERROR, "auth_unix_gid: error writing reply");
  }
 =20
- struct exportent *
-@@ -302,6 +304,26 @@ putexportent(struct exportent *ep)
- 	}
- 	if (ep->e_uuid)
- 		fprintf(fp, "fsid=3D%s,", ep->e_uuid);
++static int match_crossmnt_fsidnum(uint32_t parsed_fsidnum, char *path)
++{
++	uint32_t fsidnum;
 +
-+	if (ep->e_reexport) {
-+		fprintf(fp, "reexport=3D");
-+		switch (ep->e_reexport) {
-+			case REEXP_AUTO_FSIDNUM:
-+				fprintf(fp, "auto-fsidnum");
-+				break;
-+			case REEXP_PREDEFINED_FSIDNUM:
-+				fprintf(fp, "predefined-fsidnum");
-+				break;
-+			case REEXP_REMOTE_DEVFSID:
-+				fprintf(fp, "remote-devfsid");
-+				break;
-+			default:
-+				xlog(L_ERROR, "unknown reexport method %i", ep->e_reexport);
-+				fprintf(fp, "none");
-+		}
-+		fprintf(fp, ",");
++	if (reexpdb_fsidnum_by_path(path, &fsidnum, 0) =3D=3D 0)
++		return 0;
++
++	return fsidnum =3D=3D parsed_fsidnum;
++}
++
+ #ifdef USE_BLKID
+ static const char *get_uuid_blkdev(char *path)
+ {
+@@ -331,7 +342,52 @@ static const unsigned long nonblkid_filesystems[] =3D=
+ {
+     0        /* last */
+ };
+=20
+-static int uuid_by_path(char *path, int type, size_t uuidlen, char *uuid=
+)
++static int get_uuid_from_fsid(char *path, char *uuid_str, size_t len)
++{
++	unsigned int min_dev, maj_dev, min_fsid, maj_fsid;
++	int rc, n, found =3D 0, header_seen =3D 0;
++	struct stat stb;
++	FILE *nfsfs_fd;
++	char line[128];
++
++	rc =3D nfsd_path_stat(path, &stb);
++	if (rc) {
++		xlog(L_WARNING, "Unable to stat %s", path);
++		return 0;
 +	}
 +
- 	if (ep->e_mountpoint)
- 		fprintf(fp, "mountpoint%s%s,",
- 			ep->e_mountpoint[0]?"=3D":"", ep->e_mountpoint);
-@@ -538,6 +560,7 @@ parseopts(char *cp, struct exportent *ep, int warn, i=
-nt *had_subtree_opt_ptr)
- 	char 	*flname =3D efname?efname:"command line";
- 	int	flline =3D efp?efp->x_line:0;
- 	unsigned int active =3D 0;
-+	int saw_reexport =3D 0;
++	nfsfs_fd =3D fopen("/proc/fs/nfsfs/volumes", "r");
++	if (nfsfs_fd =3D=3D NULL) {
++		xlog(L_WARNING, "Unable to open nfsfs volume file: %m");
++		return 0;
++	}
++
++	while (fgets(line, sizeof(line), nfsfs_fd) !=3D NULL) {
++		if (!header_seen) {
++			header_seen =3D 1;
++			continue;
++		}
++		n =3D sscanf(line, "v%*u %*x %*u %u:%u %x:%x %*s", &maj_dev,
++			   &min_dev, &maj_fsid, &min_fsid);
++
++		if (n !=3D 4) {
++			xlog(L_WARNING, "Unable to parse nfsfs volume line: %d, %s", n, line)=
+;
++			continue;
++		}
++
++		if (makedev(maj_dev, min_dev) =3D=3D stb.st_dev) {
++			found =3D 1;
++			snprintf(uuid_str, len, "%08x%08x", maj_fsid, min_fsid);
++			break;
++		}
++	}
++
++	fclose(nfsfs_fd);
++
++	return found;
++}
++
++static int uuid_by_path(struct exportent *exp, char *path, int type, siz=
+e_t uuidlen, char *uuid)
+ {
+ 	/* get a uuid for the filesystem found at 'path'.
+ 	 * There are several possible ways of generating the
+@@ -362,7 +418,7 @@ static int uuid_by_path(char *path, int type, size_t =
+uuidlen, char *uuid)
+ 	 */
+ 	struct statfs64 st;
+ 	char fsid_val[17];
+-	const char *blkid_val =3D NULL;
++	const char *fsuuid_val =3D NULL;
+ 	const char *val;
+ 	int rc;
 =20
- 	squids =3D ep->e_squids; nsquids =3D ep->e_nsquids;
- 	sqgids =3D ep->e_sqgids; nsqgids =3D ep->e_nsqgids;
-@@ -644,6 +667,13 @@ bad_option:
- 			}
- 		} else if (strncmp(opt, "fsid=3D", 5) =3D=3D 0) {
- 			char *oe;
+@@ -375,7 +431,20 @@ static int uuid_by_path(char *path, int type, size_t=
+ uuidlen, char *uuid)
+ 				break;
+ 		}
+ 		if (*bad =3D=3D 0)
+-			blkid_val =3D get_uuid_blkdev(path);
++			fsuuid_val =3D get_uuid_blkdev(path);
++		else if (exp->e_reexport =3D=3D REEXP_REMOTE_DEVFSID &&
++			 *bad =3D=3D 0x6969 /* NFS_SUPER_MAGIC */) {
++			char tmp[17];
++			int ret =3D get_uuid_from_fsid(path, tmp, sizeof(tmp));
 +
-+			if (saw_reexport) {
-+				xlog(L_ERROR, "%s:%d: 'fsid=3D' has to be after 'reexport=3D' %s\n",
-+				     flname, flline, opt);
-+				goto bad_option;
-+			}
-+
- 			if (strcmp(opt+5, "root") =3D=3D 0) {
- 				ep->e_fsid =3D 0;
- 				setflags(NFSEXP_FSID, active, ep);
-@@ -688,6 +718,49 @@ bad_option:
- 			active =3D parse_flavors(opt+4, ep);
- 			if (!active)
- 				goto bad_option;
-+		} else if (strncmp(opt, "reexport=3D", 9) =3D=3D 0) {
-+#ifdef HAVE_REEXPORT_SUPPORT
-+			char *strategy =3D strchr(opt, '=3D');
-+
-+			if (!strategy) {
-+				xlog(L_ERROR, "%s:%d: bad option %s\n",
-+				     flname, flline, opt);
-+				goto bad_option;
-+			}
-+			strategy++;
-+
-+			if (saw_reexport) {
-+				xlog(L_ERROR, "%s:%d: only one 'reexport=3D' is allowed%s\n",
-+				     flname, flline, opt);
-+				goto bad_option;
-+			}
-+
-+			if (strcmp(strategy, "auto-fsidnum") =3D=3D 0) {
-+				ep->e_reexport =3D REEXP_AUTO_FSIDNUM;
-+			} else if (strcmp(strategy, "predefined-fsidnum") =3D=3D 0) {
-+				ep->e_reexport =3D REEXP_PREDEFINED_FSIDNUM;
-+			} else if (strcmp(strategy, "remote-devfsid") =3D=3D 0) {
-+				ep->e_reexport =3D REEXP_REMOTE_DEVFSID;
-+			} else if (strcmp(strategy, "none") =3D=3D 0) {
-+				ep->e_reexport =3D REEXP_NONE;
++			if (ret < 0) {
++				xlog(L_WARNING, "Unable to read nfsfs volume file: %i", ret);
++			} else if (ret =3D=3D 0) {
++				xlog(L_WARNING, "Unable to find nfsfs volume entry for %s", path);
 +			} else {
-+				xlog(L_ERROR, "%s:%d: bad option %s\n",
-+				     flname, flline, strategy);
-+				goto bad_option;
++				fsuuid_val =3D tmp;
++			}
++		}
+ 	}
+=20
+ 	if (rc =3D=3D 0 &&
+@@ -385,8 +454,8 @@ static int uuid_by_path(char *path, int type, size_t =
+uuidlen, char *uuid)
+ 	else
+ 		fsid_val[0] =3D 0;
+=20
+-	if (blkid_val && (type--) =3D=3D 0)
+-		val =3D blkid_val;
++	if (fsuuid_val && (type--) =3D=3D 0)
++		val =3D fsuuid_val;
+ 	else if (fsid_val[0] && (type--) =3D=3D 0)
+ 		val =3D fsid_val;
+ 	else
+@@ -684,8 +753,13 @@ static int match_fsid(struct parsed_fsid *parsed, nf=
+s_export *exp, char *path)
+ 		goto match;
+ 	case FSID_NUM:
+ 		if (((exp->m_export.e_flags & NFSEXP_FSID) =3D=3D 0 ||
+-		     exp->m_export.e_fsid !=3D parsed->fsidnum))
++		     exp->m_export.e_fsid !=3D parsed->fsidnum)) {
++			if (exp->m_export.e_flags & NFSEXP_CROSSMOUNT &&
++			    match_crossmnt_fsidnum(parsed->fsidnum, path))
++				goto match;
++
+ 			goto nomatch;
++		}
+ 		goto match;
+ 	case FSID_UUID4_INUM:
+ 	case FSID_UUID16_INUM:
+@@ -708,7 +782,7 @@ static int match_fsid(struct parsed_fsid *parsed, nfs=
+_export *exp, char *path)
+ 		}
+ 		else
+ 			for (type =3D 0;
+-			     uuid_by_path(path, type, parsed->uuidlen, u);
++			     uuid_by_path(&exp->m_export, path, type, parsed->uuidlen, u);
+ 			     type++)
+ 				if (memcmp(u, parsed->fhuuid, parsed->uuidlen) =3D=3D 0)
+ 					goto match;
+@@ -932,7 +1006,7 @@ static void write_fsloc(char **bp, int *blen, struct=
+ exportent *ep)
+ 	release_replicas(servers);
+ }
+ #endif
+-static void write_secinfo(char **bp, int *blen, struct exportent *ep, in=
+t flag_mask)
++static void write_secinfo(char **bp, int *blen, struct exportent *ep, in=
+t flag_mask, int extra_flag)
+ {
+ 	struct sec_entry *p;
+=20
+@@ -947,11 +1021,20 @@ static void write_secinfo(char **bp, int *blen, st=
+ruct exportent *ep, int flag_m
+ 	qword_addint(bp, blen, p - ep->e_secinfo);
+ 	for (p =3D ep->e_secinfo; p->flav; p++) {
+ 		qword_addint(bp, blen, p->flav->fnum);
+-		qword_addint(bp, blen, p->flags & flag_mask);
++		qword_addint(bp, blen, (p->flags | extra_flag) & flag_mask);
+ 	}
+=20
+ }
+=20
++static int can_reexport_via_fsidnum(struct exportent *exp, struct statfs=
+64 *st)
++{
++	if (st->f_type !=3D 0x6969 /* NFS_SUPER_MAGIC */)
++		return 0;
++
++	return exp->e_reexport =3D=3D REEXP_PREDEFINED_FSIDNUM ||
++	       exp->e_reexport =3D=3D REEXP_AUTO_FSIDNUM;
++}
++
+ static int dump_to_cache(int f, char *buf, int blen, char *domain,
+ 			 char *path, struct exportent *exp, int ttl)
+ {
+@@ -968,21 +1051,52 @@ static int dump_to_cache(int f, char *buf, int ble=
+n, char *domain,
+ 	if (exp) {
+ 		int different_fs =3D strcmp(path, exp->e_path) !=3D 0;
+ 		int flag_mask =3D different_fs ? ~NFSEXP_FSID : ~0;
++		int rc, do_fsidnum =3D 0;
++		uint32_t fsidnum =3D exp->e_fsid;
++
++		if (different_fs) {
++			struct statfs64 st;
++=09
++			rc =3D nfsd_path_statfs64(path, &st);
++			if (rc) {
++				xlog(L_WARNING, "unable to statfs %s", path);
++				errno =3D EINVAL;
++				return -1;
 +			}
 +
-+			if (reexpdb_apply_reexport_settings(ep, flname, flline) !=3D 0)
-+				goto bad_option;
-+
-+			if (ep->e_fsid)
-+				setflags(NFSEXP_FSID, active, ep);
-+
-+			saw_reexport =3D 1;
-+#else
-+			xlog(L_ERROR, "%s:%d: 'reexport=3D' not available, rebuild with --ena=
-ble-reexport\n",
-+			     flname, flline);
-+			goto bad_option;
-+#endif
- 		} else {
- 			xlog(L_ERROR, "%s:%d: unknown keyword \"%s\"\n",
- 					flname, flline, opt);
-diff --git a/utils/exportfs/Makefile.am b/utils/exportfs/Makefile.am
-index 96524c72..9eabef14 100644
---- a/utils/exportfs/Makefile.am
-+++ b/utils/exportfs/Makefile.am
-@@ -12,4 +12,8 @@ exportfs_LDADD =3D ../../support/export/libexport.a \
- 		 ../../support/misc/libmisc.a \
- 		 $(LIBWRAP) $(LIBNSL) $(LIBPTHREAD)
++			if (can_reexport_via_fsidnum(exp, &st)) {
++				do_fsidnum =3D 1;
++				flag_mask =3D ~0;
++			}
++		}
 =20
+ 		qword_adduint(&bp, &blen, now + exp->e_ttl);
+-		qword_addint(&bp, &blen, exp->e_flags & flag_mask);
++
++		if (do_fsidnum) {
++			uint32_t search_fsidnum =3D 0;
++			if (reexpdb_fsidnum_by_path(path, &search_fsidnum,
++			    exp->e_reexport =3D=3D REEXP_AUTO_FSIDNUM) =3D=3D 0) {
++				errno =3D EINVAL;
++				return -1;
++			}
++			fsidnum =3D search_fsidnum;
++			qword_addint(&bp, &blen, exp->e_flags | NFSEXP_FSID);
++		} else {
++			qword_addint(&bp, &blen, exp->e_flags & flag_mask);
++		}
++
+ 		qword_addint(&bp, &blen, exp->e_anonuid);
+ 		qword_addint(&bp, &blen, exp->e_anongid);
+-		qword_addint(&bp, &blen, exp->e_fsid);
++		qword_addint(&bp, &blen, fsidnum);
+=20
+ #ifdef HAVE_JUNCTION_SUPPORT
+ 		write_fsloc(&bp, &blen, exp);
+ #endif
+-		write_secinfo(&bp, &blen, exp, flag_mask);
++		write_secinfo(&bp, &blen, exp, flag_mask, do_fsidnum ? NFSEXP_FSID : 0=
+);
+ 		if (exp->e_uuid =3D=3D NULL || different_fs) {
+ 			char u[16];
+ 			if ((exp->e_flags & flag_mask & NFSEXP_FSID) =3D=3D 0 &&
+-			    uuid_by_path(path, 0, 16, u)) {
++			    uuid_by_path(exp, path, 0, 16, u)) {
+ 				qword_add(&bp, &blen, "uuid");
+ 				qword_addhex(&bp, &blen, u, 16);
+ 			}
+diff --git a/utils/exportd/Makefile.am b/utils/exportd/Makefile.am
+index c95bdee7..b0ec9034 100644
+--- a/utils/exportd/Makefile.am
++++ b/utils/exportd/Makefile.am
+@@ -16,11 +16,17 @@ exportd_SOURCES =3D exportd.c
+ exportd_LDADD =3D ../../support/export/libexport.a \
+ 			../../support/nfs/libnfs.la \
+ 			../../support/misc/libmisc.a \
+-			$(OPTLIBS) $(LIBBLKID) $(LIBPTHREAD) -luuid
++			$(OPTLIBS) $(LIBBLKID) $(LIBPTHREAD) \
++			-luuid
 +if CONFIG_REEXPORT
-+exportfs_LDADD +=3D ../../support/reexport/libreexport.a $(LIBSQLITE) -l=
-rt
++exportd_LDADD +=3D ../../support/reexport/libreexport.a $(LIBSQLITE) -lr=
+t
 +endif
+=20
+ exportd_CPPFLAGS =3D $(AM_CPPFLAGS) $(CPPFLAGS) \
+ 		-I$(top_srcdir)/support/export
+=20
++exportd_CPPFLAGS +=3D -I$(top_srcdir)/support/reexport
 +
  MAINTAINERCLEANFILES =3D Makefile.in
-diff --git a/utils/mount/Makefile.am b/utils/mount/Makefile.am
-index 3101f7ab..f4d5b182 100644
---- a/utils/mount/Makefile.am
-+++ b/utils/mount/Makefile.am
-@@ -32,6 +32,12 @@ mount_nfs_LDADD =3D ../../support/nfs/libnfs.la \
- 		  ../../support/misc/libmisc.a \
- 		  $(LIBTIRPC)
 =20
+ #######################################################################
+diff --git a/utils/exportd/exportd.c b/utils/exportd/exportd.c
+index 2dd12cb6..4ddfed35 100644
+--- a/utils/exportd/exportd.c
++++ b/utils/exportd/exportd.c
+@@ -22,6 +22,7 @@
+ #include "conffile.h"
+ #include "exportfs.h"
+ #include "export.h"
++#include "reexport.h"
+=20
+ extern void my_svc_run(void);
+=20
+@@ -296,6 +297,7 @@ main(int argc, char **argv)
+ 	/* Open files now to avoid sharing descriptors among forked processes *=
+/
+ 	cache_open();
+ 	v4clients_init();
++	reexpdb_init();
+=20
+ 	/* Process incoming upcalls */
+ 	cache_process_loop();
+diff --git a/utils/mountd/Makefile.am b/utils/mountd/Makefile.am
+index 13b25c90..569d335a 100644
+--- a/utils/mountd/Makefile.am
++++ b/utils/mountd/Makefile.am
+@@ -20,10 +20,16 @@ mountd_LDADD =3D ../../support/export/libexport.a \
+ 	       $(OPTLIBS) \
+ 	       $(LIBBSD) $(LIBWRAP) $(LIBNSL) $(LIBBLKID) -luuid $(LIBTIRPC) \
+ 	       $(LIBPTHREAD)
 +if CONFIG_REEXPORT
-+mount_nfs_LDADD +=3D ../../support/reexport/libreexport.a \
-+		   $(LIBSQLITE) -lrt $(LIBPTHREAD)
++mountd_LDADD +=3D ../../support/reexport/libreexport.a $(LIBSQLITE) -lrt
 +endif
 +
-+
- mount_nfs_SOURCES =3D $(mount_common)
+ mountd_CPPFLAGS =3D $(AM_CPPFLAGS) $(CPPFLAGS) \
+ 		  -I$(top_builddir)/support/include \
+ 		  -I$(top_srcdir)/support/export
 =20
- if CONFIG_LIBMOUNT
++mountd_CPPFLAGS +=3D -I$(top_srcdir)/support/reexport
++
+ MAINTAINERCLEANFILES =3D Makefile.in
+=20
+ #######################################################################
 --=20
 2.31.1
 
