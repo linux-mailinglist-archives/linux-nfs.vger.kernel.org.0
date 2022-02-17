@@ -2,42 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD0A4BA565
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 17:06:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A0E44BA602
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 17:33:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242917AbiBQQG1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Feb 2022 11:06:27 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40738 "EHLO
+        id S242494AbiBQQdv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Feb 2022 11:33:51 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:59438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236645AbiBQQG1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Feb 2022 11:06:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA97E29C124
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 08:06:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 46E4760C78
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 16:06:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81ED2C340E8;
-        Thu, 17 Feb 2022 16:06:11 +0000 (UTC)
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     neilb@suse.de
-Subject: [PATCH v2 8/8] NFSD: Move svc_serv_ops::svo_function into struct svc_serv
-Date:   Thu, 17 Feb 2022 11:06:10 -0500
-Message-Id:  <164511397026.1361.11840968118260314911.stgit@klimt.1015granger.net>
-X-Mailer: git-send-email 2.35.0
-In-Reply-To:  <164511349417.1361.12607852846407534019.stgit@klimt.1015granger.net>
-References:  <164511349417.1361.12607852846407534019.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S241264AbiBQQdv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Feb 2022 11:33:51 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A74092B2C6A
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 08:33:33 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 48BCC6CD5; Thu, 17 Feb 2022 11:33:32 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 48BCC6CD5
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1645115612;
+        bh=5qKalY3QxBx1IY9Lj/2mFGqEQOZq5BFaea6tO27X7gI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oPaXF+4Wvff7FolqSJ/MeHifyC05tEigtnZVUa8t2v1nHYPVB3t/XKTZEEHf44gWU
+         hQWpkmX+rJWRSNuw+XyiWBQzJPNPX7hplk+o3rckI+uMmKJZxRL98xgtTtWCzRvY57
+         im5nfehIWapDPm7GQiROO879Mf5Amsq3fiRStQTQ=
+Date:   Thu, 17 Feb 2022 11:33:32 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     linux-nfs@vger.kernel.org, david@sigma-star.at,
+        luis.turcitu@appsbroker.com, david.young@appsbroker.com,
+        david.oberhollenzer@sigma-star.at, trond.myklebust@hammerspace.com,
+        anna.schumaker@netapp.com, chris.chilvers@appsbroker.com
+Subject: Re: [RFC PATCH 0/6] nfs-utils: Improving NFS re-exports
+Message-ID: <20220217163332.GA16497@fieldses.org>
+References: <20220217131531.2890-1-richard@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=8750; h=from:subject:message-id; bh=WvSlLmYZntUh0Jjy1nMiK45HSoBM3Q8UY9vkvBdNJa8=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiDnJyNZyc/jwpF1Qq06QEV13++MO0Rn7P/BMUgBZx 0l12NqqJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYg5ycgAKCRAzarMzb2Z/lwK1D/ 4uKueDSfA1I6dUZyJ1U1QVOkNRem96VS8hWhXBBo9e8SyBfo1qtSlT11+wr58Dmg3GR/VIpBG5HzpC MBnnl0BSfR9jRiXKm2T+4WMIe2mxZLxIjasq+l4z/4+wV79EC0wP0ORbebwo6+eqWIC/K1oWyXghpd 3vNPqs86W4cj6lgJ+1TxtUQblWygmEs31xr2T+Reeved8N5qCTWsGEBlXI14t2e12a+75gD/CjfKEs Yp2bNsOejr3lSVskeMypp36TAyG1WmpKMKsY0OZg0KvDE+KnOp40+P5jIlqP2Wbx5Lk8QZaNcGIjRv m+LIlEcvZYFiOgkxV3HgNUwuxopofnhk4Mv2bM5OUWmcBL1IJs/b50LOU4gvPAGTX8RpEZp1ZdqxFZ 2e1SksPkcQCruwwhYSwtWCFTjJt9loR0iWJsG8Aj7ad5PiJqHkWxq4leimGN5K3Bw8rulbpfCMuxhk TR5g14CX4/c4EhnI2jUYUEJNQHAl+zK4DYvX0zy2AVMsOSbikwU6fxb+pbCJFUK4G5RM7lfI7lSXD1 rNj6s5RcxvgpxoDkcir5Qs3pT3WEZPvmTV+lmz3d5ygRW6/UOnKqnqAHkGYmAOZk5H13xjv7rs0n70 PMtuLEgk1uS7QpwGbCL2Gjz1MGx0J1ea8rD+a7eCApv6czYE/h9bC2HrDPwg==
-X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220217131531.2890-1-richard@nod.at>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,259 +48,122 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hoist svo_function back into svc_serv and remove struct
-svc_serv_ops, since the struct is now devoid of fields.
+On Thu, Feb 17, 2022 at 02:15:25PM +0100, Richard Weinberger wrote:
+> This is the second iteration of the NFS re-export improvement series for nfs-utils.
+> While the kernel side didn't change at all and is still small,
+> the userspace side saw much more changes.
+> Please note that this is still an RFC, there is room for improvement.
+> 
+> The core idea is adding new export option: reeport=
+> Using reexport= it is possible to mark an export entry in the exports file
+> explicitly as NFS re-export and select a strategy how unique identifiers
+> should be provided.
+> "remote-devfsid" is the strategy I have proposed in my first patch,
+> I understand that this one is dangerous. But I still find it useful in some
+> situations.
+> "auto-fsidnum" and "predefined-fsidnum" are new and use a SQLite database as
+> backend to keep track of generated ids.
+> For a more detailed description see patch "exports: Implement new export option reexport=".
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/lockd/svc.c             |    6 +-----
- fs/nfs/callback.c          |   43 +++++++++++--------------------------------
- fs/nfsd/nfssvc.c           |    7 +------
- include/linux/sunrpc/svc.h |   14 ++++----------
- net/sunrpc/svc.c           |   37 ++++++++++++++++++++++++++-----------
- 5 files changed, 43 insertions(+), 64 deletions(-)
+Thanks, I'll try to take a look.
 
-diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
-index bfde31124f3a..59ef8a1f843f 100644
---- a/fs/lockd/svc.c
-+++ b/fs/lockd/svc.c
-@@ -349,10 +349,6 @@ static struct notifier_block lockd_inet6addr_notifier = {
- };
- #endif
- 
--static const struct svc_serv_ops lockd_sv_ops = {
--	.svo_function		= lockd,
--};
--
- static int lockd_get(void)
- {
- 	struct svc_serv *serv;
-@@ -376,7 +372,7 @@ static int lockd_get(void)
- 		nlm_timeout = LOCKD_DFLT_TIMEO;
- 	nlmsvc_timeout = nlm_timeout * HZ;
- 
--	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, &lockd_sv_ops);
-+	serv = svc_create(&nlmsvc_program, LOCKD_BUFSIZE, lockd);
- 	if (!serv) {
- 		printk(KERN_WARNING "lockd_up: create service failed\n");
- 		return -ENOMEM;
-diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
-index a494f9e7bd0a..456af7d230cf 100644
---- a/fs/nfs/callback.c
-+++ b/fs/nfs/callback.c
-@@ -231,29 +231,10 @@ static int nfs_callback_up_net(int minorversion, struct svc_serv *serv,
- 	return ret;
- }
- 
--static const struct svc_serv_ops nfs40_cb_sv_ops = {
--	.svo_function		= nfs4_callback_svc,
--};
--#if defined(CONFIG_NFS_V4_1)
--static const struct svc_serv_ops nfs41_cb_sv_ops = {
--	.svo_function		= nfs41_callback_svc,
--};
--
--static const struct svc_serv_ops *nfs4_cb_sv_ops[] = {
--	[0] = &nfs40_cb_sv_ops,
--	[1] = &nfs41_cb_sv_ops,
--};
--#else
--static const struct svc_serv_ops *nfs4_cb_sv_ops[] = {
--	[0] = &nfs40_cb_sv_ops,
--	[1] = NULL,
--};
--#endif
--
- static struct svc_serv *nfs_callback_create_svc(int minorversion)
- {
- 	struct nfs_callback_data *cb_info = &nfs_callback_info[minorversion];
--	const struct svc_serv_ops *sv_ops;
-+	int (*threadfn)(void *data);
- 	struct svc_serv *serv;
- 
- 	/*
-@@ -262,17 +243,6 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
- 	if (cb_info->serv)
- 		return svc_get(cb_info->serv);
- 
--	switch (minorversion) {
--	case 0:
--		sv_ops = nfs4_cb_sv_ops[0];
--		break;
--	default:
--		sv_ops = nfs4_cb_sv_ops[1];
--	}
--
--	if (sv_ops == NULL)
--		return ERR_PTR(-ENOTSUPP);
--
- 	/*
- 	 * Sanity check: if there's no task,
- 	 * we should be the first user ...
-@@ -281,7 +251,16 @@ static struct svc_serv *nfs_callback_create_svc(int minorversion)
- 		printk(KERN_WARNING "nfs_callback_create_svc: no kthread, %d users??\n",
- 			cb_info->users);
- 
--	serv = svc_create(&nfs4_callback_program, NFS4_CALLBACK_BUFSIZE, sv_ops);
-+	threadfn = nfs4_callback_svc;
-+#if defined(CONFIG_NFS_V4_1)
-+	if (minorversion)
-+		threadfn = nfs41_callback_svc;
-+#else
-+	if (minorversion)
-+		return ERR_PTR(-ENOTSUPP);
-+#endif
-+	serv = svc_create(&nfs4_callback_program, NFS4_CALLBACK_BUFSIZE,
-+			  threadfn);
- 	if (!serv) {
- 		printk(KERN_ERR "nfs_callback_create_svc: create service failed\n");
- 		return ERR_PTR(-ENOMEM);
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index 544187a8a22b..5abbe5d1c77f 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -612,10 +612,6 @@ static int nfsd_get_default_max_blksize(void)
- 	return ret;
- }
- 
--static const struct svc_serv_ops nfsd_thread_sv_ops = {
--	.svo_function		= nfsd,
--};
--
- void nfsd_shutdown_threads(struct net *net)
- {
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-@@ -654,8 +650,7 @@ int nfsd_create_serv(struct net *net)
- 	if (nfsd_max_blksize == 0)
- 		nfsd_max_blksize = nfsd_get_default_max_blksize();
- 	nfsd_reset_versions(nn);
--	serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize,
--				 &nfsd_thread_sv_ops);
-+	serv = svc_create_pooled(&nfsd_program, nfsd_max_blksize, nfsd);
- 	if (serv == NULL)
- 		return -ENOMEM;
- 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index dfc9283f412f..a5dda4987e8b 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -52,13 +52,6 @@ struct svc_pool {
- 	unsigned long		sp_flags;
- } ____cacheline_aligned_in_smp;
- 
--struct svc_serv;
--
--struct svc_serv_ops {
--	/* function for service threads to run */
--	int		(*svo_function)(void *);
--};
--
- /*
-  * RPC service.
-  *
-@@ -91,7 +84,8 @@ struct svc_serv {
- 
- 	unsigned int		sv_nrpools;	/* number of thread pools */
- 	struct svc_pool *	sv_pools;	/* array of thread pools */
--	const struct svc_serv_ops *sv_ops;	/* server operations */
-+	int			(*sv_threadfn)(void *data);
-+
- #if defined(CONFIG_SUNRPC_BACKCHANNEL)
- 	struct list_head	sv_cb_list;	/* queue for callback requests
- 						 * that arrive over the same
-@@ -492,7 +486,7 @@ int svc_rpcb_setup(struct svc_serv *serv, struct net *net);
- void svc_rpcb_cleanup(struct svc_serv *serv, struct net *net);
- int svc_bind(struct svc_serv *serv, struct net *net);
- struct svc_serv *svc_create(struct svc_program *, unsigned int,
--			    const struct svc_serv_ops *);
-+			    int (*threadfn)(void *data));
- struct svc_rqst *svc_rqst_alloc(struct svc_serv *serv,
- 					struct svc_pool *pool, int node);
- void		   svc_rqst_replace_page(struct svc_rqst *rqstp,
-@@ -500,7 +494,7 @@ void		   svc_rqst_replace_page(struct svc_rqst *rqstp,
- void		   svc_rqst_free(struct svc_rqst *);
- void		   svc_exit_thread(struct svc_rqst *);
- struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
--			const struct svc_serv_ops *);
-+				     int (*threadfn)(void *data));
- int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
- int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
- int		   svc_process(struct svc_rqst *);
-diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index a90d555aa163..557004017548 100644
---- a/net/sunrpc/svc.c
-+++ b/net/sunrpc/svc.c
-@@ -448,7 +448,7 @@ __svc_init_bc(struct svc_serv *serv)
-  */
- static struct svc_serv *
- __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
--	     const struct svc_serv_ops *ops)
-+	     int (*threadfn)(void *data))
- {
- 	struct svc_serv	*serv;
- 	unsigned int vers;
-@@ -465,7 +465,7 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
- 		bufsize = RPCSVC_MAXPAYLOAD;
- 	serv->sv_max_payload = bufsize? bufsize : 4096;
- 	serv->sv_max_mesg  = roundup(serv->sv_max_payload + PAGE_SIZE, PAGE_SIZE);
--	serv->sv_ops = ops;
-+	serv->sv_threadfn = threadfn;
- 	xdrsize = 0;
- 	while (prog) {
- 		prog->pg_lovers = prog->pg_nvers-1;
-@@ -511,22 +511,37 @@ __svc_create(struct svc_program *prog, unsigned int bufsize, int npools,
- 	return serv;
- }
- 
--struct svc_serv *
--svc_create(struct svc_program *prog, unsigned int bufsize,
--	   const struct svc_serv_ops *ops)
-+/**
-+ * svc_create - Create an RPC service
-+ * @prog: the RPC program the new service will handle
-+ * @bufsize: maximum message size for @prog
-+ * @threadfn: a function to service RPC requests for @prog
-+ *
-+ * Returns an instantiated struct svc_serv object or NULL.
-+ */
-+struct svc_serv *svc_create(struct svc_program *prog, unsigned int bufsize,
-+			    int (*threadfn)(void *data))
- {
--	return __svc_create(prog, bufsize, /*npools*/1, ops);
-+	return __svc_create(prog, bufsize, 1, threadfn);
- }
- EXPORT_SYMBOL_GPL(svc_create);
- 
--struct svc_serv *
--svc_create_pooled(struct svc_program *prog, unsigned int bufsize,
--		  const struct svc_serv_ops *ops)
-+/**
-+ * svc_create_pooled - Create an RPC service with pooled threads
-+ * @prog: the RPC program the new service will handle
-+ * @bufsize: maximum message size for @prog
-+ * @threadfn: a function to service RPC requests for @prog
-+ *
-+ * Returns an instantiated struct svc_serv object or NULL.
-+ */
-+struct svc_serv *svc_create_pooled(struct svc_program *prog,
-+				   unsigned int bufsize,
-+				   int (*threadfn)(void *data))
- {
- 	struct svc_serv *serv;
- 	unsigned int npools = svc_pool_map_get();
- 
--	serv = __svc_create(prog, bufsize, npools, ops);
-+	serv = __svc_create(prog, bufsize, npools, threadfn);
- 	if (!serv)
- 		goto out_err;
- 	return serv;
-@@ -736,7 +751,7 @@ svc_start_kthreads(struct svc_serv *serv, struct svc_pool *pool, int nrservs)
- 		if (IS_ERR(rqstp))
- 			return PTR_ERR(rqstp);
- 
--		task = kthread_create_on_node(serv->sv_ops->svo_function, rqstp,
-+		task = kthread_create_on_node(serv->sv_threadfn, rqstp,
- 					      node, "%s", serv->sv_name);
- 		if (IS_ERR(task)) {
- 			svc_exit_thread(rqstp);
+Before upstreaming, I would like us to pick just one.  These kind of
+options tend to complicate testing and documentation and debugging.
 
+For an RFC, though, I think it makes sense, so I'm fine with keeping
+"reexport=" while we're still exploring the different options.  And,
+hey, maybe we end up adding more than one after we've upstreamed the
+first one.
+
+> I choose SQLite because nfs-utils already uses it and using SQL ids can nicely
+> generated and maintained. It will also scale for large setups where the amount
+> of subvolumes is high.
+> 
+> Beside of id generation this series also addresses the reboot problem.
+> If the re-exporting NFS server reboots, uncovered NFS subvolumes are not yet
+> mounted and file handles become stale.
+> Now mountd/exportd keeps track of uncovered subvolumes and makes sure they get
+> uncovered while nfsd starts.
+> 
+> The whole set of features is currently opt-in via --enable-reexport.
+> I'm also not sure about the rearrangement of the reexport code,
+> currently it is a helper library.
+> 
+> Please let me know whether you like this approach.
+> If so I'd tidy it up and submit it as non-RFC.
+> 
+> TODOs/Open questions:
+> - When re-exporting, fs.nfs.nfs_mountpoint_timeout should be set to 0
+>   to make subvolumes not vanish.
+>   Is this something exportfs should do automatically when it sees an export entry with a reexport= option?
+
+Setting the timeout to 0 doesn't help with re-export server reboots.
+After a reboot is another case where we could end up in a situation
+where a client hands us a filehandle for a filesystem that isn't mounted
+yet.
+
+I think you want to keep a path with each entry in the database.  When
+mountd gets a request for a filesystem it hasn't seen before, it stats
+that path, which should trigger the automounts.
+
+And it'd be good to have a test case with a client (Linux client or
+pynfs) that, say, opens a file several mounts deep, then reboots the
+reexport server, then tries to, say, write to the file descriptor after
+the reboot.  (Or maybe there's a way to force the mounts to expire as a
+shortcut instead of doing a full reboot.)
+
+> - exportd saw only minimal testing so far, I wasn't aware of it yet. :-S
+> - Currently wtere is no way to release the shared memory which contains the database lock.
+>   I guess it could be released via exportfs -f, which is the very last exec in nfs-server.service
+> - Add a tool to import/export entries from the reexport database which obeys the shared lock.
+> - When doing v4->v4 or v3->v4 re-exports very first read access to a file block a few seconds until
+>   the client does a retransmit. 
+>   v3->v3 works fine. More investigation needed.
+
+Might want to strace mountd and look at the communication over the
+/proc/fs/nfsd/*/channel files, maybe mountd is failing to respond to an
+upcall.
+
+--b.
+
+> 
+> Looking forward for your feedback!
+> 
+> Thanks,
+> //richard
+> 
+> Richard Weinberger (6):
+>   Implement reexport helper library
+>   exports: Implement new export option reexport=
+>   export: Implement logic behind reexport=
+>   export: Record mounted volumes
+>   nfsd: statfs() every known subvolume upon start
+>   export: Garbage collect orphaned subvolumes upon start
+> 
+>  configure.ac                 |  12 +
+>  support/Makefile.am          |   4 +
+>  support/export/Makefile.am   |   2 +
+>  support/export/cache.c       | 241 +++++++++++++++++-
+>  support/export/export.h      |   3 +
+>  support/include/nfslib.h     |   1 +
+>  support/nfs/Makefile.am      |   1 +
+>  support/nfs/exports.c        |  73 ++++++
+>  support/reexport/Makefile.am |   6 +
+>  support/reexport/reexport.c  | 477 +++++++++++++++++++++++++++++++++++
+>  support/reexport/reexport.h  |  53 ++++
+>  utils/exportd/Makefile.am    |   8 +-
+>  utils/exportd/exportd.c      |  17 ++
+>  utils/exportfs/Makefile.am   |   4 +
+>  utils/mount/Makefile.am      |   6 +
+>  utils/mountd/Makefile.am     |   6 +
+>  utils/mountd/mountd.c        |   1 +
+>  utils/mountd/svc_run.c       |  18 ++
+>  utils/nfsd/Makefile.am       |   6 +
+>  utils/nfsd/nfsd.c            |  10 +
+>  20 files changed, 934 insertions(+), 15 deletions(-)
+>  create mode 100644 support/reexport/Makefile.am
+>  create mode 100644 support/reexport/reexport.c
+>  create mode 100644 support/reexport/reexport.h
+> 
+> -- 
+> 2.31.1
