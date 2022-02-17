@@ -2,38 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E7524BA55C
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 17:06:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D272E4BA563
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Feb 2022 17:06:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242754AbiBQQGJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Feb 2022 11:06:09 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39154 "EHLO
+        id S242927AbiBQQGQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Feb 2022 11:06:16 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:39808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242903AbiBQQGH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Feb 2022 11:06:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E8229C138
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 08:05:52 -0800 (PST)
+        with ESMTP id S236645AbiBQQGP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Feb 2022 11:06:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA9D29C123
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 08:06:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 62E4A60A57
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 16:05:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ABE5C340E8;
-        Thu, 17 Feb 2022 16:05:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CFA11B8235B
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Feb 2022 16:05:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F877C340E9;
+        Thu, 17 Feb 2022 16:05:58 +0000 (UTC)
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de
-Subject: [PATCH v2 5/8] SUNRPC: Rename svc_close_xprt()
-Date:   Thu, 17 Feb 2022 11:05:50 -0500
-Message-Id:  <164511395041.1361.16754947037277415946.stgit@klimt.1015granger.net>
+Subject: [PATCH v2 6/8] SUNRPC: Remove svc_shutdown_net()
+Date:   Thu, 17 Feb 2022 11:05:57 -0500
+Message-Id:  <164511395701.1361.2321498517172060697.stgit@klimt.1015granger.net>
 X-Mailer: git-send-email 2.35.0
 In-Reply-To:  <164511349417.1361.12607852846407534019.stgit@klimt.1015granger.net>
 References:  <164511349417.1361.12607852846407534019.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3408; h=from:subject:message-id; bh=qDh3S7dNgBxb+k16OzZxSHKF7n0SMYq+ubk+1ctiqxA=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiDnJew+e9lR0ICggrdMPW2m969YMTIiU4E/MA4vkt kLGSVrGJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYg5yXgAKCRAzarMzb2Z/l9AQD/ 46ygGouiYOJR07zVs/dzBEuCVgT8X25LrCVPNS0wt8pKIPY9CQuMiMTu8hwN/LooZudRbhV8X5kmBb dG9Uj3Xm68u44tuRxp7rkjTMy7hr2bVcf6nn7a75O2ljJS8IpJNdYAKIT0b4ABhl86GFipU7grvKc1 dg9XnMBKVgi86U511YbyxbG7a3r2yeR8zJNrgyU4YFYuprg7EEQTezhDEnPDiA2iXfAx/hx6M1POBu oO8Hrup97Ci267j6VKqa2c2D/FEBbqiR2rhsWwlEiD47WiU8aToQDFRlM6oeWi90c9ibtDcFLxYz7m yGw11QXA67/7TxLC6dq/rw6sEhwmh6y/to8AJ3LdCfEzabpTmdTkV0UfCJP/GlR2V/Ej31CmxtNQB9 a30+rcsX+u77E3hXmoCWNruaQp263yRm8BJj+/TixdEAzDJVn0nPhz9JU95w229fhUE3Fu+h8gCahQ QR4fxeuVc9H6oLKP/+I2GxNspwAFMrAZ5aAUIpkGOeMY7uvGVwHbinoyn5zBtFHy3o4bP/dJylhiA+ CD1wv65Cecr3/o6QDOf/WRuNl77A6fv1+3+d4PcuPeAeltMEv9IXh8wz8i7JGuIM9O7Mv2dHaQtufg id7iHaU9IpKcsdjpn+rdsj9T2fDcgXZuD0MGwGhjdbBJXtl93cOm7SqwXkhA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5306; h=from:subject:message-id; bh=dfpjf2A6A3MjKaO5wTDQouwREOVn8RLIEd482495MP8=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiDnJljGyYDP8o5BNgApkOW7ALCWAQLMM8pKrZvoJE Nl44tjmJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYg5yZQAKCRAzarMzb2Z/lygfD/ 9Az1vHt4B3AC9DfmiA2U6wfcBzhxokCrX4kvDcwiiHM+yv/9XBHJBNivZeUVm9PrIlN8XJ3n9SkaHz ySjWgXGwlaHM7ukKRuEcelVwILfR4GG08OQ3tqp+Rkmstj3pDLQwEfWgYmUsPGXoe69ePcb0SuKxOb M+SyzpkihuYPqvc3lQgPO36Uymw+5LkQMi4hQWrkCvYtch9c3R70wh05ZAy2EqmSg75aUMjElT5Hxh slEbGaQO0qscPDzPdtRGgD2a7oFwC9K+QhPdFW6789sM/GRuUGBUg4QqipTcjV0FDI60ChfxgIoao9 gdgSy2jDBh7kDOD9YE5X0BbY3+b9Sxf5hmpmLm96CaAiWhcMV2E9c8U4l6AYBuXNFDhzhPNRNFc3Zk z3h/3nu9N0Ag6uQMYxryD7CoG029t8baQQ49vXUKckZkzzvgqPcA+aov8y2sR8wzpigvp1PaWL7sm/ bePaLFRbmLLfeiL4xErVgOGu6uV/MAv+5zw+kEJ1GgjbnB5WhiPaShT7SpTY34iKKGJW4fM9ftNir/ CYaL4HanHJYGKtLZNI1nKXcLOJ3vtBjj0e0Hcfvq4BhDbClxGLb8gUDajz9GvZdP0xGB9dI00x+yzF 7yX1LoE7u8/rK+ixMHz+9C284ZxQibMt6ckNBVejpu2kxCo1ikZGdQ8gUSmQ==
 X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
@@ -45,95 +45,143 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: Use the "svc_xprt_<task>" function naming convention as
-is used for other external APIs.
+Clean up: svc_shutdown_net() now does nothing but call
+svc_close_net(). Replace all external call sites.
+
+svc_close_net() is renamed to be the inverse of svc_xprt_create().
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfsctl.c                           |    2 +-
- include/linux/sunrpc/svc_xprt.h            |    2 +-
- net/sunrpc/svc.c                           |    2 +-
- net/sunrpc/svc_xprt.c                      |    9 +++++++--
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    2 +-
- 5 files changed, 11 insertions(+), 6 deletions(-)
+ fs/lockd/svc.c                  |    4 ++--
+ fs/nfs/callback.c               |    2 +-
+ fs/nfsd/nfssvc.c                |    2 +-
+ include/linux/sunrpc/svc.h      |    1 -
+ include/linux/sunrpc/svc_xprt.h |    1 +
+ net/sunrpc/svc.c                |    6 ------
+ net/sunrpc/svc_xprt.c           |    9 +++++++--
+ 7 files changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 8fec779994f7..16920e4512bd 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -790,7 +790,7 @@ static ssize_t __write_ports_addxprt(char *buf, struct net *net, const struct cr
- out_close:
- 	xprt = svc_find_xprt(nn->nfsd_serv, transport, net, PF_INET, port);
- 	if (xprt != NULL) {
--		svc_close_xprt(xprt);
-+		svc_xprt_close(xprt);
- 		svc_xprt_put(xprt);
- 	}
- out_err:
+diff --git a/fs/lockd/svc.c b/fs/lockd/svc.c
+index bba6f2b45b64..c83ec4a375bc 100644
+--- a/fs/lockd/svc.c
++++ b/fs/lockd/svc.c
+@@ -248,7 +248,7 @@ static int make_socks(struct svc_serv *serv, struct net *net,
+ 	if (warned++ == 0)
+ 		printk(KERN_WARNING
+ 			"lockd_up: makesock failed, error=%d\n", err);
+-	svc_shutdown_net(serv, net);
++	svc_xprt_destroy_all(serv, net);
+ 	svc_rpcb_cleanup(serv, net);
+ 	return err;
+ }
+@@ -287,7 +287,7 @@ static void lockd_down_net(struct svc_serv *serv, struct net *net)
+ 			nlm_shutdown_hosts_net(net);
+ 			cancel_delayed_work_sync(&ln->grace_period_end);
+ 			locks_end_grace(&ln->lockd_manager);
+-			svc_shutdown_net(serv, net);
++			svc_xprt_destroy_all(serv, net);
+ 			svc_rpcb_cleanup(serv, net);
+ 		}
+ 	} else {
+diff --git a/fs/nfs/callback.c b/fs/nfs/callback.c
+index c1a8767100ae..c98c68513590 100644
+--- a/fs/nfs/callback.c
++++ b/fs/nfs/callback.c
+@@ -189,7 +189,7 @@ static void nfs_callback_down_net(u32 minorversion, struct svc_serv *serv, struc
+ 		return;
+ 
+ 	dprintk("NFS: destroy per-net callback data; net=%x\n", net->ns.inum);
+-	svc_shutdown_net(serv, net);
++	svc_xprt_destroy_all(serv, net);
+ }
+ 
+ static int nfs_callback_up_net(int minorversion, struct svc_serv *serv,
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index ae25b7b3af99..b92d272f4ba6 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -722,7 +722,7 @@ void nfsd_put(struct net *net)
+ 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
+ 
+ 	if (kref_put(&nn->nfsd_serv->sv_refcnt, nfsd_noop)) {
+-		svc_shutdown_net(nn->nfsd_serv, net);
++		svc_xprt_destroy_all(nn->nfsd_serv, net);
+ 		nfsd_last_thread(nn->nfsd_serv, net);
+ 		svc_destroy(&nn->nfsd_serv->sv_refcnt);
+ 		spin_lock(&nfsd_notifier_lock);
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index 63794d772eb3..5603158b2aa7 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -508,7 +508,6 @@ struct svc_serv *  svc_create_pooled(struct svc_program *, unsigned int,
+ 			const struct svc_serv_ops *);
+ int		   svc_set_num_threads(struct svc_serv *, struct svc_pool *, int);
+ int		   svc_pool_stats_open(struct svc_serv *serv, struct file *file);
+-void		   svc_shutdown_net(struct svc_serv *, struct net *);
+ int		   svc_process(struct svc_rqst *);
+ int		   bc_svc_process(struct svc_serv *, struct rpc_rqst *,
+ 			struct svc_rqst *);
 diff --git a/include/linux/sunrpc/svc_xprt.h b/include/linux/sunrpc/svc_xprt.h
-index a7f6f17c3dc5..bf7d029fb48c 100644
+index bf7d029fb48c..42e113742429 100644
 --- a/include/linux/sunrpc/svc_xprt.h
 +++ b/include/linux/sunrpc/svc_xprt.h
-@@ -135,7 +135,7 @@ void	svc_xprt_received(struct svc_xprt *xprt);
+@@ -131,6 +131,7 @@ int	svc_xprt_create(struct svc_serv *serv, const char *xprt_name,
+ 			struct net *net, const int family,
+ 			const unsigned short port, int flags,
+ 			const struct cred *cred);
++void	svc_xprt_destroy_all(struct svc_serv *serv, struct net *net);
+ void	svc_xprt_received(struct svc_xprt *xprt);
  void	svc_xprt_enqueue(struct svc_xprt *xprt);
  void	svc_xprt_put(struct svc_xprt *xprt);
- void	svc_xprt_copy_addrs(struct svc_rqst *rqstp, struct svc_xprt *xprt);
--void	svc_close_xprt(struct svc_xprt *xprt);
-+void	svc_xprt_close(struct svc_xprt *xprt);
- int	svc_port_is_privileged(struct sockaddr *sin);
- int	svc_print_xprts(char *buf, int maxlen);
- struct	svc_xprt *svc_find_xprt(struct svc_serv *serv, const char *xcl_name,
 diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-index 74a75a22da9a..53efef3db3a9 100644
+index 53efef3db3a9..08d684746452 100644
 --- a/net/sunrpc/svc.c
 +++ b/net/sunrpc/svc.c
-@@ -1352,7 +1352,7 @@ svc_process_common(struct svc_rqst *rqstp, struct kvec *argv, struct kvec *resv)
- 	svc_authorise(rqstp);
- close_xprt:
- 	if (rqstp->rq_xprt && test_bit(XPT_TEMP, &rqstp->rq_xprt->xpt_flags))
--		svc_close_xprt(rqstp->rq_xprt);
-+		svc_xprt_close(rqstp->rq_xprt);
- 	dprintk("svc: svc_process close\n");
- 	return 0;
+@@ -536,12 +536,6 @@ svc_create_pooled(struct svc_program *prog, unsigned int bufsize,
+ }
+ EXPORT_SYMBOL_GPL(svc_create_pooled);
  
+-void svc_shutdown_net(struct svc_serv *serv, struct net *net)
+-{
+-	svc_close_net(serv, net);
+-}
+-EXPORT_SYMBOL_GPL(svc_shutdown_net);
+-
+ /*
+  * Destroy an RPC service. Should be called with appropriate locking to
+  * protect sv_permsocks and sv_tempsocks.
 diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 44be7193cd9b..6809116c996a 100644
+index 6809116c996a..0c117d3bfda8 100644
 --- a/net/sunrpc/svc_xprt.c
 +++ b/net/sunrpc/svc_xprt.c
-@@ -1068,7 +1068,12 @@ static void svc_delete_xprt(struct svc_xprt *xprt)
- 	svc_xprt_put(xprt);
+@@ -1140,7 +1140,11 @@ static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
+ 	}
  }
  
--void svc_close_xprt(struct svc_xprt *xprt)
+-/*
 +/**
-+ * svc_xprt_close - Close a client connection
-+ * @xprt: transport to disconnect
++ * svc_xprt_destroy_all - Destroy transports associated with @serv
++ * @serv: RPC service to be shut down
++ * @net: target network namespace
 + *
-+ */
-+void svc_xprt_close(struct svc_xprt *xprt)
+  * Server threads may still be running (especially in the case where the
+  * service is still running in other network namespaces).
+  *
+@@ -1152,7 +1156,7 @@ static void svc_clean_up_xprts(struct svc_serv *serv, struct net *net)
+  * threads, we may need to wait a little while and then check again to
+  * see if they're done.
+  */
+-void svc_close_net(struct svc_serv *serv, struct net *net)
++void svc_xprt_destroy_all(struct svc_serv *serv, struct net *net)
  {
- 	trace_svc_xprt_close(xprt);
- 	set_bit(XPT_CLOSE, &xprt->xpt_flags);
-@@ -1083,7 +1088,7 @@ void svc_close_xprt(struct svc_xprt *xprt)
- 	 */
- 	svc_delete_xprt(xprt);
+ 	int delay = 0;
+ 
+@@ -1163,6 +1167,7 @@ void svc_close_net(struct svc_serv *serv, struct net *net)
+ 		msleep(delay++);
+ 	}
  }
--EXPORT_SYMBOL_GPL(svc_close_xprt);
-+EXPORT_SYMBOL_GPL(svc_xprt_close);
++EXPORT_SYMBOL_GPL(svc_xprt_destroy_all);
  
- static int svc_close_list(struct svc_serv *serv, struct list_head *xprt_list, struct net *net)
- {
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-index 16897fcb659c..85c8cdda98b1 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
-@@ -198,7 +198,7 @@ static int xprt_rdma_bc_send_request(struct rpc_rqst *rqst)
- 
- 	ret = rpcrdma_bc_send_request(rdma, rqst);
- 	if (ret == -ENOTCONN)
--		svc_close_xprt(sxprt);
-+		svc_xprt_close(sxprt);
- 	return ret;
- }
- 
+ /*
+  * Handle defer and revisit of requests
 
