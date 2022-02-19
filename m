@@ -2,97 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B98974BC701
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Feb 2022 09:55:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86A504BC832
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Feb 2022 12:34:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240572AbiBSI4I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 19 Feb 2022 03:56:08 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:37722 "EHLO
+        id S238581AbiBSLei (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 19 Feb 2022 06:34:38 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:42868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbiBSI4I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Feb 2022 03:56:08 -0500
-X-Greylist: delayed 543 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 19 Feb 2022 00:55:47 PST
-Received: from eu-shark1.inbox.eu (eu-shark1.inbox.eu [195.216.236.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2D3C9926;
-        Sat, 19 Feb 2022 00:55:47 -0800 (PST)
-Received: from eu-shark1.inbox.eu (localhost [127.0.0.1])
-        by eu-shark1-out.inbox.eu (Postfix) with ESMTP id 602A46C0073B;
-        Sat, 19 Feb 2022 10:46:43 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=inbox.eu; s=20140211;
-        t=1645260403; bh=x2IqM3rwY6UxdZw1mh9cnsrSbRnGQ1NRGSoumt9GeF8=;
-        h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-         Content-Type:X-ESPOL:from:date:to:cc;
-        b=qBRVp4O7j3qJBmnvMKrWgNfY/koP4YDle4CEUxIRVdPKMCbouznzYn7qULOmDDbYS
-         W8EO9W+e8gXqSabjgfnrs++4IbEUKqNluvC9/VY0LNvLKEV8VA06cimLCfGNFrZ0W8
-         LM1NxghciLzcQpHGs9UJ/+VfeRYSCXCKSR9Hhu2E=
-Received: from localhost (localhost [127.0.0.1])
-        by eu-shark1-in.inbox.eu (Postfix) with ESMTP id 4FCC76C00736;
-        Sat, 19 Feb 2022 10:46:43 +0200 (EET)
-Received: from eu-shark1.inbox.eu ([127.0.0.1])
-        by localhost (eu-shark1.inbox.eu [127.0.0.1]) (spamfilter, port 35)
-        with ESMTP id Vmb7lF0202yH; Sat, 19 Feb 2022 10:46:43 +0200 (EET)
-Received: from mail.inbox.eu (eu-pop1 [127.0.0.1])
-        by eu-shark1-in.inbox.eu (Postfix) with ESMTP id E7FAA6C0073A;
-        Sat, 19 Feb 2022 10:46:42 +0200 (EET)
-References: <20220208215232.491780-1-anna@kernel.org>
- <20220208215232.491780-5-anna@kernel.org>
-User-agent: mu4e 1.7.0; emacs 27.2
-From:   Su Yue <l@damenly.su>
-To:     Anna Schumaker <anna@kernel.org>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 4/4] generic/633: Check if idmapped mounts are supported
- before running
-Date:   Sat, 19 Feb 2022 16:40:09 +0800
-In-reply-to: <20220208215232.491780-5-anna@kernel.org>
-Message-ID: <wnhr451v.fsf@damenly.su>
+        with ESMTP id S238736AbiBSLeh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Feb 2022 06:34:37 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A70E050454
+        for <linux-nfs@vger.kernel.org>; Sat, 19 Feb 2022 03:34:19 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4B462B80758
+        for <linux-nfs@vger.kernel.org>; Sat, 19 Feb 2022 11:34:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6631C004E1;
+        Sat, 19 Feb 2022 11:34:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645270457;
+        bh=QHo5BZzDWJoq9QDW49R+XLww9yjbYUAE/e5wemGHijA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=F1BjTKNGwNLJSwYKjvcGL3A4wFpaiN1WY2H4XJZrhb65LvjNufDlnpePg9auWVNZd
+         ztTJyxh+HRM+QN5H3QvUiw86MUQLixU8f3q4fSnSLUHpbZjDCl8DO0gQOhJ3fd/7st
+         CsqVy9fzZJPQseqIp0ytoH13MB1zbKFXRSUrPQhVAHNYyYcwhWQU0hEJ8HbhyCx2E7
+         I91UQU0S6PoTPie9S28osdL+rUBjvz2DsJHy3+wghiBMHo+k5C4a5cwGT3ZqjYlhXT
+         EZz720BSn6LwgtsLOGnOiwW4vKuhvQiFUO3FrqCsNPpmTHSVt+x9EPLnmosBZgXyK8
+         qeeDHalNc68vw==
+Date:   Sat, 19 Feb 2022 12:34:12 +0100
+From:   Christian Brauner <brauner@kernel.org>
+To:     "suy.fnst@fujitsu.com" <suy.fnst@fujitsu.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "l@damenly.su" <l@damenly.su>,
+        "brauner@kernel.org" <brauner@kernel.org>
+Subject: Re: [bug?] nfs setgid inheritance
+Message-ID: <20220219113412.7ov4tbkisv4vnmo3@wittgenstein>
+References: <OS3PR01MB770539462BE3E7959DAF8B5789389@OS3PR01MB7705.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Virus-Scanned: OK
-X-ESPOL: 6NpmlYxOGzysiV+lRWenZQs2rylXXenn5ea+0QNbnX/mQl2JBCgRI2663TM2UR7LszwX
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <OS3PR01MB770539462BE3E7959DAF8B5789389@OS3PR01MB7705.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sat, Feb 19, 2022 at 08:34:30AM +0000, suy.fnst@fujitsu.com wrote:
+> Hi NFS folks,
+>   During our xfstests, we found generic/633 fails like:
+> ============================================
+> FSTYP         -- nfs
+> PLATFORM      -- Linux/x86_64 btrfs 5.17.0-rc4-custom #236 SMP PREEMPT Sat Feb 19 15:09:03 CST 2022
+> MKFS_OPTIONS  -- 127.0.0.1:/nfsscratch
+> MOUNT_OPTIONS -- -o vers=4 127.0.0.1:/nfsscratch /mnt/scratch
+> 
+> generic/633 0s ... [failed, exit status 1]- output mismatch (see /root/xfstests-dev/results//generic/633.out.bad)
+>     --- tests/generic/633.out   2021-05-23 14:03:08.879999997 +0800
+>     +++ /root/xfstests-dev/results//generic/633.out.bad 2022-02-19 16:31:28.660000013 +0800
+>     @@ -1,2 +1,4 @@
+>      QA output created by 633
+>      Silence is golden
+>     +idmapped-mounts.c: 7906: setgid_create - Success - failure: is_setgid
+>     +idmapped-mounts.c: 13907: run_test - Success - failure: create operations in directories with setgid bit set
+>     ...
+>     (Run 'diff -u /root/xfstests-dev/tests/generic/633.out /root/xfstests-dev/results//generic/633.out.bad'  to see the entire diff)
+> Ran: generic/633
+> Failures: generic/633
+> Failed 1 of 1 tests
+> ============================================
+> 
+> The failed test is about setgid inheritance. 
+> When  a file is created with S_ISGID in the directory with S_ISGID, 
+> NFS  doesn't strip the  setgid bit of the new created file but others
+> (ext4/xfs/btrfs) do.  They call inode_init_owner() which does
+> the strip after new_inode().
+> However, NFS has its own logical to handle inode capacities. 
+> As the test says the behavior can be filesystem type specific,
+> I'd report to you NFS guys and ask whether it's a bug or not?
 
-On Tue 08 Feb 2022 at 16:52, Anna Schumaker <anna@kernel.org> 
-wrote:
+Thanks for the report. I'm not sure why NFS would have different rules
+for setgid inheritance. So I'm inclined to think that this is simply a
+bug similar to what we saw in xfs and ceph. But I'll let the NFS folks
+determine that.
 
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->
-> This appears to have been missed when the test was added.
->
-It's removed on purpose to also verify idmapped mounts unrelated 
-tests.
+XFS is only special in so far as it has a sysctl that lets it alter sgid
+inheritance behavior. And it only has that to allow for legacy irix
+semantics iiuc.
 
-Generic/633 fails on NFS because of setgid inheritance behavior of 
-NFS.
-Already reported it to the community[1].
-
-[1]: 
-https://lore.kernel.org/linux-nfs/OS3PR01MB770539462BE3E7959DAF8B5789389@OS3PR01MB7705.jpnprd01.prod.outlook.com/T/#u
-
---
-Su
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
->  tests/generic/633 | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/tests/generic/633 b/tests/generic/633
-> index 382806471223..6750117735f7 100755
-> --- a/tests/generic/633
-> +++ b/tests/generic/633
-> @@ -15,6 +15,7 @@ _begin_fstest auto quick atime attr cap 
-> idmapped io_uring mount perms rw unlink
->  # real QA test starts here
->
->  _supported_fs generic
-> +_require_idmapped_mounts
->  _require_test
->
->  echo "Silence is golden"
+Christian
