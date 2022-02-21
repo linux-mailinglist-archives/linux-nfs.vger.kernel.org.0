@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 93B4C4BDF6B
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Feb 2022 18:50:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 012964BE2AD
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Feb 2022 18:55:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379997AbiBUQRv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Feb 2022 11:17:51 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40132 "EHLO
+        id S1379987AbiBUQPc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Feb 2022 11:15:32 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379995AbiBUQPa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 11:15:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED85723BD4
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Feb 2022 08:15:06 -0800 (PST)
+        with ESMTP id S1379992AbiBUQP2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 11:15:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12B423BD4
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Feb 2022 08:15:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 990FAB81258
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3DA38612A3
         for <linux-nfs@vger.kernel.org>; Mon, 21 Feb 2022 16:15:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25984C340E9
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78728C340EC
         for <linux-nfs@vger.kernel.org>; Mon, 21 Feb 2022 16:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1645460104;
-        bh=XisaS5QIWRCnazYmX0T0WSJZm3m52nEkL8Rx78emNwc=;
+        bh=hLDoQkvyJmnOiq6gFw7//p6qSnKAkLj3H61khVngHzs=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=am5UT+4/nwGLKcIe4bW5QFN3ctAhNW7XZK7I3KxtknFxpFbZYV/9Qbtz7avRqtWGu
-         NxHWXEgxVCteZ4Zi9psjo879218BDwd9dkl/7s3fjq7gL5HJW63hvmfnZn06lJGp2S
-         tiO6hmPDj3hs5CnMuZbXse3+1JHVWKSn/ijUsq5knhF3dEBUYXLW70WYcU1WYHdQmv
-         0Hkxi+saQ4E0CMBWm5wwilIEupRiUc4jwDpbGHyYAoKGd8xSqRFw33xSw8J5pQHRbK
-         L2W/HUb+6rdKRvY4UkSNl/GGcKVvZfNMCG82LXAQ6fmV0fGhGv7QiphWXFzHnaSH/b
-         cHlpmSY9I012g==
+        b=UPAj5+vaG8C1xe+nxJxCZdrLYUQZ3cXaizsYY5nT5e6Cwv3R5wq9eeMtl9hKL6LWl
+         144v9ZrRiTxMksHFJiu62gzsEVRTqKP9YtkPIR/gHtCi3aGYIsMBJ0eE7L5Peeod7S
+         pxDEZtsv9fTPB5D9br4TXxQpZWMjES+kgfuWH0jlkTri9nvh2dPyupDfghu+2fW063
+         mn25SyGauVVxuxCvW/oZ78JRihkxaAh5aGQ81mmtoHbmSebRjzYFg1ULZ8rA6VM5B3
+         DtLggy6gXtI29ig485qJ64956aLnX/4cmlmIH5sXP5fTwvzHWZvCzBvAmin7/aQmYk
+         XQ1KAlPPd/giA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v6 12/13] NFS: Trace effects of readdirplus on the dcache
-Date:   Mon, 21 Feb 2022 11:08:50 -0500
-Message-Id: <20220221160851.15508-13-trondmy@kernel.org>
+Subject: [PATCH v6 13/13] NFS: Trace effects of the readdirplus heuristic
+Date:   Mon, 21 Feb 2022 11:08:51 -0500
+Message-Id: <20220221160851.15508-14-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220221160851.15508-12-trondmy@kernel.org>
+In-Reply-To: <20220221160851.15508-13-trondmy@kernel.org>
 References: <20220221160851.15508-1-trondmy@kernel.org>
  <20220221160851.15508-2-trondmy@kernel.org>
  <20220221160851.15508-3-trondmy@kernel.org>
@@ -50,6 +50,7 @@ References: <20220221160851.15508-1-trondmy@kernel.org>
  <20220221160851.15508-10-trondmy@kernel.org>
  <20220221160851.15508-11-trondmy@kernel.org>
  <20220221160851.15508-12-trondmy@kernel.org>
+ <20220221160851.15508-13-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -64,53 +65,93 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Trace the effects of readdirplus on attribute and dentry revalidation.
+Enable tracking of when the readdirplus heuristic causes a page cache
+invalidation.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c      | 5 +++++
- fs/nfs/nfstrace.h | 3 +++
- 2 files changed, 8 insertions(+)
+ fs/nfs/dir.c      |  6 +++++-
+ fs/nfs/nfstrace.h | 50 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 273a35851e42..bcbfe03e3835 100644
+index bcbfe03e3835..9f48c75dbf4c 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -725,8 +725,12 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
- 			status = nfs_refresh_inode(d_inode(dentry), entry->fattr);
- 			if (!status)
- 				nfs_setsecurity(d_inode(dentry), entry->fattr);
-+			trace_nfs_readdir_lookup_revalidate(d_inode(parent),
-+							    dentry, 0, status);
- 			goto out;
- 		} else {
-+			trace_nfs_readdir_lookup_revalidate_failed(
-+				d_inode(parent), dentry, 0);
- 			d_invalidate(dentry);
- 			dput(dentry);
- 			dentry = NULL;
-@@ -748,6 +752,7 @@ void nfs_prime_dcache(struct dentry *parent, struct nfs_entry *entry,
- 		dentry = alias;
- 	}
- 	nfs_set_verifier(dentry, dir_verifier);
-+	trace_nfs_readdir_lookup(d_inode(parent), dentry, 0);
- out:
- 	dput(dentry);
+@@ -1141,7 +1141,11 @@ static void nfs_readdir_handle_cache_misses(struct inode *inode,
+ 	    cache_misses <= NFS_READDIR_CACHE_MISS_THRESHOLD ||
+ 	    !nfs_readdir_may_fill_pagecache(desc))
+ 		return;
+-	invalidate_mapping_pages(inode->i_mapping, page_index + 1, -1);
++	if (invalidate_mapping_pages(inode->i_mapping, page_index + 1, -1) == 0)
++		return;
++	trace_nfs_readdir_invalidate_cache_range(
++		inode, (loff_t)(page_index + 1) << PAGE_SHIFT,
++		MAX_LFS_FILESIZE);
  }
+ 
+ /* The file offset position represents the dirent entry number.  A
 diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index c2d0543ecb2d..7c1102b991d0 100644
+index 7c1102b991d0..ec2645d20abf 100644
 --- a/fs/nfs/nfstrace.h
 +++ b/fs/nfs/nfstrace.h
-@@ -432,6 +432,9 @@ DEFINE_NFS_LOOKUP_EVENT(nfs_lookup_enter);
- DEFINE_NFS_LOOKUP_EVENT_DONE(nfs_lookup_exit);
- DEFINE_NFS_LOOKUP_EVENT(nfs_lookup_revalidate_enter);
- DEFINE_NFS_LOOKUP_EVENT_DONE(nfs_lookup_revalidate_exit);
-+DEFINE_NFS_LOOKUP_EVENT(nfs_readdir_lookup);
-+DEFINE_NFS_LOOKUP_EVENT(nfs_readdir_lookup_revalidate_failed);
-+DEFINE_NFS_LOOKUP_EVENT_DONE(nfs_readdir_lookup_revalidate);
+@@ -273,6 +273,56 @@ DEFINE_NFS_UPDATE_SIZE_EVENT(wcc);
+ DEFINE_NFS_UPDATE_SIZE_EVENT(update);
+ DEFINE_NFS_UPDATE_SIZE_EVENT(grow);
  
- TRACE_EVENT(nfs_atomic_open_enter,
++DECLARE_EVENT_CLASS(nfs_inode_range_event,
++		TP_PROTO(
++			const struct inode *inode,
++			loff_t range_start,
++			loff_t range_end
++		),
++
++		TP_ARGS(inode, range_start, range_end),
++
++		TP_STRUCT__entry(
++			__field(dev_t, dev)
++			__field(u32, fhandle)
++			__field(u64, fileid)
++			__field(u64, version)
++			__field(loff_t, range_start)
++			__field(loff_t, range_end)
++		),
++
++		TP_fast_assign(
++			const struct nfs_inode *nfsi = NFS_I(inode);
++
++			__entry->dev = inode->i_sb->s_dev;
++			__entry->fhandle = nfs_fhandle_hash(&nfsi->fh);
++			__entry->fileid = nfsi->fileid;
++			__entry->version = inode_peek_iversion_raw(inode);
++			__entry->range_start = range_start;
++			__entry->range_end = range_end;
++		),
++
++		TP_printk(
++			"fileid=%02x:%02x:%llu fhandle=0x%08x version=%llu "
++			"range=[%lld, %lld]",
++			MAJOR(__entry->dev), MINOR(__entry->dev),
++			(unsigned long long)__entry->fileid,
++			__entry->fhandle, __entry->version,
++			__entry->range_start, __entry->range_end
++		)
++);
++
++#define DEFINE_NFS_INODE_RANGE_EVENT(name) \
++	DEFINE_EVENT(nfs_inode_range_event, name, \
++			TP_PROTO( \
++				const struct inode *inode, \
++				loff_t range_start, \
++				loff_t range_end \
++			), \
++			TP_ARGS(inode, range_start, range_end))
++
++DEFINE_NFS_INODE_RANGE_EVENT(nfs_readdir_invalidate_cache_range);
++
+ DECLARE_EVENT_CLASS(nfs_readdir_event,
  		TP_PROTO(
+ 			const struct file *file,
 -- 
 2.35.1
 
