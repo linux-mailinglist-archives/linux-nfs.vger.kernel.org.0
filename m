@@ -2,53 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 83A894BF0C3
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Feb 2022 05:10:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D27084BF03C
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Feb 2022 05:10:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239894AbiBVDSa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Feb 2022 22:18:30 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:41000 "EHLO
+        id S239838AbiBVDSR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Feb 2022 22:18:17 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233775AbiBVDS3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 22:18:29 -0500
+        with ESMTP id S233775AbiBVDSQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 22:18:16 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8E0A1019;
-        Mon, 21 Feb 2022 19:18:04 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2908F73;
+        Mon, 21 Feb 2022 19:17:51 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 7DAB821100;
-        Tue, 22 Feb 2022 03:18:03 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 0FB2C210FF;
+        Tue, 22 Feb 2022 03:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1645499883; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1645499870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TNOQTzqXc1dwn0sxVclyo5qS7TsZyCY45jkw8WmjP7o=;
-        b=kR91uGJ/RTS+8au54fMBC4GFPKvaC1Yv8WHhfvVKpqmM16g4nNPlQcAHLBtdr5ZLLG+RJF
-        0AU++6qtEyJii20SGyIpbVs10MuwPMU/4wT7WXwMaLbceGreQ8aBE66tHihRjhfbzWVvpS
-        hiYuCHmmNxooYdfWYOf9cBPIOhc4FRg=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GhZHme0nl7A4JBQ0S74qk0HiW5RevCCShdffmTtXtEE=;
+        b=ljl5hpqnn8XItaz2pgS0/dFbp8Or7nFEcXyK3PPQX3y1pOij2ACiitVFo1ZW1KHULTSA32
+        YPbDwlZKpapBzbobU/O0VXr6WOOcd4WDNGQESKT4qQihx0Fj189ZP5Cn2KjOfrjZWle1nr
+        sSBZtznZf5z+aAaHk0OnFJ6IwVJ/iwo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1645499883;
+        s=susede2_ed25519; t=1645499870;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TNOQTzqXc1dwn0sxVclyo5qS7TsZyCY45jkw8WmjP7o=;
-        b=8txKd6I/x+pP445IuPzI3CE1ZWl4VGR/oru7gKU7G5Ico3dFFmNbzJjmpXh2/2uBC9kTFG
-        dbGnv5+lrLnOa2CQ==
+         content-transfer-encoding:content-transfer-encoding;
+        bh=GhZHme0nl7A4JBQ0S74qk0HiW5RevCCShdffmTtXtEE=;
+        b=ZXJr3TPlVf5poY4reMjaSwIa54LBqaPVcDT+//ErMovmrjU1PnyR6RQJgfl+heyxghO0fc
+        BsR4trFirlMhFPDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C05A113BA7;
-        Tue, 22 Feb 2022 03:17:54 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 323C613BA7;
+        Tue, 22 Feb 2022 03:17:41 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 7k2IH+JVFGJZWgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 22 Feb 2022 03:17:54 +0000
-Subject: [PATCH 01/11] DOC: convert 'subsection' to 'section' in gfp.h
+        id 6vPPN9VVFGJPWgAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 22 Feb 2022 03:17:41 +0000
+Subject: [PATCH 00/11]  Remove remaining parts of congestion tracking code.
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>,
         Wu Fengguang <fengguang.wu@intel.com>,
@@ -71,9 +69,7 @@ Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
         ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-kernel@vger.kernel.org
 Date:   Tue, 22 Feb 2022 14:17:17 +1100
-Message-ID: <164549983733.9187.17894407453436115822.stgit@noble.brown>
-In-Reply-To: <164549971112.9187.16871723439770288255.stgit@noble.brown>
-References: <164549971112.9187.16871723439770288255.stgit@noble.brown>
+Message-ID: <164549971112.9187.16871723439770288255.stgit@noble.brown>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -88,65 +84,68 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Various DOC: sections in gfp.h have subsection headers (~~~) but the
-place where they are included in mm-api.rst does not have section, only
-chapters.
-So convert to section headers (---) to avoid confusion.  Specifically if
-section are added later in mm-api.rst, an error results.
+Here is another refresh of my "remove congestion tracking" series.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+I removed the small tweaks to read-ahead code because they raised
+questions and are actually required for this series.
+
+Everything else is the same.
+
+Andrew: please drop the version of this that is currently in your tree
+even if you don't take this.  The changes to fuse/nfs/ceph are not
+appropriate and I wouldn't want them to land by mistake.
+
+Thanks,
+NeilBrown
+
 ---
- include/linux/gfp.h |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index 80f63c862be5..20f6fbe12993 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -79,7 +79,7 @@ struct vm_area_struct;
-  * DOC: Page mobility and placement hints
-  *
-  * Page mobility and placement hints
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ * ---------------------------------
-  *
-  * These flags provide hints about how mobile the page is. Pages with similar
-  * mobility are placed within the same pageblocks to minimise problems due
-@@ -112,7 +112,7 @@ struct vm_area_struct;
-  * DOC: Watermark modifiers
-  *
-  * Watermark modifiers -- controls access to emergency reserves
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ * ------------------------------------------------------------
-  *
-  * %__GFP_HIGH indicates that the caller is high-priority and that granting
-  * the request is necessary before the system can make forward progress.
-@@ -144,7 +144,7 @@ struct vm_area_struct;
-  * DOC: Reclaim modifiers
-  *
-  * Reclaim modifiers
-- * ~~~~~~~~~~~~~~~~~
-+ * -----------------
-  * Please note that all the following flags are only applicable to sleepable
-  * allocations (e.g. %GFP_NOWAIT and %GFP_ATOMIC will ignore them).
-  *
-@@ -224,7 +224,7 @@ struct vm_area_struct;
-  * DOC: Action modifiers
-  *
-  * Action modifiers
-- * ~~~~~~~~~~~~~~~~
-+ * ----------------
-  *
-  * %__GFP_NOWARN suppresses allocation failure reports.
-  *
-@@ -256,7 +256,7 @@ struct vm_area_struct;
-  * DOC: Useful GFP flag combinations
-  *
-  * Useful GFP flag combinations
-- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+ * ----------------------------
-  *
-  * Useful GFP flag combinations that are commonly used. It is recommended
-  * that subsystems start with one of these combinations and then set/clear
+NeilBrown (11):
+      DOC: convert 'subsection' to 'section' in gfp.h
+      MM: document and polish read-ahead code.
+      MM: improve cleanup when ->readpages doesn't process all pages.
+      fuse: remove reliance on bdi congestion
+      nfs: remove reliance on bdi congestion
+      ceph: remove reliance on bdi congestion
+      Remove inode_congested()
+      Remove bdi_congested() and wb_congested() and related functions
+      f2fs: replace congestion_wait() calls with io_schedule_timeout()
+      block/bfq-iosched.c: use "false" rather than "BLK_RW_ASYNC"
+      Remove congestion tracking framework.
 
+
+ Documentation/core-api/mm-api.rst |  19 ++++-
+ Documentation/filesystems/vfs.rst |  16 ++--
+ block/bfq-iosched.c               |   2 +-
+ drivers/block/drbd/drbd_int.h     |   3 -
+ drivers/block/drbd/drbd_req.c     |   3 +-
+ fs/ceph/addr.c                    |  22 +++---
+ fs/ceph/super.c                   |   1 +
+ fs/ceph/super.h                   |   1 +
+ fs/ext2/ialloc.c                  |   5 --
+ fs/f2fs/compress.c                |   4 +-
+ fs/f2fs/data.c                    |   3 +-
+ fs/f2fs/f2fs.h                    |   6 ++
+ fs/f2fs/segment.c                 |   8 +-
+ fs/f2fs/super.c                   |   6 +-
+ fs/fs-writeback.c                 |  37 ---------
+ fs/fuse/control.c                 |  17 -----
+ fs/fuse/dev.c                     |   8 --
+ fs/fuse/file.c                    |  17 +++++
+ fs/nfs/write.c                    |  14 +++-
+ fs/nilfs2/segbuf.c                |  15 ----
+ fs/xfs/xfs_buf.c                  |   3 -
+ include/linux/backing-dev-defs.h  |   8 --
+ include/linux/backing-dev.h       |  50 ------------
+ include/linux/fs.h                |   9 ++-
+ include/linux/nfs_fs_sb.h         |   1 +
+ include/trace/events/writeback.h  |  28 -------
+ mm/backing-dev.c                  |  57 --------------
+ mm/fadvise.c                      |   5 +-
+ mm/readahead.c                    | 122 ++++++++++++++++++++++++++++--
+ mm/vmscan.c                       |  21 +----
+ 30 files changed, 212 insertions(+), 299 deletions(-)
+
+--
+Signature
 
