@@ -2,51 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D27084BF03C
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Feb 2022 05:10:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D83DB4BF04E
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Feb 2022 05:10:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239838AbiBVDSR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Feb 2022 22:18:17 -0500
-Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:40288 "EHLO
+        id S241261AbiBVDVC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Feb 2022 22:21:02 -0500
+Received: from mxb-00190b01.gslb.pphosted.com ([23.128.96.19]:51012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233775AbiBVDSQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 22:18:16 -0500
+        with ESMTP id S241157AbiBVDU7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Feb 2022 22:20:59 -0500
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2908F73;
-        Mon, 21 Feb 2022 19:17:51 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4390C192B8;
+        Mon, 21 Feb 2022 19:20:26 -0800 (PST)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 0FB2C210FF;
-        Tue, 22 Feb 2022 03:17:50 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id F1CA8210E6;
+        Tue, 22 Feb 2022 03:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1645499870; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1645500024; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=GhZHme0nl7A4JBQ0S74qk0HiW5RevCCShdffmTtXtEE=;
-        b=ljl5hpqnn8XItaz2pgS0/dFbp8Or7nFEcXyK3PPQX3y1pOij2ACiitVFo1ZW1KHULTSA32
-        YPbDwlZKpapBzbobU/O0VXr6WOOcd4WDNGQESKT4qQihx0Fj189ZP5Cn2KjOfrjZWle1nr
-        sSBZtznZf5z+aAaHk0OnFJ6IwVJ/iwo=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ViDG/yMqWZxCAxTaqQtcLcHL6JhRHELXtVbiJuJsPUo=;
+        b=Tmz1uo8woLZXqpnP6AmoA/NTuRgmjrgW2cLueq9/kp9TCyUa6S7R3LyYWeiTFJaHuy3dUM
+        KZRmOxRvt9ZDQSR+hpxKFewxvdZZ9Urtb6en4poxusvXIBIlgrBpBLKDAdWO2ORb+DR1Mi
+        bSVP8TV+gQpT0TCoBjfqhnJf7D5nXLw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1645499870;
+        s=susede2_ed25519; t=1645500024;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=GhZHme0nl7A4JBQ0S74qk0HiW5RevCCShdffmTtXtEE=;
-        b=ZXJr3TPlVf5poY4reMjaSwIa54LBqaPVcDT+//ErMovmrjU1PnyR6RQJgfl+heyxghO0fc
-        BsR4trFirlMhFPDw==
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ViDG/yMqWZxCAxTaqQtcLcHL6JhRHELXtVbiJuJsPUo=;
+        b=BbqDPkZmtQqupAAVe4rSFiNNNRKLh+0XT0FLFde2mCgSKOwY64NUe64xN29OsgNhaJyglf
+        D4tHxubXuewZC/CA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 323C613BA7;
-        Tue, 22 Feb 2022 03:17:41 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8B58613BA7;
+        Tue, 22 Feb 2022 03:20:16 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id 6vPPN9VVFGJPWgAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 22 Feb 2022 03:17:41 +0000
-Subject: [PATCH 00/11]  Remove remaining parts of congestion tracking code.
+        id pLKjEXBWFGI0WwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 22 Feb 2022 03:20:16 +0000
+Subject: [PATCH 10/11] block/bfq-iosched.c: use "false" rather than
+ "BLK_RW_ASYNC"
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>,
         Wu Fengguang <fengguang.wu@intel.com>,
@@ -69,7 +72,9 @@ Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
         ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
         linux-kernel@vger.kernel.org
 Date:   Tue, 22 Feb 2022 14:17:17 +1100
-Message-ID: <164549971112.9187.16871723439770288255.stgit@noble.brown>
+Message-ID: <164549983746.9187.7949730109246767909.stgit@noble.brown>
+In-Reply-To: <164549971112.9187.16871723439770288255.stgit@noble.brown>
+References: <164549971112.9187.16871723439770288255.stgit@noble.brown>
 User-Agent: StGit/0.23
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -84,68 +89,27 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Here is another refresh of my "remove congestion tracking" series.
+bfq_get_queue() expects a "bool" for the third arg, so pass "false"
+rather than "BLK_RW_ASYNC" which will soon be removed.
 
-I removed the small tweaks to read-ahead code because they raised
-questions and are actually required for this series.
-
-Everything else is the same.
-
-Andrew: please drop the version of this that is currently in your tree
-even if you don't take this.  The changes to fuse/nfs/ceph are not
-appropriate and I wouldn't want them to land by mistake.
-
-Thanks,
-NeilBrown
-
+Acked-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ block/bfq-iosched.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-NeilBrown (11):
-      DOC: convert 'subsection' to 'section' in gfp.h
-      MM: document and polish read-ahead code.
-      MM: improve cleanup when ->readpages doesn't process all pages.
-      fuse: remove reliance on bdi congestion
-      nfs: remove reliance on bdi congestion
-      ceph: remove reliance on bdi congestion
-      Remove inode_congested()
-      Remove bdi_congested() and wb_congested() and related functions
-      f2fs: replace congestion_wait() calls with io_schedule_timeout()
-      block/bfq-iosched.c: use "false" rather than "BLK_RW_ASYNC"
-      Remove congestion tracking framework.
+diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
+index 36a66e97e3c2..ed9bb1054bf2 100644
+--- a/block/bfq-iosched.c
++++ b/block/bfq-iosched.c
+@@ -5448,7 +5448,7 @@ static void bfq_check_ioprio_change(struct bfq_io_cq *bic, struct bio *bio)
+ 	bfqq = bic_to_bfqq(bic, false);
+ 	if (bfqq) {
+ 		bfq_release_process_ref(bfqd, bfqq);
+-		bfqq = bfq_get_queue(bfqd, bio, BLK_RW_ASYNC, bic, true);
++		bfqq = bfq_get_queue(bfqd, bio, false, bic, true);
+ 		bic_set_bfqq(bic, bfqq, false);
+ 	}
+ 
 
-
- Documentation/core-api/mm-api.rst |  19 ++++-
- Documentation/filesystems/vfs.rst |  16 ++--
- block/bfq-iosched.c               |   2 +-
- drivers/block/drbd/drbd_int.h     |   3 -
- drivers/block/drbd/drbd_req.c     |   3 +-
- fs/ceph/addr.c                    |  22 +++---
- fs/ceph/super.c                   |   1 +
- fs/ceph/super.h                   |   1 +
- fs/ext2/ialloc.c                  |   5 --
- fs/f2fs/compress.c                |   4 +-
- fs/f2fs/data.c                    |   3 +-
- fs/f2fs/f2fs.h                    |   6 ++
- fs/f2fs/segment.c                 |   8 +-
- fs/f2fs/super.c                   |   6 +-
- fs/fs-writeback.c                 |  37 ---------
- fs/fuse/control.c                 |  17 -----
- fs/fuse/dev.c                     |   8 --
- fs/fuse/file.c                    |  17 +++++
- fs/nfs/write.c                    |  14 +++-
- fs/nilfs2/segbuf.c                |  15 ----
- fs/xfs/xfs_buf.c                  |   3 -
- include/linux/backing-dev-defs.h  |   8 --
- include/linux/backing-dev.h       |  50 ------------
- include/linux/fs.h                |   9 ++-
- include/linux/nfs_fs_sb.h         |   1 +
- include/trace/events/writeback.h  |  28 -------
- mm/backing-dev.c                  |  57 --------------
- mm/fadvise.c                      |   5 +-
- mm/readahead.c                    | 122 ++++++++++++++++++++++++++++--
- mm/vmscan.c                       |  21 +----
- 30 files changed, 212 insertions(+), 299 deletions(-)
-
---
-Signature
 
