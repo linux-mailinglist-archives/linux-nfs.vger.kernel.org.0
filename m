@@ -2,55 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C700D4C19EA
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 18:33:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C58C44C19FE
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 18:41:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242785AbiBWRcW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 12:32:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
+        id S236945AbiBWRlN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 12:41:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234688AbiBWRcV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 12:32:21 -0500
-Received: from cc-smtpout1.netcologne.de (cc-smtpout1.netcologne.de [IPv6:2001:4dd0:100:1062:25:2:0:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FE73584D
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 09:31:52 -0800 (PST)
-Received: from cc-smtpin2.netcologne.de (cc-smtpin2.netcologne.de [89.1.8.202])
-        by cc-smtpout1.netcologne.de (Postfix) with ESMTP id C0E8312837;
-        Wed, 23 Feb 2022 18:31:49 +0100 (CET)
-Received: from nas2.garloff.de (xdsl-89-0-168-136.nc.de [89.0.168.136])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by cc-smtpin2.netcologne.de (Postfix) with ESMTPSA id 04AEA11F13;
-        Wed, 23 Feb 2022 18:31:44 +0100 (CET)
-Received: from [192.168.155.203] (unknown [192.168.155.10])
-        by nas2.garloff.de (Postfix) with ESMTPSA id 38E25B3B0027;
-        Wed, 23 Feb 2022 18:31:35 +0100 (CET)
-Content-Type: multipart/mixed; boundary="------------3KzMwLctDLE5c6vZGYtRFApR"
-Message-ID: <53040065-a88b-1b60-3430-27d2acd761b7@garloff.de>
-Date:   Wed, 23 Feb 2022 18:31:43 +0100
+        with ESMTP id S236603AbiBWRlN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 12:41:13 -0500
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8C592705
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 09:40:44 -0800 (PST)
+Received: by mail-qv1-xf2a.google.com with SMTP id j5so9668359qvs.13
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 09:40:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQIbcm4ZoUlOd3ge4cVut8C8yldSYbmLZsPI1UrysYY=;
+        b=S5WgQkNKSyFWEDYJKUhHOEUfcBnP7qkgqfKhu5v0SPyVm1jy1QFiUtub6JsFkAdMGV
+         pTicEiP2wseHJ6a8VXOf+lp5KZFDDZOP/L1Qvr082ntVCJf6fGDtQdftVTKsJPwKm0zm
+         EX4MSOwmFolKvtFZ6BwImHOhQoOG7QX8mBGuTE1kCjtZ0FZsHb3UHQrqmE1wW1nsUolL
+         XaxeWshDClBOJgDxBjyL1was2xQqEbkL0BXwym1I2FUNeAu1OFE1zcn8UshG6THqAVTR
+         KDcGK1NwH2DxHS5wxCK6SwFyEXtfsrNMIbm7KV+fVReNds47rZStH6zqRk2IXm5X9ZCr
+         pvUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TQIbcm4ZoUlOd3ge4cVut8C8yldSYbmLZsPI1UrysYY=;
+        b=CHpJKE7w/Zbm+aQZSV8ERkNhcZ90QW7bftATt7Jw5648U9HtQmMCqdVUbnv+XCrkZB
+         tKQ/i81ltknOeJEcihw3tGgKKbBZhN2mkm551cLMdC6e4xw+kehH19DAQDxdSju4JXTv
+         8ouqXwEaWnI5vnkXEyFc55kO9lGOlOVUCThC3RFbWaK4r1Ac8UmKAt57RBwvQzhiiwYK
+         8vhpQ1Vc97+bwUp/Dt2tBZNU3KO8/ch81li1gu/1nf50hygHVk6wWtpQt8zVqowyynAD
+         gYMuk3EsK9pM+S3V0T86Nqf7lrRJQKxNHYTzGClnr/nBMWXwI3Hm0YqeeTsF2shcjnlb
+         up/Q==
+X-Gm-Message-State: AOAM531UJgt9uDe636rswTZn8W84ExITAKqmeDywA/XQCu70D6QL2+rS
+        YMiOxKdxKcMSIFDdLU3duFjGJd0P2wM=
+X-Google-Smtp-Source: ABdhPJzqSaQV8y2UnMKhLFdchG42iUMPff0TsEeX8fTsoW6xtiDl240iAOvoHK5n9GblvS3vXv9m4Q==
+X-Received: by 2002:a05:622a:24b:b0:2de:2bf3:5784 with SMTP id c11-20020a05622a024b00b002de2bf35784mr804625qtx.664.1645638044048;
+        Wed, 23 Feb 2022 09:40:44 -0800 (PST)
+Received: from kolga-mac-1.vpn.netapp.com ([2600:1700:6a10:2e90:3578:bf34:c039:8827])
+        by smtp.gmail.com with ESMTPSA id i205sm106215qke.55.2022.02.23.09.40.42
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 23 Feb 2022 09:40:43 -0800 (PST)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v1] NFSv4.1 provide mount option to toggle trunking discovery
+Date:   Wed, 23 Feb 2022 12:40:41 -0500
+Message-Id: <20220223174041.77887-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.5.0
-Content-Language: en-US
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Schumaker, Anna" <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-References: <50bd4b4d-3730-4048-fcce-6c79dfe70acf@garloff.de>
- <8957291b-ecd1-931e-5d0c-7ef20c401e5d@garloff.de>
- <F693AC98-DCB4-4086-AC19-EE1B71DB2551@netapp.com>
- <be851303-b1bb-7d8d-832e-a1a3db529662@garloff.de>
- <10d55787-7b97-8636-9426-73fdeda0a122@garloff.de>
- <6401c5e1-8f05-5644-9bea-207640a21b77@garloff.de>
- <CAN-5tyHC0m8nLgEi89EdKUo-kpEWsi-LUNHqAXc=gBzW+u52NA@mail.gmail.com>
-From:   Kurt Garloff <kurt@garloff.de>
-Subject: Re: 6f283634 / 1976b2b3 breaks NFS (QNAP/Linux kNFSD)
-In-Reply-To: <CAN-5tyHC0m8nLgEi89EdKUo-kpEWsi-LUNHqAXc=gBzW+u52NA@mail.gmail.com>
-X-NetCologne-Spam: L
-X-Rspamd-Queue-Id: 04AEA11F13
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,91 +66,78 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This is a multi-part message in MIME format.
---------------3KzMwLctDLE5c6vZGYtRFApR
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Olga Kornievskaia <kolga@netapp.com>
 
-Hi Olga,
+Introduce a new mount option -- trunkdiscovery,notrunkdiscovery -- to
+toggle whether or not the client will engage in actively discovery
+of trunking locations.
 
-thanks for coming back!
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/client.c           | 3 ++-
+ fs/nfs/fs_context.c       | 8 ++++++++
+ include/linux/nfs_fs_sb.h | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-On 23.02.22 15:22, Olga Kornievskaia wrote:
-> Hi Kurt,
-> I apologize for the late response. I have looked at the network trace.
-> The problem stems from the broken server that claims to support
-> fs_locations but then decides to never reply to the query.
->
-> I can implement a mount option to say fs_locquery=off to handle mounts
-> against the broken servers?
->
-> However I would like to ask if the better path forward isn't to update
-> to the knfsd where the problem is fixed?
-
-Well, I have ran self-compiled kernels on Qnap appliances before (to
-work around Qnap's ext4 breakage when doing the case-independent
-name lookup), but it was a painful and cumbersome process and I don't
-want to repeat it. Appliances are not meant to use with custom
-kernels.
-Even if I do: This does not help many many other users ... Unless we
-convince Qnap to provide patches for old appliances, we'll experience
-breakage.
-
-On my end, I have applied the attached patch, restricting the use
-of FS_LOCATIONS to servers that advertize NFS v4.2 or later.
-
-In the patch, you'll also see clearing the bit before it gets set.
-This was spotted by seth, see
-https://bbs.archlinux.org/viewtopic.php?pid=2023983#p2023983
-In latest upstream kernels you'd also need to clear
-NFS_CAP_CASE_PRESERVING | NFS_CAP_CASE_INSENSITIVE
-so I wonder whether we should not just nullify the caps
-bit field prior to testing and selectively setting flags.
-
-With this patch, I can mount NFS volumes from Qnap knfsd
-again without any special workarounds (such as nfsver=3 or the
-to-be-implemented setting that you suggest). I have no idea
-whether or not we leave a lot features behind by restricting
-FS_LOCATIONS on the client side to servers >= NFS v4.2.
-But certainly better than breaking in a -stable kernel update,
-even if the server might be to blame.
-
-Best,
-
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index d1f34229e11a..84c080ddfd01 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -857,7 +857,8 @@ static int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *mntfh, str
+ 	}
+ 
+ 	if (clp->rpc_ops->discover_trunking != NULL &&
+-			(server->caps & NFS_CAP_FS_LOCATIONS)) {
++			(server->caps & NFS_CAP_FS_LOCATIONS &&
++			 !(server->flags & NFS_MOUNT_NOTRUNK_DISCOVERY))) {
+ 		error = clp->rpc_ops->discover_trunking(server, mntfh);
+ 		if (error < 0)
+ 			return error;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index ea17fa1f31ec..ad1448a63aa0 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -80,6 +80,7 @@ enum nfs_param {
+ 	Opt_source,
+ 	Opt_tcp,
+ 	Opt_timeo,
++	Opt_trunkdiscovery,
+ 	Opt_udp,
+ 	Opt_v,
+ 	Opt_vers,
+@@ -180,6 +181,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_string("source",	Opt_source),
+ 	fsparam_flag  ("tcp",		Opt_tcp),
+ 	fsparam_u32   ("timeo",		Opt_timeo),
++	fsparam_flag_no("trunkdiscovery", Opt_trunkdiscovery),
+ 	fsparam_flag  ("udp",		Opt_udp),
+ 	fsparam_flag  ("v2",		Opt_v),
+ 	fsparam_flag  ("v3",		Opt_v),
+@@ -529,6 +531,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		else
+ 			ctx->flags &= ~NFS_MOUNT_NOCTO;
+ 		break;
++	case Opt_trunkdiscovery:
++		if (result.negated)
++			ctx->flags |= NFS_MOUNT_NOTRUNK_DISCOVERY;
++		else
++			ctx->flags &= ~NFS_MOUNT_NOTRUNK_DISCOVERY;
++		break;
+ 	case Opt_ac:
+ 		if (result.negated)
+ 			ctx->flags |= NFS_MOUNT_NOAC;
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ca0959e51e81..d0920d7f5f9e 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -151,6 +151,7 @@ struct nfs_server {
+ #define NFS_MOUNT_SOFTREVAL		0x800000
+ #define NFS_MOUNT_WRITE_EAGER		0x01000000
+ #define NFS_MOUNT_WRITE_WAIT		0x02000000
++#define NFS_MOUNT_NOTRUNK_DISCOVERY	0x04000000
+ 
+ 	unsigned int		fattr_valid;	/* Valid attributes */
+ 	unsigned int		caps;		/* server capabilities */
 -- 
-Kurt Garloff <kurt@garloff.de>
-Cologne, Germany
+2.27.0
 
---------------3KzMwLctDLE5c6vZGYtRFApR
-Content-Type: text/x-patch; charset=UTF-8;
- name="nfs-restrict-fs-loc-to-nfs42.diff"
-Content-Disposition: attachment; filename="nfs-restrict-fs-loc-to-nfs42.diff"
-Content-Transfer-Encoding: base64
-
-ZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9jLmMKaW5k
-ZXggMzg5ZmE3MmQ0Y2E5Li5mYzI5ZGFmMDBhNzIgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9uZnM0
-cHJvYy5jCisrKyBiL2ZzL25mcy9uZnM0cHJvYy5jCkBAIC0zODgwLDggKzM4ODAsOCBAQCBz
-dGF0aWMgaW50IF9uZnM0X3NlcnZlcl9jYXBhYmlsaXRpZXMoc3RydWN0IG5mc19zZXJ2ZXIg
-KnNlcnZlciwgc3RydWN0IG5mc19maCAqZgogCQkJcmVzLmF0dHJfYml0bWFza1syXSAmPSBG
-QVRUUjRfV09SRDJfTkZTNDJfTUFTSzsKIAkJfQogCQltZW1jcHkoc2VydmVyLT5hdHRyX2Jp
-dG1hc2ssIHJlcy5hdHRyX2JpdG1hc2ssIHNpemVvZihzZXJ2ZXItPmF0dHJfYml0bWFzaykp
-OwotCQlzZXJ2ZXItPmNhcHMgJj0gfihORlNfQ0FQX0FDTFMgfCBORlNfQ0FQX0hBUkRMSU5L
-UyB8Ci0JCQkJICBORlNfQ0FQX1NZTUxJTktTfCBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMKTsK
-KwkJc2VydmVyLT5jYXBzICY9IH4oTkZTX0NBUF9BQ0xTIHwgTkZTX0NBUF9IQVJETElOS1Mg
-fCBORlNfQ0FQX1NZTUxJTktTCisJCQkJfCBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMIHwgTkZT
-X0NBUF9GU19MT0NBVElPTlMpOwogCQlzZXJ2ZXItPmZhdHRyX3ZhbGlkID0gTkZTX0FUVFJf
-RkFUVFJfVjQ7CiAJCWlmIChyZXMuYXR0cl9iaXRtYXNrWzBdICYgRkFUVFI0X1dPUkQwX0FD
-TCAmJgogCQkJCXJlcy5hY2xfYml0bWFzayAmIEFDTDRfU1VQUE9SVF9BTExPV19BQ0wpCkBA
-IC0zODk0LDcgKzM4OTQsOCBAQCBzdGF0aWMgaW50IF9uZnM0X3NlcnZlcl9jYXBhYmlsaXRp
-ZXMoc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlciwgc3RydWN0IG5mc19maCAqZgogCQlpZiAo
-cmVzLmF0dHJfYml0bWFza1syXSAmIEZBVFRSNF9XT1JEMl9TRUNVUklUWV9MQUJFTCkKIAkJ
-CXNlcnZlci0+Y2FwcyB8PSBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMOwogI2VuZGlmCi0JCWlm
-IChyZXMuYXR0cl9iaXRtYXNrWzBdICYgRkFUVFI0X1dPUkQwX0ZTX0xPQ0FUSU9OUykKKwkJ
-LyogUmVzdHJpY3QgRlNfTE9DQVRJT05TIHRvIE5GUyB2NC4yKyB0byB3b3JrIGFyb3VuZCBR
-bmFwIGtuZnNkLTMuNC42IGJ1ZyAqLworCQlpZiAocmVzLmF0dHJfYml0bWFza1swXSAmIEZB
-VFRSNF9XT1JEMF9GU19MT0NBVElPTlMgJiYgbWlub3J2ZXJzaW9uID49IDIpCiAJCQlzZXJ2
-ZXItPmNhcHMgfD0gTkZTX0NBUF9GU19MT0NBVElPTlM7CiAJCWlmICghKHJlcy5hdHRyX2Jp
-dG1hc2tbMF0gJiBGQVRUUjRfV09SRDBfRklMRUlEKSkKIAkJCXNlcnZlci0+ZmF0dHJfdmFs
-aWQgJj0gfk5GU19BVFRSX0ZBVFRSX0ZJTEVJRDsK
-
---------------3KzMwLctDLE5c6vZGYtRFApR--
