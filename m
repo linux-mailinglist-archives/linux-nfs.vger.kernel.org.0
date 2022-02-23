@@ -2,151 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CD394C183E
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 17:10:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B74644C18FF
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 17:49:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235398AbiBWQKC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 11:10:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38646 "EHLO
+        id S235708AbiBWQsg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 11:48:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60866 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242041AbiBWQJ7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 11:09:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6610C4B47
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 08:09:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FA9D61949
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 16:09:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7392AC340E7;
-        Wed, 23 Feb 2022 16:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645632570;
-        bh=5Mx0cWnoiXceLJoARsJC8tRZjIHMDETqXR7tNIvHmvY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ALObIyhWkp12YqmaDSsO7N0lZmb5uuFHd4SljND70jdEKvbEeaTX6gl3InLvo46h+
-         hbbFqzaXeUdme3QoMN0hDuiPbRVffrsBDDgwXHVAGRiye6qXmWKjJrqWd/Eov3UTgz
-         NngJY4qFQFFjAjL5t5OxefEe/OLkM0giJqg3zuQrVwp0tCcOvPMIrL8jcha3OUJ+Bn
-         dLUNQSvqWlaZO9dylKfWn6Lu1+bFoAPFDu5Bp7AIEOsT652N7Cc5LKpQLPm6Zk8V7q
-         9vPSbDa51iLNzuwQ3INJVjIjF4hf6F34KH6MhOy8d/p7Yi/HAUQQZfEX+TZGjjZ6lq
-         fihdrcP6SqbxA==
-Date:   Wed, 23 Feb 2022 17:09:26 +0100
-From:   Christian Brauner <brauner@kernel.org>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "suy.fnst@fujitsu.com" <suy.fnst@fujitsu.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "l@damenly.su" <l@damenly.su>
-Subject: Re: [bug?] nfs setgid inheritance
-Message-ID: <20220223160926.iidztq5nf3wssw4m@wittgenstein>
-References: <OS3PR01MB770539462BE3E7959DAF8B5789389@OS3PR01MB7705.jpnprd01.prod.outlook.com>
- <20220219113412.7ov4tbkisv4vnmo3@wittgenstein>
- <55aef6aa0e1825c1709051091c7bf849fccbda32.camel@hammerspace.com>
- <20220223084425.uq75dqfwymgfayus@wittgenstein>
- <be3b341c4f0cf177b78f55de70cdb3a15ed808f4.camel@hammerspace.com>
+        with ESMTP id S233905AbiBWQsf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 11:48:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D23B836B5B
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 08:48:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645634886;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dPVCzM3xV0185YFcgo/1aEes0i2MZEq6PuLz2/3hjCE=;
+        b=QB/AJY57Wk8PZfacT9XUvmfrXPF53Y2vsIXofw0ACLvixwRetgNW3o5O+ZWXdoS9ezXUg7
+        6qTjAfkzk4G3e9QtuxZK4YbMV54Z2wpmoQxBd+lpA27C2MO/XjdkNInhdRmfOAo/ennK6O
+        cTzPoOmvEQygagVMxJ+ElaiT3YDFv8U=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-133-5V8nkJ6XNv63EyEIFMrpqg-1; Wed, 23 Feb 2022 11:48:05 -0500
+X-MC-Unique: 5V8nkJ6XNv63EyEIFMrpqg-1
+Received: by mail-qv1-f72.google.com with SMTP id w14-20020a0cfc4e000000b0042c1ac91249so4373868qvp.4
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 08:48:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:references:in-reply-to
+         :content-transfer-encoding;
+        bh=dPVCzM3xV0185YFcgo/1aEes0i2MZEq6PuLz2/3hjCE=;
+        b=j0fcfY4bJ9ODxETRC55qH0o2G+6nHi1GKVmYOYAu3nhVAnuZqkwp3sKCAeLdc8b7Hz
+         x7nwKijasnNl2wXYMYroQMjxxMkUjLNlxFNm4KMunIvKlN9c0V2OTXjIzphNdhUxbS8Y
+         IGinS3uQ2WtsCQh8OVYHZc/uXf+aiSWwG34fPRrwyyiYk2KmnU9sBOpZwCfOEVS8WH3U
+         tpUCqg/d3+HQUYg/93t+AjH60HSVykk4ByG04cqY9wRTiMLqjhTiaSgUhZ9yiO5Uo6Ju
+         6Ls0QD6S55+8bgogWVshGFlCOWrlwRq7CUEXYIQDDYKhtGWa4qjUZ3eafPNDFQJE25Cy
+         ySlw==
+X-Gm-Message-State: AOAM530rL3/QEzKxa8hBxlEiQ3YPUMMr0cptVZ0OK2b9iVxAb7Sq1N36
+        AzdHEaWQx9LmlM8OSxYveu4gAFcm48Wc80nNVNajjvbXs2V40L5R9sDnQETTP8lgnGymx+OvWs+
+        qlCE2qxkSzDYh/lJjPdEcDZSlso3nDMwLvqe1XOZb91GsztEDROj7uM70SrE6HwCe7FfD3Q==
+X-Received: by 2002:a37:6186:0:b0:60d:ed9c:6203 with SMTP id v128-20020a376186000000b0060ded9c6203mr363985qkb.172.1645634885008;
+        Wed, 23 Feb 2022 08:48:05 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJz5M4JNIgPVLBoQyacW0VZf5vghgYen++jMU7DwckzWHHNy7Pt/3ro1/9/yn4VxopLpAWgNEw==
+X-Received: by 2002:a37:6186:0:b0:60d:ed9c:6203 with SMTP id v128-20020a376186000000b0060ded9c6203mr363972qkb.172.1645634884614;
+        Wed, 23 Feb 2022 08:48:04 -0800 (PST)
+Received: from [172.31.1.6] ([71.161.196.139])
+        by smtp.gmail.com with ESMTPSA id b6sm40616qkg.51.2022.02.23.08.48.04
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Feb 2022 08:48:04 -0800 (PST)
+Message-ID: <39888986-ccfe-0dfb-6429-ad7aceb4575a@redhat.com>
+Date:   Wed, 23 Feb 2022 11:48:03 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <be3b341c4f0cf177b78f55de70cdb3a15ed808f4.camel@hammerspace.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] mount.nfs: Fix Typo auto negotiating code.
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20220219164631.38534-1-steved@redhat.com>
+In-Reply-To: <20220219164631.38534-1-steved@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 12:24:02PM +0000, Trond Myklebust wrote:
-> On Wed, 2022-02-23 at 09:44 +0100, Christian Brauner wrote:
-> > On Sat, Feb 19, 2022 at 05:00:18PM +0000, Trond Myklebust wrote:
-> > > On Sat, 2022-02-19 at 12:34 +0100, Christian Brauner wrote:
-> > > > On Sat, Feb 19, 2022 at 08:34:30AM +0000,
-> > > > suy.fnst@fujitsu.com wrote:
-> > > > > Hi NFS folks,
-> > > > >   During our xfstests, we found generic/633 fails like:
-> > > > > ============================================
-> > > > > FSTYP         -- nfs
-> > > > > PLATFORM      -- Linux/x86_64 btrfs 5.17.0-rc4-custom #236 SMP
-> > > > > PREEMPT Sat Feb 19 15:09:03 CST 2022
-> > > > > MKFS_OPTIONS  -- 127.0.0.1:/nfsscratch
-> > > > > MOUNT_OPTIONS -- -o vers=4 127.0.0.1:/nfsscratch /mnt/scratch
-> > > > > 
-> > > > > generic/633 0s ... [failed, exit status 1]- output mismatch
-> > > > > (see
-> > > > > /root/xfstests-dev/results//generic/633.out.bad)
-> > > > >     --- tests/generic/633.out   2021-05-23 14:03:08.879999997
-> > > > > +0800
-> > > > >     +++ /root/xfstests-dev/results//generic/633.out.bad 2022-
-> > > > > 02-19
-> > > > > 16:31:28.660000013 +0800
-> > > > >     @@ -1,2 +1,4 @@
-> > > > >      QA output created by 633
-> > > > >      Silence is golden
-> > > > >     +idmapped-mounts.c: 7906: setgid_create - Success -
-> > > > > failure:
-> > > > > is_setgid
-> > > > >     +idmapped-mounts.c: 13907: run_test - Success - failure:
-> > > > > create
-> > > > > operations in directories with setgid bit set
-> > > > >     ...
-> > > > >     (Run 'diff -u /root/xfstests-dev/tests/generic/633.out
-> > > > > /root/xfstests-dev/results//generic/633.out.bad'  to see the
-> > > > > entire
-> > > > > diff)
-> > > > > Ran: generic/633
-> > > > > Failures: generic/633
-> > > > > Failed 1 of 1 tests
-> > > > > ============================================
-> > > > > 
-> > > > > The failed test is about setgid inheritance. 
-> > > > > When  a file is created with S_ISGID in the directory with
-> > > > > S_ISGID,
-> > > > > NFS  doesn't strip the  setgid bit of the new created file but
-> > > > > others
-> > > > > (ext4/xfs/btrfs) do.  They call inode_init_owner() which does
-> > > > > the strip after new_inode().
-> > > > > However, NFS has its own logical to handle inode capacities. 
-> > > > > As the test says the behavior can be filesystem type specific,
-> > > > > I'd report to you NFS guys and ask whether it's a bug or not?
-> > > > 
-> > > > Thanks for the report. I'm not sure why NFS would have different
-> > > > rules
-> > > > for setgid inheritance. So I'm inclined to think that this is
-> > > > simply
-> > > > a
-> > > > bug similar to what we saw in xfs and ceph. But I'll let the NFS
-> > > > folks
-> > > > determine that.
-> > > > 
-> > > > XFS is only special in so far as it has a sysctl that lets it
-> > > > alter
-> > > > sgid
-> > > > inheritance behavior. And it only has that to allow for legacy
-> > > > irix
-> > > > semantics iiuc.
-> > > 
-> > > OK, so how do you expect this 'idmapped-mounts' functionality to
-> > > work
-> > > on NFS? I'm not asking about this bug in particular. I'm asking
-> > > about
-> > > what this is supposed to do in general.
-> > 
-> > Just to clarify, the bug has nothing to do with idmapped mounts. The
-> > idmapped mount testsuite always had a vfs generic part. That vfs
-> > generic
-> > part has been made available to all filesystems supporting xfstests a
-> > few weeks ago. (So far this setgid inheritance bug here has been
-> > present
-> > in 3 filesystems.)
-> 
-> The setgid stuff works just fine with regular use, when the server is
-> able to determine when to clear the bit. It only breaks with this kind
-> of test where the server is being lied to by the client's upper layers.
 
-I think you misunderstand: it is not possible to create idmapped mounts
-for a mounted NFS client. In order for a filesystem to support idmapped
-mounts it must set FS_ALLOW_IDMAP which currently only btrfs, ext4, fat,
-and xfs do. The failing test does not use idmapped mounts in any way.
+
+On 2/19/22 11:46 AM, Steve Dickson wrote:
+> Commit 14258541 add a check that had a '||'
+> instead of a '&&' which is the typo.
+> 
+> The intention of commit 14258541 was to show
+> EBUSY errors but this error is not shown when
+> the mount point does exists (commit afda50fc).
+> 
+> In the end, EBUSY are now interrupted correctly
+> in this corner case.
+> 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed... (tag: nfs-utils-2-6-2-rc2)
+
+steved.
+> ---
+>   utils/mount/stropts.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+> index 573df6e..dbdd11e 100644
+> --- a/utils/mount/stropts.c
+> +++ b/utils/mount/stropts.c
+> @@ -973,7 +973,7 @@ fall_back:
+>   	if ((result = nfs_try_mount_v3v2(mi, FALSE)))
+>   		return result;
+>   
+> -	if (errno != EBUSY || errno != EACCES)
+> +	if (errno != EBUSY && errno != EACCES)
+>   		errno = olderrno;
+>   
+>   	return result;
+
