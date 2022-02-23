@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01A024C1DAF
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 22:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C63824C1DA1
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 22:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242423AbiBWVUH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S242447AbiBWVUH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Wed, 23 Feb 2022 16:20:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242447AbiBWVUF (ORCPT
+        with ESMTP id S242403AbiBWVUF (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 16:20:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18ADC4ECDD
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDD84ECCD
         for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 13:19:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EC5C561650
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 21:19:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F5D5C340F0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4B70C618A0
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 21:19:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01782C340E7
         for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 21:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645651176;
-        bh=lM9XrmPi10WZoh8XtAcXdB0KwhFEAfra12xDra+VbPo=;
+        s=k20201202; t=1645651177;
+        bh=h+cJYvOB7K5QBDul+/hHIKM5aBG0kujRFDwNLhZJAu0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=LALSnwzSpIOBqRDfr0xhDElKqLMVJxD+Qf+K+km2RMts+D5YI/VsLzj3Pr7nqNAJZ
-         tJMLZ2Yof6i4BT1CgTwkFx+9ROIpvUq2jqV1G2I+pA41YXhd1FWQ6GJxp4ItPY064O
-         NZIM27sFZw2TEmORsizbl2qWm2FfUpbA0I8jc/gqsVxu+cvy5GK6ArpXne0cw9050V
-         b9erPqIEqjVQY5b9MR8RhppbEH2oipEQeijdbQDj+xCgIbtabF+9Ts6ZJ3mmqC4MDX
-         5QVjFNaolQI2303uPztVGkJd5yN2U2NHrPUAbwbq8bPEfca/VkdJ2BPA6Lo5i2lpfC
-         nhOdFJM1Tcw2w==
+        b=RWm0ku+P+5TqYZRZ8YPWN4WDRLLWl2Ybf4TSaSxmoFQ0+IHHtLx1KtVarb67FlTf9
+         8EZCSCIiGAsX1imB5MoZ4XxIyKFUzIIG/Gk5rcDw1V2dkyDe4DnQ/bHXP6s/4iTqWS
+         9D5SrjGsWHPgfpbb3JO5JUMvQLaPZZsxjM/RmcgqSI/ovgomcgHLeGC7F8E9gVo6k0
+         sjBbkLZ8o10Nuz9apY+Bh0L9ML/ccTbTdqQ83x7BpUhjb3KMydX5l18prkHI0iNd+J
+         iPfVDIr4C5wJboiMh/Wl4cXuWaKXEXQ2xkuESKME8sBdI0YCS7XRwuA9hv2CYbmDtQ
+         FfqX7MC2M8WeQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v7 12/21] NFS: Don't ask for readdirplus unless it can help nfs_getattr()
-Date:   Wed, 23 Feb 2022 16:12:56 -0500
-Message-Id: <20220223211305.296816-13-trondmy@kernel.org>
+Subject: [PATCH v7 13/21] NFSv4: Ask for a full XDR buffer of readdir goodness
+Date:   Wed, 23 Feb 2022 16:12:57 -0500
+Message-Id: <20220223211305.296816-14-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220223211305.296816-12-trondmy@kernel.org>
+In-Reply-To: <20220223211305.296816-13-trondmy@kernel.org>
 References: <20220223211305.296816-1-trondmy@kernel.org>
  <20220223211305.296816-2-trondmy@kernel.org>
  <20220223211305.296816-3-trondmy@kernel.org>
@@ -50,6 +50,7 @@ References: <20220223211305.296816-1-trondmy@kernel.org>
  <20220223211305.296816-10-trondmy@kernel.org>
  <20220223211305.296816-11-trondmy@kernel.org>
  <20220223211305.296816-12-trondmy@kernel.org>
+ <20220223211305.296816-13-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -64,93 +65,72 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If attribute caching is turned off, then use of readdirplus is not going
-to help stat() performance.
-Readdirplus also doesn't help if a file is being written to, since we
-will have to flush those writes in order to sync the mtime/ctime.
+Instead of pretending that we know the ratio of directory info vs
+readdirplus attribute info, just set the 'dircount' field to the same
+value as the 'maxcount' field.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/inode.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
+ fs/nfs/nfs3xdr.c | 7 ++++---
+ fs/nfs/nfs4xdr.c | 6 +++---
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index bbf4357ff727..10d17cfb8639 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -780,24 +780,26 @@ void nfs_setattr_update_inode(struct inode *inode, struct iattr *attr,
- }
- EXPORT_SYMBOL_GPL(nfs_setattr_update_inode);
- 
--static void nfs_readdirplus_parent_cache_miss(struct dentry *dentry)
-+/*
-+ * Don't request help from readdirplus if the file is being written to,
-+ * or if attribute caching is turned off
-+ */
-+static bool nfs_getattr_readdirplus_enable(const struct inode *inode)
+diff --git a/fs/nfs/nfs3xdr.c b/fs/nfs/nfs3xdr.c
+index 54a1d21cbcc6..296320f91579 100644
+--- a/fs/nfs/nfs3xdr.c
++++ b/fs/nfs/nfs3xdr.c
+@@ -1261,6 +1261,8 @@ static void nfs3_xdr_enc_readdir3args(struct rpc_rqst *req,
+ static void encode_readdirplus3args(struct xdr_stream *xdr,
+ 				    const struct nfs3_readdirargs *args)
  {
--	struct dentry *parent;
-+	return nfs_server_capable(inode, NFS_CAP_READDIRPLUS) &&
-+	       !nfs_have_writebacks(inode) && NFS_MAXATTRTIMEO(inode) > 5 * HZ;
-+}
++	uint32_t dircount = args->count;
++	uint32_t maxcount = args->count;
+ 	__be32 *p;
  
--	if (!nfs_server_capable(d_inode(dentry), NFS_CAP_READDIRPLUS))
--		return;
--	parent = dget_parent(dentry);
-+static void nfs_readdirplus_parent_cache_miss(struct dentry *dentry)
-+{
-+	struct dentry *parent = dget_parent(dentry);
- 	nfs_readdir_record_entry_cache_miss(d_inode(parent));
- 	dput(parent);
- }
- 
- static void nfs_readdirplus_parent_cache_hit(struct dentry *dentry)
- {
--	struct dentry *parent;
+ 	encode_nfs_fh3(xdr, args->fh);
+@@ -1273,9 +1275,8 @@ static void encode_readdirplus3args(struct xdr_stream *xdr,
+ 	 * readdirplus: need dircount + buffer size.
+ 	 * We just make sure we make dircount big enough
+ 	 */
+-	*p++ = cpu_to_be32(args->count >> 3);
 -
--	if (!nfs_server_capable(d_inode(dentry), NFS_CAP_READDIRPLUS))
--		return;
--	parent = dget_parent(dentry);
-+	struct dentry *parent = dget_parent(dentry);
- 	nfs_readdir_record_entry_cache_hit(d_inode(parent));
- 	dput(parent);
+-	*p = cpu_to_be32(args->count);
++	*p++ = cpu_to_be32(dircount);
++	*p = cpu_to_be32(maxcount);
  }
-@@ -835,6 +837,7 @@ int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
- 	int err = 0;
- 	bool force_sync = query_flags & AT_STATX_FORCE_SYNC;
- 	bool do_update = false;
-+	bool readdirplus_enabled = nfs_getattr_readdirplus_enable(inode);
  
- 	trace_nfs_getattr_enter(inode);
- 
-@@ -843,7 +846,8 @@ int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
- 			STATX_INO | STATX_SIZE | STATX_BLOCKS;
- 
- 	if ((query_flags & AT_STATX_DONT_SYNC) && !force_sync) {
--		nfs_readdirplus_parent_cache_hit(path->dentry);
-+		if (readdirplus_enabled)
-+			nfs_readdirplus_parent_cache_hit(path->dentry);
- 		goto out_no_revalidate;
+ static void nfs3_xdr_enc_readdirplus3args(struct rpc_rqst *req,
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 8e70b92df4cc..b7780b97dc4d 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -1605,7 +1605,8 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
+ 		FATTR4_WORD0_RDATTR_ERROR,
+ 		FATTR4_WORD1_MOUNTED_ON_FILEID,
+ 	};
+-	uint32_t dircount = readdir->count >> 1;
++	uint32_t dircount = readdir->count;
++	uint32_t maxcount = readdir->count;
+ 	__be32 *p, verf[2];
+ 	uint32_t attrlen = 0;
+ 	unsigned int i;
+@@ -1618,7 +1619,6 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
+ 			FATTR4_WORD1_SPACE_USED|FATTR4_WORD1_TIME_ACCESS|
+ 			FATTR4_WORD1_TIME_METADATA|FATTR4_WORD1_TIME_MODIFY;
+ 		attrs[2] |= FATTR4_WORD2_SECURITY_LABEL;
+-		dircount >>= 1;
  	}
- 
-@@ -893,15 +897,12 @@ int nfs_getattr(struct user_namespace *mnt_userns, const struct path *path,
- 		do_update |= cache_validity & NFS_INO_INVALID_BLOCKS;
- 
- 	if (do_update) {
--		/* Update the attribute cache */
--		if (!(server->flags & NFS_MOUNT_NOAC))
-+		if (readdirplus_enabled)
- 			nfs_readdirplus_parent_cache_miss(path->dentry);
--		else
--			nfs_readdirplus_parent_cache_hit(path->dentry);
- 		err = __nfs_revalidate_inode(server, inode);
- 		if (err)
- 			goto out;
--	} else
-+	} else if (readdirplus_enabled)
- 		nfs_readdirplus_parent_cache_hit(path->dentry);
- out_no_revalidate:
- 	/* Only return attributes that were revalidated. */
+ 	/* Use mounted_on_fileid only if the server supports it */
+ 	if (!(readdir->bitmask[1] & FATTR4_WORD1_MOUNTED_ON_FILEID))
+@@ -1634,7 +1634,7 @@ static void encode_readdir(struct xdr_stream *xdr, const struct nfs4_readdir_arg
+ 	encode_nfs4_verifier(xdr, &readdir->verifier);
+ 	p = reserve_space(xdr, 12 + (attrlen << 2));
+ 	*p++ = cpu_to_be32(dircount);
+-	*p++ = cpu_to_be32(readdir->count);
++	*p++ = cpu_to_be32(maxcount);
+ 	*p++ = cpu_to_be32(attrlen);
+ 	for (i = 0; i < attrlen; i++)
+ 		*p++ = cpu_to_be32(attrs[i]);
 -- 
 2.35.1
 
