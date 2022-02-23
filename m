@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CED04C1DB0
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 22:23:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A9594C1DA0
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 22:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242419AbiBWVUG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 16:20:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        id S242403AbiBWVUI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 16:20:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242423AbiBWVUE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 16:20:04 -0500
+        with ESMTP id S242442AbiBWVUF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 16:20:05 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 309EF4ECDA
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F09A14ECC9
         for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 13:19:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1267961650
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7FBEA6189F
         for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 21:19:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A127C340F0
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40D3C340F1
         for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 21:19:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1645651175;
-        bh=haB0TZhsy/Akzv5gxDiPKiHprJp2VAgbi/1a8/Kry2U=;
+        bh=1GcyI+UqjembG1jSn4h6EOLLDldBloU94xugDNPI6P4=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=B8TeJvTS2XemG2IiAsvYNkevY17OM+bITf/ENLWpH4VaHELNd+nV5Btzs3KHpLGJT
-         pvB6VbT/9jK/bTILKno//fr86wszbmZNaREKI+BIQ+76Vq6Txb4O7DrWoPEI+T+jZA
-         oibThjyu9ZCUh5QghmNe1dx8bJ64WZ9eeryds/Mo9cC0WGt9jy+898fjZdA5Z9DVHt
-         9UEsKp+0hn7Ec71CgNHQq60vcpWcOVheIEpVtU5EAekcHrvvFYSDwoZ1VT3C+HA1OR
-         IfiFKhoc768iqeGWibxKoyuqrYXDikEs3MCyXHt0MOQ0qYKpYwtDXb54LDAcgJbrOO
-         hvJHhraQMH+KA==
+        b=QpL1TX5HHMcuIZSU/EY8iMY9aqZFf0NeoGEwjjWwqWQ+tzouY/iL5hdn4t6AZJK8L
+         g9VSxSawKaZOnWlDMUfMxmdvDgted4betGTUtQfy45JLc2cn3dqR52AyJ104fOyXuQ
+         LM1SVGvsoqA9A0qupHbT2b3Jgu75m9Z7spdR/HsgvrMBh5Yp+DhpGpoPdlKT8PMYBA
+         RBqEupYwpRnNDeTjJS4xYeryidM00kvV98ajLH2Otp3nEVAPIJx10xXDNGqd6y6Jt5
+         cmomDQGEzY5VvEldvxG0EBR/m8XRUjQ5uLSHpMJG4N0ytyz4C0XBUG4IPPRp7aMxlf
+         /U8mbU2t4R2JQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v7 09/21] NFS: Simplify nfs_readdir_xdr_to_array()
-Date:   Wed, 23 Feb 2022 16:12:53 -0500
-Message-Id: <20220223211305.296816-10-trondmy@kernel.org>
+Subject: [PATCH v7 10/21] NFS: Reduce use of uncached readdir
+Date:   Wed, 23 Feb 2022 16:12:54 -0500
+Message-Id: <20220223211305.296816-11-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220223211305.296816-9-trondmy@kernel.org>
+In-Reply-To: <20220223211305.296816-10-trondmy@kernel.org>
 References: <20220223211305.296816-1-trondmy@kernel.org>
  <20220223211305.296816-2-trondmy@kernel.org>
  <20220223211305.296816-3-trondmy@kernel.org>
@@ -47,6 +47,7 @@ References: <20220223211305.296816-1-trondmy@kernel.org>
  <20220223211305.296816-7-trondmy@kernel.org>
  <20220223211305.296816-8-trondmy@kernel.org>
  <20220223211305.296816-9-trondmy@kernel.org>
+ <20220223211305.296816-10-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -61,66 +62,64 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Recent changes to readdir mean that we can cope with partially filled
-page cache entries, so we no longer need to rely on looping in
-nfs_readdir_xdr_to_array().
+When reading a very large directory, we want to try to keep the page
+cache up to date if doing so is inexpensive. With the change to allow
+readdir to continue reading even when the cache is incomplete, we no
+longer need to fall back to uncached readdir in order to scale to large
+directories.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+ fs/nfs/dir.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 83933b7018ea..9b0f13b52dbf 100644
+index 9b0f13b52dbf..982b5dbe30d7 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -879,6 +879,7 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 	size_t array_size;
- 	struct inode *inode = file_inode(desc->file);
- 	unsigned int dtsize = desc->dtsize;
-+	unsigned int pglen;
- 	int status = -ENOMEM;
+@@ -986,28 +986,11 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+ 	return res;
+ }
  
- 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -896,28 +897,20 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 	if (!pages)
- 		goto out;
- 
--	do {
--		unsigned int pglen;
--		status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie,
--						pages, dtsize,
--						verf_res);
--		if (status < 0)
--			break;
+-static bool nfs_readdir_dont_search_cache(struct nfs_readdir_descriptor *desc)
+-{
+-	struct address_space *mapping = desc->file->f_mapping;
+-	struct inode *dir = file_inode(desc->file);
+-	unsigned int dtsize = NFS_SERVER(dir)->dtsize;
+-	loff_t size = i_size_read(dir);
 -
--		pglen = status;
--		if (pglen == 0) {
--			nfs_readdir_page_set_eof(page);
--			break;
--		}
+-	/*
+-	 * Default to uncached readdir if the page cache is empty, and
+-	 * we're looking for a non-zero cookie in a large directory.
+-	 */
+-	return desc->dir_cookie != 0 && mapping->nrpages == 0 && size > dtsize;
+-}
 -
--		verf_arg = verf_res;
-+	status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie, pages,
-+					dtsize, verf_res);
-+	if (status < 0)
-+		goto free_pages;
+ /* Search for desc->dir_cookie from the beginning of the page cache */
+ static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+ {
+ 	int res;
  
-+	pglen = status;
-+	if (pglen != 0)
- 		status = nfs_readdir_page_filler(desc, entry, pages, pglen,
- 						 arrays, narrays);
--		desc->buffer_fills++;
--	} while (!status && nfs_readdir_page_needs_filling(page) &&
--		page_mapping(page));
-+	else
-+		nfs_readdir_page_set_eof(page);
-+	desc->buffer_fills++;
- 
-+free_pages:
- 	nfs_readdir_free_pages(pages, array_size);
- out:
- 	nfs_free_fattr(entry->fattr);
+-	if (nfs_readdir_dont_search_cache(desc))
+-		return -EBADCOOKIE;
+-
+ 	do {
+ 		if (desc->page_index == 0) {
+ 			desc->current_index = 0;
+@@ -1262,10 +1245,10 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+ 	}
+ 	if (offset != filp->f_pos) {
+ 		filp->f_pos = offset;
+-		if (!nfs_readdir_use_cookie(filp)) {
++		dir_ctx->page_index = 0;
++		if (!nfs_readdir_use_cookie(filp))
+ 			dir_ctx->dir_cookie = 0;
+-			dir_ctx->page_index = 0;
+-		} else
++		else
+ 			dir_ctx->dir_cookie = offset;
+ 		if (offset == 0)
+ 			memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
 -- 
 2.35.1
 
