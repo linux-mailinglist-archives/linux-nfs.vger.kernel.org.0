@@ -2,52 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 960484C1AEA
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 19:26:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6614C1C69
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 20:39:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243824AbiBWSY4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 13:24:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56000 "EHLO
+        id S242210AbiBWTjR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 14:39:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243822AbiBWSYz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 13:24:55 -0500
+        with ESMTP id S241631AbiBWTjR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 14:39:17 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E2A24A3DE;
-        Wed, 23 Feb 2022 10:24:27 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A5C48E6B;
+        Wed, 23 Feb 2022 11:38:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B0748614AC;
-        Wed, 23 Feb 2022 18:24:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB79C340EC;
-        Wed, 23 Feb 2022 18:24:26 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 82B196174C;
+        Wed, 23 Feb 2022 19:38:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6FB5C340E7;
+        Wed, 23 Feb 2022 19:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645640666;
-        bh=rgRvW1Qn3oSDYFubJHW9j2LhGBXXkh7qZ9/mK+YaNbo=;
+        s=k20201202; t=1645645127;
+        bh=qVQkt3d+s5a/ZV8+v4uu6+xjdzHcxqgEzM9ID7fMw0c=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m8fEWD4GaLZ7waaLQ7ty81ymd0pdAvkb/U+sTbFD9QI7N6nrANWX72lZRJhik+vPK
-         x7sX9MqPirv/+RnFB1FbdUAOgfR/+HbxoJuKEGmpy2SJ5c3PIkygTAJbyF1c9U1eDb
-         DcNWwPIV1cmo3+gLmBPQaPXch3iVcphl4v3bmM3GUcL0SJE4pXFB5wnqES0jyku+gp
-         8gkZa6sH2Oa3zSrDC1zTOn5ML6srO8K65+AiBrdeBnvA4lmhF2K77E9U6vYF96dOg1
-         yHKa9vnMF92xIoV4qkyun2OEy7n42RBNgetKpEemzvyQnAMCsZX2h92WMPDPhO8Dxb
-         8IZsjXFshYoHw==
-Received: by mail-wr1-f54.google.com with SMTP id o4so4274958wrf.3;
-        Wed, 23 Feb 2022 10:24:26 -0800 (PST)
-X-Gm-Message-State: AOAM533pLjA3R+DMOy0QMLX7Z8hxoUC5J2NC5wAdJBUeZBhnGqxRZtmj
-        3nyZrcuWKrShOj0NQSUhmyMJC0DSrq7bFIRdGiM=
-X-Google-Smtp-Source: ABdhPJwvY74YtBuDahnwr0uyH1IlIUzyz5bn91fZKzOhSgrdyjhpWP5Omd9qz1sWAAWMhxQUPbJFgoh/6Ji5wRMC0jk=
-X-Received: by 2002:a5d:6ace:0:b0:1ed:89dc:a456 with SMTP id
- u14-20020a5d6ace000000b001ed89dca456mr684028wrw.114.1645640664650; Wed, 23
- Feb 2022 10:24:24 -0800 (PST)
+        b=K4pPewD4PLTCDsXjQCcMG4KLyz3AcJAoC4qZmowpJgMTNfUqPnqcX34xngPCxqZ34
+         +pf7lFJJcEGidBoJbqADFanX8G39mCXjQa3wwdMQmIIThJ/zUk2Hp41JQnei1NEadI
+         KSlc8xfT6pjurxIpX0E1crMOOAWqxxlZ55TyXvKBhcVgK7zmkzIjNplTXoqugwWw8K
+         z9MNKANH8VX9/jCjgLubHghLuP1vVxGAxy7H2TXzV7yUKlQ/2iq0zw6re8+YgQYfpF
+         HBiniTxWitMWHSOYGgWx81mDwlO3G9r/9/8qkS4swjZqtIKtoBQbNYFnm/CYXDpsrG
+         4yUecb8vrNY8g==
+Received: by mail-wm1-f54.google.com with SMTP id bg16-20020a05600c3c9000b00380f6f473b0so1752930wmb.1;
+        Wed, 23 Feb 2022 11:38:47 -0800 (PST)
+X-Gm-Message-State: AOAM532tveEhQbGknyzSixWYuiF5zq4Og4OrH/z4DhFllmgzyFZvYUfO
+        12zU46vkgWSYmupZlLFbC15+KOXDilWcndUCTpo=
+X-Google-Smtp-Source: ABdhPJwQGbMOSGQ1aenegVucA4HjmtVArjSrN+7GuE2HssRPE0CBgTRXQhOiUfeXYINVXn3mD3MKRRi+Z1eQ/xLyz74=
+X-Received: by 2002:a05:600c:1d27:b0:37c:74bb:2b4d with SMTP id
+ l39-20020a05600c1d2700b0037c74bb2b4dmr8889086wms.82.1645645126440; Wed, 23
+ Feb 2022 11:38:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20220208215232.491780-1-anna@kernel.org> <20220208215232.491780-4-anna@kernel.org>
- <20220223165729.GH8288@magnolia>
-In-Reply-To: <20220223165729.GH8288@magnolia>
+References: <20220208215232.491780-1-anna@kernel.org> <20220208215232.491780-3-anna@kernel.org>
+ <20220223165426.GG8288@magnolia>
+In-Reply-To: <20220223165426.GG8288@magnolia>
 From:   Anna Schumaker <anna@kernel.org>
-Date:   Wed, 23 Feb 2022 13:24:08 -0500
-X-Gmail-Original-Message-ID: <CAFX2JfmJmeFusSEGLEtCXtNGyCW_3faCtMFXEzBKonw+rUO54A@mail.gmail.com>
-Message-ID: <CAFX2JfmJmeFusSEGLEtCXtNGyCW_3faCtMFXEzBKonw+rUO54A@mail.gmail.com>
-Subject: Re: [PATCH 3/4] generic/578: Test that filefrag is supported before running
+Date:   Wed, 23 Feb 2022 14:38:30 -0500
+X-Gmail-Original-Message-ID: <CAFX2Jfmfhh3NVtC3gE6pCtqdh3oy5LiHqTa2-Ggk995j-g8akA@mail.gmail.com>
+Message-ID: <CAFX2Jfmfhh3NVtC3gE6pCtqdh3oy5LiHqTa2-Ggk995j-g8akA@mail.gmail.com>
+Subject: Re: [PATCH 2/4] generic/531: Move test from 'quick' group to 'stress'
 To:     "Darrick J. Wong" <djwong@kernel.org>
 Cc:     fstests@vger.kernel.org,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
@@ -62,79 +62,80 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 11:57 AM Darrick J. Wong <djwong@kernel.org> wrote:
+On Wed, Feb 23, 2022 at 11:54 AM Darrick J. Wong <djwong@kernel.org> wrote:
 >
-> On Tue, Feb 08, 2022 at 04:52:31PM -0500, Anna Schumaker wrote:
+> On Tue, Feb 08, 2022 at 04:52:30PM -0500, Anna Schumaker wrote:
 > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > >
-> > NFS does not support FIBMAP/FIEMAP, so the check for non-shared extents
-> > on NFS v4.2 always fails with the message: "FIBMAP/FIEMAP unsupported".
-> > I added the _require_filefrag check for NFS and other filesystems that
-> > don't have FIEMAP or FIBMAP support.
+> > The comment up top says this is a stress test, so at the very least it
+> > should be added to this group. As for removing it from the quick group,
+> > making this test variable on the number of CPUs means this test could
+> > take a very long time to finish (I'm unsure exactly how long on NFS v4.1
+> > because I usually kill it after a half hour or so)
 > >
 > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > > ---
-> >  common/rc         | 14 ++++++++++++++
-> >  tests/generic/578 |  2 +-
-> >  2 files changed, 15 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/common/rc b/common/rc
-> > index b3289de985d8..73d17da9430e 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -4673,6 +4673,20 @@ _require_inode_limits()
-> >       fi
-> >  }
-> >
-> > +_require_filefrag()
-> > +{
-> > +     _require_command "$FILEFRAG_PROG" filefrag
-> > +
-> > +     local file="$TEST_DIR/filefrag_testfile"
-> > +
-> > +     echo "XX" > $file
+> > I have thought of two alternatives to this patch that would work for me:
+> >   1) Could we add an _unsupported_fs function which is the opposite of
+> >      _supported_fs to prevent tests from running on specific filesystems?
+> >   2) Would it be okay to check if $FSTYP == "nfs" when setting nr_cpus,
+> >      and set it to 1 instead? Perhaps through a function in common/rc
+> >      that other tests can use if they scale work based on cpu-count?
 >
-> Nit: You might want to rm -f $file before echoing into it, just in case
-> some future knave ;) sets up that pathname to point to a named pipe or
-> something that will hang fstests...
+> How about we create a function to estimate fs threading scalability?
+> There are probably (simple) filesystems out there with a Big Filesystem
+> Lock that won't benefit from more CPUs pounding on it...
 >
-> > +     ${FILEFRAG_PROG} $file 2>&1 | grep -q "FIBMAP/FIEMAP[[:space:]]*unsupported"
-> > +     if [ $? -eq 0 ]; then
+> # Estimate how many writer threads we should start to stress test this
+> # type of filesystem.
+> _estimate_threading_factor() {
+>         case "$FSTYP" in
+>         "nfs")
+>                 echo 1;;
+>         *)
+>                 echo $((2 * $(getconf _NPROCESSORS_ONLN) ));;
+>         esac
+> }
 >
-> ...and rm it again here to avoid leaving test files around.
+> and later:
+>
+> nr_cpus=$(_estimate_threading_factor)
+>
+> Once something like this is landed, we can customize for each FSTYP.  I
+> suspect that XFS on spinning rust might actually want "2" here, not
+> nr_cpus*2, given the sporadic complaints about this test taking much
+> longer for a few people.
 
-Sure, I can make that change. Should I update
-_require_filefrag_options() and _require_fibmap() to follow the same
-pattern while I'm at it? The new function was based off of those.
+Sure. Should I do a `git grep` for "nr_cpus" on the other tests and
+update them all at the same time, or just leave it with this one file
+to start?
 
 Anna
-
 >
-> Otherwise this looks ok to me.
+> > ---
+> >  tests/generic/531 | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/tests/generic/531 b/tests/generic/531
+> > index 5e84ca977b44..62e3cac92423 100755
+> > --- a/tests/generic/531
+> > +++ b/tests/generic/531
+> > @@ -12,7 +12,7 @@
+> >  # Use every CPU possible to stress the filesystem.
+> >  #
+> >  . ./common/preamble
+> > -_begin_fstest auto quick unlink
+> > +_begin_fstest auto stress unlink
+>
+> As for this change itself,
+> Reviewed-by: Darrick J. Wong <djwong@kernel.org>
 >
 > --D
 >
-> > +             _notrun "FIBMAP/FIEMAP not supported by this filesystem"
-> > +     fi
-> > +     rm -f $file
-> > +}
-> > +
-> >  _require_filefrag_options()
-> >  {
-> >       _require_command "$FILEFRAG_PROG" filefrag
-> > diff --git a/tests/generic/578 b/tests/generic/578
-> > index 01929a280f8c..64c813032cf8 100755
-> > --- a/tests/generic/578
-> > +++ b/tests/generic/578
-> > @@ -23,7 +23,7 @@ _cleanup()
-> >  # real QA test starts here
-> >  _supported_fs generic
-> >  _require_test_program "mmap-write-concurrent"
-> > -_require_command "$FILEFRAG_PROG" filefrag
-> > +_require_filefrag
-> >  _require_test_reflink
-> >  _require_cp_reflink
+>
+> >  testfile=$TEST_DIR/$seq.txt
 > >
+> >  # Import common functions.
 > > --
 > > 2.35.1
 > >
