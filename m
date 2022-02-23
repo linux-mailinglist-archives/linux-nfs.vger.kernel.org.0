@@ -2,122 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2A494C192F
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 17:58:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C700D4C19EA
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 18:33:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243067AbiBWQ6G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 11:58:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46640 "EHLO
+        id S242785AbiBWRcW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 12:32:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243084AbiBWQ57 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 11:57:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA99825E5;
-        Wed, 23 Feb 2022 08:57:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S234688AbiBWRcV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 12:32:21 -0500
+Received: from cc-smtpout1.netcologne.de (cc-smtpout1.netcologne.de [IPv6:2001:4dd0:100:1062:25:2:0:1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75FE73584D
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 09:31:52 -0800 (PST)
+Received: from cc-smtpin2.netcologne.de (cc-smtpin2.netcologne.de [89.1.8.202])
+        by cc-smtpout1.netcologne.de (Postfix) with ESMTP id C0E8312837;
+        Wed, 23 Feb 2022 18:31:49 +0100 (CET)
+Received: from nas2.garloff.de (xdsl-89-0-168-136.nc.de [89.0.168.136])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 61FE76006F;
-        Wed, 23 Feb 2022 16:57:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE159C340E7;
-        Wed, 23 Feb 2022 16:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645635449;
-        bh=F2OZITzbPLjglp+oG3kfzs+cx9PZX0CEj4yGVLb5+do=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XfusfLeTlhVEvrTrfhIPLapiFJ/Sq4KD8Gv9SpX81LYxhFBVAGqMZC88Nt4YdcP5Y
-         jO/M8r+C6tUPy/wkrxQh6zwDZBU5TJoOSigGrbwMlFWdv3Oq4wfJbM06Ayyav+piRu
-         I8WVPs6SD7TeykGpFwgCf/cxAHJr8/ZOxhgMlyJkABchGuuajMN5cegfr/t30+gR2r
-         oGfJIyrp5c/zp2zX1spqw6bGr69506Z9e1Gg3mhh6i22PG7sXS4O89LSOcRJou8GHf
-         Wc2M5F/sUed5F0ZJarW/AU1Ti7aO2p1RlNKFdHqS3rnFgZ7iHiLHF/DvSgJkHWMq0n
-         W68+FkQSdrlVA==
-Date:   Wed, 23 Feb 2022 08:57:29 -0800
-From:   "Darrick J. Wong" <djwong@kernel.org>
-To:     Anna Schumaker <anna@kernel.org>
-Cc:     fstests@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 3/4] generic/578: Test that filefrag is supported before
- running
-Message-ID: <20220223165729.GH8288@magnolia>
-References: <20220208215232.491780-1-anna@kernel.org>
- <20220208215232.491780-4-anna@kernel.org>
+        by cc-smtpin2.netcologne.de (Postfix) with ESMTPSA id 04AEA11F13;
+        Wed, 23 Feb 2022 18:31:44 +0100 (CET)
+Received: from [192.168.155.203] (unknown [192.168.155.10])
+        by nas2.garloff.de (Postfix) with ESMTPSA id 38E25B3B0027;
+        Wed, 23 Feb 2022 18:31:35 +0100 (CET)
+Content-Type: multipart/mixed; boundary="------------3KzMwLctDLE5c6vZGYtRFApR"
+Message-ID: <53040065-a88b-1b60-3430-27d2acd761b7@garloff.de>
+Date:   Wed, 23 Feb 2022 18:31:43 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220208215232.491780-4-anna@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Content-Language: en-US
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "Schumaker, Anna" <Anna.Schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+References: <50bd4b4d-3730-4048-fcce-6c79dfe70acf@garloff.de>
+ <8957291b-ecd1-931e-5d0c-7ef20c401e5d@garloff.de>
+ <F693AC98-DCB4-4086-AC19-EE1B71DB2551@netapp.com>
+ <be851303-b1bb-7d8d-832e-a1a3db529662@garloff.de>
+ <10d55787-7b97-8636-9426-73fdeda0a122@garloff.de>
+ <6401c5e1-8f05-5644-9bea-207640a21b77@garloff.de>
+ <CAN-5tyHC0m8nLgEi89EdKUo-kpEWsi-LUNHqAXc=gBzW+u52NA@mail.gmail.com>
+From:   Kurt Garloff <kurt@garloff.de>
+Subject: Re: 6f283634 / 1976b2b3 breaks NFS (QNAP/Linux kNFSD)
+In-Reply-To: <CAN-5tyHC0m8nLgEi89EdKUo-kpEWsi-LUNHqAXc=gBzW+u52NA@mail.gmail.com>
+X-NetCologne-Spam: L
+X-Rspamd-Queue-Id: 04AEA11F13
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Feb 08, 2022 at 04:52:31PM -0500, Anna Schumaker wrote:
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> 
-> NFS does not support FIBMAP/FIEMAP, so the check for non-shared extents
-> on NFS v4.2 always fails with the message: "FIBMAP/FIEMAP unsupported".
-> I added the _require_filefrag check for NFS and other filesystems that
-> don't have FIEMAP or FIBMAP support.
-> 
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
->  common/rc         | 14 ++++++++++++++
->  tests/generic/578 |  2 +-
->  2 files changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/common/rc b/common/rc
-> index b3289de985d8..73d17da9430e 100644
-> --- a/common/rc
-> +++ b/common/rc
-> @@ -4673,6 +4673,20 @@ _require_inode_limits()
->  	fi
->  }
->  
-> +_require_filefrag()
-> +{
-> +	_require_command "$FILEFRAG_PROG" filefrag
-> +
-> +	local file="$TEST_DIR/filefrag_testfile"
-> +
-> +	echo "XX" > $file
+This is a multi-part message in MIME format.
+--------------3KzMwLctDLE5c6vZGYtRFApR
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Nit: You might want to rm -f $file before echoing into it, just in case
-some future knave ;) sets up that pathname to point to a named pipe or
-something that will hang fstests...
+Hi Olga,
 
-> +	${FILEFRAG_PROG} $file 2>&1 | grep -q "FIBMAP/FIEMAP[[:space:]]*unsupported"
-> +	if [ $? -eq 0 ]; then
+thanks for coming back!
 
-...and rm it again here to avoid leaving test files around.
+On 23.02.22 15:22, Olga Kornievskaia wrote:
+> Hi Kurt,
+> I apologize for the late response. I have looked at the network trace.
+> The problem stems from the broken server that claims to support
+> fs_locations but then decides to never reply to the query.
+>
+> I can implement a mount option to say fs_locquery=off to handle mounts
+> against the broken servers?
+>
+> However I would like to ask if the better path forward isn't to update
+> to the knfsd where the problem is fixed?
 
-Otherwise this looks ok to me.
+Well, I have ran self-compiled kernels on Qnap appliances before (to
+work around Qnap's ext4 breakage when doing the case-independent
+name lookup), but it was a painful and cumbersome process and I don't
+want to repeat it. Appliances are not meant to use with custom
+kernels.
+Even if I do: This does not help many many other users ... Unless we
+convince Qnap to provide patches for old appliances, we'll experience
+breakage.
 
---D
+On my end, I have applied the attached patch, restricting the use
+of FS_LOCATIONS to servers that advertize NFS v4.2 or later.
 
-> +		_notrun "FIBMAP/FIEMAP not supported by this filesystem"
-> +	fi
-> +	rm -f $file
-> +}
-> +
->  _require_filefrag_options()
->  {
->  	_require_command "$FILEFRAG_PROG" filefrag
-> diff --git a/tests/generic/578 b/tests/generic/578
-> index 01929a280f8c..64c813032cf8 100755
-> --- a/tests/generic/578
-> +++ b/tests/generic/578
-> @@ -23,7 +23,7 @@ _cleanup()
->  # real QA test starts here
->  _supported_fs generic
->  _require_test_program "mmap-write-concurrent"
-> -_require_command "$FILEFRAG_PROG" filefrag
-> +_require_filefrag
->  _require_test_reflink
->  _require_cp_reflink
->  
-> -- 
-> 2.35.1
-> 
+In the patch, you'll also see clearing the bit before it gets set.
+This was spotted by seth, see
+https://bbs.archlinux.org/viewtopic.php?pid=2023983#p2023983
+In latest upstream kernels you'd also need to clear
+NFS_CAP_CASE_PRESERVING | NFS_CAP_CASE_INSENSITIVE
+so I wonder whether we should not just nullify the caps
+bit field prior to testing and selectively setting flags.
+
+With this patch, I can mount NFS volumes from Qnap knfsd
+again without any special workarounds (such as nfsver=3 or the
+to-be-implemented setting that you suggest). I have no idea
+whether or not we leave a lot features behind by restricting
+FS_LOCATIONS on the client side to servers >= NFS v4.2.
+But certainly better than breaking in a -stable kernel update,
+even if the server might be to blame.
+
+Best,
+
+-- 
+Kurt Garloff <kurt@garloff.de>
+Cologne, Germany
+
+--------------3KzMwLctDLE5c6vZGYtRFApR
+Content-Type: text/x-patch; charset=UTF-8;
+ name="nfs-restrict-fs-loc-to-nfs42.diff"
+Content-Disposition: attachment; filename="nfs-restrict-fs-loc-to-nfs42.diff"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL2ZzL25mcy9uZnM0cHJvYy5jIGIvZnMvbmZzL25mczRwcm9jLmMKaW5k
+ZXggMzg5ZmE3MmQ0Y2E5Li5mYzI5ZGFmMDBhNzIgMTAwNjQ0Ci0tLSBhL2ZzL25mcy9uZnM0
+cHJvYy5jCisrKyBiL2ZzL25mcy9uZnM0cHJvYy5jCkBAIC0zODgwLDggKzM4ODAsOCBAQCBz
+dGF0aWMgaW50IF9uZnM0X3NlcnZlcl9jYXBhYmlsaXRpZXMoc3RydWN0IG5mc19zZXJ2ZXIg
+KnNlcnZlciwgc3RydWN0IG5mc19maCAqZgogCQkJcmVzLmF0dHJfYml0bWFza1syXSAmPSBG
+QVRUUjRfV09SRDJfTkZTNDJfTUFTSzsKIAkJfQogCQltZW1jcHkoc2VydmVyLT5hdHRyX2Jp
+dG1hc2ssIHJlcy5hdHRyX2JpdG1hc2ssIHNpemVvZihzZXJ2ZXItPmF0dHJfYml0bWFzaykp
+OwotCQlzZXJ2ZXItPmNhcHMgJj0gfihORlNfQ0FQX0FDTFMgfCBORlNfQ0FQX0hBUkRMSU5L
+UyB8Ci0JCQkJICBORlNfQ0FQX1NZTUxJTktTfCBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMKTsK
+KwkJc2VydmVyLT5jYXBzICY9IH4oTkZTX0NBUF9BQ0xTIHwgTkZTX0NBUF9IQVJETElOS1Mg
+fCBORlNfQ0FQX1NZTUxJTktTCisJCQkJfCBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMIHwgTkZT
+X0NBUF9GU19MT0NBVElPTlMpOwogCQlzZXJ2ZXItPmZhdHRyX3ZhbGlkID0gTkZTX0FUVFJf
+RkFUVFJfVjQ7CiAJCWlmIChyZXMuYXR0cl9iaXRtYXNrWzBdICYgRkFUVFI0X1dPUkQwX0FD
+TCAmJgogCQkJCXJlcy5hY2xfYml0bWFzayAmIEFDTDRfU1VQUE9SVF9BTExPV19BQ0wpCkBA
+IC0zODk0LDcgKzM4OTQsOCBAQCBzdGF0aWMgaW50IF9uZnM0X3NlcnZlcl9jYXBhYmlsaXRp
+ZXMoc3RydWN0IG5mc19zZXJ2ZXIgKnNlcnZlciwgc3RydWN0IG5mc19maCAqZgogCQlpZiAo
+cmVzLmF0dHJfYml0bWFza1syXSAmIEZBVFRSNF9XT1JEMl9TRUNVUklUWV9MQUJFTCkKIAkJ
+CXNlcnZlci0+Y2FwcyB8PSBORlNfQ0FQX1NFQ1VSSVRZX0xBQkVMOwogI2VuZGlmCi0JCWlm
+IChyZXMuYXR0cl9iaXRtYXNrWzBdICYgRkFUVFI0X1dPUkQwX0ZTX0xPQ0FUSU9OUykKKwkJ
+LyogUmVzdHJpY3QgRlNfTE9DQVRJT05TIHRvIE5GUyB2NC4yKyB0byB3b3JrIGFyb3VuZCBR
+bmFwIGtuZnNkLTMuNC42IGJ1ZyAqLworCQlpZiAocmVzLmF0dHJfYml0bWFza1swXSAmIEZB
+VFRSNF9XT1JEMF9GU19MT0NBVElPTlMgJiYgbWlub3J2ZXJzaW9uID49IDIpCiAJCQlzZXJ2
+ZXItPmNhcHMgfD0gTkZTX0NBUF9GU19MT0NBVElPTlM7CiAJCWlmICghKHJlcy5hdHRyX2Jp
+dG1hc2tbMF0gJiBGQVRUUjRfV09SRDBfRklMRUlEKSkKIAkJCXNlcnZlci0+ZmF0dHJfdmFs
+aWQgJj0gfk5GU19BVFRSX0ZBVFRSX0ZJTEVJRDsK
+
+--------------3KzMwLctDLE5c6vZGYtRFApR--
