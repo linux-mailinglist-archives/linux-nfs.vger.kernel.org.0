@@ -2,105 +2,234 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 434094C155C
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 15:24:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 699894C1775
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Feb 2022 16:45:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241508AbiBWOXi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 09:23:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41034 "EHLO
+        id S242300AbiBWPoT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 10:44:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239615AbiBWOXi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 09:23:38 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7D5B1892
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 06:23:10 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id z22so44418640edd.1
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 06:23:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1B/oCfMvlO7P1vRziqRGnhWRi/hgZFJlRfuqeZS3BEo=;
-        b=bcXZdAHg80S5eA6IGDqF4AOeLbfFtLZw1Q3HUPam67/ro1UNQ/TW+Tt0LuwIgPZA60
-         UZr6bHMU1Jy1VMCFdsBJpMJDrDEe4an3KbiOSe58KOb3hJTLZTbj7qCvtpX+g5QMPr9z
-         rWASsvfSHzk5plT9ZxYC4Z3RYHv+PVbDzf0HJFLbaNe3HVv9UQa2uvifwGRlLZUDRtRM
-         mBkKA7u3AYP+jkrMV/wMF3BQidJleB23Hw8WWZ3loK/7FJJ39QB5akIJYAqYSqrKH8a2
-         Ss5jpDXDa3651y8HMRHB3pJReN43vupAkK3c/rgSlKolX/J7vYsJhFgCRCSY7GDvUyir
-         zlzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1B/oCfMvlO7P1vRziqRGnhWRi/hgZFJlRfuqeZS3BEo=;
-        b=Grv7d4yVqo+hvtkiUVCKYmY+L1LouSeub8EOcrNzWuFr+uCCvpygIpwkN3ykXQY8jX
-         ae8l3D4irfSDhJD22XZMHTnBNOeLthH63/D7KjcGOc3AWhoDRTsguI06BFTFMab5GRpm
-         0Y40AfMCTg5BEuLguadd8zMtArOxWC2+P3xYGHcyVMDCjoHoDXGwl7VPz9H59NTUMhBy
-         D6+bREYblcZ8jTrzBfqRl4uynVF4Q4R0q4y0E4DxafdXmOjR48nLixdA5LZm/wArMya8
-         ToaL65ADru/Klv3uzMhBcGkAH3aXu9PBFf/xRxW/1HsyL2wvCBYNUkj6WJdgDn3U/DeJ
-         o4jw==
-X-Gm-Message-State: AOAM532W8d7JPjJfnd8MDnaUYYolX0A1EseWwS++7xMUkSHnBwdirjVx
-        KolZvMAU1pbq2j4IihjS0kVBXi+HJ/Gg8Y/krQs=
-X-Google-Smtp-Source: ABdhPJyt67g4aNhewyXkoZ/8+MTHns5smc4vohE/dkgx78r3GQPANTTfI8vVT2t5NyV/t6hEKrFcOmU4k9bkyTAbL38=
-X-Received: by 2002:a05:6402:5191:b0:40f:b9e0:4d1b with SMTP id
- q17-20020a056402519100b0040fb9e04d1bmr32107324edd.149.1645626188866; Wed, 23
- Feb 2022 06:23:08 -0800 (PST)
+        with ESMTP id S242108AbiBWPoO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 10:44:14 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF2F0B1A85;
+        Wed, 23 Feb 2022 07:43:46 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 687B1618B9;
+        Wed, 23 Feb 2022 15:43:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 882EAC340EB;
+        Wed, 23 Feb 2022 15:43:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645631025;
+        bh=GlQlJ7gTsSs+29mQwM51uU8EyiUWcBAHlmovzgZMq5A=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ZO1F7n8icLu0SS8LTbbOz3ZX6I0UObRkMZp430mjGi8LrVJUfF2OldgHMoIAzghD1
+         At9AE3VGPsI1ocidqHDOgU8k0/e6MLECtGV+lC7G/btQp4HrkDP1F9XVJc9Yse7aUL
+         mf0cqqw5PbI7fNrGwG0UzZkZyYXVB+Ml/GZggGje4XPizTwSQvNDVGk/tnmWbsfw2l
+         lEnLltwKC4sGbZcxl2yUy66AgXuv+/maAOaFl30j3WzRX1NMcz+bNn6oSbA9LnFLzL
+         wFifgLSN3AYjBd/Ue6eziysvQHRY1lFlZ1BnUJkJQNvSyDlpcBXxF1ZkxyYDbu3pSD
+         T2gR1yrBxcBIQ==
+Message-ID: <ccc81eb5c23f933137c5da8d5050540cc54e58f0.camel@kernel.org>
+Subject: Re: [PATCH 06/11] ceph: remove reliance on bdi congestion
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jan Kara <jack@suse.cz>, Wu Fengguang <fengguang.wu@intel.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Paolo Valente <paolo.valente@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-nilfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
+        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 23 Feb 2022 10:43:42 -0500
+In-Reply-To: <164549983739.9187.14895675781408171186.stgit@noble.brown>
+References: <164549971112.9187.16871723439770288255.stgit@noble.brown>
+         <164549983739.9187.14895675781408171186.stgit@noble.brown>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
 MIME-Version: 1.0
-References: <50bd4b4d-3730-4048-fcce-6c79dfe70acf@garloff.de>
- <8957291b-ecd1-931e-5d0c-7ef20c401e5d@garloff.de> <F693AC98-DCB4-4086-AC19-EE1B71DB2551@netapp.com>
- <be851303-b1bb-7d8d-832e-a1a3db529662@garloff.de> <10d55787-7b97-8636-9426-73fdeda0a122@garloff.de>
- <6401c5e1-8f05-5644-9bea-207640a21b77@garloff.de>
-In-Reply-To: <6401c5e1-8f05-5644-9bea-207640a21b77@garloff.de>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Wed, 23 Feb 2022 09:22:57 -0500
-Message-ID: <CAN-5tyHC0m8nLgEi89EdKUo-kpEWsi-LUNHqAXc=gBzW+u52NA@mail.gmail.com>
-Subject: Re: 6f283634 / 1976b2b3 breaks NFS (QNAP/Linux kNFSD)
-To:     Kurt Garloff <kurt@garloff.de>
-Cc:     "Kornievskaia, Olga" <Olga.Kornievskaia@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "Schumaker, Anna" <Anna.Schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 8:20 AM Kurt Garloff <kurt@garloff.de> wrote:
->
-> Hi Olga,
->
-> any updates? Were you able to investigate the traces?
->
-> Breaking NFS mounts from Qnap (knfsd with 3.4.6 kernel here,
-> though Qnap might have patched it),is not something that
-> should happen with a -stable kernel update, even if the problem
-> would be on the Qnap side, which would not be completely
-> surprising.
->
-> So I think we should revert this patch at least for -stable,
-> unless we understand what's going on and have a better fix
-> than a plain revert.
+On Tue, 2022-02-22 at 14:17 +1100, NeilBrown wrote:
+> The bdi congestion tracking in not widely used and will be removed.
+> 
+> CEPHfs is one of a small number of filesystems that uses it, setting
+> just the async (write) congestion flags at what it determines are
+> appropriate times.
+> 
+> The only remaining effect of the async flag is to cause (some)
+> WB_SYNC_NONE writes to be skipped.
+> 
+> So instead of setting the flag, set an internal flag and change:
+>  - .writepages to do nothing if WB_SYNC_NONE and the flag is set
+>  - .writepage to return AOP_WRITEPAGE_ACTIVATE if WB_SYNC_NONE
+>     and the flag is set.
+> 
+> The writepages change causes a behavioural change in that pageout() can
+> now return PAGE_ACTIVATE instead of PAGE_KEEP, so SetPageActive() will
+> be called on the page which (I think) wil further delay the next attempt
+> at writeout.  This might be a good thing.
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
 
-Hi Kurt,
+Maybe. I have to wonder whether all of this is really useful.
 
-I apologize for the late response. I have looked at the network trace.
-The problem stems from the broken server that claims to support
-fs_locations but then decides to never reply to the query.
+When things are congested we'll avoid trying to issue new writeback
+requests. Note that we don't prevent new pages from being dirtied here -
+- only their being written back.
 
-I can implement a mount option to say fs_locquery=off to handle mounts
-against the broken servers?
+This also doesn't do anything in the DIO or sync_write cases, so if we
+lose caps or are doing DIO, we'll just keep churning out "unlimited"
+writes in those cases anyway.
 
-However I would like to ask if the better path forward isn't to update
-to the knfsd where the problem is fixed?
+With ceph too, we're not likely to be dealing with a single server as
+well. One OSD could be struggling to keep up but others are OK. Do we
+really want to throttle writeback to the ones that are fine?
 
->
-> Best,
-> --
->
-> Kurt Garloff <kurt@garloff.de>
->
+FWIW, the original patch that added this stuff was this:
+
+commit 2baba25019ec564cd247af74013873d69a0b8190
+Author: Yehuda Sadeh <yehuda@hq.newdream.net>
+Date:   Fri Dec 18 13:51:57 2009 -0800
+
+    ceph: writeback congestion control
+    
+    Set bdi congestion bit when amount of write data in flight exceeds adjustable
+    threshold.
+    
+    Signed-off-by: Yehuda Sadeh <yehuda@hq.newdream.net>
+    Signed-off-by: Sage Weil <sage@newdream.net>
+
+...but it's pretty scant on details.
+
+The only reason I can see to throttle writeback like this is to prevent
+you from having too much memory tied up in writeback requests, but we
+aren't limiting other requests in the same way.
+
+Maybe we would do better to just rip this stuff out?
+
+> ---
+>  fs/ceph/addr.c  |   22 +++++++++++++---------
+>  fs/ceph/super.c |    1 +
+>  fs/ceph/super.h |    1 +
+>  3 files changed, 15 insertions(+), 9 deletions(-)
+> 
+> diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+> index c98e5238a1b6..dc7af34640dd 100644
+> --- a/fs/ceph/addr.c
+> +++ b/fs/ceph/addr.c
+> @@ -563,7 +563,7 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
+>  
+>  	if (atomic_long_inc_return(&fsc->writeback_count) >
+>  	    CONGESTION_ON_THRESH(fsc->mount_options->congestion_kb))
+> -		set_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
+> +		fsc->write_congested = true;
+>  
+>  	req = ceph_osdc_new_request(osdc, &ci->i_layout, ceph_vino(inode), page_off, &len, 0, 1,
+>  				    CEPH_OSD_OP_WRITE, CEPH_OSD_FLAG_WRITE, snapc,
+> @@ -623,7 +623,7 @@ static int writepage_nounlock(struct page *page, struct writeback_control *wbc)
+>  
+>  	if (atomic_long_dec_return(&fsc->writeback_count) <
+>  	    CONGESTION_OFF_THRESH(fsc->mount_options->congestion_kb))
+> -		clear_bdi_congested(inode_to_bdi(inode), BLK_RW_ASYNC);
+> +		fsc->write_congested = false;
+>  
+>  	return err;
+>  }
+> @@ -635,6 +635,10 @@ static int ceph_writepage(struct page *page, struct writeback_control *wbc)
+>  	BUG_ON(!inode);
+>  	ihold(inode);
+>  
+> +	if (wbc->sync_mode == WB_SYNC_NONE &&
+> +	    ceph_inode_to_client(inode)->write_congested)
+> +		return AOP_WRITEPAGE_ACTIVATE;
+> +
+>  	wait_on_page_fscache(page);
+>  
+>  	err = writepage_nounlock(page, wbc);
+> @@ -707,8 +711,7 @@ static void writepages_finish(struct ceph_osd_request *req)
+>  			if (atomic_long_dec_return(&fsc->writeback_count) <
+>  			     CONGESTION_OFF_THRESH(
+>  					fsc->mount_options->congestion_kb))
+> -				clear_bdi_congested(inode_to_bdi(inode),
+> -						    BLK_RW_ASYNC);
+> +				fsc->write_congested = false;
+>  
+>  			ceph_put_snap_context(detach_page_private(page));
+>  			end_page_writeback(page);
+> @@ -760,6 +763,10 @@ static int ceph_writepages_start(struct address_space *mapping,
+>  	bool done = false;
+>  	bool caching = ceph_is_cache_enabled(inode);
+>  
+> +	if (wbc->sync_mode == WB_SYNC_NONE &&
+> +	    fsc->write_congested)
+> +		return 0;
+> +
+>  	dout("writepages_start %p (mode=%s)\n", inode,
+>  	     wbc->sync_mode == WB_SYNC_NONE ? "NONE" :
+>  	     (wbc->sync_mode == WB_SYNC_ALL ? "ALL" : "HOLD"));
+> @@ -954,11 +961,8 @@ static int ceph_writepages_start(struct address_space *mapping,
+>  
+>  			if (atomic_long_inc_return(&fsc->writeback_count) >
+>  			    CONGESTION_ON_THRESH(
+> -				    fsc->mount_options->congestion_kb)) {
+> -				set_bdi_congested(inode_to_bdi(inode),
+> -						  BLK_RW_ASYNC);
+> -			}
+> -
+> +				    fsc->mount_options->congestion_kb))
+> +				fsc->write_congested = true;
+>  
+>  			pages[locked_pages++] = page;
+>  			pvec.pages[i] = NULL;
+> diff --git a/fs/ceph/super.c b/fs/ceph/super.c
+> index bf79f369aec6..4a3b77d049c7 100644
+> --- a/fs/ceph/super.c
+> +++ b/fs/ceph/super.c
+> @@ -802,6 +802,7 @@ static struct ceph_fs_client *create_fs_client(struct ceph_mount_options *fsopt,
+>  	fsc->have_copy_from2 = true;
+>  
+>  	atomic_long_set(&fsc->writeback_count, 0);
+> +	fsc->write_congested = false;
+>  
+>  	err = -ENOMEM;
+>  	/*
+> diff --git a/fs/ceph/super.h b/fs/ceph/super.h
+> index 67f145e1ae7a..0bd97aea2319 100644
+> --- a/fs/ceph/super.h
+> +++ b/fs/ceph/super.h
+> @@ -121,6 +121,7 @@ struct ceph_fs_client {
+>  	struct ceph_mds_client *mdsc;
+>  
+>  	atomic_long_t writeback_count;
+> +	bool write_congested;
+>  
+>  	struct workqueue_struct *inode_wq;
+>  	struct workqueue_struct *cap_wq;
+> 
+> 
+
+-- 
+Jeff Layton <jlayton@kernel.org>
