@@ -2,60 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C04014C3161
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 17:32:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D65D4C3166
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 17:34:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229798AbiBXQbX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Feb 2022 11:31:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51072 "EHLO
+        id S229889AbiBXQc3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Feb 2022 11:32:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbiBXQbX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 11:31:23 -0500
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14C1E1F6377
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:30:44 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id bq11so3665205edb.2
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:30:44 -0800 (PST)
+        with ESMTP id S229899AbiBXQcZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 11:32:25 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D66E11D7BF
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:31:48 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id v2-20020a7bcb42000000b0037b9d960079so167081wmj.0
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:31:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xCDVviS1rWKTyTmf8XJHHf/Z/m+RW3azVtKj4v7AQgY=;
-        b=OSrQGbh1Bi5kgw2ugjnmX6C/DRnjH3ZOSsHOtHQ6rDHMa7wUDLCptYK0KxlQ8/D3N8
-         igc1yTfjmCc9EDhUCd4dMW3eDyxI7P97GL3n4MoyAXZQPZauigE+RpcX/UKKrEd3kYXA
-         UfbBHZV4pAnJJSsfn9CMy0vbmrIQxAv8eDZ/KYMQzOyDMHGNzXDcDWtU5KtgGgLJ3bjT
-         /UlN7XlLSgfpyMaCE+Yf57jyWBkXY7+6Iz9jZ/tCE4aWTW/r1foJ8/qTP9SSYUJFMu2u
-         //Jn47v5Cqk+HjBiyeTgicPxdXjkbW6QaHPfYd+LA2HfqJua4JpHHnRhVWBKLKHp2FC5
-         hepA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=WN4f2hH1ybEx+XDhPAJeCD41HbMfXw2pGJizsgIMI7c=;
+        b=DmT7mqWvl3z1Y8R0U8e28FrvZEhqLQW/YwIXDte74GJvlOSwm27ps7W2ibq9vTV+sT
+         P6IMNI/kemlttI+AU2PUwIpVNg0q6wFipa2rIodcx3kkevbTLXGKpyZfwdebdA/jcnos
+         X8YWNSHn2KEn5AtkcZLW71tdsZJ5woLzsdvUc1CvnZWd2WHGlILYfltGeMTZysh2i9gZ
+         /3zVQoO9OwSGNHzIE+VBsFyL23e344BoSN60PEQIuN9XP/94rNg8qSA4uxtodLryGVg6
+         d5o5Nee2dnACtIGRIAfOBmIU+oPKDmbxcBiHuV9ATbYkeHJFqdfcc9jmfgomzG57pxZM
+         guvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xCDVviS1rWKTyTmf8XJHHf/Z/m+RW3azVtKj4v7AQgY=;
-        b=CSGz7c64gQdF8Kj+Tnwq2IKZQHBmUiP0/RCyaqzuG39QLclOEiDyvkU57VPvh8ul3g
-         ETt9mxMwrnkUzuWW7EBpZSiD8ON33vtWdtHB6r+K+0jxMGe1VO+wIau8anrlW/Z9sBaE
-         +VMnKPz4e+YobjGDDjnfVIav87mzhvY48y7duzm9O1Z/Ow42YJEaXCuj7Dkyy5DoqlfM
-         zwO6HsCqDXi4jxNRWtytf5LTDYkn3HXjyCFJbdAeRiqPZ2GBMrenIzz7A8Orx3QJpEJe
-         SGnN/0DeKkdF8dVS/H4qd1YQX9orxSEhHN4iFVtXOxI7ZV6p7yXubDOiTcNJ7bZNxPH6
-         VZWQ==
-X-Gm-Message-State: AOAM531ZCIN34LAj6B0gy9IfskQyl+U7+turBVtL1prugCS5c0oM9i3z
-        uVi93mlnVgSom+dgIsa1SEF+0eKdl6w=
-X-Google-Smtp-Source: ABdhPJxE9nAx6DTzQ9EA24Nqi5F49tAYA8mqbXzGs9JMs+N1PstzLF9PKWHsbVVt317mNspCSC2Hlw==
-X-Received: by 2002:a5d:544d:0:b0:1ee:880d:3391 with SMTP id w13-20020a5d544d000000b001ee880d3391mr1597679wrv.72.1645719443475;
-        Thu, 24 Feb 2022 08:17:23 -0800 (PST)
-Received: from localhost.localdomain ([5.29.13.154])
-        by smtp.gmail.com with ESMTPSA id l26sm978851wmi.30.2022.02.24.08.17.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 24 Feb 2022 08:17:22 -0800 (PST)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2] nfsd: more robust allocation failure handling in nfsd_file_cache_init
-Date:   Thu, 24 Feb 2022 18:17:05 +0200
-Message-Id: <20220224161705.1041788-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=WN4f2hH1ybEx+XDhPAJeCD41HbMfXw2pGJizsgIMI7c=;
+        b=Gf5tEmDm51htMZawBvfP5Nv+gOehI/eX2a9q82k93MsdqxDVRTgDc3JLS79sDIsjUr
+         5iQF+94Si6ke/WsN8d2af7XCzIRYDuc0mzoqopQYiI4FppANdzMnS32NHwyJs4YwC2EA
+         FIskergh0d4jX6V9NLTmtEYw7OF01PmxxhHgarq9vRvGTE2eF19noMvOqHRt8Lh2/ifK
+         qWxS+ssOMKmobbICNMCwwXJjZf4YsMo2h6EjbobI8C5PtFhU2slPUhPZHeXnLtUCWi7x
+         SFWqJtTmsI0nP1gQ2DsAJ9oWJ+nbrwIW3U6Fw3WaPadJH4BJDMeqTq6dt6iIuzl+tyTi
+         LOtg==
+X-Gm-Message-State: AOAM533qBAoJUdUb3K6VlZvG0gMz1448vKJ3ZvpP45v1b866ZspfDVJ/
+        XSnNEOEfm6R8ULqKE3VCSjcZZYy/+1RKZwOR07UKaafqMYE=
+X-Google-Smtp-Source: ABdhPJzD5pmflAVa2mWQR4vqbqw3ek0mYqkkLjuj7FYUtwsMAvYsNrlMqBTKlz86mqwKfeUfh8tXx6el+BHnOn6DTcI=
+X-Received: by 2002:a7b:c742:0:b0:37b:dea5:3539 with SMTP id
+ w2-20020a7bc742000000b0037bdea53539mr2989331wmk.38.1645719524405; Thu, 24 Feb
+ 2022 08:18:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220223211305.296816-1-trondmy@kernel.org> <20220223211305.296816-2-trondmy@kernel.org>
+ <20220223211305.296816-3-trondmy@kernel.org> <20220223211305.296816-4-trondmy@kernel.org>
+ <20220223211305.296816-5-trondmy@kernel.org> <20220223211305.296816-6-trondmy@kernel.org>
+ <20220223211305.296816-7-trondmy@kernel.org>
+In-Reply-To: <20220223211305.296816-7-trondmy@kernel.org>
+From:   Anna Schumaker <schumaker.anna@gmail.com>
+Date:   Thu, 24 Feb 2022 11:18:27 -0500
+Message-ID: <CAFX2Jf=009PkXD0b9_NNyX1k60KJ1fz8WKswnd8iU8EFpmbROw@mail.gmail.com>
+Subject: Re: [PATCH v7 06/21] NFS: If the cookie verifier changes, we must
+ invalidate the page cache
+To:     trondmy@kernel.org
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -66,58 +69,69 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The nfsd file cache table can be pretty large and its allocation
-may require as many as 80 contigious pages.
+Hi Trond,
 
-Employ the same fix that was employed for similar issue that was
-reported for the reply cache hash table allocation several years ago
-by commit 8f97514b423a ("nfsd: more robust allocation failure handling
-in nfsd_reply_cache_init").
+On Wed, Feb 23, 2022 at 7:48 PM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Ensure that if the cookie verifier changes when we use the zero-valued
+> cookie, then we invalidate any cached pages.
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>  fs/nfs/dir.c | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+>
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 5d9367d9b651..7932d474ce00 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -945,9 +945,14 @@ static int find_and_lock_cache_page(struct nfs_readd=
+ir_descriptor *desc)
+>                 /*
+>                  * Set the cookie verifier if the page cache was empty
+>                  */
+> -               if (desc->page_index =3D=3D 0)
+> +               if (desc->last_cookie =3D=3D 0 &&
+> +                   memcmp(nfsi->cookieverf, verf, sizeof(nfsi->cookiever=
+f))) {
+>                         memcpy(nfsi->cookieverf, verf,
+>                                sizeof(nfsi->cookieverf));
+> +                       invalidate_inode_pages2_range(desc->file->f_mappi=
+ng,
+> +                                                     desc->page_index_ma=
+x + 1,
 
-Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to nfsd")
-Link: https://lore.kernel.org/linux-nfs/e3cdaeec85a6cfec980e87fc294327c0381c1778.camel@kernel.org/
-Suggested-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
+I'm getting this when I try to compile this patch:
 
-Since v1:
-- Use kvcalloc()
-- Use kvfree()
+fs/nfs/dir.c: In function =E2=80=98find_and_lock_cache_page=E2=80=99:
+fs/nfs/dir.c:953:61: error: =E2=80=98struct nfs_readdir_descriptor=E2=80=99=
+ has no
+member named =E2=80=98page_index_max=E2=80=99; did you mean =E2=80=98page_i=
+ndex=E2=80=99?
+  953 |
+desc->page_index_max + 1,
+      |
+^~~~~~~~~~~~~~
+      |                                                             page_in=
+dex
+make[2]: *** [scripts/Makefile.build:288: fs/nfs/dir.o] Error 1
+make[1]: *** [scripts/Makefile.build:550: fs/nfs] Error 2
+make: *** [Makefile:1831: fs] Error 2
+make: *** Waiting for unfinished jobs....
 
- fs/nfsd/filecache.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+It looks like the "page_index_max" field is added in patch 8.
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 8bc807c5fea4..cc2831cec669 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -632,7 +632,7 @@ nfsd_file_cache_init(void)
- 	if (!nfsd_filecache_wq)
- 		goto out;
- 
--	nfsd_file_hashtbl = kcalloc(NFSD_FILE_HASH_SIZE,
-+	nfsd_file_hashtbl = kvcalloc(NFSD_FILE_HASH_SIZE,
- 				sizeof(*nfsd_file_hashtbl), GFP_KERNEL);
- 	if (!nfsd_file_hashtbl) {
- 		pr_err("nfsd: unable to allocate nfsd_file_hashtbl\n");
-@@ -700,7 +700,7 @@ nfsd_file_cache_init(void)
- 	nfsd_file_slab = NULL;
- 	kmem_cache_destroy(nfsd_file_mark_slab);
- 	nfsd_file_mark_slab = NULL;
--	kfree(nfsd_file_hashtbl);
-+	kvfree(nfsd_file_hashtbl);
- 	nfsd_file_hashtbl = NULL;
- 	destroy_workqueue(nfsd_filecache_wq);
- 	nfsd_filecache_wq = NULL;
-@@ -811,7 +811,7 @@ nfsd_file_cache_shutdown(void)
- 	fsnotify_wait_marks_destroyed();
- 	kmem_cache_destroy(nfsd_file_mark_slab);
- 	nfsd_file_mark_slab = NULL;
--	kfree(nfsd_file_hashtbl);
-+	kvfree(nfsd_file_hashtbl);
- 	nfsd_file_hashtbl = NULL;
- 	destroy_workqueue(nfsd_filecache_wq);
- 	nfsd_filecache_wq = NULL;
--- 
-2.25.1
+Anna
 
+
+Anna
+> +                                                     -1);
+> +               }
+>         }
+>         res =3D nfs_readdir_search_array(desc);
+>         if (res =3D=3D 0)
+> --
+> 2.35.1
+>
