@@ -2,147 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFB354C2051
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 00:56:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D4D04C22F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 05:16:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241283AbiBWX4D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Feb 2022 18:56:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46444 "EHLO
+        id S229923AbiBXEOt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Feb 2022 23:14:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233982AbiBWX4C (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 18:56:02 -0500
-Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB1D5DE4B
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 15:55:33 -0800 (PST)
-Received: by mail-ej1-x62f.google.com with SMTP id bg10so769653ejb.4
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Feb 2022 15:55:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5nxVI/2uRa+9HOkFVRn+mxMDfkNFWjA0r1lzU26HgWc=;
-        b=F7cHrRgMVbn2a6ribFAPxu0YtOU4c1oKVOHnN2+/Tg2A2aLkATCIbsNU/GDlJz849K
-         yXC+lppjt609j+IxwUZhwedIBBe3/7aRFcNn5kwiCSY9ziENOb+WU0FlfHEfHK13Nk5x
-         ybBRVYM2/NEtZswS1pX9gvIM0Ucl6HhVL4+dh3MxeoV0ESJ1+XM1v7d+4MgC3/P/uWjL
-         QZDNyfmh87LfPkLdLXR31btmnkEn+HD5kchZ7P1DVLR551J0b+CCW5gC8s8Vw3I0fi+r
-         RWsskzOP+xnaEN4I+fVJiVGjtEa3lcDU1DXszUx87lgIkJJZB3WKzgtSTw17LaSz2tQz
-         T1MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5nxVI/2uRa+9HOkFVRn+mxMDfkNFWjA0r1lzU26HgWc=;
-        b=AS4wmVNOMuulfH9Sk/Ucee29rEXK4izFrCiuNRFyR4LxlJpNjeBpgim9F6maISe4Kj
-         PBqtuh5+55Z4QCJv4PoOVgstmNZiEnJUm+swqzQfmjeBHDA+WYaeMWztROU4MtggmpTa
-         RaUC56XaG8gpjOxnCr+NrOqqzDeK6l0mJr1qa4VjMzKdoBsQ2w/at6lz61g6Oa0Dy1lm
-         P0IwThDvYbN4kg1W9kV6ME/M81b2sPBjeGe48EE2NS05ELyYMoUZAcMoYCI15cd8zMdp
-         kXXL4uxIjF83cojP1/44SsFc+/QUh8r4qjYUlFj4Qw958RjQ/qH7ppKEQkJvRklN0gy0
-         KX/g==
-X-Gm-Message-State: AOAM531aqqi+/072CA0I9Bb23ALed1SggWTcz/BOXvHVLFrx/c8mCMkO
-        ejfjqDk8klmlU5mcnZECvFpwGQX3VknEVO0QZnyNCiYo
-X-Google-Smtp-Source: ABdhPJzcSmC0mEeRBY5KhuigSdk62S7EKQX76iXAx/Dk7mUNNuXQLR4BJDIki31aU6AivWlADayFRhBr1lRNNkQNjrs=
-X-Received: by 2002:a17:906:2991:b0:6cc:fc18:f10c with SMTP id
- x17-20020a170906299100b006ccfc18f10cmr98969eje.744.1645660531918; Wed, 23 Feb
- 2022 15:55:31 -0800 (PST)
+        with ESMTP id S229812AbiBXEOs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Feb 2022 23:14:48 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B391923A1A5;
+        Wed, 23 Feb 2022 20:14:18 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 57D25B821CD;
+        Thu, 24 Feb 2022 04:14:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDCB0C340E9;
+        Thu, 24 Feb 2022 04:14:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1645676056;
+        bh=duXreLDG7fFLuDafK9lAiAc6Pa1xpMj8KZPXZphy+gg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UqN+6Ug2W6ywgubYeFU/fOTTE6zNnKYpCF0oy2stgbTQpENMrkEw13hVwdXd5SgiE
+         rizfzemvJe38DNI/NIxKv7L5WmoCZ+/gBVdJKZecsJBXreQ6FJgGxJnkpbjx3G7bIY
+         RXt+e+UaSlpWny3paLjrEqfZNc7BtTAApWlNpcU1rWlbNBxI3lV8Uxkd94KvW/xQng
+         wUB1rfYZAHe7VHShpq4QlMtQ6pOMlIHSl10pF6eDmdtk8W0cIyazFKhbvdb2F4oUJW
+         qf4wBj1UetEQtGDkobG+rfCLCwF6htMp40fyYbt4ODusKVjXSlvR4U2T46GwX9Iibr
+         x8QQ6CXnn8Wqw==
+Date:   Wed, 23 Feb 2022 20:14:15 -0800
+From:   "Darrick J. Wong" <djwong@kernel.org>
+To:     Anna Schumaker <anna@kernel.org>
+Cc:     fstests@vger.kernel.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 2/4] generic/531: Move test from 'quick' group to 'stress'
+Message-ID: <20220224041415.GI8288@magnolia>
+References: <20220208215232.491780-1-anna@kernel.org>
+ <20220208215232.491780-3-anna@kernel.org>
+ <20220223165426.GG8288@magnolia>
+ <CAFX2Jfmfhh3NVtC3gE6pCtqdh3oy5LiHqTa2-Ggk995j-g8akA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20220223174041.77887-1-olga.kornievskaia@gmail.com>
-In-Reply-To: <20220223174041.77887-1-olga.kornievskaia@gmail.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Wed, 23 Feb 2022 18:55:20 -0500
-Message-ID: <CAN-5tyHy_+tBfv3PuD0CBwHbppHo3pRNwo0O9xRGjZxK0-rOjw@mail.gmail.com>
-Subject: Re: [PATCH v1] NFSv4.1 provide mount option to toggle trunking discovery
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Kurt Garloff <kurt@garloff.de>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFX2Jfmfhh3NVtC3gE6pCtqdh3oy5LiHqTa2-Ggk995j-g8akA@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I have forgotten to cc Kurt Garloff to the post.
+On Wed, Feb 23, 2022 at 02:38:30PM -0500, Anna Schumaker wrote:
+> On Wed, Feb 23, 2022 at 11:54 AM Darrick J. Wong <djwong@kernel.org> wrote:
+> >
+> > On Tue, Feb 08, 2022 at 04:52:30PM -0500, Anna Schumaker wrote:
+> > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > >
+> > > The comment up top says this is a stress test, so at the very least it
+> > > should be added to this group. As for removing it from the quick group,
+> > > making this test variable on the number of CPUs means this test could
+> > > take a very long time to finish (I'm unsure exactly how long on NFS v4.1
+> > > because I usually kill it after a half hour or so)
+> > >
+> > > Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > > ---
+> > > I have thought of two alternatives to this patch that would work for me:
+> > >   1) Could we add an _unsupported_fs function which is the opposite of
+> > >      _supported_fs to prevent tests from running on specific filesystems?
+> > >   2) Would it be okay to check if $FSTYP == "nfs" when setting nr_cpus,
+> > >      and set it to 1 instead? Perhaps through a function in common/rc
+> > >      that other tests can use if they scale work based on cpu-count?
+> >
+> > How about we create a function to estimate fs threading scalability?
+> > There are probably (simple) filesystems out there with a Big Filesystem
+> > Lock that won't benefit from more CPUs pounding on it...
+> >
+> > # Estimate how many writer threads we should start to stress test this
+> > # type of filesystem.
+> > _estimate_threading_factor() {
+> >         case "$FSTYP" in
+> >         "nfs")
+> >                 echo 1;;
+> >         *)
+> >                 echo $((2 * $(getconf _NPROCESSORS_ONLN) ));;
+> >         esac
+> > }
+> >
+> > and later:
+> >
+> > nr_cpus=$(_estimate_threading_factor)
+> >
+> > Once something like this is landed, we can customize for each FSTYP.  I
+> > suspect that XFS on spinning rust might actually want "2" here, not
+> > nr_cpus*2, given the sporadic complaints about this test taking much
+> > longer for a few people.
+> 
+> Sure. Should I do a `git grep` for "nr_cpus" on the other tests and
+> update them all at the same time, or just leave it with this one file
+> to start?
 
-On Wed, Feb 23, 2022 at 12:40 PM Olga Kornievskaia
-<olga.kornievskaia@gmail.com> wrote:
->
-> From: Olga Kornievskaia <kolga@netapp.com>
->
-> Introduce a new mount option -- trunkdiscovery,notrunkdiscovery -- to
-> toggle whether or not the client will engage in actively discovery
-> of trunking locations.
->
-> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> ---
->  fs/nfs/client.c           | 3 ++-
->  fs/nfs/fs_context.c       | 8 ++++++++
->  include/linux/nfs_fs_sb.h | 1 +
->  3 files changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index d1f34229e11a..84c080ddfd01 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -857,7 +857,8 @@ static int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *mntfh, str
->         }
->
->         if (clp->rpc_ops->discover_trunking != NULL &&
-> -                       (server->caps & NFS_CAP_FS_LOCATIONS)) {
-> +                       (server->caps & NFS_CAP_FS_LOCATIONS &&
-> +                        !(server->flags & NFS_MOUNT_NOTRUNK_DISCOVERY))) {
->                 error = clp->rpc_ops->discover_trunking(server, mntfh);
->                 if (error < 0)
->                         return error;
-> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-> index ea17fa1f31ec..ad1448a63aa0 100644
-> --- a/fs/nfs/fs_context.c
-> +++ b/fs/nfs/fs_context.c
-> @@ -80,6 +80,7 @@ enum nfs_param {
->         Opt_source,
->         Opt_tcp,
->         Opt_timeo,
-> +       Opt_trunkdiscovery,
->         Opt_udp,
->         Opt_v,
->         Opt_vers,
-> @@ -180,6 +181,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
->         fsparam_string("source",        Opt_source),
->         fsparam_flag  ("tcp",           Opt_tcp),
->         fsparam_u32   ("timeo",         Opt_timeo),
-> +       fsparam_flag_no("trunkdiscovery", Opt_trunkdiscovery),
->         fsparam_flag  ("udp",           Opt_udp),
->         fsparam_flag  ("v2",            Opt_v),
->         fsparam_flag  ("v3",            Opt_v),
-> @@ -529,6 +531,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
->                 else
->                         ctx->flags &= ~NFS_MOUNT_NOCTO;
->                 break;
-> +       case Opt_trunkdiscovery:
-> +               if (result.negated)
-> +                       ctx->flags |= NFS_MOUNT_NOTRUNK_DISCOVERY;
-> +               else
-> +                       ctx->flags &= ~NFS_MOUNT_NOTRUNK_DISCOVERY;
-> +               break;
->         case Opt_ac:
->                 if (result.negated)
->                         ctx->flags |= NFS_MOUNT_NOAC;
-> diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
-> index ca0959e51e81..d0920d7f5f9e 100644
-> --- a/include/linux/nfs_fs_sb.h
-> +++ b/include/linux/nfs_fs_sb.h
-> @@ -151,6 +151,7 @@ struct nfs_server {
->  #define NFS_MOUNT_SOFTREVAL            0x800000
->  #define NFS_MOUNT_WRITE_EAGER          0x01000000
->  #define NFS_MOUNT_WRITE_WAIT           0x02000000
-> +#define NFS_MOUNT_NOTRUNK_DISCOVERY    0x04000000
->
->         unsigned int            fattr_valid;    /* Valid attributes */
->         unsigned int            caps;           /* server capabilities */
-> --
-> 2.27.0
->
+Ugh, what a mess...
+
+Unbeknownst to me, "$here/src/feature -o" also returns the CPU count.
+If you want to get started on fixing other tests, I'd say ... add the
+new helper here for this test, and attach any other conversions as new
+patches at the end of the series.
+
+--D
+
+> Anna
+> >
+> > > ---
+> > >  tests/generic/531 | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tests/generic/531 b/tests/generic/531
+> > > index 5e84ca977b44..62e3cac92423 100755
+> > > --- a/tests/generic/531
+> > > +++ b/tests/generic/531
+> > > @@ -12,7 +12,7 @@
+> > >  # Use every CPU possible to stress the filesystem.
+> > >  #
+> > >  . ./common/preamble
+> > > -_begin_fstest auto quick unlink
+> > > +_begin_fstest auto stress unlink
+> >
+> > As for this change itself,
+> > Reviewed-by: Darrick J. Wong <djwong@kernel.org>
+> >
+> > --D
+> >
+> >
+> > >  testfile=$TEST_DIR/$seq.txt
+> > >
+> > >  # Import common functions.
+> > > --
+> > > 2.35.1
+> > >
