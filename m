@@ -2,122 +2,180 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B7EE4C33CD
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 18:33:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C80834C3435
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 18:57:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbiBXRce (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Feb 2022 12:32:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59630 "EHLO
+        id S232483AbiBXR4r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Feb 2022 12:56:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230400AbiBXRcd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 12:32:33 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2FEA1B7180
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 09:32:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645723922;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AZY6DSzY0Ic3apL9uhfBn5AmDld3KbOgbwMiHcsy3jU=;
-        b=Hu9vEKas0uyutQeTttnnb6pdKctAPBlt4Cqt172cuksAcIdaP5iwdr1rDqOyxGp4xNxNL+
-        oy4cscZmbGzahPBufvJA4pgG0893hDHzFG76UXVjuTRUXE5YjItzeP+7Kn+LTPrB/Z0RaX
-        2byTkwKGF7C3WJzbKRdXBXydJt3Ek5A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-665-WfbBF5MePkad71PsfwGYLQ-1; Thu, 24 Feb 2022 12:31:58 -0500
-X-MC-Unique: WfbBF5MePkad71PsfwGYLQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD1BD2E68;
-        Thu, 24 Feb 2022 17:31:57 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 64FD61057FDB;
-        Thu, 24 Feb 2022 17:31:57 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v7 19/21] NFS: Convert readdir page cache to use a cookie
- based index
-Date:   Thu, 24 Feb 2022 12:31:56 -0500
-Message-ID: <EF67F180-F1D8-4291-92C8-86E5D10D1F25@redhat.com>
-In-Reply-To: <20220223211305.296816-20-trondmy@kernel.org>
-References: <20220223211305.296816-1-trondmy@kernel.org>
- <20220223211305.296816-2-trondmy@kernel.org>
- <20220223211305.296816-3-trondmy@kernel.org>
- <20220223211305.296816-4-trondmy@kernel.org>
- <20220223211305.296816-5-trondmy@kernel.org>
- <20220223211305.296816-6-trondmy@kernel.org>
- <20220223211305.296816-7-trondmy@kernel.org>
- <20220223211305.296816-8-trondmy@kernel.org>
- <20220223211305.296816-9-trondmy@kernel.org>
- <20220223211305.296816-10-trondmy@kernel.org>
- <20220223211305.296816-11-trondmy@kernel.org>
- <20220223211305.296816-12-trondmy@kernel.org>
- <20220223211305.296816-13-trondmy@kernel.org>
- <20220223211305.296816-14-trondmy@kernel.org>
- <20220223211305.296816-15-trondmy@kernel.org>
- <20220223211305.296816-16-trondmy@kernel.org>
- <20220223211305.296816-17-trondmy@kernel.org>
- <20220223211305.296816-18-trondmy@kernel.org>
- <20220223211305.296816-19-trondmy@kernel.org>
- <20220223211305.296816-20-trondmy@kernel.org>
+        with ESMTP id S232480AbiBXR4m (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 12:56:42 -0500
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B43C27908D
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 09:56:11 -0800 (PST)
+Received: by mail-ej1-x62d.google.com with SMTP id a23so6035058eju.3
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 09:56:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hfX+cw27drmutk+iADCjz3rJdwBgKgrBhOzyZnYTQSo=;
+        b=eGK5XTyDqq1Fl9YXA54YhwtPJnMpBOuU/ET13qPdn5h96aBxr6opDVqYgz+c1+l+6a
+         ro2WezmH5z8Fl4rdZXyAuRGi4d/OEJMylV3vZWJT0vwPdWXe7My+O2CE4byLV4O2WlOL
+         qML3wG56SFaMw2WGLZznK6BdP7/6meYt7hlSr6YKepaAG5yB+cq1BNbxHh7TSenwKfAk
+         s/dowME7i7Vdp3e9+fyrQ1PE/9KRVtOarMJGgoS8GYybffe54gHGjduv/mgu9BzhAEqQ
+         Y522m/gQYTPMi2mYL59Up3ZB8q8PYESwsK5tvuyPvhSOmVVsN8zHQ8CctTW4Hmav2jap
+         euCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hfX+cw27drmutk+iADCjz3rJdwBgKgrBhOzyZnYTQSo=;
+        b=3gki+E91KeLnTzcJYuH8Lx4yAgb82IXS9aP/WQ/3oCedBlz9g6Yq+0+Kra/LWH1G4K
+         9HSGCEIudutDjVFfe9fpvh51wRR+kQuc1ATPUXxyf46eAZf4YmWSIsu+A2f+0cMLXeaZ
+         5KgQC4FijwyOwMONSaYNi2uNd4vzAxEJtVn6yt2d1bd7kekJhY0cPbR1FtCFob22EPgJ
+         /IQEou1hldkrYYtHKvBKSKWrbn64F30w2y+9z+NQ9LoGoSlR7oCNjuybsC8tC3d6a2qB
+         FH8LlYl77jrF1GYfOwIhgXbIYghVxyWKjkgW7nQoA2GJI0Hz8giiGT65oDgaenBhbWc4
+         wKLg==
+X-Gm-Message-State: AOAM533O+VDEwftKShN8CZnJmwPC7xeR43hzlPcA5y7l8EBcDPkVvwBf
+        34xASghUcj/PU7FS3PFMDF8Fuf9ovuz/BEFEe/o=
+X-Google-Smtp-Source: ABdhPJxEZAMduu2+ubW3g/WUnKAvXtu5z1jG4K6LtQeRPnlZQH9t2bkpFscled0cBYav22LaJUdvp+6nd3eUbBeIqgM=
+X-Received: by 2002:a17:906:2bc1:b0:6cf:d009:7f6b with SMTP id
+ n1-20020a1709062bc100b006cfd0097f6bmr3218384ejg.17.1645725369545; Thu, 24 Feb
+ 2022 09:56:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220223174041.77887-1-olga.kornievskaia@gmail.com> <77E34F86-FC2E-4CBF-AFCA-272BAA7C4040@oracle.com>
+In-Reply-To: <77E34F86-FC2E-4CBF-AFCA-272BAA7C4040@oracle.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Thu, 24 Feb 2022 12:55:58 -0500
+Message-ID: <CAN-5tyEWWbxCtWQPaMhYdP3OW-XKbCANZKx4mk9Fz=cwbQBU6g@mail.gmail.com>
+Subject: Re: [PATCH v1] NFSv4.1 provide mount option to toggle trunking discovery
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 23 Feb 2022, at 16:13, trondmy@kernel.org wrote:
-
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Thu, Feb 24, 2022 at 10:30 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
 >
-> Instead of using a linear index to address the pages, use the cookie of
-> the first entry, since that is what we use to match the page anyway.
 >
-> This allows us to avoid re-reading the entire cache on a seekdir() type
-> of operation. The latter is very common when re-exporting NFS, and is a
-> major performance drain.
 >
-> The change does affect our duplicate cookie detection, since we can no
-> longer rely on the page index as a linear offset for detecting whether
-> we looped backwards. However since we no longer do a linear search
-> through all the pages on each call to nfs_readdir(), this is less of a
-> concern than it was previously.
-> The other downside is that invalidate_mapping_pages() no longer can use
-> the page index to avoid clearing pages that have been read. A subsequent
-> patch will restore the functionality this provides to the 'ls -l'
-> heuristic.
+> > On Feb 23, 2022, at 12:40 PM, Olga Kornievskaia <olga.kornievskaia@gmail.com> wrote:
+> >
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > Introduce a new mount option -- trunkdiscovery,notrunkdiscovery -- to
+> > toggle whether or not the client will engage in actively discovery
+> > of trunking locations.
+>
+> An alternative solution might be to change the client's
+> probe to treat NFS4ERR_DELAY as "no trunking information
+> available" and then allow operation to proceed on the
+> known good transport.
 
-This is cool, but one reason I did not explore this was that the page cache
-index uses XArray, which is optimized for densly clustered indexes.  This
-particular sentence in the documentation was enough to scare me away:
+I'm not sure what you mean about "the known good transport". I don't
+think the ERR_DELAY is associated with a transport. Btw, if you saw a
+previous patch which restricts fs_location query to the main transport
+makes your statement even more confusing as it would mean there is no
+good transport. Or do you mean to say we should have trunking
+discovery done asynchronous to mount by a separate kernel thread and
+therefore not impact mount steps?
 
-"The XArray implementation is efficient when the indices used are densely
-clustered; hashing the object and using the hash as the index will not
-perform well."
+I do object to treating a single ERR_DELAY during discovery as a
+permanent error as there are legitimate reasons to a delay in looking
+up the information that can be resolved in time by the server.
+However, I don't object to putting a time limit or number of tries on
+ERR_DELAY as safety wheels.
 
-However, the "not perform well" may be orders of magnitude smaller than
-anthing like RPC.  Do you have concerns about this?
+Lastly, I think perhaps we can do both have a mount option to toggle
+discovery as well as safeguard the discovery from broken servers?
 
-Another option might be to flag the context after a seekdir, which would
-trigger a shift in the page_index or "turn on" hashed indexes, however
-that's really only going to improve the re-export case with v4 or cached
-fds.
-
-Or maybe the /first/ seekdir on a context sets its own offset into the
-pagecache - that could be a hash, and pages are filled from there.
-
-Hmm..
-
-Ben
-
+> I can't think of a reason why normal operation needs to
+> stop until this request succeeds...?
+>
+>
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> > fs/nfs/client.c           | 3 ++-
+> > fs/nfs/fs_context.c       | 8 ++++++++
+> > include/linux/nfs_fs_sb.h | 1 +
+> > 3 files changed, 11 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+> > index d1f34229e11a..84c080ddfd01 100644
+> > --- a/fs/nfs/client.c
+> > +++ b/fs/nfs/client.c
+> > @@ -857,7 +857,8 @@ static int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *mntfh, str
+> >       }
+> >
+> >       if (clp->rpc_ops->discover_trunking != NULL &&
+> > -                     (server->caps & NFS_CAP_FS_LOCATIONS)) {
+> > +                     (server->caps & NFS_CAP_FS_LOCATIONS &&
+> > +                      !(server->flags & NFS_MOUNT_NOTRUNK_DISCOVERY))) {
+> >               error = clp->rpc_ops->discover_trunking(server, mntfh);
+> >               if (error < 0)
+> >                       return error;
+> > diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> > index ea17fa1f31ec..ad1448a63aa0 100644
+> > --- a/fs/nfs/fs_context.c
+> > +++ b/fs/nfs/fs_context.c
+> > @@ -80,6 +80,7 @@ enum nfs_param {
+> >       Opt_source,
+> >       Opt_tcp,
+> >       Opt_timeo,
+> > +     Opt_trunkdiscovery,
+> >       Opt_udp,
+> >       Opt_v,
+> >       Opt_vers,
+> > @@ -180,6 +181,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+> >       fsparam_string("source",        Opt_source),
+> >       fsparam_flag  ("tcp",           Opt_tcp),
+> >       fsparam_u32   ("timeo",         Opt_timeo),
+> > +     fsparam_flag_no("trunkdiscovery", Opt_trunkdiscovery),
+> >       fsparam_flag  ("udp",           Opt_udp),
+> >       fsparam_flag  ("v2",            Opt_v),
+> >       fsparam_flag  ("v3",            Opt_v),
+> > @@ -529,6 +531,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+> >               else
+> >                       ctx->flags &= ~NFS_MOUNT_NOCTO;
+> >               break;
+> > +     case Opt_trunkdiscovery:
+> > +             if (result.negated)
+> > +                     ctx->flags |= NFS_MOUNT_NOTRUNK_DISCOVERY;
+> > +             else
+> > +                     ctx->flags &= ~NFS_MOUNT_NOTRUNK_DISCOVERY;
+> > +             break;
+> >       case Opt_ac:
+> >               if (result.negated)
+> >                       ctx->flags |= NFS_MOUNT_NOAC;
+> > diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+> > index ca0959e51e81..d0920d7f5f9e 100644
+> > --- a/include/linux/nfs_fs_sb.h
+> > +++ b/include/linux/nfs_fs_sb.h
+> > @@ -151,6 +151,7 @@ struct nfs_server {
+> > #define NFS_MOUNT_SOFTREVAL           0x800000
+> > #define NFS_MOUNT_WRITE_EAGER         0x01000000
+> > #define NFS_MOUNT_WRITE_WAIT          0x02000000
+> > +#define NFS_MOUNT_NOTRUNK_DISCOVERY  0x04000000
+> >
+> >       unsigned int            fattr_valid;    /* Valid attributes */
+> >       unsigned int            caps;           /* server capabilities */
+> > --
+> > 2.27.0
+> >
+>
+> --
+> Chuck Lever
+>
+>
+>
