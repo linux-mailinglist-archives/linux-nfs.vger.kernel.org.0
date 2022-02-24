@@ -2,151 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 942314C2AF7
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 12:35:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 804BB4C2BA8
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 13:28:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230500AbiBXLbI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Feb 2022 06:31:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38078 "EHLO
+        id S234182AbiBXM0f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Feb 2022 07:26:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbiBXLbH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 06:31:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC5928A113;
-        Thu, 24 Feb 2022 03:30:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 75964B82575;
-        Thu, 24 Feb 2022 11:30:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE696C340E9;
-        Thu, 24 Feb 2022 11:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1645702235;
-        bh=NEiEy8aPQXv4YCvSSvu1CrwZcw8hIl0XdkWsb+8kvdc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lzpWsjsxoWJp5qkJ96UqX80NBnU+UC1GaWf56BLmCibrCohLLcjWbwrFK+UFLdIgS
-         M3+IVpmCOF1k1d18hfO0Yq0UaOYTv8twIThmyrZyJtS0BaI+IBuZ8GbGCLoCA4Nfky
-         uw0HWHltyCjHAtOKREnE0y6956nBervDeobT4ihNlqBT6q1gMuJz1O6ENY8jS1nD30
-         C4oS6GqmHNV9tEmM4VTc/rfnlTTnWEqSE78JNNYFLUpVx8tkL5Lpk/To+UfIvaeCaj
-         xXDDgEeajWU/EpVj5VTsQF8+WQbltJex+TSRMA276bz7hfF54LMk8fLTqs2VgkV0uj
-         ELHbDgvjlTNSA==
-Message-ID: <e8ec98a9c4fab9b7aa099001f09ff9b11f0c3f96.camel@kernel.org>
-Subject: Re: [PATCH 06/11] ceph: remove reliance on bdi congestion
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>,
-        Wu Fengguang <fengguang.wu@intel.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org
-Date:   Thu, 24 Feb 2022 06:30:31 -0500
-In-Reply-To: <164568131640.25116.884631856219777713@noble.neil.brown.name>
-References: <164549971112.9187.16871723439770288255.stgit@noble.brown>
-        , <164549983739.9187.14895675781408171186.stgit@noble.brown>
-        , <ccc81eb5c23f933137c5da8d5050540cc54e58f0.camel@kernel.org>
-         <164568131640.25116.884631856219777713@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        with ESMTP id S229970AbiBXM0e (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 07:26:34 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 266E316042C
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 04:26:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645705563;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jG4+n6OpIU07qOGK7WklsoCEo711NW+OIh9FzbCo+m4=;
+        b=C+LrnEixyMDMllHqdwLJ1BUng59FhQNGhFehD69RxnALJMKQFE5MFRD0Po7/xR70YjbHQ7
+        Z/1FHWQsBmlFw8yPXBuwi3kkAKy3MSGcugjBJT5cdJfc10ArxE29jVyjPsUGpYkV3rX5YB
+        ucgT4MT48XTt1Vue5mjIvBN4BrBkizs=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-274-Sa7hWRq4PvuHjwiXCh0jmA-1; Thu, 24 Feb 2022 07:26:01 -0500
+X-MC-Unique: Sa7hWRq4PvuHjwiXCh0jmA-1
+Received: by mail-ej1-f71.google.com with SMTP id nb1-20020a1709071c8100b006d03c250b6fso1139625ejc.11
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 04:26:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jG4+n6OpIU07qOGK7WklsoCEo711NW+OIh9FzbCo+m4=;
+        b=SJMpPyodJa1K+Wo+VIkBTc2dgYvCWNihQ8d0CDl4q8N3mhDZOj+ROlmR1ODbBXQzPa
+         4yU36V2m6CnMWtSBf7tF3OyXubpnHGUfB32ka6tsleHhXb5gRkaPP3RITy+nS2v2yaAT
+         14axpFRMbPB7RRN+0hniie5NbUz2wPkTGqcegjPUkDd9BusPBofqr+GVxKP0kwzt9gVf
+         aIla77cl0QKqBLoZuSz5hS8KuRLpzKYQK66z6/Pk+XW/TuQh/DBszk0iK6MM41rwLgv6
+         ZD3j0q6jHQWAfnbAzvOoPyK7ws7X0RkW5QwWAIkYc3G491uRXeADVdmGS+74QLZKK/TF
+         lRAA==
+X-Gm-Message-State: AOAM530Y5gWYrIn+e0nVC7ANhRL3bweKYOsASJH5hpFB8Zldbnovxx+o
+        ZV62dFpkmgOuKYQB9AGkEVOFIyMRuIt8p53qwN6Co6aT477exVOu2cUOy4gEiRK7lxnUT/sfpBj
+        AI8mkVcd6uUZlhVpHtbc0znyHrTmkEP6Ck7qY
+X-Received: by 2002:a17:906:344b:b0:6ce:e64e:1b09 with SMTP id d11-20020a170906344b00b006cee64e1b09mr2072300ejb.54.1645705560394;
+        Thu, 24 Feb 2022 04:26:00 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyB+vtZMPgLJhj+pFuFnn4auTFNXutoiZT8NBe9soGbdcNKg5KrwBaD9disL2AIwPPG6fiecsTcZkIgpTyrWiU=
+X-Received: by 2002:a17:906:344b:b0:6ce:e64e:1b09 with SMTP id
+ d11-20020a170906344b00b006cee64e1b09mr2072286ejb.54.1645705560171; Thu, 24
+ Feb 2022 04:26:00 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20220223211305.296816-1-trondmy@kernel.org>
+In-Reply-To: <20220223211305.296816-1-trondmy@kernel.org>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Thu, 24 Feb 2022 07:25:24 -0500
+Message-ID: <CALF+zOnjJoy6mEZ9R0UwxDuSKRB5ODJmh=QnjkM+8wC_AJut6A@mail.gmail.com>
+Subject: Re: [PATCH v7 00/21] Readdir improvements
+To:     trondmy@kernel.org
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-02-24 at 16:41 +1100, NeilBrown wrote:
-> On Thu, 24 Feb 2022, Jeff Layton wrote:
-> > On Tue, 2022-02-22 at 14:17 +1100, NeilBrown wrote:
-> > > The bdi congestion tracking in not widely used and will be removed.
-> > > 
-> > > CEPHfs is one of a small number of filesystems that uses it, setting
-> > > just the async (write) congestion flags at what it determines are
-> > > appropriate times.
-> > > 
-> > > The only remaining effect of the async flag is to cause (some)
-> > > WB_SYNC_NONE writes to be skipped.
-> > > 
-> > > So instead of setting the flag, set an internal flag and change:
-> > >  - .writepages to do nothing if WB_SYNC_NONE and the flag is set
-> > >  - .writepage to return AOP_WRITEPAGE_ACTIVATE if WB_SYNC_NONE
-> > >     and the flag is set.
-> > > 
-> > > The writepages change causes a behavioural change in that pageout() can
-> > > now return PAGE_ACTIVATE instead of PAGE_KEEP, so SetPageActive() will
-> > > be called on the page which (I think) wil further delay the next attempt
-> > > at writeout.  This might be a good thing.
-> > > 
-> > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > 
-> > Maybe. I have to wonder whether all of this is really useful.
-> > 
-> > When things are congested we'll avoid trying to issue new writeback
-> > requests. Note that we don't prevent new pages from being dirtied here -
-> > - only their being written back.
-> > 
-> > This also doesn't do anything in the DIO or sync_write cases, so if we
-> > lose caps or are doing DIO, we'll just keep churning out "unlimited"
-> > writes in those cases anyway.
-> 
-> I think the point of congestion tracking is to differentiate between
-> sync and async IO.  Or maybe "required" and "optional".
-> Eventually the "optional" IO will become required, but if we can delay
-> it until a time when there is less "required" io, then maybe we can
-> improve perceived latency.
-> 
-> "optional" IO here is write-back and read-ahead.  If the load of
-> "required" IO is bursty, and if we can shuffle that optional stuff into
-> the quiet periods, we might win.
-> 
+On Wed, Feb 23, 2022 at 4:24 PM <trondmy@kernel.org> wrote:
+>
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> The current NFS readdir code will always try to maximise the amount of
+> readahead it performs on the assumption that we can cache anything that
+> isn't immediately read by the process.
+> There are several cases where this assumption breaks down, including
+> when the 'ls -l' heuristic kicks in to try to force use of readdirplus
+> as a batch replacement for lookup/getattr.
+>
+> This series also implement Ben's page cache filter to ensure that we can
+> improve the ability to share cached data between processes that are
+> reading the same directory at the same time, and to avoid live-locks
+> when the directory is simultaneously changing.
+>
+> --
+> v2: Remove reset of dtsize when NFS_INO_FORCE_READDIR is set
+> v3: Avoid excessive window shrinking in uncached_readdir case
+> v4: Track 'ls -l' cache hit/miss statistics
+>     Improved algorithm for falling back to uncached readdir
+>     Skip readdirplus when files are being written to
+> v5: bugfixes
+>     Skip readdirplus when the acdirmax/acregmax values are low
+>     Request a full XDR buffer when doing READDIRPLUS
+> v6: Add tracing
+>     Don't have lookup request readdirplus when it won't help
+> v7: Implement Ben's page cache filter
+>     Reduce the use of uncached readdir
+>     Change indexing of the page cache to improve seekdir() performance.
+>
+> Trond Myklebust (21):
+>   NFS: constify nfs_server_capable() and nfs_have_writebacks()
+>   NFS: Trace lookup revalidation failure
+>   NFS: Use kzalloc() to avoid initialising the nfs_open_dir_context
+>   NFS: Calculate page offsets algorithmically
+>   NFS: Store the change attribute in the directory page cache
+>   NFS: If the cookie verifier changes, we must invalidate the page cache
+>   NFS: Don't re-read the entire page cache to find the next cookie
+>   NFS: Adjust the amount of readahead performed by NFS readdir
+>   NFS: Simplify nfs_readdir_xdr_to_array()
+>   NFS: Reduce use of uncached readdir
+>   NFS: Improve heuristic for readdirplus
+>   NFS: Don't ask for readdirplus unless it can help nfs_getattr()
+>   NFSv4: Ask for a full XDR buffer of readdir goodness
+>   NFS: Readdirplus can't help lookup for case insensitive filesystems
+>   NFS: Don't request readdirplus when revalidation was forced
+>   NFS: Add basic readdir tracing
+>   NFS: Trace effects of readdirplus on the dcache
+>   NFS: Trace effects of the readdirplus heuristic
+>   NFS: Convert readdir page cache to use a cookie based index
+>   NFS: Fix up forced readdirplus
+>   NFS: Remove unnecessary cache invalidations for directories
+>
+>  fs/nfs/dir.c           | 450 ++++++++++++++++++++++++-----------------
+>  fs/nfs/inode.c         |  46 ++---
+>  fs/nfs/internal.h      |   4 +-
+>  fs/nfs/nfs3xdr.c       |   7 +-
+>  fs/nfs/nfs4proc.c      |   2 -
+>  fs/nfs/nfs4xdr.c       |   6 +-
+>  fs/nfs/nfstrace.h      | 122 ++++++++++-
+>  include/linux/nfs_fs.h |  19 +-
+>  8 files changed, 421 insertions(+), 235 deletions(-)
+>
+> --
+> 2.35.1
+>
 
-In that case, maybe we should be counting in-flight reads too and deny
-readahead when the count crosses some threshold? It seems a bit silly to
-only look at writes when it comes to "congestion".
+Trond I have been following your work here with periodic tests though
+not fully following all the patches content.  As you know this is a tricky
+area and seems to be a hotspot area for customers that use NFS, with
+many scenarios that may go wrong.  Thanks for your work, which now
+includes even some tracepoints and Ben's page cache filler.
 
-> Whether this is a real need is an important question that I don't have an
-> answer for.  And whether it is better to leave delayed requests in the
-> page cache, or in the low-level queue with sync requests able to
-> over-take them - I don't know.  If you have multiple low-level queue as
-> you say you can with ceph, then lower might be better.
-> 
-> The block layer has REQ_RAHEAD ..  maybe those request get should get a
-> lower priority ... though I don't think they do.
-> NFS has a 3 level priority queue, with write-back going at a lower
-> priority ... I think... for NFSv3 at least.
-> 
-> Sometimes I suspect that as all our transports have become faster, we
-> have been able to ignore the extra latency caused by poor scheduling of
-> optional requests.  But at other times when my recently upgraded desktop
-> is struggling to view a web page while compiling a kernel ...  I wonder
-> if maybe we don't have the balance right any more.
-> 
-> So maybe you are right - maybe we can rip all this stuff out.
-> 
+This patchset seems to be the best of all the ones so far.  My initial
+tests (listings when modifying as well as idle directories) indicate
+that the issue that Gonzalo reported on Jan 14th [1] looks to be fixed
+by this set, but I'll let him confirm.  I'll do some more testing and
+let you know if there's anything else I find.  If there're some
+scenarios (mount options, servers, etc) you need more testing on, let
+us know and we'll try to make that happen.
 
-I lean more toward just removing it. The existing implementation seems a
-bit half-baked with the gaps in what's being counted. Granted, the
-default congestion threshold is pretty high with modern memory sizes, so
-it probably doesn't come into play much in practice, but removing it
-would reduce some complexity in the client.
+[1] [PATCH] NFS: limit block size reported for directories
 
--- 
-Jeff Layton <jlayton@kernel.org>
