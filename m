@@ -2,181 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31D874C3073
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 16:55:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A3514C30D0
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 17:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236715AbiBXPyQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Feb 2022 10:54:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38990 "EHLO
+        id S229501AbiBXQCI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Feb 2022 11:02:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236425AbiBXPyP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 10:54:15 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4ECF916DADC
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 07:53:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645718024;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VTtRTgaTWjdBr5BQelwxfuEZ3dA6eZVrqE8Rtjf1wQc=;
-        b=QFT9t56yQ0Dn55MCyfUDTLiQOoPB/ovlfI5zmkeeRlZ1W5QzKglhfM6sczEHB4pagjMHch
-        8IohhAHBvg0nUM3EvwIVi7wl+s3waM/s/+IDz1EJtx6JNo05dlC1j21pkz4GolhB7nON8L
-        qItH+FHeZV/ZtkTt9gjagIcGq8EqRAI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-593-G2mD_BUpPnWvjTA_XdNoFA-1; Thu, 24 Feb 2022 10:53:41 -0500
-X-MC-Unique: G2mD_BUpPnWvjTA_XdNoFA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EECB751AE;
-        Thu, 24 Feb 2022 15:53:39 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9998783796;
-        Thu, 24 Feb 2022 15:53:39 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v7 16/21] NFS: Add basic readdir tracing
-Date:   Thu, 24 Feb 2022 10:53:38 -0500
-Message-ID: <27661489-682E-427D-8644-6F768AC6C4E0@redhat.com>
-In-Reply-To: <20220223211305.296816-17-trondmy@kernel.org>
-References: <20220223211305.296816-1-trondmy@kernel.org>
- <20220223211305.296816-2-trondmy@kernel.org>
- <20220223211305.296816-3-trondmy@kernel.org>
- <20220223211305.296816-4-trondmy@kernel.org>
- <20220223211305.296816-5-trondmy@kernel.org>
- <20220223211305.296816-6-trondmy@kernel.org>
- <20220223211305.296816-7-trondmy@kernel.org>
- <20220223211305.296816-8-trondmy@kernel.org>
- <20220223211305.296816-9-trondmy@kernel.org>
- <20220223211305.296816-10-trondmy@kernel.org>
- <20220223211305.296816-11-trondmy@kernel.org>
- <20220223211305.296816-12-trondmy@kernel.org>
- <20220223211305.296816-13-trondmy@kernel.org>
- <20220223211305.296816-14-trondmy@kernel.org>
- <20220223211305.296816-15-trondmy@kernel.org>
- <20220223211305.296816-16-trondmy@kernel.org>
- <20220223211305.296816-17-trondmy@kernel.org>
+        with ESMTP id S230205AbiBXQCH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 11:02:07 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097F916F941
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:01:28 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id m13-20020a7bca4d000000b00380e379bae2so66254wml.3
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 08:01:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+FAmlnfoEU3iGAMqqc0W5/DtwyEAItLWfu/s+LfAkhY=;
+        b=OV/1Pcv3W38uWvAGgldeIw9Zcx6zc+naVdoVuMXofRXtsrfvVv26aJJOc4mWc9hAY6
+         0ex+RFd0ZYFg+mqwZnb/Pj39/9aji/yuMtHSX9oz+JoMgYE5H0Rgn1iXxdv8vggNm+3r
+         yeiREWDwgMxD7Ris93AuoumBXaGpqIvOh/2Kc5vE2EUSqkrU2qzPg5TsWiwKXw1HyDfK
+         QYjoHFtjfjZVw89IbkjvSL3L/UkiIR/XZBH9AY4vn2lxm8vurFi7zfBvCNso1XzCGvy3
+         j8rFccWuWAJzdpCJ7HG1q4PLIr2aZjxVo1mV96LKnSI5mDmCPNkJytioEQcDr63qw0gi
+         xN9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=+FAmlnfoEU3iGAMqqc0W5/DtwyEAItLWfu/s+LfAkhY=;
+        b=KXb929Nvyai3k51G/bqmhrfinJ0dbKr4cLV8J20nc38OvmbW+d59WUD/J915no4d4R
+         JDhUW0a8qMcu/Kxjo3XrFSYGYlttnIX+1YMuKl7VPYpARUNENO3iY+69EhUZ9XIcXn1C
+         xygwKX+O5CEREoDk0PW/gfakuL1i9HdQhG0MjvXoktwkq0gtn3EfK1jASGVdEJtfnceM
+         v5whlGXWlcDweICCLYKKdA2NqlQ0Df8Akodt8emopGTeE3zMHjHv7rlKPKU/sq0PRpV1
+         BNjgtGv4gNEJw9GqiAesscTH2/VHpzaLZrMAL8O3YKHIMT5hzFb9DyQgmoYDZL8/4aC1
+         3pIw==
+X-Gm-Message-State: AOAM532jYR6jPzcmirXKo4yz+UAi82KJM1MJx9U2RHoQjuaMM3BtMCk8
+        XPoX6o9/On5jCt1T1XhJMas=
+X-Google-Smtp-Source: ABdhPJw+6xF7dDYC6U4mjAeMbAusgXhoyWegkH+4a47WOAoLK4PiGtAfEY8QJAY64xziuW0FUDSRjQ==
+X-Received: by 2002:a05:600c:22d1:b0:381:1008:f861 with SMTP id 17-20020a05600c22d100b003811008f861mr2946577wmg.120.1645718485968;
+        Thu, 24 Feb 2022 08:01:25 -0800 (PST)
+Received: from localhost.localdomain ([77.137.71.153])
+        by smtp.gmail.com with ESMTPSA id f14sm3310804wmq.3.2022.02.24.08.01.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 24 Feb 2022 08:01:25 -0800 (PST)
+From:   Amir Goldstein <amir73il@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH] nfsd: more robust allocation failure handling in nfsd_file_cache_init
+Date:   Thu, 24 Feb 2022 18:01:19 +0200
+Message-Id: <20220224160119.1034749-1-amir73il@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 23 Feb 2022, at 16:13, trondmy@kernel.org wrote:
+The nfsd file cache table can be pretty large and its allocation
+may require as many as 80 contigious pages.
 
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> Add tracing to track how often the client goes to the server for 
-> updated
-> readdir information.
->
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> ---
->  fs/nfs/dir.c      | 13 ++++++++-
->  fs/nfs/nfstrace.h | 68 
-> +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 80 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 54f0d37485d5..41e2d02d8611 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -969,10 +969,14 @@ static int find_and_lock_cache_page(struct 
-> nfs_readdir_descriptor *desc)
->  		return -ENOMEM;
->  	if (nfs_readdir_page_needs_filling(desc->page)) {
->  		desc->page_index_max = desc->page_index;
-> +		trace_nfs_readdir_cache_fill(desc->file, nfsi->cookieverf,
-> +					     desc->last_cookie,
-> +					     desc->page_index, desc->dtsize);
->  		res = nfs_readdir_xdr_to_array(desc, nfsi->cookieverf, verf,
->  					       &desc->page, 1);
->  		if (res < 0) {
->  			nfs_readdir_page_unlock_and_put_cached(desc);
-> +			trace_nfs_readdir_cache_fill_done(inode, res);
->  			if (res == -EBADCOOKIE || res == -ENOTSYNC) {
->  				invalidate_inode_pages2(desc->file->f_mapping);
->  				desc->page_index = 0;
-> @@ -1090,7 +1094,14 @@ static int uncached_readdir(struct 
-> nfs_readdir_descriptor *desc)
->  	desc->duped = 0;
->  	desc->page_index_max = 0;
->
-> +	trace_nfs_readdir_uncached(desc->file, desc->verf, 
-> desc->last_cookie,
-> +				   -1, desc->dtsize);
-> +
->  	status = nfs_readdir_xdr_to_array(desc, desc->verf, verf, arrays, 
-> sz);
-> +	if (status < 0) {
-> +		trace_nfs_readdir_uncached_done(file_inode(desc->file), status);
-> +		goto out_free;
-> +	}
->
->  	for (i = 0; !desc->eob && i < sz && arrays[i]; i++) {
->  		desc->page = arrays[i];
-> @@ -1109,7 +1120,7 @@ static int uncached_readdir(struct 
-> nfs_readdir_descriptor *desc)
->  			 i < (desc->page_index_max >> 1))
->  			nfs_shrink_dtsize(desc);
->  	}
-> -
-> +out_free:
->  	for (i = 0; i < sz && arrays[i]; i++)
->  		nfs_readdir_page_array_free(arrays[i]);
->  out:
-> diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-> index 3672f6703ee7..c2d0543ecb2d 100644
-> --- a/fs/nfs/nfstrace.h
-> +++ b/fs/nfs/nfstrace.h
-> @@ -160,6 +160,8 @@ DEFINE_NFS_INODE_EVENT(nfs_fsync_enter);
->  DEFINE_NFS_INODE_EVENT_DONE(nfs_fsync_exit);
->  DEFINE_NFS_INODE_EVENT(nfs_access_enter);
->  DEFINE_NFS_INODE_EVENT_DONE(nfs_set_cache_invalid);
-> +DEFINE_NFS_INODE_EVENT_DONE(nfs_readdir_cache_fill_done);
-> +DEFINE_NFS_INODE_EVENT_DONE(nfs_readdir_uncached_done);
->
->  TRACE_EVENT(nfs_access_exit,
->  		TP_PROTO(
-> @@ -271,6 +273,72 @@ DEFINE_NFS_UPDATE_SIZE_EVENT(wcc);
->  DEFINE_NFS_UPDATE_SIZE_EVENT(update);
->  DEFINE_NFS_UPDATE_SIZE_EVENT(grow);
->
-> +DECLARE_EVENT_CLASS(nfs_readdir_event,
-> +		TP_PROTO(
-> +			const struct file *file,
-> +			const __be32 *verifier,
-> +			u64 cookie,
-> +			pgoff_t page_index,
-> +			unsigned int dtsize
-> +		),
-> +
-> +		TP_ARGS(file, verifier, cookie, page_index, dtsize),
-> +
-> +		TP_STRUCT__entry(
-> +			__field(dev_t, dev)
-> +			__field(u32, fhandle)
-> +			__field(u64, fileid)
-> +			__field(u64, version)
-> +			__array(char, verifier, NFS4_VERIFIER_SIZE)
-> +			__field(u64, cookie)
-> +			__field(pgoff_t, index)
-> +			__field(unsigned int, dtsize)
+Employ the same fix that was employed for similar issue that was
+reported for the reply cache hash table allocation several years ago
+by commit 8f97514b423a ("nfsd: more robust allocation failure handling
+in nfsd_reply_cache_init").
 
+Fixes: 65294c1f2c5e ("nfsd: add a new struct file caching facility to nfsd")
+Link: https://lore.kernel.org/linux-nfs/e3cdaeec85a6cfec980e87fc294327c0381c1778.camel@kernel.org/
+Suggested-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+---
+ fs/nfsd/filecache.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-I'd like to be able to see the change_attr too, whether or not it's the
-cache_change_attribute or i_version.
-
-Ben
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 8bc807c5fea4..b75cd6d1e331 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -60,6 +60,9 @@ static struct fsnotify_group		*nfsd_file_fsnotify_group;
+ static atomic_long_t			nfsd_filecache_count;
+ static struct delayed_work		nfsd_filecache_laundrette;
+ 
++#define NFSD_FILE_HASHTBL_SIZE \
++	array_size(NFSD_FILE_HASH_SIZE, sizeof(*nfsd_file_hashtbl))
++
+ static void nfsd_file_gc(void);
+ 
+ static void
+@@ -632,8 +635,7 @@ nfsd_file_cache_init(void)
+ 	if (!nfsd_filecache_wq)
+ 		goto out;
+ 
+-	nfsd_file_hashtbl = kcalloc(NFSD_FILE_HASH_SIZE,
+-				sizeof(*nfsd_file_hashtbl), GFP_KERNEL);
++	nfsd_file_hashtbl = kvzalloc(NFSD_FILE_HASHTBL_SIZE, GFP_KERNEL);
+ 	if (!nfsd_file_hashtbl) {
+ 		pr_err("nfsd: unable to allocate nfsd_file_hashtbl\n");
+ 		goto out_err;
+-- 
+2.25.1
 
