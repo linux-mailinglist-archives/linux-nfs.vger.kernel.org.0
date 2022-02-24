@@ -2,66 +2,150 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9E2C4C2F00
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 16:09:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 477594C2F06
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Feb 2022 16:10:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233452AbiBXPI3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Feb 2022 10:08:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38574 "EHLO
+        id S235847AbiBXPJe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Feb 2022 10:09:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231623AbiBXPI2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 10:08:28 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E94042A2F
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 07:07:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1645715277;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zW8MpZRIcYdegour5AdeFQYVjH6vtNmq9KFcn/WZe70=;
-        b=N+pDUYgdSCx9BCD+AfKkWiri1+k5L0HiwXbJqEe8ftQaByuh3zcAdYQdN/1/v9zEUlovCV
-        nKeQ40c+57PYVfMcvWUzBZiqk3a10YD7MwoFRmh16419ehkLZ9g/rG3MHjvOkM1MmaOXs5
-        x/fndCvuue8xWV0tPZxOJypKTz7ShUk=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-641-3243B_PZPu6tNAgCbiB9uA-1; Thu, 24 Feb 2022 10:07:56 -0500
-X-MC-Unique: 3243B_PZPu6tNAgCbiB9uA-1
-Received: by mail-ej1-f70.google.com with SMTP id m12-20020a1709062acc00b006cfc98179e2so1351843eje.6
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Feb 2022 07:07:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zW8MpZRIcYdegour5AdeFQYVjH6vtNmq9KFcn/WZe70=;
-        b=P/mkBsQY0Z09DIfwr0NrVeKWz9sabcGABRlvgPEvZ1VasJHClHAOQ73KgG4dT/QWa5
-         ixxNOo7zWN2n92R7bMjnMgMzFTcPtfDgZC4cwRJfi93ScB9oWmpo4QdBgffYqDZVZe/l
-         SbzwjNLuXLsHKgq13z8OPciue8r6aMyBjERDCI+0NpWwiGN/iGAhZdJbJfcHG+bzFigD
-         f1+7ZqRMI//MJ5a5LkP98R1Kb0qTvvS5e7McysYRVKQvkr5aF1Xa1zikABSUQ+/rnvKu
-         BSPTMFsd67SOMH2/r67Qx39k8Urjn5TVfYbR2p0EpFxJkclc10HH36WiM8PDPFFPrOUd
-         P4qg==
-X-Gm-Message-State: AOAM532RyIRBKb32sFwdwrkMYZ1QFSiSZO7QYbUy2c0Cz4RdNhjs61Wi
-        EPzGLXXlLsEGZLbx5mnhYB18aDU5tvXDuAR2qKXollbLdkaxx+55aR49gl2AlLN/kcreheMH5Qk
-        U6GjhRSO5Qxl9re8R1pHmcpe6/wIMakH37HTR
-X-Received: by 2002:aa7:c982:0:b0:406:3862:a717 with SMTP id c2-20020aa7c982000000b004063862a717mr2742175edt.358.1645715274471;
-        Thu, 24 Feb 2022 07:07:54 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJx/bJLORKKAWCX9RlnSJli1ofbnNUkj8eGydLZvxOJt6Oy7Q3WTIi49EUjY41Sm0oquCVNr0n3mEB+SsV0eD5g=
-X-Received: by 2002:aa7:c982:0:b0:406:3862:a717 with SMTP id
- c2-20020aa7c982000000b004063862a717mr2742152edt.358.1645715274269; Thu, 24
- Feb 2022 07:07:54 -0800 (PST)
+        with ESMTP id S235845AbiBXPJ1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Feb 2022 10:09:27 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B436199E02;
+        Thu, 24 Feb 2022 07:08:57 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 21OCYaaP016939;
+        Thu, 24 Feb 2022 15:08:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=cKgZFMnr7zLIqT/NsE7r5i+SF88XqJpO54RNqjSzf9s=;
+ b=H0WBJ7RPyPvfTrz11LSzKjnRjJj8GGbOdcJh1zcYeG/HV1jsfzn+ZEsapOY2K9qd/HJJ
+ 1jGZV53klcgYKvxbgSkmTHKpInI4DHDpXRKc8BDq6KqJzE/2XIxlIGVv6BvG0hZREFby
+ qV6SMgp6Ue2XPV4PVz5w18YdIyVXpqtGGAVfnYLlCDWplvq08uI54dsjWLUSYOHmm6cS
+ B/EHjznk4HZRi7QVkyrU2R2KTI3PYQWnPrtm04Ev6bbEWgLEVk8vBmpIPEXK86JRrEC5
+ /hb+nK2UC8PndAm/JWQc8U3nC5VvJHUj9gmfhcj+h8mfwsCWmTCuCg/vVVoN5mqhWixg TQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ect3cqfg5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Feb 2022 15:08:48 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 21OF6wu9027462;
+        Thu, 24 Feb 2022 15:08:46 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2175.outbound.protection.outlook.com [104.47.59.175])
+        by userp3020.oracle.com with ESMTP id 3eat0qwre5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 24 Feb 2022 15:08:46 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mXzgIbFH2bg1W8VLjJT/XD1R0WSoqkoM7efzdYPRvWPbIB4rHafu/Hn6JAI4ZzyUn8KXkvhXft/FQKDDqdsJMv1nCbNKxSoNKNHfANqJIdCTd7kLfefrz52gGsWCyC0kvpgl4lIiHDQ+ZX7jiGEIWC9o3TAQbWV7UGGEyuJ/OAjKZWX1KrbV1ooebRQLJMLNWDCRkTTrVLxKZ5e6B+3eMs48l8+ovojKeFN3vvR4rvhUYP4C599YXVirplk3B5TLDVJK/2hiV1puW4VBsBdsYTtB5JTJK2UVcL3T8kAU68aWo+aHeWBTCkI/Ks0MF+Wxiv+9WrrUMyRBLMWBDOeo9A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cKgZFMnr7zLIqT/NsE7r5i+SF88XqJpO54RNqjSzf9s=;
+ b=LgJBuePgdZ2hCkljxPA0iOweMcbpcfyC+0c1SQQeIIhlY2jYSupgEYOD/bpK0+jUeiP0nasMzfI4CfAlD4f6Y2fHYJntbNzd4IBhqnp1C84z8FN10qSDKmqofV51lyfd+dMKiRU9k/5pO3FrbiaMzcNy+KLNOEAKa/EMcWktat0Zcytm5heGscbSUkXXfsACiam067qvS/6BzgNGLLCM5IGq1S4C6fJD7KboRJxBrPjqJv9BaYuGultSQjf8d909oMwRvUvogeO4O5xzRetw1mHrVUUo3M3JclrWXPA3BC+elKas7+dy7Zy+A3hqIRmZn4qY34lvQylaoFQs9czTHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cKgZFMnr7zLIqT/NsE7r5i+SF88XqJpO54RNqjSzf9s=;
+ b=jMc61HZE77jUf/JerauXCvDMtT+wgFhdo2h4lgSLMg+bZyrSY7Ai1N5GY7A6Asu4GygyRgoLALLjxnxbzcw28do5eFMEQ/PDyD4X1YKkGuE6aVfrloUslqo3aW3AoULZcSfTf8LDMCUxoUCcq2GINnrH+Mmz5tR4KMhlMg5oIJ8=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DS7PR10MB5037.namprd10.prod.outlook.com (2603:10b6:5:3a9::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5017.22; Thu, 24 Feb
+ 2022 15:08:44 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::29c0:c62f:cba3:510e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::29c0:c62f:cba3:510e%9]) with mapi id 15.20.5017.024; Thu, 24 Feb 2022
+ 15:08:44 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+CC:     "broonie@kernel.org" <broonie@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: linux-next: Tree for Feb 22 (NFSD_V2_ACL)
+Thread-Topic: linux-next: Tree for Feb 22 (NFSD_V2_ACL)
+Thread-Index: AQHYKHvjd7nIQ/9dd0WHn6e/zlcx+qyhS2SAgAD35ICAAIyUAA==
+Date:   Thu, 24 Feb 2022 15:08:44 +0000
+Message-ID: <3CFFC488-CC2F-4B2B-9DD3-F939468A85C7@oracle.com>
+References: <20220223014135.2764641-1-broonie@kernel.org>
+ <5ef34a6f-c8ed-bb32-db24-050398c897a0@infradead.org>
+ <EEADAF6A-04D6-42C8-9AAE-7D4EFB2FA507@oracle.com>
+ <4820dc3e-6c4d-58f4-701a-784726f6c786@infradead.org>
+In-Reply-To: <4820dc3e-6c4d-58f4-701a-784726f6c786@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 43969507-0bf9-47b5-4e13-08d9f7a78d0c
+x-ms-traffictypediagnostic: DS7PR10MB5037:EE_
+x-microsoft-antispam-prvs: <DS7PR10MB50373969B3FFF2A6202E0D43933D9@DS7PR10MB5037.namprd10.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: YIM29sv9lBEvsh9Lg5TxGqdc6QnrhXe87tnmPFdAsZ94i+CBishWMeu7EDjyt7pt2NlNK5qazlyxe57t58UnVo7G9o08o9TJli/ouzeAohrVGS+JYt1ROZ/S00yELbU1FYrnPqTdPWCSLfTfLlaCkobJCK4i3tV9/O28NyKJsIZgjKVFDV56Rcb9pARQc+9Zjz3ZSe8sDJa0929asnSrIpj91bpdX3iSx8kKVZHRI2cwFHaX3wJ2L8ZUNIrZKbwXsCfvVN7n1mZDS1RsetJB1Uq5P2cZ07PXeN80cABoSeDnAuM1CZq8fC0o5KIj/Efm53uEJMHJjZIJeYoMdOBLAGLFdUT+x/LjrgdRglwpGrtOoG8Cp5+Xk9van6PPVpS+h364dPTHMYljFDA1rAWjpAOZ9AbGUIVfcFG+weexH1a0311yNqXoeHFLgD7fLshQ3LgIN1O45IcIN9acWxCUEHbpXj12RdOFT+h1XC0qrBb1aK65zBgw1Ljt9FTvrqNxEuyTs3dO/9UoWYhG0Hdart91ds4omtYjS0fBVqg/HaAWpxs9BX3Crq0eYyYnB8NJCP6TQwpGsBar0Ep53Gsw+xfNPczd2sR6qm1csTASoICjOmgXdQG47eGi58X6sl4MecN7i5fgneDtKZ6tlWVn/nrypI44bB+dlTdg9hxqciETbeZDpwG/IPhLprKCQyanp4BiIbJ9xap4/h9nwQfhXVSOWL6z9CSqc4E5fZ2zInk/fYruBeL3AAhCHZ+idLM1
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(66946007)(76116006)(83380400001)(36756003)(6506007)(2906002)(66446008)(4326008)(122000001)(91956017)(8676002)(64756008)(66476007)(66556008)(5660300002)(6916009)(38100700002)(54906003)(8936002)(508600001)(26005)(186003)(2616005)(316002)(33656002)(53546011)(6512007)(38070700005)(71200400001)(6486002)(86362001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?O3hcxyXDQMyCfE/2ZoMQoIRlIa8L4mcev+ha8xAl+zIJ2dD3dhAJiyE0nlG1?=
+ =?us-ascii?Q?cT9Ui+Ny7xn+hY867XIy7UAcVJc7VSGpKkiOx0gEn97cBvCqvtXabmrAKRwO?=
+ =?us-ascii?Q?nmTijAl/gUzTJUT1qj3rUW7j289pwVZm8uSvZWzz85QhtUeQhTD9ytSn6XD/?=
+ =?us-ascii?Q?cGQb1Y98xnkBJ/HMp1rQfINLikynsSVTASGjKw7DytKLcogruleircqlPaTV?=
+ =?us-ascii?Q?rRu8jMDp9hj8Vn/hKdEE6eNdac1EkmCmXKap8pO9cDoBxc5TFW0VsKFs6vnZ?=
+ =?us-ascii?Q?syUCBTi9UgSzkEDjyK6QT2A7Btm83ZoqHyCt6zJglQyQRBfmyOhQJ08KnKt4?=
+ =?us-ascii?Q?45eSYVY7QJ27bwX6fjQvn5H9jU8mUYmKagURMtjwaxZCCX1phECtqTo33Khk?=
+ =?us-ascii?Q?1jNY+wduaa/Q6Ul+YS6ryqNpYULCE5ZJMLBTUCjBCarvONIxFJtS+Js7wokk?=
+ =?us-ascii?Q?+FxrZrQvNrMlLCcTZN351bINzo7Aoo8Qu7/HXYvLxgXaZwSwD4Jc/bp0PfFg?=
+ =?us-ascii?Q?8pbGhNTxfwBA4VvLrkjqsk3keJh1WqgztiQk/F/n0AO0N8bVrgpyW1F+y+VN?=
+ =?us-ascii?Q?FrUsM+5zb9P2q/ndwDoZ4iFx210VIKFmKLeTRAC25aIutKv6f4j0W9nN75Ba?=
+ =?us-ascii?Q?Q/+khz3oqjx+xonU8BEtbDDwmWltKKXCrsACf5nnto2JdK9lI7NvHi1FI4lq?=
+ =?us-ascii?Q?B40Xyl+OdqOTVPLVMnnB1RNe5K3XaBY4lxZHmsPBE7Slg4JlSFvNB8LcBQ4G?=
+ =?us-ascii?Q?iiZdDsd7DuPn/iT6FjEHt1TH2dmMegsxirjbPes+iv7xPvwk6B4JWJQxJfqW?=
+ =?us-ascii?Q?NRlZab9aB85/AxrzKf81oT80cNBwGIOjj+s437gFPg+7/cDW1X9JOKcpap6x?=
+ =?us-ascii?Q?jG7mzNoJk5MLWOAZGEPvdlqUFwZRjbA+ZSDu0fZ40Wh0N2ReIAfnZIXw2BPE?=
+ =?us-ascii?Q?jxypfPFqNKbGEAYqq902xtKY/qoes3atuHnV3m5o+x4rMGGeqlr25MdauP9a?=
+ =?us-ascii?Q?2p3P636EIWTpOWsklq6QV01jE0xtLKHj2ikF3hF53Fj+nMXYjVHZtXy4HUTf?=
+ =?us-ascii?Q?pi4IGQJKEEJi31t2+CwOXBjsahuIJckM2iS/RG6zb17m25JxFEWrIzMpALVm?=
+ =?us-ascii?Q?fwMlrAzAl/SF/KZhq1EM7kIy2OSoTJX+fs3qR3vqYIrME2b9E3VTda+o1eBN?=
+ =?us-ascii?Q?pn+qcV3lPv0xgKHyA6t8IRuKK2PGrXGcZcxqt6DKJM6v+bZsphe/Z8W+W6/p?=
+ =?us-ascii?Q?BGVy2M2Nqi7MIcz6y9//+VCbkpLLZDrdN2OdPCPE8/Gl+K5k4MRuhvOoKvOQ?=
+ =?us-ascii?Q?tUomQf01oum+K9VtIEUNXQWep10ngMEtAL8uyhmMqA12Za/zBWk657MwDEfJ?=
+ =?us-ascii?Q?ODMN7tMMw7W4y8A7514IPqnpU3DEkNB2VDqo/S6l0XTCbhNdiD89V6J2i95h?=
+ =?us-ascii?Q?HeWQZ9Cs2dLszTChadXhJNPZX2b5NoGx45c42r/EL0qJzTLWyJoiVYTWZNlN?=
+ =?us-ascii?Q?I0X6d18mLLbmXphneQkEsSRuX9oG/nn5RYVNaFGsPuz4t1CjGLgn4yWNADpV?=
+ =?us-ascii?Q?Jemv2kySl3qQcOK/jz45nor84JHuJsAjHFEE51LHGSt6aQzBl3xx+qGQmiAh?=
+ =?us-ascii?Q?KNHxgbgfiSDk5lY6KdAOXYY=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1DCB19060203054A87E2F584078AC404@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20220223211305.296816-1-trondmy@kernel.org>
-In-Reply-To: <20220223211305.296816-1-trondmy@kernel.org>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Thu, 24 Feb 2022 10:07:18 -0500
-Message-ID: <CALF+zOm0X8oH2=QbpdDJzCvZLq5qb2ygsuQAUo4e4P242Px+dQ@mail.gmail.com>
-Subject: Re: [PATCH v7 00/21] Readdir improvements
-To:     trondmy@kernel.org
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43969507-0bf9-47b5-4e13-08d9f7a78d0c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Feb 2022 15:08:44.6208
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oGejsglWmNkDms/hyImDW4DMxLG0zMNU4scNp6DJcUaC4yp1381NEF91XmNxoYJPMaCb/y2Qv1klCmD/fRtGuw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5037
+X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10267 signatures=681306
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 spamscore=0
+ mlxscore=0 adultscore=0 mlxlogscore=999 suspectscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2201110000
+ definitions=main-2202240091
+X-Proofpoint-ORIG-GUID: q8dASpfBrT1jRPhxCMFWobzksY23-XcE
+X-Proofpoint-GUID: q8dASpfBrT1jRPhxCMFWobzksY23-XcE
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -70,74 +154,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Feb 23, 2022 at 4:24 PM <trondmy@kernel.org> wrote:
->
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->
-> The current NFS readdir code will always try to maximise the amount of
-> readahead it performs on the assumption that we can cache anything that
-> isn't immediately read by the process.
-> There are several cases where this assumption breaks down, including
-> when the 'ls -l' heuristic kicks in to try to force use of readdirplus
-> as a batch replacement for lookup/getattr.
->
-> This series also implement Ben's page cache filter to ensure that we can
-> improve the ability to share cached data between processes that are
-> reading the same directory at the same time, and to avoid live-locks
-> when the directory is simultaneously changing.
->
-> --
-> v2: Remove reset of dtsize when NFS_INO_FORCE_READDIR is set
-> v3: Avoid excessive window shrinking in uncached_readdir case
-> v4: Track 'ls -l' cache hit/miss statistics
->     Improved algorithm for falling back to uncached readdir
->     Skip readdirplus when files are being written to
-> v5: bugfixes
->     Skip readdirplus when the acdirmax/acregmax values are low
->     Request a full XDR buffer when doing READDIRPLUS
-> v6: Add tracing
->     Don't have lookup request readdirplus when it won't help
-> v7: Implement Ben's page cache filter
->     Reduce the use of uncached readdir
->     Change indexing of the page cache to improve seekdir() performance.
->
-> Trond Myklebust (21):
->   NFS: constify nfs_server_capable() and nfs_have_writebacks()
->   NFS: Trace lookup revalidation failure
->   NFS: Use kzalloc() to avoid initialising the nfs_open_dir_context
->   NFS: Calculate page offsets algorithmically
->   NFS: Store the change attribute in the directory page cache
->   NFS: If the cookie verifier changes, we must invalidate the page cache
->   NFS: Don't re-read the entire page cache to find the next cookie
->   NFS: Adjust the amount of readahead performed by NFS readdir
->   NFS: Simplify nfs_readdir_xdr_to_array()
->   NFS: Reduce use of uncached readdir
->   NFS: Improve heuristic for readdirplus
->   NFS: Don't ask for readdirplus unless it can help nfs_getattr()
->   NFSv4: Ask for a full XDR buffer of readdir goodness
->   NFS: Readdirplus can't help lookup for case insensitive filesystems
->   NFS: Don't request readdirplus when revalidation was forced
->   NFS: Add basic readdir tracing
->   NFS: Trace effects of readdirplus on the dcache
->   NFS: Trace effects of the readdirplus heuristic
->   NFS: Convert readdir page cache to use a cookie based index
->   NFS: Fix up forced readdirplus
->   NFS: Remove unnecessary cache invalidations for directories
->
->  fs/nfs/dir.c           | 450 ++++++++++++++++++++++++-----------------
->  fs/nfs/inode.c         |  46 ++---
->  fs/nfs/internal.h      |   4 +-
->  fs/nfs/nfs3xdr.c       |   7 +-
->  fs/nfs/nfs4proc.c      |   2 -
->  fs/nfs/nfs4xdr.c       |   6 +-
->  fs/nfs/nfstrace.h      | 122 ++++++++++-
->  include/linux/nfs_fs.h |  19 +-
->  8 files changed, 421 insertions(+), 235 deletions(-)
->
-> --
-> 2.35.1
->
 
-I don't see this pushed this to your 'testing' branch, but I applied
-manually after resetting at 3f58e709c162
+
+> On Feb 24, 2022, at 1:45 AM, Randy Dunlap <rdunlap@infradead.org> wrote:
+>=20
+>=20
+>=20
+> On 2/23/22 07:58, Chuck Lever III wrote:
+>>=20
+>>> On Feb 23, 2022, at 1:08 AM, Randy Dunlap <rdunlap@infradead.org> wrote=
+:
+>>>=20
+>>> On 2/22/22 17:41, broonie@kernel.org wrote:
+>>>> Hi all,
+>>>>=20
+>>>> Note that today's -next does not include the akpm tree since it's been=
+ a
+>>>> long day and the conflicts seemed more than it was wise for me to
+>>>> attempt at this point.  I'll have another go tomorrow but no guarantee=
+s.
+>>>>=20
+>>>> Changes since 20220217:
+>>>=20
+>>> on x86_64:
+>>>=20
+>>> WARNING: unmet direct dependencies detected for NFSD_V2_ACL
+>>> Depends on [n]: NETWORK_FILESYSTEMS [=3Dy] && NFSD [=3Dn]
+>>> Selected by [y]:
+>>> - NFSD_V3_ACL [=3Dy] && NETWORK_FILESYSTEMS [=3Dy]
+>>=20
+>> Thanks, Randy. I think I've got it addressed in my for-next.
+>=20
+> Hi Chuck,
+>=20
+> I'm still seeing this in next-20220223...
+
+I tested my fixed version of the commit with the randconfig
+you attached to yesterday's email. Do you see this in
+fs/nfsd/Kconfig from next-20220223 ?
+
+config NFSD_V2_ACL
+        bool
+        depends on NFSD
+
+config NFSD_V3_ACL
+        bool "NFS server support for the NFSv3 ACL protocol extension"
+        depends on NFSD
+        select NFSD_V2_ACL
+        help
+
+--
+Chuck Lever
+
+
 
