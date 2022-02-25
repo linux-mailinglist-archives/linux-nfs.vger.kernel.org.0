@@ -2,410 +2,558 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48EA84C4895
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Feb 2022 16:18:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6614C491D
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Feb 2022 16:35:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238332AbiBYPSq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Feb 2022 10:18:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52622 "EHLO
+        id S242100AbiBYPfU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Feb 2022 10:35:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbiBYPSp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 10:18:45 -0500
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2132.outbound.protection.outlook.com [40.107.93.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9161D86D7
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Feb 2022 07:18:10 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=k2eg2Mwb1OCtbzA8L700jNX3f2oYeEkQFx4xe+fwGggUiqkP5pEcZze5sLYSiSx0j1I9eUwl/0or6j0eLP201R6jRmjosvOZpNNWPh+XP+Thn7tSt0IM0HcLn+Aj0SwS++RkeBabv1nTkkToBqoUnaB1bABLVpYY1BfMuGvrtgGCO50z/govpYiQy6+xVrvutvq82gogC1Fov5fyt7Zfvj3v5rdVZ8lCWXP5ucJNYEW47UhL2e1Mg3Ch9hMleTTC34mWmquHdodyoo5IDnOf9tPsYTq6B7U8ayc3UovC2e1ughmOoZkkiFiFKMfAYGMpIU14uOw+55jfSn/MhCgPUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gPxUYJLV6BpX8qMMdMeFdVXeFrGs6PAzTvDKfTLE4KE=;
- b=iNlAzJyR1MlOyFS4QM6297J7x3oOX7VC0baxnfrR5x39fNjqmdqsK0sR+Xide+9ZWotbeZZvIQV+W/9cCJ1eO/PnJWr7cUpqMGWJPKLPJLXgF3ly+8iBevDoyh6zFsqDqJ6nnq0mdTWCIpv8MUCP11hC0qruBKCW2nmwxTNegr/E8UjkLONUag5nSSmWAQ5ZcKx+w+XuOvBpk95PHb+OfZ9AyelN7pVKl2fMYp00X2hpVHsfQqkHqgpswXJD5LQlUfV1oZhfAgp7U27J6naEinDMDwmCg8XuFnGkyAlY4s81/Z+Gf+nDtdpqal4pLiM+1tBmmhJdgsDVLEq+jCJJHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gPxUYJLV6BpX8qMMdMeFdVXeFrGs6PAzTvDKfTLE4KE=;
- b=Vkjv2JqR4X88IZK04hPFB45oc6394NWGa9M57btNEfXiPCpYxz/hJBImxhi11/a8C12DmmqpmpUO5sqRRDMfRYKnSEINTyznHO7i1c0AUmaV0j4dLapqMyWwnACKYbidIGa9oNrpS9SxRhGnBfrw1vpitmtfGZSAXgksoshhVdw=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BN0PR13MB4680.namprd13.prod.outlook.com (2603:10b6:408:12e::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.9; Fri, 25 Feb
- 2022 15:18:05 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::21ea:8eb5:7891:7743]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::21ea:8eb5:7891:7743%7]) with mapi id 15.20.5038.010; Fri, 25 Feb 2022
- 15:18:04 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        with ESMTP id S238920AbiBYPfT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 10:35:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 52D0F19414E
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Feb 2022 07:34:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1645803285;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/qEc+VL8pppuqv2ro2md5HRTQdNL5qRKgeebtFEG1B4=;
+        b=e3LhHULxqKGAZDk9snpB8oCPQVEtkS7ouopZdZgimC2HGBY3ro4uIOKyH463sZDV4XEJC9
+        s0kNxAcFEiWrwhwMpWFHazZR07gOVz6lFfH4a16EHCkYJN6EGqxuF5/4CB7kVIDCIURkij
+        vyO04bAgllzpfHFOtcw8DgGpeopKY/c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-272-89aLG_AyMeqa3KeBbXy6Wg-1; Fri, 25 Feb 2022 10:34:44 -0500
+X-MC-Unique: 89aLG_AyMeqa3KeBbXy6Wg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CE7B835DE0;
+        Fri, 25 Feb 2022 15:34:43 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C5FCA7C027;
+        Fri, 25 Feb 2022 15:34:42 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
 Subject: Re: [PATCH v7 05/21] NFS: Store the change attribute in the directory
  page cache
-Thread-Topic: [PATCH v7 05/21] NFS: Store the change attribute in the
- directory page cache
-Thread-Index: AQHYKPs4DPebyPXb0kmsTNMhrdh+Eqyiyo0AgADBr4CAABeuAIAAgosAgAAZkwCAABpUAIAACXGA
-Date:   Fri, 25 Feb 2022 15:18:04 +0000
-Message-ID: <f9ca09baa9e41000ab6286a27de567ca306f6991.camel@hammerspace.com>
+Date:   Fri, 25 Feb 2022 10:34:41 -0500
+Message-ID: <6878D746-0A5E-4815-A520-5CE7CD98A1E2@redhat.com>
+In-Reply-To: <f9ca09baa9e41000ab6286a27de567ca306f6991.camel@hammerspace.com>
 References: <20220223211305.296816-1-trondmy@kernel.org>
-         <20220223211305.296816-2-trondmy@kernel.org>
-         <20220223211305.296816-3-trondmy@kernel.org>
-         <20220223211305.296816-4-trondmy@kernel.org>
-         <20220223211305.296816-5-trondmy@kernel.org>
-         <20220223211305.296816-6-trondmy@kernel.org>
-         <0DBE97BF-3A88-49FD-B078-012B5EDA5849@redhat.com>
-         <1ca16f7e7be9588d15525e3afa4f7a80eb66b12b.camel@hammerspace.com>
-         <9506801a7b7b6330ce2807721da5e03d77cf5c78.camel@hammerspace.com>
-         <640B2705-35C6-4E9E-89D2-CC3D0E10EC3A@redhat.com>
-         <eb2a551096bb3537a9de7091d203e0cbff8dc6be.camel@hammerspace.com>
-         <11744FC6-5EFB-427A-ADB4-D211BA1C74F4@redhat.com>
-In-Reply-To: <11744FC6-5EFB-427A-ADB4-D211BA1C74F4@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0ec0268a-db16-4620-af9c-08d9f872054e
-x-ms-traffictypediagnostic: BN0PR13MB4680:EE_
-x-microsoft-antispam-prvs: <BN0PR13MB46808BCBA38A541C09004F6AB83E9@BN0PR13MB4680.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: JDY1aOuHaGWilv2evxg9AghGdkV/tloeMV8mec54KNdqZSuL93pdkBgwrylTMEVQDmKG+L3oVZEf3SnKlpPeu9nl8o6SzZZ1201JbCqP9XnfqFk9NpeY1aUxe9SdPVNLyKuz/5VCfMKjUd/it060cn8FpYmqz9wftQNbolqfK/IS7KbvuZmswMnZksXTO8maB/3EkvRSgYwjZspYbPnYJ+1dw4pUHUwA8x9C8QYY2oe1MDwsRXbktIer4EEF+Yn31+RvlJ4rUaC38Yc5PszqbomShFdDS+CS0HM/QgeDvkeYwcSkIIC5GwZ6yGJO0IMzJvokbbftzQHx1FrGPyFIibWkRCG0xKtPdD0NyeYbB/teTMeVO8FWlGmRpaqJvk0Gmq5M4PpegI6KuaY34IA34nXsRpqyvrufY5+0oXWKw0AgcyPzX4LKPsB3T5V4LxQ1d+AxULj9KLx/5QbYjOhfFtLsmSbwJR0LmD4MPkQqE2VR3wMmxmrrBqx9o0wcQRJuy+Alf2jYmCFr42NyaSvLFLkrtlQd6EW3jdJe4nf1tOQNV43ZIPxL6h5zMjGCTPhTeTVXpZTfOIwWOKpi1Z8PELsLL05npdOM28BWmKnddCHD79fl8hApdsAgCZ9QIqDzyeaJKJMSgIILwsYq995dsYKYAGoDksWsmA3ufqFKOwZIXz7rVLyppWdA00/z+UZfJ3JC2BjUTOfBy/1l76N6TXerzy4frkpZDcLe7LZ+9h5o3ARxTUkg1SslSYbTBdr4/BoyuKnymApoY5HHZGLlTMxUlVODIBiJaKaieK3fkeY=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(136003)(346002)(39840400004)(376002)(366004)(396003)(2906002)(30864003)(38070700005)(5660300002)(86362001)(71200400001)(186003)(36756003)(6486002)(966005)(26005)(508600001)(83380400001)(38100700002)(66556008)(4326008)(66476007)(66446008)(64756008)(76116006)(66946007)(6512007)(2616005)(6916009)(8936002)(53546011)(316002)(6506007)(8676002)(122000001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?M0c0QXFXS1BpVFpFTUdMVTlQbnVYbC8vRWwxSk5vaVcyOWdCU2MwUkp3YzFq?=
- =?utf-8?B?M0VPVm05QUNkUGlIMyszNWdLQ1R4WjF2aENKdkk1R1E0U2RiVXZNQk9aektU?=
- =?utf-8?B?Z3ovOVhxZmlRUG1odTdPemZXQnc1ZmNRN1htb1RWbDNCdFByOW9Sa0tXSFFy?=
- =?utf-8?B?Qkl0UTNrRnVSL2oyTWUxQU5WRVFDVWdyZmFCUElQanRjejh2cUd0VlhBeFIw?=
- =?utf-8?B?c3ZNRENGUEtaVlNNT0taOXVpUVVZRWxtM290Sk9ldmJNeERCOHhyTXNRVkp3?=
- =?utf-8?B?QmRER3RvVFVYMmU0eUhwdXIvekJMWkUvNlg3dGZEc0JQQnhxKzBDVkZFT2Rq?=
- =?utf-8?B?YXZwV2dubW9nQzVnZWZlM3JONXFCenpuV21wTnRvYkdmUkJuRUZzbzc4RUhi?=
- =?utf-8?B?M2JLQXVaSG9zY1BHcThyQWtvbVp1V29WN2VyWm41MzhDZmdHZHhTdVNGNjRE?=
- =?utf-8?B?KzhZS1hmL1gxVkNhUnRaOGdkNG1qVWI2bTRrYjZCUkIzNmpWbGVTZ2RyWFQ0?=
- =?utf-8?B?a1BieE1uRFo3R3QwaUxKdzI4bjBiTUlFNFVrWEFSaXZJdlN3YTNlZlZtYi83?=
- =?utf-8?B?OXhZWjRtSUdaczU1TnV3UHBDZjh5KzI4aGNVTTNsSSt4aDV1eVREQ2wrc284?=
- =?utf-8?B?MlNPcWVXaHZGNmtGMmsrR3YxZEUrZXVNTDRZRXYvM1plSk5ZTzEveVdyR1Zu?=
- =?utf-8?B?VHlEZFBsUEZJTGxvVy91MWhRR2pjaXNmN2RXV3JzQzVXcVF1STNoVEtaVG5x?=
- =?utf-8?B?amxmT3V0bnkxVnhxNUdXN2tZaXppK1daRVRWOGlyKzQ1Tys1NVBZVTNPRGFO?=
- =?utf-8?B?NnlFV05KTUdTeWtHQUVvYTRmVkVqWGFBOFdHNGhiYmpVcXQrQXFZMHZVVzNF?=
- =?utf-8?B?Tkh1NlFMZ2llNGw3SUxuTS9Pd2tpY0ExRnI5bkV2czVuM0ovN3VSeDNxWnRU?=
- =?utf-8?B?NXJPd3B4bHZmMk5Xa2dTQnJXYzFZR1VDM2pLZGdaMHhSM1kzS0oydFMyemsy?=
- =?utf-8?B?R0lwdGlpRERPbUt1NFNCbTFYRlR4K3U4U1lJeU1pQUx6Y3YzR2RKN05xcFgw?=
- =?utf-8?B?d1dWUVBwSWlRYTIyVm8ycHVJQk9nckQxK1RDbjFGQlhPSGdDd0tlT3pRWGhJ?=
- =?utf-8?B?M2pGNmlnbEFiTDhQaDdDbkQ5dVEwWU9nbENsbTdFd1pTenNsWGZleUVoQ2tH?=
- =?utf-8?B?b1k4a2hZL2FnRFY3bU9NaHFNNms1cVcyVEd4TEw1bm1VaGg2N3hRV2RVcXZx?=
- =?utf-8?B?aDBFaDlPSk5TendKQWh5cEJWVzZpN0w4UzJLa3o1NkwyOXZUZm1YTjRneVVN?=
- =?utf-8?B?MTFscytKZWtHbTNRcXFRMW0rNk1QU2xXd2Y3UHJDU2ZnSTQ0bzhyWVhhV1hQ?=
- =?utf-8?B?ZkxJayt5Ukl3Vm1tdnBYZnAwakNyU3cxMnhMUmFGZ0VoVkVyek12aTg5MkZN?=
- =?utf-8?B?ams2emhQWEhPdTV6RFhzS2RubkNEQk1PT0ROb01DS2duak5hN0RnZXBFbjZL?=
- =?utf-8?B?ODNGSjBBL1R6L3JNY29ycld2cGlKL3c3a3lqS2FFTVlPaXJhQ25qYnBuczIx?=
- =?utf-8?B?YlJ6Y0Iydnp2V1hORHB4d3IwRTVzRXBQdktybllPTXhibENTSWQxWUU3MVZo?=
- =?utf-8?B?QUhGWldDTHZpaGZENkRMbkplYzFTVEZ0TVFQajZIZ3JFaVp2aEVuT2ZDdkVE?=
- =?utf-8?B?d3M5MHZLdDBQV1g5OE1VYUZ6OER6L3ExQzdxbkZBM2gxVGVLVGs3ZytxRGo3?=
- =?utf-8?B?T0kyOWhrWURJYk9JZUVQSWY2SHFLcURyVldXNG1vRTh3MWcxVURUYVBiZWV1?=
- =?utf-8?B?NW5hQzczYm9OSFpxeWJSV0VROUNXYyt1VlJ6Ym5XYUUxbGNDd01zOHdzYnJG?=
- =?utf-8?B?eUNnSE9EU09pY3FwNHZIcWFqcmJKazFTSVVQaEJXcHJkVXpRZmlRUTRQQzB6?=
- =?utf-8?B?RWxsVEdXZzA0WGtXL1FnSUVPZXBMTnFKQkgxNVB2NEtFdFRweUYrNzBaT2px?=
- =?utf-8?B?R3Y4QUQxamNzeFZ2NmtOd3krV1BJRytkaHdzVUpyRFMwMjMxeTZkSVJ1bXJt?=
- =?utf-8?B?VkNQbkVkeWZ0bU9wMHByM1lMdU9FbWFERXlTS1Zzb2VYWFhMMU0xTkZHWFYy?=
- =?utf-8?B?bUhIZUltbm1zZGRjOWRPeG5pa1ZvS2xPRk96Tk1TdTRkeHpnRkFnR2IySWlk?=
- =?utf-8?Q?GKRP7iSYy0ZStiZAlagxJNM=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7A622626EB0FA34E803D42152F38AB80@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+ <20220223211305.296816-2-trondmy@kernel.org>
+ <20220223211305.296816-3-trondmy@kernel.org>
+ <20220223211305.296816-4-trondmy@kernel.org>
+ <20220223211305.296816-5-trondmy@kernel.org>
+ <20220223211305.296816-6-trondmy@kernel.org>
+ <0DBE97BF-3A88-49FD-B078-012B5EDA5849@redhat.com>
+ <1ca16f7e7be9588d15525e3afa4f7a80eb66b12b.camel@hammerspace.com>
+ <9506801a7b7b6330ce2807721da5e03d77cf5c78.camel@hammerspace.com>
+ <640B2705-35C6-4E9E-89D2-CC3D0E10EC3A@redhat.com>
+ <eb2a551096bb3537a9de7091d203e0cbff8dc6be.camel@hammerspace.com>
+ <11744FC6-5EFB-427A-ADB4-D211BA1C74F4@redhat.com>
+ <f9ca09baa9e41000ab6286a27de567ca306f6991.camel@hammerspace.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0ec0268a-db16-4620-af9c-08d9f872054e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Feb 2022 15:18:04.7232
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sYOr49qQNzKwZRYfdKFaawbnnjEZ0rZOi7Q2XkY/vnZWn3rtkm418DD1YsATV9ObtJrxMfDjAak5N1Fi54iJsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR13MB4680
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIyLTAyLTI1IGF0IDA5OjQ0IC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAyNSBGZWIgMjAyMiwgYXQgODoxMCwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOg0K
-PiANCj4gPiBPbiBGcmksIDIwMjItMDItMjUgYXQgMDY6MzggLTA1MDAsIEJlbmphbWluIENvZGRp
-bmd0b24gd3JvdGU6DQo+ID4gPiBPbiAyNCBGZWIgMjAyMiwgYXQgMjI6NTEsIFRyb25kIE15a2xl
-YnVzdCB3cm90ZToNCj4gPiA+IA0KPiA+ID4gPiBPbiBGcmksIDIwMjItMDItMjUgYXQgMDI6MjYg
-KzAwMDAsIFRyb25kIE15a2xlYnVzdCB3cm90ZToNCj4gPiA+ID4gPiBPbiBUaHUsIDIwMjItMDIt
-MjQgYXQgMDk6NTMgLTA1MDAsIEJlbmphbWluIENvZGRpbmd0b24gd3JvdGU6DQo+ID4gPiA+ID4g
-PiBPbiAyMyBGZWIgMjAyMiwgYXQgMTY6MTIsIHRyb25kbXlAa2VybmVsLm9yZ8Kgd3JvdGU6DQo+
-ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gRnJvbTogVHJvbmQgTXlrbGVidXN0IDx0cm9uZC5t
-eWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tPg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4g
-VXNlIHRoZSBjaGFuZ2UgYXR0cmlidXRlIGFuZCB0aGUgZmlyc3QgY29va2llIGluIGENCj4gPiA+
-ID4gPiA+ID4gZGlyZWN0b3J5DQo+ID4gPiA+ID4gPiA+IHBhZ2UNCj4gPiA+ID4gPiA+ID4gY2Fj
-aGUNCj4gPiA+ID4gPiA+ID4gZW50cnkgdG8gdmFsaWRhdGUgdGhhdCB0aGUgcGFnZSBpcyB1cCB0
-byBkYXRlLg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gU3VnZ2VzdGVkLWJ5OiBCZW5q
-YW1pbiBDb2RkaW5ndG9uIDxiY29kZGluZ0ByZWRoYXQuY29tPg0KPiA+ID4gPiA+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBUcm9uZCBNeWtsZWJ1c3QNCj4gPiA+ID4gPiA+ID4gPHRyb25kLm15a2xlYnVz
-dEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gPiA+ID4gPiA+IC0tLQ0KPiA+ID4gPiA+ID4gPiDCoGZz
-L25mcy9kaXIuYyB8IDY4DQo+ID4gPiA+ID4gPiA+ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ID4gPiA+ID4gwqAxIGZpbGUgY2hhbmdl
-ZCwgMzcgaW5zZXJ0aW9ucygrKSwgMzEgZGVsZXRpb25zKC0pDQo+ID4gPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL2Rpci5jIGIvZnMvbmZzL2Rpci5jDQo+ID4g
-PiA+ID4gPiA+IGluZGV4IGYyMjU4ZTkyNmRmMi4uNWQ5MzY3ZDliNjUxIDEwMDY0NA0KPiA+ID4g
-PiA+ID4gPiAtLS0gYS9mcy9uZnMvZGlyLmMNCj4gPiA+ID4gPiA+ID4gKysrIGIvZnMvbmZzL2Rp
-ci5jDQo+ID4gPiA+ID4gPiA+IEBAIC0xMzksNiArMTM5LDcgQEAgc3RydWN0IG5mc19jYWNoZV9h
-cnJheV9lbnRyeSB7DQo+ID4gPiA+ID4gPiA+IMKgfTsNCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+
-ID4gPiA+IMKgc3RydWN0IG5mc19jYWNoZV9hcnJheSB7DQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDC
-oMKgwqDCoHU2NCBjaGFuZ2VfYXR0cjsNCj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHU2
-NCBsYXN0X2Nvb2tpZTsNCj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHVuc2lnbmVkIGlu
-dCBzaXplOw0KPiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgdW5zaWduZWQgY2hhciBwYWdl
-X2Z1bGwgOiAxLA0KPiA+ID4gPiA+ID4gPiBAQCAtMTc1LDcgKzE3Niw4IEBAIHN0YXRpYyB2b2lk
-DQo+ID4gPiA+ID4gPiA+IG5mc19yZWFkZGlyX2FycmF5X2luaXQoc3RydWN0DQo+ID4gPiA+ID4g
-PiA+IG5mc19jYWNoZV9hcnJheSAqYXJyYXkpDQo+ID4gPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqBtZW1zZXQoYXJyYXksIDAsIHNpemVvZihzdHJ1Y3QgbmZzX2NhY2hlX2FycmF5KSk7DQo+ID4g
-PiA+ID4gPiA+IMKgfQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gLXN0YXRpYyB2b2lk
-IG5mc19yZWFkZGlyX3BhZ2VfaW5pdF9hcnJheShzdHJ1Y3QgcGFnZQ0KPiA+ID4gPiA+ID4gPiAq
-cGFnZSwNCj4gPiA+ID4gPiA+ID4gdTY0DQo+ID4gPiA+ID4gPiA+IGxhc3RfY29va2llKQ0KPiA+
-ID4gPiA+ID4gPiArc3RhdGljIHZvaWQgbmZzX3JlYWRkaXJfcGFnZV9pbml0X2FycmF5KHN0cnVj
-dCBwYWdlDQo+ID4gPiA+ID4gPiA+ICpwYWdlLA0KPiA+ID4gPiA+ID4gPiB1NjQNCj4gPiA+ID4g
-PiA+ID4gbGFzdF9jb29raWUsDQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB1
-NjQNCj4gPiA+ID4gPiA+ID4gY2hhbmdlX2F0dHIpDQo+ID4gPiA+ID4gPiA+IMKgew0KPiA+ID4g
-PiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IG5mc19jYWNoZV9hcnJheSAqYXJyYXk7DQo+
-ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gVGhlcmUncyBhIGh1bmsgbWlz
-c2luZyBoZXJlLCBzb21ldGhpbmcgbGlrZToNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gQEAg
-LTE4NSw2ICsxODUsNyBAQCBzdGF0aWMgdm9pZA0KPiA+ID4gPiA+ID4gbmZzX3JlYWRkaXJfcGFn
-ZV9pbml0X2FycmF5KHN0cnVjdA0KPiA+ID4gPiA+ID4gcGFnZQ0KPiA+ID4gPiA+ID4gKnBhZ2Us
-IHU2NCBsYXN0X2Nvb2tpZSwNCj4gPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqAgbmZzX3JlYWRk
-aXJfYXJyYXlfaW5pdChhcnJheSk7DQo+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgIGFycmF5
-LT5sYXN0X2Nvb2tpZSA9IGxhc3RfY29va2llOw0KPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDC
-oCBhcnJheS0+Y29va2llc19hcmVfb3JkZXJlZCA9IDE7DQo+ID4gPiA+ID4gPiArwqDCoMKgwqDC
-oMKgIGFycmF5LT5jaGFuZ2VfYXR0ciA9IGNoYW5nZV9hdHRyOw0KPiA+ID4gPiA+ID4gwqDCoMKg
-wqDCoMKgwqDCoCBrdW5tYXBfYXRvbWljKGFycmF5KTsNCj4gPiA+ID4gPiA+IMKgIH0NCj4gPiA+
-ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gQEAgLTIwNyw3ICsyMDksNyBA
-QCBuZnNfcmVhZGRpcl9wYWdlX2FycmF5X2FsbG9jKHU2NA0KPiA+ID4gPiA+ID4gPiBsYXN0X2Nv
-b2tpZSwNCj4gPiA+ID4gPiA+ID4gZ2ZwX3QgZ2ZwX2ZsYWdzKQ0KPiA+ID4gPiA+ID4gPiDCoHsN
-Cj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBwYWdlICpwYWdlID0gYWxsb2Nf
-cGFnZShnZnBfZmxhZ3MpOw0KPiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgaWYgKHBhZ2Up
-DQo+ID4gPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfcmVhZGRp
-cl9wYWdlX2luaXRfYXJyYXkocGFnZSwNCj4gPiA+ID4gPiA+ID4gbGFzdF9jb29raWUpOw0KPiA+
-ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmZzX3JlYWRkaXJfcGFn
-ZV9pbml0X2FycmF5KHBhZ2UsDQo+ID4gPiA+ID4gPiA+IGxhc3RfY29va2llLA0KPiA+ID4gPiA+
-ID4gPiAwKTsNCj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiBwYWdlOw0KPiA+
-ID4gPiA+ID4gPiDCoH0NCj4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IEBAIC0zMDQsMTkg
-KzMwNiw0NCBAQCBpbnQgbmZzX3JlYWRkaXJfYWRkX3RvX2FycmF5KHN0cnVjdA0KPiA+ID4gPiA+
-ID4gPiBuZnNfZW50cnkNCj4gPiA+ID4gPiA+ID4gKmVudHJ5LCBzdHJ1Y3QgcGFnZSAqcGFnZSkN
-Cj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiByZXQ7DQo+ID4gPiA+ID4gPiA+
-IMKgfQ0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gK3N0YXRpYyBib29sIG5mc19yZWFk
-ZGlyX3BhZ2VfY29va2llX21hdGNoKHN0cnVjdCBwYWdlDQo+ID4gPiA+ID4gPiA+ICpwYWdlLA0K
-PiA+ID4gPiA+ID4gPiB1NjQNCj4gPiA+ID4gPiA+ID4gbGFzdF9jb29raWUsDQo+ID4gPiA+ID4g
-PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoA0KPiA+ID4gPiA+ID4gPiB1NjQgY2hhbmdlX2F0
-dHIpDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEhvdyBhYm91dCAibmZzX3JlYWRkaXJfcGFn
-ZV92YWxpZCgpIj/CoCBUaGVyZSdzIG1vcmUgZ29pbmcNCj4gPiA+ID4gPiA+IG9uDQo+ID4gPiA+
-ID4gPiB0aGFuIGENCj4gPiA+ID4gPiA+IGNvb2tpZSBtYXRjaC4NCj4gPiA+ID4gPiA+IA0KPiA+
-ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICt7DQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
-oHN0cnVjdCBuZnNfY2FjaGVfYXJyYXkgKmFycmF5ID0NCj4gPiA+ID4gPiA+ID4ga21hcF9hdG9t
-aWMocGFnZSk7DQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGludCByZXQgPSB0cnVlOw0K
-PiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChhcnJheS0+
-Y2hhbmdlX2F0dHIgIT0gY2hhbmdlX2F0dHIpDQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqByZXQgPSBmYWxzZTsNCj4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-Q2FuIHdlIHNraXAgdGhlIG5leHQgdGVzdCBpZiByZXQgPSBmYWxzZT8NCj4gPiA+ID4gPiANCj4g
-PiA+ID4gPiBJJ2QgZXhwZWN0IHRoZSBjb21waWxlciB0byBkbyB0aGF0Lg0KPiA+ID4gPiA+IA0K
-PiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGlmIChhcnJheS0+c2l6
-ZSA+IDAgJiYgYXJyYXktPmFycmF5WzBdLmNvb2tpZSAhPQ0KPiA+ID4gPiA+ID4gPiBsYXN0X2Nv
-b2tpZSkNCj4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9
-IGZhbHNlOw0KPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqBrdW5tYXBfYXRvbWljKGFycmF5
-KTsNCj4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsNCj4gPiA+ID4gPiA+
-ID4gK30NCj4gPiA+ID4gPiA+ID4gKw0KPiA+ID4gPiA+ID4gPiArc3RhdGljIHZvaWQgbmZzX3Jl
-YWRkaXJfcGFnZV91bmxvY2tfYW5kX3B1dChzdHJ1Y3QgcGFnZQ0KPiA+ID4gPiA+ID4gPiAqcGFn
-ZSkNCj4gPiA+ID4gPiA+ID4gK3sNCj4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgdW5sb2Nr
-X3BhZ2UocGFnZSk7DQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoHB1dF9wYWdlKHBhZ2Up
-Ow0KPiA+ID4gPiA+ID4gPiArfQ0KPiA+ID4gPiA+ID4gPiArDQo+ID4gPiA+ID4gPiA+IMKgc3Rh
-dGljIHN0cnVjdCBwYWdlICpuZnNfcmVhZGRpcl9wYWdlX2dldF9sb2NrZWQoc3RydWN0DQo+ID4g
-PiA+ID4gPiA+IGFkZHJlc3Nfc3BhY2UNCj4gPiA+ID4gPiA+ID4gKm1hcHBpbmcsDQo+ID4gPiA+
-ID4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHBnb2ZmX3QNCj4g
-PiA+ID4gPiA+ID4gaW5kZXgsDQo+ID4gPiA+ID4gPiA+IHU2NA0KPiA+ID4gPiA+ID4gPiBsYXN0
-X2Nvb2tpZSkNCj4gPiA+ID4gPiA+ID4gwqB7DQo+ID4gPiA+ID4gPiA+IMKgwqDCoMKgwqDCoMKg
-wqBzdHJ1Y3QgcGFnZSAqcGFnZTsNCj4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgdTY0IGNo
-YW5nZV9hdHRyOw0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gwqDCoMKgwqDCoMKgwqDC
-oHBhZ2UgPSBncmFiX2NhY2hlX3BhZ2UobWFwcGluZywgaW5kZXgpOw0KPiA+ID4gPiA+ID4gPiAt
-wqDCoMKgwqDCoMKgwqBpZiAocGFnZSAmJiAhUGFnZVVwdG9kYXRlKHBhZ2UpKSB7DQo+ID4gPiA+
-ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfcmVhZGRpcl9wYWdlX2lu
-aXRfYXJyYXkocGFnZSwNCj4gPiA+ID4gPiA+ID4gbGFzdF9jb29raWUpOw0KPiA+ID4gPiA+ID4g
-PiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYNCj4gPiA+ID4gPiA+ID4gKGludmFs
-aWRhdGVfaW5vZGVfcGFnZXMyX3JhbmdlKG1hcHBpbmcsIGluZGV4DQo+ID4gPiA+ID4gPiA+ICsN
-Cj4gPiA+ID4gPiA+ID4gMSwgLTEpIDwgMCkNCj4gPiA+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBuZnNfemFwX21hcHBpbmcobWFwcGluZy0+
-aG9zdCwNCj4gPiA+ID4gPiA+ID4gbWFwcGluZyk7DQo+ID4gPiA+ID4gPiA+IC3CoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBTZXRQYWdlVXB0b2RhdGUocGFnZSk7DQo+ID4gPiA+ID4gPiA+
-ICvCoMKgwqDCoMKgwqDCoGlmICghcGFnZSkNCj4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoHJldHVybiBOVUxMOw0KPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKg
-wqBjaGFuZ2VfYXR0ciA9DQo+ID4gPiA+ID4gPiA+IGlub2RlX3BlZWtfaXZlcnNpb25fcmF3KG1h
-cHBpbmctPmhvc3QpOw0KPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqBpZiAoUGFnZVVwdG9k
-YXRlKHBhZ2UpKSB7DQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqBpZg0KPiA+ID4gPiA+ID4gPiAobmZzX3JlYWRkaXJfcGFnZV9jb29raWVfbWF0Y2gocGFnZSwN
-Cj4gPiA+ID4gPiA+ID4gbGFzdF9jb29raWUsDQo+ID4gPiA+ID4gPiA+ICvCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqANCj4gPiA+ID4gPiA+ID4gY2hhbmdlX2F0dHIpKQ0K
-PiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHJldHVybiBwYWdlOw0KPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgbmZzX3JlYWRkaXJfY2xlYXJfYXJyYXkocGFnZSk7DQo+ID4gPiA+ID4gPiANCj4gPiA+
-ID4gPiA+IA0KPiA+ID4gPiA+ID4gV2h5IHVzZSBpX3ZlcnNpb24gcmF0aGVyIHRoYW4gbmZzX3Nh
-dmVfY2hhbmdlX2F0dHJpYnV0ZT/CoA0KPiA+ID4gPiA+ID4gU2VlbXMNCj4gPiA+ID4gPiA+IGhh
-dmluZyBhDQo+ID4gPiA+ID4gPiBjb25zaXN0ZW50IHZhbHVlIGFjcm9zcyB0aGUgcGFjaGVjYWNo
-ZSBhbmQgZGlyX3ZlcmlmaWVycw0KPiA+ID4gPiA+ID4gd291bGQNCj4gPiA+ID4gPiA+IGhlbHAN
-Cj4gPiA+ID4gPiA+IGRlYnVnZ2luZywgYW5kIHdlJ3ZlIGFscmVhZHkgaGF2ZSBhIGJ1bmNoIG9m
-IG1hY2hpbmVyeQ0KPiA+ID4gPiA+ID4gYXJvdW5kDQo+ID4gPiA+ID4gPiB0aGUNCj4gPiA+ID4g
-PiA+IGNoYW5nZV9hdHRyaWJ1dGUuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhlIGRpcmVjdG9y
-eSBjYWNoZV9jaGFuZ2VfYXR0cmlidXRlIGlzIG5vdCByZXBvcnRlZCBpbg0KPiA+ID4gPiA+IHRy
-YWNlcG9pbnRzDQo+ID4gPiA+ID4gYmVjYXVzZSBpdCBpcyBhIGRpcmVjdG9yeS1zcGVjaWZpYyBm
-aWVsZCwgc28gaXQncyBub3QgYXMNCj4gPiA+ID4gPiB1c2VmdWwNCj4gPiA+ID4gPiBmb3INCj4g
-PiA+ID4gPiBkZWJ1Z2dpbmcuDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gVGhlIGlub2RlIGNoYW5n
-ZSBhdHRyaWJ1dGUgaXMgd2hhdCB3ZSBoYXZlIHRyYWRpdGlvbmFsbHkgdXNlZA0KPiA+ID4gPiA+
-IGZvcg0KPiA+ID4gPiA+IGRldGVybWluaW5nIGNhY2hlIGNvbnNpc3RlbmN5LCBhbmQgd2hlbiB0
-byBpbnZhbGlkYXRlIHRoZQ0KPiA+ID4gPiA+IGNhY2hlLg0KPiA+ID4gPiANCj4gPiA+ID4gSSBz
-aG91bGQgcHJvYmFibHkgZWxhYm9yYXRlIGEgbGl0dGxlIGZ1cnRoZXIgb24gdGhlIGRpZmZlcmVu
-Y2VzDQo+ID4gPiA+IGJldHdlZW4NCj4gPiA+ID4gdGhlIGlub2RlIGNoYW5nZSBhdHRyaWJ1dGUg
-YW5kIHRoZSBjYWNoZV9jaGFuZ2VfYXR0cmlidXRlLg0KPiA+ID4gPiANCj4gPiA+ID4gT25lIG9m
-IHRoZSBtYWluIHJlYXNvbnMgZm9yIGludHJvZHVjaW5nIHRoZSBsYXR0ZXIgd2FzIHRvIGhhdmUN
-Cj4gPiA+ID4gc29tZXRoaW5nIHRoYXQgYWxsb3dzIHVzIHRvIHRyYWNrIGNoYW5nZXMgdG8gdGhl
-IGRpcmVjdG9yeSwgYnV0DQo+ID4gPiA+IHRvDQo+ID4gPiA+IGF2b2lkIGZvcmNpbmcgdW5uZWNl
-c3NhcnkgcmV2YWxpZGF0aW9ucyBvZiB0aGUgZGNhY2hlLg0KPiA+ID4gPiANCj4gPiA+ID4gV2hh
-dCB0aGlzIG1lYW5zIGlzIHRoYXQgd2hlbiB3ZSBjcmVhdGUgb3IgcmVtb3ZlIGEgZmlsZSwgYW5k
-DQo+ID4gPiA+IHRoZQ0KPiA+ID4gPiBwcmUvcG9zdC1vcCBhdHRyaWJ1dGVzIHRlbGwgdXMgdGhh
-dCB0aGVyZSB3ZXJlIG5vIHRoaXJkIHBhcnR5DQo+ID4gPiA+IGNoYW5nZXMNCj4gPiA+ID4gdG8g
-dGhlIGRpcmVjdG9yeSwgd2UgdXBkYXRlIHRoZSBkY2FjaGUsIGJ1dCB3ZSBkbyBfbm90XyB1cGRh
-dGUNCj4gPiA+ID4gdGhlDQo+ID4gPiA+IGNhY2hlX2NoYW5nZV9hdHRyaWJ1dGUsIGJlY2F1c2Ug
-d2Uga25vdyB0aGF0IHRoZSByZXN0IG9mIHRoZQ0KPiA+ID4gPiBkaXJlY3RvcnkNCj4gPiA+ID4g
-Y29udGVudHMgYXJlIHZhbGlkLCBhbmQgc28gd2UgZG9uJ3QgaGF2ZSB0byByZXZhbGlkYXRlIHRo
-ZQ0KPiA+ID4gPiBkZW50cmllcy4NCj4gPiA+ID4gSG93ZXZlciBpbiB0aGF0IGNhc2UsIHdlIF9k
-b18gd2FudCB0byB1cGRhdGUgdGhlIHJlYWRkaXIgY2FjaGUNCj4gPiA+ID4gdG8NCj4gPiA+ID4g
-cmVmbGVjdCB0aGUgZmFjdCB0aGF0IGFuIGVudHJ5IHdhcyBhZGRlZCBvciBkZWxldGVkLiBXaGls
-ZSB3ZQ0KPiA+ID4gPiBjb3VsZA0KPiA+ID4gPiBmaWd1cmUgb3V0IGhvdyB0byByZW1vdmUgYW4g
-ZW50cnkgKGF0IGxlYXN0IGZvciB0aGUgY2FzZSB3aGVyZQ0KPiA+ID4gPiB0aGUNCj4gPiA+ID4g
-ZmlsZXN5c3RlbSBpcyBjYXNlLXNlbnNpdGl2ZSksIHdlIGRvIG5vdCBrbm93IHdoZXJlIHRoZQ0K
-PiA+ID4gPiBmaWxlc3lzdGVtDQo+ID4gPiA+IGFkZGVkIHRoZSBuZXcgZmlsZSwgb3Igd2hhdCBj
-b29raWVzIHdhcyBhc3NpZ25lZC4NCj4gPiA+ID4gDQo+ID4gPiA+IFRoaXMgaXMgd2h5IHRoZSBp
-bm9kZSBjaGFuZ2UgYXR0cmlidXRlIGlzIG1vcmUgYXBwcm9wcmlhdGUgZm9yDQo+ID4gPiA+IGlu
-ZGV4aW5nDQo+ID4gPiA+IHRoZSBwYWdlIGNhY2hlIHBhZ2VzLiBJdCByZWZsZWN0cyB0aGUgY2Fz
-ZXMgd2hlcmUgd2Ugd2FudCB0bw0KPiA+ID4gPiByZXZhbGlkYXRlDQo+ID4gPiA+IHRoZSByZWFk
-ZGlyIGNhY2hlLCBhcyBvcHBvc2VkIHRvIHRoZSBkY2FjaGUuDQo+ID4gPiANCj4gPiA+IE9rLCB0
-aGFua3MgZm9yIGV4cGxhaW5pbmcgdGhpcy4NCj4gPiA+IA0KPiA+ID4gSSd2ZSBub3RpY2VkIHRo
-YXQgeW91IGhhdmVuJ3QgcmVzcG9uZGVkIGFib3V0IG15IGNvbmNlcm5zIGFib3V0DQo+ID4gPiBu
-b3QNCj4gPiA+IGNoZWNraW5nDQo+ID4gPiB0aGUgZGlyZWN0b3J5IGZvciBjaGFuZ2VzIHdpdGgg
-ZXZlcnkgdjQgUkVBRERJUi7CoCBGb3IgdjMsIHdlIGhhdmUNCj4gPiA+IHBvc3Qtb3ANCj4gPiA+
-IHVwZGF0ZXMgdG8gdGhlIGRpcmVjdG9yeSwgYnV0IHdpdGggdjQgdGhlIGRpcmVjdG9yeSBjYW4g
-Y2hhbmdlDQo+ID4gPiBhbmQNCj4gPiA+IHdlJ2xsDQo+ID4gPiBlbmQgdXAgd2l0aCBlbnRyaWVz
-IGluIHRoZSBjYWNoZSB0aGF0IGFyZSBtYXJrZWQgd2l0aCBhbiBvbGQNCj4gPiA+IGNoYW5nZV9h
-dHRyLg0KPiA+ID4gDQo+ID4gDQo+ID4gVGhlbiB0aGV5IHdpbGwgYmUgcmVqZWN0ZWQgYnkgbmZz
-X3JlYWRkaXJfcGFnZV9jb29raWVfbWF0Y2goKSBpZiBhIA0KPiA+IHVzZXINCj4gPiBsb29rcyB1
-cCB0aGF0IHBhZ2UgYWdhaW4gYWZ0ZXIgd2UndmUgcmV2YWxpZGF0ZWQgdGhlIGNoYW5nZQ0KPiA+
-IGF0dHJpYnV0ZQ0KPiA+IG9uIHRoZSBkaXJlY3RvcnkuDQo+ID4gDQo+ID4gLi4uYW5kIG5vdGUg
-dGhhdCBORlN2NCBkb2VzIHJldHVybnMgYSBzdHJ1Y3QgY2hhbmdlX2luZm80IGZvciBhbGwNCj4g
-PiBvcGVyYXRpb25zIHRoYXQgY2hhbmdlIHRoZSBkaXJlY3RvcnksIHNvIHdlIHdpbGwgdXBkYXRl
-IHRoZSBjaGFuZ2UNCj4gPiBhdHRyaWJ1dGUgaW4gYWxsIHRob3NlIGNhc2VzLg0KPiANCj4gSSdt
-IG5vdCB3b3JyaWVkIGFib3V0IGNoYW5nZXMgZnJvbSB0aGUgc2FtZSBjbGllbnQuDQo+IA0KPiA+
-IElmIHRoZSBjaGFuZ2UgaXMgbWFkZSBvbiB0aGUgc2VydmVyLCB3ZWxsIHRoZW4gd2Ugd2lsbCBk
-ZXRlY3QgaXQNCj4gPiB0aHJvdWdoIHRoZSBzdGFuZGFyZCByZXZhbGlkYXRpb24gcHJvY2VzcyB0
-aGF0IHVzdWFsbHkgZGVjaWRlcyB3aGVuDQo+ID4gdG8NCj4gPiBpbnZhbGlkYXRlIHRoZSBkaXJl
-Y3RvcnkgcGFnZSBjYWNoZS4NCj4gDQo+IFRoZSBlbnZpcm9ubWVudHMgSSdtIGNvbmNlcm5lZCBh
-Ym91dCBhcmUgc2V0dXAgdmVyeSBmcmVxdWVudGx5OiB0aGV5IA0KPiBsb29rDQo+IGxpa2UgbXVs
-dGlwbGUgTkZTIGNsaWVudHMgY28tb3JkaW5hdGluZyBvbiBhIGRpcmVjdG9yeSB3aXRoIG1pbGxp
-b25zDQo+IG9mDQo+IGZpbGVzLsKgIFNvbWUgY2xpZW50cyBhcmUgYWRkaW5nIGZpbGVzIGFzIHRo
-ZXkgZG8gd29yaywgb3RoZXIgY2xpZW50cw0KPiBhcmUNCj4gdGhlbiBsb29raW5nIGZvciB0aG9z
-ZSBmaWxlcyBieSB3YWxraW5nIHRoZSBkaXJlY3RvcnkgZW50cmllcyB0byANCj4gdmFsaWRhdGUN
-Cj4gdGhlaXIgZXhpc3RlbmNlLsKgIFRoZSBzeXN0ZW1zIHRoYXQgZG8gdGhpcyBoYXZlIGEgInZl
-cnkgYmFkIHRpbWUiIGlmIA0KPiBzb21lDQo+IG9mIHRoZW0gcHJvZHVjZSBsaXN0aW5ncyB0aGF0
-IGFyZSBfZHJhbWF0aWNhbGx5XyBhbmQgdHJhbnNpZW50bHkgDQo+IGRpZmZlcmVudA0KPiBmcm9t
-IGEgbGlzdGluZyB0aGV5IHByb2R1Y2VkIGJlZm9yZS4NCj4gDQo+IFRoYXQgY2FuIGhhcHBlbiBy
-ZWFsbHkgZWFzaWx5IHdpdGggd2hhdCB3ZSd2ZSBnb3QgaGVyZSwgYW5kIGl0IGNhbiANCj4gY3Jl
-YXRlIGENCj4gaHVnZSBwcm9ibGVtIGZvciB0aGVzZSBzZXR1cHMuwqAgQW5kIGl0IHdvbid0IGJl
-IGVhc2lseSByZXByb2R1Y2VhYmxlLA0KPiBhbmQgaXQNCj4gd2lsbCBiZSBoYXJkIHRvIGZpbmQu
-wqAgSXQgd2lsbCBjb3N0IGV2ZXJ5b25lIGludm9sdmVkIGEgbG90IG9mIHRpbWUNCj4gYW5kDQo+
-IGVmZm9ydCB0byB0cmFjayBkb3duLCBhbmQgd2UgY2FuIGZpeCBpdCBlYXNpbHkuDQo+IA0KPiA+
-ID4gSSdtIHByZXR0eSBwb3NpdGl2ZSB0aGF0IG5vdCBjaGVja2luZyBmb3IgY2hhbmdlcyB0byB0
-aGUNCj4gPiA+IGRpcmVjdG9yeQ0KPiA+ID4gKG5vdA0KPiA+ID4gc2VuZGluZyBHRVRBVFRSIHdp
-dGggUkVBRERJUikgaXMgZ29pbmcgdG8gY3JlYXRlIGNhc2VzIG9mIGRvdWJsZS0NCj4gPiA+IGxp
-c3RlZA0KPiA+ID4gYW5kDQo+ID4gPiB0cnVuY2F0ZWQtbGlzdGluZ3MgZm9yIGRpcmN0b3J5IGxp
-c3RlcnMuwqAgTm90IGhhbmRsaW5nIHRob3NlDQo+ID4gPiBjYXNlcw0KPiA+ID4gbWVhbnMNCj4g
-PiA+IEknbQ0KPiA+ID4gZ29pbmcgdG8gaGF2ZSBzb21lIHZlcnkgdW5oYXBweSBjdXN0b21lcnMg
-dGhhdCBjb21wbGFpbiBhYm91dA0KPiA+ID4gdGhlaXINCj4gPiA+IGZpbGVzDQo+ID4gPiBkaXNh
-cHBlYXJpbmcvcmVhcHBlYXJpbmcgb24gTkZTLg0KPiA+ID4gDQo+ID4gPiBJZiB5b3UgbmVlZCBt
-ZSB0byBwcm92ZSB0aGF0IGl0cyBhbiBpc3N1ZSwgSSBjYW4gdGFrZSB0aGUgdGltZSB0bw0KPiA+
-ID4gd3JpdGUNCj4gPiA+IHVwDQo+ID4gPiBwcm9ncmFtIHRoYXQgc2hvd3MgdGhpcyBwcm9ibGVt
-Lg0KPiA+ID4gDQo+ID4gDQo+ID4gSWYgeW91IGxhYmVsIHRoZSBwYWdlIGNvbnRlbnRzIHdpdGgg
-YW4gYXR0cmlidXRlIHRoYXQgd2FzIHJldHJpZXZlZA0KPiA+IF9hZnRlcl8gdGhlIFJFQURESVIg
-b3AsIHRoZW4geW91IHdpbGwgaW50cm9kdWNlIHRoaXMgYXMgYSBwcm9ibGVtDQo+ID4gZm9yDQo+
-ID4geW91ciBjdXN0b21lcnMuDQo+IA0KPiBObyB0aGUgcHJvYmxlbSBpcyBhbHJlYWR5IGhlcmUs
-IHdlJ3JlIG5vdCBpbnRyb2R1Y2luZyBpdC7CoCBCeQ0KPiBsYWJlbGluZyANCj4gdGhlDQo+IHBh
-Z2UgY29udGVudHMgd2l0aCBldmVyeSBjYWxsIHdlJ3JlIHNoaWZ0aW5nIHRoZSByYWNlIHdpbmRv
-dyBmcm9tIHRoZQ0KPiBjbGllbnQNCj4gd2hlcmUgaXQncyBhIHZlcnkgbGFyZ2Ugd2luZG93IHRv
-IHRoZSBzZXJ2ZXIgd2hlcmUgdGhlIHdpbmRvdyBpcw0KPiBzbWFsbC4NCj4gDQo+IEl0cyBzdGls
-bCBwb3NzaWJsZSwgYnV0ICptdWNoKiBsZXNzIGxpa2VseS4NCj4gDQo+ID4gVGhlIHJlYXNvbiBp
-cyB0aGF0IHRoZXJlIGlzIG5vIGF0b21pY2l0eSBiZXR3ZWVuIG9wZXJhdGlvbnMgaW4gYQ0KPiA+
-IENPTVBPVU5ELiBXb3JzZSwgdGhlIGltcGxlbWVudGF0aW9uIG9mIHJlYWRkaXIgaW4gc2NhbGFi
-bGUgbW9kZXJuDQo+ID4gc3lzdGVtcywgaW5jbHVkaW5nIExpbnV4LCBkb2VzIG5vdCBldmVuIGd1
-YXJhbnRlZSBhdG9taWNpdHkgb2YgdGhlDQo+ID4gcmVhZGRpciBvcGVyYXRpb24gaXRzZWxmLiBJ
-bnN0ZWFkIGVhY2ggcmVhZGRpciBlbnRyeSBpcyBmaWxsZWQNCj4gPiB3aXRob3V0DQo+ID4gaG9s
-ZGluZyBhbnkgbG9ja3Mgb3IgcHJldmVudGluZyBhbnkgY2hhbmdlcyB0byB0aGUgZGlyZWN0b3J5
-IG9yIHRvDQo+ID4gdGhlDQo+ID4gb2JqZWN0IGl0c2VsZi4NCj4gDQo+IEkgdW5kZXJzdGFuZCBh
-bGwgdGhpcywgYnV0IGl0cyBub3QgYSByZWFzb24gdG8gbWFrZSB0aGUgcHJvYmxlbQ0KPiB3b3Jz
-ZS4NCj4gDQo+ID4gUE9TSVggc3RhdGVzIHZlcnkgZXhwbGljaXRseSB0aGF0IGlmIHlvdSdyZSBt
-YWtpbmcgY2hhbmdlcyB0byB0aGUNCj4gPiBkaXJlY3RvcnkgYWZ0ZXIgdGhlIGNhbGwgdG8gb3Bl
-bmRpcigpIG9yIHJld2luZGRpcigpLCB0aGVuIHRoZQ0KPiA+IGJlaGF2aW91ciB3LnIudC4gd2hl
-dGhlciB0aGF0IGZpbGUgYXBwZWFycyBpbiB0aGUgcmVhZGRpcigpIGNhbGwgaXMNCj4gPiB1bnNw
-ZWNpZmllZC4gU2VlDQo+ID4gaHR0cHM6Ly9wdWJzLm9wZW5ncm91cC5vcmcvb25saW5lcHVicy85
-Njk5OTE5Nzk5L2Z1bmN0aW9ucy9yZWFkZGlyLmh0bWwNCj4gDQo+IFllcywgYnV0IGFnYWluIC0g
-anVzdCBiZWNhdXNlIHRoZSBwcm9ibGVtIGV4aXN0cyBkb2Vzbid0IGdpdmUgdXMNCj4gcmVhc29u
-IA0KPiB0bw0KPiBhbXBsaWZ5IGl0IHdoZW4gd2UgY2FuIGVhc2lseSBtYWtlIGEgYmV0dGVyIGNo
-b2ljZSBmb3IgYWxtb3N0IG5vDQo+IGNvc3QuDQo+IA0KPiBIZXJlIGFyZSBteSByZWFzb25zIGZv
-ciB3YW50aW5nIHRoZSBHRVRBVFRSIGFkZGVkOg0KPiDCoCAtIGl0IG1ha2VzIGl0ICptdWNoKiBs
-ZXNzIGxpa2VseSBmb3IgdGhpcyBwcm9ibGVtIHRvIG9jY3VyLCB3aXRoDQo+IHRoZSANCj4gbWlu
-b3INCj4gwqDCoMKgIGRvd25zaWRlIG9mIGRlY3JlYXNlZCBjYWNoaW5nIGZvciB1bnN0YWJsZSBk
-aXJlY3Rvcmllcy4NCj4gwqAgLSBpdCBtYWtlcyB2MyBhbmQgdjQgcmVhZGRpciBwYWdlY2FjaGUg
-YmVoYXZpb3IgY29uc2lzdGVudCBXUlQgDQo+IGNoYW5naW5nDQo+IMKgwqDCoCBkaXJlY3Rvcmll
-cy4NCj4gDQo+IEkgc3BlbnQgYSBub24tdHJpdmlhbCBhbW91bnQgb2YgdGltZSB3b3JraW5nIG9u
-IHRoaXMgcHJvYmxlbSwgYW5kIHNhdw0KPiB0aGlzDQo+IGV4YWN0IGlzc3VlIGFwcGVhci7CoCBJ
-dHMgZGVmaW5pdGVseSBzb21ldGhpbmcgdGhhdCdzIGdvaW5nIHRvIGNvbWUNCj4gYmFjayANCj4g
-YW5kDQo+IGJpdGUgdXMgaWYgd2UgZG9uJ3QgZml4IGl0Lg0KPiANCj4gSG93IGNhbiBJIGNvbnZp
-bmNlIHlvdT/CoCBJJ3ZlIG9mZmVyZWQgdG8gcHJvZHVjZSBhIHdvcmtpbmcgZXhhbXBsZSBvZg0K
-PiB0aGlzDQo+IHByb2JsZW0uwqAgV2lsbCB5b3UgcmV2aWV3IHRob3NlIHJlc3VsdHM/wqAgSWYg
-SSBjYW5ub3QgY29udmluY2UgeW91LCBJDQo+IGZlZWwNCj4gSSdsbCBoYXZlIHRvIHB1cnN1ZSBk
-aXN0cm8tc3BlY2lmaWMgY2hhbmdlcyBmb3IgdGhpcyB3b3JrLg0KDQpCZW4sIHRoZSBtYWluIGNh
-dXNlIG9mIHRoaXMga2luZCBvZiBpc3N1ZSBpbiB0aGUgY3VycmVudCBjb2RlIGlzIHRoZQ0KZm9s
-bG93aW5nIGxpbmU6DQoNCiAgICAgICAgLyoNCiAgICAgICAgICogY3R4LT5wb3MgcG9pbnRzIHRv
-IHRoZSBkaXJlbnQgZW50cnkgbnVtYmVyLg0KICAgICAgICAgKiAqZGVzYy0+ZGlyX2Nvb2tpZSBo
-YXMgdGhlIGNvb2tpZSBmb3IgdGhlIG5leHQgZW50cnkuIFdlIGhhdmUNCiAgICAgICAgICogdG8g
-ZWl0aGVyIGZpbmQgdGhlIGVudHJ5IHdpdGggdGhlIGFwcHJvcHJpYXRlIG51bWJlciBvcg0KICAg
-ICAgICAgKiByZXZhbGlkYXRlIHRoZSBjb29raWUuDQogICAgICAgICAqLw0KICAgICAgICBpZiAo
-Y3R4LT5wb3MgPT0gMCB8fCBuZnNfYXR0cmlidXRlX2NhY2hlX2V4cGlyZWQoaW5vZGUpKSB7DQog
-ICAgICAgICAgICAgICAgcmVzID0gbmZzX3JldmFsaWRhdGVfbWFwcGluZyhpbm9kZSwgZmlsZS0+
-Zl9tYXBwaW5nKTsNCiAgICAgICAgICAgICAgICBpZiAocmVzIDwgMCkNCiAgICAgICAgICAgICAg
-ICAgICAgICAgIGdvdG8gb3V0Ow0KICAgICAgICB9DQoNCg0KVGhhdCBsaW5lIHByb3RlY3RzIHRo
-ZSBwYWdlIGNhY2hlIGFnYWluc3QgY2hhbmdlcyBhZnRlbiBvcGVuZGlyKCkuIEl0DQp3YXMgaW50
-cm9kdWNlZCBieSBSZWQgSGF0IGluIGNvbW1taXQgMDdiNWNlOGVmMmQ4IGluIG9yZGVyIHRvIGZp
-eCBhDQpjbGFpbSBvZiBhIHNldmVyZSBwZXJmb3JtYW5jZSBwcm9ibGVtLg0KDQpUaGVzZSBwYXRj
-aGVzIF9yZW1vdmVfIHRoYXQgcHJvdGVjdGlvbiwgYmVjYXVzZSB3ZSdyZSBub3cgYWJsZSB0byBj
-b3BlDQp3aXRoIG1vcmUgZnJlcXVlbnQgcmV2YWxpZGF0aW9uIHdpdGhvdXQgbmVlZGluZyB0byBy
-ZXN0YXJ0IGRpcmVjdG9yeQ0KcmVhZHMgZnJvbSBzY3JhdGNoLg0KDQpTbyBuby4gV2l0aG91dCBm
-dXJ0aGVyIHByb29mLCBJIGRvbid0IGFjY2VwdCB5b3VyIGNsYWltIHRoYXQgdGhpcw0KcGF0Y2hz
-ZXQgaW50cm9kdWNlcyBhIHJlZ3Jlc3Npb24uIEkgZG9uJ3QgYWNjZXB0IHlvdXIgY2xhaW0gdGhh
-dCB3ZSBhcmUNCnJlcXVpcmVkIHRvIHJldmFsaWRhdGUgdGhlIGNoYW5nZSBhdHRyaWJ1dGUgb24g
-ZXZlcnkgcmVhZGRpciBjYWxsLiBXZQ0KY2FuJ3QgZG8gdGhhdCBmb3IgTkZTdjIgb3IgTkZTdjMg
-KHRoZSBsYXR0ZXIgb2ZmZXJzIGEgcG9zdF9vcA0KYXR0cmlidXRlLCBub3QgcHJlLW9wIGF0dHJp
-YnV0ZSkgYW5kIGFzIEkgYWxyZWFkeSBwb2ludGVkIG91dCwgdGhlcmUgaXMNCm5vdGhpbmcgaW4g
-UE9TSVggdGhhdCByZXF1aXJlcyB0aGlzLg0KDQpJZiB5b3Ugd2FudCB0byBmb3JrIHRoZSBSZWQg
-SGF0IGtlcm5lbCBvdmVyIGl0LCB0aGVuIHRoYXQncyB5b3VyDQpkZWNpc2lvbi4NCg0KLS0gDQpU
-cm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFtbWVyc3BhY2UN
-CnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On 25 Feb 2022, at 10:18, Trond Myklebust wrote:
+
+> On Fri, 2022-02-25 at 09:44 -0500, Benjamin Coddington wrote:
+>> On 25 Feb 2022, at 8:10, Trond Myklebust wrote:
+>>
+>>> On Fri, 2022-02-25 at 06:38 -0500, Benjamin Coddington wrote:
+>>>> On 24 Feb 2022, at 22:51, Trond Myklebust wrote:
+>>>>
+>>>>> On Fri, 2022-02-25 at 02:26 +0000, Trond Myklebust wrote:
+>>>>>> On Thu, 2022-02-24 at 09:53 -0500, Benjamin Coddington wrote:
+>>>>>>> On 23 Feb 2022, at 16:12, trondmy@kernel.org=C2=A0wrote:
+>>>>>>>
+>>>>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>>>>
+>>>>>>>> Use the change attribute and the first cookie in a
+>>>>>>>> directory
+>>>>>>>> page
+>>>>>>>> cache
+>>>>>>>> entry to validate that the page is up to date.
+>>>>>>>>
+>>>>>>>> Suggested-by: Benjamin Coddington <bcodding@redhat.com>
+>>>>>>>> Signed-off-by: Trond Myklebust
+>>>>>>>> <trond.myklebust@hammerspace.com>
+>>>>>>>> ---
+>>>>>>>> =C2=A0fs/nfs/dir.c | 68
+>>>>>>>> ++++++++++++++++++++++++++++------------------------
+>>>>>>>> =C2=A01 file changed, 37 insertions(+), 31 deletions(-)
+>>>>>>>>
+>>>>>>>> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+>>>>>>>> index f2258e926df2..5d9367d9b651 100644
+>>>>>>>> --- a/fs/nfs/dir.c
+>>>>>>>> +++ b/fs/nfs/dir.c
+>>>>>>>> @@ -139,6 +139,7 @@ struct nfs_cache_array_entry {
+>>>>>>>> =C2=A0};
+>>>>>>>>
+>>>>>>>> =C2=A0struct nfs_cache_array {
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u64 change_attr;
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u64 last_cookie;=
+
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned int siz=
+e;
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned char pa=
+ge_full : 1,
+>>>>>>>> @@ -175,7 +176,8 @@ static void
+>>>>>>>> nfs_readdir_array_init(struct
+>>>>>>>> nfs_cache_array *array)
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0memset(array, 0,=
+ sizeof(struct =
+
+>>>>>>>> nfs_cache_array));
+>>>>>>>> =C2=A0}
+>>>>>>>>
+>>>>>>>> -static void nfs_readdir_page_init_array(struct page
+>>>>>>>> *page,
+>>>>>>>> u64
+>>>>>>>> last_cookie)
+>>>>>>>> +static void nfs_readdir_page_init_array(struct page
+>>>>>>>> *page,
+>>>>>>>> u64
+>>>>>>>> last_cookie,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0u64
+>>>>>>>> change_attr)
+>>>>>>>> =C2=A0{
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs_cache=
+_array *array;
+>>>>>>>
+>>>>>>>
+>>>>>>> There's a hunk missing here, something like:
+>>>>>>>
+>>>>>>> @@ -185,6 +185,7 @@ static void
+>>>>>>> nfs_readdir_page_init_array(struct
+>>>>>>> page
+>>>>>>> *page, u64 last_cookie,
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 nfs_readdir_arra=
+y_init(array);
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 array->last_cook=
+ie =3D last_cookie;
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 array->cookies_a=
+re_ordered =3D 1;
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 array->change_attr =3D chan=
+ge_attr;
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kunmap_atomic(ar=
+ray);
+>>>>>>> =C2=A0 }
+>>>>>>>
+>>>>>>>>
+>>>>>>>> @@ -207,7 +209,7 @@ nfs_readdir_page_array_alloc(u64
+>>>>>>>> last_cookie,
+>>>>>>>> gfp_t gfp_flags)
+>>>>>>>> =C2=A0{
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct page *pag=
+e =3D alloc_page(gfp_flags);
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (page)
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_readdir_page_init_array(page,
+>>>>>>>> last_cookie);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_readdir_page_init_array(page,
+>>>>>>>> last_cookie,
+>>>>>>>> 0);
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return page;
+>>>>>>>> =C2=A0}
+>>>>>>>>
+>>>>>>>> @@ -304,19 +306,44 @@ int nfs_readdir_add_to_array(struct
+>>>>>>>> nfs_entry
+>>>>>>>> *entry, struct page *page)
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
+>>>>>>>> =C2=A0}
+>>>>>>>>
+>>>>>>>> +static bool nfs_readdir_page_cookie_match(struct page
+>>>>>>>> *page,
+>>>>>>>> u64
+>>>>>>>> last_cookie,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0
+>>>>>>>> u64 change_attr)
+>>>>>>>
+>>>>>>> How about "nfs_readdir_page_valid()"?=C2=A0 There's more going
+>>>>>>> on
+>>>>>>> than a
+>>>>>>> cookie match.
+>>>>>>>
+>>>>>>>
+>>>>>>>> +{
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct nfs_cache_arra=
+y *array =3D
+>>>>>>>> kmap_atomic(page);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int ret =3D true;
+>>>>>>>> +
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (array->change_att=
+r !=3D change_attr)
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D false;
+>>>>>>>
+>>>>>>> Can we skip the next test if ret =3D false?
+>>>>>>
+>>>>>> I'd expect the compiler to do that.
+>>>>>>
+>>>>>>>
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (array->size > 0 &=
+& array->array[0].cookie !=3D
+>>>>>>>> last_cookie)
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D false;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0kunmap_atomic(array);=
+
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return ret;
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> +static void nfs_readdir_page_unlock_and_put(struct page
+>>>>>>>> *page)
+>>>>>>>> +{
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unlock_page(page);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0put_page(page);
+>>>>>>>> +}
+>>>>>>>> +
+>>>>>>>> =C2=A0static struct page *nfs_readdir_page_get_locked(struct
+>>>>>>>> address_space
+>>>>>>>> *mapping,
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0p=
+goff_t
+>>>>>>>> index,
+>>>>>>>> u64
+>>>>>>>> last_cookie)
+>>>>>>>> =C2=A0{
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct page *pag=
+e;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u64 change_attr;
+>>>>>>>>
+>>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0page =3D grab_ca=
+che_page(mapping, index);
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (page && !PageUpto=
+date(page)) {
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_readdir_page_init_array(page,
+>>>>>>>> last_cookie);
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0if
+>>>>>>>> (invalidate_inode_pages2_range(mapping, index
+>>>>>>>> +
+>>>>>>>> 1, -1) < 0)
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+nfs_zap_mapping(mapping->host,
+>>>>>>>> mapping);
+>>>>>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0SetPageUptodate(page);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!page)
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return NULL;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0change_attr =3D
+>>>>>>>> inode_peek_iversion_raw(mapping->host);
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (PageUptodate(page=
+)) {
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0if
+>>>>>>>> (nfs_readdir_page_cookie_match(page,
+>>>>>>>> last_cookie,
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+
+>>>>>>>> change_attr))
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+return page;
+>>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0nfs_readdir_clear_array(page);
+>>>>>>>
+>>>>>>>
+>>>>>>> Why use i_version rather than nfs_save_change_attribute?=C2=A0
+>>>>>>> Seems
+>>>>>>> having a
+>>>>>>> consistent value across the pachecache and dir_verifiers
+>>>>>>> would
+>>>>>>> help
+>>>>>>> debugging, and we've already have a bunch of machinery
+>>>>>>> around
+>>>>>>> the
+>>>>>>> change_attribute.
+>>>>>>
+>>>>>> The directory cache_change_attribute is not reported in
+>>>>>> tracepoints
+>>>>>> because it is a directory-specific field, so it's not as
+>>>>>> useful
+>>>>>> for
+>>>>>> debugging.
+>>>>>>
+>>>>>> The inode change attribute is what we have traditionally used
+>>>>>> for
+>>>>>> determining cache consistency, and when to invalidate the
+>>>>>> cache.
+>>>>>
+>>>>> I should probably elaborate a little further on the differences
+>>>>> between
+>>>>> the inode change attribute and the cache_change_attribute.
+>>>>>
+>>>>> One of the main reasons for introducing the latter was to have
+>>>>> something that allows us to track changes to the directory, but
+>>>>> to
+>>>>> avoid forcing unnecessary revalidations of the dcache.
+>>>>>
+>>>>> What this means is that when we create or remove a file, and
+>>>>> the
+>>>>> pre/post-op attributes tell us that there were no third party
+>>>>> changes
+>>>>> to the directory, we update the dcache, but we do _not_ update
+>>>>> the
+>>>>> cache_change_attribute, because we know that the rest of the
+>>>>> directory
+>>>>> contents are valid, and so we don't have to revalidate the
+>>>>> dentries.
+>>>>> However in that case, we _do_ want to update the readdir cache
+>>>>> to
+>>>>> reflect the fact that an entry was added or deleted. While we
+>>>>> could
+>>>>> figure out how to remove an entry (at least for the case where
+>>>>> the
+>>>>> filesystem is case-sensitive), we do not know where the
+>>>>> filesystem
+>>>>> added the new file, or what cookies was assigned.
+>>>>>
+>>>>> This is why the inode change attribute is more appropriate for
+>>>>> indexing
+>>>>> the page cache pages. It reflects the cases where we want to
+>>>>> revalidate
+>>>>> the readdir cache, as opposed to the dcache.
+>>>>
+>>>> Ok, thanks for explaining this.
+>>>>
+>>>> I've noticed that you haven't responded about my concerns about
+>>>> not
+>>>> checking
+>>>> the directory for changes with every v4 READDIR.=C2=A0 For v3, we ha=
+ve
+>>>> post-op
+>>>> updates to the directory, but with v4 the directory can change
+>>>> and
+>>>> we'll
+>>>> end up with entries in the cache that are marked with an old
+>>>> change_attr.
+>>>>
+>>>
+>>> Then they will be rejected by nfs_readdir_page_cookie_match() if a
+>>> user
+>>> looks up that page again after we've revalidated the change
+>>> attribute
+>>> on the directory.
+>>>
+>>> ...and note that NFSv4 does returns a struct change_info4 for all
+>>> operations that change the directory, so we will update the change
+>>> attribute in all those cases.
+>>
+>> I'm not worried about changes from the same client.
+>>
+>>> If the change is made on the server, well then we will detect it
+>>> through the standard revalidation process that usually decides when
+>>> to
+>>> invalidate the directory page cache.
+>>
+>> The environments I'm concerned about are setup very frequently: they
+>> look
+>> like multiple NFS clients co-ordinating on a directory with millions
+>> of
+>> files.=C2=A0 Some clients are adding files as they do work, other clie=
+nts
+>> are
+>> then looking for those files by walking the directory entries to
+>> validate
+>> their existence.=C2=A0 The systems that do this have a "very bad time"=
+ if
+>> some
+>> of them produce listings that are _dramatically_ and transiently
+>> different
+>> from a listing they produced before.
+>>
+>> That can happen really easily with what we've got here, and it can
+>> create a
+>> huge problem for these setups.=C2=A0 And it won't be easily =
+
+>> reproduceable,
+>> and it
+>> will be hard to find.=C2=A0 It will cost everyone involved a lot of ti=
+me
+>> and
+>> effort to track down, and we can fix it easily.
+>>
+>>>> I'm pretty positive that not checking for changes to the
+>>>> directory
+>>>> (not
+>>>> sending GETATTR with READDIR) is going to create cases of double-
+>>>> listed
+>>>> and
+>>>> truncated-listings for dirctory listers.=C2=A0 Not handling those
+>>>> cases
+>>>> means
+>>>> I'm
+>>>> going to have some very unhappy customers that complain about
+>>>> their
+>>>> files
+>>>> disappearing/reappearing on NFS.
+>>>>
+>>>> If you need me to prove that its an issue, I can take the time to
+>>>> write
+>>>> up
+>>>> program that shows this problem.
+>>>>
+>>>
+>>> If you label the page contents with an attribute that was retrieved
+>>> _after_ the READDIR op, then you will introduce this as a problem
+>>> for
+>>> your customers.
+>>
+>> No the problem is already here, we're not introducing it.=C2=A0 By
+>> labeling
+>> the
+>> page contents with every call we're shifting the race window from the
+>> client
+>> where it's a very large window to the server where the window is
+>> small.
+>>
+>> Its still possible, but *much* less likely.
+>>
+>>> The reason is that there is no atomicity between operations in a
+>>> COMPOUND. Worse, the implementation of readdir in scalable modern
+>>> systems, including Linux, does not even guarantee atomicity of the
+>>> readdir operation itself. Instead each readdir entry is filled
+>>> without
+>>> holding any locks or preventing any changes to the directory or to
+>>> the
+>>> object itself.
+>>
+>> I understand all this, but its not a reason to make the problem
+>> worse.
+>>
+>>> POSIX states very explicitly that if you're making changes to the
+>>> directory after the call to opendir() or rewinddir(), then the
+>>> behaviour w.r.t. whether that file appears in the readdir() call is
+>>> unspecified. See
+>>> https://pubs.opengroup.org/onlinepubs/9699919799/functions/readdir.ht=
+ml
+>>
+>> Yes, but again - just because the problem exists doesn't give us
+>> reason
+>> to
+>> amplify it when we can easily make a better choice for almost no
+>> cost.
+>>
+>> Here are my reasons for wanting the GETATTR added:
+>> =C2=A0 - it makes it *much* less likely for this problem to occur, wit=
+h
+>> the
+>> minor
+>> =C2=A0=C2=A0=C2=A0 downside of decreased caching for unstable director=
+ies.
+>> =C2=A0 - it makes v3 and v4 readdir pagecache behavior consistent WRT
+>> changing
+>> =C2=A0=C2=A0=C2=A0 directories.
+>>
+>> I spent a non-trivial amount of time working on this problem, and saw
+>> this
+>> exact issue appear.=C2=A0 Its definitely something that's going to com=
+e
+>> back
+>> and
+>> bite us if we don't fix it.
+>>
+>> How can I convince you?=C2=A0 I've offered to produce a working exampl=
+e =
+
+>> of
+>> this
+>> problem.=C2=A0 Will you review those results?=C2=A0 If I cannot convin=
+ce you, =
+
+>> I
+>> feel
+>> I'll have to pursue distro-specific changes for this work.
+>
+> Ben, the main cause of this kind of issue in the current code is the
+> following line:
+>
+>         /*
+>          * ctx->pos points to the dirent entry number.
+>          * *desc->dir_cookie has the cookie for the next entry. We =
+
+> have
+>          * to either find the entry with the appropriate number or
+>          * revalidate the cookie.
+>          */
+>         if (ctx->pos =3D=3D 0 || nfs_attribute_cache_expired(inode)) {
+>                 res =3D nfs_revalidate_mapping(inode, file->f_mapping);=
+
+>                 if (res < 0)
+>                         goto out;
+>         }
+>
+>
+> That line protects the page cache against changes aften opendir(). It
+> was introduced by Red Hat in commmit 07b5ce8ef2d8 in order to fix a
+> claim of a severe performance problem.
+>
+> These patches _remove_ that protection, because we're now able to cope
+> with more frequent revalidation without needing to restart directory
+> reads from scratch.
+
+Yes, I know.  But the big change is that now we're heavily relying on
+page validation to produce sane listing results, and proper page =
+
+validation
+relies on up-to-date change info.
+
+> So no. Without further proof, I don't accept your claim that this
+> patchset introduces a regression. I don't accept your claim that we =
+
+> are
+> required to revalidate the change attribute on every readdir call. We
+> can't do that for NFSv2 or NFSv3 (the latter offers a post_op
+> attribute, not pre-op attribute) and as I already pointed out, there =
+
+> is
+> nothing in POSIX that requires this.
+
+You don't need a pre-op attribute.  You just need to detect the case =
+
+where
+you're walking into pages that contain entries that don't match the ones
+you're currently using, and post-op is as good as we can get it.
+
+Ok, so I'm reading that further proof is required, and I'm happy to do =
+
+the
+work.  Thanks for the replies here and elsewhere.
+
+Ben
+
