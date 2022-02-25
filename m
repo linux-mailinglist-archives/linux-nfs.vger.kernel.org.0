@@ -2,138 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98E4C4C51F5
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Feb 2022 00:16:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFB114C5202
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Feb 2022 00:22:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233358AbiBYXQ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Feb 2022 18:16:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54414 "EHLO
+        id S239282AbiBYXXO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Feb 2022 18:23:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbiBYXQz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 18:16:55 -0500
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3BA361E5A65;
-        Fri, 25 Feb 2022 15:16:22 -0800 (PST)
-Received: from dread.disaster.area (pa49-186-17-0.pa.vic.optusnet.com.au [49.186.17.0])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7FFB6530304;
-        Sat, 26 Feb 2022 10:16:19 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nNjow-00GQk8-BA; Sat, 26 Feb 2022 10:16:18 +1100
-Date:   Sat, 26 Feb 2022 10:16:18 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Darrick J. Wong" <djwong@kernel.org>
-Cc:     Andreas Dilger <adilger@dilger.ca>, NeilBrown <neilb@suse.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Daire Byrne <daire@dneg.com>,
-        Andreas Dilger <adilger.kernel@dilger.ca>
-Subject: Re: [PATCH/RFC] VFS: support parallel updates in the one directory.
-Message-ID: <20220225231618.GQ3061737@dread.disaster.area>
-References: <164568221518.25116.18139840533197037520@noble.neil.brown.name>
- <893053D7-E5DD-43DB-941A-05C10FF5F396@dilger.ca>
- <20220224233848.GC8269@magnolia>
+        with ESMTP id S230190AbiBYXXN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 18:23:13 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46D7132070;
+        Fri, 25 Feb 2022 15:22:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=epmPQ6RPq2hr9/8Tsc2gmOVU08RZyji5PoYx0QfoMwI=; b=hGOP3S6AbwD61QDjWjel5TI5Uj
+        QIzDnIdKHOf+ddi/1iIsPvRAHOJ73XTVuPFKd2pUjKFthBN0qnUwRsGZqlhAwTtaZK1KaY3CE4B/e
+        1qaLc4M3tgwTnbqtA91KT8ZJQtWfuEwhMKnEvYyev8eRjbbBdQYMBhbhFtZ/sNvC+T40dbAWBgnMf
+        M8EuIgo8t8paJkNhWehzCwChBTWP7oWUu8fLQQn5/4IRX9tJFJQascGhM/44sJPINprl+DcwX4Hco
+        ak5rySApzoDTbPlbxDmxnQkP0aZQph9AkpMrrCUcl+ilyBDF3Nn7nNj4XIRtgrsl0JTpu3no6gDMm
+        kzSKMsrg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nNjv1-006De6-Pb; Fri, 25 Feb 2022 23:22:35 +0000
+Date:   Fri, 25 Feb 2022 23:22:35 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+Subject: Re: [PATCH 1/2] Convert NFS from readpages to readahead
+Message-ID: <Yhlku5//fKl1cCiG@casper.infradead.org>
+References: <20220122205453.3958181-1-willy@infradead.org>
+ <Yff0la2VAOewGrhI@casper.infradead.org>
+ <YgFGQi/1RRPSSQpA@casper.infradead.org>
+ <a9384b776cc3ef23fc937f70a9cc4ca9be8d89e0.camel@hammerspace.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220224233848.GC8269@magnolia>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=62196344
-        a=+dVDrTVfsjPpH/ci3UuFng==:117 a=+dVDrTVfsjPpH/ci3UuFng==:17
-        a=kj9zAlcOel0A:10 a=oGFeUVbbRNcA:10 a=7-415B0cAAAA:8
-        a=fKKHiC7PVA1Wypr2PesA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <a9384b776cc3ef23fc937f70a9cc4ca9be8d89e0.camel@hammerspace.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 24, 2022 at 03:38:48PM -0800, Darrick J. Wong wrote:
-> On Thu, Feb 24, 2022 at 09:31:28AM -0700, Andreas Dilger wrote:
-> > On Feb 23, 2022, at 22:57, NeilBrown <neilb@suse.de> wrote:
-> > > 
-> > > 
-> > > I added this:
-> > > --- a/fs/xfs/xfs_icache.c
-> > > +++ b/fs/xfs/xfs_icache.c
-> > > @@ -87,6 +87,7 @@ xfs_inode_alloc(
-> > >    /* VFS doesn't initialise i_mode or i_state! */
-> > >    VFS_I(ip)->i_mode = 0;
-> > >    VFS_I(ip)->i_state = 0;
-> > > +    VFS_I(ip)->i_flags |= S_PAR_UPDATE;
-> > >    mapping_set_large_folios(VFS_I(ip)->i_mapping);
-> > > 
-> > >    XFS_STATS_INC(mp, vn_active);
-> > > 
-> > > and ran my highly sophisticated test in an XFS directory:
-> > > 
-> > > for i in {1..70}; do ( for j in {1000..8000}; do touch $j; rm -f $j ; done ) & done
-> 
-> I think you want something faster here, like ln to hardlink an existing
-> file into the directory.
-> 
-> > > This doesn't crash - which is a good sign.
-> > > While that was going I tried
-> > > while : ; do ls -l ; done
-> > > 
-> > > it sometimes reports garbage for the stat info:
-> > > 
-> > > total 0
-> > > -????????? ? ?    ?    ?            ? 1749
-> > > -????????? ? ?    ?    ?            ? 1764
-> > > -????????? ? ?    ?    ?            ? 1765
-> > > -rw-r--r-- 1 root root 0 Feb 24 16:47 1768
-> > > -rw-r--r-- 1 root root 0 Feb 24 16:47 1770
-> > > -rw-r--r-- 1 root root 0 Feb 24 16:47 1772
-> > > ....
-> > > 
-> > > I *think* that is bad - probably the "garbage" that you referred to?
-> > > 
-> > > Obviously I gets lots of 
-> > > ls: cannot access '1764': No such file or directory
-> > > ls: cannot access '1749': No such file or directory
-> > > ls: cannot access '1780': No such file or directory
-> > > ls: cannot access '1765': No such file or directory
-> > > 
-> > > but that is normal and expected when you are creating and deleting
-> > > files during the ls.
-> > 
-> > The "ls -l" output with "???" is exactly the case where the filename is
-> > in readdir() but stat() on a file fails due to an unavoidable userspace 
-> > race between the two syscalls and the concurrent unlink(). This is
-> > probably visible even without the concurrent dirops patch. 
-> > 
-> > The list of affected filenames even correlates with the reported errors:
-> > 1764, 1765, 1769
-> > 
-> > It looks like everything is working as expected. 
-> 
-> Here, yes.
-> 
-> A problem that I saw a week or two ago with online fsck is that an evil
-> thread repeatedly link()ing and unlink()ing a file into an otherwise
-> empty directory while racing a thread calling readdir() in a loop will
-> eventually trigger a corruption report on the directory namecheck
-> because the loop in xfs_dir2_sf_getdents that uses sfp->count as a loop
-> counter will race with the unlink decrementing sfp->count and run off
-> the end of the inline directory data buffer.
+On Mon, Feb 07, 2022 at 07:47:08PM +0000, Trond Myklebust wrote:
+> I already have them applied to my 'testing' branch, but I can't move
+> that into linux-next until Anna's pull request against -rc3 comes
+> through.
 
-Ah, shortform dirs might need the readdir moved inside the
+Hey Trond,
 
-	lock_mode = xfs_ilock_data_map_shared(dp);
+I'm not seeing any patches in linux-next to fs/nfs/ other than those
+that have gone through Andrew Morton, Jens Axboe and Chuck Lever.
+Has the linux-nfs tree dropped out of linux-next?
 
-section so that the ILOCK is held while readdir is pulling the
-dirents out of the inode - there's no buffer lock to serialise that
-against concurrent modifications like there are for block/leaf/node
-formats.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
