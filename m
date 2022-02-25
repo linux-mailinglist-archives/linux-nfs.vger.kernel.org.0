@@ -2,48 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1FD54C51BD
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Feb 2022 23:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3EC784C51EB
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Feb 2022 00:07:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235698AbiBYWtb convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 25 Feb 2022 17:49:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
+        id S233583AbiBYXHl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Feb 2022 18:07:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbiBYWtb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 17:49:31 -0500
-Received: from cc-smtpout3.netcologne.de (cc-smtpout3.netcologne.de [IPv6:2001:4dd0:100:1062:25:2:0:3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E49481AE679
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Feb 2022 14:48:57 -0800 (PST)
-Received: from cc-smtpin3.netcologne.de (cc-smtpin3.netcologne.de [89.1.8.203])
-        by cc-smtpout3.netcologne.de (Postfix) with ESMTP id 07BFA12491;
-        Fri, 25 Feb 2022 23:48:54 +0100 (CET)
-Received: from nas2.garloff.de (xdsl-89-0-252-109.nc.de [89.0.252.109])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by cc-smtpin3.netcologne.de (Postfix) with ESMTPSA id 44B3C11DF5;
-        Fri, 25 Feb 2022 23:48:49 +0100 (CET)
-Received: from [IPv6:::1] (tmo-085-40.customers.d1-online.com [80.187.85.40])
-        by nas2.garloff.de (Postfix) with ESMTPSA id BC28FB3B131A;
-        Fri, 25 Feb 2022 23:48:38 +0100 (CET)
-Date:   Fri, 25 Feb 2022 23:48:46 +0100
-From:   Kurt Garloff <kurt@garloff.de>
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-CC:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1=5D_NFSv4=2E1_provide_mount?= =?US-ASCII?Q?_option_to_toggle_trunking_discovery?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <a494ba2b-7e2c-bcad-bac9-12804b113383@garloff.de>
-References: <20220223174041.77887-1-olga.kornievskaia@gmail.com> <CAN-5tyHy_+tBfv3PuD0CBwHbppHo3pRNwo0O9xRGjZxK0-rOjw@mail.gmail.com> <a494ba2b-7e2c-bcad-bac9-12804b113383@garloff.de>
-Message-ID: <B476B883-D5D4-4112-BB08-6D9172C5D335@garloff.de>
+        with ESMTP id S231830AbiBYXHk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Feb 2022 18:07:40 -0500
+Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 16DF1223231;
+        Fri, 25 Feb 2022 15:07:07 -0800 (PST)
+Received: from dread.disaster.area (pa49-186-17-0.pa.vic.optusnet.com.au [49.186.17.0])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id 898E910E26DE;
+        Sat, 26 Feb 2022 10:07:04 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1nNjfz-00GQeR-V9; Sat, 26 Feb 2022 10:07:03 +1100
+Date:   Sat, 26 Feb 2022 10:07:03 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     "Darrick J. Wong" <djwong@kernel.org>
+Cc:     NeilBrown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Daire Byrne <daire@dneg.com>,
+        Andreas Dilger <adilger.kernel@dilger.ca>
+Subject: Re: [PATCH/RFC] VFS: support parallel updates in the one directory.
+Message-ID: <20220225230703.GP3061737@dread.disaster.area>
+References: <164549669043.5153.2021348013072574365@noble.neil.brown.name>
+ <20220222224546.GE3061737@dread.disaster.area>
+ <20220224044328.GB8269@magnolia>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-NetCologne-Spam: L
-X-Rspamd-Queue-Id: 44B3C11DF5
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220224044328.GB8269@magnolia>
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=6219611a
+        a=+dVDrTVfsjPpH/ci3UuFng==:117 a=+dVDrTVfsjPpH/ci3UuFng==:17
+        a=kj9zAlcOel0A:10 a=oGFeUVbbRNcA:10 a=7-415B0cAAAA:8
+        a=ncrAElXAJjHIR6zcruwA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,50 +51,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi, 
+On Wed, Feb 23, 2022 at 08:43:28PM -0800, Darrick J. Wong wrote:
+> On Wed, Feb 23, 2022 at 09:45:46AM +1100, Dave Chinner wrote:
+> > On Tue, Feb 22, 2022 at 01:24:50PM +1100, NeilBrown wrote:
+> > > 
+> > > Hi Al,
+> > >  I wonder if you might find time to have a look at this patch.  It
+> > >  allows concurrent updates to a single directory.  This can result in
+> > >  substantial throughput improvements when the application uses multiple
+> > >  threads to create lots of files in the one directory, and there is
+> > >  noticeable per-create latency, as there can be with NFS to a remote
+> > >  server.
+> > > Thanks,
+> > > NeilBrown
+> > > 
+> > > Some filesystems can support parallel modifications to a directory,
+> > > either because the modification happen on a remote server which does its
+> > > own locking (e.g.  NFS) or because they can internally lock just a part
+> > > of a directory (e.g.  many local filesystems, with a bit of work - the
+> > > lustre project has patches for ext4 to support concurrent updates).
+> > > 
+> > > To allow this, we introduce VFS support for parallel modification:
+> > > unlink (including rmdir) and create.  Parallel rename is not (yet)
+> > > supported.
+> > 
+> > Yay!
+> > 
+> > > If a filesystem supports parallel modification in a given directory, it
+> > > sets S_PAR_UNLINK on the inode for that directory.  lookup_open() and
+> > > the new lookup_hash_modify() (similar to __lookup_hash()) notice the
+> > > flag and take a shared lock on the directory, and rely on a lock-bit in
+> > > d_flags, much like parallel lookup relies on DCACHE_PAR_LOOKUP.
+> > 
+> > I suspect that you could enable this for XFS right now. XFS has internal
+> > directory inode locking that should serialise all reads and writes
+> > correctly regardless of what the VFS does. So while the VFS might
+> > use concurrent updates (e.g. inode_lock_shared() instead of
+> > inode_lock() on the dir inode), XFS has an internal metadata lock
+> > that will then serialise the concurrent VFS directory modifications
+> > correctly....
+> 
+> I don't think that will work because xfs_readdir doesn't hold the
+> directory ILOCK while it runs, which means that readdir will see garbage
+> if other threads now only hold inode_lock_shared while they update the
+> directory.
 
-Am 24. Februar 2022 14:42:41 MEZ schrieb Kurt Garloff <kurt@garloff.de>:
->Hi Olga,
->[...] 
->
->I see a number of possibilities to resolve this:
->(0) We pretend it's not a problem that's serious enough to take
->     action (and ensure that we do document this new option well).
->(1) We revert the patch that does FS_LOCATIONS discovery.
->     Assuming that FS_LOCATIONS does provide a useful feature, this
->     would not be our preferred solution, I guess ...
->(2) We prevent NFS v4.1 servers to use FS_LOCATIONS (like my patch
->     implements) and additionally allow for the opt-out with
->     notrunkdiscovery mount option. This fixes the known regression
->     with Qnap knfsd (without requiring user intervention) and still
->     allows for FS_LOCATIONS to be useful with NFSv4.2 servers that
->     support this. The disadvantage is that we won't use the feature
->     on NFSv4.1 servers which might support this feature perfectly
->     (and there's no opt-in possibility). And the risk is that there
->     might be NFSv4.2 servers out there that also misreport
->     FS_LOCATIONS support and still need manual intervention (which
->     at least is possible with notrunkdiscovery).
->(3) We make this feature an opt-in thing and require users to
->     pass trunkdiscovery to take advantage of the feature.
->     This has zero risk of breakage (unless we screw up the patch),
->     but always requires user intervention to take advantage of
->     the FS_LOCATIONS feature.
->(4) Identify a way to recover from the mount with FS_LOCATIONS
->     against the broken server, so instead of hanging we do just
->     turn this off if we find it not to work. Disadavantage is that
->     this adds complexity and might stall the mounting for a while
->     until the recovery worked. The complexity bears the risk for
->     us screwing up.
->
->I personally find solutions 2 -- 4 acceptable.
->
->If the experts see (4) as simple enough, it might be worth a try.
->Otherwise (2) or (3) would seem the way to go from my perspective.
+It repeated picks up and drops the ILOCK as it maps buffers. IOWs,
+the ILOCK serialises the lookup of the buffer at the next offset in
+the readdir process and then reads the data out while the buffer is
+locked. Hence we'll always serialise the buffer lookup and read
+against concurrent modifications so we'll always get the next
+directory buffer in ascending offset order. We then hold the buffer locked
+while we read all the dirents out of it into the user buffer, so
+that's also serialised against concurrent modifications.
 
-Any thought ls? 
+Also, remember that readdir does not guarantee that it returns all
+entries in the face of concurrent modifications that remove entries.
+Because the offset of dirents never changes in the XFS data segment,
+the only time we might skip an entry is when it has been removed
+and it was the last entry in a data block so the entire data block
+goes away between readdir buffer lookups. In that case, we just get
+the next highest offset buffer returned, and we continue onwards.
 
-Thanks, 
+If a hole is filled while we are walking, then we'll see the buffer
+that was added into the hole. That new buffer is now at the next
+highest offset, so readdir finding it is correct and valid
+behaviour...
 
+Cheers,
+
+Dave.
 -- 
-Kurt Garloff <kurt@garloff.de>, Cologne, Germany
-(Sent from Mobile with K9.)
+Dave Chinner
+david@fromorbit.com
