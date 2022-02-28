@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 120754C6C16
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Feb 2022 13:22:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ABF4F4C6C1A
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Feb 2022 13:22:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236010AbiB1MWy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Feb 2022 07:22:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43298 "EHLO
+        id S236248AbiB1MXC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Feb 2022 07:23:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232094AbiB1MWx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Feb 2022 07:22:53 -0500
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 225E770861
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Feb 2022 04:22:14 -0800 (PST)
-Received: by mail-pl1-x62f.google.com with SMTP id q11so10548383pln.11
-        for <linux-nfs@vger.kernel.org>; Mon, 28 Feb 2022 04:22:14 -0800 (PST)
+        with ESMTP id S236255AbiB1MXB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Feb 2022 07:23:01 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B17A274611
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Feb 2022 04:22:22 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id 195so11225601pgc.6
+        for <linux-nfs@vger.kernel.org>; Mon, 28 Feb 2022 04:22:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iCFerXiCPxcpKLyNdx6afs6aHROa19DCxH4ZSTwVEss=;
-        b=lAVHuKfps4dVgtNu+f/E9fvH0TxJ+nuX5cPLAM6rQJRwDD5sqOn8q6qdp/uwxBiBQN
-         zJ3GqG+p6+iTXMPjRhL1uYpSA8Vb+t+gQG8BJLHH736MxOCU/mEZgh1KB3spCvPIJ6kV
-         DtCAxFqQhw/ngttbKDuITF9zu0rgskOQr0h0aX7Qa3WjQ5XRckmcAGuaN1nJIceONSyc
-         2mKL8bRK/yyLOmyBks+8BGNNQUSTo7+ledWxwSiZ/EFwv7VF9iUXFx9Jr1jL4sRzNNT0
-         oLj0YfsGmAo6M31zQx3iodummLbuQhtliTq+YUzm2cQgk5rLGcxthP5fOLrEUwb0Ad2a
-         LM6g==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=19HOHREB3NEbsy4dM9jVcuvJDaSZuxg6+0rHeJjgl+I=;
+        b=o+jT2XLIR7Y7UVKvY8JafceKomqSpgXrMRhIUcYJEMeon2pgAq7w7Uuq6AU2Sz6mcz
+         N0ockYvnCBlCZCqiFw2JXLUem3Zky3vbq36reHdc0d4In6703th6HilA6xP9AiTN7n26
+         Bn80c4iFAd4JUYBDniNKWxraNAivV0PDCX8gauhtZ3p+IbtPR6Jeetw2at8WknPas5MP
+         dg5TX1SLraM+pGz8sxmn34po3dlRur/2Rdeb3Lmv5eexUZdv2hsZfjVUAo9HQtX5i8By
+         +HmHL1kWTAFRlHbDPah2ymV0bPFfwq+yYJxfpuwRhLf1XpHB05DxgvW1NOiu517gGrCa
+         +UaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=iCFerXiCPxcpKLyNdx6afs6aHROa19DCxH4ZSTwVEss=;
-        b=s/cf0aFq9zs8dK3cE58J4z4v7o4tByc4XlWQAfrg+yb1qRHms87IY4qFEk70dAiUZc
-         J5YHawneckL1Pf30YOkeKL7m0jMSkej++lgj8wkric9j/oorhxP8F8uL7S9xCL3R4+jG
-         3HvIZlhw799GIGdAkIuBwaHLVJ4ONz5gpLbd4adR2Ah/nAgg9GEOf6Dez1NGU3DNZVGN
-         o3ztC9NBaTN7WM6KsCBiM3gSY/zlHwtV+oUTZz+M6LGL9OjnuiqJLh3aaEfgjHKE42Z6
-         33T6Zw5BL95fhCpsFa6KcpdCiaOm3A/qzffjM+yA2mzon7CZ53oMj35gYXEfvgaCuT32
-         +IQg==
-X-Gm-Message-State: AOAM532GOJV4aQdBlna8gZeLNv4J2amDkpxDsEerFY32SE1IQTtETbMc
-        +3cAp8A3bWKtCQkrmsYjNiouMg==
-X-Google-Smtp-Source: ABdhPJy0UNWl2R15dNupeH455A7bg7D94HM1445CiSwf49TsplmM/Vjq5kfgEKp1eWPtJ6EdWTEwRg==
-X-Received: by 2002:a17:903:1246:b0:14f:e51e:baa7 with SMTP id u6-20020a170903124600b0014fe51ebaa7mr20311477plh.159.1646050933556;
-        Mon, 28 Feb 2022 04:22:13 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=19HOHREB3NEbsy4dM9jVcuvJDaSZuxg6+0rHeJjgl+I=;
+        b=Fe2WFS4VIea3kbicah7HO5mntkoJY6d4z9OjxT7wCxrKoE0FXgcZ0934e+5yAiqPlq
+         r6T7lvuRer99kNGprRQAWG0PpRPU4Qf/o88JaHO6PcidT7EuVLO2ebbmAZJAv0K/VA3t
+         XGzC1eXnoXDmxc6X4RDyRSdEn4Yl51VNHWDGzAYZprcsTSlEYn/wdcu6Ed4USl3z2g1a
+         XO8dFyGeig7BZFUxH0GSwPy+wZrPNyaDV/NwFMfpOPKzH5lDASCdhqxzKkYyDd5EHIXH
+         3Ui3j+s5OPULe2pokpBFnwkJoONPWVDs921iAukZ/Z2O91Ou4bq1ELumrJ3Vhj1eIJRj
+         F3Hw==
+X-Gm-Message-State: AOAM532aPjqXgCxFE619b7PJXw9MVf+RE8pe4SdIdcqy2lSrjRQtht1V
+        kqAcjgijic2vmHT4/ja5Cd4Xmw==
+X-Google-Smtp-Source: ABdhPJzIC8BNlybGIkNHzucmSZt/c2J6UPZC8cp/U77QOEXiYl5AUGQs6/Cq/PkNCHbZpwqYr/hwAg==
+X-Received: by 2002:a05:6a00:1c47:b0:4e1:2c3a:ac3d with SMTP id s7-20020a056a001c4700b004e12c3aac3dmr21147863pfw.15.1646050942145;
+        Mon, 28 Feb 2022 04:22:22 -0800 (PST)
 Received: from FVFYT0MHHV2J.tiktokcdn.com ([139.177.225.227])
-        by smtp.gmail.com with ESMTPSA id ep22-20020a17090ae65600b001b92477db10sm10466753pjb.29.2022.02.28.04.22.04
+        by smtp.gmail.com with ESMTPSA id ep22-20020a17090ae65600b001b92477db10sm10466753pjb.29.2022.02.28.04.22.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Feb 2022 04:22:13 -0800 (PST)
+        Mon, 28 Feb 2022 04:22:21 -0800 (PST)
 From:   Muchun Song <songmuchun@bytedance.com>
 To:     willy@infradead.org, akpm@linux-foundation.org, hannes@cmpxchg.org,
         mhocko@kernel.org, vdavydov.dev@gmail.com, shakeelb@google.com,
@@ -60,12 +60,13 @@ Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         zhengqi.arch@bytedance.com, duanxiongchun@bytedance.com,
         fam.zheng@bytedance.com, smuchun@gmail.com,
         Muchun Song <songmuchun@bytedance.com>
-Subject: [PATCH v6 00/16] Optimize list lru memory consumption
-Date:   Mon, 28 Feb 2022 20:21:10 +0800
-Message-Id: <20220228122126.37293-1-songmuchun@bytedance.com>
+Subject: [PATCH v6 01/16] mm: list_lru: transpose the array of per-node per-memcg lru lists
+Date:   Mon, 28 Feb 2022 20:21:11 +0800
+Message-Id: <20220228122126.37293-2-songmuchun@bytedance.com>
 X-Mailer: git-send-email 2.32.0 (Apple Git-132)
+In-Reply-To: <20220228122126.37293-1-songmuchun@bytedance.com>
+References: <20220228122126.37293-1-songmuchun@bytedance.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
@@ -76,225 +77,462 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This series is based on Linux v5.17-rc5. And I have replaced Roman's email
-in Acked-by and Reviewed-by tags to roman.gushchin@linux.dev.
+The current scheme of maintaining per-node per-memcg lru lists looks like:
+  struct list_lru {
+    struct list_lru_node *node;           (for each node)
+      struct list_lru_memcg *memcg_lrus;
+        struct list_lru_one *lru[];       (for each memcg)
+  }
 
-In our server, we found a suspected memory leak problem. The kmalloc-32
-consumes more than 6GB of memory. Other kmem_caches consume less than 2GB
-memory.
+By effectively transposing the two-dimension array of list_lru_one's structures
+(per-node per-memcg => per-memcg per-node) it's possible to save some memory
+and simplify alloc/dealloc paths. The new scheme looks like:
+  struct list_lru {
+    struct list_lru_memcg *mlrus;
+      struct list_lru_per_memcg *mlru[];  (for each memcg)
+        struct list_lru_one node[0];      (for each node)
+  }
 
-After our in-depth analysis, the memory consumption of kmalloc-32 slab
-cache is the cause of list_lru_one allocation.
+Memory savings are coming from not only 'struct rcu_head' but also some
+pointer arrays used to store the pointer to 'struct list_lru_one'.  The
+array is per node and its size is 8 (a pointer) * num_memcgs. So the total
+size of the arrays is  8 * num_nodes * memcg_nr_cache_ids. After this patch,
+the size becomes 8 * memcg_nr_cache_ids.
 
-  crash> p memcg_nr_cache_ids
-  memcg_nr_cache_ids = $2 = 24574
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+---
+ include/linux/list_lru.h |  17 ++--
+ mm/list_lru.c            | 206 +++++++++++++++++------------------------------
+ 2 files changed, 86 insertions(+), 137 deletions(-)
 
-memcg_nr_cache_ids is very large and memory consumption of each list_lru
-can be calculated with the following formula.
-
-  num_numa_node * memcg_nr_cache_ids * 32 (kmalloc-32)
-
-There are 4 numa nodes in our system, so each list_lru consumes ~3MB.
-
-  crash> list super_blocks | wc -l
-  952
-
-Every mount will register 2 list lrus, one is for inode, another is for
-dentry. There are 952 super_blocks. So the total memory is 952 * 2 * 3
-MB (~5.6GB). But now the number of memory cgroups is less than 500. So I
-guess more than 12286 memory cgroups have been created on this machine (I
-do not know why there are so many cgroups, it may be a user's bug or
-the user really want to do that). Because memcg_nr_cache_ids has not been
-reduced to a suitable value. It leads to waste a lot of memory. If we want
-to reduce memcg_nr_cache_ids, we have to *reboot* the server. This is not
-what we want.
-
-In order to reduce memcg_nr_cache_ids, I had posted a patchset [1] to do
-this. But this did not fundamentally solve the problem.
-
-We currently allocate scope for every memcg to be able to tracked on every
-superblock instantiated in the system, regardless of whether that superblock
-is even accessible to that memcg.
-
-These huge memcg counts come from container hosts where memcgs are confined
-to just a small subset of the total number of superblocks that instantiated
-at any given point in time.
-
-For these systems with huge container counts, list_lru does not need the
-capability of tracking every memcg on every superblock.
-
-What it comes down to is that the list_lru is only needed for a given memcg
-if that memcg is instatiating and freeing objects on a given list_lru.
-
-As Dave said, "Which makes me think we should be moving more towards 'add the
-memcg to the list_lru at the first insert' model rather than 'instantiate
-all at memcg init time just in case'."
-
-This patchset aims to optimize the list lru memory consumption from different
-aspects.
-
-I had done a easy test to show the optimization. I create 10k memory cgroups
-and mount 10k filesystems in the systems. We use free command to show how many
-memory does the systems comsumes after this operation (There are 2 numa nodes
-in the system).
-
-        +-----------------------+------------------------+
-        |      condition        |   memory consumption   |
-        +-----------------------+------------------------+
-        | without this patchset |        24464 MB        |
-        +-----------------------+------------------------+
-        |     after patch 1     |        21957 MB        | <--------+
-        +-----------------------+------------------------+          |
-        |     after patch 10    |         6895 MB        |          |
-        +-----------------------+------------------------+          |
-        |     after patch 12    |         4367 MB        |          |
-        +-----------------------+------------------------+          |
-                                                                    |
-        The more the number of nodes, the more obvious the effect---+
-
-BTW, there was a recent discussion [2] on the same issue.
-
-[1] https://lore.kernel.org/all/20210428094949.43579-1-songmuchun@bytedance.com/
-[2] https://lore.kernel.org/all/20210405054848.GA1077931@in.ibm.com/
-
-This series not only optimizes the memory usage of list_lru but also
-simplifies the code.
-
-v5: https://lore.kernel.org/all/20211220085649.8196-1-songmuchun@bytedance.com/
-v4: https://lore.kernel.org/all/20211213165342.74704-1-songmuchun@bytedance.com/
-v3: https://lore.kernel.org/all/20210914072938.6440-1-songmuchun@bytedance.com/
-v2: https://lore.kernel.org/all/20210527062148.9361-1-songmuchun@bytedance.com/
-v1: https://lore.kernel.org/all/20210511104647.604-1-songmuchun@bytedance.com/
-
-v6:
-  - Collect Acked-by from Roman and replace his old email with
-    roman.gushchin@linux.dev.
-  - Rework patch 1's commit log suggested by Roman.
-  - Reuse memory cgroup ID for kmem ID directly suggested by Mika Penttilä.
-  - Add a couple of words to Documentation/filesystems/porting.rst suggested
-    by Roman.
-
-  Thanks for your review.
-
-v5:
-  - Fix sleeping from atomic context reported by kernel test robot.
-  - Add a figure to patch 1 suggested by Johannes.
-  - Squash patch 9 into patch 8 suggested by Johannes.
-  - Remove LRUS_CLEAR_MASK and use GFP_RECLAIM_MASK directly suggested
-    by Johannes.
-  - Collect Acked-by from Johannes.
-
-v4:
-  - Remove some code cleanup patches since they are already merged.
-  - Collect Acked-by from Theodore.
-
-v3:
-  - Fix mixing advanced and normal XArray concepts (Thanks to Matthew).
-  - Split one patch into per-filesystem patches.
-
-v2:
-  - Update Documentation/filesystems/porting.rst suggested by Dave.
-  - Add a comment above alloc_inode_sb() suggested by Dave.
-  - Rework some patch's commit log.
-  - Add patch 18-21.
-
-Muchun Song (16):
-  mm: list_lru: transpose the array of per-node per-memcg lru lists
-  mm: introduce kmem_cache_alloc_lru
-  fs: introduce alloc_inode_sb() to allocate filesystems specific inode
-  fs: allocate inode by using alloc_inode_sb()
-  f2fs: allocate inode by using alloc_inode_sb()
-  nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
-  mm: dcache: use kmem_cache_alloc_lru() to allocate dentry
-  xarray: use kmem_cache_alloc_lru to allocate xa_node
-  mm: memcontrol: move memcg_online_kmem() to mem_cgroup_css_online()
-  mm: list_lru: allocate list_lru_one only when needed
-  mm: list_lru: rename memcg_drain_all_list_lrus to
-    memcg_reparent_list_lrus
-  mm: list_lru: replace linear array with xarray
-  mm: memcontrol: reuse memory cgroup ID for kmem ID
-  mm: memcontrol: fix cannot alloc the maximum memcg ID
-  mm: list_lru: rename list_lru_per_memcg to list_lru_memcg
-  mm: memcontrol: rename memcg_cache_id to memcg_kmem_id
-
- Documentation/filesystems/porting.rst |   6 +
- block/bdev.c                          |   2 +-
- drivers/dax/super.c                   |   2 +-
- fs/9p/vfs_inode.c                     |   2 +-
- fs/adfs/super.c                       |   2 +-
- fs/affs/super.c                       |   2 +-
- fs/afs/super.c                        |   2 +-
- fs/befs/linuxvfs.c                    |   2 +-
- fs/bfs/inode.c                        |   2 +-
- fs/btrfs/inode.c                      |   2 +-
- fs/ceph/inode.c                       |   2 +-
- fs/cifs/cifsfs.c                      |   2 +-
- fs/coda/inode.c                       |   2 +-
- fs/dcache.c                           |   3 +-
- fs/ecryptfs/super.c                   |   2 +-
- fs/efs/super.c                        |   2 +-
- fs/erofs/super.c                      |   2 +-
- fs/exfat/super.c                      |   2 +-
- fs/ext2/super.c                       |   2 +-
- fs/ext4/super.c                       |   2 +-
- fs/f2fs/super.c                       |   8 +-
- fs/fat/inode.c                        |   2 +-
- fs/freevxfs/vxfs_super.c              |   2 +-
- fs/fuse/inode.c                       |   2 +-
- fs/gfs2/super.c                       |   2 +-
- fs/hfs/super.c                        |   2 +-
- fs/hfsplus/super.c                    |   2 +-
- fs/hostfs/hostfs_kern.c               |   2 +-
- fs/hpfs/super.c                       |   2 +-
- fs/hugetlbfs/inode.c                  |   2 +-
- fs/inode.c                            |   2 +-
- fs/isofs/inode.c                      |   2 +-
- fs/jffs2/super.c                      |   2 +-
- fs/jfs/super.c                        |   2 +-
- fs/minix/inode.c                      |   2 +-
- fs/nfs/inode.c                        |   2 +-
- fs/nfs/nfs42xattr.c                   |  95 ++++----
- fs/nilfs2/super.c                     |   2 +-
- fs/ntfs/inode.c                       |   2 +-
- fs/ntfs3/super.c                      |   2 +-
- fs/ocfs2/dlmfs/dlmfs.c                |   2 +-
- fs/ocfs2/super.c                      |   2 +-
- fs/openpromfs/inode.c                 |   2 +-
- fs/orangefs/super.c                   |   2 +-
- fs/overlayfs/super.c                  |   2 +-
- fs/proc/inode.c                       |   2 +-
- fs/qnx4/inode.c                       |   2 +-
- fs/qnx6/inode.c                       |   2 +-
- fs/reiserfs/super.c                   |   2 +-
- fs/romfs/super.c                      |   2 +-
- fs/squashfs/super.c                   |   2 +-
- fs/sysv/inode.c                       |   2 +-
- fs/ubifs/super.c                      |   2 +-
- fs/udf/super.c                        |   2 +-
- fs/ufs/super.c                        |   2 +-
- fs/vboxsf/super.c                     |   2 +-
- fs/xfs/xfs_icache.c                   |   2 +-
- fs/zonefs/super.c                     |   2 +-
- include/linux/fs.h                    |  11 +
- include/linux/list_lru.h              |  17 +-
- include/linux/memcontrol.h            |  41 ++--
- include/linux/slab.h                  |   3 +
- include/linux/swap.h                  |   5 +-
- include/linux/xarray.h                |   9 +-
- ipc/mqueue.c                          |   2 +-
- lib/xarray.c                          |  10 +-
- mm/list_lru.c                         | 417 ++++++++++++++++------------------
- mm/memcontrol.c                       | 160 ++-----------
- mm/shmem.c                            |   2 +-
- mm/slab.c                             |  39 +++-
- mm/slab.h                             |  25 +-
- mm/slob.c                             |   6 +
- mm/slub.c                             |  42 ++--
- mm/workingset.c                       |   2 +-
- net/socket.c                          |   2 +-
- net/sunrpc/rpc_pipe.c                 |   2 +-
- 76 files changed, 476 insertions(+), 539 deletions(-)
-
+diff --git a/include/linux/list_lru.h b/include/linux/list_lru.h
+index 1b5fceb565df..729a27b6ff53 100644
+--- a/include/linux/list_lru.h
++++ b/include/linux/list_lru.h
+@@ -31,10 +31,15 @@ struct list_lru_one {
+ 	long			nr_items;
+ };
+ 
++struct list_lru_per_memcg {
++	/* array of per cgroup per node lists, indexed by node id */
++	struct list_lru_one	node[0];
++};
++
+ struct list_lru_memcg {
+-	struct rcu_head		rcu;
++	struct rcu_head			rcu;
+ 	/* array of per cgroup lists, indexed by memcg_cache_id */
+-	struct list_lru_one	*lru[];
++	struct list_lru_per_memcg	*mlru[];
+ };
+ 
+ struct list_lru_node {
+@@ -42,11 +47,7 @@ struct list_lru_node {
+ 	spinlock_t		lock;
+ 	/* global list, used for the root cgroup in cgroup aware lrus */
+ 	struct list_lru_one	lru;
+-#ifdef CONFIG_MEMCG_KMEM
+-	/* for cgroup aware lrus points to per cgroup lists, otherwise NULL */
+-	struct list_lru_memcg	__rcu *memcg_lrus;
+-#endif
+-	long nr_items;
++	long			nr_items;
+ } ____cacheline_aligned_in_smp;
+ 
+ struct list_lru {
+@@ -55,6 +56,8 @@ struct list_lru {
+ 	struct list_head	list;
+ 	int			shrinker_id;
+ 	bool			memcg_aware;
++	/* for cgroup aware lrus points to per cgroup lists, otherwise NULL */
++	struct list_lru_memcg	__rcu *mlrus;
+ #endif
+ };
+ 
+diff --git a/mm/list_lru.c b/mm/list_lru.c
+index 0cd5e89ca063..7d1356241aa8 100644
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -49,35 +49,37 @@ static int lru_shrinker_id(struct list_lru *lru)
+ }
+ 
+ static inline struct list_lru_one *
+-list_lru_from_memcg_idx(struct list_lru_node *nlru, int idx)
++list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
+ {
+-	struct list_lru_memcg *memcg_lrus;
++	struct list_lru_memcg *mlrus;
++	struct list_lru_node *nlru = &lru->node[nid];
++
+ 	/*
+ 	 * Either lock or RCU protects the array of per cgroup lists
+-	 * from relocation (see memcg_update_list_lru_node).
++	 * from relocation (see memcg_update_list_lru).
+ 	 */
+-	memcg_lrus = rcu_dereference_check(nlru->memcg_lrus,
+-					   lockdep_is_held(&nlru->lock));
+-	if (memcg_lrus && idx >= 0)
+-		return memcg_lrus->lru[idx];
++	mlrus = rcu_dereference_check(lru->mlrus, lockdep_is_held(&nlru->lock));
++	if (mlrus && idx >= 0)
++		return &mlrus->mlru[idx]->node[nid];
+ 	return &nlru->lru;
+ }
+ 
+ static inline struct list_lru_one *
+-list_lru_from_kmem(struct list_lru_node *nlru, void *ptr,
++list_lru_from_kmem(struct list_lru *lru, int nid, void *ptr,
+ 		   struct mem_cgroup **memcg_ptr)
+ {
++	struct list_lru_node *nlru = &lru->node[nid];
+ 	struct list_lru_one *l = &nlru->lru;
+ 	struct mem_cgroup *memcg = NULL;
+ 
+-	if (!nlru->memcg_lrus)
++	if (!lru->mlrus)
+ 		goto out;
+ 
+ 	memcg = mem_cgroup_from_obj(ptr);
+ 	if (!memcg)
+ 		goto out;
+ 
+-	l = list_lru_from_memcg_idx(nlru, memcg_cache_id(memcg));
++	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
+ out:
+ 	if (memcg_ptr)
+ 		*memcg_ptr = memcg;
+@@ -103,18 +105,18 @@ static inline bool list_lru_memcg_aware(struct list_lru *lru)
+ }
+ 
+ static inline struct list_lru_one *
+-list_lru_from_memcg_idx(struct list_lru_node *nlru, int idx)
++list_lru_from_memcg_idx(struct list_lru *lru, int nid, int idx)
+ {
+-	return &nlru->lru;
++	return &lru->node[nid].lru;
+ }
+ 
+ static inline struct list_lru_one *
+-list_lru_from_kmem(struct list_lru_node *nlru, void *ptr,
++list_lru_from_kmem(struct list_lru *lru, int nid, void *ptr,
+ 		   struct mem_cgroup **memcg_ptr)
+ {
+ 	if (memcg_ptr)
+ 		*memcg_ptr = NULL;
+-	return &nlru->lru;
++	return &lru->node[nid].lru;
+ }
+ #endif /* CONFIG_MEMCG_KMEM */
+ 
+@@ -127,7 +129,7 @@ bool list_lru_add(struct list_lru *lru, struct list_head *item)
+ 
+ 	spin_lock(&nlru->lock);
+ 	if (list_empty(item)) {
+-		l = list_lru_from_kmem(nlru, item, &memcg);
++		l = list_lru_from_kmem(lru, nid, item, &memcg);
+ 		list_add_tail(item, &l->list);
+ 		/* Set shrinker bit if the first element was added */
+ 		if (!l->nr_items++)
+@@ -150,7 +152,7 @@ bool list_lru_del(struct list_lru *lru, struct list_head *item)
+ 
+ 	spin_lock(&nlru->lock);
+ 	if (!list_empty(item)) {
+-		l = list_lru_from_kmem(nlru, item, NULL);
++		l = list_lru_from_kmem(lru, nid, item, NULL);
+ 		list_del_init(item);
+ 		l->nr_items--;
+ 		nlru->nr_items--;
+@@ -180,12 +182,11 @@ EXPORT_SYMBOL_GPL(list_lru_isolate_move);
+ unsigned long list_lru_count_one(struct list_lru *lru,
+ 				 int nid, struct mem_cgroup *memcg)
+ {
+-	struct list_lru_node *nlru = &lru->node[nid];
+ 	struct list_lru_one *l;
+ 	long count;
+ 
+ 	rcu_read_lock();
+-	l = list_lru_from_memcg_idx(nlru, memcg_cache_id(memcg));
++	l = list_lru_from_memcg_idx(lru, nid, memcg_cache_id(memcg));
+ 	count = READ_ONCE(l->nr_items);
+ 	rcu_read_unlock();
+ 
+@@ -206,16 +207,16 @@ unsigned long list_lru_count_node(struct list_lru *lru, int nid)
+ EXPORT_SYMBOL_GPL(list_lru_count_node);
+ 
+ static unsigned long
+-__list_lru_walk_one(struct list_lru_node *nlru, int memcg_idx,
++__list_lru_walk_one(struct list_lru *lru, int nid, int memcg_idx,
+ 		    list_lru_walk_cb isolate, void *cb_arg,
+ 		    unsigned long *nr_to_walk)
+ {
+-
++	struct list_lru_node *nlru = &lru->node[nid];
+ 	struct list_lru_one *l;
+ 	struct list_head *item, *n;
+ 	unsigned long isolated = 0;
+ 
+-	l = list_lru_from_memcg_idx(nlru, memcg_idx);
++	l = list_lru_from_memcg_idx(lru, nid, memcg_idx);
+ restart:
+ 	list_for_each_safe(item, n, &l->list) {
+ 		enum lru_status ret;
+@@ -272,8 +273,8 @@ list_lru_walk_one(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
+ 	unsigned long ret;
+ 
+ 	spin_lock(&nlru->lock);
+-	ret = __list_lru_walk_one(nlru, memcg_cache_id(memcg), isolate, cb_arg,
+-				  nr_to_walk);
++	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
++				  cb_arg, nr_to_walk);
+ 	spin_unlock(&nlru->lock);
+ 	return ret;
+ }
+@@ -288,8 +289,8 @@ list_lru_walk_one_irq(struct list_lru *lru, int nid, struct mem_cgroup *memcg,
+ 	unsigned long ret;
+ 
+ 	spin_lock_irq(&nlru->lock);
+-	ret = __list_lru_walk_one(nlru, memcg_cache_id(memcg), isolate, cb_arg,
+-				  nr_to_walk);
++	ret = __list_lru_walk_one(lru, nid, memcg_cache_id(memcg), isolate,
++				  cb_arg, nr_to_walk);
+ 	spin_unlock_irq(&nlru->lock);
+ 	return ret;
+ }
+@@ -308,7 +309,7 @@ unsigned long list_lru_walk_node(struct list_lru *lru, int nid,
+ 			struct list_lru_node *nlru = &lru->node[nid];
+ 
+ 			spin_lock(&nlru->lock);
+-			isolated += __list_lru_walk_one(nlru, memcg_idx,
++			isolated += __list_lru_walk_one(lru, nid, memcg_idx,
+ 							isolate, cb_arg,
+ 							nr_to_walk);
+ 			spin_unlock(&nlru->lock);
+@@ -328,166 +329,111 @@ static void init_one_lru(struct list_lru_one *l)
+ }
+ 
+ #ifdef CONFIG_MEMCG_KMEM
+-static void __memcg_destroy_list_lru_node(struct list_lru_memcg *memcg_lrus,
+-					  int begin, int end)
++static void memcg_destroy_list_lru_range(struct list_lru_memcg *mlrus,
++					 int begin, int end)
+ {
+ 	int i;
+ 
+ 	for (i = begin; i < end; i++)
+-		kfree(memcg_lrus->lru[i]);
++		kfree(mlrus->mlru[i]);
+ }
+ 
+-static int __memcg_init_list_lru_node(struct list_lru_memcg *memcg_lrus,
+-				      int begin, int end)
++static int memcg_init_list_lru_range(struct list_lru_memcg *mlrus,
++				     int begin, int end)
+ {
+ 	int i;
+ 
+ 	for (i = begin; i < end; i++) {
+-		struct list_lru_one *l;
++		int nid;
++		struct list_lru_per_memcg *mlru;
+ 
+-		l = kmalloc(sizeof(struct list_lru_one), GFP_KERNEL);
+-		if (!l)
++		mlru = kmalloc(struct_size(mlru, node, nr_node_ids), GFP_KERNEL);
++		if (!mlru)
+ 			goto fail;
+ 
+-		init_one_lru(l);
+-		memcg_lrus->lru[i] = l;
++		for_each_node(nid)
++			init_one_lru(&mlru->node[nid]);
++		mlrus->mlru[i] = mlru;
+ 	}
+ 	return 0;
+ fail:
+-	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
++	memcg_destroy_list_lru_range(mlrus, begin, i);
+ 	return -ENOMEM;
+ }
+ 
+-static int memcg_init_list_lru_node(struct list_lru_node *nlru)
++static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+ {
+-	struct list_lru_memcg *memcg_lrus;
++	struct list_lru_memcg *mlrus;
+ 	int size = memcg_nr_cache_ids;
+ 
+-	memcg_lrus = kvmalloc(struct_size(memcg_lrus, lru, size), GFP_KERNEL);
+-	if (!memcg_lrus)
++	lru->memcg_aware = memcg_aware;
++	if (!memcg_aware)
++		return 0;
++
++	mlrus = kvmalloc(struct_size(mlrus, mlru, size), GFP_KERNEL);
++	if (!mlrus)
+ 		return -ENOMEM;
+ 
+-	if (__memcg_init_list_lru_node(memcg_lrus, 0, size)) {
+-		kvfree(memcg_lrus);
++	if (memcg_init_list_lru_range(mlrus, 0, size)) {
++		kvfree(mlrus);
+ 		return -ENOMEM;
+ 	}
+-	RCU_INIT_POINTER(nlru->memcg_lrus, memcg_lrus);
++	RCU_INIT_POINTER(lru->mlrus, mlrus);
+ 
+ 	return 0;
+ }
+ 
+-static void memcg_destroy_list_lru_node(struct list_lru_node *nlru)
++static void memcg_destroy_list_lru(struct list_lru *lru)
+ {
+-	struct list_lru_memcg *memcg_lrus;
++	struct list_lru_memcg *mlrus;
++
++	if (!list_lru_memcg_aware(lru))
++		return;
++
+ 	/*
+ 	 * This is called when shrinker has already been unregistered,
+ 	 * and nobody can use it. So, there is no need to use kvfree_rcu().
+ 	 */
+-	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus, true);
+-	__memcg_destroy_list_lru_node(memcg_lrus, 0, memcg_nr_cache_ids);
+-	kvfree(memcg_lrus);
++	mlrus = rcu_dereference_protected(lru->mlrus, true);
++	memcg_destroy_list_lru_range(mlrus, 0, memcg_nr_cache_ids);
++	kvfree(mlrus);
+ }
+ 
+-static int memcg_update_list_lru_node(struct list_lru_node *nlru,
+-				      int old_size, int new_size)
++static int memcg_update_list_lru(struct list_lru *lru, int old_size, int new_size)
+ {
+ 	struct list_lru_memcg *old, *new;
+ 
+ 	BUG_ON(old_size > new_size);
+ 
+-	old = rcu_dereference_protected(nlru->memcg_lrus,
++	old = rcu_dereference_protected(lru->mlrus,
+ 					lockdep_is_held(&list_lrus_mutex));
+-	new = kvmalloc(struct_size(new, lru, new_size), GFP_KERNEL);
++	new = kvmalloc(struct_size(new, mlru, new_size), GFP_KERNEL);
+ 	if (!new)
+ 		return -ENOMEM;
+ 
+-	if (__memcg_init_list_lru_node(new, old_size, new_size)) {
++	if (memcg_init_list_lru_range(new, old_size, new_size)) {
+ 		kvfree(new);
+ 		return -ENOMEM;
+ 	}
+ 
+-	memcpy(&new->lru, &old->lru, flex_array_size(new, lru, old_size));
+-	rcu_assign_pointer(nlru->memcg_lrus, new);
++	memcpy(&new->mlru, &old->mlru, flex_array_size(new, mlru, old_size));
++	rcu_assign_pointer(lru->mlrus, new);
+ 	kvfree_rcu(old, rcu);
+ 	return 0;
+ }
+ 
+-static void memcg_cancel_update_list_lru_node(struct list_lru_node *nlru,
+-					      int old_size, int new_size)
+-{
+-	struct list_lru_memcg *memcg_lrus;
+-
+-	memcg_lrus = rcu_dereference_protected(nlru->memcg_lrus,
+-					       lockdep_is_held(&list_lrus_mutex));
+-	/* do not bother shrinking the array back to the old size, because we
+-	 * cannot handle allocation failures here */
+-	__memcg_destroy_list_lru_node(memcg_lrus, old_size, new_size);
+-}
+-
+-static int memcg_init_list_lru(struct list_lru *lru, bool memcg_aware)
+-{
+-	int i;
+-
+-	lru->memcg_aware = memcg_aware;
+-
+-	if (!memcg_aware)
+-		return 0;
+-
+-	for_each_node(i) {
+-		if (memcg_init_list_lru_node(&lru->node[i]))
+-			goto fail;
+-	}
+-	return 0;
+-fail:
+-	for (i = i - 1; i >= 0; i--) {
+-		if (!lru->node[i].memcg_lrus)
+-			continue;
+-		memcg_destroy_list_lru_node(&lru->node[i]);
+-	}
+-	return -ENOMEM;
+-}
+-
+-static void memcg_destroy_list_lru(struct list_lru *lru)
+-{
+-	int i;
+-
+-	if (!list_lru_memcg_aware(lru))
+-		return;
+-
+-	for_each_node(i)
+-		memcg_destroy_list_lru_node(&lru->node[i]);
+-}
+-
+-static int memcg_update_list_lru(struct list_lru *lru,
+-				 int old_size, int new_size)
+-{
+-	int i;
+-
+-	for_each_node(i) {
+-		if (memcg_update_list_lru_node(&lru->node[i],
+-					       old_size, new_size))
+-			goto fail;
+-	}
+-	return 0;
+-fail:
+-	for (i = i - 1; i >= 0; i--) {
+-		if (!lru->node[i].memcg_lrus)
+-			continue;
+-
+-		memcg_cancel_update_list_lru_node(&lru->node[i],
+-						  old_size, new_size);
+-	}
+-	return -ENOMEM;
+-}
+-
+ static void memcg_cancel_update_list_lru(struct list_lru *lru,
+ 					 int old_size, int new_size)
+ {
+-	int i;
++	struct list_lru_memcg *mlrus;
+ 
+-	for_each_node(i)
+-		memcg_cancel_update_list_lru_node(&lru->node[i],
+-						  old_size, new_size);
++	mlrus = rcu_dereference_protected(lru->mlrus,
++					  lockdep_is_held(&list_lrus_mutex));
++	/*
++	 * Do not bother shrinking the array back to the old size, because we
++	 * cannot handle allocation failures here.
++	 */
++	memcg_destroy_list_lru_range(mlrus, old_size, new_size);
+ }
+ 
+ int memcg_update_all_list_lrus(int new_size)
+@@ -524,8 +470,8 @@ static void memcg_drain_list_lru_node(struct list_lru *lru, int nid,
+ 	 */
+ 	spin_lock_irq(&nlru->lock);
+ 
+-	src = list_lru_from_memcg_idx(nlru, src_idx);
+-	dst = list_lru_from_memcg_idx(nlru, dst_idx);
++	src = list_lru_from_memcg_idx(lru, nid, src_idx);
++	dst = list_lru_from_memcg_idx(lru, nid, dst_idx);
+ 
+ 	list_splice_init(&src->list, &dst->list);
+ 
 -- 
 2.11.0
 
