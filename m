@@ -2,61 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F2934CB3A6
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Mar 2022 01:35:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BA664CB40C
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Mar 2022 02:09:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230350AbiCCAaW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 2 Mar 2022 19:30:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39036 "EHLO
+        id S230466AbiCCAuq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 2 Mar 2022 19:50:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230342AbiCCAaV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Mar 2022 19:30:21 -0500
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAD3151318
-        for <linux-nfs@vger.kernel.org>; Wed,  2 Mar 2022 16:29:36 -0800 (PST)
-Received: by mail-qk1-x72d.google.com with SMTP id g24so2779640qkl.3
-        for <linux-nfs@vger.kernel.org>; Wed, 02 Mar 2022 16:29:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ETM+Zu622nDqVa3wz+osL6CiDEUlv57g1pg0q6yBmFs=;
-        b=1cVjwE4vryVzO1VUWJHcv42VskLLZjk0RsqPoeURS2jD7Uxvwz6pQIVXxlwysIk2P+
-         sKDKbeU4gOZm6AIwCT15S8A1zrNeXV9ouyjHz2tRsR6cvr5B1ntLqqCAwNv6ERiQWFCT
-         /islPG8S+hCZ7lvveaZjL1vC57gnghbBzl4DznRjFFxzj2RYpY9Pk6PFNIrZQcF7uMsj
-         HT3UXTbP/ECCPSy65z1SiWUO2YA9z/UHYL6b39AyEFcVwIqgDV9Hq+8c2gPCKfSQ4rnk
-         LeYWPKQm78CCvfcVL9x3QYyseJIuxjvtATbEH3nYeaM2LOC9We3f9Veek/QeZ0+piUFL
-         3s1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ETM+Zu622nDqVa3wz+osL6CiDEUlv57g1pg0q6yBmFs=;
-        b=lKYOpu7HTPh+J/ApzmmU5wczm0kowxalvvxrHQpasG+t0Kfx4X5WDWBXMKhscoumVn
-         Jlp+/BItBSLYHxyk8v2Wz+admJeQCjOeM0cVy708/zsf6so+SqBUBLU1ZMH1v0GXlzVk
-         eFwb8sFBArKviBO1DidfoHmXyiPTjRE5ATeTcchK0SJ5W/Td4qdpiKQEQGrz5Zp9m/c4
-         teL+aXnS5zmznraPosj/lx3d+2notj5nAdfKZ8UmziVeo4okgvWLl9Hx7vt6O+mu3RIv
-         Cnlgn6Z7TDI0E+l8S3iXN+0L+IqzunomVYRlpFEXPXksc0cifKA8Bs7k1itj46qeu+My
-         ZaNA==
-X-Gm-Message-State: AOAM532Tm67wZAM8MHWX789ZwnJymliM0YDnwzhSAwULF5g0ZjIfRzgH
-        Whe5UlqhHk277D3R2RUZqJ+Lwg==
-X-Google-Smtp-Source: ABdhPJzoVMhT8D0gM/0LXP1xare2z7FtUCv+HsdrSWtLb6mAt893AwDDw4kA6s1FROaqoFOw8sWC/Q==
-X-Received: by 2002:a37:9c92:0:b0:60d:d77e:e643 with SMTP id f140-20020a379c92000000b0060dd77ee643mr18108824qke.252.1646267375830;
-        Wed, 02 Mar 2022 16:29:35 -0800 (PST)
-Received: from localhost (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id c16-20020a05622a059000b002dc93dc92d1sm403829qtb.48.2022.03.02.16.29.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Mar 2022 16:29:35 -0800 (PST)
-Date:   Wed, 2 Mar 2022 19:29:34 -0500
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
+        with ESMTP id S230495AbiCCAuq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 2 Mar 2022 19:50:46 -0500
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC42C85BD0;
+        Wed,  2 Mar 2022 16:50:01 -0800 (PST)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 266DA72C8; Wed,  2 Mar 2022 19:50:01 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 266DA72C8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1646268601;
+        bh=PVPdsK6mDTStjJW2Q2VEm4DPwkA73bY/qghpukeoqYk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kRUVK90Fr4BZ3TN4Zkf92wnI3pXU4iaw0N4fSi8b5d1oEzRIfhP7HiMSyHQ5yVT8a
+         SmLdu2duEqyUCQTeR1rgkX/DGMh/UldSbabMR6PW0w0lWQcDsiCPK7TT/EAmTM/3Tg
+         MVNlxGxKz/W+XHuuGFSXRb/BuV58fnQ5x/YzCREM=
+Date:   Wed, 2 Mar 2022 19:50:01 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Josef Bacik <josef@toxicpanda.com>
 Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
         linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
 Subject: Re: nfs generic/373 failure after "fs: allow cross-vfsmount
  reflink/dedupe"
-Message-ID: <YiAL7uNA3ZiaBCE6@localhost.localdomain>
-References: <20220302065952.GE3927073@dread.disaster.area>
- <CAOQ4uxgU7cYAO+KMd=Yb8Fo4AwScQ2J0eqkYn3xWjzBWKtUziQ@mail.gmail.com>
+Message-ID: <20220303005001.GB21944@fieldses.org>
+References: <CAOQ4uxgU7cYAO+KMd=Yb8Fo4AwScQ2J0eqkYn3xWjzBWKtUziQ@mail.gmail.com>
  <20220302082658.GF3927073@dread.disaster.area>
  <CAOQ4uxgiL2eqx-kad+dddXvXPREKT-w3_BnLzdoJaJqGm=H=vA@mail.gmail.com>
  <20220302211226.GG3927073@dread.disaster.area>
@@ -65,112 +41,66 @@ References: <20220302065952.GE3927073@dread.disaster.area>
  <20220302224250.GF10757@fieldses.org>
  <YiABiLtH/4nMJE+u@localhost.localdomain>
  <20220303000735.GA21944@fieldses.org>
+ <YiAL7uNA3ZiaBCE6@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220303000735.GA21944@fieldses.org>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <YiAL7uNA3ZiaBCE6@localhost.localdomain>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 07:07:35PM -0500, J. Bruce Fields wrote:
-> On Wed, Mar 02, 2022 at 06:45:12PM -0500, Josef Bacik wrote:
-> > On Wed, Mar 02, 2022 at 05:42:50PM -0500, J. Bruce Fields wrote:
-> > > On Wed, Mar 02, 2022 at 05:26:08PM -0500, Josef Bacik wrote:
-> > > > On Wed, Mar 02, 2022 at 05:04:50PM -0500, J. Bruce Fields wrote:
-> > > > > I started seeing generic/373 fail on recent linux-next in NFS testing.
-> > > > > 
-> > > > > Bisect lands it on aaf40970b1d0 "fs: allow cross-vfsmount
-> > > > > reflink/dedupe".
-> > > > > 
-> > > > > The test fails because a clone between two mounts is expected to fail,
-> > > > > and no longer does.
-> > > > > 
-> > > > > In my setup both mounts are nfs mounts.  They are mounts of different
-> > > > > exports, and the exports are exports of different filesystems.  So it
-> > > > > does make sense that the clone should fail.
-> > > > > 
-> > > > > I see the NFS client send a CLONE rpc to the server, and the server
-> > > > > return success.  That seems wrong.
-> > > > > 
-> > > > > Both exported filesystems are xfs, and from the code it looks like the
-> > > > > server calls vfs_clone_file_range(), which ends up calling
-> > > > > xfs_file_remap_range().
-> > > > > 
-> > > > > Are we missing a check now in that xfs case?
-> > > > > 
-> > > > > I haven't looked any more closely at what's going on, so I could be
-> > > > > missing something.
-> > > > > 
-> > > > 
-> > > > Yeah there's a few fstests that test this functionality that need to be removed,
-> > > > I have patches pending for this in our fstests staging tree (since we run
-> > > > fstests nightly on our tree)
-> > > > 
-> > > > https://github.com/btrfs/fstests/tree/staging
-> > > > 
-> > > > Right now the patches just remove the tests from auto since that's what we run,
-> > > > I'll remove them properly once the patch lands in linus.  Thanks,
-> > > 
-> > > So, out of curiosity, what is xfs doing in this case?  These are two
-> > > filesystems on separate partitions, is it falling back on a read/write
-> > > loop or something?
+On Wed, Mar 02, 2022 at 07:29:34PM -0500, Josef Bacik wrote:
+> On Wed, Mar 02, 2022 at 07:07:35PM -0500, J. Bruce Fields wrote:
+> > Sorry, took me a minute to understand, myself:
 > > 
-> > I don't think so?  I'm actually kind of confused, because nfsd does
-> > vfs_clone_file_range, and the only place I messed with for CLONE was
-> > ioctl_clone_file, so the patch changed literally nothing, unless you aren't
-> > using nfsd for the server?
+> > It's actually only the client behavior that changed.  Previously the
+> > client would reject an attempt to clone across filesystems, so the
+> > server never saw such a request.  After this patch, the client will go
+> > ahead and send the CLONE.  (Which, come to think of it, is probably the
+> > right thing for the client to do.)
 > > 
-> > And if they are in fact two different file systems the i_sb != i_sb of the
-> > files, so there's something pretty strange going on here, my patch shouldn't
-> > affect your setup.  Thanks,
+> > So the server's probably always had a bug, and this just uncovered it.
+> > 
+> > I'd be curious what the consequences are.  And where the check should be
+> > (above or below vfs_clone_file_range()?).
+> > 
 > 
-> Sorry, took me a minute to understand, myself:
+> This is where I'm confused, this really shouldn't succeed
 > 
-> It's actually only the client behavior that changed.  Previously the
-> client would reject an attempt to clone across filesystems, so the
-> server never saw such a request.  After this patch, the client will go
-> ahead and send the CLONE.  (Which, come to think of it, is probably the
-> right thing for the client to do.)
+> loff_t do_clone_file_range(struct file *file_in, loff_t pos_in,
+>                            struct file *file_out, loff_t pos_out,
+>                            loff_t len, unsigned int remap_flags)
+> {
+>         loff_t ret;
 > 
-> So the server's probably always had a bug, and this just uncovered it.
+>         WARN_ON_ONCE(remap_flags & REMAP_FILE_DEDUP);
 > 
-> I'd be curious what the consequences are.  And where the check should be
-> (above or below vfs_clone_file_range()?).
+>         if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
+>                 return -EXDEV;
 > 
+> 
+> loff_t vfs_clone_file_range(struct file *file_in, loff_t pos_in,
+>                             struct file *file_out, loff_t pos_out,
+>                             loff_t len, unsigned int remap_flags)
+> {
+>         loff_t ret;
+> 
+>         file_start_write(file_out);
+>         ret = do_clone_file_range(file_in, pos_in, file_out, pos_out, len,
+>                                   remap_flags);
+> 
+> And even if we get past here, I imagine XFS would freak out because it can't
+> find the extents (unless you're getting lucky and everything is lining up?).
+> I'm super confused...
 
-This is where I'm confused, this really shouldn't succeed
+Bah, I see what you mean.  Maybe there's something wrong with my setup.
+I'll try some more stuff and report back....
 
-loff_t do_clone_file_range(struct file *file_in, loff_t pos_in,
-                           struct file *file_out, loff_t pos_out,
-                           loff_t len, unsigned int remap_flags)
-{
-        loff_t ret;
-
-        WARN_ON_ONCE(remap_flags & REMAP_FILE_DEDUP);
-
-        if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
-                return -EXDEV;
-
-
-loff_t vfs_clone_file_range(struct file *file_in, loff_t pos_in,
-                            struct file *file_out, loff_t pos_out,
-                            loff_t len, unsigned int remap_flags)
-{
-        loff_t ret;
-
-        file_start_write(file_out);
-        ret = do_clone_file_range(file_in, pos_in, file_out, pos_out, len,
-                                  remap_flags);
-
-And even if we get past here, I imagine XFS would freak out because it can't
-find the extents (unless you're getting lucky and everything is lining up?).
-I'm super confused...
-
-Josef
+--b.
