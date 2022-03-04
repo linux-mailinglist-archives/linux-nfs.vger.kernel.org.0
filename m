@@ -2,176 +2,165 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 109F14CD327
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Mar 2022 12:14:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 304044CD85C
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Mar 2022 16:54:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239157AbiCDLO4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Mar 2022 06:14:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35704 "EHLO
+        id S239863AbiCDPz3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Mar 2022 10:55:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239127AbiCDLOz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Mar 2022 06:14:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5191B0BD7;
-        Fri,  4 Mar 2022 03:14:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7918361D00;
-        Fri,  4 Mar 2022 11:14:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7958DC340E9;
-        Fri,  4 Mar 2022 11:14:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646392446;
-        bh=oMRkrgkieQqbJLozH2f1WWABMteAvIgUeoZgr4XZLG4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ik9/iqlkSYV+ppGVcBuwu2APgDACKwcHntHw+Hu2Xr2jfUIu91CbsiGhv5jpiECni
-         a9ovy2jThDcrU31vb3KB6PNgCDbjxn7wJSUL91b4PsewrN4+rSSjwpeYjmoA689kh4
-         iDM6CtEhfpShSDPSpPc8OIhQniSoJ0vCl0gEMEfWWqbowcPyp/OV9D5KAOaqrN4GF7
-         NkaSTJNMWNW1q7JiBxw6Y8agL6pJATIClarAY+MMxefSgKrrjMeZe0bTtYVrgIPW8i
-         BgnfCclXxDPDHqmIImbnZl+viTCZzSUfh9tCE21gQuO0asP18iC8AbQv7azba/hjRh
-         5NjtEiNztu8Xw==
-Message-ID: <1c5aa5552850dc90bdeb5f8bc0e4f5dd3270a382.camel@kernel.org>
-Subject: Re: [PATCH 06/11] ceph: remove reliance on bdi congestion
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, Jan Kara <jack@suse.cz>,
-        Wu Fengguang <fengguang.wu@intel.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Paolo Valente <paolo.valente@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-ext4@vger.kernel.org,
-        ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 04 Mar 2022 06:14:03 -0500
-In-Reply-To: <164636204663.29369.1845040729675190216@noble.neil.brown.name>
-References: <164549971112.9187.16871723439770288255.stgit@noble.brown>
-        , <164549983739.9187.14895675781408171186.stgit@noble.brown>
-        , <ccc81eb5c23f933137c5da8d5050540cc54e58f0.camel@kernel.org>
-        , <164568131640.25116.884631856219777713@noble.neil.brown.name>
-        , <e8ec98a9c4fab9b7aa099001f09ff9b11f0c3f96.camel@kernel.org>
-         <164636204663.29369.1845040729675190216@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        with ESMTP id S234784AbiCDPz2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Mar 2022 10:55:28 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DFC201BBF59
+        for <linux-nfs@vger.kernel.org>; Fri,  4 Mar 2022 07:54:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646409280;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=aG4rLtP2kJb2yp237WIgfka/xS4Ld0GgBvfRU9ske9M=;
+        b=VzM9XosZHraC2lRGuuqenU/IGGQJuJb9fjGwrei2FvuG1PWTjD9SNCumTa5Cdxc4MuinHA
+        EzQsKN211gVxY6rFOXoS5wpI5fuiicwOpFAAqxogrvJxpvJqCiXOEcy2lgTOEHj5oP63MC
+        zNG94wsZFF8rTyELMivzSGalvDGpK18=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-12-KDi-fZrINB6DGEtsaNk9Kw-1; Fri, 04 Mar 2022 10:54:39 -0500
+X-MC-Unique: KDi-fZrINB6DGEtsaNk9Kw-1
+Received: by mail-qk1-f200.google.com with SMTP id c19-20020a05620a0cf300b005f17891c015so5788193qkj.18
+        for <linux-nfs@vger.kernel.org>; Fri, 04 Mar 2022 07:54:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=aG4rLtP2kJb2yp237WIgfka/xS4Ld0GgBvfRU9ske9M=;
+        b=myrhr3X00yqWGqIXFwcvXT3VUP+pLPqMRkzGPB86QrZLYuIEAB2xgRIW/ilA/G/h9y
+         r7HVM483czeIkMaLn1jlnt+s+ZEpDqI6+ZGjRsMI03kA/BLJFtPUy3RukmbUztPu+Zxl
+         iusa58N7pKHlGpwn//2tBoOc+8rH7JU3B88KSznece0+fJ4Jd1ikcwFfT88VVKpp95Rz
+         ys8gE5mKEnImML+BlJ5jMpEJ9ZGPnc9E+070IkawDJKqEuXD3zvc1RD1sm0s33ZnoXDf
+         5gbU+plFgIQaeJ59xfAGyqjGXffqxRmlweFIKv0P1ZNuSRZSrym/SsKWoEVYd0WG460n
+         sHSg==
+X-Gm-Message-State: AOAM532jb3jgPb90skkEcnsQC31WFOscAtcm4oAI2xQWXyJ8ONrH94up
+        7qMktAe66hSlpsXoU68YbOx+on2D1x7LLbZxaJd95ZFTDWJJgpK+3xqQP77X/S1iIt7qS2yA6R1
+        HgDy5T0huMJRKKvZO0KdM
+X-Received: by 2002:a37:f518:0:b0:663:a53:8a5b with SMTP id l24-20020a37f518000000b006630a538a5bmr2939778qkk.546.1646409278540;
+        Fri, 04 Mar 2022 07:54:38 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJyHytsLHgci5aOOX83ZcFpxyVV1zx+k7tk6T9y4CIhGmGy3+X1KiIKFct2ueRT+jlaSVIs5Vg==
+X-Received: by 2002:a37:f518:0:b0:663:a53:8a5b with SMTP id l24-20020a37f518000000b006630a538a5bmr2939762qkk.546.1646409278299;
+        Fri, 04 Mar 2022 07:54:38 -0800 (PST)
+Received: from [172.31.1.6] ([71.161.196.139])
+        by smtp.gmail.com with ESMTPSA id i20-20020ac85c14000000b002de4b6004a7sm3605612qti.27.2022.03.04.07.54.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 04 Mar 2022 07:54:38 -0800 (PST)
+Message-ID: <3d4467af-e6f7-694b-e711-6fafb6490fc8@redhat.com>
+Date:   Fri, 4 Mar 2022 10:54:36 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [PATCH] nfs.man: document requirements for NFS mounts in a
+ container
+Content-Language: en-US
+To:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "bcodding@redhat.com" <bcodding@redhat.com>
+References: <cover.1644515977.git.bcodding@redhat.com>
+ <4657F9AE-3B9E-4992-9334-3FF1CF18EF31@redhat.com>
+ <C7533D80-25B3-4722-94A9-0440C48B8574@oracle.com>
+ <945849B4-BE30-434C-88E9-8E901AAFA638@redhat.com>
+ <06B01290-E375-455E-A6D7-419CA653A0D1@oracle.com>
+ <948D8123-E310-4A35-BF04-C030F20EA83C@redhat.com>
+ <164479707170.27779.15384523062754338136@noble.neil.brown.name>
+ <863AB69A-D5D6-4F22-950C-E5F468CD4552@redhat.com>
+ <42AAFEDD-F4EE-4A91-BD23-E08B1149EF1C@oracle.com>
+ <3AF29DC6-2EEB-4C3E-BD6C-BE31910921AE@redhat.com>
+ <9FC005FB-370E-4AFA-AD80-8599CBFCC1E0@oracle.com>
+ <2965D098-7AEE-419D-BF8B-4D7AF4AB40FB@redhat.com>
+ <164505339057.10228.4638327664904213534@noble.neil.brown.name>
+ <164610623626.24921.6124450559951707560@noble.neil.brown.name>
+ <F285A122-30EC-4353-AF10-FBF6999B7F25@oracle.com>
+ <164627798608.17899.14049799069550646947@noble.neil.brown.name>
+ <fe1527f96f5b8f6280b24985603bbf99cde58864.camel@hammerspace.com>
+ <164635642445.13165.9587906660448735526@noble.neil.brown.name>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <164635642445.13165.9587906660448735526@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-03-04 at 13:47 +1100, NeilBrown wrote:
-> On Thu, 24 Feb 2022, Jeff Layton wrote:
-> > On Thu, 2022-02-24 at 16:41 +1100, NeilBrown wrote:
-> > > On Thu, 24 Feb 2022, Jeff Layton wrote:
-> > > > On Tue, 2022-02-22 at 14:17 +1100, NeilBrown wrote:
-> > > > > The bdi congestion tracking in not widely used and will be removed.
-> > > > > 
-> > > > > CEPHfs is one of a small number of filesystems that uses it, setting
-> > > > > just the async (write) congestion flags at what it determines are
-> > > > > appropriate times.
-> > > > > 
-> > > > > The only remaining effect of the async flag is to cause (some)
-> > > > > WB_SYNC_NONE writes to be skipped.
-> > > > > 
-> > > > > So instead of setting the flag, set an internal flag and change:
-> > > > >  - .writepages to do nothing if WB_SYNC_NONE and the flag is set
-> > > > >  - .writepage to return AOP_WRITEPAGE_ACTIVATE if WB_SYNC_NONE
-> > > > >     and the flag is set.
-> > > > > 
-> > > > > The writepages change causes a behavioural change in that pageout() can
-> > > > > now return PAGE_ACTIVATE instead of PAGE_KEEP, so SetPageActive() will
-> > > > > be called on the page which (I think) wil further delay the next attempt
-> > > > > at writeout.  This might be a good thing.
-> > > > > 
-> > > > > Signed-off-by: NeilBrown <neilb@suse.de>
-> > > > 
-> > > > Maybe. I have to wonder whether all of this is really useful.
-> > > > 
-> > > > When things are congested we'll avoid trying to issue new writeback
-> > > > requests. Note that we don't prevent new pages from being dirtied here -
-> > > > - only their being written back.
-> > > > 
-> > > > This also doesn't do anything in the DIO or sync_write cases, so if we
-> > > > lose caps or are doing DIO, we'll just keep churning out "unlimited"
-> > > > writes in those cases anyway.
-> > > 
-> > > I think the point of congestion tracking is to differentiate between
-> > > sync and async IO.  Or maybe "required" and "optional".
-> > > Eventually the "optional" IO will become required, but if we can delay
-> > > it until a time when there is less "required" io, then maybe we can
-> > > improve perceived latency.
-> > > 
-> > > "optional" IO here is write-back and read-ahead.  If the load of
-> > > "required" IO is bursty, and if we can shuffle that optional stuff into
-> > > the quiet periods, we might win.
-> > > 
-> > 
-> > In that case, maybe we should be counting in-flight reads too and deny
-> > readahead when the count crosses some threshold? It seems a bit silly to
-> > only look at writes when it comes to "congestion".
-> 
-> I agree that seems a bit silly.
-> 
-> > 
-> > > Whether this is a real need is an important question that I don't have an
-> > > answer for.  And whether it is better to leave delayed requests in the
-> > > page cache, or in the low-level queue with sync requests able to
-> > > over-take them - I don't know.  If you have multiple low-level queue as
-> > > you say you can with ceph, then lower might be better.
-> > > 
-> > > The block layer has REQ_RAHEAD ..  maybe those request get should get a
-> > > lower priority ... though I don't think they do.
-> > > NFS has a 3 level priority queue, with write-back going at a lower
-> > > priority ... I think... for NFSv3 at least.
-> > > 
-> > > Sometimes I suspect that as all our transports have become faster, we
-> > > have been able to ignore the extra latency caused by poor scheduling of
-> > > optional requests.  But at other times when my recently upgraded desktop
-> > > is struggling to view a web page while compiling a kernel ...  I wonder
-> > > if maybe we don't have the balance right any more.
-> > > 
-> > > So maybe you are right - maybe we can rip all this stuff out.
-> > > 
-> > 
-> > I lean more toward just removing it. The existing implementation seems a
-> > bit half-baked with the gaps in what's being counted. Granted, the
-> > default congestion threshold is pretty high with modern memory sizes, so
-> > it probably doesn't come into play much in practice, but removing it
-> > would reduce some complexity in the client.
-> 
-> I'd love to have some test that could reliably generate congestion and
-> measure latencies for other IO.  Without that, it is mostly guess work.
-> So I cannot argue against your proposal, and do agree that removing the
-> code would reduce complexity.  I have no idea what the costs might be -
-> if any.  Hence my focus was on not changing behaviour.
-> 
+Hey!
 
-Fair enough -- caution is warranted.
+On 3/3/22 8:13 PM, NeilBrown wrote:
+> On Fri, 04 Mar 2022, Trond Myklebust wrote:
+>> On Thu, 2022-03-03 at 14:26 +1100, NeilBrown wrote:
+>>> On Wed, 02 Mar 2022, Chuck Lever III wrote:
+>>>
+>>>
+>>>>
+>>>>
+>>>> The remaining part of this text probably should be
+>>>> part of the man page for Ben's tool, or whatever is
+>>>> coming next.
+>>>
+>>> My position is that there is no need for any tool.  The total amount
+>>> of
+>>> code needed is a couple of lines as presented in the text below.  Why
+>>> provide a wrapper just for that?
+>>> We *cannot* automatically decide how to find a name or where to store
+>>> a
+>>> generated uuid, so there is no added value that a tool could provide.
+>>>
+>>> We cannot unilaterally fix container systems.  We can only tell
+>>> people
+>>> who build these systems of the requirements for NFS.
+>>>
+>>
+>> I disagree with this position. The value of having a standard tool is
+>> that it also creates a standard for how and where the uniquifier is
+>> generated and persisted.
+>>
+>> Otherwise you have to deal with the fact that you may have a systemd
+>> script that persists something in one file, a Dockerfile recipe that
+>> generates something at container build time, and then a home-made
+>> script that looks for something in a different location. If you're
+>> trying to debug why your containers are all generating the same
+>> uniquifier, then that can be a problem.
+> 
+> I don't see how a tool can provide any consistency.
+> Is there some standard that say how containers should be built, and
+> where tools can store persistent data?  If not, the tool needs to be
+> configured, and that is not importantly different from bash being
+> configured with a 1-line script to write out the identifier.
+> 
+> I'm not strongly against a tools, I just can't see the benefit.
+I think I agree with this... Thinking about it... having a command that
+tries to manipulate different containers in different ways just
+seems like a recipe for disaster... I just don't see how a command would
+ever get it right... Hell we can't agree on its command's name
+much less what it will do. :-)
 
-I think the thing to do here is to take your patch for now, and then we
-can look at just removing all of this stuff at some point in the future.
-That would also give us a fallback that doesn't require the old
-congestion infrastructure if it turns out that it is needed.
+So I like idea of documenting when needs to happen in the
+different types of containers... So I think the man page
+is the way to go... and I think it is the safest way to go.
 
-I'm assuming this is going in via Andrew's tree, but let us know if
-you'd like us to take any of these in via the ceph tree.
+Chuck, if you would like tweak the verbiage... by all means.
 
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
+Neil, will be a V2 for man page patch from this discussion
+or should I just take the one you posted? If you do post
+a V2, please start a new thread.
+
+steved.
+
