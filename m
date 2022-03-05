@@ -2,53 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 731CB4CDE92
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Mar 2022 21:26:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BBDA4CE195
+	for <lists+linux-nfs@lfdr.de>; Sat,  5 Mar 2022 01:37:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231194AbiCDUKC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Mar 2022 15:10:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53306 "EHLO
+        id S230273AbiCEAiP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Mar 2022 19:38:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232434AbiCDUJP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Mar 2022 15:09:15 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D889120C2E0;
-        Fri,  4 Mar 2022 12:03:28 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 19F587253; Fri,  4 Mar 2022 15:03:20 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 19F587253
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1646424200;
-        bh=ZNPhSxtZN/ks7FEtwW3By9jmrYTGNVzKwe2BPkQyF4I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uiZeXZiYMk5gm68OPikmt9bu1yk4SYuezouW0NySj87i/JWnGAQkQD/NzwmMUz8R1
-         pcuHEPjP1jxU/DRaRwlqtqOR75p/mOyztxxBU7tI/0YwQ9RaQtsY3NWuqlCRGmCPXz
-         hianw1bXIv4o3k2ME/zn4ZliHSWUMLfS4epyE3UE=
-Date:   Fri, 4 Mar 2022 15:03:20 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>
-Subject: Re: nfs generic/373 failure after "fs: allow cross-vfsmount
- reflink/dedupe"
-Message-ID: <20220304200320.GB5037@fieldses.org>
-References: <20220302082658.GF3927073@dread.disaster.area>
- <CAOQ4uxgiL2eqx-kad+dddXvXPREKT-w3_BnLzdoJaJqGm=H=vA@mail.gmail.com>
- <20220302211226.GG3927073@dread.disaster.area>
- <20220302220450.GD10757@fieldses.org>
- <Yh/vADRGuPFGIEc+@localhost.localdomain>
- <20220302224250.GF10757@fieldses.org>
- <YiABiLtH/4nMJE+u@localhost.localdomain>
- <20220303000735.GA21944@fieldses.org>
- <YiAL7uNA3ZiaBCE6@localhost.localdomain>
- <20220303005001.GB21944@fieldses.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220303005001.GB21944@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        with ESMTP id S230262AbiCEAiN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Mar 2022 19:38:13 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6580EE02FC;
+        Fri,  4 Mar 2022 16:37:24 -0800 (PST)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 224K7ROQ012006;
+        Sat, 5 Mar 2022 00:37:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=0FOtlWs7VBylrB6+CCLdYrih5/M2Ej/Y4RtbRGwTkCQ=;
+ b=Vqaj3SHLZfv93leQUC11FZO9xd2ppTvYbrqyF6atGo3AFgWtSupjqyWIK5xhX4EH+Iu6
+ LC6OsRhAqOjbPFox7mSPX+oSgO96K2aZTf8XZoEjk3LLBbvxjrHgBrdia9Edoe0jshGo
+ FzqosSC0uZjnnh5TEOWtgh8+N5ID/Tx5wnP9roIjUOHU43ZOZ9famX5nV8nCpZYevlle
+ uNyi3I51Qdk253dhQ4GTMDe9AMME4SgaZq0iclj6TuYQvk7r/DlbJg1pw5Iwc4YTa3d2
+ kTBaPS1FePeCHptRRc0kaCox9jSRPDPQloQ2M40J9xJu53VajIjyGXoXKz3vvj/oau1P hQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ek4hvk5ek-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 05 Mar 2022 00:37:20 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 2250Pvkr146572;
+        Sat, 5 Mar 2022 00:37:20 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 3ek4jh9bff-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 05 Mar 2022 00:37:20 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 2250bJaD161402;
+        Sat, 5 Mar 2022 00:37:19 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by aserp3030.oracle.com with ESMTP id 3ek4jh9bfb-1;
+        Sat, 05 Mar 2022 00:37:19 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v15 0/11] NFSD: Initial implementation of NFSv4 Courteous Server
+Date:   Fri,  4 Mar 2022 16:37:02 -0800
+Message-Id: <1646440633-3542-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-ORIG-GUID: BWrIym4TXrIXM9qNZ-6_E_GsmLBqfcE5
+X-Proofpoint-GUID: BWrIym4TXrIXM9qNZ-6_E_GsmLBqfcE5
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,61 +62,249 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 02, 2022 at 07:50:01PM -0500, J. Bruce Fields wrote:
-> On Wed, Mar 02, 2022 at 07:29:34PM -0500, Josef Bacik wrote:
-> > On Wed, Mar 02, 2022 at 07:07:35PM -0500, J. Bruce Fields wrote:
-> > > Sorry, took me a minute to understand, myself:
-> > > 
-> > > It's actually only the client behavior that changed.  Previously the
-> > > client would reject an attempt to clone across filesystems, so the
-> > > server never saw such a request.  After this patch, the client will go
-> > > ahead and send the CLONE.  (Which, come to think of it, is probably the
-> > > right thing for the client to do.)
-> > > 
-> > > So the server's probably always had a bug, and this just uncovered it.
-> > > 
-> > > I'd be curious what the consequences are.  And where the check should be
-> > > (above or below vfs_clone_file_range()?).
-> > > 
-> > 
-> > This is where I'm confused, this really shouldn't succeed
-> > 
-> > loff_t do_clone_file_range(struct file *file_in, loff_t pos_in,
-> >                            struct file *file_out, loff_t pos_out,
-> >                            loff_t len, unsigned int remap_flags)
-> > {
-> >         loff_t ret;
-> > 
-> >         WARN_ON_ONCE(remap_flags & REMAP_FILE_DEDUP);
-> > 
-> >         if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb)
-> >                 return -EXDEV;
-> > 
-> > 
-> > loff_t vfs_clone_file_range(struct file *file_in, loff_t pos_in,
-> >                             struct file *file_out, loff_t pos_out,
-> >                             loff_t len, unsigned int remap_flags)
-> > {
-> >         loff_t ret;
-> > 
-> >         file_start_write(file_out);
-> >         ret = do_clone_file_range(file_in, pos_in, file_out, pos_out, len,
-> >                                   remap_flags);
-> > 
-> > And even if we get past here, I imagine XFS would freak out because it can't
-> > find the extents (unless you're getting lucky and everything is lining up?).
-> > I'm super confused...
-> 
-> Bah, I see what you mean.  Maybe there's something wrong with my setup.
-> I'll try some more stuff and report back....
+This series of patches implement the NFSv4 Courteous Server.
 
-Sorry for the noise, you're right, generic/373 is just being dumb.
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
 
-I assumed it was mounting different exports for some reason.  But in
-fact it's just doing a bind mount and then "cp --reflink=always" between
-two mounts of the same filesystem.  Previously that got rejected out of
-hand, now the client sends a CLONE and the server handles it.
+v2 patch includes:
 
-Which is an improvement.  So it's only generic/373 that needs fixing.
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
 
---b.
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+v3 patch includes:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v5 patch includes:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+v6 patch includes:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+v7 patch includes:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+v8 patch includes:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+v9 patch includes:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+v10 patch includes:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
+
+v11 patch includes:
+
+  Add comment for lm_lock_conflict callback.
+
+  Replace static const courtesy_client_expiry with macro.
+
+  Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
+  Callers use nfs4_client->cl_cs_client boolean to determined if
+  it's the courtesy client and take appropriate actions.
+
+  Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
+  with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
+
+v12 patch includes:
+
+  Remove unnecessary comment in nfs4_get_client_reaplist.
+
+  Replace nfs4_client->cl_cs_client boolean with
+  NFSD4_CLIENT_COURTESY_CLNT flag.
+
+  Remove courtesy_clnt argument from find_client_in_id_table and
+  find_clp_in_name_tree. Callers use NFSD4_CLIENT_COURTESY_CLNT to
+  determined if it's the courtesy client and take appropriate actions.
+
+v13 patch includes:
+
+  Merge with 5.17-rc3.
+
+  Cleanup Documentation/filesystems/locking.rst: replace i_lock
+  with flc_lock, update API's that use flc_lock.
+
+  Rename lm_lock_conflict to lm_lock_expired().
+
+  Remove comment of lm_lock_expired API in lock_manager_operations.
+  Same information is in patch description.
+
+  Update commit messages of 4/4.
+
+  Add some comment for NFSD4_CLIENT_COURTESY_CLNT.
+
+  Add nfsd4_discard_courtesy_clnt() to eliminate duplicate code of
+  discarding courtesy client; setting NFSD4_DESTROY_COURTESY_CLIENT.
+
+v14 patch includes:
+
+. merge with Chuck's public for-next branch.
+
+. remove courtesy_client_expiry, use client's last renew time.
+
+. simplify comment of nfs4_check_access_deny_bmap.
+
+. add comment about race condition in nfs4_get_client_reaplist.
+
+. add list_del when walking cslist in nfs4_get_client_reaplist.
+
+. remove duplicate INIT_LIST_HEAD(&reaplist) from nfs4_laundromat
+
+. Modify find_confirmed_client and find_confirmed_client_by_name
+  to detect courtesy client and destroy it.
+
+. refactor lookup_clientid to use find_client_in_id_table
+  directly instead of find_confirmed_client.
+
+. refactor nfsd4_setclientid to call find_clp_in_name_tree
+  directly instead of find_confirmed_client_by_name.
+
+. remove comment of NFSD4_CLIENT_COURTESY.
+
+. replace NFSD4_CLIENT_DESTROY_COURTESY with NFSD4_CLIENT_EXPIRED.
+
+. replace NFSD4_CLIENT_COURTESY_CLNT with NFSD4_CLIENT_RECONNECTED.
+
+v15 patch includes:
+
+. add helper locks_has_blockers_locked in fs.h to check for
+  lock blockers
+
+. rename nfs4_conflict_clients to nfs4_resolve_deny_conflicts_locked
+
+. update nfs4_upgrade_open() to handle courtesy clients.
+
+. add helper nfs4_check_and_expire_courtesy_client and
+  nfs4_is_courtesy_client_expired to deduplicate some code.
+
+. update nfs4_anylock_blocker:
+   . replace list_for_each_entry_safe with list_for_each_entry
+   . break nfs4_anylock_blocker into 2 smaller functions.
+
+. update nfs4_get_client_reaplist:
+   . remove unnecessary commets
+   . acquire cl_cs_lock before setting NFSD4_CLIENT_COURTESY flag
+
+. update client_info_show to show 'time since last renew: 00:00:38'
+  instead of 'seconds from last renew: 38'.
+
