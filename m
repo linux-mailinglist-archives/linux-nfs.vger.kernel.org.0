@@ -2,125 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA784D23F5
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Mar 2022 23:11:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B78C4D25CD
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 02:14:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241719AbiCHWLH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Mar 2022 17:11:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44814 "EHLO
+        id S229474AbiCIBCU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Mar 2022 20:02:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350525AbiCHWLG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Mar 2022 17:11:06 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FA164A918
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Mar 2022 14:10:08 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 928B364B9; Tue,  8 Mar 2022 17:10:07 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 928B364B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1646777407;
-        bh=KGuOlxQx/cJiuBH6hZZ+GU3SGyzb3eReZxta9DfREIY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aYLgM9rlUG00XW3W8NTH2z2JkSMBlCK0rIuJsOQ8lB2xTBr5COrG8V7jtN/Ng3V9z
-         s++zhgxi3kSKDu/zxn3kb8DQXlPEEbxyqq47u9kNjZ3T4tvGfaMhBNc+iXdyJvhe34
-         CxW5U2FFvjMWH357hSG9sCH/WyLCdzEFvYSIE/WY=
-Date:   Tue, 8 Mar 2022 17:10:07 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-nfs@vger.kernel.org, david@sigma-star.at,
-        luis.turcitu@appsbroker.com, david.young@appsbroker.com,
-        david.oberhollenzer@sigma-star.at, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, chris.chilvers@appsbroker.com
-Subject: Re: [RFC PATCH 2/6] exports: Implement new export option reexport=
-Message-ID: <20220308221007.GC22644@fieldses.org>
-References: <20220217131531.2890-1-richard@nod.at>
- <20220217131531.2890-3-richard@nod.at>
+        with ESMTP id S229461AbiCIBCS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Mar 2022 20:02:18 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 305FD26B583
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Mar 2022 16:40:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646786335;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t4qvsbNI6sw/nBCf9DXoGk82250g6Xxiz3eVjMRBEbQ=;
+        b=imHZkZKf0qQhGWM6fbGsecDKO1/kzxeSKR7gCuX1NFWW/hbZCZGJOeMMxA2xUoLNlKC/Wq
+        FjGp2Z+/4vIQo79kecqyjPcQv2+6CHxI1XiuWvnWSOYAECzpWkLk8JdZmujL2bhyYhnc2k
+        tfHWQsitmgl6fiqguB7umW2vWUbiu30=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-567--uKi_RuZOOqulntcXSiGhQ-1; Tue, 08 Mar 2022 18:28:02 -0500
+X-MC-Unique: -uKi_RuZOOqulntcXSiGhQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 731EF1091DA2;
+        Tue,  8 Mar 2022 23:28:00 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B00071006910;
+        Tue,  8 Mar 2022 23:27:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH v2 09/19] netfs: Adjust the netfs_failure tracepoint to
+ indicate non-subreq lines
+From:   David Howells <dhowells@redhat.com>
+To:     linux-cachefs@redhat.com
+Cc:     dhowells@redhat.com, Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Jeff Layton <jlayton@redhat.com>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 08 Mar 2022 23:27:25 +0000
+Message-ID: <164678204587.1200972.14893513018190383961.stgit@warthog.procyon.org.uk>
+In-Reply-To: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
+References: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220217131531.2890-3-richard@nod.at>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Feb 17, 2022 at 02:15:27PM +0100, Richard Weinberger wrote:
-> When re-exporting a NFS volume it is mandatory to specify
-> either a UUID or numerical fsid= option because nfsd is unable
-> to derive a identifier on its own.
-> 
-> For NFS cross mounts this becomes a problem because nfsd also
-> needs a identifier for every crossed mount.
-> A common workaround is stating every single subvolume in the
-> exports list too.
-> But this defeats the purpose of the crossmnt option and is tedious.
-> 
-> This is where the reexport= tries to help.
-> It offers various strategies to automatically derive a identifier
-> for NFS volumes and sub volumes.
-> Each have their pros and cons.
-> 
-> Currently three modes are implemented:
-> 
-> 1. auto-fsidnum
->    In this mode mountd/exportd will create a new numerical fsid
->    for a NFS volume and subvolume. The numbers are stored in a database
->    such that the server will always use the same fsid.
->    The entry in the exports file allowed to skip fsid= entiry but
->    stating a UUID is allowed, if needed.
-> 
->    This mode has the obvious downside that load balancing is not
->    possible since multiple re-exporting NFS servers would generate
->    different ids.
+Adjust the netfs_failure tracepoint to indicate a subrequest number of -1
+when it's a full-request failure unrelated to any particular subrequest,
+such as a failure to encrypt its data buffer.
 
-This is the one I think it makes sense to concentrate on first.  Ideally
-it should Just Work without requiring any configuration.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-cachefs@redhat.com
 
-And then eventually my hope is that we could replace sqlite by a
-distributed database to get filehandles that are consistent across
-multiple servers.
+Link: https://lore.kernel.org/r/164623001948.3564931.2353852999649380059.stgit@warthog.procyon.org.uk/ # v1
+---
 
-> 
-> 2. predefined-fsidnum
->    This mode works just like auto-fsidnum but does not generate ids
->    for you. It helps in the load balancing case. A system administrator
->    has to manually maintain the database and install it on all re-exporting
->    NFS servers. If you have a massive amount of subvolumes this mode
->    will help because you don't have to bloat the exports list.
+ include/trace/events/netfs.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-OK, I can see that being sort of useful but it'd be nice if we could
-start with something more automatic.
+diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+index ddf34cb476dc..273ae5f6a54c 100644
+--- a/include/trace/events/netfs.h
++++ b/include/trace/events/netfs.h
+@@ -222,7 +222,7 @@ TRACE_EVENT(netfs_failure,
+ 
+ 	    TP_STRUCT__entry(
+ 		    __field(unsigned int,		rreq		)
+-		    __field(unsigned short,		index		)
++		    __field(short,			index		)
+ 		    __field(short,			error		)
+ 		    __field(unsigned short,		flags		)
+ 		    __field(enum netfs_io_source,	source		)
+@@ -234,17 +234,17 @@ TRACE_EVENT(netfs_failure,
+ 
+ 	    TP_fast_assign(
+ 		    __entry->rreq	= rreq->debug_id;
+-		    __entry->index	= sreq ? sreq->debug_index : 0;
++		    __entry->index	= sreq ? sreq->debug_index : -1;
+ 		    __entry->error	= error;
+ 		    __entry->flags	= sreq ? sreq->flags : 0;
+ 		    __entry->source	= sreq ? sreq->source : NETFS_INVALID_READ;
+ 		    __entry->what	= what;
+-		    __entry->len	= sreq ? sreq->len : 0;
++		    __entry->len	= sreq ? sreq->len : rreq->len;
+ 		    __entry->transferred = sreq ? sreq->transferred : 0;
+ 		    __entry->start	= sreq ? sreq->start : 0;
+ 			   ),
+ 
+-	    TP_printk("R=%08x[%u] %s f=%02x s=%llx %zx/%zx %s e=%d",
++	    TP_printk("R=%08x[%d] %s f=%02x s=%llx %zx/%zx %s e=%d",
+ 		      __entry->rreq, __entry->index,
+ 		      __print_symbolic(__entry->source, netfs_sreq_sources),
+ 		      __entry->flags,
 
-> 3. remote-devfsid
->    If this mode is selected mountd/exportd will derive an UUID from the
->    re-exported NFS volume's fsid (rfc7530 section-5.8.1.9).
 
-How does the server take a filehandle with a UUID in it and map that
-UUID back to the original fsid?
-
->    No further local state is needed on the re-exporting server.
->    The export list entry still needs a fsid= setting because while
->    parsing the exports file the NFS mounts might be not there yet.
-
-I don't understand that bit.
-
->    This mode is dangerous, use only of you're absolutely sure that the
->    NFS server you're re-exporting has a stable fsid. Chances are good
->    that it can change.
-
-The fsid should be stable.
-
-The case I'm worried about is the case where we're reexporting exports
-from multiple servers.  Then there's nothing preventing the two servers
-from accidentally picking the same fsid to represent different exports.
-
---b.
-
->    Since an UUID is derived, reexporting from NFSv3 to NFSv3 is not
->    possible. The file handle space is too small.
->    NFSv3 to NFSv4 works, though.
