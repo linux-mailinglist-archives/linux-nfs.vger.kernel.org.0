@@ -2,46 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D3B14D2667
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 05:05:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 526DA4D26D7
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 05:06:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbiCIBjM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Mar 2022 20:39:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47014 "EHLO
+        id S231152AbiCIBje (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Mar 2022 20:39:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbiCIBjK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Mar 2022 20:39:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 638FEC248E
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Mar 2022 17:38:11 -0800 (PST)
+        with ESMTP id S230494AbiCIBjd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Mar 2022 20:39:33 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 175B29EBA3
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Mar 2022 17:38:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646789890;
+        s=mimecast20190719; t=1646789914;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9KU0PTCvgSIz9tzy9LdM7lpo3siWG92WJNluYJn+7O0=;
-        b=KulcTEpA4msbIsYahg/TdP2miDVEclClHbmtK1M5sqnXnaQXRzyskSOcofnBtzi7rO71Iq
-        x6UkL1Rhmg0krEd27vamXW2sGu0BsoTlHBt9vnVoddMkMZRgcbvwWUYS2SbEHa78feTHmF
-        jH2sMeWSt6KkZdb9A4AG2cdiruGcHMM=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KBFHdKKHoDjr1TUu4BsB9HH3Wp0sMYIusKKTd5TPCQ0=;
+        b=Oi9p9oBZo2ko2eAbJc8+exW8GZ89NTeavhs9PHqPFZeBH0mwl5h6YGlvNUCoJXeGk8IZPz
+        loqthUVemqs2c5ciowF5qLTBvIi9aKN7oUQcBKypbWeLho48UGzT3eIpJvgrrUaNI8rmnq
+        EBqELOerbxoWdsZL+IL8XE+ubs+1/Us=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-332-M7vknxJVPEKjaFtO4kg5oA-1; Tue, 08 Mar 2022 18:25:00 -0500
-X-MC-Unique: M7vknxJVPEKjaFtO4kg5oA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-658-a1TV6opdOWGPrxazKtqIXg-1; Tue, 08 Mar 2022 18:25:21 -0500
+X-MC-Unique: a1TV6opdOWGPrxazKtqIXg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 399FB1091DA0;
-        Tue,  8 Mar 2022 23:24:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 746CC801AFE;
+        Tue,  8 Mar 2022 23:25:19 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E08C678C0F;
-        Tue,  8 Mar 2022 23:24:17 +0000 (UTC)
-Subject: [PATCH v2 00/19] netfs: Prep for write helpers
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A1021006910;
+        Tue,  8 Mar 2022 23:25:04 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH v2 01/19] fscache: export fscache_end_operation()
 From:   David Howells <dhowells@redhat.com>
 To:     linux-cachefs@redhat.com
-Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
-        linux-afs@lists.infradead.org, Jeff Layton <jlayton@kernel.org>,
-        dhowells@redhat.com, Anna Schumaker <anna.schumaker@netapp.com>,
+Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>, dhowells@redhat.com,
+        Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Jeff Layton <jlayton@redhat.com>,
@@ -53,201 +57,132 @@ Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 08 Mar 2022 23:24:17 +0000
-Message-ID: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
+Date:   Tue, 08 Mar 2022 23:25:03 +0000
+Message-ID: <164678190346.1200972.7453733431978569479.stgit@warthog.procyon.org.uk>
+In-Reply-To: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
+References: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
 User-Agent: StGit/1.4
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-Having had a go at implementing write helpers and content encryption
-support in netfslib, it seems that the netfs_read_{,sub}request structs and
-the equivalent write request structs were almost the same and so should be
-merged, thereby requiring only one set of alloc/get/put functions and a
-common set of tracepoints.
+Export fscache_end_operation() to avoid code duplication.
 
-Merging the structs also has the advantage that if a bounce buffer is added
-to the request struct, a read operation can be performed to fill the bounce
-buffer, the contents of the buffer can be modified and then a write
-operation can be performed on it to send the data wherever it needs to go
-using the same request structure all the way through.  The I/O handlers
-would then transparently perform any required crypto.  This should make it
-easy to perform RMW cycles if needed.
+Besides, considering the paired fscache_begin_read_operation() is
+already exported, it shall make sense to also export
+fscache_end_operation().
 
-The potentially common functions and structs, however, by their names all
-proclaim themselves to be associated with the read side of things.  The
-bulk of these changes alter this in the following ways:
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: linux-cachefs@redhat.com
 
- (1) Rename struct netfs_read_{,sub}request to netfs_io_{,sub}request.
-
- (2) Rename some enums, members and flags to make them more appropriate.
-
- (3) Adjust some comments to match.
-
- (4) Drop "read"/"rreq" from the names of common functions.  For instance,
-     netfs_get_read_request() becomes netfs_get_request().
-
- (5) The ->init_rreq() and ->issue_op() methods become ->init_request() and
-     ->issue_read().  I've kept the latter as a read-specific function and
-     in another branch added an ->issue_write() method.
-
-The driver source is then reorganised into a number of files:
-
-	fs/netfs/buffered_read.c	Create read reqs to the pagecache
-	fs/netfs/io.c			Dispatchers for read and write reqs
-	fs/netfs/main.c			Some general miscellaneous bits
-	fs/netfs/objects.c		Alloc, get and put functions
-	fs/netfs/stats.c		Optional procfs statistics.
-
-and future development can be fitted into this scheme, e.g.:
-
-	fs/netfs/buffered_write.c	Modify the pagecache
-	fs/netfs/buffered_flush.c	Writeback from the pagecache
-	fs/netfs/direct_read.c		DIO read support
-	fs/netfs/direct_write.c		DIO write support
-	fs/netfs/unbuffered_write.c	Write modifications directly back
-
-Beyond the above changes, there are also some changes that affect how
-things work:
-
- (1) Make fscache_end_operation() generally available.
-
- (2) In the netfs tracing header, generate enums from the symbol -> string
-     mapping tables rather than manually coding them.
-
- (3) Add a struct for filesystems that uses netfslib to put into their
-     inode wrapper structs to hold extra state that netfslib is interested
-     in, such as the fscache cookie.  This allows netfslib functions to be
-     set in filesystem operation tables and jumped to directly without
-     having to have a filesystem wrapper.
-
- (4) Add a member to the struct added in (3) to track the remote inode
-     length as that may differ if local modifications are buffered.  We may
-     need to supply an appropriate EOF pointer when storing data (in AFS
-     for example).
-
- (5) Pass extra information to netfs_alloc_request() so that the
-     ->init_request() hook can access it and retain information to indicate
-     the origin of the operation.
-
- (6) Make the ->init_request() hook return an error, thereby allowing a
-     filesystem that isn't allowed to cache an inode (ceph or cifs, for
-     example) to skip readahead.
-
- (7) Switch to using refcount_t for subrequests and add tracepoints to log
-     refcount changes for the request and subrequest structs.
-
- (8) Add a function to consolidate dispatching a read request.  Similar
-     code is used in three places and another couple are likely to be added
-     in the future.
-
-
-The patches can be found on this branch:
-
-	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-next
-
-This is based on top of ceph's master branch as some of the patches
-conflict.
-
-David
+Link: https://lore.kernel.org/r/20220302125134.131039-2-jefflexu@linux.alibaba.com/ # Jeffle's v4
+Link: https://lore.kernel.org/r/164622971432.3564931.12184135678781328146.stgit@warthog.procyon.org.uk/ # v1
 ---
 
-Changes
-=======
-ver #2)
- - Change kdoc references to renamed files[1].
- - Switched the begin-read-function patch and the prepare-to-split patch as
-   fewer functions then need unstatic'ing.
- - Fixed an uninitialised var in netfs_begin_read()[2][3].
- - Fixed a refleak caused by an unremoved line when netfs_begin_read() was
-   introduced.
- - Use "#if IS_ENABLED()" in netfs_i_cookie(), not "#ifdef".
- - Implemented missing bit of ceph readahead through netfs_readahead().
- - Rearranged the patch order to make the ceph readahead possible.
+ fs/cifs/fscache.c       |    8 --------
+ fs/fscache/internal.h   |   11 -----------
+ fs/nfs/fscache.c        |    8 --------
+ include/linux/fscache.h |   14 ++++++++++++++
+ 4 files changed, 14 insertions(+), 27 deletions(-)
 
-Link: https://lore.kernel.org/r/20220303202811.6a1d53a1@canb.auug.org.au/ [1]
-Link: https://lore.kernel.org/r/20220303163826.1120936-1-nathan@kernel.org/ [2]
-Link: https://lore.kernel.org/r/20220303235647.1297171-1-colin.i.king@gmail.com/ [3]
-Link: https://lore.kernel.org/r/164622970143.3564931.3656393397237724303.stgit@warthog.procyon.org.uk/ # v1
-
----
-David Howells (17):
-      netfs: Generate enums from trace symbol mapping lists
-      netfs: Rename netfs_read_*request to netfs_io_*request
-      netfs: Finish off rename of netfs_read_request to netfs_io_request
-      netfs: Split netfs_io_* object handling out
-      netfs: Adjust the netfs_rreq tracepoint slightly
-      netfs: Trace refcounting on the netfs_io_request struct
-      netfs: Trace refcounting on the netfs_io_subrequest struct
-      netfs: Adjust the netfs_failure tracepoint to indicate non-subreq lines
-      netfs: Change ->init_request() to return an error code
-      netfs: Add a netfs inode context
-      netfs: Add a function to consolidate beginning a read
-      netfs: Prepare to split read_helper.c
-      netfs: Rename read_helper.c to io.c
-      netfs: Split fs/netfs/read_helper.c
-      netfs: Split some core bits out into their own file
-      netfs: Keep track of the actual remote file size
-      afs: Maintain netfs_i_context::remote_i_size
-
-Jeff Layton (1):
-      netfs: Refactor arguments for netfs_alloc_read_request
-
-Jeffle Xu (1):
-      fscache: export fscache_end_operation()
-
-
- Documentation/filesystems/netfs_library.rst |  139 ++-
- fs/9p/cache.c                               |   10 +-
- fs/9p/v9fs.c                                |    4 +-
- fs/9p/v9fs.h                                |   12 +-
- fs/9p/vfs_addr.c                            |   62 +-
- fs/9p/vfs_inode.c                           |   13 +-
- fs/afs/dynroot.c                            |    1 +
- fs/afs/file.c                               |   41 +-
- fs/afs/inode.c                              |   32 +-
- fs/afs/internal.h                           |   23 +-
- fs/afs/super.c                              |    4 +-
- fs/afs/write.c                              |   10 +-
- fs/cachefiles/io.c                          |   10 +-
- fs/ceph/addr.c                              |  113 +-
- fs/ceph/cache.c                             |   28 +-
- fs/ceph/cache.h                             |   15 +-
- fs/ceph/inode.c                             |    6 +-
- fs/ceph/super.h                             |   16 +-
- fs/cifs/cifsglob.h                          |   10 +-
- fs/cifs/fscache.c                           |   19 +-
- fs/cifs/fscache.h                           |    2 +-
- fs/fscache/internal.h                       |   11 -
- fs/netfs/Makefile                           |    8 +-
- fs/netfs/buffered_read.c                    |  428 +++++++
- fs/netfs/internal.h                         |   49 +-
- fs/netfs/io.c                               |  657 ++++++++++
- fs/netfs/main.c                             |   20 +
- fs/netfs/objects.c                          |  161 +++
- fs/netfs/read_helper.c                      | 1205 -------------------
- fs/netfs/stats.c                            |    1 -
- fs/nfs/fscache.c                            |    8 -
- include/linux/fscache.h                     |   14 +
- include/linux/netfs.h                       |  162 ++-
- include/trace/events/cachefiles.h           |    6 +-
- include/trace/events/netfs.h                |  188 ++-
- 35 files changed, 1860 insertions(+), 1628 deletions(-)
- create mode 100644 fs/netfs/buffered_read.c
- create mode 100644 fs/netfs/io.c
- create mode 100644 fs/netfs/main.c
- create mode 100644 fs/netfs/objects.c
- delete mode 100644 fs/netfs/read_helper.c
+diff --git a/fs/cifs/fscache.c b/fs/cifs/fscache.c
+index 33af72e0ac0c..b47c2011ce5b 100644
+--- a/fs/cifs/fscache.c
++++ b/fs/cifs/fscache.c
+@@ -134,14 +134,6 @@ void cifs_fscache_release_inode_cookie(struct inode *inode)
+ 	}
+ }
+ 
+-static inline void fscache_end_operation(struct netfs_cache_resources *cres)
+-{
+-	const struct netfs_cache_ops *ops = fscache_operation_valid(cres);
+-
+-	if (ops)
+-		ops->end_operation(cres);
+-}
+-
+ /*
+  * Fallback page reading interface.
+  */
+diff --git a/fs/fscache/internal.h b/fs/fscache/internal.h
+index f121c21590dc..ed1c9ed737f2 100644
+--- a/fs/fscache/internal.h
++++ b/fs/fscache/internal.h
+@@ -70,17 +70,6 @@ static inline void fscache_see_cookie(struct fscache_cookie *cookie,
+ 			     where);
+ }
+ 
+-/*
+- * io.c
+- */
+-static inline void fscache_end_operation(struct netfs_cache_resources *cres)
+-{
+-	const struct netfs_cache_ops *ops = fscache_operation_valid(cres);
+-
+-	if (ops)
+-		ops->end_operation(cres);
+-}
+-
+ /*
+  * main.c
+  */
+diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
+index cfe901650ab0..39654ca72d3d 100644
+--- a/fs/nfs/fscache.c
++++ b/fs/nfs/fscache.c
+@@ -249,14 +249,6 @@ void nfs_fscache_release_file(struct inode *inode, struct file *filp)
+ 	}
+ }
+ 
+-static inline void fscache_end_operation(struct netfs_cache_resources *cres)
+-{
+-	const struct netfs_cache_ops *ops = fscache_operation_valid(cres);
+-
+-	if (ops)
+-		ops->end_operation(cres);
+-}
+-
+ /*
+  * Fallback page reading interface.
+  */
+diff --git a/include/linux/fscache.h b/include/linux/fscache.h
+index 296c5f1d9f35..d2430da8aa67 100644
+--- a/include/linux/fscache.h
++++ b/include/linux/fscache.h
+@@ -456,6 +456,20 @@ int fscache_begin_read_operation(struct netfs_cache_resources *cres,
+ 	return -ENOBUFS;
+ }
+ 
++/**
++ * fscache_end_operation - End the read operation for the netfs lib
++ * @cres: The cache resources for the read operation
++ *
++ * Clean up the resources at the end of the read request.
++ */
++static inline void fscache_end_operation(struct netfs_cache_resources *cres)
++{
++	const struct netfs_cache_ops *ops = fscache_operation_valid(cres);
++
++	if (ops)
++		ops->end_operation(cres);
++}
++
+ /**
+  * fscache_read - Start a read from the cache.
+  * @cres: The cache resources to use
 
 
