@@ -2,64 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2010F4D38FE
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 19:40:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F4994D3A4E
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 20:25:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232735AbiCISkO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Mar 2022 13:40:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        id S237917AbiCITZC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Mar 2022 14:25:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbiCISkN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 13:40:13 -0500
+        with ESMTP id S237912AbiCITYz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 14:24:55 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AF7B09AD99
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 10:39:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2E4851FCD1
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 11:23:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646851151;
+        s=mimecast20190719; t=1646853808;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TU5GSQcUsGsLm0QedmIo4Msii85jhaXsQwdtUQuJMSQ=;
-        b=VZZiYWZf9hLa/81sh3aCS22+YFCVU6+XIUExDiFMVr9S1cE0THWv/F22FloPEvwU2Uof1Y
-        lLdbzIHIUrxMFuoOz8Pf4bTCzw3DmSQcWsLgLMUQvANrsZyrYmTFy9MToRJPuXBOWMZqJ4
-        EPf2eTxGwIXTcSxlUY/tVxn1otxIkwI=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=5Z5XscNfbcs+yg9O+mP46TlJqahAAprLj05WH8utWWM=;
+        b=LcoYPrPKGmSsv2NWjJmHVTYX0GyYdeOd/48+7EwaTpCjqifnH1EDp9AziK7/VdF0m+Wttc
+        L17j9CzVpXCPs5BiN9sNmPbha9jVAVo+KjFUo+XC15ro9YZnTavYh2EzlSy4lf6QT65Pw+
+        ENNuiXgIs5IvhIqPshePxAq/Hsm0Zu8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-438-DjY1XqkFOaWauON3rRD8CA-1; Wed, 09 Mar 2022 13:39:10 -0500
-X-MC-Unique: DjY1XqkFOaWauON3rRD8CA-1
-Received: by mail-qk1-f200.google.com with SMTP id 195-20020a3707cc000000b0067b0c849285so2200773qkh.5
-        for <linux-nfs@vger.kernel.org>; Wed, 09 Mar 2022 10:39:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=TU5GSQcUsGsLm0QedmIo4Msii85jhaXsQwdtUQuJMSQ=;
-        b=g7ZNe7JnByZo8/IIEhvt0eKTeYpivwA12XpCuvUONvcz3bayzuLuXlRyGX1xMtXgp9
-         SebHB0F661b8tM1jxGywK5Pl2q1TM25dkwrS8bZELN5/LvhgEsY9gMEwLdJt3igvRUPF
-         LLPEetMisQ9kpa84pwtRftNlE90gzq8akP8YsANrHW+tFuXvcoK3C1HsDiNGMC9QVExQ
-         KOk8fCohEUzqgiOn4W8u8T50VvWfIpf7j02g8vLxUrw4drd+OdAyKTl1ioRnQSjX8cPF
-         ayjwUxALyEdnfpK6QmQ+ZeR7WYnUKkOLJdW8ut+mki02Wt5mUXAHPf0EHgTBteWeyvBg
-         YItQ==
-X-Gm-Message-State: AOAM5316V5tVTMvGVwAGpD1OkvfJJiOSmQxTAdxDzIo/QXE/CzppSJk6
-        jEAl4bn6x4jclVD/a7MsG+UK1822n6l2HFE/PAVWqtMDys6V03sngKSvqemAj9zfqNmJvzWDuZn
-        YLi8P6FVgA0LIAMw/cxVi
-X-Received: by 2002:a05:6214:d44:b0:435:b8fd:b1d7 with SMTP id 4-20020a0562140d4400b00435b8fdb1d7mr808172qvr.19.1646851150318;
-        Wed, 09 Mar 2022 10:39:10 -0800 (PST)
-X-Google-Smtp-Source: ABdhPJzICtIC42Xa9GHFyHP+MaqIARsvCbO2mnHxe/nMuAl463CulcS9BHk/JL6v+PefmyNOF/kr8A==
-X-Received: by 2002:a05:6214:d44:b0:435:b8fd:b1d7 with SMTP id 4-20020a0562140d4400b00435b8fdb1d7mr808157qvr.19.1646851150152;
-        Wed, 09 Mar 2022 10:39:10 -0800 (PST)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id t7-20020a05622a180700b002e0ccf0aa49sm1829549qtc.62.2022.03.09.10.39.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 10:39:09 -0800 (PST)
-Message-ID: <737c8db7461567ec04d5e2a7dbec58b699f8f16c.camel@redhat.com>
-Subject: Re: [PATCH v2 02/19] netfs: Generate enums from trace symbol
- mapping lists
-From:   Jeff Layton <jlayton@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com,
+ us-mta-458-YdxP3QPhOBahVoSrble-Vg-1; Wed, 09 Mar 2022 14:23:24 -0500
+X-MC-Unique: YdxP3QPhOBahVoSrble-Vg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1E7EB1854E21;
+        Wed,  9 Mar 2022 19:23:21 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AAFF345D76;
+        Wed,  9 Mar 2022 19:23:03 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <8af0d47f17d89c06bbf602496dd845f2b0bf25b3.camel@kernel.org>
+References: <8af0d47f17d89c06bbf602496dd845f2b0bf25b3.camel@kernel.org> <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk> <164678213320.1200972.16807551936267647470.stgit@warthog.procyon.org.uk>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
         Anna Schumaker <anna.schumaker@netapp.com>,
         Steve French <sfrench@samba.org>,
         Dominique Martinet <asmadeus@codewreck.org>,
@@ -71,37 +57,88 @@ Cc:     linux-cachefs@redhat.com,
         linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
         v9fs-developer@lists.sourceforge.net,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 09 Mar 2022 13:39:08 -0500
-In-Reply-To: <1712592.1646840957@warthog.procyon.org.uk>
-References: <c2f4b3dc107b106e04c48f54945a12715cccfdf3.camel@redhat.com>
-         <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
-         <164678192454.1200972.4428834328108580460.stgit@warthog.procyon.org.uk>
-         <1712592.1646840957@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+Subject: Re: [PATCH v2 12/19] netfs: Add a netfs inode context
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1790299.1646853782.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Wed, 09 Mar 2022 19:23:02 +0000
+Message-ID: <1790300.1646853782@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-03-09 at 15:49 +0000, David Howells wrote:
-> Jeff Layton <jlayton@redhat.com> wrote:
-> 
-> > Should you undef EM and E_ here after creating these?
-> 
-> Maybe.  So far it hasn't mattered...
-> 
+Jeff Layton <jlayton@kernel.org> wrote:
 
-I wasn't suggesting there was a bug there, more just a code hygiene
-thing. With macro names as generic as that (especially), it'd probably
-be good to undef them once you're done.
--- 
-Jeff Layton <jlayton@redhat.com>
+> > Add a netfs_i_context struct that should be included in the network
+> > filesystem's own inode struct wrapper, directly after the VFS's inode
+> > struct, e.g.:
+> > =
+
+> > 	struct my_inode {
+> > 		struct {
+> > 			struct inode		vfs_inode;
+> > 			struct netfs_i_context	netfs_ctx;
+> > 		};
+> =
+
+> This seems a bit klunky.
+>
+> I think it'd be better encapsulation to give this struct a name (e.g.
+> netfs_inode) and then have the filesystems replace the embedded
+> vfs_inode with a netfs_inode.
+
+I think what you really want is:
+
+	struct my_inode : netfs_inode {
+	};
+
+right? ;-)
+
+> That way it's still just pointer math to get to the context from the
+> inode and vice versa, but the replacement seems a bit cleaner.
+> =
+
+> It might mean a bit more churn in the filesystems themselves as you
+> convert them, but most of them use macros or inline functions as
+> accessors so it shouldn't be _too_ bad.
+
+That's a lot of churn - and will definitely cause conflicts with other
+patches aimed at those filesystems.  I'd prefer to avoid that if I can.
+
+> > +static int ceph_init_request(struct netfs_io_request *rreq, struct fi=
+le *file)
+> > +{
+> > ...
+> > +}
+> > +
+> =
+
+> ^^^
+> The above change seems like it should be in its own patch. Wasn't it at
+> one point? Converting this to use init_request doesn't seem to rely on
+> the new embedded context.
+
+Well, I wrote it as a separate patch on the end for convenience, but I
+intended to merge it here otherwise ceph wouldn't be able to do readahead =
+for
+a few patches.
+
+I was thinking that it would require the context change to work and certai=
+nly
+it requires the error-return-from-init_request patch to work, but actually=
+ it
+probably doesn't require the former so I could probably separate that bit =
+out
+and put it between 11 and 12.
+
+David
 
