@@ -2,59 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 375984D38C9
+	by mail.lfdr.de (Postfix) with ESMTP id 8351B4D38CA
 	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 19:27:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231716AbiCIS20 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Mar 2022 13:28:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53960 "EHLO
+        id S234965AbiCIS2Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Mar 2022 13:28:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231230AbiCIS2Y (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 13:28:24 -0500
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A608A31206
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 10:27:22 -0800 (PST)
-Received: by mail-oo1-xc30.google.com with SMTP id w3-20020a4ac183000000b0031d806bbd7eso3858711oop.13
-        for <linux-nfs@vger.kernel.org>; Wed, 09 Mar 2022 10:27:22 -0800 (PST)
+        with ESMTP id S231716AbiCIS2Z (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 13:28:25 -0500
+Received: from mail-oo1-xc36.google.com (mail-oo1-xc36.google.com [IPv6:2607:f8b0:4864:20::c36])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D0957B04
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 10:27:24 -0800 (PST)
+Received: by mail-oo1-xc36.google.com with SMTP id l24-20020a4a8558000000b00320d5a1f938so3902504ooh.8
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Mar 2022 10:27:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v/v+PLiebDEn6OBfshopUcx5Mv717C5YgxE/2WltueU=;
-        b=BThtd47pdmBEDM6CBb+WLmZ5qDGqPgI8XqXdZb2cqt+mAhTCwXeTJsjeRFdRgo1DMX
-         QL49rkrXD0v/bqPPfJydsM+7rjuF6qLvBiaAcw9JOttdOdBlE9kXLvmV4piEaqte6P4g
-         HJv65FQL9pgc8jLKEMz7m7c6VjI+LAQFCCWwQEYEmEnqiKhAGtbqaelwHdYaswc5bjoM
-         tW6T2BhfPRh8GODG3RjdTXtoiiyta/fpr/xwK7cAhpBpmlddswNoHoeu/DpGU0sjCPoX
-         V+ZW0akTsC9YOazkyCjL6ORkKkhtv0FDpLKj+9IO0VRNqWY4gntBb2XqBzR2U6UhFhpr
-         npSA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=a5MME4KpDziBTxxufAkFOBkSULAPSK1XcRbM0uCC95g=;
+        b=YotN5tXzf+jVHlwTTFLgl4/WKT7Tjqi4XomzYukiJCuoNGzUj5kRRuvUuy5Vgfzbih
+         aH7MCaKY/F+FnErit2c5ZatzQpkttv3E0fIMRS1fPx7fCzHJELSlkmF1/g9ldxe3yIxH
+         f51J6R6ZKYnT8rt8O0YX6ftylWRRugqi5eFc+tIIb1cdj/AbooyHisuCDeIfnV8kolCl
+         gaRz5ZmABCAukWl+M6d0tw07yDLP23edcLvQinlpTIJ2G/DoIiAwLEPCTv+qki7MnHyP
+         sK5APbQLxXKb4n4MR4Yt9XF5NUKVWmghgMOC4Udt28cuU9E0lwMyFeMrILJKzgI8yofG
+         Av8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=v/v+PLiebDEn6OBfshopUcx5Mv717C5YgxE/2WltueU=;
-        b=MahMPDFK/GYFxHFRz9DGx1FMoaNqxlCahsU94c8nbe1n3TFlBrZ45yfYgog9tzhKcm
-         kX2Vb0cXxHDBPqMZIEV0+96OkSchem5AwqcR6p5mo/rZoy3SLGx6UvCbpa3Bk0JQNqml
-         Sf22Usk68W16mS0Xxqq9Kz+vc9sUodd0u1Gl/dhFY3TD9EwKqJ1A3M0yjcPQMtwGBASl
-         c5LvLUT9b3aGc3qUx4KwuiTZnPqTA18YZtbspu4A3SP/v44/2MA8Y8Or+eJlbIMxKk1T
-         WaixCC1xObivJ9Apt2Tdgp/K/osvetC0OdIy4PuBteUdNMjsz5erL6opZ70ch2FTuHBj
-         eL7g==
-X-Gm-Message-State: AOAM533dDAojO2EX9cIJYN895lNzZhT+JRBXsgFbOYJVTnjLv6Ep/Evh
-        0beio9qs63YZxKkbk1iokz1QnFLOMp4=
-X-Google-Smtp-Source: ABdhPJzTdwI1ArDBV/E+0SntLSWBvr1XRCcwyjaU6qanhz+IKOLKYQPepXwRRqUu/kt/eQM0x8peDg==
-X-Received: by 2002:a05:6870:32ce:b0:d9:a0ee:44b3 with SMTP id r14-20020a05687032ce00b000d9a0ee44b3mr499613oac.142.1646850441614;
-        Wed, 09 Mar 2022 10:27:21 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=a5MME4KpDziBTxxufAkFOBkSULAPSK1XcRbM0uCC95g=;
+        b=Nx6ub7saXR+ziMLM4ZZoH+ZRBhbU+UbVdRNjMXnNpcPuYPnde/97pdTFntw9wn4K38
+         NfbfKbVTuIuUMDsu2NkT4HfDw/6Hv65r3rwJeGzYmGaTw1YHWJ9XByDAVA0D3hhwPrxW
+         ZDUNtTCMwK0zawMuficTyFQDkkpyo6i/HX2mG2D074nuujFFx/3gWQlGAOAE7Er5w2FH
+         1GAjExwboM0MYKNqf69Gb3MkhzVhJgqq6oU16UMyqsoIOy2akzSZIIhVL3H2NcRCX6jd
+         2j3pS9HRn/aLz1qzSiGw2dab5YyDwdceguxbBcJt8c8rV7A3hwHwV1e8hYmF6N+O6jML
+         r1jg==
+X-Gm-Message-State: AOAM531KkFKJ5Z7ysvLDua2dWuQMA4Q7aUFE0qi6g7IIxDf3fVD3MZi0
+        I1NClqApxMRzQregXUm6brRDdbQwt+g=
+X-Google-Smtp-Source: ABdhPJwe6nP6aHS68JrKGp6EsVn5+ayJrzyEIYMuMWWO2Xq8s9nYaFcQFho3gelqsl2a1HC8bUBXlw==
+X-Received: by 2002:a4a:141:0:b0:31d:8eb3:b2c0 with SMTP id 62-20020a4a0141000000b0031d8eb3b2c0mr495461oor.4.1646850443920;
+        Wed, 09 Mar 2022 10:27:23 -0800 (PST)
 Received: from nyarly.redhat.com ([179.233.246.234])
-        by smtp.gmail.com with ESMTPSA id k5-20020a056870a4c500b000d9c2216692sm1213270oal.24.2022.03.09.10.27.19
+        by smtp.gmail.com with ESMTPSA id k5-20020a056870a4c500b000d9c2216692sm1213270oal.24.2022.03.09.10.27.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Mar 2022 10:27:21 -0800 (PST)
+        Wed, 09 Mar 2022 10:27:23 -0800 (PST)
 From:   Thiago Rafael Becker <trbecker@gmail.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     tbecker@redhat.com, steved@redhat.com, chuck.lever@oracle.com,
         Thiago Rafael Becker <trbecker@gmail.com>
-Subject: [RFC PATCH 0/7] Introduce nfs-readahead-udev
-Date:   Wed,  9 Mar 2022 15:26:46 -0300
-Message-Id: <20220309182653.1885252-1-trbecker@gmail.com>
+Subject: [RFC PATCH 1/7] Create nfs-readahead-udev
+Date:   Wed,  9 Mar 2022 15:26:47 -0300
+Message-Id: <20220309182653.1885252-2-trbecker@gmail.com>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220309182653.1885252-1-trbecker@gmail.com>
+References: <20220309182653.1885252-1-trbecker@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -67,50 +69,79 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patch series introduces nfs-readahead-udev, a utility to
-automatically set NFS readahead when a mountpoint is mounted.
+This tool is invoked by udev to find and set the readahead value to NFS
+mounts.
 
-The tool currently supports setting read ahead per mountpoint, nfs major
-version, or by a global default value.
-
-Thiago Rafael Becker (7):
-  Create nfs-readahead-udev
-  readahead: configure udev
-  readahead: create logging facility
-  readahead: only set readahead for nfs devices.
-  readahead: create the configuration file
-  readahead: add mountpoint and fstype options
-  readahead: documentation
-
- .gitignore                                    |   6 +
- configure.ac                                  |   4 +
- tools/Makefile.am                             |   2 +-
- tools/nfs-readahead-udev/99-nfs_bdi.rules.in  |   1 +
- tools/nfs-readahead-udev/Makefile.am          |  26 +++
- tools/nfs-readahead-udev/config_parser.c      |  25 +++
- tools/nfs-readahead-udev/config_parser.h      |  14 ++
- tools/nfs-readahead-udev/list.h               |  48 ++++
- tools/nfs-readahead-udev/log.h                |  16 ++
- tools/nfs-readahead-udev/main.c               | 211 ++++++++++++++++++
- .../nfs-readahead-udev/nfs-readahead-udev.man |  47 ++++
- tools/nfs-readahead-udev/parser.y             |  85 +++++++
- tools/nfs-readahead-udev/readahead.conf       |  15 ++
- tools/nfs-readahead-udev/scanner.l            |  19 ++
- tools/nfs-readahead-udev/syslog.c             |  47 ++++
- 15 files changed, 565 insertions(+), 1 deletion(-)
- create mode 100644 tools/nfs-readahead-udev/99-nfs_bdi.rules.in
+Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1946283
+Signed-off-by: Thiago Rafael Becker <trbecker@gmail.com>
+---
+ .gitignore                           | 1 +
+ configure.ac                         | 1 +
+ tools/Makefile.am                    | 2 +-
+ tools/nfs-readahead-udev/Makefile.am | 3 +++
+ tools/nfs-readahead-udev/main.c      | 7 +++++++
+ 5 files changed, 13 insertions(+), 1 deletion(-)
  create mode 100644 tools/nfs-readahead-udev/Makefile.am
- create mode 100644 tools/nfs-readahead-udev/config_parser.c
- create mode 100644 tools/nfs-readahead-udev/config_parser.h
- create mode 100644 tools/nfs-readahead-udev/list.h
- create mode 100644 tools/nfs-readahead-udev/log.h
  create mode 100644 tools/nfs-readahead-udev/main.c
- create mode 100644 tools/nfs-readahead-udev/nfs-readahead-udev.man
- create mode 100644 tools/nfs-readahead-udev/parser.y
- create mode 100644 tools/nfs-readahead-udev/readahead.conf
- create mode 100644 tools/nfs-readahead-udev/scanner.l
- create mode 100644 tools/nfs-readahead-udev/syslog.c
 
+diff --git a/.gitignore b/.gitignore
+index c89d1cd2..c99269a4 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -61,6 +61,7 @@ utils/statd/statd
+ tools/locktest/testlk
+ tools/getiversion/getiversion
+ tools/nfsconf/nfsconf
++tools/nfs-readahead-udev/nfs-readahead-udev
+ support/export/mount.h
+ support/export/mount_clnt.c
+ support/export/mount_xdr.c
+diff --git a/configure.ac b/configure.ac
+index e0f5a930..7e5ba5d9 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -737,6 +737,7 @@ AC_CONFIG_FILES([
+ 	tools/rpcgen/Makefile
+ 	tools/mountstats/Makefile
+ 	tools/nfs-iostat/Makefile
++	tools/nfs-readahead-udev/Makefile
+ 	tools/rpcctl/Makefile
+ 	tools/nfsdclnts/Makefile
+ 	tools/nfsconf/Makefile
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index c3feabbe..621cde03 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -12,6 +12,6 @@ if CONFIG_NFSDCLD
+ OPTDIRS += nfsdclddb
+ endif
+ 
+-SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat rpcctl nfsdclnts $(OPTDIRS)
++SUBDIRS = locktest rpcdebug nlmtest mountstats nfs-iostat rpcctl nfsdclnts nfs-readahead-udev $(OPTDIRS)
+ 
+ MAINTAINERCLEANFILES = Makefile.in
+diff --git a/tools/nfs-readahead-udev/Makefile.am b/tools/nfs-readahead-udev/Makefile.am
+new file mode 100644
+index 00000000..5455e954
+--- /dev/null
++++ b/tools/nfs-readahead-udev/Makefile.am
+@@ -0,0 +1,3 @@
++libexec_PROGRAMS = nfs-readahead-udev
++nfs_readahead_udev_SOURCES = main.c
++
+diff --git a/tools/nfs-readahead-udev/main.c b/tools/nfs-readahead-udev/main.c
+new file mode 100644
+index 00000000..e454108e
+--- /dev/null
++++ b/tools/nfs-readahead-udev/main.c
+@@ -0,0 +1,7 @@
++#include <stdio.h>
++
++int main(int argc, char **argv, char **envp)
++{
++	unsigned int readahead = 128;
++	printf("%d\n", readahead);
++}
 -- 
 2.35.1
 
