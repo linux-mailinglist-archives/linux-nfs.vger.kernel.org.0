@@ -2,136 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 338F84D3BD4
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 22:13:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C09024D3C1C
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 22:32:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238382AbiCIVN5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Mar 2022 16:13:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
+        id S237739AbiCIVdU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Mar 2022 16:33:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238381AbiCIVN4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 16:13:56 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D539CFF9;
-        Wed,  9 Mar 2022 13:12:56 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S233029AbiCIVdT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 16:33:19 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4DB4211D79A
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 13:32:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646861539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qBOlenYCvFIb4MeX0O1Y4pISWifeC2EFuZ988voTLdk=;
+        b=NVsPTlOYmJ3LNyQyKveQdb8zNdmwuHqMgkorymFhEzjLy71fck17BfR/gbBoIlkNh+mY/F
+        QC0VchzAWQfXm7PYDQAqiwsuDQs4vQ+Hew0XvGWtNcXa6d8eKbG+1j0+xGHX0MJ5s8bpA4
+        OHD8/HFq84eFisxqYxbZUrgA/kAX9B0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-604-Pk8d25hwNTGRxbk0FbcpNQ-1; Wed, 09 Mar 2022 16:32:16 -0500
+X-MC-Unique: Pk8d25hwNTGRxbk0FbcpNQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 59EA561AD1;
-        Wed,  9 Mar 2022 21:12:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CFE7C340F4;
-        Wed,  9 Mar 2022 21:12:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646860375;
-        bh=iRtGcZSySF09u13R1mT5NLROo7Lq5VVmijSoeUqM3ds=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=qqZNH2I1hX/JXgejzg8J5o0RBIaMFKyeq+jxOEujWuRmeL8cFAcORukF3OATCbFsE
-         zxqka9zCPUPZtwq3cs5vLlUvHTuQIBqlC9oggV3q+JsnzOMIhTSHI3AdL2F61VfcOl
-         uJclZFett5KSVbAu633cHl813HG5HeYRnzyLGPB8Kr0TgdL9LBuXiXMgOxJIbXba5G
-         1TzcbW44p9l4cM33AjRDUzZU19yCPGUXJ0NY0Nnom1M+Av+ogdEPQCGpFE9/8Bhsx3
-         dzRv2Gpp9lrtGqRqxWpX83pgjpDVBc1cfpFHBo3JlCsT7eN0/YJAwCg5BWrv6dQ5sG
-         DiTv+0laLP1Fw==
-Message-ID: <92ebc9fbdda967c14274f2b246ef3f77a1f21224.camel@kernel.org>
-Subject: Re: [PATCH v2 19/19] afs: Maintain netfs_i_context::remote_i_size
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
-Cc:     linux-afs@lists.infradead.org,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 09 Mar 2022 16:12:52 -0500
-In-Reply-To: <164678220204.1200972.17408022517463940584.stgit@warthog.procyon.org.uk>
-References: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
-         <164678220204.1200972.17408022517463940584.stgit@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 291991800D50;
+        Wed,  9 Mar 2022 21:32:15 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D3CAF99CC;
+        Wed,  9 Mar 2022 21:32:14 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     trondmy@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v9 00/27] Readdir improvements
+Date:   Wed, 09 Mar 2022 16:32:13 -0500
+Message-ID: <23255C00-57BD-49D5-B228-F4D2C0AFDB32@redhat.com>
+In-Reply-To: <20220227231227.9038-1-trondmy@kernel.org>
+References: <20220227231227.9038-1-trondmy@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-03-08 at 23:30 +0000, David Howells wrote:
-> Make afs use netfslib's tracking for the server's idea of what the current
-> inode size is independently of inode->i_size.  We really want to use this
-> value when calculating the new vnode size when initiating a StoreData RPC
-> op rather than the size stat() presents to the user (ie. inode->i_size) as
-> the latter is affected by as-yet uncommitted writes.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: linux-cachefs@redhat.com
-> cc: linux-afs@lists.infradead.org
-> 
-> Link: https://lore.kernel.org/r/164623014626.3564931.8375344024648265358.stgit@warthog.procyon.org.uk/ # v1
-> ---
-> 
->  fs/afs/inode.c |    1 +
->  fs/afs/write.c |    7 +++----
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/fs/afs/inode.c b/fs/afs/inode.c
-> index 5b5e40197655..2fe402483ad5 100644
-> --- a/fs/afs/inode.c
-> +++ b/fs/afs/inode.c
-> @@ -246,6 +246,7 @@ static void afs_apply_status(struct afs_operation *op,
->  		 * idea of what the size should be that's not the same as
->  		 * what's on the server.
->  		 */
-> +		vnode->netfs_ctx.remote_i_size = status->size;
->  		if (change_size) {
->  			afs_set_i_size(vnode, status->size);
->  			inode->i_ctime = t;
-> diff --git a/fs/afs/write.c b/fs/afs/write.c
-> index e4b47f67a408..85c9056ba9fb 100644
-> --- a/fs/afs/write.c
-> +++ b/fs/afs/write.c
-> @@ -353,9 +353,10 @@ static const struct afs_operation_ops afs_store_data_operation = {
->  static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t pos,
->  			  bool laundering)
->  {
-> +	struct netfs_i_context *ictx = &vnode->netfs_ctx;
->  	struct afs_operation *op;
->  	struct afs_wb_key *wbk = NULL;
-> -	loff_t size = iov_iter_count(iter), i_size;
-> +	loff_t size = iov_iter_count(iter);
->  	int ret = -ENOKEY;
->  
->  	_enter("%s{%llx:%llu.%u},%llx,%llx",
-> @@ -377,15 +378,13 @@ static int afs_store_data(struct afs_vnode *vnode, struct iov_iter *iter, loff_t
->  		return -ENOMEM;
->  	}
->  
-> -	i_size = i_size_read(&vnode->vfs_inode);
-> -
->  	afs_op_set_vnode(op, 0, vnode);
->  	op->file[0].dv_delta = 1;
->  	op->file[0].modification = true;
->  	op->store.write_iter = iter;
->  	op->store.pos = pos;
->  	op->store.size = size;
-> -	op->store.i_size = max(pos + size, i_size);
-> +	op->store.i_size = max(pos + size, ictx->remote_i_size);
+On 27 Feb 2022, at 18:12, trondmy@kernel.org wrote:
 
-Ahh ok, so if i_size is larger than is represented by this write, you'll
-have a zeroed out region until writeback catches up. Makes sense.
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> The current NFS readdir code will always try to maximise the amount of
+> readahead it performs on the assumption that we can cache anything that
+> isn't immediately read by the process.
+> There are several cases where this assumption breaks down, including
+> when the 'ls -l' heuristic kicks in to try to force use of readdirplus
+> as a batch replacement for lookup/getattr.
+>
+> This series also implement Ben's page cache filter to ensure that we can
+> improve the ability to share cached data between processes that are
+> reading the same directory at the same time, and to avoid live-locks
+> when the directory is simultaneously changing.
+>
+> --
+> v2: Remove reset of dtsize when NFS_INO_FORCE_READDIR is set
+> v3: Avoid excessive window shrinking in uncached_readdir case
+> v4: Track 'ls -l' cache hit/miss statistics
+>     Improved algorithm for falling back to uncached readdir
+>     Skip readdirplus when files are being written to
+> v5: bugfixes
+>     Skip readdirplus when the acdirmax/acregmax values are low
+>     Request a full XDR buffer when doing READDIRPLUS
+> v6: Add tracing
+>     Don't have lookup request readdirplus when it won't help
+> v7: Implement Ben's page cache filter
+>     Reduce the use of uncached readdir
+>     Change indexing of the page cache to improve seekdir() performance.
+> v8: Reduce the page cache overhead by shrinking the cookie hashvalue size
+>     Incorporate other feedback from Anna, Ben and Neil
+>     Fix nfs2/3_decode_dirent return values
+>     Fix the change attribute value set in nfs_readdir_page_get_next()
+> v9: Address bugs that were hit when testing with large directories
+>     Misc cleanups
 
->  	op->store.laundering = laundering;
->  	op->mtime = vnode->vfs_inode.i_mtime;
->  	op->flags |= AFS_OPERATION_UNINTR;
-> 
-> 
+Hi Trond, thanks for all this work!  I went through these from your testing
+branch (612896ec5a4e) rather than the posting.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+If it pleases, these can all get marked with my
+
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+and/or
+Tested-by: Benjamin Coddington <bcodding@redhat.com>
+
+.. except for 25/27, which is missing from the testing branch.
+
+As I replied to 23/27, I don't understand how the page index hashing is
+going to help out the re-export seekdir case, I think it might make it
+worse, and I think its unnecessary extra complication.
+
+I did test extensively total directory listing correctness, and it appears
+to me that you are correct, we are not regressing.  We're in a similar place
+as before.  I think we can be even more correct with directory verifiers or
+post-op updates with GETATTR in the READDIR compound for very little cost,
+but I've already made those arguments a few weeks ago.
+
+Thanks again,
+Ben
+
