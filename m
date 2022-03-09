@@ -2,145 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BECA4D3AB9
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 21:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 794D74D3ABE
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 21:02:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236979AbiCIUCH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Mar 2022 15:02:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53842 "EHLO
+        id S235423AbiCIUDD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Mar 2022 15:03:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231827AbiCIUCG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 15:02:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF54B39B;
-        Wed,  9 Mar 2022 12:01:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S238178AbiCIUC4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 15:02:56 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8ABAD1024
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 12:01:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646856115;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yX/Lbi+4paAfWgjakdtcSN+RcxoVxtsw7YU19TinczA=;
+        b=SC+5y2Vl3Az7mTXMDnBoZ2ZvmGkvO0LGLmHa2zVVtcwr+rhCxuvcQ1+KdAY2P3B/tvt8Zz
+        z+y5nJxF2bfu4KCHbyOasSdzp0xwvdfyqvrKiIfxGW1fpfGt43+mxfPn7VTKILogw511IT
+        /50Nmo2IHFkompSpQpSwnWofJNwe+3Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-578-p0sOlzq7NJm7MsTgVftiuQ-1; Wed, 09 Mar 2022 15:01:52 -0500
+X-MC-Unique: p0sOlzq7NJm7MsTgVftiuQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8989961978;
-        Wed,  9 Mar 2022 19:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47679C340EC;
-        Wed,  9 Mar 2022 19:46:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1646855215;
-        bh=dtsgPPBOF4aKczoSHHusq0zXiGSQrjZKnGswyuM+XJE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=MFEq8OQOCv7mjY36/BZPDOg/6xDn+q4ZCsq+GEWtvmnAi594FNAO6of8LjsCMztt9
-         57A7cOSy3CmT85vAUV/B+bmymMDuOdmg9cb22Y/sFXJVT89FykAjJCcA5EA3lFp9sc
-         AGbCiBTUQs/6tIlx2bRi7dmWAFoiNUxHAziXlP3VwiitMTrD7yabK+82+UQdwp4lYK
-         Co18p/9jk8YY2IJsInOgeVJ6I4QnnwQuAWGMbTis2ffwKDj1RLdrebL9T3xU9fkGy3
-         XJGkLC48xuoVGZoyAjbn7ZXG+lyDVzoBwpdrd5+nGQSEEhx3HN4QjeQ/tVTcEOl9pG
-         8SGi3EsPtc6Bw==
-Message-ID: <beaf4f6a6c2575ed489adb14b257253c868f9a5c.camel@kernel.org>
-Subject: Re: [PATCH v2 12/19] netfs: Add a netfs inode context
-From:   Jeff Layton <jlayton@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     linux-cachefs@redhat.com,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Steve French <sfrench@samba.org>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        David Wysochanski <dwysocha@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 09 Mar 2022 14:46:52 -0500
-In-Reply-To: <1790300.1646853782@warthog.procyon.org.uk>
-References: <8af0d47f17d89c06bbf602496dd845f2b0bf25b3.camel@kernel.org>
-         <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
-         <164678213320.1200972.16807551936267647470.stgit@warthog.procyon.org.uk>
-         <1790300.1646853782@warthog.procyon.org.uk>
-Content-Type: text/plain; charset="ISO-8859-15"
-User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EB76100C61F;
+        Wed,  9 Mar 2022 20:01:51 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E0B08196F2;
+        Wed,  9 Mar 2022 20:01:50 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     trondmy@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v9 23/27] NFS: Convert readdir page cache to use a cookie
+ based index
+Date:   Wed, 09 Mar 2022 15:01:49 -0500
+Message-ID: <A2AAA831-0D58-4FFB-B76C-6D6AF39607EA@redhat.com>
+In-Reply-To: <20220227231227.9038-24-trondmy@kernel.org>
+References: <20220227231227.9038-1-trondmy@kernel.org>
+ <20220227231227.9038-2-trondmy@kernel.org>
+ <20220227231227.9038-3-trondmy@kernel.org>
+ <20220227231227.9038-4-trondmy@kernel.org>
+ <20220227231227.9038-5-trondmy@kernel.org>
+ <20220227231227.9038-6-trondmy@kernel.org>
+ <20220227231227.9038-7-trondmy@kernel.org>
+ <20220227231227.9038-8-trondmy@kernel.org>
+ <20220227231227.9038-9-trondmy@kernel.org>
+ <20220227231227.9038-10-trondmy@kernel.org>
+ <20220227231227.9038-11-trondmy@kernel.org>
+ <20220227231227.9038-12-trondmy@kernel.org>
+ <20220227231227.9038-13-trondmy@kernel.org>
+ <20220227231227.9038-14-trondmy@kernel.org>
+ <20220227231227.9038-15-trondmy@kernel.org>
+ <20220227231227.9038-16-trondmy@kernel.org>
+ <20220227231227.9038-17-trondmy@kernel.org>
+ <20220227231227.9038-18-trondmy@kernel.org>
+ <20220227231227.9038-19-trondmy@kernel.org>
+ <20220227231227.9038-20-trondmy@kernel.org>
+ <20220227231227.9038-21-trondmy@kernel.org>
+ <20220227231227.9038-22-trondmy@kernel.org>
+ <20220227231227.9038-23-trondmy@kernel.org>
+ <20220227231227.9038-24-trondmy@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-03-09 at 19:23 +0000, David Howells wrote:
-> Jeff Layton <jlayton@kernel.org> wrote:
-> 
-> > > Add a netfs_i_context struct that should be included in the network
-> > > filesystem's own inode struct wrapper, directly after the VFS's inode
-> > > struct, e.g.:
-> > > 
-> > > 	struct my_inode {
-> > > 		struct {
-> > > 			struct inode		vfs_inode;
-> > > 			struct netfs_i_context	netfs_ctx;
-> > > 		};
-> > 
-> > This seems a bit klunky.
-> > 
-> > I think it'd be better encapsulation to give this struct a name (e.g.
-> > netfs_inode) and then have the filesystems replace the embedded
-> > vfs_inode with a netfs_inode.
-> 
-> I think what you really want is:
-> 
-> 	struct my_inode : netfs_inode {
-> 	};
-> 
-> right? ;-)
-> 
+On 27 Feb 2022, at 18:12, trondmy@kernel.org wrote:
 
-Sort of, I guess.  The natural way to enforce the requirement that the
-inode and context be ordered and adjacent like that is to make a struct
-that embeds them both.
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Instead of using a linear index to address the pages, use the cookie of
+> the first entry, since that is what we use to match the page anyway.
+>
+> This allows us to avoid re-reading the entire cache on a seekdir() type
+> of operation. The latter is very common when re-exporting NFS, and is a
+> major performance drain.
+>
+> The change does affect our duplicate cookie detection, since we can no
+> longer rely on the page index as a linear offset for detecting whether
+> we looped backwards. However since we no longer do a linear search
+> through all the pages on each call to nfs_readdir(), this is less of a
+> concern than it was previously.
+> The other downside is that invalidate_mapping_pages() no longer can use
+> the page index to avoid clearing pages that have been read. A subsequent
+> patch will restore the functionality this provides to the 'ls -l'
+> heuristic.
 
-My thinking was that someone at some point will try to move things
-around if they're just adjacent like this rather than an encapsulated
-"object".
+I didn't realize the approach was to also hash out the linearly-cached
+entries.  I thought we'd do something like flag the context for hashed page
+indexes after a seekdir event, and if there are collisions with the linear
+entries, they'll get fixed up when found.
 
-If we go this route, then please leave some comments in each filesystem
-warning people off from breaking them up.
+Doesn't that mean that with this approach seekdir() only hits the same pages
+when the entry offset is page-aligned?  That's 1 in 127 odds.
 
-> > That way it's still just pointer math to get to the context from the
-> > inode and vice versa, but the replacement seems a bit cleaner.
-> > 
-> > It might mean a bit more churn in the filesystems themselves as you
-> > convert them, but most of them use macros or inline functions as
-> > accessors so it shouldn't be _too_ bad.
-> 
-> That's a lot of churn - and will definitely cause conflicts with other
-> patches aimed at those filesystems.  I'd prefer to avoid that if I can.
-> 
+It also means we're amplifying the pagecache's useage for slightly changing
+directories - rather than re-using the same pages we're scattering our usage
+across the index.  Eh, maybe not a big deal if we just expect the page
+cache's LRU to do the work.
 
-Good point. Looks like around 200 or so places that would need to change
-in the affected filesystems.
+Ben
 
-> > > +static int ceph_init_request(struct netfs_io_request *rreq, struct file *file)
-> > > +{
-> > > ...
-> > > +}
-> > > +
-> > 
-> > ^^^
-> > The above change seems like it should be in its own patch. Wasn't it at
-> > one point? Converting this to use init_request doesn't seem to rely on
-> > the new embedded context.
-> 
-> Well, I wrote it as a separate patch on the end for convenience, but I
-> intended to merge it here otherwise ceph wouldn't be able to do readahead for
-> a few patches.
-> 
-> I was thinking that it would require the context change to work and certainly
-> it requires the error-return-from-init_request patch to work, but actually it
-> probably doesn't require the former so I could probably separate that bit out
-> and put it between 11 and 12.
-> 
-
-Ok.
-
--- 
-Jeff Layton <jlayton@kernel.org>
