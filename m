@@ -2,155 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C8974D31C1
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 16:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57B854D31C7
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 16:30:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232016AbiCIP3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Mar 2022 10:29:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
+        id S231178AbiCIPbl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Mar 2022 10:31:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232844AbiCIP3q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 10:29:46 -0500
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75354B10A5
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 07:28:47 -0800 (PST)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 9D3A01BE1; Wed,  9 Mar 2022 10:28:46 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 9D3A01BE1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1646839726;
-        bh=f5xkWa2EN1kaKA0o8VuAs7oihIdULEHhlZmuSihjjd4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MelBq6OYLMUsyn9nrhOuqlCI9w06n6TdMVmVml5gFbol1N/2cdWV2eHzA9m98Oq2T
-         q5JYSiMWviyMUaUt5So3BdVKy+cPO3PwTrCPCuNuROFqtgCr+EMqMBJtW/xFikT+9X
-         KXXh+LYsYdgH9cXTmn+CYeAzXD0BlCYNNfu8VPMc=
-Date:   Wed, 9 Mar 2022 10:28:46 -0500
-From:   bfields <bfields@fieldses.org>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>, david <david@sigma-star.at>,
-        luis turcitu <luis.turcitu@appsbroker.com>,
-        david young <david.young@appsbroker.com>,
-        david oberhollenzer <david.oberhollenzer@sigma-star.at>,
-        trond myklebust <trond.myklebust@hammerspace.com>,
-        anna schumaker <anna.schumaker@netapp.com>,
-        chris chilvers <chris.chilvers@appsbroker.com>
-Subject: Re: [RFC PATCH 1/6] Implement reexport helper library
-Message-ID: <20220309152846.GC6633@fieldses.org>
-References: <20220217131531.2890-1-richard@nod.at>
- <20220217131531.2890-2-richard@nod.at>
- <20220308214437.GB22644@fieldses.org>
- <692661836.127800.1646819014252.JavaMail.zimbra@nod.at>
- <20220309141945.GA6633@fieldses.org>
- <2098326047.128064.1646838131178.JavaMail.zimbra@nod.at>
+        with ESMTP id S233279AbiCIPbk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 10:31:40 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E7C75106633
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 07:30:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646839841;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6EsyJDNMaW7aLzLkycFQGvPjjJ3FlfDqU3pzS9T1Q8I=;
+        b=N+gY2C4FWhyo1L05/xf6vKSLuQkAulCUSmVu0XiV7Z6gzHPMLM21dUwrLo/xUWbfXyrR+0
+        ISvIu+9QslLVYxu7SDnq52ImpumYVzFO0Jr76RZUpUrH1ruRZApYAn/00s60WNmKAPA2li
+        eyTXRJGZ+umn/9PCyd7qN5D5lZfFB3w=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-14-nQ0pk2KzOcW1xPMNT4Kf3Q-1; Wed, 09 Mar 2022 10:30:38 -0500
+X-MC-Unique: nQ0pk2KzOcW1xPMNT4Kf3Q-1
+Received: by mail-qk1-f199.google.com with SMTP id c19-20020a05620a0cf300b005f17891c015so1756662qkj.18
+        for <linux-nfs@vger.kernel.org>; Wed, 09 Mar 2022 07:30:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=6EsyJDNMaW7aLzLkycFQGvPjjJ3FlfDqU3pzS9T1Q8I=;
+        b=fNSG5NrPa1VMAk8qui46ShLjEhNtpMD9Icp9I6rTGsAw41t7FBLN9UYgFOrA2bbY/I
+         bInOK6gkw56qJ/OiCltY4o7yMBf20DHDUjP0qWV4VR98yrACtuDNm3Ues4sMaPh8hz+O
+         Gb2VEFqAZM8HYdIzsb9qUn1KPInVnl/S+X+jZqtVLsWDqWb7YOI6l7NgpuLtczHYd5DO
+         LEL2Kxq/+cH6KBX9ghyok94Q+BTKUwtQ8tMpv3KZ4x2CBO2sInbR76ZaoQVJYCuxHlzE
+         uHD4CkIqOYFKigcBIeOtTQwldjo6FLPkZW1L6pDne7yNlB1OTJP7XDCVQSB7GQqs6vAZ
+         pG0w==
+X-Gm-Message-State: AOAM532Y6sAt1C58F+36yNgu2JZ114UVDv4l+3/HYjFWpw8D/X6zNJTV
+        IeSjiL2WYP4ZOFjkErN7Ef6tu7dX3ItnTbmgoY8RwDSVi7graZswU3+gcE4X6m9Q3dnGqSZjisZ
+        T+KDCZIBm+ThbcID2j3Rs
+X-Received: by 2002:a05:622a:102:b0:2de:6596:73ff with SMTP id u2-20020a05622a010200b002de659673ffmr166625qtw.75.1646839838465;
+        Wed, 09 Mar 2022 07:30:38 -0800 (PST)
+X-Google-Smtp-Source: ABdhPJwFSSJDdxTCAvhdcrcS/qlT4SNihglL15R3cIkJvlDoonZ+iPAI4r0UaiLtAuAoNBZeA0b9IA==
+X-Received: by 2002:a05:622a:102:b0:2de:6596:73ff with SMTP id u2-20020a05622a010200b002de659673ffmr166596qtw.75.1646839838220;
+        Wed, 09 Mar 2022 07:30:38 -0800 (PST)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id x12-20020a05620a14ac00b0060deaee7a21sm1055813qkj.51.2022.03.09.07.30.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Mar 2022 07:30:37 -0800 (PST)
+Message-ID: <c2f4b3dc107b106e04c48f54945a12715cccfdf3.camel@redhat.com>
+Subject: Re: [PATCH v2 02/19] netfs: Generate enums from trace symbol
+ mapping lists
+From:   Jeff Layton <jlayton@redhat.com>
+To:     David Howells <dhowells@redhat.com>, linux-cachefs@redhat.com
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 09 Mar 2022 10:30:36 -0500
+In-Reply-To: <164678192454.1200972.4428834328108580460.stgit@warthog.procyon.org.uk>
+References: <164678185692.1200972.597611902374126174.stgit@warthog.procyon.org.uk>
+         <164678192454.1200972.4428834328108580460.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset="ISO-8859-15"
+User-Agent: Evolution 3.42.4 (3.42.4-1.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2098326047.128064.1646838131178.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Mar 09, 2022 at 04:02:11PM +0100, Richard Weinberger wrote:
-> Bruce,
+On Tue, 2022-03-08 at 23:25 +0000, David Howells wrote:
+> netfs has a number of lists of symbols for use in tracing, listed in an
+> enum and then listed again in a symbol->string mapping for use with
+> __print_symbolic().  This is, however, redundant.
 > 
-> ----- Ursprüngliche Mail -----
-> > Von: "bfields" <bfields@fieldses.org>
-> >> Concurrent access to the database is synchronized using a shared rwlock (on
-> >> shared memory).
-> >> reexpdb_init.lock is used to make sure that creating and initializing the shared
-> >> memory/lock
-> >> happens once.
-> > 
-> > Could you point me to sqlite documentation that explains why the user
-> > would need to do their own locking?
+> Instead, use the symbol->string mapping list to also generate the enum
+> where the enum is in the same file.
 > 
-> https://www.sqlite.org/rescode.html#busy
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: linux-cachefs@redhat.com
+> 
+> Link: https://lore.kernel.org/r/164622980839.3564931.5673300162465266909.stgit@warthog.procyon.org.uk/ # v1
+> ---
+> 
+>  include/trace/events/netfs.h |   57 ++++++++++--------------------------------
+>  1 file changed, 14 insertions(+), 43 deletions(-)
+> 
+> diff --git a/include/trace/events/netfs.h b/include/trace/events/netfs.h
+> index e6f4ebbb4c69..88d9a74dd346 100644
+> --- a/include/trace/events/netfs.h
+> +++ b/include/trace/events/netfs.h
+> @@ -15,49 +15,6 @@
+>  /*
+>   * Define enums for tracing information.
+>   */
+> -#ifndef __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
+> -#define __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
+> -
+> -enum netfs_read_trace {
+> -	netfs_read_trace_expanded,
+> -	netfs_read_trace_readahead,
+> -	netfs_read_trace_readpage,
+> -	netfs_read_trace_write_begin,
+> -};
+> -
+> -enum netfs_rreq_trace {
+> -	netfs_rreq_trace_assess,
+> -	netfs_rreq_trace_done,
+> -	netfs_rreq_trace_free,
+> -	netfs_rreq_trace_resubmit,
+> -	netfs_rreq_trace_unlock,
+> -	netfs_rreq_trace_unmark,
+> -	netfs_rreq_trace_write,
+> -};
+> -
+> -enum netfs_sreq_trace {
+> -	netfs_sreq_trace_download_instead,
+> -	netfs_sreq_trace_free,
+> -	netfs_sreq_trace_prepare,
+> -	netfs_sreq_trace_resubmit_short,
+> -	netfs_sreq_trace_submit,
+> -	netfs_sreq_trace_terminated,
+> -	netfs_sreq_trace_write,
+> -	netfs_sreq_trace_write_skip,
+> -	netfs_sreq_trace_write_term,
+> -};
+> -
+> -enum netfs_failure {
+> -	netfs_fail_check_write_begin,
+> -	netfs_fail_copy_to_cache,
+> -	netfs_fail_read,
+> -	netfs_fail_short_readpage,
+> -	netfs_fail_short_write_begin,
+> -	netfs_fail_prepare_write,
+> -};
+> -
+> -#endif
+> -
+>  #define netfs_read_traces					\
+>  	EM(netfs_read_trace_expanded,		"EXPANDED ")	\
+>  	EM(netfs_read_trace_readahead,		"READAHEAD")	\
+> @@ -98,6 +55,20 @@ enum netfs_failure {
+>  	EM(netfs_fail_short_write_begin,	"short-write-begin")	\
+>  	E_(netfs_fail_prepare_write,		"prep-write")
 >  
-> > I assumed sqlite would do any necessary locking for you.  It seems like
-> > a core function for a database.
-> 
-> Well, SQLite does locking but no queuing.
-> So, as soon somebody is writing the data base it is locked and all other
-> read/writes will fail either with SQLITE_BUSY or SQLITE_LOCKED.
-> It is up to the user how to react on that.
+> +#ifndef __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
+> +#define __NETFS_DECLARE_TRACE_ENUMS_ONCE_ONLY
+> +
+> +#undef EM
+> +#undef E_
+> +#define EM(a, b) a,
+> +#define E_(a, b) a
+> +
+> +enum netfs_read_trace { netfs_read_traces } __mode(byte);
+> +enum netfs_rreq_trace { netfs_rreq_traces } __mode(byte);
+> +enum netfs_sreq_trace { netfs_sreq_traces } __mode(byte);
+> +enum netfs_failure { netfs_failures } __mode(byte);
+> +
+
+Should you undef EM and E_ here after creating these?
+
+> +#endif
 >  
-> That's why I chose to use a shared rwlock where a task can *wait* upon
-> conflicting access.
+>  /*
+>   * Export enum symbols via userspace.
 > 
-> Maybe there is a better way do it, dunno.
-
-Oh, got it, thanks for the explanation.
-
-Assuming writes are rare, maybe a dumb retry loop would be adequate.
-Sounds like that's what we'd need anyway if we were to share the
-database between cooperating re-export servers.  (Would we have a
-performance problem in that case, if several reexport servers start at
-once and all start trying to populate the shared database?  I don't
-know.)
-
-Anyway, it's a judgement call, fair enough.  Might be worth a brief
-comment, at least.
-
-> >> > What are the two tables used for?  Naively I'd've thought the
-> >> > "subvolumes" table was redundant.
-> >> 
-> >> fsidnums is used to store generated and predefined fsid numbers.
-> >> It is only used in reexport modes auto-fsidnum and predefined-fsidnum.
-> >> 
-> >> subvolumes contains a list of subvolumes which a are likely in use by
-> >> a client. Up start all these paths will get touched such that they can
-> >> be exported.
-> > 
-> > The fsidnums also contains that same list of paths, right?  So I don't
-> > understand why we need both.
 > 
-> In the current design generated fsidnums will stay forever while the paths
-> in subvolumes can get cleaned.
->  
-> > Also, if we're depending on touching all the paths on startup, something
-> > is wrong.
-> 
-> I think we talked about that already and agreed that it should work without
-> touching. So far I didn't had a chance to investigate into this.
 
-OK.  Do you think you could look into that, and strip this down to the
-one auto-fsidnum case, and then continue the discussion?  I think that'd
-clarify things.
+Looks fine otherwise:
 
-As I say, I wouldn't necessarily be opposed to later adding a reexport=
-option back in, but for now I'd first like to see if we can find the
-simplest patches that will solve the problem in one good-enough way.
+Acked-by: Jeff Layton <jlayton@redhat.com>
 
-> > What we want to do is touch the path when we get an upcall for the given
-> > fsid.  That way we don't have to assume, for example, that the system
-> > will never expire mounts that haven't been used recently.
-> > 
-> >> >> +/*
-> >> >> + * This query is a little tricky. We use SQL to find and claim the smallest
-> >> >> free fsid number.
-> >> > 
-> >> > Yes, that is a little tricky.  Is it necessary?  My SQL Is rusty, but
-> >> > the database should be able to pick a unique value for us, shouldn't it?
-> >> 
-> >> SQLite can generate a unique value, but we cannot select the range.
-> >> It will give a value between 0 and 2^64.
-> >> We need an id between 1 and 2^32.
-> > 
-> > Surely that CHECK constraint doesn't somehow cause sqlite to generate
-> > non-unique primary keys?  At worst I'd think it would cause INSERTs to
-> > fail if the ordinary primary-key-choosing algorithm chooses something
-> > over 2^32.
-> 
-> The CHECK is just a paranoid check. My SQL INSERT generates ids starting with 1.
-> Sure, if you run it 2^32 times, it will fail due to the CHECK.
-
-OK.
-
---b.
