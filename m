@@ -2,34 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3ADB4D2C61
+	by mail.lfdr.de (Postfix) with ESMTP id 79EDF4D2C60
 	for <lists+linux-nfs@lfdr.de>; Wed,  9 Mar 2022 10:43:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230026AbiCIJob convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 9 Mar 2022 04:44:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
+        id S230175AbiCIJof convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 9 Mar 2022 04:44:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbiCIJoa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 04:44:30 -0500
+        with ESMTP id S229886AbiCIJof (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Mar 2022 04:44:35 -0500
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D2714D271
-        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 01:43:30 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 436811405FF
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Mar 2022 01:43:36 -0800 (PST)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 5E97C609B3C4;
-        Wed,  9 Mar 2022 10:43:28 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id DABE0609B3F4;
+        Wed,  9 Mar 2022 10:43:34 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yB7oMt18cYiz; Wed,  9 Mar 2022 10:43:27 +0100 (CET)
+        with ESMTP id ID8E50-nAbMF; Wed,  9 Mar 2022 10:43:34 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 83A2B609B3F4;
-        Wed,  9 Mar 2022 10:43:27 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 69B4860F6B67;
+        Wed,  9 Mar 2022 10:43:34 +0100 (CET)
 Received: from lithops.sigma-star.at ([127.0.0.1])
         by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id LjDyjBlVaFDU; Wed,  9 Mar 2022 10:43:27 +0100 (CET)
+        with ESMTP id 1lsuCg5rmKkT; Wed,  9 Mar 2022 10:43:34 +0100 (CET)
 Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
-        by lithops.sigma-star.at (Postfix) with ESMTP id 5892D609B3C4;
-        Wed,  9 Mar 2022 10:43:27 +0100 (CET)
-Date:   Wed, 9 Mar 2022 10:43:27 +0100 (CET)
+        by lithops.sigma-star.at (Postfix) with ESMTP id 4AA1A609B3F4;
+        Wed,  9 Mar 2022 10:43:34 +0100 (CET)
+Date:   Wed, 9 Mar 2022 10:43:34 +0100 (CET)
 From:   Richard Weinberger <richard@nod.at>
 To:     bfields <bfields@fieldses.org>
 Cc:     linux-nfs <linux-nfs@vger.kernel.org>, david <david@sigma-star.at>,
@@ -39,17 +39,17 @@ Cc:     linux-nfs <linux-nfs@vger.kernel.org>, david <david@sigma-star.at>,
         trond myklebust <trond.myklebust@hammerspace.com>,
         anna schumaker <anna.schumaker@netapp.com>,
         chris chilvers <chris.chilvers@appsbroker.com>
-Message-ID: <401495945.127799.1646819007180.JavaMail.zimbra@nod.at>
-In-Reply-To: <20220308221007.GC22644@fieldses.org>
-References: <20220217131531.2890-1-richard@nod.at> <20220217131531.2890-3-richard@nod.at> <20220308221007.GC22644@fieldses.org>
-Subject: Re: [RFC PATCH 2/6] exports: Implement new export option reexport=
+Message-ID: <692661836.127800.1646819014252.JavaMail.zimbra@nod.at>
+In-Reply-To: <20220308214437.GB22644@fieldses.org>
+References: <20220217131531.2890-1-richard@nod.at> <20220217131531.2890-2-richard@nod.at> <20220308214437.GB22644@fieldses.org>
+Subject: Re: [RFC PATCH 1/6] Implement reexport helper library
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8BIT
 X-Originating-IP: [195.201.40.130]
 X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF97 (Linux)/8.8.12_GA_3809)
-Thread-Topic: exports: Implement new export option reexport=
-Thread-Index: TQGP/1KiauVYsjgH/rY2iehqUHRF+Q==
+Thread-Topic: Implement reexport helper library
+Thread-Index: SAqI7vRNcOjlIHla7x6oZOmiJcEJIA==
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
         T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR autolearn=ham autolearn_force=no
         version=3.4.6
@@ -63,87 +63,78 @@ Bruce,
 
 ----- Ursprüngliche Mail -----
 > Von: "bfields" <bfields@fieldses.org>
->> 1. auto-fsidnum
->>    In this mode mountd/exportd will create a new numerical fsid
->>    for a NFS volume and subvolume. The numbers are stored in a database
->>    such that the server will always use the same fsid.
->>    The entry in the exports file allowed to skip fsid= entiry but
->>    stating a UUID is allowed, if needed.
->> 
->>    This mode has the obvious downside that load balancing is not
->>    possible since multiple re-exporting NFS servers would generate
->>    different ids.
+> On Thu, Feb 17, 2022 at 02:15:26PM +0100, Richard Weinberger wrote:
+>> +#define REEXPDB_SHM_NAME "/nfs_reexport_db_lock"
+>> +#define REEXPDB_SHM_SZ 4096
+>> +#define REEXPDB_INIT_LOCK NFS_STATEDIR "/reexpdb_init.lock"
+>> +#define REEXPDB_DBFILE NFS_STATEDIR "/reexpdb.sqlite3"
 > 
-> This is the one I think it makes sense to concentrate on first.  Ideally
-> it should Just Work without requiring any configuration.
+> I don't know much about sqlite--why do we need to do our own file
+> locking?  If we do need to do it ourself, could we lock the database
+> file instead instead of using a separate lock file?
 
-Agreed.
+Concurrent access to the database is synchronized using a shared rwlock (on shared memory).
+reexpdb_init.lock is used to make sure that creating and initializing the shared memory/lock
+happens once.
  
-> And then eventually my hope is that we could replace sqlite by a
-> distributed database to get filehandles that are consistent across
-> multiple servers.
-
-Sure. I see at least two options here:
-
-a. Allow multiple SQL backends in nfs-utils. SQLite by default, but also remote MariaDB
-or Postgres...
-
-b. Placing the SQLite database on a shared file system that is capable of file locks.
-That way we can use SQlite as-is. We just need to handle the SQLITE_LOCKED case in the code.
-Luckily writing happens seldom, so this shouldn't be a big deal.
-
->> 
->> 2. predefined-fsidnum
->>    This mode works just like auto-fsidnum but does not generate ids
->>    for you. It helps in the load balancing case. A system administrator
->>    has to manually maintain the database and install it on all re-exporting
->>    NFS servers. If you have a massive amount of subvolumes this mode
->>    will help because you don't have to bloat the exports list.
+>> +static const char initdb_sql[] = "CREATE TABLE IF NOT EXISTS fsidnums (num
+>> INTEGER PRIMARY KEY CHECK (num > 0 AND num < 4294967296), path TEXT UNIQUE);
+>> CREATE TABLE IF NOT EXISTS subvolumes (path TEXT PRIMARY KEY); CREATE INDEX IF
+>> NOT EXISTS idx_ids_path ON fsidnums (path);";
 > 
-> OK, I can see that being sort of useful but it'd be nice if we could
-> start with something more automatic.
-> 
->> 3. remote-devfsid
->>    If this mode is selected mountd/exportd will derive an UUID from the
->>    re-exported NFS volume's fsid (rfc7530 section-5.8.1.9).
-> 
-> How does the server take a filehandle with a UUID in it and map that
-> UUID back to the original fsid?
+> I'd personally find it easier to read if these were defined in the place
+> where they're used.  (And, honestly, if this is just used once, maybe
+> the definition is unnecessary.)
 
-knfsd does not need the original fsid. All it sees is the UUID.
-If it needs to know which export belongs to a UUID it asks mountd.
-In mountd the regular UUID lookup is used then.
-
->>    No further local state is needed on the re-exporting server.
->>    The export list entry still needs a fsid= setting because while
->>    parsing the exports file the NFS mounts might be not there yet.
-> 
-> I don't understand that bit.
-
-I tried to explain that with this mode we don't need to store UUID or
-fsids on disk.
-
->>    This mode is dangerous, use only of you're absolutely sure that the
->>    NFS server you're re-exporting has a stable fsid. Chances are good
->>    that it can change.
-> 
-> The fsid should be stable.
-
-Didn't you explain me last time that it is not?
-By fsid I mean:
-https://datatracker.ietf.org/doc/html/rfc7530#section-5.8.1.9
-https://datatracker.ietf.org/doc/html/rfc7530#section-2.2.5
-
-So after a reboot the very same filesystem could be on different
-disks and the major/minor tuple is different. (If the server uses disk  ids
-as is).
+Ok.
  
-> The case I'm worried about is the case where we're reexporting exports
-> from multiple servers.  Then there's nothing preventing the two servers
-> from accidentally picking the same fsid to represent different exports.
+> What are the two tables used for?  Naively I'd've thought the
+> "subvolumes" table was redundant.
 
-That's a good point. Since /proc/fs/nfsfs/volumes shows all that information
-we can add sanity checks to mountd.
+fsidnums is used to store generated and predefined fsid numbers.
+It is only used in reexport modes auto-fsidnum and predefined-fsidnum.
+
+subvolumes contains a list of subvolumes which a are likely in use by
+a client. Up start all these paths will get touched such that they can
+be exported.
+
+>> +/*
+>> + * This query is a little tricky. We use SQL to find and claim the smallest
+>> free fsid number.
+> 
+> Yes, that is a little tricky.  Is it necessary?  My SQL Is rusty, but
+> the database should be able to pick a unique value for us, shouldn't it?
+
+SQLite can generate a unique value, but we cannot select the range.
+It will give a value between 0 and 2^64.
+We need an id between 1 and 2^32. 
+ 
+>> + * To find a free fsid the fsidnums is left joined to itself but with an offset
+>> of 1.
+>> + * Everything after the UNION statement is to handle the corner case where
+>> fsidnums
+>> + * is empty. In this case we want 1 as first fsid number.
+>> + */
+>> +static const char new_fsidnum_by_path_sql[] = "INSERT INTO fsidnums VALUES
+>> ((SELECT ids1.num + 1 FROM fsidnums AS ids1 LEFT JOIN fsidnums AS ids2 ON
+>> ids2.num = ids1.num + 1 WHERE ids2.num IS NULL UNION SELECT 1 WHERE NOT EXISTS
+>> (SELECT NULL FROM fsidnums WHERE num = 1) LIMIT 1), ?1) RETURNING num;";
+>> +static const char fsidnum_by_path_sql[] = "SELECT num FROM fsidnums WHERE path
+>> = ?1;";
+>> +static const char add_crossed_volume_sql[] = "REPLACE INTO subvolumes
+>> VALUES(?1);";
+>> +static const char drop_crossed_volume_sql[] = "DELETE FROM subvolumes WHERE
+>> path = ?1;";
+>> +static const char get_crossed_volumes_sql[] = "SELECT path from subvolumes;";
+> ...
+>> +/*
+>> + * reexpdb_init - Initialize reexport database
+>> + *
+>> + * Setup shared lock (database is concurrently used by multiple processes),
+> 
+> So, this should all work when rpc.mountd is run with --num_threads > 1?
+
+Yes, that's why we need the shared rwlock.
 
 Thanks,
 //richard
