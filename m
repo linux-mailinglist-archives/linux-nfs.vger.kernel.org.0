@@ -2,195 +2,648 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 652244D536D
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Mar 2022 22:08:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 509AA4D5612
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 00:56:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238620AbiCJVIq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Mar 2022 16:08:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38524 "EHLO
+        id S1345001AbiCJXzv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Mar 2022 18:55:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343881AbiCJVIo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Mar 2022 16:08:44 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2126.outbound.protection.outlook.com [40.107.236.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55A2321812
-        for <linux-nfs@vger.kernel.org>; Thu, 10 Mar 2022 13:07:43 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XKZopy/UgZ0z3Zlvf62mLvGdNUmftSRIE3XMMVjXC+s4XC+QMt+Mfkv/f/xQ+uKS9zG+4uhlKZ1alHqkZ6ly8HlD0IiaSb9ZgsZnL9pj8JzGLeIrDy5rJSJE0QNHENF7VR7BqrXfw3j41wJ/EdyAtp+hDtiJTBQSVwed/d7TZDXKHRIFWRyHEoFUowDAyyvdKDIGXU0g5B2byHk5kjKDMB88rXxS/FHNQ8oKcNAedE7F20wNrqN5yJKMPEFXg+1GH69Jg4cL7GaxCyoatOxT8VU9MFkY9B889cSrd1SGIDgtbdDonbFCI3OYIpT6gYx2Qr9+lXUSF+kFqqOp7ZzqQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=npOjBaTGwcLDnujHtW/Ae0+JoTjY/+/L4FKr2QeqTtQ=;
- b=cYPme1bT0VgN0Y0kq44X/N3GGM7UJQvLzZnWb2SURiPOvUfKAQf3Tw5sOV7iptW1ysW+euXRrTek/no/ifpFzh54bHvLDTExeZbTeB7cxTPxFWYdpkfIVOdUgGOwwj3XYeMh2a7BpVtXUxF3CKceHDY3w+9Y1Q6je8ArQiMbPviked2PcWtlQn9mhcszFp8f8E0gKOYDMNjr/jXls28mjtb8Qe61sFlqWr3On1BIfv5Skp+86A4ZGl5BW1oIswQBvE17xlftyINgQ0U8x15irIZtjtMija8dWTUH7dsEYERRwefftSw58LNfvbdwwXVLpXbFbJeZvCGrFVdZ4VnSBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=npOjBaTGwcLDnujHtW/Ae0+JoTjY/+/L4FKr2QeqTtQ=;
- b=ad6eBT8TLFWtXS1PdNR9Em6CskpEBqgEaRpb45z2gJEkc6JKt086aL5WMgucYuV7F4ITqzzblx0Gn+Yac0CqIsItFQOyfvylrkl4FhBt6JAtu3US2VxG5eI2xVj4XXGUrLfBe99AX1F5oI2fEdyJ2yabLYD59tpasGogg9LWfcE=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM6PR13MB4036.namprd13.prod.outlook.com (2603:10b6:5:2a7::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.6; Thu, 10 Mar
- 2022 21:07:41 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f%7]) with mapi id 15.20.5061.018; Thu, 10 Mar 2022
- 21:07:41 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bcodding@redhat.com" <bcodding@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v9 23/27] NFS: Convert readdir page cache to use a cookie
- based index
-Thread-Topic: [PATCH v9 23/27] NFS: Convert readdir page cache to use a cookie
- based index
-Thread-Index: AQHYLDBhnANoa08keUGsN4tf+cdAo6y3iKWAgAGkuYA=
-Date:   Thu, 10 Mar 2022 21:07:41 +0000
-Message-ID: <9099fead49c961a53027c8ed309a8efd2222d679.camel@hammerspace.com>
-References: <20220227231227.9038-1-trondmy@kernel.org>
-         <20220227231227.9038-2-trondmy@kernel.org>
-         <20220227231227.9038-3-trondmy@kernel.org>
-         <20220227231227.9038-4-trondmy@kernel.org>
-         <20220227231227.9038-5-trondmy@kernel.org>
-         <20220227231227.9038-6-trondmy@kernel.org>
-         <20220227231227.9038-7-trondmy@kernel.org>
-         <20220227231227.9038-8-trondmy@kernel.org>
-         <20220227231227.9038-9-trondmy@kernel.org>
-         <20220227231227.9038-10-trondmy@kernel.org>
-         <20220227231227.9038-11-trondmy@kernel.org>
-         <20220227231227.9038-12-trondmy@kernel.org>
-         <20220227231227.9038-13-trondmy@kernel.org>
-         <20220227231227.9038-14-trondmy@kernel.org>
-         <20220227231227.9038-15-trondmy@kernel.org>
-         <20220227231227.9038-16-trondmy@kernel.org>
-         <20220227231227.9038-17-trondmy@kernel.org>
-         <20220227231227.9038-18-trondmy@kernel.org>
-         <20220227231227.9038-19-trondmy@kernel.org>
-         <20220227231227.9038-20-trondmy@kernel.org>
-         <20220227231227.9038-21-trondmy@kernel.org>
-         <20220227231227.9038-22-trondmy@kernel.org>
-         <20220227231227.9038-23-trondmy@kernel.org>
-         <20220227231227.9038-24-trondmy@kernel.org>
-         <A2AAA831-0D58-4FFB-B76C-6D6AF39607EA@redhat.com>
-In-Reply-To: <A2AAA831-0D58-4FFB-B76C-6D6AF39607EA@redhat.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e797a0a3-9992-469f-b31f-08da02da03d3
-x-ms-traffictypediagnostic: DM6PR13MB4036:EE_
-x-microsoft-antispam-prvs: <DM6PR13MB4036E99E9DA4F37263436E0CB80B9@DM6PR13MB4036.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nNKeG/p8jmkhrneJI/sgtgpAkwRCig+URwANhu7M+bAKhx53GWBiAgJfwg8ul4vkCFpdW6/ofxLMbii6Qq54rXhmco+DB5tpaOcpmtKCRxhOi2ocmQeA+Cn58GXQp6QlGahM43yuf3LVI2Msyb4Jt9sThQKJ40nzcQzglmIUKxGd17gi1AF1WqfWgNHwr1HBCB07Dnat91HD6ZwdoMqD5QsfebsnQR6T6pfFCjxUUFhPGfet3ZL7JC87OCk3Zsld/mtK8CHW7suZD18ZpaNidtORNYq8wjTcYu8qd2npkm7wYx1xoAwA2ln9yJTNXfFxhT1oTR8v7COa2jBsrtXVjscst/l5fUpA/PI9KIeIKlM0GDym3wdRAQSscCQnXQ9ZgC6Ve+j11f8wzhfvmanaH+e6tJcQ6BLFqwwNQpmbqGF2RYscQo/Bf7ZAKGcap07SeJ5TVKlsHQn53hpgocs5IHOrvySAdUfM3LGKopZU9fWryF4b2RExyfFMYV7193Ezg5NsZwRcP0/U2t+gie/e6OKdZTFWQ5skNfIwzO8jfbN6ovvwVtYQsDvr5V2K39/Jf5B56c9DSi89OP+lc8aDuQqUl4O1Hh3zWw4yKZLcJvh7J8faADKTcFGbJwEucduIv5HM2VQ1KhD621qBIdxmft9Jqp0vsYEqidcTVABAVvuBVM1PdmJxiujMPNrWxC3kfRL3BEL4HjfhQdpmXoTU0w==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(66446008)(64756008)(4326008)(66556008)(66946007)(8676002)(66476007)(86362001)(83380400001)(122000001)(38100700002)(2906002)(6486002)(5660300002)(38070700005)(8936002)(6916009)(6506007)(36756003)(71200400001)(508600001)(76116006)(2616005)(316002)(6512007)(186003)(53546011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWNYNTYwZDVwQXBoSnJKRW1NU2lkY2dRdGNWUEppczBObUtUNWpvU1p1ZWJR?=
- =?utf-8?B?UzZ4L1hjbHFjMFNCT2xPeGdGWXo2dUhmN2xwbG5TZW9KMHIySFlLVVRnczNS?=
- =?utf-8?B?R0lENG9VUS9CdjNoMVd1bW5jT2ZXQ3hYU2luL243eFc5bUlTTWxpdUtVTFlz?=
- =?utf-8?B?OG43M0tRa2RTVFp2aXM3ME5VSDRFSlhKKy9VeVVjMUNnZ2U3TG9BTmJFV3dG?=
- =?utf-8?B?Nmg5ODhXa0Z5dU41a2VhR3ovYTJvZnErRU1ma1A4OFE3dEdQQ1hFWjVoaE9u?=
- =?utf-8?B?UlF1K2hnSWsvVkR1b1lmRXhjRFVmY1JySjdneWJxYzRjS2VZWVRUZTFWVTZE?=
- =?utf-8?B?MmZ3ZDN2WlN3Qzdhdkx1blU2ZUhIdFVDWnBZWGVYRXF3SnVFNHpxdDRSNjNU?=
- =?utf-8?B?WFd6bXh6dmFBcWxtY2lDNlZKQUlZeEhzMm05VzNGOUtrMDEycXozOEk2YUNy?=
- =?utf-8?B?eitqanhjSEc2WkhFaDZmYWZKM2pNSkpyelgrVkNGbWNoYUROZk1uYUFZeXdn?=
- =?utf-8?B?ZjFkelFDcDVPSEZNOXRMUSt2aFZnWFRad0ptOVVPTnlwWTJNV2tjcnQzODBl?=
- =?utf-8?B?d1paaUx2L1B4ZlFwRW55bnJzWiswblBNMkFYTDZBeTcvZnZXUlRxdzBzYUY3?=
- =?utf-8?B?SmpPWG9hWktTYzJKM1VnQUQ1VVFRL0dhS1dUYnNoMDJuc21nOUw1NHRwdTV5?=
- =?utf-8?B?YzJHMVJMVndmT3htUDlEbld1dkdZOTVyNlVvRGNHOGhVRU9LaXZXajNrbERI?=
- =?utf-8?B?VG1tTEIvQ1BYd2dyek04bmFJbW9MYXlpTitCTTFRY2tQZTJJMnRMS1p5TE5S?=
- =?utf-8?B?TXBjU3huK0dlVVU0eFNYWmNrQ05GU1g1azNBbGVzVUJRSFFhbjVQeURmN21D?=
- =?utf-8?B?SzhkQXduZVBtUjJibDRLY0h6bnNhZkVVMTlxTkx5WEQ1YURmcDhVWmUrQWRJ?=
- =?utf-8?B?ZmlCd1BuZVJtZHprWklQMnhwSXZPa1JscHZ4dDBCOUh5ZUo4bzNsNVNKdGM2?=
- =?utf-8?B?a0NZaXZ6SVR4K2JrY2EzNVI4dWR6elNVc0owK2R1VHVBa08xT3dMaGc1dmow?=
- =?utf-8?B?VWFoMGZ3a1NjQ0ErVVRKMENJSTBDTk1yY0FRS3hSaytKdWl1U2RwWVVtcWhs?=
- =?utf-8?B?ZmhSS1FpRm56eStQam9HMW5BM3V2RmROaDlDQUpXNnZqZ3hJMUU3ZFU5ODVB?=
- =?utf-8?B?K3hlWFlTYkw2blB1UnU2L01TaXlHZkdMaXVGNDl2UjRYaTVqL1lQOUZ1a3VO?=
- =?utf-8?B?RFpCeUJtWUlseU45S2hyaXVCczZSVksrb253d3dsNlZFMGcxc2tWc2hhZENq?=
- =?utf-8?B?V3UzWEc2UkE3R3MyVTN0K1BqUXZFT1VWZHpGWU51RzNJSVh2QmJnZGJxUDB3?=
- =?utf-8?B?UnUrejF6bGt1NDJ4cWFkVHlTbDdUR1d2a3pId1dHM2N5WXE4dXgrVC82OXdh?=
- =?utf-8?B?cElMbHpoTDNIUkwxV3AxV01FVnhjTjgvUHR0WXd3eUpXL3lqWjVUcmU0L2Fx?=
- =?utf-8?B?SUMrZG9UdjNBY0x1cmZOYXVVLzZPZnE2VTgvNW1sRVR6dzZzYytvU0UrSXlk?=
- =?utf-8?B?bitXWTJGQ1dlQlhWMkZkYjhua2hTZzVNT0hTaXRkZW1tS3hJbUV1Z1lQQzlZ?=
- =?utf-8?B?cEhRMkV4OERGL0ZSRjlSeXhmZ1B0NTFaYU1mTDlqbTd4NnlwYzV4WUdaVTc2?=
- =?utf-8?B?NVpQRmZ1UGxaK2pvaGtSRVNsSFRwd092MWk1aVBzNE94RXdURS9ibkxWa0Ri?=
- =?utf-8?B?L0w3aGdJWGpuendCV3lHUVE3Q3hXekhuQ3ZRNGh2WmsvVFRhc0tObW90ZkRE?=
- =?utf-8?B?QVhWOEJxcWs5MzNpSkVGd3NYMGZOaEczSEpTSEZyTGQ5WHc2cGlBYXE1SjFS?=
- =?utf-8?B?RWpyWGdsbkYzNkMram5POEpJVGp5WEFHYzgzd2lBdGdGSERpUGpaVjVaZnVH?=
- =?utf-8?B?ZmhSYzN6Ynk3WHhmdFFoc2k3TXdBY3VPcERBeHcxd1pxMjQ5UjRCWFdJaGk0?=
- =?utf-8?B?SFVoRmtNcG93PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <69DE404DDDB3A64589F164407CBA5FAD@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S230165AbiCJXzu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Mar 2022 18:55:50 -0500
+Received: from sonic306-28.consmr.mail.ne1.yahoo.com (sonic306-28.consmr.mail.ne1.yahoo.com [66.163.189.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDB8F19E004
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Mar 2022 15:54:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1646956485; bh=tIJ56PEQZpBSEOX/gZGEurZf9l4kFo3rQXYBXSi7jvc=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=Mdjf0THosuziM6SWXri5jjE/1GWwUC4J1nyJ7gkvqB/WCj8/QdLnYUHXH1mCYp0o5JFCIQFC55IUtZqWB9mTKjRaHK8w4sDoAe77o4ley+16/vE7ra2mvVpF8+LEUhHet4J/TO8gdgzYMILLeDYyinUPGyCnpEanX2c38IUq3/Sx9kOak4TA6IvBIk3wA5PcBHUoA512ybO1v5ws8dDnM68dXOdC8Cu6qQv86bdw8P1X7ROI38V2Np4yWDcZLN+2JaNzb1L8jgPGBZaRJ0gteHaNTiZBikCThFq32j9mwpdFdJWAkIcLA717iwWoXdLQhoHDwpYYh+TCcU/mxmr+yw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1646956485; bh=ZCSh/oLHAHPaExJlnEJ2GaF1ABfpvlNuMvLofDUgi7a=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=bqYu2TdnBgaNgecy8j459U9dSN+94E0R9dr/XgKLCE+rrf077dv40qT5uHyoCbD+sZQxBL/InOm/tvGBAS3K296SM1EtgB8E8PeJBJ7LAMQ++nBQV2rInP+pv63Xiwz+xALJ8vnObZttmXz+ud7pXd8ykosEquuooSewVuNfUXUcXLvGTU2ydC/8U2tbCFO6IOr7tdW+4aXKEKdzrvHOKkzFdU2AN9zPQdoThc5DUYvIEc05ZX12M/mx+iDJUX1RwxoQagXEWOMb2AoJq5HRLDB1/4StPzzdNHLHmjF99u7Npl090YPq4FXp7SS3nPN7+67fXx+x8Ir2V4FX4n8rZQ==
+X-YMail-OSG: AoU5VcsVM1l2o_VmGwaPlalORd9OqiPLRlClxryHwjP4JEfgt25_tRjueY8sImq
+ 4iFBgM28HJ3AgyZ.32o8lABKsk6gEpmW0Gpfn5LV3C6v_0tSixdWyUgTHUTB_2JUdCMrWstGeUQv
+ sW_LmcuBIxNe5g1KbwVJ6AnwNCoV6Y6Ytnwj3k96G3hqHXBsa90Y3BBydEaTfhl80uwuQ3i78jI8
+ X2NCX3UgMZs5Qd502gLxCJctZ8exV_J7OWgPJ0L0j8pNxEWZZBiKvKEBnJEI2o9.zGR_e.WA8zs7
+ SxpV1xM188psObvgL7edD1e2uVUMvt3tH3f1yiEOux8oBiOwRBtADy2yUK1B9CWX3Pz6Wzi69fhm
+ FL03IWir5nR82Z_solmsKGBCZAnq94OcFNObxkeQB6nZiGoLhnNvF5UXqwxSPwWFp91NKZzNtvPo
+ 020cOCZfCJUeT4EhL2JPU1TmP2i23is_OFL79S0Jq2DFLFiImoPTZYm3o.NxK5lbwLI0NO0NUOH2
+ yEeiawQfFcRcmua40fLDBAPMWNr6rc7YLJnvfofZslihNAoVVDk2.FUKLnWy1IvLwJAMGTfmug.0
+ 4fUcSoU8DBah8yzhjPcF60kG6GjRmTqqxHw.0UEl3FDxGxGO4QSnKjxZ77xXeBbGxeIWpVr523lR
+ x7VUavceb.sLyHGkf0N1nCOCm4MVD.fVGoxUie3Hu04nxuUX18DBTdn3QR7USeds9YxaOmRwMswg
+ m3Ip7pAC14EuN6a.z0yvXIi1iXBqeWAiT68kUWdV1TDVEdZCpe61.lR0vNoe7MTqtf6tjkRmzBzO
+ zQwQyv8XegSJv7NPuwPuZ7zILSsAagQdykc7quKBkqVF9Yx3OBQDVWP.9M5.OrpQoaEWE8.GZFcO
+ fkP14sGCq1Ir1uzY83jKUrnNNQjJuJ4PQOYaHnLeC1wDWU8EJyWtUC5.NwiG2Joi0d9_yUmJvom_
+ EfCFDtpmekLbplQaO1.V_1Xxw3Jd2ORfr3B5QBAk.lI2CtTp6XxEx1a80IcTvmdORAvF8SoXmRDT
+ GNV0wUWb1wXCslSzM.5nrG974DplYMJ2z2tN3C1DS44TApU8qfxXMR4FU_pM_B7CkMJS_itRNkP6
+ k2VaBj6L9ni66XToYID9peJDB2rzWx0lI2DYjGWgL56UrXgN_4eApKlayKKMEf.vSIb4aEJ87XIW
+ TjY17qTYHPfPtpz9pw70x6l2RgevTlx09NA7DnwZ8AlwX.w189tys_Zu4BB0jZWf28__lZ.5E69u
+ ilsRwddIqS5CS.fjeL1f__ebv_9C4M6FB7vwLvCXLLvfixdj6F4An1Ooq9dgv9OrJq9_sGTyi1K3
+ RnL3ZRrYjvuvT5Vdnd1juk0MTcBaRvYJ0oq3yj4oGxeqyfwOqesoZxnmZk3ACiUD5UMvA4wOzP3w
+ E8INC93zMyDj7jAs.HBMjmGLDN4q9.CYRrzhtzCVjRH4LxQrBU772u81JS6TSp4IU43QRkDsS3tk
+ HQYjIb7tE86w2nuAJwdYuM7kjReBwJi8xAsaiGqQ571eSH9wlDD2mCO3sy1m8p120vNMmka3uytI
+ B8oNmsAcn9g0YuLTF1jiYavxecreqp3uHfaqsjY7i5PyTipW7dk_wx20f2J5kWB0u6WKR.dMYNue
+ 77h4p5ix4lzLXwfPfqAwNr6fDNz_8aLwVdxP96djO_yXzWGFq2s7LV19e525KaPj.9EsNMGgO.vl
+ bR3qpXzkXI7d.0tTuzYYiZiRVo_3Xh3PwwLt1lQnPPS8JCEg0Y5.D5M8pMWfdNRKkqYVNY0grBR.
+ 8le44.1e5TjicJF1M0c0xJZwWeYxGwiQ1qieeDyGwCmdfjaAO1k5t914ai78sVpVIdaog4cZUTEr
+ SaUGq_SjZL5bK46kadLIZkFwVG5DfiJzqyV1J49TuGBSxnNficwy2VJJe42c8uDEwDm_Ddp09p5Y
+ ON65CqyvV89dEqWKK6mGWv7Vc14kgt5sjyLNkjOd6sW6Ze0zZ60aCO9wXosxYsCA67vinjUvIAMO
+ 9Apd.vgspqSa5OPx.1qq3Xsp4wcnoaZ1JjWjfv_bONTovLlIbtiEGo5NsU8xRSwzJ6YiyUsKNO8e
+ nuV5Krc0Hl6A7M0t1AfiIys1u7xf6aJq.s92lYuzzKPQRsUdQA0BoMG.hji4XNdCYGs8RsMNZp_x
+ 8ISarzgDwGui3HOb.AiQOLkKALLKPrLZjcXadhvSzrXDM_Qu5cYmPo9K5iwZOLoacIyksm1wiVT_
+ RMG3T2NGb1h1Q8lLPs4qRJlqq8Q09a35JOqJjWDi_wZFcXv6mExuCm_BNppLCHbCftMH4ogx2SE.
+ F0xcu4u7qtBucztyAfxHKSqJFNoFWChthvUhflcvGV72RSMnUY01rhw--
+X-Sonic-MF: <casey@schaufler-ca.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.ne1.yahoo.com with HTTP; Thu, 10 Mar 2022 23:54:45 +0000
+Received: by kubenode520.mail-prod1.omega.bf1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID 8cf1c259c50308b34237c785a039407c;
+          Thu, 10 Mar 2022 23:54:41 +0000 (UTC)
+From:   Casey Schaufler <casey@schaufler-ca.com>
+To:     casey.schaufler@intel.com, jmorris@namei.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
+Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
+        keescook@chromium.org, john.johansen@canonical.com,
+        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
+        stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-integrity@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: [PATCH v33 15/29] LSM: Ensure the correct LSM context releaser
+Date:   Thu, 10 Mar 2022 15:46:18 -0800
+Message-Id: <20220310234632.16194-16-casey@schaufler-ca.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20220310234632.16194-1-casey@schaufler-ca.com>
+References: <20220310234632.16194-1-casey@schaufler-ca.com>
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e797a0a3-9992-469f-b31f-08da02da03d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2022 21:07:41.5272
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VbU5B1vRmug/eMlDN476o3Foq3mfuQU7vKQovHm7gdZRi6OHNQxn8xwmvBozAuEPa0TBWO7LFB58GkOQoU/Wzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB4036
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIyLTAzLTA5IGF0IDE1OjAxIC0wNTAwLCBCZW5qYW1pbiBDb2RkaW5ndG9uIHdy
-b3RlOg0KPiBPbiAyNyBGZWIgMjAyMiwgYXQgMTg6MTIsIHRyb25kbXlAa2VybmVsLm9yZ8Kgd3Jv
-dGU6DQo+IA0KPiA+IEZyb206IFRyb25kIE15a2xlYnVzdCA8dHJvbmQubXlrbGVidXN0QGhhbW1l
-cnNwYWNlLmNvbT4NCj4gPiANCj4gPiBJbnN0ZWFkIG9mIHVzaW5nIGEgbGluZWFyIGluZGV4IHRv
-IGFkZHJlc3MgdGhlIHBhZ2VzLCB1c2UgdGhlDQo+ID4gY29va2llIG9mDQo+ID4gdGhlIGZpcnN0
-IGVudHJ5LCBzaW5jZSB0aGF0IGlzIHdoYXQgd2UgdXNlIHRvIG1hdGNoIHRoZSBwYWdlDQo+ID4g
-YW55d2F5Lg0KPiA+IA0KPiA+IFRoaXMgYWxsb3dzIHVzIHRvIGF2b2lkIHJlLXJlYWRpbmcgdGhl
-IGVudGlyZSBjYWNoZSBvbiBhIHNlZWtkaXIoKQ0KPiA+IHR5cGUNCj4gPiBvZiBvcGVyYXRpb24u
-IFRoZSBsYXR0ZXIgaXMgdmVyeSBjb21tb24gd2hlbiByZS1leHBvcnRpbmcgTkZTLCBhbmQNCj4g
-PiBpcyBhDQo+ID4gbWFqb3IgcGVyZm9ybWFuY2UgZHJhaW4uDQo+ID4gDQo+ID4gVGhlIGNoYW5n
-ZSBkb2VzIGFmZmVjdCBvdXIgZHVwbGljYXRlIGNvb2tpZSBkZXRlY3Rpb24sIHNpbmNlIHdlIGNh
-bg0KPiA+IG5vDQo+ID4gbG9uZ2VyIHJlbHkgb24gdGhlIHBhZ2UgaW5kZXggYXMgYSBsaW5lYXIg
-b2Zmc2V0IGZvciBkZXRlY3RpbmcNCj4gPiB3aGV0aGVyDQo+ID4gd2UgbG9vcGVkIGJhY2t3YXJk
-cy4gSG93ZXZlciBzaW5jZSB3ZSBubyBsb25nZXIgZG8gYSBsaW5lYXIgc2VhcmNoDQo+ID4gdGhy
-b3VnaCBhbGwgdGhlIHBhZ2VzIG9uIGVhY2ggY2FsbCB0byBuZnNfcmVhZGRpcigpLCB0aGlzIGlz
-IGxlc3MNCj4gPiBvZiBhDQo+ID4gY29uY2VybiB0aGFuIGl0IHdhcyBwcmV2aW91c2x5Lg0KPiA+
-IFRoZSBvdGhlciBkb3duc2lkZSBpcyB0aGF0IGludmFsaWRhdGVfbWFwcGluZ19wYWdlcygpIG5v
-IGxvbmdlciBjYW4NCj4gPiB1c2UNCj4gPiB0aGUgcGFnZSBpbmRleCB0byBhdm9pZCBjbGVhcmlu
-ZyBwYWdlcyB0aGF0IGhhdmUgYmVlbiByZWFkLiBBDQo+ID4gc3Vic2VxdWVudA0KPiA+IHBhdGNo
-IHdpbGwgcmVzdG9yZSB0aGUgZnVuY3Rpb25hbGl0eSB0aGlzIHByb3ZpZGVzIHRvIHRoZSAnbHMg
-LWwnDQo+ID4gaGV1cmlzdGljLg0KPiANCj4gSSBkaWRuJ3QgcmVhbGl6ZSB0aGUgYXBwcm9hY2gg
-d2FzIHRvIGFsc28gaGFzaCBvdXQgdGhlIGxpbmVhcmx5LQ0KPiBjYWNoZWQNCj4gZW50cmllcy7C
-oCBJIHRob3VnaHQgd2UnZCBkbyBzb21ldGhpbmcgbGlrZSBmbGFnIHRoZSBjb250ZXh0IGZvcg0K
-PiBoYXNoZWQgcGFnZQ0KPiBpbmRleGVzIGFmdGVyIGEgc2Vla2RpciBldmVudCwgYW5kIGlmIHRo
-ZXJlIGFyZSBjb2xsaXNpb25zIHdpdGggdGhlDQo+IGxpbmVhcg0KPiBlbnRyaWVzLCB0aGV5J2xs
-IGdldCBmaXhlZCB1cCB3aGVuIGZvdW5kLg0KDQpXaHk/IFdoYXQncyB0aGUgcG9pbnQgb2YgdXNp
-bmcgMiBtb2RlbHMgd2hlcmUgMSB3aWxsIGRvPw0KDQo+IA0KPiBEb2Vzbid0IHRoYXQgbWVhbiB0
-aGF0IHdpdGggdGhpcyBhcHByb2FjaCBzZWVrZGlyKCkgb25seSBoaXRzIHRoZQ0KPiBzYW1lIHBh
-Z2VzDQo+IHdoZW4gdGhlIGVudHJ5IG9mZnNldCBpcyBwYWdlLWFsaWduZWQ/wqAgVGhhdCdzIDEg
-aW4gMTI3IG9kZHMuDQoNClRoZSBwb2ludCBpcyBub3QgdG8gc3RvbXAgYWxsIG92ZXIgdGhlIHBh
-Z2VzIHRoYXQgY29udGFpbiBhbGlnbmVkIGRhdGENCndoZW4gdGhlIGFwcGxpY2F0aW9uIGRvZXMg
-Y2FsbCBzZWVrZGlyKCkuDQoNCklPVzogd2UgYWx3YXlzIG9wdGltaXNlIGZvciB0aGUgY2FzZSB3
-aGVyZSB3ZSBkbyBhIGxpbmVhciByZWFkIG9mIHRoZQ0KZGlyZWN0b3J5LCBidXQgd2Ugc3VwcG9y
-dCByYW5kb20gc2Vla2RpcigpICsgcmVhZCB0b28uDQoNCj4gDQo+IEl0IGFsc28gbWVhbnMgd2Un
-cmUgYW1wbGlmeWluZyB0aGUgcGFnZWNhY2hlJ3MgdXNlYWdlIGZvciBzbGlnaHRseQ0KPiBjaGFu
-Z2luZw0KPiBkaXJlY3RvcmllcyAtIHJhdGhlciB0aGFuIHJlLXVzaW5nIHRoZSBzYW1lIHBhZ2Vz
-IHdlJ3JlIHNjYXR0ZXJpbmcNCj4gb3VyIHVzYWdlDQo+IGFjcm9zcyB0aGUgaW5kZXguwqAgRWgs
-IG1heWJlIG5vdCBhIGJpZyBkZWFsIGlmIHdlIGp1c3QgZXhwZWN0IHRoZQ0KPiBwYWdlDQo+IGNh
-Y2hlJ3MgTFJVIHRvIGRvIHRoZSB3b3JrLg0KPiANCg0KSSBkb24ndCB1bmRlcnN0YW5kIHlvdXIg
-cG9pbnQgYWJvdXQgJ25vdCByZXVzaW5nJy4gSWYgdGhlIHVzZXIgc2Vla3MgdG8NCnRoZSBzYW1l
-IGNvb2tpZSwgd2UgcmV1c2UgdGhlIHBhZ2UuIEhvd2V2ZXIgSSBkb24ndCBrbm93IGhvdyB5b3Ug
-d291bGQNCmdvIGFib3V0IHNldHRpbmcgdXAgYSBzY2hlbWEgdGhhdCBhbGxvd3MgeW91IHRvIHNl
-ZWsgdG8gYW4gYXJiaXRyYXJ5DQpjb29raWUgd2l0aG91dCBkb2luZyBhIGxpbmVhciBzZWFyY2gu
-DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhh
-bW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+Add a new lsmcontext data structure to hold all the information
+about a "security context", including the string, its size and
+which LSM allocated the string. The allocation information is
+necessary because LSMs have different policies regarding the
+lifecycle of these strings. SELinux allocates and destroys
+them on each use, whereas Smack provides a pointer to an entry
+in a list that never goes away.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: John Johansen <john.johansen@canonical.com>
+Acked-by: Paul Moore <paul@paul-moore.com>
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Cc: linux-integrity@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Cc: linux-audit@redhat.com
+Cc: netfilter-devel@vger.kernel.org
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: linux-nfs@vger.kernel.org
+---
+ drivers/android/binder.c                | 10 ++++---
+ fs/ceph/xattr.c                         |  6 ++++-
+ fs/nfs/nfs4proc.c                       |  8 ++++--
+ fs/nfsd/nfs4xdr.c                       |  7 +++--
+ include/linux/security.h                | 35 +++++++++++++++++++++++--
+ include/net/scm.h                       |  5 +++-
+ kernel/audit.c                          | 14 +++++++---
+ kernel/auditsc.c                        | 12 ++++++---
+ net/ipv4/ip_sockglue.c                  |  4 ++-
+ net/netfilter/nf_conntrack_netlink.c    |  4 ++-
+ net/netfilter/nf_conntrack_standalone.c |  4 ++-
+ net/netfilter/nfnetlink_queue.c         | 13 ++++++---
+ net/netlabel/netlabel_unlabeled.c       | 19 +++++++++++---
+ net/netlabel/netlabel_user.c            |  4 ++-
+ security/security.c                     | 11 ++++----
+ 15 files changed, 121 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+index 26838061defb..2125b4b795da 100644
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -2725,6 +2725,7 @@ static void binder_transaction(struct binder_proc *proc,
+ 	int t_debug_id = atomic_inc_return(&binder_last_id);
+ 	char *secctx = NULL;
+ 	u32 secctx_sz = 0;
++	struct lsmcontext scaff; /* scaffolding */
+ 	struct list_head sgc_head;
+ 	struct list_head pf_head;
+ 	const void __user *user_buffer = (const void __user *)
+@@ -3033,7 +3034,8 @@ static void binder_transaction(struct binder_proc *proc,
+ 			t->security_ctx = 0;
+ 			WARN_ON(1);
+ 		}
+-		security_release_secctx(secctx, secctx_sz);
++		lsmcontext_init(&scaff, secctx, secctx_sz, 0);
++		security_release_secctx(&scaff);
+ 		secctx = NULL;
+ 	}
+ 	t->buffer->debug_id = t->debug_id;
+@@ -3433,8 +3435,10 @@ static void binder_transaction(struct binder_proc *proc,
+ 	binder_alloc_free_buf(&target_proc->alloc, t->buffer);
+ err_binder_alloc_buf_failed:
+ err_bad_extra_size:
+-	if (secctx)
+-		security_release_secctx(secctx, secctx_sz);
++	if (secctx) {
++		lsmcontext_init(&scaff, secctx, secctx_sz, 0);
++		security_release_secctx(&scaff);
++	}
+ err_get_secctx_failed:
+ 	kfree(tcomplete);
+ 	binder_stats_deleted(BINDER_STAT_TRANSACTION_COMPLETE);
+diff --git a/fs/ceph/xattr.c b/fs/ceph/xattr.c
+index fcf7dfdecf96..df2b3bf46364 100644
+--- a/fs/ceph/xattr.c
++++ b/fs/ceph/xattr.c
+@@ -1374,12 +1374,16 @@ int ceph_security_init_secctx(struct dentry *dentry, umode_t mode,
+ 
+ void ceph_release_acl_sec_ctx(struct ceph_acl_sec_ctx *as_ctx)
+ {
++#ifdef CONFIG_CEPH_FS_SECURITY_LABEL
++	struct lsmcontext scaff; /* scaffolding */
++#endif
+ #ifdef CONFIG_CEPH_FS_POSIX_ACL
+ 	posix_acl_release(as_ctx->acl);
+ 	posix_acl_release(as_ctx->default_acl);
+ #endif
+ #ifdef CONFIG_CEPH_FS_SECURITY_LABEL
+-	security_release_secctx(as_ctx->sec_ctx, as_ctx->sec_ctxlen);
++	lsmcontext_init(&scaff, as_ctx->sec_ctx, as_ctx->sec_ctxlen, 0);
++	security_release_secctx(&scaff);
+ #endif
+ 	if (as_ctx->pagelist)
+ 		ceph_pagelist_release(as_ctx->pagelist);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index b18f31b2c9e7..c6237b5ddd93 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -133,8 +133,12 @@ nfs4_label_init_security(struct inode *dir, struct dentry *dentry,
+ static inline void
+ nfs4_label_release_security(struct nfs4_label *label)
+ {
+-	if (label)
+-		security_release_secctx(label->label, label->len);
++	struct lsmcontext scaff; /* scaffolding */
++
++	if (label) {
++		lsmcontext_init(&scaff, label->label, label->len, 0);
++		security_release_secctx(&scaff);
++	}
+ }
+ static inline u32 *nfs4_bitmask(struct nfs_server *server, struct nfs4_label *label)
+ {
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 899de438e529..fedc4b0292d6 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -2830,6 +2830,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 	int err;
+ 	struct nfs4_acl *acl = NULL;
+ #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
++	struct lsmcontext scaff; /* scaffolding */
+ 	void *context = NULL;
+ 	int contextlen;
+ #endif
+@@ -3331,8 +3332,10 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
+ 
+ out:
+ #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
+-	if (context)
+-		security_release_secctx(context, contextlen);
++	if (context) {
++		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
++		security_release_secctx(&scaff);
++	}
+ #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
+ 	kfree(acl);
+ 	if (tempfh) {
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 9753bd9b4fdc..11c4d088f7a8 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -135,6 +135,37 @@ enum lockdown_reason {
+ 
+ extern const char *const lockdown_reasons[LOCKDOWN_CONFIDENTIALITY_MAX+1];
+ 
++/*
++ * A "security context" is the text representation of
++ * the information used by LSMs.
++ * This structure contains the string, its length, and which LSM
++ * it is useful for.
++ */
++struct lsmcontext {
++	char	*context;	/* Provided by the module */
++	u32	len;
++	int	slot;		/* Identifies the module */
++};
++
++/**
++ * lsmcontext_init - initialize an lsmcontext structure.
++ * @cp: Pointer to the context to initialize
++ * @context: Initial context, or NULL
++ * @size: Size of context, or 0
++ * @slot: Which LSM provided the context
++ *
++ * Fill in the lsmcontext from the provided information.
++ * This is a scaffolding function that will be removed when
++ * lsmcontext integration is complete.
++ */
++static inline void lsmcontext_init(struct lsmcontext *cp, char *context,
++				   u32 size, int slot)
++{
++	cp->slot = slot;
++	cp->context = context;
++	cp->len = size;
++}
++
+ /*
+  * Data exported by the security modules
+  *
+@@ -569,7 +600,7 @@ int security_ismaclabel(const char *name);
+ int security_secid_to_secctx(struct lsmblob *blob, char **secdata, u32 *seclen);
+ int security_secctx_to_secid(const char *secdata, u32 seclen,
+ 			     struct lsmblob *blob);
+-void security_release_secctx(char *secdata, u32 seclen);
++void security_release_secctx(struct lsmcontext *cp);
+ void security_inode_invalidate_secctx(struct inode *inode);
+ int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
+ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
+@@ -1432,7 +1463,7 @@ static inline int security_secctx_to_secid(const char *secdata,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline void security_release_secctx(char *secdata, u32 seclen)
++static inline void security_release_secctx(struct lsmcontext *cp)
+ {
+ }
+ 
+diff --git a/include/net/scm.h b/include/net/scm.h
+index 23a35ff1b3f2..f273c4d777ec 100644
+--- a/include/net/scm.h
++++ b/include/net/scm.h
+@@ -92,6 +92,7 @@ static __inline__ int scm_send(struct socket *sock, struct msghdr *msg,
+ #ifdef CONFIG_SECURITY_NETWORK
+ static inline void scm_passec(struct socket *sock, struct msghdr *msg, struct scm_cookie *scm)
+ {
++	struct lsmcontext context;
+ 	struct lsmblob lb;
+ 	char *secdata;
+ 	u32 seclen;
+@@ -106,7 +107,9 @@ static inline void scm_passec(struct socket *sock, struct msghdr *msg, struct sc
+ 
+ 		if (!err) {
+ 			put_cmsg(msg, SOL_SOCKET, SCM_SECURITY, seclen, secdata);
+-			security_release_secctx(secdata, seclen);
++			/*scaffolding*/
++			lsmcontext_init(&context, secdata, seclen, 0);
++			security_release_secctx(&context);
+ 		}
+ 	}
+ }
+diff --git a/kernel/audit.c b/kernel/audit.c
+index c7cd039e258b..5aa2ee06c9e4 100644
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1190,6 +1190,7 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 	struct audit_sig_info   *sig_data;
+ 	char			*ctx = NULL;
+ 	u32			len;
++	struct lsmcontext	scaff; /* scaffolding */
+ 
+ 	err = audit_netlink_ok(skb, msg_type);
+ 	if (err)
+@@ -1447,15 +1448,18 @@ static int audit_receive_msg(struct sk_buff *skb, struct nlmsghdr *nlh)
+ 		}
+ 		sig_data = kmalloc(struct_size(sig_data, ctx, len), GFP_KERNEL);
+ 		if (!sig_data) {
+-			if (lsmblob_is_set(&audit_sig_lsm))
+-				security_release_secctx(ctx, len);
++			if (lsmblob_is_set(&audit_sig_lsm)) {
++				lsmcontext_init(&scaff, ctx, len, 0);
++				security_release_secctx(&scaff);
++			}
+ 			return -ENOMEM;
+ 		}
+ 		sig_data->uid = from_kuid(&init_user_ns, audit_sig_uid);
+ 		sig_data->pid = audit_sig_pid;
+ 		if (lsmblob_is_set(&audit_sig_lsm)) {
+ 			memcpy(sig_data->ctx, ctx, len);
+-			security_release_secctx(ctx, len);
++			lsmcontext_init(&scaff, ctx, len, 0);
++			security_release_secctx(&scaff);
+ 		}
+ 		audit_send_reply(skb, seq, AUDIT_SIGNAL_INFO, 0, 0,
+ 				 sig_data, struct_size(sig_data, ctx, len));
+@@ -2147,6 +2151,7 @@ int audit_log_task_context(struct audit_buffer *ab)
+ 	unsigned len;
+ 	int error;
+ 	struct lsmblob blob;
++	struct lsmcontext scaff; /* scaffolding */
+ 
+ 	security_current_getsecid_subj(&blob);
+ 	if (!lsmblob_is_set(&blob))
+@@ -2161,7 +2166,8 @@ int audit_log_task_context(struct audit_buffer *ab)
+ 	}
+ 
+ 	audit_log_format(ab, " subj=%s", ctx);
+-	security_release_secctx(ctx, len);
++	lsmcontext_init(&scaff, ctx, len, 0);
++	security_release_secctx(&scaff);
+ 	return 0;
+ 
+ error_path:
+diff --git a/kernel/auditsc.c b/kernel/auditsc.c
+index c4c3666576c3..1626d8aabe83 100644
+--- a/kernel/auditsc.c
++++ b/kernel/auditsc.c
+@@ -1121,6 +1121,7 @@ static int audit_log_pid_context(struct audit_context *context, pid_t pid,
+ 				 struct lsmblob *blob, char *comm)
+ {
+ 	struct audit_buffer *ab;
++	struct lsmcontext lsmcxt;
+ 	char *ctx = NULL;
+ 	u32 len;
+ 	int rc = 0;
+@@ -1138,7 +1139,8 @@ static int audit_log_pid_context(struct audit_context *context, pid_t pid,
+ 			rc = 1;
+ 		} else {
+ 			audit_log_format(ab, " obj=%s", ctx);
+-			security_release_secctx(ctx, len);
++			lsmcontext_init(&lsmcxt, ctx, len, 0); /*scaffolding*/
++			security_release_secctx(&lsmcxt);
+ 		}
+ 	}
+ 	audit_log_format(ab, " ocomm=");
+@@ -1351,6 +1353,7 @@ static void audit_log_fcaps(struct audit_buffer *ab, struct audit_names *name)
+ 
+ static void show_special(struct audit_context *context, int *call_panic)
+ {
++	struct lsmcontext lsmcxt;
+ 	struct audit_buffer *ab;
+ 	int i;
+ 
+@@ -1385,7 +1388,8 @@ static void show_special(struct audit_context *context, int *call_panic)
+ 				*call_panic = 1;
+ 			} else {
+ 				audit_log_format(ab, " obj=%s", ctx);
+-				security_release_secctx(ctx, len);
++				lsmcontext_init(&lsmcxt, ctx, len, 0);
++				security_release_secctx(&lsmcxt);
+ 			}
+ 		}
+ 		if (context->ipc.has_perm) {
+@@ -1542,6 +1546,7 @@ static void audit_log_name(struct audit_context *context, struct audit_names *n,
+ 		char *ctx = NULL;
+ 		u32 len;
+ 		struct lsmblob blob;
++		struct lsmcontext lsmcxt;
+ 
+ 		lsmblob_init(&blob, n->osid);
+ 		if (security_secid_to_secctx(&blob, &ctx, &len)) {
+@@ -1550,7 +1555,8 @@ static void audit_log_name(struct audit_context *context, struct audit_names *n,
+ 				*call_panic = 2;
+ 		} else {
+ 			audit_log_format(ab, " obj=%s", ctx);
+-			security_release_secctx(ctx, len);
++			lsmcontext_init(&lsmcxt, ctx, len, 0); /* scaffolding */
++			security_release_secctx(&lsmcxt);
+ 		}
+ 	}
+ 
+diff --git a/net/ipv4/ip_sockglue.c b/net/ipv4/ip_sockglue.c
+index 933a8f94f93a..70ca4510ea35 100644
+--- a/net/ipv4/ip_sockglue.c
++++ b/net/ipv4/ip_sockglue.c
+@@ -130,6 +130,7 @@ static void ip_cmsg_recv_checksum(struct msghdr *msg, struct sk_buff *skb,
+ 
+ static void ip_cmsg_recv_security(struct msghdr *msg, struct sk_buff *skb)
+ {
++	struct lsmcontext context;
+ 	struct lsmblob lb;
+ 	char *secdata;
+ 	u32 seclen, secid;
+@@ -145,7 +146,8 @@ static void ip_cmsg_recv_security(struct msghdr *msg, struct sk_buff *skb)
+ 		return;
+ 
+ 	put_cmsg(msg, SOL_IP, SCM_SECURITY, seclen, secdata);
+-	security_release_secctx(secdata, seclen);
++	lsmcontext_init(&context, secdata, seclen, 0); /* scaffolding */
++	security_release_secctx(&context);
+ }
+ 
+ static void ip_cmsg_recv_dstaddr(struct msghdr *msg, struct sk_buff *skb)
+diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+index 073510c94b56..212e12b53adb 100644
+--- a/net/netfilter/nf_conntrack_netlink.c
++++ b/net/netfilter/nf_conntrack_netlink.c
+@@ -342,6 +342,7 @@ static int ctnetlink_dump_secctx(struct sk_buff *skb, const struct nf_conn *ct)
+ 	int len, ret;
+ 	char *secctx;
+ 	struct lsmblob blob;
++	struct lsmcontext context;
+ 
+ 	/* lsmblob_init() puts ct->secmark into all of the secids in blob.
+ 	 * security_secid_to_secctx() will know which security module
+@@ -362,7 +363,8 @@ static int ctnetlink_dump_secctx(struct sk_buff *skb, const struct nf_conn *ct)
+ 
+ 	ret = 0;
+ nla_put_failure:
+-	security_release_secctx(secctx, len);
++	lsmcontext_init(&context, secctx, len, 0); /* scaffolding */
++	security_release_secctx(&context);
+ 	return ret;
+ }
+ #else
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index bba3a66f5636..3b6ba86783f6 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -179,6 +179,7 @@ static void ct_show_secctx(struct seq_file *s, const struct nf_conn *ct)
+ 	u32 len;
+ 	char *secctx;
+ 	struct lsmblob blob;
++	struct lsmcontext context;
+ 
+ 	lsmblob_init(&blob, ct->secmark);
+ 	ret = security_secid_to_secctx(&blob, &secctx, &len);
+@@ -187,7 +188,8 @@ static void ct_show_secctx(struct seq_file *s, const struct nf_conn *ct)
+ 
+ 	seq_printf(s, "secctx=%s ", secctx);
+ 
+-	security_release_secctx(secctx, len);
++	lsmcontext_init(&context, secctx, len, 0); /* scaffolding */
++	security_release_secctx(&context);
+ }
+ #else
+ static inline void ct_show_secctx(struct seq_file *s, const struct nf_conn *ct)
+diff --git a/net/netfilter/nfnetlink_queue.c b/net/netfilter/nfnetlink_queue.c
+index a9f7c9418ad3..d986bae1587b 100644
+--- a/net/netfilter/nfnetlink_queue.c
++++ b/net/netfilter/nfnetlink_queue.c
+@@ -397,6 +397,7 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
+ 	enum ip_conntrack_info ctinfo = 0;
+ 	const struct nfnl_ct_hook *nfnl_ct;
+ 	bool csum_verify;
++	struct lsmcontext scaff; /* scaffolding */
+ 	char *secdata = NULL;
+ 	u32 seclen = 0;
+ 
+@@ -627,8 +628,10 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
+ 	}
+ 
+ 	nlh->nlmsg_len = skb->len;
+-	if (seclen)
+-		security_release_secctx(secdata, seclen);
++	if (seclen) {
++		lsmcontext_init(&scaff, secdata, seclen, 0);
++		security_release_secctx(&scaff);
++	}
+ 	return skb;
+ 
+ nla_put_failure:
+@@ -636,8 +639,10 @@ nfqnl_build_packet_message(struct net *net, struct nfqnl_instance *queue,
+ 	kfree_skb(skb);
+ 	net_err_ratelimited("nf_queue: error creating packet message\n");
+ nlmsg_failure:
+-	if (seclen)
+-		security_release_secctx(secdata, seclen);
++	if (seclen) {
++		lsmcontext_init(&scaff, secdata, seclen, 0);
++		security_release_secctx(&scaff);
++	}
+ 	return NULL;
+ }
+ 
+diff --git a/net/netlabel/netlabel_unlabeled.c b/net/netlabel/netlabel_unlabeled.c
+index c86df6ead742..a8e9ee202245 100644
+--- a/net/netlabel/netlabel_unlabeled.c
++++ b/net/netlabel/netlabel_unlabeled.c
+@@ -374,6 +374,7 @@ int netlbl_unlhsh_add(struct net *net,
+ 	struct net_device *dev;
+ 	struct netlbl_unlhsh_iface *iface;
+ 	struct audit_buffer *audit_buf = NULL;
++	struct lsmcontext context;
+ 	char *secctx = NULL;
+ 	u32 secctx_len;
+ 	struct lsmblob blob;
+@@ -447,7 +448,9 @@ int netlbl_unlhsh_add(struct net *net,
+ 					     &secctx,
+ 					     &secctx_len) == 0) {
+ 			audit_log_format(audit_buf, " sec_obj=%s", secctx);
+-			security_release_secctx(secctx, secctx_len);
++			/* scaffolding */
++			lsmcontext_init(&context, secctx, secctx_len, 0);
++			security_release_secctx(&context);
+ 		}
+ 		audit_log_format(audit_buf, " res=%u", ret_val == 0 ? 1 : 0);
+ 		audit_log_end(audit_buf);
+@@ -478,6 +481,7 @@ static int netlbl_unlhsh_remove_addr4(struct net *net,
+ 	struct netlbl_unlhsh_addr4 *entry;
+ 	struct audit_buffer *audit_buf;
+ 	struct net_device *dev;
++	struct lsmcontext context;
+ 	char *secctx;
+ 	u32 secctx_len;
+ 	struct lsmblob blob;
+@@ -508,7 +512,9 @@ static int netlbl_unlhsh_remove_addr4(struct net *net,
+ 		    security_secid_to_secctx(&blob,
+ 					     &secctx, &secctx_len) == 0) {
+ 			audit_log_format(audit_buf, " sec_obj=%s", secctx);
+-			security_release_secctx(secctx, secctx_len);
++			/* scaffolding */
++			lsmcontext_init(&context, secctx, secctx_len, 0);
++			security_release_secctx(&context);
+ 		}
+ 		audit_log_format(audit_buf, " res=%u", entry != NULL ? 1 : 0);
+ 		audit_log_end(audit_buf);
+@@ -545,6 +551,7 @@ static int netlbl_unlhsh_remove_addr6(struct net *net,
+ 	struct netlbl_unlhsh_addr6 *entry;
+ 	struct audit_buffer *audit_buf;
+ 	struct net_device *dev;
++	struct lsmcontext context;
+ 	char *secctx;
+ 	u32 secctx_len;
+ 	struct lsmblob blob;
+@@ -574,7 +581,8 @@ static int netlbl_unlhsh_remove_addr6(struct net *net,
+ 		    security_secid_to_secctx(&blob,
+ 					     &secctx, &secctx_len) == 0) {
+ 			audit_log_format(audit_buf, " sec_obj=%s", secctx);
+-			security_release_secctx(secctx, secctx_len);
++			lsmcontext_init(&context, secctx, secctx_len, 0);
++			security_release_secctx(&context);
+ 		}
+ 		audit_log_format(audit_buf, " res=%u", entry != NULL ? 1 : 0);
+ 		audit_log_end(audit_buf);
+@@ -1093,6 +1101,7 @@ static int netlbl_unlabel_staticlist_gen(u32 cmd,
+ 	int ret_val = -ENOMEM;
+ 	struct netlbl_unlhsh_walk_arg *cb_arg = arg;
+ 	struct net_device *dev;
++	struct lsmcontext context;
+ 	void *data;
+ 	u32 secid;
+ 	char *secctx;
+@@ -1163,7 +1172,9 @@ static int netlbl_unlabel_staticlist_gen(u32 cmd,
+ 			  NLBL_UNLABEL_A_SECCTX,
+ 			  secctx_len,
+ 			  secctx);
+-	security_release_secctx(secctx, secctx_len);
++	/* scaffolding */
++	lsmcontext_init(&context, secctx, secctx_len, 0);
++	security_release_secctx(&context);
+ 	if (ret_val != 0)
+ 		goto list_cb_failure;
+ 
+diff --git a/net/netlabel/netlabel_user.c b/net/netlabel/netlabel_user.c
+index 893301ae0131..ef139d8ae7cd 100644
+--- a/net/netlabel/netlabel_user.c
++++ b/net/netlabel/netlabel_user.c
+@@ -84,6 +84,7 @@ struct audit_buffer *netlbl_audit_start_common(int type,
+ 					       struct netlbl_audit *audit_info)
+ {
+ 	struct audit_buffer *audit_buf;
++	struct lsmcontext context;
+ 	char *secctx;
+ 	u32 secctx_len;
+ 	struct lsmblob blob;
+@@ -103,7 +104,8 @@ struct audit_buffer *netlbl_audit_start_common(int type,
+ 	if (audit_info->secid != 0 &&
+ 	    security_secid_to_secctx(&blob, &secctx, &secctx_len) == 0) {
+ 		audit_log_format(audit_buf, " subj=%s", secctx);
+-		security_release_secctx(secctx, secctx_len);
++		lsmcontext_init(&context, secctx, secctx_len, 0);/*scaffolding*/
++		security_release_secctx(&context);
+ 	}
+ 
+ 	return audit_buf;
+diff --git a/security/security.c b/security/security.c
+index 0bca482166d8..163cf0ae2429 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -2366,16 +2366,17 @@ int security_secctx_to_secid(const char *secdata, u32 seclen,
+ }
+ EXPORT_SYMBOL(security_secctx_to_secid);
+ 
+-void security_release_secctx(char *secdata, u32 seclen)
++void security_release_secctx(struct lsmcontext *cp)
+ {
+ 	struct security_hook_list *hp;
+-	int ilsm = lsm_task_ilsm(current);
+ 
+ 	hlist_for_each_entry(hp, &security_hook_heads.release_secctx, list)
+-		if (ilsm == LSMBLOB_INVALID || ilsm == hp->lsmid->slot) {
+-			hp->hook.release_secctx(secdata, seclen);
+-			return;
++		if (cp->slot == hp->lsmid->slot) {
++			hp->hook.release_secctx(cp->context, cp->len);
++			break;
+ 		}
++
++	memset(cp, 0, sizeof(*cp));
+ }
+ EXPORT_SYMBOL(security_release_secctx);
+ 
+-- 
+2.31.1
+
