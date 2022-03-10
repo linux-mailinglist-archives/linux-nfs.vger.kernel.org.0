@@ -2,151 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EE054D4884
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Mar 2022 15:02:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 096314D4B25
+	for <lists+linux-nfs@lfdr.de>; Thu, 10 Mar 2022 15:56:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242638AbiCJOD4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Mar 2022 09:03:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58924 "EHLO
+        id S242487AbiCJOeo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Mar 2022 09:34:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231335AbiCJODz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Mar 2022 09:03:55 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88B466C9E;
-        Thu, 10 Mar 2022 06:02:53 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22ADdwtr028050;
-        Thu, 10 Mar 2022 14:02:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=ogSJvgaO0mmsKoGd7XRHFEKw6x8jkSXb9GxEgmjpPR0=;
- b=jMyOkN1BD6X97NDCUA4s+lkJK2U2lZigEOCi8IGybKODlt1aeiE9chgjlq9vAdXDBmmb
- VoYGios5vrHWUS2S38EELnRQxD8gWGJzF1Fg+WwAu0ReMSmhh7chJcQ3I2cHKjv6Obnh
- ibspJjKn66k2qUcsveKAOFAh69D2vkfdkwUCZU5dBc49xuKfYXDTWYmjYxqd64Q15IKS
- Lt/QkmFRIJKZtzXr1xW+7bTA7Qgg4vd27u1L25jJibILpP4d8/2poGKjS4pUVcdws7ub
- H0P2zQPhm83z1nJSbE4zAB1H6xyotUIgBmjxU6Z+JBaalOqFewbgZ2qloFc5+m6u9v0m 2g== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ekx9cn55f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Mar 2022 14:02:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22AE1Ks4163011;
-        Thu, 10 Mar 2022 14:02:49 GMT
-Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2174.outbound.protection.outlook.com [104.47.59.174])
-        by aserp3020.oracle.com with ESMTP id 3ekyp3kkvg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 10 Mar 2022 14:02:49 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mDd9EdVzOW3pA2FfxSMCwDXPOR9PUn7zetSuL0iSwtHq3zesMCnn+/5n3iQxZbfPFgUXU1z9vkv9O33O/rOTlE4s/VvWsAt92eipyOB6gjO7lT/vEM+exV5CZ2njyNPUmvY1JjBt6gn01yYgnNTEZ1IfCdCJeTaLtm2aBmZSYnNz+sKEff6HdBhBiBaqAXKDyitPIApWwXpG5id4ghaBTN0BjpBPcYHYiVJ5FY3CFMPHJ+iaEIDmwzAQBR1j4c3PKxtI2Gb6pi9+DGxOdJyWu/ZCtfudCJXmS8pTmZTnjsXgxkksHQo3qWm5xD1IHfJLmqowzjxsDVPtlSZ/bk3kJA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ogSJvgaO0mmsKoGd7XRHFEKw6x8jkSXb9GxEgmjpPR0=;
- b=fLswrCMpG6qwX+JGQushrySigSn45s64bW22v9MXfYEg/azDceLqEJdO19VmR66jRQOIirpwoAFpIG2Ljjk05S5TBLUgnNmyS9rtjpJh4MhYlg6ZP8VhRk0ULYSZYq8UuASqf4xH8ASjOf/j0MeXy/+FxBPxs9z6i0PVWJzs6FaD3gikZ25nl3TE05cnEYMDQqCI77r/Zd0XH/Vim2686QEQKkn81ouhmJnqbPHzzS299XhkDbeYz0s3EX0cMWmfg3h0Pyxa1ct+m0ukV1uhmA4ib84GiIjCA89xpHDJ1sEYHe8h3GOTkB4/AQaCFqq8d9D8kfv9L69F+t/WGxOSnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ogSJvgaO0mmsKoGd7XRHFEKw6x8jkSXb9GxEgmjpPR0=;
- b=vx4L+Av754DdGpUrHHA9Nwd7FkIb0+OiVUJqZgnKBr8BUk3XO1cIS9yrvIQUd7jhjxKu4R2J99LQ8o4b4caAiDhe+CNAte0KH+yarEA5X/4vw7UeUmZ9zuy4Zx6FqYD0/fHgnAvPAq5Ek6ysUmwoUm+vQP3bzOsXW3zDsnpJECY=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB4901.namprd10.prod.outlook.com (2603:10b6:408:126::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5038.16; Thu, 10 Mar
- 2022 14:02:47 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::29c0:c62f:cba3:510e]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::29c0:c62f:cba3:510e%8]) with mapi id 15.20.5038.027; Thu, 10 Mar 2022
- 14:02:47 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Dai Ngo <dai.ngo@oracle.com>
-CC:     Bruce Fields <bfields@fieldses.org>,
-        Jeff Layton <jlayton@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH RFC v15 04/11] NFSD: Update nfsd_breaker_owns_lease() to
- handle courtesy clients
-Thread-Topic: [PATCH RFC v15 04/11] NFSD: Update nfsd_breaker_owns_lease() to
- handle courtesy clients
-Thread-Index: AQHYMCkuO3+8v2ZQTE6s2XcaoPiYRKy3nf8AgAB7qoCAAJUOAA==
-Date:   Thu, 10 Mar 2022 14:02:47 +0000
-Message-ID: <D0361183-9BAC-4A92-886F-DDD6B22626E2@oracle.com>
-References: <1646440633-3542-1-git-send-email-dai.ngo@oracle.com>
- <1646440633-3542-5-git-send-email-dai.ngo@oracle.com>
- <541790B3-6B92-4A85-8756-04615222EFF4@oracle.com>
- <efc9edcf-d6ce-e0a1-d00d-e31f6287d6d3@oracle.com>
-In-Reply-To: <efc9edcf-d6ce-e0a1-d00d-e31f6287d6d3@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 2a96e00c-46ac-42f5-5a65-08da029ea841
-x-ms-traffictypediagnostic: BN0PR10MB4901:EE_
-x-microsoft-antispam-prvs: <BN0PR10MB4901630B93272EDDABD4AAE6930B9@BN0PR10MB4901.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CNGJLHDObFd5SpOxilKivHLbAo29p/CBWj7rPsnv3IuQqi8pIz2qoo0CpVqORSrKeeLbkwc5oyHqVJSaZUvEHHtqpnZcXI+AwWoZ0dihq2zfqqaJ9s/a7hjj6J1ppJwrDCk0PkTjq6+DgqbZ0YjD+P4m8N0tMcEBq1ChAR6cifuVkwzhMpTKFWBeoLxdZIoIwtBGV+/ihdXswUs19fEI5nbCx6+ilx/ebdtO+EENf2ogKdfkHukF01Vp4pm3LhU5VqSqKyFxeZ2qMqJZgMFaKHGaEPVahJprt/3sfFlgK1BW6u7YzQyMCkQaWLWo/wjiORrAHV2+Ay4UT3bIdUyFo0OtgU7yKluEAx04M8AG8R8KaACL5epcirwpJRXq7I6ULK1xdU9uvTa5FD2MBKSEI73KcL3g2FfIvjQizlFuEBA6dHFbSqfHNlmj4Ohb7dn5lDqO68jxHYWqFVq2nCcaUP5sgi6Ab6QE9axVuy1YS+f68SpNbizIq2TOW/cCe878FvMfz4GRYa8rWkgDQ7InLwQREQThbO5Qgi/jTAjVhOLg/6eTwkOQUFRHTtarIFiRwphh4EEQTC3w8SEkOEbl3UridyIhjS7LG2NB2lR5Q98Mb47V49bOqyug210qjK12NrNMtL/Y27enFZeehl4dflmX9RQpMqiTEyo6/0qSVDP2QE7C+0+Sj8XKQNTXnYUDxZtysA08Ze71BmXy98r+Tj6nno1FrLCfrF5l3ooG3d4LJFWt36tO6RPPcXI5264t
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(186003)(2616005)(122000001)(508600001)(66446008)(66476007)(64756008)(26005)(66556008)(8676002)(66946007)(91956017)(76116006)(71200400001)(15650500001)(86362001)(6862004)(6512007)(6506007)(4326008)(5660300002)(38070700005)(83380400001)(36756003)(8936002)(316002)(37006003)(54906003)(6636002)(53546011)(33656002)(38100700002)(6486002)(2906002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Xgm02W6UPwyGNIxlnz0liSyt67jXUIxzfgY6Fypiyb1cLwR7L20PT5bhFwDZ?=
- =?us-ascii?Q?daei5Zp+Z81bX5rmFqpnxSgjhu5jB9wpzA9iHt7U9IRnxMRDY4ArT8qfcTeS?=
- =?us-ascii?Q?q2Na3pV8AaT6/dQiCd7rEeFzuHXreaAWjlga/qoOsQNUhrt4KYaqIP/l9lu6?=
- =?us-ascii?Q?NOeFgdMX2LG8iP7k2xyNvsj44GG3LGxaUN19sbC3nbKadUXHXu+9LoCfUTKu?=
- =?us-ascii?Q?LR21tPZmmaOuiM8wFO0uNaxGyi+oQPAQkHBFhDBGu8S2YzQjpwgSW8bnPGXS?=
- =?us-ascii?Q?jg7fFG9FvXZyrfzUYWezfZx7I7tb4wbZot3YutswgQ4J0cuLFBwjLRJWtJmQ?=
- =?us-ascii?Q?6Rs6Jn/eiDxWs5afX+0scw+y7UJJuexcU/0etcl/VC5Ca5kJjmrTdNOZ4EPu?=
- =?us-ascii?Q?dl/aoxZyG6H8w3egeEIAwCXpgVpP5w7H8J9gVZTzF4pCapXUta4qDtmUI2sP?=
- =?us-ascii?Q?4kKbJJo6bE3MjTevaYZ9EWwaaJ0BBHoa2+j7J7/Jt0fsNO84q4wKZ6EQC43T?=
- =?us-ascii?Q?N2LtEgT/aVAeLrcaaRm30te6U0aeUTsIgFD3j9EyVueQU+SXIk3oFZwd0dIC?=
- =?us-ascii?Q?EaMDIygWaVniOI8WJYJWTF9+0KQRcT1ojHaDbg2qreNnYXJw5EaHgRSgMKwt?=
- =?us-ascii?Q?7vvSHnhZGN0RULDbOOFGzhjUxIBDPjWSkyCHb9fkonzGFLkvwPFpcNZetFMF?=
- =?us-ascii?Q?q8P/FPIWjmKUs5v1bL9ZX2RV0Ow2hHUjLUF1ahQLNTr6xMk2Xo6bJsemkiY7?=
- =?us-ascii?Q?ILxxED7Hs0zmdPUeFNZE8lLvuisE6oi98iQV4SVE038a3p6NYZRB2/gCLpiP?=
- =?us-ascii?Q?HutqIE4/EXnePC3dhaDPARiAKrtK1j+IKFU+mgJfOqplnkgSah/gxedy9R7R?=
- =?us-ascii?Q?YkZsKFj/f8x4euMHcWF2VTQgMqH7fJkwAt8b3suJEYWbysOd6rCyjd6micAw?=
- =?us-ascii?Q?raRWISQrNNa2mBdRHyuYzFcMb+gYRTwJYLUREZtQbA3YSTal6gcEyWNSv9x7?=
- =?us-ascii?Q?qr3ewvf+gUWwGcfzoisdGGvv8bzBjd4oQdQnf30+ZWgsLXg2oAq80gdiZcL/?=
- =?us-ascii?Q?5WAiBgZH/bPYQHhUwTEG6gDaZxs/ByNuJZf5M6acKCeI+WtEunUuppDmVrPi?=
- =?us-ascii?Q?/BzxaRKmCxVzXvVzhFkZE+fS14s4SDpa1rt+S2d48ra8jXuo4ExjCxFIJryh?=
- =?us-ascii?Q?j21/tW2LyJIGQ0o8cmtblQxE3fUO0A85t8aLUatYOfQ+vtMQc2r6w6B5p6OE?=
- =?us-ascii?Q?PuHeAmtP7RPumQYVxuqiFCvLIO01q+W2b7UmHPXylmeErv7vkHxziDZ4RCoH?=
- =?us-ascii?Q?CkLeU2POb9AIuAAGVQbvlZHL+mrz48FwjKqQ3JvD5iwQ9O3axPStFVD4W/rR?=
- =?us-ascii?Q?32xClMHEmnHpklT7pbGbonV6rTGuKBEY6jlNgt25E0yRcEhTAAW8w9x87GkU?=
- =?us-ascii?Q?D5+CBoMFe9zwARbXJJyZ2ZrJzlKkGJ/7ZnUYpEZo5qY0kk/5HmhR000a9CX7?=
- =?us-ascii?Q?1K3Kv4D0afk/fXqB/LEDzpUNKZdA0HJSK3XxrwEfg/HaFeZl9/INXChmJEZn?=
- =?us-ascii?Q?4bWVCuRh/JRmhVYiawPkha58thHwVRbvgc6+PGqL18MZAWCIbp74xIDlNr+L?=
- =?us-ascii?Q?0U+meLmJrTJkVaRNMw0ZpEI=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E753CD8F28614C49B8D866F729821441@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S244768AbiCJOd6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Mar 2022 09:33:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76116EFFAF
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Mar 2022 06:31:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646922677;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wOjxkZfQd7wtZcWfBPHDJfP/G5YFYY+bE6NczbPea9k=;
+        b=RqX6eZRzc0u4/VCcdfpDeyqWMkUcOphtQU3tyKcRe7C5dtYxrjV4idTnHWsEzIQ1po9s7T
+        AfG4u1InnpxVx2e7CaaaMvakd4hppGY0q1P8O145wc84t6ZPt+5zbOXdiu0NEX9Zb30FYE
+        FeNn0FMduKmKAlr7ou4lMIBSUnJxrCY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-536-TqqfuTR0NECo05x0_7UVrg-1; Thu, 10 Mar 2022 09:31:14 -0500
+X-MC-Unique: TqqfuTR0NECo05x0_7UVrg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 14B09100C609;
+        Thu, 10 Mar 2022 14:31:13 +0000 (UTC)
+Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DABB667E7A;
+        Thu, 10 Mar 2022 14:31:12 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 77D3310C30E0; Thu, 10 Mar 2022 09:31:12 -0500 (EST)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trondmy@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Trigger "ls -l" readdir heuristic sooner
+Date:   Thu, 10 Mar 2022 09:31:12 -0500
+Message-Id: <88cb6a4d7a074fd4c4c6b59076df766c7de54105.1646922313.git.bcodding@redhat.com>
+In-Reply-To: <A7BBBBF2-768E-487C-A890-7E5AF1D40027@redhat.com>
+References: <20220227231227.9038-1-trondmy@kernel.org> <20220227231227.9038-2-trondmy@kernel.org> <20220227231227.9038-3-trondmy@kernel.org> <20220227231227.9038-4-trondmy@kernel.org> <20220227231227.9038-5-trondmy@kernel.org> <20220227231227.9038-6-trondmy@kernel.org> <20220227231227.9038-7-trondmy@kernel.org> <20220227231227.9038-8-trondmy@kernel.org> <20220227231227.9038-9-trondmy@kernel.org> <20220227231227.9038-10-trondmy@kernel.org> <20220227231227.9038-11-trondmy@kernel.org> <20220227231227.9038-12-trondmy@kernel.org> <20220227231227.9038-13-trondmy@kernel.org> <20220227231227.9038-14-trondmy@kernel.org> <20220227231227.9038-15-trondmy@kernel.org> <A7BBBBF2-768E-487C-A890-7E5AF1D40027@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a96e00c-46ac-42f5-5a65-08da029ea841
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Mar 2022 14:02:47.6665
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: g962MIjnTMoGSgy7wVozEmhY0SW0iodcIUWRFno5RDvDowSr7hm8VRI19FJ8g58nmyUTO8F5GnQhBuxR1/Bxkw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB4901
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10281 signatures=692062
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 mlxscore=0
- bulkscore=0 mlxlogscore=999 spamscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2203100076
-X-Proofpoint-ORIG-GUID: 1L5vbDuCsdEvtM-DhyIG2jDHKxSXpGVU
-X-Proofpoint-GUID: 1L5vbDuCsdEvtM-DhyIG2jDHKxSXpGVU
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -155,88 +60,69 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+.. Something like this does the trick in my testing, but yes will have an
+impact on regular workloads:
 
+8<------------------------------------------------------------------------
 
-> On Mar 10, 2022, at 12:09 AM, Dai Ngo <dai.ngo@oracle.com> wrote:
->=20
->=20
-> On 3/9/22 1:46 PM, Chuck Lever III wrote:
->>=20
->>> On Mar 4, 2022, at 7:37 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
->>>=20
->>> Update nfsd_breaker_owns_lease() to handle delegation conflict
->>> with courtesy clients. If conflict was caused courtesy client
->>> then discard the courtesy client by setting CLIENT_EXPIRED and
->>> return conflict resolved. Client with CLIENT_EXPIRED is expired
->>> by the laundromat.
->>>=20
->>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->>> ---
->>> fs/nfsd/nfs4state.c | 18 ++++++++++++++++++
->>> 1 file changed, 18 insertions(+)
->>>=20
->>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->>> index 583ac807e98d..40a357fd1a14 100644
->>> --- a/fs/nfsd/nfs4state.c
->>> +++ b/fs/nfsd/nfs4state.c
->>> @@ -4727,6 +4727,24 @@ static bool nfsd_breaker_owns_lease(struct file_=
-lock *fl)
->>> 	struct svc_rqst *rqst;
->>> 	struct nfs4_client *clp;
->>>=20
->>> +	clp =3D dl->dl_stid.sc_client;
->>> +	/*
->>> +	 * need to sync with courtesy client trying to reconnect using
->>> +	 * the cl_cs_lock, nn->client_lock can not be used since this
->>> +	 * function is called with the fl_lck held.
->>> +	 */
->>> +	spin_lock(&clp->cl_cs_lock);
->>> +	if (test_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags)) {
->>> +		spin_unlock(&clp->cl_cs_lock);
->>> +		return true;
->>> +	}
->>> +	if (test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags)) {
->>> +		set_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags);
->>> +		spin_unlock(&clp->cl_cs_lock);
->>> +		return true;
->>> +	}
->>> +	spin_unlock(&clp->cl_cs_lock);
->>> +
->> Nit: Please add nfs4_check_and_expire_courtesy_client() in this patch
->> instead of in 05/11.
->=20
-> That means nfs4_check_and_expire_courtesy_client is being called
-> in 05/11 but is not defined in 05/11. Is that ok?
+Since commit 1a34c8c9a49e ("NFS: Support larger readdir buffers") has
+updated dtsize and recent improvements to the READDIRPLUS helper heuristic,
+the heuristic may not trigger until many dentries are emitted to userspace,
+which may cause many thousands of GETATTR calls for "ls -l" when the
+directory's pagecache has already been populated.  This typically manifests
+as a much slower total runtime for a _second_ invocation of "ls -l" within
+the directory attribute cache timeouts.
 
-I thought I saw a hunk in 5/11 that converts nfsd_breaker_owns_lease()
-to use nfs4_check_and_expire_courtesy_client().
+Fix this by emitting only 17 entries for any first pass through the NFS
+directory's ->iterate_shared(), which will allow userpace to prime the
+counters for the heuristic.
 
-If so, I prefer if you add nfs4_check_and_expire_courtesy_client() in
-this patch, and call it from nfsd_breaker_owns_lease(). Then the
-additional clean-up in 5/11 isn't needed.
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/dir.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Again, this is a nit. But since you are driving a v16 soon anyway,
-I'd like the patches changed before they are merged.
-
-
-> -Dai
->=20
->>=20
->>=20
->>> 	if (!i_am_nfsd())
->>> 		return false;
->>> 	rqst =3D kthread_data(current);
->>> --=20
->>> 2.9.5
->>>=20
->> --
->> Chuck Lever
->>=20
->>=20
->>=20
-
---
-Chuck Lever
-
-
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index 7e12102b29e7..dc5fc9ba2c49 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -1060,6 +1060,8 @@ static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+ 	return res;
+ }
+ 
++#define NFS_READDIR_CACHE_MISS_THRESHOLD (16UL)
++
+ /*
+  * Once we've found the start of the dirent within a page: fill 'er up...
+  */
+@@ -1069,6 +1071,7 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc,
+ 	struct file	*file = desc->file;
+ 	struct nfs_cache_array *array;
+ 	unsigned int i;
++	bool first_emit = !desc->dir_cookie;
+ 
+ 	array = kmap(desc->page);
+ 	for (i = desc->cache_entry_index; i < array->size; i++) {
+@@ -1092,6 +1095,10 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc,
+ 			desc->ctx->pos = desc->dir_cookie;
+ 		else
+ 			desc->ctx->pos++;
++		if (first_emit && i > NFS_READDIR_CACHE_MISS_THRESHOLD + 1) {
++			desc->eob = true;
++			break;
++		}
+ 	}
+ 	if (array->page_is_eof)
+ 		desc->eof = !desc->eob;
+@@ -1173,8 +1180,6 @@ static int uncached_readdir(struct nfs_readdir_descriptor *desc)
+ 	return status;
+ }
+ 
+-#define NFS_READDIR_CACHE_MISS_THRESHOLD (16UL)
+-
+ static bool nfs_readdir_handle_cache_misses(struct inode *inode,
+ 					    struct nfs_readdir_descriptor *desc,
+ 					    unsigned int cache_misses,
+-- 
+2.31.1
 
