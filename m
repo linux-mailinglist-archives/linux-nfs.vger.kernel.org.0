@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E54734D68EB
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 20:07:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C9764D68F3
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 20:08:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351049AbiCKTIT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Mar 2022 14:08:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
+        id S1351073AbiCKTIs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Mar 2022 14:08:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351052AbiCKTIS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 14:08:18 -0500
+        with ESMTP id S1351080AbiCKTIq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 14:08:46 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E6D41B400C
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 11:07:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF01F4ECCB
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 11:07:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647025632;
+        s=mimecast20190719; t=1647025660;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=7XeQeD4ppDNhrdjXJvghzYtboPY6efwTRGGKo6zsEAY=;
-        b=DmM/3WEwJVf67mkspJj8C5Bjh2NqZP72Q+BchLDbqKJYDON7JBs8NknR23nwiol93GzFNP
-        Tgi4xPgKqQhXpEa/udoCY/aVlfY8mMiV+ugCTqcdCrRusFA2X9j3l168ggh0YKWoAfX/C2
-        mO2OKQGz31UVIQ8fEU5H3RShgB77b5Q=
+        bh=fBJs7SaLaOuVPjkP5j1dbtF7vVu9lC6LDsocaKc5yFQ=;
+        b=f+zt9RBTLHQjBr1sB1XbR6xIVMmT7WlP/9AY097yu1HpXo3G26sFSBkbaKsBLE1nZ7hF6Q
+        g3qh//IJDVK8aS9lL2Sd+dYo+Wsw9DvFU635qGsRtfUVZDr+eJ4NxXyxRplhseTJDXIv1x
+        hXpkw3WXswMJFNfacUv1JjVQXyb8g9I=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-12-m7bU32W5PzS_eyRdV0LRfQ-1; Fri, 11 Mar 2022 14:07:10 -0500
-X-MC-Unique: m7bU32W5PzS_eyRdV0LRfQ-1
+ us-mta-244-yeO4DIdzNpaHEMFS_Wkb6Q-1; Fri, 11 Mar 2022 14:07:37 -0500
+X-MC-Unique: yeO4DIdzNpaHEMFS_Wkb6Q-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25AB1854E21;
-        Fri, 11 Mar 2022 19:07:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A3C151854E27;
+        Fri, 11 Mar 2022 19:07:36 +0000 (UTC)
 Received: from nyarly.rlyeh.local (ovpn-116-72.gru2.redhat.com [10.97.116.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94F9C60BF4;
-        Fri, 11 Mar 2022 19:06:59 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80DF160BF4;
+        Fri, 11 Mar 2022 19:07:10 +0000 (UTC)
 From:   Thiago Becker <tbecker@redhat.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     steved@redhat.com, trond.myklebust@hammerspace.com,
         anna.schumaker@netapp.com, kolga@netapp.com,
         Thiago Becker <tbecker@redhat.com>
-Subject: [RFC v2 PATCH 6/7] readahead: add mountpoint and fstype options
-Date:   Fri, 11 Mar 2022 16:06:16 -0300
-Message-Id: <20220311190617.3294919-7-tbecker@redhat.com>
+Subject: [RFC v2 PATCH 7/7] readahead: documentation
+Date:   Fri, 11 Mar 2022 16:06:17 -0300
+Message-Id: <20220311190617.3294919-8-tbecker@redhat.com>
 In-Reply-To: <20220311190617.3294919-1-tbecker@redhat.com>
 References: <20220311190617.3294919-1-tbecker@redhat.com>
 MIME-Version: 1.0
@@ -60,89 +60,101 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add ways to configure the system by mountpoint or fstype.
-
 Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1946283
 Signed-off-by: Thiago Becker <tbecker@redhat.com>
 ---
- tools/nfs-readahead-udev/parser.y  | 15 +++++++++++----
- tools/nfs-readahead-udev/scanner.l |  5 +++++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+ tools/nfs-readahead-udev/Makefile.am          |  2 +
+ .../nfs-readahead-udev/nfs-readahead-udev.man | 47 +++++++++++++++++++
+ tools/nfs-readahead-udev/readahead.conf       | 14 ++++++
+ 3 files changed, 63 insertions(+)
+ create mode 100644 tools/nfs-readahead-udev/nfs-readahead-udev.man
 
-diff --git a/tools/nfs-readahead-udev/parser.y b/tools/nfs-readahead-udev/parser.y
-index f6db05c4..5951c99d 100644
---- a/tools/nfs-readahead-udev/parser.y
-+++ b/tools/nfs-readahead-udev/parser.y
-@@ -10,20 +10,25 @@ extern FILE *yyin;
- void yyerror(const char *s);
+diff --git a/tools/nfs-readahead-udev/Makefile.am b/tools/nfs-readahead-udev/Makefile.am
+index 010350aa..eaa9b90e 100644
+--- a/tools/nfs-readahead-udev/Makefile.am
++++ b/tools/nfs-readahead-udev/Makefile.am
+@@ -10,6 +10,8 @@ udev_rules_DATA = 99-nfs_bdi.rules
+ ra_confdir = $(sysconfdir)
+ ra_conf_DATA = readahead.conf
  
- // This should be visible only to this file
--extern struct config_entry *config_entry_new(void);
-+extern struct config_entry *config_entry_new();
++man5_MANS = nfs-readahead-udev.man
++
+ 99-nfs_bdi.rules: 99-nfs_bdi.rules.in $(builddefs)
+ 	$(SED) "s|_libexecdir_|@libexecdir@|g" 99-nfs_bdi.rules.in > $@
  
- struct config_entry *current;
- %}
- 
- %union {
-+	char *sval;
- 	int ival;
- }
- 
-+%token <sval> STRING
- %token <ival> INT
- %token EQ
- %token ENDL
- %token DEFAULT
-+%token MOUNTPOINT
-+%token FSTYPE
- %token READAHEAD
-+%token <sval> FS
- %token END_CONFIG 0
- 
- %%
-@@ -35,7 +40,7 @@ line:
- 	tokens endls {
- 		struct config_entry *new = config_entry_new();
- 		list_add(&current->list, &new->list);
--		current = new;
-+		current = new;		
- 	}
- 
- 
-@@ -49,9 +54,11 @@ default:
- 	DEFAULT
- 
- pair:
--	READAHEAD EQ INT	{ current->readahead = $3; }
-+	MOUNTPOINT EQ STRING	{ current->mountpoint = $3; }
-+	| FSTYPE EQ FS		{ current->fstype = $3; }
-+	| READAHEAD EQ INT	{ current->readahead = $3; }
- 
--endls:
-+endls: 
- 	endls ENDL | ENDL
- 
- %%
-diff --git a/tools/nfs-readahead-udev/scanner.l b/tools/nfs-readahead-udev/scanner.l
-index d1ceb90b..c6fb3f0c 100644
---- a/tools/nfs-readahead-udev/scanner.l
-+++ b/tools/nfs-readahead-udev/scanner.l
-@@ -5,10 +5,15 @@
- %option noyywrap
- %%
- default		{ return DEFAULT; }
-+mountpoint	{ return MOUNTPOINT; }
-+fstype		{ return FSTYPE; }
- readahead	{ return READAHEAD; }
-+nfs4		{ yylval.sval = strdup(yytext); return FS; }
-+nfs		{ yylval.sval = strdup(yytext); return FS; }
- [ \t]		;
- #[^\n]*\n	{ return ENDL; }
- \n		{ return ENDL; }
- [0-9]+		{ yylval.ival = atoi(yytext); return INT; }
-+[a-zA-Z0-9/]+	{ yylval.sval = strdup(yytext); return STRING; }
- =		{ return EQ; }
- %%
+diff --git a/tools/nfs-readahead-udev/nfs-readahead-udev.man b/tools/nfs-readahead-udev/nfs-readahead-udev.man
+new file mode 100644
+index 00000000..2477d5b3
+--- /dev/null
++++ b/tools/nfs-readahead-udev/nfs-readahead-udev.man
+@@ -0,0 +1,47 @@
++.\" Manpage for nfs-readahead-udev.
++.nh
++.ad l
++.TH man 5 "08 Mar 2022" "1.0" "nfs-readahead-udev man page"
++.SH NAME
++
++nfs-readahead-udev \- Find the readahead for a given NFS mount
++
++.SH SYNOPSIS
++
++nfs-readahead-udev <device>
++
++.SH DESCRIPTION
++
++\fInfs-readahead-udev\fR is a tool intended to be used with udev to set the \fIread_ahead_kb\fR parameter of NFS mounts, according to the configuration file (see \fICONFIGURATION\fR). \fIdevice\fR is the device number for the NFS backing device as provided by the kernel.
++
++.SH CONFIGURATION
++
++The configuration file (\fI/etc/readahead.conf\fR) contains the readahead configuration, and is formatted as follows.
++
++<LINES> ::= <LINES> <LINE> | <LINE>
++
++<LINE> ::= <TOKENS> <ENDL>
++
++<TOKENS> ::= <TOKENS> <TOKEN> | <TOKEN>
++
++<TOKEN> ::= default | <PAIR>
++
++<PAIR> ::= mountpoint = <mountpoint> | fstype = <nfs|nfs4> | readahead = <readahead>
++
++\fImountpoint\fR is the path in the system where the file system is mounted.
++
++\fIreadahead\fR is an integer to readahead.
++
++\fIfstype\fR is either \fInfs\fR or \fInfs4\fR. 
++
++.SH SEE ALSO
++
++mount.nfs(8), nfs(5), udev(7), bcc-readahead(8)
++
++.SH BUGS
++
++No known bugs.
++
++.SH AUTHOR
++
++Thiago Rafael Becker <trbecker@gmail.com>
+diff --git a/tools/nfs-readahead-udev/readahead.conf b/tools/nfs-readahead-udev/readahead.conf
+index 988b30c7..bce830f1 100644
+--- a/tools/nfs-readahead-udev/readahead.conf
++++ b/tools/nfs-readahead-udev/readahead.conf
+@@ -1 +1,15 @@
++# nfs-readahead-udev configuration file.
++#
++# This file configures the readahead for nfs mounts when those are anounced by the kernel.
++# The file is composed on lines that can contain either the default configuration (applied to
++# any nfs mount that does not match any of the other lines) or a combination of
++#   mountpoint=<mountpoint> where mountpoint is the mount point for the file system
++#   fstype=<nfs|nfs4> specifies that this configuration should only apply to a specific nfs
++#     version.
++# Every line must contain a readahead option, with the expected readahead value.
+ default				readahead=128
++
++# mountpoint=/mnt		readahead=4194304
++# fstype=nfs			readahead=4194304
++# fstype=nfs4			readahead=4194304
++# mountpoint=/mnt	fstype=nfs4	readahead=4194304
 -- 
 2.35.1
 
