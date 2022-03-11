@@ -2,49 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AFF64D68E8
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 20:07:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E54734D68EB
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 20:07:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351028AbiCKTII (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Mar 2022 14:08:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49442 "EHLO
+        id S1351049AbiCKTIT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Mar 2022 14:08:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351024AbiCKTIH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 14:08:07 -0500
+        with ESMTP id S1351052AbiCKTIS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 14:08:18 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CBC601AE66C
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 11:07:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0E6D41B400C
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 11:07:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1647025623;
+        s=mimecast20190719; t=1647025632;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Bs57FD0aFmk8X2gnoV3QY4fNBSZEDZmv2BONTpWJKJI=;
-        b=C+lztBZp2AhiUREEbVrUdIdyq0CgbhG4FxSuPOMk5ZV/+WC9YSjz0dfKpgVjYHxbKHyAul
-        X2nnzdgKbSMAMhxOMHZdNj45t4/Vvzt5mIz6aairynlhO6h0Ae3ELJYiziedP6QoV3bPd3
-        95bMy3cgeN5vaULpvgVSMOCkJQtgPi4=
+        bh=7XeQeD4ppDNhrdjXJvghzYtboPY6efwTRGGKo6zsEAY=;
+        b=DmM/3WEwJVf67mkspJj8C5Bjh2NqZP72Q+BchLDbqKJYDON7JBs8NknR23nwiol93GzFNP
+        Tgi4xPgKqQhXpEa/udoCY/aVlfY8mMiV+ugCTqcdCrRusFA2X9j3l168ggh0YKWoAfX/C2
+        mO2OKQGz31UVIQ8fEU5H3RShgB77b5Q=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-642-Av_PEcimOqmQNdPvbHMA4Q-1; Fri, 11 Mar 2022 14:06:59 -0500
-X-MC-Unique: Av_PEcimOqmQNdPvbHMA4Q-1
+ us-mta-12-m7bU32W5PzS_eyRdV0LRfQ-1; Fri, 11 Mar 2022 14:07:10 -0500
+X-MC-Unique: m7bU32W5PzS_eyRdV0LRfQ-1
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE7CB801AFC;
-        Fri, 11 Mar 2022 19:06:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A25AB1854E21;
+        Fri, 11 Mar 2022 19:07:09 +0000 (UTC)
 Received: from nyarly.rlyeh.local (ovpn-116-72.gru2.redhat.com [10.97.116.72])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6A2260BF4;
-        Fri, 11 Mar 2022 19:06:49 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 94F9C60BF4;
+        Fri, 11 Mar 2022 19:06:59 +0000 (UTC)
 From:   Thiago Becker <tbecker@redhat.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     steved@redhat.com, trond.myklebust@hammerspace.com,
         anna.schumaker@netapp.com, kolga@netapp.com,
         Thiago Becker <tbecker@redhat.com>
-Subject: [RFC v2 PATCH 5/7] readahead: create the configuration file
-Date:   Fri, 11 Mar 2022 16:06:15 -0300
-Message-Id: <20220311190617.3294919-6-tbecker@redhat.com>
+Subject: [RFC v2 PATCH 6/7] readahead: add mountpoint and fstype options
+Date:   Fri, 11 Mar 2022 16:06:16 -0300
+Message-Id: <20220311190617.3294919-7-tbecker@redhat.com>
 In-Reply-To: <20220311190617.3294919-1-tbecker@redhat.com>
 References: <20220311190617.3294919-1-tbecker@redhat.com>
 MIME-Version: 1.0
@@ -60,418 +60,89 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-At this stage, the configuration file only accepts the default value.
+Add ways to configure the system by mountpoint or fstype.
 
 Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1946283
 Signed-off-by: Thiago Becker <tbecker@redhat.com>
 ---
- .gitignore                               |  5 ++
- configure.ac                             |  3 +
- tools/nfs-readahead-udev/Makefile.am     | 16 ++++-
- tools/nfs-readahead-udev/config_parser.c | 25 ++++++++
- tools/nfs-readahead-udev/config_parser.h | 14 +++++
- tools/nfs-readahead-udev/list.h          | 48 +++++++++++++++
- tools/nfs-readahead-udev/main.c          | 68 ++++++++++++++++++++-
- tools/nfs-readahead-udev/parser.y        | 78 ++++++++++++++++++++++++
- tools/nfs-readahead-udev/readahead.conf  |  1 +
- tools/nfs-readahead-udev/scanner.l       | 14 +++++
- 10 files changed, 269 insertions(+), 3 deletions(-)
- create mode 100644 tools/nfs-readahead-udev/config_parser.c
- create mode 100644 tools/nfs-readahead-udev/config_parser.h
- create mode 100644 tools/nfs-readahead-udev/list.h
- create mode 100644 tools/nfs-readahead-udev/parser.y
- create mode 100644 tools/nfs-readahead-udev/readahead.conf
- create mode 100644 tools/nfs-readahead-udev/scanner.l
+ tools/nfs-readahead-udev/parser.y  | 15 +++++++++++----
+ tools/nfs-readahead-udev/scanner.l |  5 +++++
+ 2 files changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index c99269a4..340ee8fb 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -17,6 +17,7 @@ aclocal/ltoptions.m4
- aclocal/ltsugar.m4
- aclocal/ltversion.m4
- aclocal/lt~obsolete.m4
-+ylwrap
- # files generated by configure
- confdefs.h
- config.cache
-@@ -61,7 +62,11 @@ utils/statd/statd
- tools/locktest/testlk
- tools/getiversion/getiversion
- tools/nfsconf/nfsconf
-+tools/nfs-readahead-udev/99-nfs_bdi.rules
- tools/nfs-readahead-udev/nfs-readahead-udev
-+tools/nfs-readahead-udev/parser.c
-+tools/nfs-readahead-udev/parser.h
-+tools/nfs-readahead-udev/scanner.c
- support/export/mount.h
- support/export/mount_clnt.c
- support/export/mount_xdr.c
-diff --git a/configure.ac b/configure.ac
-index 7e5ba5d9..03cdf8f6 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -300,7 +300,10 @@ AC_PROG_INSTALL
- AC_PROG_LN_S
- AC_PROG_MAKE_SET
- AC_PROG_LIBTOOL
-+AC_PROG_YACC
- AM_PROG_CC_C_O
-+AM_PROG_LEX
-+
+diff --git a/tools/nfs-readahead-udev/parser.y b/tools/nfs-readahead-udev/parser.y
+index f6db05c4..5951c99d 100644
+--- a/tools/nfs-readahead-udev/parser.y
++++ b/tools/nfs-readahead-udev/parser.y
+@@ -10,20 +10,25 @@ extern FILE *yyin;
+ void yyerror(const char *s);
  
- if test "x$cross_compiling" = "xno"; then
- 	CC_FOR_BUILD=${CC_FOR_BUILD-${CC-gcc}}
-diff --git a/tools/nfs-readahead-udev/Makefile.am b/tools/nfs-readahead-udev/Makefile.am
-index 551d22e9..010350aa 100644
---- a/tools/nfs-readahead-udev/Makefile.am
-+++ b/tools/nfs-readahead-udev/Makefile.am
-@@ -1,12 +1,24 @@
- libexec_PROGRAMS = nfs-readahead-udev
--nfs_readahead_udev_SOURCES = main.c syslog.c
-+BUILT_SOURCES = parser.c parser.h scanner.c
-+nfs_readahead_udev_SOURCES = main.c syslog.c config_parser.c parser.y scanner.l
- nfs_readahead_udev_LDFLAGS= -lmount
-+AM_YFLAGS = -d
+ // This should be visible only to this file
+-extern struct config_entry *config_entry_new(void);
++extern struct config_entry *config_entry_new();
  
--udev_rulesdir = /etc/udev/rules.d
-+udev_rulesdir = $(sysconfdir)/udev/rules.d
- udev_rules_DATA = 99-nfs_bdi.rules
+ struct config_entry *current;
+ %}
  
-+ra_confdir = $(sysconfdir)
-+ra_conf_DATA = readahead.conf
-+
- 99-nfs_bdi.rules: 99-nfs_bdi.rules.in $(builddefs)
- 	$(SED) "s|_libexecdir_|@libexecdir@|g" 99-nfs_bdi.rules.in > $@
- 
- clean-local:
- 	$(RM) 99-nfs_bdi.rules
-+	$(RM) parser.c parser.h scanner.c
-+
-+parser.$(OBJEXT): CFLAGS += -Wno-strict-prototypes
-+
-+scanner.$(OBJEXT): CFLAGS += -Wno-strict-prototypes
-+
-+main.$(OBJEXT): CFLAGS += -DSYSCONFDIR=\"@sysconfdir@\"
-diff --git a/tools/nfs-readahead-udev/config_parser.c b/tools/nfs-readahead-udev/config_parser.c
-new file mode 100644
-index 00000000..24d58a6b
---- /dev/null
-+++ b/tools/nfs-readahead-udev/config_parser.c
-@@ -0,0 +1,25 @@
-+#include <stdlib.h>
-+#include <string.h>
-+#include "config_parser.h"
-+
-+struct config_entry *config_entry_new(void);
-+
-+struct config_entry *config_entry_new(void) {
-+	struct config_entry *new = malloc(sizeof(struct config_entry));
-+	if (!new) {
-+		return NULL; // Make this an err_ptr
-+	}
-+
-+	memset(new, 0, sizeof(struct config_entry));
-+	list_init(&new->list);
-+	return new;
-+}
-+
-+
-+void config_entry_free(struct config_entry *ce)
-+{
-+#define sfree(ce) if (ce) free(ce)
-+	sfree(ce->mountpoint);
-+	sfree(ce->fstype);
-+#undef sfree
-+}
-diff --git a/tools/nfs-readahead-udev/config_parser.h b/tools/nfs-readahead-udev/config_parser.h
-new file mode 100644
-index 00000000..f9f138bb
---- /dev/null
-+++ b/tools/nfs-readahead-udev/config_parser.h
-@@ -0,0 +1,14 @@
-+#ifndef __ra_libparser_h__
-+#define __ra_libparser_h__
-+#include "list.h"
-+
-+struct config_entry {
-+	struct list_head list;
-+	char *mountpoint;
-+	char *fstype;
-+	int readahead;
-+};
-+
-+extern int parse_config(const char *, struct list_head *config_list);
-+extern void config_entry_free(struct config_entry *);
-+#endif
-diff --git a/tools/nfs-readahead-udev/list.h b/tools/nfs-readahead-udev/list.h
-new file mode 100644
-index 00000000..69239502
---- /dev/null
-+++ b/tools/nfs-readahead-udev/list.h
-@@ -0,0 +1,48 @@
-+#ifndef __ra_list_h__
-+#define __ra_list_h__
-+struct list_head
-+{
-+	struct list_head *next, *prev;
-+};
-+
-+static inline void list_init(struct list_head *lh)
-+{
-+	lh->next = lh;
-+	lh->prev = lh;
-+}
-+
-+#define LIST_DECLARE(name)	 \
-+	struct list_head name;	 \
-+	list_init(&name);
-+
-+static inline void list_add(struct list_head *l, struct list_head *a)
-+{
-+	a->prev = l;
-+	a->next = l->next;
-+	l->next->prev = a;
-+	l->next = a;
-+}
-+
-+static inline void list_del(struct list_head *a)
-+{
-+	a->next->prev = a->prev;
-+	a->prev->next = a->next;
-+	a->next = a;
-+	a->prev = a;
-+}
-+
-+#define list_for_each(pos, head)				\
-+	for (pos = (head)->next; pos != (head); pos = pos->next)
-+
-+#define list_free(head, free_func) ({				\
-+	for (struct list_head *__lh = (head)->next;		\
-+			__lh != head; __lh = (head)->next) {	\
-+		list_del(__lh);					\
-+		free_func(__lh);				\
-+	}})
-+
-+#define containerof(p, type, field) ({				\
-+	const __typeof__(((type *)0)->field) *__ptr = (p);	\
-+	(type *)((char *)__ptr - offsetof(type, field) ); })
-+
-+#endif
-diff --git a/tools/nfs-readahead-udev/main.c b/tools/nfs-readahead-udev/main.c
-index bbb408c0..2bd76138 100644
---- a/tools/nfs-readahead-udev/main.c
-+++ b/tools/nfs-readahead-udev/main.c
-@@ -2,16 +2,23 @@
- #include <string.h>
- #include <stdlib.h>
- #include <errno.h>
-+#include <stddef.h>
- 
- #include <libmount/libmount.h>
- #include <sys/sysmacros.h>
- 
- #include "log.h"
-+#include "list.h"
-+#include "config_parser.h"
- 
- #ifndef MOUNTINFO_PATH
- #define MOUNTINFO_PATH "/proc/self/mountinfo"
- #endif
- 
-+#ifndef READAHEAD_CONFIG_FILE
-+#define READAHEAD_CONFIG_FILE SYSCONFDIR "/readahead.conf"
-+#endif
-+
- /* Device information from the system */
- struct device_info {
- 	char *device_number;
-@@ -110,6 +117,60 @@ static int get_device_info(const char *device_number, struct device_info *device
- 	return ret;
+ %union {
++	char *sval;
+ 	int ival;
  }
  
-+static void config_entry_list_head_free(struct list_head *lh) {
-+	struct config_entry *ce = containerof(lh, struct config_entry, list);
-+	config_entry_free(ce);
-+}
-+
-+static int match_config(struct device_info *di, struct config_entry *ce) {
-+#define FIELD_CMP(field) \
-+	(ce->field == NULL || (di->field != NULL && strcmp(di->field, ce->field) == 0))
-+
-+	if (!FIELD_CMP(mountpoint))
-+		return 0;
-+
-+	if (!FIELD_CMP(fstype))
-+		return 0;
-+
-+	debug("Device matched with config\n");
-+	return 1;
-+#undef FIELD_CMP
-+}
-+
-+static int get_readahead(struct device_info *di, unsigned int *readahead)
-+{
-+	LIST_DECLARE(configs);
-+	struct list_head *lh;
-+	int ret = 0;
-+	int default_ra = 0;
-+
-+	if ((ret = parse_config(READAHEAD_CONFIG_FILE, &configs)) != 0) {
-+		err("Failed to read configuration (%d)\n", ret);
-+		goto out;
-+	}
-+
-+	list_for_each(lh, &configs) {
-+		struct config_entry *ce = containerof(lh, struct config_entry, list);
-+		if (ce->mountpoint == NULL && ce->fstype == NULL) {
-+			default_ra = ce->readahead;
-+			continue;
-+		}
-+
-+		if (match_config(di, ce)) {
-+			*readahead = ce->readahead;
-+			goto out;
-+		}
-+	}
-+
-+	/* fallthrough */
-+	debug("Setting readahead to default %d\n", default_ra);
-+	*readahead = default_ra;
-+
-+out:
-+	list_free(&configs, config_entry_list_head_free);
-+	return ret;
-+}
-+
- int main(int argc, char **argv, char **envp)
- {
- 	int ret = 0;
-@@ -134,7 +195,12 @@ int main(int argc, char **argv, char **envp)
- 		goto out;
++%token <sval> STRING
+ %token <ival> INT
+ %token EQ
+ %token ENDL
+ %token DEFAULT
++%token MOUNTPOINT
++%token FSTYPE
+ %token READAHEAD
++%token <sval> FS
+ %token END_CONFIG 0
+ 
+ %%
+@@ -35,7 +40,7 @@ line:
+ 	tokens endls {
+ 		struct config_entry *new = config_entry_new();
+ 		list_add(&current->list, &new->list);
+-		current = new;
++		current = new;		
  	}
  
--	info("Setting %s readahead to 128\n", device.mountpoint);
-+	if ((ret = get_readahead(&device, &readahead)) != 0) {
-+		err("Failed to find readahead (%d)\n", ret);
-+		goto out;
-+	}
-+
-+	info("Setting %s readahead to %u\n", device.mountpoint, readahead);
  
- 	log_close();
- 	printf("%d\n", readahead);
-diff --git a/tools/nfs-readahead-udev/parser.y b/tools/nfs-readahead-udev/parser.y
-new file mode 100644
-index 00000000..f6db05c4
---- /dev/null
-+++ b/tools/nfs-readahead-udev/parser.y
-@@ -0,0 +1,78 @@
-+%{
-+#include <stdio.h>
-+#include "parser.h"
-+#include "config_parser.h"
-+#include "log.h"
-+
-+extern int yylex();
-+extern int yyparse();
-+extern FILE *yyin;
-+void yyerror(const char *s);
-+
-+// This should be visible only to this file
-+extern struct config_entry *config_entry_new(void);
-+
-+struct config_entry *current;
-+%}
-+
-+%union {
-+	int ival;
-+}
-+
-+%token <ival> INT
-+%token EQ
-+%token ENDL
-+%token DEFAULT
-+%token READAHEAD
-+%token END_CONFIG 0
-+
-+%%
-+config:
-+	lines
-+lines:
-+	lines line | line | endls lines
-+line:
-+	tokens endls {
-+		struct config_entry *new = config_entry_new();
-+		list_add(&current->list, &new->list);
-+		current = new;
-+	}
-+
-+
-+tokens:
-+	tokens token | token
-+
-+token:
-+	default | pair
-+
-+default:
-+	DEFAULT
-+
-+pair:
-+	READAHEAD EQ INT	{ current->readahead = $3; }
-+
-+endls:
-+	endls ENDL | ENDL
-+
-+%%
-+int parse_config(const char *filename, struct list_head *list)
-+{
-+	int ret;
-+
-+	yyin = fopen(filename, "r");
-+	current = config_entry_new();
-+	list_add(list, &current->list);
-+
-+	ret = yyparse();
-+
-+	/* The parser will create an empty entry that need to be eliminated */
-+	list_del(&current->list);
-+	free(current);
-+	fclose(yyin);
-+
-+	return ret;
-+}
-+
-+void yyerror(const char *s) {
-+	err("Failed to parse configuration: %s", s);
-+}
-diff --git a/tools/nfs-readahead-udev/readahead.conf b/tools/nfs-readahead-udev/readahead.conf
-new file mode 100644
-index 00000000..988b30c7
---- /dev/null
-+++ b/tools/nfs-readahead-udev/readahead.conf
-@@ -0,0 +1 @@
-+default				readahead=128
+@@ -49,9 +54,11 @@ default:
+ 	DEFAULT
+ 
+ pair:
+-	READAHEAD EQ INT	{ current->readahead = $3; }
++	MOUNTPOINT EQ STRING	{ current->mountpoint = $3; }
++	| FSTYPE EQ FS		{ current->fstype = $3; }
++	| READAHEAD EQ INT	{ current->readahead = $3; }
+ 
+-endls:
++endls: 
+ 	endls ENDL | ENDL
+ 
+ %%
 diff --git a/tools/nfs-readahead-udev/scanner.l b/tools/nfs-readahead-udev/scanner.l
-new file mode 100644
-index 00000000..d1ceb90b
---- /dev/null
+index d1ceb90b..c6fb3f0c 100644
+--- a/tools/nfs-readahead-udev/scanner.l
 +++ b/tools/nfs-readahead-udev/scanner.l
-@@ -0,0 +1,14 @@
-+%{
-+#include "parser.h"
-+#define yyterminate() return END_CONFIG
-+%}
-+%option noyywrap
-+%%
-+default		{ return DEFAULT; }
-+readahead	{ return READAHEAD; }
-+[ \t]		;
-+#[^\n]*\n	{ return ENDL; }
-+\n		{ return ENDL; }
-+[0-9]+		{ yylval.ival = atoi(yytext); return INT; }
-+=		{ return EQ; }
-+%%
+@@ -5,10 +5,15 @@
+ %option noyywrap
+ %%
+ default		{ return DEFAULT; }
++mountpoint	{ return MOUNTPOINT; }
++fstype		{ return FSTYPE; }
+ readahead	{ return READAHEAD; }
++nfs4		{ yylval.sval = strdup(yytext); return FS; }
++nfs		{ yylval.sval = strdup(yytext); return FS; }
+ [ \t]		;
+ #[^\n]*\n	{ return ENDL; }
+ \n		{ return ENDL; }
+ [0-9]+		{ yylval.ival = atoi(yytext); return INT; }
++[a-zA-Z0-9/]+	{ yylval.sval = strdup(yytext); return STRING; }
+ =		{ return EQ; }
+ %%
 -- 
 2.35.1
 
