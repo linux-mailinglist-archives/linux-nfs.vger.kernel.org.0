@@ -2,176 +2,243 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6CB4D6116
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 12:58:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 611314D6296
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 14:49:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240923AbiCKL7V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Mar 2022 06:59:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59776 "EHLO
+        id S240780AbiCKNu7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Mar 2022 08:50:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348401AbiCKL7V (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 06:59:21 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 709FD2250F
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 03:58:16 -0800 (PST)
+        with ESMTP id S1348958AbiCKNu6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 08:50:58 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 915531C4B01
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 05:49:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1646999895;
+        s=mimecast20190719; t=1647006593;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8mD+49DoohZzo6pu1up5pgQTWUjATz3E+QnK1iKIt14=;
-        b=YEZXW+8H3whP6KQ38kjL/q9YaEnzAJnXiJfo1/t/MvqUo8/lfGCTt06W+RZB/gNQfsyd8o
-        atuXxwpjuMpfjBiNL256npKjHJfFaJ+7FkiiEHhHUpwoSufqHScSdQj/kf9DzxA7DpOqKa
-        H2SqzLtIOQk8IrYazg+zkvLnrfQNZbY=
+        bh=nkVV5Z2jvGzdxq9DT6Fv6Bpxc803c9THPKkducVZxOM=;
+        b=H4BsCFisBmfq7LqSX/Dgp2Z2AffdLpw0v9jw4B7lOETE6u1dgXSrz7Un+39/egkpZ85K6/
+        U/DsOqEJhktBUbCWq12hepVitg1cCxEsmaw75vE4pz1qFBUp2LI0z4j/MpaEih+XguaGfR
+        phSxBnSuhrKo2H/OJSY9D3XYEHf6fPg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-194-kvwBMe4CO5aUGnuyK-TpRw-1; Fri, 11 Mar 2022 06:58:14 -0500
-X-MC-Unique: kvwBMe4CO5aUGnuyK-TpRw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-145-TueK1vdeMAWKJda3GjGIzA-1; Fri, 11 Mar 2022 08:49:50 -0500
+X-MC-Unique: TueK1vdeMAWKJda3GjGIzA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BAB2824FA7;
-        Fri, 11 Mar 2022 11:58:13 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0D08110589DE;
-        Fri, 11 Mar 2022 11:58:12 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v9 23/27] NFS: Convert readdir page cache to use a cookie
- based index
-Date:   Fri, 11 Mar 2022 06:58:11 -0500
-Message-ID: <466F8F77-E052-4D06-A016-946FCBD9C9BF@redhat.com>
-In-Reply-To: <9099fead49c961a53027c8ed309a8efd2222d679.camel@hammerspace.com>
-References: <20220227231227.9038-1-trondmy@kernel.org>
- <20220227231227.9038-2-trondmy@kernel.org>
- <20220227231227.9038-3-trondmy@kernel.org>
- <20220227231227.9038-4-trondmy@kernel.org>
- <20220227231227.9038-5-trondmy@kernel.org>
- <20220227231227.9038-6-trondmy@kernel.org>
- <20220227231227.9038-7-trondmy@kernel.org>
- <20220227231227.9038-8-trondmy@kernel.org>
- <20220227231227.9038-9-trondmy@kernel.org>
- <20220227231227.9038-10-trondmy@kernel.org>
- <20220227231227.9038-11-trondmy@kernel.org>
- <20220227231227.9038-12-trondmy@kernel.org>
- <20220227231227.9038-13-trondmy@kernel.org>
- <20220227231227.9038-14-trondmy@kernel.org>
- <20220227231227.9038-15-trondmy@kernel.org>
- <20220227231227.9038-16-trondmy@kernel.org>
- <20220227231227.9038-17-trondmy@kernel.org>
- <20220227231227.9038-18-trondmy@kernel.org>
- <20220227231227.9038-19-trondmy@kernel.org>
- <20220227231227.9038-20-trondmy@kernel.org>
- <20220227231227.9038-21-trondmy@kernel.org>
- <20220227231227.9038-22-trondmy@kernel.org>
- <20220227231227.9038-23-trondmy@kernel.org>
- <20220227231227.9038-24-trondmy@kernel.org>
- <A2AAA831-0D58-4FFB-B76C-6D6AF39607EA@redhat.com>
- <9099fead49c961a53027c8ed309a8efd2222d679.camel@hammerspace.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 251001091DA1;
+        Fri, 11 Mar 2022 13:49:48 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 72A0483591;
+        Fri, 11 Mar 2022 13:49:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <dd054c962818716e718bd9b446ee5322ca097675.camel@redhat.com>
+References: <dd054c962818716e718bd9b446ee5322ca097675.camel@redhat.com> <164692883658.2099075.5745824552116419504.stgit@warthog.procyon.org.uk> <164692907694.2099075.10081819855690054094.stgit@warthog.procyon.org.uk>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     dhowells@redhat.com, linux-cachefs@redhat.com,
+        ceph-devel@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 12/20] ceph: Make ceph_init_request() check caps on readahead
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2533820.1647006574.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date:   Fri, 11 Mar 2022 13:49:34 +0000
+Message-ID: <2533821.1647006574@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10 Mar 2022, at 16:07, Trond Myklebust wrote:
+Jeff Layton <jlayton@redhat.com> wrote:
 
-> On Wed, 2022-03-09 at 15:01 -0500, Benjamin Coddington wrote:
->> On 27 Feb 2022, at 18:12, trondmy@kernel.org wrote:
->>
->>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
->>>
->>> Instead of using a linear index to address the pages, use the
->>> cookie of
->>> the first entry, since that is what we use to match the page
->>> anyway.
->>>
->>> This allows us to avoid re-reading the entire cache on a seekdir()
->>> type
->>> of operation. The latter is very common when re-exporting NFS, and
->>> is a
->>> major performance drain.
->>>
->>> The change does affect our duplicate cookie detection, since we can
->>> no
->>> longer rely on the page index as a linear offset for detecting
->>> whether
->>> we looped backwards. However since we no longer do a linear search
->>> through all the pages on each call to nfs_readdir(), this is less
->>> of a
->>> concern than it was previously.
->>> The other downside is that invalidate_mapping_pages() no longer can
->>> use
->>> the page index to avoid clearing pages that have been read. A
->>> subsequent
->>> patch will restore the functionality this provides to the 'ls -l'
->>> heuristic.
->>
->> I didn't realize the approach was to also hash out the linearly-
->> cached
->> entries.  I thought we'd do something like flag the context for
->> hashed page
->> indexes after a seekdir event, and if there are collisions with the
->> linear
->> entries, they'll get fixed up when found.
->
-> Why? What's the point of using 2 models where 1 will do?
+> > +static int ceph_init_request(struct netfs_io_request *rreq, struct fi=
+le *file)
+> > +{
+> > +	struct inode *inode =3D rreq->inode;
+> > +	int got =3D 0, want =3D CEPH_CAP_FILE_CACHE;
+> > +	int ret =3D 0;
+> > +
+> > +	if (file) {
+> > +		struct ceph_rw_context *rw_ctx;
+> > +		struct ceph_file_info *fi =3D file->private_data;
+> > +
+> > +		rw_ctx =3D ceph_find_rw_context(fi);
+> > +		if (rw_ctx)
+> > +			return 0;
+> > +	}
+> > +
+> > +	if (rreq->origin !=3D NETFS_READAHEAD)
+> > +		return 0;
+> > +
+> =
 
-I don't think the hashed model is quite as simple and efficient overall, and
-may produce impacts to a system beyond NFS.
+> ^^^
+> I think you should move this check above the if (file) block above it.
+> We don't need to anything at all if we're not in readahead.
 
->>
->> Doesn't that mean that with this approach seekdir() only hits the
->> same pages
->> when the entry offset is page-aligned?  That's 1 in 127 odds.
->
-> The point is not to stomp all over the pages that contain aligned data
-> when the application does call seekdir().
->
-> IOW: we always optimise for the case where we do a linear read of the
-> directory, but we support random seekdir() + read too.
+How about the attached, then?
 
-And that could be done just by bumping the seekdir users to some constant
-offset (index 262144 ?), or something else equally dead-nuts simple.  That
-keeps tightly clustered page indexes, so walking the cache is faster.  That
-reduces the "buckshot" effect the hashing has of eating up pagecache pages
-they'll never use again.  That doesn't cap our caching ability at 33 million
-entries.
+David
+---
+commit 7082946186fc26016b15bc9039bd6d92ae732ef3
+Author: David Howells <dhowells@redhat.com>
+Date:   Wed Mar 9 21:45:22 2022 +0000
 
-Its weird to me that we're doing exactly what XArray says not to do, hash
-the index, when we don't have to.
+    ceph: Make ceph_init_request() check caps on readahead
+    =
 
->> It also means we're amplifying the pagecache's useage for slightly
->> changing
->> directories - rather than re-using the same pages we're scattering
->> our usage
->> across the index.  Eh, maybe not a big deal if we just expect the
->> page
->> cache's LRU to do the work.
->>
->
-> I don't understand your point about 'not reusing'. If the user seeks to
-> the same cookie, we reuse the page. However I don't know how you would
-> go about setting up a schema that allows you to seek to an arbitrary
-> cookie without doing a linear search.
+    Move the caps check from ceph_readahead() to ceph_init_request(),
+    conditional on the origin being NETFS_READAHEAD so that in a future pa=
+tch,
+    ceph can point its ->readahead() vector directly at netfs_readahead().
+    =
 
-So when I was taking about 'reusing' a page, that's about re-filling the
-same pages rather than constantly conjuring new ones, which requires less of
-the pagecache's resources in total.  Maybe the pagecache can handle that
-without it negatively impacting other users of the cache that /will/ re-use
-their cached pages, but I worry it might be irresponsible of us to fill the
-pagecache with pages we know we're never going to find again.
+    Changes
+    =3D=3D=3D=3D=3D=3D=3D
+    ver #4)
+     - Move the check for NETFS_READAHEAD up in ceph_init_request()[2].
+    =
 
-Ben
+    ver #3)
+     - Split from the patch to add a netfs inode context[1].
+     - Need to store the caps got in rreq->netfs_priv for later freeing.
+    =
+
+    Signed-off-by: David Howells <dhowells@redhat.com>
+    cc: ceph-devel@vger.kernel.org
+    cc: linux-cachefs@redhat.com
+    Link: https://lore.kernel.org/r/8af0d47f17d89c06bbf602496dd845f2b0bf25=
+b3.camel@kernel.org/ [1]
+    Link: https://lore.kernel.org/r/dd054c962818716e718bd9b446ee5322ca0976=
+75.camel@redhat.com/ [2]
+
+diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
+index 9189257476f8..4aeccafa5dda 100644
+--- a/fs/ceph/addr.c
++++ b/fs/ceph/addr.c
+@@ -354,6 +354,45 @@ static void ceph_netfs_issue_read(struct netfs_io_sub=
+request *subreq)
+ 	dout("%s: result %d\n", __func__, err);
+ }
+ =
+
++static int ceph_init_request(struct netfs_io_request *rreq, struct file *=
+file)
++{
++	struct inode *inode =3D rreq->inode;
++	int got =3D 0, want =3D CEPH_CAP_FILE_CACHE;
++	int ret =3D 0;
++
++	if (rreq->origin !=3D NETFS_READAHEAD)
++		return 0;
++
++	if (file) {
++		struct ceph_rw_context *rw_ctx;
++		struct ceph_file_info *fi =3D file->private_data;
++
++		rw_ctx =3D ceph_find_rw_context(fi);
++		if (rw_ctx)
++			return 0;
++	}
++
++	/*
++	 * readahead callers do not necessarily hold Fcb caps
++	 * (e.g. fadvise, madvise).
++	 */
++	ret =3D ceph_try_get_caps(inode, CEPH_CAP_FILE_RD, want, true, &got);
++	if (ret < 0) {
++		dout("start_read %p, error getting cap\n", inode);
++		return ret;
++	}
++
++	if (!(got & want)) {
++		dout("start_read %p, no cache cap\n", inode);
++		return -EACCES;
++	}
++	if (ret =3D=3D 0)
++		return -EACCES;
++
++	rreq->netfs_priv =3D (void *)(uintptr_t)got;
++	return 0;
++}
++
+ static void ceph_readahead_cleanup(struct address_space *mapping, void *p=
+riv)
+ {
+ 	struct inode *inode =3D mapping->host;
+@@ -365,7 +404,7 @@ static void ceph_readahead_cleanup(struct address_spac=
+e *mapping, void *priv)
+ }
+ =
+
+ static const struct netfs_request_ops ceph_netfs_read_ops =3D {
+-	.is_cache_enabled	=3D ceph_is_cache_enabled,
++	.init_request		=3D ceph_init_request,
+ 	.begin_cache_operation	=3D ceph_begin_cache_operation,
+ 	.issue_read		=3D ceph_netfs_issue_read,
+ 	.expand_readahead	=3D ceph_netfs_expand_readahead,
+@@ -393,33 +432,7 @@ static int ceph_readpage(struct file *file, struct pa=
+ge *subpage)
+ =
+
+ static void ceph_readahead(struct readahead_control *ractl)
+ {
+-	struct inode *inode =3D file_inode(ractl->file);
+-	struct ceph_file_info *fi =3D ractl->file->private_data;
+-	struct ceph_rw_context *rw_ctx;
+-	int got =3D 0;
+-	int ret =3D 0;
+-
+-	if (ceph_inode(inode)->i_inline_version !=3D CEPH_INLINE_NONE)
+-		return;
+-
+-	rw_ctx =3D ceph_find_rw_context(fi);
+-	if (!rw_ctx) {
+-		/*
+-		 * readahead callers do not necessarily hold Fcb caps
+-		 * (e.g. fadvise, madvise).
+-		 */
+-		int want =3D CEPH_CAP_FILE_CACHE;
+-
+-		ret =3D ceph_try_get_caps(inode, CEPH_CAP_FILE_RD, want, true, &got);
+-		if (ret < 0)
+-			dout("start_read %p, error getting cap\n", inode);
+-		else if (!(got & want))
+-			dout("start_read %p, no cache cap\n", inode);
+-
+-		if (ret <=3D 0)
+-			return;
+-	}
+-	netfs_readahead(ractl, &ceph_netfs_read_ops, (void *)(uintptr_t)got);
++	netfs_readahead(ractl, &ceph_netfs_read_ops, NULL);
+ }
+ =
+
+ #ifdef CONFIG_CEPH_FSCACHE
 
