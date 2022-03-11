@@ -2,146 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB12B4D5D3D
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 09:25:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 19FBF4D6090
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Mar 2022 12:28:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229524AbiCKI0B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Mar 2022 03:26:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39716 "EHLO
+        id S237179AbiCKL3R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 11 Mar 2022 06:29:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229474AbiCKI0B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 03:26:01 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 104881B8FDA
-        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 00:24:58 -0800 (PST)
-Received: from kwepemi500001.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KFJpW28ljzBrgN;
-        Fri, 11 Mar 2022 16:22:59 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- kwepemi500001.china.huawei.com (7.221.188.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Mar 2022 16:24:56 +0800
-Received: from [10.174.179.176] (10.174.179.176) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 11 Mar 2022 16:24:55 +0800
-Subject: Re: [PATCH] blkmapd: fix coredump in bl_add_disk
-From:   lixiaokeng <lixiaokeng@huawei.com>
-To:     <steved@redhat.com>, <linux-nfs@vger.kernel.org>
-CC:     "liuzhiqiang (I)" <liuzhiqiang26@huawei.com>,
-        linfeilong <linfeilong@huawei.com>
-References: <77a09978-a5aa-ea7f-04b8-a8d398ee325f@huawei.com>
-Message-ID: <a0926064-ea58-079f-9269-61f2a54ad7dd@huawei.com>
-Date:   Fri, 11 Mar 2022 16:24:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        with ESMTP id S232676AbiCKL3R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 06:29:17 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A980BCFBB6
+        for <linux-nfs@vger.kernel.org>; Fri, 11 Mar 2022 03:28:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1646998093;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=f8Z65QU/sPRK6Papy+C6+5xRCDPUUsts1NEh7BhXLpw=;
+        b=XyWzm03Q1Yw5Bh2Z88/Q8DadmXU8cf0vfMhFZ+D32Ck0xhLC972pD00EzsUD3jPoLcRMvE
+        qxqdu87IkxHE6zOVJAWU6JmvNImr8s0TeYu/YI48YwAfgBQPfkie3FkWPDpaan4FS9TSUk
+        PKfcwngYoacyvYDZQ4r+udk3lCJcIVA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-417-VuKjaQc1PfSwskQTQJ_d3Q-1; Fri, 11 Mar 2022 06:28:12 -0500
+X-MC-Unique: VuKjaQc1PfSwskQTQJ_d3Q-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7633C1800D50;
+        Fri, 11 Mar 2022 11:28:11 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D67A83281;
+        Fri, 11 Mar 2022 11:28:11 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v9 14/27] NFS: Improve heuristic for readdirplus
+Date:   Fri, 11 Mar 2022 06:28:10 -0500
+Message-ID: <A1B01312-F429-47AB-8EA3-4264C3FEF84A@redhat.com>
+In-Reply-To: <28d6a094ddca6e4e6c15e055ec3ef6b10d57cbd3.camel@hammerspace.com>
+References: <20220227231227.9038-1-trondmy@kernel.org>
+ <20220227231227.9038-2-trondmy@kernel.org>
+ <20220227231227.9038-3-trondmy@kernel.org>
+ <20220227231227.9038-4-trondmy@kernel.org>
+ <20220227231227.9038-5-trondmy@kernel.org>
+ <20220227231227.9038-6-trondmy@kernel.org>
+ <20220227231227.9038-7-trondmy@kernel.org>
+ <20220227231227.9038-8-trondmy@kernel.org>
+ <20220227231227.9038-9-trondmy@kernel.org>
+ <20220227231227.9038-10-trondmy@kernel.org>
+ <20220227231227.9038-11-trondmy@kernel.org>
+ <20220227231227.9038-12-trondmy@kernel.org>
+ <20220227231227.9038-13-trondmy@kernel.org>
+ <20220227231227.9038-14-trondmy@kernel.org>
+ <20220227231227.9038-15-trondmy@kernel.org>
+ <A7BBBBF2-768E-487C-A890-7E5AF1D40027@redhat.com>
+ <28d6a094ddca6e4e6c15e055ec3ef6b10d57cbd3.camel@hammerspace.com>
 MIME-Version: 1.0
-In-Reply-To: <77a09978-a5aa-ea7f-04b8-a8d398ee325f@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.179.176]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-ping
+On 10 Mar 2022, at 15:15, Trond Myklebust wrote:
+>
+> The problem is really that 'ls' (or possibly glibc) is passing in a
+> pretty huge buffer to the getdents() system call.
+>
+> On my setup, that buffer appears to be 80K in size. So what happens is
+> that we get that first getdents() call, and so we fill the 80K buffer
+> with as many files as will fit. That can quickly run into several
+> thousand entries, if the filenames are relatively short.
+>
+> Then 'ls' goes through the contents and does a stat() (or a statx()) on
+> each entry, and so we record the statistics. However that means those
+> first several thousand entries are indeed going to use cached data, or
+> force GETATTR to go on the wire. We only start using forced readdirplus
+> on the second pass.
+>
+> Yes, I suppose we could limit getdents() to ignore the buffer size, and
+> just return fewer entries, however what's the "right" size in that
+> case?
 
-On 2021/12/1 16:21, lixiaokeng wrote:
-> The serial->data is not malloced separately (just part of
-> the serial), so it can't be freed. The bl_serial has its
-> own free function. Use it.
-> 
-> Signed-off-by: Lixiaokeng <lixiaokeng@huawei.com>
-> Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-> ---
->  utils/blkmapd/device-discovery.c | 15 +++------------
->  utils/blkmapd/device-discovery.h |  2 ++
->  utils/blkmapd/device-inq.c       |  4 ++--
->  3 files changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/utils/blkmapd/device-discovery.c b/utils/blkmapd/device-discovery.c
-> index 2736ac89..cea33496 100644
-> --- a/utils/blkmapd/device-discovery.c
-> +++ b/utils/blkmapd/device-discovery.c
-> @@ -187,10 +187,7 @@ static void bl_add_disk(char *filepath)
->  	}
-> 
->  	if (disk && diskpath) {
-> -		if (serial) {
-> -			free(serial->data);
-> -			free(serial);
-> -		}
-> +		bl_free_scsi_string(serial);
->  		return;
->  	}
-> 
-> @@ -228,10 +225,7 @@ static void bl_add_disk(char *filepath)
->  			disk->size = size;
->  			disk->valid_path = path;
->  		}
-> -		if (serial) {
-> -			free(serial->data);
-> -			free(serial);
-> -		}
-> +		bl_free_scsi_string(serial);
->  	}
->  	return;
-> 
-> @@ -241,10 +235,7 @@ static void bl_add_disk(char *filepath)
->  			free(path->full_path);
->  		free(path);
->  	}
-> -	if (serial) {
-> -		free(serial->data);
-> -		free(serial);
-> -	}
-> +	bl_free_scsi_string(serial);
->  	return;
->  }
-> 
-> diff --git a/utils/blkmapd/device-discovery.h b/utils/blkmapd/device-discovery.h
-> index a86eed99..462aa943 100644
-> --- a/utils/blkmapd/device-discovery.h
-> +++ b/utils/blkmapd/device-discovery.h
-> @@ -151,6 +151,8 @@ uint64_t process_deviceinfo(const char *dev_addr_buf,
-> 
->  extern ssize_t atomicio(ssize_t(*f) (int, void *, size_t),
->  			int fd, void *_s, size_t n);
-> +extern struct bl_serial *bl_create_scsi_string(int len, const char *bytes);
-> +extern void bl_free_scsi_string(struct bl_serial *str);
->  extern struct bl_serial *bldev_read_serial(int fd, const char *filename);
->  extern enum bl_path_state_e bldev_read_ap_state(int fd);
->  extern int bl_discover_devices(void);
-> diff --git a/utils/blkmapd/device-inq.c b/utils/blkmapd/device-inq.c
-> index c7952c3e..9e5749ef 100644
-> --- a/utils/blkmapd/device-inq.c
-> +++ b/utils/blkmapd/device-inq.c
-> @@ -53,7 +53,7 @@
->  #define DEF_ALLOC_LEN	255
->  #define MX_ALLOC_LEN	(0xc000 + 0x80)
-> 
-> -static struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
-> +struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
->  {
->  	struct bl_serial *s;
-> 
-> @@ -66,7 +66,7 @@ static struct bl_serial *bl_create_scsi_string(int len, const char *bytes)
->  	return s;
->  }
-> 
-> -static void bl_free_scsi_string(struct bl_serial *str)
-> +void bl_free_scsi_string(struct bl_serial *str)
->  {
->  	if (str)
->  		free(str);
-> 
+We can return fewer entries on the first call, so for the first pass the
+right size is NFS_READDIR_CACHE_MISS_THRESHOLD + 1.  I sent a patch.
+
+> More to the point, how much pain are we going to accept before we give
+> up trying these assorted heuristics, and just define a readdirplus()
+> system call modelled on statx()?
+
+We cursed ourselves by creating the heuristic, and now we've had to maintain
+it and try to make everyone happy.  The pain for us is when the behavior
+keeps changing after sites have come to rely on previous performance.
+
+I hope you can take a look at the patch.
+
+Ben
+
