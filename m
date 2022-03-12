@@ -2,108 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C79E94D6BE6
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Mar 2022 03:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A6854D6D7D
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Mar 2022 09:14:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230073AbiCLCPG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 11 Mar 2022 21:15:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57726 "EHLO
+        id S230283AbiCLIPG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 12 Mar 2022 03:15:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230057AbiCLCPC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 11 Mar 2022 21:15:02 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2511C1AD942;
-        Fri, 11 Mar 2022 18:13:53 -0800 (PST)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22C1Vdwt023826;
-        Sat, 12 Mar 2022 02:13:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2021-07-09;
- bh=ancRsNJ/fXVbrikDCqx4d3U/VLdR68Xz3Mugzj1HFQA=;
- b=PEd6Ggss685mhgrQO6MA41G/TDzyKrwdsgPlkjaRPQKSo/HEMECMF5hKWK75eiBqNLX9
- x5iCemgqdO9ixnjaKHhO4KRpkhDjDKM2Y8x5/VHt5HWwoQjnszSmI5VbWB/zWSvd+xcS
- Cr9g0t+ZdQCgT7c7jM4enwHxUOrNQoCChXqn9F2T0gmF7wiLAl8pzZq73i5CstzVY5x5
- ux58yd99jEW9J4OwScjaWL0l1Gg/3c7axZzns887g+ij4HTK4pbDZKjPBTlCqyiaQcS0
- 2GmI6RuLRSvkWSzrMYMCWZ8bIJ29siE1U4B9JqtkAojeVZ4jrHcaHUs0i+tbzLo/VQpb rg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3erhxcg0vb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Mar 2022 02:13:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22C2CA0V084327;
-        Sat, 12 Mar 2022 02:13:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 3erhj88qgh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Mar 2022 02:13:50 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 22C2DgMl086332;
-        Sat, 12 Mar 2022 02:13:49 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by aserp3030.oracle.com with ESMTP id 3erhj88qfe-12;
-        Sat, 12 Mar 2022 02:13:49 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, bfields@fieldses.org
-Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH RFC v16 11/11] NFSD: Show state of courtesy clients in client info
-Date:   Fri, 11 Mar 2022 18:13:35 -0800
-Message-Id: <1647051215-2873-12-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1647051215-2873-1-git-send-email-dai.ngo@oracle.com>
-References: <1647051215-2873-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-GUID: Q9B1b3rdXbWYzd5YvWpUdYtKF2Sr41zB
-X-Proofpoint-ORIG-GUID: Q9B1b3rdXbWYzd5YvWpUdYtKF2Sr41zB
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230113AbiCLIPG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 12 Mar 2022 03:15:06 -0500
+Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6F61261A;
+        Sat, 12 Mar 2022 00:14:00 -0800 (PST)
+Received: by nautica.notk.org (Postfix, from userid 108)
+        id 7F113C020; Sat, 12 Mar 2022 09:13:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1647072836; bh=jFy3V5tJygVoG+31/6kc8XlbG5/C7Z4Td0QKNDh9/WU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=busjI0t7vgzULY8jXBsjcE6B8BrO6/e1n352++NjPRTXLTBOuK7XBO6As8kBlRnwV
+         T4jabpmD0ADkGHN57LmECyjH+mS/nMWJ93nxoPtHJTM0a61Il4V0mjGyog1I8diFL1
+         TWyq91VE4qWaDm/WWL948pRLP85S1yWoRgdS/q22+u8ffNdnSuPyU2V9SIIkgbq8UU
+         VKmJ/yrzKkjJqjgtTmTZMb7bnIXYpm5/HG4/vnrXgePXpNUOnS/UZgktyp7FMtd+2S
+         smMi2f+b5FY162ibvUm6R+rnwx6dJi4Kvlq7UFYlNbmz1fnMqBr9xAh2Pguhnp8tfE
+         fTnd+bfqV6E1g==
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Received: from odin.codewreck.org (localhost [127.0.0.1])
+        by nautica.notk.org (Postfix) with ESMTPS id 1ADC3C009;
+        Sat, 12 Mar 2022 09:13:50 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
+        t=1647072835; bh=jFy3V5tJygVoG+31/6kc8XlbG5/C7Z4Td0QKNDh9/WU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iSKF4cf4U0hmfSjiK8vQqls/D/IdiX53/xbtJCnilU20M24d8ieUWHg3NYDYmC7Jj
+         HWTZ/dgs1XPBXRpO4znrreaXG2trQiKcivKx9K7+h95oxej/WvQbITBQxI3SEO0sq/
+         48iK7CoijX4VI0/vm1uuI0RI4UlXC5l9qf+322YcqDE3knM4dGf3gYZ/bjCzv89rWX
+         shs44QSDOm4XstiOgZPhFXhohmVIL9f0I+JcolbPqqvHNA9yG6VJeW7Bux5xs4Fz10
+         mWZY/vKUwk16AeA3GuzQQzWI03/GehZ6uU5nDerRoSYRrqDcQjmf7IFkgWCMBpPvTR
+         VEskXuzquTMeQ==
+Received: from localhost (odin.codewreck.org [local])
+        by odin.codewreck.org (OpenSMTPD) with ESMTPA id 72c8ef7a;
+        Sat, 12 Mar 2022 08:13:47 +0000 (UTC)
+Date:   Sat, 12 Mar 2022 17:13:32 +0900
+From:   Dominique Martinet <asmadeus@codewreck.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, ceph-devel@vger.kernel.org,
+        Jeff Layton <jlayton@redhat.com>,
+        linux-afs@lists.infradead.org,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Steve French <sfrench@samba.org>,
+        David Wysochanski <dwysocha@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/20] netfs: Prep for write helpers
+Message-ID: <YixWLJXyWtD+STvl@codewreck.org>
+References: <164692883658.2099075.5745824552116419504.stgit@warthog.procyon.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <164692883658.2099075.5745824552116419504.stgit@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Update client_info_show to show state of courtesy client
-and time since last renew.
+David Howells wrote on Thu, Mar 10, 2022 at 04:13:56PM +0000:
+> The patches can be found on this branch:
+> 
+> 	http://git.kernel.org/cgit/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-next
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+Looks good to me from the 9p side:
+Tested-by: Dominique Martinet <asmadeus@codewreck.org> # 9p
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 17b5d5b202c1..79f60bb7be76 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2438,7 +2438,8 @@ static int client_info_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
- 	struct nfs4_client *clp;
--	u64 clid;
-+	u64 clid, hrs;
-+	u32 mins, secs;
- 
- 	clp = get_nfsdfs_clp(inode);
- 	if (!clp)
-@@ -2446,10 +2447,16 @@ static int client_info_show(struct seq_file *m, void *v)
- 	memcpy(&clid, &clp->cl_clientid, sizeof(clid));
- 	seq_printf(m, "clientid: 0x%llx\n", clid);
- 	seq_printf(m, "address: \"%pISpc\"\n", (struct sockaddr *)&clp->cl_addr);
--	if (test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags))
-+	if (test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags))
-+		seq_puts(m, "status: courtesy\n");
-+	else if (test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags))
- 		seq_puts(m, "status: confirmed\n");
- 	else
- 		seq_puts(m, "status: unconfirmed\n");
-+	hrs = div_u64_rem(ktime_get_boottime_seconds() - clp->cl_time,
-+				3600, &secs);
-+	mins = div_u64_rem((u64)secs, 60, &secs);
-+	seq_printf(m, "time since last renew: %llu:%02u:%02u\n", hrs, mins, secs);
- 	seq_printf(m, "name: ");
- 	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
- 	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
+writes being done by 4k chunk is really slow so will be glad to see this
+finished, keep it up! :)
+
 -- 
-2.9.5
-
+Dominique
