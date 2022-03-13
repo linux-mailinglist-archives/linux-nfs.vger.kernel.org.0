@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5852D4D772E
+	by mail.lfdr.de (Postfix) with ESMTP id EF2EC4D7730
 	for <lists+linux-nfs@lfdr.de>; Sun, 13 Mar 2022 18:12:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234471AbiCMRNQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 13 Mar 2022 13:13:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60430 "EHLO
+        id S235111AbiCMRNT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 13 Mar 2022 13:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235094AbiCMRNP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Mar 2022 13:13:15 -0400
+        with ESMTP id S235096AbiCMRNQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Mar 2022 13:13:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8FDE139CDD
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 10:12:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 529D8139CDA
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 10:12:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7160660FCF
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5F8F61228
         for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 17:12:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8357C36AE2
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 17:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D15EC340E8
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 17:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647191526;
-        bh=3hlHmJ7y0zceBlGOpowl6AQLq3X+S/rQbhpa0NQYrmg=;
+        s=k20201202; t=1647191527;
+        bh=yLr8IkkHWvZRHwxq1yjZixPXjlXDD2Jltl9nkaxNcXo=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=YZzwzAQspsb25hwj9uJt20/TgDrzb1hVfHwxnMN09MBSAbnlZh1A4Y71+stU2eBR/
-         XCTtV2hNJRiNgbm0HbgUFe6qjct9SPNA5AhU13hnAoC75qPjew+kphc+b1/eiDAErI
-         ADHOIZOYAP6wr3t7aTUnAMqPN/x0KhSR/myR7wukDXM7xTC28KanOiaD/yB2F9MeQC
-         ujOMTwFNMrGexH0lAYrjRlo8k95RgF7RGw4bCe/39jUgOv8wJ5vwDozhq2Nv7mAz6U
-         eP+cC3zeivgOJCWX51Y1nYynd/XwOE7+YiSUHLwZg5eSXYw3fPdrUCo6NSnvgW5QxD
-         wgndEOTU+QJmA==
+        b=WukW4CIeIu2r/LxJR7LYZPOK/+2j/hDE0D8HkPkfUoeHRutG7t1eGur3exuArKhfR
+         VFwOnTHlUrzgk7NxI/Jf/I7Yhr16ZjnWekRvF9icrhtofTXZ6Qg4YWALTqg3Xahsfi
+         vsdwMic7YMZYY5Nd9IcRSVoLnsR3NFWNzKCrEPWnkSqo0eC+eCLGmeVKpwbECKGo66
+         38xYae9JuZqyA9hJMLYJ51LFFCxPCqgNCBJ4rW4FwsTOMvkhOSzagw06kBNU72I0uP
+         14DC0yXvJy77cDCW7KmUMRwWMj5MLXhhurg/iil3cE0QrbpgpA5KaLugaZNXkxcxzX
+         TP3q0ABuWOY3Q==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v10 08/26] NFS: Don't re-read the entire page cache to find the next cookie
-Date:   Sun, 13 Mar 2022 13:05:39 -0400
-Message-Id: <20220313170557.5940-9-trondmy@kernel.org>
+Subject: [PATCH v10 09/26] NFS: Don't advance the page pointer unless the page is full
+Date:   Sun, 13 Mar 2022 13:05:40 -0400
+Message-Id: <20220313170557.5940-10-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220313170557.5940-8-trondmy@kernel.org>
+In-Reply-To: <20220313170557.5940-9-trondmy@kernel.org>
 References: <20220313170557.5940-1-trondmy@kernel.org>
  <20220313170557.5940-2-trondmy@kernel.org>
  <20220313170557.5940-3-trondmy@kernel.org>
@@ -46,6 +46,7 @@ References: <20220313170557.5940-1-trondmy@kernel.org>
  <20220313170557.5940-6-trondmy@kernel.org>
  <20220313170557.5940-7-trondmy@kernel.org>
  <20220313170557.5940-8-trondmy@kernel.org>
+ <20220313170557.5940-9-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -60,70 +61,93 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If the page cache entry that was last read gets invalidated for some
-reason, then make sure we can re-create it on the next call to readdir.
-This, combined with the cache page validation, allows us to reuse the
-cached value of page-index on successive calls to nfs_readdir.
+When we hit the end of the data in the readdir page, we don't want to
+start filling a new page, unless this one is full.
 
-Credit is due to Benjamin Coddington for showing that the concept works,
-and that it allows for improved cache sharing between processes even in
-the case where pages are lost due to LRU or active invalidation.
-
-Suggested-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c           | 10 +++++++---
- include/linux/nfs_fs.h |  1 +
- 2 files changed, 8 insertions(+), 3 deletions(-)
+ fs/nfs/dir.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index a1767f755460..93f70698e401 100644
+index 93f70698e401..60f7feee0a16 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -1120,6 +1120,8 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	desc->dup_cookie = dir_ctx->dup_cookie;
- 	desc->duped = dir_ctx->duped;
- 	page_index = dir_ctx->page_index;
-+	desc->page_index = page_index;
-+	desc->last_cookie = dir_ctx->last_cookie;
- 	desc->attr_gencount = dir_ctx->attr_gencount;
- 	desc->eof = dir_ctx->eof;
- 	memcpy(desc->verf, dir_ctx->verf, sizeof(desc->verf));
-@@ -1168,6 +1170,7 @@ static int nfs_readdir(struct file *file, struct dir_context *ctx)
- 	spin_lock(&file->f_lock);
- 	dir_ctx->dir_cookie = desc->dir_cookie;
- 	dir_ctx->dup_cookie = desc->dup_cookie;
-+	dir_ctx->last_cookie = desc->last_cookie;
- 	dir_ctx->duped = desc->duped;
- 	dir_ctx->attr_gencount = desc->attr_gencount;
- 	dir_ctx->page_index = desc->page_index;
-@@ -1209,10 +1212,11 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+@@ -417,6 +417,18 @@ bool nfs_readdir_use_cookie(const struct file *filp)
+ 	return true;
+ }
+ 
++static void nfs_readdir_seek_next_array(struct nfs_cache_array *array,
++					struct nfs_readdir_descriptor *desc)
++{
++	if (array->page_full) {
++		desc->last_cookie = array->last_cookie;
++		desc->current_index += array->size;
++		desc->cache_entry_index = 0;
++		desc->page_index++;
++	} else
++		desc->last_cookie = array->array[0].cookie;
++}
++
+ static int nfs_readdir_search_for_pos(struct nfs_cache_array *array,
+ 				      struct nfs_readdir_descriptor *desc)
+ {
+@@ -428,6 +440,7 @@ static int nfs_readdir_search_for_pos(struct nfs_cache_array *array,
+ 	if (diff >= array->size) {
+ 		if (array->page_is_eof)
+ 			goto out_eof;
++		nfs_readdir_seek_next_array(array, desc);
+ 		return -EAGAIN;
  	}
- 	if (offset != filp->f_pos) {
- 		filp->f_pos = offset;
--		if (nfs_readdir_use_cookie(filp))
--			dir_ctx->dir_cookie = offset;
+ 
+@@ -500,7 +513,8 @@ static int nfs_readdir_search_for_cookie(struct nfs_cache_array *array,
+ 		status = -EBADCOOKIE;
+ 		if (desc->dir_cookie == array->last_cookie)
+ 			desc->eof = true;
+-	}
++	} else
++		nfs_readdir_seek_next_array(array, desc);
+ out:
+ 	return status;
+ }
+@@ -517,11 +531,6 @@ static int nfs_readdir_search_array(struct nfs_readdir_descriptor *desc)
+ 	else
+ 		status = nfs_readdir_search_for_cookie(array, desc);
+ 
+-	if (status == -EAGAIN) {
+-		desc->last_cookie = array->last_cookie;
+-		desc->current_index += array->size;
+-		desc->page_index++;
+-	}
+ 	kunmap_atomic(array);
+ 	return status;
+ }
+@@ -998,7 +1007,7 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc,
+ {
+ 	struct file	*file = desc->file;
+ 	struct nfs_cache_array *array;
+-	unsigned int i = 0;
++	unsigned int i;
+ 
+ 	array = kmap(desc->page);
+ 	for (i = desc->cache_entry_index; i < array->size; i++) {
+@@ -1011,10 +1020,13 @@ static void nfs_do_filldir(struct nfs_readdir_descriptor *desc,
+ 			break;
+ 		}
+ 		memcpy(desc->verf, verf, sizeof(desc->verf));
+-		if (i < (array->size-1))
+-			desc->dir_cookie = array->array[i+1].cookie;
 -		else
-+		if (!nfs_readdir_use_cookie(filp)) {
- 			dir_ctx->dir_cookie = 0;
-+			dir_ctx->page_index = 0;
-+		} else
-+			dir_ctx->dir_cookie = offset;
- 		if (offset == 0)
- 			memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
- 		dir_ctx->duped = 0;
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index 6e10725887d1..1c533f2c1f36 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -105,6 +105,7 @@ struct nfs_open_dir_context {
- 	__be32	verf[NFS_DIR_VERIFIER_SIZE];
- 	__u64 dir_cookie;
- 	__u64 dup_cookie;
-+	__u64 last_cookie;
- 	pgoff_t page_index;
- 	signed char duped;
- 	bool eof;
++		if (i == array->size - 1) {
+ 			desc->dir_cookie = array->last_cookie;
++			nfs_readdir_seek_next_array(array, desc);
++		} else {
++			desc->dir_cookie = array->array[i + 1].cookie;
++			desc->last_cookie = array->array[0].cookie;
++		}
+ 		if (nfs_readdir_use_cookie(file))
+ 			desc->ctx->pos = desc->dir_cookie;
+ 		else
 -- 
 2.35.1
 
