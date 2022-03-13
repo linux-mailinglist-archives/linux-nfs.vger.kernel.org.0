@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6C524D7717
-	for <lists+linux-nfs@lfdr.de>; Sun, 13 Mar 2022 18:12:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3A584D772F
+	for <lists+linux-nfs@lfdr.de>; Sun, 13 Mar 2022 18:12:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235089AbiCMRNV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 13 Mar 2022 13:13:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60522 "EHLO
+        id S235112AbiCMRNU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 13 Mar 2022 13:13:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235113AbiCMRNT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Mar 2022 13:13:19 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25A39139CFE
-        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 10:12:11 -0700 (PDT)
+        with ESMTP id S235089AbiCMRNR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 13 Mar 2022 13:13:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC227139CDA
+        for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 10:12:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id BB58FB80CAD
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77EE460FDD
         for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 17:12:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B671C340E8
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0DC5C340F6
         for <linux-nfs@vger.kernel.org>; Sun, 13 Mar 2022 17:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1647191528;
-        bh=nXGvvAaZjXNCImpZyKPlB83LM1gB9xUedQJdbZ0r3WE=;
+        bh=8lRolItTloqfN5M+Lqc6/wyGKRBsorfh9R80QBz5eTQ=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=SWzuSGBASmChi4lR9zdhwhD9hWO7MGt5mxBbuYV6amxChxyYCFXyo4QkSE+jkO/v9
-         gHlA7z6J+y0tC/TfD3YyZDZ43DsnvF60mnKA46pqKA6rHpsAk2Pu861uKS0xPihm6d
-         Jpd3tyS1IlAA2OIG4bDiloVeEbyAn5jrMxhqx0qqP+hfrBx/sKMNRxvaUuFGtN35cZ
-         mqW2yqXHfhm0rg0WXk8fpkNnmKgonBzRP2Ls0/3zR+f6lZYpqe2HtOJ/llN+bfdv1A
-         sJDjNMGplH4yqUU9c//Fe2EeOSP6bdik/0H/mt+FXQ1ZzqckqK8nqDDYIMFXeJexQg
-         sg8Eo/SwPK3zg==
+        b=SyOk7GOGDynq+pqTVrLDrFp4V6mA2KjNHpKjko6ZMVGFPTDHYcmkgFSVz85yhYALx
+         vjyqd9ry/2JTaIZXULjVLmQ+YFfCaLWmWV9PeCiJ1i17p35lIKCKeSXOlcNci9G9e1
+         8uno0pKruypU38hkQjC7n4Bs8SHTeP2n59CEs84ohZM8xbyvcXiYJq8WtP/AgUTr3F
+         Ykpf9mJMLdIjJpjtfe25alFpdlrDgSc+VHYPBKdpe/Mxqev6vbWwZXit92qifnX1So
+         CfdPdBW+NzlV77XoNi6IXX/ns9YHOihv4A5wnt9vUF8XRR2QXCWunnkdGKDKK3ARmC
+         6eTB29W/zgOHA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v10 12/26] NFS: Simplify nfs_readdir_xdr_to_array()
-Date:   Sun, 13 Mar 2022 13:05:43 -0400
-Message-Id: <20220313170557.5940-13-trondmy@kernel.org>
+Subject: [PATCH v10 13/26] NFS: Reduce use of uncached readdir
+Date:   Sun, 13 Mar 2022 13:05:44 -0400
+Message-Id: <20220313170557.5940-14-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220313170557.5940-12-trondmy@kernel.org>
+In-Reply-To: <20220313170557.5940-13-trondmy@kernel.org>
 References: <20220313170557.5940-1-trondmy@kernel.org>
  <20220313170557.5940-2-trondmy@kernel.org>
  <20220313170557.5940-3-trondmy@kernel.org>
@@ -50,6 +50,7 @@ References: <20220313170557.5940-1-trondmy@kernel.org>
  <20220313170557.5940-10-trondmy@kernel.org>
  <20220313170557.5940-11-trondmy@kernel.org>
  <20220313170557.5940-12-trondmy@kernel.org>
+ <20220313170557.5940-13-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -64,66 +65,64 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Recent changes to readdir mean that we can cope with partially filled
-page cache entries, so we no longer need to rely on looping in
-nfs_readdir_xdr_to_array().
+When reading a very large directory, we want to try to keep the page
+cache up to date if doing so is inexpensive. With the change to allow
+readdir to continue reading even when the cache is incomplete, we no
+longer need to fall back to uncached readdir in order to scale to large
+directories.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/dir.c | 29 +++++++++++------------------
- 1 file changed, 11 insertions(+), 18 deletions(-)
+ fs/nfs/dir.c | 23 +++--------------------
+ 1 file changed, 3 insertions(+), 20 deletions(-)
 
 diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 9998d7d17367..9d086ab4f889 100644
+index 9d086ab4f889..dc6acfd14fc7 100644
 --- a/fs/nfs/dir.c
 +++ b/fs/nfs/dir.c
-@@ -889,6 +889,7 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 	size_t array_size;
- 	struct inode *inode = file_inode(desc->file);
- 	unsigned int dtsize = desc->dtsize;
-+	unsigned int pglen;
- 	int status = -ENOMEM;
+@@ -999,28 +999,11 @@ static int find_and_lock_cache_page(struct nfs_readdir_descriptor *desc)
+ 	return res;
+ }
  
- 	entry = kzalloc(sizeof(*entry), GFP_KERNEL);
-@@ -906,28 +907,20 @@ static int nfs_readdir_xdr_to_array(struct nfs_readdir_descriptor *desc,
- 	if (!pages)
- 		goto out;
- 
--	do {
--		unsigned int pglen;
--		status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie,
--						pages, dtsize,
--						verf_res);
--		if (status < 0)
--			break;
+-static bool nfs_readdir_dont_search_cache(struct nfs_readdir_descriptor *desc)
+-{
+-	struct address_space *mapping = desc->file->f_mapping;
+-	struct inode *dir = file_inode(desc->file);
+-	unsigned int dtsize = NFS_SERVER(dir)->dtsize;
+-	loff_t size = i_size_read(dir);
 -
--		pglen = status;
--		if (pglen == 0) {
--			nfs_readdir_page_set_eof(page);
--			break;
--		}
+-	/*
+-	 * Default to uncached readdir if the page cache is empty, and
+-	 * we're looking for a non-zero cookie in a large directory.
+-	 */
+-	return desc->dir_cookie != 0 && mapping->nrpages == 0 && size > dtsize;
+-}
 -
--		verf_arg = verf_res;
-+	status = nfs_readdir_xdr_filler(desc, verf_arg, entry->cookie, pages,
-+					dtsize, verf_res);
-+	if (status < 0)
-+		goto free_pages;
+ /* Search for desc->dir_cookie from the beginning of the page cache */
+ static int readdir_search_pagecache(struct nfs_readdir_descriptor *desc)
+ {
+ 	int res;
  
-+	pglen = status;
-+	if (pglen != 0)
- 		status = nfs_readdir_page_filler(desc, entry, pages, pglen,
- 						 arrays, narrays);
--		desc->buffer_fills++;
--	} while (!status && nfs_readdir_page_needs_filling(page) &&
--		page_mapping(page));
-+	else
-+		nfs_readdir_page_set_eof(page);
-+	desc->buffer_fills++;
- 
-+free_pages:
- 	nfs_readdir_free_pages(pages, array_size);
- out:
- 	nfs_free_fattr(entry->fattr);
+-	if (nfs_readdir_dont_search_cache(desc))
+-		return -EBADCOOKIE;
+-
+ 	do {
+ 		if (desc->page_index == 0) {
+ 			desc->current_index = 0;
+@@ -1273,10 +1256,10 @@ static loff_t nfs_llseek_dir(struct file *filp, loff_t offset, int whence)
+ 	}
+ 	if (offset != filp->f_pos) {
+ 		filp->f_pos = offset;
+-		if (!nfs_readdir_use_cookie(filp)) {
++		dir_ctx->page_index = 0;
++		if (!nfs_readdir_use_cookie(filp))
+ 			dir_ctx->dir_cookie = 0;
+-			dir_ctx->page_index = 0;
+-		} else
++		else
+ 			dir_ctx->dir_cookie = offset;
+ 		if (offset == 0)
+ 			memset(dir_ctx->verf, 0, sizeof(dir_ctx->verf));
 -- 
 2.35.1
 
