@@ -2,168 +2,227 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74D8C4D8C54
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Mar 2022 20:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FA704D8D95
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Mar 2022 20:58:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244014AbiCNT0r (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Mar 2022 15:26:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34446 "EHLO
+        id S244773AbiCNT7n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Mar 2022 15:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236868AbiCNT0q (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 15:26:46 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2097.outbound.protection.outlook.com [40.107.236.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CF643B3E6;
-        Mon, 14 Mar 2022 12:25:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fOTyZXObRwttY8AK/HU71+sCPhfs1r4rlZWoAHRI26jP5OdDWCwRNfXIvV3tbdrOuCrDim2YgXgTVkjh2HqnICVDkFhtFFzLfGWRI1zjjCLxpcUz7kHs8IQH55rK5zpbMxzN2PFWm2yfRk8OKNq/E9cMxVt8by2zCYOK9cH2gPAuPeQdOtx1OwCI68tF30nnUnzB+rIF1Sw8RyczVZUmglgEvy5fPbXKOsbuaVVG6qrGra6Tae5MSsq9xeDnL06xZg5e04O8o4ltOy7lXQmy9hWPsMIjHmcSbbHFUELXnp4lTu83yi+8DKyB4+O4N5z0eDNZCmHYM1Og6aog2g494Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L9N3eMc4bjFuRMI13t0dPGIERnMbdcveBUuuik34wfo=;
- b=SZ0D7glPb7ISIXnviqp5VwwnKtIGrwRvxabnpvLcDd3Y84DeQhYbYhXoAJhTF9FeQrPh0Xi5KzHJYVJmQKo7dVRYrdpa1pVg4KyCiCRzxihDl6OR3j5hd6qeqlO4bS3MDzDBBC0LKIiMwBzf3SSatjsIQAxWEVLsDjwUXMSwIkHGi+gDY8T3AYjhZRsp40fOYDgUzVIQABvX5JlgsvYWd7PMZQSMQNc4Qil2vlGUBrL6BixPmesc3dZgCa9fGgHvLQi+cmXOoJJ6n7DiY8vdmLIZS4oXozUZiTYj8uGoqHQjrVNfKJ6NHucl9YN5kD/WcYMH/TZ+ddwV4UW36eCb0A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L9N3eMc4bjFuRMI13t0dPGIERnMbdcveBUuuik34wfo=;
- b=Lkn/xR41klBdHY60ZFQL2lYAl+5L2tNV70GfsiXRwu2ykiUpkQB2SnMA558H62P2JqKBWO98Kk5X/zpGx6ybyRVcCJ2RmROpgUWGTxBj1LqrM+BSybBqKoxDSlYKK+g0g/HkQJpXVcfWc6mOkbpZOUQSAXb1kjGukhDK7eP0jUE=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM5PR13MB1610.namprd13.prod.outlook.com (2603:10b6:3:126::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.13; Mon, 14 Mar
- 2022 19:25:32 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f%9]) with mapi id 15.20.5081.013; Mon, 14 Mar 2022
- 19:25:32 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "anna@kernel.org" <anna@kernel.org>,
-        "harshit.m.mogalapalli@oracle.com" <harshit.m.mogalapalli@oracle.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+        with ESMTP id S244473AbiCNT7m (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 15:59:42 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C643AFD36;
+        Mon, 14 Mar 2022 12:58:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1647287911; x=1678823911;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AZvtWyq6NUGvNj5osgER37WrvoGpAL79tCPZIhK8DII=;
+  b=ZV8+1idyOccFv0zrFkjRFdYqeOmN9G3uzCfIP2+E6+8S/KOznSWnskit
+   tittZdJtqJSlB8fGttA+g+tpAlfya8UkIytMWaQl2H3Sp5y5Hw47+ABfh
+   RqpobG4rY6hMsRAOF5RgzM3zGPJ/13VZkznV7iB2rqg0LYsJ514USgtRi
+   xr1sSW+AQM2/mVePmYGZFnzsqlGyn7L2Z4OUgntIxKhFVIDOko4PKlpv+
+   jlp5BQOOEI3lJnGoCh6SK2LM/+Ro2LDdGyZLrNB+7Dmzn5SOx3EjljRu3
+   Y0ua3twQqOZ0grWHBkUAzaoBCkQWMq6H+Q/up9ksEOG1bSfSX6g8nNzkP
+   g==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10286"; a="255863798"
+X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
+   d="scan'208";a="255863798"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2022 12:58:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,181,1643702400"; 
+   d="scan'208";a="713875781"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 14 Mar 2022 12:58:27 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nTqpm-000ABd-Fc; Mon, 14 Mar 2022 19:58:26 +0000
+Date:   Tue, 15 Mar 2022 03:57:36 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Dan Carpenter <error27@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc:     llvm@lists.linux.dev, kbuild-all@lists.01.org,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 Subject: Re: [PATCH] NFSD: prevent integer overflow on 32 bit systems
-Thread-Topic: [PATCH] NFSD: prevent integer overflow on 32 bit systems
-Thread-Index: AQHYN606RPyyWL+vCkesSws2pKKZoqy+9RWAgAAmfQCAABEwgIAAFmwA
-Date:   Mon, 14 Mar 2022 19:25:32 +0000
-Message-ID: <a7ec2df0162554c5cb72a14f038819a695b780a1.camel@hammerspace.com>
+Message-ID: <202203150321.2NA8SWEv-lkp@intel.com>
 References: <20220314140958.GE30883@kili>
-         <251A4166-DCCD-4C84-9819-F350D17A7298@oracle.com>
-         <20220314170344.GT3315@kadam>
-         <D5859D5C-229F-4377-98FE-314EE2C80721@oracle.com>
-In-Reply-To: <D5859D5C-229F-4377-98FE-314EE2C80721@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 78005c9d-ba8c-4dbc-3b5e-08da05f0681e
-x-ms-traffictypediagnostic: DM5PR13MB1610:EE_
-x-microsoft-antispam-prvs: <DM5PR13MB1610012DA2E38C652899FA06B80F9@DM5PR13MB1610.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RD9AQEpSx5yMnmOOkzd3Lvp8ZUI0+p+zu5OeIFGGLH4Q3Fnd3o0XoKejiGGUekCanO4rbaZ2x2eAzcmfC/D/mkxs12jV6tMLwrELWlvZILkp5ehpIUkAbL3kr/oNoTqQuf36KHBePc2hPkeLjuD7Y/HVXBKz474HjrGPfzwlivBRnzn3rA1vXMzOKXgd0bdRPsFQplr6RKrJFFv7XMDZvsSxYJy6gydW48J1AyIu3S0cHT6M1rIKccXI7Pbl1Sf9ZQBLx789fR2Pf0Se7gCMZIEXAIFxfKA8l93A6U6EsM/3NtGkw9ggwntwDqqjt/+5DolkVoWJV2uXoCQQ6EZvJ4UqV7Bfgodj4Jl7tN78yobWcrC7uByTkGHtn2NnOXH/U1NjPCOEyVQHHYhRfStuk5wnpAXM1rEQXJysPoopt6ilKSrMUs/X2lDaX3SwPz7SEB4r0SvdsODWbShLqMYG9uhN77JSbLK04+v04nTxSiG6G8Ze5iHOgbXVgf5kHbtOlEmiJrcF2yb6GQfKerJO5XnmPk9RgyX2UMblOwOh8NyTqc89+oBuO6PloCKxx1wtbyQ7GOi7UhYv8Uhv1CXgy8hwKIDM535LdiRl743DQ4D9Lu0LooBzRrljm4ITZtCIu8nqH2qTSzB1mVk/6A3wxR1a+j7DU+nArrILu1zXwvSDArcVw9nqrvQMjNd/x1hy5hO0/eczqNBGR4tLGAz9KQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(316002)(6506007)(76116006)(6512007)(110136005)(54906003)(508600001)(66556008)(66476007)(66446008)(64756008)(66946007)(36756003)(8676002)(4326008)(6486002)(71200400001)(38070700005)(122000001)(86362001)(2906002)(2616005)(8936002)(53546011)(38100700002)(5660300002)(26005)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?RGlmdDhEeU5KdVNHZlB5WlpwMDM0Q3NEMVdQU0tJRVFlQXlwYkljWmIvUkNx?=
- =?utf-8?B?Nk5DRk5XOWsvSFFLczFYUTY2V3ZPYjBGUHY3OXEyMmlIQlJublIvTUtCdExX?=
- =?utf-8?B?UTYzTFhnQlFsNGdTNGpzYTNpWkwxM0pjVHJzYWtSQ24wUittbWxrSVQ1VUFX?=
- =?utf-8?B?b3g4VDVWa05DQlNlSEtkNWIwWUZKdTF2ZVJ0S3huN3dpWExIZ29NZnAzcnJU?=
- =?utf-8?B?aDI3cUhjc1ZDZHYreCtCbkYveWVxWWZsUlpBbDg2a1dQQ2JrY0VzNFBGTmp3?=
- =?utf-8?B?R2t2YVo1dHRqaERXeXN2UjVRQ09ueDErT3RsaTBCZGt0N3pmMFZMaHRaNTJ1?=
- =?utf-8?B?aG9OQTNBT0lwOGtBdU5ld0FFOHFXdjlOSXZLeU93TWlCWEM0VW5kSkxJeGk5?=
- =?utf-8?B?MU1EM2FsOWhkandvbm42Nk84UkVTRzNqN1NmRmRzNTQ4Z3dsNzE1a253ZDNp?=
- =?utf-8?B?NVZ1QzU3ZFRaa1ZUSG93R25JeDVNb2NXajJLM2ZMTW9QcHUrMmp4UmIzdWpH?=
- =?utf-8?B?UjJtVXBaaHZjTnBEdmFhWU5aRVZTSURLRDJvYW55VjJMN3hIYTNPNHUrMDRZ?=
- =?utf-8?B?cndwQk1tYmwyVW14cXQxeVFaenZKVWlpeVNJYzMyL1R5V0UxUUFzNllTRlFp?=
- =?utf-8?B?Y0xlRlNjRFBwWnh3Nzl0b1JmMGlMMXBQeEhDclhxKzVIMWd0NWcraXI3S1Vv?=
- =?utf-8?B?QjVjK2dsaG01WEFCcUh4WmlCR0l3QzZnaTAvRmZia2srQ2ZWaDhkOU8yblUz?=
- =?utf-8?B?a3BtMHRWazVqdTRzdDhnZ01iRWxldXFjVkh4MWlTR2ZYbnpmZ0k2RlBIcnRZ?=
- =?utf-8?B?RGxDUVVLbDdTT3ozVEJRMGQ1dFVaMG0rV3pHeFVYdUhkaWN2YTVVMWhjR1Nq?=
- =?utf-8?B?VnpYa2lzK004SzZIb2NUOVVMTGFFQzN2WlR0QWhhUHJZSkF2VkdvaFdTS2xu?=
- =?utf-8?B?RVIyTTBWN3NFd0s1SzZ0NkIzc2pkZktxUWxMWUZEbzFtdmRNZytOTGJ3M3pI?=
- =?utf-8?B?cnd3ZmVack5vbWJDaGZiTS9pelljS0tzb2NvWDZPMnUzL2hJb08yTWcyMzAx?=
- =?utf-8?B?THVFb2NBREd2aU1QOFdaeGZYVUtDM2xEK3hDT0FqNWRXcFJ6Y055UHJza1Uz?=
- =?utf-8?B?SVlsVFZBbFpkczZkNlZZWlNOMXdsdlhtb2RFTnFQS3k0TTc5Kzl1a2sySyt3?=
- =?utf-8?B?MTVNcnEyNnp6UmRjVUpvakdmTEdkTlIxSGdLVDdacW5LY0xTQW9sQVA2S2ZS?=
- =?utf-8?B?dCtTeWVheU9CMHBSY0k3WGpZcTl6cmtNRk1WNEhoR3c0Y0RidjFQZnpEUmh1?=
- =?utf-8?B?bFBiZDI5am53dml0QzdsdWRRQXVRZ1crRUFISzVwV0UwTWNRWHpZUCsrc0JL?=
- =?utf-8?B?NjlONU5EREI5bnpYSGt1Y1l1czdxd1lHSmxPNWRiOHpsQ0dhL2psMW9MYVk4?=
- =?utf-8?B?RWlTZkhGbFNsTzllTVJKVythQ1FPcGhJOEdtSVlTQ1BOMGo5Z0duMTFmUkph?=
- =?utf-8?B?RmRxT3RNTTUzbm1LaE90eUpDNTM5YjBPcjNaU3VmTTd3QzFpd0EzVEVlZVhS?=
- =?utf-8?B?ZnVneHVBZmVHdUNFVytMY0p0bUFnNEN2WU1KVklQVzhUNzNyU1pBQ2lpdVll?=
- =?utf-8?B?b1Bac0ttc2Z5eEhHSFhZRHFDNnAzeEhRYS80TFkvZVBVTmxyd29VQ0FxdzVG?=
- =?utf-8?B?MG1VZkEwMU1OcElqbXZ2eWtDMFMxSFVUeTBxSGJsVVFrVDBNSHJZQnpDeDlS?=
- =?utf-8?B?aGh2MDViUTFXdGEyUFVBU3Vjdk1hbHhOTU9ZTjRiLzNDMFFrL1lGdUcvTzd4?=
- =?utf-8?B?QlBqSlNJQ2dQYzBBMHA4RmZ6UG9BSkwrTU4xVGtSS0QxaTRGWksvWnNVS1F5?=
- =?utf-8?B?L2YydDM0MjFCK1craUJsK0VlUFJEWk93YTNHVWZFSXoyNTcyUzhaY09Cd2lC?=
- =?utf-8?B?bG90OElKU0tldTBiM1d4Y1U3TW9CcUxjZ0FsV3ZSU0VHRi9QMVRDOW9UVEMy?=
- =?utf-8?B?dUhPc0Rwd0JBPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <483DE023EC986E4E9D580E789EE6EAE9@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78005c9d-ba8c-4dbc-3b5e-08da05f0681e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2022 19:25:32.2510
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nnlpfy4eG0xkgnUpBpYnIvlEwCl9aIf38A87QiYk561RasYNgJBvc7kRbQ9/A95lspwS6p7UtDDx/bW1v1yItw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1610
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220314140958.GE30883@kili>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIyLTAzLTE0IGF0IDE4OjA1ICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IA0KPiANCj4gPiBPbiBNYXIgMTQsIDIwMjIsIGF0IDE6MDMgUE0sIERhbiBDYXJwZW50ZXIN
-Cj4gPiA8ZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tPiB3cm90ZToNCj4gPiANCj4gPiBPbiBNb24s
-IE1hciAxNCwgMjAyMiBhdCAwNTo0NTo1OVBNICswMzAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+ID4gPiBIaSBEYW4tDQo+ID4gPiANCj4gPiA+ID4gT24gTWFyIDE0LCAyMDIyLCBhdCAxMDow
-OSBBTSwgRGFuIENhcnBlbnRlcg0KPiA+ID4gPiA8ZGFuLmNhcnBlbnRlckBvcmFjbGUuY29tPiB3
-cm90ZToNCj4gPiA+ID4gDQo+ID4gPiA+IE9uIGEgMzIgYml0IHN5c3RlbSwgdGhlICJsZW4gKiBz
-aXplb2YoKnApIiBvcGVyYXRpb24gY2FuIGhhdmUNCj4gPiA+ID4gYW4NCj4gPiA+ID4gaW50ZWdl
-ciBvdmVyZmxvdy4NCj4gPiA+ID4gDQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IERhbiBDYXJwZW50
-ZXIgPGRhbi5jYXJwZW50ZXJAb3JhY2xlLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IEl0J3Mg
-aGFyZCB0byBwaWNrIGEgRml4ZXMgdGFnIGZvciB0aGlzLi4uwqAgVGhlIHRlbXB0YXRpb24gaXMg
-dG8NCj4gPiA+ID4gc2F5Og0KPiA+ID4gPiBGaXhlczogMzdjODg3NjNkZWY4ICgiTkZTdjQ7IENs
-ZWFuIHVwIFhEUiBlbmNvZGluZyBvZiB0eXBlDQo+ID4gPiA+IGJpdG1hcDQiKQ0KPiA+ID4gPiBC
-dXQgdGhlcmUgd2VyZSBpbnRlZ2VyIG92ZXJmbG93cyBpbiB0aGUgY29kZSBiZWZvcmUgdGhhdCBh
-cw0KPiA+ID4gPiB3ZWxsLg0KPiA+ID4gPiANCj4gPiA+ID4gaW5jbHVkZS9saW51eC9zdW5ycGMv
-eGRyLmggfCAyICsrDQo+ID4gPiA+IDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykNCj4g
-PiA+ID4gDQo+ID4gPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0K
-PiA+ID4gPiBiL2luY2x1ZGUvbGludXgvc3VucnBjL3hkci5oDQo+ID4gPiA+IGluZGV4IGI1MTk2
-MDlhZjFkMC4uNjFiOTJlNmI5ODEzIDEwMDY0NA0KPiA+ID4gPiAtLS0gYS9pbmNsdWRlL2xpbnV4
-L3N1bnJwYy94ZHIuaA0KPiA+ID4gPiArKysgYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy94ZHIuaA0K
-PiA+ID4gPiBAQCAtNzMxLDYgKzczMSw4IEBAIHhkcl9zdHJlYW1fZGVjb2RlX3VpbnQzMl9hcnJh
-eShzdHJ1Y3QNCj4gPiA+ID4geGRyX3N0cmVhbSAqeGRyLA0KPiA+ID4gPiANCj4gPiA+ID4gwqDC
-oMKgwqDCoMKgwqDCoGlmICh1bmxpa2VseSh4ZHJfc3RyZWFtX2RlY29kZV91MzIoeGRyLCAmbGVu
-KSA8IDApKQ0KPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiAt
-RUJBRE1TRzsNCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgaWYgKGxlbiA+IFVMT05HX01BWCAvIHNp
-emVvZigqcCkpDQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4g
-LUVCQURNU0c7DQo+ID4gPiANCj4gPiA+IElJVUMgeGRyX2lubGluZV9kZWNvZGUoKSByZXR1cm5z
-IE5VTEwgaWYgdGhlIHZhbHVlIG9mDQo+ID4gPiAibGVuICogc2l6ZW9mKHApIiBpcyBsYXJnZXIg
-dGhhbiB0aGUgcmVtYWluaW5nIFhEUiBidWZmZXINCj4gPiA+IHNpemUuIEkgZG9uJ3QgYmVsaWV2
-ZSB0aGlzIGV4dHJhIGNoZWNrIGlzIG5lY2Vzc2FyeS4NCj4gPiA+IA0KPiA+IA0KPiA+IFllcywg
-YnV0IGJlY2F1c2Ugb2YgdGhlIGludGVnZXIgb3ZlcmZsb3cgdGhlbiAibGVuICogc2l6ZW9mKCpw
-KSkiDQo+ID4gd2lsbA0KPiA+IGJlIGEgdmVyeSByZWFzb25hYmxlIHNtYWxsIG51bWJlci4NCj4g
-DQo+IEdvdCBpdC4NCg0KU2hvdWxkbid0IHdlIHRlY2huaWNhbGx5IHJhdGhlciBzcGVjaWZ5IFNJ
-WkVfTUFYIGluc3RlYWQgb2YgVUxPTkdfTUFYDQpzaW5jZSB4ZHJfaW5saW5lX2RlY29kZSgpIHRh
-a2VzIGEgc2l6ZV90Pw0KDQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50
-IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29t
-DQoNCg0K
+Hi Dan,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v5.17-rc8 next-20220310]
+[cannot apply to cel-2.6/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Dan-Carpenter/NFSD-prevent-integer-overflow-on-32-bit-systems/20220314-221126
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+config: s390-randconfig-r044-20220314 (https://download.01.org/0day-ci/archive/20220315/202203150321.2NA8SWEv-lkp@intel.com/config)
+compiler: clang version 15.0.0 (https://github.com/llvm/llvm-project 3e4950d7fa78ac83f33bbf1658e2f49a73719236)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install s390 cross compiling tool for clang build
+        # apt-get install binutils-s390x-linux-gnu
+        # https://github.com/0day-ci/linux/commit/455f80f80ed34963bae40e552834c7483bcec80a
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Dan-Carpenter/NFSD-prevent-integer-overflow-on-32-bit-systems/20220314-221126
+        git checkout 455f80f80ed34963bae40e552834c7483bcec80a
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash net/ipv4/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   In file included from net/ipv4/ipconfig.c:45:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:40:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:464:31: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __raw_readb(PCI_IOBASE + addr);
+                             ~~~~~~~~~~ ^
+   include/asm-generic/io.h:477:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:37:59: note: expanded from macro '__le16_to_cpu'
+   #define __le16_to_cpu(x) __swab16((__force __u16)(__le16)(x))
+                                                             ^
+   include/uapi/linux/swab.h:102:54: note: expanded from macro '__swab16'
+   #define __swab16(x) (__u16)__builtin_bswap16((__u16)(x))
+                                                        ^
+   In file included from net/ipv4/ipconfig.c:45:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:40:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:490:61: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           val = __le32_to_cpu((__le32 __force)__raw_readl(PCI_IOBASE + addr));
+                                                           ~~~~~~~~~~ ^
+   include/uapi/linux/byteorder/big_endian.h:35:59: note: expanded from macro '__le32_to_cpu'
+   #define __le32_to_cpu(x) __swab32((__force __u32)(__le32)(x))
+                                                             ^
+   include/uapi/linux/swab.h:115:54: note: expanded from macro '__swab32'
+   #define __swab32(x) (__u32)__builtin_bswap32((__u32)(x))
+                                                        ^
+   In file included from net/ipv4/ipconfig.c:45:
+   In file included from include/linux/inet.h:42:
+   In file included from include/net/net_namespace.h:40:
+   In file included from include/linux/skbuff.h:31:
+   In file included from include/linux/dma-mapping.h:10:
+   In file included from include/linux/scatterlist.h:9:
+   In file included from arch/s390/include/asm/io.h:75:
+   include/asm-generic/io.h:501:33: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writeb(value, PCI_IOBASE + addr);
+                               ~~~~~~~~~~ ^
+   include/asm-generic/io.h:511:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writew((u16 __force)cpu_to_le16(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:521:59: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           __raw_writel((u32 __force)cpu_to_le32(value), PCI_IOBASE + addr);
+                                                         ~~~~~~~~~~ ^
+   include/asm-generic/io.h:609:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsb(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:617:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsw(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:625:20: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           readsl(PCI_IOBASE + addr, buffer, count);
+                  ~~~~~~~~~~ ^
+   include/asm-generic/io.h:634:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesb(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+   include/asm-generic/io.h:643:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesw(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+   include/asm-generic/io.h:652:21: warning: performing pointer arithmetic on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+           writesl(PCI_IOBASE + addr, buffer, count);
+                   ~~~~~~~~~~ ^
+   In file included from net/ipv4/ipconfig.c:59:
+   In file included from include/linux/nfs_fs.h:31:
+   In file included from include/linux/sunrpc/auth.h:13:
+   In file included from include/linux/sunrpc/sched.h:19:
+>> include/linux/sunrpc/xdr.h:734:10: warning: result of comparison of constant 4611686018427387903 with expression of type '__u32' (aka 'unsigned int') is always false [-Wtautological-constant-out-of-range-compare]
+           if (len > ULONG_MAX / sizeof(*p))
+               ~~~ ^ ~~~~~~~~~~~~~~~~~~~~~~
+   13 warnings generated.
+
+
+vim +734 include/linux/sunrpc/xdr.h
+
+   712	
+   713	/**
+   714	 * xdr_stream_decode_uint32_array - Decode variable length array of integers
+   715	 * @xdr: pointer to xdr_stream
+   716	 * @array: location to store the integer array or NULL
+   717	 * @array_size: number of elements to store
+   718	 *
+   719	 * Return values:
+   720	 *   On success, returns number of elements stored in @array
+   721	 *   %-EBADMSG on XDR buffer overflow
+   722	 *   %-EMSGSIZE if the size of the array exceeds @array_size
+   723	 */
+   724	static inline ssize_t
+   725	xdr_stream_decode_uint32_array(struct xdr_stream *xdr,
+   726			__u32 *array, size_t array_size)
+   727	{
+   728		__be32 *p;
+   729		__u32 len;
+   730		ssize_t retval;
+   731	
+   732		if (unlikely(xdr_stream_decode_u32(xdr, &len) < 0))
+   733			return -EBADMSG;
+ > 734		if (len > ULONG_MAX / sizeof(*p))
+   735			return -EBADMSG;
+   736		p = xdr_inline_decode(xdr, len * sizeof(*p));
+   737		if (unlikely(!p))
+   738			return -EBADMSG;
+   739		if (array == NULL)
+   740			return len;
+   741		if (len <= array_size) {
+   742			if (len < array_size)
+   743				memset(array+len, 0, (array_size-len)*sizeof(*array));
+   744			array_size = len;
+   745			retval = len;
+   746		} else
+   747			retval = -EMSGSIZE;
+   748		for (; array_size > 0; p++, array++, array_size--)
+   749			*array = be32_to_cpup(p);
+   750		return retval;
+   751	}
+   752	
+
+---
+0-DAY CI Kernel Test Service
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
