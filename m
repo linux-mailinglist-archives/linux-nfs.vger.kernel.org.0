@@ -2,140 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 517094D8890
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Mar 2022 16:52:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C29D14D8A5A
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Mar 2022 18:04:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233994AbiCNPxQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Mar 2022 11:53:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59636 "EHLO
+        id S241639AbiCNRFT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Mar 2022 13:05:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237643AbiCNPxP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 11:53:15 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 760F533E14
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Mar 2022 08:52:05 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22EFSpD2001435;
-        Mon, 14 Mar 2022 15:51:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=fafDEVVDDi3w/DviUUdYqrk/KuTTpuldM9HOq4qwNTQ=;
- b=PWisGRo/qtcIa/AEIPzYECQI3tVbRNpkPuuFD66mbsTE1Huv2m0kGTe2xopqDnlX6Vhz
- 6S9xyzgV35t6gT2xjmkwyInsyMtmStiXsoaw+O/KLT42EC/WeppWG7fBUWGua2az0XtF
- PP2NnszJDXzN+vDMokU5aVXo5YW2v2xryE7zE/M1Pz6LtXErKhrZ2ufzSmOdRfiGyBu2
- yQ9RnzH/03SffWz7VOHec7ptjj4HYTY2OMLS8e39FQrNeljXcx6/U7E275c6LwgJXJKj
- ZdpmlNLAmK/4HGbUs9W72QfctvQDCArMBN9EmZP5DmQrIAHaC/y0+NugHoRHwbU38P/2 8Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3et5fu0qd8-1
+        with ESMTP id S236660AbiCNRFS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 13:05:18 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E29F13E3A;
+        Mon, 14 Mar 2022 10:04:06 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22EFSa8l011145;
+        Mon, 14 Mar 2022 17:03:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : content-type : in-reply-to :
+ mime-version; s=corp-2021-07-09;
+ bh=/INiDw5eNXS/dhrc+mkjzpUgA0x/2DQgrHiKH0H/HRo=;
+ b=I3KYcDXzjhqmuRsT6RYTW09v2ImyjeXvvaUcguEgdEbl1Waou6pZ1iWJtFTnhbvGA9dj
+ UAakxDSCwTpGrffFNxGgEBXEY/Od0NM18Y18iHbem7cnyn4/XpEj8sD3O9p1c7+iN6cU
+ E4a9SAIviEaYa0w2exYi0n12TFKF/r/4Ibqa380y7nE56V3Ki/tqccNbgu2RTGGl3GFW
+ jnTHNh2aBZqfLGwxtSJUpxmhSFQx/4RaQBX1jGF6k4MxjoPv3g/Y28j7pZroDygHm1xK
+ DeXyrDlxf2F2u+hlL16kT/9jJC5VFTUv4hnRSkQSr0zhQwJFtLiJWKn+eINqrZ3lutye Ew== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3et60rgv19-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Mar 2022 15:51:58 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22EFocQq175990;
-        Mon, 14 Mar 2022 15:51:57 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2174.outbound.protection.outlook.com [104.47.58.174])
-        by userp3020.oracle.com with ESMTP id 3et656ug6s-1
+        Mon, 14 Mar 2022 17:03:58 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22EGpund189360;
+        Mon, 14 Mar 2022 17:03:58 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2172.outbound.protection.outlook.com [104.47.55.172])
+        by aserp3030.oracle.com with ESMTP id 3et64t4ag5-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Mar 2022 15:51:57 +0000
+        Mon, 14 Mar 2022 17:03:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=clM6kQT4sBeRmETJMTqp73g8zJFSq/twk9gT3Bh+n5tgum0QizM60yUf7Y1ZpUuArpuTvpd4z3O0oj4AeLmPH7UcrJrwHmidi5R+f8UmpGH1fpAITqdaXxl2tUdKuFB61Gw+Pqd6bXt7Egp2Lx5gure7K7keFQe05m2uStO1HeqAiGTi7VcejyTzo6sacyY559WGs39/nK8e+7TLY+qWf+M1lDe8Dt/BPpHAAfCEp1HycqkBxsWFhQapk+l2aoad5nCq26FpCj0JKTTJyYr06A50wV8op1WdRyVYXW6Z1NL6qJ2iH/xxJ5JBm9dPqF9+Z2XzCpTPobiPDZzj9ZJmQg==
+ b=hdQyUpYUKFv5OaELZv58Yzpv8cNKnXen073FhsxBMxlc2B5gVmiXB5VTz6lzbdhIKmXOoyeZIGZTckZj52/Q80e2xrdh9FS78Y4eWOOnro9S1/b6XEbsVt25ZI0yNoF0ECAG/WKk4drSniVNT2Sa1KP1zsmStaAeehtYUtOF9e1yO6cDMN5CP95mCyKuoOt+e+AX3A1IuJPdC+1+kgYajZCslV20x8L3ufXNA61ZPTuoXcDwFG7XgRyxHVbB8m50AsXlT4cTjRWkFf48He7rE1rhITuFEjcSDykNn9AH6xds4NqCnUtxS0hjv6w0jMUb7lcebrZUUn+E/sfnX0Wdbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fafDEVVDDi3w/DviUUdYqrk/KuTTpuldM9HOq4qwNTQ=;
- b=IRqyhZQjrkJW55iz8sS8epEUOmsB5fsS0gS5oooeY5F2zDkk0qhRo2hOfMpZds9CUN/UtLnA/HLHO5Bjk/qA4+6UTHI14C/ILUPX2U+QniTWCmJikFyeIifVWsSgXh5ZqlRgwC+gdS4k1dcrbQM6sOrgVNondLCr0F8SnHm5ufnNQ7L9kcz5mNYjuRE4E49EEcaSGSZaQy0EWdGJ6/QF41r+Wb14GQ7KMeDiBtExqaRa+0uaCsN5XR2wDCsfZQR5HSJ+lPXifGgvhQy/lYpmO8QlRNPu1AJZ6VMNkQWL8M9vqbtMfJvf3Hqj/gXrrzUCYYbZKl615JApK/ohZWr6Uw==
+ bh=/INiDw5eNXS/dhrc+mkjzpUgA0x/2DQgrHiKH0H/HRo=;
+ b=C8rkDyoTxSB2J2xQ+N9jo4ZNn+20WxEJ1+G0g7cxQ6NirE6oBT0zomGYR2PiucQxKphlF1p7rr9h29m4xltVM4t4g2uMkwcvduJBg8ABZ+vqQLJXmflgDO3j7eTQcYJARlIxJ2OzQKuFEQexaNlw8a+xjG8Re0XriiMVueyadTSnatvIR5R+J6EM9MyYxThc6ekkk5uFkCcfFiFK2zHUucVqD309PXd/UTbo/JNFjlY4CkD/iL5lztttzCGStxtvcRvdExxJsbuBLuzsoS8pMWURmNp8N5PfZrvzzLnonVvN0NFyAI8kR4Bqo8rHb/ggOJmfRnUtoYsyJr6TRJjvGg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fafDEVVDDi3w/DviUUdYqrk/KuTTpuldM9HOq4qwNTQ=;
- b=cqYZ75XLAtoThQ3NVV3nPtvKoZmJGHtcFUIakl46AvSR9DDawLQvd6+X0+/t29VgBwRS05GhCOehOWs7CXL65Bs6/TIvgH8ZpFVCjVPowAe1LxjstZDmcWAeJ9mSZfkmGZzegfgj2lpLuVYGaTUqiZWhY07OlJdB8KDX2k1w66Q=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY4PR10MB1333.namprd10.prod.outlook.com (2603:10b6:903:2a::16) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=/INiDw5eNXS/dhrc+mkjzpUgA0x/2DQgrHiKH0H/HRo=;
+ b=uhqWIc9GfNYPHgitD5BjSMTM0Ya4HY4Qxnxp+fYA+Cc0DHMzWKcpTOzC9TuolU6Z4cRkuE1evbfjHM+GQ60xVMBSaz+eLncOjzPlCBCgk3bHtZq7CfYpqt9SGKvq48gf8o101NH5qdHHhzfo23TuiLIieE5vqFYyWz1XPtZ3JGM=
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28) by DS7PR10MB4910.namprd10.prod.outlook.com
+ (2603:10b6:5:3a4::13) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5061.25; Mon, 14 Mar
- 2022 15:51:54 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::94c5:42b1:5147:b6f0]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::94c5:42b1:5147:b6f0%5]) with mapi id 15.20.5061.028; Mon, 14 Mar 2022
- 15:51:54 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Neil Brown <neilb@suse.de>
-CC:     Benjamin Coddington <bcodding@redhat.com>,
-        Steve Dickson <SteveD@RedHat.com>,
+ 2022 17:03:56 +0000
+Received: from MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::2c3d:92b5:42b3:c1c5]) by MWHPR1001MB2365.namprd10.prod.outlook.com
+ ([fe80::2c3d:92b5:42b3:c1c5%4]) with mapi id 15.20.5061.022; Mon, 14 Mar 2022
+ 17:03:56 +0000
+Date:   Mon, 14 Mar 2022 20:03:44 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Subject: Re: [PATCH v2] nfs.man: document requirements for NFSv4 identity
-Thread-Topic: [PATCH v2] nfs.man: document requirements for NFSv4 identity
-Thread-Index: AQHYNz9tXzp0vUT6Z02tg1tG8znMeKy/CFqA
-Date:   Mon, 14 Mar 2022 15:51:54 +0000
-Message-ID: <ED6618CE-EC09-448D-904C-F34FCE8E8935@oracle.com>
-References: <164721984672.11933.15475930163427511814@noble.neil.brown.name>
-In-Reply-To: <164721984672.11933.15475930163427511814@noble.neil.brown.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 65f4ad94-f9a1-4ef9-9a28-08da05d2901a
-x-ms-traffictypediagnostic: CY4PR10MB1333:EE_
-x-microsoft-antispam-prvs: <CY4PR10MB13339EDDB617B90721525016930F9@CY4PR10MB1333.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: iJqZ0YIZY6SK31vnncSsy6Ui2fBDg9Muz+hlHsv7I+KfqhDiNaC6q+5Di74iN+NX6k08eHBv3Z5uIunNyHoTVco103yOi8vS/0d8ofasFLNj/9fjt9AjcPcVW9PVfxpJ2mHPT1H/Rq1GGCDCpoFnSnsUxDnw+BVuXHfbeGeu4PJaSJAhTT9iK+i7UCaWnV3uhlEGvq1LwulTQe6KDNEQ2IWsRvsNsyn+3s8YoEYpXB9rKZSeUkyAvosbyjUOEp+RnNHAu+zUuHYGZmNSvImR33zXiUm1u7MLhOK3Pxsam1/0IiO3xMBalsdQ9Tq5uXMKk0fPk+bRCnoHvOPSDTljOBNDAP4P4SbPAGCFg2QbVazPXgThFR0P6AUGqeET/nu3ofvAO0qt4AZfWrXqu7dUnOCCVOn4Ph6P824oSivOwaHf8jJeRWRUahpLIzjOH/x5/HewQm8778LlCZ5Xt869HHPvutipVuVUv9RgdJfCs4JHqTtOwp8yiBb1Qpovi9Dnhw0XOyJCPN/Cyv/Z7Bnzbz1xxTRXC3RR3Ld8JQeRy7J/1mtL4xbhsA8QWLEVGAR+rQLBug4KrO3UtEPmpBUVw18Nmxa7zdLhQdz4xN+TDp4MMtWHUdW4cjJ/JNwDvlw3kc+uzYZ2VSiabs1cB9cDbELaXuGO1XgwBLQkhGRChV6+gTXNoiwhhPnzNgQfiWr8gimfCggbaMMbCwJR9BJaJGRj3ipVzU7QgVeUXvs9ln7oocnElGrxFc/EQVVnQqOs
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(30864003)(5660300002)(36756003)(66946007)(66556008)(66476007)(66446008)(76116006)(91956017)(8676002)(4326008)(64756008)(54906003)(6916009)(33656002)(316002)(8936002)(83380400001)(38070700005)(2616005)(71200400001)(186003)(26005)(122000001)(508600001)(86362001)(53546011)(6512007)(6486002)(6506007)(2906002)(38100700002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?OTkc+9jQ8AdgBhO2FeUZQ4/TRFS16CGK30ZokCFfqOxlv45t138WiRx6WLA1?=
- =?us-ascii?Q?cdZRnEf7eHJdTCvL7Jt2ox2+GfT2DsdNloZaSy1JcrL/p8szacsHCThOU8lq?=
- =?us-ascii?Q?ae+2fF6urr7DP2U9KbODMH00GMt1SbQg8Z7JUEPcq7d3Hp7Mpg0oSYL8VIGS?=
- =?us-ascii?Q?athBw4TwnW6z2cOb0VwXvvKBa2UvGdNEWCA6d6hRIn7K+22deaT7BwH8lDH0?=
- =?us-ascii?Q?uFUj0DpU7Sw/CfBYa/XqudTreYdUhNRl7yJRQXTZ5TKt0GxsJZGU0xFCnmpJ?=
- =?us-ascii?Q?ZRUohBbfr2mV9KsEk36Iq7PD6X+460tp2vmb2oNldzLK2VaXcxT80eTluaGk?=
- =?us-ascii?Q?63jlhWeNKshi1AjAiutaRZgvJY/cGDPAqunkStywQQ2SMVZGx88kj+BOmZI/?=
- =?us-ascii?Q?N0xeFHUb29L2Js0V/XIbdEV+htxvVpi5ORxgrXirc1VKBzkrZ0gcrEO1hDXY?=
- =?us-ascii?Q?0suf+1WPIoEJlVsLV/9z7Aot7ahQAageHcf2Y63Y/PZ7Cl6pltWeKO+j6dO6?=
- =?us-ascii?Q?xJVZwyKqhKgPD3TdaX5B5Z6F8A2e9lIC5tiN5UO6WCnNloXbBaKcEEYDOPPC?=
- =?us-ascii?Q?hpZczwRVMST9gJ3CErnl8PKVrabCJTC6c7am1ouj0ciqmuQtf95sAWDJ0KS/?=
- =?us-ascii?Q?VVcsEjKSrIn3ZC5DJsA992r4/ARIJi3q3RhvfJd2yD90tXqcNub1+ZdZ1HnD?=
- =?us-ascii?Q?9rR6hWNkN3DycAuJjHT4HnxpWkjC4p4+qHxkaZ8lEzGYFGrzq3a8g5GB9+Co?=
- =?us-ascii?Q?hD+3GtTIOLWWvfaGJENXdc92nMu6yFN9cnMsYXDEsO72xxKmkvjMpc5baE7a?=
- =?us-ascii?Q?McScgMRp6RFfHRBMuaty4AbOiR9HsCkvQL6LNdYFPqM32ylmNDFXk4FYGIs1?=
- =?us-ascii?Q?RHjJYycXKzlAKlcfcdNKkTetCKNcCHLyWAGbmcH0bdsxX9D2rdSBqPWF4swh?=
- =?us-ascii?Q?6ksBNn7NekU8FDnoW4p8CtINu9mJjvVfT7mh2N6gPk+5ukzP0faqceOgy2gG?=
- =?us-ascii?Q?AfkpxZf2s3ztZMvBko/GoGMsTouhZrEJo5l4d8lYM+d8AEP11a99oYbG0xWm?=
- =?us-ascii?Q?ZLJ2CyP+RGC6ABDSGnfzcmo8sdetlRB19HGKNKBYAPSI3i77fFgbi63FcRpi?=
- =?us-ascii?Q?5+gziBu9EjOjiFPuvUmR3QDrqMc1UBmvdcWCJXCdmDQ/VC5Laa6N2VWcDmX+?=
- =?us-ascii?Q?NeHwyIG/wKVisQ/2vSHmu9J3W7FQ5TmM8wFlKfltwCx9MQ4DUybMPWURDeGY?=
- =?us-ascii?Q?QbLMnGFsPX+acxVCpO4JL6jubGjlTwU/2VqKRZjP0SCd2FH86E6wRT0WBxIT?=
- =?us-ascii?Q?sAtS+91MAmzGHJQwKcdYgA1CzZb1hygEWWX1f6i/kJ/uKG+cXSIby5i9FQJe?=
- =?us-ascii?Q?DNNLbRbnnRv2iiA4IgNvSMNzCP/3HybPffh1jfjG+l2MDwuxuyOv6JcUbRdt?=
- =?us-ascii?Q?ZcTTwMrN9lFWPkrAluhgRc57ztLNcX8n6Un07dvLtCIiwn2H0Fp8lw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <08CC36C742BDB14EA0B72F9E5857D649@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Subject: Re: [PATCH] NFSD: prevent integer overflow on 32 bit systems
+Message-ID: <20220314170344.GT3315@kadam>
+References: <20220314140958.GE30883@kili>
+ <251A4166-DCCD-4C84-9819-F350D17A7298@oracle.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <251A4166-DCCD-4C84-9819-F350D17A7298@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MR1P264CA0129.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:501:51::17) To MWHPR1001MB2365.namprd10.prod.outlook.com
+ (2603:10b6:301:2d::28)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 1b848be7-e172-4885-f1af-08da05dc9fad
+X-MS-TrafficTypeDiagnostic: DS7PR10MB4910:EE_
+X-Microsoft-Antispam-PRVS: <DS7PR10MB4910CC3D6D5F92AEF2759CD28E0F9@DS7PR10MB4910.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mFkU7WhSUr+NRe8RXWIcHIcvZtgU5Ya5qEIp3Tt4q7sB1oAGbvbdaam5e6ZtSWT/VpzVHcguLnkAgCmDl17j+CJhBE9+ROpuGE9VpaSIOIe6rMOyLUIE9b8hr8oOoBR3ISvF7YWTgysn200hLRFHoa1WMOz+AhqbAb23/qS1/sE0AqAKExszuyGizgf2ssZZjmQ4fAOzzVG0aDkE6N6Yw0JPprIDIe5YhcJy6WHKxs7tgoS6PqAmX3uJJ6AX83+O6EgW3Vj8M9r7Mb1p3mb6MMYsqsgdewZuCSfycME0Z3zneAoQ17gXFxexDnK4vLRcaM1thXm5YUyODcu+vlBeG32qrRBgerg9oEOKCfjqIdeCKZCz/d8G0ArMaE6q1RjaYzYTJNcyK0LqbYjNXWMRirwvH94EO484OcOpNpPNI80D1I2Lw2JJanYFYBbQklD1lEHwZMtPGqsQ7QJcMVmjEc6zMFWRy/p/GiPNP+LjBFru9UqufVFu0feiU5UDsTNrPBQ7V7H79WFNt7I8w3X/+Pbfgl7bXdFJnyrkz8KabLtqL1nnMSJQ9ssfBXQIRo93slFcjEIJky+xNR0TPe4Get4Kqu0pJ0is26qrdLYZ0z1S3Qbqv6f/9Rxf8DL3zeuCgw6iGRWNc0r2MqPyjQVMv3oGyGk6dp4MskWrGNzqDR88A7HpEI1Omz4hv3LateATpwTuy2xXe6MOa9J105d6bQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1001MB2365.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(7916004)(366004)(86362001)(6636002)(316002)(33656002)(38100700002)(38350700002)(6486002)(54906003)(5660300002)(2906002)(8936002)(6862004)(4326008)(8676002)(66556008)(66476007)(66946007)(44832011)(107886003)(1076003)(52116002)(508600001)(6512007)(6666004)(6506007)(26005)(33716001)(53546011)(186003)(9686003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UWagCj3tMm/HZjYsOYMpV3AWEfl/sRqW29A+wK4VbJ87gpDlyCm8c0VPpE+u?=
+ =?us-ascii?Q?xScnq10fs+Wre/RNyfoS1WS6xCdTjwkfw+c3/qMDuf4eZo24A7vTn2ov205A?=
+ =?us-ascii?Q?D/R0InEpUjmvrquEsrkg8vJskxKV7d3KJdZ4BJd2+y7tEZpRYHWf0wm6duQO?=
+ =?us-ascii?Q?TuqNdAA8961cAy8tW6ICK2xeeFZsOjWVbyxBzM2I4Dw1jil3etdRsHcrwta/?=
+ =?us-ascii?Q?VmrajR3UQn8ppvNgcJuPY/XNW0UY3ES7zpaWmKENASlh2l+cDhcxpEwFct+O?=
+ =?us-ascii?Q?mvsoikETH75Y7fHOKot05R7Enob6vgfRA3SFITYQKq4WIB3ZorzDcZ40RK+Q?=
+ =?us-ascii?Q?UZn2GD0w0/OlyCPe8bglLrVSxmp9xu14H/5Wlelq6ihLM8Bd2M/zz93gEXzP?=
+ =?us-ascii?Q?l/2qpyQFpZ6cnkNpmeK/z7fZQ50V+wedVNzrNwnxufgkZFjy59Glv3AosJkl?=
+ =?us-ascii?Q?trl8P1qNzLcuIF4fl1DnJgJvlqHqidHZJNHGsYB31wRWkYuWhi1A6rvhNqx4?=
+ =?us-ascii?Q?HNX4FPMEQU7HaqgkG4I1vbk29h2f1cmIY8/hQvwMkcfXdJdoEdtFRIO5XWx6?=
+ =?us-ascii?Q?BfgR9gzLpxBi+BZJiHBqInhl2r/RwA08AFOVIRXmHmn4N1Q49cOo7gx2kJXL?=
+ =?us-ascii?Q?DT95Z3weGE/mCQEjVEpwm+n+5LBPKktG/2dcqi9ShdUR4SbxUIxm9xOXkbR0?=
+ =?us-ascii?Q?qnqij3gfOLrQbnGBLYIHVdZAkNaLXbGFt0lnxUmitDJBO1RkXSUzYk7jyLHq?=
+ =?us-ascii?Q?srAYhQkU6DwpPWL8bRkIbdYbifjs+DVECsKKvYYW/NZ22e7uS8IvS5xQeshm?=
+ =?us-ascii?Q?wedkgEVetmDB0oNOp9HXKMhOpiBLUVaDHLHnWSnOUoqBWnjY6GMghwdYX9rA?=
+ =?us-ascii?Q?Okl3Fo24+3esRjU14W/mFVXR2nkMqWNhiaXzDu0x6vVECg1ePPw6n9YHLn5s?=
+ =?us-ascii?Q?Mu9oMrfxFUYFwQ5v2K38gizn5MFvhTF7m433tpNwhfP7hg0bTvinw0xTkjZa?=
+ =?us-ascii?Q?UuNQgj+ZzM550bxtktdop/kOhYPGnHbjDSmfrMWvHR3TOt9vGNP+z4yuWaPT?=
+ =?us-ascii?Q?zSkllQS4Q555DIJyswakSmzdktSZQsgDI78LZEezAkI6gWAtVIsg9E+SCXEp?=
+ =?us-ascii?Q?cE/CuhtBUyBG5qLfRlyNEZ/MhfPc/3RTXZECg49rPSX86AQByC/umzQJ7JTr?=
+ =?us-ascii?Q?G7Fad3LyFLJQvIMppr0ZLeUbFxUPdFR81uAsuMAXgCp8BP8fdEjoy7J1jQbb?=
+ =?us-ascii?Q?tw1xrgiNslXEgrTZRvuwT/So1dJBe9ltO1jup0x7SSfDaAEI8YuXVh8OfqQ7?=
+ =?us-ascii?Q?HFG9u5JRlWwUS1+eHAeqMR41nZsvo68BWK9Tpr1NiTkuKPLoQfpRSir9sCdP?=
+ =?us-ascii?Q?dxVKNTZtdLhlul7O39bNTbKeoOkT0tsXWn0bpfnQQEKBBuPnz5cpwJ8Umvf0?=
+ =?us-ascii?Q?P/NoMYTsGNsAPrbtmaAS1j7E3DhO5DMWmDb8hqqOFI3uErQ91Xclrg=3D=3D?=
 X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b848be7-e172-4885-f1af-08da05dc9fad
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1001MB2365.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65f4ad94-f9a1-4ef9-9a28-08da05d2901a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Mar 2022 15:51:54.4342
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2022 17:03:55.9860
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OXqF3zlxxgOuidLl2pNE0qDOf5SRgsxatp/Jz/eHfZS6+WmFqE9FOwx1dn5CDDNdu/qMMWYLIeoV2pPAq+ZBJg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR10MB1333
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hkv196DMR0uAiTPXwaPjkaQvNkogwSjx0SD+aYp+YgsgPnjnADmprFaQqBifVbMY1sFiPyiyeRQaWHAwiTdrdG7jtVzXaUxIGfX4nedjBY8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB4910
 X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10285 signatures=693139
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- malwarescore=0 adultscore=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203140100
-X-Proofpoint-GUID: jaVn9c25O0E-smJlAoxPNt21G7WA2JK2
-X-Proofpoint-ORIG-GUID: jaVn9c25O0E-smJlAoxPNt21G7WA2JK2
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 phishscore=0
+ suspectscore=0 mlxscore=0 adultscore=0 spamscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2203140104
+X-Proofpoint-ORIG-GUID: E4ioihhRJ10LZqnzlAiS__vMOoK5CJjB
+X-Proofpoint-GUID: E4ioihhRJ10LZqnzlAiS__vMOoK5CJjB
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
@@ -146,326 +144,54 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil-
-
-> On Mar 13, 2022, at 9:04 PM, NeilBrown <neilb@suse.de> wrote:
->=20
->=20
-> When mounting NFS filesystem in a network namespace using v4, some care
-> must be taken to ensure a unique and stable client identity.  Similar
-> case is needed for NFS-root and other situations.
->=20
-> Add documentation explaining the requirements for the NFS identity in
-> these situations.
->=20
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->=20
-> I think I've address most of the feedback, but please forgive and remind
-> if I missed something.
-> NeilBrown
->=20
-> utils/mount/nfs.man | 109 +++++++++++++++++++++++++++++++++++++++++++-
-> 1 file changed, 108 insertions(+), 1 deletion(-)
->=20
-> diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
-> index d9f34df36b42..5f15abe8cf72 100644
-> --- a/utils/mount/nfs.man
-> +++ b/utils/mount/nfs.man
-> @@ -1,7 +1,7 @@
-> .\"@(#)nfs.5"
-> .TH NFS 5 "9 October 2012"
-> .SH NAME
-> -nfs \- fstab format and options for the
-> +nfs \- fstab format and configuration for the
-> .B nfs
-> file systems
-
-Suggest "configuration for nfs file systems" (remove "the")
-
-
-> .SH SYNOPSIS
-> @@ -1844,6 +1844,113 @@ export pathname, but not both, during a remount. =
- For example,
-> merges the mount option
-> .B ro
-> with the mount options already saved on disk for the NFS server mounted a=
-t /mnt.
-> +.SH "NFS CLIENT IDENTIFIER"
-> +NFSv4 requires that the client present a unique identifier to the server
-> +to be used to track state such as file locks.  By default Linux NFS uses
-> +the host name, as configured at the time of the first NFS mount,
-> +together with some fixed content such as the name "Linux NFS" and the
-> +particular protocol version.  When the hostname is guaranteed to be
-> +unique among all client which access the same server this is sufficient.
-> +If hostname uniqueness cannot be assumed, extra identity information
-> +must be provided.
-
-The last sentence is made ambiguous by the use of passive voice.
-
-Suggest: "When hostname uniqueness cannot be guaranteed, the client
-administrator must provide extra identity information."
-
-I have a problem with basing our default uniqueness guarantee on
-hostnames "most of the time" hoping it will all work out. There
-are simply too many common cases where hostname stability can't be
-relied upon. Our sustaining teams will happily tell us this hope
-hasn't so far been born out.
-
-I also don't feel that nfs(5) is an appropriate place for this level
-of detail. Documentation/filesystems/nfs/ is more appropriate IMO.
-In general, man pages are good for quick summaries, not for
-explainers. Here, it reads like "you, a user, are going to have to
-do this thing that is like filling out a tax form" -- in reality it
-should be information that should be:
-
- - Ignorable by most folks
- - Used by distributors to add value by automating set up
- - Used for debugging large client installations
-
-Maybe I'm just stating this to understand the purpose of this
-patch, but it could also be used as an "Intended audience"
-disclaimer in this new section.
-
-
-> +.PP
-> +Some situations which are known to be problematic with respect to unique
-> +host names include:
-
-A little wordy.
-
-Suggest: "Situations known to be problematic with respect to unique
-hostnames include:"
-
-If this will eventually become part of nfs(5), I would first run
-this patch by documentation experts, because they might have a
-preference for "hostnames" over "host names" and "namespaces" over
-"name-spaces". Usage of these terms throughout this patch is not
-consistent.
-
-
-> +.IP \- 2
-> +NFS-root (diskless) clients, where the DCHP server (or equivalent) does
-> +not provide a unique host name.
-
-Suggest this addition:
-
-.IP \- 2
-
-Dynamically-assigned hostnames, where the hostname can be changed after
-a client reboot, while the client is booted, or if a client often=20
-repeatedly connects to multiple networks (for example if it is moved
-from home to an office every day).
-
-
-> +.IP \- 2
-> +"containers" within a single Linux host.  If each container has a separa=
-te
-> +network namespace, but does not use the UTS namespace to provide a uniqu=
-e
-> +host name, then there can be multiple effective NFS clients with the
-> +same host name.
-> +.IP \=3D 2
-
-.IP \- 2
-
-
-> +Clients across multiple administrative domains that access a common NFS
-> +server.  If assignment of host name is devolved to separate domains,
-
-I don't recognize the phrase "assignment is devolved to separate domains".
-Can you choose a friendlier way of saying this?
-
-
-> +uniqueness cannot be guaranteed, unless a domain name is included in the
-> +host name.
-> +.SS "Increasing Client Uniqueness"
-> +Apart from the host name, which is the preferred way to differentiate
-> +NFS clients, there are two mechanisms to add uniqueness to the
-> +client identifier.
-> +.TP
-> +.B nfs.nfs4_unique_id
-> +This module parameter can be set to an arbitrary string at boot time, or
-> +when the=20
-> +.B nfs
-> +module is loaded.  This might be suitable for configuring diskless clien=
-ts.
-
-Suggest: "This is suitable for"
-
-
-> +.TP
-> +.B /sys/fs/nfs/client/net/identifier
-> +This virtual file (available since Linux 5.3) is local to the network
-> +name-space in which it is accessed and so can provided uniqueness betwee=
-n
-> +network namespaces (containers) when the hostname remains uniform.
-
-^provided^provide
-
-^between^amongst
-
-and the clause at the end confused me.
-
-Suggest: "in which it is accessed and thus can provide uniqueness
-amongst network namespaces (containers)."
-
-
-> +.RS
-> +.PP
-> +This value is empty on name-space creation.
-> +If the value is to be set, that should be done before the first
-> +mount.  If the container system has access to some sort of per-container
-> +identity then that identity, possibly obfuscated as a UUID is privacy is
-> +needed, can be used.  Combining the identity with the name of the
-> +container systems would also help.
-
-I object to recommending obfuscation via a UUID.
-
-1. This is confusing because there has been no mention of any
-   persistence requirement so far. At this point, a reader
-   might think that the client can simply convert the hostname
-   and netns identifier every time it boots. However this is
-   only OK to do if these things are guaranteed not to change
-   during the lifetime of a client. In a world where a majority
-   of systems get their hostnames dynamically, I think this is
-   a shaky foundation.
-
-2. There's no requirement that this uniquifier be in the form
-   of a UUID anywhere in specifications, and the Linux client
-   itself does not add such a requirement. (You suggested
-   before that we should start by writing down requirements.
-   Using a UUID ain't a requirement).
-
-   Linux chooses to implement its uniquifer with a UUID because
-   it is assumed we are using a random UUID (rather than a
-   name-based or time-based UUID). A random UUID has strong
-   global uniqueness guarantees, which guarantees the client
-   identifier will always be unique amongst clients in nearly
-   all situations for nearly no cost.
-
-If we want to create a good uniquifier here, then combine the
-hostname, netns identity, and/or the host's machine-id and then
-hash that blob with a known strong digest algorithm like
-SHA-256. A man page must not recommend the use of deprecated or
-insecure obfuscation mechanisms.
-
-The man page can suggest a random-based UUID as long as it
-states plainly that such UUIDs have global uniqueness guarantees
-that make them suitable for this purpose. We're using a UUID
-for its global uniqueness properties, not because of its
-appearance.
-
-
->  For example:
-> +.RS 4
-> +echo "ip-netns:`ip netns identify`" \\
-> +.br
-> +   > /sys/fs/nfs/client/net/identifier=20
-> +.br
-> +uuidgen --sha1 --namespace @url  \\
-> +.br
-> +   -N "nfs:`cat /etc/machine-id`" \\
-> +.br
-> +   > /sys/fs/nfs/client/net/identifier=20
-> +.RE
-> +If the container system provides no stable name,
-> +but does have stable storage,
-
-Here's the first mention of "stable". It needs some
-introduction far above.
-
-
-> then something like
-> +.RS 4
-> +[ -s /etc/nfsv4-uuid ] || uuidgen > /etc/nfsv4-uuid &&=20
-> +.br
-> +cat /etc/nfsv4-uuid > /sys/fs/nfs/client/net/identifier=20
-> +.RE
-> +would suffice.
-> +.PP
-> +If a container has neither a stable name nor stable (local) storage,
-> +then it is not possible to provide a stable identifier, so providing
-> +a random identifier to ensure uniqueness would be best
-> +.RS 4
-> +uuidgen > /sys/fs/nfs/client/net/identifier
-> +.RE
-> +.RE
-> +.SS Consequences of poor identity setting
-
-This section provides context to understand the above technical
-recommendations. I suggest this whole section should be moved
-to near the opening paragraph.
-
-
-> +Any two concurrent clients that might access the same server must have
-> +different identifiers for correct operation, and any two consecutive
-> +instances of the same client should have the same identifier for optimal
-> +crash recovery.
-
-Also recovery from network partitions.
-
-
-> +.PP
-> +If two different clients present the same identity to a server there are
-> +two possible scenarios.  If the clients use the same credential then the
-> +server will treat them as the same client which appears to be restarting
-> +frequently.  One client may manage to open some files etc, but as soon
-> +as the other client does anything the first client will lose access and
-> +need to re-open everything.
-
-This seems fuzzy.
-
-1. If locks are lost, then there is a substantial risk of data
-   corruption.
-
-2. Is the client itself supposed to re-open files, or are
-   applications somehow notified that they need to re-open?
-   Either of these scenarios is fraught -- I don't believe any
-   application is coded to expect to have to re-open a file
-   due to exigent circumstances.
-
-
-> +.PP
-> +If the clients use different credentials, then the second client to
-> +establish a connection to the server will be refused access.  For=20
-> +.B auth=3Dsys
-> +the credential is based on hostname, so will be the same if the
-> +identities are the same.  With
-> +.B auth=3Dkrb
-> +the credential is stored in=20
-> +.I /etc/krb5.keytab
-> +and will be the same only if this is copied among hosts.
-
-This language implies that copying the keytab is a recommended thing
-to do. It's not. I mentioned it before because some customers think
-it's OK to use the same keytab across their client fleet. But obviously
-that will result in lost open and lock state.=20
-
-I suggest rephrasing this last sentence to describe the negative lease
-recovery consequence of two clients happening to share the same host
-principal -- as in "This is why you shouldn't share keytabs..."
-
-
-> +.PP
-> +If the identity is unique but not stable, for example if it is generated
-> +randomly on each start up of the NFS client, then crash recovery is
-> +affected.  When a client shuts down uncleanly and restarts, the server
-> +will normally detect this because the same identity is presented with
-> +different boot time (or "incarnation verifier"), and will discard old
-> +state.  If the client presents a different identifier, then the server
-> +cannot discard old state until the lease time has expired, and the new
-> +client may be delayed in opening or locking files that it was
-> +previously accessing.
-> .SH FILES
-> .TP 1.5i
-> .I /etc/fstab
-> --=20
-> 2.35.1
->=20
-
---
-Chuck Lever
-
-
-
+On Mon, Mar 14, 2022 at 05:45:59PM +0300, Chuck Lever III wrote:
+> Hi Dan-
+> 
+> > On Mar 14, 2022, at 10:09 AM, Dan Carpenter <dan.carpenter@oracle.com> wrote:
+> > 
+> > On a 32 bit system, the "len * sizeof(*p)" operation can have an
+> > integer overflow.
+> > 
+> > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > ---
+> > It's hard to pick a Fixes tag for this...  The temptation is to say:
+> > Fixes: 37c88763def8 ("NFSv4; Clean up XDR encoding of type bitmap4")
+> > But there were integer overflows in the code before that as well.
+> > 
+> > include/linux/sunrpc/xdr.h | 2 ++
+> > 1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+> > index b519609af1d0..61b92e6b9813 100644
+> > --- a/include/linux/sunrpc/xdr.h
+> > +++ b/include/linux/sunrpc/xdr.h
+> > @@ -731,6 +731,8 @@ xdr_stream_decode_uint32_array(struct xdr_stream *xdr,
+> > 
+> > 	if (unlikely(xdr_stream_decode_u32(xdr, &len) < 0))
+> > 		return -EBADMSG;
+> > +	if (len > ULONG_MAX / sizeof(*p))
+> > +		return -EBADMSG;
+> 
+> IIUC xdr_inline_decode() returns NULL if the value of
+> "len * sizeof(p)" is larger than the remaining XDR buffer
+> size. I don't believe this extra check is necessary.
+> 
+
+Yes, but because of the integer overflow then "len * sizeof(*p))" will
+be a very reasonable small number.
+
+regards,
+dan carpenter
+
+> 
+> > 	p = xdr_inline_decode(xdr, len * sizeof(*p));
+> > 	if (unlikely(!p))
+> > 		return -EBADMSG;
+> > -- 
+> > 2.20.1
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
