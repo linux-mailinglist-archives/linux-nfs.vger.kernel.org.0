@@ -2,155 +2,620 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A4C64D90D3
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Mar 2022 01:06:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D22124D91AA
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Mar 2022 01:41:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239432AbiCOAH2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Mar 2022 20:07:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34054 "EHLO
+        id S238550AbiCOAmt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Mar 2022 20:42:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234687AbiCOAH2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 20:07:28 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on2098.outbound.protection.outlook.com [40.107.101.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D842A1D332
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Mar 2022 17:06:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hlcmN3W5ww25z5ci7br0omyfooAMgMNGiBCAGcm4mTvi+lFVeZb20l68qBTHAWBCU5rLVnnBfJBq7blviCfhYnJs9ud8iWysI1mj/CgomdXHaUJNxbCd738Pi4YKPGBZpFXJGTB7hVRd5WmAu7uBmWEo8IU57MNLjqGrl6GuV3tfMe3p+rZpdeKMViETAO0NWCPryxI3QpYxQh3wm6FhhrLEYQue2WTZ2bvXZPsFZYF/Dhx6iwltePcO53GU37FnQNeSJ6vx9c9qZ2qpgE4Msg8q7IqbNGZLzKEa0pPQayHEqfBDVDgijfNtYNfvIw8Ra4XJU6737QnefgtJYaVbHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NhnoJxltjiNZFRd6vfwewTwf+QooCWpuIpC4tACeEaw=;
- b=S2iFc5SWpa91SFZYCcWUnaIuUUbB3DydPDJckjcGCmQHKsm0S4/d1pFUiPXO7+pGvA8Yrghp9yLThFOQ70nmX+TnNLP1191U64v25psN8wMxOZf/sxFcz7ituCgrPDPFtTLZCNUFU3iKVt8Td1ZygPoB5NHQpwdyEOl8n9hXbBdczHuRC/hAAgDq6GxaP3LbDypNGm8Ahx5y/zpycBcw9EAEhXc0UQylNyq1N5ECdiRP3jM7yLW+0iGZW7WaxAsnHnx2qnuoz8s72cJ9q1Gwld0cW26v1dePeorFXyKOMerRal+NWWQOviHBW818nogoZvmrB3VAU0kw0ZlP06MrTg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NhnoJxltjiNZFRd6vfwewTwf+QooCWpuIpC4tACeEaw=;
- b=PQb/fy6rGWfjf9Bp3r3Ce+d2QEDH7xAqffT/UM/9BFCMRhpnKYIUOQb7ClIkdebnGnw3ARapsdz5zLKATeFQ8h2tgiXvZKAI2ISTqcu5SjJXl7gd6qTegEpDZ55TDY6wxWv3Usn16EZ8izucRqurQ0Z+JcqMv7PvP6veiWBDfHk=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM5PR13MB1500.namprd13.prod.outlook.com (2603:10b6:3:122::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.13; Tue, 15 Mar
- 2022 00:06:13 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f%9]) with mapi id 15.20.5081.013; Tue, 15 Mar 2022
- 00:06:12 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: write_space and software kTLS
-Thread-Topic: write_space and software kTLS
-Thread-Index: AQHYN+t1B+vqcaPqcEao3l2OCHLB2ay/kR2A
-Date:   Tue, 15 Mar 2022 00:06:12 +0000
-Message-ID: <378c5635b97c237f869234e24030ac0018b684b3.camel@hammerspace.com>
-References: <B7F08FCD-0EC1-4D7E-A560-6ADA281605AE@oracle.com>
-In-Reply-To: <B7F08FCD-0EC1-4D7E-A560-6ADA281605AE@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 79293564-c8ef-4b28-6cd3-08da06179de7
-x-ms-traffictypediagnostic: DM5PR13MB1500:EE_
-x-microsoft-antispam-prvs: <DM5PR13MB15001FA5D17BC68A26C7F3B8B8109@DM5PR13MB1500.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zwn9ovgACtSfxJ+pz/Gy6zquqFEL256Ire6aTIBUhsHiYmqt3pF+7oSFqAmijQH1wp0W0XAbAegWENjBAqiwF4wnvoaAiMLqT7zDHGfFAPpz84q/anonPM+c0Eg0C06ZjZ+A0e3jJPJ8BjAgNbnhZB3j3iTr0I3W3uEdUJGmZOhahSWKWCJ5SQqhxfvDE3hfrmJEKYjUKWtrDylfwqJcIdDdNkjXsUz2ElJe1CSUknFl+5KyfpqPR1UyfEVPYdoyj9dH/1upFgcuLNLw+TyZnHj2rv5wLLlSLSQp6iEhQ9Bu0Ras2tbYD4Cv5+dLyvL9XSBbF9DQ5+lQK8v/TCrz00QhVHczTkH3jT7ftmoMi2FP9sVToGnw+AdH4o+T6vPrmJeDZjOabn5J0+fSmWajHd6iGL8RLREsuuLHXcMbYyOpgsiTgvtbhrkDD2XaBx1aJqRusKBlgOsskB1MzyVIHSR+sFV3q7kF0PoFlzAhMnKTjJKr7+WpKxqvTjpJHYT2a0UqR2Khc2FAmht0+0IrtPOWqslXdxn++TjLXwbymzqwyunaQa3D+J04aLugdz/GFdl+qnAC6lqohQTfw8/LAPH177zdEOXjSoeuBdExzs439OVrNHnBMWKhWtMzc6EyNgzWSVQUJepnXzsD9DrWh1wNFRrJr8AwNQSVyKzUmTcDEpklbN7yRKLf6GANL1ODjtwrm1Likkw3TMABtfJMC2kUNaLHTWc+IpeVNN5esbGPEmm5jrwU+lYYs47j3TXD
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(316002)(6916009)(66946007)(8676002)(5660300002)(8936002)(66556008)(26005)(186003)(2616005)(2906002)(64756008)(66446008)(4326008)(76116006)(36756003)(122000001)(86362001)(508600001)(38100700002)(6486002)(71200400001)(6512007)(6506007)(83380400001)(38070700005)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?YVlKZlF3aG5tVTRxeFhsNHZOaG1PeUdtaGppL1VSSjFlQ1liU080bSt1enhp?=
- =?utf-8?B?anF4dlpKQzV5LzhEQjJ0WitjbzlNQzFsVGhLMVZpZ3J0L3FHQ0hVdU14a0xS?=
- =?utf-8?B?ODNyYzRlTk1qYi9PZTU4dkFnNEd5NEEzbVNhVWpoNUUzMElPZGRhbUgzOEdq?=
- =?utf-8?B?UlJ0eVI1RHJIUG1SYUVjSFlnWmE5R3FMdk1GSGpVWWlYcUQyajA5V0Q1b2VT?=
- =?utf-8?B?TW8zNU9XTjdLSVR0Qy9mNkEzRnNMSjdnZ2s0NnlCTGd0MHNTWUEyWXlDc1Vv?=
- =?utf-8?B?MlZuT0VmN3RISG1RYzBPdkdablZZbmdIY0U3TXdnYjh3eWtpK3M0ZHQ3K1lE?=
- =?utf-8?B?ekI2SDVkV2lOMkxMbkJwVW1SWGFQb1dzcXRudzBtRHFQWW9PVjZ6MmdqbDh5?=
- =?utf-8?B?OEVKQnBjcm5Rb3Y3S1FNdnlpMUFVbU91OWRob3hneDNzaVBFZDRobkY5dTI0?=
- =?utf-8?B?U2JZeEVLT21Yakl2Nlg5Y1JpOU1tWFdSTDY4Slc2dWJIZWdMbVUrTU5Xa0cx?=
- =?utf-8?B?Tkg2djVuWXo0L001VlN4V0Z6blFSczhPNkxmKzljcG1WQXRHNzlmMlg1Y0lC?=
- =?utf-8?B?bmNUYXZIaUkyZ21nQ0ltZTJOOUc1WkE4M3QxT296aTY1YndLREpCdHBSUk5H?=
- =?utf-8?B?bjZmS0hzTmpUMEc3bWdzWlVpaUJ1Q3dhemFFRTZOTE9nT2RKUFQwVUNpOXE4?=
- =?utf-8?B?U3M5REo4RG9Dd3NBNnJHVzN5SzRIUjFQRHdPSDJXbm96Zm5MUFR4ZDJwUlBU?=
- =?utf-8?B?bUJZVXM5OC8xU0Urayt1RWZ5TCt3UnB1S0ZMaFUvUVBhdW5nU204c2lOVWZB?=
- =?utf-8?B?R2JhdzVRVmRPK0tVWDl3ZzczVVB1MFZmNzNhV0JrYVVkZzZSOUphdG5OdlNn?=
- =?utf-8?B?cUhlSFRBakJKNVkzc2ZOTzEwenVGRklrSHVBWWQ2cEljR1pDUWs3a2F1T1E3?=
- =?utf-8?B?VUhCcWI0MzVWYXdJVThiUWFKTGdiUkhEejNuLzRRbXdJT1JobzhITkRkcWdp?=
- =?utf-8?B?amNYMHM0QnE3YllWM2diRDhIMVYyeE1LTjhLUStLS2JONXNIMEF6VTlGaEtJ?=
- =?utf-8?B?R0dadFptaW1IN25UOW5PeGR2d0QwRm1XMVIreWw4N1hoaXg3b0pVTzZYRk5x?=
- =?utf-8?B?dnBuYk1rYWtFUFhBdUxVekMyYTBaZER6ajhLUGRZeWc1VGljUFFOdXo2Y3lj?=
- =?utf-8?B?Z2pMN1lGc0FEZVhrOHJBZU84Z0M5czZ4VzZhVGZQR2lRNDcvcFNxZE1wb1E5?=
- =?utf-8?B?TktOK0FHWXhPWWRJUEFTVE1yYlVidGVGMXNuZlhSRmtXY0pDVWV3S2h5a3FD?=
- =?utf-8?B?U0dWK3ZpS2ZDWXNTa3NsQVZaWEY5TWgrZjg4bVdhZ3BNRFBiWW4rNktRdDYw?=
- =?utf-8?B?YzREWEdpdGMvWUFuOGRpM0RvdUU4ME5UcWN6TUt5R0RHTVc2TnNzQTdZd3V3?=
- =?utf-8?B?cloreERNZi9pQUFuUW1MUjNsN0hGWEJZbm1JYVM2UlhnSE5mamVYTFhKZUJO?=
- =?utf-8?B?OFhFcU41NFE3d0RHekNzTnpWTlFvTXNVaG1XTi84ZkRTQ3Fybmw3V1dGVjlX?=
- =?utf-8?B?K3h4bWRaSFpzSUdBbURGMzM3ZE5PZzVDOTJkOGNoVzNTRm1HQTg0TjFoMUNt?=
- =?utf-8?B?SGNhQktIRG03eWcyRFV4dkRUZ2ZVSVNoWHJIN2thRjRaWnZPbDJCSVRwaENV?=
- =?utf-8?B?MWhBRVRUd0N5Uk5YNXlQZlFZVE1zWkRjRlBPOGN2TzhHWmxTUVo3c3VoR0lK?=
- =?utf-8?B?alR6Uy9SMTArV2lBSGhnRzh5UzNDbjMzU2lLM1VoeXJIOHRWWlBLc1dUT2U4?=
- =?utf-8?B?YXpmRE1zT3kyQWZZTzlZd2tMTEpkcHRybjJmUGJ5UTl5cGJza0VXQnZETTdK?=
- =?utf-8?B?MSswWXBDQmxyV0lacld5eHppWkhGMllvUXA0djBidnpRcW95dUtGNGpJS2ZE?=
- =?utf-8?B?dGlMN0EzK1JyT3o2eXlza2R4MFJYN1NndkovRW1yNUs2K3lCYURMVTRKYlB2?=
- =?utf-8?B?dkNUR0JneGpnPT0=?=
+        with ESMTP id S237514AbiCOAms (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Mar 2022 20:42:48 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5AA3AA6D
+        for <linux-nfs@vger.kernel.org>; Mon, 14 Mar 2022 17:41:36 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7134921905;
+        Tue, 15 Mar 2022 00:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1647304893; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gFJZ7IEJtye5O5sn7N/zXb1V3GDdDyS0FpLf4ft883Y=;
+        b=qyG5IVtjbgSLwZXHeVqt56zXxj6ra7JeIO+gvblO+XRFiy2NQsX4wPtVi+iB6iiJP2gMLX
+        UdAJBvZDXwBOXdZWkGm5aIbUww93GY2yFCikwwk4NPzxTCNPorEbel5n83sXi+t/TM2ncE
+        +vawaeMw5b6UsPtxh+Dc0zvR9Y6wkrs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1647304893;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gFJZ7IEJtye5O5sn7N/zXb1V3GDdDyS0FpLf4ft883Y=;
+        b=4EHrbSe3bC3nPlKINkv2SUNEo9dvHkPh1cnUMgFIrzGlZsWKvSqWSjcNR3hH9TZ/GbBdyw
+        /Wt7+q7hzUHBnFDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7546D13ADA;
+        Tue, 15 Mar 2022 00:41:31 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 0w14C7vgL2IfVAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 15 Mar 2022 00:41:31 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <9EC39BCA280E294698D578DDD76A1B14@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79293564-c8ef-4b28-6cd3-08da06179de7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2022 00:06:12.8456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: eK3QNn89FBdGbGq1NiALPmx+cd4Um2v4xeS6Av2x85Q6T/bXZ6tbBYuedTwKYide2pF8fADjl1VQjnn5HFtIfw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR13MB1500
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Benjamin Coddington" <bcodding@redhat.com>,
+        "Steve Dickson" <SteveD@RedHat.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Trond Myklebust" <trondmy@hammerspace.com>
+Subject: Re: [PATCH v2] nfs.man: document requirements for NFSv4 identity
+In-reply-to: <ED6618CE-EC09-448D-904C-F34FCE8E8935@oracle.com>
+References: <164721984672.11933.15475930163427511814@noble.neil.brown.name>,
+ <ED6618CE-EC09-448D-904C-F34FCE8E8935@oracle.com>
+Date:   Tue, 15 Mar 2022 11:41:28 +1100
+Message-id: <164730488811.11933.18315180827167871419@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIyLTAzLTE0IGF0IDIxOjM1ICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IEhleSBUcm9uZC0NCj4gDQo+IEkndmUgbWFkZSBzb21lIHByb2dyZXNzIGdldHRpbmcgUlBD
-LXdpdGgtVExTIHdvcmtpbmcgaW4NCj4gdGhlIExpbnV4IE5GUyBjbGllbnQsIGJ1dCBJIHJlY2Vu
-dGx5IGhpdCBhbiBpbnRlcmVzdGluZw0KPiBzbmFnIGFuZCBjb3VsZCB1c2UgYSBsaXR0bGUgYWR2
-aWNlLg0KPiANCj4gVGhlIHNvZnR3YXJlIGtUTFMgaW5mcmFzdHJ1Y3R1cmUgdXNlcyBkb190Y3Bf
-c2VuZHBhZ2VzKCkNCj4gdW5kZXIgdGhlIGNvdmVycywgYW5kIHRoYXQgZnVuY3Rpb24gaXMgY2xl
-YXJpbmcNCj4gU09DS1dRX0FTWU5DX05PU1BBQ0UgZnJvbSB1bmRlciB4c19ub3NwYWNlKCkuIFRo
-YXQNCj4gcHJldmVudHMgeHNfcnVuX2Vycm9yX3dvcmtlcigpIGZyb20gd2FraW5nIHVwIHhwcnQt
-PnNlbmRpbmcsDQo+IHN0YWxsaW5nIGFuIFJQQyB0cmFuc3BvcnQgd2FpdGluZyBmb3IgbW9yZSBz
-b2NrZXQgd3JpdGUNCj4gc3BhY2UuIEknbSBub3Qgc3VyZSBob3cgdG8gYWRkcmVzcyB0aGlzLCBh
-bmQgSSdtIGludGVyZXN0ZWQNCj4gaW4geW91ciBvcGluaW9uLg0KPiANCg0KSG93IGlzIGl0IGFj
-aGlldmluZyB0aGlzPyBXZSBvbmx5IHNldCBTT0NLV1FfQVNZTkNfTk9TUEFDRSBhZnRlciB0aGUN
-CmNhbGwgdG8geHBydF9zb2NrX3NlbmRtc2coKS4NCg0KPiBGb3IgZXhhbXBsZSwgd2h5IGNoZWNr
-IHRoYXQgZmxhZyByYXRoZXIgdGhhbiBqdXN0IHdha2luZw0KPiB1cCB4cHJ0LT5zZW5kaW5nIHVu
-Y29uZGl0aW9uYWxseT8NCg0KVGhlIHNvY2tldCBjb2RlIGNhbGxzIC0+d3JpdGVfc3BhY2UoKSBp
-biBhbGwgc29ydHMgb2Ygc2l0dWF0aW9ucywgc28gd2UNCm5lZWQgdG8gZGlzdGluZ3Vpc2ggYmV0
-d2VlbiB0aGUgY2FzZXMgd2hlcmUgd2UgYXJlIGFjdHVhbGx5IHdhaXRpbmcgZm9yDQpidWZmZXIg
-bWVtb3J5LCBhbmQgdGhlIHNpdHVhdGlvbnMgd2hlcmUgd2UgYXJlIG5vdC4gT3RoZXJ3aXNlLCB3
-ZSdkIGJlDQpjYWxsaW5nIHhzX3J1bl9lcnJvcl93b3JrZXIoKSBhbGwgdGhlIHRpbWUuDQoNCj4g
-DQo+IEFsc28ganVzdCBmb3IgbXkgb3duIHVuZGVyc3RhbmRpbmcgb2YgaG93IHRoZSB3cml0ZV9z
-cGFjZQ0KPiBtZWNoYW5pc20gaXMgc3VwcG9zZWQgdG8gd29yayBmb3IgUlBDLCBJIGluc3RydW1l
-bnRlZCB0aGUNCj4gY29kZSB0aGF0IGJ1bXBzIGFuZCBkZWNyZW1lbnRzIHNrX3dyaXRlX3BlbmRp
-bmcsIGFuZCBmb3VuZA0KPiB0aGF0IHVuZGVyIG5vcm1hbCB3b3JrbG9hZHMsIHRoZSB2YWx1ZSBv
-ZiB0aGF0IGZpZWxkIGdvZXMNCj4gbmVnYXRpdmUgYW5kIHN0YXlzIHRoZXJlLiBJJ20gbm90IHN1
-cmUgdGhhdCdzIGludGVuZGVkLi4uPw0KPiANCg0KSXQgaXMgbm90IGludGVuZGVkLCBuby4gTG9v
-a3MgbGlrZSB0aGVyZSBoYXZlIGJlZW4gdmFyaW91cyByZWZhY3RvcmluZ3MNCnRoYXQgaGF2ZSBt
-YW5nbGVkIHRoYXQgY29kZS4gRnJvbSB3aGF0IEkgY2FuIHNlZSwgdGhlIHNvY2tldCBjb2RlDQph
-c3N1bWVzIHRoYXQgc2tfd3JpdGVfcGVuZGluZyBzaG91bGQgYWx3YXlzIGJlIGJ1bXBlZCB3aXRo
-IHRoZQ0Kc29ja19sb2NrKCkgaGVsZC4NCg0KTGV0IG1lIHdyaXRlIGEgZml4IGZvciB0aGF0Li4u
-DQoNCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwg
-SGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+On Tue, 15 Mar 2022, Chuck Lever III wrote:
+> Hi Neil-
+>=20
+> > On Mar 13, 2022, at 9:04 PM, NeilBrown <neilb@suse.de> wrote:
+> >=20
+> >=20
+> > When mounting NFS filesystem in a network namespace using v4, some care
+> > must be taken to ensure a unique and stable client identity.  Similar
+> > case is needed for NFS-root and other situations.
+> >=20
+> > Add documentation explaining the requirements for the NFS identity in
+> > these situations.
+> >=20
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >=20
+> > I think I've address most of the feedback, but please forgive and remind
+> > if I missed something.
+> > NeilBrown
+> >=20
+> > utils/mount/nfs.man | 109 +++++++++++++++++++++++++++++++++++++++++++-
+> > 1 file changed, 108 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/utils/mount/nfs.man b/utils/mount/nfs.man
+> > index d9f34df36b42..5f15abe8cf72 100644
+> > --- a/utils/mount/nfs.man
+> > +++ b/utils/mount/nfs.man
+> > @@ -1,7 +1,7 @@
+> > .\"@(#)nfs.5"
+> > .TH NFS 5 "9 October 2012"
+> > .SH NAME
+> > -nfs \- fstab format and options for the
+> > +nfs \- fstab format and configuration for the
+> > .B nfs
+> > file systems
+>=20
+> Suggest "configuration for nfs file systems" (remove "the")
+
+Agreed.
+
+>=20
+>=20
+> > .SH SYNOPSIS
+> > @@ -1844,6 +1844,113 @@ export pathname, but not both, during a remount. =
+ For example,
+> > merges the mount option
+> > .B ro
+> > with the mount options already saved on disk for the NFS server mounted a=
+t /mnt.
+> > +.SH "NFS CLIENT IDENTIFIER"
+> > +NFSv4 requires that the client present a unique identifier to the server
+> > +to be used to track state such as file locks.  By default Linux NFS uses
+> > +the host name, as configured at the time of the first NFS mount,
+> > +together with some fixed content such as the name "Linux NFS" and the
+> > +particular protocol version.  When the hostname is guaranteed to be
+> > +unique among all client which access the same server this is sufficient.
+> > +If hostname uniqueness cannot be assumed, extra identity information
+> > +must be provided.
+>=20
+> The last sentence is made ambiguous by the use of passive voice.
+>=20
+> Suggest: "When hostname uniqueness cannot be guaranteed, the client
+> administrator must provide extra identity information."
+
+Why must the client administrator do this?  Why can't some automated
+tool do this?  Or some container-building environment.
+That's an advantage of the passive voice, you don't need to assign
+responsibility for the verb.
+
+>=20
+> I have a problem with basing our default uniqueness guarantee on
+> hostnames "most of the time" hoping it will all work out. There
+> are simply too many common cases where hostname stability can't be
+> relied upon. Our sustaining teams will happily tell us this hope
+> hasn't so far been born out.
+
+Maybe it has not been born out because there is no documented
+requirement for it that we can point people to.
+Clearly containers that use NFS are not currently all configured well to do
+this.  Some change is needed.  Maybe adding a unique host name is the
+easiest change ... or maybe not.
+
+Surely NFS is not the *only* service that uses the host name.
+Encouraging the use of unique host names might benefit others.
+
+The practical reality is that a great many NFS client installations do
+currently depend on unique host names - after all, it actually works.
+Is it really so unreasonable to try to encourage the exceptions to fit
+the common pattern better?
+
+>=20
+> I also don't feel that nfs(5) is an appropriate place for this level
+> of detail. Documentation/filesystems/nfs/ is more appropriate IMO.
+> In general, man pages are good for quick summaries, not for
+> explainers. Here, it reads like "you, a user, are going to have to
+> do this thing that is like filling out a tax form" -- in reality it
+> should be information that should be:
+>=20
+>  - Ignorable by most folks
+>  - Used by distributors to add value by automating set up
+>  - Used for debugging large client installations
+
+nfs(5) contains sections on TRANSPORT METHODS, DATA AND METADATA
+COHERENCE, SECURITY CONSIDERATIONS.  Is this section really out of
+place?=20
+
+I could agree that all of these sections belong in "section 7" (Overview,
+conventions, and miscellaneous) rather than "section 5" (File formats and
+configuration files) but we don't have nfs.7 (yet).  I think section 7
+is a reasonable fit for your 3 points above.
+
+I don't agree that Documentation/filesystems/nfs/ is sufficient.  That
+is (from my perspective) primarily of interest to kernel developers.
+The whole point of this exercise that at we need to reach people outside
+of that group.
+
+>=20
+> Maybe I'm just stating this to understand the purpose of this
+> patch, but it could also be used as an "Intended audience"
+> disclaimer in this new section.
+
+OK, so the "purpose of this patch" relates in part to a comment you made
+earlier, which I include here:
+
+> Since it is just a line or two of code, it might be of little
+> harm just to go with separate implementations for now and stop
+> talking about it. If it sucks, we can fix the suckage.
+>=20
+> Who volunteers to implement this mechanism in mount.nfs ?
+
+I don't think this is the best next step.  I think we need to get some
+container system developer to contribute here.  So far we only have
+second hand anecdotes about problems.  I think the most concrete is from
+Ben suggesting that in at least one container system, using
+/etc/machine-id is a good idea.
+
+I don't think we can change nfs-utils (whether mount.nfs or mount.conf
+or some other way) to set identity from /etc/machine-id for everyone.
+So we need at least for that container system to request that change.
+
+How would they like to do that?
+
+I suggest that we explain the problem to representatives of the various
+container communities that we have contact with (Well...  "you", more
+than "we" as I don't have contacts).
+
+We could use the documentation I provided to clearly present the
+problem.
+Then ask:
+  - would you like to just run some shell code (see examples)
+  - or would you like to provide an /etc/nfs.conf.d/my-container.conf
+  - or would you like to run a tool that we provide
+  - or is there already a push to provide unique container hostnames,
+    and is this the incentive you need to help that push across the
+    line?
+
+If we have someone from $CONTAINER_COMMUNITY say "if you do this thing,
+then we will use it", then that would be hard to argue with.
+If we could get two or three different communities to comment, I expect
+the best answer would become a lot more obvious.
+
+But first we, ourselves, need to agree on the document :-)
+
+
+>=20
+>=20
+> > +.PP
+> > +Some situations which are known to be problematic with respect to unique
+> > +host names include:
+>=20
+> A little wordy.
+>=20
+> Suggest: "Situations known to be problematic with respect to unique
+> hostnames include:"
+
+Yep.
+
+>=20
+> If this will eventually become part of nfs(5), I would first run
+> this patch by documentation experts, because they might have a
+> preference for "hostnames" over "host names" and "namespaces" over
+> "name-spaces". Usage of these terms throughout this patch is not
+> consistent.
+
+I've made it consistently "hostname" and "namespace" which is consistent
+with the rest of the document
+
+>=20
+>=20
+> > +.IP \- 2
+> > +NFS-root (diskless) clients, where the DCHP server (or equivalent) does
+> > +not provide a unique host name.
+>=20
+> Suggest this addition:
+>=20
+> .IP \- 2
+>=20
+> Dynamically-assigned hostnames, where the hostname can be changed after
+> a client reboot, while the client is booted, or if a client often=20
+> repeatedly connects to multiple networks (for example if it is moved
+> from home to an office every day).
+
+This is a different kettle of fish.  The hostname is *always* included
+in the identifier.  If it isn't stable, then the identifier isn't
+stable.
+
+I saw in the history that when you introduced the module parameter it
+replaced the hostname.  This caused problems in containers (which had
+different host names) so Trond changed it so the module parameter
+supplemented the hostname.
+
+If hostnames are really so poorly behaved I can see there might be a
+case to suppress the hostname, but we don't have that option is current
+kernels.  Should we add it?
+
+>=20
+>=20
+> > +.IP \- 2
+> > +"containers" within a single Linux host.  If each container has a separa=
+te
+> > +network namespace, but does not use the UTS namespace to provide a unique
+> > +host name, then there can be multiple effective NFS clients with the
+> > +same host name.
+> > +.IP \=3D 2
+>=20
+> .IP \- 2
+
+Thanks.
+
+>=20
+>=20
+> > +Clients across multiple administrative domains that access a common NFS
+> > +server.  If assignment of host name is devolved to separate domains,
+>=20
+> I don't recognize the phrase "assignment is devolved to separate domains".
+> Can you choose a friendlier way of saying this?
+>=20
+
+ If hostnames are not assigned centrally then uniqueness cannot be
+ guaranteed unless a domain name is included in the hostname.
+
+>=20
+> > +uniqueness cannot be guaranteed, unless a domain name is included in the
+> > +host name.
+> > +.SS "Increasing Client Uniqueness"
+> > +Apart from the host name, which is the preferred way to differentiate
+> > +NFS clients, there are two mechanisms to add uniqueness to the
+> > +client identifier.
+> > +.TP
+> > +.B nfs.nfs4_unique_id
+> > +This module parameter can be set to an arbitrary string at boot time, or
+> > +when the=20
+> > +.B nfs
+> > +module is loaded.  This might be suitable for configuring diskless clien=
+ts.
+>=20
+> Suggest: "This is suitable for"
+
+OK
+
+>=20
+>=20
+> > +.TP
+> > +.B /sys/fs/nfs/client/net/identifier
+> > +This virtual file (available since Linux 5.3) is local to the network
+> > +name-space in which it is accessed and so can provided uniqueness between
+> > +network namespaces (containers) when the hostname remains uniform.
+>=20
+> ^provided^provide
+>=20
+> ^between^amongst
+>=20
+> and the clause at the end confused me.
+>=20
+> Suggest: "in which it is accessed and thus can provide uniqueness
+> amongst network namespaces (containers)."
+
+The clause at the end was simply emphasising that the identifer is only
+needed if the hostname does not vary across containers.  I have removed it.
+
+>=20
+>=20
+> > +.RS
+> > +.PP
+> > +This value is empty on name-space creation.
+> > +If the value is to be set, that should be done before the first
+> > +mount.  If the container system has access to some sort of per-container
+> > +identity then that identity, possibly obfuscated as a UUID is privacy is
+> > +needed, can be used.  Combining the identity with the name of the
+> > +container systems would also help.
+>=20
+> I object to recommending obfuscation via a UUID.
+>=20
+> 1. This is confusing because there has been no mention of any
+>    persistence requirement so far. At this point, a reader
+>    might think that the client can simply convert the hostname
+>    and netns identifier every time it boots. However this is
+>    only OK to do if these things are guaranteed not to change
+>    during the lifetime of a client. In a world where a majority
+>    of systems get their hostnames dynamically, I think this is
+>    a shaky foundation.
+
+If the hostname changes after boot (weird concept ..  does that really
+happen?) that is irrelevant.  The hostname is copied at boot by NFS, and
+if it is included in the /sys/fs/nfs/client/identifier (which would be
+pointless, but not harmful) it has again been copied.
+
+If it is different on subsequent boots, then that is a big problem and
+not one that we can currently fix.
+
+....except that non-persistent client identifiers isn't an enormous
+problem, just a possible cause of delays.
+
+>=20
+> 2. There's no requirement that this uniquifier be in the form
+>    of a UUID anywhere in specifications, and the Linux client
+>    itself does not add such a requirement. (You suggested
+>    before that we should start by writing down requirements.
+>    Using a UUID ain't a requirement).
+
+The requirement here is that /etc/machine-id is documented as requiring
+obfuscation.  uuidgen is a convenient way to provide obfuscation.  That
+is all I was trying to say.
+
+>=20
+>    Linux chooses to implement its uniquifer with a UUID because
+>    it is assumed we are using a random UUID (rather than a
+>    name-based or time-based UUID). A random UUID has strong
+>    global uniqueness guarantees, which guarantees the client
+>    identifier will always be unique amongst clients in nearly
+>    all situations for nearly no cost.
+>=20
+
+"Linux chooses" what does that mean?  I've lost the thread here, sorry.
+
+
+> If we want to create a good uniquifier here, then combine the
+> hostname, netns identity, and/or the host's machine-id and then
+> hash that blob with a known strong digest algorithm like
+> SHA-256. A man page must not recommend the use of deprecated or
+> insecure obfuscation mechanisms.
+
+I didn't realize the hash that uuidgen uses was deprecated.  Is there
+some better way to provide an app-specific obfuscation of a string from
+the command line?
+
+Maybe
+    echo nfs-id:`cat /etc/machine-id`| sha256sum
+
+??
+
+>=20
+> The man page can suggest a random-based UUID as long as it
+> states plainly that such UUIDs have global uniqueness guarantees
+> that make them suitable for this purpose. We're using a UUID
+> for its global uniqueness properties, not because of its
+> appearance.
+
+So I could use "/etc/nfsv4-identity" instead of "/etc/nfs4-uuid".
+What else should I change/add.
+
+>=20
+>=20
+> >  For example:
+> > +.RS 4
+> > +echo "ip-netns:`ip netns identify`" \\
+> > +.br
+> > +   > /sys/fs/nfs/client/net/identifier=20
+> > +.br
+> > +uuidgen --sha1 --namespace @url  \\
+> > +.br
+> > +   -N "nfs:`cat /etc/machine-id`" \\
+> > +.br
+> > +   > /sys/fs/nfs/client/net/identifier=20
+> > +.RE
+> > +If the container system provides no stable name,
+> > +but does have stable storage,
+>=20
+> Here's the first mention of "stable". It needs some
+> introduction far above.
+
+True.  So the first para becomes:
+
+  NFSv4 requires that the client present a stable unique identifier to
+  the server to be used to track state such as file locks.  By default
+  Linux NFS uses the hostname, as configured at the time of the first
+  NFS mount, together with some fixed content such as the name "Linux
+  NFS" and the particular protocol version.  When the hostname is
+  guaranteed to be unique among all client which access the same server,
+  and stable across reboots, this is sufficient.  If hostname uniqueness
+  cannot be assumed, extra identity information must be provided.  If
+  the hostname is not stable, unclean restarts may suffer unavoidable
+  delays.
+
+>=20
+>=20
+> > then something like
+> > +.RS 4
+> > +[ -s /etc/nfsv4-uuid ] || uuidgen > /etc/nfsv4-uuid &&=20
+> > +.br
+> > +cat /etc/nfsv4-uuid > /sys/fs/nfs/client/net/identifier=20
+> > +.RE
+> > +would suffice.
+> > +.PP
+> > +If a container has neither a stable name nor stable (local) storage,
+> > +then it is not possible to provide a stable identifier, so providing
+> > +a random identifier to ensure uniqueness would be best
+> > +.RS 4
+> > +uuidgen > /sys/fs/nfs/client/net/identifier
+> > +.RE
+> > +.RE
+> > +.SS Consequences of poor identity setting
+>=20
+> This section provides context to understand the above technical
+> recommendations. I suggest this whole section should be moved
+> to near the opening paragraph.
+
+I seem to keep moving things upwards....  something has to come last.
+Maybe a "(See below)" at the end of the revised first para?
+
+>=20
+>=20
+> > +Any two concurrent clients that might access the same server must have
+> > +different identifiers for correct operation, and any two consecutive
+> > +instances of the same client should have the same identifier for optimal
+> > +crash recovery.
+>=20
+> Also recovery from network partitions.
+
+A network partition doesn't coincide with two consecutive instances of the
+same client.  There is just one client instance and one server instance.
+
+>=20
+>=20
+> > +.PP
+> > +If two different clients present the same identity to a server there are
+> > +two possible scenarios.  If the clients use the same credential then the
+> > +server will treat them as the same client which appears to be restarting
+> > +frequently.  One client may manage to open some files etc, but as soon
+> > +as the other client does anything the first client will lose access and
+> > +need to re-open everything.
+>=20
+> This seems fuzzy.
+>=20
+> 1. If locks are lost, then there is a substantial risk of data
+>    corruption.
+>=20
+> 2. Is the client itself supposed to re-open files, or are
+>    applications somehow notified that they need to re-open?
+>    Either of these scenarios is fraught -- I don't believe any
+>    application is coded to expect to have to re-open a file
+>    due to exigent circumstances.
+
+I wasn't very happy with the description either.  I think we want some
+detail, but not too much.
+
+The "re-opening" that I mentioned is the NFS client resubmitting NFS
+OPEN requests, not the application having to re-open.
+However if the application manages to get a lock, then when the "other"
+client connects to the server the application will lose the lock, and
+all read/write accesses on the relevant fd will result in EIO (I
+think).  Clearly bad.
+
+I wanted to say the clients could end up "fighting" with each other -
+the EXCHANGE_ID from one destroys the state set up by the other - I that
+seems to be too much anthropomorphism.
+
+    If two different clients present the same identity to a server there
+    are two possible scenarios.  If the clients use the same credential
+    then the server will treat them as the same client which appears to
+    be restarting frequently.  The clients will each enter a loop where
+    they establish state with the server and then find that the state
+    has been destroy by the other client and so will need to establish
+    it again.
+
+???
+
+>=20
+>=20
+> > +.PP
+> > +If the clients use different credentials, then the second client to
+> > +establish a connection to the server will be refused access.  For=20
+> > +.B auth=3Dsys
+> > +the credential is based on hostname, so will be the same if the
+> > +identities are the same.  With
+> > +.B auth=3Dkrb
+> > +the credential is stored in=20
+> > +.I /etc/krb5.keytab
+> > +and will be the same only if this is copied among hosts.
+>=20
+> This language implies that copying the keytab is a recommended thing
+> to do. It's not. I mentioned it before because some customers think
+> it's OK to use the same keytab across their client fleet. But obviously
+> that will result in lost open and lock state.=20
+>=20
+> I suggest rephrasing this last sentence to describe the negative lease
+> recovery consequence of two clients happening to share the same host
+> principal -- as in "This is why you shouldn't share keytabs..."
+>=20
+
+How about
+
+.PP
+If the clients use different credentials, then the second client to
+establish a connection to the server will be refused access which is a
+safer failure mode.  For
+.B auth=3Dsys
+the credential is based on hostname, so will be the same if the
+identities are the same.  With
+.B auth=3Dkrb
+the credential is stored in=20
+.I /etc/krb5.keytab
+so providing this isn't copied among client the safer failure mode will resul=
+t.
+
+
+??
+
+Thanks for your details review!
+
+NeilBrown
+
+>=20
+> > +.PP
+> > +If the identity is unique but not stable, for example if it is generated
+> > +randomly on each start up of the NFS client, then crash recovery is
+> > +affected.  When a client shuts down uncleanly and restarts, the server
+> > +will normally detect this because the same identity is presented with
+> > +different boot time (or "incarnation verifier"), and will discard old
+> > +state.  If the client presents a different identifier, then the server
+> > +cannot discard old state until the lease time has expired, and the new
+> > +client may be delayed in opening or locking files that it was
+> > +previously accessing.
+> > .SH FILES
+> > .TP 1.5i
+> > .I /etc/fstab
+> > --=20
+> > 2.35.1
+> >=20
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
+>=20
+>=20
