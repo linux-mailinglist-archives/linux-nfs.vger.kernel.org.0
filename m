@@ -2,47 +2,39 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D92594DA107
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Mar 2022 18:21:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 71FA64DA12A
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Mar 2022 18:30:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350520AbiCORWK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Mar 2022 13:22:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42444 "EHLO
+        id S1349378AbiCORbf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Mar 2022 13:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350516AbiCORWE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Mar 2022 13:22:04 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDD385880F;
-        Tue, 15 Mar 2022 10:20:51 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 1EC6C6A84; Tue, 15 Mar 2022 13:20:51 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1EC6C6A84
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1647364851;
-        bh=nMdUSnDfJGUkkshZG+wCco5fLanizJJTvgIT15m762s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q+yRz4wipkaDWxm6N9up/EmnOZqr+Nwm/cs0aCcQtbJsiubKwLlzHroBRaElXCwSh
-         6Y7iRU+RS+YDdh3hrpqn9Vjv0iytNh6J/iWn/w2eBIydgv3p3Rm9I4ovcFnaKgertP
-         k/WVaZLvksv+BzktkxicNPYF+U+/uI3QCU/GWCfU=
-Date:   Tue, 15 Mar 2022 13:20:51 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     chuck.lever@oracle.com, jlayton@redhat.com,
-        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC v16 03/11] NFSD: Add lm_lock_expired call out
-Message-ID: <20220315172051.GD19168@fieldses.org>
-References: <1647051215-2873-1-git-send-email-dai.ngo@oracle.com>
- <1647051215-2873-4-git-send-email-dai.ngo@oracle.com>
- <20220315150245.GA19168@fieldses.org>
- <1e1ff6a1-86cf-99d4-13ad-45352e58fe73@oracle.com>
+        with ESMTP id S236042AbiCORbe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Mar 2022 13:31:34 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 883CB5677D
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Mar 2022 10:30:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id EE046CE1B73
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Mar 2022 17:30:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF2AC340F5
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Mar 2022 17:30:18 +0000 (UTC)
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH RFC] xprtrdma: Allocate regbufs with GPF_KERNEL
+Date:   Tue, 15 Mar 2022 13:30:16 -0400
+Message-Id:  <164736541009.2241669.16368625440881516236.stgit@morisot.1015granger.net>
+X-Mailer: git-send-email 2.35.0
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1e1ff6a1-86cf-99d4-13ad-45352e58fe73@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4780; h=from:subject:message-id; bh=tUQugJmDdrgpPkTEolcLPQWOyarCn0BkXIHIFEz6QfM=; b=owEBbQKS/ZANAwAIATNqszNvZn+XAcsmYgBiMM0iB/rtI4funYkdYung0BbvcPP3NeAZ/odQKYoQ 5AewFAiJAjMEAAEIAB0WIQQosuWwEobfJDzyPv4zarMzb2Z/lwUCYjDNIgAKCRAzarMzb2Z/l7JlEA C0TLgfF5MIyXVk40d6hvnIYw3DHzV/FUZTtukclV8obf4SpEFE8rwQhfAtRAB0ZNp2CtHZWtUy/V8e rioDWFGsHyegQJKMcGgg1+geWlYAeTHKxa9NgiYrYKCyI2QwBUTdlMhYa23g85lr42AqVDw1oe4aaQ fGfff7y34Aa+QFvr3UFtg8gK0+FNSsGVrVQLJSVb5bOvw3zbEdmOq/pQA8xHOTpI3O7eUlmHLcUeOU cLAHZl4uZB6+GamzjCbdXK/pfPT1qusoaMXon5U8dwn3V+rhOq3u9RuQsElHGy2VP8GGeu8bCesY/e XmbA0f+ZBFW7p5mKQ8zrkVMSoOQDbsaE/kDv1mODl5UtqlO9ogsqArFkxHp/QRkPT+ekc5ag1xLw0Q 6T91+Pm0GMYiy2HpqUNbZFIvfCN/++DV3cjm59pcD28+XcHg2YOMpgI0knlvooK1OYaP/VUlj1ZFO7 zqubcQMtBwqvJqg2uzMgN0/Zy/dI558gQi9nq9KPyvoqaUBa4IRbgbtkj0isqE+L1A7wgtuBtl18BO D+PNIk7ovCt4LBwbsxCDbz4+3FOpk1sVfYMVMHyC2FgEU27CqyNB7iEEb5253DBERfT/BB0qf2gOZ7 ASgRO2kTp8WH0rjN3QQ4aiBL0Er+32J+H3KT9Sf2oNqvRyK5TLW2Gdr5qjqQ==
+X-Developer-Key: i=chuck.lever@oracle.com; a=openpgp; fpr=28B2E5B01286DF243CF23EFE336AB3336F667F97
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,101 +42,124 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Mar 15, 2022 at 09:26:46AM -0700, dai.ngo@oracle.com wrote:
-> 
-> On 3/15/22 8:02 AM, J. Bruce Fields wrote:
-> >On Fri, Mar 11, 2022 at 06:13:27PM -0800, Dai Ngo wrote:
-> >>Add callout function nfsd4_lm_lock_expired for lm_lock_expired.
-> >>If lock request has conflict with courtesy client then expire the
-> >>courtesy client and return no conflict to caller.
-> >>
-> >>Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> >>---
-> >>  fs/nfsd/nfs4state.c | 37 +++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 37 insertions(+)
-> >>
-> >>diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> >>index a65d59510681..583ac807e98d 100644
-> >>--- a/fs/nfsd/nfs4state.c
-> >>+++ b/fs/nfsd/nfs4state.c
-> >>@@ -6578,10 +6578,47 @@ nfsd4_lm_notify(struct file_lock *fl)
-> >>  	}
-> >>  }
-> >>+/**
-> >>+ * nfsd4_lm_lock_expired - check if lock conflict can be resolved.
-> >>+ *
-> >>+ * @fl: pointer to file_lock with a potential conflict
-> >>+ * Return values:
-> >>+ *   %false: real conflict, lock conflict can not be resolved.
-> >>+ *   %true: no conflict, lock conflict was resolved.
-> >>+ *
-> >>+ * Note that this function is called while the flc_lock is held.
-> >>+ */
-> >>+static bool
-> >>+nfsd4_lm_lock_expired(struct file_lock *fl)
-> >>+{
-> >>+	struct nfs4_lockowner *lo;
-> >>+	struct nfs4_client *clp;
-> >>+	bool rc = false;
-> >>+
-> >>+	if (!fl)
-> >>+		return false;
-> >>+	lo = (struct nfs4_lockowner *)fl->fl_owner;
-> >>+	clp = lo->lo_owner.so_client;
-> >>+
-> >>+	/* need to sync with courtesy client trying to reconnect */
-> >>+	spin_lock(&clp->cl_cs_lock);
-> >>+	if (test_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags))
-> >>+		rc = true;
-> >>+	else {
-> >>+		if (test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags)) {
-> >>+			set_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags);
-> >>+			rc =  true;
-> >>+		}
-> >>+	}
-> >I'd prefer:
-> >
-> >	if (test_bit(NFSD4_CLIENT_COURTESY, &clp->cl_flags))
-> >		set_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags);
-> 
-> we also need to set rc to true here.
+When allocating memory, it should be safe to always use GFP_KERNEL,
+since both swap tasks and asynchronous tasks will regulate the
+allocation mode through the struct task flags. A similar change was
+recently made for RPC socket transports.
 
-No, the next line does it because we set the EXPIRED bit.
+Since the @flags argument to rpcrdma_regbuf_realloc() is now
+invariant, remove it.
 
---b.
+Suggested-by: Trond Myklebust <trondmy@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    4 ++--
+ net/sunrpc/xprtrdma/transport.c            |   16 ++++------------
+ net/sunrpc/xprtrdma/verbs.c                |    5 ++---
+ net/sunrpc/xprtrdma/xprt_rdma.h            |    5 +----
+ 4 files changed, 9 insertions(+), 21 deletions(-)
 
-> 
-> >	if (test_bit(NFSD4_CLIENT_EXPIRED, &clp->cl_flags))
-> >		rc = true;
-> 
-> With v16 we need to check for NFSD4_CLIENT_EXPIRED first then
-> NFSD4_CLIENT_COURTESY because both flags can be set. In the
-> next patch version, we will clear NFSD4_CLIENT_COURTESY when
-> setting NFSD4_CLIENT_EXPIRED so the order of check does not
-> matter.
-> 
-> >
-> >Same result, but more compact and straightforward, I think.
-> 
-> Chuck wants to replace the bits used for courtesy client in
-> cl_flags with a  separate u8 field so it does not have to use
-> bit operation to set/test.
-> 
-> -Dai
-> 
-> >
-> >--b.
-> >
-> >>+	spin_unlock(&clp->cl_cs_lock);
-> >>+	return rc;
-> >>+}
-> >>+
-> >>  static const struct lock_manager_operations nfsd_posix_mng_ops  = {
-> >>  	.lm_notify = nfsd4_lm_notify,
-> >>  	.lm_get_owner = nfsd4_lm_get_owner,
-> >>  	.lm_put_owner = nfsd4_lm_put_owner,
-> >>+	.lm_lock_expired = nfsd4_lm_lock_expired,
-> >>  };
-> >>  static inline void
-> >>-- 
-> >>2.9.5
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 16897fcb659c..36d8a297a8c5 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -119,12 +119,12 @@ xprt_rdma_bc_allocate(struct rpc_task *task)
+ 		return -EINVAL;
+ 	}
+ 
+-	page = alloc_page(RPCRDMA_DEF_GFP);
++	page = alloc_page(GFP_KERNEL);
+ 	if (!page)
+ 		return -ENOMEM;
+ 	rqst->rq_buffer = page_address(page);
+ 
+-	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, RPCRDMA_DEF_GFP);
++	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, GFP_KERNEL);
+ 	if (!rqst->rq_rbuffer) {
+ 		put_page(page);
+ 		return -ENOMEM;
+diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+index 42e375dbdadb..e50824a30d41 100644
+--- a/net/sunrpc/xprtrdma/transport.c
++++ b/net/sunrpc/xprtrdma/transport.c
+@@ -541,11 +541,10 @@ xprt_rdma_free_slot(struct rpc_xprt *xprt, struct rpc_rqst *rqst)
+ }
+ 
+ static bool rpcrdma_check_regbuf(struct rpcrdma_xprt *r_xprt,
+-				 struct rpcrdma_regbuf *rb, size_t size,
+-				 gfp_t flags)
++				 struct rpcrdma_regbuf *rb, size_t size)
+ {
+ 	if (unlikely(rdmab_length(rb) < size)) {
+-		if (!rpcrdma_regbuf_realloc(rb, size, flags))
++		if (!rpcrdma_regbuf_realloc(rb, size))
+ 			return false;
+ 		r_xprt->rx_stats.hardway_register_count += size;
+ 	}
+@@ -567,17 +566,10 @@ xprt_rdma_allocate(struct rpc_task *task)
+ 	struct rpc_rqst *rqst = task->tk_rqstp;
+ 	struct rpcrdma_xprt *r_xprt = rpcx_to_rdmax(rqst->rq_xprt);
+ 	struct rpcrdma_req *req = rpcr_to_rdmar(rqst);
+-	gfp_t flags;
+ 
+-	flags = RPCRDMA_DEF_GFP;
+-	if (RPC_IS_SWAPPER(task))
+-		flags = __GFP_MEMALLOC | GFP_NOWAIT | __GFP_NOWARN;
+-
+-	if (!rpcrdma_check_regbuf(r_xprt, req->rl_sendbuf, rqst->rq_callsize,
+-				  flags))
++	if (!rpcrdma_check_regbuf(r_xprt, req->rl_sendbuf, rqst->rq_callsize))
+ 		goto out_fail;
+-	if (!rpcrdma_check_regbuf(r_xprt, req->rl_recvbuf, rqst->rq_rcvsize,
+-				  flags))
++	if (!rpcrdma_check_regbuf(r_xprt, req->rl_recvbuf, rqst->rq_rcvsize))
+ 		goto out_fail;
+ 
+ 	rqst->rq_buffer = rdmab_data(req->rl_sendbuf);
+diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+index 7b5fce2faa10..c368b4165fa0 100644
+--- a/net/sunrpc/xprtrdma/verbs.c
++++ b/net/sunrpc/xprtrdma/verbs.c
+@@ -1259,16 +1259,15 @@ rpcrdma_regbuf_alloc(size_t size, enum dma_data_direction direction,
+  * rpcrdma_regbuf_realloc - re-allocate a SEND/RECV buffer
+  * @rb: regbuf to reallocate
+  * @size: size of buffer to be allocated, in bytes
+- * @flags: GFP flags
+  *
+  * Returns true if reallocation was successful. If false is
+  * returned, @rb is left untouched.
+  */
+-bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size, gfp_t flags)
++bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size)
+ {
+ 	void *buf;
+ 
+-	buf = kmalloc(size, flags);
++	buf = kmalloc(size, GFP_KERNEL);
+ 	if (!buf)
+ 		return false;
+ 
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index c79f92eeda76..b81620c90061 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -149,8 +149,6 @@ static inline void *rdmab_data(const struct rpcrdma_regbuf *rb)
+ 	return rb->rg_data;
+ }
+ 
+-#define RPCRDMA_DEF_GFP		(GFP_NOIO | __GFP_NOWARN)
+-
+ /* To ensure a transport can always make forward progress,
+  * the number of RDMA segments allowed in header chunk lists
+  * is capped at 16. This prevents less-capable devices from
+@@ -484,8 +482,7 @@ void rpcrdma_buffer_put(struct rpcrdma_buffer *buffers,
+ void rpcrdma_rep_put(struct rpcrdma_buffer *buf, struct rpcrdma_rep *rep);
+ void rpcrdma_reply_put(struct rpcrdma_buffer *buffers, struct rpcrdma_req *req);
+ 
+-bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size,
+-			    gfp_t flags);
++bool rpcrdma_regbuf_realloc(struct rpcrdma_regbuf *rb, size_t size);
+ bool __rpcrdma_regbuf_dma_map(struct rpcrdma_xprt *r_xprt,
+ 			      struct rpcrdma_regbuf *rb);
+ 
+
