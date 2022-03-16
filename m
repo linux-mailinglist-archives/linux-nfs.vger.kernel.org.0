@@ -2,131 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B45164DBA7F
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 23:05:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C8AA84DBAA6
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 23:24:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343897AbiCPWGb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Mar 2022 18:06:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        id S229831AbiCPWZ5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Mar 2022 18:25:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243216AbiCPWG3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 18:06:29 -0400
-Received: from smtpout-2.cvg.de (smtpout-2.cvg.de [IPv6:2003:49:a034:1067:5::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB511D9
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 15:05:12 -0700 (PDT)
-Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
-        by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22GM5AKZ001402
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 23:05:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-        s=v2012061000; t=1647468311;
-        bh=OnlYcD2Bt1lsZjDgEnNXPDoWxg9Bx81/JrBm8vdvjRs=; l=2823;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To;
-        b=FzsMjKL4JLRa2GVzCHW8QaXlLNkzOhy1TEBa5R8B5wCXqqVSBYooi2kbj5Uc1a4HB
-         Cib1SnH7iQmqkWu5Cb3XQoDhAB65pUmbrRBL4fta1QJADFaYi0Fpt9N7P77v6cYVay
-         Z13xMcdfE7f65H/P+/nH+84WAiaNV87yXIe37VCA=
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-        by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 22GM58b9741411
-        for <linux-nfs@vger.kernel.org> from enrico.scholz@sigma-chemnitz.de; Wed, 16 Mar 2022 23:05:09 +0100
-Received: from mail-msa-2.intern.sigma-chemnitz.de ( [192.168.12.72]) by reddoxx.intern.sigma-chemnitz.de
-        (Reddoxx engine) with SMTP id 713C0D4D2C9; Wed, 16 Mar 2022 23:05:08 +0100
-Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-        by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22GM57Ze001374
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 16 Mar 2022 23:05:08 +0100
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
-        (envelope-from <ensc@sigma-chemnitz.de>)
-        id 1nUblR-0003PJ-UO; Wed, 16 Mar 2022 23:05:06 +0100
-From:   Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: Random NFS client lockups
-References: <lyr172gl1t.fsf@ensc-virt.intern.sigma-chemnitz.de>
-        <lysfrhr51i.fsf@ensc-virt.intern.sigma-chemnitz.de>
-        <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
-Date:   Wed, 16 Mar 2022 23:05:05 +0100
-In-Reply-To: <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
-        (Trond Myklebust's message of "Wed, 16 Mar 2022 21:39:37 +0000")
-Message-ID: <lyilsd8sfi.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        with ESMTP id S232201AbiCPWZy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 18:25:54 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D93619C31
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 15:24:39 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id d15so1936642qty.8
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 15:24:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5MiaYocJwA97nEVN8bYG9Hxb5SJ1BYXCuLlQCYg9SvQ=;
+        b=aXVgy9dCmntrNBTGU1EYSArAIBP5y8ySRIjiNtHlf8arqmxRHe2ZG29P8YXihCLOv6
+         EwolensKub0ofmeguPfVOxOKdcXK4gYiw/Mds2yY+9VakhMjiGoHEfy1j/zg7FDhVA1t
+         gj5SD0u74CAh4H5X9f8C+JVC5LcF9/MBA7WyKi0XKgsIUkcRE8YmufyopFO5UjU6Yeiu
+         7+llcstSqnd3e9jf1Bjt/4STHYkXn3uoZddFvtGI20poKS9Ku/vitoec3mjJTOEfc+U9
+         JGkSvrZSis6DHXgu27ENFY2uCiQaGbW5yDYS8QLKC7xUjaOEX0UzsIGDkGK2Zoos5Ccy
+         fdhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5MiaYocJwA97nEVN8bYG9Hxb5SJ1BYXCuLlQCYg9SvQ=;
+        b=yQzdH4G8gTxqCQdKoy1lYZTdmqvJxFSjIwWKSt0H3sqjPia1tZBFRL6PIWX9kPX0pX
+         Cax8j9tSkDazUxHDIg5Me6BF0hd8nt5TOPLF5fbSE/WxpfhntG4DOAPWK4oXrP8ozJ9K
+         YnBbB45U2MJOof+i+t5cdtrn5drB6yIrhci4bTwYaOULNJkK+dtO7Zr+UPHFVh29R3kt
+         ozHuQsFPRcHD8Q5wpnXhc2Jl3wl39miooYJorMevwhD5fpEalPWevgQf07n/QE5DyVgv
+         eHWcI0WrHR83JP67WOv8UgLUs4H9trD+P2L3HcpCwn6JxrGfo82dGkjfpEXi8bm/OhPj
+         QfDg==
+X-Gm-Message-State: AOAM532fPpTB52SN8mtEeNz0CHwipiNDMTvmGiZjws27oj3rLKbT/6Dm
+        tO4irskc3uqKaF63wyYPDWha47B45Rk=
+X-Google-Smtp-Source: ABdhPJy1IkOoiq20ntu2NboY+fTXjhLY2/Erwdu0Q1sfcHBkqlMUfgws5qdZ4F4rEy/h3h74wGQOhg==
+X-Received: by 2002:ac8:5b15:0:b0:2e1:d84f:1151 with SMTP id m21-20020ac85b15000000b002e1d84f1151mr1626354qtw.364.1647469478648;
+        Wed, 16 Mar 2022 15:24:38 -0700 (PDT)
+Received: from kolga-mac-1.vpn.netapp.com ([2600:1700:6a10:2e90:b016:68b1:1ae9:1653])
+        by smtp.gmail.com with ESMTPSA id f83-20020a379c56000000b0067b2dd2c860sm1466730qke.54.2022.03.16.15.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Mar 2022 15:24:38 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 1/1] NFSv4.1 provide mount option to toggle trunking discovery
+Date:   Wed, 16 Mar 2022 18:24:26 -0400
+Message-Id: <20220316222426.82485-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond Myklebust <trondmy@hammerspace.com> writes:
+From: Olga Kornievskaia <kolga@netapp.com>
 
->> Mar 16 05:02:40.051969: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 8=
- conn 1 dead 0 zapped 1 sk_shutdown 1
->> Mar 16 05:02:40.052067: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_clos=
-e xprt 0000000022aecad1
->> Mar 16 05:02:40.052189: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
- conn 0 dead 0 zapped 1 sk_shutdown 3
->> Mar 16 05:02:40.052243: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_erro=
-r_report client 0000000022aecad1, error=3D32...
->> Mar 16 05:02:40.052367: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
- conn 0 dead 0 zapped 1 sk_shutdown 3
->> Mar 16 05:02:40.052503: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
- conn 0 dead 0 zapped 1 sk_shutdown 3
->> Mar 16 05:02:40.053201: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_conn=
-ect scheduled xprt 0000000022aecad1
->> Mar 16 05:02:40.055886: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_bind=
- 0000:0000:0000:0000:0000:0000:0000:0000:875: ok (0)
->> __A__=C2=A0 05:02:40.055947: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wo=
-rker connecting xprt 0000000022aecad1 via tcp to XXXXX:2001:1022:: (port 20=
-49)
->> Mar 16 05:02:40.055995: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0000000=
-022aecad1 connect status 115 connected 0 sock state 2
->
-> Socket is in TCP state 2 =3D=3D SYN_SENT
-> So the client requested to connect to the server
+Introduce a new mount option -- trunkdiscovery,notrunkdiscovery -- to
+toggle whether or not the client will engage in actively discovery
+of trunking locations.
 
-server closed the connection (state 8, CLOSE_WAIT), client cleaned up
-correctly and reconnected.
+v2 make notrunkdiscovery default
 
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ fs/nfs/client.c           | 3 ++-
+ fs/nfs/fs_context.c       | 8 ++++++++
+ include/linux/nfs_fs_sb.h | 1 +
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
->> Mar 16 05:07:28.326605: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 8=
- conn 1 dead 0 zapped 1 sk_shutdown 1
->
-> Socket is now in TCP state 8 =3D=3D TCP_CLOSE_WAIT...
->
-> That means the server sent a FIN to the client to request that the
-> connection be closed.
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index d1f34229e11a..e828504cc396 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -857,7 +857,8 @@ static int nfs_probe_fsinfo(struct nfs_server *server, struct nfs_fh *mntfh, str
+ 	}
+ 
+ 	if (clp->rpc_ops->discover_trunking != NULL &&
+-			(server->caps & NFS_CAP_FS_LOCATIONS)) {
++			(server->caps & NFS_CAP_FS_LOCATIONS &&
++			 (server->flags & NFS_MOUNT_TRUNK_DISCOVERY))) {
+ 		error = clp->rpc_ops->discover_trunking(server, mntfh);
+ 		if (error < 0)
+ 			return error;
+diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+index ea17fa1f31ec..e2d59bb5e6bb 100644
+--- a/fs/nfs/fs_context.c
++++ b/fs/nfs/fs_context.c
+@@ -80,6 +80,7 @@ enum nfs_param {
+ 	Opt_source,
+ 	Opt_tcp,
+ 	Opt_timeo,
++	Opt_trunkdiscovery,
+ 	Opt_udp,
+ 	Opt_v,
+ 	Opt_vers,
+@@ -180,6 +181,7 @@ static const struct fs_parameter_spec nfs_fs_parameters[] = {
+ 	fsparam_string("source",	Opt_source),
+ 	fsparam_flag  ("tcp",		Opt_tcp),
+ 	fsparam_u32   ("timeo",		Opt_timeo),
++	fsparam_flag_no("trunkdiscovery", Opt_trunkdiscovery),
+ 	fsparam_flag  ("udp",		Opt_udp),
+ 	fsparam_flag  ("v2",		Opt_v),
+ 	fsparam_flag  ("v3",		Opt_v),
+@@ -529,6 +531,12 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
+ 		else
+ 			ctx->flags &= ~NFS_MOUNT_NOCTO;
+ 		break;
++	case Opt_trunkdiscovery:
++		if (result.negated)
++			ctx->flags &= ~NFS_MOUNT_TRUNK_DISCOVERY;
++		else
++			ctx->flags |= NFS_MOUNT_TRUNK_DISCOVERY;
++		break;
+ 	case Opt_ac:
+ 		if (result.negated)
+ 			ctx->flags |= NFS_MOUNT_NOAC;
+diff --git a/include/linux/nfs_fs_sb.h b/include/linux/nfs_fs_sb.h
+index ca0959e51e81..b0e3fd550122 100644
+--- a/include/linux/nfs_fs_sb.h
++++ b/include/linux/nfs_fs_sb.h
+@@ -151,6 +151,7 @@ struct nfs_server {
+ #define NFS_MOUNT_SOFTREVAL		0x800000
+ #define NFS_MOUNT_WRITE_EAGER		0x01000000
+ #define NFS_MOUNT_WRITE_WAIT		0x02000000
++#define NFS_MOUNT_TRUNK_DISCOVERY	0x04000000
+ 
+ 	unsigned int		fattr_valid;	/* Valid attributes */
+ 	unsigned int		caps;		/* server capabilities */
+-- 
+2.27.0
 
-yes; the same situation like above
-
-
->> Mar 16 05:07:28.326679: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_conn=
-ect scheduled xprt 0000000022aecad1
->> __B__=C2=A0 05:07:28.326978: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wo=
-rker connecting xprt 0000000022aecad1 via tcp to XXXXX:2001:1022:: (port 20=
-49)
->> Mar 16 05:07:28.327050: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0000000=
-022aecad1 connect status 0 connected 0 sock state 8
->> __C__=C2=A0 05:07:28.327113: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs=
-_close xprt 0000000022aecad1
->
-> Client closes the socket, which is still in TCP_CLOSE_WAIT
-
-the 'xs_close' is very likely a reaction to the state change reported
-above and should happen before 'xs_connect'.
-
-
-> Basically, what the above means is that your server is initiating the
-> close of the connection, not the client.
-
-yes; but the client should reconnect (and does it in most cases).
-Sometimes there seems to be a race which prevents the reconnect and
-brings the client in a broken state.
-
-
-
-Enrico
