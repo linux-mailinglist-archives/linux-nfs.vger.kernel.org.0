@@ -2,222 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 679564DBA40
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 22:39:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B45164DBA7F
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 23:05:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345373AbiCPVk5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Mar 2022 17:40:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
+        id S1343897AbiCPWGb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Mar 2022 18:06:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241335AbiCPVk4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 17:40:56 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2127.outbound.protection.outlook.com [40.107.94.127])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D4538DA7
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 14:39:40 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HbExYQKBP8bElzY3rr5vfgil3QBsYBCEITNagH2CyrT3AIVx+ln/j6gCex9zGIP+Q2YMWiAK5/sIIjyHDqULyAAlP9LpABHkZQ15LVOpy7iJjksQD8qcBtXxrCQa1O/QK8oK8lE9zWVw5amEk3CMR0+493P+1BhCjN3Ty09rUWbaMdRwfFSgaUKPmgU68AHa7OuXDBQG1GuabCUW6dgKTZjL0WzRfxYMcA14+RwckQuSopInNOgowg0Mc+DvvjrWfezuwQwW/uu/UD8pIWxmCTvM6ZHb2kkxbgxfkaCasrVKSgMg4nHWwZkTd3ds/Q5+dHexKItNyj6jcVigRe4Sqw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+HoJpI4skdnUbOfrYEVJdRXxZSfK63ezK/I00BWZbxc=;
- b=HVAhOADmi0kAU63SH3ljfy0DmKD1j2q1ofxpWT9WWGzRZUajvgvNtDGcKTmC5zlODpNhXkSlMlOmiGQIJ9peAUnIwrpiBaEkFVj7Cpdl4DNxXuKmASjBoxOQapzU4Ajz7tgA0KT+ucGQ7ua++y4r2BH0ux3F6i8cldYr0P+3ktBRJD99EP4rrnUMwwY555Kd96fM9sXvx5jzDUsxX4kMTdXjC6pny7WdZu5ZdTeCt3rZdO0/RoRWfkD/shYj6wjJleZonIkI3meiItC7s+Tb+OB3DzE61RNUrCu+dqrhFAZ1YihvYiS60eaMgntyeBJviVXMPH9pHjkW9aRKiWqnVg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+HoJpI4skdnUbOfrYEVJdRXxZSfK63ezK/I00BWZbxc=;
- b=bVXu9+LmGuD4SlDgKhgyd5BD2XY7CN/NJCMp6ZrqrLpy7dMypsjhIehvoqFe2TAJUZ//DBLaDurwRF2nffCXptcP3ZEgO5TcDLOW4rAbTcQJOC14+EoH22u+mu5VGXVR7G6jhdpgAWp2gWvFNqkEFDd+toon70P2Zef44+w+3PM=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM6PR13MB2412.namprd13.prod.outlook.com (2603:10b6:5:c3::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.12; Wed, 16 Mar
- 2022 21:39:37 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::70cc:dd9c:25b:4f3f%9]) with mapi id 15.20.5081.016; Wed, 16 Mar 2022
- 21:39:37 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "enrico.scholz@sigma-chemnitz.de" <enrico.scholz@sigma-chemnitz.de>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        with ESMTP id S243216AbiCPWG3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 18:06:29 -0400
+Received: from smtpout-2.cvg.de (smtpout-2.cvg.de [IPv6:2003:49:a034:1067:5::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECB511D9
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 15:05:12 -0700 (PDT)
+Received: from mail-mta-3.intern.sigma-chemnitz.de (mail-mta-3.intern.sigma-chemnitz.de [192.168.12.71])
+        by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22GM5AKZ001402
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 23:05:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
+        s=v2012061000; t=1647468311;
+        bh=OnlYcD2Bt1lsZjDgEnNXPDoWxg9Bx81/JrBm8vdvjRs=; l=2823;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=FzsMjKL4JLRa2GVzCHW8QaXlLNkzOhy1TEBa5R8B5wCXqqVSBYooi2kbj5Uc1a4HB
+         Cib1SnH7iQmqkWu5Cb3XQoDhAB65pUmbrRBL4fta1QJADFaYi0Fpt9N7P77v6cYVay
+         Z13xMcdfE7f65H/P+/nH+84WAiaNV87yXIe37VCA=
+Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
+        by mail-mta-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 22GM58b9741411
+        for <linux-nfs@vger.kernel.org> from enrico.scholz@sigma-chemnitz.de; Wed, 16 Mar 2022 23:05:09 +0100
+Received: from mail-msa-2.intern.sigma-chemnitz.de ( [192.168.12.72]) by reddoxx.intern.sigma-chemnitz.de
+        (Reddoxx engine) with SMTP id 713C0D4D2C9; Wed, 16 Mar 2022 23:05:08 +0100
+Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+        by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22GM57Ze001374
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 16 Mar 2022 23:05:08 +0100
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
+        (envelope-from <ensc@sigma-chemnitz.de>)
+        id 1nUblR-0003PJ-UO; Wed, 16 Mar 2022 23:05:06 +0100
+From:   Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Subject: Re: Random NFS client lockups
-Thread-Topic: Random NFS client lockups
-Thread-Index: AQHYOTNtgmB6rJCmJ0isIByWAotJaqzCffsJgAAMRwA=
-Date:   Wed, 16 Mar 2022 21:39:37 +0000
-Message-ID: <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
 References: <lyr172gl1t.fsf@ensc-virt.intern.sigma-chemnitz.de>
-         <lysfrhr51i.fsf@ensc-virt.intern.sigma-chemnitz.de>
-In-Reply-To: <lysfrhr51i.fsf@ensc-virt.intern.sigma-chemnitz.de>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8ba863c5-2ff2-4814-f492-08da07957855
-x-ms-traffictypediagnostic: DM6PR13MB2412:EE_
-x-microsoft-antispam-prvs: <DM6PR13MB2412A28BECA10F1D2180A17CB8119@DM6PR13MB2412.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fvkI4cOiq1JaUm3FNUJ9YybMnOTn6x2YUTVUxkiOIjNvrdyf2qIxW/1edNwua/vePGIAvPlpQFXlVVE95d9mkXHAVSK0dhn6RHBNImSDA6k+D1Ey6zD8hTJsbHmQwZ40o+0CrUx8A1nOu8DPKEdDLXck32pSMz90+JdLe7K0L/Le+IQqwiGM3rHXwWMMzkJL+1fEvOBmxeheqzNWA4Ck0tYWwx0vA8VQlRUptoGZIrcWdHd0apCO5p/GivpaqBn/yw7cnBLuj46Lmz9cOmi6VFQy37SxqI204LpYeWmtJ80aaOe64gfyng5ALqBW4s24b1wC0gHQ4qIL6GA7r/M5jN4cmSnrb7UkfUtgzKfTsL/TCSatvw9MnK3J2Vybsogi4cKyKlq4iXg+NYMMPlnrODt7QB3S4BrQyKMrQR07CENSPftEcpJwrD9GSekdzWrtVlVlwqIuCUw5ot1Ycd7oQ+1kq515TTy90uJ+WkjcwfyN3NtsALMLZa3G0BdoFFjlroHRiXFCvN8unjEZzJdSbIqQijN8xdbwPNyqU2F1sYzQ0uGztdFHsSITv7PCpZDsXTJOR9V83nir5ic2HHF5CT/Dz7MkKg4tH7+S068R2zrO/04Af8JQwDDjLX8vpRT51WLOcoU81GktUwvACEd8MwPCy5+9N1J5Hzi/zrXcjVQl0jiNFL7UJaVdyZrDn0LXLi0uz+bTtkOqtchCDfuzpcigZhcwipWUPrrYneeJqgxAvE353kblsXuvCQPCxUrwubG2CfPPtCB61nrGPxHjl3WKhmrxe70FffMLKyPM2NWc/pAPleMObc3JPx9h+ExPgVc0xhZch0/ABxQMSr847Et7m8+jqzXcqVLxypYyyF4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2906002)(6512007)(8936002)(86362001)(316002)(508600001)(6506007)(8676002)(66556008)(966005)(66446008)(66946007)(6486002)(76116006)(64756008)(66476007)(83380400001)(5660300002)(38100700002)(3480700007)(2616005)(36756003)(71200400001)(186003)(26005)(38070700005)(110136005)(122000001)(10090945011);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ZDlzelFJTFpCWmM4ZUFjWW1ZQ3crSEtpekRhbTFBeEgwUmRxU2pocE1yVzRv?=
- =?utf-8?B?OUR4VGRzWitzRHRLYWMyd0k5a29aSWRVNmp1U1NDWGRiN2NRMC9FNHRubEgx?=
- =?utf-8?B?MkpNdGVZQnU2a1oxQ3UvSWxFaXdsRERtSU55K1VYQkVVb3JDS2tGYkJuSGww?=
- =?utf-8?B?UE1aM1dvYWlYUXZYNFppRUlMWDF0NDRpWnVoMDNWbnRjelBWdGNjUTVOM28r?=
- =?utf-8?B?dW9JbHpVWlJvTDE5ek5VbjVEcEVDbnI2b2FDcXU4QjVHanRyZ29VZFZtekVo?=
- =?utf-8?B?Z29XQ2gzdmlmRU5HemM1UWRZNUVSd3NJQWdQTld6YjMvbFhmRjMyRnlKalJJ?=
- =?utf-8?B?UUhkeHBFaFpwVnR5WjNHZlNiMDBXKy9XRzNTWExpRURraUM5RkhHTkRLNG96?=
- =?utf-8?B?VmhLVUE3RnB6UkxXWU5SeVZwRHgwTnRLOHF5Q3VycjBCeFpUamhPOWdtb1pG?=
- =?utf-8?B?WkVDR0VKNnYySm5sMWlTY0Q5Y3dUY1hHQWpQSUpyNEh3cVJ0NFR4WmkzQXlJ?=
- =?utf-8?B?ZThpSkFORHYzakxQNDcxaGVaNjdoYVhUTWVHdDBtOUc0SW9nMERmcG5hQXV1?=
- =?utf-8?B?UkJzeEdTSVN6Sk9HZEp5dWErcW1SdExETDg1aFVjK2VaRDJJSkd1UzhxUlkx?=
- =?utf-8?B?K0k5UjlQUnA4Q3J1aVhCS2xOM1YxcGp0c1lBaHhJVW5rNERBakdjY2h2czNj?=
- =?utf-8?B?TVFhSm5zeFpTMTMrMjRZZy9Ed0RJeDU1TDhneUdRem5vT0xlcVV4YWJvTHEr?=
- =?utf-8?B?KzgvRC91TUZlSjg5V3BFSFFNSVBnU3MreWJ2UmF6eXJPeUNLM05xVnJ6a0d2?=
- =?utf-8?B?cnltME5ENU1GRmNrM2hDTXZaL01hMk14c01RNzIvSjdsMnVHbnpBRW41WHV5?=
- =?utf-8?B?YzRrZjJXQnZqWlhNV1B4TFJXNW11czJaTU5DbzJ2Q0s0aXg2anBZUnhxTEF5?=
- =?utf-8?B?aEdsQXdOUUE4cmtEeVNERkpxaXZsa3RyQ29LWC9ocW5sRnY4KythOFdKTDJL?=
- =?utf-8?B?UXpKTUpsaWsvTm14OUZDeHI0OTA0YUdPNVVNcFpvR1ZNTWpsTXJzMDFKUmJ1?=
- =?utf-8?B?dnhFQWFhQUFLWjIyQ3lTcWhvNnkwT210RUdvMkdkaHExNHF6NUxZRlpYUitN?=
- =?utf-8?B?d2dMWEFoSnQ2YnlUdkQ3dEtkTEQ2czYxS20wMHNCbDVmOXFqeEZ2eHkxQWUy?=
- =?utf-8?B?endyRnlvSER5bEZ1LzZtNi9mSFU5dnhPNzE4cFRGMXpSdWVUbStiNDF6RzVP?=
- =?utf-8?B?eXIwNGZjVC9QWmxBK0N2Qlc0NEVvWDBpUFVETHpaaVVHUTBDTFhoVjFIaSt5?=
- =?utf-8?B?Y1ovL3E5ck1DZlUxZXIydmdmNDBFRVVCUnhsQmtseGFFREl3Ky9FYTloR2dS?=
- =?utf-8?B?WEozMElLeXBMdHV5M01CUTRQaHZCWEpEbjZDYllocTA5RmQ3YXZoSEdmL2Rx?=
- =?utf-8?B?QWFMY0tFUU9WN1ZFLzBtQXBHY2Z1M20veTRuano2N1Y2ZnFIZ2VKQ3ArejZX?=
- =?utf-8?B?Vy9Fa2V3em52b21wWHdpczJjeHI0R21rQ2lpbElNSjVEemx5K1pseHdWTDZ0?=
- =?utf-8?B?OHdmb3dJRnNtRzBHOWZtRWh4bndQdWd5N0VYWEpwVk1YWVVadkkyaVJ4TmtQ?=
- =?utf-8?B?VnVUcE8xRkJ6ZHhJYUIyd1NQS0FvNW1NUkg2UTVUUVBwRFlxRWE0cTViMUFl?=
- =?utf-8?B?NkZpQkpVWGRHcGZBaFNRMG05MWlaZzRKbnQ5RG1oWEdsMlhqS3c5R0d2T0FL?=
- =?utf-8?B?WWFhQm1wRStvL255dWI1WEhiZVF5OWRwRFRRNFBGSENlZENwdWhuNjltQjd4?=
- =?utf-8?B?THJMRDBYbzM3YkZBSjdWRTFpeUplb3k5b2VMNzJQNVpNbnJ6OHBkdFdzV1VQ?=
- =?utf-8?B?MVV4aEd0OStyejV0WFZxc1ZWQXlGb2w4aTBKVlZvS0d0Tzh5eWdFa3BseUl3?=
- =?utf-8?B?ZlNEQnpZYnZQZW5GN3lXdW9GVTNJRG9zcXl3UkZCc3RtMTJuemtVQms4czJF?=
- =?utf-8?B?bEErQlRsMjBBPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4924F3B18754E04BBFB84BF0ACDE7D01@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        <lysfrhr51i.fsf@ensc-virt.intern.sigma-chemnitz.de>
+        <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
+Date:   Wed, 16 Mar 2022 23:05:05 +0100
+In-Reply-To: <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
+        (Trond Myklebust's message of "Wed, 16 Mar 2022 21:39:37 +0000")
+Message-ID: <lyilsd8sfi.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8ba863c5-2ff2-4814-f492-08da07957855
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Mar 2022 21:39:37.5517
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zDqk7P3BgfmYStv5vXeC7+AO7cyp+xJEMo1qXKdhRQ76gGMiq/am+oZ2pa5R7oVHdm4babwPVlO9f+2ovRAvdA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB2412
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URI_DOTEDU autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gV2VkLCAyMDIyLTAzLTE2IGF0IDIxOjU1ICswMTAwLCBFbnJpY28gU2Nob2x6IHdyb3RlOg0K
-PiBbWW91IGRvbid0IG9mdGVuIGdldCBlbWFpbCBmcm9tIGVucmljby5zY2hvbHpAc2lnbWEtY2hl
-bW5pdHouZGUuDQo+IExlYXJuIHdoeSB0aGlzIGlzIGltcG9ydGFudCBhdA0KPiBodHRwOi8vYWth
-Lm1zL0xlYXJuQWJvdXRTZW5kZXJJZGVudGlmaWNhdGlvbi5dDQo+IA0KPiBFbnJpY28gU2Nob2x6
-IDxlbnJpY28uc2Nob2x6QHNpZ21hLWNoZW1uaXR6LmRlPiB3cml0ZXM6DQo+IA0KPiA+IEkgYW0g
-ZXhwZXJpZW5jaW5nIHJhbmRvbSBORlMgY2xpZW50IGxvY2t1cHMgYWZ0ZXIgMS0yIGRheXMuDQo+
-ID4gLi4uDQo+ID4gVGhlIGZ1bGwgbG9nIGlzIGF2YWlsYWJsZSBhdCBodHRwczovL3Bhc3RlYmlu
-LnBsL3ZpZXcvN2QwYjM0NWINCj4gDQo+IEZpbHRlcmluZyBvbmx5IFJQQyBtZXNzYWdlc1sxXSBz
-aG93cw0KPiANCj4gLS0tLS0NCj4gTWFyIDE2IDA0OjQ4OjU4LjM0NTM1NzogUlBDOsKgwqDCoMKg
-wqDCoCB3b3JrZXIgY29ubmVjdGluZyB4cHJ0DQo+IDAwMDAwMDAwMjJhZWNhZDEgdmlhIHRjcCB0
-byBYWFhYWDoyMDAxOjEwMjI6OiAocG9ydCAyMDQ5KQ0KPiBNYXIgMTYgMDQ6NDg6NTguMzQ1NDg3
-OiBSUEM6wqDCoMKgwqDCoMKgIDAwMDAwMDAwMjJhZWNhZDEgY29ubmVjdCBzdGF0dXMNCj4gMTE1
-IGNvbm5lY3RlZCAwIHNvY2sgc3RhdGUgMg0KPiBNYXIgMTYgMDQ6NDg6NTguMzQ1NzA1OiBSUEM6
-wqDCoMKgwqDCoMKgIHN0YXRlIDEgY29ubiAwIGRlYWQgMCB6YXBwZWQgMQ0KPiBza19zaHV0ZG93
-biAwDQo+IE1hciAxNiAwNTowMjo0MC4wMzc3ODM6IFJQQzrCoMKgwqDCoMKgwqAgc3RhdGUgOCBj
-b25uIDEgZGVhZCAwIHphcHBlZCAxDQo+IHNrX3NodXRkb3duIDENCj4gTWFyIDE2IDA1OjAyOjQw
-LjAzNzkyMTogUlBDOsKgwqDCoMKgwqDCoCB4c19jbG9zZSB4cHJ0IDAwMDAwMDAwMjJhZWNhZDEN
-Cj4gTWFyIDE2IDA1OjAyOjQwLjAzODA3NjogUlBDOsKgwqDCoMKgwqDCoCBzdGF0ZSA5IGNvbm4g
-MCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMw0KPiBNYXIgMTYgMDU6MDI6NDAuMDM4
-MjExOiBSUEM6wqDCoMKgwqDCoMKgIHN0YXRlIDcgY29ubiAwIGRlYWQgMCB6YXBwZWQgMQ0KPiBz
-a19zaHV0ZG93biAzDQo+IE1hciAxNiAwNTowMjo0MC4wMzgyOTM6IFJQQzrCoMKgwqDCoMKgwqAg
-eHNfZXJyb3JfcmVwb3J0IGNsaWVudA0KPiAwMDAwMDAwMDIyYWVjYWQxLCBlcnJvcj0xMDQuLi4N
-Cj4gTWFyIDE2IDA1OjAyOjQwLjAzODQ0OTogUlBDOsKgwqDCoMKgwqDCoCBzdGF0ZSA3IGNvbm4g
-MCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMw0KPiBNYXIgMTYgMDU6MDI6NDAuMDM5
-MTM0OiBSUEM6wqDCoMKgwqDCoMKgIHhzX2Nvbm5lY3Qgc2NoZWR1bGVkIHhwcnQNCj4gMDAwMDAw
-MDAyMmFlY2FkMQ0KPiBNYXIgMTYgMDU6MDI6NDAuMDQyOTkxOiBSUEM6wqDCoMKgwqDCoMKgIHhz
-X2JpbmQNCj4gMDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjg4Mzogb2sg
-KDApDQo+IE1hciAxNiAwNTowMjo0MC4wNDMwNzI6IFJQQzrCoMKgwqDCoMKgwqAgd29ya2VyIGNv
-bm5lY3RpbmcgeHBydA0KPiAwMDAwMDAwMDIyYWVjYWQxIHZpYSB0Y3AgdG8gWFhYWFg6MjAwMTox
-MDIyOjogKHBvcnQgMjA0OSkNCj4gTWFyIDE2IDA1OjAyOjQwLjA0MzE1OTogUlBDOsKgwqDCoMKg
-wqDCoCAwMDAwMDAwMDIyYWVjYWQxIGNvbm5lY3Qgc3RhdHVzDQo+IDExNSBjb25uZWN0ZWQgMCBz
-b2NrIHN0YXRlIDINCj4gTWFyIDE2IDA1OjAyOjQwLjA0MzMwODogUlBDOsKgwqDCoMKgwqDCoCBz
-dGF0ZSAxIGNvbm4gMCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMA0KPiBNYXIgMTYg
-MDU6MDI6NDAuMDQ1ODgzOiBSUEM6wqDCoMKgwqDCoMKgIHN0YXRlIDggY29ubiAxIGRlYWQgMCB6
-YXBwZWQgMQ0KPiBza19zaHV0ZG93biAxDQo+IE1hciAxNiAwNTowMjo0MC4wNDYxNjM6IFJQQzrC
-oMKgwqDCoMKgwqAgeHNfY2xvc2UgeHBydCAwMDAwMDAwMDIyYWVjYWQxDQo+IE1hciAxNiAwNTow
-Mjo0MC4wNDY0MTA6IFJQQzrCoMKgwqDCoMKgwqAgc3RhdGUgOSBjb25uIDAgZGVhZCAwIHphcHBl
-ZCAxDQo+IHNrX3NodXRkb3duIDMNCj4gTWFyIDE2IDA1OjAyOjQwLjA0NjYyNTogUlBDOsKgwqDC
-oMKgwqDCoCBzdGF0ZSA5IGNvbm4gMCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMw0K
-PiBNYXIgMTYgMDU6MDI6NDAuMDQ3NDI4OiBSUEM6wqDCoMKgwqDCoMKgIHhzX2Nvbm5lY3Qgc2No
-ZWR1bGVkIHhwcnQNCj4gMDAwMDAwMDAyMmFlY2FkMQ0KPiBNYXIgMTYgMDU6MDI6NDAuMDUwMzg3
-OiBSUEM6wqDCoMKgwqDCoMKgIHhzX2JpbmQNCj4gMDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjAw
-MDA6MDAwMDowMDAwOjgyMjogb2sgKDApDQo+IE1hciAxNiAwNTowMjo0MC4wNTA2MTQ6IFJQQzrC
-oMKgwqDCoMKgwqAgd29ya2VyIGNvbm5lY3RpbmcgeHBydA0KPiAwMDAwMDAwMDIyYWVjYWQxIHZp
-YSB0Y3AgdG8gWFhYWFg6MjAwMToxMDIyOjogKHBvcnQgMjA0OSkNCj4gTWFyIDE2IDA1OjAyOjQw
-LjA1MDY2MjogUlBDOsKgwqDCoMKgwqDCoCAwMDAwMDAwMDIyYWVjYWQxIGNvbm5lY3Qgc3RhdHVz
-DQo+IDExNSBjb25uZWN0ZWQgMCBzb2NrIHN0YXRlIDINCj4gTWFyIDE2IDA1OjAyOjQwLjA1MDc4
-ODogUlBDOsKgwqDCoMKgwqDCoCBzdGF0ZSAxIGNvbm4gMCBkZWFkIDAgemFwcGVkIDENCj4gc2tf
-c2h1dGRvd24gMA0KPiBNYXIgMTYgMDU6MDI6NDAuMDUxOTY5OiBSUEM6wqDCoMKgwqDCoMKgIHN0
-YXRlIDggY29ubiAxIGRlYWQgMCB6YXBwZWQgMQ0KPiBza19zaHV0ZG93biAxDQo+IE1hciAxNiAw
-NTowMjo0MC4wNTIwNjc6IFJQQzrCoMKgwqDCoMKgwqAgeHNfY2xvc2UgeHBydCAwMDAwMDAwMDIy
-YWVjYWQxDQo+IE1hciAxNiAwNTowMjo0MC4wNTIxODk6IFJQQzrCoMKgwqDCoMKgwqAgc3RhdGUg
-NyBjb25uIDAgZGVhZCAwIHphcHBlZCAxDQo+IHNrX3NodXRkb3duIDMNCj4gTWFyIDE2IDA1OjAy
-OjQwLjA1MjI0MzogUlBDOsKgwqDCoMKgwqDCoCB4c19lcnJvcl9yZXBvcnQgY2xpZW50DQo+IDAw
-MDAwMDAwMjJhZWNhZDEsIGVycm9yPTMyLi4uDQo+IE1hciAxNiAwNTowMjo0MC4wNTIzNjc6IFJQ
-QzrCoMKgwqDCoMKgwqAgc3RhdGUgNyBjb25uIDAgZGVhZCAwIHphcHBlZCAxDQo+IHNrX3NodXRk
-b3duIDMNCj4gTWFyIDE2IDA1OjAyOjQwLjA1MjUwMzogUlBDOsKgwqDCoMKgwqDCoCBzdGF0ZSA3
-IGNvbm4gMCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMw0KPiBNYXIgMTYgMDU6MDI6
-NDAuMDUzMjAxOiBSUEM6wqDCoMKgwqDCoMKgIHhzX2Nvbm5lY3Qgc2NoZWR1bGVkIHhwcnQNCj4g
-MDAwMDAwMDAyMmFlY2FkMQ0KPiBNYXIgMTYgMDU6MDI6NDAuMDU1ODg2OiBSUEM6wqDCoMKgwqDC
-oMKgIHhzX2JpbmQNCj4gMDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjAwMDA6MDAwMDowMDAwOjg3
-NTogb2sgKDApDQo+IF9fQV9fwqAgMDU6MDI6NDAuMDU1OTQ3OiBSUEM6wqDCoMKgwqDCoMKgIHdv
-cmtlciBjb25uZWN0aW5nIHhwcnQNCj4gMDAwMDAwMDAyMmFlY2FkMSB2aWEgdGNwIHRvIFhYWFhY
-OjIwMDE6MTAyMjo6IChwb3J0IDIwNDkpDQo+IE1hciAxNiAwNTowMjo0MC4wNTU5OTU6IFJQQzrC
-oMKgwqDCoMKgwqAgMDAwMDAwMDAyMmFlY2FkMSBjb25uZWN0IHN0YXR1cw0KPiAxMTUgY29ubmVj
-dGVkIDAgc29jayBzdGF0ZSAyDQoNClNvY2tldCBpcyBpbiBUQ1Agc3RhdGUgMiA9PSBTWU5fU0VO
-VA0KU28gdGhlIGNsaWVudCByZXF1ZXN0ZWQgdG8gY29ubmVjdCB0byB0aGUgc2VydmVyDQoNCj4g
-TWFyIDE2IDA1OjAyOjQwLjA1NjEyNTogUlBDOsKgwqDCoMKgwqDCoCBzdGF0ZSAxIGNvbm4gMCBk
-ZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRvd24gMA0KDQpTb2NrZXQgaXMgaW4gVENQIHN0YXRl
-IDEgPT0gVENQX0VTVEFCTElTSEVEDQpUaGUgY29ubmVjdGlvbiB0byB0aGUgc2VydmVyIHdhcyBh
-Y2NlcHRlZCwgYW5kIHRoZSBjb25uZWN0aW9uIGlzDQplc3RhYmxpc2hlZC4NCg0KPiBNYXIgMTYg
-MDU6MDc6MjguMzI2NjA1OiBSUEM6wqDCoMKgwqDCoMKgIHN0YXRlIDggY29ubiAxIGRlYWQgMCB6
-YXBwZWQgMQ0KPiBza19zaHV0ZG93biAxDQoNClNvY2tldCBpcyBub3cgaW4gVENQIHN0YXRlIDgg
-PT0gVENQX0NMT1NFX1dBSVQuLi4NCg0KVGhhdCBtZWFucyB0aGUgc2VydmVyIHNlbnQgYSBGSU4g
-dG8gdGhlIGNsaWVudCB0byByZXF1ZXN0IHRoYXQgdGhlDQpjb25uZWN0aW9uIGJlIGNsb3NlZC4N
-Cg0KKHNlZQ0KaHR0cHM6Ly91c2Vycy5jcy5ub3J0aHdlc3Rlcm4uZWR1L35hZ3VwdGEvY3MzNDAv
-cHJvamVjdDIvVENQSVBfU3RhdGVfVHJhbnNpdGlvbl9EaWFncmFtLnBkZg0KZm9yIG1vcmUgaW5m
-b3JtYXRpb24gb24gdGhlIFRDUCBzdGF0ZSBkaWFncmFtKQ0KDQo+IE1hciAxNiAwNTowNzoyOC4z
-MjY2Nzk6IFJQQzrCoMKgwqDCoMKgwqAgeHNfY29ubmVjdCBzY2hlZHVsZWQgeHBydA0KPiAwMDAw
-MDAwMDIyYWVjYWQxDQo+IF9fQl9fwqAgMDU6MDc6MjguMzI2OTc4OiBSUEM6wqDCoMKgwqDCoMKg
-IHdvcmtlciBjb25uZWN0aW5nIHhwcnQNCj4gMDAwMDAwMDAyMmFlY2FkMSB2aWEgdGNwIHRvIFhY
-WFhYOjIwMDE6MTAyMjo6IChwb3J0IDIwNDkpDQo+IE1hciAxNiAwNTowNzoyOC4zMjcwNTA6IFJQ
-QzrCoMKgwqDCoMKgwqAgMDAwMDAwMDAyMmFlY2FkMSBjb25uZWN0IHN0YXR1cyAwDQo+IGNvbm5l
-Y3RlZCAwIHNvY2sgc3RhdGUgOA0KPiBfX0NfX8KgIDA1OjA3OjI4LjMyNzExMzogUlBDOsKgwqDC
-oMKgwqDCoCB4c19jbG9zZSB4cHJ0IDAwMDAwMDAwMjJhZWNhZDENCg0KQ2xpZW50IGNsb3NlcyB0
-aGUgc29ja2V0LCB3aGljaCBpcyBzdGlsbCBpbiBUQ1BfQ0xPU0VfV0FJVA0KDQo+IE1hciAxNiAw
-NTowNzoyOC4zMjcyMjk6IFJQQzrCoMKgwqDCoMKgwqAgc3RhdGUgOSBjb25uIDAgZGVhZCAwIHph
-cHBlZCAxDQo+IHNrX3NodXRkb3duIDMNCg0KLi4uYW5kIHRoZW4gdHJhbnNpdGlvbnMgdG8gVENQ
-IHN0YXRlIDkgPT0gVENQX0xBU1RfQUNLDQoNCj4gTWFyIDE2IDA1OjA3OjI4LjMyNzQ0NjogUlBD
-OsKgwqDCoMKgwqDCoCBzdGF0ZSA5IGNvbm4gMCBkZWFkIDAgemFwcGVkIDENCj4gc2tfc2h1dGRv
-d24gMw0KPiAtLS0tLQ0KPiANCg0KRm9yIG1vcmUgaW5mb3JtYXRpb24gb24gVENQIHN0YXRlcywg
-c2VlDQpodHRwczovL3VzZXJzLmNzLm5vcnRod2VzdGVybi5lZHUvfmFndXB0YS9jczM0MC9wcm9q
-ZWN0Mi9UQ1BJUF9TdGF0ZV9UcmFuc2l0aW9uX0RpYWdyYW0ucGRmDQoNCkJhc2ljYWxseSwgd2hh
-dCB0aGUgYWJvdmUgbWVhbnMgaXMgdGhhdCB5b3VyIHNlcnZlciBpcyBpbml0aWF0aW5nIHRoZQ0K
-Y2xvc2Ugb2YgdGhlIGNvbm5lY3Rpb24sIG5vdCB0aGUgY2xpZW50Lg0KDQotLSANClRyb25kIE15
-a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQ0KdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+Trond Myklebust <trondmy@hammerspace.com> writes:
+
+>> Mar 16 05:02:40.051969: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 8=
+ conn 1 dead 0 zapped 1 sk_shutdown 1
+>> Mar 16 05:02:40.052067: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_clos=
+e xprt 0000000022aecad1
+>> Mar 16 05:02:40.052189: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
+ conn 0 dead 0 zapped 1 sk_shutdown 3
+>> Mar 16 05:02:40.052243: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_erro=
+r_report client 0000000022aecad1, error=3D32...
+>> Mar 16 05:02:40.052367: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
+ conn 0 dead 0 zapped 1 sk_shutdown 3
+>> Mar 16 05:02:40.052503: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 7=
+ conn 0 dead 0 zapped 1 sk_shutdown 3
+>> Mar 16 05:02:40.053201: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_conn=
+ect scheduled xprt 0000000022aecad1
+>> Mar 16 05:02:40.055886: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_bind=
+ 0000:0000:0000:0000:0000:0000:0000:0000:875: ok (0)
+>> __A__=C2=A0 05:02:40.055947: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wo=
+rker connecting xprt 0000000022aecad1 via tcp to XXXXX:2001:1022:: (port 20=
+49)
+>> Mar 16 05:02:40.055995: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0000000=
+022aecad1 connect status 115 connected 0 sock state 2
+>
+> Socket is in TCP state 2 =3D=3D SYN_SENT
+> So the client requested to connect to the server
+
+server closed the connection (state 8, CLOSE_WAIT), client cleaned up
+correctly and reconnected.
+
+
+>> Mar 16 05:07:28.326605: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 state 8=
+ conn 1 dead 0 zapped 1 sk_shutdown 1
+>
+> Socket is now in TCP state 8 =3D=3D TCP_CLOSE_WAIT...
+>
+> That means the server sent a FIN to the client to request that the
+> connection be closed.
+
+yes; the same situation like above
+
+
+>> Mar 16 05:07:28.326679: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs_conn=
+ect scheduled xprt 0000000022aecad1
+>> __B__=C2=A0 05:07:28.326978: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 wo=
+rker connecting xprt 0000000022aecad1 via tcp to XXXXX:2001:1022:: (port 20=
+49)
+>> Mar 16 05:07:28.327050: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0000000=
+022aecad1 connect status 0 connected 0 sock state 8
+>> __C__=C2=A0 05:07:28.327113: RPC:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 xs=
+_close xprt 0000000022aecad1
+>
+> Client closes the socket, which is still in TCP_CLOSE_WAIT
+
+the 'xs_close' is very likely a reaction to the state change reported
+above and should happen before 'xs_connect'.
+
+
+> Basically, what the above means is that your server is initiating the
+> close of the connection, not the client.
+
+yes; but the client should reconnect (and does it in most cases).
+Sometimes there seems to be a race which prevents the reconnect and
+brings the client in a broken state.
+
+
+
+Enrico
