@@ -2,54 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C81814DAFF8
-	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 13:43:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 869A34DAFE0
+	for <lists+linux-nfs@lfdr.de>; Wed, 16 Mar 2022 13:39:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346550AbiCPMoc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Mar 2022 08:44:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57134 "EHLO
+        id S1355784AbiCPMku (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Mar 2022 08:40:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355827AbiCPMob (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 08:44:31 -0400
-X-Greylist: delayed 2283 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 16 Mar 2022 05:43:14 PDT
-Received: from smtpout-3.cvg.de (smtpout-3.cvg.de [IPv6:2003:49:a034:1067:5::3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C2002AC1
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 05:43:13 -0700 (PDT)
-Received: from mail-mta-2.intern.sigma-chemnitz.de (mail-mta-2.intern.sigma-chemnitz.de [192.168.12.70])
-        by mail-out-3.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22GC5604258385
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 13:05:06 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
-        s=v2012061000; t=1647432306;
-        bh=OWThl9jEsgBbK5Cl0AD8eyxjcVEabLJ19i24HO27nRY=; l=2629;
-        h=From:To:Subject:Date;
-        b=NuxT56JF9Xxk4KnVZumFDnr/8lJ95MBdqe2hq/Ih6KLAN4K5AKy1FWlai0TGpTXUu
-         +boR60xjQYtRs5IAAQRE//sgAE9ErJ9qBcPfjVjneJC6fo4nYW03/Y0C9cluq8PJiy
-         Nz2OUa8xhJUeiWJK2gJo35H5nNlmjU/tM048ajKc=
-Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
-        by mail-mta-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 22GC54Fc342147
-        for <linux-nfs@vger.kernel.org> from enrico.scholz@sigma-chemnitz.de; Wed, 16 Mar 2022 13:05:05 +0100
-Received: from mail-msa-3.intern.sigma-chemnitz.de ( [192.168.12.73]) by reddoxx.intern.sigma-chemnitz.de
-        (Reddoxx engine) with SMTP id 455F18AEB25; Wed, 16 Mar 2022 13:05:03 +0100
-Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
-        by mail-msa-3.intern.sigma-chemnitz.de (8.15.2/8.15.2) with ESMTPS id 22GC53Ub257052
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO)
-        for <linux-nfs@vger.kernel.org> from ensc@sigma-chemnitz.de; Wed, 16 Mar 2022 13:05:03 +0100
-Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
-        (envelope-from <ensc@sigma-chemnitz.de>)
-        id 1nUSOk-0007el-5p
-        for linux-nfs@vger.kernel.org; Wed, 16 Mar 2022 13:05:02 +0100
-From:   Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-To:     linux-nfs@vger.kernel.org
-Subject: Random NFS client lockups
-Date:   Wed, 16 Mar 2022 13:05:02 +0100
-Message-ID: <lyr172gl1t.fsf@ensc-virt.intern.sigma-chemnitz.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        with ESMTP id S1355785AbiCPMkq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Mar 2022 08:40:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ECDD866200
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Mar 2022 05:39:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647434371;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=NQbeNKYm8k5Yw7AFnf6GBz5Tkwp0/EraKHqLpaxy5HA=;
+        b=ZJWP2DLpdwYs6orj67OTad/yFy7DW6iAGIHca+fX5QMVrLu+WUFF+fTksqC9EOXZCX5cBd
+        mQy7IWRbQwWLnXwZ5deAESvnea2yVpw0XaBAd3ZKveBElLGRI3HnOST43m+mv5GBpoCXjX
+        hq35YhGt3LWD06W6SeVzsCJ+WJBEBF0=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-484-ITzl8SuROPmyctZa_rEMSg-1; Wed, 16 Mar 2022 08:39:30 -0400
+X-MC-Unique: ITzl8SuROPmyctZa_rEMSg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F322738035BD;
+        Wed, 16 Mar 2022 12:39:29 +0000 (UTC)
+Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BE10B40D2820;
+        Wed, 16 Mar 2022 12:39:29 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Kurt Garloff" <kurt@garloff.de>
+Cc:     "Olga Kornievskaia" <olga.kornievskaia@gmail.com>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Anna Schumaker" <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v1] NFSv4.1 provide mount option to toggle trunking
+ discovery
+Date:   Wed, 16 Mar 2022 08:39:29 -0400
+Message-ID: <8849D8CD-0720-40E2-A752-1C9AADC93C55@redhat.com>
+In-Reply-To: <B476B883-D5D4-4112-BB08-6D9172C5D335@garloff.de>
+References: <20220223174041.77887-1-olga.kornievskaia@gmail.com>
+ <CAN-5tyHy_+tBfv3PuD0CBwHbppHo3pRNwo0O9xRGjZxK0-rOjw@mail.gmail.com>
+ <a494ba2b-7e2c-bcad-bac9-12804b113383@garloff.de>
+ <B476B883-D5D4-4112-BB08-6D9172C5D335@garloff.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,87 +66,59 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On 25 Feb 2022, at 17:48, Kurt Garloff wrote:
 
-I am experiencing random NFS client lockups after 1-2 days.  Kernel
-reports
+> Hi,
+>
+> Am 24. Februar 2022 14:42:41 MEZ schrieb Kurt Garloff <kurt@garloff.de>:
+>> Hi Olga,
+>> [...]
+>>
+>> I see a number of possibilities to resolve this:
+>> (0) We pretend it's not a problem that's serious enough to take
+>>     action (and ensure that we do document this new option well).
+>> (1) We revert the patch that does FS_LOCATIONS discovery.
+>>     Assuming that FS_LOCATIONS does provide a useful feature, this
+>>     would not be our preferred solution, I guess ...
+>> (2) We prevent NFS v4.1 servers to use FS_LOCATIONS (like my patch
+>>     implements) and additionally allow for the opt-out with
+>>     notrunkdiscovery mount option. This fixes the known regression
+>>     with Qnap knfsd (without requiring user intervention) and still
+>>     allows for FS_LOCATIONS to be useful with NFSv4.2 servers that
+>>     support this. The disadvantage is that we won't use the feature
+>>     on NFSv4.1 servers which might support this feature perfectly
+>>     (and there's no opt-in possibility). And the risk is that there
+>>     might be NFSv4.2 servers out there that also misreport
+>>     FS_LOCATIONS support and still need manual intervention (which
+>>     at least is possible with notrunkdiscovery).
+>> (3) We make this feature an opt-in thing and require users to
+>>     pass trunkdiscovery to take advantage of the feature.
+>>     This has zero risk of breakage (unless we screw up the patch),
+>>     but always requires user intervention to take advantage of
+>>     the FS_LOCATIONS feature.
+>> (4) Identify a way to recover from the mount with FS_LOCATIONS
+>>     against the broken server, so instead of hanging we do just
+>>     turn this off if we find it not to work. Disadavantage is that
+>>     this adds complexity and might stall the mounting for a while
+>>     until the recovery worked. The complexity bears the risk for
+>>     us screwing up.
+>>
+>> I personally find solutions 2 -- 4 acceptable.
+>>
+>> If the experts see (4) as simple enough, it might be worth a try.
+>> Otherwise (2) or (3) would seem the way to go from my perspective.
+>
+> Any thought ls?
 
-| nfs: server XXXXXXXXX not responding, timed out
+I think (3) is the best way, and perhaps using sysfs to toggle it would
+be a solution to the problems presented by a mount option.
 
-processes are in D state and only a reboot helps.
+I'm worried that this issue is being ignored because that's usually what
+happens when requests/patches are proposed that violate the policy of "we do
+not fix the client for server bugs".  In this case that policy conficts with
+"no user visible regressions".
 
-The full log is available at https://pastebin.pl/view/7d0b345b
+Can anyone declare which policy takes precedent?
 
+Ben
 
-I can see one oddity there: shortly before the timeouts, log shows at
-05:07:28:
-
-| worker connecting xprt 0000000022aecad1 via tcp to XXXX:2001:1022:: (port 2049)
-| 0000000022aecad1 connect status 0 connected 0 sock state 8
-
-All other connects go in EINPROGRESS first
-
-| 0000000022aecad1 connect status 115 connected 0 sock state 2
-| ...
-| state 8 conn 1 dead 0 zapped 1 sk_shutdown 1
-
-
-After 'status 0', rpcdebug shows (around 05:07:43)
-
-| --> nfs4_alloc_slot used_slots=03ff highest_used=9 max_slots=30
-| <-- nfs4_alloc_slot used_slots=07ff highest_used=10 slotid=10
-| ...
-| <-- nfs4_alloc_slot used_slots=fffffff highest_used=27 slotid=27
-| --> nfs4_alloc_slot used_slots=fffffff highest_used=27 max_slots=30
-| ...
-| --> nfs4_alloc_slot used_slots=3fffffff highest_used=29 max_slots=30
-| <-- nfs4_alloc_slot used_slots=3fffffff highest_used=29 slotid=4294967295
-| nfs41_sequence_process: Error 1 free the slot 
-
-and nfs server times out then.
-
-
-The server reports nearly at this time
-
-| Mar 16 05:02:40 kernel: rpc-srv/tcp: nfsd: got error -32 when sending 112 bytes - shutting down socket
-
-Similar message (with other sizes and sometime error -104) appear
-frequently without a related client lockup.
-
-
-How can I debug this further resp. solve it?
-
-
-It happens (at least) with:
-
-- a Fedora 35 client with kernel 5.16.7,
-  kernel-5.17.0-0.rc7.20220310git3bf7edc84a9e.119.fc37.x86_64 and some
-  other between them
-
-- a Rocky Linux 8,5 server with kernel-4.18.0-348.12.2
-  and kernel-4.18.0-348.2.1
-
-Problem started after a power outage were whole infrastructure rebooted.
-I ran the setup with kernel 5.16.7 on client and 4.18.0-348.2.1 on server
-without problems before the outage.
-
-
-Issue affects a /home directory mounted with
-
-| XXXX:/home /home nfs4 rw,seclabel,nosuid,nodev,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,soft,posix,proto=tcp6,timeo=600,retrans=2,sec=krb5p,clientaddr=XXXX:2001:...,local_lock=none,addr=XXXX:2001:1022:: 0 0
-
-Happens also without the "soft" option.
-
-There are applications like firefox or chromium running which held locks
-and access the filesystem frequently.
-
-
-Logfile was created when rpcdebug enabled
-
-| nfs        proc xdr root callback client mount pnfs pnfs_ld state
-| rpc        xprt call debug nfs auth bind sched trans svcsock svcdsp misc cache
-
-
-
-
-Enrico
