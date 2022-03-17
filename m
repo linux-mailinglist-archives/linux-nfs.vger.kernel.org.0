@@ -2,147 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF824DC98C
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Mar 2022 16:04:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E7FB4DCA24
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Mar 2022 16:37:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235617AbiCQPFh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Mar 2022 11:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35422 "EHLO
+        id S233781AbiCQPiz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Mar 2022 11:38:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235612AbiCQPFg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Mar 2022 11:05:36 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDEEF1E92;
-        Thu, 17 Mar 2022 08:04:19 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22HDPNsN007230;
-        Thu, 17 Mar 2022 15:04:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=Ik64H/ecLTE4CYkQ6DSm+05VOBZHhQGOvFPGVzFf8oc=;
- b=L4EfaKQoFuXjhN9XaRsiTFyDITi3rML42qVL1EFHDtMo0/zmtfkZDjm0BcjLiC+6KE1p
- 6l6JV/GUR70v+2MDKqqQM9RPnU/1XpwNoB6MIAFHDPA+t94wIfPYP54nwoGb5PbhASxC
- TmyW1GMpvVqJvW6P+R9p8z8o2AZecoSizSxxE7CUv1DxbfCPRrkh/Ip0UARP3GtMDsh9
- ysoGcW57+/HU3KftrlEj4+EFFH6Y1o1Fq39vrqr5pXl/0AtfOuxIGEI/QJ5+upON7dgQ
- h1NYTFTPGcqYkj2FZNIDsmZsvLgUtcRFKl0m3FyJqWDBQuGy3fj0H+6JhjRZz58JdwKc Cw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3et60rhach-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Mar 2022 15:04:06 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.1.2/8.16.1.2) with SMTP id 22HEu7IF170902;
-        Thu, 17 Mar 2022 15:04:05 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2175.outbound.protection.outlook.com [104.47.55.175])
-        by aserp3020.oracle.com with ESMTP id 3et64mb3gj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Mar 2022 15:04:05 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WP4Nto3pgApRsuR2+35f4gSMkVaI8LqEEoRv5CsAihK/eUo7nvtKN2WF6mRen+CeKoB2mTPQFgtvD+9VrtU8v/EjoUouqJPt1PUpi7Wqnldws5/prYfGcZfrW/Wev4yoVlaWAqljhgdp4MgDNZKxe+QxTUL6BqU3I7gfq9CNVWVRgHzsbEd8HZRUE8ofcXYmW6h0Ci6a0wi2d3Q+0vPYGXr79lIxntc/w7uC+Mbe+XmZ3LKr8eO7Ql5YnTln9Z3ZkWBhYPNpm4FIeDUvPI9IMQtwd8xWVvnIiIyBviRLkydWmJNO2QgZGQsOW/KD5Q+R6y40D9cV6CZNIB+91BLUbw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Ik64H/ecLTE4CYkQ6DSm+05VOBZHhQGOvFPGVzFf8oc=;
- b=HUr9DGpHKZm67d/MJZboCMrcYx1ZABsBHJPJBskdzzcpY/oU+rQ59bytCVIPk7gDWpJIwk8guLqy3rUfWBqnIL9tVsP853OeIxctWiil03QZduMH/WCtqcbxLuwpbhZkRmUbO/t4r5+1SYlCA7WqsXEr2YEk7Y8Z+5KL/9uPgcqL9/2gJ9CCaCDMk+30dOQz7K3x5q5FvV8zIriSPhzwa6+IgpWIal+u/AF8qSrEBXsTYaJ6pPV5AWkuUGaC8j0FSRAwGA+3b0tEgvvDfzzYnpZrhu9nqIhnE/VHKt3oEqbiEHxigSp2OnflWElpEw2U2lJpm6Z8GBNSoHavnaSytA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ik64H/ecLTE4CYkQ6DSm+05VOBZHhQGOvFPGVzFf8oc=;
- b=UgJj14b9FmpPsuwLNH7ZadtR9DHLcVMc3KTxRar69tjhC8tVZET9UgmB6S42RGQ0wEQe2zH1xrFpj+yBelUeFEzU57DSzGJRDdMOtU4+TdSt13wwQkY4n4sfH9BUMok7u5Ro+UPe22pL8S56KdHfdbM59TxlDeTiPe58lAlVbaU=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CO1PR10MB4513.namprd10.prod.outlook.com (2603:10b6:303:93::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5081.14; Thu, 17 Mar
- 2022 15:04:02 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::94c5:42b1:5147:b6f0]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::94c5:42b1:5147:b6f0%6]) with mapi id 15.20.5081.017; Thu, 17 Mar 2022
- 15:04:02 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@redhat.com>
-CC:     Bruce Fields <bfields@fieldses.org>, Dai Ngo <dai.ngo@oracle.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH RFC v17 01/11] fs/lock: add helper
- locks_owner_has_blockers to check for blockers
-Thread-Topic: [PATCH RFC v17 01/11] fs/lock: add helper
- locks_owner_has_blockers to check for blockers
-Thread-Index: AQHYOdLAmpfjykEdNkWH0VGWaQHNA6zDrNMA
-Date:   Thu, 17 Mar 2022 15:04:02 +0000
-Message-ID: <3273032A-27F8-4F80-AFAC-45A4F29B45D4@oracle.com>
-References: <1647503028-11966-1-git-send-email-dai.ngo@oracle.com>
- <1647503028-11966-2-git-send-email-dai.ngo@oracle.com>
-In-Reply-To: <1647503028-11966-2-git-send-email-dai.ngo@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: c01756e8-beb0-4670-2422-08da08275f7e
-x-ms-traffictypediagnostic: CO1PR10MB4513:EE_
-x-microsoft-antispam-prvs: <CO1PR10MB451328562A26120F6DED5EDD93129@CO1PR10MB4513.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: CLiwrYxZMPbISUImcBQQQ8LLL8mMJd0AAwHW6dOGGl5cn37ftnEoqi90P86FzDmNg3i+bSFQ9V4on6TJHQKS1X7DdfP+Fg0w30w9fhjdoRcOdsz8+ECx3slle0w2iHaNS5FR+sB96mL9RaOSpWA+WrYXaolGw/PS5Kwjjn1dyFiwhCrqCcPmyfIEWJo2kjfRJihAxqdTJebaEKZ1JvWUaJZtZA8Hi1ndHTCQV8OXJdT5xou+n06pXgta+QZVRV8zt6M+S8yFtrVnSt5tMEbjdVh9pX6nVqNpfuInGpsvbfpoNyTiKh1biwbiNdG3i/lwRHD2S7VTF0IzyeowmyBt35uZfVMVdHV5gDqF3wFQZkSws3jm8rpijisnlycSC/ZTzp2QecQ6//yIUpYcgOYaWZ3UKUO5ZUIDGToC21KLRvdWvpjCK9+gbatR22TFVAy6JNJPLnqQiUMNvP+AY0gnhie0J1ZO7x6zjux8NpFQfKniND+4A8qpFFNWoa0lJ6EacDyEYKOrR0kcVj0LVQ8PrBY+PVYjefYb2rLj219F+o0nsak7MpWt4TQt/WUvFU8FI8Q+zRmsZihVwwsvVWZj7XfNzHW3TMutngHLG5/sKMimsygsuuL4b0S72FVgwjGEPQrJCl80BKfUhy4NXlye9h0kFKw5rGhDwCRYwmh/CGDLoqGYiupOo6qYhiLxWbtpYku+vaw/aRwxHdRCgj3gAq3K58ykHG+oKWvaDI6rB38Xa8FPvjSnB1vp0ezPy4n/
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(36756003)(2906002)(83380400001)(71200400001)(53546011)(2616005)(33656002)(6512007)(6506007)(38070700005)(8936002)(38100700002)(5660300002)(86362001)(6486002)(91956017)(66946007)(66556008)(8676002)(76116006)(508600001)(4326008)(66446008)(66476007)(64756008)(26005)(186003)(122000001)(316002)(6916009)(54906003)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8/JuVRpuBaOdvWnWqDyjeYQ73ktvjw60pe/QtXhdDTnqe2nManexILyXQjzE?=
- =?us-ascii?Q?HR1pVeIMH3Dg5hUTCFcAzKEiQVw4YlEOLpqVLB90z38JBakhihFe/kbkuwMS?=
- =?us-ascii?Q?XXlPR+z5b9InWCieMoRWNSg8i3kgUr3Ig33gkYPDo+DC27xN6nJLKDrDIELe?=
- =?us-ascii?Q?mip66cpFLhzUW+iv7Uvs0VTZZy1ugQnLsaxlWpjcaDhJCV2/wXPWRJAHuHsp?=
- =?us-ascii?Q?d1kLwQm+LBlh+54G+0bk9/z26a1xbodei9r2MInjNqIilnwOhOBLC4ImU3Oo?=
- =?us-ascii?Q?Hx1NhzDPnldNjIsjHRVpM09reh1/M+qtdowKN8rwXD/bQmPHR/N2wDZ84Bp2?=
- =?us-ascii?Q?dXAG75nfGgsU0vH7VtELKPYvwVCB2VgdV+WlyImwry6rccukcnZ4O4Kr/mJa?=
- =?us-ascii?Q?RqoPEXesb2ZzgStziCpX4uKMKSQXxx2slbtZAmxcwUVavxqOfHcVqBdgz0yi?=
- =?us-ascii?Q?H/aBerAoJS4rpYQ9V680YDNWZSGEXzy4FlnjgcwlN5YeJmGtQxbrytPjU13d?=
- =?us-ascii?Q?NGZ7bZ8f+nffZvC/2S8a012AC4pf8gjfKhnHfTSr3SND1S3DEzL3paBeVR9J?=
- =?us-ascii?Q?biU+Ub4xII81hNErAGXXsKcwB4anKNcQsJDLieP8W7E6R9q3s5l+RyYThBHc?=
- =?us-ascii?Q?NGtfJxHq0gYntEYulGKjKqEwRd4Ktq92RxEoW1YEl71uHeGKrkai/atJ9Im+?=
- =?us-ascii?Q?BVnKy+DFW8V78eHgoQbjv3M+/gc9JEs2+DksxfRHbnwJgU2i0Asceiip2dxG?=
- =?us-ascii?Q?KQQPhdDuASN+5eGOV8VWiPJkQjMQtRhdCH1h9nWg23a1bKJZ4PaS1DFvV8L4?=
- =?us-ascii?Q?DfbKibMbgFW3L5ApyrMssTF5G3BfZu0hyxOOqyVf/BrspmaciwXlRTEVLi+V?=
- =?us-ascii?Q?B84sZ5Jvb0i4S8kQ3Z4FbvuOhYJ8JsLyf4TKJLpaOFZQzelb/t4hWMIt6Iql?=
- =?us-ascii?Q?/oWarOiS/OBg1j6IerTfZ8mfgRNTokO+rtUMUSfAbYeWOf0vgtudCCWNzj4c?=
- =?us-ascii?Q?/rObejFyk6a4IcG34y8eAv5XZOcmukWQbL5Rs7q5yQasZKecJgeCX+CwZD3N?=
- =?us-ascii?Q?F0j1oms3C8Gweb72ExmSvEs2KP2US3Ibf5JauVc1CtylW4GMbFT1gklrCJhh?=
- =?us-ascii?Q?ezMkggJ6V8LS2Ylfslkrf8HOJHrwFrXJg7sPMy/39rufT+MC1ick7KZeM+8W?=
- =?us-ascii?Q?P81McFyF4UtSFb8nCG+dkEeUbw4BiTPdAjdz2xF9X3uSEAA+P5q2kZlWm8Um?=
- =?us-ascii?Q?u5gF7DWzwZgzpGAdKVZKYvBS00VmabnHQcwLvuZ96dsC0UxELDZB9ld2RHYp?=
- =?us-ascii?Q?RvVVMb+lYMnU26egnEs6dMB34sC9aCDXNzjZChsEEotPt5IpWpqAkzxNPNy+?=
- =?us-ascii?Q?jRdnQd5uo1iwb9YiHFwB6UX5D88AvI32u0Ru8r4XX3lt60mwKYCiB9W9qp+S?=
- =?us-ascii?Q?4uzcNEMSzIiIAs827HU4ccHwMXukZPiaYl4AUIYTyrz2O6Yb43N/cA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B5A13FC569DA6E47BA5E8A20FE01C378@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230196AbiCQPiy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Mar 2022 11:38:54 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6B09020A97A
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Mar 2022 08:37:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1647531455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Xyg1PhIE4lHYfJ5PVeK1wGpx/bF2KbVTrOqGv6rC1os=;
+        b=f2mcx4SmEo2PxsHdsy6g0F1frRo8Ch/523Bj8oyG2zjgyEo2olBsQM3z8N+yQf5nU9obcU
+        OYT3QQTkMP5s1p+JVJkcrEhJEhOLMDr5XFu3STltDioMm8kHweADFU4KV96LMfgnm33Ji2
+        s7riDbPL6UWW6wmq+tIKCBb4DjeVcOo=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-358-wDG-Q_IXPo-OOSaqFrrsvQ-1; Thu, 17 Mar 2022 11:37:34 -0400
+X-MC-Unique: wDG-Q_IXPo-OOSaqFrrsvQ-1
+Received: by mail-qv1-f71.google.com with SMTP id 33-20020a0c8024000000b0043d17ffb0bdso4219908qva.18
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Mar 2022 08:37:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=Xyg1PhIE4lHYfJ5PVeK1wGpx/bF2KbVTrOqGv6rC1os=;
+        b=448lBHN8q9SnYxE4ZMuE+05oBs/1aBlX3lhTgWsEaF/hpV/kGxnVSHfK+gd0YUEFKo
+         yEPeq71s309MMlHCKoX2hx1vCDrX+OYBVEAXe0G2gdtYTsD+2E4WqBxIhI0KJ1fSOxD5
+         ssq8j2I99GvdEpSCs0FmcI0/YmHXu+QV5V/fvpF752dYa6X8C7LRythT7T36fsCmZJIK
+         aKvvT/W5ptaLIuqBATiaDecAo2TVzzojDvE8ag/JwPo79qxIiZ9h9EW2IHX8rt4564Uu
+         K470yhwUlwpzqhAVm9oWejkGiK/Ba1EdkawK5I+fengtyd4NfEE+nauawruXXaWyB9HH
+         9+sg==
+X-Gm-Message-State: AOAM533werDGyCHLeZBY6z3SGAkYMLu/TW8mc1cFQhUoGHg9DYox6kgx
+        bcPsoIrFehz1KCZR/QEqIn2N0TVPaPI1ka1IV8oA2x8Ds0rhm0NZYHTMJynPmqquwPf/u9cfoEs
+        EaWowH5eEnTeoXLlOW5K4
+X-Received: by 2002:a05:620a:44cc:b0:67d:8558:db56 with SMTP id y12-20020a05620a44cc00b0067d8558db56mr3194475qkp.721.1647531453524;
+        Thu, 17 Mar 2022 08:37:33 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzyVHpVZy1pLUpqXc+fUkZMkJANqswbua/UCKq95wqrMsega421hKFkpS89db46q7u6KvDW7g==
+X-Received: by 2002:a05:620a:44cc:b0:67d:8558:db56 with SMTP id y12-20020a05620a44cc00b0067d8558db56mr3194456qkp.721.1647531453192;
+        Thu, 17 Mar 2022 08:37:33 -0700 (PDT)
+Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w8-20020ac87e88000000b002e1cdc11203sm3850862qtj.18.2022.03.17.08.37.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 17 Mar 2022 08:37:32 -0700 (PDT)
+Message-ID: <f3910fdd-d107-1f6c-8cfc-1b7f429f8024@redhat.com>
+Date:   Thu, 17 Mar 2022 11:37:31 -0400
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c01756e8-beb0-4670-2422-08da08275f7e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2022 15:04:02.4258
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YUDgmjNCLrA+yDsCRcOdJqwb8IkVDgXdPq12WDhcnGRSXir5K7Kf9jrf5bl74994bqkEc2fNeWOO+F+za/AqNQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4513
-X-Proofpoint-Virus-Version: vendor=nai engine=6300 definitions=10289 signatures=693715
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- malwarescore=0 mlxscore=0 suspectscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2202240000 definitions=main-2203170088
-X-Proofpoint-GUID: 8U5xwNo0LJnd89qAitcNDYzvAiLhvl9K
-X-Proofpoint-ORIG-GUID: 8U5xwNo0LJnd89qAitcNDYzvAiLhvl9K
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.5.0
+Subject: Re: [RFC v2 PATCH 7/7] readahead: documentation
+Content-Language: en-US
+To:     Thiago Becker <tbecker@redhat.com>, linux-nfs@vger.kernel.org
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        kolga@netapp.com
+References: <20220311190617.3294919-1-tbecker@redhat.com>
+ <20220311190617.3294919-8-tbecker@redhat.com>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220311190617.3294919-8-tbecker@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -150,94 +83,113 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-> On Mar 17, 2022, at 3:43 AM, Dai Ngo <dai.ngo@oracle.com> wrote:
->=20
-> Add helper locks_owner_has_blockers to check if there is any blockers
-> for a given lockowner.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 
-Hi Jeff, can we get an R-b or Acked from you for this one?
-
-
+On 3/11/22 2:06 PM, Thiago Becker wrote:
+> Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1946283
+> Signed-off-by: Thiago Becker <tbecker@redhat.com>
 > ---
-> fs/locks.c         | 28 ++++++++++++++++++++++++++++
-> include/linux/fs.h |  7 +++++++
-> 2 files changed, 35 insertions(+)
->=20
-> diff --git a/fs/locks.c b/fs/locks.c
-> index 050acf8b5110..53864eb99dc5 100644
-> --- a/fs/locks.c
-> +++ b/fs/locks.c
-> @@ -300,6 +300,34 @@ void locks_release_private(struct file_lock *fl)
-> }
-> EXPORT_SYMBOL_GPL(locks_release_private);
->=20
-> +/**
-> + * locks_owner_has_blockers - Check for blocking lock requests
-> + * @flctx: file lock context
-> + * @owner: lock owner
-> + *
-> + * Return values:
-> + *   %true: @owner has at least one blocker
-> + *   %false: @owner has no blockers
-> + */
-> +bool locks_owner_has_blockers(struct file_lock_context *flctx,
-> +		fl_owner_t owner)
-> +{
-> +	struct file_lock *fl;
+>   tools/nfs-readahead-udev/Makefile.am          |  2 +
+>   .../nfs-readahead-udev/nfs-readahead-udev.man | 47 +++++++++++++++++++
+>   tools/nfs-readahead-udev/readahead.conf       | 14 ++++++
+>   3 files changed, 63 insertions(+)
+>   create mode 100644 tools/nfs-readahead-udev/nfs-readahead-udev.man
+> 
+> diff --git a/tools/nfs-readahead-udev/Makefile.am b/tools/nfs-readahead-udev/Makefile.am
+> index 010350aa..eaa9b90e 100644
+> --- a/tools/nfs-readahead-udev/Makefile.am
+> +++ b/tools/nfs-readahead-udev/Makefile.am
+> @@ -10,6 +10,8 @@ udev_rules_DATA = 99-nfs_bdi.rules
+>   ra_confdir = $(sysconfdir)
+>   ra_conf_DATA = readahead.conf
+>   
+> +man5_MANS = nfs-readahead-udev.man
 > +
-> +	spin_lock(&flctx->flc_lock);
-> +	list_for_each_entry(fl, &flctx->flc_posix, fl_list) {
-> +		if (fl->fl_owner !=3D owner)
-> +			continue;
-> +		if (!list_empty(&fl->fl_blocked_requests)) {
-> +			spin_unlock(&flctx->flc_lock);
-> +			return true;
-> +		}
-> +	}
-> +	spin_unlock(&flctx->flc_lock);
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(locks_owner_has_blockers);
+>   99-nfs_bdi.rules: 99-nfs_bdi.rules.in $(builddefs)
+>   	$(SED) "s|_libexecdir_|@libexecdir@|g" 99-nfs_bdi.rules.in > $@
+>   
+> diff --git a/tools/nfs-readahead-udev/nfs-readahead-udev.man b/tools/nfs-readahead-udev/nfs-readahead-udev.man
+> new file mode 100644
+> index 00000000..2477d5b3
+> --- /dev/null
+> +++ b/tools/nfs-readahead-udev/nfs-readahead-udev.man
+> @@ -0,0 +1,47 @@
+> +.\" Manpage for nfs-readahead-udev.
+> +.nh
+> +.ad l
+> +.TH man 5 "08 Mar 2022" "1.0" "nfs-readahead-udev man page"
+> +.SH NAME
 > +
-> /* Free a lock which is not in use. */
-> void locks_free_lock(struct file_lock *fl)
-> {
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 831b20430d6e..2057a9df790f 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -1200,6 +1200,8 @@ extern void lease_unregister_notifier(struct notifi=
-er_block *);
-> struct files_struct;
-> extern void show_fd_locks(struct seq_file *f,
-> 			 struct file *filp, struct files_struct *files);
-> +extern bool locks_owner_has_blockers(struct file_lock_context *flctx,
-> +			fl_owner_t owner);
-> #else /* !CONFIG_FILE_LOCKING */
-> static inline int fcntl_getlk(struct file *file, unsigned int cmd,
-> 			      struct flock __user *user)
-> @@ -1335,6 +1337,11 @@ static inline int lease_modify(struct file_lock *f=
-l, int arg,
-> struct files_struct;
-> static inline void show_fd_locks(struct seq_file *f,
-> 			struct file *filp, struct files_struct *files) {}
-> +static inline bool locks_owner_has_blockers(struct file_lock_context *fl=
-ctx,
-> +			fl_owner_t owner)
-> +{
-> +	return false;
-> +}
-> #endif /* !CONFIG_FILE_LOCKING */
->=20
-> static inline struct inode *file_inode(const struct file *f)
-> --=20
-> 2.9.5
->=20
+> +nfs-readahead-udev \- Find the readahead for a given NFS mount
+> +
+> +.SH SYNOPSIS
+> +
+> +nfs-readahead-udev <device>
+> +
+> +.SH DESCRIPTION
+> +
+> +\fInfs-readahead-udev\fR is a tool intended to be used with udev to set the \fIread_ahead_kb\fR parameter of NFS mounts, according to the configuration file (see \fICONFIGURATION\fR). \fIdevice\fR is the device number for the NFS backing device as provided by the kernel.
+> +
+> +.SH CONFIGURATION
+> +
+> +The configuration file (\fI/etc/readahead.conf\fR) contains the readahead configuration, and is formatted as follows.
+> +
+> +<LINES> ::= <LINES> <LINE> | <LINE>
+> +
+> +<LINE> ::= <TOKENS> <ENDL>
+> +
+> +<TOKENS> ::= <TOKENS> <TOKEN> | <TOKEN>
+> +
+> +<TOKEN> ::= default | <PAIR>
+> +
+> +<PAIR> ::= mountpoint = <mountpoint> | fstype = <nfs|nfs4> | readahead = <readahead>
+> +
+> +\fImountpoint\fR is the path in the system where the file system is mounted.
+> +
+> +\fIreadahead\fR is an integer to readahead.
+> +
+> +\fIfstype\fR is either \fInfs\fR or \fInfs4\fR.
+> +
+> +.SH SEE ALSO
+> +
+> +mount.nfs(8), nfs(5), udev(7), bcc-readahead(8)
+> +
+> +.SH BUGS
+> +
+> +No known bugs.
+> +
+> +.SH AUTHOR
+I think it might make sense to added some examples
+on how the command will be used.
 
---
-Chuck Lever
+> +
+> +Thiago Rafael Becker <trbecker@gmail.com>
+> diff --git a/tools/nfs-readahead-udev/readahead.conf b/tools/nfs-readahead-udev/readahead.conf
+> index 988b30c7..bce830f1 100644
+> --- a/tools/nfs-readahead-udev/readahead.conf
+> +++ b/tools/nfs-readahead-udev/readahead.conf
+> @@ -1 +1,15 @@
+> +# nfs-readahead-udev configuration file.
+> +#
+> +# This file configures the readahead for nfs mounts when those are anounced by the kernel.
+> +# The file is composed on lines that can contain either the default configuration (applied to
+> +# any nfs mount that does not match any of the other lines) or a combination of
+> +#   mountpoint=<mountpoint> where mountpoint is the mount point for the file system
+> +#   fstype=<nfs|nfs4> specifies that this configuration should only apply to a specific nfs
+> +#     version.
+> +# Every line must contain a readahead option, with the expected readahead value.
+>   default				readahead=128
+> +
+> +# mountpoint=/mnt		readahead=4194304
+> +# fstype=nfs			readahead=4194304
+> +# fstype=nfs4			readahead=4194304
+> +# mountpoint=/mnt	fstype=nfs4	readahead=4194304
+Would it make sense to try added these to nfs.conf?
 
+I must admin I'm a bit impressed with your lex and
+yacc routines in patch 5, I have not seen those
+in a while.. but that does add more dependencies
+to nfs-utils and as well as yet another config file
+to manage.
 
+steved.
 
