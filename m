@@ -2,63 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BB1B4DE74A
-	for <lists+linux-nfs@lfdr.de>; Sat, 19 Mar 2022 10:37:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB4334DE7ED
+	for <lists+linux-nfs@lfdr.de>; Sat, 19 Mar 2022 13:45:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242626AbiCSJhr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 19 Mar 2022 05:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59950 "EHLO
+        id S242918AbiCSMrP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 19 Mar 2022 08:47:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242627AbiCSJhq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Mar 2022 05:37:46 -0400
-Received: from mail-ot1-x32d.google.com (mail-ot1-x32d.google.com [IPv6:2607:f8b0:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32C9727682D;
-        Sat, 19 Mar 2022 02:36:26 -0700 (PDT)
-Received: by mail-ot1-x32d.google.com with SMTP id i23-20020a9d6117000000b005cb58c354e6so1695227otj.10;
-        Sat, 19 Mar 2022 02:36:26 -0700 (PDT)
+        with ESMTP id S234790AbiCSMrP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 19 Mar 2022 08:47:15 -0400
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FF8B43AC0;
+        Sat, 19 Mar 2022 05:45:54 -0700 (PDT)
+Received: by mail-vk1-xa29.google.com with SMTP id h205so4052651vke.4;
+        Sat, 19 Mar 2022 05:45:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Uy+1eKTB+JOqH9ugZeFOQ3QEkLKT7rVLVRCW8ChDEEI=;
-        b=CI/DdxTDhHuesgA4pEAjrcH349fvDHT7gnrLCuodcRRzG9/lFd0zpSTiKU2dAl8sIa
-         oLhyCSaplVepH7CSHVtjmTMMptUtS1GvVfNXJa/cvmg1CU1/bVwqKXO2JaTGIe6z9mzP
-         xehpZQtTHAkpAar+OwRyYzfR5FXIMhUiQDLasJ8spbS84/IvqNGD5O6v9m0Cs8wCiYd8
-         2C2wCk2zrXsAGT1x1v7RqMyZgiCpkx3qaRGLZI8IYpEoKZeJAi9aZkKbWU7Mbx4A46Cv
-         s9nnhm0ejUU5UtXmM1QeyGIoayX8Jsim2iystSAZMPcLr/WUpDumv1TXJKcMDLpk3Bz/
-         kMbA==
+        bh=TOMGYmaATQC2z13UyvSGmscWZ1Ke2cRO2FHb2Uve4+c=;
+        b=H2shOi2EAOzGFJtpVsRsTpiG5Kz4xpnCa3MGNiZBROxxo3CUttZA+GU/rsDYwAnB8z
+         dytXpQzdTt3qZlJJCf6+4+e/zIg4HUNUo5eEVZFdVdSHPyAkEnmAhgi5IGeQREuJ4NdB
+         GN0OMABVxth+oNA2qGjhdsSQ3LkZ8/exdo3KKeH27krMSI8x60bBzqa9jyapIAJ/ylwR
+         0+oLyV42aPGla/O4dXdBp3OIpJus/ouddIfD0m1sXnee8w6NoaZj4CjeFMgQWbeeyYK2
+         P8odlP1/iGxLJJZut0uI/haoY9GlsG+XSrRj2Y4oxOueyu8z+0BbHVA4s1qFF+AoxZUJ
+         D8WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Uy+1eKTB+JOqH9ugZeFOQ3QEkLKT7rVLVRCW8ChDEEI=;
-        b=4ggCMp97uvPhcZjK7CpghaFxmmrYerIvDga3RO7B/wsA/tVHz4oXBplbHbWdF866HB
-         xOI6I2G9tUU6MlRQTwqvXUgSJDWNiX+snEr2QzD9Kc6hszZVVSjF3qO19B0STTTGDh7I
-         V/fjlvQyaY4TmBlW7SQPTzwF2dk3h+9UYUyP5uVgjwvWvVowqendowYkLVP7tAsGZU6P
-         pyQdA33fcEvIxcv+k46En/Dx3fRen2mHtD+xPBCCTNAQe3xDzPMsMRBMN4kaoYFfPZRr
-         YshWZxAVXEL0RsaKLZrA0TtiaSSq9NNNOnMrxxsh4qs/bIKAvDLIQFs+lXHk6AAAKOOC
-         koug==
-X-Gm-Message-State: AOAM531hVoR5gjXWJscVnEfkyEjbsUlcWSYst0LcXO8Re4KVRyIsYOjL
-        Hy5DPppLCATlcMZHuRCFLvkRmaFsr9hjsprnUCE=
-X-Google-Smtp-Source: ABdhPJxttmgU2KO+KHNJuxjRV3sNDDnjxXwzWANgANwl+IjiPqEEuo/Gvb1gWA56jP1Z4Yfcz3WYRsELGeVWQeG28Zo=
-X-Received: by 2002:a9d:5cc8:0:b0:5b2:35ae:7ad6 with SMTP id
- r8-20020a9d5cc8000000b005b235ae7ad6mr4491355oti.275.1647682585482; Sat, 19
- Mar 2022 02:36:25 -0700 (PDT)
+        bh=TOMGYmaATQC2z13UyvSGmscWZ1Ke2cRO2FHb2Uve4+c=;
+        b=lhp0UdiDqRwNWtf/2M06J+n1ygnURos6jWzo7sc5N0pUzhhvRPgXVvT4zrRLi5c3jp
+         QSRumj1rej5seP35GfG3tne677z62aR8tRFKL8VvIbFeJj9Nbprk+00dmiZTx1oo/lc6
+         59UWn6ZmAGKraluyCN3Z/muZFOD+z53/gli63AQ8P9R4xdG3emeUbmqAV6ZKVsBdCqye
+         Vp25yFuUnmC7YXBqX5/bsCfcjKyw7DEpQ+osEOEd9eCppQ1BC36044ZLalgUUCKqwldw
+         FMUpFaS+LX81uRGKk2UneHVZFASUhja1hmJPqZx4e1U8KbSHoomaEIyH7ZvdhCmBXp3r
+         A0QQ==
+X-Gm-Message-State: AOAM530NZf1N2VqrRcj25332kH7yGd/OQGCrmDRKtM+lLDeanwcjNd2l
+        oGRlMGCZymXEm2FJiPzrp4hhvcMkAMAgSgLxNvkaztVJwGw=
+X-Google-Smtp-Source: ABdhPJxjG9+XKDL2nuKi2W+QM9BrUWAJzSd68nq9Al1JVaNMnKFacS0NNJmC0amrXWYex35MjoU0mITjbMjNi5r5L3E=
+X-Received: by 2002:a05:6122:8c8:b0:32a:7010:c581 with SMTP id
+ 8-20020a05612208c800b0032a7010c581mr5241750vkg.32.1647693953310; Sat, 19 Mar
+ 2022 05:45:53 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220319001635.4097742-1-khazhy@google.com> <ea2afc67b92f33dbf406c3ebf49a0da9c6ec1e5b.camel@hammerspace.com>
-In-Reply-To: <ea2afc67b92f33dbf406c3ebf49a0da9c6ec1e5b.camel@hammerspace.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Sat, 19 Mar 2022 11:36:13 +0200
-Message-ID: <CAOQ4uxgTJdcO-xZbtTSUkjD2g0vSHr=PLFc6-T6RgO0u5DS=0g@mail.gmail.com>
-Subject: Re: [PATCH RFC] nfsd: avoid recursive locking through fsnotify
-To:     Trond Myklebust <trondmy@hammerspace.com>, Jan Kara <jack@suse.cz>
-Cc:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "khazhy@google.com" <khazhy@google.com>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
+References: <751829.1647648125@warthog.procyon.org.uk>
+In-Reply-To: <751829.1647648125@warthog.procyon.org.uk>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Sat, 19 Mar 2022 13:46:25 +0100
+Message-ID: <CAOi1vP_sEj7i8YbbwJibbSG=BCVp4E9BAo=JF0aC79xBNC8wcA@mail.gmail.com>
+Subject: Re: Coordinating netfslib pull request with the ceph pull request
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Xiubo Li <xiubli@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        linux-nfs@vger.kernel.org, linux-cifs@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -70,116 +71,25 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Mar 19, 2022 at 9:02 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+On Sat, Mar 19, 2022 at 1:02 AM David Howells <dhowells@redhat.com> wrote:
 >
-> On Fri, 2022-03-18 at 17:16 -0700, Khazhismel Kumykov wrote:
-> > fsnotify_add_inode_mark may allocate with GFP_KERNEL, which may
-> > result
-> > in recursing back into nfsd, resulting in deadlock. See below stack.
-> >
-> > nfsd            D    0 1591536      2 0x80004080
-> > Call Trace:
-> >  __schedule+0x497/0x630
-> >  schedule+0x67/0x90
-> >  schedule_preempt_disabled+0xe/0x10
-> >  __mutex_lock+0x347/0x4b0
-> >  fsnotify_destroy_mark+0x22/0xa0
-> >  nfsd_file_free+0x79/0xd0 [nfsd]
-> >  nfsd_file_put_noref+0x7c/0x90 [nfsd]
-> >  nfsd_file_lru_dispose+0x6d/0xa0 [nfsd]
-> >  nfsd_file_lru_scan+0x57/0x80 [nfsd]
-> >  do_shrink_slab+0x1f2/0x330
-> >  shrink_slab+0x244/0x2f0
-> >  shrink_node+0xd7/0x490
-> >  do_try_to_free_pages+0x12f/0x3b0
-> >  try_to_free_pages+0x43f/0x540
-> >  __alloc_pages_slowpath+0x6ab/0x11c0
-> >  __alloc_pages_nodemask+0x274/0x2c0
-> >  alloc_slab_page+0x32/0x2e0
-> >  new_slab+0xa6/0x8b0
-> >  ___slab_alloc+0x34b/0x520
-> >  kmem_cache_alloc+0x1c4/0x250
-> >  fsnotify_add_mark_locked+0x18d/0x4c0
-> >  fsnotify_add_mark+0x48/0x70
-> >  nfsd_file_acquire+0x570/0x6f0 [nfsd]
-> >  nfsd_read+0xa7/0x1c0 [nfsd]
-> >  nfsd3_proc_read+0xc1/0x110 [nfsd]
-> >  nfsd_dispatch+0xf7/0x240 [nfsd]
-> >  svc_process_common+0x2f4/0x610 [sunrpc]
-> >  svc_process+0xf9/0x110 [sunrpc]
-> >  nfsd+0x10e/0x180 [nfsd]
-> >  kthread+0x130/0x140
-> >  ret_from_fork+0x35/0x40
-> >
-> > Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
-> > ---
-> >  fs/nfsd/filecache.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > Marking this RFC since I haven't actually had a chance to test this,
-> > we
-> > we're seeing this deadlock for some customers.
-> >
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index fdf89fcf1a0c..a14760f9b486 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -121,6 +121,7 @@ nfsd_file_mark_find_or_create(struct nfsd_file
-> > *nf)
-> >         struct fsnotify_mark    *mark;
-> >         struct nfsd_file_mark   *nfm = NULL, *new;
-> >         struct inode *inode = nf->nf_inode;
-> > +       unsigned int pflags;
-> >
-> >         do {
-> >                 mutex_lock(&nfsd_file_fsnotify_group->mark_mutex);
-> > @@ -149,7 +150,10 @@ nfsd_file_mark_find_or_create(struct nfsd_file
-> > *nf)
-> >                 new->nfm_mark.mask = FS_ATTRIB|FS_DELETE_SELF;
-> >                 refcount_set(&new->nfm_ref, 1);
-> >
-> > +               /* fsnotify allocates, avoid recursion back into nfsd
-> > */
-> > +               pflags = memalloc_nofs_save();
-> >                 err = fsnotify_add_inode_mark(&new->nfm_mark, inode,
-> > 0);
-> > +               memalloc_nofs_restore(pflags);
-> >
-> >                 /*
-> >                  * If the add was successful, then return the object.
+> Hi Ilya,
 >
-> Isn't that stack trace showing a slab direct reclaim, and not a
-> filesystem writeback situation?
+> Since my fscache-next branch[1] is dependent on patches in the ceph/master
+> branch, I think I need to coordinate my netfslib pull request with your ceph
+> pull request for the upcoming merge window.
 >
-> Does memalloc_nofs_save()/restore() really fix this problem? It seems
-> to me that it cannot, particularly since knfsd is not a filesystem, and
-> so does not ever handle writeback of dirty pages.
+> David
+>
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=fscache-next
 >
 
-Maybe NOFS throttles direct reclaims to the point that the problem is
-harder to hit?
+Hi David,
 
-This report came in at good timing for me.
-
-It demonstrates an issue I did not predict for "volatile"' fanotify marks [1].
-As far as I can tell, nfsd filecache is currently the only fsnotify backend that
-frees fsnotify marks in memory shrinker. "volatile" fanotify marks would also
-be evictable in that way, so they would expose fanotify to this deadlock.
-
-For the short term, maybe nfsd filecache can avoid the problem by checking
-mutex_is_locked(&nfsd_file_fsnotify_group->mark_mutex) and abort the
-shrinker. I wonder if there is a place for a helper mutex_is_locked_by_me()?
-
-Jan,
-
-A relatively simple fix would be to allocate fsnotify_mark_connector in
-fsnotify_add_mark() and free it, if a connector already exists for the object.
-I don't think there is a good reason to optimize away this allocation
-for the case of a non-first group to set a mark on an object?
+Given how your branch is structured, it sounds like the easiest would
+be for you to send the netfslib pull request after I send the ceph pull
+request.  Or do you have some tighter coordination in mind?
 
 Thanks,
-Amir.
 
-
-
-[1] https://lore.kernel.org/linux-fsdevel/20220307155741.1352405-1-amir73il@gmail.com/
+                Ilya
