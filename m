@@ -2,65 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E3C44E1FED
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Mar 2022 06:20:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFD734E2530
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Mar 2022 12:23:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344381AbiCUFWS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Mar 2022 01:22:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60542 "EHLO
+        id S233349AbiCULYi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Mar 2022 07:24:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243430AbiCUFWQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Mar 2022 01:22:16 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5363C3B556
-        for <linux-nfs@vger.kernel.org>; Sun, 20 Mar 2022 22:20:51 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E83621F37C;
-        Mon, 21 Mar 2022 05:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1647840049; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        with ESMTP id S1346756AbiCULYh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Mar 2022 07:24:37 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 398B217E38;
+        Mon, 21 Mar 2022 04:23:12 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id CC01E210E6;
+        Mon, 21 Mar 2022 11:23:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1647861790; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2qDexzwyYQyiNizGNdOVC1jsqBNoNrDlwwMW/+zM2a0=;
-        b=rB+YL4ui1TG8iXiWYwsD51iF9pn/me6Q+1T5clErbKrO5XUrqimNptDKdMfxQMkO90ybWP
-        5FCAOT/nhV1xdGrNK6F6LQhF7sBJ4mKihE5TzkkjLgT1DC4Ul5vEtciSrP8FqLktsmRaSs
-        x/bAAfoamF8KYmKq6UN0l9wCrKgmPjQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1647840049;
+        bh=S7YH2NCMXs0j2a1y2EKU6RGg6TUUSRPTbk3irwt96Do=;
+        b=aalP1obog8/eREHh9ClZN4HsFStjor4Z0JkslGHycaxdP1O8udwwt4Rhw9a2GNxZmDQG2l
+        LEurYMCxd3JPPFQ1M0y1h63ZviD4/vZt016a33NTlo1n9UeUqmJhaPYpiTq5RqKn7T+IUK
+        gX9WbiMMNQyqzCRV7vxWE7qGMhPnzj4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1647861790;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2qDexzwyYQyiNizGNdOVC1jsqBNoNrDlwwMW/+zM2a0=;
-        b=0jDjmvUxZ1Fq979Mdvl7NWMBSciy2qGioYUBwrYk7sYtBcY6q+mU4OiIArTWWJ7Ere7RMA
-        9uOA3S/buOePMOBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=S7YH2NCMXs0j2a1y2EKU6RGg6TUUSRPTbk3irwt96Do=;
+        b=bLjmaa7wPygu6nvPdXNzh0NDKAiTnKhNsbLO5uX5C9DszxOw/eoB9xF0ddAQRYon5oiUIc
+        z+WdaCgdrFPKrWAw==
+Received: from quack3.suse.cz (unknown [10.100.224.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9A905139FF;
-        Mon, 21 Mar 2022 05:20:48 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 3tJeFjALOGIBdAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 21 Mar 2022 05:20:48 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by relay2.suse.de (Postfix) with ESMTPS id 6A476A3B83;
+        Mon, 21 Mar 2022 11:23:10 +0000 (UTC)
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 14B4DA0610; Mon, 21 Mar 2022 12:23:10 +0100 (CET)
+Date:   Mon, 21 Mar 2022 12:23:10 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>, Jan Kara <jack@suse.cz>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "khazhy@google.com" <khazhy@google.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jeff Layton <jlayton@kernel.org>
+Subject: Re: [PATCH RFC] nfsd: avoid recursive locking through fsnotify
+Message-ID: <20220321112310.vpr7oxro2xkz5llh@quack3.lan>
+References: <20220319001635.4097742-1-khazhy@google.com>
+ <ea2afc67b92f33dbf406c3ebf49a0da9c6ec1e5b.camel@hammerspace.com>
+ <CAOQ4uxgTJdcO-xZbtTSUkjD2g0vSHr=PLFc6-T6RgO0u5DS=0g@mail.gmail.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>,
-        "Anna Schumaker" <anna@kernel.org>
-Cc:     "Chuck Lever III" <chuck.lever@oracle.com>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: [PATCH v2] NFS: update documentation for the nfs4_unique_id parameter
-In-reply-to: <164783633625.6096.14575868633417140042@noble.neil.brown.name>
-References: <164783633625.6096.14575868633417140042@noble.neil.brown.name>
-Date:   Mon, 21 Mar 2022 16:20:43 +1100
-Message-id: <164784004337.6096.413613952857713019@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgTJdcO-xZbtTSUkjD2g0vSHr=PLFc6-T6RgO0u5DS=0g@mail.gmail.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -71,60 +70,125 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sat 19-03-22 11:36:13, Amir Goldstein wrote:
+> On Sat, Mar 19, 2022 at 9:02 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+> >
+> > On Fri, 2022-03-18 at 17:16 -0700, Khazhismel Kumykov wrote:
+> > > fsnotify_add_inode_mark may allocate with GFP_KERNEL, which may
+> > > result
+> > > in recursing back into nfsd, resulting in deadlock. See below stack.
+> > >
+> > > nfsd            D    0 1591536      2 0x80004080
+> > > Call Trace:
+> > >  __schedule+0x497/0x630
+> > >  schedule+0x67/0x90
+> > >  schedule_preempt_disabled+0xe/0x10
+> > >  __mutex_lock+0x347/0x4b0
+> > >  fsnotify_destroy_mark+0x22/0xa0
+> > >  nfsd_file_free+0x79/0xd0 [nfsd]
+> > >  nfsd_file_put_noref+0x7c/0x90 [nfsd]
+> > >  nfsd_file_lru_dispose+0x6d/0xa0 [nfsd]
+> > >  nfsd_file_lru_scan+0x57/0x80 [nfsd]
+> > >  do_shrink_slab+0x1f2/0x330
+> > >  shrink_slab+0x244/0x2f0
+> > >  shrink_node+0xd7/0x490
+> > >  do_try_to_free_pages+0x12f/0x3b0
+> > >  try_to_free_pages+0x43f/0x540
+> > >  __alloc_pages_slowpath+0x6ab/0x11c0
+> > >  __alloc_pages_nodemask+0x274/0x2c0
+> > >  alloc_slab_page+0x32/0x2e0
+> > >  new_slab+0xa6/0x8b0
+> > >  ___slab_alloc+0x34b/0x520
+> > >  kmem_cache_alloc+0x1c4/0x250
+> > >  fsnotify_add_mark_locked+0x18d/0x4c0
+> > >  fsnotify_add_mark+0x48/0x70
+> > >  nfsd_file_acquire+0x570/0x6f0 [nfsd]
+> > >  nfsd_read+0xa7/0x1c0 [nfsd]
+> > >  nfsd3_proc_read+0xc1/0x110 [nfsd]
+> > >  nfsd_dispatch+0xf7/0x240 [nfsd]
+> > >  svc_process_common+0x2f4/0x610 [sunrpc]
+> > >  svc_process+0xf9/0x110 [sunrpc]
+> > >  nfsd+0x10e/0x180 [nfsd]
+> > >  kthread+0x130/0x140
+> > >  ret_from_fork+0x35/0x40
+> > >
+> > > Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+> > > ---
+> > >  fs/nfsd/filecache.c | 4 ++++
+> > >  1 file changed, 4 insertions(+)
+> > >
+> > > Marking this RFC since I haven't actually had a chance to test this,
+> > > we
+> > > we're seeing this deadlock for some customers.
+> > >
+> > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > > index fdf89fcf1a0c..a14760f9b486 100644
+> > > --- a/fs/nfsd/filecache.c
+> > > +++ b/fs/nfsd/filecache.c
+> > > @@ -121,6 +121,7 @@ nfsd_file_mark_find_or_create(struct nfsd_file
+> > > *nf)
+> > >         struct fsnotify_mark    *mark;
+> > >         struct nfsd_file_mark   *nfm = NULL, *new;
+> > >         struct inode *inode = nf->nf_inode;
+> > > +       unsigned int pflags;
+> > >
+> > >         do {
+> > >                 mutex_lock(&nfsd_file_fsnotify_group->mark_mutex);
+> > > @@ -149,7 +150,10 @@ nfsd_file_mark_find_or_create(struct nfsd_file
+> > > *nf)
+> > >                 new->nfm_mark.mask = FS_ATTRIB|FS_DELETE_SELF;
+> > >                 refcount_set(&new->nfm_ref, 1);
+> > >
+> > > +               /* fsnotify allocates, avoid recursion back into nfsd
+> > > */
+> > > +               pflags = memalloc_nofs_save();
+> > >                 err = fsnotify_add_inode_mark(&new->nfm_mark, inode,
+> > > 0);
+> > > +               memalloc_nofs_restore(pflags);
+> > >
+> > >                 /*
+> > >                  * If the add was successful, then return the object.
+> >
+> > Isn't that stack trace showing a slab direct reclaim, and not a
+> > filesystem writeback situation?
+> >
+> > Does memalloc_nofs_save()/restore() really fix this problem? It seems
+> > to me that it cannot, particularly since knfsd is not a filesystem, and
+> > so does not ever handle writeback of dirty pages.
+> >
+> 
+> Maybe NOFS throttles direct reclaims to the point that the problem is
+> harder to hit?
+> 
+> This report came in at good timing for me.
+> 
+> It demonstrates an issue I did not predict for "volatile"' fanotify marks [1].
+> As far as I can tell, nfsd filecache is currently the only fsnotify backend that
+> frees fsnotify marks in memory shrinker. "volatile" fanotify marks would also
+> be evictable in that way, so they would expose fanotify to this deadlock.
+> 
+> For the short term, maybe nfsd filecache can avoid the problem by checking
+> mutex_is_locked(&nfsd_file_fsnotify_group->mark_mutex) and abort the
+> shrinker. I wonder if there is a place for a helper mutex_is_locked_by_me()?
+> 
+> Jan,
+> 
+> A relatively simple fix would be to allocate fsnotify_mark_connector in
+> fsnotify_add_mark() and free it, if a connector already exists for the object.
+> I don't think there is a good reason to optimize away this allocation
+> for the case of a non-first group to set a mark on an object?
 
-The documentation for nfs4_unique_id is out-of-date.  In particular it
-claim that when nfs4_unique_id is set, the host name is not used.  since
-Commit 55b592933b7d ("NFSv4: Fix nfs4_init_uniform_client_string for net
-namespaces") both the unique_id AND the host name are used.
+Indeed, nasty. Volatile marks will add group->mark_mutex into a set of
+locks grabbed during inode slab reclaim. So any allocation under
+group->mark_mutex has to be GFP_NOFS now. This is not just about connector
+allocations but also mark allocations for fanotify. Moving allocations from
+under mark_mutex is also possible solution but passing preallocated memory
+around is kind of ugly as well. So the cleanest solution I currently see is
+to come up with helpers like "fsnotify_lock_group() &
+fsnotify_unlock_group()" which will lock/unlock mark_mutex and also do
+memalloc_nofs_save / restore magic. 
 
-Update the documentation to match the code.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
-
-After writing the first version I realised that when 'identifier' is set
-it overrides the module parameter, rather than supplements it.  Hence v2.
-
- Documentation/admin-guide/nfs/nfs-client.rst | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/Documentation/admin-guide/nfs/nfs-client.rst b/Documentation/adm=
-in-guide/nfs/nfs-client.rst
-index 6adb6457bc69..36760685dd34 100644
---- a/Documentation/admin-guide/nfs/nfs-client.rst
-+++ b/Documentation/admin-guide/nfs/nfs-client.rst
-@@ -36,10 +36,9 @@ administrative requirements that require particular behavi=
-or that does not
- work well as part of an nfs_client_id4 string.
-=20
- The nfs.nfs4_unique_id boot parameter specifies a unique string that can be
--used instead of a system's node name when an NFS client identifies itself to
--a server.  Thus, if the system's node name is not unique, or it changes, its
--nfs.nfs4_unique_id stays the same, preventing collision with other clients
--or loss of state during NFS reboot recovery or transparent state migration.
-+used together with  a system's node name when an NFS client identifies itsel=
-f to
-+a server.  Thus, if the system's node name is not unique, its
-+nfs.nfs4_unique_id can help prevent collisions with other clients.
-=20
- The nfs.nfs4_unique_id string is typically a UUID, though it can contain
- anything that is believed to be unique across all NFS clients.  An
-@@ -53,8 +52,12 @@ outstanding NFSv4 state has expired, to prevent loss of NF=
-Sv4 state.
-=20
- This string can be stored in an NFS client's grub.conf, or it can be provided
- via a net boot facility such as PXE.  It may also be specified as an nfs.ko
--module parameter.  Specifying a uniquifier string is not support for NFS
--clients running in containers.
-+module parameter.
-+
-+This uniquifier string will be the same for all NFS clients running in
-+containers unless it is overridden by a value written to
-+/sys/fs/nfs/net/nfs_client/identifier which will be local to the network
-+namespace of the process which writes.
-=20
-=20
- The DNS resolver
---=20
-2.35.1
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
