@@ -2,45 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A2994E363A
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Mar 2022 02:55:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 783534E3641
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Mar 2022 02:55:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235195AbiCVB4C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Mar 2022 21:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54098 "EHLO
+        id S235169AbiCVB4F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Mar 2022 21:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235139AbiCVB4A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Mar 2022 21:56:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D3843EC2
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Mar 2022 18:54:34 -0700 (PDT)
+        with ESMTP id S235132AbiCVB4C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Mar 2022 21:56:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12CD44A02
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Mar 2022 18:54:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F9AF60AE1
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Mar 2022 01:54:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FB94C340EE;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 551C0B81B2D
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Mar 2022 01:54:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDFC3C340F2;
         Tue, 22 Mar 2022 01:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1647914073;
-        bh=TpFozSPyg7PH9QSv7+9Ca1GGRZqck54LuncQ6km/yVM=;
+        s=k20201202; t=1647914074;
+        bh=DrZNvoTWRqfjg6xxjhNfSiAQdezk+5CXJVWZ5lfbe1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPjDhmxVgFg76pCE4V6GXV92+dm5JSf3uQHe1MG1aYfvkKKk91FTh7RcM2Gy4jHcg
-         IhZBFNiZDKLq9eGvWpXBWHiPe2Tohs42Is7zTUa2NT6B1kNXzQf4/AuyTVtb6kguYu
-         pbrUrbxXO+nJ9AsrySop0/YpaK0IvqEdZw5DOOW48LjXxaxCGISvhaY6/glvv13n8T
-         WPhx/gwQwRSQFFmxbpH++vsHeXJju52SHhVddWoim9RQSuri4jHQHzyc481dlLYlzf
-         lZW/JZqVfUDvlNMjRvA7uQ4z+mMAc5WPiejTGN39CAnwynwP56D1xXYMjeY/JOPxe6
-         vYSUBF0gqcbNw==
+        b=Q9FGcM2h8saccDKPgPJuGcb+BTl5k0PjuhPEt0a9+s0chdhlmlBYiGLlIZnZ9Ga8y
+         8z570cfR4rljp45pMGbIY0qFYSBsUp5MCwdUxvrrU+bd/REt97wtgHCE6z+qUxbLnW
+         ZXZ5HzEiOPw+s6rOCBrSdibJFeTlO2k72DZd1GXKGTiY4V3kty9nU/LHB8aCTmJWBZ
+         9C9QxehdnWggq/UyMBPi4Ca/88SyxmN3xO1+one1uX1EIwXAoky/UtUhbRPpf8fJzw
+         qzRmq2O4mgWR61no/cFS0SpK3p+06Op1OFQhCovvxa4QsGRPsm43DXpN8NKZnXnv0q
+         faoznvIjLbZxQ==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>,
         Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
-Subject: [PATCH v2 1/9] NFS: Fix memory allocation in rpc_malloc()
-Date:   Mon, 21 Mar 2022 21:47:38 -0400
-Message-Id: <20220322014746.1052984-2-trondmy@kernel.org>
+Subject: [PATCH v2 2/9] NFS: Fix memory allocation in rpc_alloc_task()
+Date:   Mon, 21 Mar 2022 21:47:39 -0400
+Message-Id: <20220322014746.1052984-3-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220322014746.1052984-1-trondmy@kernel.org>
+In-Reply-To: <20220322014746.1052984-2-trondmy@kernel.org>
 References: <20220322014746.1052984-1-trondmy@kernel.org>
+ <20220322014746.1052984-2-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -55,73 +56,36 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When in a low memory situation, we do want rpciod to kick off direct
-reclaim in the case where that helps, however we don't want it looping
-forever in mempool_alloc().
-So first try allocating from the slab using GFP_KERNEL | __GFP_NORETRY,
-and then fall back to a GFP_NOWAIT allocation from the mempool.
-
-Ditto for rpc_alloc_task()
+As for rpc_malloc(), we first try allocating from the slab, then fall
+back to a non-waiting allocation from the mempool.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- include/linux/sunrpc/sched.h |  1 +
- net/sunrpc/sched.c           | 21 ++++++++++++++-------
- 2 files changed, 15 insertions(+), 7 deletions(-)
+ net/sunrpc/sched.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-index 56710f8056d3..1d7a3e51b795 100644
---- a/include/linux/sunrpc/sched.h
-+++ b/include/linux/sunrpc/sched.h
-@@ -262,6 +262,7 @@ void		rpc_destroy_mempool(void);
- extern struct workqueue_struct *rpciod_workqueue;
- extern struct workqueue_struct *xprtiod_workqueue;
- void		rpc_prepare_task(struct rpc_task *task);
-+gfp_t		rpc_task_gfp_mask(void);
- 
- static inline int rpc_wait_for_completion_task(struct rpc_task *task)
- {
 diff --git a/net/sunrpc/sched.c b/net/sunrpc/sched.c
-index 7c8f87ebdbc0..d59a033820be 100644
+index d59a033820be..b258b87a3ec2 100644
 --- a/net/sunrpc/sched.c
 +++ b/net/sunrpc/sched.c
-@@ -57,6 +57,13 @@ struct workqueue_struct *rpciod_workqueue __read_mostly;
- struct workqueue_struct *xprtiod_workqueue __read_mostly;
- EXPORT_SYMBOL_GPL(xprtiod_workqueue);
+@@ -1108,10 +1108,14 @@ static void rpc_init_task(struct rpc_task *task, const struct rpc_task_setup *ta
+ 	rpc_init_task_statistics(task);
+ }
  
-+gfp_t rpc_task_gfp_mask(void)
-+{
-+	if (current->flags & PF_WQ_WORKER)
-+		return GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN;
-+	return GFP_KERNEL;
-+}
-+
- unsigned long
- rpc_task_timeout(const struct rpc_task *task)
+-static struct rpc_task *
+-rpc_alloc_task(void)
++static struct rpc_task *rpc_alloc_task(void)
  {
-@@ -1030,15 +1037,15 @@ int rpc_malloc(struct rpc_task *task)
- 	struct rpc_rqst *rqst = task->tk_rqstp;
- 	size_t size = rqst->rq_callsize + rqst->rq_rcvsize;
- 	struct rpc_buffer *buf;
--	gfp_t gfp = GFP_KERNEL;
--
--	if (RPC_IS_ASYNC(task))
--		gfp = GFP_NOWAIT | __GFP_NOWARN;
-+	gfp_t gfp = rpc_task_gfp_mask();
+-	return (struct rpc_task *)mempool_alloc(rpc_task_mempool, GFP_KERNEL);
++	struct rpc_task *task;
++
++	task = kmem_cache_alloc(rpc_task_slabp, rpc_task_gfp_mask());
++	if (task)
++		return task;
++	return mempool_alloc(rpc_task_mempool, GFP_NOWAIT);
+ }
  
- 	size += sizeof(struct rpc_buffer);
--	if (size <= RPC_BUFFER_MAXSIZE)
--		buf = mempool_alloc(rpc_buffer_mempool, gfp);
--	else
-+	if (size <= RPC_BUFFER_MAXSIZE) {
-+		buf = kmem_cache_alloc(rpc_buffer_slabp, gfp);
-+		/* Reach for the mempool if dynamic allocation fails */
-+		if (!buf && RPC_IS_ASYNC(task))
-+			buf = mempool_alloc(rpc_buffer_mempool, GFP_NOWAIT);
-+	} else
- 		buf = kmalloc(size, gfp);
- 
- 	if (!buf)
+ /*
 -- 
 2.35.1
 
