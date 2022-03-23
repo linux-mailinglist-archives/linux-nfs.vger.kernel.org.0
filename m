@@ -2,92 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12DA74E4DB9
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 09:04:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4D914E4F61
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 10:29:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241235AbiCWIFa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Mar 2022 04:05:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32772 "EHLO
+        id S242073AbiCWJbF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Mar 2022 05:31:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232115AbiCWIF3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 04:05:29 -0400
-X-Greylist: delayed 196 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 23 Mar 2022 01:04:00 PDT
-Received: from out203-205-221-205.mail.qq.com (out203-205-221-205.mail.qq.com [203.205.221.205])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07C1370F78
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Mar 2022 01:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-        s=s201512; t=1648022633;
-        bh=lwMLg/Yews7tW/5fe8TNLpkLv34pD5PLMY7UOC6qBW4=;
-        h=From:To:Cc:Subject:Date;
-        b=SPIp5GkaXtKaowg0RJA0WfauNRcp1qCD8DCGyHxlt7Lwfg554hEhujNoKECMQi/UI
-         Yk9p1/Xk4QqHUGXRx3WFl9LfPgIi+asHSASeSo6xmBcuz2ywdEVeJCTlkc9u1VsBcK
-         XVtk06jvHjLnOog7EzyWABHviZjOUBxPk0rr7MWQ=
-Received: from localhost.localdomain ([43.227.138.48])
-        by newxmesmtplogicsvrszc9.qq.com (NewEsmtp) with SMTP
-        id 23A188F; Wed, 23 Mar 2022 16:00:35 +0800
-X-QQ-mid: xmsmtpt1648022435tca9ugqwi
-Message-ID: <tencent_61C566F88A52C1BF198826737AAE0E471806@qq.com>
-X-QQ-XMAILINFO: ONLymQk6scaO9GJ/nMNoeUSLwUq3BvP5iTFihRf6aDI5gVJH5Jgd/kyaCnjkgy
-         tpXZu0pMbNV1taHd1Tfho/FwM5qpNI/vmvr1LWWc3v3VBIg0h0RHPdSzXJkPInToClh9HMG6Cj42
-         SL/1v02nd0d16vEDVqz5/9GSxfaZzMllyR9lDESE6Fp5AW0sisjCiY4WmhAeNHeJ/czFd0hxPXpq
-         ryC9PQREFqOkeex+qh7xBQkU9nX/1+tq+vSzEhS6Ic2qlv7gmBnRi7SRiVkhTZYfmrVldjs7JgcS
-         8XBksnSB62XLpzpGsUeKijSHpJyHUvJbb4D4YEwVC+YwNWSlWd/MWuaB/QieXqGXqin+xXxWDYM1
-         NNq5itTOBQLyiDj/RmfPKIB/AiJZT+aSdAvOpdQKbTLEXTbFyA0kujcanBOjj7h/ai3+6GEN6AYL
-         44j/HNa6Gh9aNCnp622fjvDlApSyg/NS9u2cIecHPAVhvZtn1Wg3vkclAOUxKSJoOOuuLU1vmVaA
-         HEDzkbubQgM9f8ksUpF/tP9fzV+RRUgvlh25gS73pP6N4xwQAGZoNpXTQxWOSxrVOlIiLipTbBMN
-         FCMiiIzQ+kWYR6eKrjlrfq9xhBaD63vj+CT5ckwQrn41hStdx+LFh6Z6tVhmaFzZFLutzTt1vZGL
-         HC4LwInyRycVR9JWsj4HlProl7bsUX3YLNBfmgEFhIHqmbrP4tIZ6p+taTdPkJHm5UdBi/u+wm8c
-         HpgPyGw+zz4SG8SWN7uj4CmA7Q+TD092d7KsM7kNctV8EeVol6GmR9Wkrhb5yvZv0LNZ0uaVsDr1
-         SzqvIysmbm6fTRusEmXTpwe9KKlBK5LvNKCf28UhdElSfALo3w3mPok7qGsxYZkv3bn3CFFfoMD+
-         byxIdVhOAswoFH6cojh0M2bvQ6Qc1C2zqLSXOft6n8pjAcjkw6fPhZ7A5MEL+Ynz/iGsG3WseYpK
-         f7fV6OHUs=
-From:   xkernel.wang@foxmail.com
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xiaoke Wang <xkernel.wang@foxmail.com>
-Subject: [PATCH] NFS: check the return value of mempool_alloc()
-Date:   Wed, 23 Mar 2022 16:00:03 +0800
-X-OQ-MSGID: <20220323080003.2151-1-xkernel.wang@foxmail.com>
+        with ESMTP id S238098AbiCWJbF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 05:31:05 -0400
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFD316213E;
+        Wed, 23 Mar 2022 02:29:35 -0700 (PDT)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-2e64a6b20eeso10108077b3.3;
+        Wed, 23 Mar 2022 02:29:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RTdntLwWP7UcoqdxIbtO2gBEwkCYFZ/lgUjrNqmrzxY=;
+        b=T61hvAd7cJiSJIGmZk3tv26qPToF8HN5U/lQ/m08EAvWa2SmtE6To2nDTNf374lnhT
+         GPKcxTCuuPtJXa5gmEw+gX2f1CnhO+VLeiTWr2XmuaL6dVuTtvBLqYJtSXHPPzFlHs5d
+         Ri/6Ne7YUODQm8T3VMLlOYE4KOjFASZnLeZ8IqhaE9iuhu7q9KNKFvXczv/h7Sgwfpuk
+         P+Ovst/9RkkokTnzdrENQ2gJQlJX7TsW9sSFizNo9ppyZqVHj+5ghhwpu4GTzkQKNuQt
+         kjsxCrJT+nOf4qUF+msiy+R5Tj/zMWQPy3RSPf7HIGYLtyZhwIakdPpQAIpFcLhlFiZB
+         DguA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RTdntLwWP7UcoqdxIbtO2gBEwkCYFZ/lgUjrNqmrzxY=;
+        b=qypTNF9dh1L6sa75Cer/YX4VSQGLoJCifVbTmABDtyD7UZ+C67wYVHM6sta0TLaqqX
+         PMj2+lPfRJ9L0lyCD9ff9Q5vL2L6UzzJglkIUHzFqp9faI0GLtjRr6I6G+hUBPn/wLxc
+         Tqgjk/NTjwUrsQEHLHAjl1nzcmzBITCV6BoG6Rt4u9KS7o9w+n/uGS3uG3QYalyhfETb
+         IY4ke6sTxRJmMHNpMrRmu/4Evhp1PuZrp6/zBohF7dqAZ+WrDzieHzuGGx72AFn/ArKS
+         spvgjmZYjX0OHYo9UBWDVtiVO8laK3Mv2KqhoJhRZIkVvm3ucb73d7ZM7O/axBETbXMt
+         5qgQ==
+X-Gm-Message-State: AOAM530JFmh5NORM5ZVh+pt7+5AD8TJasIIE64vXJ/Hwj3FJAFxe4CEz
+        0nLrxAFHvH95BbXpeYyiNQx7KCsBoXQ7n+EN9FA=
+X-Google-Smtp-Source: ABdhPJxsStnlEm2/XrSzPGOBMOTw5PlnKDFjWTj/c9kKouVbhUo8itraPrOCZBSFmdgor+QYZSqQ1SYIOcVDz/aGNlE=
+X-Received: by 2002:a0d:c284:0:b0:2dc:37ec:f02c with SMTP id
+ e126-20020a0dc284000000b002dc37ecf02cmr33701891ywd.503.1648027774854; Wed, 23
+ Mar 2022 02:29:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+References: <20220124091107.642561-1-hch@lst.de> <20220124091107.642561-2-hch@lst.de>
+ <20220322211915.GA2413063@roeck-us.net> <CAKFNMonRd5QQMzLoH3T=M=C=2Q_j9d86EYzZeY4DU2HQAE3E8w@mail.gmail.com>
+ <20220323064248.GA24874@lst.de>
+In-Reply-To: <20220323064248.GA24874@lst.de>
+From:   Ryusuke Konishi <konishi.ryusuke@gmail.com>
+Date:   Wed, 23 Mar 2022 18:29:23 +0900
+Message-ID: <CAKFNMonANUN7_99oVBOq=iCJpt6jQs3qhu1ez5SwMm2g7sZUyw@mail.gmail.com>
+Subject: Re: [dm-devel] [PATCH 01/19] fs: remove mpage_alloc
+To:     Christoph Hellwig <hch@lst.de>, Guenter Roeck <linux@roeck-us.net>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-nfs@vger.kernel.org,
+        linux-nilfs <linux-nilfs@vger.kernel.org>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.co>,
+        device-mapper development <dm-devel@redhat.com>,
+        "Md . Haris Iqbal" <haris.iqbal@ionos.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        linux-fsdevel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        ntfs3@lists.linux.dev, Jack Wang <jinpu.wang@ionos.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        drbd-dev@lists.linbit.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        HELO_DYNAMIC_IPADDR,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H5,
-        RCVD_IN_MSPIKE_WL,RDNS_DYNAMIC,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Xiaoke Wang <xkernel.wang@foxmail.com>
+On Wed, Mar 23, 2022 at 3:42 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Wed, Mar 23, 2022 at 06:38:22AM +0900, Ryusuke Konishi wrote:
+> > This looks because the mask of GFP_KERNEL is removed along with
+> > the removal of mpage_alloc().
+> >
+>
+> > The default value of the gfp flag is set to GFP_HIGHUSER_MOVABLE by
+> > inode_init_always().
+> > So, __GFP_HIGHMEM hits the gfp warning at bio_alloc() that
+> > do_mpage_readpage() calls.
+>
+> Yeah.  Let's try this to match the iomap code:
+>
+> diff --git a/fs/mpage.c b/fs/mpage.c
+> index 9ed1e58e8d70b..d465883edf719 100644
+> --- a/fs/mpage.c
+> +++ b/fs/mpage.c
+> @@ -148,13 +148,11 @@ static struct bio *do_mpage_readpage(struct mpage_readpage_args *args)
+>         int op = REQ_OP_READ;
+>         unsigned nblocks;
+>         unsigned relative_block;
+> -       gfp_t gfp;
+> +       gfp_t gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+>
+>         if (args->is_readahead) {
+>                 op |= REQ_RAHEAD;
+> -               gfp = readahead_gfp_mask(page->mapping);
+> -       } else {
+> -               gfp = mapping_gfp_constraint(page->mapping, GFP_KERNEL);
+> +               gfp |= __GFP_NORETRY | __GFP_NOWARN;
+>         }
+>
+>         if (page_has_buffers(page))
 
-The check was first removed in 518662e ("NFS: fix usage of mempools.")
-as the passed GFP flags is `GFP_NOIO`.
-While now the flag is changed to `GFP_KERNEL` by 2b17d72 ("NFS: Clean
-up writeback code"), so it is better to check it.
+I did not test for iomap, but this patch has fixed the same regression on the
+latest mainline at least for ext2, exfat, vfat and nilfs2.  Thanks!
 
-Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
----
- fs/nfs/write.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index eae9bf1..831fad9 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -106,8 +106,10 @@ static struct nfs_pgio_header *nfs_writehdr_alloc(void)
- {
- 	struct nfs_pgio_header *p = mempool_alloc(nfs_wdata_mempool, GFP_KERNEL);
- 
--	memset(p, 0, sizeof(*p));
--	p->rw_mode = FMODE_WRITE;
-+	if (p) {
-+		memset(p, 0, sizeof(*p));
-+		p->rw_mode = FMODE_WRITE;
-+	}
- 	return p;
- }
- 
--- 
+Ryusuke Konishi
