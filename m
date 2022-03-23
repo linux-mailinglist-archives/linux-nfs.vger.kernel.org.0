@@ -2,188 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC97B4E59C5
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 21:19:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E1D4E5A56
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 22:04:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344336AbiCWUUz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Mar 2022 16:20:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51958 "EHLO
+        id S235391AbiCWVGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Mar 2022 17:06:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344602AbiCWUUy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 16:20:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BA7B41F608
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Mar 2022 13:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648066763;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+        with ESMTP id S235540AbiCWVGU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 17:06:20 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E853122E;
+        Wed, 23 Mar 2022 14:04:49 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 6057F1F387;
+        Wed, 23 Mar 2022 21:04:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1648069488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=A4WjIFYPYYr7HjXVjEDRv4oz08cl5gveTsATjw52Amg=;
-        b=F0J4XMqmc/DhbMlgjbJNTD4OoX/d19LtJY5wWvoc945ZxaI8ucQ2skX8BX8krJiOay55D1
-        tUkAje1xW+ZM73UhLgJ1dII2KjTcwASmSGoX9N063Kwtj1MusOpJgVN40KCI+DGb/xdZer
-        zYbNGFIqtMdcaliETjv7/Ff5IT8/qoA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-382-8TutiKXLMk-fcC3WlvWycA-1; Wed, 23 Mar 2022 16:19:20 -0400
-X-MC-Unique: 8TutiKXLMk-fcC3WlvWycA-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        bh=ZQRFIvMYPa57E8vs5yQx5fBF8QSVW2wkNB0Ft3IVHkg=;
+        b=hUPA4AfHH40LrLy7/afNuEXl3ZSmwWmLp5N8L4vWyy4uDG3LZjrrBdJIMAJMH4DsGmEquz
+        UQ6MKVTtH91xo15DCiU0edkhR+MBnlWOTPAARbOWUHBVPdofhMHr2EzGNTveoALQa66KJw
+        ISUr/uiq9UmAxPsZQ+SHgQlSrdE7pXk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1648069488;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZQRFIvMYPa57E8vs5yQx5fBF8QSVW2wkNB0Ft3IVHkg=;
+        b=ebx4g8z+Yz2YE2VTtZLhKFXsf1MiAaeq5J9BhH2AkGiRXYd7fdpfHSDMCj/qdFlvyt30vh
+        e9x5ncED9Oe8LVBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2799729ABA28;
-        Wed, 23 Mar 2022 20:19:20 +0000 (UTC)
-Received: from nyarly.redhat.com (ovpn-116-121.gru2.redhat.com [10.97.116.121])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A42F1401E24;
-        Wed, 23 Mar 2022 20:19:16 +0000 (UTC)
-From:   Thiago Becker <tbecker@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com, trond.myklebust@hammerspace.com,
-        anna.schumaker@netapp.com, kolga@netapp.com,
-        Thiago Becker <tbecker@redhat.com>
-Subject: [PATCH RFC v3 6/6] nfsrahead: User documentation
-Date:   Wed, 23 Mar 2022 17:18:41 -0300
-Message-Id: <20220323201841.4166549-7-tbecker@redhat.com>
-In-Reply-To: <20220323201841.4166549-1-tbecker@redhat.com>
-References: <20220323201841.4166549-1-tbecker@redhat.com>
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B02F313302;
+        Wed, 23 Mar 2022 21:04:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id aD1FGm6LO2KobwAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 23 Mar 2022 21:04:46 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     xkernel.wang@foxmail.com
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Xiaoke Wang" <xkernel.wang@foxmail.com>
+Subject: Re: [PATCH] NFS: check the return value of mempool_alloc()
+In-reply-to: <tencent_61C566F88A52C1BF198826737AAE0E471806@qq.com>
+References: <tencent_61C566F88A52C1BF198826737AAE0E471806@qq.com>
+Date:   Thu, 24 Mar 2022 08:04:41 +1100
+Message-id: <164806948116.6096.12331736937963571485@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add the man page for nfsrahead, and add the new section to nfs.conf.
+On Wed, 23 Mar 2022, xkernel.wang@foxmail.com wrote:
+> From: Xiaoke Wang <xkernel.wang@foxmail.com>
+> 
+> The check was first removed in 518662e ("NFS: fix usage of mempools.")
+> as the passed GFP flags is `GFP_NOIO`.
+> While now the flag is changed to `GFP_KERNEL` by 2b17d72 ("NFS: Clean
+> up writeback code"), so it is better to check it.
 
-Bugzilla: https://bugzilla.redhat.com/show_bug.cgi?id=1946283
-Signed-off-by: Thiago Becker <tbecker@redhat.com>
----
- systemd/nfs.conf.man          | 11 ++++++
- tools/nfsrahead/Makefile.am   |  2 +
- tools/nfsrahead/nfsrahead.man | 72 +++++++++++++++++++++++++++++++++++
- 3 files changed, 85 insertions(+)
- create mode 100644 tools/nfsrahead/nfsrahead.man
+no.  GFP_KERNEL is not that different from GFP_NOIO.
 
-diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index be487a11..e74083e9 100644
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -294,6 +294,17 @@ Only
- .B debug=
- is recognized.
- 
-+.TP
-+.B nfsrahead
-+Recognized values:
-+.BR nfs ,
-+.BR nfsv4 ,
-+.BR default .
-+
-+See
-+.BR nfsrahead (5)
-+for deatils.
-+
- .SH FILES
- .TP 10n
- .I /etc/nfs.conf
-diff --git a/tools/nfsrahead/Makefile.am b/tools/nfsrahead/Makefile.am
-index d0b5d170..7342dcba 100644
---- a/tools/nfsrahead/Makefile.am
-+++ b/tools/nfsrahead/Makefile.am
-@@ -3,6 +3,8 @@ nfsrahead_SOURCES = main.c
- nfsrahead_LDFLAGS= -lmount
- nfsrahead_LDADD = ../../support/nfs/libnfsconf.la
- 
-+man5_MANS = nfsrahead.man
-+
- udev_rulesdir = /etc/udev/rules.d
- udev_rules_DATA = 99-nfs_bdi.rules
- 
-diff --git a/tools/nfsrahead/nfsrahead.man b/tools/nfsrahead/nfsrahead.man
-new file mode 100644
-index 00000000..5488f633
---- /dev/null
-+++ b/tools/nfsrahead/nfsrahead.man
-@@ -0,0 +1,72 @@
-+.\" Manpage for nfsrahead.
-+.nh
-+.ad l
-+.TH man 5 "08 Mar 2022" "1.0" "nfsrahead man page"
-+.SH NAME
-+
-+nfsrahead \- Configure the readahead for NFS mounts
-+
-+.SH SYNOPSIS
-+
-+nfsrahead [-F] [-d] <device>
-+
-+.SH DESCRIPTION
-+
-+\fInfsrahead\fR is a tool intended to be used with udev to set the \fIread_ahead_kb\fR parameter of NFS mounts, according to the configuration file (see \fICONFIGURATION\fR). \fIdevice\fR is the device number for the NFS backing device as provided by the kernel.
-+
-+.SH OPTIONS
-+.TP
-+.B -F
-+Send messages to 
-+.I stderr 
-+instead of
-+.I syslog
-+
-+.TP
-+.B -d
-+Increase the debugging level.
-+
-+.SH CONFIGURATION
-+.I nfsrahead
-+is configured in
-+.IR /etc/nfs.conf ,
-+in the section titled
-+.IR nfsrahead .
-+It accepts the following configurations.
-+
-+.TP
-+.B nfs=<value>
-+The readahead value applied to NFSv3 mounts.
-+
-+.TP
-+.B nfs4=<value>
-+The readahead value applied to NFSv4 mounts.
-+
-+.TP
-+.B default=<value>
-+The default configuration when none of the configurations above is set.
-+
-+.SH EXAMPLE CONFIGURATION
-+[nfsrahead]
-+.br
-+nfs=15000              # readahead of 15000 for NFSv3 mounts
-+.br
-+nfs4=16000             # readahead of 16000 for NFSv4 mounts
-+.br
-+default=128            # default is 128
-+
-+.SH SEE ALSO
-+
-+.BR mount.nfs (8),
-+.BR nfs (5),
-+.BR nfs.conf (5),
-+.BR udev (7),
-+.BR bcc-readahead (8)
-+
-+.SH BUGS
-+
-+No known bugs.
-+
-+.SH AUTHOR
-+
-+Thiago Rafael Becker <trbecker@gmail.com>
--- 
-2.35.1
+mempool_alloc() can only fail with __GFP_DIRECT_RECLAIM is not passed.
 
+Please try to understand the code before you change it.
+
+NeilBrown
+
+
+> 
+> Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
+> ---
+>  fs/nfs/write.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+> index eae9bf1..831fad9 100644
+> --- a/fs/nfs/write.c
+> +++ b/fs/nfs/write.c
+> @@ -106,8 +106,10 @@ static struct nfs_pgio_header *nfs_writehdr_alloc(void)
+>  {
+>  	struct nfs_pgio_header *p = mempool_alloc(nfs_wdata_mempool, GFP_KERNEL);
+>  
+> -	memset(p, 0, sizeof(*p));
+> -	p->rw_mode = FMODE_WRITE;
+> +	if (p) {
+> +		memset(p, 0, sizeof(*p));
+> +		p->rw_mode = FMODE_WRITE;
+> +	}
+>  	return p;
+>  }
+>  
+> -- 
+> 
+> 
