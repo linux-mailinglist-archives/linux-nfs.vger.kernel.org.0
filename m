@@ -2,68 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73E1D4E5A56
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 22:04:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 289E84E5AB2
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Mar 2022 22:32:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235391AbiCWVGU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Mar 2022 17:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
+        id S241135AbiCWVdt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Mar 2022 17:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235540AbiCWVGU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 17:06:20 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E853122E;
-        Wed, 23 Mar 2022 14:04:49 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 6057F1F387;
-        Wed, 23 Mar 2022 21:04:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648069488; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZQRFIvMYPa57E8vs5yQx5fBF8QSVW2wkNB0Ft3IVHkg=;
-        b=hUPA4AfHH40LrLy7/afNuEXl3ZSmwWmLp5N8L4vWyy4uDG3LZjrrBdJIMAJMH4DsGmEquz
-        UQ6MKVTtH91xo15DCiU0edkhR+MBnlWOTPAARbOWUHBVPdofhMHr2EzGNTveoALQa66KJw
-        ISUr/uiq9UmAxPsZQ+SHgQlSrdE7pXk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648069488;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZQRFIvMYPa57E8vs5yQx5fBF8QSVW2wkNB0Ft3IVHkg=;
-        b=ebx4g8z+Yz2YE2VTtZLhKFXsf1MiAaeq5J9BhH2AkGiRXYd7fdpfHSDMCj/qdFlvyt30vh
-        e9x5ncED9Oe8LVBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B02F313302;
-        Wed, 23 Mar 2022 21:04:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id aD1FGm6LO2KobwAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 23 Mar 2022 21:04:46 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S240867AbiCWVds (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 17:33:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EFB33EF0C;
+        Wed, 23 Mar 2022 14:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mYNJfGGSVaocDlmcw7Y6SzRfFy2YudcedELxKPfKos4=; b=AALIGi39gaeafdIUdimblw8VAP
+        GcF2M2hi3z/FkOGSIrNoAIvW4v4ViL+ZEGcUkHD7Sw5lTir86cvGWJOBSouooJ7I/ABC2xgHVZqAh
+        PYKRde2/ygfGxXHxCa1SJTX8On5h7jhfp5BPDbu3fSE0Aczm1ro+lWQZxn2gS6N1ufFTG6+31ZDir
+        iwDqMGs5JBl+ZgMEV14T7SfD4XE9g2O7cn68Rb/r2nScpALp5TloWG5sbOm2xm8o3LjFPeJurqgvO
+        fQU35onhWq+GAp0Xxz1V8aeurBAsJbffkof+iCNluYLS0klgtGkojzu0aLcYido3SBV8HD5ieMr26
+        5G3hdpMg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nX8aU-00CrO3-AE; Wed, 23 Mar 2022 21:32:14 +0000
+Date:   Wed, 23 Mar 2022 21:32:14 +0000
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Thiago Becker <tbecker@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, steved@redhat.com,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        kolga@netapp.com, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH RFC v3 0/6] Intruduce nfsrahead
+Message-ID: <YjuR3h6yDYLoEeum@casper.infradead.org>
+References: <20220323201841.4166549-1-tbecker@redhat.com>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     xkernel.wang@foxmail.com
-Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
-        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Xiaoke Wang" <xkernel.wang@foxmail.com>
-Subject: Re: [PATCH] NFS: check the return value of mempool_alloc()
-In-reply-to: <tencent_61C566F88A52C1BF198826737AAE0E471806@qq.com>
-References: <tencent_61C566F88A52C1BF198826737AAE0E471806@qq.com>
-Date:   Thu, 24 Mar 2022 08:04:41 +1100
-Message-id: <164806948116.6096.12331736937963571485@noble.neil.brown.name>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220323201841.4166549-1-tbecker@redhat.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,46 +49,17 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 23 Mar 2022, xkernel.wang@foxmail.com wrote:
-> From: Xiaoke Wang <xkernel.wang@foxmail.com>
-> 
-> The check was first removed in 518662e ("NFS: fix usage of mempools.")
-> as the passed GFP flags is `GFP_NOIO`.
-> While now the flag is changed to `GFP_KERNEL` by 2b17d72 ("NFS: Clean
-> up writeback code"), so it is better to check it.
+On Wed, Mar 23, 2022 at 05:18:35PM -0300, Thiago Becker wrote:
+> Recent changes in the linux kernel caused NFS readahead to default to
+> 128 from the previous default of 15 * rsize. This causes performance
+> penalties to some read-heavy workloads, which can be fixed by
+> tuning the readahead for that given mount.
 
-no.  GFP_KERNEL is not that different from GFP_NOIO.
+Which recent changes?  Something in NFS or something in the VFS/MM?
+Did you even think about asking a wider audience than the NFS mailing
+list?  I only happened to notice this while I was looking for something
+else, otherwise I would never have seen it.  The responses from other
+people to your patches were right; you're trying to do this all wrong.
 
-mempool_alloc() can only fail with __GFP_DIRECT_RECLAIM is not passed.
-
-Please try to understand the code before you change it.
-
-NeilBrown
-
-
-> 
-> Signed-off-by: Xiaoke Wang <xkernel.wang@foxmail.com>
-> ---
->  fs/nfs/write.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index eae9bf1..831fad9 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -106,8 +106,10 @@ static struct nfs_pgio_header *nfs_writehdr_alloc(void)
->  {
->  	struct nfs_pgio_header *p = mempool_alloc(nfs_wdata_mempool, GFP_KERNEL);
->  
-> -	memset(p, 0, sizeof(*p));
-> -	p->rw_mode = FMODE_WRITE;
-> +	if (p) {
-> +		memset(p, 0, sizeof(*p));
-> +		p->rw_mode = FMODE_WRITE;
-> +	}
->  	return p;
->  }
->  
-> -- 
-> 
-> 
+Let's start out with a bug report instead of a solution.  What changed
+and when?
