@@ -2,41 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 753AF4E6A5A
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 22:40:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2034E6A56
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 22:40:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352459AbiCXVl1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Mar 2022 17:41:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
+        id S1352361AbiCXVl0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Mar 2022 17:41:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349593AbiCXVl0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 17:41:26 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473B564BE5
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 14:39:54 -0700 (PDT)
+        with ESMTP id S1349593AbiCXVlZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 17:41:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039446473C
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 14:39:53 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D4AAAB82649
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 914436139D
         for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 21:39:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DDEC340EC
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE47EC340EE
         for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 21:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648157991;
-        bh=rix6ZfMLXe62BFLdDMPJ/Nhi6jVLo5mSerSc1Ys1UQk=;
-        h=From:To:Subject:Date:From;
-        b=YfB+4YJ0BDWR/pf5zQw5vL1bZHBxayr8AvQ+FKEVcYMemjOrEBOnNMtrzdj1fl/qh
-         MXMMmmoLmFP96p68VHXBEBvjX8KBaVQZ2rtn23umJ7f8npg1iufmRiimiPXlk3lMtj
-         y8enscaWnOfiVqIbU1eaffIoef7sgoPaHY1bqTND2JHCzBOuNzaYw4ddVNOze80Nuj
-         063nPhMaYyDeN5PH882OMmNrP3pSoJw0XkMW0+2phOfxdmGam4b1zZCcLauTzH5TXZ
-         fMyKUBDDKNYY1UD6ng0FFNu2zTDZFcESQeaGHig6OI8GNl2SzgMNsgy35t9COlOw2a
-         D6UD0nHx+tD9w==
+        s=k20201202; t=1648157992;
+        bh=KuIxCCcIK5THBRyx1gYe+BY1fxdHeSRRZ1i3INheoJI=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=XvF7Yfi5EOxzOfLstsznYSX/sJbKOGL8edozo0+akPwiw29IjAfWQh2l4rxaGqOhM
+         vQuHXJMGH+2lJIMC5lf+ogN5fiGF98qCpbNFQ7c4mxfIE6Xu3f5JHwvkFQlv6cuCwd
+         U33kbADOzE/SQep1Fa33zsi5ImxrSDv0zCatKrFOnQZi349MaLvOXqfxaFIbrr3eip
+         JPkJfEoS2YLUlkIU5vf/yrMuiDpAO9I3Laze1wWjr3hTizEO/Htt7qkY8OUtm4hfPP
+         Jdxg/F+CaDFZdUErVIX2yrskBA9zao4kRp/GwytgV3C3rJedbA82gbDC0PnfH3QIXG
+         3bH4Ciams0T1Q==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/2] SUNRPC: Do not dereference non-socket transports in sysfs
-Date:   Thu, 24 Mar 2022 17:33:44 -0400
-Message-Id: <20220324213345.5833-1-trondmy@kernel.org>
+Subject: [PATCH 2/2] SUNRPC: Don't return error values in sysfs read of closed files
+Date:   Thu, 24 Mar 2022 17:33:45 -0400
+Message-Id: <20220324213345.5833-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220324213345.5833-1-trondmy@kernel.org>
+References: <20220324213345.5833-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -51,67 +53,66 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Do not cast the struct xprt to a sock_xprt unless we know it is a UDP or
-TCP transport. Otherwise the call to lock the mutex will scribble over
-whatever structure is actually there. This has been seen to cause hard
-system lockups when the underlying transport was RDMA.
+Instead of returning an error value, which ends up being the return
+value for the read() system call, it is more elegant to simply return
+the error as a string value.
 
-Fixes: e44773daf851 ("SUNRPC: Add srcaddr as a file in sysfs")
-Cc: stable@vger.kernel.org
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/sysfs.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+ net/sunrpc/sysfs.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
 diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 05c758da6a92..8ce053f84421 100644
+index 8ce053f84421..796e0f141282 100644
 --- a/net/sunrpc/sysfs.c
 +++ b/net/sunrpc/sysfs.c
-@@ -107,22 +107,34 @@ static ssize_t rpc_sysfs_xprt_srcaddr_show(struct kobject *kobj,
+@@ -93,10 +93,13 @@ static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
  	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
- 	struct sockaddr_storage saddr;
- 	struct sock_xprt *sock;
-+	const char *fmt = "<closed>\n";
- 	ssize_t ret = -1;
+ 	ssize_t ret;
  
--	if (!xprt || !xprt_connected(xprt)) {
+-	if (!xprt)
+-		return 0;
++	if (!xprt) {
++		ret = sprintf(buf, "<closed>\n");
++		goto out;
++	}
+ 	ret = sprintf(buf, "%s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
+ 	xprt_put(xprt);
++out:
+ 	return ret + 1;
+ }
+ 
+@@ -147,8 +150,8 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
+ 	ssize_t ret;
+ 
+ 	if (!xprt || !xprt_connected(xprt)) {
 -		xprt_put(xprt);
 -		return -ENOTCONN;
--	}
-+	if (!xprt || !xprt_connected(xprt))
++		ret = sprintf(buf, "<closed>\n");
 +		goto out;
+ 	}
  
--	sock = container_of(xprt, struct sock_xprt, xprt);
--	mutex_lock(&sock->recv_mutex);
--	if (sock->sock == NULL ||
--	    kernel_getsockname(sock->sock, (struct sockaddr *)&saddr) < 0)
-+	switch (xprt->xprt_class->ident) {
-+	case XPRT_TRANSPORT_UDP:
-+	case XPRT_TRANSPORT_TCP:
-+		break;
-+	default:
-+		fmt = "<not a socket>\n";
- 		goto out;
-+	};
- 
--	ret = sprintf(buf, "%pISc\n", &saddr);
--out:
-+	sock = container_of(xprt, struct sock_xprt, xprt);
-+	mutex_lock(&sock->recv_mutex);
-+	if (sock->sock != NULL) {
-+		ret = kernel_getsockname(sock->sock, (struct sockaddr *)&saddr);
-+		if (ret >= 0) {
-+			ret = sprintf(buf, "%pISc\n", &saddr);
-+			fmt = NULL;
-+		}
-+	}
- 	mutex_unlock(&sock->recv_mutex);
+ 	ret = sprintf(buf, "last_used=%lu\ncur_cong=%lu\ncong_win=%lu\n"
+@@ -165,6 +168,7 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
+ 		       atomic_long_read(&xprt->queuelen),
+ 		       (xprt->xprt_class->ident == XPRT_TRANSPORT_TCP) ?
+ 				xprt->address_strings[RPC_DISPLAY_PORT] : "0");
 +out:
-+	if (fmt)
-+		ret = sprintf(buf, fmt);
  	xprt_put(xprt);
  	return ret + 1;
  }
+@@ -178,10 +182,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
+ 	int locked, connected, connecting, close_wait, bound, binding,
+ 	    closing, congested, cwnd_wait, write_space, offline, remove;
+ 
+-	if (!xprt)
+-		return 0;
+-
+-	if (!xprt->state) {
++	if (!(xprt && xprt->state)) {
+ 		ret = sprintf(buf, "state=CLOSED\n");
+ 	} else {
+ 		locked = test_bit(XPRT_LOCKED, &xprt->state);
 -- 
 2.35.1
 
