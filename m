@@ -2,85 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F36F4E68AB
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 19:29:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 753AF4E6A5A
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 22:40:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343658AbiCXS3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Mar 2022 14:29:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33824 "EHLO
+        id S1352459AbiCXVl1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Mar 2022 17:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1352621AbiCXS3t (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 14:29:49 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D1E1102
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 11:28:06 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id D90356217; Thu, 24 Mar 2022 14:28:05 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org D90356217
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1648146485;
-        bh=zmgImIrHcr5DBCvR/GakJAG+PUiS0fLuEUZtEIZtt/o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vhjfa/yy6ChS0tYT1p5PBwszic5RQv8zIfPxldQ+YQWPswQ77HnROU37IEmI1xnXG
-         HR7fH5i7/jB0k8J7/UwT6VyGoSo5dcbDj38lf0cVOfjxdUEy230DgdRWrnfVFlQZ3s
-         bP15rY9g0PC4rmOn+IbnEWPI1jNVeEjtD4797ghs=
-Date:   Thu, 24 Mar 2022 14:28:05 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Jonathan Woithe <jwoithe@just42.net>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/2] lockd: fix server crash on reboot of client holding
- lock
-Message-ID: <20220324182805.GA28045@fieldses.org>
-References: <20220115212336.GB30050@marvin.atrad.com.au>
- <20220116220627.GA19813@marvin.atrad.com.au>
- <1E71316C-9EE8-4C71-ADA1-71E2910CA070@oracle.com>
- <20220117074430.GA22026@marvin.atrad.com.au>
- <20220117220851.GA8494@marvin.atrad.com.au>
- <20220117221156.GB3090@fieldses.org>
- <20220118220016.GB16108@fieldses.org>
- <20220118222050.GB30863@marvin.atrad.com.au>
- <20220118222703.GD16108@fieldses.org>
- <20220323233323.GI2179@marvin.atrad.com.au>
+        with ESMTP id S1349593AbiCXVl0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 17:41:26 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 473B564BE5
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 14:39:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D4AAAB82649
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 21:39:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54DDEC340EC
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 21:39:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1648157991;
+        bh=rix6ZfMLXe62BFLdDMPJ/Nhi6jVLo5mSerSc1Ys1UQk=;
+        h=From:To:Subject:Date:From;
+        b=YfB+4YJ0BDWR/pf5zQw5vL1bZHBxayr8AvQ+FKEVcYMemjOrEBOnNMtrzdj1fl/qh
+         MXMMmmoLmFP96p68VHXBEBvjX8KBaVQZ2rtn23umJ7f8npg1iufmRiimiPXlk3lMtj
+         y8enscaWnOfiVqIbU1eaffIoef7sgoPaHY1bqTND2JHCzBOuNzaYw4ddVNOze80Nuj
+         063nPhMaYyDeN5PH882OMmNrP3pSoJw0XkMW0+2phOfxdmGam4b1zZCcLauTzH5TXZ
+         fMyKUBDDKNYY1UD6ng0FFNu2zTDZFcESQeaGHig6OI8GNl2SzgMNsgy35t9COlOw2a
+         D6UD0nHx+tD9w==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/2] SUNRPC: Do not dereference non-socket transports in sysfs
+Date:   Thu, 24 Mar 2022 17:33:44 -0400
+Message-Id: <20220324213345.5833-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220323233323.GI2179@marvin.atrad.com.au>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Mar 24, 2022 at 10:03:23AM +1030, Jonathan Woithe wrote:
-> On Tue, Jan 18, 2022 at 05:27:03PM -0500, Bruce Fields wrote:
-> > On Wed, Jan 19, 2022 at 08:50:50AM +1030, Jonathan Woithe wrote:
-> > > On Tue, Jan 18, 2022 at 05:00:16PM -0500, Bruce Fields wrote:
-> > > > From: "J. Bruce Fields" <bfields@redhat.com>
-> > > > 
-> > > > I thought I was iterating over the array when actually the iteration is
-> > > > over the values contained in the array?
-> > > > :
-> > > 
-> > > Would you like me to apply this against a 5.15.x kernel and test locally? 
-> > > Or should I just wait for a 5.15.x stable series update which includes it?
-> > 
-> > I'm pretty confident I'm reproducing the same problem you saw, so it'd
-> > be fine to just wait for an update.
-> > 
-> > (But if you do test these patches, let us know, one more confirmation
-> > never hurts.)
-> 
-> The shift back to a 5.15.x kernel ended up being delayed for a while for
-> various reasons.  The server concerned was eventually upgraded to 5.15.27 on
-> 9 March 2022.  In that time, client machines have been turned on and off and
-> inevitably the conditions which caused the crash have been exercised many
-> times (libreoffice, firefox and thunderbird are used daily on almost all of
-> the clients).  The server has not experienced the crash since the upgrade. 
-> On the basis of this I think it's fair to consider our problem solved.
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Thanks for the confirmation.--b.
+Do not cast the struct xprt to a sock_xprt unless we know it is a UDP or
+TCP transport. Otherwise the call to lock the mutex will scribble over
+whatever structure is actually there. This has been seen to cause hard
+system lockups when the underlying transport was RDMA.
+
+Fixes: e44773daf851 ("SUNRPC: Add srcaddr as a file in sysfs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ net/sunrpc/sysfs.c | 32 ++++++++++++++++++++++----------
+ 1 file changed, 22 insertions(+), 10 deletions(-)
+
+diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+index 05c758da6a92..8ce053f84421 100644
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -107,22 +107,34 @@ static ssize_t rpc_sysfs_xprt_srcaddr_show(struct kobject *kobj,
+ 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
+ 	struct sockaddr_storage saddr;
+ 	struct sock_xprt *sock;
++	const char *fmt = "<closed>\n";
+ 	ssize_t ret = -1;
+ 
+-	if (!xprt || !xprt_connected(xprt)) {
+-		xprt_put(xprt);
+-		return -ENOTCONN;
+-	}
++	if (!xprt || !xprt_connected(xprt))
++		goto out;
+ 
+-	sock = container_of(xprt, struct sock_xprt, xprt);
+-	mutex_lock(&sock->recv_mutex);
+-	if (sock->sock == NULL ||
+-	    kernel_getsockname(sock->sock, (struct sockaddr *)&saddr) < 0)
++	switch (xprt->xprt_class->ident) {
++	case XPRT_TRANSPORT_UDP:
++	case XPRT_TRANSPORT_TCP:
++		break;
++	default:
++		fmt = "<not a socket>\n";
+ 		goto out;
++	};
+ 
+-	ret = sprintf(buf, "%pISc\n", &saddr);
+-out:
++	sock = container_of(xprt, struct sock_xprt, xprt);
++	mutex_lock(&sock->recv_mutex);
++	if (sock->sock != NULL) {
++		ret = kernel_getsockname(sock->sock, (struct sockaddr *)&saddr);
++		if (ret >= 0) {
++			ret = sprintf(buf, "%pISc\n", &saddr);
++			fmt = NULL;
++		}
++	}
+ 	mutex_unlock(&sock->recv_mutex);
++out:
++	if (fmt)
++		ret = sprintf(buf, fmt);
+ 	xprt_put(xprt);
+ 	return ret + 1;
+ }
+-- 
+2.35.1
+
