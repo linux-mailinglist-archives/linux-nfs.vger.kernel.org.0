@@ -2,85 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22A214E5C19
-	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 00:55:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 520904E5EB3
+	for <lists+linux-nfs@lfdr.de>; Thu, 24 Mar 2022 07:33:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233522AbiCWX4f (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Mar 2022 19:56:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
+        id S232243AbiCXGea (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Mar 2022 02:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242772AbiCWX4e (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Mar 2022 19:56:34 -0400
-X-Greylist: delayed 1282 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 23 Mar 2022 16:55:00 PDT
-Received: from server.atrad.com.au (server.atrad.com.au [150.101.241.2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68679496B5
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Mar 2022 16:55:00 -0700 (PDT)
-Received: from marvin.atrad.com.au (IDENT:1008@marvin.atrad.com.au [192.168.0.2])
-        by server.atrad.com.au (8.17.1/8.17.1) with ESMTPS id 22NNXN7n021638
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 24 Mar 2022 10:03:24 +1030
-Date:   Thu, 24 Mar 2022 10:03:23 +1030
-From:   Jonathan Woithe <jwoithe@just42.net>
-To:     Bruce Fields <bfields@fieldses.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/2] lockd: fix server crash on reboot of client holding
- lock
-Message-ID: <20220323233323.GI2179@marvin.atrad.com.au>
-References: <927EED04-840E-4DA6-B2B1-B604A7577B4E@oracle.com>
- <20220115212336.GB30050@marvin.atrad.com.au>
- <20220116220627.GA19813@marvin.atrad.com.au>
- <1E71316C-9EE8-4C71-ADA1-71E2910CA070@oracle.com>
- <20220117074430.GA22026@marvin.atrad.com.au>
- <20220117220851.GA8494@marvin.atrad.com.au>
- <20220117221156.GB3090@fieldses.org>
- <20220118220016.GB16108@fieldses.org>
- <20220118222050.GB30863@marvin.atrad.com.au>
- <20220118222703.GD16108@fieldses.org>
+        with ESMTP id S229528AbiCXGe3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 02:34:29 -0400
+Received: from mail.meizu.com (edge05.meizu.com [157.122.146.251])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CB53972C5;
+        Wed, 23 Mar 2022 23:32:57 -0700 (PDT)
+Received: from IT-EXMB-1-125.meizu.com (172.16.1.125) by mz-mail12.meizu.com
+ (172.16.1.108) with Microsoft SMTP Server (TLS) id 14.3.487.0; Thu, 24 Mar
+ 2022 14:32:49 +0800
+Received: from meizu.meizu.com (172.16.137.70) by IT-EXMB-1-125.meizu.com
+ (172.16.1.125) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2308.14; Thu, 24 Mar
+ 2022 14:32:47 +0800
+From:   Haowen Bai <baihaowen@meizu.com>
+To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
+        <chuck.lever@oracle.com>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <pabeni@redhat.com>
+CC:     <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Haowen Bai <baihaowen@meizu.com>
+Subject: [PATCH] SUNRPC: Increase size of servername string
+Date:   Thu, 24 Mar 2022 14:32:46 +0800
+Message-ID: <1648103566-15528-1-git-send-email-baihaowen@meizu.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220118222703.GD16108@fieldses.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-MIMEDefang-action: accept
-X-Scanned-By: MIMEDefang 2.86 on 192.168.0.1
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [172.16.137.70]
+X-ClientProxiedBy: IT-EXMB-1-125.meizu.com (172.16.1.125) To
+ IT-EXMB-1-125.meizu.com (172.16.1.125)
+X-Spam-Status: No, score=-1.0 required=5.0 tests=BAYES_00,KHOP_HELO_FCRDNS,
+        SPF_HELO_NONE,SPF_SOFTFAIL,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jan 18, 2022 at 05:27:03PM -0500, Bruce Fields wrote:
-> On Wed, Jan 19, 2022 at 08:50:50AM +1030, Jonathan Woithe wrote:
-> > On Tue, Jan 18, 2022 at 05:00:16PM -0500, Bruce Fields wrote:
-> > > From: "J. Bruce Fields" <bfields@redhat.com>
-> > > 
-> > > I thought I was iterating over the array when actually the iteration is
-> > > over the values contained in the array?
-> > > :
-> > 
-> > Would you like me to apply this against a 5.15.x kernel and test locally? 
-> > Or should I just wait for a 5.15.x stable series update which includes it?
-> 
-> I'm pretty confident I'm reproducing the same problem you saw, so it'd
-> be fine to just wait for an update.
-> 
-> (But if you do test these patches, let us know, one more confirmation
-> never hurts.)
+This patch will fix the warning from smatch:
 
-The shift back to a 5.15.x kernel ended up being delayed for a while for
-various reasons.  The server concerned was eventually upgraded to 5.15.27 on
-9 March 2022.  In that time, client machines have been turned on and off and
-inevitably the conditions which caused the crash have been exercised many
-times (libreoffice, firefox and thunderbird are used daily on almost all of
-the clients).  The server has not experienced the crash since the upgrade. 
-On the basis of this I think it's fair to consider our problem solved.
+net/sunrpc/clnt.c:562 rpc_create() error: snprintf() chops off
+the last chars of 'sun->sun_path': 108 vs 48
 
-Thanks for your quick response to the report and the rapid provision of the
-fix.
+Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+---
+ net/sunrpc/clnt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards
-  jonathan
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index c83fe61..6e0209e 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -526,7 +526,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *args)
+ 		.servername = args->servername,
+ 		.bc_xprt = args->bc_xprt,
+ 	};
+-	char servername[48];
++	char servername[108];
+ 	struct rpc_clnt *clnt;
+ 	int i;
+ 
+-- 
+2.7.4
+
