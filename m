@@ -2,142 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 160544E6C3B
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 02:49:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94D094E6C49
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 02:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245460AbiCYBur (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Mar 2022 21:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60654 "EHLO
+        id S244632AbiCYCBI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Mar 2022 22:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243656AbiCYBuq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 21:50:46 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFF865406
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 18:49:13 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 895A3210F4;
-        Fri, 25 Mar 2022 01:49:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648172951; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5wx0qIu9ySJlY3Psig10fHmn46QfAOeW8lCoFFHy1Wo=;
-        b=unBvVjqSCvyb94UVY2weTAdYj/JA4lpHrumr/UuyQKr4D9pHSYoQ5ierWsAphEkIDOBcD9
-        jAdWFeQJjiT3MZ8bE4HRYg1hpoGZIFzlBhU2wseZcVaJi8eUaqkfVTyCbRZMDj8TnCb1U3
-        RWqYiG7yvaqNF/QBqmTuFKydYX4QNzM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648172951;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5wx0qIu9ySJlY3Psig10fHmn46QfAOeW8lCoFFHy1Wo=;
-        b=l4vpKJdYiE9bntV1ayD4tpIwE//+1asXSJaHNnPhC5PNWiOfrhBHYtqDlc33p1KL/W7nd6
-        olCLli0BvZdoWBCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id ACAF51332D;
-        Fri, 25 Mar 2022 01:49:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id bFnGGZYfPWIadAAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 25 Mar 2022 01:49:10 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S244624AbiCYCBG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 22:01:06 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CFE04ECF3
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 18:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1648173574; x=1679709574;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KyztB8+/s4isYRrpETdwHM+TLNNITmunzZmS8Ke3Orc=;
+  b=BRvsweYnZ3R9++8c+njUJvnD8LkPp7AGroerx6I/76Gd4LMgC0aklvXe
+   KqLimd+gf2dWf+vN1UY0lHYYiHQZWey1fhicWFQ6S7kdqZ0gB5huMhHO4
+   S91hdxd4KiPB9OwEMRvxy/hE677kb7hqxCUpXlZ4lhsfI4C6dOrLS0b/m
+   z87lB7sRVkWg4sJOYONBDKGdxqNtyFWPeoZE8uK7J/Bv7QQCxwIxuJbpy
+   aRlBL5fes3h76CogkoyvdgggotE1PfbPQWUzVmvs75E633PyhFOt1b5uk
+   TpICL/TAFpnnD+1Qyt7oYQeoT0b3LWWh3dz4ldLVRnD7HPCAnqmivRtN3
+   A==;
+X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="258499580"
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="258499580"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 18:59:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
+   d="scan'208";a="520026795"
+Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
+  by orsmga006.jf.intel.com with ESMTP; 24 Mar 2022 18:59:32 -0700
+Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1nXZEi-000Les-1G; Fri, 25 Mar 2022 01:59:32 +0000
+Date:   Fri, 25 Mar 2022 09:58:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     trondmy@kernel.org, linux-nfs@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: [PATCH] SUNRPC: fix semicolon.cocci warnings
+Message-ID: <20220325015847.GA67237@a6b54b97734d>
+References: <20220324213345.5833-1-trondmy@kernel.org>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     trondmy@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] SUNRPC: Make the rpciod and xprtiod slab
- allocation modes consistent
-In-reply-to: <20220322011618.1052288-5-trondmy@kernel.org>
-References: <20220322011618.1052288-1-trondmy@kernel.org>,
- <20220322011618.1052288-2-trondmy@kernel.org>,
- <20220322011618.1052288-3-trondmy@kernel.org>,
- <20220322011618.1052288-4-trondmy@kernel.org>,
- <20220322011618.1052288-5-trondmy@kernel.org>
-Date:   Fri, 25 Mar 2022 12:49:05 +1100
-Message-id: <164817294549.6096.12941844979004220620@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220324213345.5833-1-trondmy@kernel.org>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 22 Mar 2022, trondmy@kernel.org wrote:
-> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> 
-> Make sure that rpciod and xprtiod are always using the same slab
-> allocation modes.
-> 
-> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-....
->  xs_stream_prepare_request(struct rpc_rqst *req)
->  {
->  	xdr_free_bvec(&req->rq_rcv_buf);
-> -	req->rq_task->tk_status = xdr_alloc_bvec(&req->rq_rcv_buf, GFP_KERNEL);
-> +	req->rq_task->tk_status = xdr_alloc_bvec(
-> +		&req->rq_rcv_buf, GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN);
->  }
+From: kernel test robot <lkp@intel.com>
 
-I did some testing of swap-over-NFS, and got a crash quite quickly, due
-to this change.
-The problem is that GFP_KERNEL allocations almost never fail.
-Multi-page allocations might occasionally fail, and others might fail
-for a process that has been killed by the OOM killer (or maybe just has
-a fatal signal pending), but in general GFP_KERNEL is more likely to
-wait (and wait and wait) than to fail.
-So the failure paths haven't been tested.
+net/sunrpc/sysfs.c:123:2-3: Unneeded semicolon
 
-xs_stream_prepare_request() is called from xprt_request_prepare(), which
-is called from xprt_request_enqueue_receive() which is called in
-call_encode() *after* ->tk_status has been tested.
-So when the above code sets ->tk_status to -ENOMEM - which is now more
-likely - that fact is ignored and we get a crash
 
-[  298.911356] Workqueue: xprtiod xs_stream_data_receive_workfn
-[  298.911696] RIP: 0010:_copy_to_iter+0x1cc/0x435
-..
-[  298.918259]  __skb_datagram_iter+0x64/0x225
-[  298.918507]  skb_copy_datagram_iter+0xe9/0xf2
-[  298.918767]  tcp_recvmsg_locked+0x653/0x77e
-[  298.919015]  tcp_recvmsg+0x100/0x188
-[  298.919226]  inet_recvmsg+0x5d/0x86
-[  298.919431]  xs_read_stream_request.constprop.0+0x247/0x378
-[  298.919754]  xs_read_stream.constprop.0+0x1c2/0x39b
-[  298.920038]  xs_stream_data_receive_workfn+0x50/0x160
-[  298.920331]  process_one_work+0x267/0x422
-[  298.920568]  worker_thread+0x193/0x234
+ Remove unneeded semicolon.
 
-So we really need to audit all these places where we add __GFP_NORETRY
-and ensure errors are actually handled.
+Generated by: scripts/coccinelle/misc/semicolon.cocci
 
-For call_encode(), it might be easiest to move
-	/* Add task to reply queue before transmission to avoid races */
-	if (rpc_reply_expected(task))
-		xprt_request_enqueue_receive(task);
+CC: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: kernel test robot <lkp@intel.com>
+---
 
-up before the
-	/* Did the encode result in an error condition? */
-	if (task->tk_status != 0) {
+url:    https://github.com/0day-ci/linux/commits/trondmy-kernel-org/SUNRPC-Do-not-dereference-non-socket-transports-in-sysfs/20220325-054144
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+:::::: branch date: 4 hours ago
+:::::: commit date: 4 hours ago
 
-and change it to
+ net/sunrpc/sysfs.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	/* Add task to reply queue before transmission to avoid races */
-	if (task->tk_status == 0 && rpc_reply_expected(task))
-		xprt_request_enqueue_receive(task);
-
-I'll try a bit more testing and auditing.
-
-Thanks,
-NeilBrown
+--- a/net/sunrpc/sysfs.c
++++ b/net/sunrpc/sysfs.c
+@@ -120,7 +120,7 @@ static ssize_t rpc_sysfs_xprt_srcaddr_sh
+ 	default:
+ 		fmt = "<not a socket>\n";
+ 		goto out;
+-	};
++	}
+ 
+ 	sock = container_of(xprt, struct sock_xprt, xprt);
+ 	mutex_lock(&sock->recv_mutex);
