@@ -2,96 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A32FB4E6E7C
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 08:04:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 428D64E737F
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 13:31:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358493AbiCYHFf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Mar 2022 03:05:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39556 "EHLO
+        id S244732AbiCYMdU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Mar 2022 08:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358492AbiCYHFe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 03:05:34 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6E9956C937
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 00:04:00 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-236--MPWl_J_M3qEDt7zHdpShQ-1; Fri, 25 Mar 2022 07:03:57 +0000
-X-MC-Unique: -MPWl_J_M3qEDt7zHdpShQ-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
- Server (TLS) id 15.0.1497.32; Fri, 25 Mar 2022 07:03:56 +0000
-Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
- AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
- 15.00.1497.033; Fri, 25 Mar 2022 07:03:56 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'NeilBrown' <neilb@suse.de>, Haowen Bai <baihaowen@meizu.com>
-CC:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Haowen Bai <baihaowen@meizu.com>
-Subject: RE: [PATCH] SUNRPC: Increase size of servername string
-Thread-Topic: [PATCH] SUNRPC: Increase size of servername string
-Thread-Index: AQHYP+2Bp/ily4quQUeZW4BP4EodNKzPqMOggAADaSA=
-Date:   Fri, 25 Mar 2022 07:03:56 +0000
-Message-ID: <a717757cb2cb4f32afad046ce2f45117@AcuMS.aculab.com>
-References: <1648103566-15528-1-git-send-email-baihaowen@meizu.com>
- <164817399413.6096.7103093569920914714@noble.neil.brown.name>
- <8723baf426ff4c7fb2027b86aa01fe70@AcuMS.aculab.com>
-In-Reply-To: <8723baf426ff4c7fb2027b86aa01fe70@AcuMS.aculab.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S1359165AbiCYMdG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 08:33:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37FB2D080F
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 05:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1648211491;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=yPjA/sNpnOcC3OZqw/MwHjQE8KDwlLZ97r+qgQx76dw=;
+        b=XagkBYa0BJ2I1a/1oVWAo1EYltV/5Ibg85FoVrB97ZzIk/uWt2yUI1aggwUie+L3gijIqE
+        xaPmZHWc/GyUF1YnDNJtQxREkUsgXwz6c8YDiYanr7aSNIVPbil8gNr5+HOIfM6+R5uzG/
+        hrrj7gxyz7blRDOskZPFbvQ79v6LkQs=
+Received: from mail-yw1-f199.google.com (mail-yw1-f199.google.com
+ [209.85.128.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-141-Z_2M6U8bOnWvzGc0OdHn4A-1; Fri, 25 Mar 2022 08:31:28 -0400
+X-MC-Unique: Z_2M6U8bOnWvzGc0OdHn4A-1
+Received: by mail-yw1-f199.google.com with SMTP id 00721157ae682-2e642be1a51so58745347b3.21
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 05:31:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yPjA/sNpnOcC3OZqw/MwHjQE8KDwlLZ97r+qgQx76dw=;
+        b=cxfdW0l67Jh2GJRsTBc1ptVpIYtYdCXILJv+hjOs+V/33aQDDU8m5A/XJcthuggkxR
+         qdqOEN0s31D7F+05eWRPQ0t1Had6dlIyrzBOgX1pSAmOn9BwW95dmK2cXSQrNeE2I3cH
+         pdYZfkzblGgVdXJlQc5pTdsG+HqwbnnVX1O3QtJowWcK9fTY7PPLc/0vi2zFCzImD/2P
+         9i5Mz2aPTOP0uSvacYLUDiB7OHW1+MAFegVfjHUX4Yxc39TcOaBc6mn40H9FDcXgwFMT
+         okbV9kYWLPa9InnxGD2kj1I18gjCGkOe0QTi1pM5hEd8CrEgC91E/RmITZO++/BHoEvO
+         +sTA==
+X-Gm-Message-State: AOAM533uYu+XxaaaCi8bHKieNyms9j5KVE1DmOiGVitlCTXseC+b++ch
+        D/6gB7ng8iVK4hZ7sfRkYBDbqkd8EYuW6mDJfUR3VF/7NhwQqjr2An5fOwHeyYh23vkMCLVKBn+
+        8+tj1sskSHzEjh+RVhaM8vTCPYjl+lB/SyPHi
+X-Received: by 2002:a25:22d6:0:b0:633:90f5:a3d with SMTP id i205-20020a2522d6000000b0063390f50a3dmr9732498ybi.402.1648211488034;
+        Fri, 25 Mar 2022 05:31:28 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJwLbkMySWcVby1qkRC7ubGRx41+P5/WfhnoVCsR7ijV5nDvgjZqE3XiUpuJVnnCKjaklKxotiIsqs4q8DkvuU8=
+X-Received: by 2002:a25:22d6:0:b0:633:90f5:a3d with SMTP id
+ i205-20020a2522d6000000b0063390f50a3dmr9732460ybi.402.1648211487785; Fri, 25
+ Mar 2022 05:31:27 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+References: <20220323201841.4166549-1-tbecker@redhat.com> <YjuR3h6yDYLoEeum@casper.infradead.org>
+In-Reply-To: <YjuR3h6yDYLoEeum@casper.infradead.org>
+From:   Thiago Becker <tbecker@redhat.com>
+Date:   Fri, 25 Mar 2022 09:31:16 -0300
+Message-ID: <CAD_rW4U8XA6UTmh85V+VcLhfsfSHUXBA7XBovqXEkBsxwdW=qA@mail.gmail.com>
+Subject: Re: [PATCH RFC v3 0/6] Intruduce nfsrahead
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-nfs@vger.kernel.org, Steved <steved@redhat.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        Olga Kornievskaia <kolga@netapp.com>,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDI1IE1hcmNoIDIwMjIgMDY6NTMNCj4gDQo+IEZy
-b206IE5laWxCcm93bg0KPiA+IFNlbnQ6IDI1IE1hcmNoIDIwMjIgMDI6MDcNCj4gPg0KPiA+IE9u
-IFRodSwgMjQgTWFyIDIwMjIsIEhhb3dlbiBCYWkgd3JvdGU6DQo+ID4gPiBUaGlzIHBhdGNoIHdp
-bGwgZml4IHRoZSB3YXJuaW5nIGZyb20gc21hdGNoOg0KPiA+ID4NCj4gPiA+IG5ldC9zdW5ycGMv
-Y2xudC5jOjU2MiBycGNfY3JlYXRlKCkgZXJyb3I6IHNucHJpbnRmKCkgY2hvcHMgb2ZmDQo+ID4g
-PiB0aGUgbGFzdCBjaGFycyBvZiAnc3VuLT5zdW5fcGF0aCc6IDEwOCB2cyA0OA0KPiA+ID4NCj4g
-PiA+IFNpZ25lZC1vZmYtYnk6IEhhb3dlbiBCYWkgPGJhaWhhb3dlbkBtZWl6dS5jb20+DQo+ID4g
-PiAtLS0NCj4gPiA+ICBuZXQvc3VucnBjL2NsbnQuYyB8IDIgKy0NCj4gPiA+ICAxIGZpbGUgY2hh
-bmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gPiA+DQo+ID4gPiBkaWZmIC0t
-Z2l0IGEvbmV0L3N1bnJwYy9jbG50LmMgYi9uZXQvc3VucnBjL2NsbnQuYw0KPiA+ID4gaW5kZXgg
-YzgzZmU2MS4uNmUwMjA5ZSAxMDA2NDQNCj4gPiA+IC0tLSBhL25ldC9zdW5ycGMvY2xudC5jDQo+
-ID4gPiArKysgYi9uZXQvc3VucnBjL2NsbnQuYw0KPiA+ID4gQEAgLTUyNiw3ICs1MjYsNyBAQCBz
-dHJ1Y3QgcnBjX2NsbnQgKnJwY19jcmVhdGUoc3RydWN0IHJwY19jcmVhdGVfYXJncyAqYXJncykN
-Cj4gPiA+ICAJCS5zZXJ2ZXJuYW1lID0gYXJncy0+c2VydmVybmFtZSwNCj4gPiA+ICAJCS5iY194
-cHJ0ID0gYXJncy0+YmNfeHBydCwNCj4gPiA+ICAJfTsNCj4gPiA+IC0JY2hhciBzZXJ2ZXJuYW1l
-WzQ4XTsNCj4gPiA+ICsJY2hhciBzZXJ2ZXJuYW1lWzEwOF07DQo+ID4NCj4gPiBJdCB3b3VsZCBi
-ZSBtdWNoIG5pY2VyIHRvIHVzZSBVTklYX1BBVEhfTUFYDQo+IA0KPiBOb3Qgb24tc3RhY2suLi4u
-DQoNCk9rIEkgbG9va2VkIHRoZSBjb25zdGFudCB1cCAtIGl0IGlzIDEwOC4NCk9UT0gganVzdCBs
-b29raW5nIGF0IHRoZSBjb2RlIG1ha2VzIGl0IGxvb2sgbGlrZSBhIHZhbHVlDQp0aGF0IGlzIG11
-Y2ggbGFyZ2VyIC0gbm90IGdvb2Qgb24gc3RhY2suDQpFdmVuIFtzaXplb2Ygc3VuLT5zdW5fcGF0
-aF0gd291bGQgcHJvYmFibHkgYmUgYmV0dGVyLg0KQnV0IEkgZG9uJ3QgdGhpbmsgdGhlIGNvcHkg
-aXMgbmVlZGVkIGF0IGFsbC4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtl
-c2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBV
-Sw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
+Hello,
+
+On Wed, Mar 23, 2022 at 6:32 PM Matthew Wilcox <willy@infradead.org> wrote:
+> Which recent changes?  Something in NFS or something in the VFS/MM?
+> Did you even think about asking a wider audience than the NFS mailing
+> list?  I only happened to notice this while I was looking for something
+> else, otherwise I would never have seen it.  The responses from other
+> people to your patches were right; you're trying to do this all wrong.
+>
+> Let's start out with a bug report instead of a solution.  What changed
+> and when?
+>
+
+As Trond stated, c128e575514c ("NFS: Optimise the default readahead
+size") changed the way readahead is calculated for NFS mounts. This
+caused some read workloads to underperform, compared to the
+performance from previous revisions. To recall, the current policy
+is to adopt the system default readahead of 128kiB, and mounts
+with sec=krb5p take a performance hit of 50-75% when readahead
+is 128. I haven't performed an exhaustive search for other workloads
+that might also be affected, but I noticed the meaningful drop in
+performance in sec=sys mounts, notes at the end.
+
+The previous policy was to calculate the readahead as a
+multiple of rsize, so we prescribed increasing the value to the
+complaining part, and this fixed the issue. We are now trying to find a
+solution that we can incorporate into the system.
+
+thiago.
+
+----- Tests
+===== RAWHIDE (35% performance hit) =====
+# uname -r
+5.16.0-0.rc0.20211112git5833291ab6de.12.fc36.x86_64
+
+# grep nfs /proc/self/mountinfo
+601 60 0:55 / /mnt rw,relatime shared:332 - nfs4
+192.168.122.225:/exports
+rw,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.83,local_lock=none,addr=192.168.122.225
+
+# cat /sys/class/bdi/0\:55/read_ahead_kb
+128
+
+# for i in {0..3} ; do dd if=/mnt/testfile.bin of=/dev/null bs=1M 2>&1
+| grep copied ; echo 3 > /proc/sys/vm/drop_caches ; done
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 16.5025 s, 260 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 16.4474 s, 261 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 18.0181 s, 238 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 18.2323 s, 236 MB/s
+
+# echo 15360 > /sys/class/bdi/0\:55/read_ahead_kb
+
+# for i in {0..3} ; do dd if=/mnt/testfile.bin of=/dev/null bs=1M 2>&1
+| grep copied ; echo 3 > /proc/sys/vm/drop_caches ; done
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.2601 s, 381 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.1885 s, 384 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.5877 s, 371 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 10.9475 s, 392 MB/s
+
+===== UPSTREAM (30% performance hit) =====
+# uname -r
+5.17.0+
+
+# grep nfs /proc/self/mountinfo
+583 60 0:55 / /mnt rw,relatime shared:302 - nfs4
+192.168.122.225:/exports
+rw,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=192.168.122.83,local_lock=none,addr=192.168.122.225
+
+# cat /sys/class/bdi/0\:55/read_ahead_kb
+128
+
+# for i in {0..3} ; do dd if=/mnt/testfile.bin of=/dev/null bs=1M 2>&1
+| grep copied ; echo 3 > /proc/sys/vm/drop_caches ; done
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 17.056 s, 252 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 17.1258 s, 251 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 16.5981 s, 259 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 16.5487 s, 260 MB/s
+
+# echo 15360 > /sys/class/bdi/0\:55/read_ahead_kb
+
+# for i in {0..3} ; do dd if=/mnt/testfile.bin of=/dev/null bs=1M 2>&1
+| grep copied ; echo 3 > /proc/sys/vm/drop_caches ; done
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 12.3855 s, 347 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.2528 s, 382 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.9849 s, 358 MB/s
+4294967296 bytes (4.3 GB, 4.0 GiB) copied, 11.2953 s, 380 MB/s
 
