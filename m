@@ -2,61 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D205F4E6D52
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 05:35:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C1334E6E5F
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 07:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1358238AbiCYEgv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Mar 2022 00:36:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46576 "EHLO
+        id S1344151AbiCYGyL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Mar 2022 02:54:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1358241AbiCYEgq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 00:36:46 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4D5EC682F;
-        Thu, 24 Mar 2022 21:35:09 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22ONb2Si031192;
-        Fri, 25 Mar 2022 04:35:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2021-07-09;
- bh=gyQqK7dCX48o4jiHAdmiq+u3QAEhj/882VQxChuwKY8=;
- b=bsKZRtCF9qALUGagT2sfHUo+rdiKz0Rf+q+CFHt4AoLualj8aOHJjZ0a7ToxuKtm0L/j
- WsJUz4okzi9GqlTrq2ALNbD/acBScDx+eUOs8DUpxxtS35XDSh0BLoSu7zZak8iaJMGb
- NunTQoAYbUvM+H4jVSo8Oh9p061h1HulnBgCMsnTLHJICLmCwbuRa7NfcStrgWutO3hJ
- nLrUTImYmIwikjbOMGsY+7WYfim9Mx0VWTxd3LVUntaT8hY2maBYDt09rHBdxO07eg/w
- 24B4964E6ptGg6QCyEqc6TxJleF67K5+nxDSyOCIkBbdk+HNEU0dt68whPgmCpjtnaPX 1w== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ew5s0x9x4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Mar 2022 04:35:07 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 22P4WDEW020751;
-        Fri, 25 Mar 2022 04:35:05 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3ew6sc2bsq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 25 Mar 2022 04:35:05 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 22P4YsCo040479;
-        Fri, 25 Mar 2022 04:35:05 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3ew6sc2bmt-12;
-        Fri, 25 Mar 2022 04:35:05 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, bfields@fieldses.org
-Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH RFC v18 11/11] NFSD: Show state of courtesy clients in client info
-Date:   Thu, 24 Mar 2022 21:34:51 -0700
-Message-Id: <1648182891-32599-12-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1648182891-32599-1-git-send-email-dai.ngo@oracle.com>
-References: <1648182891-32599-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-GUID: WR0hTULfwCEo-EM0UYDz2r2x8Bx2NM--
-X-Proofpoint-ORIG-GUID: WR0hTULfwCEo-EM0UYDz2r2x8Bx2NM--
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        with ESMTP id S234077AbiCYGyK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 02:54:10 -0400
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 57F48C6ED8
+        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 23:52:37 -0700 (PDT)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-308-OWCTSVYVNPyn1nCTkduS5Q-1; Fri, 25 Mar 2022 06:52:34 +0000
+X-MC-Unique: OWCTSVYVNPyn1nCTkduS5Q-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:994c:f5c2:35d6:9b65) with Microsoft SMTP
+ Server (TLS) id 15.0.1497.32; Fri, 25 Mar 2022 06:52:33 +0000
+Received: from AcuMS.Aculab.com ([fe80::994c:f5c2:35d6:9b65]) by
+ AcuMS.aculab.com ([fe80::994c:f5c2:35d6:9b65%12]) with mapi id
+ 15.00.1497.033; Fri, 25 Mar 2022 06:52:33 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'NeilBrown' <neilb@suse.de>, Haowen Bai <baihaowen@meizu.com>
+CC:     "trond.myklebust@hammerspace.com" <trond.myklebust@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Haowen Bai <baihaowen@meizu.com>
+Subject: RE: [PATCH] SUNRPC: Increase size of servername string
+Thread-Topic: [PATCH] SUNRPC: Increase size of servername string
+Thread-Index: AQHYP+2Bp/ily4quQUeZW4BP4EodNKzPqMOg
+Date:   Fri, 25 Mar 2022 06:52:33 +0000
+Message-ID: <8723baf426ff4c7fb2027b86aa01fe70@AcuMS.aculab.com>
+References: <1648103566-15528-1-git-send-email-baihaowen@meizu.com>
+ <164817399413.6096.7103093569920914714@noble.neil.brown.name>
+In-Reply-To: <164817399413.6096.7103093569920914714@noble.neil.brown.name>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,47 +67,40 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Update client_info_show to show state of courtesy client
-and time since last renew.
-
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 6169cbb74d31..5f003271004c 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2470,7 +2470,8 @@ static int client_info_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
- 	struct nfs4_client *clp;
--	u64 clid;
-+	u64 clid, hrs;
-+	u32 mins, secs;
- 
- 	clp = get_nfsdfs_clp(inode);
- 	if (!clp)
-@@ -2478,10 +2479,17 @@ static int client_info_show(struct seq_file *m, void *v)
- 	memcpy(&clid, &clp->cl_clientid, sizeof(clid));
- 	seq_printf(m, "clientid: 0x%llx\n", clid);
- 	seq_printf(m, "address: \"%pISpc\"\n", (struct sockaddr *)&clp->cl_addr);
--	if (test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags))
-+
-+	if (clp->cl_cs_client_state == NFSD4_CLIENT_COURTESY)
-+		seq_puts(m, "status: courtesy\n");
-+	else if (clp->cl_cs_client_state == NFSD4_CLIENT_CONFIRMED)
- 		seq_puts(m, "status: confirmed\n");
- 	else
- 		seq_puts(m, "status: unconfirmed\n");
-+	hrs = div_u64_rem(ktime_get_boottime_seconds() - clp->cl_time,
-+				3600, &secs);
-+	mins = div_u64_rem((u64)secs, 60, &secs);
-+	seq_printf(m, "time since last renew: %llu:%02u:%02u\n", hrs, mins, secs);
- 	seq_printf(m, "name: ");
- 	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
- 	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
--- 
-2.9.5
+RnJvbTogTmVpbEJyb3duDQo+IFNlbnQ6IDI1IE1hcmNoIDIwMjIgMDI6MDcNCj4gDQo+IE9uIFRo
+dSwgMjQgTWFyIDIwMjIsIEhhb3dlbiBCYWkgd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCB3aWxsIGZp
+eCB0aGUgd2FybmluZyBmcm9tIHNtYXRjaDoNCj4gPg0KPiA+IG5ldC9zdW5ycGMvY2xudC5jOjU2
+MiBycGNfY3JlYXRlKCkgZXJyb3I6IHNucHJpbnRmKCkgY2hvcHMgb2ZmDQo+ID4gdGhlIGxhc3Qg
+Y2hhcnMgb2YgJ3N1bi0+c3VuX3BhdGgnOiAxMDggdnMgNDgNCj4gPg0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEhhb3dlbiBCYWkgPGJhaWhhb3dlbkBtZWl6dS5jb20+DQo+ID4gLS0tDQo+ID4gIG5ldC9z
+dW5ycGMvY2xudC5jIHwgMiArLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyks
+IDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL2NsbnQuYyBi
+L25ldC9zdW5ycGMvY2xudC5jDQo+ID4gaW5kZXggYzgzZmU2MS4uNmUwMjA5ZSAxMDA2NDQNCj4g
+PiAtLS0gYS9uZXQvc3VucnBjL2NsbnQuYw0KPiA+ICsrKyBiL25ldC9zdW5ycGMvY2xudC5jDQo+
+ID4gQEAgLTUyNiw3ICs1MjYsNyBAQCBzdHJ1Y3QgcnBjX2NsbnQgKnJwY19jcmVhdGUoc3RydWN0
+IHJwY19jcmVhdGVfYXJncyAqYXJncykNCj4gPiAgCQkuc2VydmVybmFtZSA9IGFyZ3MtPnNlcnZl
+cm5hbWUsDQo+ID4gIAkJLmJjX3hwcnQgPSBhcmdzLT5iY194cHJ0LA0KPiA+ICAJfTsNCj4gPiAt
+CWNoYXIgc2VydmVybmFtZVs0OF07DQo+ID4gKwljaGFyIHNlcnZlcm5hbWVbMTA4XTsNCj4gDQo+
+IEl0IHdvdWxkIGJlIG11Y2ggbmljZXIgdG8gdXNlIFVOSVhfUEFUSF9NQVgNCg0KTm8gb24tc3Rh
+Y2suLi4uDQoNCkdpdmVuIHRoZSB1c2U6DQoNCglpZiAoeHBydGFyZ3Muc2VydmVybmFtZSA9PSBO
+VUxMKSB7DQoJCXN0cnVjdCBzb2NrYWRkcl91biAqc3VuID0NCgkJCQkoc3RydWN0IHNvY2thZGRy
+X3VuICopYXJncy0+YWRkcmVzczsNCgkJc3RydWN0IHNvY2thZGRyX2luICpzaW4gPQ0KCQkJCShz
+dHJ1Y3Qgc29ja2FkZHJfaW4gKilhcmdzLT5hZGRyZXNzOw0KCQlzdHJ1Y3Qgc29ja2FkZHJfaW42
+ICpzaW42ID0NCgkJCQkoc3RydWN0IHNvY2thZGRyX2luNiAqKWFyZ3MtPmFkZHJlc3M7DQoNCgkJ
+c2VydmVybmFtZVswXSA9ICdcMCc7DQoJCXN3aXRjaCAoYXJncy0+YWRkcmVzcy0+c2FfZmFtaWx5
+KSB7DQoJCWNhc2UgQUZfTE9DQUw6DQoJCQlzbnByaW50ZihzZXJ2ZXJuYW1lLCBzaXplb2Yoc2Vy
+dmVybmFtZSksICIlcyIsDQoJCQkJIHN1bi0+c3VuX3BhdGgpOw0KCQkJYnJlYWs7DQoJCWNhc2Ug
+QUZfSU5FVDoNCgkJCXNucHJpbnRmKHNlcnZlcm5hbWUsIHNpemVvZihzZXJ2ZXJuYW1lKSwgIiVw
+STQiLA0KCQkJCSAmc2luLT5zaW5fYWRkci5zX2FkZHIpOw0KCQkJYnJlYWs7DQoJCWNhc2UgQUZf
+SU5FVDY6DQoJCQlzbnByaW50ZihzZXJ2ZXJuYW1lLCBzaXplb2Yoc2VydmVybmFtZSksICIlcEk2
+IiwNCgkJCQkgJnNpbjYtPnNpbjZfYWRkcik7DQoJCQlicmVhazsNCgkJZGVmYXVsdDoNCgkJCS8q
+IGNhbGxlciB3YW50cyBkZWZhdWx0IHNlcnZlciBuYW1lLCBidXQNCgkJCSAqIGFkZHJlc3MgZmFt
+aWx5IGlzbid0IHJlY29nbml6ZWQuICovDQoJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsNCgkJ
+fQ0KCQl4cHJ0YXJncy5zZXJ2ZXJuYW1lID0gc2VydmVybmFtZTsNCgl9DQoNCkl0IGxvb2tzIGxp
+a2UgdGhlIEFGX0xPQ0FMIGNhc2UgY291bGQgYmU6DQoJCXhwcnRhcmdzLnNlcnZlcm5hbWUgPSBz
+dW4tPnN1bl9wYXRoOw0KVGhlbiB0aGUgYnVmZmVyIG9ubHkgbmVlZHMgdG8gYmUgYmlnIGVub3Vn
+aCBmb3IgdGhlIElQdjYgYWRkcmVzcy4NCkZvciB3aGljaCA0MCBpcyBlbm91Z2guDQoNCglEYXZp
+ZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQg
+RmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4
+NiAoV2FsZXMpDQo=
 
