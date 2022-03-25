@@ -2,218 +2,351 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B04184E6CE5
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 04:52:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 33B5D4E6D43
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 05:35:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233942AbiCYDyL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Mar 2022 23:54:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50414 "EHLO
+        id S1358221AbiCYEgf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Mar 2022 00:36:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233051AbiCYDyK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 23:54:10 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam07on2120.outbound.protection.outlook.com [40.107.212.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 431D8B919E
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 20:52:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ncVNaPp2zA7Tm1F12O/wEvXIYuIfjZz27fLX/XCYF9tXCJPMjjhmhcIaOmCOC+S705iOODtOBE9k99X70ZZ8prn9zr7daw8NoXi1Mpv4gXgyMxhWvuTW5OFBWPDGPNY2mePkAyQAsuL2ZKOPxim62U+4Jqcnm8d2qESHjWnBpW+1tFVmDKnH7yA68saA2OXLigYuvnr+akzSlpKr/KhlX6eJTvdebW6HPRBYctFwwhWI0vxrIAbaXBZQvdRjfJyD4it2BdnzMwHjsFmM0sHisLY/xU2b1MOW063KIaPm12Z73H0u2H0tQSQqs8krVE5KII60XWLq7BKCltglteSDvQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=k6lxe9maF0uwFEuMbMfIxddPOwP5qxiDSbJ+fN8S4zo=;
- b=gzGA+78IeT0rzl8/LUm0S4+VffgAoFva1jUd150OhlG/ucM3IWVBTnYFGuZr7ynVcW+Fe+sXHnfnq0aZM81wXiz0RyieQPYE6fgEaW72dPpMLxUy8TJZf+w4Cp76FaAlG9Ocn7AeKme2N3oIzVsmdCG33rbj929s/4BVKwhYFFX5uxh+yOX8431oYcXZeCMZpw6zB5zMiRSKgRcWi7nmidQk4K53arPgxfrWqbE5wbVN8X5WGwhjEeWFCeHbcbxI54y1Yc03UQAz7ZcdsH5jmoyLU1oEhAD/Z5CDmDuqCleedWVkXkdgV+aNCtSrMlGY7cHF1RRap55qreevG52pCQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=k6lxe9maF0uwFEuMbMfIxddPOwP5qxiDSbJ+fN8S4zo=;
- b=OIWYARHGofKAyAbpT293U8BdIhxgEyCVMzAwIkkQfsnHPE1agysecyeHLFkMcKUwGPHStoIEUxfZxdY0Yw9XAph/GyW2gxYyb5+qUofOo/iBlVxVqWpqvsKLMFD9SiIGcxPqTSN4pE1/84QmZZURMF3BoVhSS16d5LVtGHTAtKE=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MWHPR1301MB2064.namprd13.prod.outlook.com (2603:10b6:301:31::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5102.8; Fri, 25 Mar
- 2022 03:52:33 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::c0b:4fda:5713:9006]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::c0b:4fda:5713:9006%6]) with mapi id 15.20.5102.019; Fri, 25 Mar 2022
- 03:52:33 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>
-Subject: Re: [PATCH RFC] NFSD: Instantiate a filecache entry when creating a
- file
-Thread-Topic: [PATCH RFC] NFSD: Instantiate a filecache entry when creating a
- file
-Thread-Index: AQHYP8uo0WXZgCK6JkiCUMP0y6+YoKzPI6kAgAAdMwCAADcMAA==
-Date:   Fri, 25 Mar 2022 03:52:32 +0000
-Message-ID: <6921be3a442479678c83199f1d42600b24f2b62e.camel@hammerspace.com>
-References: <164815968129.1809.12154191330176123202.stgit@manet.1015granger.net>
-         <83b0b0292bda06ffa56487ea1a019ea142107fa3.camel@hammerspace.com>
-         <E31250AB-636B-4AE6-8A31-69A3C26223EF@oracle.com>
-In-Reply-To: <E31250AB-636B-4AE6-8A31-69A3C26223EF@oracle.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a0270093-da74-48e0-ffb4-08da0e12e47f
-x-ms-traffictypediagnostic: MWHPR1301MB2064:EE_
-x-microsoft-antispam-prvs: <MWHPR1301MB206429829BD193CBE71A28EBB81A9@MWHPR1301MB2064.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ns8R26kktQH/1D1V5Uum+Clp6bGfjI48fAS3awspdwt9ugY0vkT/0Faov2eRiRHJEhoWJcnrIZPjlanwZ6/bGSCLXMV1/L/R9LIe7GU1wH5Dldosyib/hjf1OPDJrlIfukhV13s+IH7G2rINNUKR/Xb2l2uBrWtyYJG0DCqJ5N9Cfp/aGAc6JgkZiG4Pg0qJx3+d1nGXRQ8y8ojNDEFXacm/W85fR0Akp85OIg72yAs+YwLsMS7mQY9sJzpoIx3c6mBpUBiO1urMkkgBZ/wI4dowVNZpnTPvwZaK1SMtrc77zZv2ziXsUwI9OI1LoEW3tEbKTgM/UVvbUX/5g+i9ceQqnpustidgjrfwXe4i6zkJW2korJe0VFJg4AP0ZiKi30WWYmRMZRrxi/EpDWP1+qF/47SkZfM2mZUc1a3DV1lF0BC3gz8PCPntYk925Z94t4nBtOL9id2rLlBKKe9vW9N+0GoomWNIHTx5GK+BkqWCeuAKSB3Kz5kp9pyoNyYsqrLeSIXj5d7qcAsyCP1wQMoboBpzHAik6uQUNQfDXFTt2LvShTUJNnmQUVzMuJH63yVAXVPW+gwD73W4kHp266IyqXnWIPSGu0He9aDfRUYSpd8ndLa5BW2I/zycWWc7/73oAucSos9f6HKovXkcBMAVIR9MBwnq0eUM0rI9G9uYrA9FhQS/AtEI1VqnxQeMroCwb2YsyijExXHnE0Nh/1ZWiLIMVx4NVDlxhtYeX3rJx/yIKYCblGpwGEPhJ6lBkxN2XfwiCTHK6u9AHB1U1/v2ke7aUVmPs0UYSG+5t4vLD3rIK46t4fJnbVmytNoGKoA7ZNnfTKBFaMNeKQH50X9cPSjLQDy6niHJfCGRRsmqp9U2TlLCmYNRt1+P86XH
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(8936002)(2906002)(5660300002)(6916009)(36756003)(2616005)(26005)(316002)(186003)(54906003)(6506007)(6512007)(76116006)(66556008)(8676002)(53546011)(38070700005)(83380400001)(64756008)(66446008)(966005)(66476007)(66946007)(86362001)(71200400001)(6486002)(508600001)(4326008)(122000001)(38100700002)(21314003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SzNFekRHdkhQNHA4WXRiNUNlOC9FRnZwdHJTVTU2dkNCMEw5SXVpWVhIY3dw?=
- =?utf-8?B?K294cEF4bUsxalY5UzI0YzE3N2V6Z21zNVh5UWx5ZGNLRGlKME1UWktmY2xC?=
- =?utf-8?B?RHcyZkE1QWl6TG5SVzlZV0llMFMzbStTSEsyY0J6aXFuNTd4Z3p5VnhLQXZ4?=
- =?utf-8?B?cmVWYy9tQlAxOEZPeThsVnVwWEtMZXJJbmVsOEttSVNWOUltNkk3WDJQaktR?=
- =?utf-8?B?NEx0RG9kNURFbUZRL2tEREZ1MGZXUWdvUFl4a08rQWZJZlJ4MVdaWjcrTzk5?=
- =?utf-8?B?ZGVhUkpFNmx6MFlCd2FVNWJ2NmRJWFlPNGZuZWozckRHdll4b2QzRlRJcXdK?=
- =?utf-8?B?ZUZXUStyait2Y2lybEVsL1VQeU5XZzBVRnduTE1Wa0FLUEFERXcwa1hpcHNw?=
- =?utf-8?B?eXVsK0I4aUxtckUzOEF6aE1VUkFqbklQQmpYaUNMNE9kL1NVa3l2ejFFQmxS?=
- =?utf-8?B?SXhXdE9hZnhUdTBrckMvTFF1YXBEdnhOd290YTBiRVpMSHVhQlIxeUJpb0Fs?=
- =?utf-8?B?Nmh2dG05WVhxcjFoYndrQUV0eTdTelRTTjl6d003bVlSRzAyQU9VTVJ1aWQ1?=
- =?utf-8?B?Zkd1dG93MGo1U2VlaHBZWGxEZW5mbWRRTE9CV29HWWorUkJWNHhBakZQKzBo?=
- =?utf-8?B?RVQ3byt1SEZpV2xFVmc5bnN3Qm03SnlmdmJHY1cwOUsyV2RNMm1mOHZMOXVX?=
- =?utf-8?B?Z2REVVpQeE91Nm5hUjZ0MmxuaWxwdytHRTJDWlRBdTF3UjZVem9yWG1TWXBk?=
- =?utf-8?B?Zm52RU05OE5nZm9oR2VySzhHc2JVb1hhOWJlUmlWYlhUc000RHIzNHFXc1Fw?=
- =?utf-8?B?ZjdIU3UvYmRYTUhOdnRVbmV2eDh6Uk9vT09XRThsaWhmV0RKWEZ6RkE1dEly?=
- =?utf-8?B?YlRFUlZ2M3VHMnFrTTVZRjN6MlZRRy9XVkpWcW01YjRQb0dpWXBCWVBwQkx0?=
- =?utf-8?B?Q2JFWXAyamErSzMvWExYdXhJdkJ1UEZYN254Wll5bDNEa2d5T2grVlJzQTZv?=
- =?utf-8?B?Z21zeitSNjhsT045SUZsOEYxa0hqU3hRdmZCbEhnT2dwZ2hFYnFvbkYxbjlq?=
- =?utf-8?B?azhYdGhVN2xPaXRkdXhMVTFxNDVLTDFnK2x5Y2hMWGk0R3JGUmpNNDdaRzMy?=
- =?utf-8?B?OStPTTFnSE02WlE5Q3pkUFdnNC93cUV1QVlrUU0xenpEVFBlL1ord3RUUUdW?=
- =?utf-8?B?citIckc3T1U2cFBOSnVSNlhmL1FrZXoyelFRbU5vaDJEZnZxdTVDQ3p4RmZU?=
- =?utf-8?B?ZUdUT09yTXRmNVVpZEJQejBySkN2SFN5cEJNNVZEcFBLaHBablIvRnN4OG1s?=
- =?utf-8?B?TytKTUpwRVhubFQ2NU5sYVBTNktyRUkvTW5hMU00eEQzdVBXVnNrZlJ5WGE1?=
- =?utf-8?B?cndoMmR3dGxTQTBMUnorWkZNSkFmMmc2RmNMQnM3dDJnVTFLRXR5UDZOVmNK?=
- =?utf-8?B?bzVUankxWU5EV0JoTTEvRE42SG1oVWRoTHJwVnMrMVpSY3U5dUgyZnRidlFv?=
- =?utf-8?B?cGJCRVVuQzVSSUZzUzVnbi8zOHYwazhkeWt2UmV1MG5TaDBhemE4c1JHRC80?=
- =?utf-8?B?bGd3OS9hbmE1YkVTaDhMbjVVYzJZQ2JYTWtDOEEyNEJ2dmNrcVowbHZ0azdN?=
- =?utf-8?B?N2Rmc1psc1ZTTzJpV1dHdC8vV3cvNDUrTTBHcGhlZXV4cHV0SEFnOGMyUGQ4?=
- =?utf-8?B?T3VoN0tDUGNqRGZpNmxVdlN1RllhaG84QURDUUttU2ROZ2tjY3RnSEIyYWFJ?=
- =?utf-8?B?a3ZJMWFZMUU4cnRENHdyUE85ampxbXlzUTFGdmhHZnlXNnRZL0lRVzh4RS9Y?=
- =?utf-8?B?aFQ4Rk5yN2lIWnd6c0diclU0QjArQVVHbHRwcGJ2eWNlMXJObEY1RktiOWZj?=
- =?utf-8?B?Z0xXaTEvYlZrM1lmY3hwM0lGM2xFTldRc0ZXL0hzbGhlTmh1K1VVQjh1YnFx?=
- =?utf-8?B?eUZZNklJcURtM1lmNzBuUFl5RGZzOUZBTzBxTHgzNGt5ZytKRS90aHZSVzJB?=
- =?utf-8?B?M3pHQ3F0VE9RPT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <084057B3B5C6BF44980E132D7CE26E9E@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a0270093-da74-48e0-ffb4-08da0e12e47f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Mar 2022 03:52:32.8235
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: A+0tFd+3LGdRAC1XueF/SiuxVdoc+2ff7X1Equ/lJ6RyJ4rMEWgVNujC9900CS2oe+INxEdMErdPFECzmfPOVw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR1301MB2064
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1358212AbiCYEgd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 00:36:33 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC74C680B;
+        Thu, 24 Mar 2022 21:34:59 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 22ONb2Sf031192;
+        Fri, 25 Mar 2022 04:34:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=nmEaY18QM/aRxH+ghp/mlPj5Pw5niING2HD8pFbejSw=;
+ b=y7j4ZJ6yHFb3dUoovLDS39m3qcS8f28WUPg9np/HMF8Mw8C3vyBmJsWYWCCY4hYwr1Wl
+ +FKhjcTaWIyC2tf6NnQ2mdYs6LzwEirZkoECXgzguRkrm80r1HnPRxqBD6mji3XpdeSI
+ JPEW4LY/T9TNXfgJhGKsicNMrD+fSt11aUCnIKFz3Y6A4iwRaM428IqSnq2zY4Enyrpa
+ 02OtY9kagPFnbRt5lymDjzyBF24OpAcRl0xN2SXC77O4+40wQg/4nTxPb+elZcqjSaM+
+ 66TvCina5Ip693DC6YXkzIfaTt7JSn6pEsSMPjpA0V4pHDjbLM3cy6XHQPd5fnBR6koa KA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ew5s0x9wn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Mar 2022 04:34:55 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 22P4WDT0020803;
+        Fri, 25 Mar 2022 04:34:54 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3ew6sc2bn4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Mar 2022 04:34:54 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 22P4YsCS040479;
+        Fri, 25 Mar 2022 04:34:54 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3ew6sc2bmt-1;
+        Fri, 25 Mar 2022 04:34:54 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v18 0/11] NFSD: Initial implementation of NFSv4 Courteous Server
+Date:   Thu, 24 Mar 2022 21:34:40 -0700
+Message-Id: <1648182891-32599-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-GUID: L80SaV-TT0PByjYMREO2hsw91rHT342F
+X-Proofpoint-ORIG-GUID: L80SaV-TT0PByjYMREO2hsw91rHT342F
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gRnJpLCAyMDIyLTAzLTI1IGF0IDAwOjM1ICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6
-DQo+IA0KPiANCj4gPiBPbiBNYXIgMjQsIDIwMjIsIGF0IDY6NTEgUE0sIFRyb25kIE15a2xlYnVz
-dA0KPiA+IDx0cm9uZG15QGhhbW1lcnNwYWNlLmNvbT4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVGh1
-LCAyMDIyLTAzLTI0IGF0IDE4OjA4IC0wNDAwLCBDaHVjayBMZXZlciB3cm90ZToNCj4gPiA+IFRo
-ZXJlIGhhdmUgYmVlbiByZXBvcnRzIG9mIHJhY2VzIHRoYXQgY2F1c2UgTkZTdjQgT1BFTihDUkVB
-VEUpIHRvDQo+ID4gPiByZXR1cm4gYW4gZXJyb3IgZXZlbiB0aG91Z2ggdGhlIHJlcXVlc3RlZCBm
-aWxlIHdhcyBjcmVhdGVkLiBORlN2NA0KPiA+ID4gZG9lcyBub3Qgc2VlbSB0byBwcm92aWRlIGEg
-c3RhdHVzIGNvZGUgZm9yIHRoaXMgY2FzZS4NCj4gPiA+IA0KPiA+ID4gVGhlcmUgYXJlIHBsZW50
-eSBvZiB0aGluZ3MgdGhhdCBjYW4gZ28gd3JvbmcgYmV0d2VlbiB0aGUNCj4gPiA+IHZmc19jcmVh
-dGUoKSBjYWxsIGluIGRvX25mc2RfY3JlYXRlKCkgYW5kIG5mczRfdmZzX2dldF9maWxlKCksDQo+
-ID4gPiBidXQNCj4gPiA+IG9uZSBvZiB0aGVtIGlzIGFub3RoZXIgY2xpZW50IGxvb2tpbmcgdXAg
-YW5kIG1vZGlmeWluZyB0aGUgZmlsZSdzDQo+ID4gPiBtb2RlIGJpdHMgaW4gdGhhdCB3aW5kb3cu
-IElmIHRoYXQgaGFwcGVucywgdGhlIGNyZWF0b3IgbWlnaHQgbG9zZQ0KPiA+ID4gYWNjZXNzIHRv
-IHRoZSBmaWxlIGJlZm9yZSBpdCBjYW4gYmUgb3BlbmVkLg0KPiA+ID4gDQo+ID4gPiBJbnN0ZWFk
-IG9mIG9wZW5pbmcgdGhlIG5ld2x5IGNyZWF0ZWQgZmlsZSBpbg0KPiA+ID4gbmZzZDRfcHJvY2Vz
-c19vcGVuMigpLA0KPiA+ID4gb3BlbiBpdCBhcyBzb29uIGFzIHRoZSBmaWxlIGlzIGNyZWF0ZWQs
-IGFuZCBsZWF2ZSBpdCBzaXR0aW5nIGluDQo+ID4gPiB0aGUNCj4gPiA+IGZpbGUgY2FjaGUuDQo+
-ID4gPiANCj4gPiA+IFRoaXMgcGF0Y2ggaXMgbm90IG9wdGltYWwsIG9mIGNvdXJzZSAtIHdlIHNo
-b3VsZCByZXBsYWNlIHRoZQ0KPiA+ID4gdmZzX2NyZWF0ZSgpIGNhbGwgaW4gZG9fbmZzZF9jcmVh
-dGUoKSB3aXRoIGEgY2FsbCB0aGF0IGNyZWF0ZXMNCj4gPiA+IHRoZQ0KPiA+ID4gZmlsZSBhbmQg
-cmV0dXJucyBhICJzdHJ1Y3QgZmlsZSAqIiB0aGF0IGNhbiBiZSBwbGFudGVkDQo+ID4gPiBpbW1l
-ZGlhdGVseQ0KPiA+ID4gaW4gbmYtPm5mX2ZpbGUuDQo+ID4gPiANCj4gPiA+IEJ1dCBmaXJzdCwg
-SSB3b3VsZCBsaWtlIHRvIGhlYXIgb3BpbmlvbnMgYWJvdXQgdGhlIGFwcHJvYWNoDQo+ID4gPiBz
-dWdnZXN0ZWQgYWJvdmUuDQo+ID4gPiANCj4gPiA+IEJ1Z0xpbms6IGh0dHBzOi8vYnVnemlsbGEu
-bGludXgtbmZzLm9yZy9zaG93X2J1Zy5jZ2k/aWQ9MzgyDQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBD
-aHVjayBMZXZlciA8Y2h1Y2subGV2ZXJAb3JhY2xlLmNvbT4NCj4gPiA+IC0tLQ0KPiA+ID4gwqBm
-cy9uZnNkL3Zmcy5jIHzCoMKgwqAgOSArKysrKysrKysNCj4gPiA+IMKgMSBmaWxlIGNoYW5nZWQs
-IDkgaW5zZXJ0aW9ucygrKQ0KPiA+ID4gDQo+ID4gPiBkaWZmIC0tZ2l0IGEvZnMvbmZzZC92ZnMu
-YyBiL2ZzL25mc2QvdmZzLmMNCj4gPiA+IGluZGV4IDAyYTU0NDY0NWI1Mi4uODBiNTY4ZmExMmYx
-IDEwMDY0NA0KPiA+ID4gLS0tIGEvZnMvbmZzZC92ZnMuYw0KPiA+ID4gKysrIGIvZnMvbmZzZC92
-ZnMuYw0KPiA+ID4gQEAgLTE0MTAsNiArMTQxMCw3IEBAIGRvX25mc2RfY3JlYXRlKHN0cnVjdCBz
-dmNfcnFzdCAqcnFzdHAsDQo+ID4gPiBzdHJ1Y3QNCj4gPiA+IHN2Y19maCAqZmhwLA0KPiA+ID4g
-wqDCoMKgwqDCoMKgwqAgX19iZTMywqDCoMKgwqDCoMKgwqDCoMKgIGVycjsNCj4gPiA+IMKgwqDC
-oMKgwqDCoMKgIGludMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBob3N0X2VycjsNCj4gPiA+IMKg
-wqDCoMKgwqDCoMKgIF9fdTMywqDCoMKgwqDCoMKgwqDCoMKgwqAgdl9tdGltZT0wLCB2X2F0aW1l
-PTA7DQo+ID4gPiArwqDCoMKgwqDCoMKgIHN0cnVjdCBuZnNkX2ZpbGUgKm5mOw0KPiA+ID4gwqAN
-Cj4gPiA+IMKgwqDCoMKgwqDCoMKgIC8qIFhYWDogU2hvdWxkbid0IHRoaXMgYmUgbmZzZXJyX2lu
-dmFsPyAqLw0KPiA+ID4gwqDCoMKgwqDCoMKgwqAgZXJyID0gbmZzZXJyX3Blcm07DQo+ID4gPiBA
-QCAtMTUzNSw2ICsxNTM2LDE0IEBAIGRvX25mc2RfY3JlYXRlKHN0cnVjdCBzdmNfcnFzdCAqcnFz
-dHAsDQo+ID4gPiBzdHJ1Y3QNCj4gPiA+IHN2Y19maCAqZmhwLA0KPiA+ID4gwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIGlhcC0+aWFfYXRpbWUudHZfbnNlYyA9IDA7DQo+ID4gPiDCoMKg
-wqDCoMKgwqDCoCB9DQo+ID4gPiDCoA0KPiA+ID4gK8KgwqDCoMKgwqDCoCAvKiBBdHRlbXB0IHRv
-IGluc3RhbnRpYXRlIGEgZmlsZWNhY2hlIGVudHJ5IHdoaWxlIHdlDQo+ID4gPiBzdGlsbA0KPiA+
-ID4gaG9sZA0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgICogdGhlIHBhcmVudCdzIGlub2RlIG11dGV4
-LiAqLw0KPiA+ID4gK8KgwqDCoMKgwqDCoCBlcnIgPSBuZnNkX2ZpbGVfYWNxdWlyZShycXN0cCwg
-cmVzZmhwLCBORlNEX01BWV9XUklURSwNCj4gPiA+ICZuZik7DQo+ID4gPiArwqDCoMKgwqDCoMKg
-IGlmIChlcnIpDQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBUaGlzIHdv
-dWxkIGJlIGJhZCAqLw0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZ290byBv
-dXQ7DQo+ID4gPiArwqDCoMKgwqDCoMKgIG5mc2RfZmlsZV9wdXQobmYpOw0KPiA+IA0KPiA+IFdo
-eSByZWx5IG9uIHRoZSBmaWxlIGNhY2hlIHRvIGNhcnJ5IHRoZSBuZnNkX2ZpbGU/IElzbid0IGl0
-IG11Y2gNCj4gPiBlYXNpZXINCj4gPiBqdXN0IHRvIHBhc3MgaXQgYmFjayBkaXJlY3RseSB0byB0
-aGUgY2FsbGVyPw0KPiANCj4gTXkgdGhvdWdodCB3YXMgdGhhdCB0aGUgInN0cnVjdCBmaWxlICoi
-IGhhcyB0byBlbmQgdXAgaW4gdGhlDQo+IGZpbGVjYWNoZSBhbnl3YXksIGV2ZW4gaW4gdGhlIE5G
-U3YzIGNhc2UuIElmIEkgZG8gdGhpcyByaWdodCwNCj4gSSBjYW4gYXZvaWQgdGhlIHN1YnNlcXVl
-bnQgY2FsbCB0byBuZnNkX29wZW5fdmVyaWZpZWQoKSwgd2hpY2gNCj4gc2VlbXMgdG8gYmUgdGhl
-IHNvdXJjZSBvZiB0aGUgcmFjeSBjaG1vZCBiZWhhdmlvciBJIG1lbnRpb25lZA0KPiBhYm92ZS4g
-VGhhdCBtaWdodCBoZWxwIE5GU3YzIHRvbywgd2hpY2ggd291bGQgbmVlZCB0byByZWNyZWF0ZQ0K
-PiB0aGUgInN0cnVjdCBmaWxlICoiIGluIG5mc2RfcmVhZCgpIG9yIG5mc2Rfd3JpdGUoKSBhbnl3
-YXkuDQo+IA0KPiA+IFRoZXJlIGFyZSBvbmx5IDIgY2FsbGVycyBvZiBkb19uZnNkX2NyZWF0ZSgp
-LCBzbyB5b3UnZCBoYXZlDQo+ID4gbmZzZDNfcHJvY19jcmVhdGUoKSB0aGF0IHdpbGwganVzdCBj
-YWxsIG5mc2RfZmlsZV9wdXQoKSBhcyBwZXINCj4gPiBhYm92ZSwNCj4gPiB3aGVyZWFzIHRoZSBO
-RlN2NCBzcGVjaWZpYyBkb19vcGVuX2xvb2t1cCgpIGNvdWxkIGp1c3Qgc3Rhc2ggaXQgaW4NCj4g
-PiB0aGUNCj4gPiBzdHJ1Y3QgbmZzZDRfb3BlbiBzbyB0aGF0IGl0IGNhbiBnZXQgcGFzc2VkIGlu
-dG8NCj4gPiBkb19vcGVuX3Blcm1pc3Npb24oKQ0KPiA+IGFuZCBldmVudHVhbGx5IG5mc2Q0X3By
-b2Nlc3Nfb3BlbjIoKS4NCj4gDQo+IE5laXRoZXIgbmZzZDRfcHJvY2Vzc19vcGVuMigpIG9yIGRv
-X29wZW5fcGVybWlzc2lvbigpIHNlZW0NCj4gZGlyZWN0bHkgaW50ZXJlc3RlZCBpbiB0aGUgbmZz
-ZF9maWxlIC0tLSBpdCdzIGFsbCB1bmRlciB0aGUNCj4gY292ZXJzLCBpbiBuZnM0X2dldF92ZnNf
-ZmlsZSgpLiBCdXQgeWVzLCBhICJzdHJ1Y3QgbmZzZDRfb3BlbiINCj4gaXMgcGFzc2VkIHRvIGFu
-ZCB2aXNpYmxlIGluIG5mczRfZ2V0X3Zmc19maWxlKCksIGFzIGlzIHRoZQ0KPiBvcGVuLT5vcF9j
-cmVhdGVkIGJvb2xlYW4uDQoNCkhhdmluZyBhIG5mc2RfZmlsZSBpbiB0aGUgZmlsZSBjYWNoZSBk
-b2Vzbid0IHByZXZlbnQgYW55b25lIGZyb20NCmNoYW5naW5nIHRoZSBtb2RlLCBvd25lciBhbmQg
-c2hhcmUgYWNjZXNzIGxvY2tzIG9uIHRoZSBmaWxlIGJlZm9yZSB5b3UNCmNhbiBkbyB0aGUgbmV4
-dCBzZXQgb2YgcGVybWlzc2lvbnMgY2hlY2tzIGFmdGVyIGRyb3BwaW5nIGxvY2tzLCBub3INCmRv
-ZXMgaXQgZXZlbiBndWFyYW50ZWUgdGhhdCB5b3Ugd2lsbCBzdGlsbCBoYXZlIGFuIG9wZW4gZGVz
-Y3JpcHRvciB3aGVuDQp0aGUgY2FsbCB0byBuZnNkNF9wcm9jZXNzX29wZW4yKCkgb2NjdXJzLg0K
-DQpNYWtpbmcgdGhlIGZpbGUgZGVzY3JpcHRvciBvcGVuKCkgYW5kIHNoYXJlIGxvY2sgc2V0dGlu
-Z3MgYXRvbWljIHdpdGgNCnRoZSBmaWxlIGNyZWF0aW9uLCBhbmQgZW5zdXJpbmcgdGhhdCB0aGUg
-cmVzdWx0aW5nIGRlc2NyaXB0b3IgaXMgcGFzc2VkDQphbG9uZyBhbGwgdGhlIHdheSB0aHJvdWdo
-IHRoZSBPUEVOIHByb2Nlc3NpbmcgaXMgdGhlIG9ubHkgd2F5IHRvIGF2b2lkDQp0aGVzZSBUT0NU
-T1UgcHJvYmxlbXMuIFllcywgdGhleSBhcmUgc3RpbGwgYSBwcm9ibGVtIGZvciBORlN2MywgYnV0
-DQp0aGF0J3MgYSBwcm90b2NvbCBpc3N1ZSB0aGF0IE5GU3Y0IHdhcyBzdXBwb3NlZCB0byBmaXgu
-DQoNCj4gDQo+IA0KPiA+ID4gKw0KPiA+ID4gwqAgc2V0X2F0dHI6DQo+ID4gPiDCoMKgwqDCoMKg
-wqDCoCBlcnIgPSBuZnNkX2NyZWF0ZV9zZXRhdHRyKHJxc3RwLCByZXNmaHAsIGlhcCk7DQo+ID4g
-PiDCoA0KPiA+ID4gDQo+ID4gPiANCj4gPiANCj4gPiAtLSANCj4gPiBUcm9uZCBNeWtsZWJ1c3QN
-Cj4gPiBMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQo+ID4gdHJvbmQu
-bXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KPiANCj4gLS0NCj4gQ2h1Y2sgTGV2ZXINCj4gDQo+
-IA0KPiANCg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5l
-ciwgSGFtbWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Hi Chuck, Bruce
+
+This series of patches implement the NFSv4 Courteous Server.
+
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
+
+v2 patch includes:
+
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
+
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+v3 patch includes:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v4 patch includes:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v5 patch includes:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+v6 patch includes:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+v7 patch includes:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+v8 patch includes:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+v9 patch includes:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+v10 patch includes:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
+
+v11 patch includes:
+
+  Add comment for lm_lock_conflict callback.
+
+  Replace static const courtesy_client_expiry with macro.
+
+  Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
+  Callers use nfs4_client->cl_cs_client boolean to determined if
+  it's the courtesy client and take appropriate actions.
+
+  Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
+  with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
+
+v12 patch includes:
+
+  Remove unnecessary comment in nfs4_get_client_reaplist.
+
+  Replace nfs4_client->cl_cs_client boolean with
+  NFSD4_CLIENT_COURTESY_CLNT flag.
+
+  Remove courtesy_clnt argument from find_client_in_id_table and
+  find_clp_in_name_tree. Callers use NFSD4_CLIENT_COURTESY_CLNT to
+  determined if it's the courtesy client and take appropriate actions.
+
+v13 patch includes:
+
+  Merge with 5.17-rc3.
+
+  Cleanup Documentation/filesystems/locking.rst: replace i_lock
+  with flc_lock, update API's that use flc_lock.
+
+  Rename lm_lock_conflict to lm_lock_expired().
+
+  Remove comment of lm_lock_expired API in lock_manager_operations.
+  Same information is in patch description.
+
+  Update commit messages of 4/4.
+
+  Add some comment for NFSD4_CLIENT_COURTESY_CLNT.
+
+  Add nfsd4_discard_courtesy_clnt() to eliminate duplicate code of
+  discarding courtesy client; setting NFSD4_DESTROY_COURTESY_CLIENT.
+
+v14 patch includes:
+
+. merge with Chuck's public for-next branch.
+
+. remove courtesy_client_expiry, use client's last renew time.
+
+. simplify comment of nfs4_check_access_deny_bmap.
+
+. add comment about race condition in nfs4_get_client_reaplist.
+
+. add list_del when walking cslist in nfs4_get_client_reaplist.
+
+. remove duplicate INIT_LIST_HEAD(&reaplist) from nfs4_laundromat
+
+. Modify find_confirmed_client and find_confirmed_client_by_name
+  to detect courtesy client and destroy it.
+
+. refactor lookup_clientid to use find_client_in_id_table
+  directly instead of find_confirmed_client.
+
+. refactor nfsd4_setclientid to call find_clp_in_name_tree
+  directly instead of find_confirmed_client_by_name.
+
+. remove comment of NFSD4_CLIENT_COURTESY.
+
+. replace NFSD4_CLIENT_DESTROY_COURTESY with NFSD4_CLIENT_EXPIRED.
+
+. replace NFSD4_CLIENT_COURTESY_CLNT with NFSD4_CLIENT_RECONNECTED.
+
+v15 patch includes:
+
+. add helper locks_has_blockers_locked in fs.h to check for
+  lock blockers
+
+. rename nfs4_conflict_clients to nfs4_resolve_deny_conflicts_locked
+
+. update nfs4_upgrade_open() to handle courtesy clients.
+
+. add helper nfs4_check_and_expire_courtesy_client and
+  nfs4_is_courtesy_client_expired to deduplicate some code.
+
+. update nfs4_anylock_blocker:
+   . replace list_for_each_entry_safe with list_for_each_entry
+   . break nfs4_anylock_blocker into 2 smaller functions.
+
+. update nfs4_get_client_reaplist:
+   . remove unnecessary commets
+   . acquire cl_cs_lock before setting NFSD4_CLIENT_COURTESY flag
+
+. update client_info_show to show 'time since last renew: 00:00:38'
+  instead of 'seconds from last renew: 38'.
+
+v16 patch includes:
+
+. update client_info_show to display 'status' as
+  'confirmed/unconfirmed/courtesy'
+
+. replace helper locks_has_blockers_locked in fs.h in v15 with new
+  locks_owner_has_blockers call in fs/locks.c
+
+. update nfs4_lockowner_has_blockers to use locks_owner_has_blockers
+
+. move nfs4_check_and_expire_courtesy_client from 5/11 to 4/11
+
+. remove unnecessary check for NULL clp in find_in_sessionid_hashtb
+
+. fix typo in commit messages
+
+v17 patch includes:
+
+. replace flags used for courtesy client with enum courtesy_client_state
+
+. add state table in nfsd/state.h
+
+. make nfsd4_expire_courtesy_clnt, nfsd4_discard_courtesy_clnt and
+  nfsd4_courtesy_clnt_expired as static inline.
+
+. update nfsd_breaker_owns_lease to use dl->dl_stid.sc_client directly
+
+. fix kernel test robot warning when CONFIG_FILE_LOCKING not defined.
+
+v18 patch includes:
+
+. modify 0005-NFSD-Update-nfs4_get_vfs_file-to-handle-courtesy-cli.patch to:
+
+    . remove nfs4_check_access_deny_bmap, fold this functionality
+      into nfs4_resolve_deny_conflicts_locked by making use of
+      bmap_to_share_mode.
+
+    . move nfs4_resolve_deny_conflicts_locked into nfs4_file_get_access
+      and nfs4_file_check_deny. 
+
