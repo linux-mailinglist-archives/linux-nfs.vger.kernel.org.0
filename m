@@ -2,91 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EF04C4E6C55
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 03:04:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B1034E6C5E
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Mar 2022 03:10:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242448AbiCYCGZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Mar 2022 22:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42436 "EHLO
+        id S1357697AbiCYCL6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Mar 2022 22:11:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233751AbiCYCGY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 22:06:24 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBE446D3B3
-        for <linux-nfs@vger.kernel.org>; Thu, 24 Mar 2022 19:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1648173891; x=1679709891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=agHD+Paz4Jln46JJddZwhukY10qyx004YR+R0qs2Jlg=;
-  b=nNyqUKWHZfwXC79cWSrWv1CmWIPGhgQJw4V70taZfJX0DyCzS+gAHGyU
-   0Y3p6IwVMWvu586mwcXYqLU8KBNrropYPCXDB3RdsWDKWRbqAwHHiZBc7
-   ValXaw7JmCtfdGmf1npjGp0Ky76NDsu5ND1WukhBKzan0TslsfYSPmoxZ
-   r3PC8X0knblvOV+hT7gcinTNdYVIwuaAypvGvn94WDq2ijqEzYC/Yw+RW
-   YioFP5Kx5e5wN8XYg/wBMTfjHSNiOoN6mPYecXDfOy/xb4iq1SJYkR0If
-   gZTrc/+oC8UdagL6lk+sKEedIgYgn7pcaxAc7xom9csdDoyiuQxDZSREq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6200,9189,10296"; a="258727181"
-X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
-   d="scan'208";a="258727181"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2022 19:04:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.90,209,1643702400"; 
-   d="scan'208";a="718053151"
-Received: from lkp-server02.sh.intel.com (HELO 89b41b6ae01c) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 24 Mar 2022 19:04:33 -0700
-Received: from kbuild by 89b41b6ae01c with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1nXZJZ-000Lf7-1h; Fri, 25 Mar 2022 02:04:33 +0000
-Date:   Fri, 25 Mar 2022 10:03:36 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     trondmy@kernel.org, linux-nfs@vger.kernel.org
-Cc:     kbuild-all@lists.01.org
-Subject: Re: [PATCH 1/2] SUNRPC: Do not dereference non-socket transports in
- sysfs
-Message-ID: <202203250924.8HsqSPwP-lkp@intel.com>
-References: <20220324213345.5833-1-trondmy@kernel.org>
+        with ESMTP id S1357699AbiCYCLt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Mar 2022 22:11:49 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4746A6E2E;
+        Thu, 24 Mar 2022 19:06:42 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 65D7C1F38D;
+        Fri, 25 Mar 2022 02:06:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1648174001; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GxpivvuiDhi8Meku7aRkDAE9Hjn1RoD/lKyyatBC6fo=;
+        b=obmw/6322qvngpDQFN0rPsPxkFnxb6G3GDPd4Y8stBKBgAnLRzPUnssKBaaeaaY4YN0Ld8
+        /GLE9kV0GtPKOFbh1JcPGubkXmAICloR3EeJYoceHsJOgI6qyed/tbN/ptkOXLSYjYNH7d
+        7B3YUWMfgA4Xumllu+hptCqjdkUsElQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1648174001;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GxpivvuiDhi8Meku7aRkDAE9Hjn1RoD/lKyyatBC6fo=;
+        b=/uVC+exdBq+HN9CHeK1b2SpQB4QDXI0xJIp3USC1RfxXWuVF12YSe9zIbsTpqI/3Hu1AFT
+        gmNzW5XJJ0T0N5Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 38432132E9;
+        Fri, 25 Mar 2022 02:06:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id OB6sOK0jPWJ6eAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 25 Mar 2022 02:06:37 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220324213345.5833-1-trondmy@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Haowen Bai" <baihaowen@meizu.com>
+Cc:     trond.myklebust@hammerspace.com, anna@kernel.org,
+        chuck.lever@oracle.com, davem@davemloft.net, kuba@kernel.org,
+        pabeni@redhat.com, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Haowen Bai" <baihaowen@meizu.com>
+Subject: Re: [PATCH] SUNRPC: Increase size of servername string
+In-reply-to: <1648103566-15528-1-git-send-email-baihaowen@meizu.com>
+References: <1648103566-15528-1-git-send-email-baihaowen@meizu.com>
+Date:   Fri, 25 Mar 2022 13:06:34 +1100
+Message-id: <164817399413.6096.7103093569920914714@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Thu, 24 Mar 2022, Haowen Bai wrote:
+> This patch will fix the warning from smatch:
+>=20
+> net/sunrpc/clnt.c:562 rpc_create() error: snprintf() chops off
+> the last chars of 'sun->sun_path': 108 vs 48
+>=20
+> Signed-off-by: Haowen Bai <baihaowen@meizu.com>
+> ---
+>  net/sunrpc/clnt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index c83fe61..6e0209e 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -526,7 +526,7 @@ struct rpc_clnt *rpc_create(struct rpc_create_args *arg=
+s)
+>  		.servername =3D args->servername,
+>  		.bc_xprt =3D args->bc_xprt,
+>  	};
+> -	char servername[48];
+> +	char servername[108];
 
-I love your patch! Perhaps something to improve:
+It would be much nicer to use UNIX_PATH_MAX
 
-[auto build test WARNING on trondmy-nfs/linux-next]
-[also build test WARNING on v5.17 next-20220324]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/0day-ci/linux/commits/trondmy-kernel-org/SUNRPC-Do-not-dereference-non-socket-transports-in-sysfs/20220325-054144
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-config: x86_64-randconfig-c002 (https://download.01.org/0day-ci/archive/20220325/202203250924.8HsqSPwP-lkp@intel.com/config)
-compiler: gcc-9 (Ubuntu 9.4.0-1ubuntu1~20.04.1) 9.4.0
-
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+NeilBrown
 
 
-cocci warnings: (new ones prefixed by >>)
->> net/sunrpc/sysfs.c:123:2-3: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+>  	struct rpc_clnt *clnt;
+>  	int i;
+> =20
+> --=20
+> 2.7.4
+>=20
+>=20
