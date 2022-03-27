@@ -2,146 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B5154E7DB8
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Mar 2022 01:23:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8ECB14E86CB
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Mar 2022 10:03:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232125AbiCYUB4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Mar 2022 16:01:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56402 "EHLO
+        id S229689AbiC0IEV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 27 Mar 2022 04:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231892AbiCYUBn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Mar 2022 16:01:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C623B24A765
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 12:52:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F3CA61BF8
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 18:02:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 802B5C34100
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Mar 2022 18:02:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648231328;
-        bh=wsVaQ6U8G7kdvaF7wHDkqDE5b0eb1ZOqOyqtvCNtpgI=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=i1/tS+HSyaMQ3iqq4UXga+zRsIHLxPqWh15biVft7z8h8jhxhzflekjUmMVoEoPTw
-         K16lCHBjchm3cCe9F88i4KU9jR0RN+hO5VE+28jFBr9Xt8tmzJQUiAGW5vXFIo1LU/
-         winbaneRPrOhSuzQtvMpvaV026/UtLetjykjATD6uRFhtyCLQr4aGFK2jNrvGaqEaL
-         lmwyLDGhxdVOlFekGRpq9P2Inxhw5bGduw/JvbT6/qFYqYm7WJkqKvgArl/sOiMwZZ
-         fEKYLtgpHgecSQcuVpZCxZZw74XgZEIZ11FuwQ99oSo7ZpOggctyf2gqOzxjkGu4wq
-         fH91GULeQq5XA==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 2/2] SUNRPC: Don't return error values in sysfs read of closed files
-Date:   Fri, 25 Mar 2022 13:55:21 -0400
-Message-Id: <20220325175521.561344-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220325175521.561344-1-trondmy@kernel.org>
-References: <20220325175521.561344-1-trondmy@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229636AbiC0IEV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Mar 2022 04:04:21 -0400
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A401D43AC7;
+        Sun, 27 Mar 2022 01:02:39 -0700 (PDT)
+Received: by mail-pf1-x430.google.com with SMTP id f3so8723085pfe.2;
+        Sun, 27 Mar 2022 01:02:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id;
+        bh=6WEcIiDLKxrIOj61KNbQv+CB44nK63wxSMiAxjt7pBc=;
+        b=j20HQM2NdRCFaPujnXUn9LlRirzydADGi+yfn8XMf826iiWVvT8KRXsx/KsUnpTdQh
+         e/oNsy+o00PBQWzDLRcPBmQ6h1X3TY3hgddH8q17c207+CiGOJZaXhBIq2QE4lreL1Vr
+         FpAIpq2V2QJ1wRqsSgBeN8OHzPlJErp4W+tWe24ecsIs1/AqPtkXZ0QJR+1UGVmUkkcG
+         m82t5HFIAZFkavuA6d4OZy+AKzi3JQ2qofj065KQYZzrmhM1miV0lKo3GEt+2/NDMoYZ
+         OOBOaw5d0/uFHCsA/VXz/zPF61Csaaw+PnkFJakyCrgBdSDLPySujfQaD34MSDjZMsat
+         igVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6WEcIiDLKxrIOj61KNbQv+CB44nK63wxSMiAxjt7pBc=;
+        b=Dc1Xo7bXMK8xAtRjbJA+USVFlfCqp+oEmMsIkNaz6UHaSxp4YTksyALG88WUSOrAWy
+         SAzREpqaP4T6O13xdv+RPXfVRZ11Pi5tC7zpR39RKuMWJJ3mhUD9UDlo9d5SWWewrjWw
+         Fy9CrMJtLq0C9mFOJUQWsN+xxMDpGqZNUCQ7aJMiR/sK1JFcS8HkUqtp7yB5AEVhqgS8
+         RaHjl9zeF9b30t8hYW1hAIRGTD05B4yYt8I21UiVX9qw9mwx6ugqI6qvtmPVSqIMrCuv
+         /uzdUXB0xdnZxRRksCa2EOudSg/lm4o37oSQUHFZqi7S9+p8voC+WZ1F1q0BD1uZrMto
+         rdBA==
+X-Gm-Message-State: AOAM530EB8xDbb/BSJwfkjNbWxHI8TomqJC9P1nm9KXzfY5tN1g6vFD/
+        0KlxVs+crE6OvAxGR/G8pRo=
+X-Google-Smtp-Source: ABdhPJwfIa9xLZ2dxrQyeVXx3/Z422jD2+YfbCP5OfD6iDlNgfxJHt54wRF97Ss+1jd2FYYrvG8lWw==
+X-Received: by 2002:a63:fd01:0:b0:381:31b7:8bc5 with SMTP id d1-20020a63fd01000000b0038131b78bc5mr5928177pgh.206.1648368158572;
+        Sun, 27 Mar 2022 01:02:38 -0700 (PDT)
+Received: from localhost ([115.220.243.108])
+        by smtp.gmail.com with ESMTPSA id i6-20020a633c46000000b003817d623f72sm9744595pgn.24.2022.03.27.01.02.37
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 27 Mar 2022 01:02:38 -0700 (PDT)
+From:   Xiaomeng Tong <xiam0nd.tong@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     bhalevy@panasas.com, bharrosh@panasas.com,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xiaomeng Tong <xiam0nd.tong@gmail.com>, stable@vger.kernel.org
+Subject: [PATCH] nfs: callback_proc: fix an incorrect NULL check on list iterator
+Date:   Sun, 27 Mar 2022 16:02:30 +0800
+Message-Id: <20220327080230.12134-1-xiam0nd.tong@gmail.com>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+The bug is here:
+	if (!server ||
+	server->pnfs_curr_ld->id != dev->cbd_layout_type) {
 
-Instead of returning an error value, which ends up being the return
-value for the read() system call, it is more elegant to simply return
-the error as a string value.
+The list iterator value 'server' will *always* be set and non-NULL
+by list_for_each_entry_rcu, so it is incorrect to assume that the
+iterator value will be NULL if the list is empty or no element is
+found (In fact, it will be a bogus pointer to an invalid struct
+object containing the HEAD, which is used for above check at next
+outer loop). Otherwise it may bypass the check in theory (iif
+server->pnfs_curr_ld->id == dev->cbd_layout_type, 'server' now is
+a bogus pointer) and lead to invalid memory access passing the check.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+To fix the bug, use a new variable 'iter' as the list iterator,
+while use the original variable 'server' as a dedicated pointer to
+point to the found element.
+
+Cc: stable@vger.kernel.org
+Fixes: 1be5683b03a76 ("pnfs: CB_NOTIFY_DEVICEID")
+Signed-off-by: Xiaomeng Tong <xiam0nd.tong@gmail.com>
 ---
-v2: Rewrite to use transport switch
-v3: remove '\0' from the pseudo-file
+ fs/nfs/callback_proc.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
- net/sunrpc/sysfs.c | 27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
-index 9d8a7d9f3e41..a3a2f8aeb80e 100644
---- a/net/sunrpc/sysfs.c
-+++ b/net/sunrpc/sysfs.c
-@@ -93,10 +93,13 @@ static ssize_t rpc_sysfs_xprt_dstaddr_show(struct kobject *kobj,
- 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
- 	ssize_t ret;
+diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+index c343666d9a42..84779785dc8d 100644
+--- a/fs/nfs/callback_proc.c
++++ b/fs/nfs/callback_proc.c
+@@ -361,7 +361,7 @@ __be32 nfs4_callback_devicenotify(void *argp, void *resp,
+ 	uint32_t i;
+ 	__be32 res = 0;
+ 	struct nfs_client *clp = cps->clp;
+-	struct nfs_server *server = NULL;
++	struct nfs_server *server = NULL, *iter;
  
--	if (!xprt)
--		return 0;
-+	if (!xprt) {
-+		ret = sprintf(buf, "<closed>\n");
-+		goto out;
-+	}
- 	ret = sprintf(buf, "%s\n", xprt->address_strings[RPC_DISPLAY_ADDR]);
- 	xprt_put(xprt);
-+out:
- 	return ret;
- }
- 
-@@ -106,10 +109,10 @@ static ssize_t rpc_sysfs_xprt_srcaddr_show(struct kobject *kobj,
- {
- 	struct rpc_xprt *xprt = rpc_sysfs_xprt_kobj_get_xprt(kobj);
- 	size_t buflen = PAGE_SIZE;
--	ssize_t ret = -ENOTSOCK;
-+	ssize_t ret;
- 
- 	if (!xprt || !xprt_connected(xprt)) {
--		ret = -ENOTCONN;
-+		ret = sprintf(buf, "<closed>\n");
- 	} else if (xprt->ops->get_srcaddr) {
- 		ret = xprt->ops->get_srcaddr(xprt, buf, buflen);
- 		if (ret > 0) {
-@@ -118,8 +121,10 @@ static ssize_t rpc_sysfs_xprt_srcaddr_show(struct kobject *kobj,
- 				ret++;
- 				buf[ret] = '\0';
- 			}
--		}
--	}
-+		} else
-+			ret = sprintf(buf, "<closed>\n");
-+	} else
-+		ret = sprintf(buf, "<not a socket>\n");
- 	xprt_put(xprt);
- 	return ret;
- }
-@@ -133,8 +138,8 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 	ssize_t ret;
- 
- 	if (!xprt || !xprt_connected(xprt)) {
--		xprt_put(xprt);
--		return -ENOTCONN;
-+		ret = sprintf(buf, "<closed>\n");
-+		goto out;
- 	}
- 
- 	if (xprt->ops->get_srcport)
-@@ -152,6 +157,7 @@ static ssize_t rpc_sysfs_xprt_info_show(struct kobject *kobj,
- 		       xprt->backlog.qlen, xprt->main, srcport,
- 		       atomic_long_read(&xprt->queuelen),
- 		       xprt->address_strings[RPC_DISPLAY_PORT]);
-+out:
- 	xprt_put(xprt);
- 	return ret;
- }
-@@ -165,10 +171,7 @@ static ssize_t rpc_sysfs_xprt_state_show(struct kobject *kobj,
- 	int locked, connected, connecting, close_wait, bound, binding,
- 	    closing, congested, cwnd_wait, write_space, offline, remove;
- 
--	if (!xprt)
--		return 0;
--
--	if (!xprt->state) {
-+	if (!(xprt && xprt->state)) {
- 		ret = sprintf(buf, "state=CLOSED\n");
- 	} else {
- 		locked = test_bit(XPRT_LOCKED, &xprt->state);
+ 	if (!clp) {
+ 		res = cpu_to_be32(NFS4ERR_OP_NOT_IN_SESSION);
+@@ -374,10 +374,11 @@ __be32 nfs4_callback_devicenotify(void *argp, void *resp,
+ 		if (!server ||
+ 		    server->pnfs_curr_ld->id != dev->cbd_layout_type) {
+ 			rcu_read_lock();
+-			list_for_each_entry_rcu(server, &clp->cl_superblocks, client_link)
+-				if (server->pnfs_curr_ld &&
+-				    server->pnfs_curr_ld->id == dev->cbd_layout_type) {
++			list_for_each_entry_rcu(iter, &clp->cl_superblocks, client_link)
++				if (iter->pnfs_curr_ld &&
++				    iter->pnfs_curr_ld->id == dev->cbd_layout_type) {
+ 					rcu_read_unlock();
++					server = iter;
+ 					goto found;
+ 				}
+ 			rcu_read_unlock();
 -- 
-2.35.1
+2.17.1
 
