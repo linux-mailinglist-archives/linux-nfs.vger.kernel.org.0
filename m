@@ -2,46 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 718A84EA0AF
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Mar 2022 21:51:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E034EA063
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Mar 2022 21:51:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1343893AbiC1Trj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 28 Mar 2022 15:47:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
+        id S1343998AbiC1Tu1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 28 Mar 2022 15:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343838AbiC1Tqj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Mar 2022 15:46:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB5A68FAE;
-        Mon, 28 Mar 2022 12:43:13 -0700 (PDT)
+        with ESMTP id S1344007AbiC1TsE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 28 Mar 2022 15:48:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A38186973F;
+        Mon, 28 Mar 2022 12:43:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F39A6128E;
-        Mon, 28 Mar 2022 19:43:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13602C340F0;
-        Mon, 28 Mar 2022 19:43:11 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4D8AAB81205;
+        Mon, 28 Mar 2022 19:43:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A0C4C36AE5;
+        Mon, 28 Mar 2022 19:43:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1648496592;
-        bh=WUIYG6thePESUcULHT5I4qjXkkRS99F3jg0XOg3HOro=;
+        s=k20201202; t=1648496611;
+        bh=RFxO9xF6t5YjxDSa/9vY21MmN/AHRRJpq/CrMwSlBaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PdQrv8Lt5ZMjsBWq6CzQFZ5fWuLw+N5Pr6SWczSpro0NztYsJoEvgxrKhrekndwCp
-         L74UYOj8s0gTk2ECt+/XMqkxDgPp/2OHhVqIY7TC3m589JsIoS2YQIqme+stR0wGLI
-         q/PB5gcjDj5wQVU2T6mxeouvDf5roWJ8bT2Fb2GxFzGAkmpXT+B/biFnZxiW6vGn3J
-         FAe2NtgNFOz0d2veiwzd36pKMJYdkXh8U9LKUseCh8Rvrp8wnVYq7fWlvZODq11OCQ
-         nD8Xl2CIOPdrEvCseiruf0c6XcH6ljzulgYK9ZV3MtyLkW54ldubsWF0MT4w2qR3ax
-         sASMPBe71zEjw==
+        b=vImC58N/GvB2dt8w7eKKURuo1TrAp9pAu5w6nRbTz8LcsEkX3GAfHlglPR31ni5ug
+         1+zcvgEPdx8lpEY0qcr7Nf8YqO63kfzZ1bB/Z2fCo5tXcrgyONAoB8uRzUCkNNeUFy
+         PsJDcB8jIjvLWfUvW8o/IjHikY79emLlZx6F3zxOGoglEmYr9PC/CZpA9Hq8BFiNfu
+         w/vYdr056MPYKwZqs+2QkFZKFaDEzOMvVNJJpg5txM3zQ0TZ+I7mteoZNYK3ri3lW1
+         ii2LnBYL4uXUaFMNjc69xrT5sNqmzBF2eW1XBpPGm1w867MRhU+dP3Hffr1jexrU0O
+         2vcInZ2Etha5A==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Chuck Lever <chuck.lever@oracle.com>, Dai Ngo <dai.ngo@oracle.com>,
         Sasha Levin <sashal@kernel.org>, bfields@fieldses.org,
         jlayton@poochiereds.net, linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 09/16] NFSD: Fix nfsd_breaker_owns_lease() return values
-Date:   Mon, 28 Mar 2022 15:42:52 -0400
-Message-Id: <20220328194300.1586178-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 6/8] NFSD: Fix nfsd_breaker_owns_lease() return values
+Date:   Mon, 28 Mar 2022 15:43:20 -0400
+Message-Id: <20220328194322.1586401-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220328194300.1586178-1-sashal@kernel.org>
-References: <20220328194300.1586178-1-sashal@kernel.org>
+In-Reply-To: <20220328194322.1586401-1-sashal@kernel.org>
+References: <20220328194322.1586401-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -73,10 +73,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index db4a47a280dc..181bc3d9f566 100644
+index d01d7929753e..84dd68091f42 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -4693,6 +4693,14 @@ nfsd_break_deleg_cb(struct file_lock *fl)
+@@ -4607,6 +4607,14 @@ nfsd_break_deleg_cb(struct file_lock *fl)
  	return ret;
  }
  
@@ -91,7 +91,7 @@ index db4a47a280dc..181bc3d9f566 100644
  static bool nfsd_breaker_owns_lease(struct file_lock *fl)
  {
  	struct nfs4_delegation *dl = fl->fl_owner;
-@@ -4700,11 +4708,11 @@ static bool nfsd_breaker_owns_lease(struct file_lock *fl)
+@@ -4614,11 +4622,11 @@ static bool nfsd_breaker_owns_lease(struct file_lock *fl)
  	struct nfs4_client *clp;
  
  	if (!i_am_nfsd())
