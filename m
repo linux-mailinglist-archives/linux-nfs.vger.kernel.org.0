@@ -2,141 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE544E8B56
-	for <lists+linux-nfs@lfdr.de>; Mon, 28 Mar 2022 02:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F40174E8BB3
+	for <lists+linux-nfs@lfdr.de>; Mon, 28 Mar 2022 03:43:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233782AbiC1A6g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 27 Mar 2022 20:58:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39372 "EHLO
+        id S237331AbiC1BpI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 27 Mar 2022 21:45:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233105AbiC1A6f (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Mar 2022 20:58:35 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270F01E3DB;
-        Sun, 27 Mar 2022 17:56:55 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 3B5C6210DC;
-        Mon, 28 Mar 2022 00:56:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648429014; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oey14VnM0lqn7DuaY04BOcOUPaGD3+e90gcYRjgmGd4=;
-        b=2Cp5uTfL8j0hN/FhrpXLFFgATThyr7pue7+bPKJLMywuTEACXT0BIpmCz/aS2vnMh1IzAE
-        O2fK8MEqfMBVHWG2y2yOlzZxA0qIQdeYGpOYXGfcqFPe6O80IbS+LyRBRUy01QIgbrTg1t
-        T05p+2IdgnAwAYthugG4tLWNnq7oELA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648429014;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=oey14VnM0lqn7DuaY04BOcOUPaGD3+e90gcYRjgmGd4=;
-        b=mBBHQUvkEWVrCVr6/i5W0bEkotsmUXIRk0dcmiWsBqIsbsXt6r0crFHehThwIfj3DYBlGY
-        ht5FL6lljkj4xsBA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C9C5513A72;
-        Mon, 28 Mar 2022 00:56:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id abkyIdQHQWJKKAAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 28 Mar 2022 00:56:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] VFS: filename_create(): fix incorrect intent.
-Date:   Mon, 28 Mar 2022 11:56:48 +1100
-Message-id: <164842900895.6096.10753358086437966517@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230002AbiC1BpH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Mar 2022 21:45:07 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2498149699;
+        Sun, 27 Mar 2022 18:43:27 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id c23so13562155plo.0;
+        Sun, 27 Mar 2022 18:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=9RNR9zr52nHugIxJEYN2sk3uYFpuqaSTDOBoX9HzNO4=;
+        b=PFpO6o3zLKChAGfFLiBR0mChWVvul+X+MXHqw+lrP3hBGqUdcMiapDtQTy3RLzbIPb
+         wxv+pTm73Q/VAUQmFJC44bRpW35cZigyODEmB1j6Dj/CvkDEyFwdq/Yz5EncRrySVy89
+         oGHQz5y/bN7eUcxmMDvGy6HfQxiasQB0UecRQQMqTbnQvZ1Bsq07cKresna+l+ECaCnj
+         AygqzIZ5G2wxm4T+AGvFh8vAt3lJ3oWhDmt8fixqV2PJBVegjlQB9AlJ5QIyrLtEJsPP
+         Zfx7570QAkY2k2A1E9wl+L5BnhxKL2rPis+hDcZcPlPPnGO5rOh4BwZClUQjr5lazuix
+         U1QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=9RNR9zr52nHugIxJEYN2sk3uYFpuqaSTDOBoX9HzNO4=;
+        b=fB/L/Z91/E1Vf22Hxd1/CTY9/9h2Ar5D/z6KIgz9IWgYqF4cVBOowVBIMKJOp+V/cC
+         sBd/eEmyWoCf5WEzt3A63UYA0/kTGiDyrHlh9/uu9dD1p1NTAt+W7cbJdwdxQ3vlgXLX
+         RqEL+DWustCvzQdaRX8rk0zK5/7XZ9qLXGu2FbPhHCgqlsc62A9kYJw6aLzon0P3Nbh+
+         a/N5bfTYHE79tSR3i58dBE5wDHVtPoOhEBLHNjOd39jRz4LSrEHC6XqyAeQRg/hyuNIA
+         5R7udmdg//C0nbvCHM6PyKfAy9kTI9Chl79019c8iPXraKs+eQsTBJnl46Iq3KwMOnNt
+         /t9Q==
+X-Gm-Message-State: AOAM530l57eQmuwC7AlIWrUr5p/CQEGxJ3c8fKrrBslB61nlwsVhhbB7
+        AgeRk7mZ2y1qUbDQmHXn92Y=
+X-Google-Smtp-Source: ABdhPJywb7Gs9aQi718r3lu2LJAk8/u2Ygdz3SwAdrfgFRrvnbkPk1sXVYBq8NHxMKoTeRWSrFVldg==
+X-Received: by 2002:a17:902:b10c:b0:154:a3b5:b33a with SMTP id q12-20020a170902b10c00b00154a3b5b33amr23409743plr.3.1648431806312;
+        Sun, 27 Mar 2022 18:43:26 -0700 (PDT)
+Received: from ubuntu.huawei.com ([119.3.119.18])
+        by smtp.googlemail.com with ESMTPSA id v24-20020a634818000000b0036407db4728sm10939289pga.26.2022.03.27.18.43.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 27 Mar 2022 18:43:25 -0700 (PDT)
+From:   Xiaomeng Tong <xiam0nd.tong@gmail.com>
+To:     trondmy@hammerspace.com
+Cc:     anna@kernel.org, bhalevy@panasas.com, bharrosh@panasas.com,
+        linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        stable@vger.kernel.org, xiam0nd.tong@gmail.com
+Subject: Re: [PATCH] nfs: callback_proc: fix an incorrect NULL check on list iterator
+Date:   Mon, 28 Mar 2022 09:43:14 +0800
+Message-Id: <20220328014314.18987-1-xiam0nd.tong@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <436766b6fb5f3ec513629d4fa0888b77c65cfa16.camel@hammerspace.com>
+References: <436766b6fb5f3ec513629d4fa0888b77c65cfa16.camel@hammerspace.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Sun, 27 Mar 2022 15:20:42 +0000, Trond Myklebust wrote:
+> On Sun, 2022-03-27 at 16:02 +0800, Xiaomeng Tong wrote:
+> > The bug is here:
+> >         if (!server ||
+> >         server->pnfs_curr_ld->id != dev->cbd_layout_type) {
+> > 
+> > The list iterator value 'server' will *always* be set and non-NULL
+> > by list_for_each_entry_rcu, so it is incorrect to assume that the
+> > iterator value will be NULL if the list is empty or no element is
+> > found (In fact, it will be a bogus pointer to an invalid struct
+> > object containing the HEAD, which is used for above check at next
+> > outer loop). Otherwise it may bypass the check in theory (iif
+> > server->pnfs_curr_ld->id == dev->cbd_layout_type, 'server' now is
+> > a bogus pointer) and lead to invalid memory access passing the check.
+> > 
+> > To fix the bug, use a new variable 'iter' as the list iterator,
+> > while use the original variable 'server' as a dedicated pointer to
+> > point to the found element.
+> > 
+> > Cc: stable@vger.kernel.org
+> > Fixes: 1be5683b03a76 ("pnfs: CB_NOTIFY_DEVICEID")
+> > Signed-off-by: Xiaomeng Tong <xiam0nd.tong@gmail.com>
+> > ---
+> >  fs/nfs/callback_proc.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/fs/nfs/callback_proc.c b/fs/nfs/callback_proc.c
+> > index c343666d9a42..84779785dc8d 100644
+> > --- a/fs/nfs/callback_proc.c
+> > +++ b/fs/nfs/callback_proc.c
+> > @@ -361,7 +361,7 @@ __be32 nfs4_callback_devicenotify(void *argp,
+> > void *resp,
+> >         uint32_t i;
+> >         __be32 res = 0;
+> >         struct nfs_client *clp = cps->clp;
+> > -       struct nfs_server *server = NULL;
+> > +       struct nfs_server *server = NULL, *iter;
+> >  
+> >         if (!clp) {
+> >                 res = cpu_to_be32(NFS4ERR_OP_NOT_IN_SESSION);
+> > @@ -374,10 +374,11 @@ __be32 nfs4_callback_devicenotify(void *argp,
+> > void *resp,
+> >                 if (!server ||
+> >                     server->pnfs_curr_ld->id != dev->cbd_layout_type)
+> > {
+> >                         rcu_read_lock();
+> > -                       list_for_each_entry_rcu(server, &clp-
+> > >cl_superblocks, client_link)
+> > -                               if (server->pnfs_curr_ld &&
+> > -                                   server->pnfs_curr_ld->id == dev-
+> > >cbd_layout_type) {
+> > +                       list_for_each_entry_rcu(iter, &clp-
+> > >cl_superblocks, client_link)
+> > +                               if (iter->pnfs_curr_ld &&
+> > +                                   iter->pnfs_curr_ld->id == dev-
+> > >cbd_layout_type) {
+> >                                         rcu_read_unlock();
+> > +                                       server = iter;
+> 
+> Hmm... We're not holding any locks on the super block for 'iter' here,
+> so nothing is preventing it from going away while we're.
+> 
 
-When asked to create a path ending '/', but which is not to be a
-directory (LOOKUP_DIRECTORY not set), filename_create() will never try
-to create the file.  If it doesn't exist, -ENOENT is reported.
+ok, i am not a 'rcu lock' expert, i will make it hold the rcu_read_lock()
+if necessary.
 
-However, it still passes LOOKUP_CREATE|LOOKUP_EXCL to the filesystems
-->lookup() function, even though there is no intent to create.  This is
-misleading and can cause incorrect behaviour.
+> Given that we really only want a pointer to the struct
+> pnfs_layoutdriver_type anyway, why not just convert the code to save a
+> pointer to that (and do it while holding the rcu_read_lock())?
+> 
 
-If you try
-   ln -s foo /path/dir/
+Maybe it's not that simple. If you only save a pointer to that and still
+use 'server' as the list iterator of list_for_each_entry_rcu, there could
+be problem.
 
-where 'dir' is a directory on an NFS filesystem which is not currently
-known in the dcache, this will fail with ENOENT.
-As the name is not in the dcache, nfs_lookup gets called with
-LOOKUP_CREATE|LOOKUP_EXCL and so it returns NULL without performing any
-lookup, with the expectation that as subsequent call to create the
-target will be made, and the lookup can be combined with the creation.
-In the case with a trailing '/' and no LOOKUP_DIRECTORY, that call is never
-made.  Instead filename_create() sees that the dentry is not (yet)
-positive and returns -ENOENT - even though the directory actually
-exists.
+I.e., if no element found in list_for_each_entry_rcu in the first outer
+'for' loop, and now 'server' is a bogus pointer to an invalid struct, and
+continue to go into the second outer 'for' loop, and the check below will
+lead to invalid memory access (server->pnfs_curr_ld->id), even can potentialy
+be bypassed with crafted data to make the condition false and mistakely run
+nfs4_delete_deviceid(server->pnfs_curr_ld, clp, &dev->cbd_dev_id); with bogus
+'server'.
 
-So only set LOOKUP_CREATE|LOOKUP_EXCL if there really is an intent
-to create, and use the absence of these flags to decide if -ENOENT
-should be returned.
+if (!server ||
+    server->pnfs_curr_ld->id != dev->cbd_layout_type) {
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/namei.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+> The struct pnfs_layoutdriver is always expected to be a statically
+> allocated structure, so it won't go away as long as the pNFS driver
+> module remains loaded.
+>
 
-diff --git a/fs/namei.c b/fs/namei.c
-index 3f1829b3ab5b..3ffb42e56a8e 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3676,7 +3676,6 @@ static struct dentry *filename_create(int dfd, struct f=
-ilename *name,
- 	int type;
- 	int err2;
- 	int error;
--	bool is_dir =3D (lookup_flags & LOOKUP_DIRECTORY);
-=20
- 	/*
- 	 * Note that only LOOKUP_REVAL and LOOKUP_DIRECTORY matter here. Any
-@@ -3698,9 +3697,11 @@ static struct dentry *filename_create(int dfd, struct =
-filename *name,
- 	/* don't fail immediately if it's r/o, at least try to report other errors =
-*/
- 	err2 =3D mnt_want_write(path->mnt);
- 	/*
--	 * Do the final lookup.
-+	 * Do the final lookup.  Request 'create' only if there is no trailing
-+	 * '/', or if directory is requested.
- 	 */
--	lookup_flags |=3D LOOKUP_CREATE | LOOKUP_EXCL;
-+	if (!last.name[last.len] || (lookup_flags & LOOKUP_DIRECTORY))
-+		lookup_flags |=3D LOOKUP_CREATE | LOOKUP_EXCL;
- 	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
- 	dentry =3D __lookup_hash(&last, path->dentry, lookup_flags);
- 	if (IS_ERR(dentry))
-@@ -3716,7 +3717,7 @@ static struct dentry *filename_create(int dfd, struct f=
-ilename *name,
- 	 * all is fine. Let's be bastards - you had / on the end, you've
- 	 * been asking for (non-existent) directory. -ENOENT for you.
- 	 */
--	if (unlikely(!is_dir && last.name[last.len])) {
-+	if (!likely(lookup_flags & LOOKUP_CREATE)) {
- 		error =3D -ENOENT;
- 		goto fail;
- 	}
---=20
-2.35.1
-
+--
+Xiaomeng Tong 
