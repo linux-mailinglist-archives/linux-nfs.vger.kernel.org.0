@@ -2,91 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3EB24EAF43
-	for <lists+linux-nfs@lfdr.de>; Tue, 29 Mar 2022 16:32:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C4774EAF6C
+	for <lists+linux-nfs@lfdr.de>; Tue, 29 Mar 2022 16:41:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234796AbiC2OeA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Mar 2022 10:34:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36978 "EHLO
+        id S233608AbiC2Om5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Mar 2022 10:42:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233669AbiC2OeA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Mar 2022 10:34:00 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F7E1C907;
-        Tue, 29 Mar 2022 07:32:16 -0700 (PDT)
-Received: from kwepemi100008.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4KSX7x5ghhzcbPQ;
-        Tue, 29 Mar 2022 22:31:57 +0800 (CST)
-Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 29 Mar 2022 22:32:14 +0800
-Received: from [10.174.176.52] (10.174.176.52) by
- kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Tue, 29 Mar 2022 22:32:13 +0800
-Message-ID: <68b65889-3b2c-fb72-a0a8-d0afc15a03e0@huawei.com>
-Date:   Tue, 29 Mar 2022 22:32:12 +0800
+        with ESMTP id S238067AbiC2Omx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Mar 2022 10:42:53 -0400
+Received: from smtpout-2.cvg.de (smtpout-2.cvg.de [IPv6:2003:49:a034:1067:5::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF23021C044
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Mar 2022 07:41:06 -0700 (PDT)
+Received: from mail-mta-2.intern.sigma-chemnitz.de (mail-mta-2.intern.sigma-chemnitz.de [192.168.12.70])
+        by mail-out-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22TEf39Y124658
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Tue, 29 Mar 2022 16:41:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sigma-chemnitz.de;
+        s=v2012061000; t=1648564863;
+        bh=MxgqZ3RBmRu2b3ArrTpt1l8xf7CJk1YTDBLdPHl5+b4=; l=479;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To;
+        b=P/iIJUtwBr86LD/sM4b557H9r5ilca3xHtcw6Q47EYfdWhQZSlatYmSCrjOYiJ5GC
+         wzHrkr2kYujI7NI+OxbIVx74Rb93+/y13PXoEaO5INULadhA4G0gldKNvAOPFkW3KQ
+         nInEXvgXU6LtSijDMihn2jlwCHVABKAezkwRhBRM=
+Received: from reddoxx.intern.sigma-chemnitz.de (reddoxx.sigma.local [192.168.16.32])
+        by mail-mta-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTP id 22TEf1UA165008
+        for <linux-nfs@vger.kernel.org> from enrico.scholz@sigma-chemnitz.de; Tue, 29 Mar 2022 16:41:02 +0200
+Received: from mail-msa-2.intern.sigma-chemnitz.de ( [192.168.12.72]) by reddoxx.intern.sigma-chemnitz.de
+        (Reddoxx engine) with SMTP id 1420D173BAE; Tue, 29 Mar 2022 16:41:01 +0200
+Received: from ensc-virt.intern.sigma-chemnitz.de (ensc-virt.intern.sigma-chemnitz.de [192.168.3.24])
+        by mail-msa-2.intern.sigma-chemnitz.de (8.16.1/8.16.1) with ESMTPS id 22TEf00J121784
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 29 Mar 2022 16:41:01 +0200
+Received: from ensc by ensc-virt.intern.sigma-chemnitz.de with local (Exim 4.94.2)
+        (envelope-from <ensc@sigma-chemnitz.de>)
+        id 1nZD1o-000qJr-Bp; Tue, 29 Mar 2022 16:41:00 +0200
+From:   Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: Random NFS client lockups
+References: <lyr172gl1t.fsf@ensc-virt.intern.sigma-chemnitz.de>
+        <lysfrhr51i.fsf@ensc-virt.intern.sigma-chemnitz.de>
+        <fd4d017808a5ff9492fc6dfce8506f64e600fb35.camel@hammerspace.com>
+        <lyilsd8sfi.fsf@ensc-virt.intern.sigma-chemnitz.de>
+        <800eb7d5daf7f59548645b1a310d2ba7993ba8af.camel@hammerspace.com>
+        <lybky45n7h.fsf@ensc-virt.intern.sigma-chemnitz.de>
+Date:   Tue, 29 Mar 2022 16:41:00 +0200
+In-Reply-To: <lybky45n7h.fsf@ensc-virt.intern.sigma-chemnitz.de> (Enrico
+        Scholz's message of "Thu, 17 Mar 2022 21:38:26 +0100")
+Message-ID: <lyzgl8rfcz.fsf@ensc-virt.intern.sigma-chemnitz.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
-        <bjschuma@netapp.com>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liuyongqiang13@huawei.com>, <yi.zhang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>, <tao.lyu@epfl.ch>,
-        ChenXiaoSong <chenxiaosong2@huawei.com>
-References: <20220329113208.2466000-1-chenxiaosong2@huawei.com>
-From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
-In-Reply-To: <20220329113208.2466000-1-chenxiaosong2@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.52]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600015.china.huawei.com (7.193.23.52)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+Sender: Enrico Scholz <enrico.scholz@sigma-chemnitz.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-在 2022/3/29 19:32, ChenXiaoSong 写道:
-> This series fixes following bugs:
-> 
-> When lseek() a file secondly opened with O_ACCMODE|O_DIRECT flags,
-> nfs4_valid_open_stateid() will dereference NULL nfs4_state.
-> 
-> open() with O_ACCMODE|O_DIRECT flags secondly will fail.
-> 
-> ChenXiaoSong (2):
->    Revert "NFSv4: Handle the special Linux file open access mode"
->    NFSv4: fix open failure with O_ACCMODE flag
-> 
->   fs/nfs/dir.c      | 10 ----------
->   fs/nfs/inode.c    |  1 -
->   fs/nfs/internal.h | 10 ++++++++++
->   fs/nfs/nfs4file.c |  6 ++++--
->   4 files changed, 14 insertions(+), 13 deletions(-)
-> 
+Enrico Scholz <enrico.scholz@sigma-chemnitz.de> writes:
 
-I wonder if these bugs related to 
-[CVE-2022-24448](https://nvd.nist.gov/vuln/detail/CVE-2022-24448) ?
+>> Can you please try the attached patch and see if it helps?
+>
+> Thanks; I applied the patch and it runs without problems so far.  It
+> fixes the connect-close race very likely.  I hope, this was the reason
+> for the lockups but it is too early to confirm as they usually take 1-2
+> days before they occur.
 
-[Question about 
-CVE-2022-24448](https://lore.kernel.org/all/1bb42908-8f58-bf56-c2da-42739ee48d16@huawei.com/T/)
+Client runs now for >10 days without seeing the lockups or other
+regressions.
 
-Is there POC of patch ac795161c936 ("NFSv4: Handle case where the lookup 
-of a directory fails") ?
 
-CVE-2022-24448 Description:
-An issue was discovered in fs/nfs/dir.c in the Linux kernel before 
-5.16.5. If an application sets the O_DIRECTORY flag, and tries to open a 
-regular file, nfs_atomic_open() performs a regular lookup. If a regular 
-file is found, ENOTDIR should occur, but the server instead returns 
-uninitialized data in the file descriptor.
+Thanks again
+Enrico
