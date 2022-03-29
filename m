@@ -2,61 +2,60 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5D8A4EB731
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Mar 2022 01:52:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDA854EB738
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Mar 2022 01:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241231AbiC2Xy2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 29 Mar 2022 19:54:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47292 "EHLO
+        id S234968AbiC2Xzr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 29 Mar 2022 19:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241187AbiC2Xxq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Mar 2022 19:53:46 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 296C3227C74;
-        Tue, 29 Mar 2022 16:51:56 -0700 (PDT)
+        with ESMTP id S241295AbiC2XzU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 29 Mar 2022 19:55:20 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9C0F2261D2;
+        Tue, 29 Mar 2022 16:52:52 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id BC4A31F869;
-        Tue, 29 Mar 2022 23:51:54 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 70BF9218F9;
+        Tue, 29 Mar 2022 23:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648597914; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1648597971; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oD2sx4C2K4gKivVvzHCUML/j+d0W7oIOs5nPocXITZk=;
-        b=sZGZgC++vx+vHRjb4grpV6e/1XjJQrgYuKe3NcS/RD633GfUk/tuUMZ4LbRruFngnbe832
-        bzW2+SUlO98rLTK3IkDIF77AfBqTdZjfv276HiP5o+mUuxc0GKqJIOgke8OcUBe5K2UDPn
-        Re9+tuf3tlm6E802rubAq8m1EPGdVFs=
+        bh=4Nhl/gv+xJp+ByGDT5YVjTNRimHHTfVAVx6ENwNFDnA=;
+        b=MZjJOPQZUFCfkGoWPznlD46FTghqaNHvn9Mqg5X5+zMFGTdMOOEI6thyMr1E5EyQ4IljTb
+        oTSSt81OOTQWH4rXDHtkwrHe0NDzIzUi0rJ5rm8Fa8MF9IdUvhVZiYWMrO1qC+GsGHOCTn
+        Dmb7lfyTLShn241RqjzAgAs3eT7/Y+0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648597914;
+        s=susede2_ed25519; t=1648597971;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=oD2sx4C2K4gKivVvzHCUML/j+d0W7oIOs5nPocXITZk=;
-        b=FIo3rehNH8R13SVRWbhCkiZXMWtJ8XC79+K/X1xWoyZ/pqMqbgINvgCX7eDyOkxJ1lfbdo
-        P9HM4So+h7r00lDQ==
+        bh=4Nhl/gv+xJp+ByGDT5YVjTNRimHHTfVAVx6ENwNFDnA=;
+        b=YFdItVT8i4IyKH/d06xEQvLP3mRbqho5lYqyulNC1s8hwHT9QQgIL+Mb/9ikn3DyhYLt5J
+        VjxaHKAn+FzUX2BA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B91FE13A7E;
-        Tue, 29 Mar 2022 23:51:52 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 57A4D13A7E;
+        Tue, 29 Mar 2022 23:52:49 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id UIV7G5ibQ2I6LwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 29 Mar 2022 23:51:52 +0000
-Subject: [PATCH 05/10] MM: introduce ->swap_rw and use it for reads from
- SWP_FS_OPS swap-space
+        id 9xIDBdGbQ2JfLwAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 29 Mar 2022 23:52:49 +0000
+Subject: [PATCH 10/10] VFS: Add FMODE_CAN_ODIRECT file flag
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Christoph Hellwig <hch@infradead.org>,
         David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Date:   Wed, 30 Mar 2022 10:49:41 +1100
-Message-ID: <164859778125.29473.13430559328221330589.stgit@noble.brown>
+Message-ID: <164859778128.29473.15189737957277399416.stgit@noble.brown>
 In-Reply-To: <164859751830.29473.5309689752169286816.stgit@noble.brown>
 References: <164859751830.29473.5309689752169286816.stgit@noble.brown>
 User-Agent: StGit/0.23
@@ -73,208 +72,166 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-swap currently uses ->readpage to read swap pages.  This can only
-request one page at a time from the filesystem, which is not most
-efficient.
+Currently various places test if direct IO is possible on a file by
+checking for the existence of the direct_IO address space operation.
+This is a poor choice, as the direct_IO operation may not be used - it is
+only used if the generic_file_*_iter functions are called for direct IO
+and some filesystems - particularly NFS - don't do this.
 
-swap uses ->direct_IO for writes which while this is adequate is an
-inappropriate over-loading.  ->direct_IO may need to had handle allocate
-space for holes or other details that are not relevant for swap.
+Instead, introduce a new f_mode flag: FMODE_CAN_ODIRECT and change the
+various places to check this (avoiding pointer dereferences).
+do_dentry_open() will set this flag if ->direct_IO is present, so
+filesystems do not need to be changed.
 
-So this patch introduces a new address_space operation: ->swap_rw.
-In this patch it is used for reads, and a subsequent patch will switch
-writes to use it.
+NFS *is* changed, to set the flag explicitly and discard the direct_IO
+entry in the address_space_operations for files.
 
-No filesystem yet supports ->swap_rw, but that is not a problem because
-no filesystem actually works with filesystem-based swap.
-Only two filesystems set SWP_FS_OPS:
-- cifs sets the flag, but ->direct_IO always fails so swap cannot work.
-- nfs sets the flag, but ->direct_IO calls generic_write_checks()
-  which has failed on swap files for several releases.
-
-To ensure that a NULL ->swap_rw isn't called, ->activate_swap() for both
-NFS and cifs are changed to fail if ->swap_rw is not set.  This can be
-removed if/when the function is added.
-
-Future patches will restore swap-over-NFS functionality.
-
-To submit an async read with ->swap_rw() we need to allocate a structure
-to hold the kiocb and other details.  swap_readpage() cannot handle
-transient failure, so we create a mempool to provide the structures.
+Other filesystems which currently use noop_direct_IO could usefully be
+changed to set this flag instead.
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/cifs/file.c     |    4 +++
- fs/nfs/file.c      |    4 +++
- include/linux/fs.h |    1 +
- mm/page_io.c       |   68 +++++++++++++++++++++++++++++++++++++++++++++++-----
- mm/swap.h          |    1 +
- mm/swapfile.c      |    5 ++++
- 6 files changed, 77 insertions(+), 6 deletions(-)
+ drivers/block/loop.c |    4 ++--
+ fs/fcntl.c           |    9 ++++-----
+ fs/nfs/file.c        |    3 ++-
+ fs/open.c            |    9 ++++-----
+ fs/overlayfs/file.c  |   13 ++++---------
+ include/linux/fs.h   |    3 +++
+ 6 files changed, 19 insertions(+), 22 deletions(-)
 
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index 050f463580f3..cde8466f260b 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -4899,6 +4899,10 @@ static int cifs_swap_activate(struct swap_info_struct *sis,
+diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+index 3e636a75c83a..74cd550a8952 100644
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -186,8 +186,8 @@ static void __loop_update_dio(struct loop_device *lo, bool dio)
+ 	 */
+ 	if (dio) {
+ 		if (queue_logical_block_size(lo->lo_queue) >= sb_bsize &&
+-				!(lo->lo_offset & dio_align) &&
+-				mapping->a_ops->direct_IO)
++		    !(lo->lo_offset & dio_align) &&
++		    (file->f_mode & FMODE_CAN_ODIRECT))
+ 			use_dio = true;
+ 		else
+ 			use_dio = false;
+diff --git a/fs/fcntl.c b/fs/fcntl.c
+index f15d885b9796..34a3faa4886d 100644
+--- a/fs/fcntl.c
++++ b/fs/fcntl.c
+@@ -56,11 +56,10 @@ static int setfl(int fd, struct file * filp, unsigned long arg)
+ 		   arg |= O_NONBLOCK;
  
- 	cifs_dbg(FYI, "swap activate\n");
- 
-+	if (!swap_file->f_mapping->a_ops->swap_rw)
-+		/* Cannot support swap */
+ 	/* Pipe packetized mode is controlled by O_DIRECT flag */
+-	if (!S_ISFIFO(inode->i_mode) && (arg & O_DIRECT)) {
+-		if (!filp->f_mapping || !filp->f_mapping->a_ops ||
+-			!filp->f_mapping->a_ops->direct_IO)
+-				return -EINVAL;
+-	}
++	if (!S_ISFIFO(inode->i_mode) &&
++	    (arg & O_DIRECT) &&
++	    !(filp->f_mode & FMODE_CAN_ODIRECT))
 +		return -EINVAL;
-+
- 	spin_lock(&inode->i_lock);
- 	blocks = inode->i_blocks;
- 	isize = inode->i_size;
+ 
+ 	if (filp->f_op->check_flags)
+ 		error = filp->f_op->check_flags(arg);
 diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 66136dca0ad5..6da81a4f3bff 100644
+index 6da81a4f3bff..143412226bab 100644
 --- a/fs/nfs/file.c
 +++ b/fs/nfs/file.c
-@@ -492,6 +492,10 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
- 	struct rpc_clnt *clnt = NFS_CLIENT(file->f_mapping->host);
- 	struct inode *inode = file->f_mapping->host;
+@@ -74,6 +74,8 @@ nfs_file_open(struct inode *inode, struct file *filp)
+ 		return res;
  
-+	if (!file->f_mapping->a_ops->swap_rw)
-+		/* Cannot support swap */
-+		return -EINVAL;
-+
- 	spin_lock(&inode->i_lock);
- 	blocks = inode->i_blocks;
- 	isize = inode->i_size;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 183160872133..7c65e09c09a6 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -409,6 +409,7 @@ struct address_space_operations {
- 	int (*swap_activate)(struct swap_info_struct *sis, struct file *file,
- 				sector_t *span);
- 	void (*swap_deactivate)(struct file *file);
-+	int (*swap_rw)(struct kiocb *iocb, struct iov_iter *iter);
- };
- 
- extern const struct address_space_operations empty_aops;
-diff --git a/mm/page_io.c b/mm/page_io.c
-index 5ffdbda31a16..52d423c9962b 100644
---- a/mm/page_io.c
-+++ b/mm/page_io.c
-@@ -284,6 +284,25 @@ static void bio_associate_blkg_from_page(struct bio *bio, struct page *page)
- #define bio_associate_blkg_from_page(bio, page)		do { } while (0)
- #endif /* CONFIG_MEMCG && CONFIG_BLK_CGROUP */
- 
-+struct swap_iocb {
-+	struct kiocb		iocb;
-+	struct bio_vec		bvec;
-+};
-+static mempool_t *sio_pool;
-+
-+int sio_pool_init(void)
-+{
-+	if (!sio_pool) {
-+		mempool_t *pool = mempool_create_kmalloc_pool(
-+			SWAP_CLUSTER_MAX, sizeof(struct swap_iocb));
-+		if (cmpxchg(&sio_pool, NULL, pool))
-+			mempool_destroy(pool);
-+	}
-+	if (!sio_pool)
-+		return -ENOMEM;
-+	return 0;
-+}
-+
- int __swap_writepage(struct page *page, struct writeback_control *wbc,
- 		bio_end_io_t end_write_func)
- {
-@@ -355,6 +374,48 @@ int __swap_writepage(struct page *page, struct writeback_control *wbc,
- 	return 0;
+ 	res = nfs_open(inode, filp);
++	if (res == 0)
++		filp->f_mode |= FMODE_CAN_ODIRECT;
+ 	return res;
  }
  
-+static void sio_read_complete(struct kiocb *iocb, long ret)
-+{
-+	struct swap_iocb *sio = container_of(iocb, struct swap_iocb, iocb);
-+	struct page *page = sio->bvec.bv_page;
-+
-+	if (ret != 0 && ret != PAGE_SIZE) {
-+		SetPageError(page);
-+		ClearPageUptodate(page);
-+		pr_alert_ratelimited("Read-error on swap-device\n");
-+	} else {
-+		SetPageUptodate(page);
-+		count_vm_event(PSWPIN);
-+	}
-+	unlock_page(page);
-+	mempool_free(sio, sio_pool);
-+}
-+
-+static int swap_readpage_fs(struct page *page)
-+{
-+	struct swap_info_struct *sis = page_swap_info(page);
-+	struct file *swap_file = sis->swap_file;
-+	struct address_space *mapping = swap_file->f_mapping;
-+	struct iov_iter from;
-+	struct swap_iocb *sio;
-+	loff_t pos = page_file_offset(page);
-+	int ret;
-+
-+	sio = mempool_alloc(sio_pool, GFP_KERNEL);
-+	init_sync_kiocb(&sio->iocb, swap_file);
-+	sio->iocb.ki_pos = pos;
-+	sio->iocb.ki_complete = sio_read_complete;
-+	sio->bvec.bv_page = page;
-+	sio->bvec.bv_len = PAGE_SIZE;
-+	sio->bvec.bv_offset = 0;
-+
-+	iov_iter_bvec(&from, READ, &sio->bvec, 1, PAGE_SIZE);
-+	ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
-+	if (ret != -EIOCBQUEUED)
-+		sio_read_complete(&sio->iocb, ret);
-+	return ret;
-+}
-+
- int swap_readpage(struct page *page, bool synchronous)
- {
- 	struct bio *bio;
-@@ -383,12 +444,7 @@ int swap_readpage(struct page *page, bool synchronous)
- 	}
+@@ -535,7 +537,6 @@ const struct address_space_operations nfs_file_aops = {
+ 	.write_end = nfs_write_end,
+ 	.invalidate_folio = nfs_invalidate_folio,
+ 	.releasepage = nfs_release_page,
+-	.direct_IO = nfs_direct_IO,
+ #ifdef CONFIG_MIGRATION
+ 	.migratepage = nfs_migrate_page,
+ #endif
+diff --git a/fs/open.c b/fs/open.c
+index 1315253e0247..7b50d7a2f51d 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -834,16 +834,15 @@ static int do_dentry_open(struct file *f,
+ 	if ((f->f_mode & FMODE_WRITE) &&
+ 	     likely(f->f_op->write || f->f_op->write_iter))
+ 		f->f_mode |= FMODE_CAN_WRITE;
++	if (f->f_mapping->a_ops && f->f_mapping->a_ops->direct_IO)
++		f->f_mode |= FMODE_CAN_ODIRECT;
  
- 	if (data_race(sis->flags & SWP_FS_OPS)) {
--		struct file *swap_file = sis->swap_file;
--		struct address_space *mapping = swap_file->f_mapping;
--
--		ret = mapping->a_ops->readpage(swap_file, page);
--		if (!ret)
--			count_vm_event(PSWPIN);
-+		ret = swap_readpage_fs(page);
- 		goto out;
- 	}
+ 	f->f_flags &= ~(O_CREAT | O_EXCL | O_NOCTTY | O_TRUNC);
  
-diff --git a/mm/swap.h b/mm/swap.h
-index e19f185df5e2..eafac80b18d9 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -6,6 +6,7 @@
- #include <linux/blk_types.h> /* for bio_end_io_t */
+ 	file_ra_state_init(&f->f_ra, f->f_mapping->host->i_mapping);
  
- /* linux/mm/page_io.c */
-+int sio_pool_init(void);
- int swap_readpage(struct page *page, bool do_poll);
- int swap_writepage(struct page *page, struct writeback_control *wbc);
- void end_swap_bio_write(struct bio *bio);
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 8710c9c29862..2c9b4a7aecb0 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -2247,6 +2247,11 @@ static int setup_swap_extents(struct swap_info_struct *sis, sector_t *span)
- 		if (ret < 0)
- 			return ret;
- 		sis->flags |= SWP_ACTIVATED;
-+		if ((sis->flags & SWP_FS_OPS) &&
-+		    sio_pool_init() != 0) {
-+			destroy_swap_extents(sis);
-+			return -ENOMEM;
-+		}
- 		return ret;
- 	}
+-	/* NB: we're sure to have correct a_ops only after f_op->open */
+-	if (f->f_flags & O_DIRECT) {
+-		if (!f->f_mapping->a_ops || !f->f_mapping->a_ops->direct_IO)
+-			return -EINVAL;
+-	}
++	if ((f->f_flags & O_DIRECT) && !(f->f_mode & FMODE_CAN_ODIRECT))
++		return -EINVAL;
+ 
+ 	/*
+ 	 * XXX: Huge page cache doesn't support writing yet. Drop all page
+diff --git a/fs/overlayfs/file.c b/fs/overlayfs/file.c
+index fa125feed0ff..9d69b4dbb8c4 100644
+--- a/fs/overlayfs/file.c
++++ b/fs/overlayfs/file.c
+@@ -82,11 +82,8 @@ static int ovl_change_flags(struct file *file, unsigned int flags)
+ 	if (((flags ^ file->f_flags) & O_APPEND) && IS_APPEND(inode))
+ 		return -EPERM;
+ 
+-	if (flags & O_DIRECT) {
+-		if (!file->f_mapping->a_ops ||
+-		    !file->f_mapping->a_ops->direct_IO)
+-			return -EINVAL;
+-	}
++	if ((flags & O_DIRECT) && !(file->f_mode & FMODE_CAN_ODIRECT))
++		return -EINVAL;
+ 
+ 	if (file->f_op->check_flags) {
+ 		err = file->f_op->check_flags(flags);
+@@ -306,8 +303,7 @@ static ssize_t ovl_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 
+ 	ret = -EINVAL;
+ 	if (iocb->ki_flags & IOCB_DIRECT &&
+-	    (!real.file->f_mapping->a_ops ||
+-	     !real.file->f_mapping->a_ops->direct_IO))
++	    !(real.file->f_mode & FMODE_CAN_ODIRECT))
+ 		goto out_fdput;
+ 
+ 	old_cred = ovl_override_creds(file_inode(file)->i_sb);
+@@ -367,8 +363,7 @@ static ssize_t ovl_write_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 
+ 	ret = -EINVAL;
+ 	if (iocb->ki_flags & IOCB_DIRECT &&
+-	    (!real.file->f_mapping->a_ops ||
+-	     !real.file->f_mapping->a_ops->direct_IO))
++	    !(real.file->f_mode & FMODE_CAN_ODIRECT))
+ 		goto out_fdput;
+ 
+ 	if (!ovl_should_sync(OVL_FS(inode->i_sb)))
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 7c65e09c09a6..781361562a27 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -162,6 +162,9 @@ typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+ /* File is stream-like */
+ #define FMODE_STREAM		((__force fmode_t)0x200000)
+ 
++/* File supports DIRECT IO */
++#define	FMODE_CAN_ODIRECT	((__force fmode_t)0x400000)
++
+ /* File was opened by fanotify and shouldn't generate fanotify events */
+ #define FMODE_NONOTIFY		((__force fmode_t)0x4000000)
  
 
 
