@@ -2,107 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 676844EBC75
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Mar 2022 10:14:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7188F4EBEBC
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Mar 2022 12:26:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241342AbiC3IP7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Mar 2022 04:15:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38814 "EHLO
+        id S245353AbiC3K2H (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Mar 2022 06:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244166AbiC3IP4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Mar 2022 04:15:56 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72606D98;
-        Wed, 30 Mar 2022 01:14:11 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 053471F7AB;
-        Wed, 30 Mar 2022 08:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648628050; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
+        with ESMTP id S242937AbiC3K2H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Mar 2022 06:28:07 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0EFC925FD6D
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Mar 2022 03:26:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1648635981;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=XsTxg5YKPlAg6VXpLB31OEo9MwL2KGmC4FzYa308hZk=;
-        b=hzwvvkDki5KwoetwuQRi0rywJyiFhyM18kSRZMzCZBKyUz2K456VNhk+yBnO78pFslW7/P
-        WC6/n08+qIDET4hEPsOWvDmyriE+TaLQQHMjat+j4u6JHFq/UWTdx8o2W1hQ4zl/hjnAnK
-        abeN9n5DO47U07XmEKcja7JX7O7UplU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648628050;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XsTxg5YKPlAg6VXpLB31OEo9MwL2KGmC4FzYa308hZk=;
-        b=aPuNyrr41TxJwLJ0dr9V88MYccDJLhjKBtaKEaP4yVFW3rBHf9e5zQqkfTYf8Xh67QLg6E
-        lLqmS9Jja61xmiCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        bh=c4bIFt9jVSIGZ2yyObkamPZtqAyQFwbbDREVYsapdgo=;
+        b=En9f74pyyfrhUFB6HDpmBm69cA0l68e44NM8Jbvzw3wUbCgzwL4FTbGey5wCmCq9WjyYDc
+        A2A+wjtyq3j8LlJWxBIEuhTqpoyIwvz16Kt+ZHUe8s/PXsQMNII8jrAKJlLdS1DpTcK8l6
+        zb5Jp5DN/pdzmNmp1OBdUUUSJOc5Wmg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-367-WOcvhNmsOFG4j7yI-KFN_A-1; Wed, 30 Mar 2022 06:26:19 -0400
+X-MC-Unique: WOcvhNmsOFG4j7yI-KFN_A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id CEA2213AF3;
-        Wed, 30 Mar 2022 08:14:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id QfzsMFERRGLCOQAAMHmgww
-        (envelope-from <ddiss@suse.de>); Wed, 30 Mar 2022 08:14:09 +0000
-Date:   Wed, 30 Mar 2022 10:14:08 +0200
-From:   David Disseldorp <ddiss@suse.de>
-To:     "NeilBrown" <neilb@suse.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] VFS: filename_create(): fix incorrect intent.
-Message-ID: <20220330101408.2bbb47ee@suse.de>
-In-Reply-To: <164842900895.6096.10753358086437966517@noble.neil.brown.name>
-References: <164842900895.6096.10753358086437966517@noble.neil.brown.name>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8DACA1801387;
+        Wed, 30 Mar 2022 10:26:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9B99540CF8F8;
+        Wed, 30 Mar 2022 10:26:17 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <164859751830.29473.5309689752169286816.stgit@noble.brown>
+References: <164859751830.29473.5309689752169286816.stgit@noble.brown>
+To:     NeilBrown <neilb@suse.de>
+Cc:     dhowells@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] MM changes to improve swap-over-NFS support
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2923576.1648635976.1@warthog.procyon.org.uk>
+Date:   Wed, 30 Mar 2022 11:26:16 +0100
+Message-ID: <2923577.1648635976@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Neil,
+Do you have a branch with your patches on?
 
-I gave this a spin and was wondering why xfstests wouldn't start with
-this change...
+David
 
-On Mon, 28 Mar 2022 11:56:48 +1100, NeilBrown wrote:
-...
-> 
-> diff --git a/fs/namei.c b/fs/namei.c
-> index 3f1829b3ab5b..3ffb42e56a8e 100644
-> --- a/fs/namei.c
-> +++ b/fs/namei.c
-> @@ -3676,7 +3676,6 @@ static struct dentry *filename_create(int dfd, struct filename *name,
->  	int type;
->  	int err2;
->  	int error;
-> -	bool is_dir = (lookup_flags & LOOKUP_DIRECTORY);
->  
->  	/*
->  	 * Note that only LOOKUP_REVAL and LOOKUP_DIRECTORY matter here. Any
-> @@ -3698,9 +3697,11 @@ static struct dentry *filename_create(int dfd, struct filename *name,
->  	/* don't fail immediately if it's r/o, at least try to report other errors */
->  	err2 = mnt_want_write(path->mnt);
->  	/*
-> -	 * Do the final lookup.
-> +	 * Do the final lookup.  Request 'create' only if there is no trailing
-> +	 * '/', or if directory is requested.
->  	 */
-> -	lookup_flags |= LOOKUP_CREATE | LOOKUP_EXCL;
-> +	if (!last.name[last.len] || (lookup_flags & LOOKUP_DIRECTORY))
-> +		lookup_flags |= LOOKUP_CREATE | LOOKUP_EXCL;
-
-This doesn't look right, as any LOOKUP_DIRECTORY flag gets dropped via
-the prior "lookup_flags &= LOOKUP_REVAL;".
-
-Cheers, David
