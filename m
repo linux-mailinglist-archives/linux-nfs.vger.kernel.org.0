@@ -2,59 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE5534EE371
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Mar 2022 23:47:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A7634EE428
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 00:36:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241954AbiCaVtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Mar 2022 17:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
+        id S242545AbiCaWiK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Mar 2022 18:38:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241948AbiCaVtP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 17:49:15 -0400
-Received: from cc-smtpout1.netcologne.de (cc-smtpout1.netcologne.de [89.1.8.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BB623F3F2
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Mar 2022 14:47:27 -0700 (PDT)
-Received: from cc-smtpin3.netcologne.de (cc-smtpin3.netcologne.de [89.1.8.203])
-        by cc-smtpout1.netcologne.de (Postfix) with ESMTP id 77B9412644;
-        Thu, 31 Mar 2022 23:47:25 +0200 (CEST)
-Received: from nas2.garloff.de (xdsl-213-196-192-4.nc.de [213.196.192.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S242673AbiCaWiI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 18:38:08 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906B71C8A8E;
+        Thu, 31 Mar 2022 15:36:19 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by cc-smtpin3.netcologne.de (Postfix) with ESMTPSA id D024211DE3;
-        Thu, 31 Mar 2022 23:47:17 +0200 (CEST)
-Received: from [192.168.155.202] (unknown [192.168.155.10])
-        by nas2.garloff.de (Postfix) with ESMTPSA id 310EEB3B131A;
-        Thu, 31 Mar 2022 23:47:02 +0200 (CEST)
-Message-ID: <23c59973-6c08-6132-607b-0f949501e0a5@garloff.de>
-Date:   Thu, 31 Mar 2022 23:47:16 +0200
+        by smtp-out1.suse.de (Postfix) with ESMTPS id E7E7D21A91;
+        Thu, 31 Mar 2022 22:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1648766177; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9oThGHhXzDbS58RdqWrTyTXsG5EK5i9whLg1NGJqU1k=;
+        b=z7uUZhNT/wczrRmd53Lke7NQ6cWdwtqRLDWxlWN54/CBZMVMUqW7Aelv9lL7z/tS9qKNV1
+        AQ3GgPs/DaP0ywJbEXl3RjGCqae908MBlUoU02q6r1W1Wqs8CiH+D9zTKCtjrDLmi47h+K
+        t9FVSNFyl5X1EBW0XQKv0nLE959j7Lo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1648766177;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=9oThGHhXzDbS58RdqWrTyTXsG5EK5i9whLg1NGJqU1k=;
+        b=y/NoMJ/0G2E0UptWi9Tfx0kQWjpesoBNpLUzYTMDLjAI+DjC+N7YRyQ1P6LXAZVY4s6k+E
+        kmvOMW1DS+8f12Dw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 662B5133D4;
+        Thu, 31 Mar 2022 22:36:10 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Zc5nCNosRmJ1GQAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 31 Mar 2022 22:36:10 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.2
-Content-Language: en-US
-To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20220223174041.77887-1-olga.kornievskaia@gmail.com>
- <CAN-5tyHy_+tBfv3PuD0CBwHbppHo3pRNwo0O9xRGjZxK0-rOjw@mail.gmail.com>
- <a494ba2b-7e2c-bcad-bac9-12804b113383@garloff.de>
- <B476B883-D5D4-4112-BB08-6D9172C5D335@garloff.de>
- <8849D8CD-0720-40E2-A752-1C9AADC93C55@redhat.com>
- <40CC442E-C228-4C66-A2F0-DB850DBC5EC5@oracle.com>
- <CAN-5tyHZ-7=V=CGT+Ni6DWZYbvXgpGoBn_sXeTg54YqhPZsufg@mail.gmail.com>
-From:   Kurt Garloff <kurt@garloff.de>
-Subject: Re: [PATCH v1] NFSv4.1 provide mount option to toggle trunking
- discovery
-In-Reply-To: <CAN-5tyHZ-7=V=CGT+Ni6DWZYbvXgpGoBn_sXeTg54YqhPZsufg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-NetCologne-Spam: L
-X-Rspamd-Queue-Id: D024211DE3
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Muchun Song" <songmuchun@bytedance.com>
+Cc:     "Andrew Morton" <akpm@linux-foundation.org>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        "Michal Hocko" <mhocko@kernel.org>,
+        "Vladimir Davydov" <vdavydov.dev@gmail.com>,
+        "Shakeel Butt" <shakeelb@google.com>,
+        "Roman Gushchin" <roman.gushchin@linux.dev>,
+        "Yang Shi" <shy828301@gmail.com>, "Alex Shi" <alexs@kernel.org>,
+        "Wei Yang" <richard.weiyang@gmail.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        jaegeuk@kernel.org, chao@kernel.org,
+        "Kari Argillander" <kari.argillander@gmail.com>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "linux-fsdevel" <linux-fsdevel@vger.kernel.org>,
+        "LKML" <linux-kernel@vger.kernel.org>,
+        "Linux Memory Management List" <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, "Qi Zheng" <zhengqi.arch@bytedance.com>,
+        "Xiongchun duan" <duanxiongchun@bytedance.com>,
+        "Fam Zheng" <fam.zheng@bytedance.com>,
+        "Muchun Song" <smuchun@gmail.com>
+Subject: Re: [PATCH v6 12/16] mm: list_lru: replace linear array with xarray
+In-reply-to: <CAMZfGtX9pkWYf40RwDALZLKGDc+Dt2UJA7wZFjTagf0AyWyCiw@mail.gmail.com>
+References: <20220228122126.37293-1-songmuchun@bytedance.com>,
+ <20220228122126.37293-13-songmuchun@bytedance.com>,
+ <164869718565.25542.15818719940772238394@noble.neil.brown.name>,
+ <CAMZfGtUSA9f3k9jF5U-y+NVt8cpmB9_mk1F9-vmm4JOuWFF_Bw@mail.gmail.com>,
+ <164870069595.25542.17292003658915487357@noble.neil.brown.name>,
+ <CAMZfGtX9pkWYf40RwDALZLKGDc+Dt2UJA7wZFjTagf0AyWyCiw@mail.gmail.com>
+Date:   Fri, 01 Apr 2022 09:36:06 +1100
+Message-id: <164876616694.25542.14010655277238655246@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,117 +94,232 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Olga, Chuck,
+On Thu, 31 Mar 2022, Muchun Song wrote:
+>=20
+> Thanks for your report.  I knew the reason. It is because the following
+> patch in this series was missed upstream.  Could you help me test if it
+> works properly?
+>=20
+> [v6,06/16] nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
+>=20
 
-On 16/03/2022 17:09, Olga Kornievskaia wrote:
-> On Wed, Mar 16, 2022 at 11:14 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
->
->>> On Mar 16, 2022, at 8:39 AM, Benjamin Coddington <bcodding@redhat.com> wrote:
->>>
->>> On 25 Feb 2022, at 17:48, Kurt Garloff wrote:
->>>
->>>> Hi,
->>>>
->>>> Am 24. Februar 2022 14:42:41 MEZ schrieb Kurt Garloff <kurt@garloff.de>:
->>>>> Hi Olga,
->>>>> [...]
->>>>>
->>>>> I see a number of possibilities to resolve this:
->>>>> (0) We pretend it's not a problem that's serious enough to take
->>>>>      action (and ensure that we do document this new option well).
->>>>> (1) We revert the patch that does FS_LOCATIONS discovery.
->>>>>      Assuming that FS_LOCATIONS does provide a useful feature, this
->>>>>      would not be our preferred solution, I guess ...
->>>>> (2) We prevent NFS v4.1 servers to use FS_LOCATIONS (like my patch
->>>>>      implements) and additionally allow for the opt-out with
->>>>>      notrunkdiscovery mount option. This fixes the known regression
->>>>>      with Qnap knfsd (without requiring user intervention) and still
->>>>>      allows for FS_LOCATIONS to be useful with NFSv4.2 servers that
->>>>>      support this. The disadvantage is that we won't use the feature
->>>>>      on NFSv4.1 servers which might support this feature perfectly
->>>>>      (and there's no opt-in possibility). And the risk is that there
->>>>>      might be NFSv4.2 servers out there that also misreport
->>>>>      FS_LOCATIONS support and still need manual intervention (which
->>>>>      at least is possible with notrunkdiscovery).
->>>>> (3) We make this feature an opt-in thing and require users to
->>>>>      pass trunkdiscovery to take advantage of the feature.
->>>>>      This has zero risk of breakage (unless we screw up the patch),
->>>>>      but always requires user intervention to take advantage of
->>>>>      the FS_LOCATIONS feature.
->>>>> (4) Identify a way to recover from the mount with FS_LOCATIONS
->>>>>      against the broken server, so instead of hanging we do just
->>>>>      turn this off if we find it not to work. Disadavantage is that
->>>>>      this adds complexity and might stall the mounting for a while
->>>>>      until the recovery worked. The complexity bears the risk for
->>>>>      us screwing up.
->>>>>
->>>>> I personally find solutions 2 -- 4 acceptable.
->>>>>
->>>>> If the experts see (4) as simple enough, it might be worth a try.
->>>>> Otherwise (2) or (3) would seem the way to go from my perspective.
->>>> Any thought ls?
->>> I think (3) is the best way, and perhaps using sysfs to toggle it would
->>> be a solution to the problems presented by a mount option.
->>>
->>> I'm worried that this issue is being ignored because that's usually what
->>> happens when requests/patches are proposed that violate the policy of "we do
->>> not fix the client for server bugs".  In this case that policy conficts with
->>> "no user visible regressions".
->>>
->>> Can anyone declare which policy takes precedent?
->> "No regressions" probably takes precedent. IMO 1) should be done
->> immediately.
->>
->> This is not a server bug, necessarily. The server is responding
->> within the realm of what is allowed by specification and I can
->> see cases where a server might have a good reason to DELAY an
->> fs_locations request for a while.
->>
->> So I think once 1) has been done and backported to stable, the
->> client functionality should be restored via 4) to ensure that a
->> server can't delay a client mount indefinitely. (Although I think
->> I've stated that preference before).
-> Reverting the patch is equivalent to introducing a mount option (with
-> what I'm hearing a preference of notrunking being the default) but
-> possibly better. It solves the problems of the broken servers and it
-> allows servers that want this functionality to use it.
+Thanks for the quick response!  That patch helps, but has a bug.  My
+testing resulted in refcount underflow errors.
 
-I agree with reverting and then introducing and opt-in setting instead.
+Problem is that kref_init() is called in nfs4_xattr_entry_init_once().
+This means that it is initialised to '1' the first time an entry is
+allocated, but it is left as zero the second time.
+I applied:
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -191,6 +191,7 @@ nfs4_xattr_alloc_entry(const char *name, const void *valu=
+e,
+ 	entry =3D kmem_cache_alloc_lru(nfs4_xattr_entry_cachep, lru, gfp);
+ 	if (!entry)
+ 		return NULL;
++	kref_init(&entry->ref);
+ 	namep =3D kstrdup_const(name, gfp);
+ 	if (!namep && name)
+ 		goto free_buf;
+@@ -974,7 +975,6 @@ static void nfs4_xattr_entry_init_once(void *p)
+ {
+ 	struct nfs4_xattr_entry *entry =3D p;
+=20
+-	kref_init(&entry->ref);
+ 	entry->bucket =3D NULL;
+ 	INIT_LIST_HEAD(&entry->lru);
+ 	INIT_LIST_HEAD(&entry->dispose);
 
-I have not seen this submitted yet (though I have to admit that
-I may have missed it).
+and now it seems to work.
 
-So who is going to code this. If there is noone who has capacity
-to do so, I can certainly jump in, though I am probably the least
-skilled person in this conversation.
+The complete patch that I applied is below.  I haven't reviewed it, just
+tested it.
+  Tested-by: NeilBrown <neilb@suse.de>
 
->> I don't see any need to involve a human in making the decision
->> to try fs_locations. The client should try fs_locations and if
->> it doesn't work, just move on as quickly as it can. As always,
->> I don't relish adding more administrative controls if we can
->> avoid it. Such controls add to our test matrix and our long
->> term technical debt. Easy to add, but very difficult to change
->> or remove once merged. I can't see an upside here.
-
-That would be the better approach, but it also certainly is less
-straight-forward to implement.
-I'm happy to test, if we get some patch to look at short-term.
-
-Otherwise, I'd suggest to go for reversion first and keep this
-plan in the back of our minds for later execution.
-
-Thanks.
-
--- 
-Kurt Garloff <kurt@garloff.de>
-Cologne, Germany
+Thanks,
+NeilBrown
 
 
+From: Muchun Song <songmuchun@bytedance.com>
+Date: Mon, 28 Feb 2022 20:21:16 +0800
+Subject: [PATCH] nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
 
+If we want to add the allocated objects to its list_lru, we should use
+kmem_cache_alloc_lru() to allocate objects. So intruduce
+nfs4_xattr_entry_cachep which is used to allocate nfs4_xattr_entry.
 
->>
->> --
->> Chuck Lever
->>
->>
->>
+Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+
+diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+index ad3405c64b9e..d4163c46acf1 100644
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -81,7 +81,7 @@ struct nfs4_xattr_entry {
+ 	struct hlist_node hnode;
+ 	struct list_head lru;
+ 	struct list_head dispose;
+-	char *xattr_name;
++	const char *xattr_name;
+ 	void *xattr_value;
+ 	size_t xattr_size;
+ 	struct nfs4_xattr_bucket *bucket;
+@@ -98,6 +98,7 @@ static struct list_lru nfs4_xattr_entry_lru;
+ static struct list_lru nfs4_xattr_large_entry_lru;
+=20
+ static struct kmem_cache *nfs4_xattr_cache_cachep;
++static struct kmem_cache *nfs4_xattr_entry_cachep;
+=20
+ /*
+  * Hashing helper functions.
+@@ -177,49 +178,28 @@ nfs4_xattr_alloc_entry(const char *name, const void *va=
+lue,
+ {
+ 	struct nfs4_xattr_entry *entry;
+ 	void *valp;
+-	char *namep;
+-	size_t alloclen, slen;
+-	char *buf;
+-	uint32_t flags;
++	const char *namep;
++	uint32_t flags =3D len > PAGE_SIZE ? NFS4_XATTR_ENTRY_EXTVAL : 0;
++	gfp_t gfp =3D GFP_KERNEL;
++	struct list_lru *lru;
+=20
+ 	BUILD_BUG_ON(sizeof(struct nfs4_xattr_entry) +
+ 	    XATTR_NAME_MAX + 1 > PAGE_SIZE);
+=20
+-	alloclen =3D sizeof(struct nfs4_xattr_entry);
+-	if (name !=3D NULL) {
+-		slen =3D strlen(name) + 1;
+-		alloclen +=3D slen;
+-	} else
+-		slen =3D 0;
+-
+-	if (alloclen + len <=3D PAGE_SIZE) {
+-		alloclen +=3D len;
+-		flags =3D 0;
+-	} else {
+-		flags =3D NFS4_XATTR_ENTRY_EXTVAL;
+-	}
+-
+-	buf =3D kmalloc(alloclen, GFP_KERNEL);
+-	if (buf =3D=3D NULL)
++	lru =3D flags & NFS4_XATTR_ENTRY_EXTVAL ? &nfs4_xattr_large_entry_lru :
++	      &nfs4_xattr_entry_lru;
++	entry =3D kmem_cache_alloc_lru(nfs4_xattr_entry_cachep, lru, gfp);
++	if (!entry)
+ 		return NULL;
+-	entry =3D (struct nfs4_xattr_entry *)buf;
+-
+-	if (name !=3D NULL) {
+-		namep =3D buf + sizeof(struct nfs4_xattr_entry);
+-		memcpy(namep, name, slen);
+-	} else {
+-		namep =3D NULL;
+-	}
+-
+-
+-	if (flags & NFS4_XATTR_ENTRY_EXTVAL) {
+-		valp =3D kvmalloc(len, GFP_KERNEL);
+-		if (valp =3D=3D NULL) {
+-			kfree(buf);
+-			return NULL;
+-		}
+-	} else if (len !=3D 0) {
+-		valp =3D buf + sizeof(struct nfs4_xattr_entry) + slen;
++	kref_init(&entry->ref);
++	namep =3D kstrdup_const(name, gfp);
++	if (!namep && name)
++		goto free_buf;
++
++	if (len !=3D 0) {
++		valp =3D kvmalloc(len, gfp);
++		if (!valp)
++			goto free_name;
+ 	} else
+ 		valp =3D NULL;
+=20
+@@ -232,23 +212,23 @@ nfs4_xattr_alloc_entry(const char *name, const void *va=
+lue,
+=20
+ 	entry->flags =3D flags;
+ 	entry->xattr_value =3D valp;
+-	kref_init(&entry->ref);
+ 	entry->xattr_name =3D namep;
+ 	entry->xattr_size =3D len;
+-	entry->bucket =3D NULL;
+-	INIT_LIST_HEAD(&entry->lru);
+-	INIT_LIST_HEAD(&entry->dispose);
+-	INIT_HLIST_NODE(&entry->hnode);
+=20
+ 	return entry;
++free_name:
++	kfree_const(namep);
++free_buf:
++	kmem_cache_free(nfs4_xattr_entry_cachep, entry);
++	return NULL;
+ }
+=20
+ static void
+ nfs4_xattr_free_entry(struct nfs4_xattr_entry *entry)
+ {
+-	if (entry->flags & NFS4_XATTR_ENTRY_EXTVAL)
+-		kvfree(entry->xattr_value);
+-	kfree(entry);
++	kvfree(entry->xattr_value);
++	kfree_const(entry->xattr_name);
++	kmem_cache_free(nfs4_xattr_entry_cachep, entry);
+ }
+=20
+ static void
+@@ -289,7 +269,7 @@ nfs4_xattr_alloc_cache(void)
+ {
+ 	struct nfs4_xattr_cache *cache;
+=20
+-	cache =3D kmem_cache_alloc(nfs4_xattr_cache_cachep, GFP_KERNEL);
++	cache =3D kmem_cache_alloc_lru(nfs4_xattr_cache_cachep, &nfs4_xattr_cache_l=
+ru, GFP_KERNEL);
+ 	if (cache =3D=3D NULL)
+ 		return NULL;
+=20
+@@ -991,6 +971,16 @@ static void nfs4_xattr_cache_init_once(void *p)
+ 	INIT_LIST_HEAD(&cache->dispose);
+ }
+=20
++static void nfs4_xattr_entry_init_once(void *p)
++{
++	struct nfs4_xattr_entry *entry =3D p;
++
++	entry->bucket =3D NULL;
++	INIT_LIST_HEAD(&entry->lru);
++	INIT_LIST_HEAD(&entry->dispose);
++	INIT_HLIST_NODE(&entry->hnode);
++}
++
+ int __init nfs4_xattr_cache_init(void)
+ {
+ 	int ret =3D 0;
+@@ -1002,6 +992,13 @@ int __init nfs4_xattr_cache_init(void)
+ 	if (nfs4_xattr_cache_cachep =3D=3D NULL)
+ 		return -ENOMEM;
+=20
++	nfs4_xattr_entry_cachep =3D kmem_cache_create("nfs4_xattr_entry",
++			sizeof(struct nfs4_xattr_entry), 0,
++			(SLAB_RECLAIM_ACCOUNT | SLAB_MEM_SPREAD | SLAB_ACCOUNT),
++			nfs4_xattr_entry_init_once);
++	if (!nfs4_xattr_entry_cachep)
++		goto out5;
++
+ 	ret =3D list_lru_init_memcg(&nfs4_xattr_large_entry_lru,
+ 	    &nfs4_xattr_large_entry_shrinker);
+ 	if (ret)
+@@ -1039,6 +1036,8 @@ int __init nfs4_xattr_cache_init(void)
+ out3:
+ 	list_lru_destroy(&nfs4_xattr_large_entry_lru);
+ out4:
++	kmem_cache_destroy(nfs4_xattr_entry_cachep);
++out5:
+ 	kmem_cache_destroy(nfs4_xattr_cache_cachep);
+=20
+ 	return ret;
+
