@@ -2,138 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0CDF4ED542
-	for <lists+linux-nfs@lfdr.de>; Thu, 31 Mar 2022 10:13:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 297974ED604
+	for <lists+linux-nfs@lfdr.de>; Thu, 31 Mar 2022 10:43:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232520AbiCaIP1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Mar 2022 04:15:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39752 "EHLO
+        id S230453AbiCaIpN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Mar 2022 04:45:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232253AbiCaIP1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 04:15:27 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3FBB8DAFCC
-        for <linux-nfs@vger.kernel.org>; Thu, 31 Mar 2022 01:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1648714416;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=XBSSjR/9FQIi28vZKv97ezZh1yar1AT2JnPj2c6QrxE=;
-        b=hvH3lU3LV8VDnf4mx33dx54TnwaCrURrt0MO7zXFyBsa6DAhdlekOZmNx6DAMxLPkP7KEj
-        brth1vwXCfYIVNaAIk84N43eYJs9itdRZuJMGEOPWJGrUDPosjSEIoo3twtEyP94YEfxfu
-        Y8GUHXVEawNL/ef2d+V8OkiIOH2F46I=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-32-2bVHFnLgO9mOpHl4Sg9Y2w-1; Thu, 31 Mar 2022 04:13:30 -0400
-X-MC-Unique: 2bVHFnLgO9mOpHl4Sg9Y2w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 15392899ECD;
-        Thu, 31 Mar 2022 08:13:29 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 987B240D2821;
-        Thu, 31 Mar 2022 08:13:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <164859751830.29473.5309689752169286816.stgit@noble.brown>
-References: <164859751830.29473.5309689752169286816.stgit@noble.brown>
-To:     NeilBrown <neilb@suse.de>
-Cc:     dhowells@redhat.com, Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-nfs@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/10] MM changes to improve swap-over-NFS support
+        with ESMTP id S232728AbiCaIpL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 04:45:11 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 105CE3D486
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Mar 2022 01:43:21 -0700 (PDT)
+Received: from ip4d144895.dynamic.kabel-deutschland.de ([77.20.72.149] helo=[192.168.66.200]); authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nZqOk-0000r9-F8; Thu, 31 Mar 2022 10:43:18 +0200
+Message-ID: <a7a91106-1443-b38a-ece6-7c3f335908b1@leemhuis.info>
+Date:   Thu, 31 Mar 2022 10:43:17 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3096105.1648714405.1@warthog.procyon.org.uk>
-Date:   Thu, 31 Mar 2022 09:13:25 +0100
-Message-ID: <3096106.1648714405@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: Performance regression with random IO pattern from the client
+Content-Language: en-US
+To:     Jan Kara <jack@suse.cz>, Trond Myklebust <trondmy@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, nfbrown@suse.com,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
+References: <20220330103457.r4xrhy2d6nhtouzk@quack3.lan>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <20220330103457.r4xrhy2d6nhtouzk@quack3.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1648716202;1b5f1b0a;
+X-HE-SMSGID: 1nZqOk-0000r9-F8
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-NeilBrown <neilb@suse.de> wrote:
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-> Assorted improvements for swap-via-filesystem.
+Hi, this is your Linux kernel regression tracker.  CCing the regression
+mailing list, as it should be in the loop for all regressions, as
+explained here:
+https://www.kernel.org/doc/html/latest/admin-guide/reporting-issues.html
+
+On 30.03.22 12:34, Jan Kara wrote:
+> Hello,
 > 
-> This is a resend of these patches, rebased on current HEAD.
-> The only substantial changes is that swap_dirty_folio has replaced
-> swap_set_page_dirty.
+> during our performance testing we have noticed that commit b6669305d35a
+> ("nfsd: Reduce the number of calls to nfsd_file_gc()") has introduced a
+> performance regression when a client does random buffered writes. The
+> workload on NFS client is fio running 4 processed doing random buffered writes to 4
+> different files and the files are large enough to hit dirty limits and
+> force writeback from the client. In particular the invocation is like:
 > 
-> Currently swap-via-fs (SWP_FS_OPS) doesn't work for any filesystem.  It
-> has previously worked for NFS but that broke a few releases back.
-> This series changes to use a new ->swap_rw rather than ->readpage and
-> ->direct_IO.  It also makes other improvements.
+> fio --direct=0 --ioengine=sync --thread --directory=/mnt/mnt1 --invalidate=1 --group_reporting=1 --runtime=300 --fallocate=posix --ramp_time=10 --name=RandomReads-128000-4k-4 --new_group --rw=randwrite --size=4000m --numjobs=4 --bs=4k --filename_format=FioWorkloads.\$jobnum --end_fsync=1
 > 
-> There is a companion series already in linux-next which fixes various
-> issues with NFS.  Once both series land, a final patch is needed which
-> changes NFS over to use ->swap_rw.
+> The reason why commit b6669305d35a regresses performance is the
+> filemap_flush() call it adds into nfsd_file_put(). Before this commit
+> writeback on the server happened from nfsd_commit() code resulting in
+> rather long semisequential streams of 4k writes. After commit b6669305d35a
+> all the writeback happens from filemap_flush() calls resulting in much
+> longer average seek distance (IO from different files is more interleaved)
+> and about 16-20% regression in the achieved writeback throughput when the
+> backing store is rotational storage.
+> 
+> I think the filemap_flush() from nfsd_file_put() is indeed rather
+> aggressive and I think we'd be better off to just leave writeback to either
+> nfsd_commit() or standard dirty page cleaning happening on the system. I
+> assume the rationale for the filemap_flush() call was to make it more
+> likely the file can be evicted during the garbage collection run? Was there
+> any particular problem leading to addition of this call or was it just "it
+> seemed like a good idea" thing?
+> 
+> Thanks in advance for ideas.
+> 
 
-This seems to work by running sufficient copies of the attached program in
-parallel to overwhelm the amount of ordinary RAM.
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-Tested-by: David Howells <dhowells@redhat.com>
----
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/mman.h>
+#regzbot ^introduced b6669305d35a
+#regzbot title nfs: Performance regression with random IO pattern from
+the client
+#regzbot backburner: introduced more than two years ago, first report,
+hence developers want to give it some thought
+#regzbot ignore-activity
 
-int main()
-{
-	unsigned int pid = getpid(), iterations = 0;
-	size_t i, j, size = 1024 * 1024 * 1024;
-	char *p;
-	bool mismatch;
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
 
-	p = malloc(size);
-	if (!p) {
-		perror("malloc");
-		exit(1);
-	}
+Reminder for developers: when fixing the issue, please add a 'Link:'
+tags pointing to the report (the mail quoted above) using
+lore.kernel.org/r/, as explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'. Regzbot needs them to
+automatically connect reports with fixes, but they are useful in
+general, too.
 
-	srand(pid);
-	for (i = 0; i < size; i += 4)
-		*(unsigned int *)(p + i) = rand();
-	
-	do {
-		for (j = 0; j < 16; j++) {
-			for (i = 0; i < size; i += 4096)
-				*(unsigned int *)(p + i) += 1;
-			iterations++;
-		}
+I'm sending this to everyone that got the initial report, to make
+everyone aware of the tracking. I also hope that messages like this
+motivate people to directly get at least the regression mailing list and
+ideally even regzbot involved when dealing with regressions, as messages
+like this wouldn't be needed then. And don't worry, if I need to send
+other mails regarding this regression only relevant for regzbot I'll
+send them to the regressions lists only (with a tag in the subject so
+people can filter them away). With a bit of luck no such messages will
+be needed anyway.
 
-		mismatch = false;
-		srand(pid);
-		for (i = 0; i < size; i += 4) {
-			unsigned int r = rand();
-			unsigned int v = *(unsigned int *)(p + i);
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-			if (i % 4096 == 0)
-				v -= iterations;
+P.S.: As the Linux kernel's regression tracker I'm getting a lot of
+reports on my table. I can only look briefly into most of them and lack
+knowledge about most of the areas they concern. I thus unfortunately
+will sometimes get things wrong or miss something important. I hope
+that's not the case here; if you think it is, don't hesitate to tell me
+in a public reply, it's in everyone's interest to set the public record
+straight.
 
-			if (v != r) {
-				fprintf(stderr, "mismatch %zx: %x != %x (diff %x)\n",
-					i, v, r, v - r);
-				mismatch = true;
-			}
-		}
-	} while (!mismatch);
+-- 
+Additional information about regzbot:
 
-	exit(1);
-}
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
 
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
