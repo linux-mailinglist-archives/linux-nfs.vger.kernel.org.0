@@ -2,51 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FB4F4EE8B9
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 09:03:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F2C04EEE21
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 15:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241625AbiDAHFd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 Apr 2022 03:05:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
+        id S232890AbiDANcd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Apr 2022 09:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236804AbiDAHFc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Apr 2022 03:05:32 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9362AF;
-        Fri,  1 Apr 2022 00:03:41 -0700 (PDT)
-Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.54])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KV9yW2txtzBrvc;
-        Fri,  1 Apr 2022 14:59:31 +0800 (CST)
-Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- kwepemi500016.china.huawei.com (7.221.188.220) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 1 Apr 2022 15:03:36 +0800
-Received: from [10.174.176.52] (10.174.176.52) by
- kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.21; Fri, 1 Apr 2022 15:03:35 +0800
-Message-ID: <3381d7df-7254-e0ba-648c-6e763bda2ea4@huawei.com>
-Date:   Fri, 1 Apr 2022 15:03:34 +0800
+        with ESMTP id S1345341AbiDANcc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Apr 2022 09:32:32 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1009E27DEAC
+        for <linux-nfs@vger.kernel.org>; Fri,  1 Apr 2022 06:30:43 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C01151FCFF;
+        Fri,  1 Apr 2022 13:30:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1648819841;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5FpRflFwadmazJd5+FSaayWT1/O0VT62B6/XjClAY+g=;
+        b=HghYn/oDGmUjokIIvMlK4AEevxvISloeygwRr42196KEqsrelrGJt13XJOk61ARlOjEHAI
+        Ua4OXF40d8vCs8kF6+9wRlyFQp1/7sQWM1a3lFlKqks/x7MMFGF2pcJYq2IGggeISnSOUc
+        LpwDACgSFUTyTVU9f7ECGlQpwtPGV7I=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1648819841;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5FpRflFwadmazJd5+FSaayWT1/O0VT62B6/XjClAY+g=;
+        b=Xzknx9yNCLY025B2AVUN/R4rAwgU2vTMw08bSHvkdN1ce+Ylj6K03ULfcg2ruQnzn0qkOj
+        OTIB+ozI+yzxkmDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 78FAC132C1;
+        Fri,  1 Apr 2022 13:30:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id M5RjEYD+RmLqWQAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Fri, 01 Apr 2022 13:30:40 +0000
+Date:   Fri, 1 Apr 2022 15:30:36 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Frank Filz <ffilzlnx@mindspring.com>
+Cc:     'Bruce Fields' <bfields@redhat.com>, 'NeilBrown' <neilb@suse.de>,
+        'Linux NFS Mailing List' <linux-nfs@vger.kernel.org>,
+        'Yong Sun' <yosun@suse.com>
+Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+Message-ID: <Ykb+e0nvmeq41RHg@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <YLY9pKu38lEWaXxE@pevik>
+ <YLZS1iMJR59n4hue@pick.fieldses.org>
+ <164248153844.24166.16775550865302060652@noble.neil.brown.name>
+ <CAPL3RVE8+zYOLotpUQ6QWFy5rYS8o1NV6XbKE4-D6XpVSoYw3w@mail.gmail.com>
+ <0b8e01d81249$b7c4f300$274ed900$@mindspring.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-Subject: Re: [PATCH -next,v2 0/3] nfs: handle writeback errors correctly
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
-        <smayhew@redhat.com>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <liuyongqiang13@huawei.com>, <yi.zhang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>
-References: <20220401034409.256770-1-chenxiaosong2@huawei.com>
-From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
-In-Reply-To: <20220401034409.256770-1-chenxiaosong2@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.52]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600015.china.huawei.com (7.193.23.52)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0b8e01d81249$b7c4f300$274ed900$@mindspring.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -55,60 +75,108 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-在 2022/4/1 11:44, ChenXiaoSong 写道:
-> v1:
-> cover letter: (nfs: check writeback errors correctly)
-> 
-> v2:
-> - return more nuanced writeback errors in nfs_file_write().
-> - return writeback error in close()->flush() without consumed it.
-> - fix: nfs_file_write() will always call nfs_wb_all() even if there is no
-> new writeback error.
-> 
-> 
-> ChenXiaoSong (3):
->    NFS: return more nuanced writeback errors in nfs_file_write()
->    NFS: nfs{,4}_file_flush() return correct writeback errors
->    Revert "nfs: nfs_file_write() should check for writeback errors"
-> 
->   fs/nfs/file.c     | 23 ++++++++++-------------
->   fs/nfs/nfs4file.c |  8 ++++----
->   fs/nfs/write.c    |  5 +----
->   3 files changed, 15 insertions(+), 21 deletions(-)
-> 
+Hi all,
 
-It is not a good idea to modify error sequence mechanism, as the 
-`lib/errseq.c` described:
+> Yes, I believe I wrote this test to recreate a condition we saw in the wild. There is no guarantee the client doesn't send LOCK with an OPEN stateid and requesting new lock owner when you already have a LOCK stateid for that lock owner. This test case forces that condition.
 
-	22  * Note that there is a risk of collisions if new errors are being 
-recorded
-	23  * frequently, since we have so few bits to use as a counter. 
+> It looks like we were having troubles with FREE_STATEID racing with LOCK. A LOCK following a FREE_STATEID MUST use the OPEN stateid and ask for a new lock owner (since the LOCK stateid was freed), but if the LOCK wins the race, the old LOCK stateid still exists, so we get an LOCK with OPEN stateid requesting new lock owner where the STATEID will already exist.
 
-	24  *
-	25  * To mitigate this, one bit is used as a flag to tell whether the 
-value has
-	26  * been sampled since a new value was recorded. That allows us to 
-avoid bumping
-	27  * the counter if no one has sampled it since the last time an error was
-	28  * recorded.
+> Now maybe there's a different way to resolve the race, but if the LOCK truly arrives before Ganesha even sees the FREE_STATEID then it has no knowledge that would allow it to delay the LOCK request. Before we made changes to allow this I believe we replied with an error that broke things client side.
 
+> Here's a Ganesha patch trying to resolve the race and creating the condition that LOCK24 was then written to test:
 
-So, if we want to report nuanced writeback error, it is better to detect 
-wb error from filemap_check_errors(), and then return 
--(file->f_mapping->wb_err & MAX_ERRNO) to userspace without consume it.
+> https://github.com/nfs-ganesha/nfs-ganesha/commit/7d0fb8e9328c40fcfae03ac950a854f56689bb44
 
-   nfs_mapping_set_error
-     mapping_set_error
-       __filemap_set_wb_err // record error sequence
-         errseq_set
-       set_bit(..., &mapping->flags) // record address_space flag
+> Of course the client may have changed to eliminate the race...
 
-   // it is not used to be reported, just used to detect
-   error = filemap_check_errors // -ENOSPC or -EIO
-     test_and_clear_bit(..., &mapping->flags) // error bit cleared
+> If need be, just change this from an "all" test to a "ganesha" test.
 
-   // now we try to return nuanced writeback error
-   if (error)
-   return filemap_check_wb_err(file->f_mapping, 0);
-     return -(file->f_mapping->wb_err & MAX_ERRNO)
+Bruce, could this be done to solve problems for other clients?
+
+> Frank
+
+> > -----Original Message-----
+> > From: Bruce Fields [mailto:bfields@redhat.com]
+> > Sent: Tuesday, January 25, 2022 2:47 PM
+> > To: NeilBrown <neilb@suse.de>
+> > Cc: Petr Vorel <pvorel@suse.cz>; Linux NFS Mailing List <linux-
+> > nfs@vger.kernel.org>; Yong Sun <yosun@suse.com>; Frank S. Filz
+> > <ffilzlnx@mindspring.com>
+> > Subject: Re: pynfs: [NFS 4.0] SEC7, LOCK24 test failures
+
+> > Frank added this test in 4299316fb357, and I don't really understand his
+> > description, but it *sounds* like he really wanted it to do the new-lockowner
+> > case.  Frank?
+
+> > --b.
+
+> > On Tue, Jan 18, 2022 at 12:01 AM NeilBrown <neilb@suse.de> wrote:
+
+> > > On Wed, 02 Jun 2021, J. Bruce Fields wrote:
+> > > > On Tue, Jun 01, 2021 at 04:01:08PM +0200, Petr Vorel wrote:
+
+> > > > > LOCK24   st_lock.testOpenUpgradeLock                              : FAILURE
+> > > > >            OP_LOCK should return NFS4_OK, instead got
+> > > > >            NFS4ERR_BAD_SEQID
+
+> > > > I suspect the server's actually OK here, but I need to look more
+> > > > closely.
+
+> > > I agree.
+> > > I think this patch fixes the test.
+
+> > > NeilBrown
+
+> > > From: NeilBrown <neilb@suse.de>
+> > > Date: Tue, 18 Jan 2022 15:50:37 +1100
+> > > Subject: [PATCH] Fix NFSv4.0 LOCK24 test
+
+> > > Only the first lock request for a given open-owner can use lock_file.
+> > > Subsequent lock request must use relock_file.
+
+> > > Signed-off-by: NeilBrown <neilb@suse.de>
+> > > ---
+> > >  nfs4.0/servertests/st_lock.py | 11 +++++++++--
+> > >  1 file changed, 9 insertions(+), 2 deletions(-)
+
+> > > diff --git a/nfs4.0/servertests/st_lock.py
+> > > b/nfs4.0/servertests/st_lock.py index 468672403ffe..db08fbeedac4
+> > > 100644
+> > > --- a/nfs4.0/servertests/st_lock.py
+> > > +++ b/nfs4.0/servertests/st_lock.py
+> > > @@ -886,6 +886,7 @@ class open_sequence:
+> > >          self.client = client
+> > >          self.owner = owner
+> > >          self.lockowner = lockowner
+> > > +        self.lockseq = 0
+> > >      def open(self, access):
+> > >          self.fh, self.stateid = self.client.create_confirm(self.owner,
+> > >                                                 access=access, @@
+> > > -899,15 +900,21 @@ class open_sequence:
+> > >      def close(self):
+> > >          self.client.close_file(self.owner, self.fh, self.stateid)
+> > >      def lock(self, type):
+> > > -        res = self.client.lock_file(self.owner, self.fh, self.stateid,
+> > > -                    type=type, lockowner=self.lockowner)
+> > > +        if self.lockseq == 0:
+> > > +            res = self.client.lock_file(self.owner, self.fh, self.stateid,
+> > > +                                        type=type, lockowner=self.lockowner)
+> > > +        else:
+> > > +            res = self.client.relock_file(self.lockseq, self.fh, self.lockstateid,
+> > > +                                        type=type)
+> > >          check(res)
+> > >          if res.status == NFS4_OK:
+> > >              self.lockstateid = res.lockid
+> > > +            self.lockseq = self.lockseq + 1
+> > >      def unlock(self):
+> > >          res = self.client.unlock_file(1, self.fh, self.lockstateid)
+> > >          if res.status == NFS4_OK:
+> > >              self.lockstateid = res.lockid
+> > > +            self.lockseq = self.lockseq + 1
+
+> > >  def testOpenUpgradeLock(t, env):
+> > >      """Try open, lock, open, downgrade, close
+> > > --
+> > > 2.34.1
+
 
