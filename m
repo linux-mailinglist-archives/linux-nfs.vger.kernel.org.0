@@ -2,68 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55BB04EE70B
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 06:09:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FB4F4EE8B9
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 09:03:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238582AbiDAEK2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 1 Apr 2022 00:10:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37712 "EHLO
+        id S241625AbiDAHFd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Apr 2022 03:05:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233930AbiDAEK1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Apr 2022 00:10:27 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A618211A34;
-        Thu, 31 Mar 2022 21:08:37 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id CE8F61FCFE;
-        Fri,  1 Apr 2022 04:08:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648786115; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=stAERTlZOXYQ8hqsal36CeupS9MT75dVPrFy0RCK54s=;
-        b=AUd75ipOMfa7Ou4lvyPzy5YPdhfzhXVa5zlb2nrs2HKqOVpgSRCTocADY2TuMBAd6EbvvI
-        5uQeItZX4XQ9mJfPxKyLXXgNpyrIbCU5MEvI+/7vV5hPHKAGH/g6sJqTeFdA0LCCznWgZY
-        WXGDrGF8YJybUHurirpcxQQXcPdDdOI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648786115;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=stAERTlZOXYQ8hqsal36CeupS9MT75dVPrFy0RCK54s=;
-        b=HyWglv2bDxDqsK3EXqhXiPukE4oiciqPNMZk6YAhyvn9m0yew2BiDM39UDIphPEWCbPZUo
-        xrnirHgg6cBkW0Dw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B790B13B0C;
-        Fri,  1 Apr 2022 04:08:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 9+9YHMF6RmLmXgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 01 Apr 2022 04:08:33 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S236804AbiDAHFc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Apr 2022 03:05:32 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9362AF;
+        Fri,  1 Apr 2022 00:03:41 -0700 (PDT)
+Received: from kwepemi500016.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4KV9yW2txtzBrvc;
+        Fri,  1 Apr 2022 14:59:31 +0800 (CST)
+Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
+ kwepemi500016.china.huawei.com (7.221.188.220) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 1 Apr 2022 15:03:36 +0800
+Received: from [10.174.176.52] (10.174.176.52) by
+ kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.21; Fri, 1 Apr 2022 15:03:35 +0800
+Message-ID: <3381d7df-7254-e0ba-648c-6e763bda2ea4@huawei.com>
+Date:   Fri, 1 Apr 2022 15:03:34 +0800
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Al Viro" <viro@zeniv.linux.org.uk>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "David Disseldorp" <ddiss@suse.de>
-Subject: [PATCH v4] VFS: filename_create(): fix incorrect intent.
-In-reply-to: <164877264126.25542.1271530843099472952@noble.neil.brown.name>
-References: <164877264126.25542.1271530843099472952@noble.neil.brown.name>
-Date:   Fri, 01 Apr 2022 15:08:30 +1100
-Message-id: <164878611050.25542.6758961460499392000@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH -next,v2 0/3] nfs: handle writeback errors correctly
+To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
+        <smayhew@redhat.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <liuyongqiang13@huawei.com>, <yi.zhang@huawei.com>,
+        <zhangxiaoxu5@huawei.com>
+References: <20220401034409.256770-1-chenxiaosong2@huawei.com>
+From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
+In-Reply-To: <20220401034409.256770-1-chenxiaosong2@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.52]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemm600015.china.huawei.com (7.193.23.52)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,102 +55,60 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+在 2022/4/1 11:44, ChenXiaoSong 写道:
+> v1:
+> cover letter: (nfs: check writeback errors correctly)
+> 
+> v2:
+> - return more nuanced writeback errors in nfs_file_write().
+> - return writeback error in close()->flush() without consumed it.
+> - fix: nfs_file_write() will always call nfs_wb_all() even if there is no
+> new writeback error.
+> 
+> 
+> ChenXiaoSong (3):
+>    NFS: return more nuanced writeback errors in nfs_file_write()
+>    NFS: nfs{,4}_file_flush() return correct writeback errors
+>    Revert "nfs: nfs_file_write() should check for writeback errors"
+> 
+>   fs/nfs/file.c     | 23 ++++++++++-------------
+>   fs/nfs/nfs4file.c |  8 ++++----
+>   fs/nfs/write.c    |  5 +----
+>   3 files changed, 15 insertions(+), 21 deletions(-)
+> 
 
-When asked to create a path ending '/', but which is not to be a
-directory (LOOKUP_DIRECTORY not set), filename_create() will never try
-to create the file.  If it doesn't exist, -ENOENT is reported.
+It is not a good idea to modify error sequence mechanism, as the 
+`lib/errseq.c` described:
 
-However, it still passes LOOKUP_CREATE|LOOKUP_EXCL to the filesystems
-->lookup() function, even though there is no intent to create.  This is
-misleading and can cause incorrect behaviour.
+	22  * Note that there is a risk of collisions if new errors are being 
+recorded
+	23  * frequently, since we have so few bits to use as a counter. 
 
-If you try
-   ln -s foo /path/dir/
+	24  *
+	25  * To mitigate this, one bit is used as a flag to tell whether the 
+value has
+	26  * been sampled since a new value was recorded. That allows us to 
+avoid bumping
+	27  * the counter if no one has sampled it since the last time an error was
+	28  * recorded.
 
-where 'dir' is a directory on an NFS filesystem which is not currently
-known in the dcache, this will fail with ENOENT.
-As the name is not in the dcache, nfs_lookup gets called with
-LOOKUP_CREATE|LOOKUP_EXCL and so it returns NULL without performing any
-lookup, with the expectation that a subsequent call to create the
-target will be made, and the lookup can be combined with the creation.
-In the case with a trailing '/' and no LOOKUP_DIRECTORY, that call is never
-made.  Instead filename_create() sees that the dentry is not (yet)
-positive and returns -ENOENT - even though the directory actually
-exists.
 
-So only set LOOKUP_CREATE|LOOKUP_EXCL if there really is an intent
-to create, and use the absence of these flags to decide if -ENOENT
-should be returned.
+So, if we want to report nuanced writeback error, it is better to detect 
+wb error from filemap_check_errors(), and then return 
+-(file->f_mapping->wb_err & MAX_ERRNO) to userspace without consume it.
 
-Note that filename_parentat() is only interested in LOOKUP_REVAL, so we
-split that out and store it in 'reval_flag'.
-__looku_hash() then gets reval_flag combined with whatever create flags
-were determined to be needed.
+   nfs_mapping_set_error
+     mapping_set_error
+       __filemap_set_wb_err // record error sequence
+         errseq_set
+       set_bit(..., &mapping->flags) // record address_space flag
 
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/namei.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+   // it is not used to be reported, just used to detect
+   error = filemap_check_errors // -ENOSPC or -EIO
+     test_and_clear_bit(..., &mapping->flags) // error bit cleared
 
-ARG - v3 had a missing semi-colon.  Sorry.
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 3f1829b3ab5b..509657fdf4f5 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3673,18 +3673,14 @@ static struct dentry *filename_create(int dfd, struct=
- filename *name,
- {
- 	struct dentry *dentry =3D ERR_PTR(-EEXIST);
- 	struct qstr last;
-+	bool want_dir =3D lookup_flags & LOOKUP_DIRECTORY;
-+	unsigned int reval_flag =3D lookup_flags & LOOKUP_REVAL;
-+	unsigned int create_flags =3D LOOKUP_CREATE | LOOKUP_EXCL;
- 	int type;
- 	int err2;
- 	int error;
--	bool is_dir =3D (lookup_flags & LOOKUP_DIRECTORY);
-=20
--	/*
--	 * Note that only LOOKUP_REVAL and LOOKUP_DIRECTORY matter here. Any
--	 * other flags passed in are ignored!
--	 */
--	lookup_flags &=3D LOOKUP_REVAL;
--
--	error =3D filename_parentat(dfd, name, lookup_flags, path, &last, &type);
-+	error =3D filename_parentat(dfd, name, reval_flag, path, &last, &type);
- 	if (error)
- 		return ERR_PTR(error);
-=20
-@@ -3698,11 +3694,13 @@ static struct dentry *filename_create(int dfd, struct=
- filename *name,
- 	/* don't fail immediately if it's r/o, at least try to report other errors =
-*/
- 	err2 =3D mnt_want_write(path->mnt);
- 	/*
--	 * Do the final lookup.
-+	 * Do the final lookup.  Suppress 'create' if there is a trailing
-+	 * '/', and a directory wasn't requested.
- 	 */
--	lookup_flags |=3D LOOKUP_CREATE | LOOKUP_EXCL;
-+	if (last.name[last.len] && !want_dir)
-+		create_flags =3D 0;
- 	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
--	dentry =3D __lookup_hash(&last, path->dentry, lookup_flags);
-+	dentry =3D __lookup_hash(&last, path->dentry, reval_flag | create_flags);
- 	if (IS_ERR(dentry))
- 		goto unlock;
-=20
-@@ -3716,7 +3714,7 @@ static struct dentry *filename_create(int dfd, struct f=
-ilename *name,
- 	 * all is fine. Let's be bastards - you had / on the end, you've
- 	 * been asking for (non-existent) directory. -ENOENT for you.
- 	 */
--	if (unlikely(!is_dir && last.name[last.len])) {
-+	if (unlikely(!create_flags)) {
- 		error =3D -ENOENT;
- 		goto fail;
- 	}
---=20
-2.35.1
+   // now we try to return nuanced writeback error
+   if (error)
+   return filemap_check_wb_err(file->f_mapping, 0);
+     return -(file->f_mapping->wb_err & MAX_ERRNO)
 
