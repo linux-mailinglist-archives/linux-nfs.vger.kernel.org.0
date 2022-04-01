@@ -2,65 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B19AA4EE551
-	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 02:25:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C33294EE60C
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Apr 2022 04:30:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239649AbiDAAZ7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 31 Mar 2022 20:25:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46430 "EHLO
+        id S244083AbiDACbx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 31 Mar 2022 22:31:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243495AbiDAAZ5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 20:25:57 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F91A1E533E;
-        Thu, 31 Mar 2022 17:24:08 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 3ED4821A91;
-        Fri,  1 Apr 2022 00:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1648772647; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NCG365UbPzyy03bBGGS6hwKX+7Yd3BXwdOYl9pW0s9Q=;
-        b=HFfx0z2Z8p3T/ETpeNaj+ZZ4cFl4M/vMfiItcrsoddx0yX4DkWe4RYZ5OxQ2KWGycGhoKq
-        UnUmTIbQY+leZYWwINmZe7H+zFk1fwmVupxCDPNtqmPJZy3eKxWi8TGpfpypT3ZMsIjP05
-        cHZplSuNSTwf3pZzYFQ3rAW85v2Ty54=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1648772647;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=NCG365UbPzyy03bBGGS6hwKX+7Yd3BXwdOYl9pW0s9Q=;
-        b=j8S3J/zZwpBPpvD81Lqhy6aMGo1Pz8ga5duKhYmcruhJwKLHnZ1Cz4swe3ro2g4sB4KPDB
-        9uSshAalwCBUU7DA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F270A13A84;
-        Fri,  1 Apr 2022 00:24:04 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 0wwYKiRGRmKKNgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 01 Apr 2022 00:24:04 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S244081AbiDACbw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 31 Mar 2022 22:31:52 -0400
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCB07255AB3
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Mar 2022 19:30:03 -0700 (PDT)
+Received: by mail-yb1-xb29.google.com with SMTP id g9so2700431ybf.1
+        for <linux-nfs@vger.kernel.org>; Thu, 31 Mar 2022 19:30:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=X8cwDlYjnxCV3IxzT3v3QEWgrMQiVq0GE+zAs4nW3SA=;
+        b=rikRS/GxwOHHVJquulYr9sEM7JfhAU8lhASRbchygaEUbfO7bShrfIZ6xZCSTFMtEw
+         BLu3HJKZYlqMLoI/b3V+GiWUV+i2s2XEIkaJpiCLww0rNWnEcQixmZKMBjB1hGJeg4YQ
+         ZEuUKigI11Bpnqwl/MarLJpenSrxlQSDM57lG2QmYc62fsbsIY8W9AKyY3JMkyG+TEIF
+         QOPxk6ruqlNyOMqRjFC0HdzkD7ApjZ/iOT0Uv39n8GyNgw4TWpSgUXhSylpXyu5MsZcl
+         aUuzKo0mcQJmE0s+oVKcjND1adWDIu3tPv5qyuJEGquxFT2taDugRt1cD4ofBSngJwI+
+         aR+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=X8cwDlYjnxCV3IxzT3v3QEWgrMQiVq0GE+zAs4nW3SA=;
+        b=i34VRk61uLK4L2DTM48Ykufub3BlY/VSZUC7t+oin18qpDrsacS4WVsBrPfS8Cg69F
+         uYdpQpv3kYP7FlIZORzohCRaA/z4mAYKR+2GekzXWB7gtoPav+j1DrzuQT3pSisyca46
+         A0kUjcz1WeiLxs8Wgt4xbJJzrplcWYUggcFVq63CNgpylSnMnskpJz21iTsSf1DvjDdV
+         MuOvzIcib9dg0QobreLkBRHS/vuzVUw0S+iNtFUjdnUIZ+s+b8kEyykSj4NgTBRvA56j
+         2Zkx4J3djurF73USZWPhwjWRlibGnHfhJDELhZxt71/Ecwm8tVRTB5n0vFREH0hRrTOi
+         zZRg==
+X-Gm-Message-State: AOAM5319kCieZdOpVrHnJROJ91yC+j2PRBB+M2aRciB+7II1s+ty81UD
+        pYHUifNFl3aYxV2LBb1tJyLFPr1RIubR85DZ4ZPqQA==
+X-Google-Smtp-Source: ABdhPJxXWN2EeImfs4Xf8QoUFCxpUijqGlRatJFfKNDTVsQyfVCNS5IVCFQPfVXarhLay5xdzlHUWNlAGqUh6kC8ec8=
+X-Received: by 2002:a25:24d:0:b0:633:6b37:bea1 with SMTP id
+ 74-20020a25024d000000b006336b37bea1mr6516276ybc.427.1648780203076; Thu, 31
+ Mar 2022 19:30:03 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Al Viro" <viro@zeniv.linux.org.uk>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Jeff Layton" <jlayton@kernel.org>,
-        "David Disseldorp" <ddiss@suse.de>
-Subject: [PATCH v3] VFS: filename_create(): fix incorrect intent.
-Date:   Fri, 01 Apr 2022 11:24:01 +1100
-Message-id: <164877264126.25542.1271530843099472952@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+References: <20220228122126.37293-1-songmuchun@bytedance.com>
+ <20220228122126.37293-13-songmuchun@bytedance.com> <164869718565.25542.15818719940772238394@noble.neil.brown.name>
+ <CAMZfGtUSA9f3k9jF5U-y+NVt8cpmB9_mk1F9-vmm4JOuWFF_Bw@mail.gmail.com>
+ <164870069595.25542.17292003658915487357@noble.neil.brown.name>
+ <CAMZfGtX9pkWYf40RwDALZLKGDc+Dt2UJA7wZFjTagf0AyWyCiw@mail.gmail.com> <164876616694.25542.14010655277238655246@noble.neil.brown.name>
+In-Reply-To: <164876616694.25542.14010655277238655246@noble.neil.brown.name>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Fri, 1 Apr 2022 10:29:26 +0800
+Message-ID: <CAMZfGtUMyag7MHxmg7E1_xmyZ7NDPt62e-qXbqa8nJHFC72=3w@mail.gmail.com>
+Subject: Re: [PATCH v6 12/16] mm: list_lru: replace linear array with xarray
+To:     NeilBrown <neilb@suse.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Yang Shi <shy828301@gmail.com>, Alex Shi <alexs@kernel.org>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Dave Chinner <david@fromorbit.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        jaegeuk@kernel.org, chao@kernel.org,
+        Kari Argillander <kari.argillander@gmail.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        linux-nfs@vger.kernel.org, Qi Zheng <zhengqi.arch@bytedance.com>,
+        Xiongchun duan <duanxiongchun@bytedance.com>,
+        Fam Zheng <fam.zheng@bytedance.com>,
+        Muchun Song <smuchun@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,100 +88,71 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Fri, Apr 1, 2022 at 6:36 AM NeilBrown <neilb@suse.de> wrote:
+>
+> On Thu, 31 Mar 2022, Muchun Song wrote:
+> >
+> > Thanks for your report.  I knew the reason. It is because the following
+> > patch in this series was missed upstream.  Could you help me test if it
+> > works properly?
+> >
+> > [v6,06/16] nfs42: use a specific kmem_cache to allocate nfs4_xattr_entry
+> >
+>
+> Thanks for the quick response!  That patch helps, but has a bug.  My
+> testing resulted in refcount underflow errors.
+>
+> Problem is that kref_init() is called in nfs4_xattr_entry_init_once().
+> This means that it is initialised to '1' the first time an entry is
+> allocated, but it is left as zero the second time.
+> I applied:
+> --- a/fs/nfs/nfs42xattr.c
+> +++ b/fs/nfs/nfs42xattr.c
+> @@ -191,6 +191,7 @@ nfs4_xattr_alloc_entry(const char *name, const void *value,
+>         entry = kmem_cache_alloc_lru(nfs4_xattr_entry_cachep, lru, gfp);
+>         if (!entry)
+>                 return NULL;
+> +       kref_init(&entry->ref);
+>         namep = kstrdup_const(name, gfp);
+>         if (!namep && name)
+>                 goto free_buf;
+> @@ -974,7 +975,6 @@ static void nfs4_xattr_entry_init_once(void *p)
+>  {
+>         struct nfs4_xattr_entry *entry = p;
+>
+> -       kref_init(&entry->ref);
+>         entry->bucket = NULL;
+>         INIT_LIST_HEAD(&entry->lru);
+>         INIT_LIST_HEAD(&entry->dispose);
+>
+> and now it seems to work.
+>
+> The complete patch that I applied is below.  I haven't reviewed it, just
+> tested it.
+>   Tested-by: NeilBrown <neilb@suse.de>
+>
 
-When asked to create a path ending '/', but which is not to be a
-directory (LOOKUP_DIRECTORY not set), filename_create() will never try
-to create the file.  If it doesn't exist, -ENOENT is reported.
+Thanks for your test.  I have looked at the latest code.
+I found the following patch has removed GFP_ACCOUNT
+on allocation.
 
-However, it still passes LOOKUP_CREATE|LOOKUP_EXCL to the filesystems
-->lookup() function, even though there is no intent to create.  This is
-misleading and can cause incorrect behaviour.
+5c60e89e71f8 ("NFSv4.2: Fix up an invalid combination of memory
+allocation flags")
 
-If you try
-   ln -s foo /path/dir/
+But this commit forgot to remove SLAB_ACCOUNT when creating
+nfs4_xattr_cache_cachep (I think it is a bug).  So I think the following
+patch could work.
 
-where 'dir' is a directory on an NFS filesystem which is not currently
-known in the dcache, this will fail with ENOENT.
-As the name is not in the dcache, nfs_lookup gets called with
-LOOKUP_CREATE|LOOKUP_EXCL and so it returns NULL without performing any
-lookup, with the expectation that a subsequent call to create the
-target will be made, and the lookup can be combined with the creation.
-In the case with a trailing '/' and no LOOKUP_DIRECTORY, that call is never
-made.  Instead filename_create() sees that the dentry is not (yet)
-positive and returns -ENOENT - even though the directory actually
-exists.
+diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
+index ad3405c64b9e..e7b34f7e0614 100644
+--- a/fs/nfs/nfs42xattr.c
++++ b/fs/nfs/nfs42xattr.c
+@@ -997,7 +997,7 @@ int __init nfs4_xattr_cache_init(void)
 
-So only set LOOKUP_CREATE|LOOKUP_EXCL if there really is an intent
-to create, and use the absence of these flags to decide if -ENOENT
-should be returned.
-
-Note that filename_parentat() is only interested in LOOKUP_REVAL, so we
-split that out and store it in 'reval_flag'.
-__looku_hash() then gets reval_flag combined with whatever create flags
-were determined to be needed.
-
-Signed-off-by: NeilBrown <neilb@suse.de>
----
- fs/namei.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
-
-diff --git a/fs/namei.c b/fs/namei.c
-index 3f1829b3ab5b..c1d53a189f66 100644
---- a/fs/namei.c
-+++ b/fs/namei.c
-@@ -3673,18 +3673,14 @@ static struct dentry *filename_create(int dfd, struct=
- filename *name,
- {
- 	struct dentry *dentry =3D ERR_PTR(-EEXIST);
- 	struct qstr last;
-+	bool want_dir =3D lookup_flags & LOOKUP_DIRECTORY;
-+	unsigned int reval_flag =3D lookup_flags & LOOKUP_REVAL;
-+	unsigned int create_flags =3D LOOKUP_CREATE | LOOKUP_EXCL;
- 	int type;
- 	int err2;
- 	int error;
--	bool is_dir =3D (lookup_flags & LOOKUP_DIRECTORY);
-=20
--	/*
--	 * Note that only LOOKUP_REVAL and LOOKUP_DIRECTORY matter here. Any
--	 * other flags passed in are ignored!
--	 */
--	lookup_flags &=3D LOOKUP_REVAL;
--
--	error =3D filename_parentat(dfd, name, lookup_flags, path, &last, &type);
-+	error =3D filename_parentat(dfd, name, reval_flag, path, &last, &type);
- 	if (error)
- 		return ERR_PTR(error);
-=20
-@@ -3698,11 +3694,13 @@ static struct dentry *filename_create(int dfd, struct=
- filename *name,
- 	/* don't fail immediately if it's r/o, at least try to report other errors =
-*/
- 	err2 =3D mnt_want_write(path->mnt);
- 	/*
--	 * Do the final lookup.
-+	 * Do the final lookup.  Suppress 'create' if there is a trailing
-+	 * '/', and a directory wasn't requested.
- 	 */
--	lookup_flags |=3D LOOKUP_CREATE | LOOKUP_EXCL;
-+	if (last.name[last.len] && !want_dir)
-+		create_flags =3D 0
- 	inode_lock_nested(path->dentry->d_inode, I_MUTEX_PARENT);
--	dentry =3D __lookup_hash(&last, path->dentry, lookup_flags);
-+	dentry =3D __lookup_hash(&last, path->dentry, reval_flag | create_flags);
- 	if (IS_ERR(dentry))
- 		goto unlock;
-=20
-@@ -3716,7 +3714,7 @@ static struct dentry *filename_create(int dfd, struct f=
-ilename *name,
- 	 * all is fine. Let's be bastards - you had / on the end, you've
- 	 * been asking for (non-existent) directory. -ENOENT for you.
- 	 */
--	if (unlikely(!is_dir && last.name[last.len])) {
-+	if (unlikely(!create_flags)) {
- 		error =3D -ENOENT;
- 		goto fail;
- 	}
---=20
-2.35.1
-
+        nfs4_xattr_cache_cachep = kmem_cache_create("nfs4_xattr_cache_cache",
+            sizeof(struct nfs4_xattr_cache), 0,
+-           (SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD|SLAB_ACCOUNT),
++           (SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD),
+            nfs4_xattr_cache_init_once);
+        if (nfs4_xattr_cache_cachep == NULL)
+                return -ENOMEM;
