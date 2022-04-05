@@ -2,152 +2,107 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CC74F1B6A
-	for <lists+linux-nfs@lfdr.de>; Mon,  4 Apr 2022 23:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACC074F2230
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Apr 2022 06:45:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379636AbiDDVUT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 4 Apr 2022 17:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42934 "EHLO
+        id S229839AbiDEEri (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Apr 2022 00:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379827AbiDDSLg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 4 Apr 2022 14:11:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A3DA3A73D
-        for <linux-nfs@vger.kernel.org>; Mon,  4 Apr 2022 11:09:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B4E3260DE3
-        for <linux-nfs@vger.kernel.org>; Mon,  4 Apr 2022 18:09:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F818C2BBE4
-        for <linux-nfs@vger.kernel.org>; Mon,  4 Apr 2022 18:09:36 +0000 (UTC)
-Subject: [PATCH v1 6/6] SUNRPC: Remove svc_rqst::rq_xprt_hlen
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Mon, 04 Apr 2022 14:09:35 -0400
-Message-ID: <164909577591.3716.15050159604323490718.stgit@manet.1015granger.net>
-In-Reply-To: <164909503892.3716.8666091898179474248.stgit@manet.1015granger.net>
-References: <164909503892.3716.8666091898179474248.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S230181AbiDEErM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Apr 2022 00:47:12 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E31F9FD9;
+        Mon,  4 Apr 2022 21:43:37 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 71A6168AFE; Tue,  5 Apr 2022 06:43:31 +0200 (CEST)
+Date:   Tue, 5 Apr 2022 06:43:31 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Ariel Elior <aelior@marvell.com>, Anna Schumaker <anna@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mustafa Ismail <mustafa.ismail@intel.com>,
+        Nelson Escobar <neescoba@cisco.com>, netdev@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>, rds-devel@oss.oracle.com,
+        Sagi Grimberg <sagi@grimberg.me>,
+        samba-technical@lists.samba.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        target-devel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>,
+        Xiao Yang <yangx.jy@fujitsu.com>
+Subject: Re: [PATCH] RDMA: Split kernel-only global device caps from uvers
+ device caps
+Message-ID: <20220405044331.GA22322@lst.de>
+References: <0-v1-47e161ac2db9+80f-kern_caps_jgg@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0-v1-47e161ac2db9+80f-kern_caps_jgg@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: This field is now always set to zero.
+On Mon, Apr 04, 2022 at 01:18:00PM -0300, Jason Gunthorpe wrote:
+> Split ib_device::device_cap_flags into kernel_cap_flags that holds the
+> flags only used by the kernel.
+> 
+> This cleanly splits out the uverbs flags from the kernel flags to avoid
+> confusion in the flags bitmap.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- include/linux/sunrpc/svc.h              |    2 --
- include/trace/events/sunrpc.h           |    3 +--
- net/sunrpc/svc_xprt.c                   |    8 +++-----
- net/sunrpc/svcsock.c                    |    2 --
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    1 -
- 5 files changed, 4 insertions(+), 12 deletions(-)
+> Followup from Xiao Yang's series
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index 217711fc9cac..b73704fbd09b 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -257,7 +257,6 @@ struct svc_rqst {
- 	void *			rq_xprt_ctxt;	/* transport specific context ptr */
- 	struct svc_deferred_req*rq_deferred;	/* deferred request we are replaying */
- 
--	size_t			rq_xprt_hlen;	/* xprt header len */
- 	struct xdr_buf		rq_arg;
- 	struct xdr_stream	rq_arg_stream;
- 	struct xdr_stream	rq_res_stream;
-@@ -397,7 +396,6 @@ struct svc_deferred_req {
- 	size_t			daddrlen;
- 	void			*xprt_ctxt;
- 	struct cache_deferred_req handle;
--	size_t			xprt_hlen;
- 	int			argslen;
- 	__be32			args[];
- };
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index de099ca585d7..6d72df4d29be 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -2021,8 +2021,7 @@ DECLARE_EVENT_CLASS(svc_deferred_event,
- 
- 	TP_fast_assign(
- 		__entry->dr = dr;
--		__entry->xid = be32_to_cpu(*(__be32 *)(dr->args +
--						       (dr->xprt_hlen>>2)));
-+		__entry->xid = be32_to_cpu(*(__be32 *)dr->args);
- 		__assign_sockaddr(addr, &dr->addr, dr->addrlen);
- 	),
- 
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 5b59e2103526..a4661f8d50ff 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -1230,7 +1230,6 @@ static struct cache_deferred_req *svc_defer(struct cache_req *req)
- 		dr->addrlen = rqstp->rq_addrlen;
- 		dr->daddr = rqstp->rq_daddr;
- 		dr->argslen = rqstp->rq_arg.len >> 2;
--		dr->xprt_hlen = rqstp->rq_xprt_hlen;
- 		dr->xprt_ctxt = rqstp->rq_xprt_ctxt;
- 		rqstp->rq_xprt_ctxt = NULL;
- 
-@@ -1258,9 +1257,9 @@ static noinline int svc_deferred_recv(struct svc_rqst *rqstp)
- 	trace_svc_defer_recv(dr);
- 
- 	/* setup iov_base past transport header */
--	rqstp->rq_arg.head[0].iov_base = dr->args + (dr->xprt_hlen>>2);
-+	rqstp->rq_arg.head[0].iov_base = dr->args;
- 	/* The iov_len does not include the transport header bytes */
--	rqstp->rq_arg.head[0].iov_len = (dr->argslen<<2) - dr->xprt_hlen;
-+	rqstp->rq_arg.head[0].iov_len = (dr->argslen<<2);
- 	rqstp->rq_arg.page_len = 0;
- 	/* The rq_arg.len includes the transport header bytes */
- 	rqstp->rq_arg.len     = dr->argslen<<2;
-@@ -1268,12 +1267,11 @@ static noinline int svc_deferred_recv(struct svc_rqst *rqstp)
- 	memcpy(&rqstp->rq_addr, &dr->addr, dr->addrlen);
- 	rqstp->rq_addrlen     = dr->addrlen;
- 	/* Save off transport header len in case we get deferred again */
--	rqstp->rq_xprt_hlen   = dr->xprt_hlen;
- 	rqstp->rq_daddr       = dr->daddr;
- 	rqstp->rq_respages    = rqstp->rq_pages;
- 	rqstp->rq_xprt_ctxt   = dr->xprt_ctxt;
- 	svc_xprt_received(rqstp->rq_xprt);
--	return (dr->argslen<<2) - dr->xprt_hlen;
-+	return (dr->argslen<<2);
- }
- 
- 
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index de91643eecb7..2ac619482ed0 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -250,8 +250,6 @@ static ssize_t svc_tcp_read_msg(struct svc_rqst *rqstp, size_t buflen,
- 	ssize_t len;
- 	size_t t;
- 
--	rqstp->rq_xprt_hlen = 0;
--
- 	clear_bit(XPT_DATA, &svsk->sk_xprt.xpt_flags);
- 
- 	for (i = 0, t = 0; t < buflen; i++, t += PAGE_SIZE) {
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index 864131a9fc6e..5242ad121450 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -831,7 +831,6 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
- 		goto out_err;
- 	if (ret == 0)
- 		goto out_drop;
--	rqstp->rq_xprt_hlen = 0;
- 
- 	if (svc_rdma_is_reverse_direction_reply(xprt, ctxt))
- 		goto out_backchannel;
+Can you point me to this series?
 
+> -	if (!(device->attrs.device_cap_flags & IB_DEVICE_ALLOW_USER_UNREG)) {
+> +	if (!(device->attrs.kernel_cap_flags & IB_KDEVICE_ALLOW_USER_UNREG)) {
 
+Maybe shorten the prefix to IBD_ ?
+
+> +enum ib_kernel_cap_flags {
+> +	/*
+> +	 * This device supports a per-device lkey or stag that can be
+> +	 * used without performing a memory registration for the local
+> +	 * memory.  Note that ULPs should never check this flag, but
+> +	 * instead of use the local_dma_lkey flag in the ib_pd structure,
+> +	 * which will always contain a usable lkey.
+> +	 */
+> +	IB_KDEVICE_LOCAL_DMA_LKEY = 1 << 0,
+> +	IB_KDEVICE_UD_TSO = 1 << 1,
+> +	IB_KDEVICE_BLOCK_MULTICAST_LOOPBACK = 1 << 2,
+> +	IB_KDEVICE_INTEGRITY_HANDOVER = 1 << 3,
+> +	IB_KDEVICE_ON_DEMAND_PAGING = 1ULL << 4,
+> +	IB_KDEVICE_SG_GAPS_REG = 1ULL << 5,
+> +	IB_KDEVICE_VIRTUAL_FUNCTION = 1ULL << 6,
+> +	IB_KDEVICE_RDMA_NETDEV_OPA = 1ULL << 7,
+> +	IB_KDEVICE_ALLOW_USER_UNREG = 1ULL << 8,
+> +};
+
+And maybe not in this patch, but if you touch this anyway please add
+comments to document allthe flags.
