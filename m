@@ -2,68 +2,88 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4008C4F2714
-	for <lists+linux-nfs@lfdr.de>; Tue,  5 Apr 2022 10:06:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE2F4F2E45
+	for <lists+linux-nfs@lfdr.de>; Tue,  5 Apr 2022 13:59:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233141AbiDEIFQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Apr 2022 04:05:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54458 "EHLO
+        id S235801AbiDEJes (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 5 Apr 2022 05:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234493AbiDEH6g (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Apr 2022 03:58:36 -0400
-X-Greylist: delayed 612 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Apr 2022 00:52:36 PDT
-Received: from mail.bizcall.pl (mail.bizcall.pl [192.71.213.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77500A56D4
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Apr 2022 00:52:36 -0700 (PDT)
-Received: by mail.bizcall.pl (Postfix, from userid 1001)
-        id 83DA841033; Tue,  5 Apr 2022 09:41:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizcall.pl; s=mail;
-        t=1649144543; bh=L7rZPDqncV/PGNK3vBL4eFyhOA8rMHMu3jCfxnl4mEc=;
-        h=Date:From:To:Subject:From;
-        b=gAz6hGBGTeh8EubZ+oGLsFsB4jfY35MY/TkZSNhMZ3TT0zCSLqEZuSBVdQKGji/Dp
-         di59d6KYYF+hj+1NdgXDeOE6s6Nk7/i1/OL5nigDGlkIdH3lks7IwgNXKClteAUzEL
-         3aqI0iHQORILDKTsCDMBQGflIBp+wgdkjXcLKmodbwzRripljQRK+rDbCY3Go6n+Me
-         +GsybjlcSskwnt2TQXos1jBU5QqzxqSW4f0590s/CACOYqSs2wy+i2H68lxy+yz3Tz
-         iwKVshsgavBeUJkhNZHPRz+bQBhQKW5cLNc+SbjKJE+HLqbypuQdi5CESm0hGPd+u7
-         nSSTKrU54Ty4Q==
-Received: by mail.bizcall.pl for <linux-nfs@vger.kernel.org>; Tue,  5 Apr 2022 07:38:54 GMT
-Message-ID: <20220405084501-0.1.1v.5hfz.0.mphpqbpqkr@bizcall.pl>
-Date:   Tue,  5 Apr 2022 07:38:54 GMT
-From:   "Marek Onufrowicz" <marek.onufrowicz@bizcall.pl>
-To:     <linux-nfs@vger.kernel.org>
-Subject: Prezentacja
-X-Mailer: mail.bizcall.pl
+        with ESMTP id S1343845AbiDEJOl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Apr 2022 05:14:41 -0400
+Received: from andre.telenet-ops.be (andre.telenet-ops.be [IPv6:2a02:1800:120:4::f00:15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4558A433AC
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Apr 2022 02:00:46 -0700 (PDT)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:38ab:c2b8:b3aa:7514])
+        by andre.telenet-ops.be with bizsmtp
+        id Ex0j270041peDqJ01x0jAA; Tue, 05 Apr 2022 11:00:43 +0200
+Received: from geert (helo=localhost)
+        by ramsan.of.borg with local-esmtp (Exim 4.93)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1nbf3K-008QxV-RE; Tue, 05 Apr 2022 11:00:42 +0200
+Date:   Tue, 5 Apr 2022 11:00:42 +0200 (CEST)
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+X-X-Sender: geert@ramsan.of.borg
+To:     trondmy@kernel.org
+cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] NFS: Replace readdir's use of xxhash() with hash_64()
+In-Reply-To: <20220331033023.718688-1-trondmy@kernel.org>
+Message-ID: <alpine.DEB.2.22.394.2204051056580.2010216@ramsan.of.borg>
+References: <20220331033023.718688-1-trondmy@kernel.org>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry!
+ 	Hi Trond,
 
-Czy m=C3=B3g=C5=82bym przedstawi=C4=87 rozwi=C4=85zanie, kt=C3=B3re umo=C5=
-=BCliwia monitoring ka=C5=BCdego auta w czasie rzeczywistym w tym jego po=
-zycj=C4=99, zu=C5=BCycie paliwa i przebieg?
+On Wed, 30 Mar 2022, trondmy@kernel.org wrote:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>
+> Both xxhash() and hash_64() appear to give similarly low collision
+> rates with a standard linearly increasing readdir offset. They both give
+> similarly higher collision rates when applied to ext4's offsets.
+>
+> So switch to using the standard hash_64().
+>
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Dodatkowo nasze narz=C4=99dzie minimalizuje koszty utrzymania samochod=C3=
-=B3w, skraca czas przejazd=C3=B3w, a tak=C5=BCe tworzenie planu tras czy =
-dostaw.
+Thanks for your patch!
 
-Z naszej wiedzy i do=C5=9Bwiadczenia korzysta ju=C5=BC ponad 49 tys. Klie=
-nt=C3=B3w. Monitorujemy 809 000 pojazd=C3=B3w na ca=C5=82ym =C5=9Bwiecie,=
- co jest nasz=C4=85 najlepsz=C4=85 wizyt=C3=B3wk=C4=85.
+> --- a/fs/nfs/Kconfig
+> +++ b/fs/nfs/Kconfig
+> @@ -4,10 +4,6 @@ config NFS_FS
+> 	depends on INET && FILE_LOCKING && MULTIUSER
+> 	select LOCKD
+> 	select SUNRPC
+> -	select CRYPTO
 
-Bardzo prosz=C4=99 o e-maila zwrotnego, je=C5=9Bli mogliby=C5=9Bmy wsp=C3=
-=B3lnie om=C3=B3wi=C4=87 potencja=C5=82 wykorzystania takiego rozwi=C4=85=
-zania w Pa=C5=84stwa firmie.
+I'm extremely grateful for this part! ;-)
 
+While updating shmobile_defconfig, I was wondering why I was suddenly
+asked about all those crypto drivers...
 
-Pozdrawiam,
-Marek Onufrowicz
+> -	select CRYPTO_HASH
+> -	select XXHASH
+> -	select CRYPTO_XXHASH
+> 	select NFS_ACL_SUPPORT if NFS_V3_ACL
+> 	help
+> 	  Choose Y here if you want to access files residing on other
+
+Gr{oetje,eeting}s,
+
+ 						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+ 							    -- Linus Torvalds
