@@ -2,182 +2,218 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D30C94F664B
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 19:07:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BABD4F67EE
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 19:58:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238262AbiDFREY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Apr 2022 13:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45272 "EHLO
+        id S239287AbiDFRt5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Apr 2022 13:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238272AbiDFRCT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 13:02:19 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D707217498
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 07:25:46 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2a02:3030:2:1c98:2277:ba57:a2c0:5])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sebastianfricke)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id DBDBA1F43994
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 15:25:44 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1649255145;
-        bh=Ap1H4Ppc4RISIIw/I5+mJFxMrfXys0AEPYY7C6HzfPk=;
-        h=Date:From:To:Subject:From;
-        b=Z7YgZz1mdZimM1TMmENR4sunYOcMZSC8Mq7prLWC456HMSvQGWK6e8X2W7yzeltBG
-         Xzpa6XhsvbZUG/iA/ZGbPh0ntJxh6Q2Fn+DxjGfuzeNDUvcwHw6kN239f0Z7W7qUnX
-         rkdw2vhmJRht9xdvFpcu/mrYcY4XuOSd3tZwcfbVCME/Tb6lumvvAmBcmKO13tUlCH
-         TCHn6izeoro7ZMkizYrekoqxWnWlzzHK+Poam79DcDeVu3RU4VYi/5oR8bJIQiC3jI
-         j6HmZjsF7tUyC05RV9MxWBq3PS05F9MAy16INPNoZNHViUeno365pZ/Uqr+Fot4fq1
-         N2eOhS1wvBhfA==
-Date:   Wed, 6 Apr 2022 16:25:41 +0200
-From:   Sebastian Fricke <sebastian.fricke@collabora.com>
-To:     linux-nfs@vger.kernel.org
-Subject: Possible NFS4 regression on 5.18-rc1
-Message-ID: <20220406142541.eouf7ryfbd7aooye@basti-XPS-13-9310>
+        with ESMTP id S239698AbiDFRtq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 13:49:46 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9511A181B0F
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 08:57:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1649260678;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tZkosHO3/qohnzYjmrzPUmovzbkO3kB+s/3SZou3ANY=;
+        b=JC8r/SARnpmmW+qje8YpTvRRnivlTx4RFqdcI54/8SiNynwXQYIsw48D0C60UMZrtTbwEE
+        V7AofXJtWzQKjpaRlTAyVTDRIsAtLKlv4rpJQcm5Qw+B1icYGNytvo/F27fIBNxyaa0wrw
+        YVmvs/xABxcRJO3jKvOEvvWJid/tMmw=
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
+ [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-537-N7ee4_m-NGu59oW5RoTQug-1; Wed, 06 Apr 2022 11:57:57 -0400
+X-MC-Unique: N7ee4_m-NGu59oW5RoTQug-1
+Received: by mail-qt1-f199.google.com with SMTP id p6-20020a05622a00c600b002e1cb9508e8so3248438qtw.20
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Apr 2022 08:57:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=tZkosHO3/qohnzYjmrzPUmovzbkO3kB+s/3SZou3ANY=;
+        b=uvDxtjeMV3sSOWdM8v+bk+CnRk6lG32rhQbEM3iRAgbFAf0LcAIfhHoU/ruLAFWubF
+         pBGXGaB7BCUCkp1tVuh1YU4IoXGs6nISXQAhTErf5yWTRVxwEqDtS+jU9Pua6Lu+p9tM
+         ygCVg4m79mr4ab1ZeGfnbXxElLAIfcqzlLH9oXcLFCEiqRJ3xTmkqba/PZBi2fKVMoVd
+         JsSXSSWrqulkalCjuxUUGaUXekgiEz0Lzi0KK+SD0E6g29AfkcNSW74fZkoyJIIYDLSV
+         RNP9mSJQoecOJOkOyATQMF34QY8uarP74CUvkgbeWCaftY3zOwmI74BGXwFzPMgske5f
+         ooiQ==
+X-Gm-Message-State: AOAM5301tqphz+CPvcnod93zwEMMFd4gapynrZSo9A8zWmJgZ9nKZKdR
+        J2kevAUyvsfG2eEfLWxzNRZE32uN4NnWYq/jsLBz+zuL23EIFGWHqilMjvvvtA/bb6xXKY2Wwfd
+        2peRENoVVc/F6UlBSe4ft
+X-Received: by 2002:ac8:5fcf:0:b0:2e1:ebd9:3e38 with SMTP id k15-20020ac85fcf000000b002e1ebd93e38mr8112633qta.149.1649260676692;
+        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyBFrXaaSvJ1VVoUmT6Jbzb0CgOJjxQYypYQpv2O520k3GpmyxzXgAIJq7tmV9bkY5J4AZ9Uw==
+X-Received: by 2002:ac8:5fcf:0:b0:2e1:ebd9:3e38 with SMTP id k15-20020ac85fcf000000b002e1ebd93e38mr8112617qta.149.1649260676422;
+        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
+Received: from [172.31.1.6] ([71.161.124.94])
+        by smtp.gmail.com with ESMTPSA id 3-20020a370503000000b0067b03f03589sm9893337qkf.53.2022.04.06.08.57.55
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
+Message-ID: <852313a3-005e-2771-8be1-888891370533@redhat.com>
+Date:   Wed, 6 Apr 2022 11:57:55 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH/RFC] mount.nfs: handle EADDRINUSE from mount(2)
+Content-Language: en-US
+To:     NeilBrown <neilb@suse.de>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Trond Myklebust <trondmy@hammerspace.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <164816808982.6096.11435363819568479436@noble.neil.brown.name>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <164816808982.6096.11435363819568479436@noble.neil.brown.name>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello folks,
+Hey!
 
-I am currently developing a V4L2 driver with support on GStreamer, for
-that purpose I am mounting the GStreamer repository via NFS from my
-development machine to the target ARM64 hardware.
+My apologies for taking so long to get to this....
 
-I just switched to the latest kernel and got a sudden hang up of my
-system.
-What I did was a rebase of the GStreamer repository and then I wanted to
-build it with ninja on the target, this failed with a segmentation fault:
-```
-gstreamer| Configuring libgstreamer-1.0.so.0.2100.0-gdb.py using configurat=
-ion
-Segmentation fault
-FAILED: build.ninja=20
-/usr/local/bin/meson --internal regenerate /home/user/gstreamer_crossbuild =
-/home/user/gstreamer_crossbuild/build --backend ninja
-ninja: error: rebuilding 'build.ninja': subcommand FAILED
-```
+On 3/24/22 8:28 PM, NeilBrown wrote:
+> 
+> [[This is the followup to the kernel patch I recently posted.
+>    It changes the behaviour of incorrectly configured containers to
+>    get unique client identities - so lease stealing doesn't happen
+>    so data corruption is avoided - but does not provide stable
+>    identities, so reboot recovery is not ideal.
+Which patch are you referring to and did it make it in?
 
-And on the kernel side I got a OOPS:
+>    What is best to do when configuration is wrong?  Provide best service
+>    possible despite it not being perfect, or provide no service so the
+>    config will not get fixed.  I could be swayed either way.
+> ]]
+Maybe a little both? :-) Flag the broken config and continue on
+if possible... but flagging the broken config is more critical... IMHO.
 
-```
-[ 4595.193433] Unable to handle kernel NULL pointer dereference at virtual =
-address 0000000000000008
-[ 4595.194259] Mem abort info:
-[ 4595.194518]   ESR =3D 0x96000006
-[ 4595.194857]   EC =3D 0x25: DABT (current EL), IL =3D 32 bits
-[ 4595.195343]   SET =3D 0, FnV =3D 0
-[ 4595.195622]   EA =3D 0, S1PTW =3D 0
-[ 4595.195908]   FSC =3D 0x06: level 2 translation fault
-[ 4595.196348] Data abort info:
-[ 4595.196610]   ISV =3D 0, ISS =3D 0x00000006
-[ 4595.196958]   CM =3D 0, WnR =3D 0
-[ 4595.197229] user pgtable: 4k pages, 48-bit VAs, pgdp=3D000000000450a000
-[ 4595.197807] [0000000000000008] pgd=3D08000000f1812003, p4d=3D08000000f18=
-12003, pud=3D08000000390bf003, pmd=3D0000000000000000
-[ 4595.198793] Internal error: Oops: 96000006 [#1] PREEMPT SMP
-[ 4595.199300] Modules linked in: rpcsec_gss_krb5 auth_rpcgss nfsv4 nfs loc=
-kd grace fscache netfs iptable_nat nf_nat iptable_mangle bpfilter iptable_f=
-ilter btsdio ip6t_REJECT nf_reject_ipv6 ipt_REJECT nf_reject_ipv4 xt_tcpudp=
-  xt_state xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 nft_compa=
-t nf_tables nfnetlink hantro_vpu(C) rockchip_vdec(C) hci_uart v4l2_vp9 rock=
-chip_rga v4l2_h264 btqca videobuf2_dma_contig brcmfmac videobuf2_dma_sg v4l=
-2_mem2mem btrtl snd_soc_es8316 snd_soc_audio_graph_card videobuf2_memops bt=
-bcm snd_soc_hdmi_codec snd_soc_simple_card snd_soc_rockchip_i2s snd_soc_spd=
-if_tx brcmutil videobuf2_v4l2 snd_soc_simple_card_utils btintel videobuf2_c=
-ommon snd_soc_core bluetooth cfg80211 snd_pcm_dmaengine videodev snd_pcm sn=
-d_timer dw_hdmi_i2s_audio mc dw_hdmi_cec snd rfkill soundcore cpufreq_dt su=
-nrpc ip_tables x_tables autofs4 cls_cgroup panfrost drm_shmem_helper gpu_sc=
-hed rockchipdrm drm_cma_helper dw_hdmi dw_mipi_dsi analogix_dp drm_dp_helpe=
-r drm_kms_helper cec rc_core
-[ 4595.199702]  drm drm_panel_orientation_quirks realtek(E)
-[ 4595.207759] CPU: 4 PID: 3716 Comm: meson Tainted: G         C  E     5.1=
-8.0-rc1-rockpidebug2 #94
-[ 4595.208532] Hardware name: Radxa ROCK Pi 4B (DT)
-[ 4595.208938] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=
-=3D--)
-[ 4595.209552] pc : list_lru_add+0xd4/0x180
-[ 4595.209907] lr : list_lru_add+0x15c/0x180
-[ 4595.210263] sp : ffff80000b75bbf0
-[ 4595.210556] x29: ffff80000b75bbf0 x28: ffff000005cd9d80 x27: ffff0000056=
-92a10
-[ 4595.211188] x26: 00000000000000f0 x25: ffff000001962000 x24: ffff8000018=
-d7a80
-[ 4595.211819] x23: 0000000000000000 x22: 0000000000000000 x21: 00000000000=
-00000
-[ 4595.212449] x20: ffff0000078fdc80 x19: ffff000013be8808 x18: 00000000000=
-000c0
-[ 4595.213080] x17: 0000000000000020 x16: fffffc0001028608 x15: fffffc00010=
-28600
-[ 4595.213710] x14: 1600000000000000 x13: 0000000000000008 x12: ffff0000f77=
-df278
-[ 4595.214339] x11: 0000000000000000 x10: ffff0000f77df258 x9 : ffff8000088=
-1f12c
-[ 4595.214970] x8 : ffff000001bbd300 x7 : 00000000ecc07b31 x6 : 00000000000=
-00001
-[ 4595.215600] x5 : ffff000001f04100 x4 : ffff80000b75bbb0 x3 : 00000000000=
-00000
-[ 4595.216229] x2 : 0000000000000001 x1 : 0000000000000000 x0 : 00000000000=
-00000
-[ 4595.216858] Call trace:
-[ 4595.217077]  list_lru_add+0xd4/0x180
-[ 4595.217396]  nfs4_xattr_get_cache+0x254/0x368 [nfsv4]
-[ 4595.217910]  nfs4_xattr_cache_set_list+0x2c/0x138 [nfsv4]
-[ 4595.218440]  nfs4_listxattr+0x208/0x228 [nfsv4]
-[ 4595.218895]  vfs_listxattr+0x60/0xb0
-[ 4595.219215]  listxattr+0x64/0x170
-[ 4595.219510]  path_listxattr+0x70/0xc8
-[ 4595.219835]  __arm64_sys_listxattr+0x28/0x38
-[ 4595.220212]  invoke_syscall+0x4c/0x110
-[ 4595.220547]  el0_svc_common.constprop.0+0x4c/0xf8
-[ 4595.220963]  do_el0_svc+0x2c/0x90
-[ 4595.221257]  el0_svc+0x2c/0x88
-[ 4595.221532]  el0t_64_sync_handler+0xb0/0xb8
-[ 4595.221900]  el0t_64_sync+0x18c/0x190
-[ 4595.222227] Code: f9400317 8b1602f6 910022d7 aa1703e1 (f94006e0)=20
-[ 4595.222763] ---[ end trace 0000000000000000 ]---
-[ 4595.223179] note: meson[3716] exited with preempt_count 2
-```
+> 
+> When NFS filesystems are mounted in different network namespaces, each
+> network namespace must provide a different hostname (via accompanying
+> UTS namespace) or different identifier (via sysfs).
+> 
+> If the kernel finds that the identity that it constructs is already in
+> use in a different namespace it will fail the mount with EADDRINUSE.
+> 
+> This patch catches that error and, if the sysfs identifier is unset,
+> writes a random string and retries.  This allows the mount to complete
+> safely even when misconfigured.  The random string has 128 bits of
+> entropy and so is extremely likely to be globally unique.
+> 
+> A lock is taken on the identifier file, and it is only updated if no
+> identifier is set.  Thus two concurrent mount attempts will not generate
+> different identities.  The mount is retried in any case as a race may
+> have updated the identifier while waiting for the lock.
+> 
+> This is not an ideal solution as an unclean restart of the host cannot
+> be detected by the server except by a lease timeout.  If the identifier
+> is configured correctly and is stable across restarts, the server can
+> detect the restart immediately.  Consequently a warning message is
+> generated to encourage correct configuration.
+Just curious... How did you test this patch? I would like
+to build an env to generate this type of error.
 
-I tried to get more information from the address information of the dump
-but sadly without success:
-```
-$ ./scripts/faddr2line fs/nfs/nfsv4.ko nfs4_xattr_get_cache+0x254/0x368=20
-nfs4_xattr_get_cache+0x254/0x368:
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: offset (2704378094) greater than or equal to .debug=
-_str size (1786)
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: info pointer extends beyond end of attributes
-addr2line: DWARF error: offset (1670626809) greater than or equal to .debug=
-_line size (450319)
-nfs4_xattr_get_cache at nfs42xattr.c:?
-```
+steved.
 
-(I probably did something wrong here :/)
+> 
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>   utils/mount/stropts.c | 54 ++++++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 53 insertions(+), 1 deletion(-)
+> 
+> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
+> index dbdd11e76b41..84266830b84a 100644
+> --- a/utils/mount/stropts.c
+> +++ b/utils/mount/stropts.c
+> @@ -32,6 +32,7 @@
+>   
+>   #include <sys/socket.h>
+>   #include <sys/mount.h>
+> +#include <sys/file.h>
+>   #include <netinet/in.h>
+>   #include <arpa/inet.h>
+>   
+> @@ -749,6 +750,50 @@ out:
+>   	return ret;
+>   }
+>   
+> +#define ENTROPY_BITS 128
+> +static void set_random_identifier(void)
+> +{
+> +	int fd = open("/sys/fs/nfs/net/nfs_client/identifier", O_RDWR);
+> +	int rfd = -1;
+> +	unsigned char rbuf[ENTROPY_BITS / 8];
+> +	char buf[sizeof(rbuf)*2 + 2];
+> +	int n, rn;
+> +	int cnt = 1000;
+> +
+> +	if (fd < 0)
+> +		goto out;
+> +	/* wait at most one second */
+> +	while (flock(fd, LOCK_EX | LOCK_NB) != 0) {
+> +		cnt -= 20;
+> +		if (cnt < 0)
+> +			goto out;
+> +		usleep(20 * 1000);
+> +	}
+> +	n = read(fd, buf, sizeof(buf)-1);
+> +	if (n <= 0)
+> +		goto out;
+> +	buf[n] = 0;
+> +	if (n != 7 || strcmp(buf, "(null)\n") != 0)
+> +		/* already set */
+> +		goto out;
+> +	rfd = open("/dev/urandom", O_RDONLY);
+> +	if (rfd < 0)
+> +		goto out;
+> +	rn = read(rfd, rbuf, sizeof(rbuf));
+> +	if (rn < (int)sizeof(rbuf))
+> +		goto out;
+> +	for (n = 0; n < rn; n++)
+> +		snprintf(&buf[n*2], 3, "%02x", rbuf[n]);
+> +	strcpy(&buf[n*2], "\n");
+> +	lseek(fd, SEEK_SET, 0);
+> +	write(fd, buf, strlen(buf));
+> +out:
+> +	if (rfd >= 0)
+> +		close(rfd);
+> +	if (fd >= 0)
+> +		close(fd);
+> +}
+> +
+>   static int nfs_do_mount_v4(struct nfsmount_info *mi,
+>   		struct sockaddr *sap, socklen_t salen)
+>   {
+> @@ -844,7 +889,14 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
+>   			progname, extra_opts);
+>   
+>   	result = nfs_sys_mount(mi, options);
+> -
+> +	if (!result && errno == EADDRINUSE) {
+> +		/* client id is not unique, try to create unique id
+> +		 * and try again
+> +		 */
+> +		set_random_identifier();
+> +		xlog_warn("Retry mount with randomized identifier. Please configure a stable identifier.");
+> +		result = nfs_sys_mount(mi, options);
+> +	}
+>   	/*
+>   	 * If success, update option string to be recorded in /etc/mtab.
+>   	 */
 
-I was still able to attempt a reboot, but the system hanged itself then
-in an endless loop of interrupting self detected stalls and trying to
-unmount the NFS directory:
-
-https://paste.debian.net/1236971/
-
-Thanks in advance :)
-
-Greetings,
-Sebastian
