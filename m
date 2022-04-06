@@ -2,107 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FCC44F69B4
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 21:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84C834F6A6C
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 21:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229984AbiDFTVa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Apr 2022 15:21:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44718 "EHLO
+        id S232714AbiDFTwF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Apr 2022 15:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiDFTUS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 15:20:18 -0400
-Received: from alexa-out-sd-02.qualcomm.com (alexa-out-sd-02.qualcomm.com [199.106.114.39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8441E21E19;
-        Wed,  6 Apr 2022 10:30:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=quicinc.com; i=@quicinc.com; q=dns/txt; s=qcdkim;
-  t=1649266255; x=1680802255;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=6ntTxqe3cu4c0Uf8vB38QsM5/1MJtQWWwjbiUS6GuQg=;
-  b=PstudtNCDLwXDY3HjryTq9kHJsM7BxGyrHCg/hj8zERiXmdQqKcO8E1G
-   dgA7hYltlmsbGjR9lBy2z0tNji3BytmSVhy1CEYH7u2Ln7qBr/coxs9M6
-   qgtRwWX+7VuPpsPhPOONCALvoGcjNXJhEaCk1RBmap19G49iyMcoD8mQ0
-   8=;
-Received: from unknown (HELO ironmsg03-sd.qualcomm.com) ([10.53.140.143])
-  by alexa-out-sd-02.qualcomm.com with ESMTP; 06 Apr 2022 10:30:55 -0700
-X-QCInternal: smtphost
-Received: from nasanex01c.na.qualcomm.com ([10.47.97.222])
-  by ironmsg03-sd.qualcomm.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2022 10:30:51 -0700
-Received: from nalasex01a.na.qualcomm.com (10.47.209.196) by
- nasanex01c.na.qualcomm.com (10.47.97.222) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.22; Wed, 6 Apr 2022 10:30:51 -0700
-Received: from [10.110.72.142] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.22; Wed, 6 Apr 2022
- 10:30:48 -0700
-Message-ID: <1bd025f0-8805-6ec9-7927-a9a18d0e0431@quicinc.com>
-Date:   Wed, 6 Apr 2022 10:30:47 -0700
+        with ESMTP id S232825AbiDFTvk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 15:51:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5DA1EC9AF
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 11:08:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 39ADD61C11
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 18:08:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6ECC385A5
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 18:08:09 +0000 (UTC)
+Subject: [PATCH v2 2/2] SUNRPC: Fix the svc_deferred_event trace class
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Wed, 06 Apr 2022 14:08:08 -0400
+Message-ID: <164926848846.12216.6872977249610829189.stgit@klimt.1015granger.net>
+In-Reply-To: <164926821551.12216.9112595778893638551.stgit@klimt.1015granger.net>
+References: <164926821551.12216.9112595778893638551.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.5.dev1+g8516920
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH] RDMA: Split kernel-only global device caps from uvers
- device caps
-Content-Language: en-US
-To:     Jason Gunthorpe <jgg@nvidia.com>, Ariel Elior <aelior@marvell.com>,
-        "Anna Schumaker" <anna@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Christian Benvenuti <benve@cisco.com>,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Bernard Metzler <bmt@zurich.ibm.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Dennis Dalessandro" <dennis.dalessandro@cornelisnetworks.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Keith Busch <kbusch@kernel.org>,
-        Chaitanya Kulkarni <kch@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        <linux-cifs@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-        <linux-nvme@lists.infradead.org>, <linux-rdma@vger.kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
-        Michal Kalderon <mkalderon@marvell.com>,
-        Mustafa Ismail <mustafa.ismail@intel.com>,
-        "Nelson Escobar" <neescoba@cisco.com>, <netdev@vger.kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, <rds-devel@oss.oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        <samba-technical@lists.samba.org>,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Steve French <sfrench@samba.org>,
-        Shiraz Saleem <shiraz.saleem@intel.com>,
-        <target-devel@vger.kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Yishai Hadas <yishaih@nvidia.com>,
-        "Zhu Yanjun" <zyjzyj2000@gmail.com>,
-        Xiao Yang <yangx.jy@fujitsu.com>
-References: <0-v1-47e161ac2db9+80f-kern_caps_jgg@nvidia.com>
-From:   Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <0-v1-47e161ac2db9+80f-kern_caps_jgg@nvidia.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 4/4/2022 9:18 AM, Jason Gunthorpe wrote:
-> Split ib_device::device_cap_flags into kernel_cap_flags that holds the
-> flags only used by the kernel.
-> 
-> This cleanly splits out the uverbs flags from the kernel flags to avoid
-> confusion in the flags bitmap.
-> 
-> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Fix a NULL deref crash that occurs when an svc_rqst is deferred
+while the sunrpc tracing subsystem is enabled. svc_revisit() sets
+dr->xprt to NULL, so it can't be relied upon in the tracepoint to
+provide the remote's address.
 
-subject nit: s/uvers/uverbs/ ?
+Since __sockaddr() and friends are not available before v5.18, this
+is just a partial revert of commit ece200ddd54b ("sunrpc: Save
+remote presentation address in svc_xprt for trace events") in order
+to enable backports of the fix. It can be cleaned up during a
+future merge window.
+
+Fixes: ece200ddd54b ("sunrpc: Save remote presentation address in svc_xprt for trace events")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/trace/events/sunrpc.h |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index ab8ae1f6ba84..4abc2fddd3b8 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -2017,18 +2017,19 @@ DECLARE_EVENT_CLASS(svc_deferred_event,
+ 	TP_STRUCT__entry(
+ 		__field(const void *, dr)
+ 		__field(u32, xid)
+-		__string(addr, dr->xprt->xpt_remotebuf)
++		__dynamic_array(u8, addr, dr->addrlen)
+ 	),
+ 
+ 	TP_fast_assign(
+ 		__entry->dr = dr;
+ 		__entry->xid = be32_to_cpu(*(__be32 *)(dr->args +
+ 						       (dr->xprt_hlen>>2)));
+-		__assign_str(addr, dr->xprt->xpt_remotebuf);
++		memcpy(__get_dynamic_array(addr), &dr->addr, dr->addrlen);
+ 	),
+ 
+-	TP_printk("addr=%s dr=%p xid=0x%08x", __get_str(addr), __entry->dr,
+-		__entry->xid)
++	TP_printk("addr=%pISpc dr=%p xid=0x%08x",
++		(struct sockaddr *)__get_dynamic_array(addr),
++		__entry->dr, __entry->xid)
+ );
+ 
+ #define DEFINE_SVC_DEFERRED_EVENT(name) \
+
+
