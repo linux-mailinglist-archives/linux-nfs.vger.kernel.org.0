@@ -2,218 +2,239 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BABD4F67EE
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 19:58:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87A934F69E0
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Apr 2022 21:29:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239287AbiDFRt5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Apr 2022 13:49:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60414 "EHLO
+        id S231327AbiDFTba (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Apr 2022 15:31:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239698AbiDFRtq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 13:49:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9511A181B0F
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 08:57:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649260678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=tZkosHO3/qohnzYjmrzPUmovzbkO3kB+s/3SZou3ANY=;
-        b=JC8r/SARnpmmW+qje8YpTvRRnivlTx4RFqdcI54/8SiNynwXQYIsw48D0C60UMZrtTbwEE
-        V7AofXJtWzQKjpaRlTAyVTDRIsAtLKlv4rpJQcm5Qw+B1icYGNytvo/F27fIBNxyaa0wrw
-        YVmvs/xABxcRJO3jKvOEvvWJid/tMmw=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-537-N7ee4_m-NGu59oW5RoTQug-1; Wed, 06 Apr 2022 11:57:57 -0400
-X-MC-Unique: N7ee4_m-NGu59oW5RoTQug-1
-Received: by mail-qt1-f199.google.com with SMTP id p6-20020a05622a00c600b002e1cb9508e8so3248438qtw.20
-        for <linux-nfs@vger.kernel.org>; Wed, 06 Apr 2022 08:57:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=tZkosHO3/qohnzYjmrzPUmovzbkO3kB+s/3SZou3ANY=;
-        b=uvDxtjeMV3sSOWdM8v+bk+CnRk6lG32rhQbEM3iRAgbFAf0LcAIfhHoU/ruLAFWubF
-         pBGXGaB7BCUCkp1tVuh1YU4IoXGs6nISXQAhTErf5yWTRVxwEqDtS+jU9Pua6Lu+p9tM
-         ygCVg4m79mr4ab1ZeGfnbXxElLAIfcqzlLH9oXcLFCEiqRJ3xTmkqba/PZBi2fKVMoVd
-         JsSXSSWrqulkalCjuxUUGaUXekgiEz0Lzi0KK+SD0E6g29AfkcNSW74fZkoyJIIYDLSV
-         RNP9mSJQoecOJOkOyATQMF34QY8uarP74CUvkgbeWCaftY3zOwmI74BGXwFzPMgske5f
-         ooiQ==
-X-Gm-Message-State: AOAM5301tqphz+CPvcnod93zwEMMFd4gapynrZSo9A8zWmJgZ9nKZKdR
-        J2kevAUyvsfG2eEfLWxzNRZE32uN4NnWYq/jsLBz+zuL23EIFGWHqilMjvvvtA/bb6xXKY2Wwfd
-        2peRENoVVc/F6UlBSe4ft
-X-Received: by 2002:ac8:5fcf:0:b0:2e1:ebd9:3e38 with SMTP id k15-20020ac85fcf000000b002e1ebd93e38mr8112633qta.149.1649260676692;
-        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyBFrXaaSvJ1VVoUmT6Jbzb0CgOJjxQYypYQpv2O520k3GpmyxzXgAIJq7tmV9bkY5J4AZ9Uw==
-X-Received: by 2002:ac8:5fcf:0:b0:2e1:ebd9:3e38 with SMTP id k15-20020ac85fcf000000b002e1ebd93e38mr8112617qta.149.1649260676422;
-        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
-Received: from [172.31.1.6] ([71.161.124.94])
-        by smtp.gmail.com with ESMTPSA id 3-20020a370503000000b0067b03f03589sm9893337qkf.53.2022.04.06.08.57.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Apr 2022 08:57:56 -0700 (PDT)
-Message-ID: <852313a3-005e-2771-8be1-888891370533@redhat.com>
-Date:   Wed, 6 Apr 2022 11:57:55 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH/RFC] mount.nfs: handle EADDRINUSE from mount(2)
+        with ESMTP id S231223AbiDFTam (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 15:30:42 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F0B912C25E
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 10:18:23 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 236H4739024505;
+        Wed, 6 Apr 2022 17:18:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=QnvG4lwqePFEwOiPP2mLrfZZEX+3Eipl2JLJ7CQs0Ok=;
+ b=oNZHYkomdXNvmbSro/v6LX8PVBMsGZbPykGadPznPi3MklkWkVTXQ0BpeSPRGfEYJ/8e
+ ixGl93z3EX73dFi8D6tENRMR5VsEwz9jLCoc6jqclC04OxgzizM5EWgtOjfBLpuzh4x1
+ gVaw3xsfbfJcl5oOeSrNmnsSiAime8C5Ax+IVPKLVvpemx4K7X5aSOd/myDBtfScvnNB
+ X/fmSUTEOS86jP+5rkMak+9eu4qNZyGlGHcMvlbRZMqXaaLcqYia/KoPQMl2bS44DEAA
+ aRBcbMXAsXCSrBtSOC5kVg3LcaqJqamGBpFrO0Ho6mTqsX6QgSG62I0R7t4MAUjaLHiG 3A== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3f6f1t9rcw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Apr 2022 17:18:18 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 236HGbHk040714;
+        Wed, 6 Apr 2022 17:18:17 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2177.outbound.protection.outlook.com [104.47.59.177])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3f97y6juha-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Apr 2022 17:18:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jDZjev6i873gN1nLmDtnImdK6kxh6I/enIt9Kz13X1Fm2AL2uXgwjZDQEYCIdbE2WaYpLEzKs2OSTSSUUskE5FlX2vUzE9Tz7+sBbnzoc3/bzQwi+TgxcHzhxJQNjbe73lq2km6RkYTu84owAP6f4lMbPqGFt6/O1yoKi5DTBXFKwG3V1s2oBJECs0DvSLm7Ie+wpf7XvUIdNmb7V9vGj7y1lKf+CeEpBPLMj40ou/MXw8dOgb5AwBA2za3ZE9fsCqS+3lIBRCPqPZXn0a3xnKFY0RWWqjnydIQMzr61fkOBeO4GerQalZ7VTAtoPab+PzGCb2+alYouZ8B3+qtDZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=QnvG4lwqePFEwOiPP2mLrfZZEX+3Eipl2JLJ7CQs0Ok=;
+ b=IQ7daUCaQZnmYlMnbs5BGZc9lqwYcGQza3b0owfpX5tLDKzCjLbdHkYxkQABqcmFmYF/+vvcjzJsb//Pl7+5IohJjf+z2yZGVXNqBDSxJUkkSKrFWLa1ihPZGTm3gWh/HzVUeMCzuouUbrFbeBHIKQKx9Mw+QHHnAoqJnFpAl13laB9VlGKNXFzIJl43BDLdIaE163z8McQ5jfD9TOqIxUwvbAspvXeupJZqIaRzEOgGegUcY1DkfCfn9z6/cx3tw8WTJFkODHD4g3DNzRLShL5SeCq24oRLL+Ykg+dXTGZXGk8QrYBMii0XFOYkb/iphTxBeO8TfdC/LVpDZAAcXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QnvG4lwqePFEwOiPP2mLrfZZEX+3Eipl2JLJ7CQs0Ok=;
+ b=ECeWAEKzRLc5q2zwIiE1YGriyaLHTlcdwZS8e8mPMZaYbQqyM3g95/OWIqViJlsDNqOv/BwEY2aBZMEUx3giemnWvR0kmKIPEIsWOXSqC9B9Uf3DlwmgqVm8J2ahrgCQPA3CBF3S8IvFDx+mcf8pEZhHjDKrDun/HMcWD9ETGs8=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CO1PR10MB4644.namprd10.prod.outlook.com (2603:10b6:303:99::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.21; Wed, 6 Apr
+ 2022 17:18:15 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::f427:92a0:da5d:7d49]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::f427:92a0:da5d:7d49%7]) with mapi id 15.20.5144.021; Wed, 6 Apr 2022
+ 17:18:15 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Hugh Dickins <hughd@google.com>
+CC:     Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Regression in xfstests on tmpfs-backed NFS exports
+Thread-Topic: Regression in xfstests on tmpfs-backed NFS exports
+Thread-Index: AQHYSdpN1SFcUB4GDEa/4f/k4JlVpQ==
+Date:   Wed, 6 Apr 2022 17:18:15 +0000
+Message-ID: <673D708E-2DFA-4812-BB63-6A437E0C72EE@oracle.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     NeilBrown <neilb@suse.de>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <164816808982.6096.11435363819568479436@noble.neil.brown.name>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <164816808982.6096.11435363819568479436@noble.neil.brown.name>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3654.120.0.1.13)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bbfe1546-3a2e-4b79-8525-08da17f16fd2
+x-ms-traffictypediagnostic: CO1PR10MB4644:EE_
+x-microsoft-antispam-prvs: <CO1PR10MB4644068BB093EEBDA5FBEFD693E79@CO1PR10MB4644.namprd10.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: id53Jhh4KYZBEoFEecwbDcedfytzluPDD1fxiDw0t+oEJ+TSq8fNU2ezJphtel09bq3r4d3CP0nnplPydcL3c8Pnm60Q6qfjg/VQWO3TLrFcx0/ThvQy3v+CfgdDt9UBvL1d6VR6i9N/AkjEzwc4ivu2UltOEwiFA+Vyd0Hzjte9CUKGwUDYcBORFBNHl6zeyeehP6ZPPDorcdVFhF/De7RLkKbKW7WVky6imUrmWoaCQGNrE/kL0AagYyDHkWhvrymBdaAeHxPEXdi5dx+Dw/RFer03d2qFaFhIR6qu/Esb7PSlBw5KDhYDg5PyFuK/0Rs4vp0/L6JqgbqL8B6eBRfWg8VPlUcSwXnh/A+eF4HsaNkKZHcExf5l+Esf+JvLU8sGpq9wN6MD18+X7wm0vjm/TsyFog1p5dp0Sjd0EAJ744BxFjiobfGLKQE1Llycp568BZKM44KIPMryBnmlgwvVL+hL0+8lCgfVOsqLsN5Uq70FPi1wz4vXohc4NGxHcYd2XPyL4OCdBk/GVJnFUKYicHmILctpzoBcoOPuRltyXKUGvoyAWVY5R+E3w4+Kn4CfuEJWjND83u4VojTrKyZyN6WIM+O+e0OZ/ZQJkVy5PLcbQT1oFXFJ3YvORmx4g3VaLtsLrvgecspjsO6PXOayba8S4oIKYrSaUkvUiKLq3aGuefe/o/JCzO53+kFqtasZQPsMylaH2afUO5Hy3J02RajVZIJcCI2zlSxwwfQfzVcZ5VvxIvyRLLHQsov9
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(6512007)(6506007)(83380400001)(26005)(2616005)(186003)(2906002)(5660300002)(8936002)(6916009)(54906003)(316002)(71200400001)(66946007)(91956017)(6486002)(64756008)(66446008)(66476007)(8676002)(76116006)(4326008)(66556008)(36756003)(122000001)(38100700002)(86362001)(38070700005)(33656002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BgMGfwEygOpDL4N7nuBq8KmStKKhTsMV+srXWY/vUb0rAMvNoaQ9pOlPQ6ec?=
+ =?us-ascii?Q?RxIlLDpopl0D1WvXIebtiVaTvVBjWq3OTcC7GQt0h8GJOu7739LxohrSnsBz?=
+ =?us-ascii?Q?31xXxCkVU9cpcQwfaP8uDz5e+Md1ZQI2ofL44zGPblSMALH3XC5xgxh0OtbE?=
+ =?us-ascii?Q?bxEWiG+wqc2DiqwfzV6qv/mkiiWtoPNbLhesDgoAMhl8wWoOPsnx4H6Tp8Ut?=
+ =?us-ascii?Q?60QwD1A+vF4uSAEbr/Eia53Ey2iAIENRCwJYeU/VVJnm6i80Y52qryJaZg+2?=
+ =?us-ascii?Q?VlJXZTn+38uHPO65AbkAWJ8AcuRwece+RXoJidN3QT9SCKq2hdssh0/9HCsf?=
+ =?us-ascii?Q?vsNGcQ5RoILDdmqnu1A0bCgob97OwLVcF5Oy5reFn7jYTLoLrBKO8kkXyQuN?=
+ =?us-ascii?Q?716MTP/9r6QDzzbgQS91X6JjxRqraY46LtRoqmW/3g1F8oE/BJpwX08yG0XL?=
+ =?us-ascii?Q?1nU9tiV238wbPTH9SbtjAoKiLcRhcKYJUyWUuGDPMBt80sqj7TlnCzFQ5YFT?=
+ =?us-ascii?Q?IwgRh7xZPQ8Dnjetx4YrSmNCsr+qT3KxUtzrgrOpZNUKZlBa8Vb1oi+pGYOV?=
+ =?us-ascii?Q?C+XRC+kKO5Qbb7uWBAPfyQ4cuxeBW3YUNXseL/pBNJBESZm4Q1JgyHEvbZPq?=
+ =?us-ascii?Q?N1SrIwMeXSudHYFtrtuRtsciOg+v0DWuKAWiuzEiug2Vgsaxj130JEh5wsKb?=
+ =?us-ascii?Q?bFN1aNMOj4AuqUZTlCPjpDQ/4QGCzHVaoiLYyd3CDfCNzW2PNLXmHFebSb3e?=
+ =?us-ascii?Q?sChA2/E7s5kq7Mi2vLGxewga+2HfzqU/F62m75EyJRHqYPeQcgaRPlvH/sCL?=
+ =?us-ascii?Q?bapqVu1adObJ4OhmIUBpLKPrCbzIX8Y02dKXJsRLZg868usA5/dMdHk+dzWG?=
+ =?us-ascii?Q?ceK3rtDfcyyp9ftos2fFk35mx4zQg7ERjq78TiukyGGl8Ss1CBpR3k9AlmH/?=
+ =?us-ascii?Q?2j3KGDUlRoYR/y5v3XimRCazFGXs8MTDogaLD7f4++gtZzl1R3EgZK6e/gHd?=
+ =?us-ascii?Q?67Cf/fXNy4wmmcHloZyUW6XRXUAFiT/G9BS1Pa70/3wOdyRJCkyQ5/CL5Qcg?=
+ =?us-ascii?Q?N2BE5SDFDjrsjJPhoXvpzXJPY+oqPmEdmhKhcpcO1Do5n2GRhKGOClr4xtYT?=
+ =?us-ascii?Q?igv6d5GomtmuplFvDmv/7Qu7S/brC2eoavY5qNUFaWd8RrvxL4hm0lq8urL8?=
+ =?us-ascii?Q?G3XvEVsE2+vo0fdnPYtMTW5CK+fQb7PA6Dp1x5ZlPXuXAWwB+XmpROyAhhRf?=
+ =?us-ascii?Q?i0ma8eMsZXVYzWmcaTvoHoZNKLkU16j5uT6iAWBUWY4a5/nqSeoE9YBRurWV?=
+ =?us-ascii?Q?46SHoHFrxzff1CCf6Sf5qp3HDkV91bG+Ko5/Cnjsai1zs2v3DbzZeqPI3hVt?=
+ =?us-ascii?Q?04WKiNGL1dMAw/EE95uUqMYzrztsYYLho8sAjqaZ/xtNyRuytLYKZQsjO7zI?=
+ =?us-ascii?Q?2QhQ34TTd7RZ8NSetEvlxZ78XrvDaLF31tV0vRHsETwH1paODm+lF8XTaM2N?=
+ =?us-ascii?Q?ZperN0MGSElX2mZDC2bJ8ufBqQOBHDrH9ymaPCjRM1IbDyMcF1KkE7GQK3Nm?=
+ =?us-ascii?Q?FB0iMzvFPMAIAehi9yTk53TtbDropKQQL9NVUq9CrvYl8v6OWh7TPihELhOV?=
+ =?us-ascii?Q?d4VpymETmtDRBJRe+2isgWFHUX5fJ8KkQWhBUM1pA07OHBKFuaQqJjZV0k2t?=
+ =?us-ascii?Q?tyQ+/2P1O41v2a8+GXqfzRyMbx/LvS/kjmQW7kLxLQCDGFlXRJutpgUlcGDT?=
+ =?us-ascii?Q?q5W6Y4eJtp660bmZxEwtxBwS9YHzp/E=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <080628C0D300A5438CC0A39C79967D5F@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bbfe1546-3a2e-4b79-8525-08da17f16fd2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Apr 2022 17:18:15.6502
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HAP/DQ11HuhG3u0GJ9sAaSygRTwm4OJAhQcmK/FuS8RHpqeJi1DELHmzHqzajB0vcCg0D4Mkozn46SuBCEBr/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR10MB4644
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.425,18.0.850
+ definitions=2022-04-06_09:2022-04-06,2022-04-06 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=786 spamscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204060086
+X-Proofpoint-ORIG-GUID: Lg4wm-Arm3P-xNRHnc-flzOxIo7i-ibv
+X-Proofpoint-GUID: Lg4wm-Arm3P-xNRHnc-flzOxIo7i-ibv
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey!
+Good day, Hugh-
 
-My apologies for taking so long to get to this....
+I noticed that several fsx-related tests in the xfstests suite are
+failing after updating my NFS server to v5.18-rc1. I normally test
+against xfs, ext4, btrfs, and tmpfs exports. tmpfs is the only export
+that sees these new failures:
 
-On 3/24/22 8:28 PM, NeilBrown wrote:
-> 
-> [[This is the followup to the kernel patch I recently posted.
->    It changes the behaviour of incorrectly configured containers to
->    get unique client identities - so lease stealing doesn't happen
->    so data corruption is avoided - but does not provide stable
->    identities, so reboot recovery is not ideal.
-Which patch are you referring to and did it make it in?
+generic/075 2s ... [failed, exit status 1]- output mismatch (see /home/cel/=
+src/xfstests/results//generic/075.out.bad)
+    --- tests/generic/075.out	2014-02-13 15:40:45.000000000 -0500
+    +++ /home/cel/src/xfstests/results//generic/075.out.bad	2022-04-05 16:3=
+9:59.145991520 -0400
+    @@ -4,15 +4,5 @@
+     -----------------------------------------------
+     fsx.0 : -d -N numops -S 0
+     -----------------------------------------------
+    -
+    ------------------------------------------------
+    -fsx.1 : -d -N numops -S 0 -x
+    ------------------------------------------------
+    ...
+    (Run 'diff -u /home/cel/src/xfstests/tests/generic/075.out /home/cel/sr=
+c/xfstests/results//generic/075.out.bad'  to see the entire diff)
 
->    What is best to do when configuration is wrong?  Provide best service
->    possible despite it not being perfect, or provide no service so the
->    config will not get fixed.  I could be swayed either way.
-> ]]
-Maybe a little both? :-) Flag the broken config and continue on
-if possible... but flagging the broken config is more critical... IMHO.
+generic/091 9s ... [failed, exit status 1]- output mismatch (see /home/cel/=
+src/xfstests/results//generic/091.out.bad)
+    --- tests/generic/091.out	2014-02-13 15:40:45.000000000 -0500
+    +++ /home/cel/src/xfstests/results//generic/091.out.bad	2022-04-05 16:4=
+1:24.329063277 -0400
+    @@ -1,7 +1,75 @@
+     QA output created by 091
+     fsx -N 10000 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -R -W
+    -fsx -N 10000 -o 8192 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -R -W
+    -fsx -N 10000 -o 32768 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -R -W
+    -fsx -N 10000 -o 8192 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -R -W
+    -fsx -N 10000 -o 32768 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -R -W
+    -fsx -N 10000 -o 128000 -l 500000 -r PSIZE -t BSIZE -w BSIZE -Z -W
+    ...
+    (Run 'diff -u /home/cel/src/xfstests/tests/generic/091.out /home/cel/sr=
+c/xfstests/results//generic/091.out.bad'  to see the entire diff)
 
-> 
-> When NFS filesystems are mounted in different network namespaces, each
-> network namespace must provide a different hostname (via accompanying
-> UTS namespace) or different identifier (via sysfs).
-> 
-> If the kernel finds that the identity that it constructs is already in
-> use in a different namespace it will fail the mount with EADDRINUSE.
-> 
-> This patch catches that error and, if the sysfs identifier is unset,
-> writes a random string and retries.  This allows the mount to complete
-> safely even when misconfigured.  The random string has 128 bits of
-> entropy and so is extremely likely to be globally unique.
-> 
-> A lock is taken on the identifier file, and it is only updated if no
-> identifier is set.  Thus two concurrent mount attempts will not generate
-> different identities.  The mount is retried in any case as a race may
-> have updated the identifier while waiting for the lock.
-> 
-> This is not an ideal solution as an unclean restart of the host cannot
-> be detected by the server except by a lease timeout.  If the identifier
-> is configured correctly and is stable across restarts, the server can
-> detect the restart immediately.  Consequently a warning message is
-> generated to encourage correct configuration.
-Just curious... How did you test this patch? I would like
-to build an env to generate this type of error.
+generic/112 2s ... [failed, exit status 1]- output mismatch (see /home/cel/=
+src/xfstests/results//generic/112.out.bad)
+    --- tests/generic/112.out	2014-02-13 15:40:45.000000000 -0500
+    +++ /home/cel/src/xfstests/results//generic/112.out.bad	2022-04-05 16:4=
+1:38.511075170 -0400
+    @@ -4,15 +4,4 @@
+     -----------------------------------------------
+     fsx.0 : -A -d -N numops -S 0
+     -----------------------------------------------
+    -
+    ------------------------------------------------
+    -fsx.1 : -A -d -N numops -S 0 -x
+    ------------------------------------------------
+    ...
+    (Run 'diff -u /home/cel/src/xfstests/tests/generic/112.out /home/cel/sr=
+c/xfstests/results//generic/112.out.bad'  to see the entire diff)
 
-steved.
+generic/127 49s ... - output mismatch (see /home/cel/src/xfstests/results//=
+generic/127.out.bad)
+    --- tests/generic/127.out	2016-08-28 12:16:20.000000000 -0400
+    +++ /home/cel/src/xfstests/results//generic/127.out.bad	2022-04-05 16:4=
+2:07.655099652 -0400
+    @@ -4,10 +4,198 @@
+     =3D=3D=3D FSX Light Mode, Memory Mapping =3D=3D=3D
+     All 100000 operations completed A-OK!
+     =3D=3D=3D FSX Standard Mode, No Memory Mapping =3D=3D=3D
+    -All 100000 operations completed A-OK!
+    +ltp/fsx -q -l 262144 -o 65536 -S 191110531 -N 100000 -R -W fsx_std_nom=
+map
+    +READ BAD DATA: offset =3D 0x9cb7, size =3D 0xfae3, fname =3D /tmp/mnt/=
+manet.ib-2323703/fsx_std_nommap
+    +OFFSET	GOOD	BAD	RANGE
+    ...
+    (Run 'diff -u /home/cel/src/xfstests/tests/generic/127.out /home/cel/sr=
+c/xfstests/results//generic/127.out.bad'  to see the entire diff)
 
-> 
-> Signed-off-by: NeilBrown <neilb@suse.de>
-> ---
->   utils/mount/stropts.c | 54 ++++++++++++++++++++++++++++++++++++++++++-
->   1 file changed, 53 insertions(+), 1 deletion(-)
-> 
-> diff --git a/utils/mount/stropts.c b/utils/mount/stropts.c
-> index dbdd11e76b41..84266830b84a 100644
-> --- a/utils/mount/stropts.c
-> +++ b/utils/mount/stropts.c
-> @@ -32,6 +32,7 @@
->   
->   #include <sys/socket.h>
->   #include <sys/mount.h>
-> +#include <sys/file.h>
->   #include <netinet/in.h>
->   #include <arpa/inet.h>
->   
-> @@ -749,6 +750,50 @@ out:
->   	return ret;
->   }
->   
-> +#define ENTROPY_BITS 128
-> +static void set_random_identifier(void)
-> +{
-> +	int fd = open("/sys/fs/nfs/net/nfs_client/identifier", O_RDWR);
-> +	int rfd = -1;
-> +	unsigned char rbuf[ENTROPY_BITS / 8];
-> +	char buf[sizeof(rbuf)*2 + 2];
-> +	int n, rn;
-> +	int cnt = 1000;
-> +
-> +	if (fd < 0)
-> +		goto out;
-> +	/* wait at most one second */
-> +	while (flock(fd, LOCK_EX | LOCK_NB) != 0) {
-> +		cnt -= 20;
-> +		if (cnt < 0)
-> +			goto out;
-> +		usleep(20 * 1000);
-> +	}
-> +	n = read(fd, buf, sizeof(buf)-1);
-> +	if (n <= 0)
-> +		goto out;
-> +	buf[n] = 0;
-> +	if (n != 7 || strcmp(buf, "(null)\n") != 0)
-> +		/* already set */
-> +		goto out;
-> +	rfd = open("/dev/urandom", O_RDONLY);
-> +	if (rfd < 0)
-> +		goto out;
-> +	rn = read(rfd, rbuf, sizeof(rbuf));
-> +	if (rn < (int)sizeof(rbuf))
-> +		goto out;
-> +	for (n = 0; n < rn; n++)
-> +		snprintf(&buf[n*2], 3, "%02x", rbuf[n]);
-> +	strcpy(&buf[n*2], "\n");
-> +	lseek(fd, SEEK_SET, 0);
-> +	write(fd, buf, strlen(buf));
-> +out:
-> +	if (rfd >= 0)
-> +		close(rfd);
-> +	if (fd >= 0)
-> +		close(fd);
-> +}
-> +
->   static int nfs_do_mount_v4(struct nfsmount_info *mi,
->   		struct sockaddr *sap, socklen_t salen)
->   {
-> @@ -844,7 +889,14 @@ static int nfs_do_mount_v4(struct nfsmount_info *mi,
->   			progname, extra_opts);
->   
->   	result = nfs_sys_mount(mi, options);
-> -
-> +	if (!result && errno == EADDRINUSE) {
-> +		/* client id is not unique, try to create unique id
-> +		 * and try again
-> +		 */
-> +		set_random_identifier();
-> +		xlog_warn("Retry mount with randomized identifier. Please configure a stable identifier.");
-> +		result = nfs_sys_mount(mi, options);
-> +	}
->   	/*
->   	 * If success, update option string to be recorded in /etc/mtab.
->   	 */
+I bisected the problem to:
+
+  56a8c8eb1eaf ("tmpfs: do not allocate pages on read")
+
+generic/075 fails almost immediately without any NFS-level errors.
+Likely this is data corruption rather than an overt I/O error.
+
+
+--
+Chuck Lever
+
+
 
