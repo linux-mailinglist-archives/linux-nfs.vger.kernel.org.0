@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A661A4F866C
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 19:43:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D2D34F866F
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 19:43:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232372AbiDGRpa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Apr 2022 13:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44146 "EHLO
+        id S1346528AbiDGRpi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Apr 2022 13:45:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231470AbiDGRpa (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 13:45:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CC422A292
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 10:43:27 -0700 (PDT)
+        with ESMTP id S1346519AbiDGRph (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 13:45:37 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4E122C1E9
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 10:43:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D36761AFE
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 17:43:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCEBEC385AA;
-        Thu,  7 Apr 2022 17:43:23 +0000 (UTC)
-Subject: [PATCH v3 1/2] SUNRPC: Fix NFSD's request deferral on RDMA transports
+        by ams.source.kernel.org (Postfix) with ESMTPS id E7D77B82795
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 17:43:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38B4EC385A4;
+        Thu,  7 Apr 2022 17:43:30 +0000 (UTC)
+Subject: [PATCH v3 2/2] SUNRPC: Fix the svc_deferred_event trace class
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     rostedt@goodmis.org
-Date:   Thu, 07 Apr 2022 13:43:22 -0400
-Message-ID: <164935340273.76813.7096678268046264254.stgit@klimt.1015granger.net>
+Date:   Thu, 07 Apr 2022 13:43:29 -0400
+Message-ID: <164935340926.76813.4345516465286175319.stgit@klimt.1015granger.net>
 In-Reply-To: <164935330144.76813.17862521591948764594.stgit@klimt.1015granger.net>
 References: <164935330144.76813.17862521591948764594.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev1+g8516920
@@ -42,84 +42,63 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Trond Myklebust reports an NFSD crash in svc_rdma_sendto(). Further
-investigation shows that the crash occurred while NFSD was handling
-a deferred request.
+Fix a NULL deref crash that occurs when an svc_rqst is deferred
+while the sunrpc tracing subsystem is enabled. svc_revisit() sets
+dr->xprt to NULL, so it can't be relied upon in the tracepoint to
+provide the remote's address.
 
-This patch addresses two inter-related issues that prevent request
-deferral from working correctly for RPC/RDMA requests:
+Unfortunately we can't revert the "svc_deferred_class" hunk in
+commit ece200ddd54b ("sunrpc: Save remote presentation address in
+svc_xprt for trace events") because there is now a specific check
+of event format specifiers for unsafe dereferences. The warning
+that check emits is:
 
-1. Prevent the crash by ensuring that the original
-   svc_rqst::rq_xprt_ctxt value is available when the request is
-   revisited. Otherwise svc_rdma_sendto() does not have a Receive
-   context available with which to construct its reply.
+  event svc_defer_recv has unsafe dereference of argument 1
 
-2. Possibly since before commit 71641d99ce03 ("svcrdma: Properly
-   compute .len and .buflen for received RPC Calls"),
-   svc_rdma_recvfrom() did not include the transport header in the
-   returned xdr_buf. There should have been no need for svc_defer()
-   and friends to save and restore that header, as of that commit.
-   This issue is addressed in a backport-friendly way by simply
-   having svc_rdma_recvfrom() set rq_xprt_hlen to zero
-   unconditionally, just as svc_tcp_recvfrom() does. This enables
-   svc_deferred_recv() to correctly reconstruct an RPC message
-   received via RPC/RDMA.
+A "%pISpc" format specifier with a "struct sockaddr *" is indeed
+flagged by this check.
 
-Reported-by: Trond Myklebust <trondmy@hammerspace.com>
-Link: https://lore.kernel.org/linux-nfs/82662b7190f26fb304eb0ab1bb04279072439d4e.camel@hammerspace.com/
+Instead, take the brute-force approach used by the svcrdma_qp_error
+tracepoint. Convert the dr::addr field into a presentation address
+in the TP_fast_assign() arm of the trace event, and store that as
+a string. This fix can be backported to -stable kernels.
+
+In the meantime, commit c6ced22997ad ("tracing: Update print fmt
+check to handle new __get_sockaddr() macro") is now in v5.18, so
+this wonky fix can be replaced with __sockaddr() and friends
+properly during the v5.19 merge window.
+
+Fixes: ece200ddd54b ("sunrpc: Save remote presentation address in svc_xprt for trace events")
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@vger.kernel.org>
 ---
- include/linux/sunrpc/svc.h              |    1 +
- net/sunrpc/svc_xprt.c                   |    3 +++
- net/sunrpc/xprtrdma/svc_rdma_recvfrom.c |    2 +-
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ include/trace/events/sunrpc.h |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-index a5dda4987e8b..217711fc9cac 100644
---- a/include/linux/sunrpc/svc.h
-+++ b/include/linux/sunrpc/svc.h
-@@ -395,6 +395,7 @@ struct svc_deferred_req {
- 	size_t			addrlen;
- 	struct sockaddr_storage	daddr;	/* where reply must come from */
- 	size_t			daddrlen;
-+	void			*xprt_ctxt;
- 	struct cache_deferred_req handle;
- 	size_t			xprt_hlen;
- 	int			argslen;
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 0c117d3bfda8..b42cfffa7395 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -1231,6 +1231,8 @@ static struct cache_deferred_req *svc_defer(struct cache_req *req)
- 		dr->daddr = rqstp->rq_daddr;
- 		dr->argslen = rqstp->rq_arg.len >> 2;
- 		dr->xprt_hlen = rqstp->rq_xprt_hlen;
-+		dr->xprt_ctxt = rqstp->rq_xprt_ctxt;
-+		rqstp->rq_xprt_ctxt = NULL;
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index ab8ae1f6ba84..4eb706fa5825 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -2017,17 +2017,18 @@ DECLARE_EVENT_CLASS(svc_deferred_event,
+ 	TP_STRUCT__entry(
+ 		__field(const void *, dr)
+ 		__field(u32, xid)
+-		__string(addr, dr->xprt->xpt_remotebuf)
++		__array(__u8, addr, INET6_ADDRSTRLEN + 10)
+ 	),
  
- 		/* back up head to the start of the buffer and copy */
- 		skip = rqstp->rq_arg.len - rqstp->rq_arg.head[0].iov_len;
-@@ -1269,6 +1271,7 @@ static noinline int svc_deferred_recv(struct svc_rqst *rqstp)
- 	rqstp->rq_xprt_hlen   = dr->xprt_hlen;
- 	rqstp->rq_daddr       = dr->daddr;
- 	rqstp->rq_respages    = rqstp->rq_pages;
-+	rqstp->rq_xprt_ctxt   = dr->xprt_ctxt;
- 	svc_xprt_received(rqstp->rq_xprt);
- 	return (dr->argslen<<2) - dr->xprt_hlen;
- }
-diff --git a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-index cf76a6ad127b..864131a9fc6e 100644
---- a/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-+++ b/net/sunrpc/xprtrdma/svc_rdma_recvfrom.c
-@@ -831,7 +831,7 @@ int svc_rdma_recvfrom(struct svc_rqst *rqstp)
- 		goto out_err;
- 	if (ret == 0)
- 		goto out_drop;
--	rqstp->rq_xprt_hlen = ret;
-+	rqstp->rq_xprt_hlen = 0;
+ 	TP_fast_assign(
+ 		__entry->dr = dr;
+ 		__entry->xid = be32_to_cpu(*(__be32 *)(dr->args +
+ 						       (dr->xprt_hlen>>2)));
+-		__assign_str(addr, dr->xprt->xpt_remotebuf);
++		snprintf(__entry->addr, sizeof(__entry->addr) - 1,
++			 "%pISpc", (struct sockaddr *)&dr->addr);
+ 	),
  
- 	if (svc_rdma_is_reverse_direction_reply(xprt, ctxt))
- 		goto out_backchannel;
+-	TP_printk("addr=%s dr=%p xid=0x%08x", __get_str(addr), __entry->dr,
++	TP_printk("addr=%s dr=%p xid=0x%08x", __entry->addr, __entry->dr,
+ 		__entry->xid)
+ );
+ 
 
 
