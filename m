@@ -2,226 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91F7C4F8A0A
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 00:15:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 96CE74F892E
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 00:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231659AbiDGVd0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Apr 2022 17:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56158 "EHLO
+        id S232073AbiDGWKz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Apr 2022 18:10:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231608AbiDGVdE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 17:33:04 -0400
-Received: from sonic305-28.consmr.mail.ne1.yahoo.com (sonic305-28.consmr.mail.ne1.yahoo.com [66.163.185.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBDECDCAB3
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 14:31:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1649367060; bh=gNdjBc24xDqZgOxdQ7npdvwhFNCq7/GRKYiJAZ+Tksg=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=jGSjPg9wRxSitOcWw7AlB0SBkmtNFfz2J9g+GM84lCqgC/qWBnFLG9VZKniVRM6bXv9CXS7EAUrcIZwtNXO3ysyApG1NmXm1521NxlxsNiDWKG8G+aWktPLJD6k2ruDKPWpkpj+UMmTgwL75De7tatI/adqtu6daWh6Iif9mioagdZdGEfKBknuW3wQvlPRFx37xkJGdP1YinY+L1y5/5YRt3ZxtWME34OgU1132rv2jJp4JVMQZP1KbKCk/IWQnlNF3EHQWkyrnElKYKI7EoYHy3b3Q8/OXv56diqoFzFUP4DaI5Ju7FGkySk3FgRtEVMPr4ZgMCRMGnWJSBuqGtQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1649367060; bh=zlWDj+2r0MerznCgPwMwY1DK8855d2UnDD7qH8V4rIG=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=UAVcYsaBq6je7kQ7AMAuLhKRRXG40IKiDoyBRlq+CocRknRLy+22hymTvOrYjFyPpBYHUGv3yfbxCtx8veIRaOoPaZ4+vIIbdAz4lqHG7aPWfBQA3/oP5CQFKD2MOLVcWkX8EwoJmQ5L9tdw5zE4XiqOiqbR35K2+VHJLjJXiFV12xg3NlHPXnVU6Ag5uZvT8o0mjGUPCubtgQ4A1RIC/DVlViB7eRMmOEJLOjO1yi/GjBAA2sWDIdjJ7WXlSqklcFCAU79qUJGE7t/tSLWZVu4fvYLO4TlDj9cJrRQv+kMC2PhaXivowSg4F2zZ+ca96eZJo0XzjBmutDGdggo8SQ==
-X-YMail-OSG: CS86PWgVM1mw9FnzO2_f.JDji91TA2FpNeioD67ne7bHGP.1Cv9g1sVIp9e9Es8
- k8OTUxjN7ewjEhsO9nAIHy21e0MutUemKhVD0ksR.4nu2f0QSxdbegioHIe2wW.eFWUwcMMYipRO
- Ps1Bp00qSKBnbRZtZiKsRK0AIU194gK4sWTSSy8PRqi1NwV4dbAKUrgWzoE0m0CnQiUSTRqhdEmT
- WKJdjJojJHVo2GyxN.58fiXl15Gf9uht3TzxNK3OXVcCZIKC_Ibiu.3wJ59T8EW8SOuNDSEvteww
- HHkBi5vDyjYW6ECumyp34YgmkXrA0jUzBgK.ii6Hg3gqWfk_uJP6zpObgZjt3MS_oqw_b3wFrOMt
- leNugzLYBoZidCO3ozxnzc1cSQn29Q5n50AcBVORbxZj4ZO_yZ2wKqbxarTRHkDotmOWok9FbEyx
- QvDA76ml4T5TbC_u2lWHOs8HAIBrJsSL8z1J2Gq5V2tEUdkAYUo.a5bCTv8H.xPEYla0XIYih5KC
- vZOTtEBQUQLM4j5YpdYehueA7uwlXFBaObPzZoYsnO1k8Xcuh.fXyikKvHwIpgmEViHX859in.yT
- OTAXcNNY9.VIJeXGRR5T17l04yHH9FM3i6ejieYMRG5s6Fftg_eio_QOyn3Rdq8.IM4QarJlxD9F
- _FCp05RI7ZnUWG7tW0XKfHGqIan3OotxIKA5NfWEKB4J2nfcZcXzIDC2MCXrKudslVY90wQmUEzH
- 8HasAiAxYsOMteeheNV7JqPG_jr2cIQ3nFhDRHY7DyFQGTgFzu8kQdFHJ0zbNjwU1E.zN_yI6vWY
- OsBy3j2WngzK72mV_NbJb7KPYTMnrJvejmMxBj0VTBkUt4ikIGLCWwEkMEDUn1iHwA5yrAEsootH
- F_bDFCHc6WoWji9nqlY7IH4xtO.B3O.GQgTk7fTW4TEzGA12g5fYF0BIQ6h1Jd._qippkTg3NnFG
- MGhlPMAY2c54tMv8xvbQiXxrnrgzqjogqGYFOvAy_dtl6scrTJve3xVBCx82fHlx9mz3HD4pJI6w
- .GDaqrx0MLnEp.ZXBuLpaVK2J34sS5cfF6CtL3ssNAMeXruci4v9h15PoHJ.zaqGrgnVbVNhPhKA
- 4.A7wNkJn8072krqqePSHdMaGPGJFXVLhH0STe0iry0vKDPoZfvLyuJuCeqYvmqogYMt29OjYlCK
- L3r03mMdI_zFo0VdKaq.fxay2f53HItCfsOCKvZt6OcYNec_6Pak2ozp35D3E2teehJv1kT3LvQJ
- iLH0XHI26MncAcEPfJSL6t_btksYCVkZEo5mSG6ZuoAAJPktjmkuKI1PfBcI1flCLV2LziDBZqGq
- OWYJgQdum2fcHAhHaJuphh.fiwl2rSURUZtKEkH43DdxdmFdlFR42Es2p9KhZ0v2b.RK_ZV4cm.F
- NIbYmzaIsHyrqVaQPkgt6ZfAQV7lY4fP34HED_O8beVZnauQb6lwEkgDJwzD7V.Nm.FoABoSsA44
- dymPhG5w0sh4JGPLcNlUTYy2n9Rz8ZCXBN7xTjIuqCQMMEFA3xgl1xbqg0.7QMB2M5OlYTYyTlxu
- yG2GhmPmly8QzHCPc43OW.Z0E4KhrwtSh87bOfGxO5cQ3LCLrA.VYCP28CsKPtOkNL0lLMuXsyQ1
- Qi4vQyFSlk5qYcXhEyy6MTNRPCPjF73vEpqXmdA3.S4g_hlQaJ2tKXyJv_glQrh9X3QNAy5W8YSU
- cZJAn815OEp_he66VZYY4qRaeTD_FOLjOrsqrDIBHhDw6ajSCdWtMIx0CYEbJXk.zkTzjHCGwJoJ
- qEeetHqoxoakCNVrxhGvPkv9cJeUYcaiJhCw5DXiFpbdw4RM.6v9T6w_gIVcPHy9DuQiEdWWPG8d
- nrTFEvd3jbtmF5qZg0Iw.GPi0trl987KJjIPszTTIr29w19v55SoZsZfK0.82z3mDQ4a0lggQe4m
- 0sAe8UaCTO1YJsWag8a_9WX1Luex.b9YWrNaD9GWzDtCYSCLtV2uybav56iZnx3CbFoTsTVY75fc
- PFdaiTWAtLx3rSPO16XuqxxtqTv_vmY4iKSDKDHsc9Xq.5wBm07axJymJBN5QsJB7lifP9xJmYSl
- nDr82oD8.6UTWS7NGhBci6X3usnt2ldUyhBgGHAWeaYZqN7I6wwOW6110mLkXhTUq38YIByQMei4
- xa2jlsqig1LM.o3HkP02rRhw1w8SSW_J1pMdG3VGjniN2ms2zjaUEz7DnGEnjw3S41nQR3PkqVYE
- 3TdZvwwEQ9tIxh6yJt1akV8shOOIV5BdcXqTKXTWmnFqPM7ChrOezyrBoyUsljTbg8LrRjx8Bb8J
- ubyfwjZ4ujQZNng.f2Nxs9yompO9P6w--
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic305.consmr.mail.ne1.yahoo.com with HTTP; Thu, 7 Apr 2022 21:31:00 +0000
-Received: by kubenode532.mail-prod1.omega.ne1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID c3ff6cebaa6b68d3aee0bdab632d6ae4;
-          Thu, 07 Apr 2022 21:30:54 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-To:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v34 17/29] LSM: Use lsmcontext in security_inode_getsecctx
-Date:   Thu,  7 Apr 2022 14:22:18 -0700
-Message-Id: <20220407212230.12893-18-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220407212230.12893-1-casey@schaufler-ca.com>
-References: <20220407212230.12893-1-casey@schaufler-ca.com>
+        with ESMTP id S232068AbiDGWKu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 18:10:50 -0400
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A22AD096
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:04:31 -0700 (PDT)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-de3eda6b5dso7953067fac.0
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Apr 2022 15:04:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=58SSCJZXblAmvBhjeOB3uU7MwelxZJPYCI86bkrnS8E=;
+        b=XgwIWPe4EmdEZzg2aaVL2kxNLbvNgtQDgA6CSmpYKHkmeCwbHkMVlvkx7EZXnFHO7x
+         J4SENl4Kv459oEqbYIEqiYidiPRy2CAjIFGXnioedXGzr36OF1H2DkSJyBMBC6z2evxG
+         ujxE2friAAG/Zl0uHBA5b6H+yYJKsHEbPH6JWlM7x9jyydRQcfHfaG4RYdDuX4izPVUy
+         BUlIz/KJJJd3RmEBjuwka9CSK4AWLbHSWUwXCMjbjS1cOWXJCdVd70StvQcN6RjGDRYR
+         LWZcR6+S/E+oBAOD/XW6YTBmfANzfiNjyarFB/JqspP7loBQBTX5qFG7/McZ3M07LdLI
+         ItUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=58SSCJZXblAmvBhjeOB3uU7MwelxZJPYCI86bkrnS8E=;
+        b=w4n1uI9mUDq/3bidIu4HKnR2+cS4BBBavNNsluZ251gIENvb3yHh+yelli9rc0l7/d
+         yU8yq1nDie6h67NdEp5KonXZvaQ1tZyX9q+vT7npdTsHMSzIaOTgEeJGjutfoq9SqCvV
+         THdgz36O/mxWsq4CDl0fWOrwubP4Yl5gJf4tsa6O2wR1wzVlXvLwctodc1VZISWasK8V
+         er9Kb08waQwQLrw55JlBOD8ssWgY4TnT+TPdZ9ANmfSKUwQW0RS1leQUDfhN0YvPwr2K
+         TIvksSin6pIbAhkuFSVkMi5ERbBM+/7FKbR2QP+n9bVvZtsTmi+QnPQNk9qbkl6smc0L
+         2/Cg==
+X-Gm-Message-State: AOAM532ccJAO4Nwsle3yRgHUTOLcKoKcHFhRNioX2Sahz7/4FIP45BRH
+        VzGimShS+O2vXhWaXJLwEj/SHA==
+X-Google-Smtp-Source: ABdhPJy+Z5esE3uurhkzizDtW3m1OKRWfuXho1I1H/+hKIEmfhbFpufLCET49LNS8PawnB+emtOgVA==
+X-Received: by 2002:a05:6870:e990:b0:de:9b72:c80 with SMTP id r16-20020a056870e99000b000de9b720c80mr7234558oao.118.1649369069975;
+        Thu, 07 Apr 2022 15:04:29 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id r8-20020a05683001c800b005cdadc2a837sm8359376ota.70.2022.04.07.15.04.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Apr 2022 15:04:29 -0700 (PDT)
+Date:   Thu, 7 Apr 2022 15:04:17 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.anvils
+To:     Mark Hemment <markhemm@googlemail.com>
+cc:     Hugh Dickins <hughd@google.com>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: Regression in xfstests on tmpfs-backed NFS exports
+In-Reply-To: <CANe_+UhOQzGcz9hsKdc1N2=r-gALN6RK-fkBdBkoxD+cv1ZFnA@mail.gmail.com>
+Message-ID: <5256a357-213e-84e9-a07f-f695cbb68272@google.com>
+References: <673D708E-2DFA-4812-BB63-6A437E0C72EE@oracle.com> <11f319-c9a-4648-bfbb-dc5a83c774@google.com> <CANe_+UhOQzGcz9hsKdc1N2=r-gALN6RK-fkBdBkoxD+cv1ZFnA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the security_inode_getsecctx() interface to fill
-a lsmcontext structure instead of data and length pointers.
-This provides the information about which LSM created the
-context so that security_release_secctx() can use the
-correct hook.
+On Thu, 7 Apr 2022, Mark Hemment wrote:
+> On Thu, 7 Apr 2022 at 01:19, Hugh Dickins <hughd@google.com> wrote:
+> >
+> > What could be going wrong there?  I've thought of two possibilities.
+> > A minor, hopefully easily fixed, issue would be if fs/nfsd has
+> > trouble with seeing the same page twice in a row: since tmpfs is
+> > now using the ZERO_PAGE(0) for all pages of a hole, and I think I
+> > caught sight of code which looks to see if the latest page is the
+> > same as the one before.  It's easy to imagine that might go wrong.
+> 
+> When I worked at Veritas, data corruption over NFS was hit when
+> sending the same page in succession.  This was triggered via VxFS's
+> shared page cache, after a file had been dedup'ed.
+> I can't remember all the details (~15yrs ago), but the core issue was
+> skb_can_coalesce() returning a false-positive for the 'same page' case
+> (no check for crossing a page boundary).
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Cc: linux-nfs@vger.kernel.org
----
- fs/nfsd/nfs4xdr.c        | 23 +++++++++--------------
- include/linux/security.h |  5 +++--
- security/security.c      | 13 +++++++++++--
- 3 files changed, 23 insertions(+), 18 deletions(-)
+Very useful input: thank you Mark.
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 77388b5ece56..b1505fbfb2e9 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2713,11 +2713,11 @@ nfsd4_encode_layout_types(struct xdr_stream *xdr, u32 layout_types)
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- {
- 	__be32 *p;
- 
--	p = xdr_reserve_space(xdr, len + 4 + 4 + 4);
-+	p = xdr_reserve_space(xdr, context->len + 4 + 4 + 4);
- 	if (!p)
- 		return nfserr_resource;
- 
-@@ -2727,13 +2727,13 @@ nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
- 	 */
- 	*p++ = cpu_to_be32(0); /* lfs */
- 	*p++ = cpu_to_be32(0); /* pi */
--	p = xdr_encode_opaque(p, context, len);
-+	p = xdr_encode_opaque(p, context->context, context->len);
- 	return 0;
- }
- #else
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- { return 0; }
- #endif
- 
-@@ -2830,9 +2830,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	int err;
- 	struct nfs4_acl *acl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	struct lsmcontext scaff; /* scaffolding */
--	void *context = NULL;
--	int contextlen;
-+	struct lsmcontext context = { };
- #endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
-@@ -2893,7 +2891,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						       &context);
- 		else
- 			err = -EOPNOTSUPP;
- 		contextsupport = (err == 0);
-@@ -3320,8 +3318,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
-+		status = nfsd4_encode_security_label(xdr, rqstp, &context);
- 		if (status)
- 			goto out;
- 	}
-@@ -3342,10 +3339,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context) {
--		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
--		security_release_secctx(&scaff);
--	}
-+	if (context.context)
-+		security_release_secctx(&context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(acl);
- 	if (tempfh) {
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 9a6a53f7d8d8..9933a6e28ad2 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -604,7 +604,7 @@ void security_release_secctx(struct lsmcontext *cp);
- void security_inode_invalidate_secctx(struct inode *inode);
- int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
- int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp);
- int security_locked_down(enum lockdown_reason what);
- #else /* CONFIG_SECURITY */
- 
-@@ -1479,7 +1479,8 @@ static inline int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32
- {
- 	return -EOPNOTSUPP;
- }
--static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+static inline int security_inode_getsecctx(struct inode *inode,
-+					   struct lsmcontext *cp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/security/security.c b/security/security.c
-index 50bdb6cd61f6..02b931df277a 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2434,9 +2434,18 @@ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
- }
- EXPORT_SYMBOL(security_inode_setsecctx);
- 
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp)
- {
--	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
-+	struct security_hook_list *hp;
-+
-+	memset(cp, 0, sizeof(*cp));
-+
-+	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecctx, list) {
-+		cp->slot = hp->lsmid->slot;
-+		return hp->hook.inode_getsecctx(inode, (void **)&cp->context,
-+						&cp->len);
-+	}
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
- 
--- 
-2.35.1
+That tells me that, even if we spot a "bug" in fs/nfsd, there could
+be various other places which get confused if given the ZERO_PAGE(0)
+twice in a row.  I won't be able to find them all, I cannot go on
+risking that.
 
+At first I thought of using ZERO_PAGE(0) for even pgoffs, alternating
+with a tmpfs-specific zeroed page for odd pgoffs.  But I was forgetting
+that copying ZERO_PAGE(0) is itself just a workaround to avoid the 28%
+slower iov_iter_zero().
+
+I think I have a reasonable hybrid: will reply to Chuck now with that.
+
+Hugh
+I've rewr
