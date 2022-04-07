@@ -2,58 +2,58 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96CE74F892E
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 00:14:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C80F84F8B63
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 02:56:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232073AbiDGWKz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Apr 2022 18:10:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47984 "EHLO
+        id S229981AbiDGW3F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Apr 2022 18:29:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232068AbiDGWKu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 18:10:50 -0400
-Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3A22AD096
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:04:31 -0700 (PDT)
-Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-de3eda6b5dso7953067fac.0
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Apr 2022 15:04:31 -0700 (PDT)
+        with ESMTP id S229913AbiDGW3D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 18:29:03 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4948425F0
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:27:00 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-e1dcc0a327so7971180fac.1
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Apr 2022 15:27:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :mime-version;
-        bh=58SSCJZXblAmvBhjeOB3uU7MwelxZJPYCI86bkrnS8E=;
-        b=XgwIWPe4EmdEZzg2aaVL2kxNLbvNgtQDgA6CSmpYKHkmeCwbHkMVlvkx7EZXnFHO7x
-         J4SENl4Kv459oEqbYIEqiYidiPRy2CAjIFGXnioedXGzr36OF1H2DkSJyBMBC6z2evxG
-         ujxE2friAAG/Zl0uHBA5b6H+yYJKsHEbPH6JWlM7x9jyydRQcfHfaG4RYdDuX4izPVUy
-         BUlIz/KJJJd3RmEBjuwka9CSK4AWLbHSWUwXCMjbjS1cOWXJCdVd70StvQcN6RjGDRYR
-         LWZcR6+S/E+oBAOD/XW6YTBmfANzfiNjyarFB/JqspP7loBQBTX5qFG7/McZ3M07LdLI
-         ItUA==
+        bh=OanOE6kLfCVolw3seEml8zkKEzMzrt00m4JCv7C/z4g=;
+        b=hECnWD9CMlJMnL4LsnAestuOfSifCMULwkUTKJgRG4MJb/0TJtTlQ3lctHLoeQhzGi
+         1NQosJXdRGNX/IDrmj05Bdfc0nHJrrZdFtQAL/unjFWktRHWHxL+qxQT9BQ61FoA69J4
+         hJibBMNjV5UT0BS/2LSG8Hx5pqbevCl92RtbA6SGz/NHR9ZRSMYcD/z6WQy1QqkcKnnW
+         vYwpEWC+g43CCMRgN3ooJUJypo5MZ1aQR+ERJ0rofMQiyxtNqh8mi0sGi8OK2Pw34WSk
+         /Qnatf/38QK2EXQ2SDTEs6SImQIUNq/vLKBPkYaQYOp5KAyfIwbwyOPKagEYoyRtGaOr
+         KgwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:mime-version;
-        bh=58SSCJZXblAmvBhjeOB3uU7MwelxZJPYCI86bkrnS8E=;
-        b=w4n1uI9mUDq/3bidIu4HKnR2+cS4BBBavNNsluZ251gIENvb3yHh+yelli9rc0l7/d
-         yU8yq1nDie6h67NdEp5KonXZvaQ1tZyX9q+vT7npdTsHMSzIaOTgEeJGjutfoq9SqCvV
-         THdgz36O/mxWsq4CDl0fWOrwubP4Yl5gJf4tsa6O2wR1wzVlXvLwctodc1VZISWasK8V
-         er9Kb08waQwQLrw55JlBOD8ssWgY4TnT+TPdZ9ANmfSKUwQW0RS1leQUDfhN0YvPwr2K
-         TIvksSin6pIbAhkuFSVkMi5ERbBM+/7FKbR2QP+n9bVvZtsTmi+QnPQNk9qbkl6smc0L
-         2/Cg==
-X-Gm-Message-State: AOAM532ccJAO4Nwsle3yRgHUTOLcKoKcHFhRNioX2Sahz7/4FIP45BRH
-        VzGimShS+O2vXhWaXJLwEj/SHA==
-X-Google-Smtp-Source: ABdhPJy+Z5esE3uurhkzizDtW3m1OKRWfuXho1I1H/+hKIEmfhbFpufLCET49LNS8PawnB+emtOgVA==
-X-Received: by 2002:a05:6870:e990:b0:de:9b72:c80 with SMTP id r16-20020a056870e99000b000de9b720c80mr7234558oao.118.1649369069975;
-        Thu, 07 Apr 2022 15:04:29 -0700 (PDT)
+        bh=OanOE6kLfCVolw3seEml8zkKEzMzrt00m4JCv7C/z4g=;
+        b=udJKAMVu1+4Zf9Hrz8iZ2c/UaNOcP6xs3F9JmzcdQzzCptS3OXR46zO1sCwDOqCGeb
+         ITHOqv/XLVLStGMW/9opmkgL6chMY14Eia4WxVUupyQOHRX0KsOBLl7uUXkZw5dB4T03
+         lPLQ87ZpYPIoGBEScWsup4nxukJ4NQdcE3ZpVkzaKCUrBxgcDOkzXRPvl8oA6m6cTxn6
+         S1Yg5FRwPt/eX51SImBqlMb5TJBI+yktI2tpEjMxTafAsEBYDbAfEJ5zfpgH/dp9biVq
+         xB9WcVi8/iAedcXE558OKotM7djsdtitSN3SLXBNAPR/FwGSeyWk1ZQYFthA+iOl7bMs
+         ExrA==
+X-Gm-Message-State: AOAM532C2kS02mt5rjsMuSdtR/+wdgkt1pyx9coI/LyrtlIOxRxg2Gc+
+        KhRFvDyh/pPD5Jf2KEbUVQMpuQ==
+X-Google-Smtp-Source: ABdhPJxEt9CVgNYGbly3m8umObWCgx4U3LePMXCKHWoBvBmbMfLM3t+sgMB7jRk28HslodoVzrfP3g==
+X-Received: by 2002:a05:6870:8896:b0:da:f5e5:5b62 with SMTP id m22-20020a056870889600b000daf5e55b62mr7334494oam.229.1649370419355;
+        Thu, 07 Apr 2022 15:26:59 -0700 (PDT)
 Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id r8-20020a05683001c800b005cdadc2a837sm8359376ota.70.2022.04.07.15.04.28
+        by smtp.gmail.com with ESMTPSA id m65-20020acabc44000000b002ed13d0fe6fsm7907732oif.23.2022.04.07.15.26.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 15:04:29 -0700 (PDT)
-Date:   Thu, 7 Apr 2022 15:04:17 -0700 (PDT)
+        Thu, 07 Apr 2022 15:26:58 -0700 (PDT)
+Date:   Thu, 7 Apr 2022 15:26:56 -0700 (PDT)
 From:   Hugh Dickins <hughd@google.com>
 X-X-Sender: hugh@ripple.anvils
-To:     Mark Hemment <markhemm@googlemail.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
 cc:     Hugh Dickins <hughd@google.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
         Andrew Morton <akpm@linux-foundation.org>,
+        Mark Hemment <markhemm@googlemail.com>,
         Patrice CHOTARD <patrice.chotard@foss.st.com>,
         Mikulas Patocka <mpatocka@redhat.com>,
         Lukas Czerner <lczerner@redhat.com>,
@@ -61,27 +61,41 @@ cc:     Hugh Dickins <hughd@google.com>,
         "Darrick J. Wong" <djwong@kernel.org>,
         Linux-MM <linux-mm@kvack.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
 Subject: Re: Regression in xfstests on tmpfs-backed NFS exports
-In-Reply-To: <CANe_+UhOQzGcz9hsKdc1N2=r-gALN6RK-fkBdBkoxD+cv1ZFnA@mail.gmail.com>
-Message-ID: <5256a357-213e-84e9-a07f-f695cbb68272@google.com>
-References: <673D708E-2DFA-4812-BB63-6A437E0C72EE@oracle.com> <11f319-c9a-4648-bfbb-dc5a83c774@google.com> <CANe_+UhOQzGcz9hsKdc1N2=r-gALN6RK-fkBdBkoxD+cv1ZFnA@mail.gmail.com>
+In-Reply-To: <2B7AF707-67B1-4ED8-A29F-957C26B7F87A@oracle.com>
+Message-ID: <c5ea49a-1a76-8cf9-5c76-4bb31aa3d458@google.com>
+References: <673D708E-2DFA-4812-BB63-6A437E0C72EE@oracle.com> <11f319-c9a-4648-bfbb-dc5a83c774@google.com> <2B7AF707-67B1-4ED8-A29F-957C26B7F87A@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
         ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 7 Apr 2022, Mark Hemment wrote:
-> On Thu, 7 Apr 2022 at 01:19, Hugh Dickins <hughd@google.com> wrote:
-> >
+On Thu, 7 Apr 2022, Chuck Lever III wrote:
+> > On Apr 6, 2022, at 8:18 PM, Hugh Dickins <hughd@google.com> wrote:
+> > 
+> > But I can sit here and try to guess.  I notice fs/nfsd checks
+> > file->f_op->splice_read, and employs fallback if not available:
+> > if you have time, please try rerunning those xfstests on an -rc1
+> > kernel, but with mm/shmem.c's .splice_read line commented out.
+> > My guess is that will then pass the tests, and we shall know more.
+> 
+> This seemed like the most probative next step, so I commented
+> out the .splice_read call-out in mm/shmem.c and ran the tests
+> again. Yes, that change enables the fsx-related tests to pass
+> as expected.
+
+Great, thank you for trying that.
+
+> 
 > > What could be going wrong there?  I've thought of two possibilities.
 > > A minor, hopefully easily fixed, issue would be if fs/nfsd has
 > > trouble with seeing the same page twice in a row: since tmpfs is
@@ -89,26 +103,119 @@ On Thu, 7 Apr 2022, Mark Hemment wrote:
 > > caught sight of code which looks to see if the latest page is the
 > > same as the one before.  It's easy to imagine that might go wrong.
 > 
-> When I worked at Veritas, data corruption over NFS was hit when
-> sending the same page in succession.  This was triggered via VxFS's
-> shared page cache, after a file had been dedup'ed.
-> I can't remember all the details (~15yrs ago), but the core issue was
-> skb_can_coalesce() returning a false-positive for the 'same page' case
-> (no check for crossing a page boundary).
+> Are you referring to this function in fs/nfsd/vfs.c ?
 
-Very useful input: thank you Mark.
+I think that was it, didn't pay much attention.
 
-That tells me that, even if we spot a "bug" in fs/nfsd, there could
-be various other places which get confused if given the ZERO_PAGE(0)
-twice in a row.  I won't be able to find them all, I cannot go on
-risking that.
+> 
+>  847 static int
+>  848 nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
+>  849                   struct splice_desc *sd)
+>  850 {
+>  851         struct svc_rqst *rqstp = sd->u.data;
+>  852         struct page **pp = rqstp->rq_next_page;
+>  853         struct page *page = buf->page;
+>  854 
+>  855         if (rqstp->rq_res.page_len == 0) {
+>  856                 svc_rqst_replace_page(rqstp, page);
+>  857                 rqstp->rq_res.page_base = buf->offset;
+>  858         } else if (page != pp[-1]) {
+>  859                 svc_rqst_replace_page(rqstp, page);
+>  860         }
+>  861         rqstp->rq_res.page_len += sd->len;
+>  862 
+>  863         return sd->len;
+>  864 }
+> 
+> rq_next_page should point to the first unused element of
+> rqstp->rq_pages, so IIUC that check is looking for the
+> final page that is part of the READ payload.
+> 
+> But that does suggest that if page -> ZERO_PAGE and so does
+> pp[-1], then svc_rqst_replace_page() would not be invoked.
 
-At first I thought of using ZERO_PAGE(0) for even pgoffs, alternating
-with a tmpfs-specific zeroed page for odd pgoffs.  But I was forgetting
-that copying ZERO_PAGE(0) is itself just a workaround to avoid the 28%
-slower iov_iter_zero().
+I still haven't studied the logic there: Mark's input made it clear
+that it's just too risky for tmpfs to pass back ZERO_PAGE repeatedly,
+there could be expectations of uniqueness in other places too.
 
-I think I have a reasonable hybrid: will reply to Chuck now with that.
+> 
+> > A more difficult issue would be, if fsx is racing writes and reads,
+> > in a way that it can guarantee the correct result, but that correct
+> > result is no longer delivered: because the writes go into freshly
+> > allocated tmpfs cache pages, while reads are still delivering
+> > stale ZERO_PAGEs from the pipe.  I'm hazy on the guarantees there.
+> > 
+> > But unless someone has time to help out, we're heading for a revert.
 
+We might be able to avoid that revert, and go the whole way to using
+iov_iter_zero() instead.  But the significant slowness of clear_user()
+relative to copy to user, on x86 at least, does ask for a hybrid.
+
+Suggested patch below, on top of 5.18-rc1, passes my own testing:
+but will it pass yours?  It seems to me safe, and as fast as before,
+but we don't know yet if this iov_iter_zero() works right for you.
+Chuck, please give it a go and let us know.
+
+(Don't forget to restore mm/shmem.c's .splice_read first!  And if
+this works, I can revert mm/filemap.c's SetPageUptodate(ZERO_PAGE(0))
+in the same patch, fixing the other regression, without recourse to
+#ifdefs or arch mods.)
+
+Thanks!
 Hugh
-I've rewr
+
+--- 5.18-rc1/mm/shmem.c
++++ linux/mm/shmem.c
+@@ -2513,7 +2513,6 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 		pgoff_t end_index;
+ 		unsigned long nr, ret;
+ 		loff_t i_size = i_size_read(inode);
+-		bool got_page;
+ 
+ 		end_index = i_size >> PAGE_SHIFT;
+ 		if (index > end_index)
+@@ -2570,24 +2569,34 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+ 			 */
+ 			if (!offset)
+ 				mark_page_accessed(page);
+-			got_page = true;
++			/*
++			 * Ok, we have the page, and it's up-to-date, so
++			 * now we can copy it to user space...
++			 */
++			ret = copy_page_to_iter(page, offset, nr, to);
++			put_page(page);
++
++		} else if (iter_is_iovec(to)) {
++			/*
++			 * Copy to user tends to be so well optimized, but
++			 * clear_user() not so much, that it is noticeably
++			 * faster to copy the zero page instead of clearing.
++			 */
++			ret = copy_page_to_iter(ZERO_PAGE(0), offset, nr, to);
+ 		} else {
+-			page = ZERO_PAGE(0);
+-			got_page = false;
++			/*
++			 * But submitting the same page twice in a row to
++			 * splice() - or others? - can result in confusion:
++			 * so don't attempt that optimization on pipes etc.
++			 */
++			ret = iov_iter_zero(nr, to);
+ 		}
+ 
+-		/*
+-		 * Ok, we have the page, and it's up-to-date, so
+-		 * now we can copy it to user space...
+-		 */
+-		ret = copy_page_to_iter(page, offset, nr, to);
+ 		retval += ret;
+ 		offset += ret;
+ 		index += offset >> PAGE_SHIFT;
+ 		offset &= ~PAGE_MASK;
+ 
+-		if (got_page)
+-			put_page(page);
+ 		if (!iov_iter_count(to))
+ 			break;
+ 		if (ret < nr) {
