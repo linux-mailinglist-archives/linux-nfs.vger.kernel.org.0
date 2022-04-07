@@ -2,169 +2,127 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E93E4F83EB
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 17:45:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23E114F83FA
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 17:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345196AbiDGPq6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Apr 2022 11:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44092 "EHLO
+        id S230489AbiDGPsz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Apr 2022 11:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345101AbiDGPqi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 11:46:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8215EC6F21
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 08:44:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S1345108AbiDGPsw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 11:48:52 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9310AC12D8
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 08:46:50 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2a02:3030:b:203:2277:ba57:a2c0:3])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D0F3461B8E
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:44:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6A51C385AA
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649346274;
-        bh=ZBqeJfKcLA80ny5CZGoA9SnCqhrKZWAqtslhR/LejX8=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=i31to0SOiZQ11/HKfhgeQXDfT51aJx+ZFR3m2bTwFH0/gJRTHuc10jMtD8XtutyF+
-         1+1lP9JZU55yVplelyRqumYcDjJcL8Hs28l3Cq85Fuc+Ykt70Jodpjey5TIwb5NgWw
-         VE6EkSTOBliRsBJfDyCjK3MRKLZlOT81SRk/UFao2w1+EpuaNd0rnZ446IeM3IprqJ
-         zCAe92vRIb7yH5+7hZwZmsippnFCbwDKDl+59ND6PLjzaTbbiwX/RzLS57lXmXz2pD
-         VlJ84r9gHTcrH859OASnwZaj0OBuOSeO5qVD2q9+8W7huic49q0YU2l1RHbAOX0myw
-         6C/3dbuqCnZLw==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 7/7] SUNRPC: Move the call to xprt_send_pagedata() out of xprt_sock_sendmsg()
-Date:   Thu,  7 Apr 2022 11:38:09 -0400
-Message-Id: <20220407153809.1053261-7-trondmy@kernel.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220407153809.1053261-6-trondmy@kernel.org>
-References: <20220407153809.1053261-1-trondmy@kernel.org>
- <20220407153809.1053261-2-trondmy@kernel.org>
- <20220407153809.1053261-3-trondmy@kernel.org>
- <20220407153809.1053261-4-trondmy@kernel.org>
- <20220407153809.1053261-5-trondmy@kernel.org>
- <20220407153809.1053261-6-trondmy@kernel.org>
+        (Authenticated sender: sebastianfricke)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 372511F467DA;
+        Thu,  7 Apr 2022 16:46:49 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1649346409;
+        bh=eieaB43f4SIW0IvUmDbS/q+mzXtfuK462LMTnxyuBDo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b3zlMOBXakfUIs9OKDztU55KiUbd+8PgAcINgnDnnafhiERJGmX+jVGKXKjOVl10w
+         wJ3rLMybkt1bmkjLMSKLLaG7o8tYOFV1jx4akknjQNYDTtksHyW4s4zAsBhYR9ZzbF
+         ka1uTCGJnr1umd91P61gWp7D//f1heWXBZRvLl86Ui+rL4Lq3PJh/3Ar6TGJix9t42
+         qEsm2TCjIZ3B8y1f4+ikcp9BJFzWQaZRt7JwGEbyi2x5YFmXXss6p7srFDEL5wiYKB
+         Yd3vzbWnpUNNBashfGBQcNj96Nx6jBb5vADWnlGTMAKSWpIq6x2hsbF7u4v6fo9jsL
+         O46pRYPx5ZN1A==
+Date:   Thu, 7 Apr 2022 17:46:45 +0200
+From:   "sebastian.fricke@collabora.com" <sebastian.fricke@collabora.com>
+To:     Anna Schumaker <schumaker.anna@gmail.com>
+Cc:     Muchun Song <songmuchun@bytedance.com>, NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: Possible NFS4 regression on 5.18-rc1
+Message-ID: <20220407154645.fhnog3fvubfgeglr@basti-XPS-13-9310>
+References: <20220406142541.eouf7ryfbd7aooye@basti-XPS-13-9310>
+ <23f11c6151f9bbfbb09d2699f4388d4a09a87127.camel@hammerspace.com>
+ <164929188775.10985.17822469281433754130@noble.neil.brown.name>
+ <CAMZfGtUKmTS51G+SGSLCyCXsae-Z7OD2yo35G7FD5UD9rewerw@mail.gmail.com>
+ <CAFX2Jf=ze2QcUeRMkWi8imFhmQY816z9dOhEpT8O-dA7Gx7y-Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+In-Reply-To: <CAFX2Jf=ze2QcUeRMkWi8imFhmQY816z9dOhEpT8O-dA7Gx7y-Q@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Hey Ann, Trond, Neil & Muchun,
 
-The client and server have different requirements for their memory
-allocation, so move the allocation of the send buffer out of the socket
-send code that is common to both.
+On 07.04.2022 10:00, Anna Schumaker wrote:
+>I started seeing the same problem when I rebased on rc1, and the
+>suggested patch fixes it for me.
 
-Reported-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- net/sunrpc/socklib.c  |  6 ------
- net/sunrpc/svcsock.c  | 13 +++++++++----
- net/sunrpc/xprtsock.c | 15 +++++++++++++--
- 3 files changed, 22 insertions(+), 12 deletions(-)
+Thanks, yes that patch fixes the problem for me as well.
 
-diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
-index 05b38bf68316..71ba4cf513bc 100644
---- a/net/sunrpc/socklib.c
-+++ b/net/sunrpc/socklib.c
-@@ -221,12 +221,6 @@ static int xprt_send_kvec(struct socket *sock, struct msghdr *msg,
- static int xprt_send_pagedata(struct socket *sock, struct msghdr *msg,
- 			      struct xdr_buf *xdr, size_t base)
- {
--	int err;
--
--	err = xdr_alloc_bvec(xdr, rpc_task_gfp_mask());
--	if (err < 0)
--		return err;
--
- 	iov_iter_bvec(&msg->msg_iter, WRITE, xdr->bvec, xdr_buf_pagecount(xdr),
- 		      xdr->page_len + xdr->page_base);
- 	return xprt_sendmsg(sock, msg, base + xdr->page_base);
-diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
-index 478f857cdaed..cc35ec433400 100644
---- a/net/sunrpc/svcsock.c
-+++ b/net/sunrpc/svcsock.c
-@@ -579,15 +579,18 @@ static int svc_udp_sendto(struct svc_rqst *rqstp)
- 	if (svc_xprt_is_dead(xprt))
- 		goto out_notconn;
- 
-+	err = xdr_alloc_bvec(xdr, GFP_KERNEL);
-+	if (err < 0)
-+		goto out_unlock;
-+
- 	err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
--	xdr_free_bvec(xdr);
- 	if (err == -ECONNREFUSED) {
- 		/* ICMP error on earlier request. */
- 		err = xprt_sock_sendmsg(svsk->sk_sock, &msg, xdr, 0, 0, &sent);
--		xdr_free_bvec(xdr);
- 	}
-+	xdr_free_bvec(xdr);
- 	trace_svcsock_udp_send(xprt, err);
--
-+out_unlock:
- 	mutex_unlock(&xprt->xpt_mutex);
- 	if (err < 0)
- 		return err;
-@@ -1096,7 +1099,9 @@ static int svc_tcp_sendmsg(struct socket *sock, struct xdr_buf *xdr,
- 	int ret;
- 
- 	*sentp = 0;
--	xdr_alloc_bvec(xdr, GFP_KERNEL);
-+	ret = xdr_alloc_bvec(xdr, GFP_KERNEL);
-+	if (ret < 0)
-+		return ret;
- 
- 	ret = kernel_sendmsg(sock, &msg, &rm, 1, rm.iov_len);
- 	if (ret < 0)
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index a34a15750122..e16568f9a82d 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -825,9 +825,14 @@ static int xs_stream_nospace(struct rpc_rqst *req, bool vm_wait)
- static int
- xs_stream_prepare_request(struct rpc_rqst *req)
- {
-+	gfp_t gfp = rpc_task_gfp_mask();
-+	int ret;
-+
-+	ret = xdr_alloc_bvec(&req->rq_snd_buf, gfp);
-+	if (ret < 0)
-+		return ret;
- 	xdr_free_bvec(&req->rq_rcv_buf);
--	return xdr_alloc_bvec(
--		&req->rq_rcv_buf, GFP_KERNEL | __GFP_NORETRY | __GFP_NOWARN);
-+	return xdr_alloc_bvec(&req->rq_rcv_buf, gfp);
- }
- 
- /*
-@@ -956,6 +961,9 @@ static int xs_udp_send_request(struct rpc_rqst *req)
- 	if (!xprt_request_get_cong(xprt, req))
- 		return -EBADSLT;
- 
-+	status = xdr_alloc_bvec(xdr, rpc_task_gfp_mask());
-+	if (status < 0)
-+		return status;
- 	req->rq_xtime = ktime_get();
- 	status = xprt_sock_sendmsg(transport->sock, &msg, xdr, 0, 0, &sent);
- 
-@@ -2557,6 +2565,9 @@ static int bc_sendto(struct rpc_rqst *req)
- 	int err;
- 
- 	req->rq_xtime = ktime_get();
-+	err = xdr_alloc_bvec(xdr, rpc_task_gfp_mask());
-+	if (err < 0)
-+		return err;
- 	err = xprt_sock_sendmsg(transport->sock, &msg, xdr, 0, marker, &sent);
- 	xdr_free_bvec(xdr);
- 	if (err < 0 || sent != (xdr->len + sizeof(marker)))
--- 
-2.35.1
+>
+>Anna
 
+Greetings,
+Sebastian
+>
+>On Wed, Apr 6, 2022 at 11:23 PM Muchun Song <songmuchun@bytedance.com> wrote:
+>>
+>> On Thu, Apr 7, 2022 at 8:38 AM NeilBrown <neilb@suse.de> wrote:
+>> >
+>> > On Thu, 07 Apr 2022, Trond Myklebust wrote:
+>> > > On Wed, 2022-04-06 at 16:25 +0200, Sebastian Fricke wrote:
+>> > > > [You don't often get email from sebastian.fricke@collabora.com. Learn
+>> > > > why this is important at
+>> > > > http://aka.ms/LearnAboutSenderIdentification.]
+>> > > >
+>> > > > Hello folks,
+>> > > >
+>> > > > I am currently developing a V4L2 driver with support on GStreamer,
+>> > > > for
+>> > > > that purpose I am mounting the GStreamer repository via NFS from my
+>> > > > development machine to the target ARM64 hardware.
+>> > > >
+>> > > > I just switched to the latest kernel and got a sudden hang up of my
+>> > > > system.
+>> > > > What I did was a rebase of the GStreamer repository and then I wanted
+>> > > > to
+>> > > > build it with ninja on the target, this failed with a segmentation
+>> > > > fault:
+>> > > > ```
+>> > > > gstreamer| Configuring libgstreamer-1.0.so.0.2100.0-gdb.py using
+>> > > > configurat=
+>> > > > ion
+>> > > > Segmentation fault
+>> > ....
+>> >
+>> > > > [ 4595.209552] pc : list_lru_add+0xd4/0x180
+>> > > > [ 4595.209907] lr : list_lru_add+0x15c/0x180
+>> >
+>> > This is almost certainly fixed by the patch at
+>> >
+>> > https://lore.kernel.org/all/164876616694.25542.14010655277238655246@noble.neil.brown.name/
+>> >
+>> > which almost landed in -mm, but didn't quite.
+>> >
+>> > The subsequent email
+>> >
+>> > https://lore.kernel.org/all/CAMZfGtUMyag7MHxmg7E1_xmyZ7NDPt62e-qXbqa8nJHFC72=3w@mail.gmail.com/
+>> >
+>> > suggests a one-line change.
+>> >
+>> > Trond: maybe you could queue this?
+>> >
+>> Hi NeilBrown,
+>>
+>> The complete patch could be found here. Please
+>> queue this one.
+>>
+>> [1] https://lore.kernel.org/all/20220401025905.49771-1-songmuchun@bytedance.com/
+>>
+>> Thanks.
