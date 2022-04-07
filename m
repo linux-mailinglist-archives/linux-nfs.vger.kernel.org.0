@@ -2,63 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A95CF4F71A9
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 03:43:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 483684F71B3
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 03:49:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238250AbiDGBpH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Apr 2022 21:45:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38690 "EHLO
+        id S229475AbiDGBvp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Apr 2022 21:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241490AbiDGBl5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 21:41:57 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D6D72179BD
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Apr 2022 18:33:27 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id w134so7077814ybe.10
-        for <linux-nfs@vger.kernel.org>; Wed, 06 Apr 2022 18:33:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bTHjpcwhhVO92ZOTpQbW467iF+ZpHNJTG966ZwvBdA8=;
-        b=gV2yhy61chyrCdw6VDXeVi4fUIBJECwaEMTVBgzd6mXnI3xUgUj5PBOiJ2AqyewqOC
-         xbr7fSulnK+4kim9O3I/wRQuURGPaLpNOc7JrC00QLowmPIWcaQbWCo+G9VlU969HNSP
-         05aVmDAJVvZByZ7eH6s+vydMKlkO6JRvBejUahucBarKDi76urcJ5chB7D/Uop1JOMNt
-         egsWHM6x2m7KdaC2SpV+MgBBK69fM0sprwjeYZXf0g1lpY4e+8XwCmTgGe363NmGILbV
-         dU5Lpfd8iyX5YjvX0rZ6p7yHtrTbReNtk9Cm6T1U5jx/eda9mXqDSzqZ769RJk/VKqj5
-         zRqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bTHjpcwhhVO92ZOTpQbW467iF+ZpHNJTG966ZwvBdA8=;
-        b=me3rChu5EsLZEYbiJtwnitqmPX9/WnwBRQlLDK9I9X9HxNwzeQQ+vYpguksdqDq50d
-         OM4Hcv+6NON5kMSiZzaYVKrEa4clli2ZhTV8OcR7MtXpYoLv/DSAzYPAlhHTZYpJs+6A
-         hkNODw1Pw5Yj0rm2/bH+hVUUsC1Rf6c5skT+Oma6G6hE2jTd4HTJdboVDeOON9k86Zub
-         ZlibKABHgSXQunNXfb9vb/4+bOYt+JKVDfMx600WzrnZ00QUTQ5BAG9Jbl63MVRPOMqN
-         jQ+gzGddX2/k2AtLP0HUd9hZgK2d4QUTv+ijLkl0P/CQOFk3VB6jr2KbWs4BssTj5COj
-         a3qQ==
-X-Gm-Message-State: AOAM531nAxYG8LOgEuZuKeIzqRlJjxeBHUprRoigVZ3ZoEeBL8bQUcFw
-        fI+XOVb13tEiniiVykPx9XClGFYV/VKnvllKbBfy9ZMRgX7jRQ==
-X-Google-Smtp-Source: ABdhPJz1ffgonB0lX7guxLRq5TXVt7qiDifdKZCiiOeU9EsmRs9iitvUGjdpva/ND+eisxtWqlmTgDfJXBgzcJSdFgY=
-X-Received: by 2002:a25:cc92:0:b0:63d:b330:e8a4 with SMTP id
- l140-20020a25cc92000000b0063db330e8a4mr8255501ybf.427.1649295206223; Wed, 06
- Apr 2022 18:33:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220406142541.eouf7ryfbd7aooye@basti-XPS-13-9310>
- <23f11c6151f9bbfbb09d2699f4388d4a09a87127.camel@hammerspace.com> <164929188775.10985.17822469281433754130@noble.neil.brown.name>
-In-Reply-To: <164929188775.10985.17822469281433754130@noble.neil.brown.name>
-From:   Muchun Song <songmuchun@bytedance.com>
-Date:   Thu, 7 Apr 2022 09:32:50 +0800
-Message-ID: <CAMZfGtUKmTS51G+SGSLCyCXsae-Z7OD2yo35G7FD5UD9rewerw@mail.gmail.com>
-Subject: Re: Possible NFS4 regression on 5.18-rc1
+        with ESMTP id S229685AbiDGBvn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Apr 2022 21:51:43 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56C0916DB79;
+        Wed,  6 Apr 2022 18:49:40 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id C3923685B; Wed,  6 Apr 2022 21:49:39 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org C3923685B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1649296179;
+        bh=SKTCmJeHffhfBD0bd5Ikkj/Vxo4gt7j66RyaJMQUM+o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OzXkNbyAu9Npq0rQx+2UHJCbcFbJUG504MgILRuSNcBFwQWmPGn5hY+JWdN/Q5MHM
+         Dt60Xnb+XeTBIOQg1Nd/Er3hrPnvJariy5aby/P5USHJU3DILIygRDfOy1ADoHHZV8
+         c1KeR+fhUdbUZizzcb851U5nlNEehjIHza0QAAEE=
+Date:   Wed, 6 Apr 2022 21:49:39 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
 To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "sebastian.fricke@collabora.com" <sebastian.fricke@collabora.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: sporadic hangs on generic/186
+Message-ID: <20220407014939.GC1242@fieldses.org>
+References: <20220406195424.GA1242@fieldses.org>
+ <20220407001453.GE1609613@dread.disaster.area>
+ <164929126156.10985.11316778982526844125@noble.neil.brown.name>
+ <164929437439.10985.5253499040284089154@noble.neil.brown.name>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <164929437439.10985.5253499040284089154@noble.neil.brown.name>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,56 +52,33 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Apr 7, 2022 at 8:38 AM NeilBrown <neilb@suse.de> wrote:
->
-> On Thu, 07 Apr 2022, Trond Myklebust wrote:
-> > On Wed, 2022-04-06 at 16:25 +0200, Sebastian Fricke wrote:
-> > > [You don't often get email from sebastian.fricke@collabora.com. Learn
-> > > why this is important at
-> > > http://aka.ms/LearnAboutSenderIdentification.]
-> > >
-> > > Hello folks,
-> > >
-> > > I am currently developing a V4L2 driver with support on GStreamer,
-> > > for
-> > > that purpose I am mounting the GStreamer repository via NFS from my
-> > > development machine to the target ARM64 hardware.
-> > >
-> > > I just switched to the latest kernel and got a sudden hang up of my
-> > > system.
-> > > What I did was a rebase of the GStreamer repository and then I wanted
-> > > to
-> > > build it with ninja on the target, this failed with a segmentation
-> > > fault:
-> > > ```
-> > > gstreamer| Configuring libgstreamer-1.0.so.0.2100.0-gdb.py using
-> > > configurat=
-> > > ion
-> > > Segmentation fault
-> ....
->
-> > > [ 4595.209552] pc : list_lru_add+0xd4/0x180
-> > > [ 4595.209907] lr : list_lru_add+0x15c/0x180
->
-> This is almost certainly fixed by the patch at
->
-> https://lore.kernel.org/all/164876616694.25542.14010655277238655246@noble.neil.brown.name/
->
-> which almost landed in -mm, but didn't quite.
->
-> The subsequent email
->
-> https://lore.kernel.org/all/CAMZfGtUMyag7MHxmg7E1_xmyZ7NDPt62e-qXbqa8nJHFC72=3w@mail.gmail.com/
->
-> suggests a one-line change.
->
-> Trond: maybe you could queue this?
->
-Hi NeilBrown,
+On Thu, Apr 07, 2022 at 11:19:34AM +1000, NeilBrown wrote:
+> I had a look through the various places where alloc can now fail.
+> 
+> I think xdr_alloc_bvec() in xprt_sent_pagedata() is the most likely
+> cause of a problem here.  I don't think an -ENOMEM from there is caught,
+> so it could likely filter up to NFS and result in the message you got.
+> 
+> I don't think we can easily handle failure there.  We need to stay with
+> GFP_KERNEL rely on PF_MEMALLOC to make forward progress for
+> swap-over-NFS.
+> 
+> Bruce: can you change that one line back to GFP_KERNEL and see if the
+> problem goes away?
 
-The complete patch could be found here. Please
-queue this one.
+Like this?  Sure--might take me a day or two to run the tests and get
+results back.--b.
 
-[1] https://lore.kernel.org/all/20220401025905.49771-1-songmuchun@bytedance.com/
-
-Thanks.
+diff --git a/net/sunrpc/socklib.c b/net/sunrpc/socklib.c
+index 05b38bf68316..506627dc9a0f 100644
+--- a/net/sunrpc/socklib.c
++++ b/net/sunrpc/socklib.c
+@@ -223,7 +223,7 @@ static int xprt_send_pagedata(struct socket *sock, struct msghdr *msg,
+ {
+ 	int err;
+ 
+-	err = xdr_alloc_bvec(xdr, rpc_task_gfp_mask());
++	err = xdr_alloc_bvec(xdr, GFP_KERNEL);
+ 	if (err < 0)
+ 		return err;
+ 
