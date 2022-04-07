@@ -2,41 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C057F4F83EF
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 17:45:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A48834F83F4
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Apr 2022 17:45:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241339AbiDGPqw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Apr 2022 11:46:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43994 "EHLO
+        id S1345080AbiDGPqx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Apr 2022 11:46:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345124AbiDGPqh (ORCPT
+        with ESMTP id S1345123AbiDGPqh (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Apr 2022 11:46:37 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69C00C6B62
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68C18C6B54
         for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 08:44:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3B88361B8E
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CEEE61EB6
         for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:44:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 360B0C385A4
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E962C385B2
         for <linux-nfs@vger.kernel.org>; Thu,  7 Apr 2022 15:44:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1649346271;
-        bh=/0aHu6lQWcAuZqBeYBDiYAEFbo9Ggxhgm5iutTtf7Hk=;
-        h=From:To:Subject:Date:From;
-        b=qYKnYJanVtcfqhnzZeYHI9yooQlV4P5G8MF4Z+LvHr7ElsKVJptnFjzQvSczF7Zox
-         GqEDKhAXLm71tu7fCsb1Y7FM73hP2IfAvGpbcFmo9HcxCYGNEwl5Q0XvHyUfWUItLq
-         SHFLEX+1gJICoc256z78/ZV38y86O1Ve9BUKRBqO4kQPpTa/Sbksi0sxVQ1WW/POFt
-         BLfn+pS+vuP/rsot3KnoWr+NGIIRpeWTSHmULA26u1Ow/3EdrBI8JOGo4N4VvhcYIk
-         4HKztlW4moxBdnt2dJJldX+bWpWKJmFKrWrDy5CzzSYBh9AXag8kMiMbsgG2cjlQ9H
-         tong+VUSJfnCQ==
+        bh=JdLNTLNoccxME1ykAb6vaTCpoobIqzNPmf+4E3wWhbQ=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=kagtjd/dZvZ/+AyyYVU6oxUubBo8nSgkDykUAzBT4yC9wrv/pRo/dEYEyKsF7DKQS
+         57PdCFqZQs4nJdtIdvR1m8tGZv9xe4wi3JP5hBfvR2xYyEldRA96EtNkmA1KZ3MIR8
+         xEFGO/UKo0+Gl42btaHgWJlLrxKdcFgYl2UEV2ajXtMsPxhP7rGhJihiFMmAdpTDJP
+         d8AOXxJthBqWNMBPJQ2ZirrmtaZzFTTh20dJtvtCEi+C2LBiIG1V/8kCe9pnWRxleR
+         KmktIWcvrF3yOTmKW4iQs+PPGOCquFPYTHvmu+pOU3zLNlcnDQmWYA9L9aTmqZGxwC
+         xgy/Y4VNcNzKA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/7] NFSv4.2: Fix missing removal of SLAB_ACCOUNT on kmem_cache allocation
-Date:   Thu,  7 Apr 2022 11:38:03 -0400
-Message-Id: <20220407153809.1053261-1-trondmy@kernel.org>
+Subject: [PATCH 2/7] SUNRPC: Handle ENOMEM in call_transmit_status()
+Date:   Thu,  7 Apr 2022 11:38:04 -0400
+Message-Id: <20220407153809.1053261-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220407153809.1053261-1-trondmy@kernel.org>
+References: <20220407153809.1053261-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -49,37 +51,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-The commit 5c60e89e71f8 ("NFSv4.2: Fix up an invalid combination of memory
-allocation flags") has stripped GFP_KERNEL_ACCOUNT down to GFP_KERNEL,
-however, it forgot to remove SLAB_ACCOUNT from kmem_cache allocation.
-It means that memory is still limited by kmemcg.  This patch also fix a
-NULL pointer reference issue [1] reported by NeilBrown.
+Both call_transmit() and call_bc_transmit() can now return ENOMEM, so
+let's make sure that we handle the errors gracefully.
 
-Link: https://lore.kernel.org/all/164870069595.25542.17292003658915487357@noble.neil.brown.name/ [1]
-Fixes: 5c60e89e71f8 ("NFSv4.2: Fix up an invalid combination of memory allocation flags")
-Fixes: 5abc1e37afa0 ("mm: list_lru: allocate list_lru_one only when needed")
-Reported-by: NeilBrown <neilb@suse.de>
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs42xattr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/clnt.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index ad3405c64b9e..e7b34f7e0614 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -997,7 +997,7 @@ int __init nfs4_xattr_cache_init(void)
- 
- 	nfs4_xattr_cache_cachep = kmem_cache_create("nfs4_xattr_cache_cache",
- 	    sizeof(struct nfs4_xattr_cache), 0,
--	    (SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD|SLAB_ACCOUNT),
-+	    (SLAB_RECLAIM_ACCOUNT|SLAB_MEM_SPREAD),
- 	    nfs4_xattr_cache_init_once);
- 	if (nfs4_xattr_cache_cachep == NULL)
- 		return -ENOMEM;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 3c7407104d54..07328f1d3885 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -2200,6 +2200,7 @@ call_transmit_status(struct rpc_task *task)
+ 		 * socket just returned a connection error,
+ 		 * then hold onto the transport lock.
+ 		 */
++	case -ENOMEM:
+ 	case -ENOBUFS:
+ 		rpc_delay(task, HZ>>2);
+ 		fallthrough;
+@@ -2283,6 +2284,7 @@ call_bc_transmit_status(struct rpc_task *task)
+ 	case -ENOTCONN:
+ 	case -EPIPE:
+ 		break;
++	case -ENOMEM:
+ 	case -ENOBUFS:
+ 		rpc_delay(task, HZ>>2);
+ 		fallthrough;
 -- 
 2.35.1
 
