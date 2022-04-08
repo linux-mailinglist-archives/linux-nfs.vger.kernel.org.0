@@ -2,185 +2,259 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E804F8D87
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 08:25:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 430894F9849
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 16:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbiDHFeu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Apr 2022 01:34:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43726 "EHLO
+        id S229663AbiDHOkx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Apr 2022 10:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbiDHFet (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Apr 2022 01:34:49 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0523C3A8;
-        Thu,  7 Apr 2022 22:32:45 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 7F8EE1F85F;
-        Fri,  8 Apr 2022 05:32:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1649395964; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QdTW7COGvmCgK+LD5zU9u4m949ZH/XIvxLPVYTKkNWg=;
-        b=COgZgDyt/iHlm/IOD0lhgw3zwv9X4kcDBRtS26ARUbM9IZ/E996GgZQH9RJ7as4uWKNGro
-        HuCLZIqBravRjZLbHWWa0f2vUEQ1zqko5wM9Xb8zPDk/2BLKMrZa2vOq/LVyx/BIHDUg67
-        HZr3wuyjEo2ywX2oeBiWLMrrQBe2bUc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1649395964;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QdTW7COGvmCgK+LD5zU9u4m949ZH/XIvxLPVYTKkNWg=;
-        b=occToaFpUIV8dbC+VqS2dzVKUTzPpeEdjVxmFix1qtBWVv5L/uHRuqTmBCmtnkrwXCBrUw
-        EdT+JNmWdqyjroBQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 96A4813A9C;
-        Fri,  8 Apr 2022 05:32:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id yzJEFfrIT2IlawAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 08 Apr 2022 05:32:42 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S233541AbiDHOkw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Apr 2022 10:40:52 -0400
+Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBDB28986;
+        Fri,  8 Apr 2022 07:38:48 -0700 (PDT)
+Received: by mail-ua1-x929.google.com with SMTP id k9so4664962uad.2;
+        Fri, 08 Apr 2022 07:38:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=h0U7OO6jgr7syg2oYma/02GJ8nZoVmEsQLGYr6HMkKE=;
+        b=LnKns7Qf2LQ/yngkFRT3vXI5OO0RJdDJ6DnXODInspR7oHTQMpQNmfS41T6fmEVBNI
+         vF0BWVZYp6vujcanPXBqNwDycaeW8OraKRFqAAnA27QWe9xAaknmN8/4G8TC+QMxk8d7
+         GMAN5eq2qcfMlXZIQBzoMPNVylcGwfuW+MMUQjrNNNBV9LD04WY5UnnkDKslJRkwu6Ok
+         AeUP11u4KIzJmkcRVmpS3YMq4Wkb0GrCf2cLpsTiORAyJRSzCkGC1uFfnMSQ1UCXxGKz
+         dZe0WB21sWAAax/Q7u3iQt/y6o0Sb9Qz0jj5ompCmH2a+DNmZMp6eQxrUeksJoafeMJl
+         12yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=h0U7OO6jgr7syg2oYma/02GJ8nZoVmEsQLGYr6HMkKE=;
+        b=IOSnhn+ZF63tdY/ePA1ZcdXRrzgctvdny/cs3DC+zvxZ//qm2Bxq7y76JHOtJj4Swn
+         6lzd03bApxc4AnaLa6iRz5GfJDPdBN1VW42Q3/nu+lk6XYdcThTW2Ep3E+FGq6wFxKXf
+         ivMRLIvuCj9R8QPI2Nw/7Gs8AWtz6ANG6f9SKXInIUZ5CoRFgqVIizqDUTQ6i1FA2fPl
+         msrxi0iYQMWm7pf2FsYmsYmHcEf/RhKL5X5QHqxZngr8EgkelmtDHpj3fceSpjzHgKgx
+         VLU12r9Gst3YHxn7km/PNSHdIVpMeo23nUzkZGY1mbRqmfFyva9SMlax16B5QY1NdY0D
+         2rxw==
+X-Gm-Message-State: AOAM532BJQGXIZ9mzFyzqzKxPdLRgsPNZmeIt5kgq3b7y79SUxmH2iX8
+        /WyvOSKUq+S08R/bzIodybJIjRZA0nec8KzrLKo=
+X-Google-Smtp-Source: ABdhPJxSr0pXicaPlQ5nejvPQyWHBziVbTs/XcHYInIgliTpo8o+qOCSqIup2yiFGJ95uYkXaKfIRZs2PLPBITeiONE=
+X-Received: by 2002:ab0:54c9:0:b0:35d:5e7:f830 with SMTP id
+ q9-20020ab054c9000000b0035d05e7f830mr2936867uaa.87.1649428727818; Fri, 08 Apr
+ 2022 07:38:47 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Dave Chinner" <david@fromorbit.com>
-Cc:     "Trond Myklebust" <trondmy@hammerspace.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-Subject: Re: sporadic hangs on generic/186
-In-reply-to: <20220408050321.GF1609613@dread.disaster.area>
-References: <20220406195424.GA1242@fieldses.org>,
- <20220407001453.GE1609613@dread.disaster.area>,
- <164929126156.10985.11316778982526844125@noble.neil.brown.name>,
- <164929437439.10985.5253499040284089154@noble.neil.brown.name>,
- <b282c5b98c4518952f62662ea3ba1d4e6ef85f26.camel@hammerspace.com>,
- <164930468885.10985.9905950866720150663@noble.neil.brown.name>,
- <43aace26d3a09f868f732b2ad94ca2dbf90f50bd.camel@hammerspace.com>,
- <164938596863.10985.998515507989861871@noble.neil.brown.name>,
- <20220408050321.GF1609613@dread.disaster.area>
-Date:   Fri, 08 Apr 2022 15:32:38 +1000
-Message-id: <164939595866.10985.2936909905164009297@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <673D708E-2DFA-4812-BB63-6A437E0C72EE@oracle.com>
+ <11f319-c9a-4648-bfbb-dc5a83c774@google.com> <2B7AF707-67B1-4ED8-A29F-957C26B7F87A@oracle.com>
+ <c5ea49a-1a76-8cf9-5c76-4bb31aa3d458@google.com> <0017C60F-0BD8-4F5A-BD68-189EEDB2195C@oracle.com>
+In-Reply-To: <0017C60F-0BD8-4F5A-BD68-189EEDB2195C@oracle.com>
+From:   Mark Hemment <markhemm@googlemail.com>
+Date:   Fri, 8 Apr 2022 15:38:36 +0100
+Message-ID: <CANe_+UjUGxZVzCC8yaqgqynpsMtM0d_iH0eL-ZB7k2=ZWe9rZw@mail.gmail.com>
+Subject: Re: Regression in xfstests on tmpfs-backed NFS exports
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 08 Apr 2022, Dave Chinner wrote:
-> On Fri, Apr 08, 2022 at 12:46:08PM +1000, NeilBrown wrote:
-> > On Thu, 07 Apr 2022, Trond Myklebust wrote:
-> > > The bottom line is that we use ordinary GFP_KERNEL memory allocations
-> > > where we can. The new code follows that rule, breaking it only in cases
-> > > where the specific rules of rpciod/xprtiod/nfsiod make it impossible to
-> > > wait forever in the memory manager.
-> > 
-> > It is not safe to use GFP_KERNEL for an allocation that is needed in
-> > order to free memory - and so any allocation that is needed to write out
-> > data from the page cache.
-> 
-> Except that same page cache writeback path can be called from
-> syscall context (e.g.  fsync()) which has nothing to do with memory
-> reclaim. In that case GFP_KERNEL is the correct allocation context
-> to use because there are no constraints on what memory reclaim can
-> be performed from this path.
-> 
-> IOWs, if the context initiating data writeback doesn't allow
-> GFP_KERNEL allocations, then it should be calling
-> memalloc_nofs_save() or memalloc_noio_save() to constrain all
-> allocations to the required context. We should not be requiring the
-> filesystem (or any other subsystem) to magically infer that the IO
-> is being done in a constrained allocation context and modify the
-> context they use appropriately.
-> 
-> If we this, then all filesystems would simply use GFP_NOIO
-> everywhere because the loop device layers the entire filesystem IO
-> path under block device context (i.e. requiring GFP_NOIO allocation
-> context). We don't do this - the loop device sets PF_MEMALLOC_NOIO
-> instead so all allocations in that path run with at least GFP_NOIO
-> constraints and filesystems are none the wiser about the constraints
-> of the calling context.
-> 
-> IOWs, GFP_KERNEL is generally right context to be using in
-> filesystem IO paths and callers need to restrict allocation contexts
-> via task flags if they cannot allow certain types of reclaim
-> recursion to occur...
+On Fri, 8 Apr 2022 at 00:45, Chuck Lever III <chuck.lever@oracle.com> wrote:
+> > On Apr 7, 2022, at 6:26 PM, Hugh Dickins <hughd@google.com> wrote:
+> >
+> > On Thu, 7 Apr 2022, Chuck Lever III wrote:
+> >>> On Apr 6, 2022, at 8:18 PM, Hugh Dickins <hughd@google.com> wrote:
+> >>>
+> >>> But I can sit here and try to guess.  I notice fs/nfsd checks
+> >>> file->f_op->splice_read, and employs fallback if not available:
+> >>> if you have time, please try rerunning those xfstests on an -rc1
+> >>> kernel, but with mm/shmem.c's .splice_read line commented out.
+> >>> My guess is that will then pass the tests, and we shall know more.
+> >>
+> >> This seemed like the most probative next step, so I commented
+> >> out the .splice_read call-out in mm/shmem.c and ran the tests
+> >> again. Yes, that change enables the fsx-related tests to pass
+> >> as expected.
+> >
+> > Great, thank you for trying that.
+> >
+> >>
+> >>> What could be going wrong there?  I've thought of two possibilities.
+> >>> A minor, hopefully easily fixed, issue would be if fs/nfsd has
+> >>> trouble with seeing the same page twice in a row: since tmpfs is
+> >>> now using the ZERO_PAGE(0) for all pages of a hole, and I think I
+> >>> caught sight of code which looks to see if the latest page is the
+> >>> same as the one before.  It's easy to imagine that might go wrong.
+> >>
+> >> Are you referring to this function in fs/nfsd/vfs.c ?
+> >
+> > I think that was it, didn't pay much attention.
+>
+> This code seems to have been the issue. I added a little test
+> to see if @page pointed to ZERO_PAGE(0) and now the tests
+> pass as expected.
+>
+>
+> >> 847 static int
+> >> 848 nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
+> >> 849                   struct splice_desc *sd)
+> >> 850 {
+> >> 851         struct svc_rqst *rqstp = sd->u.data;
+> >> 852         struct page **pp = rqstp->rq_next_page;
+> >> 853         struct page *page = buf->page;
+> >> 854
+> >> 855         if (rqstp->rq_res.page_len == 0) {
+> >> 856                 svc_rqst_replace_page(rqstp, page);
+> >> 857                 rqstp->rq_res.page_base = buf->offset;
+> >> 858         } else if (page != pp[-1]) {
+> >> 859                 svc_rqst_replace_page(rqstp, page);
+> >> 860         }
+> >> 861         rqstp->rq_res.page_len += sd->len;
+> >> 862
+> >> 863         return sd->len;
+> >> 864 }
+> >>
+> >> rq_next_page should point to the first unused element of
+> >> rqstp->rq_pages, so IIUC that check is looking for the
+> >> final page that is part of the READ payload.
+> >>
+> >> But that does suggest that if page -> ZERO_PAGE and so does
+> >> pp[-1], then svc_rqst_replace_page() would not be invoked.
+> >
+> > I still haven't studied the logic there: Mark's input made it clear
+> > that it's just too risky for tmpfs to pass back ZERO_PAGE repeatedly,
+> > there could be expectations of uniqueness in other places too.
+>
+> I can't really attest to Mark's comment, but...
+>
+> After studying nfsd_splice_actor() I can't see any reason
+> except cleverness and technical debt for this particular
+> check. I have a patch that removes the check and simplifies
+> this function that I'm testing now -- it seems to be a
+> reasonable clean-up whether you keep 56a8c8eb1eaf or
+> choose to revert it.
 
-NOIO and NOFS are not the issue here.  We all agree that
-memalloc_noXX_save() is the right thing to do.
+Agreed nfsd_splice_actor() is broken for the same-page case.
+That function hasn't changed in logic since introduction.  So when
+VxFS triggered this issue, back in 2007/2008, it must have had the
+same problem with this actor (same with its predecessor; ->sendfile).
+I don't remember.  But skb_can_coalesce() sticks in my mind for some
+reason.  Would jumbo frames be a good stress for can_coalesce with
+same-page?  Or, as Hugh is proposing to avoid sending ZERO_PAGE,
+ignore this for now?
 
-The issue is that memalloc can block indefinitely in low-memory
-situations, and any code that has to make progress in low-memory
-situations - like writeout - needs to be careful.
 
-This is why the block layer uses mempools for request headers etc - so
-that progress is guaranteed without depending on alloc_page() to
-succeed.
+> >>> A more difficult issue would be, if fsx is racing writes and reads,
+> >>> in a way that it can guarantee the correct result, but that correct
+> >>> result is no longer delivered: because the writes go into freshly
+> >>> allocated tmpfs cache pages, while reads are still delivering
+> >>> stale ZERO_PAGEs from the pipe.  I'm hazy on the guarantees there.
+> >>>
+> >>> But unless someone has time to help out, we're heading for a revert.
+> >
+> > We might be able to avoid that revert, and go the whole way to using
+> > iov_iter_zero() instead.  But the significant slowness of clear_user()
+> > relative to copy to user, on x86 at least, does ask for a hybrid.
+> >
+> > Suggested patch below, on top of 5.18-rc1, passes my own testing:
+> > but will it pass yours?  It seems to me safe, and as fast as before,
+> > but we don't know yet if this iov_iter_zero() works right for you.
+> > Chuck, please give it a go and let us know.
+> >
+> > (Don't forget to restore mm/shmem.c's .splice_read first!  And if
+> > this works, I can revert mm/filemap.c's SetPageUptodate(ZERO_PAGE(0))
+> > in the same patch, fixing the other regression, without recourse to
+> > #ifdefs or arch mods.)
+>
+> Sure, I will try this out first thing tomorrow.
+>
+> One thing that occurs to me is that for NFS/RDMA, having a
+> page full of zeroes that is already DMA-mapped would be a
+> nice optimization on the sender side (on the client for an
+> NFS WRITE and on the server for an NFS READ). The transport
+> would have to set up a scatter-gather list containing a
+> bunch of entries that reference the same page...
+>
+> </musing>
+>
+>
+> > Thanks!
+> > Hugh
+> >
+> > --- 5.18-rc1/mm/shmem.c
+> > +++ linux/mm/shmem.c
+> > @@ -2513,7 +2513,6 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> >               pgoff_t end_index;
+> >               unsigned long nr, ret;
+> >               loff_t i_size = i_size_read(inode);
+> > -             bool got_page;
+> >
+> >               end_index = i_size >> PAGE_SHIFT;
+> >               if (index > end_index)
+> > @@ -2570,24 +2569,34 @@ static ssize_t shmem_file_read_iter(struct kiocb *iocb, struct iov_iter *to)
+> >                        */
+> >                       if (!offset)
+> >                               mark_page_accessed(page);
+> > -                     got_page = true;
+> > +                     /*
+> > +                      * Ok, we have the page, and it's up-to-date, so
+> > +                      * now we can copy it to user space...
+> > +                      */
+> > +                     ret = copy_page_to_iter(page, offset, nr, to);
+> > +                     put_page(page);
+> > +
+> > +             } else if (iter_is_iovec(to)) {
+> > +                     /*
+> > +                      * Copy to user tends to be so well optimized, but
+> > +                      * clear_user() not so much, that it is noticeably
+> > +                      * faster to copy the zero page instead of clearing.
+> > +                      */
+> > +                     ret = copy_page_to_iter(ZERO_PAGE(0), offset, nr, to);
+> >               } else {
+> > -                     page = ZERO_PAGE(0);
+> > -                     got_page = false;
+> > +                     /*
+> > +                      * But submitting the same page twice in a row to
+> > +                      * splice() - or others? - can result in confusion:
+> > +                      * so don't attempt that optimization on pipes etc.
+> > +                      */
+> > +                     ret = iov_iter_zero(nr, to);
+> >               }
+> >
+> > -             /*
+> > -              * Ok, we have the page, and it's up-to-date, so
+> > -              * now we can copy it to user space...
+> > -              */
+> > -             ret = copy_page_to_iter(page, offset, nr, to);
+> >               retval += ret;
+> >               offset += ret;
+> >               index += offset >> PAGE_SHIFT;
+> >               offset &= ~PAGE_MASK;
+> >
+> > -             if (got_page)
+> > -                     put_page(page);
+> >               if (!iov_iter_count(to))
+> >                       break;
+> >               if (ret < nr) {
+>
+> --
+> Chuck Lever
 
-File systems do often get away with using GFP_KERNEL because the
-important paths has PF_MEMALLOC and hence __GFP_MEMALLOC in effect and
-that provides access to some shared reserves.  Shared reserves are risky
-- the other users you are sharing with might steal it all.
-
-File systems tend to survive anyway because there is a limit on the
-mount of dirty filesystem data - so there is lots of non-filesystem data
-around, and a good chance that some of that can be freed.
-
-I say "tend to" because I believe the is no real guarantee.  It seems to
-actually work 99.999% of the time, and maybe that is enough.
-
-I suspect you might be able to deadlock filesystem writeout by
-memlocking lots of memory while there are lots of dirty pages.  It
-probably wouldn't be easy though.
-
-swap-out is different.  There is no limit the the amount of dirty anon
-data, so it is fairly easy to get a situation where you absolutely must
-write out some anon pages before alloc_page() can succeed. 
-Most filesystems don't handle swap-out directly - they just tell the MM
-which disk addresses to use and submit_bio() is used for writing.
-The bio is allocated from a mempool, and nothing below submit_bio() uses
-GFP_KERNEL to alloc_page() - they all use mempools (or accept failure in
-some other way).  A separate mempool at each level - they aren't shared
-(so they are quite different from __GFP_MEMALLOC).
-
-NFS is different.  NFS handles swap using the same paths as other
-writes, so it is much more likely to face indefinite waits in
-alloc_page() - it least when handling swap.  __GFP_MEMALLOC helps to a
-degree but there a lots of levels, and the more levels we have have
-local reserves (even if the mempool only reserves a single element), the
-better.
-
-The networking people refuse to use mempools (or at least, they did once
-some years ago) and I cannot entirely blame them as there are lots of
-moving parts - lots of different things that might need to be allocated
-(arp table entries?) but usually aren't.  So for everything in the
-socket layer and below we rely on __GFP_MEMALLOC (and recommend
-increasing the reserves a bit above the default, just in case).
-
-But in NFS and particularly in SUNRPC we already have the mempool, and
-there is only a small number of things that we need to allocate to
-ensure forward progress.  So using a mempool as designed, rather than
-relying on MEMALLOC reserves is the sensible thing to do, and leaves
-more of the reserves for the networking layer.
-
-In fact, the allocation that SUNRPC now does before trying a mempool
-should really be using __GFP_NOMEMALLOC so that they don't take from the
-shared reserves (even when PF_MEMALLOC is set).  As it has a private
-reserve (the mempool) it should leave the common reserve for other
-layers (sockets etc).
-
-NeilBrown
+Cheers,
+Mark
