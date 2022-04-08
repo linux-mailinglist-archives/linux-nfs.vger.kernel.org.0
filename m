@@ -2,387 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D8DC4F9AD5
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 18:40:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ADDF84F9AE5
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Apr 2022 18:46:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232729AbiDHQmD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Apr 2022 12:42:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49784 "EHLO
+        id S232143AbiDHQsE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Apr 2022 12:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231485AbiDHQmC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Apr 2022 12:42:02 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2922412559C
-        for <linux-nfs@vger.kernel.org>; Fri,  8 Apr 2022 09:39:57 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id BE4AA1F79; Fri,  8 Apr 2022 12:39:56 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BE4AA1F79
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1649435996;
-        bh=hWjzdq3vb8eicyvl5TRJUH3K9yod5hDKreck6dy+1+0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=b+9CkVSpO8Gz8IxfOqKR+Cs5X9QkkQzUTfNM123U2BxXsqirIGOcRfpVhWrSvuYo2
-         5DEMVnA6S7hnx8UDLoicaAWg8A9E2qEkkBOQBSlVLumhdWtzBdcl5UdOmwOHx8RB63
-         Q2xSBsVo7AqhBF1mfTbfioCAnrFHQ3gge/glQPH8=
-Date:   Fri, 8 Apr 2022 12:39:56 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Dai Ngo <dai.ngo@oracle.com>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH RFC v20 0/10] NFSD: Initial implementation of NFSv4
- Courteous Server
-Message-ID: <20220408163956.GB6423@fieldses.org>
-References: <1649285133-16765-1-git-send-email-dai.ngo@oracle.com>
-MIME-Version: 1.0
+        with ESMTP id S229668AbiDHQsD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Apr 2022 12:48:03 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2076.outbound.protection.outlook.com [40.107.93.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 439F010E9;
+        Fri,  8 Apr 2022 09:45:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oeAwrP3a+ZqldNERfWZsBgHs5SvTEJf4R3vMe8QUuhkUlX315kAxJDOuygeZlrE61N4IcpIPRKRd8lr1AqY5cr7pyFapV0VZSnnMY/Kl+S2wCmXggQF+TXELLNP71iTDIgcUkzMZVQHWRBqIc1Pp+JVtYy/eAfp0eY4+s37pIrY3zseSWgASgVxtXPPgu4CdcMolQDqQjAigxwQ8+VRGSki4VbKtnqL8HCVzWAguchS1tTneGnkvFZn2IosgsuYKAhPGVPwcXFZb9xuTrpLl27D2rsscxagCIUTHHWecJEgNOuLCVKOWbqwMsdJq4CjLkYLZT89YnJvQ+Li06SYVUg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qsvgP0R4fYdofrXzMBQP1CyBGLLlYrcmWJbGPS0mv+0=;
+ b=NGN6yUhHSFrWClu05LPY9+kzRsEpGHQheauhsd6PJE8aIEYNIbFocH3o2fq7AAupfSS07/zC1mVPZv1E1FW5oQ6QIuQzfd/R5OqXq7DOL+nmkb1lwgukqlOfGJfj4BaQfyR8o0jEgg5ki0btJDLl+3afSoslrHnnYEs1RC0X59UbPCB0Hrwi148Gx89C2qYiqH4I/MiurwXnJenTSNpGDHc2mOw7L8/HZyP/d5ufcWNEdTiGEvHOHOfbKOq9QIFaTLM7IYHWpuzNoSVZ73l/nPuRWsJToCIBxveUPSVZm3ScZZ5fDp0O2bZ+LB5YVDlsiKujbpU8JIrL081NrofMnw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qsvgP0R4fYdofrXzMBQP1CyBGLLlYrcmWJbGPS0mv+0=;
+ b=ghsZiI2xW9Ssy/hJUvLmCBESa6j5f5+gz36SKuySmf1rwqbLF8BlcL5NEIF5y7nvVtP7/TpS4d8hp9JfMfYOJ3Uwxt0y+62mZ7GGMfL+wbdaqDo9VDGGvzuaTW57TlsYSW00uvFnxrawwMfkTlaF1lWaAfXfUeAD+x+UpsvyGYQPv+nE0/a+d4T8yab48gXV3ac3SL28aTAykUV6HKYmQJQIa8evxroW2ydEm9Y9sJfa1ALKhHgXp2O/3KlxObJ+ukl08R30u0fODNZ2NDaWCVsPJFE85c3e98SomJYev/U/VOiudsByysrL++z/TRr7fuFXaEU+Nn37Uo6/T5GQkA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
+ by BYAPR12MB3192.namprd12.prod.outlook.com (2603:10b6:a03:139::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5144.22; Fri, 8 Apr
+ 2022 16:45:56 +0000
+Received: from MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::cdfb:f88e:410b:9374]) by MN2PR12MB4192.namprd12.prod.outlook.com
+ ([fe80::cdfb:f88e:410b:9374%6]) with mapi id 15.20.5144.026; Fri, 8 Apr 2022
+ 16:45:56 +0000
+Date:   Fri, 8 Apr 2022 13:45:54 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Ariel Elior <aelior@marvell.com>, Anna Schumaker <anna@kernel.org>,
+        Jens Axboe <axboe@fb.com>,
+        Christian Benvenuti <benve@cisco.com>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Bernard Metzler <bmt@zurich.ibm.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Chaitanya Kulkarni <kch@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-rdma@vger.kernel.org, Max Gurtovoy <mgurtovoy@nvidia.com>,
+        Mike Marciniszyn <mike.marciniszyn@cornelisnetworks.com>,
+        Michal Kalderon <mkalderon@marvell.com>,
+        Mustafa Ismail <mustafa.ismail@intel.com>,
+        Nelson Escobar <neescoba@cisco.com>, netdev@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>, rds-devel@oss.oracle.com,
+        Sagi Grimberg <sagi@grimberg.me>,
+        samba-technical@lists.samba.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Steve French <sfrench@samba.org>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        target-devel@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Zhu Yanjun <zyjzyj2000@gmail.com>
+Subject: Re: [PATCH v2] RDMA: Split kernel-only global device caps from
+ uverbs device caps
+Message-ID: <20220408164554.GA3613777@nvidia.com>
+References: <0-v2-22c19e565eef+139a-kern_caps_jgg@nvidia.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1649285133-16765-1-git-send-email-dai.ngo@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <0-v2-22c19e565eef+139a-kern_caps_jgg@nvidia.com>
+X-ClientProxiedBy: MN2PR17CA0009.namprd17.prod.outlook.com
+ (2603:10b6:208:15e::22) To MN2PR12MB4192.namprd12.prod.outlook.com
+ (2603:10b6:208:1d5::15)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9e64985b-a5df-4d06-a5fe-08da197f4075
+X-MS-TrafficTypeDiagnostic: BYAPR12MB3192:EE_
+X-Microsoft-Antispam-PRVS: <BYAPR12MB3192BF8F41ECBF82F0C99837C2E99@BYAPR12MB3192.namprd12.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: UwV6XYtWXA/Z1zLl9Yz52w9ZcFJVkkKKeh+DvKGA5gpwcoXf958LgdoSymA1N47O2Qh1zDyz9CpyZ0jY3rEM2NwAgfiNshNT+82I9Bwt6E3y+Fka+4mN296HElizMrkzXrVKdhoO/n3GAgBBPyRbAKUQxabywUWVW5JwR7/gqc/sc37HgCp4cD+k4Cst7eQBke+HtGupM+wEpvnZSMbDIWMdsYKCbfBvN+nK1ehIUk6UndpTFkN/p0AaFBLR4txMqUxPuZQZCyBaBFUm3rBUsi/QN6Q7TXLuPdOMe2JFhKG3mRKTNT1Hyl6Is4QnNRKyttrye2C3mFl0T3XWebQ1TW54mIwDg5MWpv4fRF75X3XIyThqAPACITf6yWtGk04O7haj8OMAkr1LHd68p4aD/SE2eGdjGY185WhGoXkCJy/09m7OoxIyv3bKRje86qxfoiu45ZAWBoKJ10RHi/dvnaomRw7lFkL4EckAq5/EWvDotMOeMe2JmU5KBHpBXCWLswgVCiiXPAfEJb/IZekG5CIdCUlFiBcTLrXzGdNj5fmfJQXpyfHsnGza++bUku3Tpy6knx+GgQcgN/fHtgBaIjNbP6re7m/5RldcJcKxwtL8GeUtC5Q0zMJVKPIreiDBCVVdykq3F20FXGi0KqDxvr1sPzPvGwNQac+RwmvdKxQAZHZg47tyEGkMJEFEP1Vz
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(4636009)(366004)(2906002)(33656002)(83380400001)(186003)(86362001)(508600001)(7406005)(7416002)(921005)(8676002)(38100700002)(66476007)(66946007)(66556008)(8936002)(5660300002)(2616005)(26005)(6506007)(6486002)(1076003)(316002)(6512007)(36756003)(110136005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?b8ny8kQG1JSfpBjCDsT4hVecYB1hwn5bXJvlyiqovQuaX9Gfr9I7rA3yKTLN?=
+ =?us-ascii?Q?UCzFjx+ism8xF3r5v7laKJQssBPqlsSut1keZJ7hW7XUj2LstwjkZdfBOoYc?=
+ =?us-ascii?Q?4dPqXt+DnU9RcpKihmjKUz20w4ACDWgwiVZMlrHtYsLWGfe8Ww7uvHxNvflz?=
+ =?us-ascii?Q?MYrry7Wrb7XfUqmciEye1i8icX7mnpz8iFWRRaF57LlThsHiA3G8BU8h5L0v?=
+ =?us-ascii?Q?9D4KDmQOfHQPE877dltW69bHvKnz/l7JxMEUU0duuC/6AxObs0vMEtdjfE3X?=
+ =?us-ascii?Q?PbUqd7Z/iF7FlhtSs5iEv1V0Y4NBPLz7RES3E/pDltLxABDUgg9HDrUozixC?=
+ =?us-ascii?Q?g/wm34ZmnSaRtC+0er/Fhhi/HEqotgMV628VG0rZS0kstWTin97Kcv97HyH/?=
+ =?us-ascii?Q?Vi9d8VPGTc/7vmUvlC9RmsfU4gXAgo2Uwdy+vYn49WhsZOD2weuWJha0Bm9O?=
+ =?us-ascii?Q?JO22y/T36HL0KXaMjnHDfettNnuJivN9YfWNlCBMoB/zflpQn/8vvJ9+A1q6?=
+ =?us-ascii?Q?EJH5s6HaF+us6+b3JgodY7DOxoK604w7XQKza//BLVnFuDaa9+IIf+N/4mYp?=
+ =?us-ascii?Q?wI9hEhcVLpvDh7rQf/x6qMPEbEP3Ww17tTLqdmobKZIvwBALWgwuVqNbCh+8?=
+ =?us-ascii?Q?2ZbNxMwgYMT21Lw7lvXGRR+YuBs8V+7q5XJGNi8e7X0fr8a0PuFCDZnKfGeL?=
+ =?us-ascii?Q?I3uI45gRzuIRyR1Gm0xTeJHnMvSvsbBIDAtV10qVon75rTgFncoUu/593v5q?=
+ =?us-ascii?Q?8l6t6Pe4wpDOHtZLIICqcZ+s9naTCKl4oWOv68cwowaQ2aUli3x4T3Utixsh?=
+ =?us-ascii?Q?sMB+MsfgTC9P6EYiVmAdEA+agcpfEcw6uPbfhHpabar9vNCMQEeY4XGqKKet?=
+ =?us-ascii?Q?ILXjviKTA/YQSkEmOCShuENGohFTYmMq2M3R8dbSxbyFy0GstklItuIKLG5z?=
+ =?us-ascii?Q?lM3Uwa8meOTjnRJ4rWjgqIo/Jr2s4iNfZ9ukmbGUCcgxsZtfLo+7C54CDDdx?=
+ =?us-ascii?Q?C8yfQfhth7VrspS//PvdfBDAZ3KHGflqhAhH6b/95BX9Sv4ouF9GbHQaFR5r?=
+ =?us-ascii?Q?Gou2iucJJeBbASG/YA7BpPkgaUXpQ0ogXSnwJ55OKKaOnM7O8EnWcqpmwMpZ?=
+ =?us-ascii?Q?YCI2Aac9tUp9oxoZEXb5NDA7Oy0TIN3GuQIOUMTEU+dYW+ReIBO5dfyjKMP8?=
+ =?us-ascii?Q?+ZjNo/QisS5MdM8Mq1qekjkdC3QXSDp7yQlCRtUDWzLzCqpWyl/3DsmS96Oq?=
+ =?us-ascii?Q?Vjpvi54f0WS/zKdTneX6gaHv37Uq/LOBR1mtd4CZ/eVItqz8NwJCTH0dfSP9?=
+ =?us-ascii?Q?TZaCvoV/GOrNitSs4puY9HxkqjHdWcr7effGLWM0RzAgX5AuoatV444Swpgo?=
+ =?us-ascii?Q?wbQTlPbnU8BOYQjsiOSxp/cYhQHQ9dblFWO+n5dJDy9Y/UkIUoq74T/tNUxo?=
+ =?us-ascii?Q?mvUo769XBDw8iS3K3gYARhaB9q0X11cdTLsf9imzr6Pi62Sk2EebWfcBCwme?=
+ =?us-ascii?Q?V293/nKRn+L20KgahTF4n2ly7PJOCqfQiSeMVakGVMitJVgT5Y7rbea0ElIA?=
+ =?us-ascii?Q?gQ8JlRLjRk8C+mJtVhshaiT0aiSEyauII90eN5BdyDlEgkh67PD9zoZIsc7O?=
+ =?us-ascii?Q?ceVOlxgSURaTsJ67tnKeeqIZ/INGU3oNzH5EbfYkj89vjVoa0S1K9DClOd1N?=
+ =?us-ascii?Q?E0DjEeqINhD5XOd1blDKwMp+WjbzV9Lq0T1MwQHH+/LgPfdN9JGGW8Ljb3jo?=
+ =?us-ascii?Q?9rmT3Diy0w=3D=3D?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e64985b-a5df-4d06-a5fe-08da197f4075
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2022 16:45:56.3088
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uPYcX5AMdZH4q/Lc2BVys/6g8LOnEeU/lpmzv0sj+NtQ5otsb5JqUfF84vlyiKlF
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3192
+X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SORTED_RECIPS,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I've got a process complaint here.  Not a big deal, but I think we can
-fix it and do a little better:
-
-So, I appreciate that a big patch got split up.  But we're not getting
-all of the advantages of that, because what most of the patches do is
-add new functions that don't actually have callers yet, or code that's
-effectively dead until one of the last patches that actually tells the
-laundromat to start transitioning clients to the courtesy state.
-
-That means when reviewing these, I often have to look forward through
-the patches to understand how the new code that's being added works.
-
-Sometimes that's the best you can do.  But I think we can order these so
-that most of the patches actually make testable changes.  That means
-that if we introduce a bug, a bisect will land on the actual patch that
-introduced the bug instead of a later patch that activated that code.
-It also makes the patches easier to read in isolation.
-
-I'll try to write up a suggestion.
-
---b.
-
-On Wed, Apr 06, 2022 at 03:45:23PM -0700, Dai Ngo wrote:
-> Hi Chuck, Bruce
+On Wed, Apr 06, 2022 at 04:27:18PM -0300, Jason Gunthorpe wrote:
+> Split out flags from ib_device::device_cap_flags that are only used
+> internally to the kernel into kernel_cap_flags that is not part of the
+> uapi. This limits the device_cap_flags to being only flags exposed by the
+> driver toward userspace.
 > 
-> This series of patches implement the NFSv4 Courteous Server.
+> This cleanly splits out the uverbs flags from the kernel flags to avoid
+> confusion in the flags bitmap.
 > 
-> A server which does not immediately expunge the state on lease expiration
-> is known as a Courteous Server.  A Courteous Server continues to recognize
-> previously generated state tokens as valid until conflict arises between
-> the expired state and the requests from another client, or the server
-> reboots.
+> Add some short comments describing which each of the kernel flags is
+> connected to. Remove unused kernel flags.
+> 
+> Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+>  drivers/infiniband/core/nldev.c              |  2 +-
+>  drivers/infiniband/core/uverbs_cmd.c         |  6 +-
+>  drivers/infiniband/core/verbs.c              |  8 +-
+>  drivers/infiniband/hw/bnxt_re/ib_verbs.c     |  2 +-
+>  drivers/infiniband/hw/cxgb4/iw_cxgb4.h       |  1 -
+>  drivers/infiniband/hw/cxgb4/provider.c       |  8 +-
+>  drivers/infiniband/hw/hfi1/verbs.c           |  4 +-
+>  drivers/infiniband/hw/irdma/hw.c             |  4 -
+>  drivers/infiniband/hw/irdma/main.h           |  1 -
+>  drivers/infiniband/hw/irdma/verbs.c          |  4 +-
+>  drivers/infiniband/hw/mlx4/main.c            |  8 +-
+>  drivers/infiniband/hw/mlx5/main.c            | 15 ++--
+>  drivers/infiniband/hw/ocrdma/ocrdma_verbs.c  |  2 +-
+>  drivers/infiniband/hw/qedr/verbs.c           |  3 +-
+>  drivers/infiniband/hw/usnic/usnic_ib_verbs.c |  3 +-
+>  drivers/infiniband/sw/rxe/rxe.c              |  1 +
+>  drivers/infiniband/sw/rxe/rxe_param.h        |  1 -
+>  drivers/infiniband/sw/siw/siw_verbs.c        |  4 +-
+>  drivers/infiniband/ulp/ipoib/ipoib.h         |  1 +
+>  drivers/infiniband/ulp/ipoib/ipoib_main.c    |  5 +-
+>  drivers/infiniband/ulp/ipoib/ipoib_verbs.c   |  6 +-
+>  drivers/infiniband/ulp/iser/iscsi_iser.c     |  2 +-
+>  drivers/infiniband/ulp/iser/iser_verbs.c     |  8 +-
+>  drivers/infiniband/ulp/isert/ib_isert.c      |  2 +-
+>  drivers/infiniband/ulp/srp/ib_srp.c          |  8 +-
+>  drivers/nvme/host/rdma.c                     |  4 +-
+>  drivers/nvme/target/rdma.c                   |  4 +-
+>  fs/cifs/smbdirect.c                          |  2 +-
+>  include/rdma/ib_verbs.h                      | 84 ++++++++------------
+>  include/rdma/opa_vnic.h                      |  3 +-
+>  include/uapi/rdma/ib_user_verbs.h            |  4 +
+>  net/rds/ib.c                                 |  4 +-
+>  net/sunrpc/xprtrdma/frwr_ops.c               |  2 +-
+>  33 files changed, 100 insertions(+), 116 deletions(-)
 > 
 > v2:
-> 
-> . add new callback, lm_expire_lock, to lock_manager_operations to
->   allow the lock manager to take appropriate action with conflict lock.
-> 
-> . handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
-> 
-> . expire courtesy client after 24hr if client has not reconnected.
-> 
-> . do not allow expired client to become courtesy client if there are
->   waiters for client's locks.
-> 
-> . modify client_info_show to show courtesy client and seconds from
->   last renew.
-> 
-> . fix a problem with NFSv4.1 server where the it keeps returning
->   SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
->   the courtesy client reconnects, causing the client to keep sending
->   BCTS requests to server.
-> 
-> v3:
-> 
-> . modified posix_test_lock to check and resolve conflict locks
->   to handle NLM TEST and NFSv4 LOCKT requests.
-> 
-> . separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
-> 
-> v4:
-> 
-> . rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
->   by asking the laudromat thread to destroy the courtesy client.
-> 
-> . handle NFSv4 share reservation conflicts with courtesy client. This
->   includes conflicts between access mode and deny mode and vice versa.
-> 
-> . drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
-> 
-> v5:
-> 
-> . fix recursive locking of file_rwsem from posix_lock_file. 
-> 
-> . retest with LOCKDEP enabled.
-> 
-> v6:
-> 
-> . merge witn 5.15-rc7
-> 
-> . fix a bug in nfs4_check_deny_bmap that did not check for matched
->   nfs4_file before checking for access/deny conflict. This bug causes
->   pynfs OPEN18 to fail since the server taking too long to release
->   lots of un-conflict clients' state.
-> 
-> . enhance share reservation conflict handler to handle case where
->   a large number of conflict courtesy clients need to be expired.
->   The 1st 100 clients are expired synchronously and the rest are
->   expired in the background by the laundromat and NFS4ERR_DELAY
->   is returned to the NFS client. This is needed to prevent the
->   NFS client from timing out waiting got the reply.
-> 
-> v7:
-> 
-> . Fix race condition in posix_test_lock and posix_lock_inode after
->   dropping spinlock.
-> 
-> . Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
->   callback
-> 
-> . Always resolve share reservation conflicts asynchrously.
-> 
-> . Fix bug in nfs4_laundromat where spinlock is not used when
->   scanning cl_ownerstr_hashtbl.
-> 
-> . Fix bug in nfs4_laundromat where idr_get_next was called
->   with incorrect 'id'. 
-> 
-> . Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
-> 
-> v8:
-> 
-> . Fix warning in nfsd4_fl_expire_lock reported by test robot.
-> 
-> v9:
-> 
-> . Simplify lm_expire_lock API by (1) remove the 'testonly' flag
->   and (2) specifying return value as true/false to indicate
->   whether conflict was succesfully resolved.
-> 
-> . Rework nfsd4_fl_expire_lock to mark client with
->   NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
->   the client in the background.
-> 
-> . Add a spinlock in nfs4_client to synchronize access to the
->   NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
->   handle race conditions when resolving lock and share reservation
->   conflict.
-> 
-> . Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
->   are now consisdered 'dead', waiting for the laundromat to expire
->   it. This client is no longer allowed to use its states if it
->   reconnects before the laundromat finishes expiring the client.
-> 
->   For v4.1 client, the detection is done in the processing of the
->   SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
->   to re-establish new clientid and session.
->   For v4.0 client, the detection is done in the processing of the
->   RENEW and state-related ops and return NFS4ERR_EXPIRE to force
->   the client to re-establish new clientid.
-> 
-> v10:
-> 
->   Resolve deadlock in v9 by avoiding getting cl_client and
->   cl_cs_lock together. The laundromat needs to determine whether
->   the expired client has any state and also has no blockers on
->   its locks. Both of these conditions are allowed to change after
->   the laundromat transits an expired client to courtesy client.
->   When this happens, the laundromat will detect it on the next
->   run and and expire the courtesy client.
-> 
->   Remove client persistent record before marking it as COURTESY_CLIENT
->   and add client persistent record before clearing the COURTESY_CLIENT
->   flag to allow the courtesy client to transist to normal client to
->   continue to use its state.
-> 
->   Lock/delegation/share reversation conflict with courtesy client is
->   resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
->   effectively disable it, then allow the current request to proceed
->   immediately.
->   
->   Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
->   to reconnect to reuse itsstate. It is expired by the laundromat
->   asynchronously in the background.
-> 
->   Move processing of expired clients from nfs4_laudromat to a
->   separate function, nfs4_get_client_reaplist, that creates the
->   reaplist and also to process courtesy clients.
-> 
->   Update Documentation/filesystems/locking.rst to include new
->   lm_lock_conflict call.
-> 
->   Modify leases_conflict to call lm_breaker_owns_lease only if
->   there is real conflict.  This is to allow the lock manager to
->   resolve the delegation conflict if possible.
-> 
-> v11:
-> 
->   Add comment for lm_lock_conflict callback.
-> 
->   Replace static const courtesy_client_expiry with macro.
-> 
->   Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
->   Callers use nfs4_client->cl_cs_client boolean to determined if
->   it's the courtesy client and take appropriate actions.
-> 
->   Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
->   with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
-> 
-> v12:
-> 
->   Remove unnecessary comment in nfs4_get_client_reaplist.
-> 
->   Replace nfs4_client->cl_cs_client boolean with
->   NFSD4_CLIENT_COURTESY_CLNT flag.
-> 
->   Remove courtesy_clnt argument from find_client_in_id_table and
->   find_clp_in_name_tree. Callers use NFSD4_CLIENT_COURTESY_CLNT to
->   determined if it's the courtesy client and take appropriate actions.
-> 
-> v13:
-> 
->   Merge with 5.17-rc3.
-> 
->   Cleanup Documentation/filesystems/locking.rst: replace i_lock
->   with flc_lock, update API's that use flc_lock.
-> 
->   Rename lm_lock_conflict to lm_lock_expired().
-> 
->   Remove comment of lm_lock_expired API in lock_manager_operations.
->   Same information is in patch description.
-> 
->   Update commit messages of 4/4.
-> 
->   Add some comment for NFSD4_CLIENT_COURTESY_CLNT.
-> 
->   Add nfsd4_discard_courtesy_clnt() to eliminate duplicate code of
->   discarding courtesy client; setting NFSD4_DESTROY_COURTESY_CLIENT.
-> 
-> v14:
-> 
-> . merge with Chuck's public for-next branch.
-> 
-> . remove courtesy_client_expiry, use client's last renew time.
-> 
-> . simplify comment of nfs4_check_access_deny_bmap.
-> 
-> . add comment about race condition in nfs4_get_client_reaplist.
-> 
-> . add list_del when walking cslist in nfs4_get_client_reaplist.
-> 
-> . remove duplicate INIT_LIST_HEAD(&reaplist) from nfs4_laundromat
-> 
-> . Modify find_confirmed_client and find_confirmed_client_by_name
->   to detect courtesy client and destroy it.
-> 
-> . refactor lookup_clientid to use find_client_in_id_table
->   directly instead of find_confirmed_client.
-> 
-> . refactor nfsd4_setclientid to call find_clp_in_name_tree
->   directly instead of find_confirmed_client_by_name.
-> 
-> . remove comment of NFSD4_CLIENT_COURTESY.
-> 
-> . replace NFSD4_CLIENT_DESTROY_COURTESY with NFSD4_CLIENT_EXPIRED.
-> 
-> . replace NFSD4_CLIENT_COURTESY_CLNT with NFSD4_CLIENT_RECONNECTED.
-> 
-> v15:
-> 
-> . add helper locks_has_blockers_locked in fs.h to check for
->   lock blockers
-> 
-> . rename nfs4_conflict_clients to nfs4_resolve_deny_conflicts_locked
-> 
-> . update nfs4_upgrade_open() to handle courtesy clients.
-> 
-> . add helper nfs4_check_and_expire_courtesy_client and
->   nfs4_is_courtesy_client_expired to deduplicate some code.
-> 
-> . update nfs4_anylock_blocker:
->    . replace list_for_each_entry_safe with list_for_each_entry
->    . break nfs4_anylock_blocker into 2 smaller functions.
-> 
-> . update nfs4_get_client_reaplist:
->    . remove unnecessary commets
->    . acquire cl_cs_lock before setting NFSD4_CLIENT_COURTESY flag
-> 
-> . update client_info_show to show 'time since last renew: 00:00:38'
->   instead of 'seconds from last renew: 38'.
-> 
-> v16:
-> 
-> . update client_info_show to display 'status' as
->   'confirmed/unconfirmed/courtesy'
-> 
-> . replace helper locks_has_blockers_locked in fs.h in v15 with new
->   locks_owner_has_blockers call in fs/locks.c
-> 
-> . update nfs4_lockowner_has_blockers to use locks_owner_has_blockers
-> 
-> . move nfs4_check_and_expire_courtesy_client from 5/11 to 4/11
-> 
-> . remove unnecessary check for NULL clp in find_in_sessionid_hashtb
-> 
-> . fix typo in commit messages
-> 
-> v17:
-> 
-> . replace flags used for courtesy client with enum courtesy_client_state
-> 
-> . add state table in nfsd/state.h
-> 
-> . make nfsd4_expire_courtesy_clnt, nfsd4_discard_courtesy_clnt and
->   nfsd4_courtesy_clnt_expired as static inline.
-> 
-> . update nfsd_breaker_owns_lease to use dl->dl_stid.sc_client directly
-> 
-> . fix kernel test robot warning when CONFIG_FILE_LOCKING not defined.
-> 
-> v18:
-> 
-> . modify 0005-NFSD-Update-nfs4_get_vfs_file-to-handle-courtesy-cli.patch to:
-> 
->     . remove nfs4_check_access_deny_bmap, fold this functionality
->       into nfs4_resolve_deny_conflicts_locked by making use of
->       bmap_to_share_mode.
-> 
->     . move nfs4_resolve_deny_conflicts_locked into nfs4_file_get_access
->       and nfs4_file_check_deny. 
-> 
-> v19:
-> 
-> . modify 0002-NFSD-Add-courtesy-client-state-macro-and-spinlock-to.patch to
-> 
->     . add NFSD4_CLIENT_ACTIVE
-> 
->     . redo Courtesy client state table
-> 
-> . modify 0007-NFSD-Update-find_in_sessionid_hashtbl-to-handle-cour.patch and
->   0008-NFSD-Update-find_client_in_id_table-to-handle-courte.patch to:
-> 
->     . set cl_cs_client_stare to NFSD4_CLIENT_ACTIVE when reactive
->       courtesy client  
-> 
-> v20:
-> 
-> . modify 0006-NFSD-Update-find_clp_in_name_tree-to-handle-courtesy.patch to:
-> 	. add nfsd4_discard_reconnect_clnt
-> 	. replace call to nfsd4_discard_courtesy_clnt with
-> 	  nfsd4_discard_reconnect_clnt
-> 
-> . modify 0007-NFSD-Update-find_in_sessionid_hashtbl-to-handle-cour.patch to:
-> 	. replace call to nfsd4_discard_courtesy_clnt with
-> 	  nfsd4_discard_reconnect_clnt
->           
-> . modify 0008-NFSD-Update-find_client_in_id_table-to-handle-courte.patch
-> 	. replace call to nfsd4_discard_courtesy_clnt with
-> 	  nfsd4_discard_reconnect_clnt
+>  - Use IBK_ as the flag prefix for brevity
+>  - Remove unneeded ULLs
+>  - Spelling
+>  - Short documentation for each of the kernel flags
+
+Applied to for-next, thanks everyone
+
+Jason
