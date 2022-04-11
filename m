@@ -2,46 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E76044FC6E0
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Apr 2022 23:40:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97B094FC6DD
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Apr 2022 23:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344791AbiDKVmz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Apr 2022 17:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36794 "EHLO
+        id S234533AbiDKVmx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Apr 2022 17:42:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350070AbiDKVmx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Apr 2022 17:42:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7EE338AB
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 14:40:38 -0700 (PDT)
+        with ESMTP id S237048AbiDKVmw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Apr 2022 17:42:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A41033A0F
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 14:40:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ED24FB815C8
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DAA9D61701
         for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 21:40:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C2B8C385A9;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8E59C385AB;
         Mon, 11 Apr 2022 21:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1649713235;
-        bh=Q0sQqucLrEsfxJiDJRj0jf8k0wqNqcX5dWyoVIv+DIs=;
+        s=k20201202; t=1649713236;
+        bh=t0ZdTuVnz8eqy1TWWnBl4rDn04/xaH24HuwOHJeHyjY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HsXUkcYuUgsP1jlK+RBMJ+l2CDqWtXiQ6sINn7yCycmpquiBYAS2V9xsOVnN8ySpk
-         Y5js3q4szaVZbi8m+bezc6zI1hoYQtGp1GpTDYi0RkMC6T0P69f0PNSeTp4YIV6V6y
-         5/efoCT8QHDV60Dn72PMqEFmKALNvTQ+cyfo6GrDMWt8XIcHoWoogiAOzF6DomneKw
-         5yYym2Ax31bNiz6OPOk6DP8V/Sme7A/nsPBKdYN0mOAAZYAS9plmWQ+GEhUKlP4yYu
-         UGk8cRb575n3UFniAGpYDw4y+Wq5JX9VIKuuJH+OoEiRbNMSa96PAOArMWcab0UkAL
-         J/MhzH4WXdXKQ==
+        b=XmfVptnuX3Sb90CY9ASv4XrpNl0lvrEb2jNYjnIPCCYo6RTq5HvTfI1UffkPjoRRO
+         dKWTgWJNdz4OqFdrTTLoHZT7isNfYZ9L+Ssxz1GB5tX0cRMB94u7404f9TzYxnl/zG
+         rcBst5X05PX6jIgddpnk8yl3488M8Anor3mEdkjXFgmIKKBtatQL8BX1XMSwiBuL0D
+         3EGFGXI8z71trdvgr7/3F/QI5FiiMeeUnMwdDj0hSj4nzUXl/1ORb/fSE7vO54raad
+         k3RTmmICfneZa0m3IELtwdP0iEiielTsSPjaCqmYTfI8CDB5gnfetqJBjPc1OBeS9w
+         xUI8kHh7PbBNw==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
 Cc:     ChenXiaoSong <chenxiaosong2@huawei.com>,
         Scott Mayhew <smayhew@redhat.com>
-Subject: [PATCH v2 2/5] NFS: fsync() should report filesystem errors over EINTR/ERESTARTSYS
-Date:   Mon, 11 Apr 2022 17:33:43 -0400
-Message-Id: <20220411213346.762302-3-trondmy@kernel.org>
+Subject: [PATCH v2 3/5] NFS: Don't report ENOSPC write errors twice
+Date:   Mon, 11 Apr 2022 17:33:44 -0400
+Message-Id: <20220411213346.762302-4-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220411213346.762302-2-trondmy@kernel.org>
+In-Reply-To: <20220411213346.762302-3-trondmy@kernel.org>
 References: <20220411213346.762302-1-trondmy@kernel.org>
  <20220411213346.762302-2-trondmy@kernel.org>
+ <20220411213346.762302-3-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -56,41 +57,88 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If the commit to disk is interrupted, we should still first check for
-filesystem errors so that we can report them in preference to the error
-due to the signal.
+Any errors reported by the write() system call need to be cleared from
+the file descriptor's error tracking. The current call to nfs_wb_all()
+causes the error to be reported, but since it doesn't call
+file_check_and_advance_wb_err(), we can end up reporting the same error
+a second time when the application calls fsync().
 
-Fixes: 2197e9b06c22 ("NFS: Fix up fsync() when the server rebooted")
+Note that since Linux 4.13, the rule is that EIO may be reported for
+write(), but it must be reported by a subsequent fsync(), so let's just
+drop reporting it in write.
+
+The check for nfs_ctx_key_to_expire() is just a duplicate to the one
+already in nfs_write_end(), so let's drop that too.
+
+Reported-by: ChenXiaoSong <chenxiaosong2@huawei.com>
+Fixes: ce368536dd61 ("nfs: nfs_file_write() should check for writeback errors")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/file.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ fs/nfs/file.c | 33 +++++++++++++--------------------
+ 1 file changed, 13 insertions(+), 20 deletions(-)
 
 diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 81c80548a5c6..95e1236d95c5 100644
+index 95e1236d95c5..8211a7aa799c 100644
 --- a/fs/nfs/file.c
 +++ b/fs/nfs/file.c
-@@ -204,15 +204,16 @@ static int
- nfs_file_fsync_commit(struct file *file, int datasync)
+@@ -598,18 +598,6 @@ static const struct vm_operations_struct nfs_file_vm_ops = {
+ 	.page_mkwrite = nfs_vm_page_mkwrite,
+ };
+ 
+-static int nfs_need_check_write(struct file *filp, struct inode *inode,
+-				int error)
+-{
+-	struct nfs_open_context *ctx;
+-
+-	ctx = nfs_file_open_context(filp);
+-	if (nfs_error_is_fatal_on_server(error) ||
+-	    nfs_ctx_key_to_expire(ctx, inode))
+-		return 1;
+-	return 0;
+-}
+-
+ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
  {
- 	struct inode *inode = file_inode(file);
--	int ret;
-+	int ret, ret2;
+ 	struct file *file = iocb->ki_filp;
+@@ -637,7 +625,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	if (iocb->ki_flags & IOCB_APPEND || iocb->ki_pos > i_size_read(inode)) {
+ 		result = nfs_revalidate_file_size(inode, file);
+ 		if (result)
+-			goto out;
++			return result;
+ 	}
  
- 	dprintk("NFS: fsync file(%pD2) datasync %d\n", file, datasync);
+ 	nfs_clear_invalid_mapping(file->f_mapping);
+@@ -673,17 +661,22 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
+ 	}
+ 	result = generic_write_sync(iocb, written);
+ 	if (result < 0)
+-		goto out;
+-
++		return result;
++out:
+ 	/* Return error values */
+ 	error = filemap_check_wb_err(file->f_mapping, since);
+-	if (nfs_need_check_write(file, inode, error)) {
+-		int err = nfs_wb_all(inode);
+-		if (err < 0)
+-			result = err;
++	switch (error) {
++	default:
++		break;
++	case -EDQUOT:
++	case -EFBIG:
++	case -ENOSPC:
++		nfs_wb_all(inode);
++		error = file_check_and_advance_wb_err(file);
++		if (error < 0)
++			result = error;
+ 	}
+ 	nfs_add_stats(inode, NFSIOS_NORMALWRITTENBYTES, written);
+-out:
+ 	return result;
  
- 	nfs_inc_stats(inode, NFSIOS_VFSFSYNC);
- 	ret = nfs_commit_inode(inode, FLUSH_SYNC);
--	if (ret < 0)
--		return ret;
--	return file_check_and_advance_wb_err(file);
-+	ret2 = file_check_and_advance_wb_err(file);
-+	if (ret2 < 0)
-+		return ret2;
-+	return ret;
- }
- 
- int
+ out_swapfile:
 -- 
 2.35.1
 
