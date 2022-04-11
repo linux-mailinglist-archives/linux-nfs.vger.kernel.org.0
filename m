@@ -2,112 +2,294 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 765864FC2BD
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Apr 2022 18:51:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F20804FC5D8
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Apr 2022 22:32:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348703AbiDKQyC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Apr 2022 12:54:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60202 "EHLO
+        id S235302AbiDKUem (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Apr 2022 16:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348701AbiDKQyB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Apr 2022 12:54:01 -0400
-Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFF935AAD
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 09:51:46 -0700 (PDT)
-Received: by mail-qk1-x735.google.com with SMTP id c199so9429654qkg.4
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 09:51:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=O/Y5K+CF+Mh7GvEdz3a3b9P6kegRmry3y3L/0YvGc2o=;
-        b=UJ78C75LC6yWWBISL9bNGge8zIB5bEefv+jhAiMepnQ/broiM54lgW9PYjWE6kbkPh
-         vIxwsXhiJ9zOzkdScwnwzYPwE2MPJw6jK9S+BoMYxgcKFLzRRAr05xN9h+mqKSGvqW8z
-         t2Qm+SPjD6d82QdOBz3nKbMcW8QxrDo8lEB7yfHOyU7n9030dK0Mpl/fmi4BJ0FqhMcn
-         TvL9VXttabRAE/rT1cdbCH7X3wze/Rpg+XB2UEn10Q7GdWR+a6bXRvbEDRsyDfqOs7oI
-         /EbSNONktHTdbbwQHv2Y23tNVlCSi4ZZ2+MSG8yEQOPm/0phoIAd/l33/3kKXMjNhg1v
-         VHoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=O/Y5K+CF+Mh7GvEdz3a3b9P6kegRmry3y3L/0YvGc2o=;
-        b=yDYOdzcv38za1LVXsbnZjRQIgJeOxbx6jNKeqYVoYP+PIfNpCuwjNreUyHqeU+nJ6a
-         byasMM1CcoBOP/IXz6sgMRCuVVM5rejHsPI0b0JhMrB5/1OeH5qDitGyIgmUNwHEoncl
-         4jeOS65HZG5C9ovWpv02jqnmYveHOHRVZu5Fqt3FBAwUJiDZ9CLfyPb6aOEbT297/4Dv
-         to+rBlea6EcbfuYaaJ0MpJ1F1aU34IR1FVvlwj1Gx2Zp5AaWaW+ELHEyP+/ZWcNF29++
-         m58BkPNIZhkxK5q2k3jJa4zrK0jZ9DewmPfFIywtC1l10EBUX/iENcoANzu65nSXvzK+
-         IMqQ==
-X-Gm-Message-State: AOAM532lG/6dOaNgCV87Tu9sx9Bf7NDdfDHim9ARE9ySt0llvGalhPxf
-        vFU/0pKO80c7sJ7h4tcsHBQ+552iMns4GfdSY0o=
-X-Google-Smtp-Source: ABdhPJzhHsXG81giU074lZu0K0OqXlQmWq65qRQ9nO/EQo2xbsmyB1heRbg/++6dQTogTwfCv3o755MBIBgnYDelEGM=
-X-Received: by 2002:a05:620a:1726:b0:67e:d1d3:f26a with SMTP id
- az38-20020a05620a172600b0067ed1d3f26amr171122qkb.411.1649695905464; Mon, 11
- Apr 2022 09:51:45 -0700 (PDT)
+        with ESMTP id S1349939AbiDKUea (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Apr 2022 16:34:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332903616C
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 13:32:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 921E8615F7
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 20:32:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0C30C385A6
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Apr 2022 20:32:05 +0000 (UTC)
+Subject: [PATCH] Documentation: Add an explanation of NFSv4 client identifiers
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Mon, 11 Apr 2022 16:32:04 -0400
+Message-ID: <164970912423.2037.12497015321508491456.stgit@bazille.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Received: by 2002:a05:622a:190b:0:0:0:0 with HTTP; Mon, 11 Apr 2022 09:51:44
- -0700 (PDT)
-Reply-To: dt91120002@hotmail.com
-From:   DR DATI AMINO <dr9112000@gmail.com>
-Date:   Mon, 11 Apr 2022 09:51:44 -0700
-Message-ID: <CAE1eGCnqCQ2wCn8qkO=nGEF7BJ5Tjab-tTo+SVQJ12+ugwOx4g@mail.gmail.com>
-Subject: Please Advise me......
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DEAR_SOMETHING,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:735 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5004]
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [dr9112000[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [dt91120002[at]hotmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [dr9112000[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  2.0 DEAR_SOMETHING BODY: Contains 'Dear (something)'
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *******
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-Dear Sir/Madam,
+To enable NFSv4 to work correctly, NFSv4 client identifiers have
+to be globally unique and persistent over client reboots. We
+believe that in many cases, a good default identifier can be
+chosen and set when a client system is imaged.
 
-I am making this contact as a consultant, I do have the mandate of a
-private client with embattled political background offering a short time
-loan for duration of 2yrs and above to any corporate /individuals under
-strict anonymity.
+Because there are many different ways a system can be imaged,
+provide an explanation of how NFSv4 client identifiers and
+principals can be set by install scripts and imaging tools.
 
-If you are in need of a loan to fund a new or an existing businesses
-requiring expansion, we would be delighted to work with you.
+Additional cases, such as NFSv4 clients running in containers, also
+need unique and persistent identifiers. The Linux NFS community
+sets forth this explanation to aid those who create and manage
+container environments.
 
-I look forward to your cooperation.
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ .../filesystems/nfs/client-identifier.rst          |  212 ++++++++++++++++++++
+ Documentation/filesystems/nfs/index.rst            |    2 
+ 2 files changed, 214 insertions(+)
+ create mode 100644 Documentation/filesystems/nfs/client-identifier.rst
 
-Best Regards
+diff --git a/Documentation/filesystems/nfs/client-identifier.rst b/Documentation/filesystems/nfs/client-identifier.rst
+new file mode 100644
+index 000000000000..5d056145833f
+--- /dev/null
++++ b/Documentation/filesystems/nfs/client-identifier.rst
+@@ -0,0 +1,212 @@
++=======================
++NFSv4 client identifier
++=======================
++
++This document explains how the NFSv4 protocol identifies client
++instances in order to maintain file open and lock state during
++system restarts. A special identifier and principal are maintained
++on each client. These can be set by administrators, scripts
++provided by site administrators, or tools provided by Linux
++distributors.
++
++There are risks if a client's NFSv4 identifier and its principal
++are not chosen carefully.
++
++
++Introduction
++------------
++
++The NFSv4 protocol uses "lease-based file locking". Leases help
++NFSv4 servers provide file lock guarantees and manage their
++resources.
++
++Simply put, an NFSv4 server creates a lease for each NFSv4 client.
++The server collects each client's file open and lock state under
++the lease for that client.
++
++The client is responsible for periodically renewing its leases.
++While a lease remains valid, the server holding that lease
++guarantees the file locks the client has created remain in place.
++
++If a client stops renewing its lease (for example, if it crashes),
++the NFSv4 protocol allows the server to remove the client's open
++and lock state after a certain period of time. When a client
++restarts, it indicates to servers that open and lock state
++associated with its previous leases is no longer valid.
++
++In addition, each NFSv4 server manages a persistent list of client
++leases. When the server restarts, it uses this list to distinguish
++between requests from clients that held state before the server
++restarted and from clients that did not. This enables file locks to
++persist safely across server restarts.
++
++NFSv4 client identifiers
++------------------------
++
++Each NFSv4 client presents an identifier to NFSv4 servers so that
++they can associate the client with its lease. Each client's
++identifier consists of two elements:
++
++  - co_ownerid: An arbitrary but fixed string.
++
++  - boot verifier: A 64-bit incarnation verifier that enables a
++    server to distinguish successive boot epochs of the same client.
++
++The NFSv4.0 specification refers to these two items as an
++"nfs_client_id4". The NFSv4.1 specification refers to these two
++items as a "client_owner4".
++
++NFSv4 servers tie this identifier to the principal and security
++flavor that the client used when presenting it. Servers use this
++principal to authorize subsequent lease modification operations
++sent by the client. Effectively this principal is a third element of
++the identifier.
++
++As part of the identity presented to servers, a good
++"co_ownerid" string has several important properties:
++
++  - The "co_ownerid" string identifies the client during reboot
++    recovery, therefore the string is persistent across client
++    reboots.
++  - The "co_ownerid" string helps servers distinguish the client
++    from others, therefore the string is globally unique. Note
++    that there is no central authority that assigns "co_ownerid"
++    strings.
++  - Because it often appears on the network in the clear, the
++    "co_ownerid" string does not reveal private information about
++    the client itself.
++  - The content of the "co_ownerid" string is set and unchanging
++    before the client attempts NFSv4 mounts after a restart.
++  - The NFSv4 protocol does not place a limit on the size of the
++    "co_ownerid" string, but most NFSv4 implementations do not
++    tolerate excessively long "co_ownerid" strings.
++
++Protecting NFSv4 lease state
++----------------------------
++
++NFSv4 servers utilize the "client_owner4" as described above to
++assign a unique lease to each client. Under this scheme, there are
++circumstances where clients can interfere with each other. This is
++referred to as "lease stealing".
++
++If distinct clients present the same "co_ownerid" string and use
++the same principal (for example, AUTH_SYS and UID 0), a server is
++unable to tell that the clients are not the same. Each distinct
++client presents a different boot verifier, so it appears to the
++server as if there is one client that is rebooting frequently.
++Neither client can maintain open or lock state in this scenario.
++
++If distinct clients present the same "co_ownerid" string and use
++distinct principals, the server is likely to allow the first client
++to operate normally but reject subsequent clients with the same
++"co_ownerid" string.
++
++If a client's "co_ownerid" string or principal are not stable,
++state recovery after a server or client reboot is not guaranteed.
++If a client unexpectedly restarts but presents a different
++"co_ownerid" string or principal to the server, the server orphans
++the client's previous open and lock state. This blocks access to
++locked files until the server removes the orphaned state.
++
++If the server restarts and a client presents a changed "co_ownerid"
++string or principal to the server, the server will not allow the
++client to reclaim its open and lock state, and may give those locks
++to other clients in the mean time. This is referred to as "lock
++stealing".
++
++Lease stealing and lock stealing increase the potential for denial
++of service and in rare cases even data corruption.
++
++Selecting an appropriate client identifier
++------------------------------------------
++
++By default, the Linux NFSv4 client implementation constructs its
++"co_ownerid" string starting with the words "Linux NFS" followed by
++the client's UTS node name (the same node name, incidentally, that
++is used as the "machine name" in an AUTH_SYS credential). In small
++deployments, this construction is usually adequate. Often, however,
++the node name by itself is not adequately unique, and can change
++unexpectedly. Problematic situations include:
++
++  - NFS-root (diskless) clients, where the local DCHP server (or
++    equivalent) does not provide a unique host name.
++
++  - "Containers" within a single Linux host.  If each container has
++    a separate network namespace, but does not use the UTS namespace
++    to provide a unique host name, then there can be multiple NFS
++    client instances with the same host name.
++
++  - Clients across multiple administrative domains that access a
++    common NFS server. If hostnames are not assigned centrally
++    then uniqueness cannot be guaranteed unless a domain name is
++    included in the hostname.
++
++Linux provides two mechanisms to add uniqueness to its "co_ownerid"
++string:
++
++    nfs.nfs4_unique_id
++      This module parameter can set an arbitrary uniquifier string
++      via the kernel command line, or when the "nfs" module is
++      loaded.
++
++    /sys/fs/nfs/client/net/identifier
++      This virtual file, available since Linux 5.3, is local to the
++      network namespace in which it is accessed and so can provide
++      distinction between network namespaces (containers) when the
++      hostname remains uniform.
++
++Note that this file is empty on name-space creation. If the
++container system has access to some sort of per-container identity
++then that uniquifier can be used. For example, a uniquifier might
++be formed at boot using the container's internal identifier:
++
++    sha256sum /etc/machine-id | awk '{print $1}' \\
++        > /sys/fs/nfs/client/net/identifier
++
++Security considerations
++-----------------------
++
++The use of cryptographic security for lease management operations
++is strongly encouraged.
++
++If NFS with Kerberos is not configured, a Linux NFSv4 client uses
++AUTH_SYS and UID 0 as the principal part of its client identity.
++This configuration is not only insecure, it increases the risk of
++lease and lock stealing. However, it might be the only choice for
++client configurations that have no local persistent storage.
++"co_ownerid" string uniqueness and persistence is critical in this
++case.
++
++When a Kerberos keytab is present on a Linux NFS client, the client
++attempts to use one of the principals in that keytab when
++identifying itself to servers. Alternately, a single-user client
++with a Kerberos principal can use that principal in place of the
++client's host principal.
++
++Using Kerberos for this purpose enables the client and server to
++use the same lease for operations covered by all "sec=" settings.
++Additionally, the Linux NFS client uses the RPCSEC_GSS security
++flavor with Kerberos and the integrity QOS to prevent in-transit
++modification of lease modification requests.
++
++Additional notes
++----------------
++The Linux NFSv4 client establishes a single lease on each NFSv4
++server it accesses. NFSv4 mounts from a Linux NFSv4 client of a
++particular server then share that lease.
++
++Once a client establishes open and lock state, the NFSv4 protocol
++enables lease state to transition to other servers, following data
++that has been migrated. This hides data migration completely from
++running applications. The Linux NFSv4 client facilitates state
++migration by presenting the same "client_owner4" to all servers it
++encounters.
++
++========
++See Also
++========
++
++  - nfs(5)
++  - kerberos(7)
++  - RFC 7530 for the NFSv4.0 specification
++  - RFC 8881 for the NFSv4.1 specification.
+diff --git a/Documentation/filesystems/nfs/index.rst b/Documentation/filesystems/nfs/index.rst
+index 288d8ddb2bc6..8536134f31fd 100644
+--- a/Documentation/filesystems/nfs/index.rst
++++ b/Documentation/filesystems/nfs/index.rst
+@@ -6,6 +6,8 @@ NFS
+ .. toctree::
+    :maxdepth: 1
+ 
++   client-identifier
++   exporting
+    pnfs
+    rpc-cache
+    rpc-server-gss
 
-Dr Dati
+
