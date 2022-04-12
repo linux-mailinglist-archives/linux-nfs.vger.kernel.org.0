@@ -2,54 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68CE64FE293
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Apr 2022 15:30:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36ECB4FE30A
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Apr 2022 15:51:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235387AbiDLNb7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Apr 2022 09:31:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
+        id S240435AbiDLNtK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Apr 2022 09:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355952AbiDLNb4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Apr 2022 09:31:56 -0400
+        with ESMTP id S1356228AbiDLNtG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Apr 2022 09:49:06 -0400
 Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEBF10FE0
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Apr 2022 06:29:34 -0700 (PDT)
-Received: from kwepemi500022.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Kd60W62N7zBrX8;
-        Tue, 12 Apr 2022 21:25:15 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DDB354BDE;
+        Tue, 12 Apr 2022 06:46:48 -0700 (PDT)
+Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.57])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Kd6NP250DzBrX8;
+        Tue, 12 Apr 2022 21:42:29 +0800 (CST)
 Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- kwepemi500022.china.huawei.com (7.221.188.64) with Microsoft SMTP Server
+ kwepemi500012.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 12 Apr 2022 21:29:32 +0800
+ 15.1.2375.24; Tue, 12 Apr 2022 21:46:46 +0800
 Received: from [10.174.176.52] (10.174.176.52) by
  kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 12 Apr 2022 21:29:32 +0800
-Message-ID: <52552874-01a4-d0da-8904-1b81659e5d1c@huawei.com>
-Date:   Tue, 12 Apr 2022 21:29:31 +0800
+ 15.1.2375.24; Tue, 12 Apr 2022 21:46:45 +0800
+Message-ID: <4a8e21fb-d8bf-5428-67e5-41c47529e641@huawei.com>
+Date:   Tue, 12 Apr 2022 21:46:44 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.2.1
-Subject: Re: [PATCH v2 3/5] NFS: Don't report ENOSPC write errors twice
-From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
+Subject: Re: [PATCH -next 1/2] nfs: nfs{,4}_file_flush should consume
+ writeback error
 To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     "smayhew@redhat.com" <smayhew@redhat.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "smayhew@redhat.com" <smayhew@redhat.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "liuyongqiang13@huawei.com" <liuyongqiang13@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
         "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>,
-        "yi.zhang@huawei.com" <yi.zhang@huawei.com>
-References: <20220411213346.762302-1-trondmy@kernel.org>
- <20220411213346.762302-2-trondmy@kernel.org>
- <20220411213346.762302-3-trondmy@kernel.org>
- <20220411213346.762302-4-trondmy@kernel.org>
- <a2babe9f-e85e-3c72-9132-35aa6ae3888b@huawei.com>
- <5fde4fd533805990cfbd0f23964db786cfda2cd7.camel@hammerspace.com>
- <3536f67c-95f3-efbf-3d0f-0b7e8b4549b9@huawei.com>
-In-Reply-To: <3536f67c-95f3-efbf-3d0f-0b7e8b4549b9@huawei.com>
+        <smayhew@redhat.com>
+References: <20220305124636.2002383-1-chenxiaosong2@huawei.com>
+ <20220305124636.2002383-2-chenxiaosong2@huawei.com>
+ <ca81e90788eabbf6b5df5db7ea407199a6a3aa04.camel@hammerspace.com>
+ <5666cb64-c9e4-0549-6ddb-cfc877c9c071@huawei.com>
+ <eab4bbb565a50bd09c2dbd3522177237fde2fad9.camel@hammerspace.com>
+ <037054f5ac2cd13e59db14b12f4ab430f1ddef5d.camel@hammerspace.com>
+From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
+In-Reply-To: <037054f5ac2cd13e59db14b12f4ab430f1ddef5d.camel@hammerspace.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Originating-IP: [10.174.176.52]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemm600015.china.huawei.com (7.193.23.52)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
@@ -62,62 +65,19 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-在 2022/4/12 21:13, chenxiaosong (A) 写道:
-> 在 2022/4/12 20:16, Trond Myklebust 写道:
->> I understand all that. The point you appear to be missing is that this
->> is in fact in agreement with the documented behaviour in the write(2)
->> and fsync(2) manpages. These errors are supposed to be reported once,
->> even if they were caused by a write to a different file descriptor.
->>
->> In fact, even with your change, if you make the second 'dd' call fsync
->> (by adding a conv=fsync), I would expect it to report the exact same
->> ENOSPC error, and that would be correct behaviour!
->>
->> So my patches are more concerned with the fact that we appear to be
->> reporting the same error more than once, rather than the fact that
->> we're reporting them in the second attempt at I/O. As far as I'm
->> concerned, that is the main change that is needed to meet the behaviour
->> that is documented in the manpages.
+在 2022/3/6 23:08, Trond Myklebust 写道:
 > 
+> Just to clarify a little.
 > 
-> After merging my patchset, when make the second 'dd' call fsync (by 
-> adding a conv=fsync), it can report ENOSPC error by calling fsync() 
-> syscall.
-> 
-> And when make the second 'dd' sync write (by adding a oflag=sync), it 
-> can report ENOSPC error too:
-> 
-> ```c
-> write
->    ksys_write
->      vfs_write
->        new_sync_write
->          call_write_iter
->            nfs_file_write
->              generic_write_sync
->                vfs_fsync_range
->                  nfs_file_fsync
-> ```
+> I don't see a need to consume the writeback errors on close(), unless
+> other filesystems do the same. If the intention is that fsync() should
+> see _all_ errors that haven't already been seen, then NFS should follow
+> the same semantics as all the other filesystems.
 > 
 
-On other filesystem, wb error is only cleared when doing fsync() or sync 
-write(), it should not clear the wb error when doing async write(). Your 
-patch will clear the wb error when doing async write().
+Other filesystem will _not_ clear writeback error on close().
+And other filesystem will _not_ clear writeback error on async write() too.
 
-And my patchset mainly fix following problem:
+Other filesystem _only_ clear writeback error on fsync() or sync write().
 
-filemap_sample_wb_err() always return 0 if old writeback error
-have not been consumed. filemap_check_wb_err() will return the old error
-even if there is no new writeback error between filemap_sample_wb_err() and
-filemap_check_wb_err().
-
-```c
-   since = filemap_sample_wb_err() = 0
-     errseq_sample
-       if (!(old & ERRSEQ_SEEN)) // nobody see the error
-         return 0;
-   nfs_wb_all // no new error
-   error = filemap_check_wb_err(..., since) != 0 // unexpected error
-```
-
-
+Should NFS follow the same semantics as all the other filesystems?
