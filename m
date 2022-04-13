@@ -2,24 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC6624FFB88
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 18:41:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 634DD4FFD75
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 20:06:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236938AbiDMQny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Apr 2022 12:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        id S235971AbiDMSJJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Apr 2022 14:09:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233572AbiDMQny (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 12:43:54 -0400
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B28864BEC;
-        Wed, 13 Apr 2022 09:41:32 -0700 (PDT)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D83DA68C7B; Wed, 13 Apr 2022 18:41:28 +0200 (CEST)
-Date:   Wed, 13 Apr 2022 18:41:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Hugh Dickins <hughd@google.com>, Christoph Hellwig <hch@lst.de>,
+        with ESMTP id S233881AbiDMSJC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 14:09:02 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D7AD4C7A5;
+        Wed, 13 Apr 2022 11:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RYArLPbSRQE8E13k3ycxmMoQnNRcq1Ic+NpsE4J+dOQ=; b=vMzaRyZmQeJIGHwv1m13Wm5unS
+        s3ZTYmn9U4xKPzk44Q0g/u0dGqXES86OwZ1Ug1FlZ4Gg8SY/4PB8pK+ojDwrwQ+qfVTfcIdStZpCq
+        dn32OxPcKjM/VvEY22ob50yqVN/B7Yow4fnHkU2iVyAgpCu1Fgh71ZP0IztEIy8ibfnA+6BL+YaKB
+        8+UCXRFsHA1WTfOQRgoML1NAxOSqHgyOW8XqCLYRn+FtSosvkYfDg7Ji22uJvZt/yAJqLxEHNriiS
+        YM1wYeGLasScQ4LaGKJ8/lstaGm1Jk1WfaXWuKJWpoPWU4bZl0nmuks4rHwfP57ywTk+ZF+jmaeJy
+        78VBzJCg==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1nehNW-00ESOu-K7; Wed, 13 Apr 2022 18:06:06 +0000
+Date:   Wed, 13 Apr 2022 19:06:06 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Chuck Lever III <chuck.lever@oracle.com>,
         Mark Hemment <markhemm@googlemail.com>,
         Patrice CHOTARD <patrice.chotard@foss.st.com>,
@@ -30,16 +41,21 @@ Cc:     Hugh Dickins <hughd@google.com>, Christoph Hellwig <hch@lst.de>,
         Borislav Petkov <bp@alien8.de>, linux-mm@kvack.org,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, viro@zeniv.linux.org.uk
-Subject: Re: [PATCH] tmpfs: fix regressions from wider use of ZERO_PAGE
-Message-ID: <20220413164128.GD31487@lst.de>
-References: <9a978571-8648-e830-5735-1f4748ce2e30@google.com> <20220409050638.GB17755@lst.de> <f73cfd56-35d2-53a3-3a59-4ff9495d7d34@google.com> <20220412162221.7c55379548017bab61ea5103@linux-foundation.org>
+        linux-stm32@st-md-mailman.stormreply.com, viro@zeniv.linux.org.uk,
+        x86@kernel.org
+Subject: Re: making x86 clear_user not suck, was Re: [PATCH] tmpfs: fix
+ regressions from wider use of ZERO_PAGE
+Message-ID: <YlcRDrEGwEz1EymZ@casper.infradead.org>
+References: <9a978571-8648-e830-5735-1f4748ce2e30@google.com>
+ <20220409050638.GB17755@lst.de>
+ <f73cfd56-35d2-53a3-3a59-4ff9495d7d34@google.com>
+ <20220412045757.GA5131@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220412162221.7c55379548017bab61ea5103@linux-foundation.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+In-Reply-To: <20220412045757.GA5131@lst.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -48,9 +64,8 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Apr 12, 2022 at 04:22:21PM -0700, Andrew Morton wrote:
-> On Fri, 8 Apr 2022 23:08:29 -0700 (PDT) Hugh Dickins <hughd@google.com> wrote:
-> 
+On Tue, Apr 12, 2022 at 06:57:57AM +0200, Christoph Hellwig wrote:
+> On Fri, Apr 08, 2022 at 11:08:29PM -0700, Hugh Dickins wrote:
 > > > 
 > > > Either way I'd rather do this optimization in iov_iter_zero rather
 > > > than hiding it in tmpfs.
@@ -58,13 +73,19 @@ On Tue, Apr 12, 2022 at 04:22:21PM -0700, Andrew Morton wrote:
 > > Let's see what others say.  I think we would all prefer clear_user() to be
 > > enhanced, and hack around it neither here in tmpfs nor in iov_iter_zero().
 > > But that careful work won't get done by magic, nor by me.
-> > 
+> 
+> I agree with that.
+> 
 > > And iov_iter_zero() has to deal with a wider range of possibilities,
 > > when pulling in cache lines of ZERO_PAGE(0) will be less advantageous,
 > > than in tmpfs doing a large dd - the case I'm aiming not to regress here
 > > (tmpfs has been copying ZERO_PAGE(0) like this for years).
 > 
-> We do need something to get 5.18 fixed.  Christoph, do you think we
-> should proceed with this patch for 5.18?
+> Maybe.  OTOH I'd hate to have iov_iter_zero not used much because it
+> sucks too much.
+> 
+> So how can we entice someone with the right knowledge to implement a
+> decent clear_user for x86?
 
-Well, let's queue it up then.
+Apparently that already happened, but it needs finishing up:
+https://lore.kernel.org/lkml/Yk9yBcj78mpXOOLL@zx2c4.com/
