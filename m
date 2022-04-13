@@ -2,72 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A5C4FFB19
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 18:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6624FFB88
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 18:41:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235302AbiDMQY3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Apr 2022 12:24:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46914 "EHLO
+        id S236938AbiDMQny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Apr 2022 12:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231837AbiDMQY3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 12:24:29 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 338EE2E083
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 09:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649866927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=D+1JpeO8JhQH4iNA0xitKOUU7IsW27o5XnyNdUHi9y0=;
-        b=GoYBUo/kdmQZAdcgnFlvGx1F47Gip5SqdM7O7F+d+HkgqxdP1VlvgUmSSW9OEgm8gHNy6T
-        v/JFunAPVb/m/9N/7BEeE1uETvFLMxTC0lovQZAWtUNwgJWA5IXu5HRZLmxjiCCxDwCdJi
-        VMMUkByAwRJgqRbShtNP4POa8ISSn+g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-435-4JLYiJ2YNqeWDuEW4eNSNw-1; Wed, 13 Apr 2022 12:22:06 -0400
-X-MC-Unique: 4JLYiJ2YNqeWDuEW4eNSNw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CC75A1014A61
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 16:22:05 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BA4B840CF8EA
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 16:22:05 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: Patches from the list with Content-Type: application/octet-stream
-Date:   Wed, 13 Apr 2022 12:22:05 -0400
-Message-ID: <AA7D017B-F143-4493-B542-F8BCBEC86306@redhat.com>
-In-Reply-To: <1EBC0B18-2233-4467-89E7-4351B4047E95@redhat.com>
-References: <1EBC0B18-2233-4467-89E7-4351B4047E95@redhat.com>
+        with ESMTP id S233572AbiDMQny (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 12:43:54 -0400
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B28864BEC;
+        Wed, 13 Apr 2022 09:41:32 -0700 (PDT)
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id D83DA68C7B; Wed, 13 Apr 2022 18:41:28 +0200 (CEST)
+Date:   Wed, 13 Apr 2022 18:41:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Hugh Dickins <hughd@google.com>, Christoph Hellwig <hch@lst.de>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Mark Hemment <markhemm@googlemail.com>,
+        Patrice CHOTARD <patrice.chotard@foss.st.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Borislav Petkov <bp@alien8.de>, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, viro@zeniv.linux.org.uk
+Subject: Re: [PATCH] tmpfs: fix regressions from wider use of ZERO_PAGE
+Message-ID: <20220413164128.GD31487@lst.de>
+References: <9a978571-8648-e830-5735-1f4748ce2e30@google.com> <20220409050638.GB17755@lst.de> <f73cfd56-35d2-53a3-3a59-4ff9495d7d34@google.com> <20220412162221.7c55379548017bab61ea5103@linux-foundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220412162221.7c55379548017bab61ea5103@linux-foundation.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 13 Apr 2022, at 9:32, Benjamin Coddington wrote:
+On Tue, Apr 12, 2022 at 04:22:21PM -0700, Andrew Morton wrote:
+> On Fri, 8 Apr 2022 23:08:29 -0700 (PDT) Hugh Dickins <hughd@google.com> wrote:
+> 
+> > > 
+> > > Either way I'd rather do this optimization in iov_iter_zero rather
+> > > than hiding it in tmpfs.
+> > 
+> > Let's see what others say.  I think we would all prefer clear_user() to be
+> > enhanced, and hack around it neither here in tmpfs nor in iov_iter_zero().
+> > But that careful work won't get done by magic, nor by me.
+> > 
+> > And iov_iter_zero() has to deal with a wider range of possibilities,
+> > when pulling in cache lines of ZERO_PAGE(0) will be less advantageous,
+> > than in tmpfs doing a large dd - the case I'm aiming not to regress here
+> > (tmpfs has been copying ZERO_PAGE(0) like this for years).
+> 
+> We do need something to get 5.18 fixed.  Christoph, do you think we
+> should proceed with this patch for 5.18?
 
-> Anyone know why the linux-nfs list is setting
->
-> Content-Type: application/octet-stream
->
-> mail header for patches?  It seems to have started sometime last week, and
-> makes it difficult for me to quickly read patches.
-
-Alice has pointed out that this isn't a vger.kernel.org issue, but seems
-instead to be added by our local MTAs if the mailer hasn't set it yet.
-
-I'll follow up on this problem with our local MTA service.
-Ben
-
+Well, let's queue it up then.
