@@ -2,63 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E386A4FF7AD
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 15:32:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C65964FF7FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Apr 2022 15:43:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234057AbiDMNfC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Apr 2022 09:35:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44694 "EHLO
+        id S233001AbiDMNpG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Apr 2022 09:45:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233587AbiDMNfC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 09:35:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 379D95D5F1
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 06:32:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1649856760;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type;
-        bh=QOJfmSn0xFjav4bRpembNH2O8F44yNE+X3MVGo4gMgI=;
-        b=VMO9uLoLl5M+ZnAsxYYfOs5U0M51hfJJcZ3M9oaQdg8YL7qbkEWzHbFrM9W2/Rg+W/O8iB
-        /aCk0vGpJiiAwUN280/LA6cXOJA/Nurd/0gsVdNybBsiXyCvWSnxVwZfxMOqdh6wBiJ3IS
-        8n61zkaI9AOV05lZbTouqcABzRI3F2E=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-178-bys5NBM3OliHpiR_xy9imQ-1; Wed, 13 Apr 2022 09:32:38 -0400
-X-MC-Unique: bys5NBM3OliHpiR_xy9imQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9C64C803B22
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 13:32:38 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-66.rdu2.redhat.com [10.10.64.66])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B3BE9D4C
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Apr 2022 13:32:38 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Patches from the list with Content-Type: application/octet-stream
-Date:   Wed, 13 Apr 2022 09:32:37 -0400
-Message-ID: <1EBC0B18-2233-4467-89E7-4351B4047E95@redhat.com>
+        with ESMTP id S233893AbiDMNpF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Apr 2022 09:45:05 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ED8D6006F;
+        Wed, 13 Apr 2022 06:42:43 -0700 (PDT)
+Received: from kwepemi500011.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4KdkHN2QN1zFpqf;
+        Wed, 13 Apr 2022 21:40:16 +0800 (CST)
+Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
+ kwepemi500011.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 13 Apr 2022 21:42:41 +0800
+Received: from [10.174.176.52] (10.174.176.52) by
+ kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 13 Apr 2022 21:42:40 +0800
+Message-ID: <0b6546f7-8a04-9d6e-50c3-483c8a1a6591@huawei.com>
+Date:   Wed, 13 Apr 2022 21:42:39 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
+To:     Lyu Tao <tao.lyu@epfl.ch>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "bjschuma@netapp.com" <bjschuma@netapp.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "liuyongqiang13@huawei.com" <liuyongqiang13@huawei.com>,
+        "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+        "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>
+References: <20220329113208.2466000-1-chenxiaosong2@huawei.com>
+ <68b65889-3b2c-fb72-a0a8-d0afc15a03e0@huawei.com>
+ <e0c2d7ec62b447cabddbc8a9274be955@epfl.ch>
+From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
+In-Reply-To: <e0c2d7ec62b447cabddbc8a9274be955@epfl.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.52]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600015.china.huawei.com (7.193.23.52)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Anyone know why the linux-nfs list is setting
 
-Content-Type: application/octet-stream
+在 2022/4/13 20:07, Lyu Tao 写道:
+> 
+> Hi Xiaosong,
+> 
+> 
+> Thanks for keeping focusing on this bug.
+> 
+> 
+> I applied this CVE for the NULL dereference bug at 
+> nfs4_valid_open_stateid() and added the following description to this 
+> CVE due to the NFS maintainers replied that to me.
+> 
+> "An issue was discovered in fs/nfs/dir.c in the Linux kernel before 
+> 5.16.5. If an application sets the O_DIRECTORY flag, and tries to open a 
+> regular file, nfs_atomic_open() performs a regular lookup. If a regular 
+> file is found, ENOTDIR should occur, but the server instead returns 
+> uninitialized data in the file descriptor.
+> 
+> 
+> Actually I'm still confused with the root cause of this bug. In the 
+> original PoC, there is no O_DIRECTORY flag but commit ac795161c936 
+> mentioned.
+> 
+> Moreover, in your latest commit ab0fc21bc710, it said "After secondly 
+> opening a file with O_ACCMODE|O_DIRECT flags, nfs4_valid_open_stateid() 
+> will dereference NULL nfs4_state when lseek()." However, the original 
+> PoC opens the file only with O_RDWR|O_CREAT for the first time.
+> 
+> 
+> Original PoC:
+> 
+> fd = openat("./file1", o_RDWR|O_CREAT, 000);
+> 
+> open("./file1", 
+> O_ACCMODE|O_CREAT|O_DIRECT|O_LARGEFILE|O_NOFOLLOW|O_NOATIME|O_CLOEXEC|FASYNC|0xb3000008, 
+> 001);
+> 
+> lseek(fd, 9, SEEK_HOLE);
+> 
+> 
+> I'll update this CVE's description after I figure out these.
+> 
+> 
+> Best Regards,
+> 
+> Tao
+> 
 
-mail header for patches?  It seems to have started sometime last week, and
-makes it difficult for me to quickly read patches.
+Hi Tao:
 
-Ben
+Yes, O_ACCEMODE is _not_ necessary when fistly open() file.
 
+When open() the file secondly, O_ACCEMODE is necessary if we want to 
+reproduce the bug.
+
+Waiting for your modification of the CVE's description.
+
+Best Regards.
