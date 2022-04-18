@@ -2,32 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B895D505C2A
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Apr 2022 17:58:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E11F505CAC
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Apr 2022 18:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236685AbiDRQBf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Apr 2022 12:01:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
+        id S1346419AbiDRQwF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Apr 2022 12:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236683AbiDRQBe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Apr 2022 12:01:34 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96B2216
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Apr 2022 08:58:54 -0700 (PDT)
+        with ESMTP id S239529AbiDRQwE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Apr 2022 12:52:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61281329BE;
+        Mon, 18 Apr 2022 09:49:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 74E04B81012
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Apr 2022 15:58:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C940C385A7;
-        Mon, 18 Apr 2022 15:58:51 +0000 (UTC)
-Subject: [PATCH v2] Documentation: Add an explanation of NFSv4 client
- identifiers
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F2ECC612DF;
+        Mon, 18 Apr 2022 16:49:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0057C385A1;
+        Mon, 18 Apr 2022 16:49:23 +0000 (UTC)
+Subject: [PATCH RFC 0/5] Implement a TLS handshake upcall
 From:   Chuck Lever <chuck.lever@oracle.com>
-To:     trond.myklebust@primarydata.com, anna.schumaker@netapp.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 18 Apr 2022 11:58:50 -0400
-Message-ID: <165029751204.8305.958477650360928356.stgit@bazille.1015granger.net>
+To:     netdev@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-cifs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     ak@tempesta-tech.com, borisp@nvidia.com, simo@redhat.com
+Date:   Mon, 18 Apr 2022 12:49:22 -0400
+Message-ID: <165030051838.5073.8699008789153780301.stgit@oracle-102.nfsv4.dev>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -41,267 +42,95 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To enable NFSv4 to work correctly, NFSv4 client identifiers have
-to be globally unique and persistent over client reboots. We
-believe that in many cases, a good default identifier can be
-chosen and set when a client system is imaged.
+There are a few upper-layer (storage) protocols that want to have a
+full TLS implementation available in the Linux kernel.
 
-Because there are many different ways a system can be imaged,
-provide an explanation of how NFSv4 client identifiers and
-principals can be set by install scripts and imaging tools.
+The Linux kernel currently has an implementation of the TLS record
+protocol, known as kTLS. However it does not have a complete TLS
+implementation because it has no implementation of the TLS handshake
+protocol. In-kernel storage protocols need both to use TLS properly.
 
-Additional cases, such as NFSv4 clients running in containers, also
-need unique and persistent identifiers. The Linux NFS community
-sets forth this explanation to aid those who create and manage
-container environments.
+In the long run, our preference is to have a TLS handshake
+implementation in the kernel. However, it appears that would take a
+long time and there is some desire to avoid adding to the Linux
+kernel's "attack surface" without good reasons. So in the meantime
+we've created a prototype handshake implementation that calls out to
+user space where the actual handshake can be done by an existing
+library implementation of TLS.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+The prototype serves several purposes, including:
+
+- Proof of concept: can a handshake upcall actually be implemented?
+
+- Scaffold to enable prototyping upper-layer protocol support for TLS:
+  Is there any demand for in-kernel TLS?
+
+- Performance impact of always-on encryption with both software and
+  hardware kTLS
+
+- Understanding what features, if any, an upcall handshake cannot
+  provide
+
+The prototype currently supports client-side PSK and anonymous
+x.509 ClientHello. We would like some feedback on the approach
+before proceeding with ServerHello and mutual x.509 authentication.
+
+
+User agent: https://github.com/oracle/ktls-utils
+
+Who will use this implementation?
+--------------------------------
+
+This series implements only the upcall. I plan to post a second
+series that shows how it can be used to implement the RPC-with-TlS
+standard: https://datatracker.ietf.org/doc/draft-ietf-nfsv4-rpc-tls/
+
+https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git topic-rpc-with-tls
+
+Dr. Hannes Reinecke has a series that implements NVMe-TLS here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/hare/scsi-devel.git tls-upcall.v4
+
+We are also working with a few developers in the CIFS community
+who are interested in SMB-over-QUIC. QUICv1 (RFC 9000) uses the
+TLSv1.3 handshake protocol, and we hope they can leverage this
+prototype capability when QUIC comes to the Linux kernel.
+
 ---
- .../filesystems/nfs/client-identifier.rst          |  216 ++++++++++++++++++++
- Documentation/filesystems/nfs/index.rst            |    2 
- 2 files changed, 218 insertions(+)
- create mode 100644 Documentation/filesystems/nfs/client-identifier.rst
+
+Chuck Lever (4):
+      net: Add distinct sk_psock field
+      net/tls: Add an AF_TLSH address family
+      net/tls: Add support for PF_TLSH (a TLS handshake listener)
+      net/tls: Add observability for AF_TLSH sockets
+
+Hannes Reinecke (1):
+      tls: build proto after context has been initialized
 
 
-Changes since v1:
-- Addressed Neil's review comments
-- Added a proper SPDX tag
+ .../networking/tls-in-kernel-handshake.rst    |  103 ++
+ include/linux/skmsg.h                         |    2 +-
+ include/linux/socket.h                        |    5 +-
+ include/net/sock.h                            |    7 +-
+ include/net/tls.h                             |   15 +
+ include/net/tlsh.h                            |   22 +
+ include/uapi/linux/tls.h                      |   16 +
+ net/core/skmsg.c                              |    6 +-
+ net/core/sock.c                               |    4 +-
+ net/socket.c                                  |    1 +
+ net/tls/Makefile                              |    2 +-
+ net/tls/af_tlsh.c                             | 1078 +++++++++++++++++
+ net/tls/tls_main.c                            |   13 +-
+ net/tls/trace.c                               |    3 +
+ net/tls/trace.h                               |  355 ++++++
+ security/selinux/hooks.c                      |    4 +-
+ security/selinux/include/classmap.h           |    4 +-
+ .../perf/trace/beauty/include/linux/socket.h  |    4 +-
+ 18 files changed, 1631 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/networking/tls-in-kernel-handshake.rst
+ create mode 100644 include/net/tlsh.h
+ create mode 100644 net/tls/af_tlsh.c
 
-
-diff --git a/Documentation/filesystems/nfs/client-identifier.rst b/Documentation/filesystems/nfs/client-identifier.rst
-new file mode 100644
-index 000000000000..5147e15815a1
---- /dev/null
-+++ b/Documentation/filesystems/nfs/client-identifier.rst
-@@ -0,0 +1,216 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+NFSv4 client identifier
-+=======================
-+
-+This document explains how the NFSv4 protocol identifies client
-+instances in order to maintain file open and lock state during
-+system restarts. A special identifier and principal are maintained
-+on each client. These can be set by administrators, scripts
-+provided by site administrators, or tools provided by Linux
-+distributors.
-+
-+There are risks if a client's NFSv4 identifier and its principal
-+are not chosen carefully.
-+
-+
-+Introduction
-+------------
-+
-+The NFSv4 protocol uses "lease-based file locking". Leases help
-+NFSv4 servers provide file lock guarantees and manage their
-+resources.
-+
-+Simply put, an NFSv4 server creates a lease for each NFSv4 client.
-+The server collects each client's file open and lock state under
-+the lease for that client.
-+
-+The client is responsible for periodically renewing its leases.
-+While a lease remains valid, the server holding that lease
-+guarantees the file locks the client has created remain in place.
-+
-+If a client stops renewing its lease (for example, if it crashes),
-+the NFSv4 protocol allows the server to remove the client's open
-+and lock state after a certain period of time. When a client
-+restarts, it indicates to servers that open and lock state
-+associated with its previous leases is no longer valid and can be
-+destroyed immediately.
-+
-+In addition, each NFSv4 server manages a persistent list of client
-+leases. When the server restarts and clients attempt to recover
-+their state, the server uses this list to distinguish amongst
-+clients that held state before the server restarted and clients
-+sending fresh OPEN and LOCK requests. This enables file locks to
-+persist safely across server restarts.
-+
-+NFSv4 client identifiers
-+------------------------
-+
-+Each NFSv4 client presents an identifier to NFSv4 servers so that
-+they can associate the client with its lease. Each client's
-+identifier consists of two elements:
-+
-+  - co_ownerid: An arbitrary but fixed string.
-+
-+  - boot verifier: A 64-bit incarnation verifier that enables a
-+    server to distinguish successive boot epochs of the same client.
-+
-+The NFSv4.0 specification refers to these two items as an
-+"nfs_client_id4". The NFSv4.1 specification refers to these two
-+items as a "client_owner4".
-+
-+NFSv4 servers tie this identifier to the principal and security
-+flavor that the client used when presenting it. Servers use this
-+principal to authorize subsequent lease modification operations
-+sent by the client. Effectively this principal is a third element of
-+the identifier.
-+
-+As part of the identity presented to servers, a good
-+"co_ownerid" string has several important properties:
-+
-+  - The "co_ownerid" string identifies the client during reboot
-+    recovery, therefore the string is persistent across client
-+    reboots.
-+  - The "co_ownerid" string helps servers distinguish the client
-+    from others, therefore the string is globally unique. Note
-+    that there is no central authority that assigns "co_ownerid"
-+    strings.
-+  - Because it often appears on the network in the clear, the
-+    "co_ownerid" string does not reveal private information about
-+    the client itself.
-+  - The content of the "co_ownerid" string is set and unchanging
-+    before the client attempts NFSv4 mounts after a restart.
-+  - The NFSv4 protocol places a 1024-byte limit on the size of the
-+    "co_ownerid" string.
-+
-+Protecting NFSv4 lease state
-+----------------------------
-+
-+NFSv4 servers utilize the "client_owner4" as described above to
-+assign a unique lease to each client. Under this scheme, there are
-+circumstances where clients can interfere with each other. This is
-+referred to as "lease stealing".
-+
-+If distinct clients present the same "co_ownerid" string and use
-+the same principal (for example, AUTH_SYS and UID 0), a server is
-+unable to tell that the clients are not the same. Each distinct
-+client presents a different boot verifier, so it appears to the
-+server as if there is one client that is rebooting frequently.
-+Neither client can maintain open or lock state in this scenario.
-+
-+If distinct clients present the same "co_ownerid" string and use
-+distinct principals, the server is likely to allow the first client
-+to operate normally but reject subsequent clients with the same
-+"co_ownerid" string.
-+
-+If a client's "co_ownerid" string or principal are not stable,
-+state recovery after a server or client reboot is not guaranteed.
-+If a client unexpectedly restarts but presents a different
-+"co_ownerid" string or principal to the server, the server orphans
-+the client's previous open and lock state. This blocks access to
-+locked files until the server removes the orphaned state.
-+
-+If the server restarts and a client presents a changed "co_ownerid"
-+string or principal to the server, the server will not allow the
-+client to reclaim its open and lock state, and may give those locks
-+to other clients in the meantime. This is referred to as "lock
-+stealing".
-+
-+Lease stealing and lock stealing increase the potential for denial
-+of service and in rare cases even data corruption.
-+
-+Selecting an appropriate client identifier
-+------------------------------------------
-+
-+By default, the Linux NFSv4 client implementation constructs its
-+"co_ownerid" string starting with the words "Linux NFS" followed by
-+the client's UTS node name (the same node name, incidentally, that
-+is used as the "machine name" in an AUTH_SYS credential). In small
-+deployments, this construction is usually adequate. Often, however,
-+the node name by itself is not adequately unique, and can change
-+unexpectedly. Problematic situations include:
-+
-+  - NFS-root (diskless) clients, where the local DCHP server (or
-+    equivalent) does not provide a unique host name.
-+
-+  - "Containers" within a single Linux host.  If each container has
-+    a separate network namespace, but does not use the UTS namespace
-+    to provide a unique host name, then there can be multiple NFS
-+    client instances with the same host name.
-+
-+  - Clients across multiple administrative domains that access a
-+    common NFS server. If hostnames are not assigned centrally
-+    then uniqueness cannot be guaranteed unless a domain name is
-+    included in the hostname.
-+
-+Linux provides two mechanisms to add uniqueness to its "co_ownerid"
-+string:
-+
-+    nfs.nfs4_unique_id
-+      This module parameter can set an arbitrary uniquifier string
-+      via the kernel command line, or when the "nfs" module is
-+      loaded.
-+
-+    /sys/fs/nfs/client/net/identifier
-+      This virtual file, available since Linux 5.3, is local to the
-+      network namespace in which it is accessed and so can provide
-+      distinction between network namespaces (containers) when the
-+      hostname remains uniform.
-+
-+Note that this file is empty on name-space creation. If the
-+container system has access to some sort of per-container identity
-+then that uniquifier can be used. For example, a uniquifier might
-+be formed at boot using the container's internal identifier:
-+
-+    sha256sum /etc/machine-id | awk '{print $1}' \\
-+        > /sys/fs/nfs/client/net/identifier
-+
-+Security considerations
-+-----------------------
-+
-+The use of cryptographic security for lease management operations
-+is strongly encouraged.
-+
-+If NFS with Kerberos is not configured, a Linux NFSv4 client uses
-+AUTH_SYS and UID 0 as the principal part of its client identity.
-+This configuration is not only insecure, it increases the risk of
-+lease and lock stealing. However, it might be the only choice for
-+client configurations that have no local persistent storage.
-+"co_ownerid" string uniqueness and persistence is critical in this
-+case.
-+
-+When a Kerberos keytab is present on a Linux NFS client, the client
-+attempts to use one of the principals in that keytab when
-+identifying itself to servers. The "sec=" mount option does not
-+control this behavior. Alternately, a single-user client with a
-+Kerberos principal can use that principal in place of the client's
-+host principal.
-+
-+Using Kerberos for this purpose enables the client and server to
-+use the same lease for operations covered by all "sec=" settings.
-+Additionally, the Linux NFS client uses the RPCSEC_GSS security
-+flavor with Kerberos and the integrity QOS to prevent in-transit
-+modification of lease modification requests.
-+
-+Additional notes
-+----------------
-+The Linux NFSv4 client establishes a single lease on each NFSv4
-+server it accesses. NFSv4 mounts from a Linux NFSv4 client of a
-+particular server then share that lease.
-+
-+Once a client establishes open and lock state, the NFSv4 protocol
-+enables lease state to transition to other servers, following data
-+that has been migrated. This hides data migration completely from
-+running applications. The Linux NFSv4 client facilitates state
-+migration by presenting the same "client_owner4" to all servers it
-+encounters.
-+
-+========
-+See Also
-+========
-+
-+  - nfs(5)
-+  - kerberos(7)
-+  - RFC 7530 for the NFSv4.0 specification
-+  - RFC 8881 for the NFSv4.1 specification.
-diff --git a/Documentation/filesystems/nfs/index.rst b/Documentation/filesystems/nfs/index.rst
-index 288d8ddb2bc6..8536134f31fd 100644
---- a/Documentation/filesystems/nfs/index.rst
-+++ b/Documentation/filesystems/nfs/index.rst
-@@ -6,6 +6,8 @@ NFS
- .. toctree::
-    :maxdepth: 1
- 
-+   client-identifier
-+   exporting
-    pnfs
-    rpc-cache
-    rpc-server-gss
-
+--
+Chuck Lever
 
