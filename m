@@ -2,74 +2,38 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C792505B71
-	for <lists+linux-nfs@lfdr.de>; Mon, 18 Apr 2022 17:40:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B895D505C2A
+	for <lists+linux-nfs@lfdr.de>; Mon, 18 Apr 2022 17:58:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245488AbiDRPnR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Apr 2022 11:43:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53008 "EHLO
+        id S236685AbiDRQBf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 18 Apr 2022 12:01:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345661AbiDRPmx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Apr 2022 11:42:53 -0400
-Received: from sonic311-30.consmr.mail.ne1.yahoo.com (sonic311-30.consmr.mail.ne1.yahoo.com [66.163.188.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E5FD34660
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Apr 2022 08:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1650294486; bh=At4+NxZXv0MZomzONJVkImtyKnD/GEtK+yc2Jid0QkM=; h=From:To:Cc:Subject:Date:In-Reply-To:References:From:Subject:Reply-To; b=hXeK59YACZjLWOMQj803iSWV8jcVcorn7ovF6z/xi2i1hEobn31g92tJ7/0IDu5ezosJW798gTNDu/iyp396QwqskaD238H1eOkp5u0iDOG4oVmQa/zKL1xcbXcDPKqdpU5YMz15Kpz98T48k9JPWzJ1pm5RQicLDnZ3vOxs4XlPJUuir0Czg0m0p7Vu6V0wapqfCOLKuaap1fmFxj8Lq+gMu9TvEL/L4lRBhHEi9d11lslHH00OR/Fdr3t2D6ZynphvG2RLmtZ+7t45vBXtBNS0Q1AnAd9AE3GDUHpfzOv5pNVWwuSCZvt2kUgby6S6vZUP8IxsPJr8OyLDvsCCWQ==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1650294486; bh=THlOm56qqLM7jjy0oWlv79uA8dQtJmJQAV3MybDiqEI=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=S79kxUiTvDUqzeDjNxwMfzaLdUwRmz59BgUKvVzePzbTT+FC7mEmmREnhK8Yl4P75jBPR2WmWooM78cHm3tOnc8Z5VYIwI0ia0DVUpOcG8sMiMG9woAQqhhD9Zpuc/oLjNE6SMIV/mCLspltUA96nQz1uBYKn83ffKLYJhKl1nTFRngpdx8QT1uucfTzfLwAEhQNw9Q2HLi3IbtVRpIhZK7fLDntMUnwjhrbf8UoNqChnqMfqftCSvztyNdlQrBft9SthGV78/FWFo07pWVgzd99PEHz23BqE7+j9LvpSFP+615o5dGNcIuM7cAHckSqN0PMYWbyYdlmy0RmrItD1w==
-X-YMail-OSG: ufkWR7wVM1n7OFEt.pWhiGRlSa88oZ5wh5LJ3zGwE23j4wzdpLB34OZNa6YOms0
- g..BUGMZGdpxyN8IDqWowjOuAHIM527Za2T34KZt78L4syj5seunfqtRpqjxDDg2NZnbcLScVDOv
- rNBCxvzlnaC6HIEI7BP9vG5UOjt7HC6jBVUYFhIk2s9dJRkIkE8HsoTfjmU5nbQaa9pTv.C8ZYP5
- jLT1jcWI2e21n0hyExpXlRryUs4Khp6d6cKDZ99Kzt23lLZMs0xYwFO7l39aQNqqrV4vrt6W15gl
- Oqetm3Q520uG.e.7LHtJRPGqAnf8B9BYfEy05hOyxkWZ2eRZhsvcPSIxBfcT3Bi3EQcVVa9_OrAo
- fTvA9ZlowqqIWs4wa7Ct_i6Ru3VrdFWlTBZ.evYbvPlrMURuh6dtKUfAIRi0F_vAtCILG_beCcLN
- 0kpIdEvMjLpJsNlg7GOUFEOvWnnJe02SfbnHyw9wXC40oEVbZMtbj21oz24Vy8OdE1GW2YQ2VfNP
- lk8cqgZyUXZOcKN5vsDsV8OQG9DvqQuwf31GAGulyYM7I2.SBlDmrzEdNifiWb1bEes_OWmlpdWA
- k8l0jnnNrffxiY21cWa940r7z4TVWqprFGTtN2v2gHE2oJkW_3tR1CAtrr6BTZ_hKLMklNM3oYqY
- lRcwBykzrPMwlwNv9MrX_2p1VuVGDMaPVjci2LgDjUUlZb9AVKIkimMeMdd2RtPZcDf7sAwY.kOq
- EyPRg0YqkPScouJqSm0y2xta7A6gQnrLYSm4NQ7WlmodlzPoS0wILtsjEVPSQO9i6q5buxbiLrxN
- mnOTTxK1HauMbXimIxhn3aVzOZZErk5KBkHzOZ.Ayn8pSc2w.TpJkFR8BWZI6zE5bVlox2gHZaNZ
- 3OY5BR1t9C6W_uU7z91zJKTXv5l.UI.9htkQm8mBngYCSbdTB9aOv4o6ieKbWLqGVbF_tSl29xPE
- buDckv.R6iOhI.hjdszgIbfVmLxCPAkUlVAgYiKCSARJCfNOL2vIWqxtWLNl8GiE7o7mkjIFYS4g
- ctqAZX4IyrLzktTuMmMOflpMEZ5m7_22OjQBO5a0np2cnH6RjNIlQ.7JWBa.boq2xVULMZjpZXR3
- bc2xRbeHDb3SXNGqOt85KgFWhBheMDXakVx6.KYTNt4C0uyLvw6eSTEDvveBKio3JlUXx.MzJ267
- 4z65xhkLcgtC3RST_WbQ0C1D3163qkrAVXImYumEDUnebTP2Jg2vnKNwnCWqItJ77K4Yx7N0ZTt0
- zRe3I7keXi8YQNEUu7XaTCgVp0jGUJrxBzs9zS_PoylNKMNXE7pfmskPojcuywJRKdzasYs7Yudk
- nbMEX3TfHxlkXYH1QRcrdvo4AEUPPQC0zRbN6ZYslanvC711nhuTowdUKvs1HflqItYCuazQk271
- cJMqXnYU4sXTkfw64.bApcCB9AEtZRQoxZ2XVnQhAw41Tz.2k4k3JR..TlyT5lWZL79SCe5FR5J2
- fpcEZrc7vt6wApJ0A59Rs0I_nlzpJrhgJ6iW1ZO.TJ0mRN7nLjNxT53nGcZjLrdVjS2eDwhZUoLj
- WmhmJCV03qASl5_1l0fYHWycmwqMV9uP45CpXaTW5m2_tWU7HqDtseq3.HXSpspX531Eb_JTY8Ho
- fc8LaMNeJpZRo7M6IP4MzPZl5G.ZVAWMt.Akyc20.QBwI5b6yA6D7DLj7jA4bEplqRPkJ5RcfVMd
- SMBWtJR6iM0931NvVCcSKHLPT42RTHuwEbtulv21hKeO5vrh2KI47_urCstOmR.8QDCieUJZ8fiZ
- 3Sa90v4dR7VtPl7OfPK3k4EbGM.XcKZn6N1OnB3_cA3HdYa8_KqiosKBLk5Ycxv_O4WT3faLig5d
- YuwfagfP0sqohS9mpdbVby7KVBnyV0HGoT5KEPIKnGVP65l1_plUFKx8JvTGAXmLBzdL8PrdJbcU
- mjFrFNIMJE8JJoVZO5LEGjI4TaffPIOUqqTtMPtF2kdzHVSWcPYrbllg1KfL6Qn2QO8LNvdv4INx
- rTwMVMpwMLEHrj5YdZo2viWiQ.vMHebunv1Ikf6LVV6igII3waB6oyV5DXgb1IMonQAuzfDeFiZX
- 8rzbUOQ3bsiRT9FPdvNF07AUSh8nuC3up.SxJmuBMFdEm96B7Rd_WyUqr21VqMtdsyXNv7JGsVQt
- AbK54ChIcQ6LVAJP6BmvgG624cG6mA_CO8fs6OD378qN.Vlrj_e_wD7GZTD.HR703CxkEu7iojQG
- mufYvn.Gm6sfZ41gUXJhNthMG4VEzsshQohWyYOpdLRPTKqv1dcLqDFiFlHr4HJdEaJ3X4hZdqYA
- QZUeaCX.QByRq5_o7eJhJqHzVfkjWGuVdE6k8ghalTuubx1as492gb4tmWA--
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic311.consmr.mail.ne1.yahoo.com with HTTP; Mon, 18 Apr 2022 15:08:06 +0000
-Received: by hermes--canary-production-ne1-c7c4f6977-qcc8c (VZM Hermes SMTP Server) with ESMTPA ID 2afd461de5a55bc64b17c8606f02f3b8;
-          Mon, 18 Apr 2022 15:08:00 +0000 (UTC)
-From:   Casey Schaufler <casey@schaufler-ca.com>
-To:     casey.schaufler@intel.com, jmorris@namei.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org
-Cc:     casey@schaufler-ca.com, linux-audit@redhat.com,
-        keescook@chromium.org, john.johansen@canonical.com,
-        penguin-kernel@i-love.sakura.ne.jp, paul@paul-moore.com,
-        stephen.smalley.work@gmail.com, linux-kernel@vger.kernel.org,
-        Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v35 17/29] LSM: Use lsmcontext in security_inode_getsecctx
-Date:   Mon, 18 Apr 2022 07:59:33 -0700
-Message-Id: <20220418145945.38797-18-casey@schaufler-ca.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220418145945.38797-1-casey@schaufler-ca.com>
-References: <20220418145945.38797-1-casey@schaufler-ca.com>
+        with ESMTP id S236683AbiDRQBe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Apr 2022 12:01:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D96B2216
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Apr 2022 08:58:54 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 74E04B81012
+        for <linux-nfs@vger.kernel.org>; Mon, 18 Apr 2022 15:58:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C940C385A7;
+        Mon, 18 Apr 2022 15:58:51 +0000 (UTC)
+Subject: [PATCH v2] Documentation: Add an explanation of NFSv4 client
+ identifiers
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     trond.myklebust@primarydata.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Mon, 18 Apr 2022 11:58:50 -0400
+Message-ID: <165029751204.8305.958477650360928356.stgit@bazille.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,150 +41,267 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Change the security_inode_getsecctx() interface to fill
-a lsmcontext structure instead of data and length pointers.
-This provides the information about which LSM created the
-context so that security_release_secctx() can use the
-correct hook.
+To enable NFSv4 to work correctly, NFSv4 client identifiers have
+to be globally unique and persistent over client reboots. We
+believe that in many cases, a good default identifier can be
+chosen and set when a client system is imaged.
 
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Acked-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Reviewed-by: John Johansen <john.johansen@canonical.com>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
-Cc: linux-nfs@vger.kernel.org
+Because there are many different ways a system can be imaged,
+provide an explanation of how NFSv4 client identifiers and
+principals can be set by install scripts and imaging tools.
+
+Additional cases, such as NFSv4 clients running in containers, also
+need unique and persistent identifiers. The Linux NFS community
+sets forth this explanation to aid those who create and manage
+container environments.
+
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c        | 23 +++++++++--------------
- include/linux/security.h |  5 +++--
- security/security.c      | 13 +++++++++++--
- 3 files changed, 23 insertions(+), 18 deletions(-)
+ .../filesystems/nfs/client-identifier.rst          |  216 ++++++++++++++++++++
+ Documentation/filesystems/nfs/index.rst            |    2 
+ 2 files changed, 218 insertions(+)
+ create mode 100644 Documentation/filesystems/nfs/client-identifier.rst
 
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 77388b5ece56..b1505fbfb2e9 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2713,11 +2713,11 @@ nfsd4_encode_layout_types(struct xdr_stream *xdr, u32 layout_types)
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- {
- 	__be32 *p;
- 
--	p = xdr_reserve_space(xdr, len + 4 + 4 + 4);
-+	p = xdr_reserve_space(xdr, context->len + 4 + 4 + 4);
- 	if (!p)
- 		return nfserr_resource;
- 
-@@ -2727,13 +2727,13 @@ nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
- 	 */
- 	*p++ = cpu_to_be32(0); /* lfs */
- 	*p++ = cpu_to_be32(0); /* pi */
--	p = xdr_encode_opaque(p, context, len);
-+	p = xdr_encode_opaque(p, context->context, context->len);
- 	return 0;
- }
- #else
- static inline __be32
- nfsd4_encode_security_label(struct xdr_stream *xdr, struct svc_rqst *rqstp,
--			    void *context, int len)
-+			    struct lsmcontext *context)
- { return 0; }
- #endif
- 
-@@ -2830,9 +2830,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	int err;
- 	struct nfs4_acl *acl = NULL;
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	struct lsmcontext scaff; /* scaffolding */
--	void *context = NULL;
--	int contextlen;
-+	struct lsmcontext context = { };
- #endif
- 	bool contextsupport = false;
- 	struct nfsd4_compoundres *resp = rqstp->rq_resp;
-@@ -2893,7 +2891,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 	     bmval0 & FATTR4_WORD0_SUPPORTED_ATTRS) {
- 		if (exp->ex_flags & NFSEXP_SECURITY_LABEL)
- 			err = security_inode_getsecctx(d_inode(dentry),
--						&context, &contextlen);
-+						       &context);
- 		else
- 			err = -EOPNOTSUPP;
- 		contextsupport = (err == 0);
-@@ -3320,8 +3318,7 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
- 	if (bmval2 & FATTR4_WORD2_SECURITY_LABEL) {
--		status = nfsd4_encode_security_label(xdr, rqstp, context,
--								contextlen);
-+		status = nfsd4_encode_security_label(xdr, rqstp, &context);
- 		if (status)
- 			goto out;
- 	}
-@@ -3342,10 +3339,8 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct svc_fh *fhp,
- 
- out:
- #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
--	if (context) {
--		lsmcontext_init(&scaff, context, contextlen, 0); /*scaffolding*/
--		security_release_secctx(&scaff);
--	}
-+	if (context.context)
-+		security_release_secctx(&context);
- #endif /* CONFIG_NFSD_V4_SECURITY_LABEL */
- 	kfree(acl);
- 	if (tempfh) {
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 945b21f6ffa4..dc66f3f48456 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -622,7 +622,7 @@ void security_release_secctx(struct lsmcontext *cp);
- void security_inode_invalidate_secctx(struct inode *inode);
- int security_inode_notifysecctx(struct inode *inode, void *ctx, u32 ctxlen);
- int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen);
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen);
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp);
- int security_locked_down(enum lockdown_reason what);
- #else /* CONFIG_SECURITY */
- 
-@@ -1498,7 +1498,8 @@ static inline int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32
- {
- 	return -EOPNOTSUPP;
- }
--static inline int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+static inline int security_inode_getsecctx(struct inode *inode,
-+					   struct lsmcontext *cp)
- {
- 	return -EOPNOTSUPP;
- }
-diff --git a/security/security.c b/security/security.c
-index 91e9c8341a55..64073d807240 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -2434,9 +2434,18 @@ int security_inode_setsecctx(struct dentry *dentry, void *ctx, u32 ctxlen)
- }
- EXPORT_SYMBOL(security_inode_setsecctx);
- 
--int security_inode_getsecctx(struct inode *inode, void **ctx, u32 *ctxlen)
-+int security_inode_getsecctx(struct inode *inode, struct lsmcontext *cp)
- {
--	return call_int_hook(inode_getsecctx, -EOPNOTSUPP, inode, ctx, ctxlen);
-+	struct security_hook_list *hp;
+
+Changes since v1:
+- Addressed Neil's review comments
+- Added a proper SPDX tag
+
+
+diff --git a/Documentation/filesystems/nfs/client-identifier.rst b/Documentation/filesystems/nfs/client-identifier.rst
+new file mode 100644
+index 000000000000..5147e15815a1
+--- /dev/null
++++ b/Documentation/filesystems/nfs/client-identifier.rst
+@@ -0,0 +1,216 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+	memset(cp, 0, sizeof(*cp));
++=======================
++NFSv4 client identifier
++=======================
 +
-+	hlist_for_each_entry(hp, &security_hook_heads.inode_getsecctx, list) {
-+		cp->slot = hp->lsmid->slot;
-+		return hp->hook.inode_getsecctx(inode, (void **)&cp->context,
-+						&cp->len);
-+	}
-+	return -EOPNOTSUPP;
- }
- EXPORT_SYMBOL(security_inode_getsecctx);
++This document explains how the NFSv4 protocol identifies client
++instances in order to maintain file open and lock state during
++system restarts. A special identifier and principal are maintained
++on each client. These can be set by administrators, scripts
++provided by site administrators, or tools provided by Linux
++distributors.
++
++There are risks if a client's NFSv4 identifier and its principal
++are not chosen carefully.
++
++
++Introduction
++------------
++
++The NFSv4 protocol uses "lease-based file locking". Leases help
++NFSv4 servers provide file lock guarantees and manage their
++resources.
++
++Simply put, an NFSv4 server creates a lease for each NFSv4 client.
++The server collects each client's file open and lock state under
++the lease for that client.
++
++The client is responsible for periodically renewing its leases.
++While a lease remains valid, the server holding that lease
++guarantees the file locks the client has created remain in place.
++
++If a client stops renewing its lease (for example, if it crashes),
++the NFSv4 protocol allows the server to remove the client's open
++and lock state after a certain period of time. When a client
++restarts, it indicates to servers that open and lock state
++associated with its previous leases is no longer valid and can be
++destroyed immediately.
++
++In addition, each NFSv4 server manages a persistent list of client
++leases. When the server restarts and clients attempt to recover
++their state, the server uses this list to distinguish amongst
++clients that held state before the server restarted and clients
++sending fresh OPEN and LOCK requests. This enables file locks to
++persist safely across server restarts.
++
++NFSv4 client identifiers
++------------------------
++
++Each NFSv4 client presents an identifier to NFSv4 servers so that
++they can associate the client with its lease. Each client's
++identifier consists of two elements:
++
++  - co_ownerid: An arbitrary but fixed string.
++
++  - boot verifier: A 64-bit incarnation verifier that enables a
++    server to distinguish successive boot epochs of the same client.
++
++The NFSv4.0 specification refers to these two items as an
++"nfs_client_id4". The NFSv4.1 specification refers to these two
++items as a "client_owner4".
++
++NFSv4 servers tie this identifier to the principal and security
++flavor that the client used when presenting it. Servers use this
++principal to authorize subsequent lease modification operations
++sent by the client. Effectively this principal is a third element of
++the identifier.
++
++As part of the identity presented to servers, a good
++"co_ownerid" string has several important properties:
++
++  - The "co_ownerid" string identifies the client during reboot
++    recovery, therefore the string is persistent across client
++    reboots.
++  - The "co_ownerid" string helps servers distinguish the client
++    from others, therefore the string is globally unique. Note
++    that there is no central authority that assigns "co_ownerid"
++    strings.
++  - Because it often appears on the network in the clear, the
++    "co_ownerid" string does not reveal private information about
++    the client itself.
++  - The content of the "co_ownerid" string is set and unchanging
++    before the client attempts NFSv4 mounts after a restart.
++  - The NFSv4 protocol places a 1024-byte limit on the size of the
++    "co_ownerid" string.
++
++Protecting NFSv4 lease state
++----------------------------
++
++NFSv4 servers utilize the "client_owner4" as described above to
++assign a unique lease to each client. Under this scheme, there are
++circumstances where clients can interfere with each other. This is
++referred to as "lease stealing".
++
++If distinct clients present the same "co_ownerid" string and use
++the same principal (for example, AUTH_SYS and UID 0), a server is
++unable to tell that the clients are not the same. Each distinct
++client presents a different boot verifier, so it appears to the
++server as if there is one client that is rebooting frequently.
++Neither client can maintain open or lock state in this scenario.
++
++If distinct clients present the same "co_ownerid" string and use
++distinct principals, the server is likely to allow the first client
++to operate normally but reject subsequent clients with the same
++"co_ownerid" string.
++
++If a client's "co_ownerid" string or principal are not stable,
++state recovery after a server or client reboot is not guaranteed.
++If a client unexpectedly restarts but presents a different
++"co_ownerid" string or principal to the server, the server orphans
++the client's previous open and lock state. This blocks access to
++locked files until the server removes the orphaned state.
++
++If the server restarts and a client presents a changed "co_ownerid"
++string or principal to the server, the server will not allow the
++client to reclaim its open and lock state, and may give those locks
++to other clients in the meantime. This is referred to as "lock
++stealing".
++
++Lease stealing and lock stealing increase the potential for denial
++of service and in rare cases even data corruption.
++
++Selecting an appropriate client identifier
++------------------------------------------
++
++By default, the Linux NFSv4 client implementation constructs its
++"co_ownerid" string starting with the words "Linux NFS" followed by
++the client's UTS node name (the same node name, incidentally, that
++is used as the "machine name" in an AUTH_SYS credential). In small
++deployments, this construction is usually adequate. Often, however,
++the node name by itself is not adequately unique, and can change
++unexpectedly. Problematic situations include:
++
++  - NFS-root (diskless) clients, where the local DCHP server (or
++    equivalent) does not provide a unique host name.
++
++  - "Containers" within a single Linux host.  If each container has
++    a separate network namespace, but does not use the UTS namespace
++    to provide a unique host name, then there can be multiple NFS
++    client instances with the same host name.
++
++  - Clients across multiple administrative domains that access a
++    common NFS server. If hostnames are not assigned centrally
++    then uniqueness cannot be guaranteed unless a domain name is
++    included in the hostname.
++
++Linux provides two mechanisms to add uniqueness to its "co_ownerid"
++string:
++
++    nfs.nfs4_unique_id
++      This module parameter can set an arbitrary uniquifier string
++      via the kernel command line, or when the "nfs" module is
++      loaded.
++
++    /sys/fs/nfs/client/net/identifier
++      This virtual file, available since Linux 5.3, is local to the
++      network namespace in which it is accessed and so can provide
++      distinction between network namespaces (containers) when the
++      hostname remains uniform.
++
++Note that this file is empty on name-space creation. If the
++container system has access to some sort of per-container identity
++then that uniquifier can be used. For example, a uniquifier might
++be formed at boot using the container's internal identifier:
++
++    sha256sum /etc/machine-id | awk '{print $1}' \\
++        > /sys/fs/nfs/client/net/identifier
++
++Security considerations
++-----------------------
++
++The use of cryptographic security for lease management operations
++is strongly encouraged.
++
++If NFS with Kerberos is not configured, a Linux NFSv4 client uses
++AUTH_SYS and UID 0 as the principal part of its client identity.
++This configuration is not only insecure, it increases the risk of
++lease and lock stealing. However, it might be the only choice for
++client configurations that have no local persistent storage.
++"co_ownerid" string uniqueness and persistence is critical in this
++case.
++
++When a Kerberos keytab is present on a Linux NFS client, the client
++attempts to use one of the principals in that keytab when
++identifying itself to servers. The "sec=" mount option does not
++control this behavior. Alternately, a single-user client with a
++Kerberos principal can use that principal in place of the client's
++host principal.
++
++Using Kerberos for this purpose enables the client and server to
++use the same lease for operations covered by all "sec=" settings.
++Additionally, the Linux NFS client uses the RPCSEC_GSS security
++flavor with Kerberos and the integrity QOS to prevent in-transit
++modification of lease modification requests.
++
++Additional notes
++----------------
++The Linux NFSv4 client establishes a single lease on each NFSv4
++server it accesses. NFSv4 mounts from a Linux NFSv4 client of a
++particular server then share that lease.
++
++Once a client establishes open and lock state, the NFSv4 protocol
++enables lease state to transition to other servers, following data
++that has been migrated. This hides data migration completely from
++running applications. The Linux NFSv4 client facilitates state
++migration by presenting the same "client_owner4" to all servers it
++encounters.
++
++========
++See Also
++========
++
++  - nfs(5)
++  - kerberos(7)
++  - RFC 7530 for the NFSv4.0 specification
++  - RFC 8881 for the NFSv4.1 specification.
+diff --git a/Documentation/filesystems/nfs/index.rst b/Documentation/filesystems/nfs/index.rst
+index 288d8ddb2bc6..8536134f31fd 100644
+--- a/Documentation/filesystems/nfs/index.rst
++++ b/Documentation/filesystems/nfs/index.rst
+@@ -6,6 +6,8 @@ NFS
+ .. toctree::
+    :maxdepth: 1
  
--- 
-2.35.1
++   client-identifier
++   exporting
+    pnfs
+    rpc-cache
+    rpc-server-gss
+
 
