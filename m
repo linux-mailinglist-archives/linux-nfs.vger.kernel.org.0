@@ -2,73 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D34FA507A89
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 21:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C39C507A8A
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 21:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244527AbiDST7B (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Apr 2022 15:59:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50988 "EHLO
+        id S1345068AbiDSUAb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Apr 2022 16:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240510AbiDST7A (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 15:59:00 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E81F26562
-        for <linux-nfs@vger.kernel.org>; Tue, 19 Apr 2022 12:56:16 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id u3so23897469wrg.3
-        for <linux-nfs@vger.kernel.org>; Tue, 19 Apr 2022 12:56:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=BJ1t1/kNntgUuD3efr/7SKOKpx6bEKehZyOENyPE/oo=;
-        b=DQ2sTR2L0pvXXl0gI9V/HRvgLH8N+LSZb5TJg2cnHz0HM6WZdpwtb+Iz/P8/UFlmQ+
-         q1nktunLfFd1mI8JLtvq+X6SHrambJmyNOP3RNpwe+f79BrIqyFoF/IzZ5j9VBVJ2s8b
-         /zjxBuprM5PjNWCVZugjwVMf5jybjSzhVGaP/0/vlyJo1qNi/IyXTs6R1Ql0ZtdFJyK3
-         rdcywSeCI0yKgw4MYZF9iAtBDKzH65pnEsgjHbRN0/pi99VMUnGTU0UZzsMaw77a9Fu9
-         GpUf+16g+AeoeRtwxEzBQBm1iKOopDVZhFV4Dp4C06tXs+2btIkfdlB33E0FQt54Ah4J
-         dPEA==
+        with ESMTP id S240510AbiDSUAa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 16:00:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1797E26562
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Apr 2022 12:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1650398262;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mY76h2ebeEbaMrVhFseUjO+nXeDJ6eyP8Az/7canwDY=;
+        b=bJRPiPAtNDZQVHJAWxIVk2jBK+XGTh1m0OM9NmNDLJfJoFNi4R54cY4EIe5j4/Wi5lCK09
+        OGqCJbP3+1AMUkbOPzYJOLNbeOkU17yXEw93bTJs45airA1Uks1di6S8wjEhT5fylvvmTX
+        mDH45nr88BdtNO5xVcxytwRkRcPDE8g=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-347-8YM8DJJOMQiSKrfSkXnCow-1; Tue, 19 Apr 2022 15:57:40 -0400
+X-MC-Unique: 8YM8DJJOMQiSKrfSkXnCow-1
+Received: by mail-qv1-f70.google.com with SMTP id m16-20020ad45050000000b00446393a7a9fso9485635qvq.6
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Apr 2022 12:57:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=BJ1t1/kNntgUuD3efr/7SKOKpx6bEKehZyOENyPE/oo=;
-        b=ds45zTW4LpyNh9DHWJCdJZDPXhEMEVR0ftogF47IhRZoE9tLwAMmCtKdUdXoS1qFBw
-         Z/fy7tMBG8Gv4yeUeNuiRkk/Bd2b3EzKo1y5ergJzbPxHtNURNVf3IKwWB2/EY2+G2Al
-         ReSMWHNh2XSCx3ObQXtHwtQAyHHGJ3MncTq/0UHVhLVPzUpGkbzstEWD1JLrBl5FC0+a
-         lg18fL/tJiMr3bHzyzokJ16uRHGbnJtzcAYy8oUFTez7oFsmXspy3qjgumHRmSVQoy7M
-         7sgRA+P48Qt9adykHhl6eMQs0Hb4K5b6T9IL8A++6v1gouaOtHAN3EjF9OuimyavADHZ
-         KnOw==
-X-Gm-Message-State: AOAM532Iu8mVCOhDbpmPBC+51xBjsdBw/czjPELTTthtl5RBTRMlPu7o
-        T9BKx0NA02vrZwppi3wbPXQ=
-X-Google-Smtp-Source: ABdhPJxC5CEiNYpwhbT+Qilwv7xHA5oU6gnWbdD9t4X/oi0ax6SQJgURoOlV00Tl7NI4PE5bcsDu1A==
-X-Received: by 2002:a5d:4384:0:b0:20a:953a:4681 with SMTP id i4-20020a5d4384000000b0020a953a4681mr8856470wrq.266.1650398174473;
-        Tue, 19 Apr 2022 12:56:14 -0700 (PDT)
-Received: from eldamar (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id f1-20020a1c6a01000000b0038c9f6a3634sm19605651wmc.7.2022.04.19.12.56.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Apr 2022 12:56:14 -0700 (PDT)
-Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
-Date:   Tue, 19 Apr 2022 21:56:13 +0200
-From:   Salvatore Bonaccorso <carnil@debian.org>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Bryan Schumaker <bjschuma@netapp.com>,
-        Ben Hutchings <benh@debian.org>
-Subject: Re: [PATCH] nfs-utils: nfsidmap.man: Fix section number
-Message-ID: <Yl8T3Y5adggNfwa2@eldamar.lan>
-References: <20220412070016.720489-1-carnil@debian.org>
- <f9ec727f-e616-4af8-ac09-2d0fd1f2ae0a@redhat.com>
- <YlXSJspEFVtBvJk0@eldamar.lan>
- <YlvOH5CA+Bvl5yQC@eldamar.lan>
- <af22ce3e-2cc0-b32a-87da-204360cd1b4a@redhat.com>
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=mY76h2ebeEbaMrVhFseUjO+nXeDJ6eyP8Az/7canwDY=;
+        b=DYqt0fxgL26UlzdNf1jTglnRHHe1TJm1bbBmSO2P8D3zETAQaK3IRBvEFfCVC/Bvgj
+         vOVvj4Itf1M5blWiobL1Fgd+TfHdBXux7WlSZs4MpkssrRegRyrdm5ef7c79d1glHf5y
+         PZM2tG+yEArflc36N5G/tJpSL/nHQ6MTifaRPWa/ic1z0e/L3yac+TBRImD+PswOz8g6
+         uLZxrhPK7MWggBlR/UzNDUKQYJ/55US/Tikav0NB3O4PMALZL0jGe+EGaIPnD9LbhhC5
+         eGoRaZ7Q5XnsdhAYag2qdtyxgliTdn3EYGljorxaPskWuOGwn94BO22+8yq1NIx70pOV
+         GlKQ==
+X-Gm-Message-State: AOAM532bZCOoSOelvBypeNvlPa3jl4Pm7jbssOzddo7ZbHYIDtAPi3wl
+        eWoc9KcYSz55zChKSoCtcVfPAWrNv5pB6m7vS9GOJ1NjgSF3kwSF8MO4S8E+XJnlJ4c+Ua4Z/gL
+        Uczoo56/vYXfvWnAcW94N
+X-Received: by 2002:ac8:5e4e:0:b0:2e2:2bad:47b1 with SMTP id i14-20020ac85e4e000000b002e22bad47b1mr11504475qtx.493.1650398259535;
+        Tue, 19 Apr 2022 12:57:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyutQ1A0CKF+iVt9V+fuK2Q0U7lu0HKg1wmNdAyiCX6sl/m1tUtQxSpVrtTItPSsPLjWfe+Hw==
+X-Received: by 2002:ac8:5e4e:0:b0:2e2:2bad:47b1 with SMTP id i14-20020ac85e4e000000b002e22bad47b1mr11504456qtx.493.1650398259145;
+        Tue, 19 Apr 2022 12:57:39 -0700 (PDT)
+Received: from [172.31.1.6] ([71.168.80.171])
+        by smtp.gmail.com with ESMTPSA id i123-20020a378681000000b0069c73915781sm455238qkd.120.2022.04.19.12.57.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Apr 2022 12:57:38 -0700 (PDT)
+Message-ID: <a363ba71-9778-51f4-9c7e-88cb29020331@redhat.com>
+Date:   Tue, 19 Apr 2022 15:57:37 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af22ce3e-2cc0-b32a-87da-204360cd1b4a@redhat.com>
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.7.0
+Subject: Re: [PATCH v4 0/7] Intruduce nfsrahead
+Content-Language: en-US
+To:     Thiago Becker <tbecker@redhat.com>, linux-nfs@vger.kernel.org
+Cc:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com,
+        kolga@netapp.com
+References: <20220401153208.3120851-1-tbecker@redhat.com>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220401153208.3120851-1-tbecker@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H4,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,93 +81,72 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve,
 
-On Tue, Apr 19, 2022 at 03:17:45PM -0400, Steve Dickson wrote:
-> Hey!
+
+On 4/1/22 11:32 AM, Thiago Becker wrote:
+> Recent changes in the linux kernel caused NFS readahead to default to
+> 128 from the previous default of 15 * rsize. This causes performance
+> penalties to some read-heavy workloads, which can be fixed by
+> tuning the readahead for that given mount.
 > 
-> Sorry for the delay...
+> Specifically, the read troughput on a sec=krb5p mount drops by 50-75%
+> when comparing the default readahead with a readahead of 15360.
 > 
-> On 4/17/22 4:21 AM, Salvatore Bonaccorso wrote:
-> > Hi Steve,
-> > 
-> > On Tue, Apr 12, 2022 at 09:25:28PM +0200, Salvatore Bonaccorso wrote:
-> > > Hi Steve,
-> > > 
-> > > On Tue, Apr 12, 2022 at 10:28:50AM -0400, Steve Dickson wrote:
-> > > > Hello,
-> > > > 
-> > > > On 4/12/22 3:00 AM, Salvatore Bonaccorso wrote:
-> > > > 
-> > > > My mailer was unable to process the attachment
-> > > > Please in-line the patch and resend it.
-> > > 
-> > > That is very strange, I used git send-email to submit it, and I do not
-> > > see where it got mangled, as it is present as well in
-> > > 
-> > > https://lore.kernel.org/linux-nfs/20220412070016.720489-1-carnil@debian.org/
-> > > 
-> > > Any idea what happened?
-> > > 
-> > > Here it is again, inlined in this message.
-> > > 
-> > > Regards,
-> > > Salvatore
-> > > 
-> > >  From da390ced58885b0ed80be3722d4d913909e7c543 Mon Sep 17 00:00:00 2001
-> > > From: Ben Hutchings <benh@debian.org>
-> > > Date: Mon, 14 Mar 2022 00:19:33 +0100
-> > > Subject: [PATCH] nfsidmap.man: Fix section number
-> > > 
-> > > The nfsidmap manual page is supposed to be in section 8, but calls the
-> > > .TH macro with a section argument of 5.  This results in an incorrect
-> > > header and causes debhelper (in Debian) to install it in the section 5
-> > > directory. Fix that.
-> > > 
-> > > Signed-off-by: Ben Hutchings <benh@debian.org>
-> > > [Salvatore Bonaccorso: Slightly modify commit message to mention that
-> > > the Problem is found in Debian through installing the manpage via
-> > > debhelper]
-> > > Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
-> > > ---
-> > >   utils/nfsidmap/nfsidmap.man | 2 +-
-> > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/utils/nfsidmap/nfsidmap.man b/utils/nfsidmap/nfsidmap.man
-> > > index 2af16f3157ff..1911c41be6f9 100644
-> > > --- a/utils/nfsidmap/nfsidmap.man
-> > > +++ b/utils/nfsidmap/nfsidmap.man
-> > > @@ -2,7 +2,7 @@
-> > >   .\"@(#)nfsidmap(8) - The NFS idmapper upcall program
-> > >   .\"
-> > >   .\" Copyright (C) 2010 Bryan Schumaker <bjschuma@netapp.com>
-> > > -.TH nfsidmap 5 "1 October 2010"
-> > > +.TH nfsidmap 8 "1 October 2010"
-> > >   .SH NAME
-> > >   nfsidmap \- The NFS idmapper upcall program
-> > >   .SH SYNOPSIS
-> > > -- 
-> > > 2.35.1
-> > 
-> > Was this version now correctly processed by your mailer?
-> Yeah I got it... thanks... but...
-> Are you saying that this man page should be in chapter 5
-> or it is fact Debian installs into chapter 5?
+> Previous discussions:
+> https://lore.kernel.org/linux-nfs/20210803130717.2890565-1-trbecker@gmail.com/
+> I attempted to add a non-kernel option to mount.nfs, and it was
+> rejected.
 > 
-> In RHEL and Fedora we install it in chapter 8... If it
-> belongs in a different chapter I have no problem changing
-> it... I just need to know why.
+> https://lore.kernel.org/linux-nfs/20210811171402.947156-1-trbecker@gmail.com/
+> Attempted to add a mount option to the kernel, rejected as well.
+> 
+> I had started a separate tool to set the readahead of BDIs, but the
+> scope is specifically for NFS, so I would like to get the community
+> feeling for having this in nfs-utils.
+> 
+> This patch series introduces nfs-readahead-udev, a utility to
+> automatically set NFS readahead when NFS is mounted. The utility is
+> triggered by udev when a new BDI is added, returns to udev the value of
+> the readahead that should be used.
+> 
+> The tool currently supports setting read ahead per mountpoint, nfs major
+> version, or by a global default value.
+> 
+> v2:
+>      - explain the motivation
+> 
+> v3:
+>      - adopt already available facilities
+>      - nfsrahead is now configured in nfs.conf
+> 
+> v4:
+>      - retry getting the device if it fails
+>      - assorted fixes and improvements
+> 
+> Thiago Becker (7):
+>    Create nfsrahead
+>    nfsrahead: configure udev
+>    nfsrahead: only set readahead for nfs devices.
+>    nfsrahead: add logging
+>    nfsrahead: get the information from the config file.
+>    nfsrahead: User documentation
+>    nfsrahead: retry getting the device if it fails.
+> 
+>   .gitignore                      |   2 +
+>   configure.ac                    |   1 +
+>   systemd/nfs.conf.man            |  11 ++
+>   tools/Makefile.am               |   2 +-
+>   tools/nfsrahead/99-nfs.rules.in |   1 +
+>   tools/nfsrahead/Makefile.am     |  16 +++
+>   tools/nfsrahead/main.c          | 183 ++++++++++++++++++++++++++++++++
+>   tools/nfsrahead/nfsrahead.man   |  72 +++++++++++++
+>   8 files changed, 287 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/nfsrahead/99-nfs.rules.in
+>   create mode 100644 tools/nfsrahead/Makefile.am
+>   create mode 100644 tools/nfsrahead/main.c
+>   create mode 100644 tools/nfsrahead/nfsrahead.man
+> 
+Committed... (tag nfs-utils-2-6-2-rc4)
 
-Apologies, so this was apparently not very clear. That it belongs into
-section 8 is right. Debian installed it into the wrong section because
-the section in the manpage itself refers to 5. This is what the patch
-tries to inline, and fix the wrong argument to the .TH macro.
+steved.
 
-Because the manpage incorrectly calls the .TH macro with a section
-argument of 5 the debhelper program in Debian installs the manpage
-into section 5.
-
-Does this clarifies?
-
-Regards,
-Salvatore
