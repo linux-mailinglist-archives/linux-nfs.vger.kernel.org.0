@@ -2,168 +2,279 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CBE8D506FDB
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 16:12:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCFBF507258
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 17:58:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbiDSOOt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Apr 2022 10:14:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
+        id S1354179AbiDSQAT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Apr 2022 12:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1343600AbiDSOOr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 10:14:47 -0400
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2107.outbound.protection.outlook.com [40.107.237.107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 475403982F;
-        Tue, 19 Apr 2022 07:12:02 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=epT01J5u2NSB3hJ7m/zO+fMpsggTbGONJGzLxJO0eyXkHg8hknsvBAT8Nobbv9WhUxUuA2Xeq3guCSKQCvbK/fXpWaV0/OHkpMsSXazT7UlqCuc79CF4AQrNRkV6MIV0bLOp/8Uhc+0YcqjthnZMuKOlaQm0mfWtccwZIXSAHqNdDf+Ejmsz+q0/i1pkvsCPMHXr0Ypi3XEx6GiZlRNxcx+cMRitBZMPIAW4moUY+KDz/99Mm/GZV10m6jabQboLN8YvN8hiCuJ2/krfnEV+rr0AuYcsqfL0FpdePnXBjU4rjLCrNxI3E74Q+1qKTCKd1SdeylfcJBVOQ4jeZCYzfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=88EfXzalNS7vnTV9qCOz8pW1qmzRDqi6pCFvIgUlRCc=;
- b=X7XE5AjEl0gVFwpuRamjAtXS2oIGsaCmLzjHgCMrez4dbgehT4Rz4vGrWIpOMOiCUs+pXSTQdQVMZcdoznD+gXMxAR4YJIJjLEjKDdtC5H0EsWIsSaEYX7dOg09D/gr2Sc47IzpnkSGNxl36Qq7+bmLviRzoyPKDDdEf50DOJkhKkA6ropM/PXcK80mKz7tVbRTcUOWNlrTscstQjkUR3MUn7hx685ThT5Xf4unmc5zNHPSFIm1PqJp8HJJydadNFBc+kaDAPLeRS8ezFxqHQg0kgs7IFowHyzHndPpasmjO00BNA5jAkeGgFiBgAvpPm1BCJd7OXRnN66kurVSWsg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=88EfXzalNS7vnTV9qCOz8pW1qmzRDqi6pCFvIgUlRCc=;
- b=TaxhrmO/6Uy0DIVsT+/QVjxntK0wVXSuKjEwwuCMiAg61aT89ooy5ziOylBjCWlQIeai9u2FEwdApYGenjqOPlE+8X3oszf+XOcxmuFUIy4xzAH9cBmbPhJJaGBsLMqDG1alQ4ZRS29ebrmhTamReYzgbi5rOAvDPho/g0J0tiE=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM6PR13MB3017.namprd13.prod.outlook.com (2603:10b6:5:192::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13; Tue, 19 Apr
- 2022 14:11:59 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::c0b:4fda:5713:9006]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::c0b:4fda:5713:9006%7]) with mapi id 15.20.5186.013; Tue, 19 Apr 2022
- 14:11:59 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "brauner@kernel.org" <brauner@kernel.org>,
-        "xuyang2018.jy@fujitsu.com" <xuyang2018.jy@fujitsu.com>
-CC:     "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-        "david@fromorbit.com" <david@fromorbit.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "jlayton@kernel.org" <jlayton@kernel.org>
-Subject: Re: [PATCH v4 4/8] NFSv3: only do posix_acl_create under
- CONFIG_NFS_V3_ACL
-Thread-Topic: [PATCH v4 4/8] NFSv3: only do posix_acl_create under
- CONFIG_NFS_V3_ACL
-Thread-Index: AQHYU9rkuNt4/dYxt0yZ2ARc+gLlVqz3Q7QAgAADaQA=
-Date:   Tue, 19 Apr 2022 14:11:59 +0000
-Message-ID: <707fc9d665b44943d4235a51450bff880248eda6.camel@hammerspace.com>
-References: <1650368834-2420-1-git-send-email-xuyang2018.jy@fujitsu.com>
-         <1650368834-2420-4-git-send-email-xuyang2018.jy@fujitsu.com>
-         <20220419135938.flv776f36v6xb6sj@wittgenstein>
-In-Reply-To: <20220419135938.flv776f36v6xb6sj@wittgenstein>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7c1862e2-589d-4da3-974a-08da220e91aa
-x-ms-traffictypediagnostic: DM6PR13MB3017:EE_
-x-microsoft-antispam-prvs: <DM6PR13MB3017756B31036152242D7D19B8F29@DM6PR13MB3017.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: +J7Vk/2Xb+ykUesD1p9qyZss+KTELKIgPS3n1uydEP1ovSKhQpcmJ0sBS7ZkU6wafqc53banhKCtOSbABCmneJttJeHRY1lt1fjg88Dy+uVPAExJpdozu8VXuIt1tj9r1ckfhDxC67GrCDv6LwZiZFam506od9ZlPBb/dve0QqYbhmwM++ozJbE4F0pwqzDv5ACR6FmHayaS3+HwkNSCg2LEUyySzBPTrC+KAjNdAsqKgu4f4TpfEfq94Dv8ZIt/tduNzRW3hRFTqAI2ygEAdHbtFZaRkBuCUzFSAKIiG/w/qAKvTLGuvlhdxwFFe/I9naNhg8R3caF48uPb2/nrLjRVyo2hvq/qqOlOmdjdTWMmQOHPtDKV3Qy/zDDpf2/jRFyQFPd6cg+2vUJg+JAW5YFlM1Akx7gjbdti/pdttvN/LM8S9tA05A1u0zSQOG6i2AKyroQPPhUPmAbVFfk1Bxt8Zd8iZT6q+m5eC0wJ9KvNM+EMW2jJUPKL2A0CzYk8wwkUWe1VZB0G7ZfZUEaodAp2eVHuhHQvLL8ylpi+2Sks5fR9xEIHGzFy5IdICYKWPBIaRAVGIF++FyoT/pfs6n40KWN/uqjk365EvWwS+frM6JdzoCYYogD3jMNUAAVKWj/7ppAButVpaT+gKURWiX2V2RaCviXy4nZbeWSo3gelI5kjdreMcZPRKCelA+Peq7X+BV3WrMvKE8Pf8DejKw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(66556008)(66476007)(66446008)(64756008)(66946007)(4326008)(8676002)(76116006)(110136005)(6506007)(71200400001)(6486002)(2616005)(54906003)(508600001)(86362001)(36756003)(316002)(26005)(38070700005)(38100700002)(7416002)(5660300002)(8936002)(6512007)(186003)(122000001)(2906002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UzBhOXhTR3RDczlSc21Va25HUnZGZ1ZWK3gvWkVYZmMxMjk4T2I2aXJFQ0N4?=
- =?utf-8?B?VnNUL05NMWl6OFU1V2QzR2RoQllxVWFjZVdOajNKd0E2eGtMRHk5bCtibStR?=
- =?utf-8?B?TUJmQlduUk42U09VcFJxRjdOWmFWam5jWUpZazFPeFM2U1g0Zkt2VHUyYloz?=
- =?utf-8?B?L1FHK1J3T0Vab1A4YzRpYy94QWRZSFluT0RIQmZlL2ZsTzJUaUk0aUJIT3dU?=
- =?utf-8?B?ZkZlYitZRkFMTSs3TkZOdmVTaEkwRXBSVWhVNWhVcmpmWHVqWTF5V1BQaTJS?=
- =?utf-8?B?R0lyaDJEeWFaeVJVRG1vNW1rdXljSUJwaEJqVDdXMDlOQUIwNnZudHc1a0FY?=
- =?utf-8?B?b1ZkeUVHTWtqNjRiT3kxUmhKdmltcmxkTTNteDFVR0E1dmVQbU1oaTdDVlZu?=
- =?utf-8?B?eTZTNXk3QmhEMTdNMnJFRnE3MEc2LzJ0TUNaTmFkU0RETWFXODJqckVaKzJL?=
- =?utf-8?B?eUtlY2Vrb3RqU3llRDZwM1FmNm02M3VCRW1uMHBCakZORHA1TW9aWWU4Wk1j?=
- =?utf-8?B?a21wZFdCYVd6dVBuUkk4eEY4Z3AzUkFmWjNXZVVuKzJ3RGlma0RLbktmODRF?=
- =?utf-8?B?TmN5K1FydzVzTzYyalVaeWp0NFkyeGRDOFBROTNDWm1KYmpCWnErYUhDN1hM?=
- =?utf-8?B?S0lYUVJxV05CZVhJQlc5aHdKSE1Cd2ZmeTdoU3lQbFErRWJiWVRhc1o0ZGNK?=
- =?utf-8?B?QWhHL3NQY3dqYTBDWkNrakNpTVR1WThUNTRoNE5abnIxb1lIcFJTZEdCS2hy?=
- =?utf-8?B?Sy92MEtRRVNva1YvekNyMUp3M0xjM1lyWHdJNlZNNGppTlJDT1daazBhdGxo?=
- =?utf-8?B?ejc5WUpKclVXVUJsMGRXWEtGK0g1Y3BnU29uSzl3d2VXN0NIendZZDVNQ0Q4?=
- =?utf-8?B?YTQzV0FCWm5HM1N2SVJJaHJDVmVQOUN2djRISE1TVGlLc1JkMUhieHQ4Z3Jw?=
- =?utf-8?B?cGR3VXdEV3YxQkh4TTA2d0x0OUtJOGRDMEdzN3BQNDY5S056Z1VHaVh2SEV2?=
- =?utf-8?B?SEZISlFocXkveGFsK010dHBzNERrVXZmRUluQXRhZmdrTUFxUEZqbzRmdHN6?=
- =?utf-8?B?ZWtpQWNGNGdlVS9nZm0va3hRUkl4OUFaeVpZdmEyZVg4a1VtNU15SUFZRkFP?=
- =?utf-8?B?d1lZd0R2c1MySGdyWXczdGRtMUduTG8wZ1JzOCtxOHE3bms1Qk9VV3NNb0tV?=
- =?utf-8?B?ZGE0alFDQTN3ajlpTXN0QzRYQUNna2dzRTF0MnIvOWRFSmdqNld3Q2tZNytt?=
- =?utf-8?B?WEsvcUhQOXI0dlVGWDNuN05rUnl6VUZtREt0c1hlb3VxRlRMSW9mZ3pNWmh2?=
- =?utf-8?B?TzM3WitIUzlyUjQ1VTlnVU4rM2ZzQ1ZSQ1JpeFJyMndzekdXTHl1bEZ6cTZS?=
- =?utf-8?B?azE1dDhPZ0NZQ2RPc1dyZUVsTjl6NXpObnhRcUtBNW9SeEVwY3lmQU9weU1D?=
- =?utf-8?B?VTFiMzJJRHFzVXE5V09ZTXNJcXA1NnlvZTRiZkk0eXI2bGZCWUpab1lVZkEr?=
- =?utf-8?B?Zy94eW1JZEZqaTNXdTJxbityL3BjckhyS0hwVVplOXpwV0FyeXBaekp3Q2ZY?=
- =?utf-8?B?eGMwb3U4VkduRFVmMHN0d2ZqWSsxZU1paUlCTWxYRjJ6NUpOVEVyY3dWK2Zu?=
- =?utf-8?B?bXIxL1cyZ3RkOWV1L3BCbEova29rVkNDM21lUFBxSG1lS1VidHAreForZ2tn?=
- =?utf-8?B?ZGRaVUVvZTVRVjRwTFREc0pzaUZteHIyU3g1dHYvemMrdm9NWUlCa1FGWXk3?=
- =?utf-8?B?akhtQnJNcXZUL0hBMy95emo5SElDRThsQmloM1NWNldOZzBqc1NKam4rdU5S?=
- =?utf-8?B?V1daTFlvNGpEZGxKd2ljUVNudEVjOWtYSHczbzdwaXNQcExXNU5XR2ZKeFF6?=
- =?utf-8?B?UVdNbDVhS1EycGRTTllDNnVETWJsb3RPQWxsRlQ4RTJhNVV1cm1IUkxZODd5?=
- =?utf-8?B?bTlXcGtWNDlqQTJmT3BValFxdGVyaGhtUGlUdG1YK0I1bXlES2RkdU02c2FC?=
- =?utf-8?B?UHRKR3NMWTg5RnhoQU5mQTBWUkZ3bzh0L2hyVGF5a1h5US9FNVBITXhCZ2F0?=
- =?utf-8?B?Z3RJOXM1YkRVVnhPOGVkNkRoeHF4QUR6U2NQQlFUT0JmMUxHZ0lUbm84ZGFh?=
- =?utf-8?B?WGx6dFpuU1RqQUczbWdYWlNHU240d2U1V3JRd3RESUhjUGhyeFZKc2lOdjEr?=
- =?utf-8?B?Zkt3V0taUXQzdUYzZVY4VnFEWHkrUjBFam1BT2ZFelRaV1ZLbDZaN1kwSDg4?=
- =?utf-8?B?NFF5SEtsQUF2VHJKcXlmTVhzM2RRL3o2eXMvMlNJZEkzN3A1SlNYaUlNRmxm?=
- =?utf-8?B?Z01HR2pTVXhzWEtIRldMVDg3a3BKL1FoenFHakltQkpxZDZCb0hJWnI5SmxV?=
- =?utf-8?Q?rZVdoPhJEQ/F8aJ0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E127A97A75E7FE4B91198A0053345E07@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S1354158AbiDSQAK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 12:00:10 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60FE2409F;
+        Tue, 19 Apr 2022 08:57:26 -0700 (PDT)
+Received: by mail-qt1-f181.google.com with SMTP id o18so12547304qtk.7;
+        Tue, 19 Apr 2022 08:57:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g90PMh/mTMCy35563Vxly24H/NoYiw6F63ak04/+4eQ=;
+        b=7tjstP+Ck1Jqe9bmKR61PO/Xeyc12WmVy0x++uB4NpQMF90Pc8QvVUTeCAcoGP/881
+         xoYmnLpDSCheTlXSZqYFAs404PY28YHDcW5gvFsQzl/xj538R+5Bzwjc/Nru2Mv3T/3t
+         oaV+YhYQrWciV01tWwFCUcmB7pj3GEK2xoT/IxvjVYzWudNg194VQE+Ws7rFjAGlS1EA
+         I4q4VADyQ/j0WX5LhsceqTrfH0ksK9W7AvFIaXke6FUt7eNrcOtKd1N7ngD0gEfFc8zq
+         6yO11jJGNCNLPFp8InNJkQu0iI+JsN7aQHwj9dYtpPKOMhKIiawpd8/tOwxzNgjx25Ex
+         N2PA==
+X-Gm-Message-State: AOAM533l/3ehAMX594VGeuOUfF31dps3Q6WVYftDIOMYrKhDIs3K5G5b
+        s7aas4TzdYnh77T40N+kKha1x08U6UtU7g==
+X-Google-Smtp-Source: ABdhPJxnGD9h0GOFV8n6o/bqmQOwf0GJRKbG9hPA0wtrsszvJd3CcylorMMd9wO6ZIRZ8Km5qcn1iw==
+X-Received: by 2002:ac8:7d94:0:b0:2f1:fd15:33e1 with SMTP id c20-20020ac87d94000000b002f1fd1533e1mr7147559qtd.369.1650383845665;
+        Tue, 19 Apr 2022 08:57:25 -0700 (PDT)
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com. [209.85.219.181])
+        by smtp.gmail.com with ESMTPSA id j12-20020ae9c20c000000b0067ec380b320sm185661qkg.64.2022.04.19.08.57.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 19 Apr 2022 08:57:25 -0700 (PDT)
+Received: by mail-yb1-f181.google.com with SMTP id i20so31809292ybj.7;
+        Tue, 19 Apr 2022 08:57:25 -0700 (PDT)
+X-Received: by 2002:a25:2c89:0:b0:641:2884:b52e with SMTP id
+ s131-20020a252c89000000b006412884b52emr15167372ybs.506.1650383845109; Tue, 19
+ Apr 2022 08:57:25 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c1862e2-589d-4da3-974a-08da220e91aa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2022 14:11:59.4640
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: FkrJaHtDRrHg0lpj9pzqM2vo8h7SMU+/qpd2PqmjKCCA80XOpcAZCJvnAB5alRZzAud/YIZ/gpNUWtwELtscBg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR13MB3017
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <164859751830.29473.5309689752169286816.stgit@noble.brown>
+ <2923577.1648635976@warthog.procyon.org.uk> <164868916197.25542.11845352976146070176@noble.neil.brown.name>
+In-Reply-To: <164868916197.25542.11845352976146070176@noble.neil.brown.name>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 19 Apr 2022 17:57:13 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVJZmjM0yc=-iVi0y5ML6u8E4pG_RpLpwbZKu35Y9vOZQ@mail.gmail.com>
+Message-ID: <CAMuHMdVJZmjM0yc=-iVi0y5ML6u8E4pG_RpLpwbZKu35Y9vOZQ@mail.gmail.com>
+Subject: Re: [PATCH 00/10] MM changes to improve swap-over-NFS support
+To:     NeilBrown <neilb@suse.de>
+Cc:     David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIyLTA0LTE5IGF0IDE1OjU5ICswMjAwLCBDaHJpc3RpYW4gQnJhdW5lciB3cm90
-ZToNCj4gT24gVHVlLCBBcHIgMTksIDIwMjIgYXQgMDc6NDc6MTBQTSArMDgwMCwgWWFuZyBYdSB3
-cm90ZToNCj4gPiBTaW5jZSBuZnMzX3Byb2NfY3JlYXRlL25mczNfcHJvY19ta2Rpci9uZnMzX3By
-b2NfbWtub2QgdGhlc2UgcnBjDQo+ID4gb3BzIGFyZSBjYWxsZWQNCj4gPiBieSBuZnNfY3JlYXRl
-L25mc19ta2Rpci9uZnNfbWtkaXIgdGhlc2UgaW5vZGUgb3BzLCBzbyB0aGV5IGFyZSBhbGwNCj4g
-PiBpbiBjb250cm9sIG9mDQo+ID4gdmZzLg0KPiA+IA0KPiA+IG5mczNfcHJvY19zZXRhY2xzIGRv
-ZXMgbm90aGluZyBpbiB0aGUgIUNPTkZJR19ORlNfVjNfQUNMIGNhc2UsIHNvDQo+ID4gd2UgcHV0
-DQo+ID4gcG9zaXhfYWNsX2NyZWF0ZSB1bmRlciBDT05GSUdfTkZTX1YzX0FDTCBhbmQgaXQgYWxz
-byBkb2Vzbid0IGFmZmVjdA0KPiA+IHNhdHRyLT5pYV9tb2RlIHZhbHVlIGJlY2F1c2UgdmZzIGhh
-cyBkaWQgdW1hc2sgc3RyaXAuDQo+ID4gDQo+ID4gU2lnbmVkLW9mZi1ieTogWWFuZyBYdSA8eHV5
-YW5nMjAxOC5qeUBmdWppdHN1LmNvbT4NCj4gPiAtLS0NCj4gDQo+IEkgaGF2ZSB0aGUgc2FtZSBj
-b21tZW50IGFzIG9uIHRoZSB4ZnMgcGF0Y2guIElmIHRoZSBmaWxlc3lzdGVtIGhhcw0KPiBvcHRl
-ZA0KPiBvdXQgb2YgYWNscyBhbmQgU0JfUE9TSVhBQ0wgaXNuJ3Qgc2V0IGluIHNiLT5zX2ZsYWdz
-IHRoZW4NCj4gcG9zaXhfYWNsX2NyZWF0ZSgpIGlzIGEgbm9wLiBXaHkgYm90aGVyIHBsYWNpbmcg
-aXQgdW5kZXIgYW4gaWZkZWY/DQo+IA0KPiBJdCBhZGRzIHZpc3VhbCBub2lzZSBhbmQgaXQgaW1w
-bGllcyB0aGF0IHBvc2l4X2FjbF9jcmVhdGUoKSBhY3R1YWxseQ0KPiBkb2VzIHNvbWV0aGluZyBl
-dmVuIGlmIHRoZSBmaWxlc3lzdGVtIGRvZXNuJ3Qgc3VwcG9ydCBwb3NpeCBhY2xzLg0KPiANCg0K
-QWdyZWVkIGFuZCBOQUNLZWQuLi4NCg0KQW55IHBhdGNoIHRoYXQgZ3JhdHVpdG91c2x5IGFkZHMg
-I2lmZGVmcyBpbiBzaXR1YXRpb25zIHdoZXJlIGNsZWFuZXINCmFsdGVybmF0aXZlcyBleGlzdCBp
-cyBub3QgZ29pbmcgZ29pbmcgdG8gYmUgYXBwbGllZCBieSB0aGUgTkZTDQptYWludGFpbmVycy4N
-Cg0KLS0gDQpUcm9uZCBNeWtsZWJ1c3QNCkxpbnV4IE5GUyBjbGllbnQgbWFpbnRhaW5lciwgSGFt
-bWVyc3BhY2UNCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20NCg0KDQo=
+Hi Neil,
+
+On Thu, Mar 31, 2022 at 4:54 AM NeilBrown <neilb@suse.de> wrote:
+> On Wed, 30 Mar 2022, David Howells wrote:
+> > Do you have a branch with your patches on?
+>
+> http://git.neil.brown.name/?p=linux.git;a=shortlog;h=refs/heads/swap-nfs
+>
+> git://neil.brown.name/linux  branch swap-nfs
+>
+> Also  on https://github.com/neilbrown/linux.git same branch
+>
+> (it seems 1GB is no longer enough to run a git server for the kernel
+>  effectively)
+>
+> This contains
+>  - recent HEAD from Linus, which includes the NFS work
+>  - the patches I sent to akpm
+>  - the patch to switch NFS over to using the new swap_rw
+>  - a SUNRPC patch to fix an easy crash.  But has always been there,
+>     but recent changes to how kmalloc is called makes it much easier to
+>     trigger.
+
+Thanks for your series!
+
+I gave this a try on Renesas RSK+RZA1 (RZ/A1H with 32 MiB of RAM)
+and RZA2MEVB (RZ/A2M with 64 MiB of RAM) with a Debian nfsroot.
+Seems to work, so
+Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+However, I still managed to trigger memory allocation failures,
+even on the RZ/A2, which I don't remember seeing last time I tried.
+
+root@rza2mevb:~# free
+              total        used        free      shared  buff/cache   available
+Mem:          57428       12400       20024        1212       25004       40028
+Swap:             0           0           0
+root@rza2mevb:~# swapon /swap
+Adding 1048572k swap on /swap.  Priority:-2 extents:1 across:1048572k
+root@rza2mevb:~# apt update
+Ign:1 http://ftp.be.debian.org/debian stretch InRelease
+Get:2 http://security.debian.org stretch/updates InRelease [53.0 kB]
+Hit:3 http://ftp.be.debian.org/debian stretch Release
+Get:5 http://security.debian.org stretch/updates/main armhf Packages [738 kB]
+Get:6 http://security.debian.org stretch/updates/main Translation-en [356 kB]
+Fetched 1,147 kB in 12s (89.5 kB/s)
+apt: page allocation failure: order:0,
+mode:0x40cc0(GFP_KERNEL|__GFP_COMP), nodemask=(null)
+CPU: 0 PID: 455 Comm: apt Not tainted
+5.18.0-rc3-rza2mevb-00734-g98e2a6b7a591 #186
+Hardware name: Generic R7S9210 (Flattened Device Tree)
+ unwind_backtrace from show_stack+0x10/0x14
+ show_stack from warn_alloc+0xa0/0x150
+ warn_alloc from __alloc_pages+0x3a0/0x8c0
+ __alloc_pages from ____cache_alloc+0x194/0x734
+ ____cache_alloc from kmem_cache_alloc+0x60/0xd0
+ kmem_cache_alloc from nfs_writehdr_alloc+0x28/0x70
+ nfs_writehdr_alloc from nfs_pgio_header_alloc+0x10/0x28
+ nfs_pgio_header_alloc from nfs_generic_pg_pgios+0x14/0xa8
+ nfs_generic_pg_pgios from nfs_pageio_doio+0x2c/0x4c
+ nfs_pageio_doio from __nfs_pageio_add_request+0x34c/0x3c8
+ __nfs_pageio_add_request from nfs_pageio_add_request_mirror+0x18/0x44
+ nfs_pageio_add_request_mirror from nfs_pageio_add_request+0x1b8/0x1c8
+ nfs_pageio_add_request from nfs_direct_write_schedule_iovec+0x208/0x28c
+ nfs_direct_write_schedule_iovec from nfs_file_direct_write+0x128/0x21c
+ nfs_file_direct_write from nfs_swap_rw+0x24/0x28
+ nfs_swap_rw from swap_write_unplug+0x54/0x94
+ swap_write_unplug from __swap_writepage+0x10c/0x20c
+ __swap_writepage from shrink_page_list+0x86c/0xabc
+ shrink_page_list from shrink_inactive_list+0xfc/0x2b0
+ shrink_inactive_list from shrink_node+0x598/0x80c
+ shrink_node from try_to_free_pages+0x2bc/0x3e8
+ try_to_free_pages from __alloc_pages+0x55c/0x8c0
+ __alloc_pages from __filemap_get_folio+0x1b4/0x260
+ __filemap_get_folio from pagecache_get_page+0x10/0x68
+ pagecache_get_page from nfs_write_begin+0x30/0x148
+ nfs_write_begin from generic_perform_write+0xa4/0x1b8
+ generic_perform_write from nfs_file_write+0xf0/0x2a4
+ nfs_file_write from vfs_write+0x140/0x19c
+ vfs_write from ksys_write+0x74/0xc8
+ ksys_write from ret_fast_syscall+0x0/0x54
+Exception stack(0xc4c1dfa8 to 0xc4c1dff0)
+dfa0:                   b6ec4025 00000000 00000004 b1d0e000 019f12ac befee52c
+dfc0: b6ec4025 00000000 019f12ac 00000004 019f12ac b1d0e000 befee52c befee7ac
+dfe0: 00000000 befee4d4 b6ec0b43 b6cb1cf6
+Mem-Info:
+active_anon:1772 inactive_anon:7471 isolated_anon:64
+ active_file:679 inactive_file:392 isolated_file:0
+ unevictable:0 dirty:0 writeback:2891
+ slab_reclaimable:417 slab_unreclaimable:2863
+ mapped:32 shmem:52 pagetables:107 bounce:0
+ kernel_misc_reclaimable:0
+ free:0 free_pcp:6 free_cma:0
+Node 0 active_anon:7088kB inactive_anon:29884kB active_file:2716kB
+inactive_file:1568kB unevictable:0kB isolated(anon):256kB
+isolated(file):0kB mapped:128kB dirty:0kB writeback:11564kB
+shmem:208kB writeback_tmp:0kB kernel_stack:408kB pagetables:428kB
+all_unreclaimable? no
+Normal free:0kB boost:4096kB min:5044kB low:5280kB high:5516kB
+reserved_highatomic:0KB active_anon:7088kB inactive_anon:29884kB
+active_file:2716kB inactive_file:1568kB unevictable:0kB
+writepending:10296kB present:65536kB managed:57428kB mlocked:0kB
+bounce:0kB free_pcp:24kB local_pcp:24kB free_cma:0kB
+lowmem_reserve[]: 0 0
+Normal: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB
+0*1024kB 0*2048kB 0*4096kB = 0kB
+7385 total pagecache pages
+6262 pages in swap cache
+Swap cache stats: add 6787, delete 525, find 58/74
+Free swap  = 1021476kB
+Total swap = 1048572kB
+16384 pages RAM
+0 pages HighMem/MovableOnly
+2027 pages reserved
+Write error -12 on dio swapfile (27660288)
+Write error -12 on dio swapfile (29679616)
+Write error -12 on dio swapfile (8572928)
+Write error 0 on dio swapfile (8441856)
+Write error 0 on dio swapfile (8704000)
+Write error -12 on dio swapfile (8966144)
+Write error -12 on dio swapfile (9097216)
+Write error 0 on dio swapfile (8835072)
+Write error 0 on dio swapfile (9228288)
+Write error 0 on dio swapfile (9359360)
+sio_write_complete: 2731 callbacks suppressed
+Write error 0 on dio swapfile (34705408)
+Write error 0 on dio swapfile (23470080)
+Write error 0 on dio swapfile (23601152)
+Write error 0 on dio swapfile (23732224)
+Write error 0 on dio swapfile (4202496)
+Write error 0 on dio swapfile (4304896)
+Write error 0 on dio swapfile (4435968)
+Write error 0 on dio swapfile (4567040)
+Write error 0 on dio swapfile (4698112)
+Write error 0 on dio swapfile (4829184)
+warn_alloc: 125849 callbacks suppressed
+kworker/u2:7: page allocation failure: order:0,
+mode:0x60c40(GFP_NOFS|__GFP_COMP|__GFP_MEMALLOC), nodemask=(null)
+CPU: 0 PID: 457 Comm: kworker/u2:7 Not tainted
+5.18.0-rc3-rza2mevb-00734-g98e2a6b7a591 #186
+Hardware name: Generic R7S9210 (Flattened Device Tree)
+Workqueue: rpciod rpc_async_schedule
+ unwind_backtrace from show_stack+0x10/0x14
+ show_stack from warn_alloc+0xa0/0x150
+ warn_alloc from __alloc_pages+0x3a0/0x8c0
+ __alloc_pages from ____cache_alloc+0x194/0x734
+ ____cache_alloc from __kmalloc_track_caller+0x74/0xf0
+ __kmalloc_track_caller from kmalloc_reserve.constprop.0+0x4c/0x60
+ kmalloc_reserve.constprop.0 from __alloc_skb+0x88/0x154
+ __alloc_skb from tcp_stream_alloc_skb+0x68/0x13c
+ tcp_stream_alloc_skb from tcp_sendmsg_locked+0x4b8/0xabc
+ tcp_sendmsg_locked from tcp_sendmsg+0x24/0x38
+ tcp_sendmsg from sock_sendmsg_nosec+0x14/0x24
+ sock_sendmsg_nosec from xprt_sock_sendmsg+0x1d8/0x244
+ xprt_sock_sendmsg from xs_tcp_send_request+0x11c/0x20c
+ xs_tcp_send_request from xprt_transmit+0x84/0x234
+ xprt_transmit from call_transmit+0x6c/0x7c
+ call_transmit from __rpc_execute+0xe4/0x2f0
+ __rpc_execute from rpc_async_schedule+0x18/0x24
+ rpc_async_schedule from process_one_work+0x170/0x210
+ process_one_work from worker_thread+0x204/0x2a4
+ worker_thread from kthread+0xb0/0xbc
+ kthread from ret_from_fork+0x14/0x2c
+Exception stack(0xc4e0dfb0 to 0xc4e0dff8)
+dfa0:                                     00000000 00000000 00000000 00000000
+dfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+dfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+Mem-Info:
+active_anon:2703 inactive_anon:6291 isolated_anon:209
+ active_file:541 inactive_file:530 isolated_file:0
+ unevictable:0 dirty:0 writeback:3781
+ slab_reclaimable:391 slab_unreclaimable:2993
+ mapped:0 shmem:0 pagetables:107 bounce:0
+ kernel_misc_reclaimable:0
+ free:0 free_pcp:26 free_cma:0
+Node 0 active_anon:10812kB inactive_anon:25164kB active_file:2164kB
+inactive_file:2120kB unevictable:0kB isolated(anon):836kB
+isolated(file):0kB mapped:0kB dirty:0kB writeback:15124kB shmem:0kB
+writeback_tmp:0kB kernel_stack:408kB pagetables:428kB
+all_unreclaimable? yes
+Normal free:0kB boost:0kB min:948kB low:1184kB high:1420kB
+reserved_highatomic:0KB active_anon:10812kB inactive_anon:25164kB
+active_file:2164kB inactive_file:2120kB unevictable:0kB
+writepending:13284kB present:65536kB managed:57428kB mlocked:0kB
+bounce:0kB free_pcp:104kB local_pcp:104kB free_cma:0kB
+lowmem_reserve[]: 0 0
+Normal: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB
+0*1024kB 0*2048kB 0*4096kB = 0kB
+10274 total pagecache pages
+9203 pages in swap cache
+Swap cache stats: add 9834, delete 631, find 61/77
+Free swap  = 1009180kB
+Total swap = 1048572kB
+16384 pages RAM
+0 pages HighMem/MovableOnly
+2027 pages reserved
+sio_write_complete: 29066 callbacks suppressed
+...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
