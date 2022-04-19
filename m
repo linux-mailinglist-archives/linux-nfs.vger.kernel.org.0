@@ -2,154 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71C0C507268
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 18:01:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 988DB507842
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Apr 2022 20:26:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1354194AbiDSQDm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 19 Apr 2022 12:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35394 "EHLO
+        id S1356733AbiDSSUm convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Tue, 19 Apr 2022 14:20:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240853AbiDSQDm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 12:03:42 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADA0B2C662;
-        Tue, 19 Apr 2022 09:00:58 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23JEsWZv020195;
-        Tue, 19 Apr 2022 16:00:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=c7z5vOnynLyEDnPy11mmrmJ6Qi08Dwu5taImU8VWnnY=;
- b=zwG7N9uJHcdgTg/uBtaEiJXRzeeYFUx1L1Jy5kiH77HKEGvbP6y6fNC7d8Ui8ze9ElEE
- TYB4EagNAETyYw2dJtyA/vH+oOP9+L3GEXgROhxo4ChA8wHl7W2c5610FXecA79GEM0O
- iX93jAX66Cr7qvi2CcLsewvEttP5k8ABAWxP3g/vRZWxFn1tksMPcbs06uaEkPLVOMNA
- jcGxiPo3UPtMS8quIr6I8hiQ2PJ2+9AwASyJ6kS7ZupeDybfyF8VdM9eXbUT4Kk1rL+V
- H9IceCMJrzbkpGyjaYVYsvJ+9JmlPLnE+MepgxOdx2ntLnEneNLA2je3QJpXxY7mQdEd +A== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com with ESMTP id 3ffmd16j99-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Apr 2022 16:00:44 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23JG0dB3036821;
-        Tue, 19 Apr 2022 16:00:44 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3ffm82y8xh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Apr 2022 16:00:44 +0000
+        with ESMTP id S1356734AbiDSSTs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Apr 2022 14:19:48 -0400
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn2013.outbound.protection.outlook.com [40.92.90.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739993FBF3
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Apr 2022 11:13:49 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jJ4VRxonwYxz9tbXeN/bbWx2zMopeLzn6r+YYND4uFdNE3jb8zsfUK/YwyG6lMnXbu0aZ1eITgUnsRZUjDkzWdODYIzJVg2FPKamkL0e8UHsjG8/jHIoSiezR//XACNNhoJzxyWXgQqNm7VhVaySaAFwQ127DUAe9tn0vKVQnULkuDXP+YdfpbzBiW84pJwjfQ8SjTozpiCY5FTpXPRA7+8Qyfo5SXv8wf1bLDMdBugjU//RF9V7/Alxfe8Kgx8f9rl92SHlMLk1Eui9GIl2OtPCZwKkHoYUiz3U1/xQ5Y1Z8pRa6+smunhGpOUM72beZElAG68IU42RQ51l5FpMuA==
+ b=W97JI7h4lD2bdqbbiEVTHbcq38OtQT6HcAdZU4QzY5GvUgUkIsd4BjKKP+5vFHjCXaABfWVmFc0dhnnbTB6qcmVxL/bdkdsG1499bY8dLf90+bfEmO5f50MWy7TlF7ahGIfkqGMKLBdrNYErfMHLs96amZtQ+G584o2pGuVRTPnBcii4OIhSrOLa3JMQJFSsJJfiTxFbyXRFiNM/hq+V1yYT8T/aXFTnag9WY7tJdzGDqwu7jo4VDN9FF5sA7CDgZH9OMaxDOMtSk72PB1LwuSq2WYc2XMiVJ0wBp+Oy4+cY4NIYfTd7VsZ95Emfk0IAqEO/bYYy9ndfHonI/y6pLw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=c7z5vOnynLyEDnPy11mmrmJ6Qi08Dwu5taImU8VWnnY=;
- b=dMD8RH4gSwtVuTl24/ZNyfr12fpQKJP+RxBBnHBzmqfqUur3FiAWwXFsdRtAjjL/zz2C+d4ilSkyJuJOkAFHwsSs2fw5ZSue/1HujnUvk13RM9wn5Ey8gPotXlQ52DcyiAZ5bmCvJdlhlHiRAOSodewwe4HzDnQRCmMGypNF7Tg4mVbJKJiZt/hAUELWpjpVGbohaGAlTU+0oRmd001hZyxRV8r0R2UYGCZnCCSLlFo/62Np9ndGl0uB8GVKBwzl5Nqf8AB7uYpjVj7b+xOruFFqK4z18d8JGWD82Sf6A2xBdWEOdABOL6sSuG/WLCTV7uK4odvtJSV71zkIkkA0cQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c7z5vOnynLyEDnPy11mmrmJ6Qi08Dwu5taImU8VWnnY=;
- b=Jt/JYHXuge0kmcCSkgV/e19CWhLkefp/hRi6zjoRCy+PPdP7Y1W2r2FICeeQiV8D8QoejfcKyjssiUH97Me6yTty+gv0MS2nvUdTYH+dyWh4+ddbKPbqv7FoiZ1xwXUvj+ATgPtHflAycBselD72y5cMaV8inIvL224WuF31AfI=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BYAPR10MB3702.namprd10.prod.outlook.com (2603:10b6:a03:11a::27) with
+ bh=NgIhK+KJH03dZs6Fb3BHhPYbwBdvHZ7+P3mRarPO8dQ=;
+ b=bHd51wnu98B4Jk+/NO8cI6ueav03BgdlThLABviLVVXae2epnzO+OqsaSDihb7irsjMpchBT4eJzNrMS2TKdEKr5b5wnz0TMZf9NnktvoykLT+oZ9SN/BiDU6jADLbxaMmJl3/HOR4kNdI/qpzfih/kvRMQJcwF6YrmsN8qGOk5TMO+QpHjzdEKbuFCwH44rCVH3dCjW6cPgzmNAuoMukF3u9CkV2UvaJJ0mmvlFjgXrcDTjQO7UBw6o7SXFWl1CIqKDKbla6TaRiipnDtIPicEXHqJSqZhGowNGaU1NONcmM5CL6P8dt3jEYR4zCks+R3VbO94SPBl/xURTon0uqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+Received: from AM9P191MB1665.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:267::24)
+ by PAXP191MB1776.EURP191.PROD.OUTLOOK.COM (2603:10a6:102:1c2::5) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.13; Tue, 19 Apr
- 2022 16:00:40 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::f427:92a0:da5d:7d49]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::f427:92a0:da5d:7d49%7]) with mapi id 15.20.5164.025; Tue, 19 Apr 2022
- 16:00:40 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Trond Myklebust <trondmy@hammerspace.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "borisp@nvidia.com" <borisp@nvidia.com>,
-        "simo@redhat.com" <simo@redhat.com>,
-        "ak@tempesta-tech.com" <ak@tempesta-tech.com>
-Subject: Re: [PATCH RFC 00/15] Prototype implementation of RPC-with-TLS
-Thread-Topic: [PATCH RFC 00/15] Prototype implementation of RPC-with-TLS
-Thread-Index: AQHYU0SpuI21otIlHEi6aMaWB1g+e6z2lWsAgADRRwA=
-Date:   Tue, 19 Apr 2022 16:00:40 +0000
-Message-ID: <06AB6768-AA74-43AF-9B9A-D6580EA0AE86@oracle.com>
-References: <165030062272.5246.16956092606399079004.stgit@oracle-102.nfsv4.dev>
- <962bbdf09f6f446f26ea9b418ddfec60a23aed8d.camel@hammerspace.com>
-In-Reply-To: <962bbdf09f6f446f26ea9b418ddfec60a23aed8d.camel@hammerspace.com>
-Accept-Language: en-US
-Content-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5164.20; Tue, 19 Apr
+ 2022 18:13:47 +0000
+Received: from AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
+ ([fe80::543a:843f:f401:da2a]) by AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
+ ([fe80::543a:843f:f401:da2a%5]) with mapi id 15.20.5164.025; Tue, 19 Apr 2022
+ 18:13:47 +0000
+From:   Andreas Nagy <crispyduck@outlook.at>
+To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: ESXi NFS4.1 issue
+Thread-Topic: ESXi NFS4.1 issue
+Thread-Index: AQHYVBGFaw+YyKGBpkmYsCuhuUrPP6z3igUB
+Date:   Tue, 19 Apr 2022 18:13:47 +0000
+Message-ID: <AM9P191MB16656CBF8316ECB4EEBB9E8A8EF29@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+References: <AM9P191MB1665B57A3D3F234F676924408EF29@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+In-Reply-To: <AM9P191MB1665B57A3D3F234F676924408EF29@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+Accept-Language: de-AT, en-US
+Content-Language: de-AT
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
+suggested_attachment_session_id: 4ad4f4b3-130f-b2ba-a7b8-cb33e44389eb
+x-ms-exchange-messagesentrepresentingtype: 1
+x-tmn:  [VXlrHjPlSYwLgnYcMFT90nG6nXzP7EMv]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 66c44ed2-2d89-4cd1-c335-08da221dc09f
-x-ms-traffictypediagnostic: BYAPR10MB3702:EE_
-x-microsoft-antispam-prvs: <BYAPR10MB37022C74B435B71FC6120C9993F29@BYAPR10MB3702.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
+x-ms-office365-filtering-correlation-id: ffdbc5b6-53a9-4622-218d-08da223058dd
+x-ms-traffictypediagnostic: PAXP191MB1776:EE_
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ngnwiC2wPeIsmiRMNrPozkNxABo5M2cLUXRsqV+pt1Yl2sK9Ft1zt8ZO8rsev0ot+oDijSaToW/VJdkGQ+Sq/i/pedoxMBJ+33f3VMWwxpZSKYlmz6pQDvBmrdgctJUDHuOZ6uI2J+/4mgkqI7jkOowtPV69w9hssRvmHzlN9oXg6N02LWsCqPtQ2ah7tUgg2/H/7EPk344V1Ig3NwrhcObUvNbXsyAVUeItGN3eZq6G2/wY0zniRwxHj8a9bmnbZCzwU74c2vDpwLXCiMrJkf54xQkcCqOSl9C8QQCbDedfdAYAxPRrA9aoWbbjctr9AAzw5H4EWAJpcfn2lMLf5GhJQtKnzkrVyqfSR6xaLc4kJqHOn7KEbGAMoj36U0Yh/4ZMwZNEeVjN9Z6KYm0aChxDRX3VBQHeYzyWlfog7rZIVwDHXUTjQRzf7b1FhiDf1nWHxpiT3udP5mFr02cs9gieX9Pk0Pbo0JUb9GO+JmJwrkFuhttlEsRk8c4Pi9+7jwySde2kDIINu+Yhma9xBTXpQxf/mAe8bXxG88/eMOmvX3jMiun9bxJAQ26MTdj2wBiPiWFWiN5I3CW6kTv7XWvWF0hZMJkmd8BodixGpPBOHo+XoTjjBQub9J46VWtTkI1eKgllcj3vAI/bLOeojz+M7O1lxQ7C4Ek+UewnNPnWbUTiGd78qc+zIZp9Wia+Ad3qEH1Ue43ROwVR3YqtIDX+yzwJvYTfbnzmmqmaOo2uirPseZfyyMMvRFonVLCELTimDGcU0PHUGi4yZ7OzyJk+HY4h1JBGtlmnq11bQ6nCTcGBDCJJdrcsckVYLwcx
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2616005)(83380400001)(26005)(186003)(38070700005)(122000001)(38100700002)(5660300002)(8936002)(66446008)(64756008)(66476007)(66556008)(66946007)(2906002)(508600001)(6506007)(6512007)(53546011)(316002)(76116006)(8676002)(91956017)(4326008)(71200400001)(6916009)(54906003)(966005)(6486002)(33656002)(36756003)(86362001)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: qQG8jUDj52f6lOlVwm5pUt4sNvk5WswWodYhYmGp1hJxTBYCFxg+IRZv81sTZG3cwvLF9HxV+4NFFwic1jYxxlR0nUOUbYhLBX3dTQGknYnDfIpTHIYVAm5Z0NZbjk6EDfexSCs1nwPWC8x4V1oywyB0cf+OpDvKx9/gSowsBUdvtpDeNTXriStfE9cTWdOmgALvVHW1NsDvGiuUCKgf7/U1n61VSmKSnHGkDUbIwY6Q+0cqikXnNtScSa5DOryAuVH7Xa2zvgpMxsfYkdQ/k/xBUvkSHvINHRuF4X+EamDZXd1dUgI5YRscetZ7D2AnB+w6S2FResVdPg2+yz8oqsNVwv7d7383Xl6jzjMyljQimcEmFTW/gqlzdGfyDKaPDxHhBdmMLT+Ve768YCVHj3vZdq2jO9pC6VzbI/oWy4yHfRKOgZG0DNKhDCSflrghJAfVoUeTWKcSAwB7CGSHeAxx1UK/kuCz8k3Tm1jKvccQSV95ezydih3Z5c4TUFR7b1rpOgfijyvB7OTIkB/eTw1XF7ul9q2oWypTmPS31t9YFisN9ydi7I7Dy+JhGVdLsTUpzMZO2zkg4QM9M3yBZmz6Sy+q5XfYOfUCt0/KasGEUNllxPiY+Kx1QLChVTJW
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8IlsyU891a6D5yPCIJ58+NOFPTimC38WbZBb6B0DFCB2ODqnpKL4qE0vltim?=
- =?us-ascii?Q?qw6HX0hSQ88UUAT2Z0+KYZbYnYJkgfcWgN5QOCzR0agFgdoVGy+kKTJKpK7d?=
- =?us-ascii?Q?T9Mim1ejSantgrT2VkqxNtaL5DOEOZdW0I3BEf1IvEtpNhnZhnqQg4l3J6Ca?=
- =?us-ascii?Q?3/gAdZrPFSu7mW/Dy/C39X7arFtguMNXgskZYsqs2aHoVR4PjBV5wTKqpT4b?=
- =?us-ascii?Q?SjKg3l8EzC8+hlaPB60nzyrr/lI+848fykKiTpKXRY+SL1FFlfl6dLtzOFz/?=
- =?us-ascii?Q?lCxtOxbbik961LJgAm82A7egEA+kLgWqYD1OVq3Q6hwhKs9LM51IiKXrciAx?=
- =?us-ascii?Q?xlL6egLXqnVoC7R1e6sNbz5MmeQzEwHErjwCe6n7gqsVKg/chjeDJknsusss?=
- =?us-ascii?Q?4aTKf/5wBTUi46m8zaC2XTEkSl9kmR9UKnL2tjVagsLMfyAaPeJgVRAsvoFN?=
- =?us-ascii?Q?T5nUi04mqXxr66h2DqJMFhhI66RF64Clz+9kqE000Z9Q9HoZz0a5ajy+QHhU?=
- =?us-ascii?Q?tEhDao0XLgwH/1D0LHv4OjtBzjKoNDd0fm3HYjCNjB34jqE6oScTqIvp+puU?=
- =?us-ascii?Q?QYEX1iuFx6svZWEiH/tEUBxNfm6B/u4epEbr+wbOE1N68pyaNoLJ4Wj7TRpJ?=
- =?us-ascii?Q?HTyKT+9OG9BxGRgVaNZtIRMVTaBwvMhmCiCmAI38QuxPHnrAKs3qR1kIPK2P?=
- =?us-ascii?Q?t3Sg7vW18/hrA2bn795msH2Tr2NhPFWGpFZdNFLa4FE1BeeVlMNFCBw1H1ta?=
- =?us-ascii?Q?RtOOWpdx0F/LU89x6Emq1y/dIlhW0kQ/yJFk6D8spXXHttAGZ8x6GT+wfd0a?=
- =?us-ascii?Q?I3KGsUs1yBQzLS5JG/PEl4LvQKWif2Gw02BD5XwrqTJEmQLccEuBESXmPc+6?=
- =?us-ascii?Q?OsCXVU+6pPpycntKMkoTnStznEIH1HPAaCHaga5/Z5aQIh+zFidTg6Q5Kw2p?=
- =?us-ascii?Q?tzaVX/zN+goVXT9CWWFqMKna4InPXISWo13LYPYBDKYWtIN9qTE2ZmgtSVEU?=
- =?us-ascii?Q?vHhPZO1viukBKN5eViMnC+R1WM7fDaqfWDTdbpyxKNYPzHFpi9hawJBOeqYn?=
- =?us-ascii?Q?Dl0YZ/AKx/qmAgBi6kXk/FCbBor4KBr8sV6727e2yef29ZkzzMMenPc2KBAR?=
- =?us-ascii?Q?0ua5VrdnUsQ7srHETS8fi6gTJo8NDg3LqXfDd2XLXkcG2ZpLhggCsymHXDeT?=
- =?us-ascii?Q?+DHDSMK9fkVCYK1jwWxdQ9t/wGCZ0Nykbk7sGn5cIionQQ0vqEDuJfZftJjO?=
- =?us-ascii?Q?b8wIIryPnRbAlcJeel+c2lzroWv33nPjBDJI6wmst9xReZPywf98kXLLRBtM?=
- =?us-ascii?Q?YA5fMuQviAckbkwFVCnLNUbo8HZjhikk9osgVnSS+GxXUJWA/yktmsKa4+Q5?=
- =?us-ascii?Q?pIywhc2XaOlmehKlVhsCZpqpZPHIz0pzzDRkD1lB3Exz+t4wXDBcPAhFi72J?=
- =?us-ascii?Q?cghSs1spEG6WGgupb1StkUb7f5eELr+JR0+8MD/B0kx2+fUJqepR8MFPI+cA?=
- =?us-ascii?Q?OPq375QlAdrfP8kYWCVcRaHod9ZbnNkGNAsiHRAhnQGIU7AgL9dzSb2aD4mU?=
- =?us-ascii?Q?B+CHPeaXMCx5RydBink414Irtfc5HwQ3TUtw3pjMnf05AFPVxZLUl8MbpjkE?=
- =?us-ascii?Q?dEVk69w5lGrqfs9a+MXbHUtWoDYE0kfL6DKQxoJeRfVaptyz4Kstm+5fmBOF?=
- =?us-ascii?Q?OqJ+s35OYx9ArLAhu+s9kxrbnzKCAmHsgONCQv63wr1JoG/uEXWD+z95zbVd?=
- =?us-ascii?Q?dKBX8mxLdKwg6FM62+3ge/B6qCntdjQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <699212148367BD47A22BF36C67807D07@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?QOfsQxgREodM+aI17U6Hsvd/PkroKusCnty+ibhN7GMGACDsq1aYBMeSLR?=
+ =?iso-8859-1?Q?UMK0z/btfE7DGEhGDnBUiiHFXeECwFFQuW1Os9ih6PfVoJY9FoT9iVrUno?=
+ =?iso-8859-1?Q?uI7htmL9kgU6yEwOb+6XwypcHjTyf/ffLhcjUIMgOSTCvIum04QCDUKHlx?=
+ =?iso-8859-1?Q?iUmeKJIz791Z02IyPc6igtUI4VSfuS2o21Ks5ljvVbo5BzRN8A3JNUmqmX?=
+ =?iso-8859-1?Q?5YltgosQkoaGo6Dw0QNZ7pXccgihipwLU4/FJwNThDj17bN9kuXmUxdXiI?=
+ =?iso-8859-1?Q?JiLyUj6xJCfTd3WmgjMZNqtFzQG/dXWkdpsfHJMztbngentyEGtlOm72jO?=
+ =?iso-8859-1?Q?74rB1hy3ClHCBFnHE4AFgS9vPtEGptfZW+GLCX12WDnV10qCdJgh78CODJ?=
+ =?iso-8859-1?Q?CWXCAJhi/8OxC2cGw4+FGCI0+z0aO9VvDW8v0ZjIhWEgcM+APVWNFIy3wi?=
+ =?iso-8859-1?Q?/Utid+HjBYNPumMDQFhflnWPBV0ZnPHRG2iC0dQa4BA5UcPU59JJGAz1lB?=
+ =?iso-8859-1?Q?RHTbiRLjI4nnwfytcIS4Aux1cdB1FqdjwuIEEc9KxgdJQQa4BXVXwDxzf+?=
+ =?iso-8859-1?Q?Yx4BZBOl3hC18sZSaJIZ0bbADgZLuR0or4LtGf4QZ4gvyELtzzYUKdSP1Z?=
+ =?iso-8859-1?Q?gCbmcapmPZG8GMh8pSCmE7zMC1FHtVKdQ29WO4JfVxPasO842b073fuv7k?=
+ =?iso-8859-1?Q?8FTlzI+fb96Qnzx0oajjG+3G0kEOpAqornaKR7oAMXve00DS6uq5KvTwiC?=
+ =?iso-8859-1?Q?e/w/kcY+M8osyNN6gf2BIfJBl6Ydb2NGWPxXG9d+/srvMoGmHgEaMwTGge?=
+ =?iso-8859-1?Q?fHNAL0lCfWq+iUOpkz7YBC80g/bgqhHRpMiEIrwPnxI/djx40lXLVcirSe?=
+ =?iso-8859-1?Q?c7OI/AZEa3RazBDVD8Y6IieJHHIy5icupaajoZnYQmFscvbqG44vWfD7Pc?=
+ =?iso-8859-1?Q?nhIJM4OVxBQmx51V3038ARo0OyLJDCBVtj4zwWJWTNrXOUCBPRwvSqJvJ7?=
+ =?iso-8859-1?Q?Xikg7Vt5wuafT8O/HkbkJoch+VwLhU+bAljRxMwjQkqp4BZgI9HxnwWEGO?=
+ =?iso-8859-1?Q?u0RV2Ifknnd0GnMRwiJOYB2Lt6V6EVjrLnZT1ZdduaNYQwm1yYthhZpQaw?=
+ =?iso-8859-1?Q?6TZBK6C9C/GY6ZPsc3+nIaCXYXp7NdYSYVKS1VHVFmImH3aWqJnhr2KuqD?=
+ =?iso-8859-1?Q?SsEWckIJjyQ9F07bz98XffVXIyqP6v+be2weRJQaU7yhlNBZvCd+IJWNHR?=
+ =?iso-8859-1?Q?yZPGntlnS/vraQBJ2Y6Yc5HMd33ZDQYRA6Sl1+gwZ5IMpIdS8uKcZwmtSl?=
+ =?iso-8859-1?Q?GLxZgZADXNFynHMLvGUu4B+9RqlM+T64gmZ+RCc6aFzJwhb32YV5/tg5WD?=
+ =?iso-8859-1?Q?NcZHlt8LIgYUbNLh0szCzoCpOEYgktC4MslvFfInwk+MGACdJFjXM2pnOA?=
+ =?iso-8859-1?Q?g+twiuaWGZyIJmCHd+WPZxi2vQpazZmjkxn6Hw4wdQs8E3PXjcJFju4U1+?=
+ =?iso-8859-1?Q?s=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
+X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-50200.templateTenant
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 66c44ed2-2d89-4cd1-c335-08da221dc09f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2022 16:00:40.6813
+X-MS-Exchange-CrossTenant-AuthSource: AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffdbc5b6-53a9-4622-218d-08da223058dd
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Apr 2022 18:13:47.0383
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MxT3JaqsmgGKT3Aua1XDIT7WMtHy4tTWuP6/u2rWxhJAAHLUHu7Q13zr8LA9cUOM+LO7KMzOGabKDog6fHCz1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3702
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
- definitions=2022-04-19_05:2022-04-15,2022-04-19 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
- malwarescore=0 mlxlogscore=999 adultscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204190092
-X-Proofpoint-ORIG-GUID: BQWzxijSRghv-Gd_XwhBwqC6g7rufF5Z
-X-Proofpoint-GUID: BQWzxijSRghv-Gd_XwhBwqC6g7rufF5Z
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXP191MB1776
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -157,161 +103,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Trond-
+Hi,
 
-Thanks for the early review!
+I hope this mailing list is the right place to discuss some problems with nfs4.1.
 
+Switching from FreeBSD host as NFS server to a Proxmox environment also serving NFS I see some strange issues in combination with VMWare ESXi.
 
-> On Apr 18, 2022, at 11:31 PM, Trond Myklebust <trondmy@hammerspace.com> w=
-rote:
->=20
-> On Mon, 2022-04-18 at 12:51 -0400, Chuck Lever wrote:
->> This series implements RPC-with-TLS in the Linux kernel:
->>=20
->> https://datatracker.ietf.org/doc/draft-ietf-nfsv4-rpc-tls/
->>=20
->> This prototype is based on the previously posted mechanism for
->> providing a TLS handshake facility to in-kernel TLS consumers.
->>=20
->> For the purpose of demonstration, the Linux NFS client is modified
->> to add a new mount option: xprtsec =3D [ none|auto|tls ] . Updates
->> to the nfs(5) man page are being developed separately.
->>=20
->=20
-> I'm fine with having a userspace level 'auto' option if that's a
-> requirement for someone, however I see no reason why we would need to
-> implement that in the kernel.
->=20
-> Let's just have a robust mechanism for immediately returning an error
-> if the user supplies a 'tls' option on the client that the server
-> doesn't support, and let the negotiation policy be worked out in
-> userspace by the 'mount.nfs' utility. Otherwise we'll rathole into
-> another twisty maze of policy decisions that generate kernel level CVEs
-> instead of a set of more gentle fixes.
+After first thinking it works fine, I started to realize that there are problems with ESXi datastores on NFS4.1 when trying to import VMs (OVF). 
 
-Noted.
+Importing ESXi OVF VM Templates fails nearly every time with a ESXi error message "postNFCData failed: Not Found". With NFS3 it is working fine.
 
-However, one of Rick's preferences is that "auto" not use
-transport-layer security unless the server requires it via
-a SECINFO/MNT pseudoflavor, which only the kernel would be
-privy to. I'll have to think about whether we want to make
-that happen.
+NFS server is running on a Proxmox host:
+
+ root@sepp-sto-01:~# hostnamectl
+ Static hostname: sepp-sto-01
+ Icon name: computer-server
+ Chassis: server
+ Machine ID: 028da2386e514db19a3793d876fadf12
+ Boot ID: c5130c8524c64bc38994f6cdd170d9fd
+ Operating System: Debian GNU/Linux 11 (bullseye)
+ Kernel: Linux 5.13.19-4-pve
+ Architecture: x86-64
 
 
->> The new mount option enables client administrators to require in-
->> transit encryption for their NFS traffic, protecting the weak
->> security of AUTH_SYS. An x.509 certificate is not required on the
->> client for this protection.
->=20
-> That doesn't really do much to 'protect the weak security of AUTH_SYS'.
-
-My description doesn't really explain the whole plan, it
-introduces only what's in the current prototype. Eventually
-I'd like to do this:
-
-  xprtsec=3D none | auto | tls | mtls | psk | ...
-
-where
-  none: transport-layer security is explicitly disabled
-  auto: pick one based on what authentication material is available
-  tls: encryption-only TLSv1.3 (no client cert needed)
-  mtls: encryption and mutual authentication (client cert required)
-  psk: pre-shared key
-  ...: we could require wiregard, EAP, or IPSEC if someone cares
-       to implement one or more of them
+File system is ZFS, but also tried it with others and it is the same behaivour.
 
 
-> It just means that nobody can tamper with our AUTH_SYS credential while
-> in flight. It is still quite possible for the client to spoof both its
-> IP address and user/group credentials.
+ESXi version 7.2U3
 
-True enough. But some folks are interested only in encryption.
-They trust their clients, but not the network.
+ESXi vmkernel.log:
+2022-04-19T17:46:38.933Z cpu0:262261)cswitch: L2Sec_EnforcePortCompliance:209: [nsx@6876 comp="nsx-esx" subcomp="vswitch"]client vmk1 requested promiscuous mode on port 0x4000010, disallowed by vswitch policy 
+2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)World: 12075: VC opID esxui-d6ab-f678 maps to vmkernel opID 936118c3
+2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)WARNING: NFS41: NFS41FileDoCloseFile:3128: file handle close on obj 0x4303fce02850 failed: Stale file handle
+2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)WARNING: NFS41: NFS41FileOpCloseFile:3718: NFS41FileCloseFile failed: Stale file handle
+2022-04-19T17:46:41.164Z cpu4:266351 opID=936118c3)WARNING: NFS41: NFS41FileDoCloseFile:3128: file handle close on obj 0x4303fcdaa000 failed: Stale file handle
+2022-04-19T17:46:41.164Z cpu4:266351 opID=936118c3)WARNING: NFS41: NFS41FileOpCloseFile:3718: NFS41FileCloseFile failed: Stale file handle
+2022-04-19T17:47:25.166Z cpu18:262376)ScsiVmas: 1074: Inquiry for VPD page 00 to device mpx.vmhba32:C0:T0:L0 failed with error Not supported
+2022-04-19T17:47:25.167Z cpu18:262375)StorageDevice: 7059: End path evaluation for device mpx.vmhba32:C0:T0:L0
+2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)World: 12075: VC opID esxui-6787-f694 maps to vmkernel opID 9529ace7
+2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2465: Evicting VM with path:/vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
+2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: 209: Creating crypto hash
+2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2479: Could not find MemXferFS region for /vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
+2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2465: Evicting VM with path:/vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
+2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: 209: Creating crypto hash
+2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2479: Could not find MemXferFS region for /vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
 
+tcpdump taken on the esxi with filter on the nfs server ip ca be found here:
+https://file.io/rtFeuFGlYY98
 
-> A better recommendation would be to have users select sys=3Dkrb5 when
-> they have the ability to do so. Doing so ensures that both the client
-> and server are authenticating to one another, while also guaranteeing
-> RPC message integrity and privacy.
+I tried to analyze, but have no idea what exactly the problem is. Maybe it is some issue with the VMWare implementation? 
+Would be nice if someone with better NFS knowledge could have a look on the traces.
 
-With xprtsec=3Dmtls (see above), the server and client mutually
-authenticate, which provides a higher degree of security as you
-describe here.
-
-I agree that xprtsec=3Dtls + sec=3Dkrb5 is probably the ultimate
-combination of security with the least performance compromise.
-The prototype posted here should support this combination right
-now.
-
-
->> This prototype has been tested against prototype TLS-capable NFS
->> servers. The Linux NFS server itself does not yet have support for
->> RPC-with-TLS, but it is planned.
->>=20
->> At a later time, the Linux NFS client will also get support for
->> x.509 authentication (for which a certificate will be required on
->> the client) and PSK. For this demonstration, only authentication-
->> less TLS (encryption-only) is supported.
->>=20
->> ---
->>=20
->> Chuck Lever (15):
->>       SUNRPC: Replace dprintk() call site in xs_data_ready
->>       SUNRPC: Ignore data_ready callbacks during TLS handshakes
->>       SUNRPC: Capture cmsg metadata on client-side receive
->>       SUNRPC: Fail faster on bad verifier
->>       SUNRPC: Widen rpc_task::tk_flags
->>       SUNRPC: Add RPC client support for the RPC_AUTH_TLS
->> authentication flavor
->>       SUNRPC: Refactor rpc_call_null_helper()
->>       SUNRPC: Add RPC_TASK_CORK flag
->>       SUNRPC: Add a cl_xprtsec_policy field
->>       SUNRPC: Expose TLS policy via the rpc_create() API
->>       SUNRPC: Add infrastructure for async RPC_AUTH_TLS probe
->>       SUNRPC: Add FSM machinery to handle RPC_AUTH_TLS on reconnect
->>       NFS: Replace fs_context-related dprintk() call sites with
->> tracepoints
->>       NFS: Have struct nfs_client carry a TLS policy field
->>       NFS: Add an "xprtsec=3D" NFS mount option
->>=20
->>=20
->>  fs/nfs/client.c                 |  22 ++++
->>  fs/nfs/fs_context.c             |  70 ++++++++--
->>  fs/nfs/internal.h               |   2 +
->>  fs/nfs/nfs3client.c             |   1 +
->>  fs/nfs/nfs4client.c             |  16 ++-
->>  fs/nfs/nfstrace.h               |  77 +++++++++++
->>  fs/nfs/super.c                  |  10 ++
->>  include/linux/nfs_fs_sb.h       |   7 +-
->>  include/linux/sunrpc/auth.h     |   1 +
->>  include/linux/sunrpc/clnt.h     |  14 +-
->>  include/linux/sunrpc/sched.h    |  36 +++---
->>  include/linux/sunrpc/xprt.h     |  14 ++
->>  include/linux/sunrpc/xprtsock.h |   2 +
->>  include/net/tls.h               |   2 +
->>  include/trace/events/sunrpc.h   | 157 ++++++++++++++++++++--
->>  net/sunrpc/Makefile             |   2 +-
->>  net/sunrpc/auth.c               |   2 +
->>  net/sunrpc/auth_tls.c           | 117 +++++++++++++++++
->>  net/sunrpc/clnt.c               | 222 +++++++++++++++++++++++++++++-
->> --
->>  net/sunrpc/debugfs.c            |   2 +-
->>  net/sunrpc/xprt.c               |   3 +
->>  net/sunrpc/xprtsock.c           | 211 +++++++++++++++++++++++++++++-
->>  22 files changed, 920 insertions(+), 70 deletions(-)
->>  create mode 100644 net/sunrpc/auth_tls.c
->>=20
->> --
->> Chuck Lever
->>=20
->=20
-> --=20
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
-
---
-Chuck Lever
-
-
+Best regards,
+cd
 
