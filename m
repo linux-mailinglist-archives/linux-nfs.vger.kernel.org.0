@@ -2,96 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DD2650840A
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Apr 2022 10:50:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0827508F4D
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Apr 2022 20:21:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233689AbiDTIxZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Apr 2022 04:53:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49808 "EHLO
+        id S1353882AbiDTSYO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Apr 2022 14:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1376899AbiDTIxY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Apr 2022 04:53:24 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F195A33EBE;
-        Wed, 20 Apr 2022 01:50:36 -0700 (PDT)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.55])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KjvW21g3Fz1J9sP;
-        Wed, 20 Apr 2022 16:49:50 +0800 (CST)
-Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 20 Apr 2022 16:50:34 +0800
-Received: from [10.174.176.52] (10.174.176.52) by
- kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 20 Apr 2022 16:50:34 +0800
-Message-ID: <a3300d4d-6428-8157-b2dc-eaeb9f249858@huawei.com>
-Date:   Wed, 20 Apr 2022 16:50:33 +0800
+        with ESMTP id S233570AbiDTSYN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Apr 2022 14:24:13 -0400
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46260369F7
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Apr 2022 11:21:26 -0700 (PDT)
+Received: by mail-qv1-xf29.google.com with SMTP id i14so1921244qvk.13
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Apr 2022 11:21:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bVFP1gGjko/YJi0nbJpTtGAq5TvC3VumTUjcBAwlTNE=;
+        b=d6gSUYNXbuKckgW+ap7hqiYT1Yh8xGJWqO29rnp/76z48eezBIhE7VXobrcbjMdMWN
+         21nFfbn7z03zH3btcTiUWcwbvAO4T7Z9c7qxqB7dFk70LZb0XD7htwdvsXNQKvbxOHRU
+         rgZE3MMFuhUmWlhiAlMo9v9sX6TXu4obqYGOF7fgEHKPsATnjs1fECz6iIITUnEsa/aJ
+         elb7SArs4cYsDPx0OajZOJHucfJfu+WiHwrFo+odqcW5lRBFwBcC7D3ck+mzS0DoEuYd
+         1x26weqEpHte0vJiJB+m1P30ajEvZfJQ0y695SggcY5W5P97Bv86JWPFt6gna9F3lPpi
+         sw3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bVFP1gGjko/YJi0nbJpTtGAq5TvC3VumTUjcBAwlTNE=;
+        b=KYtpQWwzXOMFdZ4h3kD6AZbp98MzWOnxehV/Dy1MhY93CMPqifaw017Z4Rxh2oiX15
+         4xDva9EYQLXtvO2r3c5sA2dTPQVmHhc7Aibm/kdzNqDBNL6OhxWmJ8NUr5icdRR/MDfG
+         O8cuk6dzgQCOzK5msVUEL8mQX5DfsaigD4s0ngk7iE+DY/OGZ1kP54Sjf90O1Rluammk
+         wiO1ecGH8f9EFHM8OCJDVNEaPawdNiaqjTP+Lzk8rgoh9JGHqVbTOL43KHp1I9h1TbG1
+         nioqEGYYUjT/pneiMcqy0HWBm5+TA2p7bTYNaeaxq1Zq3e/iJ2wRaGFLOIm/ZIcDUEzX
+         VI/A==
+X-Gm-Message-State: AOAM532HP14jpoplzAkaJx4+OAEyZSNlnG/FAwhbXwj2QH1gwsQ8Lpc9
+        1hhz+JIfU94BcZEpB5az1wCNrdA+mkw=
+X-Google-Smtp-Source: ABdhPJwkeAGo8F+Zx3syxGRvOykdEAZWmHNy5zgbwmniwdJoOn8tOx3DDv1ewXuZPa3Z1sdEP2wxmQ==
+X-Received: by 2002:ad4:4a07:0:b0:444:4bf6:3571 with SMTP id m7-20020ad44a07000000b004444bf63571mr16570990qvz.47.1650478885103;
+        Wed, 20 Apr 2022 11:21:25 -0700 (PDT)
+Received: from kolga-mac-1.vpn.netapp.com ([2600:1700:6a10:2e90:7d70:fdbf:14d0:5acc])
+        by smtp.gmail.com with ESMTPSA id e15-20020a05622a110f00b002f33d65b065sm2111907qty.73.2022.04.20.11.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Apr 2022 11:21:24 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/1] SUNRPC release the transport of a relocated task with an assigned transport
+Date:   Wed, 20 Apr 2022 14:21:21 -0400
+Message-Id: <20220420182121.87341-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.2.1
-From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
-Subject: Re: [PATCH -next 1/2] nfs: nfs{,4}_file_flush should consume
- writeback error
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "smayhew@redhat.com" <smayhew@redhat.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "liuyongqiang13@huawei.com" <liuyongqiang13@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
-        "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>
-References: <20220305124636.2002383-1-chenxiaosong2@huawei.com>
- <20220305124636.2002383-2-chenxiaosong2@huawei.com>
- <ca81e90788eabbf6b5df5db7ea407199a6a3aa04.camel@hammerspace.com>
- <5666cb64-c9e4-0549-6ddb-cfc877c9c071@huawei.com>
- <eab4bbb565a50bd09c2dbd3522177237fde2fad9.camel@hammerspace.com>
- <037054f5ac2cd13e59db14b12f4ab430f1ddef5d.camel@hammerspace.com>
- <4a8e21fb-d8bf-5428-67e5-41c47529e641@huawei.com>
- <0528423f710cd612262666b1533763943c717273.camel@hammerspace.com>
- <ccd017a4-31f1-297f-b2e2-e71eb16f1159@huawei.com>
- <9fc83915a24d7b65d743910dd0f0e5f3d0373596.camel@hammerspace.com>
-In-Reply-To: <9fc83915a24d7b65d743910dd0f0e5f3d0373596.camel@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.52]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemm600015.china.huawei.com (7.193.23.52)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-在 2022/4/12 22:27, Trond Myklebust 写道:
+From: Olga Kornievskaia <kolga@netapp.com>
 
->
-> It will clear ENOSPC, EDQUOT and EFBIG. It should not clear other
-> errors that are not supposed to be reported by write().
-> 
-> As I keep repeating, that is _documented behaviour_!
-> 
+A relocated task must release its previous transport.
 
-Hi Trond:
+Fixes: 82ee41b85cef1 ("SUNRPC don't resend a task on an offlined transport")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+---
+ net/sunrpc/clnt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-You may mean that write(2) manpage described:
-
-> Since Linux 4.13, errors from write-back come with a promise that
-> they may be reported by subsequent.  write(2) requests, and will be
-> reported by a subsequent fsync(2) (whether or not they were also
-> reported by write(2)).
-
-The manpage mentioned that "reported by a subsequent fsync(2)", your 
-patch[1] clear the wb err on _async_ write(), and wb err will _not_ be 
-reported by subsequent fsync(2), is it documented behaviour?
-
-All other filesystems will _not_ clear any wb err on _async_ write().
-
-[1] 
-https://patchwork.kernel.org/project/linux-nfs/patch/20220411213346.762302-4-trondmy@kernel.org/
-
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index af0174d7ce5a..95de454a858b 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -1067,8 +1067,10 @@ void rpc_task_set_transport(struct rpc_task *task, struct rpc_clnt *clnt)
+ {
+ 	if (task->tk_xprt &&
+ 			!(test_bit(XPRT_OFFLINE, &task->tk_xprt->state) &&
+-                        (task->tk_flags & RPC_TASK_MOVEABLE)))
++			(task->tk_flags & RPC_TASK_MOVEABLE))) {
++			xprt_release_write(task->tk_xprt, task);
+ 		return;
++	}
+ 	if (task->tk_flags & RPC_TASK_NO_ROUND_ROBIN)
+ 		task->tk_xprt = rpc_task_get_first_xprt(clnt);
+ 	else
+-- 
+2.27.0
 
