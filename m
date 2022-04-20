@@ -2,133 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8EA4509262
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Apr 2022 23:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E3165093B7
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Apr 2022 01:48:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1382691AbiDTVzq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Apr 2022 17:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38854 "EHLO
+        id S1383275AbiDTXvE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Apr 2022 19:51:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357179AbiDTVzp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Apr 2022 17:55:45 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AEDB345513;
-        Wed, 20 Apr 2022 14:52:57 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-115-138.pa.nsw.optusnet.com.au [49.181.115.138])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id A37F310E5CE6;
-        Thu, 21 Apr 2022 07:52:54 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1nhIFo-002XWU-OW; Thu, 21 Apr 2022 07:52:52 +1000
-Date:   Thu, 21 Apr 2022 07:52:52 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "xuyang2018.jy@fujitsu.com" <xuyang2018.jy@fujitsu.com>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "jlayton@kernel.org" <jlayton@kernel.org>,
-        "ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>
-Subject: Re: [PATCH v4 1/8] fs: move sgid strip operation from
- inode_init_owner into inode_sgid_strip
-Message-ID: <20220420215252.GO1544202@dread.disaster.area>
-References: <1650368834-2420-1-git-send-email-xuyang2018.jy@fujitsu.com>
- <20220419140508.b6c4uit3u5hmdql4@wittgenstein>
- <625F6FE6.4010305@fujitsu.com>
+        with ESMTP id S230418AbiDTXvE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Apr 2022 19:51:04 -0400
+Received: from mail-yb1-xb30.google.com (mail-yb1-xb30.google.com [IPv6:2607:f8b0:4864:20::b30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453C33AA4D
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Apr 2022 16:48:16 -0700 (PDT)
+Received: by mail-yb1-xb30.google.com with SMTP id r189so5760144ybr.6
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Apr 2022 16:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q3O9US0n2UzXan2e21MKKNaMm8F8Zb9/4YNMGiLrWSA=;
+        b=phouAeM8+n8/21EdjUq29cMvCCmXV7I+mFVHMA8yRhbI2ZeFhFME+GsM/YdkOJ+z/C
+         09m7jApTuCTrba/kNnDGoZSYEvoGHgSOiITF5H9A3af9FDDIcvsqoDLKu6yuIdfB9IPX
+         l9D/NwMBQdwML+N7r71OOoBnqETGhQ28QVV55htKbX1W/CUzBTfuAv4ecz8RKIEQjmGU
+         Km2uONTd50ZhFS0i3aQHRgc5CjKQ7Hy0Zu8yU2+wPZvLti/8mCg9sotjWVhRQk6yEDtv
+         K1qMIuG30ErHEDEB5Goe0y0nhRc0kQTfVt+A+TMJWRgza//sPVxMl833ROub+LS1u7mN
+         TGEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q3O9US0n2UzXan2e21MKKNaMm8F8Zb9/4YNMGiLrWSA=;
+        b=m7AkMAOByEvaA54kBnly8CM9eYgpEcjTojEEI0yHLaDsTsjx8oYleHYQj+Mxns1AO8
+         Odaz7yfjnftHJZvKE3FF6vh56rrTeuFFiTxrfjlzVnTp4cl9qY5mo++UwKOZp0cccKxx
+         r/cTRnWOHcOOtn3kCrcaUlEEiZxztjCGou+wuO7Zebir7rjPe+rVnJg+JdI1dpJcAY7q
+         8khFGXRTv5KUNZ985DMEekGNOkOlrhtB2OBNggTaugSJz1b+5Pfa1i6T8pDHYC5hfHAZ
+         9HiJFTA6GLlW3Aiqj2FGrhgcdmQdBbcBsEeAhZkpJpdxilgblsjSezidPeua+jEtwa4I
+         plgg==
+X-Gm-Message-State: AOAM531t5xbgUYo6H3wrOiMYgx4U2MC5Ppr7wxyziieOLB3e5l1wZuIE
+        KCaDUgNQwK11z5HNxTdK8Y5LmfacvPZ903czP04YvhDA+4fzQxTF
+X-Google-Smtp-Source: ABdhPJzWLoKAq5dHEia+wimiT6TUUscUqI7ZhR1vGw31AVQAJjofyoXALdULrnUoTC9yRFf+12BPW0BeXJZlf+J/VTE=
+X-Received: by 2002:a25:2d4d:0:b0:641:d14e:ff85 with SMTP id
+ s13-20020a252d4d000000b00641d14eff85mr21674484ybe.128.1650498495301; Wed, 20
+ Apr 2022 16:48:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <625F6FE6.4010305@fujitsu.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=626080b7
-        a=/kVtbFzwtM2bJgxRVb+eeA==:117 a=/kVtbFzwtM2bJgxRVb+eeA==:17
-        a=kj9zAlcOel0A:10 a=z0gMJWrwH1QA:10 a=omOdbC7AAAAA:8 a=VwQbUJbxAAAA:8
-        a=7-415B0cAAAA:8 a=dB9dRndzBIRXieEivdAA:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20220414110838.883074566@linuxfoundation.org> <CA+G9fYvgzFW7sMZVdw5r970QNNg4OK8=pbQV0kDfbOX-rXu5Rw@mail.gmail.com>
+In-Reply-To: <CA+G9fYvgzFW7sMZVdw5r970QNNg4OK8=pbQV0kDfbOX-rXu5Rw@mail.gmail.com>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 21 Apr 2022 05:18:03 +0530
+Message-ID: <CA+G9fYscMP+DTzaQGw1p-KxyhPi0JB64ABDu_aNSU0r+_VgBHg@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/338] 4.19.238-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+        slade@sladewatkins.com, Netdev <netdev@vger.kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Apr 20, 2022 at 01:27:39AM +0000, xuyang2018.jy@fujitsu.com wrote:
-> on 2022/4/19 22:05, Christian Brauner wrote:
-> > On Tue, Apr 19, 2022 at 07:47:07PM +0800, Yang Xu wrote:
-> >> This has no functional change. Just create and export inode_sgid_strip api for
-> >> the subsequent patch. This function is used to strip S_ISGID mode when init
-> >> a new inode.
-> >>
-> >> Acked-by: Christian Brauner (Microsoft)<brauner@kernel.org>
-> >> Signed-off-by: Yang Xu<xuyang2018.jy@fujitsu.com>
-> >> ---
-> >>   fs/inode.c         | 22 ++++++++++++++++++----
-> >>   include/linux/fs.h |  3 ++-
-> >>   2 files changed, 20 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/fs/inode.c b/fs/inode.c
-> >> index 9d9b422504d1..3215e61a0021 100644
-> >> --- a/fs/inode.c
-> >> +++ b/fs/inode.c
-> >> @@ -2246,10 +2246,8 @@ void inode_init_owner(struct user_namespace *mnt_userns, struct inode *inode,
-> >>   		/* Directories are special, and always inherit S_ISGID */
-> >>   		if (S_ISDIR(mode))
-> >>   			mode |= S_ISGID;
-> >> -		else if ((mode&  (S_ISGID | S_IXGRP)) == (S_ISGID | S_IXGRP)&&
-> >> -			 !in_group_p(i_gid_into_mnt(mnt_userns, dir))&&
-> >> -			 !capable_wrt_inode_uidgid(mnt_userns, dir, CAP_FSETID))
-> >> -			mode&= ~S_ISGID;
-> >> +		else
-> >> +			inode_sgid_strip(mnt_userns, dir,&mode);
-> >>   	} else
-> >>   		inode_fsgid_set(inode, mnt_userns);
-> >>   	inode->i_mode = mode;
-> >> @@ -2405,3 +2403,19 @@ struct timespec64 current_time(struct inode *inode)
-> >>   	return timestamp_truncate(now, inode);
-> >>   }
-> >>   EXPORT_SYMBOL(current_time);
-> >> +
-> >> +void inode_sgid_strip(struct user_namespace *mnt_userns,
-> >> +		      const struct inode *dir, umode_t *mode)
-> >> +{
+On Mon, 18 Apr 2022 at 14:09, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> On Thu, 14 Apr 2022 at 18:45, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > I think with Willy agreeing in an earlier version with me and you
-> > needing to resend anyway I'd say have this return umode_t instead of
-> > passing a pointer.
-> 
-> IMO, I am fine with your and Willy way. But I need a reason otherwise
-> I can't convince myself why not use mode pointer directly.
+> > This is the start of the stable review cycle for the 4.19.238 release.
+> > There are 338 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat, 16 Apr 2022 11:07:54 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.238-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+>
+>
+> Following kernel warning noticed on arm64 Juno-r2 while booting
+> stable-rc 4.19.238. Here is the full test log link [1].
+>
+> [    0.000000] Booting Linux on physical CPU 0x0000000100 [0x410fd033]
+> [    0.000000] Linux version 4.19.238 (tuxmake@tuxmake) (gcc version
+> 11.2.0 (Debian 11.2.0-18)) #1 SMP PREEMPT @1650206156
+> [    0.000000] Machine model: ARM Juno development board (r2)
+> <trim>
+> [   18.499895] ================================
+> [   18.504172] WARNING: inconsistent lock state
+> [   18.508451] 4.19.238 #1 Not tainted
+> [   18.511944] --------------------------------
+> [   18.516222] inconsistent {IN-SOFTIRQ-W} -> {SOFTIRQ-ON-W} usage.
+> [   18.522242] kworker/u12:3/60 [HC0[0]:SC0[0]:HE1:SE1] takes:
+> [   18.527826] (____ptrval____)
+> (&(&xprt->transport_lock)->rlock){+.?.}, at: xprt_destroy+0x70/0xe0
+> [   18.536648] {IN-SOFTIRQ-W} state was registered at:
+> [   18.541543]   lock_acquire+0xc8/0x23c
+> [   18.545216]   _raw_spin_lock+0x50/0x64
+> [   18.548973]   xs_tcp_state_change+0x1b4/0x440
+> [   18.553343]   tcp_rcv_state_process+0x684/0x1300
+> [   18.557972]   tcp_v4_do_rcv+0x70/0x290
+> [   18.561731]   tcp_v4_rcv+0xc34/0xda0
+> [   18.565316]   ip_local_deliver_finish+0x16c/0x3c0
+> [   18.570032]   ip_local_deliver+0x6c/0x240
+> [   18.574051]   ip_rcv_finish+0x98/0xe4
+> [   18.577722]   ip_rcv+0x68/0x210
+> [   18.580871]   __netif_receive_skb_one_core+0x6c/0x9c
+> [   18.585847]   __netif_receive_skb+0x2c/0x74
+> [   18.590039]   netif_receive_skb_internal+0x88/0x20c
+> [   18.594928]   netif_receive_skb+0x68/0x1a0
+> [   18.599036]   smsc911x_poll+0x104/0x290
+> [   18.602881]   net_rx_action+0x124/0x4bc
+> [   18.606727]   __do_softirq+0x1d0/0x524
+> [   18.610484]   irq_exit+0x11c/0x144
+> [   18.613894]   __handle_domain_irq+0x84/0xe0
+> [   18.618086]   gic_handle_irq+0x5c/0xb0
+> [   18.621843]   el1_irq+0xb4/0x130
+> [   18.625081]   cpuidle_enter_state+0xc0/0x3ec
+> [   18.629361]   cpuidle_enter+0x38/0x4c
+> [   18.633032]   do_idle+0x200/0x2c0
+> [   18.636353]   cpu_startup_entry+0x30/0x50
+> [   18.640372]   rest_init+0x260/0x270
+> [   18.643870]   start_kernel+0x45c/0x490
+> [   18.647625] irq event stamp: 18931
+> [   18.651037] hardirqs last  enabled at (18931): [<ffff00000832e800>]
+> kfree+0xe0/0x370
+> [   18.658799] hardirqs last disabled at (18930): [<ffff00000832e7ec>]
+> kfree+0xcc/0x370
+> [   18.666564] softirqs last  enabled at (18920): [<ffff000008fbce94>]
+> rpc_wake_up_first_on_wq+0xb4/0x1b0
+> [   18.675893] softirqs last disabled at (18918): [<ffff000008fbce18>]
+> rpc_wake_up_first_on_wq+0x38/0x1b0
+> [   18.685217]
+> [   18.685217] other info that might help us debug this:
+> [   18.691758]  Possible unsafe locking scenario:
+> [   18.691758]
+> [   18.697689]        CPU0
+> [   18.700137]        ----
+> [   18.702586]   lock(&(&xprt->transport_lock)->rlock);
+> [   18.707562]   <Interrupt>
+> [   18.710184]     lock(&(&xprt->transport_lock)->rlock);
+> [   18.715335]
+> [   18.715335]  *** DEADLOCK ***
 
-You should listen to experienced developers like Willy and Christian
-when they say "follow existing coding conventions".  Indeed, Darrick
-has also mentioned he'd prefer it to return the new mode, and I'd
-also prefer that it returns the new mode.
+My bisect script pointed to the following kernel commit,
 
-> I have asked you and Willy before why return umode_t value is better, 
-> why not modify mode pointer directly? Since we have use mode as 
-> argument, why not modify mode pointer directly in function?
+BAT BISECTION OLD: This iteration (kernel rev
+2d235d26dcf81d34c93ba8616d75c804b5ee5f3f) presents old behavior.
+242a3e0c75b64b4ced82e29e07a6d6d98eeec826 is the first new commit
+commit 242a3e0c75b64b4ced82e29e07a6d6d98eeec826
+Author: NeilBrown <neilb@suse.de>
+Date:   Tue Mar 8 13:42:17 2022 +1100
 
-If the function had mulitple return status (e.g. an error or a mode)
-the convention is to pass the mode output variable by reference and
-return the error status. But there is only one return value from
-this function - the mode - and hence it should be returned in the
-return value, not passed by reference.
+    SUNRPC: avoid race between mod_timer() and del_timer_sync()
 
-Passing by reference unnecessarily makes the code more complex and
-less mainatainable.  Code that returns a single value is easy to
-understand, is more flexible in the way callers can use it and it's
-simpler to maintain.
+    commit 3848e96edf4788f772d83990022fa7023a233d83 upstream.
 
-Cheers,
+    xprt_destory() claims XPRT_LOCKED and then calls del_timer_sync().
+    Both xprt_unlock_connect() and xprt_release() call
+     ->release_xprt()
+    which drops XPRT_LOCKED and *then* xprt_schedule_autodisconnect()
+    which calls mod_timer().
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+    This may result in mod_timer() being called *after* del_timer_sync().
+    When this happens, the timer may fire long after the xprt has been freed,
+    and run_timer_softirq() will probably crash.
+
+    The pairing of ->release_xprt() and xprt_schedule_autodisconnect() is
+    always called under ->transport_lock.  So if we take ->transport_lock to
+    call del_timer_sync(), we can be sure that mod_timer() will run first
+    (if it runs at all).
+
+    Cc: stable@vger.kernel.org
+    Signed-off-by: NeilBrown <neilb@suse.de>
+    Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+    Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+ net/sunrpc/xprt.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+ --
+Linaro LKFT
+https://lkft.linaro.org
