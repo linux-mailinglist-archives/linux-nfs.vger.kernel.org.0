@@ -2,297 +2,162 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F9F850BFF0
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Apr 2022 20:50:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FE9050C454
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Apr 2022 01:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbiDVSvK convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 22 Apr 2022 14:51:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42272 "EHLO
+        id S232834AbiDVW2k (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Apr 2022 18:28:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiDVSvJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Apr 2022 14:51:09 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05olkn20823.outbound.protection.outlook.com [IPv6:2a01:111:f400:7d00::823])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4886AFAD1D
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Apr 2022 11:47:27 -0700 (PDT)
+        with ESMTP id S233110AbiDVW1d (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Apr 2022 18:27:33 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E5A53565DA
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Apr 2022 14:58:44 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 23MIkiLC019231;
+        Fri, 22 Apr 2022 19:02:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : content-type : content-id : content-transfer-encoding
+ : mime-version; s=corp-2021-07-09;
+ bh=YZJVvRWsGFJBwD0b4XitHY/wabKCOLD78RJ7XmNFJzs=;
+ b=CrNC9pESMUJinWC7oBaQDIk8mgmfHVhywMZgS62X1dGtS0ttQeoZ8Zrzfux9WIXSnUS8
+ X6tegKckyKYUChQiP7yBgUhewfa+4mkgOQNa1YqzTKIluzQlnCk6QbCvPUnPNGFD+e6X
+ q8Kp7NOONixG2Mnk91xJ/s7V7i1RGmjzneGuiY5WyjIY0hLZLwEL0FmVaP0fIS5EsFIf
+ zfmODifiIRhDBfqk+elZUcqRsvYRkg/CLAuSd1h4lsZJfWOaUIL+HvH1wfY4Vsyj08/g
+ VRBDNhC/yhYsyQazAr4TgQDsa736GGw/3VmNei4CZE+8O8+WUK1ocycJb7VtSu/GGwQc zQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com with ESMTP id 3ffmk2yhfs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Apr 2022 19:02:15 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23MJ1tuQ025253;
+        Fri, 22 Apr 2022 19:02:15 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam07lp2045.outbound.protection.outlook.com [104.47.56.45])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3ffm8b8bup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 22 Apr 2022 19:02:14 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ex2oustAkwFLvi609vqeZbQmYta9tANdnhAzyMV5OkL3fYS+y4zG7Sifkh1HA/d42Mdqy/EB4b2EaVceeHNdLbcLKR/yPAhaUNTx5g/OFCbVwglvqgq+cIH+wunEgnEGv4rTeqJNaNhjqYi74Fk9gtYSppP5UnEIMNCK35YM4CqvZPqoDdscVTPXDHAwDW7lRSB2DNYgIGJ2mA+er4Y0fiQOeOPsBOMmCY2zhq4z69X3kn1jbV/Wn4qZNFeZqyccrWu+hIpFO5KpbeyF7bhFNZyauPhr7KS2/oBlvANPkZXPxrjitGUSfnTMd1INiOOnIWcIXG6RQdgE85unjrtlug==
+ b=HUK3uKl7v0DLMS+ZeeZ7z1DO59A7uGn2xsz0Vqm/TJDX17rWlr4edeWBI4jIBHkXb3ETI/mRHoCbPljoepIWDgSd47frWW+6K1rASDF9fF1xGaRNhTe/X3smjXv1xGbA3QtgXXkcOgNcLWMtSYzm2/1mfTv18qpqq2nS2a7/wzTMJ0sKMHpDwRgKe9zQfAEP1ngZtkJbAOaptp6uXBAYGQM/ZH7gfHeGHlsn6PS0sKzxIOBp8FKdKgDPkURmqj0E7Aq1invZ6TjKUX03nfKPoKx1pn2NQbwgVOo4w2T33jfgjt37L0Syw4AvX4rUvygGouKecdN3bTI6lIIsY7j5uA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RetI4yZ3O6ydvnbq8rDsNwb4PZrr21cT/BWr9wzxIFI=;
- b=dBnTodaTtVnMDB77CZ0nv6D9MjISO+778k4uiGxXpuZCqtyNi0MA+jdV0/umawNOOrwwD8BP+66TwAEbqid+sAhxBPqZ5rX3eCJiGOAibzUcC2/N5ff2nuuazpsCK2LSLzAxyhYWxLPZu14LrsDVg4e2LByhvlmrmy9fektSyQRrl1g0nFVjXracAmjDwSqZOchNGDR+ECYPf46ZNjwwigvFznPfM7oTTyfgJtRGTIWwsfP+vniBuMIJGlMT3SZQeyWbEFuYvWckgk2vzE/rQ65riWIPJzj1ZCX1keFv9lY8/td4hFEc+nfzth8/cC13xT+uMobJ2unGlFF5vzjlOw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from AM9P191MB1665.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:267::24)
- by AM9P191MB1794.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:3ef::16) with
+ bh=YZJVvRWsGFJBwD0b4XitHY/wabKCOLD78RJ7XmNFJzs=;
+ b=UoKT30mdfferpkdXl6gcdj/Z1g60Ntq2HmtM6kgX+Bft7WsFJdEdPGdfsPP8CRL6QjilgO9qiuKXX6UefD7nBsQnfSgLJwyIkOuRmtJU8sPjbD4//7g4uONmfyt8PoNoshRU7RI3huep98GEMYuBRHG6mbka3filMCc+K9DfSGTchGotrrczq7XDx0JuSya49AA2hYG00iNK+nYnfI049j8Kgohbo29MyPxQheqPIbYdcYBKgZ5FeGr3Eolsk6jp2I4y5R8de31ukmV8YzmVri+kZqIcAJiJHgzcNO9fW98zEcIUFpsHVNauN34HBiJ7nWQ+PCjTfmDpx4uSZXNpRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YZJVvRWsGFJBwD0b4XitHY/wabKCOLD78RJ7XmNFJzs=;
+ b=qL62+thU2dFneeeAkGf0EkQspqs/bDUBGQrBPqCCtohE+AHSG/h8rs6OUM42GrUxQMMngp9p/S1gKxhW7pKe+uUzfjnEDmNdvaQ+KVHADWU+pETmwLYZG+jbd4TOYIMIUehKx8aGXYJJJNhJQXDAvu3RAVJfKb64JUH3++N2NjE=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SJ0PR10MB4768.namprd10.prod.outlook.com (2603:10b6:a03:2d3::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.15; Fri, 22 Apr
- 2022 18:43:23 +0000
-Received: from AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
- ([fe80::543a:843f:f401:da2a]) by AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
- ([fe80::543a:843f:f401:da2a%5]) with mapi id 15.20.5186.015; Fri, 22 Apr 2022
- 18:43:23 +0000
-From:   "crispyduck@outlook.at" <crispyduck@outlook.at>
-To:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Rick Macklem <rmacklem@uoguelph.ca>
-CC:     Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: AW: Problems with NFS4.1 on ESXi
-Thread-Topic: Problems with NFS4.1 on ESXi
-Thread-Index: AQHYVOLTJWvLLebuJE+8fGO0gJ9faaz5zdx5gACo0QCAAAJi6IAAGkiAgAAlUYCAAE6KrIABBqgAgAA5RS4=
-Date:   Fri, 22 Apr 2022 18:43:23 +0000
-Message-ID: <AM9P191MB1665D6D3AF49AF0DFCAD31698EF79@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
-References: <AM9P191MB1665484E1EFD2088D22C2E2F8EF59@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
- <AM9P191MB16655E3D5F3611D1B40457F08EF49@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
- <4D814D23-58D6-4EF0-A689-D6DD44CB2D56@oracle.com>
- <AM9P191MB16651F3A158CAED8F358602A8EF49@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
- <20220421164049.GB18620@fieldses.org> <20220421185423.GD18620@fieldses.org>
- <YT2PR01MB973028EFA90F153C446798C1DDF49@YT2PR01MB9730.CANPRD01.PROD.OUTLOOK.COM>
- <20220422151534.GA29913@fieldses.org>
-In-Reply-To: <20220422151534.GA29913@fieldses.org>
-Accept-Language: de-AT, en-US
-Content-Language: de-AT
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Fri, 22 Apr
+ 2022 19:02:11 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::ed81:8458:5414:f59f%7]) with mapi id 15.20.5186.015; Fri, 22 Apr 2022
+ 19:02:11 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Subject: Reminder: Spring 2022 NFS Bake-a-thon
+Thread-Topic: Reminder: Spring 2022 NFS Bake-a-thon
+Thread-Index: AQHYVnt4KHskqzCI3Eq+r7mpDT1VGw==
+Date:   Fri, 22 Apr 2022 19:02:11 +0000
+Message-ID: <ABA3EBD3-05ED-4A92-8233-53C092DEC55E@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-suggested_attachment_session_id: 3b2abf01-1213-80f2-2049-384f91ed5c66
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [dpq3kt2Ul89QrvoB67Ej40NkDyzR1tsr]
+x-mailer: Apple Mail (2.3654.120.0.1.13)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6248630d-8b4b-46bf-3a48-08da248ffadd
-x-ms-traffictypediagnostic: AM9P191MB1794:EE_
+x-ms-office365-filtering-correlation-id: 9b878fac-6d14-4778-472a-08da24929b18
+x-ms-traffictypediagnostic: SJ0PR10MB4768:EE_
+x-microsoft-antispam-prvs: <SJ0PR10MB4768D373B1F9D8396E1C330593F79@SJ0PR10MB4768.namprd10.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OFvH3jlTU25SfXMpWWfE/RIdI1e1LJrZR+U5xWdFbqkedi6FbZzILp1wZ7R0DB8EcJGbdb0oP06y4oce7Ckhrys5Fl2mIbzFfB5ltnxADFgRxZXMis7SM4+ppnRQG24tGQqoqMsiTpeTtUw9BtwKGJontl6O0J0oaOQlqO7/ylVu0F5zGewMA+T9XNH5mdWqFV9GrcEjxhFQzAwQKB9sc5BLb4fDvYkgn2Y3Mi6tNZX/KQDYhq7oBHEJVEBogFncItszgRCnZpcxmMTEZrYBRZKLATNNxJufXglV9TZupZPSPetJRWcTd1tJR7UZBYJTwHc+mA+yO3DwjVcf0/2aU1oPmcovPXOaXFB4Z+VeSQX2w2AMqio1Q3iE0Gl5l2KAApRwIYiFsaDj6Okt4oehQSppxW8o72xFFDYRhvfSkRTvx6RYMyndRMYDPhyzwIm/oqr2y4+hpof8s42h2tZ0Ddbtfd2LpA4G1d87T8FNbwHFmTJVeT1DTHU6PrcpU+SeX4YJpN2qJiM4hwVpmNoHnVlz3ti1o67yqVdzFJWEMT4+aJ8eBYk2AlwUfkMSCnjgR8x5NP44XnnKXOxEkWDgOz9yyFS7YVyBP1CwUp+qfiy/MgxuJpsT0MCe30YvC0tV
+x-microsoft-antispam-message-info: ynfWXNfCr9M5cHB17CY6bbs7VmjNVm+jKKzBq8kiIKMlTic/9rmts7p2K+Tg5RidIZB4xLYKqTBfJKmXnEhVWliX1wt7pmKOqJtjNp5QO+tDLlEJfldTggeO1zY2Xf2hemHN4k02iu15f52yJoshFe/V6+8aUCRXhLQfG5O+YT/tsDcSh6RB23zYylW9TCzus/Dxc3O++rM6wr9yaGzTpA4/kAtwnx/T+XIjvIuOG2GNqp45bp6Oj0fiSQIYLfGfHP9qlDW9FrRJoDt3tUM4OkxcR7PG6QCS0MKm71szroHw/WmHUJ3+T5WjHwFTGKyVvCcddZr/gjTMVoVvF/16DssC/xh6LRxqi7hTYHx6eu1Hx4doTWj4t09CNlaFzRCCR/8ocYGbqPrKTFwzeAHpqibgN5XdDMGAi6m3rMGvEmZQcNzfdajfog473vY/rwnwxjBPp1pkbEVyTRb+bftgjKldhTp1s7dazviTBtPBONMHmA1/v7T0KXToS/OGKXNutkUvZfZ61Sx7/HUqgqvMDi85jqrG6MoyiSLvKeiJTW645YBCxUtqZAOL6XkI48ZmpUFOz/orAOr0GK194ZWvYUJm5YqPwpFuhOHFssAuhm6b128jsBZnYTWg4LhBT1TwylwXWe4ZTIsvfbVHywGf72ipjHABoZcmKzH1OUgoKCJOR+OQ87HIRZ2ZOl/mi+T+2YmQJh5tsvdV/hqn4T/cFHermLbzrnAC5B+iRfht2M9zrTmKS6gxuJmTUQa6ReMgxlWfH8Nck6vHxY5MYa9zerKAVPo3mafm3cDASVIo/iZQM4LSmQIiMqlxazDSC6s18VweVq/StgsBSapMaN3DFbB7tmzd7EbAFhF+K7tt118=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6512007)(26005)(966005)(508600001)(2906002)(6506007)(122000001)(38070700005)(38100700002)(6486002)(5660300002)(86362001)(2616005)(4744005)(186003)(71200400001)(83380400001)(91956017)(8936002)(37006003)(6200100001)(316002)(6862004)(8676002)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(36756003)(33656002)(45980500001)(15302535012);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-1?Q?1OwYdOe7/DD1TKABcePCxxEKsGwyZAG+mv/YuWtoCmzQ1mXLv7/WZ2jZqx?=
- =?iso-8859-1?Q?k49wdTnaNLjvcMfumTC+hPB9FtduJ1oM25JeU53otYrJkUYvonTqfF/76N?=
- =?iso-8859-1?Q?4QVmXzdqJ55mvluYC2jFg1yFmpG6o33oriJas3+QhJ7KkE11x0Zdtld+32?=
- =?iso-8859-1?Q?LNgN00PRJLWeNTriAXFcvROWAos0bHm2xmkNP3SINTaM5Li6keJFwHXIc9?=
- =?iso-8859-1?Q?4CAyzcY3jDwxc+simojAwZ9dRBvNr3x6t2h69YLCneZSvYJSN6EsK7wUdS?=
- =?iso-8859-1?Q?Xmkrb3zBUTe5KEtLiAyO77/fhidkzqndoFwaZKRQX9otVi2k41WBjyb+tY?=
- =?iso-8859-1?Q?yaTVpqWCVaZJYQ4RNG/5hJYUqd5WIc7YiXxjplFRWEqDAiZ+HMSxf6SfWR?=
- =?iso-8859-1?Q?lf5X6j2ZE/IScTfuaOpR21g4pA9apzmEGSelQNBnspce+w3qi3GZQidgw2?=
- =?iso-8859-1?Q?5eEOniZSsDppPpImUwwWNJ5rEK8dsn4S0Mv7s8W1bRJs7ffJwb8T2VTGmo?=
- =?iso-8859-1?Q?g6VwXF/GZJYxdg5elHeR4sGLpT4dUJ2T6/5aJpBj4VtbgkkbjsUyLdfAkl?=
- =?iso-8859-1?Q?WDSdg+X7EzMclfiyEtl0mLD6sZawZAdvQnx8ajBAhniy3Ha51IrZKMcCKF?=
- =?iso-8859-1?Q?IlbZQA06YsIr4N+dWN2uVo99u5Crxb/+3P1TPJS+p0OAomp1mtsClydzhu?=
- =?iso-8859-1?Q?x8SOQvVvYJEPFtb8pnP7JndbUktEMgTP9kd7klUGcnYCJc9tS3VaCFGO3M?=
- =?iso-8859-1?Q?U6i95DydPi2WMUn1J8gHurqdt5hNxCaJ6Uv1m0gW8cWcJ/GKcqJ6Afa7c8?=
- =?iso-8859-1?Q?bCbXwICMP9N7EyLcPopd3m32rX0eX7j9ESnVtOB7hEqWZuGpo5OjRg43l5?=
- =?iso-8859-1?Q?DJNZorkeRTSuvt/vVY5BOOTt+aci/uSlrq716cfDaINV9rw7vQTALZK7wo?=
- =?iso-8859-1?Q?winI0hP0mcZTZ8upFNfb3KyQ1PbuQXYflh6SdV3xYtPeIElFPARnKvUdf9?=
- =?iso-8859-1?Q?u1vc7nVxSjrJ4LhKTOsYVqhFK2cv7S/5NIAAs/oszAOQUradbeSzpIh2IP?=
- =?iso-8859-1?Q?LrVNu96Eav/5wcyvzgdaGahhrXpl1gvkhstVVWhY8/AuFEuvWYCdztk2z7?=
- =?iso-8859-1?Q?W13g/FtHK2ZJhYAUCKDpqHaXibhh2crtLpy5C8BNa2vJaX8MD5QWgQgvqX?=
- =?iso-8859-1?Q?aUVDDqO0GiCbVurHLN6QVQJ+lf4qSAUmxCnEU5cHeOGrKq4ETXytzWau/T?=
- =?iso-8859-1?Q?qwouNG7Ehsp2oCFpA8XxHI2D+i+zinb+w5FR5rgmGi2A05Iq2Qia8rJKRj?=
- =?iso-8859-1?Q?u+yoYlPSi07UstVK2iPLmRqc/zrRGbZ1ci3wJGwVDcmpuJEHdLkomObaAt?=
- =?iso-8859-1?Q?MCXHlOSXaYsZkkzU0ogFri7eZRCnPe3Fdqt8s1BlwfVJf0c1XivVGVT+2a?=
- =?iso-8859-1?Q?OlVo92b6EydYc/vSixK2QDw7FD27Rn6OAvnPWURmi/u0gPidoy9Mpk+WXl?=
- =?iso-8859-1?Q?E=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?X8wIGVBDzQ849sGM4WsgFBUtZJ8feILTnucWp4uWvutOToJ2ha3SCo/IHK2i?=
+ =?us-ascii?Q?s3iIIGUTBKEP71GhB0dkxsCTY4Tu423O4v6zDf0C+x1+YIy5VcgTfDMfkF7b?=
+ =?us-ascii?Q?s9uGmL5/lOFTp0Vd7Kkyrt9HWH542fsQTkxnz20q26y0B4Uht6+e8eEftI23?=
+ =?us-ascii?Q?J065uHOhqOS07RpG0HK+DMkVNui7Idn9HkNZnIPVgnkzS7uRZxOZtvy3f0bC?=
+ =?us-ascii?Q?5gt79QCCfA5wwIR9XHiAYNxP0J5hOUMaJiQiGtOB0XPqAEBqFs1eWA9r9EBj?=
+ =?us-ascii?Q?j5iUIixiSIw3fJucFXEctub5rpKgs8srGGegpFc0tHmNjV1GA4sa9uExeCTX?=
+ =?us-ascii?Q?X37e9Bfy5BhAiAXDw5A8+K/+Gbe7AVj61vpIVJw/Hv1/2AYBTWMxv1hQnw/l?=
+ =?us-ascii?Q?/QLKapQ3v5U6ZEncM0MWsCDfPOF32cUPxVdLVxYjGe/4JRFq4NFVQncm9ner?=
+ =?us-ascii?Q?PDTBhpBAFDnjChCBBAwwU8dAGI8sQLyTg3LYGBgnoaIjF7kso6eKz/Tx1L5l?=
+ =?us-ascii?Q?9I/wYRFaKVPqKBGaNXPsPbgHXJQlYodP7ie2L/cA8yUbr/SH9TZkkzyN/V9w?=
+ =?us-ascii?Q?hPjX1FnLtt6ouGDSqXvpMmMMiTr3GBO55UxxERZFNWTnfloDmIwLFd5ctzZR?=
+ =?us-ascii?Q?Bn8iqBHs9CaLkEdQmxJjC6eL/8Z2N6E3IxQJgWxEwO99fzayU3jBHiIFRIok?=
+ =?us-ascii?Q?KRUZjdh2WyYsL6yMDD2UQ5Hn8VZEVjnf5eRhKXxEDQzqCuuPcNvrS4xormLi?=
+ =?us-ascii?Q?yGOrHiuId3gYf8hUCE73QYuJap8BLHymS+owAAbbEkjb7RCIXT6ibSmfysLK?=
+ =?us-ascii?Q?sBh3VMgifnRygIG9zBFNBxPnsb5lMcGT4VdMWOEottpOHdd1CvS7I91LoL1r?=
+ =?us-ascii?Q?YOqxrGesBrQ13m5EzBp8dEsAhreFMV9YLa5593yzqxPk6JuAzAsabO/4Loo1?=
+ =?us-ascii?Q?BfBPP9IepEu8Ak23ay5wmnMc4LrwZQfU3scki/2J9xIYlBwo2q58plxo/lKh?=
+ =?us-ascii?Q?5aHDi0cNlLDfbgPUqu1Z0DLObIFoewiShdKzJ/VPzxCFRTFPfQwaHah6yxsu?=
+ =?us-ascii?Q?T4P4EVW8LrLHZnOnDc0sfIBc3WC5MLM3QpoxYMsovbO3FPLs5x7+Ft2zlP+q?=
+ =?us-ascii?Q?LS/CrL+6iooM+QTtyfbQ1EBg835eHLWpJum1RBUPzMM1sh1uQ8v9dpH7DfQL?=
+ =?us-ascii?Q?WfBDPFoHH7uXkl1v5XXRuKisfBLCvforkdribNXtcS/pCVKO6w2qyFoF9EuF?=
+ =?us-ascii?Q?U2kqbxh6BqTNvNVp9uMeoSBBnDtO+wDg3k0pIB4xsWlX8DdS/Ai3cdVvxnnf?=
+ =?us-ascii?Q?dvR8XMN1trZkbtMF3JV4/dopQFH7SJPFVFTMm91C1Y2IB4V1S1Ie11botbiD?=
+ =?us-ascii?Q?qHRFAyuBcNhtcGhWo/ZlGILCYcxb8y+kMpqUwzEKeA1PxfC5aAuBQlN0WmdB?=
+ =?us-ascii?Q?PYSJ8cr4NjYrwFgCpMumpbuCMJmw6Dt0hXla0JeoOmRQfC/Gq4rio/DsbTyH?=
+ =?us-ascii?Q?NLsI/O84BVSWNUlo9j31T3DVWjWQN/lpMncHaQh1yua7Nxs+F072NT3+YczI?=
+ =?us-ascii?Q?zX5MDUX80vbFCfXagJUdqmiUdqJVlCU9y1UgVEY8TvEUiKdMVZ76LYqbwnmt?=
+ =?us-ascii?Q?ckJ9iPnThLNLGhVPeemQsCjPbQDQrqCFFvOzah4QgCn9pLGI1qE0u+8THm2b?=
+ =?us-ascii?Q?P0WeWFKdn+XuAWefL8nwK7jzK3sF7S3Q6E2Yplo9O/EBYFuXlA+OIqHHU8uj?=
+ =?us-ascii?Q?ipeQLNiZXI+GYzNJkYe6XsXh4X3A3jQ=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <E5357318232C4242873BF69E6D98FD7A@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-50200.templateTenant
+X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM9P191MB1665.EURP191.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6248630d-8b4b-46bf-3a48-08da248ffadd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2022 18:43:23.3603
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9b878fac-6d14-4778-472a-08da24929b18
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Apr 2022 19:02:11.2075
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9P191MB1794
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xONq5aAJ9OtnHWmIcrLznwzBw1Fjmn5PUqn1xe2HFS4IsPLuq+ZGmjDhd27hhuY0tpMpeLUbkjJA3g3v74QE+Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4768
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
+ definitions=2022-04-22_06:2022-04-22,2022-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 mlxscore=0
+ adultscore=0 mlxlogscore=775 suspectscore=0 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2204220081
+X-Proofpoint-GUID: vvX9yDQT3ZXesRS-KDdzL7GNKW6zKIMo
+X-Proofpoint-ORIG-GUID: vvX9yDQT3ZXesRS-KDdzL7GNKW6zKIMo
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Output of exportfs -v:
-sync,wdelay,hide,crossmnt,no_subtree_check,fsid=74345722,mountpoint,sec=sys,rw,secure,no_root_squash,no_all_squash
+Greetings,
 
-ESXi only supports NFS3 and NFS4.1, NFS4 is not supported, no idea why, think thy only somehow implemented 4.1 for session trunking and kerberos.
+This is a reminder that the Spring 2022 NFS bake-a-thon is
+happening next week, April 25 - 29, as a virtual event. More
+information about about the event and registration
+instructions are here:
 
-Br,
-Andreas
+   http://www.nfsv4bat.org/Events/2022/Apr/BAT/index.html
+
+Looking forward to seeing you (virtually) next week!
+
+--
+Chuck Lever
 
 
 
-
-Von: J. Bruce Fields <bfields@fieldses.org>
-Gesendet: Freitag, 22. April 2022 17:15
-An: Rick Macklem <rmacklem@uoguelph.ca>
-Cc: crispyduck@outlook.at <crispyduck@outlook.at>; Chuck Lever III <chuck.lever@oracle.com>; Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Betreff: Re: Problems with NFS4.1 on ESXi 
- 
-On Thu, Apr 21, 2022 at 11:52:32PM +0000, Rick Macklem wrote:
-> J. Bruce Fields <bfields@fieldses.org> wrote:
-> [stuff snipped]
-> > On Thu, Apr 21, 2022 at 12:40:49PM -0400, bfields wrote:
-> > >
-> > >
-> > > Stale filehandles aren't normal, and suggest some bug or
-> > > misconfiguration on the server side, either in NFS or the exported
-> > > filesystem.
-> > 
-> > Actually, I should take that back: if one client removes files while a
-> > second client is using them, it'd be normal for applications on that
-> > second client to see ESTALE.
-> I took a look at crispyduck's packet trace and here's what I saw:
-> Packet#
-> 48 Lookup of test-ovf.vmx
-> 49 NFS_OK FH is 0x7c9ce14b (the hash)
-> ...
-> 51 Open Claim_FH fo 0x7c9ce14b
-> 52 NFS_OK Open Stateid 0x35be
-> ...
-> 138 Rename test-ovf.vmx~ to test-ovf.vmx
-> 139 NFS_OK
-> ...
-> 141 Close with PutFH 0x7c9ce14b
-> 142 NFS4ERR_STALE for the PutFH
-> 
-> So, it seems that the Rename will delete the file (names another file to the
-> same name "test-ovf.vmx".  Then the subsequent Close's PutFH fails,
-> because the file for the FH has been deleted.
-
-Actually (sorry I'm slow to understand this)--why would our 4.1 server
-ever be returning STALE on a close?  We normally hold a reference to the
-file.
-
-Oh, wait, is subtree_check set on the export?  You don't want to do
-that.  (The freebsd server probably doesn't even give that as an
-option?)
-
---b.
-
-> 
-> Looks like yet another ESXi client bug to me?
-> (I've seen assorted other ones, but not this one. I have no idea how this
->  might work on a FreeBSD server. I can only assume the RPC sequence
->  ends up different for FreeBSD for some reason? Maybe the Close gets
->  processed before the Rename? I didn't look at the Sequence args for
->  these RPCs to see if they use different slots.)
-> 
-> 
-> > So it might be interesting to know what actually happens when VM
-> > templates are imported.
-> If you look at the packet trace, somewhat weird, like most things for this
-> client. It does a Lookup of the same file name over and over again, for
-> example.
-> 
-> > I suppose you could also try NFSv4.0 or try varying kernel versions to
-> > try to narrow down the problem.
-> I think it only does NFSv4.1.
-> I've tried to contact the VMware engineers, but never had any luck.
-> I wish they'd show up at a bakeathon, but...
-> 
-> > No easy ideas off the top of my head, sorry.
-> I once posted a list of problems I had found with ESXi 6.5 to a FreeBSD
-> mailing list and someone who worked for VMware cut/pasted it into their
-> problem database.  They responded to him with "might be fixed in a future
-> release" and, indeed, they were fixed in ESXi 6.7, so if you can get this to
-> them, they might fix it?
-> 
-> rick
-> 
-> --b.
-> 
-> > Figuring out more than that would require more
-> > investigation.
-> >
-> > --b.
-> >
-> > >
-> > > Br,
-> > > Andi
-> > >
-> > >
-> > >
-> > >
-> > >
-> > >
-> > > Von: Chuck Lever III <chuck.lever@oracle.com>
-> > > Gesendet: Donnerstag, 21. April 2022 16:58
-> > > An: Andreas Nagy <crispyduck@outlook.at>
-> > > Cc: Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-> > > Betreff: Re: Problems with NFS4.1 on ESXi
-> > >
-> > > Hi Andreas-
-> > >
-> > > > On Apr 21, 2022, at 12:55 AM, Andreas Nagy <crispyduck@outlook.at> wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > I hope this mailing list is the right place to discuss some problems with nfs4.1.
-> > >
-> > > Well, yes and no. This is an upstream developer mailing list,
-> > > not really for user support.
-> > >
-> > > You seem to be asking about products that are currently supported,
-> > > and I'm not sure if the Debian kernel is stock upstream 5.13 or
-> > > something else. ZFS is not an upstream Linux filesystem and the
-> > > ESXi NFS client is something we have little to no experience with.
-> > >
-> > > I recommend contacting the support desk for your products. If
-> > > they find a specific problem with the Linux NFS server's
-> > > implementation of the NFSv4.1 protocol, then come back here.
-> > >
-> > >
-> > > > Switching from FreeBSD host as NFS server to a Proxmox environment also serving NFS I see some strange issues in combination with VMWare ESXi.
-> > > >
-> > > > After first thinking it works fine, I started to realize that there are problems with ESXi datastores on NFS4.1 when trying to import VMs (OVF).
-> > > >
-> > > > Importing ESXi OVF VM Templates fails nearly every time with a ESXi error message "postNFCData failed: Not Found". With NFS3 it is working fine.
-> > > >
-> > > > NFS server is running on a Proxmox host:
-> > > >
-> > > >  root@sepp-sto-01:~# hostnamectl
-> > > >  Static hostname: sepp-sto-01
-> > > >  Icon name: computer-server
-> > > >  Chassis: server
-> > > >  Machine ID: 028da2386e514db19a3793d876fadf12
-> > > >  Boot ID: c5130c8524c64bc38994f6cdd170d9fd
-> > > >  Operating System: Debian GNU/Linux 11 (bullseye)
-> > > >  Kernel: Linux 5.13.19-4-pve
-> > > >  Architecture: x86-64
-> > > >
-> > > >
-> > > > File system is ZFS, but also tried it with others and it is the same behaivour.
-> > > >
-> > > >
-> > > > ESXi version 7.2U3
-> > > >
-> > > > ESXi vmkernel.log:
-> > > > 2022-04-19T17:46:38.933Z cpu0:262261)cswitch: L2Sec_EnforcePortCompliance:209: [nsx@6876 comp="nsx-esx" subcomp="vswitch"]client vmk1 requested promiscuous mode on port 0x4000010, disallowed by vswitch policy
-> > > > 2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)World: 12075: VC opID esxui-d6ab-f678 maps to vmkernel opID 936118c3
-> > > > 2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)WARNING: NFS41: NFS41FileDoCloseFile:3128: file handle close on obj 0x4303fce02850 failed: Stale file handle
-> > > > 2022-04-19T17:46:40.897Z cpu10:266351 opID=936118c3)WARNING: NFS41: NFS41FileOpCloseFile:3718: NFS41FileCloseFile failed: Stale file handle
-> > > > 2022-04-19T17:46:41.164Z cpu4:266351 opID=936118c3)WARNING: NFS41: NFS41FileDoCloseFile:3128: file handle close on obj 0x4303fcdaa000 failed: Stale file handle
-> > > > 2022-04-19T17:46:41.164Z cpu4:266351 opID=936118c3)WARNING: NFS41: NFS41FileOpCloseFile:3718: NFS41FileCloseFile failed: Stale file handle
-> > > > 2022-04-19T17:47:25.166Z cpu18:262376)ScsiVmas: 1074: Inquiry for VPD page 00 to device mpx.vmhba32:C0:T0:L0 failed with error Not supported
-> > > > 2022-04-19T17:47:25.167Z cpu18:262375)StorageDevice: 7059: End path evaluation for device mpx.vmhba32:C0:T0:L0
-> > > > 2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)World: 12075: VC opID esxui-6787-f694 maps to vmkernel opID 9529ace7
-> > > > 2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2465: Evicting VM with path:/vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
-> > > > 2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: 209: Creating crypto hash
-> > > > 2022-04-19T17:47:30.645Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2479: Could not find MemXferFS region for /vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
-> > > > 2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2465: Evicting VM with path:/vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
-> > > > 2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: 209: Creating crypto hash
-> > > > 2022-04-19T17:47:30.693Z cpu4:264565 opID=9529ace7)VmMemXfer: vm 264565: 2479: Could not find MemXferFS region for /vmfs/volumes/9f10677f-697882ed-0000-000000000000/test-ovf/test-ovf.vmx
-> > > >
-> > > > tcpdump taken on the esxi with filter on the nfs server ip is attached here:
-> > > > https://easyupload.io/xvtpt1
-> > > >
-> > > > I tried to analyze, but have no idea what exactly the problem is. Maybe it is some issue with the VMWare implementation?
-> > > > Would be nice if someone with better NFS knowledge could have a look on the traces.
-> > > >
-> > > > Best regards,
-> > > > cd
-> > >
-> > > --
-> > > Chuck Lever
-> > >
