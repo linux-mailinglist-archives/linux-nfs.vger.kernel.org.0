@@ -2,110 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 368A450CCFE
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Apr 2022 20:45:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 874B950D2A4
+	for <lists+linux-nfs@lfdr.de>; Sun, 24 Apr 2022 17:08:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236778AbiDWSrr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 23 Apr 2022 14:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36576 "EHLO
+        id S235345AbiDXPKj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 24 Apr 2022 11:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236790AbiDWSr0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Apr 2022 14:47:26 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A12151A36F1;
-        Sat, 23 Apr 2022 11:44:28 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23NH4FDt027770;
-        Sat, 23 Apr 2022 18:44:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2021-07-09;
- bh=7b7JkR7UyiekO2rdhJLWybZ3W5naeOwyD9Sx3dg/NSU=;
- b=CfjJIPGc2G/+XyPkQ2qMwqn2JBgry1qrC2IBKepTRwHMjVlrpQM5+3tXkv2kZuO5nkS6
- H1jfGJ8f0fbXcjz7iJNr5si/zHyJjF1Kj8TnpHGawidiMp6X0b/BrxiaUPQ/9k82xgFo
- E7jUD9WzHu/ZtOstjXgT9pZuS0+bilQpzxWKuYA9B/XeyqEMlJf8PboJVJRJikP0h6AT
- O1rdmy5jn1wCcCvf8ZzCW/XVuPLO8j+X5yz7M29HCoqEdOKb23ld77Kdc1MM6T/fd45z
- n5R/P8xIyHqp5l6XYal7mPdn0n9Koz6ZxtuI26LSiCAXv3s/rKiTK4c1fIXcmrLNQ8Xy GA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fmb9agnf7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 Apr 2022 18:44:25 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23NIbC7k010648;
-        Sat, 23 Apr 2022 18:44:24 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fm7w14sj7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 23 Apr 2022 18:44:24 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 23NIgih0016659;
-        Sat, 23 Apr 2022 18:44:24 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fm7w14sh1-8;
-        Sat, 23 Apr 2022 18:44:23 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, bfields@fieldses.org
-Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH RFC v21 7/7] NFSD: Show state of courtesy client in client info
-Date:   Sat, 23 Apr 2022 11:44:15 -0700
-Message-Id: <1650739455-26096-8-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1650739455-26096-1-git-send-email-dai.ngo@oracle.com>
-References: <1650739455-26096-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-ORIG-GUID: NKtsRpEpbwiosugjzTeaCQGw4kg0nNxK
-X-Proofpoint-GUID: NKtsRpEpbwiosugjzTeaCQGw4kg0nNxK
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S234141AbiDXPK0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 24 Apr 2022 11:10:26 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2929666F91
+        for <linux-nfs@vger.kernel.org>; Sun, 24 Apr 2022 08:07:26 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 6610A2085; Sun, 24 Apr 2022 11:07:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 6610A2085
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1650812845;
+        bh=zXFCjk8HvPDJxXnDMNoBRzBf2uA9PN0nX4nl/X/xwjM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aPRUYR76hZlRMW6EdiVVl0JVx5G9LH0sqgRfKBah3gHejDmJXTPwK91NVEzl8pY7L
+         H3zPMUBmXrDnngXNJTFkAjhAPBcOCTZwgl0QtGEu9+8Z/sHuUkIqEF4W20T+p9m6cM
+         hTazk7vNamUUVyC/UmnY+R7b96/DNhwiYkNk8vfk=
+Date:   Sun, 24 Apr 2022 11:07:25 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Rick Macklem <rmacklem@uoguelph.ca>
+Cc:     "crispyduck@outlook.at" <crispyduck@outlook.at>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: Problems with NFS4.1 on ESXi
+Message-ID: <20220424150725.GA31051@fieldses.org>
+References: <AM9P191MB1665484E1EFD2088D22C2E2F8EF59@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+ <AM9P191MB16655E3D5F3611D1B40457F08EF49@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+ <4D814D23-58D6-4EF0-A689-D6DD44CB2D56@oracle.com>
+ <AM9P191MB16651F3A158CAED8F358602A8EF49@AM9P191MB1665.EURP191.PROD.OUTLOOK.COM>
+ <20220421164049.GB18620@fieldses.org>
+ <20220421185423.GD18620@fieldses.org>
+ <YT2PR01MB973028EFA90F153C446798C1DDF49@YT2PR01MB9730.CANPRD01.PROD.OUTLOOK.COM>
+ <20220422151534.GA29913@fieldses.org>
+ <YT2PR01MB9730B98D68585B3B1036F6EEDDF79@YT2PR01MB9730.CANPRD01.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YT2PR01MB9730B98D68585B3B1036F6EEDDF79@YT2PR01MB9730.CANPRD01.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Update client_info_show to show state of courtesy client
-and time since last renew.
+On Fri, Apr 22, 2022 at 11:03:17PM +0000, Rick Macklem wrote:
+> J. Bruce Fields <bfields@fieldses.org> wrote:
+> > Actually (sorry I'm slow to understand this)--why would our 4.1 server
+> > ever be returning STALE on a close?  We normally hold a reference to the
+> > file.
+> Well, OPEN_RESULT_PRESERVE_UNLINKED is not set in the Open reply,
+> so even if it normally does so, it is not telling the ESXi client that it
+> will retain it.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+Yeah, we don't guarantee it, but I thought in this cases we did.  The
+object we use to represent the open stateid (indirectly) holds a
+reference on the inode that prevents it from being removed, so the
+filehandle lookup should still work.  If I had the time, I'd write an
+open-rename over-close test in pynfs and see if we could reproduce this,
+and if so see what's happening.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index f6aef1a7cc02..5810bf8d9b2d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2468,7 +2468,8 @@ static int client_info_show(struct seq_file *m, void *v)
- {
- 	struct inode *inode = m->private;
- 	struct nfs4_client *clp;
--	u64 clid;
-+	u64 clid, hrs;
-+	u32 mins, secs;
- 
- 	clp = get_nfsdfs_clp(inode);
- 	if (!clp)
-@@ -2476,10 +2477,19 @@ static int client_info_show(struct seq_file *m, void *v)
- 	memcpy(&clid, &clp->cl_clientid, sizeof(clid));
- 	seq_printf(m, "clientid: 0x%llx\n", clid);
- 	seq_printf(m, "address: \"%pISpc\"\n", (struct sockaddr *)&clp->cl_addr);
--	if (test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags))
-+
-+	if (clp->cl_state == NFSD4_COURTESY)
-+		seq_puts(m, "status: courtesy\n");
-+	else if (clp->cl_state == NFSD4_EXPIRABLE)
-+		seq_puts(m, "status: expired\n");
-+	else if (test_bit(NFSD4_CLIENT_CONFIRMED, &clp->cl_flags))
- 		seq_puts(m, "status: confirmed\n");
- 	else
- 		seq_puts(m, "status: unconfirmed\n");
-+	hrs = div_u64_rem(ktime_get_boottime_seconds() - clp->cl_time,
-+				3600, &secs);
-+	mins = div_u64_rem((u64)secs, 60, &secs);
-+	seq_printf(m, "time since last renew: %llu:%02u:%02u\n", hrs, mins, secs);
- 	seq_printf(m, "name: ");
- 	seq_quote_mem(m, clp->cl_name.data, clp->cl_name.len);
- 	seq_printf(m, "\nminor version: %d\n", clp->cl_minorversion);
--- 
-2.9.5
+> > Oh, wait, is subtree_check set on the export?  You don't want to do
+> > that.  (The freebsd server probably doesn't even give that as an
+> > option?)
+> Nope, Never heard of it.
 
+It adds a reference to the parent into the filehandle, so we can foil
+filehandle-guessing attacks on exports of subdirectories of filesystems.
+With the major drawback that it breaks on cross-directory rename, for
+example.  So it's not the default.
+
+--b.
