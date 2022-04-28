@@ -2,124 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5059151366C
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Apr 2022 16:09:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F009B513725
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Apr 2022 16:43:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240550AbiD1OMj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Apr 2022 10:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55358 "EHLO
+        id S1348410AbiD1Oqi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Apr 2022 10:46:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244125AbiD1OMj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Apr 2022 10:12:39 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9133E5371D
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Apr 2022 07:09:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651154963;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=r89Z/7oHso894jLgFkyp7GZ9nOpRmCTTiW/mUMGcSaU=;
-        b=e27E+jxRbxcgZoixFyFite40pNq+aqGYIDAvPT/L/vP9sArfpiHBAa02g+OfxeYbXIRfPU
-        i9Qb8Hu5Q3MYPus2ee4W0Uu3cIyYnXHtKzggC4Atttg2/YQ4fFo1OCxDcG9OyA9gQ+91KX
-        yC72C2RfitCMPB4QkhWM3HLg0rihGXE=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-531-_Aap0-ndPQmMqh42lv3zmw-1; Thu, 28 Apr 2022 10:09:19 -0400
-X-MC-Unique: _Aap0-ndPQmMqh42lv3zmw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S1348425AbiD1Oqi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Apr 2022 10:46:38 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2F421E38
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Apr 2022 07:43:21 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8C873811E7A;
-        Thu, 28 Apr 2022 14:09:18 +0000 (UTC)
-Received: from [172.16.176.1] (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B093463EF5;
-        Thu, 28 Apr 2022 14:09:18 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Hannes Reinecke" <hare@suse.de>
-Cc:     "Jakub Kicinski" <kuba@kernel.org>,
-        "Sagi Grimberg" <sagi@grimberg.me>,
-        "Chuck Lever" <chuck.lever@oracle.com>, netdev@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        ak@tempesta-tech.com, borisp@nvidia.com, simo@redhat.com
-Subject: Re: [PATCH RFC 4/5] net/tls: Add support for PF_TLSH (a TLS handshake
- listener)
-Date:   Thu, 28 Apr 2022 10:09:17 -0400
-Message-ID: <E2BF9CFF-9361-400B-BDEE-CF5E0AFDCA63@redhat.com>
-In-Reply-To: <be7e3c4b-8bb5-e818-1402-ac24cbbcb38c@suse.de>
-References: <165030051838.5073.8699008789153780301.stgit@oracle-102.nfsv4.dev>
- <165030059051.5073.16723746870370826608.stgit@oracle-102.nfsv4.dev>
- <20220425101459.15484d17@kernel.org>
- <66077b73-c1a4-d2ae-c8e4-3e19e9053171@suse.de>
- <1fca2eda-83e4-fe39-13c8-0e5e7553689b@grimberg.me>
- <20220426080247.19bbb64e@kernel.org>
- <40bc060f-f359-081d-9ba7-fae531cf2cd6@suse.de>
- <20220426170334.3781cd0e@kernel.org>
- <23f497ab-08e3-3a25-26d9-56d94ee92cde@suse.de>
- <20220428063009.0a63a7f9@kernel.org>
- <be7e3c4b-8bb5-e818-1402-ac24cbbcb38c@suse.de>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C53541F745;
+        Thu, 28 Apr 2022 14:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1651156999; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=4ogX/PVHTgBnVY9bfomFQYpJAsCgJeGa3J6Zuu0Pixg=;
+        b=jG1HWlbSDWdfX+6R84Y9G/sWp9p+No76xWpG7nBI5WWBgMUmyG2E7Z6TTCD7/yXOKrW1yB
+        +e15ck+H/kMGHQpbq1zW55hmCVfB4NPE3DWItZCMF/2DMul61AU/TGaGZuveJkrf00NhMY
+        kNGGE01JAbNzdyDsGLExVF0f//4aQZo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1651156999;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=4ogX/PVHTgBnVY9bfomFQYpJAsCgJeGa3J6Zuu0Pixg=;
+        b=Z0hsrR9HSvQkQWF8gN8tXOkvPKNHdEGRK0+RmtjovlTktCO75R9dyLd2Y/QS+5gLqkOe8s
+        bN47/Wrm8s1csTCw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F0EE713AF8;
+        Thu, 28 Apr 2022 14:43:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id /jOLOAaoamK9bwAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 28 Apr 2022 14:43:18 +0000
+From:   Petr Vorel <pvorel@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     Petr Vorel <pvorel@suse.cz>, Steve Dickson <steved@redhat.com>,
+        libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        Cyril Hrubis <chrubis@suse.cz>,
+        automated-testing@yoctoproject.org, Li Wang <liwang@redhat.com>,
+        Jan Stancek <jstancek@redhat.com>,
+        Yang Xu <xuyang2018.jy@fujitsu.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "J . Bruce Fields" <bfields@fieldses.org>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Veronika Kabatova <vkabatov@redhat.com>,
+        Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Subject: [RFC PATCH 0/3] Remove RPC rup and rusers tests
+Date:   Thu, 28 Apr 2022 16:43:05 +0200
+Message-Id: <20220428144308.32639-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 28 Apr 2022, at 9:51, Hannes Reinecke wrote:
+Hi all,
 
-> On 4/28/22 15:30, Jakub Kicinski wrote:
->> On Thu, 28 Apr 2022 09:26:41 +0200 Hannes Reinecke wrote:
->>> The whole thing started off with the problem on _how_ sockets could be
->>> passed between kernel and userspace and vice versa.
->>> While there is fd passing between processes via AF_UNIX, there is no
->>> such mechanism between kernel and userspace.
->>
->> Noob question - the kernel <> user space FD sharing is just
->> not implemented yet, or somehow fundamentally hard because kernel
->> fds are "special"?
->
-> Noob reply: wish I knew.  (I somewhat hoped _you_ would've been able to
-> tell me.)
->
-> Thing is, the only method I could think of for fd passing is the POSIX fd
-> passing via unix_attach_fds()/unix_detach_fds().  But that's AF_UNIX,
-> which really is designed for process-to-process communication, not
-> process-to-kernel.  So you probably have to move a similar logic over to
-> AF_NETLINK. And design a new interface on how fds should be passed over
-> AF_NETLINK.
->
-> But then you have to face the issue that AF_NELINK is essentially UDP, and
-> you have _no_ idea if and how many processes do listen on the other end.
-> Thing is, you (as the sender) have to copy the fd over to the receiving
-> process, so you'd better _hope_ there is a receiving process.  Not to
-> mention that there might be several processes listening in...
->
-> And that's something I _definitely_ don't feel comfortable with without
-> guidance from the networking folks, so I didn't pursue it further and we
-> went with the 'accept()' mechanism Chuck implemented.
->
-> I'm open to suggestions, though.
+IMHO safe to remove these two tests, but sending to broad audience in
+case anybody really want to have these 2 kept (they'd be rewritten to
+new LTP shell API).
 
-EXPORT_SYMBOL(receive_fd) would allow interesting implementations.
+BTW in long term I'd prefer to remove all RPC tests
+(testcases/network/rpc/ directory). IMHO they should be part of libtirpc
+(which has no tests), but these tests are old, messy and I'm not sure
+how relevant they are nowadays.
 
-The kernel keyring facilities have a good API for creating various key_types
-which are able to perform work such as this from userspace contexts.
+Kind regards,
+Petr
 
-I have a working prototype for a keyring key instantiation which allows a
-userspace process to install a kernel fd on its file table.  The problem
-here is how to match/route such fd passing to appropriate processes in
-appropriate namespaces.  I think this problem is shared by all
-kernel-to-userspace upcalls, which I hope we can discuss at LSF/MM.
+Petr Vorel (3):
+  rpc: Remove rup01.sh test
+  rpc: Remove rusers01.sh test
+  rpc: Move rest of RPC tests to runtest/net.rpc_tests
 
-I don't think kernel fds are very special as compared to userspace fds.
+ runtest/net.rpc                               |  8 ---
+ runtest/net.rpc_tests                         |  3 ++
+ scenario_groups/network                       |  1 -
+ .../network/rpc/basic_tests/rup/Makefile      | 29 -----------
+ .../network/rpc/basic_tests/rup/rup01.sh      | 50 -------------------
+ .../network/rpc/basic_tests/rusers/Makefile   | 29 -----------
+ .../rpc/basic_tests/rusers/rusers01.sh        | 50 -------------------
+ testscripts/network.sh                        |  4 +-
+ 8 files changed, 4 insertions(+), 170 deletions(-)
+ delete mode 100644 runtest/net.rpc
+ delete mode 100644 testcases/network/rpc/basic_tests/rup/Makefile
+ delete mode 100755 testcases/network/rpc/basic_tests/rup/rup01.sh
+ delete mode 100644 testcases/network/rpc/basic_tests/rusers/Makefile
+ delete mode 100755 testcases/network/rpc/basic_tests/rusers/rusers01.sh
 
-Ben
+-- 
+2.35.3
 
