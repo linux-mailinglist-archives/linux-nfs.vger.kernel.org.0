@@ -2,244 +2,244 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1F6D5128D0
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Apr 2022 03:29:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85DFB5128F3
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Apr 2022 03:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238658AbiD1Bch (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Apr 2022 21:32:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58184 "EHLO
+        id S238553AbiD1BmD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Apr 2022 21:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230351AbiD1Bcg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Apr 2022 21:32:36 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA45D2251A;
-        Wed, 27 Apr 2022 18:29:23 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23RKI0Su015475;
-        Thu, 28 Apr 2022 01:29:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=4ZixdfxHRW9gxhYX73w4Es/G/t9x5ds38z/WVpjECCY=;
- b=mzek5rvqBC8tX0bfxEX9ZZCqmpj6fe2HBCB4VuTPL23KcBMfbf7d0Y3t/uv0qM5eOfvA
- juXT9vJKHH75XC13LJ+fYe+T41Oj6TexL/fFLlT7+NTW5EwVGtsn3VcwnAdeADtGDo3a
- 7u3NrlGuwS1iA0E5hU9ORRsWh6uAYs2067ijNFQkxhUzTfIcU7rTIQjJ6i+C+Qb27s96
- 8kLGYvvun3cMlR84WJi/wChrDUev4DxNcsAltJG1IeV6KctteJuFySwaQIzJUY0nSsvB
- 7ZlDnhoZoW/WmXMADKSfqkCGWDUShptZV8tU22hIMwErKGPhgFhDCA6M4cbpDux9+v9b tg== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fmb9atkfc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Apr 2022 01:29:14 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23S1BCSa012850;
-        Thu, 28 Apr 2022 01:29:13 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2170.outbound.protection.outlook.com [104.47.57.170])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fm7w5sern-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Apr 2022 01:29:12 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jL7jAoR7PmUbmJkbD/iJwdQFrCZpIPbKYlOV5b87eTKvFEnHyzDiAlIvxcgv5UrMur+nBj68CBmXXGnR7+mUxQqwGnxq5KPMhH79TgdPxtzFjjwJhvWMRWyFzMQ5udzvP5t5v7YtOfa1BLZpFmE+2jBgvYC+yYSRO8y85ddtFEZ9wkrhD/ortZOqi8FNiIaq5lP/J5gOVdyB9FKgWzs01/8lUb6er1OCDznZnGiBaXOAvXZ6rBUPuJk0JtMhEht4G/xGeP8gC7LOkVHNE5MarmlKpo82HTbWXnnE/jSWAmC36Bh5RlfFdkgn6ggM9JbpydZUSLiSiP/gdZ0RyWR3oQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4ZixdfxHRW9gxhYX73w4Es/G/t9x5ds38z/WVpjECCY=;
- b=AnwnMmhBMzCQp3wqJoCKMtf+EsvkustVBfVfk9ND5QfU2wtYz8XTl1xFIoqX9wZb0AsNl49YwcPvgVn90g3rua0Gl0TLNJHUtvXkxjKSngmkTpzXY3WH4+wu7wtMCoDRqVUG2dHLUL6UIoUsa9JL8IJID3z+RB56jhJp/uuxMpFuy61FTEeoGUbWAvRN6d/nKsGkG1vu1SoAcNkmbXKrEIUjndbYtFWBKuyNXgvxVHbpQfHBs/ZL2/BEYb+8t5GXKfzl39bPtqBNmhRKjlpK70i288R2f3PGVUtWLYYqpTN3CNW/pwW+wccYvVI8oZMAKU7Z57hqVA2QwNswn1c0hw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4ZixdfxHRW9gxhYX73w4Es/G/t9x5ds38z/WVpjECCY=;
- b=i3aqd7fYDOsQs0Y4uWviJXjXAT6qgBtW6WFSL0PlGwPXViVnsHPA2f/zn7bMBOgSVCGfU4FtIAyrb96H9feLTN4O3/Xjg/UvTqXNJOEuWy88bCIuvjX2lDK8zGKvTZZzEy17qASpbhAxEwMtgA7jXpJyFDO84cqUu8pA3RuZs94=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CY4PR1001MB2389.namprd10.prod.outlook.com (2603:10b6:910:45::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.13; Thu, 28 Apr
- 2022 01:29:10 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5206.013; Thu, 28 Apr 2022
- 01:29:10 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     netdev <netdev@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-cifs@vger.kernel.org" <linux-cifs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "ak@tempesta-tech.com" <ak@tempesta-tech.com>,
-        "borisp@nvidia.com" <borisp@nvidia.com>,
-        "simo@redhat.com" <simo@redhat.com>
-Subject: Re: [PATCH RFC 4/5] net/tls: Add support for PF_TLSH (a TLS handshake
- listener)
-Thread-Topic: [PATCH RFC 4/5] net/tls: Add support for PF_TLSH (a TLS
- handshake listener)
-Thread-Index: AQHYU0RqwCfhD8h+BkiXOp6ayeNVBq0A6XOAgAFYlQCAABKoAIAAEbcAgACC9gCAAPo/AIAAmfUAgAAanYA=
-Date:   Thu, 28 Apr 2022 01:29:10 +0000
-Message-ID: <F64C2771-663D-4BE7-9EB9-A8859818C7F8@oracle.com>
-References: <165030051838.5073.8699008789153780301.stgit@oracle-102.nfsv4.dev>
- <165030059051.5073.16723746870370826608.stgit@oracle-102.nfsv4.dev>
- <20220425101459.15484d17@kernel.org>
- <E8809EC2-D49A-4171-8C88-D5E24FFA4079@oracle.com>
- <20220426075504.18be4ee2@kernel.org>
- <BA6BB8F6-3A2A-427B-A5D7-30B5F778B7E0@oracle.com>
- <20220426164712.068e365c@kernel.org>
- <7B871201-AC3C-46E2-98B0-52B44530E7BD@oracle.com>
- <20220427165354.2eed6c5b@kernel.org>
-In-Reply-To: <20220427165354.2eed6c5b@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: d29a8280-d55e-446a-0ec4-08da28b67ec1
-x-ms-traffictypediagnostic: CY4PR1001MB2389:EE_
-x-microsoft-antispam-prvs: <CY4PR1001MB23897088F1FA11918F43333193FD9@CY4PR1001MB2389.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: f0vSdlArSteArUAIADF/Uy8dYRQ4oVJsYEPgODz7iOE6BBM4N5TrD2cB4vmWSMoUT4hiR9q8ukJeynvPmxy1gPS7RiB6uqppLzwVmCDgeUtTBE6jL82TmCpoJiMQ8gehnRgfGKHSnXvMDhpCSlU9OPGPSUhQE9ouwHyCEjWVJPQrsSJpkJADdGkK3sJGzXZg5bEwRh6Q14exSEp/pS/JaFAcQnGb21M1oNuXdaZmQJHA0Id+5RogTpoqhYgZvasLDef6GGvoMAIKf0oAMH7L4CE08zsHKlqsF0D50j6AupyDAng4HV09/1WGJWQo3PheRZAUkQ1wWUqFd2n0YF0AP2XASW+RWeQ08ekJlQd2uGnbmHjbEpip39Wid+GtTEcoEocp7C5brBWLFXajbFJuaYWp0mjxs7Jujn5NGgM2OsoEnvWRfwVO4pokAsBy3a+AP+qmU+9tXqLCipF4+OgBbnd4RxIIN0GeZ5UvDubC1NNBfPzdd7phAQsdwr8M9253oaBiePp067xwOx1pvxdvGXz1rV1299KjAFn0TtYdmZ8+tFLRlCeT3QepzBGqnUZDT9PgNnhQFlx/0o1/DfITj5QGG0aL2sUMCkHEseA8TDv0xTuQhzVk/XXrbQPJUe6mVVy3BRr2HG6c3a0jl3Pt9uTJA6US/XnslwBx2yag514xlhE3ztQ5xFOaWOqfcNq8e7adMMy6mfIoe89LDYtQkH7yL9e55RJJEbSYMnpRrftzgRBJwZJFV9TER9tVUutb9RCUlYn31SyI/qWgVp79NFq/8gBML8+YTgd+kgqs8KQkLC3xyy03NGccZjxRm1HWXG7CvrWv+/T75ccJ0M60H3H3eLEL7EkZ48ui/uYs52M=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6512007)(83380400001)(91956017)(26005)(76116006)(66946007)(4326008)(66556008)(66476007)(66446008)(64756008)(6506007)(8676002)(53546011)(122000001)(5660300002)(6916009)(54906003)(86362001)(2906002)(316002)(38100700002)(38070700005)(36756003)(8936002)(186003)(2616005)(33656002)(508600001)(6486002)(71200400001)(966005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?P1JyvsKHx87F9fykayYxkLJq1y92s4tG7FxR1HthyYM3B/XYnQruG1Q+p1FH?=
- =?us-ascii?Q?aOmHOKSYniIsZ/MgKVpQ95j5YhlEaKSsDNfVWEf2pqf99IcDbaRF8BW8qh5E?=
- =?us-ascii?Q?AzzJqhc78I1SiScO5OZLLnb2JOU4aaYPXe452idNsA9E91cNAcksLYroEPoO?=
- =?us-ascii?Q?aA89meDrELqqPurWTehnBeElKvb/UpzhXDxt6yvjpLVoNKWb7EDNcWl0CM3V?=
- =?us-ascii?Q?3DlUQjOUoQyHaClcUlY7zLI8IKCHzsQgMMxDUuQg2Ha2KjHPKsizm/GXZIXq?=
- =?us-ascii?Q?Tyik2a/vSyjaorb+XNFEwM1B3m/lSoHv4KrRH7dkprVHd/7xMaPdIA60YaQH?=
- =?us-ascii?Q?SQBnIDg07bI17YPPtiJFPZtT8+7FkqXqwOwJFCoFaBHiJbD9Y9zf5ur9iNtW?=
- =?us-ascii?Q?+Eu7shhGKdn8VzWzReh+FRfZu1tCT4BlXMDnFTd0oVRVa1HUlbzWmw5/p0b/?=
- =?us-ascii?Q?B/yGk/pEa7RFLi/whB21AgcXxx/c7knXBAXS1zOwyT0r5FVgoLEUgxlTka0x?=
- =?us-ascii?Q?WtR26ftTMUVshStEMbGWeUK8xy1n/wagFD0o5/AVb9eJ9TmQGwttri9yJk8D?=
- =?us-ascii?Q?tIZhZzOyeQh47UIImB8wsRGWp5pNIL5Z+6jS90/QQG0cJOQePAen0uWWvHUs?=
- =?us-ascii?Q?thr1aDqH6Y/E+Nt63/Z2IvON90HxciUgggkv+9+jZy/SpMmaTDQoLe9uC7WK?=
- =?us-ascii?Q?PVIl/txrq8gFFBqf5alXK6dlf8xBlgdtTywadcNqDS65NhVHw6JmHOaTZYBE?=
- =?us-ascii?Q?+ixUthZTLagsNpLP+X44IjLZgc9FHB3sz32jUpF/52TMQ+k88c26c5ca9vhK?=
- =?us-ascii?Q?8Je0II+HQPdl2KC8/j/I1KiiTe0d5+cxUjYrB3vlCCQ++CF+QE7scCBIek1o?=
- =?us-ascii?Q?9GLvzlppTMhJWb03mWIvH6QyJZ1kANLgh68p8QuDA7rQivyOGUOSxE2Set+Q?=
- =?us-ascii?Q?oJBGMKLybvG5csI56OYdth6W2LSS7HE0G4jD+CxStVKGPUfsW0VVqTEM3ACm?=
- =?us-ascii?Q?6Gx/MLwr1INnWWdd9W+dtVuxwJnlq1Wzr2crhE2VNdFgWw8+dLeFnfa+FUPq?=
- =?us-ascii?Q?7Zdg1EGDNGTzB3TZihdFbEMG/sKMI+blJHbTjwAiDGR4iTDzcSEObvN5h1EY?=
- =?us-ascii?Q?+RVa8c/ubmaJqXzo1eXg9iDGZJ/nbJ8kg9PuMNUcv/PIS+33LD7SZCMlRF+B?=
- =?us-ascii?Q?mK1z91iBw1SXznwrP0ov5mgQNlrJ+nvmvW3bZflYtABkTHWxlZHXr7GrStAm?=
- =?us-ascii?Q?bXvAQNnvpVO9qoayKyPVbR89xPeEphiGXjF3J7cxa1corFeRg20oVZvD1es2?=
- =?us-ascii?Q?NYyKpo0H/5UTFtC7ZTGCv45EC6wiIjE/zCc7/Zp2TAy473n0b2Xf3uYy8Yyk?=
- =?us-ascii?Q?KrvM1/mZpBe/5FJXpX87gs0XrVUde5ghEqQIwIAPOWYxjqeCBusPNYuAeb8I?=
- =?us-ascii?Q?Hup1epTyDusT/b70RkszqDijUY/kzPq5JyKcoBZAOUF1fwvjmSsUEZu9Reqs?=
- =?us-ascii?Q?FpbftZWy9aZvjyRjkKPE5Qg6+zUwPAdMRKgoainWHxgG7tnP02w1o/kt8oat?=
- =?us-ascii?Q?DpGo4DOgCAbhbJURPFidTiFA7pUiVMQmQpMJ6MqfwyACdNr2nltqy3pHBZmC?=
- =?us-ascii?Q?cM7c4yvTxJQCXWXWGV7Adl3wBoPqE/K8XO469oBNFv9hBteQO5BYXSk4VBkY?=
- =?us-ascii?Q?pYDHJEyKqTiVTxTtiZR+5CdQBNwZlVcJgCetStzSCzUL990Pn0fmf6hiib44?=
- =?us-ascii?Q?TPLyECrlRWAV7KnDV98le8scgudxXvA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <31A56027C594F94BAD476D481F58F522@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229528AbiD1BmC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Apr 2022 21:42:02 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A846E7EA12
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Apr 2022 18:38:49 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 65FA3210EE;
+        Thu, 28 Apr 2022 01:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1651109928; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2UYu8aY/Bi1LG2I/Lzstp4Fzjn7cNUxESlHj0RyV0gc=;
+        b=HYqfIgwr6MsD/ECw+k4Asp9yS7t+png2vhpZurFWRFnF19BrPkz03KbcfrmoQEKowK6251
+        /VfkC47RRbg2/mR6hTjSM/T4OMnHkAjAcXlwHqQ7xyhFA2cWj02nNJB651h9xYNkhUtxIN
+        o1toAcMiOwTbeSqL/OQUCdj+0DwswUM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1651109928;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2UYu8aY/Bi1LG2I/Lzstp4Fzjn7cNUxESlHj0RyV0gc=;
+        b=Tafo+dnZXeCVd7AYXqSM0VU47YPOyp0oFcpQxyzZpfI/ElqE9Vmj/x9InqvxzEPp4yjGHP
+        u2QH4AMT6W3mHNBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 069EC13425;
+        Thu, 28 Apr 2022 01:38:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id HWpzLCbwaWJTbQAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 28 Apr 2022 01:38:46 +0000
+Subject: [PATCH 2/2] NFS: limit use of ACCESS cache for negative responses
+From:   NeilBrown <neilb@suse.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+Date:   Thu, 28 Apr 2022 11:37:32 +1000
+Message-ID: <165110985232.7595.17585053378305829045.stgit@noble.brown>
+In-Reply-To: <165110909570.7595.8578730126480600782.stgit@noble.brown>
+References: <165110909570.7595.8578730126480600782.stgit@noble.brown>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d29a8280-d55e-446a-0ec4-08da28b67ec1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Apr 2022 01:29:10.1774
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ubL5LCArJwmri+AbL9Ex2VR284b0aG32GH3GquClk0MzCWljtVCWeOH7KazYERzsl+gJNoUBlyalaweGYfxLyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1001MB2389
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
- definitions=2022-04-27_04:2022-04-27,2022-04-27 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 bulkscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204280005
-X-Proofpoint-ORIG-GUID: ey5BRPZCOrZJrokSg23AxgaYuzXDGbAD
-X-Proofpoint-GUID: ey5BRPZCOrZJrokSg23AxgaYuzXDGbAD
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+NFS currently caches the results of ACCESS lookups indefinitely while the
+inode doesn't change (i.e.  while ctime, changeid, owner/group/mode etc
+don't change).  This is a problem if the result from the server might
+change.
 
+When the result from the server depends purely on the credentials
+provided by the client and the information in the inode, it is not
+expected that the result from the server will change, and the current
+behaviour is safe.
 
-> On Apr 27, 2022, at 7:53 PM, Jakub Kicinski <kuba@kernel.org> wrote:
->=20
-> On Wed, 27 Apr 2022 14:42:53 +0000 Chuck Lever III wrote:
->>> On Apr 26, 2022, at 7:47 PM, Jakub Kicinski <kuba@kernel.org> wrote:
->>>> RPC-with-TLS requires one RPC as a "starttls" token. That could be
->>>> done in user space as part of the handshake, but it is currently
->>>> done in the kernel to enable the user agent to be shared with other
->>>> kernel consumers of TLS. Keep in mind that we already have two
->>>> real consumers: NVMe and RPC-with-TLS; and possibly QUIC.
->>>>=20
->>>> You asserted earlier that creating sockets in user space "scales
->>>> better" but did not provide any data. Can we see some? How well
->>>> does it need to scale for storage protocols that use long-lived
->>>> connections? =20
->>>=20
->>> I meant scale with the number of possible crypto protocols,=20
->>> I mentioned three there. =20
->>=20
->> I'm looking at previous emails. The "three crypto protocols"
->> don't stand out to me. Which ones?
->=20
-> TLS, QUIC and PSP maybe that was in a different email that what you
-> quoted, sorry:
-> https://lore.kernel.org/all/20220426080247.19bbb64e@kernel.org/
->=20
-> PSP:
-> https://raw.githubusercontent.com/google/psp/main/doc/PSP_Arch_Spec.pdf
+However in some configurations the server can include another lookup
+step.  This happens with the Linux NFS server when the "--manage-gids"
+option is given to rpc.mountd. NetApp servers have similar functionality
+with "AUTH_SYS Extended Groups" functionality in ONTAP9.  With these,
+the user reported by the client is mapped on the server to a list of
+group ids.  If this mapping changes, the result of ACCESS can change.
 
-During the design process, we discussed both TLS and QUIC handshake
-requirements, which are nearly the same. QUIC will want a TLSv1.3
-handshake on a UDP socket, effectively. We can support DTLS in a
-similar fashion.
+This is particularly a problem when a new group is added to a user.  If
+they had already tried and failed to access the file (or more commonly a
+directory) then adding them to the group will not successfully give them
+access as the failure is cached.  Even if the user logs out and back in
+again to get the new credential on the client, they might try to access
+the file before the server is aware of the change.  By default the Linux
+server caches group information for 30 minutes.  This can be reduced but
+there will always be a window after the group has been added when the
+server can still report ACCESS based on old group information.
 
-We hope that the proposed design can be used for all of those, and
-barring anything unforeseen in the description of PSP you provided,
-PSP can be supported as well.
+The inverse is less of a problem.  Removing someone from a group has
+never been a guaranteed way to remove any access - at the very least a
+user normally needs to log off before they lose access to any groups that
+they were a member of.
 
-The handshake agent is really only a shim around a TLS library.
-There isn't much to it.
+If a user is removed from a group they may still be granted "access" on
+the client, but this isn't sufficient to change anything for which write
+access has been removed, and normally only provides read access to
+cached content.  So caching positive ACCESS rights indefinitely is not a
+significant security problem.
 
+The value of the ACCESS cache is realised primarily for successful
+tests.  These happen often, for example the test for X permissions
+during filename lookups.  Having a quick (even lock-free) result helps
+this common operation.  When the ACCESS cache denies the access there is
+less cost in taking longer to confirm the access, and this is the case
+where a stale cache is more problematic.
 
-> Is it possible to instead create a fd-passing-like structured message
-> which could carry the fd and all the relevant context (what goes=20
-> via the getsockopt() now)?
->=20
-> The user space agent can open such upcall socket, then bind to
-> whatever entity it wants to talk to on the kernel side and read
-> the notifications via recv()?
+So, this patch changes the way that the access cache is used.
+- If the requested access is found in the cache, and is granted, then the
+  call uses the cached information no matter how old it is.
+- If the requested access is found in the cache and is denied, then the
+  cached result is only used if is it newer than the current MINATTRTIMEO
+  for the file.
+- If the requested access is found in the cache, is denied, and is more
+  than MINATTRTIMEO old, then a new ACCESS request is made to the server
+- If the requested access is NOT found in the cache, obviously a new
+  ACCESS request is made to the server, and this will be cached.
 
-We considered this kind of design. A reasonable place to start there
-would be to fabricate new NETLINK messages to do this. I don't see
-much benefit over what is done now, it's just a different isomer of
-syntactic sugar, but it could be considered.
+Signed-off-by: NeilBrown <neilb@suse.de>
+---
+ fs/nfs/dir.c           |   24 +++++++++++++++++++-----
+ fs/nfs/nfs4proc.c      |    1 +
+ include/linux/nfs_fs.h |    1 +
+ 3 files changed, 21 insertions(+), 5 deletions(-)
 
-The issue is how the connected socket is materialized in user space.
-accept(2) is the historical way to instantiate an already connected
-socket in a process's file table, and seems like a natural fit. When
-the handshake agent is done with the handshake, it closes the socket.
-This invokes the tlsh_release() function which can check whether the
-IV implantation was successful.
-
-So instead of an AF_TLSH listener we could use a named pipe or a
-netlink socket and a blocking recv(), as long as there is a reasonable
-solution to how a connected socket fd is attached to the handshake
-agent process.
-
-I'm flexible about the mechanism for passing handshake parameters.
-Attaching them to the connected socket seems convenient, but perhaps
-not aesthetic.
-
-
---
-Chuck Lever
-
+diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+index b4e2c6a34234..c461029515b5 100644
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -2900,7 +2900,8 @@ static struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, co
+ 	return NULL;
+ }
+ 
+-static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *cred, u32 *mask, bool may_block)
++static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *cred,
++					u32 *mask, unsigned long *cjiffies, bool may_block)
+ {
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+ 	struct nfs_access_entry *cache;
+@@ -2931,6 +2932,7 @@ static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *
+ 		retry = false;
+ 	}
+ 	*mask = cache->mask;
++	*cjiffies = cache->jiffies;
+ 	list_move_tail(&cache->lru, &nfsi->access_cache_entry_lru);
+ 	err = 0;
+ out:
+@@ -2942,7 +2944,8 @@ static int nfs_access_get_cached_locked(struct inode *inode, const struct cred *
+ 	return -ENOENT;
+ }
+ 
+-static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cred, u32 *mask)
++static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cred,
++				     u32 *mask, unsigned long *cjiffies)
+ {
+ 	/* Only check the most recently returned cache entry,
+ 	 * but do it without locking.
+@@ -2965,6 +2968,7 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+ 	if (nfs_check_cache_invalid(inode, NFS_INO_INVALID_ACCESS))
+ 		goto out;
+ 	*mask = cache->mask;
++	*cjiffies = cache->jiffies;
+ 	err = 0;
+ out:
+ 	rcu_read_unlock();
+@@ -2974,16 +2978,24 @@ static int nfs_access_get_cached_rcu(struct inode *inode, const struct cred *cre
+ int nfs_access_check_cached(struct inode *inode, const struct cred *cred,
+ 			    u32 want, bool may_block)
+ {
++	unsigned long cjiffies;
+ 	u32 have;
+ 	int status;
+ 
+-	status = nfs_access_get_cached_rcu(inode, cred, &have);
++	status = nfs_access_get_cached_rcu(inode, cred, &have, &cjiffies);
+ 	if (status != 0)
+ 		status = nfs_access_get_cached_locked(inode, cred, &have,
+-						      may_block);
++						      &cjiffies, may_block);
+ 
+-	if (status == 0 && (want & ~have) != 0)
++	if (status == 0 && (want & ~have) != 0) {
+ 		status = -EACCES;
++		/* Don't trust a negative result beyond MINATTRTIMEO,
++		 * even if we hold a delegation
++		 */
++		if (!time_in_range_open(jiffies, cjiffies,
++					cjiffies + NFS_MINATTRTIMEO(inode)))
++			status = -ENOENT;
++	}
+ 	return status;
+ }
+ EXPORT_SYMBOL_GPL(nfs_access_check_cached);
+@@ -3036,6 +3048,7 @@ void nfs_access_add_cache(struct inode *inode, struct nfs_access_entry *set,
+ 	cache->fsgid = cred->fsgid;
+ 	cache->group_info = get_group_info(cred->group_info);
+ 	cache->mask = set->mask;
++	cache->jiffies = set->jiffies;
+ 
+ 	/* The above field assignments must be visible
+ 	 * before this item appears on the lru.  We cannot easily
+@@ -3121,6 +3134,7 @@ static int nfs_do_access(struct inode *inode, const struct cred *cred, int mask)
+ 	 */
+ 	cache.mask = NFS_ACCESS_READ | NFS_ACCESS_MODIFY | NFS_ACCESS_EXTEND |
+ 		     nfs_access_xattr_mask(NFS_SERVER(inode));
++	cache.jiffies = jiffies;
+ 	if (S_ISDIR(inode->i_mode))
+ 		cache.mask |= NFS_ACCESS_DELETE | NFS_ACCESS_LOOKUP;
+ 	else
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 1e80d88df588..a78b62c5bad1 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -2644,6 +2644,7 @@ static int nfs4_opendata_access(const struct cred *cred,
+ 		mask = NFS4_ACCESS_READ;
+ 
+ 	nfs_access_set_mask(&cache, opendata->o_res.access_result);
++	cache.jiffies = jiffies;
+ 	nfs_access_add_cache(state->inode, &cache, cred);
+ 
+ 	flags = NFS4_ACCESS_READ | NFS4_ACCESS_EXECUTE | NFS4_ACCESS_LOOKUP;
+diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+index 7614f621c42d..e40bd61c80c5 100644
+--- a/include/linux/nfs_fs.h
++++ b/include/linux/nfs_fs.h
+@@ -56,6 +56,7 @@
+ struct nfs_access_entry {
+ 	struct rb_node		rb_node;
+ 	struct list_head	lru;
++	unsigned long		jiffies;
+ 	kuid_t			fsuid;
+ 	kgid_t			fsgid;
+ 	struct group_info	*group_info;
 
 
