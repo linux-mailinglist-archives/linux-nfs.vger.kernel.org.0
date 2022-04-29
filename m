@@ -2,45 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECBD8515280
+	by mail.lfdr.de (Postfix) with ESMTP id 2815751527E
 	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 19:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379753AbiD2RqD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Apr 2022 13:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
+        id S1379320AbiD2RqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Apr 2022 13:46:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351647AbiD2Rp6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 13:45:58 -0400
+        with ESMTP id S1379775AbiD2Rp7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 13:45:59 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 488EBD39B4
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 10:42:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E94D3D99
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 10:42:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E5B8BB8376A
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4585BC385AF;
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1EABB8376B
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E669AC385A4;
         Fri, 29 Apr 2022 17:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651254156;
-        bh=dyTDr9QFVRB6I7vXOXvD7YfHhn+ihB2g1HE55P0kzcU=;
+        s=k20201202; t=1651254157;
+        bh=5YPb4LWePLYlCNdOWjz2GW/FS+Um7vpp2gAcdBl86lY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EpDXd8TngG9LDBOQWEWyHpxyKZtUsoIaJLJsm9u25+HW3p7DSQr5rmmzUkLzciU+f
-         kiYuwdFUSlSlw1g283u5odIeQCb4OHQC4lRZuSaq/SuteySqXEYOhiOp12cUW6G6PP
-         Lb1/PDhceLa3SJ7KvwbmnW5j3EOdyLhb3+iEvJe18l70I+pnNAlh6whGh2x2i48rbX
-         Kqgo8DlxeUucqRKeqyg5HfUPODU2FnkI04+2QuEQ6QsN+kRBIwz3uFkG/7ZfLfJBn7
-         Acq0FsM5tsT+SglKdkHCiSva+8szZgrSbvrvbKMS1GeGrgNSEZjLYorLJvk2q9j6w0
-         UwYsvdZS6FVVQ==
+        b=iK1TFaiq8T3gL7GGIgpkxnJtD1tOQZa3HxxdGVEevbFyTa3PtsBk8Ry2qzjuAEXws
+         De+eaViIBw29dvB+WKCajQxuENCfsWYIbk7SYyYjSu5bMvpoT3yGEZVgNzPPO6RDwu
+         pXqWBQo8as25yZky2cAxI08p4pf18xpB+/A7GTNkEo8ea9E6pNwsxC7UtRYGyPm3iX
+         r4ftZ1afBBX5cVC2XAHzqq0krK6Os5cEdgoiuUXjZ6e2g2QPq5Q9bEWI04q6ikfPVY
+         5TdLvrJfrz99N1e0SSORw2m5SjYoOdAlc8wjfZVSCTOCiBxI/YwJ6EQZl69fdUtX2M
+         Cea/+7wsmrgxg==
 From:   trondmy@kernel.org
 To:     "wanghai (M)" <wanghai38@huawei.com>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/4] SUNRPC: Ensure timely close of disconnected AF_LOCAL sockets
-Date:   Fri, 29 Apr 2022 13:36:27 -0400
-Message-Id: <20220429173629.621418-2-trondmy@kernel.org>
+Subject: [PATCH v2 3/4] SUNRPC: Ensure gss-proxy connects on setup
+Date:   Fri, 29 Apr 2022 13:36:28 -0400
+Message-Id: <20220429173629.621418-3-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220429173629.621418-1-trondmy@kernel.org>
+In-Reply-To: <20220429173629.621418-2-trondmy@kernel.org>
 References: <20220429173629.621418-1-trondmy@kernel.org>
+ <20220429173629.621418-2-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -54,54 +55,59 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When the rpcbind server closes the socket, we need to ensure that the
-socket is closed by the kernel as soon as feasible, so add a
-sk_state_change callback to trigger this close.
+For reasons best known to the author, gss-proxy does not implement a
+NULL procedure, and returns RPC_PROC_UNAVAIL. However we still want to
+ensure that we connect to the service at setup time.
+So add a quirk-flag specially for this case.
 
+Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+Cc: stable@vger.kernel.org
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xprtsock.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ include/linux/sunrpc/clnt.h          | 1 +
+ net/sunrpc/auth_gss/gss_rpc_upcall.c | 2 +-
+ net/sunrpc/clnt.c                    | 3 +++
+ 3 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index f9849b297ea3..25b8a8ead56b 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -1418,6 +1418,26 @@ static size_t xs_tcp_bc_maxpayload(struct rpc_xprt *xprt)
- }
- #endif /* CONFIG_SUNRPC_BACKCHANNEL */
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index 267b7aeaf1a6..db5149567305 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -160,6 +160,7 @@ struct rpc_add_xprt_test {
+ #define RPC_CLNT_CREATE_NO_RETRANS_TIMEOUT	(1UL << 9)
+ #define RPC_CLNT_CREATE_SOFTERR		(1UL << 10)
+ #define RPC_CLNT_CREATE_REUSEPORT	(1UL << 11)
++#define RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL (1UL << 12)
  
-+/**
-+ * xs_local_state_change - callback to handle AF_LOCAL socket state changes
-+ * @sk: socket whose state has changed
-+ *
-+ */
-+static void xs_local_state_change(struct sock *sk)
-+{
-+	struct rpc_xprt *xprt;
-+	struct sock_xprt *transport;
-+
-+	if (!(xprt = xprt_from_sock(sk)))
-+		return;
-+	transport = container_of(xprt, struct sock_xprt, xprt);
-+	if (sk->sk_shutdown & SHUTDOWN_MASK) {
-+		clear_bit(XPRT_CONNECTED, &xprt->state);
-+		/* Trigger the socket release */
-+		xs_run_error_worker(transport, XPRT_SOCK_WAKE_DISCONNECT);
-+	}
-+}
-+
- /**
-  * xs_tcp_state_change - callback to handle TCP socket state changes
-  * @sk: socket whose state has changed
-@@ -1866,6 +1886,7 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
- 		sk->sk_user_data = xprt;
- 		sk->sk_data_ready = xs_data_ready;
- 		sk->sk_write_space = xs_udp_write_space;
-+		sk->sk_state_change = xs_local_state_change;
- 		sk->sk_error_report = xs_error_report;
+ struct rpc_clnt *rpc_create(struct rpc_create_args *args);
+ struct rpc_clnt	*rpc_bind_new_program(struct rpc_clnt *,
+diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.c b/net/sunrpc/auth_gss/gss_rpc_upcall.c
+index 61c276bddaf2..8ca1d809b78d 100644
+--- a/net/sunrpc/auth_gss/gss_rpc_upcall.c
++++ b/net/sunrpc/auth_gss/gss_rpc_upcall.c
+@@ -97,7 +97,7 @@ static int gssp_rpc_create(struct net *net, struct rpc_clnt **_clnt)
+ 		 * timeout, which would result in reconnections being
+ 		 * done without the correct namespace:
+ 		 */
+-		.flags		= RPC_CLNT_CREATE_NOPING |
++		.flags		= RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL |
+ 				  RPC_CLNT_CREATE_NO_IDLE_TIMEOUT
+ 	};
+ 	struct rpc_clnt *clnt;
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 98133aa54f19..22c28cf43eba 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -479,6 +479,9 @@ static struct rpc_clnt *rpc_create_xprt(struct rpc_create_args *args,
  
- 		xprt_clear_connected(xprt);
+ 	if (!(args->flags & RPC_CLNT_CREATE_NOPING)) {
+ 		int err = rpc_ping(clnt);
++		if ((args->flags & RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL) &&
++		    err == -EOPNOTSUPP)
++			err = 0;
+ 		if (err != 0) {
+ 			rpc_shutdown_client(clnt);
+ 			return ERR_PTR(err);
 -- 
 2.35.1
 
