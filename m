@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99199514E66
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 16:53:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1626514E69
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 16:53:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352746AbiD2O45 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Apr 2022 10:56:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41456 "EHLO
+        id S1359351AbiD2O5E (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Apr 2022 10:57:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1377978AbiD2O44 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 10:56:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A62B37B562
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 07:53:38 -0700 (PDT)
+        with ESMTP id S1377978AbiD2O5D (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 10:57:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 108A9B6D28
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 07:53:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3F35761F91
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 14:53:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D23C385A7
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 14:53:37 +0000 (UTC)
-Subject: [PATCH 1/6] NFSD: Remove dprintk call sites from tail of nfsd4_open()
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DA2961F91
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 14:53:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0F0CC385A7
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 14:53:43 +0000 (UTC)
+Subject: [PATCH 2/6] NFSD: Fix whitespace
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 29 Apr 2022 10:53:36 -0400
-Message-ID: <165124401661.1060.5623859799097995836.stgit@bazille.1015granger.net>
+Date:   Fri, 29 Apr 2022 10:53:42 -0400
+Message-ID: <165124402284.1060.14113150646693423766.stgit@bazille.1015granger.net>
 In-Reply-To: <165124376329.1060.17013198516228928515.stgit@bazille.1015granger.net>
 References: <165124376329.1060.17013198516228928515.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -41,31 +41,76 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: These relics are not likely to benefit server
-administrators.
+Clean up: Pull case arms back one tab stop to conform every other
+switch statement in fs/nfsd/nfs4proc.c.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c |    4 ----
- 1 file changed, 4 deletions(-)
+ fs/nfsd/nfs4proc.c |   50 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 28bae84d7809..0c5c0a685f02 100644
+index 0c5c0a685f02..05ec878b005d 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -622,13 +622,9 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			break;
- 		case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
-              	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
--			dprintk("NFSD: unsupported OPEN claim type %d\n",
--				open->op_claim_type);
- 			status = nfserr_notsupp;
+@@ -600,33 +600,33 @@ nfsd4_open(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 		goto out;
+ 
+ 	switch (open->op_claim_type) {
+-		case NFS4_OPEN_CLAIM_DELEGATE_CUR:
+-		case NFS4_OPEN_CLAIM_NULL:
+-			status = do_open_lookup(rqstp, cstate, open, &resfh);
+-			if (status)
+-				goto out;
+-			break;
+-		case NFS4_OPEN_CLAIM_PREVIOUS:
+-			status = nfs4_check_open_reclaim(cstate->clp);
+-			if (status)
+-				goto out;
+-			open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
+-			reclaim = true;
+-			fallthrough;
+-		case NFS4_OPEN_CLAIM_FH:
+-		case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
+-			status = do_open_fhandle(rqstp, cstate, open);
+-			if (status)
+-				goto out;
+-			resfh = &cstate->current_fh;
+-			break;
+-		case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
+-             	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
+-			status = nfserr_notsupp;
++	case NFS4_OPEN_CLAIM_DELEGATE_CUR:
++	case NFS4_OPEN_CLAIM_NULL:
++		status = do_open_lookup(rqstp, cstate, open, &resfh);
++		if (status)
  			goto out;
- 		default:
--			dprintk("NFSD: Invalid OPEN claim type %d\n",
--				open->op_claim_type);
- 			status = nfserr_inval;
+-		default:
+-			status = nfserr_inval;
++		break;
++	case NFS4_OPEN_CLAIM_PREVIOUS:
++		status = nfs4_check_open_reclaim(cstate->clp);
++		if (status)
  			goto out;
++		open->op_openowner->oo_flags |= NFS4_OO_CONFIRMED;
++		reclaim = true;
++		fallthrough;
++	case NFS4_OPEN_CLAIM_FH:
++	case NFS4_OPEN_CLAIM_DELEG_CUR_FH:
++		status = do_open_fhandle(rqstp, cstate, open);
++		if (status)
++			goto out;
++		resfh = &cstate->current_fh;
++		break;
++	case NFS4_OPEN_CLAIM_DELEG_PREV_FH:
++	case NFS4_OPEN_CLAIM_DELEGATE_PREV:
++		status = nfserr_notsupp;
++		goto out;
++	default:
++		status = nfserr_inval;
++		goto out;
  	}
+ 	/*
+ 	 * nfsd4_process_open2() does the actual opening of the file.  If
 
 
