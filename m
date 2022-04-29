@@ -2,53 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F3F513FB0
+	by mail.lfdr.de (Postfix) with ESMTP id 10BC4513FAF
 	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 02:44:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1352954AbiD2AsJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Apr 2022 20:48:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37076 "EHLO
+        id S1350820AbiD2AsD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Apr 2022 20:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237629AbiD2AsJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Apr 2022 20:48:09 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3596BB902;
-        Thu, 28 Apr 2022 17:44:52 -0700 (PDT)
+        with ESMTP id S237629AbiD2AsC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Apr 2022 20:48:02 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3350FBB902;
+        Thu, 28 Apr 2022 17:44:46 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id B2C411F37F;
-        Fri, 29 Apr 2022 00:44:51 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BCA8121872;
+        Fri, 29 Apr 2022 00:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1651193091; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1651193084; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iDTLraYqnWApa1mXlMLLgzsQSZO/JsdcUgftlr7aovM=;
-        b=bXzdo1Li8rr31MrGP07OcLcXDfd+rqubbWEqzYmjFEDlXdbtGc0KLHhGyJjrU0cnYqWm40
-        IqBCEwDGvwIoA/HnKTxK7aOaSLe1o1TNZc0f5qPWLHCDXC9s1sriGavJJP/8mMHSq77gDx
-        9qLBQP+jKfuTloZX4Igjg5LrB92+6Xg=
+        bh=JrU/wsC8sdfT/R0JtZvwzkc1EUgEvszFC5tR6hfJPHE=;
+        b=HcAEspUL3B+9CGfESTkkWyVHLwjkJyuXcPrNSc2itnNpsG4afpKgD2fceNteEvGeIDzDkF
+        vam2Q7ZjD4Gu5lf4cLuh8wj+2UI/XuhK0NK7Izl6oYOI2DyEklQM6ZBCinCG9RVEBqv6mY
+        w/P+5PydmAsMkqnfWIlJG5nPcjgdwrc=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1651193091;
+        s=susede2_ed25519; t=1651193084;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=iDTLraYqnWApa1mXlMLLgzsQSZO/JsdcUgftlr7aovM=;
-        b=1wMQN6a64l7rZ/v4UXE8U90xh7OGxjydYxyu1kmSUBId/NHpwcPt6Mw4IPLABKipjSx/M9
-        35I2hF4rrmhDshCA==
+        bh=JrU/wsC8sdfT/R0JtZvwzkc1EUgEvszFC5tR6hfJPHE=;
+        b=pAN5MwCEnPu7JYa0cLy1RgMWnMu44JE2gGqZNmMinRWucAubigJnhLMMABEnAgm3z3Cafp
+        P+EvQ9EmCJq+XnAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9A17E13491;
-        Fri, 29 Apr 2022 00:44:49 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A593513491;
+        Fri, 29 Apr 2022 00:44:42 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id blhJFgE1a2IzSgAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 29 Apr 2022 00:44:49 +0000
-Subject: [PATCH 2/2] NFS: rename nfs_direct_IO and use as ->swap_rw
+        id ljwOGfo0a2IrSgAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 29 Apr 2022 00:44:42 +0000
+Subject: [PATCH 1/2] MM: handle THP in swap_*page_fs()
 From:   NeilBrown <neilb@suse.de>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -56,7 +56,7 @@ Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
         Miaohe Lin <linmiaohe@huawei.com>, linux-nfs@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Date:   Fri, 29 Apr 2022 10:43:34 +1000
-Message-ID: <165119301493.15698.7491285551903597618.stgit@noble.brown>
+Message-ID: <165119301488.15698.9457662928942765453.stgit@noble.brown>
 In-Reply-To: <165119280115.15698.2629172320052218921.stgit@noble.brown>
 References: <165119280115.15698.2629172320052218921.stgit@noble.brown>
 User-Agent: StGit/1.5
@@ -72,100 +72,117 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The nfs_direct_IO() exists to support SWAP IO, but hasn't worked for a
-while.  We now need a ->swap_rw function which behaves slightly
-differently, returning zero for success rather than a byte count.
+Pages passed to swap_readpage()/swap_writepage() are not necessarily all
+the same size - there may be transparent-huge-pages involves.
 
-So modify nfs_direct_IO accordingly, rename it, and use it as the
-->swap_rw function.
+The BIO paths of swap_*page() handle this correctly, but the SWP_FS_OPS
+path does not.
 
-Tested-by: Geert Uytterhoeven <geert+renesas@glider.be> (on Renesas RSK+RZA1 with 32 MiB of SDRAM)
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+So we need to use thp_size() to find the size, not just assume
+PAGE_SIZE, and we need to track the total length of the request, not
+just assume it is "page * PAGE_SIZE".
+
+Reported-by: Miaohe Lin <linmiaohe@huawei.com>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfs/direct.c        |   23 ++++++++++-------------
- fs/nfs/file.c          |    5 +----
- include/linux/nfs_fs.h |    2 +-
- 3 files changed, 12 insertions(+), 18 deletions(-)
+ mm/page_io.c |   23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 11c566d8769f..4eb2a8380a28 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -153,28 +153,25 @@ nfs_direct_count_bytes(struct nfs_direct_req *dreq,
- }
- 
- /**
-- * nfs_direct_IO - NFS address space operation for direct I/O
-+ * nfs_swap_rw - NFS address space operation for swap I/O
-  * @iocb: target I/O control block
-  * @iter: I/O buffer
-  *
-- * The presence of this routine in the address space ops vector means
-- * the NFS client supports direct I/O. However, for most direct IO, we
-- * shunt off direct read and write requests before the VFS gets them,
-- * so this method is only ever called for swap.
-+ * Perform IO to the swap-file.  This is much like direct IO.
-  */
--ssize_t nfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
-+int nfs_swap_rw(struct kiocb *iocb, struct iov_iter *iter)
- {
--	struct inode *inode = iocb->ki_filp->f_mapping->host;
--
--	/* we only support swap file calling nfs_direct_IO */
--	if (!IS_SWAPFILE(inode))
--		return 0;
-+	ssize_t ret;
- 
- 	VM_BUG_ON(iov_iter_count(iter) != PAGE_SIZE);
- 
- 	if (iov_iter_rw(iter) == READ)
--		return nfs_file_direct_read(iocb, iter, true);
--	return nfs_file_direct_write(iocb, iter, true);
-+		ret = nfs_file_direct_read(iocb, iter, true);
-+	else
-+		ret = nfs_file_direct_write(iocb, iter, true);
-+	if (ret < 0)
-+		return ret;
-+	return 0;
- }
- 
- static void nfs_direct_release_pages(struct page **pages, unsigned int npages)
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index e1d10a3e086a..bfb4b707b07e 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -490,10 +490,6 @@ static int nfs_swap_activate(struct swap_info_struct *sis, struct file *file,
- 	struct rpc_clnt *clnt = NFS_CLIENT(inode);
- 	struct nfs_client *cl = NFS_SERVER(inode)->nfs_client;
- 
--	if (!file->f_mapping->a_ops->swap_rw)
--		/* Cannot support swap */
--		return -EINVAL;
--
- 	spin_lock(&inode->i_lock);
- 	blocks = inode->i_blocks;
- 	isize = inode->i_size;
-@@ -550,6 +546,7 @@ const struct address_space_operations nfs_file_aops = {
- 	.error_remove_page = generic_error_remove_page,
- 	.swap_activate = nfs_swap_activate,
- 	.swap_deactivate = nfs_swap_deactivate,
-+	.swap_rw = nfs_swap_rw,
+diff --git a/mm/page_io.c b/mm/page_io.c
+index c132511f521c..d636a3531cad 100644
+--- a/mm/page_io.c
++++ b/mm/page_io.c
+@@ -239,6 +239,7 @@ struct swap_iocb {
+ 	struct kiocb		iocb;
+ 	struct bio_vec		bvec[SWAP_CLUSTER_MAX];
+ 	int			pages;
++	int			len;
  };
+ static mempool_t *sio_pool;
  
- /*
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index b48b9259e02c..fd5543486a3f 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -507,7 +507,7 @@ static inline const struct cred *nfs_file_cred(struct file *file)
- /*
-  * linux/fs/nfs/direct.c
-  */
--extern ssize_t nfs_direct_IO(struct kiocb *, struct iov_iter *);
-+int nfs_swap_rw(struct kiocb *iocb, struct iov_iter *iter);
- ssize_t nfs_file_direct_read(struct kiocb *iocb,
- 			     struct iov_iter *iter, bool swap);
- ssize_t nfs_file_direct_write(struct kiocb *iocb,
+@@ -261,7 +262,7 @@ static void sio_write_complete(struct kiocb *iocb, long ret)
+ 	struct page *page = sio->bvec[0].bv_page;
+ 	int p;
+ 
+-	if (ret != PAGE_SIZE * sio->pages) {
++	if (ret != sio->len) {
+ 		/*
+ 		 * In the case of swap-over-nfs, this can be a
+ 		 * temporary failure if the system has limited
+@@ -301,7 +302,7 @@ static int swap_writepage_fs(struct page *page, struct writeback_control *wbc)
+ 		sio = *wbc->swap_plug;
+ 	if (sio) {
+ 		if (sio->iocb.ki_filp != swap_file ||
+-		    sio->iocb.ki_pos + sio->pages * PAGE_SIZE != pos) {
++		    sio->iocb.ki_pos + sio->len != pos) {
+ 			swap_write_unplug(sio);
+ 			sio = NULL;
+ 		}
+@@ -312,10 +313,12 @@ static int swap_writepage_fs(struct page *page, struct writeback_control *wbc)
+ 		sio->iocb.ki_complete = sio_write_complete;
+ 		sio->iocb.ki_pos = pos;
+ 		sio->pages = 0;
++		sio->len = 0;
+ 	}
+ 	sio->bvec[sio->pages].bv_page = page;
+-	sio->bvec[sio->pages].bv_len = PAGE_SIZE;
++	sio->bvec[sio->pages].bv_len = thp_size(page);
+ 	sio->bvec[sio->pages].bv_offset = 0;
++	sio->len += thp_size(page);
+ 	sio->pages += 1;
+ 	if (sio->pages == ARRAY_SIZE(sio->bvec) || !wbc->swap_plug) {
+ 		swap_write_unplug(sio);
+@@ -371,8 +374,7 @@ void swap_write_unplug(struct swap_iocb *sio)
+ 	struct address_space *mapping = sio->iocb.ki_filp->f_mapping;
+ 	int ret;
+ 
+-	iov_iter_bvec(&from, WRITE, sio->bvec, sio->pages,
+-		      PAGE_SIZE * sio->pages);
++	iov_iter_bvec(&from, WRITE, sio->bvec, sio->pages, sio->len);
+ 	ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
+ 	if (ret != -EIOCBQUEUED)
+ 		sio_write_complete(&sio->iocb, ret);
+@@ -383,7 +385,7 @@ static void sio_read_complete(struct kiocb *iocb, long ret)
+ 	struct swap_iocb *sio = container_of(iocb, struct swap_iocb, iocb);
+ 	int p;
+ 
+-	if (ret == PAGE_SIZE * sio->pages) {
++	if (ret == sio->len) {
+ 		for (p = 0; p < sio->pages; p++) {
+ 			struct page *page = sio->bvec[p].bv_page;
+ 
+@@ -415,7 +417,7 @@ static void swap_readpage_fs(struct page *page,
+ 		sio = *plug;
+ 	if (sio) {
+ 		if (sio->iocb.ki_filp != sis->swap_file ||
+-		    sio->iocb.ki_pos + sio->pages * PAGE_SIZE != pos) {
++		    sio->iocb.ki_pos + sio->len != pos) {
+ 			swap_read_unplug(sio);
+ 			sio = NULL;
+ 		}
+@@ -426,10 +428,12 @@ static void swap_readpage_fs(struct page *page,
+ 		sio->iocb.ki_pos = pos;
+ 		sio->iocb.ki_complete = sio_read_complete;
+ 		sio->pages = 0;
++		sio->len = 0;
+ 	}
+ 	sio->bvec[sio->pages].bv_page = page;
+-	sio->bvec[sio->pages].bv_len = PAGE_SIZE;
++	sio->bvec[sio->pages].bv_len = thp_size(page);
+ 	sio->bvec[sio->pages].bv_offset = 0;
++	sio->len += thp_size(page);
+ 	sio->pages += 1;
+ 	if (sio->pages == ARRAY_SIZE(sio->bvec) || !plug) {
+ 		swap_read_unplug(sio);
+@@ -521,8 +525,7 @@ void __swap_read_unplug(struct swap_iocb *sio)
+ 	struct address_space *mapping = sio->iocb.ki_filp->f_mapping;
+ 	int ret;
+ 
+-	iov_iter_bvec(&from, READ, sio->bvec, sio->pages,
+-		      PAGE_SIZE * sio->pages);
++	iov_iter_bvec(&from, READ, sio->bvec, sio->pages, sio->len);
+ 	ret = mapping->a_ops->swap_rw(&sio->iocb, &from);
+ 	if (ret != -EIOCBQUEUED)
+ 		sio_read_complete(&sio->iocb, ret);
 
 
