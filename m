@@ -2,43 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4278A515281
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 19:42:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECBD8515280
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 19:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1351647AbiD2RqD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1379753AbiD2RqD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Fri, 29 Apr 2022 13:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52442 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379774AbiD2Rp6 (ORCPT
+        with ESMTP id S1351647AbiD2Rp6 (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 13:45:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D6E9CFE70
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 10:42:37 -0700 (PDT)
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 488EBD39B4
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 10:42:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C6F16241E
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87CE5C385B2;
-        Fri, 29 Apr 2022 17:42:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E5B8BB8376A
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4585BC385AF;
+        Fri, 29 Apr 2022 17:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1651254156;
-        bh=2ZzLX/nSMo3VhPl7kFlY98cwt8OokcpFyhsV9jwdx+U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eNc5a+1k36A/4Ip8W6MGCNa+OLAfC5wDam75QNcSwnw7kCINjMQh3FVwEGx/+dXyP
-         nqNx7Wli1GdmBsboKLfqoDr8NZ+V3o+Y89aRO+SLdV2LejRs5RRF7oscM0aZ5V5lXD
-         TNnUfSKRApEQcEUZSqB08kNHYhBzee8E2xb34P1N/beHAirrUCwKNN2xgLz97tHXEb
-         xSbzy5yqR+bTQlgwAdJxG/DGvW4+E2I1qFcoxZTQjabRt3V6Q2k+F4kWGObcZym1BB
-         bvos4OYLMu9Uptlx8Hr9SXn74WTyxp9laiCULs+F30v88fwUnQ6wBPa6Bkl2BCsazL
-         +OPcl2RbOVq2w==
+        bh=dyTDr9QFVRB6I7vXOXvD7YfHhn+ihB2g1HE55P0kzcU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EpDXd8TngG9LDBOQWEWyHpxyKZtUsoIaJLJsm9u25+HW3p7DSQr5rmmzUkLzciU+f
+         kiYuwdFUSlSlw1g283u5odIeQCb4OHQC4lRZuSaq/SuteySqXEYOhiOp12cUW6G6PP
+         Lb1/PDhceLa3SJ7KvwbmnW5j3EOdyLhb3+iEvJe18l70I+pnNAlh6whGh2x2i48rbX
+         Kqgo8DlxeUucqRKeqyg5HfUPODU2FnkI04+2QuEQ6QsN+kRBIwz3uFkG/7ZfLfJBn7
+         Acq0FsM5tsT+SglKdkHCiSva+8szZgrSbvrvbKMS1GeGrgNSEZjLYorLJvk2q9j6w0
+         UwYsvdZS6FVVQ==
 From:   trondmy@kernel.org
 To:     "wanghai (M)" <wanghai38@huawei.com>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 1/4] SUNRPC: Don't leak sockets in xs_local_connect()
-Date:   Fri, 29 Apr 2022 13:36:26 -0400
-Message-Id: <20220429173629.621418-1-trondmy@kernel.org>
+Subject: [PATCH v2 2/4] SUNRPC: Ensure timely close of disconnected AF_LOCAL sockets
+Date:   Fri, 29 Apr 2022 13:36:27 -0400
+Message-Id: <20220429173629.621418-2-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
+In-Reply-To: <20220429173629.621418-1-trondmy@kernel.org>
+References: <20220429173629.621418-1-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -52,49 +54,54 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If there is still a closed socket associated with the transport, then we
-need to trigger an autoclose before we can set up a new connection.
+When the rpcbind server closes the socket, we need to ensure that the
+socket is closed by the kernel as soon as feasible, so add a
+sk_state_change callback to trigger this close.
 
-Reported-by: wanghai (M) <wanghai38@huawei.com>
-Fixes: f00432063db1 ("SUNRPC: Ensure we flush any closed sockets before xs_xprt_free()")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- net/sunrpc/xprtsock.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtsock.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index 8ab64ea46870..f9849b297ea3 100644
+index f9849b297ea3..25b8a8ead56b 100644
 --- a/net/sunrpc/xprtsock.c
 +++ b/net/sunrpc/xprtsock.c
-@@ -1950,6 +1950,9 @@ static void xs_local_connect(struct rpc_xprt *xprt, struct rpc_task *task)
- 	struct sock_xprt *transport = container_of(xprt, struct sock_xprt, xprt);
- 	int ret;
- 
-+	if (transport->file)
-+		goto force_disconnect;
-+
- 	if (RPC_IS_ASYNC(task)) {
- 		/*
- 		 * We want the AF_LOCAL connect to be resolved in the
-@@ -1962,11 +1965,17 @@ static void xs_local_connect(struct rpc_xprt *xprt, struct rpc_task *task)
- 		 */
- 		task->tk_rpc_status = -ENOTCONN;
- 		rpc_exit(task, -ENOTCONN);
--		return;
-+		goto out_wake;
- 	}
- 	ret = xs_local_setup_socket(transport);
- 	if (ret && !RPC_IS_SOFTCONN(task))
- 		msleep_interruptible(15000);
-+	return;
-+force_disconnect:
-+	xprt_force_disconnect(xprt);
-+out_wake:
-+	xprt_clear_connecting(xprt);
-+	xprt_wake_pending_tasks(xprt, -ENOTCONN);
+@@ -1418,6 +1418,26 @@ static size_t xs_tcp_bc_maxpayload(struct rpc_xprt *xprt)
  }
+ #endif /* CONFIG_SUNRPC_BACKCHANNEL */
  
- #if IS_ENABLED(CONFIG_SUNRPC_SWAP)
++/**
++ * xs_local_state_change - callback to handle AF_LOCAL socket state changes
++ * @sk: socket whose state has changed
++ *
++ */
++static void xs_local_state_change(struct sock *sk)
++{
++	struct rpc_xprt *xprt;
++	struct sock_xprt *transport;
++
++	if (!(xprt = xprt_from_sock(sk)))
++		return;
++	transport = container_of(xprt, struct sock_xprt, xprt);
++	if (sk->sk_shutdown & SHUTDOWN_MASK) {
++		clear_bit(XPRT_CONNECTED, &xprt->state);
++		/* Trigger the socket release */
++		xs_run_error_worker(transport, XPRT_SOCK_WAKE_DISCONNECT);
++	}
++}
++
+ /**
+  * xs_tcp_state_change - callback to handle TCP socket state changes
+  * @sk: socket whose state has changed
+@@ -1866,6 +1886,7 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
+ 		sk->sk_user_data = xprt;
+ 		sk->sk_data_ready = xs_data_ready;
+ 		sk->sk_write_space = xs_udp_write_space;
++		sk->sk_state_change = xs_local_state_change;
+ 		sk->sk_error_report = xs_error_report;
+ 
+ 		xprt_clear_connected(xprt);
 -- 
 2.35.1
 
