@@ -2,46 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2815751527E
+	by mail.lfdr.de (Postfix) with ESMTP id 72E0751527F
 	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 19:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1379320AbiD2RqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S1379769AbiD2RqC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Fri, 29 Apr 2022 13:46:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52450 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1379775AbiD2Rp7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 13:45:59 -0400
+        with ESMTP id S1379762AbiD2RqA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 13:46:00 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E94D3D99
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1B9D3710
         for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 10:42:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B1EABB8376B
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E669AC385A4;
-        Fri, 29 Apr 2022 17:42:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 84499B8376D
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 17:42:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97E2C385A7;
+        Fri, 29 Apr 2022 17:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1651254157;
-        bh=5YPb4LWePLYlCNdOWjz2GW/FS+Um7vpp2gAcdBl86lY=;
+        s=k20201202; t=1651254158;
+        bh=MBQFP4NqrMN0hqGMiSd3JimixdJBn9XsfqOd1NGTQKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iK1TFaiq8T3gL7GGIgpkxnJtD1tOQZa3HxxdGVEevbFyTa3PtsBk8Ry2qzjuAEXws
-         De+eaViIBw29dvB+WKCajQxuENCfsWYIbk7SYyYjSu5bMvpoT3yGEZVgNzPPO6RDwu
-         pXqWBQo8as25yZky2cAxI08p4pf18xpB+/A7GTNkEo8ea9E6pNwsxC7UtRYGyPm3iX
-         r4ftZ1afBBX5cVC2XAHzqq0krK6Os5cEdgoiuUXjZ6e2g2QPq5Q9bEWI04q6ikfPVY
-         5TdLvrJfrz99N1e0SSORw2m5SjYoOdAlc8wjfZVSCTOCiBxI/YwJ6EQZl69fdUtX2M
-         Cea/+7wsmrgxg==
+        b=rYfmZsoBkwP750VV0FNDPKWzSHgHgwIr28LPrl5fQW20P8XBlO4ySUx72YW/KHrm8
+         Hke44B3gthDeRKA7v7LzPhdBWv+NqKtfUqiD6Hbip36vQv0IYerJZMzurgc9yM8/qT
+         ZIZFP+bOzA33RP3B7b9eiL9qH2wWl1VgT1Kskev0jAwhkv3PVSgO6FJQ9MptabGXrU
+         qjmBlaCopY3xu/fSkkIy+8uDQYzYdYEfgzA0Zpy/z2eEkoFXhGDhJ1ON4wWdPoEn1S
+         t+pHeQ0yBJJWumssZVmsC+fa9MXSkawrDXWNeo1YRoAp3Ehmm0wXrrCXMsjhrL9Oeb
+         PeTJTqBYNtkEg==
 From:   trondmy@kernel.org
 To:     "wanghai (M)" <wanghai38@huawei.com>
 Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
         Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Subject: [PATCH v2 3/4] SUNRPC: Ensure gss-proxy connects on setup
-Date:   Fri, 29 Apr 2022 13:36:28 -0400
-Message-Id: <20220429173629.621418-3-trondmy@kernel.org>
+Subject: [PATCH v2 4/4] Revert "SUNRPC: attempt AF_LOCAL connect on setup"
+Date:   Fri, 29 Apr 2022 13:36:29 -0400
+Message-Id: <20220429173629.621418-4-trondmy@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220429173629.621418-2-trondmy@kernel.org>
+In-Reply-To: <20220429173629.621418-3-trondmy@kernel.org>
 References: <20220429173629.621418-1-trondmy@kernel.org>
  <20220429173629.621418-2-trondmy@kernel.org>
+ <20220429173629.621418-3-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -55,59 +56,32 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-For reasons best known to the author, gss-proxy does not implement a
-NULL procedure, and returns RPC_PROC_UNAVAIL. However we still want to
-ensure that we connect to the service at setup time.
-So add a quirk-flag specially for this case.
+This reverts commit 7073ea8799a8cf73db60270986f14e4aae20fa80.
 
-Fixes: 1d658336b05f ("SUNRPC: Add RPC based upcall mechanism for RPCGSS auth")
+We must not try to connect the socket while the transport is under
+construction, because the mechanisms to safely tear it down are not in
+place.
+
 Cc: stable@vger.kernel.org
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- include/linux/sunrpc/clnt.h          | 1 +
- net/sunrpc/auth_gss/gss_rpc_upcall.c | 2 +-
- net/sunrpc/clnt.c                    | 3 +++
- 3 files changed, 5 insertions(+), 1 deletion(-)
+ net/sunrpc/xprtsock.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 267b7aeaf1a6..db5149567305 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -160,6 +160,7 @@ struct rpc_add_xprt_test {
- #define RPC_CLNT_CREATE_NO_RETRANS_TIMEOUT	(1UL << 9)
- #define RPC_CLNT_CREATE_SOFTERR		(1UL << 10)
- #define RPC_CLNT_CREATE_REUSEPORT	(1UL << 11)
-+#define RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL (1UL << 12)
- 
- struct rpc_clnt *rpc_create(struct rpc_create_args *args);
- struct rpc_clnt	*rpc_bind_new_program(struct rpc_clnt *,
-diff --git a/net/sunrpc/auth_gss/gss_rpc_upcall.c b/net/sunrpc/auth_gss/gss_rpc_upcall.c
-index 61c276bddaf2..8ca1d809b78d 100644
---- a/net/sunrpc/auth_gss/gss_rpc_upcall.c
-+++ b/net/sunrpc/auth_gss/gss_rpc_upcall.c
-@@ -97,7 +97,7 @@ static int gssp_rpc_create(struct net *net, struct rpc_clnt **_clnt)
- 		 * timeout, which would result in reconnections being
- 		 * done without the correct namespace:
- 		 */
--		.flags		= RPC_CLNT_CREATE_NOPING |
-+		.flags		= RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL |
- 				  RPC_CLNT_CREATE_NO_IDLE_TIMEOUT
- 	};
- 	struct rpc_clnt *clnt;
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 98133aa54f19..22c28cf43eba 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -479,6 +479,9 @@ static struct rpc_clnt *rpc_create_xprt(struct rpc_create_args *args,
- 
- 	if (!(args->flags & RPC_CLNT_CREATE_NOPING)) {
- 		int err = rpc_ping(clnt);
-+		if ((args->flags & RPC_CLNT_CREATE_IGNORE_NULL_UNAVAIL) &&
-+		    err == -EOPNOTSUPP)
-+			err = 0;
- 		if (err != 0) {
- 			rpc_shutdown_client(clnt);
- 			return ERR_PTR(err);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index 25b8a8ead56b..650102a9c86a 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -2875,9 +2875,6 @@ static struct rpc_xprt *xs_setup_local(struct xprt_create *args)
+ 		}
+ 		xprt_set_bound(xprt);
+ 		xs_format_peer_addresses(xprt, "local", RPCBIND_NETID_LOCAL);
+-		ret = ERR_PTR(xs_local_setup_socket(transport));
+-		if (ret)
+-			goto out_err;
+ 		break;
+ 	default:
+ 		ret = ERR_PTR(-EAFNOSUPPORT);
 -- 
 2.35.1
 
