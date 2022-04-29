@@ -2,89 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94C76515509
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Apr 2022 21:59:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C2BF5158B6
+	for <lists+linux-nfs@lfdr.de>; Sat, 30 Apr 2022 00:55:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1380466AbiD2UCv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Apr 2022 16:02:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34680 "EHLO
+        id S1381634AbiD2W6R (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Apr 2022 18:58:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1378695AbiD2UCu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 16:02:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02B49BCB4F;
-        Fri, 29 Apr 2022 12:59:30 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 07D0C7140; Fri, 29 Apr 2022 15:59:30 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 07D0C7140
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1651262370;
-        bh=9cERD43aQDAggW+W43xzFi8iScoiz/K0W/yWtLBaydk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=w2V4kpIadmYv7Qqg7SWcOoIGr2gIsGFT7l/R4Rg+b3i61iG0HuAt0oCL1uVqiD0Tq
-         O1ttbXQsa9Lpb5g1afnR/9rqxP4qM296OQidBSdtNsPwTHIBupy6U/O6zMeyCZrpXV
-         eBV4f/s6LIWGeK+xyvX6Ei2k/ZbeWUR55jbVBH6k=
-Date:   Fri, 29 Apr 2022 15:59:30 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     dai.ngo@oracle.com
-Cc:     chuck.lever@oracle.com, jlayton@redhat.com,
-        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH RFC v23 1/7] NFSD: add courteous server support for
- thread with only delegation
-Message-ID: <20220429195930.GJ7107@fieldses.org>
-References: <1651129595-6904-1-git-send-email-dai.ngo@oracle.com>
- <1651129595-6904-2-git-send-email-dai.ngo@oracle.com>
- <20220429145543.GD7107@fieldses.org>
- <6ce5af72-52ba-7cf0-8295-7929b9b0b4a8@oracle.com>
- <20220429195510.GH7107@fieldses.org>
+        with ESMTP id S239840AbiD2W6Q (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Apr 2022 18:58:16 -0400
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE542D4C64
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 15:54:57 -0700 (PDT)
+Received: by mail-ed1-x534.google.com with SMTP id d6so10604932ede.8
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Apr 2022 15:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=MUPE+WCKiaoxRAdnteR3TsIHrvUD8FAr/F1eBQt4pX0=;
+        b=eOE3sN8s+vRwdFkxN0iX4yonGV/3x98wUVoysuuPgnFvh7chzOa9fju2SB2F35QgGt
+         ijKRvhsGcPL6mDgi8ndPsjMyLnauI5RtlRAsRq/D/orWjjdIEFTKjBwumiRnFWP6Aj6q
+         LSZv4tn0x3M/isVWGBsMRoFz0tZ7VeGgPDiVrX+kW13L//w6kciTY819ulemrBLH9Afb
+         fvMjdIR+r1ESgzTZEVVO/PedMR10I/qu7nMWN1cr/5/Fkm57AksPWCyRZG8s43aunccX
+         bA0ZT7WYmKAO+OEIC+m3SCOA/cFs9rsaeetMBbUXZMX35aXiKvDFsxE6IdGjs9TVpWht
+         HJSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=MUPE+WCKiaoxRAdnteR3TsIHrvUD8FAr/F1eBQt4pX0=;
+        b=h/zcBIztz7q7EIh4CpDXgCYC306f4X2h/Rm7HWseGzohLPJ7kMoMUm8epuAvr6QtBe
+         1CQNYE1FP6CiVBJ1J0UiQcmnQvwjABVBNgJnfombrsYcYpRUgkpjNlGhAFzPAweaTgzi
+         VFM99M4DnDO/ywXCV/bo8YRdMnb37nmEJEk8S0uQzZwoJJtXuLNHNjCzg5uYxbZGbaCX
+         9a0+yDaHIM1jwreIIPDRTtIcD9AVCvSs3OddbJQ+Xnr4CaRNk+Dv+xA6O8IEV2QyPXSC
+         dH3+wh0cygtD8lv11bBrqTZ0SrvnoPt8pqoxWfQRqYrCfK3tGJD9MBpQp8KU+jLTOWAB
+         Wo/w==
+X-Gm-Message-State: AOAM531DL4rKIm4CMVsUXZr7QVWWOvP+zjuIo/wo31rH2+MTV8jwZVy5
+        PkE7aQ1kg0yuz0IoyZPkz9Kq1xdBhYDW+lEQZmE=
+X-Google-Smtp-Source: ABdhPJzDT0e1Vr0coggEherD5r93aaW+0mvSf1obNIyKdiD/PzCIOkQ3Lr1ZefcstYEaVCQzyOZ6h4NOWoASjGWJ9CY=
+X-Received: by 2002:a05:6402:3456:b0:425:ab60:1b00 with SMTP id
+ l22-20020a056402345600b00425ab601b00mr1588014edc.71.1651272896428; Fri, 29
+ Apr 2022 15:54:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220429195510.GH7107@fieldses.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:ab4:a689:0:0:0:0:0 with HTTP; Fri, 29 Apr 2022 15:54:56
+ -0700 (PDT)
+Reply-To: jerrydosso@hotmail.com
+From:   Jerry Dosso <jerrydosso20@gmail.com>
+Date:   Sat, 30 Apr 2022 07:54:56 +0900
+Message-ID: <CAK7AM3p456RQDjBP+i-7mSnB9D1fFv61bRwg1rasPVuZRDgwhg@mail.gmail.com>
+Subject: Jerry Dosso
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:534 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4880]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [jerrydosso20[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [jerrydosso20[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  3.6 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Apr 29, 2022 at 03:55:10PM -0400, J. Bruce Fields wrote:
-> On Fri, Apr 29, 2022 at 10:21:21AM -0700, dai.ngo@oracle.com wrote:
-> > 
-> > On 4/29/22 7:55 AM, J. Bruce Fields wrote:
-> > >On Thu, Apr 28, 2022 at 12:06:29AM -0700, Dai Ngo wrote:
-> > >>+static bool client_has_state_tmp(struct nfs4_client *clp)
-> > >Why the "_tmp"?
-> > >
-> > >>+{
-> > >>+	if (!list_empty(&clp->cl_delegations) &&
-> > >>+			!client_has_openowners(clp) &&
-> > >>+			list_empty(&clp->async_copies))
-> > >I would have expected
-> > >
-> > >	if (!list_empty(&clp->cl_delegations) ||
-> > >		client_has_openowners(clp) ||
-> > >		!list_empty(&clp->async_copies))
-> > 
-> > In patch 1, we want to allow *only* clients with non-conflict delegation
-> > to be in COURTESY state, not with opens and locks. So for that, we can not
-> > use the existing client_has_state (until patch 6), so I just created
-> > client_has_state_tmp for it.
-> 
-> Got it, so, I recommend just moving this logic into
-> nfs4_anylock_blockers instead, and replacing the call to
-> client_has_state_tmp() with a call to client_has_state().
-> 
-> The logic of nfs4_anylock_blockers() is then basically "return true if anyone
-> might be waiting on this client; and if the client has some class of
-> state that we don't handle yet, just assume it might have someone
-> waiting on it."
+-- 
+My Dear Friend,
 
-And, yeah, the end result is probably the same, but this would just make
-the patches easier to read.
+Did you receive the message i sent to you?
 
---b.
+Regards,
+
+Mr Jerry Dosso
