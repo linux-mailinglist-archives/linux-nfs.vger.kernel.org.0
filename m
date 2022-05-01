@@ -2,369 +2,467 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D39F25160E2
-	for <lists+linux-nfs@lfdr.de>; Sun,  1 May 2022 00:54:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43AFB5166BA
+	for <lists+linux-nfs@lfdr.de>; Sun,  1 May 2022 19:39:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235012AbiD3W6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 30 Apr 2022 18:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        id S1353368AbiEARlu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 1 May 2022 13:41:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231941AbiD3W6N (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 30 Apr 2022 18:58:13 -0400
+        with ESMTP id S1345175AbiEARlt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 1 May 2022 13:41:49 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691D4B6F;
-        Sat, 30 Apr 2022 15:54:49 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 23UBDStq029440;
-        Sat, 30 Apr 2022 22:54:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=LSad2LC2IJveSN8B6zml9UEJ4TMp216l03MzdFpomTE=;
- b=G4wx2sUL0lQJbcO7gI3YyZnd0McTSVN+nCND3/1RUs1ITb6Eu5x7ci6GcUGr8Ae0jeff
- HsO0VitKRrWBRGgK9h1uklH0mYt/0XrABdHDdmc7zqWhlBZmTJtxdQ7Bl4NgEiK+jIag
- dqs/hlJ9f2IMZKgf9NVN8lKZnj+VgeGGj26KZZDZk0nRtpCmnQHfuGeQZJZK2kE+u7j3
- 7XuBD7uNFAk+pquu8/SNOdL4K73Rl/EXvG1bVsbgwM61NCxXyiPKuG6X3XxcKR9p8CSS
- 2jkGn3PYPFxMlVu5JKw98JBLWg3uLgvnlhilYO204xYVgAqkKQa0Jsq6girkgNpbts5O +A== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fruq08wv8-1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C267BE1A;
+        Sun,  1 May 2022 10:38:23 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 241C34fl018530;
+        Sun, 1 May 2022 17:38:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=Rt6WNsypjx83icUL4GrE2UJGpdrr8xvqrR8MCYCafkU=;
+ b=PMVen15aszRg+BcQEUiuMvb/GyV/2TyxhHNKznI+0q0Nz+PGonpHRirFbu9j585OsRsU
+ r/I/5o2odHtP/3ihD8t9H7ovIJ10YDDvfjcr+uS88ue0N6mUr1RngKLN5XA5adXpTWNR
+ FVWixt4GhRT5uf/t97DM/7AIBL2F6khelEvsJnLJdxHYsOd2NoKgYIJgVrjb8uegUeh0
+ wTSd5tni0pV8Y33XQHovjLcary+cnel3y2uxorlOftELh6po8gjGfbSuAqXuFpjSKedr
+ mnOWcFL2srGUIJo4E+2VOtDerlIaLip8/4OvMJd4039WMKAR/KWf2YuBkqh+pgbZ3RSH +Q== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3frwnt1srb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Apr 2022 22:54:44 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 23UMom6l022039;
-        Sat, 30 Apr 2022 22:54:43 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2176.outbound.protection.outlook.com [104.47.58.176])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fruj6g91q-1
+        Sun, 01 May 2022 17:38:20 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 241HZDFx033370;
+        Sun, 1 May 2022 17:38:20 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fs1a37w62-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 30 Apr 2022 22:54:43 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gcemXqI62F3IZmjnmVzNFymLNd3J9m60P6qVxm2rLGj71YRSFf73sZ81cBYubI/H3vBfnOWiHImfV1dIXRIUDoP8Eh0wtA9X+cLtgi/k72E0OL+ED4z/dtwGX5bteyONHYjTNTuwTz6hiuCoTukSByJmLMmhEF5ynlSLziPt9XXlGQWAAeNKdIBciWuttnZZMQC3ESpS9K4yykJJ+ZqMBgDaeqm6J0m1nIwDHj36tD0dhlde056wVBcw85JXa2enELrEIce+Jh15Acr95M40oB/2q6gGAvWN5JoPu0t7K22t8F/JI+2+qCcWi5DqOblh1gqVFQKFlJjJohiMn8kWgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LSad2LC2IJveSN8B6zml9UEJ4TMp216l03MzdFpomTE=;
- b=YdOT74YZ/wjGl1NwzqMIw5T3ogKmoyS7nTgUB3qfTAn1Z6FuZUO5mXY6ZjE65rMlvWN14KemfHlNnVRPOV3pVwGaZNYaowSt9SAoXlayifE8ONcq10NqPfBydFMG1c5bYXqbnOK45/5SmiCO5x1oFJXwhW0Su4ddWAEKES1FkiG39ti8TOwiAwrkkgp8+mM1gKui6Gaq4AprAAfm1pHnFl+rzASUlBoHnWv68aj4lKUHLrL4VqtwzjKmXjAS0kReJ5xyy56YNLfUomVG9uWfbd3n7NBaHLdA7QAyeSYW2RDmYmjbhSD+s80lWBiEQ581tl2WZWe6+nHHf4CdIk0vMw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LSad2LC2IJveSN8B6zml9UEJ4TMp216l03MzdFpomTE=;
- b=XyfE/Zty1fkDUQ8KNlheeyZUOSug3giT8fXjBngO0879G7wd1RZXNQe4aho3NAd7wci9LtBsH+jPT/WGHkJa/uY8HxZ1nB9amRvynwZemD0xyM2AEbVAeWU0zD1k/SBAt+xQBbrDVCTqYJsro2XySVVbLz8uqieiZVtiLQ6jiBs=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BN6PR10MB2018.namprd10.prod.outlook.com (2603:10b6:404:103::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5186.14; Sat, 30 Apr
- 2022 22:54:41 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::8191:d4f0:b79d:a586]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::8191:d4f0:b79d:a586%7]) with mapi id 15.20.5206.013; Sat, 30 Apr 2022
- 22:54:41 +0000
-Message-ID: <3300ec98-060f-6cbc-504c-981087ea3258@oracle.com>
-Date:   Sat, 30 Apr 2022 15:54:39 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.1
-Subject: Re: [PATCH RFC v23 5/7] fs/lock: add 2 callbacks to
- lock_manager_operations to resolve conflict
-Content-Language: en-US
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     chuck.lever@oracle.com, jlayton@redhat.com,
-        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <1651129595-6904-1-git-send-email-dai.ngo@oracle.com>
- <1651129595-6904-6-git-send-email-dai.ngo@oracle.com>
- <20220429151618.GF7107@fieldses.org>
- <862e6f3c-fb59-33e0-a6ea-7a67c93cfb20@oracle.com>
- <20220429195819.GI7107@fieldses.org> <20220430011826.GA14842@fieldses.org>
-From:   dai.ngo@oracle.com
-In-Reply-To: <20220430011826.GA14842@fieldses.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0248.namprd03.prod.outlook.com
- (2603:10b6:a03:3a0::13) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: ccba6273-8b84-4020-3e32-08da2afc6922
-X-MS-TrafficTypeDiagnostic: BN6PR10MB2018:EE_
-X-Microsoft-Antispam-PRVS: <BN6PR10MB2018215CBE891E305E01400F87FF9@BN6PR10MB2018.namprd10.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pyTKBSyCoSzeidnvw+E0lvG75EJe1N5Tk8vFFSPwg95yoI85ahN8qHwl2VFRpRuHDOOccV4xjJGj+lLUAzqCphKvwBSnNoDKatXz2p5m6Q0fgKtEowi3biumg9+o7duwOfKWOQZPVTnFKHtCQrGKE5d+4fC7JyktkRb8SPObf1rq1wwWnOWtba7njX/YmUveYf7B13QP0QSrI4oy1MhIb37usQLNNWL4w+40R3zP0YhLyrWnVnOWU1+TCcUmSLoG0B36usAYOaRKj5LXUMqo88xSn2mQaRA3ZOyVoTlI7RPT4cOgVheHE5IWCpTWcK1stCo+rM/AJMTqO0deOvovw5bwknQfNxCxslvsi2sR9qVWe3y85F++rmgHwsL3okM6te+ghUrtZbcUT7Z/LTZmK7h05ltl4azVB3s5fWE3AmU83w0QcjKLWj8nEyrJma4sJv5oSFp1DwM/90Lva7V+ZuKGqFjc5HBWa7z2dbfSIUpDxzSQDfEbM0hKCae2tub6GIJVtQ4bs8Bcj6Qu+uCqPpGoPQVzlgzbJzJYpM4h078mKHFBf39MUutcD9S9MfDshOWOkdkQyL7sUwY5XEciRtVfUXyab8W6uVBspN3S34Cv/Ea39gQJOjTG2+kvJvDQ7HoLWUjqR0M9B1QvWv0LjR0bQzLIPaNx2aRM2VVbGu/hoXKBjPTb6Kyv21WmtZ3Z05fDPN/kD2Kxw1+vccKg4K4+UaeiZAuOs2MRSiG49HLEMmYvnpa+6JNZXkJcyM3RUxlyFiaHCYIKS/c0pCMxwt1SoX1WOB7+UTYb2upO6Wo=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(53546011)(9686003)(6486002)(966005)(6506007)(30864003)(8676002)(4326008)(6512007)(6916009)(508600001)(86362001)(316002)(26005)(36756003)(2616005)(2906002)(31696002)(83380400001)(31686004)(66556008)(66476007)(5660300002)(66946007)(8936002)(38100700002)(186003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b0dRcHREd1JjNnlzNXpoUEFzTWV6cmFJUTlKQXlOZmdVMWxCMWpnNUNibnB2?=
- =?utf-8?B?SHFhZmwvSFFpVlhTUW43K0FaSFhDZDFPOXJpMGdWc0k5ZjF6RUlHYlQwOGNL?=
- =?utf-8?B?dkJBS25CTzlxMy9VcHhsdWJMT3lJajRMR0hLQ3R1YVZsUmJTMGV1M1B2ZThm?=
- =?utf-8?B?Z3p6V2M3QlFEd0xkK0U2Q0Nha0VXeU9RNUtiOUtqTCtnQmRJQ2hGbjNDNGtL?=
- =?utf-8?B?YkZqRW5wSGpYK3dma05rRE5MUXgyYit6S2pGUU9BcUhLTlFwR1BZbnZDNUV1?=
- =?utf-8?B?NkQxQzR5Mzd4L29DVlFpcnNwZUJaeDh4QmVJTHUwbURmcWFScWdTMGxIRDBr?=
- =?utf-8?B?Tkgyc0Z1cjVBd2o4Y2F1ZnlEaXNreVBCdFZVN0RHcXNGYkFKdFNFeW5IMUNp?=
- =?utf-8?B?cWRFTEN5dmlCYnp1clJrcnU4V2VtTW9mWjlRK0NBYVdodGNyeHBtSWVvWHdF?=
- =?utf-8?B?VmxTQlEvc09Jb1JIdDQ4OGgzUmtwalNoVFRlTnQ1ajVXVVVwNnZKR2lUR2k4?=
- =?utf-8?B?bkptWEs1THNHbGNYUXFBLzU5dnFLQ3RDc2wxank1MlpUMVFNeXVCTUVadEZV?=
- =?utf-8?B?NmljeTZHaGpLVjJkK2hrQmJKeDVaY0EwdmZLMENPazlJblNFSlBLVW00dlVv?=
- =?utf-8?B?THRIcFdHcTJ1OVIxQ1RTWWRDY1NxTXFhQzArRHhvcGNVY3U1YThGMjhHSHNT?=
- =?utf-8?B?VXFRWWkyaUNQdmRSTVNFeENlNHcrbnVxbVdMTlFBNFVWclROVU8xV28rbm5F?=
- =?utf-8?B?STZlZHZYdlQ5RzZuY29GSEZ2Q094R3oxSFMxZ2l4QlU2anhjeXRHUUYycURt?=
- =?utf-8?B?YUROWVFQNnZmdXppNjRMNnVGRjh2dTR0SHR2N0VNcDV5akhvZXJrZFVZcFJN?=
- =?utf-8?B?N1NZMkNpMG5sZTQ4aGUwMFF1ZEV0TlJqdFUxOEJRL25QZmRsYVJrZm11WnFD?=
- =?utf-8?B?SUVucXJjcG9zRDNzbUFNYlA2Y0haMUNydEFaZkQ0UXo2VXFCNEhoQ0cwQ3py?=
- =?utf-8?B?ZkZ1Zi9zMFh1dXJ4d0MrQjRYMWs5SHlVaERqb3B1L2x5SEtuTklTZXJDWEd3?=
- =?utf-8?B?YnRQZHh2dzg2UWt2Q09HdUkvKzdDYys3M00wNDRQTUZYWWpGWEFqMVViSlNO?=
- =?utf-8?B?NjU3b2JRbGhVNGp2UWFZOHQrZlo1UUEyTzh4TXJVOEpJUjIzcFgyQUhOUlFD?=
- =?utf-8?B?NFBLaStJa2dxY1lvaThXVVEvMUtMbXg5c2lRZzYvMjlCWHdkZTBlem1RbGhk?=
- =?utf-8?B?RVdaNEttTUlXRlNmRjU5dGNaN2xxcEFHSmJMTVQvb0hPTFNjZTkzdGZ6SDJB?=
- =?utf-8?B?Ry9RQ2k5cGF5ZEVPQnduNDRSRHFtaWtRYmNJQ0JCdVNvUnBWR1A1Uk5CWmNx?=
- =?utf-8?B?VE9rN2FncTFqdFF3NnowWnJSODRSUW5OcWRWUk9lclFKOFpMRXZiZzlmZTRo?=
- =?utf-8?B?VTRrYndUTTVRWmNVbHRmbWxVb2VrR0tYWWp5RWNaZ0l4d0lsSTRzNlBOdUpi?=
- =?utf-8?B?OEwrZTc2V2dRQXNuZHc4ODdvRndqWW11b2R1ZG1jUWhJdVYrdHl6QXJVQTFJ?=
- =?utf-8?B?YkNaUzN1TGxPa2I4Wk9ROFVhVDNTMUd4MlNmMTZCS1JjZUtsMnZqdEFROWhs?=
- =?utf-8?B?Sy9MeEdVeUptMEsyK1dUME9PWExRVjhSZVhWeUZvWXpBdHJrekpvcGViZjNI?=
- =?utf-8?B?Q3RweExna0NjVVkvb2E4MXlaWjBMSGJYdFdhdWRuRjdUYVRLcFl6dGJHRGYx?=
- =?utf-8?B?SDc1UzNtRlJGMnUwdG9BZkNxRlBETEFyZUp5QW0vTkdMcU1OS2V4RTFOSm1C?=
- =?utf-8?B?Y2pNYmxVRGRES0l4ZEgzRWxIRmpObjJLWVpqL2p6TkZDUjlPaU5ab3BCUmVr?=
- =?utf-8?B?Y3k5emg3em5RMlg5V3BBMUVSR2Rld2FBV3dNenNpNkdoQjNlUmszSkZBaHB6?=
- =?utf-8?B?Qm45Y2tsNzRTRyswWFpqbVdqMTBnRDFRVlkrUG92MHZFYUJrMjN5MzBtRjBV?=
- =?utf-8?B?Uk9VSktCQjBuOVVBbTB0b2drdG5kS3RaU0pqQlVKK3p0bXJPSlp1ejRQanFr?=
- =?utf-8?B?YXlQN1A0RldIZEtOU2MxNFVoaDhFc3ZwSW5QVW1mTytlZXJ0Mld1T2wrc0dY?=
- =?utf-8?B?T3ZydkEra0lrZXBUbTVQUi9Fb2RuWjlBL2Rwbjd2YXBsNWpSMWdtZDdyRit2?=
- =?utf-8?B?MVJHVWlpNVV4Q1NTbmd2elcwd0x1c0RqR3g1a3BTKzJZNHl5S1JmK0N1QzBo?=
- =?utf-8?B?ajRhS3VQalI0dUoxQ29Kc1pvcHdYWHFweFU2WUxXQzBaQlZwOWwzQ3Vya2Zk?=
- =?utf-8?B?dGtJSCs4cHZ0MDFCcmFzdndUL0R5V3hzaDN1MmhZSjZnTVpXdldLdz09?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ccba6273-8b84-4020-3e32-08da2afc6922
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2022 22:54:41.1742
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zZrSaxy9rf60XpDhpo2dERSXQjKJZB4grLcZj/tKPjIvx3z3yTePENdGAKm7Mmx+I5bsxR//7K0oY3Xob9CR2w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR10MB2018
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
- definitions=2022-04-30_08:2022-04-28,2022-04-30 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2204300180
-X-Proofpoint-ORIG-GUID: oxfOnCKPQk5wTy27qIf7AODui_G9eFy0
-X-Proofpoint-GUID: oxfOnCKPQk5wTy27qIf7AODui_G9eFy0
-X-Spam-Status: No, score=-5.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        Sun, 01 May 2022 17:38:19 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 241HauVZ034841;
+        Sun, 1 May 2022 17:38:19 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3fs1a37w5x-1;
+        Sun, 01 May 2022 17:38:19 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, bfields@fieldses.org
+Cc:     jlayton@redhat.com, viro@zeniv.linux.org.uk,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH RFC v24 0/7] NFSD: Initial implementation of NFSv4 Courteous Server
+Date:   Sun,  1 May 2022 10:38:09 -0700
+Message-Id: <1651426696-15509-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-ORIG-GUID: owQogSGI84F2QTl-RkQrIro3zNeh9mGc
+X-Proofpoint-GUID: owQogSGI84F2QTl-RkQrIro3zNeh9mGc
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Chuck, Bruce
 
-On 4/29/22 6:18 PM, J. Bruce Fields wrote:
-> On Fri, Apr 29, 2022 at 03:58:19PM -0400, J. Bruce Fields wrote:
->> On Fri, Apr 29, 2022 at 10:24:11AM -0700, dai.ngo@oracle.com wrote:
->>> On 4/29/22 8:16 AM, J. Bruce Fields wrote:
->>>> On Thu, Apr 28, 2022 at 12:06:33AM -0700, Dai Ngo wrote:
->>>>> Add 2 new callbacks, lm_lock_expirable and lm_expire_lock, to
->>>>> lock_manager_operations to allow the lock manager to take appropriate
->>>>> action to resolve the lock conflict if possible.
->>>>>
->>>>> A new field, lm_mod_owner, is also added to lock_manager_operations.
->>>>> The lm_mod_owner is used by the fs/lock code to make sure the lock
->>>>> manager module such as nfsd, is not freed while lock conflict is being
->>>>> resolved.
->>>>>
->>>>> lm_lock_expirable checks and returns true to indicate that the lock
->>>>> conflict can be resolved else return false. This callback must be
->>>>> called with the flc_lock held so it can not block.
->>>>>
->>>>> lm_expire_lock is called to resolve the lock conflict if the returned
->>>>> value from lm_lock_expirable is true. This callback is called without
->>>>> the flc_lock held since it's allowed to block. Upon returning from
->>>>> this callback, the lock conflict should be resolved and the caller is
->>>>> expected to restart the conflict check from the beginnning of the list.
->>>>>
->>>>> Lock manager, such as NFSv4 courteous server, uses this callback to
->>>>> resolve conflict by destroying lock owner, or the NFSv4 courtesy client
->>>>> (client that has expired but allowed to maintains its states) that owns
->>>>> the lock.
->>>>>
->>>>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->>>>> ---
->>>>>   Documentation/filesystems/locking.rst |  4 ++++
->>>>>   fs/locks.c                            | 45 +++++++++++++++++++++++++++++++----
->>>>>   include/linux/fs.h                    |  3 +++
->>>>>   3 files changed, 48 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
->>>>> index c26d854275a0..0997a258361a 100644
->>>>> --- a/Documentation/filesystems/locking.rst
->>>>> +++ b/Documentation/filesystems/locking.rst
->>>>> @@ -428,6 +428,8 @@ prototypes::
->>>>>   	void (*lm_break)(struct file_lock *); /* break_lease callback */
->>>>>   	int (*lm_change)(struct file_lock **, int);
->>>>>   	bool (*lm_breaker_owns_lease)(struct file_lock *);
->>>>> +        bool (*lm_lock_expirable)(struct file_lock *);
->>>>> +        void (*lm_expire_lock)(void);
->>>>>   locking rules:
->>>>> @@ -439,6 +441,8 @@ lm_grant:		no		no			no
->>>>>   lm_break:		yes		no			no
->>>>>   lm_change		yes		no			no
->>>>>   lm_breaker_owns_lease:	yes     	no			no
->>>>> +lm_lock_expirable	yes		no			no
->>>>> +lm_expire_lock		no		no			yes
->>>>>   ======================	=============	=================	=========
->>>>>   buffer_head
->>>>> diff --git a/fs/locks.c b/fs/locks.c
->>>>> index c369841ef7d1..d48c3f455657 100644
->>>>> --- a/fs/locks.c
->>>>> +++ b/fs/locks.c
->>>>> @@ -896,6 +896,37 @@ static bool flock_locks_conflict(struct file_lock *caller_fl,
->>>>>   	return locks_conflict(caller_fl, sys_fl);
->>>>>   }
->>>>> +static bool
->>>>> +resolve_lock_conflict_locked(struct file_lock_context *ctx,
->>>>> +			struct file_lock *cfl, bool rwsem)
->>>>> +{
->>>>> +	void *owner;
->>>>> +	bool ret;
->>>>> +	void (*func)(void);
->>>>> +
->>>>> +	if (cfl->fl_lmops && cfl->fl_lmops->lm_lock_expirable &&
->>>>> +				cfl->fl_lmops->lm_expire_lock) {
->>>>> +		ret = (*cfl->fl_lmops->lm_lock_expirable)(cfl);
->>>>> +		if (!ret)
->>>>> +			return false;
->>>>> +		owner = cfl->fl_lmops->lm_mod_owner;
->>>>> +		if (!owner)
->>>>> +			return false;
->>>>> +		func = cfl->fl_lmops->lm_expire_lock;
->>>>> +		__module_get(owner);
->>>>> +		if (rwsem)
->>>>> +			percpu_up_read(&file_rwsem);
->>>>> +		spin_unlock(&ctx->flc_lock);
->>>> Dropping and reacquiring locks inside a function like this makes me
->>>> nervous.  It means it's not obvious in the caller that the lock isn't
->>>> held throughout.
->>>>
->>>> I know it's more verbose, but let's just open-code this logic in the
->>>> callers.
->>> fix in v24.
->>>
->>>> (And, thanks for catching the test_lock case, I'd forgotten it.)
->>>>
->>>> Also: do we *really* need to drop the file_rwsem?  Were you seeing it
->>>> that cause problems?  The only possible conflict is with someone trying
->>>> to read /proc/locks, and I'm surprised that it'd be a problem to let
->>>> them wait here.
->>> Yes, apparently file_rwsem is used when the laundromat expires the
->>> COURTESY client client and causes deadlock.
->> It's taken, but only for read.  I'm rather surprised that would cause a
->> deadlock.  Do you have any kind of trace showing what happened?
->>
->> Oh well, it's not a big deal to just open code this and set the "retry:"
->> before both lock acquisitions, that's probably best in fact.  I'm just
->> curious.
-> I remember running across this:
->
-> 	https://lore.kernel.org/linux-nfs/20210927201433.GA1704@fieldses.org/
->
-> though that didn't involve the laundromat.  Were you seeing an actual
-> deadlock with these new patches?  Or a lockdep warning like that one?
+This series of patches implement the NFSv4 Courteous Server.
 
-Here is the stack traces of the deadlock with the latest patches that
-do not release file_rwsem before calling flush_workqueue:
+A server which does not immediately expunge the state on lease expiration
+is known as a Courteous Server.  A Courteous Server continues to recognize
+previously generated state tokens as valid until conflict arises between
+the expired state and the requests from another client, or the server
+reboots.
 
-Apr 30 15:12:15 nfsvmf24 kernel:
-Apr 30 15:12:15 nfsvmf24 kernel: ======================================================
-Apr 30 15:12:15 nfsvmf24 kernel: WARNING: possible circular locking dependency detected
-Apr 30 15:12:15 nfsvmf24 kernel: 5.18.0-rc4_bf1+ #1 Not tainted
-Apr 30 15:12:15 nfsvmf24 kernel: ------------------------------------------------------
-Apr 30 15:12:15 nfsvmf24 kernel: kworker/u2:6/9099 is trying to acquire lock:
-Apr 30 15:12:15 nfsvmf24 kernel: ffffffff991a8a50 (file_rwsem){.+.+}-{0:0}, at: locks_remove_posix+0x1af/0x3b0
-Apr 30 15:12:15 nfsvmf24 kernel: #012but task is already holding lock:
-Apr 30 15:12:15 nfsvmf24 kernel: ffff888115e37de0 ((work_completion)(&(&nn->laundromat_work)->work)){+.+.}-{0:0}, at: process_one_work+0x72d/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel: #012which lock already depends on the new lock.
-Apr 30 15:12:15 nfsvmf24 kernel: #012the existing dependency chain (in reverse order) is:
-Apr 30 15:12:15 nfsvmf24 kernel: #012-> #2 ((work_completion)(&(&nn->laundromat_work)->work)){+.+.}-{0:0}:
-Apr 30 15:12:15 nfsvmf24 kernel:       process_one_work+0x77f/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel:       worker_thread+0x55d/0xe80
-Apr 30 15:12:15 nfsvmf24 kernel:       kthread+0x29f/0x340
-Apr 30 15:12:15 nfsvmf24 kernel:       ret_from_fork+0x22/0x30
-Apr 30 15:12:15 nfsvmf24 kernel: #012-> #1 ((wq_completion)nfsd4){+.+.}-{0:0}:
-Apr 30 15:12:15 nfsvmf24 kernel:       flush_workqueue+0xf2/0x1350
-Apr 30 15:12:15 nfsvmf24 kernel:       posix_lock_inode+0x13b5/0x15e0
-Apr 30 15:12:15 nfsvmf24 kernel:       nfsd4_lock+0xf28/0x3de0 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       nfsd4_proc_compound+0xd15/0x25a0 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       nfsd_dispatch+0x4ed/0xc30 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       svc_process_common+0xd8e/0x1b20 [sunrpc]
-Apr 30 15:12:15 nfsvmf24 kernel:       svc_process+0x361/0x4f0 [sunrpc]
-Apr 30 15:12:15 nfsvmf24 kernel:       nfsd+0x2d6/0x570 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       kthread+0x29f/0x340
-Apr 30 15:12:15 nfsvmf24 kernel:       ret_from_fork+0x22/0x30
-Apr 30 15:12:15 nfsvmf24 kernel: #012-> #0 (file_rwsem){.+.+}-{0:0}:
-Apr 30 15:12:15 nfsvmf24 kernel:       __lock_acquire+0x318d/0x7830
-Apr 30 15:12:15 nfsvmf24 kernel:       lock_acquire+0x1b0/0x490
-Apr 30 15:12:15 nfsvmf24 kernel:       posix_lock_inode+0x136/0x15e0
-Apr 30 15:12:15 nfsvmf24 kernel:       locks_remove_posix+0x1af/0x3b0
-Apr 30 15:12:15 nfsvmf24 kernel:       filp_close+0xe7/0x120
-Apr 30 15:12:15 nfsvmf24 kernel:       nfs4_free_lock_stateid+0xc0/0x100 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       free_ol_stateid_reaplist+0x131/0x210 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       release_openowner+0xf7/0x160 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       __destroy_client+0x3cc/0x740 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       laundromat_main+0x483/0x1cd0 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel:       process_one_work+0x7f6/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel:       worker_thread+0x55d/0xe80
-Apr 30 15:12:15 nfsvmf24 kernel:       kthread+0x29f/0x340
-Apr 30 15:12:15 nfsvmf24 kernel:       ret_from_fork+0x22/0x30
-Apr 30 15:12:15 nfsvmf24 kernel: #012other info that might help us debug this:
-Apr 30 15:12:15 nfsvmf24 kernel: Chain exists of:#012  file_rwsem --> (wq_completion)nfsd4 --> (work_completion)(&(&nn->laundromat_work)->work)
-Apr 30 15:12:15 nfsvmf24 kernel: Possible unsafe locking scenario:
-Apr 30 15:12:15 nfsvmf24 kernel:       CPU0                    CPU1
-Apr 30 15:12:15 nfsvmf24 kernel:       ----                    ----
-Apr 30 15:12:15 nfsvmf24 kernel:  lock((work_completion)(&(&nn->laundromat_work)->work));
-Apr 30 15:12:15 nfsvmf24 kernel:                               lock((wq_completion)nfsd4);
-Apr 30 15:12:15 nfsvmf24 kernel:                               lock((work_completion)(&(&nn->laundromat_work)->work));
-Apr 30 15:12:15 nfsvmf24 kernel:  lock(file_rwsem);
-Apr 30 15:12:15 nfsvmf24 kernel: #012 *** DEADLOCK ***
-Apr 30 15:12:15 nfsvmf24 kernel: 2 locks held by kworker/u2:6/9099:
-Apr 30 15:12:15 nfsvmf24 kernel: #0: ffff888108cc6938 ((wq_completion)nfsd4){+.+.}-{0:0}, at: process_one_work+0x6ff/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel: #1: ffff888115e37de0 ((work_completion)(&(&nn->laundromat_work)->work)){+.+.}-{0:0}, at: process_one_work+0x72d/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel: #012stack backtrace:
-Apr 30 15:12:15 nfsvmf24 kernel: CPU: 0 PID: 9099 Comm: kworker/u2:6 Kdump: loaded Not tainted 5.18.0-rc4_bf1+ #1
-Apr 30 15:12:15 nfsvmf24 kernel: Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-Apr 30 15:12:15 nfsvmf24 kernel: Workqueue: nfsd4 laundromat_main [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: Call Trace:
-Apr 30 15:12:15 nfsvmf24 kernel: <TASK>
-Apr 30 15:12:15 nfsvmf24 kernel: dump_stack_lvl+0x57/0x7d
-Apr 30 15:12:15 nfsvmf24 kernel: check_noncircular+0x262/0x300
-Apr 30 15:12:15 nfsvmf24 kernel: __lock_acquire+0x318d/0x7830
-Apr 30 15:12:15 nfsvmf24 kernel: lock_acquire+0x1b0/0x490
-Apr 30 15:12:15 nfsvmf24 kernel: posix_lock_inode+0x136/0x15e0
-Apr 30 15:12:15 nfsvmf24 kernel: locks_remove_posix+0x1af/0x3b0
-Apr 30 15:12:15 nfsvmf24 kernel: filp_close+0xe7/0x120
-Apr 30 15:12:15 nfsvmf24 kernel: nfs4_free_lock_stateid+0xc0/0x100 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: free_ol_stateid_reaplist+0x131/0x210 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: release_openowner+0xf7/0x160 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: __destroy_client+0x3cc/0x740 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: laundromat_main+0x483/0x1cd0 [nfsd]
-Apr 30 15:12:15 nfsvmf24 kernel: process_one_work+0x7f6/0x12f0
-Apr 30 15:12:15 nfsvmf24 kernel: worker_thread+0x55d/0xe80
-Apr 30 15:12:15 nfsvmf24 kernel: kthread+0x29f/0x340
-Apr 30 15:12:15 nfsvmf24 kernel: ret_from_fork+0x22/0x30
-Apr 30 15:12:15 nfsvmf24 kernel: </TASK>
+v2:
+
+. add new callback, lm_expire_lock, to lock_manager_operations to
+  allow the lock manager to take appropriate action with conflict lock.
+
+. handle conflicts of NFSv4 locks with NFSv3/NLM and local locks.
+
+. expire courtesy client after 24hr if client has not reconnected.
+
+. do not allow expired client to become courtesy client if there are
+  waiters for client's locks.
+
+. modify client_info_show to show courtesy client and seconds from
+  last renew.
+
+. fix a problem with NFSv4.1 server where the it keeps returning
+  SEQ4_STATUS_CB_PATH_DOWN in the successful SEQUENCE reply, after
+  the courtesy client reconnects, causing the client to keep sending
+  BCTS requests to server.
+
+v3:
+
+. modified posix_test_lock to check and resolve conflict locks
+  to handle NLM TEST and NFSv4 LOCKT requests.
+
+. separate out fix for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v4:
+
+. rework nfsd_check_courtesy to avoid dead lock of fl_lock and client_lock
+  by asking the laudromat thread to destroy the courtesy client.
+
+. handle NFSv4 share reservation conflicts with courtesy client. This
+  includes conflicts between access mode and deny mode and vice versa.
+
+. drop the patch for back channel stuck in SEQ4_STATUS_CB_PATH_DOWN.
+
+v5:
+
+. fix recursive locking of file_rwsem from posix_lock_file. 
+
+. retest with LOCKDEP enabled.
+
+v6:
+
+. merge witn 5.15-rc7
+
+. fix a bug in nfs4_check_deny_bmap that did not check for matched
+  nfs4_file before checking for access/deny conflict. This bug causes
+  pynfs OPEN18 to fail since the server taking too long to release
+  lots of un-conflict clients' state.
+
+. enhance share reservation conflict handler to handle case where
+  a large number of conflict courtesy clients need to be expired.
+  The 1st 100 clients are expired synchronously and the rest are
+  expired in the background by the laundromat and NFS4ERR_DELAY
+  is returned to the NFS client. This is needed to prevent the
+  NFS client from timing out waiting got the reply.
+
+v7:
+
+. Fix race condition in posix_test_lock and posix_lock_inode after
+  dropping spinlock.
+
+. Enhance nfsd4_fl_expire_lock to work with with new lm_expire_lock
+  callback
+
+. Always resolve share reservation conflicts asynchrously.
+
+. Fix bug in nfs4_laundromat where spinlock is not used when
+  scanning cl_ownerstr_hashtbl.
+
+. Fix bug in nfs4_laundromat where idr_get_next was called
+  with incorrect 'id'. 
+
+. Merge nfs4_destroy_courtesy_client into nfsd4_fl_expire_lock.
+
+v8:
+
+. Fix warning in nfsd4_fl_expire_lock reported by test robot.
+
+v9:
+
+. Simplify lm_expire_lock API by (1) remove the 'testonly' flag
+  and (2) specifying return value as true/false to indicate
+  whether conflict was succesfully resolved.
+
+. Rework nfsd4_fl_expire_lock to mark client with
+  NFSD4_DESTROY_COURTESY_CLIENT then tell the laundromat to expire
+  the client in the background.
+
+. Add a spinlock in nfs4_client to synchronize access to the
+  NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT flag to
+  handle race conditions when resolving lock and share reservation
+  conflict.
+
+. Courtesy client that was marked as NFSD4_DESTROY_COURTESY_CLIENT
+  are now consisdered 'dead', waiting for the laundromat to expire
+  it. This client is no longer allowed to use its states if it
+  reconnects before the laundromat finishes expiring the client.
+
+  For v4.1 client, the detection is done in the processing of the
+  SEQUENCE op and returns NFS4ERR_BAD_SESSION to force the client
+  to re-establish new clientid and session.
+  For v4.0 client, the detection is done in the processing of the
+  RENEW and state-related ops and return NFS4ERR_EXPIRE to force
+  the client to re-establish new clientid.
+
+v10:
+
+  Resolve deadlock in v9 by avoiding getting cl_client and
+  cl_cs_lock together. The laundromat needs to determine whether
+  the expired client has any state and also has no blockers on
+  its locks. Both of these conditions are allowed to change after
+  the laundromat transits an expired client to courtesy client.
+  When this happens, the laundromat will detect it on the next
+  run and and expire the courtesy client.
+
+  Remove client persistent record before marking it as COURTESY_CLIENT
+  and add client persistent record before clearing the COURTESY_CLIENT
+  flag to allow the courtesy client to transist to normal client to
+  continue to use its state.
+
+  Lock/delegation/share reversation conflict with courtesy client is
+  resolved by marking the courtesy client as DESTROY_COURTESY_CLIENT,
+  effectively disable it, then allow the current request to proceed
+  immediately.
+  
+  Courtesy client marked as DESTROY_COURTESY_CLIENT is not allowed
+  to reconnect to reuse itsstate. It is expired by the laundromat
+  asynchronously in the background.
+
+  Move processing of expired clients from nfs4_laudromat to a
+  separate function, nfs4_get_client_reaplist, that creates the
+  reaplist and also to process courtesy clients.
+
+  Update Documentation/filesystems/locking.rst to include new
+  lm_lock_conflict call.
+
+  Modify leases_conflict to call lm_breaker_owns_lease only if
+  there is real conflict.  This is to allow the lock manager to
+  resolve the delegation conflict if possible.
+
+v11:
+
+  Add comment for lm_lock_conflict callback.
+
+  Replace static const courtesy_client_expiry with macro.
+
+  Remove courtesy_clnt argument from find_in_sessionid_hashtbl.
+  Callers use nfs4_client->cl_cs_client boolean to determined if
+  it's the courtesy client and take appropriate actions.
+
+  Rename NFSD4_COURTESY_CLIENT and NFSD4_DESTROY_COURTESY_CLIENT
+  with NFSD4_CLIENT_COURTESY and NFSD4_CLIENT_DESTROY_COURTESY.
+
+v12:
+
+  Remove unnecessary comment in nfs4_get_client_reaplist.
+
+  Replace nfs4_client->cl_cs_client boolean with
+  NFSD4_CLIENT_COURTESY_CLNT flag.
+
+  Remove courtesy_clnt argument from find_client_in_id_table and
+  find_clp_in_name_tree. Callers use NFSD4_CLIENT_COURTESY_CLNT to
+  determined if it's the courtesy client and take appropriate actions.
+
+v13:
+
+  Merge with 5.17-rc3.
+
+  Cleanup Documentation/filesystems/locking.rst: replace i_lock
+  with flc_lock, update API's that use flc_lock.
+
+  Rename lm_lock_conflict to lm_lock_expired().
+
+  Remove comment of lm_lock_expired API in lock_manager_operations.
+  Same information is in patch description.
+
+  Update commit messages of 4/4.
+
+  Add some comment for NFSD4_CLIENT_COURTESY_CLNT.
+
+  Add nfsd4_discard_courtesy_clnt() to eliminate duplicate code of
+  discarding courtesy client; setting NFSD4_DESTROY_COURTESY_CLIENT.
+
+v14:
+
+. merge with Chuck's public for-next branch.
+
+. remove courtesy_client_expiry, use client's last renew time.
+
+. simplify comment of nfs4_check_access_deny_bmap.
+
+. add comment about race condition in nfs4_get_client_reaplist.
+
+. add list_del when walking cslist in nfs4_get_client_reaplist.
+
+. remove duplicate INIT_LIST_HEAD(&reaplist) from nfs4_laundromat
+
+. Modify find_confirmed_client and find_confirmed_client_by_name
+  to detect courtesy client and destroy it.
+
+. refactor lookup_clientid to use find_client_in_id_table
+  directly instead of find_confirmed_client.
+
+. refactor nfsd4_setclientid to call find_clp_in_name_tree
+  directly instead of find_confirmed_client_by_name.
+
+. remove comment of NFSD4_CLIENT_COURTESY.
+
+. replace NFSD4_CLIENT_DESTROY_COURTESY with NFSD4_CLIENT_EXPIRED.
+
+. replace NFSD4_CLIENT_COURTESY_CLNT with NFSD4_CLIENT_RECONNECTED.
+
+v15:
+
+. add helper locks_has_blockers_locked in fs.h to check for
+  lock blockers
+
+. rename nfs4_conflict_clients to nfs4_resolve_deny_conflicts_locked
+
+. update nfs4_upgrade_open() to handle courtesy clients.
+
+. add helper nfs4_check_and_expire_courtesy_client and
+  nfs4_is_courtesy_client_expired to deduplicate some code.
+
+. update nfs4_anylock_blocker:
+   . replace list_for_each_entry_safe with list_for_each_entry
+   . break nfs4_anylock_blocker into 2 smaller functions.
+
+. update nfs4_get_client_reaplist:
+   . remove unnecessary commets
+   . acquire cl_cs_lock before setting NFSD4_CLIENT_COURTESY flag
+
+. update client_info_show to show 'time since last renew: 00:00:38'
+  instead of 'seconds from last renew: 38'.
+
+v16:
+
+. update client_info_show to display 'status' as
+  'confirmed/unconfirmed/courtesy'
+
+. replace helper locks_has_blockers_locked in fs.h in v15 with new
+  locks_owner_has_blockers call in fs/locks.c
+
+. update nfs4_lockowner_has_blockers to use locks_owner_has_blockers
+
+. move nfs4_check_and_expire_courtesy_client from 5/11 to 4/11
+
+. remove unnecessary check for NULL clp in find_in_sessionid_hashtb
+
+. fix typo in commit messages
+
+v17:
+
+. replace flags used for courtesy client with enum courtesy_client_state
+
+. add state table in nfsd/state.h
+
+. make nfsd4_expire_courtesy_clnt, nfsd4_discard_courtesy_clnt and
+  nfsd4_courtesy_clnt_expired as static inline.
+
+. update nfsd_breaker_owns_lease to use dl->dl_stid.sc_client directly
+
+. fix kernel test robot warning when CONFIG_FILE_LOCKING not defined.
+
+v18:
+
+. modify 0005-NFSD-Update-nfs4_get_vfs_file-to-handle-courtesy-cli.patch to:
+
+    . remove nfs4_check_access_deny_bmap, fold this functionality
+      into nfs4_resolve_deny_conflicts_locked by making use of
+      bmap_to_share_mode.
+
+    . move nfs4_resolve_deny_conflicts_locked into nfs4_file_get_access
+      and nfs4_file_check_deny. 
+
+v19:
+
+. modify 0002-NFSD-Add-courtesy-client-state-macro-and-spinlock-to.patch to
+
+    . add NFSD4_CLIENT_ACTIVE
+
+    . redo Courtesy client state table
+
+. modify 0007-NFSD-Update-find_in_sessionid_hashtbl-to-handle-cour.patch and
+  0008-NFSD-Update-find_client_in_id_table-to-handle-courte.patch to:
+
+    . set cl_cs_client_stare to NFSD4_CLIENT_ACTIVE when reactive
+      courtesy client  
+
+v20:
+
+. modify 0006-NFSD-Update-find_clp_in_name_tree-to-handle-courtesy.patch to:
+	. add nfsd4_discard_reconnect_clnt
+	. replace call to nfsd4_discard_courtesy_clnt with
+	  nfsd4_discard_reconnect_clnt
+
+. modify 0007-NFSD-Update-find_in_sessionid_hashtbl-to-handle-cour.patch to:
+	. replace call to nfsd4_discard_courtesy_clnt with
+	  nfsd4_discard_reconnect_clnt
+          
+. modify 0008-NFSD-Update-find_client_in_id_table-to-handle-courte.patch
+	. replace call to nfsd4_discard_courtesy_clnt with
+	  nfsd4_discard_reconnect_clnt
+
+v21:
+
+. merged with 5.18.0-rc3
+
+. Redo based on Bruce's suggestion by breaking the patches into functionality
+  and also don't remove client record of courtesy client until the client is
+  actually expired.
+
+  0001: courteous server framework with support for client with delegation only.
+        This patch also handles COURTESY and EXPIRABLE reconnect.
+        Conflict is resolved by set the courtesy client to EXPIRABLE, let the
+        laundromat expires the client on next run and return NFS4ERR_DELAY
+        OPEN request.
+
+  0002: add support for opens/share reservation to courteous server
+        Conflict is resolved by set the courtesy client to EXPIRABLE, let the
+        laundromat expires the client on next run and return NFS4ERR_DELAY
+        OPEN request.
+
+  0003: mv creation/destroying laundromat workqueue from nfs4_state_start and
+        and nfs4_state_shutdown_net to init_nfsd and exit_nfsd.
+
+  0004: fs/lock: add locks_owner_has_blockers helper
+  
+  0005: add 2 callbacks to lock_manager_operations for resolving lock conflict
+  
+  0006: add support for locks to courteous server, making use of 0004 and 0005
+        Conflict is resolved by set the courtesy client to EXPIRABLE, run the
+        laundromat immediately and wait for it to complete before returning to
+        fs/lock code to recheck the lock list from the beginning.
+
+        NOTE: I could not get queue_work/queue_delay_work and flush_workqueue
+        to work as expected, I have to use mod_delayed_work and flush_workqueue
+        to get the laundromat to run immediately.
+
+        When we check for blockers in nfs4_anylock_blockers, we do not check
+        for client with delegation conflict. This is because we already hold
+        the client_lock and to check for delegation conflict we need the state_lock
+        and scanning the del_recall_lru list each time. So to avoid this overhead
+        and potential deadlock (not sure about lock of ordering of these locks)
+        we check and set the COURTESY client with delegation being recalled to
+        EXPIRABLE later in nfs4_laundromat.
+
+  0007: show state of courtesy client in client info.
+
+v22:
+
+. modify 0001:
+	. allow EXPIRABLE client to reconnect.
+        . modify try_to_expire_client to return false if cl_state is
+          either COURTEY or EXPIRABLE.
+        . remove try_to_activate_client and set cl_state to ACTIVE in
+          get_client_locked and renew_client_locked.
+        . remove unnecessary cl_cs_lock. Synchronization between expiring
+          client and client reconnect is provided by mark_client_expired_locked
+          and get_client_locked or renew_client_locked
+
+. modify 0003:
+        . fix 'ld' error with laundry_wq when CONFIG_NFSD is defined
+          and CONFIG_NFSD_V4 is not defined.
+
+v23:
+	. rework try_to_expire_client to return true when cl_state in EXPIRABLE
+	  and its callers to work accordingly.
+
+	. add missing mod_delay_work in nfsd4_lm_lock_expirable.
+
+	. add check for cl_rpc_users before setting client state to COURTESY
+	  in nfs4_get_client_reaplist.
+
+        . setting client to COURTESY before nfs4_anylock_blockers to handle
+          race between the laundromat and thread resolving lock conflict.
+
+	. cleanup 2 fs/lock callbacks: lm_lock_expirable to return bool and
+          lm_expire_lock takes no argument.
+v24:
+	. add new counter, cl_delegs_in_recall, in nfs4_client to maintain
+	  delegation recalls and is checked by nfs4_anylock_blockers.
+
+	. remove resolve_lock_conflict_locked and move its logic into the
+	  callers posix_lock_inode and posix_test_lock for clarity.
+
+	. rename 'conflict' to 'resolvable' in nfs4_resolve_deny_conflicts_locked.
+
+	. fix kernel robot test warning about missing semicolon in nfsd.h
 
 
-I think the problem is lock ordering of file_rwsem and a lock in the
-work queue (not sure which one). The posix_lock_inode thread acquires
-file_rwsem and the lock in the work queue. The laundromat thread
-acquires the lock in the work queue then try to acquire file_rwsem in
-locks_remove_posix.
-
--Dai
-
->
-> --b.
