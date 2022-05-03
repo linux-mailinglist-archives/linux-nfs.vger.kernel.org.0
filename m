@@ -2,275 +2,368 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 800D2518CE2
-	for <lists+linux-nfs@lfdr.de>; Tue,  3 May 2022 21:11:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7029519119
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 May 2022 00:16:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240314AbiECTOl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 May 2022 15:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        id S234645AbiECWOJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 3 May 2022 18:14:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236659AbiECTOk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 May 2022 15:14:40 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EAC7255A9
-        for <linux-nfs@vger.kernel.org>; Tue,  3 May 2022 12:11:05 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 243I2L2J026110
-        for <linux-nfs@vger.kernel.org>; Tue, 3 May 2022 19:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- from : subject : to : content-type : content-transfer-encoding :
- mime-version; s=corp-2021-07-09;
- bh=FitmgPhRpHTwnbGybYIjCfC5R/URhOPG1chqwYYtyvE=;
- b=owQxztyVgRoYlSiiWXea2FQ8OhRiSnlMkOg7XsO/STnCgMmTN/5fX4XFbotxhpKbfs9W
- AGXCSijTYNhX3M8qGsp1T5CPFD6NECrLR3tXtTrJzZGk/5TIqSVHJPB4aIv40KMLWlFu
- H4pku+5HUg8sPs/rgyt+FsDi3C3NJlKtWP3L5hvgWb8jpq7TUtG7v1KRjoMkM2+XLNoo
- xYKpsS0hJFM+e6xLdSPks5vN2LCuUYrTIWTcRNjR6ML7hA3tFSrFrqRjm1Ak2Iu4futg
- OhzMuFjTWphzTy+b0cG5Sth12oyhpH31ICLVKLBw6xz3zJ263LtvpZTnrrDNxofoBkfe 4Q== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3fruhc6ghw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Tue, 03 May 2022 19:11:04 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 243JArMD009881
-        for <linux-nfs@vger.kernel.org>; Tue, 3 May 2022 19:11:03 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2177.outbound.protection.outlook.com [104.47.58.177])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3fruj8tu5f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Tue, 03 May 2022 19:11:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FsVR6qUrWRR5aapY63E7CSdw3LSnuYZDzGntYNZ0dQFU3Do3gO2tefVSNdALoRziztOUzX34Zy9SETIpuAnoWYxBq0UJBbjMGneRUPMcp7GkHbWgBoTbhEz9jZom9fUsbSvZ+AAXoX7DPNw2qhpAW6jypvqvezgZTzlR8Ig0e3or1JO6T66TU4F3BPq6AUrcGd8dNyudyujMeiDepF4z1RpRmxIwtoGoI93hzseY7+eIYvbEr65XJk9NnVTnCMAdJDyKFMxmf6fx1/Ea8rnIRuZ3VbPnzatfP2SiWkIZe4r64flHwPzn9V3IS0pIdLVKGSoJl5FWG7DIN1067395ng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FitmgPhRpHTwnbGybYIjCfC5R/URhOPG1chqwYYtyvE=;
- b=CHmeSHEVOUMqFrUlTYYhTZSEgv8HbG3+G/S91iJF6BZsgR0YqmmNUoAYIQWUKonMY7Mbh4nkG3b/XIE8UfIA2buGp93mJxSTbK9PZQP1XDOqfIJmSNVY/R+CMBHktaYX4L7R4jTftValbYjwaZj23SECdP9yX2pH/3sClGT4KCjSWq04eM6s//79tpCVLv23rSrsVJuldY51bJlkW6xjKEb/6sLC91jxIMSaiGUvaWlEp/OXIpv7kIlMHHdJt+4/Y3MiXdFEUR1i/4ykly9BIJDsMW9i3kDOWF1/qWQlPAuBbe6Kn7l1FvVI+q4H9hTkRt2P2RBCw+vgHweNA88Hnw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FitmgPhRpHTwnbGybYIjCfC5R/URhOPG1chqwYYtyvE=;
- b=JpLWojwOYouoZRjcS7PWAOXyGDw5BbKdAAOq5T98va1R5vBcApWCn1YoDYA9+kwdENJD3XjDnZCyoNy8c7vXoDPgu+YNpUjeq9GjX6uDJKMQeTg/HKRxth0rFMeVOriOEh8rjdvoRpX+gV2gcMl1zer5fQzVIsnutyy6w/gloNU=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BN8PR10MB3377.namprd10.prod.outlook.com (2603:10b6:408:cf::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5206.24; Tue, 3 May
- 2022 19:11:02 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::8191:d4f0:b79d:a586]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::8191:d4f0:b79d:a586%7]) with mapi id 15.20.5206.024; Tue, 3 May 2022
- 19:11:02 +0000
-Message-ID: <313fcd93-c3dd-35f2-ab59-2f1e913d015f@oracle.com>
-Date:   Tue, 3 May 2022 12:11:00 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.8.1
-Content-Language: en-US
-From:   dai.ngo@oracle.com
-Subject: [bug report] kernel 5.18.0-rc4 oops with invalid wait context
-To:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0035.namprd03.prod.outlook.com
- (2603:10b6:a03:33e::10) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        with ESMTP id S243569AbiECWOB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 May 2022 18:14:01 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 733C4DEB
+        for <linux-nfs@vger.kernel.org>; Tue,  3 May 2022 15:10:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1651615825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LMmiWWb29UGba9md0hMHjtayU6y/sK+/Qq01tn2LWcA=;
+        b=Pz/C8SyDFB1Jmy7CZwAXrw+0yA+FgEdCKefIde6hwwYYIiaR/rJ0QHKWtQgZQGgf9fOvV4
+        sGKwLGNS0Im1pBuPUkxaQGOFBRblA95sDnjrXf1xGuVp+evyJP4i8HMIHKlwa33m0LNL2z
+        xy02ipfOSbIAuSHHXYounuPk3Ar+6pQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-152-PMmtfFRgP3WukZcAf1g6rA-1; Tue, 03 May 2022 18:08:16 -0400
+X-MC-Unique: PMmtfFRgP3WukZcAf1g6rA-1
+Received: by mail-wr1-f70.google.com with SMTP id m8-20020adfc588000000b0020c4edd8a57so3872178wrg.10
+        for <linux-nfs@vger.kernel.org>; Tue, 03 May 2022 15:08:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LMmiWWb29UGba9md0hMHjtayU6y/sK+/Qq01tn2LWcA=;
+        b=B3gNZpYl1/pWZZXidamTh8r+p7NSisGBdKfkbY10Tvu9Vh59lym+bx5u5DPbtGRmlM
+         XsojD2uuXQAXJnICid98OIRIl8gqvj+BrWlanKN3ibhLxBuUZfSzxH38t7q1srZu1F3P
+         jcZriYL6+6Tkw1mqIKf32CnkC6/3g+47Q/rR8kNdZHAEbD7RxHvI1ZbUpVgCy2H7r8XH
+         StvU5A75tLhFi3XumZ0MbDvbu1q8zI+QJNKCPFH0tETODdX88iBNWzHeX0un+8cSxh1O
+         8NPbte7j9ALpNDGc3jsIUzGYTpdRUCHZH852zCa9enDRQs6qOJ9tfiCGQZwPzSrymNIf
+         MU6g==
+X-Gm-Message-State: AOAM530OoEIuyEJExZo/jsWRSs0Kyjgq15PYhmV7pfKFWpx/proGLdd/
+        OS8eX1ZGskdHyuc1EPi4O7Hq6bJ/hI8Zyl0hO1b4yLDMmmcRh9WWkTg2gHnPyP06b2wO0ITAS2C
+        av72SUBzcNq6RNUtqovgWhmTvgO8PwJBKo2As
+X-Received: by 2002:a05:6000:1848:b0:20c:713b:8e1e with SMTP id c8-20020a056000184800b0020c713b8e1emr5560725wri.640.1651615679251;
+        Tue, 03 May 2022 15:07:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJza/1YW4p03hLZOOEyMY2mHvXsflrL3zsJyZE7a1xvQQLAfbBGJrDpMJ+TYh2LW8q5iyzNOzDqoxAwKJZzNi54=
+X-Received: by 2002:a05:6000:1848:b0:20c:713b:8e1e with SMTP id
+ c8-20020a056000184800b0020c713b8e1emr5560709wri.640.1651615678936; Tue, 03
+ May 2022 15:07:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fda7ecbe-0d3c-4be2-82ee-08da2d38a9e4
-X-MS-TrafficTypeDiagnostic: BN8PR10MB3377:EE_
-X-Microsoft-Antispam-PRVS: <BN8PR10MB3377DAFC4CE0BF787881E07987C09@BN8PR10MB3377.namprd10.prod.outlook.com>
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1BS3799KIfnLjfycrLAmSQH2uVxA8JmwKxdnu26kwGkK2kB+2VLGopOhEJvEcxegJgwQYiNsOa924xDhCrfdNz7F8bEbxAqMP/lNT4q8BTC6GA7RU/FokUKv4aQck5srwuC6PtaG2Hezrh0R5XiYgoQXdY4mFwSeWXwl8l/cvBVWr+GpQ/ImQ2lMc7CY+9ECUwKAth/FCdrKpX3B4AK5TVimaHFHqgFjwoq7FxmFdXTsoKQYJ4zOlTtSFa47ORT2YINcHGa7zS7xFvsuaEvpIxXyPaxQEWI3UL3sHGI8IE8eu+3vc9ISMFfaFMSql0/jCBCu7CQBZvYhaCHj31USWKd1wGlJ7X6KrD5qPGwzgzDHRfoK2xc1kXiXAwgoWbLE9cqn0m1XJrG+7nePhOZJVIRz/gyhFpxw5lmm7POSY0fHBPJnaFzd/rpMUzV8ax/KLjJUvl2oh89p0Bmlx5G0yEk0Vns7IzXVDqHs5Hd7sTU1nFqrw/H4ptDmm7RBpGa2YI3I7IplQzwrCHVf+okxeXtWe436eXK9al8cEpxjj5GF91xjvx6vYeRxhSyU3o2PjxoO3GBCZUdbK1553OOdtRwZ+V+l6dKI9BC/MlIeWBr3ffZk45p9X+jtkbX//J0ouFBEUmIzGKyZ5zPGbCwc6PCN+CXJBCIyGLO014jJMkKND/yCCdtANfibiXCrDEA7KyPBv9xnogjZN1O+ncktiw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(38100700002)(83380400001)(6506007)(26005)(2616005)(31696002)(9686003)(6512007)(316002)(86362001)(186003)(36756003)(5660300002)(8936002)(8676002)(6916009)(66556008)(66946007)(66476007)(2906002)(508600001)(31686004)(45080400002)(6486002)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SjN6VUF0bzdPU3J3aUpGVG4xbVpGVVpQK0RDazJaK0VNV0lmL2t3UjQ2dFFy?=
- =?utf-8?B?SThOOGpPcWdBcEtjSjN1bXlEU2ZTK1FEeEpOMmVMS1ZJZTQvNEZ2MU40aXEy?=
- =?utf-8?B?L0l2ZUJyZVBDYkxWVkxiQk9ZOTBmdERWRWdRYU82NktXeXU4MjhtWXJ6UFQy?=
- =?utf-8?B?cHZKNlJzeXNreW9IT2RSVEdFSmhjRW5oRHJySXh3SjBOeTJHRk9jenlzMGY3?=
- =?utf-8?B?Y0hyKzVKZm1VZmMrSGdxaVd5UytpbkZZM3UxbmtvaTBoZWlXZVdlRG93TWpK?=
- =?utf-8?B?Q2xWWVcyMkFnZDhVSU1TNHlDenVwWlZwNXBJMzcwSXZCRkNVNGNBWFVScDhB?=
- =?utf-8?B?SW1ZU01Ca1NOaXJGUm9UYXAwZU1tRyswRlh0Zk15Zk41UFpMN2F1d1ZBb3hQ?=
- =?utf-8?B?WHZoUUdYVzUrR3kzMTB2MUdUc1BRd1hiRnNxekYyNUlsZmpaTVBRL3cyZW5I?=
- =?utf-8?B?VGhBUlgxc1NSamhPV3l2dU4rOFFuMnpLaTlaRXZFWW84QVI3OGw2NlhSaXJn?=
- =?utf-8?B?bHJTbSt2SzZZK1J3SXhNR1NFanQvS1ZsUE45Y1JYRkNDY25XMDNGU20ya1Z0?=
- =?utf-8?B?K2dDbnpTbU1Qajg4TEpwZld0NU5vZGFoTTRuK1FEbGI4VjBDOXJydnlOazcr?=
- =?utf-8?B?RkxXZnJiTzBQZHBTQ0hRak1zL3NpcU41WlNtbUV1RjU0WlJldGlXdFFsV1lB?=
- =?utf-8?B?WDd5ZFdEdVZiRHQwUythcEU1YitDVG1TY0t3QmRHd3VLREpaU1prbFN1TE1D?=
- =?utf-8?B?b0YvSFMxb2IvNHc1QVdzTE82dFhwTnFFa0xwdm94bVE2eUs4R1hnTkVLaEsy?=
- =?utf-8?B?QnNUd0tPaURGWjlvVHMvVC83TVRIRzBNQmgwYXQwSWdYYzZVQVFqVFZ0azc3?=
- =?utf-8?B?VzZENHRzN0Y1b3dXNUNBZFFhMEtxWU5PRDV1dy9zVGpiNGJZVllTSERNNnUy?=
- =?utf-8?B?STlJVGNiS2FSTDhvZFZmdU5nZlNwZGs2M3VNMDZhbUhsVHZYS25sbjhYRkhO?=
- =?utf-8?B?THFUdzF5ZVlOeEhFaERMWnptTzlOcnhFVGJzUWJiT2xtNzhnSkNkdUUzTkVj?=
- =?utf-8?B?d1VPSE4rdVBJbE5sQXBXc3E0STBMQnA1aXVQa0Q4ZmpkKytvWlFFdXVsRnc4?=
- =?utf-8?B?ZlBqRjNraW56dmtwaXFSZWZsb3hPZWNaNk1BWkszaDlEUS9aTFcwYVkrOHdI?=
- =?utf-8?B?UUxUV241WlpYT1NIeE54a0ZPTVpZaW40Z2wvZXRrNGxuMXgvNWxhZDlYVm0z?=
- =?utf-8?B?bGtUK1AvV2t3QlQxM0VHN2NWVC9RSFRpZnpYcGtKdHQ4TGtCd3ZBaXhoNU9Z?=
- =?utf-8?B?ckE3elZRYWliSWZQT0xvWjljcDl4bFFEdzJFWXovZlcxVVhaUk8xeXBDeU9a?=
- =?utf-8?B?RnhIYjRPWTJMY21YNkVOK05jQnBsYzVXTnVPMHE3eDIvVWFKSlhWTFNEZFRp?=
- =?utf-8?B?VEJSMlVrV211MkRRaUhFdkhIMFZaRnNRZWRoZTdQaENvWGpmUVhLc2lsODBl?=
- =?utf-8?B?V1liZi9lQVd1OXBOMERRc0l0cXdmTks1dkZObXJya1lEZE51dUF0ZHd4Qm95?=
- =?utf-8?B?TU1EZVRhUVh1MHZTSXBYMGNGKzE3eE1LWDNCQU1OTUhwQTdZdjY2azVZZDJh?=
- =?utf-8?B?bm5sdEd4UkQzNWg4OEhWcGhPNFMweVZqbGlLSllCTHl0bFJHNmkwcis0bS9V?=
- =?utf-8?B?WmxDZzRMMkRsSzBxU1ArbjdGMkpjbndnVHdSaHQvbTZySnFJK1RsVzFzM2pt?=
- =?utf-8?B?a1V0bWFHcHE4MXd6NTR1Q1JRbG5XV1QrSFlXdW14elpaK3lidU5CN2JuUlpi?=
- =?utf-8?B?ZmRNaFFNQ2lyYnk4VkZod3RvVThleStqWGFOdy8rc1lYMUVBelZTSEVFSmxH?=
- =?utf-8?B?eHdOWDZPSERnWGs0UjVUUHNzUE9WeTBiV1o1WUt6M3VhQk9NMEhzR2syenJY?=
- =?utf-8?B?QnJPRllMZ1Frclg5QUFrM0ZtZ1VuZmJONGlyVHNKa29VR0lpaFBIbEVqY2Qr?=
- =?utf-8?B?dzc5Q3pDWm1obVRMbEZuTXpDU1RudkxXMGhTVjZOamp3SmFmajdFN05xV1Jk?=
- =?utf-8?B?cFlCMHJJSXlGME5EaThQRGZoZ3BORWdTalU0dkFVMWhaNDlPN0xYbVVuS1Z6?=
- =?utf-8?B?RWF6RVJ6T2NJTi90bXB2VDR4aG9RKzBCcUxmdnN3Q3NtYWpQSnhiQ0dFRTdB?=
- =?utf-8?B?ZFFiTEN0bG9RbGFqSmp2cHB6dDZ5SFI3MWVld2ZJYyt0RlZaWEx0Nm44RnNK?=
- =?utf-8?B?TWR5WHFYdUp0czMzSlNIRkR6dXpSb0hqd1FTdFk4NnJXaU1kWWZXL2V5VVZ2?=
- =?utf-8?B?WWZHUUFVcnY2bWlKK21mZFJkSFlIcjA5ZjBSTG9tVlo0Ujd1U0g0dz09?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fda7ecbe-0d3c-4be2-82ee-08da2d38a9e4
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 May 2022 19:11:02.0745
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NSeG2oOPWBtTGPRFsYF4fGRah0NNmlXv6A1HSla+jV22KdZ+FUw2nqWWDYfpzruM6+w40MU5kFOYaatB7YxoTg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR10MB3377
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.858
- definitions=2022-05-03_08:2022-05-02,2022-05-03 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 adultscore=0
- bulkscore=0 suspectscore=0 mlxlogscore=999 malwarescore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205030121
-X-Proofpoint-GUID: Hyak4udt1o0jMjyeqpwq_fNNuzyi9YJ9
-X-Proofpoint-ORIG-GUID: Hyak4udt1o0jMjyeqpwq_fNNuzyi9YJ9
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220502054159.3471078-1-willy@infradead.org> <20220502054159.3471078-4-willy@infradead.org>
+In-Reply-To: <20220502054159.3471078-4-willy@infradead.org>
+From:   Andreas Gruenbacher <agruenba@redhat.com>
+Date:   Wed, 4 May 2022 00:07:47 +0200
+Message-ID: <CAHc6FU6CTQ5mNNJs5+16mbnmyKoQq5-TAPm8xdzwGA4q218Riw@mail.gmail.com>
+Subject: Re: [Cluster-devel] [PATCH 3/3] fs: Change the type of filler_t
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        cluster-devel <cluster-devel@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+On Mon, May 2, 2022 at 7:58 AM Matthew Wilcox (Oracle)
+<willy@infradead.org> wrote:
+> By making filler_t the same as read_folio, we can use the same function
+> for both in gfs2.  We can push the use of folios down one more level
+> in jffs2 and nfs.  We also increase type safety for future users of the
+> various read_cache_page() family of functions by forcing the parameter
+> to be a pointer to struct file (or NULL).
+>
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>  fs/gfs2/aops.c          | 29 +++++++++++------------------
+>  fs/jffs2/file.c         |  9 ++++-----
+>  fs/jffs2/gc.c           |  2 +-
+>  fs/jffs2/os-linux.h     |  2 +-
+>  fs/nfs/symlink.c        | 14 +++++++-------
+>  include/linux/pagemap.h |  6 +++---
+>  mm/filemap.c            | 40 ++++++++++++++++++++--------------------
+>  7 files changed, 47 insertions(+), 55 deletions(-)
+>
+> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
+> index 340bf5d0e835..1016631bcbdc 100644
+> --- a/fs/gfs2/aops.c
+> +++ b/fs/gfs2/aops.c
+> @@ -464,21 +464,24 @@ static int stuffed_readpage(struct gfs2_inode *ip, struct page *page)
+>         return 0;
+>  }
+>
+> -
+> -static int __gfs2_readpage(void *file, struct page *page)
+> +/**
+> + * gfs2_read_folio - read a folio from a file
+> + * @file: The file to read
+> + * @folio: The folio in the file
+> + */
+> +static int gfs2_read_folio(struct file *file, struct folio *folio)
+>  {
+> -       struct folio *folio = page_folio(page);
+> -       struct inode *inode = page->mapping->host;
+> +       struct inode *inode = folio->mapping->host;
+>         struct gfs2_inode *ip = GFS2_I(inode);
+>         struct gfs2_sbd *sdp = GFS2_SB(inode);
+>         int error;
+>
+>         if (!gfs2_is_jdata(ip) ||
+> -           (i_blocksize(inode) == PAGE_SIZE && !page_has_buffers(page))) {
+> +           (i_blocksize(inode) == PAGE_SIZE && !folio_buffers(folio))) {
+>                 error = iomap_read_folio(folio, &gfs2_iomap_ops);
+>         } else if (gfs2_is_stuffed(ip)) {
+> -               error = stuffed_readpage(ip, page);
+> -               unlock_page(page);
+> +               error = stuffed_readpage(ip, &folio->page);
+> +               folio_unlock(folio);
+>         } else {
+>                 error = mpage_read_folio(folio, gfs2_block_map);
+>         }
+> @@ -489,16 +492,6 @@ static int __gfs2_readpage(void *file, struct page *page)
+>         return error;
+>  }
+>
+> -/**
+> - * gfs2_read_folio - read a folio from a file
+> - * @file: The file to read
+> - * @folio: The folio in the file
+> - */
+> -static int gfs2_read_folio(struct file *file, struct folio *folio)
+> -{
+> -       return __gfs2_readpage(file, &folio->page);
+> -}
+> -
+>  /**
+>   * gfs2_internal_read - read an internal file
+>   * @ip: The gfs2 inode
+> @@ -523,7 +516,7 @@ int gfs2_internal_read(struct gfs2_inode *ip, char *buf, loff_t *pos,
+>                 amt = size - copied;
+>                 if (offset + size > PAGE_SIZE)
+>                         amt = PAGE_SIZE - offset;
+> -               page = read_cache_page(mapping, index, __gfs2_readpage, NULL);
+> +               page = read_cache_page(mapping, index, gfs2_read_folio, NULL);
+>                 if (IS_ERR(page))
+>                         return PTR_ERR(page);
+>                 p = kmap_atomic(page);
 
-I just noticed there were couple of oops in my Oracle6 in nfs4.dev network.
-I'm not sure who ran which tests (be useful to know) that caused these oops.
+Nice. For the gfs2 part:
 
-Here is the stack traces:
+Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
 
-[286123.154006] BUG: sleeping function called from invalid context at kernel/locking/rwsem.c:1585
-[286123.155126] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 3983, name: nfsd
-[286123.155872] preempt_count: 1, expected: 0
-[286123.156443] RCU nest depth: 0, expected: 0
-[286123.156771] 1 lock held by nfsd/3983:
-[286123.156786]  #0: ffff888006762520 (&clp->cl_lock){+.+.}-{2:2}, at: nfsd4_release_lockowner+0x306/0x850 [nfsd]
-[286123.156949] Preemption disabled at:
-[286123.156961] [<0000000000000000>] 0x0
-[286123.157520] CPU: 1 PID: 3983 Comm: nfsd Kdump: loaded Not tainted 5.18.0-rc4+ #1
-[286123.157539] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[286123.157552] Call Trace:
-[286123.157565]  <TASK>
-[286123.157581]  dump_stack_lvl+0x57/0x7d
-[286123.157609]  __might_resched.cold+0x222/0x26b
-[286123.157644]  down_read_nested+0x68/0x420
-[286123.157671]  ? down_write_nested+0x130/0x130
-[286123.157686]  ? rwlock_bug.part.0+0x90/0x90
-[286123.157705]  ? rcu_read_lock_sched_held+0x81/0xb0
-[286123.157749]  xfs_file_fsync+0x3b9/0x820
-[286123.157776]  ? lock_downgrade+0x680/0x680
-[286123.157798]  ? xfs_filemap_pfn_mkwrite+0x10/0x10
-[286123.157823]  ? nfsd_file_put+0x100/0x100 [nfsd]
-[286123.157921]  nfsd_file_flush.isra.0+0x1b/0x220 [nfsd]
-[286123.158007]  nfsd_file_put+0x79/0x100 [nfsd]
-[286123.158088]  check_for_locks+0x152/0x200 [nfsd]
-[286123.158191]  nfsd4_release_lockowner+0x4cf/0x850 [nfsd]
-[286123.158393]  ? nfsd4_locku+0xd10/0xd10 [nfsd]
-[286123.158488]  ? rcu_read_lock_bh_held+0x90/0x90
-[286123.158525]  nfsd4_proc_compound+0xd15/0x25a0 [nfsd]
-[286123.158699]  nfsd_dispatch+0x4ed/0xc30 [nfsd]
-[286123.158974]  ? rcu_read_lock_bh_held+0x90/0x90
-[286123.159010]  svc_process_common+0xd8e/0x1b20 [sunrpc]
-[286123.159043]  ? svc_generic_rpcbind_set+0x450/0x450 [sunrpc]
-[286123.159043]  ? nfsd_svc+0xc50/0xc50 [nfsd]
-[286123.159043]  ? svc_sock_secure_port+0x27/0x40 [sunrpc]
-[286123.159043]  ? svc_recv+0x1100/0x2390 [sunrpc]
-[286123.159043]  svc_process+0x361/0x4f0 [sunrpc]
-[286123.159043]  nfsd+0x2d6/0x570 [nfsd]
-[286123.159043]  ? nfsd_shutdown_threads+0x2a0/0x2a0 [nfsd]
-[286123.159043]  kthread+0x29f/0x340
-[286123.159043]  ? kthread_complete_and_exit+0x20/0x20
-[286123.159043]  ret_from_fork+0x22/0x30
-[286123.159043]  </TASK>
-[286123.187052] BUG: scheduling while atomic: nfsd/3983/0x00000002
-[286123.187551] INFO: lockdep is turned off.
-[286123.187918] Modules linked in: nfsd auth_rpcgss nfs_acl lockd grace sunrpc
-[286123.188527] Preemption disabled at:
-[286123.188535] [<0000000000000000>] 0x0
-[286123.189255] CPU: 1 PID: 3983 Comm: nfsd Kdump: loaded Tainted: G        W         5.18.0-rc4+ #1
-[286123.190233] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[286123.190910] Call Trace:
-[286123.190910]  <TASK>
-[286123.190910]  dump_stack_lvl+0x57/0x7d
-[286123.190910]  __schedule_bug.cold+0x133/0x143
-[286123.190910]  __schedule+0x16c9/0x20a0
-[286123.190910]  ? schedule_timeout+0x314/0x510
-[286123.190910]  ? __sched_text_start+0x8/0x8
-[286123.190910]  ? internal_add_timer+0xa4/0xe0
-[286123.190910]  schedule+0xd7/0x1f0
-[286123.190910]  schedule_timeout+0x319/0x510
-[286123.190910]  ? rcu_read_lock_held_common+0xe/0xa0
-[286123.190910]  ? usleep_range_state+0x150/0x150
-[286123.190910]  ? lock_acquire+0x331/0x490
-[286123.190910]  ? init_timer_on_stack_key+0x50/0x50
-[286123.190910]  ? do_raw_spin_lock+0x116/0x260
-[286123.190910]  ? rwlock_bug.part.0+0x90/0x90
-[286123.190910]  io_schedule_timeout+0x26/0x80
-[286123.190910]  wait_for_completion_io_timeout+0x16a/0x340
-[286123.190910]  ? rcu_read_lock_bh_held+0x90/0x90
-[286123.190910]  ? wait_for_completion+0x330/0x330
-[286123.190910]  submit_bio_wait+0x135/0x1d0
-[286123.190910]  ? submit_bio_wait_endio+0x40/0x40
-[286123.190910]  ? xfs_iunlock+0xd5/0x300
-[286123.190910]  ? bio_init+0x295/0x470
-[286123.190910]  blkdev_issue_flush+0x69/0x80
-[286123.190910]  ? blk_unregister_queue+0x1e0/0x1e0
-[286123.190910]  ? bio_kmalloc+0x90/0x90
-[286123.190910]  ? xfs_iunlock+0x1b4/0x300
-[286123.190910]  xfs_file_fsync+0x354/0x820
-[286123.190910]  ? lock_downgrade+0x680/0x680
-[286123.190910]  ? xfs_filemap_pfn_mkwrite+0x10/0x10
-[286123.190910]  ? nfsd_file_put+0x100/0x100 [nfsd]
-[286123.190910]  nfsd_file_flush.isra.0+0x1b/0x220 [nfsd]
-[286123.190910]  nfsd_file_put+0x79/0x100 [nfsd]
-[286123.190910]  check_for_locks+0x152/0x200 [nfsd]
-[286123.190910]  nfsd4_release_lockowner+0x4cf/0x850 [nfsd]
-[286123.190910]  ? nfsd4_locku+0xd10/0xd10 [nfsd]
-[286123.190910]  ? rcu_read_lock_bh_held+0x90/0x90
-[286123.190910]  nfsd4_proc_compound+0xd15/0x25a0 [nfsd]
-[286123.190910]  nfsd_dispatch+0x4ed/0xc30 [nfsd]
-[286123.190910]  ? rcu_read_lock_bh_held+0x90/0x90
-[286123.190910]  svc_process_common+0xd8e/0x1b20 [sunrpc]
-[286123.190910]  ? svc_generic_rpcbind_set+0x450/0x450 [sunrpc]
-[286123.190910]  ? nfsd_svc+0xc50/0xc50 [nfsd]
-[286123.190910]  ? svc_sock_secure_port+0x27/0x40 [sunrpc]
-[286123.190910]  ? svc_recv+0x1100/0x2390 [sunrpc]
-[286123.190910]  svc_process+0x361/0x4f0 [sunrpc]
-[286123.190910]  nfsd+0x2d6/0x570 [nfsd]
-[286123.190910]  ? nfsd_shutdown_threads+0x2a0/0x2a0 [nfsd]
-[286123.190910]  kthread+0x29f/0x340
-[286123.190910]  ? kthread_complete_and_exit+0x20/0x20
-[286123.190910]  ret_from_fork+0x22/0x30
-[286123.190910]  </TASK>
+Thanks,
+Andreas
 
-The problem is the process tries to sleep while holding the
-cl_lock by nfsd4_release_lockowner. I think the problem was
-introduced with the filemap_flush in nfsd_file_put since
-'b6669305d35a nfsd: Reduce the number of calls to nfsd_file_gc()'.
-The filemap_flush is later replaced by nfsd_file_flush by
-'6b8a94332ee4f nfsd: Fix a write performance regression'.
-
--Dai
-
+> diff --git a/fs/jffs2/file.c b/fs/jffs2/file.c
+> index 492fb2da0403..ba86acbe12d3 100644
+> --- a/fs/jffs2/file.c
+> +++ b/fs/jffs2/file.c
+> @@ -110,21 +110,20 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
+>         return ret;
+>  }
+>
+> -int jffs2_do_readpage_unlock(void *data, struct page *pg)
+> +int __jffs2_read_folio(struct file *file, struct folio *folio)
+>  {
+> -       int ret = jffs2_do_readpage_nolock(pg->mapping->host, pg);
+> -       unlock_page(pg);
+> +       int ret = jffs2_do_readpage_nolock(folio->mapping->host, &folio->page);
+> +       folio_unlock(folio);
+>         return ret;
+>  }
+>
+> -
+>  static int jffs2_read_folio(struct file *file, struct folio *folio)
+>  {
+>         struct jffs2_inode_info *f = JFFS2_INODE_INFO(folio->mapping->host);
+>         int ret;
+>
+>         mutex_lock(&f->sem);
+> -       ret = jffs2_do_readpage_unlock(file, &folio->page);
+> +       ret = __jffs2_read_folio(file, folio);
+>         mutex_unlock(&f->sem);
+>         return ret;
+>  }
+> diff --git a/fs/jffs2/gc.c b/fs/jffs2/gc.c
+> index a53bac7569b6..5c6602f3c189 100644
+> --- a/fs/jffs2/gc.c
+> +++ b/fs/jffs2/gc.c
+> @@ -1327,7 +1327,7 @@ static int jffs2_garbage_collect_dnode(struct jffs2_sb_info *c, struct jffs2_era
+>          * trying to write out, read_cache_page() will not deadlock. */
+>         mutex_unlock(&f->sem);
+>         page = read_cache_page(inode->i_mapping, start >> PAGE_SHIFT,
+> -                              jffs2_do_readpage_unlock, NULL);
+> +                              __jffs2_read_folio, NULL);
+>         if (IS_ERR(page)) {
+>                 pr_warn("read_cache_page() returned error: %ld\n",
+>                         PTR_ERR(page));
+> diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
+> index 173eccac691d..921d782583d6 100644
+> --- a/fs/jffs2/os-linux.h
+> +++ b/fs/jffs2/os-linux.h
+> @@ -155,7 +155,7 @@ extern const struct file_operations jffs2_file_operations;
+>  extern const struct inode_operations jffs2_file_inode_operations;
+>  extern const struct address_space_operations jffs2_file_address_operations;
+>  int jffs2_fsync(struct file *, loff_t, loff_t, int);
+> -int jffs2_do_readpage_unlock(void *data, struct page *pg);
+> +int __jffs2_read_folio(struct file *file, struct folio *folio);
+>
+>  /* ioctl.c */
+>  long jffs2_ioctl(struct file *, unsigned int, unsigned long);
+> diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
+> index 8b53538bcc75..0e27a2e4e68b 100644
+> --- a/fs/nfs/symlink.c
+> +++ b/fs/nfs/symlink.c
+> @@ -26,21 +26,21 @@
+>   * and straight-forward than readdir caching.
+>   */
+>
+> -static int nfs_symlink_filler(void *data, struct page *page)
+> +static int nfs_symlink_filler(struct file *file, struct folio *folio)
+>  {
+> -       struct inode *inode = page->mapping->host;
+> +       struct inode *inode = folio->mapping->host;
+>         int error;
+>
+> -       error = NFS_PROTO(inode)->readlink(inode, page, 0, PAGE_SIZE);
+> +       error = NFS_PROTO(inode)->readlink(inode, &folio->page, 0, PAGE_SIZE);
+>         if (error < 0)
+>                 goto error;
+> -       SetPageUptodate(page);
+> -       unlock_page(page);
+> +       folio_mark_uptodate(folio);
+> +       folio_unlock(folio);
+>         return 0;
+>
+>  error:
+> -       SetPageError(page);
+> -       unlock_page(page);
+> +       folio_set_error(folio);
+> +       folio_unlock(folio);
+>         return -EIO;
+>  }
+>
+> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+> index b70192f56454..831b28dab01a 100644
+> --- a/include/linux/pagemap.h
+> +++ b/include/linux/pagemap.h
+> @@ -492,7 +492,7 @@ static inline gfp_t readahead_gfp_mask(struct address_space *x)
+>         return mapping_gfp_mask(x) | __GFP_NORETRY | __GFP_NOWARN;
+>  }
+>
+> -typedef int filler_t(void *, struct page *);
+> +typedef int filler_t(struct file *, struct folio *);
+>
+>  pgoff_t page_cache_next_miss(struct address_space *mapping,
+>                              pgoff_t index, unsigned long max_scan);
+> @@ -747,9 +747,9 @@ static inline struct page *grab_cache_page(struct address_space *mapping,
+>  }
+>
+>  struct folio *read_cache_folio(struct address_space *, pgoff_t index,
+> -               filler_t *filler, void *data);
+> +               filler_t *filler, struct file *file);
+>  struct page *read_cache_page(struct address_space *, pgoff_t index,
+> -               filler_t *filler, void *data);
+> +               filler_t *filler, struct file *file);
+>  extern struct page * read_cache_page_gfp(struct address_space *mapping,
+>                                 pgoff_t index, gfp_t gfp_mask);
+>
+> diff --git a/mm/filemap.c b/mm/filemap.c
+> index 079f8cca7959..81a0ed08a82c 100644
+> --- a/mm/filemap.c
+> +++ b/mm/filemap.c
+> @@ -3483,7 +3483,7 @@ EXPORT_SYMBOL(generic_file_mmap);
+>  EXPORT_SYMBOL(generic_file_readonly_mmap);
+>
+>  static struct folio *do_read_cache_folio(struct address_space *mapping,
+> -               pgoff_t index, filler_t filler, void *data, gfp_t gfp)
+> +               pgoff_t index, filler_t filler, struct file *file, gfp_t gfp)
+>  {
+>         struct folio *folio;
+>         int err;
+> @@ -3504,9 +3504,9 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
+>
+>  filler:
+>                 if (filler)
+> -                       err = filler(data, &folio->page);
+> +                       err = filler(file, folio);
+>                 else
+> -                       err = mapping->a_ops->read_folio(data, folio);
+> +                       err = mapping->a_ops->read_folio(file, folio);
+>
+>                 if (err < 0) {
+>                         folio_put(folio);
+> @@ -3557,44 +3557,44 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
+>  }
+>
+>  /**
+> - * read_cache_folio - read into page cache, fill it if needed
+> - * @mapping:   the page's address_space
+> - * @index:     the page index
+> - * @filler:    function to perform the read
+> - * @data:      first arg to filler(data, page) function, often left as NULL
+> - *
+> - * Read into the page cache. If a page already exists, and PageUptodate() is
+> - * not set, try to fill the page and wait for it to become unlocked.
+> + * read_cache_folio - Read into page cache, fill it if needed.
+> + * @mapping: The address_space to read from.
+> + * @index: The index to read.
+> + * @filler: Function to perform the read, or NULL to use aops->read_folio().
+> + * @file: Passed to filler function, may be NULL if not required.
+>   *
+> - * If the page does not get brought uptodate, return -EIO.
+> + * Read one page into the page cache.  If it succeeds, the folio returned
+> + * will contain @index, but it may not be the first page of the folio.
+>   *
+> - * The function expects mapping->invalidate_lock to be already held.
+> + * If the filler function returns an error, it will be returned to the
+> + * caller.
+>   *
+> - * Return: up to date page on success, ERR_PTR() on failure.
+> + * Context: May sleep.  Expects mapping->invalidate_lock to be held.
+> + * Return: An uptodate folio on success, ERR_PTR() on failure.
+>   */
+>  struct folio *read_cache_folio(struct address_space *mapping, pgoff_t index,
+> -               filler_t filler, void *data)
+> +               filler_t filler, struct file *file)
+>  {
+> -       return do_read_cache_folio(mapping, index, filler, data,
+> +       return do_read_cache_folio(mapping, index, filler, file,
+>                         mapping_gfp_mask(mapping));
+>  }
+>  EXPORT_SYMBOL(read_cache_folio);
+>
+>  static struct page *do_read_cache_page(struct address_space *mapping,
+> -               pgoff_t index, filler_t *filler, void *data, gfp_t gfp)
+> +               pgoff_t index, filler_t *filler, struct file *file, gfp_t gfp)
+>  {
+>         struct folio *folio;
+>
+> -       folio = do_read_cache_folio(mapping, index, filler, data, gfp);
+> +       folio = do_read_cache_folio(mapping, index, filler, file, gfp);
+>         if (IS_ERR(folio))
+>                 return &folio->page;
+>         return folio_file_page(folio, index);
+>  }
+>
+>  struct page *read_cache_page(struct address_space *mapping,
+> -                               pgoff_t index, filler_t *filler, void *data)
+> +                       pgoff_t index, filler_t *filler, struct file *file)
+>  {
+> -       return do_read_cache_page(mapping, index, filler, data,
+> +       return do_read_cache_page(mapping, index, filler, file,
+>                         mapping_gfp_mask(mapping));
+>  }
+>  EXPORT_SYMBOL(read_cache_page);
+> --
+> 2.34.1
+>
 
