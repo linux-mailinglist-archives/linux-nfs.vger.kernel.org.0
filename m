@@ -2,128 +2,100 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5719051B469
-	for <lists+linux-nfs@lfdr.de>; Thu,  5 May 2022 02:09:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AA3651B465
+	for <lists+linux-nfs@lfdr.de>; Thu,  5 May 2022 02:09:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237042AbiEEAFC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 4 May 2022 20:05:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57900 "EHLO
+        id S233886AbiEEAE7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 May 2022 20:04:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1351580AbiEDXpn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 May 2022 19:45:43 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB4A21E3B;
-        Wed,  4 May 2022 16:42:04 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 695201F745;
-        Wed,  4 May 2022 23:42:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1651707723; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AfEAmNadKBsyJGPHhIrqELUvuuTnv3+PkANYskYe9Z0=;
-        b=HP9Mdd0yAlGwCYu5G+uJ3VejgPUOyGqL96rsTA3rLVta8BIpQlcOHOnWQqLYj/g+dJevsx
-        go/q/geAcVFpjCmAsZlJR5mjce9eJQ1f5MqbY6lz7JmDcbqzw+en7IlUUmewUnxqRPtsi6
-        oO4oYZUiReSD+rAaAsK723I3eNXWdgA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1651707723;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=AfEAmNadKBsyJGPHhIrqELUvuuTnv3+PkANYskYe9Z0=;
-        b=baAopqfnk2KDxhB0joCqS5hQX4Zdx8yytBWV2UbF+3CqxSx6C28g7OxO8YVGZIVvKZNCEG
-        VvVPfKJmMxfQDYCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9D8D4131BD;
-        Wed,  4 May 2022 23:42:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id a/7yFUgPc2JxXAAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 04 May 2022 23:42:00 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1350597AbiEDX6x (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 May 2022 19:58:53 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86050541A1
+        for <linux-nfs@vger.kernel.org>; Wed,  4 May 2022 16:54:12 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id w17so5041902ybh.9
+        for <linux-nfs@vger.kernel.org>; Wed, 04 May 2022 16:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=Dn1MT8x7p4Rbn+pctwVkt7IgIdUxT0LRLjox/JaF9ttsZ2N8sUUglHFRxQa3sl75aK
+         h1U1JpCoOjPff8rV+LL0edQuBh+YvYlTbZ4zx127Qa80qMcS49J0d2nS2s7mVVadwp/M
+         vGp6wV8qQhR9tMRiQjyWHIJslgvG4HigF7p24aLxixJ1l99K68kLikab9Y0HgtSpkDYW
+         0+riuhXlj9dAnGs04evyYz4sFXKtm0FlJKiBI2Dtbo7ebvKr6E7XJkxgxzCXhReMwL1D
+         yv9OUeo9KjH+/RIlVXefhsYivAQRdlwo604eWoXrrvRFVxcSgXwgPis+UtVhyLpBWx3z
+         WyWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=ampHH5WJLIBWSsxWwzVjbk5pO9UBFxn81pZ6QIDzZtY=;
+        b=geBPZdokNWazXSjaqpiR/xRL2DbizCRP7EQxwBK8mjfo8zgC8r1Nf8AA1bZtCHCugb
+         OhK4auzyPEKjjE2EHC43Py3vwP0xfa8qMrHK80DkSYGABzLBAx+lSRTrHOBo3pccIYml
+         oD7mJTVpl5CKXgDUkuR+jzy+3kGVHAP2LkaRxDw2hBtG2Hfp8JkCloBSD4ZDkj3nGWht
+         qLH2DyDmf0AUbyZmuGSfiBPVsi8QEtdUktPzdtcUZeTzf3PxvEdJCGeIX0Ppv8yOjh5V
+         bnf4+TZtPIEub/MgSMqMgLGgA3YzcoGA3PvZCobreP1tUPD0LFoGlYMPflmy5RmRRUc0
+         63ig==
+X-Gm-Message-State: AOAM533GqsnIqyuSmEaF++XBqO8fjnCgIMDCda/K+T3jJKUxhdKuoCXr
+        hAoE+OQOEeJzQmuHAPYiqB4W5IPbK9EX4EqJv6o70+AQiXe8fQ==
+X-Google-Smtp-Source: ABdhPJyXbFHNtxfp8+qt+M9kuv/iG7XfFeFFPd7I4/fmpdxuycMtmf6dIJw5ghtZAT2CwgvAVE/kUl0HxsirxLIU8v0=
+X-Received: by 2002:a9d:6b16:0:b0:605:e0eb:d3d6 with SMTP id
+ g22-20020a9d6b16000000b00605e0ebd3d6mr8263208otp.213.1651708440302; Wed, 04
+ May 2022 16:54:00 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Yang Shi" <shy828301@gmail.com>
-Cc:     "Huang Ying" <ying.huang@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "Miaohe Lin" <linmiaohe@huawei.com>, linux-nfs@vger.kernel.org,
-        "Linux MM" <linux-mm@kvack.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] MM: handle THP in swap_*page_fs()
-In-reply-to: <CAHbLzkpF4zedBmipjX8Zy5F=Fffez+xgxTAvveaz1nRHb9Wg_Q@mail.gmail.com>
-References: <165119280115.15698.2629172320052218921.stgit@noble.brown>,
- <165119301488.15698.9457662928942765453.stgit@noble.brown>,
- <CAHbLzko+9nBem8GnxQJ8RQu7bizQMMmS1TNqbRXcgkjUs+JuMw@mail.gmail.com>,
- <165146539609.24404.4051313590023463843@noble.neil.brown.name>,
- <CAHbLzkpF4zedBmipjX8Zy5F=Fffez+xgxTAvveaz1nRHb9Wg_Q@mail.gmail.com>
-Date:   Thu, 05 May 2022 09:41:56 +1000
-Message-id: <165170771676.24672.16520001373464213119@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6802:1a9:0:0:0:0 with HTTP; Wed, 4 May 2022 16:53:59
+ -0700 (PDT)
+Reply-To: ortegainvestmmentforrealinvest@gmail.com
+From:   Info <joybhector64@gmail.com>
+Date:   Thu, 5 May 2022 05:23:59 +0530
+Message-ID: <CAP7KLYgH9LcKHS-KgR0zObHAgC6Fr3D+dOJSbDKurTc_12+iFw@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.3 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b44 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5003]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [joybhector64[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [joybhector64[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.5 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 03 May 2022, Yang Shi wrote:
-> On Sun, May 1, 2022 at 9:23 PM NeilBrown <neilb@suse.de> wrote:
-> >
-> > On Sat, 30 Apr 2022, Yang Shi wrote:
-> > > On Thu, Apr 28, 2022 at 5:44 PM NeilBrown <neilb@suse.de> wrote:
-> > > >
-> > > > Pages passed to swap_readpage()/swap_writepage() are not necessarily =
-all
-> > > > the same size - there may be transparent-huge-pages involves.
-> > > >
-> > > > The BIO paths of swap_*page() handle this correctly, but the SWP_FS_O=
-PS
-> > > > path does not.
-> > > >
-> > > > So we need to use thp_size() to find the size, not just assume
-> > > > PAGE_SIZE, and we need to track the total length of the request, not
-> > > > just assume it is "page * PAGE_SIZE".
-> > >
-> > > Swap-over-nfs doesn't support THP swap IIUC. So SWP_FS_OPS should not
-> > > see THP at all. But I agree to remove the assumption about page size
-> > > in this path.
-> >
-> > Can you help me understand this please.  How would the swap code know
-> > that swap-over-NFS doesn't support THP swap?  There is no reason that
-> > NFS wouldn't be able to handle 2MB writes.  Even 1GB should work though
-> > NFS would have to split into several smaller WRITE requests.
->=20
-> AFAICT, THP swap is only supported on non-rotate block devices, for
-> example, SSD, PMEM, etc. IIRC, the swap device has to support the
-> cluster in order to swap THP. The cluster is only supported by
-> non-rotate block devices.
->=20
-> Looped Ying in, who is the author of THP swap.
+-- 
+I am an investor. I came from the USA and I have many investments all
+over the world.
 
-I hunted around the code and found that THP swap only happens if a
-'cluster_info' is allocated, and that only happens if=20
-	if (p->bdev && bdev_nonrot(p->bdev)) {
-in the swapon syscall.
-
-I guess "nonrot" is being use as a synonym for "low latency"...
-So even if NFS was low-latency it couldn't benefit from THP swap.
-
-So as you say it is not currently possible for THP pages to be send to
-NFS for swapout.  It makes sense to prepare for it though I think - if
-only so that the code is more consistent and less confusing.
-
-Thanks,
-NeilBrown
+I want you to partner with me to invest in your country I am into many
+investment such as real Estate or buying of properties i can also
+invest money in any of existing business with equity royalty or by %
+percentage so on,
+Warm regards
