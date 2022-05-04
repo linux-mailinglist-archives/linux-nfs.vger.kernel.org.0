@@ -2,70 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7029519119
-	for <lists+linux-nfs@lfdr.de>; Wed,  4 May 2022 00:16:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17EA5519C32
+	for <lists+linux-nfs@lfdr.de>; Wed,  4 May 2022 11:45:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234645AbiECWOJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 3 May 2022 18:14:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53912 "EHLO
+        id S1347710AbiEDJtT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 4 May 2022 05:49:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243569AbiECWOB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 3 May 2022 18:14:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 733C4DEB
-        for <linux-nfs@vger.kernel.org>; Tue,  3 May 2022 15:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1651615825;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=LMmiWWb29UGba9md0hMHjtayU6y/sK+/Qq01tn2LWcA=;
-        b=Pz/C8SyDFB1Jmy7CZwAXrw+0yA+FgEdCKefIde6hwwYYIiaR/rJ0QHKWtQgZQGgf9fOvV4
-        sGKwLGNS0Im1pBuPUkxaQGOFBRblA95sDnjrXf1xGuVp+evyJP4i8HMIHKlwa33m0LNL2z
-        xy02ipfOSbIAuSHHXYounuPk3Ar+6pQ=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-152-PMmtfFRgP3WukZcAf1g6rA-1; Tue, 03 May 2022 18:08:16 -0400
-X-MC-Unique: PMmtfFRgP3WukZcAf1g6rA-1
-Received: by mail-wr1-f70.google.com with SMTP id m8-20020adfc588000000b0020c4edd8a57so3872178wrg.10
-        for <linux-nfs@vger.kernel.org>; Tue, 03 May 2022 15:08:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LMmiWWb29UGba9md0hMHjtayU6y/sK+/Qq01tn2LWcA=;
-        b=B3gNZpYl1/pWZZXidamTh8r+p7NSisGBdKfkbY10Tvu9Vh59lym+bx5u5DPbtGRmlM
-         XsojD2uuXQAXJnICid98OIRIl8gqvj+BrWlanKN3ibhLxBuUZfSzxH38t7q1srZu1F3P
-         jcZriYL6+6Tkw1mqIKf32CnkC6/3g+47Q/rR8kNdZHAEbD7RxHvI1ZbUpVgCy2H7r8XH
-         StvU5A75tLhFi3XumZ0MbDvbu1q8zI+QJNKCPFH0tETODdX88iBNWzHeX0un+8cSxh1O
-         8NPbte7j9ALpNDGc3jsIUzGYTpdRUCHZH852zCa9enDRQs6qOJ9tfiCGQZwPzSrymNIf
-         MU6g==
-X-Gm-Message-State: AOAM530OoEIuyEJExZo/jsWRSs0Kyjgq15PYhmV7pfKFWpx/proGLdd/
-        OS8eX1ZGskdHyuc1EPi4O7Hq6bJ/hI8Zyl0hO1b4yLDMmmcRh9WWkTg2gHnPyP06b2wO0ITAS2C
-        av72SUBzcNq6RNUtqovgWhmTvgO8PwJBKo2As
-X-Received: by 2002:a05:6000:1848:b0:20c:713b:8e1e with SMTP id c8-20020a056000184800b0020c713b8e1emr5560725wri.640.1651615679251;
-        Tue, 03 May 2022 15:07:59 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJza/1YW4p03hLZOOEyMY2mHvXsflrL3zsJyZE7a1xvQQLAfbBGJrDpMJ+TYh2LW8q5iyzNOzDqoxAwKJZzNi54=
-X-Received: by 2002:a05:6000:1848:b0:20c:713b:8e1e with SMTP id
- c8-20020a056000184800b0020c713b8e1emr5560709wri.640.1651615678936; Tue, 03
- May 2022 15:07:58 -0700 (PDT)
+        with ESMTP id S1347825AbiEDJtN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 4 May 2022 05:49:13 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFF7EB88
+        for <linux-nfs@vger.kernel.org>; Wed,  4 May 2022 02:45:37 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:1b3c:6996:5378:f253]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1nmBZf-0005Go-GG; Wed, 04 May 2022 11:45:35 +0200
+Message-ID: <4262c3f2-7b24-49a9-1cf2-2e9b7b68d4bb@leemhuis.info>
+Date:   Wed, 4 May 2022 11:45:33 +0200
 MIME-Version: 1.0
-References: <20220502054159.3471078-1-willy@infradead.org> <20220502054159.3471078-4-willy@infradead.org>
-In-Reply-To: <20220502054159.3471078-4-willy@infradead.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Wed, 4 May 2022 00:07:47 +0200
-Message-ID: <CAHc6FU6CTQ5mNNJs5+16mbnmyKoQq5-TAPm8xdzwGA4q218Riw@mail.gmail.com>
-Subject: Re: [Cluster-devel] [PATCH 3/3] fs: Change the type of filler_t
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        cluster-devel <cluster-devel@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: NFS regression between 5.17 and 5.18
+Content-Language: en-US
+To:     Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        linux-nfs@vger.kernel.org
+References: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1651657537;c7a168fd;
+X-HE-SMSGID: 1nmBZf-0005Go-GG
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,297 +44,128 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, May 2, 2022 at 7:58 AM Matthew Wilcox (Oracle)
-<willy@infradead.org> wrote:
-> By making filler_t the same as read_folio, we can use the same function
-> for both in gfs2.  We can push the use of folios down one more level
-> in jffs2 and nfs.  We also increase type safety for future users of the
-> various read_cache_page() family of functions by forcing the parameter
-> to be a pointer to struct file (or NULL).
->
-> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> ---
->  fs/gfs2/aops.c          | 29 +++++++++++------------------
->  fs/jffs2/file.c         |  9 ++++-----
->  fs/jffs2/gc.c           |  2 +-
->  fs/jffs2/os-linux.h     |  2 +-
->  fs/nfs/symlink.c        | 14 +++++++-------
->  include/linux/pagemap.h |  6 +++---
->  mm/filemap.c            | 40 ++++++++++++++++++++--------------------
->  7 files changed, 47 insertions(+), 55 deletions(-)
->
-> diff --git a/fs/gfs2/aops.c b/fs/gfs2/aops.c
-> index 340bf5d0e835..1016631bcbdc 100644
-> --- a/fs/gfs2/aops.c
-> +++ b/fs/gfs2/aops.c
-> @@ -464,21 +464,24 @@ static int stuffed_readpage(struct gfs2_inode *ip, struct page *page)
->         return 0;
->  }
->
-> -
-> -static int __gfs2_readpage(void *file, struct page *page)
-> +/**
-> + * gfs2_read_folio - read a folio from a file
-> + * @file: The file to read
-> + * @folio: The folio in the file
-> + */
-> +static int gfs2_read_folio(struct file *file, struct folio *folio)
->  {
-> -       struct folio *folio = page_folio(page);
-> -       struct inode *inode = page->mapping->host;
-> +       struct inode *inode = folio->mapping->host;
->         struct gfs2_inode *ip = GFS2_I(inode);
->         struct gfs2_sbd *sdp = GFS2_SB(inode);
->         int error;
->
->         if (!gfs2_is_jdata(ip) ||
-> -           (i_blocksize(inode) == PAGE_SIZE && !page_has_buffers(page))) {
-> +           (i_blocksize(inode) == PAGE_SIZE && !folio_buffers(folio))) {
->                 error = iomap_read_folio(folio, &gfs2_iomap_ops);
->         } else if (gfs2_is_stuffed(ip)) {
-> -               error = stuffed_readpage(ip, page);
-> -               unlock_page(page);
-> +               error = stuffed_readpage(ip, &folio->page);
-> +               folio_unlock(folio);
->         } else {
->                 error = mpage_read_folio(folio, gfs2_block_map);
->         }
-> @@ -489,16 +492,6 @@ static int __gfs2_readpage(void *file, struct page *page)
->         return error;
->  }
->
-> -/**
-> - * gfs2_read_folio - read a folio from a file
-> - * @file: The file to read
-> - * @folio: The folio in the file
-> - */
-> -static int gfs2_read_folio(struct file *file, struct folio *folio)
-> -{
-> -       return __gfs2_readpage(file, &folio->page);
-> -}
-> -
->  /**
->   * gfs2_internal_read - read an internal file
->   * @ip: The gfs2 inode
-> @@ -523,7 +516,7 @@ int gfs2_internal_read(struct gfs2_inode *ip, char *buf, loff_t *pos,
->                 amt = size - copied;
->                 if (offset + size > PAGE_SIZE)
->                         amt = PAGE_SIZE - offset;
-> -               page = read_cache_page(mapping, index, __gfs2_readpage, NULL);
-> +               page = read_cache_page(mapping, index, gfs2_read_folio, NULL);
->                 if (IS_ERR(page))
->                         return PTR_ERR(page);
->                 p = kmap_atomic(page);
+[TLDR: I'm adding the regression report below to regzbot, the Linux
+kernel regression tracking bot; all text you find below is compiled from
+a few templates paragraphs you might have encountered already already
+from similar mails.]
 
-Nice. For the gfs2 part:
+Hi, this is your Linux kernel regression tracker. Top-posting for once,
+to make this easily accessible to everyone.
 
-Reviewed-by: Andreas Gruenbacher <agruenba@redhat.com>
+To be sure below issue doesn't fall through the cracks unnoticed, I'm
+adding it to regzbot, my Linux kernel regression tracking bot:
 
-Thanks,
-Andreas
+#regzbot ^introduced v5.17..v5.18
+#regzbot title nfs: copy from NFS to the local disk suddently takes 3
+min instead of half a second
+#regzbot ignore-activity
 
-> diff --git a/fs/jffs2/file.c b/fs/jffs2/file.c
-> index 492fb2da0403..ba86acbe12d3 100644
-> --- a/fs/jffs2/file.c
-> +++ b/fs/jffs2/file.c
-> @@ -110,21 +110,20 @@ static int jffs2_do_readpage_nolock (struct inode *inode, struct page *pg)
->         return ret;
->  }
->
-> -int jffs2_do_readpage_unlock(void *data, struct page *pg)
-> +int __jffs2_read_folio(struct file *file, struct folio *folio)
->  {
-> -       int ret = jffs2_do_readpage_nolock(pg->mapping->host, pg);
-> -       unlock_page(pg);
-> +       int ret = jffs2_do_readpage_nolock(folio->mapping->host, &folio->page);
-> +       folio_unlock(folio);
->         return ret;
->  }
->
-> -
->  static int jffs2_read_folio(struct file *file, struct folio *folio)
->  {
->         struct jffs2_inode_info *f = JFFS2_INODE_INFO(folio->mapping->host);
->         int ret;
->
->         mutex_lock(&f->sem);
-> -       ret = jffs2_do_readpage_unlock(file, &folio->page);
-> +       ret = __jffs2_read_folio(file, folio);
->         mutex_unlock(&f->sem);
->         return ret;
->  }
-> diff --git a/fs/jffs2/gc.c b/fs/jffs2/gc.c
-> index a53bac7569b6..5c6602f3c189 100644
-> --- a/fs/jffs2/gc.c
-> +++ b/fs/jffs2/gc.c
-> @@ -1327,7 +1327,7 @@ static int jffs2_garbage_collect_dnode(struct jffs2_sb_info *c, struct jffs2_era
->          * trying to write out, read_cache_page() will not deadlock. */
->         mutex_unlock(&f->sem);
->         page = read_cache_page(inode->i_mapping, start >> PAGE_SHIFT,
-> -                              jffs2_do_readpage_unlock, NULL);
-> +                              __jffs2_read_folio, NULL);
->         if (IS_ERR(page)) {
->                 pr_warn("read_cache_page() returned error: %ld\n",
->                         PTR_ERR(page));
-> diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
-> index 173eccac691d..921d782583d6 100644
-> --- a/fs/jffs2/os-linux.h
-> +++ b/fs/jffs2/os-linux.h
-> @@ -155,7 +155,7 @@ extern const struct file_operations jffs2_file_operations;
->  extern const struct inode_operations jffs2_file_inode_operations;
->  extern const struct address_space_operations jffs2_file_address_operations;
->  int jffs2_fsync(struct file *, loff_t, loff_t, int);
-> -int jffs2_do_readpage_unlock(void *data, struct page *pg);
-> +int __jffs2_read_folio(struct file *file, struct folio *folio);
->
->  /* ioctl.c */
->  long jffs2_ioctl(struct file *, unsigned int, unsigned long);
-> diff --git a/fs/nfs/symlink.c b/fs/nfs/symlink.c
-> index 8b53538bcc75..0e27a2e4e68b 100644
-> --- a/fs/nfs/symlink.c
-> +++ b/fs/nfs/symlink.c
-> @@ -26,21 +26,21 @@
->   * and straight-forward than readdir caching.
->   */
->
-> -static int nfs_symlink_filler(void *data, struct page *page)
-> +static int nfs_symlink_filler(struct file *file, struct folio *folio)
->  {
-> -       struct inode *inode = page->mapping->host;
-> +       struct inode *inode = folio->mapping->host;
->         int error;
->
-> -       error = NFS_PROTO(inode)->readlink(inode, page, 0, PAGE_SIZE);
-> +       error = NFS_PROTO(inode)->readlink(inode, &folio->page, 0, PAGE_SIZE);
->         if (error < 0)
->                 goto error;
-> -       SetPageUptodate(page);
-> -       unlock_page(page);
-> +       folio_mark_uptodate(folio);
-> +       folio_unlock(folio);
->         return 0;
->
->  error:
-> -       SetPageError(page);
-> -       unlock_page(page);
-> +       folio_set_error(folio);
-> +       folio_unlock(folio);
->         return -EIO;
->  }
->
-> diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> index b70192f56454..831b28dab01a 100644
-> --- a/include/linux/pagemap.h
-> +++ b/include/linux/pagemap.h
-> @@ -492,7 +492,7 @@ static inline gfp_t readahead_gfp_mask(struct address_space *x)
->         return mapping_gfp_mask(x) | __GFP_NORETRY | __GFP_NOWARN;
->  }
->
-> -typedef int filler_t(void *, struct page *);
-> +typedef int filler_t(struct file *, struct folio *);
->
->  pgoff_t page_cache_next_miss(struct address_space *mapping,
->                              pgoff_t index, unsigned long max_scan);
-> @@ -747,9 +747,9 @@ static inline struct page *grab_cache_page(struct address_space *mapping,
->  }
->
->  struct folio *read_cache_folio(struct address_space *, pgoff_t index,
-> -               filler_t *filler, void *data);
-> +               filler_t *filler, struct file *file);
->  struct page *read_cache_page(struct address_space *, pgoff_t index,
-> -               filler_t *filler, void *data);
-> +               filler_t *filler, struct file *file);
->  extern struct page * read_cache_page_gfp(struct address_space *mapping,
->                                 pgoff_t index, gfp_t gfp_mask);
->
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index 079f8cca7959..81a0ed08a82c 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -3483,7 +3483,7 @@ EXPORT_SYMBOL(generic_file_mmap);
->  EXPORT_SYMBOL(generic_file_readonly_mmap);
->
->  static struct folio *do_read_cache_folio(struct address_space *mapping,
-> -               pgoff_t index, filler_t filler, void *data, gfp_t gfp)
-> +               pgoff_t index, filler_t filler, struct file *file, gfp_t gfp)
->  {
->         struct folio *folio;
->         int err;
-> @@ -3504,9 +3504,9 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
->
->  filler:
->                 if (filler)
-> -                       err = filler(data, &folio->page);
-> +                       err = filler(file, folio);
->                 else
-> -                       err = mapping->a_ops->read_folio(data, folio);
-> +                       err = mapping->a_ops->read_folio(file, folio);
->
->                 if (err < 0) {
->                         folio_put(folio);
-> @@ -3557,44 +3557,44 @@ static struct folio *do_read_cache_folio(struct address_space *mapping,
->  }
->
->  /**
-> - * read_cache_folio - read into page cache, fill it if needed
-> - * @mapping:   the page's address_space
-> - * @index:     the page index
-> - * @filler:    function to perform the read
-> - * @data:      first arg to filler(data, page) function, often left as NULL
-> - *
-> - * Read into the page cache. If a page already exists, and PageUptodate() is
-> - * not set, try to fill the page and wait for it to become unlocked.
-> + * read_cache_folio - Read into page cache, fill it if needed.
-> + * @mapping: The address_space to read from.
-> + * @index: The index to read.
-> + * @filler: Function to perform the read, or NULL to use aops->read_folio().
-> + * @file: Passed to filler function, may be NULL if not required.
->   *
-> - * If the page does not get brought uptodate, return -EIO.
-> + * Read one page into the page cache.  If it succeeds, the folio returned
-> + * will contain @index, but it may not be the first page of the folio.
->   *
-> - * The function expects mapping->invalidate_lock to be already held.
-> + * If the filler function returns an error, it will be returned to the
-> + * caller.
->   *
-> - * Return: up to date page on success, ERR_PTR() on failure.
-> + * Context: May sleep.  Expects mapping->invalidate_lock to be held.
-> + * Return: An uptodate folio on success, ERR_PTR() on failure.
->   */
->  struct folio *read_cache_folio(struct address_space *mapping, pgoff_t index,
-> -               filler_t filler, void *data)
-> +               filler_t filler, struct file *file)
->  {
-> -       return do_read_cache_folio(mapping, index, filler, data,
-> +       return do_read_cache_folio(mapping, index, filler, file,
->                         mapping_gfp_mask(mapping));
->  }
->  EXPORT_SYMBOL(read_cache_folio);
->
->  static struct page *do_read_cache_page(struct address_space *mapping,
-> -               pgoff_t index, filler_t *filler, void *data, gfp_t gfp)
-> +               pgoff_t index, filler_t *filler, struct file *file, gfp_t gfp)
->  {
->         struct folio *folio;
->
-> -       folio = do_read_cache_folio(mapping, index, filler, data, gfp);
-> +       folio = do_read_cache_folio(mapping, index, filler, file, gfp);
->         if (IS_ERR(folio))
->                 return &folio->page;
->         return folio_file_page(folio, index);
->  }
->
->  struct page *read_cache_page(struct address_space *mapping,
-> -                               pgoff_t index, filler_t *filler, void *data)
-> +                       pgoff_t index, filler_t *filler, struct file *file)
->  {
-> -       return do_read_cache_page(mapping, index, filler, data,
-> +       return do_read_cache_page(mapping, index, filler, file,
->                         mapping_gfp_mask(mapping));
->  }
->  EXPORT_SYMBOL(read_cache_page);
-> --
-> 2.34.1
->
+If it turns out this isn't a regression, free free to remove it from the
+tracking by sending a reply to this thread containing a paragraph like
+"#regzbot invalid: reason why this is invalid" (without the quotes).
 
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
+
+On 28.04.22 15:05, Dennis Dalessandro wrote:
+> Hi NFS folks,
+> 
+> I've noticed a pretty nasty regression in our NFS capability between 5.17 and
+> 5.18-rc1. I've tried to bisect but not having any luck. The problem I'm seeing
+> is it takes 3 minutes to copy a file from NFS to the local disk. When it should
+> take less than half a second, which it did up through 5.17.
+> 
+> It doesn't seem to be network related, but can't rule that out completely.
+> 
+> I tried to bisect but the problem can be intermittent. Some runs I'll see a
+> problem in 3 out of 100 cycles, sometimes 0 out of 100. Sometimes I'll see it
+> 100 out of 100.
+> 
+> The latest attempt I have is at 5.18-rc4 and here's what I see when I 1) create
+> file with dd, 2) copy local disk to NFS mount, 3) copy NFS to local disk.
+> 
+> Test 2
+> Creating /dev/shm/run_nfs_test.junk...
+> 262144+0 records in
+> 262144+0 records out
+> 268435456 bytes (268 MB, 256 MiB) copied, 1.29037 s, 208 MB/s
+> Done
+> copy /dev/shm/run_nfs_test.junk to /mnt/nfs_test/run_nfs_test.junk...
+> 
+> real    0m0.502s
+> user    0m0.001s
+> sys     0m0.250s
+> Done
+> copy /mnt/nfs_test/run_nfs_test.junk to /dev/shm/run_nfs_test.tmp...
+> 
+> real    4m11.835s
+> user    0m0.001s
+> sys     0m0.277s
+> Done
+> Comparing files...
+> Done
+> Remove /dev/shm/run_nfs_test.tmp...
+> 
+> real    0m0.031s
+> user    0m0.000s
+> sys     0m0.031s
+> Done
+> Remove /dev/shm/run_nfs_test.junk...
+> 
+> real    0m0.031s
+> user    0m0.001s
+> sys     0m0.030s
+> Done
+> Remove /mnt/nfs_test/run_nfs_test.junk...
+> 
+> real    0m0.024s
+> user    0m0.001s
+> sys     0m0.022s
+> Done
+> 
+> Create the server with a 4G RAM disk:
+> mount -t tmpfs -o size=4096M tmpfs /mnt/nfs_test
+> 
+> exportfs -o fsid=0,rw,async,insecure,no_root_squash
+> 192.168.254.0/255.255.255.0:/mnt/nfs_test
+> 
+> Mount on the client side with:
+> mount -o rdma,port=20049 192.168.254.1:/mnt/nfs_test /mnt/nfs_test
+> 
+> Any advice on tracking this down further would be greatly appreciated.
+> 
+> Thanks
+> 
+> -Denny
+> 
+
+-- 
+Additional information about regzbot:
+
+If you want to know more about regzbot, check out its web-interface, the
+getting start guide, and the references documentation:
+
+https://linux-regtracking.leemhuis.info/regzbot/
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/getting_started.md
+https://gitlab.com/knurd42/regzbot/-/blob/main/docs/reference.md
+
+The last two documents will explain how you can interact with regzbot
+yourself if your want to.
+
+Hint for reporters: when reporting a regression it's in your interest to
+CC the regression list and tell regzbot about the issue, as that ensures
+the regression makes it onto the radar of the Linux kernel's regression
+tracker -- that's in your interest, as it ensures your report won't fall
+through the cracks unnoticed.
+
+Hint for developers: you normally don't need to care about regzbot once
+it's involved. Fix the issue as you normally would, just remember to
+include 'Link:' tag in the patch descriptions pointing to all reports
+about the issue. This has been expected from developers even before
+regzbot showed up for reasons explained in
+'Documentation/process/submitting-patches.rst' and
+'Documentation/process/5.Posting.rst'.
