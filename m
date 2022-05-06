@@ -2,100 +2,91 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 230B651D26E
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 May 2022 09:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 444E651D385
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 May 2022 10:38:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1381632AbiEFHok (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 May 2022 03:44:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35882 "EHLO
+        id S1390187AbiEFImN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 May 2022 04:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1357116AbiEFHoj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 May 2022 03:44:39 -0400
-Received: from smtp5.epfl.ch (smtp5.epfl.ch [IPv6:2001:620:618:1e0:1:80b2:e034:1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A8C5B3E5
-        for <linux-nfs@vger.kernel.org>; Fri,  6 May 2022 00:40:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=epfl.ch;
-      s=epfl; t=1651822852;
-      h=From:To:CC:Subject:Date:Message-ID:Content-Type:Content-Transfer-Encoding:MIME-Version;
-      bh=+q6EU4ou11rp/Adq8ErA1hBF3oE9f/2O2rhlrWoVrqE=;
-      b=ikWj4i/UhSNlTIX4yA2ndQ4Wb3PwipZ5WXfxs6AIfVzec5Q4yJ7yuvAp5hDlkUb3+
-        f0KvUnYxznnRWyjhlpBtJwqJREzgtGiscGO202/ntcCypMzeedlPwJXoN0CtD5G5z
-        9GeMrTSWP09sNvyTgeuC6+NCxWBeuI1XUQ3hkhPxo=
-Received: (qmail 4971 invoked by uid 107); 6 May 2022 07:40:52 -0000
-Received: from ax-snat-224-174.epfl.ch (HELO ewa05.intranet.epfl.ch) (192.168.224.174) (TLS, ECDHE-RSA-AES256-GCM-SHA384 (X25519 curve) cipher)
-  by mail.epfl.ch (AngelmatoPhylax SMTP proxy) with ESMTPS; Fri, 06 May 2022 09:40:52 +0200
-X-EPFL-Auth: +dtnDacP1/Qm7fXShKLMJNoVvZuS6LOxl71MoRkEl4mlgrz+9kc=
-Received: from ewa07.intranet.epfl.ch (128.178.224.178) by
- ewa05.intranet.epfl.ch (128.178.224.174) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.24; Fri, 6 May 2022 09:40:51 +0200
-Received: from ewa07.intranet.epfl.ch ([fe80::f470:9b62:7382:7f3a]) by
- ewa07.intranet.epfl.ch ([fe80::f470:9b62:7382:7f3a%4]) with mapi id
- 15.01.2375.024; Fri, 6 May 2022 09:40:51 +0200
-From:   Lyu Tao <tao.lyu@epfl.ch>
-To:     "chenxiaosong (A)" <chenxiaosong2@huawei.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bjschuma@netapp.com" <bjschuma@netapp.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "liuyongqiang13@huawei.com" <liuyongqiang13@huawei.com>,
-        "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
-        "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>
-Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
-Thread-Topic: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
-Thread-Index: AQHYQ16YLIpFlrH2FUmiiFZ5HnfMO6zWS0oAgBdxzEuAABNUgIAABmuAgAAjKin//+c4gIAAL0qEgACZlICAAHFaAYAgkWkAgAIEEb8=
-Date:   Fri, 6 May 2022 07:40:51 +0000
-Message-ID: <018da3c0453845329d5ae2ec8924af06@epfl.ch>
-References: <20220329113208.2466000-1-chenxiaosong2@huawei.com>
- <68b65889-3b2c-fb72-a0a8-d0afc15a03e0@huawei.com>
- <e0c2d7ec62b447cabddbc8a9274be955@epfl.ch>
- <0b6546f7-8a04-9d6e-50c3-483c8a1a6591@huawei.com>
- <d73a51a2-6b63-b536-61e6-3d18563f027d@huawei.com>
- <3ee78045f18b4932b1651de776ee73c4@epfl.ch>
- <f927bec5-1078-dcb9-6f3e-a64d304efd5b@huawei.com>
- <55415e44b4b04bbfa66c42d5f2788384@epfl.ch>
- <88231dee-760f-b992-f1d1-81309076071e@huawei.com>
- <f794d0aaef654bffacda9159321d66e0@epfl.ch>,<67d6a536-9027-1928-99b6-af512a36cd1a@huawei.com>
-In-Reply-To: <67d6a536-9027-1928-99b6-af512a36cd1a@huawei.com>
-Accept-Language: en-US, fr-CH
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [128.178.116.84]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S235357AbiEFImL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 May 2022 04:42:11 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EC8C3B7
+        for <linux-nfs@vger.kernel.org>; Fri,  6 May 2022 01:38:29 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id l18so13097032ejc.7
+        for <linux-nfs@vger.kernel.org>; Fri, 06 May 2022 01:38:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dneg.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EBkH1YgBBg5lHtmXPTC9d6coG0adV0HCM1ShUIWoEoc=;
+        b=gFdBpA1ILmq2CQJufz20dOXpO9QPPBOGNDEN9iwP9yYgp8oBrRHcC2FpnXWqkQFP2u
+         HbkZe6muAUQK/3mebQuSNrUP3Z0d+jKagUdzdfTl/Yg44DMBvZpRVHJVXbN+iwaEEmdQ
+         qQ3F8CBFcyQObxRS1e9UCzfC8uf4uIIBuUgtencWVOB9v1ZGiuCGkBhSLFSkA5vZ+bf1
+         FaSmX+5WZan+yPWgUNWy7bpj6YlZ+HSbMsjmplPcsDkn16KpnyxjiwMjrGI8mTZ3DPxT
+         ye+OKNYpooGHg5TJvfGsOjBV/68xhos/y0mkE1YVvXi0aufiG5Zn9oCN6wOkZ2qpjXzt
+         86Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EBkH1YgBBg5lHtmXPTC9d6coG0adV0HCM1ShUIWoEoc=;
+        b=p2R7s5KWR1KF3K2d0zB3AL35kfPchRxL1wg7wGEzTm/ZBSEghGESINuhsrzlYVJU7P
+         z1SsRdH1Bcb4gMvPfokoLi1+YhVEdReYxNljqFH18DLK9ayVQV9kt8Qij+u0cLCsi3CG
+         zXX14a6qnfdzVbjIA+ioVUbbm8F+OSIjmCEAIwCLWB/FZhoaDhJKH24ruV4Omo3DQ+37
+         s5QGTjckaEz+z5Futq9n3zd0C5Hv4Yc03+55dWFuyezDnpUPgf5KPQKELrC1Ef/cQ8xQ
+         ee4kR+i5JwCW/3mXTE8xuXBhcjPQYmDeyBe0zrpJIKqA+TD21J6S6xuhUMFYQCeTGBHL
+         HHQw==
+X-Gm-Message-State: AOAM530WRmurbbf89MAjJWMrkzIDieg0uTrQIlFh1tU8gh5nJeSjj5gg
+        h1qXQ4QpcyzWiI+g0sYaFEcIipt1EWAMnZcbnTe0Vg==
+X-Google-Smtp-Source: ABdhPJwufJaMAM2+MNOlVHAYPUzuPaCimo02YkmbADJ6ehIimaOWceDQz6W4LctqUXiCnzrmfjiFrEPSoDWSynLdYOY=
+X-Received: by 2002:a17:907:1693:b0:6f4:ee60:16e8 with SMTP id
+ hc19-20020a170907169300b006f4ee6016e8mr1858054ejc.312.1651826307950; Fri, 06
+ May 2022 01:38:27 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <20220504132106.28812-1-dwysocha@redhat.com>
+In-Reply-To: <20220504132106.28812-1-dwysocha@redhat.com>
+From:   Daire Byrne <daire@dneg.com>
+Date:   Fri, 6 May 2022 09:37:52 +0100
+Message-ID: <CAPt2mGMQ2x_aQwr2W18xX5LfUy6q118QxVqhdC663ZtUjZehdg@mail.gmail.com>
+Subject: Re: [PATCH] NFS: Pass i_size to fscache_unuse_cookie() when a file is released
+To:     Dave Wysochanski <dwysocha@redhat.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        David Howells <dhowells@redhat.com>,
+        Daire Byrne <daire.byrne@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-> From: chenxiaosong (A) <chenxiaosong2@huawei.com>
-> Sent: Thursday, May 5, 2022 4:48 AM
-> To: Lyu Tao
-> Cc: linux-nfs@vger.kernel.org; linux-kernel@vger.kernel.org; bjschuma@net=
-app.com; anna@kernel.org; Trond Myklebust; liuyongqiang13@huawei.com; yi.zh=
-ang@huawei.com; zhangxiaoxu5@huawei.com
-> Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE f=
-lag
-=A0  =20
-> "NVD Last Modified" date of CVE-2022-24448 is updated as 04/29/2022, but =
-the content of the cve is old.
-> https://nvd.nist.gov/vuln/detail/CVE-2022-24448
-=20
-Hi,=20
+On Wed, 4 May 2022 at 14:22, Dave Wysochanski <dwysocha@redhat.com> wrote:
+>
+> Pass updated i_size in fscache_unuse_cookie() when called
+> from nfs_fscache_release_file(), which ensures the size of
+> an fscache object gets written to the cache storage.  Failing
+> to do so results in unnessary reads from the NFS server, even
+> when the data is cached, due to a cachefiles object coherency
+> check failing with a trace similar to the following:
+>   cachefiles_coherency: o=0000000e BAD osiz B=afbb3 c=0
 
-Thanks for reaching out.
+I can confirm that this fixes an oddity I had noticed with the "new" fscache.
 
-I've requested to update the CVE description and they replied me that it wo=
-uld be updated yesterday. Maybe the system need some time to reflesh. Let's=
- wait a few more days.
+When running an fio read benchmark, if you remounted or dropped caches
+between reads, it seemed like it required two initial reads of the
+data (and writes to cache) before all subsequent reads would come from
+the fscache disk.
 
-Best,
-Tao=
+Tested-by: Daire Byrne <daire@dneg.com>
+
+Cheers,
+
+Daire
