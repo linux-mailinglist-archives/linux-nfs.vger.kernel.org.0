@@ -2,54 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DFD451DCC8
-	for <lists+linux-nfs@lfdr.de>; Fri,  6 May 2022 18:03:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BF3751DE59
+	for <lists+linux-nfs@lfdr.de>; Fri,  6 May 2022 19:26:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232647AbiEFQHd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 6 May 2022 12:07:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
+        id S236917AbiEFRaj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 6 May 2022 13:30:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238563AbiEFQHc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 May 2022 12:07:32 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A253569CCB
-        for <linux-nfs@vger.kernel.org>; Fri,  6 May 2022 09:03:49 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id j8-20020a17090a060800b001cd4fb60dccso7245790pjj.2
-        for <linux-nfs@vger.kernel.org>; Fri, 06 May 2022 09:03:49 -0700 (PDT)
+        with ESMTP id S236163AbiEFRag (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 6 May 2022 13:30:36 -0400
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DADFF5AA61;
+        Fri,  6 May 2022 10:26:52 -0700 (PDT)
+Received: by mail-pf1-x42a.google.com with SMTP id g8so6787139pfh.5;
+        Fri, 06 May 2022 10:26:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yEUud2b8R47zKUIouR1xspgHGmSBod8nEciqocIq7uA=;
-        b=KKDRoYVkfgjBXTdCx5SWl9SOWBc9gjKvq7Ex09NG42tIxFpGr3/xjgrYP5AmRA54w8
-         j8BT1HpjW/U30WtyIPIJf81yYjVpgb94f/HZy7WmkGydQ7FU7WmaJ57mLTNbS4diiBa+
-         C6hbwf4OTzsWIm7RkUokU4x7ITbwjI6zS+I5+iFdDPjXSmpFPYMoPX4G77/gH/2zpamu
-         d2GsdBPlQoSUcyEC0bJfumj3l1GsX4evpHMmbrT2v9RQKK0fck7NfS+bCSy7KpqwaJyE
-         3+BL1p21F9SK0OD6RJEYU8ZEPmC6djDJMZEImTcgOfoLoLDZ5F+iu4soZyfVhDnaZ/Ds
-         xong==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=aXO2Fu3NYY2Zx0XhZoe0TjIS7+Cfdg9kovY5KSy5hGU=;
+        b=Jsct77AV4aNMoEDTouuAejvb9DC0Lqc08vF3PXEFDLEn4G9G5QAcSND3nV7kYj0y8V
+         kQqIzgkx/FSkrP9QLpAaRWVB6s9Bx8kB90MVcflmshxzCHve5T2vnT8d1e6BCRZq1Nnj
+         nIQ3yvri5sDtSsAWhi225ccpdFGQOrR0xP6Jom52iZvlj5lopElIN+lv+8GapeEL0aU1
+         O90+Qipqa6OhRuDkspplkHvKHapgBiq9iuXcfDcDnaKfa2r8QPeblY+lt5i0+CjkJB+J
+         LVvlr5SscphQYTF8WT7rKA0419llgllijB9wlKniR0/MOSJlDq4g63a3XIyMxgbobRtB
+         ARKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yEUud2b8R47zKUIouR1xspgHGmSBod8nEciqocIq7uA=;
-        b=fdT8vLwSYgGaGY0pOFkn5a4rPgiIoqqgU33Qge4ZTE0kUE94+3SJDPSlCr9X8Ayyhj
-         39cfFzgLn0sInGbxxNyPTDaHNPDmL2X2CXuIpiPEA4feBHy/JofzO5ac38O2zO+1vx4p
-         YorS3XguUEZbxwiCH0KSpn41u4yZMYmpPQ3L0SVuAd96JoTy1KnDK30FhPVt8//Sc63y
-         40GAsNmwy1rQBjOb88FSzdA+dsgaDs8XcIZzDX3wIM9KFn2MLQp9W3t74Q9hWAyn2u4v
-         PTJA2j6bqfSxF08qZOHrIlphrt7BGxLyWueDfkUVEMXeC8RcatwMbms2cePx5TeIlyJA
-         zRKA==
-X-Gm-Message-State: AOAM532lT4Zm0Gs2b+0QltI6olsQTWTPHV3WFgyWdYNl+e4Y5DT225Ty
-        3apH74GOplDPK6InvE9KHv1+I6Iodb5CQAx+kxQ=
-X-Google-Smtp-Source: ABdhPJwxe++3VTUvEgPdCPX8KHERUSoug2dVY9hQVmKFy4ui3EiH2Xsz0OhTtJHSCNZ5F/kUntyF22sPobcrlUyro4Q=
-X-Received: by 2002:a17:902:ce8b:b0:15e:c249:1bf8 with SMTP id
- f11-20020a170902ce8b00b0015ec2491bf8mr4257282plg.52.1651853029023; Fri, 06
- May 2022 09:03:49 -0700 (PDT)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aXO2Fu3NYY2Zx0XhZoe0TjIS7+Cfdg9kovY5KSy5hGU=;
+        b=WLfPN9WwVynOxWEHcMnyF4RBaNSj8lR2DpK620flnTzMGSapPkVXff/j1bbZuBHKZp
+         f2xLJyyUdfdZ6Vb7a7496A0zqJyzAnW9GW4I45H0UZBpvaNKRyWLXpPLoDvH8Sb/TR2H
+         ZVZX5p69Jj7QjHUthTbp5qxUqiMTLyDXe4tEFsTjzFbkKVVkB6gCM7hJh4AxmzGXX1dj
+         eZK+2FDiCXlPuqSny+49Zz5mHaR7spcJybRvOQ9m+b5MGfq7Q9Q24Jceo/MveOTYFVTs
+         f41bV8GQVyO6jMxmoyaCI7tl08kTfCJ+3EWa2qDz5r+qiECOTiBjvy6V8TKXeGTE2X0D
+         2kew==
+X-Gm-Message-State: AOAM531YX856/AmS92ULLQTyJboXlLCCMOJzq+O9vHAZDHhSdoS9MWKg
+        ZEmpz9skJTt/SmiuQABGNbGMx7FJj458/Fg4jME=
+X-Google-Smtp-Source: ABdhPJy9T+Jn+LwgZNf+UDCwbZTt5TwfLjXzxscGrs2j0Bm3boTDvKJCc0suHjazVzfLaPemEVPpAgHzERJDFjhY7sI=
+X-Received: by 2002:a65:6951:0:b0:381:f10:ccaa with SMTP id
+ w17-20020a656951000000b003810f10ccaamr3465946pgq.587.1651858012366; Fri, 06
+ May 2022 10:26:52 -0700 (PDT)
 MIME-Version: 1.0
-From:   Jonathan Cormier <jjcf89@gmail.com>
-Date:   Fri, 6 May 2022 12:03:37 -0400
-Message-ID: <CAEzfL1kMJWEY7MkDkx6wyC9b5q6NKq=SMBA5Vb4za6YHMfOynA@mail.gmail.com>
-Subject: Re: [PATCH] NFS: LOOKUP_DIRECTORY is also ok with symlinks
-To:     trondmy@kernel.org
-Cc:     Anna.Schumaker@netapp.com, linux-nfs@vger.kernel.org,
-        pmenzel@molgen.mpg.de
+References: <165146746627.24404.2324091720943354711@noble.neil.brown.name>
+ <Ym9pLhqtf61AVrZG@casper.infradead.org> <165146932944.24404.17790836056748683378@noble.neil.brown.name>
+ <Ym9szKx7qYZTlKF2@casper.infradead.org>
+In-Reply-To: <Ym9szKx7qYZTlKF2@casper.infradead.org>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Fri, 6 May 2022 10:26:40 -0700
+Message-ID: <CAHbLzkqtjg6yaPp-yktRtUBo5-Yw9rJKvJWH9PDDHxsuHh6Mhw@mail.gmail.com>
+Subject: Re: [PATCH] MM: handle THP in swap_*page_fs() - count_vm_events()
+To:     Matthew Wilcox <willy@infradead.org>,
+        Huang Ying <ying.huang@intel.com>
+Cc:     NeilBrown <neilb@suse.de>, Miaohe Lin <linmiaohe@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Christoph Hellwig <hch@lst.de>, linux-nfs@vger.kernel.org,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
@@ -61,13 +72,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Tested patch on ubuntu kernel 5.13.0-40. And it resolved a regression
-we were seeing on our build servers.
+On Sun, May 1, 2022 at 10:32 PM Matthew Wilcox <willy@infradead.org> wrote:
+>
+> On Mon, May 02, 2022 at 03:28:49PM +1000, NeilBrown wrote:
+> > On Mon, 02 May 2022, Matthew Wilcox wrote:
+> > > On Mon, May 02, 2022 at 02:57:46PM +1000, NeilBrown wrote:
+> > > > @@ -390,9 +392,9 @@ static void sio_read_complete(struct kiocb *iocb, long ret)
+> > > >                   struct page *page = sio->bvec[p].bv_page;
+> > > >
+> > > >                   SetPageUptodate(page);
+> > > > +                 count_swpout_vm_event(page);
+> > > >                   unlock_page(page);
+> > > >           }
+> > > > -         count_vm_events(PSWPIN, sio->pages);
+> > >
+> > > Surely that should be count_swpIN_vm_event?
+> > >
+> > I'm not having a good day....
+> >
+> > Certainly shouldn't be swpout.  There isn't a count_swpin_vm_event().
+> >
+> > swap_readpage() only counts once for each page no matter how big it is.
+> > While swap_writepage() counts one for each PAGE_SIZE written.
+> >
+> > And we have THP_SWPOUT but not THP_SWPIN
+>
+> _If_ I understand the swap-in patch correctly (at least as invoked by
+> shmem), it won't attempt to swap in an entire THP.  Even if it swapped
+> out an order-9 page, it will bring in order-0 pages from swap, and then
+> rely on khugepaged to reassemble them.
 
-Reported bug: https://bugs.launchpad.net/ubuntu/+source/linux-signed-hwe-5.13/+bug/1971482
+Totally correct. The try_to_unmap() called by vmscan would split PMD
+to PTEs then install swap entries for each PTE but keep the huge page
+unsplit.
 
-Tested-by: Jonathan Cormier <jcormier@criticallink.com>
+BTW, there were patches adding THP swapin support, but they were never merged.
 
-Thanks
-
--- Sending again in plain text mode...
+>
+> Someone who actually understands the swap code should check that my
+> explanation here is correct.
+>
