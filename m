@@ -2,104 +2,90 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97557522B4F
-	for <lists+linux-nfs@lfdr.de>; Wed, 11 May 2022 06:40:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17B6A523051
+	for <lists+linux-nfs@lfdr.de>; Wed, 11 May 2022 12:09:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240626AbiEKEke (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 May 2022 00:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44356 "EHLO
+        id S229877AbiEKKJ3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 11 May 2022 06:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239460AbiEKEkP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 May 2022 00:40:15 -0400
-Received: from mail-oa1-x35.google.com (mail-oa1-x35.google.com [IPv6:2001:4860:4864:20::35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3944C14B65A
-        for <linux-nfs@vger.kernel.org>; Tue, 10 May 2022 21:39:24 -0700 (PDT)
-Received: by mail-oa1-x35.google.com with SMTP id 586e51a60fabf-edf9ddb312so1470252fac.8
-        for <linux-nfs@vger.kernel.org>; Tue, 10 May 2022 21:39:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
-        b=nrkBIDyCffFbQz5WNhQU88q5l+bx8m1CoLNL/nRcxBFZRgp3B2RwRJzpJi69hjmFPQ
-         Eotn36CVTQor8sTwq84btYhQQ+OsypTpYdHIfGkC/Ekjg8a9U0HkQq0T/gbcQg5/if4Y
-         i1yzcJYhTRMm8ny1NIiOYUNRazrfloxlCC/1XVxW2+TG0ItQpx2/G3cXjgMuOALgO1Rc
-         auxKHXwS3ghK6vFFIfR8essc70JXfRi2oIpi3YT/VLqISCMTaVWCOI/Xf0rWfpfTmlnw
-         XgqCFC8jOuHD5AjsEtox3h0b9tzcHlVM0fA1RrJyDFubK9aS707t1BYf/K43qSc4slo4
-         wrQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=s3Cdswvtyrq8qHVwuRB9YRoTAIoD9G/2//h6WeFZHzo=;
-        b=K/rcispj30/wDX12M7Ml0hSS/Glj+QF27Jn3HYhqjs6fNCkWO2L/gOVo3KsogsiAKD
-         gpCxHXQigAe2BSFilRRsbHgp6Aviqrvy/BQZxQSZJAzbrJxETNoQMwRZuK7Hu6A8Lip1
-         VB33NoAJfzsO3hKqcNDp28nicOZLsa1Fiei8wfwHe7I7n1jbbk97SZm+MOKVp+FbLwMo
-         ZyoadQ4kIjwol+/gSckGtNPsvNRLPBKdeiTwWTyiJPKqZP4JP7oQPu/iYB8qn3YU7aDu
-         OgKVE5qYOp9wAI19Z/ZFdD6jLSjEBacEw4puWIzSFzsXWMI5kNzyAEZR7z3RwEn4Wfbf
-         q6Lw==
-X-Gm-Message-State: AOAM532AEoxYycx5PMR0S5C7lpKnWkS06jMQ0NQvD7POClvcrzoz/Fj5
-        F9Ivlkdj2BKQDgi4M36JsAvpG3+Ka9EuOgKm9R5ubOe4TBQUiQ==
-X-Google-Smtp-Source: ABdhPJwbKHmbnZDflMHBZCcp2YbZAAZvFdPcM4owWeuPIkoxodmwIZJ+Xpgi08ylB1RFXLrw63SQRxJzumbwJKMTxhs=
-X-Received: by 2002:a17:90b:1007:b0:1dc:9862:68af with SMTP id
- gm7-20020a17090b100700b001dc986268afmr3261389pjb.205.1652243951499; Tue, 10
- May 2022 21:39:11 -0700 (PDT)
+        with ESMTP id S241014AbiEKKJX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 May 2022 06:09:23 -0400
+X-Greylist: delayed 359 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 11 May 2022 03:09:13 PDT
+Received: from email.studentenwerk.mhn.de (dresden.studentenwerk.mhn.de [141.84.225.229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B2C17A828;
+        Wed, 11 May 2022 03:09:12 -0700 (PDT)
+Received: from mailhub.studentenwerk.mhn.de (mailhub.studentenwerk.mhn.de [127.0.0.1])
+        by email.studentenwerk.mhn.de (Postfix) with ESMTPS id 4Kyr7z1hfMzRhSb;
+        Wed, 11 May 2022 12:03:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stwm.de; s=stwm-20170627;
+        t=1652263391;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=paHzsJSUUUK2l3doauEwUmwh24Gg8aqJ/AhHP760snk=;
+        b=Qp5JKFdwGYj8Gar70vooSb2H3bWE0kAS4UYpnePxXIykfKcymrLtiBPn/7Ux5zAKL6MUkD
+        ZQbx+twkue0/4TpKQl+UbCjWIAhbGkX6L7mJez7jwUQ3ySD+cHYwwnoXfiD8AE1LOuOXQF
+        Zd7zp0mc3Mly/9duv2GsTMfspRsupIUj6nD0hh1E8R6zFyKO7xT4YuwGVAu0nTbjIhkNX+
+        wIh40zOoBSCvn/PcE2sAQ6dtDR+0Ykq37clezF892Ak+iW4Wx0FJQbG6s7HPqFy0oFLvA3
+        KIZt83R8J7V2qEt62wEKmWbS5H+O557uF9Vpg08ivGGLStoz+ej7h+LWGyviYA==
 MIME-Version: 1.0
-Received: by 2002:a05:6a10:319:0:0:0:0 with HTTP; Tue, 10 May 2022 21:39:10
- -0700 (PDT)
-From:   Private Mail <privatemail1961@gmail.com>
-Date:   Tue, 10 May 2022 21:39:10 -0700
-Message-ID: <CANjAOAiiVcSrSv31FjThCVmeppS54UVvGVj3SRSvMfxOB+T8DA@mail.gmail.com>
-Subject: Have you had this? It is for your Benefit
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=4.3 required=5.0 tests=ADVANCE_FEE_4_NEW_MONEY,
-        BAYES_50,DEAR_BENEFICIARY,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,
-        DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLY,
-        LOTS_OF_MONEY,MONEY_FRAUD_5,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNDISC_MONEY autolearn=no autolearn_force=no
+Date:   Wed, 11 May 2022 12:03:13 +0200
+From:   Wolfgang Walter <linux@stwm.de>
+To:     stable@vger.kernel.org, Trond Myklebust <trondmy@gmail.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: 5.4.188 and later: massive performance regression with nfsd
+Message-ID: <f8d9b9112607df4807fba8948ac6e145@stwm.de>
+X-Sender: linux@stwm.de
+Organization: =?UTF-8?Q?Studentenwerk_M=C3=BCnchen?=
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_20,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
-X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Our Ref: BG/WA0151/2022
+Hi,
 
-Dear Beneficiary
+starting with 5.4.188 wie see a massive performance regression on our 
+nfs-server. It basically is serving requests very very slowly with cpu 
+utilization of 100% (with 5.4.187 and earlier it is 10%) so that it is 
+unusable as a fileserver.
 
-Subject: An Estate of US$15.8 Million
+The culprit are commits (or one of it):
 
-Blount and Griffin Genealogical Investigators specializes in probate
-research to locate missing heirs and beneficiaries to estates in the
-United Kingdom and Europe.
+c32f1041382a88b17da5736886da4a492353a1bb "nfsd: cleanup 
+nfsd_file_lru_dispose()"
+628adfa21815f74c04724abc85847f24b5dd1645 "nfsd: Containerise filecache 
+laundrette"
 
-We can also help you find wills, obtain copies of certificates, help
-you to administer an estate, as well as calculating how an estate,
-intestacy or trust should be distributed.
+(upstream 36ebbdb96b694dd9c6b25ad98f2bbd263d022b63 and 
+9542e6a643fc69d528dfb3303f145719c61d3050)
 
-You may be entitled to a large pay out for an inheritance in Europe
-worth US$15.8 million. We have discovered an estate belonging to the
-late Depositor has remained unclaimed since he died in 2011 and we
-have strong reasons to believe you are the closest living relative to
-the deceased we can find.
+If I revert them in v5.4.192 the kernel works as before and performance 
+is ok again.
 
-You may unknowingly be the heir of this person who died without
-leaving a will (intestate). We will conduct a probate research to
-prove your entitlement, and can submit a claim on your behalf all at
-no risk to yourselves.
+I did not try to revert them one by one as any disruption of our 
+nfs-server is a severe problem for us and I'm not sure if they are 
+related.
 
-Our service fee of 10% will be paid to us after you have received the estate.
+5.10 and 5.15 both always performed very badly on our nfs-server in a 
+similar way so we were stuck with 5.4.
 
-The estate transfer process should take just a matter of days as we
-have the mechanism and expertise to get this done very quickly. This
-message may come to you as a shock, however we hope to work with you
-to transfer the estate to you as quickly as possible.
+I now think this is because of 36ebbdb96b694dd9c6b25ad98f2bbd263d022b63 
+and/or 9542e6a643fc69d528dfb3303f145719c61d3050 though I didn't tried to 
+revert them in 5.15 yet.
 
-Feel free to email our senior case worker Mr. Malcolm Casey on email:
-malcolmcasey68@yahoo.com for further discussions.
 
-With warm regards,
-
-Mr. Blount W. Gort, CEO.
-Blount and Griffin Associates Inc
+Regards,
+-- 
+Wolfgang Walter
+Studentenwerk München
+Anstalt des öffentlichen Rechts
