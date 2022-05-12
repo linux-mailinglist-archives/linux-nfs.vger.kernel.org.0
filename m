@@ -2,53 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8E165250A0
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 May 2022 16:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD0005250DE
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 May 2022 17:07:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1355609AbiELOwI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 12 May 2022 10:52:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60014 "EHLO
+        id S1350919AbiELPHA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 May 2022 11:07:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1355610AbiELOwH (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 May 2022 10:52:07 -0400
+        with ESMTP id S1355478AbiELPG7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 May 2022 11:06:59 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 227C56161D
-        for <linux-nfs@vger.kernel.org>; Thu, 12 May 2022 07:52:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 584D81498FF
+        for <linux-nfs@vger.kernel.org>; Thu, 12 May 2022 08:06:57 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 4D3511F946;
-        Thu, 12 May 2022 14:52:04 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id F27D41F93E;
+        Thu, 12 May 2022 15:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1652367124; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        t=1652368016;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=RosZ0bIxWTN8r/s+Oiqc6m/fbmKUsUFW7mTc9XioBy4=;
-        b=mxu3g/t3OdFbgpf1zsLZcx6UboWc7jQa4M8LbmoGr72z8rM3PD1my7CJhwbfiTDxjhTrQq
-        BaYvWNvmjDr9lqwS60ZxBYo4YMPbYArPT9wSCCZfJ4ncEyVVTmt8K0XQY5NSggCdmYxBx2
-        xLLJ7RiP3Iy3EdIsUsYyWiNcPhJjwrE=
+        bh=UV07vqdHr/p+XyDA68jqRpyiPdC3eRHAtzp0YwJHrL4=;
+        b=B2L5XekLiin8V1vaUdiJPVNCbaeSHPDFq60iAPQRu8Ac3Knj2Ayr07I9FnkNpE5krGCZeQ
+        dKa9Ls4Qza55imetL9tmmGv2i8QYTKrmY+9FxyqYU2a7Cvx0aL5Frvc86B1TTozIzt6BCE
+        7sHCoHaL0pZhWN2hb9MC6WiK242ISuM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1652367124;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
+        s=susede2_ed25519; t=1652368016;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=RosZ0bIxWTN8r/s+Oiqc6m/fbmKUsUFW7mTc9XioBy4=;
-        b=2GYrNubYihxKjS7BN0pOr6H91QVwfcO0g/BjdHhcNwLdgqmCnRIxt2cW1gL1xPUM6MwpSj
-        6dK1cnNJlsuuOzAA==
+        bh=UV07vqdHr/p+XyDA68jqRpyiPdC3eRHAtzp0YwJHrL4=;
+        b=Z/4Lql1GkoySAwzjPdW+Xvrt4RWkgFWWNxocnolfAUGoKGUaczch8w39Jjq/NBYgelZNWz
+        3qZs8AsQiwYENqDg==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 34BBF13ABE;
-        Thu, 12 May 2022 14:52:04 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 643BE13ABE;
+        Thu, 12 May 2022 15:06:55 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id fmJjDBQffWL2XgAAMHmgww
-        (envelope-from <chrubis@suse.cz>); Thu, 12 May 2022 14:52:04 +0000
-Date:   Thu, 12 May 2022 16:54:18 +0200
-From:   Cyril Hrubis <chrubis@suse.cz>
-To:     Petr Vorel <pvorel@suse.cz>
+        id LAXgFo8ifWJwZQAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 12 May 2022 15:06:55 +0000
+Date:   Thu, 12 May 2022 17:06:53 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Cyril Hrubis <chrubis@suse.cz>
 Cc:     ltp@lists.linux.it, Steve Dickson <steved@redhat.com>,
         libtirpc-devel@lists.sourceforge.net, linux-nfs@vger.kernel.org,
         automated-testing@yoctoproject.org, Li Wang <liwang@redhat.com>,
@@ -63,14 +64,16 @@ Cc:     ltp@lists.linux.it, Steve Dickson <steved@redhat.com>,
         Veronika Kabatova <vkabatov@redhat.com>,
         Alexey Kodanev <aleksei.kodanev@bell-sw.com>
 Subject: Re: [RFC PATCH 0/3] Remove RPC rup and rusers tests
-Message-ID: <Yn0fmr2wFUcRdi1h@yuki>
+Message-ID: <Yn0ijb7vnNnW8BzB@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
 References: <20220428144308.32639-1-pvorel@suse.cz>
  <Yn0bxyweYWKgY8SB@yuki>
  <Yn0d2bVppx36Nwv5@pevik>
+ <Yn0fmr2wFUcRdi1h@yuki>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Yn0d2bVppx36Nwv5@pevik>
+In-Reply-To: <Yn0fmr2wFUcRdi1h@yuki>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
@@ -81,28 +84,32 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi!
-> > Looks like rstatd wasn't included in distributions to begin with, so
-> > there is no point to keep tests for it.
-> 
-> > https://bugs.gentoo.org/show_bug.cgi?id=115806
-> > https://access.redhat.com/solutions/34127
-> > https://www.ibm.com/support/pages/rstatd-not-installed-or-distributed-suse-linux-enterprise-server-10
-> 
-> Thanks for the links.
-> FYI Debian has had it for a long time in rstatd package:
-> https://packages.debian.org/search?suite=default&section=all&arch=any&searchon=contents&keywords=rstatd
-> https://packages.debian.org/bullseye/rstatd
-> https://tracker.debian.org/pkg/rstatd
-> 
-> but that IMHO no reason to keep these tests.
+> Hi!
+> > > Looks like rstatd wasn't included in distributions to begin with, so
+> > > there is no point to keep tests for it.
 
-For debian we have:
+> > > https://bugs.gentoo.org/show_bug.cgi?id=115806
+> > > https://access.redhat.com/solutions/34127
+> > > https://www.ibm.com/support/pages/rstatd-not-installed-or-distributed-suse-linux-enterprise-server-10
 
-https://qa.debian.org/popcon.php?package=rstatd
+> > Thanks for the links.
+> > FYI Debian has had it for a long time in rstatd package:
+> > https://packages.debian.org/search?suite=default&section=all&arch=any&searchon=contents&keywords=rstatd
+> > https://packages.debian.org/bullseye/rstatd
+> > https://tracker.debian.org/pkg/rstatd
 
-0.07% of debian installations installed rstatd.
+> > but that IMHO no reason to keep these tests.
 
--- 
-Cyril Hrubis
-chrubis@suse.cz
+> For debian we have:
+
+> https://qa.debian.org/popcon.php?package=rstatd
+
+> 0.07% of debian installations installed rstatd.
+
+Agree, both are dead, that's why I want to remove it.
+
+Because although it'd be easy to fix failing test, I have no reason to improve
+popcon statistics just to fix tests which nobody needs :).
+
+Kind regards,
+Petr
