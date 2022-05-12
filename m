@@ -2,90 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B13452423C
-	for <lists+linux-nfs@lfdr.de>; Thu, 12 May 2022 03:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CF8B524723
+	for <lists+linux-nfs@lfdr.de>; Thu, 12 May 2022 09:39:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234224AbiELB6j (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 11 May 2022 21:58:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45046 "EHLO
+        id S1350360AbiELHjm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 12 May 2022 03:39:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234018AbiELB6i (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 11 May 2022 21:58:38 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB702393DE;
-        Wed, 11 May 2022 18:58:36 -0700 (PDT)
-Received: from kwepemi500018.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4KzFJx1NKNz1JBmt;
-        Thu, 12 May 2022 09:57:21 +0800 (CST)
-Received: from kwepemm600001.china.huawei.com (7.193.23.3) by
- kwepemi500018.china.huawei.com (7.221.188.213) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 12 May 2022 09:58:34 +0800
-Received: from [10.174.176.245] (10.174.176.245) by
- kwepemm600001.china.huawei.com (7.193.23.3) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Thu, 12 May 2022 09:58:33 +0800
-Message-ID: <f7a73d6e-b5aa-269f-2251-4148bb35d655@huawei.com>
-Date:   Thu, 12 May 2022 09:58:32 +0800
+        with ESMTP id S1351099AbiELHjW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 12 May 2022 03:39:22 -0400
+X-Greylist: delayed 8792 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 12 May 2022 00:38:53 PDT
+Received: from mail.pekanbaru.go.id (mail.pekanbaru.go.id [103.131.245.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A8A55EDE9;
+        Thu, 12 May 2022 00:38:53 -0700 (PDT)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.pekanbaru.go.id (Postfix) with ESMTP id 1277598ADF7;
+        Thu, 12 May 2022 10:45:44 +0700 (WIB)
+Received: from mail.pekanbaru.go.id ([127.0.0.1])
+        by localhost (mail.pekanbaru.go.id [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id lndFhuil81oP; Thu, 12 May 2022 10:45:43 +0700 (WIB)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by mail.pekanbaru.go.id (Postfix) with ESMTP id 8040C98AE11;
+        Thu, 12 May 2022 10:45:42 +0700 (WIB)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.pekanbaru.go.id 8040C98AE11
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pekanbaru.go.id;
+        s=EA5C5C9E-4206-11EC-835B-1ADACEA726A0; t=1652327142;
+        bh=WgQd2bW8hb2KeIDNbeIeW1Bb4lp6m29iibMhAQT/egc=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=khLn2kTZr4DTHHcdbvY88rJYTCpll/75OwDVohnsRzWd35Z0X42GIWq8FO9Pjf7io
+         csdxqb/64k/evbGLk+ulTK7vlR7KbazLirWNpr6ch+6kijkupjjeSBsi/E3kzgWj2G
+         9xspqyS2vr6jmQ6x2CAZd01A49+rI6OUyEaQwz/o7aAcEXvbCO2Ax7IRB5Xjd0ZaKc
+         S1aCuJfcrtun43KnCTIIphnZIqUy2A1VAqlAM3kiJ2dg5zWYEwMwmoXQd5m6MWLSkv
+         /HQGlq67/bYUrQTOdP7RXfm3SoH8IVXG6XUHTjyU5nYkSiKZ75n1YTcjtLi++52Dwp
+         kTaJahAzjD6GA==
+X-Virus-Scanned: amavisd-new at mail.pekanbaru.go.id
+Received: from mail.pekanbaru.go.id ([127.0.0.1])
+        by localhost (mail.pekanbaru.go.id [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id SWRtHkmdBIYI; Thu, 12 May 2022 10:45:42 +0700 (WIB)
+Received: from [192.168.15.101] (unknown [41.79.219.176])
+        by mail.pekanbaru.go.id (Postfix) with ESMTPSA id A1E3D98AE01;
+        Thu, 12 May 2022 10:45:34 +0700 (WIB)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.7.0
-Subject: Re: [PATCH 0/3] Refix the socket leak in xs_setup_local()
-To:     Trond Myklebust <trondmy@hammerspace.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "kuba@kernel.org" <kuba@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20220511132232.4030-1-wanghai38@huawei.com>
- <2125358c4fbdcf2e9f84017a2f6b27830ffcb8f2.camel@hammerspace.com>
-From:   "wanghai (M)" <wanghai38@huawei.com>
-In-Reply-To: <2125358c4fbdcf2e9f84017a2f6b27830ffcb8f2.camel@hammerspace.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.176.245]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemm600001.china.huawei.com (7.193.23.3)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: Awaiting your response 
+To:     Recipients <waterproject@pekanbaru.go.id>
+From:   waterproject@pekanbaru.go.id
+Date:   Thu, 12 May 2022 04:45:26 +0100
+Reply-To: test@hostnextdoor.com
+Message-Id: <20220512034534.A1E3D98AE01@mail.pekanbaru.go.id>
+X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_BL_SPAMCOP_NET,
+        RCVD_IN_SBL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi =
 
-在 2022/5/12 0:14, Trond Myklebust 写道:
-> On Wed, 2022-05-11 at 21:22 +0800, Wang Hai wrote:
->> Patch1 and patch2 roll back the wrong solution to fix socket leaks.
->>
->> Patch3 adds safe teardown mechanism to re-fix socket leaks.
->>
->> Wang Hai (3):
->>    Revert "SUNRPC: Ensure gss-proxy connects on setup"
->>    Revert "Revert "SUNRPC: attempt AF_LOCAL connect on setup""
->>    SUNRPC: Fix local socket leak in xs_setup_local()
->>
->>   include/linux/sunrpc/clnt.h          |  1 -
->>   net/sunrpc/auth_gss/gss_rpc_upcall.c |  2 +-
->>   net/sunrpc/clnt.c                    |  3 ---
->>   net/sunrpc/xprtsock.c                | 19 ++++++++++++++++++-
->>   4 files changed, 19 insertions(+), 6 deletions(-)
->>
-> Thanks, but there is already a fix for this queued up in the linux-next
-> branch.
-Thanks, sorry to bother you, I found it.
 
-I only subscribed to the linux-kernel@vger.kernel.org mailing list,
-not the linux-nfs@vger.kernel.org mailing list separately. So I
-didn't notice it was fixed.
+Did you get my previous email? I have attempted over 3 times to open up com=
+munication with you. Please acknowledge if you receive this email. =
 
--- 
-Wang Hai
 
+Regards
+Morten Friis
