@@ -2,47 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 597915271BB
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:14:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1780F527204
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:33:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232997AbiENOOb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 10:14:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50996 "EHLO
+        id S232772AbiENOdN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 10:33:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233002AbiENOOZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:14:25 -0400
+        with ESMTP id S232498AbiENOdM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:33:12 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1CC61581D
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:14:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E31331C905
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:33:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6E24760F16
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:14:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89371C340EE;
-        Sat, 14 May 2022 14:14:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F29260F60
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:33:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99B42C340EE;
+        Sat, 14 May 2022 14:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652537663;
-        bh=vYfJPBYCAjqilbHHrueSFEhX47JBAgIfuXTUg7hMCmk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ky0A1cbsxwvCgAWVa4AHUFz2iJY1s64HwzB3EMuGQr5zpFXZ4MbAdcCwcv1Emlce9
-         ZE5SH7Q93qHE5xo1mcpp4dqXxO2rfo9Sl/FSo7/RWcZc0h7DINJyj0gkFx1MfjuJHZ
-         Fzb05TyTyt0AUzrcEPElJK2DCxj28EhzxpA+c8KiaM00uEF5cxO0oqrOzUKMjG/oPx
-         Lj8PIzKh22Pku2TT161W/x2s4rkgF8SKl7T4+BQH3uy8qL9VGgx4OapRILVWyJqaXB
-         3JtZCQd/P+M2ZHm7/fAUHlkknP9vbL1xKAcXO47vvYoalD+4V/7yIdgBz0u733IUJD
-         yaP2SgHqkKp1Q==
+        s=k20201202; t=1652538790;
+        bh=BftTyQzgW6WIZpyT8Bhqa3nVxo+4m15Y2HngVLtj1Kk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rCZpklD91KCsMJZKuIyocnzfbJ4pvUEyMUi2s+rn1EufOU4BGyFgFYewIUxFcyoyo
+         Xhglg/IrqPd5OZviILxlMvi9BDTbMCCDdx6BLhHbgHILxV+Ka8iTpkkX6B2RxJ64fY
+         3N7ga++qs7Qelmycj1Q/sDGbAhhDU7bYdpm/x/JhqnycrZuknIPgStCJqfNBnoYmGC
+         SIjWleCgarYmQt8BP44m+XMWw6ahTdoFMGR8aZ6hqhpPCZtTIzknoggobFgdjknesa
+         l2Dxy99A8ys2ROCe7OzIMXU2YpvGOmlA5TPsD1IGr7FiRwbFA47XbV4XVKQggtw4tz
+         vuYniRQhDN9Hw==
 From:   trondmy@kernel.org
 To:     Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 5/5] NFSv4: Don't hold the layoutget locks across multiple RPC calls
-Date:   Sat, 14 May 2022 10:08:14 -0400
-Message-Id: <20220514140814.3655-5-trondmy@kernel.org>
+Subject: [PATCH v3 0/5] Ensure mapping errors are reported only once
+Date:   Sat, 14 May 2022 10:26:59 -0400
+Message-Id: <20220514142704.4149-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220514140814.3655-4-trondmy@kernel.org>
-References: <20220514140814.3655-1-trondmy@kernel.org>
- <20220514140814.3655-2-trondmy@kernel.org>
- <20220514140814.3655-3-trondmy@kernel.org>
- <20220514140814.3655-4-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -57,31 +52,26 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-When doing layoutget as part of the open() compound, we have to be
-careful to release the layout locks before we can call any further RPC
-calls, such as setattr(). The reason is that those calls could trigger
-a recall, which could deadlock.
+The expectation since Linux 4.13 has been that EIO errors are always
+reported in fsync(), whether or not they were detected and reported
+earlier.
+On the other hand, ENOSPC errors are reported as soon as detected, and
+should only be reported once.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfs4proc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+--
+v3: minor correctness fixes
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index a79f66432bd3..bf3ba541b9fb 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -3098,6 +3098,10 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 	}
- 
- out:
-+	if (opendata->lgp) {
-+		nfs4_lgopen_release(opendata->lgp);
-+		opendata->lgp = NULL;
-+	}
- 	if (!opendata->cancelled)
- 		nfs4_sequence_free_slot(&opendata->o_res.seq_res);
- 	return ret;
+Trond Myklebust (5):
+  NFS: Do not report EINTR/ERESTARTSYS as mapping errors
+  NFS: fsync() should report filesystem errors over EINTR/ERESTARTSYS
+  NFS: Don't report ENOSPC write errors twice
+  NFS: Do not report flush errors in nfs_write_end()
+  NFS: Don't report errors from nfs_pageio_complete() more than once
+
+ fs/nfs/file.c  | 50 +++++++++++++++++++++-----------------------------
+ fs/nfs/write.c | 11 ++---------
+ 2 files changed, 23 insertions(+), 38 deletions(-)
+
 -- 
 2.36.1
 
