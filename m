@@ -2,93 +2,254 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61041526EDE
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 09:14:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BA535270C8
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 13:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231295AbiENEoY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 00:44:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46966 "EHLO
+        id S231274AbiENLFW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 07:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbiENEoX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 00:44:23 -0400
-Received: from zeniv-ca.linux.org.uk (zeniv-ca.linux.org.uk [IPv6:2607:5300:60:148a::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABA9723BC0;
-        Fri, 13 May 2022 21:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AmIj0gSjkDYxzy2jeo+/OtEoFwBF/q9BWriaitKkkWg=; b=wv5j/9DDwgQTA0y9hUVOtUjX6Z
-        dR+Vo9YSE+g8k6ZICXv7Fek6sU8MhthF1DC2nkxI6mnef9p660V9uS+bMLACvvhzRP/wcrACYZ5Nc
-        KZu5Ew1/CEuZe/oPUClUS7OBHoG13cn5EozWPinj+M7PixODElCRGGNPrWr74eCmRd6RdWarrWEpG
-        pVYiL4sVR4wwp9cDSZmsbflsrL4SB++wsu1SOb81yPoU1bD1xkJOMlX03qDRPQAi2HzIE59uzJiQa
-        Qe1PMRU4C8TYuM+ZjKKlAJdjDRBaIXFBoTJ7HYmI3TL6SaRTkzmKzdmWFYjJ8toGllbHdbGbn8246
-        jCYJ/4jA==;
-Received: from viro by zeniv-ca.linux.org.uk with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1npjdc-00Enxi-2A; Sat, 14 May 2022 04:44:20 +0000
-Date:   Sat, 14 May 2022 04:44:20 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH 8/8] NFSD: Instantiate a struct file when creating a
- regular NFSv4 file
-Message-ID: <Yn8zpAbwe9yFq8/i@zeniv-ca.linux.org.uk>
-References: <165247056822.6691.9087206893184705325.stgit@bazille.1015granger.net>
- <165247081391.6691.14842389384935416109.stgit@bazille.1015granger.net>
- <Yn7ZooZbccSrAru0@zeniv-ca.linux.org.uk>
+        with ESMTP id S230072AbiENLFT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 07:05:19 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 965E13E5D7
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 04:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652526317;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=hUC4ewld65jLFhYy4jFfC3AUlEvkbO0uN/8vLWH8f+U=;
+        b=P1FAsJBhaoNX5sg+9OUygMiLG0skt5UzySsBujIXWgybpZrD8ULlzSkfpD31aFM5w7CZgh
+        mEauqIfTxYLncgnZAfSdVkbvkc5gHX3RaXiBRbw7NbJa0x++15TgNeJj+8JuexKSMgp2w9
+        ChLN8WvCU0n0WKs/sbqdC4ELbkpgIMk=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-373-YsIYcKWaPNCA9gB78ABU6w-1; Sat, 14 May 2022 07:05:13 -0400
+X-MC-Unique: YsIYcKWaPNCA9gB78ABU6w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 913993C025B3;
+        Sat, 14 May 2022 11:05:13 +0000 (UTC)
+Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C24440D2820;
+        Sat, 14 May 2022 11:05:13 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 28DBE10C30F0; Sat, 14 May 2022 07:05:13 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org, smayhew@redhat.com
+Subject: [PATCH v2] NFSv4: Fix free of uninitialized nfs4_label on referral lookup.
+Date:   Sat, 14 May 2022 07:05:13 -0400
+Message-Id: <958472076fce5b85a96c90631cb45be20247c90b.1652526062.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yn7ZooZbccSrAru0@zeniv-ca.linux.org.uk>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, May 13, 2022 at 10:20:18PM +0000, Al Viro wrote:
+Changed on v2:
+	- Fix bone-headed allocation error handling.
+-- >8 --
 
-> Yuck.  dget_parent() is not entirely without valid uses, but this isn't
-> one.  It's for the cases when parent is *not* stable and you need to grab
-> what had been the parent at some point (even though it might not be the
-> parent anymore by the time dget_parent() returns).  Here you seriously
-> depend upon it remaining the parent of that sucker all the way through -
-> otherwise vfs_create() would break.  And you really, really depend upon
-> its survival - the caller is holding it locked, so they would better
-> have it pinned.
+Send along the already-allocated fattr along with nfs4_fs_locations, and
+drop the memcpy of fattr.  We end up growing two more allocations, but this
+fixes up a crash as:
 
-As an aside, the reason why vfs_create() takes inode of parent directory
-and dentry of child is basically that it's easier to describe the locking
-rules that way: vfs_create(..., dir, child, ...) must be called with
-1) dir being held by caller (exclusive) and
-2) child->d_parent->d_inode == dir, which is stabilized by (1)
+PID: 790    TASK: ffff88811b43c000  CPU: 0   COMMAND: "ls"
+ #0 [ffffc90000857920] panic at ffffffff81b9bfde
+ #1 [ffffc900008579c0] do_trap at ffffffff81023a9b
+ #2 [ffffc90000857a10] do_error_trap at ffffffff81023b78
+ #3 [ffffc90000857a58] exc_stack_segment at ffffffff81be1f45
+ #4 [ffffc90000857a80] asm_exc_stack_segment at ffffffff81c009de
+ #5 [ffffc90000857b08] nfs_lookup at ffffffffa0302322 [nfs]
+ #6 [ffffc90000857b70] __lookup_slow at ffffffff813a4a5f
+ #7 [ffffc90000857c60] walk_component at ffffffff813a86c4
+ #8 [ffffc90000857cb8] path_lookupat at ffffffff813a9553
+ #9 [ffffc90000857cf0] filename_lookup at ffffffff813ab86b
 
-inode of parent directory is a redundant argument - it can be easily
-derived from the child dentry, for all that family.  The only real
-objection against dropping it from vfs_create() and friends is that
-having rules described as "inode of parent dentry of child must be held
-exclusive by the caller" invites breakage along the lines of
+Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
+Fixes: 9558a007dbc3 ("NFS: Remove the label from the nfs4_lookup_res struct")
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+---
+ fs/nfs/nfs4namespace.c  |  9 +++++++--
+ fs/nfs/nfs4proc.c       | 15 +++++++--------
+ fs/nfs/nfs4state.c      |  9 ++++++++-
+ fs/nfs/nfs4xdr.c        |  4 ++--
+ include/linux/nfs_xdr.h |  2 +-
+ 5 files changed, 25 insertions(+), 14 deletions(-)
 
-	parent = dget_parent(child);
-	inode_lock(d_inode(parent));
-	vfs_create(..., child, ...);	// WRONG
-	inode_unlock(d_inode(parent));
-	dput(parent);
+diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
+index 3680c8da510c..f2dbf904c598 100644
+--- a/fs/nfs/nfs4namespace.c
++++ b/fs/nfs/nfs4namespace.c
+@@ -417,6 +417,9 @@ static int nfs_do_refmount(struct fs_context *fc, struct rpc_clnt *client)
+ 	fs_locations = kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNEL);
+ 	if (!fs_locations)
+ 		goto out_free;
++	fs_locations->fattr = nfs_alloc_fattr();
++	if (!fs_locations->fattr)
++		goto out_free_2;
+ 
+ 	/* Get locations */
+ 	dentry = ctx->clone_data.dentry;
+@@ -427,14 +430,16 @@ static int nfs_do_refmount(struct fs_context *fc, struct rpc_clnt *client)
+ 	err = nfs4_proc_fs_locations(client, d_inode(parent), &dentry->d_name, fs_locations, page);
+ 	dput(parent);
+ 	if (err != 0)
+-		goto out_free_2;
++		goto out_free_3;
+ 
+ 	err = -ENOENT;
+ 	if (fs_locations->nlocations <= 0 ||
+ 	    fs_locations->fs_path.ncomponents <= 0)
+-		goto out_free_2;
++		goto out_free_3;
+ 
+ 	err = nfs_follow_referral(fc, fs_locations);
++out_free_3:
++	kfree(fs_locations->fattr);
+ out_free_2:
+ 	kfree(fs_locations);
+ out_free:
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index a79f66432bd3..0600f85b6016 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4243,6 +4243,8 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
+ 	if (locations == NULL)
+ 		goto out;
+ 
++	locations->fattr = fattr;
++
+ 	status = nfs4_proc_fs_locations(client, dir, name, locations, page);
+ 	if (status != 0)
+ 		goto out;
+@@ -4252,17 +4254,14 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
+ 	 * referral.  Cause us to drop into the exception handler, which
+ 	 * will kick off migration recovery.
+ 	 */
+-	if (nfs_fsid_equal(&NFS_SERVER(dir)->fsid, &locations->fattr.fsid)) {
++	if (nfs_fsid_equal(&NFS_SERVER(dir)->fsid, &fattr->fsid)) {
+ 		dprintk("%s: server did not return a different fsid for"
+ 			" a referral at %s\n", __func__, name->name);
+ 		status = -NFS4ERR_MOVED;
+ 		goto out;
+ 	}
+ 	/* Fixup attributes for the nfs_lookup() call to nfs_fhget() */
+-	nfs_fixup_referral_attributes(&locations->fattr);
+-
+-	/* replace the lookup nfs_fattr with the locations nfs_fattr */
+-	memcpy(fattr, &locations->fattr, sizeof(struct nfs_fattr));
++	nfs_fixup_referral_attributes(fattr);
+ 	memset(fhandle, 0, sizeof(struct nfs_fh));
+ out:
+ 	if (page)
+@@ -7902,7 +7901,7 @@ static int _nfs4_proc_fs_locations(struct rpc_clnt *client, struct inode *dir,
+ 	else
+ 		bitmask[1] &= ~FATTR4_WORD1_MOUNTED_ON_FILEID;
+ 
+-	nfs_fattr_init(&fs_locations->fattr);
++	nfs_fattr_init(fs_locations->fattr);
+ 	fs_locations->server = server;
+ 	fs_locations->nlocations = 0;
+ 	status = nfs4_call_sync(client, server, &msg, &args.seq_args, &res.seq_res, 0);
+@@ -7967,7 +7966,7 @@ static int _nfs40_proc_get_locations(struct nfs_server *server,
+ 	unsigned long now = jiffies;
+ 	int status;
+ 
+-	nfs_fattr_init(&locations->fattr);
++	nfs_fattr_init(locations->fattr);
+ 	locations->server = server;
+ 	locations->nlocations = 0;
+ 
+@@ -8032,7 +8031,7 @@ static int _nfs41_proc_get_locations(struct nfs_server *server,
+ 	};
+ 	int status;
+ 
+-	nfs_fattr_init(&locations->fattr);
++	nfs_fattr_init(locations->fattr);
+ 	locations->server = server;
+ 	locations->nlocations = 0;
+ 
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 9e1c987c81e7..9656d40bb488 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -2106,6 +2106,11 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+ 		dprintk("<-- %s: no memory\n", __func__);
+ 		goto out;
+ 	}
++	locations->fattr = nfs_alloc_fattr();
++	if (locations->fattr == NULL) {
++		dprintk("<-- %s: no memory\n", __func__);
++		goto out;
++	}
+ 
+ 	inode = d_inode(server->super->s_root);
+ 	result = nfs4_proc_get_locations(server, NFS_FH(inode), locations,
+@@ -2120,7 +2125,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+ 	if (!locations->nlocations)
+ 		goto out;
+ 
+-	if (!(locations->fattr.valid & NFS_ATTR_FATTR_V4_LOCATIONS)) {
++	if (!(locations->fattr->valid & NFS_ATTR_FATTR_V4_LOCATIONS)) {
+ 		dprintk("<-- %s: No fs_locations data, migration skipped\n",
+ 			__func__);
+ 		goto out;
+@@ -2145,6 +2150,8 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
+ out:
+ 	if (page != NULL)
+ 		__free_page(page);
++	if (locations != NULL)
++		kfree(locations->fattr);
+ 	kfree(locations);
+ 	if (result) {
+ 		pr_err("NFS: migration recovery failed (server %s)\n",
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index 86a5f6516928..5d822594336d 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -7051,7 +7051,7 @@ static int nfs4_xdr_dec_fs_locations(struct rpc_rqst *req,
+ 	if (res->migration) {
+ 		xdr_enter_page(xdr, PAGE_SIZE);
+ 		status = decode_getfattr_generic(xdr,
+-					&res->fs_locations->fattr,
++					res->fs_locations->fattr,
+ 					 NULL, res->fs_locations,
+ 					 res->fs_locations->server);
+ 		if (status)
+@@ -7064,7 +7064,7 @@ static int nfs4_xdr_dec_fs_locations(struct rpc_rqst *req,
+ 			goto out;
+ 		xdr_enter_page(xdr, PAGE_SIZE);
+ 		status = decode_getfattr_generic(xdr,
+-					&res->fs_locations->fattr,
++					res->fs_locations->fattr,
+ 					 NULL, res->fs_locations,
+ 					 res->fs_locations->server);
+ 	}
+diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
+index 2863e5a69c6a..20e97329fe46 100644
+--- a/include/linux/nfs_xdr.h
++++ b/include/linux/nfs_xdr.h
+@@ -1212,7 +1212,7 @@ struct nfs4_fs_location {
+ 
+ #define NFS4_FS_LOCATIONS_MAXENTRIES 10
+ struct nfs4_fs_locations {
+-	struct nfs_fattr fattr;
++	struct nfs_fattr *fattr;
+ 	const struct nfs_server *server;
+ 	struct nfs4_pathname fs_path;
+ 	int nlocations;
+-- 
+2.31.1
 
-which *seems* to match the rules, but actually breaks them badly -
-'parent' in the snippet above might be no longer related to child by the
-time dget_parent() returns it, so we end up calling vfs_create() with
-wrong directory locked, child->d_parent being completely unstable, etc.
-Note that the difference from your code (which is correct, if redundant) is
-rather subtle.
-
-If you have any suggestions how to describe these locking rules without
-an explicit inode-of-parent argument, I would really like to hear those.
-The best I'd been able to come up with had been "there's an inode
-locked exclusive by the caller that had been observed to be equal to
-child->d_parent->d_inode at some point after it had been locked", which
-is both cumbersome and confusing...
