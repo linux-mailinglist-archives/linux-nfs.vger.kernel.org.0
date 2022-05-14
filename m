@@ -2,44 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B1E68527205
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:33:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08A5D527206
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233345AbiENOdR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S233335AbiENOdR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Sat, 14 May 2022 10:33:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53122 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233335AbiENOdQ (ORCPT
+        with ESMTP id S233333AbiENOdQ (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:33:16 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7FC1C134
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1D861C91A
         for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:33:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CAA49B808BC
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:33:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31860C34115;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5D971B808D4
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:33:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC8E0C340EE;
         Sat, 14 May 2022 14:33:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652538791;
-        bh=sWSQWQV6+C6Wk5/V/IJldIJ/fI3yA92GS7TVuJK9QJo=;
+        s=k20201202; t=1652538792;
+        bh=TnkYOxtcX0bijf8kIP+vmw0tFtDlR1x+1BxPHrsP0j8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wclx6NRkeywopOtiNTWr1ydnkjKoh/r5ZVZEd5DucY8bvpwHjln7JTgYSWGISPEO1
-         HM0nJv0K6dJSTMwj6ELl7I7FVwgmkpa7NX0V9wmuisegFTgF5TfTXlv9R6BPpkzWdq
-         iQISpJPmATFiG175+4uAqK91dcPO9kyDO25JVsiNPSGLWYE16LItYP1jrPyI9yyZ6X
-         Cq2BcV4/xW3LEG5ITEBmwv8PAYyLebmMdxZu6Qsj0Uqi3nFfcwkeh04qObtj6V0gT8
-         Ll3oIF7yBOU5l4oWS3lLgB0IO8hFVBtnIzTHZdqLfq/1QYhN38HYyTg5U5IrzGCBcH
-         hUGlXnc8x8xRw==
+        b=jBkA6nPhVjwesla2NEbqgmzmcgK0jIn445dnxVDyHpBSUWZAE7wcNutKWKp0Xg7qr
+         3J0D6Fd4R9Cb5noCoTLqtiu8Hr7VOd5tkhDb9ivAVL/Z9YF+dmMZsoTZtdFEyx0QZB
+         wbr56vuthWblLak3px2Au2bmPZ7HVtdSPcF2At9iEkMiIYkupIzj1qKjSUoUw5oSLm
+         lb7EyAybxIx73qrI2DOYIwyKTCSIl7bkqa2MuMvoZnbWH/msKIhZRCIrm9gwiP3Vdk
+         JuDjdwy4276vxi0hlR95ksUyHNaIj5LmrkF0lqs6zmX/6+CiA/l0I+4MbSTNriskwA
+         dcgH6y/TfzQcw==
 From:   trondmy@kernel.org
 To:     Anna Schumaker <anna.schumaker@netapp.com>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 1/5] NFS: Do not report EINTR/ERESTARTSYS as mapping errors
-Date:   Sat, 14 May 2022 10:27:00 -0400
-Message-Id: <20220514142704.4149-2-trondmy@kernel.org>
+Subject: [PATCH v3 2/5] NFS: fsync() should report filesystem errors over EINTR/ERESTARTSYS
+Date:   Sat, 14 May 2022 10:27:01 -0400
+Message-Id: <20220514142704.4149-3-trondmy@kernel.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220514142704.4149-1-trondmy@kernel.org>
+In-Reply-To: <20220514142704.4149-2-trondmy@kernel.org>
 References: <20220514142704.4149-1-trondmy@kernel.org>
+ <20220514142704.4149-2-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -54,28 +55,41 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-If the attempt to flush data was interrupted due to a local signal, then
-just requeue the writes back for I/O.
+If the commit to disk is interrupted, we should still first check for
+filesystem errors so that we can report them in preference to the error
+due to the signal.
 
-Fixes: 6fbda89b257f ("NFS: Replace custom error reporting mechanism with generic one")
+Fixes: 2197e9b06c22 ("NFS: Fix up fsync() when the server rebooted")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/write.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/file.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index a8eb348947a6..ce4cc4222422 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1441,7 +1441,7 @@ static void nfs_async_write_error(struct list_head *head, int error)
- 	while (!list_empty(head)) {
- 		req = nfs_list_entry(head->next);
- 		nfs_list_remove_request(req);
--		if (nfs_error_is_fatal(error))
-+		if (nfs_error_is_fatal_on_server(error))
- 			nfs_write_error(req, error);
- 		else
- 			nfs_redirty_request(req);
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 150b7fa8f0a7..7c380e555224 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -204,15 +204,16 @@ static int
+ nfs_file_fsync_commit(struct file *file, int datasync)
+ {
+ 	struct inode *inode = file_inode(file);
+-	int ret;
++	int ret, ret2;
+ 
+ 	dprintk("NFS: fsync file(%pD2) datasync %d\n", file, datasync);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSFSYNC);
+ 	ret = nfs_commit_inode(inode, FLUSH_SYNC);
+-	if (ret < 0)
+-		return ret;
+-	return file_check_and_advance_wb_err(file);
++	ret2 = file_check_and_advance_wb_err(file);
++	if (ret2 < 0)
++		return ret2;
++	return ret;
+ }
+ 
+ int
 -- 
 2.36.1
 
