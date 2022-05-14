@@ -2,46 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19651527221
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:43:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A969B527236
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233424AbiENOny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 10:43:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36790 "EHLO
+        id S233484AbiENOvP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 10:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233427AbiENOnu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:43:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C5D186DE
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:43:49 -0700 (PDT)
+        with ESMTP id S233698AbiENOvD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:51:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B685AA451
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:50:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F59F60F69
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:43:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4363CC34118;
-        Sat, 14 May 2022 14:43:48 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 554C360F47
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:50:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8C7C34116;
+        Sat, 14 May 2022 14:50:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652539428;
-        bh=rpvHvY20I59IgEIIuFFTC9dY1GCZwR+tFi2FWbpaPcQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NbKRhyF5JkFf35UP6zb7WHLG4pMviD+MTd5igFy2IzVAC44RFZmvGkk4k0Ftp3pz8
-         kM+IVNvTFzieQLK18JiqeX4o5thxucpb7HMjz6cfxTqRfRy10PKo5aYrGJcDnJBsAy
-         DD5QP0yJlkSUkiKgPFZRLBea0TQi7KRaPMbRchkrDMxPahAwq1QXSO/372sP2YB2qw
-         JwWoHeTeo70V1wK2xTAEZvWr7atNaob/tFNLmDE2d0inJjxAINu4Edx43HIjUwUZhG
-         FCjDbDyCqA3L0ze4fE+e038B2faqwc8KvgwKOzAzae24K1GqYKrgdCcGx96q70s1Ux
-         KhxRUFIsYeIMg==
+        s=k20201202; t=1652539842;
+        bh=AxffH804IbJxdgJRI2Z+Xm+gT/miBEcDgrf32xjeZAo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=q/A+/ipdisrljB11tczc1wH8oa3mLOn3g/DSOp8Tn7IryXb/PcfhlPuNDTQis/pwX
+         0zC0UweVHk2PyMzRDbSu74nKswsJCRxeHN1aSQRqx1W4jXa0hzNXECBe7Kx7XK2mBD
+         jeXxdIeVDj0GPY+2ZgL+tqQJuq5umb5uOqy3hzMOWYxGdc3/FinenuHe6T8RAS19im
+         lKzdLgdFujS0anb9nF7cErTRx7LgdMMkFXZw3ioQFSxtkCHm+LY8wPpRFMt1UDrnWY
+         ljGPjTYCWKm3j05VJIlXLIuGO/K5GC1cGsh357wsg1niibqohekPG8SLMm52p6t4cn
+         FR+khS4EMgQjg==
 From:   trondmy@kernel.org
-To:     Anna Schumaker <anna.schumaker@netapp.com>
+To:     Steve Dickson <SteveD@redhat.com>,
+        "J.Bruce Fields" <bfields@fieldses.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSv4.1: Enable access to the NFSv4.1 'dacl' and 'sacl' attributes
-Date:   Sat, 14 May 2022 10:37:00 -0400
-Message-Id: <20220514143700.4263-4-trondmy@kernel.org>
+Subject: [PATCH 0/6] Allow nfs4-acl-tools to access 'dacl' and 'sacl'
+Date:   Sat, 14 May 2022 10:44:30 -0400
+Message-Id: <20220514144436.4298-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220514143700.4263-3-trondmy@kernel.org>
-References: <20220514143700.4263-1-trondmy@kernel.org>
- <20220514143700.4263-2-trondmy@kernel.org>
- <20220514143700.4263-3-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -56,113 +53,40 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Enable access to the NFSv4 acl via the NFSv4.1 'dacl' and 'sacl'
-attributes.
-This allows the server to authenticate the DACL and the SACL operations
-separately, since reading and/or editing the SACL is usually considered
-to be a privileged operation.
-It also allows the propagation of automatic inheritance information that
-was not supported by the NFSv4.0 'acl' attribute.
+The following patch set matches the kernel patches to allow access to
+the NFSv4.1 'dacl' and 'sacl' attributes. The current patches are very
+basic, adding support for encoding/decoding the new attributes only when
+the user specifies the '--dacl' or '--sacl' flags on the command line.
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfs4proc.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+Trond Myklebust (6):
+  libnfs4acl: Add helpers to set the dacl and sacl
+  libnfs4acl: Add support for the NFS4.1 ACE_INHERITED_ACE flag
+  The NFSv41 DACL and SACL prepend an extra field to the acl
+  nfs4_getacl: Add support for the --dacl and --sacl options
+  nfs4_setacl: Add support for the --dacl and --sacl options
+  Edit manpages to document the new --dacl, --sacl and inheritance
+    features
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index b2ddbaf32a95..0dfdbb406f96 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -7698,6 +7698,55 @@ static bool nfs4_xattr_list_nfs4_acl(struct dentry *dentry)
- 	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_ACL);
- }
- 
-+#if defined(CONFIG_NFS_V4_1)
-+#define XATTR_NAME_NFSV4_DACL "system.nfs4_dacl"
-+
-+static int nfs4_xattr_set_nfs4_dacl(const struct xattr_handler *handler,
-+				    struct user_namespace *mnt_userns,
-+				    struct dentry *unused, struct inode *inode,
-+				    const char *key, const void *buf,
-+				    size_t buflen, int flags)
-+{
-+	return nfs4_proc_set_acl(inode, buf, buflen, NFS4ACL_DACL);
-+}
-+
-+static int nfs4_xattr_get_nfs4_dacl(const struct xattr_handler *handler,
-+				    struct dentry *unused, struct inode *inode,
-+				    const char *key, void *buf, size_t buflen)
-+{
-+	return nfs4_proc_get_acl(inode, buf, buflen, NFS4ACL_DACL);
-+}
-+
-+static bool nfs4_xattr_list_nfs4_dacl(struct dentry *dentry)
-+{
-+	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_DACL);
-+}
-+
-+#define XATTR_NAME_NFSV4_SACL "system.nfs4_sacl"
-+
-+static int nfs4_xattr_set_nfs4_sacl(const struct xattr_handler *handler,
-+				    struct user_namespace *mnt_userns,
-+				    struct dentry *unused, struct inode *inode,
-+				    const char *key, const void *buf,
-+				    size_t buflen, int flags)
-+{
-+	return nfs4_proc_set_acl(inode, buf, buflen, NFS4ACL_SACL);
-+}
-+
-+static int nfs4_xattr_get_nfs4_sacl(const struct xattr_handler *handler,
-+				    struct dentry *unused, struct inode *inode,
-+				    const char *key, void *buf, size_t buflen)
-+{
-+	return nfs4_proc_get_acl(inode, buf, buflen, NFS4ACL_SACL);
-+}
-+
-+static bool nfs4_xattr_list_nfs4_sacl(struct dentry *dentry)
-+{
-+	return nfs4_server_supports_acls(NFS_SB(dentry->d_sb), NFS4ACL_SACL);
-+}
-+
-+#endif
-+
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- 
- static int nfs4_xattr_set_nfs4_label(const struct xattr_handler *handler,
-@@ -10615,6 +10664,22 @@ static const struct xattr_handler nfs4_xattr_nfs4_acl_handler = {
- 	.set	= nfs4_xattr_set_nfs4_acl,
- };
- 
-+#if defined(CONFIG_NFS_V4_1)
-+static const struct xattr_handler nfs4_xattr_nfs4_dacl_handler = {
-+	.name	= XATTR_NAME_NFSV4_DACL,
-+	.list	= nfs4_xattr_list_nfs4_dacl,
-+	.get	= nfs4_xattr_get_nfs4_dacl,
-+	.set	= nfs4_xattr_set_nfs4_dacl,
-+};
-+
-+static const struct xattr_handler nfs4_xattr_nfs4_sacl_handler = {
-+	.name	= XATTR_NAME_NFSV4_SACL,
-+	.list	= nfs4_xattr_list_nfs4_sacl,
-+	.get	= nfs4_xattr_get_nfs4_sacl,
-+	.set	= nfs4_xattr_set_nfs4_sacl,
-+};
-+#endif
-+
- #ifdef CONFIG_NFS_V4_2
- static const struct xattr_handler nfs4_xattr_nfs4_user_handler = {
- 	.prefix	= XATTR_USER_PREFIX,
-@@ -10625,6 +10690,10 @@ static const struct xattr_handler nfs4_xattr_nfs4_user_handler = {
- 
- const struct xattr_handler *nfs4_xattr_handlers[] = {
- 	&nfs4_xattr_nfs4_acl_handler,
-+#if defined(CONFIG_NFS_V4_1)
-+	&nfs4_xattr_nfs4_dacl_handler,
-+	&nfs4_xattr_nfs4_sacl_handler,
-+#endif
- #ifdef CONFIG_NFS_V4_SECURITY_LABEL
- 	&nfs4_xattr_nfs4_label_handler,
- #endif
+ include/libacl_nfs4.h             | 18 +++++++
+ include/nfs4.h                    |  6 +++
+ libnfs4acl/Makefile               |  2 +
+ libnfs4acl/acl_nfs4_copy_acl.c    |  2 +
+ libnfs4acl/acl_nfs4_xattr_load.c  | 14 +++++-
+ libnfs4acl/acl_nfs4_xattr_pack.c  | 22 ++++++--
+ libnfs4acl/nfs4_ace_from_string.c |  3 ++
+ libnfs4acl/nfs4_get_ace_flags.c   |  2 +
+ libnfs4acl/nfs4_getacl.c          | 84 +++++++++++++++++++++++++++++++
+ libnfs4acl/nfs4_new_acl.c         |  1 +
+ libnfs4acl/nfs4_setacl.c          | 49 ++++++++++++++++++
+ man/man1/nfs4_getfacl.1           | 14 ++++++
+ man/man1/nfs4_setfacl.1           |  8 +++
+ man/man5/nfs4_acl.5               | 10 ++++
+ nfs4_getfacl/nfs4_getfacl.c       | 73 ++++++++++++++++++++++++---
+ nfs4_setfacl/nfs4_setfacl.c       | 67 ++++++++++++++++++++++--
+ 16 files changed, 359 insertions(+), 16 deletions(-)
+ create mode 100644 libnfs4acl/nfs4_getacl.c
+ create mode 100644 libnfs4acl/nfs4_setacl.c
+
 -- 
 2.36.1
 
