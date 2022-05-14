@@ -2,54 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BA535270C8
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 13:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6BFB5271B8
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:14:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231274AbiENLFW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 07:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54150 "EHLO
+        id S233003AbiENOO3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 10:14:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230072AbiENLFT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 07:05:19 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 965E13E5D7
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 04:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652526317;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=hUC4ewld65jLFhYy4jFfC3AUlEvkbO0uN/8vLWH8f+U=;
-        b=P1FAsJBhaoNX5sg+9OUygMiLG0skt5UzySsBujIXWgybpZrD8ULlzSkfpD31aFM5w7CZgh
-        mEauqIfTxYLncgnZAfSdVkbvkc5gHX3RaXiBRbw7NbJa0x++15TgNeJj+8JuexKSMgp2w9
-        ChLN8WvCU0n0WKs/sbqdC4ELbkpgIMk=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-373-YsIYcKWaPNCA9gB78ABU6w-1; Sat, 14 May 2022 07:05:13 -0400
-X-MC-Unique: YsIYcKWaPNCA9gB78ABU6w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S232464AbiENOOY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:14:24 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE4215815
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:14:24 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 913993C025B3;
-        Sat, 14 May 2022 11:05:13 +0000 (UTC)
-Received: from bcodding.csb (ovpn-64-2.rdu2.redhat.com [10.10.64.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C24440D2820;
-        Sat, 14 May 2022 11:05:13 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 28DBE10C30F0; Sat, 14 May 2022 07:05:13 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org, smayhew@redhat.com
-Subject: [PATCH v2] NFSv4: Fix free of uninitialized nfs4_label on referral lookup.
-Date:   Sat, 14 May 2022 07:05:13 -0400
-Message-Id: <958472076fce5b85a96c90631cb45be20247c90b.1652526062.git.bcodding@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id C5D5AB802BD
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:14:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25AB4C340EE;
+        Sat, 14 May 2022 14:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1652537661;
+        bh=OlCPLbXrkK6bmzaCkwWaRsSFTZ0uG3nR6f6NwBQLJlQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QaxVgG3XYPYw4n4M007M8QSRpdZrm/feJL2AfjvdjMZpW88zCAUsg2Qs9LzXLrsVI
+         4SDbZrNpH5vB/cfhpmGBZP7qQoSMuwx0aaw/Grgf9D8VZ9VqginOOjtJzFc5HQ5iHE
+         TqestSLBdVfqVXuaeepsM3uUuyuAG6etkatVPXpnTAcn0oxDgeADbgLX2RjVT8lmro
+         wF66DpDI0s6KMnrE8Z/7+YtrLtNg8R9Q3rTDtN8q/PnwnQewUGdhung5MvwDx9Qch7
+         Vk1iBBhfhFAAZV+zb+NFdb3kGZblKVDRWZHWXqiG7FaijveButbyB80PexdbBCbPz9
+         zFTFCBvfv6H+Q==
+From:   trondmy@kernel.org
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/5] NFS: Memory allocation failures are not server fatal errors
+Date:   Sat, 14 May 2022 10:08:10 -0400
+Message-Id: <20220514140814.3655-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.36.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,199 +50,31 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Changed on v2:
-	- Fix bone-headed allocation error handling.
--- >8 --
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Send along the already-allocated fattr along with nfs4_fs_locations, and
-drop the memcpy of fattr.  We end up growing two more allocations, but this
-fixes up a crash as:
+We need to filter out ENOMEM in nfs_error_is_fatal_on_server(), because
+running out of memory on our client is not a server error.
 
-PID: 790    TASK: ffff88811b43c000  CPU: 0   COMMAND: "ls"
- #0 [ffffc90000857920] panic at ffffffff81b9bfde
- #1 [ffffc900008579c0] do_trap at ffffffff81023a9b
- #2 [ffffc90000857a10] do_error_trap at ffffffff81023b78
- #3 [ffffc90000857a58] exc_stack_segment at ffffffff81be1f45
- #4 [ffffc90000857a80] asm_exc_stack_segment at ffffffff81c009de
- #5 [ffffc90000857b08] nfs_lookup at ffffffffa0302322 [nfs]
- #6 [ffffc90000857b70] __lookup_slow at ffffffff813a4a5f
- #7 [ffffc90000857c60] walk_component at ffffffff813a86c4
- #8 [ffffc90000857cb8] path_lookupat at ffffffff813a9553
- #9 [ffffc90000857cf0] filename_lookup at ffffffff813ab86b
-
-Suggested-by: Trond Myklebust <trondmy@hammerspace.com>
-Fixes: 9558a007dbc3 ("NFS: Remove the label from the nfs4_lookup_res struct")
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+Reported-by: Olga Kornievskaia <aglo@umich.edu>
+Fixes: 2dc23afffbca ("NFS: ENOMEM should also be a fatal error.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/nfs4namespace.c  |  9 +++++++--
- fs/nfs/nfs4proc.c       | 15 +++++++--------
- fs/nfs/nfs4state.c      |  9 ++++++++-
- fs/nfs/nfs4xdr.c        |  4 ++--
- include/linux/nfs_xdr.h |  2 +-
- 5 files changed, 25 insertions(+), 14 deletions(-)
+ fs/nfs/internal.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/nfs4namespace.c b/fs/nfs/nfs4namespace.c
-index 3680c8da510c..f2dbf904c598 100644
---- a/fs/nfs/nfs4namespace.c
-+++ b/fs/nfs/nfs4namespace.c
-@@ -417,6 +417,9 @@ static int nfs_do_refmount(struct fs_context *fc, struct rpc_clnt *client)
- 	fs_locations = kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNEL);
- 	if (!fs_locations)
- 		goto out_free;
-+	fs_locations->fattr = nfs_alloc_fattr();
-+	if (!fs_locations->fattr)
-+		goto out_free_2;
- 
- 	/* Get locations */
- 	dentry = ctx->clone_data.dentry;
-@@ -427,14 +430,16 @@ static int nfs_do_refmount(struct fs_context *fc, struct rpc_clnt *client)
- 	err = nfs4_proc_fs_locations(client, d_inode(parent), &dentry->d_name, fs_locations, page);
- 	dput(parent);
- 	if (err != 0)
--		goto out_free_2;
-+		goto out_free_3;
- 
- 	err = -ENOENT;
- 	if (fs_locations->nlocations <= 0 ||
- 	    fs_locations->fs_path.ncomponents <= 0)
--		goto out_free_2;
-+		goto out_free_3;
- 
- 	err = nfs_follow_referral(fc, fs_locations);
-+out_free_3:
-+	kfree(fs_locations->fattr);
- out_free_2:
- 	kfree(fs_locations);
- out_free:
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index a79f66432bd3..0600f85b6016 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -4243,6 +4243,8 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
- 	if (locations == NULL)
- 		goto out;
- 
-+	locations->fattr = fattr;
-+
- 	status = nfs4_proc_fs_locations(client, dir, name, locations, page);
- 	if (status != 0)
- 		goto out;
-@@ -4252,17 +4254,14 @@ static int nfs4_get_referral(struct rpc_clnt *client, struct inode *dir,
- 	 * referral.  Cause us to drop into the exception handler, which
- 	 * will kick off migration recovery.
- 	 */
--	if (nfs_fsid_equal(&NFS_SERVER(dir)->fsid, &locations->fattr.fsid)) {
-+	if (nfs_fsid_equal(&NFS_SERVER(dir)->fsid, &fattr->fsid)) {
- 		dprintk("%s: server did not return a different fsid for"
- 			" a referral at %s\n", __func__, name->name);
- 		status = -NFS4ERR_MOVED;
- 		goto out;
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 7eefa16ed381..8f8cd6e2d4db 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -841,6 +841,7 @@ static inline bool nfs_error_is_fatal_on_server(int err)
+ 	case 0:
+ 	case -ERESTARTSYS:
+ 	case -EINTR:
++	case -ENOMEM:
+ 		return false;
  	}
- 	/* Fixup attributes for the nfs_lookup() call to nfs_fhget() */
--	nfs_fixup_referral_attributes(&locations->fattr);
--
--	/* replace the lookup nfs_fattr with the locations nfs_fattr */
--	memcpy(fattr, &locations->fattr, sizeof(struct nfs_fattr));
-+	nfs_fixup_referral_attributes(fattr);
- 	memset(fhandle, 0, sizeof(struct nfs_fh));
- out:
- 	if (page)
-@@ -7902,7 +7901,7 @@ static int _nfs4_proc_fs_locations(struct rpc_clnt *client, struct inode *dir,
- 	else
- 		bitmask[1] &= ~FATTR4_WORD1_MOUNTED_ON_FILEID;
- 
--	nfs_fattr_init(&fs_locations->fattr);
-+	nfs_fattr_init(fs_locations->fattr);
- 	fs_locations->server = server;
- 	fs_locations->nlocations = 0;
- 	status = nfs4_call_sync(client, server, &msg, &args.seq_args, &res.seq_res, 0);
-@@ -7967,7 +7966,7 @@ static int _nfs40_proc_get_locations(struct nfs_server *server,
- 	unsigned long now = jiffies;
- 	int status;
- 
--	nfs_fattr_init(&locations->fattr);
-+	nfs_fattr_init(locations->fattr);
- 	locations->server = server;
- 	locations->nlocations = 0;
- 
-@@ -8032,7 +8031,7 @@ static int _nfs41_proc_get_locations(struct nfs_server *server,
- 	};
- 	int status;
- 
--	nfs_fattr_init(&locations->fattr);
-+	nfs_fattr_init(locations->fattr);
- 	locations->server = server;
- 	locations->nlocations = 0;
- 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 9e1c987c81e7..9656d40bb488 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -2106,6 +2106,11 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 		dprintk("<-- %s: no memory\n", __func__);
- 		goto out;
- 	}
-+	locations->fattr = nfs_alloc_fattr();
-+	if (locations->fattr == NULL) {
-+		dprintk("<-- %s: no memory\n", __func__);
-+		goto out;
-+	}
- 
- 	inode = d_inode(server->super->s_root);
- 	result = nfs4_proc_get_locations(server, NFS_FH(inode), locations,
-@@ -2120,7 +2125,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- 	if (!locations->nlocations)
- 		goto out;
- 
--	if (!(locations->fattr.valid & NFS_ATTR_FATTR_V4_LOCATIONS)) {
-+	if (!(locations->fattr->valid & NFS_ATTR_FATTR_V4_LOCATIONS)) {
- 		dprintk("<-- %s: No fs_locations data, migration skipped\n",
- 			__func__);
- 		goto out;
-@@ -2145,6 +2150,8 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
- out:
- 	if (page != NULL)
- 		__free_page(page);
-+	if (locations != NULL)
-+		kfree(locations->fattr);
- 	kfree(locations);
- 	if (result) {
- 		pr_err("NFS: migration recovery failed (server %s)\n",
-diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
-index 86a5f6516928..5d822594336d 100644
---- a/fs/nfs/nfs4xdr.c
-+++ b/fs/nfs/nfs4xdr.c
-@@ -7051,7 +7051,7 @@ static int nfs4_xdr_dec_fs_locations(struct rpc_rqst *req,
- 	if (res->migration) {
- 		xdr_enter_page(xdr, PAGE_SIZE);
- 		status = decode_getfattr_generic(xdr,
--					&res->fs_locations->fattr,
-+					res->fs_locations->fattr,
- 					 NULL, res->fs_locations,
- 					 res->fs_locations->server);
- 		if (status)
-@@ -7064,7 +7064,7 @@ static int nfs4_xdr_dec_fs_locations(struct rpc_rqst *req,
- 			goto out;
- 		xdr_enter_page(xdr, PAGE_SIZE);
- 		status = decode_getfattr_generic(xdr,
--					&res->fs_locations->fattr,
-+					res->fs_locations->fattr,
- 					 NULL, res->fs_locations,
- 					 res->fs_locations->server);
- 	}
-diff --git a/include/linux/nfs_xdr.h b/include/linux/nfs_xdr.h
-index 2863e5a69c6a..20e97329fe46 100644
---- a/include/linux/nfs_xdr.h
-+++ b/include/linux/nfs_xdr.h
-@@ -1212,7 +1212,7 @@ struct nfs4_fs_location {
- 
- #define NFS4_FS_LOCATIONS_MAXENTRIES 10
- struct nfs4_fs_locations {
--	struct nfs_fattr fattr;
-+	struct nfs_fattr *fattr;
- 	const struct nfs_server *server;
- 	struct nfs4_pathname fs_path;
- 	int nlocations;
+ 	return nfs_error_is_fatal(err);
 -- 
-2.31.1
+2.36.1
 
