@@ -2,49 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C72527239
-	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:51:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 937FB527233
+	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:51:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233492AbiENOvR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 10:51:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45696 "EHLO
+        id S233433AbiENOvP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 10:51:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233708AbiENOvD (ORCPT
+        with ESMTP id S233712AbiENOvD (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:51:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A81D13D
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D49E8186DE
         for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:50:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F30F5B8075F
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:50:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67B81C34115;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 888BDB808CF
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:50:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A51C340EE;
         Sat, 14 May 2022 14:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652539845;
-        bh=S5yU+/+BjMk2kG8Zj7fh/VVfqeuexGUHdyMu/3JprrI=;
+        s=k20201202; t=1652539846;
+        bh=BXw7iUghJyWb4rcPAbynJX9c0qgkAH1mwcRaEaiKH7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k8x4EscrzEldhcmAMneuM2qinrz3yk7zhPf9BuNiT9ga0F86Sq+cQLTfJblVrL8vO
-         qANOYWqwpscxkCm8VbaWp3SkxsbwtNZltvrrRZMux+LKTd1Dh6obPLMATnyn0GrIBN
-         Ym584yyaFZjTjy5ORVQot6HfkiG+Yc5OtZa2KH709+pAO034VuTDnfzUSH1fgwwZVK
-         IvTc/Bq1aOsbsOjeCRyhgPjNXEOAOhlC+MTvooFlQEHIG1urTCFTyNooubr4Jj7Tlg
-         KJOWHEG2VhE1GvzYWNC5KgD8TYT1PbLUrGb4SWmBrgrZV5tUxiSfmnftItyHT1/4A8
-         aIeZC6wFZDWTA==
+        b=hFl6bu9MBuBuB3imGAK2lcVY+gWJS1hY3HFqV+DDx9IHaoSHHRQBLqu/SnOF2jBeZ
+         GyShfj3JDoaHAcvWLx3S6fzubx7h/HS6fYB6Ld+JodsRebV/P+daN2H2KRvQ0ltuwq
+         hYl/H2xQG5o57pLZ8H3jk+Qj0mxzoOnaAG0mYCEmgEuDEUcKf8wExyzB6Vi2uG+uOW
+         1OmdIYd43BaqobCae5+kHGsi2P3MQ9+yhIVUOEPAt7pUoh86jZtOOriGgXMvZIrALI
+         r9hwcjiIzmmHQk7RxSPTd1aT3ur7QxN8a0eiUwqHNJgtDTYKwwtnUVtjnX3/eAjWTy
+         ZELJ0Rkuw+Jyw==
 From:   trondmy@kernel.org
 To:     Steve Dickson <SteveD@redhat.com>,
         "J.Bruce Fields" <bfields@fieldses.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 5/6] nfs4_setacl: Add support for the --dacl and --sacl options
-Date:   Sat, 14 May 2022 10:44:35 -0400
-Message-Id: <20220514144436.4298-6-trondmy@kernel.org>
+Subject: [PATCH 6/6] Edit manpages to document the new --dacl, --sacl and inheritance features
+Date:   Sat, 14 May 2022 10:44:36 -0400
+Message-Id: <20220514144436.4298-7-trondmy@kernel.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220514144436.4298-5-trondmy@kernel.org>
+In-Reply-To: <20220514144436.4298-6-trondmy@kernel.org>
 References: <20220514144436.4298-1-trondmy@kernel.org>
  <20220514144436.4298-2-trondmy@kernel.org>
  <20220514144436.4298-3-trondmy@kernel.org>
  <20220514144436.4298-4-trondmy@kernel.org>
  <20220514144436.4298-5-trondmy@kernel.org>
+ <20220514144436.4298-6-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -59,133 +60,78 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Add support for the NFSv4.1 dacl and sacl attributes.
-
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- nfs4_setfacl/nfs4_setfacl.c | 67 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 3 deletions(-)
+ man/man1/nfs4_getfacl.1 | 14 ++++++++++++++
+ man/man1/nfs4_setfacl.1 |  8 ++++++++
+ man/man5/nfs4_acl.5     | 10 ++++++++++
+ 3 files changed, 32 insertions(+)
 
-diff --git a/nfs4_setfacl/nfs4_setfacl.c b/nfs4_setfacl/nfs4_setfacl.c
-index d0485ad53024..e5816085c8b0 100644
---- a/nfs4_setfacl/nfs4_setfacl.c
-+++ b/nfs4_setfacl/nfs4_setfacl.c
-@@ -79,6 +79,9 @@
- #define EDITOR  		"vi"  /* <- evangelism! */
- #define u32 u_int32_t
+diff --git a/man/man1/nfs4_getfacl.1 b/man/man1/nfs4_getfacl.1
+index 7cf7cbf2cd0b..2a618fc356f9 100644
+--- a/man/man1/nfs4_getfacl.1
++++ b/man/man1/nfs4_getfacl.1
+@@ -34,6 +34,20 @@ flag is specified,
+ .B nfs4_getfacl
+ will not display the comment header (Do not print filename).
  
-+#define OPT_DACL	0x98
-+#define OPT_SACL	0x99
++If the
++.BR --dacl
++flag is specified,
++.B nfs4_getfacl
++will retrieve the dacl. This functionality is only available if
++the server supports NFSv4 minor version 1 or newer.
 +
- static int apply_action(const char *, const struct stat *, int, struct FTW *);
- static int do_apply_action(const char *, const struct stat *);
- static int open_editor(const char *);
-@@ -110,6 +113,8 @@ static struct option long_options[] = {
- 	{ "recursive",		0, 0, 'R' },
- 	{ "physical",		0, 0, 'P' },
- 	{ "logical",		0, 0, 'L' },
-+	{ "dacl",		0, 0, OPT_DACL },
-+	{ "sacl",		0, 0, OPT_SACL },
- 	{ NULL,			0, 0, 0,  },
- };
- 
-@@ -124,6 +129,8 @@ static char *mod_string;
- static char *from_ace;
- static char *to_ace;
- 
-+static enum acl_type acl_type = ACL_TYPE_ACL;
++If the
++.BR --sacl
++flag is specified,
++.B nfs4_getfacl
++will retrieve the sacl. This functionality is only available if
++the server supports NFSv4 minor version 1 or newer.
 +
- /* XXX: things we need to handle:
-  *
-  *  - we need some sort of 'purge' operation that completely clears an ACL.
-@@ -272,6 +279,13 @@ int main(int argc, char **argv)
- 				paths[numpaths++] = optarg;
- 				break;
- 
-+			case OPT_DACL:
-+				acl_type = ACL_TYPE_DACL;
-+				break;
-+			case OPT_SACL:
-+				acl_type = ACL_TYPE_SACL;
-+				break;
-+
- 			case 'h':
- 			case '?':
- 			default:
-@@ -334,6 +348,50 @@ out:
- 	return err;
- }
- 
-+static void nfs4_print_acl_error(const char *path)
-+{
-+	switch (errno) {
-+	case ENODATA:
-+		fprintf(stderr,"Attribute not found on file: %s\n", path);
-+		break;
-+	case EREMOTEIO:
-+		fprintf(stderr,"An NFS server error occurred.\n");
-+		break;
-+	case EOPNOTSUPP:
-+		fprintf(stderr,"Operation to request attribute not supported: "
-+			       "%s\n", path);
-+		break;
-+	default:
-+		perror("Failed operation");
-+	}
-+}
-+
-+static struct nfs4_acl *nfs4_retrieve_acl(const char *path,
-+					  enum acl_type type)
-+{
-+	switch (type) {
-+	case ACL_TYPE_DACL:
-+		return nfs4_getdacl(path);
-+	case ACL_TYPE_SACL:
-+		return nfs4_getsacl(path);
-+	default:
-+		return nfs4_getacl(path);
-+	}
-+}
-+
-+static int nfs4_apply_acl(const char *path, struct nfs4_acl *acl,
-+			  enum acl_type type)
-+{
-+	switch (type) {
-+	case ACL_TYPE_DACL:
-+		return nfs4_setdacl(path, acl);
-+	case ACL_TYPE_SACL:
-+		return nfs4_setsacl(path, acl);
-+	default:
-+		return nfs4_setacl(path, acl);
-+	}
-+}
-+
- /* returns 0 on success, nonzero on failure */
- static int apply_action(const char *_path, const struct stat *stat, int flag, struct FTW *ftw)
- {
-@@ -378,7 +436,7 @@ static int do_apply_action(const char *path, const struct stat *_st)
- 	if (action == SUBSTITUTE_ACTION)
- 		acl = nfs4_new_acl(S_ISDIR(st->st_mode));
- 	else
--		acl = nfs4_acl_for_path(path);
-+		acl = nfs4_retrieve_acl(path, acl_type);
- 
- 	if (acl == NULL) {
- 		fprintf(stderr, "Failed to instantiate ACL.\n");
-@@ -438,8 +496,11 @@ static int do_apply_action(const char *path, const struct stat *_st)
- 	if (is_test) {
- 		fprintf(stderr, "## Test mode only - the resulting ACL for \"%s\": \n", path);
- 		nfs4_print_acl(stdout, acl);
--	} else
--		err = nfs4_set_acl(acl, path);
-+	} else {
-+		err = nfs4_apply_acl(path, acl, acl_type);
-+		if (err == -1)
-+			nfs4_print_acl_error(path);
-+	}
- 
- out:
- 	nfs4_free_acl(acl);
+ The output format for an NFSv4 file ACL, e.g., is:
+ .RS
+ .nf
+diff --git a/man/man1/nfs4_setfacl.1 b/man/man1/nfs4_setfacl.1
+index 7144f0447ef9..47ab517c258c 100644
+--- a/man/man1/nfs4_setfacl.1
++++ b/man/man1/nfs4_setfacl.1
+@@ -101,6 +101,14 @@ in conjunction with
+ in conjunction with
+ .BR -R / --recursive ", a physical walk skips all symbolic links."
+ .TP
++.BR "--dacl"	
++acts on the dacl only. This functionality is only available if
++the server supports NFSv4 minor version 1 or newer.
++.TP
++.BR "--sacl"	
++acts on the sacl only. This functionality is only available if
++the server supports NFSv4 minor version 1 or newer.
++.TP
+ .BR --test	 
+ display results of 
+ .BR COMMAND ,
+diff --git a/man/man5/nfs4_acl.5 b/man/man5/nfs4_acl.5
+index e0b2a0a57e8b..7036ab72bc35 100644
+--- a/man/man5/nfs4_acl.5
++++ b/man/man5/nfs4_acl.5
+@@ -125,6 +125,16 @@ group - indicates that
+ .I principal
+ represents a group instead of a user.
+ .TP
++.BR "INHERITED FLAG" " - can be used in any ACE"
++.TP
++.B I
++inherited - indicates that the ACE was inherited from the parent directory.
++This flag can only be used with the NFSv4.1 protocol or newer when using the
++.BR --dacl
++or
++.BR --sacl
++options.
++.TP
+ .BR "INHERITANCE FLAGS" " - can be used in any directory ACE"
+ .TP
+ .B d
 -- 
 2.36.1
 
