@@ -2,45 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07384527235
+	by mail.lfdr.de (Postfix) with ESMTP id B9D8E527237
 	for <lists+linux-nfs@lfdr.de>; Sat, 14 May 2022 16:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233419AbiENOvO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 10:51:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45694 "EHLO
+        id S233490AbiENOvQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 14 May 2022 10:51:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233700AbiENOvD (ORCPT
+        with ESMTP id S233707AbiENOvD (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 10:51:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538423466D
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:50:44 -0700 (PDT)
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9198517ABC
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 07:50:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E36AD60F69
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:50:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F057CC34117;
-        Sat, 14 May 2022 14:50:42 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4F6D7B808CF
+        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 14:50:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914EFC340EE;
+        Sat, 14 May 2022 14:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1652539843;
-        bh=4H5VhiOzuNnAER7m+K0HBmbaoSkrPy7gUzvAMCNReZY=;
+        s=k20201202; t=1652539844;
+        bh=WEC8PsRGlYw3jcNP/Ogg7WlmDdggce5Cl0kX0a7nASo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eu9viniaghDuWVypbYsj+6tty4DGUlf4dR3SWs5qTpInQ0saUnFE0/8hWD26NJYaS
-         +6h3dNTNPmL2917+ZB7cR6E0/Kh0YxzInrp7w2lyc0+1PYMkemVQYhBSH5OeYrV/xL
-         CWBymxxlC588ANYAeODzOX/38yK36S9/ERU0/YJU5NsvudZA08rzGyAxc7PtorimCZ
-         3B+QYb3TzVANqGBtDyMr5JwDxDhxEa3txevRsC96nHrxMUsjpPdUVBYm1GQN4YzC6a
-         I7VhFNgZ7eq5DX/ltxEy5BJ0PDdP+2H+P+0V4+WgOy6eYpKCcy4eZ1Wkazcq7YzRbw
-         nH+ZiHVlilPzg==
+        b=RqvmXh5yHPLQGg4+OKwINl5mk5x74HeZvygiiGIWIMk3+QnOWm/2MmjRYsyYgjYoc
+         sPslKIhzEhFbI6k5Z0UxuscpTxRphsPzA0MglAnLSpk57rrH2HJmym7NyoYyRmhclG
+         IMs6UdCNWIBNp6J1I2cs79rOIbS/GhH/OiieeKNk586jVC3wOTpQiyHA+w8NR/UplK
+         RhE17UiirkL1mfE9PfN+wKeLj4pLro4cLWoUvfXM/TKisfq7bVDL5yv7Inqvigqc5y
+         zvqcR5SHgpmaSufORgK+b71+2YT5rxn+Lq1wXuoMLwdQrKLCEK9GoQSOL1DcDXW/xh
+         cUBNN86IRgYig==
 From:   trondmy@kernel.org
 To:     Steve Dickson <SteveD@redhat.com>,
         "J.Bruce Fields" <bfields@fieldses.org>
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/6] libnfs4acl: Add helpers to set the dacl and sacl
-Date:   Sat, 14 May 2022 10:44:31 -0400
-Message-Id: <20220514144436.4298-2-trondmy@kernel.org>
+Subject: [PATCH 2/6] libnfs4acl: Add support for the NFS4.1 ACE_INHERITED_ACE flag
+Date:   Sat, 14 May 2022 10:44:32 -0400
+Message-Id: <20220514144436.4298-3-trondmy@kernel.org>
 X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220514144436.4298-1-trondmy@kernel.org>
+In-Reply-To: <20220514144436.4298-2-trondmy@kernel.org>
 References: <20220514144436.4298-1-trondmy@kernel.org>
+ <20220514144436.4298-2-trondmy@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -55,202 +56,80 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-Add helper functions to set the NFSv4.1 dacl and sacl attributes.
+Use the letter 'I' to represent an inherited ACE.
 
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- include/libacl_nfs4.h    |  9 +++++
- libnfs4acl/Makefile      |  2 +
- libnfs4acl/nfs4_getacl.c | 83 ++++++++++++++++++++++++++++++++++++++++
- libnfs4acl/nfs4_setacl.c | 49 ++++++++++++++++++++++++
- 4 files changed, 143 insertions(+)
- create mode 100644 libnfs4acl/nfs4_getacl.c
- create mode 100644 libnfs4acl/nfs4_setacl.c
+ include/libacl_nfs4.h             | 1 +
+ include/nfs4.h                    | 1 +
+ libnfs4acl/nfs4_ace_from_string.c | 3 +++
+ libnfs4acl/nfs4_get_ace_flags.c   | 2 ++
+ nfs4_getfacl/nfs4_getfacl.c       | 1 +
+ 5 files changed, 8 insertions(+)
 
 diff --git a/include/libacl_nfs4.h b/include/libacl_nfs4.h
-index d3786c3fabdc..76bbe90af54d 100644
+index 76bbe90af54d..d54d82f94f97 100644
 --- a/include/libacl_nfs4.h
 +++ b/include/libacl_nfs4.h
-@@ -123,6 +123,8 @@
+@@ -54,6 +54,7 @@
+ #define FLAG_SUCCESSFUL_ACCESS		'S'
+ #define FLAG_FAILED_ACCESS		'F'
+ #define FLAG_GROUP			'g'
++#define FLAG_INHERITED			'I'
  
- /* NFS4 acl xattr name */
- #define ACL_NFS4_XATTR "system.nfs4_acl"
-+#define DACL_NFS4_XATTR "system.nfs4_dacl"
-+#define SACL_NFS4_XATTR "system.nfs4_sacl"
+ #define PERM_READ_DATA			'r'
+ #define PERM_WRITE_DATA			'w'
+diff --git a/include/nfs4.h b/include/nfs4.h
+index da6eefb7fbc6..20bfa6b99634 100644
+--- a/include/nfs4.h
++++ b/include/nfs4.h
+@@ -62,6 +62,7 @@
+ #define NFS4_ACE_SUCCESSFUL_ACCESS_ACE_FLAG   0x00000010
+ #define NFS4_ACE_FAILED_ACCESS_ACE_FLAG       0x00000020
+ #define NFS4_ACE_IDENTIFIER_GROUP             0x00000040
++#define NFS4_ACE_INHERITED_ACE                0x00000080
  
- /* Macro for finding empty tailqs */
- #define TAILQ_IS_EMPTY(head) (head.tqh_first == NULL)
-@@ -152,6 +154,13 @@ TAILQ_HEAD(ace_container_list_head, ace_container);
+ #define NFS4_ACE_READ_DATA                    0x00000001
+ #define NFS4_ACE_LIST_DIRECTORY               0x00000001
+diff --git a/libnfs4acl/nfs4_ace_from_string.c b/libnfs4acl/nfs4_ace_from_string.c
+index ab8401ae0629..7f1315434435 100644
+--- a/libnfs4acl/nfs4_ace_from_string.c
++++ b/libnfs4acl/nfs4_ace_from_string.c
+@@ -209,6 +209,9 @@ struct nfs4_ace * nfs4_ace_from_string(char *ace_buf, int is_dir)
+ 			case FLAG_GROUP:
+ 				flags |= NFS4_ACE_IDENTIFIER_GROUP;
+ 				break;
++			case FLAG_INHERITED:
++				flags |= NFS4_ACE_INHERITED_ACE;
++				break;
+ 			default:
+ 				fprintf(stderr,"Bad Ace Flag:%c\n", *field);
+ 				goto out_free;
+diff --git a/libnfs4acl/nfs4_get_ace_flags.c b/libnfs4acl/nfs4_get_ace_flags.c
+index 1d28ed4b5196..1f27d17ad4cd 100644
+--- a/libnfs4acl/nfs4_get_ace_flags.c
++++ b/libnfs4acl/nfs4_get_ace_flags.c
+@@ -53,6 +53,8 @@ char* nfs4_get_ace_flags(struct nfs4_ace *ace, char *buf)
+ 		*buf++ = FLAG_FAILED_ACCESS;;
+ 	if (flags & NFS4_ACE_IDENTIFIER_GROUP)
+ 		*buf++ = FLAG_GROUP;
++	if (flags & NFS4_ACE_INHERITED_ACE)
++		*buf++ = FLAG_INHERITED;
+ 	*buf = '\0';
  
- /**** Public functions ****/
- 
-+extern struct nfs4_acl *	nfs4_getacl(const char *path);
-+extern struct nfs4_acl *	nfs4_getdacl(const char *path);
-+extern struct nfs4_acl *	nfs4_getsacl(const char *path);
-+extern int			nfs4_setacl(const char *path, struct nfs4_acl *acl);
-+extern int			nfs4_setdacl(const char *path, struct nfs4_acl *acl);
-+extern int			nfs4_setsacl(const char *path, struct nfs4_acl *acl);
-+
- /** Manipulation functions **/
- extern int			acl_nfs4_set_who(struct nfs4_ace*, int, char*);
- extern struct nfs4_acl *	acl_nfs4_copy_acl(struct nfs4_acl *);
-diff --git a/libnfs4acl/Makefile b/libnfs4acl/Makefile
-index a598d4ee141f..556b59535e26 100644
---- a/libnfs4acl/Makefile
-+++ b/libnfs4acl/Makefile
-@@ -92,6 +92,8 @@ LIBACL_NFS4_CFILES = \
- 	nfs4_get_ace_access.c \
- 	nfs4_get_ace_flags.c \
- 	nfs4_get_ace_type.c \
-+	nfs4_getacl.c \
-+	nfs4_setacl.c \
- 	nfs4_insert_file_aces.c \
- 	nfs4_insert_string_aces.c \
- 	nfs4_free_acl.c \
-diff --git a/libnfs4acl/nfs4_getacl.c b/libnfs4acl/nfs4_getacl.c
-new file mode 100644
-index 000000000000..753ba9167459
---- /dev/null
-+++ b/libnfs4acl/nfs4_getacl.c
-@@ -0,0 +1,83 @@
-+/*
-+ * Copyright (c) 2022, Trond Myklebust <trond.myklebust@hammerspace.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE
-+ * version 2.1 as published by the Free Software Foundation.
-+ *
-+ * This code is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU LESSER GENERAL PUBLIC LICENSE for more details.
-+ */
-+
-+#include <sys/types.h>
-+#include <config.h>
-+#ifdef HAVE_ATTR_XATTR_H
-+# include <attr/xattr.h>
-+#else
-+# ifdef HAVE_SYS_XATTR_H
-+#  include <sys/xattr.h>
-+# endif
-+#endif
-+#include <sys/stat.h>
-+#include "libacl_nfs4.h"
-+
-+/* returns a newly-allocated struct nfs4_acl or NULL on error. */
-+static struct nfs4_acl *nfs4_getacl_byname(const char *path,
-+					   const char *xattr_name)
-+{
-+	struct nfs4_acl *acl;
-+	struct stat st;
-+	void *buf;
-+	ssize_t ret;
-+	u32 iflags = NFS4_ACL_ISFILE;
-+
-+	if (path == NULL || *path == 0) {
-+		errno = EFAULT;
-+		return NULL;
-+	}
-+
-+	/* find necessary buffer size */
-+	ret = getxattr(path, xattr_name, NULL, 0);
-+	if (ret == -1)
-+		goto err;
-+
-+	buf = malloc(ret);
-+	if (!buf)
-+		goto err;
-+
-+	/* reconstruct the ACL */
-+	ret = getxattr(path, xattr_name, buf, ret);
-+	if (ret == -1)
-+		goto err_free;
-+
-+	ret = stat(path, &st);
-+	if (ret == -1)
-+		goto err_free;
-+
-+	if (S_ISDIR(st.st_mode))
-+		iflags = NFS4_ACL_ISDIR;
-+
-+	acl = acl_nfs4_xattr_load(buf, ret, iflags);
-+
-+	free(buf);
-+	return acl;
-+err_free:
-+	free(buf);
-+err:
-+	return NULL;
-+}
-+
-+struct nfs4_acl *nfs4_getacl(const char *path)
-+{
-+	return nfs4_getacl_byname(path, ACL_NFS4_XATTR);
-+}
-+struct nfs4_acl *nfs4_getdacl(const char *path)
-+{
-+	return nfs4_getacl_byname(path, DACL_NFS4_XATTR);
-+}
-+struct nfs4_acl *nfs4_getsacl(const char *path)
-+{
-+	return nfs4_getacl_byname(path, SACL_NFS4_XATTR);
-+}
-diff --git a/libnfs4acl/nfs4_setacl.c b/libnfs4acl/nfs4_setacl.c
-new file mode 100644
-index 000000000000..298365ec67c5
---- /dev/null
-+++ b/libnfs4acl/nfs4_setacl.c
-@@ -0,0 +1,49 @@
-+/*
-+ * Copyright (c) 2022, Trond Myklebust <trond.myklebust@hammerspace.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU LESSER GENERAL PUBLIC LICENSE
-+ * version 2.1 as published by the Free Software Foundation.
-+ *
-+ * This code is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU LESSER GENERAL PUBLIC LICENSE for more details.
-+ */
-+
-+#include <sys/types.h>
-+#include <config.h>
-+#ifdef HAVE_ATTR_XATTR_H
-+# include <attr/xattr.h>
-+#else
-+# ifdef HAVE_SYS_XATTR_H
-+#  include <sys/xattr.h>
-+# endif
-+#endif
-+#include "libacl_nfs4.h"
-+
-+static int nfs4_setacl_byname(const char *path, const char *xattr_name,
-+			      struct nfs4_acl *acl)
-+{
-+	char *xdrbuf = NULL;
-+	int ret;
-+
-+	ret = acl_nfs4_xattr_pack(acl, &xdrbuf);
-+	if (ret != -1)
-+		ret = setxattr(path, xattr_name, xdrbuf, ret, XATTR_REPLACE);
-+	free(xdrbuf);
-+	return ret;
-+}
-+
-+int nfs4_setacl(const char *path, struct nfs4_acl *acl)
-+{
-+	return nfs4_setacl_byname(path, ACL_NFS4_XATTR, acl);
-+}
-+int nfs4_setdacl(const char *path, struct nfs4_acl *acl)
-+{
-+	return nfs4_setacl_byname(path, DACL_NFS4_XATTR, acl);
-+}
-+int nfs4_setsacl(const char *path, struct nfs4_acl *acl)
-+{
-+	return nfs4_setacl_byname(path, SACL_NFS4_XATTR, acl);
-+}
+ 	return bp;
+diff --git a/nfs4_getfacl/nfs4_getfacl.c b/nfs4_getfacl/nfs4_getfacl.c
+index e068095b0d6b..1222dd907c9e 100644
+--- a/nfs4_getfacl/nfs4_getfacl.c
++++ b/nfs4_getfacl/nfs4_getfacl.c
+@@ -170,6 +170,7 @@ static void more_help()
+ 	"        'S'  successful-access\n"
+ 	"        'F'  failed-access\n"
+ 	"        'g'  group (denotes that <principal> is a group)\n"
++	"        'I'  inherited\n"
+ 	"\n"
+ 	"    * <principal> - named user or group, or one of: \"OWNER@\", \"GROUP@\", \"EVERYONE@\"\n"
+ 	"\n"
 -- 
 2.36.1
 
