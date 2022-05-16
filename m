@@ -2,32 +2,34 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98533529259
-	for <lists+linux-nfs@lfdr.de>; Mon, 16 May 2022 23:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27036529242
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 May 2022 23:08:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348876AbiEPVBo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 16 May 2022 17:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46132 "EHLO
+        id S240349AbiEPVCJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 May 2022 17:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349213AbiEPVBI (ORCPT
+        with ESMTP id S1349209AbiEPVBI (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 May 2022 17:01:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3068AB859
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A835B85E
         for <linux-nfs@vger.kernel.org>; Mon, 16 May 2022 13:36:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C9144B815F3
-        for <linux-nfs@vger.kernel.org>; Mon, 16 May 2022 20:36:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F190C385AA;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 53F86B8160F
+        for <linux-nfs@vger.kernel.org>; Mon, 16 May 2022 20:36:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6BDFC34115;
         Mon, 16 May 2022 20:36:23 +0000 (UTC)
 From:   Anna.Schumaker@Netapp.com
 To:     steved@redhat.com, linux-nfs@vger.kernel.org
 Cc:     Anna.Schumaker@Netapp.com
-Subject: [PATCH v1 0/5] NFS: Improvements for the NFSv4.2 READ_PLUS
-Date:   Mon, 16 May 2022 16:36:17 -0400
-Message-Id: <20220516203622.2605713-1-Anna.Schumaker@Netapp.com>
+Subject: [PATCH v1 1/5] SUNRPC: Add a function for directly setting the xdr page len
+Date:   Mon, 16 May 2022 16:36:18 -0400
+Message-Id: <20220516203622.2605713-2-Anna.Schumaker@Netapp.com>
 X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20220516203622.2605713-1-Anna.Schumaker@Netapp.com>
+References: <20220516203622.2605713-1-Anna.Schumaker@Netapp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
@@ -41,55 +43,68 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-Previously, decoding was a one step process that expanded holes as they
-were seen in the buffer. This had a few undesireable side effects:
+We need to do this step during READ_PLUS decoding so that we know pages
+are the right length and any extra data has been preserved in the tail.
 
-1) An extra READ_PLUS call was often needed to fetch any data shifted
-   off the end of the buffer when the last two segments are a HOLE
-   followed by DATA
-2) We shifted the entire remaining buffer for each hole, meaning some
-   segments would get moved multiple times during one decode pass.
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ include/linux/sunrpc/xdr.h |  1 +
+ net/sunrpc/xdr.c           | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
-These patches attempt to address this by turning READ_PLUS decoding into
-a two-step process. First, we build up a list of each segment returned
-by the server, then we walk the list in reverse and move each segment
-directly to their target offset. This cuts out all the extra copying,
-and means we won't lose any data off of the end of the reply.
-
-The results of my performance testing can be found here:
-    https://wiki.linux-nfs.org/wiki/index.php/Read_Plus_May_2022
-
-Between these patches and the corresponding server patches, I'm seeing a
-several second decrease in the amount of time that a READ_PLUS call
-takes to complete even on the worst case test where pages alternate
-between hole and data segments.
-
-I also optimistically remove the CONFIG_NFS_V4_2_READ_PLUS Kconfig
-option now that the known performance and correctness issues have been
-resolved, but I would also be fine with changing it to default to 'y' if
-there are objections to entirely dropping the option.
-
-Please note that these patches rely on the xdr_stream_move_segment()
-function added as the first patch of the corresponding server patches.
-
-Thoughts?
-Anna
-
-
-Anna Schumaker (5):
-  SUNRPC: Add a function for directly setting the xdr page len
-  SUNRPC: Add a function for zeroing out a portion of an xdr_stream
-  NFS: Replace the READ_PLUS decoding code
-  SUNRPC: Remove xdr_align_data() and xdr_expand_hole()
-  NFS: Remove the CONFIG_NFS_V4_2_READ_PLUS Kconfig option
-
- fs/nfs/Kconfig             |   9 --
- fs/nfs/nfs42xdr.c          | 168 +++++++++++++++++++------------------
- fs/nfs/nfs4proc.c          |   2 +-
- include/linux/sunrpc/xdr.h |   5 +-
- net/sunrpc/xdr.c           | 111 +++++++++++-------------
- 5 files changed, 140 insertions(+), 155 deletions(-)
-
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index b375b284afbe..607340fa1fd4 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -262,6 +262,7 @@ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+ extern int xdr_process_buf(const struct xdr_buf *buf, unsigned int offset, unsigned int len, int (*actor)(struct scatterlist *, void *), void *data);
++extern void xdr_set_pagelen(struct xdr_stream *, unsigned int len);
+ extern unsigned int xdr_align_data(struct xdr_stream *, unsigned int offset, unsigned int length);
+ extern unsigned int xdr_expand_hole(struct xdr_stream *, unsigned int offset, unsigned int length);
+ extern bool xdr_stream_subsegment(struct xdr_stream *xdr, struct xdr_buf *subbuf,
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index d71c90552fa2..ff36a20aab89 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1509,6 +1509,36 @@ unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len)
+ }
+ EXPORT_SYMBOL_GPL(xdr_read_pages);
+ 
++/**
++ * xdr_set_pagelen - Sets the length of the XDR pages
++ * @xdr: pointer to xdr_stream struct
++ * @len: new length of the XDR page data
++ *
++ * Either grows or shrinks the length of the xdr pages by setting pagelen to
++ * @len bytes. When shrinking, any extra data is moved into buf->tail, whereas
++ * when growing any data beyond the current pointer is moved into the tail.
++ *
++ * Returns True if the operation was successful, and False otherwise.
++ */
++void xdr_set_pagelen(struct xdr_stream *xdr, unsigned int len)
++{
++	struct xdr_buf *buf = xdr->buf;
++	size_t remaining = xdr_stream_remaining(xdr);
++	size_t base = 0;
++
++	if (len < buf->page_len) {
++		base = buf->page_len - len;
++		xdr_shrink_pagelen(buf, len);
++	} else {
++		xdr_buf_head_shift_right(buf, xdr_stream_pos(xdr),
++					 buf->page_len, remaining);
++		if (len > buf->page_len)
++			xdr_buf_try_expand(buf, len - buf->page_len);
++	}
++	xdr_set_tail_base(xdr, base, remaining);
++}
++EXPORT_SYMBOL_GPL(xdr_set_pagelen);
++
+ unsigned int xdr_align_data(struct xdr_stream *xdr, unsigned int offset,
+ 			    unsigned int length)
+ {
 -- 
 2.36.1
 
