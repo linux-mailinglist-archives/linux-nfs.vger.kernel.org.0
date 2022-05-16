@@ -2,129 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32538527526
-	for <lists+linux-nfs@lfdr.de>; Sun, 15 May 2022 05:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 409C6528AA4
+	for <lists+linux-nfs@lfdr.de>; Mon, 16 May 2022 18:35:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232491AbiEODYF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 14 May 2022 23:24:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58956 "EHLO
+        id S243091AbiEPQfO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 16 May 2022 12:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbiEODYE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 14 May 2022 23:24:04 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam07on2122.outbound.protection.outlook.com [40.107.95.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A752D1F9
-        for <linux-nfs@vger.kernel.org>; Sat, 14 May 2022 20:24:03 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YhG4lXJZv67Hed1C/DmffEDIk7N22Imo7D901eSSzhmencI14M58CvDjIs45xMOVSpgPSGQEUypoCjwxL0+RVVGmnnqGsi0vrud8zQyJOHCM/Pkar2LKwMph5rMP7sV9by9I+x1d3mh2iAEYXKrcpj4oMjaqO6yjC2fVoGnoFQuBaR8mkF0XGuATwankHLDbindlh/yM3XWJjYvHWzRsf0g4tdGG6txRMXKruNht4qkLc7GI1sGVomI5tHh0xFgrfH59wm8cOA/LkN3Rs5xm3V7Vc+7XcbTw9ME8B+yaLA9bc1Rnjm1hacY8twbezHleZehEjDetLyKdY8UgXQBbwA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dbu7kFDyjaxPmGdTLOBPyd05TGRi36hJD0GVm4mH4vI=;
- b=Ldbvbx7MKgydAlV+uT6nLMWhCLdZqBsDHO8ZNiV2qFWq2Ke6YhXI43RPAdFXiG+y0vU4ufvI2QBwOZ4S2bbHi6VgG2xTHihPA8fN0KlU4120f0Abu0whNqUcdXxpno+JYqIYY+GmSZfWHACtjq/1wTqH5UE64KHquraM+4J4sz2v4lIoEl9R1KTU7h8KN+PNjfQJsvf1p2HxJF2olKfn4MTe82LqyRk7HtwB1KZqK0t4uaDosibPwh9+/r0nz5XkJfcBvJUjmMTauI7fzq4eLREeqMEbKhsRvzsWqbSw9UwFc0CJPbRPYhDHCsPfo9cTm8f3PDEFJku1azYXJSj9tA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dbu7kFDyjaxPmGdTLOBPyd05TGRi36hJD0GVm4mH4vI=;
- b=DIqSmHeMYLOqgw8BRyb0pL8Yspm6FZUXcL3GXjdaQWQZK8qJv4ehkkXWlAHtObOb1pEE5i0m2ea1jDAabn3VKMkG2O+n6i66v3RnNENm8yFaHzC+C7YIjvRzJMqREbX2aH5ixRvmMGYDmNm6AcPl6+MHDooAh15wwM7gotM2UyQ=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MWHPR13MB1582.namprd13.prod.outlook.com (2603:10b6:300:11a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.10; Sun, 15 May
- 2022 03:23:59 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5%6]) with mapi id 15.20.5273.012; Sun, 15 May 2022
- 03:23:58 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "bfields@fieldses.org" <bfields@fieldses.org>,
-        "trondmy@kernel.org" <trondmy@kernel.org>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "SteveD@redhat.com" <SteveD@redhat.com>
-Subject: Re: [PATCH 0/6] Allow nfs4-acl-tools to access 'dacl' and 'sacl'
-Thread-Topic: [PATCH 0/6] Allow nfs4-acl-tools to access 'dacl' and 'sacl'
-Thread-Index: AQHYZ6IS7jvgNvakCU+hxxui/sa/Sq0fL6IAgAAXhAA=
-Date:   Sun, 15 May 2022 03:23:57 +0000
-Message-ID: <15c4602658aff025b6d84e2b9461378930cbd802.camel@hammerspace.com>
-References: <20220514144436.4298-1-trondmy@kernel.org>
-         <20220515015946.GB30004@fieldses.org>
-In-Reply-To: <20220515015946.GB30004@fieldses.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 96c06a05-04a3-4654-831e-08da36225936
-x-ms-traffictypediagnostic: MWHPR13MB1582:EE_
-x-microsoft-antispam-prvs: <MWHPR13MB158286AE2F1258AAE100375AB8CC9@MWHPR13MB1582.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: IbzVljPvG1Qva9vqQD99QOG0TJRP1Kx5chVuBv11FqEmiyuppjLBx88U8j5bCxc11I1yBoKfjO5VS9V2lyDdTtUcZv6LIhBu4d+EKVoMJoXZkxyCX7TkJd4Wn6PUIVeVQy1qOjefdZWwBkJQrAFDc4NGN4aQBnY1Ahw8O+s5Bmn5JNK9dVGiGwNKuc4KF27nb+yk25BmTbga3TMmuGnEW6cZSmKyOJaVZL27TM1Y3X7Awnynb76i8+n3f5iL4xY74UgDaWrNh22VZExAAq4IqnNT4suCAQQOQpq5IuJss6KHrb1qbDKXpWULKh4v5W9gpoiC2aG2UxwsMip8pvmjxhmvUIAY6zMkHOy7vefFpZvnOQYq0YaWmTJFrKwSlALbmh9CpHAocu4e7PW0uGBP6MtLgSCHlkncuPDJvL6L32FHIRoeCjt4rZO1nhvijUyrmoUzIWoNPudEzueL/X3YpAq+tCZoP/kSxaBsPxbV8rhtWzOwBBNNf+kshEQE0y9gdSCqvAmtrm8YCkq5NEQfDXZkiwdxeIHDiIo89qHrHbovZjoy4wYJDhKf3YkAjlVsVnxVUmJtfTMZ8S+oMt/Db9rZaFsBtpCohthDoSczdWXxTW+X1gIzP9n+ntbvOAZusX9qSqRSVwQ+0mohGa504yf89DGFnt3FP87H69G/i0cK70wsFF3xx2YJGku0mHE6lQcaKxGEUfWzS0uWkemf9Q==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(508600001)(4326008)(66446008)(8676002)(64756008)(66476007)(66556008)(8936002)(66946007)(76116006)(5660300002)(36756003)(2616005)(6486002)(71200400001)(86362001)(26005)(6506007)(186003)(38070700005)(38100700002)(2906002)(122000001)(54906003)(6512007)(83380400001)(110136005)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SEZ4RHZFdnRtaWFSVk5iNDJKL2QzQ3gyYkhiQ2FNRlM3ZlpGcjV1REdVSzNl?=
- =?utf-8?B?emErNXczd3ZCcnRBREFQZENWMDZkNDI3VlArQ0hrUE1PbmZqTnBjdm1YQzFS?=
- =?utf-8?B?eHk5cFliUnUxclBoQ2ZNQmMvRnhmMFNOM0xZNmVZRURMTjk4bmdJQmhoQkZ0?=
- =?utf-8?B?cWNDQ1FkSHhyWXpjcU1WaFc3YXhIRVJtRm9vQitVYlZqNWdYRTNNWm1SWUlx?=
- =?utf-8?B?WkNZdnlkVlFPOEFtMUpNUVJKNit2M0d5dGFLR1JFOGc2aFJEdXhrNHpRVFlt?=
- =?utf-8?B?WDRUeE9DVEx4Q0pFT3FmTTRSVis2cWVuWVhRNk5va1krNk1UaVVtVFhtUVRk?=
- =?utf-8?B?UHZHU1UyMkNGQ3d4YUNQS21Zbmpzd3RWOXIzbklYSVRMcnhwWGNxMVNJSUZQ?=
- =?utf-8?B?b1RFYUJLWWJzN01OcXFEQ2M0bURGdFRVVk9KTHJ0cDIzWENZYjZUdzdTREF2?=
- =?utf-8?B?L1h0RVVBRGNyQUVmUzYzK1AwK080cU16MUdJNDNic0FJQStHVjBYK0xwTVhz?=
- =?utf-8?B?UG4zQlBWQzZVMTdiakhYZWRSVGxpcmxtQjJRMkZqVXRodWNCQjlIMVZ6eC9W?=
- =?utf-8?B?WWtwYjN1WG5BM1BaUzY3ZE5oV1lyNW5PWHdaUmkzeFljYXdlYmwyWU0wK1Nr?=
- =?utf-8?B?RkhzZjJGbHVtQjZyT2dVT0crVVU0c2tMcXhTYTl5N2Q0TCtHS3lsTmVVREpO?=
- =?utf-8?B?T0hUK0pKUFdobU1CbzBldmtZcnFHSlZkdjMwQk9zVFQyYlBnWFVlZ2dORisz?=
- =?utf-8?B?NUZoOUVla2lqcnI3WHk2UDhUZUxHdVNRYm5RMVUwY1R1TUtoUEZMZDRoQzEv?=
- =?utf-8?B?aS9zU2ZYcURPZno4SjNjQTRRdk1NNlB4WHpXdENxSWVnNGpRaXFqOWhRNUVv?=
- =?utf-8?B?STVtMlNHMnRiaEhtaDg0bi8waE5mZnlwTzZTekFESUhFU1ZIL2laaHlyd3Vn?=
- =?utf-8?B?MHdmUzhWNzQxZmdra1o1TFNKcDhoYXJYd2g4WnN1cHZZNmJ1S1Z1RHpwclVn?=
- =?utf-8?B?QU84eVNxdE0xcU1RS1oxTlNxNnF1TUpFWHorV2k1MkVRZFRJeUJ5cmNRdkdS?=
- =?utf-8?B?MmVKRmpDdERVRWUvVVB5RmNSRjRVTG90TWJEV3JjOUFueE1TTUlTanBVSEJ6?=
- =?utf-8?B?ZDV6cEhMYW11VlhwWUZUTEVBUnVodFFTN3d0WEtyZjd0bTJIN1N4WWF4RnVG?=
- =?utf-8?B?ZnVsUGV1WFdvTit1Rlo1MUtvbmdWSjJnL01XYzNuVEI1eUlJSStZMzNwUDVB?=
- =?utf-8?B?WWpwaXBnYnlQMVhBdE92Z0dYRHR2aklZOEQ3Ritja01vcC9iUzBtYUdiZHdi?=
- =?utf-8?B?Ky9kb0UxNWFtVURFdnNMQmFTdUNWQnl3aGtYSVpsa1prcUNWNnJQZ1JKOFJm?=
- =?utf-8?B?T2t5cHJRK1JZQUN5NTZUbHROSmVleC9xQllMQnNZdWxFSGg5ZFV6Mmlud3p6?=
- =?utf-8?B?NUl4dG1xdmlIOVBUWTA1VDIzRGx4a3BjM2FBMW1zNFU3ZHhBK2VkMi83WUp5?=
- =?utf-8?B?N1RpWW9GZVowSlVzenZCTTJUb1VJa3IrakQ1Qzc2dFVyUjBaZGpVM3ZrZjVt?=
- =?utf-8?B?U1RPYlpJR2R6SGxvT0VJS3FDTGVsTDZCTzd5WWJ0bThUSVVpaW40RXBnTkpu?=
- =?utf-8?B?SnBtR3BRd0pvbmRhSExwUzdDM3RiVDZ1d1E5Qk5GelNLYzhkRStkekZKTFVy?=
- =?utf-8?B?dURFN2gvS0hKR1QwYTRKUTI1KzZRYm8rWmRrMi85cWFTc1NMYTlOUEpudnRJ?=
- =?utf-8?B?WUxSLzVWN0lBOVlPMjI2aGV1OFg3MWVVdThWcGpOYnV5RXlVUWFqYnJ5VWxB?=
- =?utf-8?B?RFVQZSt4aWZBcXkxQWpudzFleE16a1Nib01IWGZ5YWd1UFBEM2t4T3d6Mi8v?=
- =?utf-8?B?b3htMlQ2b3JuSHoxVW5mNTNDRTBLMmMyeTVkczBHaG5mbVFtcUJmNXM4ekhi?=
- =?utf-8?B?Q01UN0k3Sm5WREc2NlJlTUhBQkxkS294TnhtYVZoeHBOSGpZbDZJKzJFOXFi?=
- =?utf-8?B?Vi9FckJIeEZiZ01jYkdpZlU4djNkZ3NwdlRmYldHNHBLTUNUTHo3UUpoVWF6?=
- =?utf-8?B?eWFRWis0azR5VXVaWHhDLzdlSGZvYWRvcnVMdDd1bmQ3WHh1MUxjbFFlbG5j?=
- =?utf-8?B?QmFWVExPdnRqbExQNGhxYStNQ25sNmhMMEZsWDBaNnNyRDlSTmZOMWVqSVBm?=
- =?utf-8?B?SlZXcWJQNFh0NzduUnhabDZNRk5VVEp3MHVYcGI1MWoxWVJNUXVnRUovWm9h?=
- =?utf-8?B?WElIR24wbDBtZnB3N2tiNml6SXlGWC9HNHhBczZVd1RPKy9aZlNmamljcWdL?=
- =?utf-8?B?U3V3U3pULzVrSG1pTk9NVFphcmQxRmhnc1F0ZVp0RkhlVkl1bTNGZW4xcHVM?=
- =?utf-8?Q?suUHDju2BiNtQO+8=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <CD83D9CA3A32DC4990BB00C7D3758C04@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S1343763AbiEPQfN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 16 May 2022 12:35:13 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7567E3BA54
+        for <linux-nfs@vger.kernel.org>; Mon, 16 May 2022 09:35:10 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id dk23so29746939ejb.8
+        for <linux-nfs@vger.kernel.org>; Mon, 16 May 2022 09:35:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=drBwZ3kZrAODzvtQSn7MfQgTCaWXGPGql0QGqZTR2FE=;
+        b=KQL7+QFYo2r8Sd9Pf0aqedX4k5zNhcuWKXrtLX9YIJuMLdbJei9DvlZckzIoNVBlav
+         Y/hAJG1cWwgAbGKG5JNPIVsuGXgI4PBulp3lQ60AEtdqpdvi9zSCZs4GlRk1gf380els
+         Rrssszjk43gUSgWS6qRsv/4jn4YxXz9uXQrWgkl/C98jnJ6uchoISYwXQKo9wyAliXU0
+         Boq3qkW4DJGauPtrg93b5ZKBL3Hqxy2GP9CC4N5Vl6bNXRcYiYREAiCeHDW6veWeUChA
+         KCRanN3a/BjYwVDMqbJqJ/rphiivcHQyA9A+/MSU0owYJJ5SyQEKfiYi27OeT5ptkkm8
+         TxIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=drBwZ3kZrAODzvtQSn7MfQgTCaWXGPGql0QGqZTR2FE=;
+        b=NsxqWu7tw+3P0qGVcawLzLi8HF2Q9t9Ws8kadCjEIXB6qP2/609uzSSu0vzTQtUgWG
+         RtbPuzV5EkXsu087YkXTbIG1DoZBh7tMzvv0ytX6JXtxGZxXA+JdpqxO/eTtZKgO84i1
+         Dc0yaF1x8cakJrZlNL5MrQxgx69VjVLRoMgJfcB8DkSLit4GZtMG4sbTe0H9g4u37kLI
+         BA6N5uyLuDl3KOLPYNdjDhMwvYCSwfVLiu7hFBBm7Uo5+ob4oPtbJxE3RyCuzNeLsQaI
+         m9k8cKRR0GhDEEh+iMHp+O4TpZrX3BZnynKXmOH8mPzBf26NtlibtWbl/5EO+TSXjMdo
+         U28Q==
+X-Gm-Message-State: AOAM533A8EWSIDI3C021fAmzIlx6MlS8Ba6AEQgJyTUz5x0+1d/GiCGM
+        Gj2TyZSNfgipSfI993vB9oges2T6OFPgQotK03ea1jaa
+X-Google-Smtp-Source: ABdhPJyH4CEacFLIAvDvTVcOhzqM76zcAioiClFVxlK82pOZQaiFJdZZ3aeDD0ngwsaXAIAlP4rKitFoXEccs0zAeDE=
+X-Received: by 2002:a17:907:6d26:b0:6f4:bba2:ebbb with SMTP id
+ sa38-20020a1709076d2600b006f4bba2ebbbmr15923958ejc.699.1652718908716; Mon, 16
+ May 2022 09:35:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96c06a05-04a3-4654-831e-08da36225936
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 May 2022 03:23:57.9722
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: m+7chV4JmC8Uu6Cu6XpO4uGtBUqYDg43QD5iZiK/TgBf6fMu9fiBm0To311qm75yszzbka2bXvft+jR+lFephA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1582
+References: <20220413132207.52825-1-olga.kornievskaia@gmail.com>
+In-Reply-To: <20220413132207.52825-1-olga.kornievskaia@gmail.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Mon, 16 May 2022 12:34:57 -0400
+Message-ID: <CAN-5tyFJeLWi5UYYSvaYspwOn3VhGMQkKx-QQkXSX1ZR+guD8g@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSv4.1 mark qualified async operations as MOVEABLE tasks
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -132,24 +65,80 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gU2F0LCAyMDIyLTA1LTE0IGF0IDIxOjU5IC0wNDAwLCBKLkJydWNlIEZpZWxkcyB3cm90ZToN
-Cj4gT24gU2F0LCBNYXkgMTQsIDIwMjIgYXQgMTA6NDQ6MzBBTSAtMDQwMCwgdHJvbmRteUBrZXJu
-ZWwub3JnwqB3cm90ZToNCj4gPiBGcm9tOiBUcm9uZCBNeWtsZWJ1c3QgPHRyb25kLm15a2xlYnVz
-dEBoYW1tZXJzcGFjZS5jb20+DQo+ID4gDQo+ID4gVGhlIGZvbGxvd2luZyBwYXRjaCBzZXQgbWF0
-Y2hlcyB0aGUga2VybmVsIHBhdGNoZXMgdG8gYWxsb3cgYWNjZXNzDQo+ID4gdG8NCj4gPiB0aGUg
-TkZTdjQuMSAnZGFjbCcgYW5kICdzYWNsJyBhdHRyaWJ1dGVzLiBUaGUgY3VycmVudCBwYXRjaGVz
-IGFyZQ0KPiA+IHZlcnkNCj4gPiBiYXNpYywgYWRkaW5nIHN1cHBvcnQgZm9yIGVuY29kaW5nL2Rl
-Y29kaW5nIHRoZSBuZXcgYXR0cmlidXRlcyBvbmx5DQo+ID4gd2hlbg0KPiA+IHRoZSB1c2VyIHNw
-ZWNpZmllcyB0aGUgJy0tZGFjbCcgb3IgJy0tc2FjbCcgZmxhZ3Mgb24gdGhlIGNvbW1hbmQNCj4g
-PiBsaW5lLg0KPiANCj4gU2VlbXMgbGlrZSBhIHJlYXNvbmFibGUgdGhpbmcgdG8gZG8uDQo+IA0K
-PiBJJ2QgcmF0aGVyIG5vdCBiZSByZXNwb25zaWJsZSBmb3IgbmZzNC1hY2wtdG9vbHMgYW55IGxv
-bmdlciwgdGhvdWdoLg0KPiANCj4gLS1iLg0KDQpJIHN1c3BlY3RlZCB0aGF0IG1pZ2h0IGJlIHRo
-ZSBjYXNlLCBidXQgc2luY2UgeW91IGhhdmVuJ3QgbWFkZSBhbnkNCmFubm91bmNlbWVudHMgYWJv
-dXQgYW55Ym9keSBlbHNlIHRha2luZyBvdmVyLCBJIGZpZ3VyZWQgSSdkIHN0YXJ0IGJ5DQpzZW5k
-aW5nIHRoZXNlIHRvIHlvdS4NCg0KU28gd2hvIHNob3VsZCB0YWtlIG92ZXIgdGhlIG5mczQtYWNs
-LXRvb2xzIG1haW50YWluZXIgcm9sZT8gSXMgdGhhdA0Kc29tZXRoaW5nIFJlZCBIYXQgbWlnaHQg
-YmUgaW50ZXJlc3RlZCBpbiBkb2luZywgb3Igc2hvdWxkIEkgdm9sdW50ZWVyDQp0byBkbyBpdCB3
-aGlsZSB3ZSB3YWl0IGZvciBzb21lYm9keSB0byBnZXQgc28gZmVkIHVwIHRoYXQgdGhleSBkZWNp
-ZGUNCnRvIHN0ZXAgaW4/DQoNCi0tIA0KVHJvbmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50
-IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29t
-DQoNCg0K
+Hi Trond and Anna,
+
+Any update on taking this patch? Thank you.
+
+On Wed, Apr 13, 2022 at 9:22 AM Olga Kornievskaia
+<olga.kornievskaia@gmail.com> wrote:
+>
+> From: Olga Kornievskaia <kolga@netapp.com>
+>
+> Mark async operations such as RENAME, REMOVE, COMMIT MOVEABLE
+> for the nfsv4.1+ sessions.
+>
+> Fixes: 85e39feead948 ("NFSv4.1 identify and mark RPC tasks that can move between transports")
+> Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> ---
+>  fs/nfs/nfs4proc.c | 24 ++++++++++++++++++++----
+>  1 file changed, 20 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+> index 16106f805ffa..f593bad996af 100644
+> --- a/fs/nfs/nfs4proc.c
+> +++ b/fs/nfs/nfs4proc.c
+> @@ -4780,7 +4780,11 @@ static void nfs4_proc_unlink_setup(struct rpc_message *msg,
+>
+>  static void nfs4_proc_unlink_rpc_prepare(struct rpc_task *task, struct nfs_unlinkdata *data)
+>  {
+> -       nfs4_setup_sequence(NFS_SB(data->dentry->d_sb)->nfs_client,
+> +       struct nfs_client *clp = NFS_SB(data->dentry->d_sb)->nfs_client;
+> +
+> +       if (clp->cl_minorversion)
+> +               task->tk_flags |= RPC_TASK_MOVEABLE;
+> +       nfs4_setup_sequence(clp,
+>                         &data->args.seq_args,
+>                         &data->res.seq_res,
+>                         task);
+> @@ -4823,7 +4827,11 @@ static void nfs4_proc_rename_setup(struct rpc_message *msg,
+>
+>  static void nfs4_proc_rename_rpc_prepare(struct rpc_task *task, struct nfs_renamedata *data)
+>  {
+> -       nfs4_setup_sequence(NFS_SERVER(data->old_dir)->nfs_client,
+> +       struct nfs_client *clp = NFS_SERVER(data->old_dir)->nfs_client;
+> +
+> +       if (clp->cl_minorversion)
+> +               task->tk_flags |= RPC_TASK_MOVEABLE;
+> +       nfs4_setup_sequence(clp,
+>                         &data->args.seq_args,
+>                         &data->res.seq_res,
+>                         task);
+> @@ -5457,7 +5465,11 @@ static void nfs4_proc_read_setup(struct nfs_pgio_header *hdr,
+>  static int nfs4_proc_pgio_rpc_prepare(struct rpc_task *task,
+>                                       struct nfs_pgio_header *hdr)
+>  {
+> -       if (nfs4_setup_sequence(NFS_SERVER(hdr->inode)->nfs_client,
+> +       struct nfs_client *clp = NFS_SERVER(hdr->inode)->nfs_client;
+> +
+> +       if (clp->cl_minorversion)
+> +               task->tk_flags |= RPC_TASK_MOVEABLE;
+> +       if (nfs4_setup_sequence(clp,
+>                         &hdr->args.seq_args,
+>                         &hdr->res.seq_res,
+>                         task))
+> @@ -5595,7 +5607,11 @@ static void nfs4_proc_write_setup(struct nfs_pgio_header *hdr,
+>
+>  static void nfs4_proc_commit_rpc_prepare(struct rpc_task *task, struct nfs_commit_data *data)
+>  {
+> -       nfs4_setup_sequence(NFS_SERVER(data->inode)->nfs_client,
+> +       struct nfs_client *clp = NFS_SERVER(data->inode)->nfs_client;
+> +
+> +       if (clp->cl_minorversion)
+> +               task->tk_flags |= RPC_TASK_MOVEABLE;
+> +       nfs4_setup_sequence(clp,
+>                         &data->args.seq_args,
+>                         &data->res.seq_res,
+>                         task);
+> --
+> 2.27.0
+>
