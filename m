@@ -2,61 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABBE052DD5A
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 May 2022 21:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7231052DE35
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 May 2022 22:20:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243410AbiESTB3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 May 2022 15:01:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57730 "EHLO
+        id S244531AbiESUUH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 May 2022 16:20:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244387AbiESTBP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 May 2022 15:01:15 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E06A263BE
-        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 12:01:10 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 497835BD0; Thu, 19 May 2022 15:01:10 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 497835BD0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1652986870;
-        bh=nPgey4YDRXgQFxQJ5nJwhU8AaDBu8+8Fm7D2pGsDU54=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ip3CiXGsGgtN2Sen9qKV74PNGqIARkm/E+oU0BoKj6Bx411IzimldNAFacnrz+VhL
-         jy6s5TWN2FUvAUepVGCqXvgCYEt3L6/yn5FaRDdMwy+Gv1eEYyPWCdaXrKwLsLHDSr
-         NxnhupiQhk7zJFMQxPVMp9nsVlSJvk3OH3oIv6M8=
-Date:   Thu, 19 May 2022 15:01:10 -0400
-From:   "bfields@fieldses.org" <bfields@fieldses.org>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "trondmy@kernel.org" <trondmy@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 0/6] Allow nfs4-acl-tools to access 'dacl' and 'sacl'
-Message-ID: <20220519190110.GD23564@fieldses.org>
-References: <20220514144436.4298-1-trondmy@kernel.org>
- <20220515015946.GB30004@fieldses.org>
- <15c4602658aff025b6d84e2b9461378930cbd802.camel@hammerspace.com>
- <627133c7-dab9-db0b-5fdf-ecb95820e76a@redhat.com>
- <20220519135311.GC23564@fieldses.org>
- <765e7b64-c5dd-a62e-3762-8e4ecec9f0d8@redhat.com>
+        with ESMTP id S239472AbiESUUG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 May 2022 16:20:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EE5ACA5002
+        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 13:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1652991605;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=m/KzPHjCHCtQObe1Y24P096H3Qk3kj52f/NF374wXgs=;
+        b=jT5HSc+a82Wupgj8LKVkmncANDRHiTG1vG40uyXF01veuE/BttjHjD0iY01b/gAMF12Jcu
+        PwQbW3GSeHkXG19uSeY2Vqlxagiet28Gz+iGDU7tD68+0scV3f5wLGGbIW9H1K9bJ4UZju
+        gOvUPA8rQVJ0aGXk6Pm2l9hNeIQGi8E=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-453-jll-i-JKPQe6hYkxBXhJPQ-1; Thu, 19 May 2022 16:20:02 -0400
+X-MC-Unique: jll-i-JKPQe6hYkxBXhJPQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B9C2E39F9CB6;
+        Thu, 19 May 2022 20:20:01 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C2D240CF8F5;
+        Thu, 19 May 2022 20:20:00 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CALF+zOk923ZnSucxitYQFN9m3AY=iOy+j90WrFmqZbKMuOcVsA@mail.gmail.com>
+References: <CALF+zOk923ZnSucxitYQFN9m3AY=iOy+j90WrFmqZbKMuOcVsA@mail.gmail.com> <165294669215.3283481.13374322806917745974.stgit@warthog.procyon.org.uk>
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     dhowells@redhat.com,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        anna@kernel.org, Jeff Layton <jlayton@kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-cachefs <linux-cachefs@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] nfs: Fix fscache volume key rendering for endianness
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <765e7b64-c5dd-a62e-3762-8e4ecec9f0d8@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3662003.1652991599.1@warthog.procyon.org.uk>
+Date:   Thu, 19 May 2022 21:19:59 +0100
+Message-ID: <3662004.1652991599@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 19, 2022 at 02:52:25PM -0400, Steve Dickson wrote:
-> Also the links on the main page of linux-nfs.org [2]
-> will need to point to [1]. I guess I don't have an
-> account on that box, so I can not make that change.
+David Wysochanski <dwysocha@redhat.com> wrote:
 
-https://wiki.linux-nfs.org/wiki/index.php/Special:RequestAccount
+> Did someone report the "cache copied between architectures" issue, or
+> is that mostly a theoretical problem you noticed?
 
---b.
+Ah, I didn't mention.  Checker noticed it (make C=1).
+
+David
+
