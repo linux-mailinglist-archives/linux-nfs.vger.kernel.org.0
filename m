@@ -2,139 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B343452DC47
-	for <lists+linux-nfs@lfdr.de>; Thu, 19 May 2022 20:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2624052DD32
+	for <lists+linux-nfs@lfdr.de>; Thu, 19 May 2022 20:53:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239814AbiESSCi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 19 May 2022 14:02:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
+        id S244121AbiESSxV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 19 May 2022 14:53:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238398AbiESSCh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 May 2022 14:02:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D9A2D5AEEC
-        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 11:02:36 -0700 (PDT)
+        with ESMTP id S244165AbiESSxN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 19 May 2022 14:53:13 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DA68C108A86
+        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 11:52:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1652983356;
+        s=mimecast20190719; t=1652986348;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+vRbUI4/GPSCZt1VwOoZEQyVUcK9j3r3qdubIZdOiHI=;
-        b=E9eMeyYtNG5N88qY1is+Su6/9zJWdCG8T5WokWoMybGGbEQbDwM6Xwu5DFs93C8A8BGsSd
-        aSLknT3Hs5E/7ZUziXiquHmD08BK4EbgzwcEpAf4dXwFKgDR5J9u7mhoS+4I3cdq+0T+QL
-        mf2tdg/4hKkxWRv75glJ6csTo7GITcM=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=OlZJnKxGTeokl1Q4CE+9ngODcoQwnWfK3KiRnYY1uBc=;
+        b=WWvUUEEtzJBuwYszkXeU3LG12JGEpzK6TclgEyXC2Z/MBWOl/DLJek2aCT486wj/nEuMF1
+        MWCBSd3Z7zJegsXzbA1Xce3ZWRZ2ilf4+5j/05ZtBVxvGZAWhG9oWlpYdD8QMwK6zbGJtT
+        huflVhTe/nIN+TDqsGof7zBjHK6OqYc=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-554-V7Xg5_RaP920JsFQDq-C2w-1; Thu, 19 May 2022 14:02:34 -0400
-X-MC-Unique: V7Xg5_RaP920JsFQDq-C2w-1
-Received: by mail-ed1-f70.google.com with SMTP id w14-20020a50fa8e000000b0042ab142d677so4065536edr.11
-        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 11:02:34 -0700 (PDT)
+ us-mta-25-CcXviha3NFqYyWXj-t9Dig-1; Thu, 19 May 2022 14:52:27 -0400
+X-MC-Unique: CcXviha3NFqYyWXj-t9Dig-1
+Received: by mail-qk1-f198.google.com with SMTP id 63-20020a370c42000000b006a063777620so4797577qkm.21
+        for <linux-nfs@vger.kernel.org>; Thu, 19 May 2022 11:52:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+vRbUI4/GPSCZt1VwOoZEQyVUcK9j3r3qdubIZdOiHI=;
-        b=DCtHqM9z22xbDkpwt0ViUmj5ThkfPWHtDLUh/PvBxGc5MUiVicaifGN5HVjWRf60rC
-         YdjWrAKZkaEoHzYhXzLJTw+2KDW8+WQhE4tw+jRCqF/5puNLCXbdczwwjqfw0JEeEBRl
-         GMfDIBR2U9qfBDw9ulWinBbbp5GRc4kJ8zqLYY3nabmnETbwCDqlca+l3I1/0F88wX4+
-         /HcoO6a4MLi/JnhJNXlBx1Ymu6Q2qBqsiP09QkYmMyTOudR8btifL3KASQ6v1AcE3Wa8
-         lNcnwy5iqnJqGc3R85FtM9ow6RNkxUWavpb4ySitkcm3WIMeykbW0a3c2TQTPwH3JVqY
-         dMgA==
-X-Gm-Message-State: AOAM533dhibI9kh3DLs8LelS5S5SxHh3TTRRVhR0dC+k4X3bSJ8oajKS
-        /apOHSrAbc7tBSWt0cXHM8/pds0VYGrMj4TW0WBPJYnSj/E7V1IA+jUUUqvPlZ4KingmoqAY79r
-        0ypgkI2O43FfnYrJd9z9RK1qw/nlealzhLbpu
-X-Received: by 2002:a05:6402:5298:b0:42a:cb63:5d10 with SMTP id en24-20020a056402529800b0042acb635d10mr6750411edb.415.1652983353660;
-        Thu, 19 May 2022 11:02:33 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxn6/Tj4V8KVXox3lSlmm5Gz66eQBDgYCQAVpr2miM030h/XBUwtnvlrRGYYV9HfkeB+8UEO+uov7EtDJwHTak=
-X-Received: by 2002:a05:6402:5298:b0:42a:cb63:5d10 with SMTP id
- en24-20020a056402529800b0042acb635d10mr6750403edb.415.1652983353522; Thu, 19
- May 2022 11:02:33 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=OlZJnKxGTeokl1Q4CE+9ngODcoQwnWfK3KiRnYY1uBc=;
+        b=Qowh5A1leSa0b/QDoJn172wOT8adw91ob9KMJd4NuBEjvG2/tuCciPFfaVW0JSreEb
+         IW0l9ebbh6UN9GQvay6HkB4CIG2AwsiHz3YLe7Qo1uYiSMc7E7u7K8f65l6XFMfqbd0U
+         rn/7HZvDTytIoiaV4zKgd0SCafbSn5xs2jb7b2TtE7Y85rk0HSGQA1DLYBvkKLZmH/I+
+         zX1cuAqFn4GG3rEYQ1LsbP0I5eRKZqkiLvjkn+e2cYOabpRRucNeYtqQ0ArvF2/lZCS0
+         j+wHIA7wfmjPj5n3gfnqM1rfY+oSOP6zOp7pUBNkRjOboOIxjbccumPpF0ws9PzOI4fF
+         JwNg==
+X-Gm-Message-State: AOAM5339km9Ad8BpE5r7LemxvD/aIy+v7JuMtkPuHRvBPUErnxYWK66o
+        r32Zi9aCNVsxrElBmE9E+MEFaS/YbcsQ646g6KdKOapfhB7nFX6/2Jm0YUF8KzONPLNIGhVRrfs
+        FAY5YGw+fQSw39GicMEkS
+X-Received: by 2002:a05:6214:528e:b0:462:584:3d75 with SMTP id kj14-20020a056214528e00b0046205843d75mr2451212qvb.110.1652986346987;
+        Thu, 19 May 2022 11:52:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzOBXoQ7Dpl/hbCKY1JbNwr7Etc4Xi3OpTVLHV3eIixYJi6ZZ5Hb0UcFjfcVZnl0RX7MUmaLQ==
+X-Received: by 2002:a05:6214:528e:b0:462:584:3d75 with SMTP id kj14-20020a056214528e00b0046205843d75mr2451190qvb.110.1652986346683;
+        Thu, 19 May 2022 11:52:26 -0700 (PDT)
+Received: from [172.31.1.6] ([71.161.96.106])
+        by smtp.gmail.com with ESMTPSA id o13-20020ac8554d000000b002f3ef928fbbsm1651123qtr.72.2022.05.19.11.52.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 May 2022 11:52:26 -0700 (PDT)
+Message-ID: <765e7b64-c5dd-a62e-3762-8e4ecec9f0d8@redhat.com>
+Date:   Thu, 19 May 2022 14:52:25 -0400
 MIME-Version: 1.0
-References: <165294669215.3283481.13374322806917745974.stgit@warthog.procyon.org.uk>
-In-Reply-To: <165294669215.3283481.13374322806917745974.stgit@warthog.procyon.org.uk>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Thu, 19 May 2022 14:01:57 -0400
-Message-ID: <CALF+zOk923ZnSucxitYQFN9m3AY=iOy+j90WrFmqZbKMuOcVsA@mail.gmail.com>
-Subject: Re: [PATCH] nfs: Fix fscache volume key rendering for endianness
-To:     David Howells <dhowells@redhat.com>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>, anna@kernel.org,
-        Jeff Layton <jlayton@kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-cachefs <linux-cachefs@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.0
+Subject: Re: [PATCH 0/6] Allow nfs4-acl-tools to access 'dacl' and 'sacl'
+Content-Language: en-US
+To:     "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "trondmy@kernel.org" <trondmy@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+References: <20220514144436.4298-1-trondmy@kernel.org>
+ <20220515015946.GB30004@fieldses.org>
+ <15c4602658aff025b6d84e2b9461378930cbd802.camel@hammerspace.com>
+ <627133c7-dab9-db0b-5fdf-ecb95820e76a@redhat.com>
+ <20220519135311.GC23564@fieldses.org>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220519135311.GC23564@fieldses.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, May 19, 2022 at 3:51 AM David Howells <dhowells@redhat.com> wrote:
->
-> Fix fscache volume key rendering for endianness.  Convert the BE numbers in
-> the address to host-endian before printing them so that they're consistent
-> if the cache is copied between architectures.
->
-> Question: This change could lead to misidentification of a volume directory
-> in the cache on a LE machine (it's unlikely because the port number as well
-> as the address numbers all get flipped), but it was introduced in -rc1 in
-> this cycle so probably isn't in any distro kernels yet.  Should I add a
-> version number to enforce non-matching?
->
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Dave Wysochanski <dwysocha@redhat.com>
-> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> cc: Anna Schumaker <anna@kernel.org>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: linux-nfs@vger.kernel.org
-> cc: linux-cachefs@redhat.com
-> ---
->
->  fs/nfs/fscache.c |   14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-> index f73c09a9cf0a..0e5572b192b2 100644
-> --- a/fs/nfs/fscache.c
-> +++ b/fs/nfs/fscache.c
-> @@ -54,17 +54,17 @@ static bool nfs_fscache_get_client_key(struct nfs_client *clp,
->
->         switch (clp->cl_addr.ss_family) {
->         case AF_INET:
-> -               if (!nfs_append_int(key, _len, sin->sin_port) ||
-> -                   !nfs_append_int(key, _len, sin->sin_addr.s_addr))
-> +               if (!nfs_append_int(key, _len, ntohs(sin->sin_port)) ||
-> +                   !nfs_append_int(key, _len, ntohl(sin->sin_addr.s_addr)))
->                         return false;
->                 return true;
->
->         case AF_INET6:
-> -               if (!nfs_append_int(key, _len, sin6->sin6_port) ||
-> -                   !nfs_append_int(key, _len, sin6->sin6_addr.s6_addr32[0]) ||
-> -                   !nfs_append_int(key, _len, sin6->sin6_addr.s6_addr32[1]) ||
-> -                   !nfs_append_int(key, _len, sin6->sin6_addr.s6_addr32[2]) ||
-> -                   !nfs_append_int(key, _len, sin6->sin6_addr.s6_addr32[3]))
-> +               if (!nfs_append_int(key, _len, ntohs(sin6->sin6_port)) ||
-> +                   !nfs_append_int(key, _len, ntohl(sin6->sin6_addr.s6_addr32[0])) ||
-> +                   !nfs_append_int(key, _len, ntohl(sin6->sin6_addr.s6_addr32[1])) ||
-> +                   !nfs_append_int(key, _len, ntohl(sin6->sin6_addr.s6_addr32[2])) ||
-> +                   !nfs_append_int(key, _len, ntohl(sin6->sin6_addr.s6_addr32[3])))
->                         return false;
->                 return true;
->
->
->
 
-IMO it's not worth versioning in this case but I agree with this change.
-Did someone report the "cache copied between architectures" issue, or
-is that mostly a theoretical problem you noticed?
 
-Acked-by: Dave Wysochanski <dwysocha@redhat.com>
+On 5/19/22 9:53 AM, bfields@fieldses.org wrote:
+> On Thu, May 19, 2022 at 09:47:41AM -0400, Steve Dickson wrote:
+>>
+>>
+>> On 5/14/22 11:23 PM, Trond Myklebust wrote:
+>>> On Sat, 2022-05-14 at 21:59 -0400, J.Bruce Fields wrote:
+>>>> On Sat, May 14, 2022 at 10:44:30AM -0400, trondmy@kernel.org wrote:
+>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>
+>>>>> The following patch set matches the kernel patches to allow access
+>>>>> to
+>>>>> the NFSv4.1 'dacl' and 'sacl' attributes. The current patches are
+>>>>> very
+>>>>> basic, adding support for encoding/decoding the new attributes only
+>>>>> when
+>>>>> the user specifies the '--dacl' or '--sacl' flags on the command
+>>>>> line.
+>>>>
+>>>> Seems like a reasonable thing to do.
+>>>>
+>>>> I'd rather not be responsible for nfs4-acl-tools any longer, though.
+>>>>
+>>>> --b.
+>>>
+>>> I suspected that might be the case, but since you haven't made any
+>>> announcements about anybody else taking over, I figured I'd start by
+>>> sending these to you.
+>>>
+>>> So who should take over the nfs4-acl-tools maintainer role? Is that
+>>> something Red Hat might be interested in doing, or should I volunteer
+>>> to do it while we wait for somebody to get so fed up that they decide
+>>> to step in?
+>>>
+>> Yeah... it probably something we should take over....
+>>
+>> I'll add these to my todo list... Where does the upstream repo
+>> live today?
+There is now a new nfs4-acl-tools repo [1]  that I will start
+using for this patch set. You might want to disable
+the old repo.
+
+Also the links on the main page of linux-nfs.org [2]
+will need to point to [1]. I guess I don't have an
+account on that box, so I can not make that change.
+
+steved.
+
+
+[1] git://git.linux-nfs.org/~steved/nfs4-acl-tools.git
+[2] http://linux-nfs.org/wiki/index.php/Main_Page
+
+
 
