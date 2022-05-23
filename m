@@ -2,53 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91328531BBA
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 964B9531C4C
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229541AbiEWSkw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 14:40:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
+        id S238321AbiEWSt5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 14:49:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243783AbiEWSkb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 14:40:31 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam08on20722.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e8c::722])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5BFA1842ED
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 11:22:11 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WcJGgQ3dL4vi3bqwags0qNYHcBsvgf5Bzwj3mv52HrDFK7cdM5qCut5f9N8aiTw2eiUcKxmWPDqdm4YNX/CElbto9chUq2wus8sj1gxuvPS3zaQ7m8QF52oHONTrfh5M4okKNnAW3Lwi4Pi1Npb161/Txcpc7rnbp9Tk5vhubmtQoMxuyiVv8pRWak1G+TknNb1mBSUm0KwVRxNyKzwQHdeAIRnQ1wKnfbu6ijY+C85qmEhrgYpaEsyznU6JgySvB5RE92vFDcdqIyakK9dwqDTLWcRIgjSeR2tPC5JqMs+r4xRU6seewsghqB5dLZXtpf6/5BoIv2fJiD43PIiylg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AvxmFctcogdmgkSk2GKrSMrT9Gllml5cjJ+9b+shqfY=;
- b=j5WPPIDQAqHtMuu/OYIm4UyDTM8XeItdsRH3PgXfI/LzZZ4f/8VQmLPgw2lop/LxfQQA41vf2HNOkXsjcpq9BTjQuziX5DVhyvRvXLU1wCzZyeT0KFHdBGGlhRQuCH1qAxTedJLcODfP1qiqKcNO7AJsaTqiunWtaMpKHpDwXh9h263vR9Mx3mgWhi6kDSsLy/4CIfEyWHK9nsD08EmcRMeAOHa/j2AypECrS8kgx7NXK9htn0uX99GzWZ9XRnfKJopUuWMRnsJz8tJlXZyI1Bb7qOzFDLh0WHyXjShzIMoDwOOQH2AFP66bb3FUHE1Qw7ETw05n0UEhqc6BmUB/zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AvxmFctcogdmgkSk2GKrSMrT9Gllml5cjJ+9b+shqfY=;
- b=L+rZEcP5xxbdGTVXX2JCWHSYLyEzPcwjPVeMlZ4AdW3N1CRj8K7b8LQ+S2uFIaSr4KxCUOjjXai10Bc4t7UCKINJ2tEINGDBE6B7iyGZDTmKkGJ/uKRV++CKCYL6ylNArfv1OPVv9vWHyU2Bc7irWGr6nviAqqtVxHmq8nMaytk=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by PH7PR13MB5865.namprd13.prod.outlook.com (2603:10b6:510:157::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.12; Mon, 23 May
- 2022 18:21:31 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5%6]) with mapi id 15.20.5293.013; Mon, 23 May 2022
- 18:21:31 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "jlayton@kernel.org" <jlayton@kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+        with ESMTP id S243150AbiEWSrF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 14:47:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEE2A22504
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 11:31:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F33F61160
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 18:30:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58B9DC385AA;
+        Mon, 23 May 2022 18:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653330632;
+        bh=QCbYZkDZDJH9+09OuTMElQ9wRv6BKgV0OKxgw+mf4cM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=S8yL17dwKSskNaWyWDhV1D2xgbg2GvaK7Qm2a/0QFjE6h1gt85Idrj9aw1FKamlpj
+         DCU/ETq6AqBtcdAU120jESW828vSZOQaRyzadusgZV8aX6ITOu9Nm4QKGdPraaI04I
+         EKXFSeaDUruMjK0upys4xzop0avi9CoAMRr2VKG24TbQMJwoR0UuFwZJLuFJQIG0KG
+         32VKY79D5HUd5zhe3QvSNDxmcq3Sj8Ng33wrYnyjpsyZ3sd+hqdr+uTECBCncvCu2V
+         PjSFqFzUAeh06uRbsT3iJxbgwWLLFQ5JGBL+RGxsO0BiiLdMN8N20uNszRbWuSheeB
+         uRqURd7fkJrEw==
+Message-ID: <f12bf8be7c8fe6cf1a9e6a440277a3eb8edd543a.camel@kernel.org>
 Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
  nfsd4_release_lockowner()
-Thread-Topic: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-Thread-Index: AQHYbfIK1GvkjIgCcUGA0PpLZZ9Qka0seYcAgAAWLoCAAAdHAIAABF2AgAAPmoCAABJ5AIAABdOAgAAEr4A=
-Date:   Mon, 23 May 2022 18:21:31 +0000
-Message-ID: <5dfbc622c9ab70af5e4a664f9ae03b7ed659e8ac.camel@hammerspace.com>
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Date:   Mon, 23 May 2022 14:30:30 -0400
+In-Reply-To: <5dfbc622c9ab70af5e4a664f9ae03b7ed659e8ac.camel@hammerspace.com>
 References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
          <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
          <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
@@ -57,283 +48,318 @@ References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net
          <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
          <93d11e12532f5a10153d3702100271f70373bce6.camel@hammerspace.com>
          <a719ae7e8fb8b46f84b00b27d800330712486f40.camel@kernel.org>
-In-Reply-To: <a719ae7e8fb8b46f84b00b27d800330712486f40.camel@kernel.org>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: da446666-2b62-4652-522e-08da3ce90f8e
-x-ms-traffictypediagnostic: PH7PR13MB5865:EE_
-x-microsoft-antispam-prvs: <PH7PR13MB5865723594427314BCED72D3B8D49@PH7PR13MB5865.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: s9xZdx2xGbuhbSB3W9QOj3lRSAtiCiYT91fL7hOFJIy9tU36zgyXphF6ZEWbe42rNxvnm3riNt6iOravAJXidvXYYAsT0WQOgr+ITMK0/Y89YJZLpPL/rakorNgw3adOb8vdHxyNGY1F5V2g0mnDFAiHEz/KEFIs4Q4SpJlnYeWKTgZgf22sgsTT9lDA/K9qw4ve4TneUbwcg3yqsAVH+l8Zhb1NSGqQHZJPWInP1r1GuzD/C54BFckgPTkC9kj7U644Xa0TAu/+Gdbn4PS+EZoyi0yi2CQ2wDVP4lIxrrTfUQc5qPeepbfFpt68zIKcEiohUYYl8YwaSC/XrkUVysnYbKwnficBO9Rim4GSl/oz5W9ESg4E2gLqMqG/P4OcOiI5nvZ1u3Aq5Re3cVLZSrphsBX8ZttyTbVOpusYvh+rLS/7RqxY7wqCfrg5uQSInbKNg71lkKYhedkr7QbQtbP57D8y9KIzcql71ci53aNMUXDz96kek5qQCr/4mHxeOraQDGIslY/gUnZ1ktkGtGrsB8IuYGQgj4uNNXHUIP3CcfUUt9piU9eKP1bSHX6MTQfEGVL/8eFfizD98JhQncr9aBcfOSI0tvBcl3GUloa4LNV9XDDuON2umVoPT1t7NSSq8wF+pPjQ6qXnxWMDXYcEGYWa1dyFvrSO4n6pejnxen48ltqqYVscfYNDRnz4QIL1zf2ayYu6FO0f2yMVUVsUedX5F7t3AFBtY6+ymHY9dgLOLeauDRTBnG1Q6HGIJ1SMu+nc6y53At1GNwfyng+UUCMi+rBeo0nEaXNiHPUx+34V/z3BmJeoY1VlnYzGl+xWB6sOkCR2Q54Dh2yb5g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(39840400004)(346002)(136003)(376002)(366004)(396003)(36756003)(86362001)(508600001)(41300700001)(71200400001)(316002)(30864003)(110136005)(186003)(2906002)(26005)(66446008)(64756008)(91956017)(66476007)(38070700005)(38100700002)(66946007)(76116006)(83380400001)(2616005)(5660300002)(122000001)(66556008)(4326008)(6506007)(966005)(6512007)(6486002)(8936002)(53546011)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?eW9BNFRicUpWaDZsd1gyZjFKTVVhMm8rUGQ4RVJSdk1oYzlHMy9WOUhuT3V6?=
- =?utf-8?B?R2x0bm1CM2NobmNJUzdGczBVS20zOStTanRzQ2RzOFB2cUFZLzVNdGR4UG80?=
- =?utf-8?B?Y0hSaDhjWk1xZWwwZkxabVREcDh0MXljbVRXVnJJeTRlT2diVjdwTklmOVNz?=
- =?utf-8?B?ZEk3dFkwSjVPbDBST3pDQ2psNGR0TTZQa29xcGZrTzhTakduTVdKbE93MHd5?=
- =?utf-8?B?YUZNeE9MNGREcE1lRDR0cEtPSjlSay9pZUFBU25jOW9jbmNFSzRIR1VwUGQx?=
- =?utf-8?B?MWkxbEFDTG1LaWhrSXhQUnhaYjVNMmdHVGxnWXRHY2dzOUZ0cGxiTnc4NTYw?=
- =?utf-8?B?cERaZE5PLzlNeEJKMm9UeHhTYVdCKy9KS01IUm5rMlN3VFBPRG8zYXpIL2V4?=
- =?utf-8?B?M3g1RnoxNE1hOWE0eldNc2dqeXZwVzk2VExOK3VZaWF6Vyt4MDNiV3BsWktk?=
- =?utf-8?B?NDJZS0xCZm53bldPNGZrekQ0Q1gzVnFBdzFWenJsRjdQNFdqZ1R2RTYzV055?=
- =?utf-8?B?RW1XdDM1bCtWdXpCZ2FndnV4UHQrcHFSRk1HZmFqVTlZTC8rQzliU09sWGla?=
- =?utf-8?B?T1hFOERweXA5d0lZWlUvOGRtYUVOc0tNSDIwYmhhdTArVU9UM3JvbWRoS1Ux?=
- =?utf-8?B?QWU4Q3NRRFJaK05lbnRhQ3BocDAvVkJxWk16SnFIRlNGeFpreWZaVlFwUngv?=
- =?utf-8?B?ZmN3Rk5DSU9SdjRxZDRFMlpyaEVBQmozKzkwSFBnTlBuTXQwNE1ZSFhJVkQ3?=
- =?utf-8?B?NWhSd1RkaU9GMHA2TVdkbFlvdmpzbW1vNk8wMEhjVkJlWXZrSG91UGI0OHIz?=
- =?utf-8?B?NEYwWEV3TzdvMWg2VzhnazdZaFQxenlWdnZBQ1VTTUxlVFFscDZ3Ykova2hN?=
- =?utf-8?B?SWcrVldNYlVCUVhObi9oekd2TWNINHM3Q3hYVTRNUjIwNUxScU9BazFBaVZS?=
- =?utf-8?B?KytxUTNhRzJWWEVZN0NBWitEdThHcmxuR2FSUVFHK1NhdXBrNmROTTRXbTNz?=
- =?utf-8?B?YlVPUkdnMG9QVjR6TlJxK3ZFNEtZQXpTajVidTJvR2ZVd0dlUXpXSUpjMGNx?=
- =?utf-8?B?WDJYcmNkczgvdXdseE1Xa0NVTjFrWmFpODZyMVRNOC9jOVBVM2pRRytYdkF6?=
- =?utf-8?B?Qm96OUNKalA4MWIzbVc0cVJndmt2cUt1RmwzUm9NV1ZCZ0FzaDhXR1Mwa3lj?=
- =?utf-8?B?Rmdha1BkdWVleFptR0t4R1QwQ3A4OU9oRCsxK3dweHNvNWNhSnpoQ3JmR0VE?=
- =?utf-8?B?K0JQbHhTSEI4MWFGVzIyVkNCZEloUm9BMUxUbDhuTWJrVWlIbkZFYnVqNDRY?=
- =?utf-8?B?UTJjSlNLb003bUdRQks0L0Z5S2Z2VHp1Ni9ZeWY5b2RqdElhcDIrWTdoSXVS?=
- =?utf-8?B?YUY4M2J6RjZXVkFVYzV6TlN6MVFOWmdXU1ZaVmtQUlRZZzh6SWk1NWs3bnU4?=
- =?utf-8?B?Ym05VE5LRCt1VkkvZnp0RzFOVkVXekgvZHQwT3g2dGhRcDd1eTIzamRvNmVH?=
- =?utf-8?B?TFhKcUdTSXNxU1JkV2wrQWJVSlE3TVREM2lCRXRWM3JoWklhWHpMWllJV3o2?=
- =?utf-8?B?WXVJMW1jVk5HbThPa2U5Q1NrOXNhSWtRUEMvV3dYSWoydkt6c3RpRmNEeUVk?=
- =?utf-8?B?SjBWZmRNazYrelVZS2xOdCs5KzFUR1g5cTA2K0hYTktJTjNVWkpOMXBTdU11?=
- =?utf-8?B?UFEzSUVNY0RhZUZydjdNeksrSnF1eWZhZVpyMGhVU0h5Z3NNakVScXVBUm9Q?=
- =?utf-8?B?QmJ5bkpyQ2I1ZW52aG9rUmJpL1krN1VXY0lOVzVwL3BqNW5XeVRBZURyNkdB?=
- =?utf-8?B?VzBjTm9vb0VrR2FGaHNDV0o2SjBvQkVCK3FIaTdXTXhRMWNraDVIU05HUEt5?=
- =?utf-8?B?UnFyUm85SXBMRkNVRGdQckNTZDBLcWpkL2tRZTdkRGZ6NUp0ZUd3ZDhtSUJI?=
- =?utf-8?B?dEsxZnczN2JxUEtTaDNaZm5uOFFNRDB4NnRESjhqcEJ0SXFMRmNtQldYVVpN?=
- =?utf-8?B?UHhzMEw1empzMHhIWnlKWTI3MFdGaEhmVU1hdTRrUXliUWJXUnZHRm1wUHFj?=
- =?utf-8?B?OVJsMGpHMng0WXdRb0NDaE9OdnJkTkVqMkFuUU1OOWdUaEZCMWRXOWRLd0lN?=
- =?utf-8?B?c1docG5LLzg4NWFVNFoyNmlramxvYysvdU9GVWgyazkrQU5Tc0MrTlVlbkF2?=
- =?utf-8?B?MW5aU0xreWVoT1RNcHlRYWF0bWZwbGkyZHM0d1cwSW9tUGlKazhMMi9ZVmtT?=
- =?utf-8?B?Mm9ZWFBhL1B6VWZpQ2U1R0xXSzN5VWdkTGN6NmprcHd1VzVaM3I4SjI2U2kz?=
- =?utf-8?B?eUdlbHoyU3hyQlBsUmptVnNNS0RqN3loVDhGdVA0bm80aWl2SThjbFE4cEVT?=
- =?utf-8?Q?D7AZnIs2DkjS+RL4=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <EAA295B6065D7748BBED452A4ED0A885@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+         <5dfbc622c9ab70af5e4a664f9ae03b7ed659e8ac.camel@hammerspace.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: da446666-2b62-4652-522e-08da3ce90f8e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 18:21:31.1753
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Jwu8dAEIeTwgM8wHyEfmYT3oIoKSwAreXBlKLMSsi5A0xFtTy0iYoFZx9cWchXVIQlk8yizsTwg4vtpLTJFmNg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR13MB5865
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIyLTA1LTIzIGF0IDE0OjA0IC0wNDAwLCBKZWZmIExheXRvbiB3cm90ZToNCj4g
-T24gTW9uLCAyMDIyLTA1LTIzIGF0IDE3OjQzICswMDAwLCBUcm9uZCBNeWtsZWJ1c3Qgd3JvdGU6
-DQo+ID4gT24gTW9uLCAyMDIyLTA1LTIzIGF0IDEyOjM3IC0wNDAwLCBKZWZmIExheXRvbiB3cm90
-ZToNCj4gPiA+IE9uIE1vbiwgMjAyMi0wNS0yMyBhdCAxNTo0MSArMDAwMCwgQ2h1Y2sgTGV2ZXIg
-SUlJIHdyb3RlOg0KPiA+ID4gPiANCj4gPiA+ID4gPiBPbiBNYXkgMjMsIDIwMjIsIGF0IDExOjI2
-IEFNLCBKZWZmIExheXRvbg0KPiA+ID4gPiA+IDxqbGF5dG9uQGtlcm5lbC5vcmc+DQo+ID4gPiA+
-ID4gd3JvdGU6DQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gT24gTW9uLCAyMDIyLTA1LTIzIGF0IDE1
-OjAwICswMDAwLCBDaHVjayBMZXZlciBJSUkgd3JvdGU6DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4g
-PiA+ID4gT24gTWF5IDIzLCAyMDIyLCBhdCA5OjQwIEFNLCBKZWZmIExheXRvbg0KPiA+ID4gPiA+
-ID4gPiA8amxheXRvbkBrZXJuZWwub3JnPg0KPiA+ID4gPiA+ID4gPiB3cm90ZToNCj4gPiA+ID4g
-PiA+ID4gDQo+ID4gPiA+ID4gPiA+IE9uIFN1biwgMjAyMi0wNS0yMiBhdCAxMTozOCAtMDQwMCwg
-Q2h1Y2sgTGV2ZXIgd3JvdGU6DQo+ID4gPiA+ID4gPiA+ID4gbmZzZDRfcmVsZWFzZV9sb2Nrb3du
-ZXIoKSBob2xkcyBjbHAtPmNsX2xvY2sgd2hlbiBpdA0KPiA+ID4gPiA+ID4gPiA+IGNhbGxzDQo+
-ID4gPiA+ID4gPiA+ID4gY2hlY2tfZm9yX2xvY2tzKCkuIEhvd2V2ZXIsIGNoZWNrX2Zvcl9sb2Nr
-cygpIGNhbGxzDQo+ID4gPiA+ID4gPiA+ID4gbmZzZF9maWxlX2dldCgpDQo+ID4gPiA+ID4gPiA+
-ID4gLyBuZnNkX2ZpbGVfcHV0KCkgdG8gYWNjZXNzIHRoZSBiYWNraW5nIGlub2RlJ3MNCj4gPiA+
-ID4gPiA+ID4gPiBmbGNfcG9zaXgNCj4gPiA+ID4gPiA+ID4gPiBsaXN0LCBhbmQNCj4gPiA+ID4g
-PiA+ID4gPiBuZnNkX2ZpbGVfcHV0KCkgY2FuIHNsZWVwIGlmIHRoZSBpbm9kZSB3YXMgcmVjZW50
-bHkNCj4gPiA+ID4gPiA+ID4gPiByZW1vdmVkLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+
-ID4gPiANCj4gPiA+ID4gPiA+ID4gSXQgbWlnaHQgYmUgZ29vZCB0byBhZGQgYSBtaWdodF9zbGVl
-cCgpIHRvIG5mc2RfZmlsZV9wdXQ/DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IEkgaW50ZW5k
-IHRvIGluY2x1ZGUgdGhlIHBhdGNoIHlvdSByZXZpZXdlZCBsYXN0IHdlZWsgdGhhdA0KPiA+ID4g
-PiA+ID4gYWRkcyB0aGUgbWlnaHRfc2xlZXAoKSwgYXMgcGFydCBvZiB0aGlzIHNlcmllcy4NCj4g
-PiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gTGV0J3MgaW5zdGVhZCBy
-ZWx5IG9uIHRoZSBzdGF0ZW93bmVyJ3MgcmVmZXJlbmNlIGNvdW50DQo+ID4gPiA+ID4gPiA+ID4g
-dG8NCj4gPiA+ID4gPiA+ID4gPiBnYXRlDQo+ID4gPiA+ID4gPiA+ID4gd2hldGhlciB0aGUgcmVs
-ZWFzZSBpcyBwZXJtaXR0ZWQuIFRoaXMgc2hvdWxkIGJlIGENCj4gPiA+ID4gPiA+ID4gPiByZWxp
-YWJsZQ0KPiA+ID4gPiA+ID4gPiA+IGluZGljYXRpb24gb2YgbG9ja3MtaW4tdXNlIHNpbmNlIGZp
-bGUgbG9jayBvcGVyYXRpb25zDQo+ID4gPiA+ID4gPiA+ID4gYW5kDQo+ID4gPiA+ID4gPiA+ID4g
-LT5sbV9nZXRfb3duZXIgdGFrZSBhcHByb3ByaWF0ZSByZWZlcmVuY2VzLCB3aGljaCBhcmUNCj4g
-PiA+ID4gPiA+ID4gPiByZWxlYXNlZA0KPiA+ID4gPiA+ID4gPiA+IGFwcHJvcHJpYXRlbHkgd2hl
-biBmaWxlIGxvY2tzIGFyZSByZW1vdmVkLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiA+IFJlcG9ydGVkLWJ5OiBEYWkgTmdvIDxkYWkubmdvQG9yYWNsZS5jb20+DQo+ID4gPiA+ID4g
-PiA+ID4gU2lnbmVkLW9mZi1ieTogQ2h1Y2sgTGV2ZXIgPGNodWNrLmxldmVyQG9yYWNsZS5jb20+
-DQo+ID4gPiA+ID4gPiA+ID4gQ2M6IHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+ID4gPiA+
-ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gPiBmcy9uZnNkL25mczRzdGF0ZS5jIHzCoMKgwqAgOSAr
-KystLS0tLS0NCj4gPiA+ID4gPiA+ID4gPiAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCsp
-LCA2IGRlbGV0aW9ucygtKQ0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IFRoaXMg
-bWlnaHQgYmUgYSBuYWl2ZSBhcHByb2FjaCwgYnV0IGxldCdzIHN0YXJ0IHdpdGgNCj4gPiA+ID4g
-PiA+ID4gPiBpdC4NCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiBUaGlzIHBhc3Nl
-cyBsaWdodCB0ZXN0aW5nLCBidXQgaXQncyBub3QgY2xlYXIgaG93IG11Y2gNCj4gPiA+ID4gPiA+
-ID4gPiBvdXINCj4gPiA+ID4gPiA+ID4gPiBleGlzdGluZw0KPiA+ID4gPiA+ID4gPiA+IGZsZWV0
-IG9mIHRlc3RzIGV4ZXJjaXNlcyB0aGlzIGFyZWEuIEkndmUgbG9jYWxseSBidWlsdA0KPiA+ID4g
-PiA+ID4gPiA+IGENCj4gPiA+ID4gPiA+ID4gPiBjb3VwbGUgb2YNCj4gPiA+ID4gPiA+ID4gPiBw
-eW5mcyB0ZXN0cyAob25lIGlzIGJhc2VkIG9uIHRoZSBvbmUgRGFpIHBvc3RlZCBsYXN0DQo+ID4g
-PiA+ID4gPiA+ID4gd2VlaykNCj4gPiA+ID4gPiA+ID4gPiBhbmQgdGhleQ0KPiA+ID4gPiA+ID4g
-PiA+IHBhc3MgdG9vLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IEkgZG9uJ3Qg
-YmVsaWV2ZSB0aGF0IEZSRUVfU1RBVEVJRCBuZWVkcyB0aGUgc2FtZQ0KPiA+ID4gPiA+ID4gPiA+
-IHNpbXBsaWZpY2F0aW9uLg0KPiA+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4gPiA+IGRpZmYg
-LS1naXQgYS9mcy9uZnNkL25mczRzdGF0ZS5jIGIvZnMvbmZzZC9uZnM0c3RhdGUuYw0KPiA+ID4g
-PiA+ID4gPiA+IGluZGV4IGEyODAyNTZjYmIwMy4uYjc3ODk0ZTY2OGE0IDEwMDY0NA0KPiA+ID4g
-PiA+ID4gPiA+IC0tLSBhL2ZzL25mc2QvbmZzNHN0YXRlLmMNCj4gPiA+ID4gPiA+ID4gPiArKysg
-Yi9mcy9uZnNkL25mczRzdGF0ZS5jDQo+ID4gPiA+ID4gPiA+ID4gQEAgLTc1NTksMTIgKzc1NTks
-OSBAQCBuZnNkNF9yZWxlYXNlX2xvY2tvd25lcihzdHJ1Y3QNCj4gPiA+ID4gPiA+ID4gPiBzdmNf
-cnFzdCAqcnFzdHAsDQo+ID4gPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+ID4gwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAvKiBzZWUgaWYgdGhlcmUgYXJlIHN0aWxsIGFueSBsb2Nr
-cw0KPiA+ID4gPiA+ID4gPiA+IGFzc29jaWF0ZWQgd2l0aCBpdCAqLw0KPiA+ID4gPiA+ID4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbG8gPSBsb2Nrb3duZXIoc29wKTsNCj4g
-PiA+ID4gPiA+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbGlzdF9mb3JfZWFj
-aF9lbnRyeShzdHAsICZzb3AtDQo+ID4gPiA+ID4gPiA+ID4gPnNvX3N0YXRlaWRzLA0KPiA+ID4g
-PiA+ID4gPiA+IHN0X3BlcnN0YXRlb3duZXIpIHsNCj4gPiA+ID4gPiA+ID4gPiAtwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChjaGVja19mb3JfbG9ja3Mo
-c3RwLQ0KPiA+ID4gPiA+ID4gPiA+ID4gc3Rfc3RpZC5zY19maWxlLCBsbykpIHsNCj4gPiA+ID4g
-PiA+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqBzdGF0dXMgPQ0KPiA+ID4gPiA+ID4gPiA+IG5mc2Vycl9sb2Nrc19oZWxk
-Ow0KPiA+ID4gPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNwaW5fdW5sb2NrKCZjbHAtDQo+ID4gPiA+ID4gPiA+
-ID4gPmNsX2xvY2spOw0KPiA+ID4gPiA+ID4gPiA+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBzdGF0dXM7DQo+ID4g
-PiA+ID4gPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqB9DQo+ID4gPiA+ID4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChh
-dG9taWNfcmVhZCgmc29wLT5zb19jb3VudCkgPiAxKSB7DQo+ID4gPiA+ID4gPiA+ID4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBzcGluX3VubG9jaygmY2xw
-LT5jbF9sb2NrKTsNCj4gPiA+ID4gPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoHJldHVybiBuZnNlcnJfbG9ja3NfaGVsZDsNCj4gPiA+ID4gPiA+
-ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH0NCj4gPiA+ID4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG5mczRfZ2V0
-X3N0YXRlb3duZXIoc29wKTsNCj4gPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+ID4gPiANCj4g
-PiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IGxtX2dldF9vd25lciBpcyBjYWxsZWQgZnJvbSBs
-b2Nrc19jb3B5X2NvbmZsb2NrLCBzbyBpZg0KPiA+ID4gPiA+ID4gPiBzb21lb25lIGVsc2UNCj4g
-PiA+ID4gPiA+ID4gaGFwcGVucyB0byBiZSBkb2luZyBhIExPQ0tUIG9yIEZfR0VUTEsgY2FsbCBh
-dCB0aGUgc2FtZQ0KPiA+ID4gPiA+ID4gPiB0aW1lDQo+ID4gPiA+ID4gPiA+IHRoYXQNCj4gPiA+
-ID4gPiA+ID4gUkVMRUFTRV9MT0NLT1dORVIgZ2V0cyBjYWxsZWQsIHRoZW4gdGhpcyBtYXkgZW5k
-IHVwDQo+ID4gPiA+ID4gPiA+IHJldHVybmluZw0KPiA+ID4gPiA+ID4gPiBhbiBlcnJvcg0KPiA+
-ID4gPiA+ID4gPiBpbmFwcHJvcHJpYXRlbHkuDQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IElN
-TyByZWxlYXNpbmcgdGhlIGxvY2tvd25lciB3aGlsZSBpdCdzIGJlaW5nIHVzZWQgZm9yDQo+ID4g
-PiA+ID4gPiBfYW55dGhpbmdfDQo+ID4gPiA+ID4gPiBzZWVtcyByaXNreSBhbmQgc3VycHJpc2lu
-Zy4gSWYgUkVMRUFTRV9MT0NLT1dORVIgc3VjY2VlZHMNCj4gPiA+ID4gPiA+IHdoaWxlDQo+ID4g
-PiA+ID4gPiB0aGUgY2xpZW50IGlzIHN0aWxsIHVzaW5nIHRoZSBsb2Nrb3duZXIgZm9yIGFueSBy
-ZWFzb24sIGENCj4gPiA+ID4gPiA+IHN1YnNlcXVlbnQgZXJyb3Igd2lsbCBvY2N1ciBpZiB0aGUg
-Y2xpZW50IHRyaWVzIHRvIHVzZSBpdA0KPiA+ID4gPiA+ID4gYWdhaW4uDQo+ID4gPiA+ID4gPiBI
-ZWNrLCBJIGNhbiBzZWUgdGhlIHNlcnZlciBmYWlsaW5nIGluIG1pZC1DT01QT1VORCB3aXRoDQo+
-ID4gPiA+ID4gPiB0aGlzDQo+ID4gPiA+ID4gPiBraW5kDQo+ID4gPiA+ID4gPiBvZiByYWNlLiBC
-ZXR0ZXIgSSB0aGluayB0byBqdXN0IGxlYXZlIHRoZSBsb2Nrb3duZXIgaW4NCj4gPiA+ID4gPiA+
-IHBsYWNlIGlmDQo+ID4gPiA+ID4gPiB0aGVyZSdzIGFueSBhbWJpZ3VpdHkuDQo+ID4gPiA+ID4g
-PiANCj4gPiA+ID4gPiANCj4gPiA+ID4gPiBUaGUgcHJvYmxlbSBoZXJlIGlzIG5vdCB0aGUgY2xp
-ZW50IGl0c2VsZiBjYWxsaW5nDQo+ID4gPiA+ID4gUkVMRUFTRV9MT0NLT1dORVINCj4gPiA+ID4g
-PiB3aGlsZSBpdCdzIHN0aWxsIGluIHVzZSwgYnV0IHJhdGhlciBhIGRpZmZlcmVudCBjbGllbnQN
-Cj4gPiA+ID4gPiBhbHRvZ2V0aGVyDQo+ID4gPiA+ID4gY2FsbGluZyBMT0NLVCAob3IgYSBsb2Nh
-bCBwcm9jZXNzIGRvZXMgYSBGX0dFVExLKSBvbiBhbiBpbm9kZQ0KPiA+ID4gPiA+IHdoZXJlIGEN
-Cj4gPiA+ID4gPiBsb2NrIGlzIGhlbGQgYnkgYSBjbGllbnQuIFRoZSBMT0NLVCBnZXRzIGEgcmVm
-ZXJlbmNlIHRvIGl0DQo+ID4gPiA+ID4gKGZvcg0KPiA+ID4gPiA+IHRoZQ0KPiA+ID4gPiA+IGNv
-bmZsb2NrKSwgd2hpbGUgdGhlIGNsaWVudCB0aGF0IGhhcyB0aGUgbG9ja293bmVyIHJlbGVhc2Vz
-DQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gbG9jayBhbmQNCj4gPiA+ID4gPiB0aGVuIHRoZSBs
-b2Nrb3duZXIgd2hpbGUgdGhlIHJlZmNvdW50IGlzIHN0aWxsIGhpZ2guDQo+ID4gPiA+ID4gDQo+
-ID4gPiA+ID4gVGhlIHJhY2Ugd2luZG93IGZvciB0aGlzIGlzIHByb2JhYmx5IHF1aXRlIHNtYWxs
-LCBidXQgSSB0aGluaw0KPiA+ID4gPiA+IGl0J3MNCj4gPiA+ID4gPiB0aGVvcmV0aWNhbGx5IHBv
-c3NpYmxlLiBUaGUgcG9pbnQgaXMgdGhhdCBhbiBlbGV2YXRlZA0KPiA+ID4gPiA+IHJlZmNvdW50
-IG9uDQo+ID4gPiA+ID4gdGhlDQo+ID4gPiA+ID4gbG9ja293bmVyIGRvZXNuJ3QgbmVjZXNzYXJp
-bHkgbWVhbiB0aGF0IGxvY2tzIGFyZSBhY3R1YWxseQ0KPiA+ID4gPiA+IGJlaW5nDQo+ID4gPiA+
-ID4gaGVsZCBieQ0KPiA+ID4gPiA+IGl0Lg0KPiA+ID4gPiANCj4gPiA+ID4gU3VyZSwgSSBnZXQg
-dGhhdCB0aGUgbG9ja293bmVyJ3MgcmVmZXJlbmNlIGNvdW50IGlzIG5vdCAxMDAlDQo+ID4gPiA+
-IHJlbGlhYmxlLiBUaGUgcXVlc3Rpb24gaXMgd2hldGhlciBpdCdzIGdvb2QgZW5vdWdoLg0KPiA+
-ID4gPiANCj4gPiA+ID4gV2UgYXJlIGxvb2tpbmcgZm9yIGEgbWVjaGFuaXNtIHRoYXQgY2FuIHNp
-bXBseSBjb3VudCB0aGUgbnVtYmVyDQo+ID4gPiA+IG9mIGxvY2tzIGhlbGQgYnkgYSBsb2Nrb3du
-ZXIuIEl0IHNvdW5kcyBsaWtlIHlvdSBiZWxpZXZlIHRoYXQNCj4gPiA+ID4gbG1fZ2V0X293bmVy
-IC8gcHV0X293bmVyIG1pZ2h0IG5vdCBiZSBhIHJlbGlhYmxlIHdheSB0byBkbw0KPiA+ID4gPiB0
-aGF0Lg0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+ID4gPiBUaGUgc3BlYyBsYW5ndWFnZSBk
-b2VzIG5vdCBzYXkgUkVMRUFTRV9MT0NLT1dORVIgbXVzdCBub3QNCj4gPiA+ID4gPiA+IHJldHVy
-bg0KPiA+ID4gPiA+ID4gTE9DS1NfSEVMRCBmb3Igb3RoZXIgcmVhc29ucywgYW5kIGl0IGRvZXMg
-c2F5IHRoYXQgdGhlcmUgaXMNCj4gPiA+ID4gPiA+IG5vDQo+ID4gPiA+ID4gPiBjaG9pY2Ugb2Yg
-dXNpbmcgYW5vdGhlciBORlNFUlIgdmFsdWUgKFJGQyA3NTMwIFNlY3Rpb24NCj4gPiA+ID4gPiA+
-IDEzLjIpLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gDQo+ID4gPiA+ID4gV2hhdCByZWNvdXJz
-ZSBkb2VzIHRoZSBjbGllbnQgaGF2ZSBpZiB0aGlzIGhhcHBlbnM/IEl0DQo+ID4gPiA+ID4gcmVs
-ZWFzZWQNCj4gPiA+ID4gPiBhbGwgb2YNCj4gPiA+ID4gPiBpdHMgbG9ja3MgYW5kIHRyaWVkIHRv
-IHJlbGVhc2UgdGhlIGxvY2tvd25lciwgYnV0IHRoZSBzZXJ2ZXINCj4gPiA+ID4gPiBzYXlzDQo+
-ID4gPiA+ID4gImxvY2tzDQo+ID4gPiA+ID4gaGVsZCIuIFNob3VsZCBpdCBqdXN0IGdpdmUgdXAg
-YXQgdGhhdCBwb2ludD8NCj4gPiA+ID4gPiBSRUxFQVNFX0xPQ0tPV05FUiBpcw0KPiA+ID4gPiA+
-IGEgc29ydA0KPiA+ID4gPiA+IG9mIGEgY291cnRlc3kgYnkgdGhlIGNsaWVudCwgSSBzdXBwb3Nl
-Li4uDQo+ID4gPiA+IA0KPiA+ID4gPiBSRUxFQVNFX0xPQ0tPV05FUiBpcyBhIGNvdXJ0ZXN5IGZv
-ciB0aGUgc2VydmVyLiBNb3N0IGNsaWVudHMNCj4gPiA+ID4gaWdub3JlIHRoZSByZXR1cm4gY29k
-ZSBJSVVDLg0KPiA+ID4gPiANCj4gPiA+ID4gU28gdGhlIGhhemFyZCBjYXVzZWQgYnkgdGhpcyBy
-YWNlIHdvdWxkIGJlIGEgc21hbGwgcmVzb3VyY2UNCj4gPiA+ID4gbGVhayBvbiB0aGUgc2VydmVy
-IHRoYXQgd291bGQgZ28gYXdheSBvbmNlIHRoZSBjbGllbnQncyBsZWFzZQ0KPiA+ID4gPiB3YXMg
-cHVyZ2VkLg0KPiA+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+ID4gPiA+IE15IGd1ZXNzIGlzIHRo
-YXQgdGhhdCB3b3VsZCBiZSBwcmV0dHkgaGFyZCB0byBoaXQgdGhlDQo+ID4gPiA+ID4gPiA+IHRp
-bWluZyByaWdodCwgYnV0IG5vdCBpbXBvc3NpYmxlLg0KPiA+ID4gPiA+ID4gPiANCj4gPiA+ID4g
-PiA+ID4gV2hhdCB3ZSBtYXkgd2FudCB0byBkbyBpcyBoYXZlIHRoZSBrZXJuZWwgZG8gdGhpcyBj
-aGVjaw0KPiA+ID4gPiA+ID4gPiBhbmQNCj4gPiA+ID4gPiA+ID4gb25seSBpZiBpdA0KPiA+ID4g
-PiA+ID4gPiBjb21lcyBiYWNrID4xIGRvIHRoZSBhY3R1YWwgY2hlY2sgZm9yIGxvY2tzLiBUaGF0
-IHdvbid0DQo+ID4gPiA+ID4gPiA+IGZpeA0KPiA+ID4gPiA+ID4gPiB0aGUgb3JpZ2luYWwNCj4g
-PiA+ID4gPiA+ID4gcHJvYmxlbSB0aG91Z2guDQo+ID4gPiA+ID4gPiA+IA0KPiA+ID4gPiA+ID4g
-PiBJbiBvdGhlciBwbGFjZXMgaW4gbmZzZCwgd2UndmUgcGx1bWJlZCBpbiBhIGRpc3Bvc2VfbGlz
-dA0KPiA+ID4gPiA+ID4gPiBoZWFkDQo+ID4gPiA+ID4gPiA+IGFuZA0KPiA+ID4gPiA+ID4gPiBk
-ZWZlcnJlZCB0aGUgc2xlZXBpbmcgZnVuY3Rpb25zIHVudGlsIHRoZSBzcGlubG9jayBjYW4gYmUN
-Cj4gPiA+ID4gPiA+ID4gZHJvcHBlZC4gSQ0KPiA+ID4gPiA+ID4gPiBoYXZlbid0IGxvb2tlZCBj
-bG9zZWx5IGF0IHdoZXRoZXIgdGhhdCdzIHBvc3NpYmxlIGhlcmUsDQo+ID4gPiA+ID4gPiA+IGJ1
-dA0KPiA+ID4gPiA+ID4gPiBpdCBtYXkgYmUgYQ0KPiA+ID4gPiA+ID4gPiBtb3JlIHJlbGlhYmxl
-IGFwcHJvYWNoLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBUaGF0IHdhcyBwcm9wb3NlZCBi
-eSBEYWkgbGFzdCB3ZWVrLg0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gPiBodHRwczovL2xvcmUu
-a2VybmVsLm9yZy9saW51eC1uZnMvMTY1MzA3OTkyOS0xODI4My0xLWdpdC1zZW5kLWVtYWlsLWRh
-aS5uZ29Ab3JhY2xlLmNvbS9ULyN1DQo+ID4gPiA+ID4gPiANCj4gPiA+ID4gPiA+IFRyb25kIHBv
-aW50ZWQgb3V0IHRoYXQgaWYgdHdvIHNlcGFyYXRlIGNsaWVudHMgd2VyZQ0KPiA+ID4gPiA+ID4g
-cmVsZWFzaW5nIGENCj4gPiA+ID4gPiA+IGxvY2tvd25lciBvbiB0aGUgc2FtZSBpbm9kZSwgdGhl
-cmUgaXMgbm90aGluZyB0aGF0IHByb3RlY3RzDQo+ID4gPiA+ID4gPiB0aGUNCj4gPiA+ID4gPiA+
-IGRpc3Bvc2VfbGlzdCwgYW5kIGl0IHdvdWxkIGdldCBjb3JydXB0ZWQuDQo+ID4gPiA+ID4gPiAN
-Cj4gPiA+ID4gPiA+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LW5mcy8zMUU4N0NFRi1D
-ODNELTRGQTgtQTc3NC1GMkMzODkwMTFGQ0VAb3JhY2xlLmNvbS9ULyNtZjFmYzFhZTA1MDM4MTVj
-MGEzNmFlNzVhOTUwODZjM2VmZjg5MjYxNA0KPiA+ID4gPiA+ID4gDQo+ID4gPiA+ID4gDQo+ID4g
-PiA+ID4gWWVhaCwgdGhhdCBkb2Vzbid0IGxvb2sgbGlrZSB3aGF0J3MgbmVlZGVkLg0KPiA+ID4g
-PiA+IA0KPiA+ID4gPiA+IFdoYXQgSSB3YXMgZ29pbmcgdG8gc3VnZ2VzdCBpcyBhIG5mc2RfZmls
-ZV9wdXQgdmFyaWFudCB0aGF0DQo+ID4gPiA+ID4gdGFrZXMNCj4gPiA+ID4gPiBhDQo+ID4gPiA+
-ID4gbGlzdF9oZWFkLiBJZiB0aGUgcmVmY291bnQgZ29lcyB0byB6ZXJvIGFuZCB0aGUgdGhpbmcg
-ZW5kcyB1cA0KPiA+ID4gPiA+IGJlaW5nDQo+ID4gPiA+ID4gdW5oYXNoZWQsIHRoZW4geW91IHB1
-dCBpdCBvbiB0aGUgZGlzcG9zZSBsaXN0IHJhdGhlciB0aGFuDQo+ID4gPiA+ID4gZG9pbmcNCj4g
-PiA+ID4gPiB0aGUNCj4gPiA+ID4gPiBibG9ja2luZyBvcGVyYXRpb25zLCBhbmQgdGhlbiBjbGVh
-biBpdCB1cCBsYXRlci4NCj4gPiA+ID4gDQo+ID4gPiA+IFRyb25kIGRvZXNuJ3QgbGlrZSB0aGF0
-IGFwcHJvYWNoOyBzZWUgdGhlIGUtbWFpbCB0aHJlYWQuDQo+ID4gPiA+IA0KPiA+ID4gDQo+ID4g
-PiBJIGRpZG4ndCBzZWUgaGltIHNheWluZyB0aGF0IHRoYXQgd291bGQgYmUgd3JvbmcsIHBlci1z
-ZSwgYnV0IHRoZQ0KPiA+ID4gaW5pdGlhbCBpbXBsZW1lbnRhdGlvbiB3YXMgcmFjeS4NCj4gPiA+
-IA0KPiA+ID4gSGlzIHN1Z2dlc3Rpb24gd2FzIGp1c3QgdG8ga2VlcCBhIGNvdW50ZXIgaW4gdGhl
-IGxvY2tvd25lciBvZiBob3cNCj4gPiA+IG1hbnkNCj4gPiA+IGxvY2tzIGFyZSBhc3NvY2lhdGVk
-IHdpdGggaXQuIFRoYXQgc2VlbXMgbGlrZSBhIGdvb2Qgc3VnZ2VzdGlvbiwNCj4gPiA+IHRob3Vn
-aA0KPiA+ID4geW91J2QgcHJvYmFibHkgbmVlZCB0byBhZGQgYSBwYXJhbWV0ZXIgdG8gbG1fZ2V0
-X293bmVyIHRvDQo+ID4gPiBpbmRpY2F0ZQ0KPiA+ID4gd2hldGhlciB5b3Ugd2VyZSBhZGRpbmcg
-YSBuZXcgbG9jayBvciBqdXN0IGRvaW5nIGEgY29uZmxvY2sgY29weS4NCj4gPiANCj4gPiBJIGRv
-bid0IHRoaW5rIHRoaXMgc2hvdWxkIGJlIG5lY2Vzc2FyeS4gVGhlIHBvc2l4X2xvY2sgY29kZSBk
-b2Vzbid0DQo+ID4gZXZlciB1c2UgYSBzdHJ1Y3QgZmlsZV9sb2NrIHRoYXQgaXQgaGFzbid0IGFs
-bG9jYXRlZCBpdHNlbGYuIFdlDQo+ID4gc2hvdWxkDQo+ID4gYWx3YXlzIGJlIGNhbGxpbmcgY29u
-ZmxvY2sgdG8gY29weSBmcm9tIHdoYXRldmVyIHN0cnVjdCBmaWxlX2xvY2sNCj4gPiB0aGF0DQo+
-ID4gdGhlIGNhbGxlciBwYXNzZWQgYXMgYW4gYXJndW1lbnQuDQo+ID4gDQo+ID4gSU9XOiB0aGUg
-bnVtYmVyIG9mIGxtX2dldF9vd25lciBhbmQgbG1fcHV0X293bmVyIGNhbGxzIHNob3VsZA0KPiA+
-IGFsd2F5cyBiZQ0KPiA+IDEwMCUgYmFsYW5jZWQgb25jZSBhbGwgdGhlIGxvY2tzIGJlbG9uZ2lu
-ZyB0byBhIHNwZWNpZmljIGxvY2sgb3duZXINCj4gPiBhcmUNCj4gPiByZW1vdmVkLg0KPiA+IA0K
-PiANCj4gV2UgdGFrZSByZWZlcmVuY2VzIHRvIHRoZSBvd25lciB3aGVuIHdlIGdvIHRvIGFkZCBh
-IGxvY2sgcmVjb3JkLCBvcg0KPiB3aGVuDQo+IGNvcHlpbmcgYSBjb25mbGljdGluZyBsb2NrLiBZ
-b3Ugd2FudCB0byBrZWVwIGEgY291bnQgb2YgdGhlIGZvcm1lcg0KPiB3aXRob3V0IGNvdW50aW5n
-IHRoZSBsYXR0ZXIuDQo+IA0KPiBsbV9nZXRfb3duZXIgZ2V0cyBjYWxsZWQgZm9yIGJvdGggdGhv
-dWdoLiBJIGRvbid0IHNlZSBob3cgeW91IGNhbg0KPiBkaXNhbWJpZ3VhdGUgdGhlIHR3byBzaXR1
-YXRpb25zIHcvbyBzb21lIHdheSB0byBpbmRpY2F0ZSB0aGF0LiBBZGRpbmcNCj4gYQ0KPiBib29s
-IGFyZ3VtZW50IHRvIGxtX2dldF9vd25lci9sbV9wdXRfb3duZXIgb3BzIHdvdWxkIGJlIHByZXR0
-eSBzaW1wbGUNCj4gdG8NCj4gaW1wbGVtZW50LCBJIHRoaW5rLg0KPiANCg0KSG1tLi4uIFRoYXQg
-c2hvdWxkIGJlIGFuIGV4dHJlbWVseSB1bmxpa2VseSByYWNlLCBnaXZlbiB0aGF0IHRoZQ0KY29u
-ZmxpY3RpbmcgbG9jayByZWZlcmVuY2Ugd291bGQgaGF2ZSB0byBiZSBoZWxkIGZvciBsb25nIGVu
-b3VnaCB0bw0KY292ZXIgdGhlIHVubG9jayArIHRoZSByZWxlYXNlX2xvY2tvd25lciAvIGZyZWVf
-c3RhdGVpZCBSUEMgY2FsbHMgZnJvbQ0KdGhlIGNsaWVudCBpbml0aWFsbHkgaG9sZGluZyB0aGUg
-bG9jaywgaG93ZXZlciBJIGFncmVlIGl0IGlzIGENCnRoZW9yZXRpY2FsIHBvc3NpYmlsaXR5Lg0K
-DQotLSANClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1t
-ZXJzcGFjZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
+On Mon, 2022-05-23 at 18:21 +0000, Trond Myklebust wrote:
+> On Mon, 2022-05-23 at 14:04 -0400, Jeff Layton wrote:
+> > On Mon, 2022-05-23 at 17:43 +0000, Trond Myklebust wrote:
+> > > On Mon, 2022-05-23 at 12:37 -0400, Jeff Layton wrote:
+> > > > On Mon, 2022-05-23 at 15:41 +0000, Chuck Lever III wrote:
+> > > > >=20
+> > > > > > On May 23, 2022, at 11:26 AM, Jeff Layton
+> > > > > > <jlayton@kernel.org>
+> > > > > > wrote:
+> > > > > >=20
+> > > > > > On Mon, 2022-05-23 at 15:00 +0000, Chuck Lever III wrote:
+> > > > > > >=20
+> > > > > > > > On May 23, 2022, at 9:40 AM, Jeff Layton
+> > > > > > > > <jlayton@kernel.org>
+> > > > > > > > wrote:
+> > > > > > > >=20
+> > > > > > > > On Sun, 2022-05-22 at 11:38 -0400, Chuck Lever wrote:
+> > > > > > > > > nfsd4_release_lockowner() holds clp->cl_lock when it
+> > > > > > > > > calls
+> > > > > > > > > check_for_locks(). However, check_for_locks() calls
+> > > > > > > > > nfsd_file_get()
+> > > > > > > > > / nfsd_file_put() to access the backing inode's
+> > > > > > > > > flc_posix
+> > > > > > > > > list, and
+> > > > > > > > > nfsd_file_put() can sleep if the inode was recently
+> > > > > > > > > removed.
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > It might be good to add a might_sleep() to nfsd_file_put?
+> > > > > > >=20
+> > > > > > > I intend to include the patch you reviewed last week that
+> > > > > > > adds the might_sleep(), as part of this series.
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > > > Let's instead rely on the stateowner's reference count
+> > > > > > > > > to
+> > > > > > > > > gate
+> > > > > > > > > whether the release is permitted. This should be a
+> > > > > > > > > reliable
+> > > > > > > > > indication of locks-in-use since file lock operations
+> > > > > > > > > and
+> > > > > > > > > ->lm_get_owner take appropriate references, which are
+> > > > > > > > > released
+> > > > > > > > > appropriately when file locks are removed.
+> > > > > > > > >=20
+> > > > > > > > > Reported-by: Dai Ngo <dai.ngo@oracle.com>
+> > > > > > > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > > > ---
+> > > > > > > > > fs/nfsd/nfs4state.c |=A0=A0=A0 9 +++------
+> > > > > > > > > 1 file changed, 3 insertions(+), 6 deletions(-)
+> > > > > > > > >=20
+> > > > > > > > > This might be a naive approach, but let's start with
+> > > > > > > > > it.
+> > > > > > > > >=20
+> > > > > > > > > This passes light testing, but it's not clear how much
+> > > > > > > > > our
+> > > > > > > > > existing
+> > > > > > > > > fleet of tests exercises this area. I've locally built
+> > > > > > > > > a
+> > > > > > > > > couple of
+> > > > > > > > > pynfs tests (one is based on the one Dai posted last
+> > > > > > > > > week)
+> > > > > > > > > and they
+> > > > > > > > > pass too.
+> > > > > > > > >=20
+> > > > > > > > > I don't believe that FREE_STATEID needs the same
+> > > > > > > > > simplification.
+> > > > > > > > >=20
+> > > > > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > > > > > > index a280256cbb03..b77894e668a4 100644
+> > > > > > > > > --- a/fs/nfsd/nfs4state.c
+> > > > > > > > > +++ b/fs/nfsd/nfs4state.c
+> > > > > > > > > @@ -7559,12 +7559,9 @@ nfsd4_release_lockowner(struct
+> > > > > > > > > svc_rqst *rqstp,
+> > > > > > > > >=20
+> > > > > > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0/* see if=
+ there are still any locks
+> > > > > > > > > associated with it */
+> > > > > > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0lo =3D lo=
+ckowner(sop);
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0list_for_ea=
+ch_entry(stp, &sop-
+> > > > > > > > > > so_stateids,
+> > > > > > > > > st_perstateowner) {
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0if (check_for_locks(stp-
+> > > > > > > > > > st_stid.sc_file, lo)) {
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0status =3D
+> > > > > > > > > nfserr_locks_held;
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0spin_unlock(&clp-
+> > > > > > > > > > cl_lock);
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0return status;
+> > > > > > > > > -=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0}
+> > > > > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0if (atomic_=
+read(&sop->so_count) > 1) {
+> > > > > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0spin_unlock(&clp->cl_lock);
+> > > > > > > > > +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0return nfserr_locks_held;
+> > > > > > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0}
+> > > > > > > > >=20
+> > > > > > > > > =A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0nfs4_get_=
+stateowner(sop);
+> > > > > > > > >=20
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > lm_get_owner is called from locks_copy_conflock, so if
+> > > > > > > > someone else
+> > > > > > > > happens to be doing a LOCKT or F_GETLK call at the same
+> > > > > > > > time
+> > > > > > > > that
+> > > > > > > > RELEASE_LOCKOWNER gets called, then this may end up
+> > > > > > > > returning
+> > > > > > > > an error
+> > > > > > > > inappropriately.
+> > > > > > >=20
+> > > > > > > IMO releasing the lockowner while it's being used for
+> > > > > > > _anything_
+> > > > > > > seems risky and surprising. If RELEASE_LOCKOWNER succeeds
+> > > > > > > while
+> > > > > > > the client is still using the lockowner for any reason, a
+> > > > > > > subsequent error will occur if the client tries to use it
+> > > > > > > again.
+> > > > > > > Heck, I can see the server failing in mid-COMPOUND with
+> > > > > > > this
+> > > > > > > kind
+> > > > > > > of race. Better I think to just leave the lockowner in
+> > > > > > > place if
+> > > > > > > there's any ambiguity.
+> > > > > > >=20
+> > > > > >=20
+> > > > > > The problem here is not the client itself calling
+> > > > > > RELEASE_LOCKOWNER
+> > > > > > while it's still in use, but rather a different client
+> > > > > > altogether
+> > > > > > calling LOCKT (or a local process does a F_GETLK) on an inode
+> > > > > > where a
+> > > > > > lock is held by a client. The LOCKT gets a reference to it
+> > > > > > (for
+> > > > > > the
+> > > > > > conflock), while the client that has the lockowner releases
+> > > > > > the
+> > > > > > lock and
+> > > > > > then the lockowner while the refcount is still high.
+> > > > > >=20
+> > > > > > The race window for this is probably quite small, but I think
+> > > > > > it's
+> > > > > > theoretically possible. The point is that an elevated
+> > > > > > refcount on
+> > > > > > the
+> > > > > > lockowner doesn't necessarily mean that locks are actually
+> > > > > > being
+> > > > > > held by
+> > > > > > it.
+> > > > >=20
+> > > > > Sure, I get that the lockowner's reference count is not 100%
+> > > > > reliable. The question is whether it's good enough.
+> > > > >=20
+> > > > > We are looking for a mechanism that can simply count the number
+> > > > > of locks held by a lockowner. It sounds like you believe that
+> > > > > lm_get_owner / put_owner might not be a reliable way to do
+> > > > > that.
+> > > > >=20
+> > > > >=20
+> > > > > > > The spec language does not say RELEASE_LOCKOWNER must not
+> > > > > > > return
+> > > > > > > LOCKS_HELD for other reasons, and it does say that there is
+> > > > > > > no
+> > > > > > > choice of using another NFSERR value (RFC 7530 Section
+> > > > > > > 13.2).
+> > > > > > >=20
+> > > > > >=20
+> > > > > > What recourse does the client have if this happens? It
+> > > > > > released
+> > > > > > all of
+> > > > > > its locks and tried to release the lockowner, but the server
+> > > > > > says
+> > > > > > "locks
+> > > > > > held". Should it just give up at that point?
+> > > > > > RELEASE_LOCKOWNER is
+> > > > > > a sort
+> > > > > > of a courtesy by the client, I suppose...
+> > > > >=20
+> > > > > RELEASE_LOCKOWNER is a courtesy for the server. Most clients
+> > > > > ignore the return code IIUC.
+> > > > >=20
+> > > > > So the hazard caused by this race would be a small resource
+> > > > > leak on the server that would go away once the client's lease
+> > > > > was purged.
+> > > > >=20
+> > > > >=20
+> > > > > > > > My guess is that that would be pretty hard to hit the
+> > > > > > > > timing right, but not impossible.
+> > > > > > > >=20
+> > > > > > > > What we may want to do is have the kernel do this check
+> > > > > > > > and
+> > > > > > > > only if it
+> > > > > > > > comes back >1 do the actual check for locks. That won't
+> > > > > > > > fix
+> > > > > > > > the original
+> > > > > > > > problem though.
+> > > > > > > >=20
+> > > > > > > > In other places in nfsd, we've plumbed in a dispose_list
+> > > > > > > > head
+> > > > > > > > and
+> > > > > > > > deferred the sleeping functions until the spinlock can be
+> > > > > > > > dropped. I
+> > > > > > > > haven't looked closely at whether that's possible here,
+> > > > > > > > but
+> > > > > > > > it may be a
+> > > > > > > > more reliable approach.
+> > > > > > >=20
+> > > > > > > That was proposed by Dai last week.
+> > > > > > >=20
+> > > > > > > https://lore.kernel.org/linux-nfs/1653079929-18283-1-git-send=
+-email-dai.ngo@oracle.com/T/#u
+> > > > > > >=20
+> > > > > > > Trond pointed out that if two separate clients were
+> > > > > > > releasing a
+> > > > > > > lockowner on the same inode, there is nothing that protects
+> > > > > > > the
+> > > > > > > dispose_list, and it would get corrupted.
+> > > > > > >=20
+> > > > > > > https://lore.kernel.org/linux-nfs/31E87CEF-C83D-4FA8-A774-F2C=
+389011FCE@oracle.com/T/#mf1fc1ae0503815c0a36ae75a95086c3eff892614
+> > > > > > >=20
+> > > > > >=20
+> > > > > > Yeah, that doesn't look like what's needed.
+> > > > > >=20
+> > > > > > What I was going to suggest is a nfsd_file_put variant that
+> > > > > > takes
+> > > > > > a
+> > > > > > list_head. If the refcount goes to zero and the thing ends up
+> > > > > > being
+> > > > > > unhashed, then you put it on the dispose list rather than
+> > > > > > doing
+> > > > > > the
+> > > > > > blocking operations, and then clean it up later.
+> > > > >=20
+> > > > > Trond doesn't like that approach; see the e-mail thread.
+> > > > >=20
+> > > >=20
+> > > > I didn't see him saying that that would be wrong, per-se, but the
+> > > > initial implementation was racy.
+> > > >=20
+> > > > His suggestion was just to keep a counter in the lockowner of how
+> > > > many
+> > > > locks are associated with it. That seems like a good suggestion,
+> > > > though
+> > > > you'd probably need to add a parameter to lm_get_owner to
+> > > > indicate
+> > > > whether you were adding a new lock or just doing a conflock copy.
+> > >=20
+> > > I don't think this should be necessary. The posix_lock code doesn't
+> > > ever use a struct file_lock that it hasn't allocated itself. We
+> > > should
+> > > always be calling conflock to copy from whatever struct file_lock
+> > > that
+> > > the caller passed as an argument.
+> > >=20
+> > > IOW: the number of lm_get_owner and lm_put_owner calls should
+> > > always be
+> > > 100% balanced once all the locks belonging to a specific lock owner
+> > > are
+> > > removed.
+> > >=20
+> >=20
+> > We take references to the owner when we go to add a lock record, or
+> > when
+> > copying a conflicting lock. You want to keep a count of the former
+> > without counting the latter.
+> >=20
+> > lm_get_owner gets called for both though. I don't see how you can
+> > disambiguate the two situations w/o some way to indicate that. Adding
+> > a
+> > bool argument to lm_get_owner/lm_put_owner ops would be pretty simple
+> > to
+> > implement, I think.
+> >=20
+>=20
+> Hmm... That should be an extremely unlikely race, given that the
+> conflicting lock reference would have to be held for long enough to
+> cover the unlock + the release_lockowner / free_stateid RPC calls from
+> the client initially holding the lock, however I agree it is a
+> theoretical possibility.
+>=20
+
+If we want to live with the possibility of that race, then Chuck's
+original patch is fine, since the object refcount would always be
+equivalent to the lock count.
+
+That said, I think it'd be better to keep an accurate count of lock
+records (sans conflocks) in the owner.
+--=20
+Jeff Layton <jlayton@kernel.org>
