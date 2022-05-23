@@ -2,55 +2,159 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15010531B18
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:56:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2FFA531C68
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:57:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238830AbiEWQhs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 12:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56048 "EHLO
+        id S238971AbiEWQ6P (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 12:58:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238837AbiEWQhr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 12:37:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0F2692B6
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 09:37:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 97355B811CC
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 16:37:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC669C385A9;
-        Mon, 23 May 2022 16:37:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653323863;
-        bh=UE2bptiO+d274XDyQ7hBScLv6kqxro/eEXpB4CRBLn0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=R46blzjLSElsd3ucWhsBErJywP6bpj//g6laHFytKEMycsbPBM8e8nRI/eFDQqpEI
-         StikrXKkBK2uvQ5wFLr43z+Vwb9wT5uoBgZNapnPqV/OTBRTb7qzrYGwtQ5JVIrqDr
-         UxjuWE/9XjTw66rn36zAzW8kVJvIsddqZgEStcgUiYnPTOThkAC08ZnwTUUz8fJ9j+
-         hUe/68SEl7NXzaEuPTvHXFyXQr/YtdRBVzGT1VpZiqxzt16fzuvr717ok7FFubnM8g
-         C1Fyfd+HPG1g+cQYnHWSfhZmjK6TVS0VsK/nHew5sAFI926WYpVCHA69JFHqU4EVkA
-         /rbEucb6w3Q3A==
-Message-ID: <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
-Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Mon, 23 May 2022 12:37:41 -0400
-In-Reply-To: <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
-References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
-         <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
-         <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
-         <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
-         <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
+        with ESMTP id S236640AbiEWQ6O (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 12:58:14 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF1E3B575;
+        Mon, 23 May 2022 09:58:13 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NEoPFX022811;
+        Mon, 23 May 2022 16:58:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=6S/Nv/8uqObsCKLERkjbzNGKQTUT1eqea+1ZzkxrOnI=;
+ b=kHb9w6++d3yQA4bGsXDI/bA0ByTkhVe99BlgUL5eaMcAI9uYaa4wT6L9FmmhR80cfBcm
+ oTgneFGkY0hRO+QhEepfQ7SsIidoKIyzPOKI7CzEejMboU5HsXqfIObUIjp6avTVaERI
+ 5nFsV5zIern3TiFkK5ODmlTR/3m6gZSYKXLztkJyVkHCCq4xeSTeY/h33c13u4ZsQCK3
+ cuDIFj8ySKvzrL9JJpde6oicn3K8LEiThFQwNyutE1rvQVx/wykI6h6nrTX2U91/Sicn
+ 9sa1MkleShM/Ily8g9Q8fN/shdfQ0vfyqzkGfBp9KvygRyMD7S7aV0dVHhiLBpoNz4tV dw== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g6rmtv02s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 May 2022 16:58:10 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24NGuHN8002578;
+        Mon, 23 May 2022 16:58:09 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2176.outbound.protection.outlook.com [104.47.55.176])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1sf80-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 May 2022 16:58:09 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LGfAGYt75dB92uQ/h1JnwOK4oiyUJvvxG5HGYjdb6yhm8HHYWY6iVH9Ij9OM/2+nOzfDTmjlnuEOWQRoJ5quAWm7ef1/rrmcOvf+KzlCT1kZjl9lo7/m/11W5te8m5Z+ycj/tg1eE+Zjjlq0VPFm9nlUAApOvTSQn79JK0IblyxVDLnM7HrrgOsx6K5fhSG35jbKeVVaV7nmLNwnDp+BD/zoaR2qCzg6drvBWQpHkTdlfY6PSSMj0sdf7uRQRO4wUV94fPxEelYTZIIpxjUsRxfbGMRjn3i2L1FcZOG3MgCQS3XR0Yv07j1PuKjOwNvaMhJ+bt2yS+1PAx6XrMy7bA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6S/Nv/8uqObsCKLERkjbzNGKQTUT1eqea+1ZzkxrOnI=;
+ b=XeaAk4o0VH5dcbLzmjkvolM7HOic8PUM8RYbvOwUYK5JgiS2IDHbXZDAij6KtBCL+PnYEAUqnYC6i6asCMK/xvyfa/OzD0QCfp9FZBPcuH7/DF7L1RQoaN9294LwcinTGl3qNXNSjeaI4eCkerqvujLxcyRprnaAxl79I6H44BUhlmHJ+QpSBa/TvORfcJzsYL2NWo2gXhvKWtu8+KyWmNoC35XIBgxlfiL0Pal69mhflBVS1xRFoNbK8tukYvjbWEu6OTFljb/dQX0zmdlNDMkADS8r24Hd7NCF3cnqwO8MX1QT640cw7dEKmQZ30L7O8JSKKFftA28gMnlCEq06A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6S/Nv/8uqObsCKLERkjbzNGKQTUT1eqea+1ZzkxrOnI=;
+ b=BEAISdce2l6/ibEZWtNUPoyEepHouUOh3rPwS1UQxK+makcoE/K0X+RpZNxk/7arXhYmr1HjRRkyr0Y7wkVm5ZHfqCBJnW3KWbh/vZywVXK3dMB5q2NL9lr3HhxVN6VK4jL6YoTI5n3afUYcb6p3Otbcgd6cCbs3NjX4Ztplcms=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by SJ0PR10MB4751.namprd10.prod.outlook.com (2603:10b6:a03:2db::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.16; Mon, 23 May
+ 2022 16:58:07 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::3584:4c8d:491b:33a9]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::3584:4c8d:491b:33a9%5]) with mapi id 15.20.5273.023; Mon, 23 May 2022
+ 16:58:07 +0000
+Message-ID: <f33ae93b-ccd6-c8db-9646-251512f5b096@oracle.com>
+Date:   Mon, 23 May 2022 09:57:56 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.9.0
+Subject: Re: [PATCH RFC v25 0/7] NFSD: Initial implementation of NFSv4
+ Courteous Server
+Content-Language: en-US
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     chuck.lever@oracle.com, jlayton@redhat.com,
+        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+References: <1651526367-1522-1-git-send-email-dai.ngo@oracle.com>
+ <20220503011252.GK30550@fieldses.org> <20220503012132.GL30550@fieldses.org>
+ <9b394762-660b-4742-b54a-2b385485b412@oracle.com>
+ <20220523154026.GD24163@fieldses.org>
+From:   dai.ngo@oracle.com
+In-Reply-To: <20220523154026.GD24163@fieldses.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: RO1P15201CA0007.LAMP152.PROD.OUTLOOK.COM
+ (2603:10d6:4:15::17) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: e58de08a-95b2-4f00-6906-08da3cdd68c2
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB4751:EE_
+X-Microsoft-Antispam-PRVS: <SJ0PR10MB4751CA369AFE492EE520E1CD87D49@SJ0PR10MB4751.namprd10.prod.outlook.com>
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8p0Ag6bf8aBnnXPDhVhz2Jm7nguUQ9cLkhqo3dQrFsIL3HMWwVw34FCZ+r7fel32troitHk2eSDB2busk0BM/D0XScQtlu7kB2ApHwxnTcY5J7rDcYW/9yrR//W1l7dqCPMds+RI3Mog8RDYwhc1BWVucSojqShCJBHNx9SO2/nYTp2djdG3I3xA8rc/81uzneYq7xUeWw+rk4XwF6EAzLFUGFCGg3j32MTjYj8uBNYwIB/DXIDln5qG5jk8Ua4EH9xzXL9NkxbFbmLtq0/OBBFZvtp+KS16NiM+O0YAAiXAOuKEJlxdUZeMnHKOXn3CV34FXXO4vsaIxJDNKOoH/OSnJjDbnIsvv3Vtg7+UyI++beQwiHbbQzioq5tvutfMy5tNRHLLgRlZA80dR1VFqb0fHojpL/DVsFALNC+zEUVIZvQPDAFmhRXoREnBFZ8ndtqeMDgYZ6XqadUXCaIy3i6PFqLE2r3e3KyYsE1BP0KVm+/gihXqJOHp+9GfD0och3TatuFP18fFpJwQs3lZI6sTcP1hluvIMqYclpHzmd9W+jvTV9I3QCP15pysUgWS/QaQKZcnvWfJZtSQ/xnoKLZ5cxy4GVG86lzssW2bOLLXQ0tZc3pk4MF5Re2eBlY0WNBnZ1FuBrc7DtFlG4lVoutBshROm5bH32OTHFihHF5Bk7kAfbgiK7H4s+kQeE73JLLxC+KAX06cR2pfLxA3Aw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(26005)(6512007)(9686003)(6486002)(508600001)(31686004)(36756003)(5660300002)(2906002)(6506007)(8936002)(53546011)(6666004)(8676002)(4326008)(38100700002)(83380400001)(6916009)(316002)(186003)(66946007)(66556008)(66476007)(31696002)(86362001)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?a3NHZGpuclgwK2VId2d3c2xoRzZjUDA2dll3ZTkzb2RERUpwNldia285VDU1?=
+ =?utf-8?B?SnFZUTE5NTQ1Zmxmdm14cFlsK0dHOWUzTWJiTmF3bUMwN0JtNzFaN2lFeGQw?=
+ =?utf-8?B?RTRseE5IbzR4QkdvR3FWY1l4Q2Y3VElVYVNuV3hSRUhFbkp2RVZQMUhiMk1j?=
+ =?utf-8?B?TzVhYmtJWXNrNjlHOEhTZ3ZETzlRYnFvbmU0QjFaY0lpZVJUZzIrSitHb1Zj?=
+ =?utf-8?B?Smk2a2UycFdnNFVCOFlFY2srMWM0VkU4Nm81Rm42dTNROVIvdmRzS0tpY3dN?=
+ =?utf-8?B?cnNVR3FBa00yOE5kQnZBZmhnVTdpSWl6SWI3bm1NaVdsYks1OEl4RzNHSUEr?=
+ =?utf-8?B?OG51NU9MMDAwMllnSm4zbVVJQmZsY3R0ZEMrY1owd3NwdjlYR3BFeGtJTURp?=
+ =?utf-8?B?RFJtQUxyR3p2RFk2WjR2eEt3ZVlzNUlNVi92UllNdXRQeVdyQWtqMHFnbDZU?=
+ =?utf-8?B?MTg4bHFQMzVJeGxyMHhqU3IyOEtFbktFVGM4RklzSzRURUYvSlN6QzlHK0My?=
+ =?utf-8?B?VVRGWm8wQmF4ZHRVOTFJOEE0Z0NmSzZVQkRiR2cyTkdobFA0dWx6MWRvT1Zr?=
+ =?utf-8?B?RG9ocitOTFMzdDkwekZoaUJEa3RWa3ZwQXhCcU9BcFJoMmlvemt1MlhmYXlR?=
+ =?utf-8?B?ZEVmODZ0TEwwYTBZOWJSOGZaUUtuY1Y0NmpZdGxiYXZjZWVwME5aeW53emhT?=
+ =?utf-8?B?T1ppRGNpWklWNFY2RWp5VktzbHFBTTIrdzVFelFtamxrZmp4ZlFaZ28vMStm?=
+ =?utf-8?B?Y2JoY1RpZE01MHRZZEtyVzd1NnZjWGFzUTF4dUhtcVJnT2JoL3JnN2tyZ1F1?=
+ =?utf-8?B?TkVYVmdpcmdWUmlWZGExdFJwMlE0ckNBcUk1TlNLdlhKZS9HWHB2TEJNenBq?=
+ =?utf-8?B?c1VjUHEwTmdjc1N4T0w4blU2TENpQUR4L1BmUVNYOEdZUWFESWNWQUpSOERP?=
+ =?utf-8?B?ZWlEYWRoYmo3eXRuNDNLYkdQUVkyL2FnWHVCcWR5eDRqcUgwNXI5elVJY3J3?=
+ =?utf-8?B?aGREY1B3R29BdDBDR01oOUVxT1BBUHlKV2hnU0I2OGZxNkpZVVZDT2puRW51?=
+ =?utf-8?B?MmdhYzcwY1hydGRFU2h5UnJwb0tKUCsrSDEzQWRBMG14UUxTTmVwZXNQUndJ?=
+ =?utf-8?B?RUM5WmhscEtPZEJOSGpVNmhrbmhHTG1wVHFYdWFXTVlncjBzaHpIZG83aytN?=
+ =?utf-8?B?dHdndHh2V3o4eitTb25oNUpkakZpNC9mYlBMdVFJUllwZnd3OHFFZzdhcGlo?=
+ =?utf-8?B?bGxOZFVuYjM0SEQ1QUw4YVJlTjRIOHVrbUF5Q3c2QTNpNEtYUjdvSDllUWdr?=
+ =?utf-8?B?TytVNUhXYWhRS0w4QWwwbGxFa0lzd1VuQWp6eUpUYXMvNUZET3VhYnhCSjk0?=
+ =?utf-8?B?Zk1JYll6SmJjNE9vZ1RNYU1YeHJKNi9mQ2tVVTBRMVpnUzJQQSsxdFpLU09E?=
+ =?utf-8?B?Ykx0NzdNd3oyMlFySmVPYlVFL21KejF1eWN6czhjM2VUeGU3Z2tkQ0gzNEkw?=
+ =?utf-8?B?ZHlreGVONGRRRGFFbW16Vng1Q0VsVlp6MmlRTEF1b2ZzVmdsY0FmTFdERFVu?=
+ =?utf-8?B?dGUwTSthRDRINUkrMitZK2ZyNm5DWWtRd1VHWmFtRXBpeWlGYi9KMFlpRUVY?=
+ =?utf-8?B?bmRkNGU3ek5tem4yTmMyb1ovTXlBbXZLZ0FraElHY2JVbkJCMCttbHNXL3Az?=
+ =?utf-8?B?eXNVV09RbE93dDF0bFJVcm1yY2F1UEQxOGF5Vmo3QWFkdjRobzB2N0tXQzZO?=
+ =?utf-8?B?b1R4YzkrMWsrd2YwQldxbjZqeUkyaThYWFFidC9iRXFYeUNuK3FWRzhleU9P?=
+ =?utf-8?B?R1RSVXlramhNRkorbFkwZEJUeG41S2tlL2FCSXdPZllFdkVxRFBQcE5meHhC?=
+ =?utf-8?B?V1ZXWEUxOWF3bWl4SlBjRGxrUit3Wk14cmRPdHNjQUMyZGFxcGRqVkFYUCtW?=
+ =?utf-8?B?U3ptVUVPZGQyeUpncHl3cWE1T0hXT3dIV0RwaStFek0rbDU4eGhqYWFQR0Iw?=
+ =?utf-8?B?dnNOUE9BOURia1pPZCtNYzhrQVdVMlpKeDg5RHV6VVJ6RlpYb0MyNFQ1OEVr?=
+ =?utf-8?B?UnhmOWdnc0loR284d3FIcUJEMitQblB6clU4YmpDMnFlODF2UC9MNHVuVUdL?=
+ =?utf-8?B?N3hkU0U0KzRoUEh2YU5tRDlyQ0ZxenJTeDFPVDE5bGZvcFNETDV2eG5xVUZz?=
+ =?utf-8?B?ZzB4YndKMUNwK3JiWEduV1NFcjhXSlFWRDRXU1BjY0dSQUtGbGZ5VHdjb29m?=
+ =?utf-8?B?dzREdWwxa2dleFJtVVR3NXF5c3IyOHZ5Q1JBdjk4bXVyRnhNR0tXK2x4QS9s?=
+ =?utf-8?B?VWxISWNseW5HZ1FXZnZweitpT211UldneCtZV0wzUVByK0lBK3hTdz09?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e58de08a-95b2-4f00-6906-08da3cdd68c2
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 May 2022 16:58:07.2484
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: W5eTVxe6sA0mkdhrvfhPh+OSxRbiuLU7OKKqLfn5FtJG7rlDxsHayHV8LVEkoy0feeelfx8iiJZ3sYpsQ5MaKA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4751
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
+ definitions=2022-05-23_07:2022-05-23,2022-05-23 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=999 adultscore=0 malwarescore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
+ definitions=main-2205230096
+X-Proofpoint-GUID: 0BF3-ym4jYnTkGPBGXJ0dMV1-nI3oXKG
+X-Proofpoint-ORIG-GUID: 0BF3-ym4jYnTkGPBGXJ0dMV1-nI3oXKG
+X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,186 +162,69 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-05-23 at 15:41 +0000, Chuck Lever III wrote:
->=20
-> > On May 23, 2022, at 11:26 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Mon, 2022-05-23 at 15:00 +0000, Chuck Lever III wrote:
-> > >=20
-> > > > On May 23, 2022, at 9:40 AM, Jeff Layton <jlayton@kernel.org> wrote=
-:
-> > > >=20
-> > > > On Sun, 2022-05-22 at 11:38 -0400, Chuck Lever wrote:
-> > > > > nfsd4_release_lockowner() holds clp->cl_lock when it calls
-> > > > > check_for_locks(). However, check_for_locks() calls nfsd_file_get=
-()
-> > > > > / nfsd_file_put() to access the backing inode's flc_posix list, a=
-nd
-> > > > > nfsd_file_put() can sleep if the inode was recently removed.
-> > > > >=20
-> > > >=20
-> > > > It might be good to add a might_sleep() to nfsd_file_put?
-> > >=20
-> > > I intend to include the patch you reviewed last week that
-> > > adds the might_sleep(), as part of this series.
-> > >=20
-> > >=20
-> > > > > Let's instead rely on the stateowner's reference count to gate
-> > > > > whether the release is permitted. This should be a reliable
-> > > > > indication of locks-in-use since file lock operations and
-> > > > > ->lm_get_owner take appropriate references, which are released
-> > > > > appropriately when file locks are removed.
-> > > > >=20
-> > > > > Reported-by: Dai Ngo <dai.ngo@oracle.com>
-> > > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > > > Cc: stable@vger.kernel.org
-> > > > > ---
-> > > > > fs/nfsd/nfs4state.c |    9 +++------
-> > > > > 1 file changed, 3 insertions(+), 6 deletions(-)
-> > > > >=20
-> > > > > This might be a naive approach, but let's start with it.
-> > > > >=20
-> > > > > This passes light testing, but it's not clear how much our existi=
-ng
-> > > > > fleet of tests exercises this area. I've locally built a couple o=
-f
-> > > > > pynfs tests (one is based on the one Dai posted last week) and th=
-ey
-> > > > > pass too.
-> > > > >=20
-> > > > > I don't believe that FREE_STATEID needs the same simplification.
-> > > > >=20
-> > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > > > index a280256cbb03..b77894e668a4 100644
-> > > > > --- a/fs/nfsd/nfs4state.c
-> > > > > +++ b/fs/nfsd/nfs4state.c
-> > > > > @@ -7559,12 +7559,9 @@ nfsd4_release_lockowner(struct svc_rqst *r=
-qstp,
-> > > > >=20
-> > > > > 		/* see if there are still any locks associated with it */
-> > > > > 		lo =3D lockowner(sop);
-> > > > > -		list_for_each_entry(stp, &sop->so_stateids, st_perstateowner) =
-{
-> > > > > -			if (check_for_locks(stp->st_stid.sc_file, lo)) {
-> > > > > -				status =3D nfserr_locks_held;
-> > > > > -				spin_unlock(&clp->cl_lock);
-> > > > > -				return status;
-> > > > > -			}
-> > > > > +		if (atomic_read(&sop->so_count) > 1) {
-> > > > > +			spin_unlock(&clp->cl_lock);
-> > > > > +			return nfserr_locks_held;
-> > > > > 		}
-> > > > >=20
-> > > > > 		nfs4_get_stateowner(sop);
-> > > > >=20
-> > > > >=20
-> > > >=20
-> > > > lm_get_owner is called from locks_copy_conflock, so if someone else
-> > > > happens to be doing a LOCKT or F_GETLK call at the same time that
-> > > > RELEASE_LOCKOWNER gets called, then this may end up returning an er=
-ror
-> > > > inappropriately.
-> > >=20
-> > > IMO releasing the lockowner while it's being used for _anything_
-> > > seems risky and surprising. If RELEASE_LOCKOWNER succeeds while
-> > > the client is still using the lockowner for any reason, a
-> > > subsequent error will occur if the client tries to use it again.
-> > > Heck, I can see the server failing in mid-COMPOUND with this kind
-> > > of race. Better I think to just leave the lockowner in place if
-> > > there's any ambiguity.
-> > >=20
-> >=20
-> > The problem here is not the client itself calling RELEASE_LOCKOWNER
-> > while it's still in use, but rather a different client altogether
-> > calling LOCKT (or a local process does a F_GETLK) on an inode where a
-> > lock is held by a client. The LOCKT gets a reference to it (for the
-> > conflock), while the client that has the lockowner releases the lock an=
-d
-> > then the lockowner while the refcount is still high.
-> >=20
-> > The race window for this is probably quite small, but I think it's
-> > theoretically possible. The point is that an elevated refcount on the
-> > lockowner doesn't necessarily mean that locks are actually being held b=
-y
-> > it.
->=20
-> Sure, I get that the lockowner's reference count is not 100%
-> reliable. The question is whether it's good enough.
->=20
-> We are looking for a mechanism that can simply count the number
-> of locks held by a lockowner. It sounds like you believe that
-> lm_get_owner / put_owner might not be a reliable way to do
-> that.
->=20
->=20
-> > > The spec language does not say RELEASE_LOCKOWNER must not return
-> > > LOCKS_HELD for other reasons, and it does say that there is no
-> > > choice of using another NFSERR value (RFC 7530 Section 13.2).
-> > >=20
-> >=20
-> > What recourse does the client have if this happens? It released all of
-> > its locks and tried to release the lockowner, but the server says "lock=
-s
-> > held". Should it just give up at that point? RELEASE_LOCKOWNER is a sor=
-t
-> > of a courtesy by the client, I suppose...
->=20
-> RELEASE_LOCKOWNER is a courtesy for the server. Most clients
-> ignore the return code IIUC.
->=20
-> So the hazard caused by this race would be a small resource
-> leak on the server that would go away once the client's lease
-> was purged.
->=20
->=20
-> > > > My guess is that that would be pretty hard to hit the
-> > > > timing right, but not impossible.
-> > > >=20
-> > > > What we may want to do is have the kernel do this check and only if=
- it
-> > > > comes back >1 do the actual check for locks. That won't fix the ori=
-ginal
-> > > > problem though.
-> > > >=20
-> > > > In other places in nfsd, we've plumbed in a dispose_list head and
-> > > > deferred the sleeping functions until the spinlock can be dropped. =
-I
-> > > > haven't looked closely at whether that's possible here, but it may =
-be a
-> > > > more reliable approach.
-> > >=20
-> > > That was proposed by Dai last week.
-> > >=20
-> > > https://lore.kernel.org/linux-nfs/1653079929-18283-1-git-send-email-d=
-ai.ngo@oracle.com/T/#u
-> > >=20
-> > > Trond pointed out that if two separate clients were releasing a
-> > > lockowner on the same inode, there is nothing that protects the
-> > > dispose_list, and it would get corrupted.
-> > >=20
-> > > https://lore.kernel.org/linux-nfs/31E87CEF-C83D-4FA8-A774-F2C389011FC=
-E@oracle.com/T/#mf1fc1ae0503815c0a36ae75a95086c3eff892614
-> > >=20
-> >=20
-> > Yeah, that doesn't look like what's needed.
-> >=20
-> > What I was going to suggest is a nfsd_file_put variant that takes a
-> > list_head. If the refcount goes to zero and the thing ends up being
-> > unhashed, then you put it on the dispose list rather than doing the
-> > blocking operations, and then clean it up later.
->=20
-> Trond doesn't like that approach; see the e-mail thread.
->=20
 
-I didn't see him saying that that would be wrong, per-se, but the
-initial implementation was racy.
+On 5/23/22 8:40 AM, J. Bruce Fields wrote:
+> On Mon, May 02, 2022 at 06:38:03PM -0700, dai.ngo@oracle.com wrote:
+>> On 5/2/22 6:21 PM, J. Bruce Fields wrote:
+>>> On Mon, May 02, 2022 at 09:12:52PM -0400, J. Bruce Fields wrote:
+>>>> Looks good to me.
+>>> And the only new test failures are due to the new DELAYs on OPEN.
+>>> Somebody'll need to fix up pynfs.  (I'm not volunteering for now.)
+>> I will fix it, since I broke it :-)
+> By the way, I have three more notes on courtesy server stuff that I
+> wanted to dump into email before I forget them:
+>
+> 1. I do still recommend fixing up those pynfs failures.  The ones I see
+>     are in RENEW3, LKU10, CLOSE9, CLOSE8, but there may be others.
 
-His suggestion was just to keep a counter in the lockowner of how many
-locks are associated with it. That seems like a good suggestion, though
-you'd probably need to add a parameter to lm_get_owner to indicate
-whether you were adding a new lock or just doing a conflock copy.
+I had the pynfs fix ready, I just wait for the courteous server patches
+to go in 5.19 then submit the pynfs fix. Or do you want me to send it
+out now?
 
-Checking the object refcount like this patch does seems wrong though.
+>
+> 2. In the lock case, nfsd4_lock() holds an st_mutex while calling
+>     vfs_lock_file(), which may end up needing to wait for the laundromat.
+>     As I said in review, I don't see a potential deadlock there, so I'm
+>     fine with the code going in as is.
+>
+>     But, as a note for possible cleanup, or if this does turn into a
+>     problem later: vfs_lock_file could return to nfsd4_lock(), and
+>     nfsd4_lock() could easily drop the st_mutex, wait, and retry.
+>
+>     I think the only trick part would be deciding on conventions for the
+>     caller to tell vfs_lock_file() that it shouldn't wait in this case
+>     (non-nfsd callers will still want to wait), and for vfs_lock_file()
+>     to indicate the caller needs to retry.  Probably something in
+>     fl_flags for the former, and an agreed-on error return for the
+>     latter?
+>
+> 3. One other piece of future work would be optimizing the conflicting
+>     lock case.  A very premature optimization at this point, but I'm just
+>     leaving my notes here in case someone's interested:
+>
+>     The loop in posix_lock_inode() is currently O(N^2) in the number of
+>     expirable clients holding conflicting locks, because each time we
+>     encounter one, we wait and then restart.  In practice I doubt that
+>     matters--if you have a lot of clients to expire, the time rescanning
+>     the list will likely be trivial compared to the time spent waiting
+>     for nfsdcld to commit the expiry of each client to stable storage.
+>
+>     *However*, it might be a more significant optimization if we first
+>     allowed more parallelism in nfsdcld.  And that might also benefit
+>     some other cases (e.g., lots of clients reconnecting after a crash).
+>     We'd need paralle nfsdcld--no idea what that would involve--and I
+>     think it'd also help to update the kernel<->nfsdcld protocol with a
+>     separate commit operation, so that nfsd could issue a bunch of client
+>     changes and then a single commit to wait for them all.
+>
+>     That done, we could modify the loop in vfs_lock_file() so that, in
+>     the case where multiple clients hold conflicting locks, the loop
+>     marks them all for expiry in one pass, then waits just once at the
+>     end.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+Thank you for your notes Bruce, I will keep these in mind.
+
+-Dai
+
+>
+> --b.
