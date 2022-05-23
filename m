@@ -2,194 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4E2E531292
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 18:22:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B93D531228
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 18:22:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237925AbiEWP0T (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 11:26:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
+        id S238063AbiEWPk3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 11:40:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237921AbiEWP0S (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 11:26:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27C13532FF
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 08:26:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A08B8612B2
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 15:26:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4850C385A9;
-        Mon, 23 May 2022 15:26:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653319576;
-        bh=1CM42ecTY/U7gVahRV41JpZ7X0SZT8TwQMmI0949N7I=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lCVWZvEnPam684VcuT/73DMw0kGHOBlkYUtfTiQv3Oll63yUuKgSmyryyjZaMon8z
-         XZ1sQ1rV7IvV2m79mWviBRv7CEqnipvMqH0CDikk31k08BiB4nUHJq2RXBguCfgdl7
-         k7L06lNw2lH0m6yPModKNbh8+VuYA0FaTDawzCo2cs1NgIO8s5eBa2nmqtDG5cdCXI
-         NjqCMILY4qdtYxE6GAKnFINzDOySzaqrV+RDD6KUKDkJ8Hdnnn9cz53j5wUw2/Xs7p
-         ecYfnknqGF5q3MfFBeth5ox2wi9IHuoBIwnOIBhQZAIcZ/2EhyQKuNSpMfzDKdhPXH
-         054TJy6AmiW6A==
-Message-ID: <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
-Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Mon, 23 May 2022 11:26:14 -0400
-In-Reply-To: <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
-References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
-         <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
-         <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
+        with ESMTP id S238041AbiEWPk2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 11:40:28 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5036513E0B;
+        Mon, 23 May 2022 08:40:27 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 8D89B6FF7; Mon, 23 May 2022 11:40:26 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 8D89B6FF7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1653320426;
+        bh=Z+qxa+zGW5+0guw4bev4YIEGkKyRlr9IpXZHYJdrvvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KLg1bD2XHFuK7LaU5CSgO/fVy9ThWOMltJQQ6GdSY5LWo0iS1RfJpIaWpP1ziepUJ
+         5/9Eld5a0MLaZQ5Icp/r4jOYLHP4K2PW6FTIQTdz4VfjRwIo7JLTQQhCQiwGgLd6nZ
+         r5ox4Uzm6Otsji7NiaA4P8WDG5X3j5WF5RInDuYU=
+Date:   Mon, 23 May 2022 11:40:26 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     dai.ngo@oracle.com
+Cc:     chuck.lever@oracle.com, jlayton@redhat.com,
+        viro@zeniv.linux.org.uk, linux-nfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH RFC v25 0/7] NFSD: Initial implementation of NFSv4
+ Courteous Server
+Message-ID: <20220523154026.GD24163@fieldses.org>
+References: <1651526367-1522-1-git-send-email-dai.ngo@oracle.com>
+ <20220503011252.GK30550@fieldses.org>
+ <20220503012132.GL30550@fieldses.org>
+ <9b394762-660b-4742-b54a-2b385485b412@oracle.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9b394762-660b-4742-b54a-2b385485b412@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-05-23 at 15:00 +0000, Chuck Lever III wrote:
->=20
-> > On May 23, 2022, at 9:40 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Sun, 2022-05-22 at 11:38 -0400, Chuck Lever wrote:
-> > > nfsd4_release_lockowner() holds clp->cl_lock when it calls
-> > > check_for_locks(). However, check_for_locks() calls nfsd_file_get()
-> > > / nfsd_file_put() to access the backing inode's flc_posix list, and
-> > > nfsd_file_put() can sleep if the inode was recently removed.
-> > >=20
-> >=20
-> > It might be good to add a might_sleep() to nfsd_file_put?
->=20
-> I intend to include the patch you reviewed last week that
-> adds the might_sleep(), as part of this series.
->=20
->=20
-> > > Let's instead rely on the stateowner's reference count to gate
-> > > whether the release is permitted. This should be a reliable
-> > > indication of locks-in-use since file lock operations and
-> > > ->lm_get_owner take appropriate references, which are released
-> > > appropriately when file locks are removed.
-> > >=20
-> > > Reported-by: Dai Ngo <dai.ngo@oracle.com>
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > Cc: stable@vger.kernel.org
-> > > ---
-> > > fs/nfsd/nfs4state.c |    9 +++------
-> > > 1 file changed, 3 insertions(+), 6 deletions(-)
-> > >=20
-> > > This might be a naive approach, but let's start with it.
-> > >=20
-> > > This passes light testing, but it's not clear how much our existing
-> > > fleet of tests exercises this area. I've locally built a couple of
-> > > pynfs tests (one is based on the one Dai posted last week) and they
-> > > pass too.
-> > >=20
-> > > I don't believe that FREE_STATEID needs the same simplification.
-> > >=20
-> > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> > > index a280256cbb03..b77894e668a4 100644
-> > > --- a/fs/nfsd/nfs4state.c
-> > > +++ b/fs/nfsd/nfs4state.c
-> > > @@ -7559,12 +7559,9 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp=
-,
-> > >=20
-> > > 		/* see if there are still any locks associated with it */
-> > > 		lo =3D lockowner(sop);
-> > > -		list_for_each_entry(stp, &sop->so_stateids, st_perstateowner) {
-> > > -			if (check_for_locks(stp->st_stid.sc_file, lo)) {
-> > > -				status =3D nfserr_locks_held;
-> > > -				spin_unlock(&clp->cl_lock);
-> > > -				return status;
-> > > -			}
-> > > +		if (atomic_read(&sop->so_count) > 1) {
-> > > +			spin_unlock(&clp->cl_lock);
-> > > +			return nfserr_locks_held;
-> > > 		}
-> > >=20
-> > > 		nfs4_get_stateowner(sop);
-> > >=20
-> > >=20
-> >=20
-> > lm_get_owner is called from locks_copy_conflock, so if someone else
-> > happens to be doing a LOCKT or F_GETLK call at the same time that
-> > RELEASE_LOCKOWNER gets called, then this may end up returning an error
-> > inappropriately.
->=20
-> IMO releasing the lockowner while it's being used for _anything_
-> seems risky and surprising. If RELEASE_LOCKOWNER succeeds while
-> the client is still using the lockowner for any reason, a
-> subsequent error will occur if the client tries to use it again.
-> Heck, I can see the server failing in mid-COMPOUND with this kind
-> of race. Better I think to just leave the lockowner in place if
-> there's any ambiguity.
->=20
+On Mon, May 02, 2022 at 06:38:03PM -0700, dai.ngo@oracle.com wrote:
+> 
+> On 5/2/22 6:21 PM, J. Bruce Fields wrote:
+> >On Mon, May 02, 2022 at 09:12:52PM -0400, J. Bruce Fields wrote:
+> >>Looks good to me.
+> >And the only new test failures are due to the new DELAYs on OPEN.
+> >Somebody'll need to fix up pynfs.  (I'm not volunteering for now.)
+> 
+> I will fix it, since I broke it :-)
 
-The problem here is not the client itself calling RELEASE_LOCKOWNER
-while it's still in use, but rather a different client altogether
-calling LOCKT (or a local process does a F_GETLK) on an inode where a
-lock is held by a client. The LOCKT gets a reference to it (for the
-conflock), while the client that has the lockowner releases the lock and
-then the lockowner while the refcount is still high.
+By the way, I have three more notes on courtesy server stuff that I
+wanted to dump into email before I forget them:
 
-The race window for this is probably quite small, but I think it's
-theoretically possible. The point is that an elevated refcount on the
-lockowner doesn't necessarily mean that locks are actually being held by
-it.
+1. I do still recommend fixing up those pynfs failures.  The ones I see
+   are in RENEW3, LKU10, CLOSE9, CLOSE8, but there may be others.
 
-> The spec language does not say RELEASE_LOCKOWNER must not return
-> LOCKS_HELD for other reasons, and it does say that there is no
-> choice of using another NFSERR value (RFC 7530 Section 13.2).
->=20
+2. In the lock case, nfsd4_lock() holds an st_mutex while calling
+   vfs_lock_file(), which may end up needing to wait for the laundromat.
+   As I said in review, I don't see a potential deadlock there, so I'm
+   fine with the code going in as is.
 
-What recourse does the client have if this happens? It released all of
-its locks and tried to release the lockowner, but the server says "locks
-held". Should it just give up at that point? RELEASE_LOCKOWNER is a sort
-of a courtesy by the client, I suppose...
+   But, as a note for possible cleanup, or if this does turn into a
+   problem later: vfs_lock_file could return to nfsd4_lock(), and
+   nfsd4_lock() could easily drop the st_mutex, wait, and retry.
 
->=20
-> > My guess is that that would be pretty hard to hit the
-> > timing right, but not impossible.
-> >=20
-> > What we may want to do is have the kernel do this check and only if it
-> > comes back >1 do the actual check for locks. That won't fix the origina=
-l
-> > problem though.
-> >=20
-> > In other places in nfsd, we've plumbed in a dispose_list head and
-> > deferred the sleeping functions until the spinlock can be dropped. I
-> > haven't looked closely at whether that's possible here, but it may be a
-> > more reliable approach.
->=20
-> That was proposed by Dai last week.
->=20
-> https://lore.kernel.org/linux-nfs/1653079929-18283-1-git-send-email-dai.n=
-go@oracle.com/T/#u
->=20
-> Trond pointed out that if two separate clients were releasing a
-> lockowner on the same inode, there is nothing that protects the
-> dispose_list, and it would get corrupted.
->=20
-> https://lore.kernel.org/linux-nfs/31E87CEF-C83D-4FA8-A774-F2C389011FCE@or=
-acle.com/T/#mf1fc1ae0503815c0a36ae75a95086c3eff892614
->=20
+   I think the only trick part would be deciding on conventions for the
+   caller to tell vfs_lock_file() that it shouldn't wait in this case
+   (non-nfsd callers will still want to wait), and for vfs_lock_file()
+   to indicate the caller needs to retry.  Probably something in
+   fl_flags for the former, and an agreed-on error return for the
+   latter?
 
-Yeah, that doesn't look like what's needed.
+3. One other piece of future work would be optimizing the conflicting
+   lock case.  A very premature optimization at this point, but I'm just
+   leaving my notes here in case someone's interested:
 
-What I was going to suggest is a nfsd_file_put variant that takes a
-list_head. If the refcount goes to zero and the thing ends up being
-unhashed, then you put it on the dispose list rather than doing the
-blocking operations, and then clean it up later.
+   The loop in posix_lock_inode() is currently O(N^2) in the number of
+   expirable clients holding conflicting locks, because each time we
+   encounter one, we wait and then restart.  In practice I doubt that
+   matters--if you have a lot of clients to expire, the time rescanning
+   the list will likely be trivial compared to the time spent waiting
+   for nfsdcld to commit the expiry of each client to stable storage.
 
-That said, nfsd_file_put has grown significantly in complexity over the
-years, so maybe that's not simple to do now.
---=20
-Jeff Layton <jlayton@kernel.org>
+   *However*, it might be a more significant optimization if we first
+   allowed more parallelism in nfsdcld.  And that might also benefit
+   some other cases (e.g., lots of clients reconnecting after a crash).
+   We'd need paralle nfsdcld--no idea what that would involve--and I
+   think it'd also help to update the kernel<->nfsdcld protocol with a
+   separate commit operation, so that nfsd could issue a bunch of client
+   changes and then a single commit to wait for them all.
+
+   That done, we could modify the loop in vfs_lock_file() so that, in
+   the case where multiple clients hold conflicting locks, the loop
+   marks them all for expiry in one pass, then waits just once at the
+   end.
+
+--b.
