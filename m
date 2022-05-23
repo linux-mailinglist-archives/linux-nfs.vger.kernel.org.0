@@ -2,188 +2,411 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A134E531B15
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:56:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 29C215318FC
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbiEWTnT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 15:43:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36382 "EHLO
+        id S231266AbiEWTnU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 15:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233157AbiEWTlp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:41:45 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE84BE9
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 12:35:52 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NGpAA9020337;
-        Mon, 23 May 2022 19:35:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=XcMAltO96nAjM/cZGLY6BuMFKHaTNqgS6qOup7EYxXA=;
- b=tRZZsijlE3DLhUB3Y0jcnofMt1wK4V1rZgxFVeU0uS6FXFcfcMHrgRqEdZ17PUA3z14W
- K3a8/UUYv3fKqGmr7gdGghsCYGbjDdP4528YULmRs6lWW+i1LzyRmR0moMMDEbTnqRsr
- Cs6CSmSNFawgbfsEH2wCzqDiEYGxhth/s6Ll0jSTUiG0OYuJ5eN34Vc71Srysl+WOYqV
- 9+A9qr8D3BlU4eEFpqAaqRqSKxGU50/21IExws73FPsvsCt+dXutiszpkKSgblUh0I9p
- fYw3bG2jroQJwuBWYNSxfZgTr9SHbSUb/zoMdRFiC9bmoig61WF8b5Mc6Jhf91E9nyUe xQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g6pv24j13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:35:48 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24NJG6YZ010297;
-        Mon, 23 May 2022 19:35:47 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1nfv6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:35:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b/xOgg4D7ADZhLpEjMV4TqfVfiYm1EJchb+EPcib6Zsl1RvvCgPIJdQ3Ht4fPK4nn0q3iwScOdhGZHDoLZtDvAKbh9yvKbcVc8J8jO51UBf6RV/5V0j3IRVXnRc4/gxFf554qKlvCikJsuq45UhrKFMQoaGyySoEjFvw9w2RSZ8m+Wzu8pXXhnly4HtFgLbfmZ9PQSeOZ8MdNUW1t+9AMs99nj7qnq/iVIx+giC3I5QF4V/zHwk/PiKr7BJysiFAFtihx9id/0ubbVsg+KnEkAoVNYSTmaLBGFBjXv3IgNVyY+/nWokuAfRMQ8MYdsw0LoQCQuDBfp68ToswsaM1gg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XcMAltO96nAjM/cZGLY6BuMFKHaTNqgS6qOup7EYxXA=;
- b=A8fozyF1FeyLYHalQK/iRkTLmBKugdl2xXfXAZAuTQ2TG3CvPXof/UzN7PEUuMCnUup0qvT4tX/tE9B7DpmR1fDFVhO148c6n17gpc5IdIL8cSGewoNHu+kP0PckDgpjwDm9WhQ5eD5Kfy5ueGcvnmRFGhntCWgCjA3lkYmW9XqmUtMK2g5qDm8EzxvBdeTr6Gav1HYNMhDqcJXjB2x/185/sYulu/IImJWuS0Wi/2tkGgFPy4LieBNaZNRguRHoL31SYexrs03uZ9sSENsNwJNZS8RRdyAcBIsycGxgzmK6rTcq0AT5EDlb4ALftURIp+/xsDFhPcwFHGeu3BN8+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XcMAltO96nAjM/cZGLY6BuMFKHaTNqgS6qOup7EYxXA=;
- b=y3IYYpLEUH6TVbi9turPG3BStODmsZiz6aWJhtklceH6Z8cUozjaSG2qZW5sDNhFFTTMoYod9kwdhpUMaCjyifB3EHuEnLvI+LVhruBysVrULkj549MMSRCxkZoX1qV2Im4ykEwXs+FSQKZ50Z89IsdBqW2B7d9hWqxtRKk/uwg=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BYAPR10MB3045.namprd10.prod.outlook.com (2603:10b6:a03:86::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.14; Mon, 23 May
- 2022 19:35:45 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5273.023; Mon, 23 May 2022
- 19:35:45 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+        with ESMTP id S233213AbiEWTlq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:41:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73E9B12768
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 12:36:30 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F3BDF612B9
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 19:36:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08FDEC385AA;
+        Mon, 23 May 2022 19:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653334589;
+        bh=PYXbU5Cy73aJPYrJmpfyZZ9AeaAPVB+B70W+wDwrxGg=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=diCVF3HIkNiELjEATfxP0EbpqrfAY4TfI1WfbcHC3mQZrygyPO4T0LvmaZlUDH0Ve
+         cXjPgEd0CIfLbA4bOqx4z0KRqaei1YuVebhPDUmaPUQwtxMryfSZ8K5VVB4otRMwxE
+         gyCSgmhHlsK+q5HKu2PkWT8r+1cncGbVXh/1VkEBvwcQ+AnwY0n8kEZ1M5WpCqRBBJ
+         yXF3H1hDaPXHFiiDmeRGTGUDbDny1lgQvw+GQ6WZJU3+R5JKsDGvSJ1hKLNCqOJ9aI
+         fWfVZ+Z/BiUrTy+qJcIWdYHS6UwXU1Dz8lbnZJ++0yE6tend3sNNLNe5sEgOn0DgpA
+         Vbzh4eKfZYuAA==
+Message-ID: <17007994486027de807d80dfde1a716c3d127de1.camel@kernel.org>
 Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
  nfsd4_release_lockowner()
-Thread-Topic: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-Thread-Index: AQHYbfIMzaj7dJY/skSZB97V0kxLh60seYcAgAAWLQCAAAdIAIAABFwAgAAPm4CAAA1wgIAAA7CAgAAgnwA=
-Date:   Mon, 23 May 2022 19:35:45 +0000
-Message-ID: <9D7CE6C9-579D-4DF3-9425-4CE0099E75E0@oracle.com>
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Mon, 23 May 2022 15:36:27 -0400
+In-Reply-To: <A67AA343-E399-44AB-AFE5-02B82B38E79E@oracle.com>
 References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
- <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
- <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
- <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
- <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
- <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
- <FF7F2939-C3DE-4584-BFFA-13B554706B9C@oracle.com>
- <f20de886f02402970c86c5195ea344de128afd91.camel@kernel.org>
-In-Reply-To: <f20de886f02402970c86c5195ea344de128afd91.camel@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 40e9f98c-1c40-4b53-5f2d-08da3cf36e6d
-x-ms-traffictypediagnostic: BYAPR10MB3045:EE_
-x-microsoft-antispam-prvs: <BYAPR10MB3045DC6DC73FF378FE026B7493D49@BYAPR10MB3045.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nclk1LIx5qXGQ5lKcdHLM1MyfZidZ0kf6MmzWBbPJ7VkT0ZpJ2bWNyNENg2lHxGI4sbBe7+nR2iHfGWAheo5d7CLYcCDyUdwSzjYQkRWenAxAMGiBCM6cjNc2Ybx2et7qTB6hozro85Ykzos267Uifygd8W+ta8CvfQlepvMElCesgzzhTVj7fH0G77vnsiPn7bA7/4Gbt1/ehHKGQqVXwxeS0WSGg9n2SzbrpghDU2oVmvi57VsUkuTpWVjB9MLESkZ7dXZIZ70YfVBXYv/If/ElPaAsvmAVTXW1oFxZf10qyRESRFTNh7OZVzEg3SWOF/74TOZ1YiX8O3SBM8SNt0x10L/x538OGk14TMYqZjzfFTWtHWKQn1uaErIeaSrW6ifyniroPHnmvaBEFAnCk+t5gxImaHwSPWLBriVvUWXer8GAi0mRIxH+lG9Ucm9Gfu7uaCX+6moV7UFv65u5RocZuYJhmoWGeRGIBqD8hh0q44QKym1Ncmy8Gx6Rh4yPnqZMFGVGCQNfdYtjt3u72JNHml9smcXscwWaSK8PcTYZSrmB23+f/FUkCcCPKqvAV/POnE6dWlbtV2dKHtEZR7sDIeADnxjj8i0YYi3zgAjWlKtZjl4w3G9fjjcNn50oTQP0siQOZni4WSheCKS6cOamBqxHNvD8rTjtnxv0RX8Nk2u7Z+lWeb1L8TyL6h8RkCOZ8Vy0V/QNYLnZqMa/x197adzUZIaUyNoT99b08I=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(33656002)(508600001)(2616005)(36756003)(316002)(6916009)(76116006)(66946007)(66446008)(2906002)(4326008)(6512007)(26005)(86362001)(4744005)(38070700005)(38100700002)(91956017)(66556008)(66476007)(6506007)(53546011)(122000001)(64756008)(8676002)(83380400001)(5660300002)(186003)(8936002)(71200400001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ymZovgXT/QwJK9E+TWMhxYjMQFZ/M4v+FkStJBonIY7ORledk3wUs7reJJfa?=
- =?us-ascii?Q?fE7V1gokW18dF0qrIfVWQ/JVeEqP91N4/6tFxB5ayHWbdEgzm94wUg10Hjbc?=
- =?us-ascii?Q?nhfs3VfX5zwTZoYrrddj178BSvYiebDatIFkUP/mAQDTonAGneqPATWJa/dw?=
- =?us-ascii?Q?KvRmlKmFyfn83eKsYjiUGBTMncuNKB7rGcNcpSZwQYtSaQTwE79WEtDpAW/l?=
- =?us-ascii?Q?7Fm6dM/hnMvJwj3v9HRzM7MqTA4Sqpnf54K2FszKi6k5UE72r9AhLwDxO6i8?=
- =?us-ascii?Q?BrEIySAPMeiva0aOSg6X95nMzAlldTwQGwBmpb/cdzytGb4Nu0ARhu2lA2Xy?=
- =?us-ascii?Q?D/7WGvSwDA++eq7jbVDzlKun83Nxd3DKV0Ohq6uxfQHiYXW0ymfROc4AM3yL?=
- =?us-ascii?Q?1ap+U4p4mq10mEf8TMKPxDsykELAmnIWBrzw08rdDbKq1JW5lBKa4hMFfR8G?=
- =?us-ascii?Q?pnPd9x/XEu0NnhiocZ3zk+OtQQaXR06oXd4XQUfw/I+7k1ge+VFksF8MdxW8?=
- =?us-ascii?Q?xHgrhJjcPZgg8hIsjqcBX8Pr5EA2wo5aFmDKtSjIzUoiyQ/X6evjqrZn6/fv?=
- =?us-ascii?Q?7k7Ec1Xnq+VClav6lIN76uLcaSV944aofbUQ0UwsUeSxBJVg7TWBZm4cNOUu?=
- =?us-ascii?Q?Hq0TySBpc3+TRIE1Uqomt8g4tcRkFq3yIBRRspCihDrAWO6fmVSJmhDBp6P9?=
- =?us-ascii?Q?Mag/mEeMi7HmD38yH72Y52oBPZHRQOzwLaIkFzTXzkf1fmO6NWhisZfJgDSX?=
- =?us-ascii?Q?Sk2cp9xNkkCd3oCf2H5j0uSJ+nX19dRpTJcTIGbMirHkUE2ee399Fd4qjM0l?=
- =?us-ascii?Q?7mlKtPmLyKK6zdnXgPB4Xo/0UmWPUZx8+i2MFHG8p/vNc6G3VYjDB2uGkaDe?=
- =?us-ascii?Q?E2rAOQfLvmZZXiKJU+TM3LfwpGfPr0DKtWq0/N/9rHluSg5WMhXFLoPt18Ry?=
- =?us-ascii?Q?NWv8Mn14M6HYclatWJF7vChttQbQ8t1YJgyr/rheU7bVM+Fd4VqpDOWOjm0Y?=
- =?us-ascii?Q?7d7rvPld36lXVDudgQmUAy5TSSJwxOFKnjRgC6g/wLQdw38+ZEiF9C8sUyW+?=
- =?us-ascii?Q?6c2kGSqZrXVFiB2oi2W2KjdpTLggrPzwH/l+G+cTv3WRdg3kpbC1spS/7t8K?=
- =?us-ascii?Q?JSUxFofhssNL0FxylkIBQRDFpbWpsmRy91n3rh/QMtzsrqIZhcDk7gHbendu?=
- =?us-ascii?Q?pVX6uV2O+r//unY1k1VCngOca0P+kz9C7vV7DlAF+3OWxbXwktgQhoAdITqq?=
- =?us-ascii?Q?0CrFEvGcPTP9HdOAZ7zDPcv3dwpv9ZMDn1kBF3AFgsvCrCUHOusC0s0m0tJJ?=
- =?us-ascii?Q?Tj+ejdxVpBsvO3bab91nhnrgYR6xTZg3grOTSXS318Q3eyCbfKOJcpm8W1LH?=
- =?us-ascii?Q?jXUlNm0VKy7411iNW29cKJMCe/UvUqEgTZWQIRVf76+d16VqYclQUWKbhFTm?=
- =?us-ascii?Q?v4z9hJzg4oKAOvcl49cRF8Zo3t3xAQNMjaXN1z7lB9ifcpbyMHvmxO5BJbW1?=
- =?us-ascii?Q?csfG0MhrP0oBUZ3j8PABZM0yvIxPIj3B9V6AJNOClN9+xDSbE2t8Uq5jk8mS?=
- =?us-ascii?Q?mvJNT7V16a5JocFptYVeovbdg4pm+GixnTgtU6ie9Xn6aKge4JvPzgJzWgav?=
- =?us-ascii?Q?YNjJhSErA7tfgT3XztRWaskdv3lzeD7aJLv7NIbZspaiac9hKFXELidXrbD6?=
- =?us-ascii?Q?Vi89Mg6BkK8PI1CD3f22/CPVk51tffUX/EmPjYyZ7V2rucye8f1B1XlTLgpq?=
- =?us-ascii?Q?qWaIuJ7kLyY9ht2w12VNHAOy05xlfFQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F0B7120955BEF743B38BB880E108E674@namprd10.prod.outlook.com>
+         <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
+         <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
+         <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
+         <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
+         <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
+         <93d11e12532f5a10153d3702100271f70373bce6.camel@hammerspace.com>
+         <a719ae7e8fb8b46f84b00b27d800330712486f40.camel@kernel.org>
+         <5dfbc622c9ab70af5e4a664f9ae03b7ed659e8ac.camel@hammerspace.com>
+         <f12bf8be7c8fe6cf1a9e6a440277a3eb8edd543a.camel@kernel.org>
+         <A67AA343-E399-44AB-AFE5-02B82B38E79E@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40e9f98c-1c40-4b53-5f2d-08da3cf36e6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 19:35:45.3258
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pb6NyF87I+vyTtNM6LhjeglVBzd2wbzDXnRyRLbUy0WfWEq7IVT/F32dlBgDKhPIZwe5h1yNWcgbzKgH5EeTXw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB3045
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
- definitions=2022-05-23_08:2022-05-23,2022-05-23 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 bulkscore=0
- mlxscore=0 mlxlogscore=999 suspectscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205230106
-X-Proofpoint-GUID: nR5xHul7w5n8RzgyHKVr9Tb9IgGVZ4fu
-X-Proofpoint-ORIG-GUID: nR5xHul7w5n8RzgyHKVr9Tb9IgGVZ4fu
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On May 23, 2022, at 1:38 PM, Jeff Layton <jlayton@kernel.org> wrote:
+On Mon, 2022-05-23 at 19:13 +0000, Chuck Lever III wrote:
 >=20
-> On Mon, 2022-05-23 at 17:25 +0000, Chuck Lever III wrote:
->>=20
->>> On May 23, 2022, at 12:37 PM, Jeff Layton <jlayton@kernel.org> wrote:
->>>=20
->>> His suggestion was just to keep a counter in the lockowner of how many
->>> locks are associated with it. That seems like a good suggestion, though
->>> you'd probably need to add a parameter to lm_get_owner to indicate
->>> whether you were adding a new lock or just doing a conflock copy.
->>=20
->> locks_copy_conflock() would need to take a boolean parameter
->> that callers would set when they actually manipulate a lock.
->>=20
+> > On May 23, 2022, at 2:30 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > On Mon, 2022-05-23 at 18:21 +0000, Trond Myklebust wrote:
+> > > On Mon, 2022-05-23 at 14:04 -0400, Jeff Layton wrote:
+> > > > On Mon, 2022-05-23 at 17:43 +0000, Trond Myklebust wrote:
+> > > > > On Mon, 2022-05-23 at 12:37 -0400, Jeff Layton wrote:
+> > > > > > On Mon, 2022-05-23 at 15:41 +0000, Chuck Lever III wrote:
+> > > > > > >=20
+> > > > > > > > On May 23, 2022, at 11:26 AM, Jeff Layton
+> > > > > > > > <jlayton@kernel.org>
+> > > > > > > > wrote:
+> > > > > > > >=20
+> > > > > > > > On Mon, 2022-05-23 at 15:00 +0000, Chuck Lever III wrote:
+> > > > > > > > >=20
+> > > > > > > > > > On May 23, 2022, at 9:40 AM, Jeff Layton
+> > > > > > > > > > <jlayton@kernel.org>
+> > > > > > > > > > wrote:
+> > > > > > > > > >=20
+> > > > > > > > > > On Sun, 2022-05-22 at 11:38 -0400, Chuck Lever wrote:
+> > > > > > > > > > > nfsd4_release_lockowner() holds clp->cl_lock when it
+> > > > > > > > > > > calls
+> > > > > > > > > > > check_for_locks(). However, check_for_locks() calls
+> > > > > > > > > > > nfsd_file_get()
+> > > > > > > > > > > / nfsd_file_put() to access the backing inode's
+> > > > > > > > > > > flc_posix
+> > > > > > > > > > > list, and
+> > > > > > > > > > > nfsd_file_put() can sleep if the inode was recently
+> > > > > > > > > > > removed.
+> > > > > > > > > > >=20
+> > > > > > > > > >=20
+> > > > > > > > > > It might be good to add a might_sleep() to nfsd_file_pu=
+t?
+> > > > > > > > >=20
+> > > > > > > > > I intend to include the patch you reviewed last week that
+> > > > > > > > > adds the might_sleep(), as part of this series.
+> > > > > > > > >=20
+> > > > > > > > >=20
+> > > > > > > > > > > Let's instead rely on the stateowner's reference coun=
+t
+> > > > > > > > > > > to
+> > > > > > > > > > > gate
+> > > > > > > > > > > whether the release is permitted. This should be a
+> > > > > > > > > > > reliable
+> > > > > > > > > > > indication of locks-in-use since file lock operations
+> > > > > > > > > > > and
+> > > > > > > > > > > ->lm_get_owner take appropriate references, which are
+> > > > > > > > > > > released
+> > > > > > > > > > > appropriately when file locks are removed.
+> > > > > > > > > > >=20
+> > > > > > > > > > > Reported-by: Dai Ngo <dai.ngo@oracle.com>
+> > > > > > > > > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > > > > > > > > > > Cc: stable@vger.kernel.org
+> > > > > > > > > > > ---
+> > > > > > > > > > > fs/nfsd/nfs4state.c |    9 +++------
+> > > > > > > > > > > 1 file changed, 3 insertions(+), 6 deletions(-)
+> > > > > > > > > > >=20
+> > > > > > > > > > > This might be a naive approach, but let's start with
+> > > > > > > > > > > it.
+> > > > > > > > > > >=20
+> > > > > > > > > > > This passes light testing, but it's not clear how muc=
+h
+> > > > > > > > > > > our
+> > > > > > > > > > > existing
+> > > > > > > > > > > fleet of tests exercises this area. I've locally buil=
+t
+> > > > > > > > > > > a
+> > > > > > > > > > > couple of
+> > > > > > > > > > > pynfs tests (one is based on the one Dai posted last
+> > > > > > > > > > > week)
+> > > > > > > > > > > and they
+> > > > > > > > > > > pass too.
+> > > > > > > > > > >=20
+> > > > > > > > > > > I don't believe that FREE_STATEID needs the same
+> > > > > > > > > > > simplification.
+> > > > > > > > > > >=20
+> > > > > > > > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.=
+c
+> > > > > > > > > > > index a280256cbb03..b77894e668a4 100644
+> > > > > > > > > > > --- a/fs/nfsd/nfs4state.c
+> > > > > > > > > > > +++ b/fs/nfsd/nfs4state.c
+> > > > > > > > > > > @@ -7559,12 +7559,9 @@ nfsd4_release_lockowner(struct
+> > > > > > > > > > > svc_rqst *rqstp,
+> > > > > > > > > > >=20
+> > > > > > > > > > >                 /* see if there are still any locks
+> > > > > > > > > > > associated with it */
+> > > > > > > > > > >                 lo =3D lockowner(sop);
+> > > > > > > > > > > -               list_for_each_entry(stp, &sop-
+> > > > > > > > > > > > so_stateids,
+> > > > > > > > > > > st_perstateowner) {
+> > > > > > > > > > > -                       if (check_for_locks(stp-
+> > > > > > > > > > > > st_stid.sc_file, lo)) {
+> > > > > > > > > > > -                               status =3D
+> > > > > > > > > > > nfserr_locks_held;
+> > > > > > > > > > > -                               spin_unlock(&clp-
+> > > > > > > > > > > > cl_lock);
+> > > > > > > > > > > -                               return status;
+> > > > > > > > > > > -                       }
+> > > > > > > > > > > +               if (atomic_read(&sop->so_count) > 1) =
+{
+> > > > > > > > > > > +                       spin_unlock(&clp->cl_lock);
+> > > > > > > > > > > +                       return nfserr_locks_held;
+> > > > > > > > > > >                 }
+> > > > > > > > > > >=20
+> > > > > > > > > > >                 nfs4_get_stateowner(sop);
+> > > > > > > > > > >=20
+> > > > > > > > > > >=20
+> > > > > > > > > >=20
+> > > > > > > > > > lm_get_owner is called from locks_copy_conflock, so if
+> > > > > > > > > > someone else
+> > > > > > > > > > happens to be doing a LOCKT or F_GETLK call at the same
+> > > > > > > > > > time
+> > > > > > > > > > that
+> > > > > > > > > > RELEASE_LOCKOWNER gets called, then this may end up
+> > > > > > > > > > returning
+> > > > > > > > > > an error
+> > > > > > > > > > inappropriately.
+> > > > > > > > >=20
+> > > > > > > > > IMO releasing the lockowner while it's being used for
+> > > > > > > > > _anything_
+> > > > > > > > > seems risky and surprising. If RELEASE_LOCKOWNER succeeds
+> > > > > > > > > while
+> > > > > > > > > the client is still using the lockowner for any reason, a
+> > > > > > > > > subsequent error will occur if the client tries to use it
+> > > > > > > > > again.
+> > > > > > > > > Heck, I can see the server failing in mid-COMPOUND with
+> > > > > > > > > this
+> > > > > > > > > kind
+> > > > > > > > > of race. Better I think to just leave the lockowner in
+> > > > > > > > > place if
+> > > > > > > > > there's any ambiguity.
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > The problem here is not the client itself calling
+> > > > > > > > RELEASE_LOCKOWNER
+> > > > > > > > while it's still in use, but rather a different client
+> > > > > > > > altogether
+> > > > > > > > calling LOCKT (or a local process does a F_GETLK) on an ino=
+de
+> > > > > > > > where a
+> > > > > > > > lock is held by a client. The LOCKT gets a reference to it
+> > > > > > > > (for
+> > > > > > > > the
+> > > > > > > > conflock), while the client that has the lockowner releases
+> > > > > > > > the
+> > > > > > > > lock and
+> > > > > > > > then the lockowner while the refcount is still high.
+> > > > > > > >=20
+> > > > > > > > The race window for this is probably quite small, but I thi=
+nk
+> > > > > > > > it's
+> > > > > > > > theoretically possible. The point is that an elevated
+> > > > > > > > refcount on
+> > > > > > > > the
+> > > > > > > > lockowner doesn't necessarily mean that locks are actually
+> > > > > > > > being
+> > > > > > > > held by
+> > > > > > > > it.
+> > > > > > >=20
+> > > > > > > Sure, I get that the lockowner's reference count is not 100%
+> > > > > > > reliable. The question is whether it's good enough.
+> > > > > > >=20
+> > > > > > > We are looking for a mechanism that can simply count the numb=
+er
+> > > > > > > of locks held by a lockowner. It sounds like you believe that
+> > > > > > > lm_get_owner / put_owner might not be a reliable way to do
+> > > > > > > that.
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > > > The spec language does not say RELEASE_LOCKOWNER must not
+> > > > > > > > > return
+> > > > > > > > > LOCKS_HELD for other reasons, and it does say that there =
+is
+> > > > > > > > > no
+> > > > > > > > > choice of using another NFSERR value (RFC 7530 Section
+> > > > > > > > > 13.2).
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > What recourse does the client have if this happens? It
+> > > > > > > > released
+> > > > > > > > all of
+> > > > > > > > its locks and tried to release the lockowner, but the serve=
+r
+> > > > > > > > says
+> > > > > > > > "locks
+> > > > > > > > held". Should it just give up at that point?
+> > > > > > > > RELEASE_LOCKOWNER is
+> > > > > > > > a sort
+> > > > > > > > of a courtesy by the client, I suppose...
+> > > > > > >=20
+> > > > > > > RELEASE_LOCKOWNER is a courtesy for the server. Most clients
+> > > > > > > ignore the return code IIUC.
+> > > > > > >=20
+> > > > > > > So the hazard caused by this race would be a small resource
+> > > > > > > leak on the server that would go away once the client's lease
+> > > > > > > was purged.
+> > > > > > >=20
+> > > > > > >=20
+> > > > > > > > > > My guess is that that would be pretty hard to hit the
+> > > > > > > > > > timing right, but not impossible.
+> > > > > > > > > >=20
+> > > > > > > > > > What we may want to do is have the kernel do this check
+> > > > > > > > > > and
+> > > > > > > > > > only if it
+> > > > > > > > > > comes back >1 do the actual check for locks. That won't
+> > > > > > > > > > fix
+> > > > > > > > > > the original
+> > > > > > > > > > problem though.
+> > > > > > > > > >=20
+> > > > > > > > > > In other places in nfsd, we've plumbed in a dispose_lis=
+t
+> > > > > > > > > > head
+> > > > > > > > > > and
+> > > > > > > > > > deferred the sleeping functions until the spinlock can =
+be
+> > > > > > > > > > dropped. I
+> > > > > > > > > > haven't looked closely at whether that's possible here,
+> > > > > > > > > > but
+> > > > > > > > > > it may be a
+> > > > > > > > > > more reliable approach.
+> > > > > > > > >=20
+> > > > > > > > > That was proposed by Dai last week.
+> > > > > > > > >=20
+> > > > > > > > > https://lore.kernel.org/linux-nfs/1653079929-18283-1-git-=
+send-email-dai.ngo@oracle.com/T/#u
+> > > > > > > > >=20
+> > > > > > > > > Trond pointed out that if two separate clients were
+> > > > > > > > > releasing a
+> > > > > > > > > lockowner on the same inode, there is nothing that protec=
+ts
+> > > > > > > > > the
+> > > > > > > > > dispose_list, and it would get corrupted.
+> > > > > > > > >=20
+> > > > > > > > > https://lore.kernel.org/linux-nfs/31E87CEF-C83D-4FA8-A774=
+-F2C389011FCE@oracle.com/T/#mf1fc1ae0503815c0a36ae75a95086c3eff892614
+> > > > > > > > >=20
+> > > > > > > >=20
+> > > > > > > > Yeah, that doesn't look like what's needed.
+> > > > > > > >=20
+> > > > > > > > What I was going to suggest is a nfsd_file_put variant that
+> > > > > > > > takes
+> > > > > > > > a
+> > > > > > > > list_head. If the refcount goes to zero and the thing ends =
+up
+> > > > > > > > being
+> > > > > > > > unhashed, then you put it on the dispose list rather than
+> > > > > > > > doing
+> > > > > > > > the
+> > > > > > > > blocking operations, and then clean it up later.
+> > > > > > >=20
+> > > > > > > Trond doesn't like that approach; see the e-mail thread.
+> > > > > > >=20
+> > > > > >=20
+> > > > > > I didn't see him saying that that would be wrong, per-se, but t=
+he
+> > > > > > initial implementation was racy.
+> > > > > >=20
+> > > > > > His suggestion was just to keep a counter in the lockowner of h=
+ow
+> > > > > > many
+> > > > > > locks are associated with it. That seems like a good suggestion=
+,
+> > > > > > though
+> > > > > > you'd probably need to add a parameter to lm_get_owner to
+> > > > > > indicate
+> > > > > > whether you were adding a new lock or just doing a conflock cop=
+y.
+> > > > >=20
+> > > > > I don't think this should be necessary. The posix_lock code doesn=
+'t
+> > > > > ever use a struct file_lock that it hasn't allocated itself. We
+> > > > > should
+> > > > > always be calling conflock to copy from whatever struct file_lock
+> > > > > that
+> > > > > the caller passed as an argument.
+> > > > >=20
+> > > > > IOW: the number of lm_get_owner and lm_put_owner calls should
+> > > > > always be
+> > > > > 100% balanced once all the locks belonging to a specific lock own=
+er
+> > > > > are
+> > > > > removed.
+> > > > >=20
+> > > >=20
+> > > > We take references to the owner when we go to add a lock record, or
+> > > > when
+> > > > copying a conflicting lock. You want to keep a count of the former
+> > > > without counting the latter.
+> > > >=20
+> > > > lm_get_owner gets called for both though. I don't see how you can
+> > > > disambiguate the two situations w/o some way to indicate that. Addi=
+ng
+> > > > a
+> > > > bool argument to lm_get_owner/lm_put_owner ops would be pretty simp=
+le
+> > > > to
+> > > > implement, I think.
+> > > >=20
+> > >=20
+> > > Hmm... That should be an extremely unlikely race, given that the
+> > > conflicting lock reference would have to be held for long enough to
+> > > cover the unlock + the release_lockowner / free_stateid RPC calls fro=
+m
+> > > the client initially holding the lock, however I agree it is a
+> > > theoretical possibility.
+> > >=20
+> >=20
+> > If we want to live with the possibility of that race, then Chuck's
+> > original patch is fine, since the object refcount would always be
+> > equivalent to the lock count.
+> >=20
+> > That said, I think it'd be better to keep an accurate count of lock
+> > records (sans conflocks) in the owner.
 >=20
-> Yep. You'd also have to add a bool arg to lm_put_owner so that you know
-> whether you need to decrement the counter.
+> I don't have an objection to maintaining an accurate count of locks
+> belonging to each lockowner. I feel comfortable (for now) that using
+> so_count is a good-enough solution, and is an improvement over holding
+> a spinlock while trying to sleep. If we go with so_count, I can add
+> a comment that explains the uses of so_count and possible races.
+>=20
+> OTOH, if we alter the lm_get/put_owner API, I would like to ensure the
+> new parameter will be difficult to misuse. A few more random thoughts
+> that might count towards due diligence:
+>=20
+> - Is there a reliable way lm_get/put_owner can distinguish between
+>   the two cases by looking at their current set of arguments?
+>=20
 
-It's the lm_put_owner() side that looks less than straightforward.
-Suggestions and advice welcome there.
+Not really. It just takes a lockowner pointer now so you don't have any
+indication of why the reference is being taken or put.
 
+> - Is it clear why the conflict case needs to take a reference on a
+>   lockowner that is not involved? Is there a way to avoid taking that
+>   reference in the first place?
+>=20
 
---
-Chuck Lever
-
-
-
+The other lockowner _is_ involved. It's the one holding the conflicting
+lock. nfs4_set_lock_denied copies info from the conflicting lockowner
+into the LOCK/LOCKT response. That's safe now because it holds a
+reference to the owner. At one point it wasn't (see commit aef9583b234a4
+"NFSD: Get reference of lockowner when coping file_lock", which fixed
+that).
+--=20
+Jeff Layton <jlayton@kernel.org>
