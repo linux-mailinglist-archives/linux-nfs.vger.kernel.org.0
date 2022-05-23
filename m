@@ -2,109 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB84153181D
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:53:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD9B531966
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:54:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230350AbiEWTnV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 15:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45524 "EHLO
+        id S229593AbiEWTok (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 15:44:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234720AbiEWTmx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:42:53 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D01BC100
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 12:42:36 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NGup4q017035;
-        Mon, 23 May 2022 19:42:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2021-07-09;
- bh=mn+Q9QuwfK7d78DY4tAXqj50t7oCfxl/mPaZ4z61e5s=;
- b=Vr5caOE0ClHoR1YiZy7QO4x9gYtWh9UKVr+5PIut1gjescbQ+p2mIL1kf9vJjXbE2J1z
- siAl5N1jGfz4qVl/ZxxGteZsn7vrPrdLyzF0Tah8AewTdhNbRf7ZROPBsMA7uQKGTQpn
- k/KgmqyXKgztceeHa8Z6AWkqelBm08RxVNcoLr7nUEmAUzKijxSL6u5MshsX6uuGQQ3O
- VZkAIvLaXzB1PWw05QJQ8+rLq8cCFpJr5czfoHzD0EmprXR/oFZfSzvdLbHeghR9IfP0
- +bZkZ4wy+RA5IEXCiAx9vCB0fQI54ZazAKW/VQvU63wuxjzFhps9WMXyc/T9fuYCz2qZ sw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g6qps4g5g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:42:35 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24NJeINI003887;
-        Mon, 23 May 2022 19:42:34 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1wcma-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:42:34 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 24NJgYsU009551;
-        Mon, 23 May 2022 19:42:34 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1wcm6-1;
-        Mon, 23 May 2022 19:42:34 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, bfields@fieldses.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 1/1] Add pynfs4.0 release lockowner test RLOWN2
-Date:   Mon, 23 May 2022 12:42:30 -0700
-Message-Id: <1653334950-8762-1-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-ORIG-GUID: ImFfzvuTxHQR-o_a82FYF968KJc9SAWi
-X-Proofpoint-GUID: ImFfzvuTxHQR-o_a82FYF968KJc9SAWi
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230300AbiEWToD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:44:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 890D0F2E
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 12:43:31 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B88BC61382
+        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 19:43:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0EF5C385A9;
+        Mon, 23 May 2022 19:43:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1653335010;
+        bh=Gj4iYIKjxE8wse1bNogJ3UWSpe3xOtS4OCTCLwjl8bI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=cMIl1qvUxjtdugWzZf9k56oqD9Ij5C8KI5tqbqPz1aNanOYe06t1iqh44g+9ZyT71
+         /3wlDe+IeFKwdafgFTNSH26Xcyi4gfQ3iORIJbJ2ZdqcL8/k/MP3OElRRESg92c9vc
+         0P2sEc+t/HES0uiiCp62jHMDG6DpXG12xk5Z7uYCquUlu5c66LIYEtqCYjYerhezlQ
+         w8MhGUFE/utaZyWsZtWbe5q5XDjR6B2ZtCwUuzyzfytxN8Ni/NIrhu+GluZymT/hTE
+         kSTVaxIm32aetoeQspnOLRNUuxP919ruIvOFCV644gnyAKOoiLijj5CmpsuUfXZQ3+
+         igcz9sAf1P+5Q==
+Message-ID: <aed59b68ecbd312972fbcba0c369b39f6812fe2b.camel@kernel.org>
+Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
+ nfsd4_release_lockowner()
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Mon, 23 May 2022 15:43:28 -0400
+In-Reply-To: <9D7CE6C9-579D-4DF3-9425-4CE0099E75E0@oracle.com>
+References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
+         <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
+         <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
+         <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
+         <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
+         <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
+         <FF7F2939-C3DE-4584-BFFA-13B554706B9C@oracle.com>
+         <f20de886f02402970c86c5195ea344de128afd91.camel@kernel.org>
+         <9D7CE6C9-579D-4DF3-9425-4CE0099E75E0@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.1 (3.44.1-1.fc36) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: root <root@nfsvme14.us.oracle.com>
+On Mon, 2022-05-23 at 19:35 +0000, Chuck Lever III wrote:
+>=20
+> > On May 23, 2022, at 1:38 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > On Mon, 2022-05-23 at 17:25 +0000, Chuck Lever III wrote:
+> > >=20
+> > > > On May 23, 2022, at 12:37 PM, Jeff Layton <jlayton@kernel.org> wrot=
+e:
+> > > >=20
+> > > > His suggestion was just to keep a counter in the lockowner of how m=
+any
+> > > > locks are associated with it. That seems like a good suggestion, th=
+ough
+> > > > you'd probably need to add a parameter to lm_get_owner to indicate
+> > > > whether you were adding a new lock or just doing a conflock copy.
+> > >=20
+> > > locks_copy_conflock() would need to take a boolean parameter
+> > > that callers would set when they actually manipulate a lock.
+> > >=20
+> >=20
+> > Yep. You'd also have to add a bool arg to lm_put_owner so that you know
+> > whether you need to decrement the counter.
+>=20
+> It's the lm_put_owner() side that looks less than straightforward.
+> Suggestions and advice welcome there.
+>=20
 
-Add RLOWN2, similar to RLOWN1 but remove the file before release
-lockowner. This test is to exercise to code path causing problem
-of being blocked in nfsd_file_put while holding the cl_client lock.
+Maybe add a new fl_flags value that indicates that a particular lock is
+a conflock and not a lock record? Then locks_release_private could use
+that to pass the appropriate argument to lm_put_owner.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- nfs4.0/servertests/st_releaselockowner.py | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
-
-diff --git a/nfs4.0/servertests/st_releaselockowner.py b/nfs4.0/servertests/st_releaselockowner.py
-index ccd10ff..50cef88 100644
---- a/nfs4.0/servertests/st_releaselockowner.py
-+++ b/nfs4.0/servertests/st_releaselockowner.py
-@@ -24,3 +24,28 @@ def testFile(t, env):
-     owner = lock_owner4(c.clientid, b"lockowner_RLOWN1")
-     res = c.compound([op.release_lockowner(owner)])
-     check(res)
-+
-+def testFile2(t, env):
-+    """RELEASE_LOCKOWNER 2 - same as basic test but remove
-+    file before release lockowner.
-+
-+    FLAGS: releaselockowner all
-+    DEPEND:
-+    CODE: RLOWN2
-+    """
-+    c = env.c1
-+    c.init_connection()
-+    fh, stateid = c.create_confirm(t.word())
-+    res = c.lock_file(t.word(), fh, stateid, lockowner=b"lockowner_RLOWN1")
-+    check(res)
-+    res = c.unlock_file(1, fh, res.lockid)
-+    check(res)
-+
-+    ops = c.use_obj(c.homedir) + [op.remove(t.word())]
-+    res = c.compound(ops)
-+    check(res)
-+
-+    # Release lockowner
-+    owner = lock_owner4(c.clientid, b"lockowner_RLOWN1")
-+    res = c.compound([op.release_lockowner(owner)])
-+    check(res)
--- 
-1.8.3.1
-
+That's probably simpler overall than trying to audit all of the
+locks_free_lock callers.
+--=20
+Jeff Layton <jlayton@kernel.org>
