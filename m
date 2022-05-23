@@ -2,476 +2,195 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10C05531B4C
-	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:56:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F0E05317C0
+	for <lists+linux-nfs@lfdr.de>; Mon, 23 May 2022 22:53:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230112AbiEWTbr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 23 May 2022 15:31:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47484 "EHLO
+        id S229650AbiEWThq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 23 May 2022 15:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231688AbiEWTbO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:31:14 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0055EA1
-        for <linux-nfs@vger.kernel.org>; Mon, 23 May 2022 12:13:28 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NHE1XV005485;
-        Mon, 23 May 2022 19:13:22 GMT
+        with ESMTP id S231849AbiEWThg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 23 May 2022 15:37:36 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C631113B8C5;
+        Mon, 23 May 2022 12:25:33 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24NHXLDJ016393;
+        Mon, 23 May 2022 19:25:32 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=E8LqAA0pJAJkA/5sqMX9aJua5CaA77yGNj4sv8vxgMU=;
- b=sKsR0DYOcFmOINw0nqaRxyZFVnznjVhOmaQdjT1LVVGBYvoCvjOxS62Ownjhul8KtWSx
- I3u7ItV8NIn2POHJrW5R3JhR+0KNiLHsiCYgawLf6tTy/zUbzrKXFNVjWpKYBq2ce3BI
- sqbnGMi1YDAeMiGxmtyFu4obJL3okZlWh8I+eFbbPlWymrI0yeImAB9bTkpxzSsblYse
- j4TqhSK0wdXzF3UzB9dab1cG9iAai5s9IX+40iHvAvBKtr8RTz4G7EX9GB6DMshxT8Di
- b36XuryW7VdZMV9Q0+ntfp48dORltfbsYGpbx8mWBeuFC6PMbz9hCuQKdxL406HVkW7M 5g== 
+ bh=20ZGj/Xi4/EHUmgCgMUSEJDdecjt9pohYodI5V5D82A=;
+ b=DisG+YLH7lWzEQpY/vK4QwgLj2Wt5+H3Ry5ih9fxLVeVF2g1MnLHPFgiwZfNyCH61PPO
+ 4Spf056aC13uPPXMbslVlE2TSL7QUDqGiuKG5KwHkbhkeW/EuPkMBUvDUMqlIISR6vcW
+ eH54F4XYu9c/pHD95o3bvgIELecuHra1dxFA/UPfhd4ysiFIJcHqQ3sQGbeIOsrP7tTo
+ 4zj9HXix/m61XESIztVFWG+F1WuQg8pvEgT0Z7f44yjzgSIW1m/jgXz6uoU+y6Fcl5sa
+ 9E3GTc46iJxbg30EKRqOhMgQDipy3Pey2mPL2r8Sqes/z3NH49o/kJjc/aPdvw0u2JfN vA== 
 Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g6pgbmcxn-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g6qya497x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:13:21 +0000
+        Mon, 23 May 2022 19:25:32 +0000
 Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24NIwKH4035440;
-        Mon, 23 May 2022 19:13:20 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2171.outbound.protection.outlook.com [104.47.56.171])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1xb5n-1
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24NJG5H5009809;
+        Mon, 23 May 2022 19:25:31 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam07lp2049.outbound.protection.outlook.com [104.47.51.49])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g6ph1xrrn-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 May 2022 19:13:20 +0000
+        Mon, 23 May 2022 19:25:31 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XuGBCPLGHHpgjMlZURnJEZhln3L0qQO14QdDMODKIGWRfULkwdpvCA8E9yIdmWNSIRO1Bpcrqpar6ptHSS051ElH4RM2iHsFLpfUPEvn+wXeI8c0Z5tkLBMWX/L50bxGEi3UrR4kKtly2Z/yCDjbNSC2LjvZ1XhZjiuUTnzNsKdBuelzFiZ+ET37SDmMWU3ivZu44HD9a0mWFhuN0CL8KjUfWxL95FSFX8IBSE5qNTOL7MvPH7HAET4H/KigdHI1RroxJ8bs0/xFuGWb9nVDf2eaK8SIImgMTLzT2EZCcVUhCOmVYKp3zKUll9xV2RTFVtRuz7hgPCY7ZmUWunWJMw==
+ b=U/jMM4kGj75prlfmrjLq8cDJzIHuOHj0LsL+XdKJzAH1zyechLUae7uH92hPyH2O4xBEHFJj//jEJUMEdEj7oEsnNxKkGrlAr4emZoyIQxspO9TC2gV3iBUaJaBbpEHWDLtpvokZ3bWIFc0Vb60ooapTsjxrhAiHsvXGD898F+TUZSWxGFrM0Q7qZCorn4esAznKDA2RoxduAz8Y+ckfD6kGJwyle3gVUInex1apE3moyx0eJhdSVzYR7acowhC2dDE8JyRB3Rs0hlERUacz+gu9oY7tSC+ZYIXoI5i7e30Y9sRj+pWGUu/lM04W1c0hGy1P0JNLvIStgVLetln8fQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E8LqAA0pJAJkA/5sqMX9aJua5CaA77yGNj4sv8vxgMU=;
- b=g6TAlP+QGSeUGp1Sf5US16uJDPe3HhN8/uhzpYKy6SgoWL3FpQ7jF7FFyHOuUL9Dj04UCG8feYecZ+EoCNW1EMufW/UEIT1f2pNN/a51qz50XwOvNL5LU9/YlkNwDe7JQD61x9zzneTxNkH0wybij5TDkf1+XjTdE2o2OwkfmaojM1nJqpjidq911k+VWpERv1BgoMzA4COJ1rKkFnVymDGyM1ipXTwEdPQwwuAsU7iL0jxh5JfoU8t4OfOk2VmNVkhSBJa5jSc1fDBu4U8Ex7jWnFGQMTo/lI7yikoa26gIUDTQYQWYqqRpJLn1S0fjlu7ItXIiGsonV1dau2DU2A==
+ bh=20ZGj/Xi4/EHUmgCgMUSEJDdecjt9pohYodI5V5D82A=;
+ b=mppHTjf15UrymCcPmcJtlsTpoTSEgncOVwF5Omq7ixHNtN0UFq/2jpFSg1FQWWz8My1EuUac4sZt0HIJNfW0N40KhKb1vBc/Rw2vx2Rsum22iaI/EIQJny4iRVfKj/GClpRf8IPXcAl3t58lB/AWC6UDftIQ+EJ3wjBlp+0GRC98K1C0MDIQUxMb6aHkj8m98NOxP5jY+Lh+sxsipiFfiAGQCE51q7t/Dv5iTwecldVtjLu3X17vpbscUkaXQfBd3KpfnuSc8JlcZ+ZwpoTI/CJaIk7umK0hg3r5+fxGO8Um5C5bkgEWUYSGXe6hQDG5QDsOVTwEfn20LjHBKGqiIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E8LqAA0pJAJkA/5sqMX9aJua5CaA77yGNj4sv8vxgMU=;
- b=qTeLKmEJSpJU+Oy21RExZf49yhwBsnGSw5i1IfLYQZjr231K7b9QmC6LH7ThAtIEPKEsLno4NPnk4Q/k7slVQo1ZvKZgsWTK8e0+t9p5W3nPXzTWrNz6vIa4+Joam6GRjWFJWnw15RXbcpCuIvZxPsueLkf7BCbAPKYsrJxppOw=
+ bh=20ZGj/Xi4/EHUmgCgMUSEJDdecjt9pohYodI5V5D82A=;
+ b=aUpw0+9WeCpZDBhLqoNMhuAQUMAb/WuFcDUsMYyYIF0tlcJdtVPTQtDlphYny41IcZlP3KPKlCMAYlIGndXe7atFTz0qieabENgtE5vj2Awdmkm0NQJ3aH4Co0Ea6EoxeQMtjQXfNmB9Nk90oLMblG6IeRwtzTuH88+mZNtC+10=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM5PR1001MB2252.namprd10.prod.outlook.com (2603:10b6:4:31::26) with
+ by PH0PR10MB5658.namprd10.prod.outlook.com (2603:10b6:510:fd::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.19; Mon, 23 May
- 2022 19:13:18 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.22; Mon, 23 May
+ 2022 19:25:29 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5273.023; Mon, 23 May 2022
- 19:13:18 +0000
+ 19:25:29 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Trond Myklebust <trondmy@hammerspace.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-Thread-Topic: [PATCH RFC] NFSD: Fix possible sleep during
- nfsd4_release_lockowner()
-Thread-Index: AQHYbfIMzaj7dJY/skSZB97V0kxLh60seYcAgAAWLQCAAAdIAIAABFwAgAAPm4CAABJ8gIAABdCAgAAEtoCAAAKDAIAAC/SA
-Date:   Mon, 23 May 2022 19:13:18 +0000
-Message-ID: <A67AA343-E399-44AB-AFE5-02B82B38E79E@oracle.com>
-References: <165323344948.2381.7808135229977810927.stgit@bazille.1015granger.net>
- <fe3f9ece807e1433631ee3e0bd6b78238305cb87.camel@kernel.org>
- <510282CB-38D3-438A-AF8A-9AC2519FCEF7@oracle.com>
- <c3d053dc36dd5e7dee1267f1c7107bbf911e4d53.camel@kernel.org>
- <1A37E2B5-8113-48D6-AF7C-5381F364D99E@oracle.com>
- <c357e63272de96f9e7595bf6688680879d83dc83.camel@kernel.org>
- <93d11e12532f5a10153d3702100271f70373bce6.camel@hammerspace.com>
- <a719ae7e8fb8b46f84b00b27d800330712486f40.camel@kernel.org>
- <5dfbc622c9ab70af5e4a664f9ae03b7ed659e8ac.camel@hammerspace.com>
- <f12bf8be7c8fe6cf1a9e6a440277a3eb8edd543a.camel@kernel.org>
-In-Reply-To: <f12bf8be7c8fe6cf1a9e6a440277a3eb8edd543a.camel@kernel.org>
+To:     Julian Schroeder 
+        <jumaco@dev-dsk-jumaco-1e-78723413.us-east-1.amazon.com>
+CC:     Amir Goldstein <amir73il@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "benh@amazon.com" <benh@amazon.com>,
+        "alisaidi@amazon.com" <alisaidi@amazon.com>,
+        "jumaco@amazon.com" <jumaco@amazon.com>
+Subject: Re: [PATCH] nfsd: destroy percpu stats counters after reply cache
+ shutdown
+Thread-Topic: [PATCH] nfsd: destroy percpu stats counters after reply cache
+ shutdown
+Thread-Index: AQHYbtZPfPOr39v3Ck6/rr8AZ3u7860s2AsA
+Date:   Mon, 23 May 2022 19:25:29 +0000
+Message-ID: <BF85B60C-EC88-4514-AD3D-93BBBF3A4A9D@oracle.com>
+References: <20220523185226.7614-1-jumaco@dev-dsk-jumaco-1e-78723413.us-east-1.amazon.com>
+In-Reply-To: <20220523185226.7614-1-jumaco@dev-dsk-jumaco-1e-78723413.us-east-1.amazon.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3654.120.0.1.13)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e1a7766e-a362-4b52-6212-08da3cf04b63
-x-ms-traffictypediagnostic: DM5PR1001MB2252:EE_
-x-microsoft-antispam-prvs: <DM5PR1001MB225243610DAC4CB8286B1A0493D49@DM5PR1001MB2252.namprd10.prod.outlook.com>
+x-ms-office365-filtering-correlation-id: 1113cd31-2e30-4423-0635-08da3cf1ff21
+x-ms-traffictypediagnostic: PH0PR10MB5658:EE_
+x-microsoft-antispam-prvs: <PH0PR10MB5658ABF203DE7137DE55ED4F93D49@PH0PR10MB5658.namprd10.prod.outlook.com>
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: w7edc3mui9WCHvlXvTbviUAV0eHxYsfUZV2FjhQUJo/KxK8h48v/wmk7Mr9lgIyCLGSMhZg2UuGQ/9yqbbuMb4xTdII9JC3juX1VPCbjwCtHqH6cn6AXfw5YFBmTleFIV/WzK8rp36BCmSo/fbmZuZUvq2WEw5Y5F3rjhVYDOLeoPJyprU+m1G6aHodPL3fvNaRLPJKNfCzG7UyFul8Bxk/Ywhgs5LIpH9bmINmPU9eOh8OLqoFmabhn40vUAHy5gvu57ipGBS26BUSKrCu7Z44mWpitzrchqARvYaTCz+nAZb6hhweK/WIohlt5C7a/UZAnyVZZTeMZzOrX8vTlEOLZqTGy/gl9VAYIgTUQS34wCgyn9BrYHCE5ntogevO28ueWBnxJN++zdpRwVe1BGMm+EPHrS4DbbncnIVoEMXhuH6Jt48UjB+prdWbopc8uWEJsjTQLSEWXVyzV5iCqM881dp1fSCNU+dJOUCLIH0ZAbL3Cgp907FUP7bDqMprp9KwV2KlRwrDcPz4Y/bAuwdp53g5+5onxDDNDFajlYUjMdb56OP0BA1tTK77wd75WJgZhgOCzjyYjl32YTLASWn8bU23Q1lZwvs8kkBg2n/yk1jV/ok3Rs/0MsrLTiNHI18w0iEGkoD/rohQINC0u3oZhXIguj+Ou38Gfw2ldSJDvKOSaHxdYhuUPw3g5HBCKf04aX0OEtHjL0Uo2r9zoAHjxw4eSfvVie1w6//mSYTDEX+Tq1Tssr2CYoRjbAkP2Ja9FKeNUIeZC5JZhbFofRzsKYRE1RtISH07VIzWFXK6YRRVuLSVPrnnXzXOyBIXmRZHEAoKkeB6OfC3XnG0RcdTp9uiCZVC4eBl/t7rVPFFsKZW1eGXZbuYIVrLDunEF
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6486002)(966005)(30864003)(66476007)(71200400001)(38070700005)(316002)(122000001)(64756008)(4326008)(66446008)(91956017)(76116006)(2906002)(66556008)(86362001)(6916009)(54906003)(38100700002)(8676002)(508600001)(83380400001)(26005)(6506007)(53546011)(8936002)(2616005)(186003)(66946007)(33656002)(36756003)(5660300002)(6512007)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: nCzLmVJDwROhRdqPBo19jwNfAoVQuUSaksqxKnLMxqev0X8q5EivgYuAz3W/te7ubvh4BXDvyZa6fe7/dS/92QhhA4ZpFtvcNDWjYgK93uRJpsLbs1WytqmbCGL1N5FcB96dBsktg9XpCQZxtQoJvq3XhRURw64CScx8Uhbiy9kNYvF9bn6tYEN8oH4AGyWZmeiDolG4soqj+KIs97+Ue+JqA3wYarS6ZIPTgoBcntz60flK7c4KctMhRYaZKB++cddUlEYoAm2ejQr67djDmtbCddcPLYyPK3mdENiVfr9aWhjuy3F0NlC93WonMY8XZmEdRLL3GUXczDZkrB73+b8aB8Ub8z+6wH6bSV3Lyx/etflg8xhglHU4IjnLUXsttEqYYHVuAql6+VhEE2HJrDlQjSFGjWGt7l2PQLZCYEHJVke5XhscJANc3Ab6KW1lI8c9Clj5nYay4f/nM5fvRX3VM2wPwZxRzhO/K18TLFovnXhGIImEZJA8Fn+sToef0LQuyEMW2FhSOQvDJGprODolW+zjYZ4Pm4CHVf0QqfVk/OKQwURFX8qo9+gAp1Zx7pmWHhGMwbUu/oj5lTJP/WUma155Ds+le9AyMmyv9cVclesdn8DEA80MPVAOlPlaA712duZRvCgIQZgGzedICv3SChuBULu6Qe8eCQW2tAFXCQJGu4+UrmS+pGoTmz/FUEHFBDwrSnzpMjZ9trqXiebiaTJ4QLiwpVNM1sSMFZXcx/ME18LWJV0KLypM5kK+
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(6916009)(6506007)(2906002)(33656002)(122000001)(316002)(54906003)(53546011)(91956017)(36756003)(66446008)(66476007)(66556008)(64756008)(66946007)(83380400001)(26005)(4326008)(8676002)(76116006)(2616005)(6512007)(38100700002)(71200400001)(38070700005)(86362001)(186003)(8936002)(508600001)(5660300002)(6486002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?l0KXP6INURXqC5ajB8YMdHsmj4AQP+Zfg0ITkrk0K8SKU44iYGSatDxb6AuE?=
- =?us-ascii?Q?V4brZwuvH5JosS0XUPTiy738sKuYxMQ90wKL1splXthdy4nIST3GntQ23xy8?=
- =?us-ascii?Q?yjCsGBLK4b/9EibIp11aaTeLP8mJ0KGYLrp0rFKaGL8vBEsTc+8Yb8D9Lk1J?=
- =?us-ascii?Q?M0zv/1z/w3uCD97PzHaq1FFquxIXahyFppiIwDqh5smdu8pa86IPZ5Gby+4y?=
- =?us-ascii?Q?9AjY2qZhrTkheSi0FnglflPYIFG8UOJo8trorBGbZX0vXnYU3tNqsUcNrKuj?=
- =?us-ascii?Q?vrN7eoS7yOSLLnqts8wIuF9ANVp5Es1xZJ07aIqyaFFO/K4/F1DpOeIG/DuY?=
- =?us-ascii?Q?BdtVb0QekwJkOhvo75jxUbHiadPi7DUarVPcCU8+XO7PN/9hKyKtP/JDn3bh?=
- =?us-ascii?Q?CHhT0RvFowB/KQ6MsauArXOEYKxs2xnZnbUIBgziSMqxciEsH+p5j9YE60wm?=
- =?us-ascii?Q?Vs60KYcyTzPWWmD7KdEjxuh4Jo24L1cwnIt2wQrqLApyshfMhwdyqxo/9TKt?=
- =?us-ascii?Q?U6Z3COXgLG9t9axL3zYFg7ym/J8I98OZ6+mmDTh1JrjIMO62nGoDZ/nEnSbA?=
- =?us-ascii?Q?qXtsCObNlJfeVHeL+TthHyxwtpcr7LUwoF9iauQw9QgO16xDhQlBe77kEDUd?=
- =?us-ascii?Q?mHTFHm8pi9+vUpO8u4XQ3u1C7g5oxfCg3TeraSk4tibD1sxNsT+PBnYY44Ns?=
- =?us-ascii?Q?IzNpNpCf6F+TGFA9KoeIJNMWbZykz1OzDO0xAk7f+NRCvjbbDY9DWBiPHykA?=
- =?us-ascii?Q?IWzx7HkbEL93WjuNi89G9zPz4ChWdfdkgwbKGJeSjRw0oB93m+YFa94kxsWU?=
- =?us-ascii?Q?vFeGufA5Qxm2PtSYvmx8MwoR4rASxoAmU4GwN8iZDr7hjcjfKeS1SeXcZegQ?=
- =?us-ascii?Q?YIj9uMxxdD/MH9Ob7ReWwQbQKFzS2zDsH+9EgBfg5qvoLaCxvYHO5pD1+TuH?=
- =?us-ascii?Q?3e9dmzaCGXnRVZ3Avq8mG38kMRuoJUe73eNdY8YqYqvY+Ja2fVmiVFib4V52?=
- =?us-ascii?Q?gKXZvro8Aos9cGvDrEufGzs6aMSDC8XDcG3pN1j06KOT3m31p/75qcQ4tvIZ?=
- =?us-ascii?Q?4RnFgibh0HeESNL/Y6s8rFuhCpRr5exgGFCDPlPwRxwER+c3ujWWVi3mUeFS?=
- =?us-ascii?Q?mRRFBU9pHfZjjtfagYrfRiR3BfUaTorMxlXyG2IgnNKg1tUQKYGN1apwMCNZ?=
- =?us-ascii?Q?8z5Hfyn4D2H/hLJ1LgCHLuxH9WPP2gZFTq+57+tGKa7XMU7RKsAXwg0ysrZx?=
- =?us-ascii?Q?ryuAjRj0rufo8UHFrBdPOSKlc35wKU1kw/CgnVu4hZcGz/LOzaVlg/YdjDqz?=
- =?us-ascii?Q?ZkT+GWfxi6zKiRVRJgMko7ju+xRyzPv3gcl0jpfg6gPxrZ0cNdEeFcRsc70r?=
- =?us-ascii?Q?dS/bW3lYvyoFo/EHMoZEDD5IVecl1a1Si3eeGxzLe9ev3R6cxRKBhaRaBYI8?=
- =?us-ascii?Q?/mJqV7Tk8A+Ov/NQC/1A3oJXMjjMY4P1je3bJ88X5IET4sOSveBwn+GJEq3U?=
- =?us-ascii?Q?9GyUzroC4hGrPL5Wbpm0AcjiKoGklFU9TEgqLHOiROT4BdqP4W+zZ6FTs9yM?=
- =?us-ascii?Q?9ZNBUdHWEA5t3JP6XzX+j+5nCWkHVpTVbGkk53EvayoPa7Rkke9eVN4mNFER?=
- =?us-ascii?Q?/chaUaHiGJAO1tlDubQAEFT+jwfFCGWo8SYaxI9duN4SBqbokQQTOXcspCmf?=
- =?us-ascii?Q?F4wZQ8PwDf0fSt9DVwv8e71wexPJVJ+iqUMNdgoSYvpG+yfjYjdCYo183yiP?=
- =?us-ascii?Q?wycUwUCK1y970if/lFWosBecphlV+kA=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <7E5216806A5C91478B8B765141F9426E@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?U2lBU0ZZdzdtMXdlZGZRY3FFSUp2RUxlR2hIL1VBM0Y1bWNKL05PaFI0L1do?=
+ =?utf-8?B?ZkhkQXo3Y2JmdVF3eDM1R3dPRnowYlYyNnBGaUVSMHlOSGFzVDlqUTlEK1JK?=
+ =?utf-8?B?SWg2WVp6aGI2YWxVR0VFeWdicGFTeWROYlUwMmN0ckJyclhNNU45YkJ4WTJG?=
+ =?utf-8?B?R2VBaUVMU21lY1d2cmJpeEJCN0VFNndsYklyTmRkR280eEhWb3dlamRXMTg2?=
+ =?utf-8?B?ZnJrUzZacnRnSUhEVm5WSTZ6S0JYaGhXSHBVcElUNGY3VWJ5RG03S0kyeGgv?=
+ =?utf-8?B?Y2ptVlZUbEM5d29tVEVSZ1djam9EVkV2bFhDcDIzTEhoZG1ESlptd0xERFZQ?=
+ =?utf-8?B?K2JtejUvNGx1TnBhK1QzSGZiUU9rWWtIU3diYnJyejl6d2RFYi9KdEg0bXk0?=
+ =?utf-8?B?RTFVTUVwQmxHbzcwVGZQYXlrMTU1b0lVSHNOVmMyTnl4Tmo1MithRStMdFdC?=
+ =?utf-8?B?M2hpeU4rUllsdk94R1pnZnpqbEZGZk5QOWxnQ1hyNXhad0NXNGROT1ZNTnM0?=
+ =?utf-8?B?NVpGNDgzRVRZYmdDQTUzeDFFZlJla25RbGdLNkVZcnlhZkVDM3VNZ3VxL01O?=
+ =?utf-8?B?eFVlbU9yOS9YbnJZaFBpNDZDMkVGemViN3UrY08vMmxZZ1luMit3WEkzK0pG?=
+ =?utf-8?B?bUZwaEhqUEJEbXNJV3ZNYXVQcDkvclgxR081UDZGMDlvU1VnN1Z0cU1FUmJI?=
+ =?utf-8?B?dDBtL1hVNHdBMXV6MENwR0draTMxa2RrMjlzYmpmbCtuc0puL0k4SEN5UXc5?=
+ =?utf-8?B?S2hLeXA0TE8wM3dFdThQcFU5alB2bkNyOTk2MWFkZVZ6Rlc4Z3ZObjU4Yncy?=
+ =?utf-8?B?a1hNK0hCVE5remNzVXZFc0oxTlJoUnlwWHFUT1h3L2hKUHNVRi85Z3k4Z1o0?=
+ =?utf-8?B?TG9TT3lLbUJGam9uYTNLWUQ4UzVScG9Pb2I0OHZWb3FnN3FHWkoxU0RGYTd4?=
+ =?utf-8?B?QTRQRmRyRVoxbEhrYkFHTTZITXhub3p1RFhQdnVTQmY4RUVBcnNVT1h6WkdS?=
+ =?utf-8?B?b0QrTkVWNzNCdXc2dm05WmFKNE0zV0N5NmtYQysyTVhWbzUxbFp6R0Z5UjNF?=
+ =?utf-8?B?dTdjb05yT01lT0lSbzlzRkUweGJYNlRjUXE1dHQ3NHZRT2NFQmlZOGNCYktw?=
+ =?utf-8?B?d1locXpURGwxc2tYelhLQ1o0MkZzN1dNemp1NGZDSkJUb3ZjbTFQV1JQUWZS?=
+ =?utf-8?B?QkRzWk5iR3ZpdEpMS2xkU095S3RLYkowS0p0eEVHcmEvZEovR3kzeS9peU5K?=
+ =?utf-8?B?ZWszdTVISythNnFJK3RCL1Y3cmE1K3NZdHRhUWgyNmUrWVpEdW5sYVUzc2VK?=
+ =?utf-8?B?S2RVWFZ2QWs1V1g4TTlLNXo4QjJpOXg5aUx0OTRqci9RVnZYRTBjNlcwbU9P?=
+ =?utf-8?B?TWpEeHdvcURCUUpENmZFak9GQVNiTzNHY3ozcVlsUFhLTU1DcXlTRy9mT3l4?=
+ =?utf-8?B?QXVNbS9wSm53Q24zbHdFOGVzNWEraVNvbWl1M0tKNWlIanUwTlowSjRrb2FD?=
+ =?utf-8?B?LzNaOFlSaHUyRUw5K0M5YUt4VUZKZSt1eFJMT21wbnhaU21Ic2VKKzNlc2hT?=
+ =?utf-8?B?RW01dENuT2c5UUhobkJ2VXBMODV1NHc1L3BkMVFrRFc4SVJVNVFYR1BDazZ0?=
+ =?utf-8?B?cFBhczRMUFdvWEl0OHRRVjgrdHJualNuSG1WeXNUdHExTHMyU1J4N2E1RW9L?=
+ =?utf-8?B?K2c4RDBXbis5UndZN3BiSVA1dVVxV3lyK2tKdnJNcG1KbmRQRWZhOEFGWlhK?=
+ =?utf-8?B?QzZrcndYa2FwR3lCVTNaSnpGcStVKzhvbGFDSDJUK1JwYzR3QS83dmFvTklB?=
+ =?utf-8?B?RkJoUXJJK3ZoT1YzcnpUVFZsblAzZFdNMDZVbmdhNVNXTGFMZCs0VUphc0ds?=
+ =?utf-8?B?QklTdmhWU0YvS0I0NmNVL3FoVnl3TS9GYjhibHp5UUhabmdWaC9jOWVOb2NH?=
+ =?utf-8?B?UEkyQmtiMWwxRXdFNnlxTGxVSFNSTkZNNmR4bEVrWFZ3NDBpRFZtb3o5Wktt?=
+ =?utf-8?B?WVlqU0JYV0RJZ0ViVzNxSW1QL2wxRTExdVViN3I4enluTmhHclY3Z0JSRk4v?=
+ =?utf-8?B?VVpQc0h1V3h6clNNRDQwL2RSTzNCc0dNaFh4VVZPR0c4WmRjWGVFUG9OM0VH?=
+ =?utf-8?B?L24yTFpzcTQwYW14RlRNQ0lGa2NWczJkTTV0aDFXUTB3MG0zVXlLbkdxZnRU?=
+ =?utf-8?B?Z3hqSW5raXAvbDlIY0EzWm40QVBnbkdaUnYwMjZ5SlFaN0dXTTNOOUJ3eWZY?=
+ =?utf-8?B?clhuSzRhekVXL0M1RG9PZ3ZuMjUzTVMxTnlrUm13eHlxMTFxWlk3WEgzVGJv?=
+ =?utf-8?B?OXhLRFRtK25yU2JOckFmL0RDTWV4TUdVNi9EQnRJTkF6ZFNyMnFTcGw3WW5O?=
+ =?utf-8?Q?Wc9vaC61NoYR2XrE=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AA669E0C6728664086C7F0168121519D@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e1a7766e-a362-4b52-6212-08da3cf04b63
-X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 19:13:18.0812
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1113cd31-2e30-4423-0635-08da3cf1ff21
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2022 19:25:29.1329
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jmaHxf2swTS4QcLGIkvLqc6r9bpLUiBVIyUesuflSoTBr/2nsOAv5LpYPRuh7HfwYk+2mkdscipTQq4I18RCHw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1001MB2252
+X-MS-Exchange-CrossTenant-userprincipalname: LemVhMSTGl1TKnGJBXCoit6Ry5F1tYb5qYUbR5G/0a+WRVBqqtrLxNwugJlW2FW5L8C/sclpX0MtED5rB9hQIg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5658
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
  definitions=2022-05-23_08:2022-05-23,2022-05-23 signatures=0
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
  mlxlogscore=999 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2202240000
- definitions=main-2205230105
-X-Proofpoint-ORIG-GUID: XYLXaA6fokf2VkcCOg26NUYbT3G7n8Pz
-X-Proofpoint-GUID: XYLXaA6fokf2VkcCOg26NUYbT3G7n8Pz
+ definitions=main-2205230106
+X-Proofpoint-GUID: iUhjTL0aOFBRhEtC5pJAhBItiognYVi6
+X-Proofpoint-ORIG-GUID: iUhjTL0aOFBRhEtC5pJAhBItiognYVi6
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On May 23, 2022, at 2:30 PM, Jeff Layton <jlayton@kernel.org> wrote:
->=20
-> On Mon, 2022-05-23 at 18:21 +0000, Trond Myklebust wrote:
->> On Mon, 2022-05-23 at 14:04 -0400, Jeff Layton wrote:
->>> On Mon, 2022-05-23 at 17:43 +0000, Trond Myklebust wrote:
->>>> On Mon, 2022-05-23 at 12:37 -0400, Jeff Layton wrote:
->>>>> On Mon, 2022-05-23 at 15:41 +0000, Chuck Lever III wrote:
->>>>>>=20
->>>>>>> On May 23, 2022, at 11:26 AM, Jeff Layton
->>>>>>> <jlayton@kernel.org>
->>>>>>> wrote:
->>>>>>>=20
->>>>>>> On Mon, 2022-05-23 at 15:00 +0000, Chuck Lever III wrote:
->>>>>>>>=20
->>>>>>>>> On May 23, 2022, at 9:40 AM, Jeff Layton
->>>>>>>>> <jlayton@kernel.org>
->>>>>>>>> wrote:
->>>>>>>>>=20
->>>>>>>>> On Sun, 2022-05-22 at 11:38 -0400, Chuck Lever wrote:
->>>>>>>>>> nfsd4_release_lockowner() holds clp->cl_lock when it
->>>>>>>>>> calls
->>>>>>>>>> check_for_locks(). However, check_for_locks() calls
->>>>>>>>>> nfsd_file_get()
->>>>>>>>>> / nfsd_file_put() to access the backing inode's
->>>>>>>>>> flc_posix
->>>>>>>>>> list, and
->>>>>>>>>> nfsd_file_put() can sleep if the inode was recently
->>>>>>>>>> removed.
->>>>>>>>>>=20
->>>>>>>>>=20
->>>>>>>>> It might be good to add a might_sleep() to nfsd_file_put?
->>>>>>>>=20
->>>>>>>> I intend to include the patch you reviewed last week that
->>>>>>>> adds the might_sleep(), as part of this series.
->>>>>>>>=20
->>>>>>>>=20
->>>>>>>>>> Let's instead rely on the stateowner's reference count
->>>>>>>>>> to
->>>>>>>>>> gate
->>>>>>>>>> whether the release is permitted. This should be a
->>>>>>>>>> reliable
->>>>>>>>>> indication of locks-in-use since file lock operations
->>>>>>>>>> and
->>>>>>>>>> ->lm_get_owner take appropriate references, which are
->>>>>>>>>> released
->>>>>>>>>> appropriately when file locks are removed.
->>>>>>>>>>=20
->>>>>>>>>> Reported-by: Dai Ngo <dai.ngo@oracle.com>
->>>>>>>>>> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->>>>>>>>>> Cc: stable@vger.kernel.org
->>>>>>>>>> ---
->>>>>>>>>> fs/nfsd/nfs4state.c |    9 +++------
->>>>>>>>>> 1 file changed, 3 insertions(+), 6 deletions(-)
->>>>>>>>>>=20
->>>>>>>>>> This might be a naive approach, but let's start with
->>>>>>>>>> it.
->>>>>>>>>>=20
->>>>>>>>>> This passes light testing, but it's not clear how much
->>>>>>>>>> our
->>>>>>>>>> existing
->>>>>>>>>> fleet of tests exercises this area. I've locally built
->>>>>>>>>> a
->>>>>>>>>> couple of
->>>>>>>>>> pynfs tests (one is based on the one Dai posted last
->>>>>>>>>> week)
->>>>>>>>>> and they
->>>>>>>>>> pass too.
->>>>>>>>>>=20
->>>>>>>>>> I don't believe that FREE_STATEID needs the same
->>>>>>>>>> simplification.
->>>>>>>>>>=20
->>>>>>>>>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->>>>>>>>>> index a280256cbb03..b77894e668a4 100644
->>>>>>>>>> --- a/fs/nfsd/nfs4state.c
->>>>>>>>>> +++ b/fs/nfsd/nfs4state.c
->>>>>>>>>> @@ -7559,12 +7559,9 @@ nfsd4_release_lockowner(struct
->>>>>>>>>> svc_rqst *rqstp,
->>>>>>>>>>=20
->>>>>>>>>>                 /* see if there are still any locks
->>>>>>>>>> associated with it */
->>>>>>>>>>                 lo =3D lockowner(sop);
->>>>>>>>>> -               list_for_each_entry(stp, &sop-
->>>>>>>>>>> so_stateids,
->>>>>>>>>> st_perstateowner) {
->>>>>>>>>> -                       if (check_for_locks(stp-
->>>>>>>>>>> st_stid.sc_file, lo)) {
->>>>>>>>>> -                               status =3D
->>>>>>>>>> nfserr_locks_held;
->>>>>>>>>> -                               spin_unlock(&clp-
->>>>>>>>>>> cl_lock);
->>>>>>>>>> -                               return status;
->>>>>>>>>> -                       }
->>>>>>>>>> +               if (atomic_read(&sop->so_count) > 1) {
->>>>>>>>>> +                       spin_unlock(&clp->cl_lock);
->>>>>>>>>> +                       return nfserr_locks_held;
->>>>>>>>>>                 }
->>>>>>>>>>=20
->>>>>>>>>>                 nfs4_get_stateowner(sop);
->>>>>>>>>>=20
->>>>>>>>>>=20
->>>>>>>>>=20
->>>>>>>>> lm_get_owner is called from locks_copy_conflock, so if
->>>>>>>>> someone else
->>>>>>>>> happens to be doing a LOCKT or F_GETLK call at the same
->>>>>>>>> time
->>>>>>>>> that
->>>>>>>>> RELEASE_LOCKOWNER gets called, then this may end up
->>>>>>>>> returning
->>>>>>>>> an error
->>>>>>>>> inappropriately.
->>>>>>>>=20
->>>>>>>> IMO releasing the lockowner while it's being used for
->>>>>>>> _anything_
->>>>>>>> seems risky and surprising. If RELEASE_LOCKOWNER succeeds
->>>>>>>> while
->>>>>>>> the client is still using the lockowner for any reason, a
->>>>>>>> subsequent error will occur if the client tries to use it
->>>>>>>> again.
->>>>>>>> Heck, I can see the server failing in mid-COMPOUND with
->>>>>>>> this
->>>>>>>> kind
->>>>>>>> of race. Better I think to just leave the lockowner in
->>>>>>>> place if
->>>>>>>> there's any ambiguity.
->>>>>>>>=20
->>>>>>>=20
->>>>>>> The problem here is not the client itself calling
->>>>>>> RELEASE_LOCKOWNER
->>>>>>> while it's still in use, but rather a different client
->>>>>>> altogether
->>>>>>> calling LOCKT (or a local process does a F_GETLK) on an inode
->>>>>>> where a
->>>>>>> lock is held by a client. The LOCKT gets a reference to it
->>>>>>> (for
->>>>>>> the
->>>>>>> conflock), while the client that has the lockowner releases
->>>>>>> the
->>>>>>> lock and
->>>>>>> then the lockowner while the refcount is still high.
->>>>>>>=20
->>>>>>> The race window for this is probably quite small, but I think
->>>>>>> it's
->>>>>>> theoretically possible. The point is that an elevated
->>>>>>> refcount on
->>>>>>> the
->>>>>>> lockowner doesn't necessarily mean that locks are actually
->>>>>>> being
->>>>>>> held by
->>>>>>> it.
->>>>>>=20
->>>>>> Sure, I get that the lockowner's reference count is not 100%
->>>>>> reliable. The question is whether it's good enough.
->>>>>>=20
->>>>>> We are looking for a mechanism that can simply count the number
->>>>>> of locks held by a lockowner. It sounds like you believe that
->>>>>> lm_get_owner / put_owner might not be a reliable way to do
->>>>>> that.
->>>>>>=20
->>>>>>=20
->>>>>>>> The spec language does not say RELEASE_LOCKOWNER must not
->>>>>>>> return
->>>>>>>> LOCKS_HELD for other reasons, and it does say that there is
->>>>>>>> no
->>>>>>>> choice of using another NFSERR value (RFC 7530 Section
->>>>>>>> 13.2).
->>>>>>>>=20
->>>>>>>=20
->>>>>>> What recourse does the client have if this happens? It
->>>>>>> released
->>>>>>> all of
->>>>>>> its locks and tried to release the lockowner, but the server
->>>>>>> says
->>>>>>> "locks
->>>>>>> held". Should it just give up at that point?
->>>>>>> RELEASE_LOCKOWNER is
->>>>>>> a sort
->>>>>>> of a courtesy by the client, I suppose...
->>>>>>=20
->>>>>> RELEASE_LOCKOWNER is a courtesy for the server. Most clients
->>>>>> ignore the return code IIUC.
->>>>>>=20
->>>>>> So the hazard caused by this race would be a small resource
->>>>>> leak on the server that would go away once the client's lease
->>>>>> was purged.
->>>>>>=20
->>>>>>=20
->>>>>>>>> My guess is that that would be pretty hard to hit the
->>>>>>>>> timing right, but not impossible.
->>>>>>>>>=20
->>>>>>>>> What we may want to do is have the kernel do this check
->>>>>>>>> and
->>>>>>>>> only if it
->>>>>>>>> comes back >1 do the actual check for locks. That won't
->>>>>>>>> fix
->>>>>>>>> the original
->>>>>>>>> problem though.
->>>>>>>>>=20
->>>>>>>>> In other places in nfsd, we've plumbed in a dispose_list
->>>>>>>>> head
->>>>>>>>> and
->>>>>>>>> deferred the sleeping functions until the spinlock can be
->>>>>>>>> dropped. I
->>>>>>>>> haven't looked closely at whether that's possible here,
->>>>>>>>> but
->>>>>>>>> it may be a
->>>>>>>>> more reliable approach.
->>>>>>>>=20
->>>>>>>> That was proposed by Dai last week.
->>>>>>>>=20
->>>>>>>> https://lore.kernel.org/linux-nfs/1653079929-18283-1-git-send-emai=
-l-dai.ngo@oracle.com/T/#u
->>>>>>>>=20
->>>>>>>> Trond pointed out that if two separate clients were
->>>>>>>> releasing a
->>>>>>>> lockowner on the same inode, there is nothing that protects
->>>>>>>> the
->>>>>>>> dispose_list, and it would get corrupted.
->>>>>>>>=20
->>>>>>>> https://lore.kernel.org/linux-nfs/31E87CEF-C83D-4FA8-A774-F2C38901=
-1FCE@oracle.com/T/#mf1fc1ae0503815c0a36ae75a95086c3eff892614
->>>>>>>>=20
->>>>>>>=20
->>>>>>> Yeah, that doesn't look like what's needed.
->>>>>>>=20
->>>>>>> What I was going to suggest is a nfsd_file_put variant that
->>>>>>> takes
->>>>>>> a
->>>>>>> list_head. If the refcount goes to zero and the thing ends up
->>>>>>> being
->>>>>>> unhashed, then you put it on the dispose list rather than
->>>>>>> doing
->>>>>>> the
->>>>>>> blocking operations, and then clean it up later.
->>>>>>=20
->>>>>> Trond doesn't like that approach; see the e-mail thread.
->>>>>>=20
->>>>>=20
->>>>> I didn't see him saying that that would be wrong, per-se, but the
->>>>> initial implementation was racy.
->>>>>=20
->>>>> His suggestion was just to keep a counter in the lockowner of how
->>>>> many
->>>>> locks are associated with it. That seems like a good suggestion,
->>>>> though
->>>>> you'd probably need to add a parameter to lm_get_owner to
->>>>> indicate
->>>>> whether you were adding a new lock or just doing a conflock copy.
->>>>=20
->>>> I don't think this should be necessary. The posix_lock code doesn't
->>>> ever use a struct file_lock that it hasn't allocated itself. We
->>>> should
->>>> always be calling conflock to copy from whatever struct file_lock
->>>> that
->>>> the caller passed as an argument.
->>>>=20
->>>> IOW: the number of lm_get_owner and lm_put_owner calls should
->>>> always be
->>>> 100% balanced once all the locks belonging to a specific lock owner
->>>> are
->>>> removed.
->>>>=20
->>>=20
->>> We take references to the owner when we go to add a lock record, or
->>> when
->>> copying a conflicting lock. You want to keep a count of the former
->>> without counting the latter.
->>>=20
->>> lm_get_owner gets called for both though. I don't see how you can
->>> disambiguate the two situations w/o some way to indicate that. Adding
->>> a
->>> bool argument to lm_get_owner/lm_put_owner ops would be pretty simple
->>> to
->>> implement, I think.
->>>=20
->>=20
->> Hmm... That should be an extremely unlikely race, given that the
->> conflicting lock reference would have to be held for long enough to
->> cover the unlock + the release_lockowner / free_stateid RPC calls from
->> the client initially holding the lock, however I agree it is a
->> theoretical possibility.
->>=20
->=20
-> If we want to live with the possibility of that race, then Chuck's
-> original patch is fine, since the object refcount would always be
-> equivalent to the lock count.
->=20
-> That said, I think it'd be better to keep an accurate count of lock
-> records (sans conflocks) in the owner.
-
-I don't have an objection to maintaining an accurate count of locks
-belonging to each lockowner. I feel comfortable (for now) that using
-so_count is a good-enough solution, and is an improvement over holding
-a spinlock while trying to sleep. If we go with so_count, I can add
-a comment that explains the uses of so_count and possible races.
-
-OTOH, if we alter the lm_get/put_owner API, I would like to ensure the
-new parameter will be difficult to misuse. A few more random thoughts
-that might count towards due diligence:
-
-- Is there a reliable way lm_get/put_owner can distinguish between
-  the two cases by looking at their current set of arguments?
-
-- Is it clear why the conflict case needs to take a reference on a
-  lockowner that is not involved? Is there a way to avoid taking that
-  reference in the first place?
-
-
---
-Chuck Lever
-
-
-
+DQoNCj4gT24gTWF5IDIzLCAyMDIyLCBhdCAyOjUyIFBNLCBKdWxpYW4gU2Nocm9lZGVyIDxqdW1h
+Y29AZGV2LWRzay1qdW1hY28tMWUtNzg3MjM0MTMudXMtZWFzdC0xLmFtYXpvbi5jb20+IHdyb3Rl
+Og0KPiANCj4gRnJvbTogSnVsaWFuIFNjaHJvZWRlciA8anVtYWNvQGFtYXpvbi5jb20+DQo+IA0K
+PiBVcG9uIG5mc2Qgc2h1dGRvd24gYW55IHBlbmRpbmcgRFJDIGNhY2hlIGlzIGZyZWVkLiBEUkMg
+Y2FjaGUgdXNlIGlzDQo+IHRyYWNrZWQgdmlhIGEgcGVyY3B1IGNvdW50ZXIuIEluIHRoZSBjdXJy
+ZW50IGNvZGUgdGhlIHBlcmNwdSBjb3VudGVyDQo+IGlzIGRlc3Ryb3llZCBiZWZvcmUuIElmIGFu
+eSBwZW5kaW5nIGNhY2hlIGlzIHN0aWxsIHByZXNlbnQsDQo+IHBlcmNwdV9jb3VudGVyX2FkZCBp
+cyBjYWxsZWQgd2l0aCBhIHBlcmNwdSBjb3VudGVyPT1OVUxMLiBUaGlzIGNhdXNlcw0KPiBhIGtl
+cm5lbCBjcmFzaC4NCj4gVGhlIHNvbHV0aW9uIGlzIHRvIGRlc3Ryb3kgdGhlIHBlcmNwdSBjb3Vu
+dGVyIGFmdGVyIHRoZSBjYWNoZSBpcyBmcmVlZC4NCj4gDQo+IEZpeGVzOiBlNTY3Yjk4Y2U5YTRi
+ICjigJxuZnNkOiBwcm90ZWN0IGNvbmN1cnJlbnQgYWNjZXNzIHRvIG5mc2Qgc3RhdHMgY291bnRl
+cnPigJ0pDQo+IFNpZ25lZC1vZmYtYnk6IEp1bGlhbiBTY2hyb2VkZXIgPGp1bWFjb0BhbWF6b24u
+Y29tPg0KPiAtLS0NCj4gZnMvbmZzZC9uZnNjYWNoZS5jIHwgMiArLQ0KPiAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9mcy9u
+ZnNkL25mc2NhY2hlLmMgYi9mcy9uZnNkL25mc2NhY2hlLmMNCj4gaW5kZXggMGIzZjEyYWEzN2Zm
+Li43ZGE4OGJkYzBkNmMgMTAwNjQ0DQo+IC0tLSBhL2ZzL25mc2QvbmZzY2FjaGUuYw0KPiArKysg
+Yi9mcy9uZnNkL25mc2NhY2hlLmMNCj4gQEAgLTIwNiw3ICsyMDYsNiBAQCB2b2lkIG5mc2RfcmVw
+bHlfY2FjaGVfc2h1dGRvd24oc3RydWN0IG5mc2RfbmV0ICpubikNCj4gCXN0cnVjdCBzdmNfY2Fj
+aGVyZXAJKnJwOw0KPiAJdW5zaWduZWQgaW50IGk7DQo+IA0KPiAtCW5mc2RfcmVwbHlfY2FjaGVf
+c3RhdHNfZGVzdHJveShubik7DQo+IAl1bnJlZ2lzdGVyX3Nocmlua2VyKCZubi0+bmZzZF9yZXBs
+eV9jYWNoZV9zaHJpbmtlcik7DQo+IA0KPiAJZm9yIChpID0gMDsgaSA8IG5uLT5kcmNfaGFzaHNp
+emU7IGkrKykgew0KPiBAQCAtMjE3LDYgKzIxNiw3IEBAIHZvaWQgbmZzZF9yZXBseV9jYWNoZV9z
+aHV0ZG93bihzdHJ1Y3QgbmZzZF9uZXQgKm5uKQ0KPiAJCQkJCQkJCQlycCwgbm4pOw0KPiAJCX0N
+Cj4gCX0NCj4gKwluZnNkX3JlcGx5X2NhY2hlX3N0YXRzX2Rlc3Ryb3kobm4pOw0KPiANCj4gCWt2
+ZnJlZShubi0+ZHJjX2hhc2h0YmwpOw0KPiAJbm4tPmRyY19oYXNodGJsID0gTlVMTDsNCj4gLS0g
+DQo+IDIuMzIuMA0KPiANCg0KVGhhbmsgeW91LCBKdWxpYW4uIFBhdGNoIGFwcGxpZWQgdG8gdGhl
+IE5GU0QgZm9yLTUuMTkgdG9waWMgYnJhbmNoLg0KDQotLQ0KQ2h1Y2sgTGV2ZXINCg0KDQoNCg==
