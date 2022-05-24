@@ -2,31 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6BA55330C4
-	for <lists+linux-nfs@lfdr.de>; Tue, 24 May 2022 20:57:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FDE75330C5
+	for <lists+linux-nfs@lfdr.de>; Tue, 24 May 2022 20:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240507AbiEXS51 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 24 May 2022 14:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52172 "EHLO
+        id S233384AbiEXS5g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 24 May 2022 14:57:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233384AbiEXS50 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 May 2022 14:57:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C77D5B3C6
-        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 11:57:25 -0700 (PDT)
+        with ESMTP id S240508AbiEXS5f (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 24 May 2022 14:57:35 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E1E45B3C6
+        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 11:57:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 07902615D9
-        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 18:57:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CE86C34100
-        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 18:57:24 +0000 (UTC)
-Subject: [PATCH v2 5/6] NFSD: Add documenting comment for
- nfsd4_release_lockowner()
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6384BCE1A8A
+        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 18:57:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9811CC34100
+        for <linux-nfs@vger.kernel.org>; Tue, 24 May 2022 18:57:30 +0000 (UTC)
+Subject: [PATCH v2 6/6] NFSD: nfsd_file_put() can sleep
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 24 May 2022 14:57:23 -0400
-Message-ID: <165341864331.3187.18446437444560725281.stgit@bazille.1015granger.net>
+Date:   Tue, 24 May 2022 14:57:29 -0400
+Message-ID: <165341864964.3187.10891043744511023924.stgit@bazille.1015granger.net>
 In-Reply-To: <165341832236.3187.8388683641228729897.stgit@bazille.1015granger.net>
 References: <165341832236.3187.8388683641228729897.stgit@bazille.1015granger.net>
 User-Agent: StGit/1.5
@@ -42,59 +41,30 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-And return fixed nfserr values that match what is documented in the
-new comment / API contract.
+Now that there are no more callers of nfsd_file_put() that might
+hold a spin lock, ensure the lockdep infrastructure can catch
+newly introduced calls to nfsd_file_put() made while a spinlock
+is held.
 
+Link: https://lore.kernel.org/linux-nfs/ece7fd1d-5fb3-5155-54ba-347cfc19bd9a@oracle.com/T/#mf1855552570cf9a9c80d1e49d91438cd9085aada
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4state.c |   18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ fs/nfsd/filecache.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index b8e17125fdf1..578a44495d0f 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -7538,6 +7538,18 @@ check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner)
- 	return status;
- }
- 
-+/**
-+ * nfsd4_release_lockowner - process NFSv4.0 RELEASE_LOCKOWNER operations
-+ * @rqstp: RPC transaction
-+ * @cstate: NFSv4 COMPOUND state
-+ * @u: RELEASE_LOCKOWNER arguments
-+ *
-+ * Return values:
-+ *   %nfs_ok: lockowner released or not found
-+ *   %nfserr_locks_held: lockowner still in use
-+ *   %nfserr_stale_clientid: clientid no longer active
-+ *   %nfserr_expired: clientid not recognized
-+ */
- __be32
- nfsd4_release_lockowner(struct svc_rqst *rqstp,
- 			struct nfsd4_compound_state *cstate,
-@@ -7564,7 +7576,7 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp,
- 	lo = find_lockowner_str_locked(clp, &rlockowner->rl_owner);
- 	if (!lo) {
- 		spin_unlock(&clp->cl_lock);
--		return status;
-+		return nfs_ok;
- 	}
- 	trace_printk("lo=%p lockcnt=%d so_count=%d\n",
- 		lo, atomic_read(&lo->lo_lockcnt), atomic_read(&lo->lo_owner.so_count));
-@@ -7582,11 +7594,11 @@ nfsd4_release_lockowner(struct svc_rqst *rqstp,
- 		put_ol_stateid_locked(stp, &reaplist);
- 	}
- 	spin_unlock(&clp->cl_lock);
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index a7e3a443a2cb..d32fcd8ad457 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -302,6 +302,8 @@ nfsd_file_put_noref(struct nfsd_file *nf)
+ void
+ nfsd_file_put(struct nfsd_file *nf)
+ {
++	might_sleep();
 +
- 	free_ol_stateid_reaplist(&reaplist);
- 	remove_blocked_locks(lo);
- 	nfs4_put_stateowner(&lo->lo_owner);
--
--	return status;
-+	return nfs_ok;
- }
- 
- static inline struct nfs4_client_reclaim *
+ 	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+ 	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) == 0) {
+ 		nfsd_file_flush(nf);
 
 
