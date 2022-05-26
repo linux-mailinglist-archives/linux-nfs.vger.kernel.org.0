@@ -2,72 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0A3753528D
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 May 2022 19:33:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3041153528F
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 May 2022 19:34:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237053AbiEZRdd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 May 2022 13:33:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40278 "EHLO
+        id S1348295AbiEZReP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 May 2022 13:34:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1348292AbiEZRdc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 May 2022 13:33:32 -0400
+        with ESMTP id S1348292AbiEZReO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 May 2022 13:34:14 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 914FA3CFCF
-        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:33:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5D32C6D849
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:34:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1653586410;
+        s=mimecast20190719; t=1653586452;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=w1kNxvGfvb8+HYC/IlcBr7/A4AKfDbmnUFoG4jJS794=;
-        b=RNMKybsToKJq2cSWOI9IZoyx6oQUPoqij/Tklnissuti4wMOAK4F7/mGQmCR+5Lb4CiR8B
-        mKaijJ2Ew+t1K8D9YOVpyZYgnWoN+k+WWHLUELY/4eayoGFaV/Hw+QpwxyRkn5lT6s9PbJ
-        5g1IJnpd1TipGEWQOAMF4M+w5RHUD5w=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=HfZ8nyPDMe89FBxL5XNerJPxvx96VldW0kScsgrDt38=;
+        b=VjIo8/0ICwNOZ+cdhiC6KpIoDUH8wb1JnhYExfu9w9PR7F5j+SOFddyCQ/N5c6XCdb7+Iu
+        uRx5URaUJOzuov+Gtkt5tjRf3iVr15oFL6vqpB+NzxeKZUWYWX/oRfCZ9uiZVh9LOLzVs1
+        HrJYkE5anXNxejXyGom2laPNi+NVmDQ=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-669-73b7epRxONG75sA9_SyUcg-1; Thu, 26 May 2022 13:33:29 -0400
-X-MC-Unique: 73b7epRxONG75sA9_SyUcg-1
-Received: by mail-qt1-f200.google.com with SMTP id l20-20020ac81494000000b002f91203eeacso2302203qtj.10
-        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:33:29 -0700 (PDT)
+ us-mta-589-wvNwN6EgPSCkf7t0cU-NcQ-1; Thu, 26 May 2022 13:34:08 -0400
+X-MC-Unique: wvNwN6EgPSCkf7t0cU-NcQ-1
+Received: by mail-qk1-f199.google.com with SMTP id bj2-20020a05620a190200b005084968bb24so1988850qkb.23
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:34:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=w1kNxvGfvb8+HYC/IlcBr7/A4AKfDbmnUFoG4jJS794=;
-        b=zqQK3KFUU/hVbaMhTVnPMvzuH67jpZr1S2hpPVUHXLEgRI6FvyZb84zRDdkQPyBfF8
-         iQEFR+hclbNyDclChgRyKTcJnl6jl9Jbtt0wwYRhCvOT58rVUYT7FROa3EWagcpBaHms
-         WoDLMdXUoHI8SbP3EsW+IWLuRf9pv2RbzEgyOV14LHSRt/ltNcv/NUoPILQn6PaNIYgf
-         jUfwXLbBQHPra5HN/uFxfuWHNdAH5dHko6+UdcyLBheVdm6XJKaZqnNtJ9MEspeuNwV9
-         4jo24z1GN8GaIeb6/B8XDYPG1ToAA4orokbeH2jldEI2km76hguMwOZorr/f6C4kWBlm
-         WTBw==
-X-Gm-Message-State: AOAM530T3MHj86z82Pprv76PJCf28kvBaGleiQZVPgPbGjKk58XjKX1v
-        44IZ2EudA5li65A0gte8J2B0SrX4JJHWhzFOwDMhlDwtlmyA2UyD3x3g83IDcMWmnFsWEkq/r9e
-        v6GmTcxiO+hf9UbAvXj7o
-X-Received: by 2002:a05:622a:1a08:b0:2fb:e220:271b with SMTP id f8-20020a05622a1a0800b002fbe220271bmr4673096qtb.221.1653586408605;
-        Thu, 26 May 2022 10:33:28 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJypuMy0h4KSRp6ftmtRXY2pRz3cMofw53ibt2xOHCSV7Zl7fNXCYhqpQkKZMpurHcQCvCjjdA==
-X-Received: by 2002:a05:622a:1a08:b0:2fb:e220:271b with SMTP id f8-20020a05622a1a0800b002fbe220271bmr4673080qtb.221.1653586408346;
-        Thu, 26 May 2022 10:33:28 -0700 (PDT)
+        bh=HfZ8nyPDMe89FBxL5XNerJPxvx96VldW0kScsgrDt38=;
+        b=evRGiXRbmqcIt6JzezUSFMEYkESo5SWdfLyX/k2q05lDqqzTqCcxRdM6LjryBtDkxv
+         CX46sMSvB5PtjC1SsgzLbPnM9k4dGN+KsPMOvbk4Tg8fAFBaPkGrxp8jztTOdg0ynmE8
+         AEAMpTkWOkbZrLR7unw+2IS9D+qTUmWTDIAi6Z65ajbS83t0sz/kSJpvxPBDqV/d7Zj5
+         MJl0f5DTL5fYQTxmgN3Kt4F6Rn2rOiPRcFZaouefMZkx2g0uEDdov1CI10YjA7QJGTkz
+         YW6F4hsVfSWtltba46uZZMB6pVUu+VJabO3LHQdy+RqJ7hux4QpRXJgrKzikPjEJXrbj
+         rRpA==
+X-Gm-Message-State: AOAM53318rpiLW8fVI0xdwrv4ZeTNGoLZjk9427Lz9lTld+H+LnEMyQX
+        VcUD3AHvX5jP1/oESWjew4JoI09aDumqIFdJYFBDYjhFkF3mfzdOVSZBt8MIzr88yZW7U+v3DC9
+        ArEu16hC1RY5STTfnFb6V
+X-Received: by 2002:a37:ab01:0:b0:6a3:4bb6:50e8 with SMTP id u1-20020a37ab01000000b006a34bb650e8mr21213746qke.255.1653586448280;
+        Thu, 26 May 2022 10:34:08 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzrPw5GmFM9sLa/QByVzUdxPbCAPL8MajCeJNf8B7MFdFEynid31UYFE1CjysV9Sa2b/2gZiA==
+X-Received: by 2002:a37:ab01:0:b0:6a3:4bb6:50e8 with SMTP id u1-20020a37ab01000000b006a34bb650e8mr21213737qke.255.1653586448065;
+        Thu, 26 May 2022 10:34:08 -0700 (PDT)
 Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 72-20020a370c4b000000b0069fc13ce1e1sm1545123qkm.18.2022.05.26.10.33.27
+        by smtp.gmail.com with ESMTPSA id d2-20020ac85442000000b002f933204688sm1278747qtq.4.2022.05.26.10.34.07
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 May 2022 10:33:28 -0700 (PDT)
-Message-ID: <75ee3189-22fe-48ca-9e04-69648b300b6a@redhat.com>
-Date:   Thu, 26 May 2022 13:33:27 -0400
+        Thu, 26 May 2022 10:34:07 -0700 (PDT)
+Message-ID: <4deae036-d3a7-abc5-446c-8f102c7da455@redhat.com>
+Date:   Thu, 26 May 2022 13:34:06 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH] mountd: Check 'nfsd/clients' directory presence instead
- of kernel version
+Subject: Re: [PATCH v2 1/2] rpcctl: Use the correct function for setting xprts
+ offline and online
 Content-Language: en-US
-To:     Konstantin Khorenko <khorenko@virtuozzo.com>,
-        linux-nfs@vger.kernel.org
-References: <20220516185555.643087-1-khorenko@virtuozzo.com>
+To:     Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+References: <20220519154727.3577715-1-anna@kernel.org>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20220516185555.643087-1-khorenko@virtuozzo.com>
+In-Reply-To: <20220519154727.3577715-1-anna@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -82,50 +81,31 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 5/16/22 2:55 PM, Konstantin Khorenko wrote:
-> Kernel major version does not always provide 100% certainty about
-> presence or absence of a feature, for example:
->   - some distros backport feature from mainstream kernel to older kernels
->   - if NFS server is run inside a system container the reported kernel
->     version inside the container may be faked
+On 5/19/22 11:47 AM, Anna Schumaker wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 > 
-> So let's determine the feature presence by checking
-> '/proc/fs/nfsd/clients/' directory presence instead of checking the
-> kernel version.
+> Otherwise the tool will tell us:
+>      'Namespace' object has no attribute 'set_state'
 > 
-> Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Committed... (tag: nfs-utils-2-6-2-rc5)
 
 steved.
 > ---
->   support/export/v4clients.c | 7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+>   tools/rpcctl/rpcctl.py | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/support/export/v4clients.c b/support/export/v4clients.c
-> index 5e4f1058..5f15b614 100644
-> --- a/support/export/v4clients.c
-> +++ b/support/export/v4clients.c
-> @@ -8,9 +8,9 @@
->   #include <unistd.h>
->   #include <stdlib.h>
->   #include <sys/inotify.h>
-> +#include <sys/stat.h>
->   #include <errno.h>
->   #include "export.h"
-> -#include "version.h"
+> diff --git a/tools/rpcctl/rpcctl.py b/tools/rpcctl/rpcctl.py
+> index b8df556b682c..2a69eacd3103 100755
+> --- a/tools/rpcctl/rpcctl.py
+> +++ b/tools/rpcctl/rpcctl.py
+> @@ -142,7 +142,7 @@ class Xprt:
+>                   xprt.set_state("offline")
+>                   xprt.set_state("remove")
+>               else:
+> -                args.set_state(args.property)
+> +                xprt.set_state(args.property)
+>           print(xprt)
 >   
->   /* search.h declares 'struct entry' and nfs_prot.h
->    * does too.  Easiest fix is to trick search.h into
-> @@ -24,7 +24,10 @@ static int clients_fd = -1;
 >   
->   void v4clients_init(void)
->   {
-> -	if (linux_version_code() < MAKE_VERSION(5, 3, 0))
-> +	struct stat sb;
-> +
-> +	if (!stat("/proc/fs/nfsd/clients", &sb) == 0 ||
-> +	    !S_ISDIR(sb.st_mode))
->   		return;
->   	if (clients_fd >= 0)
->   		return;
 
