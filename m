@@ -2,109 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C14775344FC
-	for <lists+linux-nfs@lfdr.de>; Wed, 25 May 2022 22:35:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 64CCA5358C0
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 07:27:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232975AbiEYUfp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 25 May 2022 16:35:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43676 "EHLO
+        id S237031AbiE0F1Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 May 2022 01:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44276 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345084AbiEYUfn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 25 May 2022 16:35:43 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27777B36C6
-        for <linux-nfs@vger.kernel.org>; Wed, 25 May 2022 13:35:40 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id p26so28463217eds.5
-        for <linux-nfs@vger.kernel.org>; Wed, 25 May 2022 13:35:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=fwFh7el2i70dgG7ajSBQ97ujNHUmHQr/8dBy/cp538Y0DFJy3GciSk9bfB4PmvFZDh
-         tRz7iC6mswnuoWs8xGThaDxiUfL3eeXhC9znmoQjSrqrW1MKwzA34OpegNrGTUOqHK9+
-         Nrv973KKEKRRQpWcu74Y3RLKldp+GqH2nk03/vLy5i7ZwVUrVDIuMLCpFA7MquTKhi1Z
-         N3MlhrCu1MlbrUAYV5pNcGghZx6qKVj2e5006tJF3OBAcP84Hb99hkE413VZJ5SMmEYA
-         qNdGYPicWzr4xb7wwKIyfxR39S8xgH3getFTsqN910e6DZnCwxUkLXHqWwoB3XzqnNyh
-         LjlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=jF4MxsPSKKSAh34A0y7fWqFeFSCCDQ9NCjS0um7aELU=;
-        b=ps38ZdcWm/0EJuSGg61h0ogieQqY8obUCMcx/JwNY39Q15+qMxkqA4SmrgrmyY4FGC
-         hCE7Xng29+kKgHBDWeMq4Yk4GaMVAHbIYxXEMAVVoNE2eYaXtIAT5vmBijmy8eJ8uMT/
-         Yqwc2UYEJcIBzq7xg88TyxlJ3CrwKvtDvHANiPVLjZTVajHnIXcoH/Ye+a7jzLt6F17q
-         3GjSnAZpY5zWIicwnVpiMXesSqnOiVCmBem3k7nPYqqa1mT3SBbO8J7tI1lqsjACJ4Uh
-         Ng86mkSEh58hG6LNH3Ed+/IJ1QXHqaSbJkZdXzJheqrn8PxlC9hmOS4cvX/d6af6IS/e
-         LyLw==
-X-Gm-Message-State: AOAM533KwttN0UWqCOGqB3yaoz0WqEWUyJTRAJ2lkmeGgc/aeXETwL/B
-        H0aj43MCHbgZCyNDHH7S0XT9pAFkEH/gww/szis=
-X-Google-Smtp-Source: ABdhPJzhBLyAnkmFel4q9ufiteOClIXhAPTWHVjyaqsfvTP11GQzgetuUHx39OjLI2rC7/KYSZzU0oDmHuYQzPfOn6M=
-X-Received: by 2002:a05:6402:184c:b0:42b:d806:dc8a with SMTP id
- v12-20020a056402184c00b0042bd806dc8amr389449edy.79.1653510938673; Wed, 25 May
- 2022 13:35:38 -0700 (PDT)
-MIME-Version: 1.0
-Received: by 2002:ab4:a26b:0:0:0:0:0 with HTTP; Wed, 25 May 2022 13:35:38
- -0700 (PDT)
-From:   Luisa Donstin <luisadonstin@gmail.com>
-Date:   Wed, 25 May 2022 22:35:38 +0200
-Message-ID: <CA+QBM2rPwkHTQnRgqJpppwp6pWQWJmQLxS0JF0+sTmaFWpfNOA@mail.gmail.com>
-Subject: Bitte kontaktaufnahme Erforderlich !!! Please Contact Required !!!
-To:     contact@firstdiamondbk.com
-Cc:     info@firstdiamondbk.com
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S231840AbiE0F1X (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 01:27:23 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50712EBAA5
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 22:27:20 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 10994218BB;
+        Fri, 27 May 2022 05:27:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1653629239; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l7nvUxWskKqe83LrWZMRTiXsm3Jvb9juc0cy4Z//C2Y=;
+        b=iMZeQLVyPoUUQiykUndM+fs7XqJUpf/Wr48MoXxiCmgVOOFTA+Vkr+FIc+cPfj2XqfkD6c
+        sWp5hHMDkaTKxkppit7NkgIYAnQBZErqX5r/PqEYbSuYH0qxhRU49+LC1I2jWmMqdCT21g
+        aV5vijzvuXKcxh9iT5OgFr4vUup59q4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1653629239;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=l7nvUxWskKqe83LrWZMRTiXsm3Jvb9juc0cy4Z//C2Y=;
+        b=pMVwpt7ssxpVSGi3GRzFTw/w56gWiirau/xOGmYbGM9YjXzMRbT9s8LAn78elewVszwbsg
+        JzNSSfltdi5UBXCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 364581346B;
+        Fri, 27 May 2022 05:27:17 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id GTuXODVhkGIeewAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 27 May 2022 05:27:17 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Steve Dickson" <steved@redhat.com>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH nfs-utils] Update autoconfig files to work with v2.71
+In-reply-to: <165335765658.22265.136811943333028416@noble.neil.brown.name>
+References: <165335765658.22265.136811943333028416@noble.neil.brown.name>
+Date:   Thu, 26 May 2022 10:06:19 +1000
+Message-id: <165352357925.11129.13126161631957337173@noble.neil.brown.name>
+X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Guten Tag,
+On Tue, 24 May 2022, NeilBrown wrote:
+> OpenSUSE recently updated autoconf to v2.71, and nfs-utils now doesn't
+> build.  This patch fixes it.  It was mostly achieved with the autoupdate
+> program.
+>=20
+> I haven't updated the AC_PREREQ(), but nor have I confirmed that it
+> still works with v2.59.  It does seem to work with 2.69.
 
-Ich habe mich nur gefragt, ob Sie meine vorherige E-Mail bekommen
+Actually, please don't apply this as-is.
+I remembered that I left....
+> @@ -50,8 +50,8 @@ AC_DEFUN([AC_LIBTIRPC_OLD], [
+>    dnl Also must have the headers installed where we expect
+>    dnl to look for headers; add -I compiler option if found
+>    AS_IF([test "$has_libtirpc" =3D "yes"],
+> -        [AC_CHECK_HEADERS([${tirpc_header_dir}/netconfig.h],
+> -                          [AC_SUBST([AM_CPPFLAGS], ["-I${tirpc_header_dir}=
+"])],
+> +        [AC_CHECK_HEADERS([/usr/include/tirpc/netconfig.h],
+> +                          [AC_SUBST([AM_CPPFLAGS], ["-I/usr/include/tirpc"=
+])],
+>                            [has_libtirpc=3D"no"])])
+> =20
 
-haben ?
+this in there - it ignores the config request an always uses
+/usr/include/tirpc.  I need to work out how to do the right thing
+without getting warnings.
 
-Ich habe versucht, Sie per E-Mail zu erreichen.
-
-Kommen Sie bitte schnell zu mir zur=C3=BCck, es ist sehr wichtig.
-
-Danke
-
-Luisa Donstin
-
-luisadonstin@gmail.com
-
-
-
-
-
-
-
-
-
-----------------------------------
-
-
-
-
-Good Afternoon,
-
-I was just wondering if you got my Previous E-mail
-have ?
-
-I tried to reach you by E-mail.
-
-Please come back to me quickly, it is very Important.
-
-Thanks
-
-Luisa Donstin
-
-luisadonstin@gmail.com
+Thanks,
+NeilBrown
