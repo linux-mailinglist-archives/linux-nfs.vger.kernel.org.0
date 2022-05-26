@@ -2,99 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC1E2534C76
-	for <lists+linux-nfs@lfdr.de>; Thu, 26 May 2022 11:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A665535049
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 May 2022 15:59:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234223AbiEZJWE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 26 May 2022 05:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37330 "EHLO
+        id S1347245AbiEZN7d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 May 2022 09:59:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbiEZJWE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 May 2022 05:22:04 -0400
-X-Greylist: delayed 590 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 May 2022 02:22:03 PDT
-Received: from outbound-smtp23.blacknight.com (outbound-smtp23.blacknight.com [81.17.249.191])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA86D123
-        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 02:22:03 -0700 (PDT)
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp23.blacknight.com (Postfix) with ESMTPS id CEAD3BEBF9
-        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:12:11 +0100 (IST)
-Received: (qmail 7312 invoked from network); 26 May 2022 09:12:11 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.198.246])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 26 May 2022 09:12:11 -0000
-Date:   Thu, 26 May 2022 10:12:10 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "Darrick J. Wong" <djwong@kernel.org>,
-        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux-NFS <linux-nfs@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux-XFS <linux-xfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] mm/page_alloc: Always attempt to allocate at least one page
- during bulk allocation
-Message-ID: <20220526091210.GC3441@techsingularity.net>
+        with ESMTP id S1346526AbiEZN7b (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 May 2022 09:59:31 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C056C544
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 06:59:30 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id q184so2982431ybg.11
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 06:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=sKSXgk/nk/WSkPpE0LnWU5w6MMzn9hzZMkx/hz1110g=;
+        b=M3c9+kRn84mwhYAsCWctIT1IDSmYMwZmK3zeoIHPUCtjr51Pp1h94Rs0hX6EIMzSIO
+         K9AGkvjOhfjDgvwFunkRLGpfgtaeBPhSzfV93d0HSl2a8uFxWy3ql3Elfo04C1rMF1Z0
+         u399JQgS56srDhqL9IUYZytWY7u1C05G+A/b82r5XunDwWSPe274HIMtQ5IN5c/NHSNT
+         NFRuBN2clB8OK4VxFRB6oYoiXr4XtIQE67/By8etgwri52PsFQYracC/AkM2JvBfjw5c
+         APsBo9Vn5JPLLnYQfPhu3RMFCRnEVvmO+ZcHpt3Xu8YHxOhuxPrxmlI56/oeqVK6RsqI
+         oe+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=sKSXgk/nk/WSkPpE0LnWU5w6MMzn9hzZMkx/hz1110g=;
+        b=Pk2Gp8wNKtcZERLtGyn6uKJUczaws4fUxkURaY2YLjFMmx3coC3uxS8HNcnqn90hCl
+         s8cr52MxqBCCswEEuY1wMw2/c5ZEDtERzf0XBLhUeUyt9f/JmaFMaT+l7LZkQXtw5ZmY
+         gnCoO46q6Mo4dvTLrjyfqv0fW0XjdXiH8g65fg6KiCRi5IK0FWpEVDWY+GdB9yZNtV0y
+         zDzUYB5svlNqRfyH+8KlCxm/a/xqo9ZX2i2SWJHCHTubm37HadabmaAL8mRLimITk2QC
+         TkT3wwcnKyWk/yXWo/igkEmnBBnX2qhIzM6C5uQ4bIIoiROkuxlqZxGnkX6YIa3Z91Ck
+         al/w==
+X-Gm-Message-State: AOAM530WnPjNxDqCWWgdEv9GBKOOgGTwiqBpGgCKMmXwW7p1C9nmq/uM
+        So6qV9GQJuZKwdfSDOobuU/umcZA2u1iJVn5il4=
+X-Google-Smtp-Source: ABdhPJykDwYykH1r34a482bpllF9aoIQM+YBDMDPLtrZBYW9aGnPPhX1bzjKd1ZPMWlRQfcVJhin9HSEKF7CbhIOnWc=
+X-Received: by 2002:a05:6902:102a:b0:64f:4132:9be with SMTP id
+ x10-20020a056902102a00b0064f413209bemr33838335ybt.288.1653573569271; Thu, 26
+ May 2022 06:59:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:7010:2590:b0:2d2:296a:7286 with HTTP; Thu, 26 May 2022
+ 06:59:28 -0700 (PDT)
+Reply-To: illuminatihome999world@gmail.com
+From:   Vic Naluzzi <naluzzivic49@gmail.com>
+Date:   Thu, 26 May 2022 06:59:28 -0700
+Message-ID: <CA+bhdZ37ExgDCfDSCsnuvHTt=ocKTP-c0VGeRFjocLL_6W9DTg@mail.gmail.com>
+Subject: ILLUMINATI
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5025]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [naluzzivic49[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [naluzzivic49[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Peter Pavlisko reported the following problem on kernel bugzilla 216007.
-
-	When I try to extract an uncompressed tar archive (2.6 milion
-	files, 760.3 GiB in size) on newly created (empty) XFS file system,
-	after first low tens of gigabytes extracted the process hangs in
-	iowait indefinitely. One CPU core is 100% occupied with iowait,
-	the other CPU core is idle (on 2-core Intel Celeron G1610T).
-
-It was bisected to c9fa563072e1 ("xfs: use alloc_pages_bulk_array() for
-buffers") but XFS is only the messenger. The problem is that nothing
-is waking kswapd to reclaim some pages at a time the PCP lists cannot
-be refilled until some reclaim happens. The bulk allocator checks that
-there are some pages in the array and the original intent was that a bulk
-allocator did not necessarily need all the requested pages and it was
-best to return as quickly as possible. This was fine for the first user
-of the API but both NFS and XFS require the requested number of pages
-be available before making progress. Both could be adjusted to call the
-page allocator directly if a bulk allocation fails but it puts a burden on
-users of the API. Adjust the semantics to attempt at least one allocation
-via __alloc_pages() before returning so kswapd is woken if necessary.
-
-It was reported via bugzilla that the patch addressed the problem and
-that the tar extraction completed successfully. This may also address
-bug 215975 but has yet to be confirmed.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216007
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215975
-Fixes: 387ba26fb1cb ("mm/page_alloc: add a bulk page allocator")
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org> # v5.13+
----
- mm/page_alloc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 0e42038382c1..5ced6cb260ed 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5324,8 +5324,8 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
- 		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
- 								pcp, pcp_list);
- 		if (unlikely(!page)) {
--			/* Try and get at least one page */
--			if (!nr_populated)
-+			/* Try and allocate at least one page */
-+			if (!nr_account)
- 				goto failed_irq;
- 			break;
- 		}
+-- 
+WELCOME TO ILLUMINATI, The Club of the Rich and Famous; is the world
+oldest and largest fraternity made up of 5 Millions Members.We are one
+Family under one father who is the Supreme Being. In ILLUMINATI we
+believe that we were born in paradise and no member should struggle in
+this world. Hence all our new members are given Money Rewards once
+they join in order to upgrade their lifestyle.; interested members
+should contact us via Email: illuminatihome999world@gmail.com
