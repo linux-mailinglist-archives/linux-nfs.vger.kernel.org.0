@@ -2,106 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8DB5358C1
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 07:27:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC1E2534C76
+	for <lists+linux-nfs@lfdr.de>; Thu, 26 May 2022 11:22:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237156AbiE0F15 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 May 2022 01:27:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
+        id S234223AbiEZJWE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 26 May 2022 05:22:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231840AbiE0F1z (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 01:27:55 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00156EBAA5
-        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 22:27:54 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id AD06C21A17;
-        Fri, 27 May 2022 05:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1653629273; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k+VLs/ptLNRNc758ahB/bYDsXtivmnabg9305OYQntA=;
-        b=RIf132LIcgdNvwJeF67kNBp2dQj+hxxz4CJ5CueU8YSWiZCxcb3SvfJMYrfDDMn41QA0wO
-        YjdAg76CapngdYOrg7cD0EdeaZA+wvxyLeKNxcCWQWvBmNBTQmsLwTVY6W0YLWQhz0+eKn
-        gO1xUwv7HnTNGzpo43R8d7jYF4lr09g=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1653629273;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k+VLs/ptLNRNc758ahB/bYDsXtivmnabg9305OYQntA=;
-        b=ifnZkK243Zmc2Vb6i46tezRkEZlisagGQdKrXP0/b+nv2kaEotoon5+zMi5/fHauUxTUBP
-        UFLC4ExGYvrXnFDw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DDB871346B;
-        Fri, 27 May 2022 05:27:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id I/iSJlhhkGI4ewAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 27 May 2022 05:27:52 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230081AbiEZJWE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 26 May 2022 05:22:04 -0400
+X-Greylist: delayed 590 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 May 2022 02:22:03 PDT
+Received: from outbound-smtp23.blacknight.com (outbound-smtp23.blacknight.com [81.17.249.191])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA86D123
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 02:22:03 -0700 (PDT)
+Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
+        by outbound-smtp23.blacknight.com (Postfix) with ESMTPS id CEAD3BEBF9
+        for <linux-nfs@vger.kernel.org>; Thu, 26 May 2022 10:12:11 +0100 (IST)
+Received: (qmail 7312 invoked from network); 26 May 2022 09:12:11 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.198.246])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 26 May 2022 09:12:11 -0000
+Date:   Thu, 26 May 2022 10:12:10 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <dchinner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux-NFS <linux-nfs@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux-XFS <linux-xfs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: [PATCH] mm/page_alloc: Always attempt to allocate at least one page
+ during bulk allocation
+Message-ID: <20220526091210.GC3441@techsingularity.net>
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-In-reply-to: <165352672998.11129.5573262612495384287@noble.neil.brown.name>
-References: <165352672998.11129.5573262612495384287@noble.neil.brown.name>
-Subject: [PATCH nfs-utils] autoconf: change tirpc to check for a file, not for
- an include
-Date:   Thu, 26 May 2022 10:59:58 +1000
-Message-id: <165352679825.11129.7422243280120268766@noble.neil.brown.name>
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Peter Pavlisko reported the following problem on kernel bugzilla 216007.
 
-Recent autoconf don't like variables in AC_CHECK_INCLUDE so we get a
-warning.
-In libtirpc.m4 we only need to check for the existence of a file, we
-don't need to extra  support for includes, such as defining HAVE_TIRPC_H
-or whatever.
+	When I try to extract an uncompressed tar archive (2.6 milion
+	files, 760.3 GiB in size) on newly created (empty) XFS file system,
+	after first low tens of gigabytes extracted the process hangs in
+	iowait indefinitely. One CPU core is 100% occupied with iowait,
+	the other CPU core is idle (on 2-core Intel Celeron G1610T).
 
-So change from AC_CHECK_INCLUDE to AC_CHECK_FILE.
+It was bisected to c9fa563072e1 ("xfs: use alloc_pages_bulk_array() for
+buffers") but XFS is only the messenger. The problem is that nothing
+is waking kswapd to reclaim some pages at a time the PCP lists cannot
+be refilled until some reclaim happens. The bulk allocator checks that
+there are some pages in the array and the original intent was that a bulk
+allocator did not necessarily need all the requested pages and it was
+best to return as quickly as possible. This was fine for the first user
+of the API but both NFS and XFS require the requested number of pages
+be available before making progress. Both could be adjusted to call the
+page allocator directly if a bulk allocation fails but it puts a burden on
+users of the API. Adjust the semantics to attempt at least one allocation
+via __alloc_pages() before returning so kswapd is woken if necessary.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+It was reported via bugzilla that the patch addressed the problem and
+that the tar extraction completed successfully. This may also address
+bug 215975 but has yet to be confirmed.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216007
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=215975
+Fixes: 387ba26fb1cb ("mm/page_alloc: add a bulk page allocator")
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org> # v5.13+
 ---
- aclocal/libtirpc.m4 | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ mm/page_alloc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
-index f7de5193c177..bddae0226931 100644
---- a/aclocal/libtirpc.m4
-+++ b/aclocal/libtirpc.m4
-@@ -49,9 +49,9 @@ AC_DEFUN([AC_LIBTIRPC_OLD], [
-   dnl Also must have the headers installed where we expect
-   dnl to look for headers; add -I compiler option if found
-   AS_IF([test "$has_libtirpc" =3D "yes"],
--        [AC_CHECK_HEADERS([${tirpc_header_dir}/netconfig.h],
--                          [AC_SUBST([AM_CPPFLAGS], ["-I${tirpc_header_dir}"]=
-)],
--                          [has_libtirpc=3D"no"])])
-+        [AC_CHECK_FILE([${tirpc_header_dir}/netconfig.h],
-+                       [AC_SUBST([AM_CPPFLAGS], ["-I${tirpc_header_dir}"])],
-+                       [has_libtirpc=3D"no"])])
-=20
-   dnl Now set $LIBTIRPC accordingly
-   AS_IF([test "$has_libtirpc" =3D "yes"],
---=20
-2.36.1
-
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 0e42038382c1..5ced6cb260ed 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5324,8 +5324,8 @@ unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
+ 		page = __rmqueue_pcplist(zone, 0, ac.migratetype, alloc_flags,
+ 								pcp, pcp_list);
+ 		if (unlikely(!page)) {
+-			/* Try and get at least one page */
+-			if (!nr_populated)
++			/* Try and allocate at least one page */
++			if (!nr_account)
+ 				goto failed_irq;
+ 			break;
+ 		}
