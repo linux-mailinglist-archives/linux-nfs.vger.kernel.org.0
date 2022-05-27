@@ -2,59 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9240353582E
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 06:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D444153594F
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 08:28:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238643AbiE0EGq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 May 2022 00:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44388 "EHLO
+        id S240291AbiE0G21 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 May 2022 02:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240465AbiE0EGl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 00:06:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20C1412ADC;
-        Thu, 26 May 2022 21:06:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A41BF61DBA;
-        Fri, 27 May 2022 04:06:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E0749C385A9;
-        Fri, 27 May 2022 04:06:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1653624397;
-        bh=I6sNIeTE3L/jsPEBhjey3Sktkbpn1ybtGP9GSn1ETo4=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=pa2D/cTdja6DgO4BJ8y1ihOM/tsxSn8FVaXGHxjHCsHSZMAbr+AdCmueyYiu9bDa8
-         x4NyjB/YuRLthdKhyjrj9/LRg6Jnl5N4JfqQohBjXiAgIqdh89eXPLMccZScBG3Luu
-         FyJsHWo7NY27/uGoX48fqyNmsb1SnpKTvwTlxHhZSCJWMqgmjQJZKyLYMwDbxF/fHX
-         IUTOrUebdUnRpe5UHk4OoTO2d8QaNqSsFasUZXs7JhccxeZ/GDtUxwsD2HFi0O3BVP
-         rd9aFhVztjFBc1U/vupNMPOovtd97431zhlIJtZnMdmh3QhHFBg3QsMoYbA6zFtUrh
-         Qm0hB9mJHrfmQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C2920EAC081;
-        Fri, 27 May 2022 04:06:37 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd changes for 5.19
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <DDB7B172-52E3-4015-9BD2-9BCDE209E5AC@oracle.com>
-References: <DDB7B172-52E3-4015-9BD2-9BCDE209E5AC@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <DDB7B172-52E3-4015-9BD2-9BCDE209E5AC@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.19
-X-PR-Tracked-Commit-Id: 08af54b3e5729bc1d56ad3190af811301bdc37a1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 6d29d7fe4f0c1e81c39622cce45cd397b23dc48f
-Message-Id: <165362439778.3780.1154326941363112833.pr-tracker-bot@kernel.org>
-Date:   Fri, 27 May 2022 04:06:37 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        with ESMTP id S238874AbiE0G20 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 02:28:26 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3097239BBB;
+        Thu, 26 May 2022 23:28:24 -0700 (PDT)
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4L8ZbX15V2zjX79;
+        Fri, 27 May 2022 14:27:20 +0800 (CST)
+Received: from dggpemm500018.china.huawei.com (7.185.36.111) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 27 May 2022 14:28:22 +0800
+Received: from localhost.localdomain (10.175.112.125) by
+ dggpemm500018.china.huawei.com (7.185.36.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Fri, 27 May 2022 14:28:22 +0800
+From:   keliu <liuke94@huawei.com>
+To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
+        <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     keliu <liuke94@huawei.com>
+Subject: [PATCH] nfs: Directly use ida_alloc()/free()
+Date:   Fri, 27 May 2022 06:49:51 +0000
+Message-ID: <20220527064951.2358639-1-liuke94@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.112.125]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500018.china.huawei.com (7.185.36.111)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,15 +49,56 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Thu, 26 May 2022 15:25:00 +0000:
+Use ida_alloc()/ida_free() instead of deprecated
+ida_simple_get()/ida_simple_remove() .
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.19
+Signed-off-by: keliu <liuke94@huawei.com>
+---
+ fs/nfs/nfs4state.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/6d29d7fe4f0c1e81c39622cce45cd397b23dc48f
-
-Thank you!
-
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 9e1c987c81e7..e4c311dc8b93 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -497,7 +497,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
+ 	sp = kzalloc(sizeof(*sp), gfp_flags);
+ 	if (!sp)
+ 		return NULL;
+-	sp->so_seqid.owner_id = ida_simple_get(&server->openowner_id, 0, 0,
++	sp->so_seqid.owner_id = ida_alloc(&server->openowner_id,
+ 						gfp_flags);
+ 	if (sp->so_seqid.owner_id < 0) {
+ 		kfree(sp);
+@@ -534,7 +534,7 @@ static void nfs4_free_state_owner(struct nfs4_state_owner *sp)
+ {
+ 	nfs4_destroy_seqid_counter(&sp->so_seqid);
+ 	put_cred(sp->so_cred);
+-	ida_simple_remove(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
++	ida_free(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
+ 	kfree(sp);
+ }
+ 
+@@ -877,8 +877,8 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
+ 	refcount_set(&lsp->ls_count, 1);
+ 	lsp->ls_state = state;
+ 	lsp->ls_owner = fl_owner;
+-	lsp->ls_seqid.owner_id = ida_simple_get(&server->lockowner_id,
+-						0, 0, GFP_KERNEL_ACCOUNT);
++	lsp->ls_seqid.owner_id = ida_alloc(&server->lockowner_id,
++						GFP_KERNEL_ACCOUNT);
+ 	if (lsp->ls_seqid.owner_id < 0)
+ 		goto out_free;
+ 	INIT_LIST_HEAD(&lsp->ls_locks);
+@@ -890,7 +890,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
+ 
+ void nfs4_free_lock_state(struct nfs_server *server, struct nfs4_lock_state *lsp)
+ {
+-	ida_simple_remove(&server->lockowner_id, lsp->ls_seqid.owner_id);
++	ida_free(&server->lockowner_id, lsp->ls_seqid.owner_id);
+ 	nfs4_destroy_seqid_counter(&lsp->ls_seqid);
+ 	kfree(lsp);
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.25.1
+
