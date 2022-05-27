@@ -2,146 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 227985367DC
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 22:05:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DB2D536825
+	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 22:37:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232673AbiE0UFo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 May 2022 16:05:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
+        id S230135AbiE0Uh0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 May 2022 16:37:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238250AbiE0UFn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 16:05:43 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE12419AC
-        for <linux-nfs@vger.kernel.org>; Fri, 27 May 2022 13:05:39 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id o9so3259315wmd.0
-        for <linux-nfs@vger.kernel.org>; Fri, 27 May 2022 13:05:39 -0700 (PDT)
+        with ESMTP id S1351978AbiE0UhZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 16:37:25 -0400
+Received: from smtp-fw-9103.amazon.com (smtp-fw-9103.amazon.com [207.171.188.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7261116E6
+        for <linux-nfs@vger.kernel.org>; Fri, 27 May 2022 13:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3hDs5pMehEzS9JtBcciO3du/140ZEedg4Xg+u6dsQZw=;
-        b=oihAaWbcG7Yr9p0y5ULTKT7tU46NohvPTW+4VGetJ03GHSZRqq4LU+CPKg0Z2PrH5R
-         b7AoPxPSIySEEsBuGcjzbeg273gPzUDiuDgPQe8t+O97X7MaFFmZxPWkqR1LY9W4beoO
-         n00RsO520VB1zU12ITOAw5pKWroS+wVFZbCpC2euQgZwg2TwOVdcJe/hm29p06XZbpk9
-         Sux3vMrXw4iwBHlCbOLNQjWoRtlyXEU5R6srtHjt5qRoh4UhA0D6F4jCnsUI6KqRNPOo
-         yBXjUTB2xOyeoHGBTQdQEu/248CfGEyYoUye03xA0p2HIRWz4ulUElW6T5at8G4x+QOH
-         iljg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3hDs5pMehEzS9JtBcciO3du/140ZEedg4Xg+u6dsQZw=;
-        b=NO5Gxyzs58Cvn2AIHowdXtzgxz5ugy9zO/PDZVvYYalT56GNlHWIc2y2An6IQ/mX/C
-         M9JvnZp77QRZu4n+yJLb2DLxUVlexSCDU9sIu9CsjpY9NnwzfzRrVc5NKE0yjzVK65B/
-         sQzd254ILJ/cY5YMywkupnsiquiTNtCyxkRfuDMdR15RQvlynZNI3S1NsM71CRs+IAfN
-         ZLBv/py/46TjEqvxFgg8ypF5DGXsLUA+WW9kLBpp5/Dbadk56C4v3r5GHUMb2m9Ca61b
-         /4QGP256hSjI3qbWo8F5UkN/5nlWyQ5hmuCNQ9K4IJYDXUGT4Ofe8KHH63R6FGpmeeKi
-         NiZQ==
-X-Gm-Message-State: AOAM532evWS0CVnzcojJBpC8+nyK+3Ko0y3alQHYIigPWV5SGuzX9lpR
-        cbWB5a0/uVay9SCUY5Yx5TSdG1lopRhdj+T7q6xC
-X-Google-Smtp-Source: ABdhPJzSQiwbwdo8FqZ111McYTLFv4bwIxxTTbHCjxtpHRnG+P00gPgVzRWa/5Bdb55lusFwlbu3a5oOnOFQ3+tgAU8=
-X-Received: by 2002:a05:600c:3b05:b0:397:54ce:896 with SMTP id
- m5-20020a05600c3b0500b0039754ce0896mr8458182wms.3.1653681937794; Fri, 27 May
- 2022 13:05:37 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1653683844; x=1685219844;
+  h=date:from:to:cc:message-id:references:mime-version:
+   in-reply-to:subject;
+  bh=ZvXHUkT9H2WUx0rJnGwyZXt7pM3obuMcN6VUSZLnW04=;
+  b=MsUUbJ3iJ70ly5dbCGCInOXT2IRHu2nZ74Lk6b4NDWaFSVvN8UPATL0F
+   B7iS8MwA+Q7/VuRLjsVAIaviVqHCyoTpGMQw2Vld6yGqClnPTtFziyKTr
+   VXT//g4E9I8bIE/T0KNiCg4B2jL3jsLY/e8qt6Y9SqXxA0fteUbCilKfa
+   s=;
+X-IronPort-AV: E=Sophos;i="5.91,256,1647302400"; 
+   d="scan'208";a="1019632674"
+Subject: Re: filecache LRU performance regression
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-7d84505d.us-west-2.amazon.com) ([10.25.36.210])
+  by smtp-border-fw-9103.sea19.amazon.com with ESMTP; 27 May 2022 20:37:23 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
+        by email-inbound-relay-pdx-2a-7d84505d.us-west-2.amazon.com (Postfix) with ESMTPS id 4427A80BB9;
+        Fri, 27 May 2022 20:37:22 +0000 (UTC)
+Received: from EX13D20UWA001.ant.amazon.com (10.43.160.34) by
+ EX13MTAUWA001.ant.amazon.com (10.43.160.58) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.36; Fri, 27 May 2022 20:37:22 +0000
+Received: from EX13MTAUWA001.ant.amazon.com (10.43.160.58) by
+ EX13D20UWA001.ant.amazon.com (10.43.160.34) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.36; Fri, 27 May 2022 20:37:22 +0000
+Received: from dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com
+ (172.19.206.175) by mail-relay.amazon.com (10.43.160.118) with Microsoft SMTP
+ Server id 15.0.1497.36 via Frontend Transport; Fri, 27 May 2022 20:37:22
+ +0000
+Received: by dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com (Postfix, from userid 6262777)
+        id 1BEC1EF; Fri, 27 May 2022 20:37:21 +0000 (UTC)
+Date:   Fri, 27 May 2022 20:37:21 +0000
+From:   Frank van der Linden <fllinden@amazon.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Message-ID: <20220527203721.GA10628@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+References: <5C7024DA-A792-4091-BFDE-CEED59BC1B69@oracle.com>
 MIME-Version: 1.0
-References: <20220525183703.466936-1-fred@cloudflare.com>
-In-Reply-To: <20220525183703.466936-1-fred@cloudflare.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Fri, 27 May 2022 16:05:26 -0400
-Message-ID: <CAHC9VhS=_RvB66J9D5AZ+XnyDKupvTQpFzni2uvz348REPUT5A@mail.gmail.com>
-Subject: Re: [PATCH v2] cred: Propagate security_prepare_creds() error code
-To:     Frederick Lawler <fred@cloudflare.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <5C7024DA-A792-4091-BFDE-CEED59BC1B69@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-12.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, May 25, 2022 at 2:37 PM Frederick Lawler <fred@cloudflare.com> wrote:
->
-> While experimenting with the security_prepare_creds() LSM hook, we
-> noticed that our EPERM error code was not propagated up the callstack.
-> Instead ENOMEM is always returned.  As a result, some tools may send a
-> confusing error message to the user:
->
-> $ unshare -rU
-> unshare: unshare failed: Cannot allocate memory
->
-> A user would think that the system didn't have enough memory, when
-> instead the action was denied.
->
-> This problem occurs because prepare_creds() and prepare_kernel_cred()
-> return NULL when security_prepare_creds() returns an error code. Later,
-> functions calling prepare_creds() and prepare_kernel_cred() return
-> ENOMEM because they assume that a NULL meant there was no memory
-> allocated.
->
-> Fix this by propagating an error code from security_prepare_creds() up
-> the callstack.
->
-> Signed-off-by: Frederick Lawler <fred@cloudflare.com>
->
-> ---
-> Changes since v1:
-> - Revert style churn in ovl_create_or_link() noted by Amir
-> - Revert style churn in prepare_nsset() noted by Serge
-> - Update documentation for prepare_creds()
-> - Set ofs->creator_cred in ovl_fill_super() and req->creds in aio_fsync()
->   to NULL on error noted by Amir
-> ---
->  Documentation/security/credentials.rst |  6 +++---
->  fs/aio.c                               |  9 +++++++--
->  fs/cachefiles/security.c               |  8 ++++----
->  fs/cifs/cifs_spnego.c                  |  4 ++--
->  fs/cifs/cifsacl.c                      |  4 ++--
->  fs/coredump.c                          |  2 +-
->  fs/exec.c                              | 14 ++++++++-----
->  fs/ksmbd/smb_common.c                  |  4 ++--
->  fs/nfs/flexfilelayout/flexfilelayout.c |  7 +++++--
->  fs/nfs/nfs4idmap.c                     |  4 ++--
->  fs/nfsd/auth.c                         |  4 ++--
->  fs/nfsd/nfs4callback.c                 | 10 ++++-----
->  fs/nfsd/nfs4recover.c                  |  4 ++--
->  fs/nfsd/nfsfh.c                        |  4 ++--
->  fs/open.c                              |  8 ++++----
->  fs/overlayfs/dir.c                     |  6 ++++--
->  fs/overlayfs/super.c                   |  6 ++++--
->  kernel/capability.c                    |  4 ++--
->  kernel/cred.c                          | 28 +++++++++++++++-----------
->  kernel/groups.c                        |  4 ++--
->  kernel/nsproxy.c                       |  9 ++++++++-
->  kernel/sys.c                           | 28 +++++++++++++-------------
->  kernel/trace/trace_events_user.c       |  4 ++--
->  kernel/umh.c                           |  5 +++--
->  kernel/user_namespace.c                |  6 ++++--
->  net/dns_resolver/dns_key.c             |  4 ++--
->  security/apparmor/task.c               | 12 +++++------
->  security/commoncap.c                   | 20 +++++++++---------
->  security/keys/keyctl.c                 |  8 ++++----
->  security/keys/process_keys.c           | 16 +++++++--------
->  security/landlock/syscalls.c           |  4 ++--
->  security/selinux/hooks.c               |  8 ++++----
->  security/smack/smack_lsm.c             |  8 ++++----
->  security/smack/smackfs.c               |  4 ++--
->  34 files changed, 153 insertions(+), 123 deletions(-)
+On Fri, May 27, 2022 at 06:59:47PM +0000, Chuck Lever III wrote:
+> 
+> 
+> Hi Frank-
+> 
+> Bruce recently reminded me about this issue. Is there a bugzilla somewhere?
+> Do you have a reproducer I can try?
 
-The SELinux bits look fine to me.
+Hi Chuck,
 
-Acked-by: Paul Moore <paul@paul-moore.com> (SELinux)
+The easiest way to reproduce the issue is to run generic/531 over an
+NFSv4 mount, using a system with a larger number of CPUs on the client
+side (or just scaling the test up manually - it has a calculation based
+on the number of CPUs).
 
--- 
-paul-moore.com
+The test will take a long time to finish. I initially described the
+details here:
+
+https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com/
+
+Since then, it was also reported here:
+
+https://lore.kernel.org/all/20210531125948.2D37.409509F4@e16-tech.com/T/#m8c3e4173696e17a9d5903d2a619550f352314d20
+
+I posted an experimental patch, but it's actually not quite correct
+(although I think the idea behind it is makes sense):
+
+https://lore.kernel.org/linux-nfs/20201020183718.14618-4-trondmy@kernel.org/T/#m869aa427f125afee2af9a89d569c6b98e12e516f
+
+The basic problem from the initial email I sent:
+
+> So here's what happens: for NFSv4, files that are associated with an
+> open stateid can stick around for a long time, as long as there's no
+> CLOSE done on them. That's what's happening here. Also, since those files
+> have a refcount of >= 2 (one for the hash table, one for being pointed to
+> by the state), they are never eligible for removal from the file cache.
+> Worse, since the code call nfs_file_gc inline if the upper bound is crossed
+> (8192), every single operation that calls nfsd_file_acquire will end up
+> walking the entire LRU, trying to free files, and failing every time.
+> Walking a list with millions of files every single time isn't great.
+
+I guess the basic issues here are:
+
+1) Should these NFSv4 files be in the filecache at all? They are readily
+   available from the state, no need for additional caching.
+2) In general: can state ever be gracefully retired if the client still
+   has an OPEN?
+
+- Frank
