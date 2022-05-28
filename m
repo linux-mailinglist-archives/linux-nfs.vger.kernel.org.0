@@ -2,273 +2,1048 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CA8C536890
-	for <lists+linux-nfs@lfdr.de>; Fri, 27 May 2022 23:34:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED185369D6
+	for <lists+linux-nfs@lfdr.de>; Sat, 28 May 2022 03:39:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344337AbiE0Vea (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 27 May 2022 17:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55812 "EHLO
+        id S1354435AbiE1Bhq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 27 May 2022 21:37:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbiE0VeX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 17:34:23 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF23C6EC49
-        for <linux-nfs@vger.kernel.org>; Fri, 27 May 2022 14:34:22 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24RL0gLi031991;
-        Fri, 27 May 2022 21:34:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=I4f6w2G2MEMDfBT6xW/0Xec01bUidpJuI7B5H0q2lhM=;
- b=dZsFjgcokJUO1VaUYI7MJBBA0fCNbJqDtEK+d9SszGnp2rq+K+7c2RfxFkBnNd0i0/nD
- OztgswpofXTS71zPDuYAkoSf6FAsKPKQN7CbJQT+szpXD8li6JGSeBCm6tmzd02HLRrr
- 6XGZecReRBCid+OwHcIdit+iU7Q0pnJbuvysJ4j+ggRMZGHAjCIXugyLh/cmzxgBpJuO
- UckIfAK85OSmbFNcqa2BrBYERiWVyocTO9cZ07HkkmWGT36CGaeKy0s+fowLEFfgrR7J
- xnTgMZAO5vXParCWX4BjoTFz4gfmaxZn/IBVTKg0qDxpLdJVz71QnjWDzvJm2uBWPp2A JA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3g93tc0984-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 May 2022 21:34:21 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 24RLGHIj032714;
-        Fri, 27 May 2022 21:34:21 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2175.outbound.protection.outlook.com [104.47.57.175])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3g93wyq7k6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 May 2022 21:34:21 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nfoHjCv95lgr6twlZawHvTkwcz4/xmtHYsXLuzcWxf2evXvNPrRpV7d6bOAaRJJvfGcJG5Su9EaYVv56xAiiHqDQhVNptM4FoxRWyN55ZWyhFKM1Y7Hsu/g3uFHzJp/kVBkAhq9YFGMHLJr9MyE77kMGe8igD6lOy6hs1/cxGmGFCJBKMQZ8Eo9DRuJaSr6/Lvrs575Cxv0SuTUZ3aCL4dt1K2OUcwp9ehFAzNIIK24BH/Z3g6Gewn+X653rDg+wa79RzoXqiuJ7YcDt/QtgtoYTox6EvCIX1oRA0BVcezv2KDNMtgmr/jqxU5k6hlIkEwujNHMTVc6AyrsZvQ5+9g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I4f6w2G2MEMDfBT6xW/0Xec01bUidpJuI7B5H0q2lhM=;
- b=fSNDfdDgrRIxaVlDYzxjAI1TcrZ+XM6bOuM4znFWO60nLfIUeSYTTgoP4slux6or4Oj7SJso+ZFhhcGk7KEvPb0xHrH/HfHqp6s8jIIeq+M9xx0UqntO2l8srUPEBmyXedhuwbCLI+0DeBrD3z5M1oS5wsy0ZrnllKSE80FPSVbSoAcuJtPX8AEyblFki8HDQQGvd1BpUaJrop0yZ5p+35lIarxopgtZ/xRyBLlRqm4W8Be0E5GhWbBblccbXes2ebwPsaGsCbqFD0Z0OkjeuBuZ1L7htoXv6WzMjokm2gzvNOjJ2ghNzq/zaV+2UN7zkkzRAK0Khy1Vmv9hd2GaIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I4f6w2G2MEMDfBT6xW/0Xec01bUidpJuI7B5H0q2lhM=;
- b=UtvC95ZZ35geGzWm0iFIQ/oIQgvJZN+RLhjI1RfUYksDZXmQ0M8LGGOztw+CBeGcIUQyrBtCdxTOUMvGiSVtyMoOga4f2lga7OVxMvABQYdYEJTesd890/RAGoSvs3osU6XFckVWhTpRYhhjs4jjYoU6KeHe9I8/UXveYh6FaJY=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN6PR10MB2928.namprd10.prod.outlook.com (2603:10b6:805:d2::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5273.19; Fri, 27 May
- 2022 21:34:19 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5293.016; Fri, 27 May 2022
- 21:34:18 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Frank van der Linden <fllinden@amazon.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Liam Howlett <liam.howlett@oracle.com>
-Subject: Re: filecache LRU performance regression
-Thread-Topic: filecache LRU performance regression
-Thread-Index: AQHYcfvwqM9TwnG0lkutiJn4EA8Bxq0zLyiAgAAP6gA=
-Date:   Fri, 27 May 2022 21:34:18 +0000
-Message-ID: <ADD1751A-7F67-4729-BFFC-D6938CA963A0@oracle.com>
-References: <5C7024DA-A792-4091-BFDE-CEED59BC1B69@oracle.com>
- <20220527203721.GA10628@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
-In-Reply-To: <20220527203721.GA10628@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: edfaac1f-4918-4250-cb5c-08da4028a802
-x-ms-traffictypediagnostic: SN6PR10MB2928:EE_
-x-microsoft-antispam-prvs: <SN6PR10MB2928E59FAB7D879C5135DDC993D89@SN6PR10MB2928.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ol+kxIhXZsamMkpPlIzDJgDtjIWiz/7SasA7ipe/T0KeQeEClLBNiBV5wyyg4f9gvI00h5FFBrrH8/omEOjV9QraZVxNxWFh8LoQe+W62NMu/DFNPOwnqCD4kuNN3HLQZa/id9e7IGKlAJe39Lmot8ZpOF/x59THr30qHURI9ADPGdrEAPWGwzcHm/VCUTW0IFiqGebNlbAJbBlKyqTmDf3FckLDjAA14SMcCgIohc1483s4EurdfxHfzKJ2EQ05qsPKDKDo0TgHcXFVvffi9lQyAQXpt4LKzsHZW+9nbPOo9vtbS4cjsVmxL8f9+VqvoA1Bq8xzAO1+vQ1zY71ZUZ1Bo3G9sq4sYS3NDIQhdI2fCF2aVDpFZJGIcE5FmX+ev497fFodniK1rgWSXvepz3vHXj4AOR5GcJh5pkI+/SV0pb3uKA1U5IjEiRfsX/ImU+tPVxVM/Q1ov1VEHO6QgyVHpSQuHUxk5tXzdnEOZi4bfUmXvTxGEMDf2JnE1XubXCubMzFJ9YgInbzYK/WvJPFCZas216hlp7+kfN1ql1RRqNUGZsKrP1gfyfrKwGU39CnL0+qAJURGEM3UUEcbnyibqqAOBCPAtIHJHi1W9d+mS3r/fw6miVQ7zy1FO4MzuI+2Y45lDyOVOhu7d9Q02acdiM9PLok4SRE7KOHgvZ+Q5qNoMn6oIAnUOcTCkPY7DCNsBa34/2fDVN4gTDc4dISYoBZ0WMdwbvtJWYPGvkmTplAUpqPPi2SuA/71dIo0IYwsaChmJ3NcxZb/4xo6vJQ3H0JrvrnZlwaiXImXdy9Ny7IZKUwaFgBhZxy5OQ/E2ntrwk2/BylpvwLMBveIeIG1vjTh1Yu5dKxZYEssRgsqoSM4RsleEc0PvA2onxry
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(2616005)(107886003)(966005)(54906003)(6916009)(33656002)(83380400001)(3480700007)(2906002)(6486002)(508600001)(8936002)(36756003)(5660300002)(316002)(186003)(71200400001)(122000001)(76116006)(91956017)(66556008)(66946007)(66476007)(6506007)(64756008)(38070700005)(66446008)(6512007)(26005)(53546011)(38100700002)(4326008)(8676002)(86362001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?78FF3LbHIQQfVK/PFZpG0E8NKOqiZ8keNQaBszvKhYk6aJoYMe+iMIoXPpmP?=
- =?us-ascii?Q?gWiDN04vnpAKIzKy2bWzKDQedEe/2+UTn4EWD4yEarMHdO4sEa5if0RQZx+p?=
- =?us-ascii?Q?8M5PhdbFMaYpYp9FWMPAxrJ34Wshjqs/hG0yT9mE62xkqzMDJA0a9nU72+sF?=
- =?us-ascii?Q?j1XDLSXz0QRugNzmO50MwIj00sPUCuSHIxWRvaVPh/OTcW5bpUNql+gBnc8Y?=
- =?us-ascii?Q?oxKPRyHTp5Oc8vYctJjDE5g690e/2bILBmwsqgrxvQaiCBfqJIZG/nhTiKts?=
- =?us-ascii?Q?n9hauQx789xiCvTlDTCphL6f3gyG8++ORgCbqb06eVWV/r6O/+YQC35I3dsX?=
- =?us-ascii?Q?L9y+8JgP4XoF2FfksgMYUq1wbAPcce49et/ShPrq2vavKYXmMUqPGSHaPxY/?=
- =?us-ascii?Q?FKptXQWS+RbZRvg5kJU5/h7xn5vZkkJgM8M2hfLnaJ/j4qfS8YxKeDSv+dqy?=
- =?us-ascii?Q?F0uRNGpnVvkpxovvqM//o7nf61/4SYf689J7Y/a+UTp9JjhxrZYIyyYty/u9?=
- =?us-ascii?Q?Gfc1bkaur1u6FRaYhAxFAOcaM2HzhWSKhGaYgZBZrsrrrFhuz3pA7DOagOr/?=
- =?us-ascii?Q?zn2lxAaCHPJcCSRBNwn0KQWTTIH5F1rUu8s8Tw/a0nhz7rxTRcezLGOmhQa2?=
- =?us-ascii?Q?n4ecvYdYJRfysi4r0tmfkV6PM4fH/HqiQ8+wo1wK1KGd14tBjBAopMre7B7J?=
- =?us-ascii?Q?r64r/mUMdmpTAhNiLqEuCjVxw96myrzO8knTHgBq8TCoJmWo0A41Tr7qO5Pj?=
- =?us-ascii?Q?zEaSVC4J1DXdeZsAMaJae3in6BsHgF3dDLVVsXEM/o5cBRnVK1m/8WA+gnxH?=
- =?us-ascii?Q?IbXBHRzZyslw/Da3eQGuUqvYHo7x3y1Ihp5ELg3wVYQlU9mGBANMAfNUht3O?=
- =?us-ascii?Q?wiUgcxFwW9kwm8eCnV2x1laZ8+2hJqw5ClyUDd7teFtE9SJJRhw5nyRnLfQ6?=
- =?us-ascii?Q?UUfPGoYUFiT5fxOeQrKakwMxGGVCpwU6xMFs9ipqHWD2y3HgPiV//Z5LZSlJ?=
- =?us-ascii?Q?R+UnkDDBlsGbTpdPlvZQhC4ceX/IVvEdT3HMnYb9lwy5jqq71IUUGaWJS3oO?=
- =?us-ascii?Q?XVzKwsoTRzvm32bS2AqYLlMNm8evmDO8xerX9LU4vUDKz+oNr1D5ACaKRQxk?=
- =?us-ascii?Q?eTky7DRLNNKfsRfodSQ8gffn/ApQU50S+rYP9RBxG4VSk8Wvp7uVTG8qELUy?=
- =?us-ascii?Q?t+RBBiw8biCZkx5xL98CXlWnTf6lJdjtHOziWk9wXf+8e3+vJZsiXVi1mttY?=
- =?us-ascii?Q?ePTSCz9B1qczauaEBUSQ/1VyMyiXv7g6dqKL8QqyNgZJn4wFQUtsifn/Kqo5?=
- =?us-ascii?Q?CpG+c/tc6Eqle9OuUuFMb2hRWmhlnFH3tkmuot9apZodtHrECiSkb8zFV5DA?=
- =?us-ascii?Q?RLCChgb5qbWB9PezGXe/9Vl4Wzc025YscGzqn7qY1YSE/VqDTagI78ULT1QI?=
- =?us-ascii?Q?PivA62LQpoT6rH7wKi1o5UoHUFmqMDEVFlnAnZfFmMfC4S6KeE5FX9tbdd0p?=
- =?us-ascii?Q?v0+rLA7IPjIEpnTJqWxm76ZTaDaoa9Nv0+c+10N0OtjIxBSvAZeoewDBcVyH?=
- =?us-ascii?Q?rj2VW9IRcG96aW/ksRUSUw4wK6wghSUVo/HNPiW67SCZ/UaAf2AjMQFf8rMU?=
- =?us-ascii?Q?mc7pjIEvFBH9UD9YtXC5f5yt8hdF9p5dTbuPJevmF7jXBZoHb7Cjnv/meImw?=
- =?us-ascii?Q?nlc0Iy4qcdsvoFEMXeqwCixQGGFprNhEOArea4f5H22nmBCHmHHofSvcx71R?=
- =?us-ascii?Q?XY6s64clmyWqZHmDaWku++HSO3kyrKQ=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <CDAFFFBD664D5B47A352437768D7F908@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S244067AbiE1Bhl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 27 May 2022 21:37:41 -0400
+Received: from mail.hallyn.com (mail.hallyn.com [178.63.66.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 263CE1271BA;
+        Fri, 27 May 2022 18:37:37 -0700 (PDT)
+Received: by mail.hallyn.com (Postfix, from userid 1001)
+        id 26335811; Fri, 27 May 2022 20:37:36 -0500 (CDT)
+Date:   Fri, 27 May 2022 20:37:36 -0500
+From:   "Serge E. Hallyn" <serge@hallyn.com>
+To:     Frederick Lawler <fred@cloudflare.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com
+Subject: Re: [PATCH v2] cred: Propagate security_prepare_creds() error code
+Message-ID: <20220528013736.GA21688@mail.hallyn.com>
+References: <20220525183703.466936-1-fred@cloudflare.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: edfaac1f-4918-4250-cb5c-08da4028a802
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 May 2022 21:34:18.7659
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: L8evtL0AT14Ho4aETDU/cM9NyWxAWXJSijYQoypuwCHlQCM9Q1l0BbFOe3nl7E+iA18L1GqQZROKUzD3DO4DQA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR10MB2928
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.486,18.0.874
- definitions=2022-05-27_07:2022-05-27,2022-05-27 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 mlxscore=0
- phishscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2205270103
-X-Proofpoint-GUID: CXOGq8nVixm_d4_gYon1UEq7LuPBx9jx
-X-Proofpoint-ORIG-GUID: CXOGq8nVixm_d4_gYon1UEq7LuPBx9jx
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220525183703.466936-1-fred@cloudflare.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_PASS,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Wed, May 25, 2022 at 01:37:03PM -0500, Frederick Lawler wrote:
+> While experimenting with the security_prepare_creds() LSM hook, we
+> noticed that our EPERM error code was not propagated up the callstack.
+> Instead ENOMEM is always returned.  As a result, some tools may send a
+> confusing error message to the user:
+> 
+> $ unshare -rU
+> unshare: unshare failed: Cannot allocate memory
+> 
+> A user would think that the system didn't have enough memory, when
+> instead the action was denied.
+> 
+> This problem occurs because prepare_creds() and prepare_kernel_cred()
+> return NULL when security_prepare_creds() returns an error code. Later,
+> functions calling prepare_creds() and prepare_kernel_cred() return
+> ENOMEM because they assume that a NULL meant there was no memory
+> allocated.
+> 
+> Fix this by propagating an error code from security_prepare_creds() up
+> the callstack.
+> 
+> Signed-off-by: Frederick Lawler <fred@cloudflare.com>
 
+Reviewed-by: Serge Hallyn <serge@hallyn.com>
 
-> On May 27, 2022, at 4:37 PM, Frank van der Linden <fllinden@amazon.com> w=
-rote:
->=20
-> On Fri, May 27, 2022 at 06:59:47PM +0000, Chuck Lever III wrote:
->>=20
->>=20
->> Hi Frank-
->>=20
->> Bruce recently reminded me about this issue. Is there a bugzilla somewhe=
-re?
->> Do you have a reproducer I can try?
->=20
-> Hi Chuck,
->=20
-> The easiest way to reproduce the issue is to run generic/531 over an
-> NFSv4 mount, using a system with a larger number of CPUs on the client
-> side (or just scaling the test up manually - it has a calculation based
-> on the number of CPUs).
->=20
-> The test will take a long time to finish. I initially described the
-> details here:
->=20
-> https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinden=
--2c-c1893d73.us-west-2.amazon.com/
->=20
-> Since then, it was also reported here:
->=20
-> https://lore.kernel.org/all/20210531125948.2D37.409509F4@e16-tech.com/T/#=
-m8c3e4173696e17a9d5903d2a619550f352314d20
-
-Thanks for the summary. So, there isn't a bugzilla tracking this
-issue? If not, please create one here:
-
-  https://bugzilla.linux-nfs.org/
-
-Then we don't have to keep asking for a repeat summary ;-)
-
-
-> I posted an experimental patch, but it's actually not quite correct
-> (although I think the idea behind it is makes sense):
->=20
-> https://lore.kernel.org/linux-nfs/20201020183718.14618-4-trondmy@kernel.o=
-rg/T/#m869aa427f125afee2af9a89d569c6b98e12e516f
-
-A handful of random comments:
-
-- nfsd_file_put() is now significantly different than it used
-  to be, so that part of the patch will have to be updated in
-  order to apply to v5.18+
-
-- IMO maybe that hash table should be replaced with something
-  more memory and CPU-cache efficient, like a Maple tree. That
-  patch can certainly be developed independently of the other
-  LRU/GC related fixes you proposed. (Added Matthew and Liam
-  for their take).
-
-How can we take this forward? Would you like to continue
-developing these patches, or should I adopt the project?
-Maybe Matthew or Liam see a straightforward way to convert
-the nfsd_file hash table as a separate project?
-
-
-> The basic problem from the initial email I sent:
->=20
->> So here's what happens: for NFSv4, files that are associated with an
->> open stateid can stick around for a long time, as long as there's no
->> CLOSE done on them. That's what's happening here. Also, since those file=
-s
->> have a refcount of >=3D 2 (one for the hash table, one for being pointed=
- to
->> by the state), they are never eligible for removal from the file cache.
->> Worse, since the code call nfs_file_gc inline if the upper bound is cros=
-sed
->> (8192), every single operation that calls nfsd_file_acquire will end up
->> walking the entire LRU, trying to free files, and failing every time.
->> Walking a list with millions of files every single time isn't great.
-
-Walking a linked list is just about the worst thing to do
-to the cache on a modern CPU. I vote for replacing that
-data structure.
-
-
-> I guess the basic issues here are:
->=20
-> 1) Should these NFSv4 files be in the filecache at all? They are readily
->   available from the state, no need for additional caching.
-
-I agree that LRU and garbage collection are not needed for
-managing NFSv4 files. NFSv4 OPEN/CLOSE and lease destruction
-are already effective at that.
-
-Re-reading the old email thread, I'm not exactly sure what
-"turning off the filecache for NFSv4" means exactly. Fleshing
-that idea out could be helpful. Would it make sense to simply
-disable the GC walk when releasing NFSv4 files?
-
-Interestingly, the dcache has the same problem with negative
-dentries, which can grow without bound, creating a significant
-performance impact on systems with high uptime. There were a
-few other similar cases discussed at the recent LSF/MM.
-
-
-> 2) In general: can state ever be gracefully retired if the client still
->   has an OPEN?
-
-I think that's what NFS4ERR_ADMIN_REVOKED is for? It's not
-exactly graceful, but the server can warn the client that
-state is gone.
-
-Also, I expect a server might recall a delegation if it needs
-to reclaim resources. We've talked in the past about a server
-that recalls in order to cap the number of delegations that
-need to be returned by the client when the lease is destroyed.
-
-
---
-Chuck Lever
-
+> 
+> ---
+> Changes since v1:
+> - Revert style churn in ovl_create_or_link() noted by Amir
+> - Revert style churn in prepare_nsset() noted by Serge
+> - Update documentation for prepare_creds()
+> - Set ofs->creator_cred in ovl_fill_super() and req->creds in aio_fsync()
+>   to NULL on error noted by Amir
+> ---
+>  Documentation/security/credentials.rst |  6 +++---
+>  fs/aio.c                               |  9 +++++++--
+>  fs/cachefiles/security.c               |  8 ++++----
+>  fs/cifs/cifs_spnego.c                  |  4 ++--
+>  fs/cifs/cifsacl.c                      |  4 ++--
+>  fs/coredump.c                          |  2 +-
+>  fs/exec.c                              | 14 ++++++++-----
+>  fs/ksmbd/smb_common.c                  |  4 ++--
+>  fs/nfs/flexfilelayout/flexfilelayout.c |  7 +++++--
+>  fs/nfs/nfs4idmap.c                     |  4 ++--
+>  fs/nfsd/auth.c                         |  4 ++--
+>  fs/nfsd/nfs4callback.c                 | 10 ++++-----
+>  fs/nfsd/nfs4recover.c                  |  4 ++--
+>  fs/nfsd/nfsfh.c                        |  4 ++--
+>  fs/open.c                              |  8 ++++----
+>  fs/overlayfs/dir.c                     |  6 ++++--
+>  fs/overlayfs/super.c                   |  6 ++++--
+>  kernel/capability.c                    |  4 ++--
+>  kernel/cred.c                          | 28 +++++++++++++++-----------
+>  kernel/groups.c                        |  4 ++--
+>  kernel/nsproxy.c                       |  9 ++++++++-
+>  kernel/sys.c                           | 28 +++++++++++++-------------
+>  kernel/trace/trace_events_user.c       |  4 ++--
+>  kernel/umh.c                           |  5 +++--
+>  kernel/user_namespace.c                |  6 ++++--
+>  net/dns_resolver/dns_key.c             |  4 ++--
+>  security/apparmor/task.c               | 12 +++++------
+>  security/commoncap.c                   | 20 +++++++++---------
+>  security/keys/keyctl.c                 |  8 ++++----
+>  security/keys/process_keys.c           | 16 +++++++--------
+>  security/landlock/syscalls.c           |  4 ++--
+>  security/selinux/hooks.c               |  8 ++++----
+>  security/smack/smack_lsm.c             |  8 ++++----
+>  security/smack/smackfs.c               |  4 ++--
+>  34 files changed, 153 insertions(+), 123 deletions(-)
+> 
+> diff --git a/Documentation/security/credentials.rst b/Documentation/security/credentials.rst
+> index 357328d566c8..8852b2ab6a18 100644
+> --- a/Documentation/security/credentials.rst
+> +++ b/Documentation/security/credentials.rst
+> @@ -438,7 +438,7 @@ new set of credentials by calling::
+>  
+>  this locks current->cred_replace_mutex and then allocates and constructs a
+>  duplicate of the current process's credentials, returning with the mutex still
+> -held if successful.  It returns NULL if not successful (out of memory).
+> +held if successful.  It returns < 0 if not successful.
+>  
+>  The mutex prevents ``ptrace()`` from altering the ptrace state of a process
+>  while security checks on credentials construction and changing is taking place
+> @@ -497,8 +497,8 @@ A typical credentials alteration function would look something like this::
+>  		int ret;
+>  
+>  		new = prepare_creds();
+> -		if (!new)
+> -			return -ENOMEM;
+> +		if (IS_ERR(new))
+> +			return PTR_ERR(new);
+>  
+>  		new->suid = suid;
+>  		ret = security_alter_suid(new);
+> diff --git a/fs/aio.c b/fs/aio.c
+> index 3c249b938632..5abbe88c3ca7 100644
+> --- a/fs/aio.c
+> +++ b/fs/aio.c
+> @@ -1620,6 +1620,8 @@ static void aio_fsync_work(struct work_struct *work)
+>  static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+>  		     bool datasync)
+>  {
+> +	int err;
+> +
+>  	if (unlikely(iocb->aio_buf || iocb->aio_offset || iocb->aio_nbytes ||
+>  			iocb->aio_rw_flags))
+>  		return -EINVAL;
+> @@ -1628,8 +1630,11 @@ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+>  		return -EINVAL;
+>  
+>  	req->creds = prepare_creds();
+> -	if (!req->creds)
+> -		return -ENOMEM;
+> +	if (IS_ERR(req->creds)) {
+> +		err = PTR_ERR(req->creds);
+> +		req->creds = NULL;
+> +		return err;
+> +	}
+>  
+>  	req->datasync = datasync;
+>  	INIT_WORK(&req->work, aio_fsync_work);
+> diff --git a/fs/cachefiles/security.c b/fs/cachefiles/security.c
+> index fe777164f1d8..8dc256b18312 100644
+> --- a/fs/cachefiles/security.c
+> +++ b/fs/cachefiles/security.c
+> @@ -21,8 +21,8 @@ int cachefiles_get_security_ID(struct cachefiles_cache *cache)
+>  	_enter("{%s}", cache->secctx);
+>  
+>  	new = prepare_kernel_cred(current);
+> -	if (!new) {
+> -		ret = -ENOMEM;
+> +	if (IS_ERR(new)) {
+> +		ret = PTR_ERR(new);
+>  		goto error;
+>  	}
+>  
+> @@ -84,8 +84,8 @@ int cachefiles_determine_cache_security(struct cachefiles_cache *cache,
+>  	/* duplicate the cache creds for COW (the override is currently in
+>  	 * force, so we can use prepare_creds() to do this) */
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	cachefiles_end_secure(cache, *_saved_cred);
+>  
+> diff --git a/fs/cifs/cifs_spnego.c b/fs/cifs/cifs_spnego.c
+> index 342717bf1dc2..0a5b8157387a 100644
+> --- a/fs/cifs/cifs_spnego.c
+> +++ b/fs/cifs/cifs_spnego.c
+> @@ -190,8 +190,8 @@ init_cifs_spnego(void)
+>  	 */
+>  
+>  	cred = prepare_kernel_cred(NULL);
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	keyring = keyring_alloc(".cifs_spnego",
+>  				GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, cred,
+> diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+> index bf861fef2f0c..1debcfa927d1 100644
+> --- a/fs/cifs/cifsacl.c
+> +++ b/fs/cifs/cifsacl.c
+> @@ -466,8 +466,8 @@ init_cifs_idmap(void)
+>  	 * with add_key().
+>  	 */
+>  	cred = prepare_kernel_cred(NULL);
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	keyring = keyring_alloc(".cifs_idmap",
+>  				GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, cred,
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index ebc43f960b64..ea4ccae6368a 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -546,7 +546,7 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  		goto fail;
+>  
+>  	cred = prepare_creds();
+> -	if (!cred)
+> +	if (IS_ERR(cred))
+>  		goto fail;
+>  	/*
+>  	 * We cannot trust fsuid as being the "true" uid of the process
+> diff --git a/fs/exec.c b/fs/exec.c
+> index e3e55d5e0be1..a9139f31eb8f 100644
+> --- a/fs/exec.c
+> +++ b/fs/exec.c
+> @@ -1466,15 +1466,19 @@ EXPORT_SYMBOL(finalize_exec);
+>   */
+>  static int prepare_bprm_creds(struct linux_binprm *bprm)
+>  {
+> +	int err = -ERESTARTNOINTR;
+>  	if (mutex_lock_interruptible(&current->signal->cred_guard_mutex))
+> -		return -ERESTARTNOINTR;
+> +		return err;
+>  
+>  	bprm->cred = prepare_exec_creds();
+> -	if (likely(bprm->cred))
+> -		return 0;
+> +	if (IS_ERR(bprm->cred)) {
+> +		err = PTR_ERR(bprm->cred);
+> +		bprm->cred = NULL;
+> +		mutex_unlock(&current->signal->cred_guard_mutex);
+> +		return err;
+> +	}
+>  
+> -	mutex_unlock(&current->signal->cred_guard_mutex);
+> -	return -ENOMEM;
+> +	return 0;
+>  }
+>  
+>  static void free_bprm(struct linux_binprm *bprm)
+> diff --git a/fs/ksmbd/smb_common.c b/fs/ksmbd/smb_common.c
+> index 9a7e211dbf4f..285006184afb 100644
+> --- a/fs/ksmbd/smb_common.c
+> +++ b/fs/ksmbd/smb_common.c
+> @@ -620,8 +620,8 @@ int ksmbd_override_fsids(struct ksmbd_work *work)
+>  		gid = share->force_gid;
+>  
+>  	cred = prepare_kernel_cred(NULL);
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	cred->fsuid = make_kuid(current_user_ns(), uid);
+>  	cred->fsgid = make_kgid(current_user_ns(), gid);
+> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+> index 604be402ae13..74d950a6dd55 100644
+> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
+> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+> @@ -493,9 +493,12 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+>  			kcred = prepare_kernel_cred(NULL);
+>  			memalloc_nofs_restore(nofs_flags);
+>  		}
+> -		rc = -ENOMEM;
+> -		if (!kcred)
+> +
+> +		if (IS_ERR(kcred)) {
+> +			rc = PTR_ERR(kcred);
+>  			goto out_err_free;
+> +		}
+> +
+>  		kcred->fsuid = uid;
+>  		kcred->fsgid = gid;
+>  		cred = RCU_INITIALIZER(kcred);
+> diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
+> index f331866dd418..6ddceff5fbe0 100644
+> --- a/fs/nfs/nfs4idmap.c
+> +++ b/fs/nfs/nfs4idmap.c
+> @@ -204,8 +204,8 @@ int nfs_idmap_init(void)
+>  		key_type_id_resolver.name);
+>  
+>  	cred = prepare_kernel_cred(NULL);
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	keyring = keyring_alloc(".id_resolver",
+>  				GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, cred,
+> diff --git a/fs/nfsd/auth.c b/fs/nfsd/auth.c
+> index fdf2aad73470..9206ec3ed0f1 100644
+> --- a/fs/nfsd/auth.c
+> +++ b/fs/nfsd/auth.c
+> @@ -31,8 +31,8 @@ int nfsd_setuser(struct svc_rqst *rqstp, struct svc_export *exp)
+>  	/* discard any old override before preparing the new set */
+>  	revert_creds(get_cred(current_real_cred()));
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	new->fsuid = rqstp->rq_cred.cr_uid;
+>  	new->fsgid = rqstp->rq_cred.cr_gid;
+> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> index 11f8715d92d6..630c2af0ec74 100644
+> --- a/fs/nfsd/nfs4callback.c
+> +++ b/fs/nfsd/nfs4callback.c
+> @@ -872,8 +872,8 @@ static const struct cred *get_backchannel_cred(struct nfs4_client *clp, struct r
+>  		struct cred *kcred;
+>  
+>  		kcred = prepare_kernel_cred(NULL);
+> -		if (!kcred)
+> -			return NULL;
+> +		if (IS_ERR(kcred))
+> +			return ERR_CAST(kcred);
+>  
+>  		kcred->uid = ses->se_cb_sec.uid;
+>  		kcred->gid = ses->se_cb_sec.gid;
+> @@ -932,10 +932,10 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
+>  		return PTR_ERR(client);
+>  	}
+>  	cred = get_backchannel_cred(clp, client, ses);
+> -	if (!cred) {
+> -		trace_nfsd_cb_setup_err(clp, -ENOMEM);
+> +	if (IS_ERR(cred)) {
+> +		trace_nfsd_cb_setup_err(clp, PTR_ERR(cred));
+>  		rpc_shutdown_client(client);
+> -		return -ENOMEM;
+> +		return PTR_ERR(cred);
+>  	}
+>  	clp->cl_cb_client = client;
+>  	clp->cl_cb_cred = cred;
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index c634483d85d2..8e1b196928c1 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -75,8 +75,8 @@ nfs4_save_creds(const struct cred **original_creds)
+>  	struct cred *new;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	new->fsuid = GLOBAL_ROOT_UID;
+>  	new->fsgid = GLOBAL_ROOT_GID;
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index c29baa03dfaf..af41db078843 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -219,8 +219,8 @@ static __be32 nfsd_set_fh_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp)
+>  		 * fix that case easily.
+>  		 */
+>  		struct cred *new = prepare_creds();
+> -		if (!new) {
+> -			error =  nfserrno(-ENOMEM);
+> +		if (IS_ERR(new)) {
+> +			error = nfserrno(PTR_ERR(new));
+>  			goto out;
+>  		}
+>  		new->cap_effective =
+> diff --git a/fs/open.c b/fs/open.c
+> index 1315253e0247..489e70d9ccdf 100644
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -350,8 +350,8 @@ static const struct cred *access_override_creds(void)
+>  	struct cred *override_cred;
+>  
+>  	override_cred = prepare_creds();
+> -	if (!override_cred)
+> -		return NULL;
+> +	if (IS_ERR(override_cred))
+> +		return ERR_CAST(override_cred);
+>  
+>  	override_cred->fsuid = override_cred->uid;
+>  	override_cred->fsgid = override_cred->gid;
+> @@ -414,8 +414,8 @@ static long do_faccessat(int dfd, const char __user *filename, int mode, int fla
+>  
+>  	if (!(flags & AT_EACCESS)) {
+>  		old_cred = access_override_creds();
+> -		if (!old_cred)
+> -			return -ENOMEM;
+> +		if (IS_ERR(old_cred))
+> +			return PTR_ERR(old_cred);
+>  	}
+>  
+>  retry:
+> diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
+> index f18490813170..2942fe8a65f7 100644
+> --- a/fs/overlayfs/dir.c
+> +++ b/fs/overlayfs/dir.c
+> @@ -589,9 +589,8 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
+>  			goto out_revert_creds;
+>  	}
+>  
+> -	err = -ENOMEM;
+>  	override_cred = prepare_creds();
+> -	if (override_cred) {
+> +	if (!IS_ERR(override_cred)) {
+>  		override_cred->fsuid = inode->i_uid;
+>  		override_cred->fsgid = inode->i_gid;
+>  		if (!attr->hardlink) {
+> @@ -610,7 +609,10 @@ static int ovl_create_or_link(struct dentry *dentry, struct inode *inode,
+>  			err = ovl_create_upper(dentry, inode, attr);
+>  		else
+>  			err = ovl_create_over_whiteout(dentry, inode, attr);
+> +	} else {
+> +		err = PTR_ERR(override_cred);
+>  	}
+> +
+>  out_revert_creds:
+>  	revert_creds(old_cred);
+>  	return err;
+> diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+> index 001cdbb8f015..7fee2072b243 100644
+> --- a/fs/overlayfs/super.c
+> +++ b/fs/overlayfs/super.c
+> @@ -1984,10 +1984,12 @@ static int ovl_fill_super(struct super_block *sb, void *data, int silent)
+>  	if (!ofs)
+>  		goto out;
+>  
+> -	err = -ENOMEM;
+>  	ofs->creator_cred = cred = prepare_creds();
+> -	if (!cred)
+> +	if (IS_ERR(cred)) {
+> +		err = PTR_ERR(cred);
+> +		ofs->creator_cred = NULL;
+>  		goto out_err;
+> +	}
+>  
+>  	/* Is there a reason anyone would want not to share whiteouts? */
+>  	ofs->share_whiteout = true;
+> diff --git a/kernel/capability.c b/kernel/capability.c
+> index 765194f5d678..7a722754f571 100644
+> --- a/kernel/capability.c
+> +++ b/kernel/capability.c
+> @@ -263,8 +263,8 @@ SYSCALL_DEFINE2(capset, cap_user_header_t, header, const cap_user_data_t, data)
+>  	inheritable.cap[CAP_LAST_U32] &= CAP_LAST_U32_VALID_MASK;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	ret = security_capset(new, current_cred(),
+>  			      &effective, &inheritable, &permitted);
+> diff --git a/kernel/cred.c b/kernel/cred.c
+> index e10c15f51c1f..dba33c9fa869 100644
+> --- a/kernel/cred.c
+> +++ b/kernel/cred.c
+> @@ -245,12 +245,13 @@ struct cred *cred_alloc_blank(void)
+>   *
+>   * Preparation involves making a copy of the objective creds for modification.
+>   *
+> - * Returns a pointer to the new creds-to-be if successful, NULL otherwise.
+> + * Returns a pointer to the new creds-to-be if successful, < 0 on error.
+>   *
+>   * Call commit_creds() or abort_creds() to clean up.
+>   */
+>  struct cred *prepare_creds(void)
+>  {
+> +	int err = -ENOMEM;
+>  	struct task_struct *task = current;
+>  	const struct cred *old;
+>  	struct cred *new;
+> @@ -259,7 +260,7 @@ struct cred *prepare_creds(void)
+>  
+>  	new = kmem_cache_alloc(cred_jar, GFP_KERNEL);
+>  	if (!new)
+> -		return NULL;
+> +		return ERR_PTR(err);
+>  
+>  	kdebug("prepare_creds() alloc %p", new);
+>  
+> @@ -288,7 +289,8 @@ struct cred *prepare_creds(void)
+>  	if (!new->ucounts)
+>  		goto error;
+>  
+> -	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+> +	err = security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT);
+> +	if (err < 0)
+>  		goto error;
+>  
+>  	validate_creds(new);
+> @@ -296,7 +298,7 @@ struct cred *prepare_creds(void)
+>  
+>  error:
+>  	abort_creds(new);
+> -	return NULL;
+> +	return ERR_PTR(err);
+>  }
+>  EXPORT_SYMBOL(prepare_creds);
+>  
+> @@ -309,8 +311,8 @@ struct cred *prepare_exec_creds(void)
+>  	struct cred *new;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return new;
+> +	if (IS_ERR(new))
+> +		return ERR_CAST(new);
+>  
+>  #ifdef CONFIG_KEYS
+>  	/* newly exec'd tasks don't get a thread keyring */
+> @@ -363,8 +365,8 @@ int copy_creds(struct task_struct *p, unsigned long clone_flags)
+>  	}
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	if (clone_flags & CLONE_NEWUSER) {
+>  		ret = create_user_ns(new);
+> @@ -707,16 +709,17 @@ void __init cred_init(void)
+>   *
+>   * The caller may change these controls afterwards if desired.
+>   *
+> - * Returns the new credentials or NULL if out of memory.
+> + * Returns the new credentials or < 0 on error
+>   */
+>  struct cred *prepare_kernel_cred(struct task_struct *daemon)
+>  {
+> +	int err = -ENOMEM;
+>  	const struct cred *old;
+>  	struct cred *new;
+>  
+>  	new = kmem_cache_alloc(cred_jar, GFP_KERNEL);
+>  	if (!new)
+> -		return NULL;
+> +		return ERR_PTR(err);
+>  
+>  	kdebug("prepare_kernel_cred() alloc %p", new);
+>  
+> @@ -750,7 +753,8 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
+>  	if (!new->ucounts)
+>  		goto error;
+>  
+> -	if (security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT) < 0)
+> +	err = security_prepare_creds(new, old, GFP_KERNEL_ACCOUNT);
+> +	if (err < 0)
+>  		goto error;
+>  
+>  	put_cred(old);
+> @@ -760,7 +764,7 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
+>  error:
+>  	put_cred(new);
+>  	put_cred(old);
+> -	return NULL;
+> +	return ERR_PTR(err);
+>  }
+>  EXPORT_SYMBOL(prepare_kernel_cred);
+>  
+> diff --git a/kernel/groups.c b/kernel/groups.c
+> index 787b381c7c00..140915fbb31f 100644
+> --- a/kernel/groups.c
+> +++ b/kernel/groups.c
+> @@ -136,8 +136,8 @@ int set_current_groups(struct group_info *group_info)
+>  	struct cred *new;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	set_groups(new, group_info);
+>  	return commit_creds(new);
+> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
+> index eec72ca962e2..6cf75aa83b6c 100644
+> --- a/kernel/nsproxy.c
+> +++ b/kernel/nsproxy.c
+> @@ -311,6 +311,7 @@ static void put_nsset(struct nsset *nsset)
+>  
+>  static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>  {
+> +	int err = -ENOMEM;
+>  	struct task_struct *me = current;
+>  
+>  	nsset->nsproxy = create_new_namespaces(0, me, current_user_ns(), me->fs);
+> @@ -324,6 +325,12 @@ static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>  	if (!nsset->cred)
+>  		goto out;
+>  
+> +	if (IS_ERR(nsset->cred)) {
+> +		err = PTR_ERR(nsset->cred);
+> +		nsset->cred = NULL;
+> +		goto out;
+> +	}
+> +
+>  	/* Only create a temporary copy of fs_struct if we really need to. */
+>  	if (flags == CLONE_NEWNS) {
+>  		nsset->fs = me->fs;
+> @@ -338,7 +345,7 @@ static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>  
+>  out:
+>  	put_nsset(nsset);
+> -	return -ENOMEM;
+> +	return err;
+>  }
+>  
+>  static inline int validate_ns(struct nsset *nsset, struct ns_common *ns)
+> diff --git a/kernel/sys.c b/kernel/sys.c
+> index 374f83e95239..53a12bc4da70 100644
+> --- a/kernel/sys.c
+> +++ b/kernel/sys.c
+> @@ -372,8 +372,8 @@ long __sys_setregid(gid_t rgid, gid_t egid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	retval = -EPERM;
+> @@ -434,8 +434,8 @@ long __sys_setgid(gid_t gid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	retval = -EPERM;
+> @@ -529,8 +529,8 @@ long __sys_setreuid(uid_t ruid, uid_t euid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	retval = -EPERM;
+> @@ -606,8 +606,8 @@ long __sys_setuid(uid_t uid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	retval = -EPERM;
+> @@ -672,8 +672,8 @@ long __sys_setresuid(uid_t ruid, uid_t euid, uid_t suid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	old = current_cred();
+>  
+> @@ -767,8 +767,8 @@ long __sys_setresgid(gid_t rgid, gid_t egid, gid_t sgid)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	retval = -EPERM;
+> @@ -850,7 +850,7 @@ long __sys_setfsuid(uid_t uid)
+>  		return old_fsuid;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> +	if (IS_ERR(new))
+>  		return old_fsuid;
+>  
+>  	if (uid_eq(kuid, old->uid)  || uid_eq(kuid, old->euid)  ||
+> @@ -894,7 +894,7 @@ long __sys_setfsgid(gid_t gid)
+>  		return old_fsgid;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> +	if (IS_ERR(new))
+>  		return old_fsgid;
+>  
+>  	if (gid_eq(kgid, old->gid)  || gid_eq(kgid, old->egid)  ||
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 706e1686b5eb..35bca2fd9e8d 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -559,8 +559,8 @@ static int user_event_set_call_visible(struct user_event *user, bool visible)
+>  
+>  	cred = prepare_creds();
+>  
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	/*
+>  	 * While by default tracefs is locked down, systems can be configured
+> diff --git a/kernel/umh.c b/kernel/umh.c
+> index 36c123360ab8..2bf9b402083a 100644
+> --- a/kernel/umh.c
+> +++ b/kernel/umh.c
+> @@ -87,10 +87,11 @@ static int call_usermodehelper_exec_async(void *data)
+>  	 */
+>  	set_user_nice(current, 0);
+>  
+> -	retval = -ENOMEM;
+>  	new = prepare_kernel_cred(current);
+> -	if (!new)
+> +	if (IS_ERR(new)) {
+> +		retval = PTR_ERR(new);
+>  		goto out;
+> +	}
+>  
+>  	spin_lock(&umh_sysctl_lock);
+>  	new->cap_bset = cap_intersect(usermodehelper_bset, new->cap_bset);
+> diff --git a/kernel/user_namespace.c b/kernel/user_namespace.c
+> index 5481ba44a8d6..56c94b0867b4 100644
+> --- a/kernel/user_namespace.c
+> +++ b/kernel/user_namespace.c
+> @@ -171,18 +171,20 @@ int create_user_ns(struct cred *new)
+>  int unshare_userns(unsigned long unshare_flags, struct cred **new_cred)
+>  {
+>  	struct cred *cred;
+> -	int err = -ENOMEM;
+> +	int err;
+>  
+>  	if (!(unshare_flags & CLONE_NEWUSER))
+>  		return 0;
+>  
+>  	cred = prepare_creds();
+> -	if (cred) {
+> +	if (!IS_ERR(cred)) {
+>  		err = create_user_ns(cred);
+>  		if (err)
+>  			put_cred(cred);
+>  		else
+>  			*new_cred = cred;
+> +	} else {
+> +		err = PTR_ERR(cred);
+>  	}
+>  
+>  	return err;
+> diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+> index 3aced951d5ab..dbfb2b17491e 100644
+> --- a/net/dns_resolver/dns_key.c
+> +++ b/net/dns_resolver/dns_key.c
+> @@ -338,8 +338,8 @@ static int __init init_dns_resolver(void)
+>  	 * with add_key().
+>  	 */
+>  	cred = prepare_kernel_cred(NULL);
+> -	if (!cred)
+> -		return -ENOMEM;
+> +	if (IS_ERR(cred))
+> +		return PTR_ERR(cred);
+>  
+>  	keyring = keyring_alloc(".dns_resolver",
+>  				GLOBAL_ROOT_UID, GLOBAL_ROOT_GID, cred,
+> diff --git a/security/apparmor/task.c b/security/apparmor/task.c
+> index d17130ee6795..77d0bb7f0aa6 100644
+> --- a/security/apparmor/task.c
+> +++ b/security/apparmor/task.c
+> @@ -53,8 +53,8 @@ int aa_replace_current_label(struct aa_label *label)
+>  		return -EBUSY;
+>  
+>  	new  = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	if (ctx->nnp && label_is_stale(ctx->nnp)) {
+>  		struct aa_label *tmp = ctx->nnp;
+> @@ -118,8 +118,8 @@ int aa_set_current_hat(struct aa_label *label, u64 token)
+>  	struct cred *new;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	AA_BUG(!label);
+>  
+>  	if (!ctx->previous) {
+> @@ -164,8 +164,8 @@ int aa_restore_previous_label(u64 token)
+>  		return 0;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	aa_put_label(cred_label(new));
+>  	set_cred_label(new, aa_get_newest_label(ctx->previous));
+> diff --git a/security/commoncap.c b/security/commoncap.c
+> index 5fc8986c3c77..906d1bf4a226 100644
+> --- a/security/commoncap.c
+> +++ b/security/commoncap.c
+> @@ -1247,8 +1247,8 @@ static int cap_prctl_drop(unsigned long cap)
+>  		return -EINVAL;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	cap_lower(new->cap_bset, cap);
+>  	return commit_creds(new);
+>  }
+> @@ -1323,8 +1323,8 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+>  			return -EPERM;
+>  
+>  		new = prepare_creds();
+> -		if (!new)
+> -			return -ENOMEM;
+> +		if (IS_ERR(new))
+> +			return PTR_ERR(new);
+>  		new->securebits = arg2;
+>  		return commit_creds(new);
+>  
+> @@ -1341,8 +1341,8 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+>  			return -EPERM;
+>  
+>  		new = prepare_creds();
+> -		if (!new)
+> -			return -ENOMEM;
+> +		if (IS_ERR(new))
+> +			return PTR_ERR(new);
+>  		if (arg2)
+>  			new->securebits |= issecure_mask(SECURE_KEEP_CAPS);
+>  		else
+> @@ -1355,8 +1355,8 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+>  				return -EINVAL;
+>  
+>  			new = prepare_creds();
+> -			if (!new)
+> -				return -ENOMEM;
+> +			if (IS_ERR(new))
+> +				return PTR_ERR(new);
+>  			cap_clear(new->cap_ambient);
+>  			return commit_creds(new);
+>  		}
+> @@ -1378,8 +1378,8 @@ int cap_task_prctl(int option, unsigned long arg2, unsigned long arg3,
+>  				return -EPERM;
+>  
+>  			new = prepare_creds();
+> -			if (!new)
+> -				return -ENOMEM;
+> +			if (IS_ERR(new))
+> +				return PTR_ERR(new);
+>  			if (arg2 == PR_CAP_AMBIENT_RAISE)
+>  				cap_raise(new->cap_ambient, arg3);
+>  			else
+> diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
+> index 96a92a645216..cb3be208bc7d 100644
+> --- a/security/keys/keyctl.c
+> +++ b/security/keys/keyctl.c
+> @@ -1146,8 +1146,8 @@ static int keyctl_change_reqkey_auth(struct key *key)
+>  	struct cred *new;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	key_put(new->request_key_auth);
+>  	new->request_key_auth = key_get(key);
+> @@ -1396,8 +1396,8 @@ long keyctl_set_reqkey_keyring(int reqkey_defl)
+>  		return old_setting;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	switch (reqkey_defl) {
+>  	case KEY_REQKEY_DEFL_THREAD_KEYRING:
+> diff --git a/security/keys/process_keys.c b/security/keys/process_keys.c
+> index b5d5333ab330..8e7655d48319 100644
+> --- a/security/keys/process_keys.c
+> +++ b/security/keys/process_keys.c
+> @@ -247,8 +247,8 @@ static int install_thread_keyring(void)
+>  	int ret;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	ret = install_thread_keyring_to_cred(new);
+>  	if (ret < 0) {
+> @@ -294,8 +294,8 @@ static int install_process_keyring(void)
+>  	int ret;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	ret = install_process_keyring_to_cred(new);
+>  	if (ret < 0) {
+> @@ -359,8 +359,8 @@ static int install_session_keyring(struct key *keyring)
+>  	int ret;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	ret = install_session_keyring_to_cred(new, keyring);
+>  	if (ret < 0) {
+> @@ -842,8 +842,8 @@ long join_session_keyring(const char *name)
+>  	long ret, serial;
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  	old = current_cred();
+>  
+>  	/* if no name is provided, install an anonymous keyring */
+> diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
+> index 7e27ce394020..905ae7f9717f 100644
+> --- a/security/landlock/syscalls.c
+> +++ b/security/landlock/syscalls.c
+> @@ -419,8 +419,8 @@ SYSCALL_DEFINE2(landlock_restrict_self,
+>  
+>  	/* Prepares new credentials. */
+>  	new_cred = prepare_creds();
+> -	if (!new_cred) {
+> -		err = -ENOMEM;
+> +	if (IS_ERR(new_cred)) {
+> +		err = PTR_ERR(new_cred);
+>  		goto out_put_ruleset;
+>  	}
+>  	new_llcred = landlock_cred(new_cred);
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index e9e959343de9..a0b3671ee1f1 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -3472,8 +3472,8 @@ static int selinux_inode_copy_up(struct dentry *src, struct cred **new)
+>  
+>  	if (new_creds == NULL) {
+>  		new_creds = prepare_creds();
+> -		if (!new_creds)
+> -			return -ENOMEM;
+> +		if (IS_ERR(new_creds))
+> +			return PTR_ERR(new_creds);
+>  	}
+>  
+>  	tsec = selinux_cred(new_creds);
+> @@ -6457,8 +6457,8 @@ static int selinux_setprocattr(const char *name, void *value, size_t size)
+>  	}
+>  
+>  	new = prepare_creds();
+> -	if (!new)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	/* Permission checking based on the specified context is
+>  	   performed during the actual operation (execve,
+> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
+> index 6207762dbdb1..ca4e2b906cce 100644
+> --- a/security/smack/smack_lsm.c
+> +++ b/security/smack/smack_lsm.c
+> @@ -3555,8 +3555,8 @@ static int smack_setprocattr(const char *name, void *value, size_t size)
+>  	}
+>  
+>  	new = prepare_creds();
+> -	if (new == NULL)
+> -		return -ENOMEM;
+> +	if (IS_ERR(new))
+> +		return PTR_ERR(new);
+>  
+>  	tsp = smack_cred(new);
+>  	tsp->smk_task = skp;
+> @@ -4633,8 +4633,8 @@ static int smack_inode_copy_up(struct dentry *dentry, struct cred **new)
+>  
+>  	if (new_creds == NULL) {
+>  		new_creds = prepare_creds();
+> -		if (new_creds == NULL)
+> -			return -ENOMEM;
+> +		if (IS_ERR(new_creds))
+> +			return PTR_ERR(new_creds);
+>  	}
+>  
+>  	tsp = smack_cred(new_creds);
+> diff --git a/security/smack/smackfs.c b/security/smack/smackfs.c
+> index 658eab05599e..1e90b325c56b 100644
+> --- a/security/smack/smackfs.c
+> +++ b/security/smack/smackfs.c
+> @@ -2777,8 +2777,8 @@ static ssize_t smk_write_relabel_self(struct file *file, const char __user *buf,
+>  		struct task_smack *tsp;
+>  
+>  		new = prepare_creds();
+> -		if (!new) {
+> -			rc = -ENOMEM;
+> +		if (IS_ERR(new)) {
+> +			rc = PTR_ERR(new);
+>  			goto out;
+>  		}
+>  		tsp = smack_cred(new);
+> -- 
+> 2.30.2
+> 
