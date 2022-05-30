@@ -2,176 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 30905537353
-	for <lists+linux-nfs@lfdr.de>; Mon, 30 May 2022 03:36:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CEA95384B4
+	for <lists+linux-nfs@lfdr.de>; Mon, 30 May 2022 17:22:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231538AbiE3Bgw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 29 May 2022 21:36:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46018 "EHLO
+        id S239042AbiE3PWC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 30 May 2022 11:22:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230402AbiE3Bgw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 29 May 2022 21:36:52 -0400
-Received: from out20-86.mail.aliyun.com (out20-86.mail.aliyun.com [115.124.20.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D4063DF
-        for <linux-nfs@vger.kernel.org>; Sun, 29 May 2022 18:36:51 -0700 (PDT)
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04445068|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.0182193-0.00142166-0.980359;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047199;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=5;RT=5;SR=0;TI=SMTPD_---.NvNh89i_1653874608;
-Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.NvNh89i_1653874608)
-          by smtp.aliyun-inc.com(33.37.67.126);
-          Mon, 30 May 2022 09:36:48 +0800
-Date:   Mon, 30 May 2022 09:36:50 +0800
-From:   Wang Yugui <wangyugui@e16-tech.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Subject: Re: filecache LRU performance regression
-Cc:     Frank van der Linden <fllinden@amazon.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Liam Howlett <liam.howlett@oracle.com>
-In-Reply-To: <69EAFC64-E5B1-450A-9DCE-695E478A213B@oracle.com>
-References: <20220529103218.65DA.409509F4@e16-tech.com> <69EAFC64-E5B1-450A-9DCE-695E478A213B@oracle.com>
-Message-Id: <20220530093649.43F8.409509F4@e16-tech.com>
+        with ESMTP id S242955AbiE3PUx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 30 May 2022 11:20:53 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB7841207CB
+        for <linux-nfs@vger.kernel.org>; Mon, 30 May 2022 07:22:54 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id p74so11447422iod.8
+        for <linux-nfs@vger.kernel.org>; Mon, 30 May 2022 07:22:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=Uon8wdSqHAkD3+idsDwqsw5/RYE9GUuamAt3cXARqV3NAeDaGTFSLoXs/G0hoAHt+5
+         codSJJxeeG8vzFjwPvQIVi8pQwh8BHkUEnJ12EbeOHHixGjwXNoKXbv093UEgoEUQfeX
+         Wod0GKDhAdiR/Ye/ytirv8v0lLWuUvpQJix1wPyUwccxWGh+xUage9MXo7G5h4Fk521r
+         DI2oe8/v8oseOn3Ob0K+CIOBqiMgej7MNHpUOxL774B1gIBhklt7oanUcWy5rMkcHIBO
+         DPJxFGRqOeAdN5gDE89YSbgO4qUovR5BE7nFCFMjyJGWrnHFIj5hKg5UUE4gd+cXFCdp
+         hO1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=XJqXgw0Qi4Ge6Q57wB4GlvotoYnhUuSq68y9152a6AE=;
+        b=UNSUvV76DA/uAVXiWJ4qME7h3hxIAIB5s62ZoXkG2FB5ACcZyBcPxIuuT/QcB4yugn
+         Jbkg6+YyRHKMqZSC8Kx5xt5jplFcP9dB05C/o4w5PpKUVD5jDpPd1JsE8yIk1ccSN3EA
+         ITasbknhCRMxx5nFIv/ePkQdD0zetKOxpDHp5MJ+Y5y3P4Y40T/+KIbmv03KmUhs0fHN
+         9OEbjaGj4FRprVlIsf/695rzhsS8hTXH8QtwBUOXEO9ZwSfPpQUAxJbdRnuZacz0s176
+         ypHh3yLfwW6QGdIcSPZgGZgsSm2f4+WTIROkzKw0/mzAiDlN7pRes+ePBhb4P/rFMoLL
+         SgVQ==
+X-Gm-Message-State: AOAM530gPtf3tJefFcuXHNreprsgUJyqnVrbTRfy7uathIUlOkn2W0I6
+        t4yycXB5vMoNUp2WP3WVdLR1XZCJpaoKSjk6TDQ=
+X-Google-Smtp-Source: ABdhPJwtvJ+07dKTyr7TpOGjLPDpnwsexIyHiV/hfgzfTPNlT+ipRRN6pgsw9s1i3X6T+BTCXU16HSeeuxtReVm1TBY=
+X-Received: by 2002:a05:6638:498e:b0:32e:be76:f908 with SMTP id
+ cv14-20020a056638498e00b0032ebe76f908mr20858880jab.66.1653920570933; Mon, 30
+ May 2022 07:22:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Becky! ver. 2.75.04 [en]
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY
-        autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:6622:f06:0:0:0:0 with HTTP; Mon, 30 May 2022 07:22:50
+ -0700 (PDT)
+Reply-To: barristerbenjamin221@gmail.com
+From:   Attorney Amadou <koadaidrissa1@gmail.com>
+Date:   Mon, 30 May 2022 07:22:50 -0700
+Message-ID: <CAOh7+P_+cJJknP6BJXj8NWX7nn8nkbA=aoSG2t49pestA9PG0g@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+X-Spam-Status: Yes, score=7.7 required=5.0 tests=BAYES_99,BAYES_999,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:d44 listed in]
+        [list.dnswl.org]
+        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
+        *      [score: 1.0000]
+        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
+        *      [score: 1.0000]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [koadaidrissa1[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [barristerbenjamin221[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [koadaidrissa1[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-
-> 
-> > On May 28, 2022, at 10:32 PM, Wang Yugui <wangyugui@e16-tech.com> wrote:
-> > 
-> > Hi,
-> > 
-> >>> On May 27, 2022, at 4:37 PM, Frank van der Linden <fllinden@amazon.com> wrote:
-> >>> 
-> >>> On Fri, May 27, 2022 at 06:59:47PM +0000, Chuck Lever III wrote:
-> >>>> 
-> >>>> Hi Frank-
-> >>>> 
-> >>>> Bruce recently reminded me about this issue. Is there a bugzilla somewhere?
-> >>>> Do you have a reproducer I can try?
-> >>> 
-> >>> Hi Chuck,
-> >>> 
-> >>> The easiest way to reproduce the issue is to run generic/531 over an
-> >>> NFSv4 mount, using a system with a larger number of CPUs on the client
-> >>> side (or just scaling the test up manually - it has a calculation based
-> >>> on the number of CPUs).
-> >>> 
-> >>> The test will take a long time to finish. I initially described the
-> >>> details here:
-> >>> 
-> >>> https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com/
-> >>> 
-> >>> Since then, it was also reported here:
-> >>> 
-> >>> https://lore.kernel.org/all/20210531125948.2D37.409509F4@e16-tech.com/T/#m8c3e4173696e17a9d5903d2a619550f352314d20
-> >> 
-> >> Thanks for the summary. So, there isn't a bugzilla tracking this
-> >> issue? If not, please create one here:
-> >> 
-> >>  https://bugzilla.linux-nfs.org/
-> >> 
-> >> Then we don't have to keep asking for a repeat summary ;-)
-> >> 
-> >> 
-> >>> I posted an experimental patch, but it's actually not quite correct
-> >>> (although I think the idea behind it is makes sense):
-> >>> 
-> >>> https://lore.kernel.org/linux-nfs/20201020183718.14618-4-trondmy@kernel.org/T/#m869aa427f125afee2af9a89d569c6b98e12e516f
-> >> 
-> >> A handful of random comments:
-> >> 
-> >> - nfsd_file_put() is now significantly different than it used
-> >>  to be, so that part of the patch will have to be updated in
-> >>  order to apply to v5.18+
-> > 
-> > When many open files(>NFSD_FILE_LRU_THRESHOLD),
-> > nfsd_file_gc() will waste many CPU times.
-> 
-> Thanks for the suggestion. I agree that CPU and
-> memory bandwidth are not being used effectively
-> by the filecache garbage collector.
-> 
-> 
-> > Can we serialize nfsd_file_gc() for v5.18+ as a first step?
-> 
-> If I understand Frank's problem statement correctly,
-> garbage collection during an nfsd_file_put() under
-> an NFSv4-only workload walks the length of the LRU
-> list and finds nothing to evict 100% of the time.
-> That seems like a bug, and fixing it might give us
-> the most improvement in this area.
-> 
-> 
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index 3d944ca..6abefd9 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -63,6 +63,8 @@ static struct delayed_work		nfsd_filecache_laundrette;
-> > 
-> > static void nfsd_file_gc(void);
-> > 
-> > +static atomic_t nfsd_file_gc_queue_delayed = ATOMIC_INIT(0);
-> > +
-> > static void
-> > nfsd_file_schedule_laundrette(void)
-> > {
-> > @@ -71,8 +73,10 @@ nfsd_file_schedule_laundrette(void)
-> > 	if (count == 0 || test_bit(NFSD_FILE_SHUTDOWN, &nfsd_file_lru_flags))
-> > 		return;
-> > 
-> > -	queue_delayed_work(system_wq, &nfsd_filecache_laundrette,
-> > +	if(atomic_cmpxchg(&nfsd_file_gc_queue_delayed, 0, 1)==0){
-> > +		queue_delayed_work(system_wq, &nfsd_filecache_laundrette,
-> > 			NFSD_LAUNDRETTE_DELAY);
-> 
-> I might misunderstand what this is doing exactly.
-> I'm sure there's a preferred idiom in the kernel
-> for not queuing a new work item when one is already
-> running, so that an open-coded cmpxchg is not
-> necessary.
-
-Thanks. I dropped queue_delayed_work related change and reposted it.
-
-> It might be better to allocate a specific workqueue
-> for filecache garbage collection, and limit the
-> maximum number of active work items allowed on that
-> queue to 1. One benefit of that might be reducing
-> the number of threads contending for the filecache
-> data structures.
-
-In this way, the number of threads of filecache garbage collection is
-reduced. but filecache is still accessed by all nfsd threads for filecache
-fetch/save.
-
-Best Regards
-Wang Yugui (wangyugui@e16-tech.com)
-2022/05/30
-
-> If GC is capped like this, maybe create one GC
-> workqueue per nfsd_net so GC activity in one
-> namespace does not starve filecache GC in other
-> namespaces.
-> 
-> Before I would take patches like this, though,
-> performance data demonstrating a problem and some
-> improvement should be presented separately or as
-> part of the patch descriptions.
-
-> If you repost, start a separate thread and cc:
-> 
-> M:      Tejun Heo <tj@kernel.org>
-> R:      Lai Jiangshan <jiangshanlai@gmail.com>
-> 
-> to get review by workqueue domain experts.
-> 
-> 
-
+SGVsbG8gZGVhciBmcmllbmQuDQoNClBsZWFzZSBJIHdpbGwgbG92ZSB0byBkaXNjdXNzIHNvbWV0
+aGluZyB2ZXJ5IGltcG9ydGFudCB3aXRoIHlvdSwgSQ0Kd2lsbCBhcHByZWNpYXRlIGl0IGlmIHlv
+dSBncmFudCBtZSBhdWRpZW5jZS4NCg0KU2luY2VyZWx5Lg0KQmFycmlzdGVyIEFtYWRvdSBCZW5q
+YW1pbiBFc3EuDQouLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4u
+Li4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4uLi4NCuimquaEm+OB
+quOCi+WPi+S6uuOAgeOBk+OCk+OBq+OBoeOBr+OAgg0KDQrnp4Hjga/jgYLjgarjgZ/jgajpnZ7l
+uLjjgavph43opoHjgarjgZPjgajjgavjgaTjgYTjgaboqbHjgZflkIjjgYbjga7jgYzlpKflpb3j
+gY3jgafjgZnjgIHjgYLjgarjgZ/jgYznp4HjgavogbTooYbjgpLkuI7jgYjjgabjgY/jgozjgozj
+gbDnp4Hjga/jgZ3jgozjgpLmhJ/orJ3jgZfjgb7jgZnjgIINCg0K5b+D44GL44KJ44CCDQrjg5Dj
+g6rjgrnjgr/jg7zjgqLjg57jg4njgqXjg5njg7Pjgrjjg6Pjg5/jg7NFc3HjgIINCg==
