@@ -2,100 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B03E0538B35
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 May 2022 08:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF381538B79
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 May 2022 08:40:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235006AbiEaGMD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 May 2022 02:12:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48312 "EHLO
+        id S244255AbiEaGkL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 May 2022 02:40:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238360AbiEaGMC (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 May 2022 02:12:02 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 353DB46159
-        for <linux-nfs@vger.kernel.org>; Mon, 30 May 2022 23:12:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1653977520; x=1685513520;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fekQ/J8nbROQkB+pG2DwAGCVJ8UWT1A/AYFz2noIobc=;
-  b=evvwamiyC57y6NNEP3VJCfx6HpdZqwv4sIAQJ81JZRSueB0hW9fgwE24
-   pB88IRwfQ2mSNejGalXAncnh8xyps3YfyU2XHFi6cqtbbIvV8kH3r+tPV
-   RCJHtLREDmIA6xoMRFAbdI3cuXyZrIPg48DNDBX3+rxSxHWxiu9tZOtQM
-   0ySzYVcDGM1ruah/2RSXROb9AgqQ1ychkN3KCXZ7l8x8r8jlwzranNvoK
-   4dn2UCT3AKWu+bRbt0k0sdPIVr//4cHNyYZNaPts43tdH2zUdRHd6olV6
-   KQHo3UUQzN9ry47kXoa6+YytxQn03RG/2PC8ARj+k2kFu9jSou0BxKE47
-   g==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10363"; a="335809479"
-X-IronPort-AV: E=Sophos;i="5.91,264,1647327600"; 
-   d="scan'208";a="335809479"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2022 23:11:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,264,1647327600"; 
-   d="scan'208";a="706429509"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 30 May 2022 23:11:58 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nvv6k-0002PO-1c;
-        Tue, 31 May 2022 06:11:58 +0000
-Date:   Tue, 31 May 2022 14:10:57 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Wang Yugui <wangyugui@e16-tech.com>, linux-nfs@vger.kernel.org
-Cc:     kbuild-all@lists.01.org, Wang Yugui <wangyugui@e16-tech.com>
-Subject: Re: [PATCH] nfsd: serialize filecache garbage collector
-Message-ID: <202205311402.i5by7a5m-lkp@intel.com>
-References: <20220530012947.16451-1-wangyugui@e16-tech.com>
+        with ESMTP id S232025AbiEaGkK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 May 2022 02:40:10 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E35524948;
+        Mon, 30 May 2022 23:40:08 -0700 (PDT)
+Received: from kwepemi100018.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LC2cs0cBzzBrpZ;
+        Tue, 31 May 2022 14:37:01 +0800 (CST)
+Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
+ kwepemi100018.china.huawei.com (7.221.188.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 31 May 2022 14:40:06 +0800
+Received: from [10.174.176.52] (10.174.176.52) by
+ kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Tue, 31 May 2022 14:40:05 +0800
+Message-ID: <db55c8f7-6a6f-410e-74ca-4040364bd38a@huawei.com>
+Date:   Tue, 31 May 2022 14:40:04 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220530012947.16451-1-wangyugui@e16-tech.com>
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
+To:     Lyu Tao <tao.lyu@epfl.ch>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bjschuma@netapp.com" <bjschuma@netapp.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "liuyongqiang13@huawei.com" <liuyongqiang13@huawei.com>,
+        "yi.zhang@huawei.com" <yi.zhang@huawei.com>,
+        "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>
+References: <20220329113208.2466000-1-chenxiaosong2@huawei.com>
+ <68b65889-3b2c-fb72-a0a8-d0afc15a03e0@huawei.com>
+ <e0c2d7ec62b447cabddbc8a9274be955@epfl.ch>
+ <0b6546f7-8a04-9d6e-50c3-483c8a1a6591@huawei.com>
+ <d73a51a2-6b63-b536-61e6-3d18563f027d@huawei.com>
+ <3ee78045f18b4932b1651de776ee73c4@epfl.ch>
+ <f927bec5-1078-dcb9-6f3e-a64d304efd5b@huawei.com>
+ <55415e44b4b04bbfa66c42d5f2788384@epfl.ch>
+ <88231dee-760f-b992-f1d1-81309076071e@huawei.com>
+ <f794d0aaef654bffacda9159321d66e0@epfl.ch>
+ <67d6a536-9027-1928-99b6-af512a36cd1a@huawei.com>
+ <018da3c0453845329d5ae2ec8924af06@epfl.ch>
+From:   "chenxiaosong (A)" <chenxiaosong2@huawei.com>
+In-Reply-To: <018da3c0453845329d5ae2ec8924af06@epfl.ch>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.52]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemm600015.china.huawei.com (7.193.23.52)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Wang,
+Hi Tao:
 
-Thank you for the patch! Perhaps something to improve:
+"NVD Last Modified" date of 
+[CVE-2022-24448](https://nvd.nist.gov/vuln/detail/CVE-2022-24448) is 
+already updated to 05/12/2022, but the description of the cve is still 
+wrong, and the hyperlink of [unrelated patch: NFSv4: Handle case where 
+the lookup of a directory 
+fails](https://github.com/torvalds/linux/commit/ac795161c93699d600db16c1a8cc23a65a1eceaf) 
+is still shown in the web.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.18 next-20220527]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+There is two fix patches of the cve, the web just show one of my patches.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Wang-Yugui/nfsd-serialize-filecache-garbage-collector/20220530-093218
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b00ed48bb0a7c295facf9036135a573a5cdbe7de
-config: x86_64-randconfig-s021 (https://download.01.org/0day-ci/archive/20220531/202205311402.i5by7a5m-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-1) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-14-g5a0004b5-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/7e2af8570695784cb8a9f9a3931dc631a9077206
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Wang-Yugui/nfsd-serialize-filecache-garbage-collector/20220530-093218
-        git checkout 7e2af8570695784cb8a9f9a3931dc631a9077206
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/nfsd/
+one patch is already shown in the web: [Revert "NFSv4: Handle the 
+special Linux file open access 
+mode"](https://github.com/torvalds/linux/commit/ab0fc21bc7105b54bafd85bd8b82742f9e68898a)
 
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
+second patch is not shown in the web: [NFSv4: fix open failure with 
+O_ACCMODE 
+flag](https://github.com/torvalds/linux/commit/b243874f6f9568b2daf1a00e9222cacdc15e159c)
 
-
-sparse warnings: (new ones prefixed by >>)
->> fs/nfsd/filecache.c:475:10: sparse: sparse: symbol 'nfsd_file_gc_running' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+在 2022/5/6 15:40, Lyu Tao 写道:
+>> From: chenxiaosong (A) <chenxiaosong2@huawei.com>
+>> Sent: Thursday, May 5, 2022 4:48 AM
+>> To: Lyu Tao
+>> Cc: linux-nfs@vger.kernel.org; linux-kernel@vger.kernel.org; bjschuma@netapp.com; anna@kernel.org; Trond Myklebust; liuyongqiang13@huawei.com; yi.zhang@huawei.com; zhangxiaoxu5@huawei.com
+>> Subject: Re: [PATCH -next 0/2] fix nfsv4 bugs of opening with O_ACCMODE flag
+>      
+>> "NVD Last Modified" date of CVE-2022-24448 is updated as 04/29/2022, but the content of the cve is old.
+>> https://nvd.nist.gov/vuln/detail/CVE-2022-24448
+>   
+> Hi,
+> 
+> Thanks for reaching out.
+> 
+> I've requested to update the CVE description and they replied me that it would be updated yesterday. Maybe the system need some time to reflesh. Let's wait a few more days.
+> 
+> Best,
+> Tao.
+> 
