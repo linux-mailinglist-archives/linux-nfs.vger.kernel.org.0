@@ -2,275 +2,364 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C81095394BC
-	for <lists+linux-nfs@lfdr.de>; Tue, 31 May 2022 18:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DBA0539559
+	for <lists+linux-nfs@lfdr.de>; Tue, 31 May 2022 19:18:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346022AbiEaQPB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 May 2022 12:15:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35122 "EHLO
+        id S1346476AbiEaRS0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 31 May 2022 13:18:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346014AbiEaQO7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 May 2022 12:14:59 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2100.outbound.protection.outlook.com [40.107.236.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0095A17
-        for <linux-nfs@vger.kernel.org>; Tue, 31 May 2022 09:14:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nZbS3CKY22TZ8XhN6M5yxPM1eleLOMyuL+icTYknI8t6u1tYlHq8etRQKGBUXtDAaiurKp+e92w0SVI//U3cCJE6BAPfd3F28H657d7ytzNn1B/XAjvpJ1txDnDT10GMttbOn9p1FSVlh4C4OFPlERWrFDybpo1OJUwG2ByO1il00OsUe5Zf7jvyO75uBn0f0g+tTR3vo23xKFRHw37JME7Sz8Up8rUGEtcxdtOsPlsbo+RlesQDQWTBsxVkOk0ssXriV/uSwrgb93Y5BkOTXWN1SNVmz8tLYZYFHb1rcuAHc+e8ac1tgkIg2uzYABfbLt9KadQ09wiOeyCSAwhcPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hocbbEnj6sCM2EyOetQmNYqdp6ekUfKGwfIia+3ruHw=;
- b=SXKDdtKiLKxjrR9QlRITvQIIGp/AwlEkVBS9OZI3OXeyuaXhpX+g52SJGXtuzL6mUKbEOPVPsoQtk0c3htnfHjNbIPpbrIczvHy+/L+ezBPRVx/mT/ktDJoaetrfTwfPKnDzMKVHZyJp5itmf/jB+NcA3kRi/vYqmdAqVPMWhCu3nvosY4QaUuHrH6GAkkYBqsDl+xZ0Pbfs7QiB0jl8gWmAMvjF4Uj73/GfAjpwPAknkbhwc5HUCCw5YccND+cGKBsHTO7FFRshThXK7OaGANo06knH+we9SItCzRsbtPtMgU9rDCEKFyfs+ndl+DIg4sQfMyuJdY/mWEhG6BtbbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hocbbEnj6sCM2EyOetQmNYqdp6ekUfKGwfIia+3ruHw=;
- b=JVIKPY3Yo0QvL4TsajUUfh2X8/eqJ2jPgz92d2qzjoiZ3tAQoZZiMHopGdKERUHpzspJlyZclUj6OiFq4+r/WHtjzxHCtzU+DNUeLEKXSRgqrfa+m6+K7DnkXsbolTOOo206+SBvSzNqQ7KTPs/wrvW4QDD3UUh+A3wal+P3JU4=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by DM4PR13MB5931.namprd13.prod.outlook.com (2603:10b6:8:51::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.12; Tue, 31 May
- 2022 16:14:55 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::694a:6bf0:4537:f3e5%6]) with mapi id 15.20.5314.012; Tue, 31 May 2022
- 16:14:54 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>
+        with ESMTP id S1346486AbiEaRS0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 May 2022 13:18:26 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1519A14022
+        for <linux-nfs@vger.kernel.org>; Tue, 31 May 2022 10:18:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1654017502; x=1685553502;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KAPz3dULxchQpvhuAXdTRXaOSnE/EP/xfK7tYE3AhwU=;
+  b=RAbbiFQ35b/zNAVoAftvitufSHyB+GdLRKkAjM/6hPXwMaX2tE6h+Cql
+   OfQPeoJRosBIAiJXdPamIJnXTMVHBu2MmMmjK8lpAcC2MRMmI/1muVkGm
+   rmZEsO7/3yy60sk31vg5zJv0MTObp3gYHcPnYR6j532L+QLOddrRFoGiU
+   RhH89gn76SaR6O10+FkkQrKV2TLQbY5g0Cmnrnx6JbVQiNII7fA2CHwp5
+   tA9jeaACsQiJKvnWPHhvoAMzbrP+0VmK79z9Hwy6k1TgQrf5RFl86NjFv
+   Jqgq6Jr2yhI8C9AH1vdydUDKcb82gs9ipl8TVDrZqXjyPMxOjUac5Hhyu
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10364"; a="275052066"
+X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
+   d="scan'208";a="275052066"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2022 10:18:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,265,1647327600"; 
+   d="scan'208";a="706666218"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 31 May 2022 10:18:19 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1nw5Vb-0002uk-5m;
+        Tue, 31 May 2022 17:18:19 +0000
+Date:   Wed, 1 Jun 2022 01:17:31 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     kbuild-all@lists.01.org, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH] pNFS: fix IO thread starvation problem during
  LAYOUTUNAVAILABLE error
-Thread-Topic: [PATCH] pNFS: fix IO thread starvation problem during
- LAYOUTUNAVAILABLE error
-Thread-Index: AQHYdPUwtG1kTZlHl06QKDjQMPTRBK05FEoAgAARwQCAAAMpgA==
-Date:   Tue, 31 May 2022 16:14:54 +0000
-Message-ID: <6f20f34221a8892521bf0e7eef18dbee7cc8dda6.camel@hammerspace.com>
+Message-ID: <202206010131.m809TcwM-lkp@intel.com>
 References: <20220531134854.63115-1-olga.kornievskaia@gmail.com>
-         <b829962068bf70b5aadcb16fd0265ec64c85f853.camel@hammerspace.com>
-         <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
-In-Reply-To: <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e2aca3d7-85b2-445d-0968-08da4320b31b
-x-ms-traffictypediagnostic: DM4PR13MB5931:EE_
-x-microsoft-antispam-prvs: <DM4PR13MB5931E6DAFE5655651FEAFE21B8DC9@DM4PR13MB5931.namprd13.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /4arj/NWkQ7hLWZ+ldRpNUbyrKOsrsBKgLmR+sTw1GTlIgsai9E10f6dwGS8HOLyaXjZmow4pskUfBDm7CktfilL5BmNAnkKPfhMQQdXpuX/lM6n1Pws7nWOwbGG0qG55+sxdj3PCM+FUXfvvW7n9DA4uKA+dtsFl6C3P6qdQbxnsMonWOHLXPRAPr/WZfg0v3dt/pjFLh4yzdSJ5YCwu3PZATw7n/hQ5sZoUlIPK7YF152afzN3g64jetw1/rmPOEgn9dCGOXQvZTwrCIiUcFx7DcC56NYgaLmduAfII7CsUYf4W1Y1zj+KITes7bvB8hLmQC/h3YiYEg8PE0xo61HHd/lzPCX+ziq60lRbHSGtQyCAjZ0MZh8I/ZkFGOgg8WzDmZkoZRfLXoFMTEXoxPd7GiqdPuCP64kNlrXmk0y6TpJ4U3h6Ee8XqlK2dLJGN3wWiNQvBlAZS+jiDQ40qAVDsftWNhkr12vFuCnpklwajiS+Yp/bfPOPQAPHZWe/a888yEF86hm7XrMfvj4Eq5FP+sp3o89+TkbsKmPCFcWeKmsSMc4EDMuYdteEfKnrao6BJEg0UB34m9nTchkxWi2MN0A1FGaQFuk/Ug6PXQHaEw9vA6sw23DFFlFH4wqqqAY4lyLzQFyBvpZBxG1j57oIY/hd598htiBVQe36Bu7P7uC4w+EKFQ60oDoZ8KGFD0GZ/c1AlR/2x5FfgVhciA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(39830400003)(376002)(346002)(396003)(366004)(136003)(36756003)(8936002)(2906002)(5660300002)(4326008)(66446008)(64756008)(66556008)(66476007)(66946007)(76116006)(8676002)(38100700002)(508600001)(38070700005)(86362001)(316002)(122000001)(6486002)(83380400001)(71200400001)(26005)(53546011)(186003)(54906003)(6512007)(2616005)(6506007)(6916009)(41300700001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?c3pBajV0aHpEVU1MU2VtcTI4dzNyaUp0bmNxbzY2NG5PeWFPR0t4QnQzQTcz?=
- =?utf-8?B?cFNEdWhWdzVwR1BheWUvVTRLQWt2eXVCNDU3QzBBRXBVTkZrbnk4M3NqOEcw?=
- =?utf-8?B?TTh2algzU0Z4UHh0SWYvR2oyUTd3QWFMZDg3Z01GZW1HVHpJaUZJeFRDbGZH?=
- =?utf-8?B?VGQweEdRc21CaStPZjJQQkhBaTJqSHRIdFhCWkthVGZIdEl3TlBwRmxiMXk2?=
- =?utf-8?B?aVFKWUdYR2ZJV3c2S25VODZCd0tNdlA3bDJodm4wa0VRNG52UWoyc2JVd0JO?=
- =?utf-8?B?TVpNTTR4VWVQeGlMQlE3SnNLZVhySWZISmdqZHJQcjIvZUJCa1dJc3I0LzRm?=
- =?utf-8?B?ZmUzc0NYK25XUWFsajZGQ2k5Vmx0Sm81VEh0bEM1eHl5WStiU2VOcG5vOXli?=
- =?utf-8?B?SXR3Y3RvTTFaa3RMcDR0STE0aVJGdG5nSlJ6a1poS1AxTWtYUndoVFM5Z2k5?=
- =?utf-8?B?b0pTc0ZLYitwYWRHdWNNNHNZT1dUUEhRSkpaUXgybXlxeUtGb3BqWWNRVkxn?=
- =?utf-8?B?QXF0NUFxUUZ1SXc2VWRTeXY2RGFZT0NxemIvQVVIckRlWkdjQUEvbEhPZHBX?=
- =?utf-8?B?cHlUci85UXVJWURPVFZKL1k4YjU0dnNacmp1dWpiWW1qYi9Hci9oNlE3cW9V?=
- =?utf-8?B?MnJLSEVMeUhsaWc0VE1UcWo3ZVhwa24zdm5uVXBoeUdPNTNiMnFmMm5INi8w?=
- =?utf-8?B?RW00QjRTSkg5U3ljZ2dlRlhpTDFtbmZ2WXlyQUlxRDFFSEZUSFFRRGJGbjBt?=
- =?utf-8?B?UXFick5mS0xqZ1VzN28yRDJxZGJrRm55aGhGcDZjQlRFY2l3c0Z4RU4wYVBL?=
- =?utf-8?B?bVR2SnNrZVRxMEJpTTVBQWpLRHIyVWsvQzVjdDVucktVSkk2VXNwdE9VR0Uw?=
- =?utf-8?B?RzRyTjBFaFVib1VIalVVbWRlWnZtQ21ndHYxOWxiSzVlVThWUmRQZlVKaFJq?=
- =?utf-8?B?Ly9QZDdlOEhFaURsUVU1dmN1bFJ2aGV2aHRwR3g3dnZWWXE5Tys4TTlkTUR1?=
- =?utf-8?B?V0s5VFlLWjBTVXpDYTRpWEorTjJxVTFYVzY0elRrQ1EzbWJiSVpaMkVEMW1V?=
- =?utf-8?B?eHdVUkFDeHRHR1gwdnhsT3BBRyt4cWJuZXpYc3RoNGVCbFp0eUkrdXJMSXp3?=
- =?utf-8?B?M2ZEbkdobGJKKy8ydEp1bmVua3N1VXhObWplT05Ib3o3WlNudTZzeGM0R3Vk?=
- =?utf-8?B?TytMMXRRWkFjSzNtRDlDb1hCR3h3ZldKbmoyRTczSkN1VEpDenpKR1pOa3ly?=
- =?utf-8?B?eE5weVFGRkVwY2xxNmYwYUM4dHVzL1JkU1J3ZTFKSHltZ0gvdzgxREFpcmR3?=
- =?utf-8?B?SlU5WDVpZEl0YXlvMCsxUjJWSUgwM3h6aDZ5ZzQvNzFBWTIrNUw5enlMNjB6?=
- =?utf-8?B?eWZFMUdjc01IblhSb25Lc09LNzZtQmJoYyt6ZFlvZ2VyWkZ2aFlmaWwvdTA0?=
- =?utf-8?B?SDBML1Q1OFNrOGNoeEdoQ3lpM2JhRW8xRGxER0tkYUw4eUptUTdnQmFVbW1G?=
- =?utf-8?B?RGNlZDIzbVkraHlNeUJITHljWWFYME56RWlzdExMZEtmODFaMDV2ZjE4andI?=
- =?utf-8?B?ZnQ2dXNlZXplcDdqK3ltZ1JQcitFT0o0emttdzNRekdtcEZHc0lRQ0sxMzVn?=
- =?utf-8?B?bUNwNy9JbTRjMFdyd01yTmJSNnZnclpwZzhzWlpNeXFEcGtqdldjSW5KUGgr?=
- =?utf-8?B?YkhXM3N4ajd6SkZzdEtxVVd5VFZiTVlQWUQ2VE5BYWE5MnFTc3o0YXZrRnlR?=
- =?utf-8?B?eURDRU51elNndlNqS1kwQ2JvcUxxL2Y2M3l3bzdSUlFldnoyUGpmNDI0Yit4?=
- =?utf-8?B?S1lTek0zNTl2TlREUDRuRUZjbE5QZ0hmZGtGYnFrdjJtK1lBOWNGeVlWaFlL?=
- =?utf-8?B?U3ppSVYzUCtaWHZ0bldaNGQwaXE4UFBORWMzYWZ1ZXhxNklXYlBPY1AwVWs4?=
- =?utf-8?B?QTkwT0N5dVlFc0d1bzJmeEtHSVdpWGVUd3dLL2E4Y2ZoaUdWYjRRT0t0QnNk?=
- =?utf-8?B?S3BOcTZJUTBEeTlydEtKT2txZXM1ODYxTWVwRkhYM2lqaEZrTi85eGNGTmtw?=
- =?utf-8?B?ZlUyWTBPakh1ZldDU2VYVzArYmxUZG1DQjZPeWY0R2VPdDZURWt1VUk2SHJm?=
- =?utf-8?B?Y2JGT0k2ZlZoMFNKazdveHh6QS9wWkwvaHZoZ0xOQVJIbGs2aWZTNURGSjdw?=
- =?utf-8?B?UGlXSTNwNm14SnIxMkljZG9aNENsTzNiSkhicmNQVityWWhia0lkSzJDa1VQ?=
- =?utf-8?B?R1hxMUF3TXVlWVJWMm91NDJUaGxkK2lERzMvVDU1d3JqM3lzQjJKdThzYktm?=
- =?utf-8?B?UENtSG5tTXlyZnd3NVJSaFNZZFBpRzVyZWxTRHJQbXlGaXRLVkZvL0xHTkV5?=
- =?utf-8?Q?PKf6+FU1gzmn8fo0=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DC35730023BE834BB83E8F474E447BFC@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e2aca3d7-85b2-445d-0968-08da4320b31b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 May 2022 16:14:54.8942
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mVEaXTJkjWrNiKuKcKivPy4sDD5R1DdEAa4pwcKiq3RCRXi3C180hU7VyMZjo6T5sXczu9mjt8bGZRhvFQ6p3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR13MB5931
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220531134854.63115-1-olga.kornievskaia@gmail.com>
+X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVHVlLCAyMDIyLTA1LTMxIGF0IDEyOjAzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToKPiBPbiBUdWUsIE1heSAzMSwgMjAyMiBhdCAxMTowMCBBTSBUcm9uZCBNeWtsZWJ1c3QKPiA8
-dHJvbmRteUBoYW1tZXJzcGFjZS5jb20+IHdyb3RlOgo+ID4gCj4gPiBPbiBUdWUsIDIwMjItMDUt
-MzEgYXQgMDk6NDggLTA0MDAsIE9sZ2EgS29ybmlldnNrYWlhIHdyb3RlOgo+ID4gPiBGcm9tOiBP
-bGdhIEtvcm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4KPiA+ID4gCj4gPiA+IEluIHJlY2Vu
-dCBwbmZzIHRlc3Rpbmcgd2UndmUgaW5jb3VudGVyZWQgSU8gdGhyZWFkIHN0YXJ2YXRpb24KPiA+
-ID4gcHJvYmxlbQo+ID4gPiBkdXJpbmcgdGhlIHRpbWUgd2hlbiB0aGUgc2VydmVyIHJldHVybnMg
-TEFZT1VUVU5BVkFJTEFCTEUgZXJyb3IKPiA+ID4gdG8KPiA+ID4gdGhlCj4gPiA+IGNsaWVudC4g
-V2hlbiB0aGF0IGhhcHBlbnMgZWFjaCBJTyByZXF1ZXN0IHRyaWVzIHRvIGdldCBhIG5ldwo+ID4g
-PiBsYXlvdXQKPiA+ID4gYW5kIHRoZSBwbmZzX3VwZGF0ZV9sYXlvdXQoKSBjb2RlIGVuc3VyZXMg
-dGhhdCBvbmx5IDEgTEFZT1VUR0VUCj4gPiA+IFJQQyBpcyBvdXRzdGFuZGluZywgdGhlIHJlc3Qg
-d291bGQgYmUgd2FpdGluZy4gQXMgdGhlIHRocmVhZCB0aGF0Cj4gPiA+IGdldHMKPiA+ID4gdGhl
-IGxheW91dCB3YWtlcyB1cCB0aGUgd2FpdGVycyBvbmx5IG9uZSBnZXRzIHRvIHJ1biBhbmQgaXQg
-dGVuZHMKPiA+ID4gdG8KPiA+ID4gYmUKPiA+ID4gdGhlIGxhdGVzdCBhZGRlZCB0byB0aGUgd2Fp
-dGluZyBxdWV1ZS4gQWZ0ZXIgcmVjZWl2aW5nCj4gPiA+IExBWU9VVFVOQVZBSUxBQkxFCj4gPiA+
-IGVycm9yIHRoZSBjbGllbnQgd291bGQgZmFsbCBiYWNrIHRvIHRoZSBNRFMgd3JpdGVzIGFuZCBh
-cyB0aG9zZQo+ID4gPiB3cml0ZXMKPiA+ID4gY29tcGxldGUgYW5kIHRoZSBuZXcgd3JpdGUgaXMg
-aXNzdWVkLCB0aG9zZSByZXF1ZXN0cyBhcmUgYWRkZWQgYXMKPiA+ID4gd2FpdGVycyBhbmQgdGhl
-eSBnZXQgdG8gcnVuIGJlZm9yZSB0aGUgZWFybGllc3Qgb2YgdGhlIHdhaXRlcnMKPiA+ID4gdGhh
-dAo+ID4gPiB3YXMgcHV0IG9uIHRoZSBxdWV1ZSBvcmlnaW5hbGx5IG5ldmVyIGdldHMgdG8gcnVu
-IHVudGlsIHRoZQo+ID4gPiBMQVlPVVRVTkFWQUlMQUJMRSBjb25kaXRpb24gcmVzb2x2ZXMgaXRz
-ZWxmIG9uIHRoZSBzZXJ2ZXIuCj4gPiA+IAo+ID4gPiBXaXRoIHRoZSBjdXJyZW50IGNvZGUsIGlm
-IE4gSU9zIGFycml2ZSBhc2tpbmcgZm9yIGEgbGF5b3V0LCB0aGVuCj4gPiA+IHRoZXJlIHdpbGwg
-YmUgTiBzZXJpYWwgTEFZT1VUR0VUcyB0aGF0IHdpbGwgZm9sbG93LCBlYWNoIHdvdWxkIGJlCj4g
-PiA+IGdldHRpbmcgaXRzIG93biBMQVlPVVRVTkFWQUlMQUJMRSBlcnJvci4gSW5zdGVhZCwgdGhl
-IHBhdGNoCj4gPiA+IHByb3Bvc2VzCj4gPiA+IHRvIGFwcGx5IHRoZSBlcnJvciBjb25kaXRpb24g
-dG8gQUxMIHRoZSB3YWl0ZXJzIGZvciB0aGUKPiA+ID4gb3V0c3RhbmRpbmcKPiA+ID4gTEFZT1VU
-R0VULiBPbmNlIHRoZSBlcnJvciBpcyByZWNlaXZlZCwgdGhlIGNvZGUgd291bGQgYWxsb3cgYWxs
-Cj4gPiA+IGV4aXRpbmcgTiBJT3MgZmFsbCBiYWNrIHRvIHRoZSBNRFMsIGJ1dCBhbnkgbmV3IGFy
-cml2aW5nIElPcwo+ID4gPiB3b3VsZCBiZQo+ID4gPiB0aGVuIHF1ZXVlZCB1cCBhbmQgb25lIHRo
-ZW0gdGhlIG5ldyBJTyB3b3VsZCB0cmlnZ2VyIGEgbmV3Cj4gPiA+IExBWU9VVEdFVC4KPiA+ID4g
-Cj4gPiA+IFNpZ25lZC1vZmYtYnk6IE9sZ2EgS29ybmlldnNrYWlhIDxrb2xnYUBuZXRhcHAuY29t
-Pgo+ID4gPiAtLS0KPiA+ID4gwqBmcy9uZnMvcG5mcy5jIHwgMTQgKysrKysrKysrKysrKy0KPiA+
-ID4gwqBmcy9uZnMvcG5mcy5oIHzCoCAyICsrCj4gPiA+IMKgMiBmaWxlcyBjaGFuZ2VkLCAxNSBp
-bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0IGEvZnMv
-bmZzL3BuZnMuYyBiL2ZzL25mcy9wbmZzLmMKPiA+ID4gaW5kZXggNjhhODdiZTNlNmY5Li41Yjdh
-Njc5ZTMyYzggMTAwNjQ0Cj4gPiA+IC0tLSBhL2ZzL25mcy9wbmZzLmMKPiA+ID4gKysrIGIvZnMv
-bmZzL3BuZnMuYwo+ID4gPiBAQCAtMjAyOCwxMCArMjAyOCwyMCBAQCBwbmZzX3VwZGF0ZV9sYXlv
-dXQoc3RydWN0IGlub2RlICppbm8sCj4gPiA+IMKgwqDCoMKgwqDCoMKgIGlmICgobGlzdF9lbXB0
-eSgmbG8tPnBsaF9zZWdzKSB8fAo+ID4gPiAhcG5mc19sYXlvdXRfaXNfdmFsaWQobG8pKQo+ID4g
-PiAmJgo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGF0b21pY19yZWFkKCZsby0+cGxoX291
-dHN0YW5kaW5nKSAhPSAwKSB7Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
-cGluX3VubG9jaygmaW5vLT5pX2xvY2spOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoCBhdG9taWNfaW5jKCZsby0+cGxoX3dhaXRpbmcpOwo+ID4gPiDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgbHNlZyA9IEVSUl9QVFIod2FpdF92YXJfZXZlbnRfa2lsbGFibGUoJmxv
-LQo+ID4gPiA+IHBsaF9vdXRzdGFuZGluZywKPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICFh
-dG9taWNfcmVhZCgmbG8tCj4gPiA+ID4gcGxoX291dHN0YW5kaW5nKSkpOwo+ID4gPiAtwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoSVNfRVJSKGxzZWcpKQo+ID4gPiArwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAoSVNfRVJSKGxzZWcpKSB7Cj4gPiA+ICvCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBhdG9taWNfZGVjKCZsby0+cGxoX3dh
-aXRpbmcpOwo+ID4gPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGdvdG8gb3V0X3B1dF9sYXlvdXRfaGRyOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB9Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICh0ZXN0X2Jp
-dChORlNfTEFZT1VUX0RSQUlOLCAmbG8tPnBsaF9mbGFncykpIHsKPiA+ID4gK8KgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBuZnNfbGF5b3V0X2NsZWFyX2ZhaWxf
-Yml0KGxvLAo+ID4gPiBwbmZzX2lvbW9kZV90b19mYWlsX2JpdChpb21vZGUpKTsKCkJ5IHRoZSB3
-YXk6IHRoaXMgY2FsbCB0byBwbmZzX2xheW91dF9jbGVhcl9mYWlsX2JpdCgpIHdvdWxkIGJyZWFr
-IGFueQpmdXR1cmUgZml4IHRvIE5GUzRFUlJfTEFZT1VUVU5BVkFJTEFCTEUuIEl0J3Mgbm90IHRo
-ZSByaWdodCB0aGluZyB0byBkbwpoZXJlLgoKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIGxzZWcgPSBOVUxMOwo+ID4gPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKGF0b21pY19kZWNfYW5kX3Rlc3QoJmxv
-LQo+ID4gPiA+cGxoX3dhaXRpbmcpKQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNsZWFyX2JpdChORlNfTEFZT1VUX0RS
-QUlOLCAmbG8tCj4gPiA+ID4gcGxoX2ZsYWdzKTsKPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGdvdG8gb3V0X3B1dF9sYXlvdXRfaGRyOwo+ID4gPiAr
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB9Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCBwbmZzX3B1dF9sYXlvdXRfaGRyKGxvKTsKPiA+ID4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIGdvdG8gbG9va3VwX2FnYWluOwo+ID4gPiDCoMKgwqDCoMKgwqDCoCB9
-Cj4gPiA+IEBAIC0yMTUyLDYgKzIxNjIsOCBAQCBwbmZzX3VwZGF0ZV9sYXlvdXQoc3RydWN0IGlu
-b2RlICppbm8sCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXNlIC1FUkVD
-QUxMQ09ORkxJQ1Q6Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjYXNlIC1F
-QUdBSU46Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqAgYnJlYWs7Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNhc2UgLUVOT0RB
-VEE6Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBz
-ZXRfYml0KE5GU19MQVlPVVRfRFJBSU4sICZsby0KPiA+ID4gPnBsaF9mbGFncyk7Cj4gPiA+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkZWZhdWx0Ogo+ID4gPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlmICghbmZzX2Vycm9yX2lzX2ZhdGFs
-KFBUUl9FUlIobHNlZykpKSB7Cj4gPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBuZnNfbGF5b3V0X2NsZWFyX2ZhaWxfYml0
-KGxvLAo+ID4gPiBwbmZzX2lvbW9kZV90b19mYWlsX2JpdChpb21vZGUpKTsKPiA+ID4gZGlmZiAt
-LWdpdCBhL2ZzL25mcy9wbmZzLmggYi9mcy9uZnMvcG5mcy5oCj4gPiA+IGluZGV4IDA3ZjExNDg5
-ZTRlOS4uNWMwN2RhMzIzMjBiIDEwMDY0NAo+ID4gPiAtLS0gYS9mcy9uZnMvcG5mcy5oCj4gPiA+
-ICsrKyBiL2ZzL25mcy9wbmZzLmgKPiA+ID4gQEAgLTEwNSw2ICsxMDUsNyBAQCBlbnVtIHsKPiA+
-ID4gwqDCoMKgwqDCoMKgwqAgTkZTX0xBWU9VVF9GSVJTVF9MQVlPVVRHRVQswqDCoMKgwqAgLyog
-U2VyaWFsaXplIGZpcnN0Cj4gPiA+IGxheW91dGdldAo+ID4gPiAqLwo+ID4gPiDCoMKgwqDCoMKg
-wqDCoCBORlNfTEFZT1VUX0lOT0RFX0ZSRUVJTkcswqDCoMKgwqDCoMKgIC8qIFRoZSBpbm9kZSBp
-cyBiZWluZwo+ID4gPiBmcmVlZAo+ID4gPiAqLwo+ID4gPiDCoMKgwqDCoMKgwqDCoCBORlNfTEFZ
-T1VUX0hBU0hFRCzCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAvKiBUaGUgbGF5b3V0IHZpc2li
-bGUgKi8KPiA+ID4gK8KgwqDCoMKgwqDCoCBORlNfTEFZT1VUX0RSQUlOLAo+ID4gPiDCoH07Cj4g
-PiA+IAo+ID4gPiDCoGVudW0gbGF5b3V0ZHJpdmVyX3BvbGljeV9mbGFncyB7Cj4gPiA+IEBAIC0x
-OTYsNiArMTk3LDcgQEAgc3RydWN0IHBuZnNfY29tbWl0X29wcyB7Cj4gPiA+IMKgc3RydWN0IHBu
-ZnNfbGF5b3V0X2hkciB7Cj4gPiA+IMKgwqDCoMKgwqDCoMKgIHJlZmNvdW50X3TCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBwbGhfcmVmY291bnQ7Cj4gPiA+IMKgwqDCoMKgwqDCoMKgIGF0b21p
-Y190wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHBsaF9vdXRzdGFuZGluZzsgLyogbnVt
-YmVyIG9mCj4gPiA+IFJQQ3MKPiA+ID4gb3V0ICovCj4gPiA+ICvCoMKgwqDCoMKgwqAgYXRvbWlj
-X3TCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcGxoX3dhaXRpbmc7Cj4gPiA+IMKgwqDC
-oMKgwqDCoMKgIHN0cnVjdCBsaXN0X2hlYWTCoMKgwqDCoMKgwqDCoCBwbGhfbGF5b3V0czvCoMKg
-IC8qIG90aGVyIGNsaWVudAo+ID4gPiBsYXlvdXRzICovCj4gPiA+IMKgwqDCoMKgwqDCoMKgIHN0
-cnVjdCBsaXN0X2hlYWTCoMKgwqDCoMKgwqDCoCBwbGhfYnVsa19kZXN0cm95Owo+ID4gPiDCoMKg
-wqDCoMKgwqDCoCBzdHJ1Y3QgbGlzdF9oZWFkwqDCoMKgwqDCoMKgwqAgcGxoX3NlZ3M7wqDCoMKg
-wqDCoCAvKiBsYXlvdXQgc2VnbWVudHMKPiA+ID4gbGlzdCAqLwo+ID4gCj4gPiBBY2NvcmRpbmcg
-dG8gdGhlIHNwZWMsIHRoZSBjb3JyZWN0IGJlaGF2aW91ciBmb3IgaGFuZGxpbmcKPiA+IE5GUzRF
-UlJfTEFZT1VUVU5BVkFJTEFCTEUgaXMgdG8gc3RvcCB0cnlpbmcgdG8gZG8gcE5GUyB0byB0aGUK
-PiA+IGlub2RlLAo+ID4gYW5kIHRvIGZhbGwgYmFjayB0byBkb2luZyBJL08gdGhyb3VnaCB0aGUg
-TURTLiBUaGUgZXJyb3IgZGVzY3JpYmVzCj4gPiBhCj4gPiBtb3JlIG9yIGxlc3MgcGVybWFuZW50
-IHN0YXRlIG9mIHRoZSBzZXJ2ZXIgYmVpbmcgdW5hYmxlIHRvIGhhbmQgb3V0Cj4gPiBhCj4gPiBs
-YXlvdXQgZm9yIHRoaXMgZmlsZS4KPiA+IElmIHRoZSBzZXJ2ZXIgd2FudGVkIHRoZSBjbGllbnRz
-IHRvIHJldHJ5IGFmdGVyIGEgZGVsYXksIGl0IHNob3VsZAo+ID4gYmUKPiA+IHJldHVybmluZyBO
-RlM0RVJSX0xBWU9VVFRSWUxBVEVSLiBXZSBhbHJlYWR5IGhhbmRsZSB0aGF0IGNvcnJlY3RseS4K
-PiAKPiBUbyBjbGFyaWZ5LCBjYW4geW91IGNvbmZpcm0gdGhhdCBMQVlPVVRVTkFWQUlMQUJMRSB3
-b3VsZCBvbmx5IHR1cm4KPiBvZmYKPiB0aGUgaW5vZGUgcGVybWFuZW50bHkgYnV0IGZvciBhIHBl
-cmlvZCBvZiB0aW1lPwoKU2VlIHBuZnNfbGF5b3V0X2lvX3Rlc3RfZmFpbGVkKCkuIEl0IGF1dG9t
-YXRpY2FsbHkgY2xlYXJzIHRoZSBmYWlsIGJpdAphZnRlciBhIHBlcmlvZCBvZiBQTkZTX0xBWU9V
-VEdFVF9SRVRSWV9USU1FT1VUIChpLmUuIDEyMCBzZWNvbmRzKQoKPiAKPiBJdCBsb29rcyB0byBt
-ZSB0aGF0IGZvciB0aGUgTEFZT1VUVFJZTEFURVIsIHRoZSBjbGllbnQgd291bGQgZmFjZSB0aGUK
-PiBzYW1lIHN0YXJ2YXRpb24gcHJvYmxlbSBpbiB0aGUgc2FtZSBzaXR1YXRpb24uIEkgZG9uJ3Qg
-c2VlIGFueXRoaW5nCj4gbWFya2luZyB0aGUgc2VnbWVudCBmYWlsZWQgZm9yIHN1Y2ggZXJyb3I/
-IEkgYmVsaWV2ZSB0aGUgY2xpZW50Cj4gcmV0dXJucyBub2xheW91dCBmb3IgdGhhdCBlcnJvciwg
-ZmFsbHMgYmFjayB0byBNRFMgYnV0IGFsbG93cyBhc2tpbmcKPiBmb3IgdGhlIGxheW91dCBmb3Ig
-YSBwZXJpb2Qgb2YgdGltZSwgaGF2aW5nIGFnYWluIHRoZSBxdWV1ZSBvZgo+IHdhaXRlcnMKPiB0
-aGF0IGdldHMgbWFuaXB1bGF0ZWQgYXMgc3VjaCB0aGF0IGZhdm9ycyBsYXN0IGFkZGVkLgo+IAo+
-IAo+ID4gQ3VycmVudGx5LCB3aGF0IG91ciBjbGllbnQgZG9lcyB0byBoYW5kbGUgTkZTNEVSUl9M
-QVlPVVRVTkFWQUlMQUJMRQo+ID4gaXMKPiA+IGp1c3QgcGxhaW4gd3Jvbmc6IHdlIGp1c3QgcmV0
-dXJuIG5vIGxheW91dCwgYW5kIHRoZW4gbGV0IHRoZSBuZXh0Cj4gPiBjYWxsZXIgdG8gcG5mc191
-cGRhdGVfbGF5b3V0KCkgaW1tZWRpYXRlbHkgdHJ5IGFnYWluLgo+ID4gCj4gPiBNeSBwcm9ibGVt
-IHdpdGggdGhpcyBwYXRjaCwgaXMgdGhhdCBpdCBqdXN0IGZhbGxzIGJhY2sgdG8gZG9pbmcgSS9P
-Cj4gPiB0aHJvdWdoIHRoZSBNRFMgZm9yIHRoZSB3cml0ZXMgdGhhdCBhcmUgYWxyZWFkeSBxdWV1
-ZWQgaW4KPiA+IHBuZnNfdXBkYXRlX2xheW91dCgpLiBJdCBwZXJwZXR1YXRlcyB0aGUgY3VycmVu
-dCBiYWQgYmVoYXZpb3VyIG9mCj4gPiB1bm5lY2Vzc2FyeSBwb3VuZGluZyBvZiB0aGUgc2VydmVy
-IHdpdGggTEFZT1VUR0VUIHJlcXVlc3RzIHRoYXQgYXJlCj4gPiBnb2luZyB0byBmYWlsIHdpdGgg
-dGhlIGV4YWN0IHNhbWUgZXJyb3IuCj4gPiAKPiA+IEknZCB0aGVyZWZvcmUgcHJlZmVyIHRvIHNl
-ZSB1cyBmaXggdGhlIHJlYWwgYnVnIChpLmUuIHRoZSBoYW5kbGluZwo+ID4gb2YKPiA+IE5GUzRF
-UlJfTEFZT1VUVU5BVkFJTEFCTEUpIGZpcnN0LCBhbmQgdGhlbiBsb29rIGF0IG1pdGlnYXRpbmcK
-PiA+IGlzc3Vlcwo+ID4gd2l0aCB0aGUgcXVldWluZy4gSSBhbHJlYWR5IGhhdmUgMiBwYXRjaGVz
-IHRvIGRlYWwgd2l0aCB0aGlzLgo+ID4gCj4gPiAtLQo+ID4gVHJvbmQgTXlrbGVidXN0Cj4gPiBM
-aW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlCj4gPiB0cm9uZC5teWtsZWJ1
-c3RAaGFtbWVyc3BhY2UuY29tCj4gPiAKPiA+IAoKLS0gClRyb25kIE15a2xlYnVzdApMaW51eCBO
-RlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlCnRyb25kLm15a2xlYnVzdEBoYW1tZXJz
-cGFjZS5jb20KCgo=
+Hi Olga,
+
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on v5.18 next-20220531]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Olga-Kornievskaia/pNFS-fix-IO-thread-starvation-problem-during-LAYOUTUNAVAILABLE-error/20220531-215040
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20220601/202206010131.m809TcwM-lkp@intel.com/config)
+compiler: arceb-elf-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/7f80a6c53d6cdb806706a8748cb79348f9906229
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Olga-Kornievskaia/pNFS-fix-IO-thread-starvation-problem-during-LAYOUTUNAVAILABLE-error/20220531-215040
+        git checkout 7f80a6c53d6cdb806706a8748cb79348f9906229
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash fs/nfs/
+
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   fs/nfs/pnfs.c: In function 'pnfs_update_layout':
+>> fs/nfs/pnfs.c:2164:25: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    2164 |                         set_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   fs/nfs/pnfs.c:2165:17: note: here
+    2165 |                 default:
+         |                 ^~~~~~~
+
+
+vim +2164 fs/nfs/pnfs.c
+
+  1952	
+  1953	/*
+  1954	 * Layout segment is retreived from the server if not cached.
+  1955	 * The appropriate layout segment is referenced and returned to the caller.
+  1956	 */
+  1957	struct pnfs_layout_segment *
+  1958	pnfs_update_layout(struct inode *ino,
+  1959			   struct nfs_open_context *ctx,
+  1960			   loff_t pos,
+  1961			   u64 count,
+  1962			   enum pnfs_iomode iomode,
+  1963			   bool strict_iomode,
+  1964			   gfp_t gfp_flags)
+  1965	{
+  1966		struct pnfs_layout_range arg = {
+  1967			.iomode = iomode,
+  1968			.offset = pos,
+  1969			.length = count,
+  1970		};
+  1971		unsigned pg_offset;
+  1972		struct nfs_server *server = NFS_SERVER(ino);
+  1973		struct nfs_client *clp = server->nfs_client;
+  1974		struct pnfs_layout_hdr *lo = NULL;
+  1975		struct pnfs_layout_segment *lseg = NULL;
+  1976		struct nfs4_layoutget *lgp;
+  1977		nfs4_stateid stateid;
+  1978		long timeout = 0;
+  1979		unsigned long giveup = jiffies + (clp->cl_lease_time << 1);
+  1980		bool first;
+  1981	
+  1982		if (!pnfs_enabled_sb(NFS_SERVER(ino))) {
+  1983			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  1984					 PNFS_UPDATE_LAYOUT_NO_PNFS);
+  1985			goto out;
+  1986		}
+  1987	
+  1988		if (pnfs_within_mdsthreshold(ctx, ino, iomode)) {
+  1989			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  1990					 PNFS_UPDATE_LAYOUT_MDSTHRESH);
+  1991			goto out;
+  1992		}
+  1993	
+  1994	lookup_again:
+  1995		lseg = ERR_PTR(nfs4_client_recover_expired_lease(clp));
+  1996		if (IS_ERR(lseg))
+  1997			goto out;
+  1998		first = false;
+  1999		spin_lock(&ino->i_lock);
+  2000		lo = pnfs_find_alloc_layout(ino, ctx, gfp_flags);
+  2001		if (lo == NULL) {
+  2002			spin_unlock(&ino->i_lock);
+  2003			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2004					 PNFS_UPDATE_LAYOUT_NOMEM);
+  2005			goto out;
+  2006		}
+  2007	
+  2008		/* Do we even need to bother with this? */
+  2009		if (test_bit(NFS_LAYOUT_BULK_RECALL, &lo->plh_flags)) {
+  2010			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2011					 PNFS_UPDATE_LAYOUT_BULK_RECALL);
+  2012			dprintk("%s matches recall, use MDS\n", __func__);
+  2013			goto out_unlock;
+  2014		}
+  2015	
+  2016		/* if LAYOUTGET already failed once we don't try again */
+  2017		if (pnfs_layout_io_test_failed(lo, iomode)) {
+  2018			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2019					 PNFS_UPDATE_LAYOUT_IO_TEST_FAIL);
+  2020			goto out_unlock;
+  2021		}
+  2022	
+  2023		/*
+  2024		 * If the layout segment list is empty, but there are outstanding
+  2025		 * layoutget calls, then they might be subject to a layoutrecall.
+  2026		 */
+  2027		if ((list_empty(&lo->plh_segs) || !pnfs_layout_is_valid(lo)) &&
+  2028		    atomic_read(&lo->plh_outstanding) != 0) {
+  2029			spin_unlock(&ino->i_lock);
+  2030			atomic_inc(&lo->plh_waiting);
+  2031			lseg = ERR_PTR(wait_var_event_killable(&lo->plh_outstanding,
+  2032						!atomic_read(&lo->plh_outstanding)));
+  2033			if (IS_ERR(lseg)) {
+  2034				atomic_dec(&lo->plh_waiting);
+  2035				goto out_put_layout_hdr;
+  2036			}
+  2037			if (test_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags)) {
+  2038				pnfs_layout_clear_fail_bit(lo, pnfs_iomode_to_fail_bit(iomode));
+  2039				lseg = NULL;
+  2040				if (atomic_dec_and_test(&lo->plh_waiting))
+  2041					clear_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
+  2042				goto out_put_layout_hdr;
+  2043			}
+  2044			pnfs_put_layout_hdr(lo);
+  2045			goto lookup_again;
+  2046		}
+  2047	
+  2048		/*
+  2049		 * Because we free lsegs when sending LAYOUTRETURN, we need to wait
+  2050		 * for LAYOUTRETURN.
+  2051		 */
+  2052		if (test_bit(NFS_LAYOUT_RETURN, &lo->plh_flags)) {
+  2053			spin_unlock(&ino->i_lock);
+  2054			dprintk("%s wait for layoutreturn\n", __func__);
+  2055			lseg = ERR_PTR(pnfs_prepare_to_retry_layoutget(lo));
+  2056			if (!IS_ERR(lseg)) {
+  2057				pnfs_put_layout_hdr(lo);
+  2058				dprintk("%s retrying\n", __func__);
+  2059				trace_pnfs_update_layout(ino, pos, count, iomode, lo,
+  2060							 lseg,
+  2061							 PNFS_UPDATE_LAYOUT_RETRY);
+  2062				goto lookup_again;
+  2063			}
+  2064			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2065						 PNFS_UPDATE_LAYOUT_RETURN);
+  2066			goto out_put_layout_hdr;
+  2067		}
+  2068	
+  2069		lseg = pnfs_find_lseg(lo, &arg, strict_iomode);
+  2070		if (lseg) {
+  2071			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2072					PNFS_UPDATE_LAYOUT_FOUND_CACHED);
+  2073			goto out_unlock;
+  2074		}
+  2075	
+  2076		/*
+  2077		 * Choose a stateid for the LAYOUTGET. If we don't have a layout
+  2078		 * stateid, or it has been invalidated, then we must use the open
+  2079		 * stateid.
+  2080		 */
+  2081		if (test_bit(NFS_LAYOUT_INVALID_STID, &lo->plh_flags)) {
+  2082			int status;
+  2083	
+  2084			/*
+  2085			 * The first layoutget for the file. Need to serialize per
+  2086			 * RFC 5661 Errata 3208.
+  2087			 */
+  2088			if (test_and_set_bit(NFS_LAYOUT_FIRST_LAYOUTGET,
+  2089					     &lo->plh_flags)) {
+  2090				spin_unlock(&ino->i_lock);
+  2091				lseg = ERR_PTR(wait_on_bit(&lo->plh_flags,
+  2092							NFS_LAYOUT_FIRST_LAYOUTGET,
+  2093							TASK_KILLABLE));
+  2094				if (IS_ERR(lseg))
+  2095					goto out_put_layout_hdr;
+  2096				pnfs_put_layout_hdr(lo);
+  2097				dprintk("%s retrying\n", __func__);
+  2098				goto lookup_again;
+  2099			}
+  2100	
+  2101			spin_unlock(&ino->i_lock);
+  2102			first = true;
+  2103			status = nfs4_select_rw_stateid(ctx->state,
+  2104						iomode == IOMODE_RW ? FMODE_WRITE : FMODE_READ,
+  2105						NULL, &stateid, NULL);
+  2106			if (status != 0) {
+  2107				lseg = ERR_PTR(status);
+  2108				trace_pnfs_update_layout(ino, pos, count,
+  2109						iomode, lo, lseg,
+  2110						PNFS_UPDATE_LAYOUT_INVALID_OPEN);
+  2111				nfs4_schedule_stateid_recovery(server, ctx->state);
+  2112				pnfs_clear_first_layoutget(lo);
+  2113				pnfs_put_layout_hdr(lo);
+  2114				goto lookup_again;
+  2115			}
+  2116			spin_lock(&ino->i_lock);
+  2117		} else {
+  2118			nfs4_stateid_copy(&stateid, &lo->plh_stateid);
+  2119		}
+  2120	
+  2121		if (pnfs_layoutgets_blocked(lo)) {
+  2122			trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2123					PNFS_UPDATE_LAYOUT_BLOCKED);
+  2124			goto out_unlock;
+  2125		}
+  2126		nfs_layoutget_begin(lo);
+  2127		spin_unlock(&ino->i_lock);
+  2128	
+  2129		_add_to_server_list(lo, server);
+  2130	
+  2131		pg_offset = arg.offset & ~PAGE_MASK;
+  2132		if (pg_offset) {
+  2133			arg.offset -= pg_offset;
+  2134			arg.length += pg_offset;
+  2135		}
+  2136		if (arg.length != NFS4_MAX_UINT64)
+  2137			arg.length = PAGE_ALIGN(arg.length);
+  2138	
+  2139		lgp = pnfs_alloc_init_layoutget_args(ino, ctx, &stateid, &arg, gfp_flags);
+  2140		if (!lgp) {
+  2141			trace_pnfs_update_layout(ino, pos, count, iomode, lo, NULL,
+  2142						 PNFS_UPDATE_LAYOUT_NOMEM);
+  2143			nfs_layoutget_end(lo);
+  2144			goto out_put_layout_hdr;
+  2145		}
+  2146	
+  2147		lgp->lo = lo;
+  2148		pnfs_get_layout_hdr(lo);
+  2149	
+  2150		lseg = nfs4_proc_layoutget(lgp, &timeout);
+  2151		trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2152					 PNFS_UPDATE_LAYOUT_SEND_LAYOUTGET);
+  2153		nfs_layoutget_end(lo);
+  2154		if (IS_ERR(lseg)) {
+  2155			switch(PTR_ERR(lseg)) {
+  2156			case -EBUSY:
+  2157				if (time_after(jiffies, giveup))
+  2158					lseg = NULL;
+  2159				break;
+  2160			case -ERECALLCONFLICT:
+  2161			case -EAGAIN:
+  2162				break;
+  2163			case -ENODATA:
+> 2164				set_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
+  2165			default:
+  2166				if (!nfs_error_is_fatal(PTR_ERR(lseg))) {
+  2167					pnfs_layout_clear_fail_bit(lo, pnfs_iomode_to_fail_bit(iomode));
+  2168					lseg = NULL;
+  2169				}
+  2170				goto out_put_layout_hdr;
+  2171			}
+  2172			if (lseg) {
+  2173				if (first)
+  2174					pnfs_clear_first_layoutget(lo);
+  2175				trace_pnfs_update_layout(ino, pos, count,
+  2176					iomode, lo, lseg, PNFS_UPDATE_LAYOUT_RETRY);
+  2177				pnfs_put_layout_hdr(lo);
+  2178				goto lookup_again;
+  2179			}
+  2180		} else {
+  2181			pnfs_layout_clear_fail_bit(lo, pnfs_iomode_to_fail_bit(iomode));
+  2182		}
+  2183	
+  2184	out_put_layout_hdr:
+  2185		if (first)
+  2186			pnfs_clear_first_layoutget(lo);
+  2187		trace_pnfs_update_layout(ino, pos, count, iomode, lo, lseg,
+  2188					 PNFS_UPDATE_LAYOUT_EXIT);
+  2189		pnfs_put_layout_hdr(lo);
+  2190	out:
+  2191		dprintk("%s: inode %s/%llu pNFS layout segment %s for "
+  2192				"(%s, offset: %llu, length: %llu)\n",
+  2193				__func__, ino->i_sb->s_id,
+  2194				(unsigned long long)NFS_FILEID(ino),
+  2195				IS_ERR_OR_NULL(lseg) ? "not found" : "found",
+  2196				iomode==IOMODE_RW ?  "read/write" : "read-only",
+  2197				(unsigned long long)pos,
+  2198				(unsigned long long)count);
+  2199		return lseg;
+  2200	out_unlock:
+  2201		spin_unlock(&ino->i_lock);
+  2202		goto out_put_layout_hdr;
+  2203	}
+  2204	EXPORT_SYMBOL_GPL(pnfs_update_layout);
+  2205	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
