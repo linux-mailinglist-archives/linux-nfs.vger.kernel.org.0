@@ -2,89 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC47F53AC07
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jun 2022 19:35:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71C5653AD5C
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jun 2022 21:48:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356381AbiFARe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 1 Jun 2022 13:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40934 "EHLO
+        id S229653AbiFATbJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Jun 2022 15:31:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356406AbiFARe4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jun 2022 13:34:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 99F4BA501B
-        for <linux-nfs@vger.kernel.org>; Wed,  1 Jun 2022 10:34:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654104894;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=PrGy0+WSqjbldaLDiTD6I7uCOoMEI7d+ThKKSkhEAcI=;
-        b=BRQZ+nCWhHfD2m/pipmm9pwpj4+39MnR1lgdYGBI0jreZcdtd2yrCMeCE0H2uFfe5YkI/3
-        dMfGvvixgp4oCQ4XHJUkGf1oxhek1CyArfSyTPfP32SaANPDWquJGGfd4UN1gHNgdQyf97
-        BoUfUyIciQVJBd73mhQOqxluImRaEwQ=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-43-RX-Ev_V9MUGxHAySWzqHzQ-1; Wed, 01 Jun 2022 13:34:51 -0400
-X-MC-Unique: RX-Ev_V9MUGxHAySWzqHzQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 23F1A1C00129;
-        Wed,  1 Jun 2022 17:34:51 +0000 (UTC)
-Received: from aion.usersys.redhat.com (unknown [10.22.12.3])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 318F52166B26;
-        Wed,  1 Jun 2022 17:34:50 +0000 (UTC)
-Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
-        id CB62C1A27C3; Wed,  1 Jun 2022 13:34:49 -0400 (EDT)
-From:   Scott Mayhew <smayhew@redhat.com>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     kolga@netapp.com, linux-nfs@vger.kernel.org
-Subject: [PATCH] sunrpc: set cl_max_connect when cloning an rpc_clnt
-Date:   Wed,  1 Jun 2022 13:34:49 -0400
-Message-Id: <20220601173449.155273-1-smayhew@redhat.com>
+        with ESMTP id S229627AbiFATbJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jun 2022 15:31:09 -0400
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1335B17CCBE
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Jun 2022 12:28:43 -0700 (PDT)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-f2cbceefb8so3993078fac.11
+        for <linux-nfs@vger.kernel.org>; Wed, 01 Jun 2022 12:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Gk4nfCem3ECRa7Gml0J0mN/3RZoOAdfGaQAqyHPKtiI=;
+        b=HLFKV03IvnCnmYNulbqEkPjTK3riUL87h2wHAPtiQ15M9iY6Q8e992KMQxJwLdk6f+
+         yc6asPWVRklcz8AY8oqwyi19SO9Z3FXfSKl8KIcHwdn2diZ16fcVN3Noj9XYHhxCnXOp
+         L86c6aBumcYcai1ti0jT0anzEO5LqUJSpP7KiFxQXIe3O9qnWY7viJfSABa1ly9ubc5O
+         7xqU4M/fQQEbpLLu8u6cCuAo0xRfp/5LoTJYIMP5ne/O4VXGwgI3hKlV02ue3fdzqvYA
+         6IABKhDngCz8ZKTuipfv5GZ/7HEqJFbM8x/u/85qQFiKTPs+Mb3XRU84XoMrlsTu1Zr+
+         PsMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Gk4nfCem3ECRa7Gml0J0mN/3RZoOAdfGaQAqyHPKtiI=;
+        b=VH+ffmyQoHh4obi8nCkB3Mz1I7s0RG2RlEVBSHNi0GaJc5qRisWjXqbEeZXmQGZHUR
+         rgmtK5DnDFviZnKlPUIIQpoF5guwMtYLPQANMhPt8T5XEUmKVAyuReMZYLo3S+uzVQoL
+         gVpCmRNsfNOzh5aQvRNsHAIMZEQF9MJ3d52rLA8U19iuKYL4NURyNM+XRP0UuH24UoGR
+         baPmDjwoxfzpWSPCXqXAYQqU6kNYVhEnwrsVPtTn+9lvvWtaX7Aj0FxzmBeO7v3GL06Z
+         0wKyIdbQu83f6QhSwM9xwIHap/YnJ9y/cCZcIfigf27QU77x269dULLxEyJh3YqTOK4S
+         60eA==
+X-Gm-Message-State: AOAM533o3ZCilMRQ1ktmVA+cDH4ViuFwvnOhxhOL1RZM4U42luS3xwh7
+        Z6FlzeOEektaDqepaKYLrbsxbvyw60sUOHvb4+d4MzDJpTo=
+X-Google-Smtp-Source: ABdhPJzieEZsH3sz7p7h/CGCrygaKC3twss2VqEDgMRTw52PjXyF0yZxDsfC/Wcw+CTWK4gcBihtpQQBph7O0cnThRw=
+X-Received: by 2002:a05:6870:308:b0:f1:ddfe:8ac5 with SMTP id
+ m8-20020a056870030800b000f1ddfe8ac5mr16670934oaf.237.1654111051378; Wed, 01
+ Jun 2022 12:17:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:a05:6358:3601:b0:a3:2139:251d with HTTP; Wed, 1 Jun 2022
+ 12:17:30 -0700 (PDT)
+Reply-To: johnwinery@online.ee
+From:   johnwinery <alicejohnson8974@gmail.com>
+Date:   Wed, 1 Jun 2022 12:17:30 -0700
+Message-ID: <CAFqHCSSUC0MpbjYK8d-GCxOG4b6Qbk2uH3+xQDZte6cPBsxLGA@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If the initial attempt at trunking detection using the krb5i auth flavor
-fails with -EACCES, -NFS4ERR_CLID_INUSE, or -NFS4ERR_WRONGSEC, then the
-NFS client tries again using auth_sys, cloning the rpc_clnt in the
-process.  If this second attempt at trunking detection succeeds, then
-the resulting nfs_client->cl_rpcclient winds up having cl_max_connect=0
-and subsequent attempts to add additional transport connections to the
-rpc_clnt will fail with a message similar to the following being logged:
-
-[502044.312640] SUNRPC: reached max allowed number (0) did not add
-transport to server: 192.168.122.3
-
-Signed-off-by: Scott Mayhew <smayhew@redhat.com>
----
- net/sunrpc/clnt.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index e2c6eca0271b..b6781ada3aa8 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -651,6 +651,7 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
- 	new->cl_discrtry = clnt->cl_discrtry;
- 	new->cl_chatty = clnt->cl_chatty;
- 	new->cl_principal = clnt->cl_principal;
-+	new->cl_max_connect = clnt->cl_max_connect;
- 	return new;
- 
- out_err:
--- 
-2.35.3
-
+Greeting ,I had written an earlier mail to you but without response
