@@ -2,209 +2,290 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 957BA539A60
-	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jun 2022 02:34:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FF0D539E5B
+	for <lists+linux-nfs@lfdr.de>; Wed,  1 Jun 2022 09:36:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235844AbiFAAer (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 31 May 2022 20:34:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45990 "EHLO
+        id S1344955AbiFAHg1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 1 Jun 2022 03:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230158AbiFAAeq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 31 May 2022 20:34:46 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C2D68304
-        for <linux-nfs@vger.kernel.org>; Tue, 31 May 2022 17:34:42 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 24VNxPLj020753;
-        Wed, 1 Jun 2022 00:34:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=yaUEnxW8K/6wvb5G/FEtQYf2HPso8McRg4yF1I/fBkI=;
- b=IDl+ijI6Bh+h5XBjwt3yAp4vFpu+cgj4Eq3Ou7RLRzj30S3F982OKEgAOiM+Oq6Y87Ua
- Xej8WqJ1O8LWvmBOGcBf8dH7A5Co1vf89L5hjlblajf5lJCVks1O9o9KemI3ZuwZYhpi
- bEHPL1KazGZpmTmql7E2r2CXZyh4sAsdD/KJjcV8TPVCdnaLSnTethOs8fKxy7Jg2xzI
- 7awnix5P760SfUQMkEaCtZWXcBiIh9oFe6RfXZ+parYxglhzFBNvPdRypa0t2AM3GN5i
- 6aVO1h99WXP8Sxopq403sYrslQYSg6xuphUQCMTNa6AIuSCBYthXo21NarEpOxoSMFqy gw== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3gbcaupjre-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jun 2022 00:34:37 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 2510ACS6035899;
-        Wed, 1 Jun 2022 00:34:37 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2170.outbound.protection.outlook.com [104.47.55.170])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3gc8hw8qaj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 01 Jun 2022 00:34:36 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NStv2dWpe8c09E9La5eXgqxOJo/6NwZAhxfuyv+LYNpet1KS80pMnmAaE2GpgM1vALl4yG/g1IbvBgzhvYO6xrqeQfe5sYPZtRwEtDfXcIlD9Q8MmqjGuYtI0b3d1ykHBLeER9HDK3wxMYVXK7TskLvx5rtiOVHnde0eoaofk7wScA1nnRqjhW117ZIe3mkh+Mw65baxiFTtU7kaZY/EXmR8T0brgxy0wKOA3YXCzwo1EvUej3toJ5WSDh8soJmo7VUAQhhEbIqBAiGiHLyPPwg0Y5JKgeXZO+UbzD8+qS2JrAdRhf6uTbs92807NBM3TXOr7znRO2V7rYl2pvOKMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yaUEnxW8K/6wvb5G/FEtQYf2HPso8McRg4yF1I/fBkI=;
- b=XAKMO3sSOCABAYYRuj1F0zjhd4+YSe+fslmhoVOz1DZFf3z56P7fTQpGhWCiLOk9vGp/YcBM7NdKxb7q0gef8NpFcqhhbDN7G4WtWvBFHzZD/txFvX64AKzHmv5TV0NzPUgQDSpCDPJaWyCb1gFcyUY18UCAMwqi5EKZ76QmK2BK6cjMFCN7zQ5vdhr6EwugrJo6V/BLfVsW+RA44di5rdSbeOw3r6XE+LE8AKUdZGMef89TmRMGZy6HJCZk/ZzOVHuQhrczLwfLVstyyY1ARCcdNqK8srvsV/lHfvpfcmyM2a6MTxleazR4dBIZsWfxHIitCYNOz5MoNxAXAxpsgw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yaUEnxW8K/6wvb5G/FEtQYf2HPso8McRg4yF1I/fBkI=;
- b=Zie5DTTMissGmGUqfA6EcrzFkw7m1QxZEdQoDCu5Y0F5B0jyWvdasSCMuYOe8IXyhmD6fXDuoW+vNLksQFzoozsg+z5mIPgq+MYegsdVw5cCLDqSJOOR0wSVm8l6uPX6klqkaHaUxSb4Yz9RLYsP1qRQ01HOkaYyO+nKxMvTFAw=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BN0PR10MB5191.namprd10.prod.outlook.com (2603:10b6:408:116::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5293.13; Wed, 1 Jun
- 2022 00:34:35 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::ed81:8458:5414:f59f%9]) with mapi id 15.20.5293.019; Wed, 1 Jun 2022
- 00:34:35 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Frank van der Linden <fllinden@amazon.com>,
-        Wang Yugui <wangyugui@e16-tech.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Matthew Wilcox <matthew.wilcox@oracle.com>,
-        Liam Howlett <liam.howlett@oracle.com>
-Subject: Re: filecache LRU performance regression
-Thread-Topic: filecache LRU performance regression
-Thread-Index: AQHYcfvwqM9TwnG0lkutiJn4EA8Bxq0zLyiAgAAP6gCABnuxAA==
-Date:   Wed, 1 Jun 2022 00:34:34 +0000
-Message-ID: <BED36887-054D-4DC9-A5F1-CB6DD1F0DC16@oracle.com>
-References: <5C7024DA-A792-4091-BFDE-CEED59BC1B69@oracle.com>
- <20220527203721.GA10628@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
- <ADD1751A-7F67-4729-BFFC-D6938CA963A0@oracle.com>
-In-Reply-To: <ADD1751A-7F67-4729-BFFC-D6938CA963A0@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3654.120.0.1.13)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 451ef4bb-8853-4724-f798-08da43668097
-x-ms-traffictypediagnostic: BN0PR10MB5191:EE_
-x-microsoft-antispam-prvs: <BN0PR10MB5191D2DA1D0CE8127FADFB4B93DF9@BN0PR10MB5191.namprd10.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mLMuCA0Lf2m8wqNQRs1owd76jPyS+KmhsA2PNwMhAcefxANNpH/I3vPW/a9iXb/rB4zP2Y7rlYCkHhlOtJ71W7oh7Z1CNXvWOrcsINEg7XLhc0/po/K0IaiUKcpQQB0nvRNFwVW/NP1FPZw31ph2Aq1TziVfTfP8v6mcDRuYHTaH0NegMaXusiv4w3fedpIdv/Uk+MG6xmGXO6BLBosqfCjNptwNABjAXucr7gkPxZjchsHXlD5KQAywMvyULMumFAiR3SXQxXouU9bBykNrfEGrWi8G/oT2fl9IWlpSHprOWXkAhZunZ+JamN4UM6u85DCzbBx78iMC/0AsBCeZqaoSErtUgHODYUJCRO9FaDEBCHs33mEEtHMqcQzZrlvcUk7q5akTGyNKWpcIt5+HfkxALJpdgJxf80m1/xUHCy3EPukx1AF2o59VwZShvbS23xNdQYAnuG4J6yztdV8l95RHWAJC2Fn36+dpGQeENC3vwHwRGycvrPFTK7Nb2jciASsvKfbgpgupf0cgohieLNAlE4D9HQrQSw4KcqhBOwDErH1uAJZPK6gCfWqOXKq27GyMtNNNaJAewXOcH10MTtOiW+MdDKZBfNzaJCyVCy0AEcJqViDdXJR8kgU2myevmyg2m3myHP1WRGdO/RmQadjNy/s4aOV1mXqYSEHVNQZ8JpGtrnphElJNklfo2FXoMMCCTMzRjFsD4QEQZBQeGnxApC1O+vPjabGXJlIki8RzXAK9KfGbEJowu+8Yy4FEmyg1bVz7ni7ds1qiLpkY43oYsbGkx3Ds4dkQcoi9HA+2HTqhG6JkHvcTvLzMKK2vshUl9MD4JlvNovIHPxKHFyQtFh53huu52XwD/bzHy3E=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230001)(366004)(64756008)(66446008)(66476007)(33656002)(508600001)(110136005)(2906002)(66946007)(76116006)(66556008)(36756003)(186003)(966005)(91956017)(122000001)(83380400001)(4326008)(38070700005)(86362001)(38100700002)(2616005)(107886003)(3480700007)(26005)(6512007)(71200400001)(6506007)(53546011)(6486002)(8936002)(5660300002)(316002)(8676002)(54906003)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?wWEs/1vgmaSAFe23WcTZXgWrr0qXw6ynPl9Y2gp5oLljmpslvBU+U92TrqsR?=
- =?us-ascii?Q?hdyft+s+dUiZn5ZTAk7lql7dvaLuLxInUIHX9Fl5Kpbe6fIhT8aVoxYCsZd4?=
- =?us-ascii?Q?cx0OQRjNmoOK4Y6eQFS1hbsYJlnpeheR3fomWDIEXDAmYCL9EucUeWb8sR2j?=
- =?us-ascii?Q?oFxxzijn29FOjIFxX4janpg3QH8hCkArd6sE/a0Yl2PDlL9xcGrGOOWsjajR?=
- =?us-ascii?Q?QlqsrhmyeQITqMjNbrzzTNpDp8kOawHhNyyrGeiMwTMle2lSElNpDEqVy+rA?=
- =?us-ascii?Q?w81pX//FzqnYBR7iMgTvRuS2xg0dXLH4V/lJKxb7Fp/Z8cM35yB8aSt5ViB9?=
- =?us-ascii?Q?ukeDK5oAtc8SzJlr492imzeqtwE60/PHsKlJJqzcci6jZa9W5YpaTNDTeZiZ?=
- =?us-ascii?Q?nvDD3o2O34ANakUWj8ZCQP7tap0OFyhJKprLUpRbJm59R5J3mXQvOr2mIAB+?=
- =?us-ascii?Q?k3ovvOgDXP2kbSEuzbwrbFn+z3x2j167S/LJOWn/Vn39wfeJeswnSa+z8sVh?=
- =?us-ascii?Q?x8iKvbCPR8n1DhmfX4xtiGMq5PfF3zophdYzl8C3sibJ/k6jW4Yhw3lNbPHz?=
- =?us-ascii?Q?Des9gPVOwaFEeSx9lvBogp03PKUfrWKomh9JS2WSwnGEAqzhUka255C5fsTj?=
- =?us-ascii?Q?mVY0qyPB59D8DaIXaagyoJ+mxnEv2aJEIVGhe/9wa2Fe978tk39AH5Sfhg92?=
- =?us-ascii?Q?FjIi/h89wnEc7JvDC8QVwuTjMFPghMuXMxPWZoSyRqg6GKq/XF7qZAaagOkf?=
- =?us-ascii?Q?EIOeBWwwjGsu3pZe3ORHuRpXs/2DlGur2iDYaURy26v+RcXbexv0Ge4m8ijo?=
- =?us-ascii?Q?OOxRBC4FNvbaK+Sar+kLWtiofKiFtlZJFBcYfNyuZKWKtJExbOlc7634HjaD?=
- =?us-ascii?Q?PxbsINzquMmOIZ3wQuMqwfNZ7rS3H21YZLdr3Y9GXvXglTVlebXCJZ6gGX+x?=
- =?us-ascii?Q?/3/ltSgGqm2cuoYs0utMCCXjlrjoJXCw3Z7HNx2N5Z3KOcsGZU1CpFDv8nhw?=
- =?us-ascii?Q?VoEg7wPLNHHf7CwBzBmX1fQZ0XJ6Ob/rA73MSgqR2VrnFUJ5b/d73B7upjln?=
- =?us-ascii?Q?7FbB9bIlCcW0RtJwbEz618yFxZvnmwmztYoJGJVHBMdfcJMKQBoVjbgxqKjT?=
- =?us-ascii?Q?E96xb5MmJjspLwb0ghUcDaQMejMeTGbAPle1YE4sgutPiYnp1pnS6LjQ/C0l?=
- =?us-ascii?Q?WIv7LSy0KeMuogBzWvFevRg4SbofbMPzGS2owlvHQI0U/mCA+AZqW3lHk+bP?=
- =?us-ascii?Q?gLwAx0BmnXfJ8kyAnuEuaq1MgJb2OAr1P6MYevT0IYqGZqjjDF/Xc1Dltati?=
- =?us-ascii?Q?57ZVBF/4NCfV97IjcIsuLZridM+dO6ZXaaniK5pzAvpCJIIe0it7RKPKSGVf?=
- =?us-ascii?Q?4sBl6C3jvcS11kZkPlpAiiuJ14WWVaNm4vbsTdtcb+617GBcyHKcRgPGgI+h?=
- =?us-ascii?Q?DTyvPqQ1DbaxcKF3mZN3DdeymzZ753zNmf3DMFcVdHT5b23VeXaJYIZshX77?=
- =?us-ascii?Q?D+oKr9ZtBsZXhtyvugBwHo2mj3q1chRRkyFY76D7JnS8E8VqEfzu3ppTRQUE?=
- =?us-ascii?Q?yxlBEA4bXXADPxTW2edCoJ0dWCdhwtiIaAGqt+k15MS7NQxUn5Uc0dFIwPOE?=
- =?us-ascii?Q?Nwm1a9NbzrWFqeca5LRD1X2EfKdAQTfUzLttxivivk5Rz7M56mAsnP7C1KD9?=
- =?us-ascii?Q?GuASw+WsMMSTmWPJ8r8sa9jvhRy5Ris4u3smxF1MrUu6kkbTxr4a1D6DcZD6?=
- =?us-ascii?Q?shTU/+CKsOv4+xbWrW6I9x8Nq9/W69s=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E20BBAA58CDA7E469367AA163DEC1596@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S1345417AbiFAHgZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 1 Jun 2022 03:36:25 -0400
+X-Greylist: delayed 511 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Jun 2022 00:36:22 PDT
+Received: from smtp-o-3.desy.de (smtp-o-3.desy.de [131.169.56.156])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0F87A80B
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Jun 2022 00:36:21 -0700 (PDT)
+Received: from smtp-buf-3.desy.de (smtp-buf-3.desy.de [IPv6:2001:638:700:1038::1:a6])
+        by smtp-o-3.desy.de (Postfix) with ESMTP id A49BD60A4E
+        for <linux-nfs@vger.kernel.org>; Wed,  1 Jun 2022 09:27:48 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp-o-3.desy.de A49BD60A4E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=desy.de; s=default;
+        t=1654068468; bh=Qick2iSfOgu1Y8FDygDE9jagOryKDt2CW1Ho5Bc4Pa0=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=1QkzxT6YPl77BBiRAyQsHxDBaM7+fisXatZ9G9VwoJHpzhsrw6DJ1O5PEd03iGEZb
+         TCCR0EcKhEhUF37PwCyaxR1PLOMY8m7HIgh35LlV0CM8GmTI0rbQMayM5+2AJwKpTN
+         aTje973seJcDpZlS2g5W3sXhvG1TuCK6d8qVes5w=
+Received: from smtp-m-3.desy.de (smtp-m-3.desy.de [131.169.56.131])
+        by smtp-buf-3.desy.de (Postfix) with ESMTP id 98CB5A0586;
+        Wed,  1 Jun 2022 09:27:48 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at desy.de
+Received: from z-mbx-2.desy.de (z-mbx-2.desy.de [131.169.55.140])
+        by smtp-intra-1.desy.de (Postfix) with ESMTP id 632EFC0177;
+        Wed,  1 Jun 2022 09:27:48 +0200 (CEST)
+Date:   Wed, 1 Jun 2022 09:27:47 +0200 (CEST)
+From:   "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To:     Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc:     trondmy <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1666242553.16570812.1654068467831.JavaMail.zimbra@desy.de>
+In-Reply-To: <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
+References: <20220531134854.63115-1-olga.kornievskaia@gmail.com> <b829962068bf70b5aadcb16fd0265ec64c85f853.camel@hammerspace.com> <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
+Subject: Re: [PATCH] pNFS: fix IO thread starvation problem during
+ LAYOUTUNAVAILABLE error
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 451ef4bb-8853-4724-f798-08da43668097
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Jun 2022 00:34:34.8889
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: y4A9LrCoHn0qRSgk7sI5KvahHy9PUzoiGWwG6Udo6lcHwIHSXi2qYS/9w2Js0vjEJOPFmtXLgvg6WzPDtKY0PQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5191
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.874
- definitions=2022-05-31_08:2022-05-30,2022-05-31 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 bulkscore=0 suspectscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2205310105
-X-Proofpoint-ORIG-GUID: I1JLdGZaqYfmWeszScKdLm9_Vuiv3xtc
-X-Proofpoint-GUID: I1JLdGZaqYfmWeszScKdLm9_Vuiv3xtc
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; 
+        boundary="----=_Part_16570828_427416030.1654068468342"
+X-Mailer: Zimbra 8.8.15_GA_4203 (ZimbraWebClient - FF100 (Linux)/8.8.15_GA_4232)
+Thread-Topic: pNFS: fix IO thread starvation problem during LAYOUTUNAVAILABLE error
+Thread-Index: KdT2VOZL5uQPiCdQL888a0t44wwVmQ==
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HK_RANDOM_ENVFROM,
+        HK_RANDOM_FROM,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+------=_Part_16570828_427416030.1654068468342
+Date: Wed, 1 Jun 2022 09:27:47 +0200 (CEST)
+From: "Mkrtchyan, Tigran" <tigran.mkrtchyan@desy.de>
+To: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Cc: trondmy <trondmy@hammerspace.com>, 
+	Anna Schumaker <anna.schumaker@netapp.com>, 
+	linux-nfs <linux-nfs@vger.kernel.org>
+Message-ID: <1666242553.16570812.1654068467831.JavaMail.zimbra@desy.de>
+In-Reply-To: <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
+References: <20220531134854.63115-1-olga.kornievskaia@gmail.com> <b829962068bf70b5aadcb16fd0265ec64c85f853.camel@hammerspace.com> <CAN-5tyGF56-spgEcwLV2cfw4KnNfO_ru9tRH9i_mMh+wmC+cTg@mail.gmail.com>
+Subject: Re: [PATCH] pNFS: fix IO thread starvation problem during
+ LAYOUTUNAVAILABLE error
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: Zimbra 8.8.15_GA_4203 (ZimbraWebClient - FF100 (Linux)/8.8.15_GA_4232)
+Thread-Topic: pNFS: fix IO thread starvation problem during LAYOUTUNAVAILABLE error
+Thread-Index: KdT2VOZL5uQPiCdQL888a0t44wwVmQ==
 
+Hi Olga,
 
-> On May 27, 2022, at 5:34 PM, Chuck Lever III <chuck.lever@oracle.com> wro=
-te:
->=20
->=20
->=20
->> On May 27, 2022, at 4:37 PM, Frank van der Linden <fllinden@amazon.com> =
-wrote:
->>=20
->> On Fri, May 27, 2022 at 06:59:47PM +0000, Chuck Lever III wrote:
->>>=20
->>>=20
->>> Hi Frank-
->>>=20
->>> Bruce recently reminded me about this issue. Is there a bugzilla somewh=
-ere?
->>> Do you have a reproducer I can try?
->>=20
->> Hi Chuck,
->>=20
->> The easiest way to reproduce the issue is to run generic/531 over an
->> NFSv4 mount, using a system with a larger number of CPUs on the client
->> side (or just scaling the test up manually - it has a calculation based
->> on the number of CPUs).
->>=20
->> The test will take a long time to finish. I initially described the
->> details here:
->>=20
->> https://lore.kernel.org/linux-nfs/20200608192122.GA19171@dev-dsk-fllinde=
-n-2c-c1893d73.us-west-2.amazon.com/
->>=20
->> Since then, it was also reported here:
->>=20
->> https://lore.kernel.org/all/20210531125948.2D37.409509F4@e16-tech.com/T/=
-#m8c3e4173696e17a9d5903d2a619550f352314d20
->=20
-> Thanks for the summary. So, there isn't a bugzilla tracking this
-> issue? If not, please create one here:
->=20
->  https://bugzilla.linux-nfs.org/
->=20
-> Then we don't have to keep asking for a repeat summary ;-)
+----- Original Message -----
+> From: "Olga Kornievskaia" <olga.kornievskaia@gmail.com>
+> To: "trondmy" <trondmy@hammerspace.com>
+> Cc: "Anna Schumaker" <anna.schumaker@netapp.com>, "linux-nfs" <linux-nfs@vger.kernel.org>
+> Sent: Tuesday, 31 May, 2022 18:03:34
+> Subject: Re: [PATCH] pNFS: fix IO thread starvation problem during LAYOUTUNAVAILABLE error
 
-I can easily reproduce this scenario in my lab. I've opened:
+> On Tue, May 31, 2022 at 11:00 AM Trond Myklebust
+> <trondmy@hammerspace.com> wrote:
+>>
+>> On Tue, 2022-05-31 at 09:48 -0400, Olga Kornievskaia wrote:
+>> > From: Olga Kornievskaia <kolga@netapp.com>
+>> >
+>> > In recent pnfs testing we've incountered IO thread starvation problem
+>> > during the time when the server returns LAYOUTUNAVAILABLE error to
+>> > the
+>> > client. When that happens each IO request tries to get a new layout
+>> > and the pnfs_update_layout() code ensures that only 1 LAYOUTGET
+>> > RPC is outstanding, the rest would be waiting. As the thread that
+>> > gets
+>> > the layout wakes up the waiters only one gets to run and it tends to
+>> > be
+>> > the latest added to the waiting queue. After receiving
+>> > LAYOUTUNAVAILABLE
+>> > error the client would fall back to the MDS writes and as those
+>> > writes
+>> > complete and the new write is issued, those requests are added as
+>> > waiters and they get to run before the earliest of the waiters that
+>> > was put on the queue originally never gets to run until the
+>> > LAYOUTUNAVAILABLE condition resolves itself on the server.
+>> >
+>> > With the current code, if N IOs arrive asking for a layout, then
+>> > there will be N serial LAYOUTGETs that will follow, each would be
+>> > getting its own LAYOUTUNAVAILABLE error. Instead, the patch proposes
+>> > to apply the error condition to ALL the waiters for the outstanding
+>> > LAYOUTGET. Once the error is received, the code would allow all
+>> > exiting N IOs fall back to the MDS, but any new arriving IOs would be
+>> > then queued up and one them the new IO would trigger a new LAYOUTGET.
+>> >
+>> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+>> > ---
+>> >  fs/nfs/pnfs.c | 14 +++++++++++++-
+>> >  fs/nfs/pnfs.h |  2 ++
+>> >  2 files changed, 15 insertions(+), 1 deletion(-)
+>> >
+>> > diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
+>> > index 68a87be3e6f9..5b7a679e32c8 100644
+>> > --- a/fs/nfs/pnfs.c
+>> > +++ b/fs/nfs/pnfs.c
+>> > @@ -2028,10 +2028,20 @@ pnfs_update_layout(struct inode *ino,
+>> >         if ((list_empty(&lo->plh_segs) || !pnfs_layout_is_valid(lo))
+>> > &&
+>> >             atomic_read(&lo->plh_outstanding) != 0) {
+>> >                 spin_unlock(&ino->i_lock);
+>> > +               atomic_inc(&lo->plh_waiting);
+>> >                 lseg = ERR_PTR(wait_var_event_killable(&lo-
+>> > >plh_outstanding,
+>> >                                         !atomic_read(&lo-
+>> > >plh_outstanding)));
+>> > -               if (IS_ERR(lseg))
+>> > +               if (IS_ERR(lseg)) {
+>> > +                       atomic_dec(&lo->plh_waiting);
+>> >                         goto out_put_layout_hdr;
+>> > +               }
+>> > +               if (test_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags)) {
+>> > +                       pnfs_layout_clear_fail_bit(lo,
+>> > pnfs_iomode_to_fail_bit(iomode));
+>> > +                       lseg = NULL;
+>> > +                       if (atomic_dec_and_test(&lo->plh_waiting))
+>> > +                               clear_bit(NFS_LAYOUT_DRAIN, &lo-
+>> > >plh_flags);
+>> > +                       goto out_put_layout_hdr;
+>> > +               }
+>> >                 pnfs_put_layout_hdr(lo);
+>> >                 goto lookup_again;
+>> >         }
+>> > @@ -2152,6 +2162,8 @@ pnfs_update_layout(struct inode *ino,
+>> >                 case -ERECALLCONFLICT:
+>> >                 case -EAGAIN:
+>> >                         break;
+>> > +               case -ENODATA:
+>> > +                       set_bit(NFS_LAYOUT_DRAIN, &lo->plh_flags);
+>> >                 default:
+>> >                         if (!nfs_error_is_fatal(PTR_ERR(lseg))) {
+>> >                                 pnfs_layout_clear_fail_bit(lo,
+>> > pnfs_iomode_to_fail_bit(iomode));
+>> > diff --git a/fs/nfs/pnfs.h b/fs/nfs/pnfs.h
+>> > index 07f11489e4e9..5c07da32320b 100644
+>> > --- a/fs/nfs/pnfs.h
+>> > +++ b/fs/nfs/pnfs.h
+>> > @@ -105,6 +105,7 @@ enum {
+>> >         NFS_LAYOUT_FIRST_LAYOUTGET,     /* Serialize first layoutget
+>> > */
+>> >         NFS_LAYOUT_INODE_FREEING,       /* The inode is being freed
+>> > */
+>> >         NFS_LAYOUT_HASHED,              /* The layout visible */
+>> > +       NFS_LAYOUT_DRAIN,
+>> >  };
+>> >
+>> >  enum layoutdriver_policy_flags {
+>> > @@ -196,6 +197,7 @@ struct pnfs_commit_ops {
+>> >  struct pnfs_layout_hdr {
+>> >         refcount_t              plh_refcount;
+>> >         atomic_t                plh_outstanding; /* number of RPCs
+>> > out */
+>> > +       atomic_t                plh_waiting;
+>> >         struct list_head        plh_layouts;   /* other client
+>> > layouts */
+>> >         struct list_head        plh_bulk_destroy;
+>> >         struct list_head        plh_segs;      /* layout segments
+>> > list */
+>>
+>> According to the spec, the correct behaviour for handling
+>> NFS4ERR_LAYOUTUNAVAILABLE is to stop trying to do pNFS to the inode,
+>> and to fall back to doing I/O through the MDS. The error describes a
+>> more or less permanent state of the server being unable to hand out a
+>> layout for this file.
+>> If the server wanted the clients to retry after a delay, it should be
+>> returning NFS4ERR_LAYOUTTRYLATER. We already handle that correctly.
+> 
+> To clarify, can you confirm that LAYOUTUNAVAILABLE would only turn off
+> the inode permanently but for a period of time?
+> 
+> It looks to me that for the LAYOUTTRYLATER, the client would face the
+> same starvation problem in the same situation. I don't see anything
+> marking the segment failed for such error? I believe the client
+> returns nolayout for that error, falls back to MDS but allows asking
+> for the layout for a period of time, having again the queue of waiters
 
-  https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D386
+Your assumption doesn't match to our observation. For files that off-line
+(DS down or file is on tape) we return LAYOUTTRYLATER. Usually, client keep
+re-trying LAYOUTGET until file is available again. We use flexfile layout
+as nfs4_file has less predictable behavior. For files that should be served
+by MDS we return LAYOUTUNAVAILABLE. Typically, those files are quite small
+and served with a single READ request, so I haven't observe repetitive LAYOUTGET
+calls.
 
+Best regards,
+   Tigran. 
 
---
-Chuck Lever
+> that gets manipulated as such that favors last added.
+> 
+> 
+>> Currently, what our client does to handle NFS4ERR_LAYOUTUNAVAILABLE is
+>> just plain wrong: we just return no layout, and then let the next
+>> caller to pnfs_update_layout() immediately try again.
+>>
+>> My problem with this patch, is that it just falls back to doing I/O
+>> through the MDS for the writes that are already queued in
+>> pnfs_update_layout(). It perpetuates the current bad behaviour of
+>> unnecessary pounding of the server with LAYOUTGET requests that are
+>> going to fail with the exact same error.
+>>
+>> I'd therefore prefer to see us fix the real bug (i.e. the handling of
+>> NFS4ERR_LAYOUTUNAVAILABLE) first, and then look at mitigating issues
+>> with the queuing. I already have 2 patches to deal with this.
+>>
+>> --
+>> Trond Myklebust
+>> Linux NFS client maintainer, Hammerspace
+>> trond.myklebust@hammerspace.com
+>>
 
+------=_Part_16570828_427416030.1654068468342
+Content-Type: application/pkcs7-signature; name=smime.p7s; smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCAMIIF
+vzCCBKegAwIBAgIMJENPm+MXSsxZAQzUMA0GCSqGSIb3DQEBCwUAMIGNMQswCQYDVQQGEwJERTFF
+MEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVpbmVzIERldXRzY2hlbiBGb3JzY2h1bmdz
+bmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUwIwYDVQQDDBxERk4tVmVyZWluIEdsb2Jh
+bCBJc3N1aW5nIENBMB4XDTIxMDIxMDEyMzEwOVoXDTI0MDIxMDEyMzEwOVowWDELMAkGA1UEBhMC
+REUxLjAsBgNVBAoMJURldXRzY2hlcyBFbGVrdHJvbmVuLVN5bmNocm90cm9uIERFU1kxGTAXBgNV
+BAMMEFRpZ3JhbiBNa3J0Y2h5YW4wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClVKHU
+er1OiIaoo2MFDgCSzcqRCB8qVjjLJyJwzHWkhKniE6dwY8xHciG0HZFpSQqiRsoakD+BzqINXsqI
+CkVck5n7cUJ6cHBOM1r4pzEBcuuozPrT2tAfnHkFFGTZffOXgjmEITfSh6SD+DYeZH4Dt8kPZmnD
+mzWMDFDyB67WWcWApVC1nPh29yGgJk18UZ+Ut9a+woaovMZlutMbuvLVt/x5rpycMw0z+J1qeK7J
+8F3bKb0o2gg+Mnz9LzpLtJp7E9qJUKOTkZGDua9w9xrlo4XGX9Vn72K5wodu6woahdgNG+sXRcJM
+RH3aWgfdznoi1ORLJCfTbdfjSBpclvt/AgMBAAGjggJRMIICTTA+BgNVHSAENzA1MA8GDSsGAQQB
+ga0hgiwBAQQwEAYOKwYBBAGBrSGCLAEBBAgwEAYOKwYBBAGBrSGCLAIBBAgwCQYDVR0TBAIwADAO
+BgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMB0GA1UdDgQWBBQG
+1+t/IHSjHSbbu11uU5Iw7JW92zAfBgNVHSMEGDAWgBRrOpiL+fJTidrgrbIyHgkf6Ko7dDAjBgNV
+HREEHDAagRh0aWdyYW4ubWtydGNoeWFuQGRlc3kuZGUwgY0GA1UdHwSBhTCBgjA/oD2gO4Y5aHR0
+cDovL2NkcDEucGNhLmRmbi5kZS9kZm4tY2EtZ2xvYmFsLWcyL3B1Yi9jcmwvY2FjcmwuY3JsMD+g
+PaA7hjlodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2Rmbi1jYS1nbG9iYWwtZzIvcHViL2NybC9jYWNy
+bC5jcmwwgdsGCCsGAQUFBwEBBIHOMIHLMDMGCCsGAQUFBzABhidodHRwOi8vb2NzcC5wY2EuZGZu
+LmRlL09DU1AtU2VydmVyL09DU1AwSQYIKwYBBQUHMAKGPWh0dHA6Ly9jZHAxLnBjYS5kZm4uZGUv
+ZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwSQYIKwYBBQUHMAKGPWh0dHA6
+Ly9jZHAyLnBjYS5kZm4uZGUvZGZuLWNhLWdsb2JhbC1nMi9wdWIvY2FjZXJ0L2NhY2VydC5jcnQw
+DQYJKoZIhvcNAQELBQADggEBADaFbcKsjBPbw6aRf5vxlJdehkafMy4JIdduMEGB+IjpBRZGmu0Z
+R2FRWNyq0lNRz03holZ8Rew0Ldx58REJmvAEzbwox4LT1wG8gRLEehyasSROajZBFrIHadDja0y4
+1JrfqP2umZFE2XWap8pDFpQk4sZOXW1mEamLzFtlgXtCfalmYmbnrq5DnSVKX8LOt5BZvDWin3r4
+m5v313d5/l0Qz2IrN6v7qNIyqT4peW90DUJHB1MGN60W2qe+VimWIuLJkQXMOpaUQJUlhkHOnhw8
+82g+jWG6kpKBMzIQMMGP0urFlPAia2Iuu2VtCkT7Wr43xyhiVzkZcT6uzR23PLsAADGCApswggKX
+AgEBMIGeMIGNMQswCQYDVQQGEwJERTFFMEMGA1UECgw8VmVyZWluIHp1ciBGb2VyZGVydW5nIGVp
+bmVzIERldXRzY2hlbiBGb3JzY2h1bmdzbmV0emVzIGUuIFYuMRAwDgYDVQQLDAdERk4tUEtJMSUw
+IwYDVQQDDBxERk4tVmVyZWluIEdsb2JhbCBJc3N1aW5nIENBAgwkQ0+b4xdKzFkBDNQwDQYJYIZI
+AWUDBAIBBQCggc4wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjIw
+NjAxMDcyNzQ4WjAtBgkqhkiG9w0BCTQxIDAeMA0GCWCGSAFlAwQCAQUAoQ0GCSqGSIb3DQEBCwUA
+MC8GCSqGSIb3DQEJBDEiBCBftRfGU4O6S3/JEPeyfNOd+t2sjNzlucCFtX36eJ8mzzA0BgkqhkiG
+9w0BCQ8xJzAlMAoGCCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDAHBgUrDgMCBzANBgkqhkiG9w0B
+AQsFAASCAQBLf3yw98NXAGTK0ANVvkMfYjBGhqzrUp7va1AWw7EOj1M2FhcfOsRBtaIA22fqKqlm
+uFwTAbBapjZ6JlDAlgNfXeqPTJCTATNhS9w6/CwJ+o4sCJFuGYezaAVe8oNQgykLxOcdLgpclc+p
+rIZbrGUaMmVrEcqCqwDDbLcj038S5TAa4Tf//55xiRMuSt6VHPcJcUazvEqnZ4eCBXaOilh3hm4x
+c2dJfPH5GEg+mXyfOjy9FjP7dhCwOOEZv+tQQUCBMT6DLKRurffMDJd0dFuXV124SmhWy939BxhO
+yg/E1mVmZHqS0dXiks8LaPr5P0YRO0U21MOkRj+vQjgMTtgeAAAAAAAA
+------=_Part_16570828_427416030.1654068468342--
