@@ -2,126 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 73D6253EDE9
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jun 2022 20:29:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3EB453EDEF
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jun 2022 20:36:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231809AbiFFS3X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jun 2022 14:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53872 "EHLO
+        id S231607AbiFFSgK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jun 2022 14:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231820AbiFFS3V (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jun 2022 14:29:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0D6AF6BFF5
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 11:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654540158;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rUOm5nW2jIzp7hBhCtR8BVpn4Nh4LsKZJd2QYQQqCpI=;
-        b=LCVTI7vY4BawdQ5E9hGXa1uvaK0vf364IX70i/eMJzGvKUYdNQO9iDFAW1BMvXeUuabDY5
-        AYwW8lz1wfLM+uugmA1y3aGrI/X8+Y6qK5gzI69mCrithTwBc2E6hnovXeafmPUV6Ld7Jb
-        56vjdg0KLVO0M8uuaLSuqEVKNgsjyMc=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-402-W1RSsp_dMNelWpHGRUIX7w-1; Mon, 06 Jun 2022 14:29:16 -0400
-X-MC-Unique: W1RSsp_dMNelWpHGRUIX7w-1
-Received: by mail-qk1-f197.google.com with SMTP id q7-20020a05620a0d8700b006a6b5428cb1so3731931qkl.2
-        for <linux-nfs@vger.kernel.org>; Mon, 06 Jun 2022 11:29:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:references:from:in-reply-to
-         :content-transfer-encoding;
-        bh=rUOm5nW2jIzp7hBhCtR8BVpn4Nh4LsKZJd2QYQQqCpI=;
-        b=x0x5chE1cRJumzXDGEZu7fGWpdjRLD2dymNbWdNWIunyiRo2Hiac2PMrYoYt/Ceikw
-         aVSySr+ulmdx5b1MckgG5iJgkSGo/G0uCiMaawn55KRoc3Q3aKuaz/KjNNIGC2uYm0CI
-         xWXexDI52yekzo7SAKbDdhbsUCvGHDP0dQ9Hyw8zcd0KxdISOUC8y/DzIsyd1GOtBHW9
-         cslADR89wPJLgdRcwArI+OC2iTHMZtAsK2IjANrMXvG93Fh6hSAR1wdTQD8/N4MHNAtX
-         mxUNgptiGA8FTaEVsF6Y3/5jRXLx8oKQvtXii6ZRjdnxCH97mD2FHKmLdS7cOZZsOcdo
-         sglg==
-X-Gm-Message-State: AOAM531v9Vm5cfUl77SBEcAtsIrdBgus7sPviiDcOVKdcVD1HmAq6lBa
-        /+lx6CyCckwJO81Q6MStdLUk46sM3KfQKEYF9bDwRkjqPJx3Sq06Xnfuv+bP01wRURoA08gzWBz
-        Wky7Ssm+KlDpg2ugdpvnp
-X-Received: by 2002:a37:9d86:0:b0:6a6:9631:db0d with SMTP id g128-20020a379d86000000b006a69631db0dmr12970986qke.473.1654540155860;
-        Mon, 06 Jun 2022 11:29:15 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJz1AIlVMzC4VDnel78BQiLIJDJTurK7gON56NF4QOu/7lUlYBRn3VyXYQZUG2CR3qzVuY2SHg==
-X-Received: by 2002:a37:9d86:0:b0:6a6:9631:db0d with SMTP id g128-20020a379d86000000b006a69631db0dmr12970966qke.473.1654540155572;
-        Mon, 06 Jun 2022 11:29:15 -0700 (PDT)
-Received: from [172.31.1.6] ([71.161.96.106])
-        by smtp.gmail.com with ESMTPSA id 21-20020ac84e95000000b002f90a33c78csm11645310qtp.67.2022.06.06.11.29.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Jun 2022 11:29:15 -0700 (PDT)
-Message-ID: <35aabd94-068a-3ef3-c52c-3b30a2bf5c71@redhat.com>
-Date:   Mon, 6 Jun 2022 14:29:14 -0400
+        with ESMTP id S230154AbiFFSgJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jun 2022 14:36:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4711116D
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 11:36:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4916761336
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 18:36:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98E88C385A9
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 18:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1654540567;
+        bh=QxKZ57Tbu0KMV0ZdyJzdTNzsIMtxg0C2WD3ipQlam44=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aRfFEcYhxySCdexgS7Ze0juVZk7eSEPyjIr2SIF82yre40f/NoaR+uNWoGs920Cjo
+         j9crbhZNZ1LB9ncgbcngfphHZlvrlZLy0aKyqN7o/TKSHdjQXpycvP6oBh9mxSISXj
+         XRxtb9zNNNGin2v5axjNrHADM6Jp9ZiTazi5oUGk7Sv8jrUlRcNbU58S65Wbi4S93M
+         2lNvgqjJVroqm2/rQJElWGKPTBKzCF6q0g+vvYgYUNa2/c2UTcsD6P56wNoqra/+K5
+         wmUb7T+6JvjmC0RErsuRU2we1aFe/hH4OIxquLbmcFAjTMe34VDKsJVDt6H7LEITAG
+         RKm/eMtOCZ+0g==
+Received: by mail-wm1-f47.google.com with SMTP id o37-20020a05600c512500b0039c4ba4c64dso2476605wms.2
+        for <linux-nfs@vger.kernel.org>; Mon, 06 Jun 2022 11:36:07 -0700 (PDT)
+X-Gm-Message-State: AOAM5318Q+Kgmxt9FMuy4/EoLTCg1j7GHyPatuxLsVe48PAPCs0XYro5
+        XSPM8eSq1zyLvzAdcKm5MLEJORuvR9XzlK/jD+8=
+X-Google-Smtp-Source: ABdhPJyRWOK+qsj0QPner7rMuyqmOP5XqwGK+Jmno3p0YzbxhZ//DVM8QV8BrScg9ht5Y4TVa2kYnBV334QMbI1d4Hs=
+X-Received: by 2002:a05:600c:4f51:b0:397:86a9:b827 with SMTP id
+ m17-20020a05600c4f5100b0039786a9b827mr50929217wmq.114.1654540566184; Mon, 06
+ Jun 2022 11:36:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: nfs-utils: rpc.svcgssd bug reading /etc/nfs.conf
-Content-Language: en-US
-To:     marcel@linux-ng.de, linux-nfs@vger.kernel.org
-References: <bf4aa2c82bfef19304d7a458a2a8fb28@linux-ng.de>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <bf4aa2c82bfef19304d7a458a2a8fb28@linux-ng.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220601173449.155273-1-smayhew@redhat.com>
+In-Reply-To: <20220601173449.155273-1-smayhew@redhat.com>
+From:   Anna Schumaker <anna@kernel.org>
+Date:   Mon, 6 Jun 2022 14:35:49 -0400
+X-Gmail-Original-Message-ID: <CAFX2JfkQFoQd2UDGqtMc=FPPrtpb0Qyjj-iO-FXZUfauVcXv2w@mail.gmail.com>
+Message-ID: <CAFX2JfkQFoQd2UDGqtMc=FPPrtpb0Qyjj-iO-FXZUfauVcXv2w@mail.gmail.com>
+Subject: Re: [PATCH] sunrpc: set cl_max_connect when cloning an rpc_clnt
+To:     Scott Mayhew <smayhew@redhat.com>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+Hi Scott,
 
-On 6/6/22 2:14 PM, marcel@linux-ng.de wrote:
-> Hi there,
-> 
-> please don't hesitate to direct me somewhere else in case this is not the right place to report
-> bugs concerning nfs-utils.
-> 
-> I found a bug in nfs-utils concerning the rpc.svcgssd daemon while I was trying to set the
-> principal name in /etc/nfs.conf:
-> 
-> [svcgssd]
-> principal=nfs/myhost.mydomain.de@MYDOMAIN.DE
-> 
-> However rpc.svcgssd refused to start - complaining about not being able to find the principal in
-> the keytab.
-> When specified on command line (using the -p option) things worked however.
-> 
-> So I took a look at the code and found the problem in nfs-utils-2.6.1/utils/gssd/svcgssd.c.
-> The problem seems to be here:
-> 
-> /* We don't need the config anymore */
-> conf_cleanup();
-> 
-> This is called right after parsing the config file(s), but before calling gssd_acquire_cred().
-> At the time it is called the variable "principal" does no longer contain the data read from the
-> config file.
-> 
-> Moving conf_cleanup() to the end of the code helps.Could you please set a patch that shows where you moved this call?
+On Wed, Jun 1, 2022 at 1:34 PM Scott Mayhew <smayhew@redhat.com> wrote:
+>
+> If the initial attempt at trunking detection using the krb5i auth flavor
+> fails with -EACCES, -NFS4ERR_CLID_INUSE, or -NFS4ERR_WRONGSEC, then the
+> NFS client tries again using auth_sys, cloning the rpc_clnt in the
+> process.  If this second attempt at trunking detection succeeds, then
+> the resulting nfs_client->cl_rpcclient winds up having cl_max_connect=0
+> and subsequent attempts to add additional transport connections to the
+> rpc_clnt will fail with a message similar to the following being logged:
+>
+> [502044.312640] SUNRPC: reached max allowed number (0) did not add
+> transport to server: 192.168.122.3
 
-> 
-> As I first encountered this on Ubuntu 22.04 I also opened a Launchpad bug report:
-> s. https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/1977745
-Unfortunately I don't get notified when these get open....
-https://bugzilla.linux-nfs.org/ would be a better place.
+Good catch! I was wondering if you could give me a "Fixes:" tag so it
+can be backported to stable?
 
-> 
-> Maybe someone can fix this for the next release.
-Sure... send a patch and we can make it happen!
+Thanks,
+Anna
 
-steved.
-
-> 
-> Best regards,
-> Marcel
-> 
-
+>
+> Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+> ---
+>  net/sunrpc/clnt.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+> index e2c6eca0271b..b6781ada3aa8 100644
+> --- a/net/sunrpc/clnt.c
+> +++ b/net/sunrpc/clnt.c
+> @@ -651,6 +651,7 @@ static struct rpc_clnt *__rpc_clone_client(struct rpc_create_args *args,
+>         new->cl_discrtry = clnt->cl_discrtry;
+>         new->cl_chatty = clnt->cl_chatty;
+>         new->cl_principal = clnt->cl_principal;
+> +       new->cl_max_connect = clnt->cl_max_connect;
+>         return new;
+>
+>  out_err:
+> --
+> 2.35.3
+>
