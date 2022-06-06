@@ -2,31 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2503653E947
-	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jun 2022 19:08:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3730753E7CA
+	for <lists+linux-nfs@lfdr.de>; Mon,  6 Jun 2022 19:07:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbiFFOvS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 6 Jun 2022 10:51:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56450 "EHLO
+        id S240047AbiFFOv0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 6 Jun 2022 10:51:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240047AbiFFOvQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jun 2022 10:51:16 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24B1A16FEE3
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 07:51:16 -0700 (PDT)
+        with ESMTP id S240051AbiFFOvZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 6 Jun 2022 10:51:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2C132FFD8
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 07:51:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B4E08614B2
-        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 14:51:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 066C3C34115;
-        Mon,  6 Jun 2022 14:51:14 +0000 (UTC)
-Subject: [PATCH v2 07/15] SUNRPC: Refactor rpc_call_null_helper()
+        by ams.source.kernel.org (Postfix) with ESMTPS id ED4DDB81A7A
+        for <linux-nfs@vger.kernel.org>; Mon,  6 Jun 2022 14:51:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79DC6C34115;
+        Mon,  6 Jun 2022 14:51:21 +0000 (UTC)
+Subject: [PATCH v2 08/15] SUNRPC: Add RPC client support for the RPC_AUTH_TLS
+ auth flavor
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     trondmy@hammerspace.com
-Date:   Mon, 06 Jun 2022 10:51:13 -0400
-Message-ID: <165452707392.1496.12861225717405665289.stgit@oracle-102.nfsv4.dev>
+Date:   Mon, 06 Jun 2022 10:51:20 -0400
+Message-ID: <165452708031.1496.6127408236315108243.stgit@oracle-102.nfsv4.dev>
 In-Reply-To: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
 References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
 User-Agent: StGit/1.5
@@ -42,60 +43,181 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I'm about to add a use case that does not want RPC_TASK_NULLCREDS.
+The new authentication flavor is used only to discover peer support
+for RPC-over-TLS.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- net/sunrpc/clnt.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ include/linux/sunrpc/auth.h |    1 
+ net/sunrpc/Makefile         |    2 -
+ net/sunrpc/auth.c           |    2 -
+ net/sunrpc/auth_tls.c       |  120 +++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 123 insertions(+), 2 deletions(-)
+ create mode 100644 net/sunrpc/auth_tls.c
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 0ca86c92968f..ade83ee13bac 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2751,8 +2751,7 @@ struct rpc_task *rpc_call_null_helper(struct rpc_clnt *clnt,
- 		.rpc_op_cred = cred,
- 		.callback_ops = ops ?: &rpc_null_ops,
- 		.callback_data = data,
--		.flags = flags | RPC_TASK_SOFT | RPC_TASK_SOFTCONN |
--			 RPC_TASK_NULLCREDS,
-+		.flags = flags | RPC_TASK_SOFT | RPC_TASK_SOFTCONN,
- 	};
+diff --git a/include/linux/sunrpc/auth.h b/include/linux/sunrpc/auth.h
+index 3e6ce288a7fc..1f13d923f439 100644
+--- a/include/linux/sunrpc/auth.h
++++ b/include/linux/sunrpc/auth.h
+@@ -144,6 +144,7 @@ struct rpc_credops {
  
- 	return rpc_run_task(&task_setup_data);
-@@ -2760,7 +2759,8 @@ struct rpc_task *rpc_call_null_helper(struct rpc_clnt *clnt,
+ extern const struct rpc_authops	authunix_ops;
+ extern const struct rpc_authops	authnull_ops;
++extern const struct rpc_authops	authtls_ops;
  
- struct rpc_task *rpc_call_null(struct rpc_clnt *clnt, struct rpc_cred *cred, int flags)
- {
--	return rpc_call_null_helper(clnt, NULL, cred, flags, NULL, NULL);
-+	return rpc_call_null_helper(clnt, NULL, cred, flags | RPC_TASK_NULLCREDS,
-+				    NULL, NULL);
- }
- EXPORT_SYMBOL_GPL(rpc_call_null);
+ int __init		rpc_init_authunix(void);
+ int __init		rpcauth_init_module(void);
+diff --git a/net/sunrpc/Makefile b/net/sunrpc/Makefile
+index 1c8de397d6ad..f89c10fe7e6a 100644
+--- a/net/sunrpc/Makefile
++++ b/net/sunrpc/Makefile
+@@ -9,7 +9,7 @@ obj-$(CONFIG_SUNRPC_GSS) += auth_gss/
+ obj-$(CONFIG_SUNRPC_XPRT_RDMA) += xprtrdma/
  
-@@ -2860,9 +2860,11 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- 		goto success;
- 	}
+ sunrpc-y := clnt.o xprt.o socklib.o xprtsock.o sched.o \
+-	    auth.o auth_null.o auth_unix.o \
++	    auth.o auth_null.o auth_tls.o auth_unix.o \
+ 	    svc.o svcsock.o svcauth.o svcauth_unix.o \
+ 	    addr.o rpcb_clnt.o timer.o xdr.o \
+ 	    sunrpc_syms.o cache.o rpc_pipe.o sysfs.o \
+diff --git a/net/sunrpc/auth.c b/net/sunrpc/auth.c
+index 682fcd24bf43..91c21a1c7cdc 100644
+--- a/net/sunrpc/auth.c
++++ b/net/sunrpc/auth.c
+@@ -32,7 +32,7 @@ static unsigned int auth_hashbits = RPC_CREDCACHE_DEFAULT_HASHBITS;
+ static const struct rpc_authops __rcu *auth_flavors[RPC_AUTH_MAXFLAVOR] = {
+ 	[RPC_AUTH_NULL] = (const struct rpc_authops __force __rcu *)&authnull_ops,
+ 	[RPC_AUTH_UNIX] = (const struct rpc_authops __force __rcu *)&authunix_ops,
+-	NULL,			/* others can be loadable modules */
++	[RPC_AUTH_TLS]  = (const struct rpc_authops __force __rcu *)&authtls_ops,
+ };
  
--	task = rpc_call_null_helper(clnt, xprt, NULL, RPC_TASK_ASYNC,
--			&rpc_cb_add_xprt_call_ops, data);
-+	task = rpc_call_null_helper(clnt, xprt, NULL,
-+				    RPC_TASK_ASYNC | RPC_TASK_NULLCREDS,
-+				    &rpc_cb_add_xprt_call_ops, data);
- 	data->xps->xps_nunique_destaddr_xprts++;
+ static LIST_HEAD(cred_unused);
+diff --git a/net/sunrpc/auth_tls.c b/net/sunrpc/auth_tls.c
+new file mode 100644
+index 000000000000..cf4185f188e9
+--- /dev/null
++++ b/net/sunrpc/auth_tls.c
+@@ -0,0 +1,120 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2021, 2022 Oracle.  All rights reserved.
++ *
++ * The AUTH_TLS credential is used only to probe a remote peer
++ * for RPC-over-TLS support.
++ */
 +
- 	rpc_put_task(task);
- success:
- 	return 1;
-@@ -2903,7 +2905,8 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
- 		goto out_err;
- 
- 	/* Test the connection */
--	task = rpc_call_null_helper(clnt, xprt, NULL, 0, NULL, NULL);
-+	task = rpc_call_null_helper(clnt, xprt, NULL, RPC_TASK_NULLCREDS,
-+				    NULL, NULL);
- 	if (IS_ERR(task)) {
- 		status = PTR_ERR(task);
- 		goto out_err;
++#include <linux/types.h>
++#include <linux/module.h>
++#include <linux/sunrpc/clnt.h>
++
++static const char *starttls_token = "STARTTLS";
++static const size_t starttls_len = 8;
++
++static struct rpc_auth tls_auth;
++static struct rpc_cred tls_cred;
++
++static struct rpc_auth *tls_create(const struct rpc_auth_create_args *args,
++				   struct rpc_clnt *clnt)
++{
++	refcount_inc(&tls_auth.au_count);
++	return &tls_auth;
++}
++
++static void tls_destroy(struct rpc_auth *auth)
++{
++}
++
++static struct rpc_cred *tls_lookup_cred(struct rpc_auth *auth,
++					struct auth_cred *acred, int flags)
++{
++	return get_rpccred(&tls_cred);
++}
++
++static void tls_destroy_cred(struct rpc_cred *cred)
++{
++}
++
++static int tls_match(struct auth_cred *acred, struct rpc_cred *cred, int taskflags)
++{
++	return 1;
++}
++
++static int tls_marshal(struct rpc_task *task, struct xdr_stream *xdr)
++{
++	__be32 *p;
++
++	p = xdr_reserve_space(xdr, 4 * XDR_UNIT);
++	if (!p)
++		return -EMSGSIZE;
++	/* Credential */
++	*p++ = rpc_auth_tls;
++	*p++ = xdr_zero;
++	/* Verifier */
++	*p++ = rpc_auth_null;
++	*p   = xdr_zero;
++	return 0;
++}
++
++static int tls_refresh(struct rpc_task *task)
++{
++	set_bit(RPCAUTH_CRED_UPTODATE, &task->tk_rqstp->rq_cred->cr_flags);
++	return 0;
++}
++
++static int tls_validate(struct rpc_task *task, struct xdr_stream *xdr)
++{
++	__be32 *p;
++	void *str;
++
++	p = xdr_inline_decode(xdr, XDR_UNIT);
++	if (!p)
++		return -EIO;
++	if (*p != rpc_auth_null)
++		return -EIO;
++	if (xdr_stream_decode_opaque_inline(xdr, &str, starttls_len) != starttls_len)
++		return -EIO;
++	if (memcmp(str, starttls_token, starttls_len))
++		return -EIO;
++	return 0;
++}
++
++const struct rpc_authops authtls_ops = {
++	.owner		= THIS_MODULE,
++	.au_flavor	= RPC_AUTH_TLS,
++	.au_name	= "NULL",
++	.create		= tls_create,
++	.destroy	= tls_destroy,
++	.lookup_cred	= tls_lookup_cred,
++};
++
++static struct rpc_auth tls_auth = {
++	.au_cslack	= NUL_CALLSLACK,
++	.au_rslack	= NUL_REPLYSLACK,
++	.au_verfsize	= NUL_REPLYSLACK,
++	.au_ralign	= NUL_REPLYSLACK,
++	.au_ops		= &authtls_ops,
++	.au_flavor	= RPC_AUTH_TLS,
++	.au_count	= REFCOUNT_INIT(1),
++};
++
++static const struct rpc_credops tls_credops = {
++	.cr_name	= "AUTH_TLS",
++	.crdestroy	= tls_destroy_cred,
++	.crmatch	= tls_match,
++	.crmarshal	= tls_marshal,
++	.crwrap_req	= rpcauth_wrap_req_encode,
++	.crrefresh	= tls_refresh,
++	.crvalidate	= tls_validate,
++	.crunwrap_resp	= rpcauth_unwrap_resp_decode,
++};
++
++static struct rpc_cred tls_cred = {
++	.cr_lru		= LIST_HEAD_INIT(tls_cred.cr_lru),
++	.cr_auth	= &tls_auth,
++	.cr_ops		= &tls_credops,
++	.cr_count	= REFCOUNT_INIT(2),
++	.cr_flags	= 1UL << RPCAUTH_CRED_UPTODATE,
++};
 
 
