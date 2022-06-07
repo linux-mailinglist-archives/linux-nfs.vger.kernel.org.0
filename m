@@ -2,146 +2,110 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 351DA53F5F0
-	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jun 2022 08:13:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BB2753F712
+	for <lists+linux-nfs@lfdr.de>; Tue,  7 Jun 2022 09:22:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236934AbiFGGN4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jun 2022 02:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52448 "EHLO
+        id S231667AbiFGHWq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jun 2022 03:22:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230292AbiFGGNx (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jun 2022 02:13:53 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35C9BC6DF;
-        Mon,  6 Jun 2022 23:13:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1654582431; x=1686118431;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=pViZck3K1Rq0vF4B9iREn005L3q1DYrrwNaeY+v9f0c=;
-  b=QKKK+0byDSz1oDYDQEy0NxbMp9GB7AJHHAgkEbJKEqqdIzvCnxvOVR3F
-   pVB/L1QThNbZR0pE7ABG8PH0GA8n0QVT/hiDebOWw0UUI3RVidqB6h0hr
-   fhKWWYtwTKJX28nMgds1JbInUg3GgllVvV53505tfavHMvHwQAWwuJnrG
-   ravYW1EfUwogg/PjR3GcSeUbTvXjVSf/sSL6poHhmlFOJvY3jTfGhdSWL
-   ixY7SqGrJMEbuBla9Sf3PDmNN/gbhZDYV1Fhufy3XjqS+kX//PknmvFOf
-   Sa6GtkIY8Itzz86d4Xfl//y+BnDPzMg3Z/psOmOi9lm/yGIBFonxb2az5
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10370"; a="277338689"
-X-IronPort-AV: E=Sophos;i="5.91,282,1647327600"; 
-   d="scan'208";a="277338689"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2022 23:13:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,282,1647327600"; 
-   d="scan'208";a="614746862"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2022 23:13:44 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-        (envelope-from <lkp@intel.com>)
-        id 1nySTI-000DQ5-17;
-        Tue, 07 Jun 2022 06:13:44 +0000
-Date:   Tue, 7 Jun 2022 14:13:26 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-fsdevel@vger.kernel.org
-Cc:     kbuild-all@lists.01.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-aio@kvack.org, linux-btrfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-ntfs-dev@lists.sourceforge.net, ocfs2-devel@oss.oracle.com,
-        linux-mtd@lists.infradead.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH 14/20] hugetlb: Convert to migrate_folio
-Message-ID: <202206071414.41wGG8fp-lkp@intel.com>
-References: <20220606204050.2625949-15-willy@infradead.org>
+        with ESMTP id S237594AbiFGHWq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jun 2022 03:22:46 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF65217ABE
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Jun 2022 00:22:44 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id z7so21731840edm.13
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jun 2022 00:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
+        b=lv9PTbuSv56tx5HgyywnNYRnQv5swfyd5P5s282FiotNed9XVJXspvz6bz8EIjZSuE
+         NLd0JFZp8982ocfg/zPt2iKi9KpBY6WzO10uj+0MumtJg2QVk937WIEAEnttP8jPD9/Y
+         0tBkfMEgxZVmAEbknrxwT+gXsomzENGMUXiucYk72ENoP/hI0TjSIFvpKu+MNLFCe+zZ
+         n5GMMpLWbaTIktb0b419LGNHyvxJm3vz6a2fqy+xSl1zqAc3FMdsSPPtb8O3r5gPEOa6
+         2HhQY+dBQtWZ7mCNNYNAbtMuY+1Bpud32tgI8tllGyaYdZvgihC5T4UBf3zHimU5OSGZ
+         TMHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=OHbou33WPhW0PDy9/CZae9mIrL4buN3/FALSld4obAM=;
+        b=S4KAkPP6KtfY2nNxFrldLEPh4LZI/+Hz9+CP5KYI7BWgmQYB81s1RnQsMAuiNJOiwG
+         QDLmGCR7dxddZivhMe99o0FITU6p0uQgtE8n/rb49FK3pf/Nk/XGe2TWR1CTzeyqZ/nH
+         iDFylc96Snpdr/qujKwUS5oCP2gWnoWxCjX0c3RkSilN6tCu3skBqzel+t5P+nShUKL6
+         mYSx4vKLat4htP10bc2cS2Bqls95tBvZ/IOhYdGHFQM9PnsK2OUECqC39LUzNoXvRCdP
+         4PfOOrUHZfhykbwIvPc9+X7SJag5PVele2shQj97h2ixfweaIDo5+TrHp3Iz3dJj7EQB
+         JBFA==
+X-Gm-Message-State: AOAM532GYbu9jdeIXHJ9S+6o377bMH6AqGI/F6c1vOhnWAmBTk0EiMK3
+        YWRZCS08gPb66WvfdM4i2QmX6BskLqZmkLEGbGs=
+X-Google-Smtp-Source: ABdhPJyoUIGhN6gl16ZlVFKf4ecv+pDlHmwd5/j9V0vTW6f78ls4sOXnCX4KhDCiiutfp69wU00Jq3iRGSoINev115U=
+X-Received: by 2002:aa7:db8d:0:b0:42e:1cbc:5e28 with SMTP id
+ u13-20020aa7db8d000000b0042e1cbc5e28mr27523543edt.366.1654586563440; Tue, 07
+ Jun 2022 00:22:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220606204050.2625949-15-willy@infradead.org>
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+Received: by 2002:a05:6402:26c8:0:0:0:0 with HTTP; Tue, 7 Jun 2022 00:22:42
+ -0700 (PDT)
+Reply-To: andyhalford22@gmail.com
+From:   Andy Halford <fameyemrf@gmail.com>
+Date:   Tue, 7 Jun 2022 00:22:42 -0700
+Message-ID: <CAATdNasdUagDd7AYTHH6yErxgmpL-Ri=+vHuUu78xzHc-Nt6og@mail.gmail.com>
+Subject: Dear Friend
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=6.8 required=5.0 tests=BAYES_50,DEAR_FRIEND,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
         autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:544 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [fameyemrf[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [andyhalford22[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  2.6 DEAR_FRIEND BODY: Dear Friend? That's not very dear!
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  2.3 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi "Matthew,
-
-I love your patch! Yet something to improve:
-
-[auto build test ERROR on linus/master]
-[also build test ERROR on v5.19-rc1 next-20220607]
-[cannot apply to jaegeuk-f2fs/dev-test trondmy-nfs/linux-next kdave/for-next xfs-linux/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Matthew-Wilcox-Oracle/Convert-aops-migratepage-to-aops-migrate_folio/20220607-044509
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git f2906aa863381afb0015a9eb7fefad885d4e5a56
-config: ia64-randconfig-r015-20220605 (https://download.01.org/0day-ci/archive/20220607/202206071414.41wGG8fp-lkp@intel.com/config)
-compiler: ia64-linux-gcc (GCC) 11.3.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/b038962c9c8c2ab77c71dfba24356ce24bd7a242
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Matthew-Wilcox-Oracle/Convert-aops-migratepage-to-aops-migrate_folio/20220607-044509
-        git checkout b038962c9c8c2ab77c71dfba24356ce24bd7a242
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash fs/hugetlbfs/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All errors (new ones prefixed by >>):
-
-   fs/hugetlbfs/inode.c: In function 'hugetlbfs_migrate_folio':
->> fs/hugetlbfs/inode.c:990:17: error: implicit declaration of function 'folio_migrate_copy' [-Werror=implicit-function-declaration]
-     990 |                 folio_migrate_copy(dst, src);
-         |                 ^~~~~~~~~~~~~~~~~~
->> fs/hugetlbfs/inode.c:992:17: error: implicit declaration of function 'folio_migrate_flags'; did you mean 'folio_mapping_flags'? [-Werror=implicit-function-declaration]
-     992 |                 folio_migrate_flags(dst, src);
-         |                 ^~~~~~~~~~~~~~~~~~~
-         |                 folio_mapping_flags
-   cc1: some warnings being treated as errors
-
-
-vim +/folio_migrate_copy +990 fs/hugetlbfs/inode.c
-
-   972	
-   973	static int hugetlbfs_migrate_folio(struct address_space *mapping,
-   974					struct folio *dst, struct folio *src,
-   975					enum migrate_mode mode)
-   976	{
-   977		int rc;
-   978	
-   979		rc = migrate_huge_page_move_mapping(mapping, dst, src);
-   980		if (rc != MIGRATEPAGE_SUCCESS)
-   981			return rc;
-   982	
-   983		if (hugetlb_page_subpool(&src->page)) {
-   984			hugetlb_set_page_subpool(&dst->page,
-   985						hugetlb_page_subpool(&src->page));
-   986			hugetlb_set_page_subpool(&src->page, NULL);
-   987		}
-   988	
-   989		if (mode != MIGRATE_SYNC_NO_COPY)
- > 990			folio_migrate_copy(dst, src);
-   991		else
- > 992			folio_migrate_flags(dst, src);
-   993	
-   994		return MIGRATEPAGE_SUCCESS;
-   995	}
-   996	
-
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Hello Sir
+
+
+
+  I am Andy Halford from London, UK. Nice to meet you. Sorry for the
+inconvenience it's because of the time difference. I contacted you
+specifically regarding an important piece of information I intend
+sharing with you that will be of interest to you. Having gone through
+an intelligent methodical search, I decided to specifically contact
+you hoping that you will find this information useful. Kindly confirm
+I got the correct email by replying via same email to ensure I don't
+send the information to the wrong person.
+
+
+
+REGARDS
+Andy Halford
