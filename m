@@ -2,71 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65A565426F8
-	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jun 2022 08:58:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69562542421
+	for <lists+linux-nfs@lfdr.de>; Wed,  8 Jun 2022 08:52:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349770AbiFHAst (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 7 Jun 2022 20:48:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47330 "EHLO
+        id S229476AbiFHCzq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 7 Jun 2022 22:55:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1840795AbiFHAGI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jun 2022 20:06:08 -0400
+        with ESMTP id S1448223AbiFHCxu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 7 Jun 2022 22:53:50 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5838F21BC
-        for <linux-nfs@vger.kernel.org>; Tue,  7 Jun 2022 13:52:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E1E8231911
+        for <linux-nfs@vger.kernel.org>; Tue,  7 Jun 2022 13:53:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654635164;
+        s=mimecast20190719; t=1654635180;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4pi9zsMAXDuLyZeO3WFaKM/rERoaUnEi+vEzV8+98OA=;
-        b=UgUb8TmA9fQPDpRXXmSQZZrvUZ/sfNhYudswzyhUqO71i1AkaYOMtcQPfri6JoQgfCjAb4
-        mOvfDAn74C2g0zOYX06oNiz1pGd0oo2PJxWb0jdMwfqlznR5yI3Dr1jbFaomsQqMwiuoTQ
-        mDx5fr2+5MywzlyPX9Dur/+pE760s2o=
+        bh=dDw+DFbo1nylc/ZiLyMhKBIGXqJWaoeV1uhIrGfNhiQ=;
+        b=ds3bn5iIf88DceNdjuRFD9hZTq7uAnrTDJ3rPJtgzulT6N+EemM6QKX/onKC5l6lm+pM1u
+        8uUzYidCe8TSI2b4M/wXV68v/k49p7X2mtwADlUIi1oDGo4uHmS9n+rkCSsId33H3xGccy
+        WEzp+NpEr3kkDx+idBYooqV13Tw7KKk=
 Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
  [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-124-4MoPghYcPqi1El1si2liUg-1; Tue, 07 Jun 2022 16:52:42 -0400
-X-MC-Unique: 4MoPghYcPqi1El1si2liUg-1
-Received: by mail-qt1-f199.google.com with SMTP id d13-20020ac85acd000000b002f3be21793dso14831554qtd.12
-        for <linux-nfs@vger.kernel.org>; Tue, 07 Jun 2022 13:52:42 -0700 (PDT)
+ us-mta-434-SqYdQk-cMMqEwHv7GE2dzQ-1; Tue, 07 Jun 2022 16:52:59 -0400
+X-MC-Unique: SqYdQk-cMMqEwHv7GE2dzQ-1
+Received: by mail-qt1-f199.google.com with SMTP id f22-20020ac859d6000000b00304bf4dba7fso14851775qtf.3
+        for <linux-nfs@vger.kernel.org>; Tue, 07 Jun 2022 13:52:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
          :content-language:to:cc:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=4pi9zsMAXDuLyZeO3WFaKM/rERoaUnEi+vEzV8+98OA=;
-        b=lheLjvt4/fMuk1zGwos9sm/71yyRFRQVpNKCMgTUTUjCahAqWNZOcSEa960TQ0S73M
-         j2dm790FU7bx9kOMWYqwX8fpOXG/cOD37jpHuiSOu3QFbnft3v8F1GKElvTQ7HpFkceP
-         2CtAtLQBuLZOdgXK2xZvYeWC0sYNOpUcR3KahFTlL+DmDF3e/RhKg3KjFV0FWW3Lah5h
-         mh3cJidL6zpN11hvZuQJ4w4ixWVqrj7lKqQBpf9uECpN8HiFz7ufG9KQqj9GBdHsPcNk
-         p/HRnJjLSJZ7TmGqNdVOUal+Rv4vFFiWrAPo1vyWmKmIeceH+8wKSLDroIoGIhc67a15
-         Ww4Q==
-X-Gm-Message-State: AOAM533ROChfDVtskF8K4vxIR1o/l8PxbYmxZyzMDLNIMYE7K0Zof7EG
-        +DisLatYMX+1QDErMt5NM2sXcPbKf0YfFwqvIFmLs0Mie7WAOZ4k3UnTDNvFdXpjsqnV5Un9d+m
-        Hr7BTpag9z9sbIjcA3BoG
-X-Received: by 2002:a0c:e392:0:b0:467:db64:dde7 with SMTP id a18-20020a0ce392000000b00467db64dde7mr19366396qvl.85.1654635161997;
-        Tue, 07 Jun 2022 13:52:41 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyypBsT/ZYavlmqFXvhpdbRRNac7Jmi/hqdka8mADKtAPXRYERhqlye5s8Z3g4iUEriA+NGXg==
-X-Received: by 2002:a0c:e392:0:b0:467:db64:dde7 with SMTP id a18-20020a0ce392000000b00467db64dde7mr19366382qvl.85.1654635161632;
-        Tue, 07 Jun 2022 13:52:41 -0700 (PDT)
+        bh=dDw+DFbo1nylc/ZiLyMhKBIGXqJWaoeV1uhIrGfNhiQ=;
+        b=joQOCC/vVhjYYJ4DD5bobS9xhNJYOojtt3kiqw9JXzr0wxVyz2/J5+qlL4gLaxcxP0
+         jotmfnH31xyfPoXI6I+I20xvNM1z9Hnno/wA9sv7uw7IK0exJG56lxQUtsVt680UR7wU
+         r0NLBAWWQ0jBJeQCwl/1D+cWDv+8rSUNNXGvAyc/8psxYYYc+Kc1pJQFMRWVamrMXIyB
+         wr2KVk7HNybhpX1nLJys/wu4JBToBiTHz45+nwL4cdYPwZ8p0/nAALUZa4wSn8EF0tnR
+         +Tc63iwz7VPWo6FTEzprWsKvs1jzzIG6M1KoF/EVi1TnbJTkIVG0CbGkrN8VgRCm/RFf
+         UwUg==
+X-Gm-Message-State: AOAM532w/rf81rhBRYQPJJzn4O5qNvc/GGFu2H4rPa/JSoVz1xSJoSsh
+        BkoHap0+lSxp/FywYJj9x8mwfa6lFKvNa102Q0H+t3oPFBuRIsCYVXX9YguSklgDsVqSYloJnDv
+        2PaWzdSOYg9KcGdLEfb6m
+X-Received: by 2002:a05:620a:469e:b0:6a6:d363:813b with SMTP id bq30-20020a05620a469e00b006a6d363813bmr5225249qkb.621.1654635179190;
+        Tue, 07 Jun 2022 13:52:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJx46flULz7YMo6mFAEAxPTn6DL11v0DHTPy6HME2mKrSX/ulqJ2gBAbtvcNaaJ4cc/CJIAxbw==
+X-Received: by 2002:a05:620a:469e:b0:6a6:d363:813b with SMTP id bq30-20020a05620a469e00b006a6d363813bmr5225238qkb.621.1654635178924;
+        Tue, 07 Jun 2022 13:52:58 -0700 (PDT)
 Received: from [172.31.1.6] ([71.161.96.106])
-        by smtp.gmail.com with ESMTPSA id j1-20020ac84041000000b00304e8938800sm6624197qtl.96.2022.06.07.13.52.41
+        by smtp.gmail.com with ESMTPSA id d22-20020a05620a241600b006a6b1630e95sm8461606qkn.45.2022.06.07.13.52.58
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jun 2022 13:52:41 -0700 (PDT)
-Message-ID: <d3b8a55e-ac7e-e4a9-451f-1bcd2c5b5a92@redhat.com>
-Date:   Tue, 7 Jun 2022 16:52:40 -0400
+        Tue, 07 Jun 2022 13:52:58 -0700 (PDT)
+Message-ID: <86b11317-f663-602b-0459-129aa2101ba1@redhat.com>
+Date:   Tue, 7 Jun 2022 16:52:57 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH nfs-utils v2] Update autoconfig files to work with v2.71
+Subject: Re: [PATCH nfs-utils] autoconf: change tirpc to check for a file, not
+ for an include
 Content-Language: en-US
 To:     NeilBrown <neilb@suse.de>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 References: <165352672998.11129.5573262612495384287@noble.neil.brown.name>
+ <165352679825.11129.7422243280120268766@noble.neil.brown.name>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <165352672998.11129.5573262612495384287@noble.neil.brown.name>
+In-Reply-To: <165352679825.11129.7422243280120268766@noble.neil.brown.name>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -81,427 +83,39 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 5/25/22 8:58 PM, NeilBrown wrote:
+On 5/25/22 8:59 PM, NeilBrown wrote:
 > 
-> OpenSUSE recently updated autoconf to v2.71, and nfs-utils now doesn't
-> build.  This patch fixes it - mostly.
-> This patch is the result of:
+> Recent autoconf don't like variables in AC_CHECK_INCLUDE so we get a
+> warning.
+> In libtirpc.m4 we only need to check for the existence of a file, we
+> don't need to extra  support for includes, such as defining HAVE_TIRPC_H
+> or whatever.
 > 
->   - running autoupdate on configure.am and aclocal/*
->   - removing any sections add that say they can safely be removed
->   - revertion the change to AC_PREREQ.
-> 
-> I haven't confirmed that it still works with v2.59.  It does seem to
-> work with 2.69 at least.
+> So change from AC_CHECK_INCLUDE to AC_CHECK_FILE.
 > 
 > Signed-off-by: NeilBrown <neilb@suse.de>
 Committed... (tag: nfs-utils-2-6-2-rc6)
 
 steved.
 > ---
->   aclocal/bsdsignals.m4  |  7 ++--
->   aclocal/kerberos5.m4   |  2 +-
->   aclocal/libblkid.m4    |  5 +--
->   aclocal/libsqlite3.m4  |  5 +--
->   aclocal/libtirpc.m4    |  3 +-
->   aclocal/nfs-utils.m4   |  5 +--
->   aclocal/rpcsec_vers.m4 |  2 +-
->   configure.ac           | 85 +++++++++++++++---------------------------
->   8 files changed, 43 insertions(+), 71 deletions(-)
+>   aclocal/libtirpc.m4 | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/aclocal/bsdsignals.m4 b/aclocal/bsdsignals.m4
-> index 24572aa721d6..362ddb5bd3bf 100644
-> --- a/aclocal/bsdsignals.m4
-> +++ b/aclocal/bsdsignals.m4
-> @@ -2,13 +2,13 @@ dnl *********** BSD vs. POSIX signal handling **************
->   AC_DEFUN([AC_BSD_SIGNALS], [
->     AC_MSG_CHECKING(for BSD signal semantics)
->     AC_CACHE_VAL(knfsd_cv_bsd_signals,
-> -    [AC_TRY_RUN([
-> +    [AC_RUN_IFELSE([AC_LANG_SOURCE([[
->   	#include <signal.h>
->   	#include <unistd.h>
->   	#include <sys/wait.h>
->   
->   	static int counter = 0;
-> -	static RETSIGTYPE handler(int num) { counter++; }
-> +	static void handler(int num) { counter++; }
->   
->   	int main()
->   	{
-> @@ -23,8 +23,7 @@ AC_DEFUN([AC_BSD_SIGNALS], [
->   		kill(getpid(), SIGHUP); kill(getpid(), SIGHUP);
->   		return (counter == 2)? 0 : 1;
->   	}
-> -    ], knfsd_cv_bsd_signals=yes, knfsd_cv_bsd_signals=no,
-> -    [
-> +    ]])],[knfsd_cv_bsd_signals=yes],[knfsd_cv_bsd_signals=no],[
->         case "$host_os" in
->           *linux*) knfsd_cv_bsd_signals=no;;
->           *bsd*)   knfsd_cv_bsd_signals=yes;;
-> diff --git a/aclocal/kerberos5.m4 b/aclocal/kerberos5.m4
-> index bf0e88bc57f4..f96f0fd44e6b 100644
-> --- a/aclocal/kerberos5.m4
-> +++ b/aclocal/kerberos5.m4
-> @@ -6,7 +6,7 @@ dnl The Kerberos gssapi library will be dynamically loaded?
->   AC_DEFUN([AC_KERBEROS_V5],[
->     AC_MSG_CHECKING(for Kerberos v5)
->     AC_ARG_WITH(krb5,
-> -  [AC_HELP_STRING([--with-krb5=DIR], [use Kerberos v5 installation in DIR])],
-> +  [AS_HELP_STRING([--with-krb5=DIR],[use Kerberos v5 installation in DIR])],
->     [ case "$withval" in
->       yes|no)
->          krb5_with=""
-> diff --git a/aclocal/libblkid.m4 b/aclocal/libblkid.m4
-> index 10824e9f58f1..1b8884ce6bcd 100644
-> --- a/aclocal/libblkid.m4
-> +++ b/aclocal/libblkid.m4
-> @@ -5,15 +5,14 @@ AC_DEFUN([AC_BLKID_VERS], [
->      [
->       saved_LIBS="$LIBS"
->       LIBS=-lblkid
-> -    AC_TRY_RUN([
-> +    AC_RUN_IFELSE([AC_LANG_SOURCE([[
->   	#include <blkid/blkid.h>
->   	int main()
->   	{
->   		int vers = blkid_get_library_version(0, 0);
->   		return vers >= 140 ? 0 : 1;
->   	}
-> -       ], [libblkid_cv_is_recent=yes], [libblkid_cv_is_recent=no],
-> -       [libblkid_cv_is_recent=unknown])
-> +       ]])],[libblkid_cv_is_recent=yes],[libblkid_cv_is_recent=no],[libblkid_cv_is_recent=unknown])
->       LIBS="$saved_LIBS"])
->     AC_MSG_RESULT($libblkid_cv_is_recent)
->   ])dnl
-> diff --git a/aclocal/libsqlite3.m4 b/aclocal/libsqlite3.m4
-> index 8c38993cbba8..16b8c8a1d565 100644
-> --- a/aclocal/libsqlite3.m4
-> +++ b/aclocal/libsqlite3.m4
-> @@ -14,7 +14,7 @@ AC_DEFUN([AC_SQLITE3_VERS], [
->      [
->       saved_LIBS="$LIBS"
->       LIBS=-lsqlite3
-> -    AC_TRY_RUN([
-> +    AC_RUN_IFELSE([AC_LANG_SOURCE([[
->   	#include <stdio.h>
->   	#include <sqlite3.h>
->   	int main()
-> @@ -24,8 +24,7 @@ AC_DEFUN([AC_SQLITE3_VERS], [
->   		return vers != SQLITE_VERSION_NUMBER ||
->   			vers < 3003000;
->   	}
-> -       ], [libsqlite3_cv_is_recent=yes], [libsqlite3_cv_is_recent=no],
-> -       [libsqlite3_cv_is_recent=unknown])
-> +       ]])],[libsqlite3_cv_is_recent=yes],[libsqlite3_cv_is_recent=no],[libsqlite3_cv_is_recent=unknown])
->       LIBS="$saved_LIBS"])
->   
->     AC_MSG_RESULT($libsqlite3_cv_is_recent)
 > diff --git a/aclocal/libtirpc.m4 b/aclocal/libtirpc.m4
-> index 27368ff24ef1..f7de5193c177 100644
+> index f7de5193c177..bddae0226931 100644
 > --- a/aclocal/libtirpc.m4
 > +++ b/aclocal/libtirpc.m4
-> @@ -37,8 +37,7 @@ dnl
->   AC_DEFUN([AC_LIBTIRPC_OLD], [
+> @@ -49,9 +49,9 @@ AC_DEFUN([AC_LIBTIRPC_OLD], [
+>     dnl Also must have the headers installed where we expect
+>     dnl to look for headers; add -I compiler option if found
+>     AS_IF([test "$has_libtirpc" = "yes"],
+> -        [AC_CHECK_HEADERS([${tirpc_header_dir}/netconfig.h],
+> -                          [AC_SUBST([AM_CPPFLAGS], ["-I${tirpc_header_dir}"])],
+> -                          [has_libtirpc="no"])])
+> +        [AC_CHECK_FILE([${tirpc_header_dir}/netconfig.h],
+> +                       [AC_SUBST([AM_CPPFLAGS], ["-I${tirpc_header_dir}"])],
+> +                       [has_libtirpc="no"])])
 >   
->     AC_ARG_WITH([tirpcinclude],
-> -              [AC_HELP_STRING([--with-tirpcinclude=DIR],
-> -                              [use TI-RPC headers in DIR])],
-> +              [AS_HELP_STRING([--with-tirpcinclude=DIR],[use TI-RPC headers in DIR])],
->                 [tirpc_header_dir=$withval],
->                 [tirpc_header_dir=/usr/include/tirpc])
->   
-> diff --git a/aclocal/nfs-utils.m4 b/aclocal/nfs-utils.m4
-> index fae8b95fe533..5f3ab0c2b301 100644
-> --- a/aclocal/nfs-utils.m4
-> +++ b/aclocal/nfs-utils.m4
-> @@ -2,13 +2,12 @@ dnl *********** GNU libc 2 ***************
->   AC_DEFUN([AC_GNULIBC],[
->     AC_MSG_CHECKING(for GNU libc2)
->     AC_CACHE_VAL(knfsd_cv_glibc2,
-> -  [AC_TRY_CPP([
-> +  [AC_PREPROC_IFELSE([AC_LANG_SOURCE([[
->         #include <features.h>
->         #if !defined(__GLIBC__)
->         # error Nope
->         #endif
-> -      ],
-> -  knfsd_cv_glibc2=yes, knfsd_cv_glibc2=no)])
-> +      ]])],[knfsd_cv_glibc2=yes],[knfsd_cv_glibc2=no])])
->     AC_MSG_RESULT($knfsd_cv_glibc2)
->     if test $knfsd_cv_glibc2 = yes; then
->       CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
-> diff --git a/aclocal/rpcsec_vers.m4 b/aclocal/rpcsec_vers.m4
-> index 11d2f18cb241..43e5a9669383 100644
-> --- a/aclocal/rpcsec_vers.m4
-> +++ b/aclocal/rpcsec_vers.m4
-> @@ -2,7 +2,7 @@ dnl Checks librpcsec version
->   AC_DEFUN([AC_RPCSEC_VERSION], [
->   
->     AC_ARG_WITH([gssglue],
-> -	[AC_HELP_STRING([--with-gssglue], [Use libgssglue for GSS support])])
-> +	[AS_HELP_STRING([--with-gssglue],[Use libgssglue for GSS support])])
->     if test x"$with_gssglue" = x"yes"; then
->       PKG_CHECK_MODULES([GSSGLUE], [libgssglue >= 0.3])
->       AC_CHECK_LIB([gssglue], [gss_set_allowable_enctypes])
-> diff --git a/configure.ac b/configure.ac
-> index 3e1c183b6a07..a13f36915a35 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -14,33 +14,29 @@ dnl *************************************************************
->   dnl * Define the set of applicable options
->   dnl *************************************************************
->   AC_ARG_WITH(release,
-> -	[AC_HELP_STRING([--with-release=XXX], [set release to XXX [1]])],
-> +	[AS_HELP_STRING([--with-release=XXX],[set release to XXX [1]])],
->   	RELEASE=$withval,
->   	RELEASE=1)
->   	AC_SUBST(RELEASE)
->   AC_ARG_WITH(statedir,
-> -	[AC_HELP_STRING([--with-statedir=/foo],
-> -			[use state dir /foo @<:@default=/var/lib/nfs@:>@])],
-> +	[AS_HELP_STRING([--with-statedir=/foo],[use state dir /foo @<:@default=/var/lib/nfs@:>@])],
->   	statedir=$withval,
->   	statedir=/var/lib/nfs)
->   	AC_SUBST(statedir)
->   AC_ARG_WITH(nfsconfig,
-> -	[AC_HELP_STRING([--with-nfsconfig=/config/file],
-> -			[use general config file /config/file @<:@default=/etc/nfs.conf@:>@])],
-> +	[AS_HELP_STRING([--with-nfsconfig=/config/file],[use general config file /config/file @<:@default=/etc/nfs.conf@:>@])],
->   	nfsconfig=$withval,
->   	nfsconfig=/etc/nfs.conf)
->   	AC_SUBST(nfsconfig)
->   AC_ARG_WITH(statdpath,
-> -	[AC_HELP_STRING([--with-statdpath=/foo],
-> -			[define the statd state dir as /foo instead of the NFS statedir @<:@default=/var/lib/nfs@:>@])],
-> +	[AS_HELP_STRING([--with-statdpath=/foo],[define the statd state dir as /foo instead of the NFS statedir @<:@default=/var/lib/nfs@:>@])],
->   	statdpath=$withval,
->   	statdpath=$statedir
->   	)
->   	AC_SUBST(statdpath)
->   AC_ARG_WITH(statduser,
-> -	[AC_HELP_STRING([--with-statduser=rpcuser],
-> -                        [statd to run under @<:@rpcuser or nobody@:>@]
-> -	)],
-> +	[AS_HELP_STRING([--with-statduser=rpcuser],[statd to run under @<:@rpcuser or nobody@:>@
-> +	])],
->   	statduser=$withval,
->   	if test "x$cross_compiling" = "xno"; then
->   		if grep -s '^rpcuser:' /etc/passwd > /dev/null; then
-> @@ -53,9 +49,8 @@ AC_ARG_WITH(statduser,
->   	fi)
->   	AC_SUBST(statduser)
->   AC_ARG_WITH(start-statd,
-> -	[AC_HELP_STRING([--with-start-statd=scriptname],
-> -			[When an nfs filesystems is mounted with locking, run this script]
-> -	)],
-> +	[AS_HELP_STRING([--with-start-statd=scriptname],[When an nfs filesystems is mounted with locking, run this script
-> +	])],
->   	startstatd=$withval,
->   	startstatd=/usr/sbin/start-statd
->   	)
-> @@ -63,8 +58,7 @@ AC_ARG_WITH(start-statd,
->   	AC_DEFINE_UNQUOTED(START_STATD, "$startstatd", [Define this to a script which can start statd on mount])
->   unitdir=/usr/lib/systemd/system
->   AC_ARG_WITH(systemd,
-> -	[AC_HELP_STRING([--with-systemd@<:@=unit-dir-path@:>@],
-> -			[install systemd unit files @<:@Default: no, and path defaults to /usr/lib/systemd/system if not given@:>@])],
-> +	[AS_HELP_STRING([--with-systemd@<:@=unit-dir-path@:>@],[install systemd unit files @<:@Default: no, and path defaults to /usr/lib/systemd/system if not given@:>@])],
->   	if test "$withval" != "no" ; then
->   		use_systemd=1
->   		if test "$withval" != "yes" ; then
-> @@ -78,8 +72,7 @@ AC_ARG_WITH(systemd,
->   	AC_SUBST(unitdir)
->   
->   AC_ARG_ENABLE(nfsv4,
-> -	[AC_HELP_STRING([--disable-nfsv4],
-> -                        [disable support for NFSv4 @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-nfsv4],[disable support for NFSv4 @<:@default=no@:>@])],
->   	enable_nfsv4=$enableval,
->   	enable_nfsv4=yes)
->   	if test "$enable_nfsv4" = yes; then
-> @@ -93,8 +86,7 @@ AC_ARG_ENABLE(nfsv4,
->   	AM_CONDITIONAL(CONFIG_NFSV4, [test "$enable_nfsv4" = "yes"])
->   
->   AC_ARG_ENABLE(nfsv41,
-> -	[AC_HELP_STRING([--disable-nfsv41],
-> -                        [disable support for NFSv41 @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-nfsv41],[disable support for NFSv41 @<:@default=no@:>@])],
->   	enable_nfsv41=$enableval,
->   	enable_nfsv41=yes)
->   	if test "$enable_nfsv41" = yes; then
-> @@ -111,8 +103,7 @@ AC_ARG_ENABLE(nfsv41,
->   	AM_CONDITIONAL(CONFIG_NFSV41, [test "$enable_nfsv41" = "yes"])
->   
->   AC_ARG_ENABLE(gss,
-> -	[AC_HELP_STRING([--disable-gss],
-> -              [disable client support for rpcsec_gss @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-gss],[disable client support for rpcsec_gss @<:@default=no@:>@])],
->   	enable_gss=$enableval,
->   	enable_gss=yes)
->   	if test "$enable_gss" = yes; then
-> @@ -126,8 +117,7 @@ AC_ARG_ENABLE(gss,
->   	AM_CONDITIONAL(CONFIG_GSS, [test "$enable_gss" = "yes"])
->   
->   AC_ARG_ENABLE(svcgss,
-> -	[AC_HELP_STRING([--enable-svcgss],
-> -    [enable building svcgssd for rpcsec_gss server support @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--enable-svcgss],[enable building svcgssd for rpcsec_gss server support @<:@default=no@:>@])],
->   	enable_svcgss=$enableval,
->   	enable_svcgss=no)
->   	if test "$enable_gss" = yes -a "$enable_svcgss" = yes; then
-> @@ -141,12 +131,12 @@ AC_ARG_ENABLE(svcgss,
->   	AM_CONDITIONAL(CONFIG_SVCGSS, [test "$enable_svcgss" = "yes"])
->   
->   AC_ARG_ENABLE(kprefix,
-> -	[AC_HELP_STRING([--enable-kprefix], [install progs as rpc.knfsd etc])],
-> +	[AS_HELP_STRING([--enable-kprefix],[install progs as rpc.knfsd etc])],
->   	test "$enableval" = "yes" && kprefix=k,
->   	kprefix=)
->   	AC_SUBST(kprefix)
->   AC_ARG_WITH(rpcgen,
-> -	[AC_HELP_STRING([--with-rpcgen=internal], [use internal rpcgen instead of system one])],
-> +	[AS_HELP_STRING([--with-rpcgen=internal],[use internal rpcgen instead of system one])],
->   	rpcgen_path=$withval,
->   	rpcgen_path=yes )
->   	rpcgen_cflags=-Werror=strict-prototypes
-> @@ -166,21 +156,18 @@ AC_ARG_WITH(rpcgen,
->   	AC_SUBST(RPCGEN_PATH)
->   	AM_CONDITIONAL(CONFIG_RPCGEN, [test "$RPCGEN_PATH" = "internal"])
->   AC_ARG_ENABLE(uuid,
-> -	[AC_HELP_STRING([--disable-uuid],
-> -		[Exclude uuid support to avoid buggy libblkid. @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-uuid],[Exclude uuid support to avoid buggy libblkid. @<:@default=no@:>@])],
->   	if test "$enableval" = "yes" ; then choose_blkid=yes; else choose_blkid=no; fi,
->   	choose_blkid=default)
->   AC_ARG_ENABLE(mount,
-> -	[AC_HELP_STRING([--disable-mount],
-> -		[Do not build mount.nfs and do use the util-linux mount(8) functionality. @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-mount],[Do not build mount.nfs and do use the util-linux mount(8) functionality. @<:@default=no@:>@])],
->   	enable_mount=$enableval,
->   	enable_mount=yes)
->   	AM_CONDITIONAL(CONFIG_MOUNT, [test "$enable_mount" = "yes"])
->   
->   if test "$enable_mount" = yes; then
->   	AC_ARG_ENABLE(libmount-mount,
-> -		[AC_HELP_STRING([--enable-libmount-mount],
-> -				[Link mount.nfs with libmount @<:@default=no@:>@])],
-> +		[AS_HELP_STRING([--enable-libmount-mount],[Link mount.nfs with libmount @<:@default=no@:>@])],
->   		enable_libmount=$enableval,
->   		enable_libmount=no)
->   else
-> @@ -188,14 +175,12 @@ else
->   fi
->   
->   AC_ARG_ENABLE(sbin-override,
-> -	[AC_HELP_STRING([--disable-sbin-override],
-> -		[Don't force nfsdcltrack and mount helpers into /sbin: always honour --sbindir])],
-> +	[AS_HELP_STRING([--disable-sbin-override],[Don't force nfsdcltrack and mount helpers into /sbin: always honour --sbindir])],
->   	enable_sbin_override=$enableval,
->   	enable_sbin_override=yes)
->   	AM_CONDITIONAL(CONFIG_SBIN_OVERRIDE, [test "$enable_sbin_override" = "yes"])
->   AC_ARG_ENABLE(junction,
-> -	[AC_HELP_STRING([--enable-junction],
-> -			[enable support for NFS junctions @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--enable-junction],[enable support for NFS junctions @<:@default=no@:>@])],
->   	enable_junction=$enableval,
->   	enable_junction=no)
->   	if test "$enable_junction" = yes; then
-> @@ -207,13 +192,11 @@ AC_ARG_ENABLE(junction,
->   	AM_CONDITIONAL(CONFIG_JUNCTION, [test "$enable_junction" = "yes" ])
->   
->   AC_ARG_ENABLE(tirpc,
-> -	[AC_HELP_STRING([--disable-tirpc],
-> -			[disable use of TI-RPC library @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-tirpc],[disable use of TI-RPC library @<:@default=no@:>@])],
->   	enable_tirpc=$enableval,
->   	enable_tirpc=yes)
->   AC_ARG_ENABLE(ipv6,
-> -	[AC_HELP_STRING([--disable-ipv6],
-> -                        [disable support for IPv6 @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-ipv6],[disable support for IPv6 @<:@default=no@:>@])],
->   	enable_ipv6=$enableval,
->   	enable_ipv6=yes)
->   	if test "$enable_ipv6" = yes; then
-> @@ -226,8 +209,7 @@ AC_ARG_ENABLE(ipv6,
->   
->   if test "$enable_mount" = yes; then
->   	AC_ARG_ENABLE(mountconfig,
-> -	[AC_HELP_STRING([--disable-mountconfig],
-> -        [disable mount to use a configuration file @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-mountconfig],[disable mount to use a configuration file @<:@default=no@:>@])],
->   	enable_mountconfig=$enableval,
->   	enable_mountconfig=yes)
->   	if test "$enable_mountconfig" = no; then
-> @@ -236,9 +218,8 @@ if test "$enable_mount" = yes; then
->   		AC_DEFINE(MOUNT_CONFIG, 1,
->   			[Define this if you want mount to read a configuration file])
->   		AC_ARG_WITH(mountfile,
-> -			[AC_HELP_STRING([--with-mountfile=filename],
-> -			[Using filename as the NFS mount options file [/etc/nfsmounts.conf]]
-> -			)],
-> +			[AS_HELP_STRING([--with-mountfile=filename],[Using filename as the NFS mount options file [/etc/nfsmounts.conf]
-> +			])],
->   		mountfile=$withval,
->   		mountfile=/etc/nfsmount.conf)
->   		AC_SUBST(mountfile)
-> @@ -252,20 +233,17 @@ else
->   fi
->   
->   AC_ARG_ENABLE(nfsdcld,
-> -	[AC_HELP_STRING([--disable-nfsdcld],
-> -			[disable NFSv4 clientid tracking daemon @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-nfsdcld],[disable NFSv4 clientid tracking daemon @<:@default=no@:>@])],
->   	enable_nfsdcld=$enableval,
->   	enable_nfsdcld="yes")
->   
->   AC_ARG_ENABLE(nfsdcltrack,
-> -	[AC_HELP_STRING([--disable-nfsdcltrack],
-> -			[disable NFSv4 clientid tracking programs @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--disable-nfsdcltrack],[disable NFSv4 clientid tracking programs @<:@default=no@:>@])],
->   	enable_nfsdcltrack=$enableval,
->   	enable_nfsdcltrack="yes")
->   
->   AC_ARG_ENABLE(nfsv4server,
-> -	[AC_HELP_STRING([--enable-nfsv4server],
-> -			[enable support for NFSv4 only server  @<:@default=no@:>@])],
-> +	[AS_HELP_STRING([--enable-nfsv4server],[enable support for NFSv4 only server  @<:@default=no@:>@])],
->   	enable_nfsv4server=$enableval,
->   	enable_nfsv4server="no")
->   	if test "$enable_nfsv4server" = yes; then
-> @@ -299,7 +277,7 @@ AC_PROG_CPP
->   AC_PROG_INSTALL
->   AC_PROG_LN_S
->   AC_PROG_MAKE_SET
-> -AC_PROG_LIBTOOL
-> +LT_INIT
->   AM_PROG_CC_C_O
->   
->   if test "x$cross_compiling" = "xno"; then
-> @@ -313,7 +291,6 @@ AC_SUBST(CC_FOR_BUILD)
->   AC_CHECK_TOOL(AR, ar)
->   AC_CHECK_TOOL(LD, ld)
->   
-> -AC_HEADER_STDC([])
->   AC_GNULIBC
->   AC_BSD_SIGNALS
->   
-> @@ -553,7 +530,7 @@ AC_C_INLINE
->   AC_TYPE_OFF_T
->   AC_TYPE_PID_T
->   AC_TYPE_SIZE_T
-> -AC_HEADER_TIME
-> +
->   AC_STRUCT_TM
->   AC_CHECK_TYPES([struct file_handle], [], [], [[
->   		#define _GNU_SOURCE
-> @@ -579,7 +556,7 @@ AC_HEADER_MAJOR
->   AC_FUNC_MEMCMP
->   #AC_FUNC_REALLOC
->   AC_FUNC_SELECT_ARGTYPES
-> -AC_TYPE_SIGNAL
-> +
->   AC_FUNC_STAT
->   AC_FUNC_VPRINTF
->   AC_CHECK_FUNCS([alarm atexit dup2 fdatasync ftruncate getcwd \
+>     dnl Now set $LIBTIRPC accordingly
+>     AS_IF([test "$has_libtirpc" = "yes"],
 
