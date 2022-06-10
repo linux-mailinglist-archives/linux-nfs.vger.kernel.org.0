@@ -2,298 +2,85 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B83CB546DDD
-	for <lists+linux-nfs@lfdr.de>; Fri, 10 Jun 2022 21:59:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25E31546FEB
+	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jun 2022 01:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348984AbiFJT5t (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jun 2022 15:57:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49324 "EHLO
+        id S1348656AbiFJXUC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 10 Jun 2022 19:20:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350584AbiFJT5U (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jun 2022 15:57:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E85027FE6
-        for <linux-nfs@vger.kernel.org>; Fri, 10 Jun 2022 12:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1654891038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=8NSkt+9OBeiMDSzKoOk1px92nniKwBrH90yvJxWMzUc=;
-        b=FJF1ewFWuJBb5fbEkncqiUxkDzq+1yAcoekbGO520+NWl9wVtfp/r62i+3a9xXcBrTRx36
-        h/UJfI74kBNdwAoEEW0Cba7mawmR6mJbil3bYH/hliMwPnEn/KfcWZvxlt3NSexr9PjW+h
-        pGR4kU0BzLh7RYxEQS/sJYGEWTub9iY=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-635-av3RAJm5M3qyoV1NkwL1hw-1; Fri, 10 Jun 2022 15:57:12 -0400
-X-MC-Unique: av3RAJm5M3qyoV1NkwL1hw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 75773811E76;
-        Fri, 10 Jun 2022 19:57:11 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B1EAB492C3B;
-        Fri, 10 Jun 2022 19:57:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 3/3] netfs: Rename the netfs_io_request cleanup op and give it
- an op pointer
-From:   David Howells <dhowells@redhat.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, linux-cachefs@redhat.com,
-        dhowells@redhat.com,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
-        linux-cachefs@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Fri, 10 Jun 2022 20:57:09 +0100
-Message-ID: <165489102899.703883.17034408390431788184.stgit@warthog.procyon.org.uk>
-In-Reply-To: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
-References: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/1.4
+        with ESMTP id S1347792AbiFJXUC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jun 2022 19:20:02 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24226F506D
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jun 2022 16:19:58 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id kq6so708638ejb.11
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jun 2022 16:19:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mFUZ/4X/JukFzJtRWCj5IwVqnR0commkjm8Ld9IJoQA=;
+        b=AoxxrgfmaiG7fB01rWVX7//fR7hc8pfPaO6KuFkmEJpDpFR/HpqhwLdFQM6dVgzan3
+         DB7+Ryy9LWRyARZSjDc1y62fbB3v6E3HNwslaXd4JIbxny9dkIOf8ftYNIIBC41esAeu
+         4Gv6sMSeEfJjJ4Ad3imZr/QdI/L/mCWsQLeaA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mFUZ/4X/JukFzJtRWCj5IwVqnR0commkjm8Ld9IJoQA=;
+        b=UHZeJz0giQJ6DnTxCJ9yV6of9Bqk3T2Nd3u7X4UfDWh/4ghZ6GraoEi5wWvSkFgPXr
+         c/Wed96iQa0qOPZO/1HCbOELOckIaHeklvzKIHeJ0QZ/hrcaERZhe01aCxLnOJ9bIqP0
+         gNzXk6LEskMuda7f6WaDiELR2HLx8/0Da0bKH8MO7+kKlGb1QXjLtdpnUUr7o3xVVsCD
+         HPPdoY6iSX+OhhPYsvC6p8ThSQNIffonQRCkJiJVlCFJOD6OdeJ1uBv1czz2uJia2gTR
+         YwwF8qAjaIhsfRw30i3oXX5MO0PcVpsbpP6xQcheDy2/2eWpvd80CfLtUP5YgQC9RqcX
+         Y5sw==
+X-Gm-Message-State: AOAM530iwHj7dQyR8OeglEIWNefXvrPCapxA5fnKsLgt3UCqGEIwvzAr
+        WY/Ig9BD/EwyEtcU4t+85AZurRewYwZxI95a
+X-Google-Smtp-Source: ABdhPJxSC6FzGtaQhAtKSl8UAQ73ODtPyilA1jKGhr+QTg7KZZL1WWg7upnuLIyfH0Ro0UnF3YzbCg==
+X-Received: by 2002:a17:906:7308:b0:710:dad0:f56d with SMTP id di8-20020a170906730800b00710dad0f56dmr30793787ejc.691.1654903197042;
+        Fri, 10 Jun 2022 16:19:57 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id ie5-20020a170906df0500b006fe89cafc42sm189169ejc.172.2022.06.10.16.19.55
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Jun 2022 16:19:55 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id l2-20020a05600c4f0200b0039c55c50482so1830724wmq.0
+        for <linux-nfs@vger.kernel.org>; Fri, 10 Jun 2022 16:19:55 -0700 (PDT)
+X-Received: by 2002:a05:600c:3485:b0:39c:7db5:f0f7 with SMTP id
+ a5-20020a05600c348500b0039c7db5f0f7mr2015707wmq.8.1654903194928; Fri, 10 Jun
+ 2022 16:19:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MISSING_HEADERS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
+In-Reply-To: <165489100590.703883.11054313979289027590.stgit@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 10 Jun 2022 16:19:38 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgeW2nF5MZzmx6cPmS8mbq0kjP+VF5V76LNDLDjJ64hUA@mail.gmail.com>
+Message-ID: <CAHk-=wgeW2nF5MZzmx6cPmS8mbq0kjP+VF5V76LNDLDjJ64hUA@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/3] netfs, afs: Cleanups
+To:     David Howells <dhowells@redhat.com>
+Cc:     linux-cachefs@redhat.com, linux-afs@lists.infradead.org,
+        Jeff Layton <jlayton@kernel.org>,
+        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>,
+        CIFS <linux-cifs@vger.kernel.org>, ceph-devel@vger.kernel.org,
+        v9fs-developer@lists.sourceforge.net, linux-erofs@lists.ozlabs.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The netfs_io_request cleanup op is now always in a position to be given a
-pointer to a netfs_io_request struct, so this can be passed in instead of
-the mapping and private data arguments (both of which are included in the
-struct).
+On Fri, Jun 10, 2022 at 12:56 PM David Howells <dhowells@redhat.com> wrote:
+>
+> Here are some cleanups, one for afs and a couple for netfs:
 
-So rename the ->cleanup op to ->free_request (to match ->init_request) and
-pass in the I/O pointer.
+Pulled,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-cc: linux-cachefs@redhat.com
----
-
- Documentation/filesystems/netfs_library.rst |   24 ++++++++++++------------
- fs/9p/vfs_addr.c                            |   11 +++++------
- fs/afs/file.c                               |    6 +++---
- fs/ceph/addr.c                              |    9 ++++-----
- fs/netfs/objects.c                          |    6 +++---
- include/linux/netfs.h                       |    3 ++-
- 6 files changed, 29 insertions(+), 30 deletions(-)
-
-diff --git a/Documentation/filesystems/netfs_library.rst b/Documentation/filesystems/netfs_library.rst
-index 9332f66373ee..4d19b19bcc08 100644
---- a/Documentation/filesystems/netfs_library.rst
-+++ b/Documentation/filesystems/netfs_library.rst
-@@ -158,9 +158,10 @@ The helpers manage the read request, calling back into the network filesystem
- through the suppplied table of operations.  Waits will be performed as
- necessary before returning for helpers that are meant to be synchronous.
- 
--If an error occurs and netfs_priv is non-NULL, ops->cleanup() will be called to
--deal with it.  If some parts of the request are in progress when an error
--occurs, the request will get partially completed if sufficient data is read.
-+If an error occurs, the ->free_request() will be called to clean up the
-+netfs_io_request struct allocated.  If some parts of the request are in
-+progress when an error occurs, the request will get partially completed if
-+sufficient data is read.
- 
- Additionally, there is::
- 
-@@ -208,8 +209,7 @@ The above fields are the ones the netfs can use.  They are:
-  * ``netfs_priv``
- 
-    The network filesystem's private data.  The value for this can be passed in
--   to the helper functions or set during the request.  The ->cleanup() op will
--   be called if this is non-NULL at the end.
-+   to the helper functions or set during the request.
- 
-  * ``start``
-  * ``len``
-@@ -294,6 +294,7 @@ through which it can issue requests and negotiate::
- 
- 	struct netfs_request_ops {
- 		void (*init_request)(struct netfs_io_request *rreq, struct file *file);
-+		void (*free_request)(struct netfs_io_request *rreq);
- 		int (*begin_cache_operation)(struct netfs_io_request *rreq);
- 		void (*expand_readahead)(struct netfs_io_request *rreq);
- 		bool (*clamp_length)(struct netfs_io_subrequest *subreq);
-@@ -302,7 +303,6 @@ through which it can issue requests and negotiate::
- 		int (*check_write_begin)(struct file *file, loff_t pos, unsigned len,
- 					 struct folio *folio, void **_fsdata);
- 		void (*done)(struct netfs_io_request *rreq);
--		void (*cleanup)(struct address_space *mapping, void *netfs_priv);
- 	};
- 
- The operations are as follows:
-@@ -310,7 +310,12 @@ The operations are as follows:
-  * ``init_request()``
- 
-    [Optional] This is called to initialise the request structure.  It is given
--   the file for reference and can modify the ->netfs_priv value.
-+   the file for reference.
-+
-+ * ``free_request()``
-+
-+   [Optional] This is called as the request is being deallocated so that the
-+   filesystem can clean up any state it has attached there.
- 
-  * ``begin_cache_operation()``
- 
-@@ -384,11 +389,6 @@ The operations are as follows:
-    [Optional] This is called after the folios in the request have all been
-    unlocked (and marked uptodate if applicable).
- 
-- * ``cleanup``
--
--   [Optional] This is called as the request is being deallocated so that the
--   filesystem can clean up ->netfs_priv.
--
- 
- 
- Read Helper Procedure
-diff --git a/fs/9p/vfs_addr.c b/fs/9p/vfs_addr.c
-index c004b9a73a92..a8f512b44a85 100644
---- a/fs/9p/vfs_addr.c
-+++ b/fs/9p/vfs_addr.c
-@@ -66,13 +66,12 @@ static int v9fs_init_request(struct netfs_io_request *rreq, struct file *file)
- }
- 
- /**
-- * v9fs_req_cleanup - Cleanup request initialized by v9fs_init_request
-- * @mapping: unused mapping of request to cleanup
-- * @priv: private data to cleanup, a fid, guaranted non-null.
-+ * v9fs_free_request - Cleanup request initialized by v9fs_init_rreq
-+ * @rreq: The I/O request to clean up
-  */
--static void v9fs_req_cleanup(struct address_space *mapping, void *priv)
-+static void v9fs_free_request(struct netfs_io_request *rreq)
- {
--	struct p9_fid *fid = priv;
-+	struct p9_fid *fid = rreq->netfs_priv;
- 
- 	p9_client_clunk(fid);
- }
-@@ -94,9 +93,9 @@ static int v9fs_begin_cache_operation(struct netfs_io_request *rreq)
- 
- const struct netfs_request_ops v9fs_req_ops = {
- 	.init_request		= v9fs_init_request,
-+	.free_request		= v9fs_free_request,
- 	.begin_cache_operation	= v9fs_begin_cache_operation,
- 	.issue_read		= v9fs_issue_read,
--	.cleanup		= v9fs_req_cleanup,
- };
- 
- /**
-diff --git a/fs/afs/file.c b/fs/afs/file.c
-index 4de7af7c2f09..42118a4f3383 100644
---- a/fs/afs/file.c
-+++ b/fs/afs/file.c
-@@ -382,17 +382,17 @@ static int afs_check_write_begin(struct file *file, loff_t pos, unsigned len,
- 	return test_bit(AFS_VNODE_DELETED, &vnode->flags) ? -ESTALE : 0;
- }
- 
--static void afs_priv_cleanup(struct address_space *mapping, void *netfs_priv)
-+static void afs_free_request(struct netfs_io_request *rreq)
- {
--	key_put(netfs_priv);
-+	key_put(rreq->netfs_priv);
- }
- 
- const struct netfs_request_ops afs_req_ops = {
- 	.init_request		= afs_init_request,
-+	.free_request		= afs_free_request,
- 	.begin_cache_operation	= afs_begin_cache_operation,
- 	.check_write_begin	= afs_check_write_begin,
- 	.issue_read		= afs_issue_read,
--	.cleanup		= afs_priv_cleanup,
- };
- 
- int afs_write_inode(struct inode *inode, struct writeback_control *wbc)
-diff --git a/fs/ceph/addr.c b/fs/ceph/addr.c
-index 9763e7ea8148..6dee88815491 100644
---- a/fs/ceph/addr.c
-+++ b/fs/ceph/addr.c
-@@ -394,11 +394,10 @@ static int ceph_init_request(struct netfs_io_request *rreq, struct file *file)
- 	return 0;
- }
- 
--static void ceph_readahead_cleanup(struct address_space *mapping, void *priv)
-+static void ceph_netfs_free_request(struct netfs_io_request *rreq)
- {
--	struct inode *inode = mapping->host;
--	struct ceph_inode_info *ci = ceph_inode(inode);
--	int got = (uintptr_t)priv;
-+	struct ceph_inode_info *ci = ceph_inode(rreq->inode);
-+	int got = (uintptr_t)rreq->netfs_priv;
- 
- 	if (got)
- 		ceph_put_cap_refs(ci, got);
-@@ -406,12 +405,12 @@ static void ceph_readahead_cleanup(struct address_space *mapping, void *priv)
- 
- const struct netfs_request_ops ceph_netfs_ops = {
- 	.init_request		= ceph_init_request,
-+	.free_request		= ceph_netfs_free_request,
- 	.begin_cache_operation	= ceph_begin_cache_operation,
- 	.issue_read		= ceph_netfs_issue_read,
- 	.expand_readahead	= ceph_netfs_expand_readahead,
- 	.clamp_length		= ceph_netfs_clamp_length,
- 	.check_write_begin	= ceph_netfs_check_write_begin,
--	.cleanup		= ceph_readahead_cleanup,
- };
- 
- #ifdef CONFIG_CEPH_FSCACHE
-diff --git a/fs/netfs/objects.c b/fs/netfs/objects.c
-index c6afa605b63b..e17cdf53f6a7 100644
---- a/fs/netfs/objects.c
-+++ b/fs/netfs/objects.c
-@@ -75,10 +75,10 @@ static void netfs_free_request(struct work_struct *work)
- 	struct netfs_io_request *rreq =
- 		container_of(work, struct netfs_io_request, work);
- 
--	netfs_clear_subrequests(rreq, false);
--	if (rreq->netfs_priv)
--		rreq->netfs_ops->cleanup(rreq->mapping, rreq->netfs_priv);
- 	trace_netfs_rreq(rreq, netfs_rreq_trace_free);
-+	netfs_clear_subrequests(rreq, false);
-+	if (rreq->netfs_ops->free_request)
-+		rreq->netfs_ops->free_request(rreq);
- 	if (rreq->cache_resources.ops)
- 		rreq->cache_resources.ops->end_operation(&rreq->cache_resources);
- 	kfree(rreq);
-diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-index a62739f3726b..097cdd644665 100644
---- a/include/linux/netfs.h
-+++ b/include/linux/netfs.h
-@@ -206,7 +206,9 @@ struct netfs_io_request {
-  */
- struct netfs_request_ops {
- 	int (*init_request)(struct netfs_io_request *rreq, struct file *file);
-+	void (*free_request)(struct netfs_io_request *rreq);
- 	int (*begin_cache_operation)(struct netfs_io_request *rreq);
-+
- 	void (*expand_readahead)(struct netfs_io_request *rreq);
- 	bool (*clamp_length)(struct netfs_io_subrequest *subreq);
- 	void (*issue_read)(struct netfs_io_subrequest *subreq);
-@@ -214,7 +216,6 @@ struct netfs_request_ops {
- 	int (*check_write_begin)(struct file *file, loff_t pos, unsigned len,
- 				 struct folio *folio, void **_fsdata);
- 	void (*done)(struct netfs_io_request *rreq);
--	void (*cleanup)(struct address_space *mapping, void *netfs_priv);
- };
- 
- /*
-
-
+               Linus
