@@ -2,59 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DC0354708F
-	for <lists+linux-nfs@lfdr.de>; Sat, 11 Jun 2022 02:38:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79E9354792D
+	for <lists+linux-nfs@lfdr.de>; Sun, 12 Jun 2022 09:23:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243193AbiFKAis (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 10 Jun 2022 20:38:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44366 "EHLO
+        id S234583AbiFLHXJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 12 Jun 2022 03:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbiFKAir (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 10 Jun 2022 20:38:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BF9831232;
-        Fri, 10 Jun 2022 17:38:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E1AE861F5D;
-        Sat, 11 Jun 2022 00:38:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D6ABC34114;
-        Sat, 11 Jun 2022 00:38:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1654907924;
-        bh=eS5+SBJYvKIgvd5Yu/DxZd2ASuUQIMWVcGVR7WK0xzY=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=TkMMDG9yM9ZfHnGNG/3cib5p8kuWQv/T+kj9Abe59iOb6Kf+29pPgkHRNfgh35ilQ
-         As47q9krzCp8GzAAmMjFU/noQPXR4EwlkNmDTzoyUvNC65ujRNdeItgurrXw4sKLCP
-         MK8g8vN3hXONVBTDyWSJ4dAwfQ+zZX0gVitFgjrJG0ggF7RRB0HBO4vcm+1HB0uPJF
-         BCoZwT/1pvcP6LNeSNtHi7iHW1X0HwXYw/lyU296QXdQPcBV7vhVvMGIj9e52g5Q5W
-         lLdZZOS0vLIGdTGNtUtvFxrnHk1VCQaJn/8PZtT2Hg+jAZbHF1ErPPDp3PIwxDSCFy
-         SU+jhbh49l1EQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3862AE737F6;
-        Sat, 11 Jun 2022 00:38:44 +0000 (UTC)
-Subject: Re: [GIT PULL] nfsd fixes for 5.19
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <FF9D9B25-0117-446D-B5B3-A4240C67A99F@oracle.com>
-References: <FF9D9B25-0117-446D-B5B3-A4240C67A99F@oracle.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <FF9D9B25-0117-446D-B5B3-A4240C67A99F@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.19-1
-X-PR-Tracked-Commit-Id: da9e94fe000e11f21d3d6f66012fe5c6379bd93c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 0885eacdc81f920c3e0554d5615e69a66504a28d
-Message-Id: <165490792422.22575.16609460064231495408.pr-tracker-bot@kernel.org>
-Date:   Sat, 11 Jun 2022 00:38:44 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S229559AbiFLHXI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 12 Jun 2022 03:23:08 -0400
+Received: from out20-206.mail.aliyun.com (out20-206.mail.aliyun.com [115.124.20.206])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B8D21254
+        for <linux-nfs@vger.kernel.org>; Sun, 12 Jun 2022 00:22:57 -0700 (PDT)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04557695|-1;BR=01201311R181S36rulernew998_84748_2000303;CH=blue;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0306788-0.000804414-0.968517;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047203;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=2;RT=2;SR=0;TI=SMTPD_---.O2fTfTn_1655018574;
+Received: from T640.e16-tech.com(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.O2fTfTn_1655018574)
+          by smtp.aliyun-inc.com;
+          Sun, 12 Jun 2022 15:22:54 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     Wang Yugui <wangyugui@e16-tech.com>
+Subject: [RPC] nfsd: NFSv4 close a file completely
+Date:   Sun, 12 Jun 2022 15:22:53 +0800
+Message-Id: <20220612072253.66354-1-wangyugui@e16-tech.com>
+X-Mailer: git-send-email 2.36.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,15 +36,63 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Sat, 11 Jun 2022 00:17:34 +0000:
+NFSv4 need to close a file completely (no lingering open) when it does
+a CLOSE or DELEGRETURN.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-5.19-1
+When multiple NFSv4/OPEN from different clients, we need to check the
+reference count. The flowing reference-count-check change the behavior
+of NFSv3 nfsd_rename()/nfsd_unlink() too.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/0885eacdc81f920c3e0554d5615e69a66504a28d
+Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=387
+Signed-off-by: Wang Yugui <wangyugui@e16-tech.com>
+---
+TO-CHECK:
+1) NFSv3 nfsd_rename()/nfsd_unlink() feature change is OK?
+2) Can we do better performance than nfsd_file_close_inode_sync()?
+3) nfsd_file_close_inode_sync()->nfsd_file_close_inode() in nfsd4_delegreturn()
+	=> 'Text file busy' about 4s
+4) reference-count-check : refcount_read(&nf->nf_ref) <= 1 or ==0?
+	nfsd_file_alloc()	refcount_set(&nf->nf_ref, 1);
 
-Thank you!
+ fs/nfsd/filecache.c | 2 +-
+ fs/nfsd/nfs4state.c | 4 ++++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 9cb2d590c036..8890a8fa7402 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -512,7 +512,7 @@ __nfsd_file_close_inode(struct inode *inode, unsigned int hashval,
+ 
+ 	spin_lock(&nfsd_file_hashtbl[hashval].nfb_lock);
+ 	hlist_for_each_entry_safe(nf, tmp, &nfsd_file_hashtbl[hashval].nfb_head, nf_node) {
+-		if (inode == nf->nf_inode)
++		if (inode == nf->nf_inode && refcount_read(&nf->nf_ref) <= 1)
+ 			nfsd_file_unhash_and_release_locked(nf, dispose);
+ 	}
+ 	spin_unlock(&nfsd_file_hashtbl[hashval].nfb_lock);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9409a0dc1b76..be4b480f5914 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6673,6 +6673,8 @@ nfsd4_close(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 
+ 	/* put reference from nfs4_preprocess_seqid_op */
+ 	nfs4_put_stid(&stp->st_stid);
++
++	nfsd_file_close_inode_sync(d_inode(cstate->current_fh.fh_dentry));
+ out:
+ 	return status;
+ }
+@@ -6702,6 +6704,8 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	destroy_delegation(dp);
+ put_stateid:
+ 	nfs4_put_stid(&dp->dl_stid);
++
++	nfsd_file_close_inode_sync(d_inode(cstate->current_fh.fh_dentry));
+ out:
+ 	return status;
+ }
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.36.1
+
