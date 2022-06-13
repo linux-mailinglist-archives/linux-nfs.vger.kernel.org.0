@@ -2,192 +2,207 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EC88549AB2
-	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jun 2022 19:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C1D15498FF
+	for <lists+linux-nfs@lfdr.de>; Mon, 13 Jun 2022 18:37:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231361AbiFMR4C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jun 2022 13:56:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33870 "EHLO
+        id S243134AbiFMP4g (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jun 2022 11:56:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239750AbiFMRyp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jun 2022 13:54:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AE3992DD9
-        for <linux-nfs@vger.kernel.org>; Mon, 13 Jun 2022 06:40:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655127610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6qhy4E8DRGh0mW5qQ6vXjS66jet/9Dj6BAup48rZTn4=;
-        b=F4zUDDxJqnEu15PegbK/hLKVMrjlXwX5cNtC6ti83uaddr44QEpITcTPLiQLQE++HAKWd/
-        jf7XUIneaVxXK+sJ7WTVyYImXzhT1D763ze+ObMny5ycaHJKWNHl62Qg0fe3tWDfSLV698
-        Y8xQcFSR7Kd7YBdkhlOSom7hwZt94/0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-606-k2me43KINyimTpTzcUZYtw-1; Mon, 13 Jun 2022 09:40:07 -0400
-X-MC-Unique: k2me43KINyimTpTzcUZYtw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5763A380670E;
-        Mon, 13 Jun 2022 13:40:07 +0000 (UTC)
-Received: from bcodding.csb (ovpn-0-23.rdu2.redhat.com [10.22.0.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 390762026D2D;
-        Mon, 13 Jun 2022 13:40:07 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 93F8710C30E0; Mon, 13 Jun 2022 09:40:06 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     chuck.lever@oracle.com, trond.myklebust@hammerspace.com,
-        anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NLM: Defend against file_lock changes after vfs_test_lock()
-Date:   Mon, 13 Jun 2022 09:40:06 -0400
-Message-Id: <9688295e35c07d3b3d6c71970b6996348c2d8f1e.1654798464.git.bcodding@redhat.com>
+        with ESMTP id S243118AbiFMP4J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jun 2022 11:56:09 -0400
+Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D71B419321E
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jun 2022 06:46:52 -0700 (PDT)
+Received: by mail-oi1-x22c.google.com with SMTP id p8so3423327oip.8
+        for <linux-nfs@vger.kernel.org>; Mon, 13 Jun 2022 06:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=F8034aqgQYOIDnTJYbKnqdxe/P3NxT2RcNrYib0/ruQ=;
+        b=R4MMR5hyemRuM3l2mh4JZIS+Ysd67mGMs9w57QzxuAYNivT2oR2uA0ccLItOXx/Nff
+         HI6/bkCTWcHzuf8uaxK0aZVKIRxAzJmo3pQ4NckjHUXisjQlQKqlTIlGGFMleFZ26TS5
+         XrbPJQzMEXp3LBINHndQ9fwG3XW2+NnK70OZQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=F8034aqgQYOIDnTJYbKnqdxe/P3NxT2RcNrYib0/ruQ=;
+        b=ghI3+avjn5yUP5V621te/qiwePQGEty4yKtCfm8kxb9P08VvkxVFdL2kZMgX+docTI
+         2qZ+OLaI1XP02Tkr+382GDac4ZsldM2pIAqgJr4CkMMDaqorCdtKlh75QoeH3AF17BXY
+         Q//D/3yvmGZnjRisSTbRKER2n51VxyRzyJ0KWIlYbEltgqCN5JWE6Id3satjuRCIPno5
+         wJ40NyH2UGwrnirwi9Gz6WfERQK9opWKsZqkFZGneb1P960zKdH7yT65BdQA0IYgeGwz
+         GNrA3DRbn8Nsp+Aid6DzLHgXaS+9F6Dn1Is58FmJC/2HPdwohW8BKzolVS4FsgfSdXzJ
+         yRGQ==
+X-Gm-Message-State: AOAM532Qg7EBKAoydW/aL86br2Jq7UUxMSuePWP4hW69MzsMoMOwGFrS
+        dI03vC3riW7+BzbSQzw85Icuaw==
+X-Google-Smtp-Source: ABdhPJxMf2Qm5H8GA35Xq5n+x+nRvAKUAEETko5C92sldqd/ieCBtB6EHAADbYtdN68bTfZpGjw0Ow==
+X-Received: by 2002:aca:b744:0:b0:32f:4c19:cec1 with SMTP id h65-20020acab744000000b0032f4c19cec1mr1696209oif.43.1655128012170;
+        Mon, 13 Jun 2022 06:46:52 -0700 (PDT)
+Received: from [192.168.0.41] ([184.4.90.121])
+        by smtp.gmail.com with ESMTPSA id o20-20020a4ad494000000b0035eb4e5a6b5sm3699171oos.11.2022.06.13.06.46.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 13 Jun 2022 06:46:51 -0700 (PDT)
+Message-ID: <b4113083-73de-3ab6-e23f-32c6627d177e@cloudflare.com>
+Date:   Mon, 13 Jun 2022 08:46:49 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
+Content-Language: en-US
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Paul Moore <paul@paul-moore.com>
+References: <20220608150942.776446-1-fred@cloudflare.com>
+ <YqJ/0W3wxPThWqgC@sol.localdomain>
+From:   Frederick Lawler <fred@cloudflare.com>
+In-Reply-To: <YqJ/0W3wxPThWqgC@sol.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Instead of trusting that struct file_lock returns completely unchanged
-after vfs_test_lock() when there's no conflicting lock, stash away our
-nlm_lockowner reference so we can properly release it for all cases.
+Hi Eric,
 
-This defends against another file_lock implementation overwriting fl_owner
-when the return type is F_UNLCK.
+On 6/9/22 6:18 PM, Eric Biggers wrote:
+> On Wed, Jun 08, 2022 at 10:09:42AM -0500, Frederick Lawler wrote:
+>> diff --git a/fs/aio.c b/fs/aio.c
+>> index 3c249b938632..5abbe88c3ca7 100644
+>> --- a/fs/aio.c
+>> +++ b/fs/aio.c
+>> @@ -1620,6 +1620,8 @@ static void aio_fsync_work(struct work_struct *work)
+>>   static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+>>   		     bool datasync)
+>>   {
+>> +	int err;
+>> +
+>>   	if (unlikely(iocb->aio_buf || iocb->aio_offset || iocb->aio_nbytes ||
+>>   			iocb->aio_rw_flags))
+>>   		return -EINVAL;
+>> @@ -1628,8 +1630,11 @@ static int aio_fsync(struct fsync_iocb *req, const struct iocb *iocb,
+>>   		return -EINVAL;
+>>   
+>>   	req->creds = prepare_creds();
+>> -	if (!req->creds)
+>> -		return -ENOMEM;
+>> +	if (IS_ERR(req->creds)) {
+>> +		err = PTR_ERR(req->creds);
+>> +		req->creds = NULL;
+>> +		return err;
+>> +	}
+> 
+> This part is a little ugly.  How about doing:
+> 
+> 	creds = prepare_creds();
+> 	if (IS_ERR(creds))
+> 		return PTR_ERR(creds);
+> 	req->creds = creds;
+> 
 
-Reported-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Tested-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- fs/lockd/svc4proc.c         |  4 +++-
- fs/lockd/svclock.c          | 10 +---------
- fs/lockd/svcproc.c          |  5 ++++-
- include/linux/lockd/lockd.h |  1 +
- 4 files changed, 9 insertions(+), 11 deletions(-)
+I can do that, and same for below.
 
-diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-index 176b468a61c7..4f247ab8be61 100644
---- a/fs/lockd/svc4proc.c
-+++ b/fs/lockd/svc4proc.c
-@@ -87,6 +87,7 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_args *argp = rqstp->rq_argp;
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
-+	struct nlm_lockowner *test_owner;
- 	__be32 rc = rpc_success;
- 
- 	dprintk("lockd: TEST4        called\n");
-@@ -96,6 +97,7 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	if ((resp->status = nlm4svc_retrieve_args(rqstp, argp, &host, &file)))
- 		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
- 
-+	test_owner = argp->lock.fl.fl_owner;
- 	/* Now check for conflicting locks */
- 	resp->status = nlmsvc_testlock(rqstp, file, host, &argp->lock, &resp->lock, &resp->cookie);
- 	if (resp->status == nlm_drop_reply)
-@@ -103,7 +105,7 @@ __nlm4svc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	else
- 		dprintk("lockd: TEST4        status %d\n", ntohl(resp->status));
- 
--	nlmsvc_release_lockowner(&argp->lock);
-+	nlmsvc_put_lockowner(test_owner);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
- 	return rc;
-diff --git a/fs/lockd/svclock.c b/fs/lockd/svclock.c
-index cb3658ab9b7a..9c1aa75441e1 100644
---- a/fs/lockd/svclock.c
-+++ b/fs/lockd/svclock.c
-@@ -340,7 +340,7 @@ nlmsvc_get_lockowner(struct nlm_lockowner *lockowner)
- 	return lockowner;
- }
- 
--static void nlmsvc_put_lockowner(struct nlm_lockowner *lockowner)
-+void nlmsvc_put_lockowner(struct nlm_lockowner *lockowner)
- {
- 	if (!refcount_dec_and_lock(&lockowner->count, &lockowner->host->h_lock))
- 		return;
-@@ -590,7 +590,6 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
- 	int			error;
- 	int			mode;
- 	__be32			ret;
--	struct nlm_lockowner	*test_owner;
- 
- 	dprintk("lockd: nlmsvc_testlock(%s/%ld, ty=%d, %Ld-%Ld)\n",
- 				nlmsvc_file_inode(file)->i_sb->s_id,
-@@ -604,9 +603,6 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
- 		goto out;
- 	}
- 
--	/* If there's a conflicting lock, remember to clean up the test lock */
--	test_owner = (struct nlm_lockowner *)lock->fl.fl_owner;
--
- 	mode = lock_to_openmode(&lock->fl);
- 	error = vfs_test_lock(file->f_file[mode], &lock->fl);
- 	if (error) {
-@@ -635,10 +631,6 @@ nlmsvc_testlock(struct svc_rqst *rqstp, struct nlm_file *file,
- 	conflock->fl.fl_end = lock->fl.fl_end;
- 	locks_release_private(&lock->fl);
- 
--	/* Clean up the test lock */
--	lock->fl.fl_owner = NULL;
--	nlmsvc_put_lockowner(test_owner);
--
- 	ret = nlm_lck_denied;
- out:
- 	return ret;
-diff --git a/fs/lockd/svcproc.c b/fs/lockd/svcproc.c
-index 4dc1b40a489a..b09ca35b527c 100644
---- a/fs/lockd/svcproc.c
-+++ b/fs/lockd/svcproc.c
-@@ -116,6 +116,7 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	struct nlm_args *argp = rqstp->rq_argp;
- 	struct nlm_host	*host;
- 	struct nlm_file	*file;
-+	struct nlm_lockowner *test_owner;
- 	__be32 rc = rpc_success;
- 
- 	dprintk("lockd: TEST          called\n");
-@@ -125,6 +126,8 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 	if ((resp->status = nlmsvc_retrieve_args(rqstp, argp, &host, &file)))
- 		return resp->status == nlm_drop_reply ? rpc_drop_reply :rpc_success;
- 
-+	test_owner = argp->lock.fl.fl_owner;
-+
- 	/* Now check for conflicting locks */
- 	resp->status = cast_status(nlmsvc_testlock(rqstp, file, host, &argp->lock, &resp->lock, &resp->cookie));
- 	if (resp->status == nlm_drop_reply)
-@@ -133,7 +136,7 @@ __nlmsvc_proc_test(struct svc_rqst *rqstp, struct nlm_res *resp)
- 		dprintk("lockd: TEST          status %d vers %d\n",
- 			ntohl(resp->status), rqstp->rq_vers);
- 
--	nlmsvc_release_lockowner(&argp->lock);
-+	nlmsvc_put_lockowner(test_owner);
- 	nlmsvc_release_host(host);
- 	nlm_release_file(file);
- 	return rc;
-diff --git a/include/linux/lockd/lockd.h b/include/linux/lockd/lockd.h
-index fcef192e5e45..70ce419e2709 100644
---- a/include/linux/lockd/lockd.h
-+++ b/include/linux/lockd/lockd.h
-@@ -292,6 +292,7 @@ void		  nlmsvc_locks_init_private(struct file_lock *, struct nlm_host *, pid_t);
- __be32		  nlm_lookup_file(struct svc_rqst *, struct nlm_file **,
- 					struct nlm_lock *);
- void		  nlm_release_file(struct nlm_file *);
-+void		  nlmsvc_put_lockowner(struct nlm_lockowner *);
- void		  nlmsvc_release_lockowner(struct nlm_lock *);
- void		  nlmsvc_mark_resources(struct net *);
- void		  nlmsvc_free_host_resources(struct nlm_host *);
--- 
-2.31.1
+>> diff --git a/fs/exec.c b/fs/exec.c
+>> index 0989fb8472a1..02624783e40e 100644
+>> --- a/fs/exec.c
+>> +++ b/fs/exec.c
+>> @@ -1468,15 +1468,19 @@ EXPORT_SYMBOL(finalize_exec);
+>>    */
+>>   static int prepare_bprm_creds(struct linux_binprm *bprm)
+>>   {
+>> +	int err = -ERESTARTNOINTR;
+>>   	if (mutex_lock_interruptible(&current->signal->cred_guard_mutex))
+>> -		return -ERESTARTNOINTR;
+>> +		return err;
+>>   
+>>   	bprm->cred = prepare_exec_creds();
+>> -	if (likely(bprm->cred))
+>> -		return 0;
+>> +	if (IS_ERR(bprm->cred)) {
+>> +		err = PTR_ERR(bprm->cred);
+>> +		bprm->cred = NULL;
+>> +		mutex_unlock(&current->signal->cred_guard_mutex);
+>> +		return err;
+>> +	}
+>>   
+>> -	mutex_unlock(&current->signal->cred_guard_mutex);
+>> -	return -ENOMEM;
+>> +	return 0;
+>>   }
+> 
+> Similarly:
+> 
+> static int prepare_bprm_creds(struct linux_binprm *bprm)
+> {
+> 	struct cred *cred;
+> 
+> 	if (mutex_lock_interruptible(&current->signal->cred_guard_mutex))
+> 		return -ERESTARTNOINTR;
+> 
+> 	cred = prepare_exec_creds();
+> 	if (IS_ERR(cred)) {
+> 		mutex_unlock(&current->signal->cred_guard_mutex);
+> 		return PTR_ERR(cred);
+> 	}
+> 	bprm->cred = cred;
+> 	return 0;
+> }
+> 
+>> diff --git a/kernel/nsproxy.c b/kernel/nsproxy.c
+>> index eec72ca962e2..6cf75aa83b6c 100644
+>> --- a/kernel/nsproxy.c
+>> +++ b/kernel/nsproxy.c
+>> @@ -311,6 +311,7 @@ static void put_nsset(struct nsset *nsset)
+>>   
+>>   static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>>   {
+>> +	int err = -ENOMEM;
+>>   	struct task_struct *me = current;
+>>   
+>>   	nsset->nsproxy = create_new_namespaces(0, me, current_user_ns(), me->fs);
+>> @@ -324,6 +325,12 @@ static int prepare_nsset(unsigned flags, struct nsset *nsset)
+>>   	if (!nsset->cred)
+>>   		goto out;
+>>   
+>> +	if (IS_ERR(nsset->cred)) {
+>> +		err = PTR_ERR(nsset->cred);
+>> +		nsset->cred = NULL;
+>> +		goto out;
+>> +	}
+> 
+> Why is the NULL check above being kept?
+> 
+
+In the branch prior:
+
+	if (flags & CLONE_NEWUSER) {
+		nsset->cred = prepare_creds();
+	else
+		nsset->cred = current_cred();
+
+I don't see cases where others are checking for null after 
+current_cred(), therefore I can remove that check.
+
+> Also, drivers/crypto/ccp/sev-dev.c needs to be updated.
+> 
+
+Nice catch! I clearly missed addition after the merge window.
+
+> - Eric
 
