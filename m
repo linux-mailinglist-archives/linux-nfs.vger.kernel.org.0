@@ -2,54 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C06754A28D
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 01:20:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE04754A288
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 01:20:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236965AbiFMXUp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 13 Jun 2022 19:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51904 "EHLO
+        id S235195AbiFMXUT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 13 Jun 2022 19:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236428AbiFMXUn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jun 2022 19:20:43 -0400
+        with ESMTP id S235127AbiFMXUO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 13 Jun 2022 19:20:14 -0400
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AB5B2983D;
-        Mon, 13 Jun 2022 16:20:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F246EDF05;
+        Mon, 13 Jun 2022 16:20:12 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 34EB11F959;
-        Mon, 13 Jun 2022 23:20:38 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7BDA11F959;
+        Mon, 13 Jun 2022 23:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1655162438; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1655162411; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dv0t/moe0oo2g4yNdVPUDgVdwdMBKpyu/x9jlXnCUWQ=;
-        b=gat8BNdlwOtlhRNhKV7bDO0aFl07I0a2ImRNHxKdZm/OlKMUeP89eD7Vy0zTlZzn+fswIW
-        BJBM3zg3jTWoZsgs0i5+oizCj6FvQ82vjWdHWLy/CPZ1lH+r529KPtVc9r/6gNiX2UlryB
-        en50mmh+nZQeoojQnNnd+KiTbC01BgA=
+        bh=82DjfRBW99HvcPcA756zHmAdDUvmWlAbNLkjBBig1RU=;
+        b=onyQo7w/F0j7JWAstX/Wf8oR9psNhx1SG23FAe2QRj3Dl8qx03/yLvA+O/XM7M23wHrmOc
+        pH9zLJIvsBz8c0/ne+N1laY26Y9dnQeJYqQVXG5DPaVfQvXpO+ZTMSnpO+QUUHJ+xywWBs
+        NBk6PDAZBPlHpGuLznAgyxxzCp4qkTw=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1655162438;
+        s=susede2_ed25519; t=1655162411;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dv0t/moe0oo2g4yNdVPUDgVdwdMBKpyu/x9jlXnCUWQ=;
-        b=C0BcQJ7jOn+AVLULjJbrc70KgLqI8xMLcwgkLYm31PuvYVhtEl0PGgF4leaYNeOmCmrwuM
-        E+UlmOtqwBVkhhAA==
+        bh=82DjfRBW99HvcPcA756zHmAdDUvmWlAbNLkjBBig1RU=;
+        b=bKil98UTCl04ew4EmOoqlArjuqiVuARFlR9KJdTnnLaClKo9d1GorIumVTGQ7m9E2oobVn
+        T20lIhtIhAndPqDw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E824A134CF;
-        Mon, 13 Jun 2022 23:20:35 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 0DDE2134CF;
+        Mon, 13 Jun 2022 23:20:07 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id gk8JKEPGp2LNbwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 13 Jun 2022 23:20:35 +0000
-Subject: [PATCH 04/12] VFS: move dput() and mnt_drop_write() into
- done_path_update()
+        id kkCnLifGp2K1bwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 13 Jun 2022 23:20:07 +0000
+Subject: [PATCH 02/12] VFS: move EEXIST and ENOENT tests into
+ lookup_hash_update()
 From:   NeilBrown <neilb@suse.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>, Daire Byrne <daire@dneg.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
@@ -57,7 +57,7 @@ To:     Al Viro <viro@zeniv.linux.org.uk>, Daire Byrne <daire@dneg.com>,
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Date:   Tue, 14 Jun 2022 09:18:21 +1000
-Message-ID: <165516230198.21248.8276913837756883567.stgit@noble.brown>
+Message-ID: <165516230197.21248.5856192432755210577.stgit@noble.brown>
 In-Reply-To: <165516173293.21248.14587048046993234326.stgit@noble.brown>
 References: <165516173293.21248.14587048046993234326.stgit@noble.brown>
 User-Agent: StGit/1.5
@@ -74,53 +74,127 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-All calls to done_path_update() are followed by the same two calls, so
-merge them in.
+Moving common error handling into lookup_hash_update() simplifies
+callers.
+A future patch will export this functionality to nfsd, and the more code
+we put in the interface, the less code will be needed in nfsd.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/namei.c |    8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ fs/namei.c |   55 +++++++++++++++++++++++++++++++------------------------
+ 1 file changed, 31 insertions(+), 24 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index 83ce2f7083be..f13bff877e30 100644
+index 9a2ca515c219..e7a56d6e2472 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1732,6 +1732,8 @@ static void done_path_update(struct path *path, struct dentry *dentry,
- 	} else {
- 		inode_unlock(dir);
- 	}
-+	dput(dentry);
-+	mnt_drop_write(path->mnt);
- }
- 
- static struct dentry *lookup_fast(struct nameidata *nd,
-@@ -3953,8 +3955,6 @@ void done_path_create_wq(struct path *path, struct dentry *dentry,
- 			 wait_queue_head_t *wq)
+@@ -1563,7 +1563,13 @@ static struct dentry *lookup_dcache(const struct qstr *name,
  {
- 	done_path_update(path, dentry, wq);
--	dput(dentry);
--	mnt_drop_write(path->mnt);
- 	path_put(path);
- }
- EXPORT_SYMBOL(done_path_create_wq);
-@@ -4276,8 +4276,6 @@ int do_rmdir(int dfd, struct filename *name)
- 	error = vfs_rmdir(mnt_userns, path.dentry->d_inode, dentry);
- exit3:
- 	done_path_update(&path, dentry, &wq);
--	dput(dentry);
--	mnt_drop_write(path.mnt);
- exit2:
- 	path_put(&path);
- 	if (retry_estale(error, lookup_flags)) {
-@@ -4412,8 +4410,6 @@ int do_unlinkat(int dfd, struct filename *name)
- 				   &delegated_inode);
- exit3:
- 		done_path_update(&path, dentry, &wq);
--		dput(dentry);
--		mnt_drop_write(path.mnt);
+ 	struct dentry *dentry = d_lookup(dir, name);
+ 	if (dentry) {
+-		int error = d_revalidate(dentry, flags);
++		int error;
++		/* Some filesystems assume EXCL -> CREATE, so make
++		 * sure it does.
++		 */
++		if (!(flags & LOOKUP_CREATE))
++			flags &= ~LOOKUP_EXCL;
++		error = d_revalidate(dentry, flags);
+ 		if (unlikely(error <= 0)) {
+ 			if (!error)
+ 				d_invalidate(dentry);
+@@ -1621,6 +1627,8 @@ static struct dentry *__lookup_hash(const struct qstr *name,
+  * or shared lock depending on the fs preference, then do a lookup,
+  * and then set the DCACHE_PAR_UPDATE bit on the child if a shared lock
+  * was taken on the parent.
++ * If LOOKUP_EXCL, name should not already exist, else -EEXIST
++ * If not LOOKUP_CREATE, name should already exist, else -ENOENT
+  */
+ static struct dentry *lookup_hash_update(const struct qstr *name,
+ 					 struct dentry *base, unsigned int flags,
+@@ -1644,6 +1652,20 @@ static struct dentry *lookup_hash_update(const struct qstr *name,
+ 		err = PTR_ERR(dentry);
+ 		goto out_err;
  	}
- 	if (inode)
- 		iput(inode);	/* truncate the inode here */
++	if (flags & LOOKUP_EXCL) {
++		if (d_is_positive(dentry)) {
++			dput(dentry);
++			err = -EEXIST;
++			goto out_err;
++		}
++	}
++	if (!(flags & LOOKUP_CREATE)) {
++		if (!dentry->d_inode) {
++			dput(dentry);
++			err = -ENOENT;
++			goto out_err;
++		}
++	}
+ 	if (wq && !d_lock_update(dentry, base, name)) {
+ 		/*
+ 		 * Failed to get lock due to race with unlink or rename
+@@ -3838,7 +3860,7 @@ static struct dentry *filename_create_one(struct qstr *last, struct path *path,
+ 	struct dentry *dentry;
+ 	bool want_dir = lookup_flags & LOOKUP_DIRECTORY;
+ 	unsigned int reval_flag = lookup_flags & LOOKUP_REVAL;
+-	unsigned int create_flags = LOOKUP_CREATE | LOOKUP_EXCL;
++	unsigned int create_flag = LOOKUP_CREATE;
+ 	int err2;
+ 	int error;
+ 
+@@ -3849,26 +3871,17 @@ static struct dentry *filename_create_one(struct qstr *last, struct path *path,
+ 	 * '/', and a directory wasn't requested.
+ 	 */
+ 	if (last->name[last->len] && !want_dir)
+-		create_flags = 0;
++		/* Name was foo/bar/ but not creating a directory, so
++		 * we won't try to create - result with be either -ENOENT
++		 * or -EEXIST.
++		 */
++		create_flag = 0;
+ 	dentry = lookup_hash_update(last, path->dentry,
+-				    reval_flag | create_flags,  wq);
++				    reval_flag | create_flag | LOOKUP_EXCL,
++				    wq);
+ 	if (IS_ERR(dentry))
+ 		goto drop_write;
+ 
+-	error = -EEXIST;
+-	if (d_is_positive(dentry))
+-		goto fail;
+-
+-	/*
+-	 * Special case - lookup gave negative, but... we had foo/bar/
+-	 * From the vfs_mknod() POV we just have a negative dentry -
+-	 * all is fine. Let's be bastards - you had / on the end, you've
+-	 * been asking for (non-existent) directory. -ENOENT for you.
+-	 */
+-	if (unlikely(!create_flags)) {
+-		error = -ENOENT;
+-		goto fail;
+-	}
+ 	if (unlikely(err2)) {
+ 		error = err2;
+ 		goto fail;
+@@ -4264,10 +4277,6 @@ int do_rmdir(int dfd, struct filename *name)
+ 	error = PTR_ERR(dentry);
+ 	if (IS_ERR(dentry))
+ 		goto exit3;
+-	if (!dentry->d_inode) {
+-		error = -ENOENT;
+-		goto exit4;
+-	}
+ 	error = security_path_rmdir(&path, dentry);
+ 	if (error)
+ 		goto exit4;
+@@ -4407,8 +4416,6 @@ int do_unlinkat(int dfd, struct filename *name)
+ 		if (last.name[last.len])
+ 			goto slashes;
+ 		inode = dentry->d_inode;
+-		if (d_is_negative(dentry))
+-			goto slashes;
+ 		ihold(inode);
+ 		error = security_path_unlink(&path, dentry);
+ 		if (error)
 
 
