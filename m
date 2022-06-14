@@ -2,30 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47C4654B63D
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 18:35:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DB6154BA02
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 21:02:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244345AbiFNQbj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jun 2022 12:31:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46564 "EHLO
+        id S1354997AbiFNTB1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jun 2022 15:01:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243064AbiFNQbg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 12:31:36 -0400
-Received: from out03.mta.xmission.com (out03.mta.xmission.com [166.70.13.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D82443C9;
-        Tue, 14 Jun 2022 09:31:35 -0700 (PDT)
-Received: from in02.mta.xmission.com ([166.70.13.52]:56828)
-        by out03.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1o19S2-00AmWn-9i; Tue, 14 Jun 2022 10:31:34 -0600
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:40454 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1o19S0-009rSu-TN; Tue, 14 Jun 2022 10:31:33 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Frederick Lawler <fred@cloudflare.com>
+        with ESMTP id S1345460AbiFNTBK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 15:01:10 -0400
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F960E6
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 11:59:13 -0700 (PDT)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-fb6b4da1dfso13686971fac.4
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 11:59:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=P/zvL47bzMX9zv6R9Iu19Vam9aHyZ/GbOGpqtXAWqMc=;
+        b=YbrS1rTCXkBCIbh142yEwubaBQ2XkSJH/0xKf0lf6tUumEJSdjOkNie1Nx61lojoXo
+         7ghRJ4k9WRR4jECQ0Dr2ZPBq/WU7t6xV2yqW0HATlcT/2Yl8k5zRPz4Fct1kN9ZfM/ig
+         wiY+zF/49Otr9jZ/sUBro5DEDVmoThVwMV6c4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=P/zvL47bzMX9zv6R9Iu19Vam9aHyZ/GbOGpqtXAWqMc=;
+        b=eISuyrUrcHmV005uao2sUqF45+cJzwhHXR76646tO/JhPbaj+fIG6d7HaIZe1N+IPq
+         iDoCSzq2dWLk5mEMtOHFe2VVfNI4ZbjC2WrT2DKxhRfCEK7LS9enIGS74cz9Gj0jQhVF
+         S39COaQ5DYqqxd5snJjjKi2RlcXqhxz4Vfre8h4Knu5z7pztjME8K8BYP2k0QsmEN13+
+         yVYSYktFWBGhYnN0gD2ZvE0t7v/LOJGxAD17CO4dwNIaO/F7oqhl4pl76ia9hnLUGPLW
+         yoevpnnXfM/WQsuRIbB8sj+i/V8LuttFe2WaFCQSYqgNkFGn+6piX0Orfv1zwIl8LrMf
+         X6bw==
+X-Gm-Message-State: AJIora/NhOKQVy8GYGG6LJR/JUhgOrOZi+NYFrKBf0QEDskkW03jt0sv
+        P0oUsbx+h1nVIk6KvZrkWfYLBw==
+X-Google-Smtp-Source: AGRyM1ufL5MDqjvHIo4wa13zoHeLqce3gwGBqjZkT/cfGeJacNorGFZd87ZD1rOQxbOuCm8UywPhnQ==
+X-Received: by 2002:a05:6870:c151:b0:fe:251b:804c with SMTP id g17-20020a056870c15100b000fe251b804cmr3187763oad.15.1655233152767;
+        Tue, 14 Jun 2022 11:59:12 -0700 (PDT)
+Received: from [192.168.0.41] ([184.4.90.121])
+        by smtp.gmail.com with ESMTPSA id x64-20020acae043000000b0032ecb7370ffsm5017316oig.41.2022.06.14.11.59.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jun 2022 11:59:10 -0700 (PDT)
+Message-ID: <9ed91f15-420c-3db6-8b3b-85438b02bf97@cloudflare.com>
+Date:   Tue, 14 Jun 2022 13:59:08 -0500
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
+Content-Language: en-US
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
 Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
         linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
@@ -37,140 +64,134 @@ Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
         Jeff Moyer <jmoyer@redhat.com>,
         Paul Moore <paul@paul-moore.com>
 References: <20220608150942.776446-1-fred@cloudflare.com>
-        <87tu8oze94.fsf@email.froward.int.ebiederm.org>
-        <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com>
-        <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
-        <859cb593-9e96-5846-2191-6613677b07c5@cloudflare.com>
-Date:   Tue, 14 Jun 2022 11:30:54 -0500
-In-Reply-To: <859cb593-9e96-5846-2191-6613677b07c5@cloudflare.com> (Frederick
-        Lawler's message of "Tue, 14 Jun 2022 11:06:24 -0500")
-Message-ID: <87o7yvxl4x.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1o19S0-009rSu-TN;;;mid=<87o7yvxl4x.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=softfail
-X-XM-AID: U2FsdGVkX19OwrPXsW8XkXxckntCYt4oo3aNKl7qziA=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
+ <87tu8oze94.fsf@email.froward.int.ebiederm.org>
+ <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com>
+ <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
+ <859cb593-9e96-5846-2191-6613677b07c5@cloudflare.com>
+ <87o7yvxl4x.fsf@email.froward.int.ebiederm.org>
+From:   Frederick Lawler <fred@cloudflare.com>
+In-Reply-To: <87o7yvxl4x.fsf@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
-X-Spam-DCC: XMission; sa04 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: *****;Frederick Lawler <fred@cloudflare.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 748 ms - load_scoreonly_sql: 0.04 (0.0%),
-        signal_user_changed: 10 (1.3%), b_tie_ro: 9 (1.2%), parse: 0.81 (0.1%),
-         extract_message_metadata: 10 (1.4%), get_uri_detail_list: 2.1 (0.3%),
-        tests_pri_-1000: 18 (2.4%), tests_pri_-950: 1.02 (0.1%),
-        tests_pri_-900: 0.85 (0.1%), tests_pri_-90: 303 (40.5%), check_bayes:
-        299 (39.9%), b_tokenize: 8 (1.1%), b_tok_get_all: 11 (1.5%),
-        b_comp_prob: 2.8 (0.4%), b_tok_touch_all: 271 (36.3%), b_finish: 1.36
-        (0.2%), tests_pri_0: 387 (51.7%), check_dkim_signature: 0.80 (0.1%),
-        check_dkim_adsp: 2.9 (0.4%), poll_dns_idle: 0.91 (0.1%), tests_pri_10:
-        3.9 (0.5%), tests_pri_500: 11 (1.5%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Frederick Lawler <fred@cloudflare.com> writes:
+On 6/14/22 11:30 AM, Eric W. Biederman wrote:
+> Frederick Lawler <fred@cloudflare.com> writes:
+> 
+>> On 6/13/22 11:44 PM, Eric W. Biederman wrote:
+>>> Frederick Lawler <fred@cloudflare.com> writes:
+>>>
+>>>> Hi Eric,
+>>>>
+>>>> On 6/13/22 12:04 PM, Eric W. Biederman wrote:
+>>>>> Frederick Lawler <fred@cloudflare.com> writes:
+>>>>>
+>>>>>> While experimenting with the security_prepare_creds() LSM hook, we
+>>>>>> noticed that our EPERM error code was not propagated up the callstack.
+>>>>>> Instead ENOMEM is always returned.  As a result, some tools may send a
+>>>>>> confusing error message to the user:
+>>>>>>
+>>>>>> $ unshare -rU
+>>>>>> unshare: unshare failed: Cannot allocate memory
+>>>>>>
+>>>>>> A user would think that the system didn't have enough memory, when
+>>>>>> instead the action was denied.
+>>>>>>
+>>>>>> This problem occurs because prepare_creds() and prepare_kernel_cred()
+>>>>>> return NULL when security_prepare_creds() returns an error code. Later,
+>>>>>> functions calling prepare_creds() and prepare_kernel_cred() return
+>>>>>> ENOMEM because they assume that a NULL meant there was no memory
+>>>>>> allocated.
+>>>>>>
+>>>>>> Fix this by propagating an error code from security_prepare_creds() up
+>>>>>> the callstack.
+>>>>> Why would it make sense for security_prepare_creds to return an error
+>>>>> code other than ENOMEM?
+>>>>>    > That seems a bit of a violation of what that function is supposed to do
+>>>>>
+>>>>
+>>>> The API allows LSM authors to decide what error code is returned from the
+>>>> cred_prepare hook. security_task_alloc() is a similar hook, and has its return
+>>>> code propagated.
+>>> It is not an api.  It is an implementation detail of the linux kernel.
+>>> It is a set of convenient functions that do a job.
+>>> The general rule is we don't support cases without an in-tree user.  I
+>>> don't see an in-tree user.
+>>>
+>>>> I'm proposing we follow security_task_allocs() pattern, and add visibility for
+>>>> failure cases in prepare_creds().
+>>> I am asking why we would want to.  Especially as it is not an API, and I
+>>> don't see any good reason for anything but an -ENOMEM failure to be
+>>> supported.
+>>>
+>> We're writing a LSM BPF policy, and not a new LSM. Our policy aims to solve
+>> unprivileged unshare, similar to Debian's patch [1]. We're in a position such
+>> that we can't use that patch because we can't block _all_ of our applications
+>> from performing an unshare. We prefer a granular approach. LSM BPF seems like a
+>> good choice.
+> 
+> I am quite puzzled why doesn't /proc/sys/user/max_user_namespaces work
+> for you?
+> 
 
-> On 6/13/22 11:44 PM, Eric W. Biederman wrote:
->> Frederick Lawler <fred@cloudflare.com> writes:
->> 
->>> Hi Eric,
+We have the following requirements:
+
+1. Allow list criteria
+2. root user must be able to create namespaces whenever
+3. Everything else not in 1 & 2 must be denied
+
+We use per task attributes to determine whether or not we allow/deny the 
+current call to unshare().
+
+/proc/sys/user/max_user_namespaces limits are a bit broad for this level 
+of detail.
+
+>> Because LSM BPF exposes these hooks, we should probably treat them as an
+>> API. From that perspective, userspace expects unshare to return a EPERM
+>> when the call is denied permissions.
+> 
+> The BPF code gets to be treated as a out of tree kernel module.
+> 
+>>> Without an in-tree user that cares it is probably better to go the
+>>> opposite direction and remove the possibility of return anything but
+>>> memory allocation failure.  That will make it clearer to implementors
+>>> that a general error code is not supported and this is not a location
+>>> to implement policy, this is only a hook to allocate state for the LSM.
 >>>
->>> On 6/13/22 12:04 PM, Eric W. Biederman wrote:
->>>> Frederick Lawler <fred@cloudflare.com> writes:
->>>>
->>>>> While experimenting with the security_prepare_creds() LSM hook, we
->>>>> noticed that our EPERM error code was not propagated up the callstack.
->>>>> Instead ENOMEM is always returned.  As a result, some tools may send a
->>>>> confusing error message to the user:
->>>>>
->>>>> $ unshare -rU
->>>>> unshare: unshare failed: Cannot allocate memory
->>>>>
->>>>> A user would think that the system didn't have enough memory, when
->>>>> instead the action was denied.
->>>>>
->>>>> This problem occurs because prepare_creds() and prepare_kernel_cred()
->>>>> return NULL when security_prepare_creds() returns an error code. Later,
->>>>> functions calling prepare_creds() and prepare_kernel_cred() return
->>>>> ENOMEM because they assume that a NULL meant there was no memory
->>>>> allocated.
->>>>>
->>>>> Fix this by propagating an error code from security_prepare_creds() up
->>>>> the callstack.
->>>> Why would it make sense for security_prepare_creds to return an error
->>>> code other than ENOMEM?
->>>>   > That seems a bit of a violation of what that function is supposed to do
->>>>
->>>
->>> The API allows LSM authors to decide what error code is returned from the
->>> cred_prepare hook. security_task_alloc() is a similar hook, and has its return
->>> code propagated.
->> It is not an api.  It is an implementation detail of the linux kernel.
->> It is a set of convenient functions that do a job.
->> The general rule is we don't support cases without an in-tree user.  I
->> don't see an in-tree user.
->> 
->>> I'm proposing we follow security_task_allocs() pattern, and add visibility for
->>> failure cases in prepare_creds().
->> I am asking why we would want to.  Especially as it is not an API, and I
->> don't see any good reason for anything but an -ENOMEM failure to be
->> supported.
 >>
-> We're writing a LSM BPF policy, and not a new LSM. Our policy aims to solve
-> unprivileged unshare, similar to Debian's patch [1]. We're in a position such
-> that we can't use that patch because we can't block _all_ of our applications
-> from performing an unshare. We prefer a granular approach. LSM BPF seems like a
-> good choice.
-
-I am quite puzzled why doesn't /proc/sys/user/max_user_namespaces work
-for you?
-
-> Because LSM BPF exposes these hooks, we should probably treat them as an
-> API. From that perspective, userspace expects unshare to return a EPERM 
-> when the call is denied permissions.
-
-The BPF code gets to be treated as a out of tree kernel module.
-
->> Without an in-tree user that cares it is probably better to go the
->> opposite direction and remove the possibility of return anything but
->> memory allocation failure.  That will make it clearer to implementors
->> that a general error code is not supported and this is not a location
->> to implement policy, this is only a hook to allocate state for the LSM.
->> 
->
-> That's a good point, and it's possible we're using the wrong hook for the
-> policy. Do you know of other hooks we can look into?
-
-Not off the top of my head.
-
->>>> I have probably missed a very interesting discussion where that was
->>>> mentioned but I don't see link to the discussion or anything explaining
->>>> why we want to do that in this change.
+>> That's a good point, and it's possible we're using the wrong hook for the
+>> policy. Do you know of other hooks we can look into?
+> 
+> Not off the top of my head.
+> 
+>>>>> I have probably missed a very interesting discussion where that was
+>>>>> mentioned but I don't see link to the discussion or anything explaining
+>>>>> why we want to do that in this change.
+>>>>>
 >>>>
+>>>> AFAIK, this is the start of the discussion.
+>>> You were on v3 and had an out of tree piece of code so I assumed someone
+>>> had at least thought about why you want to implement policy in a piece
+>>> of code whose only purpose is to allocate memory to store state.
 >>>
->>> AFAIK, this is the start of the discussion.
->> You were on v3 and had an out of tree piece of code so I assumed someone
->> had at least thought about why you want to implement policy in a piece
->> of code whose only purpose is to allocate memory to store state.
->> 
->
-> No worries.
->
->> Eric
->> 
->> 
->
-> Links:
-> 1:
-> https://sources.debian.org/patches/linux/3.16.56-1+deb8u1/debian/add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by-default.patch/
+>>
+>> No worries.
+>>
+>>> Eric
+>>>
+>>>
+>>
+>> Links:
+>> 1:
+>> https://sources.debian.org/patches/linux/3.16.56-1+deb8u1/debian/add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by-default.patch/
+> 
+> Eric
 
-Eric
