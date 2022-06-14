@@ -2,170 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5F7D54B458
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 17:17:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD27154B556
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 18:06:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1356566AbiFNPP0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jun 2022 11:15:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
+        id S1356779AbiFNQGr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jun 2022 12:06:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356558AbiFNPPW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 11:15:22 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4C7B424BB;
-        Tue, 14 Jun 2022 08:15:18 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LMsNZ4vcRzRjQr;
-        Tue, 14 Jun 2022 23:11:58 +0800 (CST)
-Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 14 Jun 2022 23:15:16 +0800
-Received: from huawei.com (10.175.127.227) by kwepemm600015.china.huawei.com
- (7.193.23.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.24; Tue, 14 Jun
- 2022 23:15:15 +0800
-From:   ChenXiaoSong <chenxiaosong2@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenxiaosong2@huawei.com>, <liuyongqiang13@huawei.com>,
-        <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>
-Subject: [PATCH -next,v2] NFS: report and clear ENOSPC/EFBIG/EDQUOT writeback error on close() file
-Date:   Tue, 14 Jun 2022 23:28:17 +0800
-Message-ID: <20220614152817.271507-1-chenxiaosong2@huawei.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S1356567AbiFNQGq (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 12:06:46 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8D5D403F3
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 09:06:27 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id p129so12173392oig.3
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 09:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language:to
+         :cc:references:from:in-reply-to:content-transfer-encoding;
+        bh=X4xRWyF9vr8qnasqfhsd+VAGIzL+N4al4cfXIWCdc0g=;
+        b=NLNTK/3yOlui/8PDUrYDNIdgpprrS90aWM+WjqJ+L2bMU+1Ozbmg2rD4fkMgfuWnpm
+         aMGJEYfd5nogbWyMEV3d9AdrsFTbd/ai3JvhNvWmxQgkmSCNpEsOoNznE37pK/knJYQu
+         8Aw2b9wKcBroceGAhUyVkpxk3cOL+KGNAnLUM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=X4xRWyF9vr8qnasqfhsd+VAGIzL+N4al4cfXIWCdc0g=;
+        b=w9klO9eK6NFMtikmqCJigwmF+OZQnwXa67aZSnNzJy45nPUHs1SPfKFRcHv5JhKZBn
+         v9oLctifHD2w60en4zjwWXLwSC5/mbjMM5sVse/0NQkOd/nEd7at8lVVW1fM0e5oFPV9
+         rdhcHRHm1fHdv71nUV3FZSvXhTNTc24c4EkvbsDKd0KODuUbgWcEQLy8DhrKA38ZCtxT
+         vNcNaJrrmiKh+uDF/wcIvEKhc3RmFLdW8B4wP3o3xtDtZqjjDnQYuncZu+u5vdqHjkFL
+         dPfuz93VqWVDEetXan8Pnf9QpALLU3PXyxsu3ip7jqa4pNS9S+EbzFMkiS2bOqWr5Ay+
+         M9Ig==
+X-Gm-Message-State: AOAM533B1pZHFv4M0WQt3/xyTj0TyE5dNhiW7ByIl128TOYqa3VxYPu4
+        cs4wkeMVXP9+39SmivYUGDkfJQ==
+X-Google-Smtp-Source: ABdhPJz9B/kSdK+3GB7ULQc4BQgTDB3yrng0XI1+iE7DuZFwNplTTKpOWFeQG4wG0wSczvdmVlxS5A==
+X-Received: by 2002:aca:3945:0:b0:32b:3a61:35d6 with SMTP id g66-20020aca3945000000b0032b3a6135d6mr2484880oia.293.1655222787108;
+        Tue, 14 Jun 2022 09:06:27 -0700 (PDT)
+Received: from [192.168.0.41] ([184.4.90.121])
+        by smtp.gmail.com with ESMTPSA id d1-20020a0568301b6100b0060bec21ffcdsm4939272ote.22.2022.06.14.09.06.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jun 2022 09:06:26 -0700 (PDT)
+Message-ID: <859cb593-9e96-5846-2191-6613677b07c5@cloudflare.com>
+Date:   Tue, 14 Jun 2022 11:06:24 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.127.227]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600015.china.huawei.com (7.193.23.52)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
+Content-Language: en-US
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Paul Moore <paul@paul-moore.com>
+References: <20220608150942.776446-1-fred@cloudflare.com>
+ <87tu8oze94.fsf@email.froward.int.ebiederm.org>
+ <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com>
+ <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
+From:   Frederick Lawler <fred@cloudflare.com>
+In-Reply-To: <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently, we report and clear ENOSPC/EFBIG/EDQUOT writeback error on write(),
-write() file will report unexpected error if previous writeback error have not
-been cleared.
+On 6/13/22 11:44 PM, Eric W. Biederman wrote:
+> Frederick Lawler <fred@cloudflare.com> writes:
+> 
+>> Hi Eric,
+>>
+>> On 6/13/22 12:04 PM, Eric W. Biederman wrote:
+>>> Frederick Lawler <fred@cloudflare.com> writes:
+>>>
+>>>> While experimenting with the security_prepare_creds() LSM hook, we
+>>>> noticed that our EPERM error code was not propagated up the callstack.
+>>>> Instead ENOMEM is always returned.  As a result, some tools may send a
+>>>> confusing error message to the user:
+>>>>
+>>>> $ unshare -rU
+>>>> unshare: unshare failed: Cannot allocate memory
+>>>>
+>>>> A user would think that the system didn't have enough memory, when
+>>>> instead the action was denied.
+>>>>
+>>>> This problem occurs because prepare_creds() and prepare_kernel_cred()
+>>>> return NULL when security_prepare_creds() returns an error code. Later,
+>>>> functions calling prepare_creds() and prepare_kernel_cred() return
+>>>> ENOMEM because they assume that a NULL meant there was no memory
+>>>> allocated.
+>>>>
+>>>> Fix this by propagating an error code from security_prepare_creds() up
+>>>> the callstack.
+>>> Why would it make sense for security_prepare_creds to return an error
+>>> code other than ENOMEM?
+>>>   > That seems a bit of a violation of what that function is supposed to do
+>>>
+>>
+>> The API allows LSM authors to decide what error code is returned from the
+>> cred_prepare hook. security_task_alloc() is a similar hook, and has its return
+>> code propagated.
+> 
+> It is not an api.  It is an implementation detail of the linux kernel.
+> It is a set of convenient functions that do a job.
+> 
+> The general rule is we don't support cases without an in-tree user.  I
+> don't see an in-tree user.
+> 
+>> I'm proposing we follow security_task_allocs() pattern, and add visibility for
+>> failure cases in prepare_creds().
+> 
+> I am asking why we would want to.  Especially as it is not an API, and I
+> don't see any good reason for anything but an -ENOMEM failure to be
+> supported.
+>
+We're writing a LSM BPF policy, and not a new LSM. Our policy aims to 
+solve unprivileged unshare, similar to Debian's patch [1]. We're in a 
+position such that we can't use that patch because we can't block _all_ 
+of our applications from performing an unshare. We prefer a granular 
+approach. LSM BPF seems like a good choice.
 
-Reproducer:
-        nfs server            |       nfs client
- -----------------------------|---------------------------------------------
- # No space left on server    |
- fallocate -l 100G /svr/nospc |
-                              | mount -t nfs $nfs_server_ip:/ /mnt
-                              |
-                              | # Expected error: No space left on device
-                              | dd if=/dev/zero of=/mnt/file count=1 ibs=10K
-                              |
-                              | # Release space on mountpoint
-                              | rm /mnt/nospc
-                              |
-                              | # Just write 512B and report unexpected error
-                              | dd if=/dev/zero of=/mnt/file count=1 ibs=10K
+Because LSM BPF exposes these hooks, we should probably treat them as an 
+API. From that perspective, userspace expects unshare to return a EPERM 
+when the call is denied permissions.
 
-Fix this by clearing ENOSPC/EFBIG/EDQUOT writeback error on close file,
-it will not clear other errors that are not supposed to be reported by close().
+> Without an in-tree user that cares it is probably better to go the
+> opposite direction and remove the possibility of return anything but
+> memory allocation failure.  That will make it clearer to implementors
+> that a general error code is not supported and this is not a location
+> to implement policy, this is only a hook to allocate state for the LSM.
+> 
 
-Signed-off-by: ChenXiaoSong <chenxiaosong2@huawei.com>
----
- fs/nfs/file.c     | 16 ++++++++--------
- fs/nfs/internal.h | 10 ++++++++++
- fs/nfs/nfs4file.c |  9 +++++++--
- 3 files changed, 25 insertions(+), 10 deletions(-)
+That's a good point, and it's possible we're using the wrong hook for 
+the policy. Do you know of other hooks we can look into?
 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 2d72b1b7ed74..275d1fdc7f9a 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -138,7 +138,7 @@ static int
- nfs_file_flush(struct file *file, fl_owner_t id)
- {
- 	struct inode	*inode = file_inode(file);
--	errseq_t since;
-+	errseq_t since, error;
- 
- 	dprintk("NFS: flush(%pD2)\n", file);
- 
-@@ -149,7 +149,12 @@ nfs_file_flush(struct file *file, fl_owner_t id)
- 	/* Flush writes to the server and return any errors */
- 	since = filemap_sample_wb_err(file->f_mapping);
- 	nfs_wb_all(inode);
--	return filemap_check_wb_err(file->f_mapping, since);
-+	error = filemap_check_wb_err(file->f_mapping, since);
-+
-+	if (nfs_should_clear_wb_err(error))
-+		file_check_and_advance_wb_err(file);
-+
-+	return error;
- }
- 
- ssize_t
-@@ -673,12 +678,7 @@ ssize_t nfs_file_write(struct kiocb *iocb, struct iov_iter *from)
- out:
- 	/* Return error values */
- 	error = filemap_check_wb_err(file->f_mapping, since);
--	switch (error) {
--	default:
--		break;
--	case -EDQUOT:
--	case -EFBIG:
--	case -ENOSPC:
-+	if (nfs_should_clear_wb_err(error)) {
- 		nfs_wb_all(inode);
- 		error = file_check_and_advance_wb_err(file);
- 		if (error < 0)
-diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-index 8f8cd6e2d4db..e49aad8f7d09 100644
---- a/fs/nfs/internal.h
-+++ b/fs/nfs/internal.h
-@@ -859,3 +859,13 @@ static inline void nfs_set_port(struct sockaddr *sap, int *port,
- 
- 	rpc_set_port(sap, *port);
- }
-+
-+static inline bool nfs_should_clear_wb_err(int error) {
-+	switch (error) {
-+	case -EDQUOT:
-+	case -EFBIG:
-+	case -ENOSPC:
-+		return true;
-+	}
-+	return false;
-+}
-diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-index 03d3a270eff4..ddf3f0abd55a 100644
---- a/fs/nfs/nfs4file.c
-+++ b/fs/nfs/nfs4file.c
-@@ -113,7 +113,7 @@ static int
- nfs4_file_flush(struct file *file, fl_owner_t id)
- {
- 	struct inode	*inode = file_inode(file);
--	errseq_t since;
-+	errseq_t since, error;
- 
- 	dprintk("NFS: flush(%pD2)\n", file);
- 
-@@ -131,7 +131,12 @@ nfs4_file_flush(struct file *file, fl_owner_t id)
- 	/* Flush writes to the server and return any errors */
- 	since = filemap_sample_wb_err(file->f_mapping);
- 	nfs_wb_all(inode);
--	return filemap_check_wb_err(file->f_mapping, since);
-+	error = filemap_check_wb_err(file->f_mapping, since);
-+
-+	if (nfs_should_clear_wb_err(error))
-+		file_check_and_advance_wb_err(file);
-+
-+	return error;
- }
- 
- #ifdef CONFIG_NFS_V4_2
--- 
-2.31.1
+>>> I have probably missed a very interesting discussion where that was
+>>> mentioned but I don't see link to the discussion or anything explaining
+>>> why we want to do that in this change.
+>>>
+>>
+>> AFAIK, this is the start of the discussion.
+> 
+> You were on v3 and had an out of tree piece of code so I assumed someone
+> had at least thought about why you want to implement policy in a piece
+> of code whose only purpose is to allocate memory to store state.
+> 
 
+No worries.
+
+> Eric
+> 
+> 
+> 
+
+Links:
+1: 
+https://sources.debian.org/patches/linux/3.16.56-1+deb8u1/debian/add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by-default.patch/
