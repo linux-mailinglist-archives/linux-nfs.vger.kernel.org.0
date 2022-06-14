@@ -2,145 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9681154A844
-	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 06:44:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93A3054B1A7
+	for <lists+linux-nfs@lfdr.de>; Tue, 14 Jun 2022 14:56:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236581AbiFNEoj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 14 Jun 2022 00:44:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57280 "EHLO
+        id S1355499AbiFNMmA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 14 Jun 2022 08:42:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbiFNEoi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 00:44:38 -0400
-Received: from out01.mta.xmission.com (out01.mta.xmission.com [166.70.13.231])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 032D52E9E4;
-        Mon, 13 Jun 2022 21:44:37 -0700 (PDT)
-Received: from in02.mta.xmission.com ([166.70.13.52]:60056)
-        by out01.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1o0yPs-002t3o-D4; Mon, 13 Jun 2022 22:44:36 -0600
-Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:40374 helo=email.froward.int.ebiederm.org.xmission.com)
-        by in02.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.93)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1o0yPr-008Y07-9H; Mon, 13 Jun 2022 22:44:36 -0600
-From:   "Eric W. Biederman" <ebiederm@xmission.com>
-To:     Frederick Lawler <fred@cloudflare.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, linux-mm@kvack.org,
-        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        keyrings@vger.kernel.org, selinux@vger.kernel.org,
-        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com,
-        Jeff Moyer <jmoyer@redhat.com>,
-        Paul Moore <paul@paul-moore.com>
-References: <20220608150942.776446-1-fred@cloudflare.com>
-        <87tu8oze94.fsf@email.froward.int.ebiederm.org>
-        <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com>
-Date:   Mon, 13 Jun 2022 23:44:28 -0500
-In-Reply-To: <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com> (Frederick
-        Lawler's message of "Mon, 13 Jun 2022 15:52:38 -0500")
-Message-ID: <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        with ESMTP id S1356244AbiFNMln (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 14 Jun 2022 08:41:43 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1E33457B9;
+        Tue, 14 Jun 2022 05:38:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655210312; x=1686746312;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JZpQvDvEIGZaQUq59bSiwPNjvfk7SP1Lb3vRsb+B8Io=;
+  b=Lk/jEIiYK7feeM2vPVRCWln2ntqpFXNwxNbBG1rDLvduvnt5qrpZ73fi
+   HGR/w2kr3RZPMY7Kefk5UL34VTO4qigHDtVoxPM9V0odiaNnopgy/FxvH
+   8u9rRClS7ATnQjYnW1yU56CSO4M3qniSMRPWMgLyh3SkuZe3qiAWQzvNF
+   Db6YvBuZiSGYWQz8JPiw0qX+EdfnOVUAjaEPJ20bbJlr39yFJDPFe+pXh
+   bBzkSqkZuOdPgMUjziztRWxxmkJrhSSSpiwciWeKwqvlmULEbMOmbS1K4
+   HkCB8AA4bXrIERLvyLiy3tx03VOJPo3ekL/UMc0AtvrPD4E1ojZIUxhru
+   w==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10377"; a="304016026"
+X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
+   d="scan'208";a="304016026"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 05:38:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
+   d="scan'208";a="617980489"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 14 Jun 2022 05:38:30 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1o15oT-000LsV-D8;
+        Tue, 14 Jun 2022 12:38:29 +0000
+Date:   Tue, 14 Jun 2022 20:37:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     NeilBrown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>
+Cc:     kbuild-all@lists.01.org,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/12] VFS: support concurrent renames.
+Message-ID: <202206142059.8hhAq16w-lkp@intel.com>
+References: <165516230199.21248.18142980966152036732.stgit@noble.brown>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1o0yPr-008Y07-9H;;;mid=<87y1xzyhub.fsf@email.froward.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=softfail
-X-XM-AID: U2FsdGVkX1+prA+7T4gv0KWu4+rCykKSU9Ye39R87hA=
-X-SA-Exim-Connect-IP: 68.227.174.4
-X-SA-Exim-Mail-From: ebiederm@xmission.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <165516230199.21248.18142980966152036732.stgit@noble.brown>
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
-X-Spam-DCC: XMission; sa06 1397; Body=1 Fuz1=1 Fuz2=1 
-X-Spam-Combo: ***;Frederick Lawler <fred@cloudflare.com>
-X-Spam-Relay-Country: 
-X-Spam-Timing: total 540 ms - load_scoreonly_sql: 0.07 (0.0%),
-        signal_user_changed: 12 (2.2%), b_tie_ro: 10 (1.9%), parse: 1.30
-        (0.2%), extract_message_metadata: 15 (2.8%), get_uri_detail_list: 2.4
-        (0.5%), tests_pri_-1000: 23 (4.2%), tests_pri_-950: 1.22 (0.2%),
-        tests_pri_-900: 1.01 (0.2%), tests_pri_-90: 123 (22.8%), check_bayes:
-        121 (22.4%), b_tokenize: 12 (2.2%), b_tok_get_all: 10 (1.8%),
-        b_comp_prob: 3.8 (0.7%), b_tok_touch_all: 92 (17.0%), b_finish: 0.89
-        (0.2%), tests_pri_0: 337 (62.4%), check_dkim_signature: 0.53 (0.1%),
-        check_dkim_adsp: 5 (0.9%), poll_dns_idle: 2.8 (0.5%), tests_pri_10:
-        3.5 (0.6%), tests_pri_500: 19 (3.5%), rewrite_mail: 0.00 (0.0%)
-Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
-X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Frederick Lawler <fred@cloudflare.com> writes:
+Hi NeilBrown,
 
-> Hi Eric,
->
-> On 6/13/22 12:04 PM, Eric W. Biederman wrote:
->> Frederick Lawler <fred@cloudflare.com> writes:
->> 
->>> While experimenting with the security_prepare_creds() LSM hook, we
->>> noticed that our EPERM error code was not propagated up the callstack.
->>> Instead ENOMEM is always returned.  As a result, some tools may send a
->>> confusing error message to the user:
->>>
->>> $ unshare -rU
->>> unshare: unshare failed: Cannot allocate memory
->>>
->>> A user would think that the system didn't have enough memory, when
->>> instead the action was denied.
->>>
->>> This problem occurs because prepare_creds() and prepare_kernel_cred()
->>> return NULL when security_prepare_creds() returns an error code. Later,
->>> functions calling prepare_creds() and prepare_kernel_cred() return
->>> ENOMEM because they assume that a NULL meant there was no memory
->>> allocated.
->>>
->>> Fix this by propagating an error code from security_prepare_creds() up
->>> the callstack.
->> Why would it make sense for security_prepare_creds to return an error
->> code other than ENOMEM?
->>  > That seems a bit of a violation of what that function is supposed to do
->>
->
-> The API allows LSM authors to decide what error code is returned from the
-> cred_prepare hook. security_task_alloc() is a similar hook, and has its return
-> code propagated.
+Thank you for the patch! Perhaps something to improve:
 
-It is not an api.  It is an implementation detail of the linux kernel.
-It is a set of convenient functions that do a job.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.19-rc2 next-20220614]
+[cannot apply to trondmy-nfs/linux-next viro-vfs/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-The general rule is we don't support cases without an in-tree user.  I
-don't see an in-tree user.
+url:    https://github.com/intel-lab-lkp/linux/commits/NeilBrown/Allow-concurrent-directory-updates/20220614-072355
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git b13baccc3850ca8b8cccbf8ed9912dbaa0fdf7f3
+config: i386-randconfig-s001-20220613 (https://download.01.org/0day-ci/archive/20220614/202206142059.8hhAq16w-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-30-g92122700-dirty
+        # https://github.com/intel-lab-lkp/linux/commit/46a2afd9f68f24a42f38f3a8afebafe7e494e9d8
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review NeilBrown/Allow-concurrent-directory-updates/20220614-072355
+        git checkout 46a2afd9f68f24a42f38f3a8afebafe7e494e9d8
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash
 
-> I'm proposing we follow security_task_allocs() pattern, and add visibility for
-> failure cases in prepare_creds().
-
-I am asking why we would want to.  Especially as it is not an API, and I
-don't see any good reason for anything but an -ENOMEM failure to be
-supported.
-
-Without an in-tree user that cares it is probably better to go the
-opposite direction and remove the possibility of return anything but
-memory allocation failure.  That will make it clearer to implementors
-that a general error code is not supported and this is not a location
-to implement policy, this is only a hook to allocate state for the LSM.
-
->> I have probably missed a very interesting discussion where that was
->> mentioned but I don't see link to the discussion or anything explaining
->> why we want to do that in this change.
->> 
->
-> AFAIK, this is the start of the discussion.
-
-You were on v3 and had an out of tree piece of code so I assumed someone
-had at least thought about why you want to implement policy in a piece
-of code whose only purpose is to allocate memory to store state.
-
-Eric
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
 
+sparse warnings: (new ones prefixed by >>)
+>> fs/namei.c:3175:15: sparse: sparse: symbol 'lock_rename_lookup_excl' was not declared. Should it be static?
+   fs/namei.c: note: in included file (through include/linux/rbtree.h, include/linux/mm_types.h, include/linux/mmzone.h, ...):
+   include/linux/rcupdate.h:726:9: sparse: sparse: context imbalance in 'terminate_walk' - unexpected unlock
+   include/linux/rcupdate.h:726:9: sparse: sparse: context imbalance in 'try_to_unlazy' - unexpected unlock
+   include/linux/rcupdate.h:726:9: sparse: sparse: context imbalance in 'try_to_unlazy_next' - unexpected unlock
+   fs/namei.c:2492:19: sparse: sparse: context imbalance in 'path_init' - different lock contexts for basic block
 
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
