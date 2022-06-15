@@ -2,39 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC6F754C146
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 07:43:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3875154C1DC
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 08:30:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345669AbiFOFkW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 01:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33798 "EHLO
+        id S1353478AbiFOGaC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 02:30:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229595AbiFOFkV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 01:40:21 -0400
-Received: from mail.nfschina.com (unknown [IPv6:2400:dd01:100f:2:72e2:84ff:fe10:5f45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 31ACE4A3C3;
-        Tue, 14 Jun 2022 22:40:20 -0700 (PDT)
-Received: from localhost (unknown [127.0.0.1])
-        by mail.nfschina.com (Postfix) with ESMTP id E30811E80D27;
-        Wed, 15 Jun 2022 13:38:51 +0800 (CST)
-X-Virus-Scanned: amavisd-new at test.com
-Received: from mail.nfschina.com ([127.0.0.1])
-        by localhost (mail.nfschina.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id J5ZCcSn-ymiE; Wed, 15 Jun 2022 13:38:49 +0800 (CST)
-Received: from localhost.localdomain (unknown [180.167.10.98])
-        (Authenticated sender: yuzhe@nfschina.com)
-        by mail.nfschina.com (Postfix) with ESMTPA id 6322C1E80CFF;
-        Wed, 15 Jun 2022 13:38:48 +0800 (CST)
-From:   Yu ZHe <yuzhe@nfschina.com>
-To:     trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        liqiong@nfschina.com, yuzhe <yuzhe@nfschina.com>
-Subject: [PATCH] nfs: remove unnecessary (void*) conversions.
-Date:   Wed, 15 Jun 2022 13:39:24 +0800
-Message-Id: <20220615053924.829-1-yuzhe@nfschina.com>
-X-Mailer: git-send-email 2.11.0
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,RDNS_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no
+        with ESMTP id S236311AbiFOGaB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 02:30:01 -0400
+X-Greylist: delayed 128 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Jun 2022 23:30:00 PDT
+Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48EAA3A5E9
+        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 23:30:00 -0700 (PDT)
+Received: from ([60.208.111.195])
+        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id JCQ00149;
+        Wed, 15 Jun 2022 14:27:49 +0800
+Received: from localhost.localdomain (10.200.104.97) by
+ jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
+ 15.1.2308.27; Wed, 15 Jun 2022 14:27:48 +0800
+From:   Bo Liu <liubo03@inspur.com>
+To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Bo Liu <liubo03@inspur.com>
+Subject: [PATCH] NFSv4: Directly use ida_alloc()/free()
+Date:   Wed, 15 Jun 2022 02:27:45 -0400
+Message-ID: <20220615062745.2752-1-liubo03@inspur.com>
+X-Mailer: git-send-email 2.18.2
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.200.104.97]
+tUid:   2022615142749efc7e55c7c8b159e3943ff0ba03ca600
+X-Abuse-Reports-To: service@corp-email.com
+Abuse-Reports-To: service@corp-email.com
+X-Complaints-To: service@corp-email.com
+X-Report-Abuse-To: service@corp-email.com
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -42,97 +46,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: yuzhe <yuzhe@nfschina.com>
+Use ida_alloc()/ida_free() instead of
+ida_simple_get()/ida_simple_remove().
+The latter is deprecated and more verbose.
 
-remove unnecessary void* type castings.
-
-Signed-off-by: yuzhe <yuzhe@nfschina.com>
+Signed-off-by: Bo Liu <liubo03@inspur.com>
 ---
- fs/nfs/inode.c      | 6 +++---
- fs/nfs/nfs42xattr.c | 2 +-
- fs/nfs/nfs4idmap.c  | 2 +-
- fs/nfs/nfs4proc.c   | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ fs/nfs/nfs4state.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-index b4e46b0ffa2d..a3a88fd09809 100644
---- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -318,7 +318,7 @@ struct nfs_find_desc {
- static int
- nfs_find_actor(struct inode *inode, void *opaque)
+diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+index 2540b35ec187..8f018d4d35d7 100644
+--- a/fs/nfs/nfs4state.c
++++ b/fs/nfs/nfs4state.c
+@@ -497,8 +497,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
+ 	sp = kzalloc(sizeof(*sp), gfp_flags);
+ 	if (!sp)
+ 		return NULL;
+-	sp->so_seqid.owner_id = ida_simple_get(&server->openowner_id, 0, 0,
+-						gfp_flags);
++	sp->so_seqid.owner_id = ida_alloc(&server->openowner_id, gfp_flags);
+ 	if (sp->so_seqid.owner_id < 0) {
+ 		kfree(sp);
+ 		return NULL;
+@@ -534,7 +533,7 @@ static void nfs4_free_state_owner(struct nfs4_state_owner *sp)
  {
--	struct nfs_find_desc	*desc = (struct nfs_find_desc *)opaque;
-+	struct nfs_find_desc	*desc = opaque;
- 	struct nfs_fh		*fh = desc->fh;
- 	struct nfs_fattr	*fattr = desc->fattr;
+ 	nfs4_destroy_seqid_counter(&sp->so_seqid);
+ 	put_cred(sp->so_cred);
+-	ida_simple_remove(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
++	ida_free(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
+ 	kfree(sp);
+ }
  
-@@ -336,7 +336,7 @@ nfs_find_actor(struct inode *inode, void *opaque)
- static int
- nfs_init_locked(struct inode *inode, void *opaque)
+@@ -877,8 +876,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
+ 	refcount_set(&lsp->ls_count, 1);
+ 	lsp->ls_state = state;
+ 	lsp->ls_owner = fl_owner;
+-	lsp->ls_seqid.owner_id = ida_simple_get(&server->lockowner_id,
+-						0, 0, GFP_KERNEL_ACCOUNT);
++	lsp->ls_seqid.owner_id = ida_alloc(&server->lockowner_id, GFP_KERNEL_ACCOUNT);
+ 	if (lsp->ls_seqid.owner_id < 0)
+ 		goto out_free;
+ 	INIT_LIST_HEAD(&lsp->ls_locks);
+@@ -890,7 +888,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
+ 
+ void nfs4_free_lock_state(struct nfs_server *server, struct nfs4_lock_state *lsp)
  {
--	struct nfs_find_desc	*desc = (struct nfs_find_desc *)opaque;
-+	struct nfs_find_desc	*desc = opaque;
- 	struct nfs_fattr	*fattr = desc->fattr;
- 
- 	set_nfs_fileid(inode, fattr->fileid);
-@@ -2270,7 +2270,7 @@ static inline void nfs4_init_once(struct nfs_inode *nfsi)
- 
- static void init_once(void *foo)
- {
--	struct nfs_inode *nfsi = (struct nfs_inode *) foo;
-+	struct nfs_inode *nfsi = foo;
- 
- 	inode_init_once(&nfsi->vfs_inode);
- 	INIT_LIST_HEAD(&nfsi->open_files);
-diff --git a/fs/nfs/nfs42xattr.c b/fs/nfs/nfs42xattr.c
-index e7b34f7e0614..f10ea5652037 100644
---- a/fs/nfs/nfs42xattr.c
-+++ b/fs/nfs/nfs42xattr.c
-@@ -981,7 +981,7 @@ nfs4_xattr_entry_count(struct shrinker *shrink, struct shrink_control *sc)
- 
- static void nfs4_xattr_cache_init_once(void *p)
- {
--	struct nfs4_xattr_cache *cache = (struct nfs4_xattr_cache *)p;
-+	struct nfs4_xattr_cache *cache = p;
- 
- 	spin_lock_init(&cache->listxattr_lock);
- 	atomic_long_set(&cache->nent, 0);
-diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
-index f331866dd418..01e54dd9301c 100644
---- a/fs/nfs/nfs4idmap.c
-+++ b/fs/nfs/nfs4idmap.c
-@@ -585,7 +585,7 @@ static int nfs_idmap_legacy_upcall(struct key *authkey, void *aux)
- 	struct request_key_auth *rka = get_request_key_auth(authkey);
- 	struct rpc_pipe_msg *msg;
- 	struct idmap_msg *im;
--	struct idmap *idmap = (struct idmap *)aux;
-+	struct idmap *idmap = aux;
- 	struct key *key = rka->target_key;
- 	int ret = -ENOKEY;
- 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index c0fdcf8c0032..937e379c9906 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -6601,7 +6601,7 @@ static void nfs4_delegreturn_prepare(struct rpc_task *task, void *data)
- 	struct nfs4_delegreturndata *d_data;
- 	struct pnfs_layout_hdr *lo;
- 
--	d_data = (struct nfs4_delegreturndata *)data;
-+	d_data = data;
- 
- 	if (!d_data->lr.roc && nfs4_wait_on_layoutreturn(d_data->inode, task)) {
- 		nfs4_sequence_done(task, &d_data->res.seq_res);
-@@ -8894,7 +8894,7 @@ int nfs4_proc_exchange_id(struct nfs_client *clp, const struct cred *cred)
- void nfs4_test_session_trunk(struct rpc_clnt *clnt, struct rpc_xprt *xprt,
- 			    void *data)
- {
--	struct nfs4_add_xprt_data *adata = (struct nfs4_add_xprt_data *)data;
-+	struct nfs4_add_xprt_data *adata = data;
- 	struct rpc_task *task;
- 	int status;
- 
+-	ida_simple_remove(&server->lockowner_id, lsp->ls_seqid.owner_id);
++	ida_free(&server->lockowner_id, lsp->ls_seqid.owner_id);
+ 	nfs4_destroy_seqid_counter(&lsp->ls_seqid);
+ 	kfree(lsp);
+ }
 -- 
-2.11.0
+2.27.0
 
