@@ -2,75 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2565454C955
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 15:00:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCB5354C9E8
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 15:35:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344234AbiFONAZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 09:00:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40304 "EHLO
+        id S1351648AbiFONfQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 09:35:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237898AbiFONAY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 09:00:24 -0400
-Received: from mail-wm1-x32a.google.com (mail-wm1-x32a.google.com [IPv6:2a00:1450:4864:20::32a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDB1443EE6;
-        Wed, 15 Jun 2022 06:00:21 -0700 (PDT)
-Received: by mail-wm1-x32a.google.com with SMTP id a10so6265613wmj.5;
-        Wed, 15 Jun 2022 06:00:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HlQlxdzPmUUXOoftUhbSkD7wYzx9bVqgqLbCvZNG+RU=;
-        b=Z/u/g/vloJ5gtLacYH73J933TOrYHWY/VcSCGNpy5ilM7TVitIeGN6Pd4ueXQyeAIu
-         7+pgJxcc/w49MyIvyMuR7dAAjoTQeli3xrHNvQa1cbT0GSh5rH+yTFrT3qHCZsjg7DGn
-         YBzebWt9bNXUbgsQkCWLAcW4QvZsDXxfMg0UmWwO0rC4kjinUw+6Z4Z7OIjYTnOuMmam
-         9MVCpSdeDJrw+CjFnVy5ue+NvQ5Fn+uITckgn64pzJ/LjbCoBtDNpihuL+cCkMM2i4Fy
-         7hxbSmjfU6vhqCW1XwJHZqp48RtFw/GYqYXeqtXaEqwnkll5uR05vLFkxcLm1eDqtWma
-         EYhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HlQlxdzPmUUXOoftUhbSkD7wYzx9bVqgqLbCvZNG+RU=;
-        b=BbYjuF6gECV2NaCZzMFSQE0euMBMpA6aRfcbbKeCOv39hiVg3JoZcM7wY9W8PWoRtx
-         dr0oLYaDc6lJ2c6JB1ivDZMRHJy05JVR22NwMB4puvxHz1/MHJr3QT+bSNnMYRmWrs48
-         GOapRJpPYeVi7FA09aHbjvp77cGZcHCFiVaFrYcrK7HnmTysq15clQwcfbvFCL/OgtDE
-         /MACd49ypdY97TwaFLa/7JtDO6IZftV76wlvnUJOAOpOrYau/cSyu9mnhJSCtB+mHN7h
-         K7aut2yjwSgbY6eDIBprP5U2g3P9Fs3mRnL/Nb0dC9YwYlvu980+YON2x7M1jsFndsEg
-         pbbA==
-X-Gm-Message-State: AOAM532I3y/QDx5pc99mu2pWBHXNp54Rn6WpmDx9BrRUElXnbllECE8V
-        9uhWptpvEQLbP7A/LtgZQQQ=
-X-Google-Smtp-Source: ABdhPJzoTg4D9UVRojt5RZT4gqhbpyMLACi9RKedZ+cAldRitFro524SJDeADHaEVz4+NHSULieecg==
-X-Received: by 2002:a7b:cb88:0:b0:39d:16a7:dac7 with SMTP id m8-20020a7bcb88000000b0039d16a7dac7mr9798633wmi.128.1655298020361;
-        Wed, 15 Jun 2022 06:00:20 -0700 (PDT)
-Received: from localhost.localdomain ([77.137.66.49])
-        by smtp.gmail.com with ESMTPSA id p9-20020a056000018900b0020c5253d927sm14451721wrx.115.2022.06.15.06.00.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 06:00:19 -0700 (PDT)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Steve French <smfrench@gmail.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        He Zhe <zhe.he@windriver.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        Luis Henriques <lhenriques@suse.de>
-Subject: [PATCH v15] vfs: fix copy_file_range() regression in cross-fs copies
-Date:   Wed, 15 Jun 2022 16:00:14 +0300
-Message-Id: <20220615130014.1490661-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S238254AbiFONfO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 09:35:14 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2130.outbound.protection.outlook.com [40.107.93.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06DC035DEC
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 06:35:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hHGcGpmsCBt2ctUHA6RVLMHh1lwEzPU2xwww37+79rMzVaqXHPTR5Mt7GcnRV+JJnU+IWvmGhhr+E0nUepjzC0fsxj5GdsNp0FkL5flw9WjwlPCzbDNifaXACK9or2mcVZyuzlkiNw/3FwKID0yRVUihXrU9jaTJDYh2xD+hEZ3FnhZiSB8flYYb2MZ5/eTputZ5JrFQXPn6qEcsVt3iPQl96t4NF8DZSMIfI7/689So/+5Hegb5sylq6fobuxIlVeTYQ4JbsJqrOqbL/blmE+XPU/sdJqRNxq/bH2FPnmV6Jb/QYRGGLywb+wp3rZRFUac9t3Y7voHTO/GucEwkYw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0ajzQT08ZtyZCnz7kxumxo1bHCbEIstsOEUAwGDNE7s=;
+ b=VRCV75hddDukI/ckR2p/kOM7D2tW5wnOT/bQiaCPvcj6VP4QTpwlz3rg7cgdbP+SQWVhv5gHlHQHWQvncaKnNBFBrvhA0IzMFAq5S8PZZRplSFdlH3lapvXLeH3ddSgriagxqkXODL8INGxlUyVHRxcOmuKdIALNoIIdQhiLLhahNEV+7PUgedv0Mjw/KknEJmEc3pdS33fKmWdzr98UoAEG2juwD5aLH5T54Gw7Wehes42pwlvsxKSrTaHPREW2BAF2FKdOTtu3BNbzV6riUo1CbkFH0cItBgllfFk3BabWQsNrH48+8jf9W96fAinFcD7q3TFR3jsX4Mopkf1cNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0ajzQT08ZtyZCnz7kxumxo1bHCbEIstsOEUAwGDNE7s=;
+ b=Z0KTCSjJVfmaijwjsjGEvQiFwOQkfK3+fbdPq95iSeQYqLmtTGWmS+9mzu/QgFl/yH+4XZGlPg89bXwxJ3wLY7iHz4xJtFnZ251q9IaEsJc5dWgkWcJPTwwcq2obbJl6T6erZuwexB6sgg0RrQPXxFu2KqhDQu1b7aXMp5rF/Xc=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by MWHPR13MB1854.namprd13.prod.outlook.com (2603:10b6:300:132::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.14; Wed, 15 Jun
+ 2022 13:35:11 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::28a1:bc39:bd83:9f7]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::28a1:bc39:bd83:9f7%7]) with mapi id 15.20.5353.013; Wed, 15 Jun 2022
+ 13:35:10 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "chenxiaosong2@huawei.com" <chenxiaosong2@huawei.com>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "zhangxiaoxu5@huawei.com" <zhangxiaoxu5@huawei.com>
+Subject: Re: Question about reporting unexpected wb err in nfs write()/flush()
+Thread-Topic: Question about reporting unexpected wb err in nfs
+ write()/flush()
+Thread-Index: AQHYgLWMeKt2UGLDPUWqSThxqOyi6q1QeAoA
+Date:   Wed, 15 Jun 2022 13:35:10 +0000
+Message-ID: <1995185dc7899aca681cf70772e8e80c4a7faddd.camel@hammerspace.com>
+References: <ff6de37e-899a-8b23-d1a9-bf11fde10e5d@huawei.com>
+In-Reply-To: <ff6de37e-899a-8b23-d1a9-bf11fde10e5d@huawei.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4c06b06e-5a7b-4cbb-0459-08da4ed3dec0
+x-ms-traffictypediagnostic: MWHPR13MB1854:EE_
+x-microsoft-antispam-prvs: <MWHPR13MB185453A9368AED8E20F3803EB8AD9@MWHPR13MB1854.namprd13.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wzvXKmWDAw4ZZeREDMkOs9A64r4riqjlOkFg8fFYiFvcBLFA12FG1KaWUxCo+n8I1MZhOqCtmtVLjAExk+D0r9mZi+ur/iS7oL4kzgyMw51lEyPSJlNJyh/2tA6/T6V3chJ7qAV1dSQlgxAIAe/AJJGBx+xiXjjZQ3R8TT+sUeoxy55UefM6pV2vqheuFM6WP5vN57SjB6r59DaucGu8X09Qxs05uvd114CclPoLhlO6itYkv8HGDTpAiL2QmKgErT0TD6HWqhxhnBpUJ8Gy2KHWl+ASc+e6diuj595wE1YKGXse6LwKJFxf0ehLepnjfd0WxK0QQDPimoXJFsMBA8DHmHRQUOUqpqzstBKi436x6G9wZYQE/c5HXtfVMLnz1AJpCM1p46Gj+SV4vb8STUuMdpK0878DAAQjloeimk5/BpFd7gX6QgaHcHae+xJqikYibMZjcv5HxzfKyt6UIjIckvXP70XP7R1OwBj1aNqpYZ1OAAICiTXoYao5V7dVP2lTJtBP8M5K/WjTMq8Xn6+tJefMWdtWeWYbcR+UhjBGzRMK5DTs4uNtNZ29K4azvaOSwdUOPTcrupyoyO+ApbuLUwQtjGPiCgPWUXhhyiwAHGKRZ0oISv8Y2v3FLUXnA924b+P2jZ9Lm0mf7LulEFJQkGxATkJwieTDCriCe2ANE40gIofq9QthN/jSD03LqeZCZBDFac7c8kX2KljQWQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(396003)(39840400004)(136003)(366004)(86362001)(38100700002)(38070700005)(122000001)(508600001)(8936002)(6486002)(2906002)(316002)(186003)(6916009)(71200400001)(54906003)(76116006)(4326008)(8676002)(64756008)(66476007)(66946007)(66446008)(66556008)(83380400001)(6506007)(5660300002)(2616005)(41300700001)(36756003)(6512007)(26005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QzRJaVN2M2ZDNGQxeTNmdTlZaFIzemwvOGJSQ1pXbzEwYjJ5Nm5FOFpGVHM1?=
+ =?utf-8?B?MzBGNG9LNTZmU2JZQzZFLzdlZVdNa2E5WGpaUUl0SzExUlRKMkFoYTBaT2M3?=
+ =?utf-8?B?RVNNRU9oeGhaS1E0ay9IVE5obm9DNDY1dXJjZFUwNXVpdkdzS1p5VXZXcGha?=
+ =?utf-8?B?T1pSK1IzbUtMNm5KcUpjWFlSOTZWZXU4cVB2V0J2WVhmbkRvQ2JrbVpqYkor?=
+ =?utf-8?B?WlhNbW1LcUlXbHdvTjRLWFArdGNvQW1KakM3ZVhpT3dVQjJXeU9jVWkxbi9B?=
+ =?utf-8?B?NnBkQXNYa1BSS0tiWGUxTGM4bzI5cmVZbGhPZXRwRktQbTBUMlVUWnlNVTEr?=
+ =?utf-8?B?QU9zblQ3Q0thd3d2MngzWWhUMXlsNG8rbEkxenFlZVZ2RHFMdDUwa0pYT1Yv?=
+ =?utf-8?B?U0txeXVLdUJTdE5pdmxCM3Rza3VrMFhybTBTbDkvOEovakF3bmFxS3FiZ1p4?=
+ =?utf-8?B?aThMUDdLS3l1WDdIVjZiTEsxNzYwcUs2WGhQemt1MWNIaFAxam9TMmJCWTh3?=
+ =?utf-8?B?aCtJSW5IdVJNNU5vY0FUU3lUOS83a2ppMW9wN09UUENKWVh0cDdralhxN1JP?=
+ =?utf-8?B?YTQxSUs0SnM0T09BYXlESzJESkxKVE1xNnQvRzVGclcvTWphSHhyMEhQS1VP?=
+ =?utf-8?B?cGFtVkFLVjZ1NVdvWC9oSGk1a2tjY2ZJeXBiU1FBem5jL2w2T3NzdGdiMWUw?=
+ =?utf-8?B?MnV3aUVUcFovNk1DZEk5SmhIWkJSRlRKZ2g0SG9RTUtaUzZYNFV0cWpYWWgw?=
+ =?utf-8?B?ZURTYysxUEM5RTFsZ2g0bXFJVUdSaG55SUNkMFdSQzlnUDdwNmZnMldYRWJB?=
+ =?utf-8?B?Q2hyeGFuM1VBWCs3eG1KdXEzWXE2VTRCSjY3Ni9kQ0dabmt6T2hWYXNHUW4y?=
+ =?utf-8?B?aVA3bFZCVTRNa1dyY2lhWTVDY2YwSkJpV2lBYkJYaTdOMlhGcFlTNmFwSHZn?=
+ =?utf-8?B?cm1NT2owY1ZWZlROcVlYaEdWczJ0YjhpTWk2TXpScm4rQ1cydnlhUVV4dGVn?=
+ =?utf-8?B?NUhIbGt2NCtKM1R3UEkxZysvYVUrMDlzOWFnc0dRQmpJdE1yUmk3R3kwbUU0?=
+ =?utf-8?B?WCtQUHFtcjFwRThOMUlsT0d0NWs4dWdQekJscGY4MGRxTGxQeFFKWjF2N0hY?=
+ =?utf-8?B?aHhYZGYzLzVJclRkOU1HbnBGZTF2ZFQwcTBvWEVLWG1KVlZ2bG5iaEtRaDdq?=
+ =?utf-8?B?WDVKM1gxbkQyQnByWnFXejA0ZTlnSmRPVUM3ODNXRXNqY0FYZTJoWXhJM3FM?=
+ =?utf-8?B?aVYrelZxMUdCTlB1TnpORmNJU2E2bzdpUm9QeC9sUWZQRVRnZ253MjRSNXJI?=
+ =?utf-8?B?Y25qWEI0NW5pUi9NZmVBSWJVL0FiZ0wrUmU3WlVKOVhmenkwUWJKSWZXM1Jx?=
+ =?utf-8?B?TW10RXFvbGFVa09EWUVTNjkrSG4vN3c0WDhiWWszS1pQS2RxVWNZRCtSbDNn?=
+ =?utf-8?B?M0I3bU16QktOdUZmUzJSVVpoeUFBVDA4NUorQXJUbm1Jd1ZDZWEyT1M0QXBH?=
+ =?utf-8?B?cFp4Tkc4R3RxbHo3a2ZZb2JLUnB6WmxpcVFCU0M2YzNINTJucGFwQngxNk11?=
+ =?utf-8?B?dTlLdk9RKzN4bWVEQThaTXpxMTNQNWtXVWNTWnBDVUhGdmR2SnI5SmRIM1Zq?=
+ =?utf-8?B?d3V5amFvZzVLM0VYTERVejk2VXRmbGszZUxMMU5ObTRBRm1wN1Z1eXhrQTBx?=
+ =?utf-8?B?WG5vQWx3dWM5ZFdCb1BuS255MDhXS2ozQ3dYcFBQVnErNmx4cjdtWSt5U2Fs?=
+ =?utf-8?B?NTlyWFVoKzN4MTlIVWswVzF6MFJnUXhZLzZVYlQ1cWRqbmE5Q3VKU1VsT3FF?=
+ =?utf-8?B?Uml3SFdVbkg5ZmZ1cFdxNkNhWmxsN2orL1A5OVhkTWMxTDhrb24zYlFHdDdL?=
+ =?utf-8?B?MVZtNDQ4UXhUMXdqQWNSblJPQkhtdXBOVFJCeUJ1bDJHNXRpMUFMd2ttdUMw?=
+ =?utf-8?B?dVlLWVF6NXBZK3I4SXIrNlJiUzFNVEUzdlh1b0hBSkk5M0N3cVFUdEFRcU0v?=
+ =?utf-8?B?TWUyMmJnWFZNbHM2MWRwam1LU1BNUFhpN0JEQUJtYkZ1SlNhRENIVlZrVld4?=
+ =?utf-8?B?ZFByaU1MNHlVL3BrWENlN1dCNWpOTzFtNmlabHBXNDFiYW1LRFdjK1lzbzVI?=
+ =?utf-8?B?QkZteTFuUmdERzRmOEtDaFVqNFY4UThoMFdXSElzVWlsSjB4aG93MnFJZG15?=
+ =?utf-8?B?bWd6cXlCVGZIOG5uRWZrMDFIc1p3b2VxdjRKcHV4SXdYdm9tQjdYVk9ucWxa?=
+ =?utf-8?B?NCtkK1ZTODdzYUw3ei9Nb1pYWW85UUcvKzBsVkV6OEFTYW10TU1ySXQyaHV0?=
+ =?utf-8?B?QTF2WnFOQ1R0TFdwbVc5ekZJM0ZOdEFkNHBxamVXV0pjRUdyNldreHhUcXUx?=
+ =?utf-8?Q?eRp3S76lFY/z7fFg=3D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <B814173D833713489E927880A154757A@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4c06b06e-5a7b-4cbb-0459-08da4ed3dec0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2022 13:35:10.7913
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: w+2/IuB23VM0SuoobndiG5/eJ57N/WqtLRwgRlzSi3ObH3j3amHgxuLGmIDRJfRPwX/DXUPs3r/LwK4yVTiXaQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR13MB1854
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,287 +131,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-A regression has been reported by Nicolas Boichat, found while using the
-copy_file_range syscall to copy a tracefs file.  Before commit
-5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-kernel would return -EXDEV to userspace when trying to copy a file across
-different filesystems.  After this commit, the syscall doesn't fail anymore
-and instead returns zero (zero bytes copied), as this file's content is
-generated on-the-fly and thus reports a size of zero.
-
-Another regression has been reported by He Zhe - the assertion of
-WARN_ON_ONCE(ret == -EOPNOTSUPP) can be triggered from userspace when
-copying from a sysfs file whose read operation may return -EOPNOTSUPP.
-
-Since we do not have test coverage for copy_file_range() between any
-two types of filesystems, the best way to avoid these sort of issues
-in the future is for the kernel to be more picky about filesystems that
-are allowed to do copy_file_range().
-
-This patch restores some cross-filesystem copy restrictions that existed
-prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-devices"), namely, cross-sb copy is not allowed for filesystems that do
-not implement ->copy_file_range().
-
-Filesystems that do implement ->copy_file_range() have full control of
-the result - if this method returns an error, the error is returned to
-the user.  Before this change this was only true for fs that did not
-implement the ->remap_file_range() operation (i.e. nfsv3).
-
-Filesystems that do not implement ->copy_file_range() still fall-back to
-the generic_copy_file_range() implementation when the copy is within the
-same sb.  This helps the kernel can maintain a more consistent story
-about which filesystems support copy_file_range().
-
-nfsd and ksmbd servers are modified to fall-back to the
-generic_copy_file_range() implementation in case vfs_copy_file_range()
-fails with -EOPNOTSUPP or -EXDEV, which preserves behavior of
-server-side-copy.
-
-fall-back to generic_copy_file_range() is not implemented for the smb
-operation FSCTL_DUPLICATE_EXTENTS_TO_FILE, which is arguably a correct
-change of behavior.
-
-Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-Link: https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-Link: https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-Link: https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-Link: https://lore.kernel.org/linux-fsdevel/20210630161320.29006-1-lhenriques@suse.de/
-Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-Reported-by: kernel test robot <oliver.sang@intel.com>
-Signed-off-by: Luis Henriques <lhenriques@suse.de>
-Fixes: 64bf5ff58dff ("vfs: no fallback for ->copy_file_range")
-Link: https://lore.kernel.org/linux-fsdevel/20f17f64-88cb-4e80-07c1-85cb96c83619@windriver.com/
-Reported-by: He Zhe <zhe.he@windriver.com>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
----
-Hi Luis, Namje,
-
-Thank you for testing v14 [1].  Unfortunately (or fortunately),
-kernel test robot has alerted me on LTP test failure [2] with v14.
-
-The patch had changed behavior of same sb case when it should not have.
-So I did not apply you Tested-by and I would like to request from you
-to test v15.
-
-Luis,
-
-since you gave your concent and a lot has changed since your last
-posting, I had assumed (back) authorship of this patch and kept your
-original Signed-off-by.
-
-Steve, Olga,
-
-if you guys could also test v15 that would be great.
-I had tested myself using fstests as described in v14 and with LTP.
-
-Thanks,
-Amir.
-
-Changes since v14 [1]:
-- Allow fallback to generic_copy_file_range() within same sb
-- Run the LTP copy_file_range tests
-- Assume patch authorship
-
-Changes since v13:
-- Rebased and tested over 5.19-rc1
-- Never fallback from ->copy_file_range() to generic_copy_file_range()
-- Added fallback to generic_copy_file_range() in ksmbd
-- Typo fixes in commit message and comments
-
-[1] https://lore.kernel.org/linux-fsdevel/20220606134608.684131-1-amir73il@gmail.com/
-[2] https://lore.kernel.org/linux-fsdevel/CAOQ4uxgHPgFTWBOF34=UDtaCOk0EA6f=66szS-Ox62YNPx1b=A@mail.gmail.com/
-
- fs/ksmbd/smb2pdu.c | 16 ++++++++--
- fs/ksmbd/vfs.c     |  4 +++
- fs/nfsd/vfs.c      |  8 ++++-
- fs/read_write.c    | 77 ++++++++++++++++++++++++++--------------------
- 4 files changed, 68 insertions(+), 37 deletions(-)
-
-diff --git a/fs/ksmbd/smb2pdu.c b/fs/ksmbd/smb2pdu.c
-index e6f4ccc12f49..17f42f5b02fe 100644
---- a/fs/ksmbd/smb2pdu.c
-+++ b/fs/ksmbd/smb2pdu.c
-@@ -7806,14 +7806,24 @@ int smb2_ioctl(struct ksmbd_work *work)
- 		src_off = le64_to_cpu(dup_ext->SourceFileOffset);
- 		dst_off = le64_to_cpu(dup_ext->TargetFileOffset);
- 		length = le64_to_cpu(dup_ext->ByteCount);
--		cloned = vfs_clone_file_range(fp_in->filp, src_off, fp_out->filp,
--					      dst_off, length, 0);
-+		/*
-+		 * XXX: It is not clear if FSCTL_DUPLICATE_EXTENTS_TO_FILE
-+		 * should fall back to vfs_copy_file_range().  This could be
-+		 * beneficial when re-exporting nfs/smb mount, but note that
-+		 * this can result in partial copy that returns an error status.
-+		 * If/when FSCTL_DUPLICATE_EXTENTS_TO_FILE_EX is implemented,
-+		 * fall back to vfs_copy_file_range(), should be avoided when
-+		 * the flag DUPLICATE_EXTENTS_DATA_EX_SOURCE_ATOMIC is set.
-+		 */
-+		cloned = vfs_clone_file_range(fp_in->filp, src_off,
-+					      fp_out->filp, dst_off, length, 0);
- 		if (cloned == -EXDEV || cloned == -EOPNOTSUPP) {
- 			ret = -EOPNOTSUPP;
- 			goto dup_ext_out;
- 		} else if (cloned != length) {
- 			cloned = vfs_copy_file_range(fp_in->filp, src_off,
--						     fp_out->filp, dst_off, length, 0);
-+						     fp_out->filp, dst_off,
-+						     length, 0);
- 			if (cloned != length) {
- 				if (cloned < 0)
- 					ret = cloned;
-diff --git a/fs/ksmbd/vfs.c b/fs/ksmbd/vfs.c
-index dcdd07c6efff..8d57347231ce 100644
---- a/fs/ksmbd/vfs.c
-+++ b/fs/ksmbd/vfs.c
-@@ -1777,6 +1777,10 @@ int ksmbd_vfs_copy_file_ranges(struct ksmbd_work *work,
- 
- 		ret = vfs_copy_file_range(src_fp->filp, src_off,
- 					  dst_fp->filp, dst_off, len, 0);
-+		if (ret == -EOPNOTSUPP || ret == -EXDEV)
-+			ret = generic_copy_file_range(src_fp->filp, src_off,
-+						      dst_fp->filp, dst_off,
-+						      len, 0);
- 		if (ret < 0)
- 			return ret;
- 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 840e3af63a6f..b764213bcc55 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -577,6 +577,7 @@ __be32 nfsd4_clone_file_range(struct svc_rqst *rqstp,
- ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
- 			     u64 dst_pos, u64 count)
- {
-+	ssize_t ret;
- 
- 	/*
- 	 * Limit copy to 4MB to prevent indefinitely blocking an nfsd
-@@ -587,7 +588,12 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
- 	 * limit like this and pipeline multiple COPY requests.
- 	 */
- 	count = min_t(u64, count, 1 << 22);
--	return vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
-+	ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
-+
-+	if (ret == -EOPNOTSUPP || ret == -EXDEV)
-+		ret = generic_copy_file_range(src, src_pos, dst, dst_pos,
-+					      count, 0);
-+	return ret;
- }
- 
- __be32 nfsd4_vfs_fallocate(struct svc_rqst *rqstp, struct svc_fh *fhp,
-diff --git a/fs/read_write.c b/fs/read_write.c
-index b1b1cdfee9d3..c77df4ca6558 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1397,28 +1397,6 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
- }
- EXPORT_SYMBOL(generic_copy_file_range);
- 
--static ssize_t do_copy_file_range(struct file *file_in, loff_t pos_in,
--				  struct file *file_out, loff_t pos_out,
--				  size_t len, unsigned int flags)
--{
--	/*
--	 * Although we now allow filesystems to handle cross sb copy, passing
--	 * a file of the wrong filesystem type to filesystem driver can result
--	 * in an attempt to dereference the wrong type of ->private_data, so
--	 * avoid doing that until we really have a good reason.  NFS defines
--	 * several different file_system_type structures, but they all end up
--	 * using the same ->copy_file_range() function pointer.
--	 */
--	if (file_out->f_op->copy_file_range &&
--	    file_out->f_op->copy_file_range == file_in->f_op->copy_file_range)
--		return file_out->f_op->copy_file_range(file_in, pos_in,
--						       file_out, pos_out,
--						       len, flags);
--
--	return generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
--				       flags);
--}
--
- /*
-  * Performs necessary checks before doing a file copy
-  *
-@@ -1440,6 +1418,24 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	if (ret)
- 		return ret;
- 
-+	/*
-+	 * We allow some filesystems to handle cross sb copy, but passing
-+	 * a file of the wrong filesystem type to filesystem driver can result
-+	 * in an attempt to dereference the wrong type of ->private_data, so
-+	 * avoid doing that until we really have a good reason.
-+	 *
-+	 * nfs and cifs define several different file_system_type structures
-+	 * and several different sets of file_operations, but they all end up
-+	 * using the same ->copy_file_range() function pointer.
-+	 */
-+	if (file_out->f_op->copy_file_range) {
-+		if (file_in->f_op->copy_file_range !=
-+		    file_out->f_op->copy_file_range)
-+			return -EXDEV;
-+	} else if (file_inode(file_in)->i_sb != file_inode(file_out)->i_sb) {
-+		return -EXDEV;
-+	}
-+
- 	/* Don't touch certain kinds of inodes */
- 	if (IS_IMMUTABLE(inode_out))
- 		return -EPERM;
-@@ -1505,26 +1501,41 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	file_start_write(file_out);
- 
- 	/*
--	 * Try cloning first, this is supported by more file systems, and
--	 * more efficient if both clone and copy are supported (e.g. NFS).
-+	 * Cloning is supported by more file systems, so we implement copy on
-+	 * same sb using clone, but for filesystems where both clone and copy
-+	 * are supported (e.g. nfs,cifs), we only call the copy method.
- 	 */
-+	if (file_out->f_op->copy_file_range) {
-+		ret = file_out->f_op->copy_file_range(file_in, pos_in,
-+						      file_out, pos_out,
-+						      len, flags);
-+		goto done;
-+	}
-+
- 	if (file_in->f_op->remap_file_range &&
- 	    file_inode(file_in)->i_sb == file_inode(file_out)->i_sb) {
--		loff_t cloned;
--
--		cloned = file_in->f_op->remap_file_range(file_in, pos_in,
-+		ret = file_in->f_op->remap_file_range(file_in, pos_in,
- 				file_out, pos_out,
- 				min_t(loff_t, MAX_RW_COUNT, len),
- 				REMAP_FILE_CAN_SHORTEN);
--		if (cloned > 0) {
--			ret = cloned;
-+		if (ret > 0)
- 			goto done;
--		}
- 	}
- 
--	ret = do_copy_file_range(file_in, pos_in, file_out, pos_out, len,
--				flags);
--	WARN_ON_ONCE(ret == -EOPNOTSUPP);
-+	/*
-+	 * We can get here for same sb copy of filesystems that do not implement
-+	 * ->copy_file_range() in case filesystem does not support clone or in
-+	 * case filesystem supports clone but rejected the clone request (e.g.
-+	 * because it was not block aligned).
-+	 *
-+	 * In both cases, fall back to kernel copy so we are able to maintain a
-+	 * consistent story about which filesystems support copy_file_range()
-+	 * and which filesystems do not, that will allow userspace tools to
-+	 * make consistent desicions w.r.t using copy_file_range().
-+	 */
-+	ret = generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
-+				      flags);
-+
- done:
- 	if (ret > 0) {
- 		fsnotify_access(file_in);
--- 
-2.25.1
-
+T24gV2VkLCAyMDIyLTA2LTE1IGF0IDIwOjQzICswODAwLCBjaGVueGlhb3NvbmcgKEEpIHdyb3Rl
+Og0KPiBIaSBUcm9uZDoNCj4gDQo+IE9LLCBJIHVuZGVyc3RhbmQsIEkgd2lsbCBub3QgY2xlYXIg
+d2IgZXJyIGluIGNsb3NlKCkuIEkgd2lsbCBub3QNCj4gY2hhbmdlIA0KPiBydWxlcyB0aGF0IGFw
+cGx5IHRvIGFsbCBmaWxlc3lzdGVtcy4NCj4gDQo+IEJ1dCBpZiBvbGQgd2IgZXJyIChzdWNoIGFz
+IC1FUkVTVEFSVFNZUyBvciAtRUlOVFIsIGV0Yy4pIGV4aXN0IGluDQo+IHN0cnVjdCANCj4gYWRk
+cmVzc19zcGFjZS0+d2JfZXJyLCBuZnNfZmlsZV93cml0ZSgpIHdpbGwgYWx3YXlzIHJldHVybiB0
+aGUgDQo+IHVuZXhwZWN0ZWQgZXJyb3IuIGZpbGVtYXBfY2hlY2tfd2JfZXJyKCkgd2lsbCByZXR1
+cm4gdGhlIG9sZCBlcnJvcg0KPiBldmVuIA0KPiBpZiB0aGVyZSBpcyBubyBuZXcgd3JpdGViYWNr
+IGVycm9yIGJldHdlZW4gZmlsZW1hcF9zYW1wbGVfd2JfZXJyKCkNCj4gYW5kIA0KPiBmaWxlbWFw
+X2NoZWNrX3diX2VycigpLg0KPiBgYGBjDQo+IMKgwqDCoCBzaW5jZSA9IGZpbGVtYXBfc2FtcGxl
+X3diX2VycigpID0gMCAvLyBuZXZlciBiZSBlcnJvcg0KPiDCoMKgwqDCoMKgIGVycnNlcV9zYW1w
+bGUNCj4gwqDCoMKgwqDCoMKgwqAgaWYgKCEob2xkICYgRVJSU0VRX1NFRU4pKSAvLyBub2JvZHkg
+c2VlIHRoZSBlcnJvcg0KPiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7DQo+IMKgwqDCoCBu
+ZnNfd2JfYWxsIC8vIG5vIG5ldyBlcnJvcg0KPiDCoMKgwqAgZXJyb3IgPSBmaWxlbWFwX2NoZWNr
+X3diX2VyciguLi4sIHNpbmNlKSAhPSAwIC8vIHVuZXhwZWN0ZWQgZXJyb3INCj4gYGBgDQo+IA0K
+PiBJIHdpbGwgZml4IHRoaXMgYnkgc3RvcmUgb2xkIGVyciBiZWZvcmUgZmlsZW1hcF9zYW1wbGVf
+d2JfZXJyKCksIGFuZCANCj4gcmVzdG9yZSBvbGQgZXJyIGFmdGVyIGZpbGVtYXBfY2hlY2tfd2Jf
+ZXJyKCk6DQo+IGBgYGMNCj4gwqDCoCAvLyBTdG9yZSB0aGUgd2IgZXJyDQo+IMKgwqAgb2xkX2Vy
+ciA9IGZpbGVfY2hlY2tfYW5kX2FkdmFuY2Vfd2JfZXJyKGZpbGUpDQo+IMKgwqAgc2luY2UgPSBm
+aWxlbWFwX3NhbXBsZV93Yl9lcnIoKQ0KPiDCoMKgIG5mc193Yl9hbGwgLy8gZGV0ZWN0IG5ldyB3
+YiBlcnINCj4gwqDCoCBlcnJvciA9IGZpbGVtYXBfY2hlY2tfd2JfZXJyKC4uLiwgc2luY2UpDQo+
+IMKgwqAgLy8gUmVzdG9yZSBvbGQgd2IgZXJyIGlmIG5vIG5ldyBlcnIgaXMgZGV0ZWN0ZWQNCj4g
+wqDCoCBpZiAoIWVycm9yICYmIG9sZF9lcnIpDQo+IMKgwqAgZXJyc2VxX3NldCgmZmlsZS0+Zl9t
+YXBwaW5nLT53Yl9lcnIsIG9sZF9lcnIpOw0KPiBgYGANCj4gDQo+IElzIG15IGZpeGVzIHJlYXNv
+bmFibGUgPw0KDQpObyEgVGhhdCBpcyBzdGlsbCBzcGVjaWFsIGNhc2luZyB0aGUgd2F5IE5GUyB0
+cmVhdHMgZXJyb3JzIHZzIHRoZSB3YXkNCmFsbCBvdGhlciBmaWxlc3lzdGVtcyBkby4NCg0KRWl0
+aGVyIHRoZSBjdXJyZW50IFZGUyBpbXBsZW1lbnRhdGlvbiBvZiBlcnJvciBsb2dnaW5nIGlzIGNv
+cnJlY3QsIG9yDQppdCBpcyBub3QuIElmIGl0IGlzIGluY29ycmVjdCwgdGhlbiBsZXQncyBmaXgg
+aXQgdG8gZG8gdGhlIHJpZ2h0IHRoaW5nDQpmb3IgZXZlcnlvbmUuDQoNCkVpdGhlciB3YXksIHBs
+ZWFzZSBzdG9wIHBvc3RpbmcgdGhlc2UgTkZTLW9ubHkgd29ya2Fyb3VuZHMuDQoNCi0tIA0KVHJv
+bmQgTXlrbGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0
+cm9uZC5teWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
