@@ -2,42 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1272B54D17F
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 21:23:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4DD054D1AE
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 21:35:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235181AbiFOTXL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 15:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55336 "EHLO
+        id S229920AbiFOTe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 15:34:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236585AbiFOTXK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 15:23:10 -0400
-Received: from smtp.smtpout.orange.fr (smtp10.smtpout.orange.fr [80.12.242.132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69809340DD
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 12:23:08 -0700 (PDT)
-Received: from [192.168.1.18] ([90.11.190.129])
-        by smtp.orange.fr with ESMTPA
-        id 1YbYo2o5jsiIK1YbYovJs6; Wed, 15 Jun 2022 21:23:06 +0200
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: YWZlNiIxYWMyZDliZWIzOTcwYTEyYzlhMmU3ZiQ1M2U2MzfzZDfyZTMxZTBkMTYyNDBjNDJlZmQ3ZQ==
-X-ME-Date: Wed, 15 Jun 2022 21:23:06 +0200
-X-ME-IP: 90.11.190.129
-Message-ID: <3cc6bf65-298d-b8c7-3fce-c093b4b1a722@wanadoo.fr>
-Date:   Wed, 15 Jun 2022 21:23:04 +0200
+        with ESMTP id S1347369AbiFOTez (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 15:34:55 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21F129815
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 12:34:53 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 1B71044D2; Wed, 15 Jun 2022 15:34:53 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 1B71044D2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1655321693;
+        bh=8dACd0xyp04tqZjKzGDBF9sH1Q1VrJaGPqcDi8OkCKw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OsOfD5H6qXAivQm00W7XGnawxWqo3kPMfH1Egf+b0wZiAwoNGVRSVNKlhC8wXS10S
+         HV6LxOwafU4xCYwcJEEbg54OzDMfcn1A4sN2Apar9KGk89DykM9Fz6w3IQZrM2YAlq
+         HtDW0ojqqmh1rZFiZL4oiBU70SFYiqAInmb8YmeQ=
+Date:   Wed, 15 Jun 2022 15:34:53 -0400
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/2] nfs4lib.py: enhance open_file to work with courteous
+ server
+Message-ID: <20220615193453.GB16220@fieldses.org>
+References: <1655314495-17735-1-git-send-email-dai.ngo@oracle.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH] NFSv4: Directly use ida_alloc()/free()
-Content-Language: fr
-To:     Bo Liu <liubo03@inspur.com>, trond.myklebust@hammerspace.com,
-        anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20220615062745.2752-1-liubo03@inspur.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20220615062745.2752-1-liubo03@inspur.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1655314495-17735-1-git-send-email-dai.ngo@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -45,62 +46,39 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Le 15/06/2022 à 08:27, Bo Liu a écrit :
-> Use ida_alloc()/ida_free() instead of
-> ida_simple_get()/ida_simple_remove().
-> The latter is deprecated and more verbose.
+THere are tests that want to explicitly test for DELAY returns.  (Grep
+for ERR_DELAY.  Look at the delegation tests especially.)  Does this
+work for them?  I assumed we'd want an optional parameter that allowed
+to caller to circument the DELAY handling.
+
+--b.
+
+On Wed, Jun 15, 2022 at 10:34:54AM -0700, Dai Ngo wrote:
+> Enhance open_file to handle NFS4ERR_DELAY returned by the server
+> in case of share/access/delegation conflict.
 > 
-> Signed-off-by: Bo Liu <liubo03@inspur.com>
-
-Hi,
-for what it's worth:
-
-Reviewed-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 > ---
->   fs/nfs/nfs4state.c | 10 ++++------
->   1 file changed, 4 insertions(+), 6 deletions(-)
+>  nfs4.0/nfs4lib.py | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index 2540b35ec187..8f018d4d35d7 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -497,8 +497,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
->   	sp = kzalloc(sizeof(*sp), gfp_flags);
->   	if (!sp)
->   		return NULL;
-> -	sp->so_seqid.owner_id = ida_simple_get(&server->openowner_id, 0, 0,
-> -						gfp_flags);
-> +	sp->so_seqid.owner_id = ida_alloc(&server->openowner_id, gfp_flags);
->   	if (sp->so_seqid.owner_id < 0) {
->   		kfree(sp);
->   		return NULL;
-> @@ -534,7 +533,7 @@ static void nfs4_free_state_owner(struct nfs4_state_owner *sp)
->   {
->   	nfs4_destroy_seqid_counter(&sp->so_seqid);
->   	put_cred(sp->so_cred);
-> -	ida_simple_remove(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
-> +	ida_free(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
->   	kfree(sp);
->   }
->   
-> @@ -877,8 +876,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
->   	refcount_set(&lsp->ls_count, 1);
->   	lsp->ls_state = state;
->   	lsp->ls_owner = fl_owner;
-> -	lsp->ls_seqid.owner_id = ida_simple_get(&server->lockowner_id,
-> -						0, 0, GFP_KERNEL_ACCOUNT);
-> +	lsp->ls_seqid.owner_id = ida_alloc(&server->lockowner_id, GFP_KERNEL_ACCOUNT);
->   	if (lsp->ls_seqid.owner_id < 0)
->   		goto out_free;
->   	INIT_LIST_HEAD(&lsp->ls_locks);
-> @@ -890,7 +888,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
->   
->   void nfs4_free_lock_state(struct nfs_server *server, struct nfs4_lock_state *lsp)
->   {
-> -	ida_simple_remove(&server->lockowner_id, lsp->ls_seqid.owner_id);
-> +	ida_free(&server->lockowner_id, lsp->ls_seqid.owner_id);
->   	nfs4_destroy_seqid_counter(&lsp->ls_seqid);
->   	kfree(lsp);
->   }
-
+> diff --git a/nfs4.0/nfs4lib.py b/nfs4.0/nfs4lib.py
+> index 934def3b7333..e0299e8d6676 100644
+> --- a/nfs4.0/nfs4lib.py
+> +++ b/nfs4.0/nfs4lib.py
+> @@ -677,7 +677,12 @@ class NFS4Client(rpc.RPCClient):
+>                            claim_type=claim_type, deleg_type=deleg_type,
+>                            deleg_cur_info=deleg_cur_info)]
+>          ops += [op4.getfh()]
+> -        res = self.compound(ops)
+> +        while 1:
+> +            res = self.compound(ops)
+> +            if res.status == NFS4ERR_DELAY:
+> +                time.sleep(2)
+> +            else:
+> +                break
+>          self.advance_seqid(owner, res)
+>          if set_recall and (res.status != NFS4_OK or \
+>             res.resarray[-2].switch.switch.delegation == OPEN_DELEGATE_NONE):
+> -- 
+> 2.27.0
