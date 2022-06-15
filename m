@@ -2,243 +2,181 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D7C54CA24
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 15:47:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6250254CAF8
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 16:14:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346702AbiFONrC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 09:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
+        id S237834AbiFOOOx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 10:14:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347549AbiFONq4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 09:46:56 -0400
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 152143631F
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 06:46:52 -0700 (PDT)
-Received: by mail-ed1-x52b.google.com with SMTP id z7so16197116edm.13
-        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 06:46:52 -0700 (PDT)
+        with ESMTP id S233253AbiFOOOx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 10:14:53 -0400
+Received: from mail-wr1-x431.google.com (mail-wr1-x431.google.com [IPv6:2a00:1450:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CDCE33881
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 07:14:51 -0700 (PDT)
+Received: by mail-wr1-x431.google.com with SMTP id v14so15582852wra.5
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 07:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dneg.com; s=google;
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=yEvIXRPucn+6BeLmS4BVfzZdrrJJq6QW6xPZWAKt890=;
-        b=TXvEcZJ6ukZF/jYGwYFRRsN7SSyIAITCDv6vV7w6T62/Sst+VBOlstW+1l9SjzNkee
-         iIPsLded/ZzOmM6pzdrksIWaVV3rO5ytVyiD9RnaENYVCROlCY7iuV+k/PfbBIhJm6dM
-         JAjCL6lO3TJHOWbm/8qNlZ/kCqjDLCj/MteoPaGcgG5cUZpwEdDDszdlokoPkUNtrX1h
-         K7oVdOfABXhFKkieeowcFzgPMjXnaoI1nPuRFJh5vTyHQhdoWlp81L5y2tQhtw32eUaj
-         MIgEsi9zxdqBuMsnvAiQ6OhQRtmlCQvzonbRdTwow7+I9auMZB5udDp1vdvRKHwUoQJv
-         oukA==
+        bh=TmFspR35i19OaG7kIq4BfP3Z5+5KHooJY8o+wf2Eu7g=;
+        b=hnjS0y0DJB+Pgxck/o6M0KR1CyJPsNohu8wEV1ngzYEvfR3BNgdCgc8bBCjYcSn/q2
+         LGrABHBIuN5wiJVr3vFBZSQoyuo+ow5O4zy8y+xuerraxDm52W00Ql6GN8mxJBK7Aged
+         DMepzdaFMPS1SBM8wU0DjvHn5zjVaCWGHNtmseACjEovZd9TfrOheGRLWXnnpvnFbk3L
+         Oh5JBbb6A+TcxaBr62FlW4W2kMYFlFl4qBPFa5Vljf/kfuiWpPulvsvFhKfMVnlp7H1I
+         /Ewf9GWseGoqqzdlh7+S2YPdnfxgjB6XJIAkXpRzobHf9nGOIaKrkjPQFKm48HdjqWaG
+         xCzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=yEvIXRPucn+6BeLmS4BVfzZdrrJJq6QW6xPZWAKt890=;
-        b=ysRGFxQq2pn5A/2mOiFpAfqbsDRkvJephfugYfSNJie/gKSKPAFqWdHG7DJ6IBPbRd
-         0T2IpG9Ut15CpGvh4YHxxDbwRe3Q9PrCgSCosPTIFoemjif9iGTJnCoEj5Z03cNeawjA
-         ooeheZ8vHgynderV5hpjvI81tDed+5MCjO7YqDmcCbC7TgXdF8F/LLdBD12lzwcZg6Lp
-         6m7I1KdYVQPLlMnNxCEoB+7NnJgW5lp7oXnKMk/mmmIwBqxohyu2w1J7yT8KXbdWEZJx
-         rqdNGb+qTZYUbRs9sw/G9EkWLBjfQZf7y+1MziZnXFoRdSBt18dz+nWOyoJZUY47J5vu
-         9O0g==
-X-Gm-Message-State: AOAM530fL195XQWC+73CvJMNecUl/JfQoOd/58oLT7ydBQhwmlNgh798
-        Ku3n4/K/rue3NyL4A3cTE4UCPNBD7nG8JuWDqnVgnw==
-X-Google-Smtp-Source: AGRyM1s8Cf0Mj8Z/SnwwdeplHCi9y7diCjvcjZeMNKYhT4Tcd2GK0VSRetUi9ShVrGPYME0EWDocAtyOZ3tSiSV9oJE=
-X-Received: by 2002:a50:9f88:0:b0:42d:f7d2:1b7b with SMTP id
- c8-20020a509f88000000b0042df7d21b7bmr12938702edf.139.1655300811013; Wed, 15
- Jun 2022 06:46:51 -0700 (PDT)
+        bh=TmFspR35i19OaG7kIq4BfP3Z5+5KHooJY8o+wf2Eu7g=;
+        b=azITTuN7n1NBOtpV3h5rvXVDh7ibucuuxYqifAUOpq3c8V0C1qZ6pEJdhFUnWU0//n
+         eDIv2aKtpwIeKmhwO5hVNiSiSKruiJuqLk9HNov31LV/I7O/2FJVMUehOAZlWjN8wUkA
+         WNbnql0uAvbYRGn+JDu9RjrxH8GROJyaHKrSS7bk11+rK9Z3poLbD6PgnPETiBL3vaMH
+         A3iukin/sR2wxObyUUii2Eu2hFaMqxsAP/kgB+4fFiHcl+RZwxFbAm3/IvDKQqRd7pOo
+         di9gNhvgCEmtQ2/UFA0+wdQQ4n48ohpd8tf++D5nNrP/O9B94AtLUGlAFOPj1W5Po416
+         LjBg==
+X-Gm-Message-State: AJIora+g7tppbH7ow5RVezFNt82wQ4NKAM4sLAPtHRaqqfcRQ5P5nxsm
+        EycaGOjwIWKrw6eSepqGgRVV0zHr9EAnhjI13Q0v
+X-Google-Smtp-Source: AGRyM1shZLCqZkkSojukqCXaW+5XT6IN8fQuWUaigb52d2YijY5GHtpeOYg1i3lr6LTItEcWJJFmcKwvqWFcwysL51U=
+X-Received: by 2002:a05:6000:1447:b0:21a:278a:181c with SMTP id
+ v7-20020a056000144700b0021a278a181cmr27393wrx.161.1655302489487; Wed, 15 Jun
+ 2022 07:14:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <165516173293.21248.14587048046993234326.stgit@noble.brown>
-In-Reply-To: <165516173293.21248.14587048046993234326.stgit@noble.brown>
-From:   Daire Byrne <daire@dneg.com>
-Date:   Wed, 15 Jun 2022 14:46:14 +0100
-Message-ID: <CAPt2mGNjWXad6e7nSUTu=0ez1qU1wBNegrntgHKm5hOeBs5gQA@mail.gmail.com>
-Subject: Re: [PATCH RFC 00/12] Allow concurrent directory updates.
-To:     NeilBrown <neilb@suse.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20220608150942.776446-1-fred@cloudflare.com> <87tu8oze94.fsf@email.froward.int.ebiederm.org>
+ <e1b62234-9b8a-e7c2-2946-5ef9f6f23a08@cloudflare.com> <87y1xzyhub.fsf@email.froward.int.ebiederm.org>
+ <859cb593-9e96-5846-2191-6613677b07c5@cloudflare.com> <87o7yvxl4x.fsf@email.froward.int.ebiederm.org>
+ <9ed91f15-420c-3db6-8b3b-85438b02bf97@cloudflare.com> <20220615103031.qkzae4xr34wysj4b@wittgenstein>
+In-Reply-To: <20220615103031.qkzae4xr34wysj4b@wittgenstein>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Wed, 15 Jun 2022 10:14:38 -0400
+Message-ID: <CAHC9VhR8yPHZb2sCu4JGgXOSs7rudm=9opB+-LsG6_Lta9466A@mail.gmail.com>
+Subject: Re: [PATCH v3] cred: Propagate security_prepare_creds() error code
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Frederick Lawler <fred@cloudflare.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-cachefs@redhat.com, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, linux-mm@kvack.org,
+        linux-nfs@vger.kernel.org, linux-unionfs@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+        keyrings@vger.kernel.org, selinux@vger.kernel.org,
+        serge@hallyn.com, amir73il@gmail.com, kernel-team@cloudflare.com,
+        Jeff Moyer <jmoyer@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Neil,
-
-Firstly, thank you for your work on this. I'm probably the main
-beneficiary of this (NFSD) effort atm so I feel extra special and
-lucky!
-
-I have done some quick artificial tests similar to before where I am
-using a NFS server and client separated by an (extreme) 200ms of
-latency (great for testing parallelism). I am only using NFSv3 due to
-the NFSD_CACHE_SIZE_SLOTS_PER_SESSION parallelism limitations for
-NFSv4.
-
-Firstly, a client direct to server (VFS) with 10 simultaneous create
-processes hitting the same directory:
-
-client1 # for x in {1..1000}; do
-    echo /srv/server1/data/touch.$x
-done | xargs -n1 -P 10 -iX -t touch X 2>&1 | pv -l -a >|/dev/null
-
-Without the patch ( on the client), this reaches a steady state of 2.4
-creates/s and increasing the number of parallel create processes does
-not change this aggregate performance.
-
-With the patch, the creation rate increases to 15 creates/s and with
-100 processes, it further scales up to 121 creates/s.
-
-Now for the re-export case (NFSD) where an intermediary server
-re-exports the originating server (200ms away) to clients on it's
-local LAN, there is no noticeable improvement for a single (not
-patched) client. But we do see an aggregate improvement when we use
-multiple clients at once.
-
-# pdsh -Rssh -w 'client[1-10]' 'for x in {1..1000}; do echo
-/srv/reexport1/data/$(hostname -s).$x; done | xargs -n1 -P 10 -iX -t
-touch X 2>&1' | pv -l -a >|/dev/null
-
-Without the patch applied to the reexport server, the aggregate is
-around 2.2 create/s which is similar to doing it directly to the
-originating server from a single client (above).
-
-With the patch, the aggregate increases to 15 creates/s for 10 clients
-which again matches the results of a single patched client. Not quite
-a x10 increase but a healthy improvement nonetheless.
-
-However, it is at this point that I started to experience some
-stability issues with the re-export server that are not present with
-the vanilla unpatched v5.19-rc2 kernel. In particular the knfsd
-threads start to lock up with stack traces like this:
-
-[ 1234.460696] INFO: task nfsd:5514 blocked for more than 123 seconds.
-[ 1234.461481]       Tainted: G        W   E     5.19.0-1.dneg.x86_64 #1
-[ 1234.462289] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-disables this message.
-[ 1234.463227] task:nfsd            state:D stack:    0 pid: 5514
-ppid:     2 flags:0x00004000
-[ 1234.464212] Call Trace:
-[ 1234.464677]  <TASK>
-[ 1234.465104]  __schedule+0x2a9/0x8a0
-[ 1234.465663]  schedule+0x55/0xc0
-[ 1234.466183]  ? nfs_lookup_revalidate_dentry+0x3a0/0x3a0 [nfs]
-[ 1234.466995]  __nfs_lookup_revalidate+0xdf/0x120 [nfs]
-[ 1234.467732]  ? put_prev_task_stop+0x170/0x170
-[ 1234.468374]  nfs_lookup_revalidate+0x15/0x20 [nfs]
-[ 1234.469073]  lookup_dcache+0x5a/0x80
-[ 1234.469639]  lookup_one_unlocked+0x59/0xa0
-[ 1234.470244]  lookup_one_len_unlocked+0x1d/0x20
-[ 1234.470951]  nfsd_lookup_dentry+0x190/0x470 [nfsd]
-[ 1234.471663]  nfsd_lookup+0x88/0x1b0 [nfsd]
-[ 1234.472294]  nfsd3_proc_lookup+0xb4/0x100 [nfsd]
-[ 1234.473012]  nfsd_dispatch+0x161/0x290 [nfsd]
-[ 1234.473689]  svc_process_common+0x48a/0x620 [sunrpc]
-[ 1234.474402]  ? nfsd_svc+0x330/0x330 [nfsd]
-[ 1234.475038]  ? nfsd_shutdown_threads+0xa0/0xa0 [nfsd]
-[ 1234.475772]  svc_process+0xbc/0xf0 [sunrpc]
-[ 1234.476408]  nfsd+0xda/0x190 [nfsd]
-[ 1234.477011]  kthread+0xf0/0x120
-[ 1234.477522]  ? kthread_complete_and_exit+0x20/0x20
-[ 1234.478199]  ret_from_fork+0x22/0x30
-[ 1234.478755]  </TASK>
-
-For whatever reason, they seem to affect our Netapp mounts and
-re-exports rather than our originating Linux NFS servers (against
-which all tests were done). This may be related to the fact that those
-Netapps serve our home directories so there could be some unique
-locking patterns going on there.
-
-This issue made things a bit too unstable to test at larger scales or
-with our production workloads.
-
-So all in all, the performance improvements in the knfsd re-export
-case is looking great and we have real world use cases that this helps
-with (batch processing workloads with latencies >10ms). If we can
-figure out the hanging knfsd threads, then I can test it more heavily.
-
-Many thanks,
-
-Daire
-
-On Tue, 14 Jun 2022 at 00:19, NeilBrown <neilb@suse.de> wrote:
+On Wed, Jun 15, 2022 at 6:30 AM Christian Brauner <brauner@kernel.org> wrote:
 >
-> VFS currently holds an exclusive lock on a directory during create,
-> unlink, rename.  This imposes serialisation on all filesystems though
-> some may not benefit from it, and some may be able to provide finer
-> grained locking internally, thus reducing contention.
+> On Tue, Jun 14, 2022 at 01:59:08PM -0500, Frederick Lawler wrote:
+> > On 6/14/22 11:30 AM, Eric W. Biederman wrote:
+> > > Frederick Lawler <fred@cloudflare.com> writes:
+> > >
+> > > > On 6/13/22 11:44 PM, Eric W. Biederman wrote:
+> > > > > Frederick Lawler <fred@cloudflare.com> writes:
+> > > > >
+> > > > > > Hi Eric,
+> > > > > >
+> > > > > > On 6/13/22 12:04 PM, Eric W. Biederman wrote:
+> > > > > > > Frederick Lawler <fred@cloudflare.com> writes:
+> > > > > > >
+> > > > > > > > While experimenting with the security_prepare_creds() LSM hook, we
+> > > > > > > > noticed that our EPERM error code was not propagated up the callstack.
+> > > > > > > > Instead ENOMEM is always returned.  As a result, some tools may send a
+> > > > > > > > confusing error message to the user:
+> > > > > > > >
+> > > > > > > > $ unshare -rU
+> > > > > > > > unshare: unshare failed: Cannot allocate memory
+> > > > > > > >
+> > > > > > > > A user would think that the system didn't have enough memory, when
+> > > > > > > > instead the action was denied.
+> > > > > > > >
+> > > > > > > > This problem occurs because prepare_creds() and prepare_kernel_cred()
+> > > > > > > > return NULL when security_prepare_creds() returns an error code. Later,
+> > > > > > > > functions calling prepare_creds() and prepare_kernel_cred() return
+> > > > > > > > ENOMEM because they assume that a NULL meant there was no memory
+> > > > > > > > allocated.
+> > > > > > > >
+> > > > > > > > Fix this by propagating an error code from security_prepare_creds() up
+> > > > > > > > the callstack.
+> > > > > > > Why would it make sense for security_prepare_creds to return an error
+> > > > > > > code other than ENOMEM?
+> > > > > > >    > That seems a bit of a violation of what that function is supposed to do
+> > > > > > >
+> > > > > >
+> > > > > > The API allows LSM authors to decide what error code is returned from the
+> > > > > > cred_prepare hook. security_task_alloc() is a similar hook, and has its return
+> > > > > > code propagated.
+> > > > > It is not an api.  It is an implementation detail of the linux kernel.
+> > > > > It is a set of convenient functions that do a job.
+> > > > > The general rule is we don't support cases without an in-tree user.  I
+> > > > > don't see an in-tree user.
+> > > > >
+> > > > > > I'm proposing we follow security_task_allocs() pattern, and add visibility for
+> > > > > > failure cases in prepare_creds().
+> > > > > I am asking why we would want to.  Especially as it is not an API, and I
+> > > > > don't see any good reason for anything but an -ENOMEM failure to be
+> > > > > supported.
+> > > > >
+> > > > We're writing a LSM BPF policy, and not a new LSM. Our policy aims to solve
+> > > > unprivileged unshare, similar to Debian's patch [1]. We're in a position such
+> > > > that we can't use that patch because we can't block _all_ of our applications
+> > > > from performing an unshare. We prefer a granular approach. LSM BPF seems like a
+> > > > good choice.
+> > >
+> > > I am quite puzzled why doesn't /proc/sys/user/max_user_namespaces work
+> > > for you?
+> > >
+> >
+> > We have the following requirements:
+> >
+> > 1. Allow list criteria
+> > 2. root user must be able to create namespaces whenever
+> > 3. Everything else not in 1 & 2 must be denied
+> >
+> > We use per task attributes to determine whether or not we allow/deny the
+> > current call to unshare().
+> >
+> > /proc/sys/user/max_user_namespaces limits are a bit broad for this level of
+> > detail.
+> >
+> > > > Because LSM BPF exposes these hooks, we should probably treat them as an
+> > > > API. From that perspective, userspace expects unshare to return a EPERM
+> > > > when the call is denied permissions.
+> > >
+> > > The BPF code gets to be treated as a out of tree kernel module.
+> > >
+> > > > > Without an in-tree user that cares it is probably better to go the
+> > > > > opposite direction and remove the possibility of return anything but
+> > > > > memory allocation failure.  That will make it clearer to implementors
+> > > > > that a general error code is not supported and this is not a location
+> > > > > to implement policy, this is only a hook to allocate state for the LSM.
+> > > > >
+> > > >
+> > > > That's a good point, and it's possible we're using the wrong hook for the
+> > > > policy. Do you know of other hooks we can look into?
 >
-> This series allows the filesystem to request that the inode lock be
-> shared rather than exclusive.  In that case an exclusive lock will be
-> held on the dentry instead, much as is done for parallel lookup.
->
-> The NFS filesystem can easily support concurrent updates (server does
-> any needed serialiation) so it is converted.
->
-> This series also converts nfsd to use the new interfaces so concurrent
-> incoming NFS requests in the one directory can be handled concurrently.
->
-> As a net result, if an NFS mounted filesystem is reexported over NFS,
-> then multiple clients can create files in a single directory and all
-> synchronisation will be handled on the final server.  This helps hid
-> latency on link from client to server.
->
-> I include a few nfsd patches that aren't strictly needed for this work,
-> but seem to be a logical consequence of the changes that I did have to
-> make.
->
-> I have only tested this lightly.  In particular the rename support is
-> quite new and I haven't tried to break it yet.
->
-> I post this for general review, and hopefully extra testing...  Daire
-> Byrne has expressed interest in the NFS re-export parallelism.
->
-> NeilBrown
->
->
-> ---
->
-> NeilBrown (12):
->       VFS: support parallel updates in the one directory.
->       VFS: move EEXIST and ENOENT tests into lookup_hash_update()
->       VFS: move want_write checks into lookup_hash_update()
->       VFS: move dput() and mnt_drop_write() into done_path_update()
->       VFS: export done_path_update()
->       VFS: support concurrent renames.
->       NFS: support parallel updates in the one directory.
->       nfsd: allow parallel creates from nfsd
->       nfsd: support concurrent renames.
->       nfsd: reduce locking in nfsd_lookup()
->       nfsd: use (un)lock_inode instead of fh_(un)lock
->       nfsd: discard fh_locked flag and fh_lock/fh_unlock
->
->
->  fs/dcache.c            |  59 ++++-
->  fs/namei.c             | 578 ++++++++++++++++++++++++++++++++---------
->  fs/nfs/dir.c           |  29 ++-
->  fs/nfs/inode.c         |   2 +
->  fs/nfs/unlink.c        |   5 +-
->  fs/nfsd/nfs2acl.c      |   6 +-
->  fs/nfsd/nfs3acl.c      |   4 +-
->  fs/nfsd/nfs3proc.c     |  37 +--
->  fs/nfsd/nfs4acl.c      |   7 +-
->  fs/nfsd/nfs4proc.c     |  61 ++---
->  fs/nfsd/nfs4state.c    |   8 +-
->  fs/nfsd/nfsfh.c        |  10 +-
->  fs/nfsd/nfsfh.h        |  58 +----
->  fs/nfsd/nfsproc.c      |  31 +--
->  fs/nfsd/vfs.c          | 243 ++++++++---------
->  fs/nfsd/vfs.h          |   8 +-
->  include/linux/dcache.h |  27 ++
->  include/linux/fs.h     |   1 +
->  include/linux/namei.h  |  30 ++-
->  19 files changed, 791 insertions(+), 413 deletions(-)
->
-> --
-> Signature
->
+> Fwiw, from this commit it wasn't very clear what you wanted to achieve
+> with this. It might be worth considering adding a new security hook for
+> this. Within msft it recently came up SELinux might have an interest in
+> something like this as well.
+
+Just to clarify things a bit, I believe SELinux would have an interest
+in a LSM hook capable of implementing an access control point for user
+namespaces regardless of Microsoft's current needs.  I suspect due to
+the security relevant nature of user namespaces most other LSMs would
+be interested as well; it seems like a well crafted hook would be
+welcome by most folks I think.
+
+-- 
+paul-moore.com
