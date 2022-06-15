@@ -2,101 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3875154C1DC
-	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 08:30:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4FD454C32F
+	for <lists+linux-nfs@lfdr.de>; Wed, 15 Jun 2022 10:11:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1353478AbiFOGaC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 02:30:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45836 "EHLO
+        id S243224AbiFOILs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 04:11:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236311AbiFOGaB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 02:30:01 -0400
-X-Greylist: delayed 128 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Jun 2022 23:30:00 PDT
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48EAA3A5E9
-        for <linux-nfs@vger.kernel.org>; Tue, 14 Jun 2022 23:30:00 -0700 (PDT)
-Received: from ([60.208.111.195])
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id JCQ00149;
-        Wed, 15 Jun 2022 14:27:49 +0800
-Received: from localhost.localdomain (10.200.104.97) by
- jtjnmail201602.home.langchao.com (10.100.2.2) with Microsoft SMTP Server id
- 15.1.2308.27; Wed, 15 Jun 2022 14:27:48 +0800
-From:   Bo Liu <liubo03@inspur.com>
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Bo Liu <liubo03@inspur.com>
-Subject: [PATCH] NFSv4: Directly use ida_alloc()/free()
-Date:   Wed, 15 Jun 2022 02:27:45 -0400
-Message-ID: <20220615062745.2752-1-liubo03@inspur.com>
-X-Mailer: git-send-email 2.18.2
+        with ESMTP id S236475AbiFOILr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 04:11:47 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8B402AE02;
+        Wed, 15 Jun 2022 01:11:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4C4FCCE1D62;
+        Wed, 15 Jun 2022 08:11:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 353B6C34115;
+        Wed, 15 Jun 2022 08:11:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655280703;
+        bh=G8h+IDpJR0CvhZVQBHmA8xXUGMUALrZIeamkPUOOwAc=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=J6Y3XOcwoC/TgUHQEi+SmCxARb6tPwZNqAYZg5XUTUI3Q/ll5OApOdFtKbROVKu0J
+         G3wBk9/2zrpVCGzGGdhz1ESbgkoh73YGsKSRIOJUxvsHV+/K5Zd6avT4WMepRjY9H4
+         wamp6FUhQPTuGWEhQiYvx6IJuRvj3n1pbZp2ZHUm41s47toXZ4TP69nqNoX31VqQXs
+         PJkwswu6LBuH667SA02KF13mHrfORzWm/2zDlI2HgW90bjJCTh4CmOq+CyWlVyareR
+         TNZ8wmpjenOnCxxJfBdf7GMJYbuk/uABYuIiv48owX1ckCCiZaFExYBEBPHV4h2PdO
+         DbPuKfjHUQGOA==
+Message-ID: <5fdec03e-efb6-554b-55b3-49e7e7f2be5e@kernel.org>
+Date:   Wed, 15 Jun 2022 16:11:36 +0800
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.200.104.97]
-tUid:   2022615142749efc7e55c7c8b159e3943ff0ba03ca600
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [f2fs-dev] [PATCH v2 14/19] f2fs: Convert to
+ filemap_migrate_folio()
+Content-Language: en-US
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-fsdevel@vger.kernel.org
+Cc:     linux-aio@kvack.org, linux-nfs@vger.kernel.org,
+        cluster-devel@redhat.com, linux-ntfs-dev@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-ext4@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
+References: <20220608150249.3033815-1-willy@infradead.org>
+ <20220608150249.3033815-15-willy@infradead.org>
+From:   Chao Yu <chao@kernel.org>
+In-Reply-To: <20220608150249.3033815-15-willy@infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-9.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Use ida_alloc()/ida_free() instead of
-ida_simple_get()/ida_simple_remove().
-The latter is deprecated and more verbose.
+On 2022/6/8 23:02, Matthew Wilcox (Oracle) wrote:
+> filemap_migrate_folio() fits f2fs's needs perfectly.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-Signed-off-by: Bo Liu <liubo03@inspur.com>
----
- fs/nfs/nfs4state.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Acked-by: Chao Yu <chao@kernel.org>
 
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 2540b35ec187..8f018d4d35d7 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -497,8 +497,7 @@ nfs4_alloc_state_owner(struct nfs_server *server,
- 	sp = kzalloc(sizeof(*sp), gfp_flags);
- 	if (!sp)
- 		return NULL;
--	sp->so_seqid.owner_id = ida_simple_get(&server->openowner_id, 0, 0,
--						gfp_flags);
-+	sp->so_seqid.owner_id = ida_alloc(&server->openowner_id, gfp_flags);
- 	if (sp->so_seqid.owner_id < 0) {
- 		kfree(sp);
- 		return NULL;
-@@ -534,7 +533,7 @@ static void nfs4_free_state_owner(struct nfs4_state_owner *sp)
- {
- 	nfs4_destroy_seqid_counter(&sp->so_seqid);
- 	put_cred(sp->so_cred);
--	ida_simple_remove(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
-+	ida_free(&sp->so_server->openowner_id, sp->so_seqid.owner_id);
- 	kfree(sp);
- }
- 
-@@ -877,8 +876,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
- 	refcount_set(&lsp->ls_count, 1);
- 	lsp->ls_state = state;
- 	lsp->ls_owner = fl_owner;
--	lsp->ls_seqid.owner_id = ida_simple_get(&server->lockowner_id,
--						0, 0, GFP_KERNEL_ACCOUNT);
-+	lsp->ls_seqid.owner_id = ida_alloc(&server->lockowner_id, GFP_KERNEL_ACCOUNT);
- 	if (lsp->ls_seqid.owner_id < 0)
- 		goto out_free;
- 	INIT_LIST_HEAD(&lsp->ls_locks);
-@@ -890,7 +888,7 @@ static struct nfs4_lock_state *nfs4_alloc_lock_state(struct nfs4_state *state, f
- 
- void nfs4_free_lock_state(struct nfs_server *server, struct nfs4_lock_state *lsp)
- {
--	ida_simple_remove(&server->lockowner_id, lsp->ls_seqid.owner_id);
-+	ida_free(&server->lockowner_id, lsp->ls_seqid.owner_id);
- 	nfs4_destroy_seqid_counter(&lsp->ls_seqid);
- 	kfree(lsp);
- }
--- 
-2.27.0
-
+Thanks,
