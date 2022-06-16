@@ -2,144 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4608154D6B8
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jun 2022 03:04:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE48754D6D0
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jun 2022 03:14:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348984AbiFPBD4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 21:03:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
+        id S245094AbiFPBOX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 15 Jun 2022 21:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1356571AbiFPBDj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 21:03:39 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C7A2FFDC;
-        Wed, 15 Jun 2022 18:03:36 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S233633AbiFPBOV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 21:14:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45BD4D605;
+        Wed, 15 Jun 2022 18:14:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 3989F1FAAF;
-        Thu, 16 Jun 2022 00:56:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1655340970; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ag5m5a+2z0K0KERFvs1DIq8kLpl4y1mEEs07NPdG8AI=;
-        b=duanDr83X78qaYiegZLK2uyIKAtOfoZvf962cfwyNMQSG1WInTAeJTJEJUJSOEea8Cp40k
-        vzPrzdVDu1U5ajpk5nWnKg7hBcKuo5iY2l14vj1kFEDSzJDVcLxvMnt6++QODAWlWlJ6RP
-        dyzCDTD3jh3m0NyQf5sWIvp+nGCYj7Y=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1655340970;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ag5m5a+2z0K0KERFvs1DIq8kLpl4y1mEEs07NPdG8AI=;
-        b=4DfCkt3hNcuaspefPQPCA7LSYMFUj0dibas3CIAOQ42w97LFZ48tXs1aQlS/ghUttMXn1D
-        WnwxW4LfX80q/wCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 48A7F13A35;
-        Thu, 16 Jun 2022 00:56:06 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id HZ2XAaZ/qmJLfQAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 16 Jun 2022 00:56:06 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7D087B8216A;
+        Thu, 16 Jun 2022 01:14:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22244C341C0;
+        Thu, 16 Jun 2022 01:14:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1655342057;
+        bh=F5tbGSVtmtyru8j/GWLjm1O7l/KXlL/Ji+cKQzlskVs=;
+        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
+        b=jLFtxxOQKCdXV8qk551IPgiKVerltRCjnRn4oVHnXb5MSfuH0gPMV97T6qlCq06eZ
+         b3K9IJYiQysKGurpBS7ZWL9RiR7OQnu06f8BYKMBGQ8CmQqAcPqB0YWMk0JpTI3aH1
+         vOeEAJcoKlL/Hh+CsGP6Xttr7UDeFpGPcf4AlCekuLn7d+OS2PqUiwq8tQD8aF4x4n
+         LW25DJMMKfTXHfoeK0nd4rhH8Cvrdxsy4yHhxb4YxblevhlFeZe+PjkQbNktbohh55
+         bNze0GUNmnL+NPZoNspsDDHTID/VT+Lqd4Qv9sUG/QkPNzszf0Ism77lrpOsXqwhw5
+         Dg3ctmoetnb5g==
+Received: by mail-wr1-f47.google.com with SMTP id g4so849145wrh.11;
+        Wed, 15 Jun 2022 18:14:17 -0700 (PDT)
+X-Gm-Message-State: AJIora9i/IW0p+VQayOpSzM4dfA2t+uqBBR5zc/Q6V0FIuDcilHuCOmp
+        wGRZhbmB+ULNdGECkxyqoi6m8S8306MnFjmiMgg=
+X-Google-Smtp-Source: AGRyM1vNWa9NvzjYFrEsgV+RnaYCGzG4zUhnlGwZEdoJjeEZmOhzO5ekoczWg00a+UudLbDXapjdfYHa6B0wlf0am/0=
+X-Received: by 2002:a5d:64c7:0:b0:216:5021:687f with SMTP id
+ f7-20020a5d64c7000000b002165021687fmr2276576wri.295.1655342055301; Wed, 15
+ Jun 2022 18:14:15 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Daire Byrne" <daire@dneg.com>
-Cc:     "Al Viro" <viro@zeniv.linux.org.uk>,
-        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 00/12] Allow concurrent directory updates.
-In-reply-to: <CAPt2mGNjWXad6e7nSUTu=0ez1qU1wBNegrntgHKm5hOeBs5gQA@mail.gmail.com>
-References: <165516173293.21248.14587048046993234326.stgit@noble.brown>,
- <CAPt2mGNjWXad6e7nSUTu=0ez1qU1wBNegrntgHKm5hOeBs5gQA@mail.gmail.com>
-Date:   Thu, 16 Jun 2022 10:55:46 +1000
-Message-id: <165534094600.26404.4349155093299535793@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a05:6000:18ad:0:0:0:0 with HTTP; Wed, 15 Jun 2022 18:14:14
+ -0700 (PDT)
+In-Reply-To: <20220615130014.1490661-1-amir73il@gmail.com>
+References: <20220615130014.1490661-1-amir73il@gmail.com>
+From:   Namjae Jeon <linkinjeon@kernel.org>
+Date:   Thu, 16 Jun 2022 10:14:14 +0900
+X-Gmail-Original-Message-ID: <CAKYAXd-jvj4Bm5tZFM6TxRLOVJx7v2WZhQx5+X5=RQnTTkd8cA@mail.gmail.com>
+Message-ID: <CAKYAXd-jvj4Bm5tZFM6TxRLOVJx7v2WZhQx5+X5=RQnTTkd8cA@mail.gmail.com>
+Subject: Re: [PATCH v15] vfs: fix copy_file_range() regression in cross-fs copies
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Steve French <smfrench@gmail.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dave Chinner <david@fromorbit.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        He Zhe <zhe.he@windriver.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        kernel test robot <oliver.sang@intel.com>,
+        Luis Henriques <lhenriques@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 15 Jun 2022, Daire Byrne wrote:
-...
-> With the patch, the aggregate increases to 15 creates/s for 10 clients
-> which again matches the results of a single patched client. Not quite
-> a x10 increase but a healthy improvement nonetheless.
+2022-06-15 22:00 GMT+09:00, Amir Goldstein <amir73il@gmail.com>:
+> A regression has been reported by Nicolas Boichat, found while using the
+> copy_file_range syscall to copy a tracefs file.  Before commit
+> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
+> kernel would return -EXDEV to userspace when trying to copy a file across
+> different filesystems.  After this commit, the syscall doesn't fail anymore
+> and instead returns zero (zero bytes copied), as this file's content is
+> generated on-the-fly and thus reports a size of zero.
+>
+> Another regression has been reported by He Zhe - the assertion of
+> WARN_ON_ONCE(ret == -EOPNOTSUPP) can be triggered from userspace when
+> copying from a sysfs file whose read operation may return -EOPNOTSUPP.
+>
+> Since we do not have test coverage for copy_file_range() between any
+> two types of filesystems, the best way to avoid these sort of issues
+> in the future is for the kernel to be more picky about filesystems that
+> are allowed to do copy_file_range().
+>
+> This patch restores some cross-filesystem copy restrictions that existed
+> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
+> devices"), namely, cross-sb copy is not allowed for filesystems that do
+> not implement ->copy_file_range().
+>
+> Filesystems that do implement ->copy_file_range() have full control of
+> the result - if this method returns an error, the error is returned to
+> the user.  Before this change this was only true for fs that did not
+> implement the ->remap_file_range() operation (i.e. nfsv3).
+>
+> Filesystems that do not implement ->copy_file_range() still fall-back to
+> the generic_copy_file_range() implementation when the copy is within the
+> same sb.  This helps the kernel can maintain a more consistent story
+> about which filesystems support copy_file_range().
+>
+> nfsd and ksmbd servers are modified to fall-back to the
+> generic_copy_file_range() implementation in case vfs_copy_file_range()
+> fails with -EOPNOTSUPP or -EXDEV, which preserves behavior of
+> server-side-copy.
+>
+> fall-back to generic_copy_file_range() is not implemented for the smb
+> operation FSCTL_DUPLICATE_EXTENTS_TO_FILE, which is arguably a correct
+> change of behavior.
+>
+> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
+> Link:
+> https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
+> Link:
+> https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
+> Link:
+> https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
+> Link:
+> https://lore.kernel.org/linux-fsdevel/20210630161320.29006-1-lhenriques@suse.de/
+> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Signed-off-by: Luis Henriques <lhenriques@suse.de>
+> Fixes: 64bf5ff58dff ("vfs: no fallback for ->copy_file_range")
+> Link:
+> https://lore.kernel.org/linux-fsdevel/20f17f64-88cb-4e80-07c1-85cb96c83619@windriver.com/
+> Reported-by: He Zhe <zhe.he@windriver.com>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+> Hi Luis, Namje,
+>
+> Thank you for testing v14 [1].  Unfortunately (or fortunately),
+> kernel test robot has alerted me on LTP test failure [2] with v14.
+>
+> The patch had changed behavior of same sb case when it should not have.
+> So I did not apply you Tested-by and I would like to request from you
+> to test v15.
+Works fine. You can add tested-by tag for ksmbd.
+Tested-by: Namjae Jeon <linkinjeon@kernel.org>
 
-Great!
-
->=20
-> However, it is at this point that I started to experience some
-> stability issues with the re-export server that are not present with
-> the vanilla unpatched v5.19-rc2 kernel. In particular the knfsd
-> threads start to lock up with stack traces like this:
->=20
-> [ 1234.460696] INFO: task nfsd:5514 blocked for more than 123 seconds.
-> [ 1234.461481]       Tainted: G        W   E     5.19.0-1.dneg.x86_64 #1
-> [ 1234.462289] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
-> disables this message.
-> [ 1234.463227] task:nfsd            state:D stack:    0 pid: 5514
-> ppid:     2 flags:0x00004000
-> [ 1234.464212] Call Trace:
-> [ 1234.464677]  <TASK>
-> [ 1234.465104]  __schedule+0x2a9/0x8a0
-> [ 1234.465663]  schedule+0x55/0xc0
-> [ 1234.466183]  ? nfs_lookup_revalidate_dentry+0x3a0/0x3a0 [nfs]
-> [ 1234.466995]  __nfs_lookup_revalidate+0xdf/0x120 [nfs]
-
-I can see the cause of this - I forget a wakeup.  This patch should fix
-it, though I hope to find a better solution.
-
-diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-index 54c2c7adcd56..072130d000c4 100644
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -2483,17 +2483,16 @@ int nfs_unlink(struct inode *dir, struct dentry *dent=
-ry)
- 	if (!(dentry->d_flags & DCACHE_PAR_UPDATE)) {
- 		/* Must have exclusive lock on parent */
- 		did_set_par_update =3D true;
-+		lock_acquire_exclusive(&dentry->d_update_map, 0,
-+				       0, NULL, _THIS_IP_);
- 		dentry->d_flags |=3D DCACHE_PAR_UPDATE;
- 	}
-=20
- 	spin_unlock(&dentry->d_lock);
- 	error =3D nfs_safe_remove(dentry);
- 	nfs_dentry_remove_handle_error(dir, dentry, error);
--	if (did_set_par_update) {
--		spin_lock(&dentry->d_lock);
--		dentry->d_flags &=3D ~DCACHE_PAR_UPDATE;
--		spin_unlock(&dentry->d_lock);
--	}
-+	if (did_set_par_update)
-+		d_unlock_update(dentry);
- out:
- 	trace_nfs_unlink_exit(dir, dentry, error);
- 	return error;
-
->=20
-> So all in all, the performance improvements in the knfsd re-export
-> case is looking great and we have real world use cases that this helps
-> with (batch processing workloads with latencies >10ms). If we can
-> figure out the hanging knfsd threads, then I can test it more heavily.
-
-Hopefully the above patch will allow the more heavy testing to continue.
-In any case, thanks a lot for the testing so far,
-
-NeilBrown
+Thanks!
