@@ -2,147 +2,168 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE48754D6D0
-	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jun 2022 03:14:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED8DB54DAFD
+	for <lists+linux-nfs@lfdr.de>; Thu, 16 Jun 2022 08:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245094AbiFPBOX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 15 Jun 2022 21:14:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
+        id S241798AbiFPGva (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 16 Jun 2022 02:51:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233633AbiFPBOV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 15 Jun 2022 21:14:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C45BD4D605;
-        Wed, 15 Jun 2022 18:14:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S236834AbiFPGv3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 16 Jun 2022 02:51:29 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA45E5BD06
+        for <linux-nfs@vger.kernel.org>; Wed, 15 Jun 2022 23:51:27 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7D087B8216A;
-        Thu, 16 Jun 2022 01:14:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22244C341C0;
-        Thu, 16 Jun 2022 01:14:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655342057;
-        bh=F5tbGSVtmtyru8j/GWLjm1O7l/KXlL/Ji+cKQzlskVs=;
-        h=In-Reply-To:References:From:Date:Subject:To:Cc:From;
-        b=jLFtxxOQKCdXV8qk551IPgiKVerltRCjnRn4oVHnXb5MSfuH0gPMV97T6qlCq06eZ
-         b3K9IJYiQysKGurpBS7ZWL9RiR7OQnu06f8BYKMBGQ8CmQqAcPqB0YWMk0JpTI3aH1
-         vOeEAJcoKlL/Hh+CsGP6Xttr7UDeFpGPcf4AlCekuLn7d+OS2PqUiwq8tQD8aF4x4n
-         LW25DJMMKfTXHfoeK0nd4rhH8Cvrdxsy4yHhxb4YxblevhlFeZe+PjkQbNktbohh55
-         bNze0GUNmnL+NPZoNspsDDHTID/VT+Lqd4Qv9sUG/QkPNzszf0Ism77lrpOsXqwhw5
-         Dg3ctmoetnb5g==
-Received: by mail-wr1-f47.google.com with SMTP id g4so849145wrh.11;
-        Wed, 15 Jun 2022 18:14:17 -0700 (PDT)
-X-Gm-Message-State: AJIora9i/IW0p+VQayOpSzM4dfA2t+uqBBR5zc/Q6V0FIuDcilHuCOmp
-        wGRZhbmB+ULNdGECkxyqoi6m8S8306MnFjmiMgg=
-X-Google-Smtp-Source: AGRyM1vNWa9NvzjYFrEsgV+RnaYCGzG4zUhnlGwZEdoJjeEZmOhzO5ekoczWg00a+UudLbDXapjdfYHa6B0wlf0am/0=
-X-Received: by 2002:a5d:64c7:0:b0:216:5021:687f with SMTP id
- f7-20020a5d64c7000000b002165021687fmr2276576wri.295.1655342055301; Wed, 15
- Jun 2022 18:14:15 -0700 (PDT)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 7BBE621C85;
+        Thu, 16 Jun 2022 06:51:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1655362286;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xaB8uap2BzLYqn7FttBfPkR0KtlLual8TfZL74kVsxY=;
+        b=mbfIGiZmBjOaRji5drqCIm4yz5q1B+CezUozxXnsxLXAhNh/8BaBkWVZ62im+pi7L5miLM
+        DGa/NkS3i9c49uOTF1+vgE8gpeiaM10dJ0/E/0IGo0fvuE6zqCcV4YRRlLApdHciOuvEMB
+        hRDeE0JM0TUHMKDM8Ry+ekFHqrZ3ec8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1655362286;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xaB8uap2BzLYqn7FttBfPkR0KtlLual8TfZL74kVsxY=;
+        b=63zfYp3BbP+dRp/W+pOJk/rZ70RwsYe6y4YgNtQL5XCuJ4G/g0hNxGdYFJQDf2mPhCJQdn
+        Wgk/UuWGxEJs+0BA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 5505A1344E;
+        Thu, 16 Jun 2022 06:51:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 7QX7Eu7SqmJAXQAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 16 Jun 2022 06:51:26 +0000
+Date:   Thu, 16 Jun 2022 08:51:24 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Li Wang <liwang@redhat.com>
+Cc:     LTP List <ltp@lists.linux.it>, linux-nfs@vger.kernel.org
+Subject: Re: [LTP] [RFC][PATCH v2 9/9] nfs: Use TST_ALL_FILESYSTEMS=1
+Message-ID: <YqrS7K3l3b3Vp+ys@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20220609214223.4608-1-pvorel@suse.cz>
+ <20220609214223.4608-10-pvorel@suse.cz>
+ <CAEemH2dViRNFsreFRyyTtPECdVEyaAEE0CuYBmZrwor=rgi=mQ@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6000:18ad:0:0:0:0 with HTTP; Wed, 15 Jun 2022 18:14:14
- -0700 (PDT)
-In-Reply-To: <20220615130014.1490661-1-amir73il@gmail.com>
-References: <20220615130014.1490661-1-amir73il@gmail.com>
-From:   Namjae Jeon <linkinjeon@kernel.org>
-Date:   Thu, 16 Jun 2022 10:14:14 +0900
-X-Gmail-Original-Message-ID: <CAKYAXd-jvj4Bm5tZFM6TxRLOVJx7v2WZhQx5+X5=RQnTTkd8cA@mail.gmail.com>
-Message-ID: <CAKYAXd-jvj4Bm5tZFM6TxRLOVJx7v2WZhQx5+X5=RQnTTkd8cA@mail.gmail.com>
-Subject: Re: [PATCH v15] vfs: fix copy_file_range() regression in cross-fs copies
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Steve French <smfrench@gmail.com>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Dave Chinner <david@fromorbit.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        He Zhe <zhe.he@windriver.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        kernel test robot <oliver.sang@intel.com>,
-        Luis Henriques <lhenriques@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-8.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEemH2dViRNFsreFRyyTtPECdVEyaAEE0CuYBmZrwor=rgi=mQ@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-2022-06-15 22:00 GMT+09:00, Amir Goldstein <amir73il@gmail.com>:
-> A regression has been reported by Nicolas Boichat, found while using the
-> copy_file_range syscall to copy a tracefs file.  Before commit
-> 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices") the
-> kernel would return -EXDEV to userspace when trying to copy a file across
-> different filesystems.  After this commit, the syscall doesn't fail anymore
-> and instead returns zero (zero bytes copied), as this file's content is
-> generated on-the-fly and thus reports a size of zero.
->
-> Another regression has been reported by He Zhe - the assertion of
-> WARN_ON_ONCE(ret == -EOPNOTSUPP) can be triggered from userspace when
-> copying from a sysfs file whose read operation may return -EOPNOTSUPP.
->
-> Since we do not have test coverage for copy_file_range() between any
-> two types of filesystems, the best way to avoid these sort of issues
-> in the future is for the kernel to be more picky about filesystems that
-> are allowed to do copy_file_range().
->
-> This patch restores some cross-filesystem copy restrictions that existed
-> prior to commit 5dae222a5ff0 ("vfs: allow copy_file_range to copy across
-> devices"), namely, cross-sb copy is not allowed for filesystems that do
-> not implement ->copy_file_range().
->
-> Filesystems that do implement ->copy_file_range() have full control of
-> the result - if this method returns an error, the error is returned to
-> the user.  Before this change this was only true for fs that did not
-> implement the ->remap_file_range() operation (i.e. nfsv3).
->
-> Filesystems that do not implement ->copy_file_range() still fall-back to
-> the generic_copy_file_range() implementation when the copy is within the
-> same sb.  This helps the kernel can maintain a more consistent story
-> about which filesystems support copy_file_range().
->
-> nfsd and ksmbd servers are modified to fall-back to the
-> generic_copy_file_range() implementation in case vfs_copy_file_range()
-> fails with -EOPNOTSUPP or -EXDEV, which preserves behavior of
-> server-side-copy.
->
-> fall-back to generic_copy_file_range() is not implemented for the smb
-> operation FSCTL_DUPLICATE_EXTENTS_TO_FILE, which is arguably a correct
-> change of behavior.
->
-> Fixes: 5dae222a5ff0 ("vfs: allow copy_file_range to copy across devices")
-> Link:
-> https://lore.kernel.org/linux-fsdevel/20210212044405.4120619-1-drinkcat@chromium.org/
-> Link:
-> https://lore.kernel.org/linux-fsdevel/CANMq1KDZuxir2LM5jOTm0xx+BnvW=ZmpsG47CyHFJwnw7zSX6Q@mail.gmail.com/
-> Link:
-> https://lore.kernel.org/linux-fsdevel/20210126135012.1.If45b7cdc3ff707bc1efa17f5366057d60603c45f@changeid/
-> Link:
-> https://lore.kernel.org/linux-fsdevel/20210630161320.29006-1-lhenriques@suse.de/
-> Reported-by: Nicolas Boichat <drinkcat@chromium.org>
-> Reported-by: kernel test robot <oliver.sang@intel.com>
-> Signed-off-by: Luis Henriques <lhenriques@suse.de>
-> Fixes: 64bf5ff58dff ("vfs: no fallback for ->copy_file_range")
-> Link:
-> https://lore.kernel.org/linux-fsdevel/20f17f64-88cb-4e80-07c1-85cb96c83619@windriver.com/
-> Reported-by: He Zhe <zhe.he@windriver.com>
-> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-> ---
-> Hi Luis, Namje,
->
-> Thank you for testing v14 [1].  Unfortunately (or fortunately),
-> kernel test robot has alerted me on LTP test failure [2] with v14.
->
-> The patch had changed behavior of same sb case when it should not have.
-> So I did not apply you Tested-by and I would like to request from you
-> to test v15.
-Works fine. You can add tested-by tag for ksmbd.
-Tested-by: Namjae Jeon <linkinjeon@kernel.org>
+> On Fri, Jun 10, 2022 at 5:44 AM Petr Vorel <pvorel@suse.cz> wrote:
 
-Thanks!
+> > Signed-off-by: Petr Vorel <pvorel@suse.cz>
+> > ---
+> > Hi NFS developers,
+
+> > your comments are welcome. This is an effort how to support NFS tests on
+> > all filesystems available on SUT. Using $TST_MNTPOINT means test run in
+> > loop, each time different filesystem is used. It's implemented via
+> > formatted loop device (the same way as in LTP C API).
+
+> > Code is also at:
+> > https://github.com/pevik/ltp/tree/shell/all_filesystems.v2
+
+> > But this requires restarting NFS server (otherwise legacy
+> > testcases/lib/daemonlib.sh
+> > would have to be used), which is IMHO not optimal.
+
+> > Without that (or only run 'systemctl reload nfs-server' or exportfs -r
+> > on remote side) it cannot be umounted after testing - debugging with
+> > fuser, code at:
+
+> > https://github.com/pevik/ltp/commit/3656d035d43445a107154ef397ef1db2fad2c4f0
+
+> > The problem is that loop device is still referenced by nfs server and
+> > thus cannot be unmounted. Can this be somehow fixed? Is it even wanted
+> > to have tests on loop device (the only reasonable way to support more
+> > filesystems)? Also tests will run much longer (we could filter out some
+> > filesystems not supported, if there are any).
+
+> > # LTP_SINGLE_FS_TYPE=ext2 PATH="/opt/ltp/testcases/bin:$PATH" nfs07.sh -v
+> > 3 -t tcp -i3
+> > ## NOTE: testing itself is OK
+> > nfs07 1 TINFO: initialize 'lhost' 'ltp_ns_veth2' interface
+> > nfs07 1 TINFO: add local addr 10.0.0.2/24
+> > nfs07 1 TINFO: add local addr fd00:1:1:1::2/64
+> > nfs07 1 TINFO: initialize 'rhost' 'ltp_ns_veth1' interface
+> > nfs07 1 TINFO: add remote addr 10.0.0.1/24
+> > nfs07 1 TINFO: add remote addr fd00:1:1:1::1/64
+> > nfs07 1 TINFO: Network config (local -- remote):
+> > nfs07 1 TINFO: ltp_ns_veth2 -- ltp_ns_veth1
+> > nfs07 1 TINFO: 10.0.0.2/24 -- 10.0.0.1/24
+> > nfs07 1 TINFO: fd00:1:1:1::2/64 -- fd00:1:1:1::1/64
+> > tst_device.c:89: TINFO: Found free device 0 '/dev/loop0'
+> > tst_supported_fs_types.c:148: TINFO: WARNING: testing only ext2
+> > tst_supported_fs_types.c:89: TINFO: Kernel supports ext2
+> > tst_supported_fs_types.c:51: TINFO: mkfs.ext2 does exist
+> > nfs07 1 TINFO: Testing on ext2
+> > nfs07 1 TINFO: Formatting ext2 with opts='/dev/loop0'
+> > nfs07 1 TINFO: timeout per run is 0h 5m 0s
+> > nfs07 1 TINFO: mount.nfs: (linux nfs-utils 2.6.1)
+> > nfs07 1 TINFO: setup NFSv3, socket type tcp
+> > nfs07 1 TINFO: Mounting NFS: mount -v -t nfs -o proto=tcp,vers=3 10.0.0.2:/tmp/LTP_nfs07.A3PIB82iUv/mntpoint/3/tcp
+> > /tmp/LTP_nfs07.A3PIB82iUv/mntpoint/3/0
+> > nfs07 1 TPASS: All files and directories were correctly listed
+> > nfs07 2 TPASS: All files and directories were correctly listed
+> > nfs07 3 TPASS: All files and directories were correctly listed
+> > nfs07 4 TINFO: Cleaning up testcase
+
+> > ## DEBUGGING CODE in nfs_cleanup()
+> > nfs07 4 TINFO: fuser -mv /tmp/LTP_nfs07.P1XS9smc5w ($TST_TMPDIR)
+> >                      USER        PID ACCESS COMMAND
+> > /tmp/LTP_nfs07.P1XS9smc5w:
+> >                      root     kernel mount /tmp
+> >                      root       2125 ..c.. tst_timeout_kil
+> > nfs07 4 TINFO: fuser -mv /tmp/LTP_nfs07.P1XS9smc5w/mntpoint ($TST_MNTPOINT)
+> >                      USER        PID ACCESS COMMAND
+> > /tmp/LTP_nfs07.P1XS9smc5w/mntpoint:
+> >                      root     kernel mount
+> > /tmp/LTP_nfs07.P1XS9smc5w/mntpoint
+> > nfs07 4 TINFO: fuser -mv /tmp/LTP_nfs07.P1XS9smc5w/mntpoint/3/0
+> >                      USER        PID ACCESS COMMAND
+> > /tmp/LTP_nfs07.P1XS9smc5w/mntpoint/3/0:
+> >                      root     kernel mount
+> > /tmp/LTP_nfs07.P1XS9smc5w/mntpoint/3/0
+
+> > ## from nfs_cleanup()
+> > ## grep -q "$local_dir" /proc/mounts && umount $local_dir
+> > nfs07 4 TINFO: umount /tmp/LTP_nfs07.P1XS9smc5w/mntpoint/3/0
+> > umount: /tmp/LTP_nfs07.P1XS9smc5w/mntpoint: target is busy.
+
+
+> Maybe try with `umount -fl`?
+
+Thank you! Unfortunately it does not work (I tried this before ending up with
+restarting server because even -fl did not help).
+
+I also consider the need of 'umount -fl' as kind of error just less aggressive
+then restarting server. But if this is considered ok, why not.
+
+Kind regards,
+Petr
+
+> unmount manual says:
+>    -f, --force    force unmount (in case of an unreachable NFS system)
+>    -l, --lazy      detach the filesystem now, clean up things later
