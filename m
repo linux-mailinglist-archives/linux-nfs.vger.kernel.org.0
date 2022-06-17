@@ -2,54 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A8E354FE44
-	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jun 2022 22:24:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A126754FE42
+	for <lists+linux-nfs@lfdr.de>; Fri, 17 Jun 2022 22:24:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344340AbiFQUXl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 17 Jun 2022 16:23:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55972 "EHLO
+        id S1347199AbiFQUXm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 17 Jun 2022 16:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347398AbiFQUX1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jun 2022 16:23:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF53850E34
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Jun 2022 13:23:26 -0700 (PDT)
+        with ESMTP id S234525AbiFQUXl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 17 Jun 2022 16:23:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F81850059
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Jun 2022 13:23:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4CB256201F
-        for <linux-nfs@vger.kernel.org>; Fri, 17 Jun 2022 20:23:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B5EE7C3411D;
-        Fri, 17 Jun 2022 20:23:25 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5770FB82B8C
+        for <linux-nfs@vger.kernel.org>; Fri, 17 Jun 2022 20:23:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C530CC3411B;
+        Fri, 17 Jun 2022 20:23:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655497405;
-        bh=Pemqi22VBYYD+wqOh5aX6+0XyyVLRnLfgqsFnXL5KLQ=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=hg2B8TQYhKbaut730kqt9yEHBzVpQyQyApe6rT26fboq1O3E1Egguh+3+4aezojcu
-         qmYMeL4GqeYoSjTR4jffTVmoW0R4MN4/dXYpFQElMtCk0KPvWgsmRj8a8kBtI/S8gw
-         K1U8MWAx2Wdra9h9cHqoZ1jhFq6SiehnO+K6jyVemLExxc8Ih4CuXOJSXv5bjnTqs7
-         EuZO/7dLzTGLDbvvlp9MQeO9bXJUS/OPjS48/El16bzynJYP/QG5G8qRtZstUOVtah
-         EQQqRB+xOqGdoD/dQ3ljgt7L0LpNZO/b2MwlSTLuchOSbE5BYoLuPPPCdZ29QsDLrB
-         h9BjfeUR/2mGQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 9D5BEFD99FF;
-        Fri, 17 Jun 2022 20:23:25 +0000 (UTC)
-Subject: Re: [GIT PULL] NFS Client Bugfixes for 5.19-rc
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20220617195651.1028948-1-anna@kernel.org>
-References: <20220617195651.1028948-1-anna@kernel.org>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20220617195651.1028948-1-anna@kernel.org>
-X-PR-Tracked-Remote: git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.19-2
-X-PR-Tracked-Commit-Id: 5ee3d10f84d0a32fc11a55c70c204b6d81fd9ef6
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 4b35035bcf80ddb47c0112c4fbd84a63a2836a18
-Message-Id: <165549740564.12674.14980853172608626540.pr-tracker-bot@kernel.org>
-Date:   Fri, 17 Jun 2022 20:23:25 +0000
-To:     Anna Schumaker <anna@kernel.org>
-Cc:     linux-nfs@vger.kernel.org, torvalds@linux-foundation.org,
-        anna@kernel.org
+        s=k20201202; t=1655497418;
+        bh=EkXMMrnwGszBPFHho2BEnhFcAczct4y2BPNL8xyYLJc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Ebl9AzJKD1/oFWj4QIux+NFbDyZn5CPt78ACmIpClqS2ZReznHBXtQ9CU+sOVvHU1
+         7vNUl3k02wt2R4HBju+ZyZKLsV2zZPlZd8jEIO0wp5BaEMRWA2IjlWlIP8ydlzF1RQ
+         uZUovzKBelNq2ko62wQG7AHA/sEwXvJHBb5j8IZKNITpZ/b9nN1IZ+A631ORRluAP+
+         cLqKPO0FSfqUREO5ukvNyonTpp5njQqiVSMua3p0EhVDkc4Zlz+8slK6zGWOdTM5gE
+         wMg0+PjjfRrxSSVh2Xajjl/rFeV3NVGsqCkTuAeepcS6O6/5q3m2Q3AAAgw36/5VBU
+         w6YYkuAgpijfg==
+From:   Anna Schumaker <anna@kernel.org>
+To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
+Cc:     anna@kernel.org
+Subject: [PATCH] NFS: Allow setting rsize / wsize to a multiple of PAGE_SIZE
+Date:   Fri, 17 Jun 2022 16:23:36 -0400
+Message-Id: <20220617202336.1099702-1-anna@kernel.org>
+X-Mailer: git-send-email 2.36.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -60,15 +50,122 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 17 Jun 2022 15:56:51 -0400:
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-> git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-5.19-2
+Previously, we required this to value to be a power of 2 for UDP related
+reasons. This patch keeps the power of 2 rule for UDP but allows more
+flexibility for TCP and RDMA.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/4b35035bcf80ddb47c0112c4fbd84a63a2836a18
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+---
+ fs/nfs/client.c                           | 13 +++++++------
+ fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 ++++--
+ fs/nfs/internal.h                         | 18 ++++++++++++++++++
+ fs/nfs/nfs4client.c                       |  4 ++--
+ 4 files changed, 31 insertions(+), 10 deletions(-)
 
-Thank you!
-
+diff --git a/fs/nfs/client.c b/fs/nfs/client.c
+index e828504cc396..da8da5cdbbc1 100644
+--- a/fs/nfs/client.c
++++ b/fs/nfs/client.c
+@@ -708,9 +708,9 @@ static int nfs_init_server(struct nfs_server *server,
+ 	}
+ 
+ 	if (ctx->rsize)
+-		server->rsize = nfs_block_size(ctx->rsize, NULL);
++		server->rsize = nfs_io_size(ctx->rsize, clp->cl_proto);
+ 	if (ctx->wsize)
+-		server->wsize = nfs_block_size(ctx->wsize, NULL);
++		server->wsize = nfs_io_size(ctx->wsize, clp->cl_proto);
+ 
+ 	server->acregmin = ctx->acregmin * HZ;
+ 	server->acregmax = ctx->acregmax * HZ;
+@@ -755,18 +755,19 @@ static int nfs_init_server(struct nfs_server *server,
+ static void nfs_server_set_fsinfo(struct nfs_server *server,
+ 				  struct nfs_fsinfo *fsinfo)
+ {
++	struct nfs_client *clp = server->nfs_client;
+ 	unsigned long max_rpc_payload, raw_max_rpc_payload;
+ 
+ 	/* Work out a lot of parameters */
+ 	if (server->rsize == 0)
+-		server->rsize = nfs_block_size(fsinfo->rtpref, NULL);
++		server->rsize = nfs_io_size(fsinfo->rtpref, clp->cl_proto);
+ 	if (server->wsize == 0)
+-		server->wsize = nfs_block_size(fsinfo->wtpref, NULL);
++		server->wsize = nfs_io_size(fsinfo->wtpref, clp->cl_proto);
+ 
+ 	if (fsinfo->rtmax >= 512 && server->rsize > fsinfo->rtmax)
+-		server->rsize = nfs_block_size(fsinfo->rtmax, NULL);
++		server->rsize = nfs_io_size(fsinfo->rtmax, clp->cl_proto);
+ 	if (fsinfo->wtmax >= 512 && server->wsize > fsinfo->wtmax)
+-		server->wsize = nfs_block_size(fsinfo->wtmax, NULL);
++		server->wsize = nfs_io_size(fsinfo->wtmax, clp->cl_proto);
+ 
+ 	raw_max_rpc_payload = rpc_max_payload(server->client);
+ 	max_rpc_payload = nfs_block_size(raw_max_rpc_payload, NULL);
+diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+index bfa7202ca7be..e028f5a0ef5f 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
++++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
+@@ -113,8 +113,10 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *server, struct pnfs_device *pdev,
+ 			goto out_err_drain_dsaddrs;
+ 		ds_versions[i].version = be32_to_cpup(p++);
+ 		ds_versions[i].minor_version = be32_to_cpup(p++);
+-		ds_versions[i].rsize = nfs_block_size(be32_to_cpup(p++), NULL);
+-		ds_versions[i].wsize = nfs_block_size(be32_to_cpup(p++), NULL);
++		ds_versions[i].rsize = nfs_io_size(be32_to_cpup(p++),
++						   server->nfs_client->cl_proto);
++		ds_versions[i].wsize = nfs_io_size(be32_to_cpup(p++),
++						   server->nfs_client->cl_proto);
+ 		ds_versions[i].tightly_coupled = be32_to_cpup(p);
+ 
+ 		if (ds_versions[i].rsize > NFS_MAX_FILE_IO_SIZE)
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index 8f8cd6e2d4db..af6d261241ff 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -704,6 +704,24 @@ unsigned long nfs_block_size(unsigned long bsize, unsigned char *nrbitsp)
+ 	return nfs_block_bits(bsize, nrbitsp);
+ }
+ 
++/*
++ * Compute and set NFS server rsize / wsize
++ */
++static inline
++unsigned long nfs_io_size(unsigned long iosize, enum xprt_transports proto)
++{
++	if (iosize < NFS_MIN_FILE_IO_SIZE)
++		iosize = NFS_DEF_FILE_IO_SIZE;
++	else if (iosize >= NFS_MAX_FILE_IO_SIZE)
++		iosize = NFS_MAX_FILE_IO_SIZE;
++	else
++		iosize = iosize & PAGE_MASK;
++
++	if (proto == XPRT_TRANSPORT_UDP)
++		return nfs_block_bits(iosize, NULL);
++	return iosize;
++}
++
+ /*
+  * Determine the maximum file size for a superblock
+  */
+diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
+index 47a6cf892c95..3c5678aec006 100644
+--- a/fs/nfs/nfs4client.c
++++ b/fs/nfs/nfs4client.c
+@@ -1161,9 +1161,9 @@ static int nfs4_init_server(struct nfs_server *server, struct fs_context *fc)
+ 		return error;
+ 
+ 	if (ctx->rsize)
+-		server->rsize = nfs_block_size(ctx->rsize, NULL);
++		server->rsize = nfs_io_size(ctx->rsize, server->nfs_client->cl_proto);
+ 	if (ctx->wsize)
+-		server->wsize = nfs_block_size(ctx->wsize, NULL);
++		server->wsize = nfs_io_size(ctx->wsize, server->nfs_client->cl_proto);
+ 
+ 	server->acregmin = ctx->acregmin * HZ;
+ 	server->acregmax = ctx->acregmax * HZ;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.36.1
+
