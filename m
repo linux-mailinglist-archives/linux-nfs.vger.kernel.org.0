@@ -2,33 +2,76 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA45551F9B
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 17:02:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB796551FB5
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 17:06:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240692AbiFTPCG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jun 2022 11:02:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58988 "EHLO
+        id S242052AbiFTPFY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jun 2022 11:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233677AbiFTPBl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 11:01:41 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 578A91836C
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 07:29:29 -0700 (PDT)
-Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1o3IP5-0007lP-Mu; Mon, 20 Jun 2022 16:29:23 +0200
-Message-ID: <540c0a10-e2eb-57e9-9a71-22cf64babd8e@leemhuis.info>
-Date:   Mon, 20 Jun 2022 16:29:23 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: NFS regression between 5.17 and 5.18
-Content-Language: en-US
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        with ESMTP id S242182AbiFTPE4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 11:04:56 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 497BE63D5
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 07:40:28 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25KDDu1D023008;
+        Mon, 20 Jun 2022 14:40:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=59hUfGlT9umltBpJElzTP0SuwXt2wKm4o+nxE6Xf+Bo=;
+ b=DoM+AP5f1b6MCbKmjr1ONQKpxgS463ztjXq1HdgDaL+QejLNnqaS2f3whkcHpKphbYMu
+ j4XscwyThT50+vzE1IxAA76Q0NzQZOHxXMQNKt7yU8aFcPfyVOfpeqvNIX6dRfwk4orD
+ DoH5pQSKtla/Sh1M4XXZfWC58zOFYn257zmUBkvqfA9gfrrJwLXWPnPBLsPTo+KFvevx
+ /oXXafaX99y2TTU9iO5XE9Ze9PDgEQGD/KaYVsIZ/9Sp9j6gWNBlyt6lQAdJUAHH4R95
+ buK/nuZH3OA/pkISlHOLGLBm8rtuifwnhW8XlcqwCZcB9mzpkXrCDSjXDLGsVGu9aKWJ yQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3gs5a0bf85-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jun 2022 14:40:06 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 25KEaX5O010885;
+        Mon, 20 Jun 2022 14:40:06 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2049.outbound.protection.outlook.com [104.47.73.49])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3gtf5bhfpy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 Jun 2022 14:40:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MRqWbnCR3ltYpeoOeNAeUpxpg2EoQw4uRfl/IWGrIaXG/3WIGMsGz4FdxuUTBjDC5HJa3yKTJKHUSrUcPrkB00DBP8YGZwcDkCGTNblGxUDuDwlPkq/m+Q0e1qE41GRrU1PVPTovT31ltJRsKN7CzR4HGXXCQQmO5eZQ+mWn6EMeKMtX7OYqk9ZbrH1ipE4F+24cgpjsVtRa9s5kkn2ZZO3IJ0wIJyLwj2jXHHD6nsLLkl25edYB9w2QjVgpMoi4c+JwxX+4Zyt7vaVZVKdFGaBSKb+haDL/z0TxWWFTJxyX+bgQQvoCjbfOeRUpaJxJQq2968nOikBDg627pPsktw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=59hUfGlT9umltBpJElzTP0SuwXt2wKm4o+nxE6Xf+Bo=;
+ b=HiZ0tOt4Dn0qf1el6vFWhyffKdhQl+WdffKi9SUcxyg28K6i0qtM1qpd1hyH5EqmiXaf4buEdLXMJGbiQzIBvHQPc49lUaTGqu5afp+Lr27faXyfVgyEfY4Iy69J8jZaoJyISlU2dbMxeVP4cSpLvF62bE/TLSLzFuWkXtZEl2NZQEmfc+lavfDdCuhxzeEAY5oiu1fb9S5rcgVV3pY3fiFh7VsiM3dSpv7KT9SP17dnj8pmcTbrIOiF9OZ0JxYlrU+BPrbPbayLOXL0mPBTKf69Ewx0UsmXNnLWADk0xznEJ0bJpZdkjD409bnzkoj6U8EXXwKWP6x8IZ9WggfSSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=59hUfGlT9umltBpJElzTP0SuwXt2wKm4o+nxE6Xf+Bo=;
+ b=NCthrQ9+sRS4lqkaQTy++kTSk5yn2eQJZBsxGfsgUe5jhGofC621VC0R1wUEii7kwM7cHy44Hs+Q0lYLBiLs5WysrSDNX+dejgEQmiv7JwHpvmJi04Wl9OoSn6jyFbRBw8pm6KPqfwaBj1YaPYH3fEbXjnvUy6VRdwmASI4NpL4=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SJ0PR10MB4624.namprd10.prod.outlook.com (2603:10b6:a03:2de::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Mon, 20 Jun
+ 2022 14:40:04 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::a022:c9:1cd6:8ef0]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::a022:c9:1cd6:8ef0%4]) with mapi id 15.20.5353.022; Mon, 20 Jun 2022
+ 14:40:01 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Thorsten Leemhuis <regressions@leemhuis.info>
+CC:     Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
         Trond Myklebust <trondmy@hammerspace.com>,
         Olga Kornievskaia <aglo@umich.edu>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: NFS regression between 5.17 and 5.18
+Thread-Topic: NFS regression between 5.17 and 5.18
+Thread-Index: AQHYWwCixuCyjj49XkSuf+bm0GIRX60Faq4AgAAMfoCAAERPAIAAApwAgAEchwCAAAwEAIAK/HiAgAroagCAABmggIAAGOOAgAYzNACAAAZIgIA1BkCAgABriwCAAAT2gIAAAviA
+Date:   Mon, 20 Jun 2022 14:40:01 +0000
+Message-ID: <916910EC-4F57-4071-8A4E-FC21ED76839A@oracle.com>
 References: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
  <8E8485F8-F56F-4A93-85AC-44BD8436DF6A@oracle.com>
  <9d814666-6e95-e331-62a7-ec36fe1ca062@cornelisnetworks.com>
@@ -44,160 +87,144 @@ References: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
  <DA2DB426-6658-43CC-B331-C66B79BE8395@oracle.com>
  <1fa761b5-8083-793c-1249-d84c6ee21872@leemhuis.info>
  <C305FE22-345C-4D88-A03B-D01E326467C8@oracle.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <C305FE22-345C-4D88-A03B-D01E326467C8@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655735369;82cea1f5;
-X-HE-SMSGID: 1o3IP5-0007lP-Mu
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+ <540c0a10-e2eb-57e9-9a71-22cf64babd8e@leemhuis.info>
+In-Reply-To: <540c0a10-e2eb-57e9-9a71-22cf64babd8e@leemhuis.info>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0c29cfde-330e-44bb-2ed5-08da52cac217
+x-ms-traffictypediagnostic: SJ0PR10MB4624:EE_
+x-microsoft-antispam-prvs: <SJ0PR10MB4624127F46429E0284E29CB893B09@SJ0PR10MB4624.namprd10.prod.outlook.com>
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FALixYrzBtKElCUWj93TB+yj7bASOc/7rtY59Rw6VjKpSMHE//x5Oi13SO1rURCr4zRZem8Vx38c2JvSccyiIUXjjvC22H3kxmr2cqr12MSGjQlcyQQQlnGJGSTj0qbWPyAonEzY1xU0tpMTP4t261oDgaceadDkyDV8NNpsW2C8oFeQyb0A6lsiN9BojpHA5peKeH53aWpirUJsi1UIFsEXnOd7Jj/M4bMVyULpOItHXvo/tijaMakjf16ZhHO05E6kto4TXJmuPhl43RDEU4aIHSLDB7MKGYulrstH8EJqUf3qVrUSPR51Sw0iDS67DePVVcQ9vfgJXoCOOzCNnBOy2VqYrqZhZ61X7sZPpglaUCV3J9UEQXv0wr7dtPqEbidHPdrJuDhOEhd5y/GLYNtDLRm1v7/Y4+PS6/tY/A0H/8dIyArReQywfpoextPOIqazPuzrf4y0UkFpdu20R3WqG3F9t8qh+LDCgSxmxzUpZHfQsYJ+v/zYhR5Ei//DmiW8Dwj4wkscWbfmf9B7VYUEztbncYyuYjA/YUKWYch4kNkqX49B8h63VHp4xZVrVaGha77r27u5PVf3UXz486rDrM/AFScCUvatIylu+1+hGs6ov5HAtoqbgXj/FlMu9BVJHRTeTcKZRTXVoDDrOtF9udxFzsQDr1EI5Z9MKRlMUgI7x6Ol5aBdjRcYcu6UCPmyR7mRLA+kpRDb981zBKKhjYYj5Tj7rdNzX+k6dryQ6CXCPcYVydCUKtRQwoX6PZ8nhAFdngNdMLZ5RUjGwz7Ifw5bwf6XXGHCMsVKyTCi7YlOyjAhv0ys30/XKseykrWmSpVQfPyKqh0PfFPI2/ALjerbi21a2enU5MNrvYo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(136003)(366004)(376002)(396003)(39860400002)(64756008)(4326008)(8676002)(66446008)(71200400001)(478600001)(41300700001)(186003)(66476007)(66556008)(6486002)(54906003)(38070700005)(122000001)(76116006)(316002)(6916009)(91956017)(966005)(66946007)(83380400001)(6506007)(38100700002)(26005)(6512007)(2616005)(53546011)(5660300002)(36756003)(33656002)(8936002)(86362001)(2906002)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?BnC5zHH854P2NB3EfW6EYLgP6gJcs/euXUnxgfBlAdfXFhNxiHU41Zd4J/lu?=
+ =?us-ascii?Q?NWCceA2Q6kSCYQl+fcF8Jznyvg1S+/V2iLg49+wWJ+WADLrjTKJynd3VFGN4?=
+ =?us-ascii?Q?uZuoxz+VIbLDAQ2y39JGowbWZv/2S93atJsTElNkdR/X8hQFvKc3i9CHc5T9?=
+ =?us-ascii?Q?NjwpEs+d7BB6al+uCFfrrIQkmta+yYzUGAv3XK7mmeU0d0CSzxl9gT0gILkc?=
+ =?us-ascii?Q?C860NDjvlZnIIWkOPjpjHKzKzr9YdnSnOYpi9Z0RnaOE8sdEprfn0L4vbZK9?=
+ =?us-ascii?Q?EpY4SvXnM51pAX7PV8RDMSGoSB8bXspk3bsi5KIQhL5xD5VI+12ivAKeqdMG?=
+ =?us-ascii?Q?XLQHMrgGmAVVh3d2gzpAIXUmdNsjVep6Ks9J+ET8eW7BgzlBePOudbGCDsGP?=
+ =?us-ascii?Q?jg1fFlIghd9HVI8cjcXETecG0GEGb5wGK33ENtuirjvrS3yWTStROJBBFLBd?=
+ =?us-ascii?Q?8A2SxJkKvZWyy8pShbjFUh5rI4L/lErnzidoISLsi4W0h8sqofmcKc6WrnuQ?=
+ =?us-ascii?Q?B/ee2ssW72OESk3Ag+3QI00nN28yziyb5TsyYRG8vcIrxxHzKU55TWGQL7gi?=
+ =?us-ascii?Q?+jiQClJBZ7VwJs+RK5NxTuzx3sWlifH/5EpNeACZLryqvZOBWm06DnIpiFYe?=
+ =?us-ascii?Q?uAcxYl1Q/oFT8BGEPA9eRXJZeX+UUldYDt4OdfsGXlNwgXcohF4g1EJFV65L?=
+ =?us-ascii?Q?WQrTcrRxVyfVwZHCxFoiv0DAeBguROLPU6crW4t8qEeSl9ij81JXlE4zStMo?=
+ =?us-ascii?Q?+d6MjPLA5vVYYsG+4MuaBzXgBFqYP1ZeqU3cu4NkBNMh43y9n7CfpDeESIS5?=
+ =?us-ascii?Q?d3euULTI5g7BXBHeiHFRnLbGBG+98LG71m85yPkcde3dDOD1QiPYYrnLtgSP?=
+ =?us-ascii?Q?ZtedFAKLNKERJCgGkeGu6QJ87ei4dMYr4/57Ct26fwPMwL6LwJze4/lFQzr7?=
+ =?us-ascii?Q?W6QV/jEcGBe+Z9NSXSuz4IkVnsGIaVGoAulh/oxKSq41IdpHG1ZjSd7TW06u?=
+ =?us-ascii?Q?tzWyERmOG6xdcQAytx11aWXhlYV7/1HJeYdZIa3Swc7BGauXS+tNVsy862tM?=
+ =?us-ascii?Q?LfNDGqVkeC2GehV3tGbOjG9RIrE+iF6QIWt5qHx9wHWe1HO+ZYSTcR5kFcWO?=
+ =?us-ascii?Q?yfo/Tst/JjMNwnVGTVKF/ZNckEqB8dw96PukKni4IKrMbiFe6X5gRK8yAteD?=
+ =?us-ascii?Q?ViA93gTmptsY8n/LgdWnW8NRHsb2jG7mrv8d9Hq8siEVyHE0hzaYcwaWuOwo?=
+ =?us-ascii?Q?4HHw9RgJzxHVNpD5DHu6u1r90IzHGYTVLtmh4UiGRNIS0X2OPRTg4E+e1MRP?=
+ =?us-ascii?Q?/TfW1JMkTeoUa3e0xBQPImeV50qUROd2ThpNYzyaQCKqcyp4obcC4MaolTbN?=
+ =?us-ascii?Q?0XkUaOs+OY0cm6CiGdgNaEORb0Nx+6RAOJ8tgzNfI4ZSwOr14Mi01HaOtcV/?=
+ =?us-ascii?Q?xZXj98DEUp/uIkp4Xg52enI7x8tXpEug5dD36ny1OncPquppGqGnjily3q8Y?=
+ =?us-ascii?Q?NGTkWuJxfNaMRW59o9Ax6K3aL2fmdPWGVAqhOStbSpaUyYGiBERpFOAH2cNC?=
+ =?us-ascii?Q?DWLH1Qr2mjqGDHB278mt/LLyc8/M20WMdkBYxGRAIhXkOKz4fOBRLYjG9sJR?=
+ =?us-ascii?Q?26F28HNY0prru0oMRk6DctN/UFAnZJuyLq9LHgPLTZHm+tVIsbdAHVjKYv9+?=
+ =?us-ascii?Q?doOZz9RBqrP6CGRMau46SbuV+KbwpHmbjuTjw7qi1daOYlOgTCiCCAlUcwDO?=
+ =?us-ascii?Q?yJCn7T5MQ/cd15TfzlFhk1ZugMS2Qio=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A3B2328A9C22484584001C052E9D3148@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c29cfde-330e-44bb-2ed5-08da52cac217
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2022 14:40:01.9048
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 3rsysx/bJP5+8y/KUmfmhWGs+8hMKSuvkmGCBcYUTwo238lcxQ3F/g8KUSKGhMO08kHN7Im230caNo8QR5vsTQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4624
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.883
+ definitions=2022-06-20_04:2022-06-17,2022-06-20 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 phishscore=0
+ mlxlogscore=954 mlxscore=0 suspectscore=0 spamscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2206200068
+X-Proofpoint-ORIG-GUID: SCs7gX0ozDkh0f4O_TDgKQysvcJ0wkVu
+X-Proofpoint-GUID: SCs7gX0ozDkh0f4O_TDgKQysvcJ0wkVu
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 20.06.22 16:11, Chuck Lever III wrote:
-> 
-> 
->> On Jun 20, 2022, at 3:46 AM, Thorsten Leemhuis <regressions@leemhuis.info> wrote:
->>
->> Dennis, Chuck, I have below issue on the list of tracked regressions.
->> What's the status? Has any progress been made? Or is this not really a
->> regression and can be ignored?
->>
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->>
->> P.S.: As the Linux kernel's regression tracker I deal with a lot of
->> reports and sometimes miss something important when writing mails like
->> this. If that's the case here, don't hesitate to tell me in a public
->> reply, it's in everyone's interest to set the public record straight.
->>
->> #regzbot poke
->> ##regzbot unlink: https://bugzilla.kernel.org/show_bug.cgi?id=215890
-> 
-> The above link points to an Apple trackpad bug.
+Hi Thorsten-
 
-Yeah, I know, sorry, should have mentioned: either I or my bot did
-something stupid and associated that report with this regression, that's
-why I deassociated it with the "unlink" command.
+> On Jun 20, 2022, at 10:29 AM, Thorsten Leemhuis <regressions@leemhuis.inf=
+o> wrote:
+>=20
+> On 20.06.22 16:11, Chuck Lever III wrote:
+>>=20
+>>=20
+>>> On Jun 20, 2022, at 3:46 AM, Thorsten Leemhuis <regressions@leemhuis.in=
+fo> wrote:
+>>>=20
+>>> Dennis, Chuck, I have below issue on the list of tracked regressions.
+>>> What's the status? Has any progress been made? Or is this not really a
+>>> regression and can be ignored?
+>>>=20
+>>> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat=
+)
+>>>=20
+>>> P.S.: As the Linux kernel's regression tracker I deal with a lot of
+>>> reports and sometimes miss something important when writing mails like
+>>> this. If that's the case here, don't hesitate to tell me in a public
+>>> reply, it's in everyone's interest to set the public record straight.
+>>>=20
+>>> #regzbot poke
+>>> ##regzbot unlink: https://bugzilla.kernel.org/show_bug.cgi?id=3D215890
+>>=20
+>> The above link points to an Apple trackpad bug.
+>=20
+> Yeah, I know, sorry, should have mentioned: either I or my bot did
+> something stupid and associated that report with this regression, that's
+> why I deassociated it with the "unlink" command.
 
-> The bug described all the way at the bottom was the origin problem
-> report. I believe this is an NFS client issue. We are waiting for
-> a response from the NFS client maintainers to help Dennis track
-> this down.
+Is there an open bugzilla for the original regression?
 
-Many thx for the status update. Can anything be done to speed things up?
-This is taken quite a long time already -- way longer that outlined in
-"Prioritize work on fixing regressions" here:
-https://docs.kernel.org/process/handling-regressions.html
 
-Ciao, Thorsten
+>> The bug described all the way at the bottom was the origin problem
+>> report. I believe this is an NFS client issue. We are waiting for
+>> a response from the NFS client maintainers to help Dennis track
+>> this down.
+>=20
+> Many thx for the status update. Can anything be done to speed things up?
+> This is taken quite a long time already -- way longer that outlined in
+> "Prioritize work on fixing regressions" here:
+> https://docs.kernel.org/process/handling-regressions.html
 
->> On 17.05.22 16:02, Chuck Lever III wrote:
->>>> On May 17, 2022, at 9:40 AM, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com> wrote:
->>>>
->>>> On 5/13/22 10:59 AM, Chuck Lever III wrote:
->>>>>>>
->>>>>>> Ran a test with -rc6 and this time see a hung task trace on the
->>>>>>> console as well
->>>>>>> as an NFS RPC error.
->>>>>>>
->>>>>>> [32719.991175] nfs: RPC call returned error 512
->>>>>>> .
->>>>>>> .
->>>>>>> .
->>>>>>> [32933.285126] INFO: task kworker/u145:23:886141 blocked for more
->>>>>>> than 122 seconds.
->>>>>>> [32933.293543]       Tainted: G S                5.18.0-rc6 #1
->>>>>>> [32933.299869] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
->>>>>>> disables this
->>>>>>> message.
->>>>>>> [32933.308740] task:kworker/u145:23 state:D stack:    0 pid:886141
->>>>>>> ppid:     2
->>>>>>> flags:0x00004000
->>>>>>> [32933.318321] Workqueue: rpciod rpc_async_schedule [sunrpc]
->>>>>>> [32933.324524] Call Trace:
->>>>>>> [32933.327347]  <TASK>
->>>>>>> [32933.329785]  __schedule+0x3dd/0x970
->>>>>>> [32933.333783]  schedule+0x41/0xa0
->>>>>>> [32933.337388]  xprt_request_dequeue_xprt+0xd1/0x140 [sunrpc]
->>>>>>> [32933.343639]  ? prepare_to_wait+0xd0/0xd0
->>>>>>> [32933.348123]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
->>>>>>> [32933.354183]  xprt_release+0x26/0x140 [sunrpc]
->>>>>>> [32933.359168]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
->>>>>>> [32933.365225]  rpc_release_resources_task+0xe/0x50 [sunrpc]
->>>>>>> [32933.371381]  __rpc_execute+0x2c5/0x4e0 [sunrpc]
->>>>>>> [32933.376564]  ? __switch_to_asm+0x42/0x70
->>>>>>> [32933.381046]  ? finish_task_switch+0xb2/0x2c0
->>>>>>> [32933.385918]  rpc_async_schedule+0x29/0x40 [sunrpc]
->>>>>>> [32933.391391]  process_one_work+0x1c8/0x390
->>>>>>> [32933.395975]  worker_thread+0x30/0x360
->>>>>>> [32933.400162]  ? process_one_work+0x390/0x390
->>>>>>> [32933.404931]  kthread+0xd9/0x100
->>>>>>> [32933.408536]  ? kthread_complete_and_exit+0x20/0x20
->>>>>>> [32933.413984]  ret_from_fork+0x22/0x30
->>>>>>> [32933.418074]  </TASK>
->>>>>>>
->>>>>>> The call trace shows up again at 245, 368, and 491 seconds. Same
->>>>>>> task, same trace.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>
->>>>>> That's very helpful. The above trace suggests that the RDMA code is
->>>>>> leaking a call to xprt_unpin_rqst().
->>>>>
->>>>> IMHO this is unlikely to be related to the performance
->>>>> regression -- none of this code has changed in the past 5
->>>>> kernel releases. Could be a different issue, though.
->>>>>
->>>>> As is often the case in these situations, the INFO trace
->>>>> above happens long after the issue that caused the missing
->>>>> unpin. So... unless Dennis has a reproducer that can trigger
->>>>> the issue frequently, I don't think there's much that can
->>>>> be extracted from that.
->>>>
->>>> To be fair, I've only seen this one time and have had the performance regression
->>>> since -rc1.
->>>>
->>>>> Also "nfs: RPC call returned error 512" suggests someone
->>>>> hit ^C at some point. It's always possible that the
->>>>> xprt_rdma_free() path is missing an unpin. But again,
->>>>> that's not likely to be related to performance.
->>>>
->>>> I've checked our test code and after 10 minutes it does give up trying to do the
->>>> NFS copies and aborts (SIG_INT) the test.
->>>
->>> After sleeping on it, I'm fairly certain the stack trace
->>> above is a result of a gap in how xprtrdma handles a
->>> signaled RPC.
->>>
->>> Signal handling in that code is pretty hard to test, so not
->>> surprising that there's a lingering bug or two. One idea I
->>> had was to add a fault injector in the RPC scheduler to
->>> throw signals at random. I think it can be done without
->>> perturbing the hot path. Maybe I'll post an RFC patch.
->>>
->>>
->>>> So in all my tests and bisect attempts it seems the possibility to hit a slow
->>>> NFS operation that hangs for minutes has been possible for quite some time.
->>>> However in 5.18 it gets much worse.
->>>>
->>>> Any likely places I should add traces to try and find out what's stuck or taking
->>>> time?
->>>
->>> There's been a lot of churn in that area in recent releases,
->>> so I'm not familiar with the existing tracepoints. Maybe
->>> Ben or Trond could provide some guidance.
->>
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-> 
+ENOTMYMONKEYS ;-)
+
+I was involved to help with the ^C issue that happened while
+Dennis was troubleshooting. It's not related to the original
+regression, which needs to be pursued by the NFS client
+maintainers.
+
+The correct people to poke are Trond, Olga (both cc'd) and
+Anna Schumaker.
+
+
+--
+Chuck Lever
+
+
+
