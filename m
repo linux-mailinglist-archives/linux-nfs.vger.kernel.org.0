@@ -2,46 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCC5C551039
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 08:21:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A8765511C1
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 09:46:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238389AbiFTGVp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jun 2022 02:21:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49194 "EHLO
+        id S238584AbiFTHqu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jun 2022 03:46:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238791AbiFTGVc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 02:21:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B67FE003;
-        Sun, 19 Jun 2022 23:21:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 933E261115;
-        Mon, 20 Jun 2022 06:21:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D8DAC3411B;
-        Mon, 20 Jun 2022 06:21:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1655706079;
-        bh=V60KaGbasVpk+cXxKHu7gBBQdBX6C355r3WNY7DlSyc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=XORCUUJtpyvWO7LVv2QxnECWr5szrJkQlYjHOXocUt7+rBM94mGomEqUSZdqrF18J
-         +omCmk6H3CtC0zNH68/HSN5AHIE5z7nlpCHieJoYcR68CPhuNDNhne5A2jqCt81+e7
-         86s+HId8BOK+H//x4yG8RKMYNDzj38v87Qc/6mSOFiilX0g2FJAB9K7pCSGLekiATF
-         MhDWa6mF9e3w3JuMZ0/LVYWTxWlyPeUf2+K7qdqftTFD8g2chuQH3t7O+W89ozYPpp
-         gXn6vaGSYwGL8pfCsDU1klHtNyArbE45PwYgGM0J8HeT/b5UbGK9m2lplG4hllxV0y
-         J2zdPLQgWbFWg==
-Date:   Mon, 20 Jun 2022 14:21:14 +0800
-From:   Zorro Lang <zlang@kernel.org>
-To:     linux-nfs@vger.kernel.org
-Cc:     linux-xfs@vger.kernel.org, linux-mm@kvack.org
-Subject: [Bug report] fstests g/465 panic on NFS over XFS (linux v5.19-rc2+)
-Message-ID: <20220620062114.ixfkp7sr6rjd4ush@zlang-mailbox>
+        with ESMTP id S238369AbiFTHqt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 03:46:49 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56705FD39
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 00:46:48 -0700 (PDT)
+Received: from [2a02:8108:963f:de38:eca4:7d19:f9a2:22c5]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1o3C7P-0002Gc-KW; Mon, 20 Jun 2022 09:46:43 +0200
+Message-ID: <1fa761b5-8083-793c-1249-d84c6ee21872@leemhuis.info>
+Date:   Mon, 20 Jun 2022 09:46:43 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: NFS regression between 5.17 and 5.18
+Content-Language: en-US
+To:     Chuck Lever III <chuck.lever@oracle.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Olga Kornievskaia <aglo@umich.edu>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <979544aa-a7b1-ab22-678f-5ac19f03e17a@cornelisnetworks.com>
+ <8E8485F8-F56F-4A93-85AC-44BD8436DF6A@oracle.com>
+ <9d814666-6e95-e331-62a7-ec36fe1ca062@cornelisnetworks.com>
+ <04edca2f-d54f-4c52-9877-978bf48208fb@cornelisnetworks.com>
+ <ca84dc10f073284c9219808bb521201f246cf558.camel@hammerspace.com>
+ <bb2c7dec-dc34-6a14-044d-b6487c9e1018@cornelisnetworks.com>
+ <A04B2E88-9F29-4CF7-8ACB-1308100F1478@oracle.com>
+ <46beb079-fb43-a9c1-d9a0-9b66d5a36163@cornelisnetworks.com>
+ <9d3055f2-f751-71f4-1fc0-927817a07d99@cornelisnetworks.com>
+ <b2691e39ec13cd2b0d4f5e844f4474c8b82a13c8.camel@hammerspace.com>
+ <9D98FE64-80FB-43B7-9B1C-D177F32D2814@oracle.com>
+ <1573dd90-2031-c9e9-8d62-b3055b053cd1@cornelisnetworks.com>
+ <DA2DB426-6658-43CC-B331-C66B79BE8395@oracle.com>
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+In-Reply-To: <DA2DB426-6658-43CC-B331-C66B79BE8395@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1655711208;f00bda41;
+X-HE-SMSGID: 1o3C7P-0002Gc-KW
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -50,226 +57,115 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Dennis, Chuck, I have below issue on the list of tracked regressions.
+What's the status? Has any progress been made? Or is this not really a
+regression and can be ignored?
 
-I hit kernel panic and KASAN BUG [1] on NFS over XFS, I've left more details in
-bugzilla, refer to:
-https://bugzilla.kernel.org/show_bug.cgi?id=216151
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
 
-The kernel commit HEAD is 05c6ca8512f2722f57743d653bb68cf2a273a55a, which
-contains xfs-5.19-fixes-1.
+P.S.: As the Linux kernel's regression tracker I deal with a lot of
+reports and sometimes miss something important when writing mails like
+this. If that's the case here, don't hesitate to tell me in a public
+reply, it's in everyone's interest to set the public record straight.
 
-Not sure if it's NFS or XFS issue, so cc both mail list.
+#regzbot poke
+##regzbot unlink: https://bugzilla.kernel.org/show_bug.cgi?id=215890
 
-Thanks,
-Zorro
+On 17.05.22 16:02, Chuck Lever III wrote:
+>> On May 17, 2022, at 9:40 AM, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com> wrote:
+>>
+>> On 5/13/22 10:59 AM, Chuck Lever III wrote:
+>>>>>
+>>>>> Ran a test with -rc6 and this time see a hung task trace on the
+>>>>> console as well
+>>>>> as an NFS RPC error.
+>>>>>
+>>>>> [32719.991175] nfs: RPC call returned error 512
+>>>>> .
+>>>>> .
+>>>>> .
+>>>>> [32933.285126] INFO: task kworker/u145:23:886141 blocked for more
+>>>>> than 122 seconds.
+>>>>> [32933.293543]       Tainted: G S                5.18.0-rc6 #1
+>>>>> [32933.299869] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+>>>>> disables this
+>>>>> message.
+>>>>> [32933.308740] task:kworker/u145:23 state:D stack:    0 pid:886141
+>>>>> ppid:     2
+>>>>> flags:0x00004000
+>>>>> [32933.318321] Workqueue: rpciod rpc_async_schedule [sunrpc]
+>>>>> [32933.324524] Call Trace:
+>>>>> [32933.327347]  <TASK>
+>>>>> [32933.329785]  __schedule+0x3dd/0x970
+>>>>> [32933.333783]  schedule+0x41/0xa0
+>>>>> [32933.337388]  xprt_request_dequeue_xprt+0xd1/0x140 [sunrpc]
+>>>>> [32933.343639]  ? prepare_to_wait+0xd0/0xd0
+>>>>> [32933.348123]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
+>>>>> [32933.354183]  xprt_release+0x26/0x140 [sunrpc]
+>>>>> [32933.359168]  ? rpc_destroy_wait_queue+0x10/0x10 [sunrpc]
+>>>>> [32933.365225]  rpc_release_resources_task+0xe/0x50 [sunrpc]
+>>>>> [32933.371381]  __rpc_execute+0x2c5/0x4e0 [sunrpc]
+>>>>> [32933.376564]  ? __switch_to_asm+0x42/0x70
+>>>>> [32933.381046]  ? finish_task_switch+0xb2/0x2c0
+>>>>> [32933.385918]  rpc_async_schedule+0x29/0x40 [sunrpc]
+>>>>> [32933.391391]  process_one_work+0x1c8/0x390
+>>>>> [32933.395975]  worker_thread+0x30/0x360
+>>>>> [32933.400162]  ? process_one_work+0x390/0x390
+>>>>> [32933.404931]  kthread+0xd9/0x100
+>>>>> [32933.408536]  ? kthread_complete_and_exit+0x20/0x20
+>>>>> [32933.413984]  ret_from_fork+0x22/0x30
+>>>>> [32933.418074]  </TASK>
+>>>>>
+>>>>> The call trace shows up again at 245, 368, and 491 seconds. Same
+>>>>> task, same trace.
+>>>>>
+>>>>>
+>>>>>
+>>>>>
+>>>>
+>>>> That's very helpful. The above trace suggests that the RDMA code is
+>>>> leaking a call to xprt_unpin_rqst().
+>>>
+>>> IMHO this is unlikely to be related to the performance
+>>> regression -- none of this code has changed in the past 5
+>>> kernel releases. Could be a different issue, though.
+>>>
+>>> As is often the case in these situations, the INFO trace
+>>> above happens long after the issue that caused the missing
+>>> unpin. So... unless Dennis has a reproducer that can trigger
+>>> the issue frequently, I don't think there's much that can
+>>> be extracted from that.
+>>
+>> To be fair, I've only seen this one time and have had the performance regression
+>> since -rc1.
+>>
+>>> Also "nfs: RPC call returned error 512" suggests someone
+>>> hit ^C at some point. It's always possible that the
+>>> xprt_rdma_free() path is missing an unpin. But again,
+>>> that's not likely to be related to performance.
+>>
+>> I've checked our test code and after 10 minutes it does give up trying to do the
+>> NFS copies and aborts (SIG_INT) the test.
+> 
+> After sleeping on it, I'm fairly certain the stack trace
+> above is a result of a gap in how xprtrdma handles a
+> signaled RPC.
+> 
+> Signal handling in that code is pretty hard to test, so not
+> surprising that there's a lingering bug or two. One idea I
+> had was to add a fault injector in the RPC scheduler to
+> throw signals at random. I think it can be done without
+> perturbing the hot path. Maybe I'll post an RFC patch.
+> 
+> 
+>> So in all my tests and bisect attempts it seems the possibility to hit a slow
+>> NFS operation that hangs for minutes has been possible for quite some time.
+>> However in 5.18 it gets much worse.
+>>
+>> Any likely places I should add traces to try and find out what's stuck or taking
+>> time?
+> 
+> There's been a lot of churn in that area in recent releases,
+> so I'm not familiar with the existing tracepoints. Maybe
+> Ben or Trond could provide some guidance.
 
-
-
-[1]
-[26844.323108] run fstests generic/465 at 2022-06-20 00:24:32 
-[26847.872804] ================================================================== 
-[26847.872854] BUG: KASAN: use-after-free in _copy_to_iter+0x694/0xd0c 
-[26847.872992] Write of size 16 at addr ffff2fb1d4013000 by task nfsd/45920 
-[26847.872999]  
-[26847.873083] CPU: 0 PID: 45920 Comm: nfsd Kdump: loaded Not tainted 5.19.0-rc2+ #1 
-[26847.873090] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015 
-[26847.873094] Call trace: 
-[26847.873174]  dump_backtrace+0x1e0/0x26c 
-[26847.873198]  show_stack+0x1c/0x70 
-[26847.873203]  dump_stack_lvl+0x98/0xd0 
-[26847.873262]  print_address_description.constprop.0+0x74/0x420 
-[26847.873285]  print_report+0xc8/0x234 
-[26847.873290]  kasan_report+0xb0/0xf0 
-[26847.873294]  kasan_check_range+0xf4/0x1a0 
-[26847.873298]  memcpy+0xdc/0x100 
-[26847.873303]  _copy_to_iter+0x694/0xd0c 
-[26847.873307]  copy_page_to_iter+0x3f0/0xb30 
-[26847.873311]  filemap_read+0x3e8/0x7e0 
-[26847.873319]  generic_file_read_iter+0x2b0/0x404 
-[26847.873324]  xfs_file_buffered_read+0x18c/0x4e0 [xfs] 
-[26847.873854]  xfs_file_read_iter+0x260/0x514 [xfs] 
-[26847.874168]  do_iter_readv_writev+0x338/0x4b0 
-[26847.874176]  do_iter_read+0x120/0x374 
-[26847.874180]  vfs_iter_read+0x5c/0xa0 
-[26847.874185]  nfsd_readv+0x1a0/0x9ac [nfsd] 
-[26847.874308]  nfsd4_encode_read_plus_data+0x2f0/0x690 [nfsd] 
-[26847.874387]  nfsd4_encode_read_plus+0x344/0x924 [nfsd] 
-[26847.874468]  nfsd4_encode_operation+0x1fc/0x800 [nfsd] 
-[26847.874544]  nfsd4_proc_compound+0x9c4/0x2364 [nfsd] 
-[26847.874620]  nfsd_dispatch+0x3a4/0x67c [nfsd] 
-[26847.874697]  svc_process_common+0xd54/0x1be0 [sunrpc] 
-[26847.874921]  svc_process+0x298/0x484 [sunrpc] 
-[26847.875063]  nfsd+0x2b0/0x580 [nfsd] 
-[26847.875143]  kthread+0x230/0x294 
-[26847.875170]  ret_from_fork+0x10/0x20 
-[26847.875178]  
-[26847.875180] Allocated by task 602477: 
-[26847.875185]  kasan_save_stack+0x28/0x50 
-[26847.875191]  __kasan_slab_alloc+0x68/0x90 
-[26847.875195]  kmem_cache_alloc+0x180/0x394 
-[26847.875199]  security_inode_alloc+0x30/0x120 
-[26847.875221]  inode_init_always+0x49c/0xb1c 
-[26847.875228]  alloc_inode+0x70/0x1c0 
-[26847.875232]  new_inode+0x20/0x230 
-[26847.875236]  debugfs_create_dir+0x74/0x48c 
-[26847.875243]  rpc_clnt_debugfs_register+0xd0/0x174 [sunrpc] 
-[26847.875384]  rpc_client_register+0x90/0x4c4 [sunrpc] 
-[26847.875526]  rpc_new_client+0x6e0/0x1260 [sunrpc] 
-[26847.875666]  __rpc_clone_client+0x158/0x7d4 [sunrpc] 
-[26847.875831]  rpc_clone_client+0x168/0x1dc [sunrpc] 
-[26847.875972]  nfs4_proc_lookup_mountpoint+0x180/0x1f0 [nfsv4] 
-[26847.876149]  nfs4_submount+0xcc/0x6cc [nfsv4] 
-[26847.876251]  nfs_d_automount+0x4b4/0x7bc [nfs] 
-[26847.876389]  __traverse_mounts+0x180/0x4a0 
-[26847.876396]  step_into+0x510/0x940 
-[26847.876400]  walk_component+0xf0/0x510 
-[26847.876405]  link_path_walk.part.0.constprop.0+0x4c0/0xa3c 
-[26847.876410]  path_lookupat+0x6c/0x57c 
-[26847.876436]  filename_lookup+0x13c/0x400 
-[26847.876440]  vfs_path_lookup+0xa0/0xec 
-[26847.876445]  mount_subtree+0x1c4/0x380 
-[26847.876451]  do_nfs4_mount+0x3c0/0x770 [nfsv4] 
-[26847.876554]  nfs4_try_get_tree+0xc0/0x24c [nfsv4] 
-[26847.876653]  nfs_get_tree+0xc0/0x110 [nfs] 
-[26847.876742]  vfs_get_tree+0x78/0x2a0 
-[26847.876748]  do_new_mount+0x228/0x4fc 
-[26847.876753]  path_mount+0x268/0x16d4 
-[26847.876757]  __arm64_sys_mount+0x1dc/0x240 
-[26847.876762]  invoke_syscall.constprop.0+0xd8/0x1d0 
-[26847.876769]  el0_svc_common.constprop.0+0x224/0x2bc 
-[26847.876774]  do_el0_svc+0x4c/0x90 
-[26847.876778]  el0_svc+0x5c/0x140 
-[26847.876785]  el0t_64_sync_handler+0xb4/0x130 
-[26847.876789]  el0t_64_sync+0x174/0x178 
-[26847.876793]  
-[26847.876794] Last potentially related work creation: 
-[26847.876797]  kasan_save_stack+0x28/0x50 
-[26847.876802]  __kasan_record_aux_stack+0x9c/0xc0 
-[26847.876806]  kasan_record_aux_stack_noalloc+0x10/0x20 
-[26847.876811]  call_rcu+0xf8/0x6c0 
-[26847.876818]  security_inode_free+0x94/0xc0 
-[26847.876823]  __destroy_inode+0xb0/0x420 
-[26847.876828]  destroy_inode+0x80/0x170 
-[26847.876832]  evict+0x334/0x4c0 
-[26847.876836]  iput_final+0x138/0x364 
-[26847.876841]  iput.part.0+0x330/0x47c 
-[26847.876845]  iput+0x44/0x60 
-[26847.876849]  dentry_unlink_inode+0x200/0x43c 
-[26847.876853]  __dentry_kill+0x29c/0x56c 
-[26847.876857]  dput+0x41c/0x870 
-[26847.876860]  simple_recursive_removal+0x4ac/0x630 
-[26847.876865]  debugfs_remove+0x5c/0x80 
-[26847.876870]  rpc_clnt_debugfs_unregister+0x3c/0x7c [sunrpc] 
-[26847.877011]  rpc_free_client_work+0xdc/0x480 [sunrpc] 
-[26847.877154]  process_one_work+0x794/0x184c 
-[26847.877161]  worker_thread+0x3d4/0xc40 
-[26847.877165]  kthread+0x230/0x294 
-[26847.877168]  ret_from_fork+0x10/0x20 
-[26847.877172]  
-[26847.877174] Second to last potentially related work creation: 
-[26847.877177]  kasan_save_stack+0x28/0x50 
-[26847.877181]  __kasan_record_aux_stack+0x9c/0xc0 
-[26847.877185]  kasan_record_aux_stack_noalloc+0x10/0x20 
-[26847.877190]  call_rcu+0xf8/0x6c0 
-[26847.877195]  security_inode_free+0x94/0xc0 
-[26847.877200]  __destroy_inode+0xb0/0x420 
-[26847.877205]  destroy_inode+0x80/0x170 
-[26847.877209]  evict+0x334/0x4c0 
-[26847.877213]  iput_final+0x138/0x364 
-[26847.877217]  iput.part.0+0x330/0x47c 
-[26847.877221]  iput+0x44/0x60 
-[26847.877226]  dentry_unlink_inode+0x200/0x43c 
-[26847.877229]  __dentry_kill+0x29c/0x56c 
-[26847.877233]  dput+0x44c/0x870 
-[26847.877237]  __fput+0x244/0x730 
-[26847.877241]  ____fput+0x14/0x20 
-[26847.877245]  task_work_run+0xd0/0x240 
-[26847.877250]  do_exit+0x3a0/0xaac 
-[26847.877256]  do_group_exit+0xac/0x244 
-[26847.877260]  __arm64_sys_exit_group+0x40/0x4c 
-[26847.877264]  invoke_syscall.constprop.0+0xd8/0x1d0 
-[26847.877270]  el0_svc_common.constprop.0+0x224/0x2bc 
-[26847.877275]  do_el0_svc+0x4c/0x90 
-[26847.877280]  el0_svc+0x5c/0x140 
-[26847.877284]  el0t_64_sync_handler+0xb4/0x130 
-[26847.877288]  el0t_64_sync+0x174/0x178 
-[26847.877292]  
-[26847.877293] The buggy address belongs to the object at ffff2fb1d4013000 
-[26847.877293]  which belongs to the cache lsm_inode_cache of size 128 
-[26847.877298] The buggy address is located 0 bytes inside of 
-[26847.877298]  128-byte region [ffff2fb1d4013000, ffff2fb1d4013080) 
-[26847.877302]  
-[26847.877304] The buggy address belongs to the physical page: 
-[26847.877308] page:000000007bc4a504 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff2fb1d4013000 pfn:0x154013 
-[26847.877363] flags: 0x17ffff800000200(slab|node=0|zone=2|lastcpupid=0xfffff) 
-[26847.877375] raw: 017ffff800000200 fffffcbec6646688 fffffcbec750d708 ffff2fb1808dfe00 
-[26847.877379] raw: ffff2fb1d4013000 0000000000150010 00000001ffffffff 0000000000000000 
-[26847.877382] page dumped because: kasan: bad access detected 
-[26847.877384]  
-[26847.877385] Memory state around the buggy address: 
-[26847.877389]  ffff2fb1d4012f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-[26847.877392]  ffff2fb1d4012f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
-[26847.877395] >ffff2fb1d4013000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb 
-[26847.877397]                    ^ 
-[26847.877400]  ffff2fb1d4013080: fc fc fc fc fc fc fc fc fa fb fb fb fb fb fb fb 
-[26847.877402]  ffff2fb1d4013100: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc 
-[26847.877405] ================================================================== 
-[26847.877570] Disabling lock debugging due to kernel taint 
-[26848.391268] Unable to handle kernel write to read-only memory at virtual address ffff2fb197f76000 
-[26848.393628] KASAN: maybe wild-memory-access in range [0xfffd7d8cbfbb0000-0xfffd7d8cbfbb0007] 
-[26848.395572] Mem abort info: 
-[26848.396408]   ESR = 0x000000009600004f 
-[26848.397314]   EC = 0x25: DABT (current EL), IL = 32 bits 
-[26848.398520]   SET = 0, FnV = 0 
-[26848.506889]   EA = 0, S1PTW = 0 
-[26848.507633]   FSC = 0x0f: level 3 permission fault 
-[26848.508802] Data abort info: 
-[26848.509480]   ISV = 0, ISS = 0x0000004f 
-[26848.510347]   CM = 0, WnR = 1 
-[26848.511032] swapper pgtable: 4k pages, 48-bit VAs, pgdp=00000000b22dd000 
-[26848.512543] [ffff2fb197f76000] pgd=18000001bfff8003, p4d=18000001bfff8003, pud=18000001bfa08003, pmd=18000001bf948003, pte=0060000117f76f87 
-[26848.515600] Internal error: Oops: 9600004f [#1] SMP 
-[26848.516870] Modules linked in: loop dm_mod tls rpcsec_gss_krb5 nfsv4 dns_resolver nfs fscache netfs rpcrdma rdma_cm iw_cm ib_cm ib_core nfsd auth_rpcgss nfs_acl lockd grace rfkill sunrpc vfat fat drm fuse xfs libcrc32c crct10dif_ce ghash_ce sha2_ce sha256_arm64 sha1_ce virtio_blk virtio_net virtio_console net_failover failover virtio_mmio ipmi_devintf ipmi_msghandler 
-[26848.525472] CPU: 1 PID: 45919 Comm: nfsd Kdump: loaded Tainted: G    B             5.19.0-rc2+ #1 
-[26848.527934] Hardware name: QEMU KVM Virtual Machine, BIOS 0.0.0 02/06/2015 
-[26848.529819] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--) 
-[26848.531625] pc : __memcpy+0x2c/0x230 
-[26848.532583] lr : memcpy+0xa8/0x100 
-[26848.533497] sp : ffff80000bbb6f00 
-[26848.534444] x29: ffff80000bbb6f00 x28: 0000000000000000 x27: ffff2fb18a4bd5b8 
-[26848.536435] x26: 0000000000000000 x25: ffff80000bbb7740 x24: ffff2fb18a4bd5b0 
-[26848.538283] x23: ffff2fb1ee80bff0 x22: ffffa83e4692e000 x21: ffffa83e434ae3e8 
-[26848.540181] x20: ffff2fb197f76000 x19: 0000000000000010 x18: ffff2fb1d3c34530 
-[26848.542071] x17: 0000000000000000 x16: ffffa83e42d01a30 x15: 6161616161616161 
-[26848.543840] x14: 6161616161616161 x13: 6161616161616161 x12: 6161616161616161 
-[26848.545614] x11: 1fffe5f632feec01 x10: ffff65f632feec01 x9 : dfff800000000000 
-[26848.547387] x8 : ffff2fb197f7600f x7 : 6161616161616161 x6 : 6161616161616161 
-[26848.549156] x5 : ffff2fb197f76010 x4 : ffff2fb1ee80c000 x3 : ffffa83e434ae3e8 
-[26848.550924] x2 : 0000000000000010 x1 : ffff2fb1ee80bff0 x0 : ffff2fb197f76000 
-[26848.552694] Call trace: 
-[26848.553314]  __memcpy+0x2c/0x230 
-[26848.554123]  _copy_to_iter+0x694/0xd0c 
-[26848.555084]  copy_page_to_iter+0x3f0/0xb30 
-[26848.556104]  filemap_read+0x3e8/0x7e0 
-[26848.557020]  generic_file_read_iter+0x2b0/0x404 
-[26848.558152]  xfs_file_buffered_read+0x18c/0x4e0 [xfs] 
-[26848.559795]  xfs_file_read_iter+0x260/0x514 [xfs] 
-[26848.561265]  do_iter_readv_writev+0x338/0x4b0 
-[26848.562346]  do_iter_read+0x120/0x374 
-[26848.563263]  vfs_iter_read+0x5c/0xa0 
-[26848.564162]  nfsd_readv+0x1a0/0x9ac [nfsd] 
-[26848.565415]  nfsd4_encode_read_plus_data+0x2f0/0x690 [nfsd] 
-[26848.566869]  nfsd4_encode_read_plus+0x344/0x924 [nfsd] 
-[26848.568231]  nfsd4_encode_operation+0x1fc/0x800 [nfsd] 
-[26848.569596]  nfsd4_proc_compound+0x9c4/0x2364 [nfsd] 
-[26848.570908]  nfsd_dispatch+0x3a4/0x67c [nfsd] 
-[26848.572067]  svc_process_common+0xd54/0x1be0 [sunrpc] 
-[26848.573508]  svc_process+0x298/0x484 [sunrpc] 
-[26848.574743]  nfsd+0x2b0/0x580 [nfsd] 
-[26848.575718]  kthread+0x230/0x294 
-[26848.576528]  ret_from_fork+0x10/0x20 
-[26848.577421] Code: f100405f 540000c3 a9401c26 a97f348c (a9001c06)  
-[26848.578934] SMP: stopping secondary CPUs 
-[26848.582664] Starting crashdump kernel... 
-[26848.583602] Bye!
