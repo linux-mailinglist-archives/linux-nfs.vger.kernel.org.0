@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D065520BE
-	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 17:27:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E309A5520C7
+	for <lists+linux-nfs@lfdr.de>; Mon, 20 Jun 2022 17:27:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244612AbiFTPZ6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 20 Jun 2022 11:25:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53412 "EHLO
+        id S243890AbiFTPZ4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 20 Jun 2022 11:25:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244387AbiFTPZY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 11:25:24 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25917E01
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 08:24:36 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id p63so8011543qkd.10
-        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 08:24:36 -0700 (PDT)
+        with ESMTP id S244756AbiFTPZZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 20 Jun 2022 11:25:25 -0400
+Received: from mail-qk1-x72f.google.com (mail-qk1-x72f.google.com [IPv6:2607:f8b0:4864:20::72f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51406E0F
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 08:24:37 -0700 (PDT)
+Received: by mail-qk1-x72f.google.com with SMTP id o73so8021181qke.7
+        for <linux-nfs@vger.kernel.org>; Mon, 20 Jun 2022 08:24:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1v4+ZxnCO/CE/1Ve4CstINsmXzqfmZHhiLoXQ2o8VjU=;
-        b=USIA4FATjAIuBhKYvhXGG17e1sUJiXT0qczEX1YtGZGayZJFIHzsjFj8oS7bcQRYmH
-         yTqzCX0ahE2Kw09KT/yzzDryzQWmu+DtsH23C/aau+VaLblBkHrNsLHShvRtutLINsHs
-         7yhxUlBykgxwojaVNdt5azwFnnU5mgeP5A15oaQ0D0vIB+7o3OYZ/IYG42+WXxp5vNnv
-         tU/11Hww5cyI5KxfWRSPgoM3+dQMPALp04EzQxQSVM88UlKkRQ4qcvmcPMmSfFHFdtZk
-         lPmFfylzbAseGaY9wwd95ut1Y/nSMgHblZWUY9iHvyiCohS7x9XaDwsVdnHuU9SJYT5o
-         YHDA==
+        bh=hiOpeOldRv5C+cpYA4d1f38bxNJH8q04syRxbARTC6c=;
+        b=ay0q7cQkXAZSzBhHJ6PnnFHvbGnGRbn/98lGjYuHobUzkyCUC4rGbB/P8Sag4HJe/M
+         dtEblkAw0cVd/SNbKj8mpkAqsSW7eV4E/nHxd6KhHhFwKnq/YWfiGLPUhEW3RH7zlxZz
+         K7oIUUaMnJOHwhaxDFPfuw9VknELrO95fjzKyRm3kAx3Zx5+V8Q0sQjoZ1hSwIG8MhRF
+         LBsdk4Di9HJ1y5MqlSIj/qwGGrmy1w2cubuyKxqVtt8gF5FZpHZ5AyJyG6KIFeZAZH+r
+         C2heJ2g4fczXx+UmTyJARIKcyBQ+v/D5FV8NmUMArNUWG0TcVxpNjxwoD8A0ky+Cj5sn
+         szGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1v4+ZxnCO/CE/1Ve4CstINsmXzqfmZHhiLoXQ2o8VjU=;
-        b=2fLiSECPLuXnrKmg8LMYVTJ4S+fj6VUU+pd3pGwfI+MksLlufmIjD1FQ/D4eWZw9gj
-         R57zExcIsHRtwkrVR2AEJ+ZQT3UGG5Rl/ey7iFyW6dodpaQRMhzRcfBe2zB3kGc2EsUF
-         frROuNFlqOO4cOCisH49pdqWsSDTcXqgADq/GMuCrJc54lqM/UR9MxzxE6mEJwUw+tR6
-         GjMrrakXkcIjATyFfHnjsoGKezbedIP4YVSg+arPT2GoIlFYJXjXYQBavXSBLGQiqAba
-         Aa7KEdOUxQVxb6sfSW+Rirqc9q4FlHw+ZIxpQcIvWRY6+h3VjeGnH3RnKaIVwCEYNAfw
-         OIEA==
-X-Gm-Message-State: AJIora+cuoGpMx7vd0Ex7KS9YLtq94k9Ov5MKme/1zAi9mCPqJY+cY2C
-        +RDmFZ7/4GdDksP8C6LDzSw=
-X-Google-Smtp-Source: AGRyM1uYkqucyK2wdRs2Eid57zuVLz44Y0MkJcnF6oQn/xBvwM1CsRfZLXwqqKEoXFFCijLpb2IKKg==
-X-Received: by 2002:a05:620a:142a:b0:6a6:8a05:f862 with SMTP id k10-20020a05620a142a00b006a68a05f862mr16519063qkj.11.1655738675218;
-        Mon, 20 Jun 2022 08:24:35 -0700 (PDT)
+        bh=hiOpeOldRv5C+cpYA4d1f38bxNJH8q04syRxbARTC6c=;
+        b=ceGZRpQeJRjIasAJ22R0AfJnXIct+cZS6o7fnKZZ4IBPA4UWHthF5FZhkrnZfC0+wg
+         CdsolL3WsSxC4bzB2Qy1k0z0sp8dnYyscifH7NNbg03Y/z11cAZ+LLnIGYrO7Lymvcg+
+         E+gli98dpZ/BwEvdNS0enoD+CajpV+brKeVwuqMSMcPZ+zX1O+/cWlEcuggei7jLT8zg
+         Kg0BqWnRM8eHqEAvdmeKOeUgv0sIw58yD88KhHv/4q3b4ifhNBCNfuwFj3HJwBfnPDij
+         k5tk7WmcbK4ul6NbpD0BfsEGfpj9SdSYXT8Owxw4hqVnZNPeJWcQ3Sp4VIj9LMBLH03u
+         MALg==
+X-Gm-Message-State: AJIora+O3EXz4pqv1zjOFk156Nb5tg9X0PiP6sUYBtTgceir4qZamJvB
+        w4GBqO3r1gyx63cIB+AyHTmYQDB87EjGPw==
+X-Google-Smtp-Source: AGRyM1uOOjjPjbihuV+Uc9iy/l+cY1LRtZVrLOXieSegrvr0XwQpeoNsVPOF3f0eYtGIC4lMqq+ZhQ==
+X-Received: by 2002:a05:620a:1b98:b0:6a7:7e6d:d886 with SMTP id dv24-20020a05620a1b9800b006a77e6dd886mr16934958qkb.595.1655738676423;
+        Mon, 20 Jun 2022 08:24:36 -0700 (PDT)
 Received: from kolga-mac-1.attlocal.net ([2600:1700:6a10:2e90:48cb:6eb8:1da1:a5c0])
-        by smtp.gmail.com with ESMTPSA id g10-20020a05620a40ca00b006a791a42693sm12517862qko.133.2022.06.20.08.24.34
+        by smtp.gmail.com with ESMTPSA id g10-20020a05620a40ca00b006a791a42693sm12517862qko.133.2022.06.20.08.24.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jun 2022 08:24:34 -0700 (PDT)
+        Mon, 20 Jun 2022 08:24:35 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v1 04/12] SUNRPC create an iterator to list only OFFLINE xprts
-Date:   Mon, 20 Jun 2022 11:23:59 -0400
-Message-Id: <20220620152407.63127-5-olga.kornievskaia@gmail.com>
+Subject: [PATCH v1 05/12] SUNRPC parameterize rpc_clnt_iterate_for_each_xprt with iterator init function
+Date:   Mon, 20 Jun 2022 11:24:00 -0400
+Message-Id: <20220620152407.63127-6-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20220620152407.63127-1-olga.kornievskaia@gmail.com>
 References: <20220620152407.63127-1-olga.kornievskaia@gmail.com>
@@ -70,260 +70,139 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Olga Kornievskaia <kolga@netapp.com>
 
-Create a new iterator helper that will go thru the all the transports
-in the switch and return transports that are marked OFFLINE.
+Allow for rpc_clnt_iterate_for_each_xprt() to take in an iterator
+initialization function if no function passed in a default initiator
+is used.
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- include/linux/sunrpc/xprtmultipath.h |  3 +
- net/sunrpc/clnt.c                    | 19 +++++-
- net/sunrpc/xprtmultipath.c           | 98 +++++++++++++++++++++++++---
- 3 files changed, 108 insertions(+), 12 deletions(-)
+ fs/nfs/nfs4proc.c           |  2 +-
+ include/linux/sunrpc/clnt.h |  1 +
+ net/sunrpc/clnt.c           | 17 ++++++++++++-----
+ net/sunrpc/debugfs.c        |  2 +-
+ net/sunrpc/stats.c          |  2 +-
+ 5 files changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
-index bbb8a5fa0816..688ca7eb1d01 100644
---- a/include/linux/sunrpc/xprtmultipath.h
-+++ b/include/linux/sunrpc/xprtmultipath.h
-@@ -63,6 +63,9 @@ extern void xprt_iter_init(struct rpc_xprt_iter *xpi,
- extern void xprt_iter_init_listall(struct rpc_xprt_iter *xpi,
- 		struct rpc_xprt_switch *xps);
- 
-+extern void xprt_iter_init_listoffline(struct rpc_xprt_iter *xpi,
-+		struct rpc_xprt_switch *xps);
-+
- extern void xprt_iter_destroy(struct rpc_xprt_iter *xpi);
- 
- extern struct rpc_xprt_switch *xprt_iter_xchg_switch(
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 544b55a3aa20..410bd6c352ad 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -785,7 +785,9 @@ int rpc_switch_client_transport(struct rpc_clnt *clnt,
- EXPORT_SYMBOL_GPL(rpc_switch_client_transport);
- 
- static
--int rpc_clnt_xprt_iter_init(struct rpc_clnt *clnt, struct rpc_xprt_iter *xpi)
-+int _rpc_clnt_xprt_iter_init(struct rpc_clnt *clnt, struct rpc_xprt_iter *xpi,
-+		void func(struct rpc_xprt_iter *xpi,
-+			  struct rpc_xprt_switch *xps))
- {
- 	struct rpc_xprt_switch *xps;
- 
-@@ -794,11 +796,24 @@ int rpc_clnt_xprt_iter_init(struct rpc_clnt *clnt, struct rpc_xprt_iter *xpi)
- 	rcu_read_unlock();
- 	if (xps == NULL)
- 		return -EAGAIN;
--	xprt_iter_init_listall(xpi, xps);
-+	func(xpi, xps);
- 	xprt_switch_put(xps);
- 	return 0;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index cf898bea3bfd..5e4c32924347 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -8532,7 +8532,7 @@ int nfs4_proc_bind_conn_to_session(struct nfs_client *clp, const struct cred *cr
+ 		.clp = clp,
+ 		.cred = cred,
+ 	};
+-	return rpc_clnt_iterate_for_each_xprt(clp->cl_rpcclient,
++	return rpc_clnt_iterate_for_each_xprt(clp->cl_rpcclient, NULL,
+ 			nfs4_proc_bind_conn_to_session_callback, &data);
  }
  
-+static
-+int rpc_clnt_xprt_iter_init(struct rpc_clnt *clnt, struct rpc_xprt_iter *xpi)
-+{
-+	return _rpc_clnt_xprt_iter_init(clnt, xpi, xprt_iter_init_listall);
-+}
-+
-+static
-+int rpc_clnt_xprt_iter_offline_init(struct rpc_clnt *clnt,
-+				    struct rpc_xprt_iter *xpi)
-+{
-+	return _rpc_clnt_xprt_iter_init(clnt, xpi, xprt_iter_init_listoffline);
-+}
-+
+diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
+index e74a0740603b..20aed14fe222 100644
+--- a/include/linux/sunrpc/clnt.h
++++ b/include/linux/sunrpc/clnt.h
+@@ -213,6 +213,7 @@ const char	*rpc_peeraddr2str(struct rpc_clnt *, enum rpc_display_format_t);
+ int		rpc_localaddr(struct rpc_clnt *, struct sockaddr *, size_t);
+ 
+ int 		rpc_clnt_iterate_for_each_xprt(struct rpc_clnt *clnt,
++			int (*setup)(struct rpc_clnt *, struct rpc_xprt_iter *),
+ 			int (*fn)(struct rpc_clnt *, struct rpc_xprt *, void *),
+ 			void *data);
+ 
+diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
+index 410bd6c352ad..b26267606de0 100644
+--- a/net/sunrpc/clnt.c
++++ b/net/sunrpc/clnt.c
+@@ -817,6 +817,8 @@ int rpc_clnt_xprt_iter_offline_init(struct rpc_clnt *clnt,
  /**
   * rpc_clnt_iterate_for_each_xprt - Apply a function to all transports
   * @clnt: pointer to client
-diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
-index 1693f81aae37..4374cd6acc55 100644
---- a/net/sunrpc/xprtmultipath.c
-+++ b/net/sunrpc/xprtmultipath.c
-@@ -27,6 +27,7 @@ typedef struct rpc_xprt *(*xprt_switch_find_xprt_t)(struct rpc_xprt_switch *xps,
- static const struct rpc_xprt_iter_ops rpc_xprt_iter_singular;
- static const struct rpc_xprt_iter_ops rpc_xprt_iter_roundrobin;
- static const struct rpc_xprt_iter_ops rpc_xprt_iter_listall;
-+static const struct rpc_xprt_iter_ops rpc_xprt_iter_listoffline;
- 
- static void xprt_switch_add_xprt_locked(struct rpc_xprt_switch *xps,
- 		struct rpc_xprt *xprt)
-@@ -248,6 +249,18 @@ struct rpc_xprt *xprt_switch_find_first_entry(struct list_head *head)
- 	return NULL;
- }
- 
-+static
-+struct rpc_xprt *xprt_switch_find_first_entry_offline(struct list_head *head)
-+{
-+	struct rpc_xprt *pos;
-+
-+	list_for_each_entry_rcu(pos, head, xprt_switch) {
-+		if (!xprt_is_active(pos))
-+			return pos;
-+	}
-+	return NULL;
-+}
-+
- static
- struct rpc_xprt *xprt_iter_first_entry(struct rpc_xprt_iter *xpi)
++ * @setup: an optional iterator init function to use, if none supplied
++ *   default rpc_clnt_xprt_iter_init() iterator is used
+  * @fn: function to apply
+  * @data: void pointer to function data
+  *
+@@ -826,13 +828,17 @@ int rpc_clnt_xprt_iter_offline_init(struct rpc_clnt *clnt,
+  * On error, the iteration stops, and the function returns the error value.
+  */
+ int rpc_clnt_iterate_for_each_xprt(struct rpc_clnt *clnt,
++		int (*setup)(struct rpc_clnt *, struct rpc_xprt_iter *),
+ 		int (*fn)(struct rpc_clnt *, struct rpc_xprt *, void *),
+ 		void *data)
  {
-@@ -259,8 +272,8 @@ struct rpc_xprt *xprt_iter_first_entry(struct rpc_xprt_iter *xpi)
- }
+ 	struct rpc_xprt_iter xpi;
+ 	int ret;
  
- static
--struct rpc_xprt *xprt_switch_find_current_entry(struct list_head *head,
--		const struct rpc_xprt *cur)
-+struct rpc_xprt *_xprt_switch_find_current_entry(struct list_head *head,
-+		const struct rpc_xprt *cur, bool find_active)
- {
- 	struct rpc_xprt *pos;
- 	bool found = false;
-@@ -268,14 +281,25 @@ struct rpc_xprt *xprt_switch_find_current_entry(struct list_head *head,
- 	list_for_each_entry_rcu(pos, head, xprt_switch) {
- 		if (cur == pos)
- 			found = true;
--		if (found && xprt_is_active(pos))
-+		if (found && ((find_active && xprt_is_active(pos)) ||
-+				(!find_active && xprt_is_active(pos))))
- 			return pos;
- 	}
- 	return NULL;
- }
- 
- static
--struct rpc_xprt *xprt_iter_current_entry(struct rpc_xprt_iter *xpi)
-+struct rpc_xprt *xprt_switch_find_current_entry(struct list_head *head,
-+		const struct rpc_xprt *cur)
-+{
-+	return _xprt_switch_find_current_entry(head, cur, true);
-+}
-+
-+static
-+struct rpc_xprt * _xprt_iter_current_entry(struct rpc_xprt_iter *xpi,
-+		struct rpc_xprt *first_entry(struct list_head *head),
-+		struct rpc_xprt *current_entry(struct list_head *head,
-+		const struct rpc_xprt *cur))
- {
- 	struct rpc_xprt_switch *xps = rcu_dereference(xpi->xpi_xpswitch);
- 	struct list_head *head;
-@@ -284,8 +308,30 @@ struct rpc_xprt *xprt_iter_current_entry(struct rpc_xprt_iter *xpi)
- 		return NULL;
- 	head = &xps->xps_xprt_list;
- 	if (xpi->xpi_cursor == NULL || xps->xps_nxprts < 2)
--		return xprt_switch_find_first_entry(head);
--	return xprt_switch_find_current_entry(head, xpi->xpi_cursor);
-+		return first_entry(head);
-+	return current_entry(head, xpi->xpi_cursor);
-+}
-+
-+static
-+struct rpc_xprt *xprt_iter_current_entry(struct rpc_xprt_iter *xpi)
-+{
-+	return _xprt_iter_current_entry(xpi, xprt_switch_find_first_entry,
-+			xprt_switch_find_current_entry);
-+}
-+
-+static
-+struct rpc_xprt *xprt_switch_find_current_entry_offline(struct list_head *head,
-+		const struct rpc_xprt *cur)
-+{
-+	return _xprt_switch_find_current_entry(head, cur, false);
-+}
-+
-+static
-+struct rpc_xprt *xprt_iter_current_entry_offline(struct rpc_xprt_iter *xpi)
-+{
-+	return _xprt_iter_current_entry(xpi,
-+			xprt_switch_find_first_entry_offline,
-+			xprt_switch_find_current_entry_offline);
- }
- 
- bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
-@@ -310,7 +356,7 @@ bool rpc_xprt_switch_has_addr(struct rpc_xprt_switch *xps,
- 
- static
- struct rpc_xprt *xprt_switch_find_next_entry(struct list_head *head,
--		const struct rpc_xprt *cur)
-+		const struct rpc_xprt *cur, bool check_active)
- {
- 	struct rpc_xprt *pos, *prev = NULL;
- 	bool found = false;
-@@ -318,7 +364,12 @@ struct rpc_xprt *xprt_switch_find_next_entry(struct list_head *head,
- 	list_for_each_entry_rcu(pos, head, xprt_switch) {
- 		if (cur == prev)
- 			found = true;
--		if (found && xprt_is_active(pos))
-+		/* for request to return active transports return only
-+		 * active, for request to return offline transports
-+		 * return only offline
-+		 */
-+		if (found && ((check_active && xprt_is_active(pos)) ||
-+			      (!check_active && !xprt_is_active(pos))))
- 			return pos;
- 		prev = pos;
- 	}
-@@ -355,7 +406,7 @@ struct rpc_xprt *__xprt_switch_find_next_entry_roundrobin(struct list_head *head
- {
- 	struct rpc_xprt *ret;
- 
--	ret = xprt_switch_find_next_entry(head, cur);
-+	ret = xprt_switch_find_next_entry(head, cur, true);
- 	if (ret != NULL)
+-	ret = rpc_clnt_xprt_iter_init(clnt, &xpi);
++	if (!setup)
++		ret = rpc_clnt_xprt_iter_init(clnt, &xpi);
++	else
++		ret = setup(clnt, &xpi);
+ 	if (ret)
  		return ret;
- 	return xprt_switch_find_first_entry(head);
-@@ -397,7 +448,14 @@ static
- struct rpc_xprt *xprt_switch_find_next_entry_all(struct rpc_xprt_switch *xps,
- 		const struct rpc_xprt *cur)
+ 	for (;;) {
+@@ -3052,7 +3058,8 @@ static int rpc_xprt_offline_destroy(struct rpc_clnt *clnt,
+ 
+ void rpc_clnt_manage_trunked_xprts(struct rpc_clnt *clnt, void *data)
  {
--	return xprt_switch_find_next_entry(&xps->xps_xprt_list, cur);
-+	return xprt_switch_find_next_entry(&xps->xps_xprt_list, cur, true);
-+}
-+
-+static
-+struct rpc_xprt *xprt_switch_find_next_entry_offline(struct rpc_xprt_switch *xps,
-+		const struct rpc_xprt *cur)
-+{
-+	return xprt_switch_find_next_entry(&xps->xps_xprt_list, cur, false);
+-	rpc_clnt_iterate_for_each_xprt(clnt, rpc_xprt_offline_destroy, data);
++	rpc_clnt_iterate_for_each_xprt(clnt, NULL, rpc_xprt_offline_destroy,
++			data);
+ }
+ EXPORT_SYMBOL_GPL(rpc_clnt_manage_trunked_xprts);
+ 
+@@ -3084,7 +3091,7 @@ rpc_set_connect_timeout(struct rpc_clnt *clnt,
+ 		.connect_timeout = connect_timeout,
+ 		.reconnect_timeout = reconnect_timeout,
+ 	};
+-	rpc_clnt_iterate_for_each_xprt(clnt,
++	rpc_clnt_iterate_for_each_xprt(clnt, NULL,
+ 			rpc_xprt_set_connect_timeout,
+ 			&timeout);
+ }
+@@ -3181,7 +3188,7 @@ rpc_clnt_swap_activate(struct rpc_clnt *clnt)
+ 	while (clnt != clnt->cl_parent)
+ 		clnt = clnt->cl_parent;
+ 	if (atomic_inc_return(&clnt->cl_swapper) == 1)
+-		return rpc_clnt_iterate_for_each_xprt(clnt,
++		return rpc_clnt_iterate_for_each_xprt(clnt, NULL,
+ 				rpc_clnt_swap_activate_callback, NULL);
+ 	return 0;
+ }
+@@ -3200,7 +3207,7 @@ void
+ rpc_clnt_swap_deactivate(struct rpc_clnt *clnt)
+ {
+ 	if (atomic_dec_if_positive(&clnt->cl_swapper) == 0)
+-		rpc_clnt_iterate_for_each_xprt(clnt,
++		rpc_clnt_iterate_for_each_xprt(clnt, NULL,
+ 				rpc_clnt_swap_deactivate_callback, NULL);
+ }
+ EXPORT_SYMBOL_GPL(rpc_clnt_swap_deactivate);
+diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
+index 7dc9cc929bfd..ab60b4d3deb2 100644
+--- a/net/sunrpc/debugfs.c
++++ b/net/sunrpc/debugfs.c
+@@ -160,7 +160,7 @@ rpc_clnt_debugfs_register(struct rpc_clnt *clnt)
+ 	debugfs_create_file("tasks", S_IFREG | 0400, clnt->cl_debugfs, clnt,
+ 			    &tasks_fops);
+ 
+-	rpc_clnt_iterate_for_each_xprt(clnt, do_xprt_debugfs, &xprtnum);
++	rpc_clnt_iterate_for_each_xprt(clnt, NULL, do_xprt_debugfs, &xprtnum);
  }
  
- static
-@@ -407,6 +465,13 @@ struct rpc_xprt *xprt_iter_next_entry_all(struct rpc_xprt_iter *xpi)
- 			xprt_switch_find_next_entry_all);
- }
+ void
+diff --git a/net/sunrpc/stats.c b/net/sunrpc/stats.c
+index 52908f9e6eab..e50f73a4aca5 100644
+--- a/net/sunrpc/stats.c
++++ b/net/sunrpc/stats.c
+@@ -258,7 +258,7 @@ void rpc_clnt_show_stats(struct seq_file *seq, struct rpc_clnt *clnt)
+ 	seq_printf(seq, "p/v: %u/%u (%s)\n",
+ 			clnt->cl_prog, clnt->cl_vers, clnt->cl_program->name);
  
-+static
-+struct rpc_xprt *xprt_iter_next_entry_offline(struct rpc_xprt_iter *xpi)
-+{
-+	return xprt_iter_next_entry_multiple(xpi,
-+			xprt_switch_find_next_entry_offline);
-+}
-+
- /*
-  * xprt_iter_rewind - Resets the xprt iterator
-  * @xpi: pointer to rpc_xprt_iter
-@@ -460,6 +525,12 @@ void xprt_iter_init_listall(struct rpc_xprt_iter *xpi,
- 	__xprt_iter_init(xpi, xps, &rpc_xprt_iter_listall);
- }
+-	rpc_clnt_iterate_for_each_xprt(clnt, do_print_stats, seq);
++	rpc_clnt_iterate_for_each_xprt(clnt, NULL, do_print_stats, seq);
  
-+void xprt_iter_init_listoffline(struct rpc_xprt_iter *xpi,
-+		struct rpc_xprt_switch *xps)
-+{
-+	__xprt_iter_init(xpi, xps, &rpc_xprt_iter_listoffline);
-+}
-+
- /**
-  * xprt_iter_xchg_switch - Atomically swap out the rpc_xprt_switch
-  * @xpi: pointer to rpc_xprt_iter
-@@ -574,3 +645,10 @@ const struct rpc_xprt_iter_ops rpc_xprt_iter_listall = {
- 	.xpi_xprt = xprt_iter_current_entry,
- 	.xpi_next = xprt_iter_next_entry_all,
- };
-+
-+static
-+const struct rpc_xprt_iter_ops rpc_xprt_iter_listoffline = {
-+	.xpi_rewind = xprt_iter_default_rewind,
-+	.xpi_xprt = xprt_iter_current_entry_offline,
-+	.xpi_next = xprt_iter_next_entry_offline,
-+};
+ 	seq_printf(seq, "\tper-op statistics\n");
+ 	for (op = 0; op < maxproc; op++) {
 -- 
 2.27.0
 
