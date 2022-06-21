@@ -2,72 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8150F5532F8
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 15:10:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51C2B553395
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 15:34:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231445AbiFUNKD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Jun 2022 09:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
+        id S1351061AbiFUNeS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Jun 2022 09:34:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230399AbiFUNKD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 09:10:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AB5F1147
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:10:01 -0700 (PDT)
+        with ESMTP id S233316AbiFUNbG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 09:31:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6A3FF22B07
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1655817000;
+        s=mimecast20190719; t=1655817985;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=ex28JFKWw/z0wCocAEwiD4Y/yi+bTkGfPguNxlLNawg=;
-        b=cxkroHh3THEXPsg/WpQre0cN8eMRqKCUzokO9fteatbnjqMENtEPoJfcWWT+mZFQgQAnNN
-        FrY+ir1u6kJSU65mtDqMxomUNHRgZ58cuSzCJQuvbJIOLyLBQtMUtD93vvc2LhHAPx3g+7
-        N4wT7lpkCq3wcd4q3/GL4ldpo/OTUT0=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=j/2O2c8s1LKn8qdzaiTFmrQtYEezdKcO1gjTE1Qe/FA=;
+        b=NB59N+2too1HCs2/Qjy4uIYROmUieH0meyjSwOyQEyWkKRxX6keXXHyVUg6DsE7LJcEONo
+        ySs73XrSQKH+qzDUl5DYK0U+8YqjTdRpCNPNnPsYc7X+E0Vpzn7IFBb+C8+SLDiRAiyLws
+        gftcpLp5nR54hShmpxxco9XC73fbxm8=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-152-JzwDYTI6Nie7P5GsPi7x7w-1; Tue, 21 Jun 2022 09:09:58 -0400
-X-MC-Unique: JzwDYTI6Nie7P5GsPi7x7w-1
-Received: by mail-qv1-f70.google.com with SMTP id e10-20020a0ce3ca000000b004702b8819beso10318784qvl.4
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:09:58 -0700 (PDT)
+ us-mta-373-UmUjZpmzNUa8PRun_XdRJw-1; Tue, 21 Jun 2022 09:26:23 -0400
+X-MC-Unique: UmUjZpmzNUa8PRun_XdRJw-1
+Received: by mail-qk1-f197.google.com with SMTP id x4-20020a05620a448400b006ac665e1dfeso8971817qkp.17
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:26:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:references:in-reply-to
+         :content-language:to:references:from:in-reply-to
          :content-transfer-encoding;
-        bh=ex28JFKWw/z0wCocAEwiD4Y/yi+bTkGfPguNxlLNawg=;
-        b=1QAP6sVGPqZOWpY9P6rbuJi265C3L4KrL8I5m32wKRLnsgQKiET1VblHdEL84/GACd
-         RRt7J1JOmKplsor367r3CXoOMQk4yH01Ox7D9KD/jLs5fbPx92qVQt7F1Ru3Zup20RHU
-         fP3GTv1xX4a4UO4a32uSqRuZCZhnZGZYNblliNuZYBqmI3n3FGvwGXf4uNucdTiJnV2V
-         38V0qeuOFBvgKmnEXE+jIAqN9DLU7vPkQHnbKXRNJRTOg2iRKU67h2y8bpso4ZE+DZ8N
-         v54rpF6LZ8h+ByjmwFZFfxIGuaxGa7+SOAE8djeRAobFMbxUOgfEVOapIEtcyY/08TPh
-         W2bQ==
-X-Gm-Message-State: AJIora8uv85wcg9t3FrjG8tOn9yLLQKbAlhtOdd0c3GTJYC5I64S6QMc
-        SCtXIlQXvzLbXqO20v4kdDConcIPsy4xyAI0I9kJwwPeGndT+U9E8jtxPKdf6h/wkfVGgFImulR
-        2RXRPyhGeLNomheGnEIdbf6legmlxVEUMjis+Hm2m4YMLsoZidOEIa2SdGkuiRtIMAfVRxw==
-X-Received: by 2002:a05:620a:4310:b0:6ac:f9df:178d with SMTP id u16-20020a05620a431000b006acf9df178dmr7676556qko.773.1655816997198;
-        Tue, 21 Jun 2022 06:09:57 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tWZbnJsIJsdVzSm410QjsaCwo4y6D6keoISyDbxnMBZxluTzWbO63B+y4LiHizOannEjLORw==
-X-Received: by 2002:a05:620a:4310:b0:6ac:f9df:178d with SMTP id u16-20020a05620a431000b006acf9df178dmr7676494qko.773.1655816996434;
-        Tue, 21 Jun 2022 06:09:56 -0700 (PDT)
+        bh=j/2O2c8s1LKn8qdzaiTFmrQtYEezdKcO1gjTE1Qe/FA=;
+        b=eILVT/WQrWESKEEVV67N53FC78n7xOWFwGCpe/iwofFL9v/+qMokfhmQbIEoHeAhl+
+         lIcjutHhwoQkiAJyGLk2LzNLH0QHWcbu+X04uLlohz43N0akjpcq9GvCFU+ZdOjCOVsY
+         fvVe313pk9PBPX8UxCOFYy4KA2XdBEnvAqBtwN2BiO+Dl7SgFVwdruTV/L1BIB6MZiDH
+         Nzu11fjNLHzbgoLd4b16R2WBgLNRO5MTXP4wevHDxiOg2mhFrmy9CN1yL7chD1uYst15
+         oN0xbv3GiMwKXWUR1Y3oBub+HWO3AzMQ1CRK4Bjj79NqPlwtN1sZG6IJFj2rdSSsHH3H
+         U2tg==
+X-Gm-Message-State: AJIora8StXlAcPfy6++kv2d5atcxHGEZUCQxBF6JB8JoEmi6IrPVztNL
+        XoKEAoOsOZA033anpY8cmJGRYwEsnRndBIDVDfXqIUMujb8PU/580ZvwfNUrCj0EJZuLJ2LDYpn
+        cyGO4eO8wziYTXj//5uos
+X-Received: by 2002:a37:de0c:0:b0:69e:cd37:7646 with SMTP id h12-20020a37de0c000000b0069ecd377646mr20224525qkj.449.1655817981748;
+        Tue, 21 Jun 2022 06:26:21 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vYyZg9jdScwBpYrKtwlXhNgzGwXJxQuaNUPRlqB29cYeKEdPkOd0/HtTPPnKqLf5OJaoAhEQ==
+X-Received: by 2002:a37:de0c:0:b0:69e:cd37:7646 with SMTP id h12-20020a37de0c000000b0069ecd377646mr20224500qkj.449.1655817981456;
+        Tue, 21 Jun 2022 06:26:21 -0700 (PDT)
 Received: from [172.31.1.6] ([70.109.186.229])
-        by smtp.gmail.com with ESMTPSA id bz9-20020a05622a1e8900b00307beda5c6esm12080966qtb.26.2022.06.21.06.09.55
-        for <linux-nfs@vger.kernel.org>
+        by smtp.gmail.com with ESMTPSA id z12-20020ac86b8c000000b00304e8938800sm12306519qts.96.2022.06.21.06.26.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jun 2022 06:09:55 -0700 (PDT)
-Message-ID: <a612568f-ca58-9cc2-784f-3b07791edb8e@redhat.com>
-Date:   Tue, 21 Jun 2022 09:09:54 -0400
+        Tue, 21 Jun 2022 06:26:21 -0700 (PDT)
+Message-ID: <8337cf24-d8d2-034a-a6e7-47900d2d2165@redhat.com>
+Date:   Tue, 21 Jun 2022 09:26:20 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.10.0
-Subject: Re: [PATCH 1/4] Makefile: Added the creation of config.guess and
- config.sub
+Subject: Re: [PATCH 1/3] cifs-utils/svcgssd: Fix use-after-free bug (config
+ variables)
 Content-Language: en-US
+To:     marcel@linux-ng.de, linux-nfs@vger.kernel.org
+References: <20220607081909.1216287-1-marcel@linux-ng.de>
 From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20220616202902.53969-1-steved@redhat.com>
-In-Reply-To: <20220616202902.53969-1-steved@redhat.com>
+In-Reply-To: <20220607081909.1216287-1-marcel@linux-ng.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -80,44 +79,43 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-all 4 patches committed...
+All 3 patch committed (tag: nfs-utils-2-6-2-rc7)
 
-On 6/16/22 4:28 PM, Steve Dickson wrote:
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-> ---
->   .gitignore | 2 ++
->   Makefile   | 3 +++
->   2 files changed, 5 insertions(+)
+steved.
+
+On 6/7/22 4:19 AM, marcel@linux-ng.de wrote:
+> From: Marcel Ritter <marcel@linux-ng.de>
 > 
-> diff --git a/.gitignore b/.gitignore
-> index df58159..72bdb22 100644
-> --- a/.gitignore
-> +++ b/.gitignore
-> @@ -6,6 +6,8 @@
->   aclocal.m4
->   autom4te.cache/
->   config.log
-> +config.guess
-> +config.sub
->   config.status
->   configure
->   include/builddefs
-> diff --git a/Makefile b/Makefile
-> index 5302e11..be7454d 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -60,6 +60,7 @@ clean:	# if configure hasn't run, nothing to clean
->   endif
+> This patch fixes a bug when trying to set "principal" in /etc/nfs.conf.
+> Memory gets freed by conf_cleanup() before being used - moving cleanup
+> code resolves that.
+> 
+> ---
+>   utils/gssd/svcgssd.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/utils/gssd/svcgssd.c b/utils/gssd/svcgssd.c
+> index 881207b3..a242b789 100644
+> --- a/utils/gssd/svcgssd.c
+> +++ b/utils/gssd/svcgssd.c
+> @@ -211,9 +211,6 @@ main(int argc, char *argv[])
+>   	rpc_verbosity = conf_get_num("svcgssd", "RPC-Verbosity", rpc_verbosity);
+>   	idmap_verbosity = conf_get_num("svcgssd", "IDMAP-Verbosity", idmap_verbosity);
 >   
->   $(CONFIGURE): aclocal.m4
-> +	autoreconf --install
->   	autoconf
->   	./configure \
->   		--prefix=/ \
-> @@ -96,3 +97,5 @@ install-lib: default
->   realclean distclean: clean
->   	rm -f $(LDIRT) $(CONFIGURE)
->   	rm -rf autom4te.cache Logs
-> +	rm -rf config.guess config.sub configure~
+> -	/* We don't need the config anymore */
+> -	conf_cleanup();
+> -
+>   	while ((opt = getopt(argc, argv, "fivrnp:")) != -1) {
+>   		switch (opt) {
+>   			case 'f':
+> @@ -328,6 +325,9 @@ main(int argc, char *argv[])
+>   
+>   	daemon_ready();
+>   
+> +	/* We don't need the config anymore */
+> +	conf_cleanup();
 > +
+>   	nfs4_init_name_mapping(NULL); /* XXX: should only do this once */
+>   
+>   	rc = event_base_dispatch(evbase);
 
