@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CA31553429
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 16:06:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88E0E55342A
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 16:06:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1350516AbiFUOGV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Jun 2022 10:06:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        id S1350518AbiFUOG1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Jun 2022 10:06:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1350518AbiFUOGU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 10:06:20 -0400
+        with ESMTP id S233485AbiFUOG0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 10:06:26 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1761186E2
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 07:06:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D3414D08
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 07:06:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A1A761632
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 14:06:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6466C3411C
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 14:06:17 +0000 (UTC)
-Subject: [PATCH 1/2] SUNRPC: Expand the svc_alloc_arg_err tracepoint
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A5C6161589
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 14:06:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08841C3411C
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 14:06:23 +0000 (UTC)
+Subject: [PATCH 2/2] NFSD: Instrument fh_verify()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 21 Jun 2022 10:06:16 -0400
-Message-ID: <165582037674.1716.6493233261080715169.stgit@klimt.1015granger.net>
+Date:   Tue, 21 Jun 2022 10:06:23 -0400
+Message-ID: <165582038305.1716.14058727871663228662.stgit@klimt.1015granger.net>
 In-Reply-To: <165582017204.1716.2642742597692008742.stgit@klimt.1015granger.net>
 References: <165582017204.1716.2642742597692008742.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev3+g9561319
@@ -41,62 +41,95 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Record not only the number of pages requested, but the number of
-pages that were actually allocated, to get an measure of progress
-(or lack thereof).
+Capture file handles and how they map to local inodes. In particular,
+NFSv4 PUTFH uses fh_verify() so we can now observe which file handles
+are the target of OPEN, LOOKUP, RENAME, and so on.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/trace/events/sunrpc.h |   14 +++++++++-----
- net/sunrpc/svc_xprt.c         |    2 +-
- 2 files changed, 10 insertions(+), 6 deletions(-)
+ fs/nfsd/nfsfh.c |    5 +++--
+ fs/nfsd/trace.h |   46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
-index b61d9c90fa26..5c48be033cc7 100644
---- a/include/trace/events/sunrpc.h
-+++ b/include/trace/events/sunrpc.h
-@@ -1989,20 +1989,24 @@ TRACE_EVENT(svc_wake_up,
+diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+index c29baa03dfaf..5e2ed4b2a925 100644
+--- a/fs/nfsd/nfsfh.c
++++ b/fs/nfsd/nfsfh.c
+@@ -331,8 +331,6 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	struct dentry	*dentry;
+ 	__be32		error;
  
- TRACE_EVENT(svc_alloc_arg_err,
- 	TP_PROTO(
--		unsigned int pages
-+		unsigned int requested,
-+		unsigned int allocated
- 	),
- 
--	TP_ARGS(pages),
-+	TP_ARGS(requested, allocated),
- 
- 	TP_STRUCT__entry(
--		__field(unsigned int, pages)
-+		__field(unsigned int, requested)
-+		__field(unsigned int, allocated)
- 	),
- 
- 	TP_fast_assign(
--		__entry->pages = pages;
-+		__entry->requested = requested;
-+		__entry->allocated = allocated;
- 	),
- 
--	TP_printk("pages=%u", __entry->pages)
-+	TP_printk("requested=%u allocated=%u",
-+		__entry->requested, __entry->allocated)
+-	dprintk("nfsd: fh_verify(%s)\n", SVCFH_fmt(fhp));
+-
+ 	if (!fhp->fh_dentry) {
+ 		error = nfsd_set_fh_dentry(rqstp, fhp);
+ 		if (error)
+@@ -340,6 +338,9 @@ fh_verify(struct svc_rqst *rqstp, struct svc_fh *fhp, umode_t type, int access)
+ 	}
+ 	dentry = fhp->fh_dentry;
+ 	exp = fhp->fh_export;
++
++	trace_nfsd_fh_verify(rqstp, fhp, type, access);
++
+ 	/*
+ 	 * We still have to do all these permission checks, even when
+ 	 * fh_dentry is already set:
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index a60ead3b227a..8467fd8f94c2 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -171,6 +171,52 @@ TRACE_EVENT(nfsd_compound_encode_err,
+ 		__entry->opnum, __entry->status)
  );
  
- DECLARE_EVENT_CLASS(svc_deferred_event,
-diff --git a/net/sunrpc/svc_xprt.c b/net/sunrpc/svc_xprt.c
-index 2c4dd7ca95b0..2106003645a7 100644
---- a/net/sunrpc/svc_xprt.c
-+++ b/net/sunrpc/svc_xprt.c
-@@ -691,7 +691,7 @@ static int svc_alloc_arg(struct svc_rqst *rqstp)
- 			set_current_state(TASK_RUNNING);
- 			return -EINTR;
- 		}
--		trace_svc_alloc_arg_err(pages);
-+		trace_svc_alloc_arg_err(pages, ret);
- 		memalloc_retry_wait(GFP_KERNEL);
- 	}
- 	rqstp->rq_page_end = &rqstp->rq_pages[pages];
++#define show_fs_file_type(x) \
++	__print_symbolic(x, \
++		{ S_IFLNK,		"LNK" }, \
++		{ S_IFREG,		"REG" }, \
++		{ S_IFDIR,		"DIR" }, \
++		{ S_IFCHR,		"CHR" }, \
++		{ S_IFBLK,		"BLK" }, \
++		{ S_IFIFO,		"FIFO" }, \
++		{ S_IFSOCK,		"SOCK" })
++
++TRACE_EVENT(nfsd_fh_verify,
++	TP_PROTO(
++		const struct svc_rqst *rqstp,
++		const struct svc_fh *fhp,
++		umode_t type,
++		int access
++	),
++	TP_ARGS(rqstp, fhp, type, access),
++	TP_STRUCT__entry(
++		__field(unsigned int, netns_ino)
++		__sockaddr(server, rqstp->rq_xprt->xpt_remotelen)
++		__sockaddr(client, rqstp->rq_xprt->xpt_remotelen)
++		__field(u32, xid)
++		__field(u32, fh_hash)
++		__field(void *, inode)
++		__field(unsigned long, type)
++		__field(unsigned long, access)
++	),
++	TP_fast_assign(
++		__entry->netns_ino = SVC_NET(rqstp)->ns.inum;
++		__assign_sockaddr(server, &rqstp->rq_xprt->xpt_local,
++		       rqstp->rq_xprt->xpt_locallen);
++		__assign_sockaddr(client, &rqstp->rq_xprt->xpt_remote,
++				  rqstp->rq_xprt->xpt_remotelen);
++		__entry->xid = be32_to_cpu(rqstp->rq_xid);
++		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
++		__entry->inode = d_inode(fhp->fh_dentry);
++		__entry->type = type;
++		__entry->access = access;
++	),
++	TP_printk("xid=0x%08x fh_hash=0x%08x inode=%p type=%s access=%s",
++		__entry->xid, __entry->fh_hash, __entry->inode,
++		show_fs_file_type(__entry->type),
++		show_nfsd_may_flags(__entry->access)
++	)
++);
+ 
+ DECLARE_EVENT_CLASS(nfsd_fh_err_class,
+ 	TP_PROTO(struct svc_rqst *rqstp,
 
 
