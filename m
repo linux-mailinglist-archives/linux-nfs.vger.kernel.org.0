@@ -2,107 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A52A8552EDD
-	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 11:41:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8150F5532F8
+	for <lists+linux-nfs@lfdr.de>; Tue, 21 Jun 2022 15:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1349368AbiFUJkW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 21 Jun 2022 05:40:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51624 "EHLO
+        id S231445AbiFUNKD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 21 Jun 2022 09:10:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349287AbiFUJkJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 05:40:09 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7BF227B00
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 02:39:56 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id r3so23501778ybr.6
-        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 02:39:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=NKhg6kSkfnglJlsPDVUWhCY3Iibudx7OhZC5CePFgeNekYJKNrcmU8wB8gkktmjPqY
-         f0o4DET3nwW7oGb1WQAmWVCm6yLISrVrQXMY/9qoCppMNLX7K/jA/JZ+JMs1mNT38j+N
-         qSlM2vTiSOIkQo5cZ6oY4dkMVda7fWn0vzKRT295Q67AStI8u0BTanvw38uSxo4IMvFm
-         mtbeFJOQugEk6bmbrSLJZHxNWvSEoU0AT9TQz59V3jAGDZbWiI6U0Fx8UlroTYMr9wGQ
-         +xC78kHT5AZK7k/f6wmWhdDj3ThC5Cy20ctCKCcYvb/idPExEpgvQXB/UX/ziCu3vO07
-         Q2/g==
+        with ESMTP id S230399AbiFUNKD (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 21 Jun 2022 09:10:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4AB5F1147
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:10:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1655817000;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ex28JFKWw/z0wCocAEwiD4Y/yi+bTkGfPguNxlLNawg=;
+        b=cxkroHh3THEXPsg/WpQre0cN8eMRqKCUzokO9fteatbnjqMENtEPoJfcWWT+mZFQgQAnNN
+        FrY+ir1u6kJSU65mtDqMxomUNHRgZ58cuSzCJQuvbJIOLyLBQtMUtD93vvc2LhHAPx3g+7
+        N4wT7lpkCq3wcd4q3/GL4ldpo/OTUT0=
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
+ [209.85.219.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-152-JzwDYTI6Nie7P5GsPi7x7w-1; Tue, 21 Jun 2022 09:09:58 -0400
+X-MC-Unique: JzwDYTI6Nie7P5GsPi7x7w-1
+Received: by mail-qv1-f70.google.com with SMTP id e10-20020a0ce3ca000000b004702b8819beso10318784qvl.4
+        for <linux-nfs@vger.kernel.org>; Tue, 21 Jun 2022 06:09:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/0bRExIb6Mv4sy5raFRmeQINC+UUx7zEZcUUOWWOPJg=;
-        b=yJjZGJXm33UPNly0EbozWUCi/aCnVZx6Zs217Rv5zLSUS4zb/L35lqToHsdwV0UAvk
-         +1q5i2Bg3kv2sLMduFZZVaUMa5s0f3MVHARYOmqYIFJJk49aDoKSsiFSTCpM6paW+PJi
-         Q7ETg0PaSR/Sgda8tSJvtVNZNfQENZQgspSFczAq4sT68crH1PKzpfoJjOISg9Jck4jW
-         WAX9pd22+C3crFB5lR1p0NF0/98blC4mrH0HmmbewfQWIi3JFywLYtzVYppGNVFdY23B
-         eYyk44AKC7H7BSl+AFYVy2/rnYREx1irbCXgeNxT8CPl8c3NNabPE6WoUyTrBiBNAqc5
-         mi1g==
-X-Gm-Message-State: AJIora9iPXbEXvaV8EiU8hfrDdmQ2woTqyZ8Qcb8LAyByNnRo/XEvfcA
-        RE2PTRvN0GV5QCy3Y26htGK8Uv7qvNw3xs64DLK1O8pRvNcOdFW7
-X-Google-Smtp-Source: AGRyM1sTF/SvvxCyraPE52znD36ZX02jNmxmam87lP8bWzXT3yTfChS1a9JgJI9LjBXh9tpS4qLO5E/t+5efudcEruY=
-X-Received: by 2002:a0d:d7c7:0:b0:317:bfe8:4f2 with SMTP id
- z190-20020a0dd7c7000000b00317bfe804f2mr12417910ywd.276.1655804384555; Tue, 21
- Jun 2022 02:39:44 -0700 (PDT)
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:references:in-reply-to
+         :content-transfer-encoding;
+        bh=ex28JFKWw/z0wCocAEwiD4Y/yi+bTkGfPguNxlLNawg=;
+        b=1QAP6sVGPqZOWpY9P6rbuJi265C3L4KrL8I5m32wKRLnsgQKiET1VblHdEL84/GACd
+         RRt7J1JOmKplsor367r3CXoOMQk4yH01Ox7D9KD/jLs5fbPx92qVQt7F1Ru3Zup20RHU
+         fP3GTv1xX4a4UO4a32uSqRuZCZhnZGZYNblliNuZYBqmI3n3FGvwGXf4uNucdTiJnV2V
+         38V0qeuOFBvgKmnEXE+jIAqN9DLU7vPkQHnbKXRNJRTOg2iRKU67h2y8bpso4ZE+DZ8N
+         v54rpF6LZ8h+ByjmwFZFfxIGuaxGa7+SOAE8djeRAobFMbxUOgfEVOapIEtcyY/08TPh
+         W2bQ==
+X-Gm-Message-State: AJIora8uv85wcg9t3FrjG8tOn9yLLQKbAlhtOdd0c3GTJYC5I64S6QMc
+        SCtXIlQXvzLbXqO20v4kdDConcIPsy4xyAI0I9kJwwPeGndT+U9E8jtxPKdf6h/wkfVGgFImulR
+        2RXRPyhGeLNomheGnEIdbf6legmlxVEUMjis+Hm2m4YMLsoZidOEIa2SdGkuiRtIMAfVRxw==
+X-Received: by 2002:a05:620a:4310:b0:6ac:f9df:178d with SMTP id u16-20020a05620a431000b006acf9df178dmr7676556qko.773.1655816997198;
+        Tue, 21 Jun 2022 06:09:57 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tWZbnJsIJsdVzSm410QjsaCwo4y6D6keoISyDbxnMBZxluTzWbO63B+y4LiHizOannEjLORw==
+X-Received: by 2002:a05:620a:4310:b0:6ac:f9df:178d with SMTP id u16-20020a05620a431000b006acf9df178dmr7676494qko.773.1655816996434;
+        Tue, 21 Jun 2022 06:09:56 -0700 (PDT)
+Received: from [172.31.1.6] ([70.109.186.229])
+        by smtp.gmail.com with ESMTPSA id bz9-20020a05622a1e8900b00307beda5c6esm12080966qtb.26.2022.06.21.06.09.55
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jun 2022 06:09:55 -0700 (PDT)
+Message-ID: <a612568f-ca58-9cc2-784f-3b07791edb8e@redhat.com>
+Date:   Tue, 21 Jun 2022 09:09:54 -0400
 MIME-Version: 1.0
-Received: by 2002:a05:7010:e10a:b0:2d9:e631:94d0 with HTTP; Tue, 21 Jun 2022
- 02:39:44 -0700 (PDT)
-Reply-To: dimitryedik@gmail.com
-From:   Dimitry Edik <lsbthdwrds@gmail.com>
-Date:   Tue, 21 Jun 2022 02:39:44 -0700
-Message-ID: <CAGrL05aBO8rbFuij24J-APa+Luis69gEjhj35iv_GZfkHCVYDQ@mail.gmail.com>
-Subject: Dear Partner,
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_MONEY_PERCENT,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,
-        UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:b36 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [lsbthdwrds[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.2 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.0 T_MONEY_PERCENT X% of a lot of money for you
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH 1/4] Makefile: Added the creation of config.guess and
+ config.sub
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20220616202902.53969-1-steved@redhat.com>
+In-Reply-To: <20220616202902.53969-1-steved@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello Dear,
+all 4 patches committed...
 
-My Name is Dimitry Edik from Russia A special assistance to my Russia
-boss who deals in oil import and export He was killed by the Ukraine
-soldiers at the border side. He supplied
-oil to the Philippines company and he was paid over 90 per cent of the
-transaction and the remaining $18.6 Million dollars have been paid into a
-Taiwan bank in the Philippines..i want a partner that will assist me
-with the claims. Is a (DEAL ) 40% for you and 60% for me
-I have all information for the claims.
-Kindly read and reply to me back is 100 per cent risk-free
+On 6/16/22 4:28 PM, Steve Dickson wrote:
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+> ---
+>   .gitignore | 2 ++
+>   Makefile   | 3 +++
+>   2 files changed, 5 insertions(+)
+> 
+> diff --git a/.gitignore b/.gitignore
+> index df58159..72bdb22 100644
+> --- a/.gitignore
+> +++ b/.gitignore
+> @@ -6,6 +6,8 @@
+>   aclocal.m4
+>   autom4te.cache/
+>   config.log
+> +config.guess
+> +config.sub
+>   config.status
+>   configure
+>   include/builddefs
+> diff --git a/Makefile b/Makefile
+> index 5302e11..be7454d 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -60,6 +60,7 @@ clean:	# if configure hasn't run, nothing to clean
+>   endif
+>   
+>   $(CONFIGURE): aclocal.m4
+> +	autoreconf --install
+>   	autoconf
+>   	./configure \
+>   		--prefix=/ \
+> @@ -96,3 +97,5 @@ install-lib: default
+>   realclean distclean: clean
+>   	rm -f $(LDIRT) $(CONFIGURE)
+>   	rm -rf autom4te.cache Logs
+> +	rm -rf config.guess config.sub configure~
+> +
 
-Yours Sincerely
-Dimitry Edik
