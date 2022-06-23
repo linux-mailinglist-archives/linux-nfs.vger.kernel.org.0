@@ -2,84 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C851A558B3E
-	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jun 2022 00:33:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BADAF558BA0
+	for <lists+linux-nfs@lfdr.de>; Fri, 24 Jun 2022 01:16:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbiFWWd1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 23 Jun 2022 18:33:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60582 "EHLO
+        id S230312AbiFWXQL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 23 Jun 2022 19:16:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbiFWWd0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jun 2022 18:33:26 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F22A849930;
-        Thu, 23 Jun 2022 15:33:23 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 476F85ECC7F;
-        Fri, 24 Jun 2022 08:33:22 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1o4VO4-00AGXa-Gs; Fri, 24 Jun 2022 08:33:20 +1000
-Date:   Fri, 24 Jun 2022 08:33:20 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, "tgraf@suug.ch" <tgraf@suug.ch>,
-        Jeff Layton <jlayton@redhat.com>
-Subject: Re: [PATCH RFC 29/30] NFSD: Convert the filecache to use rhashtable
-Message-ID: <20220623223320.GG1098723@dread.disaster.area>
+        with ESMTP id S230013AbiFWXQL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 23 Jun 2022 19:16:11 -0400
+X-Greylist: delayed 1158 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 23 Jun 2022 16:16:09 PDT
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D4D9609D7;
+        Thu, 23 Jun 2022 16:16:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jAmxycjq9xNzu1qXe+8nYLfvbtKoFnsayWMYTgRJyIE=; b=er1GTyttDatX/emTmxgI3+Jwyl
+        I65TXxkXoS6Ch0n9TaPmLx9z3it0VaYDx0UeIBX5tGGeJiDW6Fe4bKrr/PtOfRnFBr5lkPM5QP8Qp
+        cP/RKdwaq3iiL2HAxypFjv8GFdaa11jPaSEKHPVxVK0z+trE1bCcW7Gk5yWQbaoOi7NcldPhQg8QK
+        nhuPx/fUnw3dNG1oSrsZ7UkNzJ/FN+2PVfymfPDif9w4G0M7XE6Cb8TEmNG+xb5o5nn4i8yVCcyRW
+        6KsWP6bH+GF7ISRbIMwqMBbicr3pHxTmY0PTXm0PmH+K/kAM1AG5FWV1lJ4q8PZwYX7UEuBxTSlgS
+        /j3+p5Ig==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
+        id 1o4Vkh-003hCY-Ax;
+        Thu, 23 Jun 2022 22:56:43 +0000
+Date:   Thu, 23 Jun 2022 23:56:43 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        david@fromorbit.com, tgraf@suug.ch, jlayton@redhat.com
+Subject: Re: [PATCH RFC 28/30] NFSD: Set up an rhashtable for the filecache
+Message-ID: <YrTvq2ED+Xugqpyi@ZenIV>
 References: <165590626293.75778.9843437418112335153.stgit@manet.1015granger.net>
- <165590735674.75778.2489188434203366753.stgit@manet.1015granger.net>
- <20220623003822.GF1098723@dread.disaster.area>
- <1BB6647C-799E-463F-BF63-55B48450FF29@oracle.com>
- <2F100B0A-04F2-496D-B59F-A90493D20439@oracle.com>
+ <165590735022.75778.7652622979487182880.stgit@manet.1015granger.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2F100B0A-04F2-496D-B59F-A90493D20439@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=62b4ea33
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=IkcTkHD0fZMA:10 a=JPEYwPQDsx4A:10 a=07d9gI8wAAAA:8 a=7-415B0cAAAA:8
-        a=oSJpYEgRxW49ZuJqY5AA:9 a=QEXdDO2ut3YA:10 a=e2CUPOnPG4QKp8I52DXD:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <165590735022.75778.7652622979487182880.stgit@manet.1015granger.net>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Jun 23, 2022 at 05:27:20PM +0000, Chuck Lever III wrote:
-> Also I just found Neil's nice rhashtable explainer:
-> 
->    https://lwn.net/Articles/751374/
-> 
-> Where he writes that:
-> 
-> > Sometimes you might want a hash table to potentially contain
-> > multiple objects for any given key. In that case you can use
-> > "rhltables" — rhashtables with lists of objects.
-> 
-> I believe that is the case for the filecache. The hash value is
-> computed based on the inode pointer, and therefore there can be more
-> than one nfsd_file object for a particular inode (depending on who
-> is opening and for what access). So I think filecache needs to use
-> rhltable, not rhashtable. Any thoughts from rhashtable experts?
+On Wed, Jun 22, 2022 at 10:15:50AM -0400, Chuck Lever wrote:
 
-Huh, I assumed the file cache was just hashing the whole key so that
-every object in the rht has it's own unique key and hash and there's
-no need to handle multiple objects per key...
+> +static u32 nfsd_file_obj_hashfn(const void *data, u32 len, u32 seed)
+> +{
+> +	const struct nfsd_file *nf = data;
+> +
+> +	return jhash2((const u32 *)&nf->nf_inode,
+> +		      sizeof_field(struct nfsd_file, nf_inode) / sizeof(u32),
+> +		      seed);
 
-What are you trying to optimise by hashing only the inode *pointer*
-in the nfsd_file object keyspace?
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Out of curiosity - what are you using to allocate those?  Because if
+it's a slab, then middle bits of address (i.e. lower bits of
+(unsigned long)data / L1_CACHE_BYTES) would better be random enough...
