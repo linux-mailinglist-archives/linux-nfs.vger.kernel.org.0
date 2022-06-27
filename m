@@ -2,70 +2,54 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2909755DEDA
-	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jun 2022 15:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 375CE55DDE0
+	for <lists+linux-nfs@lfdr.de>; Tue, 28 Jun 2022 15:28:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236519AbiF0S6W (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 27 Jun 2022 14:58:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47320 "EHLO
+        id S239810AbiF0Vbo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 27 Jun 2022 17:31:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240337AbiF0S5X (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jun 2022 14:57:23 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544A610FF
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Jun 2022 11:57:18 -0700 (PDT)
-Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S237676AbiF0Vbo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 27 Jun 2022 17:31:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 49FE6A449
+        for <linux-nfs@vger.kernel.org>; Mon, 27 Jun 2022 14:31:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1656365502;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=aCYzTwquSTHn2f2KIEEWzTbW0J6BSJdADJFyFkPB7QQ=;
+        b=ZcbHgsE/bdnsn5imvO/guaOhz7bqNwmNqRxhOXqfqZ9eJqM64T+Glv3S5aZ9hdrSZ6eEXg
+        UrmM+EUUHulparLIG/ZsHpDCbVn1rfP2Rvr8u6tXwbZtTJou5jr4EMJ3r/7C2hpd5v6ypn
+        H9b0d57z/9GQkxOOl+LObp915kH3UGA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-664-zPCNHu8fMIKhf3-KMfNUWg-1; Mon, 27 Jun 2022 17:31:36 -0400
+X-MC-Unique: zPCNHu8fMIKhf3-KMfNUWg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 0A8FA3F0C0
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Jun 2022 18:57:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1656356235;
-        bh=zR2xWZau/XPeyKSmcjnGBY11HfciSu5RUfqC0sQi5aQ=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Content-Type;
-        b=MLen4X0lmWRxJ9Prz2vzgUeC4Iyf9VM3QDfYUO0FkwX94vuYHM1oqCZ9u5Sh/XTmA
-         IeEBDnV0Fd/daiEwmDIR0twQrqF6dpNfkor8xVs8aSQTxEhJ/nVfwCMAHUbZHPVfbl
-         c6igs4En7yhJLGyjKMs10x5PyCXY30M7R3PvgTwnHgtkgu3dc3jPGPJcKFBAfspp8n
-         ZizHogPFfqc9bbifSs/R4lRUG+VeG/SXoBbYXBRjq/ixMMM8loRAHD+bgrysV1f2jT
-         l8+ZiGneoIrAE7ZdKWRnpcM6/ZE4fjqmAHn48ZzSRD0P6Xa+HLly+0Ks+KTKNX9dIg
-         omumKOUb/D9/w==
-Received: by mail-ej1-f72.google.com with SMTP id sb34-20020a1709076da200b00722f4a9865bso2777796ejc.1
-        for <linux-nfs@vger.kernel.org>; Mon, 27 Jun 2022 11:57:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=zR2xWZau/XPeyKSmcjnGBY11HfciSu5RUfqC0sQi5aQ=;
-        b=gqEsQneQE/vUy6cl+EZuDc08wLtmw548zD/19sZyP2hEa36xVpGgf6GtQK6ZJyk/8m
-         Kxc2pU0yoNa03pKfuuNrGY7SZaVcaCy7dHRb+j1xZGr2OMkgI22/9hmq7Snn+wHHJeqJ
-         I5ffuatAl+FauP+DUJiGf4X7SefSkwkBmHl+v3646WkK/N/2ztZb6Y9VFgZD07Co7sBm
-         AckXolVguucgOZ37zp3QtOGgJYdw43dadc2f08CRrgwDWAP/VlnOWSYlBsiaFpAwfyiq
-         4QbKI6WhGgUQXNkDMo93aE8W36Ft/bEfEVuRNXMT8+G3F4VZ4nyb6MpmbIm5qGxaEe+P
-         ezzQ==
-X-Gm-Message-State: AJIora+Bdv29QuvkmVDL3fIoFr62OitxPCERdgDBayjHP6WiS+4O43z4
-        dXOsHghFF8m38znzzmhWKzUyTmoScTjCtelC39K3lf7Q9rRtHrjJ7z9R5IZkNC4zbCPCaljkfAg
-        6JADUq04b+IN8U0/5q5kDeXXCW4LrQpaTn3fS3ULHt2HeBHZoPmuneA==
-X-Received: by 2002:a17:907:1c8a:b0:6e9:2a0d:d7b7 with SMTP id nb10-20020a1709071c8a00b006e92a0dd7b7mr13628795ejc.572.1656356234714;
-        Mon, 27 Jun 2022 11:57:14 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tGJ6l0PTdbHTYYsj1l5JuvDw7I37VDj1drVDSe/jx/RcA3Nc4k/D3IYdrVSFuHye5JBlbi/we+EQqPvlCFIwo=
-X-Received: by 2002:a17:907:1c8a:b0:6e9:2a0d:d7b7 with SMTP id
- nb10-20020a1709071c8a00b006e92a0dd7b7mr13628778ejc.572.1656356234452; Mon, 27
- Jun 2022 11:57:14 -0700 (PDT)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 6A8AE857DDB;
+        Mon, 27 Jun 2022 21:31:30 +0000 (UTC)
+Received: from aion.usersys.redhat.com (unknown [10.22.35.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 44A012166B26;
+        Mon, 27 Jun 2022 21:31:30 +0000 (UTC)
+Received: by aion.usersys.redhat.com (Postfix, from userid 1000)
+        id CA0961A27D8; Mon, 27 Jun 2022 17:31:29 -0400 (EDT)
+From:   Scott Mayhew <smayhew@redhat.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Add an fattr allocation to _nfs4_discover_trunking()
+Date:   Mon, 27 Jun 2022 17:31:29 -0400
+Message-Id: <20220627213129.1104710-1-smayhew@redhat.com>
 MIME-Version: 1.0
-References: <20220607081909.1216287-1-marcel@linux-ng.de> <20220607081909.1216287-3-marcel@linux-ng.de>
-In-Reply-To: <20220607081909.1216287-3-marcel@linux-ng.de>
-From:   Andreas Hasenack <andreas@canonical.com>
-Date:   Mon, 27 Jun 2022 18:57:03 +0000
-Message-ID: <CANYNYEG553LGsgf47nM+Y-nDO=oQLaCrfPAFG+_vsXWrh3u+Zg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] cifs-utils/svcgssd: Add (undocumented) config options
- to man page
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URI_NOVOWEL autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.6
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,58 +57,83 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On the heels of this patch, you might want to add this tiny bit to
-also update the nfs.conf(5) manpage:
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -283,7 +283,10 @@
- .TP
- .B svcgssd
- Recognized values:
--.BR principal .
-+.BR principal ,
-+.BR verbosity ,
-+.BR rpc-verbosity ,
-+.BR idmap-verbosity .
+This was missed in c3ed222745d9 ("NFSv4: Fix free of uninitialized
+nfs4_label on referral lookup.") and causes a panic when mounting
+with '-o trunkdiscovery':
 
- See
- .BR rpc.svcgssd (8)
+PID: 1604   TASK: ffff93dac3520000  CPU: 3   COMMAND: "mount.nfs"
+ #0 [ffffb79140f738f8] machine_kexec at ffffffffaec64bee
+ #1 [ffffb79140f73950] __crash_kexec at ffffffffaeda67fd
+ #2 [ffffb79140f73a18] crash_kexec at ffffffffaeda76ed
+ #3 [ffffb79140f73a30] oops_end at ffffffffaec2658d
+ #4 [ffffb79140f73a50] general_protection at ffffffffaf60111e
+    [exception RIP: nfs_fattr_init+0x5]
+    RIP: ffffffffc0c18265  RSP: ffffb79140f73b08  RFLAGS: 00010246
+    RAX: 0000000000000000  RBX: ffff93dac304a800  RCX: 0000000000000000
+    RDX: ffffb79140f73bb0  RSI: ffff93dadc8cbb40  RDI: d03ee11cfaf6bd50
+    RBP: ffffb79140f73be8   R8: ffffffffc0691560   R9: 0000000000000006
+    R10: ffff93db3ffd3df8  R11: 0000000000000000  R12: ffff93dac4040000
+    R13: ffff93dac2848e00  R14: ffffb79140f73b60  R15: ffffb79140f73b30
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ #5 [ffffb79140f73b08] _nfs41_proc_get_locations at ffffffffc0c73d53 [nfsv4]
+ #6 [ffffb79140f73bf0] nfs4_proc_get_locations at ffffffffc0c83e90 [nfsv4]
+ #7 [ffffb79140f73c60] nfs4_discover_trunking at ffffffffc0c83fb7 [nfsv4]
+ #8 [ffffb79140f73cd8] nfs_probe_fsinfo at ffffffffc0c0f95f [nfs]
+ #9 [ffffb79140f73da0] nfs_probe_server at ffffffffc0c1026a [nfs]
+    RIP: 00007f6254fce26e  RSP: 00007ffc69496ac8  RFLAGS: 00000246
+    RAX: ffffffffffffffda  RBX: 0000000000000000  RCX: 00007f6254fce26e
+    RDX: 00005600220a82a0  RSI: 00005600220a64d0  RDI: 00005600220a6520
+    RBP: 00007ffc69496c50   R8: 00005600220a8710   R9: 003035322e323231
+    R10: 0000000000000000  R11: 0000000000000246  R12: 00007ffc69496c50
+    R13: 00005600220a8440  R14: 0000000000000010  R15: 0000560020650ef9
+    ORIG_RAX: 00000000000000a5  CS: 0033  SS: 002b
 
-On Tue, Jun 7, 2022 at 8:19 AM <marcel@linux-ng.de> wrote:
->
-> From: Marcel Ritter <marcel@linux-ng.de>
->
-> There seem to be some undocumented options implemented.
-> Why not mention them in the man page?
->
-> ---
->  utils/gssd/svcgssd.man | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/utils/gssd/svcgssd.man b/utils/gssd/svcgssd.man
-> index 15ef4c94..8771c035 100644
-> --- a/utils/gssd/svcgssd.man
-> +++ b/utils/gssd/svcgssd.man
-> @@ -61,6 +61,19 @@ this is equivalent to the
->  option.  If set to any other value, that is used like the
->  .B -p
->  option.
-> +.TP
-> +.B verbosity
-> +Value which is equivalent to the number of
-> +.BR -v .
-> +.TP
-> +.B rpc-verbosity
-> +Value which is equivalent to the number of
-> +.BR -r .
-> +.TP
-> +.B idmap-verbosity
-> +Value which is equivalent to the number of
-> +.BR -i .
-> +
->
->  .SH SEE ALSO
->  .BR rpc.gssd(8),
-> --
-> 2.34.1
->
+Fixes: c3ed222745d9 ("NFSv4: Fix free of uninitialized nfs4_label on referral lookup.")
+Signed-off-by: Scott Mayhew <smayhew@redhat.com>
+---
+ fs/nfs/nfs4proc.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
+
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index c0fdcf8c0032..bb0e84a46d61 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -4012,22 +4012,29 @@ static int _nfs4_discover_trunking(struct nfs_server *server,
+ 	}
+ 
+ 	page = alloc_page(GFP_KERNEL);
++	if (!page)
++		return -ENOMEM;
+ 	locations = kmalloc(sizeof(struct nfs4_fs_locations), GFP_KERNEL);
+-	if (page == NULL || locations == NULL)
+-		goto out;
++	if (!locations)
++		goto out_free;
++	locations->fattr = nfs_alloc_fattr();
++	if (!locations->fattr)
++		goto out_free_2;
+ 
+ 	status = nfs4_proc_get_locations(server, fhandle, locations, page,
+ 					 cred);
+ 	if (status)
+-		goto out;
++		goto out_free_3;
+ 
+ 	for (i = 0; i < locations->nlocations; i++)
+ 		test_fs_location_for_trunking(&locations->locations[i], clp,
+ 					      server);
+-out:
+-	if (page)
+-		__free_page(page);
++out_free_3:
++	kfree(locations->fattr);
++out_free_2:
+ 	kfree(locations);
++out_free:
++	__free_page(page);
+ 	return status;
+ }
+ 
+-- 
+2.34.1
+
