@@ -2,86 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C7BDC5624E8
-	for <lists+linux-nfs@lfdr.de>; Thu, 30 Jun 2022 23:13:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97CC9562B41
+	for <lists+linux-nfs@lfdr.de>; Fri,  1 Jul 2022 08:11:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236886AbiF3VM6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 30 Jun 2022 17:12:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34820 "EHLO
+        id S232365AbiGAGKy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 1 Jul 2022 02:10:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236647AbiF3VM4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 30 Jun 2022 17:12:56 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A634220C6
-        for <linux-nfs@vger.kernel.org>; Thu, 30 Jun 2022 14:12:55 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7A74A70B8; Thu, 30 Jun 2022 17:12:54 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7A74A70B8
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1656623574;
-        bh=xRnLLlKNVuBfVx2ieGrRQaN4c41JZ9Se/aqIRLstukA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qpBFmczljIDKC8DkHX9e0dNS0X561vcSsZFD/8uCOm6H978ltPJO7xbizG0HpeCHY
-         omlsE7HbBcbcksBqClj99UkD8TzN0DNbZzlL556vKk8WFosC1un9N81i22KJeEUFn+
-         DziM93C3A44XGH2kaT45kMfLg15270BOCN6mbCLA=
-Date:   Thu, 30 Jun 2022 17:12:54 -0400
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, anna.schumaker@netapp.com,
-        zlang@redhat.com
-Subject: Re: [PATCH v1] SUNRPC: Fix READ_PLUS crasher
-Message-ID: <20220630211254.GD22291@fieldses.org>
-References: <165660978413.2453.15153844664543877314.stgit@klimt.1015granger.net>
+        with ESMTP id S234693AbiGAGKu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 1 Jul 2022 02:10:50 -0400
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E08C61DA62;
+        Thu, 30 Jun 2022 23:10:49 -0700 (PDT)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 4F5945C0061;
+        Fri,  1 Jul 2022 02:10:49 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 01 Jul 2022 02:10:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
+        :cc:content-transfer-encoding:content-type:date:date:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to; s=fm1; t=1656655849; x=
+        1656742249; bh=k1W5DMoXurzbQJ/ZkPRxE74KndqCvp2BPtDKdSkedwI=; b=X
+        /VV+8trPBbb+vBv+SicCHaboOyjXmjEer0xpn0FMOPvwPjLaLAe7b3yZEJvZY8rm
+        q6yHDf/Tra+AyoTbYQlDtgu1/48T2oBhPbd3zlIroHVAYxj6GzzyN0UtT0lB+XO/
+        +mYUBPlUtEHmKWfHIHRYt4IXF4YcJWAEnfZXU0p6eAVuzTN/L1EXCU3hw1n+HzaP
+        eO/Aod+GrI4R3qMU8O899GKxf3DbLrTJpERXsx806gF4u+IQSjtadPrl3J9rEWlS
+        UCAVxHfo3ZmNetc6vrGrjKx4sz3HioKpmIHnzqp4Jx86NgWYCxrSi8t6Ps7abaVc
+        WLn3tDbxo8Z5liisPFjXA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:in-reply-to:message-id:mime-version:references
+        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1656655849; x=
+        1656742249; bh=k1W5DMoXurzbQJ/ZkPRxE74KndqCvp2BPtDKdSkedwI=; b=t
+        FbIizNm9mYjIE7LSip8RT434fbWbtZE9xivCXQAXIGgNv7uMpxPUqAXg1aiM40M3
+        Fd89Sfrl2RxTJ5sNxtC6VF8B8gjzwJegH1nGLZWOu4kw+NsZVu1ZCCo/QBpfdnrK
+        DG7V4FDoioQoT+DD3nF4dSYq5mejuAoYt4JPM526jUz0ntF9+Y7yd69hc64YLd+L
+        Dak7utSihyCSfaaqmP9lG54tKrVJbvw9aiAyem0mnZMaRdRMTQCpvAymuV4JcTAt
+        jdxEFq6JOjhg1j8T/tFpdXM14OYg+JFYKpKQqRgepzT9qP8AymOqGq3HhxzGf3cb
+        MmxSfpSKzHhik0Ms2tGAw==
+X-ME-Sender: <xms:6I--Yo4O5vJepmTh1536gCOnBmQgCQVODCjy4bYepUFaj9cOvyRBMA>
+    <xme:6I--Yp7i5fMylPGejt_gMz_h6rsFzGEy3PG9ONB5VxSQuFsVqGxqjlF1ds1CZPdR3
+    WPbTY4bObo5>
+X-ME-Received: <xmr:6I--YnfJg0e9TAfsqWIjPnoilpkC-YHN4Ztz0QxCaS0F9TknC9cErPVdXp54pI1nNIQBzixeVNrrAcMZrZ1NnTo32SwRV_3Y8ECDrWtwjDUIEgB3Kv6v>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrudehvddguddtkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttdefjeenucfhrhhomhepkfgr
+    nhcumfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrh
+    hnpeegvdetvedvfeeivdeuueejgeetvdehlefhheethfekgfejueffgeeugfekudfhjeen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvg
+    hnsehthhgvmhgrfidrnhgvth
+X-ME-Proxy: <xmx:6I--YtIdtQpc0rJsBa5NvacxxESkQ6l5qgYpdgrLvX2H3n5JtwCMqQ>
+    <xmx:6I--YsIixB1cq32MmIeG-V1WSR7O_2Yh970MW-9zYIzmxG2hY4yTfQ>
+    <xmx:6I--Yuy0e6vHiTSS2C7qO5pEDHNiG787SvcmspOwRC9M2xpGrDZPEA>
+    <xmx:6Y--YhGv9LUUZuEfgdeP6J8gVVutX3CMCOGqshthkPOg74m0XSyg5g>
+Feedback-ID: i31e841b0:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 1 Jul 2022 02:10:46 -0400 (EDT)
+Message-ID: <22f9fbb7-a557-f372-7ede-92f0af338bd1@themaw.net>
+Date:   Fri, 1 Jul 2022 14:10:41 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <165660978413.2453.15153844664543877314.stgit@klimt.1015granger.net>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [REPOST PATCH] nfs: fix port value parsing
+Content-Language: en-US
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "Anna.Schumaker@Netapp.com" <Anna.Schumaker@Netapp.com>
+Cc:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "SteveD@redhat.com" <SteveD@redhat.com>,
+        "bcodding@redhat.com" <bcodding@redhat.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>
+References: <165637590710.37553.7481596265813355098.stgit@donald.themaw.net>
+ <cadcb382d47ef037c5b713b099ae46640dfea37d.camel@hammerspace.com>
+ <ccd23a54-27b5-e65c-4a97-b169676c23bc@themaw.net>
+ <891563475afc32c49fab757b8b56ecdc45b30641.camel@hammerspace.com>
+ <fd23da3f-e242-da15-ab1c-3e53490a8577@themaw.net>
+ <c81b95d2b68480ead9f3bb88d6cf5a82a43c73b8.camel@hammerspace.com>
+From:   Ian Kent <raven@themaw.net>
+In-Reply-To: <c81b95d2b68480ead9f3bb88d6cf5a82a43c73b8.camel@hammerspace.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Looks like the crash I saw no longer reproduces after that, fwiw.
 
---b.
+On 30/6/22 07:57, Trond Myklebust wrote:
+> On Thu, 2022-06-30 at 07:33 +0800, Ian Kent wrote:
+>> On 29/6/22 23:33, Trond Myklebust wrote:
+>>> On Wed, 2022-06-29 at 09:02 +0800, Ian Kent wrote:
+>>>> On 28/6/22 22:34, Trond Myklebust wrote:
+>>>>> On Tue, 2022-06-28 at 08:25 +0800, Ian Kent wrote:
+>>>>>> The valid values of nfs options port and mountport are 0 to
+>>>>>> USHRT_MAX.
+>>>>>>
+>>>>>> The fs parser will return a fail for port values that are
+>>>>>> negative
+>>>>>> and the sloppy option handling then returns success.
+>>>>>>
+>>>>>> But the sloppy option handling is meant to return success for
+>>>>>> invalid
+>>>>>> options not valid options with invalid values.
+>>>>>>
+>>>>>> Parsing these values as s32 rather than u32 prevents the
+>>>>>> parser
+>>>>>> from
+>>>>>> returning a parse fail allowing the later USHRT_MAX option
+>>>>>> check
+>>>>>> to
+>>>>>> correctly return a fail in this case. The result check could
+>>>>>> be
+>>>>>> changed
+>>>>>> to use the int_32 union variant as well but leaving it as a
+>>>>>> uint_32
+>>>>>> check avoids using two logical compares instead of one.
+>>>>>>
+>>>>>> Signed-off-by: Ian Kent <raven@themaw.net>
+>>>>>> ---
+>>>>>>     fs/nfs/fs_context.c |    4 ++--
+>>>>>>     1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+>>>>>> index 9a16897e8dc6..f4da1d2be616 100644
+>>>>>> --- a/fs/nfs/fs_context.c
+>>>>>> +++ b/fs/nfs/fs_context.c
+>>>>>> @@ -156,14 +156,14 @@ static const struct fs_parameter_spec
+>>>>>> nfs_fs_parameters[] = {
+>>>>>>            fsparam_u32   ("minorversion",  Opt_minorversion),
+>>>>>>            fsparam_string("mountaddr",     Opt_mountaddr),
+>>>>>>            fsparam_string("mounthost",     Opt_mounthost),
+>>>>>> -       fsparam_u32   ("mountport",     Opt_mountport),
+>>>>>> +       fsparam_s32   ("mountport",     Opt_mountport),
+>>>>>>            fsparam_string("mountproto",    Opt_mountproto),
+>>>>>>            fsparam_u32   ("mountvers",     Opt_mountvers),
+>>>>>>            fsparam_u32   ("namlen",        Opt_namelen),
+>>>>>>            fsparam_u32   ("nconnect",      Opt_nconnect),
+>>>>>>            fsparam_u32   ("max_connect",   Opt_max_connect),
+>>>>>>            fsparam_string("nfsvers",       Opt_vers),
+>>>>>> -       fsparam_u32   ("port",          Opt_port),
+>>>>>> +       fsparam_s32   ("port",          Opt_port),
+>>>>>>            fsparam_flag_no("posix",        Opt_posix),
+>>>>>>            fsparam_string("proto",         Opt_proto),
+>>>>>>            fsparam_flag_no("rdirplus",     Opt_rdirplus),
+>>>>>>
+>>>>>>
+>>>>> Why don't we just check for the ENOPARAM return value from
+>>>>> fs_parse()?
+>>>> In this case I think the return will be EINVAL.
+>>> My point is that 'sloppy' is only supposed to work to suppress the
+>>> error in the case where an option is not found by the parser. That
+>>> corresponds to the error ENOPARAM.
+>> Well, yes, and that's why ENOPARAM isn't returned and shouldn't be.
+>>
+>> And if the sloppy option is given it doesn't get to check the value
+>>
+>> of the option, it just returns success which isn't right.
+>>
+>>
+>>>> I think that's a bit to general for this case.
+>>>>
+>>>> This seemed like the most sensible way to fix it.
+>>>>
+>>> Your patch works around just one symptom of the problem instead of
+>>> addressing the root cause.
+>>>
+>> Ok, how do you recommend I fix this?
+>>
+> Maybe I'm missing something, but why not this?
+>
+> 8<--------------------------------
+> diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
+> index 9a16897e8dc6..8f1f9b4af89d 100644
+> --- a/fs/nfs/fs_context.c
+> +++ b/fs/nfs/fs_context.c
+> @@ -484,7 +484,7 @@ static int nfs_fs_context_parse_param(struct
+> fs_context *fc,
+>   
+>   	opt = fs_parse(fc, nfs_fs_parameters, param, &result);
+>   	if (opt < 0)
+> -		return ctx->sloppy ? 1 : opt;
+> +		return (opt == -ENOPARAM && ctx->sloppy) ? 1 : opt;
+>   
+>   	if (fc->security)
+>   		ctx->has_sec_mnt_opts = 1;
+>
+I tested this with the autofs connectathon tests I use which has lots of
 
-On Thu, Jun 30, 2022 at 01:24:20PM -0400, Chuck Lever wrote:
-> Looks like there are still cases when "space_left - frag1bytes" can
-> legitimately exceed PAGE_SIZE. Ensure that xdr->end always remains
-> within the current encode buffer.
-> 
-> Reported-by: Bruce Fields <bfields@fieldses.org>
-> Reported-by: Zorro Lang <zlang@redhat.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216151
-> Fixes: 6c254bf3b637 ("SUNRPC: Fix the calculation of xdr->end in xdr_get_next_encode_buffer()")
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/xdr.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Hi-
-> 
-> I had a few minutes yesterday afternoon to look into this one. The
-> following one-liner seems to address the issue and passes my smoke
-> tests with NFSv4.1/TCP and NFSv3/RDMA. Any thoughts?
-> 
-> 
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index f87a2d8f23a7..916659be2774 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -987,7 +987,7 @@ static noinline __be32 *xdr_get_next_encode_buffer(struct xdr_stream *xdr,
->  	if (space_left - nbytes >= PAGE_SIZE)
->  		xdr->end = p + PAGE_SIZE;
->  	else
-> -		xdr->end = p + space_left - frag1bytes;
-> +		xdr->end = p + min_t(int, space_left - frag1bytes, PAGE_SIZE);
->  
->  	xdr->buf->page_len += frag2bytes;
->  	xdr->buf->len += nbytes;
-> 
+success and fail cases. As expected there were no surprises, the tests
+
+worked fine and gave the expected results.
+
+
+I'll send an updated patch, is a "Suggested-by" attribution sufficient
+
+or would you like something different?
+
+
+Ian
+
