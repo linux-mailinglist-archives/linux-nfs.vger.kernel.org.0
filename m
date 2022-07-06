@@ -2,44 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4F1D568B03
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Jul 2022 16:12:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF21E568B1E
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Jul 2022 16:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232479AbiGFOMc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Jul 2022 10:12:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40544 "EHLO
+        id S231800AbiGFOXS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Jul 2022 10:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233321AbiGFOMX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 10:12:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F045C1EADE
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 07:12:22 -0700 (PDT)
+        with ESMTP id S230420AbiGFOXR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 10:23:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FBD016586
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 07:23:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F00461E73
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 14:12:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F8FC3411C;
-        Wed,  6 Jul 2022 14:12:21 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 37922B81CD2
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 14:23:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E78BCC3411C;
+        Wed,  6 Jul 2022 14:23:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657116742;
-        bh=jtI9gRdifEFPjz0Cvlh2IKcXUMXrb8Ayks7ulX+VMy0=;
+        s=k20201202; t=1657117393;
+        bh=ZsqJS4D+f8L/38diC14ckYjcuOb0LkeJUtqv18MCne8=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=K4DiqPYw2MVm3RPm2PigKYHuNFFZ8Y9zVCBFZGCHQdkbh/7QVqieiwbUCR89V04U4
-         KjpFKVuTo+HpWlKXZFyd1wHwcRfFyQEQFEzWTeAfsFDXMx39X2MOwcx8R41NoWC0DC
-         AYoLS98Uf4j0T0C7hT4L6PIB9ROzAWfJ3wmo4KFwyyM0y91YTDpDobunRSKSVnpUYk
-         dz3uy0Cm0pwLAdduib14AwqgmHkvd71l8lTIkQcsT+CAIi05nEc3HY5h+sPtcvt9Bv
-         9kBAoyhST9AxQMTq9wScLISIKarYglwgFqhWd51X+zU7j9ILK356Auq7mkhiZZhGno
-         TVvgTLQ2zL8iA==
-Message-ID: <4a39dc37373241e1ec5cb7d47f5649bc693e11df.camel@kernel.org>
-Subject: Re: [PATCH 8/8] NFSD: discard fh_locked flag and fh_lock/fh_unlock
+        b=HlcZ5DqnPP8yOortsPm8ZlTbyZlrPbtbEq+bt7x4NnD15QSfX7lxY5BZGGLbf8NhV
+         w/JlY4sd0Ktoq7sLJuEYJ5dqgOUSBO1laJzipA1Xxv+rORYoUrDYgr0AXOraisaOIv
+         ySvHjwazqyYK7/7EHyOIzfyHkNF+yf/O2XUuS4vB8b8ZhtFI6v/jZ0wRGoPQpswpyd
+         1eTAGVG0H8wpauKz+TeeSqd2iuUSEo1DHQsDGq/1J/21pQkRNmbzVbQt+9TXlbjHWd
+         QWJJ3tttgPdUgASiwSwY/N4gkZt+1gwr1EcgLmGGZoD32MSSzmlrrceLPo6+uO0MNW
+         qARclPkpZk2/A==
+Message-ID: <b327b4752784a9c3d854671d31c5b4738f45f599.camel@kernel.org>
+Subject: Re: [PATCH] NFS: don't unhash dentry during unlink.
 From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Date:   Wed, 06 Jul 2022 10:12:19 -0400
-In-Reply-To: <165708109261.1940.5366273190007170909.stgit@noble.brown>
-References: <165708033167.1940.3364591321728458949.stgit@noble.brown>
-         <165708109261.1940.5366273190007170909.stgit@noble.brown>
+To:     NeilBrown <neilb@suse.de>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Date:   Wed, 06 Jul 2022 10:23:10 -0400
+In-Reply-To: <165708423191.17141.6465885406851939941@noble.neil.brown.name>
+References: <165708423191.17141.6465885406851939941@noble.neil.brown.name>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
@@ -54,191 +55,162 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-07-06 at 14:18 +1000, NeilBrown wrote:
-> As all inode locking is now fully balanced, fh_put() does not need to
-> call fh_unlock().
-> fh_lock() and fh_unlock() are no longer used, so discard them.
-> These are the only real users of ->fh_locked, so discard that too.
+On Wed, 2022-07-06 at 15:10 +1000, NeilBrown wrote:
+> NFS unlink() must determine if the file is open, and must perform a
+> "silly rename" instead of an unlink if it is.  Otherwise the client
+> might hold a file open which has been removed on the server.
+>=20
+> Consequently if it determines that the file isn't open, it must block
+> any subsequent opens until the unlink has been completed on the server.
+>=20
+> This is currently achieved by unhashing the dentry.  This forces any
+> open attempt to the slow-path for lookup which will block on i_sem on
+> the directory until the unlink completes.  A proposed patch will change
+> the VFS to only get a shared lock on i_sem for unlink, so this will no
+> longer work.
+>=20
+> Instead we introduce an explicit interlock.  A flag is set on the dentry
+> while the unlink is running and ->d_revalidate blocks while that flag is
+> set.  This closes the race without requiring exclusion on i_sem.
+> unlink will still have exclusion on the dentry being unlinked, so it
+> will be safe to set and then clear the flag without any risk of another
+> thread touching the flag.
+>=20
+> There is little room for adding new dentry flags, so instead of adding a
+> new flag, we overload an existing flag which is not used by NFS.
+>=20
+> DCACHE_DONTCACHE is only set for filesystems which call
+> d_mark_dontcache() and NFS never calls this, so it is currently unused
+> in NFS.
+> DCACHE_DONTCACHE is only tested when the last reference on a dentry has
+> been dropped, so it is safe for NFS to set and then clear the flag while
+> holding a reference - the setting of the flag cannot cause a
+> misunderstanding.
+>=20
+> So we define DCACHE_NFS_PENDING_UNLINK as an alias for DCACHE_DONTCACHE
+> and add a definition to nfs_fs.h so that if NFS ever does find a need to
+> call d_mark_dontcache() the build will fail with a suitable error.
 >=20
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
->  fs/nfsd/nfsfh.c |    3 +--
->  fs/nfsd/nfsfh.h |   56 ++++---------------------------------------------=
-------
->  fs/nfsd/vfs.c   |   17 +----------------
->  3 files changed, 6 insertions(+), 70 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-> index 5e2ed4b2a925..22a77a5e2327 100644
-> --- a/fs/nfsd/nfsfh.c
-> +++ b/fs/nfsd/nfsfh.c
-> @@ -549,7 +549,7 @@ fh_compose(struct svc_fh *fhp, struct svc_export *exp=
-, struct dentry *dentry,
->  	if (ref_fh =3D=3D fhp)
->  		fh_put(ref_fh);
+> Hi Trond/Anna,
+>  this patch is a precursor for my parallel-directory-updates patch set.
+>  I would be particularly helpful if this (and the nfsd patches I
+>  recently sent) could land for the next merge window.  Then I could post
+>  a substantially reduced series to implement parallel directory
+>  updates, which would then be easier for other to review.
+>=20
+> Thanks,
+> NeilBrown
+>=20
+>=20
+>  fs/nfs/dir.c           | 23 ++++++++++++++++-------
+>  include/linux/nfs_fs.h | 14 ++++++++++++++
+>  2 files changed, 30 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 0c4e8dd6aa96..695bb057cbd2 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -1778,6 +1778,8 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsi=
+gned int flags,
+>  	int ret;
 > =20
-> -	if (fhp->fh_locked || fhp->fh_dentry) {
-> +	if (fhp->fh_dentry) {
->  		printk(KERN_ERR "fh_compose: fh %pd2 not initialized!\n",
->  		       dentry);
->  	}
-> @@ -681,7 +681,6 @@ fh_put(struct svc_fh *fhp)
->  	struct dentry * dentry =3D fhp->fh_dentry;
->  	struct svc_export * exp =3D fhp->fh_export;
->  	if (dentry) {
-> -		fh_unlock(fhp);
->  		fhp->fh_dentry =3D NULL;
->  		dput(dentry);
->  		fh_clear_pre_post_attrs(fhp);
-> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-> index fb9d358a267e..09c654bdf9b0 100644
-> --- a/fs/nfsd/nfsfh.h
-> +++ b/fs/nfsd/nfsfh.h
-> @@ -81,7 +81,6 @@ typedef struct svc_fh {
->  	struct dentry *		fh_dentry;	/* validated dentry */
->  	struct svc_export *	fh_export;	/* export pointer */
-> =20
-> -	bool			fh_locked;	/* inode locked by us */
->  	bool			fh_want_write;	/* remount protection taken */
->  	bool			fh_no_wcc;	/* no wcc data needed */
->  	bool			fh_no_atomic_attr;
-> @@ -93,7 +92,7 @@ typedef struct svc_fh {
->  	bool			fh_post_saved;	/* post-op attrs saved */
->  	bool			fh_pre_saved;	/* pre-op attrs saved */
-> =20
-> -	/* Pre-op attributes saved during fh_lock */
-> +	/* Pre-op attributes saved when inode is locked */
->  	__u64			fh_pre_size;	/* size before operation */
->  	struct timespec64	fh_pre_mtime;	/* mtime before oper */
->  	struct timespec64	fh_pre_ctime;	/* ctime before oper */
-> @@ -103,7 +102,7 @@ typedef struct svc_fh {
->  	 */
->  	u64			fh_pre_change;
-> =20
-> -	/* Post-op attributes saved in fh_unlock */
-> +	/* Post-op attributes saved in fh_fill_post_attrs() */
->  	struct kstat		fh_post_attr;	/* full attrs after operation */
->  	u64			fh_post_change; /* nfsv4 change; see above */
->  } svc_fh;
-> @@ -223,8 +222,8 @@ void	fh_put(struct svc_fh *);
->  static __inline__ struct svc_fh *
->  fh_copy(struct svc_fh *dst, struct svc_fh *src)
+>  	if (flags & LOOKUP_RCU) {
+> +		if (dentry->d_flags & DCACHE_NFS_PENDING_UNLINK)
+> +			return -ECHILD;
+>  		parent =3D READ_ONCE(dentry->d_parent);
+>  		dir =3D d_inode_rcu(parent);
+>  		if (!dir)
+> @@ -1786,6 +1788,9 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsi=
+gned int flags,
+>  		if (parent !=3D READ_ONCE(dentry->d_parent))
+>  			return -ECHILD;
+>  	} else {
+> +		/* Wait for unlink to complete */
+> +		wait_var_event(&dentry->d_flags,
+> +			       !(dentry->d_flags & DCACHE_NFS_PENDING_UNLINK));
+>  		parent =3D dget_parent(dentry);
+>  		ret =3D reval(d_inode(parent), dentry, flags);
+>  		dput(parent);
+> @@ -2454,7 +2459,6 @@ static int nfs_safe_remove(struct dentry *dentry)
+>  int nfs_unlink(struct inode *dir, struct dentry *dentry)
 >  {
-> -	WARN_ON(src->fh_dentry || src->fh_locked);
-> -		=09
-> +	WARN_ON(src->fh_dentry);
-> +
->  	*dst =3D *src;
->  	return dst;
->  }
-> @@ -323,51 +322,4 @@ static inline u64 nfsd4_change_attribute(struct ksta=
-t *stat,
->  extern void fh_fill_pre_attrs(struct svc_fh *fhp);
->  extern void fh_fill_post_attrs(struct svc_fh *fhp);
+>  	int error;
+> -	int need_rehash =3D 0;
 > =20
-> -
-> -/*
-> - * Lock a file handle/inode
-> - * NOTE: both fh_lock and fh_unlock are done "by hand" in
-> - * vfs.c:nfsd_rename as it needs to grab 2 i_mutex's at once
-> - * so, any changes here should be reflected there.
-> - */
-> -
-> -static inline void
-> -fh_lock_nested(struct svc_fh *fhp, unsigned int subclass)
-> -{
-> -	struct dentry	*dentry =3D fhp->fh_dentry;
-> -	struct inode	*inode;
-> -
-> -	BUG_ON(!dentry);
-> -
-> -	if (fhp->fh_locked) {
-> -		printk(KERN_WARNING "fh_lock: %pd2 already locked!\n",
-> -			dentry);
-> -		return;
-> -	}
-> -
-> -	inode =3D d_inode(dentry);
-> -	inode_lock_nested(inode, subclass);
-> -	fh_fill_pre_attrs(fhp);
-> -	fhp->fh_locked =3D true;
-> -}
-> -
-> -static inline void
-> -fh_lock(struct svc_fh *fhp)
-> -{
-> -	fh_lock_nested(fhp, I_MUTEX_NORMAL);
-> -}
-> -
-> -/*
-> - * Unlock a file handle/inode
-> - */
-> -static inline void
-> -fh_unlock(struct svc_fh *fhp)
-> -{
-> -	if (fhp->fh_locked) {
-> -		fh_fill_post_attrs(fhp);
-> -		inode_unlock(d_inode(fhp->fh_dentry));
-> -		fhp->fh_locked =3D false;
-> -	}
-> -}
-> -
->  #endif /* _LINUX_NFSD_NFSFH_H */
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 2526615285ca..fe4cdf8ab428 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1305,13 +1305,6 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct =
-svc_fh *fhp,
->  	dirp =3D d_inode(dentry);
-> =20
->  	dchild =3D dget(resfhp->fh_dentry);
-> -	if (!fhp->fh_locked) {
-> -		WARN_ONCE(1, "nfsd_create: parent %pd2 not locked!\n",
-> -				dentry);
-> -		err =3D nfserr_io;
-> -		goto out;
-> -	}
-> -
->  	err =3D nfsd_permission(rqstp, fhp->fh_export, dentry, NFSD_MAY_CREATE)=
-;
->  	if (err)
->  		goto out;
-> @@ -1674,10 +1667,7 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh =
-*ffhp, char *fname, int flen,
+>  	dfprintk(VFS, "NFS: unlink(%s/%lu, %pd)\n", dir->i_sb->s_id,
+>  		dir->i_ino, dentry);
+> @@ -2469,15 +2473,20 @@ int nfs_unlink(struct inode *dir, struct dentry *=
+dentry)
+>  		error =3D nfs_sillyrename(dir, dentry);
 >  		goto out;
 >  	}
-> =20
-> -	/* cannot use fh_lock as we need deadlock protective ordering
-> -	 * so do it by hand */
->  	trap =3D lock_rename(tdentry, fdentry);
-> -	ffhp->fh_locked =3D tfhp->fh_locked =3D true;
->  	fh_fill_pre_attrs(ffhp);
->  	fh_fill_pre_attrs(tfhp);
-> =20
-> @@ -1733,17 +1723,12 @@ nfsd_rename(struct svc_rqst *rqstp, struct svc_fh=
- *ffhp, char *fname, int flen,
->  	dput(odentry);
->   out_nfserr:
->  	err =3D nfserrno(host_err);
-> -	/*
-> -	 * We cannot rely on fh_unlock on the two filehandles,
-> -	 * as that would do the wrong thing if the two directories
-> -	 * were the same, so again we do it by hand.
-> -	 */
+> -	if (!d_unhashed(dentry)) {
+> -		__d_drop(dentry);
+> -		need_rehash =3D 1;
+> -	}
+> +	/* We must prevent any concurrent open until the unlink
+> +	 * completes.  ->d_revalidate will wait for DCACHE_NFS_PENDING_UNLINK
+> +	 * to clear.  We set it here to ensure no lookup succeeds until
+> +	 * the unlink is complete on the server.
+> +	 */
+> +	dentry->d_flags |=3D DCACHE_NFS_PENDING_UNLINK;
 > +
->  	if (!close_cached) {
->  		fh_fill_post_attrs(ffhp);
->  		fh_fill_post_attrs(tfhp);
->  	}
->  	unlock_rename(tdentry, fdentry);
-> -	ffhp->fh_locked =3D tfhp->fh_locked =3D false;
->  	fh_drop_write(ffhp);
+>  	spin_unlock(&dentry->d_lock);
+>  	error =3D nfs_safe_remove(dentry);
+>  	nfs_dentry_remove_handle_error(dir, dentry, error);
+> -	if (need_rehash)
+> -		d_rehash(dentry);
+> +	spin_lock(&dentry->d_lock);
+> +	dentry->d_flags &=3D ~DCACHE_NFS_PENDING_UNLINK;
+> +	spin_unlock(&dentry->d_lock);
+> +	wake_up_var(&dentry->d_flags);
+>  out:
+>  	trace_nfs_unlink_exit(dir, dentry, error);
+>  	return error;
+> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> index a17c337dbdf1..041a6076e045 100644
+> --- a/include/linux/nfs_fs.h
+> +++ b/include/linux/nfs_fs.h
+> @@ -617,6 +617,20 @@ nfs_fileid_to_ino_t(u64 fileid)
 > =20
->  	/*
->=20
->=20
+>  #define NFS_JUKEBOX_RETRY_TIME (5 * HZ)
+> =20
+> +/* We need to block new opens while a file is being unlinked.
+> + * If it is opened *before* we decide to unlink, we will silly-rename
+> + * instead. If it is opened *after*, then we the open to fail unless it =
+creates
 
-Nice cleanup.
+"then we allow the open to fail"
+
+> + * a new file.
+> + * If we allow the open and unlink to race, we could end up with a file =
+that is
+> + * open but deleted on the server resulting in ESTALE.
+> + * So overload DCACHE_DONTCACHE to record when the unlink is happening
+> + * and block dentry revalidation while it is set.
+> + * DCACHE_DONTCACHE is only used by filesystems which call d_mark_dontca=
+che()
+> + * which NFS never calls.  It is only tested on a dentry on which all re=
+ferences
+> + * have been dropped, so it is safe for NFS to set it while holding a re=
+ference.
+> + */
+> +#define DCACHE_NFS_PENDING_UNLINK DCACHE_DONTCACHE
+> +#define d_mark_dontcache(i) BUILD_BUG_ON_MSG(1, "NFS cannot use d_mark_d=
+ontcache()")
+> =20
+>  # undef ifdebug
+>  # ifdef NFS_DEBUG
+
+Wow, we really are out of dentry flags. I wonder if some of them are no
+longer needed?
+
+This overloading is a bit klunky but it's probably OK. AFAICT,
+0x80000000 is still available though if this turns out to be too nasty.
+It looks like 0x08000000 may also be free
+
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
