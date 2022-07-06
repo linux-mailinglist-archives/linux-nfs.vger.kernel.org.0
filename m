@@ -2,256 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AC3B569618
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 01:36:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DE8D5696A7
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 01:57:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234551AbiGFXgB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Jul 2022 19:36:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46698 "EHLO
+        id S234442AbiGFX47 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Jul 2022 19:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234526AbiGFXgB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 19:36:01 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4105A2CC8C
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 16:36:00 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id E0E2721EC2;
-        Wed,  6 Jul 2022 23:35:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1657150558; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KP45Ilat6TFUn+kDSeCRS9zHc+DP1j9Wg0vIkz2SS4c=;
-        b=EGxsbqkOzotAKppZYYRQXmEpN4gH3mV7yR6KhGCS3Eyn2du1ukywWazP6/1mVUQQ0zQjPD
-        N81xU1bMaX1gWejDl8OilIwDwUqGTCN6c0x6NXkWCdubYdaN54fM08Y2IjNqxXu5Nd95bV
-        jAXLSG7XZ2Br6jML/XKCa7BU5kbojFU=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1657150558;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KP45Ilat6TFUn+kDSeCRS9zHc+DP1j9Wg0vIkz2SS4c=;
-        b=22qzUgfSLpvWgTvKFKyu2appZB58+NJ0gVQcLKQWeLuhKLTPwkk3k2LqJumdp/JAbb85gF
-        jj7XcUiy0GBJFPAA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 79572134CF;
-        Wed,  6 Jul 2022 23:35:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id yVK5DF0cxmIPPgAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 06 Jul 2022 23:35:57 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233613AbiGFX46 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 19:56:58 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D0C2D1C8
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 16:56:58 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id m6-20020a05600c3b0600b003a0489f412cso179156wms.1
+        for <linux-nfs@vger.kernel.org>; Wed, 06 Jul 2022 16:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eOGG5TEyvbbE0DQj04oC5N4GBb+43dSxLzH6oyzn9Rc=;
+        b=YguXpB43+Mg3KH8/XIYRNPZR3TWPNkIOc1OgStIKKPm9DN7gv1AiUCzdfWZnWjjZ7b
+         hy4Lv3Pb8N/kaVEEfItsKuOTckq5r0TF/jtAVko0iMifu1CTn4hlmzZM9qKSouhAZTON
+         bFzR43FZ5iDTu2q25oF1dRSirk9BZA+qVcShrF9RXnZ1xaM6ZLeN3z4ZJlJZ+NjPwg31
+         gkP2KHhcMXBeeI5tpIRSS7ld2rTFrPTOFsHcoY4zrzq/x1XMzbILCdVDjM1J2ABWSYMG
+         cs8IHunVV+w8WkozKK+oE3d+5onUPLHt9b8AyfxmAc1d03ghhSs9sGyBLYfTn/veSIhw
+         SOnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eOGG5TEyvbbE0DQj04oC5N4GBb+43dSxLzH6oyzn9Rc=;
+        b=byKI5dbNGjphss9y6rv7qRUrMOkJ/UPb4GtUEfOvfNT3/+40dU5tT3PtJi7q3SDTSc
+         YEJOt/l/JXttn4zErB4TMn4gDc5M5sqZS6D+FgjGYK4vWXJa1WfgyN2qL2a5PkbKZz5G
+         MtXIH0UOwB2TycOROiWTHeOlZ39atwESXxa+SA6seNUS2fSQcThp5oTgWzrmh/V1MinZ
+         dLU38UG2z5X568xUAknC5HHOjbt+FQWmDVFuc2E2atQ1xzjUeiCdZw+yRMGzU7zUL2+k
+         A8a2cFDlh2eU4b9a1Dacr9kczQSMrgVboJXTwunO6X0zR0B/d2sPeMby09DJPrCKs896
+         5mEw==
+X-Gm-Message-State: AJIora97B0St8oEBhRbZtNgARejeEWWWVNglCpp/NMkhjl7C2+xBSDzN
+        pEuhALSQZ6Y4XlgAgi2zhm8qTtq2x0YU8rkUS1JCFNwM
+X-Google-Smtp-Source: AGRyM1t8Y95NQoXnAAZv1dcNiCfBVoj6Sq7z3HDCZXs0E1yBuvTwcKoZEIjf94DMfST44BCeaU99oJD9iflfTEXz0ac=
+X-Received: by 2002:a1c:7719:0:b0:3a0:31a6:4469 with SMTP id
+ t25-20020a1c7719000000b003a031a64469mr1181985wmi.20.1657151816590; Wed, 06
+ Jul 2022 16:56:56 -0700 (PDT)
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Anna Schumaker" <anna@kernel.org>,
-        "linux-nfs" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] NFS: don't unhash dentry during unlink.
-In-reply-to: <b327b4752784a9c3d854671d31c5b4738f45f599.camel@kernel.org>
-References: <165708423191.17141.6465885406851939941@noble.neil.brown.name>,
- <b327b4752784a9c3d854671d31c5b4738f45f599.camel@kernel.org>
-Date:   Thu, 07 Jul 2022 09:35:53 +1000
-Message-id: <165715055394.17141.17231322377882434619@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <CACt_J9PHSjkz_-x0K=7+AYjiX1Ur5cV+brC9Tv4i7dkG=NSBuQ@mail.gmail.com>
+ <3D87B9ED-3A00-478B-AC17-435B71D0A349@redhat.com>
+In-Reply-To: <3D87B9ED-3A00-478B-AC17-435B71D0A349@redhat.com>
+From:   jie wang <yjxxtd12@gmail.com>
+Date:   Thu, 7 Jul 2022 07:56:44 +0800
+Message-ID: <CACt_J9NXmz4WCBT8iAT1MRNnhE1k5DpQct+00t-hTsbZrru06g@mail.gmail.com>
+Subject: Re: Question abount sm-notify when use NFSv3 lock
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 07 Jul 2022, Jeff Layton wrote:
-> On Wed, 2022-07-06 at 15:10 +1000, NeilBrown wrote:
-> > NFS unlink() must determine if the file is open, and must perform a
-> > "silly rename" instead of an unlink if it is.  Otherwise the client
-> > might hold a file open which has been removed on the server.
-> >=20
-> > Consequently if it determines that the file isn't open, it must block
-> > any subsequent opens until the unlink has been completed on the server.
-> >=20
-> > This is currently achieved by unhashing the dentry.  This forces any
-> > open attempt to the slow-path for lookup which will block on i_sem on
-> > the directory until the unlink completes.  A proposed patch will change
-> > the VFS to only get a shared lock on i_sem for unlink, so this will no
-> > longer work.
-> >=20
-> > Instead we introduce an explicit interlock.  A flag is set on the dentry
-> > while the unlink is running and ->d_revalidate blocks while that flag is
-> > set.  This closes the race without requiring exclusion on i_sem.
-> > unlink will still have exclusion on the dentry being unlinked, so it
-> > will be safe to set and then clear the flag without any risk of another
-> > thread touching the flag.
-> >=20
-> > There is little room for adding new dentry flags, so instead of adding a
-> > new flag, we overload an existing flag which is not used by NFS.
-> >=20
-> > DCACHE_DONTCACHE is only set for filesystems which call
-> > d_mark_dontcache() and NFS never calls this, so it is currently unused
-> > in NFS.
-> > DCACHE_DONTCACHE is only tested when the last reference on a dentry has
-> > been dropped, so it is safe for NFS to set and then clear the flag while
-> > holding a reference - the setting of the flag cannot cause a
-> > misunderstanding.
-> >=20
-> > So we define DCACHE_NFS_PENDING_UNLINK as an alias for DCACHE_DONTCACHE
-> > and add a definition to nfs_fs.h so that if NFS ever does find a need to
-> > call d_mark_dontcache() the build will fail with a suitable error.
-> >=20
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >=20
-> > Hi Trond/Anna,
-> >  this patch is a precursor for my parallel-directory-updates patch set.
-> >  I would be particularly helpful if this (and the nfsd patches I
-> >  recently sent) could land for the next merge window.  Then I could post
-> >  a substantially reduced series to implement parallel directory
-> >  updates, which would then be easier for other to review.
-> >=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> >  fs/nfs/dir.c           | 23 ++++++++++++++++-------
-> >  include/linux/nfs_fs.h | 14 ++++++++++++++
-> >  2 files changed, 30 insertions(+), 7 deletions(-)
-> >=20
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index 0c4e8dd6aa96..695bb057cbd2 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -1778,6 +1778,8 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsi=
-gned int flags,
-> >  	int ret;
-> > =20
-> >  	if (flags & LOOKUP_RCU) {
-> > +		if (dentry->d_flags & DCACHE_NFS_PENDING_UNLINK)
-> > +			return -ECHILD;
-> >  		parent =3D READ_ONCE(dentry->d_parent);
-> >  		dir =3D d_inode_rcu(parent);
-> >  		if (!dir)
-> > @@ -1786,6 +1788,9 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsi=
-gned int flags,
-> >  		if (parent !=3D READ_ONCE(dentry->d_parent))
-> >  			return -ECHILD;
-> >  	} else {
-> > +		/* Wait for unlink to complete */
-> > +		wait_var_event(&dentry->d_flags,
-> > +			       !(dentry->d_flags & DCACHE_NFS_PENDING_UNLINK));
-> >  		parent =3D dget_parent(dentry);
-> >  		ret =3D reval(d_inode(parent), dentry, flags);
-> >  		dput(parent);
-> > @@ -2454,7 +2459,6 @@ static int nfs_safe_remove(struct dentry *dentry)
-> >  int nfs_unlink(struct inode *dir, struct dentry *dentry)
-> >  {
-> >  	int error;
-> > -	int need_rehash =3D 0;
-> > =20
-> >  	dfprintk(VFS, "NFS: unlink(%s/%lu, %pd)\n", dir->i_sb->s_id,
-> >  		dir->i_ino, dentry);
-> > @@ -2469,15 +2473,20 @@ int nfs_unlink(struct inode *dir, struct dentry *=
-dentry)
-> >  		error =3D nfs_sillyrename(dir, dentry);
-> >  		goto out;
-> >  	}
-> > -	if (!d_unhashed(dentry)) {
-> > -		__d_drop(dentry);
-> > -		need_rehash =3D 1;
-> > -	}
-> > +	/* We must prevent any concurrent open until the unlink
-> > +	 * completes.  ->d_revalidate will wait for DCACHE_NFS_PENDING_UNLINK
-> > +	 * to clear.  We set it here to ensure no lookup succeeds until
-> > +	 * the unlink is complete on the server.
-> > +	 */
-> > +	dentry->d_flags |=3D DCACHE_NFS_PENDING_UNLINK;
-> > +
-> >  	spin_unlock(&dentry->d_lock);
-> >  	error =3D nfs_safe_remove(dentry);
-> >  	nfs_dentry_remove_handle_error(dir, dentry, error);
-> > -	if (need_rehash)
-> > -		d_rehash(dentry);
-> > +	spin_lock(&dentry->d_lock);
-> > +	dentry->d_flags &=3D ~DCACHE_NFS_PENDING_UNLINK;
-> > +	spin_unlock(&dentry->d_lock);
-> > +	wake_up_var(&dentry->d_flags);
-> >  out:
-> >  	trace_nfs_unlink_exit(dir, dentry, error);
-> >  	return error;
-> > diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> > index a17c337dbdf1..041a6076e045 100644
-> > --- a/include/linux/nfs_fs.h
-> > +++ b/include/linux/nfs_fs.h
-> > @@ -617,6 +617,20 @@ nfs_fileid_to_ino_t(u64 fileid)
-> > =20
-> >  #define NFS_JUKEBOX_RETRY_TIME (5 * HZ)
-> > =20
-> > +/* We need to block new opens while a file is being unlinked.
-> > + * If it is opened *before* we decide to unlink, we will silly-rename
-> > + * instead. If it is opened *after*, then we the open to fail unless it =
-creates
->=20
-> "then we allow the open to fail"
+Thanks the reply, I have tried it, but it doesn't work, '-v' can only
+use the local address
 
-Actually it is "then we need the open to fail".
-I should probably do a complete re-write of that para.
 
->=20
-> > + * a new file.
-> > + * If we allow the open and unlink to race, we could end up with a file =
-that is
-> > + * open but deleted on the server resulting in ESTALE.
-> > + * So overload DCACHE_DONTCACHE to record when the unlink is happening
-> > + * and block dentry revalidation while it is set.
-> > + * DCACHE_DONTCACHE is only used by filesystems which call d_mark_dontca=
-che()
-> > + * which NFS never calls.  It is only tested on a dentry on which all re=
-ferences
-> > + * have been dropped, so it is safe for NFS to set it while holding a re=
-ference.
-> > + */
-> > +#define DCACHE_NFS_PENDING_UNLINK DCACHE_DONTCACHE
-> > +#define d_mark_dontcache(i) BUILD_BUG_ON_MSG(1, "NFS cannot use d_mark_d=
-ontcache()")
-> > =20
-> >  # undef ifdebug
-> >  # ifdef NFS_DEBUG
->=20
-> Wow, we really are out of dentry flags. I wonder if some of them are no
-> longer needed?
->=20
-> This overloading is a bit klunky but it's probably OK. AFAICT,
-> 0x80000000 is still available though if this turns out to be too nasty.
-> It looks like 0x08000000 may also be free
-
-I need one of those two in a subsequent patch to lock a dentry while the
-name/link is being created.  If I used the other for NFS_PENDING_UNLINK
-we would be completely out.
-
-This flag really should be completely private to nfs.  d_fsdata would be
-the best place to put it.
-But NFS doesn't have a permanent d_fsdata in which I can store a bit.
-Nor does it leave d_fsdata untouched, so I cannot store a magic value in
-there.
-There are two different uses of d_fsdata.  I don't fully understand when
-they are active, so I don't know if it is safe to add another
-independent use - I suspect not though.
-
->=20
->=20
-> Reviewed-by: Jeff Layton <jlayton@kernel.org>
->=20
-
-Thanks,
-NeilBrown
-
+On Wed, Jul 6, 2022 at 10:39 PM Benjamin Coddington <bcodding@redhat.com> wrote:
+>
+> On 6 Jul 2022, at 8:28, jie wang wrote:
+>
+> > Hi, all
+> >   When we use NFSv3, we have a LoadBalance in front of NFS server. For
+> > example, LoadBalance's ip is ip2 and NFS server's ip is ip1, and
+> > client use ip2 to mount.
+> >
+> >   Now client use flock to lock file, then I restart NFS server and
+> > execute sm-notify -f. Then the problem occurs, the sm-notify request's
+> > src ip is ip1, not ip2, so rpc.statd will ignore this notify, because
+> > it does not match ip2 when mount, so client will not reclaim lock, and
+> > lock lost when restart NFS server.
+> >
+> >   Do you know how to address this ? Thanks a lot.
+>
+> The sm-notify(8) man page shows you can use '-v' to specify an ipaddr or
+> hostname.
+>
+> Ben
+>
