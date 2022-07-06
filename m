@@ -2,77 +2,133 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B1F6567C89
-	for <lists+linux-nfs@lfdr.de>; Wed,  6 Jul 2022 05:29:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BB5E567D06
+	for <lists+linux-nfs@lfdr.de>; Wed,  6 Jul 2022 06:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbiGFD3V (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 5 Jul 2022 23:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40624 "EHLO
+        id S231361AbiGFETz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Jul 2022 00:19:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbiGFD3T (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 5 Jul 2022 23:29:19 -0400
-X-Greylist: delayed 92 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 05 Jul 2022 20:29:18 PDT
-Received: from wfbtwxkt.outbound-mail.sendgrid.net (wfbtwxkt.outbound-mail.sendgrid.net [159.183.154.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5494D17E0D
-        for <linux-nfs@vger.kernel.org>; Tue,  5 Jul 2022 20:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sendgrid.net;
-        h=content-type:mime-version:content-transfer-encoding:
-        content-description:subject:from:reply-to:to;
-        s=smtpapi; bh=ceWUKPGGBD08zymXBi1rX/aT7uNIZcaxkBUrMj2HEWE=;
-        b=B0fXgw2X3E7gXmZoP/B2q+NCLkvTTVes1TDPF+nWSLesoukfyn9cj7PHTOthQE1umYF1
-        Ywf1UOITOg15S0bOesNFgiwIzsa4HgNPkE5TfB6ucZruscfddQEHdcAM2TwiaFDkFQm1VW
-        hg4cxSAAFhBXRoXoySa9t4t51j6JzRu8U=
-Received: by filterdrecv-canary-d9fd65677-4gl8f with SMTP id filterdrecv-canary-d9fd65677-4gl8f-1-62C50132-1
-        2022-07-06 03:27:46.110576164 +0000 UTC m=+2369577.769444047
-Received: from [195.133.18.45] (unknown)
-        by geopod-ismtpd-5-0 (SG)
-        with ESMTP id LIxf1i4MRYCcEnvDFkSc2A
-        for <linux-nfs@vger.kernel.org>;
-        Wed, 06 Jul 2022 03:27:45.942 +0000 (UTC)
-Content-Type: text/plain; charset=us-ascii
+        with ESMTP id S230359AbiGFETz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 00:19:55 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62329167F4
+        for <linux-nfs@vger.kernel.org>; Tue,  5 Jul 2022 21:19:53 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id D231B1F8CB;
+        Wed,  6 Jul 2022 04:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1657081191; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AOWKGivkkop03mmfdhN7aSjFNyRtsb57nlFFbKyLAJo=;
+        b=C/2CQIhI3u8PSziexiHLdPmHfElDO9hKrVMFR8wgsJnKyzNriMUVB08tgIw7GmPAUk/mVl
+        nIlM39ozNXRfdKKX+MoBDxAqNG66Z22LI53fkUsE/h3A6kmFWd6eTCfrGERyR7sweL/bZj
+        bB9oXjnbvpkp8+Net3+fY4C3rZfdxU8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1657081191;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=AOWKGivkkop03mmfdhN7aSjFNyRtsb57nlFFbKyLAJo=;
+        b=C9ovImb4QgV9GjE4KPm50ndFaxVh80EG2kWt5b28+NrcToGaSi35FzrqMGlkJWdRDwqpG0
+        cB8S8t0wIMMbrEBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BCED013A37;
+        Wed,  6 Jul 2022 04:19:50 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id O1rWHWYNxWKTQQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 06 Jul 2022 04:19:50 +0000
+Subject: [PATCH 0/8] NFSD: clean up locking.
+From:   NeilBrown <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org
+Date:   Wed, 06 Jul 2022 14:18:12 +1000
+Message-ID: <165708033167.1940.3364591321728458949.stgit@noble.brown>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: Approved Expression of Interest (AEOI) 06-07-2022
-From:   Lusail Investment <bashi.maheshika@ibm-seimless.com>
-Date:   Wed, 06 Jul 2022 03:27:46 +0000 (UTC)
-Message-ID: <LIxf1i4MRYCcEnvDFkSc2A@geopod-ismtpd-5-0>
-Reply-To: kazem.el-mazhar@lusailinvestmentfunds.com
-X-SG-EID: =?us-ascii?Q?7ktShbfDb=2FLAf1uPGkRHFkYPn5Q40H9kJgDmVQ8oTVr6Z6W+2JQk9C1PxDvgf0?=
- =?us-ascii?Q?abw51nMQdha3MYYhhGxp3QNYpw81EHYT7kImkgT?=
- =?us-ascii?Q?+1ZMu1B0FHkv+UIqvZmOJ9MrIzYU+k2JT9vlA6q?=
- =?us-ascii?Q?AZIo6NGsrSJXXCYtf7q9NFXElfIoHWk404k2uJE?=
- =?us-ascii?Q?9GI7r=2FZ1GoVP5b3X9Z5kHe=2FkIiRWjTyrkKVESaG?=
- =?us-ascii?Q?qrJ=2FOVSK66jd=2FIMeZDxdu0c41cUqPgQE6WoXE5g?=
- =?us-ascii?Q?pF+o+LYhw4TcFRIarnrFb4EOgUz2YaHzQoyl7C8?=
- =?us-ascii?Q?=2Fh0=3D?=
-To:     linux-nfs@vger.kernel.org
-X-Entity-ID: wkmCBC+LVvGL7Ar3aY6ofg==
-X-Spam-Status: No, score=1.4 required=5.0 tests=BAYES_50,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,HEADER_FROM_DIFFERENT_DOMAINS,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_GREY autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-To/Attn: linux-nfs@vger.kernel.org=20
-Date: 06.07.2022
+This series prepares NFSD to be able to adjust to work with a proposed
+patch which allows updates to directories to happen in parallel.
+This patch set changes the way directories are locked, so the present
+series cleans up some locking in nfsd.
 
-Subject: Approved Expression of Interest (AEOI) 06-07-2022
+Specifically we remove fh_lock() and fh_unlock().
+These functions are problematic for a few reasons.
+- they are deliberately idempotent - setting or clearing a flag
+  so that a second call does nothing.  This makes locking errors harder,
+  but it results in code that looks wrong ...  and maybe sometimes is a
+  little bit wrong.
+  Early patches clean up several places where this idempotent nature of
+  the functions is depended on, and so makes the code clearer.
 
-With your permission, I will like to tender this letter of expression of in=
-terest bordering on my Board of investors' intent to invest into your compa=
-ny's investment project made known to us through our brokerage newsletter.
+- they transparently call fh_fill_pre/post_attrs(), including at times
+  when this is not necessary.  Having the calls only when necessary is
+  marginally more efficient, and arguably makes the code clearer.
 
-My Board of Investors have a paid up capital in excess of 10 Figures and is=
- rated A1 by Moody's Investor Services
+nfsd_lookup() currently always locks the directory, though often no lock
+is needed.  So a patch in this series reduces this locking.
 
-Would be delighted to schedule for a call to discuss in details at your con=
-venience. =20
+There is an awkward case that could still be further improved.
+NFSv4 open needs to ensure the file is not renamed (or unlinked etc)
+between the moment when the open succeeds, and a later moment when a
+"lease" is attached to support a delegation.  The handling of this lock
+is currently untidy, particularly when creating a file.
+It would probably be better to take a lease immediately after
+opening the file, and then discarding if after deciding not to provide a
+delegation.
 
-Best Regards.
-Kazem CFO Lusail Investment
+I have run fstests and cthon tests on this, but I wouldn't be surprised
+if there is a corner case that I've missed.
+
+NeilBrown
+
+
+---
+
+NeilBrown (8):
+      NFSD: drop rqstp arg to do_set_nfs4_acl()
+      NFSD: change nfsd_create() to unlock directory before returning.
+      NFSD: always drop directory lock in nfsd_unlink()
+      NFSD: only call fh_unlock() once in nfsd_link()
+      NFSD: reduce locking in nfsd_lookup()
+      NFSD: use explicit lock/unlock for directory ops
+      NFSD: use (un)lock_inode instead of fh_(un)lock for file operations
+      NFSD: discard fh_locked flag and fh_lock/fh_unlock
+
+
+ fs/nfsd/nfs2acl.c   |   6 +-
+ fs/nfsd/nfs3acl.c   |   4 +-
+ fs/nfsd/nfs3proc.c  |  21 ++---
+ fs/nfsd/nfs4acl.c   |  19 ++---
+ fs/nfsd/nfs4proc.c  | 106 +++++++++++++++---------
+ fs/nfsd/nfs4state.c |   8 +-
+ fs/nfsd/nfsfh.c     |   3 +-
+ fs/nfsd/nfsfh.h     |  56 +------------
+ fs/nfsd/nfsproc.c   |  14 ++--
+ fs/nfsd/vfs.c       | 193 ++++++++++++++++++++++++++------------------
+ fs/nfsd/vfs.h       |  19 +++--
+ 11 files changed, 238 insertions(+), 211 deletions(-)
+
+--
+Signature
+
