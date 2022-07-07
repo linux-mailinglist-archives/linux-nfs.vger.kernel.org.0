@@ -2,93 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE8D5696A7
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 01:57:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0783156974A
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 03:13:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234442AbiGFX47 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 6 Jul 2022 19:56:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
+        id S231345AbiGGBNu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 6 Jul 2022 21:13:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233613AbiGFX46 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 19:56:58 -0400
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D0C2D1C8
-        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 16:56:58 -0700 (PDT)
-Received: by mail-wm1-x32b.google.com with SMTP id m6-20020a05600c3b0600b003a0489f412cso179156wms.1
-        for <linux-nfs@vger.kernel.org>; Wed, 06 Jul 2022 16:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eOGG5TEyvbbE0DQj04oC5N4GBb+43dSxLzH6oyzn9Rc=;
-        b=YguXpB43+Mg3KH8/XIYRNPZR3TWPNkIOc1OgStIKKPm9DN7gv1AiUCzdfWZnWjjZ7b
-         hy4Lv3Pb8N/kaVEEfItsKuOTckq5r0TF/jtAVko0iMifu1CTn4hlmzZM9qKSouhAZTON
-         bFzR43FZ5iDTu2q25oF1dRSirk9BZA+qVcShrF9RXnZ1xaM6ZLeN3z4ZJlJZ+NjPwg31
-         gkP2KHhcMXBeeI5tpIRSS7ld2rTFrPTOFsHcoY4zrzq/x1XMzbILCdVDjM1J2ABWSYMG
-         cs8IHunVV+w8WkozKK+oE3d+5onUPLHt9b8AyfxmAc1d03ghhSs9sGyBLYfTn/veSIhw
-         SOnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eOGG5TEyvbbE0DQj04oC5N4GBb+43dSxLzH6oyzn9Rc=;
-        b=byKI5dbNGjphss9y6rv7qRUrMOkJ/UPb4GtUEfOvfNT3/+40dU5tT3PtJi7q3SDTSc
-         YEJOt/l/JXttn4zErB4TMn4gDc5M5sqZS6D+FgjGYK4vWXJa1WfgyN2qL2a5PkbKZz5G
-         MtXIH0UOwB2TycOROiWTHeOlZ39atwESXxa+SA6seNUS2fSQcThp5oTgWzrmh/V1MinZ
-         dLU38UG2z5X568xUAknC5HHOjbt+FQWmDVFuc2E2atQ1xzjUeiCdZw+yRMGzU7zUL2+k
-         A8a2cFDlh2eU4b9a1Dacr9kczQSMrgVboJXTwunO6X0zR0B/d2sPeMby09DJPrCKs896
-         5mEw==
-X-Gm-Message-State: AJIora97B0St8oEBhRbZtNgARejeEWWWVNglCpp/NMkhjl7C2+xBSDzN
-        pEuhALSQZ6Y4XlgAgi2zhm8qTtq2x0YU8rkUS1JCFNwM
-X-Google-Smtp-Source: AGRyM1t8Y95NQoXnAAZv1dcNiCfBVoj6Sq7z3HDCZXs0E1yBuvTwcKoZEIjf94DMfST44BCeaU99oJD9iflfTEXz0ac=
-X-Received: by 2002:a1c:7719:0:b0:3a0:31a6:4469 with SMTP id
- t25-20020a1c7719000000b003a031a64469mr1181985wmi.20.1657151816590; Wed, 06
- Jul 2022 16:56:56 -0700 (PDT)
+        with ESMTP id S230452AbiGGBNt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 6 Jul 2022 21:13:49 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA1EC2C657
+        for <linux-nfs@vger.kernel.org>; Wed,  6 Jul 2022 18:13:48 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 8E94D1F977;
+        Thu,  7 Jul 2022 01:13:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1657156427; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/iqy6VCoCoMWptFkWzgC0/+eopwnaC5f8jNdhsLJCUY=;
+        b=z5r64qLTFLVjwFu22rq1yEiCi0g3FK1BsfxYnIV9/OXUtLhuicew9zdE/7W3BY6vjwMUn6
+        azVICE3zp+7Z7rb7zuQvIkaYCOFhvCbqgCqcCD7/TD+1cXVMLwfBOqKuw8uw5NQCTjRP76
+        9OR+FCOOE0+UVh9HUrTxWukZqNI6FKA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1657156427;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/iqy6VCoCoMWptFkWzgC0/+eopwnaC5f8jNdhsLJCUY=;
+        b=fgSiEPAUeCEn1vvU8fzJWmD4FCkFyEMc1H4wZ6FqkDcf2uA8r8Qyp7Sdw972enwY6moDCk
+        H/anHd6vHDY6cfDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6674113A7D;
+        Thu,  7 Jul 2022 01:13:46 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 3EPFCEozxmKPWwAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 07 Jul 2022 01:13:46 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-References: <CACt_J9PHSjkz_-x0K=7+AYjiX1Ur5cV+brC9Tv4i7dkG=NSBuQ@mail.gmail.com>
- <3D87B9ED-3A00-478B-AC17-435B71D0A349@redhat.com>
-In-Reply-To: <3D87B9ED-3A00-478B-AC17-435B71D0A349@redhat.com>
-From:   jie wang <yjxxtd12@gmail.com>
-Date:   Thu, 7 Jul 2022 07:56:44 +0800
-Message-ID: <CACt_J9NXmz4WCBT8iAT1MRNnhE1k5DpQct+00t-hTsbZrru06g@mail.gmail.com>
-Subject: Re: Question abount sm-notify when use NFSv3 lock
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=0.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        linux-nfs <linux-nfs@vger.kernel.org>
+Subject: Problem with providing implementation id in NFSv4.1
+Date:   Thu, 07 Jul 2022 11:13:43 +1000
+Message-id: <165715642317.17141.14223480428236658557@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Thanks the reply, I have tried it, but it doesn't work, '-v' can only
-use the local address
 
+In NFSv4.1 when we EXCHANGE_ID to talk to a new server - possibly a PNFS
+Data Server that we haven't talked to before - we by default send an
+implementation id.  This is created from several fields obtained from
+utsname().
+utsname() depends on current->nsproxy, and will crash if that is NULL.
 
-On Wed, Jul 6, 2022 at 10:39 PM Benjamin Coddington <bcodding@redhat.com> wrote:
->
-> On 6 Jul 2022, at 8:28, jie wang wrote:
->
-> > Hi, all
-> >   When we use NFSv3, we have a LoadBalance in front of NFS server. For
-> > example, LoadBalance's ip is ip2 and NFS server's ip is ip1, and
-> > client use ip2 to mount.
-> >
-> >   Now client use flock to lock file, then I restart NFS server and
-> > execute sm-notify -f. Then the problem occurs, the sm-notify request's
-> > src ip is ip1, not ip2, so rpc.statd will ignore this notify, because
-> > it does not match ip2 when mount, so client will not reclaim lock, and
-> > lock lost when restart NFS server.
-> >
-> >   Do you know how to address this ? Thanks a lot.
->
-> The sm-notify(8) man page shows you can use '-v' to specify an ipaddr or
-> hostname.
->
-> Ben
->
+When a process exits it calls, among other things,
+
+	exit_task_namespaces(tsk);
+	exit_task_work(tsk);
+
+exit_task_namespaces() will set ->nsproxy to NULL
+exit_task_work() will run delayed work items, including fput() on all
+files that were still open when the process exited.  This will cause any
+pending writes to be flushed for NFS.
+
+So if a process writes to a file on a PNFS server, exits, and the MDS
+tells the client to send the data to a DS which it hasn't established a
+connection with before, then it will crash in encode_exchange_id().
+
+That order of calls in do_exit() is deliberate so we cannot swap them - see
+Commit: 8aac62706ada ("move exit_task_namespaces() outside of exit_notify()")
+
+The options that I can see are:
+1/ generate the implementation-id string at mount time and keep it
+   around much like we do for cl_owner_id
+2/ Check current->nsproxy in encode_exchange_id() and skip the
+   implementation id if ->nsproxy is not available.
+   Note that there is no risk for a race with testing ->nxproxy.
+
+Doesn't anyone have a strong opinion of which is best.  I'm inclined to
+go with '2', but mostly because it is less coding.
+
+Thanks,
+NeilBrown
