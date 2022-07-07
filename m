@@ -2,260 +2,181 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D2EC56A92A
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 19:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A97256A930
+	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 19:14:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235621AbiGGRMy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Jul 2022 13:12:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
+        id S232016AbiGGRN7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Jul 2022 13:13:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbiGGRMy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jul 2022 13:12:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1616D5A2DD
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Jul 2022 10:12:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657213971;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/TPw2gv0MYt5gBjtr1oYhGaSEYP9yUBbSh0PUzKXhZk=;
-        b=QGu0Lsu6N+7Wm6PeF9YknwwVuZa9OBzA515CCLWnKM6tQ31jmGIpjlxBHghjl4BQwKGz6r
-        B8GM5P83Qu5yliYSdKXulqxm1tlEwRHiXyP9t1G3lDYrbf+xLg+CVM0ClX5tt19FPKa+fS
-        b4V3Tri1A7oaWHajauuFOX8Fczzpeis=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-657-j9QuuAO1OZOI8oE6e_-OdA-1; Thu, 07 Jul 2022 13:12:50 -0400
-X-MC-Unique: j9QuuAO1OZOI8oE6e_-OdA-1
-Received: by mail-qt1-f199.google.com with SMTP id m6-20020ac866c6000000b002f52f9fb4edso16049124qtp.19
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Jul 2022 10:12:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=/TPw2gv0MYt5gBjtr1oYhGaSEYP9yUBbSh0PUzKXhZk=;
-        b=r4zTXKfb7n2I5UbYp/Pn2AKTVatwBJ6XJq4/DSgl/mxNYzwDfy6/ElfVj4YCP38t5j
-         inN6R91VTQr8ESOCG+fSZN2mLo/Gg6LjGzBfLQcw3NJKFyt38yQh4PQRq1MlgIqEGYFR
-         7fZtOH0yw0Hqr9IrhLx+ihUHhJi4Q5PNM9sJ74xhTq8PNNq41BKH9uOwhs0sM06L3f4O
-         9cMsxODQaZP+PXs5WIiFo0k1B6hLWtCiCnPa9kfLJBNO95M97YQtxV78oa9GybHvnqEi
-         GJjBPVrqaAGkrPUk1dv0+7HO+PA1T/IhHx6sWP6VrJ3f+2nYNxo4nF5vFA3P1KoAYJjw
-         qYIA==
-X-Gm-Message-State: AJIora8Qj3YM7VOEY618rWiaDptF4rH5elJ20/ykftqYQ99+SXytw9ss
-        swr0Z397ReNWasFxmuNkhOviL0M3pZ3rtsbQ7ShoRnrc56p9JfNaovMlvW0vQj0GQyLrFwu1aEV
-        HwkzrODLsXjExe24HSJel
-X-Received: by 2002:a05:620a:41e:b0:6b2:757f:2303 with SMTP id 30-20020a05620a041e00b006b2757f2303mr19349840qkp.583.1657213966079;
-        Thu, 07 Jul 2022 10:12:46 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sxfC6fA9uGp8rCq6r9+2UAXMfZw4GJ/IaQKjGuRBu76Ftdvps5lJvYKXlcsESnJfV3rfinEg==
-X-Received: by 2002:a05:620a:41e:b0:6b2:757f:2303 with SMTP id 30-20020a05620a041e00b006b2757f2303mr19349816qkp.583.1657213965719;
-        Thu, 07 Jul 2022 10:12:45 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id g6-20020a05620a40c600b006a6bb044740sm25897883qko.66.2022.07.07.10.12.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 10:12:45 -0700 (PDT)
-Message-ID: <81b43bd844e7cbae885d094cc7ae5026cee24d15.camel@redhat.com>
+        with ESMTP id S235353AbiGGRN6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jul 2022 13:13:58 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB57A31212
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Jul 2022 10:13:57 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 267GtwuK004460;
+        Thu, 7 Jul 2022 17:13:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=1dsGUPJ4q2vtI8sNjP6s1bBn4/zRW4JH79BfmAj3eY4=;
+ b=ujxka6pQBnFjteISjaQz2JQZixBCrDBK8uO/ZLr+xt1I2dNtXwMuuGHUTiIlCtJ0TSod
+ hoWuiGaW7+mmm8Vzeu5FlynuXAdG9ASe/bEsQaCEDYZFc+uTIpEhYExHo4Nn3ySuVDCa
+ zSxm7AKstybzJmVOfPV0YEJR7K86fubxYIm13HjBEFfwEGMZ36OrvXykFJZb5IJgL47a
+ z+F+jUsO2mIe/W4FGPidqwG+xqXwlz5jMhq/boEsQ/qaeLL6HcBvNxjI08ttoS+F44XS
+ xN3QdU/ROVwzvMz61EVPh/YsP2cu4i2dDBIqDYj0e4ghFp7aWqS3WINlyBPtJYPJ+7oz DA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h4ubynx8r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Jul 2022 17:13:55 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 267GtJ6N017298;
+        Thu, 7 Jul 2022 17:13:55 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2103.outbound.protection.outlook.com [104.47.55.103])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3h4ud600ey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Jul 2022 17:13:54 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CKXYF+OEIhlaey4vZ7xHQJNnzEuVccrNpxRN36PLnzKa0AVnm75VCJ8NNpGTYY/ZRY+UKC3tVb4Wibt/gnsG9wBHQ4UgjvJz92Q2oxe9DShMiESixZcjGABo0sgyWhtN+F5M8VNjTB+mBTgQn9vJflK3mning0UU+0v10d4233Rd1bzNfqHlX51597M9dyiIbuhdnAfzA0yUKkz7oWpXpJn4d+pRPHoTGx5REsfY0rbKSlpESJAeX0Bk4NyMBNT4ut2/ALfcg4s5HpVGnfEhTq6K/440Hxkyv3O9A3CMh1XyZFzU0vNctG4iKmZkU8e7Qt3Y8iKPMQAoZNZiUwHAyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1dsGUPJ4q2vtI8sNjP6s1bBn4/zRW4JH79BfmAj3eY4=;
+ b=IW2km7vLERGkMaLOekuExHVVoDBoTF9GceztOVmFhFzwvUX/+pcoUuZiW0b2pqdKgvh3c+wPAyPHjpPILyZOBCB3MtEKqpbRh8rLQuZ360PkV80NEvoDcK5cDLRIK6Gom2r9cYHikIe/6611tHZvfjn4qm0h8gQxPoO97QwbOywWu0Eb48CKPuD3uTwCBtkVrrjOAxzQFHhDZoS7jgwBoxv6Gvddkw+3WOaTZ5YT1XrDGY4HuzndcWnbJxI4Q/b203IFRU0ll9ml1WDhcZdXxrvzE4mPa0DB3eD2wcCEmTdeYBtKqrXoVZ1aACTaxBdZ06Ffk6A2+tx0cCkdaoGfjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1dsGUPJ4q2vtI8sNjP6s1bBn4/zRW4JH79BfmAj3eY4=;
+ b=qHGjN3xeegAlUCkhyDsu9J5C3TGLsz9tt6d6ob4ygJpD1BirTgHiHj/M0BMhTSeyfUnP3TcGJ07t/mc4yO8fwEd0c+81NeO0jP1OYyUJpEPmkFFd5Je7wJnpn5opk3vPtf+5C3T6ayR7o5DT6RMa2Aflb9tQSlX2+OqZczvQYug=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DS0PR10MB6032.namprd10.prod.outlook.com (2603:10b6:8:cc::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5417.16; Thu, 7 Jul 2022 17:13:53 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::9920:1ac4:2d14:e703]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::9920:1ac4:2d14:e703%5]) with mapi id 15.20.5395.021; Thu, 7 Jul 2022
+ 17:13:53 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@redhat.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH RFC] NFSD: Bump the ref count on nf_inode
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Thu, 07 Jul 2022 13:12:45 -0400
-In-Reply-To: <3A439D76-F78E-4449-923D-7E71A47FE36E@oracle.com>
+Thread-Topic: [PATCH RFC] NFSD: Bump the ref count on nf_inode
+Thread-Index: AQHYkhpvRGZ0dTioakaq+LLAbdwSV61zIGIAgAABKICAAAC9gIAAAxCAgAAAUAA=
+Date:   Thu, 7 Jul 2022 17:13:53 +0000
+Message-ID: <6F64FA5F-BC8B-4FBA-B04C-F20FE434AA90@oracle.com>
 References: <165720933938.1180.14325183467695610136.stgit@klimt.1015granger.net>
-         <f3dc1a01fae6759a350adabf944892417a63d529.camel@redhat.com>
-         <307aab1000890798345175063c24a77038a78167.camel@redhat.com>
-         <3A439D76-F78E-4449-923D-7E71A47FE36E@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
+ <f3dc1a01fae6759a350adabf944892417a63d529.camel@redhat.com>
+ <307aab1000890798345175063c24a77038a78167.camel@redhat.com>
+ <3A439D76-F78E-4449-923D-7E71A47FE36E@oracle.com>
+ <81b43bd844e7cbae885d094cc7ae5026cee24d15.camel@redhat.com>
+In-Reply-To: <81b43bd844e7cbae885d094cc7ae5026cee24d15.camel@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 449240b3-8aac-4906-dca5-08da603c114d
+x-ms-traffictypediagnostic: DS0PR10MB6032:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OyjTOtskqAobd/7FIod5KMecGh2z7bj8dq5GqMuXDkbLKERBVpC9SBuzb7Z72pbm47SutFFyq9C6i25vskni+SRhpzxdeIhVM6FpKocioCLdeTxb26BswozcQ9M2unIkqGe+RFCu/QJyVS+8dvqrA7DbdNRGA3X4DGRyOdroRu9s3pUHOChQrWM7xShPizMGUVlhgOYJeqmIXtpKPMVLva+QSaVh0Vn1pgWPMOEzWTjoyrmYIKlaB4MQ01y66b42Nkj8cXef5AAeZLFtawMFLsfbpxE76ZA6fSpz1bWoiRq37300H+5xeo0eXsTUPFi4E/FIi7EQ4AXqqnWG4IiYksy47o+DBxHh0zJS8+hWCJVG4AeNN7jd+qA4pynqj+/fTvUsiYJnwd1EyS6aGCa9hHwKIzWNJoOuKZGyIQkG/5uwjzgQBwYVhch9R1K58KY9nXBwfFEM9DWp3qC8m0q+yc2WtwbD+pBWcIjBS89ZzaE4wSDUlJEIyKzKkRDtBskw3zfqrs74OV5Cpi6ayniRQIZX1h0904Kp6U/vNd7Go2Sue+pGVktYwNOPdNU9DYHUBwE2CyYMvN00SxPA/caI9bphpRkFFBG+TQgpDXgmzyJhmMbSPPA2NKWqtXodWZqR19MbyoEvJ4e69784biSGCyrYDKM26ykINOaQaamDGSxl3U6SXQPX7t8I7GmBAyn4du8X+OMEFj4qMwwWI1OVaVsYWbTQMg1S9tRGsP8n/LDiC9lJZxwcJ0EaJg9yem5ZyQTZijbY0lHWXbXXqFbvjEHqhR0gRv3t7qNVRrUFo8uEkHrjpu767U/jKy39UusHsNCSLSyuvVPXD9+1mOgcgKf2ZmF+2AGbdZpHPK57B3o=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(366004)(346002)(136003)(39860400002)(122000001)(66556008)(33656002)(86362001)(38070700005)(316002)(76116006)(2906002)(36756003)(91956017)(66446008)(66476007)(66946007)(64756008)(38100700002)(71200400001)(6916009)(8676002)(5660300002)(8936002)(4326008)(4744005)(6512007)(26005)(6506007)(2616005)(41300700001)(478600001)(6486002)(53546011)(186003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?CbKyY5BVNHQiLH9zAygA0M1GsHtZbdkQs+CqCJdrNV7aPPRW/UacC1EhWyA1?=
+ =?us-ascii?Q?uk0/JW9ENxuX9KJ5pLUi+4y6UC4+vF5ujN3W2ZCm88KuY1e3zT71PNHpEZaa?=
+ =?us-ascii?Q?FZ+d1E2mHGE/nCAZptEq7gWEb3icyh6Q+kNqFn2D0r5TzPqgaoB6EXxT0/6r?=
+ =?us-ascii?Q?Ts+SyEwn0O+79Oq/OIfQsIAldSQDuRCuwTB0ByjHUGrQ/1gzcNqrxqFXR3C2?=
+ =?us-ascii?Q?zJ08oS/526SpR29noJrTX5IUy5qwFKNhEq1ElJ6YMDqbnM3AWP8iYlb1PToR?=
+ =?us-ascii?Q?I8xK2OU9uJL/hvk2LDKwxVCeLD484U3ep8PIQW9RQNcenyiNjLsGMulQ7cqs?=
+ =?us-ascii?Q?jsaY8StJ+Qv25HvTIvqh8yiuWBLDwqJlX0TLwrRI8SasWDza3yJE0+N8Ma0n?=
+ =?us-ascii?Q?V41qMNyaunv3gBYJjW/5rVU59ft8GnzKATFd96JJhb405dfkQQgFyM8fyy36?=
+ =?us-ascii?Q?nXzUJft0hC3kPNhnpYesFnNku0NlJhC8XOSE8gGcmm3+5r+vSjFu6BSes1+a?=
+ =?us-ascii?Q?bRHBB5K7Axq80tevzBkM+TYPB+xqTKc32GZc025UJFNt0/UHf/pUaaLz76vd?=
+ =?us-ascii?Q?SSjYUPXfeLD0G+2Or9AmxL10a6fVYsWLoYM8TtKYzcId8/Fnih2kOXpqDVAp?=
+ =?us-ascii?Q?cObWaEM/jT4K1pvbn763NPxeYgM0APbhT5hxiwyE+HwOJnNPyg6+LwCFIaTG?=
+ =?us-ascii?Q?kCjzZqH3nG///42sHW6FS7JVor7C5w6KsDWAovvfXMGHjyR6pU+jIkPq/gcr?=
+ =?us-ascii?Q?P0oLeO8+X3IsACRMm4qVubEP1uxtPnk1WEZ0dj9uKX/bjTrgy2W2eh9qk5nW?=
+ =?us-ascii?Q?KK+ge8XxD+uwJITs2jfiYp8qXd27VfbhFjmblQeOLkHxZi2Cpv+imZIJLpQF?=
+ =?us-ascii?Q?ASUwbabfO68ZdYa+pV/8OqmK4/QC/E04dxMkJY7VX/yUnsdcIGcwXL6HjlIJ?=
+ =?us-ascii?Q?bFbYB1z3TYE9nmEmekmGiEeXF2oWUAekUNJJKRUEOUy8xujdc0IgIa1PNExB?=
+ =?us-ascii?Q?+8QCF7yv1fvmnl5DLuaEkYIKE+lVd0Us23Dev8nhUpqnlt7EHW4ikCfBv1KY?=
+ =?us-ascii?Q?bMYgGcuY8pDi7VBVp2fwiuV6LgJ2COz28UXeXKD3FZ+flyJZ8DxulUo1I7j2?=
+ =?us-ascii?Q?EMBPd07NQ0jD08EJcItORPrBzLqmMQTiqNZijW+6frD5gt1IXP3VmnH8qmb2?=
+ =?us-ascii?Q?1+fDwdOL6ZRFKQ872BZUezCDxUrXgf+ZOd2El2S27k8qTLS7Fpf/7iE2bc7x?=
+ =?us-ascii?Q?f+iYlhFfe0kj3U91+9pU/uL6B3e1rK7OMIjyvFAB9O531jUK0tDpPdOdzCKp?=
+ =?us-ascii?Q?1gL4FmzZSZzqcm5a3aydAL4NQOnBDfMvOJHIStvrf9mgRyyYQIrbr8OiXt+A?=
+ =?us-ascii?Q?H+2xlntbp2HGbwo8mxhq5ct35M4FYpynFw47Z/bEIUsGGAngYupNn7gsFXCh?=
+ =?us-ascii?Q?XkMzkOvTerk6PeIbCxowB/5WFYa0sQeL/b2f5+WCUeoFQfG0ibf7HU6z/vdt?=
+ =?us-ascii?Q?JzaQ2FG0mAAbmki8TeaAFfbSJ09ag32wWfucDen6UL3+mT7UTJtTZv2Boox2?=
+ =?us-ascii?Q?SxntEeqhxb9KW6xX3lUUPa/KJEv1oE5GsgT/w7GgKHbbATySKLN3UNvh4GOc?=
+ =?us-ascii?Q?Tw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <09686FF55841594480E5492A21EA384F@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449240b3-8aac-4906-dca5-08da603c114d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Jul 2022 17:13:53.0341
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cqSwygJ86z9Z8kxYciag3dtVh60SX9pHjlWfehDmk/oZ2IY8xpt0CY2LRAXp4ODQAtKqwjlGjEy2kEpyEpgz1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR10MB6032
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.883
+ definitions=2022-07-07_13:2022-06-28,2022-07-07 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207070068
+X-Proofpoint-GUID: 3oDsXSOYZ1J3lyMHAtWDlUmy6LcfTayr
+X-Proofpoint-ORIG-GUID: 3oDsXSOYZ1J3lyMHAtWDlUmy6LcfTayr
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-07-07 at 17:01 +0000, Chuck Lever III wrote:
+
+
+> On Jul 7, 2022, at 1:12 PM, Jeff Layton <jlayton@redhat.com> wrote:
 >=20
-> > On Jul 7, 2022, at 12:59 PM, Jeff Layton <jlayton@redhat.com> wrote:
-> >=20
-> > On Thu, 2022-07-07 at 12:55 -0400, Jeff Layton wrote:
-> > > On Thu, 2022-07-07 at 11:58 -0400, Chuck Lever wrote:
-> > > > The documenting comment for struct nf_file states:
-> > > >=20
-> > > > /*
-> > > > * A representation of a file that has been opened by knfsd. These a=
-re hashed
-> > > > * in the hashtable by inode pointer value. Note that this object do=
-esn't
-> > > > * hold a reference to the inode by itself, so the nf_inode pointer =
-should
-> > > > * never be dereferenced, only used for comparison.
-> > > > */
-> > > >=20
-> > > > However, nfsd_file_mark_find_or_create() does dereference the point=
-er stored
-> > > > in this field.
-> > > >=20
-> > > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > > ---
-> > > > fs/nfsd/filecache.c | 3 +++
-> > > > fs/nfsd/filecache.h | 4 +---
-> > > > 2 files changed, 4 insertions(+), 3 deletions(-)
-> > > >=20
-> > > > Hi Jeff-
-> > > >=20
-> > > > I'm still testing this one, but I'm wondering what you think of it.
-> > > > I did hit a KASAN splat that might be related, but it's not 100%
-> > > > reproducible.
-> > > >=20
-> > >=20
-> > > My first thought is "what the hell was I thinking, tracking an inode
-> > > field without holding a reference to it?"
-> > >=20
-> > > But now that I look, the nf_inode value only gets dereferenced in one
-> > > place -- nfs4_show_superblock, and I think that's a bug. The comments
-> > > over struct nfsd_file say:
-> > >=20
-> > > "Note that this object doesn't hold a reference to the inode by itsel=
-f,
-> > > so the nf_inode pointer should never be dereferenced, only used for
-> > > comparison."
-> > >=20
-> > > We should probably annotate nf_inode better. __attribute__((noderef))
-> > > maybe? It would also be good to make nfs4_show_superblock use a
-> > > different way to get the sb.
-> > >=20
-> > > In any case, this is unlikely to fix anything unless the crash happen=
-ed
-> > > in nfs4_show_superblock.
-> > >=20
-> > >=20
-> >=20
-> > One other spot. We also dereference it in nfsd_file_mark_find_or_create=
+> On Thu, 2022-07-07 at 17:01 +0000, Chuck Lever III wrote:
+>>=20
+>>> On Jul 7, 2022, at 12:59 PM, Jeff Layton <jlayton@redhat.com> wrote:
+>>>=20
+>>> One other spot. We also dereference it in nfsd_file_mark_find_or_create=
 ,
-> > but I think that specific instance is OK. We know that we still hold a
-> > reference to the inode at that point since it comes from fhp->fh_dentry=
+>>> but I think that specific instance is OK. We know that we still hold a
+>>> reference to the inode at that point since it comes from fhp->fh_dentry=
 ,
-> > so we shouldn't need to worry about it disappearing out from under us.
+>>> so we shouldn't need to worry about it disappearing out from under us.
+>>=20
+>> Needs some annotation. I would prefer not to get that pointer from
+>> nf_inode, then. As your comment says: compare only, never deref.
+>>=20
+>>=20
 >=20
-> Needs some annotation. I would prefer not to get that pointer from
-> nf_inode, then. As your comment says: compare only, never deref.
->=20
->=20
+> Yeah, maybe we should pass in the inode as a separate parameter to that
+> function?
 
-Yeah, maybe we should pass in the inode as a separate parameter to that
-function?
+That's what I ended up doing, that seems most clear.
 
-> > What did the crash look like?
->=20
-> Jul 06 11:19:32 klimt.1015granger.net kernel: BUG: KASAN: use-after-free =
-in nfsd_file_obj_cmpfn+0x26b/0x49a [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel: Read of size 4 at addr ffff=
-888180623e1c by task nfsd/1003
-> Jul 06 11:19:32 klimt.1015granger.net kernel:=20
-> Jul 06 11:19:32 klimt.1015granger.net kernel: CPU: 3 PID: 1003 Comm: nfsd=
- Not tainted 5.19.0-rc5-00037-g17ba024b204f #3522
-> Jul 06 11:19:32 klimt.1015granger.net kernel: Hardware name: Supermicro S=
-uper Server/X10SRL-F, BIOS 3.3 10/28/2020
-> Jul 06 11:19:32 klimt.1015granger.net kernel: Call Trace:
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  <TASK>
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  dump_stack_lvl+0x56/0x7c
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  print_report+0x101/0x4bb
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  kasan_report+0x9f/0xbf
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd_file_obj_cmpfn+0x26b/=
-0x49a [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  rhashtable_lookup.constpro=
-p.0+0x143/0x1ca [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd_file_do_acquire+0x20b=
-/0x1189 [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd_write+0x138/0x255 [nf=
-sd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd3_proc_write+0x37e/0x3=
-fc [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd_dispatch+0x5ed/0x7d0 =
-[nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  svc_process_common+0x8e9/0=
-xefe [sunrpc]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  svc_process+0x34d/0x378 [s=
-unrpc]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  nfsd+0x26b/0x34c [nfsd]
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  kthread+0x249/0x258
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  ret_from_fork+0x22/0x30
-> Jul 06 11:19:32 klimt.1015granger.net kernel:  </TASK>
->=20
-> The freed object was actually not an inode, so it's a red herring.
-> Still chasing it.
->=20
 
-ACK
+--
+Chuck Lever
 
->=20
-> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > index 9cb2d590c036..7b43bb427a53 100644
-> > > > --- a/fs/nfsd/filecache.c
-> > > > +++ b/fs/nfsd/filecache.c
-> > > > @@ -180,6 +180,7 @@ nfsd_file_alloc(struct inode *inode, unsigned i=
-nt may, unsigned int hashval,
-> > > > 		nf->nf_cred =3D get_current_cred();
-> > > > 		nf->nf_net =3D net;
-> > > > 		nf->nf_flags =3D 0;
-> > > > +		ihold(inode);
-> > > > 		nf->nf_inode =3D inode;
-> > > > 		nf->nf_hashval =3D hashval;
-> > > > 		refcount_set(&nf->nf_ref, 1);
-> > > > @@ -210,6 +211,7 @@ nfsd_file_free(struct nfsd_file *nf)
-> > > > 		fput(nf->nf_file);
-> > > > 		flush =3D true;
-> > > > 	}
-> > > > +	iput(nf->nf_inode);
-> > > > 	call_rcu(&nf->nf_rcu, nfsd_file_slab_free);
-> > > > 	return flush;
-> > > > }
-> > > > @@ -940,6 +942,7 @@ nfsd_do_file_acquire(struct svc_rqst *rqstp, st=
-ruct svc_fh *fhp,
-> > > > 	if (nf =3D=3D NULL)
-> > > > 		goto open_file;
-> > > > 	spin_unlock(&nfsd_file_hashtbl[hashval].nfb_lock);
-> > > > +	iput(new->nf_inode);
-> > > > 	nfsd_file_slab_free(&new->nf_rcu);
-> > > >=20
-> > > > wait_for_construction:
-> > > > diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> > > > index 1da0c79a5580..01fbf6e88cce 100644
-> > > > --- a/fs/nfsd/filecache.h
-> > > > +++ b/fs/nfsd/filecache.h
-> > > > @@ -24,9 +24,7 @@ struct nfsd_file_mark {
-> > > >=20
-> > > > /*
-> > > > * A representation of a file that has been opened by knfsd. These a=
-re hashed
-> > > > - * in the hashtable by inode pointer value. Note that this object =
-doesn't
-> > > > - * hold a reference to the inode by itself, so the nf_inode pointe=
-r should
-> > > > - * never be dereferenced, only used for comparison.
-> > > > + * in the hashtable by inode pointer value.
-> > > > */
-> > > > struct nfsd_file {
-> > > > 	struct hlist_node	nf_node;
-> > > >=20
-> > > >=20
-> > >=20
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@redhat.com>
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
 
---=20
-Jeff Layton <jlayton@redhat.com>
 
