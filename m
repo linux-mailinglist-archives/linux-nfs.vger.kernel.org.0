@@ -2,117 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 03DF856BF6C
-	for <lists+linux-nfs@lfdr.de>; Fri,  8 Jul 2022 20:35:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D864456C3E0
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Jul 2022 01:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239482AbiGHS2Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Jul 2022 14:28:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46720 "EHLO
+        id S239188AbiGHTQx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Jul 2022 15:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239797AbiGHS1v (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Jul 2022 14:27:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ADCEA0266;
-        Fri,  8 Jul 2022 11:27:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 017A1B82924;
-        Fri,  8 Jul 2022 18:27:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F06CC341C6;
-        Fri,  8 Jul 2022 18:27:10 +0000 (UTC)
-Subject: [PATCH v3 32/32] NFSD: Ensure nf_inode is never dereferenced
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org
-Cc:     david@fromorbit.com, jlayton@redhat.com, tgraf@suug.ch
-Date:   Fri, 08 Jul 2022 14:27:09 -0400
-Message-ID: <165730482946.28142.13069318391976207471.stgit@klimt.1015granger.net>
-In-Reply-To: <165730437087.28142.6731645688073512500.stgit@klimt.1015granger.net>
+        with ESMTP id S238184AbiGHTQw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Jul 2022 15:16:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2ED645042
+        for <linux-nfs@vger.kernel.org>; Fri,  8 Jul 2022 12:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657307810;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q+E5Uxc1L6lY8x0Xu20nKw3rP9x1iQMo5WfF11E2oEw=;
+        b=asVp6543y2DeotKkJtVE9ugvnf8GkNsTXY7lxehgEWNL/INtsUgC15pjAeUa+trVUQl6bg
+        UAKXZXGOSJ1VRIuK7hPsfVp61lEh3OEzzytf97cnqYl2AG52WB170EscZLfxhP6j0wVArW
+        dROcTMYhlK4/9Iy/IzrhR3BMvUX+pM0=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-64-TZgZoY-KM3mL-GiPZeEMRg-1; Fri, 08 Jul 2022 15:16:49 -0400
+X-MC-Unique: TZgZoY-KM3mL-GiPZeEMRg-1
+Received: by mail-qk1-f199.google.com with SMTP id f10-20020a05620a408a00b006b267fdf71fso19714902qko.6
+        for <linux-nfs@vger.kernel.org>; Fri, 08 Jul 2022 12:16:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:content-transfer-encoding:user-agent:mime-version;
+        bh=q+E5Uxc1L6lY8x0Xu20nKw3rP9x1iQMo5WfF11E2oEw=;
+        b=FT/8sNXp8cTHEqOlvCkVt4K5Uc+GWMz4dSlcFQsUchkLs0OOsEeYZEaRezrvZQpkzN
+         e5hkHQ5Ru586wL1boWyivhoUEJ/TXJCftSF42dj7i2y/1VHGZD6r6OAIE0SfpQZprMHY
+         DRqMD8b+3Z3p8AnUzl9GkdxnE8jHCme4k5IX75wCyBkDdwu8OtzmsN3NjFhzO8tqTmJ9
+         Wjd1tyhr42g0M5o+3GHnx1D+OFSJMYpwB0wSg9oEyRz6vpXArnWHHzzbgFXspzXqsAsP
+         xzfD4uOQsqRkdT8WlnudBw9N22DQ3i9LIV/Zp3ZzajeiLhBGL/k79xQ3TI7HvqwycAHp
+         CF3w==
+X-Gm-Message-State: AJIora/f07X9vzzDEFD9bKJ6YeKSnXXDAl30z3rrvSmQClTIRspqKPBS
+        lrKnOCoSpQQvOwheEDjxGgNQOdVIKhCWbmqckBZMcABU/d/Y4VyGKVNiiwqEsMoYcNdLn2YNN4T
+        Y9xWlrDbenM9ZX9wUGP9R
+X-Received: by 2002:a05:620a:d54:b0:6b2:5a9b:ef2e with SMTP id o20-20020a05620a0d5400b006b25a9bef2emr3503359qkl.715.1657307809129;
+        Fri, 08 Jul 2022 12:16:49 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vlPO7bIup7NI64TA0vi+uk6M4ZJZb5w0BEQ0gp7V0aT/fIJeYl2XMp80DsYKvhK90F7DLtHg==
+X-Received: by 2002:a05:620a:d54:b0:6b2:5a9b:ef2e with SMTP id o20-20020a05620a0d5400b006b25a9bef2emr3503336qkl.715.1657307808806;
+        Fri, 08 Jul 2022 12:16:48 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id u19-20020a37ab13000000b006b56a4400f6sm1101878qke.16.2022.07.08.12.16.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Jul 2022 12:16:48 -0700 (PDT)
+Message-ID: <60ee503b9cd5c0d2963070184eb246df22aa716b.camel@redhat.com>
+Subject: Re: [PATCH v3 12/32] NFSD: Hook up the filecache stat file
+From:   Jeff Layton <jlayton@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     david@fromorbit.com, tgraf@suug.ch
+Date:   Fri, 08 Jul 2022 15:16:47 -0400
+In-Reply-To: <165730469820.28142.10369457240055089259.stgit@klimt.1015granger.net>
 References: <165730437087.28142.6731645688073512500.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5.dev3+g9561319
+         <165730469820.28142.10369457240055089259.stgit@klimt.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The documenting comment for struct nf_file states:
+On Fri, 2022-07-08 at 14:24 -0400, Chuck Lever wrote:
+> There has always been the capability of exporting filecache metrics
+> via /proc, but it was never hooked up. Let's surface these metrics
+> to enable better observability of the filecache.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/nfsctl.c |   10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>=20
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 66c352bf61b1..ecc08cf97a86 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -25,6 +25,7 @@
+>  #include "state.h"
+>  #include "netns.h"
+>  #include "pnfs.h"
+> +#include "filecache.h"
+> =20
+>  /*
+>   *	We have a single directory with several nodes in it.
+> @@ -46,6 +47,7 @@ enum {
+>  	NFSD_MaxBlkSize,
+>  	NFSD_MaxConnections,
+>  	NFSD_SupportedEnctypes,
+> +	NFSD_Filecache,
+>  	/*
+>  	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
+>  	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
+> @@ -229,6 +231,13 @@ static const struct file_operations reply_cache_stat=
+s_operations =3D {
+>  	.release	=3D single_release,
+>  };
+> =20
+> +static const struct file_operations filecache_ops =3D {
+> +	.open		=3D nfsd_file_cache_stats_open,
+> +	.read		=3D seq_read,
+> +	.llseek		=3D seq_lseek,
+> +	.release	=3D single_release,
+> +};
+> +
+>  /*----------------------------------------------------------------------=
+------*/
+>  /*
+>   * payload - write methods
+> @@ -1370,6 +1379,7 @@ static int nfsd_fill_super(struct super_block *sb, =
+struct fs_context *fc)
+>  		[NFSD_Ports] =3D {"portlist", &transaction_ops, S_IWUSR|S_IRUGO},
+>  		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_IWUSR|S_I=
+RUGO},
+>  		[NFSD_MaxConnections] =3D {"max_connections", &transaction_ops, S_IWUS=
+R|S_IRUGO},
+> +		[NFSD_Filecache] =3D {"filecache", &filecache_ops, S_IRUGO},
+>  #if defined(CONFIG_SUNRPC_GSS) || defined(CONFIG_SUNRPC_GSS_MODULE)
+>  		[NFSD_SupportedEnctypes] =3D {"supported_krb5_enctypes", &supported_en=
+ctypes_ops, S_IRUGO},
+>  #endif /* CONFIG_SUNRPC_GSS or CONFIG_SUNRPC_GSS_MODULE */
+>=20
+>=20
 
-/*
- * A representation of a file that has been opened by knfsd. These are hashed
- * in the hashtable by inode pointer value. Note that this object doesn't
- * hold a reference to the inode by itself, so the nf_inode pointer should
- * never be dereferenced, only used for comparison.
- */
+<facepalm>
+Ouch, that's quite an oversight.
+</facepalm>
 
-Replace the two existing dereferences to make the comment always
-true.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/filecache.c |    5 ++---
- fs/nfsd/filecache.h |    2 +-
- fs/nfsd/nfs4state.c |    2 +-
- 3 files changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 36d61012d5de..11099c8918a4 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -228,12 +228,11 @@ nfsd_file_mark_put(struct nfsd_file_mark *nfm)
- }
- 
- static struct nfsd_file_mark *
--nfsd_file_mark_find_or_create(struct nfsd_file *nf)
-+nfsd_file_mark_find_or_create(struct nfsd_file *nf, struct inode *inode)
- {
- 	int			err;
- 	struct fsnotify_mark	*mark;
- 	struct nfsd_file_mark	*nfm = NULL, *new;
--	struct inode *inode = nf->nf_inode;
- 
- 	do {
- 		fsnotify_group_lock(nfsd_file_fsnotify_group);
-@@ -1164,7 +1163,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 
- open_file:
- 	trace_nfsd_file_alloc(nf);
--	nf->nf_mark = nfsd_file_mark_find_or_create(nf);
-+	nf->nf_mark = nfsd_file_mark_find_or_create(nf, key.inode);
- 	if (nf->nf_mark) {
- 		if (open) {
- 			status = nfsd_open_verified(rqstp, fhp, may_flags,
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index c5ddc877116b..d534b76cb65b 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -41,7 +41,7 @@ struct nfsd_file {
- #define NFSD_FILE_BREAK_WRITE	(3)
- #define NFSD_FILE_REFERENCED	(4)
- 	unsigned long		nf_flags;
--	struct inode		*nf_inode;
-+	struct inode		*nf_inode;	/* don't deref */
- 	refcount_t		nf_ref;
- 	unsigned char		nf_may;
- 	struct nfsd_file_mark	*nf_mark;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9d1a3e131c49..994bd11bafe0 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2564,7 +2564,7 @@ static void nfs4_show_fname(struct seq_file *s, struct nfsd_file *f)
- 
- static void nfs4_show_superblock(struct seq_file *s, struct nfsd_file *f)
- {
--	struct inode *inode = f->nf_inode;
-+	struct inode *inode = file_inode(f->nf_file);
- 
- 	seq_printf(s, "superblock: \"%02x:%02x:%ld\"",
- 					MAJOR(inode->i_sb->s_dev),
-
+--=20
+Jeff Layton <jlayton@redhat.com>
 
