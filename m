@@ -2,143 +2,222 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BFCD56A9A2
-	for <lists+linux-nfs@lfdr.de>; Thu,  7 Jul 2022 19:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8012056B0BF
+	for <lists+linux-nfs@lfdr.de>; Fri,  8 Jul 2022 04:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235320AbiGGRal (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 7 Jul 2022 13:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39758 "EHLO
+        id S236955AbiGHCuh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 7 Jul 2022 22:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235634AbiGGRak (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jul 2022 13:30:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 38D0830553
-        for <linux-nfs@vger.kernel.org>; Thu,  7 Jul 2022 10:30:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657215038;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6tGWYqmlLJcSgBP6hzyYQQhxnz4dcU1VE5hZAqrl66E=;
-        b=Sq5sbWm8ql8OQ4Ylkd1grMpqEbDPXjaqGKusHNUKku38T5S5Pt8JOcMamxbAHwSY3RZXlc
-        s7ECnP2t4wqF9EUBo4v37SEkBhTLJhWQE3mSlvXDPJOrhDoN5ikpb9G0qARvHBy/F3Gm/V
-        2yWI5ssNKZz+SvsIiWzoEU7YJVjXsZQ=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-352-jkgz7ecbMx2AjmR47VlLpA-1; Thu, 07 Jul 2022 13:30:37 -0400
-X-MC-Unique: jkgz7ecbMx2AjmR47VlLpA-1
-Received: by mail-qk1-f197.google.com with SMTP id z9-20020a376509000000b006af1048e0caso18534423qkb.17
-        for <linux-nfs@vger.kernel.org>; Thu, 07 Jul 2022 10:30:37 -0700 (PDT)
+        with ESMTP id S236885AbiGHCug (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 7 Jul 2022 22:50:36 -0400
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98E4F7437F
+        for <linux-nfs@vger.kernel.org>; Thu,  7 Jul 2022 19:50:33 -0700 (PDT)
+Received: by mail-qt1-x833.google.com with SMTP id g14so25567373qto.9
+        for <linux-nfs@vger.kernel.org>; Thu, 07 Jul 2022 19:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=Ad97sT16le5gjY7PgDU6gmeetvBzm9wlE8bQkILVjNc=;
+        b=tCcxRqjITVsiKb1O2qN38oOtehuQYEQmQlnA5EmpLLTcqVHGWkBNn5r6VjhB95uftz
+         oBhwab0Wa2p2hfzUf6HitqoN4V8My4lx3Sr3LHdaGn7TrTI27nd6mE0wsQOIBv87ES7u
+         uwlTgHRa2iafBHAxVTfOiHdPWVETU8CJjwRGskRUwQecY/1YbABG8fpWqJ0i5forgO17
+         n0R7m15mcAmskoYtfNfHUvAotB5BgPlp6Llxsn+Fa0qYPR44yx2cfMCeEIswKRQZAgPI
+         NLOhCVeNcKdBjtuIw/nnF9iOSfGliNNxy/YqmZphg0HMl4dZzroFochhJCRrtxDrneBV
+         hZ4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=6tGWYqmlLJcSgBP6hzyYQQhxnz4dcU1VE5hZAqrl66E=;
-        b=ubX68hkDbWNhZp639DpbPpjs7JpStRqAt0cK7/L8VhNQflsfP08KH97ZdqGcWozsTj
-         +u4mu9cIpkuRZAgAm3bgzZnl0yP0M3ZWTNp+RtNb7cGNs0UhNIwTYnaD+Rqj/lEbA0ov
-         El/7F8g416o5EHeYBeCLAuqickGXlIsC0XhOPp4xO3eK+zlYPjgscWBw+EhSfqIx3Dg4
-         ou+DoOD/z4N3ZjfkvsaxZ/6M2CuLdtQMubBwQQ/5hJHPAKpQRvhdSWvn+EkxJIMcbS4a
-         GaXaaRnc+I1nTYjZjMOdiXyOnM8tiKp+rSJboeI1ooqkYfKrDHVJMbeUmFTPXqEZSFTK
-         KyFQ==
-X-Gm-Message-State: AJIora/E/fwNAXxhJKEsIxaP+clWnrkaRRW+ob255GQGB8wPN9jKHrW+
-        MZmKYhMUBw19I5w1yXuk3Zd7v+czQXUShR5HHHzuKzc/Pd7mwkik+CYWUx+np/9mt9vJu2oKD+D
-        WACzxaIwtaGCi4GRVrnpF
-X-Received: by 2002:a05:622a:13ce:b0:31a:b4ce:1679 with SMTP id p14-20020a05622a13ce00b0031ab4ce1679mr38986169qtk.330.1657215036652;
-        Thu, 07 Jul 2022 10:30:36 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uyzIV3+rMXpExX+bmGIalN6zMDXgn7v2JMYdQcs/6FKlaOZwMfp+wAzkSzuhBC/WOlas60mQ==
-X-Received: by 2002:a05:622a:13ce:b0:31a:b4ce:1679 with SMTP id p14-20020a05622a13ce00b0031ab4ce1679mr38986143qtk.330.1657215036401;
-        Thu, 07 Jul 2022 10:30:36 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id f10-20020a05620a280a00b006a69d7f390csm33189731qkp.103.2022.07.07.10.30.36
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=Ad97sT16le5gjY7PgDU6gmeetvBzm9wlE8bQkILVjNc=;
+        b=5uDnUqO9dsL2CKa/kxYNIwVzinCLZZZIRATHvYYz2TLXmVaHp5yO4eYGFtzXYIOhB5
+         m7QSQOb3omxmGjsDL7ModU9cr3AHau9Iw3s+nvni6BdXHPKviL2ZQXO6R1PEJA4SuMcq
+         vLciWWWRMRS8vxmz46xMm5kddBgDQ3Eutu7uEwHIz0rqGtNde8CFY2rFarjO+DAJuovV
+         eDNguzgldbqovuG/R3OaV/uguuqIHyYxiKo1JXb/ohQ2UNe2NY5ssjeig1Rw5AHp9Ryn
+         13Kqx52mvq5pCkPP7Ldye7BxZRT/vTM71XNpCqymrgLz9hX+sU+DGymyl1Mx51qetMGR
+         MIVA==
+X-Gm-Message-State: AJIora8JPIhCPwPXfsNl9gahyBt5y/A2+9ToMEvWZLQYYvpNxcFi3VBh
+        w41l5RCx2pNRIORd6gxTKmM1cw==
+X-Google-Smtp-Source: AGRyM1tJqq+vsbrqVwAmw8UZQYXdEmN7Cq4ADeDpayYOUxqHMEno4PbopiKhNsYF91bJVygTm51HMQ==
+X-Received: by 2002:ac8:7d52:0:b0:319:51f0:e418 with SMTP id h18-20020ac87d52000000b0031951f0e418mr1088284qtb.481.1657248632632;
+        Thu, 07 Jul 2022 19:50:32 -0700 (PDT)
+Received: from ripple.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id s7-20020a05620a254700b006a65c58db99sm35676841qko.64.2022.07.07.19.50.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Jul 2022 10:30:36 -0700 (PDT)
-Message-ID: <7bc372783500c40d39c6a6a2eac1b7690f1ab3ad.camel@redhat.com>
-Subject: Re: [PATCH RFC] NFSD: Bump the ref count on nf_inode
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Thu, 07 Jul 2022 13:30:35 -0400
-In-Reply-To: <5B84D6D2-E9BC-4518-B52C-ABAF240DE2A1@oracle.com>
-References: <165720933938.1180.14325183467695610136.stgit@klimt.1015granger.net>
-         <f3dc1a01fae6759a350adabf944892417a63d529.camel@redhat.com>
-         <5B84D6D2-E9BC-4518-B52C-ABAF240DE2A1@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.2 (3.44.2-1.fc36) 
+        Thu, 07 Jul 2022 19:50:32 -0700 (PDT)
+Date:   Thu, 7 Jul 2022 19:50:17 -0700 (PDT)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@ripple.anvils
+To:     "Matthew Wilcox (Oracle)" <willy@infradead.org>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-aio@kvack.org,
+        linux-btrfs@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ocfs2-devel@oss.oracle.com, linux-mtd@lists.infradead.org,
+        virtualization@lists.linux-foundation.org,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v2 07/19] mm/migrate: Convert expected_page_refs() to
+ folio_expected_refs()
+In-Reply-To: <20220608150249.3033815-8-willy@infradead.org>
+Message-ID: <6e7599d1-8a5f-bf16-383c-febd753bd051@google.com>
+References: <20220608150249.3033815-1-willy@infradead.org> <20220608150249.3033815-8-willy@infradead.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-07-07 at 17:25 +0000, Chuck Lever III wrote:
->=20
-> > On Jul 7, 2022, at 12:55 PM, Jeff Layton <jlayton@redhat.com> wrote:
-> >=20
-> > On Thu, 2022-07-07 at 11:58 -0400, Chuck Lever wrote:
-> > > The documenting comment for struct nf_file states:
-> > >=20
-> > > /*
-> > > * A representation of a file that has been opened by knfsd. These are=
- hashed
-> > > * in the hashtable by inode pointer value. Note that this object does=
-n't
-> > > * hold a reference to the inode by itself, so the nf_inode pointer sh=
-ould
-> > > * never be dereferenced, only used for comparison.
-> > > */
-> > >=20
-> > > However, nfsd_file_mark_find_or_create() does dereference the pointer=
- stored
-> > > in this field.
-> > >=20
-> > > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > > ---
-> > > fs/nfsd/filecache.c | 3 +++
-> > > fs/nfsd/filecache.h | 4 +---
-> > > 2 files changed, 4 insertions(+), 3 deletions(-)
-> > >=20
-> > > Hi Jeff-
-> > >=20
-> > > I'm still testing this one, but I'm wondering what you think of it.
-> > > I did hit a KASAN splat that might be related, but it's not 100%
-> > > reproducible.
-> > >=20
-> >=20
-> > My first thought is "what the hell was I thinking, tracking an inode
-> > field without holding a reference to it?"
-> >=20
-> > But now that I look, the nf_inode value only gets dereferenced in one
-> > place -- nfs4_show_superblock, and I think that's a bug. The comments
-> > over struct nfsd_file say:
-> >=20
-> > "Note that this object doesn't hold a reference to the inode by itself,
-> > so the nf_inode pointer should never be dereferenced, only used for
-> > comparison."
-> >=20
-> > We should probably annotate nf_inode better. __attribute__((noderef))
-> > maybe? It would also be good to make nfs4_show_superblock use a
-> > different way to get the sb.
->=20
-> How about f->nf_file->f_inode ?
->=20
->=20
+On Wed, 8 Jun 2022, Matthew Wilcox (Oracle) wrote:
 
-I'd probably prefer:
+> Now that both callers have a folio, convert this function to
+> take a folio & rename it.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/migrate.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 2975f0c4d7cf..2e2f41572066 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -336,13 +336,18 @@ void pmd_migration_entry_wait(struct mm_struct *mm, pmd_t *pmd)
+>  }
+>  #endif
+>  
+> -static int expected_page_refs(struct address_space *mapping, struct page *page)
+> +static int folio_expected_refs(struct address_space *mapping,
+> +		struct folio *folio)
+>  {
+> -	int expected_count = 1;
+> +	int refs = 1;
+> +	if (!mapping)
+> +		return refs;
+>  
+> -	if (mapping)
+> -		expected_count += compound_nr(page) + page_has_private(page);
+> -	return expected_count;
+> +	refs += folio_nr_pages(folio);
+> +	if (folio_get_private(folio))
+> +		refs++;
+> +
+> +	return refs;
+>  }
+>  
+>  /*
+> @@ -359,7 +364,7 @@ int folio_migrate_mapping(struct address_space *mapping,
+>  	XA_STATE(xas, &mapping->i_pages, folio_index(folio));
+>  	struct zone *oldzone, *newzone;
+>  	int dirty;
+> -	int expected_count = expected_page_refs(mapping, &folio->page) + extra_count;
+> +	int expected_count = folio_expected_refs(mapping, folio) + extra_count;
+>  	long nr = folio_nr_pages(folio);
+>  
+>  	if (!mapping) {
+> @@ -669,7 +674,7 @@ static int __buffer_migrate_folio(struct address_space *mapping,
+>  		return migrate_page(mapping, &dst->page, &src->page, mode);
+>  
+>  	/* Check whether page does not have extra refs before we do more work */
+> -	expected_count = expected_page_refs(mapping, &src->page);
+> +	expected_count = folio_expected_refs(mapping, src);
+>  	if (folio_ref_count(src) != expected_count)
+>  		return -EAGAIN;
+>  
+> -- 
+> 2.35.1
 
-    file_inode(f->nf_file)
+This commit (742e89c9e352d38df1a5825fe40c4de73a5d5f7a in pagecache.git
+folio/for-next and recent linux-next) is dangerously wrong, at least
+for swapcache, and probably for some others.
 
-...and I don't think there is a potential crash here either.
-nfs4_show_superblock is called while holding the cl_lock. I don't think
-the inode can disappear out from under you with that.
+I say "dangerously" because it tells page migration a swapcache page
+is safe for migration when it certainly is not.
 
---=20
-Jeff Layton <jlayton@redhat.com>
+The fun that typically ensues is kernel BUG at include/linux/mm.h:750!
+put_page_testzero() VM_BUG_ON_PAGE(page_ref_count(page) == 0, page),
+if CONFIG_DEBUG_VM=y (bisecting for that is what brought me to this).
+But I guess you might get silent data corruption too.
 
+I assumed at first that you'd changed the rules, and were now expecting
+any subsystem that puts a non-zero value into folio->private to raise
+its refcount - whereas the old convention (originating with buffer heads)
+is that setting PG_private says an extra refcount has been taken, please
+call try_to_release_page() to lower it, and maybe that will use data in
+page->private to do so; but page->private free for the subsystem owning
+the page to use as it wishes, no refcount implication.  But that you
+had missed updating swapcache.
+
+So I got working okay with the patch below; but before turning it into
+a proper patch, noticed that there were still plenty of other places
+applying the test for PG_private: so now think that maybe you set out
+with intention as above, realized it wouldn't work, but got distracted
+before cleaning up some places you'd already changed.  And patch below
+now goes in the wrong direction.
+
+Or maybe you didn't intend any change, but the PG_private test just got
+missed in a few places.  I don't know, hope you remember, but current
+linux-next badly inconsistent.
+Over to you, thanks,
+
+Hugh
+
+--- a/mm/migrate.c	2022-07-06 14:24:44.499941975 -0700
++++ b/mm/migrate.c	2022-07-06 15:49:25.000000000 -0700
+@@ -351,6 +351,10 @@ unlock:
+ }
+ #endif
+ 
++static inline bool folio_counted_private(struct folio *folio)
++{
++	return !folio_test_swapcache(folio) && folio_get_private(folio);
++}
+ static int folio_expected_refs(struct address_space *mapping,
+ 		struct folio *folio)
+ {
+@@ -359,7 +363,7 @@ static int folio_expected_refs(struct ad
+ 		return refs;
+ 
+ 	refs += folio_nr_pages(folio);
+-	if (folio_get_private(folio))
++	if (folio_counted_private(folio))
+ 		refs++;
+ 
+ 	return refs;
+--- a/mm/vmscan.c	2022-07-06 14:24:44.531942217 -0700
++++ b/mm/vmscan.c	2022-07-06 15:49:37.000000000 -0700
+@@ -2494,6 +2494,10 @@ shrink_inactive_list(unsigned long nr_to
+  * The downside is that we have to touch folio->_refcount against each folio.
+  * But we had to alter folio->flags anyway.
+  */
++static inline bool folio_counted_private(struct folio *folio)
++{
++	return !folio_test_swapcache(folio) && folio_get_private(folio);
++}
+ static void shrink_active_list(unsigned long nr_to_scan,
+ 			       struct lruvec *lruvec,
+ 			       struct scan_control *sc,
+@@ -2538,8 +2542,9 @@ static void shrink_active_list(unsigned
+ 		}
+ 
+ 		if (unlikely(buffer_heads_over_limit)) {
+-			if (folio_get_private(folio) && folio_trylock(folio)) {
+-				if (folio_get_private(folio))
++			if (folio_counted_private(folio) &&
++			    folio_trylock(folio)) {
++				if (folio_counted_private(folio))
+ 					filemap_release_folio(folio, 0);
+ 				folio_unlock(folio);
+ 			}
