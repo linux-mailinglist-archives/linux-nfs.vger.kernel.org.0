@@ -2,74 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D864456C3E0
-	for <lists+linux-nfs@lfdr.de>; Sat,  9 Jul 2022 01:15:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B5DB456C24D
+	for <lists+linux-nfs@lfdr.de>; Sat,  9 Jul 2022 01:12:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239188AbiGHTQx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 8 Jul 2022 15:16:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58750 "EHLO
+        id S239952AbiGHTbC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 8 Jul 2022 15:31:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238184AbiGHTQw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Jul 2022 15:16:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C2ED645042
-        for <linux-nfs@vger.kernel.org>; Fri,  8 Jul 2022 12:16:51 -0700 (PDT)
+        with ESMTP id S238420AbiGHTab (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 8 Jul 2022 15:30:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 567777392B
+        for <linux-nfs@vger.kernel.org>; Fri,  8 Jul 2022 12:29:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657307810;
+        s=mimecast20190719; t=1657308598;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=q+E5Uxc1L6lY8x0Xu20nKw3rP9x1iQMo5WfF11E2oEw=;
-        b=asVp6543y2DeotKkJtVE9ugvnf8GkNsTXY7lxehgEWNL/INtsUgC15pjAeUa+trVUQl6bg
-        UAKXZXGOSJ1VRIuK7hPsfVp61lEh3OEzzytf97cnqYl2AG52WB170EscZLfxhP6j0wVArW
-        dROcTMYhlK4/9Iy/IzrhR3BMvUX+pM0=
+        bh=dzh5nHfJrlphKHfnD95dnGvrtuLczKS+qXJ0FkTK3jw=;
+        b=L6EVbibjP4YXaJ9SFZnW3CQ4N52E4cak78goq/O+Ri+DkeBy7GxgTU8D1vYXsyQAqda6jo
+        eBt5O7INSG7M8Gi3K8BOnE0B8ZdIijuW/jNCOFypW7tD/2CITI868MeuJCYEA2MDJ1xS+T
+        haBlw1IG4A+qTKM6+rvJRr8oxGCdkKs=
 Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
  [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-64-TZgZoY-KM3mL-GiPZeEMRg-1; Fri, 08 Jul 2022 15:16:49 -0400
-X-MC-Unique: TZgZoY-KM3mL-GiPZeEMRg-1
-Received: by mail-qk1-f199.google.com with SMTP id f10-20020a05620a408a00b006b267fdf71fso19714902qko.6
-        for <linux-nfs@vger.kernel.org>; Fri, 08 Jul 2022 12:16:49 -0700 (PDT)
+ us-mta-279-YfEzMtoYMraqd0GjEfst_A-1; Fri, 08 Jul 2022 15:29:57 -0400
+X-MC-Unique: YfEzMtoYMraqd0GjEfst_A-1
+Received: by mail-qk1-f199.google.com with SMTP id bp10-20020a05620a458a00b006b265587a17so19937739qkb.2
+        for <linux-nfs@vger.kernel.org>; Fri, 08 Jul 2022 12:29:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
          :references:content-transfer-encoding:user-agent:mime-version;
-        bh=q+E5Uxc1L6lY8x0Xu20nKw3rP9x1iQMo5WfF11E2oEw=;
-        b=FT/8sNXp8cTHEqOlvCkVt4K5Uc+GWMz4dSlcFQsUchkLs0OOsEeYZEaRezrvZQpkzN
-         e5hkHQ5Ru586wL1boWyivhoUEJ/TXJCftSF42dj7i2y/1VHGZD6r6OAIE0SfpQZprMHY
-         DRqMD8b+3Z3p8AnUzl9GkdxnE8jHCme4k5IX75wCyBkDdwu8OtzmsN3NjFhzO8tqTmJ9
-         Wjd1tyhr42g0M5o+3GHnx1D+OFSJMYpwB0wSg9oEyRz6vpXArnWHHzzbgFXspzXqsAsP
-         xzfD4uOQsqRkdT8WlnudBw9N22DQ3i9LIV/Zp3ZzajeiLhBGL/k79xQ3TI7HvqwycAHp
-         CF3w==
-X-Gm-Message-State: AJIora/f07X9vzzDEFD9bKJ6YeKSnXXDAl30z3rrvSmQClTIRspqKPBS
-        lrKnOCoSpQQvOwheEDjxGgNQOdVIKhCWbmqckBZMcABU/d/Y4VyGKVNiiwqEsMoYcNdLn2YNN4T
-        Y9xWlrDbenM9ZX9wUGP9R
-X-Received: by 2002:a05:620a:d54:b0:6b2:5a9b:ef2e with SMTP id o20-20020a05620a0d5400b006b25a9bef2emr3503359qkl.715.1657307809129;
-        Fri, 08 Jul 2022 12:16:49 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vlPO7bIup7NI64TA0vi+uk6M4ZJZb5w0BEQ0gp7V0aT/fIJeYl2XMp80DsYKvhK90F7DLtHg==
-X-Received: by 2002:a05:620a:d54:b0:6b2:5a9b:ef2e with SMTP id o20-20020a05620a0d5400b006b25a9bef2emr3503336qkl.715.1657307808806;
-        Fri, 08 Jul 2022 12:16:48 -0700 (PDT)
+        bh=dzh5nHfJrlphKHfnD95dnGvrtuLczKS+qXJ0FkTK3jw=;
+        b=5GZ226Ck9s3ajgfELwf8c5A6+fYoaDfOoFqwWqp2LWi6SMS6m7hq3wzDn+k5baESrA
+         PJRYHvHwQCvnm1uPc6Ic6B36vVWkUK7jOv5SKZtDCgxT7TTRrGAGfN35FeSE6+8gdx83
+         rSoOcmL6P7V0hlACaSZK4KmXuXPBrFjv0zzKo0ZrIUKsqOEuZbxo/gLU/+PSpZIqNgtb
+         PVLLj71/tbB4mwl1b31vBSMZx0MeHWSg8SB7Ep4xYLiWM0M/5LzQDE0SPrF2VuzI5/ch
+         U15aeandW36OfhiDEe8Qtv+U/wW93W7n/xqb46rs5+ydchp0+ekF00dgd82tvzix22zN
+         t0pA==
+X-Gm-Message-State: AJIora/pxi5KQHszEiLpqeHj/ap3QWv+aTTWfGtuvlGtmVjIt5+U5sHI
+        xryeBnGVLXGQp6UkV565LauxtHTFRXtYdDXwatA1CS0ATiqnA5Q4/TYXD/7l55F9DtDrqXF+f6w
+        1dTAjz4NtZQkI97RRnS3Z
+X-Received: by 2002:a05:6214:c4e:b0:473:276:9a0d with SMTP id r14-20020a0562140c4e00b0047302769a0dmr4050589qvj.34.1657308596545;
+        Fri, 08 Jul 2022 12:29:56 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tgRpF4K7ucpvtHmuBCQ0errt8jFQQR0gkPIvMXPfy3pfJJfsZWvwY4piCWe2XfFnN/fbXp+w==
+X-Received: by 2002:a05:6214:c4e:b0:473:276:9a0d with SMTP id r14-20020a0562140c4e00b0047302769a0dmr4050575qvj.34.1657308596307;
+        Fri, 08 Jul 2022 12:29:56 -0700 (PDT)
 Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id u19-20020a37ab13000000b006b56a4400f6sm1101878qke.16.2022.07.08.12.16.48
+        by smtp.gmail.com with ESMTPSA id u16-20020a05620a0c5000b006a6ebde4799sm40443020qki.90.2022.07.08.12.29.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jul 2022 12:16:48 -0700 (PDT)
-Message-ID: <60ee503b9cd5c0d2963070184eb246df22aa716b.camel@redhat.com>
-Subject: Re: [PATCH v3 12/32] NFSD: Hook up the filecache stat file
+        Fri, 08 Jul 2022 12:29:55 -0700 (PDT)
+Message-ID: <2af895fcbdaeab04773cbce275ca7a6d59b879cf.camel@redhat.com>
+Subject: Re: [PATCH v3 15/32] NFSD: Leave open files out of the filecache LRU
 From:   Jeff Layton <jlayton@redhat.com>
 To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org,
         netdev@vger.kernel.org
 Cc:     david@fromorbit.com, tgraf@suug.ch
-Date:   Fri, 08 Jul 2022 15:16:47 -0400
-In-Reply-To: <165730469820.28142.10369457240055089259.stgit@klimt.1015granger.net>
+Date:   Fri, 08 Jul 2022 15:29:55 -0400
+In-Reply-To: <165730471781.28142.13547044100953437563.stgit@klimt.1015granger.net>
 References: <165730437087.28142.6731645688073512500.stgit@klimt.1015granger.net>
-         <165730469820.28142.10369457240055089259.stgit@klimt.1015granger.net>
+         <165730471781.28142.13547044100953437563.stgit@klimt.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -78,70 +78,171 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-07-08 at 14:24 -0400, Chuck Lever wrote:
-> There has always been the capability of exporting filecache metrics
-> via /proc, but it was never hooked up. Let's surface these metrics
-> to enable better observability of the filecache.
+On Fri, 2022-07-08 at 14:25 -0400, Chuck Lever wrote:
+> There have been reports of problems when running fstests generic/531
+> against Linux NFS servers with NFSv4. The NFS server that hosts the
+> test's SCRATCH_DEV suffers from CPU soft lock-ups during the test.
+> Analysis shows that:
 >=20
+> fs/nfsd/filecache.c
+>  482                 ret =3D list_lru_walk(&nfsd_file_lru,
+>  483                                 nfsd_file_lru_cb,
+>  484                                 &head, LONG_MAX);
+>=20
+> causes nfsd_file_gc() to walk the entire length of the filecache LRU
+> list every time it is called (which is quite frequently). The walk
+> holds a spinlock the entire time that prevents other nfsd threads
+> from accessing the filecache.
+>=20
+> What's more, for NFSv4 workloads, none of the items that are visited
+> during this walk may be evicted, since they are all files that are
+> held OPEN by NFS clients.
+>=20
+> Address this by ensuring that open files are not kept on the LRU
+> list.
+>=20
+> Reported-by: Frank van der Linden <fllinden@amazon.com>
+> Reported-by: Wang Yugui <wangyugui@e16-tech.com>
+> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D386
+> Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfsctl.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  fs/nfsd/filecache.c |   24 +++++++++++++++++++-----
+>  fs/nfsd/trace.h     |    2 ++
+>  2 files changed, 21 insertions(+), 5 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 66c352bf61b1..ecc08cf97a86 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -25,6 +25,7 @@
->  #include "state.h"
->  #include "netns.h"
->  #include "pnfs.h"
-> +#include "filecache.h"
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 37373b012276..6e9e186334ab 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -269,6 +269,7 @@ nfsd_file_flush(struct nfsd_file *nf)
 > =20
->  /*
->   *	We have a single directory with several nodes in it.
-> @@ -46,6 +47,7 @@ enum {
->  	NFSD_MaxBlkSize,
->  	NFSD_MaxConnections,
->  	NFSD_SupportedEnctypes,
-> +	NFSD_Filecache,
->  	/*
->  	 * The below MUST come last.  Otherwise we leave a hole in nfsd_files[]
->  	 * with !CONFIG_NFSD_V4 and simple_fill_super() goes oops
-> @@ -229,6 +231,13 @@ static const struct file_operations reply_cache_stat=
-s_operations =3D {
->  	.release	=3D single_release,
->  };
+>  static void nfsd_file_lru_add(struct nfsd_file *nf)
+>  {
+> +	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+>  	if (list_lru_add(&nfsd_file_lru, &nf->nf_lru))
+>  		trace_nfsd_file_lru_add(nf);
+>  }
+> @@ -298,7 +299,6 @@ nfsd_file_unhash(struct nfsd_file *nf)
+>  {
+>  	if (test_and_clear_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+>  		nfsd_file_do_unhash(nf);
+> -		nfsd_file_lru_remove(nf);
+>  		return true;
+>  	}
+>  	return false;
+> @@ -319,6 +319,7 @@ nfsd_file_unhash_and_release_locked(struct nfsd_file =
+*nf, struct list_head *disp
+>  	if (refcount_dec_not_one(&nf->nf_ref))
+>  		return true;
 > =20
-> +static const struct file_operations filecache_ops =3D {
-> +	.open		=3D nfsd_file_cache_stats_open,
-> +	.read		=3D seq_read,
-> +	.llseek		=3D seq_lseek,
-> +	.release	=3D single_release,
-> +};
-> +
->  /*----------------------------------------------------------------------=
-------*/
->  /*
->   * payload - write methods
-> @@ -1370,6 +1379,7 @@ static int nfsd_fill_super(struct super_block *sb, =
-struct fs_context *fc)
->  		[NFSD_Ports] =3D {"portlist", &transaction_ops, S_IWUSR|S_IRUGO},
->  		[NFSD_MaxBlkSize] =3D {"max_block_size", &transaction_ops, S_IWUSR|S_I=
-RUGO},
->  		[NFSD_MaxConnections] =3D {"max_connections", &transaction_ops, S_IWUS=
-R|S_IRUGO},
-> +		[NFSD_Filecache] =3D {"filecache", &filecache_ops, S_IRUGO},
->  #if defined(CONFIG_SUNRPC_GSS) || defined(CONFIG_SUNRPC_GSS_MODULE)
->  		[NFSD_SupportedEnctypes] =3D {"supported_krb5_enctypes", &supported_en=
-ctypes_ops, S_IRUGO},
->  #endif /* CONFIG_SUNRPC_GSS or CONFIG_SUNRPC_GSS_MODULE */
->=20
->=20
+> +	nfsd_file_lru_remove(nf);
+>  	list_add(&nf->nf_lru, dispose);
+>  	return true;
+>  }
+> @@ -330,6 +331,7 @@ nfsd_file_put_noref(struct nfsd_file *nf)
+> =20
+>  	if (refcount_dec_and_test(&nf->nf_ref)) {
+>  		WARN_ON(test_bit(NFSD_FILE_HASHED, &nf->nf_flags));
+> +		nfsd_file_lru_remove(nf);
+>  		nfsd_file_free(nf);
+>  	}
+>  }
+> @@ -339,7 +341,7 @@ nfsd_file_put(struct nfsd_file *nf)
+>  {
+>  	might_sleep();
+> =20
+> -	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> +	nfsd_file_lru_add(nf);
 
-<facepalm>
-Ouch, that's quite an oversight.
-</facepalm>
+Do you really want to add this on every put? I would have thought you'd
+only want to do this on a 2->1 nf_ref transition.
+
+>  	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
+>  		nfsd_file_flush(nf);
+>  		nfsd_file_put_noref(nf);
+> @@ -439,8 +441,18 @@ nfsd_file_dispose_list_delayed(struct list_head *dis=
+pose)
+>  	}
+>  }
+> =20
+> -/*
+> +/**
+> + * nfsd_file_lru_cb - Examine an entry on the LRU list
+> + * @item: LRU entry to examine
+> + * @lru: controlling LRU
+> + * @lock: LRU list lock (unused)
+> + * @arg: dispose list
+> + *
+>   * Note this can deadlock with nfsd_file_cache_purge.
+> + *
+> + * Return values:
+> + *   %LRU_REMOVED: @item was removed from the LRU
+> + *   %LRU_SKIP: @item cannot be evicted
+>   */
+>  static enum lru_status
+>  nfsd_file_lru_cb(struct list_head *item, struct list_lru_one *lru,
+> @@ -462,8 +474,9 @@ nfsd_file_lru_cb(struct list_head *item, struct list_=
+lru_one *lru,
+>  	 * That order is deliberate to ensure that we can do this locklessly.
+>  	 */
+>  	if (refcount_read(&nf->nf_ref) > 1) {
+> +		list_lru_isolate(lru, &nf->nf_lru);
+>  		trace_nfsd_file_gc_in_use(nf);
+> -		return LRU_SKIP;
+> +		return LRU_REMOVED;
+
+Interesting. So you wait until the LRU scanner runs to remove these
+entries? I expected to see you do this in nfsd_file_get, but this does
+seem likely to be more efficient.
+
+>  	}
+> =20
+>  	/*
+> @@ -1020,6 +1033,7 @@ nfsd_do_file_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  		goto retry;
+>  	}
+> =20
+> +	nfsd_file_lru_remove(nf);
+>  	this_cpu_inc(nfsd_file_cache_hits);
+> =20
+>  	if (!(may_flags & NFSD_MAY_NOT_BREAK_LEASE)) {
+> @@ -1055,7 +1069,6 @@ nfsd_do_file_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  	refcount_inc(&nf->nf_ref);
+>  	__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+>  	__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> -	nfsd_file_lru_add(nf);
+>  	hlist_add_head_rcu(&nf->nf_node, &nfsd_file_hashtbl[hashval].nfb_head);
+>  	++nfsd_file_hashtbl[hashval].nfb_count;
+>  	nfsd_file_hashtbl[hashval].nfb_maxcount =3D max(nfsd_file_hashtbl[hashv=
+al].nfb_maxcount,
+> @@ -1080,6 +1093,7 @@ nfsd_do_file_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  	 */
+>  	if (status !=3D nfs_ok || inode->i_nlink =3D=3D 0) {
+>  		bool do_free;
+> +		nfsd_file_lru_remove(nf);
+>  		spin_lock(&nfsd_file_hashtbl[hashval].nfb_lock);
+>  		do_free =3D nfsd_file_unhash(nf);
+>  		spin_unlock(&nfsd_file_hashtbl[hashval].nfb_lock);
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 1cc1133371eb..54082b868b72 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -929,7 +929,9 @@ DEFINE_EVENT(nfsd_file_gc_class, name,					\
+>  	TP_ARGS(nf))
+> =20
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_add);
+> +DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_add_disposed);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del);
+> +DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_lru_del_disposed);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_in_use);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_writeback);
+>  DEFINE_NFSD_FILE_GC_EVENT(nfsd_file_gc_referenced);
+>=20
+>=20
 
 --=20
 Jeff Layton <jlayton@redhat.com>
