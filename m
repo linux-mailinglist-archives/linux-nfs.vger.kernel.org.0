@@ -2,179 +2,173 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D48D8570A2C
-	for <lists+linux-nfs@lfdr.de>; Mon, 11 Jul 2022 20:56:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7F4570AE9
+	for <lists+linux-nfs@lfdr.de>; Mon, 11 Jul 2022 21:48:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230055AbiGKS4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 11 Jul 2022 14:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40192 "EHLO
+        id S229604AbiGKTsH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 11 Jul 2022 15:48:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229656AbiGKS4p (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Jul 2022 14:56:45 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC6DB28700
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jul 2022 11:56:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657565803;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VhPkyw6JSqRXpaTvoZTUIcUz3k2QZrwRVRcGZdJSN50=;
-        b=cX0oMQTn0DVw6I3DTTd9mHEenu4hqwWNLhF0NbdSocGbrRr8ARsVg8yIGMPtM+hGHGn6jF
-        d/2QHVIqbhPwdnsfXBB6V4vuslGhjNNCiXmN5oPuDT22y1jWlGuX9sK439Nj9g39TAfyvu
-        6LOPtzStg85Fy2iiIb8etnn3btR3G/8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-134-MhU8J9E3OQqvCVjRtEXkHA-1; Mon, 11 Jul 2022 14:56:42 -0400
-X-MC-Unique: MhU8J9E3OQqvCVjRtEXkHA-1
-Received: by mail-qk1-f200.google.com with SMTP id bm2-20020a05620a198200b006a5dac37fa2so5993197qkb.16
-        for <linux-nfs@vger.kernel.org>; Mon, 11 Jul 2022 11:56:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:content-transfer-encoding:user-agent:mime-version;
-        bh=VhPkyw6JSqRXpaTvoZTUIcUz3k2QZrwRVRcGZdJSN50=;
-        b=ma6cfktNo2wT0OEfzcBJjxEJhFSRO55TXXpbqX1gn5i0gUx7mEpYNpp8GB7cjCK4VL
-         crLlW4S6HoT8KzN4g2ujfIl7jwSIK1beFrn2Ds9sSbE2yL+tloGoekSw75VUbzx6ycjJ
-         CwcZrOX3vL94hfdpK/8RMR4D6uDjsvtKy5j/MLi/lNAb8pBk5Gv712RKZKyq1DUEFtyT
-         1KBZhx0GaaS6qc1UfwyMqPJX4zXhqaKQHpD6O0cTvzAWTvj1ewCiNCWwjsP50xAVIb3s
-         MCe4x5uP5oJtB+ar7bxm2DREtZIADemOVOu8S0FFbdmIxuiXPuCjmQdd7dqCQNVxggGj
-         gv6Q==
-X-Gm-Message-State: AJIora8/SHiaZIz3rpa7VGiI/E7MWXrdZ4veSms4vRYS37JPt2rZEB24
-        nXEczzgLiFHiQbi6pBjr3DPuhe55Ut6vsrmYPSnsVMM+AHcgoCQiLIubD0vTrGzVdxmYiACu9kl
-        sVZwtqkiJ7YxVMqdNuiQ+
-X-Received: by 2002:a05:620a:28c5:b0:6b2:5245:2901 with SMTP id l5-20020a05620a28c500b006b252452901mr12198434qkp.284.1657565802074;
-        Mon, 11 Jul 2022 11:56:42 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sbSnRL60Jwlg+CU4cgZnQiyj8dGPJzJr8nt0p4zQKZwFhARbZu4qXb2WCEHOrDI/LnVmA0gw==
-X-Received: by 2002:a05:620a:28c5:b0:6b2:5245:2901 with SMTP id l5-20020a05620a28c500b006b252452901mr12198424qkp.284.1657565801839;
-        Mon, 11 Jul 2022 11:56:41 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id cb25-20020a05622a1f9900b0031b7441b02asm5846436qtb.89.2022.07.11.11.56.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Jul 2022 11:56:41 -0700 (PDT)
-Message-ID: <f5d20f4e1aeb5d478e10a39c17ed003616c7872c.camel@redhat.com>
-Subject: Re: [GIT PULL] nfsd changes for 5.18
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Bruce Fields <bfields@fieldses.org>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Igor Mammedov <imammedo@redhat.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 11 Jul 2022 14:56:40 -0400
-In-Reply-To: <20220711183603.GD14184@fieldses.org>
-References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
-         <20220710124344.36dfd857@redhat.com>
-         <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
-         <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
-         <20220711181941.GC14184@fieldses.org>
-         <7CD95BBD-3552-47BD-ACF6-EC51F62787E1@oracle.com>
-         <20220711183603.GD14184@fieldses.org>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229437AbiGKTsG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 11 Jul 2022 15:48:06 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77AA57235
+        for <linux-nfs@vger.kernel.org>; Mon, 11 Jul 2022 12:48:05 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26BIY3Om015252;
+        Mon, 11 Jul 2022 19:47:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
+ bh=0koUZwod8SOsL/SAu4kD8tUoiz7fxReGO4Zhcwe6UZ0=;
+ b=qXT9Jgz8jlLF5o3/LXJOc362rA7J11iFFcvj6HlzobSxjto7/t7fn6fQn3tWNt3RToAO
+ +dzSSc4nImjPZFVqx6Saa1J8AATEKOhOgGOC5ud1kbUjziTSm7FVTkw0qAwhOEoO63qR
+ md7LGkfmK+sdMSKVllMxGGQ7iRv6eJ5irGTPVs0OLHS1cQLDL94Jcks0tUpxaJ6OmHH4
+ ExnTJNCHcsgYxRaxegM5Gkbjj7Shxg6mxKNmi28eiwkcq49qXoVxPdtxjojlp4TT1vCp
+ xM3p0o1HQlERaZBPJRsT8HrKlwXDi98yItRaqZPTr9y94gJU9ZZW/g/NeZKLrmbFuWsH Jw== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h71sc4kps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Jul 2022 19:47:59 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26BJb6U1003433;
+        Mon, 11 Jul 2022 19:47:59 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2177.outbound.protection.outlook.com [104.47.55.177])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3h7042fmfm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Jul 2022 19:47:58 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=D+drtouM6tJvTpxZo7KCq9D3wU6CSC4XhaUZ/bnVn2nryfE9/j5KRv+9xhnnhS6zbfPtey42C9lsav1z4AI4c7BK6UMPV3vu+a7dD2QMkeECG7TgNSPvYkSZ2c/g3EqmhDu/eNkbG8/fs9pmmatl6dahpZzG+yiTUj/zcU7l2+D6kMKCQ0bvk/IwVQznyEZS5HwKq63EvgzPcK6lIZAc+XM9UaZqVs5RDsAPoUKbquERMrfIjNZGvxPJyZW/HBqXGlD4ypyYLPXlRlv/fEj6O/U2NOwjNw+yU2+xTP+jZLR/SUU47xL9BWFsj2qFOHQvbvanKqUsgi/8lQA0+hJ0cw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0koUZwod8SOsL/SAu4kD8tUoiz7fxReGO4Zhcwe6UZ0=;
+ b=L23yeM+51HjOtBITdBFzzdP2MCWmhZT0Dtgf9U0X3u7AuvhSYOrYZQXC6vqC8AgXK1wIN1rVR6JVoea9c8ZcAuuz7jerPyoyTGld0H6rrXcdkoH8RygJs9Mol/57jc8Sqwtu7fmBnBFsE+LQsY4qMASAQdhmJ4zvlXYjDZYhvFK0K8wKZY/fegWoE/NLgHmU/aib+pcsGh2HaFUG5Cchl4A33DrBqMgkX22miCvqFMRBYEEjad5bzD8KJV4ZuvDR1c8O/HTsVTCOasgvIqvFBpydQOOfOK4cySdnwJ9u22ieJrrY3NnXUGHMyTeQdcfLMX668AcxHNB+cfv9wjonSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0koUZwod8SOsL/SAu4kD8tUoiz7fxReGO4Zhcwe6UZ0=;
+ b=qypyFjjinXBUUR9rrj6vUppUNOmFW/1LsAMBxblvEfLdsvVOzmYSPBYh51gDZg52JvrhfgKxJ/xGyCA8WaC76HcN109K/cYZxd07bR7u5H+zNjFXY4V4t5PzIIfJxKHzlVapCVtEg6N98xeo8EBKexn9BXPtxph1DLEjkSZlZJ4=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DM5PR1001MB2379.namprd10.prod.outlook.com (2603:10b6:4:30::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.18; Mon, 11 Jul
+ 2022 19:47:57 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::9920:1ac4:2d14:e703]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::9920:1ac4:2d14:e703%7]) with mapi id 15.20.5417.026; Mon, 11 Jul 2022
+ 19:47:57 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@kernel.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "anna@kernel.org" <anna@kernel.org>
+Subject: Re: [PATCH 0/2] lockd: fix hang on shutdown when there are active
+ locks
+Thread-Topic: [PATCH 0/2] lockd: fix hang on shutdown when there are active
+ locks
+Thread-Index: AQHYlVRHs4Srxdi+TEupsHx0CAQu7q15k5IA
+Date:   Mon, 11 Jul 2022 19:47:57 +0000
+Message-ID: <EE221E7E-8FEB-459A-86BC-B21AB4D662C8@oracle.com>
+References: <20220711183014.15161-1-jlayton@kernel.org>
+In-Reply-To: <20220711183014.15161-1-jlayton@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 68b9ce0b-7e7c-4316-f97b-08da63764107
+x-ms-traffictypediagnostic: DM5PR1001MB2379:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6boYtgwMbbzJKQHWjIcL8wcEB4Mq80jjR+OnbEyl6qTt6DzFCe1ezWOyaacBeuuFgP6qOOCaXb5alDdSDPFJEhPn0zN4I14IkBM8QCuOcWsPqsPXaHO0RM6v7mar40+PVKjOzmpoEfkSwSti/AxHamnwWyD9xDptWSpOUAaNlvZ3RgN7Dc72EPm2N2vBJ+1PG3t4mJhbieRDWnRpQSVKQj+5abk4jvyTWhfmvKEdFaZSduCCKdlmDHJgU1xvF52wKdWGfgTmrprIOJ+HxUCbfnPUmZuxctuuNXIiCpM/RP2hm1u1EMpssX5vO9g4E6aYF8piY+QGH6EZkns5VzGs1GhDQSBfYSMeHdKdOQouI931+VEeKWUiwBoO3hjbCg9cELcRipAElD9kM9P+3iAGWW+Y8GU2RoDyP2uHthxGE9yjpBKeVUrCQebK+9kdTjXx3X2VbYL4Z/YjaWUdNN+RtuHGZNlMMpiIu42pMKW7YshWgMH0WGopfnse+1S3CYhgQoWxiUyolNxOW8grx6vMb092opRKI9kJyOBynFWYIT/5UZ8QMSw6pazUl2kRa5hAN375uLXlTHPofHnfPbmE3w8P+iwth4a/sLqdT148nYQaC1JMYCcHJDjETKe2W3lgDFKF9+dW0Fh9KjheniLrAi646SnH/2G/FuJ2Wr8zw4fbvH0K+oyc5FcysUNJvPWqFdNnvSRRePrDYkk4wbEcLWGJspMqURmfz14G7qq4+zU5EMi8OJ4Cw0DwE+IBNKdo609O1XUplJc1SQA26Cdyhu7kjm3lya+gAnWKrlYAGqurjT1snZCdgQbELnqL1/0q5UYjQUW5m1RlcVyLtgqYXVuLtsOhssvzk0goKpd7Vu8=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(396003)(376002)(136003)(366004)(39860400002)(83380400001)(6512007)(38100700002)(86362001)(186003)(26005)(122000001)(41300700001)(38070700005)(66556008)(33656002)(6506007)(66446008)(478600001)(6486002)(91956017)(53546011)(66476007)(316002)(64756008)(66946007)(36756003)(8936002)(2616005)(4744005)(8676002)(5660300002)(4326008)(2906002)(71200400001)(54906003)(6916009)(76116006)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?kcirRV4GzlHkKuAD1DHpNgIFSgbx+aLKRcpQT7kvUuRsW8j0BT0/HfmXubnn?=
+ =?us-ascii?Q?XrZbkgps+jjn8+2NZ9fQt7J34t6yMIdneIbW3FaLtCpqkTLSwPTjpmx+0SJb?=
+ =?us-ascii?Q?ggeKrn/pSu7hu1VTTyPh7fGeEOkuzjnjJRDQ7A0eKV/Xa0IKqae8Pi/BjzM3?=
+ =?us-ascii?Q?pH9B2bD4OHDQi4cvxaHBVHrLsvpEJV1ucV4XzeoQriPb6RGVaqm0ea8NZ2e5?=
+ =?us-ascii?Q?9+DzOCo8QPVeNEwlFKrmGlJe341D78IRQ1pOqGga/EqMgVVgWmITecQChQQy?=
+ =?us-ascii?Q?1uSbrOjoEyAFMdSCSIStluTwQfOOgPd6k1rLq1sjCdyn4UMIwfOIibp/0gV9?=
+ =?us-ascii?Q?BC0REjB2sRNn/wv/Ry+pUWsNRmvS/9hoXNUmAuO4qnNAiCFKrP0AJeFvgee+?=
+ =?us-ascii?Q?6nIaTYyTr0L1lcH7XbG2Nrc6opl71JJk/OO6gGtvLItYCci9sFejQBV/84Fd?=
+ =?us-ascii?Q?727XF8uSon9lF1jz6yJDrnL1L5VvMqjXFkr5q62j4uAj6MuaPeytCwOr08q1?=
+ =?us-ascii?Q?Yi+sNhR86ClagneosvX+FBtH1q//lExBARhmH+fnQavMtS2M3293UaCTtmI9?=
+ =?us-ascii?Q?3DsgSWf0TXxcPLPV9HeDWpcql5paIoy3GZcU0a9wB29DSYa9+8i8emjQ13V0?=
+ =?us-ascii?Q?0EEWpGvBPJDMZRUhqLKKtk3IWpumTC8EuNOxMYeXUJtwfBSf/RkUdonasXrz?=
+ =?us-ascii?Q?y053eEuXtsYV5u9UQnrhsKbXGn1c0OqrgqSr12osxAiGP0WxW8pzRD26V8Hz?=
+ =?us-ascii?Q?3edRhvlZCAZZnj9BpOoEfUZ7Ujga1ja/ed08xP/MiU8GY4Vfw/efUhMNFaJH?=
+ =?us-ascii?Q?0ldhSUpV1nZlCnXPurZ7YLYQCKGXNDSnWwv70iRXnSFLrw0XXTilDd5wS1u2?=
+ =?us-ascii?Q?IfXaGNON+wpOMMPEX+/7m/ks4ZV7O3RY2VErNr/BJPpnEIOqcDem26MgN4VG?=
+ =?us-ascii?Q?7Q1UxieLUFxd53XaOCuJ4fDfnX/LN9zanr7NjbEqAFgmr5k7c5mRBwAnqpIh?=
+ =?us-ascii?Q?1lfqsHITZEWesll81a2C4eD2xC12VavoBJL26I+TpZDuJpzhB+gtLfuPs3ia?=
+ =?us-ascii?Q?eTbddbuF0bw9Nnf5ZUMEvfoTp2b7yePIqEkbOuJRDHYHNurIvTZQXNtvV1Ow?=
+ =?us-ascii?Q?T4TVnceG8JxCQuXQII5qVv3O2KG7wGN6BMv7YrAYWE0arqP7hTlJUpHmng0A?=
+ =?us-ascii?Q?l8HvPpYHDi2vRVx2QAGq39FT2Jj3vryBxyDbNYbIaRNF0UoZuxbHFwvrSjvu?=
+ =?us-ascii?Q?ZU3IqYW805oE77hQmbGstoC5vHb6iqzcZNg/2IxyCiOAPLahrTGUROV6gdiX?=
+ =?us-ascii?Q?fD2/7gXcw9h2DzbjvTQb0CgxxueKR6yDa3keFZYAebarY9b6vctSpzHyHClx?=
+ =?us-ascii?Q?95jGc9wrRgFUtN1wLbK5Md1scR0DxvGfg23c1psCFAm/OaKVYBHt1Pi7VMs8?=
+ =?us-ascii?Q?AwD95xFS7beM4LOiPxiZa75JzLriSIg3hPQi0WyVJQPYtOwoX1l8n1gbsl53?=
+ =?us-ascii?Q?YbQkR6qFV/OMjky5CWR8Oz1Fit1N5b6zWU36AeBeJC6ZxlxmHcJ6TKPC9OlY?=
+ =?us-ascii?Q?5ZBhXmHEZX19NFth66V2HCFQsl7WD9XjHeBAs4sxgQ4je355YERb4vXb2SSj?=
+ =?us-ascii?Q?Lg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C1096FE89ED66440BBFE70AADFD7A4EA@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68b9ce0b-7e7c-4316-f97b-08da63764107
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Jul 2022 19:47:57.4054
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VLK0oRjlqR2lKNTLHJIrO8jvdIOpF+oNSEyra0JouafqupP4BkdB79JDwcmpWS+17lM+2MozeKnaFsvu/0r1nw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1001MB2379
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.883
+ definitions=2022-07-11_24:2022-07-08,2022-07-11 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=994 mlxscore=0
+ suspectscore=0 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207110082
+X-Proofpoint-GUID: qx3Pa-WYyEZJG-9vDrHpjc69fY8kkEdv
+X-Proofpoint-ORIG-GUID: qx3Pa-WYyEZJG-9vDrHpjc69fY8kkEdv
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-07-11 at 14:36 -0400, Bruce Fields wrote:
-> On Mon, Jul 11, 2022 at 06:24:01PM +0000, Chuck Lever III wrote:
-> >=20
-> >=20
-> > > On Jul 11, 2022, at 2:19 PM, Bruce Fields <bfields@fieldses.org> wrot=
-e:
-> > >=20
-> > > On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:
-> > > > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:
-> > > > > > This patch regressed clients that support TIME_CREATE attribute=
-.
-> > > > > > Starting with this patch client might think that server support=
-s
-> > > > > > TIME_CREATE and start sending this attribute in its requests.
-> > > > >=20
-> > > > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
-> > > > > attribute") does not include a change to nfsd4_decode_fattr4()
-> > > > > that decodes the birth time attribute.
-> > > > >=20
-> > > > > I don't immediately see another storage protocol stack in our
-> > > > > kernel that supports a client setting the birth time, so NFSD
-> > > > > might have to ignore the client-provided value.
-> > > > >=20
-> > > >=20
-> > > > Cephfs allows this. My thinking at the time that I implemented it w=
-as
-> > > > that it should be settable for backup purposes, but this was possib=
-ly a
-> > > > mistake. On most filesystems, the btime seems to be equivalent to i=
-node
-> > > > creation time and is read-only.
-> > >=20
-> > > So supporting it as read-only seems reasonable.
-> > >=20
-> > > Clearly, failing to decode the setattr attempt isn't the right way to=
- do
-> > > that.  I'm not sure what exactly it should be doing--some kind of
-> > > permission error on any setattr containing TIME_CREATE?
-> >=20
-> > I don't think that will work.
-> >=20
-> > NFSD now asserts FATTR4_WORD1_TIME_CREATE when clients ask for
-> > the mask of attributes it supports. That means the server has
-> > to process GETATTR and SETATTR (and OPEN) operations that
-> > contain FATTR4_WORD1_TIME_CREATE as not an error.
+
+
+> On Jul 11, 2022, at 2:30 PM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> Well, permissions or bad attribute values or other stuff may prevent
-> setting one of the attributes.
+> We had a report that shutting down nfsd would hang when there were
+> active NFSv3 locks. The first patch fixes that.  While testing that I
+> hit a crash in nlm_close_files. The second patch fixes that one.
 >=20
-> And setattr isn't guaranteed to be atomic, so I don't think you can
-> eliminate the possibility that part of it might succeed and part might
-> not.
+> Jeff Layton (2):
+>  lockd: set fl_owner when unlocking files
+>  lockd: fix nlm_close_files
 >=20
-> But it might be more helpful to fail the whole thing up front if you
-> know part of it's going to fail?
->=20
+> fs/lockd/svcsubs.c | 14 +++++++-------
+> 1 file changed, 7 insertions(+), 7 deletions(-)
 
-RFC5661 says:
+Grabbed both for the next 5.18-rc PR.
 
-   On either success or failure of the operation, the server will return
-   the attrsset bitmask to represent what (if any) attributes were
-   successfully set.  The attrsset in the response is a subset of the
-   attrmask field of the obj_attributes field in the argument.
+--
+Chuck Lever
 
-...and then later:
 
-   A mask of the attributes actually set is returned by SETATTR in all
-   cases.  That mask MUST NOT include attribute bits not requested to be
-   set by the client.  If the attribute masks in the request and reply
-   are equal, the status field in the reply MUST be NFS4_OK.
-
-So, I think just clearing the bit and returning NFS4_OK should be fine.
-
-If the mask ends up being 0 after clearing the bit though, it might be
-reasonable to return something like NFS4ERR_ATTRNOTSUPP. That would be a
-bit weird though since we do support it for GETATTR, hence my suggestion
-for a NFS4ERR_ATTR_RO.
-
-> > The protocol
-> > allows the server to indicate it ignored the time_create value
-> > by clearing the FATTR4_WORD1_TIME_CREATE bit in the attribute
-> > bitmask it returns in the reply.
->=20
-> Yes, I think you also return an error in that case, though.
->=20
-> --b.
->=20
-
---=20
-Jeff Layton <jlayton@redhat.com>
 
