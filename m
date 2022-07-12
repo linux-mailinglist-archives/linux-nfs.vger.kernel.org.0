@@ -2,61 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CE4C57214E
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 18:47:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAA3857217E
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 19:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230294AbiGLQrM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 12:47:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36950 "EHLO
+        id S229782AbiGLRAR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 13:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229614AbiGLQrL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 12:47:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0DA921177
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 09:47:10 -0700 (PDT)
+        with ESMTP id S233010AbiGLRAR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 13:00:17 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 27A13CC031
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 10:00:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657644430;
+        s=mimecast20190719; t=1657645215;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=G3Svshh0CSIKBecEYyWOPWehxtR8pBn+wN2kw/qyhZM=;
-        b=d1vTbBHjF1TBWrfhuc3AiGykP7kTQagpZ7nhUZVsnZEAtz0qNGkm841kdcfdgHb0/Ae+xI
-        29vXmta9ENf+EiItY+IQX6/z9ug/GPtaDQUNaCfOHFZgbSgJeukJCkOcCjDMTuuFRzyUcx
-        9EWwkIUZxyZ66xMsJCM8w+I35TPZpLg=
+        bh=wNTyfY0yH1P/DlUzwoNuiHlRbz+BZPjC+6G9cgZvBpk=;
+        b=cu5VlgtknRyoZgVmmBfNqMCGaI/rs9+N09dmZKdFoyam2sriNBhNMOqUnR5kRtPtaGLCTD
+        fsA1SwyoeFE3YR+N+m6ZWTOW7kl9HTXTydpAq9GlFW0jjKg50wyYu6q+biAypMVNFxHmOP
+        DElnGBMgJPQ8Fipj0ekuk1+tMF9ZrqQ=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-661-6coTC7AOMUyVvxJ9Rq57pA-1; Tue, 12 Jul 2022 12:47:08 -0400
-X-MC-Unique: 6coTC7AOMUyVvxJ9Rq57pA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-592-Mx6dhJLJM_OMrIRGaakdIw-1; Tue, 12 Jul 2022 13:00:11 -0400
+X-MC-Unique: Mx6dhJLJM_OMrIRGaakdIw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC23C1C04B4C;
-        Tue, 12 Jul 2022 16:47:07 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 85B221C01B23;
+        Tue, 12 Jul 2022 17:00:11 +0000 (UTC)
 Received: from [172.16.176.1] (unknown [10.22.48.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99E0E40CF8E4;
-        Tue, 12 Jul 2022 16:47:06 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 112D8C1D38B;
+        Tue, 12 Jul 2022 17:00:10 +0000 (UTC)
 From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     "David Howells" <dhowells@redhat.com>,
-        linux-kernel@vger.kernel.org, "Ian Kent" <raven@themaw.net>,
-        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        "Linux Containers" <containers@lists.linux.dev>
-Subject: Re: [RFC PATCH 0/2] Keyagents: another call_usermodehelper approach
- for namespaces
-Date:   Tue, 12 Jul 2022 12:47:05 -0400
-Message-ID: <148B818D-0F61-42F6-A0EA-20D060E42560@redhat.com>
-In-Reply-To: <875yk25scg.fsf@email.froward.int.ebiederm.org>
-References: <cover.1657624639.git.bcodding@redhat.com>
- <875yk25scg.fsf@email.froward.int.ebiederm.org>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com
+Subject: Re: [PATCH v2 12/15] SUNRPC: Add RPC-with-TLS support to xprtsock.c
+Date:   Tue, 12 Jul 2022 13:00:09 -0400
+Message-ID: <5139CEB0-DA0C-495B-911E-E1459154559B@redhat.com>
+In-Reply-To: <165452710606.1496.14773661487729121787.stgit@oracle-102.nfsv4.dev>
+References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
+ <165452710606.1496.14773661487729121787.stgit@oracle-102.nfsv4.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,176 +60,48 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 12 Jul 2022, at 10:16, Eric W. Biederman wrote:
+On 6 Jun 2022, at 10:51, Chuck Lever wrote:
 
-> Adding the containers list to the discussion so more interested people
-> have a chance of seeing this.
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/linux/sunrpc/xprtsock.h |    1
+>  net/sunrpc/xprtsock.c           |  243 =
+
+> ++++++++++++++++++++++++++++++++-------
+>  2 files changed, 201 insertions(+), 43 deletions(-)
 >
-> Benjamin Coddington <bcodding@redhat.com> writes:
->
->> A persistent unsolved problem exists: how can the kernel find and/or =
+> diff --git a/include/linux/sunrpc/xprtsock.h =
 
->> create
->> the appropriate "container" within which to execute a userspace =
+> b/include/linux/sunrpc/xprtsock.h
+> index e0b6009f1f69..eaf3d705f758 100644
+> --- a/include/linux/sunrpc/xprtsock.h
+> +++ b/include/linux/sunrpc/xprtsock.h
+> @@ -57,6 +57,7 @@ struct sock_xprt {
+>  	struct work_struct	error_worker;
+>  	struct work_struct	recv_worker;
+>  	struct mutex		recv_mutex;
+> +	struct completion	handshake_done;
+>  	struct sockaddr_storage	srcaddr;
+>  	unsigned short		srcport;
+>  	int			xprt_err;
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index a4fee00412d4..63fe97ede573 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -48,6 +48,7 @@
+>  #include <net/udp.h>
+>  #include <net/tcp.h>
+>  #include <net/tls.h>
+> +#include <net/tlsh.h>
 
->> program to
->> construct keys or satisfy users of call_usermodehelper()?
->>
->> I believe the latest serious attempt to solve this problem was =
+Ah, maybe helpful to others to note this depends on the RFC "net/tls: =
 
->> David's "Make
->> containers kernel objects":
->> https://lore.kernel.org/lkml/149547014649.10599.12025037906646164347.s=
-tgit@warthog.procyon.org.uk/
->>
->> Over in NFS' space, we've most recently pondered this issue while =
+Add support for PF_TLSH":
 
->> looking at
->> ways to pass a kernel socket to userspace in order to handle TLS =
+https://lore.kernel.org/linux-nfs/165030059051.5073.16723746870370826608.=
+stgit@oracle-102.nfsv4.dev/
 
->> events:
->> https://lore.kernel.org/linux-nfs/E2BF9CFF-9361-400B-BDEE-CF5E0AFDCA63=
-@redhat.com/
->>
->> The problem is that containers are not kernel objects, rather a =
+=2E. which (of course) exists in the topic branch in the cover-letter.
 
->> collection
->> of namespaces, cgroups, etc.  Attempts at making the kernel aware of
->> containers have been mired in discussion and problems.  It has been
->> suggested that the best representation of a "container" from the =
-
->> kernel's
->> perspective is a process.
->>
->> Keyagents are processes represented by a key.  If a keyagent's key is =
-
->> linked
->> to a session_keyring, it can be sent a realtime signal when a calling
->> process requests a matching key_type.  That signal will dispatch the =
-
->> process
->> to construct the desired key within the keyagent process context.  =
-
->> Keyagents
->> are similar to ssh-agents.  To use a keyagent, one must execute a =
-
->> keyagent
->> process in the desired context, and then link the keyagent's key onto =
-
->> other
->> process' session_keyrings.
->>
->> This method of linking keyagent keys to session_keyrings can be used =
-
->> to
->> construct the various mappings of callers to keyagents that =
-
->> containers may
->> need.  A single keyagent process can answer request-key upcalls =
-
->> across
->> container boundaries, or upcalls can be restricted to specific =
-
->> containers.
->>
->> I'm aware that building on realtime signals may not be a popular =
-
->> choice, but
->> using realtime signals makes this work simple and ensures delivery.  =
-
->> Realtime
->> signals are able to convey everything needed to construct keys in =
-
->> userspace:
->> the under-construction key's serial number.
->>
->> This work is not complete; it has security implications, it needs
->> documentation, it has not been reviewed by anyone.  Thanks for =
-
->> reading this
->> RFC.  I wish to collect criticism and validate this approach.
->
-> At a high level I do agree that we need to send a message to a =
-
-> userspace
-> process and that message should contain enough information to start =
-
-> the
-> user mode helper.
->
-> Then a daemon or possibly the container init can receive the message
-> and dispatch the user mode helper.
->
-> Fundamentally that design solves all of the container issues, and I
-> think solves a few of the user mode helper issues as well.
->
-> The challenge with this design is that it requires someone standing up =
-
-> a
-> daemon to receive the messages and call a user mode helper to retain
-> compatibility with current systems.
-
-Yes..
-
-> I would prefer to see a file descriptor rather than a signal used to
-> deliver the message.  Signals suck for many many reasons and a file
-> descriptor based notification potentially can be much simpler.
-
-In the example keyagent on userspace side, signal handling is done with
-signalfd(2), which greatly simplifies things.
-
-> One of those many reasons is that by not following the common pattern
-> for filling in kernel_siginfo you have left uninitialized padding in
-> your structure that will be copied to userspace thus creating a kernel
-> information leak.  Similarly your code doesn't fill in about half the
-> fields that are present in the siginfo union for the _rt case.
-
-Yes, I just used the stack and only filled in the bare minimum.
-
-> I think a file descriptor based design could additionally address the
-> back and forth your design needs with keys to figure out what event =
-
-> has
-> happened and what user mode helper to invoke.
-
-The keys have already built out a fairly rich interface for accepting
-authorization keys, and instantiating partially-constructed keys.  I =
-
-think
-the only communication needed (currently) is to dispatch and pass the =
-
-key
-serial value.
-
-If we used file descriptors instead of rt signals, there'd be some =
-
-protocol
-engineering to do.
-
-> Ideally I would also like to see a design less tied to keys.  So that =
-
-> we
-> could use this for the other user mode helper cases as well.   That =
-
-> said
-> solving request_key appears to be the truly important part, there =
-
-> aren't
-> many other user mode helpers.  Still it would be nice if in theory the
-> design could be used to dispatch the coredump helper as well.
-
-What if there was a key_type "usermode_helper"?  Requesting a key of =
-
-that
-type executes the binary specified in the callout info.  A keyagent =
-
-could
-satisfy the creation of this key, which would allow the usermode_helper
-process to execute in the context of a container.  If no keyagent, fall =
-
-back
-to the legacy call_usermode_helper.
-
-Thanks for the look,
 Ben
 
