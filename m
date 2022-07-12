@@ -2,144 +2,142 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD305571BA9
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 15:46:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA46D571BAD
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 15:48:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232963AbiGLNqx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 09:46:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36476 "EHLO
+        id S229737AbiGLNst (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 09:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233360AbiGLNqr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 09:46:47 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 275A9B7D5D;
-        Tue, 12 Jul 2022 06:46:47 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26CCtXQg022368;
-        Tue, 12 Jul 2022 13:46:37 GMT
+        with ESMTP id S229769AbiGLNss (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 09:48:48 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9128F9FE7
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 06:48:41 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26CCtjAK020890;
+        Tue, 12 Jul 2022 13:48:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2021-07-09;
- bh=Opu34hHQMPSvPlv3whVoimG8J3VxO5st1Dp83FWfUBs=;
- b=rMmR1quGZOnXu2zni+Ewo6fl1LvpJGTywM9plkx6+Vfwl6ssFkzGHH34ozdJXqHD521Y
- +Q3dN4xiHIX7TYeElt/btH8g+lkZ82DHjFLjDAD2UkR2k47iJVUN8S9mSa3I/Nt+XvH5
- q0S4F9OE4mkaBkiryEJevj3/mOSiDQhgU6sD52aqxioHhlUQnPXInf9BRzMEWTfXLgp4
- EjIxyeLI/e2UF3Gsm4wvca52RkhPpwCrPUQLmVFfk5PsNfDs32tLVCRW3F7jcTHnM9IR
- RMSkBnwvXhlI/AN1UtXLDcSeaoskTm9lW2gcWqsnOgyeFNjT6AeWmdq2UKGsIJsSLX1g Ng== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h727sexfs-1
+ bh=8uj2vYHs3wUMfsxM407hTxaP8NXs2zhUlaeFpIOCHiQ=;
+ b=IWul5QSh8yseGdTCmA5HNB5jWbal6jcdhxiYfHLDuGMbYRcnLO42ZPrrnoVSrkXC5Th8
+ ftv+NyrgW3jPNLD4xPqg/iWp6Izk3vtQoa9gS2IwwJAfgipPHpQD36FudrWEMVpVV7l0
+ zjueDlUqIIyn94J9yhglxUAwrCShWWuDPFN6DrxFYF9DMbCOK/GoO7+pJyDvOqjAlzgK
+ 1m88TJu04beMAUSsrzKPUYiSJBqWU5XMTgFm7yYa6o1knkHqTdPlugYq1KBsgiWUYyHQ
+ MdLml3y2VijAZWMQm0hCiNhwtIvG+8zY8oXKnNQtt/I88EcyYYi1hVuD3Gj0l2TC4fmU mA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h71sc6uck-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jul 2022 13:46:36 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26CDfYv9016544;
-        Tue, 12 Jul 2022 13:46:36 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3h7043ppdc-1
+        Tue, 12 Jul 2022 13:48:34 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26CDelFk013004;
+        Tue, 12 Jul 2022 13:48:28 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3h704394kh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Jul 2022 13:46:36 +0000
+        Tue, 12 Jul 2022 13:48:28 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OkderzQlyM4nm6vSQrfjMZ/W+zWYkQTyh7P+TfEKca59r0jwQZZQLkKOAwTL9AZikONiBTI4vWNf41e4f97BrnQDMGCLZrMhTpoHcMFo93VXpfG+S1iW6VPTDXBmp5fIiseYu2CfsPpidow9pycVLhCM7WDPNnmkHw6d6WnpeoMi5h8lkEXlGxWBZc1CSBMFKHl/J6xakHne7DFWPRGg6grDSLRqbSTqA+3xzEJTUszy4pqigIS6UBzbYPScmzo+52OCeLRntqVaGA/6JzUH7KQziomhJmwczk7s5C2wO43ljevxCD2BcK5qqVXnMDGGLubfrZMqZl2Gjky0r4n1JA==
+ b=In7c3jpNQj5Tzy+3JcGemUgxVjuloFRhc2jpzeXo+cjIFiQ/AoQ8LBQToJMKyIs6byIEqF+gW1QNAsyLWK3JQZuBKjG/rJRiS6otYjTKcPNHNAzthVhbysGU5/X6HV9H4xQDASxhjhGFo26t/44O9dWHgUE+NGYtfKziT/+BiqNrn2MU5OtX5PRMgRhle52AfcMGL7BFhfY6vuuPxV3NnMEpLovFvRUggpjgggCjOFUaRBRz4VnNaOR4PyFBKlqT2O7f7eWPzN2wXyhDBoFzc8KL1Z/0BbcobNrr7Y5wjNGu9dG2EurhXPO2KoSM4pahatwkxSOBzo/ih2AcUJ5VkA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Opu34hHQMPSvPlv3whVoimG8J3VxO5st1Dp83FWfUBs=;
- b=ix+RKbk8qmzVnUiJOzep6ZXngTJXh40bd4oFqWnitqJxEPaA8y3YFRwq8F5IXgr/3jrT9Ss0kw04IBV7mY7b9f5MZDxC0hPOAezGSKWQS4u7iWtKzsq/cU5X3vsRzxwNsvav3dgPX/K7wqSpKA2icrR2VXBQtneKXOGjI4JA4Mw3NrypQxup6tCrLTYUiJ5VySsslHV+q4Ax4e7dejiQ26jEaeR/cvDFiErzvYgN40JN6huOsSbzUC4bj642prtFo7YvMBLoGwa1gtafii4nibTbzLpv8CbNg+SuVRIzfJh+4P9eUGujWen52jQfNMX2Xq8nuIdClmdeV3DZDoIz5Q==
+ bh=8uj2vYHs3wUMfsxM407hTxaP8NXs2zhUlaeFpIOCHiQ=;
+ b=DI9PuybhBEq3S071KdZuVxu/2Ap6DRPucFT5DP1/+S/ay0572qU/LtsIv/i22NHn3KnJkwjHp0Z9ATytTx/HcDxX985WXBzpbF19msvZXUSMQUGNVj7nyKOUXTq8b3JLyUk74JXc9xk/BPFHQLbrPkL4DqNsrnsyXuL3rN3XIDL+jt26piRXS26z2FugswcmQVCa4O4euzzNmxKXspXuAy1GuHugLuRk2Qn55tcm8E7Bd/FkXYDI/1JkyOlqaQNdQ1/BGc5PnPmI2/oXNRdxWFyxED/6v3wToTgSrzsSDqTsMngPSpiQnCJwRQTmVCt7FX1ZsXCN+F8emlzR0Bh3JQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Opu34hHQMPSvPlv3whVoimG8J3VxO5st1Dp83FWfUBs=;
- b=fBRruRzCtlwgTxuWq0p9n3w82hpxsLqrtQsZc4ZskvnyLX1y0mH9tzSKoX+Z4TkWQaDYPP6bScNKVidyLOILMiW38bfqmDTggvuy5MCGUk8ba6PBWtNxxhHsDYyozyqVPeAjzT+2Qb3DBTia/lS78FJTAloXZfjRpwVmlgFQ8oE=
+ bh=8uj2vYHs3wUMfsxM407hTxaP8NXs2zhUlaeFpIOCHiQ=;
+ b=cKSRySu/wPR4m+x8x3OiHV/cGUJewf0nxz6WBH1oIlWOuTdHHRNOh1XmZMQdJgB0R9MofNGGp4hwtg5hH7FZNl8EiAhJPgLX1BmHgq2e0XhOPEmuiA3vK8DTagDiRvpGCMj3W/yP0gDcj3ANyUe48MQDt8lHPBbOlRBRx7rLQrg=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DM5PR1001MB2250.namprd10.prod.outlook.com (2603:10b6:4:2b::30) with
+ by BN0PR10MB5333.namprd10.prod.outlook.com (2603:10b6:408:115::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.21; Tue, 12 Jul
- 2022 13:46:33 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5417.16; Tue, 12 Jul
+ 2022 13:48:26 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::9920:1ac4:2d14:e703]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::9920:1ac4:2d14:e703%7]) with mapi id 15.20.5417.026; Tue, 12 Jul 2022
- 13:46:33 +0000
+ 13:48:25 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Igor Mammedov <imammedo@redhat.com>
+To:     Jeff Layton <jlayton@kernel.org>
 CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] NFSD: Decode NFSv4 birth time attribute
-Thread-Topic: [PATCH v1] NFSD: Decode NFSv4 birth time attribute
-Thread-Index: AQHYlI1Yu1IMkeKgwEG1/w/Jb2AUD615alaAgAABEoCAAPjFAIAAXk8A
-Date:   Tue, 12 Jul 2022 13:46:33 +0000
-Message-ID: <78752B5D-7D24-4856-A368-5C4633CDF491@oracle.com>
-References: <165747876458.1259.8334435718280903102.stgit@bazille.1015granger.net>
- <20220711191447.1046538c@redhat.com>
- <A4F0C111-B2EB-4325-AC6A-4A80BD19DA43@oracle.com>
- <20220712100900.1c8b18dc@redhat.com>
-In-Reply-To: <20220712100900.1c8b18dc@redhat.com>
+        "trondmy@hammerspace.com" <trondmy@hammerspace.com>
+Subject: Re: [PATCH v2 00/15] RPC-with-TLS client side
+Thread-Topic: [PATCH v2 00/15] RPC-with-TLS client side
+Thread-Index: AQHYebVuZqvrXSpmmEGc/2a/uQZ/m6165IuAgAAUJ4A=
+Date:   Tue, 12 Jul 2022 13:48:25 +0000
+Message-ID: <F713FAF6-8910-4BA2-86C6-C5B09223AC0F@oracle.com>
+References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
+ <c9b6787ba9154d1f4c2bf25387a35453ad20badb.camel@kernel.org>
+In-Reply-To: <c9b6787ba9154d1f4c2bf25387a35453ad20badb.camel@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.100.31)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 87141f43-063f-450b-e0e0-08da640ceec2
-x-ms-traffictypediagnostic: DM5PR1001MB2250:EE_
+x-ms-office365-filtering-correlation-id: a0aa9ab9-2cc6-44b0-00cc-08da640d31c3
+x-ms-traffictypediagnostic: BN0PR10MB5333:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nylahQMpxz2KYUi5kV5NrmkyB9qAS5Bbub3SOC78hgGnLVnoGokI50pWfH8BdxnWLcON+8dK/NiqjD+6475Bo4DMS8TKVSdxkWOR1606t3Dp31DNzE6Hqg8W30x+lz9yCAHU1uxQrv+AUW36yuhdhMFvT8KK+gCt00kISP8HHn/u8BeVmuhw1Z991yVd5M2BeDjjkydsoVDtLYm3E8L9+UmL+HSz7rlASoHCxNx1zDePiuI3wBjSsvz5vxy0DiT/gMbvNlLuGrM0ENeDzMBTvWg+mBZ3YkKairyvOcEo80QeFWo5akkQ6/Z8PkWHv6ZQUaAthAh5cCQGCwo6B5vjqa4MxqxGV7Oub3VaF7Xql2IlklpjIGerwsN2viR/Gh/o2/RFAtwLisXHHciAKDF5oNd1LWGR/mW/m5sjzly+JPCLF5cTnr6yqPT5pGE9lbeal+wvyBcMasOWSeskJz47DF7W0vhmovLOhL91iZdvpu50/KrcYt6SeEZErRZz5d1Cc/FqGkuXRp+eUSj7Hr2QHpqkzAQokzsrnXEikH2pgWaw6kDcHPxxPTcs/DULuE/k6y4MRFJ/y9XPVnH4vVD270rmANI6aviW80GDRQj6ub5rAA7HCdkb6vXLflVlW3n8s9yz5dJ6oU86X1DaqBIBVLKkMTnkwY757wq7f6j/oRVqTxWSwG/sdKCDxW2Vyeo8ou0sP6k5WT5cmC5yfeP1P0k7HT/9aWnYKxG94RrxUsJC4bucLIS7xAGG+2Lu92eLxLPpwpH4z0kLj8LIDC5TwEnqNFBfmU14uV0vE2GRbilELuClSOingtVEf++sHXTx6Q94w4raRC1+0/GwIMMlnA9+XnPNIdamdVdB+1XAm6s=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(39860400002)(366004)(376002)(136003)(346002)(66556008)(91956017)(64756008)(83380400001)(122000001)(66476007)(8676002)(76116006)(66446008)(66946007)(38100700002)(8936002)(186003)(2616005)(86362001)(4326008)(2906002)(5660300002)(6486002)(6506007)(53546011)(6916009)(54906003)(316002)(41300700001)(26005)(33656002)(6512007)(36756003)(38070700005)(478600001)(71200400001)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: 6r2qPsWmfV6sb2EJvY3zJ+b0RlbqdiJ2KJchUOJB+YMF4p+bVgjrVrypdq8TWw35co/M/HbmHPIQko4Mz4cY0osJ85GgY+FVNL69KvYM41UjleBEXc9pCzNZI6tv/aGKpq+3rkjr6nBolAG+1iVBkc2D2DKUoSYWMjYJMXI2X3jIH7VQI00sKtD3lMSvl8TRjn9acPOE06a+uUYO/c9fXCK98uc7HWUpnkLvbfo9r4mcQeqjFOxeWKysjNzsqxfwAAMIkYip5FjiW5XNnxpRBz/Kxib6lsbgF7NmtMwlXZus4ek2yxPLrYdxkj5Kx35IBGL1UAk/hWVpMYnk15bpqP7+5RpvZs1Y8c2UkirKApBsCbAOxulsjdDD3pmpIcQ/l61OAS8lOjGrHk+jZkUFKQCUwEsXl9gp4HTl8HnQCiTyjuPTbBVu8vxEtqnQPBp6hioN+1V7nkqK02P3SjDmdWJkQqp3SSxWzNd2G6tePC9MNRdSHk3jLJPQQusg7ZJKbiBMXO4rjMHzUZYCuhh9+LvxQ6lbHdLAUGpH7VJ44Z7Lain0tjpecM8t5ahVjLZ2+GP8A36RQ8v5xcnjsfIQNjspB/amH2ht6RAw+msfpQ+fxXcqINEBSG7frc/brxqXlLDKzz1Ra1jYdf0kR1lawgJlADNmYgtM19DC7m6PPsHB31UCVCROVt82khfuFrMMPcVIZs6L21mrmJTP4LizBxHTtviqorZ+BA2Hn5Fc+le7Lk+BxfqKfQIqWcQ46ifE3EZq4JveiOPueIFJwZ7ZVUuzDAO1oD1iZ0iJfiDdJ6eKdcXP+HXiFI2hIPthokUlALVUQSLXQ6T47TLTIqRrCNyrCWu6ppxq6vkZfgJahZp3KbXVzqkesE0JqCBvz482
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(366004)(396003)(376002)(346002)(136003)(186003)(71200400001)(38070700005)(478600001)(5660300002)(966005)(2616005)(6486002)(8936002)(36756003)(2906002)(33656002)(41300700001)(38100700002)(8676002)(66446008)(66476007)(86362001)(66556008)(6512007)(316002)(6916009)(66946007)(64756008)(54906003)(4326008)(26005)(122000001)(83380400001)(53546011)(6506007)(91956017)(76116006)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?va9hW+uC3I9TZTkRdwFFmjZjPWlcX9+TGULE/h3yqFofARumx76G8/UfV7Y5?=
- =?us-ascii?Q?uUh3rDvChKf7OvgogrjVuxIA6+Rrk0Wzc4K6B/jVrATs8hjJHCN/KSrZwGrL?=
- =?us-ascii?Q?KXVs6vpnwOp403rFiD69WDh7deAggIkwvS/6o3gb86U05cBE4DWmlLb69DJp?=
- =?us-ascii?Q?EO9GrLkURKuzx2ePsI0PdcRhsrrq8v6Fvz8LyegIqwuVbn11oL0ztOGmMB6c?=
- =?us-ascii?Q?YO9u5G+1CELruNmSU4QALhy05W+5TE1J7N+ft7R45VJVTTrjaXwHeZWcIuIR?=
- =?us-ascii?Q?08QANN9YhugbrMTc/to679h7Q4OrVbrACadyyiYfX91KK8XfCmTZC2EoSTfc?=
- =?us-ascii?Q?wfiYPB0hapUqtqWE9SOU/eFQ6udOHPPXeyISS8Acnxdj9yYHHwYDM+6N0slU?=
- =?us-ascii?Q?afFtcqAg1ef+QwVUZLU1OnnP448CT2AGDy/WccPVaxEnJ7M6zPlV9gI4kukP?=
- =?us-ascii?Q?EQat/0hGMtTWSYPMdR1CuWOQOwrXeQaGHrutt9NTE+yN1zey49MzXwwDt84P?=
- =?us-ascii?Q?Woi15TQICuGJ+bEL6/KjRF/V7Jc5JqHYLOGdYMNTg3a52jYXe+c95Nykrjjq?=
- =?us-ascii?Q?4KEVEiWMDEZnYFMrWuPF3bgSGdWmp1V1ORcKnY5Z6dufiW/zDSYdE7/uGnRu?=
- =?us-ascii?Q?CBP5OuLjYjQ+QofDFXlFdP/x3uJu2B6SIjArY7axdSYz2psQ0cAZKyDW4HAI?=
- =?us-ascii?Q?7ekXNNFxRsfJR8U6qSJqggnca8Uyyr1RbRiDRIFjcMFMZolPaf3WZx9su2md?=
- =?us-ascii?Q?umq6yv0dJI2p0rFOq5O5YJe+wPDH8aQoXAJOUVoSc6FT6qmW/odBgHpxQRXp?=
- =?us-ascii?Q?tQOEmg5O66ZyHf0N4iCqJCO9iyxomr7RllrPaA4uMi8d6g+eQc7Vi7Kx9VBy?=
- =?us-ascii?Q?3ZXhmVXueNllJ0Cc5vox10oW0Ij1ki3itsY2c643pxQw8eDJeujk1kxW2PfO?=
- =?us-ascii?Q?6EPO8dVVqceTLWxbnwWN9B7Yosup9aGR0fS5gtddQpWC3EXS2XBeGkOYp2YI?=
- =?us-ascii?Q?PcYSKJbVUWl6z0ybCIoG+Iavvr/3BKb10oan9t6T4fBM16quuGo8VErfAZLZ?=
- =?us-ascii?Q?KmKGCN1O59V3AyZ/ONAyVDmfimRVKLHfOa+7jqlyAtZ+B1Dwn2GrjvUekKAj?=
- =?us-ascii?Q?BJfpHaw+kTU58T+r3d8eFz7Im8CSPKEFis9Mm3JTrpMN/0zhWTZ3DoblqbzF?=
- =?us-ascii?Q?dF+8loGQXqyhmaI6WmCLeW9A3Qj7Z0D2X641z1oFnF0zjUdmzQeMhLeiKYsh?=
- =?us-ascii?Q?uCO+ZQygjug51vgeRBj1c6faVskrxiZU7Y9Q2Yv/6RaLUH7GVqEvHZh3N+0o?=
- =?us-ascii?Q?LzWIzG/0eOAHliQ7fuezUI3Rz6GlElORfk8jXkhNcC47z8URlqmOd7sfrX3W?=
- =?us-ascii?Q?xmE05Xlw27hf5dk0p8IXBFQhWLO42bmzm0Ff+E6IhExugLXyf7y8tT3zVZPA?=
- =?us-ascii?Q?YehNa1aoLCf6kq1JNAnKsCPWTF0l+pEG8Z6MSUM0yFZWl7eZTQRm3fcaErIU?=
- =?us-ascii?Q?2GoOEd6hRFrbSrvh+9Sn/iHWsv2osqtbMJJZwjEzzjbDX3qRgqyo90g/Q9Fb?=
- =?us-ascii?Q?LCHLXklmSTQ428o8tRC8QadEmzY6/XBwed2tEo92TBNYgh+aVEv9nG5jXfxo?=
- =?us-ascii?Q?kg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?mdT5Sp5mx7PdBaJiJ9YRZ8RYaMKTIzV6SWtIbTn1Cen0ymf5A5GADdIQXVdr?=
+ =?us-ascii?Q?mZchaYsWUdzGWVChw7+/7LcFqGZwsq42A+fLI3GiBRFVqjFKVMVAfQUfYrXb?=
+ =?us-ascii?Q?dohu1zdl+MmU63lYh2vxyUkxf6efp45kUUM9FL8QxxvPmBM+NwFFCYUt2gG7?=
+ =?us-ascii?Q?q8zYdvPIm20nATCGeY+boEOCHj2rg6KjauDmxutRFVB4IWaHvkJWe6a/26Pb?=
+ =?us-ascii?Q?Ws9w7q/Kb3KHCSCSUfsCN0vXi98Ij7AnWCBtyXIAoQprtYeXBb9EVBCu+ymc?=
+ =?us-ascii?Q?KZAQph2MicDP5FXQ3Q+nFVUZCKsHjxOCpCqib7614qrbyo1kP+Xw0xBPwEqm?=
+ =?us-ascii?Q?eUuTZicOuZqAkHoNApDZNGsa07TNoR5F/WnzHmA99z2+wbALC+UkoxC1xMOi?=
+ =?us-ascii?Q?pAa2tFoFNMMjEhE8a0qlzfFFKfgpbBR2mt0X31sATc0FqjDIa1d4SCBeydAD?=
+ =?us-ascii?Q?8CJYXLCZEE0XK+QokjMr/YzzbtWkVOU3/8DbtRI07KkkYuLGtmK5L5yL2z8m?=
+ =?us-ascii?Q?USjhao0exvMpE9jNUktEy2Q5o5pERKJkN5/akybtnMsmBob+XONgpzfkqIE/?=
+ =?us-ascii?Q?2JOZAz+6gbP39KJzYoif4sIkyDci/ClDnOhgeRujmY+vhT3hfR2TTjnbQ26b?=
+ =?us-ascii?Q?4BWQeMOrpcfQAnDTp9U+PzaERgP5WPCU1Us1x0ZCZ99PkuBtGalaFJyHea23?=
+ =?us-ascii?Q?cDe11wf4sJE8F5wRnc7ohQ5hKCoB29f3SE1h9pgrO+hNFNre3b+vo0SOB2Fd?=
+ =?us-ascii?Q?ndHBrCQu71Ay7OtxDdf8RcPy+0Joz3LbNytPDxgli5vY/UVih8WLuJzI2gIL?=
+ =?us-ascii?Q?Qzg1llbJP1pQJQvtNMk+XPfhjXCRh8beFSqIM63uhMCBXXe7j9JkUDijWUkR?=
+ =?us-ascii?Q?1aexY2ziG2EwcZyaqUfwEEJt1zuqkJew7oRdya9soRcn/eqBT+a3C6hbQA8e?=
+ =?us-ascii?Q?Xh23pmMqxVO4b8kJfb3QFi79s+238z6geTxVDGzbP8sCvQoPCxOFSM9IYD2h?=
+ =?us-ascii?Q?5qMbIQ4c9gDehAtMittKQi7CPWatKhWHaN1wjrb1pyE2PyWrKO7jiGiVQzsN?=
+ =?us-ascii?Q?LV7URX6TKPdOvzVZy8FqqYzgE5mEE/X+qPTyE92BOpvBJ2h5Jq6taK7nGKqi?=
+ =?us-ascii?Q?lY1fV2Wngor1VkGrqTQEDtRY4mQ2rBckksmRSw0dtSsWK92rfrMJEPUTOtG3?=
+ =?us-ascii?Q?jNM0ci6UPI/yP8FnGUAB9EHiX9t1MxKfHrMiZpRZ8vYUqKPRVOpgC734jwnG?=
+ =?us-ascii?Q?575bBxDPmJ9BxmqSHs+dNwWlpit7KMGBrhg1olGIijiUeipyOwOQgxyaQHCt?=
+ =?us-ascii?Q?KKHukC+WaQfjrgmgRDA0a+aFaeZwWKCtDTCDNWXbwwnAIEJcZBcjWAdEy6ZF?=
+ =?us-ascii?Q?NR/7N985iI7R5OzFNXPN+c8dh6+28/nwA1tKoIJyrY2niQ26caTLsCn05V99?=
+ =?us-ascii?Q?uBTuOs6eUpXRpS+Sm/9POcDc9ACBeuZHiuFR3OATRSoyqMZk9s0NdwuJraDe?=
+ =?us-ascii?Q?cVrQ22My/3EuqLmTx3NBf0s1zRn4BlU/GcBMYtPws5JIZj6+C4eqOez+cz8+?=
+ =?us-ascii?Q?YNqvbf7gP00XRdOSq+lsA4GB2vfhKEIYstQmU2P3DrvodwRqyDmUWRujY2bF?=
+ =?us-ascii?Q?xw=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <BE52C2471B4AFA4281AAA1532B27A021@namprd10.prod.outlook.com>
+Content-ID: <E14BD03AC743E64D8971A4E082992EA2@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 87141f43-063f-450b-e0e0-08da640ceec2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2022 13:46:33.4168
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0aa9ab9-2cc6-44b0-00cc-08da640d31c3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2022 13:48:25.8249
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: QXCQd5haAxGE/aBwMjQdwE3RVW7WAYfKqeYXn5yNWSHofW8TqtrhjUssTPHJUj+fMHoK7xrQNypb/zSh9fGXsQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR1001MB2250
+X-MS-Exchange-CrossTenant-userprincipalname: V0q1mc5tB25XaVmNGDDTkmttSUe+v9AMqvcoDUD2RzvMAupzOHuyHX2czDuUfgY8jUKufizYxQPEQ0bixPp/Ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN0PR10MB5333
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.883
  definitions=2022-07-12_08:2022-07-12,2022-07-12 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0 spamscore=0
- adultscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999 mlxscore=0
+ suspectscore=0 phishscore=0 spamscore=0 malwarescore=0 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
  definitions=main-2207120053
-X-Proofpoint-ORIG-GUID: GxNsgIHY6CxtKRXMhqTerQyiR3-0lLTI
-X-Proofpoint-GUID: GxNsgIHY6CxtKRXMhqTerQyiR3-0lLTI
+X-Proofpoint-GUID: OlNTO9PEpwr-V3rXBqEhPr7oOK2EqBnZ
+X-Proofpoint-ORIG-GUID: OlNTO9PEpwr-V3rXBqEhPr7oOK2EqBnZ
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -151,43 +149,94 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-> On Jul 12, 2022, at 4:09 AM, Igor Mammedov <imammedo@redhat.com> wrote:
->=20
-> On Mon, 11 Jul 2022 17:18:38 +0000
-> Chuck Lever III <chuck.lever@oracle.com> wrote:
->=20
->>> On Jul 11, 2022, at 1:14 PM, Igor Mammedov <imammedo@redhat.com> wrote:
->>>=20
->>> on tangent:
->>> when copying file from Mac (used 'cp') there is a delay ~4sec/file
->>> 'cp' does first triggers create then extra open and then setattr
->>> which returns
->>> SETATTR Status: NFS4ERR_DELAY
->>> after which the client stalls for a few seconds before repeating setatt=
-r.
->>> So question is what makes server unhappy to trigger this error
->>> and if it could be fixed on server side.
->>>=20
->>> it seems to affect other methods of copying. So if one extracted
->>> an archive with multiple files or copied multiple files, that
->>> would be a pain.
->>>=20
->>> With vers=3D3 copying is 'instant'
->>> with linux client and vers=3D4.0 copying is 'instant' as well but it
->>> doesn't use the same call sequence.
->>>=20
->>> PS:
->>> it is not regression (I think slowness was there for a long time)=20
->>=20
->> A network capture would help diagnose this further, but it
->> sounds like it's delegation-related.
-> yep, there was delegation request/response right after SETATTR failure
-> possibly prompted by NFS4ERR_DELAY
->=20
-> shall I provide a network capture (I guess pcap file) from test env
-> I have?
 
-Yes, you can send it directly to me.
+> On Jul 12, 2022, at 8:36 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>=20
+> On Mon, 2022-06-06 at 10:50 -0400, Chuck Lever wrote:
+>> Now that the initial v5.19 merge window has closed, it's time for
+>> another round of review for RPC-with-TLS support in the Linux NFS
+>> client. This is just the RPC-specific portions. The full series is
+>> available in the "topic-rpc-with-tls-upcall" branch here:
+>>=20
+>> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>>=20
+>> I've taken two or three steps towards implementing the architecture
+>> Trond requested during the last review. There is now a two-stage
+>> connection establishment process so that the upper level can use
+>> XPRT_CONNECTED to determine when a TLS session is ready to use.
+>> There are probably additional changes and simplifications that can
+>> be made. Please review and provide feedback.
+>>=20
+>> I wanted to make more progress on client-side authentication (ie,
+>> passing an x.509 cert from the client to the server) but NFSD bugs
+>> have taken all my time for the past few weeks.
+>>=20
+>>=20
+>> Changes since v1:
+>> - Rebased on v5.18
+>> - Re-ordered so generic fixes come first
+>> - Addressed some of Trond's review comments
+>>=20
+>> ---
+>>=20
+>> Chuck Lever (15):
+>>      SUNRPC: Fail faster on bad verifier
+>>      SUNRPC: Widen rpc_task::tk_flags
+>>      SUNRPC: Replace dprintk() call site in xs_data_ready
+>>      NFS: Replace fs_context-related dprintk() call sites with tracepoin=
+ts
+>>      SUNRPC: Plumb an API for setting transport layer security
+>>      SUNRPC: Trace the rpc_create_args
+>>      SUNRPC: Refactor rpc_call_null_helper()
+>>      SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
+>>      SUNRPC: Ignore data_ready callbacks during TLS handshakes
+>>      SUNRPC: Capture cmsg metadata on client-side receive
+>>      SUNRPC: Add a connect worker function for TLS
+>>      SUNRPC: Add RPC-with-TLS support to xprtsock.c
+>>      SUNRPC: Add RPC-with-TLS tracepoints
+>>      NFS: Have struct nfs_client carry a TLS policy field
+>>      NFS: Add an "xprtsec=3D" NFS mount option
+>>=20
+>>=20
+>> fs/nfs/client.c                 |  14 ++
+>> fs/nfs/fs_context.c             |  65 +++++--
+>> fs/nfs/internal.h               |   2 +
+>> fs/nfs/nfs3client.c             |   1 +
+>> fs/nfs/nfs4client.c             |  16 +-
+>> fs/nfs/nfstrace.h               |  77 ++++++++
+>> fs/nfs/super.c                  |   7 +
+>> include/linux/nfs_fs_sb.h       |   5 +-
+>> include/linux/sunrpc/auth.h     |   1 +
+>> include/linux/sunrpc/clnt.h     |  15 +-
+>> include/linux/sunrpc/sched.h    |  32 ++--
+>> include/linux/sunrpc/xprt.h     |   2 +
+>> include/linux/sunrpc/xprtsock.h |   4 +
+>> include/net/tls.h               |   2 +
+>> include/trace/events/sunrpc.h   | 157 ++++++++++++++--
+>> net/sunrpc/Makefile             |   2 +-
+>> net/sunrpc/auth.c               |   2 +-
+>> net/sunrpc/auth_tls.c           | 120 +++++++++++++
+>> net/sunrpc/clnt.c               |  34 ++--
+>> net/sunrpc/debugfs.c            |   2 +-
+>> net/sunrpc/xprtsock.c           | 310 +++++++++++++++++++++++++++++++-
+>> 21 files changed, 805 insertions(+), 65 deletions(-)
+>> create mode 100644 net/sunrpc/auth_tls.c
+>>=20
+>> --
+>> Chuck Lever
+>>=20
+>=20
+> Chuck,
+>=20
+> How have you been testing this series? It looks like nfsd support is not
+> fully in yet, so I was wondering if you had a 3rd party server. I'd like
+> to do a little testing with this, and was wondering what I needed to
+> cobble together a test rig.
+
+Ben Coddington has an ngnix module to support RPC-with-TLS that can
+front-end a stock Linux NFSD. Rick has a FreeBSD server implementation
+of RPC-with-TLS. Rick's probably taken his server down, but Ben's
+server is still up on the bake-a-thon VPN.
 
 
 --
