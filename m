@@ -2,59 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5114C571A18
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:35:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BDF8571A22
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:36:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232884AbiGLMf2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 08:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52360 "EHLO
+        id S231770AbiGLMgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 08:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232827AbiGLMf2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:35:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89D5F2B619
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657629326;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=q6Oxuau9mdcJyn5Csp6BWf4d97wuR60ZGEZCqIDkQm8=;
-        b=HnNE+c4LitqCctisi3TZ7Fokpm+oX7NxQ0OkhrwzIdMxZ65+uQXwH14uAn2pJzuF3P9BJW
-        HUhcsFi6Ukn2+DEF1YEs/QxPsNJVGrLHvwVuFIokCApJNpUKT2ETRjfoHzGZiL3S5+OFAJ
-        xQ0DF7+QUD5CAbFCTVBeSuf4cu9nU+4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591-LBTBh47VMRKHDvhTr-OusA-1; Tue, 12 Jul 2022 08:35:22 -0400
-X-MC-Unique: LBTBh47VMRKHDvhTr-OusA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S232739AbiGLMgV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:36:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BB6A6F16
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:36:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 16714811E84;
-        Tue, 12 Jul 2022 12:35:22 +0000 (UTC)
-Received: from bcodding.csb (unknown [10.22.48.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CD984C2811A;
-        Tue, 12 Jul 2022 12:35:21 +0000 (UTC)
-Received: by bcodding.csb (Postfix, from userid 24008)
-        id 67DA110C30E2; Tue, 12 Jul 2022 08:35:21 -0400 (EDT)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     ebiederm@xmission.com, Ian Kent <raven@themaw.net>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 2/2] KEYS: Add keyagent request_key
-Date:   Tue, 12 Jul 2022 08:35:21 -0400
-Message-Id: <061dd6fe81dc97a4375e52ec0da20a54cf582cb5.1657624639.git.bcodding@redhat.com>
-In-Reply-To: <cover.1657624639.git.bcodding@redhat.com>
-References: <cover.1657624639.git.bcodding@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 40F85616A5
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 12:36:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8CDC341CA;
+        Tue, 12 Jul 2022 12:36:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1657629379;
+        bh=9DhR1GKBfIhvQAwnvHwfegoQA+E+Idll4unv9hCfxN4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=i75c5tQ0B9Rkm1L7D3to1Uy1bsizjj0wgSR3qrkGGewzjHESWCeUhIBvtGdnMQZzt
+         Y0zi5FMke5NlGGvWyxk1tuBKKa5iEgt3k688P68vozWAPlFbkl9pzwiQiQp6Ycd/w4
+         IhOuIUY54YLPUSdLv30PY2+LJKkLJjaqYaZGXeTZlSYdZktMTY2ESj+Aypo34RtepE
+         xXbq/n88KAytAznRJY4wE4qQoHbtBQ1NXuSOKsesoIrKAXDHajhlqILMmFfRjYxain
+         IcpNhq7lPnPN3COVkSSioQr9lQNMaZjjojQmv/kqZ7G2ymmLSBFVay84LLxYSBTDZO
+         ZfpKm1a5ysNvQ==
+Message-ID: <c9b6787ba9154d1f4c2bf25387a35453ad20badb.camel@kernel.org>
+Subject: Re: [PATCH v2 00/15] RPC-with-TLS client side
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     trondmy@hammerspace.com
+Date:   Tue, 12 Jul 2022 08:36:17 -0400
+In-Reply-To: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
+References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,174 +53,87 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-During key construction, search the calling process' session keyring for a
-keyagent key with a description that matches the requested key_type.  If
-found, link the authkey into the keyagent's process_keyring, and signal the
-keyagent task with a realtime signal containing the serial number of the
-key that needs to be constructed.
+On Mon, 2022-06-06 at 10:50 -0400, Chuck Lever wrote:
+> Now that the initial v5.19 merge window has closed, it's time for
+> another round of review for RPC-with-TLS support in the Linux NFS
+> client. This is just the RPC-specific portions. The full series is
+> available in the "topic-rpc-with-tls-upcall" branch here:
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>=20
+> I've taken two or three steps towards implementing the architecture
+> Trond requested during the last review. There is now a two-stage
+> connection establishment process so that the upper level can use
+> XPRT_CONNECTED to determine when a TLS session is ready to use.
+> There are probably additional changes and simplifications that can
+> be made. Please review and provide feedback.
+>=20
+> I wanted to make more progress on client-side authentication (ie,
+> passing an x.509 cert from the client to the server) but NFSD bugs
+> have taken all my time for the past few weeks.
+>=20
+>=20
+> Changes since v1:
+> - Rebased on v5.18
+> - Re-ordered so generic fixes come first
+> - Addressed some of Trond's review comments
+>=20
+> ---
+>=20
+> Chuck Lever (15):
+>       SUNRPC: Fail faster on bad verifier
+>       SUNRPC: Widen rpc_task::tk_flags
+>       SUNRPC: Replace dprintk() call site in xs_data_ready
+>       NFS: Replace fs_context-related dprintk() call sites with tracepoin=
+ts
+>       SUNRPC: Plumb an API for setting transport layer security
+>       SUNRPC: Trace the rpc_create_args
+>       SUNRPC: Refactor rpc_call_null_helper()
+>       SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
+>       SUNRPC: Ignore data_ready callbacks during TLS handshakes
+>       SUNRPC: Capture cmsg metadata on client-side receive
+>       SUNRPC: Add a connect worker function for TLS
+>       SUNRPC: Add RPC-with-TLS support to xprtsock.c
+>       SUNRPC: Add RPC-with-TLS tracepoints
+>       NFS: Have struct nfs_client carry a TLS policy field
+>       NFS: Add an "xprtsec=3D" NFS mount option
+>=20
+>=20
+>  fs/nfs/client.c                 |  14 ++
+>  fs/nfs/fs_context.c             |  65 +++++--
+>  fs/nfs/internal.h               |   2 +
+>  fs/nfs/nfs3client.c             |   1 +
+>  fs/nfs/nfs4client.c             |  16 +-
+>  fs/nfs/nfstrace.h               |  77 ++++++++
+>  fs/nfs/super.c                  |   7 +
+>  include/linux/nfs_fs_sb.h       |   5 +-
+>  include/linux/sunrpc/auth.h     |   1 +
+>  include/linux/sunrpc/clnt.h     |  15 +-
+>  include/linux/sunrpc/sched.h    |  32 ++--
+>  include/linux/sunrpc/xprt.h     |   2 +
+>  include/linux/sunrpc/xprtsock.h |   4 +
+>  include/net/tls.h               |   2 +
+>  include/trace/events/sunrpc.h   | 157 ++++++++++++++--
+>  net/sunrpc/Makefile             |   2 +-
+>  net/sunrpc/auth.c               |   2 +-
+>  net/sunrpc/auth_tls.c           | 120 +++++++++++++
+>  net/sunrpc/clnt.c               |  34 ++--
+>  net/sunrpc/debugfs.c            |   2 +-
+>  net/sunrpc/xprtsock.c           | 310 +++++++++++++++++++++++++++++++-
+>  21 files changed, 805 insertions(+), 65 deletions(-)
+>  create mode 100644 net/sunrpc/auth_tls.c
+>=20
+> --
+> Chuck Lever
+>=20
 
-Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
----
- include/uapi/asm-generic/siginfo.h |  1 +
- security/keys/internal.h           |  4 ++
- security/keys/keyagent.c           | 85 ++++++++++++++++++++++++++++++
- security/keys/request_key.c        |  9 ++++
- 4 files changed, 99 insertions(+)
+Chuck,
 
-diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
-index ffbe4cec9f32..542e297f4466 100644
---- a/include/uapi/asm-generic/siginfo.h
-+++ b/include/uapi/asm-generic/siginfo.h
-@@ -185,6 +185,7 @@ typedef struct siginfo {
- #define SI_SIGIO	-5		/* sent by queued SIGIO */
- #define SI_TKILL	-6		/* sent by tkill system call */
- #define SI_DETHREAD	-7		/* sent by execve() killing subsidiary threads */
-+#define SI_KEYAGENT	-8		/* sent by request-key */
- #define SI_ASYNCNL	-60		/* sent by glibc async name lookup completion */
- 
- #define SI_FROMUSER(siptr)	((siptr)->si_code <= 0)
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index 9b9cf3b6fcbb..a6db6eecfff5 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -372,5 +372,9 @@ static inline void key_check(const struct key *key)
- 
- #define key_check(key) do {} while(0)
- 
-+#endif
-+
-+#ifdef CONFIG_KEYAGENT
-+extern int keyagent_request_key(struct key *authkey, void *aux);
- #endif
- #endif /* _INTERNAL_H */
-diff --git a/security/keys/keyagent.c b/security/keys/keyagent.c
-index 87ebfe00c710..cf70146925f0 100644
---- a/security/keys/keyagent.c
-+++ b/security/keys/keyagent.c
-@@ -9,8 +9,11 @@
- #include <linux/slab.h>
- #include <linux/key.h>
- #include <linux/key-type.h>
-+#include <linux/sched/signal.h>
-+#include <linux/sched/task.h>
- 
- #include <keys/user-type.h>
-+#include <keys/request_key_auth-type.h>
- 
- /*
-  * Keyagent key payload.
-@@ -20,6 +23,88 @@ struct keyagent {
- 	int sig;
- };
- 
-+struct key_type key_type_keyagent;
-+
-+/*
-+ * Given a key representing a keyagent and a target_key to construct, link
-+ * the the authkey into the keyagent's process_keyring and signal the
-+ * keyagent to construct the target_key.
-+ */
-+static int keyagent_signal(struct key *ka_key, struct key *target_key,
-+							struct key *authkey)
-+{
-+	struct keyagent *ka = ka_key->payload.data[0];
-+	struct task_struct *task;
-+	const struct cred *cred;
-+	kernel_siginfo_t info = {
-+		.si_code = SI_KEYAGENT,
-+		.si_signo = ka->sig,
-+		.si_int = target_key->serial,
-+	};
-+	int ret = -ENOKEY;
-+
-+	task = get_pid_task(ka->pid, PIDTYPE_PID);
-+	/* If the task is gone, should we revoke the keyagent key? */
-+	if (!task) {
-+		key_revoke(ka_key);
-+		goto out;
-+	}
-+
-+	/* We're expecting valid keyagents to have a process keyring,
-+	 * if not, should we warn? */
-+	cred = get_cred(task->cred);
-+	if (!cred->process_keyring)
-+		goto out_nolink;
-+
-+	/* Link the autkey to the keyagent's process_keyring */
-+	ret = key_link(cred->process_keyring, authkey);
-+	if (ret < 0)
-+		goto out_nolink;
-+
-+	ret = send_sig_info(ka->sig, &info, task);
-+
-+out_nolink:
-+	put_cred(cred);
-+	put_task_struct(task);
-+out:
-+	return ret;
-+}
-+
-+/*
-+ * Search the calling process' keyrings for a keyagent that
-+ * matches the requested key type.  If found, signal the keyagent
-+ * to construct and link the key, else return -ENOKEY.
-+ */
-+int keyagent_request_key(struct key *authkey, void *aux)
-+{
-+	struct key *ka_key, *target_key;
-+	struct request_key_auth *rka;
-+	key_ref_t ka_ref;
-+	const struct cred *cred = current_cred();
-+	int ret;
-+
-+	/* We must be careful not to touch authkey and aux if
-+	 * returning -ENOKEY, since it will be reused.   */
-+	rka = get_request_key_auth(authkey);
-+	target_key = rka->target_key;
-+
-+	/* Does the calling process have a keyagent in its session keyring? */
-+	ka_ref = keyring_search(
-+					make_key_ref(cred->session_keyring, 1),
-+					&key_type_keyagent,
-+					target_key->type->name, false);
-+
-+	if (IS_ERR(ka_ref))
-+		return -ENOKEY;
-+
-+	/* We found a keyagent, let's call out to it. */
-+	ka_key = key_ref_to_ptr(ka_ref);
-+	ret = keyagent_signal(ka_key, target_key, authkey);
-+	key_put(key_ref_to_ptr(ka_ref));
-+
-+	return ret;
-+}
-+
- /*
-  * Instantiate takes a reference to the current task's struct pid
-  * and the requested realtime signal number.
-diff --git a/security/keys/request_key.c b/security/keys/request_key.c
-index 2da4404276f0..4c1f5ef55856 100644
---- a/security/keys/request_key.c
-+++ b/security/keys/request_key.c
-@@ -240,9 +240,18 @@ static int construct_key(struct key *key, const void *callout_info,
- 	actor = call_sbin_request_key;
- 	if (key->type->request_key)
- 		actor = key->type->request_key;
-+#ifdef CONFIG_KEYAGENT
-+	else {
-+		ret = keyagent_request_key(authkey, aux);
- 
-+		/* ENOKEY: no keyagents match on calling process' keyrings */
-+		if (ret != -ENOKEY)
-+			goto done;
-+	}
-+#endif
- 	ret = actor(authkey, aux);
- 
-+done:
- 	/* check that the actor called complete_request_key() prior to
- 	 * returning an error */
- 	WARN_ON(ret < 0 &&
--- 
-2.31.1
+How have you been testing this series? It looks like nfsd support is not
+fully in yet, so I was wondering if you had a 3rd party server. I'd like
+to do a little testing with this, and was wondering what I needed to
+cobble together a test rig.
 
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
