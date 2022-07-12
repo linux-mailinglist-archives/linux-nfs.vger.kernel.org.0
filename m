@@ -2,107 +2,272 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4965718CA
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 13:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E506571A15
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:35:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229872AbiGLLm3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 07:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54368 "EHLO
+        id S230230AbiGLMf1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 08:35:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232760AbiGLLmO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 07:42:14 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B92B1950;
-        Tue, 12 Jul 2022 04:42:12 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 7D98661D1; Tue, 12 Jul 2022 07:42:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 7D98661D1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1657626131;
-        bh=0Y9FMfwftkPOnmB93rdMLCL6Et7+YdNAuaMYJwinhvA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kBm59xFl775N5od/lv83C+mUJaaeT9KS7HdBL/ooWznKjnmJQ8EfQXjaYNk3j6blM
-         rvrUupSNZfR7AW6vsOUTGB96kAB/F+rjQkOqX3+yBOh3X+7JTqhkRB07VIuJMNPiN5
-         /WiWjT+lmG1GlMABqVdM0BS1K5gdtO6rH5qdECSc=
-Date:   Tue, 12 Jul 2022 07:42:11 -0400
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Igor Mammedov <imammedo@redhat.com>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] nfsd changes for 5.18
-Message-ID: <20220712114211.GA29976@fieldses.org>
-References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
- <20220710124344.36dfd857@redhat.com>
- <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
- <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
- <20220711181941.GC14184@fieldses.org>
- <20220712102746.5404e88a@redhat.com>
+        with ESMTP id S231259AbiGLMf0 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:35:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9A3082B619
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657629323;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=ZRNqvwEkQjWUz9SudAZmar3Unjg5boMD/ciY51IuWI8=;
+        b=gB4ZcsAHK9jDfveQQ8QiT3AK3hrjD50kCmCQSL9jXN/+8m/jvrMYRjCLWbTr7vQOqEvOqS
+        zsBehL6VCCYtf7X4TX/xerdtZ6sAx3mIJJwZHJDEdm+sLV0iAa0k9bgPbA5ea4sv80e6om
+        /j72e0KzBPYYFBL1CdkO8tjNVvIcwV8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-454-Fr7dWCPbPbS7hKwO1fVVSw-1; Tue, 12 Jul 2022 08:35:22 -0400
+X-MC-Unique: Fr7dWCPbPbS7hKwO1fVVSw-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 0FAF02919EBB;
+        Tue, 12 Jul 2022 12:35:22 +0000 (UTC)
+Received: from bcodding.csb (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CDAE82026D64;
+        Tue, 12 Jul 2022 12:35:21 +0000 (UTC)
+Received: by bcodding.csb (Postfix, from userid 24008)
+        id 50C4A10C30E0; Tue, 12 Jul 2022 08:35:21 -0400 (EDT)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
+Cc:     ebiederm@xmission.com, Ian Kent <raven@themaw.net>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [RFC PATCH 0/2] Keyagents: another call_usermodehelper approach for namespaces
+Date:   Tue, 12 Jul 2022 08:35:19 -0400
+Message-Id: <cover.1657624639.git.bcodding@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220712102746.5404e88a@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.78 on 10.11.54.4
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 10:27:46AM +0200, Igor Mammedov wrote:
-> On Mon, 11 Jul 2022 14:19:41 -0400
-> Bruce Fields <bfields@fieldses.org> wrote:
-> 
-> > On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:
-> > > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:  
-> > > > > This patch regressed clients that support TIME_CREATE attribute.
-> > > > > Starting with this patch client might think that server supports
-> > > > > TIME_CREATE and start sending this attribute in its requests.  
-> > > > 
-> > > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
-> > > > attribute") does not include a change to nfsd4_decode_fattr4()
-> > > > that decodes the birth time attribute.
-> > > > 
-> > > > I don't immediately see another storage protocol stack in our
-> > > > kernel that supports a client setting the birth time, so NFSD
-> > > > might have to ignore the client-provided value.
-> > > >   
-> > > 
-> > > Cephfs allows this. My thinking at the time that I implemented it was
-> > > that it should be settable for backup purposes, but this was possibly a
-> > > mistake. On most filesystems, the btime seems to be equivalent to inode
-> > > creation time and is read-only.  
-> > 
-> > So supporting it as read-only seems reasonable.
-> > 
-> > Clearly, failing to decode the setattr attempt isn't the right way to do
-> > that.  I'm not sure what exactly it should be doing--some kind of
-> > permission error on any setattr containing TIME_CREATE?
-> 
-> erroring out on TIME_CREATE will break client that try to
-> set this attribute (legitimately). That's what by chance 
-> happening with current master (return error when TIME_CREATE
-> is present).
+A persistent unsolved problem exists: how can the kernel find and/or create
+the appropriate "container" within which to execute a userspace program to
+construct keys or satisfy users of call_usermodehelper()?
 
-Hang on, now--our current server completely fails to decode any RPC
-including a SETATTR that attempts to set TIME_CREATE, which means it
-isn't able to return a useful error or tell the client which attribute
-was the problem.
+I believe the latest serious attempt to solve this problem was David's "Make
+containers kernel objects":
+https://lore.kernel.org/lkml/149547014649.10599.12025037906646164347.stgit@warthog.procyon.org.uk/
 
-It's not too surprising that that would cause a problem for a client.
+Over in NFS' space, we've most recently pondered this issue while looking at
+ways to pass a kernel socket to userspace in order to handle TLS events:
+https://lore.kernel.org/linux-nfs/E2BF9CFF-9361-400B-BDEE-CF5E0AFDCA63@redhat.com/
 
-But failures to set supported attributes are completely normal, and if
-mounts are failing completely because of that, something is really very
-wrong with the client.
+The problem is that containers are not kernel objects, rather a collection
+of namespaces, cgroups, etc.  Attempts at making the kernel aware of
+containers have been mired in discussion and problems.  It has been
+suggested that the best representation of a "container" from the kernel's
+perspective is a process.
 
-Could you first retest with a server that's patched to at least decode
-the attribute correctly?  I suspect that may be enough.  If not, then
-the client in question has a more interesting problem on its hands.
+Keyagents are processes represented by a key.  If a keyagent's key is linked
+to a session_keyring, it can be sent a realtime signal when a calling
+process requests a matching key_type.  That signal will dispatch the process
+to construct the desired key within the keyagent process context.  Keyagents
+are similar to ssh-agents.  To use a keyagent, one must execute a keyagent
+process in the desired context, and then link the keyagent's key onto other
+process' session_keyrings.
 
---b.
+This method of linking keyagent keys to session_keyrings can be used to
+construct the various mappings of callers to keyagents that containers may
+need.  A single keyagent process can answer request-key upcalls across
+container boundaries, or upcalls can be restricted to specific containers.
+
+I'm aware that building on realtime signals may not be a popular choice, but
+using realtime signals makes this work simple and ensures delivery.  Realtime
+signals are able to convey everything needed to construct keys in userspace:
+the under-construction key's serial number.
+
+This work is not complete; it has security implications, it needs
+documentation, it has not been reviewed by anyone.  Thanks for reading this
+RFC.  I wish to collect criticism and validate this approach.
+
+Below the diffstat in this message is an example userspace program to answer
+keyagent requests for user keys. It can be compiled with:
+gcc -lkeyutils -o ka_simple ka_simple.c
+
+Benjamin Coddington (2):
+  KEYS: Add key_type keyagent
+  KEYS: Add keyagent request_key
+
+ include/uapi/asm-generic/siginfo.h |   1 +
+ security/keys/Kconfig              |   9 ++
+ security/keys/Makefile             |   1 +
+ security/keys/internal.h           |   4 +
+ security/keys/keyagent.c           | 158 +++++++++++++++++++++++++++++
+ security/keys/request_key.c        |   9 ++
+ 6 files changed, 182 insertions(+)
+ create mode 100644 security/keys/keyagent.c
+
+-- 
+// SPDX-License-Identifier: GPL-2.0-only
+/* ka_simple.c: userspace keyagent example
+ *
+ * Copyright (C) 2022 Red Hat Inc. All Rights Reserved.
+ * Written by Benjamin Coddington (bcodding@redhat.com)
+ *
+ * This programs registers a simple keyagent for user keys that will handle
+ * requests from the kernel keyagent, and instantiate keys that have
+ * callout_info == "test_callout_info".
+ */
+#include <stdio.h>
+#include <unistd.h>
+#include <string.h>
+#include <err.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <linux/types.h>
+#include <keyutils.h>
+#include <sys/signalfd.h>
+
+int ka_sig_fd = 0;
+key_serial_t ka_key_serial;
+__be16 ka_signal;
+
+/* Setup a signalfd masked to SIGRTMIN + 1 */
+void ka_sig_setup()
+{
+	int ret;
+	sigset_t mask;
+
+	/* Which realtime signal are we using? */
+	ka_signal = SIGRTMIN + 1;
+
+	sigemptyset(&mask);
+	sigaddset(&mask, ka_signal);
+
+	ret = sigprocmask(SIG_BLOCK, &mask, NULL);
+	if (ret != 0)
+		err(ret, "rt_sigprocmask");
+
+	ka_sig_fd = signalfd(-1, &mask, 0);
+	if (ka_sig_fd == -1)
+		err(ret, "signalfd");
+}
+
+/* Register this process as a keyagent for user keys to be notified by
+ * signal number SIGRTMIN + 1 by creating a keyagent key with a description
+ * of "user", and payload of SIGRTMIN + 1 */
+void ka_register()
+{
+	printf("Registering as keyagent for user keys with signal %d\n", ka_signal);
+	/* The kernel will place authorization keys on our process keyring.
+	 * Make sure we have a process keyring: */
+	keyctl_get_keyring_ID(KEY_SPEC_PROCESS_KEYRING, 1);
+	ka_key_serial = add_key("keyagent", "user", &ka_signal, sizeof(unsigned int), KEY_SPEC_SESSION_KEYRING);
+
+	if (ka_key_serial == -1)
+		err(errno, "add_key");
+
+	/* Permissions for the keyagent's key: */
+	keyctl_setperm(ka_key_serial, KEY_USR_ALL);
+}
+
+/* Handle kernel request_key().  The serial number of the key is the int
+ * passed in the realtime signal */
+int ka_request_key(key_serial_t key) {
+	int ret, ntype, dpos, n;
+	char *buf_type_desc, *key_type, *key_desc;
+	void *callout;
+
+	printf("ka_request_key %d\n", key);
+
+	ret = keyctl_assume_authority(key);
+	if (ret < 0) {
+		warn("failed to assume authority over key %d (%m)\n", key);
+		goto out;
+	}
+
+	ret = keyctl_describe_alloc(key, &buf_type_desc);
+	if (ret < 0) {
+		warn("key %d inaccessible (%m)\n", key);
+		goto out;
+	}
+
+	printf("Key descriptor: \"%s\"\n", buf_type_desc);
+
+	/* Shamelessly copied from libkeyutils/request_key.c: */
+	ntype = -1;
+	dpos = -1;
+
+	n = sscanf(buf_type_desc, "%*[^;]%n;%*d;%*d;%x;%n", &ntype, &n, &dpos);
+	if (n != 1)
+		printf("Failed to parse key description\n");
+
+	key_type = buf_type_desc;
+	key_type[ntype] = 0;
+	key_desc = buf_type_desc + dpos;
+
+	ret = keyctl_read_alloc(KEY_SPEC_REQKEY_AUTH_KEY, &callout);
+	if (ret < 0) {
+		warn("failed to retrieve callout info (%m)\n");
+		goto out_free_type;
+	}
+
+	if (strcmp(buf_type_desc, "user") == 0 && strcmp(callout, "test_callout_info") == 0) {
+		keyctl_instantiate(key, "keyagent_payload", sizeof("keyagent_payload"), KEY_SPEC_SESSION_KEYRING);
+		printf("instantiated key %d with payload \"keyagent_payload\" on session keyring\n", key);
+	} else {
+		keyctl_reject(key, 10, EKEYREJECTED, KEY_SPEC_SESSION_KEYRING);
+		printf("this keyagent only instantiates user keys with callout \"test_callout_info\"\n");
+	}
+
+	/* De-assume the authority (for now) */	
+	ret = keyctl_assume_authority(0);
+	free(callout);
+	
+out_free_type:
+	free(buf_type_desc);
+out:
+	return ret;
+}
+
+/* Handle signals from our signalfd, dispatch ka_request_key() */
+int ka_process()
+{
+	struct signalfd_siginfo fdsi;
+	ssize_t size;
+
+	for (;;) {
+		size = read(ka_sig_fd, &fdsi, sizeof(struct signalfd_siginfo));
+		if (size != sizeof(struct signalfd_siginfo))
+			err(EINVAL, "reading signal_fd");
+
+		if (ka_request_key(fdsi.ssi_int))
+			break;
+	}
+}
+
+int main(int argc, char **argv)
+{
+	ka_sig_setup();
+	ka_register();
+
+	printf("Registered as keyagent with key %d\n", ka_key_serial);
+	printf("Subscribe to this keyagent by linking it into your session keyring with:\n\tkeyctl link %d @s\n", ka_key_serial);
+	printf("then, you can send a request to this agent with:\n\tkeyctl request2 user <description> \"test_callout_info\"\n");
+
+	ka_process();
+}
+
+--
+2.31.1
+
