@@ -2,76 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D31A5713F8
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 10:09:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D134757147C
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 10:27:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232544AbiGLIJL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 04:09:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40196 "EHLO
+        id S231571AbiGLI1y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 04:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232236AbiGLIJG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 04:09:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 089B733A34
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 01:09:05 -0700 (PDT)
+        with ESMTP id S229670AbiGLI1w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 04:27:52 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C7CF67A503
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 01:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657613345;
+        s=mimecast20190719; t=1657614470;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=5+0BHy+TbI5y4QNBf2E9cU8okI6M2ropxuo+9s7xiag=;
-        b=GwUe2nNqHznlhkbs55Ugnt/gTKSDfjcQ8GeLGqsqC4et0yyUv9633z/VnAZCuwPg+1Xzvs
-        f0gXxbA/AKxMB/wlIu6nPNU6+PEaafD+awrfIrJLg8E47tb43oYAUiz5o5wLsjTq4OForJ
-        ODf7iBZsXTaMTfGxhvI5KIU77XsGWn8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=JfQPW3k4yk+c+WSzuz95pilpy8J3eRh/AKdyQJaLcpA=;
+        b=IVHYV0HvirnX3cGgBUU6tIcfKnobrfUJ2zMX5b61as/3EjDtCvkNM7zichhRAYX3fgUkF1
+        rFv1j9E8KkTdE6AScm/wQ7eTpZISkqIsVVpxE5ct7TJeNRYslI0zbVrT0qLBo7vzfQTzJm
+        7tvArIKqiP+W88AsYlojWRk76i2EnZM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-44-SoU31PyqPk6WzyZl8ROIHw-1; Tue, 12 Jul 2022 04:09:03 -0400
-X-MC-Unique: SoU31PyqPk6WzyZl8ROIHw-1
-Received: by mail-wm1-f70.google.com with SMTP id bg6-20020a05600c3c8600b003a03d5d19e4so3458698wmb.1
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 01:09:03 -0700 (PDT)
+ us-mta-263-kwTzNT9sMWKa-78bk_kUnw-1; Tue, 12 Jul 2022 04:27:49 -0400
+X-MC-Unique: kwTzNT9sMWKa-78bk_kUnw-1
+Received: by mail-wr1-f70.google.com with SMTP id j23-20020adfb317000000b0021d7986c07eso1181326wrd.2
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 01:27:49 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5+0BHy+TbI5y4QNBf2E9cU8okI6M2ropxuo+9s7xiag=;
-        b=wWcF1fCJY6OVKw0vozxMURbJiswbf9YCxb96kU+l1LE25sYDrspR42Xi7zx4cnKIwu
-         6vEEPh0IeQI+tFtfJGkF2qehSYLzZM+r+gol4zhMVE3vXzDaPccc4k9DHjztlo9LRs+4
-         VBZN/vfU+54P2ie0+6YkTK2MMOJXRBLAxB9DJ8npf6jIIAUwyoiOHdbhFNI+0TBEF1lr
-         /HrruNaNL16u6JTmn/GQYuNjil+JnguFJDnZL+rpTo3QanxPVR5Co7I+P3Fu/vnpPuki
-         7qaT74UxzMq1DYtfdU9bF1wj4fZVUjxQ9nzX5YCzyoC6oKEn7HmHS7u5SOh4OW8IgL31
-         Plog==
-X-Gm-Message-State: AJIora/XvS5vjyaYO8LFkGcNGKh62PklO377U542ctgqX8RMcP85Ud58
-        T+UaEwduhF/EQ4L7zDj73nDz2qa/4wSIYsHb+x1zdmWXk9hPOkCOgOfmbGCAwmSyp1jabLM9DZ5
-        bqZvAFfCmzwuLCtWxXnBR
-X-Received: by 2002:a05:600c:3505:b0:3a1:9fbb:4d59 with SMTP id h5-20020a05600c350500b003a19fbb4d59mr2529156wmq.165.1657613342447;
-        Tue, 12 Jul 2022 01:09:02 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tTkRb943UWorlzCwualpK6U+eYPdow11CztHkTzoYVF1hr08+8yS0GIIDqpO6L79uZn6ijpA==
-X-Received: by 2002:a05:600c:3505:b0:3a1:9fbb:4d59 with SMTP id h5-20020a05600c350500b003a19fbb4d59mr2529139wmq.165.1657613342237;
-        Tue, 12 Jul 2022 01:09:02 -0700 (PDT)
+        bh=JfQPW3k4yk+c+WSzuz95pilpy8J3eRh/AKdyQJaLcpA=;
+        b=zq1Gj/lBeljeLrKbY9x/uzJdt3mdlDrR1Tfp/tFHqrnGN5BERSg2HSXkJ8+Zc1PgFC
+         Dr9sZRYcWIaSlnkW5i/qO5LBngjPxnv/uIZ3O5tLahm68Vh+03rj5JddWMqlrsccDmhc
+         Yq1D3RK+QK30dWoT64thOd3rM6QOPypOJuUdqYAcl5n0Z3nYS5m4q5VwwRo80xiHX86b
+         7XaCxIk7LmsvMhNedaAylORDQlA2MaC3KaYvFHWRnq3s+h5nm0MJG3aNUxXJgWO1g53x
+         QpZu1myGoTDz34Bpa8oveqoJc+bCYKIm0U03Wkgk3/1aiaEDLz2C9YN1j/wKOQuNRgn6
+         DQ9w==
+X-Gm-Message-State: AJIora9E+HYw0VhnTaIBOVXrK6tlBV1/MrilcuyXRGhRF6hgfq2YZTPs
+        Wy+rqNJziSZfeegZFW+WGHvBMGIxECTCJIfNLpF6gLGgi+bnDxlJp1chGyoQhjdW6l4+i+oXiBx
+        61G+hEsbMBfYnC/hx901F
+X-Received: by 2002:a5d:47c7:0:b0:21d:ac9c:571c with SMTP id o7-20020a5d47c7000000b0021dac9c571cmr5343426wrc.522.1657614468421;
+        Tue, 12 Jul 2022 01:27:48 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vgHRgKKemP017DzVbNknW+teMH9jsqa+xDB8nk5dZ4JSOVijFqOtntpmRtqeWasPBVM0vCiA==
+X-Received: by 2002:a5d:47c7:0:b0:21d:ac9c:571c with SMTP id o7-20020a5d47c7000000b0021dac9c571cmr5343413wrc.522.1657614468244;
+        Tue, 12 Jul 2022 01:27:48 -0700 (PDT)
 Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id v26-20020a1cf71a000000b003974a00697esm12069129wmh.38.2022.07.12.01.09.01
+        by smtp.gmail.com with ESMTPSA id bh21-20020a05600c3d1500b003a2d6c623f3sm12364159wmb.19.2022.07.12.01.27.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 01:09:01 -0700 (PDT)
-Date:   Tue, 12 Jul 2022 10:09:00 +0200
+        Tue, 12 Jul 2022 01:27:47 -0700 (PDT)
+Date:   Tue, 12 Jul 2022 10:27:46 +0200
 From:   Igor Mammedov <imammedo@redhat.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] NFSD: Decode NFSv4 birth time attribute
-Message-ID: <20220712100900.1c8b18dc@redhat.com>
-In-Reply-To: <A4F0C111-B2EB-4325-AC6A-4A80BD19DA43@oracle.com>
-References: <165747876458.1259.8334435718280903102.stgit@bazille.1015granger.net>
-        <20220711191447.1046538c@redhat.com>
-        <A4F0C111-B2EB-4325-AC6A-4A80BD19DA43@oracle.com>
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] nfsd changes for 5.18
+Message-ID: <20220712102746.5404e88a@redhat.com>
+In-Reply-To: <20220711181941.GC14184@fieldses.org>
+References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
+        <20220710124344.36dfd857@redhat.com>
+        <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
+        <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
+        <20220711181941.GC14184@fieldses.org>
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,123 +85,54 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 11 Jul 2022 17:18:38 +0000
-Chuck Lever III <chuck.lever@oracle.com> wrote:
+On Mon, 11 Jul 2022 14:19:41 -0400
+Bruce Fields <bfields@fieldses.org> wrote:
 
-> > On Jul 11, 2022, at 1:14 PM, Igor Mammedov <imammedo@redhat.com> wrote:
+> On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:
+> > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:  
+> > > > This patch regressed clients that support TIME_CREATE attribute.
+> > > > Starting with this patch client might think that server supports
+> > > > TIME_CREATE and start sending this attribute in its requests.  
+> > > 
+> > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
+> > > attribute") does not include a change to nfsd4_decode_fattr4()
+> > > that decodes the birth time attribute.
+> > > 
+> > > I don't immediately see another storage protocol stack in our
+> > > kernel that supports a client setting the birth time, so NFSD
+> > > might have to ignore the client-provided value.
+> > >   
 > > 
-> > On Sun, 10 Jul 2022 14:46:04 -0400
-> > Chuck Lever <chuck.lever@oracle.com> wrote:
-> >   
-> >> NFSD has advertised support for the NFSv4 time_create attribute
-> >> since commit e377a3e698fb ("nfsd: Add support for the birth time
-> >> attribute").
-> >> 
-> >> Igor Mammedov reports that Mac OS clients attempt to set the NFSv4
-> >> birth time attribute via OPEN(CREATE) and SETATTR if the server
-> >> indicates that it supports it, but since the above commit was
-> >> merged, those attempts now fail.
-> >> 
-> >> Table 5 in RFC 8881 lists the time_create attribute as one that can
-> >> be both set and retrieved, but the above commit did not add server
-> >> support for clients to provide a time_create attribute. IMO that's
-> >> a bug in our implementation of the NFSv4 protocol, which this commit
-> >> addresses.
-> >> 
-> >> Whether NFSD silently ignores the new birth time or actually sets it
-> >> is another matter. I haven't found another filesystem service in the
-> >> Linux kernel that enables users or clients to modify a file's birth
-> >> time attribute.
-> >> 
-> >> This commit reflects my (perhaps incorrect) understanding of whether
-> >> Linux users can set a file's birth time. NFSD will now recognize a
-> >> time_create attribute but it ignores its value. It clears the
-> >> time_create bit in the returned attribute bitmask to indicate that
-> >> the value was not used.
-> >> 
-> >> Reported-by: Igor Mammedov <imammedo@redhat.com>
-> >> Fixes: e377a3e698fb ("nfsd: Add support for the birth time attribute")
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>  
-> > 
-> > Thanks for fixing it,
-> > tested 'touch', 'cp', 'tar' within CLI and copying file with Finder
-> > 
-> > Tested-by: Igor Mammedov <imammedo@redhat.com>  
+> > Cephfs allows this. My thinking at the time that I implemented it was
+> > that it should be settable for backup purposes, but this was possibly a
+> > mistake. On most filesystems, the btime seems to be equivalent to inode
+> > creation time and is read-only.  
 > 
-> Thanks!
+> So supporting it as read-only seems reasonable.
 > 
-> 
-> > on tangent:
-> > when copying file from Mac (used 'cp') there is a delay ~4sec/file
-> > 'cp' does first triggers create then extra open and then setattr
-> > which returns
-> > SETATTR Status: NFS4ERR_DELAY
-> > after which the client stalls for a few seconds before repeating setattr.
-> > So question is what makes server unhappy to trigger this error
-> > and if it could be fixed on server side.
-> > 
-> > it seems to affect other methods of copying. So if one extracted
-> > an archive with multiple files or copied multiple files, that
-> > would be a pain.
-> > 
-> > With vers=3 copying is 'instant'
-> > with linux client and vers=4.0 copying is 'instant' as well but it
-> > doesn't use the same call sequence.
-> > 
-> > PS:
-> > it is not regression (I think slowness was there for a long time)  
-> 
-> A network capture would help diagnose this further, but it
-> sounds like it's delegation-related.
-yep, there was delegation request/response right after SETATTR failure
-possibly prompted by NFS4ERR_DELAY
+> Clearly, failing to decode the setattr attempt isn't the right way to do
+> that.  I'm not sure what exactly it should be doing--some kind of
+> permission error on any setattr containing TIME_CREATE?
 
-shall I provide a network capture (I guess pcap file) from test env
-I have?
+erroring out on TIME_CREATE will break client that try to
+set this attribute (legitimately). That's what by chance 
+happening with current master (return error when TIME_CREATE
+is present).
 
-> >> ---
-> >> fs/nfsd/nfs4xdr.c | 9 +++++++++
-> >> fs/nfsd/nfsd.h | 3 ++-
-> >> 2 files changed, 11 insertions(+), 1 deletion(-)
-> >> 
-> >> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> >> index 61b2aae81abb..2acea7792bb2 100644
-> >> --- a/fs/nfsd/nfs4xdr.c
-> >> +++ b/fs/nfsd/nfs4xdr.c
-> >> @@ -470,6 +470,15 @@ nfsd4_decode_fattr4(struct nfsd4_compoundargs *argp, u32 *bmval, u32 bmlen,
-> >> 			return nfserr_bad_xdr;
-> >> 		}
-> >> 	}
-> >> +	if (bmval[1] & FATTR4_WORD1_TIME_CREATE) {
-> >> +		struct timespec64 ts;
-> >> +
-> >> +		/* No Linux filesystem supports setting this attribute. */
-> >> +		bmval[1] &= ~FATTR4_WORD1_TIME_CREATE;
-> >> +		status = nfsd4_decode_nfstime4(argp, &ts);
-> >> +		if (status)
-> >> +			return status;
-> >> +	}
-> >> 	if (bmval[1] & FATTR4_WORD1_TIME_MODIFY_SET) {
-> >> 		u32 set_it;
-> >> 
-> >> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-> >> index 847b482155ae..9a8b09afc173 100644
-> >> --- a/fs/nfsd/nfsd.h
-> >> +++ b/fs/nfsd/nfsd.h
-> >> @@ -465,7 +465,8 @@ static inline bool nfsd_attrs_supported(u32 minorversion, const u32 *bmval)
-> >> 	(FATTR4_WORD0_SIZE | FATTR4_WORD0_ACL)
-> >> #define NFSD_WRITEABLE_ATTRS_WORD1 \
-> >> 	(FATTR4_WORD1_MODE | FATTR4_WORD1_OWNER | FATTR4_WORD1_OWNER_GROUP \
-> >> -	| FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_MODIFY_SET)
-> >> +	| FATTR4_WORD1_TIME_ACCESS_SET | FATTR4_WORD1_TIME_CREATE \
-> >> +	| FATTR4_WORD1_TIME_MODIFY_SET)
-> >> #ifdef CONFIG_NFSD_V4_SECURITY_LABEL
-> >> #define MAYBE_FATTR4_WORD2_SECURITY_LABEL \
-> >> 	FATTR4_WORD2_SECURITY_LABEL  
-> 
-> --
-> Chuck Lever
-> 
-> 
+As long as server advertises support for TIME_CREATE
+it should not error out when client sends it if spec permits
+such use.
+
+I think ignoring this attribute like Chuck has proposed
+is acceptable (if one ignores archiving use case where
+setting it makes sense).
+
+Alternatively if folks inclined towards erroring out,
+there should be a way to optout or optin from TIME_CREATE support,
+to keep existing clients working + a sane error message so users
+won't have to debug kernel to figure out what's wrong with
+their setup.
+
+> --b.
 > 
 
