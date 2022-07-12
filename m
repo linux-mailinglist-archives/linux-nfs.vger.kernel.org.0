@@ -2,138 +2,144 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BDF8571A22
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 742A4571A9B
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:57:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231770AbiGLMgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 08:36:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53502 "EHLO
+        id S231438AbiGLM5i (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 08:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232739AbiGLMgV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:36:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4BB6A6F16
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:36:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 40F85616A5
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 12:36:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F8CDC341CA;
-        Tue, 12 Jul 2022 12:36:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657629379;
-        bh=9DhR1GKBfIhvQAwnvHwfegoQA+E+Idll4unv9hCfxN4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=i75c5tQ0B9Rkm1L7D3to1Uy1bsizjj0wgSR3qrkGGewzjHESWCeUhIBvtGdnMQZzt
-         Y0zi5FMke5NlGGvWyxk1tuBKKa5iEgt3k688P68vozWAPlFbkl9pzwiQiQp6Ycd/w4
-         IhOuIUY54YLPUSdLv30PY2+LJKkLJjaqYaZGXeTZlSYdZktMTY2ESj+Aypo34RtepE
-         xXbq/n88KAytAznRJY4wE4qQoHbtBQ1NXuSOKsesoIrKAXDHajhlqILMmFfRjYxain
-         IcpNhq7lPnPN3COVkSSioQr9lQNMaZjjojQmv/kqZ7G2ymmLSBFVay84LLxYSBTDZO
-         ZfpKm1a5ysNvQ==
-Message-ID: <c9b6787ba9154d1f4c2bf25387a35453ad20badb.camel@kernel.org>
-Subject: Re: [PATCH v2 00/15] RPC-with-TLS client side
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Cc:     trondmy@hammerspace.com
-Date:   Tue, 12 Jul 2022 08:36:17 -0400
-In-Reply-To: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
-References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
+        with ESMTP id S230336AbiGLM5h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:57:37 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44CCA5E73;
+        Tue, 12 Jul 2022 05:57:34 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 4013064EB; Tue, 12 Jul 2022 08:57:34 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 4013064EB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1657630654;
+        bh=M6WdCyriOloN+RDs822UlkL0MGgMRmbew1eUogj1s4A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b35z0NnOnJpv2pjF9bAwqiPqMYaJ5gR70Q8s5xFIGo8Uuz8fWAwYo5KHeUL1MHKi1
+         m1lrAD68WK6qJSX1D6y+9TlcJsQhmJaoeZDVcDsyoWuBYn3CxY24cmN2YDJhJoEErL
+         a1uWk/kPPwQO79jNxtfMa9diyMMe4Ff72dM6Xyo4=
+Date:   Tue, 12 Jul 2022 08:57:34 -0400
+From:   Bruce Fields <bfields@fieldses.org>
+To:     Jeff Layton <jlayton@redhat.com>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] nfsd changes for 5.18
+Message-ID: <20220712125734.GB29976@fieldses.org>
+References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
+ <20220710124344.36dfd857@redhat.com>
+ <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
+ <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
+ <20220711181941.GC14184@fieldses.org>
+ <7CD95BBD-3552-47BD-ACF6-EC51F62787E1@oracle.com>
+ <20220711183603.GD14184@fieldses.org>
+ <f5d20f4e1aeb5d478e10a39c17ed003616c7872c.camel@redhat.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f5d20f4e1aeb5d478e10a39c17ed003616c7872c.camel@redhat.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-06-06 at 10:50 -0400, Chuck Lever wrote:
-> Now that the initial v5.19 merge window has closed, it's time for
-> another round of review for RPC-with-TLS support in the Linux NFS
-> client. This is just the RPC-specific portions. The full series is
-> available in the "topic-rpc-with-tls-upcall" branch here:
->=20
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
->=20
-> I've taken two or three steps towards implementing the architecture
-> Trond requested during the last review. There is now a two-stage
-> connection establishment process so that the upper level can use
-> XPRT_CONNECTED to determine when a TLS session is ready to use.
-> There are probably additional changes and simplifications that can
-> be made. Please review and provide feedback.
->=20
-> I wanted to make more progress on client-side authentication (ie,
-> passing an x.509 cert from the client to the server) but NFSD bugs
-> have taken all my time for the past few weeks.
->=20
->=20
-> Changes since v1:
-> - Rebased on v5.18
-> - Re-ordered so generic fixes come first
-> - Addressed some of Trond's review comments
->=20
-> ---
->=20
-> Chuck Lever (15):
->       SUNRPC: Fail faster on bad verifier
->       SUNRPC: Widen rpc_task::tk_flags
->       SUNRPC: Replace dprintk() call site in xs_data_ready
->       NFS: Replace fs_context-related dprintk() call sites with tracepoin=
-ts
->       SUNRPC: Plumb an API for setting transport layer security
->       SUNRPC: Trace the rpc_create_args
->       SUNRPC: Refactor rpc_call_null_helper()
->       SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
->       SUNRPC: Ignore data_ready callbacks during TLS handshakes
->       SUNRPC: Capture cmsg metadata on client-side receive
->       SUNRPC: Add a connect worker function for TLS
->       SUNRPC: Add RPC-with-TLS support to xprtsock.c
->       SUNRPC: Add RPC-with-TLS tracepoints
->       NFS: Have struct nfs_client carry a TLS policy field
->       NFS: Add an "xprtsec=3D" NFS mount option
->=20
->=20
->  fs/nfs/client.c                 |  14 ++
->  fs/nfs/fs_context.c             |  65 +++++--
->  fs/nfs/internal.h               |   2 +
->  fs/nfs/nfs3client.c             |   1 +
->  fs/nfs/nfs4client.c             |  16 +-
->  fs/nfs/nfstrace.h               |  77 ++++++++
->  fs/nfs/super.c                  |   7 +
->  include/linux/nfs_fs_sb.h       |   5 +-
->  include/linux/sunrpc/auth.h     |   1 +
->  include/linux/sunrpc/clnt.h     |  15 +-
->  include/linux/sunrpc/sched.h    |  32 ++--
->  include/linux/sunrpc/xprt.h     |   2 +
->  include/linux/sunrpc/xprtsock.h |   4 +
->  include/net/tls.h               |   2 +
->  include/trace/events/sunrpc.h   | 157 ++++++++++++++--
->  net/sunrpc/Makefile             |   2 +-
->  net/sunrpc/auth.c               |   2 +-
->  net/sunrpc/auth_tls.c           | 120 +++++++++++++
->  net/sunrpc/clnt.c               |  34 ++--
->  net/sunrpc/debugfs.c            |   2 +-
->  net/sunrpc/xprtsock.c           | 310 +++++++++++++++++++++++++++++++-
->  21 files changed, 805 insertions(+), 65 deletions(-)
->  create mode 100644 net/sunrpc/auth_tls.c
->=20
-> --
-> Chuck Lever
->=20
+On Mon, Jul 11, 2022 at 02:56:40PM -0400, Jeff Layton wrote:
+> On Mon, 2022-07-11 at 14:36 -0400, Bruce Fields wrote:
+> > On Mon, Jul 11, 2022 at 06:24:01PM +0000, Chuck Lever III wrote:
+> > > 
+> > > 
+> > > > On Jul 11, 2022, at 2:19 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> > > > 
+> > > > On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:
+> > > > > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:
+> > > > > > > This patch regressed clients that support TIME_CREATE attribute.
+> > > > > > > Starting with this patch client might think that server supports
+> > > > > > > TIME_CREATE and start sending this attribute in its requests.
+> > > > > > 
+> > > > > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
+> > > > > > attribute") does not include a change to nfsd4_decode_fattr4()
+> > > > > > that decodes the birth time attribute.
+> > > > > > 
+> > > > > > I don't immediately see another storage protocol stack in our
+> > > > > > kernel that supports a client setting the birth time, so NFSD
+> > > > > > might have to ignore the client-provided value.
+> > > > > > 
+> > > > > 
+> > > > > Cephfs allows this. My thinking at the time that I implemented it was
+> > > > > that it should be settable for backup purposes, but this was possibly a
+> > > > > mistake. On most filesystems, the btime seems to be equivalent to inode
+> > > > > creation time and is read-only.
+> > > > 
+> > > > So supporting it as read-only seems reasonable.
+> > > > 
+> > > > Clearly, failing to decode the setattr attempt isn't the right way to do
+> > > > that.  I'm not sure what exactly it should be doing--some kind of
+> > > > permission error on any setattr containing TIME_CREATE?
+> > > 
+> > > I don't think that will work.
+> > > 
+> > > NFSD now asserts FATTR4_WORD1_TIME_CREATE when clients ask for
+> > > the mask of attributes it supports. That means the server has
+> > > to process GETATTR and SETATTR (and OPEN) operations that
+> > > contain FATTR4_WORD1_TIME_CREATE as not an error.
+> > 
+> > Well, permissions or bad attribute values or other stuff may prevent
+> > setting one of the attributes.
+> > 
+> > And setattr isn't guaranteed to be atomic, so I don't think you can
+> > eliminate the possibility that part of it might succeed and part might
+> > not.
+> > 
+> > But it might be more helpful to fail the whole thing up front if you
+> > know part of it's going to fail?
+> > 
+> 
+> RFC5661 says:
+> 
+>    On either success or failure of the operation, the server will return
+>    the attrsset bitmask to represent what (if any) attributes were
+>    successfully set.  The attrsset in the response is a subset of the
+>    attrmask field of the obj_attributes field in the argument.
+> 
+> ...and then later:
+> 
+>    A mask of the attributes actually set is returned by SETATTR in all
+>    cases.  That mask MUST NOT include attribute bits not requested to be
+>    set by the client.  If the attribute masks in the request and reply
+>    are equal, the status field in the reply MUST be NFS4_OK.
 
-Chuck,
+For some reason I thought the converse was true too (if the masks
+differ, then the server should return an error).  But you're right, I
+don't see that in the spec.
 
-How have you been testing this series? It looks like nfsd support is not
-fully in yet, so I was wondering if you had a 3rd party server. I'd like
-to do a little testing with this, and was wondering what I needed to
-cobble together a test rig.
+> So, I think just clearing the bit and returning NFS4_OK should be fine.
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+I suppose.
+
+Nevertheless, the spec gives the option of returning both an error and a
+bitmap, and to me it seems more helpful to take advantage of the
+opportunity to tell the client both which attribute(s) failed and (to
+the extent possible) why.  ??
+
+> If the mask ends up being 0 after clearing the bit though, it might be
+> reasonable to return something like NFS4ERR_ATTRNOTSUPP. That would be a
+> bit weird though since we do support it for GETATTR, hence my suggestion
+> for a NFS4ERR_ATTR_RO.
+
+That might be useful.
+
+--b.
