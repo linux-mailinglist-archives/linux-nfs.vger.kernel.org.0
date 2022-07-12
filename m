@@ -2,106 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AAA3857217E
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 19:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BB31E5726F7
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 22:09:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiGLRAR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 13:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47694 "EHLO
+        id S233412AbiGLUJY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 16:09:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233010AbiGLRAR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 13:00:17 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 27A13CC031
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 10:00:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657645215;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wNTyfY0yH1P/DlUzwoNuiHlRbz+BZPjC+6G9cgZvBpk=;
-        b=cu5VlgtknRyoZgVmmBfNqMCGaI/rs9+N09dmZKdFoyam2sriNBhNMOqUnR5kRtPtaGLCTD
-        fsA1SwyoeFE3YR+N+m6ZWTOW7kl9HTXTydpAq9GlFW0jjKg50wyYu6q+biAypMVNFxHmOP
-        DElnGBMgJPQ8Fipj0ekuk1+tMF9ZrqQ=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-Mx6dhJLJM_OMrIRGaakdIw-1; Tue, 12 Jul 2022 13:00:11 -0400
-X-MC-Unique: Mx6dhJLJM_OMrIRGaakdIw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 85B221C01B23;
-        Tue, 12 Jul 2022 17:00:11 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.48.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 112D8C1D38B;
-        Tue, 12 Jul 2022 17:00:10 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Chuck Lever" <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org, trondmy@hammerspace.com
-Subject: Re: [PATCH v2 12/15] SUNRPC: Add RPC-with-TLS support to xprtsock.c
-Date:   Tue, 12 Jul 2022 13:00:09 -0400
-Message-ID: <5139CEB0-DA0C-495B-911E-E1459154559B@redhat.com>
-In-Reply-To: <165452710606.1496.14773661487729121787.stgit@oracle-102.nfsv4.dev>
-References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
- <165452710606.1496.14773661487729121787.stgit@oracle-102.nfsv4.dev>
-MIME-Version: 1.0
-Content-Type: text/plain; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230473AbiGLUJX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 16:09:23 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E486BA39D
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 13:09:23 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26CJY2PO023202
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 20:09:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2021-07-09;
+ bh=PdMt26dtj7QSVmDLxENHTyQvqeUxsTf66prO/TqWW8E=;
+ b=o3vsBLQEVGfuLik5YakjR4H0k7RE3kXoEH3gPcm9UhekThqyf15l+5dOUCSurlE4Bogo
+ 6tW3S9NJr+iXeBCfQQyEUv0Mel/ldozFHCJb7mTAERheO9I5o8xA5oWrmM1+z860uMt2
+ xu+0aBH0Rp4Q/aZLTWYSt7THqVGwGI7eQg4N1od1va38jPo3K8PnC0z/NIh0I8ukriOH
+ DSxPQUMawRx4cVDIVD+qMjFHmGLsK8TaoZ1PaOEYoFDc/x4rC2oXV9CdElKX7cnp5ZSB
+ ssmoH4kdaKoicEyMKU6XMgLHU/sUtp3lFnL6FD6eNk5F+g9Yp/NNSLGC9U3DlyBW3r/Q XA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h71r17ye6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 20:09:22 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26CK1Mj1020073
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 20:09:15 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3h70449spb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 20:09:15 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 26CK9EDb003044
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 20:09:14 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3h70449snp-1;
+        Tue, 12 Jul 2022 20:09:14 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: 
+Date:   Tue, 12 Jul 2022 13:09:11 -0700
+Message-Id: <1657656553-16493-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-ORIG-GUID: x0k5z7I1c1ZDf61G6Moc915NKWIOxjRK
+X-Proofpoint-GUID: x0k5z7I1c1ZDf61G6Moc915NKWIOxjRK
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 6 Jun 2022, at 10:51, Chuck Lever wrote:
+s patch series enforces a limit on the number of v4 clients allowed
+in the system. With Courteous server support there are potentially a
+lots courtesy clients exist in the system that use up memory resource
+preventing them to be used by other components in the system. Also
+without a limit on the number of clients, the number of clients can
+grow to a very large number even for system with small memory configuration
+eventually render the system into an unusable state.
 
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  include/linux/sunrpc/xprtsock.h |    1
->  net/sunrpc/xprtsock.c           |  243 =
+---
 
-> ++++++++++++++++++++++++++++++++-------
->  2 files changed, 201 insertions(+), 43 deletions(-)
->
-> diff --git a/include/linux/sunrpc/xprtsock.h =
+Dai Ngo (2):
+      NFSD: keep track of the number of v4 clients in the system
+      NFSD: limit the number of v4 clients to 4096 per 4GB of system memory
 
-> b/include/linux/sunrpc/xprtsock.h
-> index e0b6009f1f69..eaf3d705f758 100644
-> --- a/include/linux/sunrpc/xprtsock.h
-> +++ b/include/linux/sunrpc/xprtsock.h
-> @@ -57,6 +57,7 @@ struct sock_xprt {
->  	struct work_struct	error_worker;
->  	struct work_struct	recv_worker;
->  	struct mutex		recv_mutex;
-> +	struct completion	handshake_done;
->  	struct sockaddr_storage	srcaddr;
->  	unsigned short		srcport;
->  	int			xprt_err;
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index a4fee00412d4..63fe97ede573 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -48,6 +48,7 @@
->  #include <net/udp.h>
->  #include <net/tcp.h>
->  #include <net/tls.h>
-> +#include <net/tlsh.h>
+ fs/nfsd/netns.h     |  3 +++
+ fs/nfsd/nfs4state.c | 25 +++++++++++++++++++------
+ fs/nfsd/nfsctl.c    | 10 ++++++++++
+ 3 files changed, 32 insertions(+), 6 deletions(-)
 
-Ah, maybe helpful to others to note this depends on the RFC "net/tls: =
-
-Add support for PF_TLSH":
-
-https://lore.kernel.org/linux-nfs/165030059051.5073.16723746870370826608.=
-stgit@oracle-102.nfsv4.dev/
-
-=2E. which (of course) exists in the topic branch in the cover-letter.
-
-Ben
+--
+Dai Ngo
 
