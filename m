@@ -2,51 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 07DAE571A16
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5114C571A18
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 14:35:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232416AbiGLMf2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S232884AbiGLMf2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 12 Jul 2022 08:35:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52350 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231893AbiGLMf1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:35:27 -0400
+        with ESMTP id S232827AbiGLMf2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 08:35:28 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5DD522E9F5
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:35:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 89D5F2B619
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 05:35:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657629325;
+        s=mimecast20190719; t=1657629326;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mahips1lu0ySaTvg9gVpfKQSOO+wb9pXCCegZia8ars=;
-        b=Kut4eyxRTjQp+T7Za8mcvc3DH8zlUt8yiw4etn2rFnCrwv6HHCbhZ074Ifnozwo2bxJXtJ
-        mnn8aKGeNwMS0dc/9W6Q7kfE3zOvvpR+EFC571PGslL2k0wt72C2BTtbVXe5mCTkUQyZye
-        lQIvjviwGXQnoNznzqa8X0obGvAF0Oo=
+        bh=q6Oxuau9mdcJyn5Csp6BWf4d97wuR60ZGEZCqIDkQm8=;
+        b=HnNE+c4LitqCctisi3TZ7Fokpm+oX7NxQ0OkhrwzIdMxZ65+uQXwH14uAn2pJzuF3P9BJW
+        HUhcsFi6Ukn2+DEF1YEs/QxPsNJVGrLHvwVuFIokCApJNpUKT2ETRjfoHzGZiL3S5+OFAJ
+        xQ0DF7+QUD5CAbFCTVBeSuf4cu9nU+4=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-605-0S4qp9sdOfi3PS15Qd8Fig-1; Tue, 12 Jul 2022 08:35:22 -0400
-X-MC-Unique: 0S4qp9sdOfi3PS15Qd8Fig-1
+ us-mta-591-LBTBh47VMRKHDvhTr-OusA-1; Tue, 12 Jul 2022 08:35:22 -0400
+X-MC-Unique: LBTBh47VMRKHDvhTr-OusA-1
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1039918E0043;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 16714811E84;
         Tue, 12 Jul 2022 12:35:22 +0000 (UTC)
 Received: from bcodding.csb (unknown [10.22.48.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDA06C28129;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CD984C2811A;
         Tue, 12 Jul 2022 12:35:21 +0000 (UTC)
 Received: by bcodding.csb (Postfix, from userid 24008)
-        id 59EB010C30E1; Tue, 12 Jul 2022 08:35:21 -0400 (EDT)
+        id 67DA110C30E2; Tue, 12 Jul 2022 08:35:21 -0400 (EDT)
 From:   Benjamin Coddington <bcodding@redhat.com>
 To:     David Howells <dhowells@redhat.com>, linux-kernel@vger.kernel.org
 Cc:     ebiederm@xmission.com, Ian Kent <raven@themaw.net>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH 1/2] KEYS: Add key_type keyagent
-Date:   Tue, 12 Jul 2022 08:35:20 -0400
-Message-Id: <65d37935ce8cc978430f93b831482e9455b9186d.1657624639.git.bcodding@redhat.com>
+Subject: [PATCH 2/2] KEYS: Add keyagent request_key
+Date:   Tue, 12 Jul 2022 08:35:21 -0400
+Message-Id: <061dd6fe81dc97a4375e52ec0da20a54cf582cb5.1657624639.git.bcodding@redhat.com>
 In-Reply-To: <cover.1657624639.git.bcodding@redhat.com>
 References: <cover.1657624639.git.bcodding@redhat.com>
 MIME-Version: 1.0
@@ -62,132 +62,174 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Define and register a new key_type called keyagent.  When instantiated,
-keyagent keys take a reference on the struct pid of the current task, and
-store a number between SIGRTMIN and SIGRTMAX.
-
-In a later patch, we'll use that number to send a realtime signal to the
-keyagent task in order to answer request-key callouts for other key types.
+During key construction, search the calling process' session keyring for a
+keyagent key with a description that matches the requested key_type.  If
+found, link the authkey into the keyagent's process_keyring, and signal the
+keyagent task with a realtime signal containing the serial number of the
+key that needs to be constructed.
 
 Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 ---
- security/keys/Kconfig    |  9 +++++
- security/keys/Makefile   |  1 +
- security/keys/keyagent.c | 73 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 83 insertions(+)
- create mode 100644 security/keys/keyagent.c
+ include/uapi/asm-generic/siginfo.h |  1 +
+ security/keys/internal.h           |  4 ++
+ security/keys/keyagent.c           | 85 ++++++++++++++++++++++++++++++
+ security/keys/request_key.c        |  9 ++++
+ 4 files changed, 99 insertions(+)
 
-diff --git a/security/keys/Kconfig b/security/keys/Kconfig
-index abb03a1b2a5c..f31a0f94ca88 100644
---- a/security/keys/Kconfig
-+++ b/security/keys/Kconfig
-@@ -112,6 +112,15 @@ config USER_DECRYPTED_DATA
+diff --git a/include/uapi/asm-generic/siginfo.h b/include/uapi/asm-generic/siginfo.h
+index ffbe4cec9f32..542e297f4466 100644
+--- a/include/uapi/asm-generic/siginfo.h
++++ b/include/uapi/asm-generic/siginfo.h
+@@ -185,6 +185,7 @@ typedef struct siginfo {
+ #define SI_SIGIO	-5		/* sent by queued SIGIO */
+ #define SI_TKILL	-6		/* sent by tkill system call */
+ #define SI_DETHREAD	-7		/* sent by execve() killing subsidiary threads */
++#define SI_KEYAGENT	-8		/* sent by request-key */
+ #define SI_ASYNCNL	-60		/* sent by glibc async name lookup completion */
  
- 	  If you are unsure as to whether this is required, answer N.
+ #define SI_FROMUSER(siptr)	((siptr)->si_code <= 0)
+diff --git a/security/keys/internal.h b/security/keys/internal.h
+index 9b9cf3b6fcbb..a6db6eecfff5 100644
+--- a/security/keys/internal.h
++++ b/security/keys/internal.h
+@@ -372,5 +372,9 @@ static inline void key_check(const struct key *key)
  
-+config KEYAGENT
-+	bool "KEYAGENT"
-+	depends on KEYS
-+	help
-+	  This option allows persistent userland processes to answer
-+	  request-key callouts.
+ #define key_check(key) do {} while(0)
+ 
++#endif
 +
-+	  If you are unsure as to whether this is required, answer N.
-+
- config KEY_DH_OPERATIONS
-        bool "Diffie-Hellman operations on retained keys"
-        depends on KEYS
-diff --git a/security/keys/Makefile b/security/keys/Makefile
-index 5f40807f05b3..c753f8f79c38 100644
---- a/security/keys/Makefile
-+++ b/security/keys/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_SYSCTL) += sysctl.o
- obj-$(CONFIG_PERSISTENT_KEYRINGS) += persistent.o
- obj-$(CONFIG_KEY_DH_OPERATIONS) += dh.o
- obj-$(CONFIG_ASYMMETRIC_KEY_TYPE) += keyctl_pkey.o
-+obj-$(CONFIG_KEYAGENT) += keyagent.o
- 
- #
- # Key types
++#ifdef CONFIG_KEYAGENT
++extern int keyagent_request_key(struct key *authkey, void *aux);
+ #endif
+ #endif /* _INTERNAL_H */
 diff --git a/security/keys/keyagent.c b/security/keys/keyagent.c
-new file mode 100644
-index 000000000000..87ebfe00c710
---- /dev/null
+index 87ebfe00c710..cf70146925f0 100644
+--- a/security/keys/keyagent.c
 +++ b/security/keys/keyagent.c
-@@ -0,0 +1,73 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/* Key Agent handling
-+ *
-+ * Copyright (C) 2022 Red Hat Inc. All Rights Reserved.
-+ * Written by Benjamin Coddington (bcodding@redhat.com)
-+ */
-+
-+#include <linux/sched.h>
-+#include <linux/slab.h>
-+#include <linux/key.h>
-+#include <linux/key-type.h>
-+
-+#include <keys/user-type.h>
-+
-+/*
-+ * Keyagent key payload.
-+ */
-+struct keyagent {
-+	struct pid *pid;
-+	int sig;
-+};
+@@ -9,8 +9,11 @@
+ #include <linux/slab.h>
+ #include <linux/key.h>
+ #include <linux/key-type.h>
++#include <linux/sched/signal.h>
++#include <linux/sched/task.h>
+ 
+ #include <keys/user-type.h>
++#include <keys/request_key_auth-type.h>
+ 
+ /*
+  * Keyagent key payload.
+@@ -20,6 +23,88 @@ struct keyagent {
+ 	int sig;
+ };
+ 
++struct key_type key_type_keyagent;
 +
 +/*
-+ * Instantiate takes a reference to the current task's struct pid
-+ * and the requested realtime signal number.
++ * Given a key representing a keyagent and a target_key to construct, link
++ * the the authkey into the keyagent's process_keyring and signal the
++ * keyagent to construct the target_key.
 + */
-+static int
-+keyagent_instantiate(struct key *key, struct key_preparsed_payload *prep)
++static int keyagent_signal(struct key *ka_key, struct key *target_key,
++							struct key *authkey)
 +{
-+	struct keyagent *ka;
-+	__be16 sig = *(__be16 *)prep->data;
++	struct keyagent *ka = ka_key->payload.data[0];
++	struct task_struct *task;
++	const struct cred *cred;
++	kernel_siginfo_t info = {
++		.si_code = SI_KEYAGENT,
++		.si_signo = ka->sig,
++		.si_int = target_key->serial,
++	};
++	int ret = -ENOKEY;
 +
-+	/* Only real-time signals numbers allowed */
-+	if (sig < SIGRTMIN || sig > SIGRTMAX)
-+		return -EINVAL;
++	task = get_pid_task(ka->pid, PIDTYPE_PID);
++	/* If the task is gone, should we revoke the keyagent key? */
++	if (!task) {
++		key_revoke(ka_key);
++		goto out;
++	}
 +
-+	ka = kzalloc(sizeof(struct keyagent), GFP_KERNEL);
-+	if (!ka)
-+		return -ENOMEM;
++	/* We're expecting valid keyagents to have a process keyring,
++	 * if not, should we warn? */
++	cred = get_cred(task->cred);
++	if (!cred->process_keyring)
++		goto out_nolink;
 +
-+	ka->pid = get_task_pid(current, PIDTYPE_PID);
-+	ka->sig = sig;
-+	key->payload.data[0] = ka;
++	/* Link the autkey to the keyagent's process_keyring */
++	ret = key_link(cred->process_keyring, authkey);
++	if (ret < 0)
++		goto out_nolink;
 +
-+	return 0;
-+}
++	ret = send_sig_info(ka->sig, &info, task);
 +
-+static void keyagent_destroy(struct key *key)
-+{
-+	struct keyagent *ka = key->payload.data[0];
-+
-+	put_pid(ka->pid);
-+	kfree(ka);
++out_nolink:
++	put_cred(cred);
++	put_task_struct(task);
++out:
++	return ret;
 +}
 +
 +/*
-+ * keyagent keys represent userland processes waiting on signals from the
-+ * kernel to respond to request-key callouts
++ * Search the calling process' keyrings for a keyagent that
++ * matches the requested key type.  If found, signal the keyagent
++ * to construct and link the key, else return -ENOKEY.
 + */
-+struct key_type key_type_keyagent = {
-+	.name			= "keyagent",
-+	.instantiate	= keyagent_instantiate,
-+	.def_datalen	= sizeof(struct keyagent),
-+	.destroy		= keyagent_destroy,
-+	.describe		= user_describe,
-+};
-+
-+static int __init keyagent_init(void)
++int keyagent_request_key(struct key *authkey, void *aux)
 +{
-+	return register_key_type(&key_type_keyagent);
++	struct key *ka_key, *target_key;
++	struct request_key_auth *rka;
++	key_ref_t ka_ref;
++	const struct cred *cred = current_cred();
++	int ret;
++
++	/* We must be careful not to touch authkey and aux if
++	 * returning -ENOKEY, since it will be reused.   */
++	rka = get_request_key_auth(authkey);
++	target_key = rka->target_key;
++
++	/* Does the calling process have a keyagent in its session keyring? */
++	ka_ref = keyring_search(
++					make_key_ref(cred->session_keyring, 1),
++					&key_type_keyagent,
++					target_key->type->name, false);
++
++	if (IS_ERR(ka_ref))
++		return -ENOKEY;
++
++	/* We found a keyagent, let's call out to it. */
++	ka_key = key_ref_to_ptr(ka_ref);
++	ret = keyagent_signal(ka_key, target_key, authkey);
++	key_put(key_ref_to_ptr(ka_ref));
++
++	return ret;
 +}
 +
-+late_initcall(keyagent_init);
+ /*
+  * Instantiate takes a reference to the current task's struct pid
+  * and the requested realtime signal number.
+diff --git a/security/keys/request_key.c b/security/keys/request_key.c
+index 2da4404276f0..4c1f5ef55856 100644
+--- a/security/keys/request_key.c
++++ b/security/keys/request_key.c
+@@ -240,9 +240,18 @@ static int construct_key(struct key *key, const void *callout_info,
+ 	actor = call_sbin_request_key;
+ 	if (key->type->request_key)
+ 		actor = key->type->request_key;
++#ifdef CONFIG_KEYAGENT
++	else {
++		ret = keyagent_request_key(authkey, aux);
+ 
++		/* ENOKEY: no keyagents match on calling process' keyrings */
++		if (ret != -ENOKEY)
++			goto done;
++	}
++#endif
+ 	ret = actor(authkey, aux);
+ 
++done:
+ 	/* check that the actor called complete_request_key() prior to
+ 	 * returning an error */
+ 	WARN_ON(ret < 0 &&
 -- 
 2.31.1
 
