@@ -2,184 +2,239 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B71A2572059
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 18:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CE4C57214E
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 18:47:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234036AbiGLQHs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 12:07:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49814 "EHLO
+        id S230294AbiGLQrM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 12:47:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234280AbiGLQH1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 12:07:27 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0752DC8E8F
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 09:07:26 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id os14so15175202ejb.4
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 09:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n6q+dQEsk+MV7mg6+WdS/UFCUdGNVp5Bmdm/jJfgmFY=;
-        b=Ln6VK5R0EJxis6s2Dx7+BO63N2vX9PSUSNtbtO4PX2U7ycAxAJdOct6qa2bxAXWTeu
-         CzzRCQ/hnTHQqo3krZhb3jK1rWWpVspec7cc1Dk+blVFVo2ORyeYTOPqKJU7yLpf6c9G
-         FA3Q5m2YWadNmArUYq0FehTxUmpa+XmSZZqUm05XmZmZCMBBrov3tbD7MsfFVGMacuq8
-         kHqJUXIYRfYKUK+lWfpG3udKqVK5BbtGJmUNels0CfKX9PwWwYIJX8BrFOMzpW03TTNv
-         0D9KyeSvhRPP1ohDrj4ofu47c9HR/aQjXp5NwtZSqBoEjhOLNYGilfya5hM+4GLVI1PA
-         doYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n6q+dQEsk+MV7mg6+WdS/UFCUdGNVp5Bmdm/jJfgmFY=;
-        b=kCDo6Tr0Nkz+2mZOH04WCJx8188EV8lZxPTh2Knct+gBmsKFLvIWuaDzXXaruPpjX4
-         ZC5/dolZ/NxLBJxQZ3SYR0PZz9HB9jnkOKN2DJ1g2YqRausvhKzEbGhNdazv/VMf8GHk
-         HAuaujsqvTAnVAeZHN2WZiZVAyw0WAZc4FngxeI2NHHmat9RnOqjeVbjDBS7EHcd7fn9
-         FbwBJNgL3p7VZc+PhjPi2QryUFFkAERaPxr3VC1KQYHXtNJrcAHqOvbSSzbHUFkDOiZK
-         nt+49ElcWII9X6bwQadKth68L14DuVJsZrmucXlWe/O7VQg1Zpqfso/DnARrkhYfiEkv
-         ThZQ==
-X-Gm-Message-State: AJIora/YJjH94Fu8UrS1yUt+tCYx2V6WdbjfwynCQeiepGO/KiM0mHZ5
-        QikHSSeU7fz0G1W+7PoFM5uezpe09c50ecwDY5bfupTBS5E=
-X-Google-Smtp-Source: AGRyM1tQOvtsYiLn/Pzpz7+zgSUIEFNMjVPKuvhSlrHtIhBd17TfT67bshZcNSzLJ/olq3Nw36mgHeBkivDSUaMkQ24=
-X-Received: by 2002:a17:907:7f8c:b0:726:2c53:2f82 with SMTP id
- qk12-20020a1709077f8c00b007262c532f82mr23988004ejc.140.1657642044382; Tue, 12
- Jul 2022 09:07:24 -0700 (PDT)
+        with ESMTP id S229614AbiGLQrL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 12:47:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0DA921177
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 09:47:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657644430;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=G3Svshh0CSIKBecEYyWOPWehxtR8pBn+wN2kw/qyhZM=;
+        b=d1vTbBHjF1TBWrfhuc3AiGykP7kTQagpZ7nhUZVsnZEAtz0qNGkm841kdcfdgHb0/Ae+xI
+        29vXmta9ENf+EiItY+IQX6/z9ug/GPtaDQUNaCfOHFZgbSgJeukJCkOcCjDMTuuFRzyUcx
+        9EWwkIUZxyZ66xMsJCM8w+I35TPZpLg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-661-6coTC7AOMUyVvxJ9Rq57pA-1; Tue, 12 Jul 2022 12:47:08 -0400
+X-MC-Unique: 6coTC7AOMUyVvxJ9Rq57pA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DC23C1C04B4C;
+        Tue, 12 Jul 2022 16:47:07 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 99E0E40CF8E4;
+        Tue, 12 Jul 2022 16:47:06 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     "David Howells" <dhowells@redhat.com>,
+        linux-kernel@vger.kernel.org, "Ian Kent" <raven@themaw.net>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Linux Containers" <containers@lists.linux.dev>
+Subject: Re: [RFC PATCH 0/2] Keyagents: another call_usermodehelper approach
+ for namespaces
+Date:   Tue, 12 Jul 2022 12:47:05 -0400
+Message-ID: <148B818D-0F61-42F6-A0EA-20D060E42560@redhat.com>
+In-Reply-To: <875yk25scg.fsf@email.froward.int.ebiederm.org>
+References: <cover.1657624639.git.bcodding@redhat.com>
+ <875yk25scg.fsf@email.froward.int.ebiederm.org>
 MIME-Version: 1.0
-References: <20220620152407.63127-1-olga.kornievskaia@gmail.com>
- <20220620152407.63127-3-olga.kornievskaia@gmail.com> <ad8fdf73ef81e405b7fb0e07bff6ac41d562658e.camel@hammerspace.com>
-In-Reply-To: <ad8fdf73ef81e405b7fb0e07bff6ac41d562658e.camel@hammerspace.com>
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-Date:   Tue, 12 Jul 2022 12:07:13 -0400
-Message-ID: <CAN-5tyH0=SoQ-fnBY1MrjipEvky2MVxoETL2-a1PLMQNi+CQFA@mail.gmail.com>
-Subject: Re: [PATCH v1 02/12] SUNRPC add function to offline remove trunkable transports
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Jul 12, 2022 at 11:24 AM Trond Myklebust
-<trondmy@hammerspace.com> wrote:
->
-> On Mon, 2022-06-20 at 11:23 -0400, Olga Kornievskaia wrote:
-> > From: Olga Kornievskaia <kolga@netapp.com>
-> >
-> > Iterate thru available transports in the xprt_switch for all
-> > trunkable transports offline and possibly remote them as well.
-> >
-> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-> > ---
-> >  include/linux/sunrpc/clnt.h |  1 +
-> >  net/sunrpc/clnt.c           | 42
-> > +++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 43 insertions(+)
-> >
-> > diff --git a/include/linux/sunrpc/clnt.h
-> > b/include/linux/sunrpc/clnt.h
-> > index 90501404fa49..e74a0740603b 100644
-> > --- a/include/linux/sunrpc/clnt.h
-> > +++ b/include/linux/sunrpc/clnt.h
-> > @@ -234,6 +234,7 @@
-> > int         rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *,
-> >                         struct rpc_xprt_switch *,
-> >                         struct rpc_xprt *,
-> >                         void *);
-> > +void           rpc_clnt_manage_trunked_xprts(struct rpc_clnt *, void
-> > *);
-> >
-> >  const char *rpc_proc_name(const struct rpc_task *task);
-> >
-> > diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-> > index e2c6eca0271b..544b55a3aa20 100644
-> > --- a/net/sunrpc/clnt.c
-> > +++ b/net/sunrpc/clnt.c
-> > @@ -2999,6 +2999,48 @@ int rpc_clnt_add_xprt(struct rpc_clnt *clnt,
-> >  }
-> >  EXPORT_SYMBOL_GPL(rpc_clnt_add_xprt);
-> >
-> > +static int rpc_xprt_offline_destroy(struct rpc_clnt *clnt,
-> > +                                   struct rpc_xprt *xprt,
-> > +                                   void *data)
-> > +{
-> > +       struct rpc_xprt *main_xprt;
-> > +       struct rpc_xprt_switch *xps;
-> > +       int err = 0;
-> > +       int *offline_destroy = (int *)data;
-> > +
-> > +       xprt_get(xprt);
-> > +
-> > +       rcu_read_lock();
-> > +       main_xprt = xprt_get(rcu_dereference(clnt->cl_xprt));
-> > +       xps = xprt_switch_get(rcu_dereference(clnt-
-> > >cl_xpi.xpi_xpswitch));
-> > +       err = rpc_cmp_addr_port((struct sockaddr *)&xprt->addr,
-> > +                               (struct sockaddr *)&main_xprt->addr);
-> > +       rcu_read_unlock();
-> > +       xprt_put(main_xprt);
-> > +       if (err)
-> > +               goto out;
-> > +
-> > +       if (wait_on_bit_lock(&xprt->state, XPRT_LOCKED,
-> > TASK_KILLABLE)) {
-> > +               err = -EINTR;
-> > +               goto out;
-> > +       }
-> > +       xprt_set_offline_locked(xprt, xps);
-> > +       if (*offline_destroy)
-> > +               xprt_delete_locked(xprt, xps);
-> > +
-> > +       xprt_release_write(xprt, NULL);
-> > +out:
-> > +       xprt_put(xprt);
-> > +       xprt_switch_put(xps);
-> > +       return err;
-> > +}
-> > +
-> > +void rpc_clnt_manage_trunked_xprts(struct rpc_clnt *clnt, void
-> > *data)
-> > +{
-> > +       rpc_clnt_iterate_for_each_xprt(clnt,
-> > rpc_xprt_offline_destroy, data);
-> > +}
-> > +EXPORT_SYMBOL_GPL(rpc_clnt_manage_trunked_xprts);
->
-> Why is this function taking a 'void *' argument when
-> rpc_xprt_offline_destroy() won't accept anything other than an 'int *'.
-> It would be much cleaner to have 2 separate functions, neither or which
-> need more than one argument. Then you can hide the pointer to the 'int'
-> in each function and avoid exposing it as part of the API.
+On 12 Jul 2022, at 10:16, Eric W. Biederman wrote:
 
-I could remove the void * altogether. As the following code only
-offlines the transports. I wrote this function to be generic to be
-able to do either if the need arises. It wasn't clear to me what you
-meant by "have 2 separate functions". If you mean one for offline and
-another for destroy, then perhaps that removes that need too. However,
-if we were to have a generic one then since the majority of the code
-is the same I don't see how having 2 functions is better.
+> Adding the containers list to the discussion so more interested people
+> have a chance of seeing this.
+>
+> Benjamin Coddington <bcodding@redhat.com> writes:
+>
+>> A persistent unsolved problem exists: how can the kernel find and/or =
 
-> In addition, a function like this that is intended for use by
-> different layer needs a proper kerneldoc comment so that we know what
-> the API is for, and what it does.
+>> create
+>> the appropriate "container" within which to execute a userspace =
 
-Will add a comment above the function to explain what it does.
+>> program to
+>> construct keys or satisfy users of call_usermodehelper()?
+>>
+>> I believe the latest serious attempt to solve this problem was =
 
+>> David's "Make
+>> containers kernel objects":
+>> https://lore.kernel.org/lkml/149547014649.10599.12025037906646164347.s=
+tgit@warthog.procyon.org.uk/
+>>
+>> Over in NFS' space, we've most recently pondered this issue while =
+
+>> looking at
+>> ways to pass a kernel socket to userspace in order to handle TLS =
+
+>> events:
+>> https://lore.kernel.org/linux-nfs/E2BF9CFF-9361-400B-BDEE-CF5E0AFDCA63=
+@redhat.com/
+>>
+>> The problem is that containers are not kernel objects, rather a =
+
+>> collection
+>> of namespaces, cgroups, etc.  Attempts at making the kernel aware of
+>> containers have been mired in discussion and problems.  It has been
+>> suggested that the best representation of a "container" from the =
+
+>> kernel's
+>> perspective is a process.
+>>
+>> Keyagents are processes represented by a key.  If a keyagent's key is =
+
+>> linked
+>> to a session_keyring, it can be sent a realtime signal when a calling
+>> process requests a matching key_type.  That signal will dispatch the =
+
+>> process
+>> to construct the desired key within the keyagent process context.  =
+
+>> Keyagents
+>> are similar to ssh-agents.  To use a keyagent, one must execute a =
+
+>> keyagent
+>> process in the desired context, and then link the keyagent's key onto =
+
+>> other
+>> process' session_keyrings.
+>>
+>> This method of linking keyagent keys to session_keyrings can be used =
+
+>> to
+>> construct the various mappings of callers to keyagents that =
+
+>> containers may
+>> need.  A single keyagent process can answer request-key upcalls =
+
+>> across
+>> container boundaries, or upcalls can be restricted to specific =
+
+>> containers.
+>>
+>> I'm aware that building on realtime signals may not be a popular =
+
+>> choice, but
+>> using realtime signals makes this work simple and ensures delivery.  =
+
+>> Realtime
+>> signals are able to convey everything needed to construct keys in =
+
+>> userspace:
+>> the under-construction key's serial number.
+>>
+>> This work is not complete; it has security implications, it needs
+>> documentation, it has not been reviewed by anyone.  Thanks for =
+
+>> reading this
+>> RFC.  I wish to collect criticism and validate this approach.
 >
-> > +
-> >  struct connect_timeout_data {
-> >         unsigned long connect_timeout;
-> >         unsigned long reconnect_timeout;
+> At a high level I do agree that we need to send a message to a =
+
+> userspace
+> process and that message should contain enough information to start =
+
+> the
+> user mode helper.
 >
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+> Then a daemon or possibly the container init can receive the message
+> and dispatch the user mode helper.
 >
+> Fundamentally that design solves all of the container issues, and I
+> think solves a few of the user mode helper issues as well.
 >
+> The challenge with this design is that it requires someone standing up =
+
+> a
+> daemon to receive the messages and call a user mode helper to retain
+> compatibility with current systems.
+
+Yes..
+
+> I would prefer to see a file descriptor rather than a signal used to
+> deliver the message.  Signals suck for many many reasons and a file
+> descriptor based notification potentially can be much simpler.
+
+In the example keyagent on userspace side, signal handling is done with
+signalfd(2), which greatly simplifies things.
+
+> One of those many reasons is that by not following the common pattern
+> for filling in kernel_siginfo you have left uninitialized padding in
+> your structure that will be copied to userspace thus creating a kernel
+> information leak.  Similarly your code doesn't fill in about half the
+> fields that are present in the siginfo union for the _rt case.
+
+Yes, I just used the stack and only filled in the bare minimum.
+
+> I think a file descriptor based design could additionally address the
+> back and forth your design needs with keys to figure out what event =
+
+> has
+> happened and what user mode helper to invoke.
+
+The keys have already built out a fairly rich interface for accepting
+authorization keys, and instantiating partially-constructed keys.  I =
+
+think
+the only communication needed (currently) is to dispatch and pass the =
+
+key
+serial value.
+
+If we used file descriptors instead of rt signals, there'd be some =
+
+protocol
+engineering to do.
+
+> Ideally I would also like to see a design less tied to keys.  So that =
+
+> we
+> could use this for the other user mode helper cases as well.   That =
+
+> said
+> solving request_key appears to be the truly important part, there =
+
+> aren't
+> many other user mode helpers.  Still it would be nice if in theory the
+> design could be used to dispatch the coredump helper as well.
+
+What if there was a key_type "usermode_helper"?  Requesting a key of =
+
+that
+type executes the binary specified in the callout info.  A keyagent =
+
+could
+satisfy the creation of this key, which would allow the usermode_helper
+process to execute in the context of a container.  If no keyagent, fall =
+
+back
+to the legacy call_usermode_helper.
+
+Thanks for the look,
+Ben
+
