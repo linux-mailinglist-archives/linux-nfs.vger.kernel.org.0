@@ -2,126 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC12C571FC6
-	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 17:43:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D372572012
+	for <lists+linux-nfs@lfdr.de>; Tue, 12 Jul 2022 17:58:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231857AbiGLPnn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 12 Jul 2022 11:43:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
+        id S229749AbiGLP6M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 12 Jul 2022 11:58:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbiGLPnn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 11:43:43 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2127.outbound.protection.outlook.com [40.107.93.127])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8726E1146
-        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 08:43:41 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dyu+ZTcA34YoTa7Ot2HB7ApLd8pzCAe5QhlUGa0/4Xg3GWAy1SG4WrDJTNjlB4gXOFVgIdM7fbMtm22vmLl2clGFHo0vAs4VkCY/ETYGtvikEsNrHumkCUcBhmtWfbrXHdtmdfFLiqO04JQRsYiWvvAKQ05pwazsdLEhBBZd7LC40t84LrGXg7mhqQkrvH561ginprXG1ZCx3uqa5ne3xMQ6ZNZp/VbQFioCdACfdWpVWsvnRT8AYnBc+MlqNj4sMZrhGFQZygRfY5+05zHYIi+zn5155r0NUN+w4jp/zTHhgk92OkbJOAE9cM14QFz5uA3W5kG9to1UspYiAkrqEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H4wbG80GeOvmPaLRaBEgFzkGPBQrM1SCitU5zRWciAM=;
- b=RH4tTs8Xw8qoW+5sxCAtRIG+1pcK3y/LFog1NmOcmngkqAhRltFeSA26CGnUtSGqpEUFxa3IywHrxxgHp/gMv/mTVH6CRX259JR2N6IFoKhGw4fzdED+a08plTie3SMWui+tS9odtKEBZDXIt7ZLRa4QRAoEJfeiY6pxxUoB7FdM3+SQahC33vQmlh6m/tgoAF7ijbOYWTEyugP9fUkxF8LMBUMNtPNKl43Z6hLS4yAhx3zSTwryRzxuogPeJuWAbh8eKtixGO3BdsJqHp8tizxGCtFwXvtZSOBhqvHqQwmBbu6GBjoJvDTSYNQyOAsROciMb81jmKgJIoPi/BMtJg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H4wbG80GeOvmPaLRaBEgFzkGPBQrM1SCitU5zRWciAM=;
- b=YNfP65bHES31O8y7W2pdCRwRSZglLlEUoeFklvW4bpvV/ttmGju2vyLHF8d7gCF4H9lPtsgIN+H9Zf41smsjPXnwo/h54Jj8hjqA/N5IyTkY9YGtLFjkq1fEHFibTdc0SDq5b5FHPo0hTcYUB00WB7DS8cz2urVabQp66Ix+WZE=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by MN2PR13MB3773.namprd13.prod.outlook.com (2603:10b6:208:1e6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.11; Tue, 12 Jul
- 2022 15:43:39 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::88ef:2709:1cd2:50cf]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::88ef:2709:1cd2:50cf%7]) with mapi id 15.20.5438.011; Tue, 12 Jul 2022
- 15:43:38 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
-        "olga.kornievskaia@gmail.com" <olga.kornievskaia@gmail.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v1 05/12] SUNRPC parameterize
- rpc_clnt_iterate_for_each_xprt with iterator init function
-Thread-Topic: [PATCH v1 05/12] SUNRPC parameterize
- rpc_clnt_iterate_for_each_xprt with iterator init function
-Thread-Index: AQHYhLndRNBCrRwNw0+DiV2O13teC617AtmA
-Date:   Tue, 12 Jul 2022 15:43:38 +0000
-Message-ID: <d6cd802778f9bd49738dd4ca59da4e24cbfef93c.camel@hammerspace.com>
-References: <20220620152407.63127-1-olga.kornievskaia@gmail.com>
-         <20220620152407.63127-6-olga.kornievskaia@gmail.com>
-In-Reply-To: <20220620152407.63127-6-olga.kornievskaia@gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57026b79-773a-4bb8-e2c1-08da641d4a3c
-x-ms-traffictypediagnostic: MN2PR13MB3773:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 59S46lVM8TuqtL695bU7TgyVbTKtzA4N5v4RwDjf7JgtkrjZPSR0enMTXY93kzMpKblo1YOAcmXG04OHoNi+rEye8Yy+DOR3QpbgQPtenOb+o+lB624sDF6Y8fakhxt96K2eOMqRfNVzOgKEUwCLowswva200ZeVlnIDKxhiCTjf2bdgyIVFri3sJ2jptBTkkl+LJbkcjQy2y5FqACpBzNHn+tSvunt6lVdOkxzKOiNvkhDUiCMMT9wpUDoyu7370HaUrtyhNooXlBjDGnEPHXYhFaJtvVAQRKNAddaIBMCu4awu4zmo063K07qL9TizQm6OfFNPpI/0tkRpxp7moSA33BU0ZmPZPP4juGJCVR0gHbg8Dq/luT+Lujic2FLBrE0GmI3B+LC2wPNA4oimF/GZBe4Y1UlHL7DI372IzUQ8swpCoopITXhPkCoPOJbx/YBFrMdHdUfOzZudN5WXPXcotW786YWiMfAkUlLgHKCb7krGlFCFhdLN7XjyYVxUihLKbn193Fz9D5kAGaXaf0z56iTT/67ez1dwZI+u+ujlHmd402V/QmYZUdzBD401CYgRnNk8yUMssFFmD8UP8ltu5e7DcceeXVtZ8gmqCJi4+Q9O3ppHy0aLGNjymV59fUkp6Gz5LiAL8wCZRsFYP42NyuTgtJL3M8jsJJz5MlHw7XOOEwrBv36w3RVYT0HLrMh+di6toeqZZU15AmEjR321y949Ios9JVFxyz9OSJ+smNRj3ScgF5ywg7yB/Bw5j0Pz0dc4G/1c72gYCc4xNpqzZx6NjkXA3Zw15wmpsZbun4XXbJRSGJh3CzwRbtHLouRekWvib4F9xHOg5zoO5byVfaPmkHY4v1lIDXSPpUvIFdNRPqreAkPBZId80fER
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(39840400004)(366004)(136003)(346002)(376002)(122000001)(110136005)(6486002)(2616005)(36756003)(38100700002)(38070700005)(316002)(478600001)(186003)(5660300002)(2906002)(83380400001)(86362001)(8936002)(71200400001)(4326008)(76116006)(41300700001)(6512007)(64756008)(66476007)(66946007)(8676002)(6506007)(66446008)(66556008)(26005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?dXVKSWlMWGN5UW5ycUpLYnFVaW9lbzRPaTJWMEY0S0xZQWQzOFhvV2JOekM0?=
- =?utf-8?B?L1BtVVplU0RRSERxQmNvRkk3V3RzaTMyRnhidlhyNVlja3o4NzVoemNrM1My?=
- =?utf-8?B?aXBzSmhYZ3d6bDhEV2dWalVRcjZpeHFWNHY0dklrei9JUm8zVGtURVErRHo5?=
- =?utf-8?B?QU1CQVZRbjZXWTVUdVFOZDBhUTJJZ0c4dUZlc3V6c0pYY2ZEV2pCT2MxYWl0?=
- =?utf-8?B?RjllSHZKVHphdUFNNEpqOGxXOFRzeDNITkpEazVyMERvUlFVVHBYNnlXUGVN?=
- =?utf-8?B?a3c2L0x5SkcxTllhZVFRYXBSOXhkZVZoU2ErVkUvUStGK1FMOUFBeksvNlhM?=
- =?utf-8?B?SlNRbGg3S0ozS2lUeS8yS3F2VkF3bkwwalVmSXg1WmxTc2dsbTZQZVQvdXhQ?=
- =?utf-8?B?R1p5WDNjb0V1V2dmY3d5MGNqZDhPU2tDZnVvNFZvTzF3aG1vMWw2V2pkMHJo?=
- =?utf-8?B?VFFMRXE0eTY1VFZ6Y2FwQWxncjBlYjMwN3EzVUtrcnhRMHBGdVY0TTFlTkV0?=
- =?utf-8?B?aGljWDRuK29tc3d4c1N0ZldKa3JSalVrQXVKb1prSFZaanNZMlcraHd0MXR5?=
- =?utf-8?B?YUNVTkIwNWJjcVZ4d1Y0bVRQOVlXWEZnYTFrRnI1UGkxM2d2SDB1OEp3UERh?=
- =?utf-8?B?NDJEcTJoS2N6Q1NWYXdRdU9hWjZ4c1dyUWU3Q3FmeWNTck5US2tDU1BEeUpS?=
- =?utf-8?B?NUpMcWNRcFcrdGRGVWNzNy8xU0QzMWJkQlVBSjJzbnYyYktrams0QWpzMDZH?=
- =?utf-8?B?Yld6TXpzU2Zqamdka0RSVGY3R2JLQkxqNmN2dkZRQSsxemJKRGh5RVQ4bEdP?=
- =?utf-8?B?Q1JVZjF4VFhTaTdZcGZhaHZlOUlRVGJHL3NEbnZGdGYwR2JZOVN0Wmo0YWcv?=
- =?utf-8?B?T3JIdDFDK3NuYWtXejBGN3dNRzEwd3A3VEhoWG1JcS9BN3J1azR6ZnE4SmNv?=
- =?utf-8?B?RWkvUDN5RnNURE5WajQ5a3hjVUFWeU9Qak5pMDRXN2lQb3I2Qk8vRUhZQ01o?=
- =?utf-8?B?MGZZNEdHcEJpYm51ZCtUYTduUUV6UnN6RTVoV25IdmFXMUZvaWR0akZaNXZQ?=
- =?utf-8?B?WlJERUMwWDRoeXZCUks4OVVnMFFrUCtWOUdxNWVzcEFHUUgvVit6WFNLd1Zh?=
- =?utf-8?B?anJHc2g1M01SbStqbmRpcW9BdjJtWlA1dlJyVGIvaHd4VTNvazh1Zm5RMFQy?=
- =?utf-8?B?RG1MQWJEL2Q3S0FmL0U0aUk0YXpsQmNvYVpwditRT1RvTUtSdjBhN2lJbXpx?=
- =?utf-8?B?V2pLWGYxd1VpanZJVVhxdkVxUTZuR2JIZS9Na1ZuYms5TzJrdCtQcDBTMFhx?=
- =?utf-8?B?T1RUYit1VXliSDEyQWJBb2w1RTliYkFiL0ZLMS9wRGo4RXc5czdqd0NpVGdt?=
- =?utf-8?B?Qk1abGFDa05OczRZSXhGUEsrQUQ0a0psOGFhVGpML0JadjRyZDNSR0NoZTN6?=
- =?utf-8?B?WjFHYjJYTnNsK2RhZFFWS2hTUlRlaWpJQzc5NUMxWHhXVEM3aHMzb2didmlz?=
- =?utf-8?B?V3VocUZ2aE5RZDVwRzJTMzhhbmd3LzJjbWRUZXJ6em4rbzVqYzRCSVpIVlAr?=
- =?utf-8?B?SkQ0ZE5yMUd0VnViRVRkcHhXSDBTWFpKaDdYZE1tOFNhRHBXMEUxR05NN3VG?=
- =?utf-8?B?U2x6aUh2cmgrb29sdHRscUtYL2VtamNQOVN6cTBOZk5jMnBhOXBVWGZPbmtw?=
- =?utf-8?B?Zlo3eU9IVno2MkRHM2J0Nkc0bFdjL2R0blg2Znp4cEZlUEFnVURHeTczSGhE?=
- =?utf-8?B?U3BGZEdHdWh3VG5oaWtQcVBLNTJvckdzdzI3amdZc0dBbzhUOEt4Q3lMaTFO?=
- =?utf-8?B?dENtOEtOcDI4WnZiUEgzNUp0cGlqOGw2L01vYkxXaU4veEkwdmdKSDdrWUtW?=
- =?utf-8?B?aUtoYU5FVy9ycEFXSE9FV044ckk3cUJxaDlGb2tNc243eEUrTEY4UDlLRjNq?=
- =?utf-8?B?VUJydWo4YmNKMnd3NnB4a1lJcjcwWUdpUmVMQ0VaVkhMNldBc2JnRjBRWHZQ?=
- =?utf-8?B?MTgxT3NvT1MvS0VrZEhKK3hQZTdESDZYaHJRMTRhMDhpVnl6emRPekx6dWI1?=
- =?utf-8?B?Q1g5TVFyU0p0ejNidlhDYjFaV0tNR2p1YytHc0VQYURnell1RDB1ZU5heE1n?=
- =?utf-8?B?eUNhSjhzUm4rb2FXOStURmlFdXZxZ1llMXd5NFBxdjB5TE1zV3RhcmhUM1h1?=
- =?utf-8?B?dkE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0BFB79B579C2164F84660984C537FA04@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S229862AbiGLP6J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 12 Jul 2022 11:58:09 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1984C3AE7
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 08:58:08 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id x91so10694185ede.1
+        for <linux-nfs@vger.kernel.org>; Tue, 12 Jul 2022 08:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YkiA3aMrkX8JXodLt+NDKrOF5POPA5zEcUGu18mWm+0=;
+        b=a92/QgN0KmAyPf6BZUa8Zz9y3/rdDqkJgM3yPugTuB/VO9GyCnxE1I/Snn6Utig6ZP
+         +x+dce8eQpKfVz1wOySsDx82K+fHPRc+RXiqbqscrex9x2Gh7bt0o1iu4JmlKwM9lY5Y
+         VNigXKWVlhERUYVxRplpwB7T4Mfd7UPSQrlYIdK3zSQgZiuICZbGPOSXAPjZnJPCSpZ2
+         7wHTsCMdsMMaC2M1EUKTBBcxiEq9ubzpWTdPsZIro0cnEqkRXv2Zp5MBxr9OKH3j3PmE
+         5Loa41nn4GzJOJkTU9QI25yXm43SscmN25bcS3mOSSGCWQV6DLWyEuZryhSx57XmMDZd
+         kG/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YkiA3aMrkX8JXodLt+NDKrOF5POPA5zEcUGu18mWm+0=;
+        b=J/kIJdF5VPLuXoy96vqLN+Q7yGIdiis4CTlFlz1MAyIZjju+4VkheC5JWaDBbv682a
+         VMoU/XUvAcvzu8WmrR3mbtIfnF424m9Qv31p3/wp1epLYb0bmyRp4bPexXzRbYCD/I2f
+         8aP4AINkvgG/TfEMOaPkCOQJWmgvWjSaMTy+MIBM066V42RKt4/bQkyEUiZbTdVvtUmU
+         tFeRMQuAq5F+y3hH/E+EhxPdqIaolQ3WP1B77dtPfwU9lyRYS2xHmRTCfnkj7+y5UhcH
+         cEjnLaHls8lPKlwBDhOfIvjtLWWX0pkx02hENOKQ0C60/7ugCVMTR1Vd5wKlUYQ/3NfY
+         esKw==
+X-Gm-Message-State: AJIora8ZO41/igadLCu8O80BLjlfHVyT+577D27gbpuF/B/Yzo86JhRE
+        +bVBh2QfeUKha48UMUOHYYq3fYCOPRR9w4xbo1U=
+X-Google-Smtp-Source: AGRyM1uHuyBJCU16ivQGXNY3ycaHb1rgDbP3ji4cmKpSISZgfwz4OV0RM1zjI4ZKySPo3t3p3Z0tcVfki8t0wAgNsAk=
+X-Received: by 2002:a05:6402:13:b0:439:ffe8:bec9 with SMTP id
+ d19-20020a056402001300b00439ffe8bec9mr33408312edu.297.1657641487250; Tue, 12
+ Jul 2022 08:58:07 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57026b79-773a-4bb8-e2c1-08da641d4a3c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jul 2022 15:43:38.8211
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qIkpONi2h6p9L7l7voDkOZ82p9gujT8lLyg8zbHGQq4rUV3M5WWebaaH6qAML2IjDLHp/AwjO95k0C/MOpwzsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB3773
+References: <20220620152407.63127-1-olga.kornievskaia@gmail.com>
+ <20220620152407.63127-2-olga.kornievskaia@gmail.com> <a12b83a56c6a46cd31b75b471967f68080ce0a5a.camel@hammerspace.com>
+In-Reply-To: <a12b83a56c6a46cd31b75b471967f68080ce0a5a.camel@hammerspace.com>
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+Date:   Tue, 12 Jul 2022 11:57:56 -0400
+Message-ID: <CAN-5tyEYzeiNru6hZk6P1GFNCdhDCF3u--Sv5ChmyP56f8p4ag@mail.gmail.com>
+Subject: Re: [PATCH v1 01/12] SUNRPC expose functions for offline remote xprt functionality
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -129,129 +66,145 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gTW9uLCAyMDIyLTA2LTIwIGF0IDExOjI0IC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToKPiBGcm9tOiBPbGdhIEtvcm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4KPiAKPiBBbGxv
-dyBmb3IgcnBjX2NsbnRfaXRlcmF0ZV9mb3JfZWFjaF94cHJ0KCkgdG8gdGFrZSBpbiBhbiBpdGVy
-YXRvcgo+IGluaXRpYWxpemF0aW9uIGZ1bmN0aW9uIGlmIG5vIGZ1bmN0aW9uIHBhc3NlZCBpbiBh
-IGRlZmF1bHQgaW5pdGlhdG9yCj4gaXMgdXNlZC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBPbGdhIEtv
-cm5pZXZza2FpYSA8a29sZ2FAbmV0YXBwLmNvbT4KPiAtLS0KPiDCoGZzL25mcy9uZnM0cHJvYy5j
-wqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDIgKy0KPiDCoGluY2x1ZGUvbGludXgvc3VucnBjL2Ns
-bnQuaCB8wqAgMSArCj4gwqBuZXQvc3VucnBjL2NsbnQuY8KgwqDCoMKgwqDCoMKgwqDCoMKgIHwg
-MTcgKysrKysrKysrKysrLS0tLS0KPiDCoG5ldC9zdW5ycGMvZGVidWdmcy5jwqDCoMKgwqDCoMKg
-wqAgfMKgIDIgKy0KPiDCoG5ldC9zdW5ycGMvc3RhdHMuY8KgwqDCoMKgwqDCoMKgwqDCoCB8wqAg
-MiArLQo+IMKgNSBmaWxlcyBjaGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygt
-KQo+IAo+IGRpZmYgLS1naXQgYS9mcy9uZnMvbmZzNHByb2MuYyBiL2ZzL25mcy9uZnM0cHJvYy5j
-Cj4gaW5kZXggY2Y4OThiZWEzYmZkLi41ZTRjMzI5MjQzNDcgMTAwNjQ0Cj4gLS0tIGEvZnMvbmZz
-L25mczRwcm9jLmMKPiArKysgYi9mcy9uZnMvbmZzNHByb2MuYwo+IEBAIC04NTMyLDcgKzg1MzIs
-NyBAQCBpbnQgbmZzNF9wcm9jX2JpbmRfY29ubl90b19zZXNzaW9uKHN0cnVjdAo+IG5mc19jbGll
-bnQgKmNscCwgY29uc3Qgc3RydWN0IGNyZWQgKmNyCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAuY2xwID0gY2xwLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgLmNy
-ZWQgPSBjcmVkLAo+IMKgwqDCoMKgwqDCoMKgwqB9Owo+IC3CoMKgwqDCoMKgwqDCoHJldHVybiBy
-cGNfY2xudF9pdGVyYXRlX2Zvcl9lYWNoX3hwcnQoY2xwLT5jbF9ycGNjbGllbnQsCj4gK8KgwqDC
-oMKgwqDCoMKgcmV0dXJuIHJwY19jbG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydChjbHAtPmNsX3Jw
-Y2NsaWVudCwKPiBOVUxMLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoG5mczRfcHJvY19iaW5kX2Nvbm5fdG9fc2Vzc2lvbl9jYWxsYmFjaywKPiAmZGF0
-YSk7Cj4gwqB9Cj4gwqAKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zdW5ycGMvY2xudC5o
-Cj4gYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy9jbG50LmgKPiBpbmRleCBlNzRhMDc0MDYwM2IuLjIw
-YWVkMTRmZTIyMiAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3N1bnJwYy9jbG50LmgKPiAr
-KysgYi9pbmNsdWRlL2xpbnV4L3N1bnJwYy9jbG50LmgKPiBAQCAtMjEzLDYgKzIxMyw3IEBAIGNv
-bnN0IGNoYXLCoMKgKnJwY19wZWVyYWRkcjJzdHIoc3RydWN0IHJwY19jbG50ICosCj4gZW51bSBy
-cGNfZGlzcGxheV9mb3JtYXRfdCk7Cj4gwqBpbnTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNf
-bG9jYWxhZGRyKHN0cnVjdCBycGNfY2xudCAqLCBzdHJ1Y3Qgc29ja2FkZHIgKiwKPiBzaXplX3Qp
-Owo+IMKgCj4gwqBpbnTCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNfY2xudF9pdGVyYXRlX2Zv
-cl9lYWNoX3hwcnQoc3RydWN0IHJwY19jbG50ICpjbG50LAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ICgqc2V0dXApKHN0cnVjdCBycGNfY2xudCAq
-LCBzdHJ1Y3QKPiBycGNfeHBydF9pdGVyICopLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludCAoKmZuKShzdHJ1Y3QgcnBjX2NsbnQgKiwgc3RydWN0
-IHJwY194cHJ0Cj4gKiwgdm9pZCAqKSwKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqB2b2lkICpkYXRhKTsKPiDCoAo+IGRpZmYgLS1naXQgYS9uZXQvc3Vu
-cnBjL2NsbnQuYyBiL25ldC9zdW5ycGMvY2xudC5jCj4gaW5kZXggNDEwYmQ2YzM1MmFkLi5iMjYy
-Njc2MDZkZTAgMTAwNjQ0Cj4gLS0tIGEvbmV0L3N1bnJwYy9jbG50LmMKPiArKysgYi9uZXQvc3Vu
-cnBjL2NsbnQuYwo+IEBAIC04MTcsNiArODE3LDggQEAgaW50IHJwY19jbG50X3hwcnRfaXRlcl9v
-ZmZsaW5lX2luaXQoc3RydWN0Cj4gcnBjX2NsbnQgKmNsbnQsCj4gwqAvKioKPiDCoCAqIHJwY19j
-bG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydCAtIEFwcGx5IGEgZnVuY3Rpb24gdG8gYWxsCj4gdHJh
-bnNwb3J0cwo+IMKgICogQGNsbnQ6IHBvaW50ZXIgdG8gY2xpZW50Cj4gKyAqIEBzZXR1cDogYW4g
-b3B0aW9uYWwgaXRlcmF0b3IgaW5pdCBmdW5jdGlvbiB0byB1c2UsIGlmIG5vbmUKPiBzdXBwbGll
-ZAo+ICsgKsKgwqAgZGVmYXVsdCBycGNfY2xudF94cHJ0X2l0ZXJfaW5pdCgpIGl0ZXJhdG9yIGlz
-IHVzZWQKPiDCoCAqIEBmbjogZnVuY3Rpb24gdG8gYXBwbHkKPiDCoCAqIEBkYXRhOiB2b2lkIHBv
-aW50ZXIgdG8gZnVuY3Rpb24gZGF0YQo+IMKgICoKPiBAQCAtODI2LDEzICs4MjgsMTcgQEAgaW50
-IHJwY19jbG50X3hwcnRfaXRlcl9vZmZsaW5lX2luaXQoc3RydWN0Cj4gcnBjX2NsbnQgKmNsbnQs
-Cj4gwqAgKiBPbiBlcnJvciwgdGhlIGl0ZXJhdGlvbiBzdG9wcywgYW5kIHRoZSBmdW5jdGlvbiBy
-ZXR1cm5zIHRoZSBlcnJvcgo+IHZhbHVlLgo+IMKgICovCj4gwqBpbnQgcnBjX2NsbnRfaXRlcmF0
-ZV9mb3JfZWFjaF94cHJ0KHN0cnVjdCBycGNfY2xudCAqY2xudCwKPiArwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgaW50ICgqc2V0dXApKHN0cnVjdCBycGNfY2xudCAqLCBzdHJ1Y3QgcnBj
-X3hwcnRfaXRlcgo+ICopLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ICgq
-Zm4pKHN0cnVjdCBycGNfY2xudCAqLCBzdHJ1Y3QgcnBjX3hwcnQgKiwgdm9pZAo+ICopLAo+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdm9pZCAqZGF0YSkKPiDCoHsKPiDCoMKgwqDC
-oMKgwqDCoMKgc3RydWN0IHJwY194cHJ0X2l0ZXIgeHBpOwo+IMKgwqDCoMKgwqDCoMKgwqBpbnQg
-cmV0Owo+IMKgCj4gLcKgwqDCoMKgwqDCoMKgcmV0ID0gcnBjX2NsbnRfeHBydF9pdGVyX2luaXQo
-Y2xudCwgJnhwaSk7Cj4gK8KgwqDCoMKgwqDCoMKgaWYgKCFzZXR1cCkKPiArwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgcmV0ID0gcnBjX2NsbnRfeHBydF9pdGVyX2luaXQoY2xudCwgJnhw
-aSk7Cj4gK8KgwqDCoMKgwqDCoMKgZWxzZQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqByZXQgPSBzZXR1cChjbG50LCAmeHBpKTsKClBsZWFzZSBjcmVhdGUgYW4gaW50ZXJuYWwgZnVu
-Y3Rpb24gdGhhdCBpcyBub3QgZXhwb3J0ZWQgb3V0c2lkZSB0aGUgUlBDCmxheWVyIGZvciB0aGlz
-LiBJdCB3b3VsZCBiZSBmaW5lIHRvIHNoYXJlIGNvZGUgd2l0aApycGNfY2xudF9pdGVyYXRlX2Zv
-cl9lYWNoX3hwcnQoKSB3aGVyZSBhcHByb3ByaWF0ZSwgYnV0IHdlIHNob3VsZCBub3QKZXhwb3Nl
-IGFuIEFQSSB0aGF0IGV4cGVjdHMgdGhlIGNhbGxlciB0byBoYXZlIGludGltYXRlIGtub3dsZWRn
-ZSBvZiB0aGUKcnBjIGNsaWVudCBpbnRlcm5hbHMuCgo+IMKgwqDCoMKgwqDCoMKgwqBpZiAocmV0
-KQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsKPiDCoMKgwqDC
-oMKgwqDCoMKgZm9yICg7Oykgewo+IEBAIC0zMDUyLDcgKzMwNTgsOCBAQCBzdGF0aWMgaW50IHJw
-Y194cHJ0X29mZmxpbmVfZGVzdHJveShzdHJ1Y3QKPiBycGNfY2xudCAqY2xudCwKPiDCoAo+IMKg
-dm9pZCBycGNfY2xudF9tYW5hZ2VfdHJ1bmtlZF94cHJ0cyhzdHJ1Y3QgcnBjX2NsbnQgKmNsbnQs
-IHZvaWQKPiAqZGF0YSkKPiDCoHsKPiAtwqDCoMKgwqDCoMKgwqBycGNfY2xudF9pdGVyYXRlX2Zv
-cl9lYWNoX3hwcnQoY2xudCwKPiBycGNfeHBydF9vZmZsaW5lX2Rlc3Ryb3ksIGRhdGEpOwo+ICvC
-oMKgwqDCoMKgwqDCoHJwY19jbG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydChjbG50LCBOVUxMLAo+
-IHJwY194cHJ0X29mZmxpbmVfZGVzdHJveSwKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoGRhdGEpOwo+IMKgfQo+IMKgRVhQT1JUX1NZTUJPTF9HUEwocnBj
-X2NsbnRfbWFuYWdlX3RydW5rZWRfeHBydHMpOwo+IMKgCj4gQEAgLTMwODQsNyArMzA5MSw3IEBA
-IHJwY19zZXRfY29ubmVjdF90aW1lb3V0KHN0cnVjdCBycGNfY2xudCAqY2xudCwKPiDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC5jb25uZWN0X3RpbWVvdXQgPSBjb25uZWN0X3RpbWVv
-dXQsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAucmVjb25uZWN0X3RpbWVvdXQg
-PSByZWNvbm5lY3RfdGltZW91dCwKPiDCoMKgwqDCoMKgwqDCoMKgfTsKPiAtwqDCoMKgwqDCoMKg
-wqBycGNfY2xudF9pdGVyYXRlX2Zvcl9lYWNoX3hwcnQoY2xudCwKPiArwqDCoMKgwqDCoMKgwqBy
-cGNfY2xudF9pdGVyYXRlX2Zvcl9lYWNoX3hwcnQoY2xudCwgTlVMTCwKPiDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBycGNfeHBydF9zZXRfY29ubmVjdF90
-aW1lb3V0LAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCZ0aW1lb3V0KTsKPiDCoH0KPiBAQCAtMzE4MSw3ICszMTg4LDcgQEAgcnBjX2NsbnRfc3dhcF9h
-Y3RpdmF0ZShzdHJ1Y3QgcnBjX2NsbnQgKmNsbnQpCj4gwqDCoMKgwqDCoMKgwqDCoHdoaWxlIChj
-bG50ICE9IGNsbnQtPmNsX3BhcmVudCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oGNsbnQgPSBjbG50LT5jbF9wYXJlbnQ7Cj4gwqDCoMKgwqDCoMKgwqDCoGlmIChhdG9taWNfaW5j
-X3JldHVybigmY2xudC0+Y2xfc3dhcHBlcikgPT0gMSkKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgcmV0dXJuIHJwY19jbG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydChjbG50LAo+ICvC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZXR1cm4gcnBjX2NsbnRfaXRlcmF0ZV9mb3Jf
-ZWFjaF94cHJ0KGNsbnQsIE5VTEwsCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJwY19jbG50X3N3YXBfYWN0aXZhdGVfY2Fs
-bGJhY2ssCj4gTlVMTCk7Cj4gwqDCoMKgwqDCoMKgwqDCoHJldHVybiAwOwo+IMKgfQo+IEBAIC0z
-MjAwLDcgKzMyMDcsNyBAQCB2b2lkCj4gwqBycGNfY2xudF9zd2FwX2RlYWN0aXZhdGUoc3RydWN0
-IHJwY19jbG50ICpjbG50KQo+IMKgewo+IMKgwqDCoMKgwqDCoMKgwqBpZiAoYXRvbWljX2RlY19p
-Zl9wb3NpdGl2ZSgmY2xudC0+Y2xfc3dhcHBlcikgPT0gMCkKPiAtwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgcnBjX2NsbnRfaXRlcmF0ZV9mb3JfZWFjaF94cHJ0KGNsbnQsCj4gK8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJwY19jbG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydChj
-bG50LCBOVUxMLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqBycGNfY2xudF9zd2FwX2RlYWN0aXZhdGVfY2FsbGJhY2ssCj4g
-TlVMTCk7Cj4gwqB9Cj4gwqBFWFBPUlRfU1lNQk9MX0dQTChycGNfY2xudF9zd2FwX2RlYWN0aXZh
-dGUpOwo+IGRpZmYgLS1naXQgYS9uZXQvc3VucnBjL2RlYnVnZnMuYyBiL25ldC9zdW5ycGMvZGVi
-dWdmcy5jCj4gaW5kZXggN2RjOWNjOTI5YmZkLi5hYjYwYjRkM2RlYjIgMTAwNjQ0Cj4gLS0tIGEv
-bmV0L3N1bnJwYy9kZWJ1Z2ZzLmMKPiArKysgYi9uZXQvc3VucnBjL2RlYnVnZnMuYwo+IEBAIC0x
-NjAsNyArMTYwLDcgQEAgcnBjX2NsbnRfZGVidWdmc19yZWdpc3RlcihzdHJ1Y3QgcnBjX2NsbnQg
-KmNsbnQpCj4gwqDCoMKgwqDCoMKgwqDCoGRlYnVnZnNfY3JlYXRlX2ZpbGUoInRhc2tzIiwgU19J
-RlJFRyB8IDA0MDAsIGNsbnQtCj4gPmNsX2RlYnVnZnMsIGNsbnQsCj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZ0YXNrc19mb3BzKTsKPiDC
-oAo+IC3CoMKgwqDCoMKgwqDCoHJwY19jbG50X2l0ZXJhdGVfZm9yX2VhY2hfeHBydChjbG50LCBk
-b194cHJ0X2RlYnVnZnMsCj4gJnhwcnRudW0pOwo+ICvCoMKgwqDCoMKgwqDCoHJwY19jbG50X2l0
-ZXJhdGVfZm9yX2VhY2hfeHBydChjbG50LCBOVUxMLCBkb194cHJ0X2RlYnVnZnMsCj4gJnhwcnRu
-dW0pOwo+IMKgfQo+IMKgCj4gwqB2b2lkCj4gZGlmZiAtLWdpdCBhL25ldC9zdW5ycGMvc3RhdHMu
-YyBiL25ldC9zdW5ycGMvc3RhdHMuYwo+IGluZGV4IDUyOTA4ZjllNmVhYi4uZTUwZjczYTRhY2E1
-IDEwMDY0NAo+IC0tLSBhL25ldC9zdW5ycGMvc3RhdHMuYwo+ICsrKyBiL25ldC9zdW5ycGMvc3Rh
-dHMuYwo+IEBAIC0yNTgsNyArMjU4LDcgQEAgdm9pZCBycGNfY2xudF9zaG93X3N0YXRzKHN0cnVj
-dCBzZXFfZmlsZSAqc2VxLAo+IHN0cnVjdCBycGNfY2xudCAqY2xudCkKPiDCoMKgwqDCoMKgwqDC
-oMKgc2VxX3ByaW50ZihzZXEsICJwL3Y6ICV1LyV1ICglcylcbiIsCj4gwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xudC0+Y2xfcHJvZywgY2xudC0+Y2xf
-dmVycywgY2xudC0KPiA+Y2xfcHJvZ3JhbS0+bmFtZSk7Cj4gwqAKPiAtwqDCoMKgwqDCoMKgwqBy
-cGNfY2xudF9pdGVyYXRlX2Zvcl9lYWNoX3hwcnQoY2xudCwgZG9fcHJpbnRfc3RhdHMsIHNlcSk7
-Cj4gK8KgwqDCoMKgwqDCoMKgcnBjX2NsbnRfaXRlcmF0ZV9mb3JfZWFjaF94cHJ0KGNsbnQsIE5V
-TEwsIGRvX3ByaW50X3N0YXRzLAo+IHNlcSk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgc2VxX3By
-aW50ZihzZXEsICJcdHBlci1vcCBzdGF0aXN0aWNzXG4iKTsKPiDCoMKgwqDCoMKgwqDCoMKgZm9y
-IChvcCA9IDA7IG9wIDwgbWF4cHJvYzsgb3ArKykgewoKLS0gClRyb25kIE15a2xlYnVzdApMaW51
-eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlCnRyb25kLm15a2xlYnVzdEBoYW1t
-ZXJzcGFjZS5jb20KCgo=
+On Tue, Jul 12, 2022 at 11:12 AM Trond Myklebust
+<trondmy@hammerspace.com> wrote:
+>
+> On Mon, 2022-06-20 at 11:23 -0400, Olga Kornievskaia wrote:
+> > From: Olga Kornievskaia <kolga@netapp.com>
+> >
+> > Re-arrange the code that make offline transport and delete transport
+> > callable functions.
+> >
+> > Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+> > ---
+> >  include/linux/sunrpc/xprt.h |  3 +++
+> >  net/sunrpc/sysfs.c          | 28 +++++-----------------------
+> >  net/sunrpc/xprt.c           | 35 +++++++++++++++++++++++++++++++++++
+> >  3 files changed, 43 insertions(+), 23 deletions(-)
+> >
+> > diff --git a/include/linux/sunrpc/xprt.h
+> > b/include/linux/sunrpc/xprt.h
+> > index 522bbf937957..0d51b9f9ea37 100644
+> > --- a/include/linux/sunrpc/xprt.h
+> > +++ b/include/linux/sunrpc/xprt.h
+> > @@ -505,4 +505,7 @@ static inline int
+> > xprt_test_and_set_binding(struct rpc_xprt *xprt)
+> >         return test_and_set_bit(XPRT_BINDING, &xprt->state);
+> >  }
+> >
+> > +void xprt_set_offline_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps);
+> > +void xprt_set_online_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps);
+> > +void xprt_delete_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps);
+> >  #endif /* _LINUX_SUNRPC_XPRT_H */
+> > diff --git a/net/sunrpc/sysfs.c b/net/sunrpc/sysfs.c
+> > index a3a2f8aeb80e..7330eb9a70cf 100644
+> > --- a/net/sunrpc/sysfs.c
+> > +++ b/net/sunrpc/sysfs.c
+> > @@ -314,32 +314,14 @@ static ssize_t
+> > rpc_sysfs_xprt_state_change(struct kobject *kobj,
+> >                 goto release_tasks;
+> >         }
+> >         if (offline) {
+> > -               if (!test_and_set_bit(XPRT_OFFLINE, &xprt->state)) {
+> > -                       spin_lock(&xps->xps_lock);
+> > -                       xps->xps_nactive--;
+> > -                       spin_unlock(&xps->xps_lock);
+> > -               }
+> > +               xprt_set_offline_locked(xprt, xps);
+> >         } else if (online) {
+> > -               if (test_and_clear_bit(XPRT_OFFLINE, &xprt->state)) {
+> > -                       spin_lock(&xps->xps_lock);
+> > -                       xps->xps_nactive++;
+> > -                       spin_unlock(&xps->xps_lock);
+> > -               }
+> > +               xprt_set_online_locked(xprt, xps);
+> >         } else if (remove) {
+> > -               if (test_bit(XPRT_OFFLINE, &xprt->state)) {
+> > -                       if (!test_and_set_bit(XPRT_REMOVE, &xprt-
+> > >state)) {
+> > -                               xprt_force_disconnect(xprt);
+> > -                               if (test_bit(XPRT_CONNECTED, &xprt-
+> > >state)) {
+> > -                                       if (!xprt->sending.qlen &&
+> > -                                           !xprt->pending.qlen &&
+> > -                                           !xprt->backlog.qlen &&
+> > -                                           !atomic_long_read(&xprt-
+> > >queuelen))
+> > -
+> >                                                rpc_xprt_switch_remove_
+> > xprt(xps, xprt);
+> > -                               }
+> > -                       }
+> > -               } else {
+> > +               if (test_bit(XPRT_OFFLINE, &xprt->state))
+> > +                       xprt_delete_locked(xprt, xps);
+> > +               else
+> >                         count = -EINVAL;
+> > -               }
+> >         }
+> >
+> >  release_tasks:
+> > diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+> > index 86d62cffba0d..6480ae324b27 100644
+> > --- a/net/sunrpc/xprt.c
+> > +++ b/net/sunrpc/xprt.c
+> > @@ -2152,3 +2152,38 @@ void xprt_put(struct rpc_xprt *xprt)
+> >                 kref_put(&xprt->kref, xprt_destroy_kref);
+> >  }
+> >  EXPORT_SYMBOL_GPL(xprt_put);
+> > +
+> > +void xprt_set_offline_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps)
+> > +{
+> > +       if (!test_and_set_bit(XPRT_OFFLINE, &xprt->state)) {
+> > +               spin_lock(&xps->xps_lock);
+> > +               xps->xps_nactive--;
+> > +               spin_unlock(&xps->xps_lock);
+> > +       }
+> > +}
+> > +EXPORT_SYMBOL(xprt_set_offline_locked);
+> > +
+> > +void xprt_set_online_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps)
+> > +{
+> > +       if (test_and_clear_bit(XPRT_OFFLINE, &xprt->state)) {
+> > +               spin_lock(&xps->xps_lock);
+> > +               xps->xps_nactive++;
+> > +               spin_unlock(&xps->xps_lock);
+> > +       }
+> > +}
+> > +EXPORT_SYMBOL(xprt_set_online_locked);
+> > +
+> > +void xprt_delete_locked(struct rpc_xprt *xprt, struct
+> > rpc_xprt_switch *xps)
+> > +{
+> > +       if (test_and_set_bit(XPRT_REMOVE, &xprt->state))
+> > +               return;
+> > +
+> > +       xprt_force_disconnect(xprt);
+> > +       if (!test_bit(XPRT_CONNECTED, &xprt->state))
+> > +               return;
+> > +
+> > +       if (!xprt->sending.qlen && !xprt->pending.qlen &&
+> > +           !xprt->backlog.qlen && !atomic_long_read(&xprt-
+> > >queuelen))
+> > +               rpc_xprt_switch_remove_xprt(xps, xprt);
+> > +}
+> > +EXPORT_SYMBOL(xprt_delete_locked);
+>
+> Why are these functions being exported? There is nothing outside the
+> main sunrpc layer that should be using them.
+>
+
+Thank you for the comment. Make sense, will fix. It probably came from
+looking at xprt_put above that code.
+
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>
+>
