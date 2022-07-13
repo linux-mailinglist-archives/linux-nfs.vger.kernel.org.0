@@ -2,156 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 848135730E0
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jul 2022 10:22:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF24457368A
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jul 2022 14:43:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235526AbiGMIWI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Jul 2022 04:22:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
+        id S231162AbiGMMn6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Jul 2022 08:43:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235511AbiGMIVS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jul 2022 04:21:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 33396C050F
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Jul 2022 01:17:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1657700279;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Uu20DLcBo8IMgtAmd4TXW8QAm+Rrq9nhKztBRSghNtQ=;
-        b=byHTz0ITw1BM/tXoHEUWGldmkSHzEOjVrE+C0yk7vOfXE6nmWHHgr+45Nl+mE/ZNDM//7P
-        iWRU68GVhk9wpwYW5LGMfqMSut5LS6Jvs+NgDG1s+MEpFBT48q5tZUg3meQnGrRyvkqK7I
-        wy+SjFrZgRqzX5dQgpz3cKssA0KOxQA=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-462-4O5fjAEiNXOb1o_wDi5MJg-1; Wed, 13 Jul 2022 04:17:58 -0400
-X-MC-Unique: 4O5fjAEiNXOb1o_wDi5MJg-1
-Received: by mail-ej1-f70.google.com with SMTP id hr24-20020a1709073f9800b0072b57c28438so2741557ejc.5
-        for <linux-nfs@vger.kernel.org>; Wed, 13 Jul 2022 01:17:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Uu20DLcBo8IMgtAmd4TXW8QAm+Rrq9nhKztBRSghNtQ=;
-        b=fikmtEdAE5aSbCIPi75RfbRBE8eFEp3gBJrhJkyA9oG7lmCGte+aKkHm4JkYEqkYEb
-         6prY/7QWZIOkB5E2mRD80O3hs+M+F1OmrIu0GR25w9FkAEmqYj6+0xbqYMOo97bbZav4
-         8IUpY8V4TQ3V0GG5CsW7lhB+NVR5MW0qB7XUcwtorYLG9qwCUyz8gM2WqAsGj5KxOOQ4
-         vPHe6UbOspb1Gy3azIXFLvFFG+7U515im5vgGZOGJgtIwqi9GV4YF2Fc3fnHal1pK1jG
-         CCL3TZefTOndjzduo6ZmhGbpQzeqUiPURexdbvI3Fv7URYtavwpLANjKzWyhymYn0I1X
-         621g==
-X-Gm-Message-State: AJIora8ll8XwVDOkY+Q5FP7Pa1i8pURA8pA5OlaOhMhHanN2OJLZOFyZ
-        +X0t5wUpKvr3sgJJw4EbjKYGlMwRet6vNl2hDa6X3i+/AQ+OGZzs0bvNajrkUc1CjFsQjwe6Q3d
-        JjPpLrfxC47uDBUjQphWX
-X-Received: by 2002:a05:6402:2743:b0:43a:7f92:8e30 with SMTP id z3-20020a056402274300b0043a7f928e30mr3058381edd.168.1657700276864;
-        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vvDRpXirRM0iB6PQcdsyPrWgZ0lhMW3iiiISyYBlWepAh94KQ4/f62jliEYyvjsvyWAvo3wQ==
-X-Received: by 2002:a05:6402:2743:b0:43a:7f92:8e30 with SMTP id z3-20020a056402274300b0043a7f928e30mr3058362edd.168.1657700276616;
-        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id ce14-20020a170906b24e00b0071cbc7487e0sm4684104ejb.71.2022.07.13.01.17.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
-Date:   Wed, 13 Jul 2022 10:17:54 +0200
-From:   Igor Mammedov <imammedo@redhat.com>
-To:     Bruce Fields <bfields@fieldses.org>
-Cc:     Jeff Layton <jlayton@redhat.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [GIT PULL] nfsd changes for 5.18
-Message-ID: <20220713101754.50ad9bde@redhat.com>
-In-Reply-To: <20220712114211.GA29976@fieldses.org>
-References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
-        <20220710124344.36dfd857@redhat.com>
-        <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
-        <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
-        <20220711181941.GC14184@fieldses.org>
-        <20220712102746.5404e88a@redhat.com>
-        <20220712114211.GA29976@fieldses.org>
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-redhat-linux-gnu)
+        with ESMTP id S230039AbiGMMn6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jul 2022 08:43:58 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2AD1837B
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Jul 2022 05:43:56 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 8E8E633CDA;
+        Wed, 13 Jul 2022 12:43:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1657716235; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=qtU2LYuWGCdHcSk84T3OFycnSGsg9Lg6xIJMBpa98E8=;
+        b=eQ4+0dT1iX0tiulMM9+xiLtVXqFkNfku3PdARKvjq3Zvv6N8lP5XDUQah/aIVvIFwOnUK2
+        +Wlkfra6s3kZNTFrqfpXSW2ZMSZ1IkmqitIdg+l/1C2joG3GZqHNsFWcj9I2tOEnHBNgmh
+        YYjnrTmcszIZEh1bqN2mKbyQa58WtMU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1657716235;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=qtU2LYuWGCdHcSk84T3OFycnSGsg9Lg6xIJMBpa98E8=;
+        b=tKBvlfsRqnEyeV+NbNoZTU7UL8G9kWD6l4jPifRYHqsJGtwp2fZwk/2cEljXn9XuhDSab4
+        RBaJJbsjfz8MD0Aw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4554713AAD;
+        Wed, 13 Jul 2022 12:43:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id qnfhDQu+zmKHLwAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Wed, 13 Jul 2022 12:43:55 +0000
+From:   Petr Vorel <pvorel@suse.cz>
+To:     ltp@lists.linux.it
+Cc:     Petr Vorel <pvorel@suse.cz>, linux-nfs@vger.kernel.org,
+        Cyril Hrubis <chrubis@suse.cz>,
+        Martin Doucha <mdoucha@suse.cz>,
+        Alexey Kodanev <aleksei.kodanev@bell-sw.com>
+Subject: [PATCH 1/1] netstress: Restore runtime to 5m
+Date:   Wed, 13 Jul 2022 14:43:47 +0200
+Message-Id: <20220713124347.13593-1-pvorel@suse.cz>
+X-Mailer: git-send-email 2.37.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 12 Jul 2022 07:42:11 -0400
-Bruce Fields <bfields@fieldses.org> wrote:
+netstress requires the previous default timeout 5m due longer timeout
+for higher message sizes (e.g. 65535):
 
-> On Tue, Jul 12, 2022 at 10:27:46AM +0200, Igor Mammedov wrote:
-> > On Mon, 11 Jul 2022 14:19:41 -0400
-> > Bruce Fields <bfields@fieldses.org> wrote:
-> >   
-> > > On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:  
-> > > > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:    
-> > > > > > This patch regressed clients that support TIME_CREATE attribute.
-> > > > > > Starting with this patch client might think that server supports
-> > > > > > TIME_CREATE and start sending this attribute in its requests.    
-> > > > > 
-> > > > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
-> > > > > attribute") does not include a change to nfsd4_decode_fattr4()
-> > > > > that decodes the birth time attribute.
-> > > > > 
-> > > > > I don't immediately see another storage protocol stack in our
-> > > > > kernel that supports a client setting the birth time, so NFSD
-> > > > > might have to ignore the client-provided value.
-> > > > >     
-> > > > 
-> > > > Cephfs allows this. My thinking at the time that I implemented it was
-> > > > that it should be settable for backup purposes, but this was possibly a
-> > > > mistake. On most filesystems, the btime seems to be equivalent to inode
-> > > > creation time and is read-only.    
-> > > 
-> > > So supporting it as read-only seems reasonable.
-> > > 
-> > > Clearly, failing to decode the setattr attempt isn't the right way to do
-> > > that.  I'm not sure what exactly it should be doing--some kind of
-> > > permission error on any setattr containing TIME_CREATE?  
-> > 
-> > erroring out on TIME_CREATE will break client that try to
-> > set this attribute (legitimately). That's what by chance 
-> > happening with current master (return error when TIME_CREATE
-> > is present).  
-> 
-> Hang on, now--our current server completely fails to decode any RPC
-> including a SETATTR that attempts to set TIME_CREATE, which means it
-> isn't able to return a useful error or tell the client which attribute
-> was the problem.
-> 
-> It's not too surprising that that would cause a problem for a client.
-> 
-> But failures to set supported attributes are completely normal, and if
-> mounts are failing completely because of that, something is really very
-> wrong with the client.
+./sctp_ipsec.sh -6 -p comp -m transport -s 100:1000:65535:R65535
+sctp_ipsec 1 TPASS: netstress passed, median time 5 ms, data: 5 9 6 5 5
+sctp_ipsec 2 TINFO: run server 'netstress -T sctp -S fd00:1:1:1::1 -D ltp_ns_veth1 -R 500000 -B /tmp/LTP_sctp_ipsec.ARZbGkvjPa'
+sctp_ipsec 2 TINFO: run client 'netstress -l -T sctp -H fd00:1:1:1::1 -n 1000 -N 1000 -S fd00:1:1:1::2 -D ltp_ns_veth2 -a 2 -r 100 -d /tmp/LTP_sctp_ipsec.ARZbGkvjPa/tst_netload.res' 5 times
+sctp_ipsec 2 TPASS: netstress passed, median time 6 ms, data: 8 6 6 5 6
+sctp_ipsec 3 TINFO: run server 'netstress -T sctp -S fd00:1:1:1::1 -D ltp_ns_veth1 -R 500000 -B /tmp/LTP_sctp_ipsec.ARZbGkvjPa'
+sctp_ipsec 3 TINFO: run client 'netstress -l -T sctp -H fd00:1:1:1::1 -n 65535 -N 65535 -S fd00:1:1:1::2 -D ltp_ns_veth2 -a 2 -r 100 -d /tmp/LTP_sctp_ipsec.ARZbGkvjPa/tst_netload.res' 5 times
+sctp_ipsec 3 TWARN: netstress failed, ret: 2
+tst_test.c:1526: TINFO: Timeout per run is 0h 00m 30s
+netstress.c:896: TINFO: IP_BIND_ADDRESS_NO_PORT is used
+netstress.c:898: TINFO: connection: addr 'fd00:1:1:1::1', port '55097'
+netstress.c:900: TINFO: client max req: 100
+netstress.c:901: TINFO: clients num: 2
+netstress.c:906: TINFO: client msg size: 65535
+netstress.c:907: TINFO: server msg size: 65535
+netstress.c:979: TINFO: SCTP client
+netstress.c:475: TINFO: Running the test over IPv6
+Test timeouted, sending SIGKILL!
+tst_test.c:1577: TINFO: If you are running on slow machine, try exporting LTP_TIMEOUT_MUL > 1
+tst_test.c:1579: TBROK: Test killed! (timeout?)
 
-returning unsupported attribute error might work, but as Chuck mentioned
-we do kind of support TIME_CREATE for some requests so client might be
-confused when server itself sends this attribute while errors out when
-client tries to send it.
-What I'm saying if we are to try returning error in this case
-it should be tested with variety of clients before committing
-to this approach. (meanwhile decoding and ignoring attribute
-with Chuck's patch fixes immediate issue).
+Converting netstress.c to use TST_NO_DEFAULT_MAIN (i.e. implementing main)
+would require more changes, because it uses .forks_child, .needs_checkpoints,
+cleanup function.
 
-> Could you first retest with a server that's patched to at least decode
-> the attribute correctly?  I suspect that may be enough.  If not, then
-it does work with fixed decoding path:
- (i.e. patched with https://lore.kernel.org/lkml/A4F0C111-B2EB-4325-AC6A-4A80BD19DA43@oracle.com/T/)
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+---
+NOTE: there is also needed to increase timeout for sctp_ipsec.sh.
+At least on my VM 10 min wasn't enough. Trying to measure reasonable
+time with TST_TIMEOUT=-1.
 
-> the client in question has a more interesting problem on its hands.
-> 
-> --b.
-> 
+Kind regards,
+Petr
+
+ testcases/network/netstress/netstress.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/testcases/network/netstress/netstress.c b/testcases/network/netstress/netstress.c
+index 6c9e83112..7c222531d 100644
+--- a/testcases/network/netstress/netstress.c
++++ b/testcases/network/netstress/netstress.c
+@@ -1028,5 +1028,6 @@ static struct tst_test test = {
+ 		{"B:", &server_bg, "Run in background, arg is the process directory"},
+ 		{}
+ 	},
++	.max_runtime = 300,
+ 	.needs_checkpoints = 1,
+ };
+-- 
+2.37.0
 
