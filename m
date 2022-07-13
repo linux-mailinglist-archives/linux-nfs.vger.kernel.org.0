@@ -2,132 +2,156 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E3CDB572CB6
-	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jul 2022 06:47:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 848135730E0
+	for <lists+linux-nfs@lfdr.de>; Wed, 13 Jul 2022 10:22:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230189AbiGMErE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 13 Jul 2022 00:47:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42360 "EHLO
+        id S235526AbiGMIWI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 13 Jul 2022 04:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbiGMErD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jul 2022 00:47:03 -0400
-Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E09C7657;
-        Tue, 12 Jul 2022 21:46:59 -0700 (PDT)
-Received: by mail-pj1-x1036.google.com with SMTP id q5-20020a17090a304500b001efcc885cc4so1666320pjl.4;
-        Tue, 12 Jul 2022 21:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gBaYkCq2UOecKkI/ZcXaXDVPy+SEFxbUDpVc4bdCZmM=;
-        b=h1H/+uf4FxW4bgT2t3lI+XGqdPLgtl0u4V9II5sch1nlT+lMFHYXepqKt3obshgGQr
-         3HvlRGfLhGGuN/cLDAW+qlK3KCK5YFGagFcXTsXxI41AZhR0UvNjIOlpluv73F4bxF/g
-         pFWma2sdbuCLVJtI9XiLV2fs42bsQjkzpvmWkN4oCL2sNl7r9G1b+YQyRp08KueMfFes
-         c4o+4R1l23aSWaIKGanMB/60uX0VmGGgtKiBWNxIHEkc06LPSYVDvoQbvR1B5UwEmIHV
-         dw1B4Nb9a9I4T9YxMEAxznmpehRy31heyuhIqdWkyGOAybIB3VCVbIEOmwToNh5BrTu+
-         lr5g==
+        with ESMTP id S235511AbiGMIVS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 13 Jul 2022 04:21:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 33396C050F
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Jul 2022 01:17:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657700279;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uu20DLcBo8IMgtAmd4TXW8QAm+Rrq9nhKztBRSghNtQ=;
+        b=byHTz0ITw1BM/tXoHEUWGldmkSHzEOjVrE+C0yk7vOfXE6nmWHHgr+45Nl+mE/ZNDM//7P
+        iWRU68GVhk9wpwYW5LGMfqMSut5LS6Jvs+NgDG1s+MEpFBT48q5tZUg3meQnGrRyvkqK7I
+        wy+SjFrZgRqzX5dQgpz3cKssA0KOxQA=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-462-4O5fjAEiNXOb1o_wDi5MJg-1; Wed, 13 Jul 2022 04:17:58 -0400
+X-MC-Unique: 4O5fjAEiNXOb1o_wDi5MJg-1
+Received: by mail-ej1-f70.google.com with SMTP id hr24-20020a1709073f9800b0072b57c28438so2741557ejc.5
+        for <linux-nfs@vger.kernel.org>; Wed, 13 Jul 2022 01:17:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=gBaYkCq2UOecKkI/ZcXaXDVPy+SEFxbUDpVc4bdCZmM=;
-        b=oItuH4RaAJAToFdOZg68Nl6CFB7yOzmRhia1WTM0+k1sZYzgvZ2onMK0Rt/wT7DV6e
-         WkEe1az71KF8Tc2pM1PE6UVj/dFuziESIjpSTJrLnbdo2F4HyjXmjefv6xdJ8y0MJX22
-         2NALsgE+cPYCwzTpvTQPpsh2r0lnruX/gg0Ex29951w43SRlC5EFoh84qgfBAZ06GLEk
-         3AJSzFn210fBTuKzYpBnxsfhTEePzJQxkOEV22fZ293/iibFJ31/aeuTpjfMadkZnXV8
-         NUt3f7gzO0PGyjoyXXutjYNb5nHLTBFB+k5/ddPvxcOwSvLskllQocdTdEyMipwjko3/
-         w9Cg==
-X-Gm-Message-State: AJIora8vIO4Rl93VFsNmuXQSKLL+MlH9+2EnW8T0Y0kWUZ5NAQJggsq+
-        WXdI/56OsfqkiNwaeMvU650=
-X-Google-Smtp-Source: AGRyM1t4Kvp3+MPAFYCpd5hlmg5MlCU8bpPTtIXAtIiqdQtJ+Yzx2cYW2gylT+SNs6NaoePwv/3tlQ==
-X-Received: by 2002:a17:90b:1d02:b0:1f0:1c2c:cc64 with SMTP id on2-20020a17090b1d0200b001f01c2ccc64mr1836081pjb.52.1657687618757;
-        Tue, 12 Jul 2022 21:46:58 -0700 (PDT)
-Received: from localhost.localdomain (pcd364232.netvigator.com. [203.218.154.232])
-        by smtp.gmail.com with ESMTPSA id fr14-20020a17090ae2ce00b001f0097c2fb2sm469316pjb.28.2022.07.12.21.46.51
+        bh=Uu20DLcBo8IMgtAmd4TXW8QAm+Rrq9nhKztBRSghNtQ=;
+        b=fikmtEdAE5aSbCIPi75RfbRBE8eFEp3gBJrhJkyA9oG7lmCGte+aKkHm4JkYEqkYEb
+         6prY/7QWZIOkB5E2mRD80O3hs+M+F1OmrIu0GR25w9FkAEmqYj6+0xbqYMOo97bbZav4
+         8IUpY8V4TQ3V0GG5CsW7lhB+NVR5MW0qB7XUcwtorYLG9qwCUyz8gM2WqAsGj5KxOOQ4
+         vPHe6UbOspb1Gy3azIXFLvFFG+7U515im5vgGZOGJgtIwqi9GV4YF2Fc3fnHal1pK1jG
+         CCL3TZefTOndjzduo6ZmhGbpQzeqUiPURexdbvI3Fv7URYtavwpLANjKzWyhymYn0I1X
+         621g==
+X-Gm-Message-State: AJIora8ll8XwVDOkY+Q5FP7Pa1i8pURA8pA5OlaOhMhHanN2OJLZOFyZ
+        +X0t5wUpKvr3sgJJw4EbjKYGlMwRet6vNl2hDa6X3i+/AQ+OGZzs0bvNajrkUc1CjFsQjwe6Q3d
+        JjPpLrfxC47uDBUjQphWX
+X-Received: by 2002:a05:6402:2743:b0:43a:7f92:8e30 with SMTP id z3-20020a056402274300b0043a7f928e30mr3058381edd.168.1657700276864;
+        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1vvDRpXirRM0iB6PQcdsyPrWgZ0lhMW3iiiISyYBlWepAh94KQ4/f62jliEYyvjsvyWAvo3wQ==
+X-Received: by 2002:a05:6402:2743:b0:43a:7f92:8e30 with SMTP id z3-20020a056402274300b0043a7f928e30mr3058362edd.168.1657700276616;
+        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id ce14-20020a170906b24e00b0071cbc7487e0sm4684104ejb.71.2022.07.13.01.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Jul 2022 21:46:58 -0700 (PDT)
-From:   Hawkins Jiawei <yin31149@gmail.com>
-To:     hare@suse.de
-Cc:     ak@tempesta-tech.com, borisp@nvidia.com, chuck.lever@oracle.com,
-        linux-cifs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-nvme@lists.infradead.org,
-        netdev@vger.kernel.org, simo@redhat.com, kuba@kernel.org,
-        18801353760@163.com, paskripkin@gmail.com,
-        skhan@linuxfoundation.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH RFC 1/5] net: Add distinct sk_psock field
-Date:   Wed, 13 Jul 2022 12:46:37 +0800
-Message-Id: <20220713044637.106017-1-yin31149@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <325938d3-bb82-730b-046c-451dde8cc14c@suse.de>
-References: <325938d3-bb82-730b-046c-451dde8cc14c@suse.de>
+        Wed, 13 Jul 2022 01:17:56 -0700 (PDT)
+Date:   Wed, 13 Jul 2022 10:17:54 +0200
+From:   Igor Mammedov <imammedo@redhat.com>
+To:     Bruce Fields <bfields@fieldses.org>
+Cc:     Jeff Layton <jlayton@redhat.com>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Ondrej Valousek <ondrej.valousek.xm@renesas.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [GIT PULL] nfsd changes for 5.18
+Message-ID: <20220713101754.50ad9bde@redhat.com>
+In-Reply-To: <20220712114211.GA29976@fieldses.org>
+References: <EF97E1F5-B70F-4F9F-AC6D-7B48336AE3E5@oracle.com>
+        <20220710124344.36dfd857@redhat.com>
+        <B62B3A57-A8F7-478B-BBAB-785D0C2EE51C@oracle.com>
+        <5268baed1650b4cba32978ad32d14a5ef00539f2.camel@redhat.com>
+        <20220711181941.GC14184@fieldses.org>
+        <20220712102746.5404e88a@redhat.com>
+        <20220712114211.GA29976@fieldses.org>
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
->On 4/18/22 18:49, Chuck Lever wrote:
->> The sk_psock facility populates the sk_user_data field with the
->> address of an extra bit of metadata. User space sockets never
->> populate the sk_user_data field, so this has worked out fine.
->> 
->> However, kernel consumers such as the RPC client and server do
->> populate the sk_user_data field. The sk_psock() function cannot tell
->> that the content of sk_user_data does not point to psock metadata,
->> so it will happily return a pointer to something else, cast to a
->> struct sk_psock.
->> 
->> Thus kernel consumers and psock currently cannot co-exist.
->> 
->> We could educate sk_psock() to return NULL if sk_user_data does
->> not point to a struct sk_psock. However, a more general solution
->> that enables full co-existence psock and other uses of sk_user_data
->> might be more interesting.
->> 
->> Move the struct sk_psock address to its own pointer field so that
->> the contents of the sk_user_data field is preserved.
->> 
->> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->> ---
->>   include/linux/skmsg.h |    2 +-
->>   include/net/sock.h    |    4 +++-
->>   net/core/skmsg.c      |    6 +++---
->>   3 files changed, 7 insertions(+), 5 deletions(-)
->> 
->Reviewed-by: Hannes Reinecke <hare@suse.de>
->
->Cheers,
->
->Hannes
+On Tue, 12 Jul 2022 07:42:11 -0400
+Bruce Fields <bfields@fieldses.org> wrote:
 
-In Patchwork website, this patch fails the checks on
-netdev/cc_maintainers.
-
-So maybe you need CC folks pointed out by
-scripts/get_maintainer.pl script, which is suggested
-by Jakub Kicinski <kuba@kernel.org>.
-
-What's more, Syskaller reports
-refcount bug in sk_psock_get (2).
-
-In this bug, the problem is that smc and psock, 
-both use sk_user_data field to save their 
-private data. So they will treat field in their own way.
-
-> in smc_switch_to_fallback(), and set smc->clcsock->sk_user_data
-> to origin smc in smc_fback_replace_callbacks().
+> On Tue, Jul 12, 2022 at 10:27:46AM +0200, Igor Mammedov wrote:
+> > On Mon, 11 Jul 2022 14:19:41 -0400
+> > Bruce Fields <bfields@fieldses.org> wrote:
+> >   
+> > > On Mon, Jul 11, 2022 at 06:33:04AM -0400, Jeff Layton wrote:  
+> > > > On Sun, 2022-07-10 at 16:42 +0000, Chuck Lever III wrote:    
+> > > > > > This patch regressed clients that support TIME_CREATE attribute.
+> > > > > > Starting with this patch client might think that server supports
+> > > > > > TIME_CREATE and start sending this attribute in its requests.    
+> > > > > 
+> > > > > Indeed, e377a3e698fb ("nfsd: Add support for the birth time
+> > > > > attribute") does not include a change to nfsd4_decode_fattr4()
+> > > > > that decodes the birth time attribute.
+> > > > > 
+> > > > > I don't immediately see another storage protocol stack in our
+> > > > > kernel that supports a client setting the birth time, so NFSD
+> > > > > might have to ignore the client-provided value.
+> > > > >     
+> > > > 
+> > > > Cephfs allows this. My thinking at the time that I implemented it was
+> > > > that it should be settable for backup purposes, but this was possibly a
+> > > > mistake. On most filesystems, the btime seems to be equivalent to inode
+> > > > creation time and is read-only.    
+> > > 
+> > > So supporting it as read-only seems reasonable.
+> > > 
+> > > Clearly, failing to decode the setattr attempt isn't the right way to do
+> > > that.  I'm not sure what exactly it should be doing--some kind of
+> > > permission error on any setattr containing TIME_CREATE?  
+> > 
+> > erroring out on TIME_CREATE will break client that try to
+> > set this attribute (legitimately). That's what by chance 
+> > happening with current master (return error when TIME_CREATE
+> > is present).  
 > 
-> Later, sk_psock_get() will treat the smc->clcsock->sk_user_data
-> as sk_psock type, which triggers the refcnt warning.
+> Hang on, now--our current server completely fails to decode any RPC
+> including a SETATTR that attempts to set TIME_CREATE, which means it
+> isn't able to return a useful error or tell the client which attribute
+> was the problem.
+> 
+> It's not too surprising that that would cause a problem for a client.
+> 
+> But failures to set supported attributes are completely normal, and if
+> mounts are failing completely because of that, something is really very
+> wrong with the client.
 
-I have tested this patch and the reproducer did not trigger any issue.
-For more details, you can check the email
-[PATCH] smc: fix refcount bug in sk_psock_get (2)
+returning unsupported attribute error might work, but as Chuck mentioned
+we do kind of support TIME_CREATE for some requests so client might be
+confused when server itself sends this attribute while errors out when
+client tries to send it.
+What I'm saying if we are to try returning error in this case
+it should be tested with variety of clients before committing
+to this approach. (meanwhile decoding and ignoring attribute
+with Chuck's patch fixes immediate issue).
+
+> Could you first retest with a server that's patched to at least decode
+> the attribute correctly?  I suspect that may be enough.  If not, then
+it does work with fixed decoding path:
+ (i.e. patched with https://lore.kernel.org/lkml/A4F0C111-B2EB-4325-AC6A-4A80BD19DA43@oracle.com/T/)
+
+> the client in question has a more interesting problem on its hands.
+> 
+> --b.
+> 
+
