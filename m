@@ -2,192 +2,164 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DCD557529F
-	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jul 2022 18:17:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A29065752B3
+	for <lists+linux-nfs@lfdr.de>; Thu, 14 Jul 2022 18:25:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235114AbiGNQRu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 14 Jul 2022 12:17:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        id S231278AbiGNQZK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 14 Jul 2022 12:25:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238921AbiGNQRt (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Jul 2022 12:17:49 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A916461D74
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 09:17:48 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26EFs7Ng000894
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 16:17:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2021-07-09;
- bh=09zGNvtNF1jafOS6jzYUooKqtTgc2Z8D2gVr7pmQ1gQ=;
- b=fb1ZsjwXuqU7sbrTErNImVNQmwfT3dkxcY5B+deVEUAN5mC/Xg/G1EF4XJym5umG/4i7
- V+yM9BcZ4bEfg2ympR7pDtrbuRowKaLiz6ll6L+Q0EKWDPoxMiVOuc9mi4qC5slx9VFL
- xesPJyoLgAolI1kuJOl3CHULmRyyBFKBJ3q1FjL+z6V2Jfh2ZfHoOY6b9qNny9TuLZF2
- nf2BU0qFN+BF9GWQ6efGTp4B2He+pjAzabACtSS7WvJBf/aQriYK+BVtEJF7aUn947e4
- 47kDrlw90iPHVuRZQHChJvD8UDA/nzcX0BUtKSen85pUlhicjtqcZwtdT/L1r7ntjlBp /A== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h71xrnnjf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 16:17:47 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26EGFfne018976
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 16:17:46 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3h70467f6p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 16:17:46 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 26EGHjDs024660
-        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 16:17:46 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com with ESMTP id 3h70467f5u-3;
-        Thu, 14 Jul 2022 16:17:46 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2 2/2] NFSD: limit the number of v4 clients to 1024 per 1GB of system memory
-Date:   Thu, 14 Jul 2022 09:17:42 -0700
-Message-Id: <1657815462-14069-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1657815462-14069-1-git-send-email-dai.ngo@oracle.com>
-References: <1657815462-14069-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-GUID: sJm4fvku7PE2tgT58cEpynbw_hLxTRNM
-X-Proofpoint-ORIG-GUID: sJm4fvku7PE2tgT58cEpynbw_hLxTRNM
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229496AbiGNQZK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 14 Jul 2022 12:25:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 004AC5A45D
+        for <linux-nfs@vger.kernel.org>; Thu, 14 Jul 2022 09:25:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1657815907;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C2KMz0HBp/YOodgQwMdsqXQ3AN3U25t782UBS+1TGYg=;
+        b=OPATW5Pyp44j5FW+qL72rX3M6sk0E+W75oP9hazvukHacclgqtwdoAGjRkNq4jqmg8C9F+
+        kOUs21l1+rk21/jShaBJR6zLXBMZUmDjOjlHmbwuWYACCefflqyXbctA3nwkb0idfo6ZPh
+        mCQAxb89VEsYFieNv4y+gnrzj5qjz88=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-402-m6V8fAjpPCmmhK3yAgi6gw-1; Thu, 14 Jul 2022 12:25:00 -0400
+X-MC-Unique: m6V8fAjpPCmmhK3yAgi6gw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 52DA018E5341;
+        Thu, 14 Jul 2022 16:25:00 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3D8D400EA8C;
+        Thu, 14 Jul 2022 16:24:59 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Jeff Layton" <jlayton@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        trondmy@hammerspace.com
+Subject: Re: [PATCH v2 00/15] RPC-with-TLS client side
+Date:   Thu, 14 Jul 2022 12:24:58 -0400
+Message-ID: <93D09CB1-AAE2-46A1-B001-5859E6F74F12@redhat.com>
+In-Reply-To: <F713FAF6-8910-4BA2-86C6-C5B09223AC0F@oracle.com>
+References: <165452664596.1496.16204212908726904739.stgit@oracle-102.nfsv4.dev>
+ <c9b6787ba9154d1f4c2bf25387a35453ad20badb.camel@kernel.org>
+ <F713FAF6-8910-4BA2-86C6-C5B09223AC0F@oracle.com>
+MIME-Version: 1.0
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently there is no limit on how many v4 clients are supported
-by the system. This can be a problem in systems with small memory
-configuration to function properly when a very large number of
-clients exist that creates memory shortage conditions.
+On 12 Jul 2022, at 9:48, Chuck Lever III wrote:
 
-This patch enforces a limit of 1024 NFSv4 clients, including courtesy
-clients, per 1GB of system memory.  When the number of the clients
-reaches the limit, requests that create new clients are returned
-with NFS4ERR_DELAY and the laundromat is kicked start to trim old
-clients. Due to the overhead of the upcall to remove the client
-record, the maximun number of clients the laundromat removes on
-each run is limited to 128. This is done to ensure the laundromat
-can still process the other tasks in a timely manner.
+>> On Jul 12, 2022, at 8:36 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>>
+>> On Mon, 2022-06-06 at 10:50 -0400, Chuck Lever wrote:
+>>> Now that the initial v5.19 merge window has closed, it's time for
+>>> another round of review for RPC-with-TLS support in the Linux NFS
+>>> client. This is just the RPC-specific portions. The full series is
+>>> available in the "topic-rpc-with-tls-upcall" branch here:
+>>>
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git
+>>>
+>>> I've taken two or three steps towards implementing the architecture
+>>> Trond requested during the last review. There is now a two-stage
+>>> connection establishment process so that the upper level can use
+>>> XPRT_CONNECTED to determine when a TLS session is ready to use.
+>>> There are probably additional changes and simplifications that can
+>>> be made. Please review and provide feedback.
+>>>
+>>> I wanted to make more progress on client-side authentication (ie,
+>>> passing an x.509 cert from the client to the server) but NFSD bugs
+>>> have taken all my time for the past few weeks.
+>>>
+>>>
+>>> Changes since v1:
+>>> - Rebased on v5.18
+>>> - Re-ordered so generic fixes come first
+>>> - Addressed some of Trond's review comments
+>>>
+>>> ---
+>>>
+>>> Chuck Lever (15):
+>>>      SUNRPC: Fail faster on bad verifier
+>>>      SUNRPC: Widen rpc_task::tk_flags
+>>>      SUNRPC: Replace dprintk() call site in xs_data_ready
+>>>      NFS: Replace fs_context-related dprintk() call sites with 
+>>> tracepoints
+>>>      SUNRPC: Plumb an API for setting transport layer security
+>>>      SUNRPC: Trace the rpc_create_args
+>>>      SUNRPC: Refactor rpc_call_null_helper()
+>>>      SUNRPC: Add RPC client support for the RPC_AUTH_TLS auth flavor
+>>>      SUNRPC: Ignore data_ready callbacks during TLS handshakes
+>>>      SUNRPC: Capture cmsg metadata on client-side receive
+>>>      SUNRPC: Add a connect worker function for TLS
+>>>      SUNRPC: Add RPC-with-TLS support to xprtsock.c
+>>>      SUNRPC: Add RPC-with-TLS tracepoints
+>>>      NFS: Have struct nfs_client carry a TLS policy field
+>>>      NFS: Add an "xprtsec=" NFS mount option
+>>>
+>>>
+>>> fs/nfs/client.c                 |  14 ++
+>>> fs/nfs/fs_context.c             |  65 +++++--
+>>> fs/nfs/internal.h               |   2 +
+>>> fs/nfs/nfs3client.c             |   1 +
+>>> fs/nfs/nfs4client.c             |  16 +-
+>>> fs/nfs/nfstrace.h               |  77 ++++++++
+>>> fs/nfs/super.c                  |   7 +
+>>> include/linux/nfs_fs_sb.h       |   5 +-
+>>> include/linux/sunrpc/auth.h     |   1 +
+>>> include/linux/sunrpc/clnt.h     |  15 +-
+>>> include/linux/sunrpc/sched.h    |  32 ++--
+>>> include/linux/sunrpc/xprt.h     |   2 +
+>>> include/linux/sunrpc/xprtsock.h |   4 +
+>>> include/net/tls.h               |   2 +
+>>> include/trace/events/sunrpc.h   | 157 ++++++++++++++--
+>>> net/sunrpc/Makefile             |   2 +-
+>>> net/sunrpc/auth.c               |   2 +-
+>>> net/sunrpc/auth_tls.c           | 120 +++++++++++++
+>>> net/sunrpc/clnt.c               |  34 ++--
+>>> net/sunrpc/debugfs.c            |   2 +-
+>>> net/sunrpc/xprtsock.c           | 310 
+>>> +++++++++++++++++++++++++++++++-
+>>> 21 files changed, 805 insertions(+), 65 deletions(-)
+>>> create mode 100644 net/sunrpc/auth_tls.c
+>>>
+>>> --
+>>> Chuck Lever
+>>>
+>>
+>> Chuck,
+>>
+>> How have you been testing this series? It looks like nfsd support is 
+>> not
+>> fully in yet, so I was wondering if you had a 3rd party server. I'd 
+>> like
+>> to do a little testing with this, and was wondering what I needed to
+>> cobble together a test rig.
+>
+> Ben Coddington has an ngnix module to support RPC-with-TLS that can
+> front-end a stock Linux NFSD. Rick has a FreeBSD server implementation
+> of RPC-with-TLS. Rick's probably taken his server down, but Ben's
+> server is still up on the bake-a-thon VPN.
 
-Since there is now a limit of the number of clients, the 24-hr
-idle time limit of courtesy client is no longer needed and was
-removed.
+That server now has a proper certificate for CN=boson.nfsv4.dev signed 
+by the bakeathon CA (thanks Chuck).
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/netns.h     |  1 +
- fs/nfsd/nfs4state.c | 20 ++++++++++++++------
- fs/nfsd/nfsctl.c    |  6 ++++++
- fs/nfsd/nfsd.h      |  2 ++
- 4 files changed, 23 insertions(+), 6 deletions(-)
+I've also (finally) put the nginx module code up on github if anyone 
+else wants to throw it in front of a server:
+https://github.com/bcodding/nginx-rpc-tls
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index ce864f001a3e..ffe17743cc74 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -191,6 +191,7 @@ struct nfsd_net {
- 	siphash_key_t		siphash_key;
- 
- 	atomic_t		nfs4_client_count;
-+	int			nfs4_max_clients;
- };
- 
- /* Simple check to find out if a given net was properly initialized */
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 30e16d9e8657..19807f7f618d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2059,6 +2059,10 @@ static struct nfs4_client *alloc_client(struct xdr_netobj name,
- 	struct nfs4_client *clp;
- 	int i;
- 
-+	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) {
-+		mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-+		return NULL;
-+	}
- 	clp = kmem_cache_zalloc(client_slab, GFP_KERNEL);
- 	if (clp == NULL)
- 		return NULL;
-@@ -5796,9 +5800,12 @@ static void
- nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 				struct laundry_time *lt)
- {
-+	unsigned int maxreap, reapcnt = 0;
- 	struct list_head *pos, *next;
- 	struct nfs4_client *clp;
- 
-+	maxreap = (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) ?
-+			NFSD_CLIENT_MAX_TRIM_PER_RUN : 0;
- 	INIT_LIST_HEAD(reaplist);
- 	spin_lock(&nn->client_lock);
- 	list_for_each_safe(pos, next, &nn->client_lru) {
-@@ -5809,14 +5816,15 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 			break;
- 		if (!atomic_read(&clp->cl_rpc_users))
- 			clp->cl_state = NFSD4_COURTESY;
--		if (!client_has_state(clp) ||
--				ktime_get_boottime_seconds() >=
--				(clp->cl_time + NFSD_COURTESY_CLIENT_TIMEOUT))
-+		if (!client_has_state(clp))
- 			goto exp_client;
--		if (nfs4_anylock_blockers(clp)) {
-+		if (!nfs4_anylock_blockers(clp))
-+			if (reapcnt >= maxreap)
-+				continue;
- exp_client:
--			if (!mark_client_expired_locked(clp))
--				list_add(&clp->cl_lru, reaplist);
-+		if (!mark_client_expired_locked(clp)) {
-+			list_add(&clp->cl_lru, reaplist);
-+			reapcnt++;
- 		}
- 	}
- 	spin_unlock(&nn->client_lock);
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 547f4c4b9668..bbd251da86e4 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1463,6 +1463,8 @@ static __net_init int nfsd_init_net(struct net *net)
- {
- 	int retval;
- 	struct nfsd_net *nn = net_generic(net, nfsd_net_id);
-+	u64 max_clients;
-+	struct sysinfo si;
- 
- 	retval = nfsd_export_init(net);
- 	if (retval)
-@@ -1488,6 +1490,10 @@ static __net_init int nfsd_init_net(struct net *net)
- 	seqlock_init(&nn->writeverf_lock);
- 
- 	atomic_set(&nn->nfs4_client_count, 0);
-+	si_meminfo(&si);
-+	max_clients = (u64)si.totalram * si.mem_unit / (1024 * 1024 * 1024);
-+	max_clients *= NFS4_CLIENTS_PER_GB;
-+	nn->nfs4_max_clients = max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
- 
- 	return 0;
- 
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 847b482155ae..bbada18225b1 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -341,6 +341,8 @@ void		nfsd_lockd_shutdown(void);
- 
- #define NFSD_LAUNDROMAT_MINTIMEOUT      1   /* seconds */
- #define	NFSD_COURTESY_CLIENT_TIMEOUT	(24 * 60 * 60)	/* seconds */
-+#define	NFSD_CLIENT_MAX_TRIM_PER_RUN	128
-+#define	NFS4_CLIENTS_PER_GB		1024
- 
- /*
-  * The following attributes are currently not supported by the NFSv4 server:
--- 
-2.9.5
+Ben
 
