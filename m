@@ -2,531 +2,252 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44AAD576323
-	for <lists+linux-nfs@lfdr.de>; Fri, 15 Jul 2022 15:54:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4567B576361
+	for <lists+linux-nfs@lfdr.de>; Fri, 15 Jul 2022 16:06:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234441AbiGONyF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Jul 2022 09:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53266 "EHLO
+        id S231843AbiGOOGi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 15 Jul 2022 10:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234320AbiGONyF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Jul 2022 09:54:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B25AA27CF9
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Jul 2022 06:54:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 29845B82C7B
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Jul 2022 13:54:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCA3C341C0;
-        Fri, 15 Jul 2022 13:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657893239;
-        bh=qjNxDQ9T9jQKBHakUmFOyNhwA5/qmHhpeglfDvr1o5o=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jq5l4B4deMdV9Mh9nW2TOd/fkuT1rxQNjRpSw5LHX4rKQQVdqAvLoL3XSIcn9ADMB
-         zl7TcbI7/nUi6w8oqpIYpef7nPW8HuzhVnt8VzFx0GxzA96ddyJM7D5HrAvqc9yvIC
-         1qaRyWzis68gB23LAGaI/pVc6FCeoZqZWoWJQbTFIZhYVgb5DnCycXAxxUfEkzEHkm
-         1TD3NRE7ghMLJ4i0AWDAHQD8pgFM4t62zZaPUVmokCFpZIpyMzQY1CqDbakGdkt1Cd
-         0DRX4eO861meSPPQQy0TIFchlPfQEKOs93/PILW0MO3OPUGFoJCeQ9Xrb1mePDzM3/
-         2kgpiC9/dUdGA==
-Message-ID: <ba5935159ca395c4df330471e6c49d114c0cf320.camel@kernel.org>
+        with ESMTP id S230301AbiGOOGf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Jul 2022 10:06:35 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C33F15FD5
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Jul 2022 07:06:30 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26FE1uww010555;
+        Fri, 15 Jul 2022 14:06:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=TFoDWqyzMtUfiOREzlz5a+GsD5u42V/MwAV10CT7FRo=;
+ b=PfjBYznM7q2UyBYs8dk8dPfLM+m0LiV5C3X0G1GPLbYZd0Yj7zZbHbvQnxWHOtCUbfDo
+ aA98CKBrlejjaBNXWWk9+BQPuCybQPRlmvHE68YAdtohnfxADnDqIiqvKqXxtzQqGtCS
+ CPXOIdi8e6PiTl67QttOAVPDtOICdoCYFMAXH36d5iG/J3AYw55kWzRmqCTsqGFMGCiB
+ 4pILhnlX+Z8vI5FHPFGEqWRFOOH6jM34jJPfnYAyMJVC80jF6zr/77Mj2PwP6SxnN4LN
+ ukgO7VugmI6XA8pSN4YtFTXHfIGF7jR+MM+mdu+7ElehGTsjle9/eIaHH0l0b/lfr/Jp MQ== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3h71scg4t9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Jul 2022 14:06:18 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.16.1.2/8.16.1.2) with SMTP id 26FE1Uj6020097;
+        Fri, 15 Jul 2022 14:06:18 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2109.outbound.protection.outlook.com [104.47.70.109])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com with ESMTP id 3h7047hmrq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 15 Jul 2022 14:06:18 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DAW8BEwJfeMjf9E46eAB+4DpshK2eieEQuiViHhP9oD2oIhgkLLSdc1SAWrmfthPdcYmffmP95dNeWxNiXNjzQhTTWOzCd0UvYXfXe0kFW4r089V/oagmvUKvjyT7mclvkJLCxkgE2n6QBIsWv71gJ+MmIOxNH7WMVD9NyqXDstGUi8WLr6VqeY1/3ip6QvgJOcbBU4DJA7QkCHWeBDUaLNdEwLbynD549CV49PAIo3tls72/xmHRbL3VQwDvYI9AhNStP8HH0pDM5TCdjTcRPPjFex2xzTJYCT32ReE9SqVgc8kfGmX7ln/v5HTUh259YinlL52x58F4O6EWRJV7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TFoDWqyzMtUfiOREzlz5a+GsD5u42V/MwAV10CT7FRo=;
+ b=UsHsI9JwthdhMalyfKOnqHUUYlfikNqwXrgQjYKLaMIFOqLLdvltwon8HBJKyX7540nEmbRoVMVznAfHbq/YfYj40zXIVXoVJfqMUqlzixX01rXvqeRaPRvVDkIXylk/a01n1WtHEF2GRogNMGTfpmjtzCD2b9ul1dytCHB5KNhAid7n2ndwPEAKP3xExEksxYEi4jPQg4a08wWVIvewp8EmhiOuhfZW9CK+g6SMOSfQiuPhC+WqvWlizNhxbt9sZt/i3cyiOmPHHF/b9m3ZuUdKKJK9KZiXjRa+X6pa4yK4FCCKwyAbcN8KB1WJnOTHXbiKceLpVgvykPfghmzcng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TFoDWqyzMtUfiOREzlz5a+GsD5u42V/MwAV10CT7FRo=;
+ b=M7K4wQQFj1T18JMOMt7bIQfl2KfTYXwwEcP0YvhxIXOGTd0YW9h4LJcTV392rKyAo68fo0BhXglt1n628dFa/umVr2wchk6MnTg639pdfaUHqWZS2jW506wl4VV75DSg0bvJPvLZgtDq4JSajstD0Ip9u4IwuEFM1PhYAxrUI/I=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MN2PR10MB3965.namprd10.prod.outlook.com (2603:10b6:208:1b8::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.14; Fri, 15 Jul
+ 2022 14:06:13 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6%7]) with mapi id 15.20.5438.019; Fri, 15 Jul 2022
+ 14:06:13 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Neil Brown <neilb@suse.de>
+CC:     Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Subject: Re: [PATCH 0/8] NFSD: clean up locking.
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Fri, 15 Jul 2022 09:53:58 -0400
-In-Reply-To: <8740381aaa51128446734b9854af01bb2c81215b.camel@kernel.org>
+Thread-Topic: [PATCH 0/8] NFSD: clean up locking.
+Thread-Index: AQHYkO+nUhzdndZueEy9RTo7pT1nKa1xiSYAgAiEbACAAMTsgIAA7tMAgACi9ACAAmEZgIAAwNYA
+Date:   Fri, 15 Jul 2022 14:06:13 +0000
+Message-ID: <39D88652-8163-48A6-8A7E-950C209C1FB7@oracle.com>
 References: <165708033167.1940.3364591321728458949.stgit@noble.brown>
-         , <3FF88D5A-9DBF-4115-A31C-6C6A888F272F@oracle.com>
-         , <165759318889.25184.8939985512802350340@noble.neil.brown.name>
-         , <3C945625-ED72-4CC1-9CC0-F354FEF0C2E4@oracle.com>
-         , <165768676476.25184.1334928545636067316@noble.neil.brown.name>
-         , <13CEFBB0-45FB-4051-8F69-B41DC40CBD52@oracle.com>
-         <165785256143.25184.15897431161933266918@noble.neil.brown.name>
-         <8740381aaa51128446734b9854af01bb2c81215b.camel@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
+ <3FF88D5A-9DBF-4115-A31C-6C6A888F272F@oracle.com>
+ <165759318889.25184.8939985512802350340@noble.neil.brown.name>
+ <3C945625-ED72-4CC1-9CC0-F354FEF0C2E4@oracle.com>
+ <165768676476.25184.1334928545636067316@noble.neil.brown.name>
+ <13CEFBB0-45FB-4051-8F69-B41DC40CBD52@oracle.com>
+ <165785256143.25184.15897431161933266918@noble.neil.brown.name>
+In-Reply-To: <165785256143.25184.15897431161933266918@noble.neil.brown.name>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3b9b05f9-2bba-4072-eb78-08da666b2d78
+x-ms-traffictypediagnostic: MN2PR10MB3965:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +7JHAof7jFOtDKv0a/E+btMZop9VPoL2FeG/I39QMNiFONdCn/C5U5NK67/kzUf4rT0hKYHON8BRb7JcnpKM+H5igmtbrsgb6t51F8mOCMde1927mFDR9DhwIP06ga7/ZsoRSGdngFiGyyXV5BliNIP97aY1U1QGiox3zdcFloP1RPiDE9XQoBgXogY5pWzzLFYfhyMyog0iCXlPJlxkhOAlnTF9qM6Vr3wBvcpsdEA5dN51QP2WpY4l4MDbHCuodkWH2UZc9BK/MX6Y4WoAzdyTXz5bXewPdD269VsJEZgAC07L/vfrspq381WGxntW22bPAx3lAIANyfxKsl5G+DMrRm7yeUp09z8mlF0L7KRJ1BMonibDM3WWClgdLd0XrXHzKcpjL6hqwu18izMu5gvu43aB4P360Kh7ErC8EIFj5Nc2rBaGMoxMl3pOg/w+ExUMY1yvDlu32HfKEhpNP0y44j4EvzCEgZAeOet+31a3Lm6FgODRzvWWQ6cJmaQCk1qytU31rjG4CXMU0DY+DMEvKuyTx535nWSqYRUTWxNFgvg0owyfmyBc45yqjWGWv8IQleN2HFVaLFp6sdku66NkloH188w1o62Nuw+evpLuvym1ngrIWwLZmsn6P25rrs8SzTjGf+96W0AQJoI80o37sYrrluaUsJYdVvTfTn+WqZ8n0prS/fUsLSlD0/hO7rYmMErMaQ6n1fMkP8W6rfhHbUrL5F3I4Pqkk0Hp3AqfVbUzAelivqOK/0tdoS8I4BQMjD34CMZDPO2jqXf8kZ6YdSlDMlsllW43iDOmcn/po7+BmLMWTxaD0FLHtrewklKGwBJUHPuLhHzmwJbvlbs/XGQ1g7scHNjNgSllDuQ=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(376002)(396003)(366004)(346002)(136003)(38070700005)(38100700002)(2906002)(122000001)(8936002)(36756003)(66556008)(91956017)(66446008)(66476007)(76116006)(4326008)(64756008)(66946007)(41300700001)(33656002)(53546011)(6506007)(83380400001)(8676002)(26005)(6512007)(316002)(6916009)(5660300002)(2616005)(478600001)(71200400001)(6486002)(54906003)(86362001)(186003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/Gacfawam5J/rQOiAuHJGQWy+Pql5BBEllfYfrFpcUI8Oc5CpFN3W4d1IsDa?=
+ =?us-ascii?Q?UXzNd5WcaiIuCoD6hnwxZ2KJdlFHmyM/424JdFxuQTk+mBa2GBN5yAIeDQH5?=
+ =?us-ascii?Q?clvke2YJg6a62yfwubMXYuod4cEIYU8hVf7L+2/Wk/6xoT3GORB5msnwQrsr?=
+ =?us-ascii?Q?TJvCJU4ZUUVewB45nipYIO/WkMCE9V0zZQ1RJhr2M7XOYErMuA9phlk3lT4C?=
+ =?us-ascii?Q?9/bRfC63056wHXZ4n3J3RZT9/sqgwoA5FY3/Me67cAssebo8UMCUvwwRLtwU?=
+ =?us-ascii?Q?NSDUJZ7hPCv/oyRFndV0vUYdIiKbFFYmrhFRF5e6GIbCOpgFIvlQrRX1XP9C?=
+ =?us-ascii?Q?h+y0GpX/f2AosTES1WF2IMGkUxd6EhwE+2b/9DuxzsZNLpy5NwT6DWSt/54B?=
+ =?us-ascii?Q?BjQkHrpxnhDPFwqH/kRLxKU7zAoUC1TxIqTbqYaDHsCKyCgulmJUgPfJI114?=
+ =?us-ascii?Q?I/GoHVNdruuNy904fl0dp/hsR5Dm6EXfFFPbcTnaZR15j5gxt2icszypRlmJ?=
+ =?us-ascii?Q?RZZY8ZPN4Mwuzt0OtXmRMBEWHi9WOcxh9H4TVTboxEftXyYgunlyWFUtrPMP?=
+ =?us-ascii?Q?bWGtxcu3f1fTsiurwHAIPOhdQGgJltBt3axIqA44m83v2YNC/+PudIeh6gnI?=
+ =?us-ascii?Q?iwbq/912kWTu47BWd5zT3WqxT3Xa3GyM2IyOrt8YtWk56HsQco109Qdsr+7t?=
+ =?us-ascii?Q?deLckNTFonz3SO7tWFei1lhnLm7q/zmBfX+82Dr1DXdJAMavculxzCbkrf6F?=
+ =?us-ascii?Q?495hLFDaIeRuL8qU/cWlNmt6tRmL4pkVXcZIXqAl1CJ/DjMKf+PsMdbZtsW0?=
+ =?us-ascii?Q?00OmZCD5fjL3ud12mykFnrnPenJUkBlXV8lDIhyWjIueFHElCpxxdShis0KB?=
+ =?us-ascii?Q?R9ah17mvSXEXfrpKKpPukx10v3aZOI1HldC43tMvCDf9ZedIES/jISKPx/JH?=
+ =?us-ascii?Q?Vycm7HTFLGFoldw21P4T27jWZemn2fwETDsznKfWk1S7Dgp/2O5hMJBjlxfb?=
+ =?us-ascii?Q?hapIVV8XyAv8iB9aFMr277KNuhjmPvXnhRYzF1CBNa7w8IcNutEQcv2AK37u?=
+ =?us-ascii?Q?zf60CynzgdPPWdrUZg3zgB+42kLyO24MDHJ8WBijEjY1jLU2hjUlniZEdwQq?=
+ =?us-ascii?Q?ak9bpGaBg0Fj7zo8QXxMDe8avkHxZUdWiwRpu6WBGg7QVAC8IUxVtEtRahI6?=
+ =?us-ascii?Q?StKlhaPyV9MFlF2/0WVnvVcAtYyW9HXp/u9CBC9COvcMpabzA/y05ulCMYE7?=
+ =?us-ascii?Q?+1zghEkiynp9qsaKsLKibpzbUhpPEqBVnMl1rs0c4+l1suSdTy2RLt35cMLC?=
+ =?us-ascii?Q?lL39WI1wXukWtxpQK3X7E+9aZwppiwKv1M3XDCLYm3DrVHZ4+hFZtRLqEMnj?=
+ =?us-ascii?Q?TS0c6DHUMtl4xkwg1c1uX6mpcQpxG/fChlIpiPJXrllf1deYTJFGbBlwggIs?=
+ =?us-ascii?Q?xHRHxvRlD3tcAj7WGFfKtXoQ6552Lmyc1cHh29gUylx+1AdaLMpT5Ag4oKzN?=
+ =?us-ascii?Q?EtkIx9v2eMQNWXcCCX9MRZjdQ2QREJJwBADVMEggn2xgOvgS7VCdilf85oQa?=
+ =?us-ascii?Q?fYDbOFvxnYynEfUo4LXJfB3yd4UlM1MJpqx8XTIdKbOGeeJDTUyTg+6tK27F?=
+ =?us-ascii?Q?bw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <07C172380C16E64D99C466C8E1F9BC02@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b9b05f9-2bba-4072-eb78-08da666b2d78
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2022 14:06:13.6154
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WvVxTum7jB3R/GwuAqEB5/2oKVL46eZwwHVVsdnBymhflEywrVhrI1bSSPXGbV7DxffVNEYslmlz7OOmXKqsfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB3965
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.517,18.0.883
+ definitions=2022-07-15_05:2022-07-14,2022-07-15 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 mlxscore=0
+ suspectscore=0 adultscore=0 spamscore=0 mlxlogscore=629 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207150062
+X-Proofpoint-GUID: o5cZp21aaCCDs7avYaCDM-jp6E7PFrUM
+X-Proofpoint-ORIG-GUID: o5cZp21aaCCDs7avYaCDM-jp6E7PFrUM
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-07-15 at 09:01 -0400, Jeff Layton wrote:
-> On Fri, 2022-07-15 at 12:36 +1000, NeilBrown wrote:
-> > On Thu, 14 Jul 2022, Chuck Lever III wrote:
-> > >=20
-> > > > On Jul 13, 2022, at 12:32 AM, NeilBrown <neilb@suse.de> wrote:
-> > > >=20
-> > > > On Wed, 13 Jul 2022, Chuck Lever III wrote:
-> > > > >=20
-> > > > > > On Jul 11, 2022, at 10:33 PM, NeilBrown <neilb@suse.de> wrote:
-> > > > > >=20
-> > > > > > On Thu, 07 Jul 2022, Chuck Lever III wrote:
-> > > > > > >=20
-> > > > > > > > On Jul 6, 2022, at 12:18 AM, NeilBrown <neilb@suse.de> wrot=
-e:
-> > > > > > > >=20
-> > > > > > > > This series prepares NFSD to be able to adjust to work with=
- a proposed
-> > > > > > > > patch which allows updates to directories to happen in para=
-llel.
-> > > > > > > > This patch set changes the way directories are locked, so t=
-he present
-> > > > > > > > series cleans up some locking in nfsd.
-> > > > > > > >=20
-> > > > > > > > Specifically we remove fh_lock() and fh_unlock().
-> > > > > > > > These functions are problematic for a few reasons.
-> > > > > > > > - they are deliberately idempotent - setting or clearing a =
-flag
-> > > > > > > > so that a second call does nothing. This makes locking erro=
-rs harder,
-> > > > > > > > but it results in code that looks wrong ... and maybe somet=
-imes is a
-> > > > > > > > little bit wrong.
-> > > > > > > > Early patches clean up several places where this idempotent=
- nature of
-> > > > > > > > the functions is depended on, and so makes the code clearer=
-.
-> > > > > > > >=20
-> > > > > > > > - they transparently call fh_fill_pre/post_attrs(), includi=
-ng at times
-> > > > > > > > when this is not necessary. Having the calls only when nece=
-ssary is
-> > > > > > > > marginally more efficient, and arguably makes the code clea=
-rer.
-> > > > > > > >=20
-> > > > > > > > nfsd_lookup() currently always locks the directory, though =
-often no lock
-> > > > > > > > is needed. So a patch in this series reduces this locking.
-> > > > > > > >=20
-> > > > > > > > There is an awkward case that could still be further improv=
-ed.
-> > > > > > > > NFSv4 open needs to ensure the file is not renamed (or unli=
-nked etc)
-> > > > > > > > between the moment when the open succeeds, and a later mome=
-nt when a
-> > > > > > > > "lease" is attached to support a delegation. The handling o=
-f this lock
-> > > > > > > > is currently untidy, particularly when creating a file.
-> > > > > > > > It would probably be better to take a lease immediately aft=
-er
-> > > > > > > > opening the file, and then discarding if after deciding not=
- to provide a
-> > > > > > > > delegation.
-> > > > > > > >=20
-> > > > > > > > I have run fstests and cthon tests on this, but I wouldn't =
-be surprised
-> > > > > > > > if there is a corner case that I've missed.
-> > > > > > >=20
-> > > > > > > Hi Neil, thanks for (re)posting.
-> > > > > > >=20
-> > > > > > > Let me make a few general comments here before I send out spe=
-cific
-> > > > > > > review nits.
-> > > > > > >=20
-> > > > > > > I'm concerned mostly with how this series can be adequately t=
-ested.
-> > > > > > > The two particular areas I'm worried about:
-> > > > > > >=20
-> > > > > > > - There are some changes to NFSv2 code, which is effectively
-> > > > > > > fallow. I think I can run v2 tests, once we decide what tests
-> > > > > > > should be run.
-> > > > > >=20
-> > > > > > I hope we can still test v2... I know it is disabled by default=
-..
-> > > > > > If we can't test it, we should consider removing it.
-> > > > >=20
-> > > > > The work of deprecating and removing NFSv2 is already under way.
-> > > > > I think what I'm asking is if /you/ have tested the NFSv2 changes=
-.
-> > > >=20
-> > > > That's a question I can answer. I haven't. I will.
-> > >=20
-> > > Just in case it's not clear by now, NFSv2 (and NFSv3)
-> > > stability is the reason I don't want to perturb the
-> > > NFSD VFS API code in any significant way unless it's
-> > > absolutely needed.
-> >=20
-> > "absolutely" seems like a rather high bar.  It makes the goal of
-> > "stability" seem more like "ossification".
-> > Certainly we don't want to break things.  Equally certainly we will.
-> > I don't think "hold back useful changes out of fear" is the path to
-> > success.  Testing, review, and responding to bug reports is what we fin=
-d
-> > works best - and what we generally do.
-> >=20
-> > And I wouldn't class NFSv3 at all with NFSv2 (not even in parentheses).
-> > NFSv2 has very few (if any) users in the broad community, so bugs are
-> > likely to go unnoticed for extended periods.  NFSv3 is, I believe, stil=
-l
-> > widely used, though not as widely as v4.  There are use-cases where I
-> > would recommend v3.
-> >=20
-> > e.g.  a case could certainly be made to not extend my directory-locking
-> > changes to v2-specific code, but v3 should get them.
-> >=20
-> > >=20
-> > >=20
-> > > > > > > Secondarily, the series adds more bells and whistles to the g=
-eneric
-> > > > > > > NFSD VFS APIs on behalf of NFSv4-specific requirements. In pa=
-rticular:
-> > > > > > >=20
-> > > > > > > - ("NFSD: change nfsd_create() to unlock directory before ret=
-urning.")
-> > > > > > > makes some big changes to nfsd_create(). But that helper itse=
-lf
-> > > > > > > is pretty small. Seems like cleaner code would result if NFSv=
-4
-> > > > > > > had its own version of nfsd_create() to deal with the post-ch=
-ange
-> > > > > > > cases.
-> > > > > >=20
-> > > > > > I would not like that approach. Duplicating code is rarely a go=
-od idea.
-> > > > >=20
-> > > > > De-duplicating code /can/ be a good idea, but isn't always a good
-> > > > > idea. If the exceptional cases add a lot of logic, that can make =
-the
-> > > > > de-duplicated code difficult to read and reason about, and it can
-> > > > > make it brittle, just as it does in this case. Modifications on
-> > > > > behalf of NFSv4 in this common piece of code is possibly hazardou=
-s
-> > > > > to NFSv3, and navigating around the exception logic makes it
-> > > > > difficult to understand and review.
-> > > >=20
-> > > > Are we looking at the same code?
-> > > > The sum total of extra code needed for v4 is:
-> > > > - two extra parameters:
-> > > > 	 void (*post_create)(struct svc_fh *fh, void *data),
-> > > > 	 void *data)
-> > > > - two lines of code:
-> > > > 	if (!err && post_create)
-> > > > 		post_create(resfhp, data);
-> > > >=20
-> > > > does that really make anything hard to follow?
-> > >=20
-> > > The synopsis of nfsd_create() is already pretty cluttered.
-> >=20
-> > Would it help to collect related details (name, type, attributes, acl,
-> > label) into a struct and pass a reference to that around?
-> > One awkwardness in my latest patch is that the acl and label are not se=
-t
-> > in nfsd_create_setattr().  If they were passed around together with the
-> > attributes, that would be a lot easier to achieve.
-> >=20
-> > >=20
-> > > You're adding that extra code in nfsd_symlink() too IIRC? And,
-> > > this change adds a virtual function call (which has significant
-> > > overhead these days) for reasons of convenience rather than
-> > > necessity.
-> >=20
-> > "significant"?  In context of creation a file, I don't think one more
-> > virtual function call is all that significant?
-> >=20
-> > I started writing code to avoid the function pointer, but the function
-> > args list exploded.  If you could be happy with e.g.  a struct
-> > nfs_create_args which contains attrs, acl, label, and was passed into
-> > nfsd_create_setattr(), then I think that would cleanly avoid the desire
-> > for a function pointer.
-> >=20
-> > >=20
-> > >=20
-> > > > > IMO code duplication is not an appropriate design pattern in this
-> > > > > specific instance.
-> > > >=20
-> > > > I'm guessing there is a missing negation in there.
-> > >=20
-> > > Yes, thanks.
-> > >=20
-> > >=20
-> > > > > > Maybe, rather than passing a function and void* to nfsd_create(=
-), we
-> > > > > > could pass an acl and a label and do the setting in vfs.c rathe=
-r then
-> > > > > > nfs4proc.c. The difficult part of that approach is getting back=
- the
-> > > > > > individual error statuses. That should be solvable though.
-> > > > >=20
-> > > > > The bulk of the work in nfsd_create() is done by lookup_one_len()
-> > > > > and nfsd_create_locked(), both of which are public APIs. The rest
-> > > > > of nfsd_create() is code that appears in several other places
-> > > > > already.
-> > > >=20
-> > > > "several" =3D=3D 1. The only other call site for nfsd_create_locked=
-() is in
-> > > > nfsd_proc_create()
-> > >=20
-> > > But there are 15 call sites under fs/nfsd/ for lookup_one_len().
-> > > It's a pretty common trope.
-> > >=20
-> > >=20
-> > > > I would say that the "bulk" of the work is the interplay between
-> > > > locking, error checking, and these two functions you mention.
-> > >=20
-> > > You're looking at the details of your particular change, and
-> > > I'm concerned about how much technical debt is going to
-> > > continue to accrue in an area shared with legacy protocol
-> > > implementation.
-> > >=20
-> > > I'm still asking myself if I can live with the extra parameters
-> > > and virtual function call. Maybe. IMO, there are three ways
-> > > forward:
-> > >=20
-> > > 1. I can merge your patch and move on.
-> > > 2. I can merge your patch as it is and follow up with clean-up.
-> > > 3. I can drop your patch and write it the way I prefer.
-> > >=20
-> > >=20
-> > > > > > > - ("NFSD: reduce locking in nfsd_lookup()") has a similar iss=
-ue:
-> > > > > > > nfsd_lookup() is being changed such that its semantics are
-> > > > > > > substantially different for NFSv4 than for others. This is
-> > > > > > > possibly an indication that nfsd_lookup() should also be
-> > > > > > > duplicated into the NFSv4-specific code and the generic VFS
-> > > > > > > version should be left alone.
-> > > > > >=20
-> > > > > > Again, I don't like duplication. In this case, I think the long=
-er term
-> > > > > > solution is to remove the NFSv4 specific locking differences an=
-d solve
-> > > > > > the problem differently. i.e. don't hold the inode locked, but =
-check
-> > > > > > for any possible rename after getting a lease. Once that is don=
-e,
-> > > > > > nfsd_lookup() can have saner semantics.
-> > > > >=20
-> > > > > Then, perhaps we should bite that bullet and do that work now.
-> > > >=20
-> > > > While this does have an appeal, it also looks like the start of a r=
-abbit
-> > > > hole where I find have to fix up a growing collection of problems b=
-efore
-> > > > my patch can land.
-> > >=20
-> > > That's kind of the nature of the beast.
-> > >=20
-> > > You are requesting changes that add technical debt with the
-> > > promise that "sometime in the future" that debt will be
-> > > erased. Meanwhile, nfsd_lookup() will be made harder to
-> > > maintain, and it will continue to contain a real bug.
-> > >=20
-> > > I'm saying if there's a real bug here, addressing that should
-> > > be the priority.
-> > >=20
-> > >=20
-> > > > I think balance is needed - certainly asking for some preliminary
-> > > > cleanup is appropriate. Expecting long standing and subtle issues t=
-hat
-> > > > are tangential to the main goal to be resolved first is possibly as=
-king
-> > > > too much.
-> > >=20
-> > > Fixing the bug seems to me (perhaps naively) to be directly
-> > > related to the parallelism of directory operations. Why do
-> > > you think it is tangential?
-> > >=20
-> >=20
-> > The bug was exposed by the analysis required for the changes I want, bu=
-t
-> > I think that is as close as the connection goes.
-> > To really see if it is tangential, we would need to come up with a
-> > solution and see how easily it is ported across my patches.
-> >=20
-> > As I said in a reply to Jeff, I don't think locking of the parent
-> > directory should be part of the solution.  After getting a lease, we
-> > repeat the lookup and see if dentry has changed.  After my patches, tha=
-t
-> > would mean calling lookup_one_len_unlocked().  Before my patches, it
-> > would mean calling fh_unlock() earlier to ensure the directory is no
-> > longer locked but still calling lookup_one_len_unlocked()
-> >=20
-> >=20
-> > > Asking for bugs to be addressed before new features go in
-> > > seems sensible to me, and is a common practice to enable the
-> > > resulting fixes to be backported. If you don't want to address
-> > > the bug you mentioned, then someone else will need to, and
-> > > that's fine. I think the priority should be bug fixes first.
-> >=20
-> > As a general principle I would agree.
-> > In this case the bug is minor, long standing, and tangential.
-> > And the series imposes enough review burden as it is.
-> >=20
-> > But if Jeff can produce a fix, either to be applied before or after,
-> > then that would be an excellent solution.
-> >=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
->=20
->=20
-> FWIW, I hit this while running fstests against the server with some
-> draft changes. This crash is not in an area I touched, so I suspect
-> something in Neil's locking cleanup:
->=20
-> [  434.257242] ------------[ cut here ]------------
-> [  434.257278] kernel BUG at fs/nfsd/xdr4.h:752!
-> [  434.257755] invalid opcode: 0000 [#1] PREEMPT SMP KASAN NOPTI
-> [  434.257937] CPU: 2 PID: 1202 Comm: nfsd Kdump: loaded Tainted: G      =
-     OE     5.19.0-rc5+ #316
-> [  434.258179] Hardware name: Red Hat KVM/RHEL, BIOS 1.16.0-3.el9 04/01/2=
-014
-> [  434.258371] RIP: 0010:nfsd4_open+0x1940/0x1a30 [nfsd]
-> [  434.258615] Code: 40 e8 54 04 e2 e6 48 8b 7c 24 40 41 89 c4 e8 57 7e d=
-4 e6 41 f7 d4 4c 8b 44 24 60 66 44 21 63 44 48 8b 54 24 40 e9 46 fc ff ff <=
-0f> 0b 48 8d bd 88 00 00 00 e8 72 80 d4 e6 4c 8b ad 88 00 00 00 49
-> [  434.259053] RSP: 0018:ffff888134897c10 EFLAGS: 00010246
-> [  434.259211] RAX: 0000000000000000 RBX: ffff8881348791a0 RCX: ffffffffc=
-07fbb44
-> [  434.259408] RDX: 1ffff1102691001a RSI: 0000000000000002 RDI: ffff88813=
-48800d1
-> [  434.259606] RBP: ffff888134880030 R08: 0000000000000000 R09: 000000000=
-0000001
-> [  434.259802] R10: fffffbfff542dfac R11: 0000000000000001 R12: 000000000=
-0000000
-> [  434.260000] R13: ffff888133ab8000 R14: 0000000000000000 R15: ffff88811=
-65db400
-> [  434.260195] FS:  0000000000000000(0000) GS:ffff888225500000(0000) knlG=
-S:0000000000000000
-> [  434.260466] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  434.260697] CR2: 0000558890b5d178 CR3: 0000000107844000 CR4: 000000000=
-03506e0
-> [  434.260949] Call Trace:
-> [  434.261106]  <TASK>
-> [  434.261260]  ? nfsd4_decode_notsupp+0x10/0x10 [nfsd]
-> [  434.261549]  ? nfsd4_interssc_connect+0x8e0/0x8e0 [nfsd]
-> [  434.261858]  ? preempt_count_sub+0x14/0xc0
-> [  434.262054]  ? percpu_counter_add_batch+0x60/0xd0
-> [  434.262261]  nfsd4_proc_compound+0x8c6/0xe90 [nfsd]
-> [  434.262553]  nfsd_dispatch+0x2a9/0x5c0 [nfsd]
-> [  434.262836]  svc_process_common+0x6ab/0xc30 [sunrpc]
-> [  434.263162]  ? svc_create_pooled+0x390/0x390 [sunrpc]
-> [  434.263484]  ? nfsd_svc+0x830/0x830 [nfsd]
-> [  434.263755]  ? svc_recv+0xabf/0x1310 [sunrpc]
-> [  434.264074]  svc_process+0x1a3/0x200 [sunrpc]
-> [  434.264382]  nfsd+0x1d7/0x390 [nfsd]
-> [  434.264640]  ? nfsd_shutdown_threads+0x200/0x200 [nfsd]
-> [  434.264926]  kthread+0x167/0x1a0
-> [  434.265101]  ? kthread_complete_and_exit+0x20/0x20
-> [  434.265307]  ret_from_fork+0x22/0x30
-> [  434.265494]  </TASK>
-> [  434.265652] Modules linked in: rpcsec_gss_krb5(E) nft_fib_inet(E) nft_=
-fib_ipv4(E) nft_fib_ipv6(E) nft_fib(E) nft_reject_inet(E) nf_reject_ipv4(E)=
- nf_reject_ipv6(E) nft_reject(E) nft_ct(E) nft_chain_nat(E) nf_nat(E) nf_co=
-nntrack(E) nf_defrag_ipv6(E) nf_defrag_ipv4(E) ip_set(E) rfkill(E) nf_table=
-s(E) nfnetlink(E) iTCO_wdt(E) intel_rapl_msr(E) intel_pmc_bxt(E) iTCO_vendo=
-r_support(E) joydev(E) intel_rapl_common(E) i2c_i801(E) i2c_smbus(E) virtio=
-_balloon(E) lpc_ich(E) nfsd(OE) auth_rpcgss(E) nfs_acl(E) lockd(E) grace(E)=
- drm(E) fuse(E) sunrpc(E) xfs(E) crct10dif_pclmul(E) crc32_pclmul(E) crc32c=
-_intel(E) ghash_clmulni_intel(E) serio_raw(E) virtio_blk(E) virtio_console(=
-E) virtio_net(E) net_failover(E) failover(E) qemu_fw_cfg(E)
-> [  434.267660] ---[ end trace 0000000000000000 ]---
-> [  434.267870] RIP: 0010:nfsd4_open+0x1940/0x1a30 [nfsd]
-> [  434.268161] Code: 40 e8 54 04 e2 e6 48 8b 7c 24 40 41 89 c4 e8 57 7e d=
-4 e6 41 f7 d4 4c 8b 44 24 60 66 44 21 63 44 48 8b 54 24 40 e9 46 fc ff ff <=
-0f> 0b 48 8d bd 88 00 00 00 e8 72 80 d4 e6 4c 8b ad 88 00 00 00 49
-> [  434.268771] RSP: 0018:ffff888134897c10 EFLAGS: 00010246
-> [  434.268995] RAX: 0000000000000000 RBX: ffff8881348791a0 RCX: ffffffffc=
-07fbb44
-> [  434.269247] RDX: 1ffff1102691001a RSI: 0000000000000002 RDI: ffff88813=
-48800d1
-> [  434.269511] RBP: ffff888134880030 R08: 0000000000000000 R09: 000000000=
-0000001
-> [  434.269775] R10: fffffbfff542dfac R11: 0000000000000001 R12: 000000000=
-0000000
-> [  434.270030] R13: ffff888133ab8000 R14: 0000000000000000 R15: ffff88811=
-65db400
-> [  434.270288] FS:  0000000000000000(0000) GS:ffff888225500000(0000) knlG=
-S:0000000000000000
-> [  434.270632] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  434.270862] CR2: 0000558890b5d178 CR3: 0000000107844000 CR4: 000000000=
-03506e0
->=20
-> faddr2line says:
->=20
-> $ ./scripts/faddr2line --list fs/nfsd/nfsd.ko nfsd4_open+0x1940
-> nfsd4_open+0x1940/0x1a30:
->=20
-> set_change_info at /home/jlayton/git/linux/fs/nfsd/xdr4.h:752
->  747 	#define NFS4_SVC_XDRSIZE		sizeof(struct nfsd4_compoundargs)
->  748 =09
->  749 	static inline void
->  750 	set_change_info(struct nfsd4_change_info *cinfo, struct svc_fh *fhp=
-)
->  751 	{
-> > 752<		BUG_ON(!fhp->fh_pre_saved);
->  753 		cinfo->atomic =3D (u32)(fhp->fh_post_saved && !fhp->fh_no_atomic_a=
-ttr);
->  754 =09
->  755 		cinfo->before_change =3D fhp->fh_pre_change;
->  756 		cinfo->after_change =3D fhp->fh_post_change;
->  757 	}
->=20
-> (inlined by) do_open_lookup at /home/jlayton/git/linux/fs/nfsd/nfs4proc.c=
-:502
->  497 		accmode =3D NFSD_MAY_NOP;
->  498 		if (open->op_created ||
->  499 				open->op_claim_type =3D=3D NFS4_OPEN_CLAIM_DELEGATE_CUR)
->  500 			accmode |=3D NFSD_MAY_OWNER_OVERRIDE;
->  501 		status =3D do_open_permission(rqstp, *resfh, open, accmode);
-> > 502<		set_change_info(&open->op_cinfo, current_fh);
->  503 	out:
->  504 		if (status)
->  505 			inode_unlock(current_fh->fh_dentry->d_inode);
->  506 		return status;
->  507 	}
->=20
-> (inlined by) nfsd4_open at /home/jlayton/git/linux/fs/nfsd/nfs4proc.c:625
->  620 			goto out;
->  621 =09
->  622 		switch (open->op_claim_type) {
->  623 		case NFS4_OPEN_CLAIM_DELEGATE_CUR:
->  624 		case NFS4_OPEN_CLAIM_NULL:
-> > 625<			status =3D do_open_lookup(rqstp, cstate, open, &resfh);
->  626 			if (status)
->  627 				goto out;
->  628 			locked =3D true;
->  629 			break;
->  630 		case NFS4_OPEN_CLAIM_PREVIOUS:
->=20
-> I haven't yet dug down into the actual cause yet.
 
-Maybe the patch below will fix it? I didn't see other cases where we
-could return nfs_ok w/o setting the pre-op attrs, but there may be some.
-Neil, feel free to fold this into the appropriate patch in your series
-if you think it's correct:
 
-----------------------8<--------------------
-[PATCH] nfsd: ensure we fill in pre-op-attrs in v4.1 exclusive create
+> On Jul 14, 2022, at 10:36 PM, NeilBrown <neilb@suse.de> wrote:
+>=20
+> On Thu, 14 Jul 2022, Chuck Lever III wrote:
+>>=20
+>>> On Jul 13, 2022, at 12:32 AM, NeilBrown <neilb@suse.de> wrote:
+>>>=20
+>>> On Wed, 13 Jul 2022, Chuck Lever III wrote:
+>>=20
+>>>>>> Secondarily, the series adds more bells and whistles to the generic
+>>>>>> NFSD VFS APIs on behalf of NFSv4-specific requirements. In particula=
+r:
+>>>>>>=20
+>>>>>> - ("NFSD: change nfsd_create() to unlock directory before returning.=
+")
+>>>>>> makes some big changes to nfsd_create(). But that helper itself
+>>>>>> is pretty small. Seems like cleaner code would result if NFSv4
+>>>>>> had its own version of nfsd_create() to deal with the post-change
+>>>>>> cases.
+>>>>>=20
+>>>>> I would not like that approach. Duplicating code is rarely a good ide=
+a.
+>>>>=20
+>>>> De-duplicating code /can/ be a good idea, but isn't always a good
+>>>> idea. If the exceptional cases add a lot of logic, that can make the
+>>>> de-duplicated code difficult to read and reason about, and it can
+>>>> make it brittle, just as it does in this case. Modifications on
+>>>> behalf of NFSv4 in this common piece of code is possibly hazardous
+>>>> to NFSv3, and navigating around the exception logic makes it
+>>>> difficult to understand and review.
+>>>=20
+>>> Are we looking at the same code?
+>>> The sum total of extra code needed for v4 is:
+>>> - two extra parameters:
+>>> 	 void (*post_create)(struct svc_fh *fh, void *data),
+>>> 	 void *data)
+>>> - two lines of code:
+>>> 	if (!err && post_create)
+>>> 		post_create(resfhp, data);
+>>>=20
+>>> does that really make anything hard to follow?
+>>=20
+>> The synopsis of nfsd_create() is already pretty cluttered.
+>=20
+> Would it help to collect related details (name, type, attributes, acl,
+> label) into a struct and pass a reference to that around?
+> One awkwardness in my latest patch is that the acl and label are not set
+> in nfsd_create_setattr().  If they were passed around together with the
+> attributes, that would be a lot easier to achieve.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4proc.c | 1 +
- 1 file changed, 1 insertion(+)
+That kind of makes my point: using nfsd_create() for both classic
+NFSv2/3 and the new NFSv4 hotness overloads the API.
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 242f059e6788..15a08fdaf8b1 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -374,6 +374,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh=
- *fhp,
- 			if (d_inode(child)->i_mtime.tv_sec =3D=3D v_mtime &&
- 			    d_inode(child)->i_atime.tv_sec =3D=3D v_atime &&
- 			    d_inode(child)->i_size =3D=3D 0) {
-+				fh_fill_pre_attrs(fhp);
- 				open->op_created =3D true;
- 				goto set_attr;	/* subtle */
- 			}
---=20
-2.36.1
+But OK, you seem very set on this. So, let's construct a set
+of parameters for a create operation and give the set a
+sensible name. The "_args" suffix already has some meaning
+and precedence in this code. How about "struct nfsd_create_info" ?
+
+
+>> You're adding that extra code in nfsd_symlink() too IIRC? And,
+>> this change adds a virtual function call (which has significant
+>> overhead these days) for reasons of convenience rather than
+>> necessity.
+>=20
+> "significant"?  In context of creation a file, I don't think one more
+> virtual function call is all that significant?
+
+If you consider how fast underlying storage has become, and how
+fast it will become soon (eg, NVRAM-backed filesystems) then the
+cost of a virtual function call becomes significant.
+
+And note there is also control flow integrity. A virtual function
+can be used to branch into malicious code unless we are careful
+to lock it down correctly.
+
+But these are details, and kind of miss my main point.
+
+
+> I started writing code to avoid the function pointer, but the function
+> args list exploded.  If you could be happy with e.g.  a struct
+> nfs_create_args which contains attrs, acl, label, and was passed into
+> nfsd_create_setattr(), then I think that would cleanly avoid the desire
+> for a function pointer.
+
+Note that my complaint was also about adding more logic in these
+functions. It isn't much now, but having an "info struct" means
+we can pass all kinds of junk into nfsd_create() and add lots
+more exceptions to the code path.
+
+Do you see why I really don't like this approach?
+
+
+--
+Chuck Lever
+
 
 
