@@ -2,121 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DFC7576B1B
-	for <lists+linux-nfs@lfdr.de>; Sat, 16 Jul 2022 02:24:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B21C4576C30
+	for <lists+linux-nfs@lfdr.de>; Sat, 16 Jul 2022 08:30:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbiGPAYE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 15 Jul 2022 20:24:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60826 "EHLO
+        id S229436AbiGPGaG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 16 Jul 2022 02:30:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbiGPAYD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 15 Jul 2022 20:24:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB4932EE2
-        for <linux-nfs@vger.kernel.org>; Fri, 15 Jul 2022 17:24:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EA199B82F01
-        for <linux-nfs@vger.kernel.org>; Sat, 16 Jul 2022 00:24:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ABDAC34115;
-        Sat, 16 Jul 2022 00:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1657931039;
-        bh=lRUwnk22LEYqNs7U+I00SYnXM3yzhW8pxbBuR7u4TC8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=buxXlC8qrqTAodW7bsoB9voPJ4ctMgaqTamLgOI1nlgqDcCTPPe6uDdhgosDemHdA
-         jgyOXufDUBQGn+eblfzicWIjxpPi9r8ff/sgiZks2R29qdtSgH8idffKbf8cHemzdM
-         Jh1/54wkHOCPqCg8bi4x2vJ25E2cnsOACtw6+SSMZJ1yZkDkKUb5fgHhVXMHlW18GY
-         iVq8Bn/zi2RwJZ+UtRgUTjC5zhpyutYT86ucuCZCBd9EeFEkLINQQv2UhT5bWqM+4Q
-         QXV/8tgSQZG97+L9T/ep3dsToq+1vSTyD5lhg9TdsnMmOtgMCm8sYUnjRh4Ig1jSCs
-         Qzvio7wjKcooA==
-Message-ID: <0bce587f7b012c6ee1cab04923946c64d928e059.camel@kernel.org>
-Subject: Re: [PATCH v2 0/2] nfsd: close potential race between open and
- delegation
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Neil Brown <neilb@suse.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Fri, 15 Jul 2022 20:23:57 -0400
-In-Reply-To: <6F1AD05A-B3C7-4B2E-84CA-D08BF1093F82@oracle.com>
-References: <20220715183257.41129-1-jlayton@kernel.org>
-         <6F1AD05A-B3C7-4B2E-84CA-D08BF1093F82@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
+        with ESMTP id S229548AbiGPGaC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 16 Jul 2022 02:30:02 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAF1012769
+        for <linux-nfs@vger.kernel.org>; Fri, 15 Jul 2022 23:29:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1657952941; x=1689488941;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=o1ICIGxVxwPE6ZjMQbjcSfhxh7SOuTRnuQL6m3p6uqQ=;
+  b=PdnTbAe7hn7OXz6/5an44gZR6LQQUF50kHhq8vEjOEIHAhMoep9MqopW
+   08g2pMRNyg4dyNyTI7uwjR+mslZAb7aFxoTCKZ0Km49vMnae1UsTQaMik
+   XteEgvQEuKAukdCdffaDr5Ap8Y8tes9Wgnvn1sCAUYPRRJqGC7clDIOyE
+   wUmUl+6ho9auZ454y//HEsBR6EFRXYDkw75KBZ3AoK+6B5yF3pGjJF98b
+   PSBH2TZhZ9ra6RhcSvAvCmN7PWrLb69soaYEh9awfX3w/0Onls2LJ68Z8
+   F0G/e5uky7ET51t6XvEOWbcHmni+aCaX710+RcrJ6dHr9ynV8tuiRnpa9
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10409"; a="311624435"
+X-IronPort-AV: E=Sophos;i="5.92,275,1650956400"; 
+   d="scan'208";a="311624435"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2022 23:29:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,275,1650956400"; 
+   d="scan'208";a="842763309"
+Received: from lkp-server02.sh.intel.com (HELO ff137eb26ff1) ([10.239.97.151])
+  by fmsmga006.fm.intel.com with ESMTP; 15 Jul 2022 23:29:00 -0700
+Received: from kbuild by ff137eb26ff1 with local (Exim 4.95)
+        (envelope-from <lkp@intel.com>)
+        id 1oCbIS-0001DY-20;
+        Sat, 16 Jul 2022 06:29:00 +0000
+Date:   Sat, 16 Jul 2022 14:28:37 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        chuck.lever@oracle.com
+Cc:     kbuild-all@lists.01.org, anna@kernel.org
+Subject: Re: [PATCH v2 3/6] SUNRPC: Introduce xdr_buf_trim_head()
+Message-ID: <202207161409.4ykWVM8o-lkp@intel.com>
+References: <20220713190825.615678-4-anna@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220713190825.615678-4-anna@kernel.org>
 X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-07-15 at 18:42 +0000, Chuck Lever III wrote:
->=20
-> > On Jul 15, 2022, at 2:32 PM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > v2:
-> > - use nfsd_lookup_dentry instead of lookup_one_len
-> >=20
-> > Here's a respin of the patches to fix up the potential race between an
-> > open and delegation. I took Neil's advice an changed over to use
-> > nfsd_lookup_dentry.
-> >=20
-> > This patchset is based on top of Neil's recent patchset entitled:
-> >=20
-> >    [PATCH 0/8] NFSD: clean up locking.
->=20
-> Thanks to both of you for pursuing this work! I think there are
-> some good improvements here.
->=20
-> Note that there are some outstanding review comments (aside from
-> the disagreement about how to refactor nfsd_create) so I expect
-> Neil will be reposting his series. This is just to note that, as
-> long as your series is based on his, I will consider your series
-> as RFC until his base series is stable and pulled.
->=20
-> I'll review again today or over the weekend.
->=20
+Hi Anna,
 
-Thanks. I think I'll be able to adapt this approach on top of whatever
-Neil comes up with.
+I love your patch! Perhaps something to improve:
 
->=20
-> > Tested with xfstests and it seemed to behave. I haven't done any testin=
-g
-> > to ensure that the race is actually fixed, mainly because I don't have =
-a
-> > way to reliably reproduce it.
->=20
-> That's the thing: we don't have many tests that use multiple clients
-> targeting the same set of files.
->=20
->=20
+[auto build test WARNING on trondmy-nfs/linux-next]
+[also build test WARNING on linus/master v5.19-rc6 next-20220715]
+[cannot apply to cel-2.6/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yeah, it's a difficult problem. Testing delegation behavior is
-particularly difficult since the client doesn't have a lot of control
-over them being granted in the first place.
+url:    https://github.com/intel-lab-lkp/linux/commits/Anna-Schumaker/NFSD-Improvements-for-the-NFSv4-2-READ_PLUS-operation/20220714-030910
+base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
+reproduce: make htmldocs
 
-> > Jeff Layton (2):
-> >  nfsd: drop fh argument from alloc_init_deleg
-> >  nfsd: vet the opened dentry after setting a delegation
-> >=20
-> > fs/nfsd/nfs4state.c | 58 ++++++++++++++++++++++++++++++++++++++-------
-> > 1 file changed, 49 insertions(+), 9 deletions(-)
-> >=20
-> > --=20
-> > 2.36.1
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
---=20
-Jeff Layton <jlayton@kernel.org>
+All warnings (new ones prefixed by >>):
+
+>> Documentation/networking/kapi:59: net/sunrpc/xdr.c:1749: WARNING: Unexpected indentation.
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
