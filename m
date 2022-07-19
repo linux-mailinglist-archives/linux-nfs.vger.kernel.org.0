@@ -2,53 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3467C57917D
-	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jul 2022 05:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A2457A065
+	for <lists+linux-nfs@lfdr.de>; Tue, 19 Jul 2022 16:05:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234074AbiGSDvY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 18 Jul 2022 23:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47034 "EHLO
+        id S230035AbiGSOFY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 19 Jul 2022 10:05:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234591AbiGSDvX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 18 Jul 2022 23:51:23 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E90D5205F2
-        for <linux-nfs@vger.kernel.org>; Mon, 18 Jul 2022 20:51:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=AnAKQm9c1bhE8eKQOc22LDbcGLp39bywtQ6FYYfMQI0=; b=E6LnowBmtXINHeYw1P/30rHTRx
-        QyHc4sDBRErOhoFmgM+8afkQVp2ThbhB1PhY8tHJWfRC8SFpFTcZ/F6W+LCzP+LPMcAoKPPnqd5H7
-        eC+R9YXMW7IeErYn0+6TBs+wrvmM22pDl4RYkclgmDKNGGQW6m2iChI3bh8QkA+OiyFyULN8a452O
-        AvhXChUCtCH75suXxXDLW6oaJHbHt2csz2XdTDk1RAISNULXhb+ENeVEgbNIIb2IRzclUsTfthKyd
-        P1czsSeXooNjpNKG0p1rTSXHfVmwusuzH0ziunyTkHbnKt+ZMSmMQYrLR/8NPauydE70f7BYd0lSt
-        sCET88SA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oDeGT-004aB7-So; Tue, 19 Jul 2022 03:51:17 +0000
-Date:   Mon, 18 Jul 2022 20:51:17 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [PATCH] NFSD: Remove CONFIG_SUNRPC_GSS_MODULE
-Message-ID: <YtYqNZCazm64S/Di@infradead.org>
-References: <165815281251.8395.9611588593452344848.stgit@klimt.1015granger.net>
+        with ESMTP id S236227AbiGSOE4 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 19 Jul 2022 10:04:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C178D1659E
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Jul 2022 06:18:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 581BA6006F
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Jul 2022 13:18:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B219C341CA
+        for <linux-nfs@vger.kernel.org>; Tue, 19 Jul 2022 13:18:36 +0000 (UTC)
+Subject: [PATCH] SUNRPC: Fix xdr_encode_bool()
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Tue, 19 Jul 2022 09:18:35 -0400
+Message-ID: <165823671509.3047.16569036635528856192.stgit@manet.1015granger.net>
+User-Agent: StGit/1.5.dev2+g9ce680a5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <165815281251.8395.9611588593452344848.stgit@klimt.1015granger.net>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Jul 18, 2022 at 10:00:12AM -0400, Chuck Lever wrote:
-> Clean up: I cannot find CONFIG_SUNRPC_GSS_MODULE anywhere.
+I discovered that xdr_encode_bool() was returning the same address
+that was passed in the @p parameter. The documenting comment states
+that the intent is to return the address of the next buffer
+location, just like the other "xdr_encode_*" helpers.
 
-CONFIG_SUNRPC_GSS_MODULE is set if SUNRPC_GSS is built as a module.
-CONFIG_*_MODULE is Kconfig-generated magic.
+The result was the encoded results of NFSv3 PATHCONF operations were
+not formed correctly.
+
+Fixes: ded04a587f6c ("NFSD: Update the NFSv3 PATHCONF3res encoder to use struct xdr_stream")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ include/linux/sunrpc/xdr.h |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
+index 5860f32e3958..986c8a17ca5e 100644
+--- a/include/linux/sunrpc/xdr.h
++++ b/include/linux/sunrpc/xdr.h
+@@ -419,8 +419,8 @@ static inline int xdr_stream_encode_item_absent(struct xdr_stream *xdr)
+  */
+ static inline __be32 *xdr_encode_bool(__be32 *p, u32 n)
+ {
+-	*p = n ? xdr_one : xdr_zero;
+-	return p++;
++	*p++ = n ? xdr_one : xdr_zero;
++	return p;
+ }
+ 
+ /**
+
+
