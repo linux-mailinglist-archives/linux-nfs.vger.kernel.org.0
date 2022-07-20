@@ -2,257 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C6A757B6D9
-	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jul 2022 14:55:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 583EA57B890
+	for <lists+linux-nfs@lfdr.de>; Wed, 20 Jul 2022 16:32:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232553AbiGTMz2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 20 Jul 2022 08:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57150 "EHLO
+        id S230225AbiGTOcB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 20 Jul 2022 10:32:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbiGTMz1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jul 2022 08:55:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A782C109;
-        Wed, 20 Jul 2022 05:55:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 601A66157A;
-        Wed, 20 Jul 2022 12:55:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C468C3411E;
-        Wed, 20 Jul 2022 12:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658321725;
-        bh=5Fgm9alDndUYTUlCuwSsvsSTsjxvA5LuweJkUppkAb4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Th3oaYWjsXjSqFBf9fz5IrELHWVI5E16xV2Vsd3Fk9SDZgr83ikg7bB0SvUoQ7hWm
-         +LWBn807IIjnjLZecQO1v1yW9AI/UH3L9oLrQJPx9eoO8ZB+g7qUlXwHZqqVMuA136
-         jlgto+KOjs8A9xdVKLuy2wUpf2RMZOhc5iSQAAGJtxoq+RZzQQKaWNF6fwO4L+70Sb
-         BirInDcccUnHHF+yuPKPb6Vy8eCGfE+JkEKtOsjFHIsgl0SGUbfYyzPEvkV9yZ1A6L
-         wXGf3cm4UtmR+AixeEBowmnVISHmPnEBp6/6F2LaTI84yIfkskrvum/86pa0gOdtl7
-         3m7WDfvRk23/w==
-Message-ID: <8122876aa3afe2b57d2c3153045d3e1936210b98.camel@kernel.org>
-Subject: Re: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS
- implementation
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>,
-        Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Anna Schumaker <anna@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Date:   Wed, 20 Jul 2022 08:55:23 -0400
-In-Reply-To: <20220720023610.GN3600936@dread.disaster.area>
-References: <20220715184433.838521-1-anna@kernel.org>
-         <20220715184433.838521-7-anna@kernel.org>
-         <EC97C20D-A317-49F9-8280-062D1AAEE49A@oracle.com>
-         <20220718011552.GK3600936@dread.disaster.area>
-         <CAFX2Jf=FrXHMxioWLHFkRHxBNDRe-9SBUmCcco9gkaY8EQOSZg@mail.gmail.com>
-         <20220719224434.GL3600936@dread.disaster.area>
-         <CF981532-ADC0-43F9-A304-9760244A53D5@oracle.com>
-         <20220720023610.GN3600936@dread.disaster.area>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229526AbiGTOcA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 20 Jul 2022 10:32:00 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F53A3AE77
+        for <linux-nfs@vger.kernel.org>; Wed, 20 Jul 2022 07:31:58 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26KEEPm2016431;
+        Wed, 20 Jul 2022 14:31:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=JAsEFj1QVxCGdUajw43WlwDQ+z9fyo9PszU5eoGpvk4=;
+ b=rW3m33e4ht0t7ikJr1gzahqzRv7RYnHgmuETOUhFktgb35HSuAvGjWf+by4wnMPfdV4D
+ 6PM3XdGx9F1fpt3HO2bFjl36rb4iGsxxVArTGfO9Uw02Ik6nu7ais47jbdhV04yZvXeg
+ 62W2G7DhlT5AdISER2ulTXuEkkSEf1SWZtTjVkQ1A/uI65wmgJ1CBRBn7iT85DWojvgY
+ /gZ457iKSPb/lew1RXsoCqAZvaTJSxVc32ZroPMITBMcm3++6KnQWluHV/gBWaDKg+F/
+ vVvnoXhcas0YR33tCEvtd4pb+HvRbPKERDeaaumV38xoPCZu/+JgTVyd4W81ONt3ivF4 Rg== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbnvthqt0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Jul 2022 14:31:44 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26KCJQZv009934;
+        Wed, 20 Jul 2022 14:31:43 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2107.outbound.protection.outlook.com [104.47.55.107])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1gheufq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 20 Jul 2022 14:31:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=j6uwRPrq9OmbyKxf3f29DrcKStnyPTI0z4tIfmS/NV99b54DT6v6+Lo4iFnuiox1MYwnFNp7jkUjp9xyfSXtV2BQBRBppBUSJx4rR1/oX8TaoABjfxtUpWFo58II/gnSbCiGctzOrs+NLtRRUf2ESePcKONXvFq/MO9tNqtJ+TyjXXKfHTf7XX4da/Bo53giKQdAQ+u7lxKHPsSf0alqdodrb+DYSujuZHpY0t6SjLbbrUzBQMGRZxr9zm5DL2NZZWMuAkRdXRJXaRtSCs1fP6ZNbboD46Hp6ik5TDPUSn4CgcxMbVgGekCDRZsq4SAP45tFdsoihgSoK32eQyIT3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JAsEFj1QVxCGdUajw43WlwDQ+z9fyo9PszU5eoGpvk4=;
+ b=b2Yqmfdt4T77gaJjENmDiDTZcO6blzjOnPEWdxG88LUskf4Bb0lkszIaQit4in19UrkCScZrDT54XRcgVRzsfiimocPZugfwZ76YwtNk1du4LRYtpipPPzLyFA2jljn4CuYdkpY8z8QMcMvorZS8Qgi0a0vkQK2/zocTT8SVIh8ObCMMEis9DmnVB5GXYfLV3nthRKKQKgnwWJbvgljKzgXS77Gq8BQ6BHbNKWDskccr0BQZYFfyXiU8SAbUaBmh9hoF5qgOzgPzoCbZpq6a8iyUcK0LLicAi/KE8roYAuPPIuAFPJ4aK4LG6IzKyo1oZqVANVVNTOs8CaRfHmv8vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JAsEFj1QVxCGdUajw43WlwDQ+z9fyo9PszU5eoGpvk4=;
+ b=Nixxay07d6XiVgm6lAeau66VlZp1B/1lod+0TVpFBFPz9g+t56v0UrYql82+0UuYR6SykzChXApWb449Z7D/clp3H5/ow5PMGBSFVitB/Psc+F8uOJ57FL/H1Xp7JakZZ77athaZwMw4P3lyjl3GiTvn6XO6DEPFiZNNJ6hgR7A=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by DM6PR10MB3929.namprd10.prod.outlook.com (2603:10b6:5:1fb::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5438.15; Wed, 20 Jul
+ 2022 14:31:41 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6%7]) with mapi id 15.20.5438.023; Wed, 20 Jul 2022
+ 14:31:41 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Jeff Layton <jlayton@kernel.org>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Olaf Kirch <okir@suse.com>
+Subject: Re: [PATCH] nfsd: silence extraneous printk on nfsd.ko insertion
+Thread-Topic: [PATCH] nfsd: silence extraneous printk on nfsd.ko insertion
+Thread-Index: AQHYnDXDCa1WjW2RSE2Z9XOjlUB/EK2HUm4A
+Date:   Wed, 20 Jul 2022 14:31:41 +0000
+Message-ID: <97227EA3-8930-4478-8D2B-6BE9C36F9779@oracle.com>
+References: <20220720123923.16753-1-jlayton@kernel.org>
+In-Reply-To: <20220720123923.16753-1-jlayton@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.100.31)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e4648851-e8ce-46ff-b158-08da6a5c9008
+x-ms-traffictypediagnostic: DM6PR10MB3929:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 6sq8bMnqf5ZiJRomzxMg5ZGHjiplVNoYXeKTE9KvZDPwiTi3uQj1dqphQBwdsfZJ2M2YausniLK5eopXvn8awax8fZRkk9NMR5ruFQsTqwcD47Y4ULSyt76TDWHEFHSMq5Uh3pbCXRvBuZykeu5ZMTWws2NK8Ip7Z3+Tlq4jhFADIMTIjVl1qbeBDg6tceCfRf0Vt+jeWkdmYIu1Kw/LRA0STW5wbSVw4w8fYEWdLRTt1FkZrpU825hEc6c++KyYjFBc0lI01y2UGePb9TOaTviZ+93cYSQVbNjAPIYmx7X6jSIKI2xzYIxxPSudApUEg6D1+9C0dPTQ82/lwHS5RPEqudNJ4y3QxlNXNLvRFejhwnZoZ7L1HSO7AZ189XZ12jZBesJkuCxG27ty53r8RkZivppUhsDLMHewZJActGyJXzHg/UPpwQvpmEgg3rJ31l+pVAw0Z3UU88WrPoKNgBkNmT4rxIxKVILtMSOG8lBH6D+QWxhvm+QOsmH8hvLIRP6NhoI1z8UjcO7cX9IAgfuMl1hnYQN+/2NBo2OXQKr5glyN5HdfgEkx/TfOVi22jZAqnsA3l1y3jv+6rgcjaUs+rWplCbOwkEUWvkXDv8T0h8GdY7QCGrEnAlLuJ5B9cBqffBhq02LDHpO+FRzrZEVYLkQVQLEf/PEzeeOzELVUzIYP3cwUQcxC/OmQZkkNhSOK2AG3ZaHrWR7HqQoqXbo5xZHfoJK0ggMkN3WMpYLoIbaF9WWnkQaT8vO5H/uxvurgv/SDEg/oQlpAP0s1qT47Dzvzs7RlijZK+UzfWwxL8I4AKpaLeEe5G3QYkZho4dPVB98TpSVb2GOjRKK5Xg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(366004)(346002)(376002)(136003)(39860400002)(122000001)(41300700001)(2906002)(53546011)(6506007)(186003)(38100700002)(5660300002)(6512007)(33656002)(83380400001)(2616005)(71200400001)(66556008)(91956017)(76116006)(316002)(6916009)(54906003)(26005)(66446008)(478600001)(8936002)(4326008)(66946007)(8676002)(36756003)(38070700005)(66476007)(4744005)(6486002)(86362001)(64756008)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xp5rxTtoA5s+DwGJMUITfEJ/zmUke7AK9gJ5cqHg8ypguTMvApjcvRYZJuqE?=
+ =?us-ascii?Q?9Gne/dr6nFzJgtzHutXC1lTZRUHSKPyE6QmBJv6oW1dxvImWjhnjhdgr6fX0?=
+ =?us-ascii?Q?Tp0I8sqiebVh79uoZOIzouB1oYYGs8N2SmsZxOc4mzdEb1moO2aOOu7ffi+x?=
+ =?us-ascii?Q?uCedDVqeGrBU1RxvR3V7BYH6VkGtMpFMjW7GwjYLfFuJGwuO0Is6rXQ6xA/1?=
+ =?us-ascii?Q?AETrAuDPAmp7NZsPuz/vLHZ81ZQdP3TIA7MZclF424T4rYi7H09mUUdwg05t?=
+ =?us-ascii?Q?1QXHxeWfh8jeKThwxBLvgiDsxrXFQDF5AnewwvR28jmO6Gk34tFtIQ8W0GEO?=
+ =?us-ascii?Q?SteAWmIpGI7bi/BnhO3EIqe+NXtoqQqxouJfVxyaxn3BE1Fgo5OKUZewTIPE?=
+ =?us-ascii?Q?hAB1w8XPHpvS+Bh9+2oMWBL49q1KvN2QGGLyZIRu2lCi7Llp2/ADMOsNq1ha?=
+ =?us-ascii?Q?fFCZQ88EU/StrXzfiIGDN8ySYwfjKhb53bGEaqr6TEC1JeCGKIgzzaDGJozD?=
+ =?us-ascii?Q?muJgALP+QDFZ5Dmm8zojN63X8XOIxNM/3tzv/mq6Tg4Yvur3sn2YSsuKvRt8?=
+ =?us-ascii?Q?UksrdNJuWVb8YzDn1YzBkdAAEpmmrrlfyfl03cLCzZv1R+qafLl4vD/Xn4Me?=
+ =?us-ascii?Q?sYuETVY20GxVn6EY7TQ8lb57PuJq/y/0CMFnf9eiTo+OQD5YKMvPeaxC+m3v?=
+ =?us-ascii?Q?NJ7F9qYW3LWo2RWgtIZkmOxioOvXO77YSwV+VOXynY5q23RNINJly0P+wMR6?=
+ =?us-ascii?Q?fqyrUyX1K2AAwHMD1LmpkO5tXucrF1ud6oFiUcYFpGhcoFYcK6ZffH7PLR5m?=
+ =?us-ascii?Q?wE25AWHYfB4RkIViDjPkSy2ynwGMr5TkkbmSlzfTMOOtqUNsjzL7kpxie784?=
+ =?us-ascii?Q?WkDp38Rx6Xn68FhFmPPcQGzSM/TJ/cYSYJbNkzHKWe5MrLleWCzE5HTKdRvo?=
+ =?us-ascii?Q?kshW0MyHbKNg6R61V3txAEoNoOrArpLcCxCqkXtL/ciSumQ2I4blmAVndn+h?=
+ =?us-ascii?Q?UWiLCUpESMebuEXI3wqkA1HdjYfNgPE0fIH/Vt+V1aU9fET/on2dgg4alqD+?=
+ =?us-ascii?Q?8dWsWrh5rzNKcP78wf33SICs3xwCEVK3oMNU8xcUw4orA3FrAk1+QkjqUKtJ?=
+ =?us-ascii?Q?foO2WLn669wihfzEdQpaaJETdZqioL4gwQXmmdU/ITxhjFcau7CkH5TdSr1W?=
+ =?us-ascii?Q?h2R2ylyueoAp9bGtPsYHc8pNaTsQ+3dnH7d1Z7/vnWYl15BctgBKr1sHBqsO?=
+ =?us-ascii?Q?+xYXPDOg3eFQA9zzPvZ5wZDGAhloIkDT9nkdL0qC/zhsiZyMrKqxMUzG0gyO?=
+ =?us-ascii?Q?JPGlCYtsp3PHiR1lYJWEnoTPV29vtXdCUSTeVC7Pw22InUj3th3oIEeTvWwi?=
+ =?us-ascii?Q?N5G3CK2oFOaGxymsouBWY3citAeIudaLfUASoMkCUMjnUJxinTt/yoVhS0Dd?=
+ =?us-ascii?Q?b0vVk5RdlE3wh2s/KXtc8HWTTKFTxlpoTqk8PDH89sQHng+zDGgO2flyIl7T?=
+ =?us-ascii?Q?jJkDk/3Xr80SlKUJq1uM+P1MOnXcfHq3+YQNxuU5qk9pwmlFU+pBvuh9bOJ/?=
+ =?us-ascii?Q?pKCgWesolkJunG53M5vLvBQKMClIUIAxmLwzYYJn2XZyMsyOJyNRXeOPwDpH?=
+ =?us-ascii?Q?/g=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1A09E83A80079844A6D7FDC1DE0774DC@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e4648851-e8ce-46ff-b158-08da6a5c9008
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jul 2022 14:31:41.1746
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WzENJPEqdC3WyXkWzfcXYd8UKsJ4jgRuiEbYUDedkg/6gB660STHH6f1KZrlXT9rZWT/Rduw/qAjwp8FODSjNg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3929
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-20_08,2022-07-20_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ malwarescore=0 adultscore=0 mlxscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207200059
+X-Proofpoint-GUID: MKw-0l48CJzeFM9cp8tg0NV1_rZursWz
+X-Proofpoint-ORIG-GUID: MKw-0l48CJzeFM9cp8tg0NV1_rZursWz
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-07-20 at 12:36 +1000, Dave Chinner wrote:
-> On Wed, Jul 20, 2022 at 01:26:13AM +0000, Chuck Lever III wrote:
-> >=20
-> >=20
-> > > On Jul 19, 2022, at 6:44 PM, Dave Chinner <david@fromorbit.com> wrote=
-:
-> > >=20
-> > > On Tue, Jul 19, 2022 at 04:46:50PM -0400, Anna Schumaker wrote:
-> > > > On Sun, Jul 17, 2022 at 9:16 PM Dave Chinner <david@fromorbit.com> =
-wrote:
-> > > > >=20
-> > > > > On Fri, Jul 15, 2022 at 07:08:13PM +0000, Chuck Lever III wrote:
-> > > > > > > On Jul 15, 2022, at 2:44 PM, Anna Schumaker <anna@kernel.org>=
- wrote:
-> > > > > > >=20
-> > > > > > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> > > > > > >=20
-> > > > > > > Rather than relying on the underlying filesystem to tell us w=
-here hole
-> > > > > > > and data segments are through vfs_llseek(), let's instead do =
-the hole
-> > > > > > > compression ourselves. This has a few advantages over the old
-> > > > > > > implementation:
-> > > > > > >=20
-> > > > > > > 1) A single call to the underlying filesystem through nfsd_re=
-adv() means
-> > > > > > >  the file can't change from underneath us in the middle of en=
-coding.
-> > > > >=20
-> > > > > Hi Anna,
-> > > > >=20
-> > > > > I'm assuming you mean the vfs_llseek(SEEK_HOLE) call at the start
-> > > > > of nfsd4_encode_read_plus_data() that is used to trim the data th=
-at
-> > > > > has already been read out of the file?
-> > > >=20
-> > > > There is also the vfs_llseek(SEEK_DATA) call at the start of
-> > > > nfsd4_encode_read_plus_hole(). They are used to determine the lengt=
-h
-> > > > of the current hole or data segment.
-> > > >=20
-> > > > >=20
-> > > > > What's the problem with racing with a hole punch here? All it doe=
-s
-> > > > > is shorten the read data returned to match the new hole, so all i=
-t's
-> > > > > doing is making the returned data "more correct".
-> > > >=20
-> > > > The problem is we call vfs_llseek() potentially many times when
-> > > > encoding a single reply to READ_PLUS. nfsd4_encode_read_plus() has =
-a
-> > > > loop where we alternate between hole and data segments until we've
-> > > > encoded the requested number of bytes. My attempts at locking the f=
-ile
-> > > > have resulted in a deadlock since vfs_llseek() also locks the file,=
- so
-> > > > the file could change from underneath us during each iteration of t=
-he
-> > > > loop.
-> > >=20
-> > > So the problem being solved is that the current encoding is not
-> > > atomic, rather than trying to avoid any computational overhead of
-> > > multiple vfs_llseek calls (which are largely just the same extent
-> > > lookups as we do during the read call)?
-> >=20
-> > Reviewing [1] and [2] I don't find any remarks about atomicity
-> > guarantees. If a client needs an uncontended view of a file's
-> > data, it's expected to fence other accessors via a OPEN(deny)
-> > or LOCK operation, or serialize the requests itself.
+
+
+> On Jul 20, 2022, at 8:39 AM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> You've got the wrong "atomicity" scope :)
+> This printk pops every time nfsd.ko gets plugged in. Most kmods don't do
+> that and this one is not very informative. Olaf's email address seems to
+> be defunct at this point anyway. Just drop it.
 >=20
-> What I was talking about is the internal server side data operation
-> atomicity. that is, what is returned from the read to the READ_PLUS
-> code is not atomic w.r.t. the vfs_llseek() that are then used to
-> determine where there holes in the data returned by the read are.
+> Cc: Olaf Kirch <okir@suse.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+Applied for for-next, thanks!
+
+
+> ---
+> fs/nfsd/nfsctl.c | 1 -
+> 1 file changed, 1 deletion(-)
 >=20
-> Hence after the read has returned data to READ_PLUS, something else
-> can modify the data in the file (e.g. filling a hole or punching a
-> new one out) and then the ranges vfs_llseek() returns to READ_PLUS
-> does not match the data that is has in it's local buffer.
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 0621c2faf242..b6efc3b56fe9 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1517,7 +1517,6 @@ static struct pernet_operations nfsd_net_ops =3D {
+> static int __init init_nfsd(void)
+> {
+> 	int retval;
+> -	printk(KERN_INFO "Installing knfsd (copyright (C) 1996 okir@monad.swb.d=
+e).\n");
 >=20
-> i.e. to do what the READ_PLUS operation is doing now, it would
-> somehow need to ensure no modifications can be made between the read
-> starting and the last vfs_llseek() call completing. IOWs, they need
-> to be performed as an atomic operation, not as a set of
-> independently locked (or unlocked!) operations as they are now.
->=20
-> > > The implementation just seems backwards to me - rather than reading
-> > > data and then trying to work out where the holes are, I suspect it
-> > > should be working out where the holes are and then reading the data.
-> > > This is how the IO path in filesystems work, so it would seem like a
-> > > no-brainer to try to leverage the infrastructure we already have to
-> > > do that.
-> > >=20
-> > > The information is there and we have infrastructure that exposes it
-> > > to the IO path, it's just *underneath* the page cache and the page
-> > > cache destroys the information that it used to build the data it
-> > > returns to the NFSD.
-> > >=20
-> > > IOWs, it seems to me that what READ_PLUS really wants is a "sparse
-> > > read operation" from the filesystem rather than the current "read
-> > > that fills holes with zeroes". i.e. a read operation that sets an
-> > > iocb flag like RWF_SPARSE_READ to tell the filesystem to trim the
-> > > read to just the ranges that contain data.
-> > >=20
-> > > That way the read populates the page cache over a single contiguous
-> > > range of data and returns with the {offset, len} that spans the
-> > > range that is read and mapped. The caller can then read that region
-> > > out of the page cache and mark all the non-data regions as holes in
-> > > whatever manner they need to.
-> > >=20
-> > > The iomap infrastructure that XFS and other filesystems use provide
-> > > this exact "map only what contains data" capability - an iomap tells
-> > > the page cache exactly what underlies the data range (hole, data,
-> > > unwritten extents, etc) in an efficient manner, so it wouldn't be a
-> > > huge stretch just to limit read IO ranges to those that contain only
-> > > DATA extents.
-> > >=20
-> > > At this point READ_PLUS then just needs to iterate doing sparse
-> > > reads and recording the ranges that return data as vector of some
-> > > kind that is then passes to the encoding function to encode it as
-> > > a sparse READ_PLUS data range....
-> >=20
-> > The iomap approach
->=20
-> Not actually what I proposed - I'm suggesting a new kiocb flag that
-> changes what the read passed to the filesystem does. My comments
-> about iomap are that this infrastructure already provides the extent
-> range query mechanisms that allow us to efficiently perform such
-> "restricted range" IO operations.
->=20
-> > seems sensible to me and covers the two basic
-> > usage scenarios:
-> >=20
-> > - Large sparse files, where we want to conserve both network
-> >   bandwidth and client (and intermediate) cache occupancy.
-> >   These are best served by exposing data and holes.
->=20
-> *nod*
->=20
-> > - Everyday files that are relatively small and generally will
-> >   continue few, if any, holes. These are best served by using
-> >   a splice read (where possible) -- that is, READ_PLUS in this
-> >   case should work exactly like READ.
->=20
-> *nod*
->=20
-> > My impression of client implementations is that, a priori,
-> > a client does not know whether a file contains holes or not,
-> > but will probably always use READ_PLUS and let the server
-> > make the choice for it.
->=20
-> *nod*
->=20
-> > Now how does the server make that choice? Is there an attribute
-> > bit that indicates when a file should be treated as sparse? Can
-> > we assume that immutable files (or compressed files) should
-> > always be treated as sparse? Alternately, the server might use
-> > the file's data : hole ratio.
->=20
-> None of the above. The NFS server has no business knowing intimate
-> details about how the filesystem has laid out the file. All it cares
-> about ranges containing data and ranges that have no data (holes).
->=20
-> If the filesystem can support a sparse read, it returns sparse
-> ranges containing data to the NFS server. If the filesystem can't
-> support it, or it's internal file layout doesn't allow for efficient
-> hole/data discrimination, then it can just return the entire read
-> range.
->=20
-> Alternatively, in this latter case, the filesystem could call a
-> generic "sparse read" implementation that runs memchr_inv() to find
-> the first data range to return. Then the NFS server doesn't have to
-> code things differently, filesystems don't need to advertise
-> support for sparse reads, etc because every filesystem could
-> support sparse reads.
->=20
-> The only difference is that some filesystems will be much more
-> efficient and faster at it than others. We already see that sort
-> of thing with btrfs and seek hole/data on large cached files so I
-> don't see "filesystems perform differently" as a problem here...
+> 	retval =3D nfsd4_init_slabs();
+> 	if (retval)
+> --=20
+> 2.36.1
 >=20
 
-^^^
-This seems like more trouble than it's worth, and would probably result
-in worse performance. The generic implementation should just return a
-single non-sparse extent in the sparse read reply if it doesn't know how
-to fill out a sparse read properly. IOW, we shouldn't try to find holes,
-unless the underlying filesystem can do that itself via iomap sparse
-read or some similar mechanism.
---=20
-Jeff Layton <jlayton@kernel.org>
+--
+Chuck Lever
+
+
+
