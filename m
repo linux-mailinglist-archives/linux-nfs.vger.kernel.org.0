@@ -2,278 +2,388 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1F17657CE64
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jul 2022 16:59:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9381057D186
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jul 2022 18:30:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229967AbiGUO7S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jul 2022 10:59:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46414 "EHLO
+        id S233462AbiGUQap (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jul 2022 12:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35764 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiGUO7R (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jul 2022 10:59:17 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83255F7A
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 07:59:16 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26LDjA1M028363;
-        Thu, 21 Jul 2022 14:59:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=FcWbjdKsnXekGxyKzVOoy9Iunuai0Y8VdlzYzF+ciFA=;
- b=Wm3vZZmvrlYx4HV7pfZvJ7FT7nCgv3BTV0X1NPoMoEm9wwiEgZ6dWH2RZ0fgbK8PxFyN
- DlsoOxvKT4qA9wBJyu85zICQc8GB9ZKb4BhfmTA70GjfV7IA9c+n9YFnWeuC0BkxZrMh
- HB9qHFnkOvdHX9sUbNuoKtzX0qTEQYHNYpNR+HTVk2YNsOtsbOfTojAlMzu9+/xDZYCM
- qvnMzgzOrDS6gvheMzJhPouKQMkidbyScUtbTdus2hgq4E8xf9pQIIU73Cgsd+t6ptI8
- s6FPOyQw5z9UhmKh33VR3WBCfneUnlVA6kpw1oBwJIiVpTyIb+3XkYvZ8HyfoNHQFy9n hQ== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hbm42mt3b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Jul 2022 14:59:10 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26LC7uFn016547;
-        Thu, 21 Jul 2022 14:59:09 GMT
-Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2177.outbound.protection.outlook.com [104.47.57.177])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hc1epjdmt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Jul 2022 14:59:08 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LwlR2QLO1q9qXtDMh/WJufJ0gdHdEzLT42xz3MYOESoGN5ru++/KGjd6sTgkcsIx748kIFRx6Rcjqo85j1+hq1enixFQAnI5CF9jhsAKCddG7/GUhsw/6qHceTw71Vq5ElnihEGghnChknye4LANDvNpKOoaYOSi/pMbOBPVrAAiU2PsAddf1QVRBhomlxJp0l8FaULwjRJ+Jheyk2TnvL7Cy/9kcD7UhplusrmLFaAGVedMSz+SJNOMBV/lRiS0EiOS+i8Z/BPOO48SN4ixcAwBdKvO25FtolRFUOlCMKPcCtV6qdXvY9UPru1M7lScZKPxDOewlAdFKn/TqQ6/nA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FcWbjdKsnXekGxyKzVOoy9Iunuai0Y8VdlzYzF+ciFA=;
- b=HQ5Nho1YDhovCzK4/YQyVdWeNddJUBDOWLXNDfv2A/D2YVJg3zVJlDr2Gj/HNbEFbo/sQyCVjjl7G00xtJXWiVEHPqDsqqxbl5tS3EK4pzlPak2s+TOUTAKh4VIggJy45M9oYPqrvrVIVyIivNdK9DRjgk2fh79ElHOjXqOoDR7nWDbE8KN7U7aP+Pu7kvfUUOmtk04VBeu9CKYKNo2Irl087YIRTLBP0tr2Uy5d6DiryJv+4GRbCEgQbcch7YP4dKWzh540YR48x9hTDY0bhyQxNi2lXVnRwgi7Xm6CW0N6+v/NjvTZAOaKDvb/W/J0G6PukQh+X14X7aRM08CQPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FcWbjdKsnXekGxyKzVOoy9Iunuai0Y8VdlzYzF+ciFA=;
- b=xImSK+TRoNAyhw1qUaAN2Got6jFAP5N7Pq+Kcc9OaWFfpT9s0cIvM9p37yy7q2BEduQMfui06JHNvpFUcBLtsfreu/APtn7+q8lTe8RqckVpkvZwnGXo+AjB/RVR9BZXEDGLFFIfGF6AzWfudFoOlsJKAILhkBEzR0MdTdSKeK8=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN6PR10MB2639.namprd10.prod.outlook.com (2603:10b6:805:40::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.18; Thu, 21 Jul
- 2022 14:59:06 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::8cc6:21c7:b3e7:5da6]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::8cc6:21c7:b3e7:5da6%8]) with mapi id 15.20.5458.019; Thu, 21 Jul 2022
- 14:59:06 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Theodore Ts'o <tytso@mit.edu>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [Bug Report] [PATCH v1] generic/476: requires 27GB scratch size
-Thread-Topic: [Bug Report] [PATCH v1] generic/476: requires 27GB scratch size
-Thread-Index: AQHYnRJspQF+Nm/xKUaneWT4ZqBZng==
-Date:   Thu, 21 Jul 2022 14:59:06 +0000
-Message-ID: <77BA43E5-5F41-46BA-9AEE-913591ABCE90@oracle.com>
-References: <Ytlnn6myHtOphb52@mit.edu>
-In-Reply-To: <Ytlnn6myHtOphb52@mit.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.100.31)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e262047b-0b26-45f8-4853-08da6b298f54
-x-ms-traffictypediagnostic: SN6PR10MB2639:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: QlrHMRytnN4KWNtE+ooiXTW6hQsKq2WnXuXvkYrYbM2e7VdgsJ6Sn8VPkVPXV6Hj5ULXYnBBBnr8diqcoUu+vnzmX0qe3R0JnToEI9gpUKZxUwBUW7XF6hmtGkMdGgWccCMyEYQiEVDTEH72qQifcLaDYXaPm4PjioB0VUuVnKOCZBibmnfRp+3WQY+7mhQvtsv1ugVbi0e1ct69XYQfoQMnniCZqaJ9l/jaTWNhua3YYcFW0zjvbbRrhRedXgbw3zsF4jETQPm/ywzN8gLC7gswxnlXJpVJkB2rwBzqcr9dnWcZRyfoHMPyoO4vlq76NyTepgYMMH/DIoFH8C4Ndrf9mRjlGImdl/Bqnbx8thIGZFLBHyIlkVRQcGFp5qpADP26f7TwjzONnnreHX7kWMU8oWy7Bny7iikoceLXbPwnZ70rDsZwO0aJd62TVZhUMRn1XCw2DQCdNf3gSIOXQLjgNBp6pg6dTKAm0dU2FPcTjv/Z/B6zp2WMjuPlC0p5U5IMksghMkZolz+OelAlIIAY11fCjaTx23xKEP0enFo/Xpm+srT90sjNlhKlySPibYqVYY+t3mDz5kPMdEY/n5r+zhUDKjbpnNv+gsDAySsb21O1bmeQbWmReQMGRpla21TgEsKsl8+0b5Yb+rHfVtyyJG1nE/T34W0YapyTA9PU4DydyMmfqL07xBO4n0CmBxxw7txpyYqnWCIwut7xbrfqFpReBXF2cOZnjqb/v1WsYY9IzsBR1q6BhFG2fjDnrU2yvVyOpaSETFqBeYeqqnuijrX+McVaaN//FF+fZAfHAncSh7EwtBuv38ALJApVbCSblZgvFA2mS38xIlv0G3IGjqhN6cTuiPBTiN50VZTBSnOkM3VB+t5I9sF18gHNxumR3edKNaJmCge/yC2hwLomI9sZRZok+dyGljtBBdqgVZ0XJQqlrgY1AxQ5s2xl
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(396003)(376002)(39860400002)(136003)(346002)(478600001)(53546011)(26005)(86362001)(41300700001)(6512007)(316002)(6486002)(966005)(71200400001)(6916009)(38070700005)(6506007)(122000001)(186003)(83380400001)(64756008)(8676002)(76116006)(66946007)(66476007)(91956017)(66446008)(33656002)(2616005)(66556008)(36756003)(2906002)(4326008)(5660300002)(8936002)(38100700002)(41533002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?WN2LLCiRdAhqug6MFTGO5n42t/9oPb2VtQhZ4b3JaKxNqhfYptyU/6pS2uqO?=
- =?us-ascii?Q?5K/HLOLUOomdSXsO802CRhh+vUzmr571q7078gyQH58XyuYCok49YctG2/CU?=
- =?us-ascii?Q?OXlTLPL3aqH9IuNGOU5hjRzaSvNpjPd3Ae6fuXKM4Uzdt8ET2UYLnYW/Nldg?=
- =?us-ascii?Q?PpAFAhtoTI+pSDcsAP+iOKNKR72j3FAjJPORIFvN8lWLuU7xcGIzIO5LyrqU?=
- =?us-ascii?Q?6LSNVVBW/p6EvpzXC9gHa6VyWypToWlZLscTREwovjSYSlVN72lzaCD4MSwC?=
- =?us-ascii?Q?FJO+pUMV+AjPAlgi/DHwU9GaAnJNkxykGvE3MdY+56tXwKJtK7iuNdxLyaIb?=
- =?us-ascii?Q?ujr1w8Rb27YGeuoqCEQggQFj7LFJd9v3BDjDhZCY7RH1L8jl44YlJXHSgezx?=
- =?us-ascii?Q?r573XiepAGQOBzt1s7P8vE62bIwoPbjqK72toSElQFw4beBG/KeJ0jb2aQrg?=
- =?us-ascii?Q?uoE4j66JSHuCrT6nHIT3vBLVwzBaybxWP/4Rl7szZgB/pN8mVnJoDFHvLCUw?=
- =?us-ascii?Q?hOB9wlYFm/Az30V2E80RgMWwJm7UW7b0e5YM+L8v2JsiuQXQAzBpHqIH+7ha?=
- =?us-ascii?Q?L3FDMw6tubjOUmlOJq9FGPMOKjvmkWySjCBOH1PhkiRxTQT5yZItSxDcwGMi?=
- =?us-ascii?Q?kzaZtgo/LbJ21ccwtpijHTGBlgvBmfPSa1qry6hvtKy2FYDVjmm23SaZOb+v?=
- =?us-ascii?Q?I37h+f6YBhLPXo3McXRGr0IuJlAIHyuhe0eAcTVydfxi97rhqTBkCQGdsNHH?=
- =?us-ascii?Q?46ZNTkDYzDfWO6OiR1qRTA1x2nLUJKjouLyVucXDIwtLxJLxYV1aBziu5Nxo?=
- =?us-ascii?Q?NM66pBnfjwazUleElUMPYRUoGBCAdRstJhlnIL6sbdyNnSD0uTezEi4vANra?=
- =?us-ascii?Q?0PTRqT5dlT4Dg9hvMc4GfCN6QS1XcCzG08aeRkdambtruLoW8sXYro3gNIlW?=
- =?us-ascii?Q?Xn0TADdGRws9oQrA5t+eB/bY8BeJFfsNTvgqP/ZVHP6QeER0Y7wh6x03T000?=
- =?us-ascii?Q?27MvpYQKM+3fdpNUlf7jd00ZTZ3igIdXn4+y39AIV7bqxFMs5PqYLYEiltkU?=
- =?us-ascii?Q?ZPwE7/gwmx7y8BfeZTOmE3i/k7lgetdkuUoEp8tduTZ8SQR+RyvpK6I9d75f?=
- =?us-ascii?Q?ZLt+Y7rn4vd1ol0Ec3mj2JU8J4NknbPr/1puacVIMDFYNksyuTNyVD4ivdAu?=
- =?us-ascii?Q?DpAtz2U6y/xFH+EdDMOb4uygdmDEuTtgVlySJteQgD5JNpD+OogDM5k/LyXm?=
- =?us-ascii?Q?pnjgwj8zCIwHFQMBsGLL2IaWK/tjPhS3XSuhZq6O8AMSBk8LxUNrZG71Y/D6?=
- =?us-ascii?Q?ow5LIUDocJZ+dpgLgaoxYbZAmKV0Y0Go139ERyvOW6Ai7KTHKg23OMkWsvM9?=
- =?us-ascii?Q?nfhGBdtQtE54qo2PUioF2xudE5SgSz3I9csF1Cb/sUjs02DccOo0xeFxvYST?=
- =?us-ascii?Q?tY3Z+XIvnj3Zla0OmJbgpSUg35muxLcVX+pVNT+n81tShZBD4q2bOp2q1SpA?=
- =?us-ascii?Q?optcIy/6z6qUsnfL0NqFLhgYTNJZvt3rfANzV98guw5O+edyKyOKsEpDmNLO?=
- =?us-ascii?Q?JvSJW2RX/OlIDkGS4Sya+vRCnAtMVE1sYe57nqiJZqCREKZjZagpkVxm5FDi?=
- =?us-ascii?Q?lw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DB0C183F6824594390D5B7C98630DF3D@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233581AbiGUQan (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jul 2022 12:30:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DE105491C5
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 09:30:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658421039;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vnPkJn5lAOvcMsC43SXQjCCrn+IxKsBMOToz0XcS8Mw=;
+        b=SZMNiX4QCuV0/Q0UhoIRE7BHCR2c2+g+foVIj9DvcZkc/TmtXc9nJdoT4E12LeOghu9h/O
+        d3bu1W3dgcOJL1Sa+cOiuvS2ZvhmmWbFRnwHj9nuyLu5b+35yvYoys/cknx7ZtoC0Iz6vr
+        9IPHGsKRSIGzw9H7ft/Zi9TgaMB8q4M=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-589-LJkaA0zRM8qo3WvSVyupsQ-1; Thu, 21 Jul 2022 12:30:37 -0400
+X-MC-Unique: LJkaA0zRM8qo3WvSVyupsQ-1
+Received: by mail-qk1-f199.google.com with SMTP id de4-20020a05620a370400b006a9711bd9f8so1691036qkb.9
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 09:30:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=vnPkJn5lAOvcMsC43SXQjCCrn+IxKsBMOToz0XcS8Mw=;
+        b=Mb/QJqSj1maKLmGHsi2QNDLTLQaCsuvoEuz8WHByjqVgyuJRfG2kBirgytJ15Q3bZ/
+         MSc291Ilun/TCP8Tn1y6XiK/wRi68RMqt/KN/JPJjNBJ5fCeALtUf9LSbi7zaDTnpQXZ
+         9Re3SIc45J48O8pKv9pUpVIlJ+HQjrY+RjffAVUbVgebDbU32x3uuONeHglyC641uRKj
+         EHIcFpV+IhQw9DU7jftDqPp3efy24+d5i9fkmn6kT6YgDzneEvlCM3I/fXDcaxbquSAa
+         dN2RCOKX28q3lFMdhXOjjXNVCuvyPZZxfiZU3VDy+RAAx743UzyVaCR2liga/z+I+Nhs
+         lIkQ==
+X-Gm-Message-State: AJIora/zht8WHWD/nH8Jbu9t5BERmPhoPj9dYuHz0/suLREsGfsuAUf1
+        N/58DjKFXeUZXwKN2ESEoLeIDB0en2cWEAKGXNV1EufnOyAdWkHhlBkFILyV5zBw7Ju17qy5Lu3
+        i3IBAx0UFs5QKgfEAr4TN
+X-Received: by 2002:a05:620a:1929:b0:6b6:19c9:462f with SMTP id bj41-20020a05620a192900b006b619c9462fmr4322221qkb.688.1658421036368;
+        Thu, 21 Jul 2022 09:30:36 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tuh67TnAqRnepOKV3VKJGQhbiPTh5whFqoPvjw5w2wH8ct5kuwZXj4e2+pkGJFWxgZyebsbw==
+X-Received: by 2002:a05:620a:1929:b0:6b6:19c9:462f with SMTP id bj41-20020a05620a192900b006b619c9462fmr4322189qkb.688.1658421035920;
+        Thu, 21 Jul 2022 09:30:35 -0700 (PDT)
+Received: from zlang-mailbox ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id cm20-20020a05622a251400b00304fc3d144esm1558083qtb.1.2022.07.21.09.30.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Jul 2022 09:30:35 -0700 (PDT)
+Date:   Fri, 22 Jul 2022 00:30:29 +0800
+From:   Zorro Lang <zlang@redhat.com>
+To:     Chuck Lever III <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     Boyang Xue <bxue@redhat.com>,
+        "fstests@vger.kernel.org" <fstests@vger.kernel.org>
+Subject: Re: [PATCH v1] generic/476: requires 27GB scratch size
+Message-ID: <20220721163029.lmyrdbf7l3fpwdwu@zlang-mailbox>
+References: <20220721022959.4189726-1-bxue@redhat.com>
+ <20220721152909.otn3spgou5inzhoo@zlang-mailbox>
+ <C3EC5E8E-C230-4720-BFCF-6497E088EF01@oracle.com>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e262047b-0b26-45f8-4853-08da6b298f54
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Jul 2022 14:59:06.8686
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mmToWgv7eN137ojpXfRDf1Mz8+wlklcxvcCJIQmxtJF07dS0MamEkidZg4t+5p2rHs8HVqyWKQn32ec1tcVqtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR10MB2639
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-21_18,2022-07-20_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 mlxlogscore=999
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
- definitions=main-2207210060
-X-Proofpoint-ORIG-GUID: 5yd9b7klEYfla3z1fSJTrOT2Rd7a3K2M
-X-Proofpoint-GUID: 5yd9b7klEYfla3z1fSJTrOT2Rd7a3K2M
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <C3EC5E8E-C230-4720-BFCF-6497E088EF01@oracle.com>
+X-Spam-Status: No, score=-3.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Ted-
+On Thu, Jul 21, 2022 at 03:32:49PM +0000, Chuck Lever III wrote:
+> 
+> 
+> > On Jul 21, 2022, at 11:29 AM, Zorro Lang <zlang@redhat.com> wrote:
+> > 
+> > On Thu, Jul 21, 2022 at 10:29:59AM +0800, bxue@redhat.com wrote:
+> >> From: Boyang Xue <bxue@redhat.com>
+> >> 
+> >> The test requires larger scratch dev size when running on top of NFS other
+> >> than ext4 and xfs. It requires at least 27GB in my test. Without this
+> >> requirement, the test run never finishes on NFS, leaving 100% scratch disk
+> >> space use.
+> >> 
+> >> Signed-off-by: Boyang Xue <bxue@redhat.com>
+> >> ---
+> >> Hi,
+> >> 
+> >> I find generic/476 easily goes into an infinite run on top of NFS. When it
+> >> happens, the common pattern is 100% disk space use of SCRATCH_MNT, and
+> >> `nfsiostat` shows 50% write error on SCRATCH_MNT. When I run it with a large
+> >> enough SCRATCH_MNT, the problem disappears. So I post this patch to add the size
+> >> requirement.
+> >> 
+> >> Please help review this patch. Thanks!
+> >> 
+> >> -Boyang
+> >> 
+> >> tests/generic/476 | 1 +
+> >> 1 file changed, 1 insertion(+)
+> >> 
+> >> diff --git a/tests/generic/476 b/tests/generic/476
+> >> index 212373d1..dcc7c3da 100755
+> >> --- a/tests/generic/476
+> >> +++ b/tests/generic/476
+> >> @@ -24,6 +24,7 @@ _cleanup()
+> >> _supported_fs generic
+> >> 
+> >> _require_scratch
+> >> +_require_scratch_size $((27 * 1024 * 1024)) # 27GB
+> > 
+> > At first, most of other filesystems don't need this requirement, that will
+> > reduce test coverage of other fs suddently. Second, there's not a clear
+> > reason to prove NFS (or others) need a 27+GB device to run this test. Due to
+> > the generic/476 does nothing special, except random I/Os, even running with
+> > ENOSPC...
+> > 
+> > So one difference of running with small device or large enough device is the
+> > chance to run with ENOSPC. I think the device size isn't the root cause of
+> > nfs hang you hit, I doubt if it's a NFS bug with ENOSPC, or something else
+> > bug which is triggered by someone random I/O operation.
+> > 
+> > We'd better not to skip a known generic test (from upstream fstests directly)
+> > if without a clear reason. That might cause we miss bugs or test coverage,
+> > better to make sure if it's a real bug at first. Then think about if we need
+> > to improve the case or fix a bug.
+> 
+> +1
+> 
+> I can help troubleshoot the NFS-related aspects of this further, if needed.
 
-It's not clear from your report whether the kernel range applies
-to the client's kernel or the server's kernel (in the non-loopback
-case).
+Thanks Chuck, I think we'd better to cc linux-nfs list.
 
-Since a scratch device is involved, I suspect the livelock might
-be due to a problem with the NFSD filecache code introduced on or
-about v5.10. There are patches pending in the NFSD for-next branch
-that should address this issue. Is there a way that your tester
-can try these out to confirm?
+I can reproduce generic/476 hang on nfs[0] too, with real disk or Virtio disk,
+it's not a loop device related issue. And sometimes it test passed[1], even with
+a 10G loop device[2] (which I/O speed is very fast). If you or nfs forks need
+full console log, I can provide. But I think it's easy to reproduce this bug
+by running generic/476 on a general nfs v4.2.
+
+Thanks,
+Zorro
+
+[0]
+[173303.753434] sysrq: Show Memory 
+[173303.764679] Mem-Info: 
+[173303.765683] active_anon:1872 inactive_anon:22756 isolated_anon:0 
+[173303.765683]  active_file:47360 inactive_file:1230085 isolated_file:0 
+[173303.765683]  unevictable:0 dirty:3 writeback:0 
+[173303.765683]  slab_reclaimable:108117 slab_unreclaimable:100595 
+[173303.765683]  mapped:11734 shmem:7363 pagetables:544 bounce:0 
+[173303.765683]  kernel_misc_reclaimable:0 
+[173303.765683]  free:49561 free_pcp:5112 free_cma:0 
+[173303.780542] Node 0 active_anon:7488kB inactive_anon:91024kB active_file:189440kB inactive_file:4920340kB unevictable:0kB isolated(anon):0kB isolated(file):0kB mapped:46936kB dirty:12kB writeback:0kB shmem:29452kB shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 18432kB writeback_tmp:0kB kernel_stack:5920kB pagetables:2176kB all_unreclaimable? no 
+[173303.790519] Node 0 DMA free:14336kB boost:0kB min:160kB low:200kB high:240kB reserved_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB present:15992kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB 
+[173303.799060] lowmem_reserve[]: 0 2659 6183 6183 6183 
+[173303.800781] Node 0 DMA32 free:123700kB boost:0kB min:28992kB low:36240kB high:43488kB reserved_highatomic:0KB active_anon:12kB inactive_anon:1452kB active_file:61020kB inactive_file:2279284kB unevictable:0kB writepending:8kB present:3129308kB managed:2801628kB mlocked:0kB bounce:0kB free_pcp:3508kB local_pcp:768kB free_cma:0kB 
+[173303.810096] lowmem_reserve[]: 0 0 3524 3524 3524 
+[173303.812131] Node 0 Normal free:60208kB boost:0kB min:38424kB low:48028kB high:57632kB reserved_highatomic:2048KB active_anon:7476kB inactive_anon:89572kB active_file:128420kB inactive_file:2641056kB unevictable:0kB writepending:4kB present:5242880kB managed:3618860kB mlocked:0kB bounce:0kB free_pcp:16240kB local_pcp:4196kB free_cma:0kB 
+[173303.822880] lowmem_reserve[]: 0 0 0 0 0 
+[173303.824683] Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 0*1024kB 1*2048kB (M) 3*4096kB (M) = 14336kB 
+[173303.829410] Node 0 DMA32: 1385*4kB (UME) 1254*8kB (UME) 368*16kB (UME) 317*32kB (UME) 121*64kB (UM) 105*128kB (UME) 99*256kB (UM) 63*512kB (UME) 13*1024kB (UME) 0*2048kB 0*4096kB = 123700kB 
+[173303.836654] Node 0 Normal: 1056*4kB (UMEH) 1027*8kB (UMEH) 400*16kB (UMEH) 287*32kB (UMEH) 105*64kB (UMEH) 71*128kB (UM) 42*256kB (M) 10*512kB (M) 0*1024kB 0*2048kB 0*4096kB = 59704kB 
+[173303.843268] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB 
+[173303.846232] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB 
+[173303.849541] 1284815 total pagecache pages 
+[173303.851713] 7 pages in swap cache 
+[173303.853033] Swap cache stats: add 24, delete 17, find 0/1 
+[173303.874135] Free swap  = 8257760kB 
+[173303.875679] Total swap = 8258556kB 
+[173303.877210] 2097045 pages RAM 
+[173303.878574] 0 pages HighMem/MovableOnly 
+[173303.880204] 488083 pages reserved 
+[173303.881721] 0 pages cma reserved 
+[173303.883181] 0 pages hwpoisoned 
+[173311.514201] sysrq: Show State 
+[173311.531486] task:systemd         state:S stack:23208 pid:    1 ppid:     0 flags:0x00000002 
+[173311.535523] Call Trace: 
+[173311.536988]  <TASK> 
+[173311.537992]  __schedule+0x673/0x1540 
+[173311.539782]  ? io_schedule_timeout+0x160/0x160 
+[173311.541842]  schedule+0xe0/0x200 
+[173311.543466]  schedule_hrtimeout_range_clock+0x2c0/0x310 
+[173311.545632]  ? hrtimer_nanosleep_restart+0x170/0x170 
+[173311.547948]  ? lock_downgrade+0x130/0x130 
+[173311.549585]  ? lockdep_hardirqs_on_prepare.part.0+0x18c/0x370 
+[173311.551686]  ep_poll+0x7db/0xa80 
+[173311.552999]  ? ep_send_events+0x9f0/0x9f0 
+[173311.555015]  ? pick_next_task_stop+0x250/0x250 
+[173311.574734]  ? prepare_to_wait_exclusive+0x2c0/0x2c0 
+[173311.576518]  ? __lock_release+0x4c1/0xa00 
+[173311.579162]  do_epoll_wait+0x12f/0x160 
+[173311.580973]  __x64_sys_epoll_wait+0x12e/0x250 
+[173311.582599]  ? __x64_sys_epoll_pwait2+0x240/0x240 
+[173311.584769]  ? lockdep_hardirqs_on_prepare.part.0+0x18c/0x370 
+[173311.587348]  do_syscall_64+0x5c/0x90 
+[173311.589335]  ? do_syscall_64+0x69/0x90 
+[173311.591128]  ? lockdep_hardirqs_on+0x79/0x100 
+[173311.593125]  ? do_syscall_64+0x69/0x90 
+[173311.594805]  ? lockdep_hardirqs_on+0x79/0x100 
+[173311.596598]  entry_SYSCALL_64_after_hwframe+0x63/0xcd 
+[173311.598376] RIP: 0033:0x7f0a5834e7de 
+[173311.599836] RSP: 002b:00007ffcee99d180 EFLAGS: 00000293 ORIG_RAX: 00000000000000e8 
+[173311.603432] RAX: ffffffffffffffda RBX: 000056269d7b5b80 RCX: 00007f0a5834e7de 
+[173311.605924] RDX: 00000000000000a6 RSI: 000056269da4f0d0 RDI: 0000000000000004 
+[173311.608922] RBP: 000056269d7b5d10 R08: 0000000000000000 R09: 000000000000000d 
+[173311.611243] R10: 00000000ffffffff R11: 0000000000000293 R12: 0000000000000226 
+[173311.613741] R13: 000056269d7b5b80 R14: 00000000000000a6 R15: 0000000000000037 
+[173311.626581]  </TASK> 
+[173311.627500] task:kthreadd        state:S stack:27704 pid:    2 ppid:     0 flags:0x00004000 
+[173311.630191] Call Trace: 
+[173311.631013]  <TASK> 
+[173311.631872]  __schedule+0x673/0x1540 
+[173311.633147]  ? io_schedule_timeout+0x160/0x160 
+[173311.634725]  schedule+0xe0/0x200 
+[173311.635884]  kthreadd+0x9fb/0xd60 
+[173311.637204]  ? kthread_is_per_cpu+0xc0/0xc0 
+[173311.638684]  ret_from_fork+0x22/0x30 
+[173311.640320]  </TASK> 
+[173311.641273] task:rcu_gp          state:I stack:29336 pid:    3 ppid:     2 flags:0x00004000 
+[173311.645006] Workqueue:  0x0 (rcu_gp) 
+[173311.646684] Call Trace: 
+[173311.647756]  <TASK> 
+[173311.648895]  __schedule+0x673/0x1540 
+[173311.650435]  ? io_schedule_timeout+0x160/0x160 
+[173311.652317]  schedule+0xe0/0x200 
+[173311.653732]  rescuer_thread+0x662/0xb80 
+[173311.656494]  ? _raw_spin_unlock_irqrestore+0x59/0x70 
+[173311.658779]  ? worker_thread+0xed0/0xed0 
+[173311.660381]  ? __kthread_parkme+0xcc/0x200 
+[173311.662276]  ? worker_thread+0xed0/0xed0 
+[173311.664182]  kthread+0x2a7/0x350 
+[173311.665725]  ? kthread_complete_and_exit+0x20/0x20 
+[173311.667519]  ret_from_fork+0x22/0x30 
+[173311.669222]  </TASK> 
+[173311.670098] task:rcu_par_gp      state:I stack:30888 pid:    4 ppid:     2 flags:0x00004000 
+[173311.673101] Call Trace: 
+[173311.673976]  <TASK> 
+[173311.674868]  __schedule+0x673/0x1540 
+[173311.676197]  ? io_schedule_timeout+0x160/0x160 
+[173311.677805]  schedule+0xe0/0x200 
+[173311.678991]  rescuer_thread+0x662/0xb80 
+[173311.680502]  ? _raw_spin_unlock_irqrestore+0x59/0x70 
+[173311.682222]  ? worker_thread+0xed0/0xed0
+...
+(too many lines)
+...
+[173319.787263] Showing all locks held in the system: 
+[173319.788884] no locks held by systemd-journal/517. 
+[173319.789881] 1 lock held by fsstress/663798: 
+[173319.790895]  #0: ffff888130b68488 (sb_writers#16){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[173319.792551] 3 locks held by kworker/u8:2/666396: 
+[173319.794275]  #0: ffff8881e4602f58 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x30/0x120 
+[173319.795933]  #1: ffff8881e4e02f58 (&rq->__lock){-.-.}-{2:2}, at: raw_spin_rq_lock_nested+0x30/0x120 
+[173319.797605]  #2: ffff8881009bc4f0 (&p->pi_lock){-.-.}-{2:2}, at: try_to_wake_up+0xb3/0xdd0 
+[173319.799126] 3 locks held by 20_sysinfo/666628: 
+[173319.799995]  #0: ffff88810c362488 (sb_writers#3){.+.+}-{0:0}, at: ksys_write+0xf9/0x1d0 
+[173319.801695]  #1: ffffffff860e6dc0 (rcu_read_lock){....}-{1:2}, at: __handle_sysrq+0x4a/0xe0 
+[173319.803276]  #2: ffffffff860e6dc0 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire.constprop.0+0x0/0x30 
+[173319.804988]  
+[173319.805319] ============================================= 
+[173319.805319]  
+[173319.806614] Showing busy workqueues and worker pools: 
+[173319.807587] workqueue events_highpri: flags=0x10 
+[173319.808538]   pwq 5: cpus=2 node=0 flags=0x0 nice=-20 active=1/256 refcnt=2 
+[173319.808581]     pending: mix_interrupt_randomness 
+[173328.255900] sysrq: Show Blocked State 
+[173328.276745] task:fsstress        state:D stack:23416 pid:663798 ppid:663797 flags:0x00004002 
+[173328.279713] Call Trace: 
+[173328.280646]  <TASK> 
+[173328.281768]  __schedule+0x673/0x1540 
+[173328.283583]  ? io_schedule_timeout+0x160/0x160 
+[173328.285898]  ? pick_next_task_stop+0x250/0x250 
+[173328.288286]  schedule+0xe0/0x200 
+[173328.289932]  schedule_timeout+0x19e/0x250 
+[173328.291845]  ? usleep_range_state+0x190/0x190 
+[173328.293563]  ? mark_held_locks+0xa5/0xf0 
+[173328.295072]  ? lockdep_hardirqs_on_prepare.part.0+0x18c/0x370 
+[173328.297228]  ? _raw_spin_unlock_irq+0x24/0x50 
+[173328.299148]  __wait_for_common+0x381/0x540 
+[173328.301081]  ? usleep_range_state+0x190/0x190 
+[173328.303037]  ? out_of_line_wait_on_bit_timeout+0x170/0x170 
+[173328.304937]  ? up_write+0x20/0x20 
+[173328.306118]  ? nfs_file_direct_write+0xaef/0x1050 [nfs] 
+[173328.308327]  wait_for_completion_killable+0x20/0x40 
+[173328.310146]  nfs_file_direct_write+0xb2c/0x1050 [nfs] 
+[173328.312009]  ? nfs_file_direct_read+0xaa0/0xaa0 [nfs] 
+[173328.313878]  ? nfs_key_timeout_notify+0x3a/0x90 [nfs] 
+[173328.315651]  ? __lock_acquire+0xb72/0x1870 
+[173328.317032]  ? nfs_file_write+0xed/0x8c0 [nfs] 
+[173328.318716]  new_sync_write+0x2ef/0x540 
+[173328.320059]  ? new_sync_read+0x530/0x530 
+[173328.321447]  ? lock_acquire+0x1d8/0x620 
+[173328.322839]  ? rcu_read_unlock+0x40/0x40 
+[173328.324309]  vfs_write+0x62a/0x920 
+[173328.325592]  ksys_write+0xf9/0x1d0 
+[173328.327621]  ? __ia32_sys_read+0xa0/0xa0 
+[173328.328996]  ? ktime_get_coarse_real_ts64+0x130/0x170 
+[173328.330746]  do_syscall_64+0x5c/0x90 
+[173328.331998]  ? do_syscall_64+0x69/0x90 
+[173328.333303]  ? lockdep_hardirqs_on+0x79/0x100 
+[173328.335143]  ? do_syscall_64+0x69/0x90 
+[173328.336483]  ? do_syscall_64+0x69/0x90 
+[173328.338093]  ? lockdep_hardirqs_on+0x79/0x100 
+[173328.340276]  ? do_syscall_64+0x69/0x90 
+[173328.341683]  ? asm_sysvec_apic_timer_interrupt+0x16/0x20 
+[173328.343466]  ? lockdep_hardirqs_on+0x79/0x100 
+[173328.344989]  entry_SYSCALL_64_after_hwframe+0x63/0xcd 
+[173328.346646] RIP: 0033:0x7f16be13e8c7 
+[173328.347857] RSP: 002b:00007ffea1b02798 EFLAGS: 00000246 ORIG_RAX: 0000000000000001 
+[173328.350228] RAX: ffffffffffffffda RBX: 0000000000100000 RCX: 00007f16be13e8c7 
+[173328.352485] RDX: 0000000000100000 RSI: 0000000001c00000 RDI: 0000000000000003 
+[173328.354769] RBP: 0000000000000003 R08: 0000000001d00000 R09: 0000000000000000 
+[173328.357318] R10: 0000000000000100 R11: 0000000000000246 R12: 0000000000017de1 
+[173328.359664] R13: 0000000000000000 R14: 0000000001c00000 R15: 0000000000000000 
+[173328.362074]  </TASK> 
+         Stopping         
+/usr/bin/bash -c …j; exec ./tests/generic/476   
+...
+
+[1]
+  [ 9746.410677] run fstests generic/476 at 2022-07-16 15:42:38
+  [ 9803.017543] restraintd[2193]: *** Current Time: Sat Jul 16 15:43:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [ 9863.016020] restraintd[2193]: *** Current Time: Sat Jul 16 15:44:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [-- MARK -- Sat Jul 16 19:45:00 2022] 
+  [ 9923.014409] restraintd[2193]: *** Current Time: Sat Jul 16 15:45:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [ 9983.016088] restraintd[2193]: *** Current Time: Sat Jul 16 15:46:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10043.014435] restraintd[2193]: *** Current Time: Sat Jul 16 15:47:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10103.017105] restraintd[2193]: *** Current Time: Sat Jul 16 15:48:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10163.057993] restraintd[2193]: *** Current Time: Sat Jul 16 15:49:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [-- MARK -- Sat Jul 16 19:50:00 2022] 
+  [10223.018212] restraintd[2193]: *** Current Time: Sat Jul 16 15:50:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10283.015296] restraintd[2193]: *** Current Time: Sat Jul 16 15:51:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10343.014956] restraintd[2193]: *** Current Time: Sat Jul 16 15:52:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10403.014340] restraintd[2193]: *** Current Time: Sat Jul 16 15:53:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10463.016180] restraintd[2193]: *** Current Time: Sat Jul 16 15:54:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [-- MARK -- Sat Jul 16 19:55:00 2022] 
+  [10523.017423] restraintd[2193]: *** Current Time: Sat Jul 16 15:55:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10583.015557] restraintd[2193]: *** Current Time: Sat Jul 16 15:56:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10643.014811] restraintd[2193]: *** Current Time: Sat Jul 16 15:57:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10703.009075] restraintd[2193]: *** Current Time: Sat Jul 16 15:58:33 2022  Localwatchdog at: Mon Jul 18 13:01:33 2022 
+  [10752.278563] run fstests generic/477 at 2022-07-16 15:59:23
+  ...
+
+[2]
+  The 1st layer fs: xfs - SCRATCH_DEV=/dev/loop1, SCRATCH_MNT=/mnt/fstests/SCRATCH_DIR
+  meta-data=/dev/loop1             isize=512    agcount=4, agsize=655360 blks
+           =                       sectsz=512   attr=2, projid32bit=1
+           =                       crc=1        finobt=1, sparse=1, rmapbt=0
+           =                       reflink=1    bigtime=1 inobtcount=1 nrext64=0
+  data     =                       bsize=4096   blocks=2621440, imaxpct=25
+           =                       sunit=0      swidth=0 blks
+  naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+  log      =internal log           bsize=4096   blocks=16384, version=2
+           =                       sectsz=512   sunit=0 blks, lazy-count=1
+  realtime =none                   extsz=4096   blocks=0, rtextents=0
+  Discarding blocks...Done.
+  The 2nd layer fs: nfs - SCRATCH_DEV=s390x-kvm-xxx.xxx.xxx.xxxx.redhat.com:/mnt/fstests/SCRATCH_DIR/nfs-server, SCRATCH_MNT=/mnt/fstests/SCRATCH_DIR/nfs-client
 
 
-> On Jul 21, 2022, at 10:50 AM, Theodore Ts'o <tytso@mit.edu> wrote:
->=20
-> FYI, modern kernels (anything newer than 5.10 LTS, up to and excluding
-> bleeding-edge mainline kernels) are looping forever in a livelock or
-> deadlock when running generic/476 on NFS, both in a loopback and
-> external export configuration.  This *may* be an ENOSPC related issue.
->=20
-> See the referenced discussion on fstests@vger.kernel.org for more
-> details.
->=20
-> 	 			     	      - Ted
->=20
->=20
-> From: "Theodore Ts'o" <tytso@mit.edu>
-> Subject: Re: [PATCH v1] generic/476: requires 27GB scratch size
-> Date: July 21, 2022 at 10:03:45 AM EDT
-> To: Boyang Xue <bxue@redhat.com>
-> Cc: "Darrick J. Wong" <djwong@kernel.org>, fstests@vger.kernel.org
->=20
->=20
-> Following up, using NFS loopback with a 5GB scratch device on a Google
-> Compute Engine VM, generic/476 passes using a 4.14 LTS, 4.19 LTS, and
-> 5.4 LTS kernel.  So this looks like it's a regression which is in 5.10
-> LTS and newer kernels, and so instead of patching it out of the test,
-> I think the right thing to do is to add it to a kernel
-> version-specific exclude file and then filing a bug with the NFS
-> folks.
->=20
-> KERNEL:    kernel 4.14.284-xfstests #8 SMP Tue Jul 5 08:21:37 EDT 2022 x8=
-6_64
-> CMDLINE:   -c nfs/default generic/476
-> CPUS:      2
-> MEM:       7680
->=20
-> nfs/loopback: 1 tests, 597 seconds
->  generic/476  Pass     595s
-> Totals: 1 tests, 0 skipped, 0 failures, 0 errors, 595s
->=20
-> ---
-> KERNEL:    kernel 4.19.248-xfstests #4 SMP Sat Jun 25 10:43:45 EDT 2022 x=
-86_64
-> CMDLINE:   -c nfs/default generic/476
-> CPUS:      2
-> MEM:       7680
->=20
-> nfs/loopback: 1 tests, 407 seconds
->  generic/476  Pass     407s
-> Totals: 1 tests, 0 skipped, 0 failures, 0 errors, 407s
->=20
-> ----
-> KERNEL:    kernel 5.4.199-xfstests #21 SMP Sun Jul 3 12:15:15 EDT 2022 x8=
-6_64
-> CMDLINE:   -c nfs/default generic/476
-> CPUS:      2
-> MEM:       7680
->=20
-> nfs/loopback: 1 tests, 404 seconds
->  generic/476  Pass     404s
-> Totals: 1 tests, 0 skipped, 0 failures, 0 errors, 404s
->=20
->=20
-> See below for what I'm checking into xfstests-bld for
-> {kvm,gce}-xfstests.  I don't believe we should be changing xfstests's
-> generic/476, since it *does* pass with a smaller scratch device on
-> older kernels, and presumably, RHEL customers would be cranky if this
-> issue resulted in their production systems to lock up, and so it
-> should be considered a kernel bug as opposed to a test bug.
->=20
-> 						- Ted
->=20
->=20
-> commit 4a33b6721d5db9c07f295a10a8ad65d2a0021406
-> Author: Theodore Ts'o <tytso@mit.edu>
-> Date:   Thu Jul 21 09:54:50 2022 -0400
->=20
->    test-appliance: add an nfs test exclusions for kernels newer than 5.4
->=20
->    This is apparently an NFS bug which is visible in 5.10 LTS and newer
->    kernels, and likely appeared sometime after 5.4.  Since it causes the
->    test VM to spin forever (or at least for days), let's exclude it for
->    now.
->=20
->    Link: https://lore.kernel.org/all/CAHLe9YaAVyBmmM8T27dudvoeAxbJ_JMQmkz=
-7tdM1ZLnpeQW4UQ@mail.gmail.com/
->    Signed-off-by: Theodore Ts'o <tytso@mit.edu>
->=20
-> diff --git a/test-appliance/files/root/fs/nfs/exclude b/test-appliance/fi=
-les/root/fs/nfs/exclude
-> index 184750fb..ef4b19bc 100644
-> --- a/test-appliance/files/root/fs/nfs/exclude
-> +++ b/test-appliance/files/root/fs/nfs/exclude
-> @@ -10,3 +10,14 @@ generic/477
-> // failing in the expected output of the linux-nfs Wiki page.  So we'll
-> // suppress this failure for now.
-> generic/294
-> +
-> +#if LINUX_VERSION_CODE > KERNEL_VERSION(5,4,0)
-> +// There appears to be a regression that shows up sometime after 5.4.
-> +// LTS kernels for 4.14, 4.19, and 5.4 will terminate successfully,
-> +// but newer kernels will spin forever in some kind of deadlock or livel=
-ock
-> +// This apparently does not happen if the scratch device is > 27GB, so i=
-t
-> +// may be some kind of ENOSPC-related bug.
-> +// For more information see the e-mail thread starting at:
-> +// https://lore.kernel.org/r/CAHLe9YaAVyBmmM8T27dudvoeAxbJ_JMQmkz7tdM1ZL=
-npeQW4UQ@mail.gmail.com/
-> +generic/476
-> +#endif
->=20
->=20
-
---
-Chuck Lever
-
-
+> 
+> 
+> > Thanks,
+> > Zorro
+> > 
+> >> _require_command "$KILLALL_PROG" "killall"
+> >> 
+> >> echo "Silence is golden."
+> >> -- 
+> >> 2.27.0
+> >> 
+> > 
+> 
+> --
+> Chuck Lever
+> 
+> 
+> 
 
