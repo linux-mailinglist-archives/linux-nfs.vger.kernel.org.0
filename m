@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B656557D334
-	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jul 2022 20:21:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3302357D335
+	for <lists+linux-nfs@lfdr.de>; Thu, 21 Jul 2022 20:21:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231642AbiGUSVk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jul 2022 14:21:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42944 "EHLO
+        id S229555AbiGUSVl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 21 Jul 2022 14:21:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbiGUSVj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jul 2022 14:21:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E788210E
+        with ESMTP id S231672AbiGUSVk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jul 2022 14:21:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A87582117
         for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 11:21:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9451561FC9
-        for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 18:21:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C150C341CB;
-        Thu, 21 Jul 2022 18:21:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 35CD061FC8
+        for <linux-nfs@vger.kernel.org>; Thu, 21 Jul 2022 18:21:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41465C341C0;
+        Thu, 21 Jul 2022 18:21:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=k20201202; t=1658427698;
-        bh=/rdMpVPibNoV+V4UZpxODig15LN1SP1snCf7ckUe3vo=;
+        bh=mWaQeKFwusCVldo8R2eermzlT0tF5iUjW1pL24dk1x4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IADmKO1sP+3j0nJHqiIPRGWS1Hy7WI+gbl+lGcFFlCgC18iMz8jtlmtd36ifz+qts
-         DOTRq88MuRwJQEQJRPGFOsyBgunXlzo9bRbC/7l3DQz9PiekT9BmWgVOmqKFcv9akl
-         7pDp2c15GWEwGiqJNu679TGnkNM9kR9XKz2OOlLJQFX7VCc9KVZJxV1bLLQkX2szQ5
-         c91dGxETEl2vgmL65HXZwpDL145FCkwdp5SYl1LtTfoBPhacJ5qZCMXH2U8lbWU0My
-         RrBKRxYVljAoTqdpUDnat/b1XSOmbqZmPWH3CxWH6CjYfsNTvqDzGkzqs6QWeGIdXE
-         dqUEEZmMXxAcw==
+        b=ssneteS0hzF5ILsy68kY1gFPiMrblrVDtzARlBXLouzb9CgrEIeWNOxDINbWfYtid
+         /aYawLfmACbxdNGtmJL5PnWspFnO6u4vltenMsdwpVPh0lexDaq5nQvo2HOYfODbIo
+         UrtO34VJ9GGbu7s1AzR3+hQkziBFVHlJEKMeaSl86sPCoLLy5JTYPkkjV/0M04ucev
+         CKK+ia+0OWxnrsKsSoTbw0N8hs+pbLUJTcLd8U8LrIFkcrW8+TU1s5uwyL10tamk1o
+         WCa3hJQPv5s+G7vOBrFMEHq0nJ0qSOusSOZj5Lmt9ZznEKEuBVKNLEYilIB3okCyCt
+         e3U1e4nRw4Gwg==
 From:   Anna Schumaker <anna@kernel.org>
 To:     linux-nfs@vger.kernel.org, trond.myklebust@hammerspace.com
 Cc:     anna@kernel.org
-Subject: [PATCH v3 1/5] SUNRPC: Introduce xdr_stream_move_subsegment()
-Date:   Thu, 21 Jul 2022 14:21:31 -0400
-Message-Id: <20220721182135.1885071-2-anna@kernel.org>
+Subject: [PATCH v3 2/5] SUNRPC: Add a function for directly setting the xdr page len
+Date:   Thu, 21 Jul 2022 14:21:32 -0400
+Message-Id: <20220721182135.1885071-3-anna@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220721182135.1885071-1-anna@kernel.org>
 References: <20220721182135.1885071-1-anna@kernel.org>
@@ -53,106 +53,68 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-I do this by creating an xdr subsegment for the range we will be
-operating over. This lets me shift data to the correct place without
-potentially overwriting anything already there.
+We need to do this step during READ_PLUS decoding so that we know pages
+are the right length and any extra data has been preserved in the tail.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- include/linux/sunrpc/xdr.h |  2 ++
- net/sunrpc/xdr.c           | 59 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 61 insertions(+)
+ include/linux/sunrpc/xdr.h |  1 +
+ net/sunrpc/xdr.c           | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
 
 diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index 5860f32e3958..7dcc6c31fe29 100644
+index 7dcc6c31fe29..8cd38a9994ca 100644
 --- a/include/linux/sunrpc/xdr.h
 +++ b/include/linux/sunrpc/xdr.h
-@@ -262,6 +262,8 @@ extern unsigned int xdr_align_data(struct xdr_stream *, unsigned int offset, uns
+@@ -258,6 +258,7 @@ extern __be32 *xdr_inline_decode(struct xdr_stream *xdr, size_t nbytes);
+ extern unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len);
+ extern void xdr_enter_page(struct xdr_stream *xdr, unsigned int len);
+ extern int xdr_process_buf(const struct xdr_buf *buf, unsigned int offset, unsigned int len, int (*actor)(struct scatterlist *, void *), void *data);
++extern void xdr_set_pagelen(struct xdr_stream *, unsigned int len);
+ extern unsigned int xdr_align_data(struct xdr_stream *, unsigned int offset, unsigned int length);
  extern unsigned int xdr_expand_hole(struct xdr_stream *, unsigned int offset, unsigned int length);
  extern bool xdr_stream_subsegment(struct xdr_stream *xdr, struct xdr_buf *subbuf,
- 				  unsigned int len);
-+extern unsigned int xdr_stream_move_subsegment(struct xdr_stream *xdr, unsigned int offset,
-+					       unsigned int target, unsigned int length);
- 
- /**
-  * xdr_set_scratch_buffer - Attach a scratch buffer for decoding data.
 diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 5d2b3e6979fb..8ba11a754297 100644
+index 8ba11a754297..e4ac700ca554 100644
 --- a/net/sunrpc/xdr.c
 +++ b/net/sunrpc/xdr.c
-@@ -775,6 +775,34 @@ static void xdr_buf_pages_shift_left(const struct xdr_buf *buf,
- 	xdr_buf_tail_copy_left(buf, 0, len - buf->page_len, shift);
+@@ -1500,6 +1500,36 @@ unsigned int xdr_read_pages(struct xdr_stream *xdr, unsigned int len)
  }
- 
-+static void xdr_buf_head_shift_left(const struct xdr_buf *buf,
-+				    unsigned int base, unsigned int len,
-+				    unsigned int shift)
-+{
-+	const struct kvec *head = buf->head;
-+	unsigned int bytes;
-+
-+	if (!shift || !len)
-+		return;
-+
-+	if (shift > base) {
-+		bytes = (shift - base);
-+		if (bytes >= len)
-+			return;
-+		base += bytes;
-+		len -= bytes;
-+	}
-+
-+	if (base < head->iov_len) {
-+		bytes = min_t(unsigned int, len, head->iov_len - base);
-+		memmove(head->iov_base + (base - shift),
-+			head->iov_base + base, bytes);
-+		base += bytes;
-+		len -= bytes;
-+	}
-+	xdr_buf_pages_shift_left(buf, base - head->iov_len, len, shift);
-+}
-+
- /**
-  * xdr_shrink_bufhead
-  * @buf: xdr_buf
-@@ -1680,6 +1708,37 @@ bool xdr_stream_subsegment(struct xdr_stream *xdr, struct xdr_buf *subbuf,
- }
- EXPORT_SYMBOL_GPL(xdr_stream_subsegment);
+ EXPORT_SYMBOL_GPL(xdr_read_pages);
  
 +/**
-+ * xdr_stream_move_subsegment - Move part of a stream to another position
-+ * @xdr: the source xdr_stream
-+ * @offset: the source offset of the segment
-+ * @target: the target offset of the segment
-+ * @length: the number of bytes to move
++ * xdr_set_pagelen - Sets the length of the XDR pages
++ * @xdr: pointer to xdr_stream struct
++ * @len: new length of the XDR page data
 + *
-+ * Moves @length bytes from @offset to @target in the xdr_stream, overwriting
-+ * anything in its space. Returns the number of bytes in the segment.
++ * Either grows or shrinks the length of the xdr pages by setting pagelen to
++ * @len bytes. When shrinking, any extra data is moved into buf->tail, whereas
++ * when growing any data beyond the current pointer is moved into the tail.
++ *
++ * Returns True if the operation was successful, and False otherwise.
 + */
-+unsigned int xdr_stream_move_subsegment(struct xdr_stream *xdr, unsigned int offset,
-+					unsigned int target, unsigned int length)
++void xdr_set_pagelen(struct xdr_stream *xdr, unsigned int len)
 +{
-+	struct xdr_buf buf;
-+	unsigned int shift;
++	struct xdr_buf *buf = xdr->buf;
++	size_t remaining = xdr_stream_remaining(xdr);
++	size_t base = 0;
 +
-+	if (offset < target) {
-+		shift = target - offset;
-+		if (xdr_buf_subsegment(xdr->buf, &buf, offset, shift + length) < 0)
-+			return 0;
-+		xdr_buf_head_shift_right(&buf, 0, length, shift);
-+	} else if (offset > target) {
-+		shift = offset - target;
-+		if (xdr_buf_subsegment(xdr->buf, &buf, target, shift + length) < 0)
-+			return 0;
-+		xdr_buf_head_shift_left(&buf, shift, length, shift);
++	if (len < buf->page_len) {
++		base = buf->page_len - len;
++		xdr_shrink_pagelen(buf, len);
++	} else {
++		xdr_buf_head_shift_right(buf, xdr_stream_pos(xdr),
++					 buf->page_len, remaining);
++		if (len > buf->page_len)
++			xdr_buf_try_expand(buf, len - buf->page_len);
 +	}
-+	return length;
++	xdr_set_tail_base(xdr, base, remaining);
 +}
-+EXPORT_SYMBOL_GPL(xdr_stream_move_subsegment);
++EXPORT_SYMBOL_GPL(xdr_set_pagelen);
 +
- /**
-  * xdr_buf_trim - lop at most "len" bytes off the end of "buf"
-  * @buf: buf to be trimmed
+ unsigned int xdr_align_data(struct xdr_stream *xdr, unsigned int offset,
+ 			    unsigned int length)
+ {
 -- 
 2.37.1
 
