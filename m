@@ -2,36 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2822357E83A
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:20:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFC1C57E83F
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:22:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbiGVUUM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jul 2022 16:20:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46902 "EHLO
+        id S236266AbiGVUWS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 16:22:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234603AbiGVUUL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:20:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BB4224
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 13:20:07 -0700 (PDT)
+        with ESMTP id S233195AbiGVUWR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:22:17 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43522326E8;
+        Fri, 22 Jul 2022 13:22:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B439661EFE
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:20:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155EDC341C6
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:20:06 +0000 (UTC)
-Subject: [PATCH v1 11/11] NFSD: Move copy offload callback arguments into a
- separate structure
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Fri, 22 Jul 2022 16:20:05 -0400
-Message-ID: <165852120512.11403.7973705149660239326.stgit@manet.1015granger.net>
-In-Reply-To: <165852076926.11403.44005570813790008.stgit@manet.1015granger.net>
-References: <165852076926.11403.44005570813790008.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5.dev2+g9ce680a5
+        by ams.source.kernel.org (Postfix) with ESMTPS id 03584B82A6E;
+        Fri, 22 Jul 2022 20:22:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 978EDC341C6;
+        Fri, 22 Jul 2022 20:22:13 +0000 (UTC)
+Date:   Fri, 22 Jul 2022 16:22:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/4] SUNRPC: Replace dprintk() call site in
+ xs_data_ready
+Message-ID: <20220722162212.3d080c23@gandalf.local.home>
+In-Reply-To: <9FDA46D8-4D6E-49B0-A583-D0FF739111BF@oracle.com>
+References: <165851065336.361126.17865870911497306083.stgit@morisot.1015granger.net>
+        <165851074247.361126.17205394769981595871.stgit@morisot.1015granger.net>
+        <66371b9db4210fe853e98a8ec68b0f780ba886af.camel@hammerspace.com>
+        <9FDA46D8-4D6E-49B0-A583-D0FF739111BF@oracle.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
@@ -42,224 +53,50 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Refactor so that CB_OFFLOAD arguments can be passed without
-allocating a whole struct nfsd4_copy object. On my system (x86_64)
-this removes another 96 bytes from struct nfsd4_copy.
+[ Added the user space perf folks ]
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4callback.c |   37 ++++++++++++++++++-------------------
- fs/nfsd/nfs4proc.c     |   44 ++++++++++++++++++++++----------------------
- fs/nfsd/xdr4.h         |   11 +++++++----
- 3 files changed, 47 insertions(+), 45 deletions(-)
+On Fri, 22 Jul 2022 18:45:30 +0000
+Chuck Lever III <chuck.lever@oracle.com> wrote:
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 11f8715d92d6..4ce328209f61 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -679,7 +679,7 @@ static int nfs4_xdr_dec_cb_notify_lock(struct rpc_rqst *rqstp,
-  *	case NFS4_OK:
-  *		write_response4	coa_resok4;
-  *	default:
-- *	length4		coa_bytes_copied;
-+ *		length4		coa_bytes_copied;
-  * };
-  * struct CB_OFFLOAD4args {
-  *	nfs_fh4		coa_fh;
-@@ -688,21 +688,22 @@ static int nfs4_xdr_dec_cb_notify_lock(struct rpc_rqst *rqstp,
-  * };
-  */
- static void encode_offload_info4(struct xdr_stream *xdr,
--				 __be32 nfserr,
--				 const struct nfsd4_copy *cp)
-+				 const struct nfsd4_cb_offload *cbo)
- {
- 	__be32 *p;
- 
- 	p = xdr_reserve_space(xdr, 4);
--	*p++ = nfserr;
--	if (!nfserr) {
-+	*p = cbo->co_nfserr;
-+	switch (cbo->co_nfserr) {
-+	case nfs_ok:
- 		p = xdr_reserve_space(xdr, 4 + 8 + 4 + NFS4_VERIFIER_SIZE);
- 		p = xdr_encode_empty_array(p);
--		p = xdr_encode_hyper(p, cp->cp_res.wr_bytes_written);
--		*p++ = cpu_to_be32(cp->cp_res.wr_stable_how);
--		p = xdr_encode_opaque_fixed(p, cp->cp_res.wr_verifier.data,
-+		p = xdr_encode_hyper(p, cbo->co_res.wr_bytes_written);
-+		*p++ = cpu_to_be32(cbo->co_res.wr_stable_how);
-+		p = xdr_encode_opaque_fixed(p, cbo->co_res.wr_verifier.data,
- 					    NFS4_VERIFIER_SIZE);
--	} else {
-+		break;
-+	default:
- 		p = xdr_reserve_space(xdr, 8);
- 		/* We always return success if bytes were written */
- 		p = xdr_encode_hyper(p, 0);
-@@ -710,18 +711,16 @@ static void encode_offload_info4(struct xdr_stream *xdr,
- }
- 
- static void encode_cb_offload4args(struct xdr_stream *xdr,
--				   __be32 nfserr,
--				   const struct knfsd_fh *fh,
--				   const struct nfsd4_copy *cp,
-+				   const struct nfsd4_cb_offload *cbo,
- 				   struct nfs4_cb_compound_hdr *hdr)
- {
- 	__be32 *p;
- 
- 	p = xdr_reserve_space(xdr, 4);
--	*p++ = cpu_to_be32(OP_CB_OFFLOAD);
--	encode_nfs_fh4(xdr, fh);
--	encode_stateid4(xdr, &cp->cp_res.cb_stateid);
--	encode_offload_info4(xdr, nfserr, cp);
-+	*p = cpu_to_be32(OP_CB_OFFLOAD);
-+	encode_nfs_fh4(xdr, &cbo->co_fh);
-+	encode_stateid4(xdr, &cbo->co_res.cb_stateid);
-+	encode_offload_info4(xdr, cbo);
- 
- 	hdr->nops++;
- }
-@@ -731,8 +730,8 @@ static void nfs4_xdr_enc_cb_offload(struct rpc_rqst *req,
- 				    const void *data)
- {
- 	const struct nfsd4_callback *cb = data;
--	const struct nfsd4_copy *cp =
--		container_of(cb, struct nfsd4_copy, cp_cb);
-+	const struct nfsd4_cb_offload *cbo =
-+		container_of(cb, struct nfsd4_cb_offload, co_cb);
- 	struct nfs4_cb_compound_hdr hdr = {
- 		.ident = 0,
- 		.minorversion = cb->cb_clp->cl_minorversion,
-@@ -740,7 +739,7 @@ static void nfs4_xdr_enc_cb_offload(struct rpc_rqst *req,
- 
- 	encode_cb_compound4args(xdr, &hdr);
- 	encode_cb_sequence4args(xdr, cb, &hdr);
--	encode_cb_offload4args(xdr, cp->nfserr, &cp->fh, cp, &hdr);
-+	encode_cb_offload4args(xdr, cbo, &hdr);
- 	encode_cb_nops(&hdr);
- }
- 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index c82944042dc5..7196bcafdd86 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1645,9 +1645,10 @@ nfsd4_cleanup_intra_ssc(struct nfsd_file *src, struct nfsd_file *dst)
- 
- static void nfsd4_cb_offload_release(struct nfsd4_callback *cb)
- {
--	struct nfsd4_copy *copy = container_of(cb, struct nfsd4_copy, cp_cb);
-+	struct nfsd4_cb_offload *cbo =
-+		container_of(cb, struct nfsd4_cb_offload, co_cb);
- 
--	nfs4_put_copy(copy);
-+	kfree(cbo);
- }
- 
- static int nfsd4_cb_offload_done(struct nfsd4_callback *cb,
-@@ -1763,25 +1764,23 @@ static void cleanup_async_copy(struct nfsd4_copy *copy)
- 	nfs4_put_copy(copy);
- }
- 
--static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
-+static void nfsd4_send_cb_offload(struct nfsd4_copy *copy, __be32 nfserr)
- {
--	struct nfsd4_copy *cb_copy;
-+	struct nfsd4_cb_offload *cbo;
- 
--	cb_copy = kzalloc(sizeof(struct nfsd4_copy), GFP_KERNEL);
--	if (!cb_copy)
-+	cbo = kzalloc(sizeof(*cbo), GFP_KERNEL);
-+	if (!cbo)
- 		return;
- 
--	refcount_set(&cb_copy->refcount, 1);
--	memcpy(&cb_copy->cp_res, &copy->cp_res, sizeof(copy->cp_res));
--	cb_copy->cp_clp = copy->cp_clp;
--	cb_copy->nfserr = copy->nfserr;
--	memcpy(&cb_copy->fh, &copy->fh, sizeof(copy->fh));
-+	memcpy(&cbo->co_res, &copy->cp_res, sizeof(copy->cp_res));
-+	memcpy(&cbo->co_fh, &copy->fh, sizeof(copy->fh));
-+	cbo->co_nfserr = nfserr;
- 
--	nfsd4_init_cb(&cb_copy->cp_cb, cb_copy->cp_clp,
--			&nfsd4_cb_offload_ops, NFSPROC4_CLNT_CB_OFFLOAD);
--	trace_nfsd_cb_offload(copy->cp_clp, &copy->cp_res.cb_stateid,
--			      &copy->fh, copy->cp_count, copy->nfserr);
--	nfsd4_run_cb(&cb_copy->cp_cb);
-+	nfsd4_init_cb(&cbo->co_cb, copy->cp_clp, &nfsd4_cb_offload_ops,
-+		      NFSPROC4_CLNT_CB_OFFLOAD);
-+	trace_nfsd_cb_offload(copy->cp_clp, &cbo->co_res.cb_stateid,
-+			      &cbo->co_fh, copy->cp_count, nfserr);
-+	nfsd4_run_cb(&cbo->co_cb);
- }
- 
- /**
-@@ -1794,6 +1793,7 @@ static void nfsd4_send_cb_offload(struct nfsd4_copy *copy)
- static int nfsd4_do_async_copy(void *data)
- {
- 	struct nfsd4_copy *copy = (struct nfsd4_copy *)data;
-+	__be32 nfserr;
- 
- 	if (nfsd4_ssc_is_inter(copy)) {
- 		struct file *filp;
-@@ -1801,21 +1801,21 @@ static int nfsd4_do_async_copy(void *data)
- 		filp = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
- 				      &copy->stateid);
- 		if (IS_ERR(filp)) {
--			copy->nfserr = nfserr_offload_denied;
-+			nfserr = nfserr_offload_denied;
- 			nfsd4_interssc_disconnect(copy->ss_mnt);
- 			goto do_callback;
- 		}
--		copy->nfserr = nfsd4_do_copy(copy, filp,
--					     copy->nf_dst->nf_file, false);
-+		nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
-+				       false);
- 		nfsd4_cleanup_inter_ssc(copy->ss_mnt, filp, copy->nf_dst);
- 	} else {
--		copy->nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
--					     copy->nf_dst->nf_file, false);
-+		nfserr = nfsd4_do_copy(copy, copy->nf_src->nf_file,
-+				       copy->nf_dst->nf_file, false);
- 		nfsd4_cleanup_intra_ssc(copy->nf_src, copy->nf_dst);
- 	}
- 
- do_callback:
--	nfsd4_send_cb_offload(copy);
-+	nfsd4_send_cb_offload(copy, nfserr);
- 	cleanup_async_copy(copy);
- 	return 0;
- }
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 9e0722950ca7..ac876105488c 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -533,6 +533,13 @@ struct nfsd42_write_res {
- 	stateid_t		cb_stateid;
- };
- 
-+struct nfsd4_cb_offload {
-+	struct nfsd4_callback	co_cb;
-+	struct nfsd42_write_res	co_res;
-+	__be32			co_nfserr;
-+	struct knfsd_fh		co_fh;
-+};
-+
- struct nfsd4_copy {
- 	/* request */
- 	stateid_t		cp_src_stateid;
-@@ -550,10 +557,6 @@ struct nfsd4_copy {
- 
- 	/* response */
- 	struct nfsd42_write_res	cp_res;
--
--	/* for cb_offload */
--	struct nfsd4_callback	cp_cb;
--	__be32			nfserr;
- 	struct knfsd_fh		fh;
- 
- 	struct nfs4_client      *cp_clp;
+> >> +TRACE_EVENT(xs_data_ready,
+> >> +  TP_PROTO(
+> >> +  const struct rpc_xprt *xprt
+> >> +  ),
+> >> +
+> >> +  TP_ARGS(xprt),
+> >> +
+> >> +  TP_STRUCT__entry(
+> >> +  __sockaddr(addr, xprt->addrlen)
+> >> +  ),
+> >> +
+> >> +  TP_fast_assign(
+> >> +  __assign_sockaddr(addr, &xprt->addr, xprt->addrlen);
+> >> +  ),
+> >> +
+> >> +  TP_printk("peer=%pISpc", __get_sockaddr(addr))  
+> > 
+> > NACK. Please resolve and store the string up front instead of storing
+> > the sockaddr. Most versions of perf can't resolve those kernel-specific
+> > %p printks and just end up barfing on them.  
+> 
+> Interesting. We added get_sockaddr() to avoid this issue in
+> trace-cmd. Sounds like perf needs to be fixed up too, or
+> maybe this is another case of having an old libtraceevent?
+> 
+> Meanwhile, I can revert this back to the old way of handling
+> presentation addresses.
+> 
 
+Hmm, I thought that perf now uses the external libtraceevent.
+
+Perhaps it hasn't been updated to the latest release that has the ability
+to parse this.
+
+Maybe just install
+
+  git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git
+
+?
+
+-- Steve
 
