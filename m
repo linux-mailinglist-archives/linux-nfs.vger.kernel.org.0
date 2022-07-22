@@ -2,360 +2,279 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48BDF57D7D7
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 02:45:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BAF8157E03F
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 12:50:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233946AbiGVApF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 21 Jul 2022 20:45:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35584 "EHLO
+        id S234548AbiGVKuC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 06:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbiGVApE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 21 Jul 2022 20:45:04 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F36C895C1C;
-        Thu, 21 Jul 2022 17:45:01 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-2-147.pa.nsw.optusnet.com.au [49.181.2.147])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E36A310E8310;
-        Fri, 22 Jul 2022 10:45:00 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1oEgmo-003kqA-Qy; Fri, 22 Jul 2022 10:44:58 +1000
-Date:   Fri, 22 Jul 2022 10:44:58 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Anna Schumaker <anna@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS
- implementation
-Message-ID: <20220722004458.GS3600936@dread.disaster.area>
-References: <20220715184433.838521-1-anna@kernel.org>
- <20220715184433.838521-7-anna@kernel.org>
- <EC97C20D-A317-49F9-8280-062D1AAEE49A@oracle.com>
- <20220718011552.GK3600936@dread.disaster.area>
- <CAFX2Jf=FrXHMxioWLHFkRHxBNDRe-9SBUmCcco9gkaY8EQOSZg@mail.gmail.com>
- <20220719224434.GL3600936@dread.disaster.area>
- <CF981532-ADC0-43F9-A304-9760244A53D5@oracle.com>
- <20220720023610.GN3600936@dread.disaster.area>
- <CD3CE5B3-1FB7-473A-8D45-EDF3704F10D7@oracle.com>
+        with ESMTP id S233716AbiGVKuB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 06:50:01 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D7BAF95E
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 03:49:59 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id x11so3180810qts.13
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 03:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cfa.harvard.edu; s=google;
+        h=message-id:date:mime-version:user-agent:subject:content-language
+         :from:to:cc:references:in-reply-to:content-transfer-encoding;
+        bh=k0jk954N+39CPcspYFStLxJWi35OB5hgpGIhVk4Mx4c=;
+        b=T+rDNVTJHGxiH35BG5WoPlexHaojrAETimerDjvsbKznjAAAyJaP6tZHQiBWvrNQv6
+         Pay/RPcb0Ik6LaLJyrmXLIacv6m8OjmZMasaIX/ykEJmxJ2SHBkt9pg7QIDM//6XZAM9
+         GIvyUNf1yXB4kkDy8HOJC65B6eTl1wqXNMGcZdXUEpE6UdHe+jDnlpMhktFqRjAb/NAB
+         n1UHEaDhumnzQ+qMxPO7Y+NWdafJom33c3QSaP7Z1ELIX6aqEOfabAItL6sn/Bi1ruLu
+         poKSTatFtrA0SYDPkisWS72FLdKw+kYZpupyp8WfwpT/ZAkP6Hmwkvw8TN+5pfGni2UK
+         tLPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:from:to:cc:references:in-reply-to
+         :content-transfer-encoding;
+        bh=k0jk954N+39CPcspYFStLxJWi35OB5hgpGIhVk4Mx4c=;
+        b=FpQaE1Gen/rQBwgRHEcCVhDMv+LEsliFStI9LEAcvkB3nj5gzvnBdBULAsG3xU6uqL
+         WKDhGRyo8rfWb6T59nJVkdZYiYOJWSIk2a3aHaBRYqPh+rpjasswIuX7L7Tybw+YX51G
+         J9TBlOYe+vegLjTNzd/wqHp7z64guMrJT1CtV+dk+tddKn9ocklft5rvzlJcNy/WGiTR
+         XCPX7kvCSMGj6+QuGxSoYuMAZZ9a+0Wkzos5/Pnv0O40hQh1HCRDccYKKjhpSFO8uIVX
+         eeZ48bRke7SMweJL0B2BXzSQRBV8wZfE7Q+UlnXAiGxq0hxHlYmZ1qQIHk+vn9EXRWcL
+         0PzA==
+X-Gm-Message-State: AJIora+L76zTu1ZDNOSw34lH5v4enytC733ISfPLYgIpJJ5zXnHTxB/A
+        WJeIvQvIakDFxZPjIbXuVD910ptXtaNVvw==
+X-Google-Smtp-Source: AGRyM1sDz98QDpMY29C/QNYQiBscZvgIsh5KnxfTy5BmpRaPlELZqTHXUSZhFKg43917Gfy6RXUZnw==
+X-Received: by 2002:ac8:5c4e:0:b0:31e:f6e6:c62 with SMTP id j14-20020ac85c4e000000b0031ef6e60c62mr2500345qtj.460.1658486998421;
+        Fri, 22 Jul 2022 03:49:58 -0700 (PDT)
+Received: from [192.168.0.156] (pool-72-70-58-62.bstnma.fios.verizon.net. [72.70.58.62])
+        by smtp.gmail.com with ESMTPSA id o21-20020a05620a2a1500b006b249cc505fsm3318911qkp.82.2022.07.22.03.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Jul 2022 03:49:57 -0700 (PDT)
+Message-ID: <b64e8bbc-d5a3-310e-a1c8-728f890ea777@cfa.harvard.edu>
+Date:   Fri, 22 Jul 2022 06:49:56 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CD3CE5B3-1FB7-473A-8D45-EDF3704F10D7@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=e9dl9Yl/ c=1 sm=1 tr=0 ts=62d9f30d
-        a=ivVLWpVy4j68lT4lJFbQgw==:117 a=ivVLWpVy4j68lT4lJFbQgw==:17
-        a=kj9zAlcOel0A:10 a=RgO8CyIxsXoA:10 a=7-415B0cAAAA:8
-        a=mERPUiANjVKmkJHin7UA:9 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: [PATCH v2 1/1]: Thread safe client destruction
+Content-Language: en-US
+From:   Attila Kovacs <attila.kovacs@cfa.harvard.edu>
+To:     libtirpc-devel@lists.sourceforge.net
+Cc:     linux-nfs@vger.kernel.org
+References: <53af8ec6-4ece-09b2-9499-d46d0fdfaa15@cfa.harvard.edu>
+In-Reply-To: <53af8ec6-4ece-09b2-9499-d46d0fdfaa15@cfa.harvard.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Jul 20, 2022 at 04:18:36AM +0000, Chuck Lever III wrote:
-> > On Jul 19, 2022, at 10:36 PM, Dave Chinner <david@fromorbit.com> wrote:
-> > On Wed, Jul 20, 2022 at 01:26:13AM +0000, Chuck Lever III wrote:
-> >>> On Jul 19, 2022, at 6:44 PM, Dave Chinner <david@fromorbit.com> wrote:
-> >>>>> What's the problem with racing with a hole punch here? All it does
-> >>>>> is shorten the read data returned to match the new hole, so all it's
-> >>>>> doing is making the returned data "more correct".
-> >>>> 
-> >>>> The problem is we call vfs_llseek() potentially many times when
-> >>>> encoding a single reply to READ_PLUS. nfsd4_encode_read_plus() has a
-> >>>> loop where we alternate between hole and data segments until we've
-> >>>> encoded the requested number of bytes. My attempts at locking the file
-> >>>> have resulted in a deadlock since vfs_llseek() also locks the file, so
-> >>>> the file could change from underneath us during each iteration of the
-> >>>> loop.
-> >>> 
-> >>> So the problem being solved is that the current encoding is not
-> >>> atomic, rather than trying to avoid any computational overhead of
-> >>> multiple vfs_llseek calls (which are largely just the same extent
-> >>> lookups as we do during the read call)?
-> >> 
-> >> Reviewing [1] and [2] I don't find any remarks about atomicity
-> >> guarantees. If a client needs an uncontended view of a file's
-> >> data, it's expected to fence other accessors via a OPEN(deny)
-> >> or LOCK operation, or serialize the requests itself.
-> > 
-> > You've got the wrong "atomicity" scope :)
-> > 
-> > What I was talking about is the internal server side data operation
-> > atomicity. that is, what is returned from the read to the READ_PLUS
-> > code is not atomic w.r.t. the vfs_llseek() that are then used to
-> > determine where there holes in the data returned by the read are.
-> > 
-> > Hence after the read has returned data to READ_PLUS, something else
-> > can modify the data in the file (e.g. filling a hole or punching a
-> > new one out) and then the ranges vfs_llseek() returns to READ_PLUS
-> > does not match the data that is has in it's local buffer.
+Hi Steve et al.,
+
+
+Correction to the last patch I submitted. That one unfortunately created 
+a new potential deadlock in itself while trying to fix a potential stack 
+corruption. Here is some more explanation of the bug the earlier patch 
+introduced and the how the updated patch gets around it:
+
+clnt_*.c have a number of functions that wait on a condition variable to 
+be signaled. The signaling wakes up (at least) one of the threads 
+blocked on that condition, but not all of them. So, it is up to each 
+waiting call to cascade the signal to the next blocked thread, so they 
+can wake up as appropriate to process the notification.
+
+Originally, all waiting calls checked for the 'active' condition to 
+decide whether to proceed. If there was an active operation ongoing, all 
+these blocked calls went back into waiting, without cascading the 
+signal. This was perfectly fine, because none of the calls could 
+potentially do anything while the client's lock was 'active'.
+
+With the safe client destruction fix, however, the clnt_*_destroy() call 
+is now checking on a different condition (really it needs to check 
+simply if there are any pending operations waiting to complete before 
+the client can be closed). However, even if the destruction must wait, 
+another pending operation on the client could (and should) proceed 
+still, if there the lock is not 'active' during wake-up. Thus, 
+clnt_*_destroy() must cascade the notification to other blocked calls if 
+the 'active' state is not set before going back to waiting.
+
+
+-------------------------------------------------------
+
+diff --git a/src/clnt_dg.c b/src/clnt_dg.c
+index 7c5d22e..166af63 100644
+--- a/src/clnt_dg.c
++++ b/src/clnt_dg.c
+@@ -101,6 +101,7 @@ extern mutex_t clnt_fd_lock;
+  #define	release_fd_lock(fd_lock, mask) {	\
+  	mutex_lock(&clnt_fd_lock);	\
+  	fd_lock->active = FALSE;	\
++	fd_lock->pending--;		\
+  	thr_sigsetmask(SIG_SETMASK, &(mask), NULL); \
+  	cond_signal(&fd_lock->cv);	\
+  	mutex_unlock(&clnt_fd_lock);    \
+@@ -311,6 +312,7 @@ clnt_dg_call(cl, proc, xargs, argsp, xresults, 
+resultsp, utimeout)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	cu->cu_fd_lock->pending++;
+  	while (cu->cu_fd_lock->active)
+  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
+  	cu->cu_fd_lock->active = TRUE;
+@@ -571,11 +573,12 @@ clnt_dg_freeres(cl, xdr_res, res_ptr)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	cu->cu_fd_lock->pending++;
+  	while (cu->cu_fd_lock->active)
+  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
+-	cu->cu_fd_lock->active = TRUE;
+  	xdrs->x_op = XDR_FREE;
+  	dummy = (*xdr_res)(xdrs, res_ptr);
++	cu->cu_fd_lock->pending--;
+  	thr_sigsetmask(SIG_SETMASK, &mask, NULL);
+  	cond_signal(&cu->cu_fd_lock->cv);
+  	mutex_unlock(&clnt_fd_lock);
+@@ -603,6 +606,7 @@ clnt_dg_control(cl, request, info)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	cu->cu_fd_lock->pending++;
+  	while (cu->cu_fd_lock->active)
+  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
+  	cu->cu_fd_lock->active = TRUE;
+@@ -743,8 +747,14 @@ clnt_dg_destroy(cl)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
+-	while (cu_fd_lock->active)
++	/* wait until all pending operations on client are completed. */
++	while (cu_fd_lock->pending > 0) {
++		/* If a blocked operation can be awakened, then do it. */
++		if (cu_fd_lock->active == FALSE)
++			cond_signal(&cu_fd_lock->cv);
++		/* keep waiting... */
+  		cond_wait(&cu_fd_lock->cv, &clnt_fd_lock);
++	}
+  	if (cu->cu_closeit)
+  		(void)close(cu_fd);
+  	XDR_DESTROY(&(cu->cu_outxdrs));
+diff --git a/src/clnt_fd_locks.h b/src/clnt_fd_locks.h
+index 359f995..6ba62cb 100644
+--- a/src/clnt_fd_locks.h
++++ b/src/clnt_fd_locks.h
+@@ -50,6 +50,7 @@ static unsigned int fd_locks_prealloc = 0;
+  /* per-fd lock */
+  struct fd_lock_t {
+  	bool_t active;
++	int pending;        /* Number of pending operations on fd */
+  	cond_t cv;
+  };
+  typedef struct fd_lock_t fd_lock_t;
+@@ -180,6 +181,7 @@ fd_lock_t* fd_lock_create(int fd, fd_locks_t 
+*fd_locks) {
+  		item->fd = fd;
+  		item->refs = 1;
+  		item->fd_lock.active = FALSE;
++		item->fd_lock.pending = 0;
+  		cond_init(&item->fd_lock.cv, 0, (void *) 0);
+  		TAILQ_INSERT_HEAD(list, item, link);
+  	} else {
+diff --git a/src/clnt_vc.c b/src/clnt_vc.c
+index 3c73e65..5bbc78b 100644
+--- a/src/clnt_vc.c
++++ b/src/clnt_vc.c
+@@ -153,6 +153,7 @@ extern mutex_t  clnt_fd_lock;
+  #define release_fd_lock(fd_lock, mask) {	\
+  	mutex_lock(&clnt_fd_lock);	\
+  	fd_lock->active = FALSE;	\
++	fd_lock->pending--;		\
+  	thr_sigsetmask(SIG_SETMASK, &(mask), (sigset_t *) NULL);	\
+  	cond_signal(&fd_lock->cv);	\
+  	mutex_unlock(&clnt_fd_lock);    \
+@@ -357,6 +358,7 @@ clnt_vc_call(cl, proc, xdr_args, args_ptr, 
+xdr_results, results_ptr, timeout)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	ct->ct_fd_lock->pending++;
+  	while (ct->ct_fd_lock->active)
+  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
+  	ct->ct_fd_lock->active = TRUE;
+@@ -495,10 +497,12 @@ clnt_vc_freeres(cl, xdr_res, res_ptr)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	ct->ct_fd_lock->pending++;
+  	while (ct->ct_fd_lock->active)
+  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
+  	xdrs->x_op = XDR_FREE;
+  	dummy = (*xdr_res)(xdrs, res_ptr);
++	ct->ct_fd_lock->pending--;
+  	thr_sigsetmask(SIG_SETMASK, &(mask), NULL);
+  	cond_signal(&ct->ct_fd_lock->cv);
+  	mutex_unlock(&clnt_fd_lock);
+@@ -533,6 +537,7 @@ clnt_vc_control(cl, request, info)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
++	ct->ct_fd_lock->pending++;
+  	while (ct->ct_fd_lock->active)
+  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
+  	ct->ct_fd_lock->active = TRUE;
+@@ -655,8 +660,14 @@ clnt_vc_destroy(cl)
+  	sigfillset(&newmask);
+  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
+  	mutex_lock(&clnt_fd_lock);
+-	while (ct_fd_lock->active)
++	/* wait until all pending operations on client are completed. */
++	while (ct_fd_lock->pending > 0) {
++		/* If a blocked operation can be awakened, then do it. */
++		if (ct_fd_lock->active == FALSE)
++			cond_signal(&ct_fd_lock->cv);
++		/* keep waiting... */
+  		cond_wait(&ct_fd_lock->cv, &clnt_fd_lock);
++	}
+  	if (ct->ct_closeit && ct->ct_fd != -1) {
+  		(void)close(ct->ct_fd);
+  	}
+
+-------------------------------------------------------
+
+
+Signed-off-by: Attila Kovacs <attila.kovacs@cfa.harvard.edu>
+
+
+On 7/21/22 14:41, Attila Kovacs wrote:
+> Hi again,
 > 
-> Architecturally, with the NFS protocol, the client and the application
-> running there are responsible for stopping "something else [from]
-> modifying the data in the file." NFS operations in and of themselves
-> are not usually atomic in that respect.
-
-Sure, but that's not the atomicity scope I'm talking about. I'm
-looking purely at what the server is doing and how atomicity within
-the underlying filesystem - not the NFS server - changes the result.
-
-> A READ operation has the same issue as READ_PLUS: a hole punch can
-> remove data from a file while the server is constructing and
-> encoding a READ reply, unless the application on the client has
-> taken the trouble to block foreign file modifications.
-
-Yes, at the NFS server that can happen, but it *can't happen in the
-underlying filesystem*.
-
-That is, while a read IO is in progress, the hole punch will not
-start because we are not allowed to punch out an extent from under
-an IO that is currently in progress. If we allow that, then the
-extent could be reallocated to a different file and new data written
-into before the actual read IO was submitted.
-
-i.e. the filesystem has atomicity guarantees about data IO vs direct
-extent manipulations.
-
-Hence in the case of "read entire range then use memchr_inv() to
-detect holes", the read IO has been executed without racing
-with some other extent manipulation occurring. Hence the read IO is
-effectively atomic, even if it needed to do multiple physical IOs
-because the read was sparse.
-
-In the case of "read data followed by seek hole/data", the
-underlying extent map can be changed by racing modifications
-(writes, hole punch, fallocate, truncate, etc) because once the read
-is complete there is nothing stopping other operations being
-performed.
-
-Hence READ_PLUS via seek_hole/data is a non-atomic operation w.r.t.
-the data read from the underlying filesystem, whereas read w/
-memchr_inv is atomic w.r.t the data read...
-
-> > i.e. to do what the READ_PLUS operation is doing now, it would
-> > somehow need to ensure no modifications can be made between the read
-> > starting and the last vfs_llseek() call completing. IOWs, they need
-> > to be performed as an atomic operation, not as a set of
-> > independently locked (or unlocked!) operations as they are now.
 > 
-> There is nothing making that guarantee on the server, and as I
-> said, there is nothing I've found in the specs that require that
-> level of atomicity from a single READ or READ_PLUS operation.
-
-That's my point - the data corruption bug that got fixed by Anna's
-patch changes the -data access atomicity- of the server READ_PLUS
-encoding operation. i.e. it has nothing to do with the NFS
-specification for the operation but rather results from how the
-server implementation is retreiving data and metadata
-from the underlying filesystem independently and then combining them
-as it they were obtained atomically.
-
-IOWs, the information returned by SEEK_HOLE/SEEK_DATA after a data
-read does not reflect the state at the time the data was read - the
-data is effectively stale at this point. seek hole/data information
-is supposed to be used *before* the data is read to find the
-locations of the data. That way, if there is a TOCTOU race, the read
-still returns valid, correct data that matched the underlying
-file layout at the time of the read.
-
-> >>> IOWs, it seems to me that what READ_PLUS really wants is a "sparse
-> >>> read operation" from the filesystem rather than the current "read
-> >>> that fills holes with zeroes". i.e. a read operation that sets an
-> >>> iocb flag like RWF_SPARSE_READ to tell the filesystem to trim the
-> >>> read to just the ranges that contain data.
-.....
-> >> Now how does the server make that choice? Is there an attribute
-> >> bit that indicates when a file should be treated as sparse? Can
-> >> we assume that immutable files (or compressed files) should
-> >> always be treated as sparse? Alternately, the server might use
-> >> the file's data : hole ratio.
-> > 
-> > None of the above. The NFS server has no business knowing intimate
-> > details about how the filesystem has laid out the file. All it cares
-> > about ranges containing data and ranges that have no data (holes).
+> I found yet more potential MT flaws in clnt_dg.c and clnt_vg.c.
 > 
-> That would be the case if we want nothing more than impermeable
-> software layering. That's nice for software developers, but
-> maybe not of much benefit to average users.
+> 1. In clnt_dg.c in clnt_dg_freeres(), cu_fd_lock->active is set to TRUE, 
+> with no corresponding clearing when the operation (*xdr_res() call) is 
+> completed. This would leave other waiting operations blocked 
+> indefinitely, effectively deadlocked. For comparison, clnt_vd_freeres() 
+> in clnt_vc.c does not set the active state to TRUE. I believe the vc 
+> behavior is correct, while the dg behavior is a bug.
 > 
-> I see no efficiency benefit, for example, if a 10MB object file
-> has 512 bytes of zeroes at a convenient offset and the server
-> returns that as DATA/HOLE/DATA. The amount of extra work it has
-> to do to make that happen results in the same latencies as
-> transmitting 512 extra bytes on GbE. It might be even worse on
-> faster network fabrics.
-
-Welcome to the world of sparse file IO optimisation - NFS may be new
-to this, but local filesystems have been optimising this sort of
-thing for decades. Don't think we don't know about it - seek time
-between 2 discontiguous extents is *much worse* than the few extra
-microseconds that DMAing a few extra sectors worth of data in a
-single IO. Even on SSDs, there's a noticable latency difference
-between a single 16KB IO and two separate 4kB IOs to get the same
-data.
-
-As it is, we worry about filesystem block granularity, not sectors.
-A filesystem would only report a 512 byte range as a hole if it had
-a 512 byte block size. Almost no-one uses such small block sizes -
-4kB is the default for ext4 and XFS - so the minimum hole size is
-generally 4KB.
-
-Indeed, in this case XFS will not actually have a hole in the file
-layout - the underlying extent would have been allocated as a single
-contiguous unwritten extent, then when the data gets written it will
-convert the two ranges to written, resulting in a physically
-contiguous "data-unwritten-data" set of extents. However,
-SEEK_HOLE/DATA will see that unwritten extent as a hole, so you'll
-get that reported via seek hole/data or sparse reads regardless of
-whether it is optimal for READ_PLUS encoding.
-
-However, the physical layout is optimal for XFS - if the hole gets
-filled by a future write, it ends up converting the file layout to a
-single contiguous data extent that can be read with a single IO
-rather than three physically discontigous data extents that require
-3 physical IOs to read.
-
-ext4 optimises this in a different way - it will allocate small
-holes similar to the way XFS does, but it will also fill the with
-real zeros rather than leaving them unwritten. As a result, ext4
-will have a single physically contiguous extent on disk too, but it
-will -always- report as data even though the data written by the
-application is sparse and contains a run of zeroes in it.
-
-IOWs, ext4 and XFS will behave differently for the simple case you
-gave because they've optimised small holes in sparse file data
-differently. Both have their pros and cons, but it also means that
-the READ_PLUS response for the same file data written the same way
-can be different because the underlying filesystem on the server is
-different.
-
-IOWs, the NFS server cannot rely on a specific behaviour w.r.t.
-holes and data from the underlying filesystem. Sparseness of a file
-is determined by how the underlying filesystem wants to optimise the
-physical layout or the data and IO patterns that data access results
-in. The NFS server really cannot influence that, or change the
-"sparseness" it reports to the client except by examining the
-data it reads from the filesystem....
-
-> On fast networks, the less the server's host CPU has to be
-> involved in doing the READ, the better it scales. It's
-> better to set up the I/O and step out of the way; use zero
-> touch as much as possible.
-
-However, as you demonstrate for the NFS client below, something has
-to fill the holes. i.e. if we aren't doing sparse reads on the NFS
-server, then the filesystem underneath the NFS server has to spend
-the CPU to instantiate pages over the hole in the file in the page
-cache, then zero them before it can pass them to the "zero touch"
-NFS send path to be encoded into the READ reponse.
-
-IOWs, sending holes as zeroed data from the server is most
-definitely not zero touch even if NFS doesn't touch the data.
-
-Hence the "sparse read" from the underlying filesystem, which avoids
-the need to populate and zero pages in the server page cache
-altogether, as well as enabling NFS to use it's zero-touch
-encode/send path for the data that is returned. And with a sparse
-read operation, the encoding of hole ranges in READ_PLUS has almost
-zero CPU overhead because the calculation is dead simple (i.e. hole
-start = end of last data, hole len = start of next data - end of
-last data).
-
-IOWs, the lowest server CPU and memory READ processing overhead
-comes from using READ_PLUS with sparse reads from the filesystem and
-zero-touch READ_PLUS data range encoding.
-
-> Likewise on the client: it might receive a CONTENT_HOLE, but
-> then its CPU has to zero out that range, with all the memory
-> and cache activity that entails. For small holes, that's going
-> to be a lot of memset(0). If the server returns holes only
-> when they are large, then the client can use more efficient
-> techniques (like marking page cache pages or using ZERO_PAGE).
-
-Yes, if we have sparse files we have to take that page cache
-instantiation penalty *somewhere* in the IO stack between the client
-and the server.
-
-Indeed, we actually want this overhead in the NFS client, because we
-have many more NFS clients than we do NFS servers and hence on
-aggregate there is way more CPU and memory to dedicate to
-instantiating zeroed data on the client side than on the server
-side.
-
-IOWs, if we ship zeroes via RDMA to the NFS client so the NFS client
-doesn't need to instantiate holes in the page cache, then we're
-actually forcing the server to perform hole instantiation. Forcing
-the server to instantiate all the holes for all the files that all
-the clients it is serving is prohibitive from a server CPU and
-memory POV, even if you have the both the server network bandwidth
-and the cross-sectional network bandwidth available to ship all
-those zeros to all the clients.
-
-> On networks with large bandwidth-latency products, however,
-> it makes sense to trade as much server and client CPU and
-> memory for transferred bytes as you can.
-
-Server, yes, client not so much. If you focus purely on single
-client<->server throughput, the server is not going to scale when
-hundreds or thousands of clients all demand data at the same time.
-
-But, regardless of this, the fact is that the NFS server is a
-consumer of the sparseness data stored in the underlying filesystem.
-Unless it wants to touch every byte that is read, it can only export
-the HOLE/DATA information that the filesystem can provide it with.
-
-What we want is a method that allows the filesystem to provide that
-information to the NFS server READ_PLUS operation as efficiently as
-possible. AFAICT, that's a sparse read operation....
-
-> The mechanism that handles sparse files needs to be distinct
-> from the policy of when to return more than a single
-> CONTENT_DATA segment, since one of our goals is to ensure
-> that READ_PLUS performs and scales as well as READ on common
-> workloads (ie, not HPC / large sparse file workloads).
-
-Yes, so make the server operation as efficient as possible whilst
-still being correct (i.e. sparse reads), and push the the CPU and
-memory requirements for instantiating and storing zeroes out
-to the NFS client.  If the NFS client page cache instantiation can't
-keep up with the server sending it encoded ranges of zeros, then
-this isn't a server side issue; the client side sparse file support
-needs fixing/optimising.
-
-> > If the filesystem can support a sparse read, it returns sparse
-> > ranges containing data to the NFS server. If the filesystem can't
-> > support it, or it's internal file layout doesn't allow for efficient
-> > hole/data discrimination, then it can just return the entire read
-> > range.
-> > 
-> > Alternatively, in this latter case, the filesystem could call a
-> > generic "sparse read" implementation that runs memchr_inv() to find
-> > the first data range to return. Then the NFS server doesn't have to
-> > code things differently, filesystems don't need to advertise
-> > support for sparse reads, etc because every filesystem could
-> > support sparse reads.
-> > 
-> > The only difference is that some filesystems will be much more
-> > efficient and faster at it than others. We already see that sort
-> > of thing with btrfs and seek hole/data on large cached files so I
-> > don't see "filesystems perform differently" as a problem here...
+> 2. If clnt_dg_destroy() or clnt_vc_destroy() is awoken with other 
+> blocked operations pending (such as clnt_*_call(), clnt_*_control(), or 
+> clnt_*_freeres()) but no active operation currently being executed, then 
+> the client gets destroyed. Then, as the other blocked operations get 
+> subsequently awoken, they will try operate on an invalid client handle, 
+> potentially causing unpredictable behavior and stack corruption.
 > 
-> The problem with that approach is that will result in
-> performance regressions on NFSv4.2 with exports that reside
-> on underperforming filesystem types. We need READ_PLUS to
-> perform as well as READ so there is no regression between
-> NFSv4.2 without and with READ_PLUS, and no regression when
-> migrating from NFSv4.1 to NFSv4.2 with READ_PLUS enabled.
-
-Sure, but fear of regressions is not a valid reason for preventing
-change from being made.
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+> The proposed fix is to introduce a simple mutexed counting variable into 
+> the client lock structure, which keeps track of the number of pending 
+> blocking operations on the client. This way, clnt_*_destroy() can check 
+> if there are any operations pending on a client, and keep waiting until 
+> all pending operations are completed, before the client is destroyed 
+> safely and its resources are freed.
+> 
+> Attached is a patch with the above fixes.
+> 
+> -- A.
