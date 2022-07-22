@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC3AA57E705
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 21:08:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D63B57E706
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 21:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230461AbiGVTIT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jul 2022 15:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46684 "EHLO
+        id S231768AbiGVTIV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 15:08:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbiGVTIO (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 15:08:14 -0400
+        with ESMTP id S229593AbiGVTIU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 15:08:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3106715A
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 12:08:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00F2C25C66
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 12:08:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1F6CB61777
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 19:08:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DD23C341C6;
-        Fri, 22 Jul 2022 19:08:12 +0000 (UTC)
-Subject: [PATCH v2 2/4] SUNRPC: Widen rpc_task::tk_flags
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 915936172E
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 19:08:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7449C341CA;
+        Fri, 22 Jul 2022 19:08:18 +0000 (UTC)
+Subject: [PATCH v2 3/4] SUNRPC: Replace dprintk() call site in xs_data_ready
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com, trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 22 Jul 2022 15:08:11 -0400
-Message-ID: <165851689122.2312015.2292603310709378651.stgit@morisot.1015granger.net>
+Date:   Fri, 22 Jul 2022 15:08:17 -0400
+Message-ID: <165851689770.2312015.16674329181783074734.stgit@morisot.1015granger.net>
 In-Reply-To: <165851677341.2312015.16636288284789960852.stgit@morisot.1015granger.net>
 References: <165851677341.2312015.16636288284789960852.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.5
@@ -42,144 +42,70 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-There is just one unused bit left in rpc_task::tk_flags, and I will
-need two in subsequent patches. Double the width of the field to
-accommodate more flag bits.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- include/linux/sunrpc/clnt.h  |    6 ++++--
- include/linux/sunrpc/sched.h |   32 ++++++++++++++++----------------
- net/sunrpc/clnt.c            |   11 ++++++-----
- net/sunrpc/debugfs.c         |    2 +-
- 4 files changed, 27 insertions(+), 24 deletions(-)
+ include/trace/events/sunrpc.h |   20 ++++++++++++++++++++
+ net/sunrpc/xprtsock.c         |    6 ++++--
+ 2 files changed, 24 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/sunrpc/clnt.h b/include/linux/sunrpc/clnt.h
-index 90501404fa49..cbdd20dc84b7 100644
---- a/include/linux/sunrpc/clnt.h
-+++ b/include/linux/sunrpc/clnt.h
-@@ -193,11 +193,13 @@ void rpc_prepare_reply_pages(struct rpc_rqst *req, struct page **pages,
- 			     unsigned int hdrsize);
- void		rpc_call_start(struct rpc_task *);
- int		rpc_call_async(struct rpc_clnt *clnt,
--			       const struct rpc_message *msg, int flags,
-+			       const struct rpc_message *msg,
-+			       unsigned int flags,
- 			       const struct rpc_call_ops *tk_ops,
- 			       void *calldata);
- int		rpc_call_sync(struct rpc_clnt *clnt,
--			      const struct rpc_message *msg, int flags);
-+			      const struct rpc_message *msg,
-+			      unsigned int flags);
- struct rpc_task *rpc_call_null(struct rpc_clnt *clnt, struct rpc_cred *cred,
- 			       int flags);
- int		rpc_restart_call_prepare(struct rpc_task *);
-diff --git a/include/linux/sunrpc/sched.h b/include/linux/sunrpc/sched.h
-index 1d7a3e51b795..d4b7ebd0a99c 100644
---- a/include/linux/sunrpc/sched.h
-+++ b/include/linux/sunrpc/sched.h
-@@ -82,7 +82,7 @@ struct rpc_task {
- 	ktime_t			tk_start;	/* RPC task init timestamp */
+diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.h
+index b61d9c90fa26..21068ad61db8 100644
+--- a/include/trace/events/sunrpc.h
++++ b/include/trace/events/sunrpc.h
+@@ -1266,6 +1266,26 @@ TRACE_EVENT(xprt_reserve,
+ 	)
+ );
  
- 	pid_t			tk_owner;	/* Process id for batching tasks */
--	unsigned short		tk_flags;	/* misc flags */
-+	unsigned int		tk_flags;	/* misc flags */
- 	unsigned short		tk_timeouts;	/* maj timeouts */
++TRACE_EVENT(xs_data_ready,
++	TP_PROTO(
++		const struct rpc_xprt *xprt
++	),
++
++	TP_ARGS(xprt),
++
++	TP_STRUCT__entry(
++		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
++		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
++	),
++
++	TP_fast_assign(
++		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
++		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
++	),
++
++	TP_printk("peer=[%s]:%s", __get_str(addr), __get_str(port))
++);
++
+ TRACE_EVENT(xs_stream_read_data,
+ 	TP_PROTO(struct rpc_xprt *xprt, ssize_t err, size_t total),
  
- #if IS_ENABLED(CONFIG_SUNRPC_DEBUG) || IS_ENABLED(CONFIG_TRACEPOINTS)
-@@ -112,27 +112,27 @@ struct rpc_task_setup {
- 	const struct rpc_call_ops *callback_ops;
- 	void *callback_data;
- 	struct workqueue_struct *workqueue;
--	unsigned short flags;
-+	unsigned int flags;
- 	signed char priority;
- };
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index fcdd0fca408e..eba1be9984f8 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1378,7 +1378,7 @@ static void xs_udp_data_receive_workfn(struct work_struct *work)
+ }
  
- /*
-  * RPC task flags
+ /**
+- * xs_data_ready - "data ready" callback for UDP sockets
++ * xs_data_ready - "data ready" callback for sockets
+  * @sk: socket with data to read
+  *
   */
--#define RPC_TASK_ASYNC		0x0001		/* is an async task */
--#define RPC_TASK_SWAPPER	0x0002		/* is swapping in/out */
--#define RPC_TASK_MOVEABLE	0x0004		/* nfs4.1+ rpc tasks */
--#define RPC_TASK_NULLCREDS	0x0010		/* Use AUTH_NULL credential */
--#define RPC_CALL_MAJORSEEN	0x0020		/* major timeout seen */
--#define RPC_TASK_DYNAMIC	0x0080		/* task was kmalloc'ed */
--#define	RPC_TASK_NO_ROUND_ROBIN	0x0100		/* send requests on "main" xprt */
--#define RPC_TASK_SOFT		0x0200		/* Use soft timeouts */
--#define RPC_TASK_SOFTCONN	0x0400		/* Fail if can't connect */
--#define RPC_TASK_SENT		0x0800		/* message was sent */
--#define RPC_TASK_TIMEOUT	0x1000		/* fail with ETIMEDOUT on timeout */
--#define RPC_TASK_NOCONNECT	0x2000		/* return ENOTCONN if not connected */
--#define RPC_TASK_NO_RETRANS_TIMEOUT	0x4000		/* wait forever for a reply */
--#define RPC_TASK_CRED_NOREF	0x8000		/* No refcount on the credential */
-+#define RPC_TASK_ASYNC			0x00000001	/* is an async task */
-+#define RPC_TASK_SWAPPER		0x00000002	/* is swapping in/out */
-+#define RPC_TASK_MOVEABLE		0x00000004	/* nfs4.1+ rpc tasks */
-+#define RPC_TASK_NULLCREDS		0x00000010	/* Use AUTH_NULL credential */
-+#define RPC_CALL_MAJORSEEN		0x00000020	/* major timeout seen */
-+#define RPC_TASK_DYNAMIC		0x00000080	/* task was kmalloc'ed */
-+#define	RPC_TASK_NO_ROUND_ROBIN		0x00000100	/* send requests on "main" xprt */
-+#define RPC_TASK_SOFT			0x00000200	/* Use soft timeouts */
-+#define RPC_TASK_SOFTCONN		0x00000400	/* Fail if can't connect */
-+#define RPC_TASK_SENT			0x00000800	/* message was sent */
-+#define RPC_TASK_TIMEOUT		0x00001000	/* fail with ETIMEDOUT on timeout */
-+#define RPC_TASK_NOCONNECT		0x00002000	/* return ENOTCONN if not connected */
-+#define RPC_TASK_NO_RETRANS_TIMEOUT	0x00004000	/* wait forever for a reply */
-+#define RPC_TASK_CRED_NOREF		0x00008000	/* No refcount on the credential */
- 
- #define RPC_IS_ASYNC(t)		((t)->tk_flags & RPC_TASK_ASYNC)
- #define RPC_IS_SWAPPER(t)	((t)->tk_flags & RPC_TASK_SWAPPER)
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index a97d4e06cae3..476caa4ebf5c 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -1162,7 +1162,8 @@ EXPORT_SYMBOL_GPL(rpc_run_task);
-  * @msg: RPC call parameters
-  * @flags: RPC call flags
-  */
--int rpc_call_sync(struct rpc_clnt *clnt, const struct rpc_message *msg, int flags)
-+int rpc_call_sync(struct rpc_clnt *clnt, const struct rpc_message *msg,
-+		  unsigned int flags)
+@@ -1386,11 +1386,13 @@ static void xs_data_ready(struct sock *sk)
  {
- 	struct rpc_task	*task;
- 	struct rpc_task_setup task_setup_data = {
-@@ -1197,9 +1198,9 @@ EXPORT_SYMBOL_GPL(rpc_call_sync);
-  * @tk_ops: RPC call ops
-  * @data: user call data
-  */
--int
--rpc_call_async(struct rpc_clnt *clnt, const struct rpc_message *msg, int flags,
--	       const struct rpc_call_ops *tk_ops, void *data)
-+int rpc_call_async(struct rpc_clnt *clnt, const struct rpc_message *msg,
-+		   unsigned int flags, const struct rpc_call_ops *tk_ops,
-+		   void *data)
- {
- 	struct rpc_task	*task;
- 	struct rpc_task_setup task_setup_data = {
-@@ -3080,7 +3081,7 @@ static void rpc_show_task(const struct rpc_clnt *clnt,
- 	if (RPC_IS_QUEUED(task))
- 		rpc_waitq = rpc_qname(task->tk_waitqueue);
+ 	struct rpc_xprt *xprt;
  
--	printk(KERN_INFO "%5u %04x %6d %8p %8p %8ld %8p %sv%u %s a:%ps q:%s\n",
-+	printk(KERN_INFO "%5u %08x %6d %8p %8p %8ld %8p %sv%u %s a:%ps q:%s\n",
- 		task->tk_pid, task->tk_flags, task->tk_status,
- 		clnt, task->tk_rqstp, rpc_task_timeout(task), task->tk_ops,
- 		clnt->cl_program->name, clnt->cl_vers, rpc_proc_name(task),
-diff --git a/net/sunrpc/debugfs.c b/net/sunrpc/debugfs.c
-index 8df634e63f30..60f20be4e7e5 100644
---- a/net/sunrpc/debugfs.c
-+++ b/net/sunrpc/debugfs.c
-@@ -30,7 +30,7 @@ tasks_show(struct seq_file *f, void *v)
- 	if (task->tk_rqstp)
- 		xid = be32_to_cpu(task->tk_rqstp->rq_xid);
- 
--	seq_printf(f, "%5u %04x %6d 0x%x 0x%x %8ld %ps %sv%u %s a:%ps q:%s\n",
-+	seq_printf(f, "%5u %08x %6d 0x%x 0x%x %8ld %ps %sv%u %s a:%ps q:%s\n",
- 		task->tk_pid, task->tk_flags, task->tk_status,
- 		clnt->cl_clid, xid, rpc_task_timeout(task), task->tk_ops,
- 		clnt->cl_program->name, clnt->cl_vers, rpc_proc_name(task),
+-	dprintk("RPC:       xs_data_ready...\n");
+ 	xprt = xprt_from_sock(sk);
+ 	if (xprt != NULL) {
+ 		struct sock_xprt *transport = container_of(xprt,
+ 				struct sock_xprt, xprt);
++
++		trace_xs_data_ready(xprt);
++
+ 		transport->old_data_ready(sk);
+ 		/* Any data means we had a useful conversation, so
+ 		 * then we don't need to delay the next reconnect
 
 
