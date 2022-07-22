@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 358AF57E7FE
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:09:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36D8557E801
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:09:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236829AbiGVUJT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jul 2022 16:09:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35286 "EHLO
+        id S236207AbiGVUJU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 16:09:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236786AbiGVUI5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:08:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3542A894A
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 13:08:53 -0700 (PDT)
+        with ESMTP id S236544AbiGVUJC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:09:02 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2E8CAF70E
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 13:09:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5045B61F5E
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:08:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A84C341C6
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:08:52 +0000 (UTC)
-Subject: [PATCH v1 3/8] NFSD: Clean up SPLICE_OK in nfsd4_encode_read()
+        by ams.source.kernel.org (Postfix) with ESMTPS id 457CBB81EDB
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:09:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3E9DC341C6
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:08:58 +0000 (UTC)
+Subject: [PATCH v1 4/8] NFSD: Add an nfsd4_read::rd_eof field
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 22 Jul 2022 16:08:51 -0400
-Message-ID: <165852053165.11198.4403935829192122901.stgit@manet.1015granger.net>
+Date:   Fri, 22 Jul 2022 16:08:57 -0400
+Message-ID: <165852053791.11198.9827634691670761329.stgit@manet.1015granger.net>
 In-Reply-To: <165852051841.11198.2929614302983292322.stgit@manet.1015granger.net>
 References: <165852051841.11198.2929614302983292322.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -41,49 +41,88 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Do the test_bit() once -- this reduces the number of locked-bus
-operations and makes the function a little easier to read.
+Refactor: Make the EOF result available in the entire NFSv4 READ
+path.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ fs/nfsd/nfs4xdr.c |   11 +++++------
+ fs/nfsd/xdr4.h    |    5 +++--
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index e590236a60ab..c9468f205dad 100644
+index c9468f205dad..16ae1be1bbac 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3980,6 +3980,7 @@ static __be32
- nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 		  struct nfsd4_read *read)
- {
-+	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
- 	unsigned long maxcount;
+@@ -3879,7 +3879,6 @@ static __be32 nfsd4_encode_splice_read(
  	struct xdr_stream *xdr = resp->xdr;
- 	struct file *file;
-@@ -3992,11 +3993,10 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	struct xdr_buf *buf = xdr->buf;
+ 	int status, space_left;
+-	u32 eof;
+ 	__be32 nfserr;
+ 	__be32 *p = xdr->p - 2;
  
- 	p = xdr_reserve_space(xdr, 8); /* eof flag and byte count */
- 	if (!p) {
--		WARN_ON_ONCE(test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags));
-+		WARN_ON_ONCE(splice_ok);
+@@ -3888,7 +3887,8 @@ static __be32 nfsd4_encode_splice_read(
  		return nfserr_resource;
- 	}
--	if (resp->xdr->buf->page_len &&
--	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags)) {
-+	if (resp->xdr->buf->page_len && splice_ok) {
- 		WARN_ON_ONCE(1);
- 		return nfserr_resource;
- 	}
-@@ -4005,8 +4005,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	maxcount = min_t(unsigned long, read->rd_length,
- 			 (xdr->buf->buflen - xdr->buf->len));
  
--	if (file->f_op->splice_read &&
--	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags))
-+	if (file->f_op->splice_read && splice_ok)
- 		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
- 	else
- 		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
+ 	nfserr = nfsd_splice_read(read->rd_rqstp, read->rd_fhp,
+-				  file, read->rd_offset, &maxcount, &eof);
++				  file, read->rd_offset, &maxcount,
++				  &read->rd_eof);
+ 	read->rd_length = maxcount;
+ 	if (nfserr)
+ 		goto out_err;
+@@ -3899,7 +3899,7 @@ static __be32 nfsd4_encode_splice_read(
+ 		goto out_err;
+ 	}
+ 
+-	*(p++) = htonl(eof);
++	*(p++) = htonl(read->rd_eof);
+ 	*(p++) = htonl(maxcount);
+ 
+ 	buf->page_len = maxcount;
+@@ -3943,7 +3943,6 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 				 struct file *file, unsigned long maxcount)
+ {
+ 	struct xdr_stream *xdr = resp->xdr;
+-	u32 eof;
+ 	int starting_len = xdr->buf->len - 8;
+ 	__be32 nfserr;
+ 	__be32 tmp;
+@@ -3955,7 +3954,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 
+ 	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+ 			    resp->rqstp->rq_vec, read->rd_vlen, &maxcount,
+-			    &eof);
++			    &read->rd_eof);
+ 	read->rd_length = maxcount;
+ 	if (nfserr)
+ 		return nfserr;
+@@ -3963,7 +3962,7 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+ 		return nfserr_io;
+ 	xdr_truncate_encode(xdr, starting_len + 8 + xdr_align_size(maxcount));
+ 
+-	tmp = htonl(eof);
++	tmp = htonl(read->rd_eof);
+ 	write_bytes_to_xdr_buf(xdr->buf, starting_len    , &tmp, 4);
+ 	tmp = htonl(maxcount);
+ 	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
+diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+index 7b744011f2d3..6e6a89008ce1 100644
+--- a/fs/nfsd/xdr4.h
++++ b/fs/nfsd/xdr4.h
+@@ -302,9 +302,10 @@ struct nfsd4_read {
+ 	u32			rd_length;          /* request */
+ 	int			rd_vlen;
+ 	struct nfsd_file	*rd_nf;
+-	
++
+ 	struct svc_rqst		*rd_rqstp;          /* response */
+-	struct svc_fh		*rd_fhp;             /* response */
++	struct svc_fh		*rd_fhp;            /* response */
++	u32			rd_eof;             /* response */
+ };
+ 
+ struct nfsd4_readdir {
 
 
