@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F62057E804
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:09:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B85457E805
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 22:09:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236681AbiGVUJX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jul 2022 16:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
+        id S236614AbiGVUJ2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 16:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236639AbiGVUJV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:09:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91E7A8941
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 13:09:20 -0700 (PDT)
+        with ESMTP id S236713AbiGVUJ1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 16:09:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 741DEAF852
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 13:09:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 431A4B81EDB
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:09:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4F23C341C6
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:09:17 +0000 (UTC)
-Subject: [PATCH v1 7/8] NFSD: Use xdr_pad_size()
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CDC0C61F52
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:09:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E8AC341C6
+        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 20:09:24 +0000 (UTC)
+Subject: [PATCH v1 8/8] NFSD: Clean up nfsd_encode_readlink()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Fri, 22 Jul 2022 16:09:16 -0400
-Message-ID: <165852055678.11198.9033444688475970678.stgit@manet.1015granger.net>
+Date:   Fri, 22 Jul 2022 16:09:23 -0400
+Message-ID: <165852056314.11198.9481263320352443620.stgit@manet.1015granger.net>
 In-Reply-To: <165852051841.11198.2929614302983292322.stgit@manet.1015granger.net>
 References: <165852051841.11198.2929614302983292322.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -41,43 +41,58 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clean up: Use a helper instead of open-coding the calculation of
-the XDR pad size.
+Similar changes to nfsd4_encode_readv(), all bundled into a single
+patch.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4xdr.c |   11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ fs/nfsd/nfs4xdr.c |   24 +++++++++---------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 32f4f48458e6..71bac0039c42 100644
+index 71bac0039c42..358b3338c4cc 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3940,9 +3940,8 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
+@@ -4008,16 +4008,13 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ static __be32
+ nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd4_readlink *readlink)
  {
+-	int maxcount;
+-	__be32 wire_count;
+-	int zero = 0;
++	__be32 *p, *maxcount_p, zero = xdr_zero;
  	struct xdr_stream *xdr = resp->xdr;
- 	unsigned int starting_len = xdr->buf->len;
-+	__be32 zero = xdr_zero;
- 	__be32 nfserr;
--	__be32 tmp;
--	int pad;
+ 	int length_offset = xdr->buf->len;
+-	int status;
+-	__be32 *p;
++	int maxcount, status;
  
- 	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, maxcount);
- 	if (read->rd_vlen < 0)
-@@ -3958,11 +3957,9 @@ static __be32 nfsd4_encode_readv(struct nfsd4_compoundres *resp,
- 		return nfserr_io;
- 	xdr_truncate_encode(xdr, starting_len + xdr_align_size(maxcount));
+-	p = xdr_reserve_space(xdr, 4);
+-	if (!p)
++	maxcount_p = xdr_reserve_space(xdr, XDR_UNIT);
++	if (!maxcount_p)
+ 		return nfserr_resource;
+ 	maxcount = PAGE_SIZE;
  
--	tmp = xdr_zero;
--	pad = (maxcount&3) ? 4 - (maxcount&3) : 0;
--	write_bytes_to_xdr_buf(xdr->buf, starting_len + maxcount, &tmp, pad);
--	return 0;
+@@ -4042,14 +4039,11 @@ nfsd4_encode_readlink(struct nfsd4_compoundres *resp, __be32 nfserr, struct nfsd
+ 		nfserr = nfserrno(status);
+ 		goto out_err;
+ 	}
 -
-+	write_bytes_to_xdr_buf(xdr->buf, starting_len + maxcount, &zero,
+-	wire_count = htonl(maxcount);
+-	write_bytes_to_xdr_buf(xdr->buf, length_offset, &wire_count, 4);
+-	xdr_truncate_encode(xdr, length_offset + 4 + ALIGN(maxcount, 4));
+-	if (maxcount & 3)
+-		write_bytes_to_xdr_buf(xdr->buf, length_offset + 4 + maxcount,
+-						&zero, 4 - (maxcount&3));
+-	return 0;
++	*maxcount_p = cpu_to_be32(maxcount);
++	xdr_truncate_encode(xdr, length_offset + 4 + xdr_align_size(maxcount));
++	write_bytes_to_xdr_buf(xdr->buf, length_offset + 4 + maxcount, &zero,
 +			       xdr_pad_size(maxcount));
 +	return nfs_ok;
- }
  
- static __be32
+ out_err:
+ 	xdr_truncate_encode(xdr, length_offset);
 
 
