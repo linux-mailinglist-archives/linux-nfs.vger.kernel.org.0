@@ -2,279 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAF8157E03F
-	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 12:50:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6367957E190
+	for <lists+linux-nfs@lfdr.de>; Fri, 22 Jul 2022 14:45:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234548AbiGVKuC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 22 Jul 2022 06:50:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56768 "EHLO
+        id S233662AbiGVMpf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 22 Jul 2022 08:45:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233716AbiGVKuB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 06:50:01 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82D7BAF95E
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 03:49:59 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id x11so3180810qts.13
-        for <linux-nfs@vger.kernel.org>; Fri, 22 Jul 2022 03:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cfa.harvard.edu; s=google;
-        h=message-id:date:mime-version:user-agent:subject:content-language
-         :from:to:cc:references:in-reply-to:content-transfer-encoding;
-        bh=k0jk954N+39CPcspYFStLxJWi35OB5hgpGIhVk4Mx4c=;
-        b=T+rDNVTJHGxiH35BG5WoPlexHaojrAETimerDjvsbKznjAAAyJaP6tZHQiBWvrNQv6
-         Pay/RPcb0Ik6LaLJyrmXLIacv6m8OjmZMasaIX/ykEJmxJ2SHBkt9pg7QIDM//6XZAM9
-         GIvyUNf1yXB4kkDy8HOJC65B6eTl1wqXNMGcZdXUEpE6UdHe+jDnlpMhktFqRjAb/NAB
-         n1UHEaDhumnzQ+qMxPO7Y+NWdafJom33c3QSaP7Z1ELIX6aqEOfabAItL6sn/Bi1ruLu
-         poKSTatFtrA0SYDPkisWS72FLdKw+kYZpupyp8WfwpT/ZAkP6Hmwkvw8TN+5pfGni2UK
-         tLPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:from:to:cc:references:in-reply-to
-         :content-transfer-encoding;
-        bh=k0jk954N+39CPcspYFStLxJWi35OB5hgpGIhVk4Mx4c=;
-        b=FpQaE1Gen/rQBwgRHEcCVhDMv+LEsliFStI9LEAcvkB3nj5gzvnBdBULAsG3xU6uqL
-         WKDhGRyo8rfWb6T59nJVkdZYiYOJWSIk2a3aHaBRYqPh+rpjasswIuX7L7Tybw+YX51G
-         J9TBlOYe+vegLjTNzd/wqHp7z64guMrJT1CtV+dk+tddKn9ocklft5rvzlJcNy/WGiTR
-         XCPX7kvCSMGj6+QuGxSoYuMAZZ9a+0Wkzos5/Pnv0O40hQh1HCRDccYKKjhpSFO8uIVX
-         eeZ48bRke7SMweJL0B2BXzSQRBV8wZfE7Q+UlnXAiGxq0hxHlYmZ1qQIHk+vn9EXRWcL
-         0PzA==
-X-Gm-Message-State: AJIora+L76zTu1ZDNOSw34lH5v4enytC733ISfPLYgIpJJ5zXnHTxB/A
-        WJeIvQvIakDFxZPjIbXuVD910ptXtaNVvw==
-X-Google-Smtp-Source: AGRyM1sDz98QDpMY29C/QNYQiBscZvgIsh5KnxfTy5BmpRaPlELZqTHXUSZhFKg43917Gfy6RXUZnw==
-X-Received: by 2002:ac8:5c4e:0:b0:31e:f6e6:c62 with SMTP id j14-20020ac85c4e000000b0031ef6e60c62mr2500345qtj.460.1658486998421;
-        Fri, 22 Jul 2022 03:49:58 -0700 (PDT)
-Received: from [192.168.0.156] (pool-72-70-58-62.bstnma.fios.verizon.net. [72.70.58.62])
-        by smtp.gmail.com with ESMTPSA id o21-20020a05620a2a1500b006b249cc505fsm3318911qkp.82.2022.07.22.03.49.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 22 Jul 2022 03:49:57 -0700 (PDT)
-Message-ID: <b64e8bbc-d5a3-310e-a1c8-728f890ea777@cfa.harvard.edu>
-Date:   Fri, 22 Jul 2022 06:49:56 -0400
+        with ESMTP id S233236AbiGVMpe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 22 Jul 2022 08:45:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 853B3192B1;
+        Fri, 22 Jul 2022 05:45:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EF3661F0C;
+        Fri, 22 Jul 2022 12:45:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71578C341CB;
+        Fri, 22 Jul 2022 12:45:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658493931;
+        bh=Uqaz6V2M4pNQ310BNYxAvz39OUxjICaPNIsB3QkLpUw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=TsN/hS7cFtlbjZvN9eVBzZomreq9uIL+tPmQH16K7VpB8fHh5WXeYjM+9IBLi28oJ
+         By2a4s1sXuUXgPI076yodcwyUshNHhN+w1fFemq4FVzwIRNqOygbqYNl6OQfLckpWn
+         cG+hix2w+wuFnHXmSl+s1OIVmswi8BZrnX1DTKuIO9vbp2RVmsUaHqByjah0YTlvfT
+         YcNhDfLLAI1CeRCyTN3+/GhCDE6+OQmUpYnLi4rmEFqVhlkisP9g93hmB7jXZxwWUM
+         slIcoJ3RP2BaAyHUz8bwfWBG/PxSMCk/JEwgRkkUw5+LYlvNVqD6eAJCYFjMYZogXq
+         7xE1G5tVIGfGw==
+Received: by mail-wm1-f53.google.com with SMTP id 8-20020a05600c024800b003a2fe343db1so2442382wmj.1;
+        Fri, 22 Jul 2022 05:45:31 -0700 (PDT)
+X-Gm-Message-State: AJIora/OlHEUHNfg54hnKVxYsEFnX+RClYJt9w4bH82t18mQQ00cvsSA
+        3gjVHtJdLF6x3J8kQmVLxDvmqv0jhqT7wmfChI8=
+X-Google-Smtp-Source: AGRyM1ti+jL5pFkoz4Iv1P8fLKmL8KSz4TFm1XRC/Cjzz3psz3w86EoLvsg8TZhUcBnWn4BMdwVMwNLOIkCVj6Djy+M=
+X-Received: by 2002:a05:600c:284a:b0:3a2:ffb7:b56f with SMTP id
+ r10-20020a05600c284a00b003a2ffb7b56fmr12411657wmb.134.1658493929917; Fri, 22
+ Jul 2022 05:45:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: [PATCH v2 1/1]: Thread safe client destruction
-Content-Language: en-US
-From:   Attila Kovacs <attila.kovacs@cfa.harvard.edu>
-To:     libtirpc-devel@lists.sourceforge.net
-Cc:     linux-nfs@vger.kernel.org
-References: <53af8ec6-4ece-09b2-9499-d46d0fdfaa15@cfa.harvard.edu>
-In-Reply-To: <53af8ec6-4ece-09b2-9499-d46d0fdfaa15@cfa.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220715184433.838521-1-anna@kernel.org> <20220715184433.838521-7-anna@kernel.org>
+ <EC97C20D-A317-49F9-8280-062D1AAEE49A@oracle.com> <20220718011552.GK3600936@dread.disaster.area>
+ <CAFX2Jf=FrXHMxioWLHFkRHxBNDRe-9SBUmCcco9gkaY8EQOSZg@mail.gmail.com> <Ytm7e2QHomJICHsO@localhost.localdomain>
+In-Reply-To: <Ytm7e2QHomJICHsO@localhost.localdomain>
+From:   Anna Schumaker <anna@kernel.org>
+Date:   Fri, 22 Jul 2022 08:45:13 -0400
+X-Gmail-Original-Message-ID: <CAFX2JfkLW1RC9T45dN5pzfENQ+LXqF=cxDS7hxGUzaheuH07kQ@mail.gmail.com>
+Message-ID: <CAFX2JfkLW1RC9T45dN5pzfENQ+LXqF=cxDS7hxGUzaheuH07kQ@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS implementation
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Chuck Lever III <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Steve et al.,
+On Thu, Jul 21, 2022 at 4:48 PM Josef Bacik <josef@toxicpanda.com> wrote:
+>
+> On Tue, Jul 19, 2022 at 04:46:50PM -0400, Anna Schumaker wrote:
+> > On Sun, Jul 17, 2022 at 9:16 PM Dave Chinner <david@fromorbit.com> wrote:
+> > >
+> > > On Fri, Jul 15, 2022 at 07:08:13PM +0000, Chuck Lever III wrote:
+> > > > > On Jul 15, 2022, at 2:44 PM, Anna Schumaker <anna@kernel.org> wrote:
+> > > > >
+> > > > > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> > > > >
+> > > > > Rather than relying on the underlying filesystem to tell us where hole
+> > > > > and data segments are through vfs_llseek(), let's instead do the hole
+> > > > > compression ourselves. This has a few advantages over the old
+> > > > > implementation:
+> > > > >
+> > > > > 1) A single call to the underlying filesystem through nfsd_readv() means
+> > > > >   the file can't change from underneath us in the middle of encoding.
+> > >
+> > > Hi Anna,
+> > >
+> > > I'm assuming you mean the vfs_llseek(SEEK_HOLE) call at the start
+> > > of nfsd4_encode_read_plus_data() that is used to trim the data that
+> > > has already been read out of the file?
+> >
+> > There is also the vfs_llseek(SEEK_DATA) call at the start of
+> > nfsd4_encode_read_plus_hole(). They are used to determine the length
+> > of the current hole or data segment.
+> >
+> > >
+> > > What's the problem with racing with a hole punch here? All it does
+> > > is shorten the read data returned to match the new hole, so all it's
+> > > doing is making the returned data "more correct".
+> >
+> > The problem is we call vfs_llseek() potentially many times when
+> > encoding a single reply to READ_PLUS. nfsd4_encode_read_plus() has a
+> > loop where we alternate between hole and data segments until we've
+> > encoded the requested number of bytes. My attempts at locking the file
+> > have resulted in a deadlock since vfs_llseek() also locks the file, so
+> > the file could change from underneath us during each iteration of the
+> > loop.
+> >
+> > >
+> > > OTOH, if something allocates over a hole that the read filled with
+> > > zeros, what's the problem with occasionally returning zeros as data?
+> > > Regardless, if this has raced with a write to the file that filled
+> > > that hole, we're already returning stale data/hole information to
+> > > the client regardless of whether we trim it or not....
+> > >
+> > > i.e. I can't see a correctness or data integrity problem here that
+> > > doesn't already exist, and I have my doubts that hole
+> > > punching/filling racing with reads happens often enough to create a
+> > > performance or bandwidth problem OTW. Hence I've really got no idea
+> > > what the problem that needs to be solved here is.
+> > >
+> > > Can you explain what the symptoms of the problem a user would see
+> > > that this change solves?
+> >
+> > This fixes xfstests generic/091 and generic/263, along with this
+> > reported bug: https://bugzilla.kernel.org/show_bug.cgi?id=215673
+> > >
+> > > > > 2) A single call to the underlying filestem also means that the
+> > > > >   underlying filesystem only needs to synchronize cached and on-disk
+> > > > >   data one time instead of potentially many speeding up the reply.
+> > >
+> > > SEEK_HOLE/DATA doesn't require cached data to be sync'd to disk to
+> > > be coherent - that's only a problem FIEMAP has (and syncing cached
+> > > data doesn't fix the TOCTOU coherency issue!).  i.e. SEEK_HOLE/DATA
+> > > will check the page cache for data if appropriate (e.g. unwritten
+> > > disk extents may have data in memory over the top of them) instead
+> > > of syncing data to disk.
+> >
+> > For some reason, btrfs on virtual hardware has terrible performance
+> > numbers when using vfs_llseek() with files that are already in the
+> > server's cache. I think it had something to do with how they lock
+> > extents, and some extra work that needs to be done if the file already
+> > exists in the server's memory but it's been  a few years since I've
+> > gone into their code to figure out where the slowdown is coming from.
+> > See this section of my performance results wiki page:
+> > https://wiki.linux-nfs.org/wiki/index.php/Read_Plus_May_2022#BTRFS_3
+> >
+>
+> I just did this locally, once in my test vm's and once on my continuous
+> performance testing hardware and I'm not able to reproduce the numbers, so I
+> think I'm doing something wrong.
+>
+> My test is stupid, I just dd a 5gib file, come behind it and punch holes every
+> other 4k.  Then I umount and remount, SEEK_DATA+SEEK_HOLE through the whole
+> file, and then do it again so I have uncached and cached.  The numbers I'm
+> seeing are equivalent to ext4/xfs.  Granted on my VM I had to redo the test
+> because I had lockdep and other debugging on which makes us look stupid because
+> of the extent locking stuff, but with it off everything appears normal.
+>
+> Does this more or less mirror your testing?  Looking at our code we're not doing
+> anything inherently stupid, so I'm not entirely sure what could be the problem.
+> Thanks,
 
+I think that's pretty close to what the server is doing with the
+current code, except the NFS server would also do a read for every
+data segment it found. I've been using `vmtouch` to make sure the file
+doesn't get evicted from the server's page cache for my cached data.
 
-Correction to the last patch I submitted. That one unfortunately created 
-a new potential deadlock in itself while trying to fix a potential stack 
-corruption. Here is some more explanation of the bug the earlier patch 
-introduced and the how the updated patch gets around it:
+Anna
 
-clnt_*.c have a number of functions that wait on a condition variable to 
-be signaled. The signaling wakes up (at least) one of the threads 
-blocked on that condition, but not all of them. So, it is up to each 
-waiting call to cascade the signal to the next blocked thread, so they 
-can wake up as appropriate to process the notification.
-
-Originally, all waiting calls checked for the 'active' condition to 
-decide whether to proceed. If there was an active operation ongoing, all 
-these blocked calls went back into waiting, without cascading the 
-signal. This was perfectly fine, because none of the calls could 
-potentially do anything while the client's lock was 'active'.
-
-With the safe client destruction fix, however, the clnt_*_destroy() call 
-is now checking on a different condition (really it needs to check 
-simply if there are any pending operations waiting to complete before 
-the client can be closed). However, even if the destruction must wait, 
-another pending operation on the client could (and should) proceed 
-still, if there the lock is not 'active' during wake-up. Thus, 
-clnt_*_destroy() must cascade the notification to other blocked calls if 
-the 'active' state is not set before going back to waiting.
-
-
--------------------------------------------------------
-
-diff --git a/src/clnt_dg.c b/src/clnt_dg.c
-index 7c5d22e..166af63 100644
---- a/src/clnt_dg.c
-+++ b/src/clnt_dg.c
-@@ -101,6 +101,7 @@ extern mutex_t clnt_fd_lock;
-  #define	release_fd_lock(fd_lock, mask) {	\
-  	mutex_lock(&clnt_fd_lock);	\
-  	fd_lock->active = FALSE;	\
-+	fd_lock->pending--;		\
-  	thr_sigsetmask(SIG_SETMASK, &(mask), NULL); \
-  	cond_signal(&fd_lock->cv);	\
-  	mutex_unlock(&clnt_fd_lock);    \
-@@ -311,6 +312,7 @@ clnt_dg_call(cl, proc, xargs, argsp, xresults, 
-resultsp, utimeout)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	cu->cu_fd_lock->pending++;
-  	while (cu->cu_fd_lock->active)
-  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
-  	cu->cu_fd_lock->active = TRUE;
-@@ -571,11 +573,12 @@ clnt_dg_freeres(cl, xdr_res, res_ptr)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	cu->cu_fd_lock->pending++;
-  	while (cu->cu_fd_lock->active)
-  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
--	cu->cu_fd_lock->active = TRUE;
-  	xdrs->x_op = XDR_FREE;
-  	dummy = (*xdr_res)(xdrs, res_ptr);
-+	cu->cu_fd_lock->pending--;
-  	thr_sigsetmask(SIG_SETMASK, &mask, NULL);
-  	cond_signal(&cu->cu_fd_lock->cv);
-  	mutex_unlock(&clnt_fd_lock);
-@@ -603,6 +606,7 @@ clnt_dg_control(cl, request, info)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	cu->cu_fd_lock->pending++;
-  	while (cu->cu_fd_lock->active)
-  		cond_wait(&cu->cu_fd_lock->cv, &clnt_fd_lock);
-  	cu->cu_fd_lock->active = TRUE;
-@@ -743,8 +747,14 @@ clnt_dg_destroy(cl)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
--	while (cu_fd_lock->active)
-+	/* wait until all pending operations on client are completed. */
-+	while (cu_fd_lock->pending > 0) {
-+		/* If a blocked operation can be awakened, then do it. */
-+		if (cu_fd_lock->active == FALSE)
-+			cond_signal(&cu_fd_lock->cv);
-+		/* keep waiting... */
-  		cond_wait(&cu_fd_lock->cv, &clnt_fd_lock);
-+	}
-  	if (cu->cu_closeit)
-  		(void)close(cu_fd);
-  	XDR_DESTROY(&(cu->cu_outxdrs));
-diff --git a/src/clnt_fd_locks.h b/src/clnt_fd_locks.h
-index 359f995..6ba62cb 100644
---- a/src/clnt_fd_locks.h
-+++ b/src/clnt_fd_locks.h
-@@ -50,6 +50,7 @@ static unsigned int fd_locks_prealloc = 0;
-  /* per-fd lock */
-  struct fd_lock_t {
-  	bool_t active;
-+	int pending;        /* Number of pending operations on fd */
-  	cond_t cv;
-  };
-  typedef struct fd_lock_t fd_lock_t;
-@@ -180,6 +181,7 @@ fd_lock_t* fd_lock_create(int fd, fd_locks_t 
-*fd_locks) {
-  		item->fd = fd;
-  		item->refs = 1;
-  		item->fd_lock.active = FALSE;
-+		item->fd_lock.pending = 0;
-  		cond_init(&item->fd_lock.cv, 0, (void *) 0);
-  		TAILQ_INSERT_HEAD(list, item, link);
-  	} else {
-diff --git a/src/clnt_vc.c b/src/clnt_vc.c
-index 3c73e65..5bbc78b 100644
---- a/src/clnt_vc.c
-+++ b/src/clnt_vc.c
-@@ -153,6 +153,7 @@ extern mutex_t  clnt_fd_lock;
-  #define release_fd_lock(fd_lock, mask) {	\
-  	mutex_lock(&clnt_fd_lock);	\
-  	fd_lock->active = FALSE;	\
-+	fd_lock->pending--;		\
-  	thr_sigsetmask(SIG_SETMASK, &(mask), (sigset_t *) NULL);	\
-  	cond_signal(&fd_lock->cv);	\
-  	mutex_unlock(&clnt_fd_lock);    \
-@@ -357,6 +358,7 @@ clnt_vc_call(cl, proc, xdr_args, args_ptr, 
-xdr_results, results_ptr, timeout)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	ct->ct_fd_lock->pending++;
-  	while (ct->ct_fd_lock->active)
-  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
-  	ct->ct_fd_lock->active = TRUE;
-@@ -495,10 +497,12 @@ clnt_vc_freeres(cl, xdr_res, res_ptr)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	ct->ct_fd_lock->pending++;
-  	while (ct->ct_fd_lock->active)
-  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
-  	xdrs->x_op = XDR_FREE;
-  	dummy = (*xdr_res)(xdrs, res_ptr);
-+	ct->ct_fd_lock->pending--;
-  	thr_sigsetmask(SIG_SETMASK, &(mask), NULL);
-  	cond_signal(&ct->ct_fd_lock->cv);
-  	mutex_unlock(&clnt_fd_lock);
-@@ -533,6 +537,7 @@ clnt_vc_control(cl, request, info)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
-+	ct->ct_fd_lock->pending++;
-  	while (ct->ct_fd_lock->active)
-  		cond_wait(&ct->ct_fd_lock->cv, &clnt_fd_lock);
-  	ct->ct_fd_lock->active = TRUE;
-@@ -655,8 +660,14 @@ clnt_vc_destroy(cl)
-  	sigfillset(&newmask);
-  	thr_sigsetmask(SIG_SETMASK, &newmask, &mask);
-  	mutex_lock(&clnt_fd_lock);
--	while (ct_fd_lock->active)
-+	/* wait until all pending operations on client are completed. */
-+	while (ct_fd_lock->pending > 0) {
-+		/* If a blocked operation can be awakened, then do it. */
-+		if (ct_fd_lock->active == FALSE)
-+			cond_signal(&ct_fd_lock->cv);
-+		/* keep waiting... */
-  		cond_wait(&ct_fd_lock->cv, &clnt_fd_lock);
-+	}
-  	if (ct->ct_closeit && ct->ct_fd != -1) {
-  		(void)close(ct->ct_fd);
-  	}
-
--------------------------------------------------------
-
-
-Signed-off-by: Attila Kovacs <attila.kovacs@cfa.harvard.edu>
-
-
-On 7/21/22 14:41, Attila Kovacs wrote:
-> Hi again,
-> 
-> 
-> I found yet more potential MT flaws in clnt_dg.c and clnt_vg.c.
-> 
-> 1. In clnt_dg.c in clnt_dg_freeres(), cu_fd_lock->active is set to TRUE, 
-> with no corresponding clearing when the operation (*xdr_res() call) is 
-> completed. This would leave other waiting operations blocked 
-> indefinitely, effectively deadlocked. For comparison, clnt_vd_freeres() 
-> in clnt_vc.c does not set the active state to TRUE. I believe the vc 
-> behavior is correct, while the dg behavior is a bug.
-> 
-> 2. If clnt_dg_destroy() or clnt_vc_destroy() is awoken with other 
-> blocked operations pending (such as clnt_*_call(), clnt_*_control(), or 
-> clnt_*_freeres()) but no active operation currently being executed, then 
-> the client gets destroyed. Then, as the other blocked operations get 
-> subsequently awoken, they will try operate on an invalid client handle, 
-> potentially causing unpredictable behavior and stack corruption.
-> 
-> The proposed fix is to introduce a simple mutexed counting variable into 
-> the client lock structure, which keeps track of the number of pending 
-> blocking operations on the client. This way, clnt_*_destroy() can check 
-> if there are any operations pending on a client, and keep waiting until 
-> all pending operations are completed, before the client is destroyed 
-> safely and its resources are freed.
-> 
-> Attached is a patch with the above fixes.
-> 
-> -- A.
+>
+> Josef
