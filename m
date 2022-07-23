@@ -2,174 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D5FE57F08B
-	for <lists+linux-nfs@lfdr.de>; Sat, 23 Jul 2022 19:06:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36D8A57F09E
+	for <lists+linux-nfs@lfdr.de>; Sat, 23 Jul 2022 19:29:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234679AbiGWRGp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Sat, 23 Jul 2022 13:06:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59358 "EHLO
+        id S232670AbiGWR3Z (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 23 Jul 2022 13:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230005AbiGWRGn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Jul 2022 13:06:43 -0400
-X-Greylist: delayed 4365 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 23 Jul 2022 10:06:42 PDT
-Received: from web1.siteocity.com (web1.siteocity.com [172.241.25.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D68171AF2E
-        for <linux-nfs@vger.kernel.org>; Sat, 23 Jul 2022 10:06:42 -0700 (PDT)
-Received: from mailnull by web1.siteocity.com with spam-scanner (Exim 4.95)
-        (envelope-from <felipe@felipegasper.com>)
-        id 1oFHS1-00027K-7e
-        for linux-nfs@vger.kernel.org;
-        Sat, 23 Jul 2022 10:53:57 -0500
-X-ImunifyEmail-Filter-Info: ewogICAgImlzX3NraXBwZWQiOiBmYWxzZSwKICAgICJ0aW1lX3JlYWw
-        iOiAwLjQ5NjM3MywKICAgICJzeW1ib2xzIjogewogICAgICAgICJCQV
-        lFU19IQU0iOiB7CiAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAtM
-        ywKICAgICAgICAgICAgIm9wdGlvbnMiOiBbCiAgICAgICAgICAgICAg
-        ICAiOTkuOTQlIgogICAgICAgICAgICBdLAogICAgICAgICAgICAiZGV
-        zY3JpcHRpb24iOiAiTWVzc2FnZSBwcm9iYWJseSBoYW0sIHByb2JhYm
-        lsaXR5OiAiLAogICAgICAgICAgICAibmFtZSI6ICJCQVlFU19IQU0iL
-        AogICAgICAgICAgICAic2NvcmUiOiAtMi45ODU2ODQKICAgICAgICB9
-        LAogICAgICAgICJNSU1FX1VOS05PV04iOiB7CiAgICAgICAgICAgICJ
-        tZXRyaWNfc2NvcmUiOiAwLjEwMDAwMCwKICAgICAgICAgICAgIm9wdG
-        lvbnMiOiBbCiAgICAgICAgICAgICAgICAidGV4dC9wbGFpbiIKICAgI
-        CAgICAgICAgXSwKICAgICAgICAgICAgImRlc2NyaXB0aW9uIjogIk1p
-        c3Npbmcgb3IgdW5rbm93biBjb250ZW50LXR5cGUiLAogICAgICAgICA
-        gICAibmFtZSI6ICJNSU1FX1VOS05PV04iLAogICAgICAgICAgICAic2
-        NvcmUiOiAwLjEwMDAwMAogICAgICAgIH0sCiAgICAgICAgIk1JRF9SS
-        FNfTUFUQ0hfRlJPTSI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29y
-        ZSI6IDAsCiAgICAgICAgICAgICJkZXNjcmlwdGlvbiI6ICJNZXNzYWd
-        lLUlEIFJIUyBtYXRjaGVzIEZyb20gZG9tYWluIiwKICAgICAgICAgIC
-        AgIm5hbWUiOiAiTUlEX1JIU19NQVRDSF9GUk9NIiwKICAgICAgICAgI
-        CAgInNjb3JlIjogMAogICAgICAgIH0sCiAgICAgICAgIlJDVkRfVExT
-        X0FMTCI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiA
-        gICAgICAgICAgICJkZXNjcmlwdGlvbiI6ICJBbGwgaG9wcyB1c2VkIG
-        VuY3J5cHRlZCB0cmFuc3BvcnRzIiwKICAgICAgICAgICAgIm5hbWUiO
-        iAiUkNWRF9UTFNfQUxMIiwKICAgICAgICAgICAgInNjb3JlIjogMAog
-        ICAgICAgIH0sCiAgICAgICAgIkFSQ19OQSI6IHsKICAgICAgICAgICA
-        gIm1ldHJpY19zY29yZSI6IDAsCiAgICAgICAgICAgICJkZXNjcmlwdG
-        lvbiI6ICJBUkMgc2lnbmF0dXJlIGFic2VudCIsCiAgICAgICAgICAgI
-        CJuYW1lIjogIkFSQ19OQSIsCiAgICAgICAgICAgICJzY29yZSI6IDAK
-        ICAgICAgICB9LAogICAgICAgICJBU04iOiB7CiAgICAgICAgICAgICJ
-        tZXRyaWNfc2NvcmUiOiAwLAogICAgICAgICAgICAib3B0aW9ucyI6IF
-        sKICAgICAgICAgICAgICAgICJhc246MzM1MjIsIGlwbmV0OjE4NC45N
-        C4xOTIuMC8yMCwgY291bnRyeTpVUyIKICAgICAgICAgICAgXSwKICAg
-        ICAgICAgICAgIm5hbWUiOiAiQVNOIiwKICAgICAgICAgICAgInNjb3J
-        lIjogMAogICAgICAgIH0sCiAgICAgICAgIkZST01fRVFfRU5WRlJPTS
-        I6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiAgICAgI
-        CAgICAgICJkZXNjcmlwdGlvbiI6ICJGcm9tIGFkZHJlc3MgaXMgdGhl
-        IHNhbWUgYXMgdGhlIGVudmVsb3BlIiwKICAgICAgICAgICAgIm5hbWU
-        iOiAiRlJPTV9FUV9FTlZGUk9NIiwKICAgICAgICAgICAgInNjb3JlIj
-        ogMAogICAgICAgIH0sCiAgICAgICAgIlNVQkpFQ1RfRU5EU19RVUVTV
-        ElPTiI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDEsCiAg
-        ICAgICAgICAgICJkZXNjcmlwdGlvbiI6ICJTdWJqZWN0IGVuZHMgd2l
-        0aCBhIHF1ZXN0aW9uIiwKICAgICAgICAgICAgIm5hbWUiOiAiU1VCSk
-        VDVF9FTkRTX1FVRVNUSU9OIiwKICAgICAgICAgICAgInNjb3JlIjogM
-        QogICAgICAgIH0sCiAgICAgICAgIlJDVkRfVklBX1NNVFBfQVVUSCI6
-        IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiAgICAgICA
-        gICAgICJkZXNjcmlwdGlvbiI6ICJBdXRoZW50aWNhdGVkIGhhbmQtb2
-        ZmIHdhcyBzZWVuIGluIFJlY2VpdmVkIGhlYWRlcnMiLAogICAgICAgI
-        CAgICAibmFtZSI6ICJSQ1ZEX1ZJQV9TTVRQX0FVVEgiLAogICAgICAg
-        ICAgICAic2NvcmUiOiAwCiAgICAgICAgfSwKICAgICAgICAiRlJPTV9
-        IQVNfRE4iOiB7CiAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAwLA
-        ogICAgICAgICAgICAiZGVzY3JpcHRpb24iOiAiRnJvbSBoZWFkZXIga
-        GFzIGEgZGlzcGxheSBuYW1lIiwKICAgICAgICAgICAgIm5hbWUiOiAi
-        RlJPTV9IQVNfRE4iLAogICAgICAgICAgICAic2NvcmUiOiAwCiAgICA
-        gICAgfSwKICAgICAgICAiVE9fRE5fTk9ORSI6IHsKICAgICAgICAgIC
-        AgIm1ldHJpY19zY29yZSI6IDAsCiAgICAgICAgICAgICJkZXNjcmlwd
-        GlvbiI6ICJOb25lIG9mIHRoZSByZWNpcGllbnRzIGhhdmUgZGlzcGxh
-        eSBuYW1lcyIsCiAgICAgICAgICAgICJuYW1lIjogIlRPX0ROX05PTkU
-        iLAogICAgICAgICAgICAic2NvcmUiOiAwCiAgICAgICAgfSwKICAgIC
-        AgICAiUkNQVF9DT1VOVF9PTkUiOiB7CiAgICAgICAgICAgICJtZXRya
-        WNfc2NvcmUiOiAwLAogICAgICAgICAgICAib3B0aW9ucyI6IFsKICAg
-        ICAgICAgICAgICAgICIxIgogICAgICAgICAgICBdLAogICAgICAgICA
-        gICAiZGVzY3JpcHRpb24iOiAiT25lIHJlY2lwaWVudCIsCiAgICAgIC
-        AgICAgICJuYW1lIjogIlJDUFRfQ09VTlRfT05FIiwKICAgICAgICAgI
-        CAgInNjb3JlIjogMAogICAgICAgIH0sCiAgICAgICAgIk1WX0NBU0Ui
-        OiB7CiAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAwLjUwMDAwMCw
-        KICAgICAgICAgICAgImRlc2NyaXB0aW9uIjogIk1pbWUtVmVyc2lvbi
-        AudnMuIE1JTUUtVmVyc2lvbiIsCiAgICAgICAgICAgICJuYW1lIjogI
-        k1WX0NBU0UiLAogICAgICAgICAgICAic2NvcmUiOiAwLjUwMDAwMAog
-        ICAgICAgIH0sCiAgICAgICAgIlRPX01BVENIX0VOVlJDUFRfQUxMIjo
-        gewogICAgICAgICAgICAibWV0cmljX3Njb3JlIjogMCwKICAgICAgIC
-        AgICAgImRlc2NyaXB0aW9uIjogIkFsbCBvZiB0aGUgcmVjaXBpZW50c
-        yBtYXRjaCB0aGUgZW52ZWxvcGUiLAogICAgICAgICAgICAibmFtZSI6
-        ICJUT19NQVRDSF9FTlZSQ1BUX0FMTCIsCiAgICAgICAgICAgICJzY29
-        yZSI6IDAKICAgICAgICB9LAogICAgICAgICJNSU1FX1RSQUNFIjogew
-        ogICAgICAgICAgICAibWV0cmljX3Njb3JlIjogMCwKICAgICAgICAgI
-        CAgIm9wdGlvbnMiOiBbCiAgICAgICAgICAgICAgICAiMDp+IgogICAg
-        ICAgICAgICBdLAogICAgICAgICAgICAibmFtZSI6ICJNSU1FX1RSQUN
-        FIiwKICAgICAgICAgICAgInNjb3JlIjogMAogICAgICAgIH0sCiAgIC
-        AgICAgIlJDVkRfQ09VTlRfT05FIjogewogICAgICAgICAgICAibWV0c
-        mljX3Njb3JlIjogMCwKICAgICAgICAgICAgIm9wdGlvbnMiOiBbCiAg
-        ICAgICAgICAgICAgICAiMSIKICAgICAgICAgICAgXSwKICAgICAgICA
-        gICAgImRlc2NyaXB0aW9uIjogIk1lc3NhZ2UgaGFzIG9uZSBSZWNlaX
-        ZlZCBoZWFkZXIiLAogICAgICAgICAgICAibmFtZSI6ICJSQ1ZEX0NPV
-        U5UX09ORSIsCiAgICAgICAgICAgICJzY29yZSI6IDAKICAgICAgICB9
-        CiAgICB9LAogICAgInJlcXVpcmVkX3Njb3JlIjogMTUsCiAgICAibWV
-        zc2FnZXMiOiB7fSwKICAgICJhY3Rpb24iOiAibm8gYWN0aW9uIiwKIC
-        AgICJtZXNzYWdlLWlkIjogIjRBOTY0NDI4LTY1RUEtNDlENC1CN0I0L
-        TM1RDIyRDg5RDQxOEBmZWxpcGVnYXNwZXIuY29tIiwKICAgICJzY29y
-        ZSI6IC0xLjM4NTY4NAp9
-X-ImunifyEmail-Filter-Score: -1.3856842059629
-X-ImunifyEmail-Filter-Action: no action
-Received: from hou-4.nat.cptxoffice.net ([184.94.197.4]:64482 helo=smtpclient.apple)
-        by web1.siteocity.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <felipe@felipegasper.com>)
-        id 1oFHS4-00026w-QM
-        for linux-nfs@vger.kernel.org;
-        Sat, 23 Jul 2022 10:53:56 -0500
-From:   Felipe Gasper <felipe@felipegasper.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.100.31\))
-Subject: Supplementary GIDs?
-Message-Id: <4A964428-65EA-49D4-B7B4-35D22D89D418@felipegasper.com>
-Date:   Sat, 23 Jul 2022 11:53:55 -0400
-To:     linux-nfs@vger.kernel.org
-X-Mailer: Apple Mail (2.3696.100.31)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - web1.siteocity.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - felipegasper.com
-X-Get-Message-Sender-Via: web1.siteocity.com: mailgid no entry from get_recent_authed_mail_ips_entry
-X-Authenticated-Sender: web1.siteocity.com: 
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, no actual sender determined from check mail permissions
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S237980AbiGWR3Y (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 23 Jul 2022 13:29:24 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 302A818E3D
+        for <linux-nfs@vger.kernel.org>; Sat, 23 Jul 2022 10:29:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1658597362;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u+klncQTfx026CmOqOx3EggB1n2iopTP/IL6mMWs8RI=;
+        b=fTTLZnF8l8NRMjE0rYwaYioj6L5lkVmj+UFCZd0R13wC7vLHHNMvOXKEnn1tAKaTY2Fvuv
+        np/gaHsTpu9pGwLMTTgyiu3LTkW8NekpWMVFR6DAZWYzrZZ525DhArA3xkA8F2aMp07EMX
+        XBCDyj9IdlRnJ0ZWr389Jskclz2sYJI=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-206-mVcvrwUEPTyxqqjMAuAxkQ-1; Sat, 23 Jul 2022 13:29:20 -0400
+X-MC-Unique: mVcvrwUEPTyxqqjMAuAxkQ-1
+Received: by mail-qv1-f72.google.com with SMTP id q3-20020ad45743000000b004735457f428so5073255qvx.23
+        for <linux-nfs@vger.kernel.org>; Sat, 23 Jul 2022 10:29:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
+         :content-language:to:cc:references:from:in-reply-to
+         :content-transfer-encoding;
+        bh=u+klncQTfx026CmOqOx3EggB1n2iopTP/IL6mMWs8RI=;
+        b=tf6J8s3oS99rYtpNhaQbcEsPNg/8tI1m3/RCU46svObHC3La+IDXPAKJKqsj2iGLfK
+         j20PwyRI/yPHIeBC5YbEhZ/2rcrIJOXrI3E6eqFIMnWCOATN1pkjT0OFsJiUoXMFzE4H
+         QF2eizMFRSsI+E5vybCJmKfY8MzRVSmWRsDBWIYvqp25x/nBcwoOh/aZSCvxGhMnNfkg
+         yiBPiuG/9fBOB2/L6i52UMM/rmKRqgbW6qVa14CIAtsjCE2W5ROhsawvwjZv0sUC6G+n
+         CBiQnn040QWCaZRq8rPelT+eEcV0KzA1FcM1lT1RG2hSKeuDcBb4uZ/8ds4G54RSUdZD
+         /gHg==
+X-Gm-Message-State: AJIora9j50z3xpCZPWHklnzmgUqCW8LYBm2vCSM4Lr6KGrB9t0SM4jcv
+        kWe9BKe+KUDtEqTFFkyaUXZuKk4cKkF5akPeVqFu8niFdNMSBQc6xbDs4qRqKvSIKmeYFhONBZW
+        t/WeI/Y7wfmFKUURDJDrR
+X-Received: by 2002:a05:620a:1904:b0:6b5:be58:ab22 with SMTP id bj4-20020a05620a190400b006b5be58ab22mr4031972qkb.673.1658597359365;
+        Sat, 23 Jul 2022 10:29:19 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uQXbj/XOsEtZUytKxfFEyqzS03ejBDY4TiXaJjevUKn8bvZ7hn7zrCwwf1PmW0hqfkReCPCw==
+X-Received: by 2002:a05:620a:1904:b0:6b5:be58:ab22 with SMTP id bj4-20020a05620a190400b006b5be58ab22mr4031962qkb.673.1658597359105;
+        Sat, 23 Jul 2022 10:29:19 -0700 (PDT)
+Received: from [172.31.1.6] ([71.161.98.133])
+        by smtp.gmail.com with ESMTPSA id ec5-20020a05620a484500b006b61bf3153bsm3803735qkb.112.2022.07.23.10.29.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 23 Jul 2022 10:29:18 -0700 (PDT)
+Message-ID: <7bfafe56-0c13-a32d-093b-4d3684c4f2c7@redhat.com>
+Date:   Sat, 23 Jul 2022 13:29:17 -0400
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: Why keep var-lib-nfs-rpc_pipefs.mount around?
+Content-Language: en-US
+To:     Benjamin Coddington <bcodding@redhat.com>,
+        Andreas Hasenack <andreas@canonical.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <CANYNYEFSdBua3Ay6jGk2cacossVJ8_CzDgDBnFCjXfk5XSoGEQ@mail.gmail.com>
+ <EE39279C-4E40-48C8-ABC9-707EB1AD6D79@redhat.com>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <EE39279C-4E40-48C8-ABC9-707EB1AD6D79@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+My apologies delayed response... extended PTO
 
-	I’m seeing two different behaviours between kernel NFS server versions in AlmaLinux 8 and Ubuntu 20. The following Perl demonstrates the issue:
+On 7/11/22 9:13 AM, Benjamin Coddington wrote:
+> On 8 Jul 2022, at 12:50, Andreas Hasenack wrote:
+> 
+>> Hi,
+>>
+>> I was tracking down a Debian/Ubuntu bug with nfs-utils 2.6.1 where in
+>> one case, after installing the packages, you would end up with
+>> rpc_pipefs mounted at the same time in two locations: /run/rpc_pipefs
+>> and /var/lib/nfs/rpc_pipefs. The /run location is what debian/ubuntu
+>> default to.
+>>
+>> After poking around a bit, I think I found out why that is
+>> happening[1], but it led me to ask this question: why is
+>> var-lib-nfs-rpc_pipefs.mount (and its corresponding rpc_pipefs.target
+>> unit) still shipped, given that nfs-utils now has a generator?
+> 
+> Could just be an oversight, or perhaps a better reason exists.  The
+> nfs-utils userspace has to handle a lot of different cases and legacy
+> setups.
+> 
+> Steve D, do you know?
+Its not clear to me, if the read from nfs.conf does not
+happen how changing the rpc_pipefs directory could happen.
 
---------
-perl -MFile::Temp -Mautodie -Mstrict -e'my $fh = File::Temp::tempfile( DIR => "/the/nfs/mount" ); my $mailgid = getgrnam "mail"; my ($uid, $gid) = (getpwnam "bin")[2,3]; chown $uid, $gid, $fh; $) = "$gid $mailgid"; $> = $uid; chown -1, $mailgid, $fh'
---------
+When the read from nfs.conf happens and the rpc_pipefs directory
+is not defined, the compiled in default rpc_pipefs directory
+will be used and the generator will exit and not
+generating the systemd files (using the installed ones).
 
-	What this does, as root, is:
+If the rpc_pipefs directory is defined in nfs.conf, the
+generator will set up that directory as the
+rpc_pipefs directory and systemd files will be
+generated.
 
-1) Creates a file under /mnt, then deletes it, leaving the Linux file descriptor open.
+So by taking out the nfs.conf read, the only way to change
+the default rpc_pipefs directory is to recompile nfs-utils.
 
-2) chowns the file to bin:bin.
+steved.
+> 
+> Ben
+> 
+>> Shouldn't the generator be enough for all cases, where rpc_pipefs is
+>> mounted in the default compile-time location, or changed via a config
+>> change to nfs.conf? I know currently it checks[2] whether the config
+>> points at the default location, but that check could just be skipped
+>> and then the generator would always produce the correct mount and
+>> target units.
+>>
+>>
+>> 1. 
+>> https://bugs.launchpad.net/ubuntu/+source/nfs-utils/+bug/1971935/comments/22 
+>>
+>> 2. 
+>> https://salsa.debian.org/kernel-team/nfs-utils/-/blob/master/systemd/rpc-pipefs-generator.c#L138 
+>>
+> 
 
-3) Sets the process’s EUID & GUID to bin & bin/mail.
-
-4) Does fchown( fd, -1, mailgid ).
-
-	When the server is AlmaLinux 8, the above works. When the server is Ubuntu 20, it fails with EPERM. (The client is AlmaLinux 8 in both cases.) Both are configured identically.
-
-	Does anyone know of anything that changed fairly recently in the kernel’s NFS server that might affect this? I’ve done a packet capture and confirmed that in both cases there’s an NFS SETATTR sent in an RPC 2.4 packet whose UID & GIDs match the process.
-
-	Thank you in advance!
-
-cheers,
--Felipe
