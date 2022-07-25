@@ -2,128 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D172B580058
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 16:03:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F072658009E
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 16:19:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235267AbiGYODk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jul 2022 10:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
+        id S235462AbiGYOTs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jul 2022 10:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235261AbiGYODg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 10:03:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDFF15FCC
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 07:03:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F33F611DB
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 14:03:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F425C341C6;
-        Mon, 25 Jul 2022 14:03:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658757814;
-        bh=RfCUEgRu2RTVsnCmQzh3gVvKyj4WXqXvfWym3E7P2Gc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Otvjrosxw5Wk1EMxgF9beF25YpZLss24ppeybja/atunSoamxMUOiPkHbRMgnGKkP
-         6TDrgPN7U5snZqapMNlDqdYay3jWGJweryQJ2wnMCOTs0c66kO8rOrxzxwR6y9t9Ui
-         pNgrhtxO7m0ol2UqgBgTBUb6xNUFYIYuVxTj3EePkP10wYhojdTmIMrMmXc5OL20YH
-         5N2x9UiafBuhBM0ZoJCYYQX6VBmvFtF1g8TehYFvAOel1FMBrgreZOtqAfCvmhp731
-         8LzJ8Jn8bbZwcvcTGCT4bRRkCPggcnnMOgjsPspES7unBSGeSccW43X8EdQa/ZZz+P
-         X+zH30T9Vv4xQ==
-Message-ID: <9a3a447a3c4351daac436944b535b32a0e29ab51.camel@kernel.org>
-Subject: Re: [PATCH v2 3/4] SUNRPC: Replace dprintk() call site in
- xs_data_ready
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever <chuck.lever@oracle.com>, anna.schumaker@netapp.com,
-        trondmy@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 25 Jul 2022 10:03:32 -0400
-In-Reply-To: <165851689770.2312015.16674329181783074734.stgit@morisot.1015granger.net>
-References: <165851677341.2312015.16636288284789960852.stgit@morisot.1015granger.net>
-         <165851689770.2312015.16674329181783074734.stgit@morisot.1015granger.net>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
+        with ESMTP id S231282AbiGYOTr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 10:19:47 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712C3FD3E
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 07:19:46 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id t3so14174917edd.0
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 07:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VX04uHc9st83XvSxEnlaDqesc/Jxgq8KEhzLR4jvZnY=;
+        b=JIwnBChFsgN7CVaff2z9FWZo7B9VmkG2bt3eqLVYbp9CAbRWAi2KknAKsy/KHs1rrI
+         zaXzR52Din+t6eu2OaRTKLaxVCiktT4WQHUfxfs59ta5AKI5DB7jJed+8IgOaQResVr7
+         qS5Kp11m/VZbk+iZjxX7XpgbBkvBxtApJ1CaWh7c9NqIymedLHp335olJ4h8MKtcS0bM
+         s3pPVv14arZXfzGy1JhChx7+EI0JSrp1F7wKOGNPQa43QKJmim6HA9ow/y0eubxjdCyN
+         YjA8BBJG7K+58vmzAfgIjYxT7Y000WFiSB8wJmiYGzYHDE61o+OimauYgvSPHvzyD2H6
+         bDrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VX04uHc9st83XvSxEnlaDqesc/Jxgq8KEhzLR4jvZnY=;
+        b=Wurta2xDNIYcm89J9zbuL8g54mt9ZRR5/KPXysp3ki3bTiOl/aNMwPXYz5+onrEg7r
+         QL9gJAzPATzqzyL1StiUgxfH3gekKVPjOnqulcKeluFy98hnBkJsWe/ike3p/zE0N83s
+         VY2+9tg2yPo7FtB74BRV1WO2mSm260VJsfS+I35A03+1bnSE4CXj0C1+VDQWWTFhiqai
+         IKodsGgG4VY3qUhuYQQwZGYoNMw+iuVcHzp4tEPWzPiA6K7OqbaCwHzCFDqdT0/97rW5
+         tsNPv3ehwjBuEAMWvtMJXrGVsatVs4DD0uuRJMmPErMh7miEBsLUwbqCH095BDUlpZ5O
+         oRkQ==
+X-Gm-Message-State: AJIora+O/AJwrrlQosqnb6tXJQZFBC0NfB84RJruAK8WikShKAdUCzGm
+        592GRjt//NP1+MocKmX6CIbAtEIo5B2QHIXkPlfdwSun
+X-Google-Smtp-Source: AGRyM1u96epnboT/uR/5Umh4Ne1VHbGlPKajl20jYuGS65K4qf8QhVilTQO9CZRGoOlL2On+wGxkAt9ymuJuAYbMIGE=
+X-Received: by 2002:aa7:d8d4:0:b0:43b:bc29:de65 with SMTP id
+ k20-20020aa7d8d4000000b0043bbc29de65mr12970562eds.82.1658758784897; Mon, 25
+ Jul 2022 07:19:44 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <165852076926.11403.44005570813790008.stgit@manet.1015granger.net> <165852114280.11403.7277687995924103645.stgit@manet.1015granger.net>
+In-Reply-To: <165852114280.11403.7277687995924103645.stgit@manet.1015granger.net>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 25 Jul 2022 10:19:33 -0400
+Message-ID: <CAN-5tyGJFpBum6ZtO=9r0o7yNf1tsgNSEZBPJWj_qJUyLNtBWQ@mail.gmail.com>
+Subject: Re: [PATCH v1 01/11] NFSD: Shrink size of struct nfsd4_copy_notify
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     linux-nfs <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-07-22 at 15:08 -0400, Chuck Lever wrote:
+Hi Chuck,
+
+A general question: what's the rule for deciding whether to allocate
+statically or dynamically? I thought that "small" structures it's
+better to preallocate (statically) for performance reasons. Or is the
+idea here that copy_notify/copy are rare operations that instead they
+should be allocated dynamically and so that other operations doesn't
+consume more memory in nfsd4_op structure?
+
+On Fri, Jul 22, 2022 at 4:35 PM Chuck Lever <chuck.lever@oracle.com> wrote:
+>
+> struct nfsd4_copy_notify is part of struct nfsd4_op, which resides
+> in an 8-element array.
+>
+> sizeof(struct nfsd4_op):
+> Before: /* size: 2208, cachelines: 35, members: 5 */
+> After:  /* size: 1696, cachelines: 27, members: 5 */
+>
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  include/trace/events/sunrpc.h |   20 ++++++++++++++++++++
->  net/sunrpc/xprtsock.c         |    6 ++++--
->  2 files changed, 24 insertions(+), 2 deletions(-)
->=20
-> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.=
-h
-> index b61d9c90fa26..21068ad61db8 100644
-> --- a/include/trace/events/sunrpc.h
-> +++ b/include/trace/events/sunrpc.h
-> @@ -1266,6 +1266,26 @@ TRACE_EVENT(xprt_reserve,
->  	)
->  );
-> =20
-> +TRACE_EVENT(xs_data_ready,
-> +	TP_PROTO(
-> +		const struct rpc_xprt *xprt
-> +	),
-> +
-> +	TP_ARGS(xprt),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
-> +		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
-> +		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
-> +	),
-> +
-> +	TP_printk("peer=3D[%s]:%s", __get_str(addr), __get_str(port))
-> +);
-> +
->  TRACE_EVENT(xs_stream_read_data,
->  	TP_PROTO(struct rpc_xprt *xprt, ssize_t err, size_t total),
-> =20
-> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-> index fcdd0fca408e..eba1be9984f8 100644
-> --- a/net/sunrpc/xprtsock.c
-> +++ b/net/sunrpc/xprtsock.c
-> @@ -1378,7 +1378,7 @@ static void xs_udp_data_receive_workfn(struct work_=
-struct *work)
->  }
-> =20
->  /**
-> - * xs_data_ready - "data ready" callback for UDP sockets
-> + * xs_data_ready - "data ready" callback for sockets
->   * @sk: socket with data to read
->   *
->   */
-> @@ -1386,11 +1386,13 @@ static void xs_data_ready(struct sock *sk)
+>  fs/nfsd/nfs4proc.c |    4 ++--
+>  fs/nfsd/nfs4xdr.c  |   12 ++++++++++--
+>  fs/nfsd/xdr4.h     |    4 ++--
+>  3 files changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 3895eb52d2b1..22c5ccb83d20 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1953,9 +1953,9 @@ nfsd4_copy_notify(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>         /* For now, only return one server address in cpn_src, the
+>          * address used by the client to connect to this server.
+>          */
+> -       cn->cpn_src.nl4_type = NL4_NETADDR;
+> +       cn->cpn_src->nl4_type = NL4_NETADDR;
+>         status = nfsd4_set_netaddr((struct sockaddr *)&rqstp->rq_daddr,
+> -                                &cn->cpn_src.u.nl4_addr);
+> +                                &cn->cpn_src->u.nl4_addr);
+>         WARN_ON_ONCE(status);
+>         if (status) {
+>                 nfs4_put_cpntf_state(nn, cps);
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 358b3338c4cc..335431199077 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -1952,10 +1952,17 @@ nfsd4_decode_copy_notify(struct nfsd4_compoundargs *argp,
 >  {
->  	struct rpc_xprt *xprt;
-> =20
-> -	dprintk("RPC:       xs_data_ready...\n");
->  	xprt =3D xprt_from_sock(sk);
->  	if (xprt !=3D NULL) {
->  		struct sock_xprt *transport =3D container_of(xprt,
->  				struct sock_xprt, xprt);
+>         __be32 status;
+>
+> +       cn->cpn_src = svcxdr_tmpalloc(argp, sizeof(*cn->cpn_src));
+> +       if (cn->cpn_src == NULL)
+> +               return nfserrno(-ENOMEM);       /* XXX: jukebox? */
+> +       cn->cpn_dst = svcxdr_tmpalloc(argp, sizeof(*cn->cpn_dst));
+> +       if (cn->cpn_dst == NULL)
+> +               return nfserrno(-ENOMEM);       /* XXX: jukebox? */
 > +
-> +		trace_xs_data_ready(xprt);
-> +
->  		transport->old_data_ready(sk);
->  		/* Any data means we had a useful conversation, so
->  		 * then we don't need to delay the next reconnect
->=20
->=20
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+>         status = nfsd4_decode_stateid4(argp, &cn->cpn_src_stateid);
+>         if (status)
+>                 return status;
+> -       return nfsd4_decode_nl4_server(argp, &cn->cpn_dst);
+> +       return nfsd4_decode_nl4_server(argp, cn->cpn_dst);
+>  }
+>
+>  static __be32
+> @@ -4898,7 +4905,8 @@ nfsd4_encode_copy_notify(struct nfsd4_compoundres *resp, __be32 nfserr,
+>
+>         *p++ = cpu_to_be32(1);
+>
+> -       return nfsd42_encode_nl4_server(resp, &cn->cpn_src);
+> +       nfserr = nfsd42_encode_nl4_server(resp, cn->cpn_src);
+> +       return nfserr;
+>  }
+>
+>  static __be32
+> diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
+> index 6e6a89008ce1..f253fc3f4708 100644
+> --- a/fs/nfsd/xdr4.h
+> +++ b/fs/nfsd/xdr4.h
+> @@ -595,13 +595,13 @@ struct nfsd4_offload_status {
+>  struct nfsd4_copy_notify {
+>         /* request */
+>         stateid_t               cpn_src_stateid;
+> -       struct nl4_server       cpn_dst;
+> +       struct nl4_server       *cpn_dst;
+>
+>         /* response */
+>         stateid_t               cpn_cnr_stateid;
+>         u64                     cpn_sec;
+>         u32                     cpn_nsec;
+> -       struct nl4_server       cpn_src;
+> +       struct nl4_server       *cpn_src;
+>  };
+>
+>  struct nfsd4_op {
+>
+>
