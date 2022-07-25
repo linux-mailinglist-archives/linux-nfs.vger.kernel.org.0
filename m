@@ -2,203 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB94C57FFCA
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 15:29:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3785657FFDC
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 15:32:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232049AbiGYN35 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Mon, 25 Jul 2022 09:29:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51310 "EHLO
+        id S234913AbiGYNci (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jul 2022 09:32:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231653AbiGYN34 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:29:56 -0400
-Received: from web1.siteocity.com (web1.siteocity.com [172.241.25.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B70D5FDF
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:29:55 -0700 (PDT)
-Received: from mailnull by web1.siteocity.com with spam-scanner (Exim 4.95)
-        (envelope-from <felipe@felipegasper.com>)
-        id 1oFy9i-00080s-Hz
-        for linux-nfs@vger.kernel.org;
-        Mon, 25 Jul 2022 08:29:54 -0500
-X-ImunifyEmail-Filter-Info: ewogICAgImlzX3NraXBwZWQiOiBmYWxzZSwKICAgICJ0aW1lX3JlYWw
-        iOiAwLjI3OTg5MywKICAgICJzeW1ib2xzIjogewogICAgICAgICJCQV
-        lFU19IQU0iOiB7CiAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAtM
-        ywKICAgICAgICAgICAgIm9wdGlvbnMiOiBbCiAgICAgICAgICAgICAg
-        ICAiOTcuMzAlIgogICAgICAgICAgICBdLAogICAgICAgICAgICAiZGV
-        zY3JpcHRpb24iOiAiTWVzc2FnZSBwcm9iYWJseSBoYW0sIHByb2JhYm
-        lsaXR5OiAiLAogICAgICAgICAgICAibmFtZSI6ICJCQVlFU19IQU0iL
-        AogICAgICAgICAgICAic2NvcmUiOiAtMi40MTEyMDYKICAgICAgICB9
-        LAogICAgICAgICJNSU1FX1VOS05PV04iOiB7CiAgICAgICAgICAgICJ
-        tZXRyaWNfc2NvcmUiOiAwLjEwMDAwMCwKICAgICAgICAgICAgIm9wdG
-        lvbnMiOiBbCiAgICAgICAgICAgICAgICAidGV4dC9wbGFpbiIKICAgI
-        CAgICAgICAgXSwKICAgICAgICAgICAgImRlc2NyaXB0aW9uIjogIk1p
-        c3Npbmcgb3IgdW5rbm93biBjb250ZW50LXR5cGUiLAogICAgICAgICA
-        gICAibmFtZSI6ICJNSU1FX1VOS05PV04iLAogICAgICAgICAgICAic2
-        NvcmUiOiAwLjEwMDAwMAogICAgICAgIH0sCiAgICAgICAgIlJDUFRfQ
-        09VTlRfVFdPIjogewogICAgICAgICAgICAibWV0cmljX3Njb3JlIjog
-        MCwKICAgICAgICAgICAgIm9wdGlvbnMiOiBbCiAgICAgICAgICAgICA
-        gICAiMiIKICAgICAgICAgICAgXSwKICAgICAgICAgICAgImRlc2NyaX
-        B0aW9uIjogIlR3byByZWNpcGllbnRzIiwKICAgICAgICAgICAgIm5hb
-        WUiOiAiUkNQVF9DT1VOVF9UV08iLAogICAgICAgICAgICAic2NvcmUi
-        OiAwCiAgICAgICAgfSwKICAgICAgICAiTUlEX1JIU19NQVRDSF9GUk9
-        NIjogewogICAgICAgICAgICAibWV0cmljX3Njb3JlIjogMCwKICAgIC
-        AgICAgICAgImRlc2NyaXB0aW9uIjogIk1lc3NhZ2UtSUQgUkhTIG1hd
-        GNoZXMgRnJvbSBkb21haW4iLAogICAgICAgICAgICAibmFtZSI6ICJN
-        SURfUkhTX01BVENIX0ZST00iLAogICAgICAgICAgICAic2NvcmUiOiA
-        wCiAgICAgICAgfSwKICAgICAgICAiQVJDX05BIjogewogICAgICAgIC
-        AgICAibWV0cmljX3Njb3JlIjogMCwKICAgICAgICAgICAgImRlc2Nya
-        XB0aW9uIjogIkFSQyBzaWduYXR1cmUgYWJzZW50IiwKICAgICAgICAg
-        ICAgIm5hbWUiOiAiQVJDX05BIiwKICAgICAgICAgICAgInNjb3JlIjo
-        gMAogICAgICAgIH0sCiAgICAgICAgIlRPX01BVENIX0VOVlJDUFRfU0
-        9NRSI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiAgI
-        CAgICAgICAgICJkZXNjcmlwdGlvbiI6ICJTb21lIG9mIHRoZSByZWNp
-        cGllbnRzIG1hdGNoIHRoZSBlbnZlbG9wZSIsCiAgICAgICAgICAgICJ
-        uYW1lIjogIlRPX01BVENIX0VOVlJDUFRfU09NRSIsCiAgICAgICAgIC
-        AgICJzY29yZSI6IDAKICAgICAgICB9LAogICAgICAgICJBU04iOiB7C
-        iAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAwLAogICAgICAgICAg
-        ICAib3B0aW9ucyI6IFsKICAgICAgICAgICAgICAgICJhc246MzM1MjI
-        sIGlwbmV0OjE4NC45NC4xOTIuMC8yMCwgY291bnRyeTpVUyIKICAgIC
-        AgICAgICAgXSwKICAgICAgICAgICAgIm5hbWUiOiAiQVNOIiwKICAgI
-        CAgICAgICAgInNjb3JlIjogMAogICAgICAgIH0sCiAgICAgICAgIlRP
-        X0ROX0FMTCI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDA
-        sCiAgICAgICAgICAgICJkZXNjcmlwdGlvbiI6ICJBbGwgdGhlIHJlY2
-        lwaWVudHMgaGF2ZSBkaXNwbGF5IG5hbWVzIiwKICAgICAgICAgICAgI
-        m5hbWUiOiAiVE9fRE5fQUxMIiwKICAgICAgICAgICAgInNjb3JlIjog
-        MAogICAgICAgIH0sCiAgICAgICAgIlJDVkRfVklBX1NNVFBfQVVUSCI
-        6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiAgICAgIC
-        AgICAgICJkZXNjcmlwdGlvbiI6ICJBdXRoZW50aWNhdGVkIGhhbmQtb
-        2ZmIHdhcyBzZWVuIGluIFJlY2VpdmVkIGhlYWRlcnMiLAogICAgICAg
-        ICAgICAibmFtZSI6ICJSQ1ZEX1ZJQV9TTVRQX0FVVEgiLAogICAgICA
-        gICAgICAic2NvcmUiOiAwCiAgICAgICAgfSwKICAgICAgICAiRlJPTV
-        9IQVNfRE4iOiB7CiAgICAgICAgICAgICJtZXRyaWNfc2NvcmUiOiAwL
-        AogICAgICAgICAgICAiZGVzY3JpcHRpb24iOiAiRnJvbSBoZWFkZXIg
-        aGFzIGEgZGlzcGxheSBuYW1lIiwKICAgICAgICAgICAgIm5hbWUiOiA
-        iRlJPTV9IQVNfRE4iLAogICAgICAgICAgICAic2NvcmUiOiAwCiAgIC
-        AgICAgfSwKICAgICAgICAiUkNWRF9UTFNfQUxMIjogewogICAgICAgI
-        CAgICAibWV0cmljX3Njb3JlIjogMCwKICAgICAgICAgICAgImRlc2Ny
-        aXB0aW9uIjogIkFsbCBob3BzIHVzZWQgZW5jcnlwdGVkIHRyYW5zcG9
-        ydHMiLAogICAgICAgICAgICAibmFtZSI6ICJSQ1ZEX1RMU19BTEwiLA
-        ogICAgICAgICAgICAic2NvcmUiOiAwCiAgICAgICAgfSwKICAgICAgI
-        CAiU1VCSkVDVF9FTkRTX1FVRVNUSU9OIjogewogICAgICAgICAgICAi
-        bWV0cmljX3Njb3JlIjogMSwKICAgICAgICAgICAgImRlc2NyaXB0aW9
-        uIjogIlN1YmplY3QgZW5kcyB3aXRoIGEgcXVlc3Rpb24iLAogICAgIC
-        AgICAgICAibmFtZSI6ICJTVUJKRUNUX0VORFNfUVVFU1RJT04iLAogI
-        CAgICAgICAgICAic2NvcmUiOiAxCiAgICAgICAgfSwKICAgICAgICAi
-        TVZfQ0FTRSI6IHsKICAgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDA
-        uNTAwMDAwLAogICAgICAgICAgICAiZGVzY3JpcHRpb24iOiAiTWltZS
-        1WZXJzaW9uIC52cy4gTUlNRS1WZXJzaW9uIiwKICAgICAgICAgICAgI
-        m5hbWUiOiAiTVZfQ0FTRSIsCiAgICAgICAgICAgICJzY29yZSI6IDAu
-        NTAwMDAwCiAgICAgICAgfSwKICAgICAgICAiRlJPTV9FUV9FTlZGUk9
-        NIjogewogICAgICAgICAgICAibWV0cmljX3Njb3JlIjogMCwKICAgIC
-        AgICAgICAgImRlc2NyaXB0aW9uIjogIkZyb20gYWRkcmVzcyBpcyB0a
-        GUgc2FtZSBhcyB0aGUgZW52ZWxvcGUiLAogICAgICAgICAgICAibmFt
-        ZSI6ICJGUk9NX0VRX0VOVkZST00iLAogICAgICAgICAgICAic2NvcmU
-        iOiAwCiAgICAgICAgfSwKICAgICAgICAiTUlNRV9UUkFDRSI6IHsKIC
-        AgICAgICAgICAgIm1ldHJpY19zY29yZSI6IDAsCiAgICAgICAgICAgI
-        CJvcHRpb25zIjogWwogICAgICAgICAgICAgICAgIjA6fiIKICAgICAg
-        ICAgICAgXSwKICAgICAgICAgICAgIm5hbWUiOiAiTUlNRV9UUkFDRSI
-        sCiAgICAgICAgICAgICJzY29yZSI6IDAKICAgICAgICB9LAogICAgIC
-        AgICJSQ1ZEX0NPVU5UX09ORSI6IHsKICAgICAgICAgICAgIm1ldHJpY
-        19zY29yZSI6IDAsCiAgICAgICAgICAgICJvcHRpb25zIjogWwogICAg
-        ICAgICAgICAgICAgIjEiCiAgICAgICAgICAgIF0sCiAgICAgICAgICA
-        gICJkZXNjcmlwdGlvbiI6ICJNZXNzYWdlIGhhcyBvbmUgUmVjZWl2ZW
-        QgaGVhZGVyIiwKICAgICAgICAgICAgIm5hbWUiOiAiUkNWRF9DT1VOV
-        F9PTkUiLAogICAgICAgICAgICAic2NvcmUiOiAwCiAgICAgICAgfQog
-        ICAgfSwKICAgICJyZXF1aXJlZF9zY29yZSI6IDE1LAogICAgIm1lc3N
-        hZ2VzIjoge30sCiAgICAiYWN0aW9uIjogIm5vIGFjdGlvbiIsCiAgIC
-        AibWVzc2FnZS1pZCI6ICI4NjlGNjdDQS04MTJDLTRBMzktQTM2RS0zO
-        TBFRTY4MjQxQjRAZmVsaXBlZ2FzcGVyLmNvbSIsCiAgICAic2NvcmUi
-        OiAtMC44MTEyMDYKfQ==
-X-ImunifyEmail-Filter-Score: -0.81120580938422
-X-ImunifyEmail-Filter-Action: no action
-Received: from hou-4.nat.cptxoffice.net ([184.94.197.4]:51863 helo=smtpclient.apple)
-        by web1.siteocity.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <felipe@felipegasper.com>)
-        id 1oFy9i-0007xx-3o;
-        Mon, 25 Jul 2022 08:29:53 -0500
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.100.31\))
-Subject: Re: Supplementary GIDs?
-From:   Felipe Gasper <felipe@felipegasper.com>
-In-Reply-To: <7CE7A3E4-118D-4CB0-A952-5DC0014A0882@oracle.com>
-Date:   Mon, 25 Jul 2022 09:29:50 -0400
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <869F67CA-812C-4A39-A36E-390EE68241B4@felipegasper.com>
-References: <4A964428-65EA-49D4-B7B4-35D22D89D418@felipegasper.com>
- <7CE7A3E4-118D-4CB0-A952-5DC0014A0882@oracle.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-X-Mailer: Apple Mail (2.3696.100.31)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - web1.siteocity.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - felipegasper.com
-X-Get-Message-Sender-Via: web1.siteocity.com: mailgid no entry from get_recent_authed_mail_ips_entry
-X-Authenticated-Sender: web1.siteocity.com: 
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-From-Rewrite: unmodified, no actual sender determined from check mail permissions
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S235119AbiGYNch (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:32:37 -0400
+Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BFAE08A
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:34 -0700 (PDT)
+Received: by mail-vk1-xa34.google.com with SMTP id z9so4788821vkb.9
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jrZAU/7KZM2aLDeQv9VbdsL8f3XSrfycVc+z4Nwp38g=;
+        b=eUTZ43EPzNJY6+dwIuUAuUO1BAlJBnu2lErO99V+MIWthPLGxjXXP5rGEN/T7muBTW
+         3BUhrvqZEoQfZWlgr+wKWmyCrubbs6Ku+i9YCkj1Rsh9/zGH6YYporuaIXUEMiDnOr6C
+         xv9YMhaAKSFXSuCv/cqi61YZNytDSc5291h8QwQJXHwGkBjzfWCBoKyIEcZN9iGMZn4K
+         oC2H5e5kRFDh4byS7iGuWG9MiLLlMiwTGAvpQGI3tLL4HuXoU7ktABG3373wNaQ++Bp6
+         muo3mODG5287FBo4mTqbIhnbYG9YDXW7/bW0Dngp5Dgp98RHcYiWRBgiU06B5HVREaMB
+         rTiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jrZAU/7KZM2aLDeQv9VbdsL8f3XSrfycVc+z4Nwp38g=;
+        b=ZY3Ipf1D7pThlJC3RFCs0a1ZDnnrCH4ppVjhkjllk7F9P4FzuReLm9h7F7VBPFjWYZ
+         u8imn5yX0lrlkSKKn8qxt+W6VLTcdAqWwFHtKR2ibSjsXBchWGcqOjTOZbZjre+KZUGb
+         o6RhZVn8bqLH+rnHo0CCDMALJ+X8MAXuUk9XEH1YJ4/Fp8DfRHoHpFLdYdpcTKJEONCO
+         pUB1ZS1ENtx8SLpczbGMrZcC4jAH8P7dbl1EcZNDk5w3eAjVB0Lv7uNdZV/OB1jzCvT3
+         7MCtuSA9MvaDcwDULx8ai16gVkXCWALUxMFNe+A6xSMygUjdzlDxjNtXQ7P2kxAsnfZi
+         Z89A==
+X-Gm-Message-State: AJIora+oFDiNoKHdpXz2NiDsleiT1YtVh+0Oduq4nBHDys+KH36Rctdi
+        rCsQrdOFUSprCahcFb2SvF5FY7gdSpg=
+X-Google-Smtp-Source: AGRyM1uVSU1b+CRrMXoZ3TcyZteM+sCI8gX9xp9VR46six1idoFssTaQS43NQJGie9Y8yAS2rgma9g==
+X-Received: by 2002:a05:6122:17aa:b0:376:3f8e:e856 with SMTP id o42-20020a05612217aa00b003763f8ee856mr2260929vkf.2.1658755953894;
+        Mon, 25 Jul 2022 06:32:33 -0700 (PDT)
+Received: from localhost.localdomain (071-047-011-047.res.spectrum.com. [71.47.11.47])
+        by smtp.gmail.com with ESMTPSA id a6-20020ab06306000000b00383aeb53100sm2128826uap.16.2022.07.25.06.32.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 25 Jul 2022 06:32:33 -0700 (PDT)
+From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v3 00/11] Handling session trunking group membership
+Date:   Mon, 25 Jul 2022 09:32:20 -0400
+Message-Id: <20220725133231.4279-1-olga.kornievskaia@gmail.com>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Client needs to handle session trunking group membership changes that
+occur when a particular server leaves an established trunked group.
+This results in a server sending a NFS4ERR_BAD_SESSION because that
+server no longer has session's state.
 
+This series proposes to deal with that situation in two fold. First
+on DESTROY_SESSION, the client will offline all trunked connections
+it has established to the server. Then on CREATE_SESSION it will
+iterate thru offlined connections only and probe them again for
+session trunking. If session trunking conditions still hold then
+such transport would be made active again otherwise it will be
+deleted from the trunked group.
 
-> On Jul 25, 2022, at 09:23, Chuck Lever III <chuck.lever@oracle.com> wrote:
-> 
-> 
-> 
->> On Jul 23, 2022, at 11:53 AM, Felipe Gasper <felipe@felipegasper.com> wrote:
->> 
->> Hello,
->> 
->> 	I’m seeing two different behaviours between kernel NFS server versions in AlmaLinux 8 and Ubuntu 20. The following Perl demonstrates the issue:
->> 
->> --------
->> perl -MFile::Temp -Mautodie -Mstrict -e'my $fh = File::Temp::tempfile( DIR => "/the/nfs/mount" ); my $mailgid = getgrnam "mail"; my ($uid, $gid) = (getpwnam "bin")[2,3]; chown $uid, $gid, $fh; $) = "$gid $mailgid"; $> = $uid; chown -1, $mailgid, $fh'
->> --------
->> 
->> 	What this does, as root, is:
->> 
->> 1) Creates a file under /mnt, then deletes it, leaving the Linux file descriptor open.
->> 
->> 2) chowns the file to bin:bin.
->> 
->> 3) Sets the process’s EUID & GUID to bin & bin/mail.
->> 
->> 4) Does fchown( fd, -1, mailgid ).
->> 
->> 	When the server is AlmaLinux 8, the above works. When the server is Ubuntu 20, it fails with EPERM. (The client is AlmaLinux 8 in both cases.) Both are configured identically.
-> 
-> On each NFS sever, can you run 'uname -a' and show us the output?
+v3:
+-- fixed documentation for the rpc_xprt_switch_remove_xprt() function
 
-Ubuntu 20 (the “bad” one):
-root@kvm-demo-support:~# uname -a
-Linux kvm-demo-support 5.4.0-122-generic #138-Ubuntu SMP Wed Jun 22 15:00:31 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux
+Olga Kornievskaia (11):
+  SUNRPC expose functions for offline remote xprt functionality
+  SUNRPC add function to offline remove trunkable transports
+  NFSv4.1 offline trunkable transports on DESTROY_SESSION
+  SUNRPC create an iterator to list only OFFLINE xprts
+  SUNRPC enable back offline transports in trunking discovery
+  SUNRPC create an rpc function that allows xprt removal from rpc_clnt
+  NFSv4.1 remove xprt from xprt_switch if session trunking test fails
+  SUNRPC restructure rpc_clnt_setup_test_and_add_xprt
+  SUNRPC export xprt_iter_rewind function
+  SUNRPC create a function that probes only offline transports
+  NFSv4.1 probe offline transports for trunking on session creation
 
-AlmaLinux 8 (the “good” one):
-[root@10-2-71-6 ~]# uname -a
-Linux 10-2-71-6.cprapid.com 4.18.0-372.16.1.el8_6.x86_64 #1 SMP Wed Jul 13 03:56:16 EDT 2022 x86_64 x86_64 x86_64 GNU/Linux
+ fs/nfs/nfs4proc.c                    |  12 ++
+ include/linux/sunrpc/clnt.h          |   5 +
+ include/linux/sunrpc/xprt.h          |   3 +
+ include/linux/sunrpc/xprtmultipath.h |   7 +-
+ net/sunrpc/clnt.c                    | 204 +++++++++++++++++++++++----
+ net/sunrpc/sysfs.c                   |  28 +---
+ net/sunrpc/xprt.c                    |  32 +++++
+ net/sunrpc/xprtmultipath.c           | 111 ++++++++++++---
+ 8 files changed, 338 insertions(+), 64 deletions(-)
 
-> 
-> On on the NFS client, can you show us the output of 'nfsstat -m'
-> during each test run?
+-- 
+2.27.0
 
-> nfsstat -m
-/mnt/phil from kvm-demo-support.dev.cpanel.net:/volumes/kvm-demo
- Flags:	rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.2.65.75,local_lock=none,addr=10.0.32.83
-
-/mnt/felipe from 10.2.71.6:/home
- Flags:	rw,relatime,vers=4.2,rsize=262144,wsize=262144,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.2.65.75,local_lock=none,addr=10.2.71.6
-
-
-Thank you!
-
--FG
