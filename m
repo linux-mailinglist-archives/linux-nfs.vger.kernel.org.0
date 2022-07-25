@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B5157FFE9
+	by mail.lfdr.de (Postfix) with ESMTP id 9DADE57FFE8
 	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 15:33:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235509AbiGYNcy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jul 2022 09:32:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53570 "EHLO
+        id S232467AbiGYNcw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jul 2022 09:32:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235333AbiGYNcq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:32:46 -0400
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B721FDEB3
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:44 -0700 (PDT)
-Received: by mail-vs1-xe2c.google.com with SMTP id c3so10670869vsc.6
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:44 -0700 (PDT)
+        with ESMTP id S235509AbiGYNcr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:32:47 -0400
+Received: from mail-vk1-xa34.google.com (mail-vk1-xa34.google.com [IPv6:2607:f8b0:4864:20::a34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4687FE01D
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:46 -0700 (PDT)
+Received: by mail-vk1-xa34.google.com with SMTP id y129so5116462vkg.5
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=XxWsksLwNP5augzEl67LHViorzikGGB1fkSMEHJ+uOs=;
-        b=NAyrBMObTiAPltvvN6HLt4OUF8MmoCGTCzy6st2Bu8AjvhlRm1Q5ItErtqBqYiwaky
-         EmAr2vogwb0kwyXGQ12l4GMLuba3gaY7ws7uBf4CAXOlOh+Kmd6e96mVQCMa1/poijqH
-         rUh9j0biZyT6WINVaEuVRCvVRrWkP+vQFb5xMVKPx0zgmvCNMKBv6IKPJPX6cuh/r1U6
-         tbo/a1gyUJzU0MG40V67vdY8tgQgWx/MvuMGQqRl5VmLQCIdGaa/U8bwc8DIfoOJj+7I
-         GcwSf9osOuErOpynZkkjHD56pwzqHhK5zkmS3Gf8lRGF+he2IED9Y4r8rb7/UTmN7xkx
-         D8Nw==
+        bh=3FQ5JaSWfv3cXYAVokeJ/mo2/U8O1aJLSFu0DqXZFdU=;
+        b=e9xEW2JvP6XNWIfVm2Gps7ogyM7g7AEBlmEnOBTB2UOq5jKs2FyJzo9vtH/qiOWPPK
+         mHKS9zISQtDHBnWoAFTmdZDhpwFxqdhS2CXHzOeCaVjAfeBybzxGQVXiUBTEtKUKo3/z
+         6f37hmipnTyAMze+jwaT//W0xVoh0WeDNhrnhi8KTY/FgxoLDGZrYKLy6MIC+sveThn+
+         L/as/Cc8l4M3MGJbsU90kdYr4sybjwPLoEQ8PeoyEYVS8FlNQBjBt5iExy46LX0ssFBv
+         CFz/vv48xxn9JHeE3qr9Ua5eT4ab4szHK8q6G4BNGO4DFNQbbiRThnH0mWVkVCE+r6mD
+         EjIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=XxWsksLwNP5augzEl67LHViorzikGGB1fkSMEHJ+uOs=;
-        b=N6iW4Pmkv8K5q1fJiDT2vet/k89um0MoVOucHMAzkK3/0N7HpTbb2yRB+ECfqbThq1
-         lpRbgl2QAIFVRjl/Y5bQ/gqVZALqaC/QH9/IFKmtSm0A2/BoQONh4iLCcYlmgGFuJLO8
-         iOpU8MBFO5rDbQ1HWtIW4PxPtaTmgK1tjyTJ7JwJ795FhcW7e/J4AvVeZtfZgFOFUjyU
-         1OpSo9MxhUEb12lG0ns6BildzHvxgcCDHinpLtr2TuCh0q4If5G3hZZte6hsCoCJUeGM
-         RA+8+m4H2GGTAheYHyX2FffPJ/oqR+rq/DJl+WNf+U09scQU8Ewh+CYARjPV0ylExoBr
-         TB7A==
-X-Gm-Message-State: AJIora8A0ztQu0jzPkctKAvJQrPVGvrUrSdvjpiy1GW2NngYDcMctMdc
-        QcXfDfFymIhODecS0Ma3gDaL3TQQUFk=
-X-Google-Smtp-Source: AGRyM1snSM9hF/9BenODIijQ4iLcS33i59NJpVcGhttshKD/SrExPt6IX8rjH5tvhOQHXGEU6/CUog==
-X-Received: by 2002:a67:edc5:0:b0:358:6a1f:552a with SMTP id e5-20020a67edc5000000b003586a1f552amr94249vsp.53.1658755963492;
-        Mon, 25 Jul 2022 06:32:43 -0700 (PDT)
+        bh=3FQ5JaSWfv3cXYAVokeJ/mo2/U8O1aJLSFu0DqXZFdU=;
+        b=h11YuBQqsPhRbNWLRv9NuR6EocSzPAbyNLEuEwDZmkUzVzuAzVebu1e6pPkjRAHhRP
+         7TlM1hGfPBMep7mNwMPy1+dooKjI1MIch0KT3jkeFjVlu9mlLx0/If54J+ZXtiqDb91v
+         6RNqim6VLCpR/O5K4hfqMtto4y1I2icUZSLnp6UuFGPXFEU3yfjDvgPtHeM+Rsx3GKou
+         GMKsDrG0jmwnQHCaH5KJBWfrTQEMgA4XCS1dk8NVk9olVE5dPY+tiKyXuyadRyf32R6S
+         DIWvdOQVVvVdLBtwTiu+iXhf+HOejkRhtfpOvJY25usM0pOsLTWjgGuCvdZK0iUm+d1S
+         EvdQ==
+X-Gm-Message-State: AJIora93lIngAJSmdWZhqgs82uEqJNTtCfvzGoT+2U7rZ9uqeJvR66l2
+        wmCtVBdfhkl9G3rCK/jAOQI=
+X-Google-Smtp-Source: AGRyM1v3LgOAX/9cpUV3U/3i06gKQY0F8nHPWauzP84MG7hUHdBQUznC+yqOyGRI4KGbQ56n2ewObw==
+X-Received: by 2002:ac5:c38b:0:b0:374:e94e:5454 with SMTP id s11-20020ac5c38b000000b00374e94e5454mr3275057vkk.39.1658755964865;
+        Mon, 25 Jul 2022 06:32:44 -0700 (PDT)
 Received: from localhost.localdomain (071-047-011-047.res.spectrum.com. [71.47.11.47])
-        by smtp.gmail.com with ESMTPSA id a6-20020ab06306000000b00383aeb53100sm2128826uap.16.2022.07.25.06.32.42
+        by smtp.gmail.com with ESMTPSA id a6-20020ab06306000000b00383aeb53100sm2128826uap.16.2022.07.25.06.32.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 06:32:42 -0700 (PDT)
+        Mon, 25 Jul 2022 06:32:44 -0700 (PDT)
 From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
 To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 08/11] SUNRPC restructure rpc_clnt_setup_test_and_add_xprt
-Date:   Mon, 25 Jul 2022 09:32:28 -0400
-Message-Id: <20220725133231.4279-9-olga.kornievskaia@gmail.com>
+Subject: [PATCH v3 09/11] SUNRPC export xprt_iter_rewind function
+Date:   Mon, 25 Jul 2022 09:32:29 -0400
+Message-Id: <20220725133231.4279-10-olga.kornievskaia@gmail.com>
 X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 In-Reply-To: <20220725133231.4279-1-olga.kornievskaia@gmail.com>
 References: <20220725133231.4279-1-olga.kornievskaia@gmail.com>
@@ -68,100 +68,39 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In preparation for code re-use, pull out the part of the
-rpc_clnt_setup_test_and_add_xprt() portion that sends a NULL rpc
-and then calls a session trunking function into a helper function.
-
-Re-organize the end of the function for code re-use.
+Make xprt_iter_rewind callable outside of xprtmultipath.c
 
 Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
 ---
- net/sunrpc/clnt.c | 52 ++++++++++++++++++++++++++++-------------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+ include/linux/sunrpc/xprtmultipath.h | 2 ++
+ net/sunrpc/xprtmultipath.c           | 1 -
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/clnt.c b/net/sunrpc/clnt.c
-index 26f3102500bb..9c9712274ca8 100644
---- a/net/sunrpc/clnt.c
-+++ b/net/sunrpc/clnt.c
-@@ -2874,6 +2874,30 @@ int rpc_clnt_test_and_add_xprt(struct rpc_clnt *clnt,
- }
- EXPORT_SYMBOL_GPL(rpc_clnt_test_and_add_xprt);
+diff --git a/include/linux/sunrpc/xprtmultipath.h b/include/linux/sunrpc/xprtmultipath.h
+index 9fff0768d942..c0514c684b2c 100644
+--- a/include/linux/sunrpc/xprtmultipath.h
++++ b/include/linux/sunrpc/xprtmultipath.h
+@@ -68,6 +68,8 @@ extern void xprt_iter_init_listoffline(struct rpc_xprt_iter *xpi,
  
-+static int rpc_clnt_add_xprt_helper(struct rpc_clnt *clnt,
-+				    struct rpc_xprt *xprt,
-+				    struct rpc_add_xprt_test *data)
-+{
-+	struct rpc_task *task;
-+	int status = -EADDRINUSE;
+ extern void xprt_iter_destroy(struct rpc_xprt_iter *xpi);
+ 
++extern void xprt_iter_rewind(struct rpc_xprt_iter *xpi);
 +
-+	/* Test the connection */
-+	task = rpc_call_null_helper(clnt, xprt, NULL, 0, NULL, NULL);
-+	if (IS_ERR(task))
-+		return PTR_ERR(task);
-+
-+	status = task->tk_status;
-+	rpc_put_task(task);
-+
-+	if (status < 0)
-+		return status;
-+
-+	/* rpc_xprt_switch and rpc_xprt are deferrenced by add_xprt_test() */
-+	data->add_xprt_test(clnt, xprt, data->data);
-+
-+	return 0;
-+}
-+
- /**
-  * rpc_clnt_setup_test_and_add_xprt()
-  *
-@@ -2897,8 +2921,6 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
- 				     struct rpc_xprt *xprt,
- 				     void *data)
+ extern struct rpc_xprt_switch *xprt_iter_xchg_switch(
+ 		struct rpc_xprt_iter *xpi,
+ 		struct rpc_xprt_switch *newswitch);
+diff --git a/net/sunrpc/xprtmultipath.c b/net/sunrpc/xprtmultipath.c
+index 55da01730311..685db598acbe 100644
+--- a/net/sunrpc/xprtmultipath.c
++++ b/net/sunrpc/xprtmultipath.c
+@@ -481,7 +481,6 @@ struct rpc_xprt *xprt_iter_next_entry_offline(struct rpc_xprt_iter *xpi)
+  * Resets xpi to ensure that it points to the first entry in the list
+  * of transports.
+  */
+-static
+ void xprt_iter_rewind(struct rpc_xprt_iter *xpi)
  {
--	struct rpc_task *task;
--	struct rpc_add_xprt_test *xtest = (struct rpc_add_xprt_test *)data;
- 	int status = -EADDRINUSE;
- 
- 	xprt = xprt_get(xprt);
-@@ -2907,31 +2929,19 @@ int rpc_clnt_setup_test_and_add_xprt(struct rpc_clnt *clnt,
- 	if (rpc_xprt_switch_has_addr(xps, (struct sockaddr *)&xprt->addr))
- 		goto out_err;
- 
--	/* Test the connection */
--	task = rpc_call_null_helper(clnt, xprt, NULL, 0, NULL, NULL);
--	if (IS_ERR(task)) {
--		status = PTR_ERR(task);
--		goto out_err;
--	}
--	status = task->tk_status;
--	rpc_put_task(task);
--
-+	status = rpc_clnt_add_xprt_helper(clnt, xprt, data);
- 	if (status < 0)
- 		goto out_err;
- 
--	/* rpc_xprt_switch and rpc_xprt are deferrenced by add_xprt_test() */
--	xtest->add_xprt_test(clnt, xprt, xtest->data);
--
--	xprt_put(xprt);
--	xprt_switch_put(xps);
--
--	/* so that rpc_clnt_add_xprt does not call rpc_xprt_switch_add_xprt */
--	return 1;
-+	status = 1;
- out_err:
- 	xprt_put(xprt);
- 	xprt_switch_put(xps);
--	pr_info("RPC:   rpc_clnt_test_xprt failed: %d addr %s not added\n",
--		status, xprt->address_strings[RPC_DISPLAY_ADDR]);
-+	if (status < 0)
-+		pr_info("RPC:   rpc_clnt_test_xprt failed: %d addr %s not "
-+			"added\n", status,
-+			xprt->address_strings[RPC_DISPLAY_ADDR]);
-+	/* so that rpc_clnt_add_xprt does not call rpc_xprt_switch_add_xprt */
- 	return status;
- }
- EXPORT_SYMBOL_GPL(rpc_clnt_setup_test_and_add_xprt);
+ 	rcu_read_lock();
 -- 
 2.27.0
 
