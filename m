@@ -2,106 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C47E57FFEF
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 15:33:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D172B580058
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 16:03:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235233AbiGYNdB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jul 2022 09:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53918 "EHLO
+        id S235267AbiGYODk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jul 2022 10:03:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235552AbiGYNcv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:32:51 -0400
-Received: from mail-vs1-xe36.google.com (mail-vs1-xe36.google.com [IPv6:2607:f8b0:4864:20::e36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C55DDEB3
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:48 -0700 (PDT)
-Received: by mail-vs1-xe36.google.com with SMTP id x125so10659952vsb.13
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rqgp4NaqHB0e2b8gTbaEiPmf7V2zMSWAxg7BtypCeKw=;
-        b=IOpVavvFo98KTDOOv4PjzLWf+NpfOG6iG2NNbiEyxD2EbJnxRUy9VD3x5dC3I8bSTv
-         VBst9dXzJua4Cx95jTLbkGKf5GC3clIhhASy3gL+I+b1YGjdzMRNJGlzmO0VixsxCKWN
-         bl3PzJD7yiJA9YzjQV9+GchLUhYXydWIW1XEkvz3tEbUMY/IdFt0sMId0de9Vqnh9F+m
-         jGWgwAvtZ110vrOpKZfxu5A9MToKH8zoAZwSOu7cxNrzr3HIfDhtTjw1vSnL1SdDwMSY
-         lPKETzYISxB/NppSdWBC0zAc0GJOD6AJsgXbf5FSA/uUA55ZWI7dTBV4zPY8nhFT1noZ
-         kXxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rqgp4NaqHB0e2b8gTbaEiPmf7V2zMSWAxg7BtypCeKw=;
-        b=dZVHiCyDDFv806/WFAbY3860M5qf+lWtZPmSMMjUe/159b/+GhAHwsiet+4jwQGnmG
-         /N75IHhEl8R6ZH8xZjTskn88fPvoE+AUSnH8kua6XkxbAmepJxubvx3ykpEDxk/EpmA/
-         FygMqwxTzZTKdYS67XCJRZWfAjW+5sNeL4Lt0QpxZCCV2XWfU2lRV9JB8BCV3jTpFcXN
-         2S2XAmZrAqKBSET08QhXkeiL4jFYq+WSsRpIC1+EszwSgon7e7CNkWAa0OP+VKnD4XVs
-         rdEGZbtPsj3K6hPcCYBvv65m4tbp9CVeVYm/tcdo7Rk36wzqQI/110ANLYpJUKSxxOsH
-         5knw==
-X-Gm-Message-State: AJIora/k0sDcBAqRZcuTDMZdF8Jj+236flzy5AfI4bFM7ZVVH21j3w6P
-        +yDSqjS/iSmSfOcgkL72XFw=
-X-Google-Smtp-Source: AGRyM1tDOYb/Mdoy0tQxrpFnf1K2kKjNJUUkad9xmXKE01fyEKraagApn4TV1UIDNBtiuKyZBLXFoQ==
-X-Received: by 2002:a05:6102:518:b0:358:5d65:907e with SMTP id l24-20020a056102051800b003585d65907emr1347689vsa.87.1658755966858;
-        Mon, 25 Jul 2022 06:32:46 -0700 (PDT)
-Received: from localhost.localdomain (071-047-011-047.res.spectrum.com. [71.47.11.47])
-        by smtp.gmail.com with ESMTPSA id a6-20020ab06306000000b00383aeb53100sm2128826uap.16.2022.07.25.06.32.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Jul 2022 06:32:46 -0700 (PDT)
-From:   Olga Kornievskaia <olga.kornievskaia@gmail.com>
-To:     trond.myklebust@hammerspace.com, anna.schumaker@netapp.com
+        with ESMTP id S235261AbiGYODg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 10:03:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBDFF15FCC
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 07:03:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F33F611DB
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 14:03:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F425C341C6;
+        Mon, 25 Jul 2022 14:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1658757814;
+        bh=RfCUEgRu2RTVsnCmQzh3gVvKyj4WXqXvfWym3E7P2Gc=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Otvjrosxw5Wk1EMxgF9beF25YpZLss24ppeybja/atunSoamxMUOiPkHbRMgnGKkP
+         6TDrgPN7U5snZqapMNlDqdYay3jWGJweryQJ2wnMCOTs0c66kO8rOrxzxwR6y9t9Ui
+         pNgrhtxO7m0ol2UqgBgTBUb6xNUFYIYuVxTj3EePkP10wYhojdTmIMrMmXc5OL20YH
+         5N2x9UiafBuhBM0ZoJCYYQX6VBmvFtF1g8TehYFvAOel1FMBrgreZOtqAfCvmhp731
+         8LzJ8Jn8bbZwcvcTGCT4bRRkCPggcnnMOgjsPspES7unBSGeSccW43X8EdQa/ZZz+P
+         X+zH30T9Vv4xQ==
+Message-ID: <9a3a447a3c4351daac436944b535b32a0e29ab51.camel@kernel.org>
+Subject: Re: [PATCH v2 3/4] SUNRPC: Replace dprintk() call site in
+ xs_data_ready
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, anna.schumaker@netapp.com,
+        trondmy@hammerspace.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 11/11] NFSv4.1 probe offline transports for trunking on session creation
-Date:   Mon, 25 Jul 2022 09:32:31 -0400
-Message-Id: <20220725133231.4279-12-olga.kornievskaia@gmail.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
-In-Reply-To: <20220725133231.4279-1-olga.kornievskaia@gmail.com>
-References: <20220725133231.4279-1-olga.kornievskaia@gmail.com>
+Date:   Mon, 25 Jul 2022 10:03:32 -0400
+In-Reply-To: <165851689770.2312015.16674329181783074734.stgit@morisot.1015granger.net>
+References: <165851677341.2312015.16636288284789960852.stgit@morisot.1015granger.net>
+         <165851689770.2312015.16674329181783074734.stgit@morisot.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Once the session is established call into the SUNRPC layer to check
-if any offlined trunking connections should be re-enabled.
+On Fri, 2022-07-22 at 15:08 -0400, Chuck Lever wrote:
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  include/trace/events/sunrpc.h |   20 ++++++++++++++++++++
+>  net/sunrpc/xprtsock.c         |    6 ++++--
+>  2 files changed, 24 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/include/trace/events/sunrpc.h b/include/trace/events/sunrpc.=
+h
+> index b61d9c90fa26..21068ad61db8 100644
+> --- a/include/trace/events/sunrpc.h
+> +++ b/include/trace/events/sunrpc.h
+> @@ -1266,6 +1266,26 @@ TRACE_EVENT(xprt_reserve,
+>  	)
+>  );
+> =20
+> +TRACE_EVENT(xs_data_ready,
+> +	TP_PROTO(
+> +		const struct rpc_xprt *xprt
+> +	),
+> +
+> +	TP_ARGS(xprt),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(addr, xprt->address_strings[RPC_DISPLAY_ADDR])
+> +		__string(port, xprt->address_strings[RPC_DISPLAY_PORT])
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(addr, xprt->address_strings[RPC_DISPLAY_ADDR]);
+> +		__assign_str(port, xprt->address_strings[RPC_DISPLAY_PORT]);
+> +	),
+> +
+> +	TP_printk("peer=3D[%s]:%s", __get_str(addr), __get_str(port))
+> +);
+> +
+>  TRACE_EVENT(xs_stream_read_data,
+>  	TP_PROTO(struct rpc_xprt *xprt, ssize_t err, size_t total),
+> =20
+> diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+> index fcdd0fca408e..eba1be9984f8 100644
+> --- a/net/sunrpc/xprtsock.c
+> +++ b/net/sunrpc/xprtsock.c
+> @@ -1378,7 +1378,7 @@ static void xs_udp_data_receive_workfn(struct work_=
+struct *work)
+>  }
+> =20
+>  /**
+> - * xs_data_ready - "data ready" callback for UDP sockets
+> + * xs_data_ready - "data ready" callback for sockets
+>   * @sk: socket with data to read
+>   *
+>   */
+> @@ -1386,11 +1386,13 @@ static void xs_data_ready(struct sock *sk)
+>  {
+>  	struct rpc_xprt *xprt;
+> =20
+> -	dprintk("RPC:       xs_data_ready...\n");
+>  	xprt =3D xprt_from_sock(sk);
+>  	if (xprt !=3D NULL) {
+>  		struct sock_xprt *transport =3D container_of(xprt,
+>  				struct sock_xprt, xprt);
+> +
+> +		trace_xs_data_ready(xprt);
+> +
+>  		transport->old_data_ready(sk);
+>  		/* Any data means we had a useful conversation, so
+>  		 * then we don't need to delay the next reconnect
+>=20
+>=20
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
----
- fs/nfs/nfs4proc.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 4850e29904e6..5f59de55ac84 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -9249,6 +9249,13 @@ int nfs4_proc_create_session(struct nfs_client *clp, const struct cred *cred)
- 	int status;
- 	unsigned *ptr;
- 	struct nfs4_session *session = clp->cl_session;
-+	struct nfs4_add_xprt_data xprtdata = {
-+		.clp = clp,
-+	};
-+	struct rpc_add_xprt_test rpcdata = {
-+		.add_xprt_test = clp->cl_mvops->session_trunk,
-+		.data = &xprtdata,
-+	};
- 
- 	dprintk("--> %s clp=%p session=%p\n", __func__, clp, session);
- 
-@@ -9265,6 +9272,7 @@ int nfs4_proc_create_session(struct nfs_client *clp, const struct cred *cred)
- 	ptr = (unsigned *)&session->sess_id.data[0];
- 	dprintk("%s client>seqid %d sessionid %u:%u:%u:%u\n", __func__,
- 		clp->cl_seqid, ptr[0], ptr[1], ptr[2], ptr[3]);
-+	rpc_clnt_probe_trunked_xprts(clp->cl_rpcclient, &rpcdata);
- out:
- 	return status;
- }
--- 
-2.27.0
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
