@@ -2,167 +2,211 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A414357FF16
-	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 14:38:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 056F857FFB0
+	for <lists+linux-nfs@lfdr.de>; Mon, 25 Jul 2022 15:17:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233487AbiGYMiz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 25 Jul 2022 08:38:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43252 "EHLO
+        id S234761AbiGYNRL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 25 Jul 2022 09:17:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231826AbiGYMiy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 08:38:54 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85619BC98
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 05:38:53 -0700 (PDT)
-Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com [209.85.218.71])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 921AC3F11B
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 12:38:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1658752731;
-        bh=/s8WgxQHA6c84G+j/sEDuFHNsm+gnyFCTO4yO2BftJY=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=cxgCBsoETkOUaFPuAcL5bGoNkmj+5Jh7YYQdKMOjPf/eb3irFsCe75T21MiqFsnid
-         qZcDQyZ7VtIWdTK1fSmcG7UEF/m+6/NLFdDLYPABcmk3B2c9PNfmvxgHKZ4NIABoCj
-         qmCBYoE7C7uRY9r5JwNn/ycv+Qpd88EY9BcBCDz/pL7lhVEliS8MNEcvh2wRH6l49M
-         Sa6nq0/U6y9B4mMAF5kTZm/Z2Rw7LOjhi4yMPoqflSw9AhSnyF6M3juZnOHS+ine43
-         KCc37Xr+TYxmjWaMmmzxWaJ7YSeo8v6QkjMdkEgmu6uH70aWCK3cef9rS/0VBiBQaW
-         j4XdQPEwIbfeQ==
-Received: by mail-ej1-f71.google.com with SMTP id hq20-20020a1709073f1400b0072b9824f0a2so3143234ejc.23
-        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 05:38:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/s8WgxQHA6c84G+j/sEDuFHNsm+gnyFCTO4yO2BftJY=;
-        b=cuwHQ+0dL2LSU+BB+NJlMg2yg7KGPzCiCbGUSWJuowv+WWJ17U3L49tfUK/nWHlYqW
-         VaD4GtpWjzdMG9YSZEOXoZyMcnF7HlxgAcyCqF7MhFzJ2usCTha1UtLK9eMPGtPKLgtt
-         zBrBqSIuxCqUst3A5i6X6F4wFUxh2ocfW7dnLcVQ2pE8mkUix+pSW1BzNcOMRghkp2+l
-         DIYhSVkC096KYN692p6wWFXoWk/G6h7R+UPkATieyxYEf6hS4UIMkUPMc1ECTqU/nvzd
-         2orUch1NB4apYqZzbjP+BD4F+uuLjlXlpWGFrff/cnOFu2GnC1CNqapQxLfSo1+YqgLF
-         x+qg==
-X-Gm-Message-State: AJIora+8UT3aGbnXozlky3ScFEX8ny6Kl77JsLh/9DtLbGQWEGiphyPU
-        MNdZXDWRgbQmtjgA1qMKqGUxycZDXdZEgVAsaNzE4qLCpP9biebi5hvm5IlZo63Fq2G/e7Hks+r
-        NsVBCGNdeNHj8WBaFM1yl2bqWfIi2RnjFxGkR+fEIN34/CcjnTN2Z6A==
-X-Received: by 2002:a05:6402:48d:b0:43a:cccd:89d9 with SMTP id k13-20020a056402048d00b0043acccd89d9mr13390668edv.257.1658752731355;
-        Mon, 25 Jul 2022 05:38:51 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1syT69lopTQ5o2t2HUHWOPrrdqu7Scq3H2NXrHWyxD8McIVCuCb62B8WDXTx6rzoar7FiroxwB647KYL21fH4g=
-X-Received: by 2002:a05:6402:48d:b0:43a:cccd:89d9 with SMTP id
- k13-20020a056402048d00b0043acccd89d9mr13390654edv.257.1658752731158; Mon, 25
- Jul 2022 05:38:51 -0700 (PDT)
+        with ESMTP id S233312AbiGYNRK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 25 Jul 2022 09:17:10 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9155FDF5
+        for <linux-nfs@vger.kernel.org>; Mon, 25 Jul 2022 06:17:09 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26P9Y1QG031251;
+        Mon, 25 Jul 2022 13:17:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=TF/X3/KEGqlKLkVxoK8D1HNQ3ytyyZ5pe+kPxpG20Tk=;
+ b=lv5tULmiaOgNouKCA5eN+If6V0kO51CrpUtfmLSzoFOJJLmmDjUSCjs8yxOaCOZMeUH3
+ RhAaTeVVuiYINyhJ/mQGUdnwM+9VJvW44OfwTEJeph5K91j2LK3i5jeO9I02+uuVwIps
+ pdnBThjaTSHdjZTcERioSQanFM1cSqxl5HpOOts9kegH+giiemkl1KwfaOay8WcY3S5V
+ cfX7vponuQOgCaDek47sqR3l2TvB7JDDj0k5jFxFnVDloVLkPK8wiEqh3sTPpKVIWFtP
+ F+JlA9qMuvom+T0dLcLRIrBwuZ0ISsx5w98nyPsRBFvw9hEVng75w+psM1gH6X6hT/U3 Ug== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hg9anu784-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Jul 2022 13:17:06 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26PCQcPo023058;
+        Mon, 25 Jul 2022 13:17:05 GMT
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2108.outbound.protection.outlook.com [104.47.55.108])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hh5ytff57-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 25 Jul 2022 13:17:05 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VmLrBdECmz0o2BtQhuBkG2MCGfeAbawYuQtBOl9V1RoHH0tzZrVLECOwQyjqMGOmetp9u57c6GSaqRpl6lMC1M8A1uEL+YUS9Orr70eGjVr3ey2o5mIDKDObh93BrIMmfSCwjRiPzE5l4TdUv5Zc52zFNwh1XtCfbK0cCxHslONrzDho1NK0+RToxPO3zUP1L6ZLb8QWa88FqpVZ5z2/uCb52HCzqG46dyjDSW8ZnHoMmcRIyHwz+twe/CbWRUUaLVV8V2q4PdqQ6GWEkdXakNKlOL7VoDM9fVTSQYnT8TlxNhgjwOMn3IfTW6vRlQ0vlPxsXQ01V2Lc0cyIpkJzwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TF/X3/KEGqlKLkVxoK8D1HNQ3ytyyZ5pe+kPxpG20Tk=;
+ b=QhnXYmXI8xeLknQZfWf5XhS8OXHnA2fmNHqvPUX8OGhVVa1oePd0siNKoVDZ1G6zZTX5b/qyWWGp0rK2vMh1oe4oPf1b6Rj1+Ikug7OWQPy+54e071DzV4czhbBX3eVlgvsIFsppXlzx64iUWjpKRaCFAeY1hIKeZpwpeJz56wXBjQQJshzvUeqHYUsAaNAY/7YzhtzD55/VfulrPCWTSvKFkWGah9FON8nWqlsbzgtoouXknVYX1tGBlK0UZm4aDK+dxX4i2gn5JoFhKZm0DPmaQuLFydskzpudiMAGTLL5GMFlM3jQnJxqMqboTNlXQQh1y7ICjw4FBQaF40zlTg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TF/X3/KEGqlKLkVxoK8D1HNQ3ytyyZ5pe+kPxpG20Tk=;
+ b=ZBcMepI27JIV+p8KqlTg46xpF5SQNB/aANxz3a5TWuKFfU12SnogBa6GVir7joHdtgIyxTIEuA5w3DUrY9Yn9XkUhYdIS09dJZWdlCLszwIIckyG1sJGiwPihQ6kcmXVkjCwFx9Ly1aNsoS4Dr8LmwKfYaRQNcA79iRxDHabnOw=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by SA1PR10MB5822.namprd10.prod.outlook.com (2603:10b6:806:231::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.24; Mon, 25 Jul
+ 2022 13:17:03 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::8cc6:21c7:b3e7:5da6%8]) with mapi id 15.20.5458.024; Mon, 25 Jul 2022
+ 13:17:03 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Subject: Re: [PATCH 2/4] SUNRPC: Widen rpc_task::tk_flags
+Thread-Topic: [PATCH 2/4] SUNRPC: Widen rpc_task::tk_flags
+Thread-Index: AQHYnfAYpiEwiP5Q3kuMeAXmLUJIKa2KrAOAgAAAjACAAbgDAIACsTUA
+Date:   Mon, 25 Jul 2022 13:17:03 +0000
+Message-ID: <09580952-BAB1-4437-8903-F0DD2FE5C1C7@oracle.com>
+References: <165851065336.361126.17865870911497306083.stgit@morisot.1015granger.net>
+ <165851073589.361126.4062184829827389945.stgit@morisot.1015granger.net>
+ <55155a8f566599ecf802103a8d7d3aa4ea3e421a.camel@hammerspace.com>
+ <F3BA47F3-DE56-45DA-8E4A-4E8A65D5541A@oracle.com>
+ <9bbefaf99fa4857a7718bea72127b5dd64e72898.camel@hammerspace.com>
+In-Reply-To: <9bbefaf99fa4857a7718bea72127b5dd64e72898.camel@hammerspace.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5cccfab4-9004-44d6-2e97-08da6e3ff734
+x-ms-traffictypediagnostic: SA1PR10MB5822:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +i0jCmGyeSZ7g9O9ar0o8oev5q+19eYjwgvbBXhkf2hMErtfMnAuXPMZL+U0cU2Y+AENnCFB8t7cvnUtoAR27O5YXd5tSBUGqw2xv8T9Imuo2CW5lojSM5/p5KOvJKqxyI06cRb+H2zZjXLbxviQ3Nl0SLXCfR9JmuUvXUQBkacs4Qxx+VRExiP+Aku2IU/8cwHdRfwL+HNUcE7m5QxB6PkaXLeWP2F0YPDMufIrm+d852FVOMQ5GyE0zpO11ngwMeL9H0RrMb7lE9We0gJ72SA9S7yKYbToTnmL+HZnmrhLYrZ2F8zmHBxlavd17SjLHPXtKHzbDQzkNWYaX8Ohqc6NLmYPH3JwlR9Dcoms4zKFBx5lgTNAQ+CKN96z5UYpdM4sGXzpaipTHs0T2qy+s541FKLRa+ARKUbqTzHRxIYPjk09zAMK6Xbr0uDU0/bI1QVllhvX6zrQeVbMaIZvSZ3kz0v1Ir73YVIM6sIBwGHB8oZax7oZb+tfgimpPrSo4aqkOXP9TLCZc94bTdt4Jqt8DGvhvc9S+SajISamIy+PgDnU/UrgpDnW/HSWBluTOjnyoMtR7t+rVqa5q139KZH8MKWm9IvFFOZ5MX7D+NSQALpRFl/y3WBc9oblWUCwahf+KKwsIAqMEumRwwmACqUxpNoMmOgV4OouRQ7I2R6ztKWPHuGs/lAW5X50ZH62vNVJlWNfZyhzC2CdItVCNtS7wi87YO/9S2iayQp+ZONlAIy3BHzMLgNfTIqtzWcpPaqwF3Pc1/Z9iH6UGZCMiZL/qIiOiIbxKM43NQsOigN63/JqApNgExhQJOYsbqgM7yx01dXj0eSU3BWlX4kuXQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(376002)(346002)(366004)(136003)(396003)(6512007)(2616005)(53546011)(6506007)(8676002)(71200400001)(6486002)(478600001)(316002)(54906003)(41300700001)(186003)(8936002)(5660300002)(6916009)(66946007)(64756008)(66446008)(66556008)(66476007)(76116006)(4326008)(91956017)(83380400001)(2906002)(38100700002)(122000001)(38070700005)(33656002)(36756003)(86362001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9h+Dk9tuKTxOkgKb0ioBZkckQeGXMezQtuxc8VFrZWqlaHK8O2VwIdlvtboL?=
+ =?us-ascii?Q?DweY/DmFdgLMF0ikQIEfrvtjNrdFoHKCZp64v1oM6erzPGmRmW6bF8LiEHpn?=
+ =?us-ascii?Q?oFVjpRF+UnYgLnIObGKuAwcsQH+SyXKfud89+jlOewEf7UOZU/E/T7y/PFWC?=
+ =?us-ascii?Q?Cd+wucHRt06+9W7Lt82w/63rNXVdHbyejAUE3lcJguJmDaEV1TZGNivy/cf0?=
+ =?us-ascii?Q?J4lI0HLwQ9Y5Q94gJI767MwPc6PgCfEWkhrhNKpfi+nmHdJgQrBdbxlw+B4b?=
+ =?us-ascii?Q?CUrxjrnw9QjR1VYMpFI0GlIy2+hUrqhSij8jGOeI8Rk2y355Q069/L3KpYA5?=
+ =?us-ascii?Q?C6dZfegisVV0uvnIV211JSjSZUvYrcK+HGerAQX5Cf5/MwKJzZNbU4gGxyqj?=
+ =?us-ascii?Q?Fotw4+pN+C3CN66OHhElWyEGQVH7JSRugbjt7uyddxTKUTc6PQKBAwukkbk5?=
+ =?us-ascii?Q?c6lvejz6Oikd7r4unpJBUHNULaHeWciJNUPBA4zMFDaLhxPY2Pp0+txGBp8S?=
+ =?us-ascii?Q?HSeIOuyU1mFeZ+5Y6cVkQ5ixo+sAThyKNZ1hOpuUyei5jafR2wnkshmFNNwZ?=
+ =?us-ascii?Q?OY3Ll52Bs/L+Ll7kDl9TiyysRHbQNpQcdU4iii5Rw7gAomYI3hqYO9Un+vr5?=
+ =?us-ascii?Q?6ci52/Hh04Qt9H2Hho5JNdCFp7yWPIUisXBbooTWxKQoGGhEPj7BnxtQBC2T?=
+ =?us-ascii?Q?0+ODk5AtgPtFC0lKpUAMH5i5UYn/vL+4qaa5Q6eb5LTbYtQHwOmvhe0OZ/TG?=
+ =?us-ascii?Q?EJY1wPWyXJfNLmhGY42qHh8a+3ePg0xtMdEKHxvUUkrTQJ7gep6m+lLVNBUN?=
+ =?us-ascii?Q?wtGGJfylZ1b5ta8FSwiGyUWURdQg8Gj274wIof/puIzFy+BqLUFbpyG2+dlV?=
+ =?us-ascii?Q?Zc6SujCFXOPmeznUKqOSGgr6nwbclXseXhitFegavOrDfd4Z4uZjp33cDtof?=
+ =?us-ascii?Q?aoFHsyRHlJn2fY5K2Q27pRVBSa/emwAPrAyGrsipc3/hUZ532/JRsKRXmBnQ?=
+ =?us-ascii?Q?iJ109dEsFqUHzq9o1m+2plvvjgMtPic2Q6uHXltlqyQWhK5PJuRG2EL7Rjra?=
+ =?us-ascii?Q?C0pnoRYBygZxEKSl1SMwvzJXRQBhd+oCw1jiNNAcOytZGDOGa/ZdM4KRQonC?=
+ =?us-ascii?Q?rNpv455nCXORz13fT7UazJ/bFj7XTWYxNCn0zXNJ3rAWexr+o4tqEVcOuPep?=
+ =?us-ascii?Q?3Emta0I4zuVxZEmiz5c5b1MWEgeBL6ckPmxwWRCU4SlRn2f9QIm+aARJH/c5?=
+ =?us-ascii?Q?qTpn5MwJKspT/ZUyUOLmn3/OP3b4JszLrigym8Wdqz6uYIr6+sKxOQb2k9xn?=
+ =?us-ascii?Q?8ZOxatcjbKiDHYbEVHA/b9/XpALysQKGlERIy3zS/1TtQYDfcltv16mJMrZi?=
+ =?us-ascii?Q?BZdlIKwZFTjquBoHlYWHo11J72n6+8zmMK1qfmwlFzcgYd4wKnS3YwCrQrr6?=
+ =?us-ascii?Q?wnObzbnsPP0xUa0YKq024Hrxz0148cthrlIbnPT2XIcDZPoomrwV9MhhZdVt?=
+ =?us-ascii?Q?NxI5XqL0aCZp3Lglp7XRudPBNwaEZgNp3iOVyH8hP/AalgpzHBAlWXb4y/Fy?=
+ =?us-ascii?Q?K5uJ7KBp9LGSVNO6oD/NiU3V71+Obv8Xyp+ZSRHrQkdHuey/Sm3w34scsd5c?=
+ =?us-ascii?Q?Ro6AdJGKXJlybYWZJxr2dBt0JVVrKI+pfzLv4MBqpNZYEPa7wNuAAR4W8X+U?=
+ =?us-ascii?Q?Zz+Ybw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FE2E62C739C79E43A9BD510CBC7B4811@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <CANYNYEFSdBua3Ay6jGk2cacossVJ8_CzDgDBnFCjXfk5XSoGEQ@mail.gmail.com>
- <EE39279C-4E40-48C8-ABC9-707EB1AD6D79@redhat.com> <7bfafe56-0c13-a32d-093b-4d3684c4f2c7@redhat.com>
-In-Reply-To: <7bfafe56-0c13-a32d-093b-4d3684c4f2c7@redhat.com>
-From:   Andreas Hasenack <andreas@canonical.com>
-Date:   Mon, 25 Jul 2022 09:38:40 -0300
-Message-ID: <CANYNYEEA1CHwvZhrr2W0-BcGR1Rm50QSTdHwb0pygz4z0ZY=uQ@mail.gmail.com>
-Subject: Re: Why keep var-lib-nfs-rpc_pipefs.mount around?
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5cccfab4-9004-44d6-2e97-08da6e3ff734
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jul 2022 13:17:03.5264
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vTpw6cLgTyZGUaaHA5SF2ZgHGoBgOtVSZ+X4Q2xFOjkQUdLUItsHTrCcH7ELABxuouFOrZFLnK5zqL5s4Lj//Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB5822
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-25_09,2022-07-25_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=794
+ mlxscore=0 suspectscore=0 adultscore=0 bulkscore=0 spamscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2207250056
+X-Proofpoint-ORIG-GUID: -Jb8-SCM2bPiDwTmWtrpoTHpkAfh7sUK
+X-Proofpoint-GUID: -Jb8-SCM2bPiDwTmWtrpoTHpkAfh7sUK
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
 
-On Sat, Jul 23, 2022 at 2:29 PM Steve Dickson <steved@redhat.com> wrote:
->
-> My apologies delayed response... extended PTO
->
-> On 7/11/22 9:13 AM, Benjamin Coddington wrote:
-> > On 8 Jul 2022, at 12:50, Andreas Hasenack wrote:
-> >
-> >> Hi,
-> >>
-> >> I was tracking down a Debian/Ubuntu bug with nfs-utils 2.6.1 where in
-> >> one case, after installing the packages, you would end up with
-> >> rpc_pipefs mounted at the same time in two locations: /run/rpc_pipefs
-> >> and /var/lib/nfs/rpc_pipefs. The /run location is what debian/ubuntu
-> >> default to.
-> >>
-> >> After poking around a bit, I think I found out why that is
-> >> happening[1], but it led me to ask this question: why is
-> >> var-lib-nfs-rpc_pipefs.mount (and its corresponding rpc_pipefs.target
-> >> unit) still shipped, given that nfs-utils now has a generator?
-> >
-> > Could just be an oversight, or perhaps a better reason exists.  The
-> > nfs-utils userspace has to handle a lot of different cases and legacy
-> > setups.
-> >
-> > Steve D, do you know?
-> Its not clear to me, if the read from nfs.conf does not
-> happen how changing the rpc_pipefs directory could happen.
 
-The read happens, it's just that in that particular bug scenario, the
-/etc/nfs.conf file isn't there yet.
+> On Jul 23, 2022, at 4:10 PM, Trond Myklebust <trondmy@hammerspace.com> wr=
+ote:
+>=20
+> On Fri, 2022-07-22 at 17:55 +0000, Chuck Lever III wrote:
+>>=20
+>>=20
+>>> On Jul 22, 2022, at 1:53 PM, Trond Myklebust
+>>> <trondmy@hammerspace.com> wrote:
+>>>=20
+>>> On Fri, 2022-07-22 at 13:25 -0400, Chuck Lever wrote:
+>>>> There is just one unused bit left in rpc_task::tk_flags, and I
+>>>> will
+>>>> need two in subsequent patches. Double the width of the field to
+>>>> accommodate more flag bits.
+>>>=20
+>>> The values 0x8 and 0x40 are both free, so I'm not seeing why this
+>>> patch
+>>> is needed at this time.
+>>=20
+>> It's not needed now, but as recently as last year, there were no free
+>> bits (and I needed them for RPC-with-TLS support at that time). We
+>> will
+>> have to widen this field sooner or later.
+>>=20
+>> I don't have a problem dropping this one if you'd rather wait.
+>>=20
+>=20
+> I dropped it after applying the other v2 patches.
 
-In the debian case, two things are triggering this bug[1]:
-- the /etc/nfs.conf file is not shipped by the package in that
-location. Instead, it's put in place by the postinst script (like
-rpm's %postinst)[2].
-- autofs recommends[3], not depends, nfs-common. This means that
-autofs can be setup before nfs-common is, and if that happens,
-/etc/nfs.conf doesn't exist yet. But the nfs-common systemd unit files
-do exist, and the generator is run when autofs calls systemctl
-daemon-reload in its postinst. Since there is no /etc/nfs.conf, the
-generator exits silently.
+Thanks for applying the others; I'll drop this one from
+my private tree.
 
-> When the read from nfs.conf happens and the rpc_pipefs directory
-> is not defined, the compiled in default rpc_pipefs directory
 
-Or if /etc/nfs.conf isn't there, the generator exits silently.
+> As I said, I don't
+> see a need for this expansion yet, and if we do at some point run out
+> of bits, I can see other flags we can drop (RPC_TASK_ROOTCREDS and
+> RPC_TASK_NULLCREDS being obvious targets) before we need to consider
+> actually expanding the size of this field.
 
-> will be used and the generator will exit and not
-> generating the systemd files (using the installed ones).
->
-> If the rpc_pipefs directory is defined in nfs.conf, the
-> generator will set up that directory as the
-> rpc_pipefs directory and systemd files will be
-> generated.
->
-> So by taking out the nfs.conf read, the only way to change
-> the default rpc_pipefs directory is to recompile nfs-utils.
+Agreed, expanding the flags field is no longer necessary for
+RPC-with-TLS, as I've converted it to use the layered connect
+mechanism you suggested. The flag it waits on now is
+XPRT_CONNECTED.
 
-Actually, I'm doing two things:
-- taking out the var-lib-nfs-rpc_pipefs.mount and rpc_pipefs.target units
-- taking out the bit from the generator that compares the configured
-pipefs directory with the compile-time default:
---- a/systemd/rpc-pipefs-generator.c
-+++ b/systemd/rpc-pipefs-generator.c
-@@ -139,9 +139,6 @@ int main(int argc, char *argv[])
-     s = conf_get_str("general", "pipefs-directory");
-     if (!s)
-         exit(0);
--    if (strlen(s) == strlen(RPC_PIPEFS_DEFAULT) &&
--            strcmp(s, RPC_PIPEFS_DEFAULT) == 0)
--        exit(0);
 
-     if (is_non_pipefs_mountpoint(s))
-         exit(1);
+> In fact, by not expanding it, we can trivially shrink the size of
+> struct rpc_task by 8 bytes on x86_64 simply by moving the field
+> tk_rpc_status to eliminate the current 4 byte hole. I've added a patch
+> to do just that.
 
-Therefore I'm fully relying on the generator all the time, whatever
-the pipefs directory is. And my question is wouldn't this be a sane
-default behavior for all users of nfs-utils, instead of having the
-extra complication of having two units for each of rpc_pipefs mount
-and target? Did I miss something?
+--
+Chuck Lever
 
-Unfortunately I haven't heard back yet from the debian maintainer
-about this.[4] Maybe there is a "debian packaging" way to fix this. I
-also thought about systemd conditionals on /etc/nfs.conf, but then I
-would probably have to add them to a bunch of units (all of them?).
 
-1. https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1014429
-2. https://salsa.debian.org/kernel-team/nfs-utils/-/blob/master/debian/nfs-common.postinst#L9
-3. https://salsa.debian.org/debian/autofs/-/blob/master/debian/control#L35
-4. https://salsa.debian.org/kernel-team/nfs-utils/-/merge_requests/18
+
