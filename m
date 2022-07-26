@@ -2,269 +2,316 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B28F95835C8
+	by mail.lfdr.de (Postfix) with ESMTP id 66FEE5835C7
 	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jul 2022 01:49:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229924AbiG0XsM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Jul 2022 19:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38972 "EHLO
+        id S231599AbiG0XsP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Jul 2022 19:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229551AbiG0XsK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jul 2022 19:48:10 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBC95A3DF
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 16:48:09 -0700 (PDT)
+        with ESMTP id S230395AbiG0XsP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jul 2022 19:48:15 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39644F6AB
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 16:48:13 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6CFCF3F5CF;
-        Wed, 27 Jul 2022 23:48:08 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id ACF283F5D0;
+        Wed, 27 Jul 2022 23:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1658965688; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1658965692; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1YNkvFSTrvxMTheSnBWhbpu28Cp4IEmvxmpesW6Jdus=;
-        b=m4oErnVf1xg3L8OgjC5ohmWBLdayuUDA+1cH8stj6xdMa5hHQFIUm+dirsx9MLeZgChE0u
-        bO48IFu3foVPJpn+P0c7S3KhXOex4WDVW80xd2C2SUy395lXTbd5T1m67wFkXlAI1g60qO
-        LvrgU28DNsH3HPq69DJ6uYsLRlb/oJI=
+        bh=XXwE/q22+9NSgZcVZ2Z1MVv8p6Bi1Sa17CL84Ird7u0=;
+        b=jxM/7lF3MK3s27s3a5C4sF6hrG/ZuomZj7ZNeM2XWDq+3XBhbs038c5zZR/VPTKrO7n2M8
+        lxVYHy6j2xD0Agh88eyCwfqi65AsUVadW4sFyP8VsGFECmrIEoqWr9kWKOoeIXbuxOkxjZ
+        BGm8LyzlJZMrvQapVcOs/WVWzBQ/zok=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1658965688;
+        s=susede2_ed25519; t=1658965692;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=1YNkvFSTrvxMTheSnBWhbpu28Cp4IEmvxmpesW6Jdus=;
-        b=CtBhq0vNbjVGOkew7dJqI9I8wwZTEShSuYZnBZvAW2TWjs0E87xZPFL04hCFRAbHn/HM/u
-        PiZMvv0J/SG+eSDg==
+        bh=XXwE/q22+9NSgZcVZ2Z1MVv8p6Bi1Sa17CL84Ird7u0=;
+        b=+dxYXsS9H8lNSkB1NDu4RZtc89PQ/7bNRqlOQ5uMHpQRcAUFiChvNMnjbsF5dy/QWyYVvB
+        rQiJFCHok0lHcYCQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 57F3D13A8E;
-        Wed, 27 Jul 2022 23:48:07 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 9D68913A8E;
+        Wed, 27 Jul 2022 23:48:11 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id Q3KxBbfO4WJUHQAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 27 Jul 2022 23:48:07 +0000
-Subject: [PATCH 10/13] NFSD: reduce locking in nfsd_lookup()
+        id EM3vFrvO4WJbHQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 27 Jul 2022 23:48:11 +0000
+Subject: [PATCH 11/13] NFSD: use explicit lock/unlock for directory ops
 From:   NeilBrown <neilb@suse.de>
 To:     Chuck Lever III <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 Date:   Tue, 26 Jul 2022 16:45:30 +1000
-Message-ID: <165881793059.21666.657711087588520392.stgit@noble.brown>
+Message-ID: <165881793059.21666.9611699223923887416.stgit@noble.brown>
 In-Reply-To: <165881740958.21666.5904057696047278505.stgit@noble.brown>
 References: <165881740958.21666.5904057696047278505.stgit@noble.brown>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DATE_IN_PAST_24_48,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd_lookup() takes an exclusive lock on the parent inode, but no
-callers want the lock and it may not be needed at all if the
-result is in the dcache.
+When creating or unlinking a name in a directory use explicit
+inode_lock_nested() instead of fh_lock(), and explicit calls to
+fh_fill_pre_attrs() and fh_fill_post_attrs().  This is already done for
+renames.
 
-Change nfsd_lookup_dentry() to not take the lock, and call
-lookup_one_len_locked() which takes lock only if needed.
+Also move the 'fill' calls closer to the operation that might change the
+attributes.  This way they are avoided on some error paths.
 
-nfsd4_open() currently expects the lock to still be held, but that isn't
-necessary as nfsd_validate_delegated_dentry() provides required
-guarantees without the lock.
+For the v2-only code in nfsproc.c, drop the fill calls as they aren't
+needed.
 
-NOTE: NFSv4 requires directory changeinfo for OPEN even when a create
-  wasn't requested and no change happened.  Now that nfsd_lookup()
-  doesn't use fh_lock(), we need to explicitly fill the attributes
-  when no create happens.  A new fh_fill_both_attrs() is provided
-  for that task.
+Having the locking explicit will simplify proposed future changes to
+locking for directories.  It also makes it easily visible exactly where
+pre/post attributes are used - not all callers of fh_lock() actually
+need the pre/post attributes.
 
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4proc.c  |   20 ++++++++++++--------
- fs/nfsd/nfs4state.c |    3 ---
- fs/nfsd/nfsfh.c     |   19 +++++++++++++++++++
- fs/nfsd/nfsfh.h     |    2 +-
- fs/nfsd/vfs.c       |   34 ++++++++++++++--------------------
- 5 files changed, 46 insertions(+), 32 deletions(-)
+ fs/nfsd/nfs3proc.c |    6 ++++--
+ fs/nfsd/nfs4proc.c |    6 ++++--
+ fs/nfsd/nfsproc.c  |    5 ++---
+ fs/nfsd/vfs.c      |   30 +++++++++++++++++++-----------
+ 4 files changed, 29 insertions(+), 18 deletions(-)
 
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index 774e4a2ab9b1..c2f992b4387a 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -256,7 +256,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (host_err)
+ 		return nfserrno(host_err);
+ 
+-	fh_lock_nested(fhp, I_MUTEX_PARENT);
++	inode_lock_nested(inode, I_MUTEX_PARENT);
+ 
+ 	child = lookup_one_len(argp->name, parent, argp->len);
+ 	if (IS_ERR(child)) {
+@@ -314,11 +314,13 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (!IS_POSIXACL(inode))
+ 		iap->ia_mode &= ~current_umask();
+ 
++	fh_fill_pre_attrs(fhp);
+ 	host_err = vfs_create(&init_user_ns, inode, child, iap->ia_mode, true);
+ 	if (host_err < 0) {
+ 		status = nfserrno(host_err);
+ 		goto out;
+ 	}
++	fh_fill_post_attrs(fhp);
+ 
+ 	/* A newly created file already has a file size of zero. */
+ 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size == 0))
+@@ -336,7 +338,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	status = nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
+ 
+ out:
+-	fh_unlock(fhp);
++	inode_unlock(inode);
+ 	if (child && !IS_ERR(child))
+ 		dput(child);
+ 	fh_drop_write(fhp);
 diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 1aa6ae4ec2f5..48e4efb39a9c 100644
+index 48e4efb39a9c..90af82d49119 100644
 --- a/fs/nfsd/nfs4proc.c
 +++ b/fs/nfsd/nfs4proc.c
-@@ -302,6 +302,11 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (d_really_is_positive(child)) {
- 		status = nfs_ok;
+@@ -264,7 +264,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (is_create_with_attrs(open))
+ 		nfsd4_acl_to_attr(NF4REG, open->op_acl, &attrs);
  
-+		/* NFSv4 protocol requires change attributes even though
-+		 * no change happened.
-+		 */
-+		fh_fill_both_attrs(fhp);
-+
- 		switch (open->op_createmode) {
- 		case NFS4_CREATE_UNCHECKED:
- 			if (!d_is_reg(child))
-@@ -417,15 +422,15 @@ do_open_lookup(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate, stru
- 		if (nfsd4_create_is_exclusive(open->op_createmode) && status == 0)
- 			open->op_bmval[1] |= (FATTR4_WORD1_TIME_ACCESS |
- 						FATTR4_WORD1_TIME_MODIFY);
--	} else
--		/*
--		 * Note this may exit with the parent still locked.
--		 * We will hold the lock until nfsd4_open's final
--		 * lookup, to prevent renames or unlinks until we've had
--		 * a chance to an acquire a delegation if appropriate.
--		 */
-+	} else {
- 		status = nfsd_lookup(rqstp, current_fh,
- 				     open->op_fname, open->op_fnamelen, *resfh);
-+		if (!status)
-+			/* NFSv4 protocol requires change attributes even though
-+			 * no change happened.
-+			 */
-+			fh_fill_both_attrs(current_fh);
-+	}
- 	if (status)
+-	fh_lock_nested(fhp, I_MUTEX_PARENT);
++	inode_lock_nested(inode, I_MUTEX_PARENT);
+ 
+ 	child = lookup_one_len(open->op_fname, parent, open->op_fnamelen);
+ 	if (IS_ERR(child)) {
+@@ -348,10 +348,12 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (!IS_POSIXACL(inode))
+ 		iap->ia_mode &= ~current_umask();
+ 
++	fh_fill_pre_attrs(fhp);
+ 	status = nfsd4_vfs_create(fhp, child, open);
+ 	if (status != nfs_ok)
  		goto out;
- 	status = nfsd_check_obj_isreg(*resfh);
-@@ -1043,7 +1048,6 @@ nfsd4_secinfo(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 				    &exp, &dentry);
- 	if (err)
- 		return err;
--	fh_unlock(&cstate->current_fh);
- 	if (d_really_is_negative(dentry)) {
- 		exp_put(exp);
- 		err = nfserr_noent;
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c2ca37d0a616..45df1e85ff32 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -5304,9 +5304,6 @@ nfsd4_verify_deleg_dentry(struct nfsd4_open *open, struct nfs4_file *fp,
- 	struct dentry *child;
- 	__be32 err;
- 
--	/* parent may already be locked, and it may get unlocked by
--	 * this call, but that is safe.
--	 */
- 	err = nfsd_lookup_dentry(open->op_rqstp, parent,
- 				 open->op_fname, open->op_fnamelen,
- 				 &exp, &child);
-diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
-index 5e2ed4b2a925..cd2946a88d72 100644
---- a/fs/nfsd/nfsfh.c
-+++ b/fs/nfsd/nfsfh.c
-@@ -672,6 +672,25 @@ void fh_fill_post_attrs(struct svc_fh *fhp)
- 			nfsd4_change_attribute(&fhp->fh_post_attr, inode);
- }
- 
-+/**
-+ * fh_fill_both_attrs - Fill pre-op and post-op attributes
-+ * @fhp: file handle to be updated
-+ *
-+ * This is used when the directory wasn't changed, but wcc attributes
-+ * are needed anyway.
-+ */
-+void fh_fill_both_attrs(struct svc_fh *fhp)
-+{
+ 	open->op_created = true;
 +	fh_fill_post_attrs(fhp);
-+	if (!fhp->fh_post_saved)
-+		return;
-+	fhp->fh_pre_change = fhp->fh_post_change;
-+	fhp->fh_pre_mtime = fhp->fh_post_attr.mtime;
-+	fhp->fh_pre_ctime = fhp->fh_post_attr.ctime;
-+	fhp->fh_pre_size = fhp->fh_post_attr.size;
-+	fhp->fh_pre_saved = true;
-+}
-+
- /*
-  * Release a file handle.
-  */
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index fb9d358a267e..28a4f9a94e2c 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -322,7 +322,7 @@ static inline u64 nfsd4_change_attribute(struct kstat *stat,
  
- extern void fh_fill_pre_attrs(struct svc_fh *fhp);
- extern void fh_fill_post_attrs(struct svc_fh *fhp);
--
-+extern void fh_fill_both_attrs(struct svc_fh *fhp);
+ 	/* A newly created file already has a file size of zero. */
+ 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size == 0))
+@@ -373,7 +375,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (attrs.acl_failed)
+ 		open->op_bmval[0] &= ~FATTR4_WORD0_ACL;
+ out:
+-	fh_unlock(fhp);
++	inode_unlock(inode);
+ 	nfsd_attrs_free(&attrs);
+ 	if (child && !IS_ERR(child))
+ 		dput(child);
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index d09d516188d2..4cff332f58bb 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -287,7 +287,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 		goto done;
+ 	}
  
- /*
-  * Lock a file handle/inode
+-	fh_lock_nested(dirfhp, I_MUTEX_PARENT);
++	inode_lock_nested(dirfhp->fh_dentry->d_inode, I_MUTEX_PARENT);
+ 	dchild = lookup_one_len(argp->name, dirfhp->fh_dentry, argp->len);
+ 	if (IS_ERR(dchild)) {
+ 		resp->status = nfserrno(PTR_ERR(dchild));
+@@ -403,8 +403,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 	}
+ 
+ out_unlock:
+-	/* We don't really need to unlock, as fh_put does it. */
+-	fh_unlock(dirfhp);
++	inode_unlock(dirfhp->fh_dentry->d_inode);
+ 	fh_drop_write(dirfhp);
+ done:
+ 	fh_put(dirfhp);
 diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 06b1408db08b..8ebad4a99552 100644
+index 8ebad4a99552..f2cb9b047766 100644
 --- a/fs/nfsd/vfs.c
 +++ b/fs/nfsd/vfs.c
-@@ -199,27 +199,13 @@ nfsd_lookup_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 				goto out_nfserr;
- 		}
- 	} else {
--		/*
--		 * In the nfsd4_open() case, this may be held across
--		 * subsequent open and delegation acquisition which may
--		 * need to take the child's i_mutex:
--		 */
--		fh_lock_nested(fhp, I_MUTEX_PARENT);
--		dentry = lookup_one_len(name, dparent, len);
-+		dentry = lookup_one_len_unlocked(name, dparent, len);
- 		host_err = PTR_ERR(dentry);
- 		if (IS_ERR(dentry))
- 			goto out_nfserr;
- 		if (nfsd_mountpoint(dentry, exp)) {
--			/*
--			 * We don't need the i_mutex after all.  It's
--			 * still possible we could open this (regular
--			 * files can be mountpoints too), but the
--			 * i_mutex is just there to prevent renames of
--			 * something that we might be about to delegate,
--			 * and a mountpoint won't be renamed:
--			 */
--			fh_unlock(fhp);
--			if ((host_err = nfsd_cross_mnt(rqstp, &dentry, &exp))) {
-+			host_err = nfsd_cross_mnt(rqstp, &dentry, &exp);
-+			if (host_err) {
- 				dput(dentry);
- 				goto out_nfserr;
- 			}
-@@ -234,7 +220,15 @@ nfsd_lookup_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	return nfserrno(host_err);
+@@ -1369,7 +1369,7 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (host_err)
+ 		return nfserrno(host_err);
+ 
+-	fh_lock_nested(fhp, I_MUTEX_PARENT);
++	inode_lock_nested(dentry->d_inode, I_MUTEX_PARENT);
+ 	dchild = lookup_one_len(fname, dentry, flen);
+ 	host_err = PTR_ERR(dchild);
+ 	if (IS_ERR(dchild)) {
+@@ -1384,10 +1384,12 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	dput(dchild);
+ 	if (err)
+ 		goto out_unlock;
++	fh_fill_pre_attrs(fhp);
+ 	err = nfsd_create_locked(rqstp, fhp, fname, flen, attrs, type,
+ 				 rdev, resfhp);
++	fh_fill_post_attrs(fhp);
+ out_unlock:
+-	fh_unlock(fhp);
++	inode_unlock(dentry->d_inode);
+ 	return err;
  }
  
--/*
-+/**
-+ * nfsd_lookup - look up a single path component for nfsd
-+ *
-+ * @rqstp:   the request context
-+ * @ftp:     the file handle of the directory
-+ * @name:    the component name, or %NULL to look up parent
-+ * @len:     length of name to examine
-+ * @resfh:   pointer to pre-initialised filehandle to hold result.
-+ *
-  * Look up one component of a pathname.
-  * N.B. After this call _both_ fhp and resfh need an fh_put
-  *
-@@ -244,11 +238,11 @@ nfsd_lookup_dentry(struct svc_rqst *rqstp, struct svc_fh *fhp,
-  * returned. Otherwise the covered directory is returned.
-  * NOTE: this mountpoint crossing is not supported properly by all
-  *   clients and is explicitly disallowed for NFSv3
-- *      NeilBrown <neilb@cse.unsw.edu.au>
-+ *
-  */
- __be32
- nfsd_lookup(struct svc_rqst *rqstp, struct svc_fh *fhp, const char *name,
--				unsigned int len, struct svc_fh *resfh)
-+	    unsigned int len, struct svc_fh *resfh)
- {
- 	struct svc_export	*exp;
- 	struct dentry		*dentry;
+@@ -1460,20 +1462,22 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		goto out;
+ 	}
+ 
+-	fh_lock(fhp);
+ 	dentry = fhp->fh_dentry;
++	inode_lock_nested(dentry->d_inode, I_MUTEX_PARENT);
+ 	dnew = lookup_one_len(fname, dentry, flen);
+ 	if (IS_ERR(dnew)) {
+ 		err = nfserrno(PTR_ERR(dnew));
+-		fh_unlock(fhp);
++		inode_unlock(dentry->d_inode);
+ 		goto out_drop_write;
+ 	}
++	fh_fill_pre_attrs(fhp);
+ 	host_err = vfs_symlink(&init_user_ns, d_inode(dentry), dnew, path);
+ 	err = nfserrno(host_err);
+ 	cerr = fh_compose(resfhp, fhp->fh_export, dnew, fhp);
+ 	if (!err)
+ 		nfsd_create_setattr(rqstp, fhp, resfhp, attrs);
+-	fh_unlock(fhp);
++	fh_fill_post_attrs(fhp);
++	inode_unlock(dentry->d_inode);
+ 	if (!err)
+ 		err = nfserrno(commit_metadata(fhp));
+ 	dput(dnew);
+@@ -1519,9 +1523,9 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 		goto out;
+ 	}
+ 
+-	fh_lock_nested(ffhp, I_MUTEX_PARENT);
+ 	ddir = ffhp->fh_dentry;
+ 	dirp = d_inode(ddir);
++	inode_lock_nested(dirp, I_MUTEX_PARENT);
+ 
+ 	dnew = lookup_one_len(name, ddir, len);
+ 	if (IS_ERR(dnew)) {
+@@ -1534,8 +1538,10 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ 	err = nfserr_noent;
+ 	if (d_really_is_negative(dold))
+ 		goto out_dput;
++	fh_fill_pre_attrs(ffhp);
+ 	host_err = vfs_link(dold, &init_user_ns, dirp, dnew, NULL);
+-	fh_unlock(ffhp);
++	fh_fill_post_attrs(ffhp);
++	inode_unlock(dirp);
+ 	if (!host_err) {
+ 		err = nfserrno(commit_metadata(ffhp));
+ 		if (!err)
+@@ -1555,7 +1561,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ffhp,
+ out_dput:
+ 	dput(dnew);
+ out_unlock:
+-	fh_unlock(ffhp);
++	inode_unlock(dirp);
+ 	goto out_drop_write;
+ }
+ 
+@@ -1730,9 +1736,9 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 	if (host_err)
+ 		goto out_nfserr;
+ 
+-	fh_lock_nested(fhp, I_MUTEX_PARENT);
+ 	dentry = fhp->fh_dentry;
+ 	dirp = d_inode(dentry);
++	inode_lock_nested(dirp, I_MUTEX_PARENT);
+ 
+ 	rdentry = lookup_one_len(fname, dentry, flen);
+ 	host_err = PTR_ERR(rdentry);
+@@ -1750,6 +1756,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 	if (!type)
+ 		type = d_inode(rdentry)->i_mode & S_IFMT;
+ 
++	fh_fill_pre_attrs(fhp);
+ 	if (type != S_IFDIR) {
+ 		if (rdentry->d_sb->s_export_op->flags & EXPORT_OP_CLOSE_BEFORE_UNLINK)
+ 			nfsd_close_cached_files(rdentry);
+@@ -1757,8 +1764,9 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ 	} else {
+ 		host_err = vfs_rmdir(&init_user_ns, dirp, rdentry);
+ 	}
++	fh_fill_post_attrs(fhp);
+ 
+-	fh_unlock(fhp);
++	inode_unlock(dirp);
+ 	if (!host_err)
+ 		host_err = commit_metadata(fhp);
+ 	dput(rdentry);
+@@ -1781,7 +1789,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *fhp, int type,
+ out:
+ 	return err;
+ out_unlock:
+-	fh_unlock(fhp);
++	inode_unlock(dirp);
+ 	goto out_drop_write;
+ }
+ 
 
 
