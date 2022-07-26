@@ -2,143 +2,111 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AE31581A70
-	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jul 2022 21:45:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93AD6581AC7
+	for <lists+linux-nfs@lfdr.de>; Tue, 26 Jul 2022 22:13:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231840AbiGZTpv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 26 Jul 2022 15:45:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35802 "EHLO
+        id S231731AbiGZUNs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 26 Jul 2022 16:13:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbiGZTpu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Jul 2022 15:45:50 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8DB2240A1
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Jul 2022 12:45:49 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id os14so28032371ejb.4
-        for <linux-nfs@vger.kernel.org>; Tue, 26 Jul 2022 12:45:49 -0700 (PDT)
+        with ESMTP id S229929AbiGZUNs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 26 Jul 2022 16:13:48 -0400
+Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 740DD32477
+        for <linux-nfs@vger.kernel.org>; Tue, 26 Jul 2022 13:13:46 -0700 (PDT)
+Received: by mail-qv1-xf35.google.com with SMTP id j11so11470889qvt.10
+        for <linux-nfs@vger.kernel.org>; Tue, 26 Jul 2022 13:13:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=zOQcTFv0JN+aQspluzLAp3MLMWUoWl0CqXL+WNxrT4M=;
-        b=aHBFf18bJnmQitbJyOcJxu4VMovM/nk5vKgkEnJ+oabUwD/kBWiuVgW2BS1ZISlo3Q
-         34cqH3CuEZ8OID1QRbAtSRJ96aZebGkszpv/vmTebWN1/8TQygjvX+01DL3wlYaBpOHG
-         Adtgy7CHfjtzqTjQqp39lz1/KX7KYcGHJueojxdP1LHaoFkMZESnVDuUf1ozhM43I9tZ
-         plvpPW5Q5vJw8YE2aI1CXVBHUyR6eXBZVnT/FTPiwLiMaIQa/eZM0KV48uCW/Ep3U89F
-         voTQxPYM/TjSnGmM3Yy68g0dg/QHMg1vVFP9sj6UGV5ddAOUKObfSnHIkvb2n6whYQCw
-         7NVA==
+        d=cfa.harvard.edu; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN/m9n+QB+L0yLZWGe1DxdsMbZbPfnSILzV2EtfRlDU=;
+        b=zgnMm/bKDjtWlOn9Njjd+LKqzZAyNsLo9uVwnCmF8IDUCB+OVL9Dc7rLjcp9M6to3d
+         5u0XjMktfnBNywIz7Q5DJ0nJwZkXa85/uT38/+CWBZXqYPg0w5/roMD1PogjOP7oGnzY
+         YsLTkOfQ7i00WC193bJ6dsexJ8gtuPvP9/7UqSmjgflSlBOFezkcTH97Yzn2BQ5/rqbo
+         lUUb4LUMba+GmuYBrzdHOCT8ozeP4AGvhRJfJvi4FgRfqO/yOa9pFzsGjf3pUKtSgEt5
+         Mw+TKbWrjehIPbrJqjjYRqnFLhJmxn9Gb9tlSKcSpKvoy/Sv+9nN2zNvqiS6HgQQou2a
+         +RXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=zOQcTFv0JN+aQspluzLAp3MLMWUoWl0CqXL+WNxrT4M=;
-        b=GYFs5A0MfgFrsZCIuXLLDCAA4Og8PtpIXD8i4jzuMDigXsYmvAOqnIizRZb+wMUaot
-         FPQfixvMXbaVNw+cM0iyzcgvTKLNuL4X60KnmX8B/cTuV6fSSG6T7q0BJPbB4o2abICy
-         tmxP0mJ7PyDgzRMnBmfdfEXIGpA1yWeViliAPQayBJUUmo9zQnqFMITDjXz7phHnxdk9
-         7fVvrLzMMfGtX0p2HTU6tLtG7D8anLEGG2CuMvZp6N0VMGkBRQtCzey5sExobD1wCoXb
-         7BMiaObUGRGu7mwk01eb05+gNlo2low7ydwt4esQaiEQKn7+axCvLx7vs9l3pgpOeT00
-         zY2g==
-X-Gm-Message-State: AJIora/YpNhK3OU5/qBvhkd8kH7Agg8eUpzpHtszQ2yoBQzTNWxUPm7V
-        kmElAfOb4YT7hCzpLnch9JYNH5W6WSHHJmswGp8=
-X-Google-Smtp-Source: AGRyM1tnFaNROhjB6V2TdeL1XynfKmblZYPlyiGu9K9FQZ0k6fkFooAJiJd/yWC7N+bYOjE8Ys+f1MJugJ/Il4wOZ/E=
-X-Received: by 2002:a17:907:a0c6:b0:72e:ea7d:6a98 with SMTP id
- hw6-20020a170907a0c600b0072eea7d6a98mr14726066ejc.140.1658864747980; Tue, 26
- Jul 2022 12:45:47 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xN/m9n+QB+L0yLZWGe1DxdsMbZbPfnSILzV2EtfRlDU=;
+        b=1NSCfkqDL9e+ksb02TzskyZXzKUrPKvJnJNwDoQ6XdTglpWNw5fPkBrt8O/zuD2AEc
+         ngFLRbhCG2BPvkXU03HYxZiO9FX1tjFuFkLWm+wY+qPF5sz9XwuvcSzPTE8yvpaw9bLe
+         iMUT/uuDengb1gU+Ck2PXTFHkZoJ2rDKGl0XNwVr33e84lfvjkNcA+6/91hILp2ZpG6W
+         nS8wk90b8yKr8Hyxo7FhiqyeeAK4U1AzMqERG2tyrMlk3qThSrRd38fW/cF9AdLBR+PD
+         ETLSY5jIA3omYN6iBE07/DvJ2PCFebGPCOZ5YUBa4ygHAoMaxVoITQhsLQv79aT84L6a
+         EROA==
+X-Gm-Message-State: AJIora/o1SqI9f5gqFAzfHIqYtJoIIxnrNSekid7j+iBVRk3Q5aXfDsE
+        hjh3a0UdxaZf5k2y2ZpdQRJ9pN4g4ptPYg==
+X-Google-Smtp-Source: AGRyM1t+OJ+x9Y3ppLe0bHOjVbrzo6h434eEvmBvXc+cYdk+AF9CFQA70QTqj+Fj8w9rKgUMhtbhuQ==
+X-Received: by 2002:a05:6214:2423:b0:474:184d:866d with SMTP id gy3-20020a056214242300b00474184d866dmr16909122qvb.25.1658866425422;
+        Tue, 26 Jul 2022 13:13:45 -0700 (PDT)
+Received: from pihe (dhcp-131-142-152-103.cfa.harvard.edu. [131.142.152.103])
+        by smtp.gmail.com with ESMTPSA id o7-20020a05620a2a0700b006b5683ee311sm12747714qkp.100.2022.07.26.13.13.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Jul 2022 13:13:45 -0700 (PDT)
+Received: from pihe (localhost [127.0.0.1])
+        by pihe (8.17.1/8.17.1) with ESMTPS id 26QKDhog103918
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 26 Jul 2022 16:13:43 -0400
+Received: (from pumukli@localhost)
+        by pihe (8.17.1/8.17.1/Submit) id 26QKDh36103809;
+        Tue, 26 Jul 2022 16:13:43 -0400
+From:   Attila Kovacs <attila.kovacs@cfa.harvard.edu>
+To:     Libtirpc-devel Mailing List <libtirpc-devel@lists.sourceforge.net>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] SUNRPC: mutexed access blacklist_read state variable.
+Date:   Tue, 26 Jul 2022 16:12:43 -0400
+Message-Id: <20220726201243.103800-1-attila.kovacs@cfa.harvard.edu>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-References: <165852076926.11403.44005570813790008.stgit@manet.1015granger.net>
-In-Reply-To: <165852076926.11403.44005570813790008.stgit@manet.1015granger.net>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Tue, 26 Jul 2022 15:45:36 -0400
-Message-ID: <CAN-5tyEgRvvFq51kdT-ROo-ew71JE610Da=Cqf_Ya4dgYxEmKg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] Put struct nfsd4_copy on a diet
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Chuck,
+From: Attila Kovacs <attipaci@gmail.com>
 
-Are there pre-reqs for this series? I had tried to apply the patches
-on top of 5-19-rc6 but I get the following compile error:
+bindresvport()_sa(), in bidresvport.c checks blacklist_read w/o mutex
+before calling load_blacklist() which changes blacklist_read() also
+unmutexed.
 
-fs/nfsd/nfs4proc.c: In function =E2=80=98nfsd4_setup_inter_ssc=E2=80=99:
-fs/nfsd/nfs4proc.c:1539:34: error: passing argument 1 of
-=E2=80=98nfsd4_interssc_connect=E2=80=99 from incompatible pointer type
-[-Werror=3Dincompatible-pointer-types]
-  status =3D nfsd4_interssc_connect(&copy->cp_src, rqstp, mount);
-                                  ^~~~~~~~~~~~~
-fs/nfsd/nfs4proc.c:1414:43: note: expected =E2=80=98struct nl4_server *=E2=
-=80=99 but
-argument is of type =E2=80=98struct nl4_server **=E2=80=99
- nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
-                        ~~~~~~~~~~~~~~~~~~~^~~
-cc1: some warnings being treated as errors
-make[2]: *** [scripts/Makefile.build:249: fs/nfsd/nfs4proc.o] Error 1
-make[1]: *** [scripts/Makefile.build:466: fs/nfsd] Error 2
-make: *** [Makefile:1843: fs] Error 2
+Clearly, the point is to read the blacklist only once on the first call,
+but because the checking whether the blacklist is loaded is not mutexed,
+more than one thread may race to load the blacklist concurrently, which
+of course can jumble the list because of the race condition.
 
-On Fri, Jul 22, 2022 at 4:36 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> While testing NFSD for-next, I noticed svc_generic_init_request()
-> was an unexpected hot spot on NFSv4 workloads. Drilling into the
-> perf report, it shows that the hot path in there is:
->
-> 1208         memset(rqstp->rq_argp, 0, procp->pc_argsize);
-> 1209         memset(rqstp->rq_resp, 0, procp->pc_ressize);
->
-> For an NFSv4 COMPOUND,
->
->         procp->pc_argsize =3D sizeof(nfsd4_compoundargs),
->
-> struct nfsd4_compoundargs on my system is more than 17KB! This is
-> due to the size of the iops field:
->
->         struct nfsd4_op                 iops[8];
->
-> Each struct nfsd4_op contains a union of the arguments for each
-> NFSv4 operation. Each argument is typically less than 128 bytes
-> except that struct nfsd4_copy and struct nfsd4_copy_notify are both
-> larger than 2KB each.
->
-> I'm not yet totally convinced this series never orphans memory, but
-> it does reduce the size of nfsd4_compoundargs to just over 4KB. This
-> is still due to struct nfsd4_copy being almost 500 bytes. I don't
-> see more low-hanging fruit there, though.
->
-> ---
->
-> Chuck Lever (11):
->       NFSD: Shrink size of struct nfsd4_copy_notify
->       NFSD: Shrink size of struct nfsd4_copy
->       NFSD: Reorder the fields in struct nfsd4_op
->       NFSD: Make nfs4_put_copy() static
->       NFSD: Make boolean fields in struct nfsd4_copy into atomic bit flag=
-s
->       NFSD: Refactor nfsd4_cleanup_inter_ssc() (1/2)
->       NFSD: Refactor nfsd4_cleanup_inter_ssc() (2/2)
->       NFSD: Refactor nfsd4_do_copy()
->       NFSD: Remove kmalloc from nfsd4_do_async_copy()
->       NFSD: Add nfsd4_send_cb_offload()
->       NFSD: Move copy offload callback arguments into a separate structur=
-e
->
->
->  fs/nfsd/nfs4callback.c |  37 +++++----
->  fs/nfsd/nfs4proc.c     | 165 +++++++++++++++++++++--------------------
->  fs/nfsd/nfs4xdr.c      |  30 +++++---
->  fs/nfsd/state.h        |   1 -
->  fs/nfsd/xdr4.h         |  54 ++++++++++----
->  5 files changed, 163 insertions(+), 124 deletions(-)
->
-> --
-> Chuck Lever
->
+The fix simply moves the checking within the mutexed aread of the code
+to eliminate the race condition.
+
+---
+ src/bindresvport.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/bindresvport.c b/src/bindresvport.c
+index ef9b345..5c0ddcf 100644
+--- a/src/bindresvport.c
++++ b/src/bindresvport.c
+@@ -164,10 +164,11 @@ bindresvport_sa(sd, sa)
+ 	int endport = ENDPORT;
+ 	int i;
+ 
++	mutex_lock(&port_lock);
++
+ 	if (!blacklist_read)
+ 		load_blacklist();
+ 
+-	mutex_lock(&port_lock);
+ 	nports = ENDPORT - startport + 1;
+ 
+         if (sa == NULL) {
+-- 
+2.37.1
+
