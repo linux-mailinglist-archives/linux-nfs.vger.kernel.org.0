@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B4595833C6
-	for <lists+linux-nfs@lfdr.de>; Wed, 27 Jul 2022 21:41:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4090458343A
+	for <lists+linux-nfs@lfdr.de>; Wed, 27 Jul 2022 22:50:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232259AbiG0TlV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 27 Jul 2022 15:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59442 "EHLO
+        id S232184AbiG0UuA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 27 Jul 2022 16:50:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbiG0TlV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jul 2022 15:41:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F6471121
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 12:41:20 -0700 (PDT)
+        with ESMTP id S229924AbiG0Ut6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 27 Jul 2022 16:49:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BEB74E84D
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 13:49:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D04EA61A5F
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 19:41:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78F7C433D7
-        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 19:41:18 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3104961AA2
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 20:49:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21D72C433C1
+        for <linux-nfs@vger.kernel.org>; Wed, 27 Jul 2022 20:49:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1658950879;
-        bh=RWXyhd2mw2k3ehvYdmsX6UBDtBCDsjgBIbmNjXkmG90=;
+        s=k20201202; t=1658954995;
+        bh=VhYrqWoztd22bvtrYhm6wtjtsJLUblTWgBnijr/LY2c=;
         h=From:To:Subject:Date:From;
-        b=Rn4RJxDKUhSIpuHVuO+tESm7Br/5UUp1DN5DFX3tiCDMwdoIOM4ovksBRV9ibFqKE
-         j2QYeUe53kakiWywXnh3DSmon9Qnyn/EnqYoxuG42+ffcU1kJRqbIVEe7aRe6rhaEX
-         WQxs3SdeGVuHCYHX0J91kUJHOXZanjdzmootJ/vdFNgNYth+oKBL9PBCvAdaSP5LgW
-         cYEf12JBSOTyZCV9sO0juUXNZPe1CLegaV8AxvI6Nu2Epz4lwqLa5mNccOc7uJSHhF
-         jM+S1EDgmIzP3ezjZdmMWTyOvPQf3qOo84ouW5HRFLt3y/yrmx6JEtR+mn9UvEqP52
-         w7PqAGQ83AMRw==
+        b=o2882I29D7tfNDiDPWTAFnshZ1bn9wnv+J+2JQS4q2+qd6AaxVC4/aFQ4n1oDsIvm
+         A3urIQGLn2rc993ohfJAKdt8exWzGwa8RtizpYhZxmN9fR47G2LVjTmRfnDCxIzuIK
+         A1Ge1ee3BnebVbOOvJoDuTPyTlm1V3ZOK7bydmIcdhpr/GTf5bUUMNq7shzrDy6pV7
+         L7XlcoogIX7/HHhnz5W1+cAFTdCZMgQG+ZCpJyH9VlVSm93Q8a+OGT098kphmcG7Tr
+         ++ReP7jL5U8XJ1sJKdK1qVjnaPRqgp/fTrPrcWTAyx45AS9UvJZlZXdjvt6MTJFMXY
+         BYEhiOBVoiazA==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] SUNRPC: Don't reuse bvec on retransmission of the request
-Date:   Wed, 27 Jul 2022 15:34:52 -0400
-Message-Id: <20220727193452.699333-1-trondmy@kernel.org>
+Subject: [PATCH v2] SUNRPC: Don't reuse bvec on retransmission of the request
+Date:   Wed, 27 Jul 2022 16:43:28 -0400
+Message-Id: <20220727204328.717480-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -56,11 +56,13 @@ that we also re-encode the bvec, in case the page lists have changed.
 Fixes: ff053dbbaffe ("SUNRPC: Move the call to xprt_send_pagedata() out of xprt_sock_sendmsg()")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
+- v2: Fix up warning in call_decode
+
  include/linux/sunrpc/xprt.h |  3 ++-
  net/sunrpc/clnt.c           |  1 -
- net/sunrpc/xprt.c           | 26 +++++++++++++++++---------
+ net/sunrpc/xprt.c           | 27 ++++++++++++++++++---------
  net/sunrpc/xprtsock.c       | 12 ++----------
- 4 files changed, 21 insertions(+), 21 deletions(-)
+ 4 files changed, 22 insertions(+), 21 deletions(-)
 
 diff --git a/include/linux/sunrpc/xprt.h b/include/linux/sunrpc/xprt.h
 index 0d51b9f9ea37..b9f59aabee53 100644
@@ -89,7 +91,7 @@ index bbfc47f03480..b098e707ad41 100644
  		return;
  
 diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
-index 44348c9f4b00..7c195737e451 100644
+index 44348c9f4b00..d71eec494826 100644
 --- a/net/sunrpc/xprt.c
 +++ b/net/sunrpc/xprt.c
 @@ -73,7 +73,7 @@ static void	xprt_init(struct rpc_xprt *xprt, struct net *net);
@@ -110,7 +112,7 @@ index 44348c9f4b00..7c195737e451 100644
  	if (ret)
  		return ret;
  	spin_lock(&xprt->queue_lock);
-@@ -1179,8 +1179,10 @@ xprt_request_dequeue_receive_locked(struct rpc_task *task)
+@@ -1179,8 +1179,11 @@ xprt_request_dequeue_receive_locked(struct rpc_task *task)
  {
  	struct rpc_rqst *req = task->tk_rqstp;
  
@@ -118,11 +120,12 @@ index 44348c9f4b00..7c195737e451 100644
 +	if (test_and_clear_bit(RPC_TASK_NEED_RECV, &task->tk_runstate)) {
  		xprt_request_rb_remove(req->rq_xprt, req);
 +		xdr_free_bvec(&req->rq_rcv_buf);
++		req->rq_private_buf.bvec = NULL;
 +	}
  }
  
  /**
-@@ -1336,8 +1338,14 @@ xprt_request_enqueue_transmit(struct rpc_task *task)
+@@ -1336,8 +1339,14 @@ xprt_request_enqueue_transmit(struct rpc_task *task)
  {
  	struct rpc_rqst *pos, *req = task->tk_rqstp;
  	struct rpc_xprt *xprt = req->rq_xprt;
@@ -137,7 +140,7 @@ index 44348c9f4b00..7c195737e451 100644
  		req->rq_bytes_sent = 0;
  		spin_lock(&xprt->queue_lock);
  		/*
-@@ -1397,6 +1405,7 @@ xprt_request_dequeue_transmit_locked(struct rpc_task *task)
+@@ -1397,6 +1406,7 @@ xprt_request_dequeue_transmit_locked(struct rpc_task *task)
  	} else
  		list_del(&req->rq_xmit2);
  	atomic_long_dec(&req->rq_xprt->xmit_queuelen);
@@ -145,7 +148,7 @@ index 44348c9f4b00..7c195737e451 100644
  }
  
  /**
-@@ -1433,8 +1442,6 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
+@@ -1433,8 +1443,6 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
  	    test_bit(RPC_TASK_NEED_RECV, &task->tk_runstate) ||
  	    xprt_is_pinned_rqst(req)) {
  		spin_lock(&xprt->queue_lock);
@@ -154,7 +157,7 @@ index 44348c9f4b00..7c195737e451 100644
  		while (xprt_is_pinned_rqst(req)) {
  			set_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
  			spin_unlock(&xprt->queue_lock);
-@@ -1442,6 +1449,8 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
+@@ -1442,6 +1450,8 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
  			spin_lock(&xprt->queue_lock);
  			clear_bit(RPC_TASK_MSG_PIN_WAIT, &task->tk_runstate);
  		}
@@ -163,7 +166,7 @@ index 44348c9f4b00..7c195737e451 100644
  		spin_unlock(&xprt->queue_lock);
  	}
  }
-@@ -1449,18 +1458,19 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
+@@ -1449,18 +1459,19 @@ xprt_request_dequeue_xprt(struct rpc_task *task)
  /**
   * xprt_request_prepare - prepare an encoded request for transport
   * @req: pointer to rpc_rqst
@@ -185,7 +188,7 @@ index 44348c9f4b00..7c195737e451 100644
  	return 0;
  }
  
-@@ -1961,8 +1971,6 @@ void xprt_release(struct rpc_task *task)
+@@ -1961,8 +1972,6 @@ void xprt_release(struct rpc_task *task)
  	spin_unlock(&xprt->transport_lock);
  	if (req->rq_buffer)
  		xprt->ops->buf_free(task);
