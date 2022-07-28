@@ -2,143 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6CEF584265
-	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jul 2022 16:57:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CE11584267
+	for <lists+linux-nfs@lfdr.de>; Thu, 28 Jul 2022 16:57:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbiG1O5M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 28 Jul 2022 10:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34078 "EHLO
+        id S229561AbiG1O54 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 28 Jul 2022 10:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233387AbiG1O4x (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jul 2022 10:56:53 -0400
+        with ESMTP id S231491AbiG1O5h (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 28 Jul 2022 10:57:37 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E37871EC7A
-        for <linux-nfs@vger.kernel.org>; Thu, 28 Jul 2022 07:55:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05BBE69F30
+        for <linux-nfs@vger.kernel.org>; Thu, 28 Jul 2022 07:56:09 -0700 (PDT)
 Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26SD3KW5011006;
-        Thu, 28 Jul 2022 14:54:49 GMT
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26SD3KWi011006;
+        Thu, 28 Jul 2022 14:56:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=KQ90CZuj69Y9EblebSbQmsv+YTZB7vQ/bOULe037XFw=;
- b=IZpR/MlRnYKxAZrAqT4Gp7cE/khr4MMVMDA4IEJok3u27DLnn5p2jhEhz8mQdXgY8FXU
- Yub/VRDH+LMgzmoj/UPQpbBB6zfMlrxTSstSpSg26xgC3uSNajZeDepAR02KyApPc920
- VgdAAIcfQcNH6gyXjz5vgXAKUYocH9Ym1GFhcJ6CO9cfEw97zwluIiOPAUQ+ddBC26cz
- atm49nLoa5PdaHQfKIvkgaL9tG1AzJb7ievdp5E7rYVYjHH6nhZV/A5648iYxXas5apR
- fnvDxa/Ftkwz3repxZK4RDobIYbI6TMoEeBpWifUqwXzr8nHWfkmXAelPOLYXS+0ey0M uQ== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hg9ap4cap-1
+ bh=8xN2FCMUczTCf1HOBdtoMYILXM7YQHQxQqiHVOzTG4E=;
+ b=tq1TAmpFgG9aAGmChESzFjyUdZ35kZfKXdno/DPetpLd3O6+QjCtxgeW+rOTMjiArZOO
+ aD/7LqQ9Fnu83sYjqBh39rjf8aLSZZHwts7eRKZH4CC9gBtVD5X0cVPVGSKecjzqqLqu
+ gmOJesOJkTR+jsrpd2eWc69tzkZW74wKHibxm04lwidGdJaRTsK6kpaHDsgLQ8f/a9NC
+ UpeXFMwCUk/ao459AoG2YP9ycriz5G3YM4zV3AGmirS+sX+3w4YggCscjuU6W1L1BNk8
+ ciHjAoTpNHvGEd9GRL5Q9xU+NLB0yWNZ5lOmNTm8CldljqTcL4ZuFs7KQFHU/0ztTvJp Mg== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hg9ap4cf0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Jul 2022 14:54:48 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26SCuJXo019772;
-        Thu, 28 Jul 2022 14:54:47 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2108.outbound.protection.outlook.com [104.47.58.108])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hh63ap9ju-1
+        Thu, 28 Jul 2022 14:56:02 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26SCp9Un006240;
+        Thu, 28 Jul 2022 14:56:02 GMT
+Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2168.outbound.protection.outlook.com [104.47.55.168])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hh65ebs19-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Jul 2022 14:54:47 +0000
+        Thu, 28 Jul 2022 14:56:02 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dAlnHBW4xvRgZGCzPg1GmE0j6luT78Txv+AlscSRsZj/U16LsO/ZOwM/bkTskDMWX38K9qaqspQ+muObGLF7IyrPVD+wympaaUoPmfRoQl4+E+4U9Oy5gT+UGmBbFhaHXE+VVJp2iced3SvkqWK6O4PHQOrCsOgAxQe4LPA1bL1fSAfFEszE/QY5chg3FGrTk2c5vn8RBTFBdoF/4MP5xFpuZWW1+WgsNdBFakLntdLmYItNLc0L3dpM3JGIrx0+tAdzeR4ECQGgDPW7oFV/cIR6EKbEEuiFfD2qFJzrrCQr+nCmKmbz+kqS/yngdrAdgzOvVtOVe9h40LD9KQqk1g==
+ b=N3MtPJIUU0CQnF8sI87P1xdHkZOEiJYE7kUaZG5006gezl5TfIvtyf5x3LEUhipgOOXjG2NwRsqMYHcOfqWRsDzEjjcjlyKg0sTIO8ToThCLTtNx2OQ1Sw+OrHAbip4ZZVeDOoB6Kbl1On8PapVdIKrQlOfTCDVATTNAs7PfgvtiVijLmM5FyV6ALVibElem6oZODTpDtqZK83zqTLcDj+nFrCB8aIJ5pbx/gYeYe5K6AMKuXnrmkBKchOxzRBTAJQMTA1rE/3yqXkX4lAZdkzx4JfQ6It/20kPx0jQhWg8srNdb4UsBVndKxasOsrT/G++5cw3gT6SiYj9qxfKcBQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KQ90CZuj69Y9EblebSbQmsv+YTZB7vQ/bOULe037XFw=;
- b=P+haP/DGc+N63xKcQb2vLnecxepnF9xDZ1KR1DcnH9N9YQ1jTinqmmKDYyx1xBeDZVNA9RwtuWaEXAqsggqA4VBMm0YUBqUShQSvkrVMPJZSuhN0hwdlseP5oGTStEPH+f/u7H1levDBhghsaQ3WaN48UA7wVoTL6GoMClBqRJENa+u6u2NhI0J2wIU7k3K396ei8Iy/41kYuMpG2yen5fQMSro96Nxs2Y+iBUf3PqrbwduJ+37VmC+m1D57CtEa2QpAEDYlIbAOKKrVZ0vJ5AkBpBqqvrF5m6ltQWyoI3MO8UF+TCPYAEmDYCWBqiFmo2PSNm2RjChIofapoGyohw==
+ bh=8xN2FCMUczTCf1HOBdtoMYILXM7YQHQxQqiHVOzTG4E=;
+ b=NBk3soA2iHY6pLJWRjSDn/rlVOuO7/PA6CltaxHRHsXfYjKRzDi+mIAdAReHkY/9ksvMGYhoeIBgPpmlVVr6EZQfL1G9AzD4oga48d5YC1KEtn0n1nYHqNR8NYj/xcrJwj5iFusqNJyz9FwLeRn0c0+FZ3wP2w4fDHcxYU+wfZquJwwMqgSxknwYdwNy7KoRt6ojetxeUItfGaxckvvYFmOFwkkHkwvuwj8P9Q4H9F9huc3OZ2rRVMcRinTlydCufW+nyLmNncm7hAQbB9/erCF3UMrvQx4IHa0QGV5eCwE6mlh8zShZGKKA543yIT0wbMuiE21B1Db1Bz+Ye02x6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KQ90CZuj69Y9EblebSbQmsv+YTZB7vQ/bOULe037XFw=;
- b=ics4/H9Yj8gFDvvBERZ1fQmfmAvnWP8Iei0xh2e2qSGYYnx6PvaETXPlwjmnt/O0QrHxN0I3HruNhkC+eGl2ULYFJrpIlfnwmiJOEPwmc9q+XAdL0UWggQH2oepelVLG3NVBv+GwQj16+j/to5ywg8a9zDnXhw6yTJSBHeSn6Aw=
+ bh=8xN2FCMUczTCf1HOBdtoMYILXM7YQHQxQqiHVOzTG4E=;
+ b=FGkWZlpWnk9RtbycnjCkxxNaBhQY16CSVnaN+l+JVLKhs9EXsOZo8MdJpTGC9swSQae3OSv8k6qChMAm08h9RZXi8NS5jCRss2rHu7JzCIJt8nDkKBjV+1Ddol8AXSfXep+JNLN2ypMFBhOMvkYk9dYI6vJwCek0AGko9mIeeSs=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by MN2PR10MB4304.namprd10.prod.outlook.com (2603:10b6:208:1d0::20) with
+ by BYAPR10MB2885.namprd10.prod.outlook.com (2603:10b6:a03:82::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.11; Thu, 28 Jul
- 2022 14:54:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.21; Thu, 28 Jul
+ 2022 14:55:59 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::8cc6:21c7:b3e7:5da6]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::8cc6:21c7:b3e7:5da6%9]) with mapi id 15.20.5482.011; Thu, 28 Jul 2022
- 14:54:45 +0000
+ 14:55:59 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
 To:     Neil Brown <neilb@suse.de>
 CC:     Jeff Layton <jlayton@kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 11/13] NFSD: use explicit lock/unlock for directory ops
-Thread-Topic: [PATCH 11/13] NFSD: use explicit lock/unlock for directory ops
-Thread-Index: AQHYohNX7cvCckGh/kqPxDxsXdi4Iq2T38yA
-Date:   Thu, 28 Jul 2022 14:54:45 +0000
-Message-ID: <6221A20D-6623-41EB-AC9F-BEFB1F4ED925@oracle.com>
+Subject: Re: [PATCH 12/13] NFSD: use (un)lock_inode instead of fh_(un)lock for
+ file operations
+Thread-Topic: [PATCH 12/13] NFSD: use (un)lock_inode instead of fh_(un)lock
+ for file operations
+Thread-Index: AQHYohNcse/mTU3rlU6XxzVp4ktM8a2T4CMA
+Date:   Thu, 28 Jul 2022 14:55:59 +0000
+Message-ID: <6FA491BD-135C-4AFB-9344-7D883F284310@oracle.com>
 References: <165881740958.21666.5904057696047278505.stgit@noble.brown>
- <165881793059.21666.9611699223923887416.stgit@noble.brown>
-In-Reply-To: <165881793059.21666.9611699223923887416.stgit@noble.brown>
+ <165881793060.21666.12014436943063405491.stgit@noble.brown>
+In-Reply-To: <165881793060.21666.12014436943063405491.stgit@noble.brown>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 78289fbb-7e72-414a-0e1a-08da70a91c59
-x-ms-traffictypediagnostic: MN2PR10MB4304:EE_
+x-ms-office365-filtering-correlation-id: 631f2521-1c36-4ef0-7339-08da70a9486a
+x-ms-traffictypediagnostic: BYAPR10MB2885:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: UTffqY2qvmmPP7hPWvmJf86bk+MglYXICbOtJZ95XQJ45dTbjwEPRdOrU9M+4WztEgOcXjxSnboCxeX+kpMiCzeneXAlMwM5QN/E8J484tMOJ42Vz6Dm9eY7b0XA4ck+URee8bj4b4Vw7Q4XGlinR6hiiqTg1ILsJv5b6DbxG39DYM9RlRAzVVsjFW32RmMQMRnGT0IxplPgeqo2tml5GEsm7G+846ThNhFx8uIm/zlyMgM4S9bHo9hBtOQ5DOu69PQ1k2X+yIMhOesYAbpR4LQdVQPvWCQVK1UujX3MGaB6BXNTKYOwytwnHlV4NB4EDU9+0Slc1dGYt+iWvP7vqnVcyaxwJ/pUWJHKYqyjND0OjFtygnNcGOFnjKJT0o0IF5gOZwcqevUyWR8OyloDLVN4RCt6VrQwfhXyX1xJFMuXhBu8qIo1YBLhobwU8vBuaTuARLJGb7zXwtKFo5EwpHL0I+DugiJh1z3mFg1mrdjjxb+mSCuG6NcSIywrSDmLLeXq95UxldCk3C3x3dPlystTgQzQNnla/QIDCfk/eGalC7kJFKTVIHKFyBifVOXxmJ/XZdkqDD84cIGIhWEtJ2iiB9gNS7Xy+5aIckI0yppav5DXiwNe954obaBDl/Av+ajqvjXSnF+is6fvo4PwnJPpkqzIz1Ypc30L3mu6Q0sBrp/jTNtK14/GUAKEjMsatIc1qCjDyUpH1w/sxssY9nrcwDjYcgLi6PCr6ijcqaW3yjneLHn1VdxLZGJ5MWYJ/O3H/haxWCuq6lOQB1eB2RpzqWCmPiXm+aQSpXdnF7OYaL283qDtDwPCpSavStcGVdj8GqNlOf/hwSvNCgaXyg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(396003)(366004)(376002)(346002)(39860400002)(41300700001)(6486002)(478600001)(71200400001)(2616005)(83380400001)(122000001)(186003)(53546011)(26005)(6506007)(6512007)(86362001)(38100700002)(2906002)(5660300002)(8936002)(36756003)(316002)(54906003)(6916009)(38070700005)(33656002)(8676002)(91956017)(66946007)(4326008)(66446008)(66556008)(66476007)(64756008)(76116006)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: bSntDcODvzsJt11Rd1pwkFMnGezQIDeHTmDykXUvY8jqoO48aq5OTanwGQvVw0u+TTrUY975Ulc0oRaLGFgeI/MJhhezy/M5uO6GVpDmUoaUCrdi89HqXVXIruvAa6+k2bNZB5zJpfcjrt5JYAsPsm/i4l2M96BwWwtRtaZGWng85JpjcsUMvIABnt4WenSuyhOkL7PyMxpit8ATBlZesza9O5pvSQ+9/R1AUnc1ncikI/xqWIYDCMiY4axxpRYtqnW/VyPfp6Jthp/fr1cnY49xqpn07G8t/fJArFLG8WbaT8DSXaEOBF3dld2fA/8cTk1ECRp7nKDhAhvWG7LwUzNMCFZcGWsJcK7NVRU2npCWFBDQhOBJMFaazFEZhwki0iR7FQOMSwDsqG9iQWhtUV1X42Cks74F+vi/ZPzMm7TMP5ApMxzXjU/FEM4HXZIfkZ73OeQ4SU5bUKORqgIwzrHMjBYV7QCx2QnH++d4xkte+Vtz5gqAlz+B0A4Lf+x4uhIwUsjW2fXEk86+mPuW+nj/qJcWed3L/NutrTAq2rduCjMInw2xtbeQDE5YiWhzCloRMYVzllt6adThjJpqOJBwG1aOdaV5nEGP/lgd0SzJ/wSXNjep3PANuGBReNeftKicXYd5hLtKuhx1tx+6K4xLjPH4cV8zRqUw9vfn2sAYizD2VR2YIqltNpcyINtqbKJj7P+fQomwAmZ0vDovb2NyNAQGowBvczC9riRA0iuHR0ZHMJ8/RQCjPB3ntAKPtpQ1kZ8TvAQvZirVUZMdvM2lznKJCRlRN9XoJrz+aJOC9licTPqE10v1ii43ickiFHxvWzId8wpCFgxs2JqFOg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(136003)(366004)(39860400002)(346002)(376002)(396003)(66446008)(6506007)(2616005)(83380400001)(53546011)(5660300002)(6916009)(26005)(66556008)(33656002)(8936002)(6512007)(186003)(41300700001)(71200400001)(36756003)(86362001)(38100700002)(478600001)(54906003)(64756008)(122000001)(76116006)(66946007)(38070700005)(316002)(6486002)(91956017)(4326008)(66476007)(8676002)(2906002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UZmudKK7HMPAtU+USam9ei4FSwz5VBnh3sn0Fg3ZPSzK1+M663v7TY8cI7cM?=
- =?us-ascii?Q?XRGkIWHeyhmE3+Ctrfp0BeDF6MinCoeXSZepLkfI+JuYRQ9pEDaPyZ0sK7bN?=
- =?us-ascii?Q?mfnP4y9hj63wHK+BriR6KBLb4+E3Avl9PnCalDJ8rSns/7WkRCR6y4TqaxAr?=
- =?us-ascii?Q?N19d4SjsTyvH9LjhC/vqR6OvllfxRLhFMYcWBdEaBNXLwM08mImguhiGYhZ7?=
- =?us-ascii?Q?hONl4G1XRnvKYs5TtzX6vz+gkqgZA3bwAVlQw7xyTG4n9icqd5Jhr5m8ejHJ?=
- =?us-ascii?Q?opvvb9yy9XOL04/oqnTepf2W2CAqrua6DR2Jpe5fytykKhJgSfonS7yRh7jO?=
- =?us-ascii?Q?J0YR6yVDn3POvou8bsw4PXfTDr1OYW3NB++heaoK3XwQ7h7sHiHDOpbkjChl?=
- =?us-ascii?Q?YEcnW/q0xy0fqmNv8uKw3O7c0ifPqS+2nEb6DjVN+0WA85odzO5xmum9kGwX?=
- =?us-ascii?Q?HltLuk4g2ZFQ9fg3aLH9mzMGByTTAgOkmHt1OhjczlfiZR5Zzp7mJ92YF2cb?=
- =?us-ascii?Q?JjGskDBGnaIkk6OzMxgaTsDjUSeian9pIiPfgYWwA/nkVp9yNkXF2uZPD+Om?=
- =?us-ascii?Q?YIdFD8S2xke5t4FeKFdB4rVAZHlacfQcwoqeUVAZ+60dorO8iS8uMhoqwDUD?=
- =?us-ascii?Q?X4GQNM9ljZgtXD09GulXJhsqUwOmwUvPi1SQDf+2qro5ScHiY9y3FqoVRg4o?=
- =?us-ascii?Q?fv+EoanF2k7xGIol9YCzjweD0BklYkeE08gE/mUEDKmWQZXqQbrxWxuCtfaY?=
- =?us-ascii?Q?oiZ884nxMfsqwfAofqXZMnCIbrcSzQt/OnQQGyB3lV7TYkacjBYdYkEEWmyn?=
- =?us-ascii?Q?ehDGJdJjC5uGxaSBEoYBndo/7EEZ3YCtVLIMWPQnamrSxhUQuj6RUvMgP+RB?=
- =?us-ascii?Q?fqk6D3xH0wCF1GtCHoIFgA9tX44SpQfA/yF0kCfyNjJsCXD9wWLtvB7ahiAJ?=
- =?us-ascii?Q?yscgwith71XvqjbLAaselecg+o22DaNON2i0pR37CT1Tu8cM5CisuMwQWKTz?=
- =?us-ascii?Q?Iplg2LA9OPsZVkbBrKaXbB6T0yqbl+mfJRUHvbfthTvsRD60SxpXAjGCU/c2?=
- =?us-ascii?Q?fTL1+85EvQ9JvpGE0psVORc2aIdidT2FBtH2eiqjnHPvdqa5ctREJPrpW/BI?=
- =?us-ascii?Q?/RTpeLvC/wp+82VRUMJvNZijsHnDaYfJouVaOfnfjwWNrkNCSE4SPBsmIBDj?=
- =?us-ascii?Q?EpKk9u3rltu7sWqtdsOTusYPfNyrhnkaJS62r27W/NnZ/Lsni0zmgRJdKfK9?=
- =?us-ascii?Q?FEMY2TYKDxFTjrczQOwLHZN7xrY+/diP5yiSsyotTSNtbdFEHB3bmbalC9/Z?=
- =?us-ascii?Q?YtpBap5Oa/HzSf4b/OkoiJnmTjMWuJDL8KwpjLcZThTlm3Pr/rCz1lpHyLgr?=
- =?us-ascii?Q?obHUYkFbS5U/qkWPq+azQE/a4/XK+bMLeUHWIWcUG90mAANk85khYoXGNJDx?=
- =?us-ascii?Q?z6MXQ4yIeZkid6IXt3fkv0P1ti7KIRgGfSlMRbGLazFUhbI20mDrFO4cnWkp?=
- =?us-ascii?Q?7T+7UwIdwVr4vfs3vac8GGilzaYq9ujaW1JFd8kTGU9ApYNY9bfUUHPKba0e?=
- =?us-ascii?Q?A5XWPDsKLkVMuI6TWiZt5jnAnw5ily14DdZhGJS8CSfs0qpPeK6WVrQVEwJ4?=
- =?us-ascii?Q?LQ=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?J6hJxPjYF/1a45M1k0HyOP2NntR0m6qoZ3zuBPNTwRZOTVvnVb4gjtG8R7pp?=
+ =?us-ascii?Q?WdaAMtI3fGngrjUBkSG9HucKjKGyJJt7a088d7Pfw93vjesmTX72HQSs82a5?=
+ =?us-ascii?Q?lWBJBIQry58O612lBKajg4HIwxQkUNPSoo6uB0gOeajq8EJXavvJ1Hf8LyET?=
+ =?us-ascii?Q?YQXZz+ih+zaSdisdE8GWheRTwxESbVX89yyVa69xLyvAd7FaNpuUjLqlKmqZ?=
+ =?us-ascii?Q?oqiEXnbkuizWWXUFPLsp0d2jxPOGIWBfzwLb7Ip1icwmqmhWpc45cA8p6b7u?=
+ =?us-ascii?Q?C62HxKwWPpWA93c8GScky0gZfdSv8REeOX9ypcYAFjINKWeTo//a8J4id3hR?=
+ =?us-ascii?Q?xE0a5fdItmkT3qVi/jJABMuXlz/p8BKKbSNB3c91tEy8bubZ9iDqqSh3ETAY?=
+ =?us-ascii?Q?QaLi+9EdPl9/FNKYTbk/oQQV1BgiAdOI2mgOrfhxt5nLV4E9CZK472d8opBJ?=
+ =?us-ascii?Q?egIf3q1Q/ovQwr6BowcKclAOhb1L75hpKi21GrdMvkHAuK/bXVvX47LmYCea?=
+ =?us-ascii?Q?taK4OI+L6nhwn7nzjzbXFTdfcXA8sIxNlgS1b1TS+I4qdZciiIAgc+3jaghy?=
+ =?us-ascii?Q?KGqTsWsmlO2QAkild5r1IdPu0FOLwR+897ycH0QPf9tXbvp1zBwmYKIpvW7F?=
+ =?us-ascii?Q?hGoLAWz4wtR/Doveh2L3YlxUILQE4T9LngE1HBkTtTeJ3ONFoUU0yssIWotV?=
+ =?us-ascii?Q?kRuckHRNQ1IkEwY/rKNe8utnDhFVL3xuyExwUXPueIHadCYOw7mhou9Nn7Md?=
+ =?us-ascii?Q?w+WrqsJBAcFymi0U2soigLdMcSQmX4w/3K9uBGZe2YDb6sCnE6YAl0+TgBl5?=
+ =?us-ascii?Q?83cy8eVxywTEhcg7mFSWIIa0St19wumpPoMUHIpazcsLWPG+aXDNl1vZjEZu?=
+ =?us-ascii?Q?bmKD6cJgfTkSfzfuvakgCt91GMZ1PngAVs+cWvmwT14ytmptcFVrvWf7HpVU?=
+ =?us-ascii?Q?7BlMpsFOvMjP7kWjlGxsyERu5mr7Vcy5j4HXcR4vXaplwME7cRbcAGj+KmBm?=
+ =?us-ascii?Q?hRcZcjBuxwkWz5F6Pwmq+8RlkGO5vx1hjmtV5MvpTHuFiVo9jpzgUtGy1OxM?=
+ =?us-ascii?Q?l1baZjXmdK3kzWjJdExhD3Djn/TLneJx/o2qzfByxTZDq6TI5pANmJH4o1YW?=
+ =?us-ascii?Q?H0J3VFSDWGn7RWL4dZBaIpG8eDCOuuSG8OjDnkXwwjiGusenELtdX/tWO51m?=
+ =?us-ascii?Q?nI3tyAvGao8nyXxEThtF/3RrebVZqvhcgMLYEk8a3FtaAU/wCYDxpy7IyF6k?=
+ =?us-ascii?Q?4IPNhWpbqXv+CmC9J8K39tlwO5A+7GX645LB5Xhgz5XPsFfzVMx5FRYtAIDF?=
+ =?us-ascii?Q?jhwU8Z8kuqOLLEtI2j80ZuPXnIK4CCp3vdSGDXWuI9U/SDKCCa44c5QxExrV?=
+ =?us-ascii?Q?atGprguSNifJtP0ZtFDN47t+kx/EdoyMLGX1sQ9V/QIxG7pKF6wESffo4+oj?=
+ =?us-ascii?Q?QC2tCR4pfmjbnUN/K3Wcvw7eIQRyBEXmfJYcImEY5Gov/lSMIvRhcZ1r63Av?=
+ =?us-ascii?Q?3RVET2n/gUAonprj7swzbI3rUhdiU3V8guzOPZ01IFk4Aj4UfVSd+oOhinzE?=
+ =?us-ascii?Q?JkkFJBCDNIqEPPTcB5pTcKv4EFix+weW+pxp5rrS4Ff5RlDXWfDxo7aGXy6o?=
+ =?us-ascii?Q?9Q=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <73C9BFE46A867D49800DEA76E10E6CB1@namprd10.prod.outlook.com>
+Content-ID: <0FD3C268E4E18F4A83B688D0FAA29D30@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78289fbb-7e72-414a-0e1a-08da70a91c59
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2022 14:54:45.3103
+X-MS-Exchange-CrossTenant-Network-Message-Id: 631f2521-1c36-4ef0-7339-08da70a9486a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Jul 2022 14:55:59.2597
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Mw7P9nycCRqJWzn9nbxin808Q/YE2i4pxr9uJizCj0rnvHx+e53oT/jaJHvQd8igv3GeKZFiZq7+Wk6an21X4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4304
+X-MS-Exchange-CrossTenant-userprincipalname: XSaQhhCLi7uM/uv5XTAa371MnDJtkWDjYCtddldd6xakD/EeH4tG3pNOxt83oF0yyJIbYP6Cv6PmRt5WbFYt4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR10MB2885
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-07-28_06,2022-07-28_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=527 malwarescore=0
- suspectscore=0 mlxscore=0 bulkscore=0 adultscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207280068
-X-Proofpoint-ORIG-GUID: Hngw6uXPeEuHmp5YxIIctHObvYlfJurA
-X-Proofpoint-GUID: Hngw6uXPeEuHmp5YxIIctHObvYlfJurA
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 phishscore=0
+ spamscore=0 mlxlogscore=999 suspectscore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207280068
+X-Proofpoint-ORIG-GUID: Lr4BcmDMVyG-kGdCsr556aBPrXj6lNr9
+X-Proofpoint-GUID: Lr4BcmDMVyG-kGdCsr556aBPrXj6lNr9
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -153,280 +155,196 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 > On Jul 26, 2022, at 2:45 AM, NeilBrown <neilb@suse.de> wrote:
 >=20
-> When creating or unlinking a name in a directory use explicit
-> inode_lock_nested() instead of fh_lock(), and explicit calls to
-> fh_fill_pre_attrs() and fh_fill_post_attrs().  This is already done for
-> renames.
-
-IIUC, the antecedent of "This is already done" is only "explicit
-calls to fh_fill_pre_attrs() and fh_fill_post_attrs()" ?
-
+> When locking a file to access ACLs and xattrs etc, use explicit locking
+> with inode_lock() instead of fh_lock().  This means that the calls to
+> fh_fill_pre/post_attr() are also explicit which improves readability and
+> allows us to place them only where they are needed.  Only the xattr
+> calls need pre/post information.
 >=20
-> Also move the 'fill' calls closer to the operation that might change the
-> attributes.  This way they are avoided on some error paths.
->=20
-> For the v2-only code in nfsproc.c, drop the fill calls as they aren't
-> needed.
-
-This feels like 3 independent changes to me. At least the v2 change
-should be moved to a separate patch. Relocating the "fill attrs" calls
-seems like it could cause noticeable behavior changes, so maybe it
-belongs also in a separate patch?
-
-
-> Having the locking explicit will simplify proposed future changes to
-
-^Having^Making ?
-
-
-> locking for directories.  It also makes it easily visible exactly where
-> pre/post attributes are used - not all callers of fh_lock() actually
-> need the pre/post attributes.
+> When locking a file we don't need I_MUTEX_PARENT as the file is not a
+> parent of anything, so we can use inode_lock() directly rather than the
+> inode_lock_nested() call that fh_lock() uses.
 >=20
 > Reviewed-by: Jeff Layton <jlayton@kernel.org>
 > Signed-off-by: NeilBrown <neilb@suse.de>
 > ---
-> fs/nfsd/nfs3proc.c |    6 ++++--
-> fs/nfsd/nfs4proc.c |    6 ++++--
-> fs/nfsd/nfsproc.c  |    5 ++---
-> fs/nfsd/vfs.c      |   30 +++++++++++++++++++-----------
-> 4 files changed, 29 insertions(+), 18 deletions(-)
+> fs/nfsd/nfs2acl.c   |    6 +++---
+> fs/nfsd/nfs3acl.c   |    4 ++--
+> fs/nfsd/nfs4state.c |    9 +++++----
+> fs/nfsd/vfs.c       |   25 ++++++++++++-------------
+> 4 files changed, 22 insertions(+), 22 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index 774e4a2ab9b1..c2f992b4387a 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -256,7 +256,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
-> 	if (host_err)
-> 		return nfserrno(host_err);
+> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+> index b5760801d377..9edd3c1a30fb 100644
+> --- a/fs/nfsd/nfs2acl.c
+> +++ b/fs/nfsd/nfs2acl.c
+> @@ -111,7 +111,7 @@ static __be32 nfsacld_proc_setacl(struct svc_rqst *rq=
+stp)
+> 	if (error)
+> 		goto out_errno;
 >=20
-> -	fh_lock_nested(fhp, I_MUTEX_PARENT);
-> +	inode_lock_nested(inode, I_MUTEX_PARENT);
+> -	fh_lock(fh);
+> +	inode_lock(inode);
 >=20
-> 	child =3D lookup_one_len(argp->name, parent, argp->len);
-> 	if (IS_ERR(child)) {
-> @@ -314,11 +314,13 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct sv=
-c_fh *fhp,
-> 	if (!IS_POSIXACL(inode))
-> 		iap->ia_mode &=3D ~current_umask();
+> 	error =3D set_posix_acl(&init_user_ns, inode, ACL_TYPE_ACCESS,
+> 			      argp->acl_access);
+> @@ -122,7 +122,7 @@ static __be32 nfsacld_proc_setacl(struct svc_rqst *rq=
+stp)
+> 	if (error)
+> 		goto out_drop_lock;
 >=20
-> +	fh_fill_pre_attrs(fhp);
-> 	host_err =3D vfs_create(&init_user_ns, inode, child, iap->ia_mode, true)=
-;
-> 	if (host_err < 0) {
-> 		status =3D nfserrno(host_err);
-> 		goto out;
-> 	}
-> +	fh_fill_post_attrs(fhp);
->=20
-> 	/* A newly created file already has a file size of zero. */
-> 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size =3D=3D 0))
-> @@ -336,7 +338,7 @@ nfsd3_create_file(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
-> 	status =3D nfsd_create_setattr(rqstp, fhp, resfhp, &attrs);
->=20
-> out:
-> -	fh_unlock(fhp);
+> -	fh_unlock(fh);
 > +	inode_unlock(inode);
-> 	if (child && !IS_ERR(child))
-> 		dput(child);
-> 	fh_drop_write(fhp);
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 48e4efb39a9c..90af82d49119 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -264,7 +264,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
-> 	if (is_create_with_attrs(open))
-> 		nfsd4_acl_to_attr(NF4REG, open->op_acl, &attrs);
 >=20
-> -	fh_lock_nested(fhp, I_MUTEX_PARENT);
-> +	inode_lock_nested(inode, I_MUTEX_PARENT);
+> 	fh_drop_write(fh);
 >=20
-> 	child =3D lookup_one_len(open->op_fname, parent, open->op_fnamelen);
-> 	if (IS_ERR(child)) {
-> @@ -348,10 +348,12 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct sv=
-c_fh *fhp,
-> 	if (!IS_POSIXACL(inode))
-> 		iap->ia_mode &=3D ~current_umask();
+> @@ -136,7 +136,7 @@ static __be32 nfsacld_proc_setacl(struct svc_rqst *rq=
+stp)
+> 	return rpc_success;
 >=20
-> +	fh_fill_pre_attrs(fhp);
-> 	status =3D nfsd4_vfs_create(fhp, child, open);
-> 	if (status !=3D nfs_ok)
-> 		goto out;
-> 	open->op_created =3D true;
-> +	fh_fill_post_attrs(fhp);
->=20
-> 	/* A newly created file already has a file size of zero. */
-> 	if ((iap->ia_valid & ATTR_SIZE) && (iap->ia_size =3D=3D 0))
-> @@ -373,7 +375,7 @@ nfsd4_create_file(struct svc_rqst *rqstp, struct svc_=
-fh *fhp,
-> 	if (attrs.acl_failed)
-> 		open->op_bmval[0] &=3D ~FATTR4_WORD0_ACL;
-> out:
-> -	fh_unlock(fhp);
+> out_drop_lock:
+> -	fh_unlock(fh);
 > +	inode_unlock(inode);
-> 	nfsd_attrs_free(&attrs);
-> 	if (child && !IS_ERR(child))
-> 		dput(child);
-> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-> index d09d516188d2..4cff332f58bb 100644
-> --- a/fs/nfsd/nfsproc.c
-> +++ b/fs/nfsd/nfsproc.c
-> @@ -287,7 +287,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
-> 		goto done;
-> 	}
+> 	fh_drop_write(fh);
+> out_errno:
+> 	resp->status =3D nfserrno(error);
+> diff --git a/fs/nfsd/nfs3acl.c b/fs/nfsd/nfs3acl.c
+> index 35b2ebda14da..9446c6743664 100644
+> --- a/fs/nfsd/nfs3acl.c
+> +++ b/fs/nfsd/nfs3acl.c
+> @@ -101,7 +101,7 @@ static __be32 nfsd3_proc_setacl(struct svc_rqst *rqst=
+p)
+> 	if (error)
+> 		goto out_errno;
 >=20
-> -	fh_lock_nested(dirfhp, I_MUTEX_PARENT);
-> +	inode_lock_nested(dirfhp->fh_dentry->d_inode, I_MUTEX_PARENT);
-> 	dchild =3D lookup_one_len(argp->name, dirfhp->fh_dentry, argp->len);
-> 	if (IS_ERR(dchild)) {
-> 		resp->status =3D nfserrno(PTR_ERR(dchild));
-> @@ -403,8 +403,7 @@ nfsd_proc_create(struct svc_rqst *rqstp)
-> 	}
+> -	fh_lock(fh);
+> +	inode_lock(inode);
 >=20
-> out_unlock:
-> -	/* We don't really need to unlock, as fh_put does it. */
-> -	fh_unlock(dirfhp);
-> +	inode_unlock(dirfhp->fh_dentry->d_inode);
-> 	fh_drop_write(dirfhp);
-> done:
-> 	fh_put(dirfhp);
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 8ebad4a99552..f2cb9b047766 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1369,7 +1369,7 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *=
-fhp,
-> 	if (host_err)
-> 		return nfserrno(host_err);
+> 	error =3D set_posix_acl(&init_user_ns, inode, ACL_TYPE_ACCESS,
+> 			      argp->acl_access);
+> @@ -111,7 +111,7 @@ static __be32 nfsd3_proc_setacl(struct svc_rqst *rqst=
+p)
+> 			      argp->acl_default);
 >=20
-> -	fh_lock_nested(fhp, I_MUTEX_PARENT);
-> +	inode_lock_nested(dentry->d_inode, I_MUTEX_PARENT);
-> 	dchild =3D lookup_one_len(fname, dentry, flen);
-> 	host_err =3D PTR_ERR(dchild);
-> 	if (IS_ERR(dchild)) {
-> @@ -1384,10 +1384,12 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh=
- *fhp,
-> 	dput(dchild);
+> out_drop_lock:
+> -	fh_unlock(fh);
+> +	inode_unlock(inode);
+> 	fh_drop_write(fh);
+> out_errno:
+> 	resp->status =3D nfserrno(error);
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 45df1e85ff32..b9be12b3cebd 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -7397,21 +7397,22 @@ nfsd4_lock(struct svc_rqst *rqstp, struct nfsd4_c=
+ompound_state *cstate,
+> static __be32 nfsd_test_lock(struct svc_rqst *rqstp, struct svc_fh *fhp, =
+struct file_lock *lock)
+> {
+> 	struct nfsd_file *nf;
+> +	struct inode *inode;
+> 	__be32 err;
+>=20
+> 	err =3D nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
 > 	if (err)
-> 		goto out_unlock;
-> +	fh_fill_pre_attrs(fhp);
-> 	err =3D nfsd_create_locked(rqstp, fhp, fname, flen, attrs, type,
-> 				 rdev, resfhp);
-> +	fh_fill_post_attrs(fhp);
-> out_unlock:
+> 		return err;
+> -	fh_lock(fhp); /* to block new leases till after test_lock: */
+> -	err =3D nfserrno(nfsd_open_break_lease(fhp->fh_dentry->d_inode,
+> -							NFSD_MAY_READ));
+> +	inode =3D fhp->fh_dentry->d_inode;
+> +	inode_lock(inode); /* to block new leases till after test_lock: */
+> +	err =3D nfserrno(nfsd_open_break_lease(inode, NFSD_MAY_READ));
+> 	if (err)
+> 		goto out;
+> 	lock->fl_file =3D nf->nf_file;
+> 	err =3D nfserrno(vfs_test_lock(nf->nf_file, lock));
+> 	lock->fl_file =3D NULL;
+> out:
 > -	fh_unlock(fhp);
-> +	inode_unlock(dentry->d_inode);
+> +	inode_unlock(inode);
+> 	nfsd_file_put(nf);
 > 	return err;
 > }
->=20
-> @@ -1460,20 +1462,22 @@ nfsd_symlink(struct svc_rqst *rqstp, struct svc_f=
-h *fhp,
-> 		goto out;
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f2cb9b047766..1d96d89a4801 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -416,7 +416,7 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *f=
+hp,
+> 			return err;
 > 	}
 >=20
 > -	fh_lock(fhp);
-> 	dentry =3D fhp->fh_dentry;
-> +	inode_lock_nested(dentry->d_inode, I_MUTEX_PARENT);
-> 	dnew =3D lookup_one_len(fname, dentry, flen);
-> 	if (IS_ERR(dnew)) {
-> 		err =3D nfserrno(PTR_ERR(dnew));
-> -		fh_unlock(fhp);
-> +		inode_unlock(dentry->d_inode);
-> 		goto out_drop_write;
-> 	}
-> +	fh_fill_pre_attrs(fhp);
-> 	host_err =3D vfs_symlink(&init_user_ns, d_inode(dentry), dnew, path);
-> 	err =3D nfserrno(host_err);
-> 	cerr =3D fh_compose(resfhp, fhp->fh_export, dnew, fhp);
-> 	if (!err)
-> 		nfsd_create_setattr(rqstp, fhp, resfhp, attrs);
-> -	fh_unlock(fhp);
-> +	fh_fill_post_attrs(fhp);
-> +	inode_unlock(dentry->d_inode);
-> 	if (!err)
-> 		err =3D nfserrno(commit_metadata(fhp));
-> 	dput(dnew);
-> @@ -1519,9 +1523,9 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
+> +	inode_lock(inode);
+> 	if (size_change) {
+> 		/*
+> 		 * RFC5661, Section 18.30.4:
+> @@ -463,7 +463,7 @@ nfsd_setattr(struct svc_rqst *rqstp, struct svc_fh *f=
 hp,
-> 		goto out;
-> 	}
->=20
-> -	fh_lock_nested(ffhp, I_MUTEX_PARENT);
-> 	ddir =3D ffhp->fh_dentry;
-> 	dirp =3D d_inode(ddir);
-> +	inode_lock_nested(dirp, I_MUTEX_PARENT);
->=20
-> 	dnew =3D lookup_one_len(name, ddir, len);
-> 	if (IS_ERR(dnew)) {
-> @@ -1534,8 +1538,10 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *f=
-fhp,
-> 	err =3D nfserr_noent;
-> 	if (d_really_is_negative(dold))
-> 		goto out_dput;
-> +	fh_fill_pre_attrs(ffhp);
-> 	host_err =3D vfs_link(dold, &init_user_ns, dirp, dnew, NULL);
-> -	fh_unlock(ffhp);
-> +	fh_fill_post_attrs(ffhp);
-> +	inode_unlock(dirp);
-> 	if (!host_err) {
-> 		err =3D nfserrno(commit_metadata(ffhp));
-> 		if (!err)
-> @@ -1555,7 +1561,7 @@ nfsd_link(struct svc_rqst *rqstp, struct svc_fh *ff=
-hp,
-> out_dput:
-> 	dput(dnew);
-> out_unlock:
-> -	fh_unlock(ffhp);
-> +	inode_unlock(dirp);
-> 	goto out_drop_write;
-> }
->=20
-> @@ -1730,9 +1736,9 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *=
-fhp, int type,
-> 	if (host_err)
-> 		goto out_nfserr;
->=20
-> -	fh_lock_nested(fhp, I_MUTEX_PARENT);
-> 	dentry =3D fhp->fh_dentry;
-> 	dirp =3D d_inode(dentry);
-> +	inode_lock_nested(dirp, I_MUTEX_PARENT);
->=20
-> 	rdentry =3D lookup_one_len(fname, dentry, flen);
-> 	host_err =3D PTR_ERR(rdentry);
-> @@ -1750,6 +1756,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *=
-fhp, int type,
-> 	if (!type)
-> 		type =3D d_inode(rdentry)->i_mode & S_IFMT;
->=20
-> +	fh_fill_pre_attrs(fhp);
-> 	if (type !=3D S_IFDIR) {
-> 		if (rdentry->d_sb->s_export_op->flags & EXPORT_OP_CLOSE_BEFORE_UNLINK)
-> 			nfsd_close_cached_files(rdentry);
-> @@ -1757,8 +1764,9 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *=
-fhp, int type,
-> 	} else {
-> 		host_err =3D vfs_rmdir(&init_user_ns, dirp, rdentry);
-> 	}
-> +	fh_fill_post_attrs(fhp);
->=20
+> 		attr->acl_failed =3D set_posix_acl(&init_user_ns,
+> 						 inode, ACL_TYPE_DEFAULT,
+> 						 attr->dpacl);
 > -	fh_unlock(fhp);
-> +	inode_unlock(dirp);
-> 	if (!host_err)
-> 		host_err =3D commit_metadata(fhp);
-> 	dput(rdentry);
-> @@ -1781,7 +1789,7 @@ nfsd_unlink(struct svc_rqst *rqstp, struct svc_fh *=
-fhp, int type,
+> +	inode_unlock(inode);
+> 	if (size_change)
+> 		put_write_access(inode);
 > out:
-> 	return err;
-> out_unlock:
-> -	fh_unlock(fhp);
-> +	inode_unlock(dirp);
-> 	goto out_drop_write;
+> @@ -2145,12 +2145,8 @@ nfsd_listxattr(struct svc_rqst *rqstp, struct svc_=
+fh *fhp, char **bufp,
 > }
 >=20
+> /*
+> - * Removexattr and setxattr need to call fh_lock to both lock the inode
+> - * and set the change attribute. Since the top-level vfs_removexattr
+> - * and vfs_setxattr calls already do their own inode_lock calls, call
+> - * the _locked variant. Pass in a NULL pointer for delegated_inode,
+> - * and let the client deal with NFS4ERR_DELAY (same as with e.g.
+> - * setattr and remove).
+> + * Pass in a NULL pointer for delegated_inode, and let the client deal
+> + * with NFS4ERR_DELAY (same as with e.g.  setattr and remove).
+>  */
+> __be32
+> nfsd_removexattr(struct svc_rqst *rqstp, struct svc_fh *fhp, char *name)
+
+A kerneldoc comment would be nicer.
+
+
+> @@ -2166,12 +2162,14 @@ nfsd_removexattr(struct svc_rqst *rqstp, struct s=
+vc_fh *fhp, char *name)
+> 	if (ret)
+> 		return nfserrno(ret);
+>=20
+> -	fh_lock(fhp);
+> +	inode_lock(fhp->fh_dentry->d_inode);
+> +	fh_fill_pre_attrs(fhp);
+>=20
+> 	ret =3D __vfs_removexattr_locked(&init_user_ns, fhp->fh_dentry,
+> 				       name, NULL);
+>=20
+> -	fh_unlock(fhp);
+> +	fh_fill_post_attrs(fhp);
+> +	inode_unlock(fhp->fh_dentry->d_inode);
+> 	fh_drop_write(fhp);
+>=20
+> 	return nfsd_xattr_errno(ret);
+> @@ -2191,12 +2189,13 @@ nfsd_setxattr(struct svc_rqst *rqstp, struct svc_=
+fh *fhp, char *name,
+> 	ret =3D fh_want_write(fhp);
+> 	if (ret)
+> 		return nfserrno(ret);
+> -	fh_lock(fhp);
+> +	inode_lock(fhp->fh_dentry->d_inode);
+> +	fh_fill_pre_attrs(fhp);
+>=20
+> 	ret =3D __vfs_setxattr_locked(&init_user_ns, fhp->fh_dentry, name, buf,
+> 				    len, flags, NULL);
+> -
+> -	fh_unlock(fhp);
+> +	fh_fill_post_attrs(fhp);
+> +	inode_unlock(fhp->fh_dentry->d_inode);
+> 	fh_drop_write(fhp);
+>=20
+> 	return nfsd_xattr_errno(ret);
 >=20
 >=20
 
