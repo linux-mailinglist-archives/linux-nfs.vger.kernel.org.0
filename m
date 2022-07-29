@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F3A155853EE
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jul 2022 18:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6525E5853EF
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jul 2022 18:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237601AbiG2QsB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Jul 2022 12:48:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37362 "EHLO
+        id S238249AbiG2QsD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Jul 2022 12:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238186AbiG2Qrq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jul 2022 12:47:46 -0400
+        with ESMTP id S236390AbiG2Qrs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jul 2022 12:47:48 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE5289A5C
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 09:47:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AABD89AB1
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 09:47:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB24A61E42
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 16:47:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1461EC433D7;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8621E61E78
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 16:47:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943A0C433D6;
         Fri, 29 Jul 2022 16:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659113237;
-        bh=n9HWKM1++3/ZSOAmtfQeTNj5i1yKF+OmvDQ0orfgGDA=;
+        s=k20201202; t=1659113238;
+        bh=YF2T6sWpacxzBtfnZu9MFHtFQKZAqialkskW4wsao54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k2Qa7PWQ6pWaCFUi4pcDa2fXTaNlLRi/rkk8LhErg0D4GFPDgmpSjPr6B7ygGONcJ
-         en+yn5dYZSTW+3ERvl5Q3YgRQCFcgluRToswxIiDbHz2+h092GVD0pnEOozLNVMvA4
-         /y+0emEjv/oPX7tQRtdosUzUbhIIk6TtnJPJCerbNA34NI1RkeU9DWfMgjCZvQ/J0j
-         ZPCcKXHOT2Bb96Iu/En8deMwQh+u5LBQwqceIDeat+OXG0x3dlLDZH8xWsI8q9Quva
-         jjeohz48uHOFG7LFaRUh0454XYxjsgX3rP5J9iMtE5IoTWJOLfyVXAKWAwWuDT0IXj
-         1SPkuVzw1cMgw==
+        b=VIYx41C+770Lx+Zcp8bXY+E38h9n3TLKDXKmtK/JYF3gXAgpcIxubjVVeckajwgL1
+         heS0TXA3WDgcaLDvX5PybCiSmTrIqiefSWhU1uSUzjY/+QFpyUormrCrSbhSC9wFov
+         9FgoKGxPlKS53QumdY9wa/YunHpRd3mHfrQUma9FevLWa1qD+CFkZsSvPyhB0m1wvr
+         jInyKhunZGQ0+nbcMKoM6UTvk5jIfDOVm4fyD4w4qi41QS+O1yl0hDJXiEu3J1QrNG
+         0Ygn7HMrLr1srhtDLtfc1c3vCqO9db8JMh+sZMm3RSxerGhP4fSdzGkbBMVy6N5CNo
+         hAySikGE99uhQ==
 From:   Jeff Layton <jlayton@kernel.org>
 To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/3] nfsd: print nf pointer in some nfsd_file tracepoints
-Date:   Fri, 29 Jul 2022 12:47:14 -0400
-Message-Id: <20220729164715.75702-2-jlayton@kernel.org>
+Cc:     linux-nfs@vger.kernel.org, Olga Kornieskaia <kolga@netapp.com>
+Subject: [PATCH 3/3] nfsd: eliminate the NFSD_FILE_BREAK_* flags
+Date:   Fri, 29 Jul 2022 12:47:15 -0400
+Message-Id: <20220729164715.75702-3-jlayton@kernel.org>
 X-Mailer: git-send-email 2.37.1
 In-Reply-To: <20220729164715.75702-1-jlayton@kernel.org>
 References: <20220729164715.75702-1-jlayton@kernel.org>
@@ -51,119 +51,127 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+We had a report from the spring Bake-a-thon of data corruption in some
+nfstest_interop tests. Looking at the traces showed the NFS server
+allowing a v3 WRITE to proceed while a read delegation was still
+outstanding.
+
+Currently, we only set NFSD_FILE_BREAK_* flags if
+NFSD_MAY_NOT_BREAK_LEASE was set when we call nfsd_file_alloc.
+NFSD_MAY_NOT_BREAK_LEASE was intended to be set when finding files for
+COMMIT ops, where we need a writeable filehandle but don't need to
+break read leases.
+
+It doesn't make any sense to consult that flag when allocating a file
+since the file may be used on subsequent calls where we do want to break
+the lease (and the usage of it here seems to be reverse from what it
+should be anyway).
+
+Also, after calling nfsd_open_break_lease, we don't want to clear the
+BREAK_* bits. A lease could end up being set on it later (more than
+once) and we need to be able to break those leases as well.
+
+This means that the NFSD_FILE_BREAK_* flags now just mirror
+NFSD_MAY_{READ,WRITE} flags, so there's no need for them at all. Just
+drop those flags and unconditionally call nfsd_open_break_lease every
+time.
+
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2107360
+Fixes: 65294c1f2c5e (nfsd: add a new struct file caching facility to nfsd)
+Reported-by: Olga Kornieskaia <kolga@netapp.com>
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/trace.h | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ fs/nfsd/filecache.c | 26 +++-----------------------
+ fs/nfsd/filecache.h |  4 +---
+ fs/nfsd/trace.h     |  2 --
+ 3 files changed, 4 insertions(+), 28 deletions(-)
 
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index 4758c2a3fcf8..7e566ddca388 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -283,7 +283,7 @@ nfsd_file_mark_find_or_create(struct nfsd_file *nf, struct inode *inode)
+ }
+ 
+ static struct nfsd_file *
+-nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsigned int may)
++nfsd_file_alloc(struct nfsd_file_lookup_key *key)
+ {
+ 	struct nfsd_file *nf;
+ 
+@@ -301,12 +301,6 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsigned int may)
+ 		/* nf_ref is pre-incremented for hash table */
+ 		refcount_set(&nf->nf_ref, 2);
+ 		nf->nf_may = key->need;
+-		if (may & NFSD_MAY_NOT_BREAK_LEASE) {
+-			if (may & NFSD_MAY_WRITE)
+-				__set_bit(NFSD_FILE_BREAK_WRITE, &nf->nf_flags);
+-			if (may & NFSD_MAY_READ)
+-				__set_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags);
+-		}
+ 		nf->nf_mark = NULL;
+ 	}
+ 	return nf;
+@@ -1090,7 +1084,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (nf)
+ 		goto wait_for_construction;
+ 
+-	new = nfsd_file_alloc(&key, may_flags);
++	new = nfsd_file_alloc(&key);
+ 	if (!new) {
+ 		status = nfserr_jukebox;
+ 		goto out_status;
+@@ -1130,21 +1124,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	nfsd_file_lru_remove(nf);
+ 	this_cpu_inc(nfsd_file_cache_hits);
+ 
+-	if (!(may_flags & NFSD_MAY_NOT_BREAK_LEASE)) {
+-		bool write = (may_flags & NFSD_MAY_WRITE);
+-
+-		if (test_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags) ||
+-		    (test_bit(NFSD_FILE_BREAK_WRITE, &nf->nf_flags) && write)) {
+-			status = nfserrno(nfsd_open_break_lease(
+-					file_inode(nf->nf_file), may_flags));
+-			if (status == nfs_ok) {
+-				clear_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags);
+-				if (write)
+-					clear_bit(NFSD_FILE_BREAK_WRITE,
+-						  &nf->nf_flags);
+-			}
+-		}
+-	}
++	status = nfserrno(nfsd_open_break_lease(file_inode(nf->nf_file), may_flags));
+ out:
+ 	if (status == nfs_ok) {
+ 		if (open)
+diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+index d534b76cb65b..8e8c0c47d67d 100644
+--- a/fs/nfsd/filecache.h
++++ b/fs/nfsd/filecache.h
+@@ -37,9 +37,7 @@ struct nfsd_file {
+ 	struct net		*nf_net;
+ #define NFSD_FILE_HASHED	(0)
+ #define NFSD_FILE_PENDING	(1)
+-#define NFSD_FILE_BREAK_READ	(2)
+-#define NFSD_FILE_BREAK_WRITE	(3)
+-#define NFSD_FILE_REFERENCED	(4)
++#define NFSD_FILE_REFERENCED	(2)
+ 	unsigned long		nf_flags;
+ 	struct inode		*nf_inode;	/* don't deref */
+ 	refcount_t		nf_ref;
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 38fb1ca31010..e9c5d0f56977 100644
+index e9c5d0f56977..2bd867a96eba 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -803,19 +803,21 @@ TRACE_EVENT(nfsd_file_alloc,
- 	),
- 	TP_ARGS(nf),
- 	TP_STRUCT__entry(
-+		__field(const void *, nf)
- 		__field(const void *, nf_inode)
- 		__field(unsigned long, nf_flags)
- 		__field(unsigned long, nf_may)
- 		__field(unsigned int, nf_ref)
- 	),
- 	TP_fast_assign(
-+		__entry->nf = nf;
- 		__entry->nf_inode = nf->nf_inode;
- 		__entry->nf_flags = nf->nf_flags;
- 		__entry->nf_ref = refcount_read(&nf->nf_ref);
- 		__entry->nf_may = nf->nf_may;
- 	),
--	TP_printk("inode=%p ref=%u flags=%s may=%s",
--		__entry->nf_inode, __entry->nf_ref,
-+	TP_printk("nf=%p inode=%p ref=%u flags=%s may=%s",
-+		__entry->nf, __entry->nf_inode, __entry->nf_ref,
- 		show_nf_flags(__entry->nf_flags),
- 		show_nfsd_may_flags(__entry->nf_may)
- 	)
-@@ -834,6 +836,7 @@ TRACE_EVENT(nfsd_file_acquire,
+@@ -758,8 +758,6 @@ DEFINE_CLID_EVENT(confirmed_r);
+ 	__print_flags(val, "|",						\
+ 		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
+ 		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
+-		{ 1 << NFSD_FILE_BREAK_READ,	"BREAK_READ" },		\
+-		{ 1 << NFSD_FILE_BREAK_WRITE,	"BREAK_WRITE" },	\
+ 		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"})
  
- 	TP_STRUCT__entry(
- 		__field(u32, xid)
-+		__field(const void *, nf)
- 		__field(const void *, inode)
- 		__field(unsigned long, may_flags)
- 		__field(unsigned int, nf_ref)
-@@ -845,6 +848,7 @@ TRACE_EVENT(nfsd_file_acquire,
- 
- 	TP_fast_assign(
- 		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->nf = nf;
- 		__entry->inode = inode;
- 		__entry->may_flags = may_flags;
- 		__entry->nf_ref = nf ? refcount_read(&nf->nf_ref) : 0;
-@@ -854,8 +858,8 @@ TRACE_EVENT(nfsd_file_acquire,
- 		__entry->status = be32_to_cpu(status);
- 	),
- 
--	TP_printk("xid=0x%x inode=%p may_flags=%s ref=%u nf_flags=%s nf_may=%s nf_file=%p status=%u",
--			__entry->xid, __entry->inode,
-+	TP_printk("xid=0x%x nf=%p inode=%p may_flags=%s ref=%u nf_flags=%s nf_may=%s nf_file=%p status=%u",
-+			__entry->xid, __entry->nf, __entry->inode,
- 			show_nfsd_may_flags(__entry->may_flags),
- 			__entry->nf_ref, show_nf_flags(__entry->nf_flags),
- 			show_nfsd_may_flags(__entry->nf_may),
-@@ -873,6 +877,7 @@ TRACE_EVENT(nfsd_file_create,
- 	TP_ARGS(rqstp, may_flags, nf),
- 
- 	TP_STRUCT__entry(
-+		__field(const void *, nf)
- 		__field(const void *, nf_inode)
- 		__field(const void *, nf_file)
- 		__field(unsigned long, may_flags)
-@@ -883,6 +888,7 @@ TRACE_EVENT(nfsd_file_create,
- 	),
- 
- 	TP_fast_assign(
-+		__entry->nf = nf;
- 		__entry->nf_inode = nf->nf_inode;
- 		__entry->nf_file = nf->nf_file;
- 		__entry->may_flags = may_flags;
-@@ -892,8 +898,8 @@ TRACE_EVENT(nfsd_file_create,
- 		__entry->xid = be32_to_cpu(rqstp->rq_xid);
- 	),
- 
--	TP_printk("xid=0x%x inode=%p may_flags=%s ref=%u nf_flags=%s nf_may=%s nf_file=%p",
--		__entry->xid, __entry->nf_inode,
-+	TP_printk("xid=0x%x nf=%p inode=%p may_flags=%s ref=%u nf_flags=%s nf_may=%s nf_file=%p",
-+		__entry->xid, __entry->nf, __entry->nf_inode,
- 		show_nfsd_may_flags(__entry->may_flags),
- 		__entry->nf_ref, show_nf_flags(__entry->nf_flags),
- 		show_nfsd_may_flags(__entry->nf_may), __entry->nf_file
-@@ -1060,19 +1066,21 @@ DECLARE_EVENT_CLASS(nfsd_file_gc_class,
- 	),
- 	TP_ARGS(nf),
- 	TP_STRUCT__entry(
--		__field(void *, nf_inode)
--		__field(void *, nf_file)
-+		__field(const void *, nf)
-+		__field(const void *, nf_inode)
-+		__field(const void *, nf_file)
- 		__field(int, nf_ref)
- 		__field(unsigned long, nf_flags)
- 	),
- 	TP_fast_assign(
-+		__entry->nf = nf;
- 		__entry->nf_inode = nf->nf_inode;
- 		__entry->nf_file = nf->nf_file;
- 		__entry->nf_ref = refcount_read(&nf->nf_ref);
- 		__entry->nf_flags = nf->nf_flags;
- 	),
--	TP_printk("inode=%p ref=%d nf_flags=%s nf_file=%p",
--		__entry->nf_inode, __entry->nf_ref,
-+	TP_printk("nf=%p inode=%p ref=%d nf_flags=%s nf_file=%p",
-+		__entry->nf, __entry->nf_inode, __entry->nf_ref,
- 		show_nf_flags(__entry->nf_flags),
- 		__entry->nf_file
- 	)
+ DECLARE_EVENT_CLASS(nfsd_file_class,
 -- 
 2.37.1
 
