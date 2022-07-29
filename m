@@ -2,160 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59D7A58532B
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jul 2022 18:07:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 872635853F1
+	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jul 2022 18:48:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230501AbiG2QHG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Jul 2022 12:07:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34564 "EHLO
+        id S236366AbiG2QsP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 29 Jul 2022 12:48:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229818AbiG2QHF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jul 2022 12:07:05 -0400
+        with ESMTP id S236492AbiG2Qry (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jul 2022 12:47:54 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B158988761
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 09:07:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C08789A7F
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 09:47:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2EB9361BF2
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 16:07:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63488C433D6;
-        Fri, 29 Jul 2022 16:07:02 +0000 (UTC)
-Subject: [PATCH RFC] NFSD: Make nfsd4_setattr() wait before returning
- NFS4ERR_DELAY
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     imammedo@redhat.com
-Date:   Fri, 29 Jul 2022 12:07:01 -0400
-Message-ID: <165911063667.6303.17490362232454476273.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5.dev2+g9ce680a5
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7137361E62
+        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 16:47:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 892FDC433C1;
+        Fri, 29 Jul 2022 16:47:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1659113236;
+        bh=80p2Zq4IrZ1ZXaM2qm5e/a2ZSJB0WlTqsniphdRRTYc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=WBHN1vQ1Yf6efltf3bcismc54uWbZLmqToPDr/xiEH1bkALdD3oHxincPAx+qhsz3
+         jUrbAXH7iMVqI53qVthdAIXXx0LmO6NoDOXPjjQKhgpi8VYFuykmmMir1CVRKaeyzD
+         u+gN8vBtZ027lqNTOCh9m5pQj8see5308RQJzhb5qnAp5pBFZOm7/fCn8RyX1V7VaF
+         N4EKbu5/OFj0BP2GyDcN8mBWUQDSpUdfuHhkuYsykIXfaVfNv5WXQAWHDS69k2pI8i
+         1ptK+ETDm3GRcUJzGAhmhmpHfm5LHLJhRt7cSIBXugE5/QeMq1Noso8kBkYKnS5Tda
+         gWweAsHGEycvQ==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/3] nfsd: add new tracepoint in nfsd_open_break_lease
+Date:   Fri, 29 Jul 2022 12:47:13 -0400
+Message-Id: <20220729164715.75702-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfsd_setattr() can kick off a CB_RECALL (via
-notify_change() -> break_lease()) if a delegation is present. Before
-returning NFS4ERR_DELAY, give the client holding that delegation a
-chance to return it and then retry the nfsd_setattr() again, once.
-
-Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=354
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/nfs4proc.c  |   27 ++++++++++++++++++++++++++-
- fs/nfsd/nfs4state.c |    1 +
- fs/nfsd/nfsd.h      |    1 +
- fs/nfsd/trace.h     |   19 +++++++++++++++++++
- 4 files changed, 47 insertions(+), 1 deletion(-)
+ fs/nfsd/trace.h | 16 ++++++++++++++++
+ fs/nfsd/vfs.c   |  2 ++
+ 2 files changed, 18 insertions(+)
 
-Hi-
-
-Naive approach to the issue of clients attempting to use SETATTR
-without first returning a delegation. I'm interested in testing
-and suggestions for improving this mechanism.
-
-
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 3895eb52d2b1..b4cda7a7e958 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -1136,13 +1136,29 @@ nfsd4_secinfo_no_name_release(union nfsd4_op_u *u)
- 		exp_put(u->secinfo_no_name.sin_exp);
- }
- 
-+/*
-+ * A better approach would wait for the DELEGRETURN operation, and
-+ * retry just as soon as it was done. Unfortunately for NFSv4.0,
-+ * we have only the FH, and there isn't a good way to look up a
-+ * struct nfs4_delegation given an FH.
-+ *
-+ * The timeout prevents deadlock if all nfsd threads happen to be
-+ * tied up waiting for returning delegations.
-+ */
-+static void nfsd4_wait_for_delegreturn(struct svc_rqst *rqstp,
-+				       struct svc_fh *fhp)
-+{
-+	trace_nfsd_delegreturn_wait(rqstp, fhp);
-+	msleep(NFSD_DELEGRETURN_TIMEOUT);
-+}
-+
- static __be32
- nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	      union nfsd4_op_u *u)
- {
- 	struct nfsd4_setattr *setattr = &u->setattr;
- 	__be32 status = nfs_ok;
--	int err;
-+	int err, tried;
- 
- 	if (setattr->sa_iattr.ia_valid & ATTR_SIZE) {
- 		status = nfs4_preprocess_stateid_op(rqstp, cstate,
-@@ -1173,8 +1189,17 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 				&setattr->sa_label);
- 	if (status)
- 		goto out;
-+
-+	tried = 0;
-+retry:
- 	status = nfsd_setattr(rqstp, &cstate->current_fh, &setattr->sa_iattr,
- 				0, (time64_t)0);
-+	if (unlikely(status == nfserr_jukebox && !tried)) {
-+		nfsd4_wait_for_delegreturn(rqstp, &cstate->current_fh);
-+		tried++;
-+		goto retry;
-+	}
-+
- out:
- 	fh_drop_write(&cstate->current_fh);
- 	return status;
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 9a8b09afc173..30838149c7ab 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -341,6 +341,7 @@ void		nfsd_lockd_shutdown(void);
- 
- #define NFSD_LAUNDROMAT_MINTIMEOUT      1   /* seconds */
- #define	NFSD_COURTESY_CLIENT_TIMEOUT	(24 * 60 * 60)	/* seconds */
-+#define NFSD_DELEGRETURN_TIMEOUT	(50)	/* milliseconds */
- 
- /*
-  * The following attributes are currently not supported by the NFSv4 server:
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index a60ead3b227a..7cc9c6eb4f4e 100644
+index 96bb6629541e..38fb1ca31010 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -443,6 +443,25 @@ DEFINE_NFSD_COPY_ERR_EVENT(clone_file_range_err);
- #include "filecache.h"
- #include "vfs.h"
+@@ -531,6 +531,22 @@ DEFINE_STATEID_EVENT(open);
+ DEFINE_STATEID_EVENT(deleg_read);
+ DEFINE_STATEID_EVENT(deleg_recall);
  
-+TRACE_EVENT(nfsd_delegreturn_wait,
-+	TP_PROTO(
-+		const struct svc_rqst *rqstp,
-+		const struct svc_fh *fhp
-+	),
-+	TP_ARGS(rqstp, fhp),
++TRACE_EVENT(nfsd_open_break_lease,
++	TP_PROTO(struct inode *inode,
++		 int access),
++	TP_ARGS(inode, access),
 +	TP_STRUCT__entry(
-+		__field(u32, xid)
-+		__field(u32, fh_hash)
++		__field(void *, inode)
++		__field(int, access)
 +	),
 +	TP_fast_assign(
-+		__entry->xid = be32_to_cpu(rqstp->rq_xid);
-+		__entry->fh_hash = knfsd_fh_hash(&fhp->fh_handle);
++		__entry->inode = inode;
++		__entry->access = access;
 +	),
-+	TP_printk("xid=0x%08x fh_hash=0x%08x",
-+		  __entry->xid, __entry->fh_hash
-+	)
-+);
++	TP_printk("inode=%p access=%s", __entry->inode,
++		  show_nfsd_may_flags(__entry->access))
++)
 +
- DECLARE_EVENT_CLASS(nfsd_stateid_class,
- 	TP_PROTO(stateid_t *stp),
- 	TP_ARGS(stp),
-
+ DECLARE_EVENT_CLASS(nfsd_stateseqid_class,
+ 	TP_PROTO(u32 seqid, const stateid_t *stp),
+ 	TP_ARGS(seqid, stp),
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index d79db56475d4..0edfe6ff7d22 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -729,6 +729,8 @@ int nfsd_open_break_lease(struct inode *inode, int access)
+ {
+ 	unsigned int mode;
+ 
++	trace_nfsd_open_break_lease(inode, access);
++
+ 	if (access & NFSD_MAY_NOT_BREAK_LEASE)
+ 		return 0;
+ 	mode = (access & NFSD_MAY_WRITE) ? O_WRONLY : O_RDONLY;
+-- 
+2.37.1
 
