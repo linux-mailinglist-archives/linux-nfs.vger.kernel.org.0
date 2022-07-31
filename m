@@ -2,161 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A1ED358565A
-	for <lists+linux-nfs@lfdr.de>; Fri, 29 Jul 2022 23:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53568586145
+	for <lists+linux-nfs@lfdr.de>; Sun, 31 Jul 2022 22:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239053AbiG2VBM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 29 Jul 2022 17:01:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
+        id S237874AbiGaUUF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 31 Jul 2022 16:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239198AbiG2VBL (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 29 Jul 2022 17:01:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DAC4B8B4BC
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 14:01:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 634F96200E
-        for <linux-nfs@vger.kernel.org>; Fri, 29 Jul 2022 21:01:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A4A7C433D6;
-        Fri, 29 Jul 2022 21:01:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659128468;
-        bh=W2e4eSgV5s5HVtmh9AeKp+Dk08lHDOtnjHzyActVRag=;
-        h=From:To:Cc:Subject:Date:From;
-        b=A4roRnaszLwDEIU1WVk1vUpiPnody5m1mEhomLd/M4NnVOYsEQe5MnMbifTNtzbVA
-         Qzwf4qfK2MXmaUVp6w1pbijdMf5lBtN3LR9Y0mFFvV5q/QEvNHrYlx0JHpl9dWOw7Z
-         vEIteRauu4M/uYkvNIOMskbaFASGp9ia4jgft/q16shIMWOOc4/3pRvuGPrqgwq2C2
-         P3ryWVD9R9IS3dwnU6Keu870SGKgUTx2Wd+bvr9kcfsYjFW05g40hyl8zFu0gFoN5b
-         C8zBIOS4qMjofYch3XcnqIfDSzceENXf9zrClw8NkpU6kn1b4e+ya1GnY36XeAOGPh
-         R9SXf0hEy9+ew==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, kolga@netapp.com
-Subject: [PATCH v3] nfsd: eliminate the NFSD_FILE_BREAK_* flags
-Date:   Fri, 29 Jul 2022 17:01:07 -0400
-Message-Id: <20220729210107.373538-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231785AbiGaUUE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 31 Jul 2022 16:20:04 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B92C911C0D
+        for <linux-nfs@vger.kernel.org>; Sun, 31 Jul 2022 13:20:02 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 26VB2wSm013313;
+        Sun, 31 Jul 2022 20:20:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=9nsw4dRJ83hYwuf/Ki//YsDD2+vzLq7e9c75JFOxRJg=;
+ b=MmTl9gGAn4XUji4RMeeakY32359blr6x8cnZe/OOguGclTUj38dHeiLflnY7bpZrRS/B
+ U6YR93veKBpSSiLFsRRNukRR978D9sY3ctv3y/0ECt1ugpesNrUk/G0YzdJMSu44xMmE
+ Zf9MxMVFkDhduDRRx7jvU+JntBwf8ztJvWfKa9yq4pApFwGZCxCZ5T1hj6w8EV4/ShJr
+ xQYGvvZS1cgTL8E935bL1t4xL2bDbYsHIF+P4mHYfTiHiJlDdd7YH00Gf6vVoAVUPU69
+ ZdE8kkPs2g3l+lVRR5MuxeTrf0eiUX1R9xkdVaJaWan3UYWyDPItpA61/mXW/b5juuhG Fw== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hmvh9hsyq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 31 Jul 2022 20:20:01 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 26VHZRGT030892;
+        Sun, 31 Jul 2022 20:20:00 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3hmu30r6dk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 31 Jul 2022 20:19:59 +0000
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 26VKJxKa002522;
+        Sun, 31 Jul 2022 20:19:59 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3hmu30r6de-1;
+        Sun, 31 Jul 2022 20:19:59 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, olga.kornievskaia@gmail.com
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSD: fix use-after-free on source server when doing inter-server copy
+Date:   Sun, 31 Jul 2022 13:19:52 -0700
+Message-Id: <1659298792-5735-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-31_15,2022-07-28_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 malwarescore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxlogscore=999 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2206140000
+ definitions=main-2207310099
+X-Proofpoint-ORIG-GUID: 1HJRM7MCeqj3S6-tc6WBz--D9CdhqCFl
+X-Proofpoint-GUID: 1HJRM7MCeqj3S6-tc6WBz--D9CdhqCFl
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We had a report from the spring Bake-a-thon of data corruption in some
-nfstest_interop tests. Looking at the traces showed the NFS server
-allowing a v3 WRITE to proceed while a read delegation was still
-outstanding.
+Use-after-free occurred when the laundromat tried to free expired
+cpntf_state entry on the s2s_cp_stateids list after inter-server
+copy completed. The sc_cp_list that the expired copy state was
+inserted on was already freed.
 
-Currently, we only set NFSD_FILE_BREAK_* flags if
-NFSD_MAY_NOT_BREAK_LEASE was set when we call nfsd_file_alloc.
-NFSD_MAY_NOT_BREAK_LEASE was intended to be set when finding files for
-COMMIT ops, where we need a writeable filehandle but don't need to
-break read leases.
+When COPY completes, the Linux client normally sends LOCKU(lock_state x),
+FREE_STATEID(lock_state x) and CLOSE(open_state y) to the source server.
+The nfs4_put_stid call from nfsd4_free_stateid cleans up the copy state
+from the s2s_cp_stateids list before freeing the lock state's stid.
 
-It doesn't make any sense to consult that flag when allocating a file
-since the file may be used on subsequent calls where we do want to break
-the lease (and the usage of it here seems to be reverse from what it
-should be anyway).
+However, sometimes the CLOSE was sent before the FREE_STATEID request.
+When this happens, the nfsd4_close_open_stateid call from nfsd4_close
+frees all lock states on its st_locks list without cleaning up the copy
+state on the sc_cp_list list. When the time the FREE_STATEID arrives the
+server returns BAD_STATEID since the lock state was freed. This causes
+the use-after-free error to occur when the laundromat tries to free
+the expired cpntf_state.
 
-Also, after calling nfsd_open_break_lease, we don't want to clear the
-BREAK_* bits. A lease could end up being set on it later (more than
-once) and we need to be able to break those leases as well.
+This patch adds a call to nfs4_free_cpntf_statelist in
+nfsd4_close_open_stateid to clean up the copy state before calling
+free_ol_stateid_reaplist to free the lock state's stid on the reaplist.
 
-This means that the NFSD_FILE_BREAK_* flags now just mirror
-NFSD_MAY_{READ,WRITE} flags, so there's no need for them at all. Just
-drop those flags and unconditionally call nfsd_open_break_lease every
-time.
-
-Reported-by: Olga Kornieskaia <kolga@netapp.com>
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2107360
-Fixes: 65294c1f2c5e (nfsd: add a new struct file caching facility to nfsd)
-Cc: <stable@vger.kernel.org> # 5.4.x : bb283ca18d1e NFSD: Clean up the show_nf_flags() macro
-Cc: <stable@vger.kernel.org> # 5.4.x
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
- fs/nfsd/filecache.c | 22 +---------------------
- fs/nfsd/filecache.h |  4 +---
- fs/nfsd/trace.h     |  2 --
- 3 files changed, 2 insertions(+), 26 deletions(-)
+ fs/nfsd/nfs4state.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-v2: rebase on top of v5.19-rc8
-v3: drop unneeded setting of HASHED|PENDING in nfsd_file_alloc
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 9cb2d590c036..e1f98d32cee1 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -184,12 +184,6 @@ nfsd_file_alloc(struct inode *inode, unsigned int may, unsigned int hashval,
- 		nf->nf_hashval = hashval;
- 		refcount_set(&nf->nf_ref, 1);
- 		nf->nf_may = may & NFSD_FILE_MAY_MASK;
--		if (may & NFSD_MAY_NOT_BREAK_LEASE) {
--			if (may & NFSD_MAY_WRITE)
--				__set_bit(NFSD_FILE_BREAK_WRITE, &nf->nf_flags);
--			if (may & NFSD_MAY_READ)
--				__set_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags);
--		}
- 		nf->nf_mark = NULL;
- 		trace_nfsd_file_alloc(nf);
- 	}
-@@ -958,21 +952,7 @@ nfsd_do_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9409a0dc1b76..749f51dff5c7 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6608,6 +6608,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+ 	struct nfs4_client *clp = s->st_stid.sc_client;
+ 	bool unhashed;
+ 	LIST_HEAD(reaplist);
++	struct nfs4_ol_stateid *stp;
  
- 	this_cpu_inc(nfsd_file_cache_hits);
- 
--	if (!(may_flags & NFSD_MAY_NOT_BREAK_LEASE)) {
--		bool write = (may_flags & NFSD_MAY_WRITE);
--
--		if (test_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags) ||
--		    (test_bit(NFSD_FILE_BREAK_WRITE, &nf->nf_flags) && write)) {
--			status = nfserrno(nfsd_open_break_lease(
--					file_inode(nf->nf_file), may_flags));
--			if (status == nfs_ok) {
--				clear_bit(NFSD_FILE_BREAK_READ, &nf->nf_flags);
--				if (write)
--					clear_bit(NFSD_FILE_BREAK_WRITE,
--						  &nf->nf_flags);
--			}
--		}
--	}
-+	status = nfserrno(nfsd_open_break_lease(file_inode(nf->nf_file), may_flags));
- out:
- 	if (status == nfs_ok) {
- 		*pnf = nf;
-diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-index 1da0c79a5580..c9e3c6eb4776 100644
---- a/fs/nfsd/filecache.h
-+++ b/fs/nfsd/filecache.h
-@@ -37,9 +37,7 @@ struct nfsd_file {
- 	struct net		*nf_net;
- #define NFSD_FILE_HASHED	(0)
- #define NFSD_FILE_PENDING	(1)
--#define NFSD_FILE_BREAK_READ	(2)
--#define NFSD_FILE_BREAK_WRITE	(3)
--#define NFSD_FILE_REFERENCED	(4)
-+#define NFSD_FILE_REFERENCED	(2)
- 	unsigned long		nf_flags;
- 	struct inode		*nf_inode;
- 	unsigned int		nf_hashval;
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index a60ead3b227a..081179fb17e8 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -696,8 +696,6 @@ DEFINE_CLID_EVENT(confirmed_r);
- 	__print_flags(val, "|",						\
- 		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
- 		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
--		{ 1 << NFSD_FILE_BREAK_READ,	"BREAK_READ" },		\
--		{ 1 << NFSD_FILE_BREAK_WRITE,	"BREAK_WRITE" },	\
- 		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"})
- 
- DECLARE_EVENT_CLASS(nfsd_file_class,
+ 	spin_lock(&clp->cl_lock);
+ 	unhashed = unhash_open_stateid(s, &reaplist);
+@@ -6616,6 +6617,8 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+ 		if (unhashed)
+ 			put_ol_stateid_locked(s, &reaplist);
+ 		spin_unlock(&clp->cl_lock);
++		list_for_each_entry(stp, &reaplist, st_locks)
++			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
+ 		free_ol_stateid_reaplist(&reaplist);
+ 	} else {
+ 		spin_unlock(&clp->cl_lock);
 -- 
-2.37.1
+2.9.5
 
