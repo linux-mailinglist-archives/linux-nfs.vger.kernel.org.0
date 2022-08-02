@@ -2,62 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6B645872B8
-	for <lists+linux-nfs@lfdr.de>; Mon,  1 Aug 2022 23:04:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A6F5587543
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Aug 2022 03:54:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233686AbiHAVEb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 1 Aug 2022 17:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36310 "EHLO
+        id S235725AbiHBByG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 1 Aug 2022 21:54:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231263AbiHAVEb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Aug 2022 17:04:31 -0400
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D14237FAA
-        for <linux-nfs@vger.kernel.org>; Mon,  1 Aug 2022 14:04:29 -0700 (PDT)
-Received: by mail-lf1-x135.google.com with SMTP id m22so7369382lfl.9
-        for <linux-nfs@vger.kernel.org>; Mon, 01 Aug 2022 14:04:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=+lZWiOrmOQMd/ReRZ/qKqoYsgyLtc/MVdP1DCehLKtc=;
-        b=HfKcDPL4NyGH5KVduIxFCh2hWMtAjpiqsqbXk7MGFsqTV71dPI/EcvYcuenMfOsYgm
-         clQveOoKfJ/0Pgc2Mvx35FNX8llCquLZ7ZFoeD5F50QmLKpNrETpdL2wkRlC8AU1DVNB
-         bGxrocGpkfg8URudEyykynWo7J8Cn8TI/+KBMvmUvpq2cZc7cuRKwlsuEAxlhd/HSRHX
-         K9XrgNp4OZNQtB1AhDUUxZ7UuaD/maRzrFKLB4k93YQGH+KSKoMZAy26WN2dSAhQT7lx
-         9CdFl+JSMV8ZCrTaov0SelUtbthigBllH6K2t6TxwShVYxFTXUAv2mOlca79AG7fPBtc
-         T4QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=+lZWiOrmOQMd/ReRZ/qKqoYsgyLtc/MVdP1DCehLKtc=;
-        b=fyIkDUnm4emrjm/MUVc1GPyIqTEJvDtikkhxH1lEEWV+JnCGIYKZiSbtWPs//4seiP
-         zeMIwQXEBlo0dwqcrsCuAmSRGZw/Ki6FcrGmLBCsFTnDZ4Gr6kvZaURxGDkQZzCVgiJ1
-         v1iVTjQYxotCfPMRXxLD5tDxrjrUBCYv3SlGWSNipzrBVeo2bJmL/A7oJKQK8+7OtYXG
-         fpMufvXt4mImfLRPdPwx/kpfHE5bBXLHF9qj/JEUD/E8pOTnUmhFI8P8MgzI4B44K4NA
-         ISuavjIgHFNysLOYtJMCOjXXWegQJad4b+s8TYO8RfZp9e0My8KpeZApADJ578h6Wnf5
-         Q9sg==
-X-Gm-Message-State: AJIora8fBy8rRjilnp+R2Qt8/MGyS7zw3FsEAHhaIYFgAsEEF06swwje
-        9uwBALM1dlpE4lEfUBGjn750uJpJzNv95Xcuyq0=
-X-Google-Smtp-Source: AGRyM1thT90TXgOt36d15BkUgE7/U73+jIqmkDdsNprI+9Bau9zMhy0qZhgF/EoDHqrcDXDHx8ZuOHNvkVUkwY/bGvk=
-X-Received: by 2002:ac2:57d3:0:b0:48a:cb98:b32e with SMTP id
- k19-20020ac257d3000000b0048acb98b32emr6340843lfo.512.1659387867801; Mon, 01
- Aug 2022 14:04:27 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220801195726.154229-1-jlayton@kernel.org>
-In-Reply-To: <20220801195726.154229-1-jlayton@kernel.org>
-From:   Jan Kasiak <j.kasiak@gmail.com>
-Date:   Mon, 1 Aug 2022 17:04:16 -0400
-Message-ID: <CAD15GZdz8+oUqJmDxit_NCSJqnD-3J40WkmyVJLQXp+r1yHrWA@mail.gmail.com>
-Subject: Re: [PATCH v2] lockd: detect and reject lock arguments that overflow
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Chuck Lever III <chuck.lever@oracle.com>, bfields@fieldses.org,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S235724AbiHBBxa (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 1 Aug 2022 21:53:30 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E77D24A825
+        for <linux-nfs@vger.kernel.org>; Mon,  1 Aug 2022 18:52:46 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 271Nwr69024637;
+        Tue, 2 Aug 2022 01:52:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=pEUyimqlBQdSRhoBh66J1F3kNkVuOjq4e7TjLpEwm6s=;
+ b=k0nBE7FXJaCr7ABZQhTgL66pUM0fSxfD09QIY1repqd+y97Mu5IbMVnkZyPORFrxKNi0
+ B+VIsVMbCL+fK0dh46n0ubnqG3PHXHOaSVU889eHSnnzpdxhZWbOxWNIg8hG/LtbrEst
+ bbweBGpuyvm6j3BZzf5IDByF0yFbmhDlipylouEray+r1IixA/ARYrqVO9x+sgBZCFw1
+ Z5r8K6plq/Gu9NkWpsoSZGWEskuuOUJ1m+D1Wu37f7ALzWKAWdpNnWno7LZcH5UUdmXX
+ IKVe47H9/4WN1hW4gE0eRblgl9YzudbKMl6oaPMEG+Cs+0ucn0a04rCC9j9roILbg23W Ng== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hmue2ndu9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Aug 2022 01:52:40 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 271N1PIf000991;
+        Tue, 2 Aug 2022 01:52:40 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hp57qr3fp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 02 Aug 2022 01:52:37 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2721qb0m025562;
+        Tue, 2 Aug 2022 01:52:37 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3hp57qr3fg-1;
+        Tue, 02 Aug 2022 01:52:37 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, olga.kornievskaia@gmail.com,
+        jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2] NFSD: fix use-after-free on source server when doing inter-server copy
+Date:   Mon,  1 Aug 2022 18:52:34 -0700
+Message-Id: <1659405154-21910-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-01_12,2022-08-01_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
+ adultscore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2208020007
+X-Proofpoint-ORIG-GUID: eLWuEUKMf0yTJ4vQ_jxZrL3Ielyq5Y0I
+X-Proofpoint-GUID: eLWuEUKMf0yTJ4vQ_jxZrL3Ielyq5Y0I
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,132 +69,72 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Jeff,
+Use-after-free occurred when the laundromat tried to free expired
+cpntf_state entry on the s2s_cp_stateids list after inter-server
+copy completed. The sc_cp_list that the expired copy state was
+inserted on was already freed.
 
-Can't speak to everything, but applying this patch on my system fixes
-the issues I was having.
+When COPY completes, the Linux client normally sends LOCKU(lock_state x),
+FREE_STATEID(lock_state x) and CLOSE(open_state y) to the source server.
+The nfs4_put_stid call from nfsd4_free_stateid cleans up the copy state
+from the s2s_cp_stateids list before freeing the lock state's stid.
 
-Thanks for the quick patch!
+However, sometimes the CLOSE was sent before the FREE_STATEID request.
+When this happens, the nfsd4_close_open_stateid call from nfsd4_close
+frees all lock states on its st_locks list without cleaning up the copy
+state on the sc_cp_list list. When the time the FREE_STATEID arrives the
+server returns BAD_STATEID since the lock state was freed. This causes
+the use-after-free error to occur when the laundromat tries to free
+the expired cpntf_state.
 
-Jan
+This patch adds a call to nfs4_free_cpntf_statelist in
+nfsd4_close_open_stateid to clean up the copy state before calling
+free_ol_stateid_reaplist to free the lock state's stid on the reaplist.
 
-On Mon, Aug 1, 2022 at 3:57 PM Jeff Layton <jlayton@kernel.org> wrote:
->
-> lockd doesn't currently vet the start and length in nlm4 requests like
-> it should, and can end up generating lock requests with arguments that
-> overflow when passed to the filesystem.
->
-> The NLM4 protocol uses unsigned 64-bit arguments for both start and
-> length, whereas struct file_lock tracks the start and end as loff_t
-> values. By the time we get around to calling nlm4svc_retrieve_args,
-> we've lost the information that would allow us to determine if there was
-> an overflow.
->
-> Start tracking the actual start and len for NLM4 requests in the
-> nlm_lock. In nlm4svc_retrieve_args, vet these values to ensure they
-> won't cause an overflow, and return NLM4_FBIG if they do.
->
-> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=392
-> Reported-by: Jan Kasiak <j.kasiak@gmail.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/lockd/svc4proc.c       |  8 ++++++++
->  fs/lockd/xdr4.c           | 19 ++-----------------
->  include/linux/lockd/xdr.h |  2 ++
->  3 files changed, 12 insertions(+), 17 deletions(-)
->
-> v2: record args as u64s in nlm_lock and check them in
->     nlm4svc_retrieve_args
->
-> diff --git a/fs/lockd/svc4proc.c b/fs/lockd/svc4proc.c
-> index 176b468a61c7..e5adb524a445 100644
-> --- a/fs/lockd/svc4proc.c
-> +++ b/fs/lockd/svc4proc.c
-> @@ -32,6 +32,10 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
->         if (!nlmsvc_ops)
->                 return nlm_lck_denied_nolocks;
->
-> +       if (lock->lock_start > OFFSET_MAX ||
-> +           (lock->lock_len && ((lock->lock_len - 1) > (OFFSET_MAX - lock->lock_start))))
-> +               return nlm4_fbig;
-> +
->         /* Obtain host handle */
->         if (!(host = nlmsvc_lookup_host(rqstp, lock->caller, lock->len))
->          || (argp->monitor && nsm_monitor(host) < 0))
-> @@ -50,6 +54,10 @@ nlm4svc_retrieve_args(struct svc_rqst *rqstp, struct nlm_args *argp,
->                 /* Set up the missing parts of the file_lock structure */
->                 lock->fl.fl_file  = file->f_file[mode];
->                 lock->fl.fl_pid = current->tgid;
-> +               lock->fl.fl_start = (loff_t)lock->lock_start;
-> +               lock->fl.fl_end = lock->lock_len ?
-> +                                  (loff_t)(lock->lock_start + lock->lock_len - 1) :
-> +                                  OFFSET_MAX;
->                 lock->fl.fl_lmops = &nlmsvc_lock_operations;
->                 nlmsvc_locks_init_private(&lock->fl, host, (pid_t)lock->svid);
->                 if (!lock->fl.fl_owner) {
-> diff --git a/fs/lockd/xdr4.c b/fs/lockd/xdr4.c
-> index 856267c0864b..712fdfeb8ef0 100644
-> --- a/fs/lockd/xdr4.c
-> +++ b/fs/lockd/xdr4.c
-> @@ -20,13 +20,6 @@
->
->  #include "svcxdr.h"
->
-> -static inline loff_t
-> -s64_to_loff_t(__s64 offset)
-> -{
-> -       return (loff_t)offset;
-> -}
-> -
-> -
->  static inline s64
->  loff_t_to_s64(loff_t offset)
->  {
-> @@ -70,8 +63,6 @@ static bool
->  svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
->  {
->         struct file_lock *fl = &lock->fl;
-> -       u64 len, start;
-> -       s64 end;
->
->         if (!svcxdr_decode_string(xdr, &lock->caller, &lock->len))
->                 return false;
-> @@ -81,20 +72,14 @@ svcxdr_decode_lock(struct xdr_stream *xdr, struct nlm_lock *lock)
->                 return false;
->         if (xdr_stream_decode_u32(xdr, &lock->svid) < 0)
->                 return false;
-> -       if (xdr_stream_decode_u64(xdr, &start) < 0)
-> +       if (xdr_stream_decode_u64(xdr, &lock->lock_start) < 0)
->                 return false;
-> -       if (xdr_stream_decode_u64(xdr, &len) < 0)
-> +       if (xdr_stream_decode_u64(xdr, &lock->lock_len) < 0)
->                 return false;
->
->         locks_init_lock(fl);
->         fl->fl_flags = FL_POSIX;
->         fl->fl_type  = F_RDLCK;
-> -       end = start + len - 1;
-> -       fl->fl_start = s64_to_loff_t(start);
-> -       if (len == 0 || end < 0)
-> -               fl->fl_end = OFFSET_MAX;
-> -       else
-> -               fl->fl_end = s64_to_loff_t(end);
->
->         return true;
->  }
-> diff --git a/include/linux/lockd/xdr.h b/include/linux/lockd/xdr.h
-> index 398f70093cd3..67e4a2c5500b 100644
-> --- a/include/linux/lockd/xdr.h
-> +++ b/include/linux/lockd/xdr.h
-> @@ -41,6 +41,8 @@ struct nlm_lock {
->         struct nfs_fh           fh;
->         struct xdr_netobj       oh;
->         u32                     svid;
-> +       u64                     lock_start;
-> +       u64                     lock_len;
->         struct file_lock        fl;
->  };
->
-> --
-> 2.37.1
->
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+---
+ fs/nfsd/nfs4state.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 9409a0dc1b76..b99c545f93e4 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1049,6 +1049,9 @@ static struct nfs4_ol_stateid * nfs4_alloc_open_stateid(struct nfs4_client *clp)
+ 
+ static void nfs4_free_deleg(struct nfs4_stid *stid)
+ {
++	struct nfs4_ol_stateid *stp = openlockstateid(stid);
++
++	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
+ 	kmem_cache_free(deleg_slab, stid);
+ 	atomic_long_dec(&num_delegations);
+ }
+@@ -1463,6 +1466,7 @@ static void nfs4_free_ol_stateid(struct nfs4_stid *stid)
+ 	release_all_access(stp);
+ 	if (stp->st_stateowner)
+ 		nfs4_put_stateowner(stp->st_stateowner);
++	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
+ 	kmem_cache_free(stateid_slab, stid);
+ }
+ 
+@@ -6608,6 +6612,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+ 	struct nfs4_client *clp = s->st_stid.sc_client;
+ 	bool unhashed;
+ 	LIST_HEAD(reaplist);
++	struct nfs4_ol_stateid *stp;
+ 
+ 	spin_lock(&clp->cl_lock);
+ 	unhashed = unhash_open_stateid(s, &reaplist);
+@@ -6616,6 +6621,8 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+ 		if (unhashed)
+ 			put_ol_stateid_locked(s, &reaplist);
+ 		spin_unlock(&clp->cl_lock);
++		list_for_each_entry(stp, &reaplist, st_locks)
++			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
+ 		free_ol_stateid_reaplist(&reaplist);
+ 	} else {
+ 		spin_unlock(&clp->cl_lock);
+-- 
+2.9.5
+
