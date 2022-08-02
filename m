@@ -2,40 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FAF15882F4
-	for <lists+linux-nfs@lfdr.de>; Tue,  2 Aug 2022 22:08:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F30C588308
+	for <lists+linux-nfs@lfdr.de>; Tue,  2 Aug 2022 22:15:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbiHBUIz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 2 Aug 2022 16:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51540 "EHLO
+        id S234629AbiHBUPv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 2 Aug 2022 16:15:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233620AbiHBUIy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Aug 2022 16:08:54 -0400
+        with ESMTP id S230060AbiHBUPl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 2 Aug 2022 16:15:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E8DE52455
-        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 13:08:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AA4186E4
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 13:15:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AB7660C09
-        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 20:08:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27F6AC433C1
-        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 20:08:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 45C9D6115A
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 20:15:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E142C433D6
+        for <linux-nfs@vger.kernel.org>; Tue,  2 Aug 2022 20:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659470933;
-        bh=5NZeClx66lRhjbDzzIfLH6xR3fUOsG4zg6SLjZGjMcE=;
+        s=k20201202; t=1659471337;
+        bh=VqN9wUXjS5oylqwX7/Coac3pLS5+vAUJdt2X/N2/gjI=;
         h=From:To:Subject:Date:From;
-        b=P3WHEo0QLMIRcm00vo7Erary8bzPPr6EC1gFIur7+wPN+L+ZLQeZDAnEDiyUjnRFb
-         tgg2hI/MEOZGrYFMNZc7mIhzYAvqV3BI0f0Kp1Ob4rNbMgJbxaXcofWrnR+O4+ObII
-         QR1zvkqMCFGG8deS4kd86+nHJ71FuphnMIQKSj4LEZCkMO55xKRwb8Gh4QVG2WuIPV
-         SRLkcUvGX2fxuZTPG2em83mOn+3+xN3AIMp4Assvc5KXvBcJF9N/6X159ulzIWBLLu
-         QzomL0IPhwsrurJ2oKmFzy0OlY27TCWwSoMjqOPvOiBJEsK0ckgwrM0ga2DGFesUdz
-         zn+BGF5+q/n7g==
+        b=HaelRN+a6W588WDQJp4WVOtUYcQ//Il0uTp0MYoIa0Uc0pgkKJdueMSnvY9vT6/22
+         NEx2P7ZTFwCrG/8gqhf7YLcnPGeulpo3qOgza+3gRKm/sJZjPURIahMI8YNOeSIsEF
+         67l6EcYZ3cD5qGQIiWePBfE0j6irjG2CKe69Zi+GNgDk7XpJVxFnXLgY6YRZZnw+Xj
+         5PTmtoCVcgbvqQa/j7Yt6syY0Nk4uGbPHSstJ4blCF0Sv4mcfEpONoAWLePGDdnFpM
+         zDjOowQnAq2BgY4vdWLu+oKQuGHnnKFI79HJZJt7rA/Qau49i928venHVZDMzvtSNS
+         sg5bydjqBW9dg==
 From:   trondmy@kernel.org
 To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: nfs_async_write_reschedule_io must not recurse into the writeback code
-Date:   Tue,  2 Aug 2022 16:04:44 -0400
-Message-Id: <20220802200444.381597-1-trondmy@kernel.org>
+Subject: [PATCH] NFSv4/pnfs: Fix a use-after-free bug in open
+Date:   Tue,  2 Aug 2022 16:09:10 -0400
+Message-Id: <20220802200910.381918-1-trondmy@kernel.org>
 X-Mailer: git-send-email 2.37.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -50,28 +50,39 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-It is not safe to call filemap_fdatawrite_range() from
-nfs_async_write_reschedule_io(), since we're often calling from a page
-reclaim context. Just let fsync() redrive the writeback for us.
+If someone cancels the open RPC call, then we must not try to free
+either the open slot or the layoutget operation arguments, since they
+are likely still in use by the hung RPC call.
 
+Fixes: 6949493884fe ("NFSv4: Don't hold the layoutget locks across multiple RPC calls")
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfs/write.c | 2 --
- 1 file changed, 2 deletions(-)
+ fs/nfs/nfs4proc.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 16d166bc4099..4adf2b488da1 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -1444,8 +1444,6 @@ static void nfs_async_write_error(struct list_head *head, int error)
- static void nfs_async_write_reschedule_io(struct nfs_pgio_header *hdr)
- {
- 	nfs_async_write_error(&hdr->pages, 0);
--	filemap_fdatawrite_range(hdr->inode->i_mapping, hdr->args.offset,
--			hdr->args.offset + hdr->args.count - 1);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 2d7c14ade193..3ed14a2a84a4 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -3096,12 +3096,13 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
+ 	}
+ 
+ out:
+-	if (opendata->lgp) {
+-		nfs4_lgopen_release(opendata->lgp);
+-		opendata->lgp = NULL;
+-	}
+-	if (!opendata->cancelled)
++	if (!opendata->cancelled) {
++		if (opendata->lgp) {
++			nfs4_lgopen_release(opendata->lgp);
++			opendata->lgp = NULL;
++		}
+ 		nfs4_sequence_free_slot(&opendata->o_res.seq_res);
++	}
+ 	return ret;
  }
  
- static const struct nfs_pgio_completion_ops nfs_async_write_completion_ops = {
 -- 
 2.37.1
 
