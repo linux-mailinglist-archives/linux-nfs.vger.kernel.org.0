@@ -2,79 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 14E88589ECF
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Aug 2022 17:38:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D048589ECB
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Aug 2022 17:38:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235507AbiHDPiY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Aug 2022 11:38:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41702 "EHLO
+        id S229988AbiHDPiS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Aug 2022 11:38:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231644AbiHDPiW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Aug 2022 11:38:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8C19120F68
-        for <linux-nfs@vger.kernel.org>; Thu,  4 Aug 2022 08:38:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659627499;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Yog9DRxVr54iQAe1p9ahsjOiy30Sl9RiTZ3r7Sc6V88=;
-        b=G4KkBtpJfJs5+kOUh6cCXrdmSThQfJhTvPo8sQ/wZs6v1ZgGgWOB/tIfY//i53us3P50D+
-        JVhcKQruVO2Syz6PrjSwUyMUpRJOMhZkzhe17UtuaNPT2G3p80SOZ9M+EPBuPRyFRAnMnK
-        FFkjA5ktkwzi+jE0xvNNpdwrgtZR5+A=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-93-QsAES3BkMXC2cZWKAdz1-w-1; Thu, 04 Aug 2022 11:38:15 -0400
-X-MC-Unique: QsAES3BkMXC2cZWKAdz1-w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DD34A8037AA;
-        Thu,  4 Aug 2022 15:38:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.10])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 51A0CC15D4F;
-        Thu,  4 Aug 2022 15:38:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk>
-References: <165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk>
-To:     viro@zeniv.linux.org.uk
-Cc:     dhowells@redhat.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-nfs@vger.kernel.org, selinux@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfs: Fix automount superblock LSM init problem, preventing sb sharing
+        with ESMTP id S229854AbiHDPiR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Aug 2022 11:38:17 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB97F1D0E2
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Aug 2022 08:38:16 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 0F3B546EF; Thu,  4 Aug 2022 11:38:16 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 0F3B546EF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1659627496;
+        bh=IgomHCSPSlob4jZm+mGLOCUBH0zrH29GGO92LTRejMI=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=ou/KptL6xo40kH4ruRfyP6a8BsNwniVtJ1xvBRdnKMg2DA0egITdyG3iMAp7335h8
+         T+pDOIxGoC8txlfCljF2OxPE4OEmBWuuvn93Ciy3Dw1g9FvO8JN1zIWfnHlvCP5b7L
+         kz+SvtU06t8sjWGvNftRkstV0lJ2DupyQP4LY3i0=
+Date:   Thu, 4 Aug 2022 11:38:16 -0400
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: pynfs clean_init issue
+Message-ID: <20220804153816.GB9019@fieldses.org>
+References: <F80796C9-DFCE-4C7A-A2EE-4EB2075B9007@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3366905.1659627492.1@warthog.procyon.org.uk>
-Date:   Thu, 04 Aug 2022 16:38:12 +0100
-Message-ID: <3366906.1659627492@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <F80796C9-DFCE-4C7A-A2EE-4EB2075B9007@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Meh.  Forgot to commit before mailing.  I've posted a v2 with the smack
-changes and a change to make SELinux check reference != NULL instead of
-fc->purpose == FS_CONTEXT_FOR_SUBMOUNT.
+On Thu, Aug 04, 2022 at 03:23:44PM +0000, Chuck Lever III wrote:
+> Hi Bruce-
+> 
+> I'm running DELEG21 to unit-test delegations, and this message comes
+> out at the end:
+> 
+> Making sure b'DELEG21-1' is writable: operation OP_SETATTR should return NFS4_OK, instead got NFS4ERR_DELAY
+> 
+> I guess there's no callback service running during the test's clean-up phase.
+> 
+> Then if I run the test again immediately:
+> 
+> [cel@morisot pynfs]$ sudo nfs4.0/testserver.py manet:/export/tmp --maketree --rundeps -v cel
+> Initialization failed, no tests run.
+> Perhaps you need to use the --secure option or configure server to allow connections from high ports
+> Traceback (most recent call last):
+>   File "/home/cel/src/pynfs/nfs4.0/testserver.py", line 394, in <module>
+>     main()
+>   File "/home/cel/src/pynfs/nfs4.0/testserver.py", line 346, in main
+>     env.init()
+>   File "/home/cel/src/pynfs/nfs4.0/servertests/environment.py", line 150, in init
+>     c.clean_dir(self.opts.path)
+>   File "/home/cel/src/pynfs/nfs4.0/nfs4lib.py", line 579, in clean_dir
+>     check_result(res, "Making sure %s is writable" % repr(e.name))
+>   File "/home/cel/src/pynfs/nfs4.0/nfs4lib.py", line 906, in check_result
+>     raise BadCompoundRes(resop, res.status, msg)
+> nfs4lib.BadCompoundRes: Making sure b'DELEG21-1' is writable: operation OP_SETATTR should return NFS4_OK, instead got NFS4ERR_DELAY
+> 
+> And I think this condition persists until the old lease expires and
+> the server permits the client to delete that file.
 
-David
+DELEG21 should pass on any recent kernel.
 
+But possibly cleanup should also be better.  I'm not sure what the right
+fix is.
+
+--b.
