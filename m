@@ -2,188 +2,299 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7051589E9A
-	for <lists+linux-nfs@lfdr.de>; Thu,  4 Aug 2022 17:23:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18AAC589EA3
+	for <lists+linux-nfs@lfdr.de>; Thu,  4 Aug 2022 17:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239647AbiHDPXx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 4 Aug 2022 11:23:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60504 "EHLO
+        id S239956AbiHDP1C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 4 Aug 2022 11:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239937AbiHDPXu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Aug 2022 11:23:50 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD5251A36
-        for <linux-nfs@vger.kernel.org>; Thu,  4 Aug 2022 08:23:48 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 274FFwMo007542;
-        Thu, 4 Aug 2022 15:23:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=J6PWUu96OZqsZqyxC1lanLOaHbL+Bvv6X23WoXXErew=;
- b=Mu05k0eARgUZP0kfUCLi/8/GzC+7RLN+aJZ2RBNpXs6PucjxHc7TZ++6wkkAUPT3RYdM
- Yutccnz/Tuoo235s4bpLjKG0a92yP4Sad7an4rMF9RxXTm1OpGm/p8CiluNHfOGCIQ/4
- ucoXHDZIRJH+da9K/aEkpblAP2UwVvTqAbNwSi4DvsuQizHvUpSDMX19xPMLM13DH1B+
- dL70iXTIyhAVIZ8yOSoIF1Kqd/9aNOy/lJTgd98z1wfIJ/0CHsu6ttQXxd1kBg6UJYlo
- ykja1XCTEsZ6AM61hlIFZw/wMAH+w8Laq1cIzSClv5cMVwqwujN2JajLHAzGvhhbWQ0p Cw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3hmu81581g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Aug 2022 15:23:47 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 274D1mld001056;
-        Thu, 4 Aug 2022 15:23:46 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2101.outbound.protection.outlook.com [104.47.55.101])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3hp57t8rrp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 04 Aug 2022 15:23:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oE24ny1UEcaODAvtVj6zeLH+NAQYRFocHGi55wmIz8zBdPPND61ZyE3xAiLY1VSdMdeNziNGTBAtbqUYmTfhGq8p5tjjdKiujZCT/YYdModvq9JZnayy5c+ERZqg6UxwFUU/DQXWp39wb3tpPCEooCT2FNQOC646z3yCgkqSUTXZoaw8ONDPE1lUJDpV5VHFZrKBIOr0T2fuuX6+th9VLik2EDl6RcVVxkYWcN1NOcqKm3NkFyGMy1Ko3IJAy5RdHD8U9XxzgcmBMHTkUOuVjF6j0G8JVsyR09nuQSeZQP0v1HaNylSZ63kB+uNHDeEIfvd3WeOP51ItFldDLhGShw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=J6PWUu96OZqsZqyxC1lanLOaHbL+Bvv6X23WoXXErew=;
- b=i+cK4QuNqt6n7+9B22G6TCwT8XN2DyewVM0zzsmaQH2pO/RxeDGx4gL9j2lDxzxEowCilJP1kFdxgeH3NrLujAcu/x0VyHhoSs1WbXl2FtIcdDtENkMTqRR/uz8/9W2XNNwGzg2DZskpUGzJQyPn9JAnNmWx174X8Pi0DXBUJigLf14nfofZXSYVY2txjZTB4bZoWF4F18/DOqn64q71085r9qgSwsolP8RXhfUGOMXGtZhS84xNQsNvOT1zeh74Ax1qPqIAMW4dvMxMq6rofkXFWDpESPNZmCUoR4XEEIrb2eXqr69mWEirJBlRGbseO97d371RpYSdRmgHP/Uu8w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=J6PWUu96OZqsZqyxC1lanLOaHbL+Bvv6X23WoXXErew=;
- b=YXkDRzwJPP7tFZ2PShD61L3605GA0Yvp6QH64ZMmUo7K2HLYPoDI+2JLgGVqcaP04BTtJZv9jWo0be7GjSUKdOfsUexbx1ge9aeTlfB50bb7dLikHnGWj7afgcCUAtkfYDkUveZX0jXauqq7sOyxuf3bqZD0effVHEQXiI0xI68=
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com (2603:10b6:5:3a1::23)
- by DM6PR10MB3244.namprd10.prod.outlook.com (2603:10b6:5:1a0::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.14; Thu, 4 Aug
- 2022 15:23:45 +0000
-Received: from DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::9d56:faf4:482e:e6f5]) by DS7PR10MB5134.namprd10.prod.outlook.com
- ([fe80::9d56:faf4:482e:e6f5%9]) with mapi id 15.20.5504.014; Thu, 4 Aug 2022
- 15:23:44 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Bruce Fields <bfields@fieldses.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: pynfs clean_init issue
-Thread-Topic: pynfs clean_init issue
-Thread-Index: AQHYqBYv/t9veUBiB0yDXt264gjwFQ==
-Date:   Thu, 4 Aug 2022 15:23:44 +0000
-Message-ID: <F80796C9-DFCE-4C7A-A2EE-4EB2075B9007@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f0464478-3234-4ee6-1046-08da762d51f9
-x-ms-traffictypediagnostic: DM6PR10MB3244:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: rIJf5lOgA/jGu3+DXprVzXqyo6fmexrrbUvA/5gSXQ+VVkxJ/vJ9x0A1Pao6TTOWwU3av9KSZ0GnueoPyPtspt6amiDHtf626FZmL4jR+TGz3DJDenMJuybzy++ylaSt/icIrvusU7GI/9u3SG6NZkErazZAM3OTcqZo6Jf9vKc//N6z84LtiS5VFRTb3tssvPxCVrXjyyWhdRmeu3UpfxE38MFdkyXu2AMJrDKINOKXb1E98/hmHUPb7E4Q4XnDom2aeL3hWBf3rSdJMOhRnQaeTsaLcHQ1eAMlJsBcAs51TMg5t+OOuhd3aswjSoRCTYUkhzGN7pUWR/HjvZsz6X6jjrlYm0r6u3tHizC1PdNeNC78FcbW/g8ZGEckqs89qGDrGu4rmqTN79GGFYR9P2gRUZeSre3sAoMOWU+IVsGiJl5zVEM5StX26AVMf3i4bmGafLEIRP3//oDJ2a/3OOWgvcIrD8UhgrncrsJaQHGEbhr38Mas1mT0E1HjB0miRiPgE/QWjd8kNaL8y3sFVkgrR3sT8ZdlfKoVH3ne4C9t3Uz6O1Rz1GZPtRmivdvvrQFLnzh1TYf6O7oDNwhidbmxKO0pD8uZiykHJuyjkdE00bZjGyJWoT/0PZVFDxf3RVHinKikchyiT54EMkb6ySNoBH08+p/T2o2mG0JmCul/wv7sVMA5IL1eS425dNJz6X1emeWjKYhp0bg+fGDbKwGDWzqw5Sai/PeQZ0k7dTxpLHUwAJxjOu21Y8gVGxH1pqkOgUVCw7Axz3my88zlqKzJnrZm/KCSnPvyIO1d6LOIY/qc7lsSTXzSaA1qPeBSOhIR+ZqS/V1+znUHDVtA9g==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR10MB5134.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(39860400002)(136003)(376002)(396003)(346002)(33656002)(86362001)(5660300002)(186003)(66946007)(38100700002)(6506007)(26005)(6512007)(2616005)(38070700005)(122000001)(2906002)(41300700001)(316002)(6916009)(6486002)(478600001)(8936002)(7116003)(71200400001)(91956017)(76116006)(36756003)(66556008)(66446008)(64756008)(66476007)(83380400001)(4326008)(8676002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?v8jYw2VF2uC1fi+8kicpGfi5+r/RptKtxWrTqZYOGB9gmyiXr540frti0PH3?=
- =?us-ascii?Q?rAyIPpMNsRjWdysZb+lzuSei4pJ5gBKW5X8OiF278ApZ69lMKhjo9hJilMeP?=
- =?us-ascii?Q?p0ICD4qpcpJ0bBufkg8OXU+9WredjGi6N6Bz6xndaBKQ9vfJiXXOq5PVKf4V?=
- =?us-ascii?Q?FL/scxxz7IcGPNcmy/LQx2AWu5ESNfQx/ksLRCQSh7OQ3fjx0+nRBuBKKcoL?=
- =?us-ascii?Q?kiO3qs/T01iSuxQheUT971NpnqMIADwZ+iJZqaPCed9spEeMY0pw6aXHjpNO?=
- =?us-ascii?Q?/SoZ4iZjNBsSovwUxWWICGd3Euuui5CXBsCqBvS1BjQhontkEwFmwn7QYfdQ?=
- =?us-ascii?Q?hQLWQKx5gIxYEQHDuyN/e+1pVCcU0epoaJw1W55K+KJ7TyRyPMF4Ub6SbghV?=
- =?us-ascii?Q?po6PMRLr2RaxRTLGPx1Z0t1dpvn+yu3ZmB7OqXSZFPtA9tTshgZhaor6np7Z?=
- =?us-ascii?Q?/3746zTG16PQGA7NCCA2/vOdEivI6bqYKNo3P6IXkhWI/ekLrCn8TpaKWUQT?=
- =?us-ascii?Q?V+FcpsugqOsLvx306Em6yVjnYDzwmmRVsmE68JN1KdsGwOyLKfQAFoV6Zcb5?=
- =?us-ascii?Q?mS4va8uEyPPMgKSXlDqFn/xepgg3X6cTtMFiPlIA4tAlbYsMejaZLcV05eZF?=
- =?us-ascii?Q?SLU6oWfA9Zd0TggSayf/ftsIDHOHNVZ90MECNPuRwrW3WaGvbTI8IuDrN1P7?=
- =?us-ascii?Q?7ILSchWIhnfi/5FLYMIq0Rf13BkTjnyYn5UgEnEV+TiyZtmUvMtecKpJS7d5?=
- =?us-ascii?Q?P3Gj7fHFVFdanai2XEMqj0Vt/tyIXkoiFLb8qo4CkGqN3IROcQjzRgcye3Jt?=
- =?us-ascii?Q?107JLjkk5bPRfF2YeexobhZdN57LL26uBbN8Tw8VBb+NKVircLXwi2R5/gW1?=
- =?us-ascii?Q?lha4qhb/YvIB44GLNyd4+Dr3qlCFulxxbMMt5DDtPxTaMieU3Y2I+bKeYwA9?=
- =?us-ascii?Q?IT1JZ/20th1FhA8UdtT06HLUSftpeB1bqmkpAHlv9yR4M60QileoKjuEgghA?=
- =?us-ascii?Q?Q0NaO8zBh/FCNlXOszDMAyZFxDr5zlWV54RBFx11ftU2rF1RrN1zWU7hRKpE?=
- =?us-ascii?Q?x5tT6i7T6ukwRLOett+KkNrFBSP3/Mk+khKZ6e2VC9Zy3ERNYi8X6yPzkybU?=
- =?us-ascii?Q?/QnG+Yb+ErXSIInkIa/gNLwxXiI8D6Fup6elAqiz/VfijVpiyRDSEM/DGIra?=
- =?us-ascii?Q?WGQr9ez+frNjt3RjcsKyb1MkEtlDNKnML1LR5y043BIFqAILYjLwXguHaOm2?=
- =?us-ascii?Q?ReT4s4xqACIzKbJzyPO6s6UrdkW9NeKfC3o/nt15FPy3AjSZJRdKl+IGWyWe?=
- =?us-ascii?Q?kVQCFH6CGSgE+1ZWrwqJXYKF3QafQgnIiowQTJKN2FQFwHZTQUEOTpBNgBfy?=
- =?us-ascii?Q?NDWaUWF8ukA5KMzFnM92EAWhmH9PHqPpf4nLcefJrsD6zl1pmfc6ZUwugWj4?=
- =?us-ascii?Q?Oqk0ljrYO6zPr7eCHnNWAmS+ELUdeByG6FB+2M9p+SCtWDPe7gVD78s/mmUW?=
- =?us-ascii?Q?kX8fxowlqjOA5Pi5xGUWV1Y6TJIjah3RB1L/RJDiHEhtbvj7yU+EDR/KjwAt?=
- =?us-ascii?Q?DNqu8OuhRy/wjtP1MmEn7UKEPvipECxcAJ5Jxq/japcsmNK556MvVN9tmPPe?=
- =?us-ascii?Q?gg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FD8615898B079B40BC0C84FC76979F8B@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S239853AbiHDP1A (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 4 Aug 2022 11:27:00 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B89011EAC4
+        for <linux-nfs@vger.kernel.org>; Thu,  4 Aug 2022 08:26:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659626818;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UwVPMHNGaFZ81vFKHr3nYXqw8Kj/v9CVpEE3w8x/Lig=;
+        b=IuYWtnRwAJLvnQg+jB3qVTTJLUaGyTau5hRYcaAnAgVoKytrXjlW+bDTtk6GzUlgKcJBOu
+        jefbREOg5hp/qZVNtIfBd5Sxp7NzEgLJRYuLCVSBteZ9CxPYk1zha+ccmD5h+oAyjKpRR7
+        qwfvw2yxW7AVBS7v07I+0xYobJ3FC0E=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-526-OqRHtPYhM2Gz9Xwe5BTvKA-1; Thu, 04 Aug 2022 11:26:53 -0400
+X-MC-Unique: OqRHtPYhM2Gz9Xwe5BTvKA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C31D43800C36;
+        Thu,  4 Aug 2022 15:26:52 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E9B9403D0D0;
+        Thu,  4 Aug 2022 15:26:50 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH] nfs: Fix automount superblock LSM init problem,
+ preventing sb sharing
+From:   David Howells <dhowells@redhat.com>
+To:     viro@zeniv.linux.org.uk
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-nfs@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
+        dhowells@redhat.com, linux-kernel@vger.kernel.org
+Date:   Thu, 04 Aug 2022 16:26:49 +0100
+Message-ID: <165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/1.4
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR10MB5134.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f0464478-3234-4ee6-1046-08da762d51f9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Aug 2022 15:23:44.7073
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6mxK8lM4idoayW+ej/YUHuoxlLMOdSl/yALXkrupgMtYtpQ7s49QAFfwMR5gvf8hOzBNsJaPfKOpRdks/Pgg0w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR10MB3244
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-04_03,2022-08-04_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- adultscore=0 spamscore=0 bulkscore=0 suspectscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2208040067
-X-Proofpoint-ORIG-GUID: ly-atXkSz6igif7j0lPTfOhp7WIsHQ1_
-X-Proofpoint-GUID: ly-atXkSz6igif7j0lPTfOhp7WIsHQ1_
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Bruce-
+When NFS superblocks are created by automounting, their LSM parameters
+aren't set in the fs_context struct prior to sget_fc() being called,
+leading to failure to match existing superblocks.
 
-I'm running DELEG21 to unit-test delegations, and this message comes
-out at the end:
+Fix this by adding a new LSM hook to load fc->security for submount
+creation when alloc_fs_context() is creating the fs_context for it.
 
-Making sure b'DELEG21-1' is writable: operation OP_SETATTR should return NF=
-S4_OK, instead got NFS4ERR_DELAY
+However, this uncovers a further bug: nfs_get_root() initialises the
+superblock security manually by calling security_sb_set_mnt_opts() or
+security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
+security_sb_set_mnt_opts(), which can lead to SELinux, at least,
+complaining.
 
-I guess there's no callback service running during the test's clean-up phas=
-e.
+Fix that by adding a flag to the fs_context that suppresses the
+security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
+when it sets the LSM context on the new superblock.
 
-Then if I run the test again immediately:
+The first bug leads to messages like the following appearing in dmesg:
 
-[cel@morisot pynfs]$ sudo nfs4.0/testserver.py manet:/export/tmp --maketree=
- --rundeps -v cel
-Initialization failed, no tests run.
-Perhaps you need to use the --secure option or configure server to allow co=
-nnections from high ports
-Traceback (most recent call last):
-  File "/home/cel/src/pynfs/nfs4.0/testserver.py", line 394, in <module>
-    main()
-  File "/home/cel/src/pynfs/nfs4.0/testserver.py", line 346, in main
-    env.init()
-  File "/home/cel/src/pynfs/nfs4.0/servertests/environment.py", line 150, i=
-n init
-    c.clean_dir(self.opts.path)
-  File "/home/cel/src/pynfs/nfs4.0/nfs4lib.py", line 579, in clean_dir
-    check_result(res, "Making sure %s is writable" % repr(e.name))
-  File "/home/cel/src/pynfs/nfs4.0/nfs4lib.py", line 906, in check_result
-    raise BadCompoundRes(resop, res.status, msg)
-nfs4lib.BadCompoundRes: Making sure b'DELEG21-1' is writable: operation OP_=
-SETATTR should return NFS4_OK, instead got NFS4ERR_DELAY
+	NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
 
-And I think this condition persists until the old lease expires and
-the server permits the client to delete that file.
+Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
+Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
+cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+cc: Anna Schumaker <anna@kernel.org>
+cc: Alexander Viro <viro@zeniv.linux.org.uk>
+cc: Scott Mayhew <smayhew@redhat.com>
+cc: Jeff Layton <jlayton@kernel.org>
+cc: Paul Moore <paul@paul-moore.com>
+cc: Casey Schaufler <casey@schaufler-ca.com>
+cc: linux-nfs@vger.kernel.org
+cc: selinux@vger.kernel.org
+cc: linux-security-module@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+---
 
+ fs/fs_context.c               |    4 ++++
+ fs/nfs/getroot.c              |    1 +
+ fs/super.c                    |   10 ++++++----
+ include/linux/fs_context.h    |    1 +
+ include/linux/lsm_hook_defs.h |    1 +
+ include/linux/lsm_hooks.h     |    6 +++++-
+ include/linux/security.h      |    6 ++++++
+ security/security.c           |    5 +++++
+ security/selinux/hooks.c      |   29 +++++++++++++++++++++++++++++
+ 9 files changed, 58 insertions(+), 5 deletions(-)
 
---
-Chuck Lever
-
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 24ce12f0db32..22248b8a88a8 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -282,6 +282,10 @@ static struct fs_context *alloc_fs_context(struct file_system_type *fs_type,
+ 		break;
+ 	}
+ 
++	ret = security_fs_context_init(fc, reference);
++	if (ret < 0)
++		goto err_fc;
++
+ 	/* TODO: Make all filesystems support this unconditionally */
+ 	init_fs_context = fc->fs_type->init_fs_context;
+ 	if (!init_fs_context)
+diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
+index 11ff2b2e060f..651bffb0067e 100644
+--- a/fs/nfs/getroot.c
++++ b/fs/nfs/getroot.c
+@@ -144,6 +144,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
+ 	}
+ 	if (error)
+ 		goto error_splat_root;
++	fc->lsm_set = true;
+ 	if (server->caps & NFS_CAP_SECURITY_LABEL &&
+ 		!(kflags_out & SECURITY_LSM_NATIVE_LABELS))
+ 		server->caps &= ~NFS_CAP_SECURITY_LABEL;
+diff --git a/fs/super.c b/fs/super.c
+index 60f57c7bc0a6..a1c440336fd9 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -1519,10 +1519,12 @@ int vfs_get_tree(struct fs_context *fc)
+ 	smp_wmb();
+ 	sb->s_flags |= SB_BORN;
+ 
+-	error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
+-	if (unlikely(error)) {
+-		fc_drop_locked(fc);
+-		return error;
++	if (!(fc->lsm_set)) {
++		error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
++		if (unlikely(error)) {
++			fc_drop_locked(fc);
++			return error;
++		}
+ 	}
+ 
+ 	/*
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index 13fa6f3df8e4..3876dd96bb20 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -110,6 +110,7 @@ struct fs_context {
+ 	bool			need_free:1;	/* Need to call ops->free() */
+ 	bool			global:1;	/* Goes into &init_user_ns */
+ 	bool			oldapi:1;	/* Coming from mount(2) */
++	bool			lsm_set:1;	/* security_sb_set/clone_mnt_opts() already done */
+ };
+ 
+ struct fs_context_operations {
+diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
+index eafa1d2489fd..6d1c738e4a84 100644
+--- a/include/linux/lsm_hook_defs.h
++++ b/include/linux/lsm_hook_defs.h
+@@ -54,6 +54,7 @@ LSM_HOOK(int, 0, bprm_creds_from_file, struct linux_binprm *bprm, struct file *f
+ LSM_HOOK(int, 0, bprm_check_security, struct linux_binprm *bprm)
+ LSM_HOOK(void, LSM_RET_VOID, bprm_committing_creds, struct linux_binprm *bprm)
+ LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
++LSM_HOOK(int, 0, fs_context_init, struct fs_context *fc, struct dentry *reference)
+ LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
+ 	 struct fs_context *src_sc)
+ LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
+diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
+index 91c8146649f5..1782814c7c5b 100644
+--- a/include/linux/lsm_hooks.h
++++ b/include/linux/lsm_hooks.h
+@@ -87,8 +87,12 @@
+  * Security hooks for mount using fs_context.
+  *	[See also Documentation/filesystems/mount_api.rst]
+  *
++ * @fs_context_init:
++ *	Initialise fc->security.  This is initialised to NULL by the caller.
++ *	@fc indicates the new filesystem context.
++ *	@dentry indicates a reference for submount/remount
+  * @fs_context_dup:
+- *	Allocate and attach a security structure to sc->security.  This pointer
++ *	Allocate and attach a security structure to fc->security.  This pointer
+  *	is initialised to NULL by the caller.
+  *	@fc indicates the new filesystem context.
+  *	@src_fc indicates the original filesystem context.
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 7fc4e9f49f54..94834f699b04 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -291,6 +291,7 @@ int security_bprm_creds_from_file(struct linux_binprm *bprm, struct file *file);
+ int security_bprm_check(struct linux_binprm *bprm);
+ void security_bprm_committing_creds(struct linux_binprm *bprm);
+ void security_bprm_committed_creds(struct linux_binprm *bprm);
++int security_fs_context_init(struct fs_context *fc, struct dentry *reference);
+ int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc);
+ int security_fs_context_parse_param(struct fs_context *fc, struct fs_parameter *param);
+ int security_sb_alloc(struct super_block *sb);
+@@ -620,6 +621,11 @@ static inline void security_bprm_committed_creds(struct linux_binprm *bprm)
+ {
+ }
+ 
++static inline int security_fs_context_init(struct fs_context *fc,
++					   struct dentry *reference)
++{
++	return 0;
++}
+ static inline int security_fs_context_dup(struct fs_context *fc,
+ 					  struct fs_context *src_fc)
+ {
+diff --git a/security/security.c b/security/security.c
+index 188b8f782220..e683027f9424 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -880,6 +880,11 @@ void security_bprm_committed_creds(struct linux_binprm *bprm)
+ 	call_void_hook(bprm_committed_creds, bprm);
+ }
+ 
++int security_fs_context_init(struct fs_context *fc, struct dentry *reference)
++{
++	return call_int_hook(fs_context_init, 0, fc, reference);
++}
++
+ int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
+ {
+ 	return call_int_hook(fs_context_dup, 0, fc, src_fc);
+diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+index 1bbd53321d13..ddeaff4f3bb1 100644
+--- a/security/selinux/hooks.c
++++ b/security/selinux/hooks.c
+@@ -2768,6 +2768,34 @@ static int selinux_umount(struct vfsmount *mnt, int flags)
+ 				   FILESYSTEM__UNMOUNT, NULL);
+ }
+ 
++static int selinux_fs_context_init(struct fs_context *fc,
++				   struct dentry *reference)
++{
++	const struct superblock_security_struct *sbsec;
++	const struct inode_security_struct *root_isec;
++	struct selinux_mnt_opts *opts;
++
++	if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
++		opts = kzalloc(sizeof(*opts), GFP_KERNEL);
++		if (!opts)
++			return -ENOMEM;
++
++		root_isec = backing_inode_security(reference->d_sb->s_root);
++		sbsec = selinux_superblock(reference->d_sb);
++		if (sbsec->flags & FSCONTEXT_MNT)
++			opts->fscontext_sid	= sbsec->sid;
++		if (sbsec->flags & CONTEXT_MNT)
++			opts->context_sid	= sbsec->mntpoint_sid;
++		if (sbsec->flags & ROOTCONTEXT_MNT)
++			opts->rootcontext_sid	= root_isec->sid;
++		if (sbsec->flags & DEFCONTEXT_MNT)
++			opts->defcontext_sid	= sbsec->def_sid;
++		fc->security = opts;
++	}
++
++	return 0;
++}
++
+ static int selinux_fs_context_dup(struct fs_context *fc,
+ 				  struct fs_context *src_fc)
+ {
+@@ -7239,6 +7267,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
+ 	/*
+ 	 * PUT "CLONING" (ACCESSING + ALLOCATING) HOOKS HERE
+ 	 */
++	LSM_HOOK_INIT(fs_context_init, selinux_fs_context_init),
+ 	LSM_HOOK_INIT(fs_context_dup, selinux_fs_context_dup),
+ 	LSM_HOOK_INIT(fs_context_parse_param, selinux_fs_context_parse_param),
+ 	LSM_HOOK_INIT(sb_eat_lsm_opts, selinux_sb_eat_lsm_opts),
 
 
