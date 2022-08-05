@@ -2,142 +2,119 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 13E6E58B252
-	for <lists+linux-nfs@lfdr.de>; Sat,  6 Aug 2022 00:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 52ACE58B2B7
+	for <lists+linux-nfs@lfdr.de>; Sat,  6 Aug 2022 01:18:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241670AbiHEWGo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 5 Aug 2022 18:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57124 "EHLO
+        id S241576AbiHEXR7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 5 Aug 2022 19:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241632AbiHEWGn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Aug 2022 18:06:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E69571209B
-        for <linux-nfs@vger.kernel.org>; Fri,  5 Aug 2022 15:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1659737199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zlDrYXgDCUthUhiy73M1xjmezLFpu3vi4ADVmnqoFtM=;
-        b=IZZ179FP/9ItWRAObFFeQllCWkBijN1zarTlzOSekT8m1c3A8iTVUmVaq6T5F7iDd3PmTb
-        avuzWnfr3EWEru75w6hpPOONLYmtIZMJBYkkUKxndsoiko79gOZyrc2zPbaS+/0Crwpt9o
-        StmUl+KbQGTVG1O0yGhpdxAnAfcClWo=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-135-ckWTE2zxNqqdAAa9enyXSA-1; Fri, 05 Aug 2022 18:06:38 -0400
-X-MC-Unique: ckWTE2zxNqqdAAa9enyXSA-1
-Received: by mail-qv1-f69.google.com with SMTP id o9-20020a0cecc9000000b0047491274bb1so2114934qvq.19
-        for <linux-nfs@vger.kernel.org>; Fri, 05 Aug 2022 15:06:38 -0700 (PDT)
+        with ESMTP id S241449AbiHEXR6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 5 Aug 2022 19:17:58 -0400
+Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A201811C0E
+        for <linux-nfs@vger.kernel.org>; Fri,  5 Aug 2022 16:17:57 -0700 (PDT)
+Received: by mail-lf1-x12a.google.com with SMTP id t1so5317283lft.8
+        for <linux-nfs@vger.kernel.org>; Fri, 05 Aug 2022 16:17:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=sLkqhWS0z1StVd37v6tEtv9+l8BvQZP/Jy1+OiWgKb4=;
+        b=dfsrVISdOklaGakzrtQrlHJ8V1tNkwzAsnG9RrJD5jhMNo/JkBIors/iIL36ImT9Q6
+         4Lef7XPnzkuIDP8VzJYa9fKQ0ANGsPeVtV66W1Hn6QokPhRzSh3a76ZmArY/9lYc7GRZ
+         xOHWITJGofONn0CPzNQ4QX5yJr90M17wY4EBSmg8X01NohIlwTi/8pCx7z41YkgJ071O
+         0IjcM64LhGo2Jvntb3dBNYSuP+qFaRrPvqHX33ZKsZX4d+1Bqjhb4u8GHBYyd4ypfrit
+         b7pnTpxm69WDc7nMTV48smfUdh7eZgEOw1oKa6N6ucsVvwajEe0Zv/8VSgYE9EosvG6W
+         dpMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc;
-        bh=zlDrYXgDCUthUhiy73M1xjmezLFpu3vi4ADVmnqoFtM=;
-        b=myZjWiBKbv/LbcJB62ZsC0bZ48aYOobVKFYNWvFvU522wwQY0XG3a0BsUwoIZmK5is
-         5D69KBNLAGo5iz9BNHNLvuY+bZlWNOWHEb35fMePPVzzB2SMeW4Z1A2mDPj14s1A81F3
-         b51x60tUgMtyInvZLR1PzCUzBB1uRVbPH+A9zCC6gcFVxG7pwVz/ZogtFNsImoCbtpfX
-         tAGPrw9/tuFxMTlzqiJRy5P05szA5wwEFb10UZnKTIpMFJ2c/S8DyusLWc8s3ULp9D4i
-         /hpsOnNjeBNNQzzEMN5oCIpmPGLMbOJnA+3DWTH29qGpbo+tLHNwWHrbBfJk6jdQ52bq
-         Iz8g==
-X-Gm-Message-State: ACgBeo3zHu3ItBq4k/WUC9CzM4y5qeGXauJ3sgIU94sQ3m1Pl0rltAoY
-        8Pygzdma1I/dK33d40jkcgQKKCsBm2Yk+IdjeVPP92beH9GG/em41iDFr0KWz/Xrcu5y2S4DgjG
-        Ijx/ovWsT1Kz1oZ61l/G+
-X-Received: by 2002:a05:620a:170e:b0:6b8:fa02:6110 with SMTP id az14-20020a05620a170e00b006b8fa026110mr6704344qkb.184.1659737198077;
-        Fri, 05 Aug 2022 15:06:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7xEDaXjDnYGgwNPYVw0vUMBp/ecTy5raNl40Xwriy8H7D/VAv8N6Y/Htlz8LTyvWjvxbIRbw==
-X-Received: by 2002:a05:620a:170e:b0:6b8:fa02:6110 with SMTP id az14-20020a05620a170e00b006b8fa026110mr6704322qkb.184.1659737197860;
-        Fri, 05 Aug 2022 15:06:37 -0700 (PDT)
-Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
-        by smtp.gmail.com with ESMTPSA id g18-20020a05620a40d200b006b5f9b7ac87sm4514981qko.26.2022.08.05.15.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Aug 2022 15:06:37 -0700 (PDT)
-Message-ID: <c10e4aa381aea86bb51b005887533e28f9c7302b.camel@redhat.com>
-Subject: Re: [RFC PATCH 1/4] vfs: report change attribute in statx for
- IS_I_VERSION inodes
-From:   Jeff Layton <jlayton@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-fsdevel@vger.kernel.org, dhowells@redhat.com,
-        lczerner@redhat.com, bxue@redhat.com, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-afs@lists.infradead.org,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Date:   Fri, 05 Aug 2022 18:06:36 -0400
-In-Reply-To: <20220805220136.GG3600936@dread.disaster.area>
-References: <20220805183543.274352-1-jlayton@kernel.org>
-         <20220805183543.274352-2-jlayton@kernel.org>
-         <20220805220136.GG3600936@dread.disaster.area>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
+        bh=sLkqhWS0z1StVd37v6tEtv9+l8BvQZP/Jy1+OiWgKb4=;
+        b=dX/r7yQ6Q/Du3sBV4Y/7eKiEd4U7Z33f/Fc+aqbY7jDLO0kM09m97rrjbrtSNCyeRt
+         958BSg6Ezsugve5vho9fdWIXbVHWyb2ld37u6nOnf1hLUgL+Buu4aCwUpHadM5+xIZqN
+         bQ5HgAfCFrJUvYRdzmRjLT0nVnNxQaMwomVyqSwDCV1JeH4CGSJMUB2o9cfKwtTm2Lzg
+         q7oKp3mNU06Dnbsbpghi8r6JfLTBQZYYiEx5rR1OlthQ71umKmXVb4u0Z2sy3/L3gen5
+         jOm/A3B9iGBgBHf9Csudyr4wuWdk1e8HIu2SqgoODFp3aOC8ewEthwHQfmY1XDi4rIsF
+         KCnQ==
+X-Gm-Message-State: ACgBeo2h/+WD/+xLvQ2QZ4L+1YGW80TgQDGy7Kttk4SzEk3Pvm8WhEk1
+        MqA0QtrAUnOSilQjxxGvSxA7lEm5iPCHUelTOFnthFBPwjA=
+X-Google-Smtp-Source: AA6agR7z3ehyp7NcfKFfE2O7NRTmKNApuEgQGf5HdAMKaLJwXxTneoUK0BmNkxjbd4kl+jPisRGUsTFmItXpYvSynsk=
+X-Received: by 2002:a19:5e55:0:b0:48a:f08a:6c3c with SMTP id
+ z21-20020a195e55000000b0048af08a6c3cmr3018940lfi.56.1659741475384; Fri, 05
+ Aug 2022 16:17:55 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+From:   Jan Kasiak <j.kasiak@gmail.com>
+Date:   Fri, 5 Aug 2022 19:17:43 -0400
+Message-ID: <CAD15GZf0FtU81hwQ+brhnt+sv895=TpAuz-YrMtjfx__FJ28Gg@mail.gmail.com>
+Subject: Question about nlmclnt_lock
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2022-08-06 at 08:01 +1000, Dave Chinner wrote:
-> On Fri, Aug 05, 2022 at 02:35:40PM -0400, Jeff Layton wrote:
-> > From: Jeff Layton <jlayton@redhat.com>
-> >=20
-> > Claim one of the spare fields in struct statx to hold a 64-bit change
-> > attribute. When statx requests this attribute, do an
-> > inode_query_iversion and fill the result in the field.
-> >=20
-> > Also update the test-statx.c program to fetch the change attribute as
-> > well.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/stat.c                 | 7 +++++++
-> >  include/linux/stat.h      | 1 +
-> >  include/uapi/linux/stat.h | 3 ++-
-> >  samples/vfs/test-statx.c  | 4 +++-
-> >  4 files changed, 13 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/fs/stat.c b/fs/stat.c
-> > index 9ced8860e0f3..976e0a59ab23 100644
-> > --- a/fs/stat.c
-> > +++ b/fs/stat.c
-> > @@ -17,6 +17,7 @@
-> >  #include <linux/syscalls.h>
-> >  #include <linux/pagemap.h>
-> >  #include <linux/compat.h>
-> > +#include <linux/iversion.h>
-> > =20
-> >  #include <linux/uaccess.h>
-> >  #include <asm/unistd.h>
-> > @@ -118,6 +119,11 @@ int vfs_getattr_nosec(const struct path *path, str=
-uct kstat *stat,
-> >  	stat->attributes_mask |=3D (STATX_ATTR_AUTOMOUNT |
-> >  				  STATX_ATTR_DAX);
-> > =20
-> > +	if ((request_mask & STATX_CHGATTR) && IS_I_VERSION(inode)) {
-> > +		stat->result_mask |=3D STATX_CHGATTR;
-> > +		stat->chgattr =3D inode_query_iversion(inode);
-> > +	}
->=20
-> If you're going to add generic support for it, shouldn't there be a
-> generic test in fstests that ensures that filesystems that advertise
-> STATX_CHGATTR support actually behave correctly? Including across
-> mounts, and most importantly, that it is made properly stable by
-> fsync?
->=20
-> i.e. what good is this if different filesystems have random quirks
-> that mean it can't be relied on by userspace to tell it changes have
-> occurred?
+Hi,
 
-Absolutely. Being able to better test the i_version field for consistent
-behavior is a primary goal. I haven't yet written any yet, but we'd
-definitely want something in xfstests if we decide this is worthwhile.
---=20
-Jeff Layton <jlayton@redhat.com>
+I was looking at the code for nlmclnt_lock and wanted to ask a
+question about how the Linux kernel client and the NLM 4 protocol
+handle some errors around certain edge cases.
 
+Specifically, I think there is a race condition around two threads of
+the same program acquiring a lock, one of the threads being
+interrupted, and the NFS client sending an unlock when none of the
+program threads called unlock.
+
+On NFS server machine S:
+there exists an unlocked file F
+
+On NFS client machine C:
+in program P:
+thread 1 tries to lock(F) with fd A
+thread 2 tries to lock(F) with fd B
+
+The Linux client will issue two NLM_LOCK calls with the same svid and
+same range, because it uses the program id to map to an svid.
+
+For whatever reason, assume the connection is broken (cable gets pulled etc...)
+and `status = nlmclnt_call(cred, req, NLMPROC_LOCK);` fails.
+
+The Linux client will retry the request, but at some point thread 1
+receives a signal and nlmclnt_lock breaks out of its loop. Because the
+Linux client request failed, it will fall through and go to the
+out_unlock label, where it will want to send an unlock request.
+
+Assume that at some point the connection is reestablished.
+
+The Linux kernel client now has two outstanding lock requests to send
+to the remote server: one for a lock that thread 2 is still trying to
+acquire, and one for an unlock of thread 1 that failed and was
+interrupted.
+
+I'm worried that the Linux client may first send the lock request, and
+tell thread 2 that it acquired the lock, and then send an unlock
+request from the cancelled thread 1 request.
+
+The server will successfully process both requests, because the svid
+is the same for both, and the true server side state will be that the
+file is unlocked.
+
+One can talk about the wisdom of using multiple threads to acquire the
+same file lock, but this behavior is weird, because none of the
+threads called unlock.
+
+I have experimented with reproducing this, but have not been
+successful in triggering this ordering of events.
+
+I've also looked at the code of in clntproc.c and I don't see a spot
+where outstanding failed lock/unlock requests are checked while
+processing lock requests?
+
+Thanks,
+-Jan
