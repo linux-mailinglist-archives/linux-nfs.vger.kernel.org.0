@@ -2,182 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4552A58C638
-	for <lists+linux-nfs@lfdr.de>; Mon,  8 Aug 2022 12:18:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6483B58C7FD
+	for <lists+linux-nfs@lfdr.de>; Mon,  8 Aug 2022 13:57:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235395AbiHHKSW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Aug 2022 06:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42184 "EHLO
+        id S242866AbiHHL46 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 8 Aug 2022 07:56:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234440AbiHHKSV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Aug 2022 06:18:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D2FDF85;
-        Mon,  8 Aug 2022 03:18:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 22EC6B80E38;
-        Mon,  8 Aug 2022 10:18:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0127C43470;
-        Mon,  8 Aug 2022 10:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1659953897;
-        bh=NeqZRYiD9+QFszEb0HDM46ke3bHl/YmdCD/826WagaA=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=bayUb3SXYtM1CEKJnQhutAqSXWfGamnU+2f3VI6Lu7xB7XXv8f7UDn0kdPabDRRnH
-         sH2CBxWVzae7kpqcOnMWmok3cVAkIiYwaHOPbtMrEB5AK9NmRqKP4M6V0ZX5t9z0CQ
-         HU/dC+XuBtCdaW+yaO2wCP6HuVq6y8Pby2f5MwEfsVPr85C1cyYQ0tBtBGqKOrjvEU
-         joiWmLrIJNsOly31/qgnmGlLhk/8vgbKji02eOMH7ZFq1D9i/PTWVylQCshOi97owx
-         B1/jHVHhVbdmSgV+VUGzRWQXWkopnzqMl71JkcNdWi45wJ0l0xaJklGNFSiH0jF8BO
-         Bag/xMSkTZcBA==
-Message-ID: <beeaa2b135fc9a1b411a8ad208d70ba5e9708d08.camel@kernel.org>
-Subject: Re: [RFC PATCH 1/4] vfs: report change attribute in statx for
- IS_I_VERSION inodes
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Xiubo Li <xiubli@redhat.com>, linux-fsdevel@vger.kernel.org
+        with ESMTP id S242774AbiHHL45 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Aug 2022 07:56:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C69FE25FE
+        for <linux-nfs@vger.kernel.org>; Mon,  8 Aug 2022 04:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1659959813;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6TsElmCORhqXP8jgwrJUUvOp+RZV2x4q8imaLygih6I=;
+        b=FK0jFaEqsb92pr+4ukqunsoA+BdfhWMJvRLkrd+b07f7/V32C+fpP+04nxDgkmMZfVyzsv
+        4zCyghA0shM3w24KxKlfsEGU+mHEScdLdYnMJ/k15KElmCrGCyChBjqm4TVdWhuDXhZ1WS
+        uqc4O/0PwHEHwvFXGemWokSFDoSBCN4=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-509-tujhnxz-MeWNvUrpL4rTSg-1; Mon, 08 Aug 2022 07:56:52 -0400
+X-MC-Unique: tujhnxz-MeWNvUrpL4rTSg-1
+Received: by mail-pf1-f200.google.com with SMTP id r13-20020aa7988d000000b0052ed235197bso3006352pfl.20
+        for <linux-nfs@vger.kernel.org>; Mon, 08 Aug 2022 04:56:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-language:content-transfer-encoding:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc;
+        bh=6TsElmCORhqXP8jgwrJUUvOp+RZV2x4q8imaLygih6I=;
+        b=Cm2ZemLA5yx2t9OtA5HfdCsqLoL456w42zVgcrZwqESG4Mt4eVk5mj1TBplsW3reYg
+         6LFDGye8adlXuZ3LEYboaAnkD6vRd2xZf1hHG/nhvaDE/m0QsdGFCtFrIdtKB0Oe6qIK
+         /+ACmKPoYqbN2EhkZLmodkToAoaFEjCRDvdqSNgRZyeRvKA3AY6kPfQ+pi6+MGLCfwHP
+         tkcEnlOtfYClPckQmjCjv7WUX6hrptyPaRoJ7nLcMVJt2a08DAUaRbmpsa+M1GeAFPRu
+         /H5Pbjwgxm2KqoZpYAc/XSJnn9tEPxNnLTzXeHUe9yofPfhl8ZhYngVBToBT+HJlzh+r
+         G0gQ==
+X-Gm-Message-State: ACgBeo0hwO7jUke6gddfacSYJqgcQ78wrD4VIN3q8Zotr2mLy4WlqElO
+        7qhDLoqqOb0twzOihfmUIeIDe+VGIQQvehonL/+0Y253QPOcPwD0ltUcmkxMAGf7ZUd1jUJVmQ3
+        uQl6wBtaEeopmOnokPNC0
+X-Received: by 2002:a63:b95e:0:b0:41d:6498:2ad5 with SMTP id v30-20020a63b95e000000b0041d64982ad5mr5220517pgo.446.1659959811201;
+        Mon, 08 Aug 2022 04:56:51 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR4C3sNPs6TggvMZ4t7Q7yksKQiNSRb4z6RQlytFFTEdh74+vSsCOXNYe9sU2IgG9chhA2nNeQ==
+X-Received: by 2002:a63:b95e:0:b0:41d:6498:2ad5 with SMTP id v30-20020a63b95e000000b0041d64982ad5mr5220501pgo.446.1659959810869;
+        Mon, 08 Aug 2022 04:56:50 -0700 (PDT)
+Received: from [10.72.12.61] ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id b7-20020a1709027e0700b0016cf195eb16sm1338072plm.185.2022.08.08.04.56.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Aug 2022 04:56:50 -0700 (PDT)
+Subject: Re: [RFC PATCH 4/4] ceph: fill in the change attribute in statx
+ requests
+To:     Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org
 Cc:     dhowells@redhat.com, lczerner@redhat.com, bxue@redhat.com,
         ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-afs@lists.infradead.org, linux-ext4@vger.kernel.org,
         linux-xfs@vger.kernel.org, linux-btrfs@vger.kernel.org
-Date:   Mon, 08 Aug 2022 06:18:15 -0400
-In-Reply-To: <8a87ee82-fa04-6b99-8716-9acf24446c5a@redhat.com>
 References: <20220805183543.274352-1-jlayton@kernel.org>
-         <20220805183543.274352-2-jlayton@kernel.org>
-         <8a87ee82-fa04-6b99-8716-9acf24446c5a@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.3 (3.44.3-1.fc36) 
+ <20220805183543.274352-5-jlayton@kernel.org>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <42ec7d51-71ee-03b2-39bc-1ea624880a3e@redhat.com>
+Date:   Mon, 8 Aug 2022 19:56:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20220805183543.274352-5-jlayton@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-08-08 at 10:09 +0800, Xiubo Li wrote:
-> On 8/6/22 2:35 AM, Jeff Layton wrote:
-> > From: Jeff Layton <jlayton@redhat.com>
-> >=20
-> > Claim one of the spare fields in struct statx to hold a 64-bit change
-> > attribute. When statx requests this attribute, do an
-> > inode_query_iversion and fill the result in the field.
-> >=20
-> > Also update the test-statx.c program to fetch the change attribute as
-> > well.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >   fs/stat.c                 | 7 +++++++
-> >   include/linux/stat.h      | 1 +
-> >   include/uapi/linux/stat.h | 3 ++-
-> >   samples/vfs/test-statx.c  | 4 +++-
-> >   4 files changed, 13 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/fs/stat.c b/fs/stat.c
-> > index 9ced8860e0f3..976e0a59ab23 100644
-> > --- a/fs/stat.c
-> > +++ b/fs/stat.c
-> > @@ -17,6 +17,7 @@
-> >   #include <linux/syscalls.h>
-> >   #include <linux/pagemap.h>
-> >   #include <linux/compat.h>
-> > +#include <linux/iversion.h>
-> >  =20
-> >   #include <linux/uaccess.h>
-> >   #include <asm/unistd.h>
-> > @@ -118,6 +119,11 @@ int vfs_getattr_nosec(const struct path *path, str=
-uct kstat *stat,
-> >   	stat->attributes_mask |=3D (STATX_ATTR_AUTOMOUNT |
-> >   				  STATX_ATTR_DAX);
-> >  =20
-> > +	if ((request_mask & STATX_CHGATTR) && IS_I_VERSION(inode)) {
-> > +		stat->result_mask |=3D STATX_CHGATTR;
-> > +		stat->chgattr =3D inode_query_iversion(inode);
-> > +	}
-> > +
-> >   	mnt_userns =3D mnt_user_ns(path->mnt);
-> >   	if (inode->i_op->getattr)
-> >   		return inode->i_op->getattr(mnt_userns, path, stat,
-> > @@ -611,6 +617,7 @@ cp_statx(const struct kstat *stat, struct statx __u=
-ser *buffer)
-> >   	tmp.stx_dev_major =3D MAJOR(stat->dev);
-> >   	tmp.stx_dev_minor =3D MINOR(stat->dev);
-> >   	tmp.stx_mnt_id =3D stat->mnt_id;
-> > +	tmp.stx_chgattr =3D stat->chgattr;
-> >  =20
-> >   	return copy_to_user(buffer, &tmp, sizeof(tmp)) ? -EFAULT : 0;
-> >   }
-> > diff --git a/include/linux/stat.h b/include/linux/stat.h
-> > index 7df06931f25d..4a17887472f6 100644
-> > --- a/include/linux/stat.h
-> > +++ b/include/linux/stat.h
-> > @@ -50,6 +50,7 @@ struct kstat {
-> >   	struct timespec64 btime;			/* File creation time */
-> >   	u64		blocks;
-> >   	u64		mnt_id;
-> > +	u64		chgattr;
-> >   };
-> >  =20
-> >   #endif
-> > diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
-> > index 1500a0f58041..b45243a0fbc5 100644
-> > --- a/include/uapi/linux/stat.h
-> > +++ b/include/uapi/linux/stat.h
-> > @@ -124,7 +124,7 @@ struct statx {
-> >   	__u32	stx_dev_minor;
-> >   	/* 0x90 */
-> >   	__u64	stx_mnt_id;
-> > -	__u64	__spare2;
-> > +	__u64	stx_chgattr;	/* Inode change attribute */
-> >   	/* 0xa0 */
-> >   	__u64	__spare3[12];	/* Spare space for future expansion */
-> >   	/* 0x100 */
-> > @@ -152,6 +152,7 @@ struct statx {
-> >   #define STATX_BASIC_STATS	0x000007ffU	/* The stuff in the normal stat=
- struct */
-> >   #define STATX_BTIME		0x00000800U	/* Want/got stx_btime */
-> >   #define STATX_MNT_ID		0x00001000U	/* Got stx_mnt_id */
-> > +#define STATX_CHGATTR		0x00002000U	/* Want/git stx_chgattr */
->=20
-> s/git/get/ ?
->=20
 
-Muscle-memory typo. Fixed in my tree.
+On 8/6/22 2:35 AM, Jeff Layton wrote:
+> When statx requests the change attribute, request the full gamut of caps
+> (similarly to how ctime is handled). When the change attribute seems to
+> be valid, return it in the chgattr field.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   fs/ceph/inode.c | 14 +++++++++-----
+>   1 file changed, 9 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/ceph/inode.c b/fs/ceph/inode.c
+> index 56c53ab3618e..fb2ed85f9083 100644
+> --- a/fs/ceph/inode.c
+> +++ b/fs/ceph/inode.c
+> @@ -2408,10 +2408,10 @@ static int statx_to_caps(u32 want, umode_t mode)
+>   {
+>   	int mask = 0;
+>   
+> -	if (want & (STATX_MODE|STATX_UID|STATX_GID|STATX_CTIME|STATX_BTIME))
+> +	if (want & (STATX_MODE|STATX_UID|STATX_GID|STATX_CTIME|STATX_BTIME|STATX_CHGATTR))
+>   		mask |= CEPH_CAP_AUTH_SHARED;
+>   
+> -	if (want & (STATX_NLINK|STATX_CTIME)) {
+> +	if (want & (STATX_NLINK|STATX_CTIME|STATX_CHGATTR)) {
+>   		/*
+>   		 * The link count for directories depends on inode->i_subdirs,
+>   		 * and that is only updated when Fs caps are held.
+> @@ -2422,11 +2422,10 @@ static int statx_to_caps(u32 want, umode_t mode)
+>   			mask |= CEPH_CAP_LINK_SHARED;
+>   	}
+>   
+> -	if (want & (STATX_ATIME|STATX_MTIME|STATX_CTIME|STATX_SIZE|
+> -		    STATX_BLOCKS))
+> +	if (want & (STATX_ATIME|STATX_MTIME|STATX_CTIME|STATX_SIZE| STATX_BLOCKS|STATX_CHGATTR))
+>   		mask |= CEPH_CAP_FILE_SHARED;
+>   
+> -	if (want & (STATX_CTIME))
+> +	if (want & (STATX_CTIME|STATX_CHGATTR))
+>   		mask |= CEPH_CAP_XATTR_SHARED;
+>   
+>   	return mask;
+> @@ -2468,6 +2467,11 @@ int ceph_getattr(struct user_namespace *mnt_userns, const struct path *path,
+>   		valid_mask |= STATX_BTIME;
+>   	}
+>   
+> +	if (request_mask & STATX_CHGATTR) {
+> +		stat->chgattr = inode_peek_iversion_raw(inode);
+> +		valid_mask |= STATX_CHGATTR;
+> +	}
+> +
+>   	if (ceph_snap(inode) == CEPH_NOSNAP)
+>   		stat->dev = inode->i_sb->s_dev;
+>   	else
 
-> >  =20
-> >   #define STATX__RESERVED		0x80000000U	/* Reserved for future struct st=
-atx expansion */
-> >  =20
-> > diff --git a/samples/vfs/test-statx.c b/samples/vfs/test-statx.c
-> > index 49c7a46cee07..767208d2f564 100644
-> > --- a/samples/vfs/test-statx.c
-> > +++ b/samples/vfs/test-statx.c
-> > @@ -109,6 +109,8 @@ static void dump_statx(struct statx *stx)
-> >   		printf(" Inode: %-11llu", (unsigned long long) stx->stx_ino);
-> >   	if (stx->stx_mask & STATX_NLINK)
-> >   		printf(" Links: %-5u", stx->stx_nlink);
-> > +	if (stx->stx_mask & STATX_CHGATTR)
-> > +		printf(" Change Attr: 0x%llx", stx->stx_chgattr);
-> >   	if (stx->stx_mask & STATX_TYPE) {
-> >   		switch (stx->stx_mode & S_IFMT) {
-> >   		case S_IFBLK:
-> > @@ -218,7 +220,7 @@ int main(int argc, char **argv)
-> >   	struct statx stx;
-> >   	int ret, raw =3D 0, atflag =3D AT_SYMLINK_NOFOLLOW;
-> >  =20
-> > -	unsigned int mask =3D STATX_BASIC_STATS | STATX_BTIME;
-> > +	unsigned int mask =3D STATX_BASIC_STATS | STATX_BTIME | STATX_CHGATTR=
-;
-> >  =20
-> >   	for (argv++; *argv; argv++) {
-> >   		if (strcmp(*argv, "-F") =3D=3D 0) {
->=20
+Reviewed-by: Xiubo Li <xiubli@redhat.com>
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+
