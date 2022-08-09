@@ -2,69 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB8D58D23F
-	for <lists+linux-nfs@lfdr.de>; Tue,  9 Aug 2022 05:11:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BA9F58D9E5
+	for <lists+linux-nfs@lfdr.de>; Tue,  9 Aug 2022 15:50:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232302AbiHIDLE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 8 Aug 2022 23:11:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
+        id S244637AbiHINu3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 9 Aug 2022 09:50:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbiHIDLD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 8 Aug 2022 23:11:03 -0400
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D3010B8;
-        Mon,  8 Aug 2022 20:10:59 -0700 (PDT)
-Received: from mxde.zte.com.cn (unknown [10.35.8.64])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4M1ykn71Ryz1DwT;
-        Tue,  9 Aug 2022 11:10:57 +0800 (CST)
-Received: from mxus.zte.com.cn (unknown [10.207.168.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxde.zte.com.cn (FangMail) with ESMTPS id 4M1ykW2zBgzCFQtR;
-        Tue,  9 Aug 2022 11:10:43 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.138])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxus.zte.com.cn (FangMail) with ESMTPS id 4M1ykR4p84z9tyDD;
-        Tue,  9 Aug 2022 11:10:39 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.82])
+        with ESMTP id S244700AbiHINuP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 9 Aug 2022 09:50:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0B2B1C117
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Aug 2022 06:50:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4M1ykM4ps2z4xVnQ;
-        Tue,  9 Aug 2022 11:10:35 +0800 (CST)
-Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
-        by mse-fl2.zte.com.cn with SMTP id 2793AGKQ021717;
-        Tue, 9 Aug 2022 11:10:16 +0800 (GMT-8)
-        (envelope-from wang.yi59@zte.com.cn)
-Received: from mapi (szxlzmapp02[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Tue, 9 Aug 2022 11:10:16 +0800 (CST)
-Date:   Tue, 9 Aug 2022 11:10:16 +0800 (CST)
-X-Zmail-TransId: 2b0462f1d01874bde6e5
-X-Mailer: Zmail v1.0
-Message-ID: <202208091110164796108@zte.com.cn>
-In-Reply-To: <20220727100107.3062-1-wang.yi59@zte.com.cn>
-References: 20220727100107.3062-1-wang.yi59@zte.com.cn
-Mime-Version: 1.0
-From:   <wang.yi59@zte.com.cn>
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>,
-        <linux-nfs@vger.kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>, <xue.zhihong@zte.com.cn>,
-        <wang.liang82@zte.com.cn>, <zhang.xianwei8@zte.com.cn>,
-        <wang.yi59@zte.com.cn>
-Subject: =?UTF-8?B?UmU6W1BBVENIXSBORlN2NC4xOiBSRUNMQUlNX0NPTVBMRVRFIG11c3QgaGFuZGxlIEVBQ0NFUw==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 2793AGKQ021717
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.251.14.novalocal with ID 62F1D040.000 by FangMail milter!
-X-FangMail-Envelope: 1660014658/4M1ykn71Ryz1DwT/62F1D040.000/10.35.8.64/[10.35.8.64]/mxde.zte.com.cn/<wang.yi59@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 62F1D040.000/4M1ykn71Ryz1DwT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY autolearn=ham
+        by ams.source.kernel.org (Postfix) with ESMTPS id 847ACB815A1
+        for <linux-nfs@vger.kernel.org>; Tue,  9 Aug 2022 13:50:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA8C7C433C1;
+        Tue,  9 Aug 2022 13:50:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660053001;
+        bh=gnWfusfA8hTGUFglGr5om8SSVMqchdB/oghSQxF9Bik=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=B8t65zOiVcALmKjLLY3EsoIIMf5se2DalDxlWYzTGnDVWBTZy+uFXjMfiHSCySL19
+         03Bs5nabZ5taNsrZcVo6ZCqXqc//lcKHyX9zriMVbd9mJFMNyoIZ2QF6cJk4oZToRW
+         WBSyo7kTYQiMt1iFEiadhRNzAWYpy+v4ErpTfIqC7U3Z0kefWef2rd8FOdGQE4cwew
+         hmnnSDygXCluInUysjxf9Tt1Kx9iakU8d4/16w3oZ6So9oSUs0iktk7X6hxYin8v4x
+         RBtqJzTmsgF04EqNqiXp0FJt9FdYUN6hVkYDvZ+mIjpVyiYRrSHrM1lqvFM7UK6YVU
+         ig5BSlO+NTWSA==
+Message-ID: <b5d62b32edcd3c0df17382a3442c5580ad2c9196.camel@kernel.org>
+Subject: Re: Strange NFS file glob behavior
+From:   Jeff Layton <jlayton@kernel.org>
+To:     DANIEL K FORREST <dforrest@wisc.edu>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Date:   Tue, 09 Aug 2022 09:49:59 -0400
+In-Reply-To: <20220809011700.bdiikqngwmxp3abf@cosmos.ssec.wisc.edu>
+References: <20220809011700.bdiikqngwmxp3abf@cosmos.ssec.wisc.edu>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -72,35 +53,70 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Gentle ping :)
+On Tue, 2022-08-09 at 01:17 +0000, DANIEL K FORREST wrote:
+> I am seeing a strange glob behavior on NFS that I can't explain.
+>=20
+> The server has 16 files, foo/bar{01..16}.
+>=20
+> There are other files in foo/, and there are many other processes on
+> the client accessing files in the directory, but the mount is readonly
+> so the only create/delete activity is on the server, and it's all
+> rsync, so create file and rename file, but no file deletions.
+>=20
+>=20
+> When the 16th file is created (random order) processing is triggered
+> by a message from a different host that is running the rsyncs.
+>=20
+> On the client, I run this command:
+>=20
+> $ stat -c'%z %n' foo/bar{01..16}
+>=20
+> And I see all 16 files.
+>=20
+> However, if I immediately follow that command with:
+>=20
+> $ stat -c'%z %n' foo/bar*
+>=20
 
-> From: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
->
-> A client should be able to handle getting an EACCES error while doing
-> a mount operation to reclaim state due to NFS4CLNT_RECLAIM_REBOOT
-> being set. If the server returns RPC_AUTH_BADCRED because authentication
-> failed when we execute "exportfs -au", then RECLAIM_COMPLETE will go a
-> wrong way. After mount succeeds, all OPEN call will fail due to an
-> NFS4ERR_GRACE error being returned. This patch is to fix it by resending
-> a RPC request.
->
-> Signed-off-by: Zhang Xianwei <zhang.xianwei8@zte.com.cn>
-> Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-> ---
-> fs/nfs/nfs4proc.c | 3 +++
-> 1 file changed, 3 insertions(+)
->
-> diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-> index bb0e84a46d61..b51b83506011 100644
-> --- a/fs/nfs/nfs4proc.c
-> +++ b/fs/nfs/nfs4proc.c
-> @@ -9477,6 +9477,9 @@ static int nfs41_reclaim_complete_handle_errors(struct rpc_task *task, struct nf
-> rpc_delay(task, NFS4_POLL_RETRY_MAX);
-> fallthrough;
-> case -NFS4ERR_RETRY_UNCACHED_REP:
-> + case -EACCES:
-> + dprintk("%s: failed to reclaim complete error %d for server %s, retrying\n",
-> + __func__, task->tk_status, clp->cl_hostname);
-> return -EAGAIN;
-> case -NFS4ERR_BADSESSION:
-> case -NFS4ERR_DEADSESSION:
+You may want to look at an strace of the shell, and see if it's doing
+anything different at the syscall level in these two cases.
+=20
+> On rare occasions I see fewer than 16 files.
+>=20
+> The missing files are the ones most recently created, they can be seen
+> by stat when explicitly enumerated, but the shell glob does not see
+> all of the files.  This test is for verifying a problem with a program
+> that is also sometimes not seeing files using readdir/glob.
+>=20
+>=20
+> How can all 16 files be seen by stat, but not by readdir/glob?
+>=20
+>=20
+> OS is CentOS 7.9.2009, 3.10.0-1127.19.1.el7.x86_64
+> NFS mount is version 3, readonly, nordirplus, lookupcache=3Dpos
+>=20
+>=20
+
+It'd be hard to say without doing deeper analysis, but in order to
+process a glob, the shell has to issue one or more readdir() calls.
+Those calls can be split into more than one READDIR RPC on the network
+as well.
+
+There is no guarantee that between each READDIR you issue that the
+directory remains constant. It's easily possible to issue a readdir for
+the first chunk of dentries, and then have a file that's in a later
+chunk get renamed so that it's in that chunk.
+
+You're also using v3. The timestamps on most Linux servers have a
+granularity of a jiffy (~1ms). If multiple directory operations happen
+within the same jiffy then the timestamp on the directory might not
+appear to have changed even though some of its children had been
+renamed. You may want to consider using v4 just to get the benefit of
+its better cache coherency.
+
+Given that you know what the files are named, you're probably better off
+not using shell globs at all here. Just provide all of the file names on
+the command line (like in your first example) and you avoid READDIR
+activity altogether.
+--=20
+Jeff Layton <jlayton@kernel.org>
