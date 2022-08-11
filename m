@@ -2,302 +2,177 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FBEC58FC36
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 14:29:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D84F58FD13
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 15:09:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235077AbiHKM3F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Aug 2022 08:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35830 "EHLO
+        id S234431AbiHKNJ3 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Aug 2022 09:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234694AbiHKM24 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 08:28:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4755E94EE1
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 05:28:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660220934;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ldt5YH2vUdUY3Rfwj7va1rTsTGCGWHudQKX+6U+hrBE=;
-        b=JfrP0MXsUOp2yH9cix4l3ElpUlK3gq0Y79n1GfLLFgBhZpuETq4n9t51atYvnS6ADeDz0O
-        me+VCgDnCQRIn3Ehm9CbUmHtnyisVIJnuxGkghEM063oGaEEAuCay44/d67KjZFykokN3H
-        ONk7fpiDHehEjs0595HxYas73PUUJ5U=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-475-GTztm_5-O6y--vtnW-93iQ-1; Thu, 11 Aug 2022 08:28:50 -0400
-X-MC-Unique: GTztm_5-O6y--vtnW-93iQ-1
-Received: by mail-yb1-f198.google.com with SMTP id a11-20020a5b090b000000b00672acbe13c1so14379384ybq.2
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 05:28:50 -0700 (PDT)
+        with ESMTP id S234133AbiHKNJ2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 09:09:28 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9BE6E885
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 06:09:27 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id i14so33415281ejg.6
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 06:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=frVg5TguGz61KxOVQ5OMnAeHB+6G6cDUN7vGOs3aQY4=;
+        b=ZulkSurpKScdxGSKl9lQVZnkPZg6iB+i7/Pf9y+hQVsZS/yTDPGsbszO+2PY5ZxfGS
+         K//yLacB+5XngD/Mv+MPUeOcxzMts/mt+nt97GFS7yk7RazROkRKH21p+ZQacFxrJuwJ
+         L9HhO3zGupDBZVAA5lNEkwkJpmQALC5s+CIDS7YsJ2e2mTud+7ZWoC++gMs0aOd6VU8Q
+         ob+RKZijoEo6UzETNPo7X+tXixH/qZfkaaIXQBScGCISRs/Jh0FlnN9rXPXRL3dp70tP
+         Y2mjNj16jyMtwIwIKs5IzVdv547szLw+0uJLDapy4hi9O6s8lqpEJx+6vR3o5FmReXWV
+         9n5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=Ldt5YH2vUdUY3Rfwj7va1rTsTGCGWHudQKX+6U+hrBE=;
-        b=26ogurT9VOYRVJwtkV32puxarLXWVco8I+b/IfYDqIFXZaU6dRLJVVIyc9OfOe8PxQ
-         2sUgQaxkM7isQb9zoui/x97ZloLzVV+iXuVvNLHzmlveK9fwyz9Ql5QUxYZZbtc0jN9/
-         USIVMYtVzCLSARbNogaer6zLqo1VfODKdiQMJPDEaHD12Z1Bhc6B0I1TFngmLRTsTXw4
-         ZpeNGimHSFaodnPJi6jILnmqfx2uWTy08rTWe59bVUsXNUPyx40aQS2WNHVmHJYK2ed2
-         Mgp5VWfeDYSYY+3hjCsV6Wd+tyXY/gAW82IWhXAd531R1X6wTR8f70Ih0en2GXF6cJWW
-         kW0g==
-X-Gm-Message-State: ACgBeo3Z7xJ8/Sjtw1iw6l33kT2nSm0zvWyXxfqCxdMeJCQaPgLIBv3w
-        zp+HExQFvW/8t/prwDVpyNl+6KAoTmH5Of5iznXsI/qKJkeJue3wvXy1I23yrV5yOSl7pwyTBmC
-        bOhyz62NC48a6TbEsG0nOHBfdEX4M8QcQlbGF
-X-Received: by 2002:a0d:f6c4:0:b0:328:2c56:6463 with SMTP id g187-20020a0df6c4000000b003282c566463mr35602496ywf.459.1660220929342;
-        Thu, 11 Aug 2022 05:28:49 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7i/yLgTzvo55oX3D4yxqarpwhjtEMknT6HPFwQbuQSzI78hubppBmLMXchXKyrb6WYwsWpPElHXQtb2k2pY1U=
-X-Received: by 2002:a0d:f6c4:0:b0:328:2c56:6463 with SMTP id
- g187-20020a0df6c4000000b003282c566463mr35602473ywf.459.1660220929084; Thu, 11
- Aug 2022 05:28:49 -0700 (PDT)
+        bh=frVg5TguGz61KxOVQ5OMnAeHB+6G6cDUN7vGOs3aQY4=;
+        b=EQDwpI4uorBg3sXaOnBSPUxoiKW6qVgJWNU5J2mlHotQjjx3SpRfOZ8ME3+vDLcvMK
+         4KsXGZL5Ba4Bh7xu/XtAHzywc/lKRuA++jPHpYa1wdniYDF9KjTUjYDLKhCIG4PxoQon
+         X+esF4kiZDiYe9CnmdN8zEAgJGxfLyhHVfLVlYN46Hc+PlR+QaoQkAY2EoSUO+tHwkrs
+         juZI92yoOsjq0tDEIvfTzWctCS5JJH7uR/z2bpq/GDVr25b4Na6pVRnJLFNdscoBU8IA
+         mHmeRrri38UcdkucZpsowjBm3jaGHTLRVFGLgePKP0R15K7upZTxDH+NEFhtsJkpSh2x
+         cHLQ==
+X-Gm-Message-State: ACgBeo3D+ahwd+xlVYujGxzuF/+8qXdYTLZQHnJ+BcEPBLW2czBVQ/QX
+        iLmIoL980u8LgSJZF80zWdSJ88LL33EYqux4udQ=
+X-Google-Smtp-Source: AA6agR5rb4wC4CCZLVSaxtPUdIxjS4XMf1nvokK2JISljsjtSrzThpjd9dvygKZ7ZZYrOOdLehhrI1Cuywg/UoO6joM=
+X-Received: by 2002:a17:906:4fca:b0:731:5e07:e59a with SMTP id
+ i10-20020a1709064fca00b007315e07e59amr12799793ejw.140.1660223366035; Thu, 11
+ Aug 2022 06:09:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk>
-In-Reply-To: <165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Thu, 11 Aug 2022 14:28:38 +0200
-Message-ID: <CAFqZXNv+ahpN3Hdv54ixa4u-LKaqTtCyjtkpzKGbv7x4dzwc0Q@mail.gmail.com>
-Subject: Re: [PATCH v3] nfs: Fix automount superblock LSM init problem,
- preventing sb sharing
-To:     David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
+References: <CAN-5tyFLDrUMaTTi8ECTrKkAxxSdXGPEweGj8sQk5yW-vkmJ5g@mail.gmail.com>
+ <bba793f649cf4d5955f0ea3311a57ca0d15b2938.camel@kernel.org>
+In-Reply-To: <bba793f649cf4d5955f0ea3311a57ca0d15b2938.camel@kernel.org>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 11 Aug 2022 09:09:14 -0400
+Message-ID: <CAN-5tyFtjC1utV_GMXepF79mHTZb4y3LJjttoWbC2O9-Qs4EcA@mail.gmail.com>
+Subject: Re: help with nfsd kernel oops
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Chuck Lever <chuck.lever@oracle.com>,
         linux-nfs <linux-nfs@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        dwysocha@redhat.com,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+        Dai Ngo <dai.ngo@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 5, 2022 at 3:36 PM David Howells <dhowells@redhat.com> wrote:
-> When NFS superblocks are created by automounting, their LSM parameters
-> aren't set in the fs_context struct prior to sget_fc() being called,
-> leading to failure to match existing superblocks.
+On Thu, Aug 11, 2022 at 6:45 AM Jeff Layton <jlayton@kernel.org> wrote:
 >
-> Fix this by adding a new LSM hook to load fc->security for submount
-> creation when alloc_fs_context() is creating the fs_context for it.
+> On Wed, 2022-08-10 at 20:50 -0400, Olga Kornievskaia wrote:
+> > Hi folks (Chuck/Jeff specifically),
+> >
+> > We've had this outstanding kernel oops that happens (infrequently) in
+> > copy_offload testing (stack trace in the end). I've been trying to
+> > debug it for a while, added printks and such. I can hand-wavey explain
+> > what I'm seeing but I need help (a) nailing down exactly the problem
+> > and (b) get a helpful hint how to address it?
+> >
+> > Ok so what happens. Test case: source file is opened, locked,
+> > (blah-blah destination file), copy_notify to the source server, copy
+> > is done (src dest), source file unlocked (etc dest file), files
+> > closed. Copy/Copy_notify, uses a locking stateid.
+> >
+> > When unlocking happens it triggers LOCKU and FREE_STATEID. Copy_notify
+> > stateid is associated with the locking stateid on the server. When the
+> > last reference on the locking stateid goes nfs4_put_stateid() also
+> > calls nfs4_free_cpntf_statelist() which deals with cleaning up the
+> > copy_notify stateid.
+> >
+> > In the laundry thread, there is a failsafe that if for some reason the
+> > copy_notify state was not cleaned up/expired, then it would be deleted
+> > there.
+> >
+> > However in the failing case, where everything should be cleaned up as
+> > it's supposed to be, instead I see calling to put_ol_stateid_locked()
+> > (before FREE_STATEID is processed) which cleans up the parent but
+> > doesn't touch the copy_notify stateids so instead the laundry thread
+> > runs and walks the copy_notify list (since it's not empty) and tries
+> > to free the entries but that leads to this oops (since part of the
+> > memory was freed by put_ol_stateid_locked() and parent stateid)?.
+> >
+> > Perhaps the fix is to add the  nfs4_free_cpntf_statelist() to
+> > put_ol_stateid_locked() which I tried and it seems to work. But I'm
+> > not confident about it.
+> >
+> > Thoughts?
+> >
+> > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > index fa67ecd5fe63..b988d3c4e5fd 100644
+> > --- a/fs/nfsd/nfs4state.c
+> > +++ b/fs/nfsd/nfs4state.c
+> > @@ -1408,6 +1408,7 @@ static void put_ol_stateid_locked(struct
+> > nfs4_ol_stateid *stp,
+> >         }
+> >
+> >         idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
+> > +       nfs4_free_cpntf_statelist(clp->net, s);
+> >         list_add(&stp->st_locks, reaplist);
+> >  }
+> >
+> >
+> >
+> > [  338.681529] ------------[ cut here ]------------
+> > [  338.683090] kernel BUG at lib/list_debug.c:53!
+> > [  338.684372] invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
+> > [  338.685977] CPU: 1 PID: 493 Comm: kworker/u256:27 Tainted: G    B
+> >           5.19.0-rc6+ #104
+> > [  338.688266] Hardware name: VMware, Inc. VMware Virtual
+> > Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+> > [  338.691019] Workqueue: nfsd4 laundromat_main [nfsd]
+> > [  338.692224] RIP: 0010:__list_del_entry_valid.cold.3+0x3d/0x53
+> > [  338.693626] Code: 0b 4c 89 e1 4c 89 ee 48 c7 c7 e0 1a e3 8f e8 5b
+> > 60 fe ff 0f 0b 48 89 e9 4c 89 ea 48 89 de 48 c7 c7 60 1a e3 8f e8 44
+> > 60 fe ff <0f> 0b 48 89 ea 48 89 de 48 c7 c7 00 1a e3 8f e8 30 60 fe ff
+> > 0f 0b
+> > [  338.697651] RSP: 0018:ffff88800d03fc68 EFLAGS: 00010286
+> > [  338.698762] RAX: 000000000000006d RBX: ffff888028a14798 RCX: 0000000000000000
+> > [  338.700442] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: ffffffff917e9240
+> > [  338.702257] RBP: ffff88801bb0ae90 R08: ffffed100a795f0e R09: ffffed100a795f0e
+> > [  338.704016] R10: ffff888053caf86b R11: ffffed100a795f0d R12: ffff88801bb0ae90
+> > [  338.705703] R13: d9c0013300000a39 R14: 000000000000005a R15: ffff88801b9f5800
+> > [  338.707510] FS:  0000000000000000(0000) GS:ffff888053c80000(0000)
+> > knlGS:0000000000000000
+> > [  338.709319] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [  338.710715] CR2: 00005640baab74d0 CR3: 0000000017574005 CR4: 00000000001706e0
+> > [  338.712282] Call Trace:
+> > [  338.712898]  <TASK>
+> > [  338.713430]  _free_cpntf_state_locked+0x6b/0x120 [nfsd]
+> > [  338.714806]  nfs4_laundromat+0x8ef/0xf30 [nfsd]
+> > [  338.716013]  ? dequeue_entity+0x18b/0x6c0
+> > [  338.716970]  ? release_lock_stateid+0x60/0x60 [nfsd]
+> > [  338.718169]  ? _raw_spin_unlock+0x15/0x30
+> > [  338.719064]  ? __switch_to+0x2fa/0x690
+> > [  338.719879]  ? __schedule+0x67d/0xf20
+> > [  338.720678]  laundromat_main+0x15/0x40 [nfsd]
+> > [  338.721760]  process_one_work+0x3b4/0x6b0
+> > [  338.722629]  worker_thread+0x5a/0x640
+> > [  338.723425]  ? process_one_work+0x6b0/0x6b0
+> > [  338.724324]  kthread+0x162/0x190
+> > [  338.725030]  ? kthread_complete_and_exit+0x20/0x20
+> > [  338.726074]  ret_from_fork+0x22/0x30
+> > [  338.726856]  </TASK>
 >
-> However, this uncovers a further bug: nfs_get_root() initialises the
-> superblock security manually by calling security_sb_set_mnt_opts() or
-> security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
-> security_sb_set_mnt_opts(), which can lead to SELinux, at least,
-> complaining.
+> Does the kernel you're testing have Dai's patch that he posted on August
+> 1st?
 >
-> Fix that by adding a flag to the fs_context that suppresses the
-> security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
-> when it sets the LSM context on the new superblock.
+>     [PATCH v2] NFSD: fix use-after-free on source server when doing inter-server copy
 >
-> The first bug leads to messages like the following appearing in dmesg:
->
->         NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
->
-> Changes
-> =======
-> ver #2)
->  - Made LSM parameter extraction dependent on fc->purpose ==
->    FS_CONTEXT_FOR_SUBMOUNT.  Shouldn't happen on FOR_RECONFIGURE.
->
-> ver #2)
->  - Added Smack support
->  - Made LSM parameter extraction dependent on reference != NULL.
->
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
-> Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
-> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> cc: Anna Schumaker <anna@kernel.org>
-> cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> cc: Scott Mayhew <smayhew@redhat.com>
-> cc: Jeff Layton <jlayton@kernel.org>
-> cc: Paul Moore <paul@paul-moore.com>
-> cc: Casey Schaufler <casey@schaufler-ca.com>
-> cc: linux-nfs@vger.kernel.org
-> cc: selinux@vger.kernel.org
-> cc: linux-security-module@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> ---
->
->  fs/fs_context.c               |    4 +++
->  fs/nfs/getroot.c              |    1 +
->  fs/super.c                    |   10 ++++---
->  include/linux/fs_context.h    |    1 +
->  include/linux/lsm_hook_defs.h |    1 +
->  include/linux/lsm_hooks.h     |    6 +++-
->  include/linux/security.h      |    6 ++++
->  security/security.c           |    5 +++
->  security/selinux/hooks.c      |   29 +++++++++++++++++++
->  security/smack/smack_lsm.c    |   61 +++++++++++++++++++++++++++++++++++++++++
->  10 files changed, 119 insertions(+), 5 deletions(-)
+> This sounds very similar to the problem he was fixing.
 
-<snip>
+I'm testing upstream (5.19-rc6 Chuck's based) for both source and
+destination server.
 
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index 1bbd53321d13..ddeaff4f3bb1 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -2768,6 +2768,34 @@ static int selinux_umount(struct vfsmount *mnt, int flags)
->                                    FILESYSTEM__UNMOUNT, NULL);
->  }
->
-> +static int selinux_fs_context_init(struct fs_context *fc,
-> +                                  struct dentry *reference)
-> +{
-> +       const struct superblock_security_struct *sbsec;
-> +       const struct inode_security_struct *root_isec;
-> +       struct selinux_mnt_opts *opts;
-> +
-> +       if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
-> +               opts = kzalloc(sizeof(*opts), GFP_KERNEL);
-> +               if (!opts)
-> +                       return -ENOMEM;
-> +
-> +               root_isec = backing_inode_security(reference->d_sb->s_root);
-> +               sbsec = selinux_superblock(reference->d_sb);
-> +               if (sbsec->flags & FSCONTEXT_MNT)
-> +                       opts->fscontext_sid     = sbsec->sid;
-> +               if (sbsec->flags & CONTEXT_MNT)
-> +                       opts->context_sid       = sbsec->mntpoint_sid;
-> +               if (sbsec->flags & ROOTCONTEXT_MNT)
-> +                       opts->rootcontext_sid   = root_isec->sid;
-
-I wonder if this part is correct... The rootcontext=... mount option
-relates to the root inode of the mount where it is specified - i.e. in
-case of NFS only to the toplevel inode of the initial mount. Setting
-the same context on the root inode of submounts, which AFAIK are
-supposed to be transparent to the user, doesn't seem correct to me -
-i.e. it should just be left unset for the automatically created
-submounts.
-
-That said, I always feel lost in the super-complex LSM-VFS
-interactions, so I'd welcome it if someone gives a second opinion
-here.
-
-> +               if (sbsec->flags & DEFCONTEXT_MNT)
-> +                       opts->defcontext_sid    = sbsec->def_sid;
-> +               fc->security = opts;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  static int selinux_fs_context_dup(struct fs_context *fc,
->                                   struct fs_context *src_fc)
->  {
-> @@ -7239,6 +7267,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
->         /*
->          * PUT "CLONING" (ACCESSING + ALLOCATING) HOOKS HERE
->          */
-> +       LSM_HOOK_INIT(fs_context_init, selinux_fs_context_init),
->         LSM_HOOK_INIT(fs_context_dup, selinux_fs_context_dup),
->         LSM_HOOK_INIT(fs_context_parse_param, selinux_fs_context_parse_param),
->         LSM_HOOK_INIT(sb_eat_lsm_opts, selinux_sb_eat_lsm_opts),
-> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
-> index 6207762dbdb1..6ba32bb097b5 100644
-> --- a/security/smack/smack_lsm.c
-> +++ b/security/smack/smack_lsm.c
-> @@ -612,6 +612,66 @@ static int smack_add_opt(int token, const char *s, void **mnt_opts)
->         return -EINVAL;
->  }
->
-> +/**
-> + * smack_fs_context_init - Initialise security data for a filesystem context
-> + * @fc: The filesystem context.
-> + * @reference: Reference dentry (automount/reconfigure) or NULL
-> + *
-> + * Returns 0 on success or -ENOMEM on error.
-> + */
-> +static int smack_fs_context_init(struct fs_context *fc,
-> +                                struct dentry *reference)
-> +{
-> +       struct superblock_smack *sbsp;
-> +       struct smack_mnt_opts *ctx;
-> +       struct inode_smack *isp;
-> +
-> +       ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx)
-> +               return -ENOMEM;
-> +       fc->security = ctx;
-> +
-> +       if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
-> +               sbsp = smack_superblock(reference->d_sb);
-> +               isp = smack_inode(reference->d_sb->s_root->d_inode);
-> +
-> +               if (sbsp->smk_default) {
-> +                       ctx->fsdefault = kstrdup(sbsp->smk_default->smk_known, GFP_KERNEL);
-> +                       if (!ctx->fsdefault)
-> +                               return -ENOMEM;
-> +               }
-> +
-> +               if (sbsp->smk_floor) {
-> +                       ctx->fsfloor = kstrdup(sbsp->smk_floor->smk_known, GFP_KERNEL);
-> +                       if (!ctx->fsfloor)
-> +                               return -ENOMEM;
-> +               }
-> +
-> +               if (sbsp->smk_hat) {
-> +                       ctx->fshat = kstrdup(sbsp->smk_hat->smk_known, GFP_KERNEL);
-> +                       if (!ctx->fshat)
-> +                               return -ENOMEM;
-> +               }
-> +
-> +
-
-^ double empty line, FWIW
-
-> +               if (isp->smk_flags & SMK_INODE_TRANSMUTE) {
-> +                       if (sbsp->smk_root) {
-> +                               ctx->fstransmute = kstrdup(sbsp->smk_root->smk_known, GFP_KERNEL);
-> +                               if (!ctx->fstransmute)
-> +                                       return -ENOMEM;
-> +                       }
-> +               } else {
-> +                       if (sbsp->smk_root) {
-> +                               ctx->fsroot = kstrdup(sbsp->smk_root->smk_known, GFP_KERNEL);
-> +                               if (!ctx->fsroot)
-> +                                       return -ENOMEM;
-> +                       }
-> +               }
-
-Similar concerns may or may not apply here, but I know too little
-about how Smack handles mount options to be sure.
-
-
-> +       }
-> +
-> +       return 0;
-> +}
-> +
->  /**
->   * smack_fs_context_dup - Duplicate the security data on fs_context duplication
->   * @fc: The new filesystem context.
-> @@ -4755,6 +4815,7 @@ static struct security_hook_list smack_hooks[] __lsm_ro_after_init = {
->         LSM_HOOK_INIT(ptrace_traceme, smack_ptrace_traceme),
->         LSM_HOOK_INIT(syslog, smack_syslog),
->
-> +       LSM_HOOK_INIT(fs_context_init, smack_fs_context_init),
->         LSM_HOOK_INIT(fs_context_dup, smack_fs_context_dup),
->         LSM_HOOK_INIT(fs_context_parse_param, smack_fs_context_parse_param),
->
->
->
-
---
-Ondrej Mosnacek
-Senior Software Engineer, Linux Security - SELinux kernel
-Red Hat, Inc.
-
+> --
+> Jeff Layton <jlayton@kernel.org>
