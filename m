@@ -2,79 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3A09590748
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 22:20:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9370C5907A6
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 23:02:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234075AbiHKUUV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Aug 2022 16:20:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53978 "EHLO
+        id S234269AbiHKVCF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Aug 2022 17:02:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233534AbiHKUUT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 16:20:19 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4854E11A1C
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 13:20:17 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id A0C2A5D168;
-        Thu, 11 Aug 2022 20:20:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1660249216;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ea5tjl2HJw8x2mxlnZAvgJJXhqwZy1YJ9uXCkwrrQRU=;
-        b=US+4kk1Y86nzEbzY8tDRLTmpVIgzT5Nboi3qKntme9cTkYrEngkz+DRInBuQIrnYdsJR1L
-        yiypIgpHCvsifwULQT1eO27l0zPXXpqyYV408PDUApilF8iAUL2J19fdK6BPtQzqeCadkn
-        zB+F9onZbM3/Z1kArV9aEn+9aCYjBoI=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1660249216;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Ea5tjl2HJw8x2mxlnZAvgJJXhqwZy1YJ9uXCkwrrQRU=;
-        b=BsO+xUoJlacyob16xYhi8YPpGHGwKFGbmlxlwPeMKEzUrM4+XhZ5ryWrgCnn9JoH6S+CTJ
-        IvsFpMvlWyVnPzCg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6DBB013A9B;
-        Thu, 11 Aug 2022 20:20:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id ek/DF4Bk9WL5GAAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Thu, 11 Aug 2022 20:20:16 +0000
-Date:   Thu, 11 Aug 2022 22:20:14 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
-Cc:     linux-nfs@vger.kernel.org
+        with ESMTP id S234075AbiHKVCE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 17:02:04 -0400
+Received: from smtpcmd01-g.aruba.it (smtpcmd01-g.aruba.it [62.149.158.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F357C71723
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 14:02:01 -0700 (PDT)
+Received: from smtpclient.apple ([151.68.165.133])
+        by Aruba Outgoing Smtp  with ESMTPA
+        id MFJNo7NcHr8wyMFJToIo60; Thu, 11 Aug 2022 23:02:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1660251720; bh=ga8TZiU3Z6sJv6mHFOKyyAIpHu7yMK7RjJaAaxz3AiU=;
+        h=Content-Type:From:Mime-Version:Subject:Date:To;
+        b=MfEpoVT1D+JLGp1ZeGlcbP7lXTbY4Ot6snPI2Z7pXdboZ/4/OWQxjyMs37LQmPrbs
+         B06v/bC9cUOjcVpSb+4cAirAfE2jCGzB/+3tRAYB8PCWkO5ZUdfnI4gs/6Rl1+AeWL
+         SVaa9Xzr+zd+v/U8KuqUJmhxKLUy617t+/QK8DsAUYaHRpLdqqboo7PxTCj+b2pwsg
+         MricdFSwot2oZn71VQ9Qt8QM5p/2G8lKn1vmco1w7H5M+4baFRL2Pt3X7KvGHYYRcS
+         MgCgvkaqxXkjAvO3b0ThP1+iBzz1yFcNVSK2Rd2OyhciGuqsyMUbCz1XcnYGQJiEXd
+         F2ox6Z4PJsFMg==
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+Mime-Version: 1.0 (1.0)
 Subject: Re: [PATCH v3] nfsrahead: fix linking while static linking
-Message-ID: <YvVkftYtIgFhYHKk@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20220809223308.1421081-1-giulio.benetti@benettiengineering.com>
- <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Date:   Thu, 11 Aug 2022 22:36:35 +0200
+Message-Id: <881E6E82-812C-4BD8-849C-4DEE484AE4F0@benettiengineering.com>
+References: <YvVkftYtIgFhYHKk@pevik>
+Cc:     linux-nfs@vger.kernel.org
+In-Reply-To: <YvVkftYtIgFhYHKk@pevik>
+To:     Petr Vorel <pvorel@suse.cz>
+X-Mailer: iPhone Mail (19G71)
+X-CMAE-Envelope: MS4xfPeJDG4Oguql9iPvvt0hYF7ra64uncmeOwc0Pskqz+Gf8BTgZhQBmEhTu10efiGpzyazv3+Q9JOjEO3m7B0FZYFUf4HNU2Gun8HWUhA0U+pk0ciQ8zKi
+ 5/JhNBfU3wWbR1ArBfSj7WzvZJPg+g9zDjSsd3OvcVTQaVsxTj74YKXFTxpzb7Dpp8Gb8hZynuPC3APgAXuiGfNXtGUpSXys6XCy31xyCo17sJswPtpvfo0S
+ 3vFd6Z6SRnAb8a2of9pfrQ==
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Hi Petr,
 
-Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> Il giorno 11 ago 2022, alle ore 22:20, Petr Vorel <pvorel@suse.cz> ha scri=
+tto:
+>=20
+> =EF=BB=BFHi,
+>=20
+> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+>=20
+> nit (not worth of reposting): I'm not a native speaker, but IMHO subject s=
+hould
+> be without while, e.g. "fix order on static linking"
 
-nit (not worth of reposting): I'm not a native speaker, but IMHO subject should
-be without while, e.g. "fix order on static linking"
+Totally, it sounds awful as it is now.
+I ask maintainers if it=E2=80=99s possible to reword like Petr
+pointed.
 
-Kind regards,
-Petr
+Thank you all.
+
+Best regards
+Giulio
+
+>=20
+> Kind regards,
+> Petr
+
