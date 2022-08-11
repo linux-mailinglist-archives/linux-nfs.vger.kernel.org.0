@@ -2,102 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ECDB259071F
-	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 21:49:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3A09590748
+	for <lists+linux-nfs@lfdr.de>; Thu, 11 Aug 2022 22:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235639AbiHKTtB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Aug 2022 15:49:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
+        id S234075AbiHKUUV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Aug 2022 16:20:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231131AbiHKTtA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 15:49:00 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 299983206E
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 12:49:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660247339;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=0NsLBelydEYDezySxkM4ONU4gYfEyGwSacjLIPXy2w0=;
-        b=MbcBKb3IYrFYCCDQ0gwSEPYO7I/5/vMJJyk2GII1kyPUyBOpY2QkIBbnYxfONJVyb7WvFr
-        fNf8Wd36eMiZOIyXyWIngL/RblXy6JiBXI8FBFOCWmRCqMQ/CaGaIwvLn7PPaUn2FgUQng
-        WnponygoZ7Zks8KG7exduqZ+Qe9r64g=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-656-OJ9NFiJLNz6I-Wx4D2rQXA-1; Thu, 11 Aug 2022 15:48:57 -0400
-X-MC-Unique: OJ9NFiJLNz6I-Wx4D2rQXA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S233534AbiHKUUT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 16:20:19 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4854E11A1C
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 13:20:17 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72C5C8115B1
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 19:48:57 +0000 (UTC)
-Received: from kdsouza.com (vm-238-64.vmware.gsslab.pnq2.redhat.com [10.74.238.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 557AF14152E0;
-        Thu, 11 Aug 2022 19:48:56 +0000 (UTC)
-From:   Kenneth D'souza <kdsouza@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com, kdsouza@redhat.com
-Subject: [PATCH v2] libnfs4acl: Check file mode before getxattr call
-Date:   Thu, 11 Aug 2022 14:48:34 -0500
-Message-Id: <20220811194834.470072-1-kdsouza@redhat.com>
+        by smtp-out2.suse.de (Postfix) with ESMTPS id A0C2A5D168;
+        Thu, 11 Aug 2022 20:20:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1660249216;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ea5tjl2HJw8x2mxlnZAvgJJXhqwZy1YJ9uXCkwrrQRU=;
+        b=US+4kk1Y86nzEbzY8tDRLTmpVIgzT5Nboi3qKntme9cTkYrEngkz+DRInBuQIrnYdsJR1L
+        yiypIgpHCvsifwULQT1eO27l0zPXXpqyYV408PDUApilF8iAUL2J19fdK6BPtQzqeCadkn
+        zB+F9onZbM3/Z1kArV9aEn+9aCYjBoI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1660249216;
+        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+         cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ea5tjl2HJw8x2mxlnZAvgJJXhqwZy1YJ9uXCkwrrQRU=;
+        b=BsO+xUoJlacyob16xYhi8YPpGHGwKFGbmlxlwPeMKEzUrM4+XhZ5ryWrgCnn9JoH6S+CTJ
+        IvsFpMvlWyVnPzCg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 6DBB013A9B;
+        Thu, 11 Aug 2022 20:20:16 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id ek/DF4Bk9WL5GAAAMHmgww
+        (envelope-from <pvorel@suse.cz>); Thu, 11 Aug 2022 20:20:16 +0000
+Date:   Thu, 11 Aug 2022 22:20:14 +0200
+From:   Petr Vorel <pvorel@suse.cz>
+To:     Giulio Benetti <giulio.benetti@benettiengineering.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v3] nfsrahead: fix linking while static linking
+Message-ID: <YvVkftYtIgFhYHKk@pevik>
+Reply-To: Petr Vorel <pvorel@suse.cz>
+References: <20220809223308.1421081-1-giulio.benetti@benettiengineering.com>
+ <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_SOFTFAIL,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Currently we are checking file mode after getxattr call.
-Due to this the return value would be 0, which would change the getxattr return value.
-As xattr_size will be 0, nfs4_getfacl will fail with error EINVAL.
-This patch fixes this issue by moving the file mode check before
-getxattr call.
+Hi,
 
-Signed-off-by: Kenneth D'souza <kdsouza@redhat.com>
----
- libnfs4acl/nfs4_getacl.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
 
-diff --git a/libnfs4acl/nfs4_getacl.c b/libnfs4acl/nfs4_getacl.c
-index 7821da3..aace5cd 100644
---- a/libnfs4acl/nfs4_getacl.c
-+++ b/libnfs4acl/nfs4_getacl.c
-@@ -39,6 +39,13 @@ static struct nfs4_acl *nfs4_getacl_byname(const char *path,
- 		return NULL;
- 	}
- 
-+	ret = stat(path, &st);
-+	if (ret == -1)
-+		goto err;
-+
-+	if (S_ISDIR(st.st_mode))
-+		iflags = NFS4_ACL_ISDIR;
-+
- 	/* find necessary buffer size */
- 	ret = getxattr(path, xattr_name, NULL, 0);
- 	if (ret == -1)
-@@ -53,13 +60,6 @@ static struct nfs4_acl *nfs4_getacl_byname(const char *path,
- 	if (ret == -1)
- 		goto err_free;
- 
--	ret = stat(path, &st);
--	if (ret == -1)
--		goto err_free;
--
--	if (S_ISDIR(st.st_mode))
--		iflags = NFS4_ACL_ISDIR;
--
- 	acl = acl_nfs41_xattr_load(buf, ret, iflags, type);
- 
- 	free(buf);
--- 
-2.31.1
+nit (not worth of reposting): I'm not a native speaker, but IMHO subject should
+be without while, e.g. "fix order on static linking"
 
+Kind regards,
+Petr
