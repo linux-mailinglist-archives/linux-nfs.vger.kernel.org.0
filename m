@@ -2,264 +2,311 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66AD35909E7
-	for <lists+linux-nfs@lfdr.de>; Fri, 12 Aug 2022 03:34:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74D40590A74
+	for <lists+linux-nfs@lfdr.de>; Fri, 12 Aug 2022 05:04:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236042AbiHLBex (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 11 Aug 2022 21:34:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46152 "EHLO
+        id S236909AbiHLDEP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 11 Aug 2022 23:04:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230422AbiHLBew (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 21:34:52 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B856BBF71
-        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 18:34:50 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27BN6B2J010959;
-        Fri, 12 Aug 2022 01:34:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=7L+Kj8Ytq2Ml8kDqapYPPpEHS0UtUxk53M+ZxxY20ZI=;
- b=u7dHP0ffa96e/nQ+NtM6jnCKm7EWuuHxT3RganzT8kvpKc5vXYdApJ5zi68K8Z1+M05F
- APZGAKDYDc2t3M/kHdz247gq3xOzC3tOoXwrOQgeOP8GBZqezJxnSaXnmpPetV+UuQVt
- foTRBmlQiLTC5X2XXIiKkjKlJnr+FQlijmU/BHSTmObY6GCOAX7NVTdqPbFeZWBcXFuu
- AXoSNmuHOTkFyXaRZnVkgDBT0dELx4uH0sO7Uv1XqjYS9JwEJO8HitHpHzS2LWJ1Zz4S
- yFemVBEJYQwbSq3BbtfCB4VWZTw7Vh3Zuk9eVxlwQjZhl/BEGWfDM4O9bkF06GWxQtiY iw== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3huwqgp34e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Aug 2022 01:34:40 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27C0THoD018973;
-        Fri, 12 Aug 2022 01:34:40 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2041.outbound.protection.outlook.com [104.47.66.41])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3huwqknt6w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Aug 2022 01:34:39 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I0z6SygdDHVj2us31ISLZ0NBCVib5wnSO/NKCbvjvNBLAxi2ff+MxMzJ0RwmlRCfSAxUbJwU7hOkHSMG90n3dDM/kZ/MxvfVqaL0Zreu3RRVvyCrm21OYY45kic6GTLCszSwS2f/Cpe8neBsmFbxLHqpvpacJhXBE9TIAItrJKBXf25admXU2DnIrPCyO5e6urscyzWRqwnIGWNN8VoMLjr5Fz3gQzLStiizNbO1ZrWcRf09vxsA2FOrGy0hgFmKkxEuuxYir1TO30Og8DSHTosF+yDfZB9AS9Hjt+3gX/F+kz15lWsgjsarpkyakW2KnuHQxxBNkNJVVMehm2m9MQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7L+Kj8Ytq2Ml8kDqapYPPpEHS0UtUxk53M+ZxxY20ZI=;
- b=MMgUuLWxuWp2XyHQz+rf6f8Gsf13s3B4z3oKRbBbVnsJSxDyO03Wmq0QvIpplDqOYluv0w7m+rTmiraHcQS36nxEcluqVG8Axvmxji+ylrQSDTktvcQ4lOI7WANluVRuji3/nZBJSbRqTyWFazsIYviwibSnrCpriX5Wl75pRH4j3xLopXeBh05seshIbCZ2eVI4zSKIaivzLjH5yjqGgAzDYsbr6TVTZ4kLesHvkyd/FcTaZ4dA04cedTACF0NoSmpPeKx/F5CA+qOvj00UGOA1qHT/KXyQJtFv1CyUXvzAPgLgEYsmOVnZ+26eArWIFvpk/qlcezKAcjGFuuThIQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7L+Kj8Ytq2Ml8kDqapYPPpEHS0UtUxk53M+ZxxY20ZI=;
- b=yh/mxSz+EL0rEdpq7ZO00MOn9MoUji6uusugwVWwgXOwnqS59oybngl0oTOipQR3y86eOnLiD+kGo/0MuXps+Zj4hVglBzZEKEL4Z8l+DgER4shO4gszLcj+SNkuVnePxUcPUeiIB0F/d7V1zlQNN6+vf2E6kLm1+v/WLE3/z0w=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by BLAPR10MB5251.namprd10.prod.outlook.com (2603:10b6:208:332::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.11; Fri, 12 Aug
- 2022 01:34:37 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::d90f:4bba:3e6c:ebfd]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::d90f:4bba:3e6c:ebfd%4]) with mapi id 15.20.5525.010; Fri, 12 Aug 2022
- 01:34:37 +0000
-Message-ID: <ac641c57-2153-b2a3-a48b-0433dc6102da@oracle.com>
-Date:   Thu, 11 Aug 2022 18:34:34 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.12.0
-Subject: Re: help with nfsd kernel oops
-Content-Language: en-US
-To:     Olga Kornievskaia <aglo@umich.edu>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-References: <CAN-5tyFLDrUMaTTi8ECTrKkAxxSdXGPEweGj8sQk5yW-vkmJ5g@mail.gmail.com>
-From:   dai.ngo@oracle.com
-In-Reply-To: <CAN-5tyFLDrUMaTTi8ECTrKkAxxSdXGPEweGj8sQk5yW-vkmJ5g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0360.namprd03.prod.outlook.com
- (2603:10b6:a03:39c::35) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        with ESMTP id S236141AbiHLDEO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 11 Aug 2022 23:04:14 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41863A1A45
+        for <linux-nfs@vger.kernel.org>; Thu, 11 Aug 2022 20:04:13 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 3F0675D62E;
+        Fri, 12 Aug 2022 03:04:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1660273451; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+Ap3/VMgFer8mDJ7RwP3+ezw67AuvSTPW52EIeuZ1oY=;
+        b=bj9LET8rgxEiDcmRdT+NkGJX2jZT4htHCEgesIM2RICVmfF+MsZLY4JKy5zal1cF/feOOz
+        czxFdHxOj9NjEgyhbExXBWYff/NBs5Sy8ehKTtVXsPPoaFV4pEop2QlVmZPDDRRsX3S6WO
+        2Gp7Sci8QQqMrWbcwBTdzltet3p20gA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1660273451;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+Ap3/VMgFer8mDJ7RwP3+ezw67AuvSTPW52EIeuZ1oY=;
+        b=mHkT8CibfFlQiDU2emOsYBf/+uMR8lXT8J9+ayXYGVmdP6p7spkW/2uEVKVPIurwlILqCZ
+        j0FjpOhSRiEmfcCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D972013AAE;
+        Fri, 12 Aug 2022 03:04:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id O4IqJSnD9WLSJwAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 12 Aug 2022 03:04:09 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1fae2935-70e2-4e96-4c5e-08da7c02d15d
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5251:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aw/idonkVDkWnkMChvFeIbQisHp4S3yD5hpJ9k/ydQwJedMjiCbj8AonluhwcztBNcSsNmjTHPEnlOZi4DL4eMQGvP1DPSdV4CYKhniRbk9XtrI2TVY9KCsDRbvuQWn3HrpZuE5zW/tT7zdbXuTWW+glSifl6a5CKeluZGNtj0e4TgQXi+kqqkLC9MXEySa20ZzT4hiUYyKuNLBGDU+X3sDGvEGlenS0TOPqAE8PShFhrIZ+djcHE2M8uQOVq7bTc7yXX5n3xo3BE1JEWJadu0UymlpHJtojtMwSZNYuJDRaX032IL8WJwmR0f2y2KwCfirsgAclgyMqITnyPrhIjuFCX65210fgD9Y4lTSJNsOhbUgpeKu1OpL+TsedopLUChl6o2F+KR95vX18rc9XGpO1FoIPrR18IYK4xPUenHAKkayhJm2TLNNTDS7JQlflVmbsAisCffJl8ki/zeCLXG6gTZSGfXVfD9gvER61Dqb4or9grHINUhqEWHk6aRgUNbdFt4mO/tTYdSm4os1vW9wboCq7ArS8iB9HPSafNWEvhE0SvBHXl15vO5gMeIplF4gsIkGRZzmOnuB/PmET6dybr/NjXAyJrx/sBTwJ56AHvIC3cfn6A0neqYZySbNTEDJQaq6PhaCeZ+eZSUqAwFdZ7YucbryXQlsH08d7+ddwQ5JnWf6hrW6tA2+CYzPK0HEGx577tSRvGhBTAx1IZbcRutASFhg2nbOutYSX777pC8iiNG8zEYFQxjtFocRB9T+KxMxJQVVoKQDvef4lz0c7Q45Yp2kDj+fRVguhlh6P6eHihFkVK5AHmnHt9bUzepLaz3ERrHedUtUwPetwBA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(376002)(136003)(346002)(39860400002)(396003)(26005)(6486002)(41300700001)(478600001)(316002)(4326008)(2906002)(38100700002)(66556008)(110136005)(8676002)(66946007)(66476007)(8936002)(5660300002)(31686004)(36756003)(86362001)(53546011)(31696002)(2616005)(6506007)(186003)(83380400001)(6666004)(9686003)(6512007)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WFVEQVJ2Tm9LQ1gxNnhlVFIzUTdyM0czNGdBU0I3azFhMENKRTRNZ1BjZm1X?=
- =?utf-8?B?SnNnTUEzaXpxQWtXUFd4dldPZjh2ZGtxa0JoUmVxQVVjWFhIa3Jqd1NKSk40?=
- =?utf-8?B?akR1b3I2VEJCWm1ERXExc2RFNi9Mc1M4aFdGWEJOWkswU1dwMUdKTVJMSkJS?=
- =?utf-8?B?OWNYMy9Xb2hpSkZCRzdBdXdmcXg3UU5NcTNzOWFLcnJxRXd1ZDhtbTBva2ty?=
- =?utf-8?B?WXR0WmFzbmtueW9ZelFnb0FRL29JY2FlWU9xMXlBTzQ5bWpNVFQzWHBMRFEy?=
- =?utf-8?B?N3lJQ2tEZ0M1VFVLQnEzWWM5aDgxUW81d3dveFYxeEVqc0ZGWWhhaGJNQXZk?=
- =?utf-8?B?NnEvbG10QXJBaG9kYmF3LzhtNDVlWU9JRTFmdnpWVllHSEk3SjlxMERmWWxQ?=
- =?utf-8?B?cjU1Wm0yTExRbmEzTFc4VEg5d1lzemJYL2tUY21vOEV2UWlxbDhKMExpcjht?=
- =?utf-8?B?OGcxQzYvVXJLZ1ZoMWxLeXhrVmRReDJSbk5ONHZFc3l5WEl1dlpoS0RNTUxv?=
- =?utf-8?B?Rld3ZytsMWdnbGFwL3hSMjM1YWV3ZkZDUnF3L2Zydm1MbVF1anF3OWU2Z2hX?=
- =?utf-8?B?OWNGQWRrdUZKQU1UMVRRNytOamV4YUluVW5BOEQwb1l5R0dPbG42R3ZIN25u?=
- =?utf-8?B?b08vRDNjSnlwQno2OGZSMWZFM2lpeDJ4M2lKVVdZWjh5dWsxZVZGeUFCMnc1?=
- =?utf-8?B?aHdWNkZrSGd0dEIySFdPY1MrcXg3MVVpcWNibzUwQm90SWlidThhMlVXMCth?=
- =?utf-8?B?bm90RjRIRXQ3bUVRZzR3amMwVjg2WWg1cnY5Smt2SXUzZDFOazY5dTM4TzY2?=
- =?utf-8?B?V0s5RDhjSUFFRWhpcEhnblVuTURkVHVNOWdDQ01NTGcyVUVaZ0RBQ1FnQk8x?=
- =?utf-8?B?Tlh3ZVp4VGVMMk5zcnlUTTczUHAybnRIQkRNYVpFMCs3UVlsdnZ4ZXFtSGNw?=
- =?utf-8?B?cS92S2lLUktvbjNlNVRMSURhR0F4Z0dGK2JHYndFT09TZEFJdXFJbDFaVG5s?=
- =?utf-8?B?UGF4bzZXMzkxNytVQVRRMXdDaFhCQ1dUWUVMVGFRb2RIU1pzL01WOXZxbXR6?=
- =?utf-8?B?WTlTRU9EQ0VkQU5CMEZQZWYyUmJCTlAzK1BHYnlFSkQ4TnBNUGZ1QjEvTGhP?=
- =?utf-8?B?T2dtMXJ1RFlvWXNuRkExVzFObDV5VnlPbURHYzg2SDBucVM4MjBMdmpkNG13?=
- =?utf-8?B?cThPRDBtZ29HM1lZM0ZQUmZBRFFQL2hZTFo5dDY5cDF6ZVVHSDZ4QXR5Rlgv?=
- =?utf-8?B?d3cwYUZvRUZkaE1JbThienRRVWZ3NlkyK1pFM3J4NkNJUzVSWGdtd1BkWU5r?=
- =?utf-8?B?bG9PR2JMM3FXMHdPeWxEelhCdGtuR3hJY3dZR2FxMVdPaE5sT3l3dTZxRHdK?=
- =?utf-8?B?OVpGZ05lT0tWTXVIcmhxZ1JMTUgxZjZFYjF6Si90RFNyVnNudmg4Nkc2aExv?=
- =?utf-8?B?QkhIanE1OHpwcVpGVkdLUkt4VVV1ejhmS3pWaFMwaUNrcHhaTWgxT1ZUaUVG?=
- =?utf-8?B?dlE2cXJaYWNJTFpxRUxjUGUyaXJaMTdKa2VTUmVoVEdqWFdicFlIT0tSVEQw?=
- =?utf-8?B?cmFnclR3azBVMkdNRWVLcUhPOUF2UkM2YmpiMTVLLzVTUEN0M2N2Uyt1Z0d6?=
- =?utf-8?B?Q0ZkbzU0RFJ0TWhWckR4cDRRWTgwU3pGWExFdjh3eW9SR1grMGZEMFNqeUI5?=
- =?utf-8?B?RDgyNU40N05LRUM0UklZMjErVmxiYkpKNVVPMnZWYXRzTlZCZGVDOTVTNDls?=
- =?utf-8?B?VktENUkvSitUWlZYb0s3UHFYV1FEdTBkdHJTZGR3eC95VG1UTU50RnpVTy9o?=
- =?utf-8?B?cFJnNDhnOE5aZXF5NWdFUnIvYUhBYkNFc2ZYL3VRNzJVV3lSSC9QYjV6QjVu?=
- =?utf-8?B?T3NxMkpBbVlvMzZkMkxCcEZLcDNUeGR5QzJNZkovSVNUK0JxS1luWWxkajRz?=
- =?utf-8?B?WGhaRUJhd0poMGV5UWg3ck5FdHNNVHFTeTBlc2RUYzZjYi8xcVkvWlhQbUZN?=
- =?utf-8?B?cUdxZE0xd29idUx6dVNrMHN4OC9ZRitmWGNHWElNdDh4WUpkR3hjdmpKYXJt?=
- =?utf-8?B?bFlrcXpMcG1OZi9Qc1Y2UzhHWTFJSWppblpKSFkvMDBPQi9HRURISmtXMFlx?=
- =?utf-8?Q?cvS3q2UfDaNY5aL9L7jWyF8S5?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 3hktgf0nhsKOwHMS2eCv1jsOItsxZcmHuFTD024D7ZgiHat3qlrblyZoOmCorxLWcnsJYL0+1oMrkhPHRCrZjPuR5HJD5hFyGUI2nCaog5pz6qOT8SICDSZ4uMDSogaw7RTSE8AdlY6zWQuU4m/sIUJBwO6cdsVxKTrNiw3fkHQnsb0n0JR4/vjan78mf4l8VryYrCaRpHo280Q1TT6m9MVA2Fi9kUAHgMwPPjU1OtfY50BgmzutVK022LbruXief76IV+Qc0glDpMpmKWdlu/csI0C9lCMyMfcnJa8RzV0TO2eBktDq6K5wL0mccWSMTBJYqVI4zDrMt2ficzijNWHOfsmJX30urQaTpPbZ6OvyyrkY+ijsv1ArTnBEM2YKgaBhDfQCJt3zeupOYIPDdjU1wZdRYNqwBlTxd8Irckm45Dlo2EN8ZTy1WPPRo+HZcfzPUmv3oPwgecxStff1z8TtMxTZVVoS807ReEatK7xXf0rnkdaBVJBIPOTtvtWvRO5DLbiwlB+D7MGVNMtWzS+3+pQsjwfGeRV1id9N4rpILx55XG/W7koTx0IqoZNAjsIfn8D/c4f2hCXKyijbBGeM53oc9S/YeUHKsOhyOfDTz6NqQNaALH2f7oj1+5zhnCQp1fmwjdl3Ei6/6NuJzaWRClV8HTAGTTCOHS7IuCGxtNSrWl63KHf59G23INauUkMcJuf9N35HYc25CtFtNhQh5SqxORzOh0ArBp2WraF7xsJ3PeHrES+bTcIyb3+fyt+dK/zt4wUri5+YV/z0jOPoI2+fY2z+AwXce19w0rK295RZoy0+dR1Nv3+qe1y6
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1fae2935-70e2-4e96-4c5e-08da7c02d15d
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2022 01:34:37.2083
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2xl3I+IiDPig5Kge/LgwvmkbnSVXjbTbFhNE+sDWdiUBjXUjm0D4Q4UCCdRSYwpwC2GuZuyqrfcU9AeMz/Wu3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR10MB5251
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-12_01,2022-08-11_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
- spamscore=0 phishscore=0 adultscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2208120003
-X-Proofpoint-GUID: 6wTPDE4MRH2lTHcS4lLD0sRsdY2_dtZI
-X-Proofpoint-ORIG-GUID: 6wTPDE4MRH2lTHcS4lLD0sRsdY2_dtZI
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>,
+        "Anna Schumaker" <anna@kernel.org>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] NFS: don't unhash dentry during unlink/rename
+In-reply-to: <165931401422.4359.6525940729395119377@noble.neil.brown.name>
+References: <165931401422.4359.6525940729395119377@noble.neil.brown.name>
+Date:   Fri, 12 Aug 2022 13:04:05 +1000
+Message-id: <166027344582.20931.14996201146983535779@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/10/22 5:50 PM, Olga Kornievskaia wrote:
-> Hi folks (Chuck/Jeff specifically),
->
-> We've had this outstanding kernel oops that happens (infrequently) in
-> copy_offload testing (stack trace in the end). I've been trying to
-> debug it for a while, added printks and such. I can hand-wavey explain
-> what I'm seeing but I need help (a) nailing down exactly the problem
-> and (b) get a helpful hint how to address it?
->
-> Ok so what happens. Test case: source file is opened, locked,
-> (blah-blah destination file), copy_notify to the source server, copy
-> is done (src dest), source file unlocked (etc dest file), files
-> closed. Copy/Copy_notify, uses a locking stateid.
->
-> When unlocking happens it triggers LOCKU and FREE_STATEID. Copy_notify
-> stateid is associated with the locking stateid on the server. When the
-> last reference on the locking stateid goes nfs4_put_stateid() also
-> calls nfs4_free_cpntf_statelist() which deals with cleaning up the
-> copy_notify stateid.
->
-> In the laundry thread, there is a failsafe that if for some reason the
-> copy_notify state was not cleaned up/expired, then it would be deleted
-> there.
->
-> However in the failing case, where everything should be cleaned up as
-> it's supposed to be, instead I see calling to put_ol_stateid_locked()
-> (before FREE_STATEID is processed) which cleans up the parent but
-> doesn't touch the copy_notify stateids so instead the laundry thread
-> runs and walks the copy_notify list (since it's not empty) and tries
-> to free the entries but that leads to this oops (since part of the
-> memory was freed by put_ol_stateid_locked() and parent stateid)?.
->
-> Perhaps the fix is to add the  nfs4_free_cpntf_statelist() to
-> put_ol_stateid_locked() which I tried and it seems to work. But I'm
-> not confident about it.
->
-> Thoughts?
->
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index fa67ecd5fe63..b988d3c4e5fd 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1408,6 +1408,7 @@ static void put_ol_stateid_locked(struct
-> nfs4_ol_stateid *stp,
->          }
->
->          idr_remove(&clp->cl_stateids, s->sc_stateid.si_opaque.so_id);
-> +       nfs4_free_cpntf_statelist(clp->net, s);
->          list_add(&stp->st_locks, reaplist);
->   }
->
->
-In the use-after-free scenario, the copy_state is inserted on the
-sc_cp_list of the lock state.
 
-So when put_ol_stateid_locked is called from nfsd4_close_open_stateid,
-with your proposed patch, nfs4_free_cpntf_statelist does not remove
-any copy_state since 's' is the open state.
+Ping ... any thoughts?
 
-Also put_ol_stateid_locked can return without calling idr_remove
-and nfs4_free_cpntf_statelist (your proposed fix).
+Thanks,
+NeilBrown
 
--Dai
 
->
->
-> [  338.681529] ------------[ cut here ]------------
-> [  338.683090] kernel BUG at lib/list_debug.c:53!
-> [  338.684372] invalid opcode: 0000 [#1] PREEMPT SMP KASAN PTI
-> [  338.685977] CPU: 1 PID: 493 Comm: kworker/u256:27 Tainted: G    B
->            5.19.0-rc6+ #104
-> [  338.688266] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
-> [  338.691019] Workqueue: nfsd4 laundromat_main [nfsd]
-> [  338.692224] RIP: 0010:__list_del_entry_valid.cold.3+0x3d/0x53
-> [  338.693626] Code: 0b 4c 89 e1 4c 89 ee 48 c7 c7 e0 1a e3 8f e8 5b
-> 60 fe ff 0f 0b 48 89 e9 4c 89 ea 48 89 de 48 c7 c7 60 1a e3 8f e8 44
-> 60 fe ff <0f> 0b 48 89 ea 48 89 de 48 c7 c7 00 1a e3 8f e8 30 60 fe ff
-> 0f 0b
-> [  338.697651] RSP: 0018:ffff88800d03fc68 EFLAGS: 00010286
-> [  338.698762] RAX: 000000000000006d RBX: ffff888028a14798 RCX: 0000000000000000
-> [  338.700442] RDX: 0000000000000000 RSI: dffffc0000000000 RDI: ffffffff917e9240
-> [  338.702257] RBP: ffff88801bb0ae90 R08: ffffed100a795f0e R09: ffffed100a795f0e
-> [  338.704016] R10: ffff888053caf86b R11: ffffed100a795f0d R12: ffff88801bb0ae90
-> [  338.705703] R13: d9c0013300000a39 R14: 000000000000005a R15: ffff88801b9f5800
-> [  338.707510] FS:  0000000000000000(0000) GS:ffff888053c80000(0000)
-> knlGS:0000000000000000
-> [  338.709319] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  338.710715] CR2: 00005640baab74d0 CR3: 0000000017574005 CR4: 00000000001706e0
-> [  338.712282] Call Trace:
-> [  338.712898]  <TASK>
-> [  338.713430]  _free_cpntf_state_locked+0x6b/0x120 [nfsd]
-> [  338.714806]  nfs4_laundromat+0x8ef/0xf30 [nfsd]
-> [  338.716013]  ? dequeue_entity+0x18b/0x6c0
-> [  338.716970]  ? release_lock_stateid+0x60/0x60 [nfsd]
-> [  338.718169]  ? _raw_spin_unlock+0x15/0x30
-> [  338.719064]  ? __switch_to+0x2fa/0x690
-> [  338.719879]  ? __schedule+0x67d/0xf20
-> [  338.720678]  laundromat_main+0x15/0x40 [nfsd]
-> [  338.721760]  process_one_work+0x3b4/0x6b0
-> [  338.722629]  worker_thread+0x5a/0x640
-> [  338.723425]  ? process_one_work+0x6b0/0x6b0
-> [  338.724324]  kthread+0x162/0x190
-> [  338.725030]  ? kthread_complete_and_exit+0x20/0x20
-> [  338.726074]  ret_from_fork+0x22/0x30
-> [  338.726856]  </TASK>
+On Mon, 01 Aug 2022, NeilBrown wrote:
+> NFS unlink() (and rename over existing target) must determine if the
+> file is open, and must perform a "silly rename" instead of an unlink (or
+> before rename) if it is.  Otherwise the client might hold a file open
+> which has been removed on the server.
+>=20
+> Consequently if it determines that the file isn't open, it must block
+> any subsequent opens until the unlink/rename has been completed on the
+> server.
+>=20
+> This is currently achieved by unhashing the dentry.  This forces any
+> open attempt to the slow-path for lookup which will block on i_rwsem on
+> the directory until the unlink/rename completes.  A future patch will
+> change the VFS to only get a shared lock on i_rwsem for unlink, so this
+> will no longer work.
+>=20
+> Instead we introduce an explicit interlock.  A special value is stored
+> in dentry->d_fsdata while the unlink/rename is running and
+> ->d_revalidate blocks while that value is present.  When ->d_revalidate
+> unblocks, the dentry will be invalid.  This closes the race
+> without requiring exclusion on i_rwsem.
+>=20
+> d_fsdata is already used in two different ways.
+> 1/ an IS_ROOT directory dentry might have a "devname" stored in
+>    d_fsdata.  Such a dentry doesn't have a name and so cannot be the
+>    target of unlink or rename.  For safety we check if an old devname
+>    is still stored, and remove it if it is.
+> 2/ a dentry with DCACHE_NFSFS_RENAMED set will have a 'struct
+>    nfs_unlinkdata' stored in d_fsdata.  While this is set maydelete()
+>    will fail, so an unlink or rename will never proceed on such
+>    a dentry.
+>=20
+> Neither of these can be in effect when a dentry is the target of unlink
+> or rename.  So we can expect d_fsdata to be NULL, and store a special
+> value ((void*)1) which is given the name NFS_FSDATA_BLOCKED to indicate
+> that any lookup will be blocked.
+>=20
+> The d_count() is incremented under d_lock() when a lookup finds the
+> dentry, so we check d_count() is low, and set NFS_FSDATA_BLOCKED under
+> the same lock to avoid any races.
+>=20
+> Signed-off-by: NeilBrown <neilb@suse.de>
+> ---
+>  fs/nfs/dir.c           | 72 +++++++++++++++++++++++++++++++-----------
+>  include/linux/nfs_fs.h |  9 ++++++
+>  2 files changed, 63 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> index 0c4e8dd6aa96..a988dc9a5c92 100644
+> --- a/fs/nfs/dir.c
+> +++ b/fs/nfs/dir.c
+> @@ -1778,6 +1778,8 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsign=
+ed int flags,
+>  	int ret;
+> =20
+>  	if (flags & LOOKUP_RCU) {
+> +		if (dentry->d_fsdata =3D=3D NFS_FSDATA_BLOCKED)
+> +			return -ECHILD;
+>  		parent =3D READ_ONCE(dentry->d_parent);
+>  		dir =3D d_inode_rcu(parent);
+>  		if (!dir)
+> @@ -1786,6 +1788,9 @@ __nfs_lookup_revalidate(struct dentry *dentry, unsign=
+ed int flags,
+>  		if (parent !=3D READ_ONCE(dentry->d_parent))
+>  			return -ECHILD;
+>  	} else {
+> +		/* Wait for unlink to complete */
+> +		wait_var_event(&dentry->d_fsdata,
+> +			       dentry->d_fsdata !=3D NFS_FSDATA_BLOCKED);
+>  		parent =3D dget_parent(dentry);
+>  		ret =3D reval(d_inode(parent), dentry, flags);
+>  		dput(parent);
+> @@ -2454,7 +2459,6 @@ static int nfs_safe_remove(struct dentry *dentry)
+>  int nfs_unlink(struct inode *dir, struct dentry *dentry)
+>  {
+>  	int error;
+> -	int need_rehash =3D 0;
+> =20
+>  	dfprintk(VFS, "NFS: unlink(%s/%lu, %pd)\n", dir->i_sb->s_id,
+>  		dir->i_ino, dentry);
+> @@ -2469,15 +2473,25 @@ int nfs_unlink(struct inode *dir, struct dentry *de=
+ntry)
+>  		error =3D nfs_sillyrename(dir, dentry);
+>  		goto out;
+>  	}
+> -	if (!d_unhashed(dentry)) {
+> -		__d_drop(dentry);
+> -		need_rehash =3D 1;
+> -	}
+> +	/* We must prevent any concurrent open until the unlink
+> +	 * completes.  ->d_revalidate will wait for ->d_fsdata
+> +	 * to clear.  We set it here to ensure no lookup succeeds until
+> +	 * the unlink is complete on the server.
+> +	 */
+> +	error =3D -ETXTBSY;
+> +	if (WARN_ON(dentry->d_flags & DCACHE_NFSFS_RENAMED) ||
+> +	    WARN_ON(dentry->d_fsdata =3D=3D NFS_FSDATA_BLOCKED))
+> +		goto out;
+> +	if (dentry->d_fsdata)
+> +		/* old devname */
+> +		kfree(dentry->d_fsdata);
+> +	dentry->d_fsdata =3D NFS_FSDATA_BLOCKED;
+> +
+>  	spin_unlock(&dentry->d_lock);
+>  	error =3D nfs_safe_remove(dentry);
+>  	nfs_dentry_remove_handle_error(dir, dentry, error);
+> -	if (need_rehash)
+> -		d_rehash(dentry);
+> +	dentry->d_fsdata =3D NULL;
+> +	wake_up_var(&dentry->d_fsdata);
+>  out:
+>  	trace_nfs_unlink_exit(dir, dentry, error);
+>  	return error;
+> @@ -2584,6 +2598,15 @@ nfs_link(struct dentry *old_dentry, struct inode *di=
+r, struct dentry *dentry)
+>  }
+>  EXPORT_SYMBOL_GPL(nfs_link);
+> =20
+> +static void
+> +nfs_unblock_rename(struct rpc_task *task, struct nfs_renamedata *data)
+> +{
+> +	struct dentry *new_dentry =3D data->new_dentry;
+> +
+> +	new_dentry->d_fsdata =3D NULL;
+> +	wake_up_var(&new_dentry->d_fsdata);
+> +}
+> +
+>  /*
+>   * RENAME
+>   * FIXME: Some nfsds, like the Linux user space nfsd, may generate a
+> @@ -2614,8 +2637,9 @@ int nfs_rename(struct user_namespace *mnt_userns, str=
+uct inode *old_dir,
+>  {
+>  	struct inode *old_inode =3D d_inode(old_dentry);
+>  	struct inode *new_inode =3D d_inode(new_dentry);
+> -	struct dentry *dentry =3D NULL, *rehash =3D NULL;
+> +	struct dentry *dentry =3D NULL;
+>  	struct rpc_task *task;
+> +	bool must_unblock =3D false;
+>  	int error =3D -EBUSY;
+> =20
+>  	if (flags)
+> @@ -2633,18 +2657,27 @@ int nfs_rename(struct user_namespace *mnt_userns, s=
+truct inode *old_dir,
+>  	 * the new target.
+>  	 */
+>  	if (new_inode && !S_ISDIR(new_inode->i_mode)) {
+> -		/*
+> -		 * To prevent any new references to the target during the
+> -		 * rename, we unhash the dentry in advance.
+> +		/* We must prevent any concurrent open until the unlink
+> +		 * completes.  ->d_revalidate will wait for ->d_fsdata
+> +		 * to clear.  We set it here to ensure no lookup succeeds until
+> +		 * the unlink is complete on the server.
+>  		 */
+> -		if (!d_unhashed(new_dentry)) {
+> -			d_drop(new_dentry);
+> -			rehash =3D new_dentry;
+> +		error =3D -ETXTBSY;
+> +		if (WARN_ON(new_dentry->d_flags & DCACHE_NFSFS_RENAMED) ||
+> +		    WARN_ON(new_dentry->d_fsdata =3D=3D NFS_FSDATA_BLOCKED))
+> +			goto out;
+> +		if (new_dentry->d_fsdata) {
+> +			/* old devname */
+> +			kfree(new_dentry->d_fsdata);
+> +			new_dentry->d_fsdata =3D NULL;
+>  		}
+> =20
+> +		spin_lock(&new_dentry->d_lock);
+>  		if (d_count(new_dentry) > 2) {
+>  			int err;
+> =20
+> +			spin_unlock(&new_dentry->d_lock);
+> +
+>  			/* copy the target dentry's name */
+>  			dentry =3D d_alloc(new_dentry->d_parent,
+>  					 &new_dentry->d_name);
+> @@ -2657,14 +2690,19 @@ int nfs_rename(struct user_namespace *mnt_userns, s=
+truct inode *old_dir,
+>  				goto out;
+> =20
+>  			new_dentry =3D dentry;
+> -			rehash =3D NULL;
+>  			new_inode =3D NULL;
+> +		} else {
+> +			new_dentry->d_fsdata =3D NFS_FSDATA_BLOCKED;
+> +			must_unblock =3D true;
+> +			spin_unlock(&new_dentry->d_lock);
+>  		}
+> +
+>  	}
+> =20
+>  	if (S_ISREG(old_inode->i_mode))
+>  		nfs_sync_inode(old_inode);
+> -	task =3D nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry, NULL);
+> +	task =3D nfs_async_rename(old_dir, new_dir, old_dentry, new_dentry,
+> +				must_unblock ? nfs_unblock_rename : NULL);
+>  	if (IS_ERR(task)) {
+>  		error =3D PTR_ERR(task);
+>  		goto out;
+> @@ -2688,8 +2726,6 @@ int nfs_rename(struct user_namespace *mnt_userns, str=
+uct inode *old_dir,
+>  		spin_unlock(&old_inode->i_lock);
+>  	}
+>  out:
+> -	if (rehash)
+> -		d_rehash(rehash);
+>  	trace_nfs_rename_exit(old_dir, old_dentry,
+>  			new_dir, new_dentry, error);
+>  	if (!error) {
+> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
+> index a17c337dbdf1..b32ed68e7dc4 100644
+> --- a/include/linux/nfs_fs.h
+> +++ b/include/linux/nfs_fs.h
+> @@ -617,6 +617,15 @@ nfs_fileid_to_ino_t(u64 fileid)
+> =20
+>  #define NFS_JUKEBOX_RETRY_TIME (5 * HZ)
+> =20
+> +/* We need to block new opens while a file is being unlinked.
+> + * If it is opened *before* we decide to unlink, we will silly-rename
+> + * instead. If it is opened *after*, then we need to create or will fail.
+> + * If we allow the two to race, we could end up with a file that is open
+> + * but deleted on the server resulting in ESTALE.
+> + * So use ->d_fsdata to record when the unlink is happening
+> + * and block dentry revalidation while it is set.
+> + */
+> +#define NFS_FSDATA_BLOCKED ((void*)1)
+> =20
+>  # undef ifdebug
+>  # ifdef NFS_DEBUG
+> --=20
+> 2.36.1
+>=20
+>=20
