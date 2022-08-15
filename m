@@ -2,159 +2,116 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22689592C1B
-	for <lists+linux-nfs@lfdr.de>; Mon, 15 Aug 2022 12:51:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5339592FAD
+	for <lists+linux-nfs@lfdr.de>; Mon, 15 Aug 2022 15:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241308AbiHOIjP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 15 Aug 2022 04:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33864 "EHLO
+        id S242720AbiHONUN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 15 Aug 2022 09:20:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241110AbiHOIjN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Aug 2022 04:39:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17362205D9
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 01:39:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1660552751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=RtCG0fMMsALwDFLyg5EOuNj36gZMfyU4x6lmh7oVWAQ=;
-        b=bMjzGz11ZT5ZpkIC5GHq2w5zPSoFBUryIjqejAvOnYwKprSBxzzI7tNbkOyaGasdmOdqIT
-        QoivyPLfc9uLwISZ10I84Kei/YLMbxaZ/zgyFuAQJVP0UZgxTespWIBX5yHjcdC7enkmo6
-        A/61/egpVE40jBRSH7HBLBPcUisU6Lw=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-219-avz4XaOzOTm-MhDto53Sqw-1; Mon, 15 Aug 2022 04:39:09 -0400
-X-MC-Unique: avz4XaOzOTm-MhDto53Sqw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5AA5618E5340
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 08:39:09 +0000 (UTC)
-Received: from plambri-t490s.lan (unknown [10.33.36.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E7A33C15BA6
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 08:39:08 +0000 (UTC)
-From:   Pierguido Lambri <plambri@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH] nfs4_setfacl: add a specific option for indexes
-Date:   Mon, 15 Aug 2022 09:39:08 +0100
-Message-Id: <20220815083908.65720-1-plambri@redhat.com>
+        with ESMTP id S242719AbiHONUM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 15 Aug 2022 09:20:12 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C88131BE8F
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 06:20:10 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id n4so9027917wrp.10
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 06:20:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc;
+        bh=VReCwsN/r8zd7YEhiE290SZ/2en0pyTA7PFDH5oC1p8=;
+        b=J7YRO2HdKgUYPF/IsxOr/KcBJRqelpVCjYumwU7rBoe9OsV7Vvu2tg/7kLqzdbBlla
+         dU/xyiSAuYqT02BDGW7IFkHfKTTONfwdRTDT94ZHsTHWO3uQBJ9QcnamxgWzHDg5inva
+         KdUEv6HraZEkT1LcYqQPnCyxUxLvvhzo4/M5TH4p57/J+TrL5lqcqYHkA0uKp3hqZ/co
+         Ql3Z5RkAxve35zF8zq8SDNLbJ2vfOMQ5Tn4LGhT8gl7vw5WHI8UMHZA64/NYtGy7Ovw/
+         xZmBeOvZhoTogJUMOrnh8MW+x0J9xYU4IRi+BAyg5GZRugdCYOcJbx4iGxdLjnNoNvfi
+         bE1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=VReCwsN/r8zd7YEhiE290SZ/2en0pyTA7PFDH5oC1p8=;
+        b=BOXxFzXeLnOPT9DoYc/CzR8E4lA6SafmXOPexCklQSUYHRzGHXBk6uXryRg6FzAuAB
+         gq8fcyWf5Lc0HlwR3WVMijSUkGlNYwvRMzgeNgzfRyydMccMRHYRQCErNSe/4T/Cy8Y3
+         h8hZxFIxqLb3v/CFe1j56PqBBkMu3WotPcgacZw8bNlzE83df5KMMQy7SgG6pNT0XjgE
+         0i5qxCmxQbC6oe7I9t+5tVzegd6BjRzJ006ZvRImtHVy0A3ym+ToMxE+nob453AfdtiZ
+         wWfwkRjS/5PYYQu5/yVr7zmK6swV5LZrGvFjkC7WV8TfbM3spd1HHxH5MQrNjxzai8Lg
+         hXbA==
+X-Gm-Message-State: ACgBeo1cix5q1EQLtU1xZo1NncdlDf41Si0hI5O+qlUDYmdxthPdazhd
+        dEsoEgLtR+FWW7Jm+OcXLQpmblXCMkhmwccTbOQ=
+X-Google-Smtp-Source: AA6agR536BzJBr4ZLBYQxzQcfzNNgu0zbuf1XL+TrQSsjDxW6cMFiiu1SXfJKKA+hFAO5JNjo9YZJ1uOwRzAMCRrN3o=
+X-Received: by 2002:a5d:6811:0:b0:223:8131:e580 with SMTP id
+ w17-20020a5d6811000000b002238131e580mr9121342wru.77.1660569609118; Mon, 15
+ Aug 2022 06:20:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Received: by 2002:adf:e410:0:0:0:0:0 with HTTP; Mon, 15 Aug 2022 06:20:08
+ -0700 (PDT)
+Reply-To: tescobank.uk1997@gmail.com
+From:   Tesco Bank <olufemielizabeth12@gmail.com>
+Date:   Mon, 15 Aug 2022 06:20:08 -0700
+Message-ID: <CAME+Liga-m8x9Wh259m3kcdMOAKQFvWSbGzJUmAaZHhSTq81HQ@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: Yes, score=5.2 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2a00:1450:4864:20:0:0:0:443 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5003]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [tescobank.uk1997[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [olufemielizabeth12[at]gmail.com]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [olufemielizabeth12[at]gmail.com]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
+        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfs4_setfacl had the possibility to use an optional index
-to add/remove an ACL entry.
-This was causing some confusion as numeric files could be interpreted
-as indexes.
-This change adds an extra command line option '-i' to specifically
-handle the indexes.
-The index can be used only with certain operations (add and remove).
-The new syntax, when using indexes, would be:
+--=20
+Hallo, ben=C3=B6tigen Sie heute dringend einen Kredit, um eine Investition
+zu t=C3=A4tigen? Ein neues Gesch=C3=A4ft gr=C3=BCnden oder Rechnungen bezah=
+len? Und
+zahlen Sie uns in Raten zur=C3=BCck, wenn Sie m=C3=B6chten? Kontaktieren Si=
+e
+jetzt den Kreditagenten der Tesco Bank zusammen mit diesen Details
+unten, um weitere Informationen zu erhalten tescobank.uk1997@gmail.com
 
-~]# nfs4_setfacl -i 3 -a A::101:rxtncy file123
+VOLLST=C3=84NDIGER NAME
 
-Signed-off-by: Pierguido Lambri <plambri@redhat.com>
----
- nfs4_setfacl/nfs4_setfacl.c | 37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ALTER
 
-diff --git a/nfs4_setfacl/nfs4_setfacl.c b/nfs4_setfacl/nfs4_setfacl.c
-index d0485ad..c3bdf56 100644
---- a/nfs4_setfacl/nfs4_setfacl.c
-+++ b/nfs4_setfacl/nfs4_setfacl.c
-@@ -148,7 +148,7 @@ int main(int argc, char **argv)
- 		return err;
- 	}
- 
--	while ((opt = getopt_long(argc, argv, "-:a:A:s:S:x:X:m:ethvHRPL", long_options, NULL)) != -1) {
-+	while ((opt = getopt_long(argc, argv, "-:a:A:i:s:S:x:X:m:ethvHRPL", long_options, NULL)) != -1) {
- 		switch (opt) {
- 			case 'a':
- 				mod_string = optarg;
-@@ -158,21 +158,14 @@ int main(int argc, char **argv)
- 			add:
- 				assert_wu_wei(action);
- 				action = INSERT_ACTION;
--
--				/* run along if no more args (defaults to ace_index 1 == prepend) */
--				if (optind == argc)
--					break;
--				ace_index = strtoul_reals(argv[optind++], 10);
--				if (ace_index == ULONG_MAX) {
--					/* oops it wasn't an ace_index; reset */
--					optind--;
--					ace_index = -1;
--				} else if (ace_index == 0) {
--					fprintf(stderr, "Sorry, valid indices start at '1'.\n");
--					goto out;
-+				break;
-+			case 'i':
-+				ace_index = strtoul_reals(optarg, 10);
-+				if (ace_index == 0) {
-+                                    fprintf(stderr, "Sorry, valid indices start at '1'.\n");
-+                                    goto out;
- 				}
- 				break;
--
- 			case 's':
- 				mod_string = optarg;
- 				goto set;
-@@ -184,9 +177,6 @@ int main(int argc, char **argv)
- 				break;
- 
- 			case 'x':
--				ace_index = strtoul_reals(optarg, 10);
--				if(ace_index == ULONG_MAX)
--					mod_string = optarg;
- 				goto remove;
- 			case 'X':
- 				spec_file = optarg;
-@@ -248,6 +238,9 @@ int main(int argc, char **argv)
- 					case 'A':
- 						fprintf(stderr, "Sorry, -a requires an 'acl_spec', whilst -A requires a 'spec_file'.\n");
- 						goto out;
-+					case 'i':
-+						fprintf(stderr, "Sorry, -i requires an index (numerical)\n");
-+						goto out;
- 					case 's':
- 						fprintf(stderr, "Sorry, -s requires an 'acl_spec'.\n");
- 						goto out;
-@@ -283,6 +276,9 @@ int main(int argc, char **argv)
- 	if (action == NO_ACTION) {
- 		fprintf(stderr, "No action specified.\n");
- 		goto out;
-+	} else if (action != INSERT_ACTION && action != REMOVE_ACTION && ace_index >= 0) {
-+		fprintf(stderr, "Index can be used only with add or remove.\n");
-+		goto out;
- 	} else if (numpaths < 1) {
- 		fprintf(stderr, "No path(s) specified.\n");
- 		goto out;
-@@ -548,9 +544,10 @@ static void __usage(const char *name, int is_ef)
- 	"%s %s -- manipulate NFSv4 file/directory access control lists\n"
- 	"Usage: %s [OPTIONS] COMMAND file ...\n"
- 	" .. where COMMAND is one of:\n"
--	"   -a acl_spec [index]	 add ACL entries in acl_spec at index (DEFAULT: 1)\n"
--	"   -A file [index]	 read ACL entries to add from file\n"
--	"   -x acl_spec | index	 remove ACL entries or entry-at-index from ACL\n"
-+	"   -a acl_spec		 add ACL entries in acl_spec at defaul index (DEFAULT: 1)\n"
-+	"   -A file 		 read ACL entries to add from file\n"
-+	"   -i index 		 use the entry-at-index from ACL (only for add and remove)\n"
-+	"   -x acl_speci 	 remove ACL entries\n"
- 	"   -X file  		 read ACL entries to remove from file\n"
- 	"   -s acl_spec		 set ACL to acl_spec (replaces existing ACL)\n"
- 	"   -S file		 read ACL entries to set from file\n"
--- 
-2.37.2
+LAND
 
+TELEFONNUMMER
+
+DARLEHENSBETRAG
+
+Danke
