@@ -2,163 +2,192 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A6010595362
-	for <lists+linux-nfs@lfdr.de>; Tue, 16 Aug 2022 09:07:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 273DC5952AB
+	for <lists+linux-nfs@lfdr.de>; Tue, 16 Aug 2022 08:39:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231557AbiHPHHR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 16 Aug 2022 03:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55938 "EHLO
+        id S229872AbiHPGjc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 16 Aug 2022 02:39:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231553AbiHPHHA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Aug 2022 03:07:00 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120C9A404D
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 19:44:17 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id x10so8008331plb.3
-        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 19:44:17 -0700 (PDT)
+        with ESMTP id S229679AbiHPGjS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 16 Aug 2022 02:39:18 -0400
+Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C58C629F1B8
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 20:25:56 -0700 (PDT)
+Received: by mail-oo1-xc2b.google.com with SMTP id s10-20020a4ab54a000000b00435f410bbacso1623696ooo.9
+        for <linux-nfs@vger.kernel.org>; Mon, 15 Aug 2022 20:25:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=lmHfbQyvD2V+T6aEl35D0/LX8exoAJ2U3Q5h4RnXFM0=;
-        b=KrLI7i7kfBTrIfoz3y3lD5ozF7kfu7/iBcOQM6C7R7l3Dp4JPik9IuaXsIwgoFC68r
-         F8Pdxz3DnnvtRbX3s4uITpRpHzElPgg+065JKvxF/5dqeXThklXtsCNGzP7k+jTAd7eI
-         sf9QSna2G7MCNHQaDyvW77gol0hMhyMkfRWS2yXCe/RkQa+CxyKrP6uTW2je2MhqoTiN
-         tvA0zxxRjV97gvFI8BNgvVBi2wQ8RxaDD0ViCBHfg7JITGsDQUZoCHdyO55uNpJj6bx4
-         ErK3WctfQM5hsUdrbttFdU6T4N6pxlgVm74ernFmecVWigDYKNJ+g/xiRL0JcaFd6hDR
-         1Bvg==
+        d=paul-moore-com.20210112.gappssmtp.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=zaeaXOVhK8m3M+XNtVCsn3FcDPtm1Tez2CwtXwPcxOY=;
+        b=ARpEypITrGuMgsrdF/wN/8bNfpLSXuim/YQsP6UIexuLvx9eah8yn7l0kXMXTyjwRE
+         8qEhtjeKt2qs0E1Bh8Eo4E50vhNsHzDuxXjsy8Vj9b9wOEz7F0cKQq91DTLmhFa8ZmzR
+         ZSRerEin4ZzObLPGAcdjLG4Oct5E0rKGX6n6LyKNvFmuGYb+0/8nwNP9weHRw7JRtPG5
+         gDR5e0wMYm2WtchMcwKiu6iURzB2Z2tlaVfJsciS3HYKxa4MxLUHIx30a6b/OAROicQN
+         6sijuR8Y27JwEPCvlIQ3zLMZyP7xl11JHJDUrGgbcAyEL0jSsQP3GnvvVETSqzGeMEgX
+         tVgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=lmHfbQyvD2V+T6aEl35D0/LX8exoAJ2U3Q5h4RnXFM0=;
-        b=gB9BtDNzaMINmIrgA4nCdNe4SusJCWG654+eWKzi3oJl3ZjYHU3JO2F6yS3If9W7M8
-         0SKiqgu6f7uH95hLHACAb2fkE28Bae3Lz5yHw0IsYOcpAKSyxN3HoDL22M4XrZFOMQCY
-         iy6e9LG8rqdVNvTKZ3/VJyUu1zFinCcHqn0b1u9GzxTd4hZvdHcChw5nQ5xHi94EQX+v
-         w1A4okO8SGkl3PmXzgzaDN3ej/OjeTUvLDu4IhgR/X+krwlsGDkIjOPhg6Zazim9HXO7
-         dqOIpEPmzWHjHTQ6xrda0HNiEqsFbqV2uHnwTPbOcxJf6bMayyxvRcodqRRohVuK3zOj
-         AVEQ==
-X-Gm-Message-State: ACgBeo0PIk3t5TzQEpXPI+6hmcxUrFuNFJEj7ZK6uv+Fu4Ycketq2CjQ
-        tNQSPogc5/om1wNm8B1l7YA=
-X-Google-Smtp-Source: AA6agR7WA2lal+i9ZQ/vPEcZ2W6k6YY7B/VISCWz89VjHUaGK+yfgO2b69s7cOtXmMC1sstgiuGQVQ==
-X-Received: by 2002:a17:902:ce82:b0:16f:9697:1d94 with SMTP id f2-20020a170902ce8200b0016f96971d94mr20475542plg.12.1660617856506;
-        Mon, 15 Aug 2022 19:44:16 -0700 (PDT)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::bb7a])
-        by smtp.gmail.com with ESMTPSA id r15-20020aa7988f000000b0052d51acf115sm7160970pfl.157.2022.08.15.19.44.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Aug 2022 19:44:16 -0700 (PDT)
-From:   Khem Raj <raj.khem@gmail.com>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-        Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH v2 2/2] Fix function prototypes
-Date:   Mon, 15 Aug 2022 19:44:03 -0700
-Message-Id: <20220816024403.2694169-2-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.37.2
-In-Reply-To: <20220816024403.2694169-1-raj.khem@gmail.com>
-References: <20220816024403.2694169-1-raj.khem@gmail.com>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=zaeaXOVhK8m3M+XNtVCsn3FcDPtm1Tez2CwtXwPcxOY=;
+        b=RJVLBINnRJ5u44Xb2kYHWXWK0yYLwMS4NmN91o1MWDTUz7LbsHs+WKcbBCkTG/4gSD
+         SjWYnjLTa2txcxcXjkKs6lgKNBij3QeyRssY1eSxwqPj91PBjDKOPNOO9yTvdC90Pr9Z
+         lr4f9XYcfeWdvp3K/Pj+zMprOk0gP8MLRex4Lre2Cnj1t6Gn2qKheLeX+cxen7iuuqK7
+         8F3bZNzPrHfJLrwGIa1fp8ETX2CwzsZ1cfrdVfEI/u3ap4/0pC5O4xsSQ7F1dzwZzBBp
+         Xj6b3CYM9c9JB8QC1l/f+qkqak34yED6cO5S7wdn0JZe8EmHFa+b7X+sAOwBVZcPVjgJ
+         5xPg==
+X-Gm-Message-State: ACgBeo1s6+ojgGoWy5KiUxe8p/3AkCtF3t/psd/24lD5r3sTZtzImh+O
+        7fjAmYsCppNZF+BRNHyyNgKio66BEEFVn4QAEol2
+X-Google-Smtp-Source: AA6agR5jcjvLLnXLLTG9WPjI04CMRso162GWkwQVn+kAtpYa5HfLpsgdVT8wApsA1aQLcKFgfc03rLsSBvXINeCUPls=
+X-Received: by 2002:a4a:1103:0:b0:435:4c6c:6f92 with SMTP id
+ 3-20020a4a1103000000b004354c6c6f92mr5750472ooc.26.1660620355452; Mon, 15 Aug
+ 2022 20:25:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk>
+ <CAFqZXNv+ahpN3Hdv54ixa4u-LKaqTtCyjtkpzKGbv7x4dzwc0Q@mail.gmail.com>
+In-Reply-To: <CAFqZXNv+ahpN3Hdv54ixa4u-LKaqTtCyjtkpzKGbv7x4dzwc0Q@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 15 Aug 2022 23:25:44 -0400
+Message-ID: <CAHC9VhTpqvFbjKG5FMKGRBRHavOUrsCSFgayh+BNgSrry8bWLg@mail.gmail.com>
+Subject: Re: [PATCH v3] nfs: Fix automount superblock LSM init problem,
+ preventing sb sharing
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        dwysocha@redhat.com,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Clang is now erroring out on functions with out parameter types
+On Thu, Aug 11, 2022 at 8:28 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Fri, Aug 5, 2022 at 3:36 PM David Howells <dhowells@redhat.com> wrote:
+> > When NFS superblocks are created by automounting, their LSM parameters
+> > aren't set in the fs_context struct prior to sget_fc() being called,
+> > leading to failure to match existing superblocks.
+> >
+> > Fix this by adding a new LSM hook to load fc->security for submount
+> > creation when alloc_fs_context() is creating the fs_context for it.
+> >
+> > However, this uncovers a further bug: nfs_get_root() initialises the
+> > superblock security manually by calling security_sb_set_mnt_opts() or
+> > security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
+> > security_sb_set_mnt_opts(), which can lead to SELinux, at least,
+> > complaining.
+> >
+> > Fix that by adding a flag to the fs_context that suppresses the
+> > security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
+> > when it sets the LSM context on the new superblock.
+> >
+> > The first bug leads to messages like the following appearing in dmesg:
+> >
+> >         NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
+> >
+> > Changes
+> > =======
+> > ver #2)
+> >  - Made LSM parameter extraction dependent on fc->purpose ==
+> >    FS_CONTEXT_FOR_SUBMOUNT.  Shouldn't happen on FOR_RECONFIGURE.
+> >
+> > ver #2)
+> >  - Added Smack support
+> >  - Made LSM parameter extraction dependent on reference != NULL.
+> >
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
+> > Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
+> > cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > cc: Anna Schumaker <anna@kernel.org>
+> > cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > cc: Scott Mayhew <smayhew@redhat.com>
+> > cc: Jeff Layton <jlayton@kernel.org>
+> > cc: Paul Moore <paul@paul-moore.com>
+> > cc: Casey Schaufler <casey@schaufler-ca.com>
+> > cc: linux-nfs@vger.kernel.org
+> > cc: selinux@vger.kernel.org
+> > cc: linux-security-module@vger.kernel.org
+> > cc: linux-fsdevel@vger.kernel.org
+> > ---
+> >
+> >  fs/fs_context.c               |    4 +++
+> >  fs/nfs/getroot.c              |    1 +
+> >  fs/super.c                    |   10 ++++---
+> >  include/linux/fs_context.h    |    1 +
+> >  include/linux/lsm_hook_defs.h |    1 +
+> >  include/linux/lsm_hooks.h     |    6 +++-
+> >  include/linux/security.h      |    6 ++++
+> >  security/security.c           |    5 +++
+> >  security/selinux/hooks.c      |   29 +++++++++++++++++++
+> >  security/smack/smack_lsm.c    |   61 +++++++++++++++++++++++++++++++++++++++++
+> >  10 files changed, 119 insertions(+), 5 deletions(-)
+>
+> <snip>
+>
+> > diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> > index 1bbd53321d13..ddeaff4f3bb1 100644
+> > --- a/security/selinux/hooks.c
+> > +++ b/security/selinux/hooks.c
+> > @@ -2768,6 +2768,34 @@ static int selinux_umount(struct vfsmount *mnt, int flags)
+> >                                    FILESYSTEM__UNMOUNT, NULL);
+> >  }
+> >
+> > +static int selinux_fs_context_init(struct fs_context *fc,
+> > +                                  struct dentry *reference)
+> > +{
+> > +       const struct superblock_security_struct *sbsec;
+> > +       const struct inode_security_struct *root_isec;
+> > +       struct selinux_mnt_opts *opts;
+> > +
+> > +       if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
+> > +               opts = kzalloc(sizeof(*opts), GFP_KERNEL);
+> > +               if (!opts)
+> > +                       return -ENOMEM;
+> > +
+> > +               root_isec = backing_inode_security(reference->d_sb->s_root);
+> > +               sbsec = selinux_superblock(reference->d_sb);
+> > +               if (sbsec->flags & FSCONTEXT_MNT)
+> > +                       opts->fscontext_sid     = sbsec->sid;
+> > +               if (sbsec->flags & CONTEXT_MNT)
+> > +                       opts->context_sid       = sbsec->mntpoint_sid;
+> > +               if (sbsec->flags & ROOTCONTEXT_MNT)
+> > +                       opts->rootcontext_sid   = root_isec->sid;
+>
+> I wonder if this part is correct... The rootcontext=... mount option
+> relates to the root inode of the mount where it is specified - i.e. in
+> case of NFS only to the toplevel inode of the initial mount. Setting
+> the same context on the root inode of submounts, which AFAIK are
+> supposed to be transparent to the user, doesn't seem correct to me -
+> i.e. it should just be left unset for the automatically created
+> submounts.
 
-Fixes errors like
-error: a function declaration without a prototype is deprecated in all versions of C [-Werror,-Wstrict-prototypes]
+Like Ondrej, I'm not going to say I'm very comfortable with some of
+the VFS corner cases, but this is an interesting case ... as far as I
+can tell, the submount has a superblock and is treated like a normal
+filesystem mount with the one exception that it is mounted
+automatically so that users might not be aware it is a separate mount.
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-Cc: Steve Dickson <steved@redhat.com>
----
-v2: Add Steve to Cc list
+I guess my question is this: for inodes inside the superblock, does
+their superblock pointer point to the submount's superblock, or the
+parent filesystem's superblock?
 
- support/export/auth.c     | 2 +-
- support/export/v4root.c   | 2 +-
- support/export/xtab.c     | 2 +-
- utils/exportfs/exportfs.c | 4 ++--
- utils/mount/network.c     | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/support/export/auth.c b/support/export/auth.c
-index 03ce4b8..2d7960f 100644
---- a/support/export/auth.c
-+++ b/support/export/auth.c
-@@ -82,7 +82,7 @@ check_useipaddr(void)
- }
- 
- unsigned int
--auth_reload()
-+auth_reload(void)
- {
- 	struct stat		stb;
- 	static ino_t		last_inode;
-diff --git a/support/export/v4root.c b/support/export/v4root.c
-index c12a7d8..fbb0ad5 100644
---- a/support/export/v4root.c
-+++ b/support/export/v4root.c
-@@ -198,7 +198,7 @@ static int v4root_add_parents(nfs_export *exp)
-  * looking for components of the v4 mount.
-  */
- void
--v4root_set()
-+v4root_set(void)
- {
- 	nfs_export	*exp;
- 	int	i;
-diff --git a/support/export/xtab.c b/support/export/xtab.c
-index c888a80..e210ca9 100644
---- a/support/export/xtab.c
-+++ b/support/export/xtab.c
-@@ -135,7 +135,7 @@ xtab_write(char *xtab, char *xtabtmp, char *lockfn, int is_export)
- }
- 
- int
--xtab_export_write()
-+xtab_export_write(void)
- {
- 	return xtab_write(etab.statefn, etab.tmpfn, etab.lockfn, 1);
- }
-diff --git a/utils/exportfs/exportfs.c b/utils/exportfs/exportfs.c
-index 6ba615d..0897b22 100644
---- a/utils/exportfs/exportfs.c
-+++ b/utils/exportfs/exportfs.c
-@@ -69,14 +69,14 @@ static int _lockfd = -1;
-  * need these additional lockfile() routines.
-  */
- static void
--grab_lockfile()
-+grab_lockfile(void)
- {
- 	_lockfd = open(lockfile, O_CREAT|O_RDWR, 0666);
- 	if (_lockfd != -1)
- 		lockf(_lockfd, F_LOCK, 0);
- }
- static void
--release_lockfile()
-+release_lockfile(void)
- {
- 	if (_lockfd != -1) {
- 		lockf(_lockfd, F_ULOCK, 0);
-diff --git a/utils/mount/network.c b/utils/mount/network.c
-index ed2f825..01ead49 100644
---- a/utils/mount/network.c
-+++ b/utils/mount/network.c
-@@ -179,7 +179,7 @@ static const unsigned long probe_mnt3_only[] = {
- 
- static const unsigned int *nfs_default_proto(void);
- #ifdef MOUNT_CONFIG
--static const unsigned int *nfs_default_proto()
-+static const unsigned int *nfs_default_proto(void)
- {
- 	extern unsigned long config_default_proto;
- 	/*
 -- 
-2.37.2
-
+paul-moore.com
