@@ -2,64 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB79598FBA
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 23:41:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC1835990F0
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 01:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1347095AbiHRVlS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Aug 2022 17:41:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59646 "EHLO
+        id S241266AbiHRXF4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Aug 2022 19:05:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1347114AbiHRVlQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 17:41:16 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECD4CC00E1
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 14:41:13 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id f22so3475055edc.7
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 14:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=jWdgShH+woaXq6LOzYOjpkqUkDg6p0AAjgsSfaYQc1s=;
-        b=co400v7LaMrxlNvxVM1VR2thuF91ykiiJi31rjmHT76zWLXsUz/lGYxp6y1PNBtp7I
-         nhre4aYfbd/ABLXxh9NEQS4s868Y+KQ2J0cii84Z9rVUsZF7VQ4yMBa2HlgQkbD+OKqK
-         inXQVNLeeQriNCV6LU19y9nYh1UPaCNKFxHFNXLu0555fMjveHREZ0YHftVp5ldMdhi/
-         k6S1fL0Ge7oEvojVQEfzAe9mRXCTZz8uphm60jjQfRL9pcT0V1OjwAJ7A1U6txQr1vyX
-         IRs5OYQGGwK2ZW00khpmGk+tY+NU57qBvAQpG8iMv2399HK6q6cA6/ark6r/1cNEMvhK
-         RV2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=jWdgShH+woaXq6LOzYOjpkqUkDg6p0AAjgsSfaYQc1s=;
-        b=oI03jBAm/nKN82Z+go6++ToWdRVzjDKc09qtvqQnCb3+g/GN1ezsmLJxzY9sNVoeS8
-         9KOTNqRie8XfmUPSk2M3al4tS52RarX+yf+4Wx5MiCosmDZHR9OWzUqykbRXSTyY4ZM8
-         zbVHb5DtyIGV8Kcsu074YrGu5/mVOJOi9PP0H+b1CfbPkMXGgJ7BrzTYiPYs0Zb+6f/4
-         g5ZJ/GAJmOKg2A69NMAUGcaQ7R+UbLCgpOb7MH7zgZn5v+VWFMZ4AhiQ2nDU7ynXQpJ5
-         gqA2DNQ++4PB+9lAPI3q+GwUIodfgKb8MJ7EhWJJbMp9AAbrJJmHInGYw1tg6fRzI4K2
-         Hxhg==
-X-Gm-Message-State: ACgBeo3L6gOEk12Pvg+9jEQ0bre9dxcXUYt8UZEln/9K62SAtcMDw24K
-        A4pWHfFvoqZr1bmhwyHNreqwkOVCuSQoZzCvtnM=
-X-Google-Smtp-Source: AA6agR5yyWmG1D1qHcdI7lI0fsOJq8w6evcXBYHYQw4IrXPn2jyR1uh9kTXvAiBxM58dAMf+7AkZLggtGfMXTn9MsSY=
-X-Received: by 2002:a05:6402:40c2:b0:440:4ecd:f75f with SMTP id
- z2-20020a05640240c200b004404ecdf75fmr3605699edb.405.1660858872480; Thu, 18
- Aug 2022 14:41:12 -0700 (PDT)
+        with ESMTP id S231467AbiHRXFz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 19:05:55 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 921E6CD7A6
+        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 16:05:54 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 491015C56B;
+        Thu, 18 Aug 2022 23:05:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1660863953; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bVh29NEyEDoQ7z5I08Hqo13QuYYn37AowncWmf6tQ1Y=;
+        b=HxiHY94ExKj7o69Zt+PyobH74ane9g1x9bpFh+xpRpRoMAvroQh+p7wNqtBrWNMMddm/P1
+        pLNh+89Zvlj8XtNCOXTkDwIdO0dwa5NspMdgoUckgE8yD6hs1pC3VXp+jLyZU0yiCUOruo
+        VdrkuA4ubqoTR+IQVV0+FQq36jAoKDk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1660863953;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bVh29NEyEDoQ7z5I08Hqo13QuYYn37AowncWmf6tQ1Y=;
+        b=mPiPjfY0tnlHyF71n0F8FuIgpYgncsPNAiL/D3oHwBAsAK2UXc+US3C7/lEyj/R3VGgS9I
+        pPOKbq5uYfE7D7Dw==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2B9BC139B7;
+        Thu, 18 Aug 2022 23:05:51 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id Qt3iNc/F/mLmMwAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 18 Aug 2022 23:05:51 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-References: <166063173439.5425.8345694210902041629@noble.neil.brown.name>
-In-Reply-To: <166063173439.5425.8345694210902041629@noble.neil.brown.name>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 18 Aug 2022 17:41:01 -0400
-Message-ID: <CAN-5tyHdCigw38VYXFCOdsG2gcKfLp9jUFm_MFLK0PQi+vpjrg@mail.gmail.com>
-Subject: Re: [PATCH] NFS: unlink/rmdir shouldn't call d_delete() twice on ENOENT
-To:     NeilBrown <neilb@suse.de>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+From:   "NeilBrown" <neilb@suse.de>
+To:     hooanon05g@gmail.com
+Cc:     trond.myklebust@hammerspace.com, linux-nfs@vger.kernel.org
+Subject: Re: NFS, two d_delete() calls in nfs_unlink()
+In-reply-to: <9451.1660793491@jrobl>
+References: <7634.1660728564@jrobl>,
+ <166079133167.5425.16635199337074058478@noble.neil.brown.name>,
+ <9451.1660793491@jrobl>
+Date:   Fri, 19 Aug 2022 09:05:48 +1000
+Message-id: <166086394829.5425.9699631920964605772@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,48 +71,50 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Aug 16, 2022 at 4:20 AM NeilBrown <neilb@suse.de> wrote:
->
->
-> nfs_unlink() calls d_delete() twice if it receives ENOENT from the
-> server - once in nfs_dentry_handle_enoent() from nfs_safe_remove and
-> once in nfs_dentry_remove_handle_error().
->
-> nfs_rmddir() also calls it twice - the nfs_dentry_handle_enoent() call
-> is direct and inside a region locked with ->rmdir_sem
->
-> It is safe to call d_delete() twice if the refcount > 1 as the dentry is
-> simply unhashed.
-> If the refcount is 1, the first call sets d_inode to NULL and the second
-> call crashes.
->
-> Refcount is almost always 1 in nfs_unlink() so this must almost never
-> happen else we would have seen crashes before.
->
-> This patch removes the d_delete() call from nfs_dentry_handle_enoent()
-> so as to leave the one under ->remdir_sem in case that is important.
->
-> Fixes: 9019fb391de0 ("NFS: Label the dentry with a verifier in nfs_rmdir() and nfs_unlink()")
-> Signed-off-by: NeilBrown <neilb@suse.de>
+On Thu, 18 Aug 2022, hooanon05g@gmail.com wrote:
+> "NeilBrown":
+> > Thanks for the report.
+> > This possibility of calling d_delete() twice has been present
+> > since  9019fb391de0 in v5.16.
+> 
+> I don't think 9019fb391de0 is a problem.
+> Before v6.0-rc1, the target dentry was unhashed by __d_drop() call in
+> nfs_unlink(), and nfs_dentry_handle_enoent() skipped calling d_delete()
+> by simple_positive(). d_delete() was called only once via
+> nfs_dentry_remove_handle_error().
 
-This patch addresses the problem I previously reported. So Tested-by.
+Ahhh - simple_positive() checks d_unhashed() - I didn't connect that.
 
-> ---
->  fs/nfs/dir.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index dbab3caa15ed..4648b421025c 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -2382,7 +2382,6 @@ static void nfs_dentry_remove_handle_error(struct inode *dir,
->  {
->         switch (error) {
->         case -ENOENT:
-> -               d_delete(dentry);
->                 nfs_set_verifier(dentry, nfs_save_change_attribute(dir));
->                 break;
->         case 0:
-> --
-> 2.37.1
->
+So before my recent patch we needed the second call to d_delete() in
+nfs_unlink() because the first wasn't effective.  However the second
+call in nfs_rmdir() was still a problem.
+
+So if the current fix (9a31abb1c009) gets ported back before the patch
+that removed unhash (3c59366c207e) then it won't do the right thing
+for nfs_unlink().  As it has a Fixes: tag, that is likely.
+
+It would be better to protect the d_delete() with
+d_really_is_positive().
+
+Trond: can we drop that patch and replace it, or should I add the
+d_really_is_positive() check with a new patch?
+
+
+> 
+> In v6.0-rc1, the dentry is not unhashed and nfs_dentry_handle_enoent()
+> doesn't skip calling d_delete().
+> 
+> 
+> > How did you discover this bug, and why do you think my patch
+> > caused it?
+> 
+> I met this problem during a stress test aiming a filesystem I am
+> developing.
+> And I think unhashing causes nfs_dentry_handle_enoent() to call
+> d_delete().
+
+Thanks a lot for helping me understand!
+
+Thanks,
+NeilBrown
+
