@@ -2,177 +2,440 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42802598621
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 16:38:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5F6B598B41
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 20:34:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244793AbiHROiW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Aug 2022 10:38:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36024 "EHLO
+        id S1344447AbiHRScN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Aug 2022 14:32:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245458AbiHROiU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 10:38:20 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2096.outbound.protection.outlook.com [40.107.220.96])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F20737676;
-        Thu, 18 Aug 2022 07:38:18 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oRNutJQHEqUlUYAHTgKUlMitN4XEAftliOajZq0R4Fd5o/fOuddaIvITqpfoZqM6CTlybHXBqEE3wYE7evS1c2k56XLhOh6yWvN4CsvqB9X8I9qoNuue+/+C6h0lrltsbde/x9JGqcW2OPNnGV8i8xCAqL16Xiz9rC22v4LVosVKZoYdk49DGdkk3k9hJnJwwwP/Z5FRtkok/S4gekqvFkZP/I60jLUy5ZV9QLzkVhg83BPxZ4Lwu6NLUHmuqAzzNmAu2kR7hp+MjXmS44T+Uf8aJX9bXcILDKqlttg1J/37vxmSNTFFWgG/n950VJpoVZij9NFFxxtU0dOa0RND/A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5ecCv1GA2IzRI1O1I3WQ4w026x7799GHk0IN8wgfn/o=;
- b=Aj2PpIVRQJyTdWqvcVdNarPMpxw1Rfhsb5IWYZa0p+JqxpHnqVYN4P2dDvzJ9G9kq7rsMmUFEbrhm6XZWQdIu92caSGVwYM5E06v9avSeXXvKBE6LaxxHL5v5p5wdiOUMU9Vv4zQPYLZUH8VDZjfi/aY1ZLktulaPLLHvE+kfbv/DQ70BxZ/ORXIwqDlcOKsWKo6yEWjaleoHCwaWslqWZZMJgdMafVUW+HW52PrShab3Rb94fevoXKmZktiiRM2lidtozwgp+b5BJOW7F/drmDrRjAs+F19zj42OzlM19hjJ96bmc8xikpqbIu4Po66WcOvhKXJ1fk1Bh7JhkOcLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=hammerspace.com; dmarc=pass action=none
- header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5ecCv1GA2IzRI1O1I3WQ4w026x7799GHk0IN8wgfn/o=;
- b=Jo1cXs8f9JzitCy5qimGYhCMn12lp3p3aCSNBrLkn+irt0dHnDXNM7lkkvEikXN9rpOp2cLkKAiXE3x74ieMs5FeLWtUmvWaKfoXEmSqhRA3XbyATfq2BFZhoKZEBgydX10i7UhKUDo4SSnDM+A3TwyA77hIUgUAkF1P6tg0RPM=
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
- by BY5PR13MB3442.namprd13.prod.outlook.com (2603:10b6:a03:1ab::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.4; Thu, 18 Aug
- 2022 14:38:13 +0000
-Received: from CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::6dcb:fcd2:921b:9035]) by CH0PR13MB5084.namprd13.prod.outlook.com
- ([fe80::6dcb:fcd2:921b:9035%8]) with mapi id 15.20.5566.004; Thu, 18 Aug 2022
- 14:38:12 +0000
-From:   Trond Myklebust <trondmy@hammerspace.com>
-To:     "aglo@umich.edu" <aglo@umich.edu>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "kolga@netapp.com" <kolga@netapp.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "amir73il@gmail.com" <amir73il@gmail.com>
-Subject: Re: [RFC] problems with alloc_file_pseudo() use in __nfs42_ssc_open()
-Thread-Topic: [RFC] problems with alloc_file_pseudo() use in
- __nfs42_ssc_open()
-Thread-Index: AQHYsoQbU7E1olekUEiP9OU0visUl62zrV6AgAAY6QCAAAMWgIAAVeYAgAAJBoCAAHtwgIAAF4UA
-Date:   Thu, 18 Aug 2022 14:38:12 +0000
-Message-ID: <8cf1896588e79a1ca077f54398f8f82ed176114a.camel@hammerspace.com>
-References: <Yv1jwsHVWI+lguAT@ZenIV>
-         <CAN-5tyFvV7QOxyAQXu3UM5swQVB2roDpQ5CBRVc64Epp1gj9hg@mail.gmail.com>
-         <Yv2BVKuzZdMDY2Td@ZenIV>
-         <CAN-5tyF0ZMX8a6M6Qbbco3EmOzwVnnGZmqak8=t4Cvtzc45g7Q@mail.gmail.com>
-         <CAOQ4uxgA8jD6KnbuHDevNLsjD-LbEs_y1W6uYMEY6EG_es0o+Q@mail.gmail.com>
-         <Yv3Ti/niVd5ZVPP+@ZenIV>
-         <CAN-5tyHpDHzmo-rSw1X+0oX0xbxR+x13eP57osB0qhFLKbXzVA@mail.gmail.com>
-In-Reply-To: <CAN-5tyHpDHzmo-rSw1X+0oX0xbxR+x13eP57osB0qhFLKbXzVA@mail.gmail.com>
-Accept-Language: en-US, en-GB
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=hammerspace.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: bea0eeaa-de0a-4c45-cd0a-08da81274777
-x-ms-traffictypediagnostic: BY5PR13MB3442:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VhrhZf3BbKR7PPPqBGMYpeuiIb6rd/4QH5j3zPwlHmCsz4RMHy1w3V+mglK+UbwCEu82Li963Ax8frzB3ITI8LijbWz/ABzEp18f1frRIx5vM9sUC126VENOhYhTtZBqDoKB1ch+Y+nFBOpoIc9tVtLjN3gPxzulz1DUX4GUdLYvrBLW+WgZVQSUIz7LdheXCW5K/s7Wanpi8LADPC4Sl1ehfUdxghwWUkPd28cMeSmZdZskY5EoaYvhjtBph2vc/LKmit0ldsJ4bq1UX08Wz6ARCztBwu9fQQSaok6HMJ/EOBNYU/m7L50E2hpSK8tc8mIZ7WYanrDESMbaW1g1c9K+GN8m7r4taCEvshEuXnne0tb5ZjemkOXaTzbLLsBxKMu99JIn6l7UZndZtFXeN+6ElR303ltpypMHqccv/fzC8+T7lYQOI3O1AsmtaSLNAvjMW1bpjSX9N7IvcsQ4Mm0SI55IEKn+t9RrRHtJ6+apgneYhENWFBirnZuM+uuYXiJtuLVTCLDaFsIsm9N8ftfJsBh6x96MDZ09Uy3T8O83TQBE8VK+O9tddIwdkGfMxolddOmusfsLud9pT5cfd0DAhEhtlzzlw4zAy0dtOZsjAeiVdcoAk93JxdTpjRed2LJowAUpD/49zResd10LjAiTjpqQ2jhqGB/FejH1X6ynE5Izvlos51pqgVFTHrWma/paEQ/5FdNdcbQSoKzVVhpx7veiiQgZygjS3pdClhWOlyBXKWkm8+C4InDalNVzVY0e+9eCIeKI+C4UsTrIfOhXwxpOmSC2B9AEuHtZMiRE6oWRM4h6eNQ7zKG3RaZf
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(396003)(39840400004)(346002)(136003)(366004)(5660300002)(8676002)(36756003)(478600001)(71200400001)(316002)(6486002)(41300700001)(54906003)(66946007)(64756008)(66556008)(2906002)(66446008)(76116006)(4326008)(66476007)(8936002)(110136005)(86362001)(26005)(53546011)(38070700005)(38100700002)(6512007)(186003)(2616005)(6506007)(122000001)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?S29peVF0cWdGOGlTMmpDeG1qWm9VZTFZUzJtZmdUcmYwTnBydEhtYWZXelVG?=
- =?utf-8?B?aTdxZ3M3WEwwRWJrWGlVM3RpdU4rdGdkamUzT2E2ZTViUk43ZDBRNXlBZEt6?=
- =?utf-8?B?NjFvUTVMdmVMcWhaVTBSMG1FTmt3aWkrWTN4ZDVWM0xiQ3lLajNpaE1aSmhP?=
- =?utf-8?B?NTlwNlJxRDRpWk5Za3ExMWpxUFk1elcxV1NQMUQvZkN3Qy9zc2IwZi9CSHR4?=
- =?utf-8?B?RVVsVGdPUWlHMTlHUitiWmlaRE1VbTA3SDNSZC9YZ1F1YTk2TEZueklLT3VK?=
- =?utf-8?B?TFZNeWt5NTZEYis2S1hIbFRjYmlCT1dGUVdudmJzYS80VUNvTFdkZDNxTHR3?=
- =?utf-8?B?U2xhSTNydFFNei9nT24va1Yyd3hhWnRzakVGRWordGxXNnJRZ2FDcVk2ZVBt?=
- =?utf-8?B?Nm5WaksvWU1BS1ArWHRtbFFiSm8reTYwTUlRcVdUWHJKbm9haDkwRXA5NnNF?=
- =?utf-8?B?TGdhL25RU1NkUTVYMjQ1S3VXNGdzTDBuMFhuS1cvRDZmK3pJaVJyWVBncWlj?=
- =?utf-8?B?RE0rVXdmcUxhZndwRjVvKzdCbEdHbElyYWJxY2lkbWM5cGlsVVNobDJ3L1hX?=
- =?utf-8?B?U1VYNDA5ek55RUZyTW9qc2dwSUhERG1pbzcrN3d4TVY3S0tpbzEvSFlVSjBp?=
- =?utf-8?B?cmhGMjZYQTNTc2JsVVA2M3NJeHRFMGk2cnVNZFNib3JqZEgyYi9hMnB6Vzlm?=
- =?utf-8?B?b0d4a0d4Mi9zT29SYVlvNXRQK0VKZnNUS0lVMG5IbFpHWVRJcVpRcUFzTWhq?=
- =?utf-8?B?VXJ5OStQbUo1Sk55djFiVjVmeFlRbFVpK01WY0dpS2V4WkxwWSt3Nng0cWVT?=
- =?utf-8?B?K1FZd2xSdnJLcFkwT3AxdUo5SHhVRnJIVThSa0VnQ1VmUlQ0TFVua04zcVRz?=
- =?utf-8?B?aW5vcU5JQkRqU0JRWVpoVDF5cnBHdk5MUUt1bTJCTGkwb1hZUE40ZXlybUpG?=
- =?utf-8?B?R1hiR1JmRGtaWkorbVIvVGFpS3Y2ZTVZd1ZyYzNTbzh0OW4ra2xyLzc5ZDhq?=
- =?utf-8?B?QWVLNkhnRElMbk40WDJXUnBTaVNGSnlwYUNkVnRaNlpMNDJac3Rxc1VHUnc0?=
- =?utf-8?B?TWZMQWtpSld2Y0p4ZzhkQkpXSnlIOGN1SGZYaXZ3RzRuTzdUbkNjSnk3RlRW?=
- =?utf-8?B?eU5MVzU1cWVKbUFLcGlqVWhqb3pHSVJqcytzVk1UQTBMQU1HYkNIdlRwNHJM?=
- =?utf-8?B?MkVzSGxTaXB5QWhtYUtGZnBmNFRkU0EvTG8rb1JqelVwK1pmcy8xbHoySHVP?=
- =?utf-8?B?SldCSGlDYkpvVzM0V21VSk96bnEva2FLMUtpM1EzcHBqeWNkZFhhcFF5N0hT?=
- =?utf-8?B?QmVyelQ5ampGS05IQUVvZ29RbjF2Wk5Ob1N5blBBRnBnYjdnT1R6K2FTZGVo?=
- =?utf-8?B?MDM1MFhiMm42dGpqZnc3SmVuZjFuVjllZDhkTG1RU3lsZXpUaVFucWVYdDFM?=
- =?utf-8?B?ZGdGV0NydjF4eU4zMmdRc24xczBjTTc3dHdRclJBcDNXQktNMm02aExpQmd4?=
- =?utf-8?B?Q2Nra0l0YkVtTHRaQ0ZiN2M2UDh1TzZCZHBFa1FWaTQyQUpHaTVmTTBLRVNJ?=
- =?utf-8?B?Vm1rOG5QanlROGJkMHVGVUFaUEdjNldnTkg1ak9sYlpNNVZTUmtrTG1GNUlO?=
- =?utf-8?B?bmdWVkkxUVJLckp5Vzk3UVdhUHcyNzZxeFhVd0pkUVQ0QW1qNElRbnF1Zzlv?=
- =?utf-8?B?SzFzekdXck92QWdBR09TQTZsR3FUcmtGREQ1UFcxYkhDVUcya2wxZVBld0R3?=
- =?utf-8?B?bll5T1RGc0lJZWdSaXVHekJ5UDczQlY0N0IzUVZGdXdhNnE0ZWVKT0hEZDNV?=
- =?utf-8?B?QzdCNjdoWm9haFg5a2VXbWIzVUwzMjIrdHpwdVBnNXo4L1dVNngxbjJHL1kv?=
- =?utf-8?B?d3J4aDBtNHl3Q3JEU3poVzdOM29uRkoxQzR5ZHIwZmVVcEhqdlVBNHdOL0Y0?=
- =?utf-8?B?ZW15NkQzNWYveWNNNm5uY1hSSk5xcEpkK2l0emdLdGI2WFF1UGIxTjc2Szhs?=
- =?utf-8?B?dkM2eFkyQk5saWI3Vm1JTEdNRFo0N01FOUEzazU5TDJ4cS8zR1V5YUNmKzZJ?=
- =?utf-8?B?Nis4THNPR3pBYVlEdDNpY1BrUllXd2cyc2JBOWRGZXBRQlRJRDRCNk9NaG9t?=
- =?utf-8?B?S1cwVU8yZW9aSzdZbkxmdU5HY0R5ZmUrd0dhUXRtUG5taGJUd1lkcHNrSzJ4?=
- =?utf-8?B?NEE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C28D538896458B4F8984CC534CB41D92@namprd13.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        with ESMTP id S1345489AbiHRSb7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 14:31:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1563FD1E0C;
+        Thu, 18 Aug 2022 11:31:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A519FB823CF;
+        Thu, 18 Aug 2022 18:31:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48E8FC43141;
+        Thu, 18 Aug 2022 18:31:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1660847514;
+        bh=8USowyvuGBhRQW/ns/BUh02F3EJfklK34uuxtt7/kn4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=oHNVY2TjdwwHxeSi0r9q5sOMdhSYIKl7jP9F8uM20zyMWZR5O8X6+4GHcyCw2ncdZ
+         Wwoa/f36/JURNJf31LowfAFV5lUEYedcVQSQQiavGuycI2jxP3qyVCE48dpK946WQj
+         2K4ds8+1GJl9ai2Bqu1THn7AVbYx+1nC1kqqKCKqtw4R9MgC3FFokYOwDFzn0JbwBH
+         4rY58VMA1B/ZwM2mvrySgp/vto54JhcJMu7Z+s2mx4Jq+sFBDPCfDMMZV3Z2kSplWd
+         IanukIJ5DI1/zzQHV9lDpLlppuV5gpclSajtX5SKNJOejs88O6ceEhey79QUAEj9sm
+         L40Vh/b2Wi8jQ==
+Received: by mail-wr1-f44.google.com with SMTP id n7so2685918wrv.4;
+        Thu, 18 Aug 2022 11:31:54 -0700 (PDT)
+X-Gm-Message-State: ACgBeo39PybyZEdUgT6XB0OAQqsjTEevPA0zH1QZfBdDEmxVZfPoy7Al
+        klWi/DQTtRrPJq5k0LE/61sOu++lO6l1f863l58=
+X-Google-Smtp-Source: AA6agR4xsjyYGQaxxkDlbtMCKs/I9P0FWYs9o5YmZdb7NYLFKbglYxR0HQ08A++eQnkr57w5XGx99ijdnWG8AttS3uo=
+X-Received: by 2002:adf:d1e8:0:b0:223:bca:8019 with SMTP id
+ g8-20020adfd1e8000000b002230bca8019mr2275405wrd.562.1660847512502; Thu, 18
+ Aug 2022 11:31:52 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: hammerspace.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bea0eeaa-de0a-4c45-cd0a-08da81274777
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Aug 2022 14:38:12.8619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: af56g/OHssAl5H99MtZQFHEP6ZnMfzmxH7G9RXb7Yh3q7PyL7OHflntt7nHlI/vA9jrXaF06u0dxP/eX/+1dAw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR13MB3442
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+References: <20220715184433.838521-1-anna@kernel.org> <20220715184433.838521-7-anna@kernel.org>
+ <EC97C20D-A317-49F9-8280-062D1AAEE49A@oracle.com> <20220718011552.GK3600936@dread.disaster.area>
+ <CAFX2Jf=FrXHMxioWLHFkRHxBNDRe-9SBUmCcco9gkaY8EQOSZg@mail.gmail.com>
+ <20220719224434.GL3600936@dread.disaster.area> <CF981532-ADC0-43F9-A304-9760244A53D5@oracle.com>
+ <20220720023610.GN3600936@dread.disaster.area> <CD3CE5B3-1FB7-473A-8D45-EDF3704F10D7@oracle.com>
+ <20220722004458.GS3600936@dread.disaster.area> <C581A93D-6797-4044-8719-1F797BA17761@oracle.com>
+In-Reply-To: <C581A93D-6797-4044-8719-1F797BA17761@oracle.com>
+From:   Anna Schumaker <anna@kernel.org>
+Date:   Thu, 18 Aug 2022 14:31:36 -0400
+X-Gmail-Original-Message-ID: <CAFX2JfmOO7RK3SirXLrRA9kpBC=ROnZydYBje4rowxi+vdoJLg@mail.gmail.com>
+Message-ID: <CAFX2JfmOO7RK3SirXLrRA9kpBC=ROnZydYBje4rowxi+vdoJLg@mail.gmail.com>
+Subject: Re: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS implementation
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Dave Chinner <david@fromorbit.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <Josef@toxicpanda.com>,
+        ng-linux-team <ng-linux-team@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-T24gVGh1LCAyMDIyLTA4LTE4IGF0IDA5OjEzIC0wNDAwLCBPbGdhIEtvcm5pZXZza2FpYSB3cm90
-ZToNCj4gT24gVGh1LCBBdWcgMTgsIDIwMjIgYXQgMTo1MiBBTSBBbCBWaXJvIDx2aXJvQHplbml2
-LmxpbnV4Lm9yZy51az4NCj4gd3JvdGU6DQo+ID4gDQo+ID4gT24gVGh1LCBBdWcgMTgsIDIwMjIg
-YXQgMDg6MTk6NTRBTSArMDMwMCwgQW1pciBHb2xkc3RlaW4gd3JvdGU6DQo+ID4gDQo+ID4gPiBO
-RlMgc3BlYyBkb2VzIG5vdCBndWFyYW50ZWUgdGhlIHNhZmV0eSBvZiB0aGUgc2VydmVyLg0KPiA+
-ID4gSXQncyBsaWtlIHNheWluZyB0aGF0IHRoZSBMYXcgbWFrZXMgQ3JpbWUgaW1wb3NzaWJsZS4N
-Cj4gPiA+IFRoZSBsYXcgbmVlZHMgdG8gYmUgZW5mb3JjZWQsIHNvIGlmIHNlcnZlciBnZXRzIGEg
-cmVxdWVzdA0KPiA+ID4gdG8gQ09QWSBmcm9tL3RvIGFuIGZoYW5kbGUgdGhhdCByZXNvbHZlcyBh
-cyBhIG5vbi1yZWd1bGFyIGZpbGUNCj4gPiA+IChmcm9tIGEgcm9ndWUgb3IgYnVnZ3kgTkZTIGNs
-aWVudCkgdGhlIHNlcnZlciBzaG91bGQgcmV0dXJuIGFuDQo+ID4gPiBlcnJvciBhbmQgbm90IGNv
-bnRpbnVlIHRvIGFsbG9jX2ZpbGVfcHNldWRvKCkuDQo+ID4gDQo+ID4gRldJVywgbXkgcHJlZmVy
-ZW5jZSB3b3VsZCBiZSB0byBoYXZlIGFsbG9jX2ZpbGVfcHNldWRvKCkgcmVqZWN0DQo+ID4gZGly
-ZWN0b3J5IGlub2RlcyBpZiBpdCBldmVyIGdldHMgc3VjaC4NCj4gPiANCj4gPiBJJ20gc3RpbGwg
-bm90IHN1cmUgdGhhdCBteSAoYW5kIHlvdXJzLCBhcHBhcmVudGx5KSBpbnRlcnByZXRhdGlvbg0K
-PiA+IG9mIHdoYXQgT2xnYSBzYWlkIGlzIGNvcnJlY3QsIHRob3VnaC4NCj4gDQo+IFdvdWxkIGl0
-IGJlIGFwcHJvcHJpYXRlIHRvIGRvIHRoZSBmb2xsb3dpbmcgdGhlbjoNCj4gDQo+IGRpZmYgLS1n
-aXQgYS9mcy9uZnMvbmZzNGZpbGUuYyBiL2ZzL25mcy9uZnM0ZmlsZS5jDQo+IGluZGV4IGU4OGY2
-YjE4NDQ1ZS4uMTEyMTM0YjY0MzhkIDEwMDY0NA0KPiAtLS0gYS9mcy9uZnMvbmZzNGZpbGUuYw0K
-PiArKysgYi9mcy9uZnMvbmZzNGZpbGUuYw0KPiBAQCAtMzQwLDYgKzM0MCwxMSBAQCBzdGF0aWMg
-c3RydWN0IGZpbGUgKl9fbmZzNDJfc3NjX29wZW4oc3RydWN0DQo+IHZmc21vdW50ICpzc19tbnQs
-DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dDsNCj4gwqDCoMKgwqDC
-oMKgwqAgfQ0KPiANCj4gK8KgwqDCoMKgwqDCoCBpZiAoU19JU0RJUihmYXR0ci0+bW9kZSkpIHsN
-Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVzID0gRVJSX1BUUigtRUJBREYpOw0K
-PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBnb3RvIG91dDsNCj4gK8KgwqDCoMKgwqDC
-oCB9DQoNCllvdSdyZSBiZXR0ZXIgb2ZmIGdvaW5nIHdpdGjCoCdpZiAoIVNfSVNSRUcoKSknIHNv
-IHRoYXQgd2UgYWxzbyByZWplY3QNCnN5bWxpbmtzLCBwaXBlcywgZGV2aWNlcywgZXRjLiBUaGUg
-cmVxdWlyZW1lbnQgZm9yIHRoZSBORlN2NC4yIGNvcHkNCm9mZmxvYWQgcHJvdG9jb2wgaXMgdGhh
-dCBib3RoIHRoZSBzb3VyY2UgYW5kIGRlc3RpbmF0aW9uIGJlIHJlZ3VsYXINCmZpbGVzLg0KDQo+
-ICsNCj4gwqDCoMKgwqDCoMKgwqAgcmVzID0gRVJSX1BUUigtRU5PTUVNKTsNCj4gwqDCoMKgwqDC
-oMKgwqAgbGVuID0gc3RybGVuKFNTQ19SRUFEX05BTUVfQk9EWSkgKyAxNjsNCj4gwqDCoMKgwqDC
-oMKgwqAgcmVhZF9uYW1lID0ga3phbGxvYyhsZW4sIEdGUF9LRVJORUwpOw0KPiBAQCAtMzU3LDYg
-KzM2Miw3IEBAIHN0YXRpYyBzdHJ1Y3QgZmlsZSAqX19uZnM0Ml9zc2Nfb3BlbihzdHJ1Y3QNCj4g
-dmZzbW91bnQgKnNzX21udCwNCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJfaW5vLT5pX2ZvcCk7DQo+IMKg
-wqDCoMKgwqDCoMKgIGlmIChJU19FUlIoZmlsZXApKSB7DQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCByZXMgPSBFUlJfQ0FTVChmaWxlcCk7DQo+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIGlwdXQocl9pbm8pOw0KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-Z290byBvdXRfZnJlZV9uYW1lOw0KPiDCoMKgwqDCoMKgwqDCoCB9DQoNCi0tIA0KVHJvbmQgTXlr
-bGVidXN0DQpMaW51eCBORlMgY2xpZW50IG1haW50YWluZXIsIEhhbW1lcnNwYWNlDQp0cm9uZC5t
-eWtsZWJ1c3RAaGFtbWVyc3BhY2UuY29tDQoNCg0K
+On Fri, Jul 22, 2022 at 11:09 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
+>
+>
+>
+> > On Jul 21, 2022, at 8:44 PM, Dave Chinner <david@fromorbit.com> wrote:
+> >
+> > On Wed, Jul 20, 2022 at 04:18:36AM +0000, Chuck Lever III wrote:
+> >>> On Jul 19, 2022, at 10:36 PM, Dave Chinner <david@fromorbit.com> wrote:
+> >>> On Wed, Jul 20, 2022 at 01:26:13AM +0000, Chuck Lever III wrote:
+> >>>>> On Jul 19, 2022, at 6:44 PM, Dave Chinner <david@fromorbit.com> wrote:
+> >>>>> IOWs, it seems to me that what READ_PLUS really wants is a "sparse
+> >>>>> read operation" from the filesystem rather than the current "read
+> >>>>> that fills holes with zeroes". i.e. a read operation that sets an
+> >>>>> iocb flag like RWF_SPARSE_READ to tell the filesystem to trim the
+> >>>>> read to just the ranges that contain data.
+> > .....
+> >>>> Now how does the server make that choice? Is there an attribute
+> >>>> bit that indicates when a file should be treated as sparse? Can
+> >>>> we assume that immutable files (or compressed files) should
+> >>>> always be treated as sparse? Alternately, the server might use
+> >>>> the file's data : hole ratio.
+> >>>
+> >>> None of the above. The NFS server has no business knowing intimate
+> >>> details about how the filesystem has laid out the file. All it cares
+> >>> about ranges containing data and ranges that have no data (holes).
+> >>
+> >> That would be the case if we want nothing more than impermeable
+> >> software layering. That's nice for software developers, but
+> >> maybe not of much benefit to average users.
+> >>
+> >> I see no efficiency benefit, for example, if a 10MB object file
+> >> has 512 bytes of zeroes at a convenient offset and the server
+> >> returns that as DATA/HOLE/DATA. The amount of extra work it has
+> >> to do to make that happen results in the same latencies as
+> >> transmitting 512 extra bytes on GbE. It might be even worse on
+> >> faster network fabrics.
+> >
+> > Welcome to the world of sparse file IO optimisation - NFS may be new
+> > to this, but local filesystems have been optimising this sort of
+> > thing for decades. Don't think we don't know about it - seek time
+> > between 2 discontiguous extents is *much worse* than the few extra
+> > microseconds that DMAing a few extra sectors worth of data in a
+> > single IO. Even on SSDs, there's a noticable latency difference
+> > between a single 16KB IO and two separate 4kB IOs to get the same
+> > data.
+> >
+> > As it is, we worry about filesystem block granularity, not sectors.
+> > A filesystem would only report a 512 byte range as a hole if it had
+> > a 512 byte block size. Almost no-one uses such small block sizes -
+> > 4kB is the default for ext4 and XFS - so the minimum hole size is
+> > generally 4KB.
+> >
+> > Indeed, in this case XFS will not actually have a hole in the file
+> > layout - the underlying extent would have been allocated as a single
+> > contiguous unwritten extent, then when the data gets written it will
+> > convert the two ranges to written, resulting in a physically
+> > contiguous "data-unwritten-data" set of extents. However,
+> > SEEK_HOLE/DATA will see that unwritten extent as a hole, so you'll
+> > get that reported via seek hole/data or sparse reads regardless of
+> > whether it is optimal for READ_PLUS encoding.
+> >
+> > However, the physical layout is optimal for XFS - if the hole gets
+> > filled by a future write, it ends up converting the file layout to a
+> > single contiguous data extent that can be read with a single IO
+> > rather than three physically discontigous data extents that require
+> > 3 physical IOs to read.
+> >
+> > ext4 optimises this in a different way - it will allocate small
+> > holes similar to the way XFS does, but it will also fill the with
+> > real zeros rather than leaving them unwritten. As a result, ext4
+> > will have a single physically contiguous extent on disk too, but it
+> > will -always- report as data even though the data written by the
+> > application is sparse and contains a run of zeroes in it.
+> >
+> > IOWs, ext4 and XFS will behave differently for the simple case you
+> > gave because they've optimised small holes in sparse file data
+> > differently. Both have their pros and cons, but it also means that
+> > the READ_PLUS response for the same file data written the same way
+> > can be different because the underlying filesystem on the server is
+> > different.
+> >
+> > IOWs, the NFS server cannot rely on a specific behaviour w.r.t.
+> > holes and data from the underlying filesystem. Sparseness of a file
+> > is determined by how the underlying filesystem wants to optimise the
+> > physical layout or the data and IO patterns that data access results
+> > in. The NFS server really cannot influence that, or change the
+> > "sparseness" it reports to the client except by examining the
+> > data it reads from the filesystem....
+>
+> What I'm proposing is that the NFS server needs to pick and
+> choose whether to internally use sparse reads or classic
+> reads of the underlying file when satisfying a READ_PLUS
+> request.
+>
+> I am not proposing that the server should try to change the
+> extent layout used by the filesystem.
+>
+>
+> >> On fast networks, the less the server's host CPU has to be
+> >> involved in doing the READ, the better it scales. It's
+> >> better to set up the I/O and step out of the way; use zero
+> >> touch as much as possible.
+> >
+> > However, as you demonstrate for the NFS client below, something has
+> > to fill the holes. i.e. if we aren't doing sparse reads on the NFS
+> > server, then the filesystem underneath the NFS server has to spend
+> > the CPU to instantiate pages over the hole in the file in the page
+> > cache, then zero them before it can pass them to the "zero touch"
+> > NFS send path to be encoded into the READ reponse.
+> >
+> > IOWs, sending holes as zeroed data from the server is most
+> > definitely not zero touch even if NFS doesn't touch the data.
+> >
+> > Hence the "sparse read" from the underlying filesystem, which avoids
+> > the need to populate and zero pages in the server page cache
+> > altogether, as well as enabling NFS to use it's zero-touch
+> > encode/send path for the data that is returned. And with a sparse
+> > read operation, the encoding of hole ranges in READ_PLUS has almost
+> > zero CPU overhead because the calculation is dead simple (i.e. hole
+> > start = end of last data, hole len = start of next data - end of
+> > last data).
+> >
+> > IOWs, the lowest server CPU and memory READ processing overhead
+> > comes from using READ_PLUS with sparse reads from the filesystem and
+> > zero-touch READ_PLUS data range encoding.
+>
+> Agree on zero-touch: I would like to enable the use of
+> splice read for CONTENT_DATA wherever it can be supported.
+>
+> Sparse reads for large sparse files will avoid hole
+> instantiation, and that's a good thing as well.
+>
+> For small to average size files, I'm not as clear. If the
+> server does not instantiate a hole, then the clients end
+> up filling that hole themselves whenever re-reading the
+> file. That seems like an unreasonable expense for them.
+>
+> The cost of hole instantiation is low and amortized over
+> the life of the file, and after instantiated, zero touch
+> can be used to satisfy subsequent READ_PLUS requests. On
+> balance that seems like a better approach.
+>
+>
+> >> Likewise on the client: it might receive a CONTENT_HOLE, but
+> >> then its CPU has to zero out that range, with all the memory
+> >> and cache activity that entails. For small holes, that's going
+> >> to be a lot of memset(0). If the server returns holes only
+> >> when they are large, then the client can use more efficient
+> >> techniques (like marking page cache pages or using ZERO_PAGE).
+> >
+> > Yes, if we have sparse files we have to take that page cache
+> > instantiation penalty *somewhere* in the IO stack between the client
+> > and the server.
+> >
+> > Indeed, we actually want this overhead in the NFS client, because we
+> > have many more NFS clients than we do NFS servers and hence on
+> > aggregate there is way more CPU and memory to dedicate to
+> > instantiating zeroed data on the client side than on the server
+> > side.
+> >
+> > IOWs, if we ship zeroes via RDMA to the NFS client so the NFS client
+> > doesn't need to instantiate holes in the page cache, then we're
+> > actually forcing the server to perform hole instantiation. Forcing
+> > the server to instantiate all the holes for all the files that all
+> > the clients it is serving is prohibitive from a server CPU and
+> > memory POV,
+>
+> I would hope not. Server-side hole instantiation is what we
+> already have today with classic NFS READ, right?
+>
+> Anyway, the value proposition of RDMA storage protocols is
+> that the network fabric handles data transfer on behalf of
+> both the client and server host CPU -- that way, more CPU
+> capacity is available on the client for applications running
+> there.
+>
+> NFS servers are typically overprovisioned with CPU because
+> serving files is not CPU intensive work. If anything, I would
+> be concerned that hole instantiation would increase the amount
+> of I/O (as a form of write amplification). But again, NFS
+> server hardware is usually designed for I/O capacity, and
+> IIUC the server already does hole instantiation now.
+>
+> But, it's academic. READ_PLUS is not efficient on NFS/RDMA
+> as READ because with NFS/RDMA the client has to register
+> memory for the server to write the payload in. However, the
+> client cannot know in advance what the payload looks like
+> in terms of DATA and HOLEs. So it's only choice is to set up
+> a large buffer and parse through it when it gets the reply.
+> That buffer can be filled via an RDMA Write, of course, but
+> the new expense for the client is parsing the returned
+> segment list. Even if it's just one segment, the client will
+> have to copy the payload into place.
+>
+> For a classic READ over NFS/RDMA, that buffer is carved out
+> of the local page cache and the server can place the payload
+> directly into that cache. The client NFS protocol stack never
+> touches it. This enables 2-3x higher throughput for READs. We
+> see a benefit even with software-implemented RDMA (siw).
+>
+> So we would need to come up with some way of helping each
+> NFS/RDMA client to set up receive buffers that will be able
+> to get filled via direct data placement no matter how the
+> server wants to return the payload. Perhaps some new protocol
+> would be needed. Not impossible, but I don't think NFSv4.2
+> READ_PLUS can do this.
+>
+>
+> > even if you have the both the server network bandwidth
+> > and the cross-sectional network bandwidth available to ship all
+> > those zeros to all the clients.
+> >
+> >> On networks with large bandwidth-latency products, however,
+> >> it makes sense to trade as much server and client CPU and
+> >> memory for transferred bytes as you can.
+> >
+> > Server, yes, client not so much. If you focus purely on single
+> > client<->server throughput, the server is not going to scale when
+> > hundreds or thousands of clients all demand data at the same time.
+> >
+> > But, regardless of this, the fact is that the NFS server is a
+> > consumer of the sparseness data stored in the underlying filesystem.
+> > Unless it wants to touch every byte that is read, it can only export
+> > the HOLE/DATA information that the filesystem can provide it with.
+> >
+> > What we want is a method that allows the filesystem to provide that
+> > information to the NFS server READ_PLUS operation as efficiently as
+> > possible. AFAICT, that's a sparse read operation....
+>
+> I'm already sold on that. I don't want NFSD touching every
+> byte in every READ payload, even on TCP networks. And
+> definitely, for reads of large sparse files, the proposed
+> internal sparse read operation sounds great.
+>
+>
+> >> The mechanism that handles sparse files needs to be distinct
+> >> from the policy of when to return more than a single
+> >> CONTENT_DATA segment, since one of our goals is to ensure
+> >> that READ_PLUS performs and scales as well as READ on common
+> >> workloads (ie, not HPC / large sparse file workloads).
+> >
+> > Yes, so make the server operation as efficient as possible whilst
+> > still being correct (i.e. sparse reads), and push the the CPU and
+> > memory requirements for instantiating and storing zeroes out
+> > to the NFS client.
+>
+> Again, I believe that's a policy choice. It really depends on
+> the CPU available on both ends and the throughput capacity
+> of the network fabric (which always depends on instantaneous
+> traffic levels).
+>
+>
+> > If the NFS client page cache instantiation can't
+> > keep up with the server sending it encoded ranges of zeros, then
+> > this isn't a server side issue; the client side sparse file support
+> > needs fixing/optimising.
+>
+> Once optimized, I don't think it will be a "can't keep up"
+> issue but rather a "how much CPU and memory bandwidth is being
+> stolen from applications" issue.
+>
+>
+> >>> If the filesystem can support a sparse read, it returns sparse
+> >>> ranges containing data to the NFS server. If the filesystem can't
+> >>> support it, or it's internal file layout doesn't allow for efficient
+> >>> hole/data discrimination, then it can just return the entire read
+> >>> range.
+> >>>
+> >>> Alternatively, in this latter case, the filesystem could call a
+> >>> generic "sparse read" implementation that runs memchr_inv() to find
+> >>> the first data range to return. Then the NFS server doesn't have to
+> >>> code things differently, filesystems don't need to advertise
+> >>> support for sparse reads, etc because every filesystem could
+> >>> support sparse reads.
+> >>>
+> >>> The only difference is that some filesystems will be much more
+> >>> efficient and faster at it than others. We already see that sort
+> >>> of thing with btrfs and seek hole/data on large cached files so I
+> >>> don't see "filesystems perform differently" as a problem here...
+> >>
+> >> The problem with that approach is that will result in
+> >> performance regressions on NFSv4.2 with exports that reside
+> >> on underperforming filesystem types. We need READ_PLUS to
+> >> perform as well as READ so there is no regression between
+> >> NFSv4.2 without and with READ_PLUS, and no regression when
+> >> migrating from NFSv4.1 to NFSv4.2 with READ_PLUS enabled.
+> >
+> > Sure, but fear of regressions is not a valid reason for preventing
+> > change from being made.
+>
+> I don't believe I'm stating a fear, but rather I'm stating
+> a hard requirement for our final READ_PLUS implementation.
+>
+> In any event, a good way to deal with fear of any kind is
+> to do some reality testing. I think we have enough consensus
+> to build a prototype, if Anna is willing, and then assess
+> its performance.
+>
+> There are two mechanisms:
+>
+> 1 The sparse internal read mechanism you proposed
+
+Assuming nobody else has started working on the sparse-read function,
+I would like to check my understanding of what it would look like:
+
+- The function splice_directo_to_actor() takes a "struct splice_desc"
+as an argument. The sparse read function would take something similar,
+a "struct sparse_desc", which has callbacks used by the underlying
+filesystem to tell the server to encode either a hole or data segment
+next.
+
+In the default case, the VFS tells the server to encode the entire
+read range as data. If underlying filesystems opt-in, then whenever a
+data extent is found the encode_data_segment() function is called and
+whenever a hole is found it calls the encode_hole_segment() function.
+
+The NFS server would need to know file offset and length of each
+segment, so these would probably be arguments to both functions. How
+would reading data work, though? The server needs to reserve space in
+the xdr stream for the offset & length metadata, but also the data
+itself. I'm assuming it would do something similar to
+fs/nfsd/vfs.c:nfsd_readv() and set up an iov_iter or kvec that the
+underlying filesystem can use to place file data?
+
+Does that sound about right? Am I missing anything?
+
+I can definitely do the NFS server portion of this, and probably the
+vfs-level sparse read function as well. I'll need help with the
+underlying filesystem piece though, if anybody has a few spare cycles
+once I cobble together a vfs function.
+
+Thanks,
+Anna
+
+>
+> 2 The classic splice/readv mechanism that READ uses
+>
+>
+> There are three usage scenarios:
+>
+> A Large sparse files that reside on a filesystem that supports
+>   storing sparse file
+>
+> B Small to average size files that may or may not be sparse,
+>   residing on a filesystem that supports storing sparse files
+>
+> C Files that reside on a filesystem that does not support
+>   storing files sparsely (or, IIUC, does not support iomap)
+>
+>
+> I think we agree that scenario A should use mechanism 1 and
+> scenario C should use mechanism 2. The question is whether
+> mechanism 1 will perform as well as 2 for scenario B. If
+> yes, then READ_PLUS can use mechanism 1 to handle scenarios
+> A and B, and 2 to handle C. If no, then READ_PLUS can use
+> mechanism 1 to handle scenario A and 2 to handle scenarios
+> B and C.
+>
+> Both mechanisms need to be implemented no matter what, so it
+> looks to me like very little of the prototype code would be
+> wasted if such a change in direction becomes necessary once
+> performance evaluation is complete.
+>
+>
+> --
+> Chuck Lever
+>
+>
+>
