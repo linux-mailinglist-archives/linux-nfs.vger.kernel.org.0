@@ -2,63 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D89F597C48
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 05:36:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAF93597DFB
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 07:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237518AbiHRDbg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 17 Aug 2022 23:31:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57148 "EHLO
+        id S241167AbiHRFUJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Aug 2022 01:20:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235263AbiHRDbf (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 17 Aug 2022 23:31:35 -0400
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FBC69018A
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Aug 2022 20:31:35 -0700 (PDT)
-Received: by mail-pj1-x102c.google.com with SMTP id m10-20020a17090a730a00b001fa986fd8eeso3560177pjk.0
-        for <linux-nfs@vger.kernel.org>; Wed, 17 Aug 2022 20:31:35 -0700 (PDT)
+        with ESMTP id S239419AbiHRFUI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 01:20:08 -0400
+Received: from mail-vs1-xe2b.google.com (mail-vs1-xe2b.google.com [IPv6:2607:f8b0:4864:20::e2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3CDA74DE4;
+        Wed, 17 Aug 2022 22:20:06 -0700 (PDT)
+Received: by mail-vs1-xe2b.google.com with SMTP id k2so464650vsk.8;
+        Wed, 17 Aug 2022 22:20:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=message-id:date:content-id:mime-version:from:references:in-reply-to
-         :cc:to:subject:from:to:cc;
-        bh=/FofTVsK9IlfmWDW/30e5CfZ6dtBzKhzwgrCZijjfbI=;
-        b=mB1yS1vYVbxnbLAOx6627ADY+O02e+WXza6sjOwJGABfXBTY3VpzPAlHwVNRhAgkpL
-         63lhS0KGGJynWns23uZCKcvgsI74ZPxrJ5DOaToNaJrisFxb8p7tdGN2dC2fR5jsbyKx
-         whRAAE/v5/CDSZg0aHqKQTN3m8oeF7ZsPk2U6W6gnSDJbksXWXdturFWJJbHJJZXtqbW
-         a9EvAF/89U5qfEhGnqsKVbELGNhT8uebMj6lxePCRNycgogvxtJiFTP5yBSY13XEUmWM
-         Bal6bnxGg7a+UvDJt2/v2wUFBekgRxMfKBpKXyYpgz2AH01O11ymXHtrAld7F4Gopozh
-         s/Pw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=5u39g6enjL3TnhMx1SP5kr0OpbGZJ2krVZeHPYNVV2g=;
+        b=bcGhUZfCKUpACpTP3USFIBUCGNtRGJgas//fOWlAq6d7WgJlvtYC0VxdZt0g00/RJ4
+         ZEXua8tkx/bIZNkeVnnxHWhCM3U4k5S/lDG9dpYv61EepruAlQVF1Ami8Y238RlTXArR
+         EPY9cFDfko9TZnfaCv37LeckaD2GjxeL7LV9i6B7SmiOkzTG8TRx3igH7SjqlhN0iIkh
+         yAYfRxswYM7+A3bQYsdIe/qyguMxjxDEcrK0/paiI6XvAhQCfkRAxsgBAQTJLCWzzSsX
+         xFDujOXZvgQXBOF0aeGL5WAHRXOF6oQbrIreOcyldnieUxsr1U5DTvRQCTmpAsvprcOX
+         vPYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=message-id:date:content-id:mime-version:from:references:in-reply-to
-         :cc:to:subject:x-gm-message-state:from:to:cc;
-        bh=/FofTVsK9IlfmWDW/30e5CfZ6dtBzKhzwgrCZijjfbI=;
-        b=FohHJwR15dy2uqf6q8rASuwy8LnTSD+ddTdX5obt4G2VQLm56BWOt7kOowX6gZoVMg
-         tNWu1seLySHj/4cM+0Diwac7wlGGQC5x1Jen0wFxpeJRbDhWVQpxRKYWRHMx6nQ7QLi4
-         Ac258cp/da+0xtdZtT6GZbg+dvExaKH8kqqfaToN7z10BZgXteExrhvugEf2UHbGkxP7
-         HmTsgYgBVuKRNErZcpmjX4x6LQa874Ln9uZmdf4bgVwmSx+DBf+uai/9ZWYGad0a9TzK
-         YjlF37lsxJ53XqvckqbbTIWSeDdwnGhzyaHk4umzy8xzn9yojXdk5qCKesMxNRre4Ri4
-         gVsw==
-X-Gm-Message-State: ACgBeo1jaEcYYf0D5Oo7lW24kS/+DIvCnG83DeCkw3tV4IkL7Ro9crcs
-        NSM067SQqhRF7h/6ZO7HJlg=
-X-Google-Smtp-Source: AA6agR553t23v7IhCqnNZug6TWxNafJto6HeUEF1Zw4rWaUTbhI2gj7Xw/m1k9CwDp0l0Ah7MYcAkw==
-X-Received: by 2002:a17:90b:3141:b0:1f7:75cf:a449 with SMTP id ip1-20020a17090b314100b001f775cfa449mr1082653pjb.18.1660793494535;
-        Wed, 17 Aug 2022 20:31:34 -0700 (PDT)
-Received: from jromail.nowhere (h219-110-108-104.catv02.itscom.jp. [219.110.108.104])
-        by smtp.gmail.com with ESMTPSA id u15-20020a170902e80f00b0016d95380e8esm193203plg.140.2022.08.17.20.31.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Aug 2022 20:31:34 -0700 (PDT)
-Received: from localhost ([127.0.0.1] helo=jrobl) by jrobl id 1oOWFo-0002SS-7m ; Thu, 18 Aug 2022 12:31:32 +0900
-Subject: Re: NFS, two d_delete() calls in nfs_unlink()
-To:     "NeilBrown" <neilb@suse.de>
-Cc:     trond.myklebust@hammerspace.com, linux-nfs@vger.kernel.org
-In-Reply-To: <166079133167.5425.16635199337074058478@noble.neil.brown.name>
-References: <7634.1660728564@jrobl> <166079133167.5425.16635199337074058478@noble.neil.brown.name>
-From:   hooanon05g@gmail.com
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=5u39g6enjL3TnhMx1SP5kr0OpbGZJ2krVZeHPYNVV2g=;
+        b=p/IFMP4ReTGhlJZXDR/gDMBDK526Dqi6KE4hmH8KFbUHOQLMY8Hv77s+xY3DbnR9L9
+         dSMStn/WhBgRwUvlqjLr0DbWMos1GYKdcUI0z1UbRMGt0+2+DKjASnAl+XLW0OH/mhox
+         heGXLtpJtqtOj1PvuJDBIQdc8iDpVCBeAdAQqH4qu4k1XzNNzAMDqo/je48iLHyzdmT7
+         Rcj21UxUlN+owDcWIdTRuX5xgUMmESnUemGjAS8SHtM+T6qZGC5B0pvMVtYgdhR3tTog
+         5TYi7U/2sFbpqAjBI3as8wNGI0+3kMD3bhCVKNu4q06RIn2usO4Ue2VHtSbJT7j4GRg1
+         f3eQ==
+X-Gm-Message-State: ACgBeo0O61BCv2dzV02GPsOFah/3skbkEPYkKGo7i/kQiea5Tm22IV5w
+        hsWGTUOgGV05S9oBZNptIRYqK3yuzg1aKWSRg7s=
+X-Google-Smtp-Source: AA6agR6BhSrv9VHjUNG2L+DsTl3V2UVGb/bUIhtHawKstOSbcUAHR1+DqJGiFfmXQWeZNN685pcFYOgZx0+Js1zereI=
+X-Received: by 2002:a67:a246:0:b0:38c:9563:d2d8 with SMTP id
+ t6-20020a67a246000000b0038c9563d2d8mr580410vsh.2.1660800005916; Wed, 17 Aug
+ 2022 22:20:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9450.1660793491.1@jrobl>
-Date:   Thu, 18 Aug 2022 12:31:31 +0900
-Message-ID: <9451.1660793491@jrobl>
+References: <Yv1jwsHVWI+lguAT@ZenIV> <CAN-5tyFvV7QOxyAQXu3UM5swQVB2roDpQ5CBRVc64Epp1gj9hg@mail.gmail.com>
+ <Yv2BVKuzZdMDY2Td@ZenIV> <CAN-5tyF0ZMX8a6M6Qbbco3EmOzwVnnGZmqak8=t4Cvtzc45g7Q@mail.gmail.com>
+In-Reply-To: <CAN-5tyF0ZMX8a6M6Qbbco3EmOzwVnnGZmqak8=t4Cvtzc45g7Q@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Thu, 18 Aug 2022 08:19:54 +0300
+Message-ID: <CAOQ4uxgA8jD6KnbuHDevNLsjD-LbEs_y1W6uYMEY6EG_es0o+Q@mail.gmail.com>
+Subject: Re: [RFC] problems with alloc_file_pseudo() use in __nfs42_ssc_open()
+To:     Olga Kornievskaia <aglo@umich.edu>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -69,28 +68,49 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-"NeilBrown":
-> Thanks for the report.
-> This possibility of calling d_delete() twice has been present
-> since  9019fb391de0 in v5.16.
+On Thu, Aug 18, 2022 at 3:23 AM Olga Kornievskaia <aglo@umich.edu> wrote:
+>
+> On Wed, Aug 17, 2022 at 8:01 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > On Wed, Aug 17, 2022 at 06:32:15PM -0400, Olga Kornievskaia wrote:
+> > > On Wed, Aug 17, 2022 at 6:18 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> > > >
+> > > >         My apologies for having missed that back when the SSC
+> > > > patchset had been done (and missing the problems after it got
+> > > > merged, actually).
+> > > >
+> > > > 1) if this
+> > > >         r_ino = nfs_fhget(ss_mnt->mnt_sb, src_fh, fattr);
+> > > > in __nfs42_ssc_open() yields a directory inode, we are screwed
+> > > > as soon as it's passed to alloc_file_pseudo() - a *lot* of places
+> > > > in dcache handling would break if we do that.  It's not too
+> > > > nice for a regular file from non-cooperating filesystem, but for
+> > > > directory ones it's deadly.
+> > >
+> > > This inode is created to make an appearance of an opened file to do
+> > > (an NFS) read, it's never a directory.
+> >
+> > Er...  Where does the fhandle come from?  From my reading it's a client-sent
+> > data; I don't know what trust model do you assume, but the price of
+> > getting multiple dentries over the same directory inode is high.
+> > Bogus or compromised client should not be able to cause severe corruption
+> > of kernel data structures...
+>
+> This is an NFS spec specified operation. The (source file's)
+> filehandle comes from the COPY operation compound that the destination
+> server gets and then uses -- creates an inode from using the code you
+> are looking at now -- to access from the source server. Security is
+> all described in the spec. The uniqueness of the filehandle is
+> provided by the source server that created it.
 
-I don't think 9019fb391de0 is a problem.
-Before v6.0-rc1, the target dentry was unhashed by __d_drop() call in
-nfs_unlink(), and nfs_dentry_handle_enoent() skipped calling d_delete()
-by simple_positive(). d_delete() was called only once via
-nfs_dentry_remove_handle_error().
+Olga,
 
-In v6.0-rc1, the dentry is not unhashed and nfs_dentry_handle_enoent()
-doesn't skip calling d_delete().
+NFS spec does not guarantee the safety of the server.
+It's like saying that the Law makes Crime impossible.
+The law needs to be enforced, so if server gets a request
+to COPY from/to an fhandle that resolves as a non-regular file
+(from a rogue or buggy NFS client) the server should return an
+error and not continue to alloc_file_pseudo().
 
-
-> How did you discover this bug, and why do you think my patch
-> caused it?
-
-I met this problem during a stress test aiming a filesystem I am
-developing.
-And I think unhashing causes nfs_dentry_handle_enoent() to call
-d_delete().
-
-
-J. R. Okajima
+Thanks,
+Amir.
