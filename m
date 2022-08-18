@@ -2,28 +2,28 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC3A5598F14
-	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 23:13:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C275598F06
+	for <lists+linux-nfs@lfdr.de>; Thu, 18 Aug 2022 23:13:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346589AbiHRVLO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 18 Aug 2022 17:11:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56372 "EHLO
+        id S1346404AbiHRVLQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 18 Aug 2022 17:11:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346404AbiHRVKD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 17:10:03 -0400
+        with ESMTP id S1346061AbiHRVKO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 18 Aug 2022 17:10:14 -0400
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D98D86E5
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 14:04:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD620D86EF
+        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 14:04:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=zNGcWev70U81Af
-        Nj3MHIhMt6tSn8ybmmrIoMJ2Wbglw=; b=YxJn167xGLzWIBJRsXVGAh+uX4LzKf
-        99CZYq55acXPpVZpxe2LSdMP6VEKOLYKkzvGw+fPCsdfDDel5wasrWdLN75VQA1F
-        dGc45vXZ/MzMK+B2M2rkvzNrm94ummrTJNylME6wudGZjDCSGFrrgDEqxsBU+TDy
-        3DTjrI5FOqHyo=
-Received: (qmail 3962050 invoked from network); 18 Aug 2022 23:01:31 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Aug 2022 23:01:31 +0200
-X-UD-Smtp-Session: l3s3148p1@LLQmSYrme/Yucref
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=k1; bh=zNGcWev70U81AfNj3MHIhMt6tSn
+        8ybmmrIoMJ2Wbglw=; b=FSZcJs/QEO9ZGSTQUdwjb09kDFUNFxCsfyDzz04pabz
+        gqu9qlKN4lidhikPy8qqLzTshZQuRCC0+pows9ElkJDy7IZl90ukCFgMhlffNclQ
+        tF9SY2Fcp6iJLUprkWyyvS/NSl7QNR/XeXFd+vg/0PU+K2p1V2fSKIabM+7oaeM4
+        =
+Received: (qmail 3962382 invoked from network); 18 Aug 2022 23:01:47 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Aug 2022 23:01:47 +0200
+X-UD-Smtp-Session: l3s3148p1@pEEfSormjO0ucref
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -31,12 +31,10 @@ Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Anna Schumaker <anna@kernel.org>,
         Chuck Lever <chuck.lever@oracle.com>,
         Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-Subject: [PATCH 07/14] lockd: move from strlcpy with unused retval to strscpy
-Date:   Thu, 18 Aug 2022 23:01:16 +0200
-Message-Id: <20220818210123.7637-7-wsa+renesas@sang-engineering.com>
+Subject: [PATCH] lockd: move from strlcpy with unused retval to strscpy
+Date:   Thu, 18 Aug 2022 23:01:46 +0200
+Message-Id: <20220818210146.7963-1-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220818210123.7637-1-wsa+renesas@sang-engineering.com>
-References: <20220818210123.7637-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
