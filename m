@@ -2,65 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 354F8599D7C
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 16:28:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6BF599D9E
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 16:39:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1348895AbiHSOXC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Aug 2022 10:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50704 "EHLO
+        id S231433AbiHSOhk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Aug 2022 10:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349063AbiHSOXA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 10:23:00 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4834B72AD;
-        Fri, 19 Aug 2022 07:22:59 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id o22so5849453edc.10;
-        Fri, 19 Aug 2022 07:22:59 -0700 (PDT)
+        with ESMTP id S1349361AbiHSOhk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 10:37:40 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3A6EC4E1
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 07:37:39 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id gi31so2684737ejc.5
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 07:37:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=umich.edu; s=google-2016-06-03;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc;
-        bh=8zqquuEhRDjH7nVxfkiuZtn7Lef0I4tXNA1l6b9ya6o=;
-        b=iLHo4LaY1kzm0o7kBmnrS8yDYyw2qP/D+rp1lTFyInUum4NCRybh77J7clt7cjgusG
-         nBl4FZ0p37ZWjsef9YjmMxlWN/TlPmRZT721R38ikRGJYd+0q2ovLnJONK9Xpi1i2k8l
-         yMvlIBWLqUF40hz0wsB3glHxNDSKbgrnVYzWQ8rAYjkrcVBI5YH57v0Cp2rBBTm0u6K5
-         46QoSc/E9zRiALAFaK3V+vLrbkrz/F/55HqNN42G9u8h/pPA/NSal9O+G1oDpWL4oxyQ
-         aQ7oHvESpDlk7Z6nKzyH2Z0na6NC/umcvc3U1PLobDqts0s3WD2jpo8dfZQZkNMx2FcU
-         huNA==
+        bh=GApylcuHJ6o7AafYUj8ZriXMJRJhGktD8b9xSgEnGtQ=;
+        b=RW2cigDougzpiNi3LbzhUsQr/l9sVkRsrKs4OaqgaGm62oln6cIQDfgwmIGsLmyBBG
+         Xxegr4/ghU3Aff/vhg+IqxtsSHCrv++G1wKWZ2q2sEQtktznjNlzH0QXmb18LezxDZJk
+         LxKKRGs7QM9FnmLNNcLvVALde6WrUovWSllxioIgG6iIW38hzFHOEmv7hfPcs25kNJjI
+         afs7X680wQk4iACUOyab/5WrqURGx3kPHrPu2d2UQdKooVAZpXXrGN2HVpnfCceQarY7
+         nAdEg3XgyRiJmY2Gy4cI/GPPwuuYVD9ClaIQmXt+GeD21nta190N341VmnC/eWrgx/UX
+         UFuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc;
-        bh=8zqquuEhRDjH7nVxfkiuZtn7Lef0I4tXNA1l6b9ya6o=;
-        b=ToMGnCxkB9Cq911GqB4SkrEc//jPra5yPw1vsdofbyz1eerKHf8/HzmoRMPhcUEWAD
-         Mzc2fsaPCJZXjjWliurex2KaJBM9ZNDO6GrxmrJfVkNNGvS6HSzEWsbBvH92DaMGEWVy
-         X97/dO/sAxJH3usDRbplkKJSN6jq2aMMmPFt9anGTb8hZ6Ac7fA/dO2XUmmx4axNKWsM
-         1DzgBIx5bUGLaExmzn9o+X5RRx82X1npV6RxGPC0TDUj7RUffBDBzCU4hpze8f8EgpHp
-         CpvC1bmCimc8lPkfKSp/BPUdHhZk+U15htat2bG/x7gFYivFiSVgJBhgOZxDVPaFfzsH
-         fPuQ==
-X-Gm-Message-State: ACgBeo1ZG77lSzbcl6/p+CGInC1NxOCNALTTx2NCKaE+XEmW5frhVHY+
-        vQZVAFmSO+GWtIjxno6bYfo+UdDEHR/PZoFvm0k=
-X-Google-Smtp-Source: AA6agR6Jcp3qkzZYqL5OK6PsDB3dPWUpbjXAJDxsOGELdbaX0NxjcKmosxSf5SSDP8O364sJNaP6syo+5QvJLWoGLsw=
-X-Received: by 2002:a05:6402:40c2:b0:440:4ecd:f75f with SMTP id
- z2-20020a05640240c200b004404ecdf75fmr6219384edb.405.1660918978362; Fri, 19
- Aug 2022 07:22:58 -0700 (PDT)
+        bh=GApylcuHJ6o7AafYUj8ZriXMJRJhGktD8b9xSgEnGtQ=;
+        b=qcIgBj30f4vwuVMY5Dl2yHRlXzdLMotA21vDNZetyXp6mQKBsunBhCbUWc6ogIlqET
+         66Dxh8G0jM0GJKIBuszz4ndTJkMtJHPcYA8lFiF2PhBFZml2H+8OADTSd4+IoB/YKuHm
+         NXlc1SBCbI7bp2M+Jt5cVW9e7NKhD9o+1HfDGYK0SvVZCVTaE49W7paXCpTV6lMlYJjJ
+         k9OWRKiO0U7zv27SDuW4g/0p2KaoH7Bj92ucjvE9l8SO3O4T/bIxtqDqZBdMPfc46ICo
+         Wa3Kys/HUBfkkKXAderwcjKizAHzicG8QCa7qosD1l/xOhy75Xe7HI2/+rXCT9himJ35
+         JePw==
+X-Gm-Message-State: ACgBeo3lPri+h8GwCxea3ABTQnLkoBTV1YlaccIAPMuiUQhpbc2of5lY
+        84qNjE1RfB3ILm8Iqs1/OROf6ZyPjtDTu1lpJfU=
+X-Google-Smtp-Source: AA6agR6dn7uSNI59kaFR3Z+FkWmUVnLrWzO8wrEGABgtHi6UBpNO7AOBDyI4EVj6O7uwDZYB3mwDf1Ej6SPsmFfcUf4=
+X-Received: by 2002:a17:907:7349:b0:730:61c8:d80d with SMTP id
+ dq9-20020a170907734900b0073061c8d80dmr4827547ejc.699.1660919857535; Fri, 19
+ Aug 2022 07:37:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <Yv1jwsHVWI+lguAT@ZenIV> <CAN-5tyFvV7QOxyAQXu3UM5swQVB2roDpQ5CBRVc64Epp1gj9hg@mail.gmail.com>
- <Yv2BVKuzZdMDY2Td@ZenIV> <CAN-5tyF0ZMX8a6M6Qbbco3EmOzwVnnGZmqak8=t4Cvtzc45g7Q@mail.gmail.com>
- <CAOQ4uxgA8jD6KnbuHDevNLsjD-LbEs_y1W6uYMEY6EG_es0o+Q@mail.gmail.com>
- <Yv3Ti/niVd5ZVPP+@ZenIV> <CAN-5tyHpDHzmo-rSw1X+0oX0xbxR+x13eP57osB0qhFLKbXzVA@mail.gmail.com>
- <b7a77d4f-32de-af24-ed5c-8a3e49947c5a@oracle.com>
-In-Reply-To: <b7a77d4f-32de-af24-ed5c-8a3e49947c5a@oracle.com>
+References: <166086695960.5425.17748020864798390841@noble.neil.brown.name> <d6a1c7378a4c666be93d22707405e0e0136a01fa.camel@hammerspace.com>
+In-Reply-To: <d6a1c7378a4c666be93d22707405e0e0136a01fa.camel@hammerspace.com>
 From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 19 Aug 2022 10:22:46 -0400
-Message-ID: <CAN-5tyH6=GD_A48PEu0oWZYix4g0=+0FwVgE262Ek0U1qNiwvA@mail.gmail.com>
-Subject: Re: [RFC] problems with alloc_file_pseudo() use in __nfs42_ssc_open()
-To:     Dai Ngo <dai.ngo@oracle.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Date:   Fri, 19 Aug 2022 10:37:26 -0400
+Message-ID: <CAN-5tyHdSSfJLVff0DsW1+zq=tTxF152fA_BipN1He=q1LroZA@mail.gmail.com>
+Subject: Re: [PATCH v2] NFS: unlink/rmdir shouldn't call d_delete() twice on ENOENT
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "neilb@suse.de" <neilb@suse.de>,
+        "hooanon05g@gmail.com" <hooanon05g@gmail.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
@@ -73,59 +67,82 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 10:52 PM <dai.ngo@oracle.com> wrote:
+On Thu, Aug 18, 2022 at 8:17 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
 >
->
-> On 8/18/22 6:13 AM, Olga Kornievskaia wrote:
-> > On Thu, Aug 18, 2022 at 1:52 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
-> >> On Thu, Aug 18, 2022 at 08:19:54AM +0300, Amir Goldstein wrote:
-> >>
-> >>> NFS spec does not guarantee the safety of the server.
-> >>> It's like saying that the Law makes Crime impossible.
-> >>> The law needs to be enforced, so if server gets a request
-> >>> to COPY from/to an fhandle that resolves as a non-regular file
-> >>> (from a rogue or buggy NFS client) the server should return an
-> >>> error and not continue to alloc_file_pseudo().
-> >> FWIW, my preference would be to have alloc_file_pseudo() reject
-> >> directory inodes if it ever gets such.
-> >>
-> >> I'm still not sure that my (and yours, apparently) interpretation
-> >> of what Olga said is correct, though.
-> > Would it be appropriate to do the following then:
+> On Fri, 2022-08-19 at 09:55 +1000, NeilBrown wrote:
 > >
-> > diff --git a/fs/nfs/nfs4file.c b/fs/nfs/nfs4file.c
-> > index e88f6b18445e..112134b6438d 100644
-> > --- a/fs/nfs/nfs4file.c
-> > +++ b/fs/nfs/nfs4file.c
-> > @@ -340,6 +340,11 @@ static struct file *__nfs42_ssc_open(struct
-> > vfsmount *ss_mnt,
-> >                  goto out;
-> >          }
+> > nfs_unlink() calls d_delete() twice if it receives ENOENT from the
+> > server - once in nfs_dentry_handle_enoent() from nfs_safe_remove and
+> > once in nfs_dentry_remove_handle_error().
 > >
-> > +       if (S_ISDIR(fattr->mode)) {
-> > +               res = ERR_PTR(-EBADF);
-> > +               goto out;
-> > +       }
-> > +
+> > nfs_rmddir() also calls it twice - the nfs_dentry_handle_enoent()
+> > call
+> > is direct and inside a region locked with ->rmdir_sem
+> >
+> > It is safe to call d_delete() twice if the refcount > 1 as the dentry
+> > is
+> > simply unhashed.
+> > If the refcount is 1, the first call sets d_inode to NULL and the
+> > second
+> > call crashes.
+> >
+> > This patch guards the d_delete() call from nfs_dentry_handle_enoent()
+> > leaving the one under ->remdir_sem in case that is important.
+> >
+> > In mainline it would be safe to remove the d_delete() call.  However
+> > in
+> > older kernels to which this might be backported, that would change
+> > the
+> > behaviour of nfs_unlink().  nfs_unlink() used to unhash the dentry
+> > which
+> > resulted in nfs_dentry_handle_enoent() not calling d_delete().  So in
+> > older kernels we need the d_delete() in
+> > nfs_dentry_remove_handle_error()
+> > when called from nfs_unlink() but not when called from nfs_rmdir().
+> >
+> > To make the code work correctly for old and new kernels, and from
+> > both
+> > nfs_unlink() and nfs_rmdir(), we protect the d_delete() call with
+> > simple_positive().  This ensures it is never called in a circumstance
+> > where it could crash.
+> >
+> > Fixes: 3c59366c207e ("NFS: don't unhash dentry during unlink/rename")
+> > Fixes: 9019fb391de0 ("NFS: Label the dentry with a verifier in
+> > nfs_rmdir() and nfs_unlink()")
+> > Signed-off-by: NeilBrown <neilb@suse.de>
+> > ---
+> >  fs/nfs/dir.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
+> > index dbab3caa15ed..8f26f848818d 100644
+> > --- a/fs/nfs/dir.c
+> > +++ b/fs/nfs/dir.c
+> > @@ -2382,7 +2382,8 @@ static void
+> > nfs_dentry_remove_handle_error(struct inode *dir,
+> >  {
+> >         switch (error) {
+> >         case -ENOENT:
+> > -               d_delete(dentry);
+> > +               if (d_really_is_positive(dentry))
+> > +                       d_delete(dentry);
+> >                 nfs_set_verifier(dentry,
+> > nfs_save_change_attribute(dir));
+> >                 break;
+> >         case 0:
 >
-> Can we also enhance nfsd4_do_async_copy to check for
-> -EBADF and returns nfserr_wrong_type? perhaps adding
-> an error mapping function to handle other errors also.
+> OK. I've kicked v1 out of my linux-next branch, and applied v2 to my
+> testing branch. I'll try to give it some testing tomorrow.
+>
+> Olga, will you be able to test v2 to see if it fixes your bug report as
+> well?
 
-On the server side, if the open fails that's already translated into
-the appropriate error -- err_off_load_denied.
+Will do.
 
 >
-> -Dai
+> --
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
 >
-> >          res = ERR_PTR(-ENOMEM);
-> >          len = strlen(SSC_READ_NAME_BODY) + 16;
-> >          read_name = kzalloc(len, GFP_KERNEL);
-> > @@ -357,6 +362,7 @@ static struct file *__nfs42_ssc_open(struct
-> > vfsmount *ss_mnt,
-> >                                       r_ino->i_fop);
-> >          if (IS_ERR(filep)) {
-> >                  res = ERR_CAST(filep);
-> > +               iput(r_ino);
-> >                  goto out_free_name;
-> >          }
+>
