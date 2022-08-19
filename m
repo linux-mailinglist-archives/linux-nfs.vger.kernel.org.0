@@ -2,147 +2,257 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6BF599D9E
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 16:39:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 581E3599E01
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 17:21:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231433AbiHSOhk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Aug 2022 10:37:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43004 "EHLO
+        id S1348966AbiHSPSp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Aug 2022 11:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1349361AbiHSOhk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 10:37:40 -0400
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D3A6EC4E1
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 07:37:39 -0700 (PDT)
-Received: by mail-ej1-x631.google.com with SMTP id gi31so2684737ejc.5
-        for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 07:37:39 -0700 (PDT)
+        with ESMTP id S1349507AbiHSPSo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 11:18:44 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D09BA58502;
+        Fri, 19 Aug 2022 08:18:40 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27JFFR8x019891;
+        Fri, 19 Aug 2022 15:18:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=B41G1mqmR76pqWqcxraSHD5S5rFcZakdUOKo9QLY7zY=;
+ b=v7NPHmMeR/tANTJzq/791JsfhA6zwnInqN4zDw4WdRXVgEyVISCt1jUrpfdQg6d9jx7I
+ xfjOEdsraFZ4ZSs6arv8XoQkMKUHLNjZ2gpMNK0+G8il+8WExoNN7IK8iFG/dVeTX60+
+ Re8+xrdDp8cc35TZRrGQWpXfKzR1v+pRdoVSQV1zIxkCulfdZ9p97fX8BREV0af/TmLz
+ nDr/H+5e2MIvZc/2+C2B2mDq3fQWhkJtedtb/PrrFSmKVfCi4JDnIDWERoMUJrzPuXZc
+ IiLmKvs3Sd3xIOXPXFldxQYlmexQXBcUsJxFQ6BbJO6gwJ0Rup6Yy9yP5d2DHIU5CD0o XA== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j2d07r090-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Aug 2022 15:18:24 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27JDpq9Z023770;
+        Fri, 19 Aug 2022 15:18:23 GMT
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2042.outbound.protection.outlook.com [104.47.73.42])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3j0c49w58n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Aug 2022 15:18:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a2NzPTX9Fl1EuTy85ncMRMII+WN8L5cOCaepc4YWBi6UXq4nyLhyeA/PU43MkaLC76R2mTXLx8hkP5LxCpw3x94RShZqjRJ7SBhPgejUTzRfsGNMlfx35KP8Tsq7P8qIFDtK3xYmUH+fn6Kn9jCDMqEEj5LlNFLD4dC1CtjaaVpVMQfc1/vr3uqfG8W5qM/PIp8qTyE/frfrJkwpJXUQo6ZgZvCo6x4F6Rq6Racok1KfNkANw7a2z32Xt+sOfAYb3Qogru48RmWs+tJm1rbsfqeUc89OAjhh3Wmbexjup4GOEYAGH1XZ/MknYhZ2Se9mWpCExPuCQ2c8MqjobASisQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=B41G1mqmR76pqWqcxraSHD5S5rFcZakdUOKo9QLY7zY=;
+ b=HJj0qQfkmZoR11YOGPNLrakdK01DBZkQi4jmj26ko7iyV0WLHOc2b1dTbqIK8K/Hc38S1pZsYUBEHLccKPVdtthVN8C275p2U6qSEqWTKh9EFuE6SVg/SMEdZ8jl0Rxkb8KjeVcio8ixsuxWgPDUVT7JPZg4tuou57+6fdoR0Cn9yVvc/bSHtIxuxCCJ3SgXWhAaYtVM9iNOU5vfNP2bpjg8+NUCOCsOAd62POKspiwkOsU0zgZF7/kzRKc+JIQ3qXCfkbN/L2m/9Uk1QZZZeDz0Y1DMim0LCwlIrW0ibfPUnex4WJ1aSegldESPUYEX8+UPCpbhK79MALUG2fyIHw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc;
-        bh=GApylcuHJ6o7AafYUj8ZriXMJRJhGktD8b9xSgEnGtQ=;
-        b=RW2cigDougzpiNi3LbzhUsQr/l9sVkRsrKs4OaqgaGm62oln6cIQDfgwmIGsLmyBBG
-         Xxegr4/ghU3Aff/vhg+IqxtsSHCrv++G1wKWZ2q2sEQtktznjNlzH0QXmb18LezxDZJk
-         LxKKRGs7QM9FnmLNNcLvVALde6WrUovWSllxioIgG6iIW38hzFHOEmv7hfPcs25kNJjI
-         afs7X680wQk4iACUOyab/5WrqURGx3kPHrPu2d2UQdKooVAZpXXrGN2HVpnfCceQarY7
-         nAdEg3XgyRiJmY2Gy4cI/GPPwuuYVD9ClaIQmXt+GeD21nta190N341VmnC/eWrgx/UX
-         UFuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=GApylcuHJ6o7AafYUj8ZriXMJRJhGktD8b9xSgEnGtQ=;
-        b=qcIgBj30f4vwuVMY5Dl2yHRlXzdLMotA21vDNZetyXp6mQKBsunBhCbUWc6ogIlqET
-         66Dxh8G0jM0GJKIBuszz4ndTJkMtJHPcYA8lFiF2PhBFZml2H+8OADTSd4+IoB/YKuHm
-         NXlc1SBCbI7bp2M+Jt5cVW9e7NKhD9o+1HfDGYK0SvVZCVTaE49W7paXCpTV6lMlYJjJ
-         k9OWRKiO0U7zv27SDuW4g/0p2KaoH7Bj92ucjvE9l8SO3O4T/bIxtqDqZBdMPfc46ICo
-         Wa3Kys/HUBfkkKXAderwcjKizAHzicG8QCa7qosD1l/xOhy75Xe7HI2/+rXCT9himJ35
-         JePw==
-X-Gm-Message-State: ACgBeo3lPri+h8GwCxea3ABTQnLkoBTV1YlaccIAPMuiUQhpbc2of5lY
-        84qNjE1RfB3ILm8Iqs1/OROf6ZyPjtDTu1lpJfU=
-X-Google-Smtp-Source: AA6agR6dn7uSNI59kaFR3Z+FkWmUVnLrWzO8wrEGABgtHi6UBpNO7AOBDyI4EVj6O7uwDZYB3mwDf1Ej6SPsmFfcUf4=
-X-Received: by 2002:a17:907:7349:b0:730:61c8:d80d with SMTP id
- dq9-20020a170907734900b0073061c8d80dmr4827547ejc.699.1660919857535; Fri, 19
- Aug 2022 07:37:37 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B41G1mqmR76pqWqcxraSHD5S5rFcZakdUOKo9QLY7zY=;
+ b=FzAy/WZt4zDjUowDBaF6mT50wwQYJRQT0sHc6OgLi7Jp1aAy55s+RnTzDLyoUNf4IH0ch9VvUtCb5Ll/NEbyIVT/1ni3PCBdBp6beqIuCMxfjQMuIQOZnwKnCdS95gmM0Hms066tOK0MaSeMfOs923DuxRUcVZgdr4kBZO8QDGg=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by PH7PR10MB6035.namprd10.prod.outlook.com (2603:10b6:510:1fd::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5525.19; Fri, 19 Aug
+ 2022 15:18:21 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::91ca:dc5:909b:4dd9]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::91ca:dc5:909b:4dd9%9]) with mapi id 15.20.5546.018; Fri, 19 Aug 2022
+ 15:18:21 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Anna Schumaker <anna@kernel.org>,
+        Dave Chinner <david@fromorbit.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Josef Bacik <Josef@toxicpanda.com>,
+        ng-linux-team <ng-linux-team@netapp.com>
+Subject: Re: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS
+ implementation
+Thread-Topic: [PATCH v3 6/6] NFSD: Repeal and replace the READ_PLUS
+ implementation
+Thread-Index: AQHYmHrzYsqP79DW8UWdtY79IK5gxq1/y34AgAOLZACAAtl+AIAAIOUAgAAtKQCAABONAIAAHJ4AgALo+gCAAPGRAIAqp2UAgAFcVQA=
+Date:   Fri, 19 Aug 2022 15:18:21 +0000
+Message-ID: <BFA36FC1-FFDA-4F98-8C0E-DD3DE47A50E4@oracle.com>
+References: <20220715184433.838521-1-anna@kernel.org>
+ <20220715184433.838521-7-anna@kernel.org>
+ <EC97C20D-A317-49F9-8280-062D1AAEE49A@oracle.com>
+ <20220718011552.GK3600936@dread.disaster.area>
+ <CAFX2Jf=FrXHMxioWLHFkRHxBNDRe-9SBUmCcco9gkaY8EQOSZg@mail.gmail.com>
+ <20220719224434.GL3600936@dread.disaster.area>
+ <CF981532-ADC0-43F9-A304-9760244A53D5@oracle.com>
+ <20220720023610.GN3600936@dread.disaster.area>
+ <CD3CE5B3-1FB7-473A-8D45-EDF3704F10D7@oracle.com>
+ <20220722004458.GS3600936@dread.disaster.area>
+ <C581A93D-6797-4044-8719-1F797BA17761@oracle.com>
+ <CAFX2JfmOO7RK3SirXLrRA9kpBC=ROnZydYBje4rowxi+vdoJLg@mail.gmail.com>
+In-Reply-To: <CAFX2JfmOO7RK3SirXLrRA9kpBC=ROnZydYBje4rowxi+vdoJLg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d947b241-6bc9-48d3-ed73-08da81f60d66
+x-ms-traffictypediagnostic: PH7PR10MB6035:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 360WO2qCsasYXidVfi22yWcvdQDFX4u5Sf2Enyy4EWTFluJGIZEU6INFTgLn2EykP3Dq+BJLZJTyuEZGZr72kix3NRdQDDXPxE6ZQunfzTBTsy31V39QE0u3Sw5xB/Q6pOS0HoJBqGPHpGL/o+PNh+kUCWCY+0cNBapy+NqCs+tez9qFmI8VNGd8lioRdIEts8Kv9PM3Xdcem+VefHzxTV2RmfHm61r4i6AEQqeqHYFpTsM6u+H8uu2rqwJy+DC0iN82yItmqQPItI8uQM/KVbgMogKMioj4TgGPkCZil57SPKeqQ+1xk7PM/c2kAUVx08+HwQzZc0kzKbwNJHtYViOvXXlGBpKxxDrpX80X4KloNSSQkuMO697aIbfAzACqb+6Th8qDzCyfId9lYNqUusSqYKk7y+q7bNC23ffRNDFx2WWLWZ1zc6U5nlJHIaDalLTyFKgDW/cuWzozhD7SEIJ6+tn6Uy5b1kNW/ZplMvpP9BenB4uUG6h2PGxW3xbYCuMA//FpotCc4ijbzffx/rAxzJEAh1vHGhdsbr1iayEkyZnJOn3nnmBnfEdTRVf8NPV+HyjnnsKCvH5ekjxO+sKN/YTOj9v6jwoPG3935y48lPt6f2p6XuMSk0jrsGFlx7K5b8uZpM3bno5BWpd3ADpksSmSlpCsettQmmz/z86TVKwDtiCQXxXcRy1QmN+MPKizSMAfCWq3VuiCn89rcK6hIoaY4ZCU+1YgG0ii8R9Qa0H8ubMQf6+i8vWRQFkXbtXlIw3srhRhxIknk4zfMMYs/FrlQHsF0gHy09W2HVk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(366004)(346002)(136003)(39860400002)(83380400001)(186003)(2616005)(53546011)(26005)(8936002)(2906002)(5660300002)(33656002)(41300700001)(6506007)(71200400001)(478600001)(6486002)(6512007)(36756003)(66946007)(86362001)(122000001)(110136005)(76116006)(316002)(91956017)(4326008)(66476007)(38100700002)(8676002)(66446008)(54906003)(64756008)(66556008)(38070700005)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Yko6qlETmI1nVnIDaqPGUN8rS/D1Jb+49TiQQlOGj8fmnBfkw6hrwBF3zRSV?=
+ =?us-ascii?Q?Ghl+wCjRyToPlQ0JS8ig1ui1Re55nqdBD+sMHFNFrPSwbtyLrFxVG4mRDBPi?=
+ =?us-ascii?Q?OUsGWtASJf0jqSJeIoW4G+vkL+Su1C8NEhEyTl6MtQ2u/M9KMFs9NPgDnEZP?=
+ =?us-ascii?Q?4JX/6CXTJoj/VfP4i8lSrdowp7bJzPmNN6BVyNKIQ8vtHgQw0gKBwAVMAo6N?=
+ =?us-ascii?Q?a6qHKZSrDYNlPXjquaPJr5YgAjRTsje1m0bU7Zg+TLcgiSGxdGg0xVH5bYF7?=
+ =?us-ascii?Q?2A59Ly0su6YNhgVHZnKnFYSPsLNiewejV1jkmBUyf7mjEtCMPbYLck+IrG54?=
+ =?us-ascii?Q?FEgnow3r+AzVaycjaccUiXoxyf0Z8Aie/QU4gEH12VKOi16AhuxNcfIZpdl6?=
+ =?us-ascii?Q?QkaYOtm9I2QLNIQwwCXndR9ruSXlDK8/hKeDQBNcQJK4zrwGEJdAukOkKlrP?=
+ =?us-ascii?Q?iIJAML1rJQdopeBg2su8PbVqQGk/WOiUBJF1/EJAhcfnCcQ72+o+r9Id1Zy0?=
+ =?us-ascii?Q?sduX99GN27bJfFBoIAZdfptwzsJZ1vTdJPaL3Z351nbtVoh/g1lKmmY/+O5O?=
+ =?us-ascii?Q?y5VesFW9mB9pcSunucJvRvaRFSvcfofZyGRVwA9WkoY/jeC9xCoWk1IfPKul?=
+ =?us-ascii?Q?SOhkFDq/JeCF3bADHTW1hkkJDN9MJKXY6h8kX/W43ACdmgQ03na5xl4IVPZY?=
+ =?us-ascii?Q?VHwY2Dsm/qPqmof8r3EB2fNkfDFmGU49UIkBcKJ96Lpdmgp469iieqfUXIUJ?=
+ =?us-ascii?Q?rwk2q59ZXln1abyuVorfjTVLujhW79JfvTpZbtTVTNUq6LkjJ1desAcZPAYw?=
+ =?us-ascii?Q?BwtqFHlQwi5dvN1mBwjjc46hPEVI1s1/Mhv6rbgtQMYD5jA8wk+vesf9Jbr2?=
+ =?us-ascii?Q?cNo0fQPvM9ya+wYQeL6FmcpYHQFICyrWrgu9Xdwalhn/5mGFTbyc+DqO2u/f?=
+ =?us-ascii?Q?GsTA/QXrBKxp3ns++6p+5LVWQRTdClUS2F7W8VvXGmUCXdEEmEVHgpDrI8Ym?=
+ =?us-ascii?Q?LYL9Y8LAIfLSYlC95kIuh2/P5ULpXT5WSI65AOxMcT75NAk+ojTvBQ5KkeLH?=
+ =?us-ascii?Q?+OvXnBGUb8YIE4cXhMeVBaMaJTCtp2Bk9yGSyC3gPwLJSe/nD+HDwrwYZ+OX?=
+ =?us-ascii?Q?2nYFiEykCLjqLX/bXPdcfrZ9JH9FfDEHQp5nDOGe5+HrgIiTu+6d+dft+scS?=
+ =?us-ascii?Q?QMahP1zvziXMjV2MChG+TXJpzFZq+EqelwmGIjdxL3eIQwGKREY/ZVU+Wu17?=
+ =?us-ascii?Q?1U0jhj3dsVpMkm+cZGr04fB0nyJEKx61rgzbQR0RDIlttuuhkKqO3kGqSTfQ?=
+ =?us-ascii?Q?nL2UGaPCou/ylAagsb1xqE/OYrkytz5e4Us5Xn6307dIpqrAzJITGLdzyFwF?=
+ =?us-ascii?Q?83G5rap/HCMdct0GScJJwKW0j7zZmcbpCLmys13ry5rwUMf+e2XeWdTxyvKB?=
+ =?us-ascii?Q?yej64sNa6hCAGEf/GOcuZSeh7Muq83sjHjEFuvoodksDGkuaDFLLqb7XiWWH?=
+ =?us-ascii?Q?KgcbUXVqsYO2C65fZxFcOwYH5u4Zxf5tC5LDH7lBbdaThfiT1TA520yuf6L6?=
+ =?us-ascii?Q?e2i7M+Mv9vZT8x0rm7O4I95uw5BfEGXndae9LbB3eiwnxi6f2FkiiMQ69DCc?=
+ =?us-ascii?Q?RQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <551B7A415A15A947974BEFA1C501419C@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <166086695960.5425.17748020864798390841@noble.neil.brown.name> <d6a1c7378a4c666be93d22707405e0e0136a01fa.camel@hammerspace.com>
-In-Reply-To: <d6a1c7378a4c666be93d22707405e0e0136a01fa.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 19 Aug 2022 10:37:26 -0400
-Message-ID: <CAN-5tyHdSSfJLVff0DsW1+zq=tTxF152fA_BipN1He=q1LroZA@mail.gmail.com>
-Subject: Re: [PATCH v2] NFS: unlink/rmdir shouldn't call d_delete() twice on ENOENT
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "neilb@suse.de" <neilb@suse.de>,
-        "hooanon05g@gmail.com" <hooanon05g@gmail.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?E8RbYGje/fWDwmLL+LpIh+GW8zrj/WsuH023gvuV76Kyo3EnQ57YNmINAskt?=
+ =?us-ascii?Q?D0e+9dUxVXmo0yboZF+V2ViB+ggc4iz3dZ3/K5ATlMwxMvjIow/Vad0rSL8n?=
+ =?us-ascii?Q?rdeN+d0Citpk0uVP2TfqYLTUny+OhA8fF+r3hYUxGImy3u0x+Pz1Xg0NiC2I?=
+ =?us-ascii?Q?qnL3xmrAJLPG7JZHfGheRFDUML8O5Bgm1H9yFjVdE6H5JO+IcqS5yPa1Kan7?=
+ =?us-ascii?Q?b4haNBq0WXUL2Kp9SNkXdr3BQeqWEUdtmOg/JmarC6+5Dp7Dp+G3TPmtYzpF?=
+ =?us-ascii?Q?ZBzhW3nv9u+0Sn4MqR4IxluhEtzN7s+7iMLubqBib+2mTLrztw4lsJ2yQcvb?=
+ =?us-ascii?Q?wOCsM0ue2GG44iNzwiH+mmo8SOfRNVULUN937jE/HZDTSqAQ+iM3tF7F3QVF?=
+ =?us-ascii?Q?Oi5wCuAFlKQMmbjpJqoq4B/wR4Jtdt76xSK0dKacZzfQSIIRRgqpd8ILN3Sr?=
+ =?us-ascii?Q?WEDDTzJLOSZAntlzqRZ0+88eNbMRIMRpaOH7yjOC6B81X9viz3Z2pVAopX/c?=
+ =?us-ascii?Q?MqbJOCgmRSZgPCU42arJZKSoBx3P8bXp4QAfIF23kzTZATS3iU6ZSmnJWNnW?=
+ =?us-ascii?Q?2zUkUuL0qMHZvfpA2qnqYoHKMDfDz925Zc/iLziA4VggBERMobDqjIOX5QH1?=
+ =?us-ascii?Q?cClb9oEhudG87Xv7UtlFclBsvohNRsJe8a/urY6aR88lDi9xTcT0nxvKLvW9?=
+ =?us-ascii?Q?crDmrHFlsTVpZrT+VgoxvcDpraFxcA2VesiSkjtTqqhiJ5Dx83EaEoCRRtiW?=
+ =?us-ascii?Q?KArjbYaMNXVTfTWsWuDUPD36SN6tFLI0EJMYBK8EjENKLKegE+1MNiOCqvUk?=
+ =?us-ascii?Q?2pIMtB4lo8reEDMtnAlWvsg9OrYwzO7vFcU5u4c/wF6zho5v5AqwRdet2ic8?=
+ =?us-ascii?Q?KXXlQxRA9j0jsdKq0X5ciGAx0BMM6llIsyPC2cZTLiYTLqFMzpFB5nfUnh1f?=
+ =?us-ascii?Q?9ijbZ7534Qxqn67rq9IndwjJgUxFIN5vf6uPQ+CKDYIIXjVm5enrxFXw2Z3O?=
+ =?us-ascii?Q?AJhSoy/GbOeFzserG6gGMqjeCAbfQNzdg1Y5RaBk9KT809i6CRqSzwGE9Q0f?=
+ =?us-ascii?Q?nZDl3leR?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d947b241-6bc9-48d3-ed73-08da81f60d66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Aug 2022 15:18:21.2977
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: mIgJQYZMvsmwyXw8It+sFpTcWuV4UIV83LCeOv2fhPdoE/LetmHV0oc59C4yEDol9SmxSLAmBa5s4k4whjPlsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6035
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-19_08,2022-08-18_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ adultscore=0 suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2208190055
+X-Proofpoint-ORIG-GUID: stvsd2FGfAHFBv6LMe6GPqRIaQ-5c4Ol
+X-Proofpoint-GUID: stvsd2FGfAHFBv6LMe6GPqRIaQ-5c4Ol
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Aug 18, 2022 at 8:17 PM Trond Myklebust <trondmy@hammerspace.com> wrote:
->
-> On Fri, 2022-08-19 at 09:55 +1000, NeilBrown wrote:
-> >
-> > nfs_unlink() calls d_delete() twice if it receives ENOENT from the
-> > server - once in nfs_dentry_handle_enoent() from nfs_safe_remove and
-> > once in nfs_dentry_remove_handle_error().
-> >
-> > nfs_rmddir() also calls it twice - the nfs_dentry_handle_enoent()
-> > call
-> > is direct and inside a region locked with ->rmdir_sem
-> >
-> > It is safe to call d_delete() twice if the refcount > 1 as the dentry
-> > is
-> > simply unhashed.
-> > If the refcount is 1, the first call sets d_inode to NULL and the
-> > second
-> > call crashes.
-> >
-> > This patch guards the d_delete() call from nfs_dentry_handle_enoent()
-> > leaving the one under ->remdir_sem in case that is important.
-> >
-> > In mainline it would be safe to remove the d_delete() call.  However
-> > in
-> > older kernels to which this might be backported, that would change
-> > the
-> > behaviour of nfs_unlink().  nfs_unlink() used to unhash the dentry
-> > which
-> > resulted in nfs_dentry_handle_enoent() not calling d_delete().  So in
-> > older kernels we need the d_delete() in
-> > nfs_dentry_remove_handle_error()
-> > when called from nfs_unlink() but not when called from nfs_rmdir().
-> >
-> > To make the code work correctly for old and new kernels, and from
-> > both
-> > nfs_unlink() and nfs_rmdir(), we protect the d_delete() call with
-> > simple_positive().  This ensures it is never called in a circumstance
-> > where it could crash.
-> >
-> > Fixes: 3c59366c207e ("NFS: don't unhash dentry during unlink/rename")
-> > Fixes: 9019fb391de0 ("NFS: Label the dentry with a verifier in
-> > nfs_rmdir() and nfs_unlink()")
-> > Signed-off-by: NeilBrown <neilb@suse.de>
-> > ---
-> >  fs/nfs/dir.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> > index dbab3caa15ed..8f26f848818d 100644
-> > --- a/fs/nfs/dir.c
-> > +++ b/fs/nfs/dir.c
-> > @@ -2382,7 +2382,8 @@ static void
-> > nfs_dentry_remove_handle_error(struct inode *dir,
-> >  {
-> >         switch (error) {
-> >         case -ENOENT:
-> > -               d_delete(dentry);
-> > +               if (d_really_is_positive(dentry))
-> > +                       d_delete(dentry);
-> >                 nfs_set_verifier(dentry,
-> > nfs_save_change_attribute(dir));
-> >                 break;
-> >         case 0:
->
-> OK. I've kicked v1 out of my linux-next branch, and applied v2 to my
-> testing branch. I'll try to give it some testing tomorrow.
->
-> Olga, will you be able to test v2 to see if it fixes your bug report as
-> well?
 
-Will do.
 
->
-> --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
->
->
+> On Aug 18, 2022, at 2:31 PM, Anna Schumaker <anna@kernel.org> wrote:
+>=20
+> Assuming nobody else has started working on the sparse-read function,
+> I would like to check my understanding of what it would look like:
+>=20
+> - The function splice_directo_to_actor() takes a "struct splice_desc"
+> as an argument. The sparse read function would take something similar,
+> a "struct sparse_desc", which has callbacks used by the underlying
+> filesystem to tell the server to encode either a hole or data segment
+> next.
+>=20
+> In the default case, the VFS tells the server to encode the entire
+> read range as data. If underlying filesystems opt-in, then whenever a
+> data extent is found the encode_data_segment() function is called and
+> whenever a hole is found it calls the encode_hole_segment() function.
+>=20
+> The NFS server would need to know file offset and length of each
+> segment, so these would probably be arguments to both functions. How
+> would reading data work, though? The server needs to reserve space in
+> the xdr stream for the offset & length metadata, but also the data
+> itself. I'm assuming it would do something similar to
+> fs/nfsd/vfs.c:nfsd_readv() and set up an iov_iter or kvec that the
+> underlying filesystem can use to place file data?
+>=20
+> Does that sound about right? Am I missing anything?
+
+I was expecting something more like what Dave originally described:
+
+>> IOWs, it seems to me that what READ_PLUS really wants is a "sparse
+>> read operation" from the filesystem rather than the current "read
+>> that fills holes with zeroes". i.e. a read operation that sets an
+>> iocb flag like RWF_SPARSE_READ to tell the filesystem to trim the
+>> read to just the ranges that contain data.
+>>=20
+>> That way the read populates the page cache over a single contiguous
+>> range of data and returns with the {offset, len} that spans the
+>> range that is read and mapped. The caller can then read that region
+>> out of the page cache and mark all the non-data regions as holes in
+>> whatever manner they need to.
+>>=20
+>> The iomap infrastructure that XFS and other filesystems use provide
+>> this exact "map only what contains data" capability - an iomap tells
+>> the page cache exactly what underlies the data range (hole, data,
+>> unwritten extents, etc) in an efficient manner, so it wouldn't be a
+>> huge stretch just to limit read IO ranges to those that contain only
+>> DATA extents.
+>>=20
+>> At this point READ_PLUS then just needs to iterate doing sparse
+>> reads and recording the ranges that return data as vector of some
+>> kind that is then passes to the encoding function to encode it as
+>> a sparse READ_PLUS data range....
+
+
+But it's not clear how this would be made atomic, so maybe the
+callback mechanism you described is necessary.
+
+To make some progress on moving READ_PLUS out of EXPERIMENTAL
+status, can you build a READ_PLUS implementation that always
+returns a single CONTENT_DATA segment? We can merge that straight
+away, and it should perform on par with READ immediately.
+
+Then the bells and whistles can be added over time.
+
+
+--
+Chuck Lever
+
+
+
