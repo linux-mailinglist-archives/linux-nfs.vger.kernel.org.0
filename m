@@ -2,103 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2104E5994C2
-	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 07:43:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 070D4599671
+	for <lists+linux-nfs@lfdr.de>; Fri, 19 Aug 2022 09:56:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240235AbiHSFlW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 19 Aug 2022 01:41:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36692 "EHLO
+        id S1346722AbiHSHwO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 19 Aug 2022 03:52:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbiHSFlV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 01:41:21 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C3DFE115D
-        for <linux-nfs@vger.kernel.org>; Thu, 18 Aug 2022 22:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=k1; bh=rxf3M8SdaAi8jZX9TuiPymuOjRtB
-        9f2y5IJ1CdZkVgI=; b=2iR6eqt93+jzdvPrCZq4h7Q6yFPkLPCR5WYKbBlnfUy8
-        YYrq5H5I7b/ZY0slsD9BKZby4Gk17PGaz9lOkX1dxPuKlWTqnqgC4Sun6os/ChY/
-        uxrO0Cu6giKjBe7+DgM8mVMtbIK3mMMfRuyLkxD+cDYk8rOoayb4o2sDPpF9Mgw=
-Received: (qmail 4111328 invoked from network); 19 Aug 2022 07:41:18 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Aug 2022 07:41:18 +0200
-X-UD-Smtp-Session: l3s3148p1@WKQJjJHmoJMucrTL
-Date:   Fri, 19 Aug 2022 07:41:17 +0200
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 05/14] NFSD: move from strlcpy with unused retval to
- strscpy
-Message-ID: <Yv8iffnImlzwscPG@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <20220818210123.7637-1-wsa+renesas@sang-engineering.com>
- <20220818210123.7637-5-wsa+renesas@sang-engineering.com>
- <45B86549-7FA6-4E09-9739-4756FBD830BC@oracle.com>
+        with ESMTP id S1347310AbiHSHwN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 19 Aug 2022 03:52:13 -0400
+Received: from mail.fadrush.pl (mail.fadrush.pl [54.37.225.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5155FE3997
+        for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 00:52:12 -0700 (PDT)
+Received: by mail.fadrush.pl (Postfix, from userid 1002)
+        id 14D2922C57; Fri, 19 Aug 2022 07:51:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fadrush.pl; s=mail;
+        t=1660895531; bh=bD6j9gIFU6CLTaCGl0Ow9oeIxtirvTfMeNZSfLEZQ+I=;
+        h=Date:From:To:Subject:From;
+        b=H3QHPpVeDtgmH/67dfHEH/IvbsNf0TSVtuZ7TeRFPAfV5mkEdnDS7Ra7Q4Lbm6txt
+         j1ewnAywRDhyrwPgRxayOBzO5EjnOPUsCyYoSWzKhX3mI5u2EuiB7w6stGU987UAIL
+         BzxnGj5O+sQSrPszRdcVRCgWjY2ItZG8Kk4IVfhT4e5rFcp1L6CmKl3wt1bbV36W0z
+         n7Gr5D2CvyfUdKvtYyOTF6ig5BVQwGNJjlT04YCsudCaQedhHhdEoZS5xvlzRLZIkl
+         YzpCtra0ckzAnBrvpoDuzmTVwdyrqhTgM8PONPd1Zd1iSG9ubAQcVdy4PSVe/t9/XU
+         58jrTEv6DItpg==
+Received: by mail.fadrush.pl for <linux-nfs@vger.kernel.org>; Fri, 19 Aug 2022 07:51:16 GMT
+Message-ID: <20220819064500-0.1.14.8orv.0.9lkarl84mk@fadrush.pl>
+Date:   Fri, 19 Aug 2022 07:51:16 GMT
+From:   "Jakub Olejniczak" <jakub.olejniczak@fadrush.pl>
+To:     <linux-nfs@vger.kernel.org>
+Subject: =?UTF-8?Q?Zwi=C4=99kszenie_p=C5=82ynno=C5=9Bci_finansowej?=
+X-Mailer: mail.fadrush.pl
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OQpmcOm0v7g7dEMt"
-Content-Disposition: inline
-In-Reply-To: <45B86549-7FA6-4E09-9739-4756FBD830BC@oracle.com>
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Dzie=C5=84 dobry,
 
---OQpmcOm0v7g7dEMt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, poniewa=C5=BC chcia=C5=82bym za=
+proponowa=C4=87 wygodne rozwi=C4=85zanie, kt=C3=B3re umo=C5=BCliwi Pa=C5=84=
+stwa firmie stabilny rozw=C3=B3j.=20
 
+Konkurencyjne otoczenie wymaga ci=C4=85g=C5=82ego ulepszania i poszerzeni=
+a oferty, co z kolei wi=C4=85=C5=BCe si=C4=99 z konieczno=C5=9Bci=C4=85 i=
+nwestowania. Brak odpowiedniego kapita=C5=82u powa=C5=BCnie ogranicza tem=
+po rozwoju firmy.
 
-> > Follow the advice of the below link and prefer 'strscpy' in this
-> > subsystem. Conversion is 1:1 because the return value is not used.
-> > Generated by a coccinelle script.
-> >=20
-> > Link: https://lore.kernel.org/r/CAHk-=3DwgfRnXz0W3D37d01q3JFkr_i_uTL=3D=
-V6A6G1oUZcprmknw@mail.gmail.com/
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->=20
-> Makes sense.
->=20
-> I think I would like to carry 05 and 07 in the NFSD tree so they
-> can get some exposure to our test workloads before they are merged.
-> Is that OK with you?
+Od wielu lat z powodzeniem pomagam firmom w uzyskaniu najlepszej formy fi=
+nansowania z banku oraz UE. Mam sta=C5=82ych Klient=C3=B3w, kt=C3=B3rzy n=
+adal ch=C4=99tnie korzystaj=C4=85 z moich us=C5=82ug, a tak=C5=BCe poleca=
+j=C4=85 je innym.
 
-Of course!
-
-Thank you.
+Czy chcieliby Pa=C5=84stwo skorzysta=C4=87 z pomocy wykwalifikowanego i d=
+o=C5=9Bwiadczonego doradcy finansowego?
 
 
---OQpmcOm0v7g7dEMt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmL/In0ACgkQFA3kzBSg
-KbZ/1w//WPRMjC3Fm6kfd96K8bmUdoOfM0KYYOyOOBI9tEAlayDUHujR7YWvGHUv
-0x1kZis2/cICOT+091nsNrIYqNknKT3s+PGsPmaeQw15RLfwUgz1/LKlOvIh+urs
-/omml8sj/DiiwQmxGKB43TC0J6I4wjNqOjf9GdXrxE0K+JJBAvawRelTL+1rhxid
-8X00ukppcHTubtPoIK/+EESAlt3nwxN7V5KoxNScp34aJ7aRFcs0MJuxxQoIkLl+
-WvNvpKZeQTV8pNXsNnDYiVYgDFeTuvEIpSZwZiKwCV6pQSTQRHggg/0OUOKmVoub
-6kboc2CZWA5CE/FCNY7n/OIXfiM/mFvhBwJqbCQvhcHVa79llARugWD8Wbk6draa
-zGYBmZDWraeJYA33+UDPgeCYfVoxf3gAEsvRd1cs+kAarYwiHGCJuAU1opK5bvTB
-vyY/a1IzGOlqtXER+lvjVreoGK/guKv6khU4hP3ioqQ2ggCDpOj6iAV1b1wW8li8
-ZiG3tRzrdQKamUEPBc6XhoiXcWMAytxCOu069cmmnnjjRVrGnVYG9SSCoIlxhyPa
-MrzX3lxxWLj/5Q2/W8kksbUpm9vRg5od2/vyNhnCr4LpZg3S6TCs/5IFQ52+T1Ix
-bgxFzvgruEZhVWpbxizfJ2BJ1LEPRCb0Bq5G9tNNv7B2mFFlFxY=
-=BvOU
------END PGP SIGNATURE-----
-
---OQpmcOm0v7g7dEMt--
+Pozdrawiam
+Jakub Olejniczak
