@@ -2,169 +2,161 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97DB659C52F
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Aug 2022 19:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 367F959C533
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Aug 2022 19:41:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236947AbiHVRkB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Aug 2022 13:40:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58374 "EHLO
+        id S236116AbiHVRkz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Aug 2022 13:40:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235360AbiHVRkA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Aug 2022 13:40:00 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815B73F332;
-        Mon, 22 Aug 2022 10:39:59 -0700 (PDT)
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27MGBj1W017156;
-        Mon, 22 Aug 2022 17:39:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=LLQbnt0q20UFDDZ3yGUxRCh9F6rYZEakZkSemAYNDz0=;
- b=l4O2LQ4b+48Y2b5DbW1GS09Ly8JzaBLZaS0gBXC3VkjUvj/hldFY/Qgn/oEPAkVT931f
- 0FtS6g4/KYfkctQgTvxXRaWg2HEovJYovqd2qKF0VsL+H/7qHI2yyqi1ba3gQD1KOpFe
- IOrL04i+ZG/G6CAwfz/CXa1uqK5mZ1sBUmzXSb8oxyLdL1M+T9heR6Z1QjnvQj/lr1+u
- EdD7vu8CTN/RxHtMHgQB/P8OwRhpQlKZ6dNxJHoxvvvgtDXA7mYNruOMLf9cgJAa/ICs
- N4gM94Kcgpb7wf4gtC65YOsHEdOwp3DT4z1GVvjDSgqOp+iuGVNfB8znjSezdAu5USsO tg== 
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3j4d3w2gax-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Aug 2022 17:39:51 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 27MHLM14021957;
-        Mon, 22 Aug 2022 17:39:48 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 3j2q88tqnt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 22 Aug 2022 17:39:48 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 27MHe62F33751454
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Aug 2022 17:40:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78A05A404D;
-        Mon, 22 Aug 2022 17:39:46 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CADB0A4040;
-        Mon, 22 Aug 2022 17:39:43 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.163.20.129])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 22 Aug 2022 17:39:43 +0000 (GMT)
-Message-ID: <18827b350fbf6719733fda814255ec20d6dcf00f.camel@linux.ibm.com>
-Subject: Re: [PATCH] iversion: update comments with info about atime updates
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-ext4@vger.kernel.org, NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Dave Chinner <david@fromorbit.com>
-Date:   Mon, 22 Aug 2022 13:39:42 -0400
-In-Reply-To: <f17b9d627703bee2a7b531a051461671648a9dbd.camel@kernel.org>
-References: <20220822133309.86005-1-jlayton@kernel.org>
-         <ceb8f09a4cb2de67f40604d03ee0c475feb3130a.camel@linux.ibm.com>
-         <f17b9d627703bee2a7b531a051461671648a9dbd.camel@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: DPsvjf5TeA-4Aml2sZxqU_iiU1YlCmIP
-X-Proofpoint-ORIG-GUID: DPsvjf5TeA-4Aml2sZxqU_iiU1YlCmIP
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S237316AbiHVRk2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Aug 2022 13:40:28 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2105.outbound.protection.outlook.com [40.107.244.105])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D6F41D32;
+        Mon, 22 Aug 2022 10:40:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SmY0pskAXsYIX2E8oWVLRfw4NESzu3ck4n9EO8429U++j7rixglOw0vTNMu+OEW8TPR4MaPkxUyrgUNEgPT63a2DjXVswhluHNMt1J70UFaOJjZkRwXQtm3L1upcn3dxhLlUFr0kh8+MylDIFTAVV7eC8reJoNEopHCVvOG+jP00I42teSZugM6cnc5R/ceAhH0qeAUnNF0f1xsrDlId95DWbq9Kr8UccU7kJ+FAqx/1phgq2I8yTB7iagzCcObU21WoiIphJc56AIGKRqfXxmEq7Mjb6JLJdU11qFzDt4GzfpVNIJYoEqGbBGxfD9wJWdswT4kBjM1tMBUi7LiogA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yudIKHJHjsXYgOJqdINAHDLn0I26trScwOLW56WgzZQ=;
+ b=goLX6djQouwNIrd9kG6Gy0ImTlwLfsFfgx9b0PpgKQFtNynE3yKXYucE+wNOvRQRvz33pPIsLzUh1cJMNpz31iBY/c25s1wpozyL7X7Fb0iQIsX7FBBV+hnOW+sr8jX0CmRx8ZA0/wkvsjgmfjGSSAiE5qUP8wWYbwDM1ce5J9XrY4y58GgDcQY1Nwgwl7VBeVKqVsHaMUE/bJnMFVR+q6BZwODDFkhQle2vyN4gtZg3QVEdbKJQNjj3owetx1lwtf93BkZbKMAz2n1x4rXANGhogiB/deI/PM1UREQRmhfCnGhWW1YslVN/GZhaiNym+0YjbCqO3pJSJBl5Z4syfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yudIKHJHjsXYgOJqdINAHDLn0I26trScwOLW56WgzZQ=;
+ b=OxgfWcd8AE+EoMUv7C9aVYSUVlldBmhcRKDJyedbEn8WT0pTibUCueNIZKsijMvIo4UKRE95piY7TGJaNGWcFuSSjsuaYCYx3JKl0fTkNiIRcI+y8b68RnF8vIrF5oufCeJXEOCJMRkqNxd7Yrp7nPVU/MGXL9+qUDPGSh61K14=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by BYAPR13MB2856.namprd13.prod.outlook.com (2603:10b6:a03:f7::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14; Mon, 22 Aug
+ 2022 17:40:18 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::f1c7:62d0:a63d:f5ca]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::f1c7:62d0:a63d:f5ca%3]) with mapi id 15.20.5566.014; Mon, 22 Aug 2022
+ 17:40:18 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>
+CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] Please pull NFS client bugfixes for Linux 6.0
+Thread-Topic: [GIT PULL] Please pull NFS client bugfixes for Linux 6.0
+Thread-Index: AQHYtk4+N/24gzQg2E6+a5mlu7hgYg==
+Date:   Mon, 22 Aug 2022 17:40:18 +0000
+Message-ID: <b3717e756e8360d0f8ccb70a9b13b4cd9d503a8d.camel@hammerspace.com>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b776113b-47ee-44f1-8ceb-08da84656165
+x-ms-traffictypediagnostic: BYAPR13MB2856:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: J8RjZwgxhyEAspEXCFMw6C7gimmdJCSEIUR+JNjycDoKtJUpRTUxnLmcPZJCcznaYl4Tw2Hicp6txrXC53vnsF1IDRSATZ2AbC24e5rHBljAjL1E8VJ7gC8OYOI/YeAn0+iqiPi/bOVnOkAraFzJvZt/KM8q6IFxCrrEmvAklEWsoM/MHSbBz6sm6Mxr75kmfgX9NF+8KzxmvJ+1HrtaE0dAIam7/UEUQYVPUqP3sazacX3mJVn9ArZtlgZgb+LADoeoX2IFzfqFN1+Cz9sBE+kJxYpOahngzfGlrjiMc+em+Ol+p/UvKLaanmrrOPK/PofrdYuYbxbgW8aN7pai7H8R+q5BPNQPMDEkkcWiZHQ9Ce5NKoI3CtVA9qU9C4wtrd6Cs4uXdfDIE8EWmKMdQ0iDWWU6NxPOsokmrvPrn23PwC1woWjpByfZptIxg1cKH9FbklqSHsCvJoZIi/ZItnkduul2JP5lJJ1cVvFYlr6NXT5V6AQFR4hHYyPOZSjzcwKdpTpfxga3/o0z4I8G+atPtvZrsl/DYQbC1wSSFtJyDsgzsFZ07q1tijfKyExW3Va4LfFoiizm/Nf2SafUryBNKR8LeUYJR2BAscSW7M3pYRCxDXS6VEnV7KTQlxr1LDHgm5nibWhsfwpVqtIzhW2aq4G5/aQ1x3jaBESXayZtlvc+QUKnt3pyhZe2Is3q/y2bpA+382uIX+XUMD8WmUDFGdvT8YCmfRYdMst5CpLIZXi5oNWkxEcmFdXju3PjJtuzkjUJhr9ydlcfeUCYLw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(376002)(396003)(366004)(136003)(39830400003)(36756003)(26005)(6512007)(6506007)(86362001)(71200400001)(41300700001)(38070700005)(186003)(2616005)(83380400001)(478600001)(6486002)(4326008)(8676002)(66946007)(76116006)(64756008)(66556008)(66476007)(66446008)(54906003)(6916009)(316002)(38100700002)(122000001)(8936002)(2906002)(5660300002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?ckVPN2dPWFNGNGliQ2J5dVlaMXlyRFR5ejBZRTJQNHVJOFlwNE1kR2RNUkNB?=
+ =?utf-8?B?ajE4T1lhbG9vcHFzOEtTL2JYaXNQc2dNVGxSL3pBcmVGajVPekdHcmJLb3N4?=
+ =?utf-8?B?VDl2ek96TUtUVUlSRmVMTTU0SHVBb0xoWFBDQ3BuQmYveFM2SG1XVHNSK3V0?=
+ =?utf-8?B?ZVpOajZPR1g5TG5YMkozcHFOMjYvMHRyN2dVa3hWekdiRHJIMytPSFhFa1hr?=
+ =?utf-8?B?OGdvZ1dhdE9Fc1RKemZCUWJlRVc2RE91MGVHNmo5ZHp0N1BhZG9aR3BDSy8x?=
+ =?utf-8?B?WlZkNnVZdFV4LzA4RzJBWDdKeEtZZVV2Q1lCRkJFOU1ka2JnbVI3NnlVQ3FW?=
+ =?utf-8?B?QnFyYmJweDA1eDlBWnVxaittQkVQdnNtZm1iMGdSNFR5WnZ1cmI5N2N6dkJB?=
+ =?utf-8?B?L1lJYU9mOWYwZ1NkOTAxY3FpdGhBYXNhUDc2eTBJeGVqL09hdG94RG9Qbnlr?=
+ =?utf-8?B?OVdDbDFqRXI1QXFiUkpabUhqVi9wbzVwZnlWZUNGVENSTGR4czlSaUhBVHBw?=
+ =?utf-8?B?M2MyY1B4K2pUUURoMUFELytwYkUvSWNHeTFaMnpRWHY5c3g3aGlXWjAxN2hY?=
+ =?utf-8?B?T2swVTczNVhUVk5uRDBwZFJYK1g5US8xQ3ZtWGdYelR6Uk9LaTFwQTRsSmdV?=
+ =?utf-8?B?T1o1eDhuU2NIbjQreGhiaWlmY2UzZU42b2xmTXI5NkI5SFBNM3hHcC9ocDY5?=
+ =?utf-8?B?SWd6VnB3N2RjK0hrSjZTQjJvenZXSFF3Z3BCTlV0K1Q2bkc1Qkk4bUl0RUZ2?=
+ =?utf-8?B?RTBYRVZpN0JTSVdwTEtOaSs4ZU0wbkJqSVNQc2NXUDRDMEdiYm56WEl4M0ph?=
+ =?utf-8?B?U3RtZmhKeGsyRDc5OW40M3l1QnIydVExQ0NJZU5hZ3p0UnFLNlgyemsyL2Rn?=
+ =?utf-8?B?UGwyOUxMQVBUM1QzYXFMQlBYaEN0R1ZXaUJna0dIZEljYUNJM3kxb2lpMldO?=
+ =?utf-8?B?aW9Rc2JIQW44RzVEZHFkL1FuL3lxZ1ppYlhEelNPV3U2Vm5PS3NZcS9QMmpa?=
+ =?utf-8?B?SWt3V2I1RjNENHZYU2hJRS9FZnlMcnBOaHVSZ1dlSk9DYWFJbnVzZG9EQXRN?=
+ =?utf-8?B?UHVLUWFINHkvVVRhZGVBV1l5bjljLzdBMS9nUVd1WmNMQzdkOE1uR1Z6ZTlJ?=
+ =?utf-8?B?bWJQSXlHT1RvVTZ0VW9yOWZPNTRVQWh5aEw5ZnhManpWa2Y3d0U2Snd3WHpz?=
+ =?utf-8?B?b0VGMlVteHhzUXdSTlNKM21vUTY2WkYrSVhRcG9vcG5kM1RtYlYxdmtxOENK?=
+ =?utf-8?B?NTJtdk9DT0V4TzVBZEh6Y0Y1NEVUYUJ4a1pqTktwUHh3N0RHWjJlODBXNjF3?=
+ =?utf-8?B?NU9HZERyM0dpQjlDaVA3Zi95akMrSGhoL3pPSTBCTUR6V2dPZTJkZ0FrSElt?=
+ =?utf-8?B?V3VRWjJ6Y0Y0cjd1SDRlNzZTRnZXN3Z4YTZmOWVRNWVoQnNqT2pOUzhhZzV0?=
+ =?utf-8?B?cmdjaU1xZXJKaFE5NFlhakthOWd0STc0akwrVFp0WGw3dmY4cXplUzJuWWlG?=
+ =?utf-8?B?RitML0NQWnJ6czRHU3hUTEd1aEt2bS9XL0JhS2xkT0R6bnBSVHcrVHpBNC9p?=
+ =?utf-8?B?M2dhUUhGZkxGemhEMjhxd0sxRlhOWFpENUFCNG94WXBKY0pqMGpmTVV4UGtN?=
+ =?utf-8?B?ZEcwQ210cVhZZEVlRkV6REozbHM2YjBQTHlIa2MwYjA2am8vdE53UzVQUGo2?=
+ =?utf-8?B?U0tYdmErWGVWejZOYXJkRFdOUzVVeVFsZUhzdmZGQVpDYlc0RGFvekJvd3FK?=
+ =?utf-8?B?UG1jbDZGVnczVnJLYWtMcFgyNzN6NFZ0MHMwc201TTdKQ05tVlFZb0pTRzJr?=
+ =?utf-8?B?bTNFRGQwdC83M1puYW42MkFDdmNhekhBeG5SQnZCRkhUU3k3VDZLUU54L2RY?=
+ =?utf-8?B?RmVHM0EvcEl0NmVCNjBYS21yV29MM1RlU0UwTVY2eUE0RjhtVVpyUmJvZVZn?=
+ =?utf-8?B?UFlrL1hlNEtBamg4QnpRVHhucytaa2tzMFE2OVBvcGQ4M21DYXk0VmQ2Y1Rl?=
+ =?utf-8?B?YUFoUWNBQTA2a3M5NmFmZDFhbjN3V2pRU1cxNkVCSFkxZnNROFBVcWxKOXRs?=
+ =?utf-8?B?QWljZ3pSYTNTSXhNMXFjYUU2S2VsM2p3U3ZFRW1uSDZwOGVaQzVBaW5sZDlY?=
+ =?utf-8?B?UFRvajhiK0ZFMkFCNHJxQ3dDdFVsdXphOXdLbWhCb0JlRi9ZSVFvWWFZMEVX?=
+ =?utf-8?B?Unc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <817F7D0CE60DE74594EAF0469C3AC4D8@namprd13.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-22_10,2022-08-22_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 phishscore=0 spamscore=0 clxscore=1015
- adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2207270000 definitions=main-2208220073
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b776113b-47ee-44f1-8ceb-08da84656165
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Aug 2022 17:40:18.6642
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fHMT2MG2wRAO3YmW2+ZIkEflfiGwmyiW4vYB1z41Fs36dIFmhar+MkAW6uExM8rptOlEc00U0KyI0IgPHQHLsQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR13MB2856
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-08-22 at 12:22 -0400, Jeff Layton wrote:
-> On Mon, 2022-08-22 at 11:40 -0400, Mimi Zohar wrote:
-> > On Mon, 2022-08-22 at 09:33 -0400, Jeff Layton wrote:
-> > > Add an explicit paragraph codifying that atime updates due to reads
-> > > should not be counted against the i_version counter. None of the
-> > > existing subsystems that use the i_version want those counted, and
-> > > there is an easy workaround for those that do.
-> > > 
-> > > Cc: NeilBrown <neilb@suse.de>
-> > > Cc: Trond Myklebust <trondmy@hammerspace.com>
-> > > Cc: Dave Chinner <david@fromorbit.com>
-> > > Link: https://lore.kernel.org/linux-xfs/166086932784.5425.17134712694961326033@noble.neil.brown.name/#t
-> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > ---
-> > >  include/linux/iversion.h | 10 ++++++++--
-> > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/include/linux/iversion.h b/include/linux/iversion.h
-> > > index 3bfebde5a1a6..da6cc1cc520a 100644
-> > > --- a/include/linux/iversion.h
-> > > +++ b/include/linux/iversion.h
-> > > @@ -9,8 +9,8 @@
-> > >   * ---------------------------
-> > >   * The change attribute (i_version) is mandated by NFSv4 and is mostly for
-> > >   * knfsd, but is also used for other purposes (e.g. IMA). The i_version must
-> > > - * appear different to observers if there was a change to the inode's data or
-> > > - * metadata since it was last queried.
-> > > + * appear different to observers if there was an explicit change to the inode's
-> > > + * data or metadata since it was last queried.
-> > >   *
-> > >   * Observers see the i_version as a 64-bit number that never decreases. If it
-> > >   * remains the same since it was last checked, then nothing has changed in the
-> > > @@ -18,6 +18,12 @@
-> > >   * anything about the nature or magnitude of the changes from the value, only
-> > >   * that the inode has changed in some fashion.
-> > >   *
-> > > + * Note that atime updates due to reads or similar activity do _not_ represent
-> > > + * an explicit change to the inode. If the only change is to the atime and it
-> > 
-> > Thanks, Jeff.  The ext4 patch increments i_version on file metadata
-> > changes.  Could the wording here be more explicit to reflect changes
-> > based on either inode data or metadata changes?b
-> > 
-> > 
-> 
-> Thanks Mimi,
-> 
-> Care to suggest some wording?
-> 
-> The main issue we have is that ext4 and xfs both increment i_version on
-> atime updates due to reads. I have patches in flight to fix those, but
-> going forward, we want to ensure that i_version gets incremented on all
-> changes _except_ for atime updates.
-> 
-> The best wording we have at the moment is what Trond suggested, which is
-> to classify the changes to the inode as "explicit" (someone or something
-> made a deliberate change to the inode) and "implicit" (the change to the
-> inode was due to activity such as reads that don't actually change
-> anything).
-> 
-> Is there a better way to describe this?
-
-"explicit change to the inode" probably implies both the inode file
-data and metadata, but let's call it out by saying "an explicit change
-to either the inode data or metadata".
-
-> 
-> > > + * wasn't set via utimes() or a similar mechanism, then i_version should not be
-> > > + * incremented. If an observer cares about atime updates, it should plan to
-> > > + * fetch and store them in conjunction with the i_version.
-> > > + *
-> > >   * Not all filesystems properly implement the i_version counter. Subsystems that
-> > >   * want to use i_version field on an inode should first check whether the
-> > >   * filesystem sets the SB_I_VERSION flag (usually via the IS_I_VERSION macro).
-> > 
-> > 
-> 
-
-
+SGkgTGludXMsDQoNClRoZSBmb2xsb3dpbmcgY2hhbmdlcyBzaW5jZSBjb21taXQgM2ZhNWNiZGM0
+NGRlMTkwZjJjNTYwNWJhN2RiMDE1YWUwZDI2ZjY2ODoNCg0KICBORlM6IEltcHJvdmUgcmVhZHBh
+Z2Uvd3JpdGVwYWdlIHRyYWNpbmcgKDIwMjItMDgtMDkgMTQ6MTE6MzQgLTA0MDApDQoNCmFyZSBh
+dmFpbGFibGUgaW4gdGhlIEdpdCByZXBvc2l0b3J5IGF0Og0KDQogIGdpdDovL2dpdC5saW51eC1u
+ZnMub3JnL3Byb2plY3RzL3Ryb25kbXkvbGludXgtbmZzLmdpdCB0YWdzL25mcy1mb3ItNS4yMC0y
+DQoNCmZvciB5b3UgdG8gZmV0Y2ggY2hhbmdlcyB1cCB0byBlZDA2ZmNlMGIwMzRiMmUyNWJkOTM0
+MzBmNWM0Y2JiMjgwMzZjYzFhOg0KDQogIFNVTlJQQzogUlBDIGxldmVsIGVycm9ycyBzaG91bGQg
+c2V0IHRhc2stPnRrX3JwY19zdGF0dXMgKDIwMjItMDgtMTkgMjA6MzI6MDUgLTA0MDApDQoNClRo
+YW5rcywNCiAgVHJvbmQNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTkZTIGNsaWVudCBidWdmaXhlcyBmb3IgTGludXgg
+Ni4wDQoNCkhpZ2hsaWdodHMgaW5jbHVkZToNCg0KU3RhYmxlIGZpeGVzDQotIE5GUzogRml4IGFu
+b3RoZXIgZnN5bmMoKSBpc3N1ZSBhZnRlciBhIHNlcnZlciByZWJvb3QNCg0KQnVnZml4ZXMNCi0g
+TkZTOiB1bmxpbmsvcm1kaXIgc2hvdWxkbid0IGNhbGwgZF9kZWxldGUoKSB0d2ljZSBvbiBFTk9F
+TlQNCi0gTkZTOiBGaXggbWlzc2luZyB1bmxvY2sgaW4gbmZzX3VubGluaygpDQotIEFkZCBzYW5p
+dHkgY2hlY2tpbmcgb2YgdGhlIGZpbGUgdHlwZSB1c2VkIGJ5IF9fbmZzNDJfc3NjX29wZW4NCi0g
+Rml4IGEgY2FzZSB3aGVyZSB3ZSdyZSBmYWlsaW5nIHRvIHNldCB0YXNrLT50a19ycGNfc3RhdHVz
+DQoNCkNsZWFudXBzDQotIFJlbW92ZSB0aGUgZmxhZyBORlNfQ09OVEVYVF9SRVNFTkRfV1JJVEVT
+IHRoYXQgZ290IG9ic29sZXRlZCBieSB0aGUNCiAgZnN5bmMoKSBmaXgNCg0KLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KTmVp
+bEJyb3duICgxKToNCiAgICAgIE5GUzogdW5saW5rL3JtZGlyIHNob3VsZG4ndCBjYWxsIGRfZGVs
+ZXRlKCkgdHdpY2Ugb24gRU5PRU5UDQoNCk9sZ2EgS29ybmlldnNrYWlhICgxKToNCiAgICAgIE5G
+U3Y0LjIgZml4IHByb2JsZW1zIHdpdGggX19uZnM0Ml9zc2Nfb3Blbg0KDQpTdW4gS2UgKDEpOg0K
+ICAgICAgTkZTOiBGaXggbWlzc2luZyB1bmxvY2sgaW4gbmZzX3VubGluaygpDQoNClRyb25kIE15
+a2xlYnVzdCAoNCk6DQogICAgICBORlM6IEZpeCBhbm90aGVyIGZzeW5jKCkgaXNzdWUgYWZ0ZXIg
+YSBzZXJ2ZXIgcmVib290DQogICAgICBORlM6IFJlbW92ZSBhIGJvZ3VzIGZsYWcgc2V0dGluZyBp
+biBwbmZzX3dyaXRlX2RvbmVfcmVzZW5kX3RvX21kcw0KICAgICAgTkZTOiBDbGVhbnVwIHRvIHJl
+bW92ZSB1bnVzZWQgZmxhZyBORlNfQ09OVEVYVF9SRVNFTkRfV1JJVEVTDQogICAgICBTVU5SUEM6
+IFJQQyBsZXZlbCBlcnJvcnMgc2hvdWxkIHNldCB0YXNrLT50a19ycGNfc3RhdHVzDQoNCiBmcy9u
+ZnMvZGlyLmMgICAgICAgICAgIHwgIDcgKysrKystLQ0KIGZzL25mcy9maWxlLmMgICAgICAgICAg
+fCAxNSArKysrKystLS0tLS0tLS0NCiBmcy9uZnMvaW5vZGUuYyAgICAgICAgIHwgIDEgKw0KIGZz
+L25mcy9uZnM0ZmlsZS5jICAgICAgfCAgNiArKysrKysNCiBmcy9uZnMvcG5mcy5jICAgICAgICAg
+IHwgIDEgLQ0KIGZzL25mcy93cml0ZS5jICAgICAgICAgfCAgNiArKysrLS0NCiBpbmNsdWRlL2xp
+bnV4L25mc19mcy5oIHwgIDIgKy0NCiBuZXQvc3VucnBjL2NsbnQuYyAgICAgIHwgIDIgKy0NCiA4
+IGZpbGVzIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQ0KDQotLSAN
+ClRyb25kIE15a2xlYnVzdA0KTGludXggTkZTIGNsaWVudCBtYWludGFpbmVyLCBIYW1tZXJzcGFj
+ZQ0KdHJvbmQubXlrbGVidXN0QGhhbW1lcnNwYWNlLmNvbQ0KDQoNCg==
