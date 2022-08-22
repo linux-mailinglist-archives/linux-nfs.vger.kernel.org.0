@@ -2,56 +2,56 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB65959BB32
-	for <lists+linux-nfs@lfdr.de>; Mon, 22 Aug 2022 10:17:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC38959BDB5
+	for <lists+linux-nfs@lfdr.de>; Mon, 22 Aug 2022 12:41:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbiHVIQZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 22 Aug 2022 04:16:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48208 "EHLO
+        id S233024AbiHVKkj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 22 Aug 2022 06:40:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231302AbiHVIQY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Aug 2022 04:16:24 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC9011C105
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Aug 2022 01:16:19 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id u15so10923074ejt.6
-        for <linux-nfs@vger.kernel.org>; Mon, 22 Aug 2022 01:16:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc;
-        bh=IsLrz65gWVQHAa6Mn3c9cerNUrChm5P+U50JI2d+SIE=;
-        b=Hs/pyJA0XeAngz1meQtZojd98p8kg6bmf0xjRzQE1DRatwpEfV3jZ3fr9h+wQEGELC
-         sBuFYS78hyQbr7Fj8lY69q5SCl7JMfTdoHpLEYdWEKcFy8qe6niIjb3nvyKtuWX9ZpBe
-         WXpizMCcaT+dwx4Dzwpe6+mPg3LNyYVMMHDtg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc;
-        bh=IsLrz65gWVQHAa6Mn3c9cerNUrChm5P+U50JI2d+SIE=;
-        b=4nxmKZW28tpNb6xEKWMIRlwrDGeHo4iustwEqjzqnDhBnB+WZBhc4rgtOI3kZVHBpk
-         jIVIlouFXzOOV58vlFwdJ8psC9rlmi+BJ3JbNoIcuCUN60RC7c2GdEbLkI2hdzS/fsEM
-         FhmXmUfsYgSLNpm1zrLFQ6B+iRyvWZ5o1MPbrPI3jp3hC7ovF3Sfe82KgVZEYVGWk+y+
-         CqaRoTlfFWOYz8nsj5+yvFxqawz1I/gvH9j3CQCxvNSdqMRhAfGO5Uc5bb5zeTbnZpzm
-         xLry6IirT98vMULvaRyojtHxAiZ4V53f/SLxeWA0hlDfvUsod8eV4SKrMu/WhVQVLQ2F
-         AgnA==
-X-Gm-Message-State: ACgBeo16G0UjyB4LC327PbXWfmtWcuOv5F2tzTNQzvRjQ1HGZ0dA2cJ3
-        cwZ773wfsDHnPCNQ5oT/+YX0T7xMx/Ap6x7zQdgkxB3Cs2SqCw==
-X-Google-Smtp-Source: AA6agR566dsQXlVXIeS0jqQFfW0yUkQSVCGR44FEVJO+cDl4l/OmxgLqqYASi2dBD6hSr3no4ijBH037fr3Eln2XSck=
-X-Received: by 2002:a17:907:84a:b0:733:735:2b1a with SMTP id
- ww10-20020a170907084a00b0073307352b1amr12198563ejb.290.1661156178228; Mon, 22
- Aug 2022 01:16:18 -0700 (PDT)
-MIME-Version: 1.0
-From:   Igor Raits <igor@gooddata.com>
-Date:   Mon, 22 Aug 2022 10:16:07 +0200
-Message-ID: <CA+9S74iBrObUnaSpSdqXu0_GosDdE1dmSbmgxfmxEK2mhDaNjg@mail.gmail.com>
-Subject: Regression: deadlock in io_schedule / nfs_writepage_locked
-To:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S233192AbiHVKkW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 22 Aug 2022 06:40:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C6F72E6BF;
+        Mon, 22 Aug 2022 03:40:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 14623B81032;
+        Mon, 22 Aug 2022 10:40:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEAC5C433C1;
+        Mon, 22 Aug 2022 10:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661164818;
+        bh=yHtb/QXG0SOmjXqK03h8WGKXY6avHJktJO7EkQ7DU58=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Toyz5EJmLbKH9iqh3AVKjQo69eVx7aTUhE3XlgRi4yhf9+oF5/dyfUHE3rp9OmV+Y
+         Lv0TIoTGQ2/gAW/kNQOsLZ0g3HbgYCucp1TI6p7wGbXcEm0PDauzX/fdpxEf+pfzjZ
+         neR+XO2Uo5sN1nLVrEr+Mt1mBkJ44CsB8M+LblwcZKWsFlLbHkqmcZyT6iL5pNMv9u
+         h9bnSbXo3bLZ6zAJY5rRo+cWbfGS4M+v+GDzUgpqyHXTguDCD+lWxiD64Ldxdfey/1
+         tUg2YOfv4blj+J8elmnmoarawbSFRDZb6Qtn1U/Iu9Xld7AFeB6yulZG/PzoPo5tGb
+         Ng4Eul0Ewcftw==
+Message-ID: <fc87931a003d7a911ba1ab7088e559e6b46f6299.camel@kernel.org>
+Subject: Re: [PATCH] xfs: don't bump the i_version on an atime update in
+ xfs_vn_update_time
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     "Darrick J . Wong" <djwong@kernel.org>, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        Dave Chinner <david@fromorbit.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        David Wysochanski <dwysocha@redhat.com>
+Date:   Mon, 22 Aug 2022 06:40:16 -0400
+In-Reply-To: <166112626820.23264.11718948914253988812@noble.neil.brown.name>
+References: <20220819113450.11885-1-jlayton@kernel.org>
+         <166112626820.23264.11718948914253988812@noble.neil.brown.name>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,56 +60,98 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello everyone,
+On Mon, 2022-08-22 at 09:57 +1000, NeilBrown wrote:
+> On Fri, 19 Aug 2022, Jeff Layton wrote:
+> > xfs will update the i_version when updating only the atime value, which
+> > is not desirable for any of the current consumers of i_version. Doing s=
+o
+> > leads to unnecessary cache invalidations on NFS and extra measurement
+> > activity in IMA.
+> >=20
+> > Add a new XFS_ILOG_NOIVER flag, and use that to indicate that the
+> > transaction should not update the i_version. Set that value in
+> > xfs_vn_update_time if we're only updating the atime.
+> >=20
+> > Cc: Dave Chinner <david@fromorbit.com>
+> > Cc: NeilBrown <neilb@suse.de>
+> > Cc: Trond Myklebust <trondmy@hammerspace.com>
+> > Cc: David Wysochanski <dwysocha@redhat.com>
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/xfs/libxfs/xfs_log_format.h  |  2 +-
+> >  fs/xfs/libxfs/xfs_trans_inode.c |  2 +-
+> >  fs/xfs/xfs_iops.c               | 10 +++++++---
+> >  3 files changed, 9 insertions(+), 5 deletions(-)
+> >=20
+> > diff --git a/fs/xfs/libxfs/xfs_log_format.h b/fs/xfs/libxfs/xfs_log_for=
+mat.h
+> > index b351b9dc6561..866a4c5cf70c 100644
+> > --- a/fs/xfs/libxfs/xfs_log_format.h
+> > +++ b/fs/xfs/libxfs/xfs_log_format.h
+> > @@ -323,7 +323,7 @@ struct xfs_inode_log_format_32 {
+> >  #define	XFS_ILOG_ABROOT	0x100	/* log i_af.i_broot */
+> >  #define XFS_ILOG_DOWNER	0x200	/* change the data fork owner on replay =
+*/
+> >  #define XFS_ILOG_AOWNER	0x400	/* change the attr fork owner on replay =
+*/
+> > -
+> > +#define XFS_ILOG_NOIVER	0x800	/* don't bump i_version */
+> > =20
+> >  /*
+> >   * The timestamps are dirty, but not necessarily anything else in the =
+inode
+> > diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_=
+inode.c
+> > index 8b5547073379..ffe6d296e7f9 100644
+> > --- a/fs/xfs/libxfs/xfs_trans_inode.c
+> > +++ b/fs/xfs/libxfs/xfs_trans_inode.c
+> > @@ -126,7 +126,7 @@ xfs_trans_log_inode(
+> >  	 * unconditionally.
+> >  	 */
+> >  	if (!test_and_set_bit(XFS_LI_DIRTY, &iip->ili_item.li_flags)) {
+> > -		if (IS_I_VERSION(inode) &&
+> > +		if (!(flags & XFS_ILOG_NOIVER) && IS_I_VERSION(inode) &&
+> >  		    inode_maybe_inc_iversion(inode, flags & XFS_ILOG_CORE))
+> >  			iversion_flags =3D XFS_ILOG_CORE;
+> >  	}
+> > diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
+> > index 45518b8c613c..54db85a43dfb 100644
+> > --- a/fs/xfs/xfs_iops.c
+> > +++ b/fs/xfs/xfs_iops.c
+> > @@ -1021,7 +1021,7 @@ xfs_vn_update_time(
+> >  {
+> >  	struct xfs_inode	*ip =3D XFS_I(inode);
+> >  	struct xfs_mount	*mp =3D ip->i_mount;
+> > -	int			log_flags =3D XFS_ILOG_TIMESTAMP;
+> > +	int			log_flags =3D XFS_ILOG_TIMESTAMP|XFS_ILOG_NOIVER;
+> >  	struct xfs_trans	*tp;
+> >  	int			error;
+> > =20
+> > @@ -1041,10 +1041,14 @@ xfs_vn_update_time(
+> >  		return error;
+> > =20
+> >  	xfs_ilock(ip, XFS_ILOCK_EXCL);
+> > -	if (flags & S_CTIME)
+> > +	if (flags & S_CTIME) {
+> >  		inode->i_ctime =3D *now;
+> > -	if (flags & S_MTIME)
+> > +		log_flags &=3D ~XFS_ILOG_NOIVER;
+> > +	}
+> > +	if (flags & S_MTIME) {
+> >  		inode->i_mtime =3D *now;
+> > +		log_flags &=3D ~XFS_ILOG_NOIVER;
+> > +	}
+> >  	if (flags & S_ATIME)
+> >  		inode->i_atime =3D *now;
+>=20
+> I think you should also clear XFS_ILOG_NOIVER is S_VERSION is set, but
+> otherwise this looks sane to me.
+>=20
+> Thanks,
+> NeilBrown
 
-Hopefully I'm sending this to the right place=E2=80=A6
-We recently started to see the following stacktrace quite often on our
-VMs that are using NFS extensively (I think after upgrading to
-5.18.11+, but not sure when exactly. For sure it happens on 5.18.15):
+Good point. I'll spin up a v2.
 
-INFO: task kworker/u36:10:377691 blocked for more than 122 seconds.
-     Tainted: G            E     5.18.15-1.gdc.el8.x86_64 #1
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:kworker/u36:10  state:D stack:    0 pid:377691 ppid:     2 flags:0x000=
-04000
-Workqueue: writeback wb_workfn (flush-0:308)
-Call Trace:
-<TASK>
-__schedule+0x38c/0x7d0
-schedule+0x41/0xb0
-io_schedule+0x12/0x40
-__folio_lock+0x110/0x260
-? filemap_alloc_folio+0x90/0x90
-write_cache_pages+0x1e3/0x4d0
-? nfs_writepage_locked+0x1d0/0x1d0 [nfs]
-nfs_writepages+0xe1/0x200 [nfs]
-do_writepages+0xd2/0x1b0
-? check_preempt_curr+0x47/0x70
-? ttwu_do_wakeup+0x17/0x180
-__writeback_single_inode+0x41/0x360
-writeback_sb_inodes+0x1f0/0x460
-__writeback_inodes_wb+0x5f/0xd0
-wb_writeback+0x235/0x2d0
-wb_workfn+0x348/0x4a0
-? put_prev_task_fair+0x1b/0x30
-? pick_next_task+0x84/0x940
-? __update_idle_core+0x1b/0xb0
-process_one_work+0x1c5/0x390
-worker_thread+0x30/0x360
-? process_one_work+0x390/0x390
-kthread+0xd7/0x100
-? kthread_complete_and_exit+0x20/0x20
-ret_from_fork+0x1f/0x30
-</TASK>
-
-I see that something very similar was fixed in btrfs
-(https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=
-=3Dlinux-5.18.y&id=3D9535ec371d741fa037e37eddc0a5b25ba82d0027)
-but I could not find anything similar for NFS.
-
-Do you happen to know if this is already fixed? If so, would you mind
-sharing some commits? If not, could you help getting this addressed?
-
-Thanks in advance!
+Thanks,
 --=20
-Igor Raits
+Jeff Layton <jlayton@kernel.org>
