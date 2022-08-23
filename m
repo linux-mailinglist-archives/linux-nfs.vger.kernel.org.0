@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44EEE59EDF1
-	for <lists+linux-nfs@lfdr.de>; Tue, 23 Aug 2022 23:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B44D59EDF6
+	for <lists+linux-nfs@lfdr.de>; Tue, 23 Aug 2022 23:05:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbiHWVFb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 23 Aug 2022 17:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        id S229954AbiHWVFa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 23 Aug 2022 17:05:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230425AbiHWVAT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Aug 2022 17:00:19 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA5D786D7
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Aug 2022 14:00:18 -0700 (PDT)
+        with ESMTP id S231296AbiHWVAW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 23 Aug 2022 17:00:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6350F79605
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Aug 2022 14:00:22 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 7FE61CE1FE7
-        for <linux-nfs@vger.kernel.org>; Tue, 23 Aug 2022 21:00:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60EEC433D6;
-        Tue, 23 Aug 2022 21:00:14 +0000 (UTC)
-Subject: [PATCH v1 2/7] NFSD: Use xdr_inline_decode() to decode NFSv3 symlinks
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 009A4615A6
+        for <linux-nfs@vger.kernel.org>; Tue, 23 Aug 2022 21:00:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DE67C433D6;
+        Tue, 23 Aug 2022 21:00:21 +0000 (UTC)
+Subject: [PATCH v1 3/7] NFSD: Check for junk after RPC Call messages
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Tue, 23 Aug 2022 17:00:13 -0400
-Message-ID: <166128841388.2788.9568755346644827020.stgit@manet.1015granger.net>
+Date:   Tue, 23 Aug 2022 17:00:20 -0400
+Message-ID: <166128842018.2788.3153078415664547122.stgit@manet.1015granger.net>
 In-Reply-To: <166128840714.2788.7887913547062461761.stgit@manet.1015granger.net>
 References: <166128840714.2788.7887913547062461761.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -41,48 +41,59 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Replace the check for buffer over/underflow with a helper that is
-commonly used for this purpose. The helper also sets xdr->nwords
-correctly after successfully linearizing the symlink argument into
-the stream's scratch buffer.
+The current RPC server code allows incoming RPC messages up to about
+a megabyte in size. For TCP, this is based on the size value
+contained in the RPC record marker.
+
+Currently, NFSD ignores anything in the message that is past the end
+of the encoded RPC Call message. A very large RPC message can arrive
+with just an NFSv3 LOOKUP operation in it, and NFSD ignores the rest
+of the message until the next RPC fragment in the TCP stream.
+
+That ignored data still consumes pages in the svc_rqst's page array,
+however. The current arrangement is that each svc_rqst gets about
+260 pages, assuming that all supported NFS operations will never
+require more than a total of 260 pages to decode a Call message
+and construct its corresponding Reply message.
+
+A clever attacker can add garbage at the end of a READ-like request,
+which generally has a small Call message and a potentially large
+Reply message with a payload . That makes both the Call message and
+the Reply message large, and runs the svc_rqst out of pages. At the
+very least, this can result in a short or empty READ or READDIR
+result.
+
+So, let's teach NFSD to look for such shenanigans and reject any
+Call where the incoming RPC frame has content remaining in the
+receive buffer after NFSD has decoded all of the Call arguments.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c |   14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ fs/nfsd/nfssvc.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 0293b8d65f10..71e32cf28885 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -616,8 +616,6 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index 4bb5baa17040..5face047ce1a 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -1027,6 +1027,7 @@ nfsd(void *vrqstp)
+ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
  {
- 	struct nfsd3_symlinkargs *args = rqstp->rq_argp;
- 	struct kvec *head = rqstp->rq_arg.head;
--	struct kvec *tail = rqstp->rq_arg.tail;
--	size_t remaining;
+ 	const struct svc_procedure *proc = rqstp->rq_procinfo;
++	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
  
- 	if (!svcxdr_decode_diropargs3(xdr, &args->ffh, &args->fname, &args->flen))
- 		return false;
-@@ -626,16 +624,10 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 	if (xdr_stream_decode_u32(xdr, &args->tlen) < 0)
- 		return false;
+ 	/*
+ 	 * Give the xdr decoder a chance to change this if it wants
+@@ -1035,7 +1036,9 @@ int nfsd_dispatch(struct svc_rqst *rqstp, __be32 *statp)
+ 	rqstp->rq_cachetype = proc->pc_cachetype;
  
--	/* request sanity */
--	remaining = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len;
--	remaining -= xdr_stream_pos(xdr);
--	if (remaining < xdr_align_size(args->tlen))
--		return false;
--
--	args->first.iov_base = xdr->p;
-+	/* symlink_data */
- 	args->first.iov_len = head->iov_len - xdr_stream_pos(xdr);
--
--	return true;
-+	args->first.iov_base = xdr_inline_decode(xdr, args->tlen);
-+	return args->first.iov_base != NULL;
- }
+ 	svcxdr_init_decode(rqstp);
+-	if (!proc->pc_decode(rqstp, &rqstp->rq_arg_stream))
++	if (!proc->pc_decode(rqstp, xdr))
++		goto out_decode_err;
++	if (xdr_stream_remaining(xdr))
+ 		goto out_decode_err;
  
- bool
+ 	switch (nfsd_cache_lookup(rqstp)) {
 
 
