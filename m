@@ -2,146 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2244C59FA8F
-	for <lists+linux-nfs@lfdr.de>; Wed, 24 Aug 2022 14:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA5FC59FAC6
+	for <lists+linux-nfs@lfdr.de>; Wed, 24 Aug 2022 15:02:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237580AbiHXMyA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 24 Aug 2022 08:54:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53720 "EHLO
+        id S237818AbiHXNBu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 24 Aug 2022 09:01:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237558AbiHXMx6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Aug 2022 08:53:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64B7995E4F;
-        Wed, 24 Aug 2022 05:53:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 828B16138B;
-        Wed, 24 Aug 2022 12:53:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF8C2C433D6;
-        Wed, 24 Aug 2022 12:53:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661345635;
-        bh=9qKTFfSvvv3odyymWozZ3aH/e3Es4L33cC41zZfYrDE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Hk1K3btiYElGBvohLpvnxQA2OisfrjMc8S/kg7OoZJF85mm9jLVcvTTAZ2Lw3evSf
-         +sk8cPvrEnDfRUlkNaDMbeNAim0UmwOmrY2pIWcRft2vYW4uPpmhpNvFOWSEFl9mf3
-         QLay6v3wIZsAU5jfFCs7L1BJGnXS/W03OFJ0YDMp4gY37+neRradBW1qYmAIK/3vXZ
-         rH0cBEQjhvbko4l7YDHO4ZvHkKsW6ii/iQNe7zRcOO0XiedDIeQ1GB55rvhtyCgtDT
-         MTwkOUMyoB8htAc5+QUeCwDFg2s1hrRx+bU8zr99viJWCFLcJrbgo2GNfUpBcdOvDe
-         UEdrfsdXKJDGw==
-Message-ID: <5f248d934ec5d2345986fd75d7d12bcd9e2f32b9.camel@kernel.org>
-Subject: Re: [PATCH] iversion: update comments with info about atime updates
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-ext4@vger.kernel.org,
-        Trond Myklebust <trondmy@hammerspace.com>
-Date:   Wed, 24 Aug 2022 08:53:53 -0400
-In-Reply-To: <166129348704.23264.10381335282721356873@noble.neil.brown.name>
-References: <20220822133309.86005-1-jlayton@kernel.org>
-        , <ceb8f09a4cb2de67f40604d03ee0c475feb3130a.camel@linux.ibm.com>
-        , <f17b9d627703bee2a7b531a051461671648a9dbd.camel@kernel.org>
-        , <18827b350fbf6719733fda814255ec20d6dcf00f.camel@linux.ibm.com>
-        , <4cc84440d954c022d0235bf407a60da66a6ccc39.camel@kernel.org>
-        , <20220822233231.GJ3600936@dread.disaster.area>
-        , <6cbcb33d33613f50dd5e485ecbf6ce7e305f3d6f.camel@kernel.org>
-        , <166125468756.23264.2859374883806269821@noble.neil.brown.name>
-        , <df469d936b2e1c1a8c9c947896fa8a160f33b0e8.camel@kernel.org>
-         <166129348704.23264.10381335282721356873@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S237799AbiHXNBh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 24 Aug 2022 09:01:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0266C97B2C
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Aug 2022 06:01:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661346094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QAPjAsJu7iOATQWB+c0GngHgi+xgKxQbdfkHrh5GaOU=;
+        b=VoCTXM/8cjtH66VE0rJRbqD+bRlvnXIBfe+4TQcKQScxBjk3oKMlaASwf19lZGtTRDe4aN
+        gXsBBSHbejEpFOBRquVrP8vwm/jaIKgS4H1pt9JEjvK/v7XktQ6xVLvAoJFpqVY9nnJaG0
+        SJdsfONPVmqzM1W0veNGiujgP4KZ/Rw=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-634-RSKbT_xYP86Ii-wiIenf3Q-1; Wed, 24 Aug 2022 09:01:33 -0400
+X-MC-Unique: RSKbT_xYP86Ii-wiIenf3Q-1
+Received: by mail-ed1-f71.google.com with SMTP id o2-20020a056402438200b0043d552deb2aso10808759edc.0
+        for <linux-nfs@vger.kernel.org>; Wed, 24 Aug 2022 06:01:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=QAPjAsJu7iOATQWB+c0GngHgi+xgKxQbdfkHrh5GaOU=;
+        b=I+nqcik9b3/Ja19kDPsD4QnA9qLG/ES9pw9K1I6O9dtI2rR7OXsAt9aqQeGieAcRu2
+         /yWIwGfMKls0/jBzBiX29nOqzwzKzIBpZyRZWolrrNkJKQ+YYyqBoqXzgQ+B6npbXVSJ
+         AOJNsG2vhhxlahlc7jdSYNnf/S1xqaYR+FgHmkdAJyLR//4MgqVwMatN5fUUkrvE4/3B
+         HmaZWKqdchHVsri9IVKxNjZL3NQ53Q6/0QRNl7Zt90xMa6nFHsDl409SPZ7AJeXtqgHi
+         rkPAtTq9KArxPpShvTl0QowFYohOtlF+2fuRqvwRXvWqMdnqIG17tJzt/6r685QvabZx
+         xYGA==
+X-Gm-Message-State: ACgBeo2qXrKg67AOQxZ7jeyhv+buZlpVe+TcXAmTyF/NpjX71Z3J2esw
+        KccC/ExUrIQH3LYvzgeegJnKo6YcSlOLzI1CR1xL+jbqlOLGUHvjTYserwJm3ElURBZi9uJskyN
+        aooafwoSZKp9nQLRSQPFmcIbClgqF8I3ZubI7
+X-Received: by 2002:a17:907:6da1:b0:73d:877d:c56c with SMTP id sb33-20020a1709076da100b0073d877dc56cmr2889265ejc.342.1661346092377;
+        Wed, 24 Aug 2022 06:01:32 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR5joQw+U7+cpfBdVsHUHveN+r+mfIGsH2drD6D8wqkR8Ewtl6W7Ks6IwlXoBRTkKxUtCYhE/QHr7QpxyWLrVAE=
+X-Received: by 2002:a17:907:6da1:b0:73d:877d:c56c with SMTP id
+ sb33-20020a1709076da100b0073d877dc56cmr2889259ejc.342.1661346092168; Wed, 24
+ Aug 2022 06:01:32 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20220824093501.384755-1-dwysocha@redhat.com> <20220824093501.384755-3-dwysocha@redhat.com>
+ <429ecc819fcffe63d60dbb2b72f9022d2a21ddd8.camel@hammerspace.com>
+In-Reply-To: <429ecc819fcffe63d60dbb2b72f9022d2a21ddd8.camel@hammerspace.com>
+From:   David Wysochanski <dwysocha@redhat.com>
+Date:   Wed, 24 Aug 2022 09:00:56 -0400
+Message-ID: <CALF+zOknvMZyufSUD-g9Z9Y5RfwE-vUFT+CF0kxqbcpR=yJPJw@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/3] NFS: Add support for netfs in struct nfs_inode
+ and Kconfig
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "anna.schumaker@netapp.com" <anna.schumaker@netapp.com>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "daire.byrne@gmail.com" <daire.byrne@gmail.com>,
+        "benmaynard@google.com" <benmaynard@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-08-24 at 08:24 +1000, NeilBrown wrote:
-> On Tue, 23 Aug 2022, Jeff Layton wrote:
-> > On Tue, 2022-08-23 at 21:38 +1000, NeilBrown wrote:
-> > > On Tue, 23 Aug 2022, Jeff Layton wrote:
-> > > > So, we can refer to that and simply say:
-> > > >=20
-> > > > "If the function updates the mtime or ctime on the inode, then the
-> > > > i_version should be incremented. If only the atime is being updated=
-,
-> > > > then the i_version should not be incremented. The exception to this=
- rule
-> > > > is explicit atime updates via utimes() or similar mechanism, which
-> > > > should result in the i_version being incremented."
-> > >=20
-> > > Is that exception needed? utimes() updates ctime.
-> > >=20
-> > > https://man7.org/linux/man-pages/man2/utimes.2.html
-> > >=20
-> > > doesn't say that, but
-> > >=20
-> > > https://pubs.opengroup.org/onlinepubs/007904875/functions/utimes.html
-> > >=20
-> > > does, as does the code.
-> > >=20
-> >=20
-> > Oh, good point! I think we can leave that out. Even better!
->=20
-> Further, implicit mtime updates (file_update_time()) also update ctime.
-> So all you need is
->  If the function updates the ctime, then i_version should be
->  incremented.
->=20
-> and I have to ask - why not just use the ctime? Why have another number
-> that is parallel?
->=20
-> Timestamps are updated at HZ (ktime_get_course) which is at most every
-> millisecond.
-> xfs stores nanosecond resolution, so about 20 bits are currently wasted.
-> We could put a counter like i_version in there that only increments
-> after it is viewed, then we can get all the precision we need but with
-> exactly ctime semantics.
->=20
-> The 64 change-id could comprise
->  35 bits of seconds (nearly a millenium)
->  16 bits of sub-seconds (just in case a higher precision time was wanted
->  one day)
->  13 bits of counter. - 8192 changes per tick
+On Wed, Aug 24, 2022 at 8:42 AM Trond Myklebust <trondmy@hammerspace.com> wrote:
+>
+> On Wed, 2022-08-24 at 05:35 -0400, Dave Wysochanski wrote:
+> > As first steps for support of the netfs library, add NETFS_SUPPORT
+> > to Kconfig and add the required netfs_inode into struct nfs_inode.
+> > The struct netfs_inode is now where the vfs_inode is stored as well
+> > as the fscache_cookie.  In addition, use the netfs_inode() and
+> > netfs_i_cookie() helpers, and remove our own helper, nfs_i_fscache().
+> >
+> > Later patches will enable netfs by defining NFS specific version
+> > of struct netfs_request_ops and calling netfs_inode_init().
+> >
+> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > ---
+> >  fs/nfs/Kconfig         |  1 +
+> >  fs/nfs/delegation.c    |  2 +-
+> >  fs/nfs/dir.c           |  2 +-
+> >  fs/nfs/fscache.c       | 20 +++++++++-----------
+> >  fs/nfs/fscache.h       | 15 ++++++---------
+> >  fs/nfs/inode.c         |  6 +++---
+> >  fs/nfs/internal.h      |  2 +-
+> >  fs/nfs/pnfs.c          | 12 ++++++------
+> >  fs/nfs/write.c         |  2 +-
+> >  include/linux/nfs_fs.h | 19 +++++--------------
+> >  10 files changed, 34 insertions(+), 47 deletions(-)
+> >
+> > diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
+> > index 14a72224b657..79b241bed762 100644
+> > --- a/fs/nfs/Kconfig
+> > +++ b/fs/nfs/Kconfig
+> > @@ -5,6 +5,7 @@ config NFS_FS
+> >         select LOCKD
+> >         select SUNRPC
+> >         select NFS_ACL_SUPPORT if NFS_V3_ACL
+> > +       select NETFS_SUPPORT
+> >
+>
+> NACK. I'm not at all OK with making netfs mandatory.
+>
 
-We'd need a "seen" flag too, so maybe only 4096 changes per tick...
+Just so we're on the same page, are you ok with netfs being enabled if
+fscache is enabled like today?
 
->=20
-> The value exposed in i_ctime would hide the counter and just show the
-> timestamp portion of what the filesystem stores. This would ensure we
-> never get changes on different files that happen in one order leaving
-> timestamps with the reversed order (the timestamps could be the same,
-> but that is expected).
->=20
-> This scheme could be made to handle a sustained update rate of 1
-> increment every 8 nanoseconds (if the counter were allowed to overflow
-> into unused bits of the sub-second field). This is one ever 24 CPU
-> cycles. Incrementing a counter and making it visible to all CPUs can
-> probably be done in 24 cycles. Accessing it and setting the "seen" flag
-> as well might just fit with faster memory. Getting any other useful
-> work done while maintaining that rate on a single file seems unlikely.
-
-This is an interesting idea.
-
-So, for NFSv4 you'd just mask off the counter bits (and "seen" flag) to
-get the ctime, and for the change attribute we'd just mask off the
-"seen" flag and put it all in there.
-
- * Implementing that for all filesystems would be a huge project though.
-   If we were implementing the i_version counter from scratch, I'd
-   probably do something along these lines. Given that we already have
-   an existing i_version counter, would there be any real benefit to
-   pursuing this avenue instead?
---=20
-Jeff Layton <jlayton@kernel.org>
