@@ -2,102 +2,112 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9252A5A1905
-	for <lists+linux-nfs@lfdr.de>; Thu, 25 Aug 2022 20:48:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E8585A194B
+	for <lists+linux-nfs@lfdr.de>; Thu, 25 Aug 2022 21:06:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243233AbiHYSsv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Aug 2022 14:48:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47408 "EHLO
+        id S238372AbiHYTGo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Aug 2022 15:06:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243309AbiHYSso (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Aug 2022 14:48:44 -0400
-Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AB9B08B9;
-        Thu, 25 Aug 2022 11:48:38 -0700 (PDT)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id A0E735C00A7;
-        Thu, 25 Aug 2022 14:48:35 -0400 (EDT)
-Received: from imap46 ([10.202.2.96])
-  by compute5.internal (MEProxy); Thu, 25 Aug 2022 14:48:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=verbum.org; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm1; t=1661453315; x=1661539715; bh=7/QJ5cEPcM
-        fYYVo1y1XafN6H2GK15RMZ9wDJuYjC+3c=; b=tAJRAlKJC6gwE4HsW/KFz043yK
-        24kBNzKUiqmnVincz1sRtGKAb19o0zAv/9Fy3yHUJ7me08gpSkhGFvCWlPjT4ER+
-        +fNGjc/wZ6IOXNAIT2wqi5fp++4hIugMf/rc7b0/ujORdyOq64rh2quHqGtoZDdk
-        dLsQf6wCXqgn8RU8Hcy812rvA86MmxNSJzKD+fXCKdMwbwgJxgW6h1iB9+o1jgA+
-        IFur+F8TqAEKzz9HV8vU978jhpMJ/9UHc1JGXLoIg+JnodG27tUhcPdFWNzDDdpX
-        UJ+mfLKn/kDhfRmWTKQ7v9y49Y7kQ2GfW83zU0SnddNwXV24uGXZmhQx2ZJA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1661453315; x=1661539715; bh=7/QJ5cEPcMfYYVo1y1XafN6H2GK1
-        5RMZ9wDJuYjC+3c=; b=aa7WC/tnYeq9OEjXMIgD5gjslo07PCVNiJjuBBQdaR38
-        n51GhANSSmBdeGZTtg5eDLrA4BdvWSEkvqCwaDMIfgyWc5depXXCHqTnmv8m3d8r
-        fT0XK7FvIHXFXhcdMpTLHH/RNW06CX+x4fWxxT7+BSpuO3yDHayMs9RvS2M26UHW
-        iNbjsaRW4egk+/gLmvM2xNiZSdbMruognidUigvjkcHjc8yNGrhD4zrxT6oImZps
-        Np1MrDj8k9jtJQZo2sjU/Z4SucHTM7VJ4DksLpIRKM/y7/dCCcR0zG3W4nSOKS2V
-        L18DNzyfWvFLhNSJ6GoReFAYZ8icZaxkfOMf6DkXrw==
-X-ME-Sender: <xms:A8QHY82GfZAwKKwY_0T6x9zEtaLb6uf8nx0uruUK6g9bGwSe1YyFkA>
-    <xme:A8QHY3GvgJ9DZvB6LI9m-3Xd4J6y_1XZJcXrLdp-0fj0YbzrrihNF-_-GmAEe38ne
-    uwZn9MWVop5_BwY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvfedrvdejfedguddvlecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdev
-    ohhlihhnucghrghlthgvrhhsfdcuoeifrghlthgvrhhssehvvghrsghumhdrohhrgheqne
-    cuggftrfgrthhtvghrnhephfejuddthedtgfeuueeltdekfeekvdfgveeifeduteekheff
-    jefgieehheekgeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepfigrlhhtvghrshesvhgvrhgsuhhmrdhorhhg
-X-ME-Proxy: <xmx:A8QHY06R9jjTowXOu19o1y47k7-QiWvVbrDyUvENlz3pvT8WGkhMQA>
-    <xmx:A8QHY11eU6Qd6nefd6Gb9VL37HPxK91pI76roxyKS7OooLjewyKexQ>
-    <xmx:A8QHY_F_Rr4M0DWHCqyFKNnhF_6pTnoh2MsmzQkRDS-XVvRAemOFQw>
-    <xmx:A8QHY045Pks8pmIGRrvdS2iqbDXCdghu_nCsY5cdix3wFMMXOYN6Bg>
-Feedback-ID: ibe7c40e9:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 3C1E52A20075; Thu, 25 Aug 2022 14:48:35 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-841-g7899e99a45-fm-20220811.002-g7899e99a
-Mime-Version: 1.0
-Message-Id: <fc59bfa8-295e-4180-9cf0-c2296d2e8707@www.fastmail.com>
-In-Reply-To: <20220823215333.GC3144495@dread.disaster.area>
-References: <20220819115641.14744-1-jlayton@kernel.org>
- <20220823215333.GC3144495@dread.disaster.area>
-Date:   Thu, 25 Aug 2022 14:48:02 -0400
-From:   "Colin Walters" <walters@verbum.org>
-To:     "Dave Chinner" <david@fromorbit.com>,
-        "Jeff Layton" <jlayton@kernel.org>
-Cc:     "Al Viro" <viro@zeniv.linux.org.uk>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
-        "Jeff Layton" <jlayton@redhat.com>,
-        "David Howells" <dhowells@redhat.com>,
-        "Frank Filz" <ffilzlnx@mindspring.com>
-Subject: Re: [PATCH] vfs: report an inode version in statx for IS_I_VERSION inodes
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S235785AbiHYTGn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Aug 2022 15:06:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E45FBD09B
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Aug 2022 12:06:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id ECD5DB82834
+        for <linux-nfs@vger.kernel.org>; Thu, 25 Aug 2022 19:06:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52BEAC433C1;
+        Thu, 25 Aug 2022 19:06:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661454399;
+        bh=r2gfrpY9yN2pe4++snf36nqrJwrExuBz10HYbox866k=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JTWSaj8yZDItAULxZTmlHiQfIAFFQZRoSUweF7BKMqz569YHE7bPYsoH73VbA35/l
+         o0IjcEHFm4/92DUWjLq8c3yYJSHRNh+sDJS20WcOPvKNifx+2iPUyg4Uz5PyU7yXWb
+         +ZJ3xbAZmlP3VpbE0Q5jIfsTW4i23oR3feDxthnJl/X1WTU/SIfQUxN92eD1ZFSJye
+         x65AgucRLkFk8gRIQi4GZT8hdPiy4TPiG5qtFf8JxUZKoil38E8Cqs2AO98nkm+IFe
+         vaW31ozwQmYs+6HSFao2DjatADaYSi981DDliUOWrJak4v29SeAHnWgPwjy+Q0pAdJ
+         yjA3hrYLSSijA==
+From:   trondmy@kernel.org
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFSv4: Turn off open-by-filehandle and NFS re-export for NFSv4.0
+Date:   Thu, 25 Aug 2022 15:00:13 -0400
+Message-Id: <20220825190013.578922-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.37.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
+The NFSv4.0 protocol only supports open() by name. It cannot therefore
+be used with open_by_handle() and friends, nor can it be re-exported by
+knfsd.
 
-On Tue, Aug 23, 2022, at 5:53 PM, Dave Chinner wrote:
-> 
-> THere's no definition of what consitutes an "inode change" and this
-> exposes internal filesystem implementation details (i.e. on disk
-> format behaviour) directly to userspace. That means when the
-> internal filesystem behaviour changes, userspace applications will
-> see changes in stat->ino_version changes and potentially break them.
+Reported-by: Chuck Lever III <chuck.lever@oracle.com>
+Fixes: 20fa19027286 ("nfs: add export operations")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/super.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-As a userspace developer (ostree, etc. who is definitely interested in this functionality) I do agree with this concern; but a random drive by comment: would it be helpful to expose iversion (or other bits like this from the vfs) via e.g. debugfs to start?  I think that'd unblock writing fstests in the short term right?
-
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 6ab5eeb000dc..5e4bacb77bfc 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -1051,22 +1051,31 @@ static void nfs_fill_super(struct super_block *sb, struct nfs_fs_context *ctx)
+ 	if (ctx->bsize)
+ 		sb->s_blocksize = nfs_block_size(ctx->bsize, &sb->s_blocksize_bits);
+ 
+-	if (server->nfs_client->rpc_ops->version != 2) {
+-		/* The VFS shouldn't apply the umask to mode bits. We will do
+-		 * so ourselves when necessary.
++	switch (server->nfs_client->rpc_ops->version) {
++	case 2:
++		sb->s_time_gran = 1000;
++		sb->s_time_min = 0;
++		sb->s_time_max = U32_MAX;
++		break;
++	case 3:
++		/*
++		 * The VFS shouldn't apply the umask to mode bits.
++		 * We will do so ourselves when necessary.
+ 		 */
+ 		sb->s_flags |= SB_POSIXACL;
+ 		sb->s_time_gran = 1;
+-		sb->s_export_op = &nfs_export_ops;
+-	} else
+-		sb->s_time_gran = 1000;
+-
+-	if (server->nfs_client->rpc_ops->version != 4) {
+ 		sb->s_time_min = 0;
+ 		sb->s_time_max = U32_MAX;
+-	} else {
++		sb->s_export_op = &nfs_export_ops;
++		break;
++	case 4:
++		sb->s_flags |= SB_POSIXACL;
++		sb->s_time_gran = 1;
+ 		sb->s_time_min = S64_MIN;
+ 		sb->s_time_max = S64_MAX;
++		if (server->caps & NFS_CAP_ATOMIC_OPEN_V1)
++			sb->s_export_op = &nfs_export_ops;
++		break;
+ 	}
+ 
+ 	sb->s_magic = NFS_SUPER_MAGIC;
+-- 
+2.37.2
 
