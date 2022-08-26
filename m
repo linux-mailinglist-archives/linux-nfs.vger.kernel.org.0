@@ -2,47 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA2755A29FE
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:49:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14A225A2A30
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:59:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233093AbiHZOtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 10:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
+        id S229917AbiHZO7U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 10:59:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230408AbiHZOtP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:49:15 -0400
-X-Greylist: delayed 432 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 Aug 2022 07:49:14 PDT
-Received: from mail.stoffel.org (li1843-175.members.linode.com [172.104.24.175])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54314D87EB;
-        Fri, 26 Aug 2022 07:49:14 -0700 (PDT)
-Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com [68.116.170.226])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S242617AbiHZO7S (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:59:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7570D99CE
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 07:59:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661525957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4sT6cPObYVYFGAbshMuSoJcQWCc0YuGMsMFW5ouDLCM=;
+        b=H3HdVnHMUKVZPS9q9SVWe6D4ITne47ncdeyHKIxTGxbVtF/Fw2NnGRAAy3iZQV0XT1QDyN
+        Md5mCYR6/19HO0x7HNngBJSfRANAWiHpTTuU2E+6jUfhsKqr2epJA50tjshKVsITqIVYrk
+        zkKcekuQHuUpXmnV0cd1TGtPyDHFgwM=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-589-XY6yH73iNfGfB8IMedfifA-1; Fri, 26 Aug 2022 10:59:13 -0400
+X-MC-Unique: XY6yH73iNfGfB8IMedfifA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.stoffel.org (Postfix) with ESMTPSA id 0BD202189D;
-        Fri, 26 Aug 2022 10:42:01 -0400 (EDT)
-Received: by quad.stoffel.org (Postfix, from userid 1000)
-        id 4B1F7A7E15; Fri, 26 Aug 2022 10:42:00 -0400 (EDT)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 869EB3C11720;
+        Fri, 26 Aug 2022 14:59:12 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CA23BC15BB3;
+        Fri, 26 Aug 2022 14:59:11 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     neilb@suse.de, anna@kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 0/2] NFS: limit use of ACCESS cache for negative responses
+Date:   Fri, 26 Aug 2022 10:59:09 -0400
+Message-ID: <D788BD7B-029F-4A4C-A377-81B117BD4CD2@redhat.com>
+In-Reply-To: <d6c351439c71d95f761c89533919850c91975639.camel@hammerspace.com>
+References: <165110909570.7595.8578730126480600782.stgit@noble.brown>
+ <165274590805.17247.12823419181284113076@noble.neil.brown.name>
+ <72f091ceaaf15069834eb200c04f0630eca7eaef.camel@hammerspace.com>
+ <165274805538.17247.18045261877097040122@noble.neil.brown.name>
+ <acdd578d2bb4551e45570c506d0948647d964f66.camel@hammerspace.com>
+ <165274950799.17247.7605561502483278140@noble.neil.brown.name>
+ <3ec50603479c7ee60cfa269aa06ae151e3ebc447.camel@hammerspace.com>
+ <165275056203.17247.1826100963816464474@noble.neil.brown.name>
+ <d6c351439c71d95f761c89533919850c91975639.camel@hammerspace.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Message-ID: <25352.56248.283092.213037@quad.stoffel.home>
-Date:   Fri, 26 Aug 2022 10:42:00 -0400
-From:   "John Stoffel" <john@stoffel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daire Byrne <daire@dneg.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH/RFC 00/10 v5] Improve scalability of directory operations
-In-Reply-To: <166147828344.25420.13834885828450967910.stgit@noble.brown>
-References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
-X-Mailer: VM 8.2.0b under 27.1 (x86_64-pc-linux-gnu)
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,65 +65,15 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
->>>>> "NeilBrown" == NeilBrown  <neilb@suse.de> writes:
+On 16 May 2022, at 21:36, Trond Myklebust wrote:
+> So until you have a different solution that doesn't impact the client's
+> ability to cache permissions, then the answer is going to be "no" to
+> these patches.
 
-NeilBrown> [I made up "v5" - I haven't been counting]
+Hi Trond,
 
-My first comments, but I'm not a serious developer...
+We have some folks negatively impacted by this issue as well.  Are you
+willing to consider this via a mount option?
 
-NeilBrown> VFS currently holds an exclusive lock on the directory while making
-NeilBrown> changes: add, remove, rename.
-NeilBrown> When multiple threads make changes in the one directory, the contention
-NeilBrown> can be noticeable.
-NeilBrown> In the case of NFS with a high latency link, this can easily be
-NeilBrown> demonstrated.  NFS doesn't really need VFS locking as the server ensures
-NeilBrown> correctness.
-
-NeilBrown> Lustre uses a single(?) directory for object storage, and has patches
-NeilBrown> for ext4 to support concurrent updates (Lustre accesses ext4 directly,
-NeilBrown> not via the VFS).
-
-NeilBrown> XFS (it is claimed) doesn't its own locking and doesn't need the VFS to
-NeilBrown> help at all.
-
-This sentence makes no sense to me... I assume you meant to say "...does
-it's own locking..."
-
-NeilBrown> This patch series allows filesystems to request a shared lock on
-NeilBrown> directories and provides serialisation on just the affected name, not the
-NeilBrown> whole directory.  It changes both the VFS and NFSD to use shared locks
-NeilBrown> when appropriate, and changes NFS to request shared locks.
-
-Are there any performance results?  Why wouldn't we just do a shared
-locked across all VFS based filesystems?  
-
-NeilBrown> The central enabling feature is a new dentry flag DCACHE_PAR_UPDATE
-NeilBrown> which acts as a bit-lock.  The ->d_lock spinlock is taken to set/clear
-NeilBrown> it, and wait_var_event() is used for waiting.  This flag is set on all
-NeilBrown> dentries that are part of a directory update, not just when a shared
-NeilBrown> lock is taken.
-
-NeilBrown> When a shared lock is taken we must use alloc_dentry_parallel() which
-NeilBrown> needs a wq which must remain until the update is completed.  To make use
-NeilBrown> of concurrent create, kern_path_create() would need to be passed a wq.
-NeilBrown> Rather than the churn required for that, we use exclusive locking when
-NeilBrown> no wq is provided.
-
-Is this a per-operation wq or a per-directory wq?  Can there be issues
-if someone does something silly like having 1,000 directories, all of
-which have multiple processes making parallel changes?  
-
-Does it degrade gracefully if a wq can't be allocated?  
-
-NeilBrown> One interesting consequence of this is that silly-rename becomes a
-NeilBrown> little more complex.  As the directory may not be exclusively locked,
-NeilBrown> the new silly-name needs to be locked (DCACHE_PAR_UPDATE) as well.
-NeilBrown> A new LOOKUP_SILLY_RENAME is added which helps implement this using
-NeilBrown> common code.
-
-NeilBrown> While testing I found some odd behaviour that was caused by
-NeilBrown> d_revalidate() racing with rename().  To resolve this I used
-NeilBrown> DCACHE_PAR_UPDATE to ensure they cannot race any more.
-
-NeilBrown> Testing, review, or other comments would be most welcome,
+Ben
 
