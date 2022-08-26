@@ -2,54 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C5A9D5A1EA0
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 04:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D4E85A1EAC
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 04:18:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244036AbiHZCRW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 25 Aug 2022 22:17:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36070 "EHLO
+        id S244751AbiHZCSQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 25 Aug 2022 22:18:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244739AbiHZCRS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Aug 2022 22:17:18 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAB9CB5D9;
-        Thu, 25 Aug 2022 19:17:11 -0700 (PDT)
+        with ESMTP id S244753AbiHZCSI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 25 Aug 2022 22:18:08 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2541BCC311;
+        Thu, 25 Aug 2022 19:18:06 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 60F5A20781;
-        Fri, 26 Aug 2022 02:17:10 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BBAD337C4A;
+        Fri, 26 Aug 2022 02:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1661480230; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1661480284; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IAy5RIlK+BKXr3TtbnQGrDhGvJvfQnV3J6gfvsVI2SI=;
-        b=Y6yj7S4oNnQdmlZED4Sv2odlp45fzx1VpVUavURqmBrMe1lS8cFAWL7Vr+fDDacDg86PBP
-        xlvopoqEdpGN90wF/FxrX0wXM+JlFXMjdgunwCGmCPt3lUXRcZ1z+75W46z72RDtladjCl
-        Xmgy1l2RHbiBbHMnt2HUgbQqm5i7H48=
+        bh=ohYWj3ZdjfHRt86tXw/kKwWt3bxrD9pOKcmPMT9kEcY=;
+        b=z81KLXkWXjeVBfHywZ5OItrPtCTOdh0H2vDMGa059trs3yytcOa7MZ4qF/0FEck6ub4U4L
+        21VmstNx2VMVeUbj543idTCoQiYfqzflz6CyG0D0qu9Yh7nK3kEG+yVeh0PxGSlsZmPyBo
+        a+yAhYf+iu04SXCN3I/Cy+2/XgjrY4s=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1661480230;
+        s=susede2_ed25519; t=1661480284;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=IAy5RIlK+BKXr3TtbnQGrDhGvJvfQnV3J6gfvsVI2SI=;
-        b=Ua0xxjneF59o45AsOnrN7VuFr9bOCgaBvcGGtWeZBzHmtOxoOIbXZjZ66XIWEE++e7f+I0
-        QZ6LBjQNCDAYrTAg==
+        bh=ohYWj3ZdjfHRt86tXw/kKwWt3bxrD9pOKcmPMT9kEcY=;
+        b=RBnzKXXcnp+eFTWlUXfN8d1xPIgGW+K+Z/PABCEIwyqKgEGHhZ3Evi+vmE/4Fb8jasls96
+        r/8hFVU5rUZmi6DQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4057313A65;
-        Fri, 26 Aug 2022 02:16:58 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2627213A65;
+        Fri, 26 Aug 2022 02:17:43 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id J8SJOhotCGNZMQAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 26 Aug 2022 02:16:58 +0000
-Subject: [PATCH 02/10] VFS: move EEXIST and ENOENT tests into
- lookup_hash_update()
+        id JNYFNEctCGOSMQAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 26 Aug 2022 02:17:43 +0000
+Subject: [PATCH 06/10] VFS: support concurrent renames.
 From:   NeilBrown <neilb@suse.de>
 To:     Al Viro <viro@zeniv.linux.org.uk>,
         Linus Torvalds <torvalds@linux-foundation.org>,
@@ -59,7 +58,7 @@ To:     Al Viro <viro@zeniv.linux.org.uk>,
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 Date:   Fri, 26 Aug 2022 12:10:43 +1000
-Message-ID: <166147984373.25420.5973159222199992210.stgit@noble.brown>
+Message-ID: <166147984375.25420.13018600986239729815.stgit@noble.brown>
 In-Reply-To: <166147828344.25420.13834885828450967910.stgit@noble.brown>
 References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
 User-Agent: StGit/1.5
@@ -76,139 +75,343 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Moving common error handling into lookup_hash_update() simplifies
-callers.
-A future patch will export this functionality to nfsd, and the more code
-we put in the interface, the less code will be needed in nfsd.
+Allow object can now be renamed from or to a directory in which a create
+or unlink is concurrently happening.
 
-EEXIST is returned if LOOKUP_EXCL is set and dentry is positivie.
-ENOENT is returned if LOOKUP_CREAT is NOT set and dentry is negative.
+Two or more renames with the one directory can also be concurrent.
+s_vfs_rename_mutex still serialises lookups for cross-directory renames,
+but the renames themselves can proceed concurrently.
 
-This involves seting LOOKUP_EXCL in cases where it wasn't before.
-In particular, when creating a non-dir named "foo/", we want the
-EEXIST error, but don't want to actually create anything.
-Some filesystems assume LOOKUP_EXCL implies LOOKUP_CREATE, so ensure it
-does when calling ->lookup().
+A core part of this change is introducing lock_rename_lookup()
+which both locks the directories and performs the lookups.
+If the filesystem supports shared-lock updates and a wq is provided,
+shared locks are used on directories, otherwise exclusive locks.
+DCACHE_PAR_UPDATE is always set on the found dentries.
+
+unlock_rename_lookup() performs appropriate unlocking.  It needs to be
+told if a wq was provided to lock_rename_lookup().
+
+As we may use alloc_dentry_parallel() which can block, we need to be
+careful of the case where both names are the same, in the same
+directory.  If the first ->lookup() chooses not to complete the lookup -
+as may happen with LOOKUP_RENAME_TARGET - then the second will block.
+LOOKUP_RENAME_TARGET is only expected on the first name listed, so we
+make sure to lookup the second name given first.
 
 Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/namei.c |   58 ++++++++++++++++++++++++++++++++++------------------------
- 1 file changed, 34 insertions(+), 24 deletions(-)
+ fs/namei.c            |  221 ++++++++++++++++++++++++++++++++++++++++++++-----
+ include/linux/namei.h |   10 ++
+ 2 files changed, 208 insertions(+), 23 deletions(-)
 
 diff --git a/fs/namei.c b/fs/namei.c
-index c008dfd01e30..09c2d007814a 100644
+index 13f8ac9721be..a7c458cc787c 100644
 --- a/fs/namei.c
 +++ b/fs/namei.c
-@@ -1562,7 +1562,13 @@ static struct dentry *lookup_dcache(const struct qstr *name,
- {
- 	struct dentry *dentry = d_lookup(dir, name);
- 	if (dentry) {
--		int error = d_revalidate(dentry, flags);
-+		int error;
-+		/* Some filesystems assume EXCL -> CREATE, so make
-+		 * sure it does.
+@@ -3156,6 +3156,187 @@ void unlock_rename(struct dentry *p1, struct dentry *p2)
+ }
+ EXPORT_SYMBOL(unlock_rename);
+ 
++static struct dentry *lock_rename_lookup(struct dentry *p1, struct dentry *p2,
++					 struct dentry **d1p, struct dentry **d2p,
++					 struct qstr *last1, struct qstr *last2,
++					 unsigned int flags1, unsigned int flags2,
++					 wait_queue_head_t *wq)
++{
++	struct dentry *p;
++	struct dentry *d1, *d2;
++	bool ok1, ok2;
++	bool shared = wq && IS_PAR_UPDATE(p1->d_inode);
++
++	if (p1 == p2) {
++		if (shared)
++			inode_lock_shared_nested(p1->d_inode, I_MUTEX_PARENT);
++		else
++			inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++	retry:
++		/* last1 is expected to be target so and might be looked up
++		 * lazily.  So look up last2 first to avoid the second look up
++		 * waiting for the first.
 +		 */
-+		if (!(flags & LOOKUP_CREATE))
-+			flags &= ~LOOKUP_EXCL;
-+		error = d_revalidate(dentry, flags);
- 		if (unlikely(error <= 0)) {
- 			if (!error)
- 				d_invalidate(dentry);
-@@ -1621,6 +1627,8 @@ static struct dentry *__lookup_hash(const struct qstr *name,
-  * or shared lock depending on the fs preference, then do a lookup,
-  * and then set the DCACHE_PAR_UPDATE bit on the child if a shared lock
-  * was taken on the parent.
-+ * If LOOKUP_EXCL, name should not already exist, else -EEXIST
-+ * If not LOOKUP_CREATE, name should already exist, else -ENOENT
-  */
- static struct dentry *lookup_hash_update(
- 	const struct qstr *name,
-@@ -1651,6 +1659,24 @@ static struct dentry *lookup_hash_update(
- 		dput(dentry);
- 		goto retry;
- 	}
-+	if (flags & LOOKUP_EXCL) {
-+		if (d_is_positive(dentry)) {
-+			d_lookup_done(dentry);
-+			d_unlock_update(dentry);
-+			dput(dentry);
-+			err = -EEXIST;
-+			goto out_err;
++		d2 = __lookup_hash(last2, p2, flags2, wq);
++		if (IS_ERR(d2))
++			goto out_unlock_2;
++		d1 = __lookup_hash(last1, p1, flags1, wq);
++		if (IS_ERR(d1))
++			goto out_unlock_1;
++		*d1p = d1; *d2p = d2;
++
++		if (d1 < d2) {
++			ok1 = d_lock_update_nested(d1, p1, last1,
++						   I_MUTEX_PARENT);
++			ok2 = d_lock_update_nested(d2, p2, last2,
++						   I_MUTEX_PARENT2);
++		} else if (d1 > d2) {
++			ok2 = d_lock_update_nested(d2, p2, last2,
++						   I_MUTEX_PARENT);
++			ok1 = d_lock_update_nested(d1, p1, last1,
++						   I_MUTEX_PARENT2);
++		} else {
++			/* d1 == d2 !! */
++			ok1 = d_lock_update_nested(d1, p1, last1,
++						   I_MUTEX_PARENT);
++			ok2 = ok1;
++		}
++		if (!ok1 || !ok2) {
++			if (ok1)
++				d_unlock_update(d1);
++			if (ok2)
++				d_unlock_update(d2);
++			dput(d1);
++			dput(d2);
++			goto retry;
++		}
++		return NULL;
++	out_unlock_1:
++		d_lookup_done(d2);
++		dput(d2);
++		d2 = d1;
++	out_unlock_2:
++		if (shared)
++			inode_unlock_shared(p1->d_inode);
++		else
++			inode_unlock(p1->d_inode);
++		return d1;
++	}
++
++	mutex_lock(&p1->d_sb->s_vfs_rename_mutex);
++
++	if ((p = d_ancestor(p2, p1)) != NULL) {
++		if (shared) {
++			inode_lock_shared_nested(p2->d_inode, I_MUTEX_PARENT);
++			inode_lock_shared_nested(p1->d_inode, I_MUTEX_CHILD);
++		} else {
++			inode_lock_nested(p2->d_inode, I_MUTEX_PARENT);
++			inode_lock_nested(p1->d_inode, I_MUTEX_CHILD);
++		}
++	} else if ((p = d_ancestor(p1, p2)) != NULL) {
++		if (shared) {
++			inode_lock_shared_nested(p1->d_inode, I_MUTEX_PARENT);
++			inode_lock_shared_nested(p2->d_inode, I_MUTEX_CHILD);
++		} else {
++			inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++			inode_lock_nested(p2->d_inode, I_MUTEX_CHILD);
++		}
++	} else {
++		if (shared) {
++			inode_lock_shared_nested(p1->d_inode, I_MUTEX_PARENT);
++			inode_lock_shared_nested(p2->d_inode, I_MUTEX_PARENT2);
++		} else {
++			inode_lock_nested(p1->d_inode, I_MUTEX_PARENT);
++			inode_lock_nested(p2->d_inode, I_MUTEX_PARENT2);
 +		}
 +	}
-+	if (!(flags & LOOKUP_CREATE)) {
-+		if (!dentry->d_inode) {
-+			d_lookup_done(dentry);
-+			d_unlock_update(dentry);
-+			dput(dentry);
-+			err = -ENOENT;
-+			goto out_err;
-+		}
++retry2:
++	d1 = __lookup_hash(last1, p1, flags1, wq);
++	if (IS_ERR(d1))
++		goto unlock_out_3;
++	d2 = __lookup_hash(last2, p2, flags2, wq);
++	if (IS_ERR(d2))
++		goto unlock_out_4;
++
++	if (d1 < d2) {
++		ok1 = d_lock_update_nested(d1, p1, last1, I_MUTEX_PARENT);
++		ok2 = d_lock_update_nested(d2, p2, last2, I_MUTEX_PARENT2);
++	} else {
++		ok2 = d_lock_update_nested(d2, p2, last2, I_MUTEX_PARENT);
++		ok1 = d_lock_update_nested(d1, p1, last1, I_MUTEX_PARENT2);
 +	}
- 	return dentry;
++	if (!ok1 || !ok2) {
++		if (ok1)
++			d_unlock_update(d1);
++		if (ok2)
++			d_unlock_update(d2);
++		dput(d1);
++		dput(d2);
++		goto retry2;
++	}
++	*d1p = d1;
++	*d2p = d2;
++	return p;
++unlock_out_4:
++	d_lookup_done(d1);
++	dput(d1);
++	d1 = d2;
++unlock_out_3:
++	if (shared) {
++		inode_unlock_shared(p1->d_inode);
++		inode_unlock_shared(p2->d_inode);
++	} else {
++		inode_unlock(p1->d_inode);
++		inode_unlock(p2->d_inode);
++	}
++	mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
++	return d1;
++}
++
++struct dentry *lock_rename_lookup_one(struct dentry *p1, struct dentry *p2,
++				      struct dentry **d1p, struct dentry **d2p,
++				      const char *name1, int nlen1,
++				      const char *name2, int nlen2,
++				      unsigned int flags1, unsigned int flags2,
++				      wait_queue_head_t *wq)
++{
++	struct qstr this1, this2;
++	int err;
++
++	err = lookup_one_common(&init_user_ns, name1, p1, nlen1, &this1);
++	if (err)
++		return ERR_PTR(err);
++	err = lookup_one_common(&init_user_ns, name2, p2, nlen2, &this2);
++	if (err)
++		return ERR_PTR(err);
++	return lock_rename_lookup(p1, p2, d1p, d2p, &this1, &this2,
++				  flags1, flags2, wq);
++}
++EXPORT_SYMBOL(lock_rename_lookup_one);
++
++void unlock_rename_lookup(struct dentry *p1, struct dentry *p2,
++			  struct dentry *d1, struct dentry *d2,
++			  bool with_wq)
++{
++	bool shared = with_wq && IS_PAR_UPDATE(p1->d_inode);
++	d_lookup_done(d1);
++	d_lookup_done(d2);
++	d_unlock_update(d1);
++	if (d2 != d1)
++		d_unlock_update(d2);
++	if (shared) {
++		inode_unlock_shared(p1->d_inode);
++		if (p1 != p2) {
++			inode_unlock_shared(p2->d_inode);
++			mutex_unlock(&p1->d_sb->s_vfs_rename_mutex);
++		}
++	} else
++		unlock_rename(p1, p2);
++	dput(d1);
++	dput(d2);
++}
++EXPORT_SYMBOL(unlock_rename_lookup);
++
+ /**
+  * mode_strip_umask - handle vfs umask stripping
+  * @dir:	parent directory of the new inode
+@@ -4945,6 +5126,7 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
+ 	unsigned int lookup_flags = 0, target_flags = LOOKUP_RENAME_TARGET;
+ 	bool should_retry = false;
+ 	int error = -EINVAL;
++	DECLARE_WAIT_QUEUE_HEAD_ONSTACK(wq);
  
- out_err:
-@@ -3868,7 +3894,7 @@ static struct dentry *filename_create_one(struct qstr *last, struct path *path,
- 	struct dentry *dentry;
- 	bool want_dir = lookup_flags & LOOKUP_DIRECTORY;
- 	unsigned int reval_flag = lookup_flags & LOOKUP_REVAL;
--	unsigned int create_flags = LOOKUP_CREATE | LOOKUP_EXCL;
-+	unsigned int create_flag = LOOKUP_CREATE;
- 	int err2;
- 	int error;
+ 	if (flags & ~(RENAME_NOREPLACE | RENAME_EXCHANGE | RENAME_WHITEOUT))
+ 		goto put_names;
+@@ -4985,58 +5167,53 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
+ 		goto exit2;
  
-@@ -3879,26 +3905,16 @@ static struct dentry *filename_create_one(struct qstr *last, struct path *path,
- 	 * '/', and a directory wasn't requested.
- 	 */
- 	if (last->name[last->len] && !want_dir)
--		create_flags = 0;
-+		/* Name was foo/bar/ but not creating a directory, so
-+		 * we won't try to create - result will be either -ENOENT
-+		 * or -EEXIST.
-+		 */
-+		create_flag = 0;
- 	dentry = lookup_hash_update(last, path->dentry,
--				    reval_flag | create_flags,  wq);
-+				    reval_flag | create_flag | LOOKUP_EXCL, wq);
- 	if (IS_ERR(dentry))
- 		goto drop_write;
- 
--	error = -EEXIST;
--	if (d_is_positive(dentry))
--		goto fail;
+ retry_deleg:
+-	trap = lock_rename(new_path.dentry, old_path.dentry);
 -
--	/*
--	 * Special case - lookup gave negative, but... we had foo/bar/
--	 * From the vfs_mknod() POV we just have a negative dentry -
--	 * all is fine. Let's be bastards - you had / on the end, you've
--	 * been asking for (non-existent) directory. -ENOENT for you.
--	 */
--	if (unlikely(!create_flags)) {
--		error = -ENOENT;
--		goto fail;
--	}
- 	if (unlikely(err2)) {
- 		error = err2;
- 		goto fail;
-@@ -4292,10 +4308,6 @@ int do_rmdir(int dfd, struct filename *name)
- 	error = PTR_ERR(dentry);
- 	if (IS_ERR(dentry))
+-	old_dentry = __lookup_hash(&old_last, old_path.dentry,
+-				   lookup_flags, NULL);
+-	error = PTR_ERR(old_dentry);
+-	if (IS_ERR(old_dentry))
++	trap = lock_rename_lookup(new_path.dentry, old_path.dentry,
++				  &new_dentry, &old_dentry,
++				  &new_last, &old_last,
++				  lookup_flags | target_flags, lookup_flags,
++				  &wq);
++	if (IS_ERR(trap))
  		goto exit3;
--	if (!dentry->d_inode) {
--		error = -ENOENT;
--		goto exit4;
--	}
- 	error = security_path_rmdir(&path, dentry);
- 	if (error)
+ 	/* source must exist */
+ 	error = -ENOENT;
+ 	if (d_is_negative(old_dentry))
  		goto exit4;
-@@ -4435,8 +4447,6 @@ int do_unlinkat(int dfd, struct filename *name)
- 		if (last.name[last.len])
- 			goto slashes;
- 		inode = dentry->d_inode;
--		if (d_is_negative(dentry))
--			goto slashes;
- 		ihold(inode);
- 		error = security_path_unlink(&path, dentry);
- 		if (error)
+-	new_dentry = __lookup_hash(&new_last, new_path.dentry,
+-				   lookup_flags | target_flags, NULL);
+-	error = PTR_ERR(new_dentry);
+-	if (IS_ERR(new_dentry))
+-		goto exit4;
+ 	error = -EEXIST;
+ 	if ((flags & RENAME_NOREPLACE) && d_is_positive(new_dentry))
+-		goto exit5;
++		goto exit4;
+ 	if (flags & RENAME_EXCHANGE) {
+ 		error = -ENOENT;
+ 		if (d_is_negative(new_dentry))
+-			goto exit5;
++			goto exit4;
+ 
+ 		if (!d_is_dir(new_dentry)) {
+ 			error = -ENOTDIR;
+ 			if (new_last.name[new_last.len])
+-				goto exit5;
++				goto exit4;
+ 		}
+ 	}
+ 	/* unless the source is a directory trailing slashes give -ENOTDIR */
+ 	if (!d_is_dir(old_dentry)) {
+ 		error = -ENOTDIR;
+ 		if (old_last.name[old_last.len])
+-			goto exit5;
++			goto exit4;
+ 		if (!(flags & RENAME_EXCHANGE) && new_last.name[new_last.len])
+-			goto exit5;
++			goto exit4;
+ 	}
+ 	/* source should not be ancestor of target */
+ 	error = -EINVAL;
+ 	if (old_dentry == trap)
+-		goto exit5;
++		goto exit4;
+ 	/* target should not be an ancestor of source */
+ 	if (!(flags & RENAME_EXCHANGE))
+ 		error = -ENOTEMPTY;
+ 	if (new_dentry == trap)
+-		goto exit5;
++		goto exit4;
+ 
+ 	error = security_path_rename(&old_path, old_dentry,
+ 				     &new_path, new_dentry, flags);
+ 	if (error)
+-		goto exit5;
++		goto exit4;
+ 
+ 	rd.old_dir	   = old_path.dentry->d_inode;
+ 	rd.old_dentry	   = old_dentry;
+@@ -5047,12 +5224,10 @@ int do_renameat2(int olddfd, struct filename *from, int newdfd,
+ 	rd.delegated_inode = &delegated_inode;
+ 	rd.flags	   = flags;
+ 	error = vfs_rename(&rd);
+-exit5:
+-	dput(new_dentry);
+ exit4:
+-	dput(old_dentry);
++	unlock_rename_lookup(new_path.dentry, old_path.dentry, new_dentry, old_dentry,
++			     true);
+ exit3:
+-	unlock_rename(new_path.dentry, old_path.dentry);
+ 	if (delegated_inode) {
+ 		error = break_deleg_wait(&delegated_inode);
+ 		if (!error)
+diff --git a/include/linux/namei.h b/include/linux/namei.h
+index b1a210a51210..29756921f69b 100644
+--- a/include/linux/namei.h
++++ b/include/linux/namei.h
+@@ -108,6 +108,16 @@ extern int follow_up(struct path *);
+ 
+ extern struct dentry *lock_rename(struct dentry *, struct dentry *);
+ extern void unlock_rename(struct dentry *, struct dentry *);
++extern struct dentry *lock_rename_lookup_one(
++	struct dentry *p1, struct dentry *p2,
++	struct dentry **d1p, struct dentry **d2p,
++	const char *name1, int nlen1,
++	const char *name2, int nlen2,
++	unsigned int flags1, unsigned int flags2,
++	wait_queue_head_t *wq);
++extern void unlock_rename_lookup(struct dentry *p1, struct dentry *p2,
++				 struct dentry *d1, struct dentry *d2,
++				 bool withwq);
+ 
+ extern int __must_check nd_jump_link(struct path *path);
+ 
 
 
