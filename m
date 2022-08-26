@@ -2,71 +2,75 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12B9A5A32A2
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Aug 2022 01:30:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ABD4F5A32B7
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Aug 2022 01:39:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231131AbiHZXaZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 19:30:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60684 "EHLO
+        id S231629AbiHZXja (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 19:39:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43216 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbiHZXaY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 19:30:24 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72EF614089;
-        Fri, 26 Aug 2022 16:30:23 -0700 (PDT)
+        with ESMTP id S229704AbiHZXj3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 19:39:29 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB4EEE3C25
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 16:39:28 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 5CB3F1F8A3;
-        Fri, 26 Aug 2022 23:30:21 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 87AEA33719;
+        Fri, 26 Aug 2022 23:39:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1661556621; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1661557167; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=unGSz6GeVrKzu8z4US0hp1I7QAv6QVA+9wpL/58ggnY=;
-        b=0V1L2YmY/SO4Hg6/P1+TCnDKpYTJ3zE/ceDi2KTgXj9i8srU6zzib2FxWAHBTIDwIJJyWk
-        pVHsBDZz+FxMVfjNzStMMzL+h8LmllqfagPM6usVeIIK/UR38FTBFql0aOLiS9BaltRrmD
-        h6mxNDs9mXJcwMx5vxU2xFu1W3+WVg4=
+        bh=CTrxAE8eQF9rIJ7gQKGtdjHsa2QTs6QVii3gO3axYQg=;
+        b=c1iNrOQZgYrk81IOU9h3qVr6uB8COnnfHvl0CzljV7aacrGW920jqhCK06aolH4a6e4O33
+        JBwB0PdkavmxoYhxM3swAj6RAjteLqlprPSnEq8dPyKmr5LuIjvZ9i8VUIZ0V1FjJ6LVR/
+        cRyMj/JpIGgHDJiVLbk8bEj8hN5DKC0=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1661556621;
+        s=susede2_ed25519; t=1661557167;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=unGSz6GeVrKzu8z4US0hp1I7QAv6QVA+9wpL/58ggnY=;
-        b=XhFNEspwKY6y966OH86b9J1438bnvK8CLtDVQbBYzTesi9pVDPbR5ETZFt3T0gIqH7gAAg
-        U5+qhPjhcPakiIDA==
+        bh=CTrxAE8eQF9rIJ7gQKGtdjHsa2QTs6QVii3gO3axYQg=;
+        b=UIRhjLiwf5/sohPHbdjwXb/DKR5XKLRUCpG1BYqZLEppXda0sNaGpWLujZwfSM/vE3ixYY
+        0kAzJuOYVo4vVFAQ==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8332C13421;
-        Fri, 26 Aug 2022 23:30:18 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2695C13421;
+        Fri, 26 Aug 2022 23:39:25 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id cLUvD4pXCWMtdwAAMHmgww
-        (envelope-from <neilb@suse.de>); Fri, 26 Aug 2022 23:30:18 +0000
+        id 0TyqNK1ZCWOXeQAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 26 Aug 2022 23:39:25 +0000
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "John Stoffel" <john@stoffel.org>
-Cc:     "Al Viro" <viro@zeniv.linux.org.uk>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "Daire Byrne" <daire@dneg.com>,
-        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        "Chuck Lever" <chuck.lever@oracle.com>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org,
-        "LKML" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH/RFC 00/10 v5] Improve scalability of directory operations
-In-reply-to: <25352.56248.283092.213037@quad.stoffel.home>
-References: <166147828344.25420.13834885828450967910.stgit@noble.brown>,
- <25352.56248.283092.213037@quad.stoffel.home>
-Date:   Sat, 27 Aug 2022 09:30:13 +1000
-Message-id: <166155661379.27490.6823575125331418990@noble.neil.brown.name>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "bcodding@redhat.com" <bcodding@redhat.com>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH 0/2] NFS: limit use of ACCESS cache for negative responses
+In-reply-to: <a56ca216aef75f419d8a13dd6c7719ef15bbcaab.camel@hammerspace.com>
+References: <165110909570.7595.8578730126480600782.stgit@noble.brown>,
+ <165274590805.17247.12823419181284113076@noble.neil.brown.name>,
+ <72f091ceaaf15069834eb200c04f0630eca7eaef.camel@hammerspace.com>,
+ <165274805538.17247.18045261877097040122@noble.neil.brown.name>,
+ <acdd578d2bb4551e45570c506d0948647d964f66.camel@hammerspace.com>,
+ <165274950799.17247.7605561502483278140@noble.neil.brown.name>,
+ <3ec50603479c7ee60cfa269aa06ae151e3ebc447.camel@hammerspace.com>,
+ <165275056203.17247.1826100963816464474@noble.neil.brown.name>,
+ <d6c351439c71d95f761c89533919850c91975639.camel@hammerspace.com>,
+ <D788BD7B-029F-4A4C-A377-81B117BD4CD2@redhat.com>,
+ <a56ca216aef75f419d8a13dd6c7719ef15bbcaab.camel@hammerspace.com>
+Date:   Sat, 27 Aug 2022 09:39:21 +1000
+Message-id: <166155716162.27490.17801636432417958045@noble.neil.brown.name>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
@@ -76,130 +80,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 27 Aug 2022, John Stoffel wrote:
-> >>>>> "NeilBrown" =3D=3D NeilBrown  <neilb@suse.de> writes:
->=20
-> NeilBrown> [I made up "v5" - I haven't been counting]
->=20
-> My first comments, but I'm not a serious developer...
->=20
-> NeilBrown> VFS currently holds an exclusive lock on the directory while mak=
-ing
-> NeilBrown> changes: add, remove, rename.
-> NeilBrown> When multiple threads make changes in the one directory, the con=
-tention
-> NeilBrown> can be noticeable.
-> NeilBrown> In the case of NFS with a high latency link, this can easily be
-> NeilBrown> demonstrated.  NFS doesn't really need VFS locking as the server=
- ensures
-> NeilBrown> correctness.
->=20
-> NeilBrown> Lustre uses a single(?) directory for object storage, and has pa=
-tches
-> NeilBrown> for ext4 to support concurrent updates (Lustre accesses ext4 dir=
-ectly,
-> NeilBrown> not via the VFS).
->=20
-> NeilBrown> XFS (it is claimed) doesn't its own locking and doesn't need the=
- VFS to
-> NeilBrown> help at all.
->=20
-> This sentence makes no sense to me... I assume you meant to say "...does
-> it's own locking..."
-
-Thanks - you are correct.  "does its own locking".
-
->=20
-> NeilBrown> This patch series allows filesystems to request a shared lock on
-> NeilBrown> directories and provides serialisation on just the affected name=
-, not the
-> NeilBrown> whole directory.  It changes both the VFS and NFSD to use shared=
- locks
-> NeilBrown> when appropriate, and changes NFS to request shared locks.
->=20
-> Are there any performance results?  Why wouldn't we just do a shared
-> locked across all VFS based filesystems? =20
-
-Daire Byrne has done some tests with NFS clients to an NFS server which
-re-exports mounts from another server - so there are a couple of levels
-of locking that can be removed.  At lease one of these levels has
-significant network latency (100ms or so I think) The results are much
-what you would expect.  Many more file creations per second are
-possible.  15 creates-per-second up to 121 crates-per-second in one
-test.
-https://lore.kernel.org/linux-nfs/CAPt2mGNjWXad6e7nSUTu=3D0ez1qU1wBNegrntgHKm=
-5hOeBs5gQA@mail.gmail.com/
-
-
->=20
-> NeilBrown> The central enabling feature is a new dentry flag DCACHE_PAR_UPD=
-ATE
-> NeilBrown> which acts as a bit-lock.  The ->d_lock spinlock is taken to set=
-/clear
-> NeilBrown> it, and wait_var_event() is used for waiting.  This flag is set =
-on all
-> NeilBrown> dentries that are part of a directory update, not just when a sh=
-ared
-> NeilBrown> lock is taken.
->=20
-> NeilBrown> When a shared lock is taken we must use alloc_dentry_parallel() =
-which
-> NeilBrown> needs a wq which must remain until the update is completed.  To =
-make use
-> NeilBrown> of concurrent create, kern_path_create() would need to be passed=
- a wq.
-> NeilBrown> Rather than the churn required for that, we use exclusive lockin=
-g when
-> NeilBrown> no wq is provided.
->=20
-> Is this a per-operation wq or a per-directory wq?  Can there be issues
-> if someone does something silly like having 1,000 directories, all of
-> which have multiple processes making parallel changes? =20
-
-It is per-operation though I expect to change that to be taken from a
-pool for shared work queues.
-
-Workqueues can be shared quite cheaply.  There is spin-lock contention
-when multiple threads add/remove waiters to/from the queues.  Having
-more queues in a pool than cores, and randomly selecting queues from the
-pool can keep that under control.
-
-If there are dozens of waiter of more, then a wakeup might run more
-slowly (and hold the lock for longer), but in this case wakeup should be
-rare. =20
-
-Most filesystem operations are uncontended at the name level. e.g. it is
-rare that two threads will try to create the same name at the same time,
-or one looks up a name that another is unlinking it.  These are the only
-times that wakeups would happen, so sharing a pool among all filesystem
-accesses is unlikely to be a problem.
-
->=20
-> Does it degrade gracefully if a wq can't be allocated? =20
-
-In the current code, the wq is allocated on the stack.  I'm probably
-going to change to a global allocation.  In either case, there is no
-risk of allocation failure during a filesystem operation.
-
-Thanks for the questions,
-NeilBrown
-
-
->=20
-> NeilBrown> One interesting consequence of this is that silly-rename becomes=
- a
-> NeilBrown> little more complex.  As the directory may not be exclusively lo=
-cked,
-> NeilBrown> the new silly-name needs to be locked (DCACHE_PAR_UPDATE) as wel=
-l.
-> NeilBrown> A new LOOKUP_SILLY_RENAME is added which helps implement this us=
-ing
-> NeilBrown> common code.
->=20
-> NeilBrown> While testing I found some odd behaviour that was caused by
-> NeilBrown> d_revalidate() racing with rename().  To resolve this I used
-> NeilBrown> DCACHE_PAR_UPDATE to ensure they cannot race any more.
->=20
-> NeilBrown> Testing, review, or other comments would be most welcome,
->=20
->=20
+T24gU2F0LCAyNyBBdWcgMjAyMiwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOgo+IE9uIEZyaSwgMjAy
+Mi0wOC0yNiBhdCAxMDo1OSAtMDQwMCwgQmVuamFtaW4gQ29kZGluZ3RvbiB3cm90ZToKPiA+IE9u
+IDE2IE1heSAyMDIyLCBhdCAyMTozNiwgVHJvbmQgTXlrbGVidXN0IHdyb3RlOgo+ID4gPiBTbyB1
+bnRpbCB5b3UgaGF2ZSBhIGRpZmZlcmVudCBzb2x1dGlvbiB0aGF0IGRvZXNuJ3QgaW1wYWN0IHRo
+ZQo+ID4gPiBjbGllbnQncwo+ID4gPiBhYmlsaXR5IHRvIGNhY2hlIHBlcm1pc3Npb25zLCB0aGVu
+IHRoZSBhbnN3ZXIgaXMgZ29pbmcgdG8gYmUgIm5vIgo+ID4gPiB0bwo+ID4gPiB0aGVzZSBwYXRj
+aGVzLgo+ID4gCj4gPiBIaSBUcm9uZCwKPiA+IAo+ID4gV2UgaGF2ZSBzb21lIGZvbGtzIG5lZ2F0
+aXZlbHkgaW1wYWN0ZWQgYnkgdGhpcyBpc3N1ZSBhcyB3ZWxsLsKgIEFyZQo+ID4geW91Cj4gPiB3
+aWxsaW5nIHRvIGNvbnNpZGVyIHRoaXMgdmlhIGEgbW91bnQgb3B0aW9uPwo+ID4gCj4gPiBCZW4K
+PiA+IAo+IAo+IEkgZG9uJ3Qgc2VlIGhvdyB0aGF0IGFuc3dlcnMgbXkgY29uY2Vybi4KCkNvdWxk
+IHlvdSBwbGVhc2Ugc3BlbGwgb3V0IGFnYWluIHdoYXQgeW91ciBjb25jZXJucyBhcmU/ICBJIHN0
+aWxsIGRvbid0CnVuZGVyc3RhbmQuIApUaGUgb25seSBwZXJmb3JtYW5jZSBpbXBhY3QgaXMgd2hl
+biBhIHBlcm1pc3Npb24gdGVzdCBmYWlscy4gIEluIHdoYXQKY2lyY3Vtc3RhbmNlIGlzIHBlcm1p
+c3Npb24gZmFpbHVyZSBleHBlY3RlZCBvbiBhIGZhc3QtcGF0aD8KCj4gCj4gSSdkIHJhdGhlciBz
+ZWUgdXMgc2V0IHVwIGFuIGV4cGxpY2l0IHRyaWdnZXIgbWVjaGFuaXNtLiBJdCBkb2Vzbid0IGhh
+dmUKPiB0byBiZSBwYXJ0aWN1bGFybHkgc29waGlzdGljYXRlZC4gSSBjYW4gaW1hZ2luZSBqdXN0
+IGhhdmluZyBhIGdsb2JhbCwKPiBvciBtb3JlIGxpa2VseSBhIHBlci1jb250YWluZXIsIGNvb2tp
+ZSB0aGF0IGhhcyBhIGNvbnRyb2wgbWVjaGFuaXNtIGluCj4gL3N5cy9mcy9uZnMsIGFuZCB0aGF0
+IGNhbiBiZSB1c2VkIHRvIG9yZGVyIGFsbCB0aGUgaW5vZGVzIHRvIGludmFsaWRhdGUKPiB0aGVp
+ciBwZXJtaXNzaW9ucyBjYWNoZXMgd2hlbiB5b3UgYmVsaWV2ZSB0aGVyZSBpcyBhIG5lZWQgdG8g
+ZG8gc28uCgpJIGhvcGUgaXQgd291bGQgb25seSBpbnZhbGlkYXRlIG5lZ2F0aXZlIGNhY2hlZCBw
+ZXJtaXNzaW9ucywgbm90CnBvc2l0aXZlLgpDYWNoZXMgcG9zaXRpdmUgcGVybWlzc2lvbnMgYXJl
+bid0IHJlYWxseSBhIHByb2JsZW0gYXMgd2UnbGwgZmluZCBvdXQKdGhleSB3ZXJlIHdyb25nIGFz
+IHNvb24gYXMgd2Ugc2VuZCB0aGUgcmVsZXZhbnQgcmVxdWVzdCB0byB0aGUgc2VydmVyLgpUaGUg
+cHJvYmxlbSB3aXRoIGNhY2hlZCBuZWdhdGl2ZSBwZXJtaXNzaW9ucyBpcyB0aGF0IHdlIG5ldmVy
+IGV2ZW4gdHJ5CnRvIHNlbmQgYSByZXF1ZXN0IHRvIHRoZSBzZXJ2ZXIuCgpUaGUgY2xpZW50IGRv
+ZXNuJ3QgKmtub3cqIHdoZW4gdGhlIHNlcnZlciBjaGFuZ2VzIGl0J3MgdW5kZXJzdGFuZGluZyBv
+Zgpncm91cCBtZW1iZXJzaGlwLCBzbyBpdCBjYW5ub3Qga25vdyB3aGVuIHRvIHdyaXRlIHRvIHRo
+aXMuICBTbyB0aGUgYmVzdAp0aGUgY2xpZW50IGNhbiBkbyBpcyBpbnZhbGlkYXRlIG5lZ2F0aXZl
+IGNhY2hlZCBwZXJtaXNzaW9ucwpwZXJpb2RpY2FsbHkuICBTbyBpZiB0aGlzIC9zeXMvZnMvbmZz
+LyB0dW5hYmxlIHdlcmUgdG8gYmUgYWRkZWQsIEkgd291bGQKbGlrZSBpdCB0byBiZSBhIHRpbWUg
+aW50ZXJ2YWwgYWZ0ZXIgd2hpY2ggdGhleSBjYW4gZXhwaXJlIChJIHdvdWxkIHNldCBpdAp0byB6
+ZXJvIG9mIGNvdXJzZSkuCgpUaGFua3MsCk5laWxCcm93bgoKPiAKPiBpLmUuIHlvdSBjYWNoZSB0
+aGUgdmFsdWUgb2YgdGhlIGdsb2JhbCBjb29raWUgaW4gdGhlIGlub2RlLCBhbmQgaWYgeW91Cj4g
+bm90aWNlIGEgY2hhbmdlLCB0aGVuIHRoYXQncyB0aGUgc2lnbmFsIHRoYXQgeW91IG5lZWQgdG8g
+aW52YWxpZGF0ZSB0aGUKPiBwZXJtaXNzaW9ucyBjYWNoZSBiZWZvcmUgdXBkYXRpbmcgdGhlIGNh
+Y2hlZCB2YWx1ZSBvZiB0aGUgY29va2llLgo+IAo+IFRoYXQgd2F5LCB5b3UgaGF2ZSBhIG1lY2hh
+bmlzbSB0aGF0IHNlcnZlcyBhbGwgcHVycG9zZXM6IGl0IGNhbiBkbyBhbgo+IGltbWVkaWF0ZSBv
+bmUtdGltZSBvbmx5IGZsdXNoLCBvciB5b3UgY2FuIHNldCB1cCBhIHVzZXJzcGFjZSBqb2IgdGhh
+dAo+IGlzc3VlcyBhIGdsb2JhbCBmbHVzaCBvbmNlIGV2ZXJ5IHNvIG9mdGVuLCBlLmcuIHVzaW5n
+IGEgY3JvbiBqb2IuCj4gCj4gLS0gCj4gVHJvbmQgTXlrbGVidXN0Cj4gTGludXggTkZTIGNsaWVu
+dCBtYWludGFpbmVyLCBIYW1tZXJzcGFjZQo+IHRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5j
+b20KPiAKPiAKPiAK
