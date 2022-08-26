@@ -2,150 +2,199 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC5D55A2915
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CBC15A29B6
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239997AbiHZOJB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 10:09:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46442 "EHLO
+        id S1344520AbiHZOlF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 10:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344389AbiHZOI6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:08:58 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2085.outbound.protection.outlook.com [40.107.223.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E48AFC696D;
-        Fri, 26 Aug 2022 07:08:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=F6SP++Ut3LPS3D1sAQe3Okt8pC3pw/gE+8PK2bk3gQIf+CD+L14xD3DtFvEFR+XJrp0d54HWpReecSenyCgKtHsBzllUPtued+RBIlvXs9T9uu+VbxUh32syg+juVdjfCUI7v8p5CANQpw2MfCf/VyBvakR0RJ6LNiHEAiOLT1siatHWe234BcZ21w/bhmQgPm09H1UNGXvlRwt6RJKYm/8NGTT1roB97G7zus5LtC8XIgK7/uliKAvemZu/JB2usTq4s3n9edfJ1nmVfEXTCQDfYuh0xHy82IzKO1nRX3uix6nzV0H2htOxGo1J5ZuK6GVEmaEGfpbMob4oaaMgcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=q8s61hdiGXypl02H62DPL7ySwxDgTyIgB8oLMzwaFGk=;
- b=Hh/BOTVfPbXJZTgWEg5Y4LmUmjRXxcMRUtHVJ9gLW71+wuphL5GsHVmthqxbjl05h6R4YyvX1CvNvOFaHIy+Z0rH7YhXpouAJ15kuTf1QuSpEieWJ7Y3wvTUtDgKk1+XDTIS251aj++Cwl53txObuTuynptwjvNtWYbgJcUyNCD7N30tArl3cuV3/Tldl06k56HeKZmVVDSIGCEcrh5yYboW/4VgFxmWJfwZTALD7Mb/kQBB6c8uEwCUElj45IR+tW13wQylOtqelyvGNxktFaS8pHvnpqaOD3/RoRIb3ZRS4zKg1wJy0BkpjT4fHuwlFnw9eOmsD6t9IQyCj6Eemg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q8s61hdiGXypl02H62DPL7ySwxDgTyIgB8oLMzwaFGk=;
- b=SSor77sJh3Vewnx7Zp+5TcTUWb/wfVllDokoXsoi8V7o51MJj8vb1FOSYalTGWpbMfW7AXz6FniRTCYUpEGLWPn4e0PMbr8Ae2exFar4I7KVh9wlZsJc1+rE3CbuQJbC9EbM5BXKEUBfjlv9NLDSfT1drI5yCl+X2TK2LiQYhP7jY7JdmBdcZjf2aBszMnYScvbN0DN3ogWGc/KJipaKLsA33DrNL+0cjOvd70UonWqMJ2boFNDMpkD/sq9U9nTlZ/RxEOiXsKe7P4wJ70Ydvor5t5j5LeYz62j7ulBf+auuleLh3y8DDRhUrXt3smaRQPApoatjgMSawIPry0SHWg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com (2603:10b6:208:1d5::15)
- by BL1PR12MB5142.namprd12.prod.outlook.com (2603:10b6:208:312::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Fri, 26 Aug
- 2022 14:08:56 +0000
-Received: from MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::462:7fe:f04f:d0d5]) by MN2PR12MB4192.namprd12.prod.outlook.com
- ([fe80::462:7fe:f04f:d0d5%8]) with mapi id 15.20.5566.016; Fri, 26 Aug 2022
- 14:08:56 +0000
-Date:   Fri, 26 Aug 2022 11:08:55 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH v1] RDMA/core: Fix check_flush_dependency splat on addr_wq
-Message-ID: <YwjT9yz8reC1HDR/@nvidia.com>
-References: <166118222093.3250511.11454048195824271658.stgit@morisot.1015granger.net>
- <YwSLOxyEtV4l2Frc@unreal>
- <584E7212-BC09-48E1-A27E-725E54FA075E@oracle.com>
- <YwXtePKW+sn/89M6@unreal>
- <591D1B3D-B04A-4625-8DD0-CA0C2E986345@oracle.com>
- <YwjKpoVbd1WygWwF@nvidia.com>
- <08F23441-1532-4F40-9C2A-5DBD61B11483@oracle.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <08F23441-1532-4F40-9C2A-5DBD61B11483@oracle.com>
-X-ClientProxiedBy: MN2PR07CA0009.namprd07.prod.outlook.com
- (2603:10b6:208:1a0::19) To MN2PR12MB4192.namprd12.prod.outlook.com
- (2603:10b6:208:1d5::15)
+        with ESMTP id S1344430AbiHZOlA (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:41:00 -0400
+Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B057BB02B1
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 07:40:58 -0700 (PDT)
+Received: by mail-ed1-x535.google.com with SMTP id w10so2387660edc.3
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 07:40:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc;
+        bh=2mcb8k0VXzXqfM2ZttJcq55uhMWz9wotQDWFSKhCh+M=;
+        b=MQd06gUIsCc8mgcyXWvLewZXzrDvOMQOSdpt2jN8HdgfFz2pWsrtmdFaw+r15snKeE
+         x5Ny8l0hA4u2PTcwEyhlJLEu9x2EioBLs2keh2oZ6u89rVHfDuOmVkx/Fk6BX9c5eETo
+         eBCfndtS+DzOAHClzchPfNRXEog76zehiCF3GxLvJmVI+9KEzkLkmTq4snJ6gkeai6Ee
+         isqgQFxk2YmbcmmdVGV52MMj9PpegcM21J5k5Yp6nyNLTBRyOFBJmJsVDze+e/UjewCL
+         fBfIKM95z3wF4eaOMoAJPZVb7I7nHyLjJ3eOcKmuFD4vzAFK/TIAzyZrUTRtdlqmeuJW
+         8cuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc;
+        bh=2mcb8k0VXzXqfM2ZttJcq55uhMWz9wotQDWFSKhCh+M=;
+        b=hVm8jJjV7+RUIgU+gWGX8kdTBrwPScnkDrRBJz4v0WRAvdajWsqTgK8HSquhNKKRmz
+         UQBGOtZfCM+oRavdi4hb8HPXPO6rRRvKhZv9s1SF8JjyCS8QKoW29TVZBZwYPPSvw/9N
+         mUkH0Tif4CwkdmnvaB0cKd1AoNkAA3eP01YQt6ILZQmjV+4i3pdb/ySyqm++bm4u+Fyb
+         vZkqfDx8PEhyQvi9e76UAeA1C5sZGNv0Ym4hcOXRWsXNqO+lY3kwdW8mPV7gEsevYrII
+         e0Qo3G5cAfB04KEKIVJnqOvYYuRhfBHnFyZuQCACVmCE1/sV3GGEAUX9mefkUsSTMnck
+         Q7PA==
+X-Gm-Message-State: ACgBeo0zxCrE/I64fRizlXIYNhkILgND93wSyzcsk+jUVcFTpxJ0HGQ1
+        7TQJ1sNxfF6gAr45Lwinz8G+MY+pPVhvqTtPr6qIMceM3Is=
+X-Google-Smtp-Source: AA6agR4a8ZMafqpcOcRDeKQHujps+0TFWAxkYLLeqo1t3BBAzDeWG77093jlKFWydsDNFBB6yxAteF7pcQ3QNXNgT+U=
+X-Received: by 2002:a05:6402:2d6:b0:447:ae9d:d0f1 with SMTP id
+ b22-20020a05640202d600b00447ae9dd0f1mr6690104edx.256.1661524856857; Fri, 26
+ Aug 2022 07:40:56 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7d4a49d5-b6fd-4c73-b2dd-08da876c83d1
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5142:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6c523ZfQP72d9DETuoPd2NbcbRYRQlPa6C8iHVO6tXbrYUeWaiNm8BdNaDP+vvOVkZ298m7wLPJuAi3UWflHWb8taK4j21jmOQXvw+Ejerzr96Ivap8JoVmaZn7Dm6wN2KLDKjZS4jdlAGxtI4zgK1bz004t4UtqghMBrF5hJNiPU2ebTN+hsDGRlqMx97YdUnO/6NOVl3M0vTW6cGyrahNRnVZJ2WTeiyn6nwJbiov/QLHNVz0gZpmnUKjzP7PhU0mP4r0p6SS5fMv22n5/frHPZv4QkG02MrMqF/ZMhmaLIFDw31GmSUcF2jo56qx6LH0cYllcD43qhBpT93b9RqH4ZRje/8t5zT5HsovGv64Ulw3eoZca5AkqI+iY6jC49B4X69+V+bPTQeRXCA3z8GtNH+Am7Mi6PLd32OlAVGVr3plyUSCPqBAxpXnjV9Qfo5u4jn1PvZ0H2AZBoRWXbat75U6QI2FOEWKH9rODRyWRpbdkyj5k6mZwcJqWwTpQW29VFJP7A3umEwjbaBasJGXKzksiE5ICoVcLibAgK00qvOvmjOmMURMhVNufNDXbzz4Ca4qRsmunIifViSBaSNExOvyx+A90b1Y0wXnzq/yNpumZBijDVHOwFljcFPIYkhKtV6JXRN6TJQFMwTHQeEvDJx+9KW9u7AKf+IPP7YoRwOiQVApvJIE9SO64oi/Hp67nD7aU8UrNtIs+VLZk3Q==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB4192.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(346002)(376002)(136003)(366004)(396003)(83380400001)(2616005)(5660300002)(66476007)(8676002)(66556008)(66946007)(4326008)(6512007)(6506007)(26005)(2906002)(36756003)(8936002)(478600001)(186003)(6486002)(41300700001)(86362001)(6916009)(54906003)(38100700002)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?keebmw9qgHiL8+2i7/nYxn+lycnNEYmK/qJRXe6CxDR7XLbHUaXgBNXDFITj?=
- =?us-ascii?Q?ZvoqKlkSxQ+zs7FSh34EglSwN8Bkxt3RY601AM0uyYtuH92uZ/ylnU/RewV4?=
- =?us-ascii?Q?I1+fPjBadsMg9ysQFwU26gw4DfUK5wa6eWJgeMkNikSSeFSmOSCwVxmHg347?=
- =?us-ascii?Q?QHgCQrAO8NtBW1uBtgRj+XRhIWUPiCBWmaXu43ksMNFeXWYroDjR1IO9bhBm?=
- =?us-ascii?Q?EL4kBcF5Q2HT7kUcBFjjYNh5Tadhy7Qy76X3oTN0xxWbFGHY33Qpd/zGn/Kn?=
- =?us-ascii?Q?QF+KAanOsOsN1We464IzWqsmSCKNbdGeKoShIHpdzzu2i9Zynww5wI4SnQsk?=
- =?us-ascii?Q?bqSPRdzMQ5Xisf1U5cFhhwFHe9WUK7qpRuYaXR9zJ1kB90YtdQygVT4tjacY?=
- =?us-ascii?Q?7GIGHP0kpA/2PrRlstMbvXnTAWntVqVpvXS0VJsYAVGSu+quSRE4uOkP7r4a?=
- =?us-ascii?Q?CDuNK75vB6Qxq4tIGeoyxKIe45qttQqyd2eR2sRp2iEDRpLIU4qfo752L+p6?=
- =?us-ascii?Q?+CVwnucVLmzhRHcIVGe+xYU0VcuOYsw5thuoEovOP1NjhLzdFvl9fnbTDk9j?=
- =?us-ascii?Q?5du0eHLDbQYT8oJ7Ww1oW/aoIiJUTQHrMRslpQykE43RmHLp6TZoSUv4rL0i?=
- =?us-ascii?Q?Ug+I2kiuZX65aIxLocpitaK9sUFzvatxuvlwE6vtCAq7MCRdgoceNw26yzW6?=
- =?us-ascii?Q?a9m8OompGamugmeXQNwyW269ivyC9qPw7W7aXb/g+QN2vhGN+h6n/6PjNqLZ?=
- =?us-ascii?Q?zeJ071swPtzAgk9G7TUQNBFLi44bCkoiNgi3hAmnV7xczN5+FjapvLn/O8EB?=
- =?us-ascii?Q?kVDfPlT1PfzxLyP5dygYHkOPRREiHOK33n1J15RhTds/81/51BalURV/Mwal?=
- =?us-ascii?Q?kakI/Lf8se1gXInPffZ1M1U0sT4Cwv15DauISLuKizYPiTFTRd75zVSI7YRy?=
- =?us-ascii?Q?qZv0mkkaGTi7W08/Xf5/aU5El5yJXZVmtXONTOwSwFJUPBqtqoeIVVe/busp?=
- =?us-ascii?Q?TG98eiZvwdXXVkBHT+CGLjDbuO2bcgGyjACVe29ejQdnceC4KeBKmrT7DIEV?=
- =?us-ascii?Q?xJpG3Kroc/zB6LwdnWRnnE1Ob8xBTYvfmzA8SmaEFJvN8w6USisU+DVlOzdV?=
- =?us-ascii?Q?Do1Yt8GmU/0+VKTuXk9rhC9oCHX8xNmYnLbBSGU8g6sJ8karf0FlEwVnauu1?=
- =?us-ascii?Q?kWw7+jbR1vLFPAXx+eUKvsY2wWj0e3JuLGjDXsIAL/ro3Mg6m/TLOXDGkSn8?=
- =?us-ascii?Q?1uMww6wi69O6gVhmW5uPpoe4B93amY+7mQ1/8OohuOA7RSCzEafkzUHiDfZ3?=
- =?us-ascii?Q?Q3CM/XAf5sIxzXjXjT7rdZxaQJF3tJPk3g5jizFGxozGhSbSfdMCLZ48nbgt?=
- =?us-ascii?Q?HA7Wwo4NEUc9dcBiGxe++c/I+zf/vcyXEqTS0XxGoCF50qecJW4io0Yy5R+r?=
- =?us-ascii?Q?nkXomSsjedvxodUpmjOq4l7daM16oVgSUVD8aJhhPw+EUj+t18l/JZH6YYHW?=
- =?us-ascii?Q?N6Y6Pc1uFmtll8l1cmKfz4bm2AR48FQX4pgGdkm/Z+tbd2VZEABY+P7B8ncw?=
- =?us-ascii?Q?osbo833d4cg0tdNyPQygMI8PSdLZezsxsIu8AWB5?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d4a49d5-b6fd-4c73-b2dd-08da876c83d1
-X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB4192.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Aug 2022 14:08:56.5840
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: P8mlPQqBpsSXigrJRLMymFULPMfGWFc+B1oz0zkOspL7XlJjnxiCZKdhvyte9bo2
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5142
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+From:   Chris Chilvers <chilversc@gmail.com>
+Date:   Fri, 26 Aug 2022 15:40:44 +0100
+Message-ID: <CAAmbk-fJ6Ks=xEyiiCPxr+La852ugBE9Tg32Weo9Og2BSRRm1g@mail.gmail.com>
+Subject: NFS re-export, READDIR, and large cookies
+To:     linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Aug 26, 2022 at 02:02:55PM +0000, Chuck Lever III wrote:
- 
-> I see recent commits that do exactly what I've done for the reason I've done it.
-> 
-> 4c4b1996b5db ("IB/hfi1: Fix WQ_MEM_RECLAIM warning")
+I've been investigating an issue where an NFSv3 client would receive
+NFS3ERR_INVAL in response to a READDIR or READDIRPLUS request when using
+a cookie.
 
-No, this one says:
+The set up is using an intermediate NFS re-export server;
+* Source NFS Server: VAST Data
+* Proxy NFS Server : Ubuntu 20.04 LTS, Kernel 5.13.18
 
-    The hfi1_wq does not allocate memory with GFP_KERNEL or otherwise become
-    entangled with memory reclaim, so this flag is appropriate.
-    
-So it is OK, it is not the same thing as adding WQ_MEM_RECLAIM to a WQ
-that allocates memory.
+Several clients were used for testing, including an older 3.10 kernel.
+There was no difference between them when mounting the re-export proxy
+NFS server. There are differences in behaviour when mounting the source
+server directly based upon whether the client's kernel implements
+nfs_readdir_use_cookie.
 
-> I accept that this might be a long chain to pull, but we need a plan
-> to resolve this. 
+For the test a directory was created on the source NFS server containing
+200 files.
 
-It is not just a long chain, it is something that was never designed
-to even work or thought about. People put storage ULPs on top of this
-and just ignored the problem.
+While the investigation initially looked at the READDIR issue with a
+re-export server it was discovered that the underlying issue can also
+cause odd behaviour when the clients mount the source NFS server
+directly without the re-export proxy in the middle. The issue can affect
+user applications that use telldir, seekdir, lseek, or similar
+functions.
 
-If someone wants to tackle this then we need a comprehensive patch
-series identifying what functions are safe to call under memory
-reclaim contexts and then fully auditing them that they are actually
-safe.
+When the client running 3.10 accessed the NFS share via the proxy NFS
+server the following exchange was observed when the ls command was
+executed:
 
-Right now I don't even know the basic information what functions the
-storage community need to be reclaim safe.
+1) Client -> Proxy    : READDIRPLUS (cookie: 0)
+2)   Proxy  -> Source : READDIRPLUS (cookie: 0)
+3)   Source -> Proxy  : Reply, first 100 files, EOF 0
+4)   Proxy  -> Source : READDIRPLUS (cookie: 2551291679986417766)
+5)   Source -> Proxy  : Reply, next 200 files, EOF 1
+6) Proxy  -> Client   : Reply, all 200 files, EOF 1
+7) Client -> Proxy    : READDIRPLUS (cookie: 11500424819426459749)
+8) Proxy  -> Client   : NFS3ERR_INVAL
 
-Jason
+I'm not certain why the client issued a second READDIRPLUS with a cookie
+since the first request contains the full directory listing as indicated
+by the EOF field.
+
+The cookie in the second request is a valid cookie that was issued by
+the source NFS server. The cookie is for a file about half way through
+the directory listing. While the cookie is valid for the NFS 3 protocol,
+it should be noted that the cookie's value is greater than 2^63-1. When
+interpreted as a signed 64 bit integer the cookie would have the value
+of -6946319254283091867.
+
+Sample of directory entries captured by tcpdump (only includes the name
+and cookie fields for brevity):
+
+    Entry: name .      Cookie: 1
+    Entry: name ..     Cookie: 2
+    Entry: name 1      Cookie: 848716379849752578
+    Entry: name 10     Cookie: 15827834395709931523
+    Entry: name 100    Cookie: 16032066584625283076
+    Entry: name 101    Cookie: 3137853460930625541
+    Entry: name 102    Cookie: 7540226876707438598
+    Entry: name 103    Cookie: 4424272775414284295
+    Entry: name 104    Cookie: 15750249638323552264
+    Entry: name 105    Cookie: 15370663860381941769
+    ...
+
+Tracing how the NFS cookie is handled by nfsd to the point the error is
+generated I found the following:
+
+* The cookie is converted to loff_t. This converts from unsigned to
+  signed.
+
+  nfsd/nfs3proc.c - nfsd3_proc_readdirplus
+      loff_t offset;
+      offset = argp->cookie;
+
+* This offset is then passed to, nfsd_readdir where it is used with
+  vfs_llseek:
+
+  nfsd/vfs.c - nfsd_readdir
+      offset = vfs_llseek(file, offset, SEEK_SET);
+
+* Since the proxy server is re-exporting an NFS volume my assumption is
+  that the underlying VFS driver is NFS and the file handle is a
+  directory, thus vfs_llseek invokes nfs_llseek_dir.
+
+  nfs/dir.c - nfs_llseek_dir
+      switch (whence) {
+      case SEEK_SET:
+          if (offset < 0)
+              return -EINVAL;
+
+* Since offset is < 0, -EINVAL is returned resulting in NFS3ERR_INVAL.
+
+Reading further into the nfs/dir.c source, it seems the cookie value is
+used extensively as the dir's offset position, often being stored in
+ctx->pos.
+
+The issue here is the dir_context pos field is exposed to user
+applications. As a test the proxy NFS was removed, and the clients
+accessed the source NFS directly. In this configuration READDIRPLUS
+worked as expected but issues with telldir and seekdir were observed.
+
+When printing a directory listing using opendir/readdir negative d_off
+values were displayed in the output (left file name, right d_off):
+
+      . - 1
+     .. - 2
+      1 - 848716379849752578
+     10 - -2618909677999620093
+    100 - -2414677489084268540
+    101 - 3137853460930625541
+    102 - 7540226876707438598
+    103 - 4424272775414284295
+    104 - -2696494435385999352
+    105 - -3076080213327609847
+    ...
+
+The directory listing was printed a second time, with an added call to
+seekdir after opendir. If a non-negative d_off value was chosen the
+directory listing would correctly start from that entry. If a negative
+d_off value was chosen the directory listing would start from the first
+entry.
+
+As seekdir has no way to indicate an error, it's likely that the lseek
+call failed. We did not include a test at the time to clear and check
+errno but it's likely this would have indicated EINVAL.
+
+A similar issue was noted with lseek returning negative positions for
+directories on ext4: https://bugzilla.kernel.org/show_bug.cgi?id=200043
+It was noted here that the correct behaviour is not well defined.
+It seems it's not prohibited to return a negative value, but many
+applications tend to interpret negative values as an error. Also lseek
+is now documented to return -1 on an error, which is an issue here as -1
+is a perfectly valid cookie value.
+
+On the older 3.10 kernel, this was not an issue as the 3.10 kernel uses
+the array index position for the offset value instead of the NFS cookie.
+
+--
+Chris
