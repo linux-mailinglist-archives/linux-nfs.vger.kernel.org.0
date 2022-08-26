@@ -2,398 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6DF95A2D20
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 19:12:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45BCA5A2E66
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 20:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344559AbiHZRLx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 13:11:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60978 "EHLO
+        id S238142AbiHZS1h (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 14:27:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235192AbiHZRLv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 13:11:51 -0400
-Received: from sonic304-27.consmr.mail.ne1.yahoo.com (sonic304-27.consmr.mail.ne1.yahoo.com [66.163.191.153])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A616AACA16
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 10:11:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661533908; bh=BjGErp7VQSmdg7wKiwYWi91SipqV8tAxeV5RpgsuZJk=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=VpwjT+KuH0NEw1UpFqYe5lZN8Ay1Hr9CgBJnpDEvzGHNqqQKvid2R/Z4l9WHI6Od9S4oMz3qcIgKx4ybmKAwd6m0mfz0a59OjZOuiahF6Dq5rS+930fSNjXFKfSWzNluNGtmylr75nOi5J5X+hf1rx2zobo2Mg95pNya9/BpqptYvYvQSJt0o/kXzC7R5MGSyUjRMW99yaXWA4CrtlV5xHw5a0C1QcdPneg4IFiSPn0dmJMvM1yaFxRWmZUsUFOG1Gagb7xvFzwkGodPMZ7i0Y0rbmm9y1ei4w3iuijc7QhRTagBPIzce08mPBSqwRtEVBmhVuLBinmkpIpf+C3qfg==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661533908; bh=ZZR9W96fDTqng5nBAch+HJ4ZoRq6+NrR6e+OImz1Mgq=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=cGGkzHsKMnVEHEzXAz0gfYtIEM/f1p643Pik7eHRbugy4NfNG5TPBVLMM7irGrmBchPUF2dyoy2NFrqHNdSPn2Im9smqYqN5RPIEZAsg5wINETEtmagbYA3VwPbWVD04ubDhlpKbqh6Gd6Z60fl4vNXbAMyreWQHq49vfSgx2Nv+wg+C2xK+QZhQ6qtciPdudaVfL+cRX9Jl957f1g2bC7OKwUU+6NnvM5D2dD34zWcvYbg0xd3cciYzL8uEcQe2bHDDiHstWFm0FNzQs2a9RzLKO7wVJ62zU3JN4MfzdFSKBcGHbDFHopLSC5X1rePxMc5yjLSbOacIo4jLrtG7ng==
-X-YMail-OSG: M7cMbVsVM1lrmseMSVC4dQ3B0ZM8N4eGmeogdbfj3CF9Iula_84w99aM6p3.b.s
- .ExIttB8KbA.e_WJMV5BLIWmxYbx30wil93BJYjlBeTms3B5R.BqkcD7K4HxNJ9fIrOG_zBV4v0.
- 3xouBFazjp5dBnDpSCeTgz3IWsYRX7s6n6dmgpTxUWqeeSHsIOdwB8jzqWUQvnud9ig8duuHBEEE
- 5XkK1KNjJYc9cMh_mJ1GJRKWmWhJJtqTvLw8EUDbC2dFdcb5gGIDWJ_Y25FtDn4V2Y97Xd.hyQfB
- AqLTUGTV0KPzZSNJNrsooLjyxqIM6Qk2HrFXJhBeBYgeWquvlGZW2_WaZU1hifHzq6PdFcjxGptK
- bVtqMoYQs8xVjFXoEg.CA8hF5O3WYrHdlOBY4OI2xbFNSpeqiqrdUvBzEdy7yRn30MThnfRGQKvG
- ZmxBm5uwk.A8n.Yt8gJDzWZmtvivpP56cgWH7bvDNOSFAdn24npQ1pvm0pJ8aKAEjVuvsfZYltVi
- ELFjXXAPqwe02MXuG4qb7lvkQ1XxAWTRBgzSLDLFxdIjoh_P3Lv9mnQOhZ.w74VUuRraRW4d2p3W
- 8Vj3saayDFK0fUDyx5qtcNzlFqcyt22kpa6pgvdVGyn1l66OogUJqVhPxj3wYZME2M7cCQ822Ud1
- 86tL6bWsJD5r9wLVHUqift516aqx9gacFBo96RCpGmTd2f4UK5hzkp97pzce7rV_wR07Hin.WofH
- 0WvtKpwYfhL8PpdQFvOLH.BzWUR_oHloOSdHD.1A69SIfbOHqRBESjUr6k8NBerZ0xoe6xBHB9QQ
- tx8JS8Ismj7xm_cQ19NFjsvDsUW8b9kee9uZB_On_oMLE7lqFAqnb9I7nlDlIgKre8JywMf6qU5J
- pzWCucNySA3NuWD7JFs_xZETfUz1dHRyOAjYQmNYtKKqDa_y29G1CJMDc8DtTNJJnoWE4OiVgMF9
- OgUxzowIxURZHPXhjP3KSLKnDBkVWLWEwMtJ9_uD55ZRKNnB2ccNxR3qKTQTAZUAy4ZcdUKSVSDH
- u8T9__19eTy5IrV.OOACAOI3TqYOi6pJE1lTmhUYSIbokc_gYxLtwDXlcTKZlnr4bE0zAd0kE5p9
- xoI2oy7jZDFfiSNgVB0cP.ziRtPZ.Aj0DMu0iRl84_ymhr6ySLW7FHqGL5ox5DXp1TbT8j3IRht3
- R.FPuP8nv7F5K3qxWhItp2w.pux1JgDqtAblTFrUwJi.0ZW7YW3iJQ9rHdB9e53SfL.zSlXvkUiI
- 6A1uyTnirw8_hmN3Uk8UQAvkMwRjXjSfylBQ.o125Qc4Bio_Rov5kaQ_XsGFMtNZm8Iz3aIB2ukR
- H767kc0d_ApQ9bXiL7RP9Ld57QKN_LLQNxHz1b6L0KsPzGPjwC3nO9OtmeiDCnY31qPlruZELZcI
- NLNROpW.ak4rP3ZZEtlKnRcDwBBE_cqR6DHX9DNImZn5qoo3_QYwsdz1QHCgY3gGrVNJsr2taqKj
- V8YD5T8YHIwSlZr763eggOGHQ9cJKk2uDVRfsPfp1gVA.MZrwKKySdhgrFGAhCVnw6QXBNiGRn5V
- kLx6ItBj9bTNNajTSgWb0WmcDZIAR3PUlEron4I1AggHLqYvjdkZwAw7AhBcrEFP3Q23y1ydPUPH
- 0nDQHo.MrCLL43ULdajwzowP1nBwBs8bpW5oiFskrsp7kgOmm_YoZmhcU_7.2xd7WRvIWWvUcw2w
- FZCl4fgQz6UL4aHxhops4tqN_XO8lIdx8FzdNuslX2cBcNH5vSHFajbqhlK5Z7KPYIgXhmSXcuvW
- 6L0AXI_fk87KK8U3Ely464l7nzqn9dQObJa3U1VEfWFJOWobo741whJjsTfbZLuP5V3.BIo3mCSr
- BQu7UOGZ_WOQAFXJH1mHmjT9RBC74CzdbxZJ0LehXnABggcWnFS1E91x60HxQ22k2i0bLdeh1.gw
- 08AMS2dOjcNdxvnfc75XNygZ5QtA1k3aW5doynaT7IyI3P.qacFTSfET1IS1rxDUUtmnVabh50H5
- QXS6a6HEVMUW7vtKeRHW1d4cYmvzFLRetxsyLjmb8M8H39QV1Og9PyuWhgpMGLr_AJuKSNotgCpl
- FiSkq84KFD.nc2Ok6pl_u1sBNaz3RrY.L9QOGOLKqWSxcuob_Y0nmBSKB7FLyj7Wo2KlHnN1Da9x
- tWUwnoqemNHKAyY3Hne74XZlsc_sPLZGOn7wlnB8kJDKCMIGkbbCXduFEhfkYLz5nvbqpTjfAl8A
- xQiMq6cATqKYGLcVBHz.dW.l40edza8AuzXHJgDiI9RHx6IU-
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic304.consmr.mail.ne1.yahoo.com with HTTP; Fri, 26 Aug 2022 17:11:48 +0000
-Received: by hermes--production-ne1-6649c47445-rtgvf (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID d1446b6f120dd0671a202e122773c63d;
-          Fri, 26 Aug 2022 17:11:44 +0000 (UTC)
-Message-ID: <c648aa7c-a49c-a7e2-6a05-d1dfe44b8fdb@schaufler-ca.com>
-Date:   Fri, 26 Aug 2022 10:11:42 -0700
+        with ESMTP id S231216AbiHZS1g (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 14:27:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD98D3447
+        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 11:27:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661538454;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FaKEYNB6y5v/Ekh4SL1N4iTiFI1VS/8XS6d+uMaleJQ=;
+        b=bDEC9xSvNwd2CuwBe2CD+MjCGRsxd12e+cX6Nkg2W9SwSDk5klWc+696nT0/NgBfT3dRvZ
+        vBTmwBHWpyNxvuTz97RyTSRPBGTa7ipCrHN8pfahgo2xTWUZjx1uilBwyn8P9xz9kVF3Wu
+        dLlZ5DirDfnjedXfXzQmcDHLKeuCko4=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-622-FI-e518FO9a94-PlaB0GiQ-1; Fri, 26 Aug 2022 14:27:32 -0400
+X-MC-Unique: FI-e518FO9a94-PlaB0GiQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8BD5E3C11991;
+        Fri, 26 Aug 2022 18:27:32 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id F17394010D45;
+        Fri, 26 Aug 2022 18:27:31 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     anna@kernel.org, linux-nfs@vger.kernel.org, neilb@suse.de
+Subject: Re: [PATCH 0/2] NFS: limit use of ACCESS cache for negative responses
+Date:   Fri, 26 Aug 2022 14:27:30 -0400
+Message-ID: <FA952BF7-1638-4BD1-8DA9-683078CFDE8F@redhat.com>
+In-Reply-To: <f5a2163d11f73e24c2106d43e72d0400d5a282b6.camel@hammerspace.com>
+References: <165110909570.7595.8578730126480600782.stgit@noble.brown>
+ <165274590805.17247.12823419181284113076@noble.neil.brown.name>
+ <72f091ceaaf15069834eb200c04f0630eca7eaef.camel@hammerspace.com>
+ <165274805538.17247.18045261877097040122@noble.neil.brown.name>
+ <acdd578d2bb4551e45570c506d0948647d964f66.camel@hammerspace.com>
+ <165274950799.17247.7605561502483278140@noble.neil.brown.name>
+ <3ec50603479c7ee60cfa269aa06ae151e3ebc447.camel@hammerspace.com>
+ <165275056203.17247.1826100963816464474@noble.neil.brown.name>
+ <d6c351439c71d95f761c89533919850c91975639.camel@hammerspace.com>
+ <D788BD7B-029F-4A4C-A377-81B117BD4CD2@redhat.com>
+ <a56ca216aef75f419d8a13dd6c7719ef15bbcaab.camel@hammerspace.com>
+ <54685EB8-7E6D-4EC4-8A9E-2BF55F41DABA@redhat.com>
+ <f5a2163d11f73e24c2106d43e72d0400d5a282b6.camel@hammerspace.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH v4] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
-Content-Language: en-US
-To:     Christian Brauner <brauner@kernel.org>,
-        David Howells <dhowells@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, linux-nfs@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
-        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
-References: <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk>
- <20220826082439.wdestxwkeccsyqtp@wittgenstein>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <20220826082439.wdestxwkeccsyqtp@wittgenstein>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.20595 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/26/2022 1:24 AM, Christian Brauner wrote:
-> On Wed, Aug 24, 2022 at 11:09:50AM +0100, David Howells wrote:
->> When NFS superblocks are created by automounting, their LSM parameters
->> aren't set in the fs_context struct prior to sget_fc() being called,
->> leading to failure to match existing superblocks.
->>
->> Fix this by adding a new LSM hook to load fc->security for submount
->> creation when alloc_fs_context() is creating the fs_context for it.
->>
->> However, this uncovers a further bug: nfs_get_root() initialises the
->> superblock security manually by calling security_sb_set_mnt_opts() or
->> security_sb_clone_mnt_opts() - but then vfs_get_tree() calls
->> security_sb_set_mnt_opts(), which can lead to SELinux, at least,
->> complaining.
->>
->> Fix that by adding a flag to the fs_context that suppresses the
->> security_sb_set_mnt_opts() call in vfs_get_tree().  This can be set by NFS
->> when it sets the LSM context on the new superblock.
->>
->> The first bug leads to messages like the following appearing in dmesg:
->>
->> 	NFS: Cache volume key already in use (nfs,4.2,2,108,106a8c0,1,,,,100000,100000,2ee,3a98,1d4c,3a98,1)
->>
->> Changes
->> =======
->> ver #4)
->>  - When doing a FOR_SUBMOUNT mount, don't set the root label in SELinux or
->>    Smack.
->>
->> ver #3)
->>  - Made LSM parameter extraction dependent on fc->purpose ==
->>    FS_CONTEXT_FOR_SUBMOUNT.  Shouldn't happen on FOR_RECONFIGURE.
->>
->> ver #2)
->>  - Added Smack support
->>  - Made LSM parameter extraction dependent on reference != NULL.
->>
->> Signed-off-by: David Howells <dhowells@redhat.com>
->> Fixes: 9bc61ab18b1d ("vfs: Introduce fs_context, switch vfs_kern_mount() to it.")
->> Fixes: 779df6a5480f ("NFS: Ensure security label is set for root inode)
->> Tested-by: Jeff Layton <jlayton@kernel.org>
->> cc: Trond Myklebust <trond.myklebust@hammerspace.com>
->> cc: Anna Schumaker <anna@kernel.org>
->> cc: Alexander Viro <viro@zeniv.linux.org.uk>
->> cc: Scott Mayhew <smayhew@redhat.com>
->> cc: Jeff Layton <jlayton@kernel.org>
->> cc: Paul Moore <paul@paul-moore.com>
->> cc: Casey Schaufler <casey@schaufler-ca.com>
->> cc: linux-nfs@vger.kernel.org
->> cc: selinux@vger.kernel.org
->> cc: linux-security-module@vger.kernel.org
->> cc: linux-fsdevel@vger.kernel.org
->> Link: https://lore.kernel.org/r/165962680944.3334508.6610023900349142034.stgit@warthog.procyon.org.uk/ # v1
->> Link: https://lore.kernel.org/r/165962729225.3357250.14350728846471527137.stgit@warthog.procyon.org.uk/ # v2
->> Link: https://lore.kernel.org/r/165970659095.2812394.6868894171102318796.stgit@warthog.procyon.org.uk/ # v3
->> ---
->>
->>  fs/fs_context.c               |    4 +++
->>  fs/nfs/getroot.c              |    1 +
->>  fs/super.c                    |   10 +++++---
->>  include/linux/fs_context.h    |    1 +
->>  include/linux/lsm_hook_defs.h |    1 +
->>  include/linux/lsm_hooks.h     |    6 ++++-
->>  include/linux/security.h      |    6 +++++
->>  security/security.c           |    5 ++++
->>  security/selinux/hooks.c      |   27 +++++++++++++++++++++
->>  security/smack/smack_lsm.c    |   54 +++++++++++++++++++++++++++++++++++++++++
->>  10 files changed, 110 insertions(+), 5 deletions(-)
->>
->> diff --git a/fs/fs_context.c b/fs/fs_context.c
->> index 24ce12f0db32..22248b8a88a8 100644
->> --- a/fs/fs_context.c
->> +++ b/fs/fs_context.c
->> @@ -282,6 +282,10 @@ static struct fs_context *alloc_fs_context(struct file_system_type *fs_type,
->>  		break;
->>  	}
->>  
->> +	ret = security_fs_context_init(fc, reference);
->> +	if (ret < 0)
->> +		goto err_fc;
->> +
->>  	/* TODO: Make all filesystems support this unconditionally */
->>  	init_fs_context = fc->fs_type->init_fs_context;
->>  	if (!init_fs_context)
->> diff --git a/fs/nfs/getroot.c b/fs/nfs/getroot.c
->> index 11ff2b2e060f..651bffb0067e 100644
->> --- a/fs/nfs/getroot.c
->> +++ b/fs/nfs/getroot.c
->> @@ -144,6 +144,7 @@ int nfs_get_root(struct super_block *s, struct fs_context *fc)
->>  	}
->>  	if (error)
->>  		goto error_splat_root;
->> +	fc->lsm_set = true;
->>  	if (server->caps & NFS_CAP_SECURITY_LABEL &&
->>  		!(kflags_out & SECURITY_LSM_NATIVE_LABELS))
->>  		server->caps &= ~NFS_CAP_SECURITY_LABEL;
->> diff --git a/fs/super.c b/fs/super.c
->> index 734ed584a946..94666c0c92a4 100644
->> --- a/fs/super.c
->> +++ b/fs/super.c
->> @@ -1552,10 +1552,12 @@ int vfs_get_tree(struct fs_context *fc)
->>  	smp_wmb();
->>  	sb->s_flags |= SB_BORN;
->>  
->> -	error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
->> -	if (unlikely(error)) {
->> -		fc_drop_locked(fc);
->> -		return error;
->> +	if (!(fc->lsm_set)) {
->> +		error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
->> +		if (unlikely(error)) {
->> +			fc_drop_locked(fc);
->> +			return error;
->> +		}
->>  	}
->>  
->>  	/*
->> diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
->> index 13fa6f3df8e4..3876dd96bb20 100644
->> --- a/include/linux/fs_context.h
->> +++ b/include/linux/fs_context.h
->> @@ -110,6 +110,7 @@ struct fs_context {
->>  	bool			need_free:1;	/* Need to call ops->free() */
->>  	bool			global:1;	/* Goes into &init_user_ns */
->>  	bool			oldapi:1;	/* Coming from mount(2) */
->> +	bool			lsm_set:1;	/* security_sb_set/clone_mnt_opts() already done */
->>  };
->>  
->>  struct fs_context_operations {
->> diff --git a/include/linux/lsm_hook_defs.h b/include/linux/lsm_hook_defs.h
->> index 806448173033..40ac14d772da 100644
->> --- a/include/linux/lsm_hook_defs.h
->> +++ b/include/linux/lsm_hook_defs.h
->> @@ -54,6 +54,7 @@ LSM_HOOK(int, 0, bprm_creds_from_file, struct linux_binprm *bprm, struct file *f
->>  LSM_HOOK(int, 0, bprm_check_security, struct linux_binprm *bprm)
->>  LSM_HOOK(void, LSM_RET_VOID, bprm_committing_creds, struct linux_binprm *bprm)
->>  LSM_HOOK(void, LSM_RET_VOID, bprm_committed_creds, struct linux_binprm *bprm)
->> +LSM_HOOK(int, 0, fs_context_init, struct fs_context *fc, struct dentry *reference)
->>  LSM_HOOK(int, 0, fs_context_dup, struct fs_context *fc,
->>  	 struct fs_context *src_sc)
->>  LSM_HOOK(int, -ENOPARAM, fs_context_parse_param, struct fs_context *fc,
->> diff --git a/include/linux/lsm_hooks.h b/include/linux/lsm_hooks.h
->> index 84a0d7e02176..aec42d6287b5 100644
->> --- a/include/linux/lsm_hooks.h
->> +++ b/include/linux/lsm_hooks.h
->> @@ -87,8 +87,12 @@
->>   * Security hooks for mount using fs_context.
->>   *	[See also Documentation/filesystems/mount_api.rst]
->>   *
->> + * @fs_context_init:
->> + *	Initialise fc->security.  This is initialised to NULL by the caller.
->> + *	@fc indicates the new filesystem context.
->> + *	@dentry indicates a reference for submount/remount
->>   * @fs_context_dup:
->> - *	Allocate and attach a security structure to sc->security.  This pointer
->> + *	Allocate and attach a security structure to fc->security.  This pointer
->>   *	is initialised to NULL by the caller.
->>   *	@fc indicates the new filesystem context.
->>   *	@src_fc indicates the original filesystem context.
->> diff --git a/include/linux/security.h b/include/linux/security.h
->> index 1bc362cb413f..e7dfe38df72d 100644
->> --- a/include/linux/security.h
->> +++ b/include/linux/security.h
->> @@ -291,6 +291,7 @@ int security_bprm_creds_from_file(struct linux_binprm *bprm, struct file *file);
->>  int security_bprm_check(struct linux_binprm *bprm);
->>  void security_bprm_committing_creds(struct linux_binprm *bprm);
->>  void security_bprm_committed_creds(struct linux_binprm *bprm);
->> +int security_fs_context_init(struct fs_context *fc, struct dentry *reference);
->>  int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc);
->>  int security_fs_context_parse_param(struct fs_context *fc, struct fs_parameter *param);
->>  int security_sb_alloc(struct super_block *sb);
->> @@ -622,6 +623,11 @@ static inline void security_bprm_committed_creds(struct linux_binprm *bprm)
->>  {
->>  }
->>  
->> +static inline int security_fs_context_init(struct fs_context *fc,
->> +					   struct dentry *reference)
->> +{
->> +	return 0;
->> +}
->>  static inline int security_fs_context_dup(struct fs_context *fc,
->>  					  struct fs_context *src_fc)
->>  {
->> diff --git a/security/security.c b/security/security.c
->> index 14d30fec8a00..7b677087c4eb 100644
->> --- a/security/security.c
->> +++ b/security/security.c
->> @@ -880,6 +880,11 @@ void security_bprm_committed_creds(struct linux_binprm *bprm)
->>  	call_void_hook(bprm_committed_creds, bprm);
->>  }
->>  
->> +int security_fs_context_init(struct fs_context *fc, struct dentry *reference)
->> +{
->> +	return call_int_hook(fs_context_init, 0, fc, reference);
->> +}
->> +
->>  int security_fs_context_dup(struct fs_context *fc, struct fs_context *src_fc)
->>  {
->>  	return call_int_hook(fs_context_dup, 0, fc, src_fc);
->> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
->> index 79573504783b..c09dcf6df2b6 100644
->> --- a/security/selinux/hooks.c
->> +++ b/security/selinux/hooks.c
->> @@ -2765,6 +2765,32 @@ static int selinux_umount(struct vfsmount *mnt, int flags)
->>  				   FILESYSTEM__UNMOUNT, NULL);
->>  }
->>  
->> +static int selinux_fs_context_init(struct fs_context *fc,
->> +				   struct dentry *reference)
->> +{
->> +	const struct superblock_security_struct *sbsec;
->> +	const struct inode_security_struct *root_isec;
->> +	struct selinux_mnt_opts *opts;
->> +
->> +	if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
->> +		opts = kzalloc(sizeof(*opts), GFP_KERNEL);
->> +		if (!opts)
->> +			return -ENOMEM;
->> +
->> +		root_isec = backing_inode_security(reference->d_sb->s_root);
->> +		sbsec = selinux_superblock(reference->d_sb);
->> +		if (sbsec->flags & FSCONTEXT_MNT)
->> +			opts->fscontext_sid	= sbsec->sid;
->> +		if (sbsec->flags & CONTEXT_MNT)
->> +			opts->context_sid	= sbsec->mntpoint_sid;
->> +		if (sbsec->flags & DEFCONTEXT_MNT)
->> +			opts->defcontext_sid	= sbsec->def_sid;
->> +		fc->security = opts;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>  static int selinux_fs_context_dup(struct fs_context *fc,
->>  				  struct fs_context *src_fc)
->>  {
->> @@ -7236,6 +7262,7 @@ static struct security_hook_list selinux_hooks[] __lsm_ro_after_init = {
->>  	/*
->>  	 * PUT "CLONING" (ACCESSING + ALLOCATING) HOOKS HERE
->>  	 */
->> +	LSM_HOOK_INIT(fs_context_init, selinux_fs_context_init),
->>  	LSM_HOOK_INIT(fs_context_dup, selinux_fs_context_dup),
->>  	LSM_HOOK_INIT(fs_context_parse_param, selinux_fs_context_parse_param),
->>  	LSM_HOOK_INIT(sb_eat_lsm_opts, selinux_sb_eat_lsm_opts),
->> diff --git a/security/smack/smack_lsm.c b/security/smack/smack_lsm.c
->> index 001831458fa2..8665428481d3 100644
->> --- a/security/smack/smack_lsm.c
->> +++ b/security/smack/smack_lsm.c
->> @@ -612,6 +612,59 @@ static int smack_add_opt(int token, const char *s, void **mnt_opts)
->>  	return -EINVAL;
->>  }
->>  
->> +/**
->> + * smack_fs_context_init - Initialise security data for a filesystem context
->> + * @fc: The filesystem context.
->> + * @reference: Reference dentry (automount/reconfigure) or NULL
->> + *
->> + * Returns 0 on success or -ENOMEM on error.
->> + */
->> +static int smack_fs_context_init(struct fs_context *fc,
->> +				 struct dentry *reference)
->> +{
->> +	struct superblock_smack *sbsp;
->> +	struct smack_mnt_opts *ctx;
->> +	struct inode_smack *isp;
->> +
->> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
->> +	if (!ctx)
->> +		return -ENOMEM;
->> +	fc->security = ctx;
->> +
->> +	if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
->> +		sbsp = smack_superblock(reference->d_sb);
->> +		isp = smack_inode(reference->d_sb->s_root->d_inode);
->> +
->> +		if (sbsp->smk_default) {
->> +			ctx->fsdefault = kstrdup(sbsp->smk_default->smk_known, GFP_KERNEL);
->> +			if (!ctx->fsdefault)
->> +				return -ENOMEM;
->> +		}
->> +
->> +		if (sbsp->smk_floor) {
->> +			ctx->fsfloor = kstrdup(sbsp->smk_floor->smk_known, GFP_KERNEL);
->> +			if (!ctx->fsfloor)
->> +				return -ENOMEM;
->> +		}
->> +
->> +		if (sbsp->smk_hat) {
->> +			ctx->fshat = kstrdup(sbsp->smk_hat->smk_known, GFP_KERNEL);
->> +			if (!ctx->fshat)
->> +				return -ENOMEM;
->> +		}
->> +
->> +		if (isp->smk_flags & SMK_INODE_TRANSMUTE) {
->> +			if (sbsp->smk_root) {
->> +				ctx->fstransmute = kstrdup(sbsp->smk_root->smk_known, GFP_KERNEL);
->> +				if (!ctx->fstransmute)
->> +					return -ENOMEM;
-> Just curious, how's freeing that worked for this case? Is all of that
-> memory dropped in ops->free() somehow?
+On 26 Aug 2022, at 12:56, Trond Myklebust wrote:
+> User group membership is not a per-mount thing. It's a global thing.
 
-Yes, in the current implementation. However ...
+The cached access entry is a per-inode thing.
 
-The authors of this version of the mount code failed to look
-especially closely at how Smack maintains label names. Once a
-label name is used in the kernel it is kept on a list forever.
-All the copies of smk_known here and in the rest of the mount
-infrastructure are unnecessary and wasteful. The entire set of
-Smack hooks that deal with mounting need to be reworked to remove
-that waste. It's on my list of Smack cleanups, but I'd be happy
-if someone else wanted a go at it.
+> As I said, what I'm proposing does allow you to set up a cron job that
+> flushes your cache on a regular basis. There is absolutely no extra
+> value whatsoever provided by moving that into the kernel on a per-mount
+> basis.
+
+Sure there is - that's where we configure major NFS client behaviors.
+
+I understand where you're coming from, but it seems so bizarre that a previous
+behavior that multiple organizations built and depend upon has been removed
+to optimize performance, and now we will need to tell them that to restore
+it we must write cron jobs on all the clients.  I don't think there's been a
+dependency on cron to get NFS to work a certain way yet.
+
+A mount option is much easier to deploy in these organizations that have
+autofs deployed, and documenting it in NFS(5) seems the right place.
+
+If that's just not acceptable, at least let's just make a tuneable that
+expires entries rather than a trigger to flush everything.  Please consider
+the configuration sprawl on the NFS client, and let me know how to proceed.
+
+Ben
 
