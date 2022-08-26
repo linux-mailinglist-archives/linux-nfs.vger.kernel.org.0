@@ -2,199 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CBC15A29B6
-	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:41:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2755A29FE
+	for <lists+linux-nfs@lfdr.de>; Fri, 26 Aug 2022 16:49:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344520AbiHZOlF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 10:41:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48728 "EHLO
+        id S233093AbiHZOtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 10:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344430AbiHZOlA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:41:00 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B057BB02B1
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 07:40:58 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id w10so2387660edc.3
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 07:40:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=2mcb8k0VXzXqfM2ZttJcq55uhMWz9wotQDWFSKhCh+M=;
-        b=MQd06gUIsCc8mgcyXWvLewZXzrDvOMQOSdpt2jN8HdgfFz2pWsrtmdFaw+r15snKeE
-         x5Ny8l0hA4u2PTcwEyhlJLEu9x2EioBLs2keh2oZ6u89rVHfDuOmVkx/Fk6BX9c5eETo
-         eBCfndtS+DzOAHClzchPfNRXEog76zehiCF3GxLvJmVI+9KEzkLkmTq4snJ6gkeai6Ee
-         isqgQFxk2YmbcmmdVGV52MMj9PpegcM21J5k5Yp6nyNLTBRyOFBJmJsVDze+e/UjewCL
-         fBfIKM95z3wF4eaOMoAJPZVb7I7nHyLjJ3eOcKmuFD4vzAFK/TIAzyZrUTRtdlqmeuJW
-         8cuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=2mcb8k0VXzXqfM2ZttJcq55uhMWz9wotQDWFSKhCh+M=;
-        b=hVm8jJjV7+RUIgU+gWGX8kdTBrwPScnkDrRBJz4v0WRAvdajWsqTgK8HSquhNKKRmz
-         UQBGOtZfCM+oRavdi4hb8HPXPO6rRRvKhZv9s1SF8JjyCS8QKoW29TVZBZwYPPSvw/9N
-         mUkH0Tif4CwkdmnvaB0cKd1AoNkAA3eP01YQt6ILZQmjV+4i3pdb/ySyqm++bm4u+Fyb
-         vZkqfDx8PEhyQvi9e76UAeA1C5sZGNv0Ym4hcOXRWsXNqO+lY3kwdW8mPV7gEsevYrII
-         e0Qo3G5cAfB04KEKIVJnqOvYYuRhfBHnFyZuQCACVmCE1/sV3GGEAUX9mefkUsSTMnck
-         Q7PA==
-X-Gm-Message-State: ACgBeo0zxCrE/I64fRizlXIYNhkILgND93wSyzcsk+jUVcFTpxJ0HGQ1
-        7TQJ1sNxfF6gAr45Lwinz8G+MY+pPVhvqTtPr6qIMceM3Is=
-X-Google-Smtp-Source: AA6agR4a8ZMafqpcOcRDeKQHujps+0TFWAxkYLLeqo1t3BBAzDeWG77093jlKFWydsDNFBB6yxAteF7pcQ3QNXNgT+U=
-X-Received: by 2002:a05:6402:2d6:b0:447:ae9d:d0f1 with SMTP id
- b22-20020a05640202d600b00447ae9dd0f1mr6690104edx.256.1661524856857; Fri, 26
- Aug 2022 07:40:56 -0700 (PDT)
+        with ESMTP id S230408AbiHZOtP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 10:49:15 -0400
+X-Greylist: delayed 432 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 26 Aug 2022 07:49:14 PDT
+Received: from mail.stoffel.org (li1843-175.members.linode.com [172.104.24.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54314D87EB;
+        Fri, 26 Aug 2022 07:49:14 -0700 (PDT)
+Received: from quad.stoffel.org (068-116-170-226.res.spectrum.com [68.116.170.226])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.stoffel.org (Postfix) with ESMTPSA id 0BD202189D;
+        Fri, 26 Aug 2022 10:42:01 -0400 (EDT)
+Received: by quad.stoffel.org (Postfix, from userid 1000)
+        id 4B1F7A7E15; Fri, 26 Aug 2022 10:42:00 -0400 (EDT)
 MIME-Version: 1.0
-From:   Chris Chilvers <chilversc@gmail.com>
-Date:   Fri, 26 Aug 2022 15:40:44 +0100
-Message-ID: <CAAmbk-fJ6Ks=xEyiiCPxr+La852ugBE9Tg32Weo9Og2BSRRm1g@mail.gmail.com>
-Subject: NFS re-export, READDIR, and large cookies
-To:     linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Message-ID: <25352.56248.283092.213037@quad.stoffel.home>
+Date:   Fri, 26 Aug 2022 10:42:00 -0400
+From:   "John Stoffel" <john@stoffel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH/RFC 00/10 v5] Improve scalability of directory operations
+In-Reply-To: <166147828344.25420.13834885828450967910.stgit@noble.brown>
+References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
+X-Mailer: VM 8.2.0b under 27.1 (x86_64-pc-linux-gnu)
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I've been investigating an issue where an NFSv3 client would receive
-NFS3ERR_INVAL in response to a READDIR or READDIRPLUS request when using
-a cookie.
+>>>>> "NeilBrown" == NeilBrown  <neilb@suse.de> writes:
 
-The set up is using an intermediate NFS re-export server;
-* Source NFS Server: VAST Data
-* Proxy NFS Server : Ubuntu 20.04 LTS, Kernel 5.13.18
+NeilBrown> [I made up "v5" - I haven't been counting]
 
-Several clients were used for testing, including an older 3.10 kernel.
-There was no difference between them when mounting the re-export proxy
-NFS server. There are differences in behaviour when mounting the source
-server directly based upon whether the client's kernel implements
-nfs_readdir_use_cookie.
+My first comments, but I'm not a serious developer...
 
-For the test a directory was created on the source NFS server containing
-200 files.
+NeilBrown> VFS currently holds an exclusive lock on the directory while making
+NeilBrown> changes: add, remove, rename.
+NeilBrown> When multiple threads make changes in the one directory, the contention
+NeilBrown> can be noticeable.
+NeilBrown> In the case of NFS with a high latency link, this can easily be
+NeilBrown> demonstrated.  NFS doesn't really need VFS locking as the server ensures
+NeilBrown> correctness.
 
-While the investigation initially looked at the READDIR issue with a
-re-export server it was discovered that the underlying issue can also
-cause odd behaviour when the clients mount the source NFS server
-directly without the re-export proxy in the middle. The issue can affect
-user applications that use telldir, seekdir, lseek, or similar
-functions.
+NeilBrown> Lustre uses a single(?) directory for object storage, and has patches
+NeilBrown> for ext4 to support concurrent updates (Lustre accesses ext4 directly,
+NeilBrown> not via the VFS).
 
-When the client running 3.10 accessed the NFS share via the proxy NFS
-server the following exchange was observed when the ls command was
-executed:
+NeilBrown> XFS (it is claimed) doesn't its own locking and doesn't need the VFS to
+NeilBrown> help at all.
 
-1) Client -> Proxy    : READDIRPLUS (cookie: 0)
-2)   Proxy  -> Source : READDIRPLUS (cookie: 0)
-3)   Source -> Proxy  : Reply, first 100 files, EOF 0
-4)   Proxy  -> Source : READDIRPLUS (cookie: 2551291679986417766)
-5)   Source -> Proxy  : Reply, next 200 files, EOF 1
-6) Proxy  -> Client   : Reply, all 200 files, EOF 1
-7) Client -> Proxy    : READDIRPLUS (cookie: 11500424819426459749)
-8) Proxy  -> Client   : NFS3ERR_INVAL
+This sentence makes no sense to me... I assume you meant to say "...does
+it's own locking..."
 
-I'm not certain why the client issued a second READDIRPLUS with a cookie
-since the first request contains the full directory listing as indicated
-by the EOF field.
+NeilBrown> This patch series allows filesystems to request a shared lock on
+NeilBrown> directories and provides serialisation on just the affected name, not the
+NeilBrown> whole directory.  It changes both the VFS and NFSD to use shared locks
+NeilBrown> when appropriate, and changes NFS to request shared locks.
 
-The cookie in the second request is a valid cookie that was issued by
-the source NFS server. The cookie is for a file about half way through
-the directory listing. While the cookie is valid for the NFS 3 protocol,
-it should be noted that the cookie's value is greater than 2^63-1. When
-interpreted as a signed 64 bit integer the cookie would have the value
-of -6946319254283091867.
+Are there any performance results?  Why wouldn't we just do a shared
+locked across all VFS based filesystems?  
 
-Sample of directory entries captured by tcpdump (only includes the name
-and cookie fields for brevity):
+NeilBrown> The central enabling feature is a new dentry flag DCACHE_PAR_UPDATE
+NeilBrown> which acts as a bit-lock.  The ->d_lock spinlock is taken to set/clear
+NeilBrown> it, and wait_var_event() is used for waiting.  This flag is set on all
+NeilBrown> dentries that are part of a directory update, not just when a shared
+NeilBrown> lock is taken.
 
-    Entry: name .      Cookie: 1
-    Entry: name ..     Cookie: 2
-    Entry: name 1      Cookie: 848716379849752578
-    Entry: name 10     Cookie: 15827834395709931523
-    Entry: name 100    Cookie: 16032066584625283076
-    Entry: name 101    Cookie: 3137853460930625541
-    Entry: name 102    Cookie: 7540226876707438598
-    Entry: name 103    Cookie: 4424272775414284295
-    Entry: name 104    Cookie: 15750249638323552264
-    Entry: name 105    Cookie: 15370663860381941769
-    ...
+NeilBrown> When a shared lock is taken we must use alloc_dentry_parallel() which
+NeilBrown> needs a wq which must remain until the update is completed.  To make use
+NeilBrown> of concurrent create, kern_path_create() would need to be passed a wq.
+NeilBrown> Rather than the churn required for that, we use exclusive locking when
+NeilBrown> no wq is provided.
 
-Tracing how the NFS cookie is handled by nfsd to the point the error is
-generated I found the following:
+Is this a per-operation wq or a per-directory wq?  Can there be issues
+if someone does something silly like having 1,000 directories, all of
+which have multiple processes making parallel changes?  
 
-* The cookie is converted to loff_t. This converts from unsigned to
-  signed.
+Does it degrade gracefully if a wq can't be allocated?  
 
-  nfsd/nfs3proc.c - nfsd3_proc_readdirplus
-      loff_t offset;
-      offset = argp->cookie;
+NeilBrown> One interesting consequence of this is that silly-rename becomes a
+NeilBrown> little more complex.  As the directory may not be exclusively locked,
+NeilBrown> the new silly-name needs to be locked (DCACHE_PAR_UPDATE) as well.
+NeilBrown> A new LOOKUP_SILLY_RENAME is added which helps implement this using
+NeilBrown> common code.
 
-* This offset is then passed to, nfsd_readdir where it is used with
-  vfs_llseek:
+NeilBrown> While testing I found some odd behaviour that was caused by
+NeilBrown> d_revalidate() racing with rename().  To resolve this I used
+NeilBrown> DCACHE_PAR_UPDATE to ensure they cannot race any more.
 
-  nfsd/vfs.c - nfsd_readdir
-      offset = vfs_llseek(file, offset, SEEK_SET);
+NeilBrown> Testing, review, or other comments would be most welcome,
 
-* Since the proxy server is re-exporting an NFS volume my assumption is
-  that the underlying VFS driver is NFS and the file handle is a
-  directory, thus vfs_llseek invokes nfs_llseek_dir.
-
-  nfs/dir.c - nfs_llseek_dir
-      switch (whence) {
-      case SEEK_SET:
-          if (offset < 0)
-              return -EINVAL;
-
-* Since offset is < 0, -EINVAL is returned resulting in NFS3ERR_INVAL.
-
-Reading further into the nfs/dir.c source, it seems the cookie value is
-used extensively as the dir's offset position, often being stored in
-ctx->pos.
-
-The issue here is the dir_context pos field is exposed to user
-applications. As a test the proxy NFS was removed, and the clients
-accessed the source NFS directly. In this configuration READDIRPLUS
-worked as expected but issues with telldir and seekdir were observed.
-
-When printing a directory listing using opendir/readdir negative d_off
-values were displayed in the output (left file name, right d_off):
-
-      . - 1
-     .. - 2
-      1 - 848716379849752578
-     10 - -2618909677999620093
-    100 - -2414677489084268540
-    101 - 3137853460930625541
-    102 - 7540226876707438598
-    103 - 4424272775414284295
-    104 - -2696494435385999352
-    105 - -3076080213327609847
-    ...
-
-The directory listing was printed a second time, with an added call to
-seekdir after opendir. If a non-negative d_off value was chosen the
-directory listing would correctly start from that entry. If a negative
-d_off value was chosen the directory listing would start from the first
-entry.
-
-As seekdir has no way to indicate an error, it's likely that the lseek
-call failed. We did not include a test at the time to clear and check
-errno but it's likely this would have indicated EINVAL.
-
-A similar issue was noted with lseek returning negative positions for
-directories on ext4: https://bugzilla.kernel.org/show_bug.cgi?id=200043
-It was noted here that the correct behaviour is not well defined.
-It seems it's not prohibited to return a negative value, but many
-applications tend to interpret negative values as an error. Also lseek
-is now documented to return -1 on an error, which is an issue here as -1
-is a perfectly valid cookie value.
-
-On the older 3.10 kernel, this was not an issue as the 3.10 kernel uses
-the array index position for the offset value instead of the NFS cookie.
-
---
-Chris
