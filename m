@@ -2,263 +2,204 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62D585A324E
-	for <lists+linux-nfs@lfdr.de>; Sat, 27 Aug 2022 01:01:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A40E5A325C
+	for <lists+linux-nfs@lfdr.de>; Sat, 27 Aug 2022 01:07:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345073AbiHZXBd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 26 Aug 2022 19:01:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        id S1345476AbiHZXHL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 26 Aug 2022 19:07:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231738AbiHZXBc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 19:01:32 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76ACFE831A
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 16:01:31 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27QMY4rl006479
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 23:01:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2022-7-12;
- bh=ZBdMQu+PUFtw31PX7bMo6q47LoJsd1sQ4amWWMgvmbE=;
- b=Zv+27YLX5wPXm7qP+n1zL7Q7yotNxY6B/R1DJLlbH86Q8d2bK4N2+n9IJ+ItrMzj6Aru
- Pxc5kv/vmKD7pQ+c1m39mgCN//2AF4v2W62Vd46rnSHj1rhpZbzhcqnM31P/adDRVC7M
- 43dGW2Aaz0aLV3j4Ml0Yy9FvtxKFJUMZwWh+o4BSziIdZJmTKJ4iefRmMbMElpEsDITo
- ty5RS0fKJdjqC4zuRMX5MPIS0hdomfOoVGi8AoM4n8YdbUL2pbJopAO4epgK9FjP5krR
- QSr8qDd5//FVJ2qDraLEXnLQcZnD5GX1uP0ZDLqRmegPhqLqane7r9nJ6xS3KpFUvDrM oQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j4w25tmm2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 23:01:30 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27QJqTmK033562
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 23:01:30 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3j5n6rjccc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 23:01:29 +0000
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27QN1SqE005764
-        for <linux-nfs@vger.kernel.org>; Fri, 26 Aug 2022 23:01:29 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3j5n6rjcb7-3;
-        Fri, 26 Aug 2022 23:01:29 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 2/2] NFSD: add shrinker to reap courtesy clients on low memory condition
-Date:   Fri, 26 Aug 2022 16:01:26 -0700
-Message-Id: <1661554886-26025-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1661554886-26025-1-git-send-email-dai.ngo@oracle.com>
-References: <1661554886-26025-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-26_12,2022-08-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 spamscore=0
- bulkscore=0 adultscore=0 mlxscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2208260090
-X-Proofpoint-ORIG-GUID: tKXIelwr1a6KCuyD78leBOC20Xw6kvOv
-X-Proofpoint-GUID: tKXIelwr1a6KCuyD78leBOC20Xw6kvOv
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S1345469AbiHZXHG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 26 Aug 2022 19:07:06 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C950EA15E;
+        Fri, 26 Aug 2022 16:06:59 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 7704F1F9AA;
+        Fri, 26 Aug 2022 23:06:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1661555217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z9A0c2a3LCJ9HJ4RB1nSEWfMe03bJHyDrZPgEaaTEYc=;
+        b=INqbeFj3w2PzH1oF+OZJpFIvoUFqm1RVyKKo5LXy/H0mMWfs+cr4E5Kb521FCR6ButT2HE
+        XoxSEZ3kRwmNKABcz3C/2+JUAng99Xo3RjdLJU+w6GNF1NeNcAw7GNGvW7GuON0kkIskNG
+        Y4QJTey76ikAMYV2mZo6Pd5ufPf+MV0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1661555217;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z9A0c2a3LCJ9HJ4RB1nSEWfMe03bJHyDrZPgEaaTEYc=;
+        b=Ck47smO+LzO+yoZ5LmCawuaiW47mp3isxzMgPSMeB7m75ceiKfdcX0prCboyj5Vk3A6Xh+
+        iVioxUaSV5z+7kAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F05A013421;
+        Fri, 26 Aug 2022 23:06:54 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id VZZiKg5SCWOhcAAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 26 Aug 2022 23:06:54 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Linus Torvalds" <torvalds@linux-foundation.org>
+Cc:     "Al Viro" <viro@zeniv.linux.org.uk>,
+        "Daire Byrne" <daire@dneg.com>,
+        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
+        "Chuck Lever" <chuck.lever@oracle.com>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org,
+        "LKML" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] VFS: support parallel updates in the one directory.
+In-reply-to: <CAHk-=wi_wwTxPTnFXsG8zdaem5YDnSd4OsCeP78yJgueQCb-1g@mail.gmail.com>
+References: <166147828344.25420.13834885828450967910.stgit@noble.brown>,
+ <166147984370.25420.13019217727422217511.stgit@noble.brown>,
+ <CAHk-=wi_wwTxPTnFXsG8zdaem5YDnSd4OsCeP78yJgueQCb-1g@mail.gmail.com>
+Date:   Sat, 27 Aug 2022 09:06:51 +1000
+Message-id: <166155521174.27490.456427475820966571@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add the courtesy client shrinker to react to low memory condition
-triggered by the memory shrinker.
+On Sat, 27 Aug 2022, Linus Torvalds wrote:
+> On Thu, Aug 25, 2022 at 7:16 PM NeilBrown <neilb@suse.de> wrote:
+> >
+> > If a filesystem supports parallel modification in directories, it sets
+> > FS_PAR_DIR_UPDATE on the file_system_type.  lookup_open() and the new
+> > lookup_hash_update() notice the flag and take a shared lock on the
+> > directory, and rely on a lock-bit in d_flags, much like parallel lookup
+> > relies on DCACHE_PAR_LOOKUP.
+>=20
+> Ugh.
 
-On the shrinker's count callback, we increment a callback counter
-and return the number of outstanding courtesy clients. When the
-laundromat runs, it checks if this counter is not zero and starts
-reaping old courtesy clients. The maximum number of clients to be
-reaped is limited to NFSD_CIENT_MAX_TRIM_PER_RUN (128). This limit
-is to prevent the laundromat from spending too much time reaping
-the clients and not processing other tasks in a timely manner.
+Thanks :-) - no, really - thanks for the high-level review!
 
-The laundromat is rescheduled to run sooner if it detects low
-low memory condition and there are more clients to reap.
+>=20
+> I absolutely believe in the DCACHE_PAR_LOOKUP model, and in "parallel
+> updates" being important, but I *despise* locking code like this
+>=20
+> +       if (wq && IS_PAR_UPDATE(dir))
+> +               inode_lock_shared_nested(dir, I_MUTEX_PARENT);
+> +       else
+> +               inode_lock_nested(dir, I_MUTEX_PARENT);
+>=20
+> and I really really hope there's some better model for this.
+>=20
+> That "wq" test in particular is just absolutely disgusting. So now it
+> doesn't just depend on whether the directory supports parallel
+> updates, now the caller can choose whether to do the parallel thing or
+> not, and that's how "create" is different from "rename".
 
-On the shrinker's scan callback, we return the number of clients
-That were reaped since the last scan callback. We can not reap
-the clients on the scan callback context since destroying the
-client might require call into the underlying filesystem or other
-subsystems which might allocate memory which can cause deadlock.
+As you note, by the end of the series "create" is not more different
+from "rename" than it already is.  I only broke up the patches to make
+review more manageable.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/netns.h     |  3 +++
- fs/nfsd/nfs4state.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfsctl.c    |  6 ++++--
- fs/nfsd/nfsd.h      |  9 +++++++--
- 4 files changed, 61 insertions(+), 8 deletions(-)
+The "wq" can be removed.  There are two options.
+One is to change every kern_path_create() or user_path_create() caller
+to passed in a wq.  Then we can assume that a wq is always available.
+There are about a dozen of these calls, so not an enormous change, but
+one that I didn't want to think about just yet.  I could add a patch at
+the front of the series which did this.
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 2695dff1378a..2a604951623f 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -194,6 +194,9 @@ struct nfsd_net {
- 	int			nfs4_max_clients;
- 
- 	atomic_t		nfsd_courtesy_client_count;
-+	atomic_t		nfsd_client_shrinker_cb_count;
-+	atomic_t		nfsd_client_shrinker_reapcount;
-+	struct shrinker		nfsd_client_shrinker;
- };
- 
- /* Simple check to find out if a given net was properly initialized */
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 3d8d7ebb5b91..9d5a20f0c3c4 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4341,7 +4341,39 @@ nfsd4_init_slabs(void)
- 	return -ENOMEM;
- }
- 
--void nfsd4_init_leases_net(struct nfsd_net *nn)
-+static unsigned long
-+nfsd_courtesy_client_count(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	struct nfsd_net *nn = container_of(shrink,
-+			struct nfsd_net, nfsd_client_shrinker);
-+
-+	atomic_inc(&nn->nfsd_client_shrinker_cb_count);
-+	return (unsigned long)atomic_read(&nn->nfsd_courtesy_client_count);
-+}
-+
-+static unsigned long
-+nfsd_courtesy_client_scan(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	struct nfsd_net *nn = container_of(shrink,
-+			struct nfsd_net, nfsd_client_shrinker);
-+	unsigned long cnt;
-+
-+	cnt = atomic_read(&nn->nfsd_client_shrinker_reapcount);
-+	atomic_set(&nn->nfsd_client_shrinker_reapcount, 0);
-+	return cnt;
-+}
-+
-+static int
-+nfsd_register_client_shrinker(struct nfsd_net *nn)
-+{
-+	nn->nfsd_client_shrinker.scan_objects = nfsd_courtesy_client_scan;
-+	nn->nfsd_client_shrinker.count_objects = nfsd_courtesy_client_count;
-+	nn->nfsd_client_shrinker.seeks = DEFAULT_SEEKS;
-+	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
-+}
-+
-+int
-+nfsd4_init_leases_net(struct nfsd_net *nn)
- {
- 	struct sysinfo si;
- 	u64 max_clients;
-@@ -4362,6 +4394,8 @@ void nfsd4_init_leases_net(struct nfsd_net *nn)
- 	nn->nfs4_max_clients = max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
- 
- 	atomic_set(&nn->nfsd_courtesy_client_count, 0);
-+	atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
-+	return nfsd_register_client_shrinker(nn);
- }
- 
- static void init_nfs4_replay(struct nfs4_replay *rp)
-@@ -5870,12 +5904,17 @@ static void
- nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 				struct laundry_time *lt)
- {
--	unsigned int oldstate, maxreap, reapcnt = 0;
-+	unsigned int oldstate, maxreap = 0, reapcnt = 0;
-+	int cb_cnt;
- 	struct list_head *pos, *next;
- 	struct nfs4_client *clp;
- 
--	maxreap = (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) ?
--			NFSD_CLIENT_MAX_TRIM_PER_RUN : 0;
-+	cb_cnt = atomic_read(&nn->nfsd_client_shrinker_cb_count);
-+	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients ||
-+							cb_cnt) {
-+		maxreap = NFSD_CLIENT_MAX_TRIM_PER_RUN;
-+		atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
-+	}
- 	INIT_LIST_HEAD(reaplist);
- 	spin_lock(&nn->client_lock);
- 	list_for_each_safe(pos, next, &nn->client_lru) {
-@@ -5902,6 +5941,8 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 		}
- 	}
- 	spin_unlock(&nn->client_lock);
-+	if (cb_cnt)
-+		atomic_add(reapcnt, &nn->nfsd_client_shrinker_reapcount);
- }
- 
- static time64_t
-@@ -5942,6 +5983,8 @@ nfs4_laundromat(struct nfsd_net *nn)
- 		list_del_init(&clp->cl_lru);
- 		expire_client(clp);
- 	}
-+	if (atomic_read(&nn->nfsd_client_shrinker_cb_count) > 0)
-+		lt.new_timeo = NFSD_LAUNDROMAT_MINTIMEOUT;
- 	spin_lock(&state_lock);
- 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
- 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 917fa1892fd2..597a26ad4183 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1481,11 +1481,12 @@ static __net_init int nfsd_init_net(struct net *net)
- 		goto out_idmap_error;
- 	nn->nfsd_versions = NULL;
- 	nn->nfsd4_minorversions = NULL;
-+	retval = nfsd4_init_leases_net(nn);
-+	if (retval)
-+		goto out_drc_error;
- 	retval = nfsd_reply_cache_init(nn);
- 	if (retval)
- 		goto out_drc_error;
--	nfsd4_init_leases_net(nn);
--
- 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
- 	seqlock_init(&nn->writeverf_lock);
- 
-@@ -1507,6 +1508,7 @@ static __net_exit void nfsd_exit_net(struct net *net)
- 	nfsd_idmap_shutdown(net);
- 	nfsd_export_shutdown(net);
- 	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
-+	nfsd4_leases_net_shutdown(nn);
- }
- 
- static struct pernet_operations nfsd_net_ops = {
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 57a468ed85c3..ed4b48a9b260 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -498,7 +498,11 @@ extern void unregister_cld_notifier(void);
- extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
- #endif
- 
--extern void nfsd4_init_leases_net(struct nfsd_net *nn);
-+extern int nfsd4_init_leases_net(struct nfsd_net *nn);
-+static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn)
-+{
-+	unregister_shrinker(&nn->nfsd_client_shrinker);
-+};
- 
- #else /* CONFIG_NFSD_V4 */
- static inline int nfsd4_is_junction(struct dentry *dentry)
-@@ -506,7 +510,8 @@ static inline int nfsd4_is_junction(struct dentry *dentry)
- 	return 0;
- }
- 
--static inline void nfsd4_init_leases_net(struct nfsd_net *nn) {};
-+static inline int nfsd4_init_leases_net(struct nfsd_net *nn) { return 0 };
-+static inline void nfsd4_leases_shutdown(struct nfsd_net *nn) { };
- 
- #define register_cld_notifier() 0
- #define unregister_cld_notifier() do { } while(0)
--- 
-2.9.5
+Alternate option is to never pass in a wq for create operation, and use
+var_waitqueue() (or something similar) to provide a global shared wait
+queue (which is essentially what I am using to wait for
+DCACHE_PAR_UPDATE to clear).
+The more I think about it, the more I think this is the best way
+forward.   Maybe we'll want to increase WAIT_TABLE_BITS ... I wonder how
+to measure how much contention there is on these shared queues.
 
+>=20
+> And that last difference is, I think, the one that makes me go "No. HELL NO=
+".
+>=20
+> Instead of it being up to the filesystem to say "I can do parallel
+> creates, but I need to serialize renames", this whole thing has been
+> set up to be about the caller making that decision.
+
+I think that is a misunderstanding.  The caller isn't making a decision
+- except the IS_PAR_UPDATE() test which is simply acting on the fs
+request.  What you are seeing is a misguided attempt to leave in place
+some existing interfaces which assumed exclusive locking and didn't
+provide wqs.
+
+>=20
+> That's just feels horribly horribly wrong.
+>=20
+> Yes, I realize that to you that's just a "later patches will do
+> renames", but what if it really is a filesystem issue where the
+> filesystem can easily handle new names, but needs something else for
+> renames because it has various cross-directory issues, perhaps?
+
+Obviously a filesystem can add its own locking - and they will have to,
+though at a finer grain that the VFS can do.
+
+
+>=20
+> So I feel this is fundamentally wrong, and this ugliness is a small
+> effect of that wrongness.
+>=20
+> I think we should strive for
+>=20
+>  (a) make that 'wq' and DCACHE_PAR_LOOKUP bit be unconditional
+
+Agreed (in an earlier version DCACHE_PAR_LOOKUP was optional, but I
+realised that you wouldn't like that :-)
+
+>=20
+>  (b) aim for the inode lock being taken *after* the _lookup_hash(),
+> since the VFS layer side has to be able to handle the concurrency on
+> the dcache side anyway
+
+I think you are suggesting that we change ->lookup call to NOT
+require i_rwsem be held.  That is not a small change.
+I agree that it makes sense in the long term.  Getting there ....  won't
+be a quick as I'd hoped.
+
+>=20
+>  (c) at that point, the serialization really ends up being about the
+> call into the filesystem, and aim to simply move the
+> inode_lock{_shared]_nested() into the filesystem so that there's no
+> need for a flag and related conditional locking at all.
+
+It might be nice to take a shared lock in VFS, and let the FS upgrade it
+to exclusive if needed, but we don't have upgrade_read() ...  maybe it
+would be deadlock-prone.
+
+>=20
+> Because right now I think the main reason we cannot move the lock into
+> the filesystem is literally that we've made the lock cover not just
+> the filesystem part, but the "lookup and create dentry" part too.
+>=20
+> But once you have that "DCACHE_PAR_LOOKUP" bit and the
+> d_alloc_parallel() logic to serialize a _particular_ dentry being
+> created (as opposed to serializing all the sleeping ops to that
+> directly), I really think we should strive to move the locking - that
+> no longer helps the VFS dcache layer - closer to the filesystem call
+> and eventually into it.
+>=20
+> Please? I think these patches are "mostly going in the right
+> direction", but at the same time I feel like there's some serious
+> mis-design going on.
+
+Hmmm....  I'll dig more deeply into ->lookup and see if I can understand
+the locking well enough to feel safe removing i_rwsem from it.
+
+Thanks,
+NeilBrown
