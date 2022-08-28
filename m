@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF8F55A3F2F
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Aug 2022 20:50:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 421355A3F30
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Aug 2022 20:51:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230041AbiH1Sux (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 28 Aug 2022 14:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37060 "EHLO
+        id S230028AbiH1SvA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 28 Aug 2022 14:51:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230028AbiH1Suw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Aug 2022 14:50:52 -0400
+        with ESMTP id S230073AbiH1Su6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Aug 2022 14:50:58 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520DEDF7A
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Aug 2022 11:50:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E06E0A6
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Aug 2022 11:50:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F266BB8076E
-        for <linux-nfs@vger.kernel.org>; Sun, 28 Aug 2022 18:50:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96DE9C433C1;
-        Sun, 28 Aug 2022 18:50:48 +0000 (UTC)
-Subject: [PATCH v2 5/7] NFSD: Clean up WRITE arg decoders
+        by ams.source.kernel.org (Postfix) with ESMTPS id 52B9FB80B87
+        for <linux-nfs@vger.kernel.org>; Sun, 28 Aug 2022 18:50:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43EFC433D6;
+        Sun, 28 Aug 2022 18:50:54 +0000 (UTC)
+Subject: [PATCH v2 6/7] SUNRPC: Fix typo in xdr_buf_subsegment's kdoc comment
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Sun, 28 Aug 2022 14:50:47 -0400
-Message-ID: <166171264742.21449.12798598095676580927.stgit@manet.1015granger.net>
+Date:   Sun, 28 Aug 2022 14:50:54 -0400
+Message-ID: <166171265398.21449.11749625023129698282.stgit@manet.1015granger.net>
 In-Reply-To: <166171174172.21449.5036120183381273656.stgit@manet.1015granger.net>
 References: <166171174172.21449.5036120183381273656.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -41,45 +41,23 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-xdr_stream_subsegment() already returns a boolean value.
-
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3xdr.c |    4 +---
- fs/nfsd/nfsxdr.c  |    4 +---
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ net/sunrpc/xdr.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
-index 71e32cf28885..3308dd671ef0 100644
---- a/fs/nfsd/nfs3xdr.c
-+++ b/fs/nfsd/nfs3xdr.c
-@@ -571,10 +571,8 @@ nfs3svc_decode_writeargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 		args->count = max_blocksize;
- 		args->len = max_blocksize;
- 	}
--	if (!xdr_stream_subsegment(xdr, &args->payload, args->count))
--		return false;
- 
--	return true;
-+	return xdr_stream_subsegment(xdr, &args->payload, args->count);
- }
- 
- bool
-diff --git a/fs/nfsd/nfsxdr.c b/fs/nfsd/nfsxdr.c
-index aba8520b4b8b..caf6355b18fa 100644
---- a/fs/nfsd/nfsxdr.c
-+++ b/fs/nfsd/nfsxdr.c
-@@ -338,10 +338,8 @@ nfssvc_decode_writeargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
- 		return false;
- 	if (args->len > NFSSVC_MAXBLKSIZE_V2)
- 		return false;
--	if (!xdr_stream_subsegment(xdr, &args->payload, args->len))
--		return false;
- 
--	return true;
-+	return xdr_stream_subsegment(xdr, &args->payload, args->len);
- }
- 
- bool
+diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+index 482586c23fdd..8ad637ca703e 100644
+--- a/net/sunrpc/xdr.c
++++ b/net/sunrpc/xdr.c
+@@ -1575,7 +1575,7 @@ EXPORT_SYMBOL_GPL(xdr_buf_from_iov);
+  *
+  * @buf and @subbuf may be pointers to the same struct xdr_buf.
+  *
+- * Returns -1 if base of length are out of bounds.
++ * Returns -1 if base or length are out of bounds.
+  */
+ int xdr_buf_subsegment(const struct xdr_buf *buf, struct xdr_buf *subbuf,
+ 		       unsigned int base, unsigned int len)
 
 
