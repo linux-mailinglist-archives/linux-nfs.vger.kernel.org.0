@@ -2,173 +2,236 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 563EB5A3AC1
-	for <lists+linux-nfs@lfdr.de>; Sun, 28 Aug 2022 03:07:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3AF95A3DAF
+	for <lists+linux-nfs@lfdr.de>; Sun, 28 Aug 2022 15:25:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230201AbiH1BH4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 27 Aug 2022 21:07:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47828 "EHLO
+        id S229628AbiH1NZp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 28 Aug 2022 09:25:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbiH1BHz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 27 Aug 2022 21:07:55 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430F04D81F;
-        Sat, 27 Aug 2022 18:07:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RarSH45MZT6jfFcdNdewAu5lGJfJnsreF8Vx/4RiYC7rIHxGEg6MbZa3mG8whJy4zzpCTiAXi9QdO0HwLajtc1E8wHgKE4RwMRUEnlM0RwFWOAH4W6sVIOfp2gLgTcVFUIuKNz21Z5QUFO0VVQHKGg1/G03dxm5ggjT4ZN8hqceUrjn4zesqhuoqRE8QF4JHxcF9VJxEumlnjEHjOvdnDua98Ni7y4WNXvHNmhzptb728xfBdJKIVYiBmrj1jqYOT0OYp+nVg70R0zgL5xiimVq/TwIJORZZaC3JVahQ6Z4h38Tc/mtMIkoqX82r9QNsCqTE6FZzk8b5DjnaivqO1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0qgFoj4aoFtoa7ImsVC3+YHUj8ufhx8X74LkpWSUDRQ=;
- b=WQlVbzdQD6Tsc4ez7L3UdmpEMntcB1viI9/kH4HlqFku+wKfc3BX/Ktl+K/iRKXdcpUEeNmDM7Yv7VuygeyuQyuuCBB1zfRlIBZ0rFe2FOZJMeGFxOeMT3Myx1YeaIOwhvjcuYp+e7pdna6Ybmq2Cyz6wX1uwc8CG5VDlTA9LBxujoAubeGFGuXMGC+b4A+stn9ErkYlh3nwP+rw/IgxUG8zUYJ0pAZJ2eosKSB2uHfsNopGYqxAqOxv8iMwaSwRBgzUOsjAPU6gYOZ4TCuEyZfWHax9CccKNcWfb5p3J7uywPhT/eNizzUf8h3lQl5eA4RZ9fsIacGvFz97hKnKlw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0qgFoj4aoFtoa7ImsVC3+YHUj8ufhx8X74LkpWSUDRQ=;
- b=clQxFgS58D46dgU8cpSQ/adv5LP0eZset33/lyKPvm8hs5mEs4VkFP6B5EenYC6ibjZJJ5/CNB4Yf+sF9S84l6p2Wa9GTx+lTkIEWNkFE+S9Rzry6+Dyq1BXgoKIX85iXUhGw9jZY7MozUfFCWcNchA+SVDPpyKBnQzdY+MZKM/pDP+KbZNAHbqBhyBmJ/N1L9FlTBFZqaPGwst7jTHeHn0IHJ5um2fQCJjljohrDq3Fhulo4QfixVDyFguGWlcBHyOi9gbLJy8a3KaH1q+odt9sopaAqP+IsiOigkZSWhHtz60oGrQaod/N2A/O9fZQ0KZzMAdfpa0wZD1YRQIyNQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by DM6PR12MB4779.namprd12.prod.outlook.com (2603:10b6:5:172::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.14; Sun, 28 Aug
- 2022 01:07:51 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5%8]) with mapi id 15.20.5566.021; Sun, 28 Aug 2022
- 01:07:51 +0000
-Message-ID: <345f3293-51fd-1f2c-9d6a-7e6e8950102d@nvidia.com>
-Date:   Sat, 27 Aug 2022 18:07:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.12.0
-Subject: Re: [PATCH 2/6] block: add dio_w_*() wrappers for pin, unpin user
- pages
-Content-Language: en-US
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20220827083607.2345453-1-jhubbard@nvidia.com>
- <20220827083607.2345453-3-jhubbard@nvidia.com>
- <20220827152745.3dcd05e98b3a4383af650a72@linux-foundation.org>
- <4c6903d4-0612-5097-0005-4a9420890826@nvidia.com>
- <20220827171220.fa2f21f6b22c6d3047857381@linux-foundation.org>
- <d89943aa-5528-a424-099f-4b1a2151b893@nvidia.com>
-In-Reply-To: <d89943aa-5528-a424-099f-4b1a2151b893@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR01CA0071.prod.exchangelabs.com (2603:10b6:a03:94::48)
- To BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+        with ESMTP id S229436AbiH1NZm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 28 Aug 2022 09:25:42 -0400
+Received: from mail-vs1-xe33.google.com (mail-vs1-xe33.google.com [IPv6:2607:f8b0:4864:20::e33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5032181E;
+        Sun, 28 Aug 2022 06:25:41 -0700 (PDT)
+Received: by mail-vs1-xe33.google.com with SMTP id k2so5964170vsk.8;
+        Sun, 28 Aug 2022 06:25:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc;
+        bh=jJnPIiLXos1pGZCNNXz0g207shJMFvq2w6EE6u3Sb08=;
+        b=kPn9FW50BqKVOiGds0UgH1bs+xviysP6qmZCqv5tiBST88174BRcUyMuJXQvcfSlcc
+         42qsWsPkK5amx9cD7ByvWdqpBjE/ra4SiCuwU3zcfsvKuWaoT8Gi5DMhGYRUgOciSOz7
+         tCJXaTjV4sgf+pZaM58Nb8HqtMcWxfoCGe9pfVfOzHmVyvvggiHWHD4yDDKFv6X7B5uy
+         uY6J7DUBRk6AF4M7p14R2ilmayp8TivWNxZE2WAw1axPWFfpBjQf7Zsp45J9CM1Y4lh8
+         xA4yiFMZo1xRhr73M7Gh5jY5+ivon96qLczdct6Wb+qaqOB70IhIy3zkVJIhG30eUiHj
+         Xikg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc;
+        bh=jJnPIiLXos1pGZCNNXz0g207shJMFvq2w6EE6u3Sb08=;
+        b=h4j6x37mBIsWQ+q4bwUp73VPG5i62tshPBmwbZQ9P8k6QEZiz5b5uwanniNCcLSXoD
+         WjjAvqW78HjzoklbfndE6RLHzAapx/sKoktATAB56NU659+tEiznBaz/MyRkt6WsH0aB
+         G3e3LcrRHm4pWUspuZ1nvIh8ULhl3Pn7GHOb/y554H6JmpNxf8kx30Bd1PxWpif8bZyJ
+         x0fmDZQJ+OlAqseGh4sHunt5oUTTpZMSckvocOczjfukiMKt9TeL5Nm/sjiTo9JeQdMP
+         ajZk0nUHDkjpM5twrC2MGHi2UKLh8y2gZrrxisIW1tTu6fhkI2JlYBCJUWBfuk6+k995
+         GxeQ==
+X-Gm-Message-State: ACgBeo0WoHxXS8sh6oXOwcZFwsWPqxhAbpfGQWAiKGRMOpqkQ9akngKR
+        s0yLDSXz2xHbDWpzcGCTRPKZkWyfE73HMJv3m4M=
+X-Google-Smtp-Source: AA6agR5YihNa9fdzWTu45XRhezWFmDItj8XSiiAoefP66VqkIn8e0FUykWNTGpm7/ldany6mpYtQ7ZZxQNFsslv/wmM=
+X-Received: by 2002:a67:a649:0:b0:390:88c5:6a91 with SMTP id
+ r9-20020a67a649000000b0039088c56a91mr2274114vsh.3.1661693139696; Sun, 28 Aug
+ 2022 06:25:39 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 1507fa3d-c5fc-49ff-41e0-08da8891bada
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4779:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lck6Pbx24zNPshqLbrNG/SYQIjqneeiiaRT7AHdrYNYcBVRFY3JK5zAoA3nRKk7hjeTMo04YKXhrIOruqlnSZ5Gng7S7iRR8F8uorXPkW25rMjhACeDNplaYWVlfGDMvUkEPhP1GHqYTTcepIPfi5lT3OjcbsZ9PbvkM6Ifivc6AVP4V9FzuWqJeEqn1hXOyXdxE0cPst4r1Qhi2zI7OY9h44vKbS0i7hjefDaA4y/vWJ6yqlDDVZGA6QehxvDxG4x5cElWD5JAElsF12RY2LgB+zqdiBXx/Eul+AX/QCeJFhr0YRzi7BmVCPTPhNKGB3WdlnbE7AVvzocoecBr6+F/zJoGRpB3E3IkrIUI1eJEhTG8rUm/kqJ66Agd/VodVn7SwPxvd/5x3i55yl6so62H0FHAgJs1EDCgrcqKSnT8ZbkwoNnA/HDVxz1DzjzigblVdmBWwLJ1bUvHj3GyPUuystZtjIn9qLEJiVix1FEtlDg/Y6khoq/bGN2bAc+ZepUtk7jRcUP2i/E8aaRptCvR5Z1mdYTUeNH2OTTNnxBkpEFNv4ofRO/OMGbajfkttknBMqz2Ii/up/ynFp7zHrICenvcUgMxXnRo7CBbwb7uSL0JSgUMfVY6y/DG5S+4I4uZkFCPawoTpXqkMKiihBwcmPRk9BaUXSnx00INlSiz0Xaj47+2WuGqm55iTultUFpHCDpjP2OSVxUcouO9DtI6DSmIZofYnnlC7ulX8sRdV2A06pnyaozhtYx3qp4RJTlQKqZ+DldAhQk4G6JCP4TvTeuobTKetFz6ApAPYZcU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(346002)(396003)(136003)(366004)(39860400002)(41300700001)(6486002)(6506007)(53546011)(26005)(6666004)(6512007)(316002)(54906003)(6916009)(86362001)(31696002)(478600001)(38100700002)(186003)(2616005)(4744005)(31686004)(7416002)(8936002)(2906002)(5660300002)(36756003)(8676002)(66476007)(66946007)(4326008)(66556008)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NjBHQmpSb1ExWkx0VkdRRENabG9VekZnVVlodnhyc0pxem16cXAwdXRoNjMw?=
- =?utf-8?B?L090aVI3MWdGQ2JtaDFPOEtRVXcxejZlb2hhRXJpVEp1ZEFvanpIRklSeVIv?=
- =?utf-8?B?bDVsc3EwS1ZyaXRRaW93dFhSVlQycWZ3NjdUa2VLUEZrWVR1UXl3RmY3Zkg0?=
- =?utf-8?B?ZmkwQUFYbHE2OVVlc3ltUXBRdllSYkRRNDR4bnArNmN5R0dDekNiWDJhY1Qx?=
- =?utf-8?B?SE15SlZaUmxwWjVzRFZIVGNmTUptY0E1a21SU05iMFFreHErelJXRzlHM0xp?=
- =?utf-8?B?VVRuV3haM0tEZk9UOWkzRFB1TEFMRmo5aVA0OHc5cmtvcDJESFNhT0ZOdnNj?=
- =?utf-8?B?NDF1SXJDbHVmMi9EVlVXbG02Wm5sQnBGQXJkbzIxQkVjR0JQRWJMYldXRGJO?=
- =?utf-8?B?cnRVaFROUWRoSk1vTnNacmM0MTk2d2tQWXRwQzNmNlVKNVFXWFRQTTBmcWsy?=
- =?utf-8?B?YU96d0hvT3NEdFJSOTV2SUdoWTRKNHJ5ckFrWmhtYUJPS0N3OWFKTVVlTUZZ?=
- =?utf-8?B?MlpvekdCS3BlMVR0MS9oUmp1V01IMm9FTnVWa2xwWkVsQm1Kd012aVhycHFI?=
- =?utf-8?B?VTVhczdqK0d0a3hTZ0hNNU1jVUZSME9paElmYllCRkZCWEhEOFVVVTJNOWFl?=
- =?utf-8?B?M0xsRURsMkVsRUR0S3Y5WFEzcU1vV29tY0liOWRBeTFiK1B0TzZ2dnREbW9J?=
- =?utf-8?B?a0grM2VOVnlaTU9EeEN1RmxmZ0VhS2lRUUhMTExreURjRjBqL2x5d2Q0aUhD?=
- =?utf-8?B?OE44d3RXTUx3dGZmbU4wWVliZkFiY255VktsRTE0dTk0UWxqRHQxVEN1Y0U2?=
- =?utf-8?B?UkJSTXR3eHpPYXZuYm9qZ3ZVTjZxZlloYmNJVmExWU1pdmZySGxmQk5wZW9W?=
- =?utf-8?B?cEZaTE4wQkRqZjJFSnZramNPd0lsWVJvcWJOSUJYdEZZR0xablFhOXE4S3JD?=
- =?utf-8?B?eVR5a3I4aldROTVCeXZBRTZnZjFaUzIyYVhwVTNoRGdXUC95eDVGWWgwYi9V?=
- =?utf-8?B?ZmZCN0c0MTE3bzNaVVMxYWM3NlJ5QU9TSDM2VlgwQ1c1YkRPUm54d0F1dUd4?=
- =?utf-8?B?MGlMNURnMjJVU0FMMEMxeTFkT3BCZmhpT0x0empnZTdhRFZRa3VKUW53MXZn?=
- =?utf-8?B?cmU5M1J3c09OUW5PWnQxYWxERGRWZWJtUkpGbUNUR0ZRbXA2T2VuUXRVUTBL?=
- =?utf-8?B?WUJUVUZnUkhqZDdTa2ppNFErT0FPUGs1aDhsYjdNMW5uRDM1c0l0enhKM21k?=
- =?utf-8?B?VzRBS1Q3c2QwMkk4cUtMKzgvY0lhQ2o3RE5RUHYvaHNCMFNadDhPalVmYk1J?=
- =?utf-8?B?WWRoNnlCQkpGZzV2RC9HU015RGxPTXpEZFJWQ0ZDY1JKSVQ3ZEZYeEtGK1I5?=
- =?utf-8?B?aXRSZ0hWOFdQTUUvUUpuSjZ3REk5Qmpic1VNZzkvZWRkVHMyWUovaFNoOVds?=
- =?utf-8?B?V1BNdGdRZHRpbEQvOGx1OGQ4Rk9YUWhmaW1ZZ3JWcUdjcTNWbUlHTE1wQzZ6?=
- =?utf-8?B?SS9nUmZrN04vOFZtaW5TdEpwWTJCZDI3VFB0WnM0L0ljSTBCWHo4MzdMVEJF?=
- =?utf-8?B?N3VlN2lDQzcwc3R3Uk1jM01paGtEN25lVXFmTFh6cWl2U3dvbE5ua0hpZGNj?=
- =?utf-8?B?SmkvNjFud1p5eHNTR0pqQnpSYVRNbFh2cDF2dTJjNnZNTzdrU0g4cWNnbDhN?=
- =?utf-8?B?MkRxOERVdzRrUVViRGZzMVlSaWJqdStTd3dGYmxHUVlIRkt0TmNvN0ltZ09G?=
- =?utf-8?B?MXhEUzBJMlhBbTcyYVZrRTFhcnh2S0tLOGtDMnNHZVF2R2VRUXRWMmVmT0xk?=
- =?utf-8?B?eDVxVWhPYnZKeGx3QW1PTTdsVVorMDFWVnFRNDFPeWRZMERCYkhOUmw2L0ZL?=
- =?utf-8?B?eWx3K2F5c0tHblJXU0NibGVCeDZLb25QamhPM3k5UC8xU25zdDkydU5vbXNv?=
- =?utf-8?B?cGxxalZRbnVQLzYwMWlKTlhFZ3BxcUtZWnR2aGgvazExbWZGb3JpYlZuaFFj?=
- =?utf-8?B?OUhxT05sTFlPK2NRTHN0RG5mc0V1bmlKc3N5a1daUlRCdWZyeEZQTTk0VTN0?=
- =?utf-8?B?UHdsNWdCeFZneUlpaElMa0w5SnN4amRPeVNuTzFUUWlrTkhNTC90ZUdiRUw2?=
- =?utf-8?Q?uv3zBsq5sDOtAuKRzkXpU5BuA?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1507fa3d-c5fc-49ff-41e0-08da8891bada
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2022 01:07:51.4097
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 8pSUopkVYVUGWDefwj8jBPnQR7aQaL0ZsnQpAiwL5O7IhITgUHPipP8vBjnPg+vZ1WldfJ3KHWKglDrfjK+O/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4779
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+References: <20220826214703.134870-1-jlayton@kernel.org> <20220826214703.134870-5-jlayton@kernel.org>
+ <CAOQ4uxjzE_B_EQktLr8z8gXOhFDNm-_YpUTycfZCdaZNp-i0hQ@mail.gmail.com>
+ <CAOQ4uxge86g=+HPnds-wRXkFHg67G=m9rGK7V_T8yS+2=w9tmg@mail.gmail.com>
+ <35d31d0a5c6c9a20c58f55ef62355ff39a3f18c6.camel@kernel.org>
+ <Ywo8cWRcJUpLFMxJ@magnolia> <079df2134120f847e8237675a8cc227d6354a153.camel@hammerspace.com>
+ <b13812a68310e49cc6fb649c2b1c25287712a8af.camel@kernel.org>
+In-Reply-To: <b13812a68310e49cc6fb649c2b1c25287712a8af.camel@kernel.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Sun, 28 Aug 2022 16:25:28 +0300
+Message-ID: <CAOQ4uxgThXDEO3mxR_PtPgcPsF7ueqFUxHO3F3KE9sVqi8sLJQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] xfs: don't bump the i_version on an atime update
+ in xfs_vn_update_time
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "neilb@suse.de" <neilb@suse.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "dwysocha@redhat.com" <dwysocha@redhat.com>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "lczerner@redhat.com" <lczerner@redhat.com>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/27/22 17:31, John Hubbard wrote:
-> On 8/27/22 17:12, Andrew Morton wrote:
->> On Sat, 27 Aug 2022 16:59:32 -0700 John Hubbard <jhubbard@nvidia.com> wrote:
->>
->>> Anyway, I'll change my patch locally for now, to this:
->>>
->>> static inline void dio_w_unpin_user_pages(struct page **pages,
->>> 					  unsigned long npages)
->>> {
->>> 	/* Careful, release_pages() uses a smaller integer type for npages: */
->>> 	if (WARN_ON_ONCE(npages > (unsigned long)INT_MAX))
->>> 		return;
->>>
->>> 	release_pages(pages, (int)npages);
->>> }
->>
->> Well, it might be slower.  release_pages() has a ton of fluff.
->>
->> As mentioned, the above might be faster if the pages tend
->> to have page_count()==1??
->>
-> 
-> I don't think we can know the answer to that. This code is called
+On Sat, Aug 27, 2022 at 7:10 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Sat, 2022-08-27 at 16:03 +0000, Trond Myklebust wrote:
+> > On Sat, 2022-08-27 at 08:46 -0700, Darrick J. Wong wrote:
+> > > On Sat, Aug 27, 2022 at 09:14:30AM -0400, Jeff Layton wrote:
+> > > > On Sat, 2022-08-27 at 11:01 +0300, Amir Goldstein wrote:
+> > > > > On Sat, Aug 27, 2022 at 10:26 AM Amir Goldstein
+> > > > > <amir73il@gmail.com> wrote:
+> > > > > >
+> > > > > > On Sat, Aug 27, 2022 at 12:49 AM Jeff Layton
+> > > > > > <jlayton@kernel.org> wrote:
+> > > > > > >
+> > > > > > > xfs will update the i_version when updating only the atime
+> > > > > > > value, which
+> > > > > > > is not desirable for any of the current consumers of
+> > > > > > > i_version. Doing so
+> > > > > > > leads to unnecessary cache invalidations on NFS and extra
+> > > > > > > measurement
+> > > > > > > activity in IMA.
+> > > > > > >
+> > > > > > > Add a new XFS_ILOG_NOIVER flag, and use that to indicate that
+> > > > > > > the
+> > > > > > > transaction should not update the i_version. Set that value
+> > > > > > > in
+> > > > > > > xfs_vn_update_time if we're only updating the atime.
+> > > > > > >
+> > > > > > > Cc: Dave Chinner <david@fromorbit.com>
+> > > > > > > Cc: NeilBrown <neilb@suse.de>
+> > > > > > > Cc: Trond Myklebust <trondmy@hammerspace.com>
+> > > > > > > Cc: David Wysochanski <dwysocha@redhat.com>
+> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > > ---
+> > > > > > >  fs/xfs/libxfs/xfs_log_format.h  |  2 +-
+> > > > > > >  fs/xfs/libxfs/xfs_trans_inode.c |  2 +-
+> > > > > > >  fs/xfs/xfs_iops.c               | 11 +++++++++--
+> > > > > > >  3 files changed, 11 insertions(+), 4 deletions(-)
+> > > > > > >
+> > > > > > > Dave has NACK'ed this patch, but I'm sending it as a way to
+> > > > > > > illustrate
+> > > > > > > the problem. I still think this approach should at least fix
+> > > > > > > the worst
+> > > > > > > problems with atime updates being counted. We can look to
+> > > > > > > carve out
+> > > > > > > other "spurious" i_version updates as we identify them.
+> > > > > > >
+> > > > > >
+> > > > > > AFAIK, "spurious" is only inode blocks map changes due to
+> > > > > > writeback
+> > > > > > of dirty pages. Anybody know about other cases?
+> > > > > >
+> > > > > > Regarding inode blocks map changes, first of all, I don't think
+> > > > > > that there is
+> > > > > > any practical loss from invalidating NFS client cache on dirty
+> > > > > > data writeback,
+> > > > > > because NFS server should be serving cold data most of the
+> > > > > > time.
+> > > > > > If there are a few unneeded cache invalidations they would only
+> > > > > > be temporary.
+> > > > > >
+> > > > >
+> > > > > Unless there is an issue with a writer NFS client that
+> > > > > invalidates its
+> > > > > own attribute
+> > > > > caches on server data writeback?
+> > > > >
+> > > >
+> > > > The client just looks at the file attributes (of which i_version is
+> > > > but
+> > > > one), and if certain attributes have changed (mtime, ctime,
+> > > > i_version,
+> > > > etc...) then it invalidates its cache.
+> > > >
+> > > > In the case of blocks map changes, could that mean a difference in
+> > > > the
+> > > > observable sparse regions of the file? If so, then a READ_PLUS
+> > > > before
+> > > > the change and a READ_PLUS after could give different results.
+> > > > Since
+> > > > that difference is observable by the client, I'd think we'd want to
+> > > > bump
+> > > > i_version for that anyway.
+> > >
+> > > How /is/ READ_PLUS supposed to detect sparse regions, anyway?  I know
+> > > that's been the subject of recent debate.  At least as far as XFS is
+> > > concerned, a file range can go from hole -> delayed allocation
+> > > reservation -> unwritten extent -> (actual writeback) -> written
+> > > extent.
+> > > The dance became rather more complex when we added COW.  If any of
+> > > that
+> > > will make a difference for READ_PLUS, then yes, I think you'd want
+> > > file
+> > > writeback activities to bump iversion to cause client invalidations,
+> > > like (I think) Dave said.
+> > >
+> > > The fs/iomap/ implementation of SEEK_DATA/SEEK_HOLE reports data for
+> > > written and delalloc extents; and an unwritten extent will report
+> > > data
+> > > for any pagecache it finds.
+> > >
+> >
+> > READ_PLUS should never return anything different than a read() system
+> > call would return for any given area. The way it reports sparse regions
+> > vs. data regions is purely an RPC formatting convenience.
+> >
+> > The only point to note about NFS READ and READ_PLUS is that because the
+> > client is forced to send multiple RPC calls if the user is trying to
+> > read a region that is larger than the 'rsize' value, it is possible
+> > that these READ/READ_PLUS calls may be processed out of order, and so
+> > the result may end up looking different than if you had executed a
+> > read() call for the full region directly on the server.
+> > However each individual READ / READ_PLUS reply should look as if the
+> > user had called read() on that rsize-sized section of the file.
+> > > >
+>
+> Yeah, thinking about it some more, simply changing the block allocation
+> is not something that should affect the ctime, so we probably don't want
+> to bump i_version on it. It's an implicit change, IOW, not an explicit
+> one.
+>
+> The fact that xfs might do that is unfortunate, but it's not the end of
+> the world and it still would conform to the proposed definition for
+> i_version. In practice, this sort of allocation change should come soon
+> after the file was written, so one would hope that any damage due to the
+> false i_version bump would be minimized.
+>
 
-To clarify: I mean, I don't think we can know whether or not these pages 
-usually have page_count()==1.
+That was exactly my point.
 
+> It would be nice to teach it not to do that however. Maybe we can insert
+> the NOIVER flag at a strategic place to avoid it?
 
-thanks,
+Why would that be nice to avoid?
+You did not specify any use case where incrementing i_version
+on block mapping change matters in practice.
+On the contrary, you said that NFS client writer sends COMMIT on close,
+which should stabilize i_version for the next readers.
 
--- 
-John Hubbard
-NVIDIA
+Given that we already have an xfs implementation that does increment
+i_version on block mapping changes and it would be a pain to change
+that or add a new user options, I don't see the point in discussing it further
+unless there is a good incentive for avoiding i_version updates in those cases.
+
+Thanks,
+Amir.
