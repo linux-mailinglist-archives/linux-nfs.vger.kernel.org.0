@@ -2,220 +2,271 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DAFD35A4ECE
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 16:07:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38D735A4FA4
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 16:51:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230188AbiH2OHS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Aug 2022 10:07:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52004 "EHLO
+        id S230204AbiH2Ov1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Aug 2022 10:51:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbiH2OHR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 10:07:17 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D7507E817
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 07:07:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229486AbiH2OvZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 10:51:25 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3DBB90839;
+        Mon, 29 Aug 2022 07:51:22 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD4ECB81091
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 14:07:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9505C433D6;
-        Mon, 29 Aug 2022 14:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661782033;
-        bh=wOGVo/ncM0Ih336XZ0rMSPGRZ0sG/3LIxXvbzU8l+Ro=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=GvNRdacXLhVSQjlJ8x61/A3FmBqQVHgMxKQVUtUXo9fbClekEWqiLz5xzp72MejBq
-         gJnsy4lCmffO6iZjbr9oOJpE+rkAIQMe302c3EbvH7Qkm2rbo4rl5JNkdbw5Qf4F0v
-         FdNYp6rTKLdm5RTRFs2KQar08V9FJ6aS5uXlhHukALHUtE3cgQHIYyGCaJnAT6Jl1S
-         OWAvjAO+1zMreirfd0ki23k6r1ASS8BDBhMTuz3rx/C/qvHbXVsnZufovS+GAHa09V
-         xw9k5uFgY2sAfzAdJey1AjV6iXu/1JMohgxRxixSouKFiINNKUb7fAyV0HKPaIINLv
-         iAzuz89q6Gm+Q==
-Message-ID: <22601f2b7ced45d3b5f44951970f79c22490aced.camel@kernel.org>
-Subject: Re: [PATCH 0/2] NFS: limit use of ACCESS cache for negative
- responses
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna@kernel.org" <anna@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "bcodding@redhat.com" <bcodding@redhat.com>
-Date:   Mon, 29 Aug 2022 10:07:11 -0400
-In-Reply-To: <166172952853.27490.16907220841440758560@noble.neil.brown.name>
-References: <165110909570.7595.8578730126480600782.stgit@noble.brown>
-        , <165274590805.17247.12823419181284113076@noble.neil.brown.name>
-        , <72f091ceaaf15069834eb200c04f0630eca7eaef.camel@hammerspace.com>
-        , <165274805538.17247.18045261877097040122@noble.neil.brown.name>
-        , <acdd578d2bb4551e45570c506d0948647d964f66.camel@hammerspace.com>
-        , <165274950799.17247.7605561502483278140@noble.neil.brown.name>
-        , <3ec50603479c7ee60cfa269aa06ae151e3ebc447.camel@hammerspace.com>
-        , <165275056203.17247.1826100963816464474@noble.neil.brown.name>
-        , <d6c351439c71d95f761c89533919850c91975639.camel@hammerspace.com>
-        , <D788BD7B-029F-4A4C-A377-81B117BD4CD2@redhat.com>
-        , <a56ca216aef75f419d8a13dd6c7719ef15bbcaab.camel@hammerspace.com>
-        , <166155716162.27490.17801636432417958045@noble.neil.brown.name>
-        , <c64f102712ed8a5d728c2bf74592715891302f78.camel@hammerspace.com>
-         <166172952853.27490.16907220841440758560@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E7FD61F86C;
+        Mon, 29 Aug 2022 14:51:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1661784680; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5LCtrszBdV+NVGN5QwWvJ7u/iDQSPpMJ9iYqsp0NIIM=;
+        b=kDcD6vT81/U/Nuy1vB7RO9gscm9E7n+BbQjAish8tsMUyVGlai7OrnJZ7WUObk5E+ozoVv
+        Ba1REghpocBzmAbvNvM+W8ax1J18VlvtsrvcCEhRrJCnB6a2yR+5ebzLNhh9k9PHwpwxYl
+        gN5db5Ew89HF9SdoRCC682W4Z446pzw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1661784680;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5LCtrszBdV+NVGN5QwWvJ7u/iDQSPpMJ9iYqsp0NIIM=;
+        b=Kga3/jsqDzRe01fFnuANlNYwO2dlgn4LX3Mkbmi7wXgFNT8F9EzlcAqAiAe9aBCpUwkwKr
+        YxAIovn60f0xnRDQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A4D33133A6;
+        Mon, 29 Aug 2022 14:51:20 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 4acyKGjSDGMQdwAAMHmgww
+        (envelope-from <jack@suse.cz>); Mon, 29 Aug 2022 14:51:20 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id EA3A0A066D; Mon, 29 Aug 2022 16:51:19 +0200 (CEST)
+Date:   Mon, 29 Aug 2022 16:51:19 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        brauner@kernel.org, linux-api@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-ceph@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH v3 3/7] ext4: unconditionally enable the i_version counter
+Message-ID: <20220829145119.wopmm2q6dldtfeqi@quack3>
+References: <20220826214703.134870-1-jlayton@kernel.org>
+ <20220826214703.134870-4-jlayton@kernel.org>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220826214703.134870-4-jlayton@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-08-29 at 09:32 +1000, NeilBrown wrote:
-> On Sat, 27 Aug 2022, Trond Myklebust wrote:
-> > On Sat, 2022-08-27 at 09:39 +1000, NeilBrown wrote:
-> > > On Sat, 27 Aug 2022, Trond Myklebust wrote:
-> > > > On Fri, 2022-08-26 at 10:59 -0400, Benjamin Coddington wrote:
-> > > > > On 16 May 2022, at 21:36, Trond Myklebust wrote:
-> > > > > > So until you have a different solution that doesn't impact the
-> > > > > > client's
-> > > > > > ability to cache permissions, then the answer is going to be
-> > > > > > "no"
-> > > > > > to
-> > > > > > these patches.
-> > > > >=20
-> > > > > Hi Trond,
-> > > > >=20
-> > > > > We have some folks negatively impacted by this issue as well.=A0
-> > > > > Are
-> > > > > you
-> > > > > willing to consider this via a mount option?
-> > > > >=20
-> > > > > Ben
-> > > > >=20
-> > > >=20
-> > > > I don't see how that answers my concern.
-> > >=20
-> > > Could you please spell out again what your concerns are?=A0 I still
-> > > don't
-> > > understand.=20
-> > > The only performance impact is when a permission test fails.=A0 In wh=
-at
-> > > circumstance is permission failure expected on a fast-path?
-> > >=20
-> >=20
-> > You're treating the problem as if it were a timeout issue, when clearly
-> > it has nothing at all to do with timeouts. There is no problem of
-> > 'group membership changes on a regular basis' to be solved.
->=20
-> You are the one who suggested a timeout.  I quote:
->=20
-> > That way, you have a mechanism that serves all purposes: it can do an
-> > immediate one-time only flush, or you can set up a userspace job that
-> > issues a global flush once every so often, e.g. using a cron job.
->=20
-> "every so often" =3D=3D "timeout".  I thought that maybe this was somewhe=
-re
-> that we could find some agreement.  As I said, I would set the timeout
-> to zero.  I don't really want the timeout - not more than the ac
-> timeouts we already have.
->=20
-> >=20
-> > The problem to be solved is that on the very rare occasion when a group
-> > membership does change, then the server and the client may update their
-> > view of that membership at completely different times. In the
-> > particular case when the client updates its view of the group
-> > membership before the server does, then the access cache is polluted,
-> > and there is no remedy.
->=20
-> Agreed.
->=20
-> >=20
-> > So my concerns are around the mismatch of problem and solution. I see
-> > multiple issues.
-> >=20
-> >    1. Your timeouts are per inode. That means that if inode A sees the
-> >       problem being solved, then there is no guarantee that inode B
-> >       sees the same problem as being solved (and the converse is true
-> >       as well).
->=20
-> Is that a problem?  Is that even anything new?
-> If I chmod file A and file B on the server, then the client may see
-> the change to file A before the change to file B (or vice-versa).
-> i.e.  the inconsistent-cache problem might be solved for one but not the
-> other.  It has always been this way.
->=20
-> >    2. There is no quick on-the-spot solution. If your admin updates the
-> >       group membership, then you are only guaranteed that the client
-> >       and server are in sync once the server has picked up the solution
-> >       (however you arrange that), and the client cache has expired.
-> >       IOW: your only solution is to wait 1 client cache expiration
-> >       period after the server is known to be fixed (or to reboot the
-> >       client).
->=20
-> This is also the only solution to seeing other changes that have been
-> made to inodes.
-> For file/directory content you can open the file/directory and this
-> triggers CTO consistency checks.  But stat() or access() doesn't.
->=20
-> Hmmm.. What if we add an ACCESS check to the OPEN request for files, and
-> the equivalent GETATTR for directories?  That would provide a direct
-> way to force a refresh without adding any extra RPC requests??
->=20
-> >    3. There is no solution at all for the positive cache case. If your
-> >       sysadmin is trying to revoke an access due to a group membership
-> >       change, their only solution is to reboot the client.
->=20
-> Yes.  Revoking read/execute access that you have already granted is not
-> really possible.  The application may have already read the file.  It
-> might even have emailed the content to $BLACKHAT.  Even rebooting the
-> client isn't really a solution.
-> Revoking write access already works fine as does revoking read access to
-> a file before putting new content in it - the new content is safe.
->=20
-> >    4. You are tying the access cache timeout to the completely
-> >       unrelated 'acregmin' and 'acdirmin' values. Not only does that
-> >       mean that the default values for regular files are extremely
-> >       small (3 seconds), meaning that we have to refresh extremely
-> >       often. However it also means that you have to explain why
-> >       directories behave differently (longer default timeouts) despite
-> >       the fact that the group membership changed at exactly the same
-> >       time for both types of object.
-> >          1. Bonus points for explaining why our default values are desi=
-gned
-> >             for a group membership that changes every 3 seconds.
->=20
-> I don't see why you treat the access information as different from all
-> the other attributes.  "bob has group x access to the directory" and
-> "file size if 42000 bytes" are just attributes of the inode.  We collect
-> them different ways, but they are not deeply different.
->=20
-> The odd thing here is that we cache these "access" attributes
-> indefinitely when ctime doesn't change - even though there is no
-> guarantee that ctime captures access changes.  I think that choice needs
-> to be justified.
+On Fri 26-08-22 17:46:59, Jeff Layton wrote:
+> The original i_version implementation was pretty expensive, requiring a
+> log flush on every change. Because of this, it was gated behind a mount
+> option (implemented via the MS_I_VERSION mountoption flag).
 
-Maybe I'm being pedantic, but I don't see the first as an inode
-attribute. There are really 2 pieces to that access control example:
+I don't think "log flush on every change" was really required. But "logging
+an inode on every change" was required and even that can get expensive.
 
-- bob is a member of group x
-- group x has access to the directory
+> Commit ae5e165d855d (fs: new API for handling inode->i_version) made the
+> i_version flag much less expensive, so there is no longer a performance
+> penalty from enabling it. xfs and btrfs already enable it
+> unconditionally when the on-disk format can support it.
+> 
+> Have ext4 ignore the SB_I_VERSION flag, and just enable it
+> unconditionally. While we're in here, remove the handling of
+> Opt_i_version as well since it's due for deprecation anyway.
+> 
+> Ideally, we'd couple this change with a way to disable the i_version
+> counter (just in case), but the way the iversion mount option was
+> implemented makes that difficult to do. We'd need to add a new mount
+> option altogether or do something with tune2fs. That's probably best
+> left to later patches if it turns out to be needed.
+> 
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: Lukas Czerner <lczerner@redhat.com>
+> Cc: Benjamin Coddington <bcodding@redhat.com>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> Cc: Darrick J. Wong <djwong@kernel.org>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-The first has nothing directly to do with the inode and so it's no
-surprise that its ctime and i_version aren't affected when group
-membership changes.
+Otherwise the change looks good to me so feel free to add:
 
-> Using the cached value indefinitely when it grants access is defensible
-> because it is a frequent operation (checking x access in a directory
-> while following a patch).  I think that adequately justifies the choice.
-> I cannot see the justification when the access is denied by the cache.
->=20
-> >    5. 'noac' suddenly now turns off access caching, but only for
-> >       negative cached values.
->=20
-> Is this a surprise?
->=20
-> But what do you think of adding an ACCESS check when opening a dir/file?
-> At least for NFSv4?
+Reviewed-by: Jan Kara <jack@suse.cz>
 
---=20
-Jeff Layton <jlayton@kernel.org>
+								Honza
+
+> ---
+>  fs/ext4/inode.c       |  2 +-
+>  fs/ext4/ioctl.c       | 12 ++++--------
+>  fs/ext4/move_extent.c |  6 ++----
+>  fs/ext4/super.c       | 13 ++++---------
+>  fs/ext4/xattr.c       |  3 +--
+>  5 files changed, 12 insertions(+), 24 deletions(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index aa37bce4c541..6ef37269e7c0 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -5342,7 +5342,7 @@ int ext4_setattr(struct user_namespace *mnt_userns, struct dentry *dentry,
+>  	int error, rc = 0;
+>  	int orphan = 0;
+>  	const unsigned int ia_valid = attr->ia_valid;
+> -	bool inc_ivers = IS_I_VERSION(inode);
+> +	bool inc_ivers = true;
+>  
+>  	if (unlikely(ext4_forced_shutdown(EXT4_SB(inode->i_sb))))
+>  		return -EIO;
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index 60e77ae9342d..ad3a294a88eb 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -452,8 +452,7 @@ static long swap_inode_boot_loader(struct super_block *sb,
+>  	swap_inode_data(inode, inode_bl);
+>  
+>  	inode->i_ctime = inode_bl->i_ctime = current_time(inode);
+> -	if (IS_I_VERSION(inode))
+> -		inode_inc_iversion(inode);
+> +	inode_inc_iversion(inode);
+>  
+>  	inode->i_generation = prandom_u32();
+>  	inode_bl->i_generation = prandom_u32();
+> @@ -667,8 +666,7 @@ static int ext4_ioctl_setflags(struct inode *inode,
+>  	ext4_set_inode_flags(inode, false);
+>  
+>  	inode->i_ctime = current_time(inode);
+> -	if (IS_I_VERSION(inode))
+> -		inode_inc_iversion(inode);
+> +	inode_inc_iversion(inode);
+>  
+>  	err = ext4_mark_iloc_dirty(handle, inode, &iloc);
+>  flags_err:
+> @@ -779,8 +777,7 @@ static int ext4_ioctl_setproject(struct inode *inode, __u32 projid)
+>  
+>  	EXT4_I(inode)->i_projid = kprojid;
+>  	inode->i_ctime = current_time(inode);
+> -	if (IS_I_VERSION(inode))
+> -		inode_inc_iversion(inode);
+> +	inode_inc_iversion(inode);
+>  out_dirty:
+>  	rc = ext4_mark_iloc_dirty(handle, inode, &iloc);
+>  	if (!err)
+> @@ -1263,8 +1260,7 @@ static long __ext4_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		err = ext4_reserve_inode_write(handle, inode, &iloc);
+>  		if (err == 0) {
+>  			inode->i_ctime = current_time(inode);
+> -			if (IS_I_VERSION(inode))
+> -				inode_inc_iversion(inode);
+> +			inode_inc_iversion(inode);
+>  			inode->i_generation = generation;
+>  			err = ext4_mark_iloc_dirty(handle, inode, &iloc);
+>  		}
+> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+> index d73ab3153218..285700b00d38 100644
+> --- a/fs/ext4/move_extent.c
+> +++ b/fs/ext4/move_extent.c
+> @@ -687,10 +687,8 @@ ext4_move_extents(struct file *o_filp, struct file *d_filp, __u64 orig_blk,
+>  
+>  		orig_inode->i_ctime = current_time(orig_inode);
+>  		donor_inode->i_ctime = current_time(donor_inode);
+> -		if (IS_I_VERSION(orig_inode))
+> -			inode_inc_iversion(orig_inode);
+> -		if (IS_I_VERSION(donor_inode))
+> -			inode_inc_iversion(donor_inode);
+> +		inode_inc_iversion(orig_inode);
+> +		inode_inc_iversion(donor_inode);
+>  	}
+>  	*moved_len = o_start - orig_blk;
+>  	if (*moved_len > len)
+> diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+> index 9a66abcca1a8..e7cf5361245a 100644
+> --- a/fs/ext4/super.c
+> +++ b/fs/ext4/super.c
+> @@ -1585,7 +1585,7 @@ enum {
+>  	Opt_inlinecrypt,
+>  	Opt_usrjquota, Opt_grpjquota, Opt_quota,
+>  	Opt_noquota, Opt_barrier, Opt_nobarrier, Opt_err,
+> -	Opt_usrquota, Opt_grpquota, Opt_prjquota, Opt_i_version,
+> +	Opt_usrquota, Opt_grpquota, Opt_prjquota,
+>  	Opt_dax, Opt_dax_always, Opt_dax_inode, Opt_dax_never,
+>  	Opt_stripe, Opt_delalloc, Opt_nodelalloc, Opt_warn_on_error,
+>  	Opt_nowarn_on_error, Opt_mblk_io_submit, Opt_debug_want_extra_isize,
+> @@ -1694,7 +1694,6 @@ static const struct fs_parameter_spec ext4_param_specs[] = {
+>  	fsparam_flag	("barrier",		Opt_barrier),
+>  	fsparam_u32	("barrier",		Opt_barrier),
+>  	fsparam_flag	("nobarrier",		Opt_nobarrier),
+> -	fsparam_flag	("i_version",		Opt_i_version),
+>  	fsparam_flag	("dax",			Opt_dax),
+>  	fsparam_enum	("dax",			Opt_dax_type, ext4_param_dax),
+>  	fsparam_u32	("stripe",		Opt_stripe),
+> @@ -2140,11 +2139,6 @@ static int ext4_parse_param(struct fs_context *fc, struct fs_parameter *param)
+>  	case Opt_abort:
+>  		ctx_set_mount_flag(ctx, EXT4_MF_FS_ABORTED);
+>  		return 0;
+> -	case Opt_i_version:
+> -		ext4_msg(NULL, KERN_WARNING, deprecated_msg, param->key, "5.20");
+> -		ext4_msg(NULL, KERN_WARNING, "Use iversion instead\n");
+> -		ctx_set_flags(ctx, SB_I_VERSION);
+> -		return 0;
+>  	case Opt_inlinecrypt:
+>  #ifdef CONFIG_FS_ENCRYPTION_INLINE_CRYPT
+>  		ctx_set_flags(ctx, SB_INLINECRYPT);
+> @@ -2970,8 +2964,6 @@ static int _ext4_show_options(struct seq_file *seq, struct super_block *sb,
+>  		SEQ_OPTS_PRINT("min_batch_time=%u", sbi->s_min_batch_time);
+>  	if (nodefs || sbi->s_max_batch_time != EXT4_DEF_MAX_BATCH_TIME)
+>  		SEQ_OPTS_PRINT("max_batch_time=%u", sbi->s_max_batch_time);
+> -	if (sb->s_flags & SB_I_VERSION)
+> -		SEQ_OPTS_PUTS("i_version");
+>  	if (nodefs || sbi->s_stripe)
+>  		SEQ_OPTS_PRINT("stripe=%lu", sbi->s_stripe);
+>  	if (nodefs || EXT4_MOUNT_DATA_FLAGS &
+> @@ -4640,6 +4632,9 @@ static int __ext4_fill_super(struct fs_context *fc, struct super_block *sb)
+>  	sb->s_flags = (sb->s_flags & ~SB_POSIXACL) |
+>  		(test_opt(sb, POSIX_ACL) ? SB_POSIXACL : 0);
+>  
+> +	/* i_version is always enabled now */
+> +	sb->s_flags |= SB_I_VERSION;
+> +
+>  	if (le32_to_cpu(es->s_rev_level) == EXT4_GOOD_OLD_REV &&
+>  	    (ext4_has_compat_features(sb) ||
+>  	     ext4_has_ro_compat_features(sb) ||
+> diff --git a/fs/ext4/xattr.c b/fs/ext4/xattr.c
+> index e975442e4ab2..36d6ba7190b6 100644
+> --- a/fs/ext4/xattr.c
+> +++ b/fs/ext4/xattr.c
+> @@ -2412,8 +2412,7 @@ ext4_xattr_set_handle(handle_t *handle, struct inode *inode, int name_index,
+>  	if (!error) {
+>  		ext4_xattr_update_super_block(handle, inode->i_sb);
+>  		inode->i_ctime = current_time(inode);
+> -		if (IS_I_VERSION(inode))
+> -			inode_inc_iversion(inode);
+> +		inode_inc_iversion(inode);
+>  		if (!value)
+>  			no_expand = 0;
+>  		error = ext4_mark_iloc_dirty(handle, inode, &is.iloc);
+> -- 
+> 2.37.2
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
