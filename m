@@ -2,44 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A21665A4E87
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 15:49:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D18A95A4E8A
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 15:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229689AbiH2Ntl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Aug 2022 09:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52110 "EHLO
+        id S229645AbiH2NuV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Aug 2022 09:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53762 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbiH2Ntk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 09:49:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EF0996749
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 06:49:37 -0700 (PDT)
+        with ESMTP id S230011AbiH2NuV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 09:50:21 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8AC148EA5
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 06:50:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 29C7D60E65
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 13:49:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46253C433D7;
-        Mon, 29 Aug 2022 13:49:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6CC37B81063
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 13:50:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E4DC433C1;
+        Mon, 29 Aug 2022 13:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661780976;
-        bh=T0UKPz07TRsnqwC25JVYc7iV3n614QIpJp+EIFVd+h8=;
+        s=k20201202; t=1661781014;
+        bh=qs5xYyzN50TajHHwxGpwnEiIRgnD5vefae0gI/dUjpQ=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=hrLkAm6FAyll1PZivQoNxrRnscuqcfOqrIbE1JzuAV6VJwfLP1wwq+5/MK4w1M8B/
-         0YAa8WSUbKVRoQyY7RACgvMgcauWXfaPiHnXjMSDxz0Gj5j+mTvhYHhRzctNJIo5fs
-         f3SRWpmunzqcSwRg+XdxApjdjBndROYhrFxpB3WVSsZ4s/bKkklsWxOGxmudKP4GzV
-         fHaLGD+8N8kcZAGycC4Jp99rJHkTOBbXHC8gy0E4kP3w3AL22VSATMv7qmZzKbuVAX
-         C+hdZykDUUsGfYH6mP9ZfsYmvgn8biKSAFbV5WbGurTlD6LFaqe2Ce9k3dK4YnFP4/
-         LW32WepXa3hlA==
-Message-ID: <a3dbd2a8e63d17710ee650674a0f2b320f7bdd26.camel@kernel.org>
-Subject: Re: [PATCH v2 6/7] SUNRPC: Fix typo in xdr_buf_subsegment's kdoc
- comment
+        b=PBnQY725RjD8h6SulOWsFqp2hIp4cwoN+aGs7kuQEoSkivGy/lvKYZoqi6ubweDFR
+         joUIMwU7CogFtf6az12oiQHpM8UVD06OtcWvWXOyaD2ikBYUgAu5ELNwdvrjOXV5Xo
+         55YBfbZTc9999MC0ef+/3wke/XDecFlYdcRPjMHk1fF+/Lunnt08kc54a00uvCwjPi
+         yh7xssCkey6NHmm47nVcxMtKRrBo8guHZ8khhlD6QkfqlUoflaZpjPUUSRUaKXEB+i
+         KvT+Fvere5D9PKzfy636ycVlQrPI9HNK521TyKT/YACByNieQ5XHtVIsX0oCXQhr2m
+         cUGTmLB0nt88g==
+Message-ID: <b64175263e298bc957c8dbf9c7cd2ee6ed84651c.camel@kernel.org>
+Subject: Re: [PATCH v2 7/7] NFSD: Clean up nfs4svc_encode_compoundres()
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date:   Mon, 29 Aug 2022 09:49:34 -0400
-In-Reply-To: <166171265398.21449.11749625023129698282.stgit@manet.1015granger.net>
+Date:   Mon, 29 Aug 2022 09:50:12 -0400
+In-Reply-To: <166171266025.21449.2692376100575745686.stgit@manet.1015granger.net>
 References: <166171174172.21449.5036120183381273656.stgit@manet.1015granger.net>
-         <166171265398.21449.11749625023129698282.stgit@manet.1015granger.net>
+         <166171266025.21449.2692376100575745686.stgit@manet.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
@@ -54,26 +53,36 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, 2022-08-28 at 14:50 -0400, Chuck Lever wrote:
+On Sun, 2022-08-28 at 14:51 -0400, Chuck Lever wrote:
+> In today's Linux NFS server implementation, the NFS dispatcher
+> initializes each XDR result stream, and the NFSv4 .pc_func and
+> .pc_encode methods all use xdr_stream-based encoding. This keeps
+> rq_res.len automatically updated. There is no longer a need for
+> the WARN_ON_ONCE() check in nfs4svc_encode_compoundres().
+>=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  net/sunrpc/xdr.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  fs/nfsd/nfs4xdr.c |    4 ----
+>  1 file changed, 4 deletions(-)
 >=20
-> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-> index 482586c23fdd..8ad637ca703e 100644
-> --- a/net/sunrpc/xdr.c
-> +++ b/net/sunrpc/xdr.c
-> @@ -1575,7 +1575,7 @@ EXPORT_SYMBOL_GPL(xdr_buf_from_iov);
->   *
->   * @buf and @subbuf may be pointers to the same struct xdr_buf.
->   *
-> - * Returns -1 if base of length are out of bounds.
-> + * Returns -1 if base or length are out of bounds.
->   */
->  int xdr_buf_subsegment(const struct xdr_buf *buf, struct xdr_buf *subbuf=
-,
->  		       unsigned int base, unsigned int len)
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 1e9690a061ec..af51e2a8ceb7 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -5423,12 +5423,8 @@ bool
+>  nfs4svc_encode_compoundres(struct svc_rqst *rqstp, struct xdr_stream *xd=
+r)
+>  {
+>  	struct nfsd4_compoundres *resp =3D rqstp->rq_resp;
+> -	struct xdr_buf *buf =3D xdr->buf;
+>  	__be32 *p;
+> =20
+> -	WARN_ON_ONCE(buf->len !=3D buf->head[0].iov_len + buf->page_len +
+> -				 buf->tail[0].iov_len);
+> -
+>  	/*
+>  	 * Send buffer space for the following items is reserved
+>  	 * at the top of nfsd4_proc_compound().
 >=20
 >=20
 
