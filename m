@@ -2,197 +2,269 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD9DB5A52E6
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 19:15:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC9605A52EC
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 19:15:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230137AbiH2RPL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Aug 2022 13:15:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32802 "EHLO
+        id S230373AbiH2RPg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Aug 2022 13:15:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230373AbiH2RPI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 13:15:08 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A6092180F;
-        Mon, 29 Aug 2022 10:15:05 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27TGidfo029024;
-        Mon, 29 Aug 2022 17:15:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=/FCokW4FLcqMVdOLnuGTF+YoA/yLRLm656qlkFmCS6o=;
- b=EYyXjQnBUKmZ2dv1lDnivCAYxX9qg7jeFn/lSd+u5BN6y6QUSIu5OBCgL0cBKAs+UZfr
- DI4t4UR+E4ACRV5hmZGZ/mHZxbI6illQQ6j3mVSXVFYDhuSXk7HcP92R4cRQ8RkK+m6Q
- /q3o735LnnzfuUWAQS2FzsnC9/Yex/p0pzQc9Aopi297x03T1us9EWPnUtGo2g3W0INi
- dEkCPVNNsOL+UimTmV4SzNL+QVAdl4PxgdV8QXLmhzJWVYWPh1NoJJkmFbJCejtRxSLu
- O1FsylGjrevXDHO7uQCMysHZ04z+6Ts393ajuKsW8f6qQkZBm2MMWiJ/vHdqprilv8k2 hg== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j7btt403v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Aug 2022 17:15:00 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27TGIEmH033360;
-        Mon, 29 Aug 2022 17:14:58 GMT
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2046.outbound.protection.outlook.com [104.47.73.46])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3j79q2p2qg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Aug 2022 17:14:58 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BOxPwgmSfh5nOKW5gKkemqgx/PvcOdMt+irCnyiG5jAr81RRM1BWLM+J41nIF2PkDI3zPKRI8fMhaRbmIVOoGuL3VlrHLOhowhf091j/UHHMrzObfDSBmHpo+OM1nOdSKZaC41/bdzF7PNks+lEm5FBf6smC1xGU/8zkPIUYXRjNJ8qFJiw/x3Q2vo24Zb+62IaCxvzb0EqQUEOkVpvW0CNntqevJ3kbPKepO6guLIkZdA5KRaA91K0oOZFtPAVqrhXI2bNp+OvRPKuAdT12Yl0PNqR5WCLMp2Ma7MGauoez3VvyYPGUUaUWUOS0gpS9PWazutXnpP4AnI37/oJJ7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/FCokW4FLcqMVdOLnuGTF+YoA/yLRLm656qlkFmCS6o=;
- b=TcuHQphw3ElxMqe/MfANTC474mfqGElyxil7a4RyX1dBLGtRnJ3mpowCcpqN303BhFJ97in7F/YNe0U9QfxxOAWzbdDXBOrfrBHKOY1WxAHDuDNQvUq4wsIKMLD2548orzERNEz9W5XiniWeKEXapjgB8smEmHQplGrqEkTJhozgAilaW6zeW7CHhkgzOkeKe4KikenK49eyLb2nVR7g2DnKriPB/eXY/CGSoYnV3gK9mF6JYROZ/eMQ//qkUyCEBqq2T4o7ZIUVViIAKw67W+Jbtir9VrAufW3jWKVJXqBUVtpzYt2RgVV5dDvg6iFs0ZK/55/kDyJLRd63O/9jcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/FCokW4FLcqMVdOLnuGTF+YoA/yLRLm656qlkFmCS6o=;
- b=Kv1XLzbVCZpZluvmhVYeY/8S5Bh8Ch7pLb9a74GY6Advkzxbk73n3aaVdRW+7ZfqmWF+0OMJjOp8a0FsG8L612LTim2ujLfVkvu2D2EwS2dIdImpZeg2fhoW07Q+pJXdHP9kOVtY2ImAlgKJyPtUBjIhA6TbHgPoBx/4XfYe76E=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by BL0PR10MB2787.namprd10.prod.outlook.com (2603:10b6:208:78::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.15; Mon, 29 Aug
- 2022 17:14:56 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::25d6:da15:34d:92fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::25d6:da15:34d:92fa%4]) with mapi id 15.20.5566.021; Mon, 29 Aug 2022
- 17:14:56 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-CC:     Leon Romanovsky <leon@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
-Subject: Re: [PATCH v1] RDMA/core: Fix check_flush_dependency splat on addr_wq
-Thread-Topic: [PATCH v1] RDMA/core: Fix check_flush_dependency splat on
- addr_wq
-Thread-Index: AQHYtjxDHzOcFbDad0CgCtqOY9xpUa28It+AgABhkYCAAUS4AIAAULmAgAMZTACAAAltAIAAAa6AgABhRICABIF0gIAACD6A
-Date:   Mon, 29 Aug 2022 17:14:56 +0000
-Message-ID: <90CD6895-348C-4B75-BAC5-2F7A0414494B@oracle.com>
-References: <166118222093.3250511.11454048195824271658.stgit@morisot.1015granger.net>
- <YwSLOxyEtV4l2Frc@unreal> <584E7212-BC09-48E1-A27E-725E54FA075E@oracle.com>
- <YwXtePKW+sn/89M6@unreal> <591D1B3D-B04A-4625-8DD0-CA0C2E986345@oracle.com>
- <YwjKpoVbd1WygWwF@nvidia.com>
- <08F23441-1532-4F40-9C2A-5DBD61B11483@oracle.com>
- <YwjT9yz8reC1HDR/@nvidia.com>
- <FF62F78D-95EE-4BA1-9FC6-4C6B1F355520@oracle.com>
- <YwztJVdYq6f5M9yZ@nvidia.com>
-In-Reply-To: <YwztJVdYq6f5M9yZ@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f899207e-1d10-41ff-9577-08da89e1fee5
-x-ms-traffictypediagnostic: BL0PR10MB2787:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mlnInrFhWp3TH0qGigKn5o3/0/oVM6xTltbf+wvWVt0u+cA9Rg2Ww0lsNM1nR2UYsyERfb7nqbtvNWMpHa6GIlu/tLra5uiqkjidqfzu5S9jkTXKPaxJ379P8M+oL79fNOadwWkxsRmbZioFQglDoVgEb/tSJobJjDRlV2H6Bge4I89hvn6WbCX64CELrDaMseY0da0n1eVyNZrSrPL3OCSHVDzxYuQ0+bTmFsvZzN+8X9SwjBo0vTS14IFFmDk/mJfm2hjaag4sHH1uIXzW2LZ/uSViT36FKxAZnEcTlbYQP+5zITD+olLU+iwujHx4OJBTeCuMPOZU0q3uYs83CAMoIQ8os/LOAAqxOnmsbLigavbOjjuod6VvYnbou8ujz0H99wuFUxXd+WyseQHbM0V2rnvi8cXDUf72QMGUNNRrOkw05gwgFZHf/O2B/CKkod5XmnvyyZT17Ud7rSbp1eaKqIULvUl69eZCnf/rGr8xvQVDQG4WgPgaWi9pTXXWjE4+2b+YbhZdnGSS7Dtr9ADAmWEVu2JozF2NgkvYgPdcYpPfvzF5YXho7Irf/Ngv75gEegmnU//QU7N2ItVRtnmdMEB08zeCEagdkDPzJdAvsFFwMuO5l4QHrzKvBopI1q8p6jNTueK03jMzk/Om0ID2jsaAIfBkoWYBBf7hM8uFxeCJuKJauwvMkr0fuIzmddDoPiPRUeBBC6pVAZad1gvQSm0cngLUtZQcu1df+uGubZE6SRFSKQ8pLEjVyasYIt5xXaNgiAiBw7fioJem8zRc/5kD36P5XYZJqf92XlU=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(376002)(39860400002)(136003)(396003)(346002)(6486002)(8676002)(316002)(66446008)(66946007)(66556008)(66476007)(4326008)(54906003)(8936002)(6916009)(71200400001)(91956017)(64756008)(76116006)(86362001)(5660300002)(478600001)(41300700001)(36756003)(38070700005)(53546011)(6506007)(2616005)(2906002)(6512007)(26005)(122000001)(83380400001)(38100700002)(186003)(33656002)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UxNpnlbfzfGIAic4i6D4rflFEPJEhTQaJ0pfNw66zQrNTJSAIEjrNmkOqfL3?=
- =?us-ascii?Q?v5i7wzAKnwnjs3YJZ6K603FMqzjaRcv4SoqFhaeWtwVdCOkZ3y9hdOd6OLm7?=
- =?us-ascii?Q?N0kihGzNKE1ErGsskf0e5BtY+YvGXk7NTBjPVZWjvib8Fl2SMPtCVcaIdEWS?=
- =?us-ascii?Q?hYt2zwvOUb07hrvofkHwPAB1LQ3seFeig75ZfIS9H91PmKFt4d3EmRcqjPOb?=
- =?us-ascii?Q?Se0D/8qvsnOBppN9FtJyYp+b15AHGKN9UNHTz/egSLnXk7rv85fsE+TLM9xP?=
- =?us-ascii?Q?3CEkfM2W8uq++412OTcOqv9a51EZzckU0+NWnxQGM2QJSZUm2NyAbhPNG6hy?=
- =?us-ascii?Q?oRm6Py5WGMFcSSaXrM44NAdId92dq6X+JHFErt9or63YV0uSKdnFhm7PdB8Q?=
- =?us-ascii?Q?0/YCBtC+3l4HVfWCHMbDDDkwsttwFpAmYYVy4j6J8gewDp+kYd3XUji3vOgn?=
- =?us-ascii?Q?I1zdQEa9dXGFkcwWUSN6oOJBFJ80mlupt4OVFllV/St82usgKUXJC+hpcv1z?=
- =?us-ascii?Q?oor8hnKPbkSfZV/YKPbFeesALjkjmMxBqkv5GEIs9aTT655IUS8RL5Ll/xYi?=
- =?us-ascii?Q?WXdtY8Q/c7OabPSIWzP1wKkCAns2ijzEx7ro6CGs2RJm9K4NAN3bt/Dk5/eK?=
- =?us-ascii?Q?7fk53GzkNc8CsqTPlZn/G6Ps+D+mmTUmXayQr0Tz3hTWgZhY9Q3l87UmXoy6?=
- =?us-ascii?Q?++CACsVunPEJo9uE4JC14Jg/WmcY1YJQ645jHwcsNa/wie4lgTlJRnxQCiDH?=
- =?us-ascii?Q?0N/vtCYlp4VXvXKql8YYdlEfMSlDYS8WUMDPJVrR6DnA9b+0XRDalKAlBVoF?=
- =?us-ascii?Q?wAlwGACsSaBUH4uT96sfhgisxy4LVy3zcWNQGsHTo078ctw4zY1AyqEt0p3z?=
- =?us-ascii?Q?xix6Um0PiCDywCmA4xJpuQzB6XuCx9HqN4rpHn77Q6ql+CyychNHJkJiN+CY?=
- =?us-ascii?Q?k761Qu9SinXpcPhIcP+qCGzMgiT/isHtsFU+mh/92k4LzPnYB5h1dSUOlI3t?=
- =?us-ascii?Q?SppjH8oThAgbqhgfV963ArCziayb1a3L+qGQdpBeMH6PExiGonCg5TgDuxaj?=
- =?us-ascii?Q?7ZGQl4st2rszP44H4/AXxeaUzcLMiXAlIE+ECcejGFkxF7T3EHldYWvmXBW1?=
- =?us-ascii?Q?w3X4k5gNqBon4YjF77NxOD24anoqdgsZvOav6C+l5FZ4sQ2+0QAfvm4MVHsY?=
- =?us-ascii?Q?7VnJPrQx/XnLPYVSk9MJlKpPPymmzsdlS44DwFdQykFwAmxjSV+8AiIf/iKC?=
- =?us-ascii?Q?Z6/PhzS841nSyzQofF67toOktvquahgxxDt2SWZUSQqPjppLedzr+lJP63dZ?=
- =?us-ascii?Q?aWo6ht3YByfOS8exTBcxZ6VZC+6ZuodrkYIVus0NoVWUSLK/2dAPhGSOVykR?=
- =?us-ascii?Q?5ge210IyyQwcR7NBlSz5kEWw3bvMpcWC8ziduqMfygWj0HsEAUHyVgcNDXj7?=
- =?us-ascii?Q?MeSWEiBnJBpBx9UPyoox6cg5p88p2ARwMdxgm0FLjO/VKfr4DCATy1LJ/hQL?=
- =?us-ascii?Q?7Oy0JHkmioFYORw4K7Eb4z260jmQ2cOJh632TpQMUuD6rV2/JZOHT4SUF7aY?=
- =?us-ascii?Q?PCDCC4QQ/QNCMk3fJ7KTDbJr+HswjYIlQoEjMuYxgTfvOAe5xjfwkh07K/tn?=
- =?us-ascii?Q?Kw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8100F58ED790D747AB50CDF1139A7E19@namprd10.prod.outlook.com>
+        with ESMTP id S231309AbiH2RPf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 13:15:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E50471727
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 10:15:34 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D2C73B80B8C
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 17:15:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 206F8C433C1;
+        Mon, 29 Aug 2022 17:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661793331;
+        bh=lBee4AVi5Abvd4KgHFKA87moR3n6j09YnbzvzfkMRRU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=XWweIpAXI7NiVOYR2/YSS+DEwWJr8ssTEQA7p0SscBsFTAX1hSwqlJ7K+TWbBY+0u
+         KSrvE8k6qBl2tHIcgcLgHbXhshjK0vri/1hiAR632opAe2ld6nfvX62m3HVuU/ynNU
+         ELEpWA+oPbMLozDV4q9VhfUeWkyC+0obG3TJFepaxMJ3KCnAAxCjYBAXrK6MUdX+sf
+         9gVRMe9Yh54M1lNTGuxMYneh7vWfHXtAV4Kq5a3djOF2IoIPYqVOf1mHG0yGaHh+qn
+         1JHxcot9ZgzHcCUO5lzFu4GCo8deE7ff1OnkFUtdX4iCMFYj8DmhXv5RdU34rZ7Ugo
+         RYP7u5anvx+og==
+Message-ID: <b12994817cda7d9509767182edb1b1f21697648a.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] NFSD: add shrinker to reap courtesy clients on
+ low memory condition
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Mon, 29 Aug 2022 13:15:29 -0400
+In-Reply-To: <1661734063-22023-3-git-send-email-dai.ngo@oracle.com>
+References: <1661734063-22023-1-git-send-email-dai.ngo@oracle.com>
+         <1661734063-22023-3-git-send-email-dai.ngo@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f899207e-1d10-41ff-9577-08da89e1fee5
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Aug 2022 17:14:56.3139
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yvtVUYUMhJM+3CISqcyZjcLwqGjW3jLI+BPxcgQojLkTdHmC/1tfc0/pEJVl3DsXYgo188I/RM8WLyk1N1F++w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR10MB2787
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-29_09,2022-08-25_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 mlxscore=0
- spamscore=0 mlxlogscore=999 phishscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2208290080
-X-Proofpoint-ORIG-GUID: Ep7FKVT3MOUUhuVSaVm-UtvbPHIC8AKQ
-X-Proofpoint-GUID: Ep7FKVT3MOUUhuVSaVm-UtvbPHIC8AKQ
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Aug 29, 2022, at 12:45 PM, Jason Gunthorpe <jgg@nvidia.com> wrote:
+On Sun, 2022-08-28 at 17:47 -0700, Dai Ngo wrote:
+> Add the courtesy client shrinker to react to low memory condition
+> triggered by the memory shrinker.
 >=20
-> On Fri, Aug 26, 2022 at 07:57:04PM +0000, Chuck Lever III wrote:
->> The connect APIs would be a place to start. In the meantime, though...
->>=20
->> Two or three years ago I spent some effort to ensure that closing
->> an RDMA connection leaves a client-side RPC/RDMA transport with no
->> RDMA resources associated with it. It releases the CQs, QP, and all
->> the MRs. That makes initial connect and reconnect both behave exactly
->> the same, and guarantees that a reconnect does not get stuck with
->> an old CQ that is no longer working or a QP that is in TIMEWAIT.
->>=20
->> However that does mean that substantial resource allocation is
->> done on every reconnect.
+> On the shrinker's count callback, we increment a callback counter
+> and return the number of outstanding courtesy clients. When the
+> laundromat runs, it checks if this counter is not zero and starts
+> reaping old courtesy clients. The maximum number of clients to be
+> reaped is limited to NFSD_CIENT_MAX_TRIM_PER_RUN (128). This limit
+> is to prevent the laundromat from spending too much time reaping
+> the clients and not processing other tasks in a timely manner.
 >=20
-> And if the resource allocations fail then what happens? The storage
-> ULP retries forever and is effectively deadlocked?
+> The laundromat is rescheduled to run sooner if it detects low
+> low memory condition and there are more clients to reap.
+>=20
+> On the shrinker's scan callback, we return the number of clients
+> That were reaped since the last scan callback. We can not reap
+> the clients on the scan callback context since destroying the
+> client might require call into the underlying filesystem or other
+> subsystems which might allocate memory which can cause deadlock.
+>=20
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/netns.h     |  3 +++
+>  fs/nfsd/nfs4state.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++=
+----
+>  fs/nfsd/nfsctl.c    |  6 ++++--
+>  fs/nfsd/nfsd.h      |  9 +++++++--
+>  4 files changed, 61 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 2695dff1378a..2a604951623f 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -194,6 +194,9 @@ struct nfsd_net {
+>  	int			nfs4_max_clients;
+> =20
+>  	atomic_t		nfsd_courtesy_client_count;
+> +	atomic_t		nfsd_client_shrinker_cb_count;
+> +	atomic_t		nfsd_client_shrinker_reapcount;
+> +	struct shrinker		nfsd_client_shrinker;
+>  };
+> =20
+>  /* Simple check to find out if a given net was properly initialized */
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 3d8d7ebb5b91..9d5a20f0c3c4 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4341,7 +4341,39 @@ nfsd4_init_slabs(void)
+>  	return -ENOMEM;
+>  }
+> =20
+> -void nfsd4_init_leases_net(struct nfsd_net *nn)
+> +static unsigned long
+> +nfsd_courtesy_client_count(struct shrinker *shrink, struct shrink_contro=
+l *sc)
+> +{
+> +	struct nfsd_net *nn =3D container_of(shrink,
+> +			struct nfsd_net, nfsd_client_shrinker);
+> +
+> +	atomic_inc(&nn->nfsd_client_shrinker_cb_count);
+> +	return (unsigned long)atomic_read(&nn->nfsd_courtesy_client_count);
+> +}
+> +
+> +static unsigned long
+> +nfsd_courtesy_client_scan(struct shrinker *shrink, struct shrink_control=
+ *sc)
+> +{
+> +	struct nfsd_net *nn =3D container_of(shrink,
+> +			struct nfsd_net, nfsd_client_shrinker);
+> +	unsigned long cnt;
+> +
+> +	cnt =3D atomic_read(&nn->nfsd_client_shrinker_reapcount);
+> +	atomic_set(&nn->nfsd_client_shrinker_reapcount, 0);
 
-The reconnection attempt fails, and any resources allocated during
-that attempt are released. The ULP waits a bit then tries again
-until it works or is interrupted.
+Is it legit to return that we freed these objects when it hasn't
+actually been done yet? Maybe this should always return 0? I'm not sure
+what the rules are with shrinkers.
 
-A deadlock might occur if one of those allocations triggers
-additional reclaim activity.
+Either way, it seems like "scan" should cue the laundromat to run ASAP.
+When this is called, it may be quite some time before the laundromat
+runs again. Currently, it's always just scheduled it out to when we know
+there may be work to be done, but this is a different situation.
 
+> +	return cnt;
+> +}
+> +
+> +static int
+> +nfsd_register_client_shrinker(struct nfsd_net *nn)
+> +{
+> +	nn->nfsd_client_shrinker.scan_objects =3D nfsd_courtesy_client_scan;
+> +	nn->nfsd_client_shrinker.count_objects =3D nfsd_courtesy_client_count;
+> +	nn->nfsd_client_shrinker.seeks =3D DEFAULT_SEEKS;
+> +	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
+> +}
+> +
+> +int
+> +nfsd4_init_leases_net(struct nfsd_net *nn)
+>  {
+>  	struct sysinfo si;
+>  	u64 max_clients;
+> @@ -4362,6 +4394,8 @@ void nfsd4_init_leases_net(struct nfsd_net *nn)
+>  	nn->nfs4_max_clients =3D max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
+> =20
+>  	atomic_set(&nn->nfsd_courtesy_client_count, 0);
+> +	atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
+> +	return nfsd_register_client_shrinker(nn);
+>  }
+> =20
+>  static void init_nfs4_replay(struct nfs4_replay *rp)
+> @@ -5870,12 +5904,17 @@ static void
+>  nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist=
+,
+>  				struct laundry_time *lt)
+>  {
+> -	unsigned int oldstate, maxreap, reapcnt =3D 0;
+> +	unsigned int oldstate, maxreap =3D 0, reapcnt =3D 0;
+> +	int cb_cnt;
+>  	struct list_head *pos, *next;
+>  	struct nfs4_client *clp;
+> =20
+> -	maxreap =3D (atomic_read(&nn->nfs4_client_count) >=3D nn->nfs4_max_clie=
+nts) ?
+> -			NFSD_CLIENT_MAX_TRIM_PER_RUN : 0;
+> +	cb_cnt =3D atomic_read(&nn->nfsd_client_shrinker_cb_count);
+> +	if (atomic_read(&nn->nfs4_client_count) >=3D nn->nfs4_max_clients ||
+> +							cb_cnt) {
+> +		maxreap =3D NFSD_CLIENT_MAX_TRIM_PER_RUN;
+> +		atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
+> +	}
+>  	INIT_LIST_HEAD(reaplist);
+>  	spin_lock(&nn->client_lock);
+>  	list_for_each_safe(pos, next, &nn->client_lru) {
+> @@ -5902,6 +5941,8 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struc=
+t list_head *reaplist,
+>  		}
+>  	}
+>  	spin_unlock(&nn->client_lock);
+> +	if (cb_cnt)
+> +		atomic_add(reapcnt, &nn->nfsd_client_shrinker_reapcount);
+>  }
+> =20
+>  static time64_t
+> @@ -5942,6 +5983,8 @@ nfs4_laundromat(struct nfsd_net *nn)
+>  		list_del_init(&clp->cl_lru);
+>  		expire_client(clp);
+>  	}
+> +	if (atomic_read(&nn->nfsd_client_shrinker_cb_count) > 0)
+> +		lt.new_timeo =3D NFSD_LAUNDROMAT_MINTIMEOUT;
+>  	spin_lock(&state_lock);
+>  	list_for_each_safe(pos, next, &nn->del_recall_lru) {
+>  		dp =3D list_entry (pos, struct nfs4_delegation, dl_recall_lru);
+> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+> index 917fa1892fd2..597a26ad4183 100644
+> --- a/fs/nfsd/nfsctl.c
+> +++ b/fs/nfsd/nfsctl.c
+> @@ -1481,11 +1481,12 @@ static __net_init int nfsd_init_net(struct net *n=
+et)
+>  		goto out_idmap_error;
+>  	nn->nfsd_versions =3D NULL;
+>  	nn->nfsd4_minorversions =3D NULL;
+> +	retval =3D nfsd4_init_leases_net(nn);
+> +	if (retval)
+> +		goto out_drc_error;
+>  	retval =3D nfsd_reply_cache_init(nn);
+>  	if (retval)
+>  		goto out_drc_error;
+> -	nfsd4_init_leases_net(nn);
+> -
+>  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
+>  	seqlock_init(&nn->writeverf_lock);
+> =20
+> @@ -1507,6 +1508,7 @@ static __net_exit void nfsd_exit_net(struct net *ne=
+t)
+>  	nfsd_idmap_shutdown(net);
+>  	nfsd_export_shutdown(net);
+>  	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
+> +	nfsd4_leases_net_shutdown(nn);
+>  }
+> =20
+>  static struct pernet_operations nfsd_net_ops =3D {
+> diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> index 57a468ed85c3..7e05ab7a3532 100644
+> --- a/fs/nfsd/nfsd.h
+> +++ b/fs/nfsd/nfsd.h
+> @@ -498,7 +498,11 @@ extern void unregister_cld_notifier(void);
+>  extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
+>  #endif
+> =20
+> -extern void nfsd4_init_leases_net(struct nfsd_net *nn);
+> +extern int nfsd4_init_leases_net(struct nfsd_net *nn);
+> +static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn)
+> +{
+> +	unregister_shrinker(&nn->nfsd_client_shrinker);
+> +};
+> =20
+>  #else /* CONFIG_NFSD_V4 */
+>  static inline int nfsd4_is_junction(struct dentry *dentry)
+> @@ -506,7 +510,8 @@ static inline int nfsd4_is_junction(struct dentry *de=
+ntry)
+>  	return 0;
+>  }
+> =20
+> -static inline void nfsd4_init_leases_net(struct nfsd_net *nn) {};
+> +static inline int nfsd4_init_leases_net(struct nfsd_net *nn) { return 0;=
+ };
+> +static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn) { };
+> =20
+>  #define register_cld_notifier() 0
+>  #define unregister_cld_notifier() do { } while(0)
 
-> How much allocation can you safely do under GFP_NOIO?
-
-My naive take is that doing those allocations under NOIO would
-help avoid recursion during memory exhaustion.
-
-
---
-Chuck Lever
-
-
-
+--=20
+Jeff Layton <jlayton@kernel.org>
