@@ -2,44 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E79F5A4E69
-	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 15:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBFBD5A4E7C
+	for <lists+linux-nfs@lfdr.de>; Mon, 29 Aug 2022 15:48:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229550AbiH2NoG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 29 Aug 2022 09:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43904 "EHLO
+        id S229557AbiH2Nse (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 29 Aug 2022 09:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbiH2NoE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 09:44:04 -0400
+        with ESMTP id S229724AbiH2Nsd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 29 Aug 2022 09:48:33 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6765A94EFF
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 06:44:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD721956BD
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 06:48:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E4D32B8107A
-        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 13:43:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ACCBC433B5;
-        Mon, 29 Aug 2022 13:43:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 56D04B8107A
+        for <linux-nfs@vger.kernel.org>; Mon, 29 Aug 2022 13:48:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4A9C433D6;
+        Mon, 29 Aug 2022 13:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661780638;
-        bh=agLg+fFFSOp+qxWSgmwTQVeeQ5LWY77SDZCyJ7DaFPY=;
+        s=k20201202; t=1661780909;
+        bh=NWMyxZvup7b12MaC/BZ0HppMAePd+fwYJWJF9RHwOrs=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=Fv5NfVKf1Qnk2n1bU1tsD1HbRU/UKqSfqjazSdEBJCysYbs/QyttogERaNyHCOqkr
-         gVxdwL/IKNshPPi4i6PAoErlpItbk6YgaMBbQ7tCF+NNcueF0Qp1HTtWyzhq+fVuLF
-         gfSFj5wulLUodncw4qoCdnwtFUBfen7VpQqZZj6NrPLSwNNfoi+9gyI4KlNynh3DJg
-         Rhh8TE2CJ7/VXIWoJ9mzrhMZaMqXcmOxn8YQf/Xmka1Rl1A2X6uDumujYVZgqxwTKi
-         OVFwzkiiivODR+IQ8i/Kco2MGBmQPD0jL6A8zS5axjGyeXTgIx/2xZMmWiSUOSOZ3b
-         DcK4OJqTt+tpA==
-Message-ID: <52a93203dbd9daa02814cc920a61066d6df2749e.camel@kernel.org>
-Subject: Re: [PATCH v2 3/7] NFSD: Protect against READDIR send buffer
- overflow
+        b=dcSVxjPv0hMdRMErkdwfnRZ9BiA8TnEK0gIoENytv5Wcpino1ixcWDE/GvezL5CmA
+         4Vn7n7AlNKbwJawOvWOrBZvhf6cgvtwxk85Wx1vx5zjkAj20JjabWZkxiEs1Veu2qS
+         2WHqY1lKEyEXWIHke3UWCNqvbzJ5AzHczpELrAIGDhoN2pcQ9oXLCHIbub+29gcl9M
+         IT7YqNG7uVVEOvT7JX+W0mA0KhNRSp6u9gPJQpjb9QUOjeCmwp2EgSmEb888XODhO+
+         3Fg80wiTSRav7ifdF9Tat3T+sEh1BVO0FRFU3Du9rzp77Bc7FT+YMyiWwYQV5OnSi4
+         8pXzd/4KHEvbQ==
+Message-ID: <6b5b45ea8d94c6122445ee26ae7bf6d2555770f2.camel@kernel.org>
+Subject: Re: [PATCH v2 4/7] NFSD: Use xdr_inline_decode() to decode NFSv3
+ symlinks
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date:   Mon, 29 Aug 2022 09:43:56 -0400
-In-Reply-To: <166171263459.21449.18044553311121354704.stgit@manet.1015granger.net>
+Date:   Mon, 29 Aug 2022 09:48:28 -0400
+In-Reply-To: <166171264105.21449.17586756015319208200.stgit@manet.1015granger.net>
 References: <166171174172.21449.5036120183381273656.stgit@manet.1015granger.net>
-         <166171263459.21449.18044553311121354704.stgit@manet.1015granger.net>
+         <166171264105.21449.17586756015319208200.stgit@manet.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
@@ -55,88 +55,53 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Sun, 2022-08-28 at 14:50 -0400, Chuck Lever wrote:
-> For many years, NFSD has conserved the number of pages held by
-> each nfsd thread by combining the RPC receive and send buffers
-> into a single array of pages. The dividing line between the
-> receive and send buffer is pointed to by svc_rqst::rq_respages.
+> Replace the check for buffer over/underflow with a helper that is
+> commonly used for this purpose. The helper also sets xdr->nwords
+> correctly after successfully linearizing the symlink argument into
+> the stream's scratch buffer.
 >=20
-
-nit: Given that you don't look at rq_respages in the patch below, the
-previous sentence is not particularly relevant. It might be better to
-just explain that rq_res describes the part of the array that is the
-response buffer, so we want to consult it for the max length.
-
-> Thus the send buffer shrinks when the received RPC record
-> containing the RPC Call is large.
->=20
-> nfsd3_init_dirlist_pages() needs to account for the space in the
-> svc_rqst::rq_pages array already consumed by the RPC receive buffer.
-> Otherwise READDIR reply encoding can wander off the end of the page
-> array.
->=20
-> Thanks to Aleksi Illikainen and Kari Hulkko for discovering this
-> issue.
->=20
-> Reported-by: Ben Ronallo <Benjamin.Ronallo@synopsys.com>
-> Fixes: f5dcccd647da ("NFSD: Update the NFSv2 READDIR entry encoder to use=
- struct xdr_stream")
-> Fixes: 7f87fc2d34d4 ("NFSD: Update NFSv3 READDIR entry encoders to use st=
-ruct xdr_stream")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs3proc.c |    5 ++---
->  fs/nfsd/nfsproc.c  |    5 ++---
->  2 files changed, 4 insertions(+), 6 deletions(-)
+>  fs/nfsd/nfs3xdr.c |   14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index a41cca619338..fab87e9e0b20 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -564,12 +564,11 @@ static void nfsd3_init_dirlist_pages(struct svc_rqs=
-t *rqstp,
->  	struct xdr_buf *buf =3D &resp->dirlist;
->  	struct xdr_stream *xdr =3D &resp->xdr;
+> diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+> index 0293b8d65f10..71e32cf28885 100644
+> --- a/fs/nfsd/nfs3xdr.c
+> +++ b/fs/nfsd/nfs3xdr.c
+> @@ -616,8 +616,6 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, st=
+ruct xdr_stream *xdr)
+>  {
+>  	struct nfsd3_symlinkargs *args =3D rqstp->rq_argp;
+>  	struct kvec *head =3D rqstp->rq_arg.head;
+> -	struct kvec *tail =3D rqstp->rq_arg.tail;
+> -	size_t remaining;
 > =20
-> -	count =3D clamp(count, (u32)(XDR_UNIT * 2), svc_max_payload(rqstp));
+>  	if (!svcxdr_decode_diropargs3(xdr, &args->ffh, &args->fname, &args->fle=
+n))
+>  		return false;
+> @@ -626,16 +624,10 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, =
+struct xdr_stream *xdr)
+>  	if (xdr_stream_decode_u32(xdr, &args->tlen) < 0)
+>  		return false;
+> =20
+> -	/* request sanity */
+> -	remaining =3D head->iov_len + rqstp->rq_arg.page_len + tail->iov_len;
+> -	remaining -=3D xdr_stream_pos(xdr);
+> -	if (remaining < xdr_align_size(args->tlen))
+> -		return false;
 > -
->  	memset(buf, 0, sizeof(*buf));
-> =20
->  	/* Reserve room for the NULL ptr & eof flag (-2 words) */
-> -	buf->buflen =3D count - XDR_UNIT * 2;
-> +	buf->buflen =3D clamp(count, (u32)(XDR_UNIT * 2), rqstp->rq_res.buflen)=
-;
-> +	buf->buflen -=3D XDR_UNIT * 2;
->  	buf->pages =3D rqstp->rq_next_page;
->  	rqstp->rq_next_page +=3D (buf->buflen + PAGE_SIZE - 1) >> PAGE_SHIFT;
-> =20
-> diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-> index 7381972f1677..23c273cb68a9 100644
-> --- a/fs/nfsd/nfsproc.c
-> +++ b/fs/nfsd/nfsproc.c
-> @@ -567,12 +567,11 @@ static void nfsd_init_dirlist_pages(struct svc_rqst=
- *rqstp,
->  	struct xdr_buf *buf =3D &resp->dirlist;
->  	struct xdr_stream *xdr =3D &resp->xdr;
-> =20
-> -	count =3D clamp(count, (u32)(XDR_UNIT * 2), svc_max_payload(rqstp));
+> -	args->first.iov_base =3D xdr->p;
+> +	/* symlink_data */
+>  	args->first.iov_len =3D head->iov_len - xdr_stream_pos(xdr);
 > -
->  	memset(buf, 0, sizeof(*buf));
+> -	return true;
+> +	args->first.iov_base =3D xdr_inline_decode(xdr, args->tlen);
+> +	return args->first.iov_base !=3D NULL;
+>  }
 > =20
->  	/* Reserve room for the NULL ptr & eof flag (-2 words) */
-> -	buf->buflen =3D count - XDR_UNIT * 2;
-> +	buf->buflen =3D clamp(count, (u32)(XDR_UNIT * 2), rqstp->rq_res.buflen)=
-;
-> +	buf->buflen -=3D XDR_UNIT * 2;
->  	buf->pages =3D rqstp->rq_next_page;
->  	rqstp->rq_next_page++;
-> =20
+>  bool
 >=20
 >=20
-
-I wonder if a better fix would be to make svc_max_payload take the
-already-consumed arg space into account? We'd need to fix up the other
-callers of course.
-
-In any case, the patch itself looks fine:
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
