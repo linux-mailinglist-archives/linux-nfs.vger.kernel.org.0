@@ -2,75 +2,45 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9413E5A6D67
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 21:30:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01CA75A6D7F
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 21:40:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231230AbiH3TaV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Aug 2022 15:30:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
+        id S229774AbiH3TkZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Aug 2022 15:40:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229808AbiH3TaT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 15:30:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EBB1FCC0;
-        Tue, 30 Aug 2022 12:30:18 -0700 (PDT)
+        with ESMTP id S229565AbiH3TkZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 15:40:25 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 344912C132
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 12:40:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 16D4961772;
-        Tue, 30 Aug 2022 19:30:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6D9C433D6;
-        Tue, 30 Aug 2022 19:30:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BBFB561731
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 19:40:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3843C433D6;
+        Tue, 30 Aug 2022 19:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661887817;
-        bh=nBVnvrKt98aOcRMDXo5kWCSaoHa1L3WfB0MImmB7bsA=;
+        s=k20201202; t=1661888423;
+        bh=cZUU2onp3wriv5Xemx9q6G40/jEofE0TJtD5iLXJlwo=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=LAGBjRI0iICkSCcey3Hj90hGM0SqheIVF3UoW82NBZzIz/pwdUg/h+ZPa9irfUgQB
-         1s2LRyXlDCP9C4zI3ji74eomVC+5lmIjm9aAB+/Hcttw0Y+R4eiEnQX2gIwcyylcGZ
-         m0HT0zoISUjbBp0qlYJXXVP8gT75R6Rg9V6R2tmBTQbZLwC5VMRi2/IuSdDU2wnnoQ
-         s8vbTr0QPN2e82jnZJX+Heu5jjIstCTuxNZNjDoGaO1O9jXsqCQ5asBV74B1QbtBAd
-         mUKvBBbd6N/l/Ri+dhT47y56cLzRqElhTacOHddkmxB7PKH22K4iwFitXwtuU0g0vP
-         s/YieDF4URcow==
-Message-ID: <b3c0e3ae74a6f30547bd5c49c32c17f1e7a13b0c.camel@kernel.org>
-Subject: Re: [PATCH v3 1/7] iversion: update comments with info about atime
- updates
+        b=BgMnev3o4qjHEPSGVdZRKc9DRXsMPb8MCYFKj/mXlArSWP4HZRGOWuts8kTBzKOcA
+         5/j601wjrqRRqA9n4GRDYkD0wXhhBBAytW6CQpnIg6keo2ugwBLvth9nUCkKCSwTNa
+         wTV91KdGCITcAPKF/2u99dljdMb5KXTyk5j5qIFID+3RfDaBqhWEkHgUsjnpd7aQL6
+         0QRrvcyXP8A7lQRAeyOU/RRj9g0CikVSULV4+IW2+LCdVc88D8TEKGnbNNMRHfFTLF
+         IncrDhG7lQroU9TsTaCN1PL7RHgidx1thDdLVUKn1W15OpvF3LSkwWQH6F/+2uLvoB
+         J9wzQVFRUkOow==
+Message-ID: <e32e725974ca5f5f5ee4e16192d4c4cce80e9248.camel@kernel.org>
+Subject: Re: [PATCH v3 1/2] NFSD: keep track of the number of courtesy
+ clients in the system
 From:   Jeff Layton <jlayton@kernel.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "brauner@kernel.org" <brauner@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "neilb@suse.de" <neilb@suse.de>,
-        "david@fromorbit.com" <david@fromorbit.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-ceph@vger.kernel.org" <linux-ceph@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "lczerner@redhat.com" <lczerner@redhat.com>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "walters@verbum.org" <walters@verbum.org>
-Date:   Tue, 30 Aug 2022 15:30:13 -0400
-In-Reply-To: <20220830183244.GG26330@fieldses.org>
-References: <549776abfaddcc936c6de7800b6d8249d97d9f28.camel@kernel.org>
-         <166181389550.27490.8200873228292034867@noble.neil.brown.name>
-         <f5c42c0d87dfa45188c2109ccf9baeb7a42aa27e.camel@kernel.org>
-         <20220830132443.GA26330@fieldses.org>
-         <a07686e7e1d1ef15720194be2abe5681f6a6c78e.camel@kernel.org>
-         <20220830144430.GD26330@fieldses.org>
-         <e4815337177c74a9928098940dfdcb371017a40c.camel@hammerspace.com>
-         <20220830151715.GE26330@fieldses.org>
-         <3e8c7af5d39870c5b0dc61736a79bd134be5a9b3.camel@hammerspace.com>
-         <4adb2abd1890b147dbc61a06413f35d2f147c43a.camel@kernel.org>
-         <20220830183244.GG26330@fieldses.org>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 30 Aug 2022 15:40:21 -0400
+In-Reply-To: <1661886865-30304-2-git-send-email-dai.ngo@oracle.com>
+References: <1661886865-30304-1-git-send-email-dai.ngo@oracle.com>
+         <1661886865-30304-2-git-send-email-dai.ngo@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
@@ -85,43 +55,98 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-08-30 at 14:32 -0400, J. Bruce Fields wrote:
-> On Tue, Aug 30, 2022 at 01:02:50PM -0400, Jeff Layton wrote:
-> > The fact that NFS kept this more loosely-defined is what allowed us to
-> > elide some of the i_version bumps and regain a fair bit of performance
-> > for local filesystems [1]. If the change attribute had been more
-> > strictly defined like you mention, then that particular optimization
-> > would not have been possible.
-> >=20
-> > This sort of thing is why I'm a fan of not defining this any more
-> > strictly than we require. Later on, maybe we'll come up with a way for
-> > filesystems to advertise that they can offer stronger guarantees.
+On Tue, 2022-08-30 at 12:14 -0700, Dai Ngo wrote:
+> Add counter nfs4_courtesy_client_count to nfsd_net to keep track
+> of the number of courtesy clients in the system.
 >=20
-> Yeah, the afs change-attribute-as-counter thing seems ambitious--I
-> wouldn't even know how to define what exactly you're counting.
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/netns.h     |  2 ++
+>  fs/nfsd/nfs4state.c | 14 +++++++++++---
+>  2 files changed, 13 insertions(+), 3 deletions(-)
 >=20
-> My one question is whether it'd be worth just defining the thing as
-> *increasing*.  That's a lower bar.
->=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index ffe17743cc74..2695dff1378a 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -192,6 +192,8 @@ struct nfsd_net {
+> =20
+>  	atomic_t		nfs4_client_count;
+>  	int			nfs4_max_clients;
+> +
+> +	atomic_t		nfsd_courtesy_client_count;
+>  };
+> =20
+>  /* Simple check to find out if a given net was properly initialized */
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index c5d199d7e6b4..9675b5d8f408 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -169,7 +169,8 @@ static __be32 get_client_locked(struct nfs4_client *c=
+lp)
+>  	if (is_client_expired(clp))
+>  		return nfserr_expired;
+>  	atomic_inc(&clp->cl_rpc_users);
+> -	clp->cl_state =3D NFSD4_ACTIVE;
+> +	if (xchg(&clp->cl_state, NFSD4_ACTIVE) !=3D NFSD4_ACTIVE)
+> +		atomic_add_unless(&nn->nfsd_courtesy_client_count, -1, 0);
 
-That's a very good question.
+I'd prefer this:
 
-One could argue that NFSv4 sort of requires that for write delegations
-anyway. All of the existing implementations that I know of do this, so
-that wouldn't rule any of them out.
+	if (clp->cl_state !=3D NFSD4_ACTIVE)
+		atomic_add_unless(...
+	clp->cl_state =3D NFSD4_ACTIVE;
 
-I'm not opposed to adding that constraint. Let me think on it a bit
-more.
+It's more lines, but it's easier to read. It's may also be more
+efficient since you're protected by a spinlock anyway.
 
-> (Though admittedly we don't quite manage it now--see again 1631087ba872
-> "Revert "nfsd4: support change_attr_type attribute"".)
->=20
+I think it's also less deceptive when reading the code. When I see
+xchg() operations being used like that, my immediate thought is that
+they must be needed for synchronization purposes. It's not in this case.
 
-Factoring the ctime into the change attr seems wrong, since a clock jump
-could make it go backward. Do you remember what drove that change (see
-630458e730b8) ?
+>  	return nfs_ok;
+>  }
+> =20
+> @@ -190,7 +191,8 @@ renew_client_locked(struct nfs4_client *clp)
+> =20
+>  	list_move_tail(&clp->cl_lru, &nn->client_lru);
+>  	clp->cl_time =3D ktime_get_boottime_seconds();
+> -	clp->cl_state =3D NFSD4_ACTIVE;
+> +	if (xchg(&clp->cl_state, NFSD4_ACTIVE) !=3D NFSD4_ACTIVE)
+> +		atomic_add_unless(&nn->nfsd_courtesy_client_count, -1, 0);
+>  }
+> =20
+>  static void put_client_renew_locked(struct nfs4_client *clp)
+> @@ -2233,6 +2235,8 @@ __destroy_client(struct nfs4_client *clp)
+>  	if (clp->cl_cb_conn.cb_xprt)
+>  		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+>  	atomic_add_unless(&nn->nfs4_client_count, -1, 0);
+> +	if (clp->cl_state !=3D NFSD4_ACTIVE)
+> +		atomic_add_unless(&nn->nfsd_courtesy_client_count, -1, 0);
+>  	free_client(clp);
+>  	wake_up_all(&expiry_wq);
+>  }
+> @@ -4356,6 +4360,8 @@ void nfsd4_init_leases_net(struct nfsd_net *nn)
+>  	max_clients =3D (u64)si.totalram * si.mem_unit / (1024 * 1024 * 1024);
+>  	max_clients *=3D NFS4_CLIENTS_PER_GB;
+>  	nn->nfs4_max_clients =3D max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
+> +
+> +	atomic_set(&nn->nfsd_courtesy_client_count, 0);
+>  }
+> =20
+>  static void init_nfs4_replay(struct nfs4_replay *rp)
+> @@ -5879,7 +5885,9 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struc=
+t list_head *reaplist,
+>  		if (!state_expired(lt, clp->cl_time))
+>  			break;
+>  		if (!atomic_read(&clp->cl_rpc_users))
+> -			clp->cl_state =3D NFSD4_COURTESY;
+> +			if (xchg(&clp->cl_state, NFSD4_COURTESY) =3D=3D
+> +							NFSD4_ACTIVE)
+> +				atomic_inc(&nn->nfsd_courtesy_client_count);
+>  		if (!client_has_state(clp))
+>  			goto exp_client;
+>  		if (!nfs4_anylock_blockers(clp))
 
-It seems like if the i_version=A0were to go backward, then the ctime
-probably would too, and you'd still see a duplicate change attr.
 --=20
 Jeff Layton <jlayton@kernel.org>
