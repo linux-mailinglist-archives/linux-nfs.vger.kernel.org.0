@@ -2,44 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DA65A6B49
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 19:52:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B2E5A6B6B
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 19:56:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232055AbiH3Rwz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Aug 2022 13:52:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56066 "EHLO
+        id S232193AbiH3R4N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Aug 2022 13:56:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbiH3RwZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 13:52:25 -0400
+        with ESMTP id S231443AbiH3Rzz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 13:55:55 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74FC76050B
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 10:49:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF83B7E838;
+        Tue, 30 Aug 2022 10:53:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4177D61463
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 17:49:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445FAC433D6;
-        Tue, 30 Aug 2022 17:49:05 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 21F5A614EC;
+        Tue, 30 Aug 2022 17:53:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F94DC433B5;
+        Tue, 30 Aug 2022 17:53:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661881745;
-        bh=3id+N2tbN+UYzRteYPt3Zk4lWM/vmuFXld7Xah+p0nI=;
+        s=k20201202; t=1661882009;
+        bh=vCK6CST7ctMbCISxwN2JFQPXC0nxggMxJE8Qv8vIua4=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=rEd18UY2lPBh3CZLvbCnawxcCrN0qtcjqcCjpVs9omwSxnQiYBrRiF8nXOQSbjGwU
-         Bc6Oy7eeLjbPdd8UBZYyfYhl3ea8n/dyGBK2AjKzdrn7yUbCppFhjmtOOr+lQ34G5u
-         6LDB3qQLFIwRnXIc9SVr8FFyyCO/5pQDjYlXzTrIh9rASDoXZwORHYR1s58d3M6M7x
-         YC/NfSNs+CSrb/DrkFpdbqybbqJmKa0ZKCwt47q+WJZ5nAp+8loJRW9Mve+A1JtAsM
-         V8WcjTQ5SJ2mBiID2b6n38ElOVhOP1Q2w/xd8WJapRWmxq/LNPG1TmMfGyLMYk0wkS
-         BdPtf5AjkRLxA==
-Message-ID: <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
-Subject: Re: Is this nfsd kernel oops known?
+        b=kdyP1qF4LUhTZCBdTjOvFfxiYTDILbA1AbrABLir16ACmXUIxZK2B5OrMO4yDv6j1
+         3uNB7TlEiEn0Em7YW1hiBeijJ6L/4lpD5L5QrDeEBv5hqhpxKq5ncNVbY2rQkeDCpI
+         yEp34r9ecnRrzDQm0FQNoDVhKo1u0Q5mT4C92Gi810wp5zXVISOHXT1LGzII0QW5ua
+         1r6LC/sCe3pzIFUP2V4u2A+cBcOxkSYlLlXCP4o+7fReWDLzfUkghtoUprDhaCE6XU
+         2y1b4BJ/XbebcnmipvjXC6lLbFMWLl3i9xjx4E8ywzr69WrCKHCk6KMS209xhLy32F
+         KGCDJ0679pkNg==
+Message-ID: <5f194ec391498f18602f75126d78bfe21132ecea.camel@kernel.org>
+Subject: Re: [PATCH v3 1/7] iversion: update comments with info about atime
+ updates
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Olga Kornievskaia <aglo@umich.edu>,
-        Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs <linux-nfs@vger.kernel.org>
-Date:   Tue, 30 Aug 2022 13:49:03 -0400
-In-Reply-To: <CAN-5tyGkHd+wEHC5NwQGRuQsJie+aPu0RkWNrp_wFo4e+JcQgA@mail.gmail.com>
-References: <CAN-5tyGkHd+wEHC5NwQGRuQsJie+aPu0RkWNrp_wFo4e+JcQgA@mail.gmail.com>
+To:     Trond Myklebust <trondmy@hammerspace.com>,
+        "bfields@fieldses.org" <bfields@fieldses.org>
+Cc:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "neilb@suse.de" <neilb@suse.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-ceph@vger.kernel.org" <linux-ceph@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "lczerner@redhat.com" <lczerner@redhat.com>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "walters@verbum.org" <walters@verbum.org>
+Date:   Tue, 30 Aug 2022 13:53:26 -0400
+In-Reply-To: <5fd1f7e99d5ab87db48c8c3603b014c1c2d2ec5a.camel@hammerspace.com>
+References: <20220826214703.134870-1-jlayton@kernel.org>
+         <20220826214703.134870-2-jlayton@kernel.org>
+         <20220829075651.GS3600936@dread.disaster.area>
+         <549776abfaddcc936c6de7800b6d8249d97d9f28.camel@kernel.org>
+         <166181389550.27490.8200873228292034867@noble.neil.brown.name>
+         <f5c42c0d87dfa45188c2109ccf9baeb7a42aa27e.camel@kernel.org>
+         <20220830132443.GA26330@fieldses.org>
+         <a07686e7e1d1ef15720194be2abe5681f6a6c78e.camel@kernel.org>
+         <20220830144430.GD26330@fieldses.org>
+         <e4815337177c74a9928098940dfdcb371017a40c.camel@hammerspace.com>
+         <20220830151715.GE26330@fieldses.org>
+         <3e8c7af5d39870c5b0dc61736a79bd134be5a9b3.camel@hammerspace.com>
+         <4adb2abd1890b147dbc61a06413f35d2f147c43a.camel@kernel.org>
+         <5fd1f7e99d5ab87db48c8c3603b014c1c2d2ec5a.camel@hammerspace.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
@@ -54,129 +88,166 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-08-30 at 13:14 -0400, Olga Kornievskaia wrote:
-> Hi folks,
+On Tue, 2022-08-30 at 17:47 +0000, Trond Myklebust wrote:
+> On Tue, 2022-08-30 at 13:02 -0400, Jeff Layton wrote:
+> > On Tue, 2022-08-30 at 15:43 +0000, Trond Myklebust wrote:
+> > > On Tue, 2022-08-30 at 11:17 -0400, J. Bruce Fields wrote:
+> > > > On Tue, Aug 30, 2022 at 02:58:27PM +0000, Trond Myklebust wrote:
+> > > > > On Tue, 2022-08-30 at 10:44 -0400, J. Bruce Fields wrote:
+> > > > > > On Tue, Aug 30, 2022 at 09:50:02AM -0400, Jeff Layton wrote:
+> > > > > > > On Tue, 2022-08-30 at 09:24 -0400, J. Bruce Fields wrote:
+> > > > > > > > On Tue, Aug 30, 2022 at 07:40:02AM -0400, Jeff Layton
+> > > > > > > > wrote:
+> > > > > > > > > Yes, saying only that it must be different is
+> > > > > > > > > intentional.
+> > > > > > > > > What
+> > > > > > > > > we
+> > > > > > > > > really want is for consumers to treat this as an opaque
+> > > > > > > > > value
+> > > > > > > > > for the
+> > > > > > > > > most part [1]. Therefore an implementation based on
+> > > > > > > > > hashing
+> > > > > > > > > would
+> > > > > > > > > conform to the spec, I'd think, as long as all of the
+> > > > > > > > > relevant
+> > > > > > > > > info is
+> > > > > > > > > part of the hash.
+> > > > > > > >=20
+> > > > > > > > It'd conform, but it might not be as useful as an
+> > > > > > > > increasing
+> > > > > > > > value.
+> > > > > > > >=20
+> > > > > > > > E.g. a client can use that to work out which of a series
+> > > > > > > > of
+> > > > > > > > reordered
+> > > > > > > > write replies is the most recent, and I seem to recall
+> > > > > > > > that
+> > > > > > > > can
+> > > > > > > > prevent
+> > > > > > > > unnecessary invalidations in some cases.
+> > > > > > > >=20
+> > > > > > >=20
+> > > > > > > That's a good point; the linux client does this. That said,
+> > > > > > > NFSv4
+> > > > > > > has a
+> > > > > > > way for the server to advertise its change attribute
+> > > > > > > behavior
+> > > > > > > [1]
+> > > > > > > (though nfsd hasn't implemented this yet).
+> > > > > >=20
+> > > > > > It was implemented and reverted.=A0 The issue was that I
+> > > > > > thought
+> > > > > > nfsd
+> > > > > > should mix in the ctime to prevent the change attribute going
+> > > > > > backwards
+> > > > > > on reboot (see fs/nfsd/nfsfh.h:nfsd4_change_attribute()), but
+> > > > > > Trond
+> > > > > > was
+> > > > > > concerned about the possibility of time going backwards.=A0 See
+> > > > > > 1631087ba872 "Revert "nfsd4: support change_attr_type
+> > > > > > attribute"".
+> > > > > > There's some mailing list discussion to that I'm not turning
+> > > > > > up
+> > > > > > right
+> > > > > > now.
+> > > >=20
+> > > > https://lore.kernel.org/linux-nfs/a6294c25cb5eb98193f609a52aa8f4b5d=
+4e81279.camel@hammerspace.com/
+> > > > is what I was thinking of but it isn't actually that interesting.
+> > > >=20
+> > > > > My main concern was that some filesystems (e.g. ext3) were
+> > > > > failing
+> > > > > to
+> > > > > provide sufficient timestamp resolution to actually label the
+> > > > > resulting
+> > > > > 'change attribute' as being updated monotonically. If the time
+> > > > > stamp
+> > > > > doesn't change when the file data or metadata are changed, then
+> > > > > the
+> > > > > client has to perform extra checks to try to figure out whether
+> > > > > or
+> > > > > not
+> > > > > its caches are up to date.
+> > > >=20
+> > > > That's a different issue from the one you were raising in that
+> > > > discussion.
+> > > >=20
+> > > > > > Did NFSv4 add change_attr_type because some implementations
+> > > > > > needed
+> > > > > > the
+> > > > > > unordered case, or because they realized ordering was useful
+> > > > > > but
+> > > > > > wanted
+> > > > > > to keep backwards compatibility?=A0 I don't know which it was.
+> > > > >=20
+> > > > > We implemented it because, as implied above, knowledge of
+> > > > > whether
+> > > > > or
+> > > > > not the change attribute behaves monotonically, or strictly
+> > > > > monotonically, enables a number of optimisations.
+> > > >=20
+> > > > Of course, but my question was about the value of the old
+> > > > behavior,
+> > > > not
+> > > > about the value of the monotonic behavior.
+> > > >=20
+> > > > Put differently, if we could redesign the protocol from scratch
+> > > > would
+> > > > we
+> > > > actually have included the option of non-monotonic behavior?
+> > > >=20
+> > >=20
+> > > If we could design the filesystems from scratch, we probably would
+> > > not.
+> > > The protocol ended up being as it is because people were trying to
+> > > make
+> > > it as easy to implement as possible.
+> > >=20
+> > > So if we could design the filesystem from scratch, we would have
+> > > probably designed it along the lines of what AFS does.
+> > > i.e. each explicit change is accompanied by a single bump of the
+> > > change
+> > > attribute, so that the clients can not only decide the order of the
+> > > resulting changes, but also if they have missed a change (that
+> > > might
+> > > have been made by a different client).
+> > >=20
+> > > However that would be a requirement that is likely to be very
+> > > specific
+> > > to distributed caches (and hence distributed filesystems). I doubt
+> > > there are many user space applications that would need that high
+> > > precision. Maybe MPI, but that's the only candidate I can think of
+> > > for
+> > > now?
+> > >=20
+> >=20
+> > The fact that NFS kept this more loosely-defined is what allowed us
+> > to
+> > elide some of the i_version bumps and regain a fair bit of
+> > performance
+> > for local filesystems [1]. If the change attribute had been more
+> > strictly defined like you mention, then that particular optimization
+> > would not have been possible.
+> >=20
+> > This sort of thing is why I'm a fan of not defining this any more
+> > strictly than we require. Later on, maybe we'll come up with a way
+> > for
+> > filesystems to advertise that they can offer stronger guarantees.
 >=20
-> Is this a known nfsd kernel oops in 6.0-rc1. Was running xfstests on
-> pre-rhel-9.1 client against 6.0-rc1 server when it panic-ed.
+> What 'eliding of the bumps' are we talking about here? If it results in
+> unreliable behaviour, then I propose we just drop the whole concept and
+> go back to using the ctime. The change attribute is only useful if it
+> results in a reliable mechanism for detecting changes. Once you "elide
+> away" the word "reliable", then it has no value beyond what ctime
+> already does.
 >=20
-> [ 5554.769159] BUG: KASAN: null-ptr-deref in kernel_sendpage+0x60/0x220
-> [ 5554.770526] Read of size 8 at addr 0000000000000008 by task nfsd/2590
-> [ 5554.771899]
 
-No, I haven't seen this one. I'm guessing the page pointer passed to
-kernel_sendpage was probably NULL, so this may be a case where something
-walked off the end of the rq_pages array?
+I'm talking about the scheme to optimize away i_version updates when the
+current one has never been queried:
 
-Beyond that I can't tell much from just this stack trace. It might be
-nice to see what line of code kernel_sendpage+0x60 refers to on your
-kernel.
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/comm=
+it/?id=3Df02a9ad1f15d
 
-> [ 5554.772249] CPU: 1 PID: 2590 Comm: nfsd Not tainted 6.0.0-rc1+ #84
-> [ 5554.773575] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
-> [ 5554.775952] Call Trace:
-> [ 5554.776500]  <TASK>
-> [ 5554.776977]  dump_stack_lvl+0x33/0x46
-> [ 5554.777792]  ? kernel_sendpage+0x60/0x220
-> [ 5554.778672]  print_report.cold.12+0x499/0x6b7
-> [ 5554.779628]  ? tcp_release_cb+0x46/0x200
-> [ 5554.780577]  ? kernel_sendpage+0x60/0x220
-> [ 5554.781516]  kasan_report+0xa3/0x120
-> [ 5554.782361]  ? inet_sendmsg+0xa0/0xa0
-> [ 5554.783217]  ? kernel_sendpage+0x60/0x220
-> [ 5554.784191]  kernel_sendpage+0x60/0x220
-> [ 5554.785247]  svc_tcp_sendmsg+0x206/0x2e0 [sunrpc]
-> [ 5554.787188]  ? svc_tcp_send_kvec.isra.20.constprop.29+0xa0/0xa0 [sunrp=
-c]
-> [ 5554.789364]  ? refcount_dec_not_one+0xa0/0x120
-> [ 5554.790402]  ? refcount_warn_saturate+0x120/0x120
-> [ 5554.791495]  ? __rcu_read_unlock+0x4e/0x250
-> [ 5554.792575]  ? __mutex_lock_slowpath+0x10/0x10
-> [ 5554.793571]  ? tcp_release_cb+0x46/0x200
-> [ 5554.794443]  svc_tcp_sendto+0x14f/0x2e0 [sunrpc]
-> [ 5554.796182]  ? svc_addsock+0x370/0x370 [sunrpc]
-> [ 5554.797924]  ? svc_sock_secure_port+0x27/0x50 [sunrpc]
-> [ 5554.799848]  ? svc_recv+0xab0/0xfa0 [sunrpc]
-> [ 5554.801434]  svc_send+0x9c/0x260 [sunrpc]
-> [ 5554.802963]  nfsd+0x170/0x270 [nfsd]
-> [ 5554.804140]  ? nfsd_shutdown_threads+0xe0/0xe0 [nfsd]
-> [ 5554.805631]  kthread+0x160/0x190
-> [ 5554.806354]  ? kthread_complete_and_exit+0x20/0x20
-> [ 5554.807401]  ret_from_fork+0x1f/0x30
-> [ 5554.808206]  </TASK>
-> [ 5554.808699] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [ 5554.810486] Disabling lock debugging due to kernel taint
-> [ 5554.811772] BUG: kernel NULL pointer dereference, address: 00000000000=
-00008
-> [ 5554.813236] #PF: supervisor read access in kernel mode
-> [ 5554.814345] #PF: error_code(0x0000) - not-present page
-> [ 5554.815462] PGD 0 P4D 0
-> [ 5554.816032] Oops: 0000 [#1] PREEMPT SMP KASAN PTI
-> [ 5554.817057] CPU: 1 PID: 2590 Comm: nfsd Tainted: G    B
->  6.0.0-rc1+ #84
-> [ 5554.818677] Hardware name: VMware, Inc. VMware Virtual
-> Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
-> [ 5554.821028] RIP: 0010:kernel_sendpage+0x60/0x220
-> [ 5554.822138] Code: 24 a0 00 00 00 e8 a0 98 83 ff 49 83 bc 24 a0 00
-> 00 00 00 0f 84 9f 00 00 00 48 8d 43 08 48 89 c7 48 89 44 24 08 e8 80
-> 98 83 ff <4c> 8b 63 08 41 f6 c4 01 0f 85 ee 00 00 00 0f 1f 44 00 00 48
-> 89 df
-> [ 5554.826047] RSP: 0018:ffff888017ef7c38 EFLAGS: 00010296
-> [ 5554.827192] RAX: 0000000000000001 RBX: 0000000000000000 RCX: ffffffffa=
-3b173b6
-> [ 5554.828715] RDX: 0000000000000001 RSI: 0000000000000008 RDI: ffffffffa=
-6b16260
-> [ 5554.830237] RBP: ffff8880057ac380 R08: fffffbfff4d62c4d R09: fffffbfff=
-4d62c4d
-> [ 5554.831757] R10: ffffffffa6b16267 R11: fffffbfff4d62c4c R12: ffffffffa=
-545e6a0
-> [ 5554.833341] R13: ffff8880057ac3a0 R14: 0000000000001000 R15: 000000000=
-0000000
-> [ 5554.834881] FS:  0000000000000000(0000) GS:ffff888057c80000(0000)
-> knlGS:0000000000000000
-> [ 5554.836590] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [ 5554.837819] CR2: 0000000000000008 CR3: 000000000677e004 CR4: 000000000=
-01706e0
-> [ 5554.839374] Call Trace:
-> [ 5554.839919]  <TASK>
-> [ 5554.840400]  svc_tcp_sendmsg+0x206/0x2e0 [sunrpc]
-> [ 5554.842066]  ? svc_tcp_send_kvec.isra.20.constprop.29+0xa0/0xa0 [sunrp=
-c]
-> [ 5554.844194]  ? refcount_dec_not_one+0xa0/0x120
-> [ 5554.845239]  ? refcount_warn_saturate+0x120/0x120
-> [ 5554.846275]  ? __rcu_read_unlock+0x4e/0x250
-> [ 5554.847199]  ? __mutex_lock_slowpath+0x10/0x10
-> [ 5554.848171]  ? tcp_release_cb+0x46/0x200
-> [ 5554.849039]  svc_tcp_sendto+0x14f/0x2e0 [sunrpc]
-> [ 5554.850667]  ? svc_addsock+0x370/0x370 [sunrpc]
-> [ 5554.852285]  ? svc_sock_secure_port+0x27/0x50 [sunrpc]
-> [ 5554.854420]  ? svc_recv+0xab0/0xfa0 [sunrpc]
-> [ 5554.856187]  svc_send+0x9c/0x260 [sunrpc]
-> [ 5554.857773]  nfsd+0x170/0x270 [nfsd]
-> [ 5554.859009]  ? nfsd_shutdown_threads+0xe0/0xe0 [nfsd]
-> [ 5554.860602]  kthread+0x160/0x190
-> [ 5554.861400]  ? kthread_complete_and_exit+0x20/0x20
-> [ 5554.862452]  ret_from_fork+0x1f/0x30
-> [ 5554.863265]  </TASK>
-> [ 5554.863756] Modules linked in: rdma_ucm ib_uverbs rpcrdma rdma_cm
-> iw_cm ib_cm ib_core nfsd nfs_acl lockd grace ext4 mbcache jbd2 fuse
-> xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ipt_REJECT
-> nf_reject_ipv4 nft_compat nf_tables nfnetlink tun bridge stp llc bnep
-> vmw_vsock_vmci_transport vsock intel_rapl_msr intel_rapl_common
-> snd_seq_midi snd_seq_midi_event crct10dif_pclmul crc32_pclmul
-> vmw_balloon ghash_clmulni_intel joydev pcspkr snd_ens1371
-> snd_ac97_codec ac97_bus snd_seq btusb btrtl btbcm btintel snd_pcm
-> snd_timer snd_rawmidi snd_seq_device bluetooth rfkill snd ecdh_generic
-> ecc soundcore vmw_vmci i2c_piix4 auth_rpcgss sunrpc ip_tables xfs
-> libcrc32c sr_mod cdrom sg crc32c_intel nvme serio_raw nvme_core t10_pi
-> crc64_rocksoft crc64 vmwgfx drm_ttm_helper ttm ahci drm_kms_helper
-> ata_generic syscopyarea sysfillrect sysimgblt fb_sys_fops vmxnet3
-> libahci ata_piix drm libata
-> [ 5554.880681] CR2: 0000000000000008
-> [ 5554.881539] ---[ end trace 0000000000000000 ]---
-
+There's nothing unreliable about it.
 --=20
 Jeff Layton <jlayton@kernel.org>
