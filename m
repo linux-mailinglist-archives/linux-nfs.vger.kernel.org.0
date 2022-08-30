@@ -2,264 +2,126 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E74A05A6CE4
-	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 21:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9413E5A6D67
+	for <lists+linux-nfs@lfdr.de>; Tue, 30 Aug 2022 21:30:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbiH3TPA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Aug 2022 15:15:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
+        id S231230AbiH3TaV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Aug 2022 15:30:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbiH3TO6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 15:14:58 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 018F1DF64
-        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 12:14:55 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 27UHtNiL032440;
-        Tue, 30 Aug 2022 19:14:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2022-7-12;
- bh=EmpyzlL3nuknxQdSqOXda82Dr6QuQNOupqcP4MCw3MQ=;
- b=JRJRIhenW7kyMlk7X+bV7HCZfXTfLUzVgUhCbd+aKav+oVhuI7eewVVq3fY8/sAegjH9
- W/og91WRxCWLbt52cJiOJzEZdVeFwck+n4spJ3lR3wmV9EkOpxXa7D0d5KvQqycgtag9
- 5IqMteoxD8GNWsKbdOeViPWU80WutJ/NFK+09gfMOxTqAyw35Je7gUqvDG7DP6pOBY3c
- 5UlTeUHNa4JwVg9/sQrZl2StxNiZ8pf9DRTv9XCaKQNTntaQZW0zqcHKmN0TXyFAjG4e
- K+xwq9AOQdCscx0j6aMzfeVsjVrU/uLPOzC+BiXgx6upwNL7q91kAaufx/lRSaB9rZPX sg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j7a227b75-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Aug 2022 19:14:51 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 27UIXXJY035890;
-        Tue, 30 Aug 2022 19:14:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3j79q4h625-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Aug 2022 19:14:50 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 27UJEn1x002516;
-        Tue, 30 Aug 2022 19:14:50 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3j79q4h61f-3;
-        Tue, 30 Aug 2022 19:14:50 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v3 2/2] NFSD: add shrinker to reap courtesy clients on low memory condition
-Date:   Tue, 30 Aug 2022 12:14:25 -0700
-Message-Id: <1661886865-30304-3-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1661886865-30304-1-git-send-email-dai.ngo@oracle.com>
-References: <1661886865-30304-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-08-30_10,2022-08-30_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2208300086
-X-Proofpoint-GUID: 7jcMbmq4uSEDUhQ_R-SAd2NnQYrDXmuI
-X-Proofpoint-ORIG-GUID: 7jcMbmq4uSEDUhQ_R-SAd2NnQYrDXmuI
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229808AbiH3TaT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 15:30:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81EBB1FCC0;
+        Tue, 30 Aug 2022 12:30:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 16D4961772;
+        Tue, 30 Aug 2022 19:30:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E6D9C433D6;
+        Tue, 30 Aug 2022 19:30:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1661887817;
+        bh=nBVnvrKt98aOcRMDXo5kWCSaoHa1L3WfB0MImmB7bsA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=LAGBjRI0iICkSCcey3Hj90hGM0SqheIVF3UoW82NBZzIz/pwdUg/h+ZPa9irfUgQB
+         1s2LRyXlDCP9C4zI3ji74eomVC+5lmIjm9aAB+/Hcttw0Y+R4eiEnQX2gIwcyylcGZ
+         m0HT0zoISUjbBp0qlYJXXVP8gT75R6Rg9V6R2tmBTQbZLwC5VMRi2/IuSdDU2wnnoQ
+         s8vbTr0QPN2e82jnZJX+Heu5jjIstCTuxNZNjDoGaO1O9jXsqCQ5asBV74B1QbtBAd
+         mUKvBBbd6N/l/Ri+dhT47y56cLzRqElhTacOHddkmxB7PKH22K4iwFitXwtuU0g0vP
+         s/YieDF4URcow==
+Message-ID: <b3c0e3ae74a6f30547bd5c49c32c17f1e7a13b0c.camel@kernel.org>
+Subject: Re: [PATCH v3 1/7] iversion: update comments with info about atime
+ updates
+From:   Jeff Layton <jlayton@kernel.org>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Trond Myklebust <trondmy@hammerspace.com>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "neilb@suse.de" <neilb@suse.de>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-ceph@vger.kernel.org" <linux-ceph@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "lczerner@redhat.com" <lczerner@redhat.com>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "walters@verbum.org" <walters@verbum.org>
+Date:   Tue, 30 Aug 2022 15:30:13 -0400
+In-Reply-To: <20220830183244.GG26330@fieldses.org>
+References: <549776abfaddcc936c6de7800b6d8249d97d9f28.camel@kernel.org>
+         <166181389550.27490.8200873228292034867@noble.neil.brown.name>
+         <f5c42c0d87dfa45188c2109ccf9baeb7a42aa27e.camel@kernel.org>
+         <20220830132443.GA26330@fieldses.org>
+         <a07686e7e1d1ef15720194be2abe5681f6a6c78e.camel@kernel.org>
+         <20220830144430.GD26330@fieldses.org>
+         <e4815337177c74a9928098940dfdcb371017a40c.camel@hammerspace.com>
+         <20220830151715.GE26330@fieldses.org>
+         <3e8c7af5d39870c5b0dc61736a79bd134be5a9b3.camel@hammerspace.com>
+         <4adb2abd1890b147dbc61a06413f35d2f147c43a.camel@kernel.org>
+         <20220830183244.GG26330@fieldses.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+MIME-Version: 1.0
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add the courtesy client shrinker to react to low memory condition
-triggered by the memory shrinker.
+On Tue, 2022-08-30 at 14:32 -0400, J. Bruce Fields wrote:
+> On Tue, Aug 30, 2022 at 01:02:50PM -0400, Jeff Layton wrote:
+> > The fact that NFS kept this more loosely-defined is what allowed us to
+> > elide some of the i_version bumps and regain a fair bit of performance
+> > for local filesystems [1]. If the change attribute had been more
+> > strictly defined like you mention, then that particular optimization
+> > would not have been possible.
+> >=20
+> > This sort of thing is why I'm a fan of not defining this any more
+> > strictly than we require. Later on, maybe we'll come up with a way for
+> > filesystems to advertise that they can offer stronger guarantees.
+>=20
+> Yeah, the afs change-attribute-as-counter thing seems ambitious--I
+> wouldn't even know how to define what exactly you're counting.
+>=20
+> My one question is whether it'd be worth just defining the thing as
+> *increasing*.  That's a lower bar.
+>=20
 
-On the shrinker's count callback, we increment a callback counter
-and return the number of outstanding courtesy clients. When the
-laundromat runs, it checks if this counter is not zero and starts
-reaping old courtesy clients. The maximum number of clients to be
-reaped is limited to NFSD_CIENT_MAX_TRIM_PER_RUN (128). This limit
-is to prevent the laundromat from spending too much time reaping
-the clients and not processing other tasks in a timely manner.
+That's a very good question.
 
-The laundromat is rescheduled to run sooner if it detects low
-low memory condition and there are more clients to reap.
+One could argue that NFSv4 sort of requires that for write delegations
+anyway. All of the existing implementations that I know of do this, so
+that wouldn't rule any of them out.
 
-On the shrinker's scan callback, we return the number of clients
-That were reaped since the last scan callback. We can not reap
-the clients on the scan callback context since destroying the
-client might require call into the underlying filesystem or other
-subsystems which might allocate memory which can cause deadlock.
+I'm not opposed to adding that constraint. Let me think on it a bit
+more.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/netns.h     |  3 +++
- fs/nfsd/nfs4state.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfsctl.c    |  6 ++++--
- fs/nfsd/nfsd.h      |  9 +++++++--
- 4 files changed, 62 insertions(+), 8 deletions(-)
+> (Though admittedly we don't quite manage it now--see again 1631087ba872
+> "Revert "nfsd4: support change_attr_type attribute"".)
+>=20
 
-diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
-index 2695dff1378a..2a604951623f 100644
---- a/fs/nfsd/netns.h
-+++ b/fs/nfsd/netns.h
-@@ -194,6 +194,9 @@ struct nfsd_net {
- 	int			nfs4_max_clients;
- 
- 	atomic_t		nfsd_courtesy_client_count;
-+	atomic_t		nfsd_client_shrinker_cb_count;
-+	atomic_t		nfsd_client_shrinker_reapcount;
-+	struct shrinker		nfsd_client_shrinker;
- };
- 
- /* Simple check to find out if a given net was properly initialized */
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 9675b5d8f408..73815c861bec 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -4341,7 +4341,40 @@ nfsd4_init_slabs(void)
- 	return -ENOMEM;
- }
- 
--void nfsd4_init_leases_net(struct nfsd_net *nn)
-+static unsigned long
-+nfsd_courtesy_client_count(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	struct nfsd_net *nn = container_of(shrink,
-+			struct nfsd_net, nfsd_client_shrinker);
-+
-+	atomic_inc(&nn->nfsd_client_shrinker_cb_count);
-+	mod_delayed_work(laundry_wq, &nn->laundromat_work, 0);
-+	return (unsigned long)atomic_read(&nn->nfsd_courtesy_client_count);
-+}
-+
-+static unsigned long
-+nfsd_courtesy_client_scan(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	struct nfsd_net *nn = container_of(shrink,
-+			struct nfsd_net, nfsd_client_shrinker);
-+	unsigned long cnt;
-+
-+	cnt = atomic_read(&nn->nfsd_client_shrinker_reapcount);
-+	atomic_set(&nn->nfsd_client_shrinker_reapcount, 0);
-+	return cnt;
-+}
-+
-+static int
-+nfsd_register_client_shrinker(struct nfsd_net *nn)
-+{
-+	nn->nfsd_client_shrinker.scan_objects = nfsd_courtesy_client_scan;
-+	nn->nfsd_client_shrinker.count_objects = nfsd_courtesy_client_count;
-+	nn->nfsd_client_shrinker.seeks = DEFAULT_SEEKS;
-+	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
-+}
-+
-+int
-+nfsd4_init_leases_net(struct nfsd_net *nn)
- {
- 	struct sysinfo si;
- 	u64 max_clients;
-@@ -4362,6 +4395,8 @@ void nfsd4_init_leases_net(struct nfsd_net *nn)
- 	nn->nfs4_max_clients = max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
- 
- 	atomic_set(&nn->nfsd_courtesy_client_count, 0);
-+	atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
-+	return nfsd_register_client_shrinker(nn);
- }
- 
- static void init_nfs4_replay(struct nfs4_replay *rp)
-@@ -5870,12 +5905,17 @@ static void
- nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 				struct laundry_time *lt)
- {
--	unsigned int maxreap, reapcnt = 0;
-+	unsigned int maxreap = 0, reapcnt = 0;
-+	int cb_cnt;
- 	struct list_head *pos, *next;
- 	struct nfs4_client *clp;
- 
--	maxreap = (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) ?
--			NFSD_CLIENT_MAX_TRIM_PER_RUN : 0;
-+	cb_cnt = atomic_read(&nn->nfsd_client_shrinker_cb_count);
-+	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients ||
-+							cb_cnt) {
-+		maxreap = NFSD_CLIENT_MAX_TRIM_PER_RUN;
-+		atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
-+	}
- 	INIT_LIST_HEAD(reaplist);
- 	spin_lock(&nn->client_lock);
- 	list_for_each_safe(pos, next, &nn->client_lru) {
-@@ -5900,6 +5940,8 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
- 		}
- 	}
- 	spin_unlock(&nn->client_lock);
-+	if (cb_cnt)
-+		atomic_add(reapcnt, &nn->nfsd_client_shrinker_reapcount);
- }
- 
- static time64_t
-@@ -5940,6 +5982,8 @@ nfs4_laundromat(struct nfsd_net *nn)
- 		list_del_init(&clp->cl_lru);
- 		expire_client(clp);
- 	}
-+	if (atomic_read(&nn->nfsd_client_shrinker_cb_count) > 0)
-+		lt.new_timeo = NFSD_LAUNDROMAT_MINTIMEOUT;
- 	spin_lock(&state_lock);
- 	list_for_each_safe(pos, next, &nn->del_recall_lru) {
- 		dp = list_entry (pos, struct nfs4_delegation, dl_recall_lru);
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 917fa1892fd2..597a26ad4183 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -1481,11 +1481,12 @@ static __net_init int nfsd_init_net(struct net *net)
- 		goto out_idmap_error;
- 	nn->nfsd_versions = NULL;
- 	nn->nfsd4_minorversions = NULL;
-+	retval = nfsd4_init_leases_net(nn);
-+	if (retval)
-+		goto out_drc_error;
- 	retval = nfsd_reply_cache_init(nn);
- 	if (retval)
- 		goto out_drc_error;
--	nfsd4_init_leases_net(nn);
--
- 	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
- 	seqlock_init(&nn->writeverf_lock);
- 
-@@ -1507,6 +1508,7 @@ static __net_exit void nfsd_exit_net(struct net *net)
- 	nfsd_idmap_shutdown(net);
- 	nfsd_export_shutdown(net);
- 	nfsd_netns_free_versions(net_generic(net, nfsd_net_id));
-+	nfsd4_leases_net_shutdown(nn);
- }
- 
- static struct pernet_operations nfsd_net_ops = {
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 57a468ed85c3..7e05ab7a3532 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -498,7 +498,11 @@ extern void unregister_cld_notifier(void);
- extern void nfsd4_ssc_init_umount_work(struct nfsd_net *nn);
- #endif
- 
--extern void nfsd4_init_leases_net(struct nfsd_net *nn);
-+extern int nfsd4_init_leases_net(struct nfsd_net *nn);
-+static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn)
-+{
-+	unregister_shrinker(&nn->nfsd_client_shrinker);
-+};
- 
- #else /* CONFIG_NFSD_V4 */
- static inline int nfsd4_is_junction(struct dentry *dentry)
-@@ -506,7 +510,8 @@ static inline int nfsd4_is_junction(struct dentry *dentry)
- 	return 0;
- }
- 
--static inline void nfsd4_init_leases_net(struct nfsd_net *nn) {};
-+static inline int nfsd4_init_leases_net(struct nfsd_net *nn) { return 0; };
-+static inline void nfsd4_leases_net_shutdown(struct nfsd_net *nn) { };
- 
- #define register_cld_notifier() 0
- #define unregister_cld_notifier() do { } while(0)
--- 
-2.9.5
+Factoring the ctime into the change attr seems wrong, since a clock jump
+could make it go backward. Do you remember what drove that change (see
+630458e730b8) ?
 
+It seems like if the i_version=A0were to go backward, then the ctime
+probably would too, and you'd still see a duplicate change attr.
+--=20
+Jeff Layton <jlayton@kernel.org>
