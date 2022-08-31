@@ -2,97 +2,83 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DE7A5A7E1D
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 14:58:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0DD465A7F35
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 15:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231588AbiHaM6A (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Aug 2022 08:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44114 "EHLO
+        id S231867AbiHaNtB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Aug 2022 09:49:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229863AbiHaM57 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 08:57:59 -0400
-Received: from mail-pf1-x433.google.com (mail-pf1-x433.google.com [IPv6:2607:f8b0:4864:20::433])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B29B69E8
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 05:57:56 -0700 (PDT)
-Received: by mail-pf1-x433.google.com with SMTP id y127so14338424pfy.5
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 05:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc;
-        bh=UjX9RpzNcMdO3PaAYHh1O169Hpy8ePU2w6yD42ZlV/c=;
-        b=f06QULJx6gSkux/M5D4YcEWCDN1v1CH1bm9hmwqQuTzSKWd+HgYgqCTvtfD/3RMAvI
-         Q3AL+cFZfQJ4zeQRUL66Qm3wzcOBFcpMNZ60A5cpL5M3D4L9z/4WPG36Q1nENbjcc52J
-         dCv/T7iuiX8bN3sWlTdloQfVjQMGQz/CQHYZJCiM0ZGmxRatBL5h+qFOkXIARjpdsdMV
-         5dYlMHyV9NHHUwlTeFxNb7ega8tgl0SZBpeP5Tm8MaUHQdN3HSg+7RVssFNkF101poRH
-         MHW7YOhOsX72ObL/RVEy6pkDHTTNcgAOeZN8Gz95P2hc4iMTXrWY+hBRdRpO3hPkEAZq
-         Gw5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc;
-        bh=UjX9RpzNcMdO3PaAYHh1O169Hpy8ePU2w6yD42ZlV/c=;
-        b=pAeTye6krQKBGv11krhJszvW/72AlmQA0cW2tZ9cMfLulnNpKK1vmzi4+Q1BXwE7mP
-         YXr1neeK/hysBGvWVIOfAu9XvYBoYhftu7xLmywYBFFwhVOI6JlxigYUnkM9njaZ+LZm
-         ZJ/2mH9jbl12LlIeMThpt3/PxLEWhAtx9R09DY2WU0xgNpW5FsvUlQF9Ga4+aVfptt8H
-         sXEWsqkg4KTmL0c6981Oue8FNc/ErRiVqpWBIdq0l6f/B2CNup5UyEhieG0XDMRTaHa9
-         WLAS0jH2rnvCl4ojQ0pACDV6ZLIk1l3giI4gQkPRbFlU21WDEmBNVqaNAfIcWLISWux0
-         2qHQ==
-X-Gm-Message-State: ACgBeo0EtSKAI2Yb4o6s48iLiAtOhroO0VuDcq/o7dI+I/TP3iNvgx5U
-        R/NWCodGJZIZstrC4aTdoqmB7poJxOlmfudIBzpHcnJjGhs=
-X-Google-Smtp-Source: AA6agR4xnj7wR6kYN1vE+RcPh3+ebjBYNw1GXDoZLPjraqWVcfOfgkBv42IHnXXUJN8yjAQlL8ts5FmZsCAE2k+K4Xo=
-X-Received: by 2002:a63:914a:0:b0:42b:4eaf:7c75 with SMTP id
- l71-20020a63914a000000b0042b4eaf7c75mr21883185pge.306.1661950674690; Wed, 31
- Aug 2022 05:57:54 -0700 (PDT)
+        with ESMTP id S231829AbiHaNs7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 09:48:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F34D476E
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 06:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661953728;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=MHgckLY1k0e6IPDOoXCSz/obpbHVtMPSQg5MXk7HP0o=;
+        b=LEnO5YDL4T8BwzXJTk2ikRyhGXUVNac1jN2AlfVyuRVWJ27IApgDWMEsoBitgXDvoqlbts
+        7mlZedMaU7PSjOiK1a5NFZJkZuoHNY7zYaAO5n9ormd1D6yTYITtGE6s54Cu9FTCK428Te
+        kKRWcXnKl0K6+F5bIcXOimSfZShLSl0=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-611-yerZESZVNty5lBMkSHHD1w-1; Wed, 31 Aug 2022 09:48:43 -0400
+X-MC-Unique: yerZESZVNty5lBMkSHHD1w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 72F50811E83;
+        Wed, 31 Aug 2022 13:48:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.72])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA6B1C15BB3;
+        Wed, 31 Aug 2022 13:48:40 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <89548338-f716-c110-0f85-3ef880bbd723@schaufler-ca.com>
+References: <89548338-f716-c110-0f85-3ef880bbd723@schaufler-ca.com> <c648aa7c-a49c-a7e2-6a05-d1dfe44b8fdb@schaufler-ca.com> <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk> <20220826082439.wdestxwkeccsyqtp@wittgenstein> <1903709.1661849345@warthog.procyon.org.uk>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     dhowells@redhat.com, Christian Brauner <brauner@kernel.org>,
+        viro@zeniv.linux.org.uk, Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, linux-nfs@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] vfs, security: Fix automount superblock LSM init problem, preventing NFS sb sharing
 MIME-Version: 1.0
-From:   Murphy Zhou <jencce.kernel@gmail.com>
-Date:   Wed, 31 Aug 2022 20:57:43 +0800
-Message-ID: <CADJHv_tkpQi4F930dS6qadHHR+d5JenfeDzbvAW0okKCMndKkQ@mail.gmail.com>
-Subject: mainline kernel fails fstests generic/130 over nfsv4.2
-To:     linux-nfs <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1535494.1661953720.1@warthog.procyon.org.uk>
+Date:   Wed, 31 Aug 2022 14:48:40 +0100
+Message-ID: <1535495.1661953720@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
+Casey Schaufler <casey@schaufler-ca.com> wrote:
 
-It's pretty reproducible for me.
+> No. I appreciate that you're including Smack as part of the effort.
+> I would much rather have the code working as you have it than have
+> to go in later and do it all from scratch. With luck I should be able
+> to get someone with a considerably lower level of expertise to work
+> on it.
 
-Could anyone look into it? Thanks!
+Can I put you down as a Reviewed-by, then?
 
-FSTYP         -- nfs
-PLATFORM      -- Linux/x86_64 ibm-x3250m2-4 6.0.0-rc1 #1 SMP
-PREEMPT_DYNAMIC Sat Aug 20 19:03:47 UTC 2022
-MKFS_OPTIONS  -- localhost:/export/scratch
-MOUNT_OPTIONS -- -o vers=4.2 -o context=system_u:object_r:nfs_t:s0
-localhost:/export/scratch /mnt/xfstests/mnt2
+David
 
-generic/130       - output mismatch (see
-/var/lib/xfstests/results//generic/130.out.bad)
-    --- tests/generic/130.out 2022-08-23 07:38:25.769217560 -0400
-    +++ /var/lib/xfstests/results//generic/130.out.bad 2022-08-23
-08:09:10.121494654 -0400
-    @@ -7,6 +7,520 @@
-     00000000:  63 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-c...............
-     00000010:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-................
-     *
-    +0000a000:  1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b
-................
-    +0000a010:  2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b
-....0123456789..
-    +0000a020:  3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b
-.....ABCDEFGHIJK
-    +0000a030:  4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b
-LMNOPQRSTUVWXYZ.
-    ...
-    (Run 'diff -u /var/lib/xfstests/tests/generic/130.out
-/var/lib/xfstests/results//generic/130.out.bad'  to see the entire
-diff)
