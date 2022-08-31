@@ -2,81 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E6E5A8778
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 22:21:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65CAF5A878D
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 22:32:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230490AbiHaUVC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Aug 2022 16:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51876 "EHLO
+        id S231196AbiHaUcQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Aug 2022 16:32:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbiHaUVB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 16:21:01 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4301D34CF
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 13:21:00 -0700 (PDT)
+        with ESMTP id S229916AbiHaUcP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 16:32:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079C3DF0B0
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 13:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1661977260;
+        s=mimecast20190719; t=1661977934;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=vNbUZw9ZAyuBRA0HADclM+IyPC7OPrvHhvFWLFi8hs8=;
-        b=H1V6AmARTch72lw7AroOcF+KSCR8mLJD9S5WJWWT+fDC+A8RVGxhHb5GqXWdFGbh+vrAPI
-        l1SOQBy1oqMhfNT2U4VGYMLFzQ85wArRTndGjnmAKznqyXBkt8IUAGnBDCliSy6GYuNrSV
-        goJF0Q6qtJHGbMf+W87htItWEyYcjqk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-531-yBdNikoGNnmuMCrdv0mglQ-1; Wed, 31 Aug 2022 16:20:58 -0400
-X-MC-Unique: yBdNikoGNnmuMCrdv0mglQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A4F1B101A54E;
-        Wed, 31 Aug 2022 20:20:57 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.48.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43BBB40C141D;
-        Wed, 31 Aug 2022 20:20:57 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Trond Myklebust" <trondmy@hammerspace.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: client call_decode WARN_ON memcmp race since 72691a269f0b
-Date:   Wed, 31 Aug 2022 16:20:55 -0400
-Message-ID: <6806AB48-F7D6-4639-8D03-E31BA25C4CF3@redhat.com>
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wDvnL7iwjHbaaK8cBedl2pypt0raOsAfKjcUtL7shH4=;
+        b=SR3CcCEY6PK2EiGY2FrQkFI8sXsd29sHSNKTY6BN0f+L1B9f12r3glr2levIE2xF9t95yR
+        W45fBC0U2DEPaIHpUrCw3A+71eLbrsMB5k8tN/WuPW4w7tZ3s1SZIeRatTJYbca54DwSyy
+        j5iLBiWwlocU0hfGxfkgBgi24lcqo8E=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-204-Xeoa5Eg5NBmK8TbDiVQO4w-1; Wed, 31 Aug 2022 16:32:13 -0400
+X-MC-Unique: Xeoa5Eg5NBmK8TbDiVQO4w-1
+Received: by mail-qk1-f199.google.com with SMTP id g6-20020a05620a40c600b006bbdeb0b1f2so12788018qko.22
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 13:32:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc;
+        bh=wDvnL7iwjHbaaK8cBedl2pypt0raOsAfKjcUtL7shH4=;
+        b=OENBQvLZ3qO41NUERfnTGW5LsFgcXbexQuS2occNP1JPXBiEOHdu9/i5C0ynISpYBR
+         h87JKcMhBp3XPxmwVBvIvziv6tWt7yx6vrZJXU0Hbi9J+0CUTOwrk4KoS4fn/+cWiEVx
+         LmTnz1fLdGacxfrI6c8PeMwwy8H6AEtFN9vmmnk5rEPwBmaMjXnYqICV8k8hWgP/+e7D
+         XPSXagJO9CM+5BerSG47J0r8pjSuom7RePVtTd1yufZjwQnXmdjqmaBJiod0tDIvQOXu
+         KERmL6Acx7cZftXpkeqDqUlLnLSlgt48iU/BUT9jtCSsxuwziZ1P1Hh0hoU+Ctru63zr
+         Coow==
+X-Gm-Message-State: ACgBeo3L4dWSsrJw29E1ta2LOlM5c90f+12xreNGTBtiES1bAzHZEgY8
+        12tqxYZUVddy8joCMwMfr+bClWoFopVnFz2ZgMdqXN3CwG5GhW7B4c2kb6MtSCrADIACuDBtMfo
+        k8jH3Zoy9riZxa0CAWsGuzw6ULAAfekP6EOW4MBLL/d4pBj0H00OP8yOxY0PQElsu0L9t2Q==
+X-Received: by 2002:a05:620a:ecf:b0:6bb:a38:43cb with SMTP id x15-20020a05620a0ecf00b006bb0a3843cbmr16972975qkm.742.1661977932383;
+        Wed, 31 Aug 2022 13:32:12 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7HjBBRBrkPIYSxsae+LunIyi1I88HafEf3rm6Wm2H348+2md3sAp5TXK/YxCjnwl8nliPRow==
+X-Received: by 2002:a05:620a:ecf:b0:6bb:a38:43cb with SMTP id x15-20020a05620a0ecf00b006bb0a3843cbmr16972949qkm.742.1661977932076;
+        Wed, 31 Aug 2022 13:32:12 -0700 (PDT)
+Received: from [172.31.1.6] ([71.161.94.45])
+        by smtp.gmail.com with ESMTPSA id c6-20020a05620a268600b006b945519488sm11256548qkp.88.2022.08.31.13.32.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 Aug 2022 13:32:11 -0700 (PDT)
+Message-ID: <c0d059fc-a41c-ca24-59f8-ad7f780f91f0@redhat.com>
+Date:   Wed, 31 Aug 2022 16:32:10 -0400
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: Announcing the Fall 2022 Bakeathon
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
+        NFSv4 <nfsv4@ietf.org>
+References: <480ddad3-f93a-dab3-0f50-b4b7ebacd6e9@redhat.com>
+In-Reply-To: <480ddad3-f93a-dab3-0f50-b4b7ebacd6e9@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hey Trond,
+Hello,
 
-Since "72691a269f0b SUNRPC: Don't reuse bvec on retransmission of the
-request" I can sometimes pop the WARN_ON() in call_decode(), usually on
-generic/642.
+Just a quick reminder... The Bakeathonn is a
+little over a month out... I know a lot of the
+Red Haters planning on intending F2F...
 
-I think there's a kworker halfway through
+I sounds like Netapp plan on being there in person as
+well as virtual. I have heard rumors that Oracle
+plan on attending F2F.
 
-xprt_complete_rqst() ->
-       xprt_request_dequeue_receive_locked()
+Still looking to hear from HammerSpace, Amazon,
+Google, Vmware, CEA and HP. I'm hoping they
+will be attending... one way or another.
 
-between these two linse:
-         xdr_free_bvec(&req->rq_rcv_buf);
-         req->rq_private_buf.bvec = NULL;
+I would like to set up talks Tue, Wed and
+Thur at 2pm EST. So you are interested in
+hearing about something or if you want to
+talk about something or just status on
+things (RDMA, TLS, QUIC, Session Trunking)
+Just let me know. I'll set up a google
+doc to sign up....
 
-And at the same time the task is doing the WARN_ON(memcmp()) in
-call_decode.
+I'm pretty sure I will be able to set things up so
+the remote  people can participate.
 
-I'm not sure of a good fix - perhaps we can fixup the other paths that
-require the NULL check in xdr_alloc_bvec() so we don't have to set bvec =
-NULL.
+As usual, Red Hat will be having a few
+"pops" with hors d'oeuvres starting
+around 4ish each day...
 
-Any thoughts?
+steved.
 
-Ben
+
+On 7/13/22 10:59 AM, Steve Dickson wrote:
+> Hello,
+> 
+> Red Hat is pleased to announce that we'll be hosting the
+> Fall 2022 Bakeathon at our Westford office in Massachusetts, US.
+> 
+> The event will be F2F as well as virtual. Hoping to
+> draw as many participants as possible.
+> 
+> Date: Mon Oct 10 to Fri Oct 14
+> Address: Red Hat, 314 Littleton Rd, Westford, MA
+> 
+> Details, registration and hotel info are here [1].
+> Any questions please send them to bakeathon-contact@googlegroups.com
+> 
+> I hope to see you there... One way or the other!
+> 
+> steved.
+> 
+> [1] http://www.nfsv4bat.org/Events/2022/Oct/BAT/index.html
+> 
 
