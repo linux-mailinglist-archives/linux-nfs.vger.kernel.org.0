@@ -2,160 +2,145 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBE585A7237
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 02:06:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CED35A72FB
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 02:51:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229720AbiHaAGa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 30 Aug 2022 20:06:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        id S229591AbiHaAvK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 30 Aug 2022 20:51:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiHaAG3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 20:06:29 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2066.outbound.protection.outlook.com [40.107.243.66])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3C261122;
-        Tue, 30 Aug 2022 17:06:28 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FwdMNYvQPHNIhGOEXKqftMuWWrIZ5mjjbRktX2GCLD0nNlJaZTDSSpI6pXFiGX71F6RTln5Y/oxRCNYXYw8wNBePm6bvjSu6+xSqlKqEKhghViXQtFPaKG/gp+qnJPp2o/KBpwvWFA1ype8sFpXd/K8Jhs5r5ctDlfNLqWrYZWYGGCTB0jaLIezNzCyPd+Gfz8oynW293pENV7s3yA5LPUNbPwnE9A75Dsc1nwGYhJalqUA56WORRsf9/Rc5XhTkXT7fMCIa5H3NlGBm0DE5MCis9WI9Fcc73jwgvtIkqyBzMgJYgKdcLDhCAwqps31RrLhjfQqj9uuBrPnXJ1ENsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=SZM9qkQWLPwKpz3U6oXuN+PEq3S5IVnnSz8KSRlJiKQ=;
- b=GfY2RG+wU/haTqxG/1cgOZ6mCO9gD4L9MVbkbM5Tsjfxf9ctAaP+fSE0kNaslWNVKDt801w28ftdGVdJ16myQmYulhuvUJdOISe6I/qqT3Fhb5dkcqm/6jo7MPaMs5r8vbSbOX4uo9uBDnr6THlzrE0cGTE1tDifkN3eUSWGBkedsaj0nzMM6WTjunUuDe/84BYlsjtDk9udGbmjjnBKLnd1Dc94q9SiTuPtBxRwPppi6I1gFWzuKmXHtpHP4IBMvf3UGHuyyZ3nVrf098TVFmuA+GTbziRwqe5KQoLPMSs/dv93C1CvTstZ1vJqXVBfI63C4cKP2QWzdT47x2DhMQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SZM9qkQWLPwKpz3U6oXuN+PEq3S5IVnnSz8KSRlJiKQ=;
- b=ts/ZTL2ZehbE6mzmB12Mdt9YtrDXd24JrnPIJL8geJUHJFKXStbpjuGctY3bn3qdNX8ga4uEb4ayVfIxMvEBE0y5g5V3fqivmz77ksAwI15Z2cJCPT8sH1rVLf+VQIzeqd7bl3DqzJZvAbPGYXDs9VV/a3P70TfAfGH9KgUvXvoCYKcIElMco6/+IG99Va4vsk8Q/mn5sPWhPbQJUh/qbuyiCiU/f/J2oilqgWWnomWybKhzJQYgs3gkf1Gd3+jcaa4wYac/gzJmXL59eI2zr/W43qMvuj07YHy8cAuYD5Q1qiNXiLxOI+z59bQEGphqJlVMFEdWEnpnM2/Sn8sSbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by MW5PR12MB5623.namprd12.prod.outlook.com (2603:10b6:303:199::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5546.18; Wed, 31 Aug
- 2022 00:06:27 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::508d:221c:9c9e:e1a5%9]) with mapi id 15.20.5588.010; Wed, 31 Aug 2022
- 00:06:27 +0000
-Message-ID: <b28ba728-f879-7c11-c232-80908bd42853@nvidia.com>
-Date:   Tue, 30 Aug 2022 17:06:24 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH 1/6] mm/gup: introduce pin_user_page()
-Content-Language: en-US
-To:     David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
+        with ESMTP id S229923AbiHaAvJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 30 Aug 2022 20:51:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB14D33A24
+        for <linux-nfs@vger.kernel.org>; Tue, 30 Aug 2022 17:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1661907058;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=A8rBE+7JFY+czmuPJK/CvpGRu6lO2Vcjhw9PpCAvMAQ=;
+        b=TBzrYHQk9yrF24CHiv6V0fdS7YnA3iIW9nAtfPh9xXJcW5RVTjiep70egt742XumhUMTNr
+        ltPwFUxYXbVA17kgvjZHhQrmdbKlzoWEiQntTAYfd03HdZeMbNT0L+N+f6FMQYKikKMrVE
+        M1mXWHCHtVkBL1QZirS6yxkPQg77vsY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-135-kpDPkuJpPJu5G2A5KcParw-1; Tue, 30 Aug 2022 20:50:55 -0400
+X-MC-Unique: kpDPkuJpPJu5G2A5KcParw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id A6ABF8037AF;
+        Wed, 31 Aug 2022 00:50:54 +0000 (UTC)
+Received: from dwysocha.rdu.csb (unknown [10.22.8.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3F8D1492C3B;
+        Wed, 31 Aug 2022 00:50:54 +0000 (UTC)
+From:   Dave Wysochanski <dwysocha@redhat.com>
+To:     Anna Schumaker <anna.schumaker@netapp.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20220827083607.2345453-1-jhubbard@nvidia.com>
- <20220827083607.2345453-2-jhubbard@nvidia.com>
- <10a9d33a-58a3-10b3-690b-53100d4e5440@redhat.com>
- <a47eef63-0f29-2185-f044-854ffaefae9c@nvidia.com>
- <5aa08b4f-251e-a63d-c36c-324a04ba24f4@redhat.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-In-Reply-To: <5aa08b4f-251e-a63d-c36c-324a04ba24f4@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0369.namprd03.prod.outlook.com
- (2603:10b6:a03:3a1::14) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
+        David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        Benjamin Maynard <benmaynard@google.com>,
+        Daire Byrne <daire.byrne@gmail.com>
+Subject: [PATCH v3 0/3] Convert NFS with fscache to the netfs API
+Date:   Tue, 30 Aug 2022 20:50:50 -0400
+Message-Id: <20220831005053.1287363-1-dwysocha@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 824ffa63-14aa-4c32-cb95-08da8ae4a609
-X-MS-TrafficTypeDiagnostic: MW5PR12MB5623:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2HA5ba7WFcGXzDKal92g76behUy7qAye/2GbMHxPVwLSpO8Aw2MYuvaB825ZZqBXyhQ5eWXtidS/Z2N9NE6KijBx4/ZmqG5CdS47p0iZ8Rwf2nsaMhQJS73GeBMGhIjMK/dxrS6e46TTROhNP7fIcRwkzHl4ya6YzPdb0Ht6l6wyu+uh4uL+aY1vNJBPK9Qaw6XtKOElE9fOdQ6Kloj0m4wWzzJdwCPtcX2kZxkYNpzuEb179b+v0gRGp4WXmds+8Qfy3inrr3n3uWQv6+OASXl2iq8oK3Nab7Ox74e/Q+tT5GlbabGXUgPZ4BRQjivoRwbxGint7RFG5lKBZYIaqrj4JaYZY/gF0erKYFt72alK3iO/xfmL5bykVa4/QuMv/BDVQ08GXWEMwJi5x9Pa+gv24ePTbg4lY9AZ/dFVKO9HCg61GMpWoo+Ey3xTHQ5CGhV7LmgCMVp580uEqRRzWHlU+8TWHKNoDvRY+tzHX5ctG5JSilpFrUckpUjyknriOSjLSsW/3O2Qvc58gUE6CcQGxREd6UnP8vrVIRUY1DSVUlLd5GVx+dPa/Y1SuryYwODeLmoSxAVda6IKkRnQPFst3To0p+GnDM/qQ+pGoXVUDTfagXrmKleBu2XjIPOLgFIXBA5s6rcMeCXk/CKLEabkR2NaJrGjGRzAi9kqrqS6JjOSUzd/WNvoYx+RbOe0NO3b27HJ3KSQsiuuQ8ZBrz7f9kkwWrZAVl5IoMstdueAtNQ5KjI45bm7g2cpdBryvL1lIjeKD2JsSd8B3PIdK64THwFj0KWcTng/qvr7IEc=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(31696002)(6512007)(26005)(4744005)(6486002)(2906002)(478600001)(53546011)(6506007)(86362001)(41300700001)(6666004)(54906003)(8936002)(186003)(38100700002)(2616005)(31686004)(66946007)(5660300002)(66556008)(8676002)(110136005)(66476007)(4326008)(36756003)(7416002)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Yk9JdDVGLzQraGMrYmZDUHEvdnhMRW0rWlJlT28wVE1KaWRjcFFuUS9kKzJV?=
- =?utf-8?B?c3oyVTZFOERFT3lUcTBtK3JVVUtHbGIzQUhDZk01U3NLQmVRbDNjTVBCbVBk?=
- =?utf-8?B?N282cUk3c0tWVjdWak9SVkJPN3Z2bWNXMkhrYXM1d3hlamVDQ2J5Ni9hRkxD?=
- =?utf-8?B?R2FlNTB1Z0NLbTdYcmVIVnpZK1kvNGxISU1mK0lyeEdseXZHYVpIcTJjajhU?=
- =?utf-8?B?cTMzRlp5ZHV6TlIrMkpRWUNEb210ZGc4Mks3czBtczArWEpab1IvNExJM2NU?=
- =?utf-8?B?a3Vva2ZxRzB3UVA3b0ordllROWQrVjNCOCtHb2JSM3QyckhMSVp3OUNDZmVE?=
- =?utf-8?B?QVIxNC90NE4vY25pWElZUmdUczIrWFFldkRRMHlSNDJyZVU4UkZsdGVlazJO?=
- =?utf-8?B?a2JWRUViWUVqY1FBLy9oVkw2dGpwRzFhVHdLbkc2MDZneXVCYUdMR25Mc3Yr?=
- =?utf-8?B?U1gwZVp3TkU4YlJTMkJOT3FiUHpGNlQ5Wkg0MExzQ3pkVXZJS1grQzJLak9Z?=
- =?utf-8?B?Z1ZtaGRLS3lKTXhZRUdPVDIvYjBnM0I1ZGt3R2VZbFpWcExPSmM4L1hyNEt6?=
- =?utf-8?B?WHdBZlZ0anNSSlMrQ2d5Q0FDSTNaNDlGY2JmQmNZVE1KZFJEWXB2WXozRWE4?=
- =?utf-8?B?U2JLSVl5alp5NnJqZXIvUk5xOTVzOEF4RFpJOVNQYkkrTXlYM0dwWkZXY1VU?=
- =?utf-8?B?V21FVzljZldPVUpoVHR2ZE5TTjYram8wb1MrV3ltbXpiSWF4VTVYRUY5bUJI?=
- =?utf-8?B?bnFyRDFMcFNSVDYzcmVFY0tSdFNCcmp0QWlyNnp2dmQ4R001S2FQYnk5V1hI?=
- =?utf-8?B?WjBpUXRXSUtjcFgyT2ltRDBsQzF0UGFlV3M1bnk0d0dJeEQrQkRFeXNuVVpi?=
- =?utf-8?B?Y2FHdDVDZjZsLzN6SDlsOWlCOG5NYUtibjlOMWJJTlRVbHRFZnFOS3hLZ1l0?=
- =?utf-8?B?WEJYSE42aEcwRDlBYUdQaXlXVmIvTmFrNy9ERnQycmZOU1M1Q21NWXBJS0JH?=
- =?utf-8?B?SFlUb1hWK3NXQ3ZaZDJrREF6OFQ1Y0ViZ2hOWHQxUUxMQ3BxNThYaml3OHp4?=
- =?utf-8?B?NEhodnVocVM2cDZPSTI0U3RvUlZHUnBpeTdoRUN1Q0dUWldpbkpZUnRVcHlP?=
- =?utf-8?B?MG11dUxveTdjMm9OeFBjaEVuYkp3SXlpV0pRSVdxTmFZYlBRaFpmU3Y0anNQ?=
- =?utf-8?B?Z0ZIWnRGdzZOb1ZiMk9wWGFJUzlVL1dMY29EUUs1UXh6NktPL1EyZjF3bG1D?=
- =?utf-8?B?YUVWWDVxOVVVdE5QRjZpbEpDSU9uRk1pdlYxeGZlSjVnWWV1aVFUSkhKUjY0?=
- =?utf-8?B?a1VXYmhrU3M2Yy9KMkY3dlArM1hHOEZHYTNmRUgvYStyU2pHTTlMQjBYTHJX?=
- =?utf-8?B?Mk0zVHlrQ2w4d0UvVWt1SzlUdWxzZHRUdTRRakgrMmVYSGpOZEpVMXNkOXRq?=
- =?utf-8?B?SkR6ZnZMcmRuSm9paGVKdnBOVG8yeGNHUXRxaFUwS2o3Vkp6V25OQ25NalNh?=
- =?utf-8?B?cTZEQ1hQK1RDSVAzR0k0YXZLSFZ0YUZyOGZPN1FLNlBkSU9uU2JGeXViS1VH?=
- =?utf-8?B?dnVxYnFGOWhpVk1EUW9zbTBoOXJweGg2UERhWnRiT2ZYUkxXZVJERXgzcm9N?=
- =?utf-8?B?ZERScXBSNzBUZDVtNnFtdWxKV1FyNkwrdnRLOEtpTXB5QUxKbE53Wmp5ZlRD?=
- =?utf-8?B?eEhLdzM4WlhpTms4dUZ2b1h0UHFPb3J2UG40NVdFaEF5Q0ZNaHJ2N2RFdHZU?=
- =?utf-8?B?N0NQZTRhaHZBTjZwMlhDd3ZseUhGN2YyQkJ3RWh3c2RkNWtGNlpsbXhXY1h1?=
- =?utf-8?B?dlRrRlRXbVZTdWd1YzVMY0h6c3ZpbHovQ2E4UkpJZDQxSXhiOUxITlhSdDNm?=
- =?utf-8?B?clNNbERBNU8yNnFXZm1ROW9KVGlWQ0Q5Nnh1T2xTclNYSjRxSU0xZW5mc09G?=
- =?utf-8?B?Zk5jZHgvdytSalVpNUdQMmphbGVIdGlyUjh6UzhjTTFZdk1jSzd3RWhsaHhD?=
- =?utf-8?B?WXVFZlArK09xYzZDNHhqZW5MNUt5alA3TFREWGpRWThTMitOdGc2N3hRWlBO?=
- =?utf-8?B?RDY4VkdQcGxTdkUrTHYrb1NQVGtqTEo2TGhtMXJiY0x6NjhIUWpZaVgrVHVo?=
- =?utf-8?B?U29weHRjcmdmdU9kVkhnUGpvb3RodUxlUDUyYW03cDMvN1o0cXB4UEs1VVJI?=
- =?utf-8?B?L2c9PQ==?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 824ffa63-14aa-4c32-cb95-08da8ae4a609
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2022 00:06:27.0432
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n2x6lm+o9bjpTZMmU45zziuIENfSBqOgVywUvSsGSahz0+oTmtcYnlR5Hf080PW1LZ1t4zjXoU1boUzX7LJVYg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR12MB5623
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/30/22 05:17, David Hildenbrand wrote:
-> (side note: after recent VM_BUG_ON discussions we might want to convert
-> the VM_BUG_ON_PAGE in sanity_check_pinned_pages())
+This patchset converts NFS with fscache non-direct READ IO paths to
+use the netfs API with a non-invasive approach.  The existing NFS pgio
+layer does not need extensive changes, and is the best way so far I've
+found to address Trond's concerns about modifying the IO path [1] as
+well as only enabling netfs when fscache is configured and enabled [2].
+I have not yet attempted performance comparisions to address Chuck
+Lever's concern [3], though this is probably less of a concern now,
+since netfs is not used unless fscache is configured and enabled.
 
-Just realized I skipped over this point in my other response.
+The main patch to be reviewed is patch #3 which converts nfs_read_folio
+and nfs_readahead.
 
-So, there are 28 "BUG_ON" calls in mm/gup.c, only 3 of which are 
-BUILD_BUG_ON().
+Changes since v2 (all PATCH 3)
+- Fix Aug 28 kernel test robot <lkp@intel.com> compile warning due
+  to unusued 'inode' variable by removing dprintk (can bring back
+  as a trace event if needed)
+- Rename nfs_issue_read to nfs_netfs_issue_read
+- Rename nfs_begin_cache_operation to nfs_netfs_begin_cache_operation
+- Add nfs_netfs_read_completion and move logic from read.c into fscache.c
+- Add nfs_netfs_read_initiate and nfs_netfs_read_done to handle netfs
+  IO accounting updates (resolves prior hang with BAD_STATEID errors),
+  moving logic out of pagelist.c
 
-Maybe a single patch that covers all 25 at once is the way to go, I'm
-thinking. And of course, any patch that touches any of those lines
-should convert to a WARN* variant--whichever lands first.
+The patches are fairly stable as evidenced with xfstests generic with
+various servers: hammerspace w/NFS4.2+fscache,
+NetApp(ontap9) NFSv4.1+fscache, and RHEL8 NFSv3+fscache.
+The known issues are as follows:
 
+1. Unit test setting rsize < readahead does not properly read from
+fscache but re-reads data from the NFS server
+* This will be fixed once another linux-cachefs [4] patch to resolve
+"Stop read optimisation when folio removed from pagecache"
 
-thanks,
+2. "Cache volume key already in use" after xfstest runs
+* xfstests (hammerspace with vers=4.2,fsc) shows the following on the
+console after some tests:
+"NFS: Cache volume key already in use (nfs,4.1,2,c50,cfe0100a,3,,,8000,100000,100000,bb8,ea60,7530,ea60,1)"
+* This may be fixed with another patch [4] that is in progress
+
+3. Hang (RESOLVED)
+
+4. Data corruption seen with unit test where rsize < readahead
+* Seen with vanilla 6.0-rc2 (did not occur on 5.19); likely unrelated
+to this patchset
+ mount -o vers=4.2,fsc,rsize=8192 127.0.0.1:/export /mnt
+ dd if=/dev/urandom of=/tmp/integrity-rsize-file1.bin bs=16k count=1
+ ./nfs-readahead.sh set /mnt 16384
+ dd if=/tmp/integrity-rsize-file1.bin of=/mnt/integrity-rsize-file1.bin bs=16k count=1
+ echo 3 > /proc/sys/vm/drop_caches
+ md5sum /mnt/integrity-rsize-file1.bin /tmp/integrity-rsize-file1.bin
+ md5sums don't match, MD5_NFS = 00eaf1a5bc1b3dfd54711db551619afa != MD5_LOCAL = e8d835c83ba1f1264869dc40673fa20c
+
+The patchset is based on 6.0-rc3 and has been pushed to github at:
+https://github.com/DaveWysochanskiRH/kernel/commits/nfs-fscache-netfs
+
+[1] https://lore.kernel.org/linux-nfs/9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com/
+[2] https://lore.kernel.org/linux-nfs/da9200f1bded9b8b078a7aef227fd6b92eb028fb.camel@hammerspace.com/
+[3] https://marc.info/?l=linux-nfs&m=160597917525083&w=4
+[4] https://www.mail-archive.com/linux-cachefs@redhat.com/msg03043.html
+[5] https://marc.info/?l=linux-nfs&m=165962662200679&w=4
+
+Dave Wysochanski (3):
+  NFS: Rename readpage_async_filler to nfs_pageio_add_page
+  NFS: Add support for netfs in struct nfs_inode and Kconfig
+  NFS: Convert nfs_read_folio and nfs_readahead to netfs APIs
+
+ fs/nfs/Kconfig           |   1 +
+ fs/nfs/delegation.c      |   2 +-
+ fs/nfs/dir.c             |   2 +-
+ fs/nfs/fscache.c         | 191 ++++++++++++++++++---------------------
+ fs/nfs/fscache.h         |  77 ++++++++--------
+ fs/nfs/inode.c           |   8 +-
+ fs/nfs/internal.h        |  10 +-
+ fs/nfs/pagelist.c        |  14 +++
+ fs/nfs/pnfs.c            |  12 +--
+ fs/nfs/read.c            | 117 ++++++++----------------
+ fs/nfs/write.c           |   2 +-
+ include/linux/nfs_fs.h   |  19 +---
+ include/linux/nfs_page.h |   1 +
+ include/linux/nfs_xdr.h  |   1 +
+ 14 files changed, 210 insertions(+), 247 deletions(-)
 
 -- 
-John Hubbard
-NVIDIA
+2.31.1
+
