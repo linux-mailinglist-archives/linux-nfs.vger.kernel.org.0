@@ -2,87 +2,138 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE3A95A838B
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 18:53:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C4DC5A84EC
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 20:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231928AbiHaQxL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Aug 2022 12:53:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54284 "EHLO
+        id S232058AbiHaSCx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Aug 2022 14:02:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229842AbiHaQxJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 12:53:09 -0400
-Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4615DCFE5
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 09:53:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661964785; bh=ZCdWOAPS92e0L8p/nSC2kBeHBP1h4DoQBYzuNRI5u+U=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=C2Ta+o3Il5MP8bKvZbxOh+n9Q/l7S6LpGCk4RtspiXnWJOF/E03lTkYaNq78kUc654j8ZKzAPot3kx0l0o+nhs4oF0xVtIJ73AP9ZCB1Ou8bAYbijDzevQ3IKB2JVnXgA+SdBe5UCkncuwiRI3qoxW3m40RkV+xRuN9QhsVNySqXK5xo9/BNqCthWDO9JPcSrDFdvIkryAmdZRoEDu5kqwiMq6Mqt2XjnNwIkUA+QBJoFN5d6OM8bve5/QaO7UIXzYIP5yQg9zE6wt9mb+5lVQFdi4pNYyTlJiZg2EysSegjn0a142PDOtQrHnt4+qDH4JUQOWBl3+6d9WU/Kh37UA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661964785; bh=8OplMxJbJkJZ9r7vM63IiotdRomZJCnDpbR8aoQxPjV=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=OselDFnnrcq47Vosf6n7SYy4PRFgzyCKVKQzwVo4fh/IvFnIOTlIuFI7LQb9Mtj1didxJlZssJ1udE8Kn/rFiJ4ZtnK6o2c4XLP09Y4yZrrkFjDUgOD7T1yQcuCDOf21UX6EvxuX5mZYC05y4xy4dhmfiJHXGlxEjNxKZu9cza1G4lHsYG1zydHYhsYuYQVuDZrzEdvo1WNHFXC90xM6ns3eSojAP/p3QTe/q7PuvYiIj9cBPC3f6F04NHzl1WB9NVXy8C6AXAcxoIU04mxJNcYdsehvrgh2+4Vpvd6QfpaJxUJcvBG+bQLYqUuZMtgfLPSh27Q2TCgEy1gnvaFUXg==
-X-YMail-OSG: 0RdEtYYVM1niEJJkXuqbzhxiFHwZuTcNFUqPOLFl2StBWLTKjYVHGBvQH5pOq_p
- oIg_pWVyilnlRqg5AUexGcZiwpNexJpoMS_tSso7KWebqnPBIN96mQKtBAIEy2ZCJuuN1IMrEcvg
- DWUc6EvkqRtY7WSooEnVfYnHQ6KhjaprU73SobbkYlzIToIRnldzcGNZRLOiSTUFFFSV6dINoBtH
- n.8_vPQNRglo_nvAi2scl_CgfnoSnE.KL1GxD0zNcH_2YKvQtkYMqP7k0me5qCeUqdJrnRF7_Bk0
- OEKjUS3WGUjilgOUFuHBS5uHGI9R1SgrxZOC1dZV4KcIW_rK.eSv0lgQMpgsfDg1tYM3I2RapQ6v
- cnA87UQWsl.lHCcc3d9tjuEvYRY28x7bbquAps0l15rojufio8nEI0XvLFCCSTQ1S81KXPBdMAwd
- rMCmChIUaNXJR5vcNdzXCO.QKKI4sET42AUvaOWicAqF1Az_XdzHUwVoAjJdT4QqCr3DDm59hUDc
- lmxWUKx45.d_JwjJq5y_m9PHpuAOzRjKfeV3VnrbE1JkKkfIrdVa0qKevDyKT7RIJ6tYXRuX6Oua
- yS_Mc0XcDUCNP07JmCxnntk3f2vAknWQRrhwmM5Vrvy.2Ms9I._afIZFdJoWMRO2EkUXDEpBUZnz
- HK0iJhIiJApFS9z0WcT.jFWwJqeqUNFT6S1IVrt2Xmq2waa9EvN4GCgUORQ1C5DQz9k1totxs8Gz
- YX.jEKFKv8HPxLKs5v10J3he_oszldXHwRRj8RmqZwSa_2KIoPGBBcvMjHYzGWc26Fn1gZu4jFlL
- 2Xg8Xn27PKCVYvifdaplV0T5GRXtLEdOmwd7MZsGeRKU9AbZ7Brki8a6Pgu8Bk6Z.PT9En1u9mZ6
- hzVT8zjjLVEh0htyosyYy.fh7g7vFasff6AyS4KycTrXGm9dmJRXuxvbzJdtqohbM0LFzhKJR7ue
- wY1bwY_PP4Im1zEuHcTGqBq6Vil.O289U01fqhzazTKT0TquvkM13r0X1.ekrxqdFTjHztMYcrsp
- vtjuhedblUf2xGrbKPOfj.Xzd3aEtFM8iXzYXzAtx2CThawlkU0fxK11ARAwC5Jj9DCyd5ggpJeG
- d07fKORhaRipG1I1Dhs25dc4JktSiJ5Uub86cf00Z5w4iIP7JAZqHDyJw2EKRCcAwUrVJI9mW.B8
- U0lDrjkNw1rboLGqudaMd7A22QD3j39ZZT_xFxitGQu05cEMOMdjK3UZ8IuBk.F_gFcQmFvynKAj
- xp3_8TZC67F8MEciunQi2hBp7T5s6Yaunh2iCKJjN1DrJbp4xddIK8UGDEfy5wH.e1Skd1IVGWEp
- Gqm7t4bmHKUjBDMBxj5tegDYqaUSAOuCESM9njYIyqhuE9IWW92dI8n7e..beQKMRV1_JYW4mSo2
- 64APWNT_eKsQsDcuZEPxrP_4mCd1_jnyUc7.1VXg6q5qV4jzQZnMQDlJ9lGLcjPD1TlR4eW9ntwB
- HJzE9BBKZ.lFxiKMQX5ye3VZ8HJQhGfhogV5zqGYkazBb77yeXQf2HDsll3P9nkhxOyZpZ6Z7oDX
- TqjW0GxdMaSFfAt1oz.oipn1wnk8xJ.NYl6D5EtcnnwohAYMDxYIQreNxeG1R8fkBEW32fC3dla0
- CW6WQ2UPNimUgQYK2OQLe9AJjd4iYIk.zn8K0PREZ.PvGxSISQs.059vfG3UbTj3oJKfD5baDUqY
- 13XhhZyBxESIDTXZfIXpKt7LC3oppuNnhvnd502v1YzSuh062OuA3NSsQCbWWTBNh34eUHKJb4fU
- NhHoWEo4FjRnk3YFC3eopsWCIAkJieaFuF.8m_ecsiBSMwQZYCn8mpgaXVBxFcyu41s17sRpWKP8
- xYPPC9ADuNZE9jo..36bd59PV_eFCmTzQbZq_5qNcIG.QCgQ6p3odgB3RRzvrL53Q8uuPjHd1jMY
- fesXh8ISBx9kK.zNp.dB8BpjYdKnuRlya9qwkvX.unJSRqC1R9Lp9yP6hkDZkFp9mna4R4Z0T0sm
- X9GtbG7JIteNAQ7zmDi7pOr0jlnhiTRq70lU5xHavJrjRx_S2XXpZsxXrxRnUvEvP2G.kGKZJ4ST
- xfWKec8HEUcTq1sY01Sd3BdevtMgSmnfl8wv6Lls2GoSt32LYHaVUPbEYAlbByCPSfndYNhG.iCb
- XCTFZTipebGqvsDC_OvINSi9w3t4ot2epPzUWjuzUal7B4FVy3ZmtNQKOCCRaV_T8n3BMBfMD2ox
- dc23fg2GtKd3yu1SyUYzq_HtBOd4YsacQfQ--
-X-Sonic-MF: <casey@schaufler-ca.com>
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Wed, 31 Aug 2022 16:53:05 +0000
-Received: by hermes--production-bf1-7586675c46-lmmdh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9f8c2b6d5afb29179a6b494874f2add6;
-          Wed, 31 Aug 2022 16:53:01 +0000 (UTC)
-Message-ID: <766a755d-bd43-22eb-7a90-970a807ea803@schaufler-ca.com>
-Date:   Wed, 31 Aug 2022 09:52:58 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v4] vfs, security: Fix automount superblock LSM init
- problem, preventing NFS sb sharing
+        with ESMTP id S231754AbiHaSCw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 14:02:52 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2079.outbound.protection.outlook.com [40.107.237.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0312AC6CCC;
+        Wed, 31 Aug 2022 11:02:51 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CsxWZ9ZoALZWGjbjn29W73ZZTdbSEtsPL77Pm4cWI/p2jBI8wckp/dsh3ZlWr0WvPRuxtwiZIPBxluB61TyrCFEFrFANOdrMo0X+FV2UWZks1FNQ2CslscpPuZwDKKoSeLvc5LNrJqHWGuUYAWJRw8Pbx1klCajftE/cSHjGgoRRRY7qv5H3IlGZyx7IKRvszk3MrK+oFcrBRX3pkY4CmNE/dGYg+tKbGmWgwvtdtTAzRAyaNzrDvm/PxiigwJnZ/T4sBJncvotBS326ptTFnb/FebdnOIM+6Lec3kD5J0dWAqRQUTfRkxPmFNsYDKl6iEgDhLcKOkfZO2tBMHxr4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H74zguoUo/WcRNEIN40L3e35AvSumUDwpxlKWAaZuDE=;
+ b=KRwdNiaRi9jOwubaNM4fVlA+z5ZiHwesKBjURiXQt5Bb4E2yr9O69goNDZD1cMntiO2AJKR0+w3NJ1lqI1g722AXhBBPYZYQRiyZsOKIsC3L+KHfWwqHygYgNWhip/+3iK3Tg5wygB5Uz9apu/1+BQC7EWUrOry3zAjxqhyXtw6AiI9hYoZc5zPcbjwECEL8uWi4kMb0LDCrzzMwmwlV/fekeqUJSoJOnmQUJ/dhbZ9wFx0Ng3UZoUKdB+DxSiGrVTNb3Zpkt7JKjJPI9FK2oAID8sUqY3eIiuiqsPVDI478NLnqQ6dkA/wYiPOcIBkItpvtOxJM3dDNXIYlhQyaYQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H74zguoUo/WcRNEIN40L3e35AvSumUDwpxlKWAaZuDE=;
+ b=eqrI7mnomzJz6dXE8NdMf7I3wJ7+nqkPq6ys4O4ccel6QrSLMjHhG+k8z8vB2+sfHIppSm90v2woQMt+OzaNVoHxEuD66YPxj8YqbE3rKKWc1M9rwBwQu5mwQcKEAcSBrwf1248wJvbrze5cUMYdzIBdqcEaY10nbH4ENhqNMRJAw+GorHG2R7tgHbCq+YD8q3vHvC/vez6Wg7AiFz5AIhskl0PS44jEWzvVMogYnbMWiFRbnmQ9kKDXwAJ3LEADKX2IhQPX/BrJJtKKOlakduZ/pJSNgee60Gf1f3T1ZoZidQL61JzTe1Srv6JcfLmSJvIqpsrTBkd9q6irLsW+1Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
+ by PH7PR12MB5880.namprd12.prod.outlook.com (2603:10b6:510:1d8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.21; Wed, 31 Aug
+ 2022 18:02:48 +0000
+Received: from BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5]) by BY5PR12MB4130.namprd12.prod.outlook.com
+ ([fe80::508d:221c:9c9e:e1a5%9]) with mapi id 15.20.5588.010; Wed, 31 Aug 2022
+ 18:02:48 +0000
+Message-ID: <c66b13a6-b9d7-381a-4fb8-cc5e8b833ac5@nvidia.com>
+Date:   Wed, 31 Aug 2022 11:02:45 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH 5/6] NFS: direct-io: convert to FOLL_PIN pages
 Content-Language: en-US
-To:     David Howells <dhowells@redhat.com>
-Cc:     Christian Brauner <brauner@kernel.org>, viro@zeniv.linux.org.uk,
-        Jeff Layton <jlayton@kernel.org>,
+To:     Jan Kara <jack@suse.cz>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
         Anna Schumaker <anna@kernel.org>,
-        Scott Mayhew <smayhew@redhat.com>,
-        Paul Moore <paul@paul-moore.com>, linux-nfs@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
-        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
-References: <89548338-f716-c110-0f85-3ef880bbd723@schaufler-ca.com>
- <c648aa7c-a49c-a7e2-6a05-d1dfe44b8fdb@schaufler-ca.com>
- <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk>
- <20220826082439.wdestxwkeccsyqtp@wittgenstein>
- <1903709.1661849345@warthog.procyon.org.uk>
- <1535495.1661953720@warthog.procyon.org.uk>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-In-Reply-To: <1535495.1661953720@warthog.procyon.org.uk>
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20220827083607.2345453-1-jhubbard@nvidia.com>
+ <20220827083607.2345453-6-jhubbard@nvidia.com> <YwqfWoAE2Awp4YvT@ZenIV>
+ <353f18ac-0792-2cb7-6675-868d0bd41d3d@nvidia.com> <Ywq5ILRNxsbWvFQe@ZenIV>
+ <Ywq5VrSrY341UVpL@ZenIV> <217b4a17-1355-06c5-291e-7980c0d3cea6@nvidia.com>
+ <20220829160808.rwkkiuelipr3huxk@quack3>
+ <a53b2d14-687a-16c9-2f63-4f94876f8b3c@nvidia.com>
+ <20220831094349.boln4jjajkdtykx3@quack3>
+From:   John Hubbard <jhubbard@nvidia.com>
+In-Reply-To: <20220831094349.boln4jjajkdtykx3@quack3>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Mailer: WebService/1.1.20595 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+X-ClientProxiedBy: BY5PR16CA0003.namprd16.prod.outlook.com
+ (2603:10b6:a03:1a0::16) To BY5PR12MB4130.namprd12.prod.outlook.com
+ (2603:10b6:a03:20b::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 952b5246-39bc-4c85-d96a-08da8b7b03a4
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5880:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QabiXuw8/FIHuhaifxZqAANb+ahL9duSSe1mFjoJrgmSRM/iD3gMmKtV6E+Mnrkxv+EEJ52wRR1ctk/RYvzcNRPGwtZ7J7YXL3o5L1nVVLdnZGOiWempJO3gUZvO6QEimHAYm+7pUyt6nc05stikNQgzbUYszMhETKaU/XXNifuJuabkkuXtKiQjYjnN/0qPn4DIrID77LI8LKBCYmOFC72zFmKV8UGhvO0GOwkWcvIBA0WfHsY3NGw2GvizP7YXhjBeYRDlim2szcscpq9NRsmmnbWL1i9pqvn9vmpUfZqUhN2MY+ndKzqCTGCemFa03wI81Qn4ot5TFiDsJQoa3tdMIM2BBfN0AMl6Ye4gv6v7+eqIirpXkUylD/y2EjibtYqvsMMvA9v153OnPqRFX7D8tdtzbh8bdk7u/m1ILM9d9gt7yi8YF/bqSksdlMSCEskRQlPn5zQdWlQz8PtIPXP/W2wBrp169ZTOhm8xt18OdHLdNPDye5dYpEUaoicodtbZsrDiTFFPNGVCktUeYbNhYoEW/lyeFLEbIe7aUFvmv0S+5DK8r8IVZN9FEiludRefRB7hnjuH8MBA5B5fKSWCVimux4K5CaRi1KZyjuSc++fSNSdyyZa+l/+y45/KignmQbUKVO0wkJF19J9oqCj1KhaD9nHR/u7X7zDY2Sjrrwqqg+f3MtojfOfZjtuNZsuwbUfnQIIg5lADEBBz7TYizRVob6Vk132JHZ2uTmpMGa8y5kf6KEBPvsWl15WsFtLitvUtgqkXLi8nCoV7xweAkBeilgT3qAdY6JndzSM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(136003)(376002)(39860400002)(346002)(366004)(396003)(83380400001)(53546011)(86362001)(26005)(31696002)(6666004)(478600001)(6486002)(6506007)(41300700001)(186003)(6512007)(38100700002)(316002)(2616005)(6916009)(8936002)(4326008)(5660300002)(8676002)(66556008)(66946007)(66476007)(31686004)(2906002)(54906003)(36756003)(7416002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eXVoMC9VU29IVTV1QmtWWkFZWTlOd0xLdDV0L2VHTFZ4REhLWkZpTGRYcmxp?=
+ =?utf-8?B?Y1VEMWdSUVYzMGN1TnBHTmUrS1hIZ2lCcTEwcjdveHppL0J0bnQwWmVGU2NI?=
+ =?utf-8?B?c3F3RTVWSldqOGk5bEFZeXQxVC8xbHFaS01SSVB4T3ltWjBJWGUwSllMYlhu?=
+ =?utf-8?B?Zm9aOEtTRjd5SlZyYXAwZzV1d1JoWCs0VGpoRnpnOEVKZ3RUSlNzYk4zZjBx?=
+ =?utf-8?B?dDhHcEorcnFqSThVYWQ2Q2I3QVhBekFORllkK3VPclhkTURjT2ltZElKQXRl?=
+ =?utf-8?B?elBIbmpxVVk2aUlOdi8yK1lGS1hJbUlobzBEdm1aeTUydXM5Z1hBbFM2bWhQ?=
+ =?utf-8?B?bEtGT1J2ZUJsMmdtRzJPOFhVTU8rRlMzanlEdmVHWllCem5aNHVhUndJejlr?=
+ =?utf-8?B?ZmlKUHJLa2R2Vi91dEtGdTNocHN5RTg5OEtEL0N1OXhDNTA2QkNqcmlBNitH?=
+ =?utf-8?B?MncrbFoxNStRQy84K1N3UTJEMkpnQjBjaXFvVlNSTFUvUGkzclUxcnRNM3cv?=
+ =?utf-8?B?K3ZyZUNZVE1IaFVsRVBQVmoxYlNGQTdkcjJodzdkRk1aR1lnSUE5YVFLcFk3?=
+ =?utf-8?B?U2grL1lCaWVvNmZMOFdqbmYyZCt3R09FZGVOeDN2WXZ5b3ZsRGp5eEJraWlk?=
+ =?utf-8?B?NW8yZnNmdjdwazJuYi9INWxEU0MycmNrSVFuaVJ2ODZxS1orZ2JOazV6bDNu?=
+ =?utf-8?B?dHU4Vnd2ZEdWRjY4VnJ1ekEvNkVDOG95VmR0V0lySjNKWDdpSU9uWEh1N2h2?=
+ =?utf-8?B?TmEyQzdPNEwrSVFnbFE5ZGQ3eVFYRzhydys2MTlHdjRwNnhmVlRsN3ppQWdu?=
+ =?utf-8?B?MVRQRFpnbjdNU3JXZm10L2NHTU5MKzk0bzV1TkZDS3owTHIzdTBJeWVMeEkv?=
+ =?utf-8?B?K2ZZSWFGbVFrTmRPc0x6WksrZ1ptM1JUNWRZVGVOdk5sVlhoVnltVlljd0Na?=
+ =?utf-8?B?THkyaW8vMWd5ejVCM0VpeGJGWldlY09seGFJc1VqY250R1RWUm5qTkdmT2o5?=
+ =?utf-8?B?TERQUE56SlFsRGpWY3BEOGRIak5ybzBUWng5TDlmbGc0TUpoSXZLN2FSZjNE?=
+ =?utf-8?B?azFxWXkydTIvVUFkMkRlVEptTW5Qam0yU0M1L0lyejBuck1SY29RK2xtUjU3?=
+ =?utf-8?B?NlBsT3IrN0crWk43Sm5tRVQ1UHVFNmVKdFpWeXVXRHRWWmtGTXd0YW5HS2Nk?=
+ =?utf-8?B?N2dqcGtROEdvSnFHQ0hnNWVrelRkRFBBWmZSMGh3eDgzT0VOVkIyeVJKK1kx?=
+ =?utf-8?B?WGF0aUZ4aE8xa0J0YTFrNXpHZ0tlOUdJOXd4ZENpd3hVeDNYY2gwRzY3OSs3?=
+ =?utf-8?B?bG13YVZDT0gzY1JMNFRXM1JlWkI3RTExUThPd1VVVmNwcjA4N1hZMUpzTy95?=
+ =?utf-8?B?VkJLY2J5ay9sWHhtMjgvOStKcXF6NGcrd29EOXNWT1dpam91dHRzSzdzTFE5?=
+ =?utf-8?B?TVB6c2E4dTBFZmNENWxkWWs0WEIzcUtaRDhZdDJTKy9PeFZJeDkvc1kzWFF5?=
+ =?utf-8?B?c0xCVmUrZ2d4dkNoMUxLTjBwVDFSY3F6ODJZWXZ1UzlzYk44VVovOHBJNkRp?=
+ =?utf-8?B?RTN0MFlpMXA2TFpsVG52YlgyVExpclkyQ2FhdGdGb2hmY2Y4akUzNkFVMEsw?=
+ =?utf-8?B?ck5mL2ZadmppNE9SZzBITi94WjB1TXJDenI2Sm1UVnRZZFpjdVlXbW0zRnUy?=
+ =?utf-8?B?VGxjRGFvTnlieldxS25lckJhVzRqOGxFOFpyQ29JWUw0VEFaVGdDU1lUcUJD?=
+ =?utf-8?B?YlZ4WXhORHpOMjBVLzl0d1JoZ0t1RFBiSDQ1Qnl2SHdyY2JJQkNQZGhtSmVY?=
+ =?utf-8?B?S0c3WTEzaXVXNnVVRDF2dW1DbjU3VUNpejFLeHBRcDVmTEIwS3VhN1dVTkNr?=
+ =?utf-8?B?ZFQxRWEvVm1LTUc3THhPUVJlbHFxbHYrS0tnL1oyNHdPS0ZSODREcEZ4NlZh?=
+ =?utf-8?B?QkFNSlc0Qmw1ZTN6Q2l1MVQ5aWlySnNaWVNiZk4rbHpaSU5tOE1KQnNZVTEy?=
+ =?utf-8?B?QmlLNzFpejlQRm5ZdkN4N2huYThIZGNPNFdyL0VrZHl1djNmMU9hOVRtL1Ft?=
+ =?utf-8?B?S1Z1STlJMDVmTTVvN2V0NVdqa0c3N3dmRElEUVFiQ1lac1VxaFh3SmpOa2tF?=
+ =?utf-8?Q?GyHA7ufh5iGbw1P5eUfqzbe/H?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 952b5246-39bc-4c85-d96a-08da8b7b03a4
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2022 18:02:48.6438
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aC564EZzlLoGCRfQPGAqDr6OJJvIJ7Wj4jwnFOEHJQlCb4gfKSyfxlNPUz3ldVGwcu/gBZTDkV0uhuT735H/Vw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5880
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -90,20 +141,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 8/31/2022 6:48 AM, David Howells wrote:
-> Casey Schaufler <casey@schaufler-ca.com> wrote:
->
->> No. I appreciate that you're including Smack as part of the effort.
->> I would much rather have the code working as you have it than have
->> to go in later and do it all from scratch. With luck I should be able
->> to get someone with a considerably lower level of expertise to work
->> on it.
-> Can I put you down as a Reviewed-by, then?
+On 8/31/22 02:43, Jan Kara wrote:
+>> OK, thanks, that looks viable. So, that approach assumes that the
+>> remaining two cases in __iov_iter_get_pages_alloc() will never end up
+>> being released via bio_release_pages():
+>>
+>>     iov_iter_is_pipe(i)
+>>     iov_iter_is_xarray(i)
+>>
+>> I'm actually a little worried about ITER_XARRAY, which is a recent addition.
+>> It seems to be used in ways that are similar to ITER_BVEC, and cephfs is
+>> using it. It's probably OK for now, for this series, which doesn't yet
+>> convert cephfs.
+> 
+> So after looking into that a bit more, I think a clean approach would be to
+> provide iov_iter_pin_pages2() and iov_iter_pages_alloc2(), under the hood
+> in __iov_iter_get_pages_alloc() make sure we use pin_user_page() instead of
+> get_page() in all the cases (using this in pipe_get_pages() and
+> iter_xarray_get_pages() is easy) and then make all bio handling use the
+> pinning variants for iters. I think at least iov_iter_is_pipe() case needs
+> to be handled as well because as I wrote above, pipe pages can enter direct
+> IO code e.g. for splice(2).
+> 
 
-I haven't had a chance to test the changes. I wouldn't want to go
-so far as Reviewed-by without that. I don't think I'll be able to
-do the required setup for the test this week.
+OK, yes.
 
->
-> David
->
+> Also I think that all iov_iter_get_pages2() (or the _alloc2 variant) users
+> actually do want the "pin page" semantics in the end (they are accessing
+> page contents) so eventually we should convert them all to
+> iov_iter_pin_pages2() and remove iov_iter_get_pages2() altogether. But this
+> will take some more conversion work with networking etc. so I'd start with
+> converting bios only.
+> 
+> 								Honza
+
+
+I'll give this approach a spin, thanks very much for the guidance!
+
+
+thanks,
+
+-- 
+John Hubbard
+NVIDIA
