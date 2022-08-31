@@ -2,468 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3ECE5A8369
-	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 18:44:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE3A95A838B
+	for <lists+linux-nfs@lfdr.de>; Wed, 31 Aug 2022 18:53:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232342AbiHaQoB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Aug 2022 12:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40252 "EHLO
+        id S231928AbiHaQxL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 31 Aug 2022 12:53:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232328AbiHaQoA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 12:44:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648BADA3FC
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 09:43:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E62E1619DD
-        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 16:43:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74554C433C1;
-        Wed, 31 Aug 2022 16:43:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1661964236;
-        bh=ZiaaAA0TLDJVC5LVdFwnvZ/bMQkYYMaQca6fiZlFdtE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oSuO/frz8DSt/FUqaMmZDJA+nMaW7DNDPijHGqQIg/yQzRWC1w/ZlgRdmJ5vWKq7/
-         slGO/5mR1zG2RWefFtTkJfXuW1yL5B7cFchmrU7Hh92j0UnyYjagUyYOpPEa7AQ2Bc
-         1CiLo5Jh+JFotmlCSpQa6DLtna3McjBPNayThFL7lWYwleJegzEkHdGeF7QfhLeaWe
-         Jmbc5SU7y8AVFuL2V3MeqzUvQhLC2LfKhPBdqM5YqfW2zHYcFjZCFAX0EYc2b4h1Tv
-         5H3jTk1dhBOG7qV7Pg6TXuUAMZ8s19l0vIV/hQofSPTW0UI71tPq1oV5HyVgSpH95/
-         zTAoAbDxbOSyQ==
-Message-ID: <812b96cfa4414592f77c18a3d5fb354ccc2ff15d.camel@kernel.org>
-Subject: Re: [PATCH v3 2/3] NFS: Configure support for netfs when NFS
- fscache is configured
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Wysochanski <dwysocha@redhat.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        Benjamin Maynard <benmaynard@google.com>,
-        Daire Byrne <daire.byrne@gmail.com>
-Date:   Wed, 31 Aug 2022 12:43:53 -0400
-In-Reply-To: <20220831005053.1287363-3-dwysocha@redhat.com>
-References: <20220831005053.1287363-1-dwysocha@redhat.com>
-         <20220831005053.1287363-3-dwysocha@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S229842AbiHaQxJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 12:53:09 -0400
+Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4615DCFE5
+        for <linux-nfs@vger.kernel.org>; Wed, 31 Aug 2022 09:53:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661964785; bh=ZCdWOAPS92e0L8p/nSC2kBeHBP1h4DoQBYzuNRI5u+U=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=C2Ta+o3Il5MP8bKvZbxOh+n9Q/l7S6LpGCk4RtspiXnWJOF/E03lTkYaNq78kUc654j8ZKzAPot3kx0l0o+nhs4oF0xVtIJ73AP9ZCB1Ou8bAYbijDzevQ3IKB2JVnXgA+SdBe5UCkncuwiRI3qoxW3m40RkV+xRuN9QhsVNySqXK5xo9/BNqCthWDO9JPcSrDFdvIkryAmdZRoEDu5kqwiMq6Mqt2XjnNwIkUA+QBJoFN5d6OM8bve5/QaO7UIXzYIP5yQg9zE6wt9mb+5lVQFdi4pNYyTlJiZg2EysSegjn0a142PDOtQrHnt4+qDH4JUQOWBl3+6d9WU/Kh37UA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1661964785; bh=8OplMxJbJkJZ9r7vM63IiotdRomZJCnDpbR8aoQxPjV=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=OselDFnnrcq47Vosf6n7SYy4PRFgzyCKVKQzwVo4fh/IvFnIOTlIuFI7LQb9Mtj1didxJlZssJ1udE8Kn/rFiJ4ZtnK6o2c4XLP09Y4yZrrkFjDUgOD7T1yQcuCDOf21UX6EvxuX5mZYC05y4xy4dhmfiJHXGlxEjNxKZu9cza1G4lHsYG1zydHYhsYuYQVuDZrzEdvo1WNHFXC90xM6ns3eSojAP/p3QTe/q7PuvYiIj9cBPC3f6F04NHzl1WB9NVXy8C6AXAcxoIU04mxJNcYdsehvrgh2+4Vpvd6QfpaJxUJcvBG+bQLYqUuZMtgfLPSh27Q2TCgEy1gnvaFUXg==
+X-YMail-OSG: 0RdEtYYVM1niEJJkXuqbzhxiFHwZuTcNFUqPOLFl2StBWLTKjYVHGBvQH5pOq_p
+ oIg_pWVyilnlRqg5AUexGcZiwpNexJpoMS_tSso7KWebqnPBIN96mQKtBAIEy2ZCJuuN1IMrEcvg
+ DWUc6EvkqRtY7WSooEnVfYnHQ6KhjaprU73SobbkYlzIToIRnldzcGNZRLOiSTUFFFSV6dINoBtH
+ n.8_vPQNRglo_nvAi2scl_CgfnoSnE.KL1GxD0zNcH_2YKvQtkYMqP7k0me5qCeUqdJrnRF7_Bk0
+ OEKjUS3WGUjilgOUFuHBS5uHGI9R1SgrxZOC1dZV4KcIW_rK.eSv0lgQMpgsfDg1tYM3I2RapQ6v
+ cnA87UQWsl.lHCcc3d9tjuEvYRY28x7bbquAps0l15rojufio8nEI0XvLFCCSTQ1S81KXPBdMAwd
+ rMCmChIUaNXJR5vcNdzXCO.QKKI4sET42AUvaOWicAqF1Az_XdzHUwVoAjJdT4QqCr3DDm59hUDc
+ lmxWUKx45.d_JwjJq5y_m9PHpuAOzRjKfeV3VnrbE1JkKkfIrdVa0qKevDyKT7RIJ6tYXRuX6Oua
+ yS_Mc0XcDUCNP07JmCxnntk3f2vAknWQRrhwmM5Vrvy.2Ms9I._afIZFdJoWMRO2EkUXDEpBUZnz
+ HK0iJhIiJApFS9z0WcT.jFWwJqeqUNFT6S1IVrt2Xmq2waa9EvN4GCgUORQ1C5DQz9k1totxs8Gz
+ YX.jEKFKv8HPxLKs5v10J3he_oszldXHwRRj8RmqZwSa_2KIoPGBBcvMjHYzGWc26Fn1gZu4jFlL
+ 2Xg8Xn27PKCVYvifdaplV0T5GRXtLEdOmwd7MZsGeRKU9AbZ7Brki8a6Pgu8Bk6Z.PT9En1u9mZ6
+ hzVT8zjjLVEh0htyosyYy.fh7g7vFasff6AyS4KycTrXGm9dmJRXuxvbzJdtqohbM0LFzhKJR7ue
+ wY1bwY_PP4Im1zEuHcTGqBq6Vil.O289U01fqhzazTKT0TquvkM13r0X1.ekrxqdFTjHztMYcrsp
+ vtjuhedblUf2xGrbKPOfj.Xzd3aEtFM8iXzYXzAtx2CThawlkU0fxK11ARAwC5Jj9DCyd5ggpJeG
+ d07fKORhaRipG1I1Dhs25dc4JktSiJ5Uub86cf00Z5w4iIP7JAZqHDyJw2EKRCcAwUrVJI9mW.B8
+ U0lDrjkNw1rboLGqudaMd7A22QD3j39ZZT_xFxitGQu05cEMOMdjK3UZ8IuBk.F_gFcQmFvynKAj
+ xp3_8TZC67F8MEciunQi2hBp7T5s6Yaunh2iCKJjN1DrJbp4xddIK8UGDEfy5wH.e1Skd1IVGWEp
+ Gqm7t4bmHKUjBDMBxj5tegDYqaUSAOuCESM9njYIyqhuE9IWW92dI8n7e..beQKMRV1_JYW4mSo2
+ 64APWNT_eKsQsDcuZEPxrP_4mCd1_jnyUc7.1VXg6q5qV4jzQZnMQDlJ9lGLcjPD1TlR4eW9ntwB
+ HJzE9BBKZ.lFxiKMQX5ye3VZ8HJQhGfhogV5zqGYkazBb77yeXQf2HDsll3P9nkhxOyZpZ6Z7oDX
+ TqjW0GxdMaSFfAt1oz.oipn1wnk8xJ.NYl6D5EtcnnwohAYMDxYIQreNxeG1R8fkBEW32fC3dla0
+ CW6WQ2UPNimUgQYK2OQLe9AJjd4iYIk.zn8K0PREZ.PvGxSISQs.059vfG3UbTj3oJKfD5baDUqY
+ 13XhhZyBxESIDTXZfIXpKt7LC3oppuNnhvnd502v1YzSuh062OuA3NSsQCbWWTBNh34eUHKJb4fU
+ NhHoWEo4FjRnk3YFC3eopsWCIAkJieaFuF.8m_ecsiBSMwQZYCn8mpgaXVBxFcyu41s17sRpWKP8
+ xYPPC9ADuNZE9jo..36bd59PV_eFCmTzQbZq_5qNcIG.QCgQ6p3odgB3RRzvrL53Q8uuPjHd1jMY
+ fesXh8ISBx9kK.zNp.dB8BpjYdKnuRlya9qwkvX.unJSRqC1R9Lp9yP6hkDZkFp9mna4R4Z0T0sm
+ X9GtbG7JIteNAQ7zmDi7pOr0jlnhiTRq70lU5xHavJrjRx_S2XXpZsxXrxRnUvEvP2G.kGKZJ4ST
+ xfWKec8HEUcTq1sY01Sd3BdevtMgSmnfl8wv6Lls2GoSt32LYHaVUPbEYAlbByCPSfndYNhG.iCb
+ XCTFZTipebGqvsDC_OvINSi9w3t4ot2epPzUWjuzUal7B4FVy3ZmtNQKOCCRaV_T8n3BMBfMD2ox
+ dc23fg2GtKd3yu1SyUYzq_HtBOd4YsacQfQ--
+X-Sonic-MF: <casey@schaufler-ca.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Wed, 31 Aug 2022 16:53:05 +0000
+Received: by hermes--production-bf1-7586675c46-lmmdh (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 9f8c2b6d5afb29179a6b494874f2add6;
+          Wed, 31 Aug 2022 16:53:01 +0000 (UTC)
+Message-ID: <766a755d-bd43-22eb-7a90-970a807ea803@schaufler-ca.com>
+Date:   Wed, 31 Aug 2022 09:52:58 -0700
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: [PATCH v4] vfs, security: Fix automount superblock LSM init
+ problem, preventing NFS sb sharing
+Content-Language: en-US
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christian Brauner <brauner@kernel.org>, viro@zeniv.linux.org.uk,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Paul Moore <paul@paul-moore.com>, linux-nfs@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
+        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
+References: <89548338-f716-c110-0f85-3ef880bbd723@schaufler-ca.com>
+ <c648aa7c-a49c-a7e2-6a05-d1dfe44b8fdb@schaufler-ca.com>
+ <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk>
+ <20220826082439.wdestxwkeccsyqtp@wittgenstein>
+ <1903709.1661849345@warthog.procyon.org.uk>
+ <1535495.1661953720@warthog.procyon.org.uk>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <1535495.1661953720@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20595 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-08-30 at 20:50 -0400, Dave Wysochanski wrote:
-> As first steps for support of the netfs library when NFS_FSCACHE is
-> configured, add NETFS_SUPPORT to Kconfig and add the required netfs_inode
-> into struct nfs_inode.
->=20
-> Using netfs requires we move the VFS inode structure to be stored
-> inside struct netfs_inode, along with the fscache_cookie.
-> Thus, create a new helper, NFSI_TO_INODE(), which is defined
-> differently depending on whether NFS_FSCACHE is configured.
-> In addition, use the netfs_inode() and netfs_i_cookie() helpers,
-> and remove our own helper, nfs_i_fscache().
->=20
-> Later patches will convert NFS fscache to fully use netfs.
->=20
-> Link: https://lore.kernel.org/linux-nfs/da9200f1bded9b8b078a7aef227fd6b92=
-eb028fb.camel@hammerspace.com/
->=20
-> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> ---
->  fs/nfs/Kconfig         |  1 +
->  fs/nfs/delegation.c    |  2 +-
->  fs/nfs/dir.c           |  2 +-
->  fs/nfs/fscache.c       | 20 +++++++++-----------
->  fs/nfs/fscache.h       | 15 ++++++---------
->  fs/nfs/inode.c         |  6 +++---
->  fs/nfs/internal.h      |  2 +-
->  fs/nfs/pnfs.c          | 12 ++++++------
->  fs/nfs/write.c         |  2 +-
->  include/linux/nfs_fs.h | 36 ++++++++++++++++++++++++------------
->  10 files changed, 53 insertions(+), 45 deletions(-)
->=20
-> diff --git a/fs/nfs/Kconfig b/fs/nfs/Kconfig
-> index 14a72224b657..8fbb6caf3481 100644
-> --- a/fs/nfs/Kconfig
-> +++ b/fs/nfs/Kconfig
-> @@ -171,6 +171,7 @@ config ROOT_NFS
->  config NFS_FSCACHE
->  	bool "Provide NFS client caching support"
->  	depends on NFS_FS=3Dm && FSCACHE || NFS_FS=3Dy && FSCACHE=3Dy
-> +	select NETFS_SUPPORT
->  	help
->  	  Say Y here if you want NFS data to be cached locally on disc through
->  	  the general filesystem cache manager
-> diff --git a/fs/nfs/delegation.c b/fs/nfs/delegation.c
-> index 5c97cad741a7..41a2c5176783 100644
-> --- a/fs/nfs/delegation.c
-> +++ b/fs/nfs/delegation.c
-> @@ -306,7 +306,7 @@ nfs_start_delegation_return_locked(struct nfs_inode *=
-nfsi)
->  	}
->  	spin_unlock(&delegation->lock);
->  	if (ret)
-> -		nfs_clear_verifier_delegated(&nfsi->vfs_inode);
-> +		nfs_clear_verifier_delegated(NFSI_TO_INODE(nfsi));
->  out:
->  	return ret;
->  }
-> diff --git a/fs/nfs/dir.c b/fs/nfs/dir.c
-> index 5d6c2ddc7ea6..72de1b8791e9 100644
-> --- a/fs/nfs/dir.c
-> +++ b/fs/nfs/dir.c
-> @@ -2799,7 +2799,7 @@ nfs_do_access_cache_scan(unsigned int nr_to_scan)
-> =20
->  		if (nr_to_scan-- =3D=3D 0)
->  			break;
-> -		inode =3D &nfsi->vfs_inode;
-> +		inode =3D NFSI_TO_INODE(nfsi);
->  		spin_lock(&inode->i_lock);
->  		if (list_empty(&nfsi->access_cache_entry_lru))
->  			goto remove_lru_entry;
-> diff --git a/fs/nfs/fscache.c b/fs/nfs/fscache.c
-> index e861d7bae305..a6fc1c8b6644 100644
-> --- a/fs/nfs/fscache.c
-> +++ b/fs/nfs/fscache.c
-> @@ -163,13 +163,14 @@ void nfs_fscache_init_inode(struct inode *inode)
->  	struct nfs_server *nfss =3D NFS_SERVER(inode);
->  	struct nfs_inode *nfsi =3D NFS_I(inode);
-> =20
-> -	nfsi->fscache =3D NULL;
-> +	netfs_inode(inode)->cache =3D NULL;
->  	if (!(nfss->fscache && S_ISREG(inode->i_mode)))
->  		return;
-> =20
->  	nfs_fscache_update_auxdata(&auxdata, inode);
-> =20
-> -	nfsi->fscache =3D fscache_acquire_cookie(NFS_SB(inode->i_sb)->fscache,
-> +	netfs_inode(inode)->cache =3D fscache_acquire_cookie(
-> +					       nfss->fscache,
->  					       0,
->  					       nfsi->fh.data, /* index_key */
->  					       nfsi->fh.size,
-> @@ -183,11 +184,8 @@ void nfs_fscache_init_inode(struct inode *inode)
->   */
->  void nfs_fscache_clear_inode(struct inode *inode)
->  {
-> -	struct nfs_inode *nfsi =3D NFS_I(inode);
-> -	struct fscache_cookie *cookie =3D nfs_i_fscache(inode);
-> -
-> -	fscache_relinquish_cookie(cookie, false);
-> -	nfsi->fscache =3D NULL;
-> +	fscache_relinquish_cookie(netfs_i_cookie(&NFS_I(inode)->netfs), false);
-> +	netfs_inode(inode)->cache =3D NULL;
->  }
-> =20
->  /*
-> @@ -212,7 +210,7 @@ void nfs_fscache_clear_inode(struct inode *inode)
->  void nfs_fscache_open_file(struct inode *inode, struct file *filp)
->  {
->  	struct nfs_fscache_inode_auxdata auxdata;
-> -	struct fscache_cookie *cookie =3D nfs_i_fscache(inode);
-> +	struct fscache_cookie *cookie =3D netfs_i_cookie(&NFS_I(inode)->netfs);
->  	bool open_for_write =3D inode_is_open_for_write(inode);
-> =20
->  	if (!fscache_cookie_valid(cookie))
-> @@ -230,7 +228,7 @@ EXPORT_SYMBOL_GPL(nfs_fscache_open_file);
->  void nfs_fscache_release_file(struct inode *inode, struct file *filp)
->  {
->  	struct nfs_fscache_inode_auxdata auxdata;
-> -	struct fscache_cookie *cookie =3D nfs_i_fscache(inode);
-> +	struct fscache_cookie *cookie =3D netfs_i_cookie(&NFS_I(inode)->netfs);
->  	loff_t i_size =3D i_size_read(inode);
-> =20
->  	nfs_fscache_update_auxdata(&auxdata, inode);
-> @@ -243,7 +241,7 @@ void nfs_fscache_release_file(struct inode *inode, st=
-ruct file *filp)
->  static int fscache_fallback_read_page(struct inode *inode, struct page *=
-page)
->  {
->  	struct netfs_cache_resources cres;
-> -	struct fscache_cookie *cookie =3D nfs_i_fscache(inode);
-> +	struct fscache_cookie *cookie =3D netfs_i_cookie(&NFS_I(inode)->netfs);
->  	struct iov_iter iter;
->  	struct bio_vec bvec[1];
->  	int ret;
-> @@ -271,7 +269,7 @@ static int fscache_fallback_write_page(struct inode *=
-inode, struct page *page,
->  				       bool no_space_allocated_yet)
->  {
->  	struct netfs_cache_resources cres;
-> -	struct fscache_cookie *cookie =3D nfs_i_fscache(inode);
-> +	struct fscache_cookie *cookie =3D netfs_i_cookie(&NFS_I(inode)->netfs);
->  	struct iov_iter iter;
->  	struct bio_vec bvec[1];
->  	loff_t start =3D page_offset(page);
-> diff --git a/fs/nfs/fscache.h b/fs/nfs/fscache.h
-> index 2a37af880978..38614ed8f951 100644
-> --- a/fs/nfs/fscache.h
-> +++ b/fs/nfs/fscache.h
-> @@ -54,7 +54,7 @@ static inline bool nfs_fscache_release_folio(struct fol=
-io *folio, gfp_t gfp)
->  		if (current_is_kswapd() || !(gfp & __GFP_FS))
->  			return false;
->  		folio_wait_fscache(folio);
-> -		fscache_note_page_release(nfs_i_fscache(folio->mapping->host));
-> +		fscache_note_page_release(netfs_i_cookie(&NFS_I(folio->mapping->host)-=
->netfs));
->  		nfs_inc_fscache_stats(folio->mapping->host,
->  				      NFSIOS_FSCACHE_PAGES_UNCACHED);
->  	}
-> @@ -66,7 +66,7 @@ static inline bool nfs_fscache_release_folio(struct fol=
-io *folio, gfp_t gfp)
->   */
->  static inline int nfs_fscache_read_page(struct inode *inode, struct page=
- *page)
->  {
-> -	if (nfs_i_fscache(inode))
-> +	if (netfs_inode(inode)->cache)
->  		return __nfs_fscache_read_page(inode, page);
->  	return -ENOBUFS;
->  }
-> @@ -78,7 +78,7 @@ static inline int nfs_fscache_read_page(struct inode *i=
-node, struct page *page)
->  static inline void nfs_fscache_write_page(struct inode *inode,
->  					   struct page *page)
->  {
-> -	if (nfs_i_fscache(inode))
-> +	if (netfs_inode(inode)->cache)
->  		__nfs_fscache_write_page(inode, page);
->  }
-> =20
-> @@ -101,13 +101,10 @@ static inline void nfs_fscache_update_auxdata(struc=
-t nfs_fscache_inode_auxdata *
->  static inline void nfs_fscache_invalidate(struct inode *inode, int flags=
-)
->  {
->  	struct nfs_fscache_inode_auxdata auxdata;
-> -	struct nfs_inode *nfsi =3D NFS_I(inode);
-> +	struct fscache_cookie *cookie =3D  netfs_i_cookie(&NFS_I(inode)->netfs)=
-;
-> =20
-> -	if (nfsi->fscache) {
-> -		nfs_fscache_update_auxdata(&auxdata, inode);
-> -		fscache_invalidate(nfsi->fscache, &auxdata,
-> -				   i_size_read(inode), flags);
-> -	}
-> +	nfs_fscache_update_auxdata(&auxdata, inode);
-> +	fscache_invalidate(cookie, &auxdata, i_size_read(inode), flags);
->  }
-> =20
->  /*
-> diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
-> index bea7c005119c..7d1b9e39863c 100644
-> --- a/fs/nfs/inode.c
-> +++ b/fs/nfs/inode.c
-> @@ -1411,7 +1411,7 @@ int nfs_revalidate_mapping(struct inode *inode, str=
-uct address_space *mapping)
-> =20
->  static bool nfs_file_has_writers(struct nfs_inode *nfsi)
->  {
-> -	struct inode *inode =3D &nfsi->vfs_inode;
-> +	struct inode *inode =3D NFSI_TO_INODE(nfsi);
-> =20
->  	if (!S_ISREG(inode->i_mode))
->  		return false;
-> @@ -2249,7 +2249,7 @@ struct inode *nfs_alloc_inode(struct super_block *s=
-b)
->  #ifdef CONFIG_NFS_V4_2
->  	nfsi->xattr_cache =3D NULL;
->  #endif
-> -	return &nfsi->vfs_inode;
-> +	return NFSI_TO_INODE(nfsi);
->  }
->  EXPORT_SYMBOL_GPL(nfs_alloc_inode);
-> =20
-> @@ -2273,7 +2273,7 @@ static void init_once(void *foo)
->  {
->  	struct nfs_inode *nfsi =3D (struct nfs_inode *) foo;
-> =20
-> -	inode_init_once(&nfsi->vfs_inode);
-> +	inode_init_once(NFSI_TO_INODE(nfsi));
->  	INIT_LIST_HEAD(&nfsi->open_files);
->  	INIT_LIST_HEAD(&nfsi->access_cache_entry_lru);
->  	INIT_LIST_HEAD(&nfsi->access_cache_inode_lru);
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 27c720d71b4e..78d945f5f97f 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -355,7 +355,7 @@ nfs4_label_copy(struct nfs4_label *dst, struct nfs4_l=
-abel *src)
-> =20
->  static inline void nfs_zap_label_cache_locked(struct nfs_inode *nfsi)
->  {
-> -	if (nfs_server_capable(&nfsi->vfs_inode, NFS_CAP_SECURITY_LABEL))
-> +	if (nfs_server_capable(NFSI_TO_INODE(nfsi), NFS_CAP_SECURITY_LABEL))
->  		nfsi->cache_validity |=3D NFS_INO_INVALID_LABEL;
->  }
->  #else
-> diff --git a/fs/nfs/pnfs.c b/fs/nfs/pnfs.c
-> index 2613b7e36eb9..e44b9934349c 100644
-> --- a/fs/nfs/pnfs.c
-> +++ b/fs/nfs/pnfs.c
-> @@ -763,19 +763,19 @@ static struct pnfs_layout_hdr *__pnfs_destroy_layou=
-t(struct nfs_inode *nfsi)
->  	struct pnfs_layout_hdr *lo;
->  	LIST_HEAD(tmp_list);
-> =20
-> -	spin_lock(&nfsi->vfs_inode.i_lock);
-> +	spin_lock(&NFSI_TO_INODE(nfsi)->i_lock);
->  	lo =3D nfsi->layout;
->  	if (lo) {
->  		pnfs_get_layout_hdr(lo);
->  		pnfs_mark_layout_stateid_invalid(lo, &tmp_list);
->  		pnfs_layout_clear_fail_bit(lo, NFS_LAYOUT_RO_FAILED);
->  		pnfs_layout_clear_fail_bit(lo, NFS_LAYOUT_RW_FAILED);
-> -		spin_unlock(&nfsi->vfs_inode.i_lock);
-> +		spin_unlock(&NFSI_TO_INODE(nfsi)->i_lock);
->  		pnfs_free_lseg_list(&tmp_list);
-> -		nfs_commit_inode(&nfsi->vfs_inode, 0);
-> +		nfs_commit_inode(NFSI_TO_INODE(nfsi), 0);
->  		pnfs_put_layout_hdr(lo);
->  	} else
-> -		spin_unlock(&nfsi->vfs_inode.i_lock);
-> +		spin_unlock(&NFSI_TO_INODE(nfsi)->i_lock);
->  	return lo;
->  }
-> =20
-> @@ -790,9 +790,9 @@ static bool pnfs_layout_removed(struct nfs_inode *nfs=
-i,
->  {
->  	bool ret;
-> =20
-> -	spin_lock(&nfsi->vfs_inode.i_lock);
-> +	spin_lock(&NFSI_TO_INODE(nfsi)->i_lock);
->  	ret =3D nfsi->layout !=3D lo;
-> -	spin_unlock(&nfsi->vfs_inode.i_lock);
-> +	spin_unlock(&NFSI_TO_INODE(nfsi)->i_lock);
->  	return ret;
->  }
-> =20
-> diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-> index 1843fa235d9b..451da6336e12 100644
-> --- a/fs/nfs/write.c
-> +++ b/fs/nfs/write.c
-> @@ -828,7 +828,7 @@ nfs_page_search_commits_for_head_request_locked(struc=
-t nfs_inode *nfsi,
->  {
->  	struct nfs_page *freq, *t;
->  	struct nfs_commit_info cinfo;
-> -	struct inode *inode =3D &nfsi->vfs_inode;
-> +	struct inode *inode =3D NFSI_TO_INODE(nfsi);
-> =20
->  	nfs_init_cinfo_from_inode(&cinfo, inode);
-> =20
-> diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-> index 7931fa472561..5a451caa38a4 100644
-> --- a/include/linux/nfs_fs.h
-> +++ b/include/linux/nfs_fs.h
-> @@ -31,6 +31,10 @@
->  #include <linux/sunrpc/auth.h>
->  #include <linux/sunrpc/clnt.h>
-> =20
-> +#ifdef CONFIG_NFS_FSCACHE
-> +#include <linux/netfs.h>
-> +#endif
-> +
->  #include <linux/nfs.h>
->  #include <linux/nfs2.h>
->  #include <linux/nfs3.h>
-> @@ -121,6 +125,10 @@ struct nfs4_xattr_cache;
->   * nfs fs inode data in memory
->   */
->  struct nfs_inode {
-> +#ifdef CONFIG_NFS_FSCACHE
-> +	struct netfs_inode netfs; /* Netfslib context and inode */
-> +#endif
-> +
->  	/*
->  	 * The 64bit 'inode number'
->  	 */
-> @@ -203,10 +211,10 @@ struct nfs_inode {
->  	/* how many bytes have been written/read and how many bytes queued up *=
-/
->  	__u64 write_io;
->  	__u64 read_io;
-> -#ifdef CONFIG_NFS_FSCACHE
-> -	struct fscache_cookie	*fscache;
-> +#ifndef CONFIG_NFS_FSCACHE
-> +	/* fscache uses netfs, and netfs_inode contains the inode */
-> +	struct inode	vfs_inode;
->  #endif
-> -	struct inode		vfs_inode;
-> =20
->  #ifdef CONFIG_NFS_V4_2
->  	struct nfs4_xattr_cache *xattr_cache;
-> @@ -281,9 +289,22 @@ struct nfs4_copy_state {
->  #define NFS_INO_LAYOUTSTATS	(11)		/* layoutstats inflight */
->  #define NFS_INO_ODIRECT		(12)		/* I/O setting is O_DIRECT */
-> =20
-> +static inline struct inode *NFSI_TO_INODE(struct nfs_inode *nfsi)
+On 8/31/2022 6:48 AM, David Howells wrote:
+> Casey Schaufler <casey@schaufler-ca.com> wrote:
+>
+>> No. I appreciate that you're including Smack as part of the effort.
+>> I would much rather have the code working as you have it than have
+>> to go in later and do it all from scratch. With luck I should be able
+>> to get someone with a considerably lower level of expertise to work
+>> on it.
+> Can I put you down as a Reviewed-by, then?
 
-Not crazy about the name here. Maybe VFS_I() ? ntfs and xfs have private
-helpers named VFS_I that do something similar, so it seems more
-idiomatic.
+I haven't had a chance to test the changes. I wouldn't want to go
+so far as Reviewed-by without that. I don't think I'll be able to
+do the required setup for the test this week.
 
-> +{
-> +#ifdef CONFIG_NFS_FSCACHE
-> +	return &nfsi->netfs.inode;
-> +#else
-> +	return &nfsi->vfs_inode;
-> +#endif
-> +}
-> +
-
-These are hard to read (and reason about) defined this way. I think I'd
-rather see less #ifdef-ery here. Instead if having the #ifdef's inside
-the functions, do:
-
-#ifdef CONFIG_NFS_FSCACHE
-
-/* define all static inlines here for fscache case */
-
-#else
-
-/* and here for the !fscache case */
-
-#endif
-
->  static inline struct nfs_inode *NFS_I(const struct inode *inode)
->  {
-> +#ifdef CONFIG_NFS_FSCACHE
-> +	return container_of(inode, struct nfs_inode, netfs.inode);
-> +#else
->  	return container_of(inode, struct nfs_inode, vfs_inode);
-> +#endif
->  }
-> =20
->  static inline struct nfs_server *NFS_SB(const struct super_block *s)
-> @@ -328,15 +349,6 @@ static inline int NFS_STALE(const struct inode *inod=
-e)
->  	return test_bit(NFS_INO_STALE, &NFS_I(inode)->flags);
->  }
-> =20
-> -static inline struct fscache_cookie *nfs_i_fscache(struct inode *inode)
-> -{
-> -#ifdef CONFIG_NFS_FSCACHE
-> -	return NFS_I(inode)->fscache;
-> -#else
-> -	return NULL;
-> -#endif
-> -}
-> -
->  static inline __u64 NFS_FILEID(const struct inode *inode)
->  {
->  	return NFS_I(inode)->fileid;
-
---=20
-Jeff Layton <jlayton@kernel.org>
+>
+> David
+>
