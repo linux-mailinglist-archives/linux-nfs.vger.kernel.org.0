@@ -2,51 +2,52 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87FC05A8BFC
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 05:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 373A35A8D07
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 07:04:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbiIADox (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 31 Aug 2022 23:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38178 "EHLO
+        id S232374AbiIAFEf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Sep 2022 01:04:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbiIADow (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 31 Aug 2022 23:44:52 -0400
+        with ESMTP id S229746AbiIAFEe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Sep 2022 01:04:34 -0400
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC19DE6;
-        Wed, 31 Aug 2022 20:44:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C881157F5;
+        Wed, 31 Aug 2022 22:04:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=0VksQaHKdS6SzPuFX+0v16y3jeL3gHA/j4NUzfzCUmk=; b=J2RjzPauJNV4IAQ2+ZSqQLrKLT
-        9dHf76Waf0U38NmL8YfXc+FtDGEUD6J34IJQETySw8gs/qKDte9PMD4rsPPZNrSw3mmxcrpRiEECJ
-        nULr+sPA5uxvETo809jKLj6DhZwRj0AfJw1E/sH0gz3NJlsEomQ9L9E/XyPdScbcplIXIH/0srxiw
-        V1NLw+D72qLn6W1cxBUdxhRsqP1mLMgAyTI7qqcK06JvbZS1BF3BR/oxzgVJeu+YjeArDFDzfMq9k
-        8sqEEEnUREs+Bh3XlcsMzxx/zE3BeLOWN0Y+IJF7CxGqAejoq6NS6xu3MUmmZMn7Y4GG5A/4t5mps
-        jLP2q6KQ==;
+        bh=9MgdM/4E/TOLmi5ouDu792LxVmllOqtYXJ7y3pATFgQ=; b=pSZCdMPw4gdcTYtt1r9bP+HAlK
+        gU+1IgMTmybd7HuQhOOMEkC6JigND3VXY7zlyLDvXJiSMswIBSVrQGt9s9NROjx8QZ18YBGuVNUv8
+        kdfGLL2VqDpbs77GqAQNt7PSgOP9rD2VAH610+zip0lIuDWyGW0WwOQETLLEaCaw529fi3UKzjQs5
+        s7/sJZoF5/ns40rXGoptnnJMNQ+8/A/9oGgnzn6dtYiI3rdntD6yqwUyebhsjcXKwRU3GNw7UGe0y
+        3Ti/O5aDOvsVO9na6UmeQnRUMSTrlibkrj+p1hRpypHQonh4ix9Bc8plfJl5W1Qrv0/sw8sOXzfFq
+        tf+YRkkA==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
-        id 1oTb88-00ApuF-5q;
-        Thu, 01 Sep 2022 03:44:36 +0000
-Date:   Thu, 1 Sep 2022 04:44:36 +0100
+        id 1oTcNI-00Ar6I-Sm;
+        Thu, 01 Sep 2022 05:04:21 +0000
+Date:   Thu, 1 Sep 2022 06:04:20 +0100
 From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daire Byrne <daire@dneg.com>,
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] VFS: support parallel updates in the one directory.
-Message-ID: <YxAqpGgNi4JTxkbT@ZenIV>
-References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
- <166147984370.25420.13019217727422217511.stgit@noble.brown>
- <CAHk-=wi_wwTxPTnFXsG8zdaem5YDnSd4OsCeP78yJgueQCb-1g@mail.gmail.com>
- <YwlifYSJYzovBKGB@ZenIV>
- <166199227016.17668.15373771428363682061@noble.neil.brown.name>
+        Anna Schumaker <anna@kernel.org>,
+        Scott Mayhew <smayhew@redhat.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-nfs@vger.kernel.org, selinux@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, dwysocha@redhat.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] vfs, security: Fix automount superblock LSM init
+ problem, preventing NFS sb sharing
+Message-ID: <YxA9VJuQpQSgGnhB@ZenIV>
+References: <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <166199227016.17668.15373771428363682061@noble.neil.brown.name>
+In-Reply-To: <166133579016.3678898.6283195019480567275.stgit@warthog.procyon.org.uk>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -57,52 +58,57 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 01, 2022 at 10:31:10AM +1000, NeilBrown wrote:
+On Wed, Aug 24, 2022 at 11:09:50AM +0100, David Howells wrote:
 
-> Thanks for this list.
+What's the reason for difference between selinux and smack instances of
+context_init?  The former allocates only on submount, the latter -
+unconditionally...
 
-Keep in mind that this list is just off the top of my head - it's
-nowhere near complete.
+> +static int selinux_fs_context_init(struct fs_context *fc,
+> +				   struct dentry *reference)
+> +{
+> +	const struct superblock_security_struct *sbsec;
+> +	const struct inode_security_struct *root_isec;
+> +	struct selinux_mnt_opts *opts;
+> +
+> +	if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
+> +		opts = kzalloc(sizeof(*opts), GFP_KERNEL);
+> +		if (!opts)
+> +			return -ENOMEM;
+> +
+> +		root_isec = backing_inode_security(reference->d_sb->s_root);
+> +		sbsec = selinux_superblock(reference->d_sb);
+> +		if (sbsec->flags & FSCONTEXT_MNT)
+> +			opts->fscontext_sid	= sbsec->sid;
+> +		if (sbsec->flags & CONTEXT_MNT)
+> +			opts->context_sid	= sbsec->mntpoint_sid;
+> +		if (sbsec->flags & DEFCONTEXT_MNT)
+> +			opts->defcontext_sid	= sbsec->def_sid;
+> +		fc->security = opts;
+> +	}
+> +
+> +	return 0;
+> +}
 
-> d_splice_alias() happens at ->lookup time so it is already under a
-> shared lock.  I don't see that it depends on i_rwsem - it uses i_lock
-> for the important locking.
-
-Nope.
-
-Process 1:
-rmdir foo/bar
-	foo found and locked exclusive [*]
-	dentry of bar found
-	->rmdir() instance called
-Process 2:
-stat foo/splat
-	foo found and locked shared [*]
-	dentry of splat does not exist anywhere
-	dentry allocated, marked in-lookup
-	->lookup() instance called
-	inode found and passed to d_splice_alias() ...
-	... which finds that it's a directory inode ...
-	... and foo/bar refers to it.  E.g. it's on NFS and another
-client has just done mv bar splat
-	__d_unalias() is called, to try and move existing alias (foo/bar)
-into the right place.  It sees that no change of parent is involved,
-	so it can just proceed to __d_move().
-Process 1:
-	forms an rmdir request to server, using ->d_name (and possibly
-->d_parent) of dentry of foo/bar.  It knows that ->d_name is stable,
-since the caller holds foo locked exclusive and all callers of __d_move()
-hold the old parent at least shared.
-
-In mainline process 2 will block (or, in case if it deals with different
-parent, try to grab the old parent of the existing alias shared and fail
-and with -ESTALE).  With your changes process 1 will be holding
-foo/ locked shared, so process 2 will succeed and proceed to __d_move(),
-right under the nose of process 1 accessing ->d_name.  If the names involved
-had been longer than 32 characters, it would risk accessing kfreed memory.
-Or fetching the length from old name and pointer from new one, walking
-past the end of kmalloc'ed object, etc.
-
-Sure, assuming that we are talking about NFS, server would have probably
-failed the RMDIR request - if you managed to form that request without
-oopsing, that is.
+> +/**
+> + * smack_fs_context_init - Initialise security data for a filesystem context
+> + * @fc: The filesystem context.
+> + * @reference: Reference dentry (automount/reconfigure) or NULL
+> + *
+> + * Returns 0 on success or -ENOMEM on error.
+> + */
+> +static int smack_fs_context_init(struct fs_context *fc,
+> +				 struct dentry *reference)
+> +{
+> +	struct superblock_smack *sbsp;
+> +	struct smack_mnt_opts *ctx;
+> +	struct inode_smack *isp;
+> +
+> +	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
+> +	if (!ctx)
+> +		return -ENOMEM;
+> +	fc->security = ctx;
+> +
+> +	if (fc->purpose == FS_CONTEXT_FOR_SUBMOUNT) {
+> +		sbsp = smack_superblock(reference->d_sb);
+> +		isp = smack_inode(reference->d_sb->s_root->d_inode);
