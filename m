@@ -2,30 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCBE95A9F95
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 21:09:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E73035A9F97
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 21:10:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231447AbiIATJx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Sep 2022 15:09:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
+        id S233668AbiIATKB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Sep 2022 15:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233562AbiIATJw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Sep 2022 15:09:52 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 858D7C0D
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Sep 2022 12:09:50 -0700 (PDT)
+        with ESMTP id S233598AbiIATJ7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Sep 2022 15:09:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF888BC8C
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Sep 2022 12:09:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D11AB825DC
-        for <linux-nfs@vger.kernel.org>; Thu,  1 Sep 2022 19:09:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B610CC433D6;
-        Thu,  1 Sep 2022 19:09:47 +0000 (UTC)
-Subject: [PATCH v3 0/6] Fixes for server-side xdr_stream overhaul
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7971DB828CE
+        for <linux-nfs@vger.kernel.org>; Thu,  1 Sep 2022 19:09:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E79C433D6;
+        Thu,  1 Sep 2022 19:09:53 +0000 (UTC)
+Subject: [PATCH v3 1/6] SUNRPC: Fix svcxdr_init_decode's end-of-buffer
+ calculation
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Thu, 01 Sep 2022 15:09:46 -0400
-Message-ID: <166204973526.1435.6068003336048840051.stgit@manet.1015granger.net>
+Date:   Thu, 01 Sep 2022 15:09:53 -0400
+Message-ID: <166205939308.1435.11978929988056383822.stgit@manet.1015granger.net>
+In-Reply-To: <166204973526.1435.6068003336048840051.stgit@manet.1015granger.net>
+References: <166204973526.1435.6068003336048840051.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,47 +42,63 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-During review of the v2 of this series, Jeff suggested looking at
-svc_max_payload() call sites for similar issues, and I found some.
-I've included fixes for NFSv2 and NFSv3 operations in v3 of this
-series.
+Ensure that stream-based argument decoding can't go past the actual
+end of the receive buffer. xdr_init_decode's calculation of the
+value of xdr->end over-estimates the end of the buffer because the
+Linux kernel RPC server code does not remove the size of the RPC
+header from rqstp->rq_arg before calling the upper layer's
+dispatcher.
 
-The NFSv4 stack is different than NFSv2/3, so the simple fixes
-proposed here are not appropriate there. For one thing, NFSv4 has
-these op_rsize_bop helpers that use svc_max_payload() to estimate
-the reply size -- but these are called well before
-svcxdr_init_encode() has set rq_res.buflen. I'm still working on
-fixes for those (including get/listxattr, getattr, read, readdir,
-etc).
+The server-side still uses the svc_getnl() macros to decode the
+RPC call header. These macros reduce the length of the head iov
+but do not update the total length of the message in the buffer
+(buf->len).
 
+A proper fix for this would be to replace the use of svc_getnl() and
+friends in the RPC header decoder, but that would be a large and
+invasive change that would be difficult to backport.
 
-Changes since v2:
-- Dropped the clean-up patches; will re-post those separately, later
-- Added fixes for NFSv3 READ and for NFSv2 READ and READDIR
-- Hopefully addressed a crash when @dircount is too large
-
-Changes since v1:
-- Dropped the xdr_buf_length() helper
-- Replaced 7/7 with patch that cleans up an unneeded use of xdr_buf::len
-- Dropped the checks for oversized RPC records
-- Fixed narrow problem with NFSv2 and NFSv3 READDIR processing
-
+Fixes: 5191955d6fc6 ("SUNRPC: Prepare for xdr_stream-style decoding on the server-side")
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ include/linux/sunrpc/svc.h |   17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-Chuck Lever (6):
-      SUNRPC: Fix svcxdr_init_decode's end-of-buffer calculation
-      SUNRPC: Fix svcxdr_init_encode's buflen calculation
-      NFSD: Protect against send buffer overflow in NFSv2 READDIR
-      NFSD: Protect against send buffer overflow in NFSv3 READDIR
-      NFSD: Protect against send buffer overflow in NFSv2 READ
-      NFSD: Protect against send buffer overflow in NFSv3 READ
+diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
+index daecb009c05b..5a830b66f059 100644
+--- a/include/linux/sunrpc/svc.h
++++ b/include/linux/sunrpc/svc.h
+@@ -544,16 +544,27 @@ static inline void svc_reserve_auth(struct svc_rqst *rqstp, int space)
+ }
+ 
+ /**
+- * svcxdr_init_decode - Prepare an xdr_stream for svc Call decoding
++ * svcxdr_init_decode - Prepare an xdr_stream for Call decoding
+  * @rqstp: controlling server RPC transaction context
+  *
++ * This function currently assumes the RPC header in rq_arg has
++ * already been decoded. Upon return, xdr->p points to the
++ * location of the upper layer header.
+  */
+ static inline void svcxdr_init_decode(struct svc_rqst *rqstp)
+ {
+ 	struct xdr_stream *xdr = &rqstp->rq_arg_stream;
+-	struct kvec *argv = rqstp->rq_arg.head;
++	struct xdr_buf *buf = &rqstp->rq_arg;
++	struct kvec *argv = buf->head;
+ 
+-	xdr_init_decode(xdr, &rqstp->rq_arg, argv->iov_base, NULL);
++	/*
++	 * svc_getnl() and friends do not keep the xdr_buf's ::len
++	 * field up to date. Refresh that field before initializing
++	 * the argument decoding stream.
++	 */
++	buf->len = buf->head->iov_len + buf->page_len + buf->tail->iov_len;
++
++	xdr_init_decode(xdr, buf, argv->iov_base, NULL);
+ 	xdr_set_scratch_page(xdr, rqstp->rq_scratch_page);
+ }
+ 
 
-
- fs/nfsd/nfs3proc.c         | 11 ++++++-----
- fs/nfsd/nfsproc.c          |  6 +++---
- include/linux/sunrpc/svc.h | 19 +++++++++++++++----
- 3 files changed, 24 insertions(+), 12 deletions(-)
-
---
-Chuck Lever
 
