@@ -2,152 +2,87 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 084F25A92BF
-	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 11:08:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C9955A959E
+	for <lists+linux-nfs@lfdr.de>; Thu,  1 Sep 2022 13:22:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234404AbiIAJIZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 1 Sep 2022 05:08:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55392 "EHLO
+        id S233026AbiIALVn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 1 Sep 2022 07:21:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233527AbiIAJHz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Sep 2022 05:07:55 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE2ED13419C;
-        Thu,  1 Sep 2022 02:06:30 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S234472AbiIALVd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 1 Sep 2022 07:21:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A218A12649E;
+        Thu,  1 Sep 2022 04:21:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6291022302;
-        Thu,  1 Sep 2022 09:06:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1662023189; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=50nRSQyk1QI9hFhV212TIh+r/CdBOfcrQIb/TCXpMNg=;
-        b=O5vzmoJzcxlCgyu6A22ZqfiRq7FtslJRe5nEwyx+iAICCIY83IOVAxbUJR77VZsi6zzjxV
-        5ABgsatN6KiutI+2xWkckWKoXanoQYyAEm3Zd1SRjFP4B5YTacLniMUHhVShxLwfJFQJoD
-        5oNnxBJhsCs2TM4gNQGyC0f6354K8qY=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1662023189;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=50nRSQyk1QI9hFhV212TIh+r/CdBOfcrQIb/TCXpMNg=;
-        b=HQd7tUGwjFXnUO3Le+M69ODGktLs4sIBlRIsKKJJIc9SQdO/yGlCDjqrzs3lQAqqyPs/o8
-        FW6Ih0TJiB7zoaCA==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 4F61F13A79;
-        Thu,  1 Sep 2022 09:06:29 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id IKtVExV2EGPoRAAAMHmgww
-        (envelope-from <jack@suse.cz>); Thu, 01 Sep 2022 09:06:29 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id DC9BFA067C; Thu,  1 Sep 2022 11:06:28 +0200 (CEST)
-Date:   Thu, 1 Sep 2022 11:06:28 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jan Kara <jack@suse.cz>, John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Christoph Hellwig <hch@infradead.org>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/6] NFS: direct-io: convert to FOLL_PIN pages
-Message-ID: <20220901090628.h4debwejkirrhqtj@quack3>
-References: <20220827083607.2345453-6-jhubbard@nvidia.com>
- <YwqfWoAE2Awp4YvT@ZenIV>
- <353f18ac-0792-2cb7-6675-868d0bd41d3d@nvidia.com>
- <Ywq5ILRNxsbWvFQe@ZenIV>
- <Ywq5VrSrY341UVpL@ZenIV>
- <217b4a17-1355-06c5-291e-7980c0d3cea6@nvidia.com>
- <20220829160808.rwkkiuelipr3huxk@quack3>
- <a53b2d14-687a-16c9-2f63-4f94876f8b3c@nvidia.com>
- <20220831094349.boln4jjajkdtykx3@quack3>
- <Yw/+/U9GFaNnARdk@ZenIV>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C58861DBA;
+        Thu,  1 Sep 2022 11:21:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5674C433D6;
+        Thu,  1 Sep 2022 11:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1662031288;
+        bh=Y1ObXWZoAPO9a3cVwM+9DOIhRMb2NN2/YlncxX1cYIA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=g8HIcvDfJ7+Kvvz7+2WkqooremfBKbH+fzUyNPoCCJ2aYsc9DWatob971V4yk03CO
+         CF6JpCsGQDyY0QDjoCeC8LtYUjVtluTRQnHT+In0odOoTv1u/fhLc26r3d+JtsKvMH
+         5PuERM7bTHJjhKOVQZCMjMVa45wyctq94eCQtHyhw46Akh48FlQ6jSlJYP6T8kKM3x
+         RugJdDoqIJ3L6xxhrT6ZYLyWIG8ao+H+lluQYn4OM88a8h3sfyWsoFA+/06aPUwOym
+         RBlIYrKDULw2WTZ7K3lmhXwcE94QUucjPYFUeWQRUAZXqT0Kxu8vaaotXrYDElSDNc
+         VVGWuzmYv6mxw==
+Message-ID: <5c5d87f8329e44275bda36657be4de2390f065d4.camel@kernel.org>
+Subject: Re: [PATCH v2 1/3] nfsd: Fix a memory leak in an error handling path
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "J. Bruce Fields" <bfields@redhat.com>,
+        Scott Mayhew <smayhew@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Date:   Thu, 01 Sep 2022 07:21:26 -0400
+In-Reply-To: <14d802144c88da0eb9e201b3acbf4bde376b2473.1662009844.git.christophe.jaillet@wanadoo.fr>
+References: <14d802144c88da0eb9e201b3acbf4bde376b2473.1662009844.git.christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Yw/+/U9GFaNnARdk@ZenIV>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu 01-09-22 01:38:21, Al Viro wrote:
-> On Wed, Aug 31, 2022 at 11:43:49AM +0200, Jan Kara wrote:
-> 
-> > So after looking into that a bit more, I think a clean approach would be to
-> > provide iov_iter_pin_pages2() and iov_iter_pages_alloc2(), under the hood
-> > in __iov_iter_get_pages_alloc() make sure we use pin_user_page() instead of
-> > get_page() in all the cases (using this in pipe_get_pages() and
-> > iter_xarray_get_pages() is easy) and then make all bio handling use the
-> > pinning variants for iters. I think at least iov_iter_is_pipe() case needs
-> > to be handled as well because as I wrote above, pipe pages can enter direct
-> > IO code e.g. for splice(2).
-> > 
-> > Also I think that all iov_iter_get_pages2() (or the _alloc2 variant) users
-> > actually do want the "pin page" semantics in the end (they are accessing
-> > page contents) so eventually we should convert them all to
-> > iov_iter_pin_pages2() and remove iov_iter_get_pages2() altogether. But this
-> > will take some more conversion work with networking etc. so I'd start with
-> > converting bios only.
-> 
-> Not sure, TBH...
-> 
-> FWIW, quite a few of the callers of iov_iter_get_pages2() do *NOT* need to
-> grab any references for BVEC/XARRAY/PIPE cases.  What's more, it would be
-> bloody useful to have a variant that doesn't grab references for
-> !iter->user_backed case - that could be usable for KVEC as well, simplifying
-> several callers.
-> 
-> Requirements:
-> 	* recepients of those struct page * should have a way to make
-> dropping the page refs conditional (obviously); bio machinery can be told
-> to do so.
-> 	* callers should *NOT* do something like
-> 	"set an ITER_BVEC iter, with page references grabbed and stashed in
-> bio_vec array, call async read_iter() and drop the references in array - the
-> refs we grab in dio will serve"
-> Note that for sync IO that pattern is fine whether we grab/drop anything
-> inside read_iter(); for async we could take depopulating the bio_vec
-> array to the IO completion or downstream of that.
-> 	* the code dealing with the references returned by iov_iter_..._pages
-> should *NOT* play silly buggers with refcounts - something like "I'll grab
-> a reference, start DMA and report success; page will stay around until I
-> get around to dropping the ref and callers don't need to wait for that" deep
-> in the bowels of infinibad stack (or something equally tasteful) is seriously
-> asking for trouble.
+On Thu, 2022-09-01 at 07:27 +0200, Christophe JAILLET wrote:
+> If this memdup_user() call fails, the memory allocated in a previous call
+> a few lines above should be freed. Otherwise it leaks.
+>=20
+> Fixes: 6ee95d1c8991 ("nfsd: add support for upcall version 2")
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  fs/nfsd/nfs4recover.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4recover.c b/fs/nfsd/nfs4recover.c
+> index b29d27eaa8a6..248ff9f4141c 100644
+> --- a/fs/nfsd/nfs4recover.c
+> +++ b/fs/nfsd/nfs4recover.c
+> @@ -815,8 +815,10 @@ __cld_pipe_inprogress_downcall(const struct cld_msg_=
+v2 __user *cmsg,
+>  				princhash.data =3D memdup_user(
+>  						&ci->cc_princhash.cp_data,
+>  						princhashlen);
+> -				if (IS_ERR_OR_NULL(princhash.data))
+> +				if (IS_ERR_OR_NULL(princhash.data)) {
+> +					kfree(name.data);
+>  					return -EFAULT;
+> +				}
+>  				princhash.len =3D princhashlen;
+>  			} else
+>  				princhash.len =3D 0;
 
-I agree we could get away without grabbing references in some cases. But it
-is a performance vs robustness tradeoff I'd say. E.g. with XARRAY case I
-can see people feeding pages from struct address_space and it is unclear
-what else than page reference would protect them from being freed by
-reclaim. Furthermore if e.g. writeback can happen for such struct
-address_space (or other filesystem operations requiring stable data), we
-really need a full page pin and not just page reference to signal that the
-page may be under DMA and may be changing under your hands. So I'm not
-against having some special cases that avoid grabbing page reference / page
-pin but I think it is justified only in performance sensitive cases and
-when we can make sure filesystem backed page (because of above mentioned
-data stability issues) or anon page (because of cow handling) cannot
-possibly enter this path.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
