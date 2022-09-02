@@ -2,243 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BBF15AB8E5
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Sep 2022 21:34:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5BA5E5AB976
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Sep 2022 22:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbiIBTe5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Sep 2022 15:34:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56166 "EHLO
+        id S229595AbiIBU3u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Sep 2022 16:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbiIBTez (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 15:34:55 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B5D73ECF2
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 12:34:54 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 282GF41i029456;
-        Fri, 2 Sep 2022 19:34:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=890FNS213gOUf8pV83Rjc5+Ci+l1U95k7LvkQkGeUQs=;
- b=hSk5maYRaXy4Gh3LXiH1XDNOCjLxKrSubsAWuAPd8MQ6zsbmFkzW0zywdZl/Uzav2zkF
- H85inMf94++nBCtaqzJg/aDlxiyXbYslQ+6eBSKIliZRjSbbJBHDqfN0jpkFr20wuy28
- OzUPMwZ+GGxAUWAtebzpFpRrocl3Gq0W/dpDMcqHzRuIHKjF6iGD+ZXreKc45829phAt
- /+BuRq1TaJAmN1Y1FBrGBJqtNQnOWc+Mt34Ny7OWCTves+AmRQ8Kz+5AlWkMwIpNSF9o
- K8ecsIcliDyvlt7Ly72YHo3r4yHBuBDZppxjNr72H0MZ6NHHoPBAE4bvU6Kkgy4kNSB+ Sg== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j79pc7mg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Sep 2022 19:34:49 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 282HJUlh019753;
-        Fri, 2 Sep 2022 19:34:49 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2104.outbound.protection.outlook.com [104.47.55.104])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3j79q7tv07-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Sep 2022 19:34:48 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gK8kO8PEHQu2yoJlADeg3pUCWUMgVciAHFqXfx4HikyxPQ43lUwhjyd6JCahP1m0Qa65nwfi7S/fWWNWOo28y4fcffYtUtC9uoQ5K35ZeM3+bKfRKiGPnyQSwhKiVmiZ4YlX0HoUo7NK9MCvKubajGbnNG6uMejXCYXWNHSiAugMaukZdkMrQ/wI0wyfMt0xAeHwp9HPGGDdg8k2zeOFBptfnDOIB/Xk5gD5zBZsanQBRS8OZxFkulAsIVczh459S9Pl+nUtjKoGizZLYGrY9ofzC8y00uDqovQqYeGfKsrpDhrWHXWGzLYtFmpy1fp5U7aA/mBq7qdy7BpfQ727jw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=890FNS213gOUf8pV83Rjc5+Ci+l1U95k7LvkQkGeUQs=;
- b=FvYO6dv1adqQYbPTF3HTB3zOsex9T0DKvnChQMCYslNONyxh/8KxIY9ZYLiehNre49a4b2R6IjhKGtU8xxjRKo4Nvrde8OPo9u/62Xb/SwGc2OHuhclcTFX6GgxWpXKuOpvXlsrtzWi09KjA16D3sDMyMDjZ/z3rDzxtUtE3PSyr1bh3F0WsKDnbxGHYALJPcvt6kIraPG3aOoyTL5Jw5aMAyUeglPeBGz5H8Ujajy6ICOf+VJ3La49OF4hwguiSEXxoK7AXYo3Fmb1NahlaqIaA/mlWqqmKxnip9I1U84adrhjhAtQPM57uLQepLtSJ/4qnkoaLeANIKh8iSEjhmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=890FNS213gOUf8pV83Rjc5+Ci+l1U95k7LvkQkGeUQs=;
- b=JQ0aPwriziemL06rYF6LKacwZrkDF+yMWBupWsddyvcOQHtvo79lZM7UozncX+kKlhin0SJgst/gFSfCxfX17iU9U6ew0C4x27ohkHCdWpFs1xIavAzCfKkzEFKugrTvNIpgOqqg6O2ZJWHAKYVj4WKCmsNBAKbh29lGSR65vu8=
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by SJ0PR10MB4542.namprd10.prod.outlook.com (2603:10b6:a03:2da::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.12; Fri, 2 Sep
- 2022 19:34:47 +0000
-Received: from BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::803:3bcf:a1ee:9e1c]) by BY5PR10MB4257.namprd10.prod.outlook.com
- ([fe80::803:3bcf:a1ee:9e1c%5]) with mapi id 15.20.5588.010; Fri, 2 Sep 2022
- 19:34:47 +0000
-Message-ID: <fc5a3aa7-af8e-656d-a16e-c07c201ec62a@oracle.com>
-Date:   Fri, 2 Sep 2022 12:34:44 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.13.0
-Subject: Re: [PATCH v4 2/2] NFSD: add shrinker to reap courtesy clients on low
- memory condition
-Content-Language: en-US
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <1661896113-8013-1-git-send-email-dai.ngo@oracle.com>
- <1661896113-8013-3-git-send-email-dai.ngo@oracle.com>
- <FA83E721-C874-4A47-87BA-54B13E0B12A3@oracle.com>
- <2df6f1fe-c8eb-d5a1-0a11-2fd965555a33@oracle.com>
- <7041D47D-ECB3-497E-9174-96E9E36FFBDE@oracle.com>
- <eb197dde-8758-7ef4-8a7b-989273e09abc@oracle.com>
- <3CD64E7F-8E81-4B37-AAF3-499B47B25D19@oracle.com>
-From:   dai.ngo@oracle.com
-In-Reply-To: <3CD64E7F-8E81-4B37-AAF3-499B47B25D19@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM6PR06CA0101.namprd06.prod.outlook.com
- (2603:10b6:5:336::34) To BY5PR10MB4257.namprd10.prod.outlook.com
- (2603:10b6:a03:211::21)
+        with ESMTP id S229504AbiIBU3t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 16:29:49 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A57C2D1EB
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 13:29:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1662150587; x=1693686587;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OT/Xtt6yjDY9JNOtOArICZI8EWpObk+kEfWJqW9Bm4E=;
+  b=X5Xk/C+ErSHS/oraXs4ANvOkpAhxwpK2G0GT521O7y/tWRI7fV4b7K1X
+   KIOqnUOvQ8Po2asjk6S4JZnqeuMlvU9HCcHGKoEvGLx3rII5zh+PeyLoZ
+   ZA75IxyPw/SaSfXzpM1oBSFYO/iGaFT7x2uLEMnR1JnziLPfDySEry9wH
+   N7cjWTnG1+mn1+/6hJKWsSmOW2GivnY6ChpkGCeguZKm46lSezqeoHMSs
+   nD55JiFbcrQWxFgJFh9AcoLjwdHHx89V/YFBS/h2UzEcg/4nE4Sk3+hvo
+   Oqtc/faYApktsFRHTzifAQ9kd6yuM6Tjq9FoAjOCmUhkEojYRURSlORw9
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10458"; a="276481691"
+X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
+   d="scan'208";a="276481691"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2022 13:29:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.93,285,1654585200"; 
+   d="scan'208";a="941419037"
+Received: from lkp-server02.sh.intel.com (HELO 95dfd251caa2) ([10.239.97.151])
+  by fmsmga005.fm.intel.com with ESMTP; 02 Sep 2022 13:29:21 -0700
+Received: from kbuild by 95dfd251caa2 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1oUDI0-0000Zw-2o;
+        Fri, 02 Sep 2022 20:29:20 +0000
+Date:   Sat, 3 Sep 2022 04:28:22 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     kbuild-all@lists.01.org
+Subject: Re: [PATCH v1] NFSD: Increase NFSD_MAX_OPS_PER_COMPOUND
+Message-ID: <202209030446.TMHuJXY9-lkp@intel.com>
+References: <166214486962.101939.2252490595444681944.stgit@bazille.1015granger.net>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6665e568-f3c7-4995-6731-08da8d1a31b2
-X-MS-TrafficTypeDiagnostic: SJ0PR10MB4542:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: VT8lTzBGzsCE9JtbhBU9NSrTpDgpcy0PzoZmb4WdpzCdxEKBE/4R1/KRDRQeUN7hC8dF4U3viRhQj+X4zQtjbHkXAX8aXVcLqX6FqJw1LLLOy20MF7CPfYODa7rLEKvDBMWpoLZinasbQvl2aFm16rRhFJdCk1NZoMCd5W8YNicyjmCf91/3xxnG4H+ighlmAIv3HZZqBsamDkPdrDQ/3S+PNkntrP/MsGq9VqV2RoPy0VI0gDOSMQc1wHaMjJvivsNUKR5VqEYXeZ2N2npVIibiJTgZQdUUXZJaxCHSXz0uW+OyIhhP+0S18PQeE4DmhhkmYb/qFJ5Wid+IU+SOzYsozmtQbSiTtvHQlO3bCst96I+FSfa+ucwl7B4RQ2CWCxScAt5cgw535acB3JyrmU0yxkoSGvskzwV6Asp8YuRNNNj1EKE0LUbbMjPJ+PNbA7LPz8+ZMPG5hQA1jHJiOxvhKu/wO3hdQoJlGR5drawUqzty6jrG33xzIgzHJ8/QfeP4LFw0/M2fjO8m4FQr2Uqn13fEW0ETHlVDJZC8ReoqThe08H9c2qNZhD/yV+O3LvTl8ADs6Ql0WkpqKQu6NkJVFdbMcc0Y/QY9peBUj37BxW5b0QyFOx3E684mlDiXqvUOhmleU8djcS+nElKLVLMOT67eUzqB6s6ZkavWttZYmv2kiX4sp6/CmwINuucZ3NrBJRK78oZH1kii8QOLuYgiqenYV2b2HZqujXaKT6b2ZAkQyCThMf+veKjY+i9G
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(346002)(366004)(376002)(39860400002)(136003)(396003)(6666004)(6506007)(6512007)(9686003)(53546011)(186003)(83380400001)(36756003)(31686004)(26005)(6486002)(478600001)(2906002)(2616005)(8676002)(66476007)(66556008)(66946007)(6862004)(38100700002)(8936002)(5660300002)(41300700001)(31696002)(316002)(4326008)(37006003)(86362001)(54906003)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b3R5KzZRUE5FWGlZQi9TMi8zNzZUbFdDTHIrZHFjenlWZjFkekNUMkxCdzI3?=
- =?utf-8?B?V2UrZ04vekVZQWZneUFBRmtrZHpGY2FENVlMaU9GaHFqMWo3aEFOT0o0Y2hy?=
- =?utf-8?B?NTNlRHJyUEhUSFZtY3pNd1drODZ4WEJkdG9jQW9ySThXYmtJbG9ScEMzMDAw?=
- =?utf-8?B?ekdXQkgvbUh4WVRndjhqOXBDdDhoeURlNmRzd2JQeXUxSVlwZTJlMmRRdW9v?=
- =?utf-8?B?MlNkYk5mblQvZ2J3c015QkRSb3picGdWdndTcUxVWks5L2FGRi9aQVpHMFZT?=
- =?utf-8?B?eGVWSWxqVm90OVZDYjAxZEJXcFdlQTNyL0N4QzIvaU9wZmR2MFJ5Y0hvVDBI?=
- =?utf-8?B?RUJCdXRtZGJVajY0dU9adEJCZmNJVXViRGZJREVhNk5DczNoOSs0MWh5YnNJ?=
- =?utf-8?B?U3NDY0FhUWNvdDZtRi9tOTJOd2htOWRCTWJwN0xsb1RWcVpqT25WeEdWRG4w?=
- =?utf-8?B?TmZPSUhLelFYR3EyaFd2ZnJ0UGd5enpPMDZFbXVzTldROVYreWFNQ1pMREtN?=
- =?utf-8?B?QlNpVmNsOVBKdlZ3NnhoYm5ydGpGY1NUQ0x3eG9nMGNKM1pneDR5ZUh6ZGNs?=
- =?utf-8?B?b0hkZ2VRVEluSWVaMGd3TmFnWGlMQW81SEl0dVluZGQvdWhzbThRUTFrQ0U4?=
- =?utf-8?B?NDdsK091RGxxSi9KVURJdzR3ay94YXN4cmtHUEZZQ0tlRlY5dU0xWTM1cDNh?=
- =?utf-8?B?ZGlDaW5RMEZxcm9SUUk4ajdMTWx4MVhhM2N6UkNkUXRwNWJMMUlSd0hoTkpO?=
- =?utf-8?B?V3BEVjJWeXNDZDhKMXpXbmY1a0FOdWdEc2p3YkRSVWVueDZISFM0Q1pieWdj?=
- =?utf-8?B?VUlSUEZrTHQ0d0haUThHZ2hvdU10bzZqeWhlZDJoSlhnK0EraDJ6QWxWN2Zy?=
- =?utf-8?B?cklwZ1RlUjNTZ1hFNW9OTXRRQVA0a2tZeEtQRlUvRWxzSmVZeER0ZDNST2gy?=
- =?utf-8?B?MGxsNnJXdUExYm9DVUJTSis2T3JEaGF0M21aVFN3amlOQ2NqcXRNNjBzbnds?=
- =?utf-8?B?ZEJ5NWNMdVhqbS9hYXBZcFU2MjdmRXRNY0xZRUhTMDdScDc0Z282TTFaOXVQ?=
- =?utf-8?B?MW4zcjJUT0RWbTNqemhBWlV0ZkQwQkNRYW05NFA2RHdjeVhxbXg0Njkyd05C?=
- =?utf-8?B?OXUxczRjWlNlbTZkelM1TTZ1TXhHUTRMZklqZTlleDlXWmZzS3hXVnQyejhN?=
- =?utf-8?B?RHpUMGZvbml0Qi9qSlJrQU9RZW41NVFMMmcxV2F0TFpZR21TVGNYQngwN25J?=
- =?utf-8?B?VW1PS1VkSDBoT2tXSkpnNW1BWDY2S0tBMWVPT3daMHRuVlV1NE1HMURNWVpB?=
- =?utf-8?B?NWZmbUFDWlNSN0pBTDJwc2JYYW5RaDh6N04zenoyTWRESTlDWTJ4cnVneGN4?=
- =?utf-8?B?S0lZdGpwYUdybHlrejNmOFVCWFUzcE1tNTlIQWthdm9MQWF5YkVtNUg1S2JM?=
- =?utf-8?B?SFFiTHJpSVVuSDNNcmttUUVsNXRobFc3WGFiYk0xNVh4ZHQ4KzgvWlpTVWtv?=
- =?utf-8?B?VGJXYWlYOTZwVGl2UTUzQmRWWExlVTMzU1RqM1FWS25NVmxLbDVVbjU5MFNV?=
- =?utf-8?B?TDJLQ0hQbXkyUWxTSG5tRlhpUldneFNYWkM1NzhGNEpTa3NkQlR0R3o1b3p0?=
- =?utf-8?B?aWhndWlpNFRmL3JJTDgzR3VZR25XUk41ZDNWQlRNQjBrMjIzL1hRazkrYWJ6?=
- =?utf-8?B?ZzAwTThWREdlK0NxZ21wTXlUTHBKMi9HOUdDdUxSb2hwa2dvY3E4VEl6RGJ4?=
- =?utf-8?B?NTB3dDhTMkNGSjlaNStpRWZ5NmpEY25hZlVJc3RHL29LWGNpQzNYQk5sbC9i?=
- =?utf-8?B?UjhxWXlsdXYwbUpLN2VEcTE0MTNVWXc1b08wL2hteFNUdENlalBOSzZ3Ty9a?=
- =?utf-8?B?SmZJSWx5SDR2NGwxK01WL3ZyMXRwbTliTS9hbExtOUtzaElwUjRZRUVkUTE5?=
- =?utf-8?B?VUlqeFd2aURwdis5OUdacCtHWVgxRXJTNHlKd2ZMaThMUVFGLzkyNW5hanFW?=
- =?utf-8?B?WVBlZTgxbVZLOTNFQTdKYk9YcVBRRTExcE5VR2RyeitxVzZnaXBRRFBJcnRK?=
- =?utf-8?B?OXVzVnV2bjVCRmVNNVlsRmVBTXp0NmFlaVZkQ1g3a000Qk9kN1hUREFka2VT?=
- =?utf-8?Q?p1w+yk2rEajojlBZlB3Dvempp?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6665e568-f3c7-4995-6731-08da8d1a31b2
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2022 19:34:47.3162
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SKDb6WFHicBy/3JZq75QAbjP2RtocGITnDM77B+pZyuyTBkLMhbxfTipx6ycbUu0C75R4GxBHaZocL91NuYSkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4542
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-09-02_04,2022-08-31_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 spamscore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2209020088
-X-Proofpoint-ORIG-GUID: Q_MxpBvSN_lz_6IC5Xn3v7hWMJy8gVyl
-X-Proofpoint-GUID: Q_MxpBvSN_lz_6IC5Xn3v7hWMJy8gVyl
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166214486962.101939.2252490595444681944.stgit@bazille.1015granger.net>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi Chuck,
 
-On 9/2/22 10:58 AM, Chuck Lever III wrote:
->>> Or, nfsd_courtesy_client_count() could return
->>> nfsd_couresy_client_count. nfsd_courtesy_client_scan() could
->>> then look something like this:
->>>
->>> 	if ((sc->gfp_mask & GFP_KERNEL) != GFP_KERNEL)
->>> 		return SHRINK_STOP;
->>>
->>> 	nfsd_get_client_reaplist(nn, reaplist, lt);
->>> 	list_for_each_safe(pos, next, &reaplist) {
->>> 		clp = list_entry(pos, struct nfs4_client, cl_lru);
->>> 		trace_nfsd_clid_purged(&clp->cl_clientid);
->>> 		list_del_init(&clp->cl_lru);
->>> 		expire_client(clp);
->>> 		count++;
->>> 	}
->>> 	return count;
->> This does not work, we cannot expire clients on the context of
->> scan callback due to deadlock problem.
-> Correct, we don't want to start shrinker laundromat activity if
-> the allocation request specified that it cannot wait. But are
-> you sure it doesn't work if sc_gfp_flags is set to GFP_KERNEL?
+I love your patch! Perhaps something to improve:
 
-It can be deadlock due to lock ordering problem:
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.0-rc3 next-20220901]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-======================================================
-  WARNING: possible circular locking dependency detected
-  5.19.0-rc2_sk+ #1 Not tainted
-  ------------------------------------------------------
-  lck/31847 is trying to acquire lock:
-  ffff88811d268850 (&sb->s_type->i_mutex_key#16){+.+.}-{3:3}, at: btrfs_inode_lock+0x38/0x70
-  #012but task is already holding lock:
-  ffffffffb41848c0 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x506/0x1db0
-  #012which lock already depends on the new lock.
-  #012the existing dependency chain (in reverse order) is:
+url:    https://github.com/intel-lab-lkp/linux/commits/Chuck-Lever/NFSD-Increase-NFSD_MAX_OPS_PER_COMPOUND/20220903-025613
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git 0b3acd1cc0222953035d18176b1e4aa06624fd6e
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20220903/202209030446.TMHuJXY9-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/2b18db50c1618d5efba82c205ab1d127cf210862
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Chuck-Lever/NFSD-Increase-NFSD_MAX_OPS_PER_COMPOUND/20220903-025613
+        git checkout 2b18db50c1618d5efba82c205ab1d127cf210862
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=alpha SHELL=/bin/bash fs/
 
-  #012-> #1 (fs_reclaim){+.+.}-{0:0}:
-        fs_reclaim_acquire+0xc0/0x100
-        __kmalloc+0x51/0x320
-        btrfs_buffered_write+0x2eb/0xd90
-        btrfs_do_write_iter+0x6bf/0x11c0
-        do_iter_readv_writev+0x2bb/0x5a0
-        do_iter_write+0x131/0x630
-        nfsd_vfs_write+0x4da/0x1900 [nfsd]
-        nfsd4_write+0x2ac/0x760 [nfsd]
-        nfsd4_proc_compound+0xce8/0x23e0 [nfsd]
-        nfsd_dispatch+0x4ed/0xc10 [nfsd]
-        svc_process_common+0xd3f/0x1b00 [sunrpc]
-        svc_process+0x361/0x4f0 [sunrpc]
-        nfsd+0x2d6/0x570 [nfsd]
-        kthread+0x2a1/0x340
-        ret_from_fork+0x22/0x30
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-  #012-> #0 (&sb->s_type->i_mutex_key#16){+.+.}-{3:3}:
-        __lock_acquire+0x318d/0x7830
-        lock_acquire+0x1bb/0x500
-        down_write+0x82/0x130
-        btrfs_inode_lock+0x38/0x70
-        btrfs_sync_file+0x280/0x1010
-        nfsd_file_flush.isra.0+0x1b/0x220 [nfsd]
-        nfsd_file_put+0xd4/0x110 [nfsd]
-        release_all_access+0x13a/0x220 [nfsd]
-        nfs4_free_ol_stateid+0x40/0x90 [nfsd]
-        free_ol_stateid_reaplist+0x131/0x210 [nfsd]
-        release_openowner+0xf7/0x160 [nfsd]
-        __destroy_client+0x3cc/0x740 [nfsd]
-        nfsd_cc_lru_scan+0x271/0x410 [nfsd]
-        shrink_slab.constprop.0+0x31e/0x7d0
-        shrink_node+0x54b/0xe50
-        try_to_free_pages+0x394/0xba0
-        __alloc_pages_slowpath.constprop.0+0x5d2/0x1db0
-        __alloc_pages+0x4d6/0x580
-        __handle_mm_fault+0xc25/0x2810
-        handle_mm_fault+0x136/0x480
-        do_user_addr_fault+0x3d8/0xec0
-        exc_page_fault+0x5d/0xc0
-        asm_exc_page_fault+0x27/0x30
+All warnings (new ones prefixed by >>):
 
--Dai
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_decode_compound':
+   fs/nfsd/nfs4xdr.c:2372:29: error: implicit declaration of function 'vcalloc'; did you mean 'kvcalloc'? [-Werror=implicit-function-declaration]
+    2372 |                 argp->ops = vcalloc(argp->opcnt, sizeof(*argp->ops));
+         |                             ^~~~~~~
+         |                             kvcalloc
+>> fs/nfsd/nfs4xdr.c:2372:27: warning: assignment to 'struct nfsd4_op *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+    2372 |                 argp->ops = vcalloc(argp->opcnt, sizeof(*argp->ops));
+         |                           ^
+   fs/nfsd/nfs4xdr.c: In function 'nfsd4_release_compoundargs':
+   fs/nfsd/nfs4xdr.c:5396:17: error: implicit declaration of function 'vfree'; did you mean 'kvfree'? [-Werror=implicit-function-declaration]
+    5396 |                 vfree(args->ops);
+         |                 ^~~~~
+         |                 kvfree
+   cc1: some warnings being treated as errors
 
+
+vim +2372 fs/nfsd/nfs4xdr.c
+
+  2329	
+  2330	static bool
+  2331	nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
+  2332	{
+  2333		struct nfsd4_op *op;
+  2334		bool cachethis = false;
+  2335		int auth_slack= argp->rqstp->rq_auth_slack;
+  2336		int max_reply = auth_slack + 8; /* opcnt, status */
+  2337		int readcount = 0;
+  2338		int readbytes = 0;
+  2339		__be32 *p;
+  2340		int i;
+  2341	
+  2342		if (xdr_stream_decode_u32(argp->xdr, &argp->taglen) < 0)
+  2343			return false;
+  2344		max_reply += XDR_UNIT;
+  2345		argp->tag = NULL;
+  2346		if (unlikely(argp->taglen)) {
+  2347			if (argp->taglen > NFSD4_MAX_TAGLEN)
+  2348				return false;
+  2349			p = xdr_inline_decode(argp->xdr, argp->taglen);
+  2350			if (!p)
+  2351				return false;
+  2352			argp->tag = svcxdr_savemem(argp, p, argp->taglen);
+  2353			if (!argp->tag)
+  2354				return false;
+  2355			max_reply += xdr_align_size(argp->taglen);
+  2356		}
+  2357	
+  2358		if (xdr_stream_decode_u32(argp->xdr, &argp->minorversion) < 0)
+  2359			return false;
+  2360		if (xdr_stream_decode_u32(argp->xdr, &argp->opcnt) < 0)
+  2361			return false;
+  2362	
+  2363		/*
+  2364		 * NFS4ERR_RESOURCE is a more helpful error than GARBAGE_ARGS
+  2365		 * here, so we return success at the xdr level so that
+  2366		 * nfsd4_proc can handle this is an NFS-level error.
+  2367		 */
+  2368		if (argp->opcnt > NFSD_MAX_OPS_PER_COMPOUND)
+  2369			return true;
+  2370	
+  2371		if (argp->opcnt > ARRAY_SIZE(argp->iops)) {
+> 2372			argp->ops = vcalloc(argp->opcnt, sizeof(*argp->ops));
+  2373			if (!argp->ops) {
+  2374				argp->ops = argp->iops;
+  2375				return false;
+  2376			}
+  2377		}
+  2378	
+  2379		if (argp->minorversion > NFSD_SUPPORTED_MINOR_VERSION)
+  2380			argp->opcnt = 0;
+  2381	
+  2382		for (i = 0; i < argp->opcnt; i++) {
+  2383			op = &argp->ops[i];
+  2384			op->replay = NULL;
+  2385	
+  2386			if (xdr_stream_decode_u32(argp->xdr, &op->opnum) < 0)
+  2387				return false;
+  2388			if (nfsd4_opnum_in_range(argp, op)) {
+  2389				op->status = nfsd4_dec_ops[op->opnum](argp, &op->u);
+  2390				if (op->status != nfs_ok)
+  2391					trace_nfsd_compound_decode_err(argp->rqstp,
+  2392								       argp->opcnt, i,
+  2393								       op->opnum,
+  2394								       op->status);
+  2395			} else {
+  2396				op->opnum = OP_ILLEGAL;
+  2397				op->status = nfserr_op_illegal;
+  2398			}
+  2399			op->opdesc = OPDESC(op);
+  2400			/*
+  2401			 * We'll try to cache the result in the DRC if any one
+  2402			 * op in the compound wants to be cached:
+  2403			 */
+  2404			cachethis |= nfsd4_cache_this_op(op);
+  2405	
+  2406			if (op->opnum == OP_READ || op->opnum == OP_READ_PLUS) {
+  2407				readcount++;
+  2408				readbytes += nfsd4_max_reply(argp->rqstp, op);
+  2409			} else
+  2410				max_reply += nfsd4_max_reply(argp->rqstp, op);
+  2411			/*
+  2412			 * OP_LOCK and OP_LOCKT may return a conflicting lock.
+  2413			 * (Special case because it will just skip encoding this
+  2414			 * if it runs out of xdr buffer space, and it is the only
+  2415			 * operation that behaves this way.)
+  2416			 */
+  2417			if (op->opnum == OP_LOCK || op->opnum == OP_LOCKT)
+  2418				max_reply += NFS4_OPAQUE_LIMIT;
+  2419	
+  2420			if (op->status) {
+  2421				argp->opcnt = i+1;
+  2422				break;
+  2423			}
+  2424		}
+  2425		/* Sessions make the DRC unnecessary: */
+  2426		if (argp->minorversion)
+  2427			cachethis = false;
+  2428		svc_reserve(argp->rqstp, max_reply + readbytes);
+  2429		argp->rqstp->rq_cachetype = cachethis ? RC_REPLBUFF : RC_NOCACHE;
+  2430	
+  2431		if (readcount > 1 || max_reply > PAGE_SIZE - auth_slack)
+  2432			__clear_bit(RQ_SPLICE_OK, &argp->rqstp->rq_flags);
+  2433	
+  2434		return true;
+  2435	}
+  2436	
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
