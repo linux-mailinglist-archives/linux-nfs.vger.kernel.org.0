@@ -2,144 +2,155 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 155B65AB660
-	for <lists+linux-nfs@lfdr.de>; Fri,  2 Sep 2022 18:17:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05C7B5AB6C4
+	for <lists+linux-nfs@lfdr.de>; Fri,  2 Sep 2022 18:44:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237249AbiIBQRs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Sep 2022 12:17:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44902 "EHLO
+        id S236145AbiIBQoV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Sep 2022 12:44:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235317AbiIBQRV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 12:17:21 -0400
+        with ESMTP id S234742AbiIBQoT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 12:44:19 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44D8524BDF
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 09:15:26 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 282D7OA0030924;
-        Fri, 2 Sep 2022 15:58:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=5nQHym4yZyuQUDE6kOBu/SPo6kKBCR2OtrE2wJJDkSo=;
- b=yBogR/BERQ+QrHB2zG8n22ZPL0wBoARofUYNSTAzpdz7MA6FTXDYc41fTRRLGnnl15Z2
- INoAwwUZ2D9MDP+n2Txrdw/XFEp7jFz++lsoQC9p8Cq33pYbSPWYLMH/UziCx9CnOJgJ
- Ea3DC2FrGxnOv+EUEud54yTCCLIoAh/gjl5KfwFl+c2G9VtMjZ0SJxTD6fLEFY3RBhGz
- GBsirc2R7TOIYX7Y50iMvpWWhNo5UxcdNKcKOELFBO9QdewFA0B8UJG4SHLiNnOy7fKx
- s3Ok1nQUwirIO2JLs3nt66n+U79V8bS4Ja6P3WO0eCTy59qSHS8LbrKgNwt4oxgRqEpM Ag== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j79v0yhmc-1
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8B0DF7B1D
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 09:44:18 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 282GCJgn001632;
+        Fri, 2 Sep 2022 16:44:14 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=mu/T4akswNe9xdOGuGiMOY0DO91w4jYUOkeFxAbZ604=;
+ b=e/SiDnS8bUWtVpaQdw4gDv2xDQUhqvAA93EQZv05Dtu46m1D/AitdcosHlDXIHlOfb9b
+ SD7r536DzshG/AeBBSlJSBeMWQC06wnfFscUlfuurnq+TiFX9F5r+rDfZls32n9Gu2VY
+ ZDAVbaFBp1r8TsSr3+kR36yAL45yobeyr2uDs4bjyPtFkJ7WAGRDxOEz1PYNjAP7NVu2
+ kwmTgoQNI2yUlBb82XMYN0ywujYaRAW34JKJEAUfrT3Me+q/i69ufPF6WPjN5Ex1sdF/
+ pSQhrQmNvRro96cpfmxxFzN4LhgdgPAW21/vGxWspoWHTZhvNJ3PycNxK6SdU0MnFvb4 wA== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3j7bttfpx9-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Sep 2022 15:58:07 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 282DCw1E002231;
-        Fri, 2 Sep 2022 15:58:05 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3j79q7sd5w-1
+        Fri, 02 Sep 2022 16:44:14 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 282FibxG002065;
+        Fri, 2 Sep 2022 16:44:13 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jarqm2s5d-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 02 Sep 2022 15:58:05 +0000
+        Fri, 02 Sep 2022 16:44:13 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=K961KxrD6h//2W/nvBn8CgrZH5VjhQIklGqwj+cADbOyzvfg+gnkFXR26oCgQsCgs93Eb+aZ6HVX3c9HCgXGb7AdkeZoqz5H3zCRd8Atp06M/6nbYdV1wV7O8hnK7hG7nzyejFvAlEkNERTFMu9/tq8ERz6EecoI56kj8c9WXMWaQC/ZouDOKZiphMz9QjkP3pHtnyhrzX5Iu73A450mJIR2bmqeDfa75Of7s7Z4lyCrFogrurXSWwOlqoySvp6/zUXYJgMLJYxF0d0jhofa96nkhMU94uzx3WXK5EzdxV8PCqy/Eqy0Qy5GfhVRobOLPGd9tKMo+ILMPMf2a2pDAQ==
+ b=i/mqUqZ/R6zlD9U13Uq7MxP+WcN9USwvD+sXBFYk42wj7hp9PcgtdElcCz9Ww3S6Jaccsy5ceWA/F7UZnZN32TgJYoLaMlsNgG4VsA2U7VSsUfNLNr3+S1j9nUCYQaSzSVRElt3vqhQebq3pNm0M/wfBuYKSR8Y2mSPcVF+tA+u+9yl37TWPajr5GCYBV3UmJ3lFpyGhA7Wr1prB2oMX391uuZfrHY49F31JhdKaeoo1Yy/jP4jZkR0qnegl/zpiY7rtId1x9oWx6517I4tlEHuOl8mZwC6WCGGudrs842IoyDNCq8oPJHP1wNzZhVxnnAuquT4+LDClcCPNfkpOpQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5nQHym4yZyuQUDE6kOBu/SPo6kKBCR2OtrE2wJJDkSo=;
- b=Z9kq10AGn5zd5fz37zwFy9eYPmkW76oW4hgqVB0ihGAXIomBoPiIm6+rr9aN93EMSwZCHFXEutWIfU8LNcfXmliAQ8Se0mGztj6GklICewEjNAi+Q4ouSVnhvt7JL7bsRoO22JnnQUJ7593nktE0CmKe11ydllvh4fHQKwipxLhRwgVAg5G73Xl1OM/3hhaXiXGdXaiHzVhBNmCiLpFxKuYyCtl4xLgEdl/R6NOMC+gG86/vjWEeCY+BC1goMFiG7mNMuPqxXqpJrdkX5RN42P6itUHbbkCYY/EYniebIEHrhtXkPxlqHq/n0Cjsfiz0rv2a1ojLZ96SbKPKCGNXVQ==
+ bh=mu/T4akswNe9xdOGuGiMOY0DO91w4jYUOkeFxAbZ604=;
+ b=i14jAwe4o7KMuiWZUsGWlgCD6+8NHCrbl22Gp3ZAiWmlFYEQdvEyw2DxSGOtlYPk1IXdtTU+iGyMjy00N26apY3eEigOLrUnIS7jIsrFJgy5jo9CV0YZ/dn+x76YL4CltcTClQXH5nOsf2vgf5E9Cc2G7z01JK5+qPyC9DYFnLmldhH9f7eSadyKEWe+a5oRIT0mR1AeEXg6/pPoEP3hSFREBCmsNrpoasE+XfBgvxnwOyXmTWKxIFMH0+N06fqXSoyMj+Mef5EwSt86OGBFHM26aJdnsa7Idlkce3jpCSFf44LB4Yf2FLSQ3eEMf4otqDpJ0bQew686Nm411AntFA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5nQHym4yZyuQUDE6kOBu/SPo6kKBCR2OtrE2wJJDkSo=;
- b=mxjScF7bCPUAinYlhu3LKqlBuYlw6Oth77xk0wKqceG7+7X7SfwotcAGSTbICkyh8+ePgXCJVtdMTxg86046t16XsGSpp2QrGhwtG6hZEHzdJv9ioj7KRTRbxoJ2ja/mrlJIEP9IQMwO1N+3MYU8Y77jHsdp9kfGphcHNUF1Glo=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by SN7PR10MB6382.namprd10.prod.outlook.com (2603:10b6:806:26e::20) with
+ bh=mu/T4akswNe9xdOGuGiMOY0DO91w4jYUOkeFxAbZ604=;
+ b=pmNLUZ3nc93xnKr29hAVk+PInQ1VXsy7hvj9oy6cGpz/ChUL6lAx50xwU4dag43fLhS9O7si7MMXr7bfOTsv1q8V88vGoBb74xUG3+KLVsJDjubsBJrQFaNXIAVtk8oq+oTSzG0Z/zRSzPM0QZdWl5kEM/WmQXwsjwAqnpRsrTM=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by PH0PR10MB4678.namprd10.prod.outlook.com (2603:10b6:510:3b::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.15; Fri, 2 Sep
- 2022 15:58:04 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::25d6:da15:34d:92fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::25d6:da15:34d:92fa%4]) with mapi id 15.20.5588.012; Fri, 2 Sep 2022
- 15:58:04 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Anna Schumaker <anna@kernel.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 1/1] NFSD: Simplify READ_PLUS
-Thread-Topic: [PATCH 1/1] NFSD: Simplify READ_PLUS
-Thread-Index: AQHYvjFg3/EVQxaYQEaaRJDN+HcN9q3MTS2A
-Date:   Fri, 2 Sep 2022 15:58:04 +0000
-Message-ID: <3EAF27E2-42DC-4D15-99CF-C75279729D58@oracle.com>
-References: <20220901183341.1543827-1-anna@kernel.org>
- <20220901183341.1543827-2-anna@kernel.org>
-In-Reply-To: <20220901183341.1543827-2-anna@kernel.org>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Fri, 2 Sep
+ 2022 16:44:11 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::803:3bcf:a1ee:9e1c]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::803:3bcf:a1ee:9e1c%5]) with mapi id 15.20.5588.010; Fri, 2 Sep 2022
+ 16:44:10 +0000
+Message-ID: <eb197dde-8758-7ef4-8a7b-989273e09abc@oracle.com>
+Date:   Fri, 2 Sep 2022 09:44:07 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.0
+Subject: Re: [PATCH v4 2/2] NFSD: add shrinker to reap courtesy clients on low
+ memory condition
 Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 652d64c1-0d24-4514-998b-08da8cfbeb7d
-x-ms-traffictypediagnostic: SN7PR10MB6382:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 5QryuFTQ8v7YbKLtMz9S614L2Per8+oR69gRxTFfXUQSi+9zX3KTphwptBHBsDRGdkDvFK2b6Cd9gy4b9DKNN3T20YlvQBY72EhE/4sCj5UdynygaklHjzqn56qeh6UtNdXG76Y9rhVqe5FRH8TdiYd+TQxdXD4XtmZD+vFtvn+LVFbu3wYnUR8z2BHqTnG/AtjrbEldAsjixDWQTSlBX9EaSTCa4CJPwaT1XDNYhRTdxx4C9IvczbNNOFw7edIMPn+SA3c+pNwTn5VhUa+Y71AOGuwOWA9+4kClALn0REyCm/n/ZBG2yaueJ5SjnWgopjg9F881gXeaZEwA/53pw8O8WBt5vDkX36fDOWUoNUiy9tVpHYL4B7RcFE4IQG4ZkjxyC2PniRITnKYO89MQ0w1PksU9QLL+zkxAEFhN2aDE+OwlC0vjFrga3y1sPRk4uHEI+pRSULil9lqLMHfHuTdi8HOTkKJ3+FQ44XLHguqADioWyYvUCkXzZiKu4cnGaqQeqqDdVB+ACc4jsqW5LpA5icDQccRoYl6Oj+bgsRbOWi2xxpSr8grEStRlutZUvx5LJgWHPLEaO8nUJEpGun3XJ5I8ILTZq5Y8hltN/qEaT8au+5uK0FydFjTz+iMwRlgvBtilkhB7XHy6ZjR4IUVpwIIBvyXez29D91qN1cLUX21fpPhjglGbznWEwJM5H8UwstaGVIm6UqYn3Ps30uoZEK3aMsUn6fr8AY24gmEN54LRloHmNbgCuhhgnhYY+WCkad1fCDr5Pmmd3xh9Ixn2LfvspxPn8yChCyWZqUc=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(376002)(346002)(366004)(396003)(136003)(39860400002)(53546011)(38100700002)(122000001)(41300700001)(6512007)(6506007)(26005)(71200400001)(38070700005)(83380400001)(6486002)(478600001)(186003)(2616005)(76116006)(66946007)(66476007)(66556008)(91956017)(66446008)(64756008)(8676002)(4326008)(86362001)(2906002)(36756003)(8936002)(5660300002)(316002)(33656002)(6916009)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?dFusnI24zmq+W+WY4vxBtOlD3KqMBIo55hg0s4UnqayceIrTHA9ASm/tsFtR?=
- =?us-ascii?Q?WiCAOUi+ctYj5fNrUiLEYlk7fdVPp5cVYSMxHR2f6aHWgmrI7mg/3ZWS0dm4?=
- =?us-ascii?Q?MdKXmJvJqyEbcaEoS2PFYGB9BB/Pq6xKXeLict3hWeGk16Wl7+E1MafDcuZo?=
- =?us-ascii?Q?mX5ZqrKGLfAZspEKj486SveY/2spRO5hi9bZ2hOt7BmqaiSMcdJ822zAJ0/C?=
- =?us-ascii?Q?zzELP5fQMgi0QPH+oyfjnmM6AQhl3dRtTIdmB+rDfRK/KdvGQDqbVZFDLIqD?=
- =?us-ascii?Q?4E6BLLHRjPBjpz3lg7OeBELBEVhkt+7korwxtrU3E7kreqmRwjZNpZAsqaJw?=
- =?us-ascii?Q?zKxTRKz0RFXzgVjqJBhYnYmAyD31YkZDSXzzA21uoNPdGqiJbhJItZKbMzBm?=
- =?us-ascii?Q?zouUFg0w2Jz+rX4PR9fu706T0/HiFqnlMJkeX6Digglrpafqft8XYofLS96s?=
- =?us-ascii?Q?/Ht8ROELhBhSkLwzUdYWw2N8t7l1+GImA7mzDeWB5wP7ALxQjtrhEgLd2K69?=
- =?us-ascii?Q?arTFiptc7OIbVIqsbjcjUReBhbpWmBICQWfxYf3gekvPMN0WELef3KOVrBBZ?=
- =?us-ascii?Q?pTYuDgj/b2duAE4psHgMNeP4OEu8AFSIE2ed/sPCQCO8/8dtHp7Y+6Sgq9wk?=
- =?us-ascii?Q?H+kcU6ip1gwr72Aeb9bic5C7GILcNaUiGPKPVVn4zaD+45ipr3a/pk2e5L3V?=
- =?us-ascii?Q?ZadamSXDeW8Ep7OIvcVFxcjf738whzLVIfb+muaQJcDNbSSuT1fqyEMbUNTH?=
- =?us-ascii?Q?JEydqFUVMeA7yANuxtWOQj4B5ZLsRi/SFa5ks8cYhzEsI9Y1TqQkGzxWLD5/?=
- =?us-ascii?Q?NVIgbfNE/Jxu5tA704WZpoZy/bqnsi50JNCO4u8puLgqsyUon88TnZ64c3Mc?=
- =?us-ascii?Q?uKf9iQ+XvJgR0iQzkMcdiZzztSGdX24z82SoYMhSrAG3Q3aB32EEncCXk+TN?=
- =?us-ascii?Q?ckzF7PyKZcWEHn5gGhABHybX86rtIztYjezV7eoc3VA+PPAF7u+QrLnk1jUA?=
- =?us-ascii?Q?8RD+KndJ9p/tXHn6gRDJgVBQAUuRMg2No7XUAFxbkHvyJ9l9/l2x+jUrAI6w?=
- =?us-ascii?Q?imatC5uX+zies3KRQCvzhIKa53KxZIhjiEebG5HqkgxK/dCluJpDawpdNAcg?=
- =?us-ascii?Q?ml3R6IT9mVYjXvLlo5ENxULrhVTo8D6PcoMM/Kt51xaiaaZZpHs+7roYECxj?=
- =?us-ascii?Q?Vhw7aujMOb9r3tCSyNQ+PvhCf+AqDte7+RvogdCNhJ0e0+iZcxzCbHyvECbK?=
- =?us-ascii?Q?QDJQsnEBAJx2mal+S/ojgf/B6aMeWPLL6VGZkvDOqfVaMKp6U7JCBDlvBomh?=
- =?us-ascii?Q?v5pNKfEz5WAlglbA67SrqPh7yZgeINMwneZPUVTXVAFRbfpX8T20H5JLTzS/?=
- =?us-ascii?Q?84ZngbQuFl2Ipa4jH26WT0GHBEg5nw8p7BKH+s9LFXmlg3oVfNuRxWDjt7TQ?=
- =?us-ascii?Q?InNobtZFL4ZJG+kbNVvuxvWo33qkLv+zoSpjlXlktnTt3TdtszIlD+h2t+uy?=
- =?us-ascii?Q?zLHoefRB6TJdp6quMCcmqWCe+5xTkkmYrb7Z2IfK/f4mr4pXsP+edIwmBR9T?=
- =?us-ascii?Q?wDGUwLFBx4jCykE6u0fapnr4EKlO12LkJ6dseXNazGEs5g6RB8YskRFASCQb?=
- =?us-ascii?Q?Uw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <313DE5AB5F832D438DC7ECD8136CD99E@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <1661896113-8013-1-git-send-email-dai.ngo@oracle.com>
+ <1661896113-8013-3-git-send-email-dai.ngo@oracle.com>
+ <FA83E721-C874-4A47-87BA-54B13E0B12A3@oracle.com>
+ <2df6f1fe-c8eb-d5a1-0a11-2fd965555a33@oracle.com>
+ <7041D47D-ECB3-497E-9174-96E9E36FFBDE@oracle.com>
+From:   dai.ngo@oracle.com
+In-Reply-To: <7041D47D-ECB3-497E-9174-96E9E36FFBDE@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DS7PR07CA0014.namprd07.prod.outlook.com
+ (2603:10b6:5:3af::17) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 51992ed6-c07a-4dda-e09c-08da8d025c6f
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4678:EE_
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ZpgaJzN5+71NJMYAHUoDtJUYsHIztdy+c/CMb5wrtgxurnGrZ2ZfKKkCQibhGpqWLhQoOd/a2M39k2rAXGUQH+ATG0duWHLDlOdUJf06oyicJ6bw52hItVEyaEXsgp4h+z/vkp6YFDxyAswIL50rNtNVl9qzyiqsx420QrVnUI+13T43Iy4czdv+YoaPm916Gowb6pzaOfUqRgVRIFBcyX52PuDDMdjaKrWtF6dgo4tbD7yl8oU5LGOW0BTMmBMst9SpavhctzXcloDdnJPt2gShD6QcpQslqeZ1pj16oFkfewJahxwAvtMnw3ttKM3XJj545CCeJhQ7TekFq0FPaCV58G1hGncLZdeFHK6IffB+mD21qlvvu+5rwq6Z8phMKTBzAs1aRqLxxj3znFdHEh1Mc+rJvmJLSjt27QcHSbi0CfkvXjk8I/jLbIjE7OFvrbh2t/fB3GUjSxfw0QpgdOL98g6RmWUGr4C1Jn1IPd2DSYa+oQd2t0N5EnjIaALKKQ2yPtIlP2oUkodujBqmUFSPfLucxFVOsqX/pQKUF6ZCeauGBW6PL03bswMBDTzCGI5F3z1mAzjQzKZnSoG0zsKBYqUlUDLCqovOHHUJFXQTPn35LJGP3/H5lLTWIuUooR5zxD296bOiBM5a4bA7qwwGoAdfSaVUuxZBmXqEZie7/SESErLKteCLsnfVkgmoR53BcPhHJrffUP8drKMjI3M/DQGqwdXEOpsxrZ6+Xwhi+r7Muh+5+49a72c4xOuK
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(39860400002)(136003)(396003)(376002)(346002)(316002)(6506007)(38100700002)(53546011)(26005)(6512007)(9686003)(83380400001)(36756003)(31686004)(37006003)(54906003)(8676002)(4326008)(478600001)(6486002)(41300700001)(8936002)(6862004)(5660300002)(6666004)(186003)(2906002)(31696002)(86362001)(66476007)(66556008)(66946007)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eUdhMUd1bDdLOGh0N05PSitwbFlwQ3dUc1BCZ2c1YlRrRVVKdWo0VURCSVJ4?=
+ =?utf-8?B?NE5wT0I4QlBGaFA0UEkzdUpRbjloQ1RyTUl6SklxWGlPZEd3eWxaaXFxOHJN?=
+ =?utf-8?B?RTloRWhVRW4xT3hVc28xZEZ3VVlEcHQ4dnlKamNURFluK1Y2UERTejJBeUNG?=
+ =?utf-8?B?OTh0OEpnNWJIMThsUUpvUEdPL1RORitEUXF6VjArSmlyQllIbjVEQzRHSGN5?=
+ =?utf-8?B?NmdHa05kMEVsWjNLY1JMdW8wYXJISUJyVUR6SUZpckUwVlR2Qk0xcC9jSHJH?=
+ =?utf-8?B?SGhnMzMxNVZuOG1RZEhsV2E1LzVBSU81RCtaWWovYVlTLzRUeVhqUzQ1WTZH?=
+ =?utf-8?B?TGkvcURPNEtMZ01vU1ZnMXpBUzRuOGhIdnVGbnJXczVJWVRaa3pzQ2oxdUdl?=
+ =?utf-8?B?dVpLZDIrNHZLUmh6QVZaMElPbHAwOHRLbDZsSzJPb21BLzV4SkRrNDU1ZEJy?=
+ =?utf-8?B?K0lVT1BBTHVmZStnMnhaYzlNOWVEYXdvSjd6dHh4SFZ1U0l1cUwxNjhaNVJo?=
+ =?utf-8?B?aTlBSWZac0ZrWVI3Z1RrMEFUQ3A0QVBaNm5jZXZMOGtEcC9oL1VvbTBKckIw?=
+ =?utf-8?B?OEtsb0RsS3FqZEpnVVJORm5OYjNJRmM2L1dJNHhzZnFOV1E5aGtxeDFCbnla?=
+ =?utf-8?B?TjNaNXBjV1ZPYWdPQkNGeCtJYjRNMUFZNVp1L2hNNmdhSFZ5TUFqNEZDU2xh?=
+ =?utf-8?B?eDE4eWZQRTAvOWZIRmhHWjh3NHVJVlFSOXNiMG84cHQ0OVdObStuVFI4U2tK?=
+ =?utf-8?B?NDA2bm5SV2lCd1IwbEc0dmpiZWw0WkVzdmpLUVNFbTNuMXZ1K0JDV21rL2lS?=
+ =?utf-8?B?UlVPeWl5UnY0Z1E1c3RrRVE3ZmdzN3JkR1ZoeFdTbGRoZm45R2czV3RlWUdj?=
+ =?utf-8?B?T2lCNStCV3B3bWhreEZFODIyTnJqWFRvbFNDV1IvNU9PaDBEditCZ2V2WkIv?=
+ =?utf-8?B?ZU9YRThnaWNmcVF2OHV4U1gvM1VKZ2xvc29LTS9QUCt3ckxXNUpBMEhBU0Vx?=
+ =?utf-8?B?TFAxbUxtSHNCVlZuYitoSDRYUFRUVzhYa3FLU3duV2ZUcmhsOURQYUFXd1E1?=
+ =?utf-8?B?RFBhck5icllNbVhMV29jdHE3dHhvSUIwZVJ6dElvYnVUWjhoczI4OHBhbW1F?=
+ =?utf-8?B?c3p0MmpidWl5WVlGVkxBOFdaZjNVWmMzREs1akpvRmdPSkxEVFhuNklteXBr?=
+ =?utf-8?B?QlpsYjMrRm5wTWQrMkRVSlhXRXdLVGZkcXp1RXBkb09CVTd4dEhlNmhzQVBt?=
+ =?utf-8?B?NStzbytnTElEbm5ZUFVocVZsNjZIQ3MvektRd2RycmNaMndoOHowZml0STdT?=
+ =?utf-8?B?aitiekJlRE5QSHlOYmdOTlhNTXpyTmJTRzBCbE5tcmNwTFlJRHBQMU9hSnkx?=
+ =?utf-8?B?TmV6T0syZGlsTlNMWTR0TlR6NE40c1k2ZFU0L3pKWGR0a0dEalRic2ZvcVdo?=
+ =?utf-8?B?N3BhaXZCOTJOdGNoVmFJeUIrUm54bFErdy9vZEZwbndZajNPMnV4eUJpSTBX?=
+ =?utf-8?B?UU1TaVhlMCs0cm1ZaU91K1BMQlNqeGRpMDRrVWdWTVBGOG5NakhRVVR2eSs0?=
+ =?utf-8?B?dUZQVU5rZUk3QmplQXNlSXNvQnJ5R2FiQTRxNCsrcDE5WEpjSFRJZFhRSE5n?=
+ =?utf-8?B?ditIUHd0a0dSOGhvajFTOHFKNWVYNE1UcTI1VzVIU0RDeEgrd1hzUGFtcFdC?=
+ =?utf-8?B?cFM4NTdpTUcyRC9aV3RTVmI3TmtXU3hCZ0t5TWFhVUltMWY0R0lyeXNoVXdV?=
+ =?utf-8?B?MzBjZURCOFZpSU9lRm83ZXRNZmw4ZFNROUFzYTFqZGtMbjlwZXpma0M3Qmxj?=
+ =?utf-8?B?THVCeUdDK2xjd2dRSmdHQklSTWdNOGFhOHg1R0JxU0YzOW5ieTRjaGxNVlB6?=
+ =?utf-8?B?R2tzZlNFSnpUQkRETmd2MVM5OStia2FRbGIvcVBycktNT0JTTGhPSDFzYnVP?=
+ =?utf-8?B?T0tPdkwzeUhkQ2pjM3c4R2tsZlFTazRQT0VKV0ZmR05tWExpdlBzMElPZERM?=
+ =?utf-8?B?NXVRdlRFcnBBUG93TWs2V2hWVFlpQ1ZaeUo5NEVWd05lY2J1VzNkSmttQWpl?=
+ =?utf-8?B?TkVKUlEvaGh3aEg1SU51aFNBN3Urb2w3d3VUaVcrRmNrSE8yVm5jRXR6eHU2?=
+ =?utf-8?Q?PO9CLcRx/ES6vdILTobhY/PLS?=
 X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51992ed6-c07a-4dda-e09c-08da8d025c6f
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 652d64c1-0d24-4514-998b-08da8cfbeb7d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2022 15:58:04.1278
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2022 16:44:10.7726
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fLu0ZOYG4kUQ1+LgflwfI4bqLKwcFoWtlCF2bh6p/3GsZBMiQuBxx3EQ7ZlUT6xQzHAXX32P/eI8DRJRyWAlpA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR10MB6382
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: t6g7wpGQZG8G1WzSgvI379DYi/yihFX6+ugEB9QBFGTh/Su9woYTxgMtAfUbDWhdJS5FWwUW0TTZb+yGmgJbXw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4678
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-09-02_03,2022-08-31_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxlogscore=999
- suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 spamscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2207270000 definitions=main-2209020077
-X-Proofpoint-GUID: B7L6ml026BdkQfIEqgztLbezmULXAKG7
-X-Proofpoint-ORIG-GUID: B7L6ml026BdkQfIEqgztLbezmULXAKG7
+ definitions=2022-09-02_04,2022-08-31_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
+ phishscore=0 suspectscore=0 malwarescore=0 adultscore=0 spamscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2207270000 definitions=main-2209020079
+X-Proofpoint-ORIG-GUID: 7TfGzpdnoe73d5lzSS8-yObX7VB8iS2o
+X-Proofpoint-GUID: 7TfGzpdnoe73d5lzSS8-yObX7VB8iS2o
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -149,256 +160,89 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
+On 9/1/22 9:32 PM, Chuck Lever III wrote:
+>
+>> On Sep 1, 2022, at 9:56 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>>
+>> Hi Chuck,
+>>
+>> On 8/31/22 7:30 AM, Chuck Lever III wrote:
+>>>> 	struct list_head *pos, *next;
+>>>> 	struct nfs4_client *clp;
+>>>>
+>>>> -	maxreap = (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients) ?
+>>>> -			NFSD_CLIENT_MAX_TRIM_PER_RUN : 0;
+>>>> +	cb_cnt = atomic_read(&nn->nfsd_client_shrinker_cb_count);
+>>>> +	if (atomic_read(&nn->nfs4_client_count) >= nn->nfs4_max_clients ||
+>>>> +							cb_cnt) {
+>>>> +		maxreap = NFSD_CLIENT_MAX_TRIM_PER_RUN;
+>>>> +		atomic_set(&nn->nfsd_client_shrinker_cb_count, 0);
+>>>> +	}
+>>> I'm not terribly happy with this, but I don't have a better suggestion
+>>> at the moment. Let me think about it.
+>> Do you have any suggestion to improve this, I want to incorporate it
+>> before sending out v5?
+> Let's consider some broad outlines...
+>
+> With regards to parametrizing the reaplist behavior, you want
+> a normal laundromat run to reap zero or more courtesy clients.
+> You want a shrinker laundromat run to reap more than zero. I
+> think you want a minreap variable as well as a maxreap variable
+> in there to control how the reaplist is built. Making @minreap
+> a function parameter rather than a global atomic would be a
+> plus for me, but maybe that's not practical.
 
-> On Sep 1, 2022, at 2:33 PM, Anna Schumaker <anna@kernel.org> wrote:
->=20
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->=20
-> Change the implementation to return a single DATA segment covering the
-> requested read range.
->=20
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
-> fs/nfsd/nfs4xdr.c | 122 ++++++++--------------------------------------
-> 1 file changed, 20 insertions(+), 102 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 1e9690a061ec..adbff7737c14 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -4731,79 +4731,30 @@ nfsd4_encode_offload_status(struct nfsd4_compound=
-res *resp, __be32 nfserr,
->=20
-> static __be32
-> nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
-> -			    struct nfsd4_read *read,
-> -			    unsigned long *maxcount, u32 *eof,
-> -			    loff_t *pos)
-> +			    struct nfsd4_read *read)
+I'm not quite understand how the minreap is used, I think it
+will make the code more complex.
 
-Now eventually (but not right at the moment) I don't think we
-can use the rd_length and rd_offset fields in @read directly
-in this function ... won't those arguments be different for
-each data segment? Not a problem yet, just thinking out loud.
+>
+> But I would prefer a more straightforward approach overall. The
+> proposed approach seems tricky and brittle, and needs a lot of
+> explaining to understand. Other subsystems seem to get away with
+> something simpler.
+>
+> Can nfsd_courtesy_client_count() simply reduce
+> nn->nfs4_max_clients, kick the laundromat, and then return 0?
+> Then get rid of nfsd_courtesy_client_scan().
 
-I think using @read directly here makes it easy to re-use
-nfsd4_encode_readv(), so I'm OK with this strategy for the
-moment.
+I need to think more about this approach. However at first glance,
+nn->nfs4_max_clients is used to control how many clients, including
+active and courtesy clients, are allowed in the system. If we lower
+this count, it also prevent new clients from connecting to the
+system. So now the shrinker mechanism does more than just getting
+rid of unused resources, maybe that's ok?
 
-
-> {
-> +	unsigned long maxcount;
-
-Nit: reverse christmas tree, please. The declaration of
-maxcount goes on the line after "struct file *file ...".
-
-
-> 	struct xdr_stream *xdr =3D resp->xdr;
-> 	struct file *file =3D read->rd_nf->nf_file;
-> -	int starting_len =3D xdr->buf->len;
-> -	loff_t hole_pos;
-> 	__be32 nfserr;
-> -	__be32 *p, tmp;
-> -	__be64 tmp64;
-> -
-> -	hole_pos =3D pos ? *pos : vfs_llseek(file, read->rd_offset, SEEK_HOLE);
-> -	if (hole_pos > read->rd_offset)
-> -		*maxcount =3D min_t(unsigned long, *maxcount, hole_pos - read->rd_offs=
-et);
-> -	*maxcount =3D min_t(unsigned long, *maxcount, (xdr->buf->buflen - xdr->=
-buf->len));
-> +	__be32 *p;
->=20
-> 	/* Content type, offset, byte count */
-> 	p =3D xdr_reserve_space(xdr, 4 + 8 + 4);
-> 	if (!p)
-> 		return nfserr_resource;
->=20
-> -	read->rd_vlen =3D xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxc=
-ount);
-> -	if (read->rd_vlen < 0)
-> -		return nfserr_resource;
-> +	maxcount =3D min_t(unsigned long, read->rd_length,
-> +			 (xdr->buf->buflen - xdr->buf->len));
->=20
-> -	nfserr =3D nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
-> -			    resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
-> +	nfserr =3D nfsd4_encode_readv(resp, read, file, maxcount);
-> 	if (nfserr)
-> 		return nfserr;
-
-The only problem I see with this so far is that nfsd4_encode_readv()
-can return nfserr_resource, which isn't allowed after NFSv4.0, and
-is not listed in RFC 7862's table of allowed errors for READ_PLUS.
-
-I see that READ_PLUS code remaining after this patch might make the
-same mistake. I think this patch needs to correct that at least for
-the code that isn't shared with READ. Consult RFC 7862 to figure out
-the correct status codes to return. (I'll file a bug to audit the
-other encoders and come up with a plan to ensure NFSD returns an
-appropriate error code for the minorversion in use).
-
-
-To help answer the "merge readiness" question and to know if we need
-splice read support or not, can you run some performance comparison
-tests with NFSv4.2 READ (with and without a splice-enabled filesystem)
-and this READ_PLUS implementation? Nothing elaborate, let's just check
-our assumptions.
-
-I've also applied the 0/1 splice change here to do some testing to
-see if I can work out what's giving xfstests heartburn.
-
-
-> -	xdr_truncate_encode(xdr, starting_len + 16 + xdr_align_size(*maxcount))=
-;
->=20
-> -	tmp =3D htonl(NFS4_CONTENT_DATA);
-> -	write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
-> -	tmp64 =3D cpu_to_be64(read->rd_offset);
-> -	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
-> -	tmp =3D htonl(*maxcount);
-> -	write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
-> -
-> -	tmp =3D xdr_zero;
-> -	write_bytes_to_xdr_buf(xdr->buf, starting_len + 16 + *maxcount, &tmp,
-> -			       xdr_pad_size(*maxcount));
-> -	return nfs_ok;
-> -}
-> -
-> -static __be32
-> -nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
-> -			    struct nfsd4_read *read,
-> -			    unsigned long *maxcount, u32 *eof)
-> -{
-> -	struct file *file =3D read->rd_nf->nf_file;
-> -	loff_t data_pos =3D vfs_llseek(file, read->rd_offset, SEEK_DATA);
-> -	loff_t f_size =3D i_size_read(file_inode(file));
-> -	unsigned long count;
-> -	__be32 *p;
-> -
-> -	if (data_pos =3D=3D -ENXIO)
-> -		data_pos =3D f_size;
-> -	else if (data_pos <=3D read->rd_offset || (data_pos < f_size && data_po=
-s % PAGE_SIZE))
-> -		return nfsd4_encode_read_plus_data(resp, read, maxcount, eof, &f_size)=
-;
-> -	count =3D data_pos - read->rd_offset;
-> -
-> -	/* Content type, offset, byte count */
-> -	p =3D xdr_reserve_space(resp->xdr, 4 + 8 + 8);
-> -	if (!p)
-> -		return nfserr_resource;
-> -
-> -	*p++ =3D htonl(NFS4_CONTENT_HOLE);
-> +	*p++ =3D cpu_to_be32(NFS4_CONTENT_DATA);
-> 	p =3D xdr_encode_hyper(p, read->rd_offset);
-> -	p =3D xdr_encode_hyper(p, count);
-> +	*p =3D cpu_to_be32(read->rd_length);
->=20
-> -	*eof =3D (read->rd_offset + count) >=3D f_size;
-> -	*maxcount =3D min_t(unsigned long, count, *maxcount);
-> 	return nfs_ok;
-> }
->=20
-> @@ -4811,20 +4762,14 @@ static __be32
-> nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
-> 		       struct nfsd4_read *read)
-> {
-> -	unsigned long maxcount, count;
-> 	struct xdr_stream *xdr =3D resp->xdr;
-> -	struct file *file;
-> +	struct file *file =3D read->rd_nf->nf_file;
-
-Nit: Reverse christmas tree style means this one goes at the top.
-
-
-> 	int starting_len =3D xdr->buf->len;
-> -	int last_segment =3D xdr->buf->len;
-> 	int segments =3D 0;
-
-I would also say that @segments should be u32, but that's not
-relevant to this changeset. Optional if you want to add that
-change.
-
-
-> -	__be32 *p, tmp;
-> -	bool is_data;
-> -	loff_t pos;
-> -	u32 eof;
-> +	__be32 *p;
->=20
-> 	if (nfserr)
-> 		return nfserr;
-> -	file =3D read->rd_nf->nf_file;
->=20
-> 	/* eof flag, segment count */
-> 	p =3D xdr_reserve_space(xdr, 4 + 4);
-> @@ -4832,48 +4777,21 @@ nfsd4_encode_read_plus(struct nfsd4_compoundres *=
-resp, __be32 nfserr,
-> 		return nfserr_resource;
-> 	xdr_commit_encode(xdr);
->=20
-> -	maxcount =3D min_t(unsigned long, read->rd_length,
-> -			 (xdr->buf->buflen - xdr->buf->len));
-> -	count    =3D maxcount;
-> -
-> -	eof =3D read->rd_offset >=3D i_size_read(file_inode(file));
-> -	if (eof)
-> +	read->rd_eof =3D read->rd_offset >=3D i_size_read(file_inode(file));
-> +	if (read->rd_eof)
-> 		goto out;
->=20
-> -	pos =3D vfs_llseek(file, read->rd_offset, SEEK_HOLE);
-> -	is_data =3D pos > read->rd_offset;
-> -
-> -	while (count > 0 && !eof) {
-> -		maxcount =3D count;
-> -		if (is_data)
-> -			nfserr =3D nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof,
-> -						segments =3D=3D 0 ? &pos : NULL);
-> -		else
-> -			nfserr =3D nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
-> -		if (nfserr)
-> -			goto out;
-> -		count -=3D maxcount;
-> -		read->rd_offset +=3D maxcount;
-> -		is_data =3D !is_data;
-> -		last_segment =3D xdr->buf->len;
-> -		segments++;
-> -	}
-> -
-> -out:
-> -	if (nfserr && segments =3D=3D 0)
-> +	nfserr =3D nfsd4_encode_read_plus_data(resp, read);
-> +	if (nfserr) {
-> 		xdr_truncate_encode(xdr, starting_len);
-> -	else {
-> -		if (nfserr) {
-> -			xdr_truncate_encode(xdr, last_segment);
-> -			nfserr =3D nfs_ok;
-> -			eof =3D 0;
-> -		}
-> -		tmp =3D htonl(eof);
-> -		write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
-> -		tmp =3D htonl(segments);
-> -		write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
-> +		return nfserr;
+>
+> Or, nfsd_courtesy_client_count() could return
+> nfsd_couresy_client_count. nfsd_courtesy_client_scan() could
+> then look something like this:
+>
+> 	if ((sc->gfp_mask & GFP_KERNEL) != GFP_KERNEL)
+> 		return SHRINK_STOP;
+>
+> 	nfsd_get_client_reaplist(nn, reaplist, lt);
+> 	list_for_each_safe(pos, next, &reaplist) {
+> 		clp = list_entry(pos, struct nfs4_client, cl_lru);
+> 		trace_nfsd_clid_purged(&clp->cl_clientid);
+> 		list_del_init(&clp->cl_lru);
+> 		expire_client(clp);
+> 		count++;
 > 	}
->=20
-> +	segments++;
-> +
-> +out:
-> +	p =3D xdr_encode_bool(p, read->rd_eof);
-> +	*p =3D cpu_to_be32(segments);
-> 	return nfserr;
-> }
->=20
-> --=20
-> 2.37.2
->=20
+> 	return count;
 
---
-Chuck Lever
+This does not work, we cannot expire clients on the context of
+scan callback due to deadlock problem.
 
+I will experiment with ways to get rid of the scan function to
+make the logic simpler.
 
+Thanks,
+-Dai
 
+>
+> Obviously you would need to refactor common code into helper
+> functions.
+>
+> --
+> Chuck Lever
+>
