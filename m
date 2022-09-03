@@ -2,114 +2,69 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E18C85ABAC1
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 00:18:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD0E55ABB85
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 02:06:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbiIBWS0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Sep 2022 18:18:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59114 "EHLO
+        id S229803AbiICAGP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Sep 2022 20:06:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231319AbiIBWSY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 18:18:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D83CFC2E92
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 15:18:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A4F6661E11
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 22:18:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07747C433C1
-        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 22:18:16 +0000 (UTC)
-Subject: [PATCH v3] NFSD: Increase NFSD_MAX_OPS_PER_COMPOUND
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Fri, 02 Sep 2022 18:18:16 -0400
-Message-ID: <166215705963.2962.2787714967300626937.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
+        with ESMTP id S229595AbiICAGP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 20:06:15 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A134DF660;
+        Fri,  2 Sep 2022 17:06:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KdeTuqcqB+4Nrt8OAhVoYy5O7SMidBuWR9jEOoug8WU=; b=cgNDBcJTeZ5wmsY7k04DFpxV0U
+        ZeH6ksnjmTDz0Y9BZ6jj5+75ez+lHZbiJ3axVd5oIqBkI5ud3s4a3f7VdK2/iEm50vENAcEzNWSy0
+        hUSvj2huKpM4j9k/3pGyAlNgYiCTzMMN+gh1H9GfW2qVSZxL8i3HWUnOCP818BbV5IcBata7qCMo0
+        TV18JArbO7QgUWEwe7+U9x0VJ8q6Gp2NUdTMs4kITnbiyH4MEKaDKu0ovhl7JivBg1lTTSVNjkFj3
+        NxD8NUPou2Z4g89i3Ie/2BjOb9sf3l2inYzCU3BTpuoBT+tciy91pd8FxB5+kenWiBW2Z3XmdH81f
+        esTdl4XA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
+        id 1oUGfg-00BUUx-SB;
+        Sat, 03 Sep 2022 00:06:01 +0000
+Date:   Sat, 3 Sep 2022 01:06:00 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     NeilBrown <neilb@suse.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Daire Byrne <daire@dneg.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/10] VFS: support parallel updates in the one directory.
+Message-ID: <YxKaaN9cHD5yzlTr@ZenIV>
+References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
+ <166147984370.25420.13019217727422217511.stgit@noble.brown>
+ <YwmS63X3Sm4bhlcT@ZenIV>
+ <166173834258.27490.151597372187103012@noble.neil.brown.name>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166173834258.27490.151597372187103012@noble.neil.brown.name>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-When attempting an NFSv4 mount, a Solaris NFSv4 client builds a
-single large COMPOUND that chains a series of LOOKUPs to get to the
-pseudo filesystem root directory that is to be mounted. The Linux
-NFS server's current maximum of 16 operations per NFSv4 COMPOUND is
-not large enough to ensure that this works for paths that are more
-than a few components deep.
+On Mon, Aug 29, 2022 at 11:59:02AM +1000, NeilBrown wrote:
 
-Since NFSD_MAX_OPS_PER_COMPOUND is mostly a sanity check, and most
-NFSv4 COMPOUNDS are between 3 and 6 operations (thus they do not
-trigger any re-allocation of the operation array on the server),
-increasing this maximum should result in little to no impact.
+> > When would we get out of __lookup_hash() with in-lookup dentry?
+> > Confused...
+> 
+> Whenever wq is passed in and ->lookup() decides, based on the flags, to do
+> nothing.
+> NFS does this for LOOKUP_CREATE|LOOKUP_EXCL and for LOOKUP_RENAME_TARGET
 
-The ops array can get large now, so allocate it via vmalloc() to
-help ensure memory fragmentation won't cause an allocation failure.
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216383
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4xdr.c |    7 ++++---
- fs/nfsd/state.h   |    2 +-
- 2 files changed, 5 insertions(+), 4 deletions(-)
-
-Goddamnit. git let me mail out v2 while the work space was still
-dirty.
-
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 1e9690a061ec..4b69e86240eb 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -42,6 +42,8 @@
- #include <linux/sunrpc/svcauth_gss.h>
- #include <linux/sunrpc/addr.h>
- #include <linux/xattr.h>
-+#include <linux/vmalloc.h>
-+
- #include <uapi/linux/xattr.h>
- 
- #include "idmap.h"
-@@ -2369,10 +2371,9 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
- 		return true;
- 
- 	if (argp->opcnt > ARRAY_SIZE(argp->iops)) {
--		argp->ops = kzalloc(argp->opcnt * sizeof(*argp->ops), GFP_KERNEL);
-+		argp->ops = vcalloc(argp->opcnt, sizeof(*argp->ops));
- 		if (!argp->ops) {
- 			argp->ops = argp->iops;
--			dprintk("nfsd: couldn't allocate room for COMPOUND\n");
- 			return false;
- 		}
- 	}
-@@ -5394,7 +5395,7 @@ void nfsd4_release_compoundargs(struct svc_rqst *rqstp)
- 	struct nfsd4_compoundargs *args = rqstp->rq_argp;
- 
- 	if (args->ops != args->iops) {
--		kfree(args->ops);
-+		vfree(args->ops);
- 		args->ops = args->iops;
- 	}
- 	while (args->to_free) {
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index ae596dbf8667..5d28beb290fe 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -175,7 +175,7 @@ static inline struct nfs4_delegation *delegstateid(struct nfs4_stid *s)
- /* Maximum number of slots per session. 160 is useful for long haul TCP */
- #define NFSD_MAX_SLOTS_PER_SESSION     160
- /* Maximum number of operations per session compound */
--#define NFSD_MAX_OPS_PER_COMPOUND	16
-+#define NFSD_MAX_OPS_PER_COMPOUND	50
- /* Maximum  session per slot cache size */
- #define NFSD_SLOT_CACHE_SIZE		2048
- /* Maximum number of NFSD_SLOT_CACHE_SIZE slots per session */
-
-
+Frankly, I would rather do what all other callers of ->lookup() do and
+just follow it with d_lookup_done(dentry), no matter what it returns.
+It's cheap enough...
