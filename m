@@ -2,151 +2,141 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA7435ABFD9
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 18:42:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BCB65ABFDF
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 18:52:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbiICQmH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 3 Sep 2022 12:42:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37714 "EHLO
+        id S230160AbiICQwj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 3 Sep 2022 12:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbiICQmG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 3 Sep 2022 12:42:06 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABA158DCA
-        for <linux-nfs@vger.kernel.org>; Sat,  3 Sep 2022 09:42:04 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 283CBxYG007403;
-        Sat, 3 Sep 2022 16:41:46 GMT
+        with ESMTP id S229526AbiICQwi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 3 Sep 2022 12:52:38 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2F7A25C47
+        for <linux-nfs@vger.kernel.org>; Sat,  3 Sep 2022 09:52:37 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2839U7BQ031508;
+        Sat, 3 Sep 2022 16:52:36 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=gvSEBATVvvnVP2AIfrM0I015H/YIhQ4hkeY8xIdqOb8=;
- b=d6UX89SKIn8zMWgiga8DHkZXRGqtOy81djC7yHFnPm4IRNRKLrOYEbXijVIwuqzxJDH3
- b7W/cS5HPSXJMpMJ003JD1zWmG1VZnEsqDwZtjjHpmbe71ueEwF48f8lqnp00hUWqV/M
- bue0XI35EPPjvsNK2OTTOp/D4wTYwPs9KYvor3XoPmbUHaIXwF19o2lm2XYx98Y3qUiL
- 4CgMrbzh2+8ji9vK0/rn1gu4MwVcyCghYNggvF/9VJf1wT4M/mhsLrbR/y58sED6+WQB
- 9VWIIuGYgb4RSUw471A1AiRWWtrJ96BLfQWKMTD6oTSdXOlCDkQnUhurzm1xOFYXznyO 4A== 
+ bh=fsINO0suksjvPoEEM+5SQShOuWK4R8drcGnuE9pEkx4=;
+ b=KtYaUrWrB8EWxXBzpNCBqO1i1ZBN0UOKliQt4T4jQkqrMYU4rHZB4d1v/oLluR7kHEST
+ 9DG/igVNo5XdeW6OCiKzplWXiAhZEF9nI3YWIf2atdmPLdwrI3/sd4wOcLNFeT2FixQp
+ Tl+63Twze56Zx9UZGV7HF2B8xAipmdPUPvj6howscRIx6dT90sWLw6Zs0Trl6/cttkra
+ HBW59bSA52xxUVqbOi6ln9WVAsUAE5KF7o+xvVnp17d8Ha17hSCVgcLF5arwblLNlO0M
+ vVXx/yKPmQ36QxGgtc5wwd5MxDgRuZ4U/yYStvVG+Qvts0hh6C+PBNQfIEUatPg6PWp4 KA== 
 Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jbyftgrkv-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jbwbc0v2n-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 03 Sep 2022 16:41:46 +0000
+        Sat, 03 Sep 2022 16:52:35 +0000
 Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2839Dl4h017505;
-        Sat, 3 Sep 2022 16:41:44 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2177.outbound.protection.outlook.com [104.47.55.177])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jbwc6thyk-1
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28394qPv017464;
+        Sat, 3 Sep 2022 16:52:35 GMT
+Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2104.outbound.protection.outlook.com [104.47.70.104])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jbwc6tngp-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 03 Sep 2022 16:41:44 +0000
+        Sat, 03 Sep 2022 16:52:35 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NpMfoEeZWxVypnRhzDdskUn9mYsfDgKNLVGdgW9YuXzw5GdmwYOnkmeJe+b2kSWZOzaJkh6Us3tPgSM1a3GJYpXblgbLVEFPOJTZ1VMRNwWOGjTpZ6IzMc3n4nih3G0CHnyhsto6Dn47obe7lyKeCojrTHpayj5YxjwY8UlcG0ZiYcOvqFCXuNSqpxN4p+Qg+1hc9vOPqOu08B4G9buekFuZLqJvhPQCcQCnPj7B5ukiiLoFy29Xr/V/aBy/uqNVSnpy/51/DGyiD1r2hbh7s9NN5pwRsTt2SwnUi9Q+OrILBNbMC168p6eswBIFaBgxBeI7y2OAht8cUtm1WEHlww==
+ b=UCNwHdljB4Zr7ZSjpFXroaWn5kL/1JjaGvnsRIIfzd55xroMYsloeKjxRBoDYoJiVWFd5sn68voammSpcpdnYIJqjrVYd7+LLZ6svmyyS4V2NoJCj0VpjoZayHsv9OHNPef+ZsOzDE8Rj4FIQNudYJD6LUSOJL8khvqWikkFWKCDSiNcWH6IWFhUdxyUovnl4eVrZk8luOSjBRkzRViiHUcwJV7W0I14TIIXFcl9NtRwMKIVPgzEvyNINMdltnzisyhBpwE+7sHnl7kI/5nZH3YAo+0At03ehEydPELRToGokXvUmsphqKwn3R8ivzGvD3N+QPDSEvH25lylPpabXg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gvSEBATVvvnVP2AIfrM0I015H/YIhQ4hkeY8xIdqOb8=;
- b=TYhe81GBj7XhEiyVaBc6mklALR2thDlhNDBkrUUhpunHfzrZjbPzJ0GKRk3j5mjZzrosDxAtZ+4uAbbYbiOJ+2mqVNTXQWLjAr7ZYpnlRbNpS5hAg/CPrpd4sD1gWTAHJ4PyS1IeJ1zqnsYfJ/QILU9rK6rDrGc2eEFYVqvrdY0wZkfnEZ+iYgsLC7CD0G7tA1IVPgq+0Tfk5MbLfeyEWpZRy5yA2ZDW1INGOn+xynQVBmhiD22CuXk3PdQL1KDpoTRwKCJSe+1hmF03lTHP5MXapcbzXGlHKVvAildynN2Orn69XpyvM/sPGx+XfktzHOoq81A7/cxH9YM2/VzPhQ==
+ bh=fsINO0suksjvPoEEM+5SQShOuWK4R8drcGnuE9pEkx4=;
+ b=QHsG0Ra9/3P3k8dZS8MTXLb6gVqmP3Ccs3sd5P3gUukHqhdqYqUkuBZyNHjq5qDe3Mmc+vlucek1wcvoTvr7A9sl28SIQXUbcG7cOOBeWobCwL/N5ZZ9dpdbA3tyhbB4NRgwaeuR07fngDNZegMg3mpCSdh/M+ai+ivhv06Py6cC/X1GJd5boUqjDRBEP+QyYUY6MSnoH1bcQcfc/zDsVLdGP4JxlTfNs5TvHWhYRxfHM96fcZJHOnO7mkv19Cu8cFPmXUMb40ofsau12LihzQ63wPPvOqyF+lxkwpFMTOWkYN4GbpSDIE0YIFFIjL51eO3dFMpk/Bknup34yT2N8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gvSEBATVvvnVP2AIfrM0I015H/YIhQ4hkeY8xIdqOb8=;
- b=uSXocB1maKCyYjmiRzuSIbCWiAnxFNeAPw1B0gpbGpCfIXlnAqr96hff0wNOTQ7C+CZsQ0+TvZvNSj+w9GxNII/19YaW5FWCRVTvDj/l+VU60uSggOrWK/se2rAGDMkYrdtDMdU7aTgmzMDC3d7+Asw/4/6qVxpESnUsU+1b/kg=
+ bh=fsINO0suksjvPoEEM+5SQShOuWK4R8drcGnuE9pEkx4=;
+ b=apX8to3eSjO0Q9Rkg1FbEzfGwVfjYhQX/51ErMw4IqZFlnGoWewUQHXuXPgW+Bru0WlGRUbbJqSMGkKX/+vyrpCJyW32aNo1Ksjaj5jT/Mfw98397/TfYke3VwacWQGj9X/H2l2BNMbRf1kctReQmmPyLLPcJVodU4gwXZVBrXo=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by CH2PR10MB4183.namprd10.prod.outlook.com (2603:10b6:610:7e::8) with
+ by BY5PR10MB4242.namprd10.prod.outlook.com (2603:10b6:a03:20d::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.11; Sat, 3 Sep
- 2022 16:41:43 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5588.10; Sat, 3 Sep
+ 2022 16:52:33 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::25d6:da15:34d:92fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::25d6:da15:34d:92fa%4]) with mapi id 15.20.5588.017; Sat, 3 Sep 2022
- 16:41:43 +0000
+ 16:52:33 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Olga Kornievskaia <aglo@umich.edu>
-CC:     Benjamin Coddington <bcodding@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Is this nfsd kernel oops known?
-Thread-Topic: Is this nfsd kernel oops known?
-Thread-Index: AQHYvJP9R6JamLcYaUyLf/owehh7vq3HuG2AgALiPACAAGl2gIAAWREAgAFHCwCAAAQygIAAOVOAgAAxWwCAANvUAA==
-Date:   Sat, 3 Sep 2022 16:41:42 +0000
-Message-ID: <B7AA8016-0CBE-4F5B-BF08-4E521269A2CB@oracle.com>
-References: <CAN-5tyGkHd+wEHC5NwQGRuQsJie+aPu0RkWNrp_wFo4e+JcQgA@mail.gmail.com>
- <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
- <CAN-5tyEOTVDhR6FgP7nPVon76qhKkexaWB8AJ_iBVTp6iYOk1g@mail.gmail.com>
- <11BEA7FE-4CBC-4E5C-9B68-A0310CF1F3BE@oracle.com>
- <CAN-5tyHOugPeTsu+gBJ1tkqawyQDkfHXrO=vQ6vZTTzWJWTqGA@mail.gmail.com>
- <6DC1F4DF-8242-480B-813A-5F87D64593A6@redhat.com>
- <2E6F8E3F-C14C-44C7-8B72-744A5F6E8F7F@oracle.com>
- <1D65FB47-EC61-45FB-972D-D68832B54C47@redhat.com>
- <CAN-5tyHCuKcUEhBZUmA9VsckaA-Ogr0jsEPriQL8xhXJpc6OUw@mail.gmail.com>
-In-Reply-To: <CAN-5tyHCuKcUEhBZUmA9VsckaA-Ogr0jsEPriQL8xhXJpc6OUw@mail.gmail.com>
+To:     Murphy Zhou <jencce.kernel@gmail.com>
+CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: mainline kernel fails fstests generic/130 over nfsv4.2
+Thread-Topic: mainline kernel fails fstests generic/130 over nfsv4.2
+Thread-Index: AQHYvTlPQz8fMrGV1kqvLqRSUqg1763N8KsA
+Date:   Sat, 3 Sep 2022 16:52:33 +0000
+Message-ID: <EC03148E-4DF6-4D9C-AA02-046AAA1D512A@oracle.com>
+References: <CADJHv_tkpQi4F930dS6qadHHR+d5JenfeDzbvAW0okKCMndKkQ@mail.gmail.com>
+In-Reply-To: <CADJHv_tkpQi4F930dS6qadHHR+d5JenfeDzbvAW0okKCMndKkQ@mail.gmail.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 79f9b96d-d934-473c-20df-08da8dcb2ed6
-x-ms-traffictypediagnostic: CH2PR10MB4183:EE_
+x-ms-office365-filtering-correlation-id: 4dcc0dbc-e89f-43d9-cffd-08da8dccb28e
+x-ms-traffictypediagnostic: BY5PR10MB4242:EE_
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fnqgf6N9fBmKHLVQfIMPp36g5SR6QhQDshyoTGUHitebq8BZ2jsK7JRKffVU8kh69yGLFPDxlVIJiQbAawermchhrWdynwfAed6nugVFp2q2RG2atzuoR6zJnOiTO39NksxWkMKhwhDi2rqXsjPXCx/kFZEYZXcJvFiKNBL7IrYD9Pco4oOdn6c3xD+3qFsZBcCElQuJHwSVCUEwMyXdUEYcAcrbBzNTvKHhQXgnf4R0Xl0AMjx1excu8qEpyVK7JjwbkbrgJAD06JrXqxmcY/jHdoN56+Hm7qinUgJsI4PomCnAC2zwEWmiERUWXDxJT9KLl0T6+hJiumtQ/uLwxOncL7HOQIfBgIRG3S0wJteFcJFA2ZxSigVSR+XJn8NMj5ZJ0vQpXpHY4WjezVgU676TDMHS0FfUz6ZB1dXk8mIdzwNWLJty4XGk3kMxdFYUxZSt/NWdZbDvqXJkJMn5RAikc8OLb2Scb/UcPyM4ZOXdsBbA2iqRmpZ83V2uQ2W/Ttk/1zYNr6rzbcIjUwoveMXmcYg1nz5jAoXLlXVvqw7qE2aPxUNp+aJDpq6bMqxKukyDxG97ZJRDlcQ52jzFiMREz8RfgMOy+KN2PTL71RFwGqqjZbcB4xJ8Vj0oo2DDJGC3+3ogVxfIXQYcxdXUqbWmHpH0cNEWpwX+mlpF2WVV/UiR4ITugYmY9NWCMO6VRw4Q8Gu5cwGRRoyacr0FuJeKsWBqgEgDMCicF/LVT1WbkYwJRi2QC2PMkk5Rd55FifVGRJ1xV55TtTcBSaSqwk6lQZEqQUsvT1MjviKe3tg=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(396003)(346002)(376002)(39860400002)(136003)(83380400001)(478600001)(186003)(2616005)(66946007)(4326008)(8676002)(64756008)(66446008)(66476007)(66556008)(76116006)(6506007)(36756003)(41300700001)(26005)(53546011)(71200400001)(33656002)(6486002)(6512007)(38070700005)(122000001)(86362001)(6916009)(54906003)(2906002)(5660300002)(8936002)(91956017)(38100700002)(316002)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: kRcC9wCnQ460LHWLOmzK1hmiKar/eXWfO2uof5jFYpeMErLPTUe8bTUJZ1Df/PSQ4kabTCV/AILYj1kdCsm6jPukFCJVESpbQ5E+2UbVrZ6gxuAKLtDEAvcUBF15FjVdfG7vRZX0a0+yqR8FT6Rh5AXunvDUJi/XE3m+L/BuJdfiiRKIa66PnwQLxiv4yqJ+kx4yXnjp3pjrnUhSxApjFPk2VbRYpVlFEvupE0UTiZQMKn2HwlOlvbkw9IS5Ip99rfoNa660CSomA6ChA6oDsUDSacN280tfsA3qTAYKNF4A8BXePTMcWC+JhLF4IiU4aHc7F6Db7Jqt7eTE7zR/ranY+rPgxlptF70UrKFVjmdfOepLYQLKN/BNGAPE6B3l/dmdm16+zRsxJAiLtPXUyDsmAXmFTtqXNQtdYflSF1FFP8tv94lkfWzoNMndIC9rXt3V8/uqg/moowYQjp4xMcDWjHAZ0CwY01TasNS+swRemd+1WsjYfS/VkCwRYo1Y+QaCyhu8tm9E/q/QJwp3boXSsiYNDAaDYzjtC/xSt5y42l3+dA6JhbfPSzya/gGlRbU2C2Rced/S1QKF6n3lO7rn9VlRtUd+XKq2R5oJBYyqy/ZUYTEPNQ05+8t9RTmwNulksOWU0htStQQn2nMhHygGQZhwPX4D9TiLGG8M4nrlEnNgaJATm124ZoBRJm6jiVH9owYTWWbALwuHMOXs8pkjM0Yh8se0UpRW95b5L8EiGbmDbj5So+wyPflB+HNNXhw7pDd2ZMmElhOoyhv/BBfJ4jo5rNPKGq2aC0XWb38ojSjLJDIrR4luOCL9RBFe53zMpstJRYorW9EOoI4sQOtg6Y+97o+2O1KqQ3QCWMg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(39860400002)(136003)(366004)(346002)(396003)(376002)(6916009)(8936002)(5660300002)(2906002)(4326008)(91956017)(64756008)(66476007)(66446008)(66556008)(8676002)(66946007)(316002)(76116006)(36756003)(478600001)(71200400001)(41300700001)(33656002)(6486002)(6506007)(26005)(53546011)(6512007)(86362001)(186003)(2616005)(122000001)(38070700005)(38100700002)(41533002)(45980500001)(505234007);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?nl2LjA9tba3y8HO9Yppkk4Tw7D5XdmS9bDVolEIWnw2TFnmLxNDxnRszHMMB?=
- =?us-ascii?Q?1pv+KvggB3GnJteaIeicHKfJUA9FkdRGoh2bMkl5G3mzUZTb+5kCI8YlRe6v?=
- =?us-ascii?Q?3bdyml4DG2Gd1GvUUvkc9OHwDDXVnI5hD0lr8fLOlXla3YPpZPZETtDzs2UL?=
- =?us-ascii?Q?FHcHwdtMd5wJbp6ahcb2B/v86bZf1NsaS+cfq97x97dZiCAm7ofNhAK89n7s?=
- =?us-ascii?Q?h9h/sBOPwU3A68sNSthBoBNCFE9oR4knCCe8EaA6ButTjk19NpIM5xAYDSoG?=
- =?us-ascii?Q?GoHbbfO++nZB76Epm82moGjtJNCTameIZ5Uue36as42pt+kciJb2eNhaZo3G?=
- =?us-ascii?Q?tjgeSBm0Bull9fM3PUO2FBiqvVgAs5MQMhhIAtxenLQqzklig98dSePhdgyv?=
- =?us-ascii?Q?rzZn1YZ/mMTS/b2kwaCx+/4sgf8A2S/esVcQqJwQsOHvGmKuWlyicqsN5Kit?=
- =?us-ascii?Q?OtM0f8nT7dA3g0kbpEjMXxOqX1D7rmS9pleOE5pQTV86hC2c78pNH5flcvQz?=
- =?us-ascii?Q?0GTJF7d586GnJNYQkeeVfJwr8wfh3nz7YnsFD8BsvShsuv+OJnqq8YboYqSA?=
- =?us-ascii?Q?dkplyH5LUZsVE4sOhrQtATirmUH40D+ErgT4RElH3G5j0wfMvQKrNzKHffhd?=
- =?us-ascii?Q?IE3csLUjOXeyz/XhTBQr/S/rLQ1L3HbFKqwuT7AJ8CroLNdzuoLHzuplKeNN?=
- =?us-ascii?Q?iK4Qi0lDYKaNvGhmFE8DQq9CZXFtILO77zEmdidCn7SKZMgMu7xkmZnlwNB3?=
- =?us-ascii?Q?Y45Fxzhpdle/YQGdXjrRrG+CmZ5PESKNqFexPnubUoasIVld+6+6a+x2FsCN?=
- =?us-ascii?Q?521oCd4fZTDun1ndT4U4oDpeIQLJB8r8B8ox+jWf9JVuCSJwzeVcNmpihsTe?=
- =?us-ascii?Q?ONue3KYRI+WONgMHzwbzTC/f7Yb0zWHn694nFjBcbrlTLxzXxz6lY4SR1qJJ?=
- =?us-ascii?Q?qwfU/U4kGdqIZcaltNx2jr8icvFXAggFbCY4bVcKWYtqWpFaXi8IG3NTv/XX?=
- =?us-ascii?Q?OZazKMpFUiNnbjEvjXGChyCbEkLrGh2ajNztIV68R7OrQq1KVtPL6k6erPsO?=
- =?us-ascii?Q?USvAzKdPUcz+wNp3a4xva08SYglpCAeKhP0/DKa03o74Bqax3bT3/d88NxR0?=
- =?us-ascii?Q?xQH2ds1vHdj00Rjpy3VigmOJTGftSefG/ra5HEBZgFR07rQE1sgnNmFAKIYg?=
- =?us-ascii?Q?Ukn4BrO3/TJXAchSn2sgiUJUOhfXh1X3vtJW67oO6sdjRs/5SztqyO/pj81E?=
- =?us-ascii?Q?E56pCwBUwK86VJNN7X0q6xBEXkcC0EigqgjHE0zMRKdczdCub4hl26kpIpi+?=
- =?us-ascii?Q?tqRveEXALV7cHsF0ljyh4pufp3k3xPgw9TZVhkIwv3eZeFLGc9+FVO55rns9?=
- =?us-ascii?Q?ZwVWKjZpwiFlmmO+Yt/VBN9Uw7RuA0hVC0YKpdnG/w9jvF26jiIMq7GvY+3x?=
- =?us-ascii?Q?ynuNueLTk+/t8WJ3U36BQZFUC7pjYpfU2PxLhR1So8d3dPdvcZfR4Nv54UE7?=
- =?us-ascii?Q?YMpZG2ClEg0p4+WxXEoQJ9C/ro/vLoviaZsk902nMUc4sFiig2Ink/1VlKiM?=
- =?us-ascii?Q?5bS2HVGkbekWJ9IjErbm54L2CMCQSJ9ZfIH4O+QRYbzlaCDSaoDeBlkhWb6F?=
- =?us-ascii?Q?ew=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?dTU4p8C0p7K8L7ME6Ha39AkwoMPsOm6YQtlJiR49VfOxcGAVGlxcROrt/1LH?=
+ =?us-ascii?Q?E3afjId4NbgU1obyDsCadeyq0KlIMWybBr2KRNQaaYSKyi08P5uZvVKw0V+l?=
+ =?us-ascii?Q?/EA3w9ORi74TITNJ1+KmXAYKdr8bA7deShMkb/jBPnZLUat+ppFCWqnwK6Nr?=
+ =?us-ascii?Q?1xmaEfeRsZetAKu+PI1Ptdc3GRDUfRWx2/3KI2eJ5Pir8+kHwwwjOO/Fjca+?=
+ =?us-ascii?Q?WLs6EbcCor4aD63dLXWnhrT8H+0O9OR6WfHlwEttftTLe0nQzMO5EIiigbTH?=
+ =?us-ascii?Q?Fo5p0vTvV47pCdNPXIJQcHv9vJFwWw8UKll1j5EIGyiYKQKVpcBkcXmxo/r7?=
+ =?us-ascii?Q?J42TP/dnjIqNJJtFAmHSIX9zV6EK9KDLp7OlpGRmGiLkUVnd8/HGtJIc3owo?=
+ =?us-ascii?Q?C9AifXkcm0kow3i6CRuDhmzge66qFcwAjZKtQ0ZFLmKcmSC6vgjw+MrpJXGZ?=
+ =?us-ascii?Q?Ex7sNX8Q/yoXLXWAyCqrtvAeDabyzxjsvzF+5c7XrfaW5j74/jzr9QNpkVYB?=
+ =?us-ascii?Q?JnZqwb9vEIawnnK5A7/z6TFQDVJMeG/rXsh0d5sB45bCEjw8lTx7/wluvAKX?=
+ =?us-ascii?Q?w+jrMI/B9wFTqlV3/PN+1jjBK3/OsrHzphr2h+tHl33BgqsMvBRRgZJFPQqN?=
+ =?us-ascii?Q?vrr0omzcsU3VYIRFmkrh6MZNa+LCN1cYeTQDHOkX4t6dA8gN0bY4VcmJSkOT?=
+ =?us-ascii?Q?vdReGCz90KOquENI0VaBiO51Vvecs96K3AZ1HGRoIdGuYDD3nAPUvMjmKGNp?=
+ =?us-ascii?Q?VR/Dmstc838bmgXnDnlfSJV8lmKkllngAJLQO9X3g0KZTTv9dVi2cHKrYpig?=
+ =?us-ascii?Q?gj1WbBGtxX/ZcfeS8SULJoEbxBas0OtOIRZajUit+3Bh47vm8SCpUhYy0uTl?=
+ =?us-ascii?Q?vBXiOqrYv7RVsnZR68lGnKZa7if9u25MNcLBhh9jkesIA7skutmbyJeZBUtc?=
+ =?us-ascii?Q?0BTOaSWaDlpS1sWLYJOcyASM0IKBWzOx9SRmtO5v+hpEZOch6PXeN1eIvA50?=
+ =?us-ascii?Q?5o+QW1RUHMNn7vCY1TiED8MHQuxOcTMSQp7xRRJvUCcBsR7Cz7ao520SA8PZ?=
+ =?us-ascii?Q?Ik8yFhlQFLI1h7NooA4MVBKEPCLLPOHHKp2srHDM/z/otzNQqMKeliZYuhEO?=
+ =?us-ascii?Q?wWOEIFyRWmSPqPTCGZKbFCDKEkuYV84MZf0oBEyOSSBIxZ/jkG3aESXyLStC?=
+ =?us-ascii?Q?22yKZSRfdmp6curmm4Leln+V9/OG0WPpLaY/cXE7yHA9sGZhBuAalWdMyEi3?=
+ =?us-ascii?Q?arXfMsEjc9n2XCppo3erm84tnINGXOc/fIACO0eXu3e/P7qoTzFvek8EazkC?=
+ =?us-ascii?Q?+cLwykWY9//biS/OWz0Zse9hF+Txbd712bFx7YLDHH29tyErmKAGlQRUaxQM?=
+ =?us-ascii?Q?NGD6w8baINavW1wDJR8fDn5yzap0ODL1Nz1F7Q4k8//08m5hdREE3SLmcqyg?=
+ =?us-ascii?Q?EtHTneUyZ2pVu6DfrS2dN57lWw+i9sJlgGBo3I9ideYtLkzOGVn9ApkvqJW5?=
+ =?us-ascii?Q?vcLgbTCbhoc0yKacOBhN9ryeElWk2xYUMJZuL4bdKgnrAWKDKwxm2ogRe9Ck?=
+ =?us-ascii?Q?r0xqsB7r3QSTe59bNcdBsPdKlwz3zwhomY3cN40fhzoPHtziiJQsiaV2ofJW?=
+ =?us-ascii?Q?oQ=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D97EDBB55CDFD64881D088ACA6E3BC99@namprd10.prod.outlook.com>
+Content-ID: <71350EF13635964AA941865E90720F87@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79f9b96d-d934-473c-20df-08da8dcb2ed6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2022 16:41:42.9540
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dcc0dbc-e89f-43d9-cffd-08da8dccb28e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Sep 2022 16:52:33.4582
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 11HJldSDHtmhwo+PTNRZWM6RQMFMH+B4ELVTkjJRT5P7NQub3NhFjrM3NHI4LxT1VK1DIcLklns5LkkgwKRK8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4183
+X-MS-Exchange-CrossTenant-userprincipalname: QbKPWW1K2FsTn9HdiJCKWOAQZTPoQpT79u3lhFxmu5fB7+Npixt3L5dUtlAcVqNsndzMqgLKoMs+f8dbzaQpFQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR10MB4242
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-09-03_07,2022-08-31_03,2022-06-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
  malwarescore=0 mlxlogscore=999 bulkscore=0 suspectscore=0 spamscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
- definitions=main-2209030085
-X-Proofpoint-ORIG-GUID: hYDljtM5fYUFsz_Av-13PQotnzxd9Vb8
-X-Proofpoint-GUID: hYDljtM5fYUFsz_Av-13PQotnzxd9Vb8
+ definitions=main-2209030086
+X-Proofpoint-ORIG-GUID: 2-bDtIVX9sjS4Yg6guc06DWh5fVuwVqx
+X-Proofpoint-GUID: 2-bDtIVX9sjS4Yg6guc06DWh5fVuwVqx
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -159,130 +149,56 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Sep 2, 2022, at 11:34 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
+> On Aug 31, 2022, at 8:57 AM, Murphy Zhou <jencce.kernel@gmail.com> wrote:
 >=20
-> Hi folks,
+> Hi,
 >=20
-> Ok so I won't be trying Ben's idea but I'm sort of confused is the
-> thought that NFS is somehow at fault in incorrectly using the "new"
-> code introduced by the new patches. Isn't it possible that the new
-> patches are wrong?
+> It's pretty reproducible for me.
+>=20
+> Could anyone look into it? Thanks!
 
-Since the bisect result indicates one of Al's commits, that commit
-should be at the top of the suspect list. I believe the intent is
-that, generally speaking, both the folio and the iov_iter work are
-not supposed to require changes to API consumers like NFSD.
+I'm not volunteering to look into this, but can you also
+provide more information about your configuration? The two
+most interesting items would be:
 
+- What filesystem underlies the test export and the scratch
+filesystem?
 
-> I haven't had time to try and revert the patch(es)
-> to see if that makes the oops go away.
-
-A test revert would be a good step to confirm the bisect result
-before asking for Al's opinion. Always dot your p's and cross your
-q's!
+- is READ_PLUS support enabled on your test client? Look
+for the CONFIG_NFS_V4_2_READ_PLUS setting in your client's
+kernel configuration.
 
 
-> I won't get around to it until about tuesday with the holidays.
-
-Try it out when you can. Or if someone else has a chance before
-then, they can report back here.
-
-
-> On Fri, Sep 2, 2022 at 8:38 PM Benjamin Coddington <bcodding@redhat.com> =
-wrote:
->>=20
->> On 2 Sep 2022, at 17:13, Chuck Lever III wrote:
->>=20
->>>> On Sep 2, 2022, at 4:58 PM, Benjamin Coddington <bcodding@redhat.com>
->>>> wrote:
->>>>=20
->>>> Olga, does this fix it up for you?  I'm testing now, but I think it
->>>> might be
->>>> a little harder for me to hit.
->>>>=20
->>>> Ben
->>>>=20
->>>> 8<------------------------------------------------
->>>> From 6bea39a887495b1748ff3b179d6e2f3d7e552b61 Mon Sep 17 00:00:00
->>>> 2001
->>>> From: Benjamin Coddington <bcodding@redhat.com>
->>>> Date: Fri, 2 Sep 2022 16:49:17 -0400
->>>> Subject: [PATCH] SUNRPC: Fix svc_tcp_sendmsg bvec offset calculation
->>>>=20
->>>> The xdr_buf's bvec member points to an array of struct bio_vec, let's
->>>> fixup the calculation to the start of the bio_vec for non-zero
->>>> page_base.
->>>>=20
->>>> Fixes: bad4c6eb5eaa ("SUNRPC: Fix NFS READs that start at
->>>> non-page-aligned offsets")
->>>> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
->>>> ---
->>>> net/sunrpc/svcsock.c | 2 +-
->>>> 1 file changed, 1 insertion(+), 1 deletion(-)
->>>>=20
->>>> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
->>>> index 2fc98fea59b4..ecafc9c4bc5c 100644
->>>> --- a/net/sunrpc/svcsock.c
->>>> +++ b/net/sunrpc/svcsock.c
->>>> @@ -1110,7 +1110,7 @@ static int svc_tcp_sendmsg(struct socket *sock,
->>>> struct xdr_buf *xdr,
->>>>               unsigned int offset, len, remaining;
->>>>               struct bio_vec *bvec;
->>>>=20
->>>> -               bvec =3D xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
->>>> +               bvec =3D &xdr->bvec[xdr->page_base >> PAGE_SHIFT];
->>>=20
->>> Color me skeptical.
->>>=20
->>> I'm not sure these two expressions are different. This variety
->>> of pointer arithmetic is used throughout the XDR layer:
->>=20
->> Yeah, you know what - it did crash in the same place with this change.
->>=20
->> My thinking was that if you have (for example) page_base =3D 8192, and
->> xdr->bvec of, say 0xffff4500, then what you want is to set the local
->> bvec var
->> to 0xfff4500 + sizeof(struct bio_vec)*2, but the code looks like it
->> would
->> set the local bvec to 0xffff4502, which is not the same thing..
->>=20
->> There must be a hole in my head,  I guess I need to dig out my K&R,
->> sorry
->> for the noise.  I will figure it out.
->>=20
->>> net/sunrpc/xdr.c:       pgto =3D pages + (pgto_base >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       pgfrom =3D pages + (pgfrom_base >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       pgto =3D pages + (pgto_base >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       pgfrom =3D pages + (pgfrom_base >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       pgto =3D pages + (pgbase >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       pgfrom =3D pages + (pgbase >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       page =3D pages + (pgbase >> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:       xdr->page_ptr =3D buf->pages + (new >>
->>> PAGE_SHIFT);
->>> net/sunrpc/xdr.c:               ppages =3D buf->pages + (base >>
->>> PAGE_SHIFT);
->>> net/sunrpc/xprtrdma/rpc_rdma.c: ppages =3D buf->pages + (buf->page_base
->>>>> PAGE_SHIFT);
->>> net/sunrpc/xprtrdma/rpc_rdma.c: ppages =3D xdrbuf->pages +
->>> (xdrbuf->page_base >> PAGE_SHIFT);
->>> net/sunrpc/xprtrdma/rpc_rdma.c: ppages =3D xdr->pages + (xdr->page_base
->>>>> PAGE_SHIFT);
->>> net/sunrpc/xprtrdma/rpc_rdma.c: ppages =3D xdr->pages + (xdr->page_base
->>>>> PAGE_SHIFT);
->>=20
->> Hmm.. there's clearly something wrong with me.
->>=20
->>> Commit bad4c6eb5eaa is from v5.11. Wouldn't this issue have
->>> shown up in earlier kernels? At the very least, the patch
->>> description needs to explain why this computation is not a
->>> problem for kernels 5.11 through 5.19.
->>=20
->> I totally agree.  I figured it was rare to have a non-zero page_base,
->> and
->> maybe a client change is now creating that.
->>=20
->> Ben
->>=20
+> FSTYP         -- nfs
+> PLATFORM      -- Linux/x86_64 ibm-x3250m2-4 6.0.0-rc1 #1 SMP
+> PREEMPT_DYNAMIC Sat Aug 20 19:03:47 UTC 2022
+> MKFS_OPTIONS  -- localhost:/export/scratch
+> MOUNT_OPTIONS -- -o vers=3D4.2 -o context=3Dsystem_u:object_r:nfs_t:s0
+> localhost:/export/scratch /mnt/xfstests/mnt2
+>=20
+> generic/130       - output mismatch (see
+> /var/lib/xfstests/results//generic/130.out.bad)
+>    --- tests/generic/130.out 2022-08-23 07:38:25.769217560 -0400
+>    +++ /var/lib/xfstests/results//generic/130.out.bad 2022-08-23
+> 08:09:10.121494654 -0400
+>    @@ -7,6 +7,520 @@
+>     00000000:  63 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> c...............
+>     00000010:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> ................
+>     *
+>    +0000a000:  1c 1d 1e 1f 20 21 22 23 24 25 26 27 28 29 2a 2b
+> ................
+>    +0000a010:  2c 2d 2e 2f 30 31 32 33 34 35 36 37 38 39 3a 3b
+> ....0123456789..
+>    +0000a020:  3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b
+> .....ABCDEFGHIJK
+>    +0000a030:  4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b
+> LMNOPQRSTUVWXYZ.
+>    ...
+>    (Run 'diff -u /var/lib/xfstests/tests/generic/130.out
+> /var/lib/xfstests/results//generic/130.out.bad'  to see the entire
+> diff)
 
 --
 Chuck Lever
