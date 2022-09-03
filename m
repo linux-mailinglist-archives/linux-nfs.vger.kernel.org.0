@@ -2,107 +2,176 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FC065ABC3D
-	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 04:12:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A15B5ABC98
+	for <lists+linux-nfs@lfdr.de>; Sat,  3 Sep 2022 05:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbiICCMj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 2 Sep 2022 22:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57594 "EHLO
+        id S229520AbiICDfM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 2 Sep 2022 23:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229508AbiICCMi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 22:12:38 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78B5EE42CD;
-        Fri,  2 Sep 2022 19:12:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=+9hT3j8PY8NaJfAXBqOIgtHebUuVNz5evAMl6MQrDZM=; b=ImpVKficYcJZfn/PGfcZIeWwIT
-        i3sOwcqfBBOo9/04H4EvdYmeTXQyqAtQcUUjkDsZnYpJRYNaO4U6dnVOH1iSpI/nGtl1OCacl8I87
-        MdYdlxVyh2qd7jXqWuVtIq6HlPyyG14dBQavaEZpsCkdXQH160E55IuBfXZjOUHzzfmSWEVd0+4KR
-        KhJveS9tkCVcIwA/vUIGGiqf+FPIprO8pMMJR+IQZ/FLihVVJRKbKYr/4VZOw7QdYmk+zSTKUDXrG
-        gPUIP+3F0OZc6xNqaqid6OzICV0qSgi1hHR44HbzoYMA65n9TNsySthic+fDVLrJRs6/H5DqeOTBa
-        kY67tQEQ==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
-        id 1oUIe2-00BW85-2R;
-        Sat, 03 Sep 2022 02:12:26 +0000
-Date:   Sat, 3 Sep 2022 03:12:26 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Daire Byrne <daire@dneg.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/10] VFS: support parallel updates in the one directory.
-Message-ID: <YxK4CiVNaQ6egobJ@ZenIV>
-References: <166147828344.25420.13834885828450967910.stgit@noble.brown>
- <166147984370.25420.13019217727422217511.stgit@noble.brown>
- <YwmS63X3Sm4bhlcT@ZenIV>
- <166173834258.27490.151597372187103012@noble.neil.brown.name>
- <YxKaaN9cHD5yzlTr@ZenIV>
- <166216924401.28768.5809376269835339554@noble.neil.brown.name>
+        with ESMTP id S231575AbiICDfL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 2 Sep 2022 23:35:11 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C771F4362A
+        for <linux-nfs@vger.kernel.org>; Fri,  2 Sep 2022 20:35:07 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id e18so4973916edj.3
+        for <linux-nfs@vger.kernel.org>; Fri, 02 Sep 2022 20:35:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=9NPnwf0YcDNwVLAp7Apg60ndJm93+ECIz/VNkLfbU1o=;
+        b=FPXvRFcZcH14Ac/JFLt8ys9BXl7OjpALFg0FBH3y9oy9fiFw+3QGZu/aWdXgs3ICES
+         ksjq6hd77GewP7Dj4SqULPfXqJqcu4wRf8OXbX0s1QB6tsR2iLjW60tbkrurtZL8FspP
+         TsZD+l62V/pKepqmHmK1nIV7Er7xGAaeL0e3DYkKLfLhZhzJfLR0ag4kKL/C4ANEjNR0
+         TAoP/sKz6lcfrXncPy7TBMe/Cl9ILZsKljSqzeqGI0sAFfm74N++1i0n9sI++aT9G+kQ
+         EBUkIO2NUOy81Ep6z6aWYFGdUQkAdDby9jFNvr5JwL7zVd0Ceg2znfsvZNHjR/2rWypH
+         O6WQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=9NPnwf0YcDNwVLAp7Apg60ndJm93+ECIz/VNkLfbU1o=;
+        b=xw/atDG8Sb2tVCKOozzVZH0xK0W04VFD7UWKUdzG/guYimJq3feMpdFLcgOpIVmBaR
+         GU8oiWWSBCNs6WUgShvt3Y5GCOufmOCGqmWpbzYeE3SClbl7M6VotFbq7u6jh9HFPZ1Y
+         kkKkwmSPsc/9atXCKt3iYRxYBhbl4eExlz4LONp2TB2a7gH19d6Qk1Xw8r8pWDoT88oX
+         SSVMwhHh7lIsHM99CynYqzgIjHgfM7I1+8XEzw8eA9AnWpFZU2l2niZ1bh3dKHVDhJvS
+         hpeciesiUWrBBn8gUIeAfmn0soioFkBr7qZrSfh9XmDxtipHC1h1PxaVcJ49pG3Fz2W+
+         VaJA==
+X-Gm-Message-State: ACgBeo29+ccqIkvlyc7jhI+jA+6h2LqnGs+hV5XL3guk/ArnjinkYwky
+        AABBEPamtHSLFfHBHY3/cpON/iia0Tl+P0LO9fM=
+X-Google-Smtp-Source: AA6agR7SMwjCWjIvAXkYH+1gbX4LzWzsy4F5BgLNCExdeBcMbs5iW0Di79Zq2X4OXYv1r+WnVsZzpT54kOqT9qRCxnE=
+X-Received: by 2002:a05:6402:2b88:b0:43a:6c58:6c64 with SMTP id
+ fj8-20020a0564022b8800b0043a6c586c64mr36038178edb.348.1662176106138; Fri, 02
+ Sep 2022 20:35:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <166216924401.28768.5809376269835339554@noble.neil.brown.name>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <CAN-5tyGkHd+wEHC5NwQGRuQsJie+aPu0RkWNrp_wFo4e+JcQgA@mail.gmail.com>
+ <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
+ <CAN-5tyEOTVDhR6FgP7nPVon76qhKkexaWB8AJ_iBVTp6iYOk1g@mail.gmail.com>
+ <11BEA7FE-4CBC-4E5C-9B68-A0310CF1F3BE@oracle.com> <CAN-5tyHOugPeTsu+gBJ1tkqawyQDkfHXrO=vQ6vZTTzWJWTqGA@mail.gmail.com>
+ <6DC1F4DF-8242-480B-813A-5F87D64593A6@redhat.com> <2E6F8E3F-C14C-44C7-8B72-744A5F6E8F7F@oracle.com>
+ <1D65FB47-EC61-45FB-972D-D68832B54C47@redhat.com>
+In-Reply-To: <1D65FB47-EC61-45FB-972D-D68832B54C47@redhat.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 2 Sep 2022 23:34:54 -0400
+Message-ID: <CAN-5tyHCuKcUEhBZUmA9VsckaA-Ogr0jsEPriQL8xhXJpc6OUw@mail.gmail.com>
+Subject: Re: Is this nfsd kernel oops known?
+To:     Benjamin Coddington <bcodding@redhat.com>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Sep 03, 2022 at 11:40:44AM +1000, NeilBrown wrote:
+Hi folks,
 
-> I don't think that is a good idea.  Once you call d_lookup_done()
-> (without having first called d_add() or similar) the dentry becomes
-> invisible to normal path lookup, so another might be created.  But the
-> dentry will still be used for the 'create' or 'rename' and may then be
-> added to the dcache - at which point you could have two dentries with the
-> same name.
-> 
-> When ->lookup() returns success without d_add()ing the dentry, that
-> means that something else will complete the d_add() if/when necessary.
-> For NFS, it specifically means that the lookup is effectively being
-> combined with the following CREATE or RENAME.  In this case there is no
-> d_lookup_done() until the full operation is complete.
+Ok so I won't be trying Ben's idea but I'm sort of confused is the
+thought that NFS is somehow at fault in incorrectly using the "new"
+code introduced by the new patches. Isn't it possible that the new
+patches are wrong? I haven't had time to try and revert the patch(es)
+to see if that makes the oops go away. I won't get around to it until
+about tuesday with the holidays.
+
+On Fri, Sep 2, 2022 at 8:38 PM Benjamin Coddington <bcodding@redhat.com> wrote:
 >
-> For autofs (thanks for pointing me to that) the operation is completed
-> when d_automount() signals the daemon to create the directory or
-> symlink.  In that case there IS a d_lookup_done() call and autofs needs
-> some extra magic (the internal 'active' list) to make sure subsequent
-> ->lookup requests can see that dentry which is still in the process of
-> being set up.
-> 
-> It might be nice if the dentry passed to autofs_lookup() could remain
-> "d_inlookup()" until after d_automount has completed.  Then autofs
-> wouldn't need that active list.  However I haven't yet looked at how
-> disruptive such a change might be.
-
-Very much so.  You are starting to invent new rules for ->lookup() that
-just never had been there, basing on nothing better than a couple of
-examples.  They are nowhere near everything there is.
-
-And you can't rely upon d_add() done by a method, for very obvious
-reasons.  They are out of your control, they might very well decide
-that object creation has failed and drop the damn thing.  Which is
-not allowed for in-lookup dentries without d_lookup_done().
-
-Neil, *IF* you are introducing new rules like that, the absolutely minimal
-requirement is having them in Documentation/filesystems/porting.rst.
-And that includes "such-and-such method might be called with parent
-locked only shared; in that case it's guaranteed such-and-such things
-about its arguments (bitlocks held, etc.)".
-
-One thing we really need to avoid is that thing coming undocumented, with
-"NFS copes, nobody else has it enabled, whoever does it for other
-filesystems will just have to RTFS".  I hope it's obvious that this
-is not an option.  Because I can bloody guarantee that it will be
-cargo-culted over to other filesystems, with nobody (you and me included)
-understanding the resulting code.
+> On 2 Sep 2022, at 17:13, Chuck Lever III wrote:
+>
+> >> On Sep 2, 2022, at 4:58 PM, Benjamin Coddington <bcodding@redhat.com>
+> >> wrote:
+> >>
+> >> Olga, does this fix it up for you?  I'm testing now, but I think it
+> >> might be
+> >> a little harder for me to hit.
+> >>
+> >> Ben
+> >>
+> >> 8<------------------------------------------------
+> >> From 6bea39a887495b1748ff3b179d6e2f3d7e552b61 Mon Sep 17 00:00:00
+> >> 2001
+> >> From: Benjamin Coddington <bcodding@redhat.com>
+> >> Date: Fri, 2 Sep 2022 16:49:17 -0400
+> >> Subject: [PATCH] SUNRPC: Fix svc_tcp_sendmsg bvec offset calculation
+> >>
+> >> The xdr_buf's bvec member points to an array of struct bio_vec, let's
+> >> fixup the calculation to the start of the bio_vec for non-zero
+> >> page_base.
+> >>
+> >> Fixes: bad4c6eb5eaa ("SUNRPC: Fix NFS READs that start at
+> >> non-page-aligned offsets")
+> >> Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
+> >> ---
+> >> net/sunrpc/svcsock.c | 2 +-
+> >> 1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/net/sunrpc/svcsock.c b/net/sunrpc/svcsock.c
+> >> index 2fc98fea59b4..ecafc9c4bc5c 100644
+> >> --- a/net/sunrpc/svcsock.c
+> >> +++ b/net/sunrpc/svcsock.c
+> >> @@ -1110,7 +1110,7 @@ static int svc_tcp_sendmsg(struct socket *sock,
+> >> struct xdr_buf *xdr,
+> >>                unsigned int offset, len, remaining;
+> >>                struct bio_vec *bvec;
+> >>
+> >> -               bvec = xdr->bvec + (xdr->page_base >> PAGE_SHIFT);
+> >> +               bvec = &xdr->bvec[xdr->page_base >> PAGE_SHIFT];
+> >
+> > Color me skeptical.
+> >
+> > I'm not sure these two expressions are different. This variety
+> > of pointer arithmetic is used throughout the XDR layer:
+>
+> Yeah, you know what - it did crash in the same place with this change.
+>
+> My thinking was that if you have (for example) page_base = 8192, and
+> xdr->bvec of, say 0xffff4500, then what you want is to set the local
+> bvec var
+> to 0xfff4500 + sizeof(struct bio_vec)*2, but the code looks like it
+> would
+> set the local bvec to 0xffff4502, which is not the same thing..
+>
+> There must be a hole in my head,  I guess I need to dig out my K&R,
+> sorry
+> for the noise.  I will figure it out.
+>
+> > net/sunrpc/xdr.c:       pgto = pages + (pgto_base >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       pgfrom = pages + (pgfrom_base >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       pgto = pages + (pgto_base >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       pgfrom = pages + (pgfrom_base >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       pgto = pages + (pgbase >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       pgfrom = pages + (pgbase >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       page = pages + (pgbase >> PAGE_SHIFT);
+> > net/sunrpc/xdr.c:       xdr->page_ptr = buf->pages + (new >>
+> > PAGE_SHIFT);
+> > net/sunrpc/xdr.c:               ppages = buf->pages + (base >>
+> > PAGE_SHIFT);
+> > net/sunrpc/xprtrdma/rpc_rdma.c: ppages = buf->pages + (buf->page_base
+> > >> PAGE_SHIFT);
+> > net/sunrpc/xprtrdma/rpc_rdma.c: ppages = xdrbuf->pages +
+> > (xdrbuf->page_base >> PAGE_SHIFT);
+> > net/sunrpc/xprtrdma/rpc_rdma.c: ppages = xdr->pages + (xdr->page_base
+> > >> PAGE_SHIFT);
+> > net/sunrpc/xprtrdma/rpc_rdma.c: ppages = xdr->pages + (xdr->page_base
+> > >> PAGE_SHIFT);
+>
+> Hmm.. there's clearly something wrong with me.
+>
+> > Commit bad4c6eb5eaa is from v5.11. Wouldn't this issue have
+> > shown up in earlier kernels? At the very least, the patch
+> > description needs to explain why this computation is not a
+> > problem for kernels 5.11 through 5.19.
+>
+> I totally agree.  I figured it was rare to have a non-zero page_base,
+> and
+> maybe a client change is now creating that.
+>
+> Ben
+>
