@@ -2,83 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B61B5ACA85
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Sep 2022 08:25:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 17D435AD770
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Sep 2022 18:29:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236607AbiIEGXO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Sep 2022 02:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58480 "EHLO
+        id S231200AbiIEQ3Y (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Sep 2022 12:29:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236692AbiIEGXG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 02:23:06 -0400
-Received: from mail1.bemta37.messagelabs.com (mail1.bemta37.messagelabs.com [85.158.142.112])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A403055D;
-        Sun,  4 Sep 2022 23:22:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fujitsu.com;
-        s=170520fj; t=1662358973; i=@fujitsu.com;
-        bh=eedFYo6xGyTr6apElA9LfkQQDI6fKYFV5f6rr++cXJQ=;
-        h=Message-ID:Date:MIME-Version:From:Subject:References:To:
-         In-Reply-To:Content-Type:Content-Transfer-Encoding;
-        b=G8qnhG56xEyRlNBAddOObquQPySeh1yp88Y4LMPpoilHQ6M2oCJcuWyLZRmglyq8k
-         GWxra4Zu04fPm6G5lUtvuSLJfYOKw8ZijBDBmaRPQRoZupsRYRxagtCioEflKrO3Vg
-         eolVRi0BHVZsPh1sSlE2r+/ci1AX253nrPefcagt+/4du5azA+7/sicVRHBPPfpABq
-         oXDcTzk6knFWoTSdR2Os00c2kphOCTuPDt+X7J7n9p2srEfI4qfsxXA2nMe6JUTWOK
-         3UrQ+g6MaD8Zw06dOOu/ifPPHdyb0o4SMEFdtNLwN2H5xUN4uDHckWK29Ie4JqCLbV
-         wK+YbiQefAfhg==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrBIsWRWlGSWpSXmKPExsViZ8MxSXfvVNF
-  kgz8LJS1Ot+xlt7hw4DSrA5PH501yAYxRrJl5SfkVCawZM/7eYix4x1Xx4MF7tgbGNZxdjFwc
-  QgJbGCVaJ35jg3CWM0msXfeVHcLZyigx/dhk1i5GTg5eATuJD1MPgNksAioSO972MEPEBSVOz
-  nzCAmKLCiRL9JxoZgex2QRcJM5NuARWIyzgLvFt3hGgDRxAQ/kk5r/JAwmLCFhJbDnaCzaSU4
-  Bf4vP1rWCtzAIWEovfHISy5SW2v50DNkZCQFHiz71DjBB2hUTj9ENMELaaxNVzm5gnMArOQnL
-  RLCSjZiEZtYCReRWjTVJRZnpGSW5iZo6uoYGBrqGhKZA21DU01Uus0k3USy3VzcsvKsnQNdRL
-  LC/WSy0u1iuuzE3OSdHLSy3ZxAgM9JTiVP4djDf2/dI7xCjJwaQkyutZLZosxJeUn1KZkVicE
-  V9UmpNafIhRhoNDSYJXeQpQTrAoNT21Ii0zBxh1MGkJDh4lEd5ykDRvcUFibnFmOkTqFKMux8
-  c/F/cyC7Hk5eelSonzOoIUCYAUZZTmwY2AJYBLjLJSwryMDAwMQjwFqUW5mSWo8q8YxTkYlYR
-  5kycDTeHJzCuB2/QK6AgmoCPs+oRBjihJREhJNTCxC7448Cyu7pihruO6Z7K8O4PCN3kcWbdw
-  mjfXzl/tnS90Fz+Y/+5iecjKtMVm791lhX+27p2s3LJhs3rWhA+L3dO3/0piTIwtvpqw+4Knc
-  95ZRg/DnefXu6ZJ9Ca/XtO4t+ztzC/iTKXd9cICrtUbnjHPjn63yET59p9mWf6cZ75lk+4Xit
-  1x4Q7VOPdfaFFlcJfwAqdwPq+6CpNUx52hU49U724TmO/e8vaC0uJHNfOfc9UW2bo0f1Y59vZ
-  3yJZSH91lU7fdctrx22jGvIvuh69Zvq/7rPdhnSlPm6Bcb5Yb/4lJ/rIvsk6ybdu88uG7vptX
-  q5xNOS2iOi2YLerrPkiKephJ/1vrWnnAf58SS3FGoqEWc1FxIgAAo6qsewMAAA==
-X-Env-Sender: cuiyue-fnst@fujitsu.com
-X-Msg-Ref: server-7.tower-728.messagelabs.com!1662358973!98737!1
-X-Originating-IP: [62.60.8.146]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.87.3; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8787 invoked from network); 5 Sep 2022 06:22:53 -0000
-Received: from unknown (HELO n03ukasimr02.n03.fujitsu.local) (62.60.8.146)
-  by server-7.tower-728.messagelabs.com with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP; 5 Sep 2022 06:22:53 -0000
-Received: from n03ukasimr02.n03.fujitsu.local (localhost [127.0.0.1])
-        by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTP id CBD6E1000C1;
-        Mon,  5 Sep 2022 07:22:52 +0100 (BST)
-Received: from R01UKEXCASM121.r01.fujitsu.local (R01UKEXCASM121 [10.183.43.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by n03ukasimr02.n03.fujitsu.local (Postfix) with ESMTPS id BE062100078;
-        Mon,  5 Sep 2022 07:22:52 +0100 (BST)
-Received: from [10.167.225.61] (10.167.225.61) by
- R01UKEXCASM121.r01.fujitsu.local (10.183.43.173) with Microsoft SMTP Server
- (TLS) id 15.0.1497.32; Mon, 5 Sep 2022 07:22:51 +0100
-Message-ID: <2a35a5a9-945a-e8ac-67e3-2fb312e41a46@fujitsu.com>
-Date:   Mon, 5 Sep 2022 14:22:45 +0800
+        with ESMTP id S229476AbiIEQ3W (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 12:29:22 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D386D69
+        for <linux-nfs@vger.kernel.org>; Mon,  5 Sep 2022 09:29:21 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 285ErNTS024335
+        for <linux-nfs@vger.kernel.org>; Mon, 5 Sep 2022 16:29:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : subject :
+ date : message-id : content-type : content-id : content-transfer-encoding
+ : mime-version; s=corp-2022-7-12;
+ bh=26Oryy4k1/LzPOD60j/w6ReIjfsiOwjTYctegAXwAyM=;
+ b=Ii/hs4cPw6ghk2acDvg6UawzPtYJgy+/2f/bYGBlURiFgiK2vNNlC+8Fi/OiGGJHruXv
+ 63zFpWSvUVLyIqScBH4RRAhFoTnVXcEzb0fXCBTj5x3UqfYS7QIQfV5FiIK5Rhs1DD6n
+ N9mpZfmMEA/kGmhvD2ypjky9CxFswmsEJiH7J99TfFNWaT1egDgEQbhRtvLq1YnD2J8h
+ hlmH6EVbtTDQJPOgV9gIBYxg+pqZ3vJc8omJdjif9ZhpF5309WvCASdQMO6e8iYm9h/d
+ C6H91sIO9YzgcD+vg8MeV+M5lpjdEwc5uTDgz3JSiIfkVrZEMl/yTyqB1xSZmF4o0tDM uw== 
+Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jbxtabswk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Mon, 05 Sep 2022 16:29:21 +0000
+Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 285FWGtQ023646
+        for <linux-nfs@vger.kernel.org>; Mon, 5 Sep 2022 16:29:19 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2176.outbound.protection.outlook.com [104.47.56.176])
+        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jbwc8745b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
+        for <linux-nfs@vger.kernel.org>; Mon, 05 Sep 2022 16:29:19 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kNRbW1aHPW+LILttx+SovFA+NQbDwVSbstCSbUr6VfRLxNKrcnLabvo6Whbcy0EDpLMO9apnwg02qgBThd7zwXYLSlJOauSAXW+aKUWS3Enqso1XlyvZmY0A8r4mdqkseGChV6CGmfaYvex3Z2gaobBYtov0GlrMueZ2Muw/voQg1h2rtPxfaq8qOzfJbHH+xWIShJJLdB7KlYWr5lnoFiUBwT4APODaAyYqZcNv4O10kaBOiyuS3aD+wQlAnr4TGXKqONEYzupakD5na4fY2DdHvcQmLu/ii/ENwUyCw0OyHut0ri/JzKwaI7ppNV62NQk135XMgvXLNJEEuJn+2Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=26Oryy4k1/LzPOD60j/w6ReIjfsiOwjTYctegAXwAyM=;
+ b=W2BPxrhUSVNP2/mYOBoHQAQ83Mme5TlgpLP6BxVPrP83JFVHiolLyRSx5OBFsSpTDEOzuy22vBub1BYimXKii4ME7L+vuHgnWqkqx/dNn9ndI4G/rUYkfgClNLF95MYDLS7URPgCuXiFwdMME0spQ1V12sVHLR1jhuSsVpBu3+lVrnT98UHnqKxqAEHhFpu4xqPCh5RI0qwhdxyHm6mvcsHzUgzJF6cqqaFxijlQ+0tCw1HV6DH/I28Qr/l587zWeZnj3yXfdKVR/DnPnQZNC96eTp3c4STWX6FyknmvnR7gTfpetHfXuV12K6UGHIAKG4jso8+FDUxeprc4/8mzuw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=26Oryy4k1/LzPOD60j/w6ReIjfsiOwjTYctegAXwAyM=;
+ b=SKAp2Y9/srrq3Xv6iG+rJbm+u9CssaXfDE+9lSpd3nIys8g0qn2KkwoJhumd94wmBqihVlrawyFNWOPmDxr40NHqwRzqCAo61ngti/QcgI2LVx/8M4rNOAVT+b4qtakzetyeLz9IrIkpjh/Bskp/kSDaOgntOMyuELGygIqukL8=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by BL3PR10MB6114.namprd10.prod.outlook.com (2603:10b6:208:3b9::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5566.21; Mon, 5 Sep
+ 2022 16:29:16 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::25d6:da15:34d:92fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::25d6:da15:34d:92fa%4]) with mapi id 15.20.5588.017; Mon, 5 Sep 2022
+ 16:29:16 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: nfs/001 failing
+Thread-Topic: nfs/001 failing
+Thread-Index: AQHYwUSkcXQiVijzKEaSIjLdRrkw0g==
+Date:   Mon, 5 Sep 2022 16:29:16 +0000
+Message-ID: <BF47B6B7-CB52-4E14-94B0-E28FD5C52234@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 430f03ac-90a8-4061-d729-08da8f5bc6a2
+x-ms-traffictypediagnostic: BL3PR10MB6114:EE_
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C5+GsC7LlN9BFUg7F0Iwaz+26+z95OQ4sONggpdFaRuBRUhvHPT6dEiLCwtT9Pw9t8c5j1fcNaop4S4m903bb87xpPrwvOVuMq9YHoD/xVxMcrJbJCa9SfjkYE+A5er44kDLrWQChTbLGWv5d/Aoqk+NG9UBkTDZyRbToVuATQ6aJtT0eiAnXdHpsnW7zNgfpqIcgYieyjnTl6NgwcdrxRmrqeszsZYEbF8lUlJF0/rXBfNHa03yD4eM1fJ9BnajDJSGw23llYXPZRlqhXt54KHtE3aMTiIf2IBvy13Udz4pFx/0vmcrx7aYNl7dDjt8hikQwIS00x4Hvj2nFXGxPUiWU94j/Gz/801SUA1635bsPnY2lhJ7qDk2maQ68WCw8UnKCE3ebD2b902z+Iwsjtm4bfhMSShsoRlI9v1Yhj85lUZTDCQrjcZz/nsbP0MbN+RuHTfkekcRJXffiGUjJeGjseeggKJRQMRXAU4WrkCTP63EiGMZk2IEnyuxuQ3JvFa9xVxPqQ0k66pb+yIxgNPN5HgmEMrkgSJT16XtagxsKcZ/bOkp3im3fjriOH6Arw2rlX30sIF3h54l4tu8c3+pruBATZBKl2zvg1jfGoTMZTC6t6iYffj1/wm5BS7rykK9wrNH5C25PiX+BXGcH4lHp+q4pQs0wfGmmgqapxY182iG8Al0d+klYo/at99gOwjuMS4zYNLyhUcCZ5inG7WlmXfVk0ILauCaf8k9n8blZkE6xZ+I0akrQ39cc0hgQRgtTetB4be4cktoHbMfkh7nTv1/jE9I/vP7d610rkM=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(366004)(39860400002)(346002)(136003)(66946007)(66556008)(38070700005)(122000001)(86362001)(5660300002)(66446008)(38100700002)(76116006)(64756008)(8676002)(8936002)(478600001)(66476007)(41300700001)(186003)(2616005)(71200400001)(4001150100001)(6916009)(316002)(6486002)(91956017)(26005)(33656002)(4744005)(6512007)(6506007)(83380400001)(2906002)(36756003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?zUYLZA71YvzGIYlC0+vWAoYL0PjhLutl0WJr/R1ZAypU5OtxPNu9rLbBKgd2?=
+ =?us-ascii?Q?aoRuCUANfpQeqGMJd4z2hUV4GocBHaCP4cabHN/Nn8Qt+Xc1bO28RjjnePoj?=
+ =?us-ascii?Q?rrVLTFK2Sec2/8aj29ypnx0K6UltyNXhD56YMDML28iQDlT/48djWDqb5Zzy?=
+ =?us-ascii?Q?fmCZLQk88d+52nHClDQd1Zsnbb9cZ/zV/vUzVtbI43fCj6blRub6qf50+4y7?=
+ =?us-ascii?Q?92eb7/5XjdAAVmcvsSygKPrLqxJaTLqVayCMTPezAqqUDES5cNTCKEjzC0GG?=
+ =?us-ascii?Q?M35VAi7g/Q2fotRCETgG6mEYK0IsOvi9UtO+Cidj/XMMcf6OVqhSF8GPkpIM?=
+ =?us-ascii?Q?dftuXSvq3mr8k9S5vdlPaq0BbBw8Ap2CF1npngwNbHgeGlXp3omWX3SrCccf?=
+ =?us-ascii?Q?3KZ4zd3m9O+9mbtHXpi5wpA56KNhZit9tK7NzkWR+DpqBWa6YwqMrXRGQahB?=
+ =?us-ascii?Q?H+KwLmw10IrZyvf1H8a/yxSuYMXnCzSXhzxu9VXStSlOtclsaTTicNfKvKdM?=
+ =?us-ascii?Q?k5tfQ5RnGHo0vJ+CHokJu0g2E3W9iT0BEvMLutpyQlxitK3nQ7MXAdsbH5B6?=
+ =?us-ascii?Q?96njBrssWooyQx8REU39QN8+3J0cztF2MWm7G1eiFPONbmXHRGe1DJ89N50n?=
+ =?us-ascii?Q?ycK2cmY7PRJCba1b/BHrJsQX9RN/IIqVrQao5IPzDFBF3QxGLfcytbU2ZkiR?=
+ =?us-ascii?Q?V0Edl9MQgicFoKNoWaO/Rk3WYY/BDbs00lOl2QnhB1twsqzqYedWz6CK1/gh?=
+ =?us-ascii?Q?BD0Cnr0d+lMGvBIO8mGxl1n27IqlJ5VLFwMHY9TpbXK8bCsvd28zfKNwfY8x?=
+ =?us-ascii?Q?TP+SsvkerlWfJ+1avvPjSE7w0AmeoskdK/YqIkRGFTFzvioSd15wL2jE8HPo?=
+ =?us-ascii?Q?s1qA7gUT4sS2I1BeZo+sm0MbAK9VlvG7LBD3Yfzcz0muApqqdBUOlbV96SRA?=
+ =?us-ascii?Q?XNH30WDv/Gt8bcFsjsAh+ttmbsj+Eu8Wz48/EirC8HSXOCYdQ9mGwNFR+M43?=
+ =?us-ascii?Q?tkIKbMaWXacqK41FtNOYT8YBBxb5mttMiEgbgWiED9rrvTNUf82808bxp8PB?=
+ =?us-ascii?Q?/qPav5JuaikPSP3UjYglMouI6yjyufko869Y3KluCqNGW/caXgQZ8Codargi?=
+ =?us-ascii?Q?KmXkm3gsoLqwuaZmDEnC+fgfL8n3/Y8vNj2pPu69NxC/qT/Sdc3LcZiDE6mj?=
+ =?us-ascii?Q?T2J/1detTQyZmfCKPu0ZSOyq+JOe4bipnTdgxF1jsnie/BYxOZBGjt7a1hl4?=
+ =?us-ascii?Q?cGGnrww5Owt3FOQ+g/oJHAnZqhb2IgCCK8eim0LIzHg+lzCm4Pib2AfwvJJc?=
+ =?us-ascii?Q?viBMp8iuKqZWUIDmzaPXdA7xR8Tscrnfo8k1ySNNyy4MYIjLej+URHYaJbtS?=
+ =?us-ascii?Q?FchcMtWeP+TL4GV4dh+D3NzqY83IxOdylzFv9/XlIMUFGZpRTTF0L1QIkE+p?=
+ =?us-ascii?Q?eoAv+fGMJn0eBpDPAXQ5OubDsaTYzQD+UuceZr/l+nzm0IsxQJiGDL5jV2Xh?=
+ =?us-ascii?Q?d7T/8f1nkhoim1RWlwSccPS3M534BAeVD6PhZ1TyB4dEtcgsJTXIqAaUmuJk?=
+ =?us-ascii?Q?TQ4oigAvE+VFTgW8jT4QejeS8KoJMnhcJ2p4vsoTDtUy8EnDNJrlTUEtQN5u?=
+ =?us-ascii?Q?WQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <378A043678FD7040B785AA996D3D909F@namprd10.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-From:   =?UTF-8?B?Q3VpLCBZdWUv5bSUIOaCpg==?= <cuiyue-fnst@fujitsu.com>
-Subject: [PATCH] generic: Ignore getcap and setcap cases when it is NFS
-References: <>
-To:     <fstests@vger.kernel.org>, <linux-nfs@vger.kernel.org>
-In-Reply-To: <>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.167.225.61]
-X-ClientProxiedBy: G08CNEXCHPEKD07.g08.fujitsu.local (10.167.33.80) To
- R01UKEXCASM121.r01.fujitsu.local (10.183.43.173)
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 430f03ac-90a8-4061-d729-08da8f5bc6a2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Sep 2022 16:29:16.3078
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GPvT0l/+RvY57U+w67HQOlR892gSuJG8Bm38/NyCKOjj/Sek0aTNY4xQXm6aOQOZcis+4DWFIQRJA0M79Xj8Lg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL3PR10MB6114
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-05_12,2022-09-05_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 adultscore=0
+ malwarescore=0 mlxlogscore=880 bulkscore=0 suspectscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2209050080
+X-Proofpoint-ORIG-GUID: PKC4ozmp6nBt_qH9118IO5gYAIGlZ2-W
+X-Proofpoint-GUID: PKC4ozmp6nBt_qH9118IO5gYAIGlZ2-W
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -87,49 +144,29 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hi-
 
-Signed-off-by: Cui Yue <cuiyue-fnst@fujitsu.com>
----
-  tests/generic/513 | 2 ++
-  tests/generic/675 | 2 ++
-  tests/generic/688 | 2 ++
-  3 files changed, 6 insertions(+)
+Bruce reminded me I'm not the only one seeing this failure
+these days:
 
-diff --git a/tests/generic/513 b/tests/generic/513
-index dc08278..d7201f5 100755
---- a/tests/generic/513
-+++ b/tests/generic/513
-@@ -19,6 +19,8 @@ _require_scratch_reflink
-  _require_command "$GETCAP_PROG" getcap
-  _require_command "$SETCAP_PROG" setcap
-  +test $FSTYP == "nfs"  && _notrun "NFS can't support getcap and setcap"
-+
-  _scratch_mkfs >>$seqres.full 2>&1
-  _scratch_mount
-  diff --git a/tests/generic/675 b/tests/generic/675
-index 189251f..0e9fd36 100755
---- a/tests/generic/675
-+++ b/tests/generic/675
-@@ -22,6 +22,8 @@ _require_command "$GETCAP_PROG" getcap
-  _require_command "$SETCAP_PROG" setcap
-  _require_scratch_reflink
-  +test $FSTYP == "nfs"  && _notrun "NFS can't support getcap and setcap"
-+
-  _scratch_mkfs >> $seqres.full
-  _scratch_mount
-  _require_congruent_file_oplen $SCRATCH_MNT 1048576
-diff --git a/tests/generic/688 b/tests/generic/688
-index 426286b..54b9e3c 100755
---- a/tests/generic/688
-+++ b/tests/generic/688
-@@ -30,6 +30,8 @@ _require_xfs_io_command falloc
-  _require_test
-  _require_congruent_file_oplen $TEST_DIR 65536
-  +test $FSTYP == "nfs"  && _notrun "NFS can't support getcap and setcap"
-+
-  junk_dir=$TEST_DIR/$seq
-  junk_file=$junk_dir/a
-  mkdir -p $junk_dir/
--- 
-1.8.3.1
+> nfs/001 4s ... - output mismatch (see /root/xfstests-dev/results//nfs/001=
+.out.bad)
+>    --- tests/nfs/001.out	2019-12-20 17:34:10.569343364 -0500
+>    +++ /root/xfstests-dev/results//nfs/001.out.bad	2022-09-04 20:01:35.50=
+2462323 -0400
+>    @@ -1,2 +1,2 @@
+>     QA output created by 001
+>    -203
+>    +3
+>    ...
+
+
+I'm looking at about 5 other priority bugs at the moment. Can
+someone else do a little triage?
+
+
+--
+Chuck Lever
+
+
 
