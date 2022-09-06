@@ -2,97 +2,71 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CAAA5ADE88
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 06:29:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34ED45ADFE7
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 08:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbiIFEZn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Sep 2022 00:25:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55480 "EHLO
+        id S238421AbiIFGgY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Sep 2022 02:36:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32970 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229766AbiIFEZm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 00:25:42 -0400
+        with ESMTP id S238420AbiIFGgX (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 02:36:23 -0400
 Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E6A28E0C;
-        Mon,  5 Sep 2022 21:25:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569494622B;
+        Mon,  5 Sep 2022 23:36:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-        bh=KjGpnaOCoiegcftfzU0dj0F2Me4aFhhK3DZjFApXZm8=; b=zb+LxBkfN6fMtDfzMz18/kuVNr
-        IQPwEBNu0xJKIj4at/oCNSMojQGn8qRP1p2xw67S1SQlArvCNhLnuL0nb3s2R1USbaKdgkOiv8dw2
-        +nFlRQHDUB8dW/kgm3sOzjJ/BBsE54SIaE3w99cAkBkceRrYyHaS/uh2CcYSJDqdf7P/0ro+V2bIK
-        jPsoJmiuoYk8DI+TWhZelI9NZ6XqE+rjxG9SEOGFEp2nIZe/tdelTXE67E3SywxdlMB27IzrT1npY
-        vowQYKNIPnF1kzmFkFwxBXq1sIl8a5CSVgZAaQL21lxwGujANqWN0IXy+sQiYb76Usavm9t/CaOAt
-        3qI3RwsA==;
-Received: from [2601:1c0:6280:3f0::a6b3]
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1oVQ9T-005wFF-F0; Tue, 06 Sep 2022 04:25:31 +0000
-Message-ID: <5c2049f2-8bb8-8626-0ed0-433c202227fd@infradead.org>
-Date:   Mon, 5 Sep 2022 21:25:29 -0700
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=kFNZmmVwOhX3BjOPJ3tln3iTlg4hrSY3aWoS1Dwfdhg=; b=yGw6sWaI79F1sxKkVQaLBqfkMn
+        ciPMa49hRCEsXC2e6QaC54/IVuW1x7URn7p9FAd8AYvAjhg/l+1gdoUkyxzOIxNQSBREX9xh7Ddi7
+        q2c0xDaqVAW+qvoITRmcqt4ZgncEoEdCsyZ+if/g0K63wSpNDe759gtusSOfiypyV3ckYrrwNjqKy
+        fw+hMWUso0tMaAGn4D5npZ88RTr1mhqS1sde0A6s/XS2WYHo+CKamVL67MufxQdIBBU7Cql8EAIJ8
+        2S3PpJWk6hCoYJk1DgBfZbJROPvkE3hHk70QgGadjMpxViBoTBeQ/LLfjrtGr9lkOg7brY3tIdMCT
+        o3mXVCUA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oVSBm-00AS9k-Lz; Tue, 06 Sep 2022 06:36:02 +0000
+Date:   Mon, 5 Sep 2022 23:36:02 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 0/7] convert most filesystems to pin_user_pages_fast()
+Message-ID: <YxbqUvDJ/rJsLMPZ@infradead.org>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.1
-Subject: Re: [PATCH v2] fs/nfs/pnfs_nfs.c: fix spelling typo and syntax error
- in comment
-Content-Language: en-US
-To:     Jiangshan Yi <13667453960@163.com>,
-        trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jiangshan Yi <yijiangshan@kylinos.cn>,
-        k2ci <kernel-bot@kylinos.cn>
-References: <20220906024119.424210-1-13667453960@163.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20220906024119.424210-1-13667453960@163.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220831041843.973026-1-jhubbard@nvidia.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On Tue, Aug 30, 2022 at 09:18:36PM -0700, John Hubbard wrote:
+> The conversion is temporarily guarded by
+> CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO. In the future (not part of this
+> series), when we are certain that all filesystems have converted their
+> Direct IO paths to FOLL_PIN, then we can do the final step, which is to
+> get rid of CONFIG_BLK_USE_PIN_USER_PAGES_FOR_DIO and search-and-replace
+> the dio_w_*() functions with their final names (see bvec.h changes).
 
-
-On 9/5/22 19:41, Jiangshan Yi wrote:
-> From: Jiangshan Yi <yijiangshan@kylinos.cn>
-> 
-> Fix spelling typo and syntax error in comment.
-> 
-> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
-> Reported-by: k2ci <kernel-bot@kylinos.cn>
-> Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
-> ---
->  fs/nfs/pnfs_nfs.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
-> index 657c242a18ff..987c88ddeaf0 100644
-> --- a/fs/nfs/pnfs_nfs.c
-> +++ b/fs/nfs/pnfs_nfs.c
-> @@ -374,12 +374,12 @@ pnfs_bucket_search_commit_reqs(struct pnfs_commit_bucket *buckets,
->  	return NULL;
->  }
->  
-> -/* pnfs_generic_search_commit_reqs - Search lists in @cinfo for the head reqest
-> +/* pnfs_generic_search_commit_reqs - Search lists in @cinfo for the head request
->   *				   for @page
->   * @cinfo - commit info for current inode
->   * @page - page to search for matching head request
->   *
-> - * Returns a the head request if one is found, otherwise returns NULL.
-> + * Return: the head request if one is found, otherwise %NULL.
->   */
->  struct nfs_page *
->  pnfs_generic_search_commit_reqs(struct nfs_commit_info *cinfo, struct page *page)
-
--- 
-~Randy
+What is the the point of these wrappers?  We should be able to
+convert one caller at a time in an entirely safe way.
