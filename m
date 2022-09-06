@@ -2,130 +2,89 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB3055ADCA1
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 02:42:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70FBD5ADD0E
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 03:51:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232117AbiIFAma (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Sep 2022 20:42:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
+        id S232063AbiIFBvO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Sep 2022 21:51:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiIFAm3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 20:42:29 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54AF6A49C
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Sep 2022 17:42:28 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id ED9F01F8B9;
-        Tue,  6 Sep 2022 00:42:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1662424946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=kpyfGOcI7GuWmB12GKLPIynRogI8GCvFaQQyUOir/k8=;
-        b=gQQJpsyxMzQwN5Zhnbf7AwHhCzTN+boJiUkrYjrtICF3c3Gtkdk1VYWXQUWxZGdCAE1a0R
-        dKVkb1Gd+XxKZJHdS4jSBLyzkOfEbMQD8sWI20Gjdwd5UML7kBzQgDGevFdL3zeVRBsT96
-        l47HW12dqEAvNSEEMGGt3gjY8LhYyrA=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1662424946;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=kpyfGOcI7GuWmB12GKLPIynRogI8GCvFaQQyUOir/k8=;
-        b=1OkFZorZ1GCmY5+WEsQFcU6zMbNchk6Z2LyrCyLboD0zk1c8IKGYhQA5h2YRmLs9ebXLyG
-        93K7DL1VI82EHRBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D6247139C7;
-        Tue,  6 Sep 2022 00:42:25 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id LepQJHGXFmOxNAAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 06 Sep 2022 00:42:25 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S231994AbiIFBvO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 21:51:14 -0400
+Received: from mail-m973.mail.163.com (mail-m973.mail.163.com [123.126.97.3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2936617061;
+        Mon,  5 Sep 2022 18:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=W/44+
+        IbuOj0a3OaAjCjrnVzWwtelwbjOo0SR89cGwhU=; b=o+C0Hd0hEljP8Tkzu8D39
+        hWNgU+uO5Zef8N1ReCL9bXH9isX5fLndzY0LrNlBUd/tOK5iHS1MfRQdDNRakSUy
+        8dELgPVkem48nPkLrmyNYoZWMBBs9uLepzhGrBKF4KqEPRXk2ln/OkeWZYeG/lCN
+        x9hKMrsvtQy1M53zyOvUUc=
+Received: from localhost.localdomain (unknown [116.128.244.169])
+        by smtp3 (Coremail) with SMTP id G9xpCgDX3Kl8pxZjIWD5bA--.39470S2;
+        Tue, 06 Sep 2022 09:50:54 +0800 (CST)
+From:   Jiangshan Yi <13667453960@163.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiangshan Yi <yijiangshan@kylinos.cn>,
+        k2ci <kernel-bot@kylinos.cn>
+Subject: [PATCH] fs/nfs/pnfs_nfs.c: fix spelling typo and syntax error in comment
+Date:   Tue,  6 Sep 2022 09:50:27 +0800
+Message-Id: <20220906015027.3963386-1-13667453960@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: [PATCH] NFSD: drop fname and flen args from nfsd_create_locked()
-Date:   Tue, 06 Sep 2022 10:42:19 +1000
-Message-id: <166242493965.1168.6227147868888984691@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: G9xpCgDX3Kl8pxZjIWD5bA--.39470S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrZF4ruF4fJw4rur4kAFy7KFg_yoWkArX_GF
+        yIv34DWw4UJrs3Aw17Kr4avFyY9FsxKFZ7JF4qqF1ak345G395ZayktFWfAr4DWr48tr95
+        Gwn2kryqyrySvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: bprtllyxuvjmiwq6il2tof0z/1tbivgB0+1Zcem0tCwAAsK
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FROM_LOCAL_DIGITS,FROM_LOCAL_HEX,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Jiangshan Yi <yijiangshan@kylinos.cn>
 
-nfsd_create_locked() does not use the "fname" and "flen" arguments, so
-drop them from declaration and all callers.
+Fix spelling typo and syntax error in comment.
 
-Signed-off-by: NeilBrown <neilb@suse.de>
+Reported-by: k2ci <kernel-bot@kylinos.cn>
+Signed-off-by: Jiangshan Yi <yijiangshan@kylinos.cn>
 ---
- fs/nfsd/nfsproc.c | 4 ++--
- fs/nfsd/vfs.c     | 4 ++--
- fs/nfsd/vfs.h     | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ fs/nfs/pnfs_nfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 7381972f1677..9c766ac2cc68 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -390,8 +390,8 @@ nfsd_proc_create(struct svc_rqst *rqstp)
- 	resp->status = nfs_ok;
- 	if (!inode) {
- 		/* File doesn't exist. Create it and set attrs */
--		resp->status = nfsd_create_locked(rqstp, dirfhp, argp->name,
--						  argp->len, &attrs, type, rdev,
-+		resp->status = nfsd_create_locked(rqstp, dirfhp,
-+						  &attrs, type, rdev,
- 						  newfhp);
- 	} else if (type == S_IFREG) {
- 		dprintk("nfsd:   existing %s, valid=%x, size=%ld\n",
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 9f486b788ed0..528afc3be7af 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1252,7 +1252,7 @@ nfsd_check_ignore_resizing(struct iattr *iap)
- /* The parent directory should already be locked: */
- __be32
- nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
--		   char *fname, int flen, struct nfsd_attrs *attrs,
-+		   struct nfsd_attrs *attrs,
- 		   int type, dev_t rdev, struct svc_fh *resfhp)
- {
- 	struct dentry	*dentry, *dchild;
-@@ -1379,7 +1379,7 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	if (err)
- 		goto out_unlock;
- 	fh_fill_pre_attrs(fhp);
--	err = nfsd_create_locked(rqstp, fhp, fname, flen, attrs, type,
-+	err = nfsd_create_locked(rqstp, fhp, attrs, type,
- 				 rdev, resfhp);
- 	fh_fill_post_attrs(fhp);
- out_unlock:
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index c95cd414b4bb..0bf5c7e79abe 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -79,7 +79,7 @@ __be32		nfsd4_clone_file_range(struct svc_rqst *rqstp,
- 				       u64 count, bool sync);
- #endif /* CONFIG_NFSD_V4 */
- __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
--				char *name, int len, struct nfsd_attrs *attrs,
-+				struct nfsd_attrs *attrs,
- 				int type, dev_t rdev, struct svc_fh *res);
- __be32		nfsd_create(struct svc_rqst *, struct svc_fh *,
- 				char *name, int len, struct nfsd_attrs *attrs,
+diff --git a/fs/nfs/pnfs_nfs.c b/fs/nfs/pnfs_nfs.c
+index 657c242a18ff..45a5a66a2e3e 100644
+--- a/fs/nfs/pnfs_nfs.c
++++ b/fs/nfs/pnfs_nfs.c
+@@ -374,12 +374,12 @@ pnfs_bucket_search_commit_reqs(struct pnfs_commit_bucket *buckets,
+ 	return NULL;
+ }
+ 
+-/* pnfs_generic_search_commit_reqs - Search lists in @cinfo for the head reqest
++/* pnfs_generic_search_commit_reqs - Search lists in @cinfo for the head request
+  *				   for @page
+  * @cinfo - commit info for current inode
+  * @page - page to search for matching head request
+  *
+- * Returns a the head request if one is found, otherwise returns NULL.
++ * Returns the head request if one is found, otherwise returns NULL.
+  */
+ struct nfs_page *
+ pnfs_generic_search_commit_reqs(struct nfs_commit_info *cinfo, struct page *page)
 -- 
-2.37.1
+2.25.1
+
+
+No virus found
+		Checked by Hillstone Network AntiVirus
 
