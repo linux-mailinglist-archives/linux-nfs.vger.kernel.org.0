@@ -2,39 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B05D85AE826
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 14:31:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 912675AE8ED
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 15:00:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240099AbiIFMbA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Sep 2022 08:31:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
+        id S238052AbiIFNAN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Sep 2022 09:00:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240121AbiIFMaZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 08:30:25 -0400
+        with ESMTP id S239522AbiIFNAN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 09:00:13 -0400
 Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9BA78BED
-        for <linux-nfs@vger.kernel.org>; Tue,  6 Sep 2022 05:27:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0A712091
+        for <linux-nfs@vger.kernel.org>; Tue,  6 Sep 2022 06:00:12 -0700 (PDT)
 Received: by fieldses.org (Postfix, from userid 2815)
-        id 51A7161B2; Tue,  6 Sep 2022 08:27:14 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 51A7161B2
+        id CD4A24298; Tue,  6 Sep 2022 09:00:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CD4A24298
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1662467234;
-        bh=P2S18U++P6quSVGyKs1Xx7niQSpD5olh+3HczQ9UUUw=;
+        s=default; t=1662469211;
+        bh=IJOyuF6urIA6S6GGr4y8z0q8js5tsULVoh3/SfaEaSY=;
         h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=YWFMVYiTt55Ecm/W2wxaAcRqcDGQilgDbE2oH6QBenZ3LvBzlSbauf+kCswVePqll
-         5RdJZ6aBZtQueVvFKVRTr3voYsFX1HPzFi8ZsghMC9yIrpOH2BMasaWAnr9AGTRJBJ
-         76JekNIp7PP5x7u907kxZjyhCgXwNk/e2YSBSP3s=
-Date:   Tue, 6 Sep 2022 08:27:14 -0400
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        NeilBrown <neilb@suse.de>
-Subject: Re: nfs/001 failing
-Message-ID: <20220906122714.GA25323@fieldses.org>
-References: <BF47B6B7-CB52-4E14-94B0-E28FD5C52234@oracle.com>
+        b=kNcNYgo7B+SXT9G7UVRk1GlHKzArqu5Vjktjh71Hh8dLTgJIjtVd66yfQDzW61AHV
+         X81eS/BgDSKN7vROipE7CUoNfQH7BEntXM6/wqHhs3kFAB4gff+GmFwrzQl/lNAaok
+         tKYDFLQaDbbpGdx9Fmk4u+UjD23dnxAHlrBLQjFg=
+Date:   Tue, 6 Sep 2022 09:00:11 -0400
+To:     dai.ngo@oracle.com
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        steved@redhat.com
+Subject: Re: [PATCH v4 2/2] NFSD: add shrinker to reap courtesy clients on
+ low memory condition
+Message-ID: <20220906130011.GB25323@fieldses.org>
+References: <FA83E721-C874-4A47-87BA-54B13E0B12A3@oracle.com>
+ <2df6f1fe-c8eb-d5a1-0a11-2fd965555a33@oracle.com>
+ <7041D47D-ECB3-497E-9174-96E9E36FFBDE@oracle.com>
+ <eb197dde-8758-7ef4-8a7b-989273e09abc@oracle.com>
+ <3CD64E7F-8E81-4B37-AAF3-499B47B25D19@oracle.com>
+ <fc5a3aa7-af8e-656d-a16e-c07c201ec62a@oracle.com>
+ <44A716C4-3904-424D-A5D6-CE46FC9145F0@oracle.com>
+ <2b9549f8-58ec-be8a-1b15-3a6d7751a04f@oracle.com>
+ <5B4E5FAA-5D46-4E43-962D-64AFDC035C41@oracle.com>
+ <1f395e2b-695f-836f-2038-6a672c651d53@oracle.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BF47B6B7-CB52-4E14-94B0-E28FD5C52234@oracle.com>
+In-Reply-To: <1f395e2b-695f-836f-2038-6a672c651d53@oracle.com>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 From:   bfields@fieldses.org (J. Bruce Fields)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -46,28 +58,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-On Mon, Sep 05, 2022 at 04:29:16PM +0000, Chuck Lever III wrote:
-> Bruce reminded me I'm not the only one seeing this failure
-> these days:
+On Sat, Sep 03, 2022 at 10:59:17AM -0700, dai.ngo@oracle.com wrote:
+> On 9/3/22 10:29 AM, Chuck Lever III wrote:
+> >What I was suggesting was a longer term strategy for improving the
+> >laundromat. In order to scale well in the number of clients, it
+> >needs to schedule client expiry and deletion without serializing.
+> >
+> >(ie, the laundromat itself can identify a set of clients to clean,
+> >but then it should pass that list to other workers so it can run
+> >again as soon as it needs to -- and that also means it can use more
+> >than just one CPU at a time to do its work).
 > 
-> > nfs/001 4s ... - output mismatch (see /root/xfstests-dev/results//nfs/001.out.bad)
-> >    --- tests/nfs/001.out	2019-12-20 17:34:10.569343364 -0500
-> >    +++ /root/xfstests-dev/results//nfs/001.out.bad	2022-09-04 20:01:35.502462323 -0400
-> >    @@ -1,2 +1,2 @@
-> >     QA output created by 001
-> >    -203
-> >    +3
-> >    ...
-> 
-> I'm looking at about 5 other priority bugs at the moment. Can
-> someone else do a little triage?
+> I see. Currently on my lowly 1-CPU VM it takes about ~35 secs to
+> destroy 128 clients, each with only few states (generated by pynfs's
+> CID5 test). We can improve on this.
 
-For what it's worth, a bisect lands on
-c0cbe70742f4a70893cd6e5f6b10b6e89b6db95b "NFSD: add posix ACLs to struct
-nfsd_attrs".
+Careful--it's not the CPU that's the issue, it's waiting for disk.
 
-Haven't really looked at nfs/001 except to note it does have something
-to do with ACLs, so that checks out....
+If you're on a hard drive, for example, it's going to take at least one
+seek (probably at least 10ms) to expire a single client, so you're never
+going to destroy more than 100 per second.  That's what you need to
+parallelize.  See item 3 from
+
+	https://lore.kernel.org/linux-nfs/20220523154026.GD24163@fieldses.org/
+
+Also, looks like current nfs-utils is still doing 3 commits per expiry.
+
+Steve, for some reason I think "nfsdcld: use WAL journal for faster
+commits" never got applied:
+
+	https://lore.kernel.org/linux-nfs/20220104222445.GF12040@fieldses.org/
 
 --b.
