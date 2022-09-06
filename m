@@ -2,114 +2,72 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A405AE7EF
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 14:22:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B05D85AE826
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 14:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240103AbiIFMVf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Sep 2022 08:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60896 "EHLO
+        id S240099AbiIFMbA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Sep 2022 08:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240020AbiIFMUq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 08:20:46 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C5479637
-        for <linux-nfs@vger.kernel.org>; Tue,  6 Sep 2022 05:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662466669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YjvVsGnaOPZ/gpG0KVHSfjbjbq9SkmePYc60DJuuWGs=;
-        b=cT+7bCVxJgQLFqa1HP+1ZQIb55muguaQsYrHBkRhzzdY6qJycblS0wqgVjnGjsm2aVCYqb
-        hXzoqZP/ZbeAJiRe5Lrxcw+TXSvcnlNisF65z641R8AAIrKmOuQSsfyrt0JjQYIGd2Uhdm
-        f3eTlgaNZFd3mI0sU6vACDPWA+py8uc=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-47-HSUfhPJXM-2ppp1fdmrDZw-1; Tue, 06 Sep 2022 08:17:46 -0400
-X-MC-Unique: HSUfhPJXM-2ppp1fdmrDZw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E76891C06901;
-        Tue,  6 Sep 2022 12:17:44 +0000 (UTC)
-Received: from oldenburg.str.redhat.com (unknown [10.39.192.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9F5940334C;
-        Tue,  6 Sep 2022 12:17:39 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        bfields@fieldses.org, brauner@kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [RFC PATCH v2] statx, inode: document the new STATX_INO_VERSION
- field
-References: <20220901121714.20051-1-jlayton@kernel.org>
-        <874jxrqdji.fsf@oldenburg.str.redhat.com>
-        <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org>
-Date:   Tue, 06 Sep 2022 14:17:38 +0200
-In-Reply-To: <81e57e81e4570d1659098f2bbc7c9049a605c5e8.camel@kernel.org> (Jeff
-        Layton's message of "Thu, 01 Sep 2022 12:30:20 -0400")
-Message-ID: <87ilm066jh.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+        with ESMTP id S240121AbiIFMaZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Sep 2022 08:30:25 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9BA78BED
+        for <linux-nfs@vger.kernel.org>; Tue,  6 Sep 2022 05:27:15 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 51A7161B2; Tue,  6 Sep 2022 08:27:14 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 51A7161B2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1662467234;
+        bh=P2S18U++P6quSVGyKs1Xx7niQSpD5olh+3HczQ9UUUw=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=YWFMVYiTt55Ecm/W2wxaAcRqcDGQilgDbE2oH6QBenZ3LvBzlSbauf+kCswVePqll
+         5RdJZ6aBZtQueVvFKVRTr3voYsFX1HPzFi8ZsghMC9yIrpOH2BMasaWAnr9AGTRJBJ
+         76JekNIp7PP5x7u907kxZjyhCgXwNk/e2YSBSP3s=
+Date:   Tue, 6 Sep 2022 08:27:14 -0400
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        NeilBrown <neilb@suse.de>
+Subject: Re: nfs/001 failing
+Message-ID: <20220906122714.GA25323@fieldses.org>
+References: <BF47B6B7-CB52-4E14-94B0-E28FD5C52234@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.10
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BF47B6B7-CB52-4E14-94B0-E28FD5C52234@oracle.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-* Jeff Layton:
 
-> All of the existing implementations use all 64 bits. If you were to
-> increment a 64 bit value every nanosecond, it will take >500 years for
-> it to wrap. I'm hoping that's good enough. ;)
->
-> The implementation that all of the local Linux filesystems use track
-> whether the value has been queried using one bit, so there you only get
-> 63 bits of counter.
->
-> My original thinking here was that we should leave the spec "loose" to
-> allow for implementations that may not be based on a counter. E.g. could
-> some filesystem do this instead by hashing certain metadata?
+On Mon, Sep 05, 2022 at 04:29:16PM +0000, Chuck Lever III wrote:
+> Bruce reminded me I'm not the only one seeing this failure
+> these days:
+> 
+> > nfs/001 4s ... - output mismatch (see /root/xfstests-dev/results//nfs/001.out.bad)
+> >    --- tests/nfs/001.out	2019-12-20 17:34:10.569343364 -0500
+> >    +++ /root/xfstests-dev/results//nfs/001.out.bad	2022-09-04 20:01:35.502462323 -0400
+> >    @@ -1,2 +1,2 @@
+> >     QA output created by 001
+> >    -203
+> >    +3
+> >    ...
+> 
+> I'm looking at about 5 other priority bugs at the moment. Can
+> someone else do a little triage?
 
-Hashing might have collisions that could be triggered deliberately, so
-probably not a good idea.  It's also hard to argue that random
-collisions are unlikely.
+For what it's worth, a bisect lands on
+c0cbe70742f4a70893cd6e5f6b10b6e89b6db95b "NFSD: add posix ACLs to struct
+nfsd_attrs".
 
-> It's arguable though that the NFSv4 spec requires that this be based on
-> a counter, as the client is required to increment it in the case of
-> write delegations.
+Haven't really looked at nfs/001 except to note it does have something
+to do with ACLs, so that checks out....
 
-Yeah, I think it has to be monotonic.
-
->> If the system crashes without flushing disks, is it possible to observe
->> new file contents without a change of i_version?
->
-> Yes, I think that's possible given the current implementations.
->
-> We don't have a great scheme to combat that at the moment, other than
-> looking at this in conjunction with the ctime. As long as the clock
-> doesn't jump backward after the crash and it takes more than one jiffy
-> to get the host back up, then you can be reasonably sure that
-> i_version+ctime should never repeat.
->
-> Maybe that's worth adding to the NOTES section of the manpage?
-
-I'd appreciate that.
-
-Thanks,
-Florian
-
+--b.
