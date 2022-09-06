@@ -2,37 +2,62 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B450A5AD9A9
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Sep 2022 21:33:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB3055ADCA1
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Sep 2022 02:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbiIETdn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Sep 2022 15:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53048 "EHLO
+        id S232117AbiIFAma (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Sep 2022 20:42:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232592AbiIETdk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 15:33:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8227247B95
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Sep 2022 12:33:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229817AbiIFAm3 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Sep 2022 20:42:29 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E54AF6A49C
+        for <linux-nfs@vger.kernel.org>; Mon,  5 Sep 2022 17:42:28 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A5BD4B811FE
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Sep 2022 19:33:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3149CC433C1;
-        Mon,  5 Sep 2022 19:33:34 +0000 (UTC)
-Subject: [PATCH v1] NFSD: Fix handling of oversized NFSv4 COMPOUND requests
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     bfields@fieldses.org
-Date:   Mon, 05 Sep 2022 15:33:32 -0400
-Message-ID: <166240641266.2834.1862985890566562958.stgit@bazille.1015granger.net>
-User-Agent: StGit/1.5
-MIME-Version: 1.0
+        by smtp-out2.suse.de (Postfix) with ESMTPS id ED9F01F8B9;
+        Tue,  6 Sep 2022 00:42:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1662424946; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kpyfGOcI7GuWmB12GKLPIynRogI8GCvFaQQyUOir/k8=;
+        b=gQQJpsyxMzQwN5Zhnbf7AwHhCzTN+boJiUkrYjrtICF3c3Gtkdk1VYWXQUWxZGdCAE1a0R
+        dKVkb1Gd+XxKZJHdS4jSBLyzkOfEbMQD8sWI20Gjdwd5UML7kBzQgDGevFdL3zeVRBsT96
+        l47HW12dqEAvNSEEMGGt3gjY8LhYyrA=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1662424946;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=kpyfGOcI7GuWmB12GKLPIynRogI8GCvFaQQyUOir/k8=;
+        b=1OkFZorZ1GCmY5+WEsQFcU6zMbNchk6Z2LyrCyLboD0zk1c8IKGYhQA5h2YRmLs9ebXLyG
+        93K7DL1VI82EHRBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id D6247139C7;
+        Tue,  6 Sep 2022 00:42:25 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id LepQJHGXFmOxNAAAMHmgww
+        (envelope-from <neilb@suse.de>); Tue, 06 Sep 2022 00:42:25 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+MIME-Version: 1.0
+From:   "NeilBrown" <neilb@suse.de>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [PATCH] NFSD: drop fname and flen args from nfsd_create_locked()
+Date:   Tue, 06 Sep 2022 10:42:19 +1000
+Message-id: <166242493965.1168.6227147868888984691@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -40,117 +65,67 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If an NFS server returns NFS4ERR_RESOURCE on the first operation in
-an NFSv4 COMPOUND, there's no way for a client to know where the
-problem is and then simplify the compound to make forward progress.
 
-So instead, make NFSD process as many operations in an oversized
-COMPOUND as it can and then return NFS4ERR_RESOURCE on the first
-operation it did not process.
+nfsd_create_locked() does not use the "fname" and "flen" arguments, so
+drop them from declaration and all callers.
 
-pynfs NFSv4.0 COMP6 exercises this case, but checks only for the
-COMPOUND status code, not whether the server has processed any
-of the operations.
-
-pynfs NFSv4.1 SEQ6 and SEQ7 exercise the NFSv4.1 case, which detects
-too many operations per COMPOUND by checking against the limits
-negotiated when the session was created.
-
-Suggested-by: Bruce Fields <bfields@fieldses.org>
-Fixes: 0078117c6d91 ("nfsd: return RESOURCE not GARBAGE_ARGS on too many ops")
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4proc.c |   19 +++++++++++++------
- fs/nfsd/nfs4xdr.c  |   12 +++---------
- fs/nfsd/xdr4.h     |    3 ++-
- 3 files changed, 18 insertions(+), 16 deletions(-)
+ fs/nfsd/nfsproc.c | 4 ++--
+ fs/nfsd/vfs.c     | 4 ++--
+ fs/nfsd/vfs.h     | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 7055e1c91d0e..6ef0795fefb4 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -2631,9 +2631,6 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 	status = nfserr_minor_vers_mismatch;
- 	if (nfsd_minorversion(nn, args->minorversion, NFSD_TEST) <= 0)
- 		goto out;
--	status = nfserr_resource;
--	if (args->opcnt > NFSD_MAX_OPS_PER_COMPOUND)
--		goto out;
- 
- 	status = nfs41_check_op_ordering(args);
- 	if (status) {
-@@ -2646,10 +2643,20 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 
- 	rqstp->rq_lease_breaker = (void **)&cstate->clp;
- 
--	trace_nfsd_compound(rqstp, args->opcnt);
-+	trace_nfsd_compound(rqstp, args->client_opcnt);
- 	while (!status && resp->opcnt < args->opcnt) {
- 		op = &args->ops[resp->opcnt++];
- 
-+		if (unlikely(resp->opcnt == NFSD_MAX_OPS_PER_COMPOUND)) {
-+			/* If there are still more operations to process,
-+			 * stop here and report NFS4ERR_RESOURCE. */
-+			if (cstate->minorversion == 0 &&
-+			    args->client_opcnt > resp->opcnt) {
-+				op->status = nfserr_resource;
-+				goto encode_op;
-+			}
-+		}
-+
- 		/*
- 		 * The XDR decode routines may have pre-set op->status;
- 		 * for example, if there is a miscellaneous XDR error
-@@ -2725,8 +2732,8 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
- 			status = op->status;
- 		}
- 
--		trace_nfsd_compound_status(args->opcnt, resp->opcnt, status,
--					   nfsd4_op_name(op->opnum));
-+		trace_nfsd_compound_status(args->client_opcnt, resp->opcnt,
-+					   status, nfsd4_op_name(op->opnum));
- 
- 		nfsd4_cstate_clear_replay(cstate);
- 		nfsd4_increment_op_stats(op->opnum);
-diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 4b69e86240eb..09519b4a860a 100644
---- a/fs/nfsd/nfs4xdr.c
-+++ b/fs/nfsd/nfs4xdr.c
-@@ -2359,16 +2359,10 @@ nfsd4_decode_compound(struct nfsd4_compoundargs *argp)
- 
- 	if (xdr_stream_decode_u32(argp->xdr, &argp->minorversion) < 0)
- 		return false;
--	if (xdr_stream_decode_u32(argp->xdr, &argp->opcnt) < 0)
-+	if (xdr_stream_decode_u32(argp->xdr, &argp->client_opcnt) < 0)
- 		return false;
--
--	/*
--	 * NFS4ERR_RESOURCE is a more helpful error than GARBAGE_ARGS
--	 * here, so we return success at the xdr level so that
--	 * nfsd4_proc can handle this is an NFS-level error.
--	 */
--	if (argp->opcnt > NFSD_MAX_OPS_PER_COMPOUND)
--		return true;
-+	argp->opcnt = min_t(u32, argp->client_opcnt,
-+			    NFSD_MAX_OPS_PER_COMPOUND);
- 
- 	if (argp->opcnt > ARRAY_SIZE(argp->iops)) {
- 		argp->ops = vcalloc(argp->opcnt, sizeof(*argp->ops));
-diff --git a/fs/nfsd/xdr4.h b/fs/nfsd/xdr4.h
-index 96267258e629..466e2786fc97 100644
---- a/fs/nfsd/xdr4.h
-+++ b/fs/nfsd/xdr4.h
-@@ -717,9 +717,10 @@ struct nfsd4_compoundargs {
- 	struct svcxdr_tmpbuf		*to_free;
- 	struct svc_rqst			*rqstp;
- 
--	u32				taglen;
- 	char *				tag;
-+	u32				taglen;
- 	u32				minorversion;
-+	u32				client_opcnt;
- 	u32				opcnt;
- 	struct nfsd4_op			*ops;
- 	struct nfsd4_op			iops[8];
-
+diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
+index 7381972f1677..9c766ac2cc68 100644
+--- a/fs/nfsd/nfsproc.c
++++ b/fs/nfsd/nfsproc.c
+@@ -390,8 +390,8 @@ nfsd_proc_create(struct svc_rqst *rqstp)
+ 	resp->status = nfs_ok;
+ 	if (!inode) {
+ 		/* File doesn't exist. Create it and set attrs */
+-		resp->status = nfsd_create_locked(rqstp, dirfhp, argp->name,
+-						  argp->len, &attrs, type, rdev,
++		resp->status = nfsd_create_locked(rqstp, dirfhp,
++						  &attrs, type, rdev,
+ 						  newfhp);
+ 	} else if (type == S_IFREG) {
+ 		dprintk("nfsd:   existing %s, valid=%x, size=%ld\n",
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 9f486b788ed0..528afc3be7af 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1252,7 +1252,7 @@ nfsd_check_ignore_resizing(struct iattr *iap)
+ /* The parent directory should already be locked: */
+ __be32
+ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+-		   char *fname, int flen, struct nfsd_attrs *attrs,
++		   struct nfsd_attrs *attrs,
+ 		   int type, dev_t rdev, struct svc_fh *resfhp)
+ {
+ 	struct dentry	*dentry, *dchild;
+@@ -1379,7 +1379,7 @@ nfsd_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	if (err)
+ 		goto out_unlock;
+ 	fh_fill_pre_attrs(fhp);
+-	err = nfsd_create_locked(rqstp, fhp, fname, flen, attrs, type,
++	err = nfsd_create_locked(rqstp, fhp, attrs, type,
+ 				 rdev, resfhp);
+ 	fh_fill_post_attrs(fhp);
+ out_unlock:
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index c95cd414b4bb..0bf5c7e79abe 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -79,7 +79,7 @@ __be32		nfsd4_clone_file_range(struct svc_rqst *rqstp,
+ 				       u64 count, bool sync);
+ #endif /* CONFIG_NFSD_V4 */
+ __be32		nfsd_create_locked(struct svc_rqst *, struct svc_fh *,
+-				char *name, int len, struct nfsd_attrs *attrs,
++				struct nfsd_attrs *attrs,
+ 				int type, dev_t rdev, struct svc_fh *res);
+ __be32		nfsd_create(struct svc_rqst *, struct svc_fh *,
+ 				char *name, int len, struct nfsd_attrs *attrs,
+-- 
+2.37.1
 
