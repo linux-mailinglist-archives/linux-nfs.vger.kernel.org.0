@@ -2,108 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2156A5B045F
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Sep 2022 14:53:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 90B5A5B0464
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Sep 2022 14:53:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbiIGMxA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Sep 2022 08:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57474 "EHLO
+        id S229526AbiIGMxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Sep 2022 08:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230164AbiIGMwW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Sep 2022 08:52:22 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 244D8BB69A;
-        Wed,  7 Sep 2022 05:52:12 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5936C6023; Wed,  7 Sep 2022 08:52:11 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 5936C6023
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1662555131;
-        bh=P3lBuJJGteBG86RAZAucfIziaQwt7ERXU7IpxeYykcE=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=lr8RCW8m5JayBSGG9RnfCwfbBC67SLxg4/J94yTsCxlQcdBAXKpWffJf40z50vF0B
-         LaUy0qid957lECGK2TVd/9vKJPbvblTLN1bXxkdTANhJFBJdEjkQ/50CERJv1vcIq9
-         GMfJeZUWshHbaOtrvdWd2bxbYi2ihJyvy4xW/oa4=
-Date:   Wed, 7 Sep 2022 08:52:11 -0400
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     NeilBrown <neilb@suse.de>, tytso@mit.edu, adilger.kernel@dilger.ca,
-        djwong@kernel.org, david@fromorbit.com, trondmy@hammerspace.com,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        brauner@kernel.org, fweimer@redhat.com, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-Message-ID: <20220907125211.GB17729@fieldses.org>
-References: <20220907111606.18831-1-jlayton@kernel.org>
- <166255065346.30452.6121947305075322036@noble.neil.brown.name>
- <79aaf122743a295ddab9525d9847ac767a3942aa.camel@kernel.org>
+        with ESMTP id S229958AbiIGMxO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Sep 2022 08:53:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6DD77C773
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Sep 2022 05:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1662555175;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+pzGF4JCDbCnyO8i6LXRCYYwL9qvEU4Y8265aQCUKwA=;
+        b=Gtobz2tFrpuiALiFmHVsSbx28lanvPAhB5F0lfA7SEbotZQJEmC7ySyRof4IjF3CAQEGdc
+        L+R/fdR1hY0dk1CF9jJC08Uq/cUnFzdqqC42oKldssi+qd4vJdVJxoBSQFwzSp7va4y8SM
+        ECFsjdsRjpjfqXowZxkLTdExFFRsYSw=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-344-AxT0L-jtMOG67TbjdZpFMA-1; Wed, 07 Sep 2022 08:52:49 -0400
+X-MC-Unique: AxT0L-jtMOG67TbjdZpFMA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D4DD880029D;
+        Wed,  7 Sep 2022 12:52:48 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1EBC31415102;
+        Wed,  7 Sep 2022 12:52:47 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Al Viro" <viro@zeniv.linux.org.uk>
+Cc:     "Olga Kornievskaia" <aglo@umich.edu>,
+        "Jeff Layton" <jlayton@kernel.org>,
+        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>,
+        "Chuck Lever III" <chuck.lever@oracle.com>
+Subject: Re: Is this nfsd kernel oops known?
+Date:   Wed, 07 Sep 2022 08:52:46 -0400
+Message-ID: <25AF9743-A2A2-4AFE-9123-BAD3C8F17655@redhat.com>
+In-Reply-To: <EE9C1D1C-AA5B-48BC-9E3A-8A4523456AEE@oracle.com>
+References: <CAN-5tyGkHd+wEHC5NwQGRuQsJie+aPu0RkWNrp_wFo4e+JcQgA@mail.gmail.com>
+ <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
+ <CAN-5tyEOTVDhR6FgP7nPVon76qhKkexaWB8AJ_iBVTp6iYOk1g@mail.gmail.com>
+ <11BEA7FE-4CBC-4E5C-9B68-A0310CF1F3BE@oracle.com>
+ <CAN-5tyHOugPeTsu+gBJ1tkqawyQDkfHXrO=vQ6vZTTzWJWTqGA@mail.gmail.com>
+ <D0A6E504-F2C2-4A5F-BC51-FD3D88A790F0@redhat.com>
+ <CAN-5tyHYH7ODzmTK=Maa3NZOSxfcE0mfaWY11+n2htQpya869g@mail.gmail.com>
+ <EE9C1D1C-AA5B-48BC-9E3A-8A4523456AEE@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <79aaf122743a295ddab9525d9847ac767a3942aa.camel@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; format=flowed
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 07, 2022 at 08:47:20AM -0400, Jeff Layton wrote:
-> On Wed, 2022-09-07 at 21:37 +1000, NeilBrown wrote:
-> > On Wed, 07 Sep 2022, Jeff Layton wrote:
-> > > +The change to \fIstatx.stx_ino_version\fP is not atomic with respect to the
-> > > +other changes in the inode. On a write, for instance, the i_version it usually
-> > > +incremented before the data is copied into the pagecache. Therefore it is
-> > > +possible to see a new i_version value while a read still shows the old data.
-> > 
-> > Doesn't that make the value useless?
-> > 
-> 
-> No, I don't think so. It's only really useful for comparing to an older
-> sample anyway. If you do "statx; read; statx" and the value hasn't
-> changed, then you know that things are stable. 
+On 7 Sep 2022, at 0:58, Chuck Lever III wrote:
 
-I don't see how that helps.  It's still possible to get:
+>> On Sep 6, 2022, at 3:12 PM, Olga Kornievskaia <aglo@umich.edu> wrote:
+>>
+>> On Tue, Sep 6, 2022 at 2:28 PM Benjamin Coddington 
+>> <bcodding@redhat.com> wrote:
+>>>
+>>> On 1 Sep 2022, at 21:27, Olga Kornievskaia wrote:
+>>>
+>>>> Thanks Chuck. I first, based on a hunch, narrowed down that it's
+>>>> coming from Al Viro's merge commit. Then I git bisected his 
+>>>> 32patches
+>>>> to the following commit f0f6b614f83dbae99d283b7b12ab5dd2e04df979
+>>>
+>>> No crash for me after reverting 
+>>> f0f6b614f83dbae99d283b7b12ab5dd2e04df979.
+>>
+>> I second that. No crash after a revert here.
+>
+> I bisected the new xfstests failures to the same commit:
+>
+> f0f6b614f83dbae99d283b7b12ab5dd2e04df979 is the first bad commit
+> commit f0f6b614f83dbae99d283b7b12ab5dd2e04df979
+> Author: Al Viro <viro@zeniv.linux.org.uk>
+> Date:   Thu Jun 23 17:21:37 2022 -0400
+>
+>     copy_page_to_iter(): don't split high-order page in case of 
+> ITER_PIPE
+>
+>     ... just shove it into one pipe_buffer.
+>
+>     Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+>
+>  lib/iov_iter.c | 21 ++++++---------------
+>  1 file changed, 6 insertions(+), 15 deletions(-)
+>
 
-		reader		writer
-		------		------
-				i_version++
-		statx
-		read
-		statx
-				update page cache
+I've been reliably reproducing this on generic/551 on xfs.  In the case
+where it crashes, rqstp->rq_res.page_base is positive multiple of 
+PAGE_SIZE
+after getting set in nfsd_splice_actor(), and that with page_len 
+overruns
+the 256 pages we have.
 
-right?
+With f0f6b614f83d reverted, rqstp->rq_res.page_base is always zero.
 
---b.
+After 47b7fcae419dc and f0f6b614f83d, buf->offset in nfsd_splice_actor 
+can
+be a positive multiple of PAGE_SIZE, whereas before it was always just 
+the
+offset into the page.
 
-> 
-> > Surely the change number must
-> > change no sooner than the change itself is visible, otherwise stale data
-> > could be cached indefinitely.
-> > 
-> > If currently implementations behave this way, surely they are broken.
-> 
-> It's certainly not ideal but we've never been able to offer truly atomic
-> behavior here given that Linux is a general-purpose OS. The behavior is
-> a little inconsistent too:
-> 
-> The c/mtime update and i_version bump on directories (mostly) occur
-> after the operation. c/mtime updates for files however are mostly driven
-> by calls to file_update_time, which happens before data is copied to the
-> pagecache.
-> 
-> It's not clear to me why it's done this way. Maybe to ensure that the
-> metadata is up to date in the event that a statx comes in? Improving
-> this would be nice, but I don't see a way to do that without regressing
-> performance.
-> -- 
-> Jeff Layton <jlayton@kernel.org>
+Something like this might fix it up:
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index 9f486b788ed0..d62963f36f03 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -849,7 +849,7 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, 
+struct pipe_buffer *buf,
+
+         svc_rqst_replace_page(rqstp, buf->page);
+         if (rqstp->rq_res.page_len == 0)
+-               rqstp->rq_res.page_base = buf->offset;
++               rqstp->rq_res.page_base = buf->offset % PAGE_SIZE;
+         rqstp->rq_res.page_len += sd->len;
+         return sd->len;
+  }
+
+
+.. but we should check with Al about whether this needs to be fixed over 
+in
+copy_page_to_iter_pipe(),  since I don't think pipe_buffer offset should 
+be
+greater than PAGE_SIZE.
+
+Al, any thoughts?
+
+Ben
+
