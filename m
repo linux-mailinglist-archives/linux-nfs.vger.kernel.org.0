@@ -2,82 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BAD545AFD37
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Sep 2022 09:14:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E67755AFF7C
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Sep 2022 10:45:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbiIGHO1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Sep 2022 03:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35552 "EHLO
+        id S229742AbiIGIpn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Sep 2022 04:45:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbiIGHO1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Sep 2022 03:14:27 -0400
-Received: from mail-m975.mail.163.com (mail-m975.mail.163.com [123.126.97.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E651E8E4DB;
-        Wed,  7 Sep 2022 00:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=tB1RP
-        O26vXe1FKV6Z0BCxutSM6Hh9I8XS6K8h1ddblw=; b=lULX5HIQA49HMpjnmMClZ
-        bUDrbrnBT081jnGcf/yLo0vTjve0E95ZcYr4gtOirJnKHVSukPOHtpqM5MUA5IJD
-        7RCV7bfKOf3NrieJeHbi1O+RjPWYEicTeYXqseOQEWh9nP/sPdwV22SEMfSJBFJH
-        5B9xKjMFY2R0BhSYy55Tgo=
-Received: from localhost.localdomain (unknown [36.112.3.164])
-        by smtp5 (Coremail) with SMTP id HdxpCgCHGUqjRBhjg6Qvag--.54847S4;
-        Wed, 07 Sep 2022 15:13:51 +0800 (CST)
-From:   Jianglei Nie <niejianglei2021@163.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org,
-        trond.myklebust@hammerspace.com, anna@kernel.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com
-Cc:     linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jianglei Nie <niejianglei2021@163.com>
-Subject: [PATCH] SUNRPC: Fix potential memory leak in xs_udp_send_request()
-Date:   Wed,  7 Sep 2022 15:13:38 +0800
-Message-Id: <20220907071338.56969-1-niejianglei2021@163.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229572AbiIGIpm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Sep 2022 04:45:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E3C72EE1;
+        Wed,  7 Sep 2022 01:45:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=EBn6+PekQ9HgWpOyL3HjDLpM5I9iK8a5/LWby5GXm9w=; b=oVetsvWLvH5eTqsi2zWONtOAC3
+        rpZ6+qvDKI37kr2ze2cMlVgkhAfvPg6uiUWsrUYR9ZcUyYQNl4xeK1t6c4whmVHD1E23Mhxgz01wR
+        vXF5bBSal2savl00zL3GewiEwtqdPIW0eH0UH4EbDt3Wi2PxSzFltT2mdaBrlbik3gmpqAjya3jSQ
+        NGIUR67sBaEfsENy+OvVHmXQ7qCuMwLTtqbOKQl1Wv+5Kl/t2anvwTp1DeYUFuU8DAs/eLpqyNY3y
+        FxW4UOxkCgD0Il8Z5AF1hAzQ0cfHvx1nSsH2xsI4w6iHAzjsFq53EgVIyPzPpxzmtV9iZ+vo4btdE
+        qjixFbYg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1oVqgY-004SGZ-4V; Wed, 07 Sep 2022 08:45:26 +0000
+Date:   Wed, 7 Sep 2022 01:45:26 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YxhaJktqtHw3QTSG@infradead.org>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
+ <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: HdxpCgCHGUqjRBhjg6Qvag--.54847S4
-X-Coremail-Antispam: 1Uf129KBjvdXoW7Wr1rZFy8CrWkXrWkuw4fuFg_yoWfAFcEgF
-        ykWa1xXr1qganxJayUZa13Gr1ayay7WFZ5u3Z3GFy7J3W8ur13tr10grn3GayxCr43Jr98
-        C3WkKry2yw1SvjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7xRK7KsUUUUUU==
-X-Originating-IP: [36.112.3.164]
-X-CM-SenderInfo: xqlhyxxdqjzvrlsqjii6rwjhhfrp/xtbBOQZ1jF-PPLOtqgAAse
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220906102106.q23ovgyjyrsnbhkp@quack3>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-xs_udp_send_request() allocates a memory chunk for xdr->bvec with
-xdr_alloc_bvec(). When xprt_sock_sendmsg() finishs, xdr->bvec is not
-released, which will lead to a memory leak.
+On Tue, Sep 06, 2022 at 12:21:06PM +0200, Jan Kara wrote:
+> > For FOLL_PIN callers, never pin bvec and kvec pages:  For file systems
+> > not acquiring a reference is obviously safe, and the other callers will
+> > need an audit, but I can't think of why it woul  ever be unsafe.
+> 
+> Are you sure about "For file systems not acquiring a reference is obviously
+> safe"? I can see places e.g. in orangefs, afs, etc. which create bvec iters
+> from pagecache pages. And then we have iter_file_splice_write() which
+> creates bvec from pipe pages (which can also be pagecache pages if
+> vmsplice() is used). So perhaps there are no lifetime issues even without
+> acquiring a reference (but looking at the code I would not say it is
+> obvious) but I definitely don't see how it would be safe to not get a pin
+> to signal to filesystem backing the pagecache page that there is DMA
+> happening to/from the page.
 
-we should release the xdr->bvec with xdr_free_bvec() after
-xprt_sock_sendmsg() like bc_sendto() does.
-
-Signed-off-by: Jianglei Nie <niejianglei2021@163.com>
----
- net/sunrpc/xprtsock.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
-index e976007f4fd0..298182a3c168 100644
---- a/net/sunrpc/xprtsock.c
-+++ b/net/sunrpc/xprtsock.c
-@@ -958,6 +958,7 @@ static int xs_udp_send_request(struct rpc_rqst *req)
- 		return status;
- 	req->rq_xtime = ktime_get();
- 	status = xprt_sock_sendmsg(transport->sock, &msg, xdr, 0, 0, &sent);
-+	xdr_free_bvec(xdr);
- 
- 	dprintk("RPC:       xs_udp_send_request(%u) = %d\n",
- 			xdr->len, status);
--- 
-2.25.1
-
+I mean in the context of iov_iter_get_pages callers, that is direct
+I/O.  Direct callers of iov_iter_bvec which then pass that iov to
+->read_iter / ->write_iter will need to hold references (those are
+the references that the callers of iov_iter_get_pages rely on!).
