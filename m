@@ -2,47 +2,51 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3A3C5B241E
-	for <lists+linux-nfs@lfdr.de>; Thu,  8 Sep 2022 19:00:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53DAD5B2484
+	for <lists+linux-nfs@lfdr.de>; Thu,  8 Sep 2022 19:25:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230507AbiIHRAx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Sep 2022 13:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44412 "EHLO
+        id S231982AbiIHRZR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Sep 2022 13:25:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229504AbiIHRAu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Sep 2022 13:00:50 -0400
+        with ESMTP id S229491AbiIHRY6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Sep 2022 13:24:58 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407B3C4831
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Sep 2022 10:00:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A014EE0A;
+        Thu,  8 Sep 2022 10:24:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E011DB818B5
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Sep 2022 17:00:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A01DC433D6;
-        Thu,  8 Sep 2022 17:00:46 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 35065B821DC;
+        Thu,  8 Sep 2022 17:24:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8AEBC433C1;
+        Thu,  8 Sep 2022 17:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662656446;
-        bh=1eY/HOWwy2efhbRjsiAhA60K8ylM9PwTnRJ2H6lYYmI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=L+mOrxiGJhskJoLaWQPv8f4jkiaBtA/CU1sBHKY8G1yV0PpRqebKP2UiVDn0OBgpZ
-         BNwDromGXYs0TCgNfkG5p671vTGySVwq+VFwnrk3LlqU25iS8JAKx2KX90Dhlssnvp
-         kb3Qz+vV/a+jIr9kzb/aujemUtVZ+svsFNzIyGHbcFsojb/JsZBuSWk0mSfpI9gZiW
-         c2iEkLbHmE8YaruIL4ELa0Q/XNH9B3E0Y4jbcz416RUKbnRBOX3TVFV98KZqFzonDs
-         FbiTuw75uOI85q8iqlZq3edZABTB5FZvcFWrzEhM1Sp2+qfapsNea8dfXc5KL0D9ST
-         ejZLw0pjNWdgA==
-Message-ID: <3ecdb5e4baff87b3dcfb77ce3dc7b6336b9832ce.camel@kernel.org>
-Subject: Re: [PATCH] nfsd: clean up mounted_on_fileid handling
+        s=k20201202; t=1662657891;
+        bh=jJcFm13hVF9RY9y/OKHnwztBV1qiy0LTPkPTC1q0taw=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qSgcME4dLdsxXrisJmoKXG1TUhRdr502APJkM8P+y8mGawxcYHF4Vbsp6U+AbzBcN
+         2buc6MAuMnTh+7N+Zpg6yFn/WaXGA6OZeTSMbmmloXPaBHpK3tX9gMenyJaauoirRT
+         GglAlnFZPmkcgd4XpkjLJ+wEDCDT3b+RCMkjTC6iI5SQm3ebRnpc+L4rAQP5Iwbyeq
+         T5LjD0nOG5UK51pJV09uUXidU/U9g4V4gSUW1DyZEK+fnTgpWjFTpH8OwmZeEuI6js
+         Gp5bMJkFa9Th3p+zoQ/smtzzIKb6VlglHE1eqz3KAV3NAUc0wwO6okbNxPvMjZjyls
+         D/lja4aKOv+0Q==
 From:   Jeff Layton <jlayton@kernel.org>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Thu, 08 Sep 2022 13:00:44 -0400
-In-Reply-To: <20220908163107.202597-1-jlayton@kernel.org>
-References: <20220908163107.202597-1-jlayton@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com
+Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v5 0/8] vfs/nfsd: clean up handling of the i_version counter
+Date:   Thu,  8 Sep 2022 13:24:40 -0400
+Message-Id: <20220908172448.208585-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -53,81 +57,61 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-09-08 at 12:31 -0400, Jeff Layton wrote:
-> We only need the inode number for this, not a full rack of attributes.
-> Rename this function make it take a pointer to a u64 instead of
-> struct kstat, and change it to just request STATX_INO.
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/nfs4xdr.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->=20
-> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-> index 1e9690a061ec..5980df859c3a 100644
-> --- a/fs/nfsd/nfs4xdr.c
-> +++ b/fs/nfsd/nfs4xdr.c
-> @@ -2774,9 +2774,10 @@ static __be32 fattr_handle_absent_fs(u32 *bmval0, =
-u32 *bmval1, u32 *bmval2, u32
->  }
-> =20
-> =20
-> -static int get_parent_attributes(struct svc_export *exp, struct kstat *s=
-tat)
-> +static int get_mounted_on_ino(struct svc_export *exp, u64 *pino)
->  {
->  	struct path path =3D exp->ex_path;
-> +	struct kstat stat;
->  	int err;
-> =20
->  	path_get(&path);
-> @@ -2784,8 +2785,10 @@ static int get_parent_attributes(struct svc_export=
- *exp, struct kstat *stat)
->  		if (path.dentry !=3D path.mnt->mnt_root)
->  			break;
->  	}
-> -	err =3D vfs_getattr(&path, stat, STATX_BASIC_STATS, AT_STATX_SYNC_AS_ST=
-AT);
-> +	err =3D vfs_getattr(&path, &stat, STATX_INO, AT_STATX_SYNC_AS_STAT);
+v5: don't try to expose i_version to userland (yet)
+    use getattr to get i_version in nfsd
+    take inode lock when getting i_version
 
-We could also consider using AT_STATX_DONT_SYNC here as well, but it's
-probably not worthwhile. Just asking for the inode number shouldn't
-result in any I/O in a sanely-written getattr.
+This set is a bit different from the earlier ones. In particular, it
+does not try to expose i_version to userland. STATX_INO_VERSION is added
+as a kernel-only symbol (for now), and the infrastructure is changed
+around to use it.
 
->  	path_put(&path);
-> +	if (!err)
-> +		*pino =3D stat.ino;
->  	return err;
->  }
-> =20
-> @@ -3282,22 +3285,21 @@ nfsd4_encode_fattr(struct xdr_stream *xdr, struct=
- svc_fh *fhp,
->  		*p++ =3D cpu_to_be32(stat.btime.tv_nsec);
->  	}
->  	if (bmval1 & FATTR4_WORD1_MOUNTED_ON_FILEID) {
-> -		struct kstat parent_stat;
->  		u64 ino =3D stat.ino;
-> =20
->  		p =3D xdr_reserve_space(xdr, 8);
->  		if (!p)
->                  	goto out_resource;
->  		/*
-> -		 * Get parent's attributes if not ignoring crossmount
-> -		 * and this is the root of a cross-mounted filesystem.
-> +		 * Get ino of mountpoint in parent filesystem, if not ignoring
-> +		 * crossmount and this is the root of a cross-mounted
-> +		 * filesystem.
->  		 */
->  		if (ignore_crossmnt =3D=3D 0 &&
->  		    dentry =3D=3D exp->ex_path.mnt->mnt_root) {
-> -			err =3D get_parent_attributes(exp, &parent_stat);
-> +			err =3D get_mounted_on_ino(exp, &ino);
->  			if (err)
->  				goto out_nfserr;
-> -			ino =3D parent_stat.ino;
->  		}
->  		p =3D xdr_encode_hyper(p, ino);
->  	}
+This allows us to fetch the i_version during the getattr operation, and
+eliminate the fetch_iversion export operation. This is a much more
+natual way to handle the i_version counter in nfsd and, as a bonus, this
+should allow nfsd to use ceph's i_version counter too. Huzzah!
 
---=20
-Jeff Layton <jlayton@kernel.org>
+The first two patches fix up ext4's i_version handling and enable it
+unconditionally. Those can go in independently of the rest, IMO. Ted, if
+you're ok with those and want to pick them up then that would be great.
+
+The rest of the patches clean up the i_version handling, but should not
+change the userland API at all.  This should make it very simple to
+expose i_version to userland in the future if we decide to do so. Maybe
+we should take these in via the nfsd tree? I'm not sure here.
+
+The last patch should be considered an RFC. I think that that approach
+should prevent the potential race, without adding new work in the
+write codepath.
+
+Jeff Layton (8):
+  iversion: clarify when the i_version counter must be updated
+  ext4: fix i_version handling in ext4
+  ext4: unconditionally enable the i_version counter
+  vfs: plumb i_version handling into struct kstat
+  nfs: report the inode version in getattr if requested
+  ceph: report the inode version in getattr if requested
+  nfsd: use the getattr operation to fetch i_version
+  nfsd: take inode_lock when querying for NFSv4 GETATTR
+
+ fs/ceph/inode.c          | 14 +++++++++-----
+ fs/ext4/inode.c          | 15 +++++----------
+ fs/ext4/ioctl.c          |  4 ++++
+ fs/ext4/move_extent.c    |  6 ++++++
+ fs/ext4/super.c          | 13 ++++---------
+ fs/ext4/xattr.c          |  1 +
+ fs/nfs/export.c          |  7 -------
+ fs/nfs/inode.c           |  7 +++++--
+ fs/nfsd/nfs4xdr.c        | 17 ++++++++++++++++-
+ fs/nfsd/nfsfh.c          |  6 ++++++
+ fs/nfsd/nfsfh.h          |  9 ++++-----
+ fs/nfsd/vfs.h            |  7 ++++++-
+ fs/stat.c                | 14 +++++++++++++-
+ include/linux/exportfs.h |  1 -
+ include/linux/iversion.h | 10 ++++++++--
+ include/linux/stat.h     |  4 ++++
+ 16 files changed, 91 insertions(+), 44 deletions(-)
+
+-- 
+2.37.3
+
