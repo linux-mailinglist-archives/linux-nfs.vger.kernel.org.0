@@ -2,283 +2,247 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABEA5B3E70
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 20:00:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BBDE85B3E98
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 20:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiIISAw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Sep 2022 14:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
+        id S230064AbiIISMf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Sep 2022 14:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229989AbiIISAY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 14:00:24 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA62C5F7CB
-        for <linux-nfs@vger.kernel.org>; Fri,  9 Sep 2022 11:00:10 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id r18so5752295eja.11
-        for <linux-nfs@vger.kernel.org>; Fri, 09 Sep 2022 11:00:10 -0700 (PDT)
+        with ESMTP id S231244AbiIISMe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 14:12:34 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05862D5730
+        for <linux-nfs@vger.kernel.org>; Fri,  9 Sep 2022 11:12:33 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 289I42jo000308;
+        Fri, 9 Sep 2022 18:12:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=SR82Po03UoZCScXm35VjhQlFcXulc4BnF8917HA7duo=;
+ b=VmSyC40YUyOPtXnRG8MOFW/P1pI337aRiGYt9itu+EtUv2usIQ/RllcBakIBz1iSbd5z
+ SRfESObVKl6zx9D1OC/6hz331cFxz5CijDIaWuGpW5yIH0VOdk6WyRREoGY6AzJ4TYFq
+ PM3LuRBDjMVlCGSPBDPBBYZ3u1MZ5kD1nnshIkvlgPfGAqs926rDlCWNpfqKHRMBC8KA
+ A4TOEL+SkxuEpl2hjTktEoEz+p2jfyXoGcqVdX4vwxjn5HhHNiMZ/vXBxmvXCuLwo2HH
+ NvE5twcRwE91Sm2XvztzXK4YsNKGMprsqK1DdK29/6/97JzWu5t1XYcPY4oF+nibEL5/ SA== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jbxht01a8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 09 Sep 2022 18:12:29 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 289GBnsb008720;
+        Fri, 9 Sep 2022 18:12:28 GMT
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jbwc8j9xt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 09 Sep 2022 18:12:27 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MwAe1cb9CQyNthtlZ5/OAiqcCwM4F0G9LE2Xx1c2mtiFibSNF+aoP5wDxaEGvpvcfquqiyDJQhyRIaQAvu2FzGJDJ3nk5JDpw2uXLtvOVeRhxF7v1WHkFdFyNgLHRv0UaFW8KKQ9p6s/JnpwCh/OvQTSCzq6u/SPZdyhxK6BPqicxxwtU0F6LIbY8somgD50jx36ibV2FcMV+6wklTH6H/aC7kiTd50zCSv/DO3PZGIHbXb523cSFw3CW0Wd9oCnKT7iMcjDKaWSycJiLo1AjzXmySFGtyYRb8x8wAolsiRbceCzWox/fta7E7LkPXMFQ9gicjU4L6FewwEyVt9lJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=SR82Po03UoZCScXm35VjhQlFcXulc4BnF8917HA7duo=;
+ b=almxum+u0DJD+CDfpBCFw/fK68/oMr8aIVfmoY5if/2beAlufnt3i1cwJkljmklcwf5wpdYNWF0gvhUwxjfQn2FJ7sfAahaIuQNZd20SNJSr6aGDKIrTlFECKKk4esE9rBWeLgsL/maYbM7ryCRQcjtVsUEb4MrH6PovPHRucOX4i8dJycSzpE780xi+3+SeII+wd6OETbfqqqBdL0DhXC+UIF09Q0EI+2sec2ANqXdjc/LwICSmj/lWMUlsWShtKubpPO9M5WnmLjCMBN1dDTvkVroqiGkc0oQhHmrO+eTaa/zM6gC2jRHMTSbdoaDHhssQwOeJIq5H9/yjY+YDUw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=Tz5yD0RJuOyAZR5ePYyGiDWmggQdhn+DZL0QzTAC0Is=;
-        b=GKKBFVCkzcZLXMTGIsd6yz9VsN683y3D5sukWn/uTWoDqwSZrTHIqT3NkEUm3zRVY9
-         7w7rRWVMUCNuAPaFFvR9wOAbbX+AtJwctHUI+gOeIwWGlY81QfrhxHRGiVHZuXRESdXK
-         yVufBP8DGKKGBK/tdH/sCz9nRG2zzBmw4ey47huGXsqkdr9G2j5hAz0T4TaKNwbgcuGg
-         LSStK5rLMsoZEL/TbvDQV9QDaSDYSjfRWPeCnRI9ECL2izgSjAjU2Nw16F/wzSq4yUJm
-         in9tZa7cA7SMM29FBAocLW2EM1d6EEjvbET+PJZPAMmkLDjn2FXWmddUhPMSEEG+Rp0i
-         BDRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=Tz5yD0RJuOyAZR5ePYyGiDWmggQdhn+DZL0QzTAC0Is=;
-        b=SuPK4z5e39dCm3Pz1YNX5bPvNUMiDbq5ZH9hTcPerOHMY9b9s7GT0c7ncGYZsZqvjT
-         b/s66fMyKk2dRgYOR++Bh35JH+5KG7CTQjh0BDNMsGa8j1NDTsx4SfoH9OYcXGGOuFm+
-         rf7eiP/2ZruWg0/v17f3P/nRAP6ajCCw6t/S9tHi+v7ze0qgVCwPETz3qZBTszf9IVws
-         ZoyWDCV5pa3qWdO9d77exeyWZHMQOpJBk1Puvqh60WXisGBNIgMIHZ3+WFgQB/64Rtwv
-         kszK7q+9jsfDb6tuCkFcMCfu00LF4AFbkV84uqYZmN1m/YJYZj8wXYU8elMWxThMJJK8
-         vAFQ==
-X-Gm-Message-State: ACgBeo0cKBee1gTlE02OuRZKSWDFoVM/RDNwln4+1sDiR0frPD1LLNA6
-        p2lWsKAPj0C0de1gd9e9hJWmhu9je426s1KsL3eR4wETXZE=
-X-Google-Smtp-Source: AA6agR7LRf+Jsqu6I4KqBadR8KlWu21tSes2OD63Gh+bB5s7iPQtjy/yJTH+z9pK8pY5jMEDEvKQjNPnN+TS5SUAB3I=
-X-Received: by 2002:a17:907:d2a:b0:741:4f42:df74 with SMTP id
- gn42-20020a1709070d2a00b007414f42df74mr10119555ejc.535.1662746408677; Fri, 09
- Sep 2022 11:00:08 -0700 (PDT)
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=SR82Po03UoZCScXm35VjhQlFcXulc4BnF8917HA7duo=;
+ b=DAC0FJoLXbnYoIq/H1N6Cbzb+A1UtmDZlnckooumXHvzwbtMRYVUWSvEP6TDRXauukZRU56+SO5z9R9gNfiWgDeu3ZEpBUYEoJHrB+jdJMLNk2UXRUmdR1DBsE72brichTAWphR6tggkWYYIxfvWI+4+U0SaTdVNr30Mv4w9hc4=
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
+ by CH0PR10MB5292.namprd10.prod.outlook.com (2603:10b6:610:ca::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5612.12; Fri, 9 Sep
+ 2022 18:12:26 +0000
+Received: from BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::803:3bcf:a1ee:9e1c]) by BY5PR10MB4257.namprd10.prod.outlook.com
+ ([fe80::803:3bcf:a1ee:9e1c%6]) with mapi id 15.20.5612.019; Fri, 9 Sep 2022
+ 18:12:26 +0000
+Message-ID: <1557e8bb-1739-29a4-a04c-c62732cfc7c4@oracle.com>
+Date:   Fri, 9 Sep 2022 11:12:22 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.13.0
+Subject: Re: [PATCH v2] NFSD: fix use-after-free on source server when doing
+ inter-server copy
+Content-Language: en-US
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+References: <1659405154-21910-1-git-send-email-dai.ngo@oracle.com>
+ <E146112C-33EE-4143-92F7-7515638301D7@oracle.com>
+From:   dai.ngo@oracle.com
+In-Reply-To: <E146112C-33EE-4143-92F7-7515638301D7@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SN7PR04CA0177.namprd04.prod.outlook.com
+ (2603:10b6:806:125::32) To BY5PR10MB4257.namprd10.prod.outlook.com
+ (2603:10b6:a03:211::21)
 MIME-Version: 1.0
-References: <CA+9S74iBrObUnaSpSdqXu0_GosDdE1dmSbmgxfmxEK2mhDaNjg@mail.gmail.com>
- <28bbec15d3a631e0a9047f4a5895bd42db364dba.camel@hammerspace.com>
- <CA+9S74jaMmn69WLsOZG8QYT2kZQDn9SGszNr-ozxRPubPuV5wQ@mail.gmail.com>
- <6beb46a169e675c560871ca54748481522ecbaec.camel@hammerspace.com>
- <CA+9S74iB8kjqcySajgfbcFGt5nrL3YpquWc66oL5mvnPgO3vnA@mail.gmail.com>
- <CH0PR13MB50840DBE3BF030039288DB63B8439@CH0PR13MB5084.namprd13.prod.outlook.com>
- <a3aa0865d7c6e5b0f8f3dfd62e99578fc528eab0.camel@hammerspace.com>
-In-Reply-To: <a3aa0865d7c6e5b0f8f3dfd62e99578fc528eab0.camel@hammerspace.com>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Fri, 9 Sep 2022 13:59:57 -0400
-Message-ID: <CAN-5tyEuWz2wLJOfk5DPLyrQXXc7ScJ7Je8C=YyEpt0pM=-bgA@mail.gmail.com>
-Subject: Re: Regression: deadlock in io_schedule / nfs_writepage_locked
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "igor@gooddata.com" <igor@gooddata.com>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|CH0PR10MB5292:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27815bfb-73c8-43bc-64cd-08da928ed958
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: CpvB50E38HAB+XkjbKg2aULT6csiROd6xo8BadJVVRRUzE9YhkXsPU6efY+3X45QuLfV+Q8WGmMmB8iHMYBn9Pmcdd56Yo8VjuUZU7XW1sj98oLbgkC0kRaDCaltgCMoJlFjToVWo+MwrJePYSxuDcnrZSAYEskwPxv7mmczVRj2drGiXkWQmipkXoVaPa3KNM+4iSI1qnAbbua4sj9yWoQIClEmO38WKWHtYvK/nl/iXqUmCCR29Zg6132CkuEeOfw6ve3Xypip1whsPlhAuThju/jlKVy0Xz0ZOpeYe8/N2YLQoeFqyoXCDiPh3EPsKHtaxguMPbDYQ4NcQKSts1djCbzJiwjGWGHGD44Da36jl+xQjzCA+pM0brPZYrX+RW9Soq3o9Wv+D4nmUCbP/AZnEx/JiekswWY3MWY1WniELHDHkVOywgULSqxtMILo4olxZczCafGtOuOSXRvoI9V2ZqMRrKgAdT+8v6KJHVuqYEIBap8O6KevjaSxABBfnQpJo1Yat7GqLFxZoDIyC6IGiwAVJqWHKMYA9D5MkBuF+fCPKWFq4c4Is1cQTaF9fUzLkiBDqtbF4QN1JJY/vpkV9od7Mzue8xoc7Rkzkc3pEAs1mnuGkCeUr5c0m4TVfqygq1sciI+uQysfug4ZmaH2V/Vz5jJ2HOeKBMrIBhopztogGFO29ShmUd5JDnZtwrhGn4OHv7F+9k6gKi8haDQIZUZ6y+uotyevhFmMPgy50kk6mGgYqdOndEcCEzcN
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(396003)(376002)(366004)(39860400002)(136003)(346002)(36756003)(86362001)(38100700002)(31696002)(26005)(8676002)(66556008)(66476007)(2906002)(6506007)(31686004)(6666004)(41300700001)(6862004)(8936002)(5660300002)(4326008)(478600001)(54906003)(37006003)(316002)(53546011)(2616005)(6486002)(66946007)(83380400001)(6512007)(186003)(9686003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZEYyTFZZc0FHV1dTQ2FFY3A0U2lCR1ZibGlYVEhUYzlJQW1hcFQyQ1VTMEM3?=
+ =?utf-8?B?aUxIYlM0S0VZd0lpV0h3RElLSUw0dERvQk9ucWlPRkE0SGZGRk41czgxK3BJ?=
+ =?utf-8?B?YjJqa0hLSFRyQmw3Uk1jZG5naXBlRWZUVWVMVlJsS3hFSHBYTVJDbEQ1dXpQ?=
+ =?utf-8?B?UjA5TXpSYmtHQlZDaHdmUTlGWUdMU20rSUhUakRhVmYrNHdicXpCamFXSm5T?=
+ =?utf-8?B?cDV4bFVsc2JHNFpNd1Y1NGYxV1NnMlVtUEVmL1hxTWkwU0pZTkRKTnVhcTVm?=
+ =?utf-8?B?dXBjd0htVTVRTFRNUERKN0ZLaHl5TzhBNEhLSHJqMHVxVUsxaVlhNXNFSzRC?=
+ =?utf-8?B?dDFzWGNOQU54Vmp2QzAxWjlqTThCSG4rdWdJRUZ0TzVTQ0NTYzRubEpQaU1r?=
+ =?utf-8?B?a3dUNVdTOVQreDgxbUVkeHRTVVMxY0k3ZWlGekVQcm14R3pEZy95ZysxaXpm?=
+ =?utf-8?B?RmlXSzNITW5FZkFqK1FZbEFZSDVoclZ4TzlyVDFGOEMxUlNSYTlTeThhUFJQ?=
+ =?utf-8?B?KzZkRkdOaVRiNTloSk9ST2FKRDVJUWEzK2dNOGdqaVR2bFNIL1R6M3RudURE?=
+ =?utf-8?B?YlMwZFVYaVAyUS92U29xNjVXMHEzSzY1ZFFUQ1VSclpOYk4vb0ZBblBvUUh1?=
+ =?utf-8?B?eDVockR5S0NnR3hrUzhMclRMeC9zeVMyWDJ1VmtOcUgvUm5mT0l2SDRvNzlu?=
+ =?utf-8?B?RktZakNnZzJjcFdPRElvVURVcXdJenozWU5LZ0wvZHhEUTFQV0oyMEYxSkZj?=
+ =?utf-8?B?Mkl5UU9RNTBKYkVRUGxOaHVoNzlqRzlpUlVDeU1UODJQa3pRdVdLb0RGUVl4?=
+ =?utf-8?B?a25WSURoM244K2haMitaNlBKVlJSa1ovS2E3cTdoQklHSytTRlVVMmM4Vy91?=
+ =?utf-8?B?dE1Jb09sVVBtaWtOZ21OWldHQVQ5WGVFZ3M3U09ORHp1OFNRa0xqWW4rZjJG?=
+ =?utf-8?B?akY5Y0pkYjR3T0FFakNqeXRWNUwvZjVLandONjhZTDNqQ0FFREVPV3RGUFEv?=
+ =?utf-8?B?WlB1V1htUjN0YXJkYlB1b3FWNVRSTU4waUZLcTZ5SzFrSHBWclpQbWxDdFM5?=
+ =?utf-8?B?aGVZMTJXclhibTV0cXRSQjczbUkyOGhLVG14MGJGd2VmRWxSdk9aV3lEeGxC?=
+ =?utf-8?B?VVpPRnl4WjcrdUsrQWM0R2FvT3I2MkdjM3VkQkhRSzlqbzJjY0JmRjN5aFV2?=
+ =?utf-8?B?clRvZER1LzdFZ3ZhbElLQ2h5SGROZFJYc0FlQlBxamNBcHRuQm9JcmR1QzMz?=
+ =?utf-8?B?VG5kelJBdExzNHI5bVAybjlNQmw4MGZGMjNOc0VEUTVwMis0ajJPZ253OHNi?=
+ =?utf-8?B?TnUrdzJDaGREZ3Bhd3ZxVFJlYmlySVRYb2NrWlBGSUl6K01YeG9IR3RvRW9L?=
+ =?utf-8?B?WnFXcjhDTHpoY1RIZzNNWktad1hyaXBHYWtNYTExMU56YXRNRlZwZGJtNTNZ?=
+ =?utf-8?B?OU42dDhETG5NdTJZeS9iL01SVGo0ZFJ5Z0x3VFJ1UnZwSFJwWTg0ZzlKcElI?=
+ =?utf-8?B?SE5HTDVHY0F5NVArQ3hWVlQvUnR5b0xhK1pJVVFtUGV0S1hMUFEwQldUb1B6?=
+ =?utf-8?B?ang0SGwyREdTMHpqY292S1lIZC9lVmF0UWdta3kvM29RR200YXNhWkdCdmxR?=
+ =?utf-8?B?aHdJd2xRTmJmMzNYaDBtL0UwUkg4VVFmRnJiV2VXTkV1aGxFQk5nNDR4Skdo?=
+ =?utf-8?B?Yk53UjVjYVBaVlVMZ2liZzBMM29xUjRsVUFBWjdQaTM2K29taU1XZmtmVmdS?=
+ =?utf-8?B?cTNuZHBKNCtoMjRLZ3NtamtHUWdGaGFKNlZhTkZMQUhzYSt1ODBla2t2RjQ2?=
+ =?utf-8?B?RWdSQWVXcDlXVzNEemJHWnBHaUxaZnFqVTd2TmQyelFNM2dwOE5PVzlyOWdQ?=
+ =?utf-8?B?dng0UkVRWkNlSXNVOFQ1dVVUWHg1OGRTdEM2K0dnMVkxazM0a0I1ZU5UVkow?=
+ =?utf-8?B?YU5aVjJaZm9MTFdMTGU1UXIva0lvVTY3TExrMExudHYwWC9JWCtUZUxhL3ZW?=
+ =?utf-8?B?Q0lxeVhzRG5oMStOUTBSZHZFbDhyeTBhNkxQWFNpejQyWk5ydTVlZnBhYWtQ?=
+ =?utf-8?B?djdONVFLeThxYS9hOGJtS3VxVm9hZGt2bTNHL0pubERSWkhZcDI5T1ZUTmhR?=
+ =?utf-8?Q?U9eTN7xsUTXcN0kxBUV9DFkt/?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27815bfb-73c8-43bc-64cd-08da928ed958
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2022 18:12:25.8618
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: pNUmW+S7mSN3oOd58R3g5x3CTQX4rhqjfWGtwhWRU46hXNdTuqsezYNyVR3zO1bcfbSv53mgdYfC+1lbSnZGGQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB5292
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-09_08,2022-09-09_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0 mlxscore=0
+ suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2209090064
+X-Proofpoint-GUID: u-uS5yG77Gyx6o8GaMBLE2-c_6huQa81
+X-Proofpoint-ORIG-GUID: u-uS5yG77Gyx6o8GaMBLE2-c_6huQa81
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 9, 2022 at 12:52 PM Trond Myklebust <trondmy@hammerspace.com> w=
-rote:
+Hi Chuck,
+
+Is there anything else you want me to do with this patch?
+
+Thanks,
+-Dai
+
+On 8/2/22 7:35 AM, Chuck Lever III wrote:
 >
-> On Fri, 2022-09-09 at 16:47 +0000, Trond Myklebust wrote:
-> > This looks like it might be the root cause issue. It looks like
-> > you're using pNFS:
-> >
-> > /proc/3278822/stack:
-> > [<0>] pnfs_update_layout+0x603/0xed0 [nfsv4]
-> > [<0>] fl_pnfs_update_layout.constprop.18+0x23/0x1e0
-> > [nfs_layout_nfsv41_files]
-> > [<0>] filelayout_pg_init_write+0x3a/0x70 [nfs_layout_nfsv41_files]
-> > [<0>] __nfs_pageio_add_request+0x294/0x470 [nfs]
-> > [<0>] nfs_pageio_add_request_mirror+0x2f/0x40 [nfs]
-> > [<0>] nfs_pageio_add_request+0x200/0x2d0 [nfs]
-> > [<0>] nfs_page_async_flush+0x120/0x310 [nfs]
-> > [<0>] nfs_writepages_callback+0x5b/0xc0 [nfs]
-> > [<0>] write_cache_pages+0x187/0x4d0
-> > [<0>] nfs_writepages+0xe1/0x200 [nfs]
-> > [<0>] do_writepages+0xd2/0x1b0
-> > [<0>] __writeback_single_inode+0x41/0x360
-> > [<0>] writeback_sb_inodes+0x1f0/0x460
-> > [<0>] __writeback_inodes_wb+0x5f/0xd0
-> > [<0>] wb_writeback+0x235/0x2d0
-> > [<0>] wb_workfn+0x312/0x4a0
-> > [<0>] process_one_work+0x1c5/0x390
-> > [<0>] worker_thread+0x30/0x360
-> > [<0>] kthread+0xd7/0x100
-> > [<0>] ret_from_fork+0x1f/0x30
-> >
-> > What is the pNFS server you are running against? I see you're using
-> > the files pNFS layout type, so is this a NetApp?
-
-
-This reminds me of the problem that was supposed to be fixed by the
-patches that went into 5.19-rc3?.
-      pNFS: Don't keep retrying if the server replied NFS4ERR_LAYOUTUNAVAIL=
-ABLE
-      pNFS: Avoid a live lock condition in pnfs_update_layout()
-
-Igor,
-
-Is the server constantly returning LAYOUT_UNAVAILABLE? And does this
-happen to be co-located with a volume move operation?
-
-
-> >
+>> On Aug 1, 2022, at 9:52 PM, Dai Ngo <dai.ngo@oracle.com> wrote:
+>>
+>> Use-after-free occurred when the laundromat tried to free expired
+>> cpntf_state entry on the s2s_cp_stateids list after inter-server
+>> copy completed. The sc_cp_list that the expired copy state was
+>> inserted on was already freed.
+>>
+>> When COPY completes, the Linux client normally sends LOCKU(lock_state x),
+>> FREE_STATEID(lock_state x) and CLOSE(open_state y) to the source server.
+>> The nfs4_put_stid call from nfsd4_free_stateid cleans up the copy state
+>> from the s2s_cp_stateids list before freeing the lock state's stid.
+>>
+>> However, sometimes the CLOSE was sent before the FREE_STATEID request.
+>> When this happens, the nfsd4_close_open_stateid call from nfsd4_close
+>> frees all lock states on its st_locks list without cleaning up the copy
+>> state on the sc_cp_list list. When the time the FREE_STATEID arrives the
+>> server returns BAD_STATEID since the lock state was freed. This causes
+>> the use-after-free error to occur when the laundromat tries to free
+>> the expired cpntf_state.
+>>
+>> This patch adds a call to nfs4_free_cpntf_statelist in
+>> nfsd4_close_open_stateid to clean up the copy state before calling
+>> free_ol_stateid_reaplist to free the lock state's stid on the reaplist.
+>>
+>> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Applied to my private tree for testing.
+> I added "Cc: <stable@vger.kernel.org> # 5.6+".
 >
-> Sorry for the HTML spam... Resending with all that crap stripped out.
 >
-> > From: Igor Raits <igor@gooddata.com>
-> > Sent: Friday, September 9, 2022 11:09
-> > To: Trond Myklebust <trondmy@hammerspace.com>
-> > Cc: anna@kernel.org <anna@kernel.org>; linux-nfs@vger.kernel.org
-> > <linux-nfs@vger.kernel.org>
-> > Subject: Re: Regression: deadlock in io_schedule /
-> > nfs_writepage_locked
-> >
-> > Hello Trond,
-> >
-> > On Mon, Aug 22, 2022 at 5:01 PM Trond Myklebust
-> > <trondmy@hammerspace.com> wrote:
-> > >
-> > > On Mon, 2022-08-22 at 16:43 +0200, Igor Raits wrote:
-> > > > [You don't often get email from igor@gooddata.com. Learn why this
-> > > > is
-> > > > important at https://aka.ms/LearnAboutSenderIdentification ]
-> > > >
-> > > > Hello Trond,
-> > > >
-> > > > On Mon, Aug 22, 2022 at 4:02 PM Trond Myklebust
-> > > > <trondmy@hammerspace.com> wrote:
-> > > > >
-> > > > > On Mon, 2022-08-22 at 10:16 +0200, Igor Raits wrote:
-> > > > > > [You don't often get email from igor@gooddata.com. Learn why
-> > > > > > this
-> > > > > > is
-> > > > > > important at https://aka.ms/LearnAboutSenderIdentification ]
-> > > > > >
-> > > > > > Hello everyone,
-> > > > > >
-> > > > > > Hopefully I'm sending this to the right place=E2=80=A6
-> > > > > > We recently started to see the following stacktrace quite
-> > > > > > often
-> > > > > > on
-> > > > > > our
-> > > > > > VMs that are using NFS extensively (I think after upgrading
-> > > > > > to
-> > > > > > 5.18.11+, but not sure when exactly. For sure it happens on
-> > > > > > 5.18.15):
-> > > > > >
-> > > > > > INFO: task kworker/u36:10:377691 blocked for more than 122
-> > > > > > seconds.
-> > > > > >       Tainted: G            E     5.18.15-1.gdc.el8.x86_64 #1
-> > > > > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables
-> > > > > > this
-> > > > > > message.
-> > > > > > task:kworker/u36:10  state:D stack:    0 pid:377691 ppid:
-> > > > > > 2
-> > > > > > flags:0x00004000
-> > > > > > Workqueue: writeback wb_workfn (flush-0:308)
-> > > > > > Call Trace:
-> > > > > > <TASK>
-> > > > > > __schedule+0x38c/0x7d0
-> > > > > > schedule+0x41/0xb0
-> > > > > > io_schedule+0x12/0x40
-> > > > > > __folio_lock+0x110/0x260
-> > > > > > ? filemap_alloc_folio+0x90/0x90
-> > > > > > write_cache_pages+0x1e3/0x4d0
-> > > > > > ? nfs_writepage_locked+0x1d0/0x1d0 [nfs]
-> > > > > > nfs_writepages+0xe1/0x200 [nfs]
-> > > > > > do_writepages+0xd2/0x1b0
-> > > > > > ? check_preempt_curr+0x47/0x70
-> > > > > > ? ttwu_do_wakeup+0x17/0x180
-> > > > > > __writeback_single_inode+0x41/0x360
-> > > > > > writeback_sb_inodes+0x1f0/0x460
-> > > > > > __writeback_inodes_wb+0x5f/0xd0
-> > > > > > wb_writeback+0x235/0x2d0
-> > > > > > wb_workfn+0x348/0x4a0
-> > > > > > ? put_prev_task_fair+0x1b/0x30
-> > > > > > ? pick_next_task+0x84/0x940
-> > > > > > ? __update_idle_core+0x1b/0xb0
-> > > > > > process_one_work+0x1c5/0x390
-> > > > > > worker_thread+0x30/0x360
-> > > > > > ? process_one_work+0x390/0x390
-> > > > > > kthread+0xd7/0x100
-> > > > > > ? kthread_complete_and_exit+0x20/0x20
-> > > > > > ret_from_fork+0x1f/0x30
-> > > > > > </TASK>
-> > > > > >
-> > > > > > I see that something very similar was fixed in btrfs
-> > > > > > (
-> > > > > > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.gi=
-t/commi
-> > > > > > t/?h=3Dlinux-
-> > > > > > 5.18.y&id=3D9535ec371d741fa037e37eddc0a5b25ba82d0027)
-> > > > > > but I could not find anything similar for NFS.
-> > > > > >
-> > > > > > Do you happen to know if this is already fixed? If so, would
-> > > > > > you
-> > > > > > mind
-> > > > > > sharing some commits? If not, could you help getting this
-> > > > > > addressed?
-> > > > > >
-> > > > >
-> > > > > The stack trace you show above isn't particularly helpful for
-> > > > > diagnosing what the problem is.
-> > > > >
-> > > > > All it is saying is that 'thread A' is waiting to take a page
-> > > > > lock
-> > > > > that
-> > > > > is being held by a different 'thread B'. Without information on
-> > > > > what
-> > > > > 'thread B' is doing, and why it isn't releasing the lock, there
-> > > > > is
-> > > > > nothing we can conclude.
-> > > >
-> > > > Do you have some hint how to debug this issue further (when it
-> > > > happens
-> > > > again)? Would `virsh dump` to get a memory dump and then some
-> > > > kind of
-> > > > "bt all" via crash help to get more information?
-> > > > Or something else?
-> > > >
-> > > > Thanks in advance!
-> > > > --
-> > > > Igor Raits
-> > >
-> > > Please try running the following two lines of 'bash' script as
-> > > root:
-> > >
-> > > (for tt in $(grep -l 'nfs[^d]' /proc/*/stack); do echo "${tt}:";
-> > > cat ${tt}; echo; done) >/tmp/nfs_threads.txt
-> > >
-> > > cat /sys/kernel/debug/sunrpc/rpc_clnt/*/tasks > /tmp/rpc_tasks.txt
-> > >
-> > > and then send us the output from the two files /tmp/nfs_threads.txt
-> > > and
-> > > /tmp/rpc_tasks.txt.
-> > >
-> > > The file nfs_threads.txt gives us a full set of stack traces from
-> > > all
-> > > processes that are currently in the NFS client code. So it should
-> > > contain both the stack trace from your 'thread A' above, and the
-> > > traces
-> > > from all candidates for the 'thread B' process that is causing the
-> > > blockage.
-> > > The file rpc_tasks.txt gives us the status of any RPC calls that
-> > > might
-> > > be outstanding and might help diagnose any issues with the TCP
-> > > connection.
-> > >
-> > > That should therefore give us a better starting point for root
-> > > causing
-> > > the problem.
-> >
-> > The rpc_tasks is empty but I got nfs_threads from the moment it is
-> > stuck (see attached file).
-> >
-> > It still happens with 5.19.3, 5.19.6.
->
+>> ---
+>> fs/nfsd/nfs4state.c | 7 +++++++
+>> 1 file changed, 7 insertions(+)
+>>
+>> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+>> index 9409a0dc1b76..b99c545f93e4 100644
+>> --- a/fs/nfsd/nfs4state.c
+>> +++ b/fs/nfsd/nfs4state.c
+>> @@ -1049,6 +1049,9 @@ static struct nfs4_ol_stateid * nfs4_alloc_open_stateid(struct nfs4_client *clp)
+>>
+>> static void nfs4_free_deleg(struct nfs4_stid *stid)
+>> {
+>> +	struct nfs4_ol_stateid *stp = openlockstateid(stid);
+>> +
+>> +	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
+>> 	kmem_cache_free(deleg_slab, stid);
+>> 	atomic_long_dec(&num_delegations);
+>> }
+>> @@ -1463,6 +1466,7 @@ static void nfs4_free_ol_stateid(struct nfs4_stid *stid)
+>> 	release_all_access(stp);
+>> 	if (stp->st_stateowner)
+>> 		nfs4_put_stateowner(stp->st_stateowner);
+>> +	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
+>> 	kmem_cache_free(stateid_slab, stid);
+>> }
+>>
+>> @@ -6608,6 +6612,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+>> 	struct nfs4_client *clp = s->st_stid.sc_client;
+>> 	bool unhashed;
+>> 	LIST_HEAD(reaplist);
+>> +	struct nfs4_ol_stateid *stp;
+>>
+>> 	spin_lock(&clp->cl_lock);
+>> 	unhashed = unhash_open_stateid(s, &reaplist);
+>> @@ -6616,6 +6621,8 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
+>> 		if (unhashed)
+>> 			put_ol_stateid_locked(s, &reaplist);
+>> 		spin_unlock(&clp->cl_lock);
+>> +		list_for_each_entry(stp, &reaplist, st_locks)
+>> +			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
+>> 		free_ol_stateid_reaplist(&reaplist);
+>> 	} else {
+>> 		spin_unlock(&clp->cl_lock);
+>> -- 
+>> 2.9.5
+>>
 > --
-> Trond Myklebust
-> Linux NFS client maintainer, Hammerspace
-> trond.myklebust@hammerspace.com
+> Chuck Lever
+>
 >
 >
