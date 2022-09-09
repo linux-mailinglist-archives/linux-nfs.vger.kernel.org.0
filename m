@@ -2,104 +2,225 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A58D25B2EC6
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 08:24:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70AB45B2F31
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 08:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230423AbiIIGYt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Sep 2022 02:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41006 "EHLO
+        id S231226AbiIIGmC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Sep 2022 02:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230424AbiIIGYs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 02:24:48 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08348220FA
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Sep 2022 23:24:43 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id br15-20020a056830390f00b0061c9d73b8bdso484780otb.6
-        for <linux-nfs@vger.kernel.org>; Thu, 08 Sep 2022 23:24:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date;
-        bh=ZwPxd8LtjEuPX3lP8M/ewsRzKiwOr4k1fCds3gC7Jk4=;
-        b=WcH6UHGbsWFkewU/wT0fJawZxX15Zl4hkDGkeADuGdJGmv3t1iQNtgSoMnFwdIiKsl
-         x0SFF8bkohRdk9mKGKM+s9gauDKjJXrvYE2yTKQmchoZQEeCIon6bMdclwr30NYYePtN
-         LlWsahNYX+ZnmYtHuo+L3HiSHKxAxOAJsjY/zT5bRdtKkslqggYR6PeuSVU/Upq3p6Lx
-         v7+3Sl0ycmpNJAkDyyfB3vDmj0Ku1DLMT5UNXcPYiD+ne677L4tBdx+wZ+UEyMq3qhuC
-         L3qiWtmRltydGdTH8yRtHUUCoYBmNYblSu9kOey2R0GaJCd4zJFwUrFzR3gFC4Ma5YBK
-         ywXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=ZwPxd8LtjEuPX3lP8M/ewsRzKiwOr4k1fCds3gC7Jk4=;
-        b=U4pouLFkfLIEwXA71Rv0DSsJGwfqGGcxYxjOcDNQ/QOrNBe55Mr8VwBh7YzzdM/O2r
-         c+pTEBOUYS+LqF0HnfJ/FzhIBOqvGMyctBxWcPeELwifdY4h8Qbx3u+3KEYfsE5kzxb9
-         SZUvaeR2H10qSBBtzPKqr/A+OBAptxZO+y3M+ynlSc7Yau2/SdajZ+lNa3Jn7isrr5uh
-         QlabpfbB2gm2dIkY2Y2MntE4B9VI+2bjCgHdfzrJjJxWKNDrsMGGemxiiSJiEEsLIL7/
-         Vir2fzypJL1LC0rTBLhkIpf+QhHShx3NvVRzeNWskHJDXcqZKcHSFC2fokvPGUpDJOf8
-         uuxA==
-X-Gm-Message-State: ACgBeo3eC/rXC+7rvdNVtlKK2HKyTcv0Gcu+nCf77KtxlNxYZeCcAeSv
-        lFLKhtz4Yi/wF4ibAAe77otOHPMpXNtjKjVjiyA=
-X-Google-Smtp-Source: AA6agR5oQwYexb5IuYa5dQgOTrJVTByrVtuS9dapD7VlJ47FKqY17GiN0xDTC5NddRnxIwHXasBmKTYYBxKZ43rAUg0=
-X-Received: by 2002:a9d:6e0e:0:b0:652:6ed2:eb83 with SMTP id
- e14-20020a9d6e0e000000b006526ed2eb83mr3789515otr.308.1662704682511; Thu, 08
- Sep 2022 23:24:42 -0700 (PDT)
+        with ESMTP id S230113AbiIIGl7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 02:41:59 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F086C10043D;
+        Thu,  8 Sep 2022 23:41:53 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 63F58223CF;
+        Fri,  9 Sep 2022 06:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1662705712; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yu9RUrvQxAp2Fwf5ytrIMONKOHocNgrjkYLX/KWmaXI=;
+        b=fnx4L3TRvm7ivccqTWoZ0YtWUYcY+D9ZxAZGDhBgo37sBA/T0aQbgG6OHbtlGec9adsq8E
+        5HzIEN6DRXftpAKhAUJNpLoKQPTW6mcV+tw35b0VOy4ilMlRbstQPo11SkefQxxUAlodRb
+        UJ/mgeNoLD9djtqe0p2bvwr0xGWzjsw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1662705712;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yu9RUrvQxAp2Fwf5ytrIMONKOHocNgrjkYLX/KWmaXI=;
+        b=o7rI0SCETDdSZb5fZLS/rndvwmAOsDGOGxBlP8QvX3nqHAyoPxX9zWeZ73w4A6jtSgij2C
+        FeUntuj8ItjuWfCA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 016AC139D5;
+        Fri,  9 Sep 2022 06:41:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id osOjKSjgGmOTHwAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 09 Sep 2022 06:41:44 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Received: by 2002:a05:6358:c27:b0:bc:944f:7c4e with HTTP; Thu, 8 Sep 2022
- 23:24:42 -0700 (PDT)
-Reply-To: stefanopessina14@gmail.com
-From:   Stefano Pessina <prniceugochukwu@gmail.com>
-Date:   Thu, 8 Sep 2022 23:24:42 -0700
-Message-ID: <CA+eeEkAUSxvd2fRt0O=B0KtG8hzLpcviCGXBvO_1bui7P5TghQ@mail.gmail.com>
-Subject: Donation
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,LOTS_OF_MONEY,MONEY_FREEMAIL_REPTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNDISC_FREEM,UNDISC_MONEY autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:344 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [stefanopessina14[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [prniceugochukwu[at]gmail.com]
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  3.1 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  2.0 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  0.1 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: *******
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Trond Myklebust" <trondmy@hammerspace.com>
+Cc:     "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "bfields@fieldses.org" <bfields@fieldses.org>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "fweimer@redhat.com" <fweimer@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "jlayton@kernel.org" <jlayton@kernel.org>,
+        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "lczerner@redhat.com" <lczerner@redhat.com>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>
+Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
+ STATX_INO_VERSION field
+In-reply-to: <8d638cb3c63b0d2da8679b5288d1622fdb387f83.camel@hammerspace.com>
+References: <20220907111606.18831-1-jlayton@kernel.org>,
+ <166255065346.30452.6121947305075322036@noble.neil.brown.name>,
+ <79aaf122743a295ddab9525d9847ac767a3942aa.camel@kernel.org>,
+ <20220907125211.GB17729@fieldses.org>,
+ <771650a814ab1ff4dc5473d679936b747d9b6cf5.camel@kernel.org>,
+ <20220907135153.qvgibskeuz427abw@quack3>,
+ <166259786233.30452.5417306132987966849@noble.neil.brown.name>,
+ <20220908083326.3xsanzk7hy3ff4qs@quack3>, <YxoIjV50xXKiLdL9@mit.edu>,
+ <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>,
+ <166267775728.30452.17640919701924887771@noble.neil.brown.name>,
+ <91e31d20d66d6f47fe12c80c34b1cffdfc202b6a.camel@hammerspace.com>,
+ <166268467103.30452.1687952324107257676@noble.neil.brown.name>,
+ <166268566751.30452.13562507405746100242@noble.neil.brown.name>,
+ <29a6c2e78284e7947ddedf71e5cb9436c9330910.camel@hammerspace.com>,
+ <8d638cb3c63b0d2da8679b5288d1622fdb387f83.camel@hammerspace.com>
+Date:   Fri, 09 Sep 2022 16:41:41 +1000
+Message-id: <166270570118.30452.16939807179630112340@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
--- 
-I am Stefano Pessina, an  Italian business tycoon, investor, and
-philanthropist. the vice chairman, chief executive officer (CEO), and
-the single largest shareholder of Walgreens Boots Alliance. I gave
-away 25 percent of my personal wealth to charity. And I also pledged
-to give away the rest of 25% this year 2022 to Individuals.. I have
-decided to donate $2,200,000.00 to you. If you are interested in my
-donation, do contact me for more info
+On Fri, 09 Sep 2022, Trond Myklebust wrote:
+> On Fri, 2022-09-09 at 01:10 +0000, Trond Myklebust wrote:
+> > On Fri, 2022-09-09 at 11:07 +1000, NeilBrown wrote:
+> > > On Fri, 09 Sep 2022, NeilBrown wrote:
+> > > > On Fri, 09 Sep 2022, Trond Myklebust wrote:
+> > > >=20
+> > > > >=20
+> > > > > IOW: the minimal condition needs to be that for all cases
+> > > > > below,
+> > > > > the
+> > > > > application reads 'state B' as having occurred if any data was
+> > > > > committed to disk before the crash.
+> > > > >=20
+> > > > > Application=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0Filesystem
+> > > > > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D
+> > > > > read change attr <- 'state A'
+> > > > > read data <- 'state A'
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0write data -> 'state B'
+> > > > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0<crash>+<reboot>
+> > > > > read change attr <- 'state B'
+> > > >=20
+> > > > The important thing here is to not see 'state A'.=C2=A0 Seeing 'state
+> > > > C'
+> > > > should be acceptable.=C2=A0 Worst case we could merge in wall-clock
+> > > > time
+> > > > of
+> > > > system boot, but the filesystem should be able to be more helpful
+> > > > than
+> > > > that.
+> > > >=20
+> > >=20
+> > > Actually, without the crash+reboot it would still be acceptable to
+> > > see
+> > > "state A" at the end there - but preferably not for long.
+> > > From the NFS perspective, the changeid needs to update by the time
+> > > of
+> > > a
+> > > close or unlock (so it is visible to open or lock), but before that
+> > > it
+> > > is just best-effort.
+> >=20
+> > Nope. That will inevitably lead to data corruption, since the
+> > application might decide to use the data from state A instead of
+> > revalidating it.
+> >=20
+>=20
+> The point is, NFS is not the only potential use case for change
+> attributes. We wouldn't be bothering to discuss statx() if it was.
+
+My understanding is that it was primarily a desire to add fstests to
+exercise the i_version which motivated the statx extension.
+Obviously we should prepare for other uses though.
+
+>=20
+> I could be using O_DIRECT, and all the tricks in order to ensure that
+> my stock broker application (to choose one example) has access to the
+> absolute very latest prices when I'm trying to execute a trade.
+> When the filesystem then says 'the prices haven't changed since your
+> last read because the change attribute on the database file is the
+> same' in response to a statx() request with the AT_STATX_FORCE_SYNC
+> flag set, then why shouldn't my application be able to assume it can
+> serve those prices right out of memory instead of having to go to disk?
+
+I would think that such an application would be using inotify rather
+than having to poll.  But certainly we should have a clear statement of
+quality-of-service parameters in the documentation.
+If we agree that perfect atomicity is what we want to promise, and that
+the cost to the filesystem and the statx call is acceptable, then so be it.
+
+My point wasn't to say that atomicity is bad.  It was that:
+ - if the i_version change is visible before the change itself is
+   visible, then that is a correctness problem.
+ - if the i_version change is only visible some time after the change
+   itself is visible, then that is a quality-of-service issue.
+I cannot see any room for debating the first.  I do see some room to
+debate the second.
+
+Cached writes, directory ops, and attribute changes are, I think, easy
+enough to provide truly atomic i_version updates with the change being
+visible.
+
+Changes to a shared memory-mapped files is probably the hardest to
+provide timely i_version updates for.  We might want to document an
+explicit exception for those.  Alternately each request for i_version
+would need to find all pages that are writable, remap them read-only to
+catch future writes, then update i_version if any were writable (i.e.
+->mkwrite had been called).  That is the only way I can think of to
+provide atomicity.
+
+O_DIRECT writes are a little easier than mmapped files.  I suspect we
+should update the i_version once the device reports that the write is
+complete, but a parallel reader could have seem some of the write before
+that moment.  True atomicity could only be provided by taking some
+exclusive lock that blocked all O_DIRECT writes.  Jeff seems to be
+suggesting this, but I doubt the stock broker application would be
+willing to make the call in that case.  I don't think I would either.
+
+NeilBrown
+
+>=20
+> --=20
+> Trond Myklebust
+> Linux NFS client maintainer, Hammerspace
+> trond.myklebust@hammerspace.com
+>=20
+>=20
+>=20
