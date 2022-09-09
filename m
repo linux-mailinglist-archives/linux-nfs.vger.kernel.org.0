@@ -2,46 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FEBE5B3DC0
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 19:12:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ABEA5B3E70
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Sep 2022 20:00:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231178AbiIIRL7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 9 Sep 2022 13:11:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57894 "EHLO
+        id S229806AbiIISAw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 9 Sep 2022 14:00:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231816AbiIIRLo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 13:11:44 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E72278591
-        for <linux-nfs@vger.kernel.org>; Fri,  9 Sep 2022 10:11:41 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id z97so3485542ede.8
-        for <linux-nfs@vger.kernel.org>; Fri, 09 Sep 2022 10:11:41 -0700 (PDT)
+        with ESMTP id S229989AbiIISAY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 9 Sep 2022 14:00:24 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA62C5F7CB
+        for <linux-nfs@vger.kernel.org>; Fri,  9 Sep 2022 11:00:10 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id r18so5752295eja.11
+        for <linux-nfs@vger.kernel.org>; Fri, 09 Sep 2022 11:00:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gooddata.com; s=google;
+        d=umich.edu; s=google-2016-06-03;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date;
-        bh=V0TrAy09aGuLauU9a8X8cq8usuFfY13dXhzf3XOXf/k=;
-        b=Q89O+E1uWXtr+4HKZriG47kROz1B3mWkGbVllXdzAztVmI8ORo8xynCPq8El8Qd+Ql
-         cX6yqunezrfblv+t3+TnCVOxhjVB5RCIw6MwvoLbSV5L/6IySaFGMymfwhBACgp6XcSC
-         59MrLmCAj9duRppFPIkGm8S7DwRk+YWUJKNic=
+        bh=Tz5yD0RJuOyAZR5ePYyGiDWmggQdhn+DZL0QzTAC0Is=;
+        b=GKKBFVCkzcZLXMTGIsd6yz9VsN683y3D5sukWn/uTWoDqwSZrTHIqT3NkEUm3zRVY9
+         7w7rRWVMUCNuAPaFFvR9wOAbbX+AtJwctHUI+gOeIwWGlY81QfrhxHRGiVHZuXRESdXK
+         yVufBP8DGKKGBK/tdH/sCz9nRG2zzBmw4ey47huGXsqkdr9G2j5hAz0T4TaKNwbgcuGg
+         LSStK5rLMsoZEL/TbvDQV9QDaSDYSjfRWPeCnRI9ECL2izgSjAjU2Nw16F/wzSq4yUJm
+         in9tZa7cA7SMM29FBAocLW2EM1d6EEjvbET+PJZPAMmkLDjn2FXWmddUhPMSEEG+Rp0i
+         BDRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=V0TrAy09aGuLauU9a8X8cq8usuFfY13dXhzf3XOXf/k=;
-        b=iNmtVh6tgkWBD7dIBaLO8hsK/eE3Xn0LEp3ub4OSgytkU+pSP/qhgewxmLUSQCAL6m
-         okYya3S+4NaDGbM4HxpG831wyyP7w+wq70C8EQ0j3ZMnWE1kl69tdKqEuUR3CtETGrpM
-         0UeQj9FGdmaGelbDhfYQc1JbS6Dgwa9dwbqoODrU7sQnf3Elm3xZeghWLQVWkTe9DdAV
-         p4kKNBmX+tKylAe8YAK/fZjPwTlmIBGCuwYyW0CXPu183+ZC1oLEfBaNaoyb/Q3hNkn7
-         u9RGy+zzyonTUx2V1XEZWKIbUYvAWeTVAYxvLLeNSecSIhT9MtiLrhbZWe4aWKS8waBK
-         IBkw==
-X-Gm-Message-State: ACgBeo0Y2TitQM2w2LYC6jdIDQhHE8blLf1ipKd3K5CCE+y6yVknNwzw
-        YfjImw4U1c2hi/oV8z+GjrEknr+maywD15tkzLORwp3Qf5/d2w==
-X-Google-Smtp-Source: AA6agR72OWqv2fWs5DjtSNKqGZls8lOTUsjODUyrD/zfqL1/Ir8l7MU0dtEKICjItyI5U0wEjvX7gvhrO/By4jW0UzE=
-X-Received: by 2002:a05:6402:5168:b0:44e:9ca8:bf6 with SMTP id
- d8-20020a056402516800b0044e9ca80bf6mr12365498ede.384.1662743499641; Fri, 09
- Sep 2022 10:11:39 -0700 (PDT)
+        bh=Tz5yD0RJuOyAZR5ePYyGiDWmggQdhn+DZL0QzTAC0Is=;
+        b=SuPK4z5e39dCm3Pz1YNX5bPvNUMiDbq5ZH9hTcPerOHMY9b9s7GT0c7ncGYZsZqvjT
+         b/s66fMyKk2dRgYOR++Bh35JH+5KG7CTQjh0BDNMsGa8j1NDTsx4SfoH9OYcXGGOuFm+
+         rf7eiP/2ZruWg0/v17f3P/nRAP6ajCCw6t/S9tHi+v7ze0qgVCwPETz3qZBTszf9IVws
+         ZoyWDCV5pa3qWdO9d77exeyWZHMQOpJBk1Puvqh60WXisGBNIgMIHZ3+WFgQB/64Rtwv
+         kszK7q+9jsfDb6tuCkFcMCfu00LF4AFbkV84uqYZmN1m/YJYZj8wXYU8elMWxThMJJK8
+         vAFQ==
+X-Gm-Message-State: ACgBeo0cKBee1gTlE02OuRZKSWDFoVM/RDNwln4+1sDiR0frPD1LLNA6
+        p2lWsKAPj0C0de1gd9e9hJWmhu9je426s1KsL3eR4wETXZE=
+X-Google-Smtp-Source: AA6agR7LRf+Jsqu6I4KqBadR8KlWu21tSes2OD63Gh+bB5s7iPQtjy/yJTH+z9pK8pY5jMEDEvKQjNPnN+TS5SUAB3I=
+X-Received: by 2002:a17:907:d2a:b0:741:4f42:df74 with SMTP id
+ gn42-20020a1709070d2a00b007414f42df74mr10119555ejc.535.1662746408677; Fri, 09
+ Sep 2022 11:00:08 -0700 (PDT)
 MIME-Version: 1.0
 References: <CA+9S74iBrObUnaSpSdqXu0_GosDdE1dmSbmgxfmxEK2mhDaNjg@mail.gmail.com>
  <28bbec15d3a631e0a9047f4a5895bd42db364dba.camel@hammerspace.com>
@@ -51,27 +54,29 @@ References: <CA+9S74iBrObUnaSpSdqXu0_GosDdE1dmSbmgxfmxEK2mhDaNjg@mail.gmail.com>
  <CH0PR13MB50840DBE3BF030039288DB63B8439@CH0PR13MB5084.namprd13.prod.outlook.com>
  <a3aa0865d7c6e5b0f8f3dfd62e99578fc528eab0.camel@hammerspace.com>
 In-Reply-To: <a3aa0865d7c6e5b0f8f3dfd62e99578fc528eab0.camel@hammerspace.com>
-From:   Igor Raits <igor@gooddata.com>
-Date:   Fri, 9 Sep 2022 19:11:27 +0200
-Message-ID: <CA+9S74j5SbjCwDbP8k74Jd+3RC5LBX0V05D=6=e-=zrhFLZQMw@mail.gmail.com>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Fri, 9 Sep 2022 13:59:57 -0400
+Message-ID: <CAN-5tyEuWz2wLJOfk5DPLyrQXXc7ScJ7Je8C=YyEpt0pM=-bgA@mail.gmail.com>
 Subject: Re: Regression: deadlock in io_schedule / nfs_writepage_locked
 To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     "anna@kernel.org" <anna@kernel.org>,
+Cc:     "igor@gooddata.com" <igor@gooddata.com>,
+        "anna@kernel.org" <anna@kernel.org>,
         "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 9, 2022 at 6:50 PM Trond Myklebust <trondmy@hammerspace.com> wr=
-ote:
+On Fri, Sep 9, 2022 at 12:52 PM Trond Myklebust <trondmy@hammerspace.com> w=
+rote:
 >
 > On Fri, 2022-09-09 at 16:47 +0000, Trond Myklebust wrote:
 > > This looks like it might be the root cause issue. It looks like
@@ -103,13 +108,18 @@ ote:
 > > What is the pNFS server you are running against? I see you're using
 > > the files pNFS layout type, so is this a NetApp?
 
-Exactly! The NFS is provided by Netapp AFF-A700s. Mount options are below.
-nas-prod01.int.na3.pcigdc.com:/vol/prod_DataLoading on
-/mnt/kubelet/pods/c018cfaa-ca32-4864-b141-0e3b8852949c/volumes/kubernetes.i=
-o~nfs/datawarehouse-query-worker-nfs-pv
-type nfs4 (rw,relatime,vers=3D4.2,rsize=3D65536,wsize=3D65536,namlen=3D255,=
-hard,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,clientaddr=3D10.7.3.9,lo=
-cal_lock=3Dnone,addr=3D10.7.0.11)
+
+This reminds me of the problem that was supposed to be fixed by the
+patches that went into 5.19-rc3?.
+      pNFS: Don't keep retrying if the server replied NFS4ERR_LAYOUTUNAVAIL=
+ABLE
+      pNFS: Avoid a live lock condition in pnfs_update_layout()
+
+Igor,
+
+Is the server constantly returning LAYOUT_UNAVAILABLE? And does this
+happen to be co-located with a volume move operation?
+
 
 > >
 >
@@ -272,17 +282,3 @@ t/commi
 > trond.myklebust@hammerspace.com
 >
 >
-
-
---=20
-
-Igor Raits | Principal SW Engineer
-
-igor@gooddata.com
-
-+420 775 117 817
-
-
-Moravske namesti 1007/14
-
-602 00 Brno-Veveri, Czech Republic
