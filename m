@@ -2,93 +2,104 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F0005B4A77
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Sep 2022 00:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15F665B4A73
+	for <lists+linux-nfs@lfdr.de>; Sun, 11 Sep 2022 00:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230007AbiIJWNe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 10 Sep 2022 18:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56140 "EHLO
+        id S229971AbiIJWNa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 10 Sep 2022 18:13:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229965AbiIJWNc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 10 Sep 2022 18:13:32 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CB565E3
-        for <linux-nfs@vger.kernel.org>; Sat, 10 Sep 2022 15:13:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YR+ntuHl5fOk06kmMtEESyE6d9xq40oR2msXPof/X2w=; b=GYfnMrOwmiEwokZy0Qh/lHe7aQ
-        tbI9wJ0z/ENTAX8UtsRkMpjm6+0lEx+hvtd1jSo+S8hTUhN+mKPo/UaxtUfOca1sMQc4R8WeoB/mb
-        q0ZlxBmPTZl7QcML/WdP9I1A+aFA/AB+g15JWYCu1ZkNYhv9Ps6Y4vygxyMOojNxubFf3T53qARKI
-        ccpKozpFomaGX2cGzHglUXbDkjH/5BV8/YY65p0p78Y+CYy9/lq/EfEi05FC4qta8Lu4xKCJq2eVV
-        Q7wH6QgRQz5AoB9QMPxGKO87P7/dBiAVEbB8e0KdauIt7g0dZXQrkui7nVgqA+rcnS01pf6P1RXDp
-        1JsOiAlw==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
-        id 1oX8is-00ESF7-Ar;
-        Sat, 10 Sep 2022 22:13:10 +0000
-Date:   Sat, 10 Sep 2022 23:13:10 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Is this nfsd kernel oops known?
-Message-ID: <Yx0L9p4VMH2v2tBX@ZenIV>
-References: <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
- <CAN-5tyEOTVDhR6FgP7nPVon76qhKkexaWB8AJ_iBVTp6iYOk1g@mail.gmail.com>
- <11BEA7FE-4CBC-4E5C-9B68-A0310CF1F3BE@oracle.com>
- <CAN-5tyHOugPeTsu+gBJ1tkqawyQDkfHXrO=vQ6vZTTzWJWTqGA@mail.gmail.com>
- <D0A6E504-F2C2-4A5F-BC51-FD3D88A790F0@redhat.com>
- <CAN-5tyHYH7ODzmTK=Maa3NZOSxfcE0mfaWY11+n2htQpya869g@mail.gmail.com>
- <EE9C1D1C-AA5B-48BC-9E3A-8A4523456AEE@oracle.com>
- <25AF9743-A2A2-4AFE-9123-BAD3C8F17655@redhat.com>
- <Yxz+GhK7nWKcBLcI@ZenIV>
- <9D6CDF68-6B12-44DE-BC01-3BD0251E7F94@oracle.com>
+        with ESMTP id S229576AbiIJWN2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 10 Sep 2022 18:13:28 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5EB65E3;
+        Sat, 10 Sep 2022 15:13:24 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id ACF6C1F931;
+        Sat, 10 Sep 2022 22:13:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1662848002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p/t9XoKe6JDgLqefB7W9+evIBh18o9QxoMvh7Ovrcl0=;
+        b=xKNunlCPh3CvPxBa/rNxPqx+bIQ6e9eE3nSuqzMEmSJ3SJNjsk81Q91RHQ9MtJdCzP1hhJ
+        xgP8hc4f9hCj8J2vTeN7yq8lNdKrB3umeqrSFH58T1fe9Imo4RZxgw2EDVG0V6GyLXfjST
+        UV/Jh2R5aE5X2P3XXyASbKJSaegDi9Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1662848002;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p/t9XoKe6JDgLqefB7W9+evIBh18o9QxoMvh7Ovrcl0=;
+        b=/Iyu3yh6+xqg3JiqhL+2mgJ8SAgB3gxb5Y8E/FhgXDN/MyKwhRcLMnzY28GHlUgViTcfEI
+        qoutkVt9kNxdSwBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 8D26913441;
+        Sat, 10 Sep 2022 22:13:15 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id MdalEfsLHWMkPAAAMHmgww
+        (envelope-from <neilb@suse.de>); Sat, 10 Sep 2022 22:13:15 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9D6CDF68-6B12-44DE-BC01-3BD0251E7F94@oracle.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>,
+        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
+        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, brauner@kernel.org, fweimer@redhat.com,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
+ STATX_INO_VERSION field
+In-reply-to: <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+References: <79aaf122743a295ddab9525d9847ac767a3942aa.camel@kernel.org>,
+ <20220907125211.GB17729@fieldses.org>,
+ <771650a814ab1ff4dc5473d679936b747d9b6cf5.camel@kernel.org>,
+ <20220907135153.qvgibskeuz427abw@quack3>,
+ <166259786233.30452.5417306132987966849@noble.neil.brown.name>,
+ <20220908083326.3xsanzk7hy3ff4qs@quack3>, <YxoIjV50xXKiLdL9@mit.edu>,
+ <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>,
+ <20220908155605.GD8951@fieldses.org>,
+ <9e06c506fd6b3e3118da0ec24276e85ea3ee45a1.camel@kernel.org>,
+ <20220908182252.GA18939@fieldses.org>,
+ <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+Date:   Sun, 11 Sep 2022 08:13:11 +1000
+Message-id: <166284799157.30452.4308111193560234334@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, Sep 10, 2022 at 09:21:11PM +0000, Chuck Lever III wrote:
+On Fri, 09 Sep 2022, Jeff Layton wrote:
+> 
+> The machine crashes and comes back up, and we get a query for i_version
+> and it comes back as X. Fine, it's an old version. Now there is a write.
+> What do we do to ensure that the new value doesn't collide with X+1? 
 
-> It's also possible that recent simplifications I've done to the splice
-> read actor accidentally removed the ability to deal with compound pages.
-> You might want to review the commit history of nfsd_splice_actor() to
-> see if there is an historic version that would behave correctly with
-> the new copy_page_to_iter().
+(I missed this bit in my earlier reply..)
 
-Nah, that's unrelated...
+How is it "Fine" to see an old version?
+The file could have changed without the version changing.
+And I thought one of the goals of the crash-count was to be able to
+provide a monotonic change id.
 
-> Is the need to deal with CompoundPage documented somewhere? If not,
-> perhaps nfsd_splice_actor() could mention it so that overzealous
-> maintainers don't break it again.
-
-> > +	struct page *page = buf->page;	// may be a compound one
-
-Does that qualify? ;-)
-
-FWIW, there's a separate problem in that thing - it assumes that
-pipe_buffer boundaries will end up PAGE_SIZE-aligned.  Usually
-that's going to be true, but foofs_splice_read() is not required to
-maintain that.  E.g. it might be working in terms of chunks
-used by weird protocol used by foofs, with e.g. 1024-byte payloads
-+ 300-odd bytes of framing/checskums/whatnot.  In that case it
-might do 1024 bytes per pipe_buffer, with non-zero offset in page
-in each of them; normal read()/splice()/etc. would work just fine
-with that, but for nfsd_splice_actor() results would not be
-nice.
-
-AFAICS, sunrpc assumes that we have several pages, offset in the
-first one and total size; no provisions exist for e.g. 5Kb of
-data scattered in 5 chunks over 5 pages.  Correct?
+NeilBrown
