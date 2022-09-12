@@ -2,30 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 298705B62A7
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 23:23:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 71EA65B62A8
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 23:23:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbiILVXA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Sep 2022 17:23:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52340 "EHLO
+        id S229696AbiILVXH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Sep 2022 17:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbiILVW7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 17:22:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 084174055B
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 14:22:58 -0700 (PDT)
+        with ESMTP id S229698AbiILVXG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 17:23:06 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54CAF4055B
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 14:23:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 95B4961297
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 21:22:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00013C433D7
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 21:22:56 +0000 (UTC)
-Subject: [PATCH v1 05/12] NFSD: Refactor common code out of dirlist helpers
+        by ams.source.kernel.org (Postfix) with ESMTPS id 16B08B80C9E
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 21:23:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA06C433D7
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 21:23:02 +0000 (UTC)
+Subject: [PATCH v1 06/12] NFSD: Use xdr_inline_decode() to decode NFSv3
+ symlinks
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Mon, 12 Sep 2022 17:22:56 -0400
-Message-ID: <166301777615.89884.16374274815216182549.stgit@oracle-102.nfsv4.dev>
+Date:   Mon, 12 Sep 2022 17:23:02 -0400
+Message-ID: <166301778198.89884.1973943063854884679.stgit@oracle-102.nfsv4.dev>
 In-Reply-To: <166301759113.89884.7985359396842428444.stgit@oracle-102.nfsv4.dev>
 References: <166301759113.89884.7985359396842428444.stgit@oracle-102.nfsv4.dev>
 User-Agent: StGit/1.5
@@ -41,107 +42,49 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The dust has settled a bit and it's become obvious what code is
-totally common between nfsd_init_dirlist_pages() and
-nfsd3_init_dirlist_pages(). Move that common code to SUNRPC.
+Replace the check for buffer over/underflow with a helper that is
+commonly used for this purpose. The helper also sets xdr->nwords
+correctly after successfully linearizing the symlink argument into
+the stream's scratch buffer.
 
-The new helper brackets the existing xdr_init_decode_pages() API.
-
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs3proc.c         |   10 +---------
- fs/nfsd/nfsproc.c          |   10 +---------
- include/linux/sunrpc/xdr.h |    2 ++
- net/sunrpc/xdr.c           |   22 ++++++++++++++++++++++
- 4 files changed, 26 insertions(+), 18 deletions(-)
+ fs/nfsd/nfs3xdr.c |   14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-index 58695e4e18b4..923d9a80df92 100644
---- a/fs/nfsd/nfs3proc.c
-+++ b/fs/nfsd/nfs3proc.c
-@@ -574,15 +574,7 @@ static void nfsd3_init_dirlist_pages(struct svc_rqst *rqstp,
- 	buf->pages = rqstp->rq_next_page;
- 	rqstp->rq_next_page += (buf->buflen + PAGE_SIZE - 1) >> PAGE_SHIFT;
+diff --git a/fs/nfsd/nfs3xdr.c b/fs/nfsd/nfs3xdr.c
+index 0293b8d65f10..71e32cf28885 100644
+--- a/fs/nfsd/nfs3xdr.c
++++ b/fs/nfsd/nfs3xdr.c
+@@ -616,8 +616,6 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ {
+ 	struct nfsd3_symlinkargs *args = rqstp->rq_argp;
+ 	struct kvec *head = rqstp->rq_arg.head;
+-	struct kvec *tail = rqstp->rq_arg.tail;
+-	size_t remaining;
  
--	/* This is xdr_init_encode(), but it assumes that
--	 * the head kvec has already been consumed. */
--	xdr_set_scratch_buffer(xdr, NULL, 0);
--	xdr->buf = buf;
--	xdr->page_ptr = buf->pages;
--	xdr->iov = NULL;
--	xdr->p = page_address(*buf->pages);
--	xdr->end = (void *)xdr->p + min_t(u32, buf->buflen, PAGE_SIZE);
--	xdr->rqst = NULL;
-+	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
+ 	if (!svcxdr_decode_diropargs3(xdr, &args->ffh, &args->fname, &args->flen))
+ 		return false;
+@@ -626,16 +624,10 @@ nfs3svc_decode_symlinkargs(struct svc_rqst *rqstp, struct xdr_stream *xdr)
+ 	if (xdr_stream_decode_u32(xdr, &args->tlen) < 0)
+ 		return false;
+ 
+-	/* request sanity */
+-	remaining = head->iov_len + rqstp->rq_arg.page_len + tail->iov_len;
+-	remaining -= xdr_stream_pos(xdr);
+-	if (remaining < xdr_align_size(args->tlen))
+-		return false;
+-
+-	args->first.iov_base = xdr->p;
++	/* symlink_data */
+ 	args->first.iov_len = head->iov_len - xdr_stream_pos(xdr);
+-
+-	return true;
++	args->first.iov_base = xdr_inline_decode(xdr, args->tlen);
++	return args->first.iov_base != NULL;
  }
  
- /*
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 49778ff410e3..82b3ddeacc33 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -575,15 +575,7 @@ static void nfsd_init_dirlist_pages(struct svc_rqst *rqstp,
- 	buf->pages = rqstp->rq_next_page;
- 	rqstp->rq_next_page++;
- 
--	/* This is xdr_init_encode(), but it assumes that
--	 * the head kvec has already been consumed. */
--	xdr_set_scratch_buffer(xdr, NULL, 0);
--	xdr->buf = buf;
--	xdr->page_ptr = buf->pages;
--	xdr->iov = NULL;
--	xdr->p = page_address(*buf->pages);
--	xdr->end = (void *)xdr->p + min_t(u32, buf->buflen, PAGE_SIZE);
--	xdr->rqst = NULL;
-+	xdr_init_encode_pages(xdr, buf, buf->pages,  NULL);
- }
- 
- /*
-diff --git a/include/linux/sunrpc/xdr.h b/include/linux/sunrpc/xdr.h
-index 69175029abbb..f84e2a1358e1 100644
---- a/include/linux/sunrpc/xdr.h
-+++ b/include/linux/sunrpc/xdr.h
-@@ -240,6 +240,8 @@ typedef int	(*kxdrdproc_t)(struct rpc_rqst *rqstp, struct xdr_stream *xdr,
- 
- extern void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf,
- 			    __be32 *p, struct rpc_rqst *rqst);
-+extern void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
-+			   struct page **pages, struct rpc_rqst *rqst);
- extern __be32 *xdr_reserve_space(struct xdr_stream *xdr, size_t nbytes);
- extern int xdr_reserve_space_vec(struct xdr_stream *xdr, struct kvec *vec,
- 		size_t nbytes);
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 482586c23fdd..b7a7e1467a1b 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -946,6 +946,28 @@ void xdr_init_encode(struct xdr_stream *xdr, struct xdr_buf *buf, __be32 *p,
- }
- EXPORT_SYMBOL_GPL(xdr_init_encode);
- 
-+/**
-+ * xdr_init_encode_pages - Initialize an xdr_stream for encoding into pages
-+ * @xdr: pointer to xdr_stream struct
-+ * @buf: pointer to XDR buffer into which to encode data
-+ * @pages: list of pages to decode into
-+ * @rqst: pointer to controlling rpc_rqst, for debugging
-+ *
-+ */
-+void xdr_init_encode_pages(struct xdr_stream *xdr, struct xdr_buf *buf,
-+			   struct page **pages, struct rpc_rqst *rqst)
-+{
-+	xdr_reset_scratch_buffer(xdr);
-+
-+	xdr->buf = buf;
-+	xdr->page_ptr = pages;
-+	xdr->iov = NULL;
-+	xdr->p = page_address(*pages);
-+	xdr->end = (void *)xdr->p + min_t(u32, buf->buflen, PAGE_SIZE);
-+	xdr->rqst = rqst;
-+}
-+EXPORT_SYMBOL_GPL(xdr_init_encode_pages);
-+
- /**
-  * __xdr_commit_encode - Ensure all data is written to buffer
-  * @xdr: pointer to xdr_stream
+ bool
 
 
