@@ -2,103 +2,93 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31AD15B5A00
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 14:13:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 904F95B5A9D
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 14:54:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbiILMNX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Sep 2022 08:13:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45414 "EHLO
+        id S229905AbiILMyr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Sep 2022 08:54:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229620AbiILMNW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 08:13:22 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4DD721E09
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 05:13:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1662984798;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=mrkO2o7NLCcYAn3dzHQJOYSP8ki543AiPRGrSsHduoY=;
-        b=XSEnU1qZsv3D0DwtCDA0BurA/dpM5xKoPfaNLexXfmNBnOuUwXnf0zP4nCapzfY7T9tA9U
-        n3lTDwVzPu5jFw6zowvvAzgRVJ5SRxj5waji86GtXLJO6fChJUl+SDuIJ0xmECGEtky08q
-        G5Ot+TPgPEuZ7cdLfLDeaEI8Ga0LguA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-146-fPG4ltTxOjK_xKdfMFGHXQ-1; Mon, 12 Sep 2022 08:13:13 -0400
-X-MC-Unique: fPG4ltTxOjK_xKdfMFGHXQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D7F43C0D848;
-        Mon, 12 Sep 2022 12:13:12 +0000 (UTC)
-Received: from oldenburg.str.redhat.com (unknown [10.39.193.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 21BFE2166B26;
-        Mon, 12 Sep 2022 12:13:06 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
+        with ESMTP id S229873AbiILMyb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 08:54:31 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64378293;
+        Mon, 12 Sep 2022 05:54:26 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 85BBA1C5A; Mon, 12 Sep 2022 08:54:25 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 85BBA1C5A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1662987265;
+        bh=+dP3CR0pJn+xvcRB32nVYSOBikrkL0fn9mnZyLj/yc0=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=hizOueM/RZjFn7wviO3QMF+H+5/tUroul/3qkSgJtfDWZ/gLtRrlb1lbMAac/IMTN
+         rqt1OH17KGAuARU8FNY6cCqBGD2s6LBJRuqXcfipxarMAu5N5xlQ2aVfFz/lJbD2lM
+         n31oWdToPxRhD+7ks53TSa4bF7zorfGDC9jm1K9o=
+Date:   Mon, 12 Sep 2022 08:54:25 -0400
 To:     Jeff Layton <jlayton@kernel.org>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+Cc:     Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         NeilBrown <neilb@suse.de>, adilger.kernel@dilger.ca,
         djwong@kernel.org, david@fromorbit.com, trondmy@hammerspace.com,
         viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
         chuck.lever@oracle.com, lczerner@redhat.com, brauner@kernel.org,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
+        fweimer@redhat.com, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
 Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
  STATX_INO_VERSION field
-References: <166259786233.30452.5417306132987966849@noble.neil.brown.name>
-        <20220908083326.3xsanzk7hy3ff4qs@quack3> <YxoIjV50xXKiLdL9@mit.edu>
-        <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>
-        <20220908155605.GD8951@fieldses.org>
-        <9e06c506fd6b3e3118da0ec24276e85ea3ee45a1.camel@kernel.org>
-        <20220908182252.GA18939@fieldses.org>
-        <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
-        <20220909154506.GB5674@fieldses.org>
-        <125df688dbebaf06478b0911e76e228e910b04b3.camel@kernel.org>
-        <20220910145600.GA347@fieldses.org>
-        <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
-Date:   Mon, 12 Sep 2022 14:13:05 +0200
-In-Reply-To: <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org> (Jeff
-        Layton's message of "Mon, 12 Sep 2022 07:42:16 -0400")
-Message-ID: <87a67423la.fsf@oldenburg.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.2 (gnu/linux)
+Message-ID: <20220912125425.GA9304@fieldses.org>
+References: <YxoIjV50xXKiLdL9@mit.edu>
+ <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>
+ <20220908155605.GD8951@fieldses.org>
+ <9e06c506fd6b3e3118da0ec24276e85ea3ee45a1.camel@kernel.org>
+ <20220908182252.GA18939@fieldses.org>
+ <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+ <20220909154506.GB5674@fieldses.org>
+ <125df688dbebaf06478b0911e76e228e910b04b3.camel@kernel.org>
+ <20220910145600.GA347@fieldses.org>
+ <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-* Jeff Layton:
-
+On Mon, Sep 12, 2022 at 07:42:16AM -0400, Jeff Layton wrote:
+> A scheme like that could work. It might be hard to do it without a
+> spinlock or something, but maybe that's ok. Thinking more about how we'd
+> implement this in the underlying filesystems:
+> 
 > To do this we'd need 2 64-bit fields in the on-disk and in-memory 
 > superblocks for ext4, xfs and btrfs. On the first mount after a crash,
 > the filesystem would need to bump s_version_max by the significant
 > increment (2^40 bits or whatever). On a "clean" mount, it wouldn't need
 > to do that.
->
+> 
 > Would there be a way to ensure that the new s_version_max value has made
 > it to disk? Bumping it by a large value and hoping for the best might be
 > ok for most cases, but there are always outliers, so it might be
 > worthwhile to make an i_version increment wait on that if necessary. 
 
-How common are unclean shutdowns in practice?  Do ex64/XFS/btrfs keep
-counters in the superblocks for journal replays that can be read easily?
+I was imagining that when you recognize you're getting close, you kick
+off something which writes s_version_max+2^40 to disk, and then updates
+s_version_max to that new value on success of the write.
 
-Several useful i_version applications could be negatively impacted by
-frequent i_version invalidation.
+The code that increments i_version checks to make sure it wouldn't
+exceed s_version_max.  If it would, something has gone wrong--a write
+has failed or taken a long time--so it waits or errors out or something,
+depending on desired filesystem behavior in that case.
 
-Thanks,
-Florian
+No locking required in the normal case?
 
+--b.
