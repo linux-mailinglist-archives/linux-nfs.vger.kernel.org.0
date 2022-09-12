@@ -2,113 +2,149 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 475465B50EB
-	for <lists+linux-nfs@lfdr.de>; Sun, 11 Sep 2022 21:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7046C5B52FE
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 06:04:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229670AbiIKTj4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 11 Sep 2022 15:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58020 "EHLO
+        id S229531AbiILEEF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Sep 2022 00:04:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbiIKTjz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 11 Sep 2022 15:39:55 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D190D12ADD
-        for <linux-nfs@vger.kernel.org>; Sun, 11 Sep 2022 12:39:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eD2QaVV/z60ab9/ZtuPPSACehSEwOfRrxTzdGqbMckQ=; b=Iygc/r0rffcYtrDj3V+usnhQ11
-        u5X9id0gRBcSbF04+6Lh0K9lfJj01pFAa3L13VmfIIwfXupvetOWNpwOU0Look3e72uj3eINnaHEa
-        yJzhddhMTUYIO5jRHI2AOcZCHtr/PEaV/NGz14gOrGSusAemJmgvSYW8nIYtI0TzDtAk1BfmSTPWM
-        +He9lMqc1gQudfj0PJuTBV/CtV1uHu4wnqLHRGdqd+kHjjkolWy69mJyoFFygTB957hDkjfNSPDH8
-        1jupZD+I0dvW7go2L+NeE5sis/4CMY/76oRb15kycXeCaNNGkTvTLYNrbMAijG+AWnM6xgZQgsmKn
-        mvCLEFCg==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.95 #2 (Red Hat Linux))
-        id 1oXSni-00EznS-AZ;
-        Sun, 11 Sep 2022 19:39:30 +0000
-Date:   Sun, 11 Sep 2022 20:39:30 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Benjamin Coddington <bcodding@redhat.com>,
-        Olga Kornievskaia <aglo@umich.edu>,
-        Jeff Layton <jlayton@kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: Is this nfsd kernel oops known?
-Message-ID: <Yx45clPaZODzYV+z@ZenIV>
-References: <5c423fdf25e6cedb2dcdbb9c8665d6a9ab4ad4b1.camel@kernel.org>
- <CAN-5tyEOTVDhR6FgP7nPVon76qhKkexaWB8AJ_iBVTp6iYOk1g@mail.gmail.com>
- <11BEA7FE-4CBC-4E5C-9B68-A0310CF1F3BE@oracle.com>
- <CAN-5tyHOugPeTsu+gBJ1tkqawyQDkfHXrO=vQ6vZTTzWJWTqGA@mail.gmail.com>
- <D0A6E504-F2C2-4A5F-BC51-FD3D88A790F0@redhat.com>
- <CAN-5tyHYH7ODzmTK=Maa3NZOSxfcE0mfaWY11+n2htQpya869g@mail.gmail.com>
- <EE9C1D1C-AA5B-48BC-9E3A-8A4523456AEE@oracle.com>
- <25AF9743-A2A2-4AFE-9123-BAD3C8F17655@redhat.com>
- <Yxz+GhK7nWKcBLcI@ZenIV>
- <8B4DBE66-960F-473C-8636-8159B397FFC0@oracle.com>
+        with ESMTP id S229511AbiILEEE (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 00:04:04 -0400
+Received: from sonic302-26.consmr.mail.ne1.yahoo.com (sonic302-26.consmr.mail.ne1.yahoo.com [66.163.186.152])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0233F2408D
+        for <linux-nfs@vger.kernel.org>; Sun, 11 Sep 2022 21:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1662955440; bh=7C4O2HzfkDB2JUgsGoWLBIX3FcwiIG0KjKxfRDa2Qkc=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=OJwFaxQJ41wiB3fy08VBxthvfrHCQaK2NqbUXxE0Hl8/qb+JANrssdhQ1HJ1Ki8Rw/BCmoQI9vINaaasyeA4WVjxYBz33+a+N4mCvDWtaYCSYXVkQsplaPTCy0NKAr5lIymodELzOO0Pl40qja3eo+mIBzMwHs6G0Axm2EOoaSdwq5FvRqKNFt/zj3OlvINxHKDw1CP/Swi79CPv3hP3fpjxrw6PX8+VyPl3muyAy+DqkIOBhnA1Wa6klZZ4FEAQplx6xSRJONZ/UQduIDF7yRaC4ftLUp0qnUEWY3Q+b6xXCTF1N7w3iOCoRUWB7cPHJpsIFbZOolIt31Ex3o8iKA==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1662955440; bh=zGQfMEG3duSTfJBtd4VxyPXJrOReAFdvwjz/TsTMZbt=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=pvbI+DQmMpLP9XUzt0dYhs8WPUR58AMOb+j4PDL88vGzebnvc2B0WiXzd0Q9CDedn/r856sm7h3MIDB9xSDF0+x0H/SEH3o03o6QX75pdyzXaAVEyAQQ0PPrhXBxRzl7K63doPCx3IhPXGcKybUdmsGXRsKre+C9qZ0rxFH1G0OJKuHb3cOATqu5KjuaZkfQVVHPO0+bz7/mgtzlDH2d+pIU5QH+1M4f/kiUZV6z7/UMfBMdgPG7jERz+r728FkxOZVtvJZ04h9r9p8oNiMsmJvugZgi5a2DlvL6JxUITssXPhHoPtZXEPvqfY2WnxrW3PtqD+yIzaFMAw+s6fyQzw==
+X-YMail-OSG: bus_QZcVM1liI_8YVBC5MhHJBMUHxz1jaASZl7OeQyprPSohs1T2804NoOTfIIU
+ FAnGGcfdF3IdGpxhdMSeLMMPXDZIzU.BWG0HBRwrk9VETnXk36rB0nXgSdsSAKF0USDkVOGJeP2.
+ ibVgQVapAPsnB0jaua.jFY._KsEriEvxFyFcJ80XmUvJPyZg_JuOy3urNvxQ6EtFh2hHsnKArehB
+ .F8CvdvtQuMSPQfHC_EtOWJiULHZKTF8.QUI9vnQsWmpZQaGht6Fpzb6Ns0O52uTZ9m6c4SdT_0y
+ IehIfYfV1O2JDb6rdkt3T8hjcuCEqTxm_Etb4wS6gcIbnUf0N_HMTPNWnlSTVtFPg1jeirOVCTC9
+ 4shk06YyZINv7dMXMLrrdQWCaLWXryuqTopEw9QtB2dDpQZFKXobuPbZm8rfX_8D3fbPMU6_jnHg
+ yMStNPr1QiOO8a3OzU3iy3tnbYPkxnwIY8InIv4nYiUzDEdmYxj1CgR2CKJUp5Ob64G51lAlwC.N
+ 6Eref.LCKZHk_pQif70ZP61n5Zy6JA2P0wxhWZ5A7quIdJ5haf4B9zQ6EhNYXa7fWijj1Av9_pCo
+ ZOVZU1DOhg7yjJng3PgI6MZoivzL3gSLvBYB.2MhXKbWlnap5wcYVEWpHKF50vYts.N1swKb.K7F
+ 065Rf4wF8B.ukXN.2K7wUnwZRoAW8hvjchRgpHwArJw73XJvKj0aCNccPahn9H8I5C.tTZfWNRnn
+ swNO5hJBNyqDwsVlOw2a0uuSadey4DTRfN_TjJDZZulRB9_xFgJUwiRU8qYFrIsjSpxZ.1RX6c.5
+ ACKny9N7cnrIyZ9KgjWPgUMT96d4EXbL9ehYgNpYieNZRgFqVpNd.LUxRZHHYolPBFHe.hasy8.Z
+ A9xnm0FWbqV5xkav1wxeMn9YXVwZkdN6Yy4SzGHw50OVOE8YZqDkqVgUtP57JK5ZnF1gvnjncj8e
+ zA9W8bDIqE3yPr9qbOJjAhPh3vDM4y2xPrW_R.Iu30fqyQgPm4fR2xlrsMy9WyvZVhyTqoB5APJ2
+ Cz.SzW8ihbW1PLtX8EvBjVK_FmsvRDSsYPUrzhasnfDoJ3l0ZpmSFq5Qah1VxVEguIFVXQUqeFf3
+ lLy5kAxOrYru6Jrl.gt4r6a8XQEMr.FJLkat3OJuTUIOesRx9QoXKHg3IlEQsYgrmi3uRUnwR0iL
+ GORByYtCbwGIToPv13bDBjXQLWC6ZQd7DjoxVCW2Nu3A75EzJQCl38Jfejgs7J9.wEJSUhwyAsw9
+ OXlYcdQZnR4U7k_fSaEe1wArfJ7tnCuYCwxnSxPQyt7mEkA8KkIMkiT3pkCgPyIQq4Xs55jDdz6P
+ Irv40M_Vs6J6EiNHiCpFC2KnG4vvbwxSqqyVSJbd0u7N8DbEfns0m_uSNKZdbTleac6cU_SSS9TI
+ VN02UPLhFL3f3bKJiiWefYWK1jt8aizmyMleXFz4xWD1T9DhG._62NYozQH7IFok.WZ3mtmoakQf
+ 2mM37xhXgIC_Jw1S7SD2ck9T3SZ1UPoaNjPhjH8BNrjS5_1L9dYcksOWtltKQduVsMmeHLJwV7f6
+ h3oTOkQeUoz625AtJuj58SntbUnL83nLEkMzQusKiPWFdUb7NyLFEVaC2iZdPylXqodwMV67Mgux
+ FJzralF4s1qidRoQXBJJ24pJXybe3EsOWRbKQqWvbMOfF6RiSTgWSJ_LwQ_NPS_pD8UeZ.ZEcerb
+ 6X7U2.nSsr.D.xy3F2cO4u_hf4eTNfRs4nrA7SScZTySx_7wTFg8NyCvc7eY6TdgBNgfJ44sOmrD
+ pEHCEd4Xh7nLrjefBEFtDngxgwq3ZYLJysJ9eSO82Fwqbc7RzMJua4rB6Mln9boZHug5OTRX09DL
+ zTb0kKKP6zRyt6en9mNRuzptWFzgEhzH42yt84JFFhjyI_puT3noEeLNFT9KnqbLp13ZuHh7jwh2
+ 83lujWcN2BFZcG4HJ8zapFtwHzGZs2c41lvmPS3suu7.yBKaiXu3HEu3Yn4.YeaV.jYSplxa5_KD
+ Hi7Boh9ev2qjgAw4foiZkv1LaOjpKJkgj3.njqcUNSLxaH_IbRwr2xOfPe9OdG5vkVek2DM8R.fo
+ JDttijWnnEXUYXnnWuLEvkeAqPsmtd2pWUhNwXZZmS6Az7zSa.QSsDUuUbmGQ_xgWyCN_2pksBy_
+ zUqpBt9ZvNhMNw5B5tshOqg3CPBKnPjfgr9Fyg0jZZK3UciDz.iX3a_JqLNosD1pmkaBdrymbXt3
+ 5jHut7fOBxW9uXE472IUaW3VneoYZ0OPrcubnT7MSBawZrvMqx50XjjyCz5JoRClNBevhOKSU7he
+ .tQxsBuUVQgU-
+X-Sonic-MF: <casey@schaufler-ca.com>
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic302.consmr.mail.ne1.yahoo.com with HTTP; Mon, 12 Sep 2022 04:04:00 +0000
+Received: by hermes--production-gq1-5499fdd576-dl2rj (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 5bc4dae1e3808d755ab5454ef596dc5a;
+          Mon, 12 Sep 2022 04:03:55 +0000 (UTC)
+Message-ID: <ee70a6bf-898c-63aa-c513-6c2f0f307f2b@schaufler-ca.com>
+Date:   Sun, 11 Sep 2022 21:03:55 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8B4DBE66-960F-473C-8636-8159B397FFC0@oracle.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.13.0
+Subject: Re: Does NFS support Linux Capabilities
+Content-Language: en-US
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     Chuck Lever III <chuck.lever@oracle.com>,
+        battery dude <jyf007@gmail.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        casey@schaufler-ca.com
+References: <CAMBbDaF2Ni0gMRKNeFTQwgAOPPYy7RLXYwDJyZ1edq=tfATFzw@mail.gmail.com>
+ <1D8F1768-D42A-4775-9B0E-B507D5F9E51E@oracle.com> <YxsGIoFlKkpQdSDY@mit.edu>
+ <8865e109-3ec6-f848-8014-9fe58e3876f4@schaufler-ca.com>
+ <Yx2xyW5n0ECZX9bJ@mit.edu>
+From:   Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <Yx2xyW5n0ECZX9bJ@mit.edu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.20612 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
+X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,LOTS_OF_MONEY,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Sep 11, 2022 at 06:36:22PM +0000, Chuck Lever III wrote:
+On 9/11/2022 3:00 AM, Theodore Ts'o wrote:
+> On Fri, Sep 09, 2022 at 08:59:41AM -0700, Casey Schaufler wrote:
+>> Data General's UNIX system supported in excess of 330 capabilities.
+>> Linux is currently using 40. Linux has deviated substantially from
+>> the Withdrawn Draft, especially in the handling of effective capabilities.
+>> I believe that you could support POSIX capabilities or Linux capabilities,
+>> but an attempt to support both is impractical.
+> Yeah, good point, I had forgotten about how we (Linux) ended up
+> diverging from POSIX 1.e when we changed how effective capabilities
+> were calculated.
+>
+>> Supporting any given UNIX implementation is possible, but once you
+>> get past the POSIX defined capabilities into the vendor specific
+>> ones interoperability ain't gonna happen.
+> And from an NFS perspective, if we had (for example) a Trusted Solaris
+> trying to emulate Linux binaries over NFS with capabilities masks, I
+> suspect trying to map Linux's Capabilities onto Trusted Solaris's
+> implementation of POSIX 1.e would be the least of Oracle's technical
+> challenges.  :-)
+>
+>>> .. and this is why the C2 by '92 initiative was doomed to failure,
+>>> and why Posix.1e never completed the standardization process.  :-)
+>> The POSIX.1e effort wasn't completed because vendors lost interest
+>> in the standards process and because they lost interest in the
+>> evaluated security process.
+> It was my sense was that the reason why they lost interested in the
+> evaluated security process was simply that the business case didn't
+> make any sense.  That is, the $$$ they might get from US Government
+> sales was probability not worth the opportunity cost of the engineers
+> tasked to work on Trusted {AIX,DG,HPUX,Solaris}.  Heck, I'm not sure
+> the revenue would balance out the _costs_, let alone the opportunity
+> costs...
 
-> > diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> > index 9f486b788ed0..b16aed158ba6 100644
-> > --- a/fs/nfsd/vfs.c
-> > +++ b/fs/nfsd/vfs.c
-> > @@ -846,10 +846,14 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
-> > 		  struct splice_desc *sd)
-> > {
-> > 	struct svc_rqst *rqstp = sd->u.data;
-> > -
-> > -	svc_rqst_replace_page(rqstp, buf->page);
-> > -	if (rqstp->rq_res.page_len == 0)
-> > -		rqstp->rq_res.page_base = buf->offset;
-> > +	struct page *page = buf->page;	// may be a compound one
-> > +	unsigned offset = buf->offset;
-> > +
-> > +	page += offset / PAGE_SIZE;
-> 
-> Nit: I see "offset / PAGE_SIZE" is used in the iter code base,
-> but in the NFS stack, we prefer "offset >> PAGE_SIZE" and
-> "offset & ~PAGE_MASK" (below).
+A B1 evaluation cost the vendor $1M/year for 3 years. At the time we were
+selling large systems for $10M-20M, so you didn't have to sell very many
+to justify the expense. Alas, salesmanship beats technological leadership
+more often than you'd hope.
 
-*shrug*
+>> Granularity was always a bone of contention in the working group.
+>> What's sad is that granularity wasn't the driving force behind capabilities.
+>> The important point was to separate privilege from UID 0. In the end
+>> I think we'd have been better off with one capability, CAP_PRIVILEGED,
+>> defined in the specification and a note saying that beyond that you were
+>> on your own.
+> Well, hey, we almost have that already, sort of --- CAP_SYS_ADMIN ==
+> "root", for almost all intents and purposes.  :-)
 
-If a C compiler is too dumb to recognize division by a power of two
-constant...
+My, but did we have trouble teaching evaluators about CAP_SYS_ADMIN.
+They had a very hard time understanding why we had to have a capability
+for things that had nothing to do with the system security policy.
+The problem is that including what CAP_SYS_ADMIN does in a "real"
+security policy introduces an level of complexity that makes any kind
+of analysis impractical. How does the ioctl() that reverses the spin
+on a disk drive relate to DAC or MAC? What are the objects involved?
 
-Anyway, your codebase, your rules.
+The big issue is that so few Linux kernel developers understand what
+the Linux security policy is. So much emphasis has gone into "least
+privilege" and "fine granularity" that it is rare to find someone who
+is willing to think about the big picture.
 
-> 
-> > +	for (int i = sd->len; i > 0; i -= PAGE_SIZE)
-> > +		svc_rqst_replace_page(rqstp, page++);
-> > +	if (rqstp->rq_res.page_len == 0)	// first call
-> > +		rqstp->rq_res.page_base = offset % PAGE_SIZE;
-> > 	rqstp->rq_res.page_len += sd->len;
-> > 	return sd->len;
-> > }
-> 
-> I could take this through the nfsd for-rc tree, but that's based
-> on 5.19-rc7 so it doesn't have f0f6b614f83d. I don't think will
-> break functionality, but I'm wondering if it would be better for
-> you to take this through your tree to improve bisect-ability.
-> 
-> If you agree and Ben reports a Tested-by:, then here's my
-> 
->   Acked-by: Chuck Lever <chuck.lever@oracle.com>
-
-OK, I'll wait for Tested-by and send it to Linus.  Should be safe
-for backports - with non-compound pages we are going to have
-offset < PAGE_SIZE and sd->len <= PAGE_SIZE, so this is equivalent
-to the mainline variant of the function for those...
+> 						- Ted
