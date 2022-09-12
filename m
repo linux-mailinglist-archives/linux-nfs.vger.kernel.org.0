@@ -2,121 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 871155B5CA4
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 16:49:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65BCB5B5CAD
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 16:51:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230202AbiILOtV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Sep 2022 10:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
+        id S230221AbiILOvB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Sep 2022 10:51:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229786AbiILOtU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 10:49:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791BE2F02B
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 07:49:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2D260B80CAA
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 14:49:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 894ECC433D6;
-        Mon, 12 Sep 2022 14:49:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1662994156;
-        bh=PDYXkMlNN1pYxk9SGE2NU9/RQvbmOuzKSx1YCy4yt0o=;
-        h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=L18rIJaMJLexdOGj5DpKtYHN/H8XpbjL/exkmaiM0XBm1+udRyO31V2/aIQIzbRWk
-         5popbK5oY9qLth7pAkkaI90L4mH/OiAvjtRMFdx7RbUZ30OjwlbEqs+Cw7yX3Ppezh
-         0WX0EeSvNyr7ESA7SPNLb7v5vhcUW1w98Rcth9s5Vy+t18WfGz9+7Y0upHKnSnifeT
-         vLV0PEOV821hAhVRqOncgqZcu8M11o2UXdnOCazH4qOMWC+VWg6ieiBn7JkiklpWqt
-         AwoEwrBgvjf+g+XoIaKZ9Fl7Yq7tQpWiEVSBkH0XSN9BuqzRgr42aKQ5NrOGb+BNic
-         1iNHwqsspfZNg==
-Message-ID: <26398d6ee1b5a8d69a1c17cc30f5363a0da5650a.camel@kernel.org>
-Subject: Re: [nfsv4] Announcing the Fall 2022 Bakeathon
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Steve Dickson <steved@redhat.com>,
-        Linux NFS Mailing list <linux-nfs@vger.kernel.org>,
-        NFSv4 <nfsv4@ietf.org>
-Date:   Mon, 12 Sep 2022 10:49:15 -0400
-In-Reply-To: <c0d059fc-a41c-ca24-59f8-ad7f780f91f0@redhat.com>
-References: <480ddad3-f93a-dab3-0f50-b4b7ebacd6e9@redhat.com>
-         <c0d059fc-a41c-ca24-59f8-ad7f780f91f0@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S229702AbiILOu7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 10:50:59 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B47A33A13;
+        Mon, 12 Sep 2022 07:50:58 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id BA232607F; Mon, 12 Sep 2022 10:50:57 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org BA232607F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1662994257;
+        bh=VDdSkcB3ak4apclVt/05byVDTIM05k6XxyMCdrwmp68=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=ZxaPJSMlBqmONwwNp0emyvFwmdCV+rXkOxnX0QmNvsUqYJ7+nv0vtXBhzTfFolKHm
+         8Z4pmf/VYv2EQvLqi0tre+x4AC6HjpEkOV3yYDAwkEgUFVH4VeM3qN5geCJuc/Oyte
+         4hAXnRcuTFvpSfnwUcfrGO2AyAk6TWRvxbXytk8k=
+Date:   Mon, 12 Sep 2022 10:50:57 -0400
+To:     Trond Myklebust <trondmy@hammerspace.com>
+Cc:     "jlayton@kernel.org" <jlayton@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "djwong@kernel.org" <djwong@kernel.org>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        "brauner@kernel.org" <brauner@kernel.org>,
+        "neilb@suse.de" <neilb@suse.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
+        "david@fromorbit.com" <david@fromorbit.com>,
+        "fweimer@redhat.com" <fweimer@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
+        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "tytso@mit.edu" <tytso@mit.edu>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "lczerner@redhat.com" <lczerner@redhat.com>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>
+Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
+ STATX_INO_VERSION field
+Message-ID: <20220912145057.GE9304@fieldses.org>
+References: <20220908182252.GA18939@fieldses.org>
+ <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+ <20220909154506.GB5674@fieldses.org>
+ <125df688dbebaf06478b0911e76e228e910b04b3.camel@kernel.org>
+ <20220910145600.GA347@fieldses.org>
+ <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
+ <87a67423la.fsf@oldenburg.str.redhat.com>
+ <7c71050e139a479e08ab7cf95e9e47da19a30687.camel@kernel.org>
+ <20220912135131.GC9304@fieldses.org>
+ <aeb314e7104647ccfd83a82bd3092005c337d953.camel@hammerspace.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aeb314e7104647ccfd83a82bd3092005c337d953.camel@hammerspace.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I'm planning to attend in-person this year.
--- Jeff
+On Mon, Sep 12, 2022 at 02:15:16PM +0000, Trond Myklebust wrote:
+> On Mon, 2022-09-12 at 09:51 -0400, J. Bruce Fields wrote:
+> > On Mon, Sep 12, 2022 at 08:55:04AM -0400, Jeff Layton wrote:
+> > > Because of the "seen" flag, we have a 63 bit counter to play with.
+> > > Could
+> > > we use a similar scheme to the one we use to handle when "jiffies"
+> > > wraps? Assume that we'd never compare two values that were more
+> > > than
+> > > 2^62 apart? We could add i_version_before/i_version_after macros to
+> > > make
+> > > it simple to handle this.
+> > 
+> > As far as I recall the protocol just assumes it can never wrap.  I
+> > guess
+> > you could add a new change_attr_type that works the way you describe.
+> > But without some new protocol clients aren't going to know what to do
+> > with a change attribute that wraps.
+> > 
+> > I think this just needs to be designed so that wrapping is impossible
+> > in
+> > any realistic scenario.  I feel like that's doable?
+> > 
+> > If we feel we have to catch that case, the only 100% correct behavior
+> > would probably be to make the filesystem readonly.
+> > 
+> 
+> Which protocol? If you're talking about basic NFSv4, it doesn't assume
+> anything about the change attribute and wrapping.
+> 
+> The NFSv4.2 protocol did introduce the optional attribute
+> 'change_attr_type' that tries to describe the change attribute
+> behaviour to the client. It tells you if the behaviour is monotonically
+> increasing, but doesn't say anything about the behaviour when the
+> attribute value overflows.
+> 
+> That said, the Linux NFSv4.2 client, which uses that change_attr_type
+> attribute does deal with overflow by assuming standard uint64_t wrap
+> around rules. i.e. it assumes bit values > 63 are truncated, meaning
+> that the value obtained by incrementing (2^64-1) is 0.
 
-On Wed, 2022-08-31 at 16:32 -0400, Steve Dickson wrote:
-> Hello,
->=20
-> Just a quick reminder... The Bakeathonn is a
-> little over a month out... I know a lot of the
-> Red Haters planning on intending F2F...
->=20
-> I sounds like Netapp plan on being there in person as
-> well as virtual. I have heard rumors that Oracle
-> plan on attending F2F.
->=20
-> Still looking to hear from HammerSpace, Amazon,
-> Google, Vmware, CEA and HP. I'm hoping they
-> will be attending... one way or another.
->=20
-> I would like to set up talks Tue, Wed and
-> Thur at 2pm EST. So you are interested in
-> hearing about something or if you want to
-> talk about something or just status on
-> things (RDMA, TLS, QUIC, Session Trunking)
-> Just let me know. I'll set up a google
-> doc to sign up....
->=20
-> I'm pretty sure I will be able to set things up so
-> the remote  people can participate.
->=20
-> As usual, Red Hat will be having a few
-> "pops" with hors d'oeuvres starting
-> around 4ish each day...
->=20
-> steved.
->=20
->=20
-> On 7/13/22 10:59 AM, Steve Dickson wrote:
-> > Hello,
-> >=20
-> > Red Hat is pleased to announce that we'll be hosting the
-> > Fall 2022 Bakeathon at our Westford office in Massachusetts, US.
-> >=20
-> > The event will be F2F as well as virtual. Hoping to
-> > draw as many participants as possible.
-> >=20
-> > Date: Mon Oct 10 to Fri Oct 14
-> > Address: Red Hat, 314 Littleton Rd, Westford, MA
-> >=20
-> > Details, registration and hotel info are here [1].
-> > Any questions please send them to bakeathon-contact@googlegroups.com
-> >=20
-> > I hope to see you there... One way or the other!
-> >=20
-> > steved.
-> >=20
-> > [1] http://www.nfsv4bat.org/Events/2022/Oct/BAT/index.html
-> >=20
->=20
-> _______________________________________________
-> nfsv4 mailing list
-> nfsv4@ietf.org
-> https://www.ietf.org/mailman/listinfo/nfsv4
+Yeah, it was the MONOTONIC_INCRE case I was thinking of.  That's
+interesting, I didn't know the client did that.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+--b.
