@@ -2,120 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 08BBA5B5C33
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 16:29:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05E7D5B5C9A
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Sep 2022 16:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbiILO3d (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Sep 2022 10:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
+        id S229965AbiILOre (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Sep 2022 10:47:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230194AbiILO3a (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 10:29:30 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21DF33355
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 07:29:27 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id u6so13024831eda.12
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Sep 2022 07:29:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date;
-        bh=RMfellM8EsS5NNfYNUH1wed5lqjBR+CLqiQJlPNlGdc=;
-        b=pvuLq2auKbJ7YsaXjnVhbrmUl+aXkUYqxb0fuH2nVHb5HqrIjQP33lQILpYWpF2ake
-         r+giS42iQTIxs7j8DO0wkVHcuwZV0d1IzaBaaHPhY1hBGShk9HHpNa62vTzs6qeuTrWi
-         u5qAjdjTyPr1HVHfKSDzxj4hwGhMM4eaRfuBqSgChw5K8ZPRqODsgB6CemKAmXAFtnz7
-         w0UG5otlXMFrJZ7kk0LaOSJpKvapiVtpCTVLeBAe91jEbIlQIDwplML92MDGktLKbVrq
-         vu+EfV1CmeS3ZYPwvb5ZT7FhAcaP0RCrs3QXF449+Za2hhhaCIW1iaATGgvfRVrkpSop
-         Bm9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=RMfellM8EsS5NNfYNUH1wed5lqjBR+CLqiQJlPNlGdc=;
-        b=2cs5oaZxG/fcYBukFVx/Ek5AbxH3N0751LvlI2TgDeZuS9XBDHUwYiQROX1uWCQtdt
-         uoKeBtAHPZZ5/BxDswTiELxm1Wss+R5Vcio3cjDWH+BK70IpV45uhAIUQwa+jpj0QkW3
-         KWv9zXzqmuBOBxzv8o7W+bJ9QRZenGIS160eOZ2uoNicKnXDDy8ZrXeW50IvHsoYbd5D
-         UpzN+/Y8PbO/GCDElhrZEPTQhbf29/l68E7hY2l0YBnu0OfcXFRN1aW1mip+cEs8Tnd8
-         ImeCnLTZyguw5r+AMv7ctxO1A4zDc3JkxeqRz4nny8NGAdmgXwtaH8n8+hCRRHxCUqE0
-         yi6g==
-X-Gm-Message-State: ACgBeo0s70MbFbaj4bj8SV1SmCdQZhd07fRovrj91ugaZRLWU2WDH2pU
-        G8ytwVxXttpMVzPUT9n7PAr6IR1uyNakMEHj1DYXUtHQOycyVw==
-X-Google-Smtp-Source: AA6agR5PWr4HRjNJkSei5O3AxaVgZWSZGFKzYtkLeaAvK5VpyeUyqkhAYS9XiiOFOwlpQmI/QBGLriO3TNvqVs0/chw=
-X-Received: by 2002:a05:6402:5ca:b0:43b:6e01:482c with SMTP id
- n10-20020a05640205ca00b0043b6e01482cmr22919228edx.189.1662992965731; Mon, 12
- Sep 2022 07:29:25 -0700 (PDT)
+        with ESMTP id S229718AbiILOrc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Sep 2022 10:47:32 -0400
+Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9424223BC1;
+        Mon, 12 Sep 2022 07:47:31 -0700 (PDT)
+Received: by fieldses.org (Postfix, from userid 2815)
+        id CFBAA1C5A; Mon, 12 Sep 2022 10:47:30 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org CFBAA1C5A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
+        s=default; t=1662994050;
+        bh=KrCKV+nSm550BbWCcA/q//1uO/LeSXqDHyHCbzO1WJk=;
+        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
+        b=Dfx5+C/kD+osKxTq13Gb2GCFlVdcialgctzJi05n2pAIbusLp1G06ffaXC3Eac1yY
+         H7CWy0N5muuBjXNSIiooqAQzv7jet1zI4xWjxBmZys9o1JABAQIakYevKUN79sli9L
+         81iLAHBR1MuyfGYXr065a8FUKIoL1YQtZ2Xs+16o=
+Date:   Mon, 12 Sep 2022 10:47:30 -0400
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Florian Weimer <fweimer@redhat.com>, Theodore Ts'o <tytso@mit.edu>,
+        Jan Kara <jack@suse.cz>, NeilBrown <neilb@suse.de>,
+        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
+        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, brauner@kernel.org, linux-man@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ceph-devel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-xfs@vger.kernel.org
+Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
+ STATX_INO_VERSION field
+Message-ID: <20220912144730.GD9304@fieldses.org>
+References: <20220908182252.GA18939@fieldses.org>
+ <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+ <20220909154506.GB5674@fieldses.org>
+ <125df688dbebaf06478b0911e76e228e910b04b3.camel@kernel.org>
+ <20220910145600.GA347@fieldses.org>
+ <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
+ <87a67423la.fsf@oldenburg.str.redhat.com>
+ <7c71050e139a479e08ab7cf95e9e47da19a30687.camel@kernel.org>
+ <20220912135131.GC9304@fieldses.org>
+ <1abae98579030d437224ae24f73fffaabb3f64c1.camel@kernel.org>
 MIME-Version: 1.0
-From:   Pradeep <pradeepthomas@gmail.com>
-Date:   Mon, 12 Sep 2022 07:29:14 -0700
-Message-ID: <CAD8zhTCcHTXsrhqYWZRAK9NZLFg4oZUzia8Uh-quGgZSjscMaw@mail.gmail.com>
-Subject: EREMOTE error on NFSv4 CREATE RPC with latest kernel.
-To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1abae98579030d437224ae24f73fffaabb3f64c1.camel@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hello,
+On Mon, Sep 12, 2022 at 10:02:27AM -0400, Jeff Layton wrote:
+> On Mon, 2022-09-12 at 09:51 -0400, J. Bruce Fields wrote:
+> > On Mon, Sep 12, 2022 at 08:55:04AM -0400, Jeff Layton wrote:
+> > > Because of the "seen" flag, we have a 63 bit counter to play with. Could
+> > > we use a similar scheme to the one we use to handle when "jiffies"
+> > > wraps? Assume that we'd never compare two values that were more than
+> > > 2^62 apart? We could add i_version_before/i_version_after macros to make
+> > > it simple to handle this.
+> > 
+> > As far as I recall the protocol just assumes it can never wrap.  I guess
+> > you could add a new change_attr_type that works the way you describe.
+> > But without some new protocol clients aren't going to know what to do
+> > with a change attribute that wraps.
+> > 
+> 
+> Right, I think that's the case now, and with contemporary hardware that
+> shouldn't ever happen, but in 10 years when we're looking at femtosecond
+> latencies, could this be different? I don't know.
 
-We have created a referral-based =E2=80=9Cdistributed=E2=80=9D namespace sp=
-read across
-multiple Linux nodes using the local file system. The server
-implementation uses nfs-ganesha. Within an NFSv4 export, we place
-top-level directories (under export root) on different nodes for =E2=80=9Cl=
-oad
-balancing=E2=80=9D. These directories simulate separate filesystems (separa=
-te
-fsids) and return fs_locations when queried by the client. Note that
-currently, the Linux NFS client only queries for fs_locations
-attribute (handling of NFS4ERR_MOVED) on a =E2=80=9Clookup=E2=80=9D VFS ope=
-ration.
+That doesn't sound likely.  We probably need not just 2^63 writes to a
+single file, but a dependent sequence of 2^63 interspersed writes and
+change attribute reads.
 
-To allow the client to be able to create top-level directories, we
-must ensure that the mkdir succeeds (since the client cannot handle
-NFS4ERR_MOVED on CREATE), but the directory created to be potentially
-placed on a different node than the one client is connecting to. To do
-this, we internally forward the mkdir request to another node where it
-gets created.
+Then there's the question of how many crashes and remounts are possible
+for a single filesystem in the worst case.
 
-Until recently, we were able to return a zero-byte filehandle in the
-GETFH response for CREATE (a compound of PUTFH, CREATE, GETFH,
-GETATTR). This forces the Linux client to issue a LOOKUP on the
-directory name, get an NFS4ERR_MOVED in response and subsequently get
-redirected to the correct node.
+> 
+> > I think this just needs to be designed so that wrapping is impossible in
+> > any realistic scenario.  I feel like that's doable?
+> > 
+> > If we feel we have to catch that case, the only 100% correct behavior
+> > would probably be to make the filesystem readonly.
+> 
+> What would be the recourse at that point? Rebuild the fs from scratch, I
+> guess?
 
-See code here for reference that forces a LOOKUP on zero byte FH:
-https://elixir.bootlin.com/linux/latest/source/fs/nfs/dir.c#L2237
+I guess.
 
-Of course, this isn=E2=80=99t documented in the protocol, although the
-protocol does not explicitly disallow =E2=80=9Cjunctions=E2=80=9D to be cre=
-ated by the
-client.
-
-Trond=E2=80=99s recent change on file handle validation in RPC decoding lay=
-er
-now makes the zero-byte file handle invalid - see
-https://git.linux-nfs.org/?p=3Dtrondmy/linux-nfs.git;a=3Dcommitdiff;h=3Deb3=
-d58c68e39fad68d8054e0324eb06d82dcedbb;hp=3D3d66bae156a652be18e278f3c88bc3e0=
-69ae824b.
-
-This is probably done (correctly) for other reasons. However, it does
-prevent the client from =E2=80=9Crecovering=E2=80=9D the filehandle of a ne=
-wly created
-directory through a subsequent lookup. Other options like returning a
-correct filehandle (which we could obtain from the remote node) would
-not work, since the client is not informed of fs_locations. Similarly,
-NFS4ERR_BADHANDLE or NFS4ERR_STALE will not perform any =E2=80=9Crecovery=
-=E2=80=9D
-since the directory isn=E2=80=99t known yet to have a separate fsid.
-
-Suggestions on how/if we can support junction creates from the client?
-
-Thanks,
-Pradeep
+--b.
