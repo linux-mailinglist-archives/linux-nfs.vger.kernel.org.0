@@ -2,74 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 952725B775A
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 19:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AD395B7765
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 19:12:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231874AbiIMRIM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 13:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39122 "EHLO
+        id S231305AbiIMRLl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 13:11:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231980AbiIMRHq (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 13:07:46 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2605F90C42
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 08:57:03 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id C471734C42;
-        Tue, 13 Sep 2022 15:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1663084617;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
+        with ESMTP id S232478AbiIMRLZ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 13:11:25 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528E385FDA
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 09:00:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663084777;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=kM3oceWYTwXTJ87wjVgDRLcrCQPzSh85+zwy7HneCf4=;
-        b=m33h3znXFM9TSHWseB0uxOW2zHuQJsOzS1fSH6vKaCeRz+EK5OOFYM1/ykhHXvA9U0+252
-        P2hx6xhsK64Dn16gbPCkH8BRKbaZD3T7+B7feSnB7ldjVuV5CAKKr6Tmvv1KVXh1lg4bXE
-        6xuR0TnaUzy23xthu0yjYMCiy3Pqu+E=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1663084617;
-        h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-         cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kM3oceWYTwXTJ87wjVgDRLcrCQPzSh85+zwy7HneCf4=;
-        b=UwJ9mJjToZcLkvzIg28jeXFQWrXWklE9qJh5FNdjqtfMNPKHCicm0CZMOpKW1IyfQagNfM
-        VEVq0ZdA8EaIDdCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 977D6139B3;
-        Tue, 13 Sep 2022 15:56:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id qwwZIkmoIGNlYgAAMHmgww
-        (envelope-from <pvorel@suse.cz>); Tue, 13 Sep 2022 15:56:57 +0000
-Date:   Tue, 13 Sep 2022 17:56:55 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     Steve Dickson <steved@redhat.com>
-Cc:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v3] nfsrahead: fix linking while static linking
-Message-ID: <YyCoRz6FfHgnCnmw@pevik>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <YvVkftYtIgFhYHKk@pevik>
- <881E6E82-812C-4BD8-849C-4DEE484AE4F0@benettiengineering.com>
- <12ece17b-b2d9-6621-0af7-26a12470bc99@redhat.com>
- <21969dec-4bbe-94ae-b317-1bc12300d6ca@benettiengineering.com>
- <42980d60-3b6d-4479-8c1a-a5fd7ba30f4c@redhat.com>
+        bh=KARhchcnmyxpKQVcKDMjwE/KLDdmE86JLITX7Xw37Qo=;
+        b=FLjhshnZ+iPnIam/lEXOupYgOAAjPuB2c1ya5Wf58PwmcrDwXImiN9ZjZ/gao4Q2BEkI+P
+        3JVPlS6TkMZfEEIWYaoKqP4rvxhStEK8Hs0lJC07viyq2i7QgmRFj3P29pGD2wql//92Ak
+        igufBF5Mp72NdKX5qzW9fFyJHGEU7dY=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-547-BPmS9ywqO-u9jWBL4xucCA-1; Tue, 13 Sep 2022 11:59:36 -0400
+X-MC-Unique: BPmS9ywqO-u9jWBL4xucCA-1
+Received: by mail-qt1-f198.google.com with SMTP id o21-20020ac87c55000000b00344646ea2ccso10099329qtv.11
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 08:59:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date;
+        bh=KARhchcnmyxpKQVcKDMjwE/KLDdmE86JLITX7Xw37Qo=;
+        b=GIyjy5ARnsSrmW0fpYs/sgeNluNSTDjAzJ6TLzr6xkvAzGNboMFB7nCjNLH3Q4atsV
+         QRPdsysDDvE8mj+RL56MVKO0qpKTb1kXd911WDTlk21S7nR6Oe9W68kH999F7u2TVXFk
+         S4jExME/BeYFO6tLvODh9oKEm9UvTTSUZq8yKi40q4rZSpC27Fbyfz1O18UeXirY8nUw
+         mCoHP85Bu/+XZq7Cv8Qf7R+ku7Jtv5QblsGKqLxXoUspsdCRcivEdyp1YzfJO0WzbCmS
+         fCP8/IwJ0nqk06kAlTACzzHgjJ15dtM8G8CnWkiMSTRGMLfGPiZ/vqU+BoW8tWZ7UJQd
+         QuXQ==
+X-Gm-Message-State: ACgBeo1Vqke+BAEY7UClGST2A5Xf1AHBAMixKF/YbPkJbTaHDcn4ipyl
+        p53D4kqJlVklKC3OMoAKvrSeVX8xClbvQAQCLg775gpdqMdHU6C/KjT8kkggreijs7Jhbysc0iy
+        L9UmsihR9LPxE1idJ0J0h
+X-Received: by 2002:a05:622a:3d0:b0:35b:b4d4:8d99 with SMTP id k16-20020a05622a03d000b0035bb4d48d99mr9240770qtx.516.1663084773560;
+        Tue, 13 Sep 2022 08:59:33 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR7L6UOB4IoilQjpeHi9JuWSTE4rcl7yLZrWIb4hpuQ057VpGE+klwBMcPewNM26euUQFtyflg==
+X-Received: by 2002:a05:622a:3d0:b0:35b:b4d4:8d99 with SMTP id k16-20020a05622a03d000b0035bb4d48d99mr9240722qtx.516.1663084773012;
+        Tue, 13 Sep 2022 08:59:33 -0700 (PDT)
+Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id l19-20020a05620a28d300b006ce622e6c96sm1936520qkp.30.2022.09.13.08.59.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Sep 2022 08:59:32 -0700 (PDT)
+Message-ID: <fcb3e029-5754-d8d4-cc3c-a8b833db03c0@redhat.com>
+Date:   Tue, 13 Sep 2022 11:59:31 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <42980d60-3b6d-4479-8c1a-a5fd7ba30f4c@redhat.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_SOFTFAIL,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH] nfs4_setfacl: add a specific option for indexes
+Content-Language: en-US
+To:     Pierguido Lambri <plambri@redhat.com>
+Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20220815083908.65720-1-plambri@redhat.com>
+ <dff91106-4869-c20b-502b-4d3e0e9ac536@redhat.com>
+ <20220825074345.cexc7kgaljnuqf66@plambri-t490s>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20220825074345.cexc7kgaljnuqf66@plambri-t490s>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -78,77 +83,22 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On 8/22/22 4:33 PM, Giulio Benetti wrote:
-> > Hi Steve, Petr,
+On 8/25/22 3:43 AM, Pierguido Lambri wrote:
+> On Wed, Aug 24, 2022 at 04:10:40PM -0400, Steve Dickson wrote:
+>> Hello,
+>>
+>> I'll go ahead and que this patch.. but there needs to be
+>> an manpage update for me to commit to it...
+> 
+> Thanks Steve.
+> I wasn't sure this would be accepted, I'll send another patch for the man
+> page.
+FYI... I'm going to wait for the man page before I
+do the commit.
 
-> > On 22/08/22 21:17, Steve Dickson wrote:
+steved.
 
-
-> > > On 8/11/22 4:36 PM, Giulio Benetti wrote:
-> > > > Hi Petr,
-
-> > > > > Il giorno 11 ago 2022, alle ore 22:20, Petr Vorel
-> > > > > <pvorel@suse.cz> ha scritto:
-
-> > > > > ﻿Hi,
-
-> > > > > Reviewed-by: Petr Vorel <pvorel@suse.cz>
-
-> > > > > nit (not worth of reposting): I'm not a native speaker, but
-> > > > > IMHO subject should
-> > > > > be without while, e.g. "fix order on static linking"
-
-> > > > Totally, it sounds awful as it is now.
-> > > > I ask maintainers if it’s possible to reword like Petr
-> > > > pointed.
-> > > Will do!
-
-> > Thank you!
-
-> > I will try to improve the pkg-config autotools because as it is now it
-> > works but it’s not a good solution.
-
-> > I should use what it’s been suggested to me here:
-> > https://lists.buildroot.org/pipermail/buildroot/2022-August/648926.html
-> > And I’ve given another solution:
-> > https://lists.buildroot.org/pipermail/buildroot/2022-August/648933.html
-> > but it’s still not ok:
-> > https://lists.buildroot.org/pipermail/buildroot/2022-August/649058.html
-> I don't have access to those list...
-
-Yep, these are forbidden 403.
-Giulio, please post a link on lore
-https://lore.kernel.org/buildroot/
-(or on patchwork)
-
-Kind regards,
-Petr
-
-
-> > So for the moment it’s a decent solution indeed it’s been committed to
-> > Buildroot
-> > but I’ll try to improve it once I’ll have time.
-> Sounds like a plan...
-
-> steved.
-
-
-> > Kind regards
-> > —
-> > Giulio Benetti
-> > CEO/CTO@Benetti Engineering sas
-
-> > > steved.
-
-> > > > Thank you all.
-
-> > > > Best regards
-> > > > Giulio
-
-
-> > > > > Kind regards,
-> > > > > Petr
-
-
-
+> 
+> Pier
+> 
 
