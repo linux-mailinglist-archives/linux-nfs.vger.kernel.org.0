@@ -2,78 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AD395B7765
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 19:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCFE35B779F
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 19:20:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231305AbiIMRLl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 13:11:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50900 "EHLO
+        id S231360AbiIMRU0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 13:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232478AbiIMRLZ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 13:11:25 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528E385FDA
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 09:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663084777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KARhchcnmyxpKQVcKDMjwE/KLDdmE86JLITX7Xw37Qo=;
-        b=FLjhshnZ+iPnIam/lEXOupYgOAAjPuB2c1ya5Wf58PwmcrDwXImiN9ZjZ/gao4Q2BEkI+P
-        3JVPlS6TkMZfEEIWYaoKqP4rvxhStEK8Hs0lJC07viyq2i7QgmRFj3P29pGD2wql//92Ak
-        igufBF5Mp72NdKX5qzW9fFyJHGEU7dY=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-547-BPmS9ywqO-u9jWBL4xucCA-1; Tue, 13 Sep 2022 11:59:36 -0400
-X-MC-Unique: BPmS9ywqO-u9jWBL4xucCA-1
-Received: by mail-qt1-f198.google.com with SMTP id o21-20020ac87c55000000b00344646ea2ccso10099329qtv.11
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 08:59:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=KARhchcnmyxpKQVcKDMjwE/KLDdmE86JLITX7Xw37Qo=;
-        b=GIyjy5ARnsSrmW0fpYs/sgeNluNSTDjAzJ6TLzr6xkvAzGNboMFB7nCjNLH3Q4atsV
-         QRPdsysDDvE8mj+RL56MVKO0qpKTb1kXd911WDTlk21S7nR6Oe9W68kH999F7u2TVXFk
-         S4jExME/BeYFO6tLvODh9oKEm9UvTTSUZq8yKi40q4rZSpC27Fbyfz1O18UeXirY8nUw
-         mCoHP85Bu/+XZq7Cv8Qf7R+ku7Jtv5QblsGKqLxXoUspsdCRcivEdyp1YzfJO0WzbCmS
-         fCP8/IwJ0nqk06kAlTACzzHgjJ15dtM8G8CnWkiMSTRGMLfGPiZ/vqU+BoW8tWZ7UJQd
-         QuXQ==
-X-Gm-Message-State: ACgBeo1Vqke+BAEY7UClGST2A5Xf1AHBAMixKF/YbPkJbTaHDcn4ipyl
-        p53D4kqJlVklKC3OMoAKvrSeVX8xClbvQAQCLg775gpdqMdHU6C/KjT8kkggreijs7Jhbysc0iy
-        L9UmsihR9LPxE1idJ0J0h
-X-Received: by 2002:a05:622a:3d0:b0:35b:b4d4:8d99 with SMTP id k16-20020a05622a03d000b0035bb4d48d99mr9240770qtx.516.1663084773560;
-        Tue, 13 Sep 2022 08:59:33 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR7L6UOB4IoilQjpeHi9JuWSTE4rcl7yLZrWIb4hpuQ057VpGE+klwBMcPewNM26euUQFtyflg==
-X-Received: by 2002:a05:622a:3d0:b0:35b:b4d4:8d99 with SMTP id k16-20020a05622a03d000b0035bb4d48d99mr9240722qtx.516.1663084773012;
-        Tue, 13 Sep 2022 08:59:33 -0700 (PDT)
-Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id l19-20020a05620a28d300b006ce622e6c96sm1936520qkp.30.2022.09.13.08.59.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 08:59:32 -0700 (PDT)
-Message-ID: <fcb3e029-5754-d8d4-cc3c-a8b833db03c0@redhat.com>
-Date:   Tue, 13 Sep 2022 11:59:31 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH] nfs4_setfacl: add a specific option for indexes
-Content-Language: en-US
-To:     Pierguido Lambri <plambri@redhat.com>
-Cc:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20220815083908.65720-1-plambri@redhat.com>
- <dff91106-4869-c20b-502b-4d3e0e9ac536@redhat.com>
- <20220825074345.cexc7kgaljnuqf66@plambri-t490s>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20220825074345.cexc7kgaljnuqf66@plambri-t490s>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        with ESMTP id S232300AbiIMRT7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 13:19:59 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60553D344A
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 09:06:26 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28DF8D9F004861;
+        Tue, 13 Sep 2022 16:06:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=KZRGVU83jZNIpbAn/QTtDa5QJy01A8N5oO70HU/iJR4=;
+ b=Qvs4MxkrnUGOuWoCeyQn8MReaBnMwfryfeaD6DnJGumbcTG7Me3to4A/uMU0EPGnKngh
+ s6d+jCxS2A+8ubZNaUbGE0vMSE5WSELcnn2yy25Ml7hd/oXllGAXReDqHSDMcd0LpXWl
+ R1SLu7u1xZv36YoRYfSQADg++nSciJb+KnJMOe79EKV+oKzqspqPyYCnHN8cPSFQyzHC
+ UVBm0aLLMj1TisMUBVuml5nsasjKakZB/LQmoPk1PM/HCa7D+BCCxWJSVFzU9ubO+XdU
+ rFjT9xh/O37R1FGRxcgZBvRjSUkgGQ2bhv4shPE7B/o/0Bf4aTLEH+Kzt8T5tVlRIMQy BQ== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jgjf9y7j6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Sep 2022 16:06:18 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28DEV9Ls016733;
+        Tue, 13 Sep 2022 16:06:17 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jj6b2r38q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Sep 2022 16:06:17 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28DG6HDh023194;
+        Tue, 13 Sep 2022 16:06:17 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3jj6b2r38a-1;
+        Tue, 13 Sep 2022 16:06:17 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v6 0/2] NFSD: memory shrinker for NFSv4 clients
+Date:   Tue, 13 Sep 2022 09:06:08 -0700
+Message-Id: <1663085170-23136-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-13_09,2022-09-13_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 phishscore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2207270000
+ definitions=main-2209130073
+X-Proofpoint-GUID: 3vhC5upl_FEBpQMJ_lELhWoaVNPt6GmN
+X-Proofpoint-ORIG-GUID: 3vhC5upl_FEBpQMJ_lELhWoaVNPt6GmN
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,24 +68,50 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+This patch series implements the memory shrinker for NFSv4 clients
+to react to system low memory condition.
 
+The first patch adds a counter to keep track of the number of
+courtesy clients in the system.
 
-On 8/25/22 3:43 AM, Pierguido Lambri wrote:
-> On Wed, Aug 24, 2022 at 04:10:40PM -0400, Steve Dickson wrote:
->> Hello,
->>
->> I'll go ahead and que this patch.. but there needs to be
->> an manpage update for me to commit to it...
-> 
-> Thanks Steve.
-> I wasn't sure this would be accepted, I'll send another patch for the man
-> page.
-FYI... I'm going to wait for the man page before I
-do the commit.
+The second patch implements the courtesy_client_reaper used to
+expiring the courtesy clients.
 
-steved.
+By destroying the courtesy clients, all states associated with
+these clients are also released.
 
-> 
-> Pier
-> 
+v2:
+. fix kernel test robot errors in nfsd.h when CONFIG_NFSD_V4 not defined.
 
+v3:
+. add mod_delayed_work in nfsd_courtesy_client_scan to kick start
+  the laundromat.
+
+v4:
+. replace the use of xchg() with vanilla '=' in patch 1.
+
+v5:
+. rename nfsd_courtesy_client_count to nfsd_courtesy_clients
+. add helper nfsd4_update_courtesy_client_count
+. move nfsd_register_client_shrinker into nfsd4_init_leases_net
+. move nfsd4_leases_net_shutdown from nfsd.h to nfs4state.c
+. do away with shrinker 'scan' callback, just return SHRINK_STOP
+. remove unused nfsd_client_shrinker_reapcount
+
+v6:
+. create courtesy_client_reaper and a separate delayed_work for it
+  using the laundromat_wq. 
+  I tried merging nfs4_get_courtesy_client_reaplist and
+  nfs4_get_client_reaplist but it make the code looks ugly and
+  hard to read so I leave them separate for now.
+---
+
+Dai Ngo (2):
+      NFSD: keep track of the number of courtesy clients in the system
+      NFSD: add shrinker to reap courtesy clients on low memory condition
+
+ fs/nfsd/netns.h     |   5 ++
+ fs/nfsd/nfs4state.c | 119 +++++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfsctl.c    |   6 ++-
+ fs/nfsd/nfsd.h      |   7 ++-
+ 4 files changed, 124 insertions(+), 13 deletions(-)
