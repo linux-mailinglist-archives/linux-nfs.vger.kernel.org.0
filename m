@@ -2,116 +2,153 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8A0B5B7956
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 20:23:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 955BD5B79BD
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 20:38:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231880AbiIMSXS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 14:23:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46270 "EHLO
+        id S231407AbiIMShr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 14:37:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbiIMSW7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:22:59 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9035EF4D
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:39:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663090788;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Fu10hD1OCFhuxjnvLtrbqqDX8ceXhWf0cEsoDTTGW6A=;
-        b=dx4o8F/vVl8whooQZFizi1NW85xADrfeppGpGHPZD33YIuXSurqCrkXh2kxJQpws5RprGX
-        Wzo1Okj69mQj8jTXrc8SR99JyyNaQGlFGqdheFp9L821NFgy9VgOIlGyqGSb4Dc4jYjmFJ
-        SgbCFy3sQUg918Kf/T58TgHhh0oEFCQ=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-228-Ql35O-pfND2ion6BtF0bUA-1; Tue, 13 Sep 2022 13:39:47 -0400
-X-MC-Unique: Ql35O-pfND2ion6BtF0bUA-1
-Received: by mail-qt1-f198.google.com with SMTP id fx6-20020a05622a4ac600b0035a70ba1cbcso10532219qtb.21
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:39:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date;
-        bh=Fu10hD1OCFhuxjnvLtrbqqDX8ceXhWf0cEsoDTTGW6A=;
-        b=lCq6vOAQceRE+iZsNgDgdGe4iL06pAjjE/i4ri/fa8iB2IjQ91GToowC0SeStQifdT
-         FuU2JDRrHNNfBwFhCM5yTo2VNqO8JPFVLA6aogxOK30xNiOPRh4Ill1nIgib/kSW22g6
-         5SyTYerDOL9hilwjlbT8jZ6K3SE4ncIz2CSdr/b1t0KOjBT/obLOMVmRH8kaSz1UV1Zp
-         hEpd034U1SmpflUjLB0OOCEUFOd37wkcqj9ajU5Wb2fD2Az+OS8eTqIfRghYPUmPMv49
-         c9kTME7lNX9yEosXVQaINK28aPmuo0psCXmG8FL1th8U4Ke9wMKwtvPNWs4mqwoNhvd4
-         vahg==
-X-Gm-Message-State: ACgBeo3PyrG2dpX9yx6BI97M9MvZ8C9wM4yYwFNe7Xz6C9h35z9ohcLM
-        fKv+apEiA46+YFV5mfttcTufxAA89Ggc3+8tKwfgV5HxD1Ozu5fCmLWVNsMP0ZWY3Z+0UU5ILOq
-        tQ6cM0JMxs5IINlBKT5B4
-X-Received: by 2002:ac8:5710:0:b0:343:5fa9:b707 with SMTP id 16-20020ac85710000000b003435fa9b707mr28159861qtw.192.1663090778920;
-        Tue, 13 Sep 2022 10:39:38 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR74ceIOw5oF8KIKm7jfKnQ4yV4dP6oimS+lx8QcLFJOFDvDW6RaO/0AHdEvDY3zLtl09z/YdA==
-X-Received: by 2002:ac8:5710:0:b0:343:5fa9:b707 with SMTP id 16-20020ac85710000000b003435fa9b707mr28159849qtw.192.1663090778679;
-        Tue, 13 Sep 2022 10:39:38 -0700 (PDT)
-Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id v5-20020a05620a0f0500b0069fe1dfbeffsm10474690qkl.92.2022.09.13.10.39.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 10:39:37 -0700 (PDT)
-Message-ID: <f8e252f5-9a87-5f22-1c47-2fccd82091bf@redhat.com>
-Date:   Tue, 13 Sep 2022 13:39:35 -0400
+        with ESMTP id S232106AbiIMShb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:37:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22088883FE
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 11:02:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A62E5B81098
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 18:01:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB5D8C433C1;
+        Tue, 13 Sep 2022 18:01:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663092113;
+        bh=EI8E2BTkndQwavwySJDazDxus1g7WbH0ort5W1AHzcM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GhBxjeSD+q76D5F6/4LRrAqWYIIAExNGqlW/UhjrDVyeCo1hpW8liyaIBWuMpUOUH
+         uuSKAtH5BCsA4gKP1tfbREGVcSYBH9O8gC1L+cIt/55g3PWpY/pfFYe2tkSFLzqM/T
+         PWs6qNaDLD61lgfk4KDXh6pJFRwvcv9/alS0y7HAO1QrXpeF95eQoZNLcdi+X3ExYj
+         XIBCIHk/ze1GDzdl0WfMvTAHY4X54nlmnJwSgZ2W7GgLapf0rd8czsPKQSqgECqviO
+         gB4eB5Bz9V4bnU9qKaNIeZm4vCgLBgG2/ji8fn6e2lTU61bRGzROGcFQOzqBZ76HHH
+         VBvkaaE3v7zZQ==
+From:   Anna Schumaker <anna@kernel.org>
+To:     linux-nfs@vger.kernel.org, chuck.lever@oracle.com
+Cc:     anna@kernel.org
+Subject: [PATCH v4 0/2] NFSD: Simplify READ_PLUS
+Date:   Tue, 13 Sep 2022 14:01:49 -0400
+Message-Id: <20220913180151.1928363-1-anna@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH] nfs-blkmapd: Fix the error status when nfs-blkmapd stops
-Content-Language: en-US
-To:     zhanchengbin <zhanchengbin1@huawei.com>
-Cc:     linux-nfs@vger.kernel.org, liuzhiqiang26@huawei.com,
-        linfeilong <linfeilong@huawei.com>
-References: <ae07856f-ef34-270e-91b2-9364fdcd6563@huawei.com>
-From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <ae07856f-ef34-270e-91b2-9364fdcd6563@huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+
+When we left off with READ_PLUS, Chuck had suggested reverting the
+server to reply with a single NFS4_CONTENT_DATA segment essentially
+mimicing how the READ operation behaves. Then, a future sparse read
+function can be added and the server modified to support it without
+needing to rip out the old READ_PLUS code at the same time.
+
+This patch takes that first step. I was even able to re-use the
+nfsd4_encode_readv() and nfsd4_encode_splice_read() functions to
+remove some duuplicate code.
+
+Below is some performance data comparing the READ and READ_PLUS
+operations with v4.2. I tested reading 2G files with various hole
+lengths including 100% data, 100% hole, and a handful of mixed hole and
+data files. For the mixed files, a notation like "1d" means
+every-other-page is data, and the first page is data. "4h" would mean
+alternating 4 pages data and 4 pages hole, beginning with hole.
+
+I also used the 'vmtouch' utility to make sure the file is either
+evicted from the server's pagecache ("Uncached on server") or present in
+the server's page cache ("Cached on server").
+
+   2048M-data
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.555 s, 712 MB/s, 0.74 s kern, 24% cpu
+   :    :........................... Cached on server .....  1.346 s, 1.6 GB/s, 0.69 s kern, 52% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.596 s, 690 MB/s, 0.72 s kern, 23% cpu
+        :........................... Cached on server .....  1.394 s, 1.6 GB/s, 0.67 s kern, 48% cpu
+   2048M-hole
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  4.934 s, 762 MB/s, 1.86 s kern, 29% cpu
+   :    :........................... Cached on server .....  1.328 s, 1.6 GB/s, 0.72 s kern, 54% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  4.823 s, 739 MB/s, 1.88 s kern, 28% cpu
+        :........................... Cached on server .....  1.399 s, 1.5 GB/s, 0.70 s kern, 50% cpu
+   2048M-mixed-1d
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  4.480 s, 598 MB/s, 0.76 s kern, 21% cpu
+   :    :........................... Cached on server .....  1.445 s, 1.5 GB/s, 0.71 s kern, 50% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  4.774 s, 559 MB/s, 0.75 s kern, 19% cpu
+        :........................... Cached on server .....  1.514 s, 1.4 GB/s, 0.67 s kern, 44% cpu
+   2048M-mixed-1h
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.568 s, 633 MB/s, 0.78 s kern, 23% cpu
+   :    :........................... Cached on server .....  1.357 s, 1.6 GB/s, 0.71 s kern, 53% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.580 s, 641 MB/s, 0.74 s kern, 22% cpu
+        :........................... Cached on server .....  1.396 s, 1.5 GB/s, 0.67 s kern, 48% cpu
+   2048M-mixed-2d
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.159 s, 708 MB/s, 0.78 s kern, 26% cpu
+   :    :........................... Cached on server .....  1.410 s, 1.5 GB/s, 0.70 s kern, 50% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.093 s, 712 MB/s, 0.74 s kern, 25% cpu
+        :........................... Cached on server .....  1.474 s, 1.4 GB/s, 0.67 s kern, 46% cpu
+   2048M-mixed-2h
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.043 s, 722 MB/s, 0.78 s kern, 26% cpu
+   :    :........................... Cached on server .....  1.374 s, 1.6 GB/s, 0.72 s kern, 53% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.913 s, 756 MB/s, 0.74 s kern, 26% cpu
+        :........................... Cached on server .....  1.349 s, 1.6 GB/s, 0.67 s kern, 50% cpu
+   2048M-mixed-4d
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.275 s, 680 MB/s, 0.75 s kern, 24% cpu
+   :    :........................... Cached on server .....  1.391 s, 1.5 GB/s, 0.71 s kern, 52% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.470 s, 626 MB/s, 0.72 s kern, 21% cpu
+        :........................... Cached on server .....  1.456 s, 1.5 GB/s, 0.67 s kern, 46% cpu
+   2048M-mixed-4h
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.035 s, 743 MB/s, 0.74 s kern, 26% cpu
+   :    :........................... Cached on server .....  1.345 s, 1.6 GB/s, 0.71 s kern, 53% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.848 s, 779 MB/s, 0.73 s kern, 26% cpu
+        :........................... Cached on server .....  1.421 s, 1.5 GB/s, 0.68 s kern, 48% cpu
+   2048M-mixed-8d
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.262 s, 687 MB/s, 0.74 s kern, 24% cpu
+   :    :........................... Cached on server .....  1.366 s, 1.6 GB/s, 0.69 s kern, 51% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.195 s, 709 MB/s, 0.72 s kern, 24% cpu
+        :........................... Cached on server .....  1.414 s, 1.5 GB/s, 0.67 s kern, 48% cpu
+   2048M-mixed-8h
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  2.899 s, 789 MB/s, 0.73 s kern, 27% cpu
+   :    :........................... Cached on server .....  1.338 s, 1.6 GB/s, 0.69 s kern, 52% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.910 s, 772 MB/s, 0.72 s kern, 26% cpu
+        :........................... Cached on server .....  1.438 s, 1.5 GB/s, 0.67 s kern, 47% cpu
+   2048M-mixed-16d
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.416 s, 661 MB/s, 0.73 s kern, 23% cpu
+   :    :........................... Cached on server .....  1.345 s, 1.6 GB/s, 0.70 s kern, 53% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.177 s, 713 MB/s, 0.70 s kern, 23% cpu
+        :........................... Cached on server .....  1.447 s, 1.5 GB/s, 0.68 s kern, 47% cpu
+   2048M-mixed-16h
+   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  2.919 s, 780 MB/s, 0.73 s kern, 26% cpu
+   :    :........................... Cached on server .....  1.363 s, 1.6 GB/s, 0.70 s kern, 51% cpu
+   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.934 s, 773 MB/s, 0.70 s kern, 25% cpu
+        :........................... Cached on server .....  1.435 s, 1.5 GB/s, 0.67 s kern, 47% cpu
+
+- v4:
+  - Change READ and READ_PLUS to return nfserr_serverfault if the splice
+    splice check fails.
+
+Thanks,
+Anna
 
 
-On 9/1/22 9:44 AM, zhanchengbin wrote:
-> The systemctl stop nfs-blkmap.service will sends the SIGTERM signal
-> to the nfs-blkmap.service first.If the process fails to be stopped,
-> it sends the SIGKILL signal again to kill the process.
-> However, exit(1) is executed in the SIGTERM processing function of
-> nfs-blkmap.service. As a result, systemd receives an error message
-> indicating that nfs-blkmap.service failed.
-> "Active: failed" is displayed when the systemctl status
-> nfs-blkmap.service command is executed.
-> 
-> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
-Committed... (tag: nfs-utils-2-6-3-rc1)
+Anna Schumaker (2):
+  NFSD: Return nfserr_serverfault if splice_ok but buf->pages have data
+  NFSD: Simplify READ_PLUS
 
-steved.
-> ---
->   utils/blkmapd/device-discovery.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/utils/blkmapd/device-discovery.c 
-> b/utils/blkmapd/device-discovery.c
-> index 2736ac89..49935c2e 100644
-> --- a/utils/blkmapd/device-discovery.c
-> +++ b/utils/blkmapd/device-discovery.c
-> @@ -462,7 +462,7 @@ static void sig_die(int signal)
->           unlink(PID_FILE);
->       }
->       BL_LOG_ERR("exit on signal(%d)\n", signal);
-> -    exit(1);
-> +    exit(0);
->   }
->   static void usage(void)
->   {
+ fs/nfsd/nfs4xdr.c | 141 +++++++++++-----------------------------------
+ 1 file changed, 33 insertions(+), 108 deletions(-)
+
+-- 
+2.37.3
 
