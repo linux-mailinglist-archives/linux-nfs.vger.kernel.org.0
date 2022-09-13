@@ -2,226 +2,121 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB4AE5B7C44
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 22:45:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0655B7C73
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 23:06:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbiIMUpi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 16:45:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55570 "EHLO
+        id S229552AbiIMVGq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 17:06:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbiIMUph (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 16:45:37 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0461F7286A
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 13:45:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AF26BB810BD
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 20:45:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A81BC433C1
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 20:45:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663101933;
-        bh=Tpq5aCI0334I7mdgQq4L+2ZGedcMoH8UVpRvQRU+8m0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EKVx55FO7gxy981r0Bm9c1kbPcAoRC7bfgwIP4Gz0JHybMwZXG6DOPMDSbGrBsgVq
-         zs7GtxuWY6Nd0MWJE+T0zVwrzJ950AkHzjju0oZHKAZuhH26WPyA7vQvMxbuiaG3X6
-         c0297mZHpON40Vz9QLsBGnbofzYBZblEHZKyOwH50u4++Ow0Pbc0t6IAGdzquh3Hb5
-         h5okXkp1mqkgqREdH5zwmBqQb0oquA8vVFDf25E9Kbt0ogNsb/UBA3WosRbRC3v6L5
-         aqdK6tfGp8Rn7I6a+DijqgZmB+h6qpc82tSQEf0ICE9t94ui6XAuTykNdAV4FJsWL+
-         JrGhC1MJkaqiQ==
-Received: by mail-wr1-f54.google.com with SMTP id cc5so12788930wrb.6
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 13:45:33 -0700 (PDT)
-X-Gm-Message-State: ACgBeo1e6SDb7f+ZN5XxgEaJA3V8U12aAzhsQo3T+cf0SokVtFjw3JFK
-        GAOTJmQemjZHNC5ZJIIQ/zSlPXoWJ6/ckIWzdjA=
-X-Google-Smtp-Source: AA6agR4AuE373m5KabJ/wnqA+o4rn5BkQasP5TrW7LUcXHXU8FGXZv1/cFhuR5tjVqKMj1LVkkRNOb3L4mX5Y/vfvuY=
-X-Received: by 2002:a05:6000:18aa:b0:22a:b489:badc with SMTP id
- b10-20020a05600018aa00b0022ab489badcmr5160187wri.564.1663101931883; Tue, 13
- Sep 2022 13:45:31 -0700 (PDT)
+        with ESMTP id S229449AbiIMVGo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 17:06:44 -0400
+Received: from smtpdh16-2.aruba.it (smtpdh16-2.aruba.it [62.149.155.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 26EA661B13
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 14:06:41 -0700 (PDT)
+Received: from [192.168.50.173] ([146.241.22.4])
+        by Aruba Outgoing Smtp  with ESMTPSA
+        id YD78oa4POWuL0YD78oFoea; Tue, 13 Sep 2022 23:06:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+        t=1663103199; bh=20m1Xz05dyemyXvB6f90NSVuR2jT16nE0etUMS9IQwM=;
+        h=Date:MIME-Version:Subject:To:From:Content-Type;
+        b=e4V42ch7fcQoR6ynZh5uzZumbDj7GQsa9mSHFVe157uSnAdzjas/YZn/0JJCgcNKZ
+         n1J2n6Eq5iyavhnFLRFMrJHehFo+1kGxsqE2+QPvVmuQf9avDdI8s19JvH8MKo2rrh
+         meABK5yDiG38rQ61uTz+G75FNbZFIW8ztQWFX5715QPpr4ObuxjlficEC0t0l4mmnV
+         kQxu9DhXj2vqoV8eqEPRpk1RJnKnRe/d3ZJHK3yo7k7wlAvOo+55ZjoXcjarpDE8YO
+         uaCE+7G6XlFlHA6ZILs/GgTWnpeUO6a0YXBXB+V7kb7l7L98BjtHXdHzgiZmH30T6c
+         MEc1nfoS9TUcw==
+Message-ID: <f67c4131-0dc0-a909-e5ad-d323406ce03d@benettiengineering.com>
+Date:   Tue, 13 Sep 2022 23:06:38 +0200
 MIME-Version: 1.0
-References: <20220913180151.1928363-1-anna@kernel.org> <E45EC764-E698-45E9-8489-FF63A2A0FC5C@oracle.com>
-In-Reply-To: <E45EC764-E698-45E9-8489-FF63A2A0FC5C@oracle.com>
-From:   Anna Schumaker <anna@kernel.org>
-Date:   Tue, 13 Sep 2022 16:45:15 -0400
-X-Gmail-Original-Message-ID: <CAFX2JfkDPzVL26KNxKnvHDLBgc0X2xdCJtBD1H+H10uRkwttug@mail.gmail.com>
-Message-ID: <CAFX2JfkDPzVL26KNxKnvHDLBgc0X2xdCJtBD1H+H10uRkwttug@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] NFSD: Simplify READ_PLUS
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.1
+Subject: Re: [PATCH v3] nfsrahead: fix linking while static linking
+Content-Language: en-US
+To:     Petr Vorel <pvorel@suse.cz>, Steve Dickson <steved@redhat.com>
+Cc:     linux-nfs@vger.kernel.org
+References: <YvVkftYtIgFhYHKk@pevik>
+ <881E6E82-812C-4BD8-849C-4DEE484AE4F0@benettiengineering.com>
+ <12ece17b-b2d9-6621-0af7-26a12470bc99@redhat.com>
+ <21969dec-4bbe-94ae-b317-1bc12300d6ca@benettiengineering.com>
+ <42980d60-3b6d-4479-8c1a-a5fd7ba30f4c@redhat.com> <YyCoRz6FfHgnCnmw@pevik>
+From:   Giulio Benetti <giulio.benetti@benettiengineering.com>
+In-Reply-To: <YyCoRz6FfHgnCnmw@pevik>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4xfBROEG902JmmmJkWhksEIPkSYUNEklJpoO0koQ9LUo5ZddOCvK0QRf5t5Z2bKM8b3Mi6wkDr+gk/DD27jsHma0MmUPvH8S6zJppmix3SsAAWiwKrb5HN
+ 9M7miwmLhteJ9DvM94qGqzBWs35U2DMR7VplVjC+mqRrMfvm193kK/tW6BSvzg1ZDaLUx5KYyJLncBZMnUgnCXKoG/PcvJUnzQaKqbAj2YIvrj72sPgRIlGX
+ Kpm4uPtToAJV19WrdOq4VUroSRFaxlxfcspNGc65wCg=
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 13, 2022 at 2:45 PM Chuck Lever III <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Sep 13, 2022, at 11:01 AM, Anna Schumaker <anna@kernel.org> wrote:
-> >
-> > From: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> >
-> > When we left off with READ_PLUS, Chuck had suggested reverting the
-> > server to reply with a single NFS4_CONTENT_DATA segment essentially
-> > mimicing how the READ operation behaves. Then, a future sparse read
-> > function can be added and the server modified to support it without
-> > needing to rip out the old READ_PLUS code at the same time.
-> >
-> > This patch takes that first step. I was even able to re-use the
-> > nfsd4_encode_readv() and nfsd4_encode_splice_read() functions to
-> > remove some duuplicate code.
-> >
-> > Below is some performance data comparing the READ and READ_PLUS
-> > operations with v4.2. I tested reading 2G files with various hole
-> > lengths including 100% data, 100% hole, and a handful of mixed hole and
-> > data files. For the mixed files, a notation like "1d" means
-> > every-other-page is data, and the first page is data. "4h" would mean
-> > alternating 4 pages data and 4 pages hole, beginning with hole.
-> >
-> > I also used the 'vmtouch' utility to make sure the file is either
-> > evicted from the server's pagecache ("Uncached on server") or present in
-> > the server's page cache ("Cached on server").
-> >
-> >   2048M-data
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.555 s, 712 MB/s, 0.74 s kern, 24% cpu
-> >   :    :........................... Cached on server .....  1.346 s, 1.6 GB/s, 0.69 s kern, 52% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.596 s, 690 MB/s, 0.72 s kern, 23% cpu
-> >        :........................... Cached on server .....  1.394 s, 1.6 GB/s, 0.67 s kern, 48% cpu
-> >   2048M-hole
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  4.934 s, 762 MB/s, 1.86 s kern, 29% cpu
-> >   :    :........................... Cached on server .....  1.328 s, 1.6 GB/s, 0.72 s kern, 54% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  4.823 s, 739 MB/s, 1.88 s kern, 28% cpu
-> >        :........................... Cached on server .....  1.399 s, 1.5 GB/s, 0.70 s kern, 50% cpu
-> >   2048M-mixed-1d
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  4.480 s, 598 MB/s, 0.76 s kern, 21% cpu
-> >   :    :........................... Cached on server .....  1.445 s, 1.5 GB/s, 0.71 s kern, 50% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  4.774 s, 559 MB/s, 0.75 s kern, 19% cpu
-> >        :........................... Cached on server .....  1.514 s, 1.4 GB/s, 0.67 s kern, 44% cpu
-> >   2048M-mixed-1h
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.568 s, 633 MB/s, 0.78 s kern, 23% cpu
-> >   :    :........................... Cached on server .....  1.357 s, 1.6 GB/s, 0.71 s kern, 53% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.580 s, 641 MB/s, 0.74 s kern, 22% cpu
-> >        :........................... Cached on server .....  1.396 s, 1.5 GB/s, 0.67 s kern, 48% cpu
-> >   2048M-mixed-2d
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.159 s, 708 MB/s, 0.78 s kern, 26% cpu
-> >   :    :........................... Cached on server .....  1.410 s, 1.5 GB/s, 0.70 s kern, 50% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.093 s, 712 MB/s, 0.74 s kern, 25% cpu
-> >        :........................... Cached on server .....  1.474 s, 1.4 GB/s, 0.67 s kern, 46% cpu
-> >   2048M-mixed-2h
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.043 s, 722 MB/s, 0.78 s kern, 26% cpu
-> >   :    :........................... Cached on server .....  1.374 s, 1.6 GB/s, 0.72 s kern, 53% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.913 s, 756 MB/s, 0.74 s kern, 26% cpu
-> >        :........................... Cached on server .....  1.349 s, 1.6 GB/s, 0.67 s kern, 50% cpu
-> >   2048M-mixed-4d
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.275 s, 680 MB/s, 0.75 s kern, 24% cpu
-> >   :    :........................... Cached on server .....  1.391 s, 1.5 GB/s, 0.71 s kern, 52% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.470 s, 626 MB/s, 0.72 s kern, 21% cpu
-> >        :........................... Cached on server .....  1.456 s, 1.5 GB/s, 0.67 s kern, 46% cpu
-> >   2048M-mixed-4h
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.035 s, 743 MB/s, 0.74 s kern, 26% cpu
-> >   :    :........................... Cached on server .....  1.345 s, 1.6 GB/s, 0.71 s kern, 53% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.848 s, 779 MB/s, 0.73 s kern, 26% cpu
-> >        :........................... Cached on server .....  1.421 s, 1.5 GB/s, 0.68 s kern, 48% cpu
-> >   2048M-mixed-8d
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.262 s, 687 MB/s, 0.74 s kern, 24% cpu
-> >   :    :........................... Cached on server .....  1.366 s, 1.6 GB/s, 0.69 s kern, 51% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.195 s, 709 MB/s, 0.72 s kern, 24% cpu
-> >        :........................... Cached on server .....  1.414 s, 1.5 GB/s, 0.67 s kern, 48% cpu
-> >   2048M-mixed-8h
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  2.899 s, 789 MB/s, 0.73 s kern, 27% cpu
-> >   :    :........................... Cached on server .....  1.338 s, 1.6 GB/s, 0.69 s kern, 52% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.910 s, 772 MB/s, 0.72 s kern, 26% cpu
-> >        :........................... Cached on server .....  1.438 s, 1.5 GB/s, 0.67 s kern, 47% cpu
-> >   2048M-mixed-16d
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  3.416 s, 661 MB/s, 0.73 s kern, 23% cpu
-> >   :    :........................... Cached on server .....  1.345 s, 1.6 GB/s, 0.70 s kern, 53% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  3.177 s, 713 MB/s, 0.70 s kern, 23% cpu
-> >        :........................... Cached on server .....  1.447 s, 1.5 GB/s, 0.68 s kern, 47% cpu
-> >   2048M-mixed-16h
-> >   :... v6.0-rc4 (w/o Read Plus) ... Uncached on server ...  2.919 s, 780 MB/s, 0.73 s kern, 26% cpu
-> >   :    :........................... Cached on server .....  1.363 s, 1.6 GB/s, 0.70 s kern, 51% cpu
-> >   :... v6.0-rc4 (w/ Read Plus) .... Uncached on server ...  2.934 s, 773 MB/s, 0.70 s kern, 25% cpu
-> >        :........................... Cached on server .....  1.435 s, 1.5 GB/s, 0.67 s kern, 47% cpu
->
-> For this particular change, I'm interested only in cases where the
-> whole file is cached on the server. We're focusing on the efficiency
-> and performance of the protocol and transport here, not the underlying
-> filesystem (which is... xfs?).
+Hi Petr, Steve, All,
 
-Sounds good, I can narrow down to just that test.
+On 13/09/22 17:56, Petr Vorel wrote:
+> 
+> 
+>> On 8/22/22 4:33 PM, Giulio Benetti wrote:
+>>> Hi Steve, Petr,
+> 
+>>> On 22/08/22 21:17, Steve Dickson wrote:
+> 
+> 
+>>>> On 8/11/22 4:36 PM, Giulio Benetti wrote:
+>>>>> Hi Petr,
+> 
+>>>>>> Il giorno 11 ago 2022, alle ore 22:20, Petr Vorel
+>>>>>> <pvorel@suse.cz> ha scritto:
+> 
+>>>>>> ﻿Hi,
+> 
+>>>>>> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> 
+>>>>>> nit (not worth of reposting): I'm not a native speaker, but
+>>>>>> IMHO subject should
+>>>>>> be without while, e.g. "fix order on static linking"
+> 
+>>>>> Totally, it sounds awful as it is now.
+>>>>> I ask maintainers if it’s possible to reword like Petr
+>>>>> pointed.
+>>>> Will do!
+> 
+>>> Thank you!
+> 
+>>> I will try to improve the pkg-config autotools because as it is now it
+>>> works but it’s not a good solution.
+> 
+>>> I should use what it’s been suggested to me here:
+>>> https://lists.buildroot.org/pipermail/buildroot/2022-August/648926.html
+>>> And I’ve given another solution:
+>>> https://lists.buildroot.org/pipermail/buildroot/2022-August/648933.html
+>>> but it’s still not ok:
+>>> https://lists.buildroot.org/pipermail/buildroot/2022-August/649058.html
+>> I don't have access to those list...
+> 
+> Yep, these are forbidden 403.
+> Giulio, please post a link on lore
+> https://lore.kernel.org/buildroot/
+> (or on patchwork)
 
->
-> Also, 2GB files can be read with just 20 1MB READ requests. That
-> means we don't have a large sample size of READ operations for any
-> single test, assuming the client is using 1MB rsize.
->
-> Also, are these averages, or single runs? I think running each test
-> 5-10 times (at least) and including some variance data in the results
-> would help build more confidence that the small differences in the
-> timing are not noise.
+Oops, you're both right, thank you Petr.
 
-This is an average across 10 runs.
+Follows lore links:
 
->
-> All that said, however, I see with some consistency that READ_PLUS
-> takes longer to pull data over the wire, but uses slightly less CPU.
-> Assuming the CPU utilizations are client-side, that matches my
-> expectations of lower CPU utilization results if the throughput is
-> lower.
->
-> Looking at the 100% data results, READ_PLUS takes 3.5% longer than
-> READ. That to me is a small but significant drop -- I think it will
-> be noticeable for large workloads. Can you explain the difference?
+I should use what it’s been suggested to me here:
+https://lore.kernel.org/buildroot/20220810231839.1b6164f7@windsurf/
+And I’ve given another solution:
+https://lore.kernel.org/buildroot/20220810215104.107714-1-giulio.benetti@benettiengineering.com/
+but it’s still not ok:
+https://lore.kernel.org/buildroot/20220811224752.1a1e53b7@windsurf/
 
-I'll try larger files for my next round of testing. I was assuming the
-difference is just noise, since there are cases like the mixed-2h test
-where READ_PLUS was slightly faster. But more testing will help figure
-that out.
-
->
-> For subsequent test runs, can you find a server with more memory,
-> test with larger files, and test with a variety of rsize settings?
-> You can reduce your test matrix by leaving out the tests with holey
-> files for the moment.
-
-Sure thing!
-
-Anna
-
->
->
-> > - v4:
-> >  - Change READ and READ_PLUS to return nfserr_serverfault if the splice
-> >    splice check fails.
->
-> At this point, the code looks fine, but I'd like to understand why
-> the performance is not the same.
->
->
-> > Thanks,
-> > Anna
-> >
-> >
-> > Anna Schumaker (2):
-> >  NFSD: Return nfserr_serverfault if splice_ok but buf->pages have data
-> >  NFSD: Simplify READ_PLUS
-> >
-> > fs/nfsd/nfs4xdr.c | 141 +++++++++++-----------------------------------
-> > 1 file changed, 33 insertions(+), 108 deletions(-)
-> >
-> > --
-> > 2.37.3
-> >
->
-> --
-> Chuck Lever
->
->
->
+Best regards
+-- 
+Giulio Benetti
+Benetti Engineering sas
