@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4F765B79BB
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 20:38:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B9C15B79BC
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 20:38:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232562AbiIMShx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 14:37:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45490 "EHLO
+        id S231985AbiIMSh4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 14:37:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232130AbiIMShg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:37:36 -0400
+        with ESMTP id S229705AbiIMShh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:37:37 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CE101099
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 11:02:14 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 537447284F
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 11:02:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7759661552
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 18:01:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81790C433D6;
-        Tue, 13 Sep 2022 18:01:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0AD4861494
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 18:01:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 148E8C433D7;
+        Tue, 13 Sep 2022 18:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663092113;
-        bh=bPLBKkTMNsbpLsKMCfOR/FlX9M/qfqpFC/HnX6ydAqs=;
+        s=k20201202; t=1663092114;
+        bh=CMZqBmC7T4Ox0n1WjSpipEx7BP+yDXPDdG0yCBuTffs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LB+w6BuVqw6+hS3lVuv4lVTn8kSZ9Z32bY7MI/B8MpBF1Aw5i4Tw7zy8abnhAnhaa
-         DyVTLlm/Lio9STDSb7SeE/V9VEe3K1BxGlni9DVo0ZWlJ6WNc9XKPpla2KF5qmSoGM
-         Rfd9A26RBXYZzjyymG0eBZClqtTs+LoSO/tWO6sjg3Fa3ctteMb9hZ7KJwSS14ivWK
-         H0wkEHuBREWc4jeKlR5dERlkxwcw3gW+BpmiIfrgwnftT+PDOHkJWEupDKW5Gr+rOx
-         jrztoxK1wIy5lJpjrkZGVdIut6v17vSUf7npy1+Eb3VbPdg4bjHebgJy9NXGG3SwlA
-         cvLuvJYGt/EgA==
+        b=V4OiMY8eI038agnxGcXGLU0hKmaPeKEfOeerB51xmDpKTBRrnZ+el2N5Edb/FXhmf
+         Txs8ymu7kis0VMbtSq+PwFV+ofJvIgTfk+dtmcwb3sMaLYl/SdSaGiYbil9Xu+GdVL
+         7XsrdeR0Werg9z/yB/wpildmEtyH+stN2zOX01YRnQxyxMe5d2WoKRm6KNmaPrcD8Q
+         kl75Nok2Y8t3BrPkotNFVL8byRWvI96qJIjdvIffDdBdRp5ZO2ARoGVXE8YRo0Kpb4
+         X95LOEPJHxdr2ea9q3ckMFDDOqyBXbTOth7K9aTeIolWQklw3eqqZHQKfZiOqNwWxU
+         NfsKyJi8WAJQw==
 From:   Anna Schumaker <anna@kernel.org>
 To:     linux-nfs@vger.kernel.org, chuck.lever@oracle.com
 Cc:     anna@kernel.org
-Subject: [PATCH v4 1/2] NFSD: Return nfserr_serverfault if splice_ok but buf->pages have data
-Date:   Tue, 13 Sep 2022 14:01:50 -0400
-Message-Id: <20220913180151.1928363-2-anna@kernel.org>
+Subject: [PATCH v4 2/2] NFSD: Simplify READ_PLUS
+Date:   Tue, 13 Sep 2022 14:01:51 -0400
+Message-Id: <20220913180151.1928363-3-anna@kernel.org>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20220913180151.1928363-1-anna@kernel.org>
 References: <20220913180151.1928363-1-anna@kernel.org>
@@ -54,27 +54,201 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-This was discussed with Chuck as part of this patch set. Returning
-nfserr_resource was decided to not be the best error message here, and
-he suggested changing to nfserr_serverfault instead.
+Chuck had suggested reverting READ_PLUS so it returns a single DATA
+segment covering the requested read range. This prepares the server for
+a future "sparse read" function so support can easily be added without
+needing to rip out the old READ_PLUS code at the same time.
 
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 ---
- fs/nfsd/nfs4xdr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfsd/nfs4xdr.c | 139 +++++++++++-----------------------------------
+ 1 file changed, 32 insertions(+), 107 deletions(-)
 
 diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
-index 1e9690a061ec..01dd73ed5720 100644
+index 01dd73ed5720..280c7c8ac807 100644
 --- a/fs/nfsd/nfs4xdr.c
 +++ b/fs/nfsd/nfs4xdr.c
-@@ -3994,7 +3994,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
- 	}
- 	if (resp->xdr->buf->page_len && splice_ok) {
- 		WARN_ON_ONCE(1);
+@@ -4731,79 +4731,37 @@ nfsd4_encode_offload_status(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 
+ static __be32
+ nfsd4_encode_read_plus_data(struct nfsd4_compoundres *resp,
+-			    struct nfsd4_read *read,
+-			    unsigned long *maxcount, u32 *eof,
+-			    loff_t *pos)
++			    struct nfsd4_read *read)
+ {
+-	struct xdr_stream *xdr = resp->xdr;
++	bool splice_ok = test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags);
+ 	struct file *file = read->rd_nf->nf_file;
+-	int starting_len = xdr->buf->len;
+-	loff_t hole_pos;
+-	__be32 nfserr;
+-	__be32 *p, tmp;
+-	__be64 tmp64;
+-
+-	hole_pos = pos ? *pos : vfs_llseek(file, read->rd_offset, SEEK_HOLE);
+-	if (hole_pos > read->rd_offset)
+-		*maxcount = min_t(unsigned long, *maxcount, hole_pos - read->rd_offset);
+-	*maxcount = min_t(unsigned long, *maxcount, (xdr->buf->buflen - xdr->buf->len));
++	struct xdr_stream *xdr = resp->xdr;
++	unsigned long maxcount;
++	__be32 nfserr, *p;
+ 
+ 	/* Content type, offset, byte count */
+ 	p = xdr_reserve_space(xdr, 4 + 8 + 4);
+ 	if (!p)
 -		return nfserr_resource;
++		return nfserr_io;
++	if (resp->xdr->buf->page_len && splice_ok) {
++		WARN_ON_ONCE(splice_ok);
 +		return nfserr_serverfault;
- 	}
++	}
+ 
+-	read->rd_vlen = xdr_reserve_space_vec(xdr, resp->rqstp->rq_vec, *maxcount);
+-	if (read->rd_vlen < 0)
+-		return nfserr_resource;
++	maxcount = min_t(unsigned long, read->rd_length,
++			 (xdr->buf->buflen - xdr->buf->len));
+ 
+-	nfserr = nfsd_readv(resp->rqstp, read->rd_fhp, file, read->rd_offset,
+-			    resp->rqstp->rq_vec, read->rd_vlen, maxcount, eof);
++	if (file->f_op->splice_read && splice_ok)
++		nfserr = nfsd4_encode_splice_read(resp, read, file, maxcount);
++	else
++		nfserr = nfsd4_encode_readv(resp, read, file, maxcount);
+ 	if (nfserr)
+ 		return nfserr;
+-	xdr_truncate_encode(xdr, starting_len + 16 + xdr_align_size(*maxcount));
+ 
+-	tmp = htonl(NFS4_CONTENT_DATA);
+-	write_bytes_to_xdr_buf(xdr->buf, starting_len,      &tmp,   4);
+-	tmp64 = cpu_to_be64(read->rd_offset);
+-	write_bytes_to_xdr_buf(xdr->buf, starting_len + 4,  &tmp64, 8);
+-	tmp = htonl(*maxcount);
+-	write_bytes_to_xdr_buf(xdr->buf, starting_len + 12, &tmp,   4);
+-
+-	tmp = xdr_zero;
+-	write_bytes_to_xdr_buf(xdr->buf, starting_len + 16 + *maxcount, &tmp,
+-			       xdr_pad_size(*maxcount));
+-	return nfs_ok;
+-}
+-
+-static __be32
+-nfsd4_encode_read_plus_hole(struct nfsd4_compoundres *resp,
+-			    struct nfsd4_read *read,
+-			    unsigned long *maxcount, u32 *eof)
+-{
+-	struct file *file = read->rd_nf->nf_file;
+-	loff_t data_pos = vfs_llseek(file, read->rd_offset, SEEK_DATA);
+-	loff_t f_size = i_size_read(file_inode(file));
+-	unsigned long count;
+-	__be32 *p;
+-
+-	if (data_pos == -ENXIO)
+-		data_pos = f_size;
+-	else if (data_pos <= read->rd_offset || (data_pos < f_size && data_pos % PAGE_SIZE))
+-		return nfsd4_encode_read_plus_data(resp, read, maxcount, eof, &f_size);
+-	count = data_pos - read->rd_offset;
+-
+-	/* Content type, offset, byte count */
+-	p = xdr_reserve_space(resp->xdr, 4 + 8 + 8);
+-	if (!p)
+-		return nfserr_resource;
+-
+-	*p++ = htonl(NFS4_CONTENT_HOLE);
++	*p++ = cpu_to_be32(NFS4_CONTENT_DATA);
+ 	p = xdr_encode_hyper(p, read->rd_offset);
+-	p = xdr_encode_hyper(p, count);
++	*p = cpu_to_be32(read->rd_length);
+ 
+-	*eof = (read->rd_offset + count) >= f_size;
+-	*maxcount = min_t(unsigned long, count, *maxcount);
+ 	return nfs_ok;
+ }
+ 
+@@ -4811,69 +4769,36 @@ static __be32
+ nfsd4_encode_read_plus(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 		       struct nfsd4_read *read)
+ {
+-	unsigned long maxcount, count;
++	struct file *file = read->rd_nf->nf_file;
+ 	struct xdr_stream *xdr = resp->xdr;
+-	struct file *file;
+ 	int starting_len = xdr->buf->len;
+-	int last_segment = xdr->buf->len;
+-	int segments = 0;
+-	__be32 *p, tmp;
+-	bool is_data;
+-	loff_t pos;
+-	u32 eof;
++	u32 segments = 0;
++	__be32 *p;
+ 
+ 	if (nfserr)
+ 		return nfserr;
+-	file = read->rd_nf->nf_file;
+ 
+ 	/* eof flag, segment count */
+ 	p = xdr_reserve_space(xdr, 4 + 4);
+ 	if (!p)
+-		return nfserr_resource;
++		return nfserr_io;
  	xdr_commit_encode(xdr);
+ 
+-	maxcount = min_t(unsigned long, read->rd_length,
+-			 (xdr->buf->buflen - xdr->buf->len));
+-	count    = maxcount;
+-
+-	eof = read->rd_offset >= i_size_read(file_inode(file));
+-	if (eof)
++	read->rd_eof = read->rd_offset >= i_size_read(file_inode(file));
++	if (read->rd_eof)
+ 		goto out;
+ 
+-	pos = vfs_llseek(file, read->rd_offset, SEEK_HOLE);
+-	is_data = pos > read->rd_offset;
+-
+-	while (count > 0 && !eof) {
+-		maxcount = count;
+-		if (is_data)
+-			nfserr = nfsd4_encode_read_plus_data(resp, read, &maxcount, &eof,
+-						segments == 0 ? &pos : NULL);
+-		else
+-			nfserr = nfsd4_encode_read_plus_hole(resp, read, &maxcount, &eof);
+-		if (nfserr)
+-			goto out;
+-		count -= maxcount;
+-		read->rd_offset += maxcount;
+-		is_data = !is_data;
+-		last_segment = xdr->buf->len;
+-		segments++;
+-	}
+-
+-out:
+-	if (nfserr && segments == 0)
++	nfserr = nfsd4_encode_read_plus_data(resp, read);
++	if (nfserr) {
+ 		xdr_truncate_encode(xdr, starting_len);
+-	else {
+-		if (nfserr) {
+-			xdr_truncate_encode(xdr, last_segment);
+-			nfserr = nfs_ok;
+-			eof = 0;
+-		}
+-		tmp = htonl(eof);
+-		write_bytes_to_xdr_buf(xdr->buf, starting_len,     &tmp, 4);
+-		tmp = htonl(segments);
+-		write_bytes_to_xdr_buf(xdr->buf, starting_len + 4, &tmp, 4);
++		return nfserr;
+ 	}
+ 
++	segments++;
++
++out:
++	p = xdr_encode_bool(p, read->rd_eof);
++	*p = cpu_to_be32(segments);
+ 	return nfserr;
+ }
  
 -- 
 2.37.3
