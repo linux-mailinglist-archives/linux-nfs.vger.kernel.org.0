@@ -2,74 +2,74 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7691F5B7955
+	by mail.lfdr.de (Postfix) with ESMTP id C8A0B5B7956
 	for <lists+linux-nfs@lfdr.de>; Tue, 13 Sep 2022 20:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229528AbiIMSXC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 14:23:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47450 "EHLO
+        id S231880AbiIMSXS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 14:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229703AbiIMSWj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:22:39 -0400
+        with ESMTP id S229575AbiIMSW7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 14:22:59 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D7392AE3
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:38:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9035EF4D
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:39:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663090733;
+        s=mimecast20190719; t=1663090788;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=BBSJfVuICSc79/LbZEVM9PnioSObmaSMxSDczVPNGKA=;
-        b=ibgkEGChl1dHZ9sqTgoaew2SQBN7KqnxYdbb1PjEhXhMztu+pU5rJlU0nRkCEYNrNs7OEb
-        4Yu4qA9T3F4JziarA+b+qY4efAl/O2JNUdhGgLvOitpffAzUoNx7kDL4r5nmYg2lwJ8Pgb
-        RshhaenYcsPD6ZzBVLUDqQb+MJogQUA=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Fu10hD1OCFhuxjnvLtrbqqDX8ceXhWf0cEsoDTTGW6A=;
+        b=dx4o8F/vVl8whooQZFizi1NW85xADrfeppGpGHPZD33YIuXSurqCrkXh2kxJQpws5RprGX
+        Wzo1Okj69mQj8jTXrc8SR99JyyNaQGlFGqdheFp9L821NFgy9VgOIlGyqGSb4Dc4jYjmFJ
+        SgbCFy3sQUg918Kf/T58TgHhh0oEFCQ=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-128-WBPkxQfIP8yDTg_GdTLl_g-1; Tue, 13 Sep 2022 13:38:52 -0400
-X-MC-Unique: WBPkxQfIP8yDTg_GdTLl_g-1
-Received: by mail-qv1-f69.google.com with SMTP id w19-20020a0562140b3300b0049cad77df78so8495022qvj.6
-        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:38:51 -0700 (PDT)
+ us-mta-228-Ql35O-pfND2ion6BtF0bUA-1; Tue, 13 Sep 2022 13:39:47 -0400
+X-MC-Unique: Ql35O-pfND2ion6BtF0bUA-1
+Received: by mail-qt1-f198.google.com with SMTP id fx6-20020a05622a4ac600b0035a70ba1cbcso10532219qtb.21
+        for <linux-nfs@vger.kernel.org>; Tue, 13 Sep 2022 10:39:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:to
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=BBSJfVuICSc79/LbZEVM9PnioSObmaSMxSDczVPNGKA=;
-        b=A26EoZerREe+jXGevnhhQaAk/a76HOwwfmvZIFo+gfZ+5mxwjlelimCl8OM+XIe6p2
-         glqS1zO6VVJMcOgRoj/00CUR+HpdG+Eh9J8ZkXtQ3ZzvaXs4Lq4t9g8pQJu72qKa/4r2
-         6QD/FsiVxoj4GztWgly7Vi+M3i2hM5AXzINE1FTROHj0bXInOOlcMh+2m5vpLUBmQArr
-         HgpMdS7I/p9/3lhjxYW5IzCzUKzMGugiKTcW44cLPNZQqTrzgHKsKWYOwuXSWfipMOvu
-         Wd7X0gWMF3kBGwY9JKT7MWTydeEZv1xCNJ/VkFiV8Oet60L9U+Qi2/EyYxkYvimC+ioF
-         Veug==
-X-Gm-Message-State: ACgBeo1W00iMqWn/itxDN01dvIkc5/3KEzKnyUIlSt+0Nu7fARtr8OHu
-        b1Z5gdP22Fgea3O50sYz6A0kBixDGpcmUaAYIMKVKGMeqtrO4PWNhplT9r1LnYOmCASUrMf1ZvL
-        0XUp+eTDM6wmxePIU/RH3
-X-Received: by 2002:a05:622a:5c7:b0:344:8f29:5374 with SMTP id d7-20020a05622a05c700b003448f295374mr28031364qtb.447.1663090731322;
-        Tue, 13 Sep 2022 10:38:51 -0700 (PDT)
-X-Google-Smtp-Source: AA6agR47RbltlGEqYIGeGAZ3BnWtv0ROSs2xraPN/yvPH3uxpHt3qV5UGc4IRfotgBX2n1M8MMJEog==
-X-Received: by 2002:a05:622a:5c7:b0:344:8f29:5374 with SMTP id d7-20020a05622a05c700b003448f295374mr28031349qtb.447.1663090731048;
-        Tue, 13 Sep 2022 10:38:51 -0700 (PDT)
+        bh=Fu10hD1OCFhuxjnvLtrbqqDX8ceXhWf0cEsoDTTGW6A=;
+        b=lCq6vOAQceRE+iZsNgDgdGe4iL06pAjjE/i4ri/fa8iB2IjQ91GToowC0SeStQifdT
+         FuU2JDRrHNNfBwFhCM5yTo2VNqO8JPFVLA6aogxOK30xNiOPRh4Ill1nIgib/kSW22g6
+         5SyTYerDOL9hilwjlbT8jZ6K3SE4ncIz2CSdr/b1t0KOjBT/obLOMVmRH8kaSz1UV1Zp
+         hEpd034U1SmpflUjLB0OOCEUFOd37wkcqj9ajU5Wb2fD2Az+OS8eTqIfRghYPUmPMv49
+         c9kTME7lNX9yEosXVQaINK28aPmuo0psCXmG8FL1th8U4Ke9wMKwtvPNWs4mqwoNhvd4
+         vahg==
+X-Gm-Message-State: ACgBeo3PyrG2dpX9yx6BI97M9MvZ8C9wM4yYwFNe7Xz6C9h35z9ohcLM
+        fKv+apEiA46+YFV5mfttcTufxAA89Ggc3+8tKwfgV5HxD1Ozu5fCmLWVNsMP0ZWY3Z+0UU5ILOq
+        tQ6cM0JMxs5IINlBKT5B4
+X-Received: by 2002:ac8:5710:0:b0:343:5fa9:b707 with SMTP id 16-20020ac85710000000b003435fa9b707mr28159861qtw.192.1663090778920;
+        Tue, 13 Sep 2022 10:39:38 -0700 (PDT)
+X-Google-Smtp-Source: AA6agR74ceIOw5oF8KIKm7jfKnQ4yV4dP6oimS+lx8QcLFJOFDvDW6RaO/0AHdEvDY3zLtl09z/YdA==
+X-Received: by 2002:ac8:5710:0:b0:343:5fa9:b707 with SMTP id 16-20020ac85710000000b003435fa9b707mr28159849qtw.192.1663090778679;
+        Tue, 13 Sep 2022 10:39:38 -0700 (PDT)
 Received: from [10.19.60.33] (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d5-20020a05622a15c500b0035bb6298526sm4488209qty.17.2022.09.13.10.38.50
+        by smtp.gmail.com with ESMTPSA id v5-20020a05620a0f0500b0069fe1dfbeffsm10474690qkl.92.2022.09.13.10.39.37
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Sep 2022 10:38:50 -0700 (PDT)
-Message-ID: <4e29b6ba-1824-e6a7-0f68-9c0aa90453cd@redhat.com>
-Date:   Tue, 13 Sep 2022 13:38:49 -0400
+        Tue, 13 Sep 2022 10:39:37 -0700 (PDT)
+Message-ID: <f8e252f5-9a87-5f22-1c47-2fccd82091bf@redhat.com>
+Date:   Tue, 13 Sep 2022 13:39:35 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
-Subject: Re: [PATCH v3] nfsrahead: fix linking while static linking
+Subject: Re: [PATCH] nfs-blkmapd: Fix the error status when nfs-blkmapd stops
 Content-Language: en-US
-To:     Giulio Benetti <giulio.benetti@benettiengineering.com>,
-        linux-nfs@vger.kernel.org
-References: <20220809223308.1421081-1-giulio.benetti@benettiengineering.com>
- <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
+To:     zhanchengbin <zhanchengbin1@huawei.com>
+Cc:     linux-nfs@vger.kernel.org, liuzhiqiang26@huawei.com,
+        linfeilong <linfeilong@huawei.com>
+References: <ae07856f-ef34-270e-91b2-9364fdcd6563@huawei.com>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20220810214554.107094-1-giulio.benetti@benettiengineering.com>
+In-Reply-To: <ae07856f-ef34-270e-91b2-9364fdcd6563@huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
         RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -82,53 +82,36 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 8/10/22 5:45 PM, Giulio Benetti wrote:
-> -lmount must preceed -lblkid and to obtain this let's add in configure.ac:
-> PKG_CHECK_MODULES([LIBMOUNT], [mount])
-> and in tools/nfsrahead/Makefile.am let's substitute explicit `-lmount`
-> with:
-> $(LIBMOUNT_LIBS)
-> This way all the required libraries will be present and in the right order
-> when static linking.
+On 9/1/22 9:44 AM, zhanchengbin wrote:
+> The systemctl stop nfs-blkmap.service will sends the SIGTERM signal
+> to the nfs-blkmap.service first.If the process fails to be stopped,
+> it sends the SIGKILL signal again to kill the process.
+> However, exit(1) is executed in the SIGTERM processing function of
+> nfs-blkmap.service. As a result, systemd receives an error message
+> indicating that nfs-blkmap.service failed.
+> "Active: failed" is displayed when the systemctl status
+> nfs-blkmap.service command is executed.
 > 
-> Signed-off-by: Giulio Benetti <giulio.benetti@benettiengineering.com>
+> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
 Committed... (tag: nfs-utils-2-6-3-rc1)
 
-steved
+steved.
 > ---
-> V1->V2:
-> * modify pkg-conf to pkg-config
-> V2->V3:
-> * use the correct way for using pkg-config with Autotools
-> ---
->   configure.ac                | 3 +++
->   tools/nfsrahead/Makefile.am | 2 +-
->   2 files changed, 4 insertions(+), 1 deletion(-)
+>   utils/blkmapd/device-discovery.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/configure.ac b/configure.ac
-> index f1c46c5c..ff85200b 100644
-> --- a/configure.ac
-> +++ b/configure.ac
-> @@ -273,6 +273,9 @@ AC_LIBCAP
->   dnl Check for -lxml2
->   AC_LIBXML2
->   
-> +dnl Check for -lmount
-> +PKG_CHECK_MODULES([LIBMOUNT], [mount])
-> +
->   # Check whether user wants TCP wrappers support
->   AC_TCP_WRAPPERS
->   
-> diff --git a/tools/nfsrahead/Makefile.am b/tools/nfsrahead/Makefile.am
-> index 845ea0d5..7e08233a 100644
-> --- a/tools/nfsrahead/Makefile.am
-> +++ b/tools/nfsrahead/Makefile.am
-> @@ -1,6 +1,6 @@
->   libexec_PROGRAMS = nfsrahead
->   nfsrahead_SOURCES = main.c
-> -nfsrahead_LDFLAGS= -lmount
-> +nfsrahead_LDFLAGS= $(LIBMOUNT_LIBS)
->   nfsrahead_LDADD = ../../support/nfs/libnfsconf.la
->   
->   man5_MANS = nfsrahead.man
+> diff --git a/utils/blkmapd/device-discovery.c 
+> b/utils/blkmapd/device-discovery.c
+> index 2736ac89..49935c2e 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -462,7 +462,7 @@ static void sig_die(int signal)
+>           unlink(PID_FILE);
+>       }
+>       BL_LOG_ERR("exit on signal(%d)\n", signal);
+> -    exit(1);
+> +    exit(0);
+>   }
+>   static void usage(void)
+>   {
 
