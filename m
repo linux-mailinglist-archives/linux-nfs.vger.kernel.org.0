@@ -2,147 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3C95B8B0E
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 16:52:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 979CF5B8C54
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 17:54:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229744AbiINOwi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Sep 2022 10:52:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
+        id S229598AbiINPyo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Sep 2022 11:54:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbiINOwh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 10:52:37 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739C51A83D;
-        Wed, 14 Sep 2022 07:52:35 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id BAC0A339CE;
-        Wed, 14 Sep 2022 14:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1663167153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wCNnJsTvzDL0Ox0oJoto7Z0gWCmReDnFFpxhGEpv45M=;
-        b=lK0OJflOFaTVBDNJGHIUSBQa3bUT+rqVNAOzb42o4ScXiVv1vJMQE0dPHLHRbiDHdkVX+G
-        ilzuajvlwOM16QdSohRsh+XSCBQylRQrUx0g9xl98uhPJsdjw2Ldg1BHMs/m3TIcc1fk2J
-        LV7soPZ1H7wl7Yj+sCJSmuokSlTfFg8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1663167153;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=wCNnJsTvzDL0Ox0oJoto7Z0gWCmReDnFFpxhGEpv45M=;
-        b=HDEaQIgQZQFxnGUVEGHKXrWl+9KmSpSPW44OQxNkxlot3B2fvH+wLLh/l5Cqrf2pJkcL8Y
-        zx1SOSVooD/X0tAQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A8895134B3;
-        Wed, 14 Sep 2022 14:52:33 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id n84lKbHqIWMbQAAAMHmgww
-        (envelope-from <jack@suse.cz>); Wed, 14 Sep 2022 14:52:33 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 38F74A0680; Wed, 14 Sep 2022 16:52:33 +0200 (CEST)
-Date:   Wed, 14 Sep 2022 16:52:33 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
-Message-ID: <20220914145233.cyeljaku4egeu4x2@quack3>
-References: <20220831041843.973026-1-jhubbard@nvidia.com>
- <20220831041843.973026-5-jhubbard@nvidia.com>
- <YxbtF1O8+kXhTNaj@infradead.org>
- <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
- <Yxb7YQWgjHkZet4u@infradead.org>
- <20220906102106.q23ovgyjyrsnbhkp@quack3>
- <YxhaJktqtHw3QTSG@infradead.org>
- <YyFPtTtxYozCuXvu@ZenIV>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <YyFPtTtxYozCuXvu@ZenIV>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230259AbiINPyl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 11:54:41 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F1CE764A
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 08:54:38 -0700 (PDT)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28EFkNqS028304;
+        Wed, 14 Sep 2022 15:54:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=8SBa3dQJB4neXUGzhpVC+X9w2Q5iqRv4/+L0MdigOlI=;
+ b=fQ2gZSnanmHz+5YvR5hsSeMAYHJNrVebHkARszDHLiVfS9mH5SWQ5B4364Di/66ddlHo
+ rCfXYkCCWLxFzwzQNIILvC4ws5K2dxeKMoX4Krl507VVSOy+UiQxcwFZAxS2ypeDugBx
+ 7R4fUoVRujmVIr9AyEiHISaPJ2KPTmY+dXcboxnELDnvBGphN9iP+ihLhavoSHwxlVly
+ N3+jMZRfsbArsr0WayifIovepKT6dkfRwaC87av2+TnWuxP6ngu+QdqGnXdc3A72h0iT
+ baIeZfPzgPw4SI3zjJCiCskYXv2BHMIfflKi0MPyrdKmFUjQMgbYbTbQWTCIir1JG+71 OA== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jjxyf2pvv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Sep 2022 15:54:34 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28EDZbB2035419;
+        Wed, 14 Sep 2022 15:54:33 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jjykyt0xr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 14 Sep 2022 15:54:33 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28EFp3ZE025970;
+        Wed, 14 Sep 2022 15:54:32 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3jjykyt0xj-1;
+        Wed, 14 Sep 2022 15:54:32 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v7 0/2] NFSD: memory shrinker for NFSv4 clients
+Date:   Wed, 14 Sep 2022 08:54:24 -0700
+Message-Id: <1663170866-21524-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-14_07,2022-09-14_04,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 adultscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2208220000
+ definitions=main-2209140077
+X-Proofpoint-GUID: bkIYLy3BuNJQDF_ObNFH8_HzHcvtLgBh
+X-Proofpoint-ORIG-GUID: bkIYLy3BuNJQDF_ObNFH8_HzHcvtLgBh
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed 14-09-22 04:51:17, Al Viro wrote:
-> On Wed, Sep 07, 2022 at 01:45:26AM -0700, Christoph Hellwig wrote:
-> > On Tue, Sep 06, 2022 at 12:21:06PM +0200, Jan Kara wrote:
-> > > > For FOLL_PIN callers, never pin bvec and kvec pages:  For file systems
-> > > > not acquiring a reference is obviously safe, and the other callers will
-> > > > need an audit, but I can't think of why it woul  ever be unsafe.
-> > > 
-> > > Are you sure about "For file systems not acquiring a reference is obviously
-> > > safe"? I can see places e.g. in orangefs, afs, etc. which create bvec iters
-> > > from pagecache pages. And then we have iter_file_splice_write() which
-> > > creates bvec from pipe pages (which can also be pagecache pages if
-> > > vmsplice() is used). So perhaps there are no lifetime issues even without
-> > > acquiring a reference (but looking at the code I would not say it is
-> > > obvious) but I definitely don't see how it would be safe to not get a pin
-> > > to signal to filesystem backing the pagecache page that there is DMA
-> > > happening to/from the page.
-> > 
-> > I mean in the context of iov_iter_get_pages callers, that is direct
-> > I/O.  Direct callers of iov_iter_bvec which then pass that iov to
-> > ->read_iter / ->write_iter will need to hold references (those are
-> > the references that the callers of iov_iter_get_pages rely on!).
-> 
-> Unless I'm misreading Jan, the question is whether they should get or
-> pin.  AFAICS, anyone who passes the sucker to ->read_iter() (or ->recvmsg(),
-> or does direct copy_to_iter()/zero_iter(), etc.) is falling under
-> =================================================================================
-> CASE 5: Pinning in order to write to the data within the page
-> -------------------------------------------------------------
-> Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
-> write to a page's data, unpin" can cause a problem. Case 5 may be considered a
-> superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
-> other words, if the code is neither Case 1 nor Case 2, it may still require
-> FOLL_PIN, for patterns like this:
-> 
-> Correct (uses FOLL_PIN calls):
->     pin_user_pages()
->     write to the data within the pages
->     unpin_user_pages()
-> 
-> INCORRECT (uses FOLL_GET calls):
->     get_user_pages()
->     write to the data within the pages
->     put_page()
-> =================================================================================
+This patch series implements the memory shrinker for NFSv4 clients
+to react to system low memory condition.
 
-Yes, that was my point.
+The first patch adds a counter to keep track of the number of
+courtesy clients in the system.
 
-> Regarding iter_file_splice_write() case, do we need to pin pages
-> when we are not going to modify the data in those?
+The second patch implements the courtesy_client_reaper used to
+expiring the courtesy clients.
 
-Strictly speaking not. So far we are pinning pages even if they serve as
-data source because it is simpler not to bother about data access direction
-but I'm not really aware of anything that would mandate that.
+By destroying the courtesy clients, all states associated with
+these clients are also released.
 
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+v2:
+. fix kernel test robot errors in nfsd.h when CONFIG_NFSD_V4 not defined.
+
+v3:
+. add mod_delayed_work in nfsd_courtesy_client_scan to kick start
+  the laundromat.
+
+v4:
+. replace the use of xchg() with vanilla '=' in patch 1.
+
+v5:
+. rename nfsd_courtesy_client_count to nfsd_courtesy_clients
+. add helper nfsd4_update_courtesy_client_count
+. move nfsd_register_client_shrinker into nfsd4_init_leases_net
+. move nfsd4_leases_net_shutdown from nfsd.h to nfs4state.c
+. do away with shrinker 'scan' callback, just return SHRINK_STOP
+. remove unused nfsd_client_shrinker_reapcount
+
+v6:
+. create courtesy_client_reaper and a separate delayed_work for it
+  using the laundromat_wq. 
+  I tried merging nfs4_get_courtesy_client_reaplist and
+  nfs4_get_client_reaplist but it make the code looks ugly and
+  hard to read so I leave them as separate for now.
+
+v7:
+. patch1: rename nfsd4_decr_courtesy_client_count to
+  nfsd4_dec_courtesy_client_count
+. patch 2: get rid of nfsd_client_shrinker_cb_count and do not
+  reschedule courtesy_client_reaper
+---
+
+Dai Ngo (2):
+      NFSD: keep track of the number of courtesy clients in the system
+      NFSD: add shrinker to reap courtesy clients on low memory condition
+
+ fs/nfsd/netns.h     |   4 ++
+ fs/nfsd/nfs4state.c | 111 +++++++++++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfsctl.c    |   6 ++-
+ fs/nfsd/nfsd.h      |   7 ++-
+ 4 files changed, 115 insertions(+), 13 deletions(-)
+
