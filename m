@@ -2,118 +2,147 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7998A5B8787
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 13:51:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B3C95B8B0E
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 16:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229979AbiINLvY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Sep 2022 07:51:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40164 "EHLO
+        id S229744AbiINOwi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Sep 2022 10:52:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbiINLvW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 07:51:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4941377540;
-        Wed, 14 Sep 2022 04:51:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229520AbiINOwh (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 10:52:37 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 739C51A83D;
+        Wed, 14 Sep 2022 07:52:35 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D859B61C1E;
-        Wed, 14 Sep 2022 11:51:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A191C433D7;
-        Wed, 14 Sep 2022 11:51:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663156280;
-        bh=X6kiqA3vAvyzSls3/AgVE2v/FEsxYi7tj84qKsyADRM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=uJa0v9qeHwb8WVGx+Pmyq1IzVgQKGgEg/HVaKyYqi96uBhi47IDhEKa1x4Ul1y0mH
-         /w90TOMFwH8kX9giXvz3W7flfTWbaM/Q/B5u1FqNrs4/7m5vC5BEULUm6DShkSly67
-         R4FDaE8yKtWgRjMSHxFLOtV0ClClIS3Za4N0HVNMlYGwsaCBuyHg+x7bZb6huOD/AZ
-         +tCl7Au0A3qvfkB7e2I85bZG1RfS02XFGZrPXuvukiTg61tOt/3PRMn8l3KuDmd0yW
-         6EJnF4409xTaQzTOH2UpI4g9rYBZ9RZnaoTzMRSsuBl8UEr5bjmRE/e9vXQhQoG0+U
-         8NgmKnbtCRvmw==
-Message-ID: <f8a41b55efd1c59bc63950e8c1b734626d970a90.camel@kernel.org>
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "brauner@kernel.org" <brauner@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "fweimer@redhat.com" <fweimer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "tytso@mit.edu" <tytso@mit.edu>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "lczerner@redhat.com" <lczerner@redhat.com>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>
-Date:   Wed, 14 Sep 2022 07:51:16 -0400
-In-Reply-To: <166311144203.20483.1888757883086697314@noble.neil.brown.name>
-References: <91e31d20d66d6f47fe12c80c34b1cffdfc202b6a.camel@hammerspace.com>
-        , <166268467103.30452.1687952324107257676@noble.neil.brown.name>
-        , <166268566751.30452.13562507405746100242@noble.neil.brown.name>
-        , <29a6c2e78284e7947ddedf71e5cb9436c9330910.camel@hammerspace.com>
-        , <8d638cb3c63b0d2da8679b5288d1622fdb387f83.camel@hammerspace.com>
-        , <166270570118.30452.16939807179630112340@noble.neil.brown.name>
-        , <33d058be862ccc0ccaf959f2841a7e506e51fd1f.camel@kernel.org>
-        , <166285038617.30452.11636397081493278357@noble.neil.brown.name>
-        , <2e34a7d4e1a3474d80ee0402ed3bc0f18792443a.camel@kernel.org>
-        , <166302538820.30452.7783524836504548113@noble.neil.brown.name>
-        , <20220913011518.GE3600936@dread.disaster.area>
-        , <b67fe8b26977dc1213deb5ec815a53a26d31fbc0.camel@kernel.org>
-         <166311144203.20483.1888757883086697314@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        by smtp-out1.suse.de (Postfix) with ESMTPS id BAC0A339CE;
+        Wed, 14 Sep 2022 14:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1663167153; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wCNnJsTvzDL0Ox0oJoto7Z0gWCmReDnFFpxhGEpv45M=;
+        b=lK0OJflOFaTVBDNJGHIUSBQa3bUT+rqVNAOzb42o4ScXiVv1vJMQE0dPHLHRbiDHdkVX+G
+        ilzuajvlwOM16QdSohRsh+XSCBQylRQrUx0g9xl98uhPJsdjw2Ldg1BHMs/m3TIcc1fk2J
+        LV7soPZ1H7wl7Yj+sCJSmuokSlTfFg8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1663167153;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=wCNnJsTvzDL0Ox0oJoto7Z0gWCmReDnFFpxhGEpv45M=;
+        b=HDEaQIgQZQFxnGUVEGHKXrWl+9KmSpSPW44OQxNkxlot3B2fvH+wLLh/l5Cqrf2pJkcL8Y
+        zx1SOSVooD/X0tAQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id A8895134B3;
+        Wed, 14 Sep 2022 14:52:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id n84lKbHqIWMbQAAAMHmgww
+        (envelope-from <jack@suse.cz>); Wed, 14 Sep 2022 14:52:33 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 38F74A0680; Wed, 14 Sep 2022 16:52:33 +0200 (CEST)
+Date:   Wed, 14 Sep 2022 16:52:33 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <20220914145233.cyeljaku4egeu4x2@quack3>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
+ <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <YyFPtTtxYozCuXvu@ZenIV>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-09-14 at 09:24 +1000, NeilBrown wrote:
-> On Wed, 14 Sep 2022, Jeff Layton wrote:
-> >=20
-> > At that point, bumping i_version both before and after makes a bit more
-> > sense, since it better ensures that a change will be noticed, whether
-> > the related read op comes before or after the statx.
->=20
-> How does bumping it before make any sense at all?  Maybe it wouldn't
-> hurt much, but how does it help anyone at all?
->=20
+On Wed 14-09-22 04:51:17, Al Viro wrote:
+> On Wed, Sep 07, 2022 at 01:45:26AM -0700, Christoph Hellwig wrote:
+> > On Tue, Sep 06, 2022 at 12:21:06PM +0200, Jan Kara wrote:
+> > > > For FOLL_PIN callers, never pin bvec and kvec pages:  For file systems
+> > > > not acquiring a reference is obviously safe, and the other callers will
+> > > > need an audit, but I can't think of why it woul  ever be unsafe.
+> > > 
+> > > Are you sure about "For file systems not acquiring a reference is obviously
+> > > safe"? I can see places e.g. in orangefs, afs, etc. which create bvec iters
+> > > from pagecache pages. And then we have iter_file_splice_write() which
+> > > creates bvec from pipe pages (which can also be pagecache pages if
+> > > vmsplice() is used). So perhaps there are no lifetime issues even without
+> > > acquiring a reference (but looking at the code I would not say it is
+> > > obvious) but I definitely don't see how it would be safe to not get a pin
+> > > to signal to filesystem backing the pagecache page that there is DMA
+> > > happening to/from the page.
+> > 
+> > I mean in the context of iov_iter_get_pages callers, that is direct
+> > I/O.  Direct callers of iov_iter_bvec which then pass that iov to
+> > ->read_iter / ->write_iter will need to hold references (those are
+> > the references that the callers of iov_iter_get_pages rely on!).
+> 
+> Unless I'm misreading Jan, the question is whether they should get or
+> pin.  AFAICS, anyone who passes the sucker to ->read_iter() (or ->recvmsg(),
+> or does direct copy_to_iter()/zero_iter(), etc.) is falling under
+> =================================================================================
+> CASE 5: Pinning in order to write to the data within the page
+> -------------------------------------------------------------
+> Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
+> write to a page's data, unpin" can cause a problem. Case 5 may be considered a
+> superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+> other words, if the code is neither Case 1 nor Case 2, it may still require
+> FOLL_PIN, for patterns like this:
+> 
+> Correct (uses FOLL_PIN calls):
+>     pin_user_pages()
+>     write to the data within the pages
+>     unpin_user_pages()
+> 
+> INCORRECT (uses FOLL_GET calls):
+>     get_user_pages()
+>     write to the data within the pages
+>     put_page()
+> =================================================================================
 
-My assumption (maybe wrong) was that timestamp updates were done before
-the actual write by design. Does doing it before the write make increase
-the chances that the inode metadata writeout will get done in the same
-physical I/O as the data write? IDK, just speculating here.
+Yes, that was my point.
 
-If there's no benefit to doing it before then we should just move it
-afterward.
+> Regarding iter_file_splice_write() case, do we need to pin pages
+> when we are not going to modify the data in those?
 
+Strictly speaking not. So far we are pinning pages even if they serve as
+data source because it is simpler not to bother about data access direction
+but I'm not really aware of anything that would mandate that.
 
->   i_version must appear to change no sooner than the change it reflects
->   becomes visible and no later than the request which initiated that
->   change is acknowledged as complete.
->=20
-> Why would that definition ever not be satisfactory?
-
-It's fine with me.
---=20
-Jeff Layton <jlayton@kernel.org>
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
