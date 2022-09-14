@@ -2,53 +2,55 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 979CF5B8C54
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 17:54:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6B345B8C53
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 17:54:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229598AbiINPyo (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Sep 2022 11:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51714 "EHLO
+        id S229761AbiINPyn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Sep 2022 11:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbiINPyl (ORCPT
+        with ESMTP id S230240AbiINPyl (ORCPT
         <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 11:54:41 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F1CE764A
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 08:54:38 -0700 (PDT)
-Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28EFkNqS028304;
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CDDD6474
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 08:54:37 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28EFkNnp006721;
         Wed, 14 Sep 2022 15:54:34 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2022-7-12;
- bh=8SBa3dQJB4neXUGzhpVC+X9w2Q5iqRv4/+L0MdigOlI=;
- b=fQ2gZSnanmHz+5YvR5hsSeMAYHJNrVebHkARszDHLiVfS9mH5SWQ5B4364Di/66ddlHo
- rCfXYkCCWLxFzwzQNIILvC4ws5K2dxeKMoX4Krl507VVSOy+UiQxcwFZAxS2ypeDugBx
- 7R4fUoVRujmVIr9AyEiHISaPJ2KPTmY+dXcboxnELDnvBGphN9iP+ihLhavoSHwxlVly
- N3+jMZRfsbArsr0WayifIovepKT6dkfRwaC87av2+TnWuxP6ngu+QdqGnXdc3A72h0iT
- baIeZfPzgPw4SI3zjJCiCskYXv2BHMIfflKi0MPyrdKmFUjQMgbYbTbQWTCIir1JG+71 OA== 
+ subject : date : message-id : in-reply-to : references; s=corp-2022-7-12;
+ bh=dDUIV++FOlZw1FyU7tZpkjCVLJFUnwGdPEj9nHJkAPo=;
+ b=ABiHxNnjytJ5zW0Ti9bGj1DlqlFZt5lqQwa60EKY9XtIgvle+gat7z8sW8660mJBt9yX
+ D/WtVXL6O6jI0Ehf5jF0dW49OZ6W+BOH6WOteb3vemTLqRpzwR0JVsD3dy236rdySp3E
+ euTU/f1U75g/7rB0ezjJ+H8Udxps1mjdcMwZoXHzL413tDrK6t9zQYgnuWpcIQ1zcUQz
+ BMpdP7uHZwCf7qq9BChIPNB7Do99lawEJa73nRyCI3qv90ETIvNuBIFziKCZ/v/ynzxz
+ HA8Nk1lAiEE5yppbdhkx9Yu+xUWu7+eI7g/uFelhpa9O5uMmrsxnLwr9ysm4D5dgdzpv zA== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jjxyf2pvv-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jjxyr2sp0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Wed, 14 Sep 2022 15:54:34 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28EDZbB2035419;
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28EDZbln035456;
         Wed, 14 Sep 2022 15:54:33 GMT
 Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jjykyt0xr-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3jjykyt0y0-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Wed, 14 Sep 2022 15:54:33 +0000
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28EFp3ZE025970;
-        Wed, 14 Sep 2022 15:54:32 GMT
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 28EFp3ZG025970;
+        Wed, 14 Sep 2022 15:54:33 GMT
 Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3jjykyt0xj-1;
-        Wed, 14 Sep 2022 15:54:32 +0000
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3jjykyt0xj-2;
+        Wed, 14 Sep 2022 15:54:33 +0000
 From:   Dai Ngo <dai.ngo@oracle.com>
 To:     chuck.lever@oracle.com, jlayton@kernel.org
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v7 0/2] NFSD: memory shrinker for NFSv4 clients
-Date:   Wed, 14 Sep 2022 08:54:24 -0700
-Message-Id: <1663170866-21524-1-git-send-email-dai.ngo@oracle.com>
+Subject: [PATCH v7 1/2] NFSD: keep track of the number of courtesy clients in the system
+Date:   Wed, 14 Sep 2022 08:54:25 -0700
+Message-Id: <1663170866-21524-2-git-send-email-dai.ngo@oracle.com>
 X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1663170866-21524-1-git-send-email-dai.ngo@oracle.com>
+References: <1663170866-21524-1-git-send-email-dai.ngo@oracle.com>
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
  definitions=2022-09-14_07,2022-09-14_04,2022-06-22_01
@@ -56,8 +58,8 @@ X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamsc
  malwarescore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 phishscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2208220000
  definitions=main-2209140077
-X-Proofpoint-GUID: bkIYLy3BuNJQDF_ObNFH8_HzHcvtLgBh
-X-Proofpoint-ORIG-GUID: bkIYLy3BuNJQDF_ObNFH8_HzHcvtLgBh
+X-Proofpoint-GUID: 5F7dVH_lgu2iw7JtSzrVD41Mk6TAQKfP
+X-Proofpoint-ORIG-GUID: 5F7dVH_lgu2iw7JtSzrVD41Mk6TAQKfP
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
@@ -68,57 +70,92 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patch series implements the memory shrinker for NFSv4 clients
-to react to system low memory condition.
+Add counter nfs4_courtesy_client_count to nfsd_net to keep track
+of the number of courtesy clients in the system.
 
-The first patch adds a counter to keep track of the number of
-courtesy clients in the system.
-
-The second patch implements the courtesy_client_reaper used to
-expiring the courtesy clients.
-
-By destroying the courtesy clients, all states associated with
-these clients are also released.
-
-v2:
-. fix kernel test robot errors in nfsd.h when CONFIG_NFSD_V4 not defined.
-
-v3:
-. add mod_delayed_work in nfsd_courtesy_client_scan to kick start
-  the laundromat.
-
-v4:
-. replace the use of xchg() with vanilla '=' in patch 1.
-
-v5:
-. rename nfsd_courtesy_client_count to nfsd_courtesy_clients
-. add helper nfsd4_update_courtesy_client_count
-. move nfsd_register_client_shrinker into nfsd4_init_leases_net
-. move nfsd4_leases_net_shutdown from nfsd.h to nfs4state.c
-. do away with shrinker 'scan' callback, just return SHRINK_STOP
-. remove unused nfsd_client_shrinker_reapcount
-
-v6:
-. create courtesy_client_reaper and a separate delayed_work for it
-  using the laundromat_wq. 
-  I tried merging nfs4_get_courtesy_client_reaplist and
-  nfs4_get_client_reaplist but it make the code looks ugly and
-  hard to read so I leave them as separate for now.
-
-v7:
-. patch1: rename nfsd4_decr_courtesy_client_count to
-  nfsd4_dec_courtesy_client_count
-. patch 2: get rid of nfsd_client_shrinker_cb_count and do not
-  reschedule courtesy_client_reaper
+Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
 ---
+ fs/nfsd/netns.h     |  2 ++
+ fs/nfsd/nfs4state.c | 17 ++++++++++++++++-
+ 2 files changed, 18 insertions(+), 1 deletion(-)
 
-Dai Ngo (2):
-      NFSD: keep track of the number of courtesy clients in the system
-      NFSD: add shrinker to reap courtesy clients on low memory condition
-
- fs/nfsd/netns.h     |   4 ++
- fs/nfsd/nfs4state.c | 111 +++++++++++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfsctl.c    |   6 ++-
- fs/nfsd/nfsd.h      |   7 ++-
- 4 files changed, 115 insertions(+), 13 deletions(-)
+diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+index ffe17743cc74..55c7006d6109 100644
+--- a/fs/nfsd/netns.h
++++ b/fs/nfsd/netns.h
+@@ -192,6 +192,8 @@ struct nfsd_net {
+ 
+ 	atomic_t		nfs4_client_count;
+ 	int			nfs4_max_clients;
++
++	atomic_t		nfsd_courtesy_clients;
+ };
+ 
+ /* Simple check to find out if a given net was properly initialized */
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c5d199d7e6b4..2827329704ea 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -160,6 +160,13 @@ static bool is_client_expired(struct nfs4_client *clp)
+ 	return clp->cl_time == 0;
+ }
+ 
++static void nfsd4_dec_courtesy_client_count(struct nfsd_net *nn,
++					struct nfs4_client *clp)
++{
++	if (clp->cl_state != NFSD4_ACTIVE)
++		atomic_add_unless(&nn->nfsd_courtesy_clients, -1, 0);
++}
++
+ static __be32 get_client_locked(struct nfs4_client *clp)
+ {
+ 	struct nfsd_net *nn = net_generic(clp->net, nfsd_net_id);
+@@ -169,6 +176,7 @@ static __be32 get_client_locked(struct nfs4_client *clp)
+ 	if (is_client_expired(clp))
+ 		return nfserr_expired;
+ 	atomic_inc(&clp->cl_rpc_users);
++	nfsd4_dec_courtesy_client_count(nn, clp);
+ 	clp->cl_state = NFSD4_ACTIVE;
+ 	return nfs_ok;
+ }
+@@ -190,6 +198,7 @@ renew_client_locked(struct nfs4_client *clp)
+ 
+ 	list_move_tail(&clp->cl_lru, &nn->client_lru);
+ 	clp->cl_time = ktime_get_boottime_seconds();
++	nfsd4_dec_courtesy_client_count(nn, clp);
+ 	clp->cl_state = NFSD4_ACTIVE;
+ }
+ 
+@@ -2233,6 +2242,7 @@ __destroy_client(struct nfs4_client *clp)
+ 	if (clp->cl_cb_conn.cb_xprt)
+ 		svc_xprt_put(clp->cl_cb_conn.cb_xprt);
+ 	atomic_add_unless(&nn->nfs4_client_count, -1, 0);
++	nfsd4_dec_courtesy_client_count(nn, clp);
+ 	free_client(clp);
+ 	wake_up_all(&expiry_wq);
+ }
+@@ -4356,6 +4366,8 @@ void nfsd4_init_leases_net(struct nfsd_net *nn)
+ 	max_clients = (u64)si.totalram * si.mem_unit / (1024 * 1024 * 1024);
+ 	max_clients *= NFS4_CLIENTS_PER_GB;
+ 	nn->nfs4_max_clients = max_t(int, max_clients, NFS4_CLIENTS_PER_GB);
++
++	atomic_set(&nn->nfsd_courtesy_clients, 0);
+ }
+ 
+ static void init_nfs4_replay(struct nfs4_replay *rp)
+@@ -5878,8 +5890,11 @@ nfs4_get_client_reaplist(struct nfsd_net *nn, struct list_head *reaplist,
+ 			goto exp_client;
+ 		if (!state_expired(lt, clp->cl_time))
+ 			break;
+-		if (!atomic_read(&clp->cl_rpc_users))
++		if (!atomic_read(&clp->cl_rpc_users)) {
++			if (clp->cl_state == NFSD4_ACTIVE)
++				atomic_inc(&nn->nfsd_courtesy_clients);
+ 			clp->cl_state = NFSD4_COURTESY;
++		}
+ 		if (!client_has_state(clp))
+ 			goto exp_client;
+ 		if (!nfs4_anylock_blockers(clp))
+-- 
+2.9.5
 
