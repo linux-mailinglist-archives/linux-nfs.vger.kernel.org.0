@@ -2,100 +2,189 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 50CE35B8D49
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 18:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85ECE5B8E32
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 19:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbiINQnJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Sep 2022 12:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40684 "EHLO
+        id S229733AbiINRbZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Sep 2022 13:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229953AbiINQnD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 12:43:03 -0400
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DF956E8B5;
-        Wed, 14 Sep 2022 09:43:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=drGd84Y88D87DtABnnd7yh6bhIO3nFxVGZfiNKSay/w=; b=NJ6SAfFns58rMbVH+azyEAlIBe
-        P6n1bn9OXiF4fmUEUpqXGV/bE106qYmZbX/MwFVbHxtW6ssgk2PCE8UfNTQg1aWm+yynxcJ9j7g08
-        8/tgQ5onCzhF8MKSQaEQ6zA3aarCv+3D7yqjX8P1okh4bYNOq1WFHE1a4IQDf5KHdx5u5zA+Wymlc
-        S+7i9ko/VpxQnZRAsQ62an08GtRr8DVSaNW3j49A/qLEWP1M+neWYX1OVsjvTIT7LfH477m66cmRa
-        Nyt7CbCvmVkXs5Lmdv1xX0vhwGMMyYK/hJL+vP9XhDhzkKBGXkATkAHo1w7IXkb8b+clGQVzjQxRV
-        f5T3UCDA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1oYVTE-00GF4L-1R;
-        Wed, 14 Sep 2022 16:42:40 +0000
-Date:   Wed, 14 Sep 2022 17:42:40 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
-Message-ID: <YyIEgD8ksSZTsUdJ@ZenIV>
-References: <20220831041843.973026-1-jhubbard@nvidia.com>
- <20220831041843.973026-5-jhubbard@nvidia.com>
- <YxbtF1O8+kXhTNaj@infradead.org>
- <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
- <Yxb7YQWgjHkZet4u@infradead.org>
- <20220906102106.q23ovgyjyrsnbhkp@quack3>
- <YxhaJktqtHw3QTSG@infradead.org>
- <YyFPtTtxYozCuXvu@ZenIV>
- <20220914145233.cyeljaku4egeu4x2@quack3>
+        with ESMTP id S229780AbiINRbW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 13:31:22 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35CA67F256
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 10:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1663176679;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=SJAcaQM3ZwcdVItNf0KHvz1LyegbhSJ/0s07Hr9+kU8=;
+        b=ckAVM+RUESyW6X9sh1rlqQgYrP3Xbt5dYdy5kgoxkLbQKJLTIKHUFbUp8kju4awCl0in2r
+        b4G4TH8KrkmyTtolripucjXY33MQY/uCZ4wtGWRXywM3MMhjTQiGWoLzUeKpg041s6d2UM
+        eKUzES4fpA+qXpfaIZ9s311czjjyPGg=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-307-zAcqbZdKM52ivvbI7loH1g-1; Wed, 14 Sep 2022 13:31:17 -0400
+X-MC-Unique: zAcqbZdKM52ivvbI7loH1g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 621C5381078D
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 17:31:17 +0000 (UTC)
+Received: from plambri-t490s.homenet.telecomitalia.it (unknown [10.33.36.13])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DF5B240C6EC2
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 17:31:16 +0000 (UTC)
+From:   Pierguido Lambri <plambri@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH v2 1/2] nfs4_setfacl: add a specific option for indexes
+Date:   Wed, 14 Sep 2022 18:31:14 +0100
+Message-Id: <20220914173115.296058-1-plambri@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220914145233.cyeljaku4egeu4x2@quack3>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 04:52:33PM +0200, Jan Kara wrote:
-> > =================================================================================
-> > CASE 5: Pinning in order to write to the data within the page
-> > -------------------------------------------------------------
-> > Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
-> > write to a page's data, unpin" can cause a problem. Case 5 may be considered a
-> > superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
-> > other words, if the code is neither Case 1 nor Case 2, it may still require
-> > FOLL_PIN, for patterns like this:
-> > 
-> > Correct (uses FOLL_PIN calls):
-> >     pin_user_pages()
-> >     write to the data within the pages
-> >     unpin_user_pages()
-> > 
-> > INCORRECT (uses FOLL_GET calls):
-> >     get_user_pages()
-> >     write to the data within the pages
-> >     put_page()
-> > =================================================================================
-> 
-> Yes, that was my point.
+nfs4_setfacl had the possibility to use an optional index
+to add/remove an ACL entry.
+This was causing some confusion as numeric files could be interpreted
+as indexes.
+This change adds an extra command line option '-i' to specifically
+handle the indexes.
+The index can be used only with certain operations (add and remove).
+The new syntax, when using indexes, would be:
 
-The thing is, at which point do we pin those pages?  pin_user_pages() works by
-userland address; by the time we get to any of those we have struct page
-references and no idea whether they are still mapped anywhere.
+~]# nfs4_setfacl -i 3 -a A::101:rxtncy file123
 
-How would that work?  What protects the area where you want to avoid running
-into pinned pages from previously acceptable page getting pinned?  If "they
-must have been successfully unmapped" is a part of what you are planning, we
-really do have a problem...
+Signed-off-by: Pierguido Lambri <plambri@redhat.com>
+---
+ nfs4_setfacl/nfs4_setfacl.c | 60 +++++++++++++++++++++++--------------
+ 1 file changed, 38 insertions(+), 22 deletions(-)
+
+diff --git a/nfs4_setfacl/nfs4_setfacl.c b/nfs4_setfacl/nfs4_setfacl.c
+index e581608..d10e073 100644
+--- a/nfs4_setfacl/nfs4_setfacl.c
++++ b/nfs4_setfacl/nfs4_setfacl.c
+@@ -143,7 +143,7 @@ int main(int argc, char **argv)
+ 	int opt, err = 1;
+ 	int numpaths = 0, curpath = 0;
+ 	char *tmp, **paths = NULL, *path = NULL, *spec_file = NULL;
+-	FILE *s_fp = NULL;
++	FILE *s_fp, *fd = NULL;
+ 
+ 	if (!strcmp(basename(argv[0]), "nfs4_editfacl")) {
+ 		action = EDIT_ACTION;
+@@ -155,7 +155,7 @@ int main(int argc, char **argv)
+ 		return err;
+ 	}
+ 
+-	while ((opt = getopt_long(argc, argv, "-:a:A:s:S:x:X:m:ethvHRPL", long_options, NULL)) != -1) {
++	while ((opt = getopt_long(argc, argv, "-:a:A:i:s:S:x::X:m:ethvHRPL", long_options, NULL)) != -1) {
+ 		switch (opt) {
+ 			case 'a':
+ 				mod_string = optarg;
+@@ -165,21 +165,14 @@ int main(int argc, char **argv)
+ 			add:
+ 				assert_wu_wei(action);
+ 				action = INSERT_ACTION;
+-
+-				/* run along if no more args (defaults to ace_index 1 == prepend) */
+-				if (optind == argc)
+-					break;
+-				ace_index = strtoul_reals(argv[optind++], 10);
+-				if (ace_index == ULONG_MAX) {
+-					/* oops it wasn't an ace_index; reset */
+-					optind--;
+-					ace_index = -1;
+-				} else if (ace_index == 0) {
+-					fprintf(stderr, "Sorry, valid indices start at '1'.\n");
+-					goto out;
++				break;
++			case 'i':
++				ace_index = strtoul_reals(optarg, 10);
++				if (ace_index == 0) {
++                                    fprintf(stderr, "Sorry, valid indices start at '1'.\n");
++                                    goto out;
+ 				}
+ 				break;
+-
+ 			case 's':
+ 				mod_string = optarg;
+ 				goto set;
+@@ -191,9 +184,14 @@ int main(int argc, char **argv)
+ 				break;
+ 
+ 			case 'x':
+-				ace_index = strtoul_reals(optarg, 10);
+-				if(ace_index == ULONG_MAX)
+-					mod_string = optarg;
++				/* make sure we handle the argument even if
++				 * it doesn't immediately follow the option
++				 */
++				if (optarg == NULL && optind < argc && argv[optind][0] != '-')
++				{
++					optarg = argv[optind++];
++				}
++				mod_string = optarg;
+ 				goto remove;
+ 			case 'X':
+ 				spec_file = optarg;
+@@ -255,6 +253,9 @@ int main(int argc, char **argv)
+ 					case 'A':
+ 						fprintf(stderr, "Sorry, -a requires an 'acl_spec', whilst -A requires a 'spec_file'.\n");
+ 						goto out;
++					case 'i':
++						fprintf(stderr, "Sorry, -i requires an index (numerical)\n");
++						goto out;
+ 					case 's':
+ 						fprintf(stderr, "Sorry, -s requires an 'acl_spec'.\n");
+ 						goto out;
+@@ -297,7 +298,21 @@ int main(int argc, char **argv)
+ 	if (action == NO_ACTION) {
+ 		fprintf(stderr, "No action specified.\n");
+ 		goto out;
+-	} else if (numpaths < 1) {
++	} else if (action != INSERT_ACTION && action != REMOVE_ACTION && ace_index >= 0) {
++		fprintf(stderr, "Index can be used only with add or remove.\n");
++		goto out;
++	} else if (numpaths <= 0 && ace_index >= 0 && mod_string)
++	{
++		/* Make sure the argument is a file */
++		if (!(fd = fopen(mod_string, "r"))) {
++			fprintf(stderr, "No path(s) specified.\n");
++			goto out;
++		} else
++			fclose(fd);
++		paths = malloc(sizeof(char *) * (argc - optind + 1));
++		paths[numpaths++] = mod_string;
++	} else if (numpaths < 1)
++	{
+ 		fprintf(stderr, "No path(s) specified.\n");
+ 		goto out;
+ 	}
+@@ -609,9 +624,10 @@ static void __usage(const char *name, int is_ef)
+ 	"%s %s -- manipulate NFSv4 file/directory access control lists\n"
+ 	"Usage: %s [OPTIONS] COMMAND file ...\n"
+ 	" .. where COMMAND is one of:\n"
+-	"   -a acl_spec [index]	 add ACL entries in acl_spec at index (DEFAULT: 1)\n"
+-	"   -A file [index]	 read ACL entries to add from file\n"
+-	"   -x acl_spec | index	 remove ACL entries or entry-at-index from ACL\n"
++	"   -a acl_spec		 add ACL entries in acl_spec at defaul index (DEFAULT: 1)\n"
++	"   -A file 		 read ACL entries to add from file\n"
++	"   -i index 		 use the entry-at-index from ACL (only for add and remove)\n"
++	"   -x acl_speci 	 remove ACL entries\n"
+ 	"   -X file  		 read ACL entries to remove from file\n"
+ 	"   -s acl_spec		 set ACL to acl_spec (replaces existing ACL)\n"
+ 	"   -S file		 read ACL entries to set from file\n"
+-- 
+2.37.3
+
