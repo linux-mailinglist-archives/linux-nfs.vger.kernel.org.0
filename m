@@ -2,310 +2,315 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BAC75B8555
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 11:42:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EA16F5B8771
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 13:46:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231318AbiINJmh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 14 Sep 2022 05:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53204 "EHLO
+        id S229570AbiINLqK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 14 Sep 2022 07:46:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbiINJmW (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 05:42:22 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B8B863F1D
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 02:41:44 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a26so4647362ejc.4
-        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 02:41:44 -0700 (PDT)
+        with ESMTP id S229588AbiINLqJ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 14 Sep 2022 07:46:09 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66127AC24
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 04:46:05 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id c19so8667224qkm.7
+        for <linux-nfs@vger.kernel.org>; Wed, 14 Sep 2022 04:46:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=2QTHjIJATAE4dtWLgNMw1b7pLdmY12OOr8muR2WBpL4=;
-        b=qUSJ+kB7WeMughU7epaBGxTIAb+DOXq/S5E+tJzQ7wVUAy39LaFMWrefM2ApsJ8J/r
-         t+Sk5sbcB6f8ZjHtmGdIJccHUS/tTnBcy7pNIcTD4RjhW0AjgmhlyrQSc2bwD14cTkpq
-         KQdWFhpGCurDfmVOAFhCW8yDIMftIbDwWUSyiDrGcHeb8zMDj5FX7H7P326T+Visw6z9
-         X/qzWvJB0tI8ZFKjzUDFGBggNrNFPgsMLj0aNhTe2eQWusCgCdV42P+sQcuey5I/yTGN
-         HV6oM3pWbx082M0S3mWm6gGWXgJq1a9KyJAjhdFC5u3Z5uqRexPDpUtNl6YU0+6bBkAw
-         zpOw==
+        d=poochiereds-net.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date;
+        bh=mr2q6up8sRp0Iq/rjMUChN+ahUikauuKGydfHuSFITg=;
+        b=0pBXUVWnXmV1NlWchCfg6dty2djPPKRRQrhj2+250EGPsG5dP9a3YMAiBP3QEeGDyx
+         O5pJzsBEBHzrSfrSI8t2u/bT2jz+JDOxQbnvDYw3f7etJVhunSQtmleeFRrf/AI8pC3a
+         TJf3vWnGveUEw4uJkl1hfN3vcl5a2vLCpcsmwKpxlVmN8SefGx62nucJnelDh0AT3OcK
+         o6A1yBpsbUX0mjck7KZ5dFqtFAKISncjb1SLwkeE4DxWjeMpSJlIigfHreV6pSgOCBR4
+         IQqdZ0g0TgDNc68c/qovpIgGdHbGbvZFpTFF/ClIu3R+HzCC5bjnxneHxANXAe5eLT0+
+         sMHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=2QTHjIJATAE4dtWLgNMw1b7pLdmY12OOr8muR2WBpL4=;
-        b=zqUr5NxTD8bO68UtAxmMr4ZSVGzUJ1WcweOxBoqg8He2xmALTzwc9Ibff/+myYwfXy
-         QGrlmEW3tOml0ad3ig7cQlmfKOMGk5zMMq78qZSyUqiY5Nfsr4X2/QesTp/yXKpl+Vbu
-         Rdq98dbE0sZUSAbO7nqNrpkzZJr3rfaLEY8dqRPPvxB5qAMEeMpMSzt96EICmX68LSQP
-         sDprxTQxwkQPYi1v1Ny1S6LDkbJu/ufJH1q8+ThncEBG1YpufGRISx/mrt0SO/Jq1Lov
-         /n/sN0meszmVWGO/McUNvUd1N3anuITGIe3baSul2QH0aVp0Uo83j+9GmU79etfX5nSp
-         5kiw==
-X-Gm-Message-State: ACgBeo36yi+bhyJyD+nF6pn6W0yXNF0kI23Ws/0NCXG8iBwh3s60woQx
-        aIbGupmrRmw72HZgbmu2u9YRipR3HT6Td5LoNG5wPA==
-X-Google-Smtp-Source: AA6agR5ZKDh1B1qLI4CnWaTmS7MdpjOYsuffoGM9VfXHG/QDiAdeyi8cHZ1dpFi1dxOzCOVsTncoUqTfgUXWTLuOMbU=
-X-Received: by 2002:a17:906:cc0d:b0:77a:c170:3019 with SMTP id
- ml13-20020a170906cc0d00b0077ac1703019mr14706840ejb.253.1663148502775; Wed, 14
- Sep 2022 02:41:42 -0700 (PDT)
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
+         :to:cc:subject:date;
+        bh=mr2q6up8sRp0Iq/rjMUChN+ahUikauuKGydfHuSFITg=;
+        b=75TYhrpxsTKfieRB/Wul0RR3YosHcO7v1/KgzrsGG1Vr/rK9ra0r9dVPLx7TxRRgYR
+         MPzl+V8vaIhHDhlpwOjcriBS6aZt3Q354YE27S3FroUF2sLBzrqgsV+RxndnZO8wMHnt
+         wRDumx7wOv/iNz3RgyXUTPRS8WAX3NutfRuWbxmMkVKqDTWUJYiilvmIlTX8jMvbNKdI
+         QA0x+SAk1QT4dG2sFnCmiz5sTEyV1H/0IVIYiX/+K45stptkzH7X8aXCOUOmvdtosoa3
+         sij0jIqA0jd6k5Zy7kLxIcvWg1eTb96+zMkc91q0qn6C9AfXG1LS53rd+QnXr2phLfU3
+         UvhQ==
+X-Gm-Message-State: ACgBeo1HIOsr27TjQMeY6P/FSwDJ3d0+qPChutuiOzLP1/C3JFDWvZeL
+        YXZv9hQikIBQbUyc4ue8aDMyNAaL/4L92Q==
+X-Google-Smtp-Source: AA6agR4y02a86BDCmITDFgsB3raYctjz8gplidSkNFiSyQj6g4YikYyJuwht/lgIJLg0dv+gSXSuYA==
+X-Received: by 2002:a37:6905:0:b0:6bb:5827:e658 with SMTP id e5-20020a376905000000b006bb5827e658mr26602477qkc.735.1663155964696;
+        Wed, 14 Sep 2022 04:46:04 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id u8-20020a05620a430800b006bb208bd889sm1605896qko.120.2022.09.14.04.46.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Sep 2022 04:46:03 -0700 (PDT)
+Message-ID: <d58ad71b011adba97b7f1d24f01d416a92977eca.camel@poochiereds.net>
+Subject: Re: nfs client strange behavior with cpuwait and memory writeback
+From:   Jeff Layton <jlayton@poochiereds.net>
+To:     Isak <netamego@gmail.com>, linux-nfs@vger.kernel.org
+Date:   Wed, 14 Sep 2022 07:46:02 -0400
+In-Reply-To: <CAALSs0bq2hnU45XwXQxY07pxDAy=eSWCMGrAZgD9+9KQ8qyi3w@mail.gmail.com>
+References: <CAALSs0ZuC2FLuk3PsiXKCc+3vZoAz5UWPaX+D7WV8JcpP8_Ueg@mail.gmail.com>
+         <8201ede6bcb5d6ab77bb4cce08f3b6c6776a43af.camel@kernel.org>
+         <CAALSs0bxqODBzN0V67ExMCnOJFi_+9vZ0_zK1DTGOomb+H-D7Q@mail.gmail.com>
+         <f85356b31470779736f60500b0a89561db9cf8de.camel@kernel.org>
+         <CAALSs0bq2hnU45XwXQxY07pxDAy=eSWCMGrAZgD9+9KQ8qyi3w@mail.gmail.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-References: <20220913140357.323297659@linuxfoundation.org>
-In-Reply-To: <20220913140357.323297659@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 14 Sep 2022 15:11:31 +0530
-Message-ID: <CA+G9fYv5CJeEaxu6XoaJrpizk+z1uXZ0aaQm2DVTA_w79oa2SA@mail.gmail.com>
-Subject: Re: [PATCH 5.15 000/121] 5.15.68-rc1 review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-        slade@sladewatkins.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,
+        T_SPF_PERMERROR autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 13 Sept 2022 at 19:46, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.15.68 release.
-> There are 121 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 15 Sep 2022 14:03:27 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.68-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, 2022-09-13 at 21:12 +0200, Isak wrote:
+> Thank you very much Jeff. Understood. That explains why I have high cpu
+> iowait and high latency (nfsiostat) when launching a dd to an NFS
+> filesystem without the sync option. Surely my vm.dirty tunables are wrong
+> for the workload. Maybe more RAM is needed.
+>=20
+> But what about dd to NFS filesystem mounted with Sync (Test 2)?. As I
+> understood (from your free lessons) VM.dirty tunables don't have much sen=
+se
+> in that scenario because a fsync is done after 1MB write (in my case). I
+> have high cpuwait and low NFS latency (nfsiostat).How is This posible?Thi=
+s
+> is extruding my brain. If dd is launched with oflag=3Ddirect in the same =
+NFS
+> filesystem (mounted with Sync), page cache is not used and there isn't
+> cpuwait.
+>=20
+>=20
+> Thank you very much.
+>=20
 
+I'm not familiar with the tool you used to collect this info, but
+assuming that the "wa" column refers to the same thing as it would in
+vmstat, then what you're talking about is iowait:
 
-Results from Linaro's test farm.
-No regressions on arm64, arm, x86_64, and i386.
+    wa: Time spent waiting for IO.  Prior to Linux 2.5.41, included in idle=
+.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+That just means that the CPU was waiting for I/O to complete, which is
+basically what you'd expect with a sync mount. Each of those COMMIT
+calls at the end of the writes is synchronous and the CPU has to wait
+for it to complete.
 
-NOTE:
-While running LTP syscalls, hugetlb and ssuite tests on x86 and arm64
-Raspberry Pi 4 Model B.
+> 2022-09-13 13:51 GMT+02:00, Jeff Layton <jlayton@kernel.org>:
+> > On Mon, 2022-09-12 at 21:00 +0200, Isak wrote:
+> > > El lun, 12 sept 2022 a las 12:40, Jeff Layton (<jlayton@kernel.org>)
+> > > escribi=F3:
+> > > >=20
+> > > > On Sun, 2022-09-11 at 20:58 +0200, Isak wrote:
+> > > > > Hi everybody!!!
+> > > > >=20
+> > > > > I am very happy writing my first email to one of the Linux mailin=
+g
+> > > > > list.
+> > > > >=20
+> > > > > I have read the faq and i know this mailing list is not a user he=
+lp
+> > > > > desk but i have strange behaviour with memory write back and NFS.
+> > > > > Maybe someone can help me. I am so sorry if this is not the right
+> > > > > "forum".
+> > > > >=20
+> > > > > I did three simple tests writing to the same NFS filesystem and t=
+he
+> > > > > behavior of the cpu and memory is extruding my brain.
+> > > > >=20
+> > > > > The Environment:
+> > > > >=20
+> > > > > - Linux RedHat 8.6, 2 vCPU (VMWare VM) and 8 GB RAM (but same
+> > > > > behavior
+> > > > > with Red Hat 7.9)
+> > > > >=20
+> > > > > - One nfs filesystem mounted with sync and without sync
+> > > > >=20
+> > > > > 1x.1x.2xx.1xx:/test_fs on /mnt/test_fs_with_sync type nfs
+> > > > > (rw,relatime,sync,vers=3D3,rsize=3D1048576,wsize=3D1048576,namlen=
+=3D255,hard,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,mountaddr=3D1x.1x=
+.2xx.1xx,mountvers=3D3,mountport=3D2050,mountproto=3Dudp,local_lock=3Dnone,=
+addr=3D1x.1x.2xx.1xx)
+> > > > >=20
+> > > > > 1x.1x.2xx.1xx:/test_fs on /mnt/test_fs_without_sync type nfs
+> > > > > (rw,relatime,vers=3D3,rsize=3D1048576,wsize=3D1048576,namlen=3D25=
+5,hard,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,mountaddr=3D1x.1x.2xx.=
+1xx,mountvers=3D3,mountport=3D2050,mountproto=3Dudp,local_lock=3Dnone,addr=
+=3D1x.1x.2xx.1xx:)
+> > > > >=20
+> > > > > - Link between nfs client and nfs server is a 10Gb (Fiber) and ip=
+erf3
+> > > > > data show the link works at maximum speed. No problems here. I kn=
+ow
+> > > > > there are nfs options like nconnect to improve performance but I =
+am
+> > > > > interested in linux kernel internals.
+> > > > >=20
+> > > > > The test:
+> > > > >=20
+> > > > > 1.- dd in /mnt/test_fs_without_sync
+> > > > >=20
+> > > > > dd if=3D/dev/zero of=3Dtest.out bs=3D1M count=3D5000
+> > > > > 5000+0 records in
+> > > > > 5000+0 records out
+> > > > > 5242880000 bytes (5.2 GB, 4.9 GiB) copied, 21.4122 s, 245 MB/s
+> > > > >=20
+> > > > > * High cpuwait
+> > > > > * High nfs latency
+> > > > > * Writeback in use
+> > > > >=20
+> > > > > Evidences:
+> > > > > https://zerobin.net/?43f9bea1953ed7aa#TaUk+K0GDhxjPq1EgJ2aAHgEyhn=
+tQ0NQzeFF51d9qI0=3D
+> > > > >=20
+> > > > > https://i.stack.imgur.com/pTong.png
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > 2.- dd in /mnt/test_fs_with_sync
+> > > > >=20
+> > > > > dd if=3D/dev/zero of=3Dtest.out bs=3D1M count=3D5000
+> > > > > 5000+0 records in
+> > > > > 5000+0 records out
+> > > > > 5242880000 bytes (5.2 GB, 4.9 GiB) copied, 35.6462 s, 147 MB/s
+> > > > >=20
+> > > > > * High cpuwait
+> > > > > * Low nfs latency
+> > > > > * No writeback
+> > > > >=20
+> > > > > Evidences
+> > > > > https://zerobin.net/?0ce52c5c5d946d7a#ZeyjHFIp7B+K+65DX2RzEGlp+Oq=
+9rCidAKL8RpKpDJ8=3D
+> > > > >=20
+> > > > > https://i.stack.imgur.com/Pf1xS.png
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > 3.- dd in /mnt/test_fs_with_sync and oflag=3Ddirect
+> > > > >=20
+> > > > > dd if=3D/dev/zero of=3Dtest.out bs=3D1M oflag=3Ddirect count=3D50=
+00
+> > > > > 5000+0 records in
+> > > > > 5000+0 records out
+> > > > > 5242880000 bytes (5.2 GB, 4.9 GiB) copied, 34.6491 s, 151 MB/s
+> > > > >=20
+> > > > > * Low cpuwait
+> > > > > * Low nfs latency
+> > > > > * No writeback
+> > > > >=20
+> > > > > Evidences:
+> > > > > https://zerobin.net/?03c4aa040a7a5323#bScEK36+Sdcz18VwKnBXNbOsi/q=
+Ft/O+qFyNj5FUs8k=3D
+> > > > >=20
+> > > > > https://i.stack.imgur.com/Qs6y5.png
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > >=20
+> > > > > The questions:
+> > > > >=20
+> > > > > I know write back is an old issue in linux and seems is the probl=
+em
+> > > > > here.I played with
+> > > > > vm.dirty_background_bytes/vm.dirty_background_ratio
+> > > > > and vm.dirty_background_ratio/vm.dirty_background_ratio (i know o=
+nly
+> > > > > one is valid) but whatever value put in this tunables I always ha=
+ve
+> > > > > iowait (except from dd with oflag=3Ddirect)
+> > > > >=20
+> > > > > - In test number 2. How is it possible that it has no nfs latency=
+ but
+> > > > > has a high cpu wait?
+> > > > >=20
+> > > > > - In test number 2. How is it possible that have almost the same =
+code
+> > > > > path than test number 1? Test number 2 use a nfs filesystem mount=
+ed
+> > > > > with sync option but seems to use pagecache codepath (see flame
+> > > > > graph)
+> > > > >=20
+> > > >=20
+> > > > "sync" just means that the write codepaths do an implicit fsync of =
+the
+> > > > written range after every write. The data still goes through the
+> > > > pagecache in that case. It just does a (synchronous) flush of the d=
+ata
+> > > > to the server and a commit after every 1M (in your case).
+> > >=20
+> > > Thank you very much Jeff. Understood. My mistake. I thought that, wit=
+h
+> > > the nfs sync option, page cache was actually not used. What about tes=
+t
+> > > 2 (with Sync) regarding to cpuwait? Seems like a CPU accounting
+> > > "problem"? I have high cpuwait and low NFS latency (nfsiostat). If dd
+> > > is launched with oflag=3Ddirect in the same NFS filesystem (mounted w=
+ith
+> > > Sync), page cache is not used and there isn't cpuwait.
+> > >=20
+> > > >=20
+> > > > >=20
+> > > > > - In test number 1. Why isn't there a change in cpuwait behavior =
+when
+> > > > > vm.dirty tunables are changed? (i have tested a lot of combinatio=
+ns)
+> > > > >=20
+> > > > >=20
+> > > >=20
+> > > > Depends on which tunables you're twiddling, but you have 8G of RAM =
+and
+> > > > are writing a 5G file. All of that should fit in the pagecache with=
+out
+> > > > needing to flush anything before all the writes are done. I imagine=
+ the
+> > > > vm.dirty tunables don't really come into play in these tests, other
+> > > > than
+> > > > maybe the background ones, and those shouldn't really affect your
+> > > > buffered write throughput.
+> > >=20
+> > > My understanding (surely wrong) about page cache in Linux is that we
+> > > actually have two caches. One is "read cache" and the other is "write
+> > > cache" aka dirty pages so write cache should not exceed the parameter
+> > > vm.dirty_bytes or vm.dirty_ratio so I don't think 5gb file in 8gb RAM
+> > > with low vm.dirty_ratio does much buffering.
+> > >=20
+> >=20
+> > Not exactly.
+> >=20
+> > The VM has two sets of thresholds: dirty_bytes and dirty_ratio, along
+> > with "background" versions of the same tunables. Most distros these day=
+s
+> > don't work the "bytes" values, but work with the "ratio" ones, primaril=
+y
+> > because memory sizes can vary wildly and that gives better results.
+> >=20
+> > The dirty_ratio indicates the point where the client starts forcibly
+> > flushing pages in order to satisfy new allocation requests. If you want
+> > to do a write, you have to allocate pages to hold the data and that wil=
+l
+> > block until the ratio of dirty memory to clean is below the threshold.
+> >=20
+> > The dirty_background_ratio indicates the point where the VM starts more
+> > aggressively flushing data in the background, but that doesn't usually
+> > affect userland activity. Your allocations won't block when you exceed
+> > the background ratio, for instance so you can just keep writing and
+> > filling memory.
+> >=20
+> > Ideally, you never want to hit the dirty_ratio, and if things are tuned
+> > well, you never will as long as background writeback is keeping up with
+> > the rate of page dirtying.
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
 
-> Trond Myklebust <trond.myklebust@hammerspace.com>
->     NFS: Fix another fsync() issue after a server reboot
->
-> Trond Myklebust <trond.myklebust@hammerspace.com>
->     NFS: Save some space in the inode
->
-> Trond Myklebust <trond.myklebust@hammerspace.com>
->     NFS: Further optimisations for 'ls -l'
-
-I have not bisected the reported problem.
-
-hugemmap05.c:99: TINFO: check /proc/meminfo before allocation.
-hugemmap05.c:278: TINFO: HugePages_Total is 3.
-hugemmap05.c:278: TINFO: HugePages_Free is 3.
-hugemmap05.c:278: TINFO: HugePages_Surp is 1.
-hugemmap05.c:27[   51.077819] ------------[ cut here ]------------
-[   51.082692] WARNING: CPU: 0 PID: 590 at fs/nfs/inode.c:123
-nfs_evict_inode+0x58/0x70
-[   51.090451] Modules linked in: x86_pkg_temp_thermal
-[   51.095329] CPU: 0 PID: 590 Comm: hugemmap05 Not tainted 5.15.68-rc1 #1
-[   51.101948] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-2.5 11/26/2020
-[   51.109340] RIP: 0010:nfs_evict_inode+0x58/0x70
-[   51.113872] Code: 29 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 75 2b
-4c 89 e7 e8 7a d8 ff ff 4c 89 e7 e8 82 74 ff ff 4c 8b 65 f8 c9 c3 cc
-cc cc cc <0f> 0b 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 74 d5 0f 0b eb
-d1 0f
-[   51.132626] RSP: 0018:ffffb6b140a8fb90 EFLAGS: 00010286
-[   51.137861] RAX: adacafaea9a8abaa RBX: ffff937fa606a2c0 RCX: ffffb6b140a8fbd0
-[   51.144986] RDX: ffff937fa606a2d0 RSI: ffffffffbc720682 RDI: ffffffffbc5ec05f
-[   51.152120] RBP: ffffb6b140a8fb98 R08: 0000000000000000 R09: ffffb6b140a8fcf0
-[   51.159253] R10: 0000000000000000 R11: 0000000000000002 R12: ffff937fa606a1a8
-[   51.166395] R13: ffffffffbd851b40 R14: ffff937c40803870 R15: 0000000000000003
-[   51.173525] FS:  00007f5afcdf4740(0000) GS:ffff937fa7a00000(0000)
-knlGS:0000000000000000
-[   51.181602] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   51.187359] CR2: 00007f5afcf10680 CR3: 000000010360a006 CR4: 00000000003706f0
-8: TINFO: HugePa[   51.194499] DR0: 0000000000000000 DR1:
-0000000000000000 DR2: 0000000000000000
-[   51.203009] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[   51.210135] Call Trace:
-[   51.212585]  <TASK>
-[   51.214684]  evict+0xc8/0x180
-[   51.217682]  prune_icache_sb+0x81/0xc0
-[   51.221435]  super_cache_scan+0x169/0x200
-[   51.225447]  do_shrink_slab+0x13f/0x2b0
-[   51.229288]  shrink_slab+0x186/0x2a0
-[   51.232868]  drop_slab_node+0x4a/0xa0
-[   51.236533]  drop_slab+0x41/0x90
-[   51.239765]  drop_caches_sysctl_handler+0x79/0x90
-[   51.244471]  proc_sys_call_handler+0x159/0x290
-[   51.248918]  proc_sys_write+0x13/0x20
-[   51.252582]  new_sync_write+0x111/0x1a0
-[   51.256423]  vfs_write+0x1d5/0x270
-[   51.259828]  ksys_write+0x67/0xf0
-[   51.263150]  __x64_sys_write+0x19/0x20
-[   51.266901]  do_syscall_64+0x38/0x90
-[   51.270479]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
-[   51.275534] RIP: 0033:0x7f5afcef31d7
-[   51.279112] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
-0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
-00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
-74 24
-[   51.297859] RSP: 002b:00007ffd40638738 EFLAGS: 00000246 ORIG_RAX:
-0000000000000001
-[   51.305425] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f5afcef31d7
-[   51.312557] RDX: 0000000000000001 RSI: 00000000016f1480 RDI: 0000000000000003
-[   51.319689] RBP: 00000000016f1480 R08: 0000000000000001 R09: 0000000000000001
-[   51.326812] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000001
-[   51.333938] R13: 00000000016f12a0 R14: 0000000000000001 R15: 00007f5afcfe87a0
-[   51.341073]  </TASK>
-[   51.343264] ---[ end trace 3420625c1fbde9e9 ]---
-ges_Rsvd is 3.
-[   51.348004] hugemmap05 (590): drop_caches: 3
-hugemmap05.c:253: TINFO: First hex is 7070707
-
-Full test log link on x86_64
-https://lkft.validation.linaro.org/scheduler/job/5522436#L1711
-
-
-Crash log on arm64  Raspberry Pi 4 Model B.
-
-linktest 1 TPASS: errors: 0
-linktest 1 TINFO: test hard link, limit: 1000
-linktest 1 TPASS: errors: 0
-[ 1172.344209] ------------[ cut here ]------------
-[ 1172.348913] WARNING: CPU: 3 PID: 4759 at fs/nfs/inode.c:123
-nfs_clear_inode+0x54/0x90
-[ 1172.356884] Modules linked in: algif_hash aes_neon_bs aes_neon_blk
-xhci_pci xhci_pci_renesas snd_soc_hdmi_codec raspberrypi_cpufreq
-hci_uart btqca brcmfmac btbcm brcmutil bluetooth cfg80211
-raspberrypi_hwmon rfkill clk_raspberrypi reset_raspberrypi vc4
-pwm_bcm2835 cec bcm2711_thermal pcie_brcmstb drm_kms_helper
-i2c_bcm2835 iproc_rng200 rng_core crct10dif_ce fuse drm
-[ 1172.389906] CPU: 3 PID: 4759 Comm: rm Not tainted 5.15.68-rc1 #1
-[ 1172.396005] Hardware name: Raspberry Pi 4 Model B (DT)
-[ 1172.401217] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[ 1172.408284] pc : nfs_clear_inode+0x54/0x90
-[ 1172.412444] lr : nfs_evict_inode+0x34/0x44
-[ 1172.416604] sp : ffff800012babca0
-[ 1172.419963] x29: ffff800012babca0 x28: ffff000040b40000 x27: 0000000000000000
-[ 1172.427217] x26: ffff000049a61e88 x25: 0000000000000002 x24: 00000000ffffffec
-[ 1172.434468] x23: ffff80000a62ea28 x22: ffff8000092bf7b0 x21: ffff000049a61fa0
-[ 1172.441718] x20: ffff000049a62088 x19: ffff000049a61e88 x18: 0000000000000000
-[ 1172.448966] x17: 0000000000000000 x16: 0000000000000000 x15: 8107000128000000
-[ 1172.456215] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000088
-[ 1172.463464] x11: 0000015a6a1d5174 x10: ffff8000ed98a000 x9 : ffff800008486634
-[ 1172.470714] x8 : fffffc0001160848 x7 : fffffffffffffffe x6 : 0000000000000001
-[ 1172.477962] x5 : ffff80000a62f000 x4 : ffff80000a62f260 x3 : 0000000000000000
-[ 1172.485211] x2 : ffff000049a620a8 x1 : ffff000049a61fb0 x0 : ffff000049a61dc0
-[ 1172.492460] Call trace:
-[ 1172.494938]  nfs_clear_inode+0x54/0x90
-[ 1172.498745]  nfs_evict_inode+0x34/0x44
-[ 1172.502551]  evict+0xac/0x190
-[ 1172.505564]  iput+0x174/0x22c
-[ 1172.508572]  do_unlinkat+0x1c0/0x26c
-[ 1172.512201]  __arm64_sys_unlinkat+0x48/0x90
-[ 1172.516446]  invoke_syscall+0x50/0x120
-[ 1172.520254]  el0_svc_common.constprop.0+0x104/0x124
-[ 1172.525207]  do_el0_svc+0x30/0x9c
-[ 1172.528572]  el0_svc+0x2c/0x90
-[ 1172.531676]  el0t_64_sync_handler+0xa4/0x130
-[ 1172.536012]  el0t_64_sync+0x1a0/0x1a4
-[ 1172.539728] ---[ end trace 6eb5987f00ab00b7 ]---
-
-Full test log log link on arm64
-https://lkft.validation.linaro.org/scheduler/job/5524239#L1447
-
-
-## Build
-* kernel: 5.15.68-rc1
-* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-* git branch: linux-5.15.y
-* git commit: 292041e8d6044e6398e95c0bffa9484edd678478
-* git describe: v5.15.67-122-g292041e8d604
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15.67-122-g292041e8d604
-
-## No test Regressions (compared to v5.15.67)
-
-## No metric Regressions (compared to v5.15.67)
-
-## No test Fixes (compared to v5.15.67)
-
-## No metric Fixes (compared to v5.15.67)
-
-## Test result summary
-total: 106655, pass: 93993, fail: 696, skip: 11659, xfail: 307
-
-## Build Summary
-* arc: 10 total, 10 passed, 0 failed
-* arm: 333 total, 333 passed, 0 failed
-* arm64: 65 total, 63 passed, 2 failed
-* i386: 55 total, 53 passed, 2 failed
-* mips: 56 total, 56 passed, 0 failed
-* parisc: 12 total, 12 passed, 0 failed
-* powerpc: 63 total, 63 passed, 0 failed
-* riscv: 22 total, 22 passed, 0 failed
-* s390: 24 total, 24 passed, 0 failed
-* sh: 24 total, 24 passed, 0 failed
-* sparc: 12 total, 12 passed, 0 failed
-* x86_64: 58 total, 56 passed, 2 failed
-
-## Test suites summary
-* fwts
-* igt-gpu-tools
-* kunit
-* kvm-unit-tests
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-test
-* ltp-cap_bounds
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-filecaps
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-fsx
-* ltp-hugetlb
-* ltp-io
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-open-posix-tests
-* ltp-pty
-* ltp-sched
-* ltp-securebits
-* ltp-syscalls
-* ltp-tracing
-* network-basic-tests
-* packetdrill
-* rcutorture
-* v4l2-compliance
-* vdso
-
---
-Linaro LKFT
-https://lkft.linaro.org
+--=20
+Jeff Layton <jlayton@poochiereds.net>
