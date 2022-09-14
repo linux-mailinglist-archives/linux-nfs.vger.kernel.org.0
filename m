@@ -2,127 +2,134 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BF105B7DC6
-	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 02:08:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF1515B7FC6
+	for <lists+linux-nfs@lfdr.de>; Wed, 14 Sep 2022 05:51:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbiINAIw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Sep 2022 20:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59586 "EHLO
+        id S229809AbiINDvm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Sep 2022 23:51:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229494AbiINAIu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 20:08:50 -0400
-Received: from fieldses.org (fieldses.org [IPv6:2600:3c00:e000:2f7::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CA4262A95;
-        Tue, 13 Sep 2022 17:08:49 -0700 (PDT)
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 74A4EBCE; Tue, 13 Sep 2022 20:08:48 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 fieldses.org 74A4EBCE
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fieldses.org;
-        s=default; t=1663114128;
-        bh=E9WEzEar/6VJErlxq0icil2vqwzUNkdFMHHx75MNPGk=;
-        h=Date:To:Cc:Subject:References:In-Reply-To:From:From;
-        b=gbzbUdAw9tQbApBKPqCcLDaprymqGt1ZMnsxKY2ZvOplS6yqAodJy/iaWkqufRExJ
-         fCKIdC9SJKsHpIw5KnLOhMQm2UVX/RKMaTclCJzV7X4HnaBhdJ0wbD9HhMcPI07tFG
-         GAxZc03ETKVHcTcXtNtSGu96B8Jx5HwFmjs1fk3Q=
-Date:   Tue, 13 Sep 2022 20:08:48 -0400
-To:     NeilBrown <neilb@suse.de>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        adilger.kernel@dilger.ca, djwong@kernel.org,
-        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
-        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
-        lczerner@redhat.com, brauner@kernel.org, fweimer@redhat.com,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-Message-ID: <20220914000848.GB11958@fieldses.org>
-References: <20220908182252.GA18939@fieldses.org>
- <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
- <20220909154506.GB5674@fieldses.org>
- <125df688dbebaf06478b0911e76e228e910b04b3.camel@kernel.org>
- <20220910145600.GA347@fieldses.org>
- <9eaed9a47d1aef11fee95f0079e302bc776bc7ff.camel@kernel.org>
- <20220913004146.GD3600936@dread.disaster.area>
- <166303374350.30452.17386582960615006566@noble.neil.brown.name>
- <20220913190226.GA11958@fieldses.org>
- <166311116291.20483.960025733349761945@noble.neil.brown.name>
+        with ESMTP id S229824AbiINDvl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Sep 2022 23:51:41 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430606F26F;
+        Tue, 13 Sep 2022 20:51:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TsvPRmshdxnvSY7tVAecRy6+/ce+5hAWcS0J6w4JVyE=; b=utEF1SOCThG3gcFxitxIjq3WGs
+        IHfq+Z1KW6tA+eL0Sb+cwipStWaYLjhRhDVZ8GZwNeZmjvBd05BRjtyauZaHH7ZZsrmJ5jQ9m7NYH
+        t5YnppvGuDY68g9HYjVC2w5Z2W2ZRP72TY/rLYf5gK5zcB6xl2TQzc8waMQW+L4/KmLbLr+tX1SHf
+        wva/bWAZqkuKFcKia9aZdCn5gJ0/PD4X1KzRVwCHXE2T9wrl7lomyCDzaAAQRhl9Ob3eHi4ibY6gS
+        2A/E8y+stzUFsaCfnKU1fUsoMPrEmJ9V+q/Xc7gYpbpZ/qBuLSMLG/JKoH2axtiXJ3qbsfdU1SaT+
+        ODK9JccA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1oYJQj-00G2aP-2o;
+        Wed, 14 Sep 2022 03:51:17 +0000
+Date:   Wed, 14 Sep 2022 04:51:17 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Jan Kara <jack@suse.cz>, John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YyFPtTtxYozCuXvu@ZenIV>
+References: <20220831041843.973026-1-jhubbard@nvidia.com>
+ <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <166311116291.20483.960025733349761945@noble.neil.brown.name>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <YxhaJktqtHw3QTSG@infradead.org>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 14, 2022 at 09:19:22AM +1000, NeilBrown wrote:
-> On Wed, 14 Sep 2022, J. Bruce Fields wrote:
-> > On Tue, Sep 13, 2022 at 11:49:03AM +1000, NeilBrown wrote:
-> > > Invalidating the client cache on EVERY unmount/mount could impose
-> > > unnecessary cost.  Imagine a client that caches a lot of data (several
-> > > large files) from a server which is expected to fail-over from one
-> > > cluster node to another from time to time.  Adding extra delays to a
-> > > fail-over is not likely to be well received.
-> > > 
-> > > I don't *know* this cost would be unacceptable, and I *would* like to
-> > > leave it to the filesystem to decide how to manage its own i_version
-> > > values.  So maybe XFS can use the LSN for a salt.  If people notice the
-> > > extra cost, they can complain.
+On Wed, Sep 07, 2022 at 01:45:26AM -0700, Christoph Hellwig wrote:
+> On Tue, Sep 06, 2022 at 12:21:06PM +0200, Jan Kara wrote:
+> > > For FOLL_PIN callers, never pin bvec and kvec pages:  For file systems
+> > > not acquiring a reference is obviously safe, and the other callers will
+> > > need an audit, but I can't think of why it woul  ever be unsafe.
 > > 
-> > I'd expect complaints.
-> > 
-> > NFS is actually even worse than this: it allows clients to reacquire
-> > file locks across server restart and unmount/remount, even though
-> > obviously the kernel will do nothing to prevent someone else from
-> > locking (or modifying) the file in between.
+> > Are you sure about "For file systems not acquiring a reference is obviously
+> > safe"? I can see places e.g. in orangefs, afs, etc. which create bvec iters
+> > from pagecache pages. And then we have iter_file_splice_write() which
+> > creates bvec from pipe pages (which can also be pagecache pages if
+> > vmsplice() is used). So perhaps there are no lifetime issues even without
+> > acquiring a reference (but looking at the code I would not say it is
+> > obvious) but I definitely don't see how it would be safe to not get a pin
+> > to signal to filesystem backing the pagecache page that there is DMA
+> > happening to/from the page.
 > 
-> I don't understand this comment.  You seem to be implying that changing
-> the i_version during a server restart would stop a client from
-> reclaiming locks.  Is that correct?
+> I mean in the context of iov_iter_get_pages callers, that is direct
+> I/O.  Direct callers of iov_iter_bvec which then pass that iov to
+> ->read_iter / ->write_iter will need to hold references (those are
+> the references that the callers of iov_iter_get_pages rely on!).
 
-No, sorry, I'm probably being confusing.
+Unless I'm misreading Jan, the question is whether they should get or
+pin.  AFAICS, anyone who passes the sucker to ->read_iter() (or ->recvmsg(),
+or does direct copy_to_iter()/zero_iter(), etc.) is falling under
+=================================================================================
+CASE 5: Pinning in order to write to the data within the page
+-------------------------------------------------------------
+Even though neither DMA nor Direct IO is involved, just a simple case of "pin,
+write to a page's data, unpin" can cause a problem. Case 5 may be considered a
+superset of Case 1, plus Case 2, plus anything that invokes that pattern. In
+other words, if the code is neither Case 1 nor Case 2, it may still require
+FOLL_PIN, for patterns like this:
 
-I was just saying: we've always depended in a lot of ways on the
-assumption that filesystems aren't messed with while nfsd's not running.
-You can produce all sorts of incorrect behavior by violating that
-assumption.  That tools might fool with unmounted filesystems is just
-another such example, and fixing that wouldn't be very high on my list
-of priorities.
+Correct (uses FOLL_PIN calls):
+    pin_user_pages()
+    write to the data within the pages
+    unpin_user_pages()
 
-??
+INCORRECT (uses FOLL_GET calls):
+    get_user_pages()
+    write to the data within the pages
+    put_page()
+=================================================================================
 
---b.
+Regarding iter_file_splice_write() case, do we need to pin pages
+when we are not going to modify the data in those?
 
-> I would have thought that the client would largely ignore i_version
-> while it has a lock or open or delegation, as these tend to imply some
-> degree of exclusive access ("open" being least exclusive).
-> 
-> Thanks,
-> NeilBrown
-> 
-> 
-> > 
-> > Administrators are just supposed to know not to allow other applications
-> > access to the filesystem until nfsd's started.  It's always been this
-> > way.
-> > 
-> > You can imagine all sorts of measures to prevent that, and if anyone
-> > wants to work on ways to prevent people from shooting themselves in the
-> > foot here, great.
-> > 
-> > Just taking away the ability to cache or lock across reboots wouldn't
-> > make people happy, though....
-> > 
-> > --b.
-> > 
+The same goes for afs, AFAICS; I started to type "... and everything that passes
+WRITE to iov_iter_bvec()", but...
+drivers/vhost/vringh.c:1165:            iov_iter_bvec(&iter, READ, iov, ret, translated);
+drivers/vhost/vringh.c:1198:            iov_iter_bvec(&iter, WRITE, iov, ret, translated);
+is backwards - READ is for data destinations, comes with copy_to_iter(); WRITE is
+for data sources and it comes with copy_from_iter()...
+I'm really tempted to slap
+	if (WARN_ON(i->data_source))
+		return 0;
+into copy_to_iter() et.al., along with its opposite for copy_from_iter().
+And see who comes screaming...  Things like
+        if (unlikely(iov_iter_is_pipe(i) || iov_iter_is_discard(i))) {
+                WARN_ON(1);
+                return 0;
+        }
+in e.g. csum_and_copy_from_iter() would be replaced by that, and become
+easier to understand...
+These two are also getting it wrong, BTW:
+drivers/target/target_core_file.c:340:  iov_iter_bvec(&iter, READ, bvec, sgl_nents, len);
+drivers/target/target_core_file.c:476:  iov_iter_bvec(&iter, READ, bvec, nolb, len);
+
