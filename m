@@ -2,202 +2,205 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62E955B9F13
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Sep 2022 17:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37A735B9F3F
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Sep 2022 17:57:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbiIOPmE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Sep 2022 11:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52054 "EHLO
+        id S229946AbiIOP5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Sep 2022 11:57:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbiIOPls (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Sep 2022 11:41:48 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AE3D7F135;
-        Thu, 15 Sep 2022 08:41:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6C082B81EC7;
-        Thu, 15 Sep 2022 15:41:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C38AAC433D6;
-        Thu, 15 Sep 2022 15:41:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663256503;
-        bh=rlYPWFSDAkkceF7nnuumRwCxflqb4EWJ0ok6kVleU78=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=L0qoLoaZylbWW9G3EOU33xsqrYNKphW711WlAzAes5iEVHL0jx3ta+ZXfkPEsKTI6
-         LOuwQupSJLTDY0kMx7XNEohgk2hcqqFZRogLQCMmVKeZJLfArbzzbtuZMZicKa+M2g
-         Q8/5AJR87ThypT1xvjDu5rKkQLK/qY3RdPucLMMQ5T5h9RQrpeAjRxsP6xpHJ/Q6K7
-         4YgIoplcufipLrJqnpL0oLY5N2f3Zub7Ka9tWTfg9hYSHa01sTQfZ3+BudJ8Kmugve
-         EaM497Eux9X+MpeofpD6JF4Q/M7UeI0IcBptZ06I5nHDr1mj5DCGUNALA2AtdlMiOA
-         jOlHJDeT+0O/g==
-Message-ID: <52a21018cde28eb7670a5ea86b79aef4a100d74b.camel@kernel.org>
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-From:   Jeff Layton <jlayton@kernel.org>
-To:     "J. Bruce Fields" <bfields@fieldses.org>, NeilBrown <neilb@suse.de>
-Cc:     Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
-        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
-        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
-        lczerner@redhat.com, brauner@kernel.org, fweimer@redhat.com,
-        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Date:   Thu, 15 Sep 2022 11:41:40 -0400
-In-Reply-To: <20220915140644.GA15754@fieldses.org>
-References: <20220908083326.3xsanzk7hy3ff4qs@quack3>
-         <YxoIjV50xXKiLdL9@mit.edu>
-         <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>
-         <20220908155605.GD8951@fieldses.org>
-         <9e06c506fd6b3e3118da0ec24276e85ea3ee45a1.camel@kernel.org>
-         <20220908182252.GA18939@fieldses.org>
-         <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
-         <166284799157.30452.4308111193560234334@noble.neil.brown.name>
-         <20220912134208.GB9304@fieldses.org>
-         <166302447257.30452.6751169887085269140@noble.neil.brown.name>
-         <20220915140644.GA15754@fieldses.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        with ESMTP id S229939AbiIOP5B (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Sep 2022 11:57:01 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C51974F693;
+        Thu, 15 Sep 2022 08:56:59 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id dv25so43099739ejb.12;
+        Thu, 15 Sep 2022 08:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=4SJlOpsTPc5GSecmr6gUPYeQqelFZcN9hVkBWAKVK4M=;
+        b=JRUkPnvxqt+21+hZQtDFYdtNLMgNs+4ZDEZIuxHu+d6Kk/YMH2v2giTnAerjbATRqA
+         d25T/h4EsPeZfZ6/vvsfDo7txgCH+klgY3oDI15bbANrUEEBNnFvr5vmtmbFhMboNcqd
+         QsSLAVOzq8rbxbCQfezu+tc6adTeaxRxI2S5ToerqxWfdx1rI9MPkYqLvAKG8i5uS5v9
+         skIu0Dtag7/38w2rNna6Gh0Zywm6x+nERYc/GZqa2CZ4CHBzoabM/hR7yUHLiUDa3haS
+         Y6Zwm2fkwoGcETRxRf9WIFDW2agnZhM0VEX7l07OdiyVNomzFW0z8Rfk9kdZCY5oednJ
+         EIew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=4SJlOpsTPc5GSecmr6gUPYeQqelFZcN9hVkBWAKVK4M=;
+        b=LySMJ20rOP6qprm8jDSj5pnuc6ut8ROmW2VdMeEuF40F6k+JWlX4yGnKA6mGO/4fVx
+         y+oqUL/5rclfoxnwYIX66wVIBU8DFL07q6QrQg7KEBBzGqeixVicGlZSkm15GuO3LhcW
+         QlmSip3ZdHH1yDm6OCvMQaDVp89R5vWtvE4Gy0kqvQID54Cq1CiJLh1d3Mp6zqmKR+qT
+         38Xaaqf+1rQ/G7x/BWvXe6KWBB6JLDpJfRrWnfhQawqRAy+4Uk6OdQxJe3fsRlmZg+F6
+         j/rJJDKoYoBw3DaMQi96HX0cWs1V3NC4Z2YD49JP7IiNM6JYhUfrSQAbkOOZFK0UX/mA
+         7Ytw==
+X-Gm-Message-State: ACrzQf2gh9N6de7mXyMiOxaekiBgjazlL/JGM3oT/4Pnred/WWYHzMjv
+        9aTVehmM1+GdONUOIvdwYFufWPZyEZwpajYvuKE=
+X-Google-Smtp-Source: AMsMyM7w7rxaxmEkffH15PuLQgUYuCuNhhDMGSISfi3eZ9u97MOCM8FHl9ULuyDSSmA3i6p7Lyd8yFYd04abXXdKKEI=
+X-Received: by 2002:a17:907:72cf:b0:780:2618:97d4 with SMTP id
+ du15-20020a17090772cf00b00780261897d4mr469476ejc.150.1663257418175; Thu, 15
+ Sep 2022 08:56:58 -0700 (PDT)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <166247968798.587726.7092426682689468087.stgit@morisot.1015granger.net>
+In-Reply-To: <166247968798.587726.7092426682689468087.stgit@morisot.1015granger.net>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Thu, 15 Sep 2022 11:56:46 -0400
+Message-ID: <CAN-5tyEtr0f6o=0j_kMpf-tY7vvzfzaCd__P6taXhmq+e3TM-g@mail.gmail.com>
+Subject: Re: [PATCH v1] SUNRPC: Replace the use of the xprtiod WQ in rpcrdma
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        linux-nfs <linux-nfs@vger.kernel.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-09-15 at 10:06 -0400, J. Bruce Fields wrote:
-> On Tue, Sep 13, 2022 at 09:14:32AM +1000, NeilBrown wrote:
-> > On Mon, 12 Sep 2022, J. Bruce Fields wrote:
-> > > On Sun, Sep 11, 2022 at 08:13:11AM +1000, NeilBrown wrote:
-> > > > On Fri, 09 Sep 2022, Jeff Layton wrote:
-> > > > >=20
-> > > > > The machine crashes and comes back up, and we get a query for i_v=
-ersion
-> > > > > and it comes back as X. Fine, it's an old version. Now there is a=
- write.
-> > > > > What do we do to ensure that the new value doesn't collide with X=
-+1?=20
-> > > >=20
-> > > > (I missed this bit in my earlier reply..)
-> > > >=20
-> > > > How is it "Fine" to see an old version?
-> > > > The file could have changed without the version changing.
-> > > > And I thought one of the goals of the crash-count was to be able to
-> > > > provide a monotonic change id.
-> > >=20
-> > > I was still mainly thinking about how to provide reliable close-to-op=
-en
-> > > semantics between NFS clients.  In the case the writer was an NFS
-> > > client, it wasn't done writing (or it would have COMMITted), so those
-> > > writes will come in and bump the change attribute soon, and as long a=
-s
-> > > we avoid the small chance of reusing an old change attribute, we're O=
-K,
-> > > and I think it'd even still be OK to advertise
-> > > CHANGE_TYPE_IS_MONOTONIC_INCR.
-> >=20
-> > You seem to be assuming that the client doesn't crash at the same time
-> > as the server (maybe they are both VMs on a host that lost power...)
-> >=20
-> > If client A reads and caches, client B writes, the server crashes after
-> > writing some data (to already allocated space so no inode update needed=
-)
-> > but before writing the new i_version, then client B crashes.
-> > When server comes back the i_version will be unchanged but the data has
-> > changed.  Client A will cache old data indefinitely...
->=20
-> I guess I assume that if all we're promising is close-to-open, then a
-> client isn't allowed to trust its cache in that situation.  Maybe that's
-> an overly draconian interpretation of close-to-open.
->=20
-> Also, I'm trying to think about how to improve things incrementally.
-> Incorporating something like a crash count into the on-disk i_version
-> fixes some cases without introducing any new ones or regressing
-> performance after a crash.
->=20
-
-I think we ought to start there.
-
-> If we subsequently wanted to close those remaining holes, I think we'd
-> need the change attribute increment to be seen as atomic with respect to
-> its associated change, both to clients and (separately) on disk.  (That
-> would still allow the change attribute to go backwards after a crash, to
-> the value it held as of the on-disk state of the file.  I think clients
-> should be able to deal with that case.)
->=20
-> But, I don't know, maybe a bigger hammer would be OK:
->=20
-> > I think we need to require the filesystem to ensure that the i_version
-> > is seen to increase shortly after any change becomes visible in the
-> > file, and no later than the moment when the request that initiated the
-> > change is acknowledged as being complete.  In the case of an unclean
-> > restart, any file that is not known to have been unchanged immediately
-> > before the crash must have i_version increased.
-> >=20
-> > The simplest implementation is to have an unclean-restart counter and t=
-o
-> > always included this multiplied by some constant X in the reported
-> > i_version.  The filesystem guarantees to record (e.g.  to journal
-> > at least) the i_version if it comes close to X more than the previous
-> > record.  The filesystem gets to choose X.
+On Tue, Sep 6, 2022 at 12:25 PM Chuck Lever <chuck.lever@oracle.com> wrote:
 >
-> So the question is whether people can live with invalidating all client
-> caches after a cache.  I don't know.
->=20
+> While setting up a new lab, I accidentally misconfigured the
+> Ethernet port for a system that tried an NFS mount using RoCE.
+> This made the NFS server unreachable. The following WARNING
+> popped on the NFS client while waiting for the mount attempt to
+> time out:
 
-I assume you mean "after a crash". Yeah, that is pretty nasty. We don't
-get perfect crash resilience with incorporating this into the on-disk
-value, but I like that better than factoring it in at=A0presentation time.
+I also hit this today (on the 5.18 kernel) while running xfstest
+generic/460 using soft iWarp. In my case the port was properly
+configured. The test was going. I'm not sure exactly what happened. I
+know I also crashed the server that I was running against. But the
+point I would like to make is that this condition is possible to get
+to on a properly configured system.
 
-That would mean that the servers would end up getting hammered with read
-activity after a crash (at least in some environments). I don't think
-that would be worth the tradeoff. There's a real benefit to preserving
-caches when we can.
-
-> > A more complex solution would be to record (similar to the way orphans
-> > are recorded) any file which is open for write, and to add X to the
-> > i_version for any "dirty" file still recorded during an unclean
-> > restart.  This would avoid bumping the i_version for read-only files.
->=20
-> Is that practical?  Working out the performance tradeoffs sounds like a
-> project.
+> kernel: workqueue: WQ_MEM_RECLAIM xprtiod:xprt_rdma_connect_worker [rpcrdma] is flushing !WQ_MEM_RECLAI>
+> kernel: WARNING: CPU: 0 PID: 100 at kernel/workqueue.c:2628 check_flush_dependency+0xbf/0xca
+> kernel: Modules linked in: rpcsec_gss_krb5 nfsv4 dns_resolver nfs 8021q garp stp mrp llc rfkill rpcrdma>
+> kernel: CPU: 0 PID: 100 Comm: kworker/u8:8 Not tainted 6.0.0-rc1-00002-g6229f8c054e5 #13
+> kernel: Hardware name: Supermicro X10SRA-F/X10SRA-F, BIOS 2.0b 06/12/2017
+> kernel: Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
+> kernel: RIP: 0010:check_flush_dependency+0xbf/0xca
+> kernel: Code: 75 2a 48 8b 55 18 48 8d 8b b0 00 00 00 4d 89 e0 48 81 c6 b0 00 00 00 48 c7 c7 65 33 2e be>
+> kernel: RSP: 0018:ffffb562806cfcf8 EFLAGS: 00010092
+> kernel: RAX: 0000000000000082 RBX: ffff97894f8c3c00 RCX: 0000000000000027
+> kernel: RDX: 0000000000000002 RSI: ffffffffbe3447d1 RDI: 00000000ffffffff
+> kernel: RBP: ffff978941315840 R08: 0000000000000000 R09: 0000000000000000
+> kernel: R10: 00000000000008b0 R11: 0000000000000001 R12: ffffffffc0ce3731
+> kernel: R13: ffff978950c00500 R14: ffff97894341f0c0 R15: ffff978951112eb0
+> kernel: FS:  0000000000000000(0000) GS:ffff97987fc00000(0000) knlGS:0000000000000000
+> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> kernel: CR2: 00007f807535eae8 CR3: 000000010b8e4002 CR4: 00000000003706f0
+> kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> kernel: Call Trace:
+> kernel:  <TASK>
+> kernel:  __flush_work.isra.0+0xaf/0x188
+> kernel:  ? _raw_spin_lock_irqsave+0x2c/0x37
+> kernel:  ? lock_timer_base+0x38/0x5f
+> kernel:  __cancel_work_timer+0xea/0x13d
+> kernel:  ? preempt_latency_start+0x2b/0x46
+> kernel:  rdma_addr_cancel+0x70/0x81 [ib_core]
+> kernel:  _destroy_id+0x1a/0x246 [rdma_cm]
+> kernel:  rpcrdma_xprt_connect+0x115/0x5ae [rpcrdma]
+> kernel:  ? _raw_spin_unlock+0x14/0x29
+> kernel:  ? raw_spin_rq_unlock_irq+0x5/0x10
+> kernel:  ? finish_task_switch.isra.0+0x171/0x249
+> kernel:  xprt_rdma_connect_worker+0x3b/0xc7 [rpcrdma]
+> kernel:  process_one_work+0x1d8/0x2d4
+> kernel:  worker_thread+0x18b/0x24f
+> kernel:  ? rescuer_thread+0x280/0x280
+> kernel:  kthread+0xf4/0xfc
+> kernel:  ? kthread_complete_and_exit+0x1b/0x1b
+> kernel:  ret_from_fork+0x22/0x30
+> kernel:  </TASK>
 >
->=20
-> > There may be other solutions, but we should leave that up to the
-> > filesystem.  Each filesystem might choose something different.
->=20
-> Sure.
->=20
-
-Agreed here too. I think we need to allow for some flexibility here.=A0
-
-Here's what I'm thinking:
-
-We'll carve out the upper 16 bits in the i_version counter to be the
-crash counter field. That gives us 8k crashes before we have to worry
-about collisions. Hopefully the remaining 47 bits of counter will be
-plenty given that we don't increment it when it's not being queried or
-nothing else changes. (Can we mitigate wrapping here somehow?)
-
-The easiest way to do this would be to add a u16 s_crash_counter to
-struct super_block. We'd initialize that to 0, and the filesystem could
-fill that value out at mount time.
-
-Then inode_maybe_inc_iversion can just shift the s_crash_counter that
-left by 24 bits and and plop it into the top of the value we're
-preparing to cmpxchg into place.
-
-This is backward compatible too, at least for i_version counter values
-that are <2^47. With anything larger, we might end up with something
-going backward and a possible collision, but it's (hopefully) a small
-risk.
-
---=20
-Jeff Layton <jlayton@kernel.org>
+> SUNRPC's xprtiod workqueue is WQ_MEM_RECLAIM, so any workqueue that
+> one of its work items tries to cancel has to be WQ_MEM_RECLAIM to
+> prevent a priority inversion. The internal workqueues in the
+> RDMA/core are currently non-MEM_RECLAIM.
+>
+> Jason Gunthorpe says this about the current state of RDMA/core:
+> > If you attempt to do a reconnection/etc from within a RECLAIM
+> > context it will deadlock on one of the many allocations that are
+> > made to support opening the connection.
+> >
+> > The general idea of reclaim is that the entire task context
+> > working under the reclaim is marked with an override of the gfp
+> > flags to make all allocations under that call chain reclaim safe.
+> >
+> > But rdmacm does allocations outside this, eg in the WQs processing
+> > the CM packets. So this doesn't work and we will deadlock.
+> >
+> > Fixing it is a big deal and needs more than poking WQ_MEM_RECLAIM
+> > here and there.
+>
+> So we will change the ULP in this case to avoid the use of
+> WQ_MEM_RECLAIM where possible. Deadlocks that were possible before
+> are not fixed, but at least we no longer have a false sense of
+> confidence that the stack won't allocate memory during memory
+> reclaim.
+>
+> While we're adjusting these queue_* call sites, ensure the work
+> requests always run on the local CPU so the worker allocates RDMA
+> resources that are local to the CPU that queued the work request.
+>
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  net/sunrpc/xprtrdma/transport.c |    4 ++--
+>  net/sunrpc/xprtrdma/verbs.c     |   11 ++++-------
+>  2 files changed, 6 insertions(+), 9 deletions(-)
+>
+> Hi Anna-
+>
+> I've had this applied to my test client for a while. I think it's
+> ready to apply.
+>
+>
+> diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
+> index bcb37b51adf6..9581641bb8cb 100644
+> --- a/net/sunrpc/xprtrdma/transport.c
+> +++ b/net/sunrpc/xprtrdma/transport.c
+> @@ -494,8 +494,8 @@ xprt_rdma_connect(struct rpc_xprt *xprt, struct rpc_task *task)
+>                 xprt_reconnect_backoff(xprt, RPCRDMA_INIT_REEST_TO);
+>         }
+>         trace_xprtrdma_op_connect(r_xprt, delay);
+> -       queue_delayed_work(xprtiod_workqueue, &r_xprt->rx_connect_worker,
+> -                          delay);
+> +       queue_delayed_work_on(smp_processor_id(), system_long_wq,
+> +                             &r_xprt->rx_connect_worker, delay);
+>  }
+>
+>  /**
+> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
+> index 2fbe9aaeec34..691afc96bcbc 100644
+> --- a/net/sunrpc/xprtrdma/verbs.c
+> +++ b/net/sunrpc/xprtrdma/verbs.c
+> @@ -791,13 +791,10 @@ void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
+>         /* If there is no underlying connection, it's no use
+>          * to wake the refresh worker.
+>          */
+> -       if (ep->re_connect_status == 1) {
+> -               /* The work is scheduled on a WQ_MEM_RECLAIM
+> -                * workqueue in order to prevent MR allocation
+> -                * from recursing into NFS during direct reclaim.
+> -                */
+> -               queue_work(xprtiod_workqueue, &buf->rb_refresh_worker);
+> -       }
+> +       if (ep->re_connect_status != 1)
+> +               return;
+> +       queue_work_on(smp_processor_id(), system_highpri_wq,
+> +                     &buf->rb_refresh_worker);
+>  }
+>
+>  /**
+>
+>
