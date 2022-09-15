@@ -2,205 +2,139 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37A735B9F3F
-	for <lists+linux-nfs@lfdr.de>; Thu, 15 Sep 2022 17:57:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2DA25B9F47
+	for <lists+linux-nfs@lfdr.de>; Thu, 15 Sep 2022 18:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229946AbiIOP5S (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 15 Sep 2022 11:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43308 "EHLO
+        id S229544AbiIOQAB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 15 Sep 2022 12:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbiIOP5B (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Sep 2022 11:57:01 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C51974F693;
-        Thu, 15 Sep 2022 08:56:59 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id dv25so43099739ejb.12;
-        Thu, 15 Sep 2022 08:56:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umich.edu; s=google-2016-06-03;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date;
-        bh=4SJlOpsTPc5GSecmr6gUPYeQqelFZcN9hVkBWAKVK4M=;
-        b=JRUkPnvxqt+21+hZQtDFYdtNLMgNs+4ZDEZIuxHu+d6Kk/YMH2v2giTnAerjbATRqA
-         d25T/h4EsPeZfZ6/vvsfDo7txgCH+klgY3oDI15bbANrUEEBNnFvr5vmtmbFhMboNcqd
-         QsSLAVOzq8rbxbCQfezu+tc6adTeaxRxI2S5ToerqxWfdx1rI9MPkYqLvAKG8i5uS5v9
-         skIu0Dtag7/38w2rNna6Gh0Zywm6x+nERYc/GZqa2CZ4CHBzoabM/hR7yUHLiUDa3haS
-         Y6Zwm2fkwoGcETRxRf9WIFDW2agnZhM0VEX7l07OdiyVNomzFW0z8Rfk9kdZCY5oednJ
-         EIew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date;
-        bh=4SJlOpsTPc5GSecmr6gUPYeQqelFZcN9hVkBWAKVK4M=;
-        b=LySMJ20rOP6qprm8jDSj5pnuc6ut8ROmW2VdMeEuF40F6k+JWlX4yGnKA6mGO/4fVx
-         y+oqUL/5rclfoxnwYIX66wVIBU8DFL07q6QrQg7KEBBzGqeixVicGlZSkm15GuO3LhcW
-         QlmSip3ZdHH1yDm6OCvMQaDVp89R5vWtvE4Gy0kqvQID54Cq1CiJLh1d3Mp6zqmKR+qT
-         38Xaaqf+1rQ/G7x/BWvXe6KWBB6JLDpJfRrWnfhQawqRAy+4Uk6OdQxJe3fsRlmZg+F6
-         j/rJJDKoYoBw3DaMQi96HX0cWs1V3NC4Z2YD49JP7IiNM6JYhUfrSQAbkOOZFK0UX/mA
-         7Ytw==
-X-Gm-Message-State: ACrzQf2gh9N6de7mXyMiOxaekiBgjazlL/JGM3oT/4Pnred/WWYHzMjv
-        9aTVehmM1+GdONUOIvdwYFufWPZyEZwpajYvuKE=
-X-Google-Smtp-Source: AMsMyM7w7rxaxmEkffH15PuLQgUYuCuNhhDMGSISfi3eZ9u97MOCM8FHl9ULuyDSSmA3i6p7Lyd8yFYd04abXXdKKEI=
-X-Received: by 2002:a17:907:72cf:b0:780:2618:97d4 with SMTP id
- du15-20020a17090772cf00b00780261897d4mr469476ejc.150.1663257418175; Thu, 15
- Sep 2022 08:56:58 -0700 (PDT)
+        with ESMTP id S229824AbiIOP7n (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 15 Sep 2022 11:59:43 -0400
+Received: from out20-15.mail.aliyun.com (out20-15.mail.aliyun.com [115.124.20.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949F6BCD;
+        Thu, 15 Sep 2022 08:59:36 -0700 (PDT)
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.08941565|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_enroll_verification|0.00588278-0.000715529-0.993402;FP=0|0|0|0|0|-1|-1|-1;HT=ay29a033018047212;MF=wangyugui@e16-tech.com;NM=1;PH=DS;RN=18;RT=18;SR=0;TI=SMTPD_---.PGRt5Pa_1663257570;
+Received: from 192.168.2.112(mailfrom:wangyugui@e16-tech.com fp:SMTPD_---.PGRt5Pa_1663257570)
+          by smtp.aliyun-inc.com;
+          Thu, 15 Sep 2022 23:59:31 +0800
+Date:   Thu, 15 Sep 2022 23:59:38 +0800
+From:   Wang Yugui <wangyugui@e16-tech.com>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: [PATCH 5.15 000/121] 5.15.68-rc1 review
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+        slade@sladewatkins.com,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org
+In-Reply-To: <CA+G9fYv5CJeEaxu6XoaJrpizk+z1uXZ0aaQm2DVTA_w79oa2SA@mail.gmail.com>
+References: <20220913140357.323297659@linuxfoundation.org> <CA+G9fYv5CJeEaxu6XoaJrpizk+z1uXZ0aaQm2DVTA_w79oa2SA@mail.gmail.com>
+Message-Id: <20220915235936.4AD5.409509F4@e16-tech.com>
 MIME-Version: 1.0
-References: <166247968798.587726.7092426682689468087.stgit@morisot.1015granger.net>
-In-Reply-To: <166247968798.587726.7092426682689468087.stgit@morisot.1015granger.net>
-From:   Olga Kornievskaia <aglo@umich.edu>
-Date:   Thu, 15 Sep 2022 11:56:46 -0400
-Message-ID: <CAN-5tyEtr0f6o=0j_kMpf-tY7vvzfzaCd__P6taXhmq+e3TM-g@mail.gmail.com>
-Subject: Re: [PATCH v1] SUNRPC: Replace the use of the xprtiod WQ in rpcrdma
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        linux-nfs <linux-nfs@vger.kernel.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.75.04 [en]
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Sep 6, 2022 at 12:25 PM Chuck Lever <chuck.lever@oracle.com> wrote:
->
-> While setting up a new lab, I accidentally misconfigured the
-> Ethernet port for a system that tried an NFS mount using RoCE.
-> This made the NFS server unreachable. The following WARNING
-> popped on the NFS client while waiting for the mount attempt to
-> time out:
+Hi,
 
-I also hit this today (on the 5.18 kernel) while running xfstest
-generic/460 using soft iWarp. In my case the port was properly
-configured. The test was going. I'm not sure exactly what happened. I
-know I also crashed the server that I was running against. But the
-point I would like to make is that this condition is possible to get
-to on a properly configured system.
+> I have not bisected the reported problem.
+> 
+> hugemmap05.c:99: TINFO: check /proc/meminfo before allocation.
+> hugemmap05.c:278: TINFO: HugePages_Total is 3.
+> hugemmap05.c:278: TINFO: HugePages_Free is 3.
+> hugemmap05.c:278: TINFO: HugePages_Surp is 1.
+> hugemmap05.c:27[   51.077819] ------------[ cut here ]------------
+> [   51.082692] WARNING: CPU: 0 PID: 590 at fs/nfs/inode.c:123
+> nfs_evict_inode+0x58/0x70
+> [   51.090451] Modules linked in: x86_pkg_temp_thermal
+> [   51.095329] CPU: 0 PID: 590 Comm: hugemmap05 Not tainted 5.15.68-rc1 #1
+> [   51.101948] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
+> 2.5 11/26/2020
+> [   51.109340] RIP: 0010:nfs_evict_inode+0x58/0x70
+> [   51.113872] Code: 29 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 75 2b
+> 4c 89 e7 e8 7a d8 ff ff 4c 89 e7 e8 82 74 ff ff 4c 8b 65 f8 c9 c3 cc
+> cc cc cc <0f> 0b 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 74 d5 0f 0b eb
+> d1 0f
+> [   51.132626] RSP: 0018:ffffb6b140a8fb90 EFLAGS: 00010286
+> [   51.137861] RAX: adacafaea9a8abaa RBX: ffff937fa606a2c0 RCX: ffffb6b140a8fbd0
+> [   51.144986] RDX: ffff937fa606a2d0 RSI: ffffffffbc720682 RDI: ffffffffbc5ec05f
+> [   51.152120] RBP: ffffb6b140a8fb98 R08: 0000000000000000 R09: ffffb6b140a8fcf0
+> [   51.159253] R10: 0000000000000000 R11: 0000000000000002 R12: ffff937fa606a1a8
+> [   51.166395] R13: ffffffffbd851b40 R14: ffff937c40803870 R15: 0000000000000003
+> [   51.173525] FS:  00007f5afcdf4740(0000) GS:ffff937fa7a00000(0000)
+> knlGS:0000000000000000
+> [   51.181602] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   51.187359] CR2: 00007f5afcf10680 CR3: 000000010360a006 CR4: 00000000003706f0
+> 8: TINFO: HugePa[   51.194499] DR0: 0000000000000000 DR1:
+> 0000000000000000 DR2: 0000000000000000
+> [   51.203009] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   51.210135] Call Trace:
+> [   51.212585]  <TASK>
+> [   51.214684]  evict+0xc8/0x180
+> [   51.217682]  prune_icache_sb+0x81/0xc0
+> [   51.221435]  super_cache_scan+0x169/0x200
+> [   51.225447]  do_shrink_slab+0x13f/0x2b0
+> [   51.229288]  shrink_slab+0x186/0x2a0
+> [   51.232868]  drop_slab_node+0x4a/0xa0
+> [   51.236533]  drop_slab+0x41/0x90
+> [   51.239765]  drop_caches_sysctl_handler+0x79/0x90
+> [   51.244471]  proc_sys_call_handler+0x159/0x290
+> [   51.248918]  proc_sys_write+0x13/0x20
+> [   51.252582]  new_sync_write+0x111/0x1a0
+> [   51.256423]  vfs_write+0x1d5/0x270
+> [   51.259828]  ksys_write+0x67/0xf0
+> [   51.263150]  __x64_sys_write+0x19/0x20
+> [   51.266901]  do_syscall_64+0x38/0x90
+> [   51.270479]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
+> [   51.275534] RIP: 0033:0x7f5afcef31d7
+> [   51.279112] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
+> 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
+> 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
+> 74 24
+> [   51.297859] RSP: 002b:00007ffd40638738 EFLAGS: 00000246 ORIG_RAX:
+> 0000000000000001
+> [   51.305425] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f5afcef31d7
+> [   51.312557] RDX: 0000000000000001 RSI: 00000000016f1480 RDI: 0000000000000003
+> [   51.319689] RBP: 00000000016f1480 R08: 0000000000000001 R09: 0000000000000001
+> [   51.326812] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000001
+> [   51.333938] R13: 00000000016f12a0 R14: 0000000000000001 R15: 00007f5afcfe87a0
+> [   51.341073]  </TASK>
+> [   51.343264] ---[ end trace 3420625c1fbde9e9 ]---
+> ges_Rsvd is 3.
+> [   51.348004] hugemmap05 (590): drop_caches: 3
+> hugemmap05.c:253: TINFO: First hex is 7070707
 
-> kernel: workqueue: WQ_MEM_RECLAIM xprtiod:xprt_rdma_connect_worker [rpcrdma] is flushing !WQ_MEM_RECLAI>
-> kernel: WARNING: CPU: 0 PID: 100 at kernel/workqueue.c:2628 check_flush_dependency+0xbf/0xca
-> kernel: Modules linked in: rpcsec_gss_krb5 nfsv4 dns_resolver nfs 8021q garp stp mrp llc rfkill rpcrdma>
-> kernel: CPU: 0 PID: 100 Comm: kworker/u8:8 Not tainted 6.0.0-rc1-00002-g6229f8c054e5 #13
-> kernel: Hardware name: Supermicro X10SRA-F/X10SRA-F, BIOS 2.0b 06/12/2017
-> kernel: Workqueue: xprtiod xprt_rdma_connect_worker [rpcrdma]
-> kernel: RIP: 0010:check_flush_dependency+0xbf/0xca
-> kernel: Code: 75 2a 48 8b 55 18 48 8d 8b b0 00 00 00 4d 89 e0 48 81 c6 b0 00 00 00 48 c7 c7 65 33 2e be>
-> kernel: RSP: 0018:ffffb562806cfcf8 EFLAGS: 00010092
-> kernel: RAX: 0000000000000082 RBX: ffff97894f8c3c00 RCX: 0000000000000027
-> kernel: RDX: 0000000000000002 RSI: ffffffffbe3447d1 RDI: 00000000ffffffff
-> kernel: RBP: ffff978941315840 R08: 0000000000000000 R09: 0000000000000000
-> kernel: R10: 00000000000008b0 R11: 0000000000000001 R12: ffffffffc0ce3731
-> kernel: R13: ffff978950c00500 R14: ffff97894341f0c0 R15: ffff978951112eb0
-> kernel: FS:  0000000000000000(0000) GS:ffff97987fc00000(0000) knlGS:0000000000000000
-> kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> kernel: CR2: 00007f807535eae8 CR3: 000000010b8e4002 CR4: 00000000003706f0
-> kernel: DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> kernel: DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> kernel: Call Trace:
-> kernel:  <TASK>
-> kernel:  __flush_work.isra.0+0xaf/0x188
-> kernel:  ? _raw_spin_lock_irqsave+0x2c/0x37
-> kernel:  ? lock_timer_base+0x38/0x5f
-> kernel:  __cancel_work_timer+0xea/0x13d
-> kernel:  ? preempt_latency_start+0x2b/0x46
-> kernel:  rdma_addr_cancel+0x70/0x81 [ib_core]
-> kernel:  _destroy_id+0x1a/0x246 [rdma_cm]
-> kernel:  rpcrdma_xprt_connect+0x115/0x5ae [rpcrdma]
-> kernel:  ? _raw_spin_unlock+0x14/0x29
-> kernel:  ? raw_spin_rq_unlock_irq+0x5/0x10
-> kernel:  ? finish_task_switch.isra.0+0x171/0x249
-> kernel:  xprt_rdma_connect_worker+0x3b/0xc7 [rpcrdma]
-> kernel:  process_one_work+0x1d8/0x2d4
-> kernel:  worker_thread+0x18b/0x24f
-> kernel:  ? rescuer_thread+0x280/0x280
-> kernel:  kthread+0xf4/0xfc
-> kernel:  ? kthread_complete_and_exit+0x1b/0x1b
-> kernel:  ret_from_fork+0x22/0x30
-> kernel:  </TASK>
->
-> SUNRPC's xprtiod workqueue is WQ_MEM_RECLAIM, so any workqueue that
-> one of its work items tries to cancel has to be WQ_MEM_RECLAIM to
-> prevent a priority inversion. The internal workqueues in the
-> RDMA/core are currently non-MEM_RECLAIM.
->
-> Jason Gunthorpe says this about the current state of RDMA/core:
-> > If you attempt to do a reconnection/etc from within a RECLAIM
-> > context it will deadlock on one of the many allocations that are
-> > made to support opening the connection.
-> >
-> > The general idea of reclaim is that the entire task context
-> > working under the reclaim is marked with an override of the gfp
-> > flags to make all allocations under that call chain reclaim safe.
-> >
-> > But rdmacm does allocations outside this, eg in the WQs processing
-> > the CM packets. So this doesn't work and we will deadlock.
-> >
-> > Fixing it is a big deal and needs more than poking WQ_MEM_RECLAIM
-> > here and there.
->
-> So we will change the ULP in this case to avoid the use of
-> WQ_MEM_RECLAIM where possible. Deadlocks that were possible before
-> are not fixed, but at least we no longer have a false sense of
-> confidence that the stack won't allocate memory during memory
-> reclaim.
->
-> While we're adjusting these queue_* call sites, ensure the work
-> requests always run on the local CPU so the worker allocates RDMA
-> resources that are local to the CPU that queued the work request.
->
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> ---
->  net/sunrpc/xprtrdma/transport.c |    4 ++--
->  net/sunrpc/xprtrdma/verbs.c     |   11 ++++-------
->  2 files changed, 6 insertions(+), 9 deletions(-)
->
-> Hi Anna-
->
-> I've had this applied to my test client for a while. I think it's
-> ready to apply.
->
->
-> diff --git a/net/sunrpc/xprtrdma/transport.c b/net/sunrpc/xprtrdma/transport.c
-> index bcb37b51adf6..9581641bb8cb 100644
-> --- a/net/sunrpc/xprtrdma/transport.c
-> +++ b/net/sunrpc/xprtrdma/transport.c
-> @@ -494,8 +494,8 @@ xprt_rdma_connect(struct rpc_xprt *xprt, struct rpc_task *task)
->                 xprt_reconnect_backoff(xprt, RPCRDMA_INIT_REEST_TO);
->         }
->         trace_xprtrdma_op_connect(r_xprt, delay);
-> -       queue_delayed_work(xprtiod_workqueue, &r_xprt->rx_connect_worker,
-> -                          delay);
-> +       queue_delayed_work_on(smp_processor_id(), system_long_wq,
-> +                             &r_xprt->rx_connect_worker, delay);
->  }
->
->  /**
-> diff --git a/net/sunrpc/xprtrdma/verbs.c b/net/sunrpc/xprtrdma/verbs.c
-> index 2fbe9aaeec34..691afc96bcbc 100644
-> --- a/net/sunrpc/xprtrdma/verbs.c
-> +++ b/net/sunrpc/xprtrdma/verbs.c
-> @@ -791,13 +791,10 @@ void rpcrdma_mrs_refresh(struct rpcrdma_xprt *r_xprt)
->         /* If there is no underlying connection, it's no use
->          * to wake the refresh worker.
->          */
-> -       if (ep->re_connect_status == 1) {
-> -               /* The work is scheduled on a WQ_MEM_RECLAIM
-> -                * workqueue in order to prevent MR allocation
-> -                * from recursing into NFS during direct reclaim.
-> -                */
-> -               queue_work(xprtiod_workqueue, &buf->rb_refresh_worker);
-> -       }
-> +       if (ep->re_connect_status != 1)
-> +               return;
-> +       queue_work_on(smp_processor_id(), system_highpri_wq,
-> +                     &buf->rb_refresh_worker);
->  }
->
->  /**
->
->
+I hit this warning too.
+
+It seems that we need this patch for 5.15.y
+
+commit 0ebeebcf59601bcfa0284f4bb7abdec051eb856d
+Author: Dave Wysochanski <dwysocha@redhat.com>
+Date:   Sun Oct 10 18:23:13 2021 -0400
+
+    NFS: Fix WARN_ON due to unionization of nfs_inode.nrequests
+
+    Fixes the following WARN_ON
+    WARNING: CPU: 2 PID: 18678 at fs/nfs/inode.c:123 nfs_clear_inode+0x3b/0x50 [nfs]
+    ...
+    Call Trace:
+      nfs4_evict_inode+0x57/0x70 [nfsv4]
+      evict+0xd1/0x180
+
+Best Regards
+Wang Yugui (wangyugui@e16-tech.com)
+2022/09/15
+
+
