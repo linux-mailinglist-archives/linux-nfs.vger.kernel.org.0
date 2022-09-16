@@ -2,56 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D04C25BA959
-	for <lists+linux-nfs@lfdr.de>; Fri, 16 Sep 2022 11:27:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5364B5BAC79
+	for <lists+linux-nfs@lfdr.de>; Fri, 16 Sep 2022 13:32:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229806AbiIPJ1X (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 16 Sep 2022 05:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
+        id S231126AbiIPLch (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 16 Sep 2022 07:32:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbiIPJ1W (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Sep 2022 05:27:22 -0400
+        with ESMTP id S229503AbiIPLcf (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 16 Sep 2022 07:32:35 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEC6A346C;
-        Fri, 16 Sep 2022 02:27:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F409A9260;
+        Fri, 16 Sep 2022 04:32:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 67CDA622A8;
-        Fri, 16 Sep 2022 09:27:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E22C433D6;
-        Fri, 16 Sep 2022 09:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1663320440;
-        bh=/MbCCWvfY/b1qyntb3td32NBslVGpl//w8KGvmHgeJU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HDP4Amiasr8z4M4I/WLXROZp/eLHnmsWVBGKIKSWnpklEGxVVFhpwAcIv9Gq4GXyg
-         zzyQzvJsjkEkdvDahhehUKcq332S2x5fyMGmh9ZTQX9XxFEp1M5PCM2wVHJ4guFZav
-         EIq7GKEW6B2VpWJGUlC6Qv+wxXnG4ag2TRWAFOmk=
-Date:   Fri, 16 Sep 2022 11:27:46 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     David Wysochanski <dwysocha@redhat.com>
-Cc:     wangyugui@e16-tech.com, Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-        jonathanh@nvidia.com, f.fainelli@gmail.com,
-        sudipm.mukherjee@gmail.com, slade@sladewatkins.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        linux-nfs <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH 5.15 000/121] 5.15.68-rc1 review
-Message-ID: <YyRBktIgj+G3wq/k@kroah.com>
-References: <20220913140357.323297659@linuxfoundation.org>
- <CA+G9fYv5CJeEaxu6XoaJrpizk+z1uXZ0aaQm2DVTA_w79oa2SA@mail.gmail.com>
- <20220915235936.4AD5.409509F4@e16-tech.com>
- <CALF+zO=u0ehYsEuLBR4HG+KCma8zdjweE_Chgw1oJJEMS4TDjg@mail.gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 02C0A62B0F;
+        Fri, 16 Sep 2022 11:32:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40FF5C433C1;
+        Fri, 16 Sep 2022 11:32:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1663327953;
+        bh=SFEpbvLcH+KXscDiOrOSBj0en22paN06QAqHGAz7Ui4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=YHJeSmeiZkkE3v0QGZ2daHsa5+G4j+5L/xV/g2z6wWFBmGSJCTDBkckU9k3HBA3U3
+         G9ls/Fd1yPsFf2P7Q+TfkY+UvoRb6iAtCPZpVx0b0nfZE7dqKrAouSzcURtkE150/l
+         m8qT9QjOMDUEx3hk4Q1ewpXYKc27+7tVsS+QyD9ubmqMLVb39YP+hXXfv3QECfs52a
+         Xdi75/Gdk+RKJyCp5o+vW/ZINsJFXFcDKSC706a+UWdO+RYqas1NXCovhLUHwO3x+b
+         hoBMOINOgl4mDWnwpD2AZQ8m1cTuLAK4R/li3B7NFXjiwdwi294MLhXawSZxtVL6k8
+         3YrPbHxULngIg==
+Message-ID: <d9c065939af2728b1c0768d5ef7526995b634902.camel@kernel.org>
+Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
+ STATX_INO_VERSION field
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
+        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, brauner@kernel.org, fweimer@redhat.com,
+        linux-man@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Date:   Fri, 16 Sep 2022 07:32:29 -0400
+In-Reply-To: <166328177826.15759.4993896959612969524@noble.neil.brown.name>
+References: <20220908083326.3xsanzk7hy3ff4qs@quack3>
+        , <YxoIjV50xXKiLdL9@mit.edu>
+        , <02928a8c5718590bea5739b13d6b6ebe66cac577.camel@kernel.org>
+        , <20220908155605.GD8951@fieldses.org>
+        , <9e06c506fd6b3e3118da0ec24276e85ea3ee45a1.camel@kernel.org>
+        , <20220908182252.GA18939@fieldses.org>
+        , <44efe219dbf511492b21a653905448d43d0f3363.camel@kernel.org>
+        , <166284799157.30452.4308111193560234334@noble.neil.brown.name>
+        , <20220912134208.GB9304@fieldses.org>
+        , <166302447257.30452.6751169887085269140@noble.neil.brown.name>
+        , <20220915140644.GA15754@fieldses.org>
+        , <52a21018cde28eb7670a5ea86b79aef4a100d74b.camel@kernel.org>
+         <166328177826.15759.4993896959612969524@noble.neil.brown.name>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALF+zO=u0ehYsEuLBR4HG+KCma8zdjweE_Chgw1oJJEMS4TDjg@mail.gmail.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,105 +75,202 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 15, 2022 at 05:27:40PM -0400, David Wysochanski wrote:
-> On Thu, Sep 15, 2022 at 12:02 PM Wang Yugui <wangyugui@e16-tech.com> wrote:
-> >
-> > Hi,
-> >
-> > > I have not bisected the reported problem.
-> > >
-> > > hugemmap05.c:99: TINFO: check /proc/meminfo before allocation.
-> > > hugemmap05.c:278: TINFO: HugePages_Total is 3.
-> > > hugemmap05.c:278: TINFO: HugePages_Free is 3.
-> > > hugemmap05.c:278: TINFO: HugePages_Surp is 1.
-> > > hugemmap05.c:27[   51.077819] ------------[ cut here ]------------
-> > > [   51.082692] WARNING: CPU: 0 PID: 590 at fs/nfs/inode.c:123
-> > > nfs_evict_inode+0x58/0x70
-> > > [   51.090451] Modules linked in: x86_pkg_temp_thermal
-> > > [   51.095329] CPU: 0 PID: 590 Comm: hugemmap05 Not tainted 5.15.68-rc1 #1
-> > > [   51.101948] Hardware name: Supermicro SYS-5019S-ML/X11SSH-F, BIOS
-> > > 2.5 11/26/2020
-> > > [   51.109340] RIP: 0010:nfs_evict_inode+0x58/0x70
-> > > [   51.113872] Code: 29 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 75 2b
-> > > 4c 89 e7 e8 7a d8 ff ff 4c 89 e7 e8 82 74 ff ff 4c 8b 65 f8 c9 c3 cc
-> > > cc cc cc <0f> 0b 49 8b 54 24 90 49 8d 44 24 90 48 39 c2 74 d5 0f 0b eb
-> > > d1 0f
-> > > [   51.132626] RSP: 0018:ffffb6b140a8fb90 EFLAGS: 00010286
-> > > [   51.137861] RAX: adacafaea9a8abaa RBX: ffff937fa606a2c0 RCX: ffffb6b140a8fbd0
-> > > [   51.144986] RDX: ffff937fa606a2d0 RSI: ffffffffbc720682 RDI: ffffffffbc5ec05f
-> > > [   51.152120] RBP: ffffb6b140a8fb98 R08: 0000000000000000 R09: ffffb6b140a8fcf0
-> > > [   51.159253] R10: 0000000000000000 R11: 0000000000000002 R12: ffff937fa606a1a8
-> > > [   51.166395] R13: ffffffffbd851b40 R14: ffff937c40803870 R15: 0000000000000003
-> > > [   51.173525] FS:  00007f5afcdf4740(0000) GS:ffff937fa7a00000(0000)
-> > > knlGS:0000000000000000
-> > > [   51.181602] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> > > [   51.187359] CR2: 00007f5afcf10680 CR3: 000000010360a006 CR4: 00000000003706f0
-> > > 8: TINFO: HugePa[   51.194499] DR0: 0000000000000000 DR1:
-> > > 0000000000000000 DR2: 0000000000000000
-> > > [   51.203009] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> > > [   51.210135] Call Trace:
-> > > [   51.212585]  <TASK>
-> > > [   51.214684]  evict+0xc8/0x180
-> > > [   51.217682]  prune_icache_sb+0x81/0xc0
-> > > [   51.221435]  super_cache_scan+0x169/0x200
-> > > [   51.225447]  do_shrink_slab+0x13f/0x2b0
-> > > [   51.229288]  shrink_slab+0x186/0x2a0
-> > > [   51.232868]  drop_slab_node+0x4a/0xa0
-> > > [   51.236533]  drop_slab+0x41/0x90
-> > > [   51.239765]  drop_caches_sysctl_handler+0x79/0x90
-> > > [   51.244471]  proc_sys_call_handler+0x159/0x290
-> > > [   51.248918]  proc_sys_write+0x13/0x20
-> > > [   51.252582]  new_sync_write+0x111/0x1a0
-> > > [   51.256423]  vfs_write+0x1d5/0x270
-> > > [   51.259828]  ksys_write+0x67/0xf0
-> > > [   51.263150]  __x64_sys_write+0x19/0x20
-> > > [   51.266901]  do_syscall_64+0x38/0x90
-> > > [   51.270479]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
-> > > [   51.275534] RIP: 0033:0x7f5afcef31d7
-> > > [   51.279112] Code: 0f 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7
-> > > 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00
-> > > 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89
-> > > 74 24
-> > > [   51.297859] RSP: 002b:00007ffd40638738 EFLAGS: 00000246 ORIG_RAX:
-> > > 0000000000000001
-> > > [   51.305425] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f5afcef31d7
-> > > [   51.312557] RDX: 0000000000000001 RSI: 00000000016f1480 RDI: 0000000000000003
-> > > [   51.319689] RBP: 00000000016f1480 R08: 0000000000000001 R09: 0000000000000001
-> > > [   51.326812] R10: 0000000000001000 R11: 0000000000000246 R12: 0000000000000001
-> > > [   51.333938] R13: 00000000016f12a0 R14: 0000000000000001 R15: 00007f5afcfe87a0
-> > > [   51.341073]  </TASK>
-> > > [   51.343264] ---[ end trace 3420625c1fbde9e9 ]---
-> > > ges_Rsvd is 3.
-> > > [   51.348004] hugemmap05 (590): drop_caches: 3
-> > > hugemmap05.c:253: TINFO: First hex is 7070707
-> >
-> > I hit this warning too.
-> >
-> > It seems that we need this patch for 5.15.y
-> >
-> > commit 0ebeebcf59601bcfa0284f4bb7abdec051eb856d
-> > Author: Dave Wysochanski <dwysocha@redhat.com>
-> > Date:   Sun Oct 10 18:23:13 2021 -0400
-> >
-> >     NFS: Fix WARN_ON due to unionization of nfs_inode.nrequests
-> >
-> >     Fixes the following WARN_ON
-> >     WARNING: CPU: 2 PID: 18678 at fs/nfs/inode.c:123 nfs_clear_inode+0x3b/0x50 [nfs]
-> >     ...
-> >     Call Trace:
-> >       nfs4_evict_inode+0x57/0x70 [nfsv4]
-> >       evict+0xd1/0x180
-> >
-> > Best Regards
-> > Wang Yugui (wangyugui@e16-tech.com)
-> > 2022/09/15
-> >
-> >
-> 
-> Sorry, commit 0ebeebcf59601bcfa0284f4bb7abdec051eb856d probably should
-> have had this
-> Fixes: e591b298d7ec "NFS: Save some space in the inode"
+On Fri, 2022-09-16 at 08:42 +1000, NeilBrown wrote:
+> On Fri, 16 Sep 2022, Jeff Layton wrote:
+> > On Thu, 2022-09-15 at 10:06 -0400, J. Bruce Fields wrote:
+> > > On Tue, Sep 13, 2022 at 09:14:32AM +1000, NeilBrown wrote:
+> > > > On Mon, 12 Sep 2022, J. Bruce Fields wrote:
+> > > > > On Sun, Sep 11, 2022 at 08:13:11AM +1000, NeilBrown wrote:
+> > > > > > On Fri, 09 Sep 2022, Jeff Layton wrote:
+> > > > > > >=20
+> > > > > > > The machine crashes and comes back up, and we get a query for=
+ i_version
+> > > > > > > and it comes back as X. Fine, it's an old version. Now there =
+is a write.
+> > > > > > > What do we do to ensure that the new value doesn't collide wi=
+th X+1?=20
+> > > > > >=20
+> > > > > > (I missed this bit in my earlier reply..)
+> > > > > >=20
+> > > > > > How is it "Fine" to see an old version?
+> > > > > > The file could have changed without the version changing.
+> > > > > > And I thought one of the goals of the crash-count was to be abl=
+e to
+> > > > > > provide a monotonic change id.
+> > > > >=20
+> > > > > I was still mainly thinking about how to provide reliable close-t=
+o-open
+> > > > > semantics between NFS clients.  In the case the writer was an NFS
+> > > > > client, it wasn't done writing (or it would have COMMITted), so t=
+hose
+> > > > > writes will come in and bump the change attribute soon, and as lo=
+ng as
+> > > > > we avoid the small chance of reusing an old change attribute, we'=
+re OK,
+> > > > > and I think it'd even still be OK to advertise
+> > > > > CHANGE_TYPE_IS_MONOTONIC_INCR.
+> > > >=20
+> > > > You seem to be assuming that the client doesn't crash at the same t=
+ime
+> > > > as the server (maybe they are both VMs on a host that lost power...=
+)
+> > > >=20
+> > > > If client A reads and caches, client B writes, the server crashes a=
+fter
+> > > > writing some data (to already allocated space so no inode update ne=
+eded)
+> > > > but before writing the new i_version, then client B crashes.
+> > > > When server comes back the i_version will be unchanged but the data=
+ has
+> > > > changed.  Client A will cache old data indefinitely...
+> > >=20
+> > > I guess I assume that if all we're promising is close-to-open, then a
+> > > client isn't allowed to trust its cache in that situation.  Maybe tha=
+t's
+> > > an overly draconian interpretation of close-to-open.
+> > >=20
+> > > Also, I'm trying to think about how to improve things incrementally.
+> > > Incorporating something like a crash count into the on-disk i_version
+> > > fixes some cases without introducing any new ones or regressing
+> > > performance after a crash.
+> > >=20
+> >=20
+> > I think we ought to start there.
+> >=20
+> > > If we subsequently wanted to close those remaining holes, I think we'=
+d
+> > > need the change attribute increment to be seen as atomic with respect=
+ to
+> > > its associated change, both to clients and (separately) on disk.  (Th=
+at
+> > > would still allow the change attribute to go backwards after a crash,=
+ to
+> > > the value it held as of the on-disk state of the file.  I think clien=
+ts
+> > > should be able to deal with that case.)
+> > >=20
+> > > But, I don't know, maybe a bigger hammer would be OK:
+> > >=20
+> > > > I think we need to require the filesystem to ensure that the i_vers=
+ion
+> > > > is seen to increase shortly after any change becomes visible in the
+> > > > file, and no later than the moment when the request that initiated =
+the
+> > > > change is acknowledged as being complete.  In the case of an unclea=
+n
+> > > > restart, any file that is not known to have been unchanged immediat=
+ely
+> > > > before the crash must have i_version increased.
+> > > >=20
+> > > > The simplest implementation is to have an unclean-restart counter a=
+nd to
+> > > > always included this multiplied by some constant X in the reported
+> > > > i_version.  The filesystem guarantees to record (e.g.  to journal
+> > > > at least) the i_version if it comes close to X more than the previo=
+us
+> > > > record.  The filesystem gets to choose X.
+> > >=20
+> > > So the question is whether people can live with invalidating all clie=
+nt
+> > > caches after a cache.  I don't know.
+> > >=20
+> >=20
+> > I assume you mean "after a crash". Yeah, that is pretty nasty. We don't
+> > get perfect crash resilience with incorporating this into the on-disk
+> > value, but I like that better than factoring it in at=A0presentation ti=
+me.
+> >=20
+> > That would mean that the servers would end up getting hammered with rea=
+d
+> > activity after a crash (at least in some environments). I don't think
+> > that would be worth the tradeoff. There's a real benefit to preserving
+> > caches when we can.
+>=20
+> Would it really mean the server gets hammered?
+>=20
 
-Now queued up, thanks.
+Traditionally, yes. That was the rationale for fscache, after all.
+Particularly in large renderfarms, when rebooting a large swath of
+client machines, they end up with blank caches and when they come up
+they hammer the server with READs.
 
-greg k-h
+We'll be back to that behavior after a crash with this scheme, since
+fscache uses the change attribute to determine cache validity. I guess
+that's unavoidable for now.
+
+> For files and NFSv4, any significant cache should be held on the basis
+> of a delegation, and if the client holds a delegation then it shouldn't
+> be paying attention to i_version.
+>=20
+> I'm not entirely sure of this.  Section 10.2.1 of RFC 5661 seems to
+> suggest that when the client uses CLAIM_DELEG_PREV to reclaim a
+> delegation, it must then return the delegation.  However the explanation
+> seems to be mostly about WRITE delegations and immediately flushing
+> cached changes.  Do we know if there is a way for the server to say "OK,
+> you have that delegation again" in a way that the client can keep the
+> delegation and continue to ignore i_version?
+>=20
+
+Delegations may change that calculus. In general I've noticed that the
+client tends to ignore attribute cache changes when it has a delegation.
+
+> For directories, which cannot be delegated the same way but can still be
+> cached, the issues are different.  All directory morphing operations
+> will be journalled by the filesystem so it should be able to keep the
+> i_version up to date.  So the (journalling) filesystem should *NOT* add
+> a crash-count to the i_version for directories even if it does for files.
+>=20
+
+Interesting and good point. We should be able to make that distinction
+and just mix in the crash counter for regular files.
+
+>=20
+>=20
+> >=20
+> > > > A more complex solution would be to record (similar to the way orph=
+ans
+> > > > are recorded) any file which is open for write, and to add X to the
+> > > > i_version for any "dirty" file still recorded during an unclean
+> > > > restart.  This would avoid bumping the i_version for read-only file=
+s.
+> > >=20
+> > > Is that practical?  Working out the performance tradeoffs sounds like=
+ a
+> > > project.
+> > >=20
+> > >=20
+> > > > There may be other solutions, but we should leave that up to the
+> > > > filesystem.  Each filesystem might choose something different.
+> > >=20
+> > > Sure.
+> > >=20
+> >=20
+> > Agreed here too. I think we need to allow for some flexibility here.=A0
+> >=20
+> > Here's what I'm thinking:
+> >=20
+> > We'll carve out the upper 16 bits in the i_version counter to be the
+> > crash counter field. That gives us 8k crashes before we have to worry
+> > about collisions. Hopefully the remaining 47 bits of counter will be
+> > plenty given that we don't increment it when it's not being queried or
+> > nothing else changes. (Can we mitigate wrapping here somehow?)
+> >=20
+> > The easiest way to do this would be to add a u16 s_crash_counter to
+> > struct super_block. We'd initialize that to 0, and the filesystem could
+> > fill that value out at mount time.
+> >=20
+> > Then inode_maybe_inc_iversion can just shift the s_crash_counter that
+> > left by 24 bits and and plop it into the top of the value we're
+> > preparing to cmpxchg into place.
+> >=20
+> > This is backward compatible too, at least for i_version counter values
+> > that are <2^47. With anything larger, we might end up with something
+> > going backward and a possible collision, but it's (hopefully) a small
+> > risk.
+> >=20
+> > --=20
+> > Jeff Layton <jlayton@kernel.org>
+> >=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
