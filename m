@@ -2,71 +2,73 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75AAF5BED02
-	for <lists+linux-nfs@lfdr.de>; Tue, 20 Sep 2022 20:48:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A4C65BED04
+	for <lists+linux-nfs@lfdr.de>; Tue, 20 Sep 2022 20:49:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230418AbiITSsx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 20 Sep 2022 14:48:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53020 "EHLO
+        id S229805AbiITStK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 20 Sep 2022 14:49:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbiITSsw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Sep 2022 14:48:52 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E08C74B9E
-        for <linux-nfs@vger.kernel.org>; Tue, 20 Sep 2022 11:48:49 -0700 (PDT)
+        with ESMTP id S230489AbiITStI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 20 Sep 2022 14:49:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46F4719B8
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Sep 2022 11:49:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663699728;
+        s=mimecast20190719; t=1663699746;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=+Dkz+vyaSR4q88otLbUdNAn6DLbGXNehFzsnUguPd7o=;
-        b=Y0O4zJwqXLwsqsrRrm52ljWqKqxNXkAwxVSV0XlzyXTtP3uBa6E3TT2ZVTeCBq8M2dzjmD
-        mc8qk3JwzcTuiEuIK2+wrCLYKFA+gwI1NIHFfXSfYJH8sCGtPO3sZIpeCcmaW9QRU/CSsY
-        JYMrxlI4uyVZkAQdrKHwuoQhEk9u1VM=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=9fLjV0tvpYYLhcyJLChfkM4al0lltAwBtMCZ3SX9RXI=;
+        b=R1RN0xtGrGcyhoGIabUXIJWmVBXPFfh0uNnK/AZ920Cot/9x7ssqrB2OoxMpvwiUfsHopw
+        2G0LqGjFpyK4NRNfBM09hA4MOqRIxvgRgjBzWg904rn/mynWIFsgkTUMuOQuInxV2m/TaQ
+        eonQUOUXxNCteQSXzRJX8J9dBeV6Rt4=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-352-fD_uUttBNqmr6OU5fCfI7Q-1; Tue, 20 Sep 2022 14:48:47 -0400
-X-MC-Unique: fD_uUttBNqmr6OU5fCfI7Q-1
-Received: by mail-qt1-f198.google.com with SMTP id w4-20020a05622a134400b0035cbc5ec9a2so2506435qtk.14
-        for <linux-nfs@vger.kernel.org>; Tue, 20 Sep 2022 11:48:47 -0700 (PDT)
+ us-mta-375-GgbiBwWwMeay8mioBv8wWQ-1; Tue, 20 Sep 2022 14:49:04 -0400
+X-MC-Unique: GgbiBwWwMeay8mioBv8wWQ-1
+Received: by mail-qk1-f199.google.com with SMTP id h8-20020a05620a284800b006b5c98f09fbso2644186qkp.21
+        for <linux-nfs@vger.kernel.org>; Tue, 20 Sep 2022 11:49:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date;
-        bh=+Dkz+vyaSR4q88otLbUdNAn6DLbGXNehFzsnUguPd7o=;
-        b=jnJj8Mwnk7CK0RLcLTzB1T2Bklba2wIXehidEuu5g6O7PMCG6CaS0qrCyBkLJudkez
-         ZjYqythQqFngRggnOtWVyvsKpqZtD0E1sf3ayTu/7KWLWmJ43W+CBxpDwzWHbABYHnd0
-         lfI0iCrYe3OS0QH8eRJujlIXdW2DMSYvjB+mSsSzQG3l9wTkdl7k9XeFgIivyV4KoaLB
-         eooIRqCbqWTlStvLUhVT/cf8ymHBJaYTS5ARz+2RYk0B3eT8i1Ha3zdJxAieMhqUz3kw
-         iJyuAqDo5lRNYg4i8/1jyODjo7BFEYOc3Figz3whwcK0GxSdvkCXEiZI22gkKdP5Qwe4
-         psUQ==
-X-Gm-Message-State: ACrzQf2Pi6jM2arWTJC/y0cH2jome1Y4W7iFsyn+3rn31bq2QtSlHA5O
-        Mrqa4+tT0eYuf5MS2WpJsYP3+I30eD6UhLwzYcEaHuQfoq6hoeOZ8Jt8a3MPVefWc9pLRA/FdbH
-        ZYk9E4Ruzk7SeB8Gz1sMj
-X-Received: by 2002:a05:6214:76b:b0:4ac:be62:d2e5 with SMTP id f11-20020a056214076b00b004acbe62d2e5mr20253959qvz.91.1663699726883;
-        Tue, 20 Sep 2022 11:48:46 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM51LCz2Bw1+tyz7dqKWt/5Yy2HIoIMZUcvLhdh517Oon41UArbXBSWdbopssUnAAL2CY3sB3Q==
-X-Received: by 2002:a05:6214:76b:b0:4ac:be62:d2e5 with SMTP id f11-20020a056214076b00b004acbe62d2e5mr20253940qvz.91.1663699726571;
-        Tue, 20 Sep 2022 11:48:46 -0700 (PDT)
+        bh=9fLjV0tvpYYLhcyJLChfkM4al0lltAwBtMCZ3SX9RXI=;
+        b=EGYOs78XPg/f38KnH3b7RgQRd7k8ygByzY06bJHTINaY14nVYx7hcY62lloIeuF/Ol
+         gdtClY+c9OnILkRYnxhhhvao+5AdavZH/wqRIwwb+LqmxYZMD+Efg6R4Ka5Qw84qki9G
+         Z11Cfnvkh9YSjPdmP0hGBrVbWSm9U4orexDw1FucT6kIbrD9YcMQUflAy4APNgCGIwQw
+         yyFARAlCTvC86jV3f9iu5wq3DIlNIxOEHVv7P6c5hUYpOx0rvQ26N4K7tnCGqqCGPoSN
+         RI+l0CZ2HKwsb6iGf1sMtyiYMMieqOvSHUqb/oEN6OV71OTBgZMUPkp0Ej5r4V07Sc/A
+         Q5rg==
+X-Gm-Message-State: ACrzQf3Wg/rbVvm76GoJrpa7ziTDemAeVyliF/MlCQ2Ptq7KkFvVvLxm
+        EJfLhMlqMqAZ99kcRwUcXq8Vk3ozkehzXCrhQNHn63kw+9XDDtei3O53wmdofZO0opp37u63iBu
+        f7b4cM0VolLFE6yykKbcW
+X-Received: by 2002:a05:6214:c89:b0:4ac:c6ba:3f22 with SMTP id r9-20020a0562140c8900b004acc6ba3f22mr20324717qvr.9.1663699743444;
+        Tue, 20 Sep 2022 11:49:03 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6P0UDvd8A5Em+iuq4xg23YNgI25VDfYugpw9VPPoJkBuVYpjK+HZAn9SslsMr4UTulzeKg1Q==
+X-Received: by 2002:a05:6214:c89:b0:4ac:c6ba:3f22 with SMTP id r9-20020a0562140c8900b004acc6ba3f22mr20324706qvr.9.1663699743174;
+        Tue, 20 Sep 2022 11:49:03 -0700 (PDT)
 Received: from [172.31.1.6] ([71.161.93.20])
-        by smtp.gmail.com with ESMTPSA id y17-20020a37f611000000b006b5cc25535fsm320513qkj.99.2022.09.20.11.48.45
+        by smtp.gmail.com with ESMTPSA id g20-20020a05620a40d400b006b95b0a714esm402123qko.17.2022.09.20.11.49.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Sep 2022 11:48:46 -0700 (PDT)
-Message-ID: <4db19e2a-40eb-dce9-0094-f6b1e479a95b@redhat.com>
-Date:   Tue, 20 Sep 2022 14:48:45 -0400
+        Tue, 20 Sep 2022 11:49:02 -0700 (PDT)
+Message-ID: <c9521a3b-a83d-765d-6e0b-1bb7c12dc540@redhat.com>
+Date:   Tue, 20 Sep 2022 14:49:02 -0400
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.2.0
-Subject: Re: [PATCH v2 1/2] nfs4_setfacl: add a specific option for indexes
+Subject: Re: [PATCH v2 2/2] nfs4_setfacl: update man page about new option
+ index
 Content-Language: en-US
 To:     Pierguido Lambri <plambri@redhat.com>,
         Linux NFS Mailing list <linux-nfs@vger.kernel.org>
 References: <20220914173115.296058-1-plambri@redhat.com>
+ <20220914173115.296058-2-plambri@redhat.com>
 From:   Steve Dickson <steved@redhat.com>
-In-Reply-To: <20220914173115.296058-1-plambri@redhat.com>
+In-Reply-To: <20220914173115.296058-2-plambri@redhat.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -82,138 +84,74 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 On 9/14/22 1:31 PM, Pierguido Lambri wrote:
-> nfs4_setfacl had the possibility to use an optional index
-> to add/remove an ACL entry.
-> This was causing some confusion as numeric files could be interpreted
-> as indexes.
-> This change adds an extra command line option '-i' to specifically
-> handle the indexes.
-> The index can be used only with certain operations (add and remove).
-> The new syntax, when using indexes, would be:
-> 
-> ~]# nfs4_setfacl -i 3 -a A::101:rxtncy file123
+> The man page now reflects the newly added syntax to handle indexes.
 > 
 > Signed-off-by: Pierguido Lambri <plambri@redhat.com>
 Committed (tag: nfs4-acl-tools-0.4.1-rc3)
 
 steved.
 > ---
->   nfs4_setfacl/nfs4_setfacl.c | 60 +++++++++++++++++++++++--------------
->   1 file changed, 38 insertions(+), 22 deletions(-)
+>   man/man1/nfs4_setfacl.1 | 26 ++++++++++++++------------
+>   1 file changed, 14 insertions(+), 12 deletions(-)
 > 
-> diff --git a/nfs4_setfacl/nfs4_setfacl.c b/nfs4_setfacl/nfs4_setfacl.c
-> index e581608..d10e073 100644
-> --- a/nfs4_setfacl/nfs4_setfacl.c
-> +++ b/nfs4_setfacl/nfs4_setfacl.c
-> @@ -143,7 +143,7 @@ int main(int argc, char **argv)
->   	int opt, err = 1;
->   	int numpaths = 0, curpath = 0;
->   	char *tmp, **paths = NULL, *path = NULL, *spec_file = NULL;
-> -	FILE *s_fp = NULL;
-> +	FILE *s_fp, *fd = NULL;
->   
->   	if (!strcmp(basename(argv[0]), "nfs4_editfacl")) {
->   		action = EDIT_ACTION;
-> @@ -155,7 +155,7 @@ int main(int argc, char **argv)
->   		return err;
->   	}
->   
-> -	while ((opt = getopt_long(argc, argv, "-:a:A:s:S:x:X:m:ethvHRPL", long_options, NULL)) != -1) {
-> +	while ((opt = getopt_long(argc, argv, "-:a:A:i:s:S:x::X:m:ethvHRPL", long_options, NULL)) != -1) {
->   		switch (opt) {
->   			case 'a':
->   				mod_string = optarg;
-> @@ -165,21 +165,14 @@ int main(int argc, char **argv)
->   			add:
->   				assert_wu_wei(action);
->   				action = INSERT_ACTION;
-> -
-> -				/* run along if no more args (defaults to ace_index 1 == prepend) */
-> -				if (optind == argc)
-> -					break;
-> -				ace_index = strtoul_reals(argv[optind++], 10);
-> -				if (ace_index == ULONG_MAX) {
-> -					/* oops it wasn't an ace_index; reset */
-> -					optind--;
-> -					ace_index = -1;
-> -				} else if (ace_index == 0) {
-> -					fprintf(stderr, "Sorry, valid indices start at '1'.\n");
-> -					goto out;
-> +				break;
-> +			case 'i':
-> +				ace_index = strtoul_reals(optarg, 10);
-> +				if (ace_index == 0) {
-> +                                    fprintf(stderr, "Sorry, valid indices start at '1'.\n");
-> +                                    goto out;
->   				}
->   				break;
-> -
->   			case 's':
->   				mod_string = optarg;
->   				goto set;
-> @@ -191,9 +184,14 @@ int main(int argc, char **argv)
->   				break;
->   
->   			case 'x':
-> -				ace_index = strtoul_reals(optarg, 10);
-> -				if(ace_index == ULONG_MAX)
-> -					mod_string = optarg;
-> +				/* make sure we handle the argument even if
-> +				 * it doesn't immediately follow the option
-> +				 */
-> +				if (optarg == NULL && optind < argc && argv[optind][0] != '-')
-> +				{
-> +					optarg = argv[optind++];
-> +				}
-> +				mod_string = optarg;
->   				goto remove;
->   			case 'X':
->   				spec_file = optarg;
-> @@ -255,6 +253,9 @@ int main(int argc, char **argv)
->   					case 'A':
->   						fprintf(stderr, "Sorry, -a requires an 'acl_spec', whilst -A requires a 'spec_file'.\n");
->   						goto out;
-> +					case 'i':
-> +						fprintf(stderr, "Sorry, -i requires an index (numerical)\n");
-> +						goto out;
->   					case 's':
->   						fprintf(stderr, "Sorry, -s requires an 'acl_spec'.\n");
->   						goto out;
-> @@ -297,7 +298,21 @@ int main(int argc, char **argv)
->   	if (action == NO_ACTION) {
->   		fprintf(stderr, "No action specified.\n");
->   		goto out;
-> -	} else if (numpaths < 1) {
-> +	} else if (action != INSERT_ACTION && action != REMOVE_ACTION && ace_index >= 0) {
-> +		fprintf(stderr, "Index can be used only with add or remove.\n");
-> +		goto out;
-> +	} else if (numpaths <= 0 && ace_index >= 0 && mod_string)
-> +	{
-> +		/* Make sure the argument is a file */
-> +		if (!(fd = fopen(mod_string, "r"))) {
-> +			fprintf(stderr, "No path(s) specified.\n");
-> +			goto out;
-> +		} else
-> +			fclose(fd);
-> +		paths = malloc(sizeof(char *) * (argc - optind + 1));
-> +		paths[numpaths++] = mod_string;
-> +	} else if (numpaths < 1)
-> +	{
->   		fprintf(stderr, "No path(s) specified.\n");
->   		goto out;
->   	}
-> @@ -609,9 +624,10 @@ static void __usage(const char *name, int is_ef)
->   	"%s %s -- manipulate NFSv4 file/directory access control lists\n"
->   	"Usage: %s [OPTIONS] COMMAND file ...\n"
->   	" .. where COMMAND is one of:\n"
-> -	"   -a acl_spec [index]	 add ACL entries in acl_spec at index (DEFAULT: 1)\n"
-> -	"   -A file [index]	 read ACL entries to add from file\n"
-> -	"   -x acl_spec | index	 remove ACL entries or entry-at-index from ACL\n"
-> +	"   -a acl_spec		 add ACL entries in acl_spec at defaul index (DEFAULT: 1)\n"
-> +	"   -A file 		 read ACL entries to add from file\n"
-> +	"   -i index 		 use the entry-at-index from ACL (only for add and remove)\n"
-> +	"   -x acl_speci 	 remove ACL entries\n"
->   	"   -X file  		 read ACL entries to remove from file\n"
->   	"   -s acl_spec		 set ACL to acl_spec (replaces existing ACL)\n"
->   	"   -S file		 read ACL entries to set from file\n"
+> diff --git a/man/man1/nfs4_setfacl.1 b/man/man1/nfs4_setfacl.1
+> index 47ab517..61699ae 100644
+> --- a/man/man1/nfs4_setfacl.1
+> +++ b/man/man1/nfs4_setfacl.1
+> @@ -30,27 +30,21 @@ Refer to the
+>   manpage for information about NFSv4 ACL terminology and syntax.
+>   .SS COMMANDS
+>   .TP
+> -.BR "-a " "\fIacl_spec\fP [\fIindex\fP]"
+> +.BR "-a " "\fIacl_spec\fP"
+>   .RI "add the ACEs from " acl_spec " to " file "'s ACL."
+> -ACEs are inserted starting at the
+> -.IR index th
+> -position (DEFAULT: 1) of
+> +ACEs are inserted starting at the default position 1 of
+>   .IR file "'s ACL."
+>   .\".ns
+>   .TP
+> -.BR "-A " "\fIacl_file\fP [\fIindex\fP]"
+> +.BR "-A " "\fIacl_file\fP "
+>   .RI "add the ACEs from the acl_spec in " acl_file " to " file "'s ACL."
+> -ACEs are inserted starting at the
+> -.IR index th
+> -position (DEFAULT: 1) of
+> +ACEs are inserted starting at the default position 1 of
+>   .IR file "'s ACL."
+>   .TP
+> -.BI "-x " "acl_spec \fR|\fP index"
+> +.BI "-x " "acl_spec \fR"
+>   delete ACEs matched from
+>   .I acl_spec
+> -- or delete the
+> -.IR index th
+> -ACE - from
+> +from
+>   .IR file 's
+>   ACL.  Note that the ordering of the ACEs in
+>   .I acl_spec
+> @@ -61,6 +55,10 @@ delete ACEs matched from the acl_spec in
+>   .IR acl_file " from " file "'s ACL."
+>   Note that the ordering of the ACEs in the acl_spec does not matter.
+>   .TP
+> +.BI "-i " "\fIindex\fP"
+> +.RI "ACEs are inserted or deleted starting at the " index "th position (DEFAULT: 1) of file's ACL.
+> +It can be used only with the add or delete action.
+> +.TP
+>   .BI "-s " acl_spec
+>   .RI "set " file "'s ACL to " acl_spec .
+>   .TP
+> @@ -189,6 +187,10 @@ add the same ACE as above, but using aliases:
+>   .br
+>   	$ nfs4_setfacl -a A::alice@nfsdomain.org:RX foo
+>   .IP - 2
+> +add the same ACE as above, at index 2:
+> +.br
+> +	$ nfs4_setfacl -i 2 -a A::alice@nfsdomain.org:RX foo
+> +.IP - 2
+>   edit existing ACL in a text editor and set modified ACL on clean save/exit:
+>   .br
+>   	$ nfs4_setfacl -e foo
 
