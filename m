@@ -2,212 +2,166 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EE545E6CE3
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 22:18:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DD895E6D1A
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 22:36:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232740AbiIVUSM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Sep 2022 16:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40344 "EHLO
+        id S229880AbiIVUgh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Sep 2022 16:36:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230019AbiIVUSJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 16:18:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54D8B110B0A;
-        Thu, 22 Sep 2022 13:18:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 18040B83A79;
-        Thu, 22 Sep 2022 20:18:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7C0C433D6;
-        Thu, 22 Sep 2022 20:18:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663877885;
-        bh=6v4b3j+MIvjHQBr7sFzf0op2Awjf2oGOtqPQJUi0BhE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PBDIKFf0+HT/5WE513751U+D9B8X2TiRIo4ChfKxEhlYfkCZqIXfjGWMA5s8HUPj6
-         /WZCJxTUNZDksXVX0QJtUzdxKyinG3iYf+lAl5Fq1KjA/cxCGwfeQ8rXXzqlPm514l
-         AOd4VqbUMSRxXQN9h7mP9Nsy2/C2mz/FOkUJSiRIioYZeYPKtLcILmKl1o9bTPSAwc
-         PB4bOY9tIG2uCbLWlPVNXoM9wSEkYQuTqlvsLqxhCUoC6l6AYyOsQ1svTudGncvkfQ
-         RWtrRqApPGzZ7bF/EOBqG33kqa7APErg8algJT9WxggMwagA39au085YMRZA55+5EU
-         KJoHeHA5e8KNg==
-Message-ID: <1ef261e3ff1fa7fcd0d75ed755931aacb8062de2.camel@kernel.org>
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>, NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "brauner@kernel.org" <brauner@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "fweimer@redhat.com" <fweimer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "lczerner@redhat.com" <lczerner@redhat.com>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Date:   Thu, 22 Sep 2022 16:18:02 -0400
-In-Reply-To: <e04e349170bc227b330556556d0592a53692b5b5.camel@kernel.org>
-References: <166328063547.15759.12797959071252871549@noble.neil.brown.name>
-         <YyQdmLpiAMvl5EkU@mit.edu>
-         <7027d1c2923053fe763e9218d10ce8634b56e81d.camel@kernel.org>
-         <24005713ad25370d64ab5bd0db0b2e4fcb902c1c.camel@kernel.org>
-         <20220918235344.GH3600936@dread.disaster.area>
-         <87fb43b117472c0a4c688c37a925ac51738c8826.camel@kernel.org>
-         <20220920001645.GN3600936@dread.disaster.area>
-         <5832424c328ea427b5c6ecdaa6dd53f3b99c20a0.camel@kernel.org>
-         <20220921000032.GR3600936@dread.disaster.area>
-         <93b6d9f7cf997245bb68409eeb195f9400e55cd0.camel@kernel.org>
-         <20220921214124.GS3600936@dread.disaster.area>
-         <e04e349170bc227b330556556d0592a53692b5b5.camel@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229873AbiIVUgg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 16:36:36 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A25B0106A2F
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 13:36:35 -0700 (PDT)
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 28MKYcg4016753;
+        Thu, 22 Sep 2022 20:36:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-id :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=5qZHmWhwDxPZXsS97ENhFfBBJHerOXl/4Y4y1tBpt+k=;
+ b=B9fT3LrjzwzpBGkPTgKaZw9pjr1rh0mUbdUBviqSungoLSyOJ3AldE/zZSUVrRNveK9B
+ OkOACY1/6TX2p8EYD6u33DZOKoAayk549Kg97ahEgcdlFUO4EmLgGRL99pMyRCjrL94G
+ olOqG0kZ3hOBaK+O19oIfpjBJDQOThJIzw9EcwJ1cSBlUd5sIDLQ9hl/tGULYa8zCWNr
+ yCKFQW15AruTYJvuC07jPoQUQ4BAkfh7fp9PWQar0gfjm1VqLzG1l5ppVJ7ZzJduUynH
+ sF2O3ZLaIDsoDwa1D1RnvdMXD27+DH8BJvo0bK5p2L7ctiZuVkHFSaN1hv1ZVH3RZW39 ig== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jn68rpqp1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Sep 2022 20:36:32 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 28MIFZ6f028927;
+        Thu, 22 Sep 2022 20:36:30 GMT
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1anam02lp2042.outbound.protection.outlook.com [104.47.57.42])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jp3d51mbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 22 Sep 2022 20:36:30 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VCApcBa2G1cULRlNNaQM1AHqiAnU7Nty39bGfHqcOXfnb5QcF5VN2aB5TiNRlaH97feIVQPW+ifaOrSSXtVEi+0pQqf5ikGSiH/+jepfFC/cAZKX5760xu9H2gXe53amhbd50U1QyoNBrMOrlgbTUPp3M1DM4mL7qGO3fG9bDmt5vESWHKu2EPW4fEDn+dS3GfJxKdKgxYqBP3lHZdTZ+/RNmt/qpx+c+7o618HvvAi6zqduUVQy7unK+PtDp87UJVCy1JXvvcg6muN0dCRyxFJcgMUEOXTMO8wFyiSe3O/KCInD98wEy2FPTs7RDF8ep9yNYO47Fe8WtSAIcwPxSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5qZHmWhwDxPZXsS97ENhFfBBJHerOXl/4Y4y1tBpt+k=;
+ b=AQfIOmTEecPXRrx1kksEyir5IEwIDwRmvlVkjZkLBuoxvSZCkIl09BzWs47CcX+oWFdc9tmTDolTZ35bZIBfydwKditIIMwijG//e750RiNRfDsx6vwGd8c/jRKXMSWcDuEZYRq0nb5k3ZBlQqS8agorWH8jhtK4vEB5G/KfQfW9EKqVuo5XM4kpkep95fJoYCEEqIpP3uAv6WixCiaYf8KJwc+FFMyamiXr/s1PtvMJCp5F7verdCr7Pfaqm4K3xApzzgLJKnm6vij7U8M52B1L47asCDYlKZp0d2IlJx5p6vs+DuKlQGXcZB94j9KDZtPBaS6odfWUXop+W6lMOg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5qZHmWhwDxPZXsS97ENhFfBBJHerOXl/4Y4y1tBpt+k=;
+ b=AVl13/a4D0qJh6z2ByrO+vSyuUZWGqSdxzOjTMd7n81xqdY3IE8omchTYgFl8S6JhLQgGEIatkUa7jPnSoFRKiwBm8VhGyg17TdOMIaOYp3NRF6b6mBOIQY0auUsiFSSZUioEGyIomO/CsA7lRuW5/qhp8cXsPyNughNQcn1lm4=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by CH2PR10MB4374.namprd10.prod.outlook.com (2603:10b6:610:af::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5654.17; Thu, 22 Sep
+ 2022 20:36:28 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::25d6:da15:34d:92fa]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::25d6:da15:34d:92fa%5]) with mapi id 15.20.5654.019; Thu, 22 Sep 2022
+ 20:36:28 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+CC:     Jeff Layton <jlayton@kernel.org>
+Subject: NFSD XDR tracepoints rebased on v5.19
+Thread-Topic: NFSD XDR tracepoints rebased on v5.19
+Thread-Index: AQHYzsL9gk5KmaCKs0GkRAHOL4s0Zg==
+Date:   Thu, 22 Sep 2022 20:36:28 +0000
+Message-ID: <93CC3B5C-32D6-475E-B034-4F1AC0F8E279@oracle.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CH2PR10MB4374:EE_
+x-ms-office365-filtering-correlation-id: bd30f0fd-fbf5-4383-3e9d-08da9cda2054
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: I1R7oT6TtdF+MSIxWIRHdYbNsO25ty17XooiXaKN1LmIEc5Ov7BHWjT/z+SwPwIVlAD1FkxAIN0QEhl7N/iPtdyfY/WzfkfXElb/HGnUkL2uHO0lys0HuB7hRrLXh+RGmwXNx4inx2CN+TMuFPETxYvMpNzRfIO3dpFGY50Y2VpgVS3cMyZSQbEHtdVkZlzzrKy00eO5PBY+EuQJmkK+iMAFLaIv12rixiM8Z5+6u285Pj8Nl0dRoxkkt6s3ZOtiV+RKSFiwJc7EyN4TzsrBILuV5Fd1gkE68dfj8RpRQeC/1uEO/jvwu4Y3rbHZVN0dZPhaH8OKWFDli/0k77zfSckwL8PxXeh5M92VJWeNBMPY7VZBaM/BwHkqTgww/PwcBb6qHXWm/FsjTfvSddHoi+GNpuLUfGtexppMAxgHThkEv6EsBTiE6HN1sVRwyT/GKLJ8RbfxNFus/nmr6NiMUm/AMDsuoUBpp5r7W/oAxs14x88dmStbYOmH06rOzGYigEIoXZ92Co5RapnagL8vIM//onJfCHA0EpGbifWvP09zq6+lSI07GEd3W0DJSvdUfbLc86CRzszSP/pjyjTlTw15cjsnkahOhWjxOyzx5sG/LjgHYXkkjNvCUscYOBLJvYIbSKPh5l821ln7tBdC475ItzbcLfHN4l4iUpZv7Kn7TVmcnY9zZrAJhb5r6nkZf6lnDlb+jgiWKkWMmTpurA6rS3KTFXmO5hB0cUEyvgebexy3tEtq87d7kIIUYMWG7n/nTOR+ZmGFsKefTuwhV8/4NjayoY1jHFYIxdK242ylUbgRVGzsRVbe6TlmaNVu9SZ9XZ4iTb3rXyPGAL4/oQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(366004)(136003)(396003)(346002)(39860400002)(451199015)(86362001)(66446008)(966005)(478600001)(33656002)(76116006)(6506007)(316002)(71200400001)(6486002)(91956017)(66476007)(26005)(66556008)(8676002)(4326008)(66946007)(64756008)(6512007)(41300700001)(38100700002)(122000001)(36756003)(38070700005)(2616005)(4744005)(2906002)(5660300002)(186003)(6916009)(8936002)(83380400001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?xPiAasQESpO9QuiS77OSByvhljEWcHKwxcDwH7/cCNwGf2GB0syFp2LiU18l?=
+ =?us-ascii?Q?CmYVKWe9d8ZIqHoguDmhgdxETMun6xwVUWJM+UJr8jJ5JNyTTrSiengZnmVV?=
+ =?us-ascii?Q?SVXUNrEV2fjsjsSxzjwZlYVuYL3xyvdkpDJOBPZEzyejvg80yAG+Zj7eKcUW?=
+ =?us-ascii?Q?21S+3rFzjSJC1NlKQf1ctlfe+5LwcHouB8qO8dFoANYlBHl+HLUnfQypmFac?=
+ =?us-ascii?Q?XcJyuG+4kFUwWZt7LxeGqQhPnOAMiMbRNxJPO1isNXJ+Z+suBTH+iuTeF+zX?=
+ =?us-ascii?Q?r3M32WQpKtyMRgF7pjxJleWmJrysODIl2RmTo8oY4dczguRfL8CSc2WJhLvs?=
+ =?us-ascii?Q?TYkE0faDCv24IEQ9PTe105bPPnj968Vedbg8eBH05PYOVRkfyUbjEq2IV6AE?=
+ =?us-ascii?Q?MLigiyiIYJZ5XxDic44tqWwG0nbTvZ0An4cPyZgbCvWCd0nHTAWywQvzkVxJ?=
+ =?us-ascii?Q?odItLmMjpzYOKchl+ZKgBEZ4OzeZzUWb1+MQpwNZGYc0B/2bU5WzqKJDkPbD?=
+ =?us-ascii?Q?q+1s+xgLcRDQc3IJSUFbzsheoYlbRAjwHLld6LzrvYRxBEDAjfLxYpfXE09g?=
+ =?us-ascii?Q?c1A2h0IjS6p7vUa/aWZbPPuZh0tgolzLPs222PWmhoDMDRVQZh2Qnz7YtH2w?=
+ =?us-ascii?Q?KXH9cBzaepqmo2hYTkyPykKjGdzMotdcF8N1YRFXHRT4GjRumM7CCG+Ko93l?=
+ =?us-ascii?Q?v0rJSoy/sKiB+n8jAm+BnBqwbOgRtI0Jb6zTuPQDfF8cS+uLYIDfQFrilzbZ?=
+ =?us-ascii?Q?8MWnLIQVTAEgLil9kNLhQ2WXIaLrUu3BosjrKsWjTL/NB5Fw9mH+GUdpnTpw?=
+ =?us-ascii?Q?gRRY8K10Pxu87Ot7+qgHw0N5JiYBld6qNOoOXeJkCJWJqWsboouHIZK8Lerj?=
+ =?us-ascii?Q?vdGC/+mDgCW5AHLR81xq+zLd3hsh7CbF27Kz13FVl+8nYMlBDDqQitso2uhu?=
+ =?us-ascii?Q?emkwD5AScPAtl0KXI2Z7U9Atlu84r1FkfOaSOg3Nb1+PND1hiejrQ+mZm3h5?=
+ =?us-ascii?Q?qn8beLrupesUZJi608GZAyplytf+gV/wusswoySOL/E8Fa05INtSIPaMmd+u?=
+ =?us-ascii?Q?Kq1raqZkDlrobBMwGYOWlIDR+d0CGRANqV4lf5AgmWZeJ1XwA0wV5/LWpu7c?=
+ =?us-ascii?Q?ivfX3DR643feSdzqW96pRbHCi77SITeuhCmNcNeHik5jtwN052RVJIHgRi8T?=
+ =?us-ascii?Q?R/vd3dZ/Sh99Y8A3WaZT+RMf7rs/UIh3QFmIldLPnsd8PEtHdr9//nAyfshC?=
+ =?us-ascii?Q?/aGZiWCpmKBEFcZzhgL4hDnntXbYUKnck38e0NUhtWjC1xMuMFDQKwpiWT2M?=
+ =?us-ascii?Q?Hdmiv2jWse+0w1wNZcoLEgp73pvQ1X6K0TL7QTpBupknbxO/FgMpK1ot8ese?=
+ =?us-ascii?Q?hNqn7WHBKsLgyeBDIHiMuMY/QReUIYlv9t36R0zibsZFAO0gIOQ0uNAjyajZ?=
+ =?us-ascii?Q?b9yl6cf87mzNxI4mC1jytpM2oSOzmqvsiPBjMJQyBITL3fZsV4ggnd7XOyny?=
+ =?us-ascii?Q?0k2BqtGSUQNkAlBgwBXem4G24wHdgdQ1K8gPL3Oy0dsE0GDsKBDmd0r3VmYO?=
+ =?us-ascii?Q?m92P30l9eH6Mirx0nBtXcdiGTRumKJjVLGKQA6HYnJaulSomB9CkLG5TEiMP?=
+ =?us-ascii?Q?Xw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <61B92BA0AFB77A4AA4AAF7A723A39A30@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bd30f0fd-fbf5-4383-3e9d-08da9cda2054
+X-MS-Exchange-CrossTenant-originalarrivaltime: 22 Sep 2022 20:36:28.4917
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lSZQKASq6yBesoyEEfeRQ+bwokdY7cC6YAplBRbGK7EWHqR8b5GyuFzwi+brzj1NWjGSL+j/7VdWI1BiFA4uIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR10MB4374
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
+ definitions=2022-09-22_14,2022-09-22_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 malwarescore=0
+ bulkscore=0 adultscore=0 suspectscore=0 mlxlogscore=859 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2209220132
+X-Proofpoint-GUID: sgl2KGT6vKGvHuhED-9jsJR1E6TJGn3B
+X-Proofpoint-ORIG-GUID: sgl2KGT6vKGvHuhED-9jsJR1E6TJGn3B
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 2022-09-22 at 06:18 -0400, Jeff Layton wrote:
-> On Thu, 2022-09-22 at 07:41 +1000, Dave Chinner wrote:
-> > On Wed, Sep 21, 2022 at 06:33:28AM -0400, Jeff Layton wrote:
-> > > On Wed, 2022-09-21 at 10:00 +1000, Dave Chinner wrote:
-> > > > > How do we determine what that offset should be? Your last email
-> > > > > suggested that there really is no limit to the number of i_versio=
-n bumps
-> > > > > that can happen in memory before one of them makes it to disk. Wh=
-at can
-> > > > > we do to address that?
-> > > >=20
-> > > > <shrug>
-> > > >=20
-> > > > I'm just pointing out problems I see when defining this as behaviou=
-r
-> > > > for on-disk format purposes. If we define it as part of the on-disk
-> > > > format, then we have to be concerned about how it may be used
-> > > > outside the scope of just the NFS server application.=20
-> > > >=20
-> > > > However, If NFS keeps this metadata and functionaly entirely
-> > > > contained at the application level via xattrs, I really don't care
-> > > > what algorithm NFS developers decides to use for their crash
-> > > > sequencing. It's not my concern at this point, and that's precisely
-> > > > why NFS should be using xattrs for this NFS specific functionality.
-> > > >=20
-> > >=20
-> > > I get it: you'd rather not have to deal with what you see as an NFS
-> > > problem, but I don't get how what you're proposing solves anything. W=
-e
-> > > might be able to use that scheme to detect crashes, but that's only p=
-art
-> > > of the problem (and it's a relatively simple part of the problem to
-> > > solve, really).
-> > >=20
-> > > Maybe you can clarify it for me:
-> > >=20
-> > > Suppose we go with what you're saying and store some information in
-> > > xattrs that allows us to detect crashes in some fashion. The server
-> > > crashes and comes back up and we detect that there was a crash earlie=
-r.
-> > >=20
-> > > What does nfsd need to do now to ensure that it doesn't hand out a
-> > > duplicate change attribute?=20
-> >=20
-> > As I've already stated, the NFS server can hold the persistent NFS
-> > crash counter value in a second xattr that it bumps whenever it
-> > detects a crash and hence we take the local filesystem completely
-> > out of the equation.  How the crash counter is then used by the nfsd
-> > to fold it into the NFS protocol change attribute is a nfsd problem,
-> > not a local filesystem problem.
-> >=20
->=20
-> Ok, assuming you mean put this in an xattr that lives at the root of the
-> export? We only need this for IS_I_VERSION filesystems (btrfs, xfs, and
-> ext4), and they all support xattrs so this scheme should work.
->=20
+Hi-
 
-I had a look at this today and it's not as straightforward as it
-sounds.=A0
+Jeff noticed my XDR tracepoints branch was getting stale. I've
+rebased it on latest stable (v5.19).
 
-In particular, there is no guarantee that an export will not cross
-filesystem boundaries. Also, nfsd and mountd are very much "demand
-driven". We might not touch an exported filesystem at all if nothing
-asks for it. Ensuring we can do something to every exported filesystem
-after a crash is more difficult than it sounds.
+https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/log/?h=3Dtopi=
+c-xdr-tracepoints
 
-So trying to do something with xattrs on the exported filesystems is
-probably not what we want. It's also sort of janky since we do strive to
-leave a "light footprint" on the exported filesystem.
+This adds nfsd_xdr and lockd_xdr subsystems. When enabled, they
+record the arguments and results of each RPC request (NFSv3,
+NFS3ACL, NFSv4, and NLM). It's noisy as hell, but I've posted
+it for people to try out or even use to solve their issues.
 
-Maybe we don't need that though. Chuck reminded me that nfsdcltrack
-could be used here instead. We can punt this to userland!
+Comments and opinions welcome.
 
-nfsdcltrack could keep track of a global crash "salt", and feed that to
-nfsd when it starts up. When starting a grace period, it can=A0set a
-RUNNING flag in the db. If it's set when the server starts, we know
-there was a crash and can bump the crash counter. When nfsd is shutting
-down cleanly, it can call sync() and then clear the flag (this may
-require a new cld upcall cmd). We then mix that value into the change
-attribute for IS_I_VERSION inodes.
+--
+Chuck Lever
 
-That's probably good enough for nfsd, but if we wanted to present this
-to userland via statx, we'd need a different mechanism. For now, I'm
-going to plan to fix this up in nfsd and then we'll see where we are.
 
-> > If you're worried about maximum number of writes outstanding vs
-> > i_version bumps that are held in memory, then *bound the maximum
-> > number of uncommitted i_version changes that the NFS server will
-> > allow to build up in memory*. By moving the crash counter to being a
-> > NFS server only function, the NFS server controls the entire
-> > algorithm and it doesn't have to care about external 3rd party
-> > considerations like local filesystems have to.
-> >=20
->=20
-> Yeah, this is the bigger consideration.
->=20
-> > e.g. The NFS server can track the i_version values when the NFSD
-> > syncs/commits a given inode. The nfsd can sample i_version it when
-> > calls ->commit_metadata or flushed data on the inode, and then when
-> > it peeks at i_version when gathering post-op attrs (or any other
-> > getattr op) it can decide that there is too much in-memory change
-> > (e.g. 10,000 counts since last sync) and sync the inode.
-> >=20
-> > i.e. the NFS server can trivially cap the maximum number of
-> > uncommitted NFS change attr bumps it allows to build up in memory.
-> > At that point, the NFS server has a bound "maximum write count" that
-> > can be used in conjunction with the xattr based crash counter to
-> > determine how the change_attr is bumped by the crash counter.
->=20
-> Well, not "trivially". This is the bit where we have to grow struct
-> inode (or the fs-specific inode), as we'll need to know what the latest
-> on-disk value is for the inode.
->=20
-> I'm leaning toward doing this on the query side. Basically, when nfsd
-> goes to query the i_version, it'll check the delta between the current
-> version and the latest one on disk. If it's bigger than X then we'd just
-> return NFS4ERR_DELAY to the client.
->=20
-> If the delta is >X/2, maybe it can kick off a workqueue job or something
-> that calls write_inode with WB_SYNC_ALL to try to get the thing onto the
-> platter ASAP.
 
-Still looking at this bit too. Probably we can just kick off a
-WB_SYNC_NONE filemap_fdatawrite at that point and hope for the best?
---=20
-Jeff Layton <jlayton@kernel.org>
