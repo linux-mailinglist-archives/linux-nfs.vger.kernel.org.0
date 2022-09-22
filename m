@@ -2,56 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E43245E647B
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 15:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 390FF5E64AC
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 16:06:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231826AbiIVN6o (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Sep 2022 09:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52256 "EHLO
+        id S229886AbiIVOGi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Sep 2022 10:06:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231924AbiIVN6d (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 09:58:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA46EF081
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 06:58:32 -0700 (PDT)
+        with ESMTP id S230266AbiIVOGg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 10:06:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1065E9CD3
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 07:06:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663855111;
+        s=mimecast20190719; t=1663855595;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=pVM5H6WeHIMkCSWLCuQqMp/v231mVqiypUhphVjNZ90=;
-        b=K003MYHdFlxPJDyf24i8BFU05zPRXk6YldtYJ5dsSnXHYyiweBgMeSeuChgBZkwUU/dyqW
-        PcXT2Uw0S0ACii1eHtmTeF1215XEd+oFaQ745PeArkd8HCKpJcFTMTyGLjIeOZHt7KtLQb
-        0Pu8WtUcBLivqZDqLmmaBd9p0Ad26SE=
+        bh=uuLGcoQiYoOVTxw2WfYVAvz1INh8CDw8el3VbZCEysE=;
+        b=jQvtbbo+svjlpCcsepxhui/nZmlwpGtI3Xth11oRTbkXW9yOC+m9vp50f2WIY3A4Z4m/NN
+        ayod0Z9gY19cv4HReUDfM+OXoOKeOB26e66WNST30o3exb8gnxQ+ziEHHquKncJES2pjgG
+        +g2FTWnkTOKPs112RKK8mz1+c9wOAwo=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-29-Axkun4_zMY6Y94RiZucrAg-1; Thu, 22 Sep 2022 09:58:28 -0400
-X-MC-Unique: Axkun4_zMY6Y94RiZucrAg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-448-6gd_s3P2O0CtsrCEuHgsVw-1; Thu, 22 Sep 2022 10:06:31 -0400
+X-MC-Unique: 6gd_s3P2O0CtsrCEuHgsVw-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 99062803481;
-        Thu, 22 Sep 2022 13:58:27 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.215])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F01ED112131B;
-        Thu, 22 Sep 2022 13:58:26 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        Benjamin Maynard <benmaynard@google.com>,
-        Daire Byrne <daire.byrne@gmail.com>
-Subject: [PATCH v8 5/5] NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
-Date:   Thu, 22 Sep 2022 09:58:21 -0400
-Message-Id: <20220922135821.1771966-6-dwysocha@redhat.com>
-In-Reply-To: <20220922135821.1771966-1-dwysocha@redhat.com>
-References: <20220922135821.1771966-1-dwysocha@redhat.com>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A320185A7AA;
+        Thu, 22 Sep 2022 14:06:31 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.48.4])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 069ED41F37E;
+        Thu, 22 Sep 2022 14:06:30 +0000 (UTC)
+From:   "Benjamin Coddington" <bcodding@redhat.com>
+To:     "Alan Maxwell" <amaxwell@fedex.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [EXTERNAL] nfsv4 client idmapper issue
+Date:   Thu, 22 Sep 2022 10:06:29 -0400
+Message-ID: <812A1C59-B489-4D6B-8673-15F5C86A99D0@redhat.com>
+In-Reply-To: <DS0PR12MB6486B941F1EA96D2634CED63C84E9@DS0PR12MB6486.namprd12.prod.outlook.com>
+References: <DS0PR12MB6486987EC76AD88C7A80D229C84F9@DS0PR12MB6486.namprd12.prod.outlook.com>
+ <46FAEBBD-50BC-464B-A983-1DC2232795C5@redhat.com>
+ <DS0PR12MB6486B941F1EA96D2634CED63C84E9@DS0PR12MB6486.namprd12.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -61,136 +58,39 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFS specific trace points are no longer needed as tracing is well
-covered by netfs and fscache.
+On 22 Sep 2022, at 9:45, Alan Maxwell wrote:
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
----
- fs/nfs/nfstrace.h      | 91 ------------------------------------------
- include/linux/nfs_fs.h |  1 -
- 2 files changed, 92 deletions(-)
+> How would the server know what gidNumber to assign if the nfs client sent
+> a name?
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 8c6cc58679ff..6b56abe49ec2 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -39,7 +39,6 @@
- 			{ BIT(NFS_INO_STALE), "STALE" }, \
- 			{ BIT(NFS_INO_ACL_LRU_SET), "ACL_LRU_SET" }, \
- 			{ BIT(NFS_INO_INVALIDATING), "INVALIDATING" }, \
--			{ BIT(NFS_INO_FSCACHE), "FSCACHE" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMIT), "NEED_LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMITTING), "LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTSTATS), "LAYOUTSTATS" }, \
-@@ -1213,96 +1212,6 @@ TRACE_EVENT(nfs_readpage_short,
- 		)
- );
- 
--DECLARE_EVENT_CLASS(nfs_fscache_page_event,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page
--		),
--
--		TP_ARGS(inode, page),
--
--		TP_STRUCT__entry(
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset
--		)
--);
--DECLARE_EVENT_CLASS(nfs_fscache_page_event_done,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page,
--			int error
--		),
--
--		TP_ARGS(inode, page, error),
--
--		TP_STRUCT__entry(
--			__field(int, error)
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--			__entry->error = error;
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld error=%d",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset, __entry->error
--		)
--);
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT(name) \
--	DEFINE_EVENT(nfs_fscache_page_event, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page \
--			), \
--			TP_ARGS(inode, page))
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(name) \
--	DEFINE_EVENT(nfs_fscache_page_event_done, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page, \
--				int error \
--			), \
--			TP_ARGS(inode, page, error))
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_read_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_read_page_exit);
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_write_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_write_page_exit);
- 
- TRACE_EVENT(nfs_pgio_error,
- 	TP_PROTO(
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index a1c402e26abf..0150a5673419 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -281,7 +281,6 @@ struct nfs4_copy_state {
- #define NFS_INO_ACL_LRU_SET	(2)		/* Inode is on the LRU list */
- #define NFS_INO_INVALIDATING	(3)		/* inode is being invalidated */
- #define NFS_INO_PRESERVE_UNLINKED (4)		/* preserve file if removed while open */
--#define NFS_INO_FSCACHE		(5)		/* inode can be cached by FS-Cache */
- #define NFS_INO_LAYOUTCOMMIT	(9)		/* layoutcommit required */
- #define NFS_INO_LAYOUTCOMMITTING (10)		/* layoutcommit inflight */
- #define NFS_INO_LAYOUTSTATS	(11)		/* layoutstats inflight */
--- 
-2.31.1
+I'm not familiar with this server, but I'm guessing if you have it set to
+"Do not send names", then it also will try not to translate uid/gids it
+receives.  Are you asking a theoretical question?
+
+> Is there a method in Redhat to have the nfsclient only send
+> uidNumbers/gidNumbers?
+
+Better to use Red Hat's support for these type of questions because this
+list is mostly upstream development work, but I believe that's the point of
+nfs4_disable_idmapping which exists on that kernel.
+
+> Doing id mapping or better name , id verification, is expected. We hope
+> the server would tell us, "client sent name I can't verify or lookup"
+
+Right, and that is a signal to the client that the server is not doing the
+"Do not send names" thing, rather trying to map values, so the client
+changes its behavior.
+
+If you're only sending integer gid values, what does it mean to verify a
+group id?  If you want your server to treat the values as integer gids, then
+it shouldn't return an error that means "I couldn't translate this into a
+gid".
+
+> The nfsclient  sends both a bad name and bad gidNumber, we actually think
+> that should be the case, even and security=sys , there should be
+> validation of users and groups.
+
+I'm sorry, I don't understand what you trying to say here.
+
+Ben
 
