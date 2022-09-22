@@ -2,53 +2,79 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 390FF5E64AC
-	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 16:06:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DEFF5E64C8
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 16:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229886AbiIVOGi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Sep 2022 10:06:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
+        id S231431AbiIVOLf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Sep 2022 10:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230266AbiIVOGg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 10:06:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1065E9CD3
-        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 07:06:35 -0700 (PDT)
+        with ESMTP id S231425AbiIVOLK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 10:11:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5215857F7
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 07:11:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1663855595;
+        s=mimecast20190719; t=1663855860;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uuLGcoQiYoOVTxw2WfYVAvz1INh8CDw8el3VbZCEysE=;
-        b=jQvtbbo+svjlpCcsepxhui/nZmlwpGtI3Xth11oRTbkXW9yOC+m9vp50f2WIY3A4Z4m/NN
-        ayod0Z9gY19cv4HReUDfM+OXoOKeOB26e66WNST30o3exb8gnxQ+ziEHHquKncJES2pjgG
-        +g2FTWnkTOKPs112RKK8mz1+c9wOAwo=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-448-6gd_s3P2O0CtsrCEuHgsVw-1; Thu, 22 Sep 2022 10:06:31 -0400
-X-MC-Unique: 6gd_s3P2O0CtsrCEuHgsVw-1
-Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5A320185A7AA;
-        Thu, 22 Sep 2022 14:06:31 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.48.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 069ED41F37E;
-        Thu, 22 Sep 2022 14:06:30 +0000 (UTC)
-From:   "Benjamin Coddington" <bcodding@redhat.com>
-To:     "Alan Maxwell" <amaxwell@fedex.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: [EXTERNAL] nfsv4 client idmapper issue
-Date:   Thu, 22 Sep 2022 10:06:29 -0400
-Message-ID: <812A1C59-B489-4D6B-8673-15F5C86A99D0@redhat.com>
-In-Reply-To: <DS0PR12MB6486B941F1EA96D2634CED63C84E9@DS0PR12MB6486.namprd12.prod.outlook.com>
-References: <DS0PR12MB6486987EC76AD88C7A80D229C84F9@DS0PR12MB6486.namprd12.prod.outlook.com>
- <46FAEBBD-50BC-464B-A983-1DC2232795C5@redhat.com>
- <DS0PR12MB6486B941F1EA96D2634CED63C84E9@DS0PR12MB6486.namprd12.prod.outlook.com>
+        bh=zPdNgvFs1bF+oDkeZWX8kHVlvs/CpJe6dbYRA6eY6sE=;
+        b=Abb88FTG+7CYNQAMgOlfw20SAEqUTbWOoSaV0qfjPgXdd1HYCZxL9yGXVjpawDayAyysdS
+        padPeRvr8LFfLdH7dsyDKpe0oNJWRxlvZ8W8XJToV5nHuXHyxcz6yRLDIR4lz9Amm50FkD
+        HgaHf7q8eX9Aazc8IQ/bGRokDJaj7hY=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-439-UMBC-o07M5eZUeeZ9A82vg-1; Thu, 22 Sep 2022 10:10:59 -0400
+X-MC-Unique: UMBC-o07M5eZUeeZ9A82vg-1
+Received: by mail-qv1-f71.google.com with SMTP id y7-20020ad45307000000b004ac7fd46495so6561099qvr.23
+        for <linux-nfs@vger.kernel.org>; Thu, 22 Sep 2022 07:10:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:user-agent:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date;
+        bh=zPdNgvFs1bF+oDkeZWX8kHVlvs/CpJe6dbYRA6eY6sE=;
+        b=xSuZ5eotkQ2uEPr80+1A9dT1zbJmPKsGqLOBykSipDoWqjCIiW2n8wvhBLRlyxvsE/
+         iHSd4KyUxw4ShDfo2f4ala+5zHxxT96kNdfIOJ9nFIX8R9n6RdYj/QV6+/A+KnlzROtT
+         INi3gvFe+kH9apdL2bf5uZYsdil9X9y07CpfSN+3akXcvtyY3KRFxuQETKmteeFfNnAE
+         FO4YmMLWfBeJSvmLZlVKrNkY07WhNSUN9UfVbnZTkolos7wV9vJNtgJ/KHwXNRiCSFSl
+         vxCNKYLch0DJ7Mmh4OkF1olkkVoD2ECyh9Red+sDuYdySA8OqmnVY/0AsWOvj6wSj/4w
+         uJdw==
+X-Gm-Message-State: ACrzQf3TVxFxGx2LyfkqFJOSIfm1LMaUn5Zu5DH24AKqeqmefVabAZZM
+        rKsA1vEDJ0ghgp87TAZT5Mfqvj2mqCj/50TpdHfuK3ZDVdGissNWKPIe28b5XG2Nd8P+ZmW48I6
+        4pwaPsx0kkLnNYuYR/88N
+X-Received: by 2002:a05:620a:955:b0:6cb:deab:4966 with SMTP id w21-20020a05620a095500b006cbdeab4966mr2217688qkw.664.1663855858500;
+        Thu, 22 Sep 2022 07:10:58 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM71gQY9DagAmvaKQxZ5AyZ4StUMX2TVLdWhOGJ1XRq7KR+bVcRHPR0AlNI3yv/TcOSuFKBkLw==
+X-Received: by 2002:a05:620a:955:b0:6cb:deab:4966 with SMTP id w21-20020a05620a095500b006cbdeab4966mr2217650qkw.664.1663855858180;
+        Thu, 22 Sep 2022 07:10:58 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-104-76.dyn.eolo.it. [146.241.104.76])
+        by smtp.gmail.com with ESMTPSA id t6-20020a37ea06000000b006cf38fd659asm3793448qkj.103.2022.09.22.07.10.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 07:10:57 -0700 (PDT)
+Message-ID: <b6c4c53945823eab9b353e8944c7b50636c93091.camel@redhat.com>
+Subject: Re: [PATCH net] sunrpc: Use GFP_NOFS to prevent use of
+ current->task_frag.
+From:   Paolo Abeni <pabeni@redhat.com>
+To:     Guillaume Nault <gnault@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        Benjamin Coddington <bcodding@redhat.com>
+Date:   Thu, 22 Sep 2022 16:10:54 +0200
+In-Reply-To: <96a18bd00cbc6cb554603cc0d6ef1c551965b078.1663762494.git.gnault@redhat.com>
+References: <96a18bd00cbc6cb554603cc0d6ef1c551965b078.1663762494.git.gnault@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
@@ -58,39 +84,38 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 22 Sep 2022, at 9:45, Alan Maxwell wrote:
+On Wed, 2022-09-21 at 14:16 +0200, Guillaume Nault wrote:
+> Commit a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all
+> rpciod/xprtiod jobs") stopped setting sk->sk_allocation explicitly in
+> favor of using memalloc_nofs_save()/memalloc_nofs_restore() critical
+> sections.
+> 
+> However, ->sk_allocation isn't used just by the memory allocator.
+> In particular, sk_page_frag() uses it to figure out if it can return
+> the page_frag from current or if it has to use the socket one.
+> With ->sk_allocation set to the default GFP_KERNEL, sk_page_frag() now
+> returns current->page_frag, which might already be in use in the
+> current context if the call happens during memory reclaim.
+> 
+> Fix this by setting ->sk_allocation to GFP_NOFS.
+> Note that we can't just instruct sk_page_frag() to look at
+> current->flags, because it could generate a cache miss, thus slowing
+> down the TCP fast path.
+> 
+> This is similar to the problems fixed by the following two commits:
+>   * cifs: commit dacb5d8875cc ("tcp: fix page frag corruption on page
+>     fault").
+>   * nbd: commit 20eb4f29b602 ("net: fix sk_page_frag() recursion from
+>     memory reclaim").
+> 
+> Link: https://lore.kernel.org/netdev/b4d8cb09c913d3e34f853736f3f5628abfd7f4b6.1656699567.git.gnault@redhat.com/
+> Fixes: a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all rpciod/xprtiod jobs")
+> Signed-off-by: Guillaume Nault <gnault@redhat.com>
 
-> How would the server know what gidNumber to assign if the nfs client sent
-> a name?
+It's unfortunate, but I think we need to keep both memalloc_nofs_save()
+and sk_allocation for the time being.
 
-I'm not familiar with this server, but I'm guessing if you have it set to
-"Do not send names", then it also will try not to translate uid/gids it
-receives.  Are you asking a theoretical question?
+Thanks Guillaume, patch LGTM.
 
-> Is there a method in Redhat to have the nfsclient only send
-> uidNumbers/gidNumbers?
-
-Better to use Red Hat's support for these type of questions because this
-list is mostly upstream development work, but I believe that's the point of
-nfs4_disable_idmapping which exists on that kernel.
-
-> Doing id mapping or better name , id verification, is expected. We hope
-> the server would tell us, "client sent name I can't verify or lookup"
-
-Right, and that is a signal to the client that the server is not doing the
-"Do not send names" thing, rather trying to map values, so the client
-changes its behavior.
-
-If you're only sending integer gid values, what does it mean to verify a
-group id?  If you want your server to treat the values as integer gids, then
-it shouldn't return an error that means "I couldn't translate this into a
-gid".
-
-> The nfsclient  sends both a bad name and bad gidNumber, we actually think
-> that should be the case, even and security=sys , there should be
-> validation of users and groups.
-
-I'm sorry, I don't understand what you trying to say here.
-
-Ben
+Acked-by: Paolo Abeni <pabeni@redhat.com>
 
