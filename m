@@ -2,74 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96BB95E5552
-	for <lists+linux-nfs@lfdr.de>; Wed, 21 Sep 2022 23:41:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 51A065E5889
+	for <lists+linux-nfs@lfdr.de>; Thu, 22 Sep 2022 04:23:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230307AbiIUVld (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 21 Sep 2022 17:41:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43334 "EHLO
+        id S229986AbiIVCXN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 21 Sep 2022 22:23:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbiIUVlb (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Sep 2022 17:41:31 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 02665A61F1;
-        Wed, 21 Sep 2022 14:41:29 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au [49.181.106.210])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id CD09A1100972;
-        Thu, 22 Sep 2022 07:41:25 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1ob7TA-00AY5T-EA; Thu, 22 Sep 2022 07:41:24 +1000
-Date:   Thu, 22 Sep 2022 07:41:24 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Theodore Ts'o <tytso@mit.edu>, NeilBrown <neilb@suse.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        "bfields@fieldses.org" <bfields@fieldses.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "djwong@kernel.org" <djwong@kernel.org>,
-        "brauner@kernel.org" <brauner@kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "fweimer@redhat.com" <fweimer@redhat.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "chuck.lever@oracle.com" <chuck.lever@oracle.com>,
-        "linux-man@vger.kernel.org" <linux-man@vger.kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "jack@suse.cz" <jack@suse.cz>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "lczerner@redhat.com" <lczerner@redhat.com>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
- STATX_INO_VERSION field
-Message-ID: <20220921214124.GS3600936@dread.disaster.area>
-References: <166328063547.15759.12797959071252871549@noble.neil.brown.name>
- <YyQdmLpiAMvl5EkU@mit.edu>
- <7027d1c2923053fe763e9218d10ce8634b56e81d.camel@kernel.org>
- <24005713ad25370d64ab5bd0db0b2e4fcb902c1c.camel@kernel.org>
- <20220918235344.GH3600936@dread.disaster.area>
- <87fb43b117472c0a4c688c37a925ac51738c8826.camel@kernel.org>
- <20220920001645.GN3600936@dread.disaster.area>
- <5832424c328ea427b5c6ecdaa6dd53f3b99c20a0.camel@kernel.org>
- <20220921000032.GR3600936@dread.disaster.area>
- <93b6d9f7cf997245bb68409eeb195f9400e55cd0.camel@kernel.org>
+        with ESMTP id S229803AbiIVCXL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 21 Sep 2022 22:23:11 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 277F070E5B;
+        Wed, 21 Sep 2022 19:23:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=ZiPBxKPeBhyg1ydjp9NE+T7YJ8ZxnXylq6Qe68BttcM=; b=X5nKHSb5zMgYZl+FhXsP6DCn72
+        bEglB3uwj1u2ckoCMYriAyG5kPjUhImLESuKJd2vtNNiLCcrYBHeBdt3F6cQh6Wm3StOrkOcjQeJu
+        4qrCsHH5WIU26q176+DcvQKvcrbj0BY9yaqWeThAwanr0qzriUoC+LqfYejfH/Fnsff8pbPPZ71Qb
+        NjRsD6GZMQI/wiIBI5colWhci+DcZ9INZTqBN7Niz8E0f9Fh+HHg3qeHhqTiWGfHStzVjtBSLeI0K
+        W8V4q7B54U3lalSJFlSdAHcj1YZ49zmVV2ju998nI+9rCL2JEeqKV0rTw/xbrhrKpjGLwJQMEI0p/
+        suiYbjiA==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1obBrU-002FEi-1w;
+        Thu, 22 Sep 2022 02:22:48 +0000
+Date:   Thu, 22 Sep 2022 03:22:48 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YyvG+Oih2A37Grcf@ZenIV>
+References: <20220831041843.973026-5-jhubbard@nvidia.com>
+ <YxbtF1O8+kXhTNaj@infradead.org>
+ <103fe662-3dc8-35cb-1a68-dda8af95c518@nvidia.com>
+ <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
+ <20220914145233.cyeljaku4egeu4x2@quack3>
+ <YyIEgD8ksSZTsUdJ@ZenIV>
+ <20220915081625.6a72nza6yq4l5etp@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <93b6d9f7cf997245bb68409eeb195f9400e55cd0.camel@kernel.org>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=OJNEYQWB c=1 sm=1 tr=0 ts=632b8509
-        a=j6JUzzrSC7wlfFge/rmVbg==:117 a=j6JUzzrSC7wlfFge/rmVbg==:17
-        a=kj9zAlcOel0A:10 a=xOM3xZuef0cA:10 a=7-415B0cAAAA:8
-        a=8pfsZ2Olh1enfcy7SOgA:9 a=CjuIK1q_8ugA:10 a=Fg_2k2EkwPauNWe-Eirz:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
+In-Reply-To: <20220915081625.6a72nza6yq4l5etp@quack3>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,71 +69,65 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Sep 21, 2022 at 06:33:28AM -0400, Jeff Layton wrote:
-> On Wed, 2022-09-21 at 10:00 +1000, Dave Chinner wrote:
-> > > How do we determine what that offset should be? Your last email
-> > > suggested that there really is no limit to the number of i_version bumps
-> > > that can happen in memory before one of them makes it to disk. What can
-> > > we do to address that?
-> > 
-> > <shrug>
-> > 
-> > I'm just pointing out problems I see when defining this as behaviour
-> > for on-disk format purposes. If we define it as part of the on-disk
-> > format, then we have to be concerned about how it may be used
-> > outside the scope of just the NFS server application. 
-> > 
-> > However, If NFS keeps this metadata and functionaly entirely
-> > contained at the application level via xattrs, I really don't care
-> > what algorithm NFS developers decides to use for their crash
-> > sequencing. It's not my concern at this point, and that's precisely
-> > why NFS should be using xattrs for this NFS specific functionality.
-> > 
+On Thu, Sep 15, 2022 at 10:16:25AM +0200, Jan Kara wrote:
+
+> > How would that work?  What protects the area where you want to avoid running
+> > into pinned pages from previously acceptable page getting pinned?  If "they
+> > must have been successfully unmapped" is a part of what you are planning, we
+> > really do have a problem...
 > 
-> I get it: you'd rather not have to deal with what you see as an NFS
-> problem, but I don't get how what you're proposing solves anything. We
-> might be able to use that scheme to detect crashes, but that's only part
-> of the problem (and it's a relatively simple part of the problem to
-> solve, really).
+> But this is a very good question. So far the idea was that we lock the
+> page, unmap (or writeprotect) the page, and then check pincount == 0 and
+> that is a reliable method for making sure page data is stable (until we
+> unlock the page & release other locks blocking page faults and writes). But
+> once suddently ordinary page references can be used to create pins this
+> does not work anymore. Hrm.
 > 
-> Maybe you can clarify it for me:
-> 
-> Suppose we go with what you're saying and store some information in
-> xattrs that allows us to detect crashes in some fashion. The server
-> crashes and comes back up and we detect that there was a crash earlier.
-> 
-> What does nfsd need to do now to ensure that it doesn't hand out a
-> duplicate change attribute? 
+> Just brainstorming ideas now: So we'd either need to obtain the pins early
+> when we still have the virtual address (but I guess that is often not
+> practical but should work e.g. for normal direct IO path) or we need some
+> way to "simulate" the page fault when pinning the page, just don't map it
+> into page tables in the end. This simulated page fault could be perhaps
+> avoided if rmap walk shows that the page is already mapped somewhere with
+> suitable permissions.
 
-As I've already stated, the NFS server can hold the persistent NFS
-crash counter value in a second xattr that it bumps whenever it
-detects a crash and hence we take the local filesystem completely
-out of the equation.  How the crash counter is then used by the nfsd
-to fold it into the NFS protocol change attribute is a nfsd problem,
-not a local filesystem problem.
+OK.  As far as I can see, the rules are along the lines of
+	* creator of ITER_BVEC/ITER_XARRAY is responsible for pages being safe.
+	  That includes
+		* page known to be locked by caller
+		* page being privately allocated and not visible to anyone else
+		* iterator being data source
+		* page coming from pin_user_pages(), possibly as the result of
+		  iov_iter_pin_pages() on ITER_IOVEC/ITER_UBUF.
+	* ITER_PIPE pages are always safe
+	* pages found in ITER_BVEC/ITER_XARRAY are safe, since the iterator
+	  had been created with such.
+My preference would be to have iov_iter_get_pages() and friends pin if and
+only if we have data-destination iov_iter that is user-backed.  For
+data-source user-backed we only need FOLL_GET, and for all other flavours
+(ITER_BVEC, etc.) we only do get_page(), if we need to grab any references
+at all.
 
-If you're worried about maximum number of writes outstanding vs
-i_version bumps that are held in memory, then *bound the maximum
-number of uncommitted i_version changes that the NFS server will
-allow to build up in memory*. By moving the crash counter to being a
-NFS server only function, the NFS server controls the entire
-algorithm and it doesn't have to care about external 3rd party
-considerations like local filesystems have to.
+What I'd like to have is the understanding of the places where we drop
+the references acquired by iov_iter_get_pages().  How do we decide
+whether to unpin?  E.g. pipe_buffer carries a reference to page and no
+way to tell whether it's a pinned one; results of iov_iter_get_pages()
+on ITER_IOVEC *can* end up there, but thankfully only from data-source
+(== WRITE, aka.  ITER_SOURCE) iov_iter.  So for those we don't care.
+Then there's nfs_request; AFAICS, we do need to pin the references in
+those if they are coming from nfs_direct_read_schedule_iovec(), but
+not if they come from readpage_async_filler().  How do we deal with
+coalescence, etc.?  It's been a long time since I really looked at
+that code...  Christoph, could you give any comments on that one?
 
-e.g. The NFS server can track the i_version values when the NFSD
-syncs/commits a given inode. The nfsd can sample i_version it when
-calls ->commit_metadata or flushed data on the inode, and then when
-it peeks at i_version when gathering post-op attrs (or any other
-getattr op) it can decide that there is too much in-memory change
-(e.g. 10,000 counts since last sync) and sync the inode.
-
-i.e. the NFS server can trivially cap the maximum number of
-uncommitted NFS change attr bumps it allows to build up in memory.
-At that point, the NFS server has a bound "maximum write count" that
-can be used in conjunction with the xattr based crash counter to
-determine how the change_attr is bumped by the crash counter.
-
--Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Note, BTW, that nfs_request coming from readpage_async_filler() have
+pages locked by caller; the ones from nfs_direct_read_schedule_iovec()
+do not, and that's where we want them pinned.  Resulting page references
+end up (after quite a trip through data structures) stuffed into struct
+rpc_rqst ->rc_recv_buf.pages[] and when a response arrives from server,
+they get picked by xs_read_bvec() and fed to iov_iter_bvec().  In one
+case it's safe since the pages are locked; in another - since they would
+come from pin_user_pages().  The call chain at the time they are used
+has nothing to do with the originator - sunrpc is looking at the arrived
+response to READ that matches an rpc_rqst that had been created by sender
+of that request and safety is the sender's responsibility.
