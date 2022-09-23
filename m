@@ -2,121 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA815E730C
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 06:39:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93C2F5E7500
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 09:41:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbiIWEjj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Sep 2022 00:39:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36540 "EHLO
+        id S229520AbiIWHk7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Sep 2022 03:40:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbiIWEjh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 00:39:37 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51973E68;
-        Thu, 22 Sep 2022 21:39:31 -0700 (PDT)
-Received: from dggemv704-chm.china.huawei.com (unknown [172.30.72.55])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4MYfWf2bvhzHqFM;
-        Fri, 23 Sep 2022 12:37:18 +0800 (CST)
-Received: from kwepemm600015.china.huawei.com (7.193.23.52) by
- dggemv704-chm.china.huawei.com (10.3.19.47) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Fri, 23 Sep 2022 12:39:29 +0800
-Received: from huawei.com (10.175.101.6) by kwepemm600015.china.huawei.com
- (7.193.23.52) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.31; Fri, 23 Sep
- 2022 12:39:28 +0800
-From:   ChenXiaoSong <chenxiaosong2@huawei.com>
-To:     <trond.myklebust@hammerspace.com>, <anna@kernel.org>
-CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <chenxiaosong2@huawei.com>, <yi.zhang@huawei.com>,
-        <zhangxiaoxu5@huawei.com>
-Subject: [PATCH v3 2/2] NFSv4: check FMODE_EXEC from open context mode in nfs4_opendata_access()
-Date:   Fri, 23 Sep 2022 13:40:15 +0800
-Message-ID: <20220923054015.2890271-3-chenxiaosong2@huawei.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20220923054015.2890271-1-chenxiaosong2@huawei.com>
-References: <20220923054015.2890271-1-chenxiaosong2@huawei.com>
+        with ESMTP id S229677AbiIWHk5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 03:40:57 -0400
+Received: from mail.fadrush.pl (mail.fadrush.pl [54.37.225.211])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E0111C160
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 00:40:55 -0700 (PDT)
+Received: by mail.fadrush.pl (Postfix, from userid 1002)
+        id 0717C2363E; Fri, 23 Sep 2022 07:37:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fadrush.pl; s=mail;
+        t=1663918807; bh=bD6j9gIFU6CLTaCGl0Ow9oeIxtirvTfMeNZSfLEZQ+I=;
+        h=Date:From:To:Subject:From;
+        b=gFu2VFOyz0uuYjvjJzcerrX4fItIjUlP4u2L9tP2MFxy3AxUpIivb/dLRp89a9LR8
+         QZMfOMUkx3bomJuRA/6FJ8UaPI+hPTDC7UIx81kdsyhQdTQXFG3732+kEKLq5RQzJe
+         KHxV8Mkc5JVjjjx6VTHWtYLT7klPiY9SvckyWjPn1Rn8fSyw11Ok7xyD+w33F9QKOb
+         E1TVMhFvv63WRIxizqpX9z4Xnb7K+e9XAyGjgfh4tRh1pK+5GaEdpOeXldNjgjJi1Y
+         dbivu5uwa9itesUQzay37dRr+WcrEMfp39EE7VtL6SRLfcbdMZJO6lvldfaVHSzcSZ
+         OCaGK0QosKSBw==
+Received: by mail.fadrush.pl for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 07:36:05 GMT
+Message-ID: <20220923064500-0.1.1t.h9tx.0.q6n9eazg7z@fadrush.pl>
+Date:   Fri, 23 Sep 2022 07:36:05 GMT
+From:   "Jakub Olejniczak" <jakub.olejniczak@fadrush.pl>
+To:     <linux-nfs@vger.kernel.org>
+Subject: =?UTF-8?Q?Zwi=C4=99kszenie_p=C5=82ynno=C5=9Bci_finansowej?=
+X-Mailer: mail.fadrush.pl
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.101.6]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemm600015.china.huawei.com (7.193.23.52)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-After converting file f_flags to open context mode by flags_to_mode(), open
-context mode will have FMODE_EXEC when file open for exec, so we check
-FMODE_EXEC from open context mode.
+Dzie=C5=84 dobry,
 
-No functional change, just simplify the code.
+kontaktuj=C4=99 si=C4=99 z Pa=C5=84stwem, poniewa=C5=BC chcia=C5=82bym za=
+proponowa=C4=87 wygodne rozwi=C4=85zanie, kt=C3=B3re umo=C5=BCliwi Pa=C5=84=
+stwa firmie stabilny rozw=C3=B3j.=20
 
-Signed-off-by: ChenXiaoSong <chenxiaosong2@huawei.com>
----
- fs/nfs/nfs4proc.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+Konkurencyjne otoczenie wymaga ci=C4=85g=C5=82ego ulepszania i poszerzeni=
+a oferty, co z kolei wi=C4=85=C5=BCe si=C4=99 z konieczno=C5=9Bci=C4=85 i=
+nwestowania. Brak odpowiedniego kapita=C5=82u powa=C5=BCnie ogranicza tem=
+po rozwoju firmy.
 
-diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 3ed14a2a84a4..806d243f66e8 100644
---- a/fs/nfs/nfs4proc.c
-+++ b/fs/nfs/nfs4proc.c
-@@ -2624,8 +2624,7 @@ static int _nfs4_recover_proc_open(struct nfs4_opendata *data)
-  */
- static int nfs4_opendata_access(const struct cred *cred,
- 				struct nfs4_opendata *opendata,
--				struct nfs4_state *state, fmode_t fmode,
--				int openflags)
-+				struct nfs4_state *state, fmode_t fmode)
- {
- 	struct nfs_access_entry cache;
- 	u32 mask, flags;
-@@ -2636,11 +2635,7 @@ static int nfs4_opendata_access(const struct cred *cred,
- 		return 0;
- 
- 	mask = 0;
--	/*
--	 * Use openflags to check for exec, because fmode won't
--	 * always have FMODE_EXEC set when file open for exec.
--	 */
--	if (openflags & __FMODE_EXEC) {
-+	if (fmode & FMODE_EXEC) {
- 		/* ONLY check for exec rights */
- 		if (S_ISDIR(state->inode->i_mode))
- 			mask = NFS4_ACCESS_LOOKUP;
-@@ -3023,7 +3018,7 @@ static unsigned nfs4_exclusive_attrset(struct nfs4_opendata *opendata,
- }
- 
- static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
--		int flags, struct nfs_open_context *ctx)
-+		struct nfs_open_context *ctx)
- {
- 	struct nfs4_state_owner *sp = opendata->owner;
- 	struct nfs_server *server = sp->so_server;
-@@ -3084,8 +3079,7 @@ static int _nfs4_open_and_get_state(struct nfs4_opendata *opendata,
- 	/* Parse layoutget results before we check for access */
- 	pnfs_parse_lgopen(state->inode, opendata->lgp, ctx);
- 
--	ret = nfs4_opendata_access(sp->so_cred, opendata, state,
--			acc_mode, flags);
-+	ret = nfs4_opendata_access(sp->so_cred, opendata, state, acc_mode);
- 	if (ret != 0)
- 		goto out;
- 
-@@ -3159,7 +3153,7 @@ static int _nfs4_do_open(struct inode *dir,
- 	if (d_really_is_positive(dentry))
- 		opendata->state = nfs4_get_open_state(d_inode(dentry), sp);
- 
--	status = _nfs4_open_and_get_state(opendata, flags, ctx);
-+	status = _nfs4_open_and_get_state(opendata, ctx);
- 	if (status != 0)
- 		goto err_opendata_put;
- 	state = ctx->state;
--- 
-2.31.1
+Od wielu lat z powodzeniem pomagam firmom w uzyskaniu najlepszej formy fi=
+nansowania z banku oraz UE. Mam sta=C5=82ych Klient=C3=B3w, kt=C3=B3rzy n=
+adal ch=C4=99tnie korzystaj=C4=85 z moich us=C5=82ug, a tak=C5=BCe poleca=
+j=C4=85 je innym.
 
+Czy chcieliby Pa=C5=84stwo skorzysta=C4=87 z pomocy wykwalifikowanego i d=
+o=C5=9Bwiadczonego doradcy finansowego?
+
+
+Pozdrawiam
+Jakub Olejniczak
