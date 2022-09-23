@@ -2,136 +2,174 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C8E45E7FC3
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 18:28:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC93E5E8276
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 21:20:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232454AbiIWQ24 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Sep 2022 12:28:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36442 "EHLO
+        id S231206AbiIWTUT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Sep 2022 15:20:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229625AbiIWQ2r (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 12:28:47 -0400
+        with ESMTP id S229520AbiIWTUT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 15:20:19 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036C3139F78
-        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 09:28:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0321D76770
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 12:20:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B52460BEA
-        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 16:28:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7328CC433D6;
-        Fri, 23 Sep 2022 16:28:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1663950523;
-        bh=OceAtJ4pt2Wn6P+PXGI5MbxptXjjwDOIad/bTXf0tqQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=WHby3rQcaReZjb60VPUuxuYVtjJhuTDXvFG9ea/lTy1G/NwS+8P/GL61JtEyZnucI
-         DqJ5I/jnarthZOXoqh4tfTILO9F8wN9PxRkrpE3/7o3rQ4PNZGvLkg/arBQ+lGkKc0
-         OYwq3OkKsu/pGiZa0Zx9csnN0Pt1ufwLlc44kEKwP3OEukU+US4ChJ6MLMAXG29jJu
-         rXoLCDm9LgyUwzNeFuh/X1a+gCoCbxVlnSncMDzsurFr6yDPMz2A/j7NM2U+RRrhlC
-         YmyNebECgOxvbpTttyXEfILsO4bauMfsjCaFk7RUfCmV1mEDzyy28Ghysa3x3qoEGU
-         viTkwsmfmFC6g==
-Message-ID: <442cabb565154a3fe8a1f45192d8c52a24c54e54.camel@kernel.org>
-Subject: Re: [PATCH v2] NFSD: fix use-after-free on source server when doing
- inter-server copy
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com,
-        olga.kornievskaia@gmail.com
-Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 23 Sep 2022 12:28:42 -0400
-In-Reply-To: <1659405154-21910-1-git-send-email-dai.ngo@oracle.com>
-References: <1659405154-21910-1-git-send-email-dai.ngo@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-1.fc36) 
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8964F61372
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 19:20:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B59C6C433C1
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 19:20:16 +0000 (UTC)
+Subject: [PATCH RFC] NFSD: Cap rsize_bop result based on send buffer size
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Date:   Fri, 23 Sep 2022 15:20:15 -0400
+Message-ID: <166396081544.17299.12934850812688968276.stgit@bazille.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-08-01 at 18:52 -0700, Dai Ngo wrote:
-> Use-after-free occurred when the laundromat tried to free expired
-> cpntf_state entry on the s2s_cp_stateids list after inter-server
-> copy completed. The sc_cp_list that the expired copy state was
-> inserted on was already freed.
->=20
-> When COPY completes, the Linux client normally sends LOCKU(lock_state x),
-> FREE_STATEID(lock_state x) and CLOSE(open_state y) to the source server.
-> The nfs4_put_stid call from nfsd4_free_stateid cleans up the copy state
-> from the s2s_cp_stateids list before freeing the lock state's stid.
->=20
-> However, sometimes the CLOSE was sent before the FREE_STATEID request.
-> When this happens, the nfsd4_close_open_stateid call from nfsd4_close
-> frees all lock states on its st_locks list without cleaning up the copy
-> state on the sc_cp_list list. When the time the FREE_STATEID arrives the
-> server returns BAD_STATEID since the lock state was freed. This causes
-> the use-after-free error to occur when the laundromat tries to free
-> the expired cpntf_state.
->=20
-> This patch adds a call to nfs4_free_cpntf_statelist in
-> nfsd4_close_open_stateid to clean up the copy state before calling
-> free_ol_stateid_reaplist to free the lock state's stid on the reaplist.
->=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/nfsd/nfs4state.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 9409a0dc1b76..b99c545f93e4 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -1049,6 +1049,9 @@ static struct nfs4_ol_stateid * nfs4_alloc_open_sta=
-teid(struct nfs4_client *clp)
-> =20
->  static void nfs4_free_deleg(struct nfs4_stid *stid)
->  {
-> +	struct nfs4_ol_stateid *stp =3D openlockstateid(stid);
-> +
-> +	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
+Since before the git era, NFSD has conserved the number of pages
+held by each nfsd thread by combining the RPC receive and send
+buffers into a single array of pages. This works because there are
+no cases where an operation needs a large RPC Call message and a
+large RPC Reply at the same time.
 
-You're casting a delegation stateid to an openlockstateid, and then
-getting stid back from that. How about this instead, and drop the
-openlockstateid weirdness?
+Once an RPC Call has been received, svc_process() updates
+svc_rqst::rq_res to describe the part of rq_pages that can be
+used for constructing the Reply. This means that the send buffer
+(rq_res) shrinks when the received RPC record containing the RPC
+Call is large.
 
-      WARN_ON(!list_empty(&stid->sc_cp_list));
+Add an NFSv4 helper that computes the size of the send buffer. It
+replaces svc_max_payload() in spots where svc_max_payload() returns
+a value that might be larger than the remaining send buffer space.
+Callers who need to know the transport's actual maximum payload size
+will continue to use svc_max_payload().
 
->  	kmem_cache_free(deleg_slab, stid);
->  	atomic_long_dec(&num_delegations);
->  }
-> @@ -1463,6 +1466,7 @@ static void nfs4_free_ol_stateid(struct nfs4_stid *=
-stid)
->  	release_all_access(stp);
->  	if (stp->st_stateowner)
->  		nfs4_put_stateowner(stp->st_stateowner);
-> +	WARN_ON(!list_empty(&stp->st_stid.sc_cp_list));
->  	kmem_cache_free(stateid_slab, stid);
->  }
-> =20
-> @@ -6608,6 +6612,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol=
-_stateid *s)
->  	struct nfs4_client *clp =3D s->st_stid.sc_client;
->  	bool unhashed;
->  	LIST_HEAD(reaplist);
-> +	struct nfs4_ol_stateid *stp;
-> =20
->  	spin_lock(&clp->cl_lock);
->  	unhashed =3D unhash_open_stateid(s, &reaplist);
-> @@ -6616,6 +6621,8 @@ static void nfsd4_close_open_stateid(struct nfs4_ol=
-_stateid *s)
->  		if (unhashed)
->  			put_ol_stateid_locked(s, &reaplist);
->  		spin_unlock(&clp->cl_lock);
-> +		list_for_each_entry(stp, &reaplist, st_locks)
-> +			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
->  		free_ol_stateid_reaplist(&reaplist);
->  	} else {
->  		spin_unlock(&clp->cl_lock);
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+---
+ fs/nfsd/nfs4proc.c |   48 ++++++++++++++++++++++++------------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
---=20
-Jeff Layton <jlayton@kernel.org>
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index a09901cf175c..8beb2bc4c328 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -2771,6 +2771,22 @@ nfsd4_proc_compound(struct svc_rqst *rqstp)
+ 
+ #define op_encode_channel_attrs_maxsz	(6 + 1 + 1)
+ 
++/*
++ * The _rsize() helpers are invoked by the NFSv4 COMPOUND decoder, which
++ * is called before sunrpc sets rq_res.buflen. Thus we have to compute
++ * the maximum payload size here, based on transport limits and the size
++ * of the remaining space in the rq_pages array.
++ */
++static u32 nfsd4_max_payload(const struct svc_rqst *rqstp)
++{
++	u32 buflen;
++
++	buflen = (rqstp->rq_page_end - rqstp->rq_next_page) * PAGE_SIZE;
++	buflen -= rqstp->rq_auth_slack;
++	buflen -= rqstp->rq_res.head[0].iov_len;
++	return min_t(u32, buflen, svc_max_payload(rqstp));
++}
++
+ static u32 nfsd4_only_status_rsize(const struct svc_rqst *rqstp,
+ 				   const struct nfsd4_op *op)
+ {
+@@ -2816,9 +2832,9 @@ static u32 nfsd4_getattr_rsize(const struct svc_rqst *rqstp,
+ 	u32 ret = 0;
+ 
+ 	if (bmap0 & FATTR4_WORD0_ACL)
+-		return svc_max_payload(rqstp);
++		return nfsd4_max_payload(rqstp);
+ 	if (bmap0 & FATTR4_WORD0_FS_LOCATIONS)
+-		return svc_max_payload(rqstp);
++		return nfsd4_max_payload(rqstp);
+ 
+ 	if (bmap1 & FATTR4_WORD1_OWNER) {
+ 		ret += IDMAP_NAMESZ + 4;
+@@ -2878,10 +2894,7 @@ static u32 nfsd4_open_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_read_rsize(const struct svc_rqst *rqstp,
+ 			    const struct nfsd4_op *op)
+ {
+-	u32 maxcount = 0, rlen = 0;
+-
+-	maxcount = svc_max_payload(rqstp);
+-	rlen = min(op->u.read.rd_length, maxcount);
++	u32 rlen = min(op->u.read.rd_length, nfsd4_max_payload(rqstp));
+ 
+ 	return (op_encode_hdr_size + 2 + XDR_QUADLEN(rlen)) * sizeof(__be32);
+ }
+@@ -2889,8 +2902,7 @@ static u32 nfsd4_read_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_read_plus_rsize(const struct svc_rqst *rqstp,
+ 				 const struct nfsd4_op *op)
+ {
+-	u32 maxcount = svc_max_payload(rqstp);
+-	u32 rlen = min(op->u.read.rd_length, maxcount);
++	u32 rlen = min(op->u.read.rd_length, nfsd4_max_payload(rqstp));
+ 	/*
+ 	 * If we detect that the file changed during hole encoding, then we
+ 	 * recover by encoding the remaining reply as data. This means we need
+@@ -2904,10 +2916,7 @@ static u32 nfsd4_read_plus_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_readdir_rsize(const struct svc_rqst *rqstp,
+ 			       const struct nfsd4_op *op)
+ {
+-	u32 maxcount = 0, rlen = 0;
+-
+-	maxcount = svc_max_payload(rqstp);
+-	rlen = min(op->u.readdir.rd_maxcount, maxcount);
++	u32 rlen = min(op->u.readdir.rd_maxcount, nfsd4_max_payload(rqstp));
+ 
+ 	return (op_encode_hdr_size + op_encode_verifier_maxsz +
+ 		XDR_QUADLEN(rlen)) * sizeof(__be32);
+@@ -3046,10 +3055,7 @@ static u32 nfsd4_copy_notify_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_getdeviceinfo_rsize(const struct svc_rqst *rqstp,
+ 				     const struct nfsd4_op *op)
+ {
+-	u32 maxcount = 0, rlen = 0;
+-
+-	maxcount = svc_max_payload(rqstp);
+-	rlen = min(op->u.getdeviceinfo.gd_maxcount, maxcount);
++	u32 rlen = min(op->u.getdeviceinfo.gd_maxcount, nfsd4_max_payload(rqstp));
+ 
+ 	return (op_encode_hdr_size +
+ 		1 /* gd_layout_type*/ +
+@@ -3099,10 +3105,7 @@ static u32 nfsd4_seek_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_getxattr_rsize(const struct svc_rqst *rqstp,
+ 				const struct nfsd4_op *op)
+ {
+-	u32 maxcount, rlen;
+-
+-	maxcount = svc_max_payload(rqstp);
+-	rlen = min_t(u32, XATTR_SIZE_MAX, maxcount);
++	u32 rlen = min_t(u32, XATTR_SIZE_MAX, nfsd4_max_payload(rqstp));
+ 
+ 	return (op_encode_hdr_size + 1 + XDR_QUADLEN(rlen)) * sizeof(__be32);
+ }
+@@ -3116,10 +3119,7 @@ static u32 nfsd4_setxattr_rsize(const struct svc_rqst *rqstp,
+ static u32 nfsd4_listxattrs_rsize(const struct svc_rqst *rqstp,
+ 				  const struct nfsd4_op *op)
+ {
+-	u32 maxcount, rlen;
+-
+-	maxcount = svc_max_payload(rqstp);
+-	rlen = min(op->u.listxattrs.lsxa_maxcount, maxcount);
++	u32 rlen = min(op->u.listxattrs.lsxa_maxcount, nfsd4_max_payload(rqstp));
+ 
+ 	return (op_encode_hdr_size + 4 + XDR_QUADLEN(rlen)) * sizeof(__be32);
+ }
+
+
