@@ -2,146 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 805115E7264
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 05:20:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D725B5E725F
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 05:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232332AbiIWDUn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 22 Sep 2022 23:20:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39732 "EHLO
+        id S231308AbiIWDUO (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 22 Sep 2022 23:20:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232311AbiIWDUe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 23:20:34 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FD898D22;
-        Thu, 22 Sep 2022 20:20:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1663903232; x=1695439232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U+A/qYlJeKZBPbpBrijZ8bmcVp04W1EXYKGOTOpIgSg=;
-  b=Gi8FV3eLFffWOtDGAdYIHtgN1Nao3ttnF9JKY0tRBcQR76w2Ndzi2dhy
-   9yCLJ8XDqoiftlc/5kU3zIswCLbeOn1lWn2z6a6DW8QzLXHqeQSKUxrJx
-   D+MgJzmqyVmT/cQ4dIFQMjfC2F/Q4HlI66ymJtIxPeqKLgdYwWdRFWs6H
-   uuyu21JLk95Ba1zwb4tDBkiBXtIFdAWbY1RH7gUgQ+EU77iwY5Vsj/Bmc
-   8RSzToa33AvQhBo3+uNyI+utoIVwH77O2JFhC4ZHVFs8g6Y+rU5nJRVXN
-   h6g27Gr3A3NWR41VYqJ/m0hUvs7ozYh3/cRthYEMtahN3Np8MD2LDXnIv
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10478"; a="364511569"
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="364511569"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Sep 2022 20:20:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.93,337,1654585200"; 
-   d="scan'208";a="709148133"
-Received: from lkp-server01.sh.intel.com (HELO c0a60f19fe7e) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 22 Sep 2022 20:20:29 -0700
-Received: from kbuild by c0a60f19fe7e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1obZEr-0005Gm-0Z;
-        Fri, 23 Sep 2022 03:20:29 +0000
-Date:   Fri, 23 Sep 2022 11:19:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     ChenXiaoSong <chenxiaosong2@huawei.com>,
-        trond.myklebust@hammerspace.com, anna@kernel.org
-Cc:     kbuild-all@lists.01.org, linux-nfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenxiaosong2@huawei.com,
-        yi.zhang@huawei.com, zhangxiaoxu5@huawei.com
-Subject: Re: [PATCH 2/2] NFSv4: check FMODE_EXEC from open context mode in
- nfs4_opendata_access()
-Message-ID: <202209231127.Fb4Qkx0m-lkp@intel.com>
-References: <20220922034905.1442056-3-chenxiaosong2@huawei.com>
+        with ESMTP id S229706AbiIWDUN (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 22 Sep 2022 23:20:13 -0400
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30584814D1;
+        Thu, 22 Sep 2022 20:20:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Q+FM57iduMogJtSFwZB4LfTdEsChuEHae2/DVlkArcM=; b=sk/KR0xPUKPHHKWolvPzsqAt4o
+        o9FlyBUe1wX2zq2RbXWaAJTiFJqpuaVPHn1hI4kFCMLxmK2i4rRcZyBQ7i8qSoGeGHFgdH3ZJ0UN5
+        dLNBxE5Tu66mnNUVk9JDrYHLUSZ5tR8FUBrd6EieY3EtTeOzsSdqmQkk2T5jFMG+0yVorDIOTv6BI
+        x2e9UgKUZKYh/UhIHRV8YFxRZVu+ZhV9ughRdGArDVjBkXAu9QUFk9H7Msq1b4dF/F8zWJ6sfxbPX
+        1KW1gnVTo+E89ZNUi1kmPsIS+V0iIkxK6dzo7GQGwpv2V3hXCjpWSwrQMvlVc1ZMa41+fwRncsoTL
+        6/jkjISg==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1obZE6-002eVa-0R;
+        Fri, 23 Sep 2022 03:19:42 +0000
+Date:   Fri, 23 Sep 2022 04:19:42 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Jan Kara <jack@suse.cz>
+Cc:     John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <Yy0lztxfwfGXFme4@ZenIV>
+References: <Yxb7YQWgjHkZet4u@infradead.org>
+ <20220906102106.q23ovgyjyrsnbhkp@quack3>
+ <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
+ <20220914145233.cyeljaku4egeu4x2@quack3>
+ <YyIEgD8ksSZTsUdJ@ZenIV>
+ <20220915081625.6a72nza6yq4l5etp@quack3>
+ <YyvG+Oih2A37Grcf@ZenIV>
+ <a6f95605-c2d5-6ec5-b85c-d1f3f8664646@nvidia.com>
+ <20220922112935.pep45vfqfw5766gq@quack3>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20220922034905.1442056-3-chenxiaosong2@huawei.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20220922112935.pep45vfqfw5766gq@quack3>
+Sender: Al Viro <viro@ftp.linux.org.uk>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi ChenXiaoSong,
+On Thu, Sep 22, 2022 at 01:29:35PM +0200, Jan Kara wrote:
 
-Thank you for the patch! Perhaps something to improve:
+> > This rule would mostly work, as long as we can relax it in some cases, to
+> > allow pinning of both source and dest pages, instead of just destination
+> > pages, in some cases. In particular, bio_release_pages() has lost all
+> > context about whether it was a read or a write request, as far as I can
+> > tell. And bio_release_pages() is the primary place to unpin pages for
+> > direct IO.
+> 
+> Well, we already do have BIO_NO_PAGE_REF bio flag that gets checked in
+> bio_release_pages(). I think we can easily spare another bio flag to tell
+> whether we need to unpin or not. So as long as all the pages in the created
+> bio need the same treatment, the situation should be simple.
 
-[auto build test WARNING on trondmy-nfs/linux-next]
-[also build test WARNING on linus/master v6.0-rc6 next-20220921]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Yes.  Incidentally, the same condition is already checked by the creators
+of those bio - see the assorted should_dirty logics.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/ChenXiaoSong/NFS-check-FMODE_EXEC-from-open-context-mode/20220922-105006
-base:   git://git.linux-nfs.org/projects/trondmy/linux-nfs.git linux-next
-config: arm64-randconfig-s041-20220921 (https://download.01.org/0day-ci/archive/20220923/202209231127.Fb4Qkx0m-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 12.1.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/74ed5473611c0257ea5fe8bb5e77f19d94d02596
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review ChenXiaoSong/NFS-check-FMODE_EXEC-from-open-context-mode/20220922-105006
-        git checkout 74ed5473611c0257ea5fe8bb5e77f19d94d02596
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=arm64 SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-
-sparse warnings: (new ones prefixed by >>)
->> fs/nfs/nfs4proc.c:2638:13: sparse: sparse: restricted fmode_t degrades to integer
-
-vim +2638 fs/nfs/nfs4proc.c
-
-  2616	
-  2617	/*
-  2618	 * Additional permission checks in order to distinguish between an
-  2619	 * open for read, and an open for execute. This works around the
-  2620	 * fact that NFSv4 OPEN treats read and execute permissions as being
-  2621	 * the same.
-  2622	 * Note that in the non-execute case, we want to turn off permission
-  2623	 * checking if we just created a new file (POSIX open() semantics).
-  2624	 */
-  2625	static int nfs4_opendata_access(const struct cred *cred,
-  2626					struct nfs4_opendata *opendata,
-  2627					struct nfs4_state *state, fmode_t fmode)
-  2628	{
-  2629		struct nfs_access_entry cache;
-  2630		u32 mask, flags;
-  2631	
-  2632		/* access call failed or for some reason the server doesn't
-  2633		 * support any access modes -- defer access call until later */
-  2634		if (opendata->o_res.access_supported == 0)
-  2635			return 0;
-  2636	
-  2637		mask = 0;
-> 2638		if (fmode & __FMODE_EXEC) {
-  2639			/* ONLY check for exec rights */
-  2640			if (S_ISDIR(state->inode->i_mode))
-  2641				mask = NFS4_ACCESS_LOOKUP;
-  2642			else
-  2643				mask = NFS4_ACCESS_EXECUTE;
-  2644		} else if ((fmode & FMODE_READ) && !opendata->file_created)
-  2645			mask = NFS4_ACCESS_READ;
-  2646	
-  2647		nfs_access_set_mask(&cache, opendata->o_res.access_result);
-  2648		nfs_access_add_cache(state->inode, &cache, cred);
-  2649	
-  2650		flags = NFS4_ACCESS_READ | NFS4_ACCESS_EXECUTE | NFS4_ACCESS_LOOKUP;
-  2651		if ((mask & ~cache.mask & flags) == 0)
-  2652			return 0;
-  2653	
-  2654		return -EACCES;
-  2655	}
-  2656	
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+While we are at it - how much of the rationale around bio_check_pages_dirty()
+doing dirtying is still applicable with pinning pages before we stick them
+into bio?  We do dirty them before submitting bio, then on completion
+bio_check_pages_dirty() checks if something has marked them clean while
+we'd been doing IO; if all of them are still dirty we just drop the pages
+(well, unpin and drop), otherwise we arrange for dirty + unpin + drop
+done in process context (via schedule_work()).  Can they be marked clean by
+anyone while they are pinned?  After all, pinning is done to prevent
+writeback getting done on them while we are modifying the suckers...
