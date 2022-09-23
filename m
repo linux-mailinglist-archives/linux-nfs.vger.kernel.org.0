@@ -2,163 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5624E5E7AB6
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 14:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FF0D5E7B4A
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 15:06:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230514AbiIWM1G (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Sep 2022 08:27:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        id S230448AbiIWNGG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Sep 2022 09:06:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232124AbiIWM0o (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 08:26:44 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5A513505E;
-        Fri, 23 Sep 2022 05:22:46 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S230216AbiIWNGF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 09:06:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FFA128A3F
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 06:06:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 141DA1F92C;
-        Fri, 23 Sep 2022 12:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1663935764; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uWHeuxh4DhTU4e8+sDFIgUuNnvFHgGUFoyEReSRgGTY=;
-        b=GaS3P1mTSVy7nSKrfrj/ufMsJsJTty09ODjZQD7Oil8VPuL9kb5L9beX55XjUmTXKt1Khg
-        C9qw8QX+RAXmqHhFkH98ZIxe2yS2l4qcpdJz70A6dQonZHj9MTnoX7Mc1FhsCrWsw0JYCy
-        8Oga72G9TOuH67EiyKlPNlYkr81TbLQ=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1663935764;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uWHeuxh4DhTU4e8+sDFIgUuNnvFHgGUFoyEReSRgGTY=;
-        b=B9eWBL1C7tXZz2ObeTj77PXquEvf2OzUBEKJwPMz5GnRUw5EvSKpLvEKLIx65rjNnBrrVL
-        b0EHoJAfEr5c3dCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E508513A00;
-        Fri, 23 Sep 2022 12:22:43 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id cwLLNxOlLWO9cgAAMHmgww
-        (envelope-from <jack@suse.cz>); Fri, 23 Sep 2022 12:22:43 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-        id 78FD3A0685; Fri, 23 Sep 2022 14:22:43 +0200 (CEST)
-Date:   Fri, 23 Sep 2022 14:22:43 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        "Darrick J . Wong" <djwong@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
-Message-ID: <20220923122243.bbw6agvopkhz5yud@quack3>
-References: <YxhaJktqtHw3QTSG@infradead.org>
- <YyFPtTtxYozCuXvu@ZenIV>
- <20220914145233.cyeljaku4egeu4x2@quack3>
- <YyIEgD8ksSZTsUdJ@ZenIV>
- <20220915081625.6a72nza6yq4l5etp@quack3>
- <YyvG+Oih2A37Grcf@ZenIV>
- <a6f95605-c2d5-6ec5-b85c-d1f3f8664646@nvidia.com>
- <20220922112935.pep45vfqfw5766gq@quack3>
- <Yy0lztxfwfGXFme4@ZenIV>
- <7e652ba4-8b03-59e0-a9ef-1118c4bbd492@nvidia.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EFB2D610A5
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 13:06:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7F9C433C1;
+        Fri, 23 Sep 2022 13:06:00 +0000 (UTC)
+Subject: [PATCH v1 0/6] xprtrdma deadlock avoidance
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     anna.schumaker@netapp.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Fri, 23 Sep 2022 09:05:58 -0400
+Message-ID: <166393821144.1029362.9036806277307694311.stgit@morisot.1015granger.net>
+User-Agent: StGit/1.5
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7e652ba4-8b03-59e0-a9ef-1118c4bbd492@nvidia.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu 22-09-22 21:05:16, John Hubbard wrote:
-> On 9/22/22 20:19, Al Viro wrote:
-> > On Thu, Sep 22, 2022 at 01:29:35PM +0200, Jan Kara wrote:
-> > 
-> >>> This rule would mostly work, as long as we can relax it in some cases, to
-> >>> allow pinning of both source and dest pages, instead of just destination
-> >>> pages, in some cases. In particular, bio_release_pages() has lost all
-> >>> context about whether it was a read or a write request, as far as I can
-> >>> tell. And bio_release_pages() is the primary place to unpin pages for
-> >>> direct IO.
-> >>
-> >> Well, we already do have BIO_NO_PAGE_REF bio flag that gets checked in
-> >> bio_release_pages(). I think we can easily spare another bio flag to tell
-> >> whether we need to unpin or not. So as long as all the pages in the created
-> >> bio need the same treatment, the situation should be simple.
-> > 
-> > Yes.  Incidentally, the same condition is already checked by the creators
-> > of those bio - see the assorted should_dirty logics.
-> 
-> Beautiful!
-> 
-> > 
-> > While we are at it - how much of the rationale around bio_check_pages_dirty()
-> > doing dirtying is still applicable with pinning pages before we stick them
-> > into bio?  We do dirty them before submitting bio, then on completion
-> > bio_check_pages_dirty() checks if something has marked them clean while
-> > we'd been doing IO; if all of them are still dirty we just drop the pages
-> > (well, unpin and drop), otherwise we arrange for dirty + unpin + drop
-> > done in process context (via schedule_work()).  Can they be marked clean by
-> > anyone while they are pinned?  After all, pinning is done to prevent
-> > writeback getting done on them while we are modifying the suckers...
-> 
-> I certainly hope not. And in fact, we should really just say that that's
-> a rule: the whole time the page is pinned, it simply must remain dirty
-> and writable, at least with the way things are right now.
+These patches attempt to reduce the possibility of a deadlock when
+direct reclaim drives resource allocation in xprtrdma. Looking for
+comments and review.
 
-I agree the page should be staying dirty the whole time it is pinned. I
-don't think it is feasible to keep it writeable in the page tables because
-that would mean you would need to block e.g. munmap() until the pages gets
-unpinned and that will almost certainly upset some current userspace.
+---
 
-But keeping page dirty should be enough so that we can get rid of all these
-nasty calls to set_page_dirty() from IO completion.
+Chuck Lever (6):
+      svcrdma: Clean up RPCRDMA_DEF_GFP
+      xprtrdma: Clean up synopsis of rpcrdma_req_create()
+      xprtrdma: Clean up synopsis of rpcrdma_regbuf_alloc()
+      xprtrdma: MR-related memory allocation should be allowed to fail
+      xprtrdma: Memory allocation should be allowed to fail during connect
+      xprtrdma: Prevent memory allocations from driving a reclaim
 
-> This reminds me that I'm not exactly sure what the rules for
-> FOLL_LONGTERM callers should be, with respect to dirtying. At the
-> moment, most, if not all of the code that does "set_page_dirty_lock();
-> unpin_user_page()" is wrong.
 
-Right.
+ net/sunrpc/xprtrdma/backchannel.c          |  2 +-
+ net/sunrpc/xprtrdma/frwr_ops.c             | 17 ++++-----
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  4 +--
+ net/sunrpc/xprtrdma/verbs.c                | 42 +++++++++++-----------
+ net/sunrpc/xprtrdma/xprt_rdma.h            | 10 ++++--
+ 5 files changed, 38 insertions(+), 37 deletions(-)
 
-> To fix those cases, IIUC, the answer is: you must make the page dirty
-> properly, with page_mkwrite(), not just with set_page_dirty_lock(). And
+--
+Chuck Lever
 
-Correct, and GUP (or PUP) actually does that under the hood so I don't
-think we need to change anything there.
-
-> that has to be done probably a lot earlier, for reasons that I'm still
-> vague on. But perhaps right after pinning the page. (Assuming that we
-> hold off writeback while the page is pinned.)
-
-Holding off writeback is not always doable - as Christoph mentions, for
-data integrity writeback we'll have to get the data to disk before the page
-is unpinned (as for longterm users it can take days for the page to be
-unpinned). But we can just writeback the page without clearing the dirty
-bit in these cases. We may need to use bounce pages to be able to safely
-writeback pinned pages but that's another part of the story...
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
