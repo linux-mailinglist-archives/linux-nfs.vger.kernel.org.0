@@ -2,31 +2,33 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FF0D5E7B4A
-	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 15:06:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BEDA45E7B4C
+	for <lists+linux-nfs@lfdr.de>; Fri, 23 Sep 2022 15:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230448AbiIWNGG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 23 Sep 2022 09:06:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57892 "EHLO
+        id S230113AbiIWNGM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 23 Sep 2022 09:06:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiIWNGF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 09:06:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FFA128A3F
-        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 06:06:01 -0700 (PDT)
+        with ESMTP id S231235AbiIWNGL (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 23 Sep 2022 09:06:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46A5613A393
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 06:06:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EFB2D610A5
-        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 13:06:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A7F9C433C1;
-        Fri, 23 Sep 2022 13:06:00 +0000 (UTC)
-Subject: [PATCH v1 0/6] xprtrdma deadlock avoidance
+        by ams.source.kernel.org (Postfix) with ESMTPS id F253CB82538
+        for <linux-nfs@vger.kernel.org>; Fri, 23 Sep 2022 13:06:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98DD9C433D7;
+        Fri, 23 Sep 2022 13:06:06 +0000 (UTC)
+Subject: [PATCH v1 1/6] svcrdma: Clean up RPCRDMA_DEF_GFP
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     anna.schumaker@netapp.com
 Cc:     linux-nfs@vger.kernel.org
-Date:   Fri, 23 Sep 2022 09:05:58 -0400
-Message-ID: <166393821144.1029362.9036806277307694311.stgit@morisot.1015granger.net>
+Date:   Fri, 23 Sep 2022 09:06:05 -0400
+Message-ID: <166393836562.1029362.1049888762792503024.stgit@morisot.1015granger.net>
+In-Reply-To: <166393821144.1029362.9036806277307694311.stgit@morisot.1015granger.net>
+References: <166393821144.1029362.9036806277307694311.stgit@morisot.1015granger.net>
 User-Agent: StGit/1.5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -40,28 +42,46 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-These patches attempt to reduce the possibility of a deadlock when
-direct reclaim drives resource allocation in xprtrdma. Looking for
-comments and review.
+xprt_rdma_bc_allocate() is now the only user of RPCRDMA_DEF_GFP.
+Replace that macro with the raw flags.
 
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ net/sunrpc/xprtrdma/svc_rdma_backchannel.c |    4 ++--
+ net/sunrpc/xprtrdma/xprt_rdma.h            |    2 --
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
-Chuck Lever (6):
-      svcrdma: Clean up RPCRDMA_DEF_GFP
-      xprtrdma: Clean up synopsis of rpcrdma_req_create()
-      xprtrdma: Clean up synopsis of rpcrdma_regbuf_alloc()
-      xprtrdma: MR-related memory allocation should be allowed to fail
-      xprtrdma: Memory allocation should be allowed to fail during connect
-      xprtrdma: Prevent memory allocations from driving a reclaim
+diff --git a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+index 85c8cdda98b1..aa2227a7e552 100644
+--- a/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
++++ b/net/sunrpc/xprtrdma/svc_rdma_backchannel.c
+@@ -119,12 +119,12 @@ xprt_rdma_bc_allocate(struct rpc_task *task)
+ 		return -EINVAL;
+ 	}
+ 
+-	page = alloc_page(RPCRDMA_DEF_GFP);
++	page = alloc_page(GFP_NOIO | __GFP_NOWARN);
+ 	if (!page)
+ 		return -ENOMEM;
+ 	rqst->rq_buffer = page_address(page);
+ 
+-	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, RPCRDMA_DEF_GFP);
++	rqst->rq_rbuffer = kmalloc(rqst->rq_rcvsize, GFP_NOIO | __GFP_NOWARN);
+ 	if (!rqst->rq_rbuffer) {
+ 		put_page(page);
+ 		return -ENOMEM;
+diff --git a/net/sunrpc/xprtrdma/xprt_rdma.h b/net/sunrpc/xprtrdma/xprt_rdma.h
+index c79f92eeda76..84b685c45555 100644
+--- a/net/sunrpc/xprtrdma/xprt_rdma.h
++++ b/net/sunrpc/xprtrdma/xprt_rdma.h
+@@ -149,8 +149,6 @@ static inline void *rdmab_data(const struct rpcrdma_regbuf *rb)
+ 	return rb->rg_data;
+ }
+ 
+-#define RPCRDMA_DEF_GFP		(GFP_NOIO | __GFP_NOWARN)
+-
+ /* To ensure a transport can always make forward progress,
+  * the number of RDMA segments allowed in header chunk lists
+  * is capped at 16. This prevents less-capable devices from
 
-
- net/sunrpc/xprtrdma/backchannel.c          |  2 +-
- net/sunrpc/xprtrdma/frwr_ops.c             | 17 ++++-----
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |  4 +--
- net/sunrpc/xprtrdma/verbs.c                | 42 +++++++++++-----------
- net/sunrpc/xprtrdma/xprt_rdma.h            | 10 ++++--
- 5 files changed, 38 insertions(+), 37 deletions(-)
-
---
-Chuck Lever
 
