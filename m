@@ -2,152 +2,98 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B258D5E996D
-	for <lists+linux-nfs@lfdr.de>; Mon, 26 Sep 2022 08:24:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 926A55EAD53
+	for <lists+linux-nfs@lfdr.de>; Mon, 26 Sep 2022 18:58:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229697AbiIZGYt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 26 Sep 2022 02:24:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34536 "EHLO
+        id S229509AbiIZQ6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 26 Sep 2022 12:58:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40716 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232965AbiIZGYr (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Sep 2022 02:24:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A2F064F2;
-        Sun, 25 Sep 2022 23:24:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A8FC6B818D2;
-        Mon, 26 Sep 2022 06:24:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D80E6C433D6;
-        Mon, 26 Sep 2022 06:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1664173482;
-        bh=SEwUUQrr6k5PLSyi2fjuCqZdrPa/9arlIxbgN1unuqA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mhhMSbuckchOV+Ydzn7bwvDIGmOGTVORgEbvlasEbhe6zsMxW0NMH5cJoQPpEzGN8
-         Coq624fVCaqgcNDVpi3WhrnX6Wmd5N7+ZDsvIV7rPF4pczU85V5xdRfa2J20qzsIm9
-         ihEi+czx1zWUlrMk9U0vEUPaojqMFTZjuFMNpUkI=
-Date:   Mon, 26 Sep 2022 08:24:39 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Thorsten Leemhuis <regressions@leemhuis.info>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        "anna@kernel.org" <anna@kernel.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
-        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Kurt Garloff <kurt@garloff.de>
-Subject: Re: nfs_scan_commit: BUG: unable to handle page fault for address:
- 000000001d473c07
-Message-ID: <YzFFp49wt8heLRUP@kroah.com>
-References: <c5d8485b-0dbc-5192-4dc6-10ef2b86b520@molgen.mpg.de>
- <e845f65cb78d31aa1982da4bc752ee2e5191f10f.camel@hammerspace.com>
- <ae96779e-e3a7-b4b5-78fc-e5b53d456ece@molgen.mpg.de>
- <ef08bf84da796db2a85549d882d655a370deb835.camel@hammerspace.com>
- <0e1263a1-9d3d-a6cf-deb7-197ab1eed437@leemhuis.info>
+        with ESMTP id S230091AbiIZQ5w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 26 Sep 2022 12:57:52 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB07293;
+        Mon, 26 Sep 2022 08:54:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=GLjOCldwMSYbtIvOp9MNc738nkI+qSWqG0cQCtDGyYs=; b=iKgsgckx1BpnYBt1Ml1luRzlNo
+        UEaD93VJ/NaxUNW6l6hN4BiK/C+lXg9TvmRBVZsr6VTRgniAUARhROkGwU1gb/+ga6hgyHbqIk4/Z
+        MZ2vk2dp+YZ4n0PysUqI70IA94ZPELr3jKfzqB+j9wqcDa40U1/yUR6ed5i6U/Ooq6akJwUIH9LCc
+        4FE9DI2L7LRdgnfG+csHbDb8jVG/m3HrQoeTsrshIrc6b/uSVjKzkoMcldkhksDV/gf35W549vzaw
+        QW3k1gYHecYAhnbGFnhN3AfKto9jFnIhYWcwx925qCXeqVUi440PLfDtd4qG2idoghktcU6o/gEhs
+        CpXOoeeQ==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ocqQR-005okf-Pg; Mon, 26 Sep 2022 15:53:43 +0000
+Date:   Mon, 26 Sep 2022 08:53:43 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Christoph Hellwig <hch@infradead.org>, Jan Kara <jack@suse.cz>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        "Darrick J . Wong" <djwong@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 4/7] iov_iter: new iov_iter_pin_pages*() routines
+Message-ID: <YzHLB4lGa2vktN7W@infradead.org>
+References: <YxhaJktqtHw3QTSG@infradead.org>
+ <YyFPtTtxYozCuXvu@ZenIV>
+ <20220914145233.cyeljaku4egeu4x2@quack3>
+ <YyIEgD8ksSZTsUdJ@ZenIV>
+ <20220915081625.6a72nza6yq4l5etp@quack3>
+ <YyvG+Oih2A37Grcf@ZenIV>
+ <YyxzYTlyGhbb2MOu@infradead.org>
+ <Yy00eSjyxvUIp7D5@ZenIV>
+ <Yy1x8QE9YA4HHzbQ@infradead.org>
+ <Yy3bNjaiUoGv/djG@ZenIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0e1263a1-9d3d-a6cf-deb7-197ab1eed437@leemhuis.info>
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <Yy3bNjaiUoGv/djG@ZenIV>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Sep 26, 2022 at 08:00:46AM +0200, Thorsten Leemhuis wrote:
-> [adding Greg and Sasha to the recipients, to ensure they see this; CCing
-> Kurt as well, to keep him in the loop]
-> 
-> On 22.09.22 15:44, Trond Myklebust wrote:
-> > On Thu, 2022-09-22 at 13:42 +0200, Paul Menzel wrote:
-> >> Am 21.09.22 um 14:44 schrieb Trond Myklebust:
-> >>> On Wed, 2022-09-21 at 13:42 +0200, Paul Menzel wrote:
-> >>
-> >>>> Moving from Linux 5.10.113 to 5.15.69, starting Mozilla
-> >>>> Thunderbird or
-> >>>> Mozilla Firefox with the home on NFS, both programs get killed,
-> >>>> and
-> >>>> Linux 5.15.69 logs:
-> >>>>
-> >>>> ```
-> >>>> [ 3827.604396] BUG: unable to handle page fault for address:
-> >>>> 000000001d473c07
-> >>>> [ 3827.611297] #PF: supervisor read access in kernel mode
-> >>>> [ 3827.616452] #PF: error_code(0x0000) - not-present page
-> >>>> [ 3827.621604] PGD 0 P4D 0
-> >>>> [ 3827.624152] Oops: 0000 [#1] SMP PTI
-> >>>> [ 3827.627657] CPU: 0 PID: 2378 Comm: firefox Not tainted
-> >>>> 5.15.69.mx64.435 #1
-> >>>> [ 3827.634551] Hardware name: Dell Inc. Precision Tower
-> >>>> 3620/0MWYPT, BIOS 2.20.0 12/09/2021
-> >>
-> >> […]
-> >>
-> >>>> [ 3827.743328] Call Trace:
-> >>>> [ 3827.745779]  <TASK>
-> >>>> [ 3827.747883]  nfs_scan_commit+0x76/0xb0 [nfs]
-> >>>> [ 3827.752167]  __nfs_commit_inode+0x108/0x180 [nfs]
-> >>>> [ 3827.756886]  nfs_wb_all+0x59/0x110 [nfs]
-> >>>> [ 3827.760822]  nfs4_inode_return_delegation+0x58/0x90 [nfsv4]
-> >>>> [ 3827.766413]  nfs4_proc_remove+0x101/0x110 [nfsv4]
-> >>>> [ 3827.771130]  nfs_unlink+0xf5/0x2d0 [nfs]
-> >>>> [ 3827.775065]  vfs_unlink+0x10b/0x280
-> >>>> [ 3827.778563]  do_unlinkat+0x19e/0x2c0
-> >>>> [ 3827.782158]  __x64_sys_unlink+0x3e/0x60
-> >>>> [ 3827.786002]  ? __x64_sys_readlink+0x1b/0x30
-> >>>> [ 3827.790192]  do_syscall_64+0x40/0x90
-> >>>> [ 3827.793779]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
-> >>
-> >> […]
-> >>
-> >>>> ```
-> >>>>
-> >>>
-> >>> Does cherry-picking commit 6e176d47160c ("NFSv4: Fixes for
-> >>> nfs4_inode_return_delegation()") into 5.15.69 from the upstream
-> >>> kernel
-> >>> tree fix the problem?
-> >>>
-> >>> 8<---------------------------------------------------
-> >>> From 6e176d47160cec8bcaa28d9aa06926d72d54237c Mon Sep 17 00:00:00
-> >>> 2001
-> >>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >>> Date: Sun, 10 Oct 2021 10:58:12 +0200
-> >>> Subject: [PATCH] NFSv4: Fixes for nfs4_inode_return_delegation()
-> >>
-> >> […]
-> >>
-> >> Indeed with that commit, present since v5.16-rc1, we are unable to 
-> >> reproduce the issue, so it seems to be the fix. It looks like there
-> >> are 
-> >> not a lot of 5.15 NFS users out there. ;-)
-> >>
-> > 
-> > I believe this is a dependency that was introduced by the back port of
-> > commit e591b298d7ec ("NFS: Save some space in the inode") into 5.15.68.
-> > So the reason it wasn't seen is because the change is very recent.
-> 
-> Side note: I wonder if that is causing this problem from Kurt as well:
-> https://lore.kernel.org/all/f6755107-b62c-a388-0ab5-0a6633bf9082@garloff.de/
-> 
-> > FYI Greg and Sasha: please also consider pulling 6e176d47160c ("NFSv4:
-> > Fixes for nfs4_inode_return_delegation()") into that stable series.
-> 
-> Greg, I noticed you in the past few days added quite a few patches into
-> the queue for the next 5.15.y release, but this one was not among them
-> afaics. So just to be sure: is that still on your todo list or is more
-> needed to get 6e176d47160c added in time for the next stable -rc?
+On Fri, Sep 23, 2022 at 05:13:42PM +0100, Al Viro wrote:
+> You are mixing two issues here - holding references to pages while using
+> iov_iter instance is obvious; holding them until async IO is complete, even
+> though struct iov_iter might be long gone by that point is a different
+> story.
 
-I don't see any request by anyone in the stable@vger.kernel.org history
-asking for that commit to be added, so no, it was not in my queue.
+But someone needs to hold a refernce until the I/O is completed, because
+the I/O obviously needs the pages.  Yes, we could say the callers holds
+them and can drop the references right after I/O submission, while
+the method needs to grab another reference.  But that is more
+complicated and is more costly than just holding the damn reference.
 
-I'll go add it now, thanks.
+> And originating iov_iter instance really can be long-gone by the time
+> of IO completion - requirement to keep it around would be very hard to
+> satisfy.  I've no objections to requiring the pages in ITER_BVEC to be
+> preserved at least until the IO completion by means independent of
+> whatever ->read_iter/->write_iter does to them, but
+> 	* that needs to be spelled out very clearly and
+> 	* we need to verify that it is, indeed, the case for all existing
+> iov_iter_bvec callers, preferably with comments next to non-obvious ones
+> (something that is followed only by the sync IO is obvious)
 
-greg k-h
+Agreed.
+
+> That goes not just for bio - if we make get_pages *NOT* grab references
+> on ITER_BVEC (and I'm all for it), we need to make sure that those
+> pages won't be retained after the original protection runs out.
+
+Yes.
