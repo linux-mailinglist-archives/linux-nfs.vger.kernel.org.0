@@ -2,36 +2,36 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A19C5EC0CA
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Sep 2022 13:15:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332735EC460
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Sep 2022 15:23:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232002AbiI0LPG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Sep 2022 07:15:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58842 "EHLO
+        id S232915AbiI0NXa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Sep 2022 09:23:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232016AbiI0LOn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Sep 2022 07:14:43 -0400
+        with ESMTP id S232882AbiI0NWu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Sep 2022 09:22:50 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFB9215FEA;
-        Tue, 27 Sep 2022 04:14:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767151B2D13;
+        Tue, 27 Sep 2022 06:18:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id D152EB81B10;
-        Tue, 27 Sep 2022 11:14:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70C55C433D6;
-        Tue, 27 Sep 2022 11:14:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 62FDEB81BE5;
+        Tue, 27 Sep 2022 13:18:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06FECC43141;
+        Tue, 27 Sep 2022 13:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664277272;
-        bh=5RonbP18IW8Z1fzGmvbzApRwvceRQaHvox4MafxU4WM=;
+        s=k20201202; t=1664284726;
+        bh=75r45GYNmdQ6TGZtVM1PaqeQt62nqyjqpVvH5ey6w3w=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jPMifld9Bgt7hQQIZP4NRfbCWgUUNzwL6HS1//AyhPQuhCxgajDcxDDX/IjN3dzp0
-         aRijbdoPQLxecjpIv+XrikW9FVpKmVIt9XrPx83dZDoJRtO4rA2tfDGL5+jPOOGXHE
-         dBCMMpfl3TQY1hcxDVcLgkN3iZVUrmcvpwoT7lvIkWVp28WHlg0DtaD3Cell82dfvc
-         RZJonJLYZbRRBIuz7w8Gy5LPXTUemXiCsxLPbXXIyyVClhIpq7JzhX7+Nu48q9Mgcl
-         Z2oQfGygH6flhHdLwADKaxx8/xQHSoeHKDHRSkCJXRDLwP6zG8b+dzYIaWTQet5NZc
-         7bvm2jVgTJhgQ==
-Message-ID: <32723e738a37806a76b9c346295b9464f45f410b.camel@kernel.org>
+        b=fl/6F/CbEzRJTGc0S8S+u4io0/U1Y20LUrcV8EI3ai8sfiZq7a4r0+QeC02bKrgC4
+         7HLpeekjBIf7338lAJOzta/LOslAVVelG3jIV1Lvn6wCxaW7H+tOwrFkKYSVJIeAz8
+         /Dns3spD7Duj6yT0m9RoAt8Ok1gNZQmxjyeybUAIEzuijiFrg6vhwlJ5lZy6iCXJr7
+         XaUkai7saTAfwQ7h38pJ0iO5LTsAKKJO2EcfaHan35eEHdu3BlHxlrm+iLEsC8YZtA
+         wYCyXxLU7CInTWkFKw/JgXdTP65K/aQBbe0kZCxmfO6ZROiBEORjT7PgdJKddfO079
+         J+SzYeeiBsV9Q==
+Message-ID: <6012013b1fd92e5dad7927d8133d5d5b3cd76e3f.camel@kernel.org>
 Subject: Re: [man-pages RFC PATCH v4] statx, inode: document the new
  STATX_INO_VERSION field
 From:   Jeff Layton <jlayton@kernel.org>
@@ -59,7 +59,7 @@ Cc:     Trond Myklebust <trondmy@hammerspace.com>,
         "lczerner@redhat.com" <lczerner@redhat.com>,
         "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
         "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>
-Date:   Tue, 27 Sep 2022 07:14:28 -0400
+Date:   Tue, 27 Sep 2022 09:18:42 -0400
 In-Reply-To: <166423223623.17572.7229091435446226718@noble.neil.brown.name>
 References: <24005713ad25370d64ab5bd0db0b2e4fcb902c1c.camel@kernel.org>
         , <20220918235344.GH3600936@dread.disaster.area>
@@ -104,21 +104,12 @@ t
 >=20
 > I wonder if we are over-thinking this, trying too hard, making "perfect"
 > the enemy of "good".
-
-I tend to think we are.
-
 > While we agree that the current implementation of i_version is
 > imperfect, it isn't causing major data corruption all around the world.
 > I don't think there are even any known bug reports are there?
 > So while we do want to fix it as best we can, we don't need to make that
 > the first priority.
 >=20
-
-I'm not aware of any bug reports aside from the issue of atime updates
-affecting the change attribute, but the effects of misbehavior here can
-be very subtle.
-
-
 > I think the first priority should be to document how we want it to work,
 > which is what this thread is really all about.  The documentation can
 > note that some (all) filesystems do not provide perfect semantics across
@@ -131,34 +122,34 @@ be very subtle.
 > achieved easily in common code.  We can then update the man page to say
 > "since Linux 6.42, this list of anomalies is no longer present".
 >=20
-
-I have a patch for this for ext4, and started looking at the same for
-btrfs and xfs.
-
 > Then we can explore some options for handling unclean restart - in a
 > context where we can write tests and maybe even demonstrate a concrete
 > problem before we start trying to fix it.
 >=20
 
-I think too that we need to recognize that there are multiple distinct
-issues around i_version handling:
+We can also argue that crash resilience isn't a hard requirement for all
+possible applications. We'll definitely need some sort of mitigation for
+nfsd so we can claim that it's MONOTONIC [1], but local applications may
+not care whether the value rolls backward after a crash, since they
+would have presumably crashed as well and may not be persisting values.
 
-1/ atime updates affecting i_version in ext4 and xfs, which harms
-performance
+IOW, I think I agree with Dave C. that crash resilience for regular
+files is best handled at the application level (with the first
+application being knfsd). RFC 7862 requires that the change_attr_type be
+homogeneous across the entire filesystem, so we don't have the option of
+deciding that on a per-inode basis. If we want to advertise it, we have
+ensure that all inode types conform.
 
-2/ ext4 should enable the change attribute by default
+I think for nfsd, a crash counter tracked in userland by nfsdcld
+multiplied by some large number of reasonable version bumps in a jiffy
+would work well and allow us to go back to advertising the value as
+MONOTONIC.=A0That's a bit of a project though and may take a while.
 
-3/ we currently mix the ctime into the change attr for directories,
-which is unnecessary.
+For presentation via statx, maybe we can create a
+STATX_ATTR_VERSION_MONOTONIC bit for stx_attributes for when the
+filesystem can provide that sort of guarantee. I may just add that
+internally for now anyway, since that would make for nicer layering.
 
-4/ we'd like to be able to report NFS4_CHANGE_TYPE_IS_MONOTONIC_INCR
-from nfsd, but the change attr on regular files can appear to go
-backward after a crash+clock jump.
-
-5/ testing i_version behavior is very difficult since there is no way to
-query it from userland.
-
-We can work on the first three without having to solve the last two
-right away.
+[1]: https://datatracker.ietf.org/doc/html/rfc7862#section-12.2.3
 --=20
 Jeff Layton <jlayton@kernel.org>
