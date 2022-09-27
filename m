@@ -2,421 +2,170 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BEBC5ECAB1
-	for <lists+linux-nfs@lfdr.de>; Tue, 27 Sep 2022 19:22:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1797D5ECC85
+	for <lists+linux-nfs@lfdr.de>; Tue, 27 Sep 2022 20:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiI0RWi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 27 Sep 2022 13:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46404 "EHLO
+        id S231298AbiI0S7n (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 27 Sep 2022 14:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231577AbiI0RWh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Sep 2022 13:22:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D9071CD10D
-        for <linux-nfs@vger.kernel.org>; Tue, 27 Sep 2022 10:22:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D2CAD60A6E
-        for <linux-nfs@vger.kernel.org>; Tue, 27 Sep 2022 17:22:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14E53C433C1;
-        Tue, 27 Sep 2022 17:22:35 +0000 (UTC)
-Subject: [PATCH RFC 2/2] NFSD: Use rhashtable for managing nfs4_file objects
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     jlayton@redhat.com, bfields@fieldses.org
-Date:   Tue, 27 Sep 2022 13:22:34 -0400
-Message-ID: <166429935413.4564.11504575992930966330.stgit@manet.1015granger.net>
-In-Reply-To: <166429914973.4564.115423416224540586.stgit@manet.1015granger.net>
-References: <166429914973.4564.115423416224540586.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5.dev2+g9ce680a5
+        with ESMTP id S230445AbiI0S7l (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 27 Sep 2022 14:59:41 -0400
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD511A069;
+        Tue, 27 Sep 2022 11:59:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1664305173;
+    s=strato-dkim-0002; d=garloff.de;
+    h=In-Reply-To:Subject:From:References:Cc:To:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=pgCnu2u9aasbInJyHgNeYUt7gTjNDDIS3Hbg8N6F9Fw=;
+    b=kMmwcI8AtGlaT6zzburG83oUuqwxgs9NO6D/B0M1u9nvTgs+1d0LeK0KXbphknND7A
+    uaO5hbqoHJLSN0qWnD0uOKRZP5e/DamcVCwMI/0N/OYU+KudO62f4N/yPGjqlnEiPSEK
+    p+BPV1HmCZiapOtUUuJtz/eklGgQBjfikwvRfzQ8lvRmV9bYZk682jZevqccALiV8XSD
+    4tXBG2gsci1wZYQFFuIyucgu/pFjZlQITsNPJJLZZYU//ycZVzbP9CYbthRPCdqLXFY1
+    7G0Iw3ocGggd1PH7pYDXtWkDdQgh/+tmS9LfMsKadz51p4bhM2jjQD66rk8V7WffioOk
+    RBfQ==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":J3kWYWCveu3U88BfwGxYwcN+YZ41GOdzWdTW9IJoHV1zocjVWQKKeekM8j2gfegf7pwk"
+X-RZG-CLASS-ID: mo00
+Received: from mail.garloff.de
+    by smtp.strato.de (RZmta 48.1.1 DYNA|AUTH)
+    with ESMTPSA id uc84cay8RIxWFoU
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Tue, 27 Sep 2022 20:59:32 +0200 (CEST)
+Received: from [192.168.155.202] (ap5.garloff.de [192.168.155.10])
+        by mail.garloff.de (Postfix) with ESMTPSA id 0C4EE61470;
+        Tue, 27 Sep 2022 20:59:32 +0200 (CEST)
+Message-ID: <5dc1b00f-0451-bb0d-56e4-6c178d3c2ce7@garloff.de>
+Date:   Tue, 27 Sep 2022 20:59:31 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+To:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     "anna@kernel.org" <anna@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
+        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
+        Trond Myklebust <trondmy@hammerspace.com>
+References: <c5d8485b-0dbc-5192-4dc6-10ef2b86b520@molgen.mpg.de>
+ <e845f65cb78d31aa1982da4bc752ee2e5191f10f.camel@hammerspace.com>
+ <ae96779e-e3a7-b4b5-78fc-e5b53d456ece@molgen.mpg.de>
+ <ef08bf84da796db2a85549d882d655a370deb835.camel@hammerspace.com>
+ <0e1263a1-9d3d-a6cf-deb7-197ab1eed437@leemhuis.info>
+Content-Language: en-US
+From:   Kurt Garloff <kurt@garloff.de>
+Subject: Re: nfs_scan_commit: BUG: unable to handle page fault for address:
+ 000000001d473c07
+In-Reply-To: <0e1263a1-9d3d-a6cf-deb7-197ab1eed437@leemhuis.info>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-fh_match() is expensive to use for hash chains that contain more
-than a few objects. With common workloads, I see multiple thousands
-of objects stored in file_hashtbl[], which has only 256 buckets.
+Hi Thorsten,
 
-Replace it with an rhashtable, which dynamically resizes its bucket
-array to keep hash chains less than two, on average.
+thanks for collecting this issue and providing relevant context!
 
-This also enables the removal of the use of state_lock to serialize
-operations on the new rhashtable.
+On 26/09/2022 08:00, Thorsten Leemhuis wrote:
 
-The result is an improvement in the latency of NFSv4 operations
-and the reduction of nfsd CPU utilization due to the cache misses
-of walking long hash chains in file_hashtbl.
+> [adding Greg and Sasha to the recipients, to ensure they see this; CCing
+> Kurt as well, to keep him in the loop]
+>
+> On 22.09.22 15:44, Trond Myklebust wrote:
+>> On Thu, 2022-09-22 at 13:42 +0200, Paul Menzel wrote:
+>>> Am 21.09.22 um 14:44 schrieb Trond Myklebust:
+>>>> On Wed, 2022-09-21 at 13:42 +0200, Paul Menzel wrote:
+>>>>> Moving from Linux 5.10.113 to 5.15.69, starting Mozilla
+>>>>> Thunderbird or
+>>>>> Mozilla Firefox with the home on NFS, both programs get killed,
+>>>>> and
+>>>>> Linux 5.15.69 logs:
+>>>>>
+>>>>> ```
+>>>>> [ 3827.604396] BUG: unable to handle page fault for address:
+>>>>> 000000001d473c07
+>>>>> [ 3827.611297] #PF: supervisor read access in kernel mode
+>>>>> [ 3827.616452] #PF: error_code(0x0000) - not-present page
+>>>>> [ 3827.621604] PGD 0 P4D 0
+>>>>> [ 3827.624152] Oops: 0000 [#1] SMP PTI
+>>>>> [ 3827.627657] CPU: 0 PID: 2378 Comm: firefox Not tainted
+>>>>> 5.15.69.mx64.435 #1
+>>>>> [ 3827.634551] Hardware name: Dell Inc. Precision Tower
+>>>>> 3620/0MWYPT, BIOS 2.20.0 12/09/2021
+>>> […]
+>>>
+>>>>> [ 3827.743328] Call Trace:
+>>>>> [ 3827.745779]  <TASK>
+>>>>> [ 3827.747883]  nfs_scan_commit+0x76/0xb0 [nfs]
+>>>>> [ 3827.752167]  __nfs_commit_inode+0x108/0x180 [nfs]
+>>>>> [ 3827.756886]  nfs_wb_all+0x59/0x110 [nfs]
+>>>>> [ 3827.760822]  nfs4_inode_return_delegation+0x58/0x90 [nfsv4]
+>>>>> [ 3827.766413]  nfs4_proc_remove+0x101/0x110 [nfsv4]
+>>>>> [ 3827.771130]  nfs_unlink+0xf5/0x2d0 [nfs]
+>>>>> [ 3827.775065]  vfs_unlink+0x10b/0x280
+>>>>> [ 3827.778563]  do_unlinkat+0x19e/0x2c0
+>>>>> [ 3827.782158]  __x64_sys_unlink+0x3e/0x60
+>>>>> [ 3827.786002]  ? __x64_sys_readlink+0x1b/0x30
+>>>>> [ 3827.790192]  do_syscall_64+0x40/0x90
+>>>>> [ 3827.793779]  entry_SYSCALL_64_after_hwframe+0x61/0xcb
+>>> […]
+>>>
+>>>>> ```
+>>>>>
+>>>> Does cherry-picking commit 6e176d47160c ("NFSv4: Fixes for
+>>>> nfs4_inode_return_delegation()") into 5.15.69 from the upstream
+>>>> kernel
+>>>> tree fix the problem?
+>>>>
+>>>> 8<---------------------------------------------------
+>>>>  From 6e176d47160cec8bcaa28d9aa06926d72d54237c Mon Sep 17 00:00:00
+>>>> 2001
+>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>> Date: Sun, 10 Oct 2021 10:58:12 +0200
+>>>> Subject: [PATCH] NFSv4: Fixes for nfs4_inode_return_delegation()
+>>> […]
+>>>
+>>> Indeed with that commit, present since v5.16-rc1, we are unable to
+>>> reproduce the issue, so it seems to be the fix. It looks like there
+>>> are
+>>> not a lot of 5.15 NFS users out there. ;-)
+>>>
+>> I believe this is a dependency that was introduced by the back port of
+>> commit e591b298d7ec ("NFS: Save some space in the inode") into 5.15.68.
+>> So the reason it wasn't seen is because the change is very recent.
+> Side note: I wonder if that is causing this problem from Kurt as well:
+> https://lore.kernel.org/all/f6755107-b62c-a388-0ab5-0a6633bf9082@garloff.de/
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4state.c |  227 +++++++++++++++++++++++++++++++++++----------------
- fs/nfsd/state.h     |    5 -
- 2 files changed, 156 insertions(+), 76 deletions(-)
+Looks like it:
+After confirming that the 5.15.69 kernel worked again fine backing out
+those last three NFS commits, I reapplied them and cherry-picked commit
+6e176d47160c as suggested. The kernel worked flawlessly thus far, so this
+seems to indeed be a requirement for e591b298d7ec not to cause harm.
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c5d199d7e6b4..b96edcd22a34 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -44,7 +44,9 @@
- #include <linux/jhash.h>
- #include <linux/string_helpers.h>
- #include <linux/fsnotify.h>
-+#include <linux/rhashtable.h>
- #include <linux/nfs_ssc.h>
-+
- #include "xdr4.h"
- #include "xdr4cb.h"
- #include "vfs.h"
-@@ -84,6 +86,7 @@ static bool check_for_locks(struct nfs4_file *fp, struct nfs4_lockowner *lowner)
- static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
- void nfsd4_end_grace(struct nfsd_net *nn);
- static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cpntf_state *cps);
-+static void unhash_nfs4_file(struct nfs4_file *fp);
- 
- /* Locking: */
- 
-@@ -577,11 +580,8 @@ static void nfsd4_free_file_rcu(struct rcu_head *rcu)
- void
- put_nfs4_file(struct nfs4_file *fi)
- {
--	might_lock(&state_lock);
--
--	if (refcount_dec_and_lock(&fi->fi_ref, &state_lock)) {
--		hlist_del_rcu(&fi->fi_hash);
--		spin_unlock(&state_lock);
-+	if (refcount_dec_and_test(&fi->fi_ref)) {
-+		unhash_nfs4_file(fi);
- 		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
- 		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
- 		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
-@@ -695,19 +695,85 @@ static unsigned int ownerstr_hashval(struct xdr_netobj *ownername)
- 	return ret & OWNER_HASH_MASK;
- }
- 
--/* hash table for nfs4_file */
--#define FILE_HASH_BITS                   8
--#define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
-+static struct rhashtable nfs4_file_rhashtbl ____cacheline_aligned_in_smp;
-+
-+/*
-+ * The returned hash value is based solely on the address of an in-code
-+ * inode, a pointer to a slab-allocated object. The entropy in such a
-+ * pointer is concentrated in its middle bits.
-+ */
-+static u32 nfs4_file_inode_hash(const struct inode *inode, u32 seed)
-+{
-+	unsigned long ptr = (unsigned long)inode;
-+	u32 k;
-+
-+	k = ptr >> L1_CACHE_SHIFT;
-+	k &= 0x00ffffff;
-+	return jhash2(&k, 1, seed);
-+}
-+
-+/**
-+ * nfs4_file_key_hashfn - Compute the hash value of a lookup key
-+ * @data: key on which to compute the hash value
-+ * @len: rhash table's key_len parameter (unused)
-+ * @seed: rhash table's random seed of the day
-+ *
-+ * Return value:
-+ *   Computed 32-bit hash value
-+ */
-+static u32 nfs4_file_key_hashfn(const void *data, u32 len, u32 seed)
-+{
-+	const struct svc_fh *fhp = data;
-+
-+	return nfs4_file_inode_hash(d_inode(fhp->fh_dentry), seed);
-+}
-+
-+/**
-+ * nfs4_file_obj_hashfn - Compute the hash value of an nfs4_file object
-+ * @data: object on which to compute the hash value
-+ * @len: rhash table's key_len parameter (unused)
-+ * @seed: rhash table's random seed of the day
-+ *
-+ * Return value:
-+ *   Computed 32-bit hash value
-+ */
-+static u32 nfs4_file_obj_hashfn(const void *data, u32 len, u32 seed)
-+{
-+	const struct nfs4_file *fi = data;
-+
-+	return nfs4_file_inode_hash(fi->fi_inode, seed);
-+}
- 
--static unsigned int file_hashval(struct svc_fh *fh)
-+/**
-+ * nfs4_file_obj_cmpfn - Match a cache item against search criteria
-+ * @arg: search criteria
-+ * @ptr: cache item to check
-+ *
-+ * Return values:
-+ *   %0 - Item matches search criteria
-+ *   %1 - Item does not match search criteria
-+ */
-+static int nfs4_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
-+			       const void *ptr)
- {
--	struct inode *inode = d_inode(fh->fh_dentry);
-+	const struct svc_fh *fhp = arg->key;
-+	const struct nfs4_file *fi = ptr;
- 
--	/* XXX: why not (here & in file cache) use inode? */
--	return (unsigned int)hash_long(inode->i_ino, FILE_HASH_BITS);
-+	return fh_match(&fi->fi_fhandle, &fhp->fh_handle) ? 0 : 1;
- }
- 
--static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
-+static const struct rhashtable_params nfs4_file_rhash_params = {
-+	.key_len		= sizeof_field(struct nfs4_file, fi_inode),
-+	.key_offset		= offsetof(struct nfs4_file, fi_inode),
-+	.head_offset		= offsetof(struct nfs4_file, fi_rhash),
-+	.hashfn			= nfs4_file_key_hashfn,
-+	.obj_hashfn		= nfs4_file_obj_hashfn,
-+	.obj_cmpfn		= nfs4_file_obj_cmpfn,
-+
-+	/* Reduce resizing churn on light workloads */
-+	.min_size		= 256,		/* buckets */
-+	.automatic_shrinking	= true,
-+};
- 
- /*
-  * Check if courtesy clients have conflicting access and resolve it if possible
-@@ -4251,11 +4317,8 @@ static struct nfs4_file *nfsd4_alloc_file(void)
- }
- 
- /* OPEN Share state helper functions */
--static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
--				struct nfs4_file *fp)
-+static void init_nfs4_file(const struct svc_fh *fh, struct nfs4_file *fp)
- {
--	lockdep_assert_held(&state_lock);
--
- 	refcount_set(&fp->fi_ref, 1);
- 	spin_lock_init(&fp->fi_lock);
- 	INIT_LIST_HEAD(&fp->fi_stateids);
-@@ -4273,7 +4336,6 @@ static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
- 	INIT_LIST_HEAD(&fp->fi_lo_states);
- 	atomic_set(&fp->fi_lo_recalls, 0);
- #endif
--	hlist_add_head_rcu(&fp->fi_hash, &file_hashtbl[hashval]);
- }
- 
- void
-@@ -4626,71 +4688,84 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
- 		nfs4_put_stid(&last->st_stid);
- }
- 
--/* search file_hashtbl[] for file */
--static struct nfs4_file *
--find_file_locked(struct svc_fh *fh, unsigned int hashval)
-+static struct nfs4_file *find_nfs4_file(const struct svc_fh *fhp)
- {
--	struct nfs4_file *fp;
-+	struct nfs4_file *fi;
- 
--	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
--				lockdep_is_held(&state_lock)) {
--		if (fh_match(&fp->fi_fhandle, &fh->fh_handle)) {
--			if (refcount_inc_not_zero(&fp->fi_ref))
--				return fp;
--		}
--	}
--	return NULL;
-+	rcu_read_lock();
-+	fi = rhashtable_lookup(&nfs4_file_rhashtbl, fhp,
-+			       nfs4_file_rhash_params);
-+	if (fi)
-+		if (!refcount_inc_not_zero(&fi->fi_ref))
-+			fi = NULL;
-+	rcu_read_unlock();
-+	return fi;
- }
- 
--static struct nfs4_file *insert_file(struct nfs4_file *new, struct svc_fh *fh,
--				     unsigned int hashval)
-+static void check_nfs4_file_aliases_locked(struct nfs4_file *new,
-+					   const struct svc_fh *fhp)
- {
--	struct nfs4_file *fp;
--	struct nfs4_file *ret = NULL;
--	bool alias_found = false;
-+	struct rhashtable *ht = &nfs4_file_rhashtbl;
-+	struct rhash_lock_head __rcu *const *bkt;
-+	struct rhashtable_compare_arg arg = {
-+		.ht	= ht,
-+		.key	= fhp,
-+	};
-+	struct bucket_table *tbl;
-+	struct rhash_head *he;
-+	unsigned int hash;
- 
--	spin_lock(&state_lock);
--	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
--				 lockdep_is_held(&state_lock)) {
--		if (fh_match(&fp->fi_fhandle, &fh->fh_handle)) {
--			if (refcount_inc_not_zero(&fp->fi_ref))
--				ret = fp;
--		} else if (d_inode(fh->fh_dentry) == fp->fi_inode)
--			fp->fi_aliased = alias_found = true;
--	}
--	if (likely(ret == NULL)) {
--		nfsd4_init_file(fh, hashval, new);
--		new->fi_aliased = alias_found;
--		ret = new;
-+	/*
-+	 * rhashtable guarantees small buckets, thus this loop stays
-+	 * efficient.
-+	 */
-+	rcu_read_lock();
-+	tbl = rht_dereference_rcu(ht->tbl, ht);
-+	hash = rht_key_hashfn(ht, tbl, fhp, nfs4_file_rhash_params);
-+	bkt = rht_bucket(tbl, hash);
-+	rht_for_each_rcu_from(he, rht_ptr_rcu(bkt), tbl, hash) {
-+		struct nfs4_file *fi;
-+
-+		fi = rht_obj(ht, he);
-+		if (nfs4_file_obj_cmpfn(&arg, fi) == 0)
-+			continue;
-+		if (d_inode(fhp->fh_dentry) == fi->fi_inode) {
-+			fi->fi_aliased = true;
-+			new->fi_aliased = true;
-+		}
- 	}
--	spin_unlock(&state_lock);
--	return ret;
-+	rcu_read_unlock();
- }
- 
--static struct nfs4_file * find_file(struct svc_fh *fh)
-+static noinline struct nfs4_file *
-+find_or_hash_nfs4_file(struct nfs4_file *new, const struct svc_fh *fhp)
- {
--	struct nfs4_file *fp;
--	unsigned int hashval = file_hashval(fh);
-+	struct nfs4_file *fi;
- 
--	rcu_read_lock();
--	fp = find_file_locked(fh, hashval);
--	rcu_read_unlock();
--	return fp;
--}
-+	init_nfs4_file(fhp, new);
- 
--static struct nfs4_file *
--find_or_add_file(struct nfs4_file *new, struct svc_fh *fh)
--{
--	struct nfs4_file *fp;
--	unsigned int hashval = file_hashval(fh);
-+	fi = rhashtable_lookup_get_insert_key(&nfs4_file_rhashtbl,
-+					      fhp, &new->fi_rhash,
-+					      nfs4_file_rhash_params);
-+	if (!fi) {
-+		fi = new;
-+		goto check_aliases;
-+	}
-+	if (IS_ERR(fi))		/* or BUG? */
-+		return NULL;
-+	if (!refcount_inc_not_zero(&fi->fi_ref))
-+		fi = new;
- 
--	rcu_read_lock();
--	fp = find_file_locked(fh, hashval);
--	rcu_read_unlock();
--	if (fp)
--		return fp;
-+check_aliases:
-+	check_nfs4_file_aliases_locked(fi, fhp);
- 
--	return insert_file(new, fh, hashval);
-+	return fi;
-+}
-+
-+static void unhash_nfs4_file(struct nfs4_file *fi)
-+{
-+	rhashtable_remove_fast(&nfs4_file_rhashtbl, &fi->fi_rhash,
-+			       nfs4_file_rhash_params);
- }
- 
- /*
-@@ -4703,9 +4778,10 @@ nfs4_share_conflict(struct svc_fh *current_fh, unsigned int deny_type)
- 	struct nfs4_file *fp;
- 	__be32 ret = nfs_ok;
- 
--	fp = find_file(current_fh);
-+	fp = find_nfs4_file(current_fh);
- 	if (!fp)
- 		return ret;
-+
- 	/* Check for conflicting share reservations */
- 	spin_lock(&fp->fi_lock);
- 	if (fp->fi_share_deny & deny_type)
-@@ -5548,7 +5624,7 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	 * and check for delegations in the process of being recalled.
- 	 * If not found, create the nfs4_file struct
- 	 */
--	fp = find_or_add_file(open->op_file, current_fh);
-+	fp = find_or_hash_nfs4_file(open->op_file, current_fh);
- 	if (fp != open->op_file) {
- 		status = nfs4_check_deleg(cl, open, &dp);
- 		if (status)
-@@ -7905,10 +7981,16 @@ nfs4_state_start(void)
- {
- 	int ret;
- 
--	ret = nfsd4_create_callback_queue();
-+	ret = rhashtable_init(&nfs4_file_rhashtbl, &nfs4_file_rhash_params);
- 	if (ret)
- 		return ret;
- 
-+	ret = nfsd4_create_callback_queue();
-+	if (ret) {
-+		rhashtable_destroy(&nfs4_file_rhashtbl);
-+		return ret;
-+	}
-+
- 	set_max_delegations();
- 	return 0;
- }
-@@ -7939,6 +8021,7 @@ nfs4_state_shutdown_net(struct net *net)
- 
- 	nfsd4_client_tracking_exit(net);
- 	nfs4_state_destroy_net(net);
-+	rhashtable_destroy(&nfs4_file_rhashtbl);
- #ifdef CONFIG_NFSD_V4_2_INTER_SSC
- 	nfsd4_ssc_shutdown_umount(nn);
- #endif
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index ae596dbf8667..879f085bc39e 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -536,16 +536,13 @@ struct nfs4_clnt_odstate {
-  * inode can have multiple filehandles associated with it, so there is
-  * (potentially) a many to one relationship between this struct and struct
-  * inode.
-- *
-- * These are hashed by filehandle in the file_hashtbl, which is protected by
-- * the global state_lock spinlock.
-  */
- struct nfs4_file {
- 	refcount_t		fi_ref;
- 	struct inode *		fi_inode;
- 	bool			fi_aliased;
- 	spinlock_t		fi_lock;
--	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
-+	struct rhash_head	fi_rhash;
- 	struct list_head        fi_stateids;
- 	union {
- 		struct list_head	fi_delegations;
+>> FYI Greg and Sasha: please also consider pulling 6e176d47160c ("NFSv4:
+>> Fixes for nfs4_inode_return_delegation()") into that stable series.
+> Greg, I noticed you in the past few days added quite a few patches into
+> the queue for the next 5.15.y release, but this one was not among them
+> afaics. So just to be sure: is that still on your todo list or is more
+> needed to get 6e176d47160c added in time for the next stable -rc?
 
+So by all means, Greg, please put this in the stable queue unless the
+NFS wizards out there consider it safer to revert e591b298d7ec instead.
+
+Thanks,
+
+-- 
+Kurt Garloff <kurt@garloff.de>
+Cologne, Germany
 
