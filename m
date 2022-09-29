@@ -2,181 +2,128 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 672E75EDDF5
-	for <lists+linux-nfs@lfdr.de>; Wed, 28 Sep 2022 15:42:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FB885EEE30
+	for <lists+linux-nfs@lfdr.de>; Thu, 29 Sep 2022 09:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234133AbiI1NmK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 28 Sep 2022 09:42:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60554 "EHLO
+        id S233332AbiI2HAJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 29 Sep 2022 03:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231567AbiI1NmI (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 28 Sep 2022 09:42:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 204F16E2F4;
-        Wed, 28 Sep 2022 06:42:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F8F761EB1;
-        Wed, 28 Sep 2022 13:42:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB686C433D6;
-        Wed, 28 Sep 2022 13:42:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664372524;
-        bh=PDniZhspoAjFGFPMZfaZ8GgB4DLLy5mz44zztNU7B+8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DqtgQ/m//i1BdMXDYXkHNALzJc+Fb2CkxwupnjD5iFoPUOy+RjGzDkBw6u16woact
-         Ek+6D4V044/DHPxZTiHl8kuYrAVeeMg2TUGzyu9mlJpBrkxFJqDxhyeySNUTWPuyDE
-         hkbGAN5/XfCvtPpm39Zv+BugYwMfdEX6eE42uDuYEIIMtghXn56j8tNz+CdNoTpYGY
-         oLA0DJOske77HfN24JeefL9hG37cIs4JMzuBMxszwi1t7W9Jgu94CxlxxpRk9x88qB
-         1bv9fv5W8vrBkEn3A2+rUfg9FkuebF8rP6DNdglXtFDEV9ehvhMRQoF+tvVevKpvLP
-         8XuQDoIktoBXA==
-From:   Jeff Layton <jlayton@kernel.org>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
-        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
-        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
-        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com,
-        linux-man@vger.kernel.org
-Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org
-Subject: [man-pages RFC PATCH v6] statx, inode: document the new STATX_VERSION field
-Date:   Wed, 28 Sep 2022 09:42:00 -0400
-Message-Id: <20220928134200.28741-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
+        with ESMTP id S234963AbiI2HAH (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Sep 2022 03:00:07 -0400
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62387855BE
+        for <linux-nfs@vger.kernel.org>; Thu, 29 Sep 2022 00:00:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1664434802;
+    s=strato-dkim-0002; d=garloff.de;
+    h=In-Reply-To:From:References:Cc:To:Subject:Date:Message-ID:Cc:Date:
+    From:Subject:Sender;
+    bh=AcI2rkfVeijKqXm1LJxGarnuPd5idq7pXYXFMaSTKTM=;
+    b=dhUl5qED60qQxUSGwPt12hsUaXCU78ur5chSin/XprIVhGwrxLGIXgZHIzRE1YYA9U
+    K2r2RQo5/qvAXLsIWvlrPeWf8zMAQJLijA9lyyMAev+6uDMDo5qTqvQUUAi3xd01hsAh
+    aqZRCwXZeCIsA/OqlYddfloO5x8mgl07D+R1gYSUwCzw1bs5UaG3tN9vPW+eNaEkYiLx
+    azHMPX6MLsuDNHj9AAWanliUXasi04BzgnG+R2jL7d2CH3wo5XOyHeNwNN0mx8EXxA46
+    b1sejryklduKapG6dtT4VH21tGkaloFnys4wfXKw9kwf7ZDAf4DLSJvsGaiaRKZEQLlV
+    apDg==
+Authentication-Results: strato.com;
+    dkim=none
+X-RZG-AUTH: ":J3kWYWCveu3U88BfwGxYwcN+YZ41GOdzWdTW9IJoHV1zocjVWQ2FeSNmljTMRpK4ZL0="
+X-RZG-CLASS-ID: mo00
+Received: from mail.garloff.de
+    by smtp.strato.de (RZmta 48.1.3 DYNA|AUTH)
+    with ESMTPSA id t2737by8T70227e
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Thu, 29 Sep 2022 09:00:02 +0200 (CEST)
+Received: from [192.168.155.202] (ap5.garloff.de [192.168.155.10])
+        by mail.garloff.de (Postfix) with ESMTPSA id B61456302E;
+        Thu, 29 Sep 2022 09:00:01 +0200 (CEST)
+Message-ID: <34652266-06a6-b076-dec4-2abfa4c1b01b@garloff.de>
+Date:   Thu, 29 Sep 2022 09:00:01 +0200
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.3.0
+Subject: Re: nfs_scan_commit: BUG: unable to handle page fault for address:
+ 000000001d473c07
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Thorsten Leemhuis <regressions@leemhuis.info>,
+        Sasha Levin <sashal@kernel.org>,
+        "anna@kernel.org" <anna@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "it+linux-nfs@molgen.mpg.de" <it+linux-nfs@molgen.mpg.de>,
+        "pmenzel@molgen.mpg.de" <pmenzel@molgen.mpg.de>,
+        Trond Myklebust <trondmy@hammerspace.com>
+References: <c5d8485b-0dbc-5192-4dc6-10ef2b86b520@molgen.mpg.de>
+ <e845f65cb78d31aa1982da4bc752ee2e5191f10f.camel@hammerspace.com>
+ <ae96779e-e3a7-b4b5-78fc-e5b53d456ece@molgen.mpg.de>
+ <ef08bf84da796db2a85549d882d655a370deb835.camel@hammerspace.com>
+ <0e1263a1-9d3d-a6cf-deb7-197ab1eed437@leemhuis.info>
+ <5dc1b00f-0451-bb0d-56e4-6c178d3c2ce7@garloff.de>
+ <YzPvBLBTyISlNz4k@kroah.com>
+Content-Language: en-US
+From:   Kurt Garloff <kurt@garloff.de>
+In-Reply-To: <YzPvBLBTyISlNz4k@kroah.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I'm proposing to expose the inode change attribute via statx [1]. Document
-what this value means and what an observer can infer from it changing.
+Hi Greg,
 
-NB: this will probably have conflicts with the STATX_DIOALIGN doc
-patches, but we should be able to resolve those before merging anything.
+On 28/09/2022 08:51, Greg KH wrote:
+> On Tue, Sep 27, 2022 at 08:59:31PM +0200, Kurt Garloff wrote:
+>> On 26/09/2022 08:00, Thorsten Leemhuis wrote:
+>>
+>>> Does cherry-picking commit 6e176d47160c ("NFSv4: Fixes for
+>>>>>> nfs4_inode_return_delegation()") into 5.15.69 from the upstream
+>>>>>> kernel
+>>>>>> tree fix the problem?
+>>>>>>
+>>>>>> 8<---------------------------------------------------
+>>>>>>   From 6e176d47160cec8bcaa28d9aa06926d72d54237c Mon Sep 17 00:00:00
+>>>>>> 2001
+>>>>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>>>> Date: Sun, 10 Oct 2021 10:58:12 +0200
+>>>>>> Subject: [PATCH] NFSv4: Fixes for nfs4_inode_return_delegation()
+>>>>> […]
+>>>>>
+>>>>> Indeed with that commit, present since v5.16-rc1, we are unable to
+>>>>> reproduce the issue, so it seems to be the fix. It looks like there
+>>>>> are
+>>>>> not a lot of 5.15 NFS users out there. ;-)
+>>>>>
+>>>> I believe this is a dependency that was introduced by the back port of
+>>>> commit e591b298d7ec ("NFS: Save some space in the inode") into 5.15.68.
+>>>> So the reason it wasn't seen is because the change is very recent.
+>>> Side note: I wonder if that is causing this problem from Kurt as well:
+>>> https://lore.kernel.org/all/f6755107-b62c-a388-0ab5-0a6633bf9082@garloff.de/
+>> Looks like it:
+>> After confirming that the 5.15.69 kernel worked again fine backing out
+>> those last three NFS commits, I reapplied them and cherry-picked commit
+>> 6e176d47160c as suggested. The kernel worked flawlessly thus far, so this
+>> seems to indeed be a requirement for e591b298d7ec not to cause harm.
+>> [...]
+>> So by all means, Greg, please put this in the stable queue unless the
+>> NFS wizards out there consider it safer to revert e591b298d7ec instead.
+> Already queued up for the next 5.15.y release that will happen in a few
+> hours, thanks for testing.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
+And -- unsurprisingly -- I can confirm that NFS in 5.15.71 does work again,
+indeed.
 
-[1]: https://lore.kernel.org/linux-nfs/20220826214703.134870-1-jlayton@kernel.org/T/#t
----
- man2/statx.2 | 13 +++++++++++++
- man7/inode.7 | 36 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+Thanks!
 
-v6: incorporate Neil's suggestions
-    clarify how well-behaved filesystems should order things
-
-diff --git a/man2/statx.2 b/man2/statx.2
-index 0d1b4591f74c..ee7005334a2f 100644
---- a/man2/statx.2
-+++ b/man2/statx.2
-@@ -62,6 +62,7 @@ struct statx {
-     __u32 stx_dev_major;   /* Major ID */
-     __u32 stx_dev_minor;   /* Minor ID */
-     __u64 stx_mnt_id;      /* Mount ID */
-+    __u64 stx_version;     /* Inode change attribute */
- };
- .EE
- .in
-@@ -247,6 +248,7 @@ STATX_BTIME	Want stx_btime
- STATX_ALL	The same as STATX_BASIC_STATS | STATX_BTIME.
- 	It is deprecated and should not be used.
- STATX_MNT_ID	Want stx_mnt_id (since Linux 5.8)
-+STATX_VERSION	Want stx_version (DRAFT)
- .TE
- .in
- .PP
-@@ -407,10 +409,16 @@ This is the same number reported by
- .BR name_to_handle_at (2)
- and corresponds to the number in the first field in one of the records in
- .IR /proc/self/mountinfo .
-+.TP
-+.I stx_version
-+The inode version, also known as the inode change attribute. See
-+.BR inode (7)
-+for details.
- .PP
- For further information on the above fields, see
- .BR inode (7).
- .\"
-+.TP
- .SS File attributes
- The
- .I stx_attributes
-@@ -489,6 +497,11 @@ without an explicit
- See
- .BR mmap (2)
- for more information.
-+.TP
-+.BR STATX_ATTR_VERSION_MONOTONIC " (since Linux 6.?)"
-+The stx_version value monotonically increases over time and will never appear
-+to go backward, even in the event of a crash. This can allow an application to
-+make a better determination about ordering when viewing different versions.
- .SH RETURN VALUE
- On success, zero is returned.
- On error, \-1 is returned, and
-diff --git a/man7/inode.7 b/man7/inode.7
-index 9b255a890720..e8adb63b1f6a 100644
---- a/man7/inode.7
-+++ b/man7/inode.7
-@@ -184,6 +184,12 @@ Last status change timestamp (ctime)
- This is the file's last status change timestamp.
- It is changed by writing or by setting inode information
- (i.e., owner, group, link count, mode, etc.).
-+.TP
-+Inode version (version)
-+(not returned in the \fIstat\fP structure); \fIstatx.stx_version\fP
-+.IP
-+This is the inode change counter. See the discussion of
-+\fBthe inode version counter\fP, below.
- .PP
- The timestamp fields report time measured with a zero point at the
- .IR Epoch ,
-@@ -424,6 +430,36 @@ on a directory means that a file
- in that directory can be renamed or deleted only by the owner
- of the file, by the owner of the directory, and by a privileged
- process.
-+.SS The inode version counter
-+.PP
-+The \fIstatx.stx_version\fP field is the inode change counter. Any operation
-+that could result in a change to \fIstatx.stx_ctime\fP must result in an
-+increase to this value. Soon after a change has been made, an stx_version value
-+should appear to be larger than previous readings. This is the case even
-+when a ctime change is not evident due to coarse timestamp granularity.
-+.PP
-+An observer cannot infer anything from amount of increase about the
-+nature or magnitude of the change. In fact, a single increment can reflect
-+multiple discrete changes if the value was not checked while those changes
-+were being processed.
-+.PP
-+Changes to stx_version are not necessarily atomic with the change itself, but
-+well-behaved filesystems should increment stx_version after a change has been
-+made visible to observers rather than before. This is especially important for
-+read-caching algorithms which could be fooled into associating a newer
-+stx_version with an older version of data. Note that this does leave a window
-+of time where a change may be visible, but the old stx_version is still being
-+reported.
-+.PP
-+In the event of a system crash, this value can appear to go backward if it was
-+queried before ever being written to the backing store. Applications that
-+persist stx_version values across a reboot should take care to mitigate this.
-+If the filesystem reports \fISTATX_ATTR_VERSION_MONOTONIC\fP in
-+\fIstatx.stx_attributes\fP, then it is not subject to this problem.
-+.PP
-+The stx_version is a Linux extension and is not supported by all filesystems.
-+The application must verify that the \fISTATX_VERSION\fP bit is set in the
-+returned \fIstatx.stx_mask\fP before relying on this field.
- .SH STANDARDS
- If you need to obtain the definition of the
- .I blkcnt_t
 -- 
-2.37.3
+Kurt Garloff <kurt@garloff.de>
+Cologne, Germany
+
+
+
 
