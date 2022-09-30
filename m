@@ -2,89 +2,122 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55FD95F022D
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Sep 2022 03:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5716C5F0A24
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Sep 2022 13:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbiI3BXa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 29 Sep 2022 21:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48682 "EHLO
+        id S231803AbiI3L1C (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Sep 2022 07:27:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbiI3BX2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 29 Sep 2022 21:23:28 -0400
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C50C01F34B5;
-        Thu, 29 Sep 2022 18:23:26 -0700 (PDT)
-Received: from cwcc.thunk.org (pool-173-48-120-46.bstnma.fios.verizon.net [173.48.120.46])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 28U1MqlG010966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 29 Sep 2022 21:22:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mit.edu; s=outgoing;
-        t=1664500982; bh=MMajPwAjURWxTvOvdJLhItRHH+a8PB3KnPvtMrFA1PA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To;
-        b=VAEiiP6yp/EwZmY81q7oozZTyov097KW2IVId7q2lCYOL6QZ/Us/YOR8XwnK8pEk9
-         MgC92A9NgKDlHDSmlAGk6tbFY0ppzFjOEadWRC8nOyRm0Om2lrvQ5VeYRmm5bi6pGR
-         S77dg7CwxZq1isPXxGr3jidqtvJgqP3usRT9jw9MdwzHajemHIJ+8thAQKnuZZ3Vsn
-         XLc7EcFGydDYzfrLFAcTLGBzNDfOm+I1FdicJuemqaUjRNgiD930DJ7DTp6q2cHSRZ
-         6NArrV6FhjX6RvF6sCKwOjuQC896+AiJHJ7j5i87kXSnhx7Ow88VSW7/b30wpizIhD
-         kOr8m0zsUp6yw==
-Received: by cwcc.thunk.org (Postfix, from userid 15806)
-        id 103E915C00C9; Thu, 29 Sep 2022 21:22:52 -0400 (EDT)
-Date:   Thu, 29 Sep 2022 21:22:52 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
-        trondmy@hammerspace.com, neilb@suse.de, viro@zeniv.linux.org.uk,
-        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
-        lczerner@redhat.com, jack@suse.cz, bfields@fieldses.org,
-        brauner@kernel.org, fweimer@redhat.com,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        with ESMTP id S230085AbiI3L02 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Sep 2022 07:26:28 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBC56FAEA;
+        Fri, 30 Sep 2022 04:18:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AC356B827AA;
+        Fri, 30 Sep 2022 11:18:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5374EC433C1;
+        Fri, 30 Sep 2022 11:18:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664536724;
+        bh=qW5czRWn4GLiEtwmzJqFOMVb5w3oIFlZuNEbzaPShnI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=qclGvuAaez5oX3gT5MUceMEYs9CNEX5R4R1bJF3WZ+L0+aYeWJ84DC5WTsT2xi8ia
+         U6cqxRjw80Txiw9vnu1hf973zEHsjPBWdl8q8vj7PSw8GbhVSfgi/4a5NVCGKZOFIU
+         BpT/1wGxzvsMtbjFGbXSIjk1VDdol6BqOFBhGa/z+KyWOLCN3krK9RFIpF/7dg0cLx
+         p6ye45BNLcd1z55bJMnBvTPVQcy4ZQA0nChO3ZKY63MmuWekHHjZTQnp5zC7tNugQh
+         FNt3Gv9RE0QvUuoMNl57bfwV9VVo6BLFr0yJH7M/cCMBzImSL2XuPSc1fpR8Xthb0H
+         z2UeJq0yMeptA==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com
+Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
         linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
         linux-xfs@vger.kernel.org
-Subject: Re: [PATCH v5 2/8] ext4: fix i_version handling in ext4
-Message-ID: <YzZE7PUB13cqSw1x@mit.edu>
-References: <20220908172448.208585-1-jlayton@kernel.org>
- <20220908172448.208585-3-jlayton@kernel.org>
+Subject: [PATCH v6 0/9] vfs/nfsd: clean up handling of i_version counter
+Date:   Fri, 30 Sep 2022 07:18:31 -0400
+Message-Id: <20220930111840.10695-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220908172448.208585-3-jlayton@kernel.org>
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Sep 08, 2022 at 01:24:42PM -0400, Jeff Layton wrote:
-> ext4 currently updates the i_version counter when the atime is updated
-> during a read. This is less than ideal as it can cause unnecessary cache
-> invalidations with NFSv4 and unnecessary remeasurements for IMA.
-> 
-> The increment in ext4_mark_iloc_dirty is also problematic since it can
-> corrupt the i_version counter for ea_inodes. We aren't bumping the file
-> times in ext4_mark_iloc_dirty, so changing the i_version there seems
-> wrong, and is the cause of both problems.
-> 
-> Remove that callsite and add increments to the setattr, setxattr and
-> ioctl codepaths, at the same times that we update the ctime. The
-> i_version bump that already happens during timestamp updates should take
-> care of the rest.
-> 
-> In ext4_move_extents, increment the i_version on both inodes, and also
-> add in missing ctime updates.
-> 
-> Cc: Lukas Czerner <lczerner@redhat.com>
-> Reviewed-by: Jan Kara <jack@suse.cz>
-> Reviewed-by: Christian Brauner (Microsoft) <brauner@kernel.org>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+v6: add support for STATX_ATTR_VERSION_MONOTONIC
+    add patch to expose i_version counter to userland
+    patches to update times/version after copying write data
 
-Thanks, I've applied just this patch from this patch series.  I made
-some minor adjustments since we've already enabled the i_version
-counter unconditionally via another patch series from Lukas.
+An updated set of i_version handling changes! I've dropped the earlier
+ext4 patches since Ted has picked up the relevant ext4 ones.
 
-			    	    	  - Ted
+This set is based on linux-next, to make sure we don't collide with the
+statx DIO alignment patches, and some other i_version cleanups that are
+in flight.  I'm hoping those land in 6.1.
+
+There are a few changes since v5, mostly centered around adding
+STATX_ATTR_VERSION_MONOTONIC. I've also re-added the patch to expose
+STATX_VERSION to userland via statx. What I'm proposing should now
+(mostly) conform to the semantics I layed out in the manpage patch I
+sent recently [1].
+
+Finally, I've added two patches to make __generic_file_write_iter and
+ext4 update the c/mtime after copying file data instead of before, which
+Neil pointed out makes for better cache-coherency handling. Those should
+take care of ext4 and tmpfs. xfs and btrfs will need to make the same
+changes.
+
+One thing I'm not sure of is what we should do if update_times fails
+after an otherwise successful write. Should we just ignore that and move
+on (and maybe WARN)? Return an error? Set a writeback error? What's the
+right recourse there?
+
+I'd like to go ahead and get the first 6 patches from this series into
+linux-next fairly soon, so if anyone has objections, please speak up!
+
+[1]: https://lore.kernel.org/linux-nfs/20220928134200.28741-1-jlayton@kernel.org/T/#u
+
+Jeff Layton (9):
+  iversion: move inode_query_iversion to libfs.c
+  iversion: clarify when the i_version counter must be updated
+  vfs: plumb i_version handling into struct kstat
+  nfs: report the inode version in getattr if requested
+  ceph: report the inode version in getattr if requested
+  nfsd: use the getattr operation to fetch i_version
+  vfs: expose STATX_VERSION to userland
+  vfs: update times after copying data in __generic_file_write_iter
+  ext4: update times after I/O in write codepaths
+
+ fs/ceph/inode.c           | 16 +++++++++----
+ fs/ext4/file.c            | 20 +++++++++++++---
+ fs/libfs.c                | 36 +++++++++++++++++++++++++++++
+ fs/nfs/export.c           |  7 ------
+ fs/nfs/inode.c            | 10 ++++++--
+ fs/nfsd/nfs4xdr.c         |  4 +++-
+ fs/nfsd/nfsfh.c           | 40 ++++++++++++++++++++++++++++++++
+ fs/nfsd/nfsfh.h           | 29 +----------------------
+ fs/nfsd/vfs.h             |  7 +++++-
+ fs/stat.c                 |  7 ++++++
+ include/linux/exportfs.h  |  1 -
+ include/linux/iversion.h  | 48 ++++++++-------------------------------
+ include/linux/stat.h      |  2 +-
+ include/uapi/linux/stat.h |  6 +++--
+ mm/filemap.c              | 17 ++++++++++----
+ samples/vfs/test-statx.c  |  8 +++++--
+ 16 files changed, 163 insertions(+), 95 deletions(-)
+
+-- 
+2.37.3
+
