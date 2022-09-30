@@ -2,44 +2,48 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D39415F143A
-	for <lists+linux-nfs@lfdr.de>; Fri, 30 Sep 2022 22:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EBB05F1443
+	for <lists+linux-nfs@lfdr.de>; Fri, 30 Sep 2022 22:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232038AbiI3U4J (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Sep 2022 16:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
+        id S232161AbiI3U6q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 30 Sep 2022 16:58:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231685AbiI3U4F (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Sep 2022 16:56:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E607752838
-        for <linux-nfs@vger.kernel.org>; Fri, 30 Sep 2022 13:56:04 -0700 (PDT)
+        with ESMTP id S232267AbiI3U6k (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Sep 2022 16:58:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394263EA49
+        for <linux-nfs@vger.kernel.org>; Fri, 30 Sep 2022 13:58:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82DFF6242A
-        for <linux-nfs@vger.kernel.org>; Fri, 30 Sep 2022 20:56:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A177AC433D6;
-        Fri, 30 Sep 2022 20:56:03 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EAFB9B82A30
+        for <linux-nfs@vger.kernel.org>; Fri, 30 Sep 2022 20:58:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BD57C433C1;
+        Fri, 30 Sep 2022 20:58:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1664571364;
-        bh=oO1vgIBI9d4H7jLBw3fHneP7pnmGJmPWRx+p2kK3qLM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=eX6V3rcLxQE6/kWHpFsbKqse8tRtm1BY5GC2qY2awV7T6KiPp6R21rL7cgmZR9o1/
-         pdWIydfvrtNam2BQszFEXd7jorygJeZ01u/b6WorGtiHcE78QG0AjoNviD778TXOcg
-         urYPFRkH+TCMzldQORz3M/YxsGk8IkIWpz5P2eDY3SOMeKllFCUYQ5W586WetCwpl/
-         RCVp5F/17UmZVYJ4ETqytf4DIrfwh5rHzAXrB8k2EOl+OHywV/ZrnidWvKyoUQnD03
-         K1F5c+/qetH1IpOaiHJkZ1wGDy1a5c7R0Vot2nn8OcKje9HKdbwKiFO7GCyOXCLNLG
-         BOrFYGKrTGw0w==
+        s=k20201202; t=1664571513;
+        bh=aUOZaQq9YDCAcYUVzSs3KzGkeAQNgcwU+IuEymQOob4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=bPwgQiolX16NV0QD2O+ZMyVedw+CknvdR83UsO6fsQvTWH3fGz9gRINqEaLog/1DX
+         3acYRRosHIHt4mlbnh1EQfoRLVbFavf2Bv+1ttVgD+LEKO0lGv9QU/FE9qe/8wmf33
+         xzqyUL4V1PBUZ9580eR8ivCaWf6eaqkDVvASdByzQfNUkEMR3vAV3yHfJpAvaoR/kf
+         KuwzADWXh3ZX2TU2ROISIJ9aLCAppq3pfdoCqSNpVBHujdUWROHsLvMag/cedOCncm
+         dgcj7GvHId4X2FLSsVRdKsi+g6SqfuT/VquICvxTQd9l659Dz+0TnImEAA/2vWeL68
+         SWVnax6d5pQeg==
+Message-ID: <225eb68c838607125ba82e605b7e02b7100d4cf6.camel@kernel.org>
+Subject: Re: [PATCH 2/3] nfsd: fix potential race in nfsd_file_close
 From:   Jeff Layton <jlayton@kernel.org>
 To:     chuck.lever@oracle.com
 Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v2] nfsd: fix nfsd_file_unhash_and_dispose
-Date:   Fri, 30 Sep 2022 16:56:02 -0400
-Message-Id: <20220930205602.180271-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
+Date:   Fri, 30 Sep 2022 16:58:32 -0400
+In-Reply-To: <20220930191550.172087-3-jlayton@kernel.org>
+References: <20220930191550.172087-1-jlayton@kernel.org>
+         <20220930191550.172087-3-jlayton@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -49,127 +53,52 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This function is called two reasons:
+On Fri, 2022-09-30 at 15:15 -0400, Jeff Layton wrote:
+> Once we call nfsd_file_put, there is no guarantee that "nf" can still be
+> safely accessed. That may have been the last reference.
+>=20
+> Change the code to instead check for whether nf_ref is 2 and then unhash
+> it and put the reference if we're successful.
+>=20
+> We might occasionally race with another lookup and end up unhashing it
+> when it probably shouldn't have been, but that should hopefully be rare
+> and will just result in the competing lookup having to create a new
+> nfsd_file.
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfsd/filecache.c | 12 +++++++-----
+>  1 file changed, 7 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index 6237715bd23e..58f4d9267f4a 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -461,12 +461,14 @@ nfsd_file_put(struct nfsd_file *nf)
+>   */
+>  void nfsd_file_close(struct nfsd_file *nf)
+>  {
+> -	nfsd_file_put(nf);
+> -	if (refcount_dec_if_one(&nf->nf_ref)) {
+> -		nfsd_file_unhash(nf);
+> -		nfsd_file_lru_remove(nf);
+> -		nfsd_file_free(nf);
+> +	/* One for the reference being put, and one for the hash */
+> +	if (refcount_read(&nf->nf_ref) =3D=3D 2) {
+> +		if (nfsd_file_unhash(nf))
+> +			nfsd_file_put_noref(nf);
+>  	}
+> +	/* put the ref for the stateid */
+> +	nfsd_file_put(nf);
+> +
 
-We're either shutting down and purging the filecache, or we've gotten a
-notification about a file delete, so we want to go ahead and unhash it
-so that it'll get cleaned up when we close.
+Chuck if you're ok with this one, can you fix the stray newline above?
 
-We're either walking the hashtable or doing a lookup in it and we
-don't take a reference in either case. What we want to do in both cases
-is to try and unhash the object and put it on the dispose list if that
-was successful. If it's no longer hashed, then we don't want to touch
-it, with the assumption being that something else is already cleaning
-up the sentinel reference.
+>  }
+> =20
+>  struct nfsd_file *
 
-Instead of trying to selectively decrement the refcount in this
-function, just unhash it, and if that was successful, move it to the
-dispose list. Then, the disposal routine will just clean that up as
-usual.
 
-Also, just make this a void function, drop the WARN_ON_ONCE, and the
-comments about deadlocking since the nature of the purported deadlock
-is no longer clear.
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/filecache.c | 37 +++++++------------------------------
- 1 file changed, 7 insertions(+), 30 deletions(-)
-
-v2: fix comments and formatting nit
-
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 58f4d9267f4a..5ab0b2b35c52 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -405,22 +405,15 @@ nfsd_file_unhash(struct nfsd_file *nf)
- 	return false;
- }
- 
--/*
-- * Return true if the file was unhashed.
-- */
--static bool
-+static void
- nfsd_file_unhash_and_dispose(struct nfsd_file *nf, struct list_head *dispose)
- {
- 	trace_nfsd_file_unhash_and_dispose(nf);
--	if (!nfsd_file_unhash(nf))
--		return false;
--	/* keep final reference for nfsd_file_lru_dispose */
--	if (refcount_dec_not_one(&nf->nf_ref))
--		return true;
--
--	nfsd_file_lru_remove(nf);
--	list_add(&nf->nf_lru, dispose);
--	return true;
-+	if (nfsd_file_unhash(nf)) {
-+		/* caller must call nfsd_file_dispose_list() later */
-+		nfsd_file_lru_remove(nf);
-+		list_add(&nf->nf_lru, dispose);
-+	}
- }
- 
- static void
-@@ -468,7 +461,6 @@ void nfsd_file_close(struct nfsd_file *nf)
- 	}
- 	/* put the ref for the stateid */
- 	nfsd_file_put(nf);
--
- }
- 
- struct nfsd_file *
-@@ -564,8 +556,6 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
-  * @lock: LRU list lock (unused)
-  * @arg: dispose list
-  *
-- * Note this can deadlock with nfsd_file_cache_purge.
-- *
-  * Return values:
-  *   %LRU_REMOVED: @item was removed from the LRU
-  *   %LRU_ROTATE: @item is to be moved to the LRU tail
-@@ -750,8 +740,6 @@ nfsd_file_close_inode(struct inode *inode)
-  *
-  * Walk the LRU list and close any entries that have not been used since
-  * the last scan.
-- *
-- * Note this can deadlock with nfsd_file_cache_purge.
-  */
- static void
- nfsd_file_delayed_close(struct work_struct *work)
-@@ -893,16 +881,12 @@ nfsd_file_cache_init(void)
- 	goto out;
- }
- 
--/*
-- * Note this can deadlock with nfsd_file_lru_cb.
-- */
- static void
- __nfsd_file_cache_purge(struct net *net)
- {
- 	struct rhashtable_iter iter;
- 	struct nfsd_file *nf;
- 	LIST_HEAD(dispose);
--	bool del;
- 
- 	rhashtable_walk_enter(&nfsd_file_rhash_tbl, &iter);
- 	do {
-@@ -912,14 +896,7 @@ __nfsd_file_cache_purge(struct net *net)
- 		while (!IS_ERR_OR_NULL(nf)) {
- 			if (net && nf->nf_net != net)
- 				continue;
--			del = nfsd_file_unhash_and_dispose(nf, &dispose);
--
--			/*
--			 * Deadlock detected! Something marked this entry as
--			 * unhased, but hasn't removed it from the hash list.
--			 */
--			WARN_ON_ONCE(!del);
--
-+			nfsd_file_unhash_and_dispose(nf, &dispose);
- 			nf = rhashtable_walk_next(&iter);
- 		}
- 
--- 
-2.37.3
-
+Thanks,
+--=20
+Jeff Layton <jlayton@kernel.org>
