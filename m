@@ -2,107 +2,143 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67D4D5F1630
-	for <lists+linux-nfs@lfdr.de>; Sat,  1 Oct 2022 00:32:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E23875F19E2
+	for <lists+linux-nfs@lfdr.de>; Sat,  1 Oct 2022 06:45:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231879AbiI3Wcd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 30 Sep 2022 18:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
+        id S229436AbiJAEpE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 1 Oct 2022 00:45:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232158AbiI3Wc3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 30 Sep 2022 18:32:29 -0400
-Received: from mail104.syd.optusnet.com.au (mail104.syd.optusnet.com.au [211.29.132.246])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BEE69166489;
-        Fri, 30 Sep 2022 15:32:24 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au [49.181.106.210])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 078B88AB6CD;
-        Sat,  1 Oct 2022 08:32:19 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1oeOYM-00E7kF-Mx; Sat, 01 Oct 2022 08:32:18 +1000
-Date:   Sat, 1 Oct 2022 08:32:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, Theodore Ts'o <tytso@mit.edu>,
-        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Trond Myklebust <trondmy@hammerspace.com>,
-        Neil Brown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "xiubli@redhat.com" <xiubli@redhat.com>,
-        Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
-        Bruce Fields <bfields@fieldses.org>,
-        Christian Brauner <brauner@kernel.org>,
-        "fweimer@redhat.com" <fweimer@redhat.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH v6 6/9] nfsd: use the getattr operation to fetch i_version
-Message-ID: <20220930223218.GL3600936@dread.disaster.area>
-References: <20220930111840.10695-1-jlayton@kernel.org>
- <20220930111840.10695-7-jlayton@kernel.org>
- <D7DAB33E-BB23-45A9-BE2C-DBF9B5D62EF8@oracle.com>
+        with ESMTP id S229462AbiJAEpC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 1 Oct 2022 00:45:02 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8822B63A
+        for <linux-nfs@vger.kernel.org>; Fri, 30 Sep 2022 21:44:58 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id E2D631F892;
+        Sat,  1 Oct 2022 04:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1664599496; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g3G+a07EAqu6SiU85l8fAD7nyUc3XRqVHf+iDEqvp3Q=;
+        b=Jd5inrjUijcRADO+L5Ct/ntcE1B4ZZTA4vtt+uxHyfcAfukvjsT7FyP+rdJDXlbYqziAa8
+        Bo8sDUQ3HWoEPInJMU9DHGE0yNIuMouFmVx8ms+jR94bRw7Cnn/3VEklI7o+0mYOd+GY4Y
+        J7j3PnOKMf9Oywn1CsSmlWfsqWOc+xk=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1664599496;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g3G+a07EAqu6SiU85l8fAD7nyUc3XRqVHf+iDEqvp3Q=;
+        b=/+VqhOGLdeEkI/V3VHWwgYrvrHrvIS02Me7oZGfLCn7CTYD2VTLe7PPSSVeczsQSvyIkoF
+        LPMvhq2xQMiYfMBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BA717133E5;
+        Sat,  1 Oct 2022 04:44:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id s4uBHMfFN2N4bgAAMHmgww
+        (envelope-from <neilb@suse.de>); Sat, 01 Oct 2022 04:44:55 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D7DAB33E-BB23-45A9-BE2C-DBF9B5D62EF8@oracle.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=63376e77
-        a=j6JUzzrSC7wlfFge/rmVbg==:117 a=j6JUzzrSC7wlfFge/rmVbg==:17
-        a=kj9zAlcOel0A:10 a=Qawa6l4ZSaYA:10 a=VwQbUJbxAAAA:8 a=7-415B0cAAAA:8
-        a=P6V2cQqVOOyE__6v1BQA:9 a=CjuIK1q_8ugA:10 a=AjGcO6oz07-iQ99wixmX:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/3] nfsd: nfsd_do_file_acquire should hold rcu_read_lock
+ while getting refs
+In-reply-to: <20220930191550.172087-2-jlayton@kernel.org>
+References: <20220930191550.172087-1-jlayton@kernel.org>,
+ <20220930191550.172087-2-jlayton@kernel.org>
+Date:   Sat, 01 Oct 2022 14:44:50 +1000
+Message-id: <166459949085.17572.9387753773056673569@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Sep 30, 2022 at 02:34:51PM +0000, Chuck Lever III wrote:
-> 
-> 
-> > On Sep 30, 2022, at 7:18 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> > 
-> > Now that we can call into vfs_getattr to get the i_version field, use
-> > that facility to fetch it instead of doing it in nfsd4_change_attribute.
-> > 
-> > Neil also pointed out recently that IS_I_VERSION directory operations
-> > are always logged,
-> 
-> ^logged^synchronous maybe?
+On Sat, 01 Oct 2022, Jeff Layton wrote:
+> nfsd_file is RCU-freed, so it's possible that one could be found that's
+> in the process of being freed and the memory recycled. Ensure we hold
+> the rcu_read_lock while attempting to get a reference on the object.
+>=20
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  fs/nfsd/filecache.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index d5c57360b418..6237715bd23e 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1077,10 +1077,12 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+> =20
+>  retry:
+>  	/* Avoid allocation if the item is already in cache */
+> +	rcu_read_lock();
+>  	nf =3D rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
+>  				    nfsd_file_rhash_params);
+>  	if (nf)
+>  		nf =3D nfsd_file_get(nf);
+> +	rcu_read_unlock();
 
-A pedantic note, but I think necessary because so many people still
-get this wrong when it comes to filesystems and IO: synchronous !=
-persistent.
+Looks good.
 
-Ext4 and XFS both use *asynchronous journalling* - they journal
-changes first to memory buffers, and only make those recorded
-changes persistent when they hit internal checkpoint thresholds or
-something external requires persistence to be guaranteed.
+>  	if (nf)
+>  		goto wait_for_construction;
+> =20
+> @@ -1090,16 +1092,21 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  		goto out_status;
+>  	}
+> =20
+> +	rcu_read_lock();
+>  	nf =3D rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
+>  					      &key, &new->nf_rhash,
+>  					      nfsd_file_rhash_params);
+>  	if (!nf) {
+> +		rcu_read_unlock();
+>  		nf =3D new;
+>  		goto open_file;
+>  	}
+> -	if (IS_ERR(nf))
+> +	if (IS_ERR(nf)) {
+> +		rcu_read_unlock();
+>  		goto insert_err;
+> +	}
+>  	nf =3D nfsd_file_get(nf);
+> +	rcu_read_unlock();
 
-->commit_metadata is the operation filesystems provide the NFS
-server to *guarantee persistence*. This allows filesystems to use
-asynchronous journalling for most operations, right up to the point
-the NFS server requires a change to be persistent. "synchronous
-operation" is a side effect of guaranteeing persistence on some
-filesytems and storage media, whereas "synchronous operation"
-does not provide any guarantee of persistence...
+Ugh.
+Could we make this:
+   rcu_read_lock()
+   nf =3D r_l_g_i_k()
+   if (!IS_ERR_OR_NULL(nf))
+        nf =3D nfsd_file_get(nf);
+   rcu_read_unlock()
+   ...
+??
 
-IOWs, please talk about persistence guarantees the NFS server
-application requires and implements, not about the operations (or
-the nature of the operations) that may be performed by the
-underlying filesystems to provide that persistence guarantee.
+NeilBrown
 
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+>  	if (nf =3D=3D NULL) {
+>  		nf =3D new;
+>  		goto open_file;
+> --=20
+> 2.37.3
+>=20
+>=20
