@@ -2,70 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 143FD5F3133
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 15:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 114B05F3181
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 15:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbiJCNZl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Oct 2022 09:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57152 "EHLO
+        id S229991AbiJCNw7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Oct 2022 09:52:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230163AbiJCNZP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 09:25:15 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAA4D205D0
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 06:25:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1664803496;
-        bh=bJ0KfBG1IMZSzm3eGCdJShyzO6MjfktMVcXhGqXnQTE=;
-        h=X-UI-Sender-Class:Date:Subject:To:References:From:In-Reply-To;
-        b=bCoW7ZsLb0a3cUVSthOtWUzzsajdh3Gb03tVpu3hEoxMpgNGvs/s/iYBoQ9+rV3hf
-         quluXxXUSapeOhwpnrHn1/K6r7vBwloB5gT/+j8gLxy38sb55bcdCsDsxQwhH0iuMH
-         CVOPzhuAroWXaAC/rQy07lgFhQHDnPPWbvswpZCw=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.99.12] ([212.126.164.126]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MeCpR-1pFEUR0J55-00bKet; Mon, 03
- Oct 2022 15:24:56 +0200
-Message-ID: <e3842fe7-da95-98e2-b0e8-fa3aede673cc@gmx.ch>
-Date:   Mon, 3 Oct 2022 15:24:55 +0200
+        with ESMTP id S229780AbiJCNw5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 09:52:57 -0400
+Received: from mail-ua1-x92c.google.com (mail-ua1-x92c.google.com [IPv6:2607:f8b0:4864:20::92c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57E503A499;
+        Mon,  3 Oct 2022 06:52:56 -0700 (PDT)
+Received: by mail-ua1-x92c.google.com with SMTP id i17so4128958uaq.9;
+        Mon, 03 Oct 2022 06:52:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=SWaeV/ybx1EEPzgA7mLfnQ6qvSq0W9UmA+imh17h5mU=;
+        b=erdEkb3Er6D92QZa5NGTjNKHu/4J1A9VrE06RdpSXQFqt9vzlpDzeQaZR0PJNqD5i0
+         Tvz2FrwcSJ8iabakFYWDBbw9bkY39F9CLDQw5mDqVDrDKR1blXQEF1U3kvcmePD8brJ1
+         ITzLApDRpc+MbyEU0nPZmwxnCOoRvfe3yv1DHznMO8LflTK/nPXLd2olCILD7zc3vp77
+         p6s0MJj9k8uw9sLWG531v1jwUu9Yokox3G9QwMYa96UyEJUwG47jLUMs8b4GmBwjE24u
+         dTHA0JQjQKOiPNZOf4U3X7SFiyqW++jWWYhkJtBhvkrRi/1cMjt/3XjizKORUxRq1OI8
+         Kmww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=SWaeV/ybx1EEPzgA7mLfnQ6qvSq0W9UmA+imh17h5mU=;
+        b=O1K41nT4WwX/y5CJmMJ4jed2qUvaSHEuvb0PmJQ8gBhSBJi1VM9ogS65SsDMWzzQwy
+         K2eyJNYzNb4+FbiXMoCsp/fO2e6vBEEfbHuOb0vNZdWGn4VO1E4xKLzKOk653wx/lDQ2
+         J83ILVA7CvyhHW8jnmYPJ+7hUAfCvBgjHrL4gsN1LY+ud3dYqL45S8JYycQjiJ34nN0G
+         sTKhV7cgVjXvR71ZwMN5WLAdGrGFFPFl6mcVZMLj3Ewv/j6UdUDipasRVn7HtCAFiy8w
+         AyP7rvM9VcroYMVeIhV+xVkpUlK1tlK7o6limfRGF8RHKV/zxy/wwBAdCEtS4MNryd5c
+         6B9g==
+X-Gm-Message-State: ACrzQf0pZCp1THf94IQ1dNTJjSxZnBM/GTdOoGHAGVkVtKYw4whSBQjc
+        2RlLZJKiMBhxchbUsLE9gCIQodSDFPXqKUjKGtM=
+X-Google-Smtp-Source: AMsMyM6DL0nf8mEAa5UKqrqukdOAMa4uFbSl2mR3cT+W3Lp5sQTTos0pz3zqwsJEXklBiGSniCAIMxHbXngHQoE8sQE=
+X-Received: by 2002:ab0:6056:0:b0:3d8:e58:4c34 with SMTP id
+ o22-20020ab06056000000b003d80e584c34mr3020938ual.114.1664805175371; Mon, 03
+ Oct 2022 06:52:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: nfs4.1+: workaround for defunct clientaddr?
-Content-Language: de-CH, en-US
-To:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
-References: <39bf58c7-47d9-744b-6d26-d672aa713024@gmx.ch>
- <8cd63730f7b5f3e2aa3bde98587de0c6a42b384b.camel@kernel.org>
- <8550c032-2ef8-4ddb-19a0-307777bd9645@gmx.ch>
- <c163b299164cd9abe21325a947c9efe908a04331.camel@kernel.org>
-From:   Manfred Schwarb <manfred99@gmx.ch>
-In-Reply-To: <c163b299164cd9abe21325a947c9efe908a04331.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:WxAXcg5bvT8I4KIA+qvCddklHHNslnoHRGuTbuQcPiAKUykbfKo
- aqTsv+ZJBiVsc9z9xGUHm0n8MhVgM/th8pJZeTVtfh21TkHAxQljTbgWstsbrbcSFZQ6l7z
- Ao1Ky6NALVzWSxRoseZ30ID6z16gLW9zNkY9kB4014g9JIzqjN8QY1Hofddd3x3McJGLxIu
- 6uF4ihsqP3KsDvSTRlhdw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2+IjFz1rTv0=:iaKzLq9u004F9/CI1RAefS
- Y7O2Le4m53rEbLZjSFGS7tRBmcpfcc1fqHCJAlTtmedJWFAfnKhjH70w02CphAYXDzIA3Z6d+
- YmkE0LAmlmRCO5GqJlwmMdDNQ9w7ELX3AB7RObwFglSFfbGplWnRtsTO97gD3dZgMIOvPIzes
- uTFFpQaAXsZ/ErCFDEBhORTEWE+REtYXEuVuKJv8Ip8Df18PSlvWit+ewTnq7fBtbf5YJbs4r
- 7a/jg4Mri8LEWdwyBJCQQLXo0+oYvQxxtgr8QDqRKJ133XzsH+djf3OCQ2Y1v+uoJoxvfvxph
- JjohoAVoGvewK3E1godk0vhN+4YeR71v5gr+sLRY8iCjnWZMDofrWDm58KyhCDQjG9T6yiIyq
- VKA+Gtbiw2T9BfxPoaoh1hhid2QPJbKi3x/WX+bWQQlx5sUhisGrXjZQgIO5QUuLS8jgbrjQ8
- YCVMTTvMzffqVGWrzztMHCJpsg4bijV45YBICDeFkkwhNxy3LFxkDmfUWwHn9HHdvBH4gCI6/
- jQkYmNTLrNIJyf+K0M1GOestMoZ2Y8EV4sNXnc4T+WCRnBIdrWQDd5ZePA/G530gnIFG4djaP
- wf0xWsiuHsfLqb5IDUeVK9E4g9CoiWuLyFHNxrqzhEieUZOiHwqCMJO4Fy7AJh3mFWobho56H
- 4idCh1TrKg95vYyp65ymyDtP/WGpEgtJbBaSlyigYabSTadymHU+LlM2ELvpwgkR26H/O+pAf
- vJhaO+E2Sj3fzmqVlQJycvNGqRAb9zy1cDa6b/v/VPakvorzK25MgRJJSeGkrGLbkc8pnGQ0H
- GEMivQOwowz6t98m1bgBtqs7eNgSVXNy7e34QsZXTCU85F6gx8z27fZVPk3GYsAIY68HKz8J8
- NuXf4mxi0sgBTO97c7CxL6qSrmR+J+oc8sYgf9QknBdpjCvUVoAf9mqCoqGCUS2xxnI9nAQz7
- dF9zOhbbUHAwZJ2ovHSZp1Ns032UryJct3HdwJB0tp2YELjjgZhWZd1XOefexCtjS+1IxyxtN
- 793a1EylHkpnIQZY/OQpR9e4xb+KBZCnvbhNf/XSJSQb1MIKdu5ylAsVgQmP0hJuL/zrQYWAR
- n1jOXBgSYCA6oAEtJHNjTamNmf4vPtTXq/gAqtrvBRiwz1aoNBimcAmSGASQtV+0nrSrTwBik
- tRLzIvkmLrMVLIllru3Pz76oDQ
-X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_PASS autolearn=ham
+References: <20220930111840.10695-1-jlayton@kernel.org> <20220930111840.10695-9-jlayton@kernel.org>
+ <CAOQ4uxgofERYwN7AfYFWqQMpQH5y3LV+6UuGfjU29gZXNf7-vQ@mail.gmail.com> <df91b9ec61bc49aa5330714e3319dcea2531953b.camel@kernel.org>
+In-Reply-To: <df91b9ec61bc49aa5330714e3319dcea2531953b.camel@kernel.org>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Mon, 3 Oct 2022 16:52:43 +0300
+Message-ID: <CAOQ4uxi6pPDexF7Z1wshnpV0kbSKsHUeawaUkhjq4FNGbqWU+A@mail.gmail.com>
+Subject: Re: [PATCH v6 8/9] vfs: update times after copying data in __generic_file_write_iter
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,105 +73,102 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Am 03.10.22 um 14:26 schrieb Jeff Layton:
-> On Mon, 2022-10-03 at 13:55 +0200, Manfred Schwarb wrote:
->> Am 03.10.22 um 13:39 schrieb Jeff Layton:
->>> On Sun, 2022-10-02 at 14:35 +0200, Manfred Schwarb wrote:
->>>> Hi,
->>>>
->>>> I have 2 boxes connected with 2 network cards each, one
->>>> crossover connection and one connection via LAN.
->>>> I want to use the crossover connection for backup,
->>>> so I want to be able to select exactly this wire when
->>>> doing my NFS backup transfers. Everything interconnected via NFS4.1
->>>> and automount.
->>>>
->>>> Now the thing is, if there is an already existing connection
->>>> via LAN, I am not able to select the crossover connection,
->>>> there is some session reuse against my will.
->>>>
->>>> automount config:
->>>> /net/192.168.99.1  -fstype=3Dnfs4,nfsvers=3D4,minorversion=3D1,client=
-addr=3D192.168.99.100   /  192.168.99.1:/
->>>> /net2/192.168.98.1 -fstype=3Dnfs4,nfsvers=3D4,minorversion=3D1,client=
-addr=3D192.168.98.100   /  192.168.98.1:/
->>>>
->>>> mount -l:
->>>> 192.168.99.1:/data on /net/192.168.99.1/data type nfs4 (...,clientadd=
-r=3D192.168.99.100,addr=3D192.168.99.1)
->>>> 192.168.99.1:/data on /net2/192.168.98.1/data type nfs4 (...,clientad=
-dr=3D192.168.99.100,addr=3D192.168.99.1)
->>>>
->>>> As you see, both connections are on "192.168.99.1:/data", and the bac=
-kup runs
->>>> over the same wire as all user communication, which is not desired.
->>>> This even happens if I explicitly set some clientaddr=3D option.
->>>>
->>>> Now I found two workarounds:
->>>> - downgrade to NFS 4.0, clientaddr seems to work with it
->>>> - choose different NFS versions, i.e. one connection with
->>>>   minorversion=3D1 and the other with minorversion=3D2
->>>>
->>>> Both possibilities seem a bit lame to me.
->>>> Are there some other (recommended) variants which do what I want?
->>>>
->>>> It seems different minor versions result in different "nfs4_unique_id=
-" values,
->>>> and therefore no session sharing occurs. But why do different network
->>>> interfaces (via explicitly set clientaddr=3D by user) not result in d=
-ifferent
->>>> "nfs4_unique_id" values?
->>>>
->>>> Thanks for any comments and advice,
->>>> Manfred
->>>
->>> That sounds like a bug. We probably need to compare the clientaddr
->>> values in nfs_compare_super or nfs_compare_mount_options so that it
->>> doesn't match if the clientaddrs are different.
->>>
+On Mon, Oct 3, 2022 at 4:01 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> On Sun, 2022-10-02 at 10:08 +0300, Amir Goldstein wrote:
+> > On Fri, Sep 30, 2022 at 2:30 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > >
+> > > The c/mtime and i_version currently get updated before the data is
+> > > copied (or a DIO write is issued), which is problematic for NFS.
+> > >
+> > > READ+GETATTR can race with a write (even a local one) in such a way as
+> > > to make the client associate the state of the file with the wrong change
+> > > attribute. That association can persist indefinitely if the file sees no
+> > > further changes.
+> > >
+> > > Move the setting of times to the bottom of the function in
+> > > __generic_file_write_iter and only update it if something was
+> > > successfully written.
+> > >
+> >
+> > This solution is wrong for several reasons:
+> >
+> > 1. There is still file_update_time() in ->page_mkwrite() so you haven't
+> >     solved the problem completely
+>
+> Right. I don't think there is a way to solve the problem vs. mmap.
+> Userland can write to a writeable mmap'ed page at any time and we'd
+> never know. We have to specifically carve out mmap as an exception here.
+> I'll plan to add something to the manpage patch for this.
+>
+> > 2. The other side of the coin is that post crash state is more likely to end
+> >     up data changes without mtime/ctime change
+> >
+>
+> Is this really something filesystems rely on? I suppose the danger is
+> that some cached data gets written to disk before the write returns and
+> the inode on disk never gets updated.
+>
+> But...isn't that a danger now? Some of the cached data could get written
+> out and the updated inode just never makes it to disk before a crash
+> (AFAIU). I'm not sure that this increases our exposure to that problem.
 >
 >
-> Actually, I take it back, clientaddr is specifically advertised as being
-> for NFSv4.0 only. The workaround for you is "nosharecache", which will
-> force the mount under /net2 to get a new superblock altogether.
 
-But clientaddr is silently accepted on NFS4.1+, and seemingly silently doe=
-s nothing.
+You are correct that that danger exists, but it only exists for overwriting
+to allocated blocks.
 
-The point is, RFC5661 explicitely tells
-"NFS minor version 1 is deemed superior to NFS minor version 0 with no los=
-s of functionality".
+For writing to new blocks, mtime change is recorded in transaction
+before the block mapping is recorded in transaction so there is no
+danger in this case (before your patch).
 
-So this behavior comes as a surprise.
+Also, observing size change without observing mtime change
+after crash seems like a very bad outcome that may be possible
+after your change.
 
+These are just a few cases that I could think of, they may be filesystem
+dependent, but my gut feeling is that if you remove the time update before
+the operation, that has been like that forever, a lot of s#!t is going to float
+for various filesystems and applications.
+
+And it is not one of those things that are discovered  during rc or even
+stable kernel testing - they are discovered much later when users start to
+realize their applications got bogged up after crash, so it feels like to me
+like playing with fire.
+
+> > If I read the problem description correctly, then a solution that invalidates
+> > the NFS cache before AND after the write would be acceptable. Right?
+> > Would an extra i_version bump after the write solve the race?
+> >
 >
->>> As a workaround, you can probably mount the second mount with
->>> -o nosharecache and get what you want.
->>
->> Indeed, nosharecache works. But the man page has some scary words for i=
-t:
->>   "This is considered a data risk".
->>
->
-> Yeah, it does sound scary but it's not a huge issue unless you're doing
-> I/O to the same files at the same time via both mounts. With
-> "sharecache" (the default) you get better cache coherency in that
-> situation since the inode and its pagecache are the same.
+> I based this patch on Neil's assertion that updating the time before an
+> operation was pointless if we were going to do it afterward. The NFS
+> client only really cares about seeing it change after a write.
 >
 
-So I guess this is equivalent to the minorversion=3D1/minorversion=3D2 tri=
-ck
-cache coherency wise then?
+Pointless to NFS client maybe.
+Whether or not this is not changing user behavior for other applications
+is up to you to prove and I doubt that you can prove it because I doubt
+that it is true.
 
+> Doing both would be fine from a correctness standpoint, and in most
+> cases, the second would be a no-op anyway since a query would have to
+> race in between the two for that to happen.
+>
+> FWIW, I think we should update the m/ctime and version at the same time.
+> If the version changes, then there is always the potential that a timer
+> tick has occurred. So, that would translate to a second call to
+> file_update_time in here.
+>
+> The downside of bumping the times/version both before and after is that
+> these are hot codepaths, and we'd be adding extra operations there. Even
+> in the case where nothing has changed, we'd have to call
+> inode_needs_update_time a second time for every write. Is that worth the
+> cost?
 
-> With "nosharecache" you need to be more careful to flush caches, etc. if
-> you are doing reads and writes to the same files via different paths. If
-> you need careful coordination there, then you probably want to use file
-> locking.
+Is there a practical cost for iversion bump AFTER write as I suggested?
+If you NEED m/ctime update AFTER write and iversion update is not enough
+then I did not understand from your commit message why that is.
 
-Thanks for these explanations, it is appreciated!
-Manfred
-
-> --
-> Jeff Layton <jlayton@kernel.org>
-
+Thanks,
+Amir.
