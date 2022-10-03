@@ -2,202 +2,209 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 022EF5F389D
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Oct 2022 00:07:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF7A15F396C
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Oct 2022 00:57:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbiJCWHi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Oct 2022 18:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43718 "EHLO
+        id S229840AbiJCW47 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Oct 2022 18:56:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbiJCWHg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 18:07:36 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B7FD20F69
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 15:07:35 -0700 (PDT)
+        with ESMTP id S229549AbiJCW45 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 18:56:57 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCAB31373;
+        Mon,  3 Oct 2022 15:56:55 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 1542C218B5;
-        Mon,  3 Oct 2022 22:07:34 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id AC70821902;
+        Mon,  3 Oct 2022 22:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1664834854; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1664837813; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4Qoy7OR8yx0bkrI7WtFXmVUXWqj+IXFMQDqmZFglxLg=;
-        b=QlFMILyETmAYa+8ecwqbVWkCh9r70nFmNIeZ3M8yw06clv/Kk4bFJC2uQZuouqJvfHh3ZI
-        EaMx9kHkCZqcUWv/Se8gt4n/GZKUAkR+xrLvmCzQ1ivwtfNpOKhLjAGhD0vcdcxVDTk437
-        5KHGGy8ZfR8huIbj6UjB4xNnENLoA3E=
+        bh=V1nQZ58TJ+GEmzZcpyTOK5ayREv1t5fIjSbrNpFEZ4o=;
+        b=yimo5/6EB/XmhspbZuEjyIRw3HYb3bw8toqAtzev2eUQkTn/03jPZw7eZ/PQk4+m4i7XKR
+        /P7hp7Rh9MPX3ISKaj08hoFSFB5nZGLSrQZAQ0tf7AriKJ34pb0PaXqYz68VYIIXSXFXHU
+        A8NmMmj/VcMLYYmVhJTBBt+nwRVmZBs=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1664834854;
+        s=susede2_ed25519; t=1664837813;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=4Qoy7OR8yx0bkrI7WtFXmVUXWqj+IXFMQDqmZFglxLg=;
-        b=sjalXxIZaXVcz/saZgTcQHoywcCqI2ZakuKHEyG/l7PTKWV7LHONxrWvNGbZlJtpmK7CJl
-        EH4LiewQ8mGFbtDg==
+        bh=V1nQZ58TJ+GEmzZcpyTOK5ayREv1t5fIjSbrNpFEZ4o=;
+        b=jrlkmi0B7QBCeHc3w4JoJ77FztOga2B/4GULpyIMCqDJyJ85OhF+N3KBk6kStvshIiqYZK
+        R0gpizHBYQ/QCNDA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id F038913522;
-        Mon,  3 Oct 2022 22:07:32 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E65291332F;
+        Mon,  3 Oct 2022 22:56:46 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id P3/DKiRdO2MdfwAAMHmgww
-        (envelope-from <neilb@suse.de>); Mon, 03 Oct 2022 22:07:32 +0000
+        id geubJ65oO2NBDwAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 03 Oct 2022 22:56:46 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Jeff Layton" <jlayton@kernel.org>,
-        "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v3] nfsd: rework hashtable handling in nfsd_do_file_acquire
-In-reply-to: <F4DF35B2-CE11-4BD9-8442-97852F57CE2E@oracle.com>
-References: <20221003113436.24161-1-jlayton@kernel.org>,
- <F4DF35B2-CE11-4BD9-8442-97852F57CE2E@oracle.com>
-Date:   Tue, 04 Oct 2022 09:07:29 +1100
-Message-id: <166483484979.14457.9448463531121052564@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+To:     "Amir Goldstein" <amir73il@gmail.com>
+Cc:     "Jeff Layton" <jlayton@kernel.org>, tytso@mit.edu,
+        adilger.kernel@dilger.ca, djwong@kernel.org, david@fromorbit.com,
+        trondmy@hammerspace.com, viro@zeniv.linux.org.uk,
+        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
+        lczerner@redhat.com, jack@suse.cz, bfields@fieldses.org,
+        brauner@kernel.org, fweimer@redhat.com,
+        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: Re: [PATCH v6 8/9] vfs: update times after copying data in
+ __generic_file_write_iter
+In-reply-to: <CAOQ4uxi6pPDexF7Z1wshnpV0kbSKsHUeawaUkhjq4FNGbqWU+A@mail.gmail.com>
+References: <20220930111840.10695-1-jlayton@kernel.org>,
+ <20220930111840.10695-9-jlayton@kernel.org>,
+ <CAOQ4uxgofERYwN7AfYFWqQMpQH5y3LV+6UuGfjU29gZXNf7-vQ@mail.gmail.com>,
+ <df91b9ec61bc49aa5330714e3319dcea2531953b.camel@kernel.org>,
+ <CAOQ4uxi6pPDexF7Z1wshnpV0kbSKsHUeawaUkhjq4FNGbqWU+A@mail.gmail.com>
+Date:   Tue, 04 Oct 2022 09:56:42 +1100
+Message-id: <166483780286.14457.1388505585556274283@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 04 Oct 2022, Chuck Lever III wrote:
+On Tue, 04 Oct 2022, Amir Goldstein wrote:
+> On Mon, Oct 3, 2022 at 4:01 PM Jeff Layton <jlayton@kernel.org> wrote:
+> >
+> > On Sun, 2022-10-02 at 10:08 +0300, Amir Goldstein wrote:
+> > > On Fri, Sep 30, 2022 at 2:30 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > > >
+> > > > The c/mtime and i_version currently get updated before the data is
+> > > > copied (or a DIO write is issued), which is problematic for NFS.
+> > > >
+> > > > READ+GETATTR can race with a write (even a local one) in such a way as
+> > > > to make the client associate the state of the file with the wrong cha=
+nge
+> > > > attribute. That association can persist indefinitely if the file sees=
+ no
+> > > > further changes.
+> > > >
+> > > > Move the setting of times to the bottom of the function in
+> > > > __generic_file_write_iter and only update it if something was
+> > > > successfully written.
+> > > >
+> > >
+> > > This solution is wrong for several reasons:
+> > >
+> > > 1. There is still file_update_time() in ->page_mkwrite() so you haven't
+> > >     solved the problem completely
+> >
+> > Right. I don't think there is a way to solve the problem vs. mmap.
+> > Userland can write to a writeable mmap'ed page at any time and we'd
+> > never know. We have to specifically carve out mmap as an exception here.
+> > I'll plan to add something to the manpage patch for this.
+> >
+> > > 2. The other side of the coin is that post crash state is more likely t=
+o end
+> > >     up data changes without mtime/ctime change
+> > >
+> >
+> > Is this really something filesystems rely on? I suppose the danger is
+> > that some cached data gets written to disk before the write returns and
+> > the inode on disk never gets updated.
+> >
+> > But...isn't that a danger now? Some of the cached data could get written
+> > out and the updated inode just never makes it to disk before a crash
+> > (AFAIU). I'm not sure that this increases our exposure to that problem.
+> >
+> >
 >=20
-> > On Oct 3, 2022, at 7:34 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > nfsd_file is RCU-freed, so we need to hold the rcu_read_lock long enough
-> > to get a reference after finding it in the hash. Take the
-> > rcu_read_lock() and call rhashtable_lookup directly.
-> >=20
-> > Switch to using rhashtable_lookup_insert_key as well, and use the usual
-> > retry mechanism if we hit an -EEXIST. Eliminiate the insert_err goto
-> > target as well.
+> You are correct that that danger exists, but it only exists for overwriting
+> to allocated blocks.
 >=20
-> The insert_err goto is there to remove a very rare case from
-> the hot path. I'd kinda like to keep that feature of this code.
+> For writing to new blocks, mtime change is recorded in transaction
+> before the block mapping is recorded in transaction so there is no
+> danger in this case (before your patch).
+>=20
+> Also, observing size change without observing mtime change
+> after crash seems like a very bad outcome that may be possible
+> after your change.
+>=20
+> These are just a few cases that I could think of, they may be filesystem
+> dependent, but my gut feeling is that if you remove the time update before
+> the operation, that has been like that forever, a lot of s#!t is going to f=
+loat
+> for various filesystems and applications.
+>=20
+> And it is not one of those things that are discovered  during rc or even
+> stable kernel testing - they are discovered much later when users start to
+> realize their applications got bogged up after crash, so it feels like to me
+> like playing with fire.
+>=20
+> > > If I read the problem description correctly, then a solution that inval=
+idates
+> > > the NFS cache before AND after the write would be acceptable. Right?
+> > > Would an extra i_version bump after the write solve the race?
+> > >
+> >
+> > I based this patch on Neil's assertion that updating the time before an
+> > operation was pointless if we were going to do it afterward. The NFS
+> > client only really cares about seeing it change after a write.
+> >
+>=20
+> Pointless to NFS client maybe.
+> Whether or not this is not changing user behavior for other applications
+> is up to you to prove and I doubt that you can prove it because I doubt
+> that it is true.
+>=20
+> > Doing both would be fine from a correctness standpoint, and in most
+> > cases, the second would be a no-op anyway since a query would have to
+> > race in between the two for that to happen.
+> >
+> > FWIW, I think we should update the m/ctime and version at the same time.
+> > If the version changes, then there is always the potential that a timer
+> > tick has occurred. So, that would translate to a second call to
+> > file_update_time in here.
+> >
+> > The downside of bumping the times/version both before and after is that
+> > these are hot codepaths, and we'd be adding extra operations there. Even
+> > in the case where nothing has changed, we'd have to call
+> > inode_needs_update_time a second time for every write. Is that worth the
+> > cost?
+>=20
+> Is there a practical cost for iversion bump AFTER write as I suggested?
+> If you NEED m/ctime update AFTER write and iversion update is not enough
+> then I did not understand from your commit message why that is.
+>=20
+> Thanks,
+> Amir.
+>=20
 
-????
-The fast path in the new code looks quite clean - what concerns you?
-Maybe a "likely()" annotation can be used to encourage the compiler to
-optimise for the non-error path so the error-handling gets moved
-out-of-line (assuming it isn't already), but don't think the new code
-needs that goto.
+Maybe we should split i_version updates from ctime updates.
+
+While it isn't true that ctime updates have happened before the write
+"forever" it has been true since 2.3.43[1] which is close to forever.
+
+For ctime there doesn't appear to be a strong specification of when the
+change happens, so history provides a good case for leaving it before.
+For i_version we want to provide clear and unambiguous semantics.
+Performing 2 updates makes the specification muddy.
+
+So I would prefer a single update for i_version, performed after the
+change becomes visible.  If that means it has to be separate from ctime,
+then so be it.
 
 NeilBrown
 
 
->=20
-> The rest of the patch looks good.
->=20
->=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > fs/nfsd/filecache.c | 46 ++++++++++++++++++++-------------------------
-> > 1 file changed, 20 insertions(+), 26 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index be152e3e3a80..63955f3353ed 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -1043,9 +1043,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
-t svc_fh *fhp,
-> > 		.need	=3D may_flags & NFSD_FILE_MAY_MASK,
-> > 		.net	=3D SVC_NET(rqstp),
-> > 	};
-> > -	struct nfsd_file *nf, *new;
-> > +	struct nfsd_file *nf;
-> > 	bool retry =3D true;
-> > 	__be32 status;
-> > +	int ret;
-> >=20
-> > 	status =3D fh_verify(rqstp, fhp, S_IFREG,
-> > 				may_flags|NFSD_MAY_OWNER_OVERRIDE);
-> > @@ -1055,35 +1056,35 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
-> > 	key.cred =3D get_current_cred();
-> >=20
-> > retry:
-> > -	/* Avoid allocation if the item is already in cache */
-> > -	nf =3D rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
-> > -				    nfsd_file_rhash_params);
-> > +	rcu_read_lock();
-> > +	nf =3D rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
-> > +			       nfsd_file_rhash_params);
-> > 	if (nf)
-> > 		nf =3D nfsd_file_get(nf);
-> > +	rcu_read_unlock();
-> > 	if (nf)
-> > 		goto wait_for_construction;
-> >=20
-> > -	new =3D nfsd_file_alloc(&key, may_flags);
-> > -	if (!new) {
-> > +	nf =3D nfsd_file_alloc(&key, may_flags);
-> > +	if (!nf) {
-> > 		status =3D nfserr_jukebox;
-> > 		goto out_status;
-> > 	}
-> >=20
-> > -	nf =3D rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
-> > -					      &key, &new->nf_rhash,
-> > -					      nfsd_file_rhash_params);
-> > -	if (!nf) {
-> > -		nf =3D new;
-> > -		goto open_file;
-> > -	}
-> > -	if (IS_ERR(nf))
-> > -		goto insert_err;
-> > -	nf =3D nfsd_file_get(nf);
-> > -	if (nf =3D=3D NULL) {
-> > -		nf =3D new;
-> > +	ret =3D rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
-> > +					   &key, &nf->nf_rhash,
-> > +					   nfsd_file_rhash_params);
-> > +	if (ret =3D=3D 0)
-> > 		goto open_file;
-> > +
-> > +	nfsd_file_slab_free(&nf->nf_rcu);
-> > +	if (retry && ret =3D=3D EEXIST) {
-> > +		retry =3D false;
-> > +		goto retry;
-> > 	}
-> > -	nfsd_file_slab_free(&new->nf_rcu);
-> > +	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
-> > +	status =3D nfserr_jukebox;
-> > +	goto out_status;
-> >=20
-> > wait_for_construction:
-> > 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
-> > @@ -1143,13 +1144,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
-t svc_fh *fhp,
-> > 	smp_mb__after_atomic();
-> > 	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
-> > 	goto out;
-> > -
-> > -insert_err:
-> > -	nfsd_file_slab_free(&new->nf_rcu);
-> > -	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, PTR_ERR(nf));
-> > -	nf =3D NULL;
-> > -	status =3D nfserr_jukebox;
-> > -	goto out_status;
-> > }
-> >=20
-> > /**
-> > --=20
-> > 2.37.3
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
->=20
+[1]:  https://git.kernel.org/pub/scm/linux/kernel/git/history/history.git/com=
+mit/?id=3D636b38438001a00b25f23e38747a91cb8428af29
