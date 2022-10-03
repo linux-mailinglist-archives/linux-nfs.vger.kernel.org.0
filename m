@@ -2,120 +2,184 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 418A75F2F6C
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 13:17:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CE9E5F2FB8
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 13:34:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiJCLRY (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Oct 2022 07:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42020 "EHLO
+        id S229862AbiJCLeM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Oct 2022 07:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbiJCLRY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 07:17:24 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3374D39B9B
-        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 04:17:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664795842;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zNN/awQowjYY/OSbhWJ12ieMCymWD1ABTgD2NfFaiQY=;
-        b=VkuW4D0ISsmXjqEUgAk9SYlgEo/EuY05FhrTtvKLifko3Efu6jc7Mmrn//IGLInUq9R1Ob
-        EPf9SfYf9LjFRs2D9aEgw9FMGNugaBYk/n8q7uJs0nA31GZ+Z404uvBeEKebHYSYmDoAqi
-        TB07rRMgOIvu3pQ5Z66Hotwd3DZKX0Y=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-144-kJQ2JqIMNr61-bdCNmV62g-1; Mon, 03 Oct 2022 07:17:21 -0400
-X-MC-Unique: kJQ2JqIMNr61-bdCNmV62g-1
-Received: by mail-qk1-f197.google.com with SMTP id de16-20020a05620a371000b006ceb92bc740so8869898qkb.15
-        for <linux-nfs@vger.kernel.org>; Mon, 03 Oct 2022 04:17:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date;
-        bh=zNN/awQowjYY/OSbhWJ12ieMCymWD1ABTgD2NfFaiQY=;
-        b=p0GPuKgGVlTuyQJ8IZ/zrUAADG8gEFQ3Ys34Gpv1B+AycXQ7Uap1yW+AQQY79RGBs0
-         BI7xtg0DwSRXt9AcMhx/mxwQQwnclpNRK/nMlgPXX6y3Naq+Mpn99H3d3z73GeHNbJh+
-         m24X/Ekmyxapw1P1fWlosb1Mpf5uaKANeNkZEoXPkOajMY1QNUumvy7m8W3p1X5I7Xrz
-         gyZZWz0NtHNjEcyMiE9L8dTSWIGGfR97pk4iM2Lhhz5F6PXIUaeuA4K70at/mo3Dfv40
-         79QFqtnEW1iCvbnalH4UFNwW416dRG5UyKvT6PtdzYOO7O+knH3TuJATUPKfW4evNGmp
-         G5SQ==
-X-Gm-Message-State: ACrzQf1wLi0/0h1VL2ojNR8+GdVgW8dj+TEDsbrskxUL84FPo+LQUK1M
-        YQfyosQ06U01lpNNJily8tkkozHQF8bY0JwGaHrNGmtKIE27B6404IX930YfkKGCyHnyWqJoKZT
-        81VMNshEH7mqYtmsnTrIs
-X-Received: by 2002:a05:620a:219a:b0:6ce:4164:e22c with SMTP id g26-20020a05620a219a00b006ce4164e22cmr12814963qka.214.1664795840614;
-        Mon, 03 Oct 2022 04:17:20 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM6TrmZnw4wqso9g92894QWa6i8MwytoRbzKZSVIgtg/vozS1sjjP0hWsMHQLrOcTaAC25Qh5g==
-X-Received: by 2002:a05:620a:219a:b0:6ce:4164:e22c with SMTP id g26-20020a05620a219a00b006ce4164e22cmr12814948qka.214.1664795840391;
-        Mon, 03 Oct 2022 04:17:20 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-97-71.dyn.eolo.it. [146.241.97.71])
-        by smtp.gmail.com with ESMTPSA id dm19-20020a05620a1d5300b006cbbc3daaacsm11529406qkb.113.2022.10.03.04.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 04:17:19 -0700 (PDT)
-Message-ID: <866a0ac45418a3543c9ddc2869671fc9c2b20afb.camel@redhat.com>
-Subject: Re: [PATCH net] sunrpc: Use GFP_NOFS to prevent use of
- current->task_frag.
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Guillaume Nault <gnault@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     netdev@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-        Benjamin Coddington <bcodding@redhat.com>
-Date:   Mon, 03 Oct 2022 13:17:15 +0200
-In-Reply-To: <96a18bd00cbc6cb554603cc0d6ef1c551965b078.1663762494.git.gnault@redhat.com>
-References: <96a18bd00cbc6cb554603cc0d6ef1c551965b078.1663762494.git.gnault@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        with ESMTP id S229842AbiJCLeM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 07:34:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EB13ECFC
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 04:34:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3CE4D61024
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 11:34:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F8AC433C1;
+        Mon,  3 Oct 2022 11:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664796849;
+        bh=EyW5kEyj4REtAQNh0qJMVFPWibIcbI/ferIIPc0HaX0=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=rkjdMI2QBu+47kej7OJgg++t4Dab2TEDIPUAa1sOYvAUUtcKD8skCYs6zuDAKkZgG
+         lZqm+/y1thAaRJEUKUDhb6fAcXAV+GBCL4W3OdwQzrD1cAT3Rvt4P4wTpB3OQohFTn
+         IoMTz1/iW91Echrv7yrkZuHNbJ2mKNl9QemFRAEmxOh0N3txCzvarIG1uZgAJXrzsR
+         d8GOWb2cTiggS1l8rfItHWiH+Ecbz0O1OeGZZD09yF7guiku7nbW0SSxcvi3nsEhkJ
+         oL0NNfMh4AcBguKYhKjQOTONWTmuwuqjssfo3Flypm341Ouo9Js2S8OJFkhOIv9QN6
+         OnGSEOEFTkVDw==
+Message-ID: <f38b7fe087b1dd296bf7a5b693e685936ebecada.camel@kernel.org>
+Subject: Re: [PATCH RFC] NFSD: Hold rcu_read_lock while getting refs
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date:   Mon, 03 Oct 2022 07:34:07 -0400
+In-Reply-To: <166463917715.10124.3789034969503323129.stgit@bazille.1015granger.net>
+References: <166463917715.10124.3789034969503323129.stgit@bazille.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-09-21 at 14:16 +0200, Guillaume Nault wrote:
-> Commit a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all
-> rpciod/xprtiod jobs") stopped setting sk->sk_allocation explicitly in
-> favor of using memalloc_nofs_save()/memalloc_nofs_restore() critical
-> sections.
-> 
-> However, ->sk_allocation isn't used just by the memory allocator.
-> In particular, sk_page_frag() uses it to figure out if it can return
-> the page_frag from current or if it has to use the socket one.
-> With ->sk_allocation set to the default GFP_KERNEL, sk_page_frag() now
-> returns current->page_frag, which might already be in use in the
-> current context if the call happens during memory reclaim.
-> 
-> Fix this by setting ->sk_allocation to GFP_NOFS.
-> Note that we can't just instruct sk_page_frag() to look at
-> current->flags, because it could generate a cache miss, thus slowing
-> down the TCP fast path.
-> 
-> This is similar to the problems fixed by the following two commits:
->   * cifs: commit dacb5d8875cc ("tcp: fix page frag corruption on page
->     fault").
->   * nbd: commit 20eb4f29b602 ("net: fix sk_page_frag() recursion from
->     memory reclaim").
-> 
-> Link: https://lore.kernel.org/netdev/b4d8cb09c913d3e34f853736f3f5628abfd7f4b6.1656699567.git.gnault@redhat.com/
-> Fixes: a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all rpciod/xprtiod jobs")
-> Signed-off-by: Guillaume Nault <gnault@redhat.com>
+On Sat, 2022-10-01 at 11:48 -0400, Chuck Lever wrote:
+> nfsd_file is RCU-freed, so it's possible that one could be found
+> that's in the process of being freed and the memory recycled. Ensure
+> we hold the rcu_read_lock while attempting to get a reference on the
+> object.
+>=20
+> Suggested-by: Jeff Layton <jlayton@kernel.org>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  fs/nfsd/filecache.c |   34 +++++++++++-----------------------
+>  fs/nfsd/trace.h     |   27 ---------------------------
+>  2 files changed, 11 insertions(+), 50 deletions(-)
+>=20
+> This is what I was thinking... Compile-tested only.
+>=20
+>=20
 
-@Trond, @Anna, @Chuck: are you ok with this patch? Should we take it
-via the net tree or will you merge it?
+Looks reasonable. I had something pretty similar that I'll send along in
+a bit.
 
-Thanks!
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index be152e3e3a80..6e17f74fb29f 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -1056,10 +1056,12 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+> =20
+>  retry:
+>  	/* Avoid allocation if the item is already in cache */
+> -	nf =3D rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
+> -				    nfsd_file_rhash_params);
+> +	rcu_read_lock();
+> +	nf =3D rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
+> +			       nfsd_file_rhash_params);
+>  	if (nf)
+>  		nf =3D nfsd_file_get(nf);
+> +	rcu_read_unlock();
+>  	if (nf)
+>  		goto wait_for_construction;
+> =20
+> @@ -1069,21 +1071,14 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+>  		goto out_status;
+>  	}
+> =20
+> -	nf =3D rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
+> -					      &key, &new->nf_rhash,
+> -					      nfsd_file_rhash_params);
+> -	if (!nf) {
+> -		nf =3D new;
+> -		goto open_file;
+> -	}
+> -	if (IS_ERR(nf))
+> -		goto insert_err;
+> -	nf =3D nfsd_file_get(nf);
+> -	if (nf =3D=3D NULL) {
+> -		nf =3D new;
+> -		goto open_file;
+> +	if (rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
+> +					 &key, &new->nf_rhash,
+> +					 nfsd_file_rhash_params)) {
+> +		nfsd_file_slab_free(&new->nf_rcu);
+> +		goto retry;
 
-Paolo
+This can return other errors besides -EEXIST. I'm not sure we want to
+goto retry on those others.
 
+>  	}
+> -	nfsd_file_slab_free(&new->nf_rcu);
+> +	nf =3D new;
+> +	goto open_file;
+> =20
+>  wait_for_construction:
+>  	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
+> @@ -1143,13 +1138,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
+t svc_fh *fhp,
+>  	smp_mb__after_atomic();
+>  	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+>  	goto out;
+> -
+> -insert_err:
+> -	nfsd_file_slab_free(&new->nf_rcu);
+> -	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, PTR_ERR(nf));
+> -	nf =3D NULL;
+> -	status =3D nfserr_jukebox;
+> -	goto out_status;
+>  }
+> =20
+>  /**
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 06a96e955bd0..c15467b2e8d9 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -954,33 +954,6 @@ TRACE_EVENT(nfsd_file_create,
+>  	)
+>  );
+> =20
+> -TRACE_EVENT(nfsd_file_insert_err,
+> -	TP_PROTO(
+> -		const struct svc_rqst *rqstp,
+> -		const struct inode *inode,
+> -		unsigned int may_flags,
+> -		long error
+> -	),
+> -	TP_ARGS(rqstp, inode, may_flags, error),
+> -	TP_STRUCT__entry(
+> -		__field(u32, xid)
+> -		__field(const void *, inode)
+> -		__field(unsigned long, may_flags)
+> -		__field(long, error)
+> -	),
+> -	TP_fast_assign(
+> -		__entry->xid =3D be32_to_cpu(rqstp->rq_xid);
+> -		__entry->inode =3D inode;
+> -		__entry->may_flags =3D may_flags;
+> -		__entry->error =3D error;
+> -	),
+> -	TP_printk("xid=3D0x%x inode=3D%p may_flags=3D%s error=3D%ld",
+> -		__entry->xid, __entry->inode,
+> -		show_nfsd_may_flags(__entry->may_flags),
+> -		__entry->error
+> -	)
+> -);
+> -
+>  TRACE_EVENT(nfsd_file_cons_err,
+>  	TP_PROTO(
+>  		const struct svc_rqst *rqstp,
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
