@@ -2,340 +2,182 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7A45F31CB
-	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 16:12:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED515F31DA
+	for <lists+linux-nfs@lfdr.de>; Mon,  3 Oct 2022 16:18:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbiJCOMw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 3 Oct 2022 10:12:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53994 "EHLO
+        id S229730AbiJCOSz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 3 Oct 2022 10:18:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbiJCOMu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 10:12:50 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5193746DBC;
-        Mon,  3 Oct 2022 07:12:48 -0700 (PDT)
-Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 293DOaUS030232;
-        Mon, 3 Oct 2022 14:12:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : content-type : content-id :
- content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=+wqaEBlPqpDH5oW0rIG9NY80qBAQADscGka3FsNiGfc=;
- b=aLwmChjW+npepvJswHNzDkEtNiC0fsYun7ZeASeMB/u9JqvYA31gNGPk/0dfr7kjiDm4
- GC9cfuPH4XKHhPNix5LM/nsZ2L9f2XzAK2CwZ4pRDQeX2quOiRZnEk2RUxNB7deNy/n/
- kG2VncnLSQVa9VcrNmtXVRgACRmna2yuY/HEmf0Jq0mcDNvPuDSmQssRHa8NgENOXsqF
- e55JvNZPfS8GbDh+4QhQ9UyahkDDitbqmZDZSEdYqpNOxBEFmWYnogbP7vGXo0XJOckj
- caRpwqVRLk1wnZr3gTxbOb3pM1yOgRNCliQPIqMw+GAZRL05KLpO4iUwOuEtLW/knpdx /A== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3jxdea3nee-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Oct 2022 14:12:41 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 293DUX6Q030283;
-        Mon, 3 Oct 2022 14:12:40 GMT
-Received: from nam12-bn8-obe.outbound.protection.outlook.com (mail-bn8nam12lp2169.outbound.protection.outlook.com [104.47.55.169])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3jxc09hwxk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 03 Oct 2022 14:12:40 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=M+VYR5anR0/8MyQraIS27YujJONKjtAtQbps6jAm+y9E6iblYFG6s6ZSmX0d+wl8DqX8tth1QNLsWED27jC2pd6Jb3zYIY9zfyW9TYwWsy+2WM/RnwgLS1grgFF9pY8raqOYJLxcFAINdnrWu1cEW4dqNivlrOJkrZOrIdUGbhiucmwA4uA8Ape5Yk4ukX/JPZPdLRyHykuFpnBqkH1/cXWuqTkn/MhDR+h1qqkvdEOrmdhqZcB2w1+MO7J5dIJ7uM1PBMOf4i19munlbqkPZ2kNjX2azKnHHbVpmNJVuqEaXIycg7ZwJXrPt0YECc4+4wX7Tz/OpVWY1N1s4x7iZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+wqaEBlPqpDH5oW0rIG9NY80qBAQADscGka3FsNiGfc=;
- b=fmEDeZ8mmzCYkrLyGxbpjcyZ1UQJH904L1Lef+SH1lJeHVYdxlwAx3ns5P4BRpA+Wm1EpYUicT7SF0buEO/xGfQdMUL5/Vp5dts7Z/UVr5c3vTwahFcYx8NVr9e9/uFF9bMfVDoVouktmMkmVRVSvaR0Lnl3MEPvHRCJeeZec0ED7d3siuxzM5+y3m5uGPE0vN0e/yJlQblaUQIW8lKf31CtmYRAzQyTh11VcOtmaQnTZAOXTrNI5e96EBFNbMJu5eb6wOxFSZ36gRGyzHijRtsUjMcjHqdIsDOabmeQ2hl2lT48ftiuddBHEVzSBQyLQr79rjCraxQ0zcKAkiL9Uw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+        with ESMTP id S229646AbiJCOSz (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 3 Oct 2022 10:18:55 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B934CA33
+        for <linux-nfs@vger.kernel.org>; Mon,  3 Oct 2022 07:18:51 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id q99-20020a17090a1b6c00b0020ac0368d64so750923pjq.3
+        for <linux-nfs@vger.kernel.org>; Mon, 03 Oct 2022 07:18:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+wqaEBlPqpDH5oW0rIG9NY80qBAQADscGka3FsNiGfc=;
- b=FuR+yvUM8K/h8dSD+MFjz8v0wa5sTo+Z4Z9rKPtMUoAs6uyR3ORoNkQ9UM5x9S+qFOks+eKS6vmB6dhrQOgePvquGkaryzEp9WHhevIQIwR9evDukpZgyWtKfltieuJSzqnZoc9LcEb/fmvfmBjNZ/odgpWYs3cws49id1nduNI=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH0PR10MB4582.namprd10.prod.outlook.com (2603:10b6:510:39::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5676.28; Mon, 3 Oct
- 2022 14:12:38 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5403:3164:f6c3:d48a]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5403:3164:f6c3:d48a%3]) with mapi id 15.20.5676.030; Mon, 3 Oct 2022
- 14:12:38 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-Subject: [GIT PULL] NFSD changes for 6.1
-Thread-Topic: [GIT PULL] NFSD changes for 6.1
-Thread-Index: AQHY1zIxpsdwgqZ4MUKDr+1D+RfM9g==
-Date:   Mon, 3 Oct 2022 14:12:38 +0000
-Message-ID: <1677F534-541E-480D-8C4B-7BF6126358B0@oracle.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB4582:EE_
-x-ms-office365-filtering-correlation-id: 91f69c05-1d48-4f80-5915-08daa54953de
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: LfdtohQdYcFBO6nmbkBHedNgXJ/Nyk6t/vmh4TNV6gy2cNmMFxVfhPEjB7Z4ovzRwqkHia4Q3IiuCV+HfjkfKJPPCyjIM36MnGsLoN4w6e1bhenNlwpd/SJlH9jQLd/76BDkBM91iBSwfTesbFEXb1zeQ8WP8Z27N5EV0Pmj8NnA2/3q6ZOt93WFEiQX2dL65phU4IY26v8Hj2Yf5/D757KtRl2jJTni8eCtpt/tgvcHZCk1mjdqDNZDdt/tYG3tQAjP+AYBlkLP68pFXSHd7/V//neb/OfHBaAzMaz9iYFRUa2E0ujpap24tB8Txklh3SpJmsuMzM5dVkMSL+oHqBE65LcYvzFcOWZ7wHmgKcbHUwfeB8s0CZnjxtT3ZQ56iha20DnQ+g5v2UPUQ7GZUlz+MJqntXGrShUV+QfLjxHIfDKbZKArpS49AS3PPTj5cDd2+Fl9TggJ3n75vSqd53kPaz5ck1eNTYfXraQBRgArk0ysAe5l0+baWxfH4bZO35BBP25R+D9Wjjl4U13mcTG4cWJvcma62Y+z7f1PR35J441AZ+L1HenhJjOAfgRsL2TJoJm4Ka4VDSUfiu6Zgmjy7e51/VoYZ3US5hRRPcerikp76CRHbdusSkBHxsXAVyEP85UwlXOis6Jj322JqDzvFUCZ5W3dj12cQSY75RpuylFa+LAsev+Ibsgy/E5u3vPTIeONTuk0vp4MXrJSKJyKwOPMmNMS0nsT6Vpr5sfeBmM8V8GCHlIryUP835HakmjRo6QNQH0RQJGK+YMmY4U8gBcRmU4Upjlnf1WkC9M4Mssd/gpyBcmIAvTru1++9yq0jm9ZOVhuQIpil/1MyA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(366004)(346002)(396003)(39860400002)(136003)(451199015)(71200400001)(6486002)(478600001)(36756003)(316002)(2616005)(91956017)(33656002)(186003)(8936002)(38070700005)(122000001)(2906002)(5660300002)(64756008)(66946007)(4326008)(8676002)(76116006)(66446008)(66476007)(66556008)(6512007)(6506007)(6916009)(54906003)(26005)(966005)(38100700002)(86362001)(83380400001)(41300700001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?pyB7QvSNxW8h0deRVzq+JzR1jHB19w+l3hMzHPQJqnG79NEtbJyTZSZrZxjp?=
- =?us-ascii?Q?LznCaN4JKOXqmyiBC+Iod6jT1duHKuu5nAsQ9R7REvm44JCuUqy+vxXmdHpN?=
- =?us-ascii?Q?EzFdd9LmOMLXKfjbP7MWqnMehYmu3BLfFrc0KQd3znZf50pnfAcVqy6yAh1f?=
- =?us-ascii?Q?ybGnGjfZaXkWmjxcp6+xnYz9BomahvBQTuQ+v/N9/YtS9v1QykEPStGipo4G?=
- =?us-ascii?Q?RxtHzuVGX+hzq11GQ/euynoVrDqFkjxr8jczred994/isbhg49bFAS79N2b+?=
- =?us-ascii?Q?Qns6I+Aq+8lldSsvlvAC2fWls68mmITA7TNzY72bsTncXJGrI7F6p9taGC93?=
- =?us-ascii?Q?tXN52wvks+lBSPdVoWw6qmRfk2wpPQsN50ne1Fi0R5tidioTyeHEwy1kaD/9?=
- =?us-ascii?Q?ufwlsuPNdzu69qgA/joSxaAi3lqxzdCcZKnAbs2FCEMgCYuJA1qYCUmIu4Hj?=
- =?us-ascii?Q?lVfnY9AYGcndKge5ODhG0lF5NgK2iyj2IFXPO4XLegUeiEdHW9uXmR6gAexO?=
- =?us-ascii?Q?sVisJPLNfEieG5eWZg4ZImkrkNrIt5h5Fd8zzKH0WigLXAurDNxbBSivpe67?=
- =?us-ascii?Q?+o/oPrXEJLtfk5YNnswSX9/wf/AItj1kHWwa1ahIRnBKdPDCo7FWl8CQo3a+?=
- =?us-ascii?Q?gXdJ+xV26bvxLcpV9KQ5klLDh19YlJP8uoVvYFPR9J2nLwfdd4UNuhKnD8RX?=
- =?us-ascii?Q?Aeehxe5/JaG1mmiqt/gdUvxpukNwDEJSmZ9f721FzrSSF1BraZKI6Q2AYGq8?=
- =?us-ascii?Q?T4GgiYe3NNWfssL30RVMRhTBuIgOq6iTjou9Xh/ic7j8d1ow4ohFtzyPz5Xz?=
- =?us-ascii?Q?ydr+YcH9myg15Iwfd7FVM6UrYQENxP4/WOU2YeX+iWLM2JaP+ZeZuNk8lx3R?=
- =?us-ascii?Q?XQT7CCcaxQqgislQgy6aW2dIqv6j9RZ0VCUeW+J1VpG1ZwlDcS9yAwZHmQwl?=
- =?us-ascii?Q?BpS164E2kJx92KtWqZkjn455pH5wkkmDQ75SnoFKC1TOCrIpTAubKHlvVgQJ?=
- =?us-ascii?Q?bNS0/3wSruEohlj3IHqoklvdhSt5psyLzE4hjo1U+S1Wsy3ZBy3MRe6E8Spb?=
- =?us-ascii?Q?UYTyGJ+m4vLgXetYiddFrQXriCJhCz1+2EgPYZWfaObUZOqpzYW0uVZnT3nC?=
- =?us-ascii?Q?MN0+fFZxPhh3P4J2dh+nQNLsugGGyNIwYiuIJyaW4B3OYoZt5AJEUDWbRWUa?=
- =?us-ascii?Q?DLSV7jCs/FJk3GIwVMSWehAc6vNH88K7s1sZsjvQ/4xCSFshVxTsBDQHjIBf?=
- =?us-ascii?Q?dWQzJrFFogGiDy76SOdRCx9MOVX4GPHFgz7Iq8zd5XATpp7Hl/Y1VoToYn8Q?=
- =?us-ascii?Q?P3vw8S5J0PszA439c+exU+HQtvFjw+zrPMO6k5zXZhgNg8Ad3eVgf43nnJQK?=
- =?us-ascii?Q?l+g3eqQxtE6Bj2UG2s+nF0MvcsjlG7NpaCOVeg/udneHoXTpa9Hq+Jw48LBo?=
- =?us-ascii?Q?Ojv3b0tBQMTKJWqGg4n2QqYYOOmvfub7Dbru4Z4wrCaPg1vSX2OkebshUaYS?=
- =?us-ascii?Q?n1yylETzSYpT/+UyBQVPBn8CN8JvrdIneBhC0XzEoYNmpxEmt9NQTr19rMYX?=
- =?us-ascii?Q?kgIO16wSEuGycCjqvmRiybmRP0hMFjUXGA1B8wBFbOIYK25O7vVYY7SZTb8P?=
- =?us-ascii?Q?mg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A26D67EF0312214A92C472BD0B229F04@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=umich.edu; s=google-2016-06-03;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date;
+        bh=qacSLZoCDUbl5CTzAWfkN+em2+Ar7q2NjUhcB+PjREU=;
+        b=lXL0DqwS8L+0dps4Ekf7jF1GtjjtszU50+yRbw28uVChp0i8cg+XlvVfHyz0vqwYsS
+         tYokeR9JzWlD14ALZIdYiD0SNaIaqMdIAS+Ym0X3vLDLqZKhp7DAzzhk7FX8qlmXDtau
+         PittBDq+vMSq4A/eC+SbS5q+ke6Z3n8o3JFRWtgDnnrv0i0yEC1HeligSL2KpiTjLNIr
+         IkOiBMka01h/yE1Aa4qea6Gv/OndhFnuxlNrAamYnDNz+/4w6uEl+EY1D56JjywLCNsr
+         LKkNesIzVmrfPPmStinJvHOWJMnOjYAhIZDLMiDj7S4trDOniiNAMXKUEJrzlQjJjChc
+         /lXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date;
+        bh=qacSLZoCDUbl5CTzAWfkN+em2+Ar7q2NjUhcB+PjREU=;
+        b=edYT9jqlttd7ooF4EyYaT8+HRj/K2FDTo+cWzs0bWByIq4EKkQGtrJrbWPCfM82FR4
+         fB7AUgB1OErIVnCeO3i7H7GQmhOj/t1pKK0Sz6T/ZkD1O8pl03ScRH+mcuFWptCAgBIA
+         We/n7zA1d0eRQ5mx/H3zXGrWwYfazHaZ1SmZv8EYtXrJWFpd79BAqrE8FtT2mOvd7KQe
+         YQZYuHvjP39m0W4d5DmBEbzZKIOSW0FdvrZmZrtL5EBbY/4io5IDNSa9CCr6j7nQl9Pz
+         xWJB9SdtkoYR6s/TTO/4fdBGG90aNvLECcptJSsXbiHnGsYDxWWLm6saAoL4d3AfrqS+
+         scAw==
+X-Gm-Message-State: ACrzQf1843EzzGRkKUEW3qQcLF8PcypgcDTYJ/An+6oS8+e1YWJH8S3O
+        5mAqycXLawcbZevQwyIDAbnh4jco3Nrt/lMF++DMoVRv
+X-Google-Smtp-Source: AMsMyM75YD6PNNmUbq/3UfY+6IBeGGRR+AT7p4wmNRreUTSIoiqlYrlgD5RvC7bGSZbghAYHzgPyjnYRrIs49/N20mA=
+X-Received: by 2002:a17:902:eccb:b0:178:1313:afa1 with SMTP id
+ a11-20020a170902eccb00b001781313afa1mr22819366plh.97.1664806730756; Mon, 03
+ Oct 2022 07:18:50 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91f69c05-1d48-4f80-5915-08daa54953de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Oct 2022 14:12:38.4466
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sCsulrPLC3wldJ1F1ZEba0xaSjczFEYVuS8sEefz+S2ryuP1NiOBoPT1vK5xmPNf2E5lCyVNy6SRhU7wNQGW+A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB4582
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.528,FMLib:17.11.122.1
- definitions=2022-10-03_02,2022-09-29_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
- definitions=main-2210030085
-X-Proofpoint-GUID: 8dtZo-dhXEBpQqtOOwO7TQEi7Z216AB8
-X-Proofpoint-ORIG-GUID: 8dtZo-dhXEBpQqtOOwO7TQEi7Z216AB8
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <39bf58c7-47d9-744b-6d26-d672aa713024@gmx.ch> <8cd63730f7b5f3e2aa3bde98587de0c6a42b384b.camel@kernel.org>
+ <8550c032-2ef8-4ddb-19a0-307777bd9645@gmx.ch> <c163b299164cd9abe21325a947c9efe908a04331.camel@kernel.org>
+ <e3842fe7-da95-98e2-b0e8-fa3aede673cc@gmx.ch>
+In-Reply-To: <e3842fe7-da95-98e2-b0e8-fa3aede673cc@gmx.ch>
+From:   Olga Kornievskaia <aglo@umich.edu>
+Date:   Mon, 3 Oct 2022 10:18:38 -0400
+Message-ID: <CAN-5tyEj97UO-K=ZcgkhzNr2H3wTd5tq8u+TdPj19-syc81=rw@mail.gmail.com>
+Subject: Re: nfs4.1+: workaround for defunct clientaddr?
+To:     Manfred Schwarb <manfred99@gmx.ch>
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus-
+ Hi Manfred,
 
-We are still working on an infrequent UAF that happens during
-an NFSv4 DELEGRETURN request, as documented here:
+What's the purpose of segregating your connections? You don't want
+your backup traffic "interfering" with your regular operation.
+However, the assumption is that between 2 NICs the backup traffic and
+regular traffic could co-exists, correct? In that case why not use
+session trunking?  What you are correctly experiencing is that with
+4.1+ the 2nd mount discovers that in the 2nd mount it's the same
+server the client is talking to (even if it's thru a different IPs)
+and the client will drop the new connection.
 
-  https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D394
-
-This appears to have been an issue for the past several
-releases (maybe since v5.14 or v5.15?). I expect Jeff and I
-will have this addressed in the next couple of weeks.
-
-However, the other v6.1 changes for NFSD are ready for you now.
-
-
----- Pull request follows ----
-
-The following changes since commit 521a547ced6477c54b4b0cc206000406c221b4d6=
-:
-
-  Linux 6.0-rc6 (2022-09-18 13:44:14 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6=
-.1
-
-for you to fetch changes up to 895ddf5ed4c54ea9e3533606d7a8b4e4f27f95ef:
-
-  nfsd: extra checks when freeing delegation stateids (2022-09-26 14:50:58 =
--0400)
-
-----------------------------------------------------------------
-NFSD 6.1 Release Notes
-
-This release is mostly bug fixes, clean-ups, and optimizations.
-
-One notable set of fixes addresses a subtle buffer overflow issue
-that occurs if a small RPC Call message arrives in an oversized
-RPC record. This is only possible on a framed RPC transport such
-as TCP.
-
-Because NFSD shares the receive and send buffers in one set of
-pages, an oversized RPC record steals pages from the send buffer
-that will be used to construct the RPC Reply message. NFSD must
-not assume that a full-sized buffer is always available to it;
-otherwise, it will walk off the end of the send buffer while
-constructing its reply.
-
-In this release, we also introduce the ability for the server to
-wait a moment for clients to return delegations before it responds
-with NFS4ERR_DELAY. This saves a retransmit and a network round-
-trip when a delegation recall is needed. This work will be built
-upon in future releases.
-
-The NFS server adds another shrinker to its collection. Because
-courtesy clients can linger for quite some time, they might be
-freeable when the server host comes under memory pressure. A new
-shrinker has been added that releases courtesy client resources
-during low memory scenarios.
-
-Lastly, of note: the maximum number of operations per NFSv4
-COMPOUND that NFSD can handle is increased from 16 to 50. There
-are NFSv4 client implementations that need more than 16 to
-successfully perform a mount operation that uses a pathname
-with many components.
-
-----------------------------------------------------------------
-Anna Schumaker (1):
-      NFSD: Return nfserr_serverfault if splice_ok but buf->pages have data
-
-ChenXiaoSong (5):
-      nfsd: use DEFINE_PROC_SHOW_ATTRIBUTE to define nfsd_proc_ops
-      nfsd: use DEFINE_SHOW_ATTRIBUTE to define export_features_fops and su=
-pported_enctypes_fops
-      nfsd: use DEFINE_SHOW_ATTRIBUTE to define client_info_fops
-      nfsd: use DEFINE_SHOW_ATTRIBUTE to define nfsd_reply_cache_stats_fops
-      nfsd: use DEFINE_SHOW_ATTRIBUTE to define nfsd_file_cache_stats_fops
-
-Christophe JAILLET (3):
-      nfsd: Fix a memory leak in an error handling path
-      nfsd: Avoid some useless tests
-      nfsd: Propagate some error code returned by memdup_user()
-
-Chuck Lever (30):
-      NFSD: Increase NFSD_MAX_OPS_PER_COMPOUND
-      SUNRPC: Fix svcxdr_init_decode's end-of-buffer calculation
-      SUNRPC: Fix svcxdr_init_encode's buflen calculation
-      NFSD: Protect against send buffer overflow in NFSv2 READDIR
-      NFSD: Protect against send buffer overflow in NFSv3 READDIR
-      NFSD: Protect against send buffer overflow in NFSv2 READ
-      NFSD: Protect against send buffer overflow in NFSv3 READ
-      NFSD: Fix handling of oversized NFSv4 COMPOUND requests
-      NFSD: Replace dprintk() call site in fh_verify()
-      NFSD: Trace NFSv4 COMPOUND tags
-      NFSD: Add tracepoints to report NFSv4 callback completions
-      NFSD: Add a mechanism to wait for a DELEGRETURN
-      NFSD: Refactor nfsd_setattr()
-      NFSD: Make nfsd4_setattr() wait before returning NFS4ERR_DELAY
-      NFSD: Make nfsd4_rename() wait before returning NFS4ERR_DELAY
-      NFSD: Make nfsd4_remove() wait before returning NFS4ERR_DELAY
-      SUNRPC: Optimize svc_process()
-      SUNRPC: Parametrize how much of argsize should be zeroed
-      NFSD: Reduce amount of struct nfsd4_compoundargs that needs clearing
-      SUNRPC: Clarify comment that documents svc_max_payload()
-      NFSD: Refactor common code out of dirlist helpers
-      NFSD: Use xdr_inline_decode() to decode NFSv3 symlinks
-      NFSD: Clean up WRITE arg decoders
-      SUNRPC: Fix typo in xdr_buf_subsegment's kdoc comment
-      NFSD: Clean up nfs4svc_encode_compoundres()
-      NFSD: Remove "inline" directives on op_rsize_bop helpers
-      NFSD: Remove unused nfsd4_compoundargs::cachetype field
-      NFSD: Pack struct nfsd4_compoundres
-      NFSD: Rename the fields in copy_stateid_t
-      NFSD: Cap rsize_bop result based on send buffer size
-
-Dai Ngo (3):
-      NFSD: keep track of the number of courtesy clients in the system
-      NFSD: add shrinker to reap courtesy clients on low memory condition
-      NFSD: fix use-after-free on source server when doing inter-server cop=
-y
-
-Gaosheng Cui (1):
-      nfsd: remove nfsd4_prepare_cb_recall() declaration
-
-Jeff Layton (5):
-      nfsd: clean up mounted_on_fileid handling
-      nfsd: only fill out return pointer on success in nfsd4_lookup_stateid
-      nfsd: fix comments about spinlock handling with delegations
-      nfsd: make nfsd4_run_cb a bool return function
-      nfsd: extra checks when freeing delegation stateids
-
-Jinpeng Cui (1):
-      NFSD: remove redundant variable status
-
-NeilBrown (1):
-      NFSD: drop fname and flen args from nfsd_create_locked()
-
-Olga Kornievskaia (1):
-      NFSD enforce filehandle check for source file in COPY
-
-Wolfram Sang (2):
-      NFSD: move from strlcpy with unused retval to strscpy
-      lockd: move from strlcpy with unused retval to strscpy
-
- fs/lockd/host.c            |   2 +-
- fs/lockd/svc4proc.c        |  24 ++++++++++++
- fs/lockd/svcproc.c         |  24 ++++++++++++
- fs/nfs/callback_xdr.c      |   1 +
- fs/nfsd/cache.h            |   2 +-
- fs/nfsd/filecache.c        |   7 +---
- fs/nfsd/filecache.h        |   2 +-
- fs/nfsd/netns.h            |   4 ++
- fs/nfsd/nfs2acl.c          |   5 +++
- fs/nfsd/nfs3acl.c          |   3 ++
- fs/nfsd/nfs3proc.c         |  43 ++++++++++++++-------
- fs/nfsd/nfs3xdr.c          |  18 ++-------
- fs/nfsd/nfs4callback.c     |  14 ++++++-
- fs/nfsd/nfs4idmap.c        |   8 ++--
- fs/nfsd/nfs4layouts.c      |   2 +-
- fs/nfsd/nfs4proc.c         | 226 +++++++++++++++++++++++++++++++++++++++++=
-+++++++++++++++++++++++---------------------------------------------
- fs/nfsd/nfs4recover.c      |  14 ++++---
- fs/nfsd/nfs4state.c        | 218 +++++++++++++++++++++++++++++++++++++++++=
-++++++++++++++++++++++++++++++++++++++++++----------------------
- fs/nfsd/nfs4xdr.c          | 102 ++++++++++++++++++++++++++++++++---------=
---------
- fs/nfsd/nfscache.c         |  13 ++-----
- fs/nfsd/nfsctl.c           |  54 +++++++-------------------
- fs/nfsd/nfsd.h             |  13 ++++++-
- fs/nfsd/nfsfh.c            |   8 +---
- fs/nfsd/nfsproc.c          |  39 +++++++++++--------
- fs/nfsd/nfssvc.c           |   2 +-
- fs/nfsd/nfsxdr.c           |   4 +-
- fs/nfsd/state.h            |  11 +++---
- fs/nfsd/stats.c            |  14 +------
- fs/nfsd/trace.h            | 131 +++++++++++++++++++++++++++++++++++++++++=
-+++++++++++++++++-----
- fs/nfsd/vfs.c              | 128 ++++++++++++++++++++++++++++++++++++++++-=
----------------------
- fs/nfsd/vfs.h              |   4 +-
- fs/nfsd/xdr4.h             |   9 +++--
- include/linux/sunrpc/svc.h |  20 ++++++++--
- include/linux/sunrpc/xdr.h |   2 +
- net/sunrpc/svc.c           |  34 +++++++++--------
- net/sunrpc/xdr.c           |  24 +++++++++++-
- 36 files changed, 829 insertions(+), 400 deletions(-)
-
---
-Chuck Lever
+For session trunking, you can configure your linux server (I'm
+assuming it is, if not that might be a problem) to support session
+trunking (by using replica=<> option). Then you can also add
+"discovertrunking" option to your mount command and then the client
+will discover the 2 available paths to the server. You wouldn't need 2
+mounts and you'd have both NICs available to serve your combined
+regular and backup traffic. This would be the solution to utilize both
+of the NICs (network paths) you have available between the client and
+the server.
 
 
-
+On Mon, Oct 3, 2022 at 9:27 AM Manfred Schwarb <manfred99@gmx.ch> wrote:
+>
+> Am 03.10.22 um 14:26 schrieb Jeff Layton:
+> > On Mon, 2022-10-03 at 13:55 +0200, Manfred Schwarb wrote:
+> >> Am 03.10.22 um 13:39 schrieb Jeff Layton:
+> >>> On Sun, 2022-10-02 at 14:35 +0200, Manfred Schwarb wrote:
+> >>>> Hi,
+> >>>>
+> >>>> I have 2 boxes connected with 2 network cards each, one
+> >>>> crossover connection and one connection via LAN.
+> >>>> I want to use the crossover connection for backup,
+> >>>> so I want to be able to select exactly this wire when
+> >>>> doing my NFS backup transfers. Everything interconnected via NFS4.1
+> >>>> and automount.
+> >>>>
+> >>>> Now the thing is, if there is an already existing connection
+> >>>> via LAN, I am not able to select the crossover connection,
+> >>>> there is some session reuse against my will.
+> >>>>
+> >>>> automount config:
+> >>>> /net/192.168.99.1  -fstype=nfs4,nfsvers=4,minorversion=1,clientaddr=192.168.99.100   /  192.168.99.1:/
+> >>>> /net2/192.168.98.1 -fstype=nfs4,nfsvers=4,minorversion=1,clientaddr=192.168.98.100   /  192.168.98.1:/
+> >>>>
+> >>>> mount -l:
+> >>>> 192.168.99.1:/data on /net/192.168.99.1/data type nfs4 (...,clientaddr=192.168.99.100,addr=192.168.99.1)
+> >>>> 192.168.99.1:/data on /net2/192.168.98.1/data type nfs4 (...,clientaddr=192.168.99.100,addr=192.168.99.1)
+> >>>>
+> >>>> As you see, both connections are on "192.168.99.1:/data", and the backup runs
+> >>>> over the same wire as all user communication, which is not desired.
+> >>>> This even happens if I explicitly set some clientaddr= option.
+> >>>>
+> >>>> Now I found two workarounds:
+> >>>> - downgrade to NFS 4.0, clientaddr seems to work with it
+> >>>> - choose different NFS versions, i.e. one connection with
+> >>>>   minorversion=1 and the other with minorversion=2
+> >>>>
+> >>>> Both possibilities seem a bit lame to me.
+> >>>> Are there some other (recommended) variants which do what I want?
+> >>>>
+> >>>> It seems different minor versions result in different "nfs4_unique_id" values,
+> >>>> and therefore no session sharing occurs. But why do different network
+> >>>> interfaces (via explicitly set clientaddr= by user) not result in different
+> >>>> "nfs4_unique_id" values?
+> >>>>
+> >>>> Thanks for any comments and advice,
+> >>>> Manfred
+> >>>
+> >>> That sounds like a bug. We probably need to compare the clientaddr
+> >>> values in nfs_compare_super or nfs_compare_mount_options so that it
+> >>> doesn't match if the clientaddrs are different.
+> >>>
+> >
+> >
+> > Actually, I take it back, clientaddr is specifically advertised as being
+> > for NFSv4.0 only. The workaround for you is "nosharecache", which will
+> > force the mount under /net2 to get a new superblock altogether.
+>
+> But clientaddr is silently accepted on NFS4.1+, and seemingly silently does nothing.
+>
+> The point is, RFC5661 explicitely tells
+> "NFS minor version 1 is deemed superior to NFS minor version 0 with no loss of functionality".
+>
+> So this behavior comes as a surprise.
+>
+> >
+> >>> As a workaround, you can probably mount the second mount with
+> >>> -o nosharecache and get what you want.
+> >>
+> >> Indeed, nosharecache works. But the man page has some scary words for it:
+> >>   "This is considered a data risk".
+> >>
+> >
+> > Yeah, it does sound scary but it's not a huge issue unless you're doing
+> > I/O to the same files at the same time via both mounts. With
+> > "sharecache" (the default) you get better cache coherency in that
+> > situation since the inode and its pagecache are the same.
+> >
+>
+> So I guess this is equivalent to the minorversion=1/minorversion=2 trick
+> cache coherency wise then?
+>
+>
+> > With "nosharecache" you need to be more careful to flush caches, etc. if
+> > you are doing reads and writes to the same files via different paths. If
+> > you need careful coordination there, then you probably want to use file
+> > locking.
+>
+> Thanks for these explanations, it is appreciated!
+> Manfred
+>
+> > --
+> > Jeff Layton <jlayton@kernel.org>
+>
