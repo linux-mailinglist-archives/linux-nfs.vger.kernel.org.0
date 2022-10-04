@@ -2,129 +2,167 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CE3E5F48BA
-	for <lists+linux-nfs@lfdr.de>; Tue,  4 Oct 2022 19:41:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB7AE5F49CA
+	for <lists+linux-nfs@lfdr.de>; Tue,  4 Oct 2022 21:41:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbiJDRlC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Oct 2022 13:41:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
+        id S229611AbiJDTlP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Oct 2022 15:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229851AbiJDRke (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Oct 2022 13:40:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525814F3B3
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 10:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1664905218;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=SCR9mlk85jb8kDj17yDLyneP5x5BC2d4THb6IR+XW7g=;
-        b=aSOFcaVauB+b9suC2Rk61aUHlrZbf9Ueh6qQSEVzZ2IJLWYS2uplGnvSAKMfa3ogb1S17s
-        whDPNvV9LflNRyAtix0Xk+9A4SQVa44fLW2Hqma5SxKcVUhVXMUDPhYcQEQkK0lPnuwKSS
-        ILSkdaHuKSXs6L47VMmXYIAh0x+aozU=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-316-2B0znjqHPJ29ypNMYpT46w-1; Tue, 04 Oct 2022 13:40:17 -0400
-X-MC-Unique: 2B0znjqHPJ29ypNMYpT46w-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S229436AbiJDTlO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Oct 2022 15:41:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E9CD5C9D9
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 12:41:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3E24480C8C1
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 17:40:17 +0000 (UTC)
-Received: from bearskin.sorenson.redhat.com (unknown [10.2.17.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1537F4099B57;
-        Tue,  4 Oct 2022 17:40:17 +0000 (UTC)
-From:   Frank Sorenson <sorenson@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com
-Subject: [PATCH nfs-utils] Allow 'debug' configuration option to accept '0' and '1'
-Date:   Tue,  4 Oct 2022 12:40:15 -0500
-Message-Id: <20221004174015.1362841-1-sorenson@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 078A961504
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 19:41:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02070C433D6;
+        Tue,  4 Oct 2022 19:41:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1664912472;
+        bh=kBS+gCGIPOGuzlTDrwtTuD0DOFgFkBJdJnt9Dy7vHvg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CvQH8ezDFYoSYmOLLwAYKHZfpcP9rY2oaLz7NY6ZOJzXhB03o8vNSSnS/N4OeQi/4
+         3mJdIHLJQMbnTq7WA1wEVUbhRbgs7vklD2pzDZWhm7yYUNAHFDJZfEEtH7ujzn02RX
+         Ok3GG6cCWFUUabKz0O9sk18BFWvRMoAZn03U2PrXYJ9fYQW+KSCXTBwdpprcnjRT1h
+         /RROewy160QpuNcYL8wtX+wkc7hXSEncVrAocccsNBWwbzAjk4R5WdzvEHCba9oyyw
+         1rojCQtz8b4ewRfK4X+dB2iOMFItnpOKBka0EZrQk9nVS33sf0mmGGMV4sYflphY25
+         0h/p1dB9jjfOg==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     chuck.lever@oracle.com
+Cc:     neilb@suse.de, linux-nfs@vger.kernel.org
+Subject: [PATCH v4] nfsd: rework hashtable handling in nfsd_do_file_acquire
+Date:   Tue,  4 Oct 2022 15:41:10 -0400
+Message-Id: <20221004194110.120599-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-In the example /etc/nfs.conf file, most sections include
-a commented-out 'debug = 0' line, suggesting that '0' is
-the default.  In addition, the manpages for some of the
-utilities state that debugging can be enabled by setting
-'debug = 1' in the nfs.conf file.
+nfsd_file is RCU-freed, so we need to hold the rcu_read_lock long enough
+to get a reference after finding it in the hash. Take the
+rcu_read_lock() and call rhashtable_lookup directly.
 
-However, neither '0' nor '1' is accepted as a valid option
-for 'debug' while parsing the nfs.conf file.
+Switch to using rhashtable_lookup_insert_key as well, and use the usual
+retry mechanism if we hit an -EEXIST. Rename the "retry" bool to
+open_retry, and eliminiate the insert_err goto target.
 
-Add '0' and '1' to the valid strings when parsing 'debug',
-with '0' not changing any debugging settings, and '1'
-enabling all debugging.
-
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- support/nfs/xlog.c   | 7 +++++--
- systemd/nfs.conf.man | 6 ++++++
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ fs/nfsd/filecache.c | 52 +++++++++++++++++++--------------------------
+ 1 file changed, 22 insertions(+), 30 deletions(-)
 
-diff --git a/support/nfs/xlog.c b/support/nfs/xlog.c
-index e5861b9d..fa125cef 100644
---- a/support/nfs/xlog.c
-+++ b/support/nfs/xlog.c
-@@ -46,11 +46,13 @@ int export_errno = 0;
+v4: fix sign on -EEXIST comparison
+    don't clear the retry flag on an insertion race
+
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index be152e3e3a80..5399d8b44c45 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -1043,9 +1043,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		.need	= may_flags & NFSD_FILE_MAY_MASK,
+ 		.net	= SVC_NET(rqstp),
+ 	};
+-	struct nfsd_file *nf, *new;
+-	bool retry = true;
++	struct nfsd_file *nf;
++	bool open_retry = true;
+ 	__be32 status;
++	int ret;
  
- static void	xlog_toggle(int sig);
- static struct xlog_debugfac	debugnames[] = {
-+	{ "0",		0, },
- 	{ "general",	D_GENERAL, },
- 	{ "call",	D_CALL, },
- 	{ "auth",	D_AUTH, },
- 	{ "parse",	D_PARSE, },
- 	{ "all",	D_ALL, },
-+	{ "1",		D_ALL, },
- 	{ NULL,		0, },
- };
+ 	status = fh_verify(rqstp, fhp, S_IFREG,
+ 				may_flags|NFSD_MAY_OWNER_OVERRIDE);
+@@ -1055,35 +1056,33 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	key.cred = get_current_cred();
  
-@@ -119,13 +121,14 @@ xlog_sconfig(char *kind, int on)
- {
- 	struct xlog_debugfac	*tbl = debugnames;
+ retry:
+-	/* Avoid allocation if the item is already in cache */
+-	nf = rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
+-				    nfsd_file_rhash_params);
++	rcu_read_lock();
++	nf = rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
++			       nfsd_file_rhash_params);
+ 	if (nf)
+ 		nf = nfsd_file_get(nf);
++	rcu_read_unlock();
+ 	if (nf)
+ 		goto wait_for_construction;
  
--	while (tbl->df_name != NULL && strcasecmp(tbl->df_name, kind)) 
-+	while (tbl->df_name != NULL && strcasecmp(tbl->df_name, kind))
- 		tbl++;
- 	if (!tbl->df_name) {
- 		xlog (L_WARNING, "Invalid debug facility: %s\n", kind);
- 		return;
+-	new = nfsd_file_alloc(&key, may_flags);
+-	if (!new) {
++	nf = nfsd_file_alloc(&key, may_flags);
++	if (!nf) {
+ 		status = nfserr_jukebox;
+ 		goto out_status;
  	}
--	xlog_config(tbl->df_fac, on);
-+	if (tbl->df_fac)
-+		xlog_config(tbl->df_fac, on);
+ 
+-	nf = rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
+-					      &key, &new->nf_rhash,
+-					      nfsd_file_rhash_params);
+-	if (!nf) {
+-		nf = new;
+-		goto open_file;
+-	}
+-	if (IS_ERR(nf))
+-		goto insert_err;
+-	nf = nfsd_file_get(nf);
+-	if (nf == NULL) {
+-		nf = new;
++	ret = rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
++					   &key, &nf->nf_rhash,
++					   nfsd_file_rhash_params);
++	if (likely(ret == 0))
+ 		goto open_file;
+-	}
+-	nfsd_file_slab_free(&new->nf_rcu);
++
++	nfsd_file_slab_free(&nf->nf_rcu);
++	if (ret == -EEXIST)
++		goto retry;
++	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
++	status = nfserr_jukebox;
++	goto out_status;
+ 
+ wait_for_construction:
+ 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
+@@ -1091,11 +1090,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	/* Did construction of this file fail? */
+ 	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+ 		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
+-		if (!retry) {
++		if (!open_retry) {
+ 			status = nfserr_jukebox;
+ 			goto out;
+ 		}
+-		retry = false;
++		open_retry = false;
+ 		nfsd_file_put_noref(nf);
+ 		goto retry;
+ 	}
+@@ -1143,13 +1142,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	smp_mb__after_atomic();
+ 	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+ 	goto out;
+-
+-insert_err:
+-	nfsd_file_slab_free(&new->nf_rcu);
+-	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, PTR_ERR(nf));
+-	nf = NULL;
+-	status = nfserr_jukebox;
+-	goto out_status;
  }
  
- void
-diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
-index e74083e9..b95c05a6 100644
---- a/systemd/nfs.conf.man
-+++ b/systemd/nfs.conf.man
-@@ -98,6 +98,12 @@ value, which can be one or more from the list
- .BR parse ,
- .BR all .
- When a list is given, the members should be comma-separated.
-+The values
-+.BR 0
-+and
-+.BR 1
-+are also accepted, with '0' making no changes to the debug level, and '1' equivalent to specifying 'all'.
-+
- .TP
- .B general
- Recognized values:
+ /**
 -- 
-2.37.2
+2.37.3
 
