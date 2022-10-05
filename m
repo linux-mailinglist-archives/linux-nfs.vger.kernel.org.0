@@ -2,67 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1074E5F4C6B
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 01:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F41BC5F4D05
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 02:25:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230095AbiJDXGq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 4 Oct 2022 19:06:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34440 "EHLO
+        id S229530AbiJEAZT (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 4 Oct 2022 20:25:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230116AbiJDXGX (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Oct 2022 19:06:23 -0400
+        with ESMTP id S229470AbiJEAZR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 4 Oct 2022 20:25:17 -0400
 Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E56727B33
-        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 16:06:15 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84824286C3
+        for <linux-nfs@vger.kernel.org>; Tue,  4 Oct 2022 17:25:16 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 8C04E218E8;
-        Tue,  4 Oct 2022 23:06:14 +0000 (UTC)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 061B92198D;
+        Wed,  5 Oct 2022 00:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1664924774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1664929515; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lZI6xtemsVCF5yBriFGUIYAln0eHjioIoffaHM8ZfFI=;
-        b=WdEbhFEWoRdMf0TcXjTvMZQPfNwj8yvWkdjSankNnMdi3lWvydyxOJj28hFC+EsAaBFk3U
-        E+hrOxYFSaXmmF+K2jVkql+a7/YCUsnPfR5j5+jRqxfU5afZYryYwoOr/MEoY5rcLlHN0l
-        Q99RWASzus/prR4Xs9bvUZiN5Tml6nA=
+        bh=jEK56S4R6zFvtBZQUS/XIh0EqRa6KE3zlRCByQiFSJE=;
+        b=cnzLXBhC9VtlShOZS5kK+27os7IxI70uKH9+hI3+K4soFDW02732XNwKll7qVOI9OvRBJk
+        XuPWiN/XTUINb5cVxzK4jPtpsu57ehkLiVX31bCfCzIlJipqYiaLp0Z/vKlLkL95sV5VbX
+        8Ut4RiAsPjKPG/V7MrzQm3n+WKacmeM=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1664924774;
+        s=susede2_ed25519; t=1664929515;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=lZI6xtemsVCF5yBriFGUIYAln0eHjioIoffaHM8ZfFI=;
-        b=HrFAUpz2TJDTvRtPlyELnwzEdcdPw0N88pej3WFOrw30ztUdpw6mL9ykW7nF8Z43S32eNi
-        MvZp3OmF/m5w/IAw==
+        bh=jEK56S4R6zFvtBZQUS/XIh0EqRa6KE3zlRCByQiFSJE=;
+        b=A7WHbPiTaCvnLqB1e5s+nIHD72UnenkmSMR1hYO3FV5fvMVzc1lz2/KD0qGyIsJJmy4itU
+        d+9vYGRSrYYeF5Dw==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 64778139D2;
-        Tue,  4 Oct 2022 23:06:13 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id BBC2C13345;
+        Wed,  5 Oct 2022 00:25:13 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id lxqsB2W8PGN6NwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 04 Oct 2022 23:06:13 +0000
+        id wOJfG+nOPGMSUQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 05 Oct 2022 00:25:13 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Jeff Layton" <jlayton@kernel.org>,
+To:     "Jeff Layton" <jlayton@kernel.org>
+Cc:     "Chuck Lever" <chuck.lever@oracle.com>,
         "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v3] nfsd: rework hashtable handling in nfsd_do_file_acquire
-In-reply-to: <4FF85113-6F17-4F3C-AD31-E2472A988618@oracle.com>
-References: <20221003113436.24161-1-jlayton@kernel.org>,
- <F4DF35B2-CE11-4BD9-8442-97852F57CE2E@oracle.com>,
- <166483484979.14457.9448463531121052564@noble.neil.brown.name>,
- <4FF85113-6F17-4F3C-AD31-E2472A988618@oracle.com>
-Date:   Wed, 05 Oct 2022 10:06:07 +1100
-Message-id: <166492476800.14457.10230243127842792324@noble.neil.brown.name>
+Subject: Re: nfsd: another possible delegation race
+In-reply-to: <fb9c520e8bd9a034eeb10285c03dcf5cd6a660c9.camel@kernel.org>
+References: <166486048770.14457.133971372966856907@noble.neil.brown.name>,
+ <fb9c520e8bd9a034eeb10285c03dcf5cd6a660c9.camel@kernel.org>
+Date:   Wed, 05 Oct 2022 11:25:09 +1100
+Message-id: <166492950933.14457.10186344229031903354@noble.neil.brown.name>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -72,62 +70,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 05 Oct 2022, Chuck Lever III wrote:
+On Tue, 04 Oct 2022, Jeff Layton wrote:
+> On Tue, 2022-10-04 at 16:14 +1100, NeilBrown wrote:
+> > Hi,
+> >  I have a customer who experienced a crash in nfsd which appears to be
+> >  related to delegation return.  I cannot completely rule-out
+> >   Commit 548ec0805c39 ("nfsd: fix use-after-free due to delegation race")
+...
 > 
-> > On Oct 3, 2022, at 6:07 PM, NeilBrown <neilb@suse.de> wrote:
-> > 
-> > On Tue, 04 Oct 2022, Chuck Lever III wrote:
-> >> 
-> >>> On Oct 3, 2022, at 7:34 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >>> 
-> >>> nfsd_file is RCU-freed, so we need to hold the rcu_read_lock long enough
-> >>> to get a reference after finding it in the hash. Take the
-> >>> rcu_read_lock() and call rhashtable_lookup directly.
-> >>> 
-> >>> Switch to using rhashtable_lookup_insert_key as well, and use the usual
-> >>> retry mechanism if we hit an -EEXIST. Eliminiate the insert_err goto
-> >>> target as well.
-> >> 
-> >> The insert_err goto is there to remove a very rare case from
-> >> the hot path. I'd kinda like to keep that feature of this code.
-> > 
-> > ????
-> > The fast path in the new code looks quite clean - what concerns you?
-> > Maybe a "likely()" annotation can be used to encourage the compiler to
-> > optimise for the non-error path so the error-handling gets moved
-> > out-of-line (assuming it isn't already), but don't think the new code
-> > needs that goto.
+> Ok, so a DELEGRETURN is racing with a lease break?
 > 
-> It's an instruction cache footprint issue.
-> 
-> A CPU populates its instruction cache by reading instructions from
-> memory in bulk (some multiple of the size of the cacheline). I
-> would like to keep the instructions involved with very rare cases
-> (like this one) out-of-line so they do not clutter the CPU's
-> instruction cache.
-> 
-> Unfortunately the compiler on my system has decided to place this
-> snippet of code right before the out_status: label, which defeats
-> my intention.
 
-Don't you hate that!!!!
+and that is exactly what the above mentioned commit fixes.  I now see
+that it is the right fix for my problem as well.
 
-On the unpatched code, if I put a "likely" annotation on the assumed
-common case:
+Putting the delegation_hashed() check in nfsd_break_deleg_cb() doesn't
+help because the problematic list-add to del_recall_lru doesn't happen
+until later in a different thread, and so the nfs4_delegation could
+still get unhashed before that thread adds it to the list.  The above
+commit adds the protection at the right place.
 
-	if (likely(!nf)) {
-		nf = new;
-		goto open_file;
-	}
+Because being on ->del_recall_lru doesn't imply a reference, it is easy
+for the delegation to be freed before the laundromat finds it on the
+list.
 
-then the open_file code is placed immediately after the
-rhashtable_lookup_get_insert_key().
+As mentioned in my reply to Chuck, the refcount_inc() gives a "saturated"
+error rather than a "use-after-free" error because when the delegation
+was freed, slub (which SUSE uses) puts a pointer at the start of the
+memory, which is exactly where the refcount is.  So it has a good chance
+of becoming negative.
 
-This supports my suggestion that likely/unlikely annotations are better
-at controlling code placement than source-code placement.
-
-I've thought for a while that those annotations should be
-optimise_for() and optimise_against() or similar.  That is what is being
-requested.
+So my symptoms are now completely explained.  Thanks to both of you for
+your help.
 
 NeilBrown
