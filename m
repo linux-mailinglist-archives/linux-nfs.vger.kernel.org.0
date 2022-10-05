@@ -2,30 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A34BB5F56CC
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 16:55:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 005F05F56CD
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 16:55:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbiJEOzm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Oct 2022 10:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47000 "EHLO
+        id S229815AbiJEOzs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Oct 2022 10:55:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiJEOzl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Oct 2022 10:55:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4073A27177
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 07:55:38 -0700 (PDT)
+        with ESMTP id S230002AbiJEOzs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Oct 2022 10:55:48 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0664152E
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 07:55:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D72AE6170B
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C739C433C1
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:37 +0000 (UTC)
-Subject: [PATCH RFC 0/9] A course adjustment, maybe
+        by ams.source.kernel.org (Postfix) with ESMTPS id CA541B81DED
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FECC433D6
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:43 +0000 (UTC)
+Subject: [PATCH RFC 1/9] nfsd: fix nfsd_file_unhash_and_dispose
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Wed, 05 Oct 2022 10:55:35 -0400
-Message-ID: <166497916751.1527.11190362197003358927.stgit@manet.1015granger.net>
+Date:   Wed, 05 Oct 2022 10:55:42 -0400
+Message-ID: <166498174250.1527.18089441104110588219.stgit@manet.1015granger.net>
+In-Reply-To: <166497916751.1527.11190362197003358927.stgit@manet.1015granger.net>
+References: <166497916751.1527.11190362197003358927.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -39,55 +41,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-I'm proposing this series as the first NFSD-related patchset to go
-into v6.2 (for-next), though I haven't opened that yet.
+From: Jeff Layton <jlayton@kernel.org>
 
-For quite some time, we've been encouraged to disable filecache
-garbage collection for NFSv4 files, and I think I found a surgical
-way to do just that. That is presented in "NFSD: Add an NFSD_FILE_GC
-flag to enable nfsd_file garbage collection".
+nfsd_file_unhash_and_dispose() is called for two reasons:
 
-To make that fit, I've dropped Jeff's fix for nfsd_file_close(), but
-incorporated his proposed replacement logic into nfsd_file_put().
-The justification for that can be found in the patch descriptions.
+We're either shutting down and purging the filecache, or we've gotten a
+notification about a file delete, so we want to go ahead and unhash it
+so that it'll get cleaned up when we close.
 
-Jeff's other two patches are included here because I intend to get
-them merged into v6.1 soon thus they will become part of the base
-for NFSD for-next. For the moment I'm leaving out Fixes tags because
-I'd like to see these get some testing before they are applied to
-v6.0 -- and again, we're not yet 100% sure these fix a misbehavior
-that has been hit in the field.
+We're either walking the hashtable or doing a lookup in it and we
+don't take a reference in either case. What we want to do in both cases
+is to try and unhash the object and put it on the dispose list if that
+was successful. If it's no longer hashed, then we don't want to touch
+it, with the assumption being that something else is already cleaning
+up the sentinel reference.
 
-Comments and opinions are welcome.
+Instead of trying to selectively decrement the refcount in this
+function, just unhash it, and if that was successful, move it to the
+dispose list. Then, the disposal routine will just clean that up as
+usual.
 
+Also, just make this a void function, drop the WARN_ON_ONCE, and the
+comments about deadlocking since the nature of the purported deadlock
+is no longer clear.
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
+ fs/nfsd/filecache.c |   36 +++++++-----------------------------
+ 1 file changed, 7 insertions(+), 29 deletions(-)
 
-Chuck Lever (7):
-      NFSD: Pass the target nfsd_file to nfsd_commit()
-      NFSD: Revert "NFSD: NFSv4 CLOSE should release an nfsd_file immediately"
-      NFSD: Add an NFSD_FILE_GC flag to enable nfsd_file garbage collection
-      NFSD: Use const pointers as parameters to fh_ helpers.
-      NFSD: Use rhashtable for managing nfs4_file objects
-      NFSD: Clean up nfs4_preprocess_stateid_op() call sites
-      NFSD: Trace delegation revocations
+diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+index eeed4ae5b4ad..844c41832d50 100644
+--- a/fs/nfsd/filecache.c
++++ b/fs/nfsd/filecache.c
+@@ -405,22 +405,15 @@ nfsd_file_unhash(struct nfsd_file *nf)
+ 	return false;
+ }
+ 
+-/*
+- * Return true if the file was unhashed.
+- */
+-static bool
++static void
+ nfsd_file_unhash_and_dispose(struct nfsd_file *nf, struct list_head *dispose)
+ {
+ 	trace_nfsd_file_unhash_and_dispose(nf);
+-	if (!nfsd_file_unhash(nf))
+-		return false;
+-	/* keep final reference for nfsd_file_lru_dispose */
+-	if (refcount_dec_not_one(&nf->nf_ref))
+-		return true;
+-
+-	nfsd_file_lru_remove(nf);
+-	list_add(&nf->nf_lru, dispose);
+-	return true;
++	if (nfsd_file_unhash(nf)) {
++		/* caller must call nfsd_file_dispose_list() later */
++		nfsd_file_lru_remove(nf);
++		list_add(&nf->nf_lru, dispose);
++	}
+ }
+ 
+ static void
+@@ -562,8 +555,6 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
+  * @lock: LRU list lock (unused)
+  * @arg: dispose list
+  *
+- * Note this can deadlock with nfsd_file_cache_purge.
+- *
+  * Return values:
+  *   %LRU_REMOVED: @item was removed from the LRU
+  *   %LRU_ROTATE: @item is to be moved to the LRU tail
+@@ -748,8 +739,6 @@ nfsd_file_close_inode(struct inode *inode)
+  *
+  * Walk the LRU list and close any entries that have not been used since
+  * the last scan.
+- *
+- * Note this can deadlock with nfsd_file_cache_purge.
+  */
+ static void
+ nfsd_file_delayed_close(struct work_struct *work)
+@@ -891,16 +880,12 @@ nfsd_file_cache_init(void)
+ 	goto out;
+ }
+ 
+-/*
+- * Note this can deadlock with nfsd_file_lru_cb.
+- */
+ static void
+ __nfsd_file_cache_purge(struct net *net)
+ {
+ 	struct rhashtable_iter iter;
+ 	struct nfsd_file *nf;
+ 	LIST_HEAD(dispose);
+-	bool del;
+ 
+ 	rhashtable_walk_enter(&nfsd_file_rhash_tbl, &iter);
+ 	do {
+@@ -910,14 +895,7 @@ __nfsd_file_cache_purge(struct net *net)
+ 		while (!IS_ERR_OR_NULL(nf)) {
+ 			if (net && nf->nf_net != net)
+ 				continue;
+-			del = nfsd_file_unhash_and_dispose(nf, &dispose);
+-
+-			/*
+-			 * Deadlock detected! Something marked this entry as
+-			 * unhased, but hasn't removed it from the hash list.
+-			 */
+-			WARN_ON_ONCE(!del);
+-
++			nfsd_file_unhash_and_dispose(nf, &dispose);
+ 			nf = rhashtable_walk_next(&iter);
+ 		}
+ 
 
-Jeff Layton (2):
-      nfsd: fix nfsd_file_unhash_and_dispose
-      nfsd: rework hashtable handling in nfsd_do_file_acquire
-
-
- fs/nfsd/filecache.c | 165 ++++++++++++++++---------------
- fs/nfsd/filecache.h |   4 +-
- fs/nfsd/nfs3proc.c  |  10 +-
- fs/nfsd/nfs4proc.c  |  42 ++++----
- fs/nfsd/nfs4state.c | 235 ++++++++++++++++++++++++++++++--------------
- fs/nfsd/nfsfh.h     |  10 +-
- fs/nfsd/state.h     |   5 +-
- fs/nfsd/trace.h     |  58 ++++++++++-
- fs/nfsd/vfs.c       |  19 ++--
- fs/nfsd/vfs.h       |   3 +-
- 10 files changed, 344 insertions(+), 207 deletions(-)
-
---
-Chuck Lever
 
