@@ -2,30 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 005F05F56CD
-	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 16:55:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D21AA5F56CE
+	for <lists+linux-nfs@lfdr.de>; Wed,  5 Oct 2022 16:55:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229815AbiJEOzs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 5 Oct 2022 10:55:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47268 "EHLO
+        id S230118AbiJEOz4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 5 Oct 2022 10:55:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbiJEOzs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Oct 2022 10:55:48 -0400
+        with ESMTP id S230002AbiJEOzy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 5 Oct 2022 10:55:54 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C0664152E
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 07:55:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F5C85722C
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 07:55:53 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CA541B81DED
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85FECC433D6
-        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:43 +0000 (UTC)
-Subject: [PATCH RFC 1/9] nfsd: fix nfsd_file_unhash_and_dispose
+        by ams.source.kernel.org (Postfix) with ESMTPS id 10D39B81DED
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A973DC433C1
+        for <linux-nfs@vger.kernel.org>; Wed,  5 Oct 2022 14:55:49 +0000 (UTC)
+Subject: [PATCH RFC 2/9] nfsd: rework hashtable handling in
+ nfsd_do_file_acquire
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Wed, 05 Oct 2022 10:55:42 -0400
-Message-ID: <166498174250.1527.18089441104110588219.stgit@manet.1015granger.net>
+Date:   Wed, 05 Oct 2022 10:55:48 -0400
+Message-ID: <166498174879.1527.18235050678404528153.stgit@manet.1015granger.net>
 In-Reply-To: <166497916751.1527.11190362197003358927.stgit@manet.1015granger.net>
 References: <166497916751.1527.11190362197003358927.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -43,117 +44,117 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Jeff Layton <jlayton@kernel.org>
 
-nfsd_file_unhash_and_dispose() is called for two reasons:
+nfsd_file is RCU-freed, so we need to hold the rcu_read_lock long enough
+to get a reference after finding it in the hash. Take the
+rcu_read_lock() and call rhashtable_lookup directly.
 
-We're either shutting down and purging the filecache, or we've gotten a
-notification about a file delete, so we want to go ahead and unhash it
-so that it'll get cleaned up when we close.
-
-We're either walking the hashtable or doing a lookup in it and we
-don't take a reference in either case. What we want to do in both cases
-is to try and unhash the object and put it on the dispose list if that
-was successful. If it's no longer hashed, then we don't want to touch
-it, with the assumption being that something else is already cleaning
-up the sentinel reference.
-
-Instead of trying to selectively decrement the refcount in this
-function, just unhash it, and if that was successful, move it to the
-dispose list. Then, the disposal routine will just clean that up as
-usual.
-
-Also, just make this a void function, drop the WARN_ON_ONCE, and the
-comments about deadlocking since the nature of the purported deadlock
-is no longer clear.
+Switch to using rhashtable_lookup_insert_key as well, and use the usual
+retry mechanism if we hit an -EEXIST. Rename the "retry" bool to
+open_retry, and eliminiate the insert_err goto target.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/filecache.c |   36 +++++++-----------------------------
- 1 file changed, 7 insertions(+), 29 deletions(-)
+ fs/nfsd/filecache.c |   52 ++++++++++++++++++++++-----------------------------
+ 1 file changed, 22 insertions(+), 30 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index eeed4ae5b4ad..844c41832d50 100644
+index 844c41832d50..a2adfc247648 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -405,22 +405,15 @@ nfsd_file_unhash(struct nfsd_file *nf)
- 	return false;
- }
+@@ -1042,9 +1042,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		.need	= may_flags & NFSD_FILE_MAY_MASK,
+ 		.net	= SVC_NET(rqstp),
+ 	};
+-	struct nfsd_file *nf, *new;
+-	bool retry = true;
++	bool open_retry = true;
++	struct nfsd_file *nf;
+ 	__be32 status;
++	int ret;
  
--/*
-- * Return true if the file was unhashed.
-- */
--static bool
-+static void
- nfsd_file_unhash_and_dispose(struct nfsd_file *nf, struct list_head *dispose)
- {
- 	trace_nfsd_file_unhash_and_dispose(nf);
--	if (!nfsd_file_unhash(nf))
--		return false;
--	/* keep final reference for nfsd_file_lru_dispose */
--	if (refcount_dec_not_one(&nf->nf_ref))
--		return true;
--
--	nfsd_file_lru_remove(nf);
--	list_add(&nf->nf_lru, dispose);
--	return true;
-+	if (nfsd_file_unhash(nf)) {
-+		/* caller must call nfsd_file_dispose_list() later */
-+		nfsd_file_lru_remove(nf);
-+		list_add(&nf->nf_lru, dispose);
-+	}
- }
+ 	status = fh_verify(rqstp, fhp, S_IFREG,
+ 				may_flags|NFSD_MAY_OWNER_OVERRIDE);
+@@ -1054,35 +1055,33 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	key.cred = get_current_cred();
  
- static void
-@@ -562,8 +555,6 @@ nfsd_file_dispose_list_delayed(struct list_head *dispose)
-  * @lock: LRU list lock (unused)
-  * @arg: dispose list
-  *
-- * Note this can deadlock with nfsd_file_cache_purge.
-- *
-  * Return values:
-  *   %LRU_REMOVED: @item was removed from the LRU
-  *   %LRU_ROTATE: @item is to be moved to the LRU tail
-@@ -748,8 +739,6 @@ nfsd_file_close_inode(struct inode *inode)
-  *
-  * Walk the LRU list and close any entries that have not been used since
-  * the last scan.
-- *
-- * Note this can deadlock with nfsd_file_cache_purge.
-  */
- static void
- nfsd_file_delayed_close(struct work_struct *work)
-@@ -891,16 +880,12 @@ nfsd_file_cache_init(void)
- 	goto out;
- }
+ retry:
+-	/* Avoid allocation if the item is already in cache */
+-	nf = rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
+-				    nfsd_file_rhash_params);
++	rcu_read_lock();
++	nf = rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
++			       nfsd_file_rhash_params);
+ 	if (nf)
+ 		nf = nfsd_file_get(nf);
++	rcu_read_unlock();
+ 	if (nf)
+ 		goto wait_for_construction;
  
--/*
-- * Note this can deadlock with nfsd_file_lru_cb.
-- */
- static void
- __nfsd_file_cache_purge(struct net *net)
- {
- 	struct rhashtable_iter iter;
- 	struct nfsd_file *nf;
- 	LIST_HEAD(dispose);
--	bool del;
+-	new = nfsd_file_alloc(&key, may_flags);
+-	if (!new) {
++	nf = nfsd_file_alloc(&key, may_flags);
++	if (!nf) {
+ 		status = nfserr_jukebox;
+ 		goto out_status;
+ 	}
  
- 	rhashtable_walk_enter(&nfsd_file_rhash_tbl, &iter);
- 	do {
-@@ -910,14 +895,7 @@ __nfsd_file_cache_purge(struct net *net)
- 		while (!IS_ERR_OR_NULL(nf)) {
- 			if (net && nf->nf_net != net)
- 				continue;
--			del = nfsd_file_unhash_and_dispose(nf, &dispose);
--
--			/*
--			 * Deadlock detected! Something marked this entry as
--			 * unhased, but hasn't removed it from the hash list.
--			 */
--			WARN_ON_ONCE(!del);
--
-+			nfsd_file_unhash_and_dispose(nf, &dispose);
- 			nf = rhashtable_walk_next(&iter);
+-	nf = rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
+-					      &key, &new->nf_rhash,
+-					      nfsd_file_rhash_params);
+-	if (!nf) {
+-		nf = new;
+-		goto open_file;
+-	}
+-	if (IS_ERR(nf))
+-		goto insert_err;
+-	nf = nfsd_file_get(nf);
+-	if (nf == NULL) {
+-		nf = new;
++	ret = rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
++					   &key, &nf->nf_rhash,
++					   nfsd_file_rhash_params);
++	if (likely(ret == 0))
+ 		goto open_file;
+-	}
+-	nfsd_file_slab_free(&new->nf_rcu);
++
++	nfsd_file_slab_free(&nf->nf_rcu);
++	if (ret == -EEXIST)
++		goto retry;
++	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
++	status = nfserr_jukebox;
++	goto out_status;
+ 
+ wait_for_construction:
+ 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
+@@ -1090,11 +1089,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	/* Did construction of this file fail? */
+ 	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+ 		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
+-		if (!retry) {
++		if (!open_retry) {
+ 			status = nfserr_jukebox;
+ 			goto out;
  		}
+-		retry = false;
++		open_retry = false;
+ 		nfsd_file_put_noref(nf);
+ 		goto retry;
+ 	}
+@@ -1142,13 +1141,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 	smp_mb__after_atomic();
+ 	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+ 	goto out;
+-
+-insert_err:
+-	nfsd_file_slab_free(&new->nf_rcu);
+-	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, PTR_ERR(nf));
+-	nf = NULL;
+-	status = nfserr_jukebox;
+-	goto out_status;
+ }
  
+ /**
 
 
