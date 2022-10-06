@@ -2,140 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 078D75F6B78
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Oct 2022 18:21:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1A715F6BDA
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Oct 2022 18:35:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbiJFQVH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Oct 2022 12:21:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
+        id S229479AbiJFQfr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Oct 2022 12:35:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbiJFQVG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Oct 2022 12:21:06 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DED95A2C5
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 09:21:04 -0700 (PDT)
+        with ESMTP id S231451AbiJFQfo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Oct 2022 12:35:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97FE9B874
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 09:35:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 778D9B8060E
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:21:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15929C433C1
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:21:02 +0000 (UTC)
-Subject: [PATCH v2 9/9] NFSD: Trace delegation revocations
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Thu, 06 Oct 2022 12:21:01 -0400
-Message-ID: <166507326118.1802.6798669234973034879.stgit@manet.1015granger.net>
-In-Reply-To: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>
-References: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5.dev2+g9ce680a5
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 756F661A11
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:35:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C020C433D7;
+        Thu,  6 Oct 2022 16:35:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1665074141;
+        bh=yTbk1yzJgPURyBPspfhzDFZJqhqSzXKFfPplKLaoU7M=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=GSoaJqYAhGy6O86tXqzGvQkCvkTLTxsi2O8dbR3fW7+Aoz4OEW+puT2N7h8JbRCzW
+         MhOTbIuXRqu/T/sRz/ePNcplSQAy/q2bHHuj889oFDgfJq1qY5l2nRjkw4Feenv/gc
+         Whk1c0xHi3/qno/SJzxzmBKfK1exZPOrpRWoma0t7aOUCbQ0G4xlo/FM1OiXe9blwB
+         P1bmCqjTBDPoiWo4HiuKuvlhrByeZwYEsmi0Lov3kofFsI7rI5D8qblECzj7241Sku
+         D+ClLrIKOoxSzvteQZxRxIU9XAoApBO8FQ5qYr0b/q1LoOcJXHpifrblYs3dmPsyQB
+         6ZALE/hgifSWw==
+Message-ID: <cb4a93b027f898c53ad1acba59c036d7c9b0d43a.camel@kernel.org>
+Subject: Re: [PATCH v4 1/2] NFSD: Return nfserr_serverfault if splice_ok but
+ buf->pages have data
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
+        chuck.lever@oracle.com
+Date:   Thu, 06 Oct 2022 12:35:39 -0400
+In-Reply-To: <20220913180151.1928363-2-anna@kernel.org>
+References: <20220913180151.1928363-1-anna@kernel.org>
+         <20220913180151.1928363-2-anna@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Delegation revocation is an exceptional event that is not otherwise
-visible externally (eg, no network traffic is emitted). Generate a
-trace record when it occurs so that revocation can be observed or
-other activity can be triggered. Example:
+On Tue, 2022-09-13 at 14:01 -0400, Anna Schumaker wrote:
+> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
+>=20
+> This was discussed with Chuck as part of this patch set. Returning
+> nfserr_resource was decided to not be the best error message here, and
+> he suggested changing to nfserr_serverfault instead.
+>=20
+> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+> ---
+>  fs/nfsd/nfs4xdr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+> index 1e9690a061ec..01dd73ed5720 100644
+> --- a/fs/nfsd/nfs4xdr.c
+> +++ b/fs/nfsd/nfs4xdr.c
+> @@ -3994,7 +3994,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, _=
+_be32 nfserr,
+>  	}
+>  	if (resp->xdr->buf->page_len && splice_ok) {
+>  		WARN_ON_ONCE(1);
+> -		return nfserr_resource;
+> +		return nfserr_serverfault;
+>  	}
+>  	xdr_commit_encode(xdr);
+> =20
 
-nfsd-1104  [005]  1912.002544: nfsd_stid_revoke:        client 633c9343:4e82788d stateid 00000003:00000001 ref=2 type=DELEG
-
-Trace infrastructure is provided for subsequent additional tracing
-related to nfs4_stid activity.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- fs/nfsd/nfs4state.c |    2 ++
- fs/nfsd/trace.h     |   55 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index bb52510a6a83..5d58e71f664d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1404,6 +1404,8 @@ static void revoke_delegation(struct nfs4_delegation *dp)
- 
- 	WARN_ON(!list_empty(&dp->dl_recall_lru));
- 
-+	trace_nfsd_stid_revoke(&dp->dl_stid);
-+
- 	if (clp->cl_minorversion) {
- 		dp->dl_stid.sc_type = NFS4_REVOKED_DELEG_STID;
- 		refcount_inc(&dp->dl_stid.sc_count);
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 4921144880d3..23fb39c957af 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -561,6 +561,61 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
- DEFINE_STATESEQID_EVENT(preprocess);
- DEFINE_STATESEQID_EVENT(open_confirm);
- 
-+TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
-+TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
-+TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
-+TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
-+
-+#define show_stid_type(x)						\
-+	__print_flags(x, "|",						\
-+		{ NFS4_OPEN_STID,		"OPEN" },		\
-+		{ NFS4_LOCK_STID,		"LOCK" },		\
-+		{ NFS4_DELEG_STID,		"DELEG" },		\
-+		{ NFS4_CLOSED_STID,		"CLOSED" },		\
-+		{ NFS4_REVOKED_DELEG_STID,	"REVOKED" },		\
-+		{ NFS4_CLOSED_DELEG_STID,	"CLOSED_DELEG" },	\
-+		{ NFS4_LAYOUT_STID,		"LAYOUT" })
-+
-+DECLARE_EVENT_CLASS(nfsd_stid_class,
-+	TP_PROTO(
-+		const struct nfs4_stid *stid
-+	),
-+	TP_ARGS(stid),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, sc_type)
-+		__field(int, sc_count)
-+		__field(u32, cl_boot)
-+		__field(u32, cl_id)
-+		__field(u32, si_id)
-+		__field(u32, si_generation)
-+	),
-+	TP_fast_assign(
-+		const stateid_t *stp = &stid->sc_stateid;
-+
-+		__entry->sc_type = stid->sc_type;
-+		__entry->sc_count = refcount_read(&stid->sc_count);
-+		__entry->cl_boot = stp->si_opaque.so_clid.cl_boot;
-+		__entry->cl_id = stp->si_opaque.so_clid.cl_id;
-+		__entry->si_id = stp->si_opaque.so_id;
-+		__entry->si_generation = stp->si_generation;
-+	),
-+	TP_printk("client %08x:%08x stateid %08x:%08x ref=%d type=%s",
-+		__entry->cl_boot, __entry->cl_id,
-+		__entry->si_id, __entry->si_generation,
-+		__entry->sc_count, show_stid_type(__entry->sc_type)
-+	)
-+);
-+
-+#define DEFINE_STID_EVENT(name)					\
-+DEFINE_EVENT(nfsd_stid_class, nfsd_stid_##name,			\
-+	TP_PROTO(const struct nfs4_stid *stid),			\
-+	TP_ARGS(stid))
-+
-+DEFINE_STID_EVENT(revoke);
-+
- DECLARE_EVENT_CLASS(nfsd_clientid_class,
- 	TP_PROTO(const clientid_t *clid),
- 	TP_ARGS(clid),
-
-
