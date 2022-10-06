@@ -2,31 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 197185F6B71
-	for <lists+linux-nfs@lfdr.de>; Thu,  6 Oct 2022 18:20:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE3DA5F6B72
+	for <lists+linux-nfs@lfdr.de>; Thu,  6 Oct 2022 18:20:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231836AbiJFQUc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 6 Oct 2022 12:20:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46960 "EHLO
+        id S230286AbiJFQUg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 6 Oct 2022 12:20:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231200AbiJFQUU (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Oct 2022 12:20:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C59A33E76C
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 09:20:19 -0700 (PDT)
+        with ESMTP id S231789AbiJFQU1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 6 Oct 2022 12:20:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24A2B6EF38
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 09:20:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 52D4560C40
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:20:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A68DAC433D6
-        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:20:18 +0000 (UTC)
-Subject: [PATCH v2 2/9] nfsd: rework hashtable handling in
- nfsd_do_file_acquire
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F72E619F3
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:20:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B24C433C1
+        for <linux-nfs@vger.kernel.org>; Thu,  6 Oct 2022 16:20:24 +0000 (UTC)
+Subject: [PATCH v2 3/9] NFSD: Pass the target nfsd_file to nfsd_commit()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Thu, 06 Oct 2022 12:20:17 -0400
-Message-ID: <166507321765.1802.824657970020121601.stgit@manet.1015granger.net>
+Date:   Thu, 06 Oct 2022 12:20:23 -0400
+Message-ID: <166507322393.1802.16096728476929624989.stgit@manet.1015granger.net>
 In-Reply-To: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>
 References: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -42,119 +41,143 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+In a moment I'm going to introduce separate nfsd_file types, one of
+which is garbage-collected; the other, not. The garbage-collected
+variety is to be used by NFSv2 and v3, and the non-garbage-collected
+variety is to be used by NFSv4.
 
-nfsd_file is RCU-freed, so we need to hold the rcu_read_lock long enough
-to get a reference after finding it in the hash. Take the
-rcu_read_lock() and call rhashtable_lookup directly.
+nfsd_commit() is invoked by both NFSv3 and NFSv4 consumers. We want
+nfsd_commit() to find and use the correct variety of cached
+nfsd_file object for the NFS version that is in use.
 
-Switch to using rhashtable_lookup_insert_key as well, and use the usual
-retry mechanism if we hit an -EEXIST. Rename the "retry" bool to
-open_retry, and eliminiate the insert_err goto target.
+This is a refactoring change. No behavior change is expected.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/filecache.c |   52 ++++++++++++++++++++++-----------------------------
- 1 file changed, 22 insertions(+), 30 deletions(-)
+ fs/nfsd/nfs3proc.c |   10 +++++++++-
+ fs/nfsd/nfs4proc.c |   11 ++++++++++-
+ fs/nfsd/vfs.c      |   15 ++++-----------
+ fs/nfsd/vfs.h      |    3 ++-
+ 4 files changed, 25 insertions(+), 14 deletions(-)
 
-diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 844c41832d50..a2adfc247648 100644
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -1042,9 +1042,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 		.need	= may_flags & NFSD_FILE_MAY_MASK,
- 		.net	= SVC_NET(rqstp),
- 	};
--	struct nfsd_file *nf, *new;
--	bool retry = true;
-+	bool open_retry = true;
+diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+index a41cca619338..d12823371857 100644
+--- a/fs/nfsd/nfs3proc.c
++++ b/fs/nfsd/nfs3proc.c
+@@ -13,6 +13,7 @@
+ #include "cache.h"
+ #include "xdr3.h"
+ #include "vfs.h"
++#include "filecache.h"
+ 
+ #define NFSDDBG_FACILITY		NFSDDBG_PROC
+ 
+@@ -770,6 +771,7 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
+ {
+ 	struct nfsd3_commitargs *argp = rqstp->rq_argp;
+ 	struct nfsd3_commitres *resp = rqstp->rq_resp;
 +	struct nfsd_file *nf;
- 	__be32 status;
-+	int ret;
  
- 	status = fh_verify(rqstp, fhp, S_IFREG,
- 				may_flags|NFSD_MAY_OWNER_OVERRIDE);
-@@ -1054,35 +1055,33 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	key.cred = get_current_cred();
+ 	dprintk("nfsd: COMMIT(3)   %s %u@%Lu\n",
+ 				SVCFH_fmt(&argp->fh),
+@@ -777,8 +779,14 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
+ 				(unsigned long long) argp->offset);
  
- retry:
--	/* Avoid allocation if the item is already in cache */
--	nf = rhashtable_lookup_fast(&nfsd_file_rhash_tbl, &key,
--				    nfsd_file_rhash_params);
-+	rcu_read_lock();
-+	nf = rhashtable_lookup(&nfsd_file_rhash_tbl, &key,
-+			       nfsd_file_rhash_params);
- 	if (nf)
- 		nf = nfsd_file_get(nf);
-+	rcu_read_unlock();
- 	if (nf)
- 		goto wait_for_construction;
- 
--	new = nfsd_file_alloc(&key, may_flags);
--	if (!new) {
-+	nf = nfsd_file_alloc(&key, may_flags);
-+	if (!nf) {
- 		status = nfserr_jukebox;
- 		goto out_status;
- 	}
- 
--	nf = rhashtable_lookup_get_insert_key(&nfsd_file_rhash_tbl,
--					      &key, &new->nf_rhash,
--					      nfsd_file_rhash_params);
--	if (!nf) {
--		nf = new;
--		goto open_file;
--	}
--	if (IS_ERR(nf))
--		goto insert_err;
--	nf = nfsd_file_get(nf);
--	if (nf == NULL) {
--		nf = new;
-+	ret = rhashtable_lookup_insert_key(&nfsd_file_rhash_tbl,
-+					   &key, &nf->nf_rhash,
-+					   nfsd_file_rhash_params);
-+	if (likely(ret == 0))
- 		goto open_file;
--	}
--	nfsd_file_slab_free(&new->nf_rcu);
-+
-+	nfsd_file_slab_free(&nf->nf_rcu);
-+	if (ret == -EEXIST)
-+		goto retry;
-+	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, ret);
-+	status = nfserr_jukebox;
-+	goto out_status;
- 
- wait_for_construction:
- 	wait_on_bit(&nf->nf_flags, NFSD_FILE_PENDING, TASK_UNINTERRUPTIBLE);
-@@ -1090,11 +1089,11 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	/* Did construction of this file fail? */
- 	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
- 		trace_nfsd_file_cons_err(rqstp, key.inode, may_flags, nf);
--		if (!retry) {
-+		if (!open_retry) {
- 			status = nfserr_jukebox;
- 			goto out;
- 		}
--		retry = false;
-+		open_retry = false;
- 		nfsd_file_put_noref(nf);
- 		goto retry;
- 	}
-@@ -1142,13 +1141,6 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
- 	smp_mb__after_atomic();
- 	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
- 	goto out;
--
--insert_err:
--	nfsd_file_slab_free(&new->nf_rcu);
--	trace_nfsd_file_insert_err(rqstp, key.inode, may_flags, PTR_ERR(nf));
--	nf = NULL;
--	status = nfserr_jukebox;
--	goto out_status;
+ 	fh_copy(&resp->fh, &argp->fh);
+-	resp->status = nfsd_commit(rqstp, &resp->fh, argp->offset,
++	resp->status = nfsd_file_acquire(rqstp, &resp->fh, NFSD_MAY_WRITE |
++					 NFSD_MAY_NOT_BREAK_LEASE, &nf);
++	if (resp->status)
++		goto out;
++	resp->status = nfsd_commit(rqstp, &resp->fh, nf, argp->offset,
+ 				   argp->count, resp->verf);
++	nfsd_file_put(nf);
++out:
+ 	return rpc_success;
  }
  
- /**
+diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+index a72ab97f77ef..d0d976f847ca 100644
+--- a/fs/nfsd/nfs4proc.c
++++ b/fs/nfsd/nfs4proc.c
+@@ -739,10 +739,19 @@ nfsd4_commit(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	     union nfsd4_op_u *u)
+ {
+ 	struct nfsd4_commit *commit = &u->commit;
++	struct nfsd_file *nf;
++	__be32 status;
+ 
+-	return nfsd_commit(rqstp, &cstate->current_fh, commit->co_offset,
++	status = nfsd_file_acquire(rqstp, &cstate->current_fh, NFSD_MAY_WRITE |
++				   NFSD_MAY_NOT_BREAK_LEASE, &nf);
++	if (status != nfs_ok)
++		return status;
++
++	status = nfsd_commit(rqstp, &cstate->current_fh, nf, commit->co_offset,
+ 			     commit->co_count,
+ 			     (__be32 *)commit->co_verf.data);
++	nfsd_file_put(nf);
++	return status;
+ }
+ 
+ static __be32
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index fc17b0ac8729..44f210ba17cc 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1108,6 +1108,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+  * nfsd_commit - Commit pending writes to stable storage
+  * @rqstp: RPC request being processed
+  * @fhp: NFS filehandle
++ * @nf: target file
+  * @offset: raw offset from beginning of file
+  * @count: raw count of bytes to sync
+  * @verf: filled in with the server's current write verifier
+@@ -1124,19 +1125,13 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp, loff_t offset,
+  *   An nfsstat value in network byte order.
+  */
+ __be32
+-nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, u64 offset,
+-	    u32 count, __be32 *verf)
++nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, struct nfsd_file *nf,
++	    u64 offset, u32 count, __be32 *verf)
+ {
++	__be32			err = nfs_ok;
+ 	u64			maxbytes;
+ 	loff_t			start, end;
+ 	struct nfsd_net		*nn;
+-	struct nfsd_file	*nf;
+-	__be32			err;
+-
+-	err = nfsd_file_acquire(rqstp, fhp,
+-			NFSD_MAY_WRITE|NFSD_MAY_NOT_BREAK_LEASE, &nf);
+-	if (err)
+-		goto out;
+ 
+ 	/*
+ 	 * Convert the client-provided (offset, count) range to a
+@@ -1177,8 +1172,6 @@ nfsd_commit(struct svc_rqst *rqstp, struct svc_fh *fhp, u64 offset,
+ 	} else
+ 		nfsd_copy_write_verifier(verf, nn);
+ 
+-	nfsd_file_put(nf);
+-out:
+ 	return err;
+ }
+ 
+diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
+index c95cd414b4bb..04dfd80570f0 100644
+--- a/fs/nfsd/vfs.h
++++ b/fs/nfsd/vfs.h
+@@ -88,7 +88,8 @@ __be32		nfsd_access(struct svc_rqst *, struct svc_fh *, u32 *, u32 *);
+ __be32		nfsd_create_setattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 				struct svc_fh *resfhp, struct nfsd_attrs *iap);
+ __be32		nfsd_commit(struct svc_rqst *rqst, struct svc_fh *fhp,
+-				u64 offset, u32 count, __be32 *verf);
++				struct nfsd_file *nf, u64 offset, u32 count,
++				__be32 *verf);
+ #ifdef CONFIG_NFSD_V4
+ __be32		nfsd_getxattr(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 			    char *name, void **bufp, int *lenp);
 
 
