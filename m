@@ -2,46 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC6A55F8E1F
-	for <lists+linux-nfs@lfdr.de>; Sun,  9 Oct 2022 22:53:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0635F8E4B
+	for <lists+linux-nfs@lfdr.de>; Sun,  9 Oct 2022 22:56:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230336AbiJIUxv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 9 Oct 2022 16:53:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45040 "EHLO
+        id S231176AbiJIUz7 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 9 Oct 2022 16:55:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230334AbiJIUxM (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Oct 2022 16:53:12 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C1A2CC83;
-        Sun,  9 Oct 2022 13:52:27 -0700 (PDT)
+        with ESMTP id S230306AbiJIUzR (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 9 Oct 2022 16:55:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C58B2F3A8;
+        Sun,  9 Oct 2022 13:53:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5A9D3B80DC5;
-        Sun,  9 Oct 2022 20:52:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52B03C433C1;
-        Sun,  9 Oct 2022 20:52:24 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9CEE60C93;
+        Sun,  9 Oct 2022 20:53:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64AE8C4347C;
+        Sun,  9 Oct 2022 20:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665348745;
-        bh=+pLaFWlsF+KOAjZAyo/mGe/F2d+gV7atMKM+wOKakCo=;
+        s=k20201202; t=1665348786;
+        bh=ZC+Nt/ANukX4zutJ/TqxycRHaRxMXm8olnPp1zq+5ik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JtW3+0pjHeobDIBe7dhaTxVir1MN86218fo902K457gmKn2jk7tJ2xWtmolY4rID7
-         k9lkWZOR5klbGEsYWHdSkghRiilxYZ8YoGlTEbaKzrZWIf9uoGsEx2/x0KhYg7W9OX
-         OJhTQCFX6HblEPmPZaS8mxSBaNVXUydePaOyqz6gorWgzy0pXF2DPLJwB+Wt4SqTuX
-         8WHmnZzDINc0VBEnsXvGpSejj95P2o2XS1d4/M0EUXPFT6/8WnZ976Ey4Uc84mM2TT
-         YOwhDuh0gHvghCUftKySTKcL73+3Lv1XyrYvAiQyUTs3lHhHoK1949DpW63K0czYXf
-         aWAMaCRkMRbwA==
+        b=dW4lNcN3IJRiPzu0wQ2cqq/q3IqmYsEUslhj110Eqr7uF0uTK1Bgdz94Kky4fj1+M
+         WkqtyLlIZQMCkmNjvw7kHL6nnwWL/mJNMaIdmJaJHfFa8w5JMvXjrePo5h8iEwlK/M
+         9WkeT5YCYR16jmc+tpOXjFzX0wkzH58RrSIcxcEzLYZ61aYkNVzw8BY4CGFRRwtrEJ
+         nrMgc30u+Zz4rXo+K0ZzfsxRWrEKmB8RMd+ioSodxWolXS/bOBQh02LDi0NAj4RurL
+         +E8/vD0NJFstIX9COBLTNQyWEe940A1YKzpL4XMnw86J5jrtCCPV19WNBjvA1vpSpt
+         qt5uKBYRlHP0g==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dai Ngo <dai.ngo@oracle.com>, Chuck Lever <chuck.lever@oracle.com>,
+Cc:     Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Chuck Lever <chuck.lever@oracle.com>,
         Sasha Levin <sashal@kernel.org>, jlayton@kernel.org,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 18/18] NFSD: fix use-after-free on source server when doing inter-server copy
-Date:   Sun,  9 Oct 2022 16:51:35 -0400
-Message-Id: <20221009205136.1201774-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.19 15/16] NFSD: Return nfserr_serverfault if splice_ok but buf->pages have data
+Date:   Sun,  9 Oct 2022 16:52:24 -0400
+Message-Id: <20221009205226.1202133-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221009205136.1201774-1-sashal@kernel.org>
-References: <20221009205136.1201774-1-sashal@kernel.org>
+In-Reply-To: <20221009205226.1202133-1-sashal@kernel.org>
+References: <20221009205226.1202133-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -55,76 +56,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Dai Ngo <dai.ngo@oracle.com>
+From: Anna Schumaker <Anna.Schumaker@Netapp.com>
 
-[ Upstream commit 019805fea91599b22dfa62ffb29c022f35abeb06 ]
+[ Upstream commit 06981d560606ac48d61e5f4fff6738b925c93173 ]
 
-Use-after-free occurred when the laundromat tried to free expired
-cpntf_state entry on the s2s_cp_stateids list after inter-server
-copy completed. The sc_cp_list that the expired copy state was
-inserted on was already freed.
+This was discussed with Chuck as part of this patch set. Returning
+nfserr_resource was decided to not be the best error message here, and
+he suggested changing to nfserr_serverfault instead.
 
-When COPY completes, the Linux client normally sends LOCKU(lock_state x),
-FREE_STATEID(lock_state x) and CLOSE(open_state y) to the source server.
-The nfs4_put_stid call from nfsd4_free_stateid cleans up the copy state
-from the s2s_cp_stateids list before freeing the lock state's stid.
-
-However, sometimes the CLOSE was sent before the FREE_STATEID request.
-When this happens, the nfsd4_close_open_stateid call from nfsd4_close
-frees all lock states on its st_locks list without cleaning up the copy
-state on the sc_cp_list list. When the time the FREE_STATEID arrives the
-server returns BAD_STATEID since the lock state was freed. This causes
-the use-after-free error to occur when the laundromat tries to free
-the expired cpntf_state.
-
-This patch adds a call to nfs4_free_cpntf_statelist in
-nfsd4_close_open_stateid to clean up the copy state before calling
-free_ol_stateid_reaplist to free the lock state's stid on the reaplist.
-
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: https://lore.kernel.org/linux-nfs/20220907195259.926736-1-anna@kernel.org/T/#t
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/nfs4state.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/nfsd/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c5d199d7e6b4..0bc36472f8b7 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1049,6 +1049,7 @@ static struct nfs4_ol_stateid * nfs4_alloc_open_stateid(struct nfs4_client *clp)
+diff --git a/fs/nfsd/nfs4xdr.c b/fs/nfsd/nfs4xdr.c
+index 2acea7792bb2..6a0229c29ea4 100644
+--- a/fs/nfsd/nfs4xdr.c
++++ b/fs/nfsd/nfs4xdr.c
+@@ -4001,7 +4001,7 @@ nfsd4_encode_read(struct nfsd4_compoundres *resp, __be32 nfserr,
+ 	if (resp->xdr->buf->page_len &&
+ 	    test_bit(RQ_SPLICE_OK, &resp->rqstp->rq_flags)) {
+ 		WARN_ON_ONCE(1);
+-		return nfserr_resource;
++		return nfserr_serverfault;
+ 	}
+ 	xdr_commit_encode(xdr);
  
- static void nfs4_free_deleg(struct nfs4_stid *stid)
- {
-+	WARN_ON(!list_empty(&stid->sc_cp_list));
- 	kmem_cache_free(deleg_slab, stid);
- 	atomic_long_dec(&num_delegations);
- }
-@@ -1462,6 +1463,7 @@ static void nfs4_free_ol_stateid(struct nfs4_stid *stid)
- 	release_all_access(stp);
- 	if (stp->st_stateowner)
- 		nfs4_put_stateowner(stp->st_stateowner);
-+	WARN_ON(!list_empty(&stid->sc_cp_list));
- 	kmem_cache_free(stateid_slab, stid);
- }
- 
-@@ -6684,6 +6686,7 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
- 	struct nfs4_client *clp = s->st_stid.sc_client;
- 	bool unhashed;
- 	LIST_HEAD(reaplist);
-+	struct nfs4_ol_stateid *stp;
- 
- 	spin_lock(&clp->cl_lock);
- 	unhashed = unhash_open_stateid(s, &reaplist);
-@@ -6692,6 +6695,8 @@ static void nfsd4_close_open_stateid(struct nfs4_ol_stateid *s)
- 		if (unhashed)
- 			put_ol_stateid_locked(s, &reaplist);
- 		spin_unlock(&clp->cl_lock);
-+		list_for_each_entry(stp, &reaplist, st_locks)
-+			nfs4_free_cpntf_statelist(clp->net, &stp->st_stid);
- 		free_ol_stateid_reaplist(&reaplist);
- 	} else {
- 		spin_unlock(&clp->cl_lock);
 -- 
 2.35.1
 
