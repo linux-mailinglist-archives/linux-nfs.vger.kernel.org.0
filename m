@@ -2,103 +2,347 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EBF595FA891
-	for <lists+linux-nfs@lfdr.de>; Tue, 11 Oct 2022 01:18:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C76635FA8BB
+	for <lists+linux-nfs@lfdr.de>; Tue, 11 Oct 2022 01:50:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229530AbiJJXSW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Oct 2022 19:18:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46614 "EHLO
+        id S229730AbiJJXue (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Oct 2022 19:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229658AbiJJXSV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Oct 2022 19:18:21 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 771945AC6B
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Oct 2022 16:18:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229711AbiJJXue (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Oct 2022 19:50:34 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD54279EE6
+        for <linux-nfs@vger.kernel.org>; Mon, 10 Oct 2022 16:50:32 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 25EFEB810FD
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Oct 2022 23:18:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B8BC433D6;
-        Mon, 10 Oct 2022 23:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665443897;
-        bh=AkGkCzANeX0Aa3x4lPhHF8yIS/fELfU5g3DyJMawUis=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=FpmvatKpr+dLqqYUSKfHYwVkOYS10ZjoTJfEuJF6O5PpfRMAHA/0BZcnJyy/FSYPv
-         lFSyiXzxSAGsS9iZdqp2Ld1/w8qlDTqKlFMsGyo+4qG9F4+vCxOGl/FpTy9yE29fID
-         egY/555gXYZjVW1yRwnzShEr9d40XiA+rMGBXQCGAYeNU4pIPy2MiSMoeJK3A/lxTU
-         ndGca6HLi95cJ+rK7srQIJds3dxpoE85kVH2MNaKQeRdbzhnsd7YTYsylV0xNvuAuZ
-         R/N3oExapwv8z+Tn2hy+e5dJ7Svd9cqcGGe69wpDczPdLwlzjlwaFXCXm52p/puijo
-         pWxd91T1AIr9w==
-Message-ID: <4df8175d03d013e2d394126621775db9ecff13f0.camel@kernel.org>
-Subject: Re: [PATCH] NFSD: unregister shrinker when nfsd_init_net() fails
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Dai Ngo <dai.ngo@oracle.com>,
-        "open list:NFS, SUNRPC, AND..." <linux-nfs@vger.kernel.org>
-Cc:     syzbot <syzbot+ff796f04613b4c84ad89@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com
-Date:   Mon, 10 Oct 2022 19:18:14 -0400
-In-Reply-To: <66b0ff35-c468-1a5b-3327-7e2ffcc768ee@I-love.SAKURA.ne.jp>
-References: <0000000000008c976e05ea9f491d@google.com>
-         <66b0ff35-c468-1a5b-3327-7e2ffcc768ee@I-love.SAKURA.ne.jp>
-Content-Type: text/plain; charset="UTF-8"
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 522B91FA61;
+        Mon, 10 Oct 2022 23:50:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1665445831; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DwEx1QLZmfU8bG2PnQ5HNc1VZPLD2fr3xA21XYo3kGA=;
+        b=o0JjbT8cYLcE004bGFjcnxyggibs+aoURCVkjI699BVR3ovJPy4PytuseZeAsYo7N7fGgQ
+        b3QNU5TY+XCyqnBfgU0M8L1HTa5J4n0ZXeeRJN14LnXh3Rubg2dWnEHUrGjF4ORd9in0hb
+        oSJPZtAl3xbcnPSixq7XG3onDFD13rw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1665445831;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DwEx1QLZmfU8bG2PnQ5HNc1VZPLD2fr3xA21XYo3kGA=;
+        b=lnpzIMt9lZiFcbJ4QeLAEXEIIxM7vJypgM1Xax07h+cjyCYuZ3zEaLK0q9HUGciwroD+FM
+        kba7Lz/btvSWqQBA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 778C113479;
+        Mon, 10 Oct 2022 23:50:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 41XHDMavRGM1agAAMHmgww
+        (envelope-from <neilb@suse.de>); Mon, 10 Oct 2022 23:50:30 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever" <chuck.lever@oracle.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] NFSD: Add an NFSD_FILE_GC flag to enable nfsd_file
+ garbage collection
+In-reply-to: <166507323630.1802.8998394314935628609.stgit@manet.1015granger.net>
+References: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>,
+ <166507323630.1802.8998394314935628609.stgit@manet.1015granger.net>
+Date:   Tue, 11 Oct 2022 10:50:23 +1100
+Message-id: <166544582340.14457.4208476936769397056@noble.neil.brown.name>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-10-10 at 14:59 +0900, Tetsuo Handa wrote:
-> syzbot is reporting UAF read at register_shrinker_prepared() [1], for
-> commit 7746b32f467b3813 ("NFSD: add shrinker to reap courtesy clients on
-> low memory condition") missed that nfsd4_leases_net_shutdown() from
-> nfsd_exit_net() is called only when nfsd_init_net() succeeded.
-> If nfsd_init_net() fails due to nfsd_reply_cache_init() failure,
-> register_shrinker() from nfsd4_init_leases_net() has to be undone
-> before nfsd_init_net() returns.
+On Fri, 07 Oct 2022, Chuck Lever wrote:
+> NFSv4 operations manage the lifetime of nfsd_file items they use by
+> means of NFSv4 OPEN and CLOSE. Hence there's no need for them to be
+> garbage collected.
 >=20
-> Link: https://syzkaller.appspot.com/bug?extid=3Dff796f04613b4c84ad89 [1]
-> Reported-by: syzbot <syzbot+ff796f04613b4c84ad89@syzkaller.appspotmail.co=
-m>
-> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Fixes: 7746b32f467b3813 ("NFSD: add shrinker to reap courtesy clients on =
-low memory condition")
+> Introduce a mechanism to enable garbage collection for nfsd_file
+> items used only by NFSv2/3 callers.
+>=20
+> Note that the change in nfsd_file_put() ensures that both CLOSE and
+> DELEGRETURN will actually close out and free an nfsd_file on last
+> reference of a non-garbage-collected file.
+>=20
+> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D394
+> Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfsctl.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  fs/nfsd/filecache.c |   61 +++++++++++++++++++++++++++++++++++++++++++++--=
+----
+>  fs/nfsd/filecache.h |    3 +++
+>  fs/nfsd/nfs3proc.c  |    4 ++-
+>  fs/nfsd/trace.h     |    3 ++-
+>  fs/nfsd/vfs.c       |    4 ++-
+>  5 files changed, 63 insertions(+), 12 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-> index 6a29bcfc9390..dc74a947a440 100644
-> --- a/fs/nfsd/nfsctl.c
-> +++ b/fs/nfsd/nfsctl.c
-> @@ -1458,12 +1458,14 @@ static __net_init int nfsd_init_net(struct net *n=
-et)
->  		goto out_drc_error;
->  	retval =3D nfsd_reply_cache_init(nn);
->  	if (retval)
-> -		goto out_drc_error;
-> +		goto out_cache_error;
->  	get_random_bytes(&nn->siphash_key, sizeof(nn->siphash_key));
->  	seqlock_init(&nn->writeverf_lock);
+> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> index b7aa523c2010..01c27deabf83 100644
+> --- a/fs/nfsd/filecache.c
+> +++ b/fs/nfsd/filecache.c
+> @@ -63,6 +63,7 @@ struct nfsd_file_lookup_key {
+>  	struct net			*net;
+>  	const struct cred		*cred;
+>  	unsigned char			need;
+> +	unsigned char			gc:1;
+>  	enum nfsd_file_lookup_type	type;
+>  };
 > =20
->  	return 0;
+> @@ -162,6 +163,8 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_compar=
+e_arg *arg,
+>  			return 1;
+>  		if (!nfsd_match_cred(nf->nf_cred, key->cred))
+>  			return 1;
+> +		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D key->gc)
+> +			return 1;
+>  		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
+>  			return 1;
+>  		break;
+> @@ -297,6 +300,8 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsig=
+ned int may)
+>  		nf->nf_flags =3D 0;
+>  		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+>  		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> +		if (key->gc)
+> +			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
+>  		nf->nf_inode =3D key->inode;
+>  		/* nf_ref is pre-incremented for hash table */
+>  		refcount_set(&nf->nf_ref, 2);
+> @@ -428,16 +433,27 @@ nfsd_file_put_noref(struct nfsd_file *nf)
+>  	}
+>  }
 > =20
-> +out_cache_error:
-> +	nfsd4_leases_net_shutdown(nn);
->  out_drc_error:
->  	nfsd_idmap_shutdown(net);
->  out_idmap_error:
+> +static void
+> +nfsd_file_unhash_and_put(struct nfsd_file *nf)
+> +{
+> +	if (nfsd_file_unhash(nf))
+> +		nfsd_file_put_noref(nf);
+> +}
+> +
+>  void
+>  nfsd_file_put(struct nfsd_file *nf)
+>  {
+>  	might_sleep();
+> =20
+> -	nfsd_file_lru_add(nf);
+> +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)
+> +		nfsd_file_lru_add(nf);
+> +	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
+> +		nfsd_file_unhash_and_put(nf);
+> +
+>  	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
+>  		nfsd_file_flush(nf);
+>  		nfsd_file_put_noref(nf);
+> -	} else if (nf->nf_file) {
+> +	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)=
+ {
+>  		nfsd_file_put_noref(nf);
+>  		nfsd_file_schedule_laundrette();
+>  	} else
+> @@ -1017,12 +1033,14 @@ nfsd_file_is_cached(struct inode *inode)
+> =20
+>  static __be32
+>  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> -		     unsigned int may_flags, struct nfsd_file **pnf, bool open)
+> +		     unsigned int may_flags, struct nfsd_file **pnf,
+> +		     bool open, int want_gc)
+>  {
+>  	struct nfsd_file_lookup_key key =3D {
+>  		.type	=3D NFSD_FILE_KEY_FULL,
+>  		.need	=3D may_flags & NFSD_FILE_MAY_MASK,
+>  		.net	=3D SVC_NET(rqstp),
+> +		.gc	=3D want_gc,
+>  	};
+>  	bool open_retry =3D true;
+>  	struct nfsd_file *nf;
+> @@ -1117,14 +1135,35 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct=
+ svc_fh *fhp,
+>  	 * then unhash.
+>  	 */
+>  	if (status !=3D nfs_ok || key.inode->i_nlink =3D=3D 0)
+> -		if (nfsd_file_unhash(nf))
+> -			nfsd_file_put_noref(nf);
+> +		nfsd_file_unhash_and_put(nf);
+>  	clear_bit_unlock(NFSD_FILE_PENDING, &nf->nf_flags);
+>  	smp_mb__after_atomic();
+>  	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+>  	goto out;
+>  }
+> =20
+> +/**
+> + * nfsd_file_acquire_gc - Get a struct nfsd_file with an open file
+> + * @rqstp: the RPC transaction being executed
+> + * @fhp: the NFS filehandle of the file to be opened
+> + * @may_flags: NFSD_MAY_ settings for the file
+> + * @pnf: OUT: new or found "struct nfsd_file" object
+> + *
+> + * The nfsd_file object returned by this API is reference-counted
+> + * and garbage-collected. The object is retained for a few
+> + * seconds after the final nfsd_file_put() in case the caller
+> + * wants to re-use it.
+> + *
+> + * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
+> + * network byte order is returned.
+> + */
+> +__be32
+> +nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		     unsigned int may_flags, struct nfsd_file **pnf)
+> +{
+> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true, 1);
+> +}
+> +
+>  /**
+>   * nfsd_file_acquire - Get a struct nfsd_file with an open file
+>   * @rqstp: the RPC transaction being executed
+> @@ -1132,6 +1171,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struct =
+svc_fh *fhp,
+>   * @may_flags: NFSD_MAY_ settings for the file
+>   * @pnf: OUT: new or found "struct nfsd_file" object
+>   *
+> + * The nfsd_file_object returned by this API is reference-counted
+> + * but not garbage-collected. The object is released one RCU grace
+> + * period after the final nfsd_file_put().
+> + *
+>   * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
+>   * network byte order is returned.
+>   */
+> @@ -1139,7 +1182,7 @@ __be32
+>  nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		  unsigned int may_flags, struct nfsd_file **pnf)
+>  {
+> -	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true);
+> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true, 0);
+>  }
+> =20
+>  /**
+> @@ -1149,6 +1192,10 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct svc=
+_fh *fhp,
+>   * @may_flags: NFSD_MAY_ settings for the file
+>   * @pnf: OUT: new or found "struct nfsd_file" object
+>   *
+> + * The nfsd_file_object returned by this API is reference-counted
+> + * but not garbage-collected. The object is released immediately
+> + * one RCU grace period after the final nfsd_file_put().
+
+While that last sentence is correct, I think it is missing the point.
+The reference to grace periods is really an internal implementation
+details.
+
+The important point is that on final nfsd_file_put(), the object is
+removed from the hash table.  This contrasts with the other version
+where on final nfsd_file_put(), the object is added to the lru.
+
+The code all seems good, just the comment seemed odd.
+
+Thanks,
+NeilBrown
 
 
-Good catch!
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> + *
+>   * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
+>   * network byte order is returned.
+>   */
+> @@ -1156,7 +1203,7 @@ __be32
+>  nfsd_file_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		 unsigned int may_flags, struct nfsd_file **pnf)
+>  {
+> -	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, false);
+> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, false, 0);
+>  }
+> =20
+>  /*
+> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
+> index f81c198f4ed6..0f6546bcd3e0 100644
+> --- a/fs/nfsd/filecache.h
+> +++ b/fs/nfsd/filecache.h
+> @@ -38,6 +38,7 @@ struct nfsd_file {
+>  #define NFSD_FILE_HASHED	(0)
+>  #define NFSD_FILE_PENDING	(1)
+>  #define NFSD_FILE_REFERENCED	(2)
+> +#define NFSD_FILE_GC		(3)
+>  	unsigned long		nf_flags;
+>  	struct inode		*nf_inode;	/* don't deref */
+>  	refcount_t		nf_ref;
+> @@ -55,6 +56,8 @@ void nfsd_file_put(struct nfsd_file *nf);
+>  struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
+>  void nfsd_file_close_inode_sync(struct inode *inode);
+>  bool nfsd_file_is_cached(struct inode *inode);
+> +__be32 nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> +		  unsigned int may_flags, struct nfsd_file **nfp);
+>  __be32 nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+>  		  unsigned int may_flags, struct nfsd_file **nfp);
+>  __be32 nfsd_file_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
+> index d12823371857..6a5ad6c91d8e 100644
+> --- a/fs/nfsd/nfs3proc.c
+> +++ b/fs/nfsd/nfs3proc.c
+> @@ -779,8 +779,8 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
+>  				(unsigned long long) argp->offset);
+> =20
+>  	fh_copy(&resp->fh, &argp->fh);
+> -	resp->status =3D nfsd_file_acquire(rqstp, &resp->fh, NFSD_MAY_WRITE |
+> -					 NFSD_MAY_NOT_BREAK_LEASE, &nf);
+> +	resp->status =3D nfsd_file_acquire_gc(rqstp, &resp->fh, NFSD_MAY_WRITE |
+> +					    NFSD_MAY_NOT_BREAK_LEASE, &nf);
+>  	if (resp->status)
+>  		goto out;
+>  	resp->status =3D nfsd_commit(rqstp, &resp->fh, nf, argp->offset,
+> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> index 9ebd67d461f9..4921144880d3 100644
+> --- a/fs/nfsd/trace.h
+> +++ b/fs/nfsd/trace.h
+> @@ -742,7 +742,8 @@ DEFINE_CLID_EVENT(confirmed_r);
+>  	__print_flags(val, "|",						\
+>  		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
+>  		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
+> -		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"})
+> +		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"},		\
+> +		{ 1 << NFSD_FILE_GC,		"GC"})
+> =20
+>  DECLARE_EVENT_CLASS(nfsd_file_class,
+>  	TP_PROTO(struct nfsd_file *nf),
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index 44f210ba17cc..89d682a56fc4 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -1060,7 +1060,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc_f=
+h *fhp,
+>  	__be32 err;
+> =20
+>  	trace_nfsd_read_start(rqstp, fhp, offset, *count);
+> -	err =3D nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
+> +	err =3D nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_READ, &nf);
+>  	if (err)
+>  		return err;
+> =20
+> @@ -1092,7 +1092,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *fhp=
+, loff_t offset,
+> =20
+>  	trace_nfsd_write_start(rqstp, fhp, offset, *cnt);
+> =20
+> -	err =3D nfsd_file_acquire(rqstp, fhp, NFSD_MAY_WRITE, &nf);
+> +	err =3D nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_WRITE, &nf);
+>  	if (err)
+>  		goto out;
+> =20
+>=20
+>=20
+>=20
