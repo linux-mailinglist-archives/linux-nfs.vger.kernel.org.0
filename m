@@ -2,98 +2,97 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5963B5FA241
-	for <lists+linux-nfs@lfdr.de>; Mon, 10 Oct 2022 18:57:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F26D5FA620
+	for <lists+linux-nfs@lfdr.de>; Mon, 10 Oct 2022 22:26:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbiJJQ46 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 10 Oct 2022 12:56:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43074 "EHLO
+        id S230051AbiJJU0b (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 10 Oct 2022 16:26:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbiJJQ46 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Oct 2022 12:56:58 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4154B15A2D
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Oct 2022 09:56:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1665421016;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=uPO6cayUxn155KLqJqdjdaVBf5rRxmPDtlmd3DNG1vQ=;
-        b=h6ggHxYFMm/1Xspy8BpjDL8toqfhzIlw+HJpv1zCIfKSZgd+/wMR0J5jxA6Yj6EqlZ5PdV
-        lGkH0acXCWbc0HrnTmXtPDQQXE2eXOHDqFzyMY3rJdnPN+JbBrmwjSbRMqSHARoPN2SxE4
-        O/teFOkdE/6UAvaMh2EzLMk7qgAS7h8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-68-wvVq7o4pM5ShBvTFeQTkQw-1; Mon, 10 Oct 2022 12:56:55 -0400
-X-MC-Unique: wvVq7o4pM5ShBvTFeQTkQw-1
-Received: by mail-wm1-f70.google.com with SMTP id h10-20020a1c210a000000b003c56437e529so666833wmh.2
-        for <linux-nfs@vger.kernel.org>; Mon, 10 Oct 2022 09:56:54 -0700 (PDT)
+        with ESMTP id S229966AbiJJU0C (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 10 Oct 2022 16:26:02 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A234C20195;
+        Mon, 10 Oct 2022 13:24:55 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so7021583wmb.0;
+        Mon, 10 Oct 2022 13:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uitibauigOgCccEn2okfAVkQvelKUvNuPxyBgEXlDaY=;
+        b=et+EKQ2UH93E+D2uoLEYylnzEhMHPMcJkxCQ8Qa/drFfxI7ar+NuOEmoG2FdjVQLlw
+         RF5wo8jfcu8UzZlWh83Fcmo4HKc4GZu45be22mqPvKd9tWGz4MXbEzfB5pQ9B1CCovaW
+         H9RaLTOvsRCFcJnGUvx78D8OQGOAn3xJTIJIxwZ2EesqJEJv1RxC6yc1/c4oT8uxkQIC
+         rUd/cq/YAy50jhrgemql4uu85Nj8gP1JamZ/xUTv7A2gnQNcRgayy4b9AJtCTWjfOFu+
+         ZwGGzRL+y14SMldGbPEvL0iqqWi1liULDzAGeD5njltf0c7VWUu7HhjyiXhlp17tOd50
+         tN3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uPO6cayUxn155KLqJqdjdaVBf5rRxmPDtlmd3DNG1vQ=;
-        b=3QSiQcE9cUhnubYbk1b5mHSGb6tgE4jWxQwK7oMK016cUKnxLnCNv2/WTRdxGx6MPW
-         CIGO3gKHpopZcUevtoatxRL/DlsKxuyk+3SpN/d5a535tuZ44Ed+WcUmxAprGfxGq6hs
-         5suWPL8Y/ZRQTdWwyXPczboa4fBpxQxR93K1Oia4WSldfAnpJXr0ukgSQQY+qTDp9B+X
-         oXzQnJNB7bhmcllXKUDGGAMHCmXlbsgCNMMQ3SUvNoDjiHcryTfSuIxiJgztWyW7wMtC
-         DgJdudIvIiEyKpMk3D0YXom3Me+kAUGENO5cWsaEYA6U6JDAV5nQpTPsk2OSSf1kUGvM
-         QsnQ==
-X-Gm-Message-State: ACrzQf1pTUZ4kJBHRTNzsAgAvK7vmf0vByVyuL8aHon4F8fiYmdpoQNl
-        +w2uFtkY5lcVv67BBhHrv5DZfaF388pXOU+moJCRyCGdQcYPGTvc8BNwRXk08svivdABllcSDaW
-        o6TMrUcudlSEFNGPxss8N
-X-Received: by 2002:a05:600c:444b:b0:3b4:cb9e:bd93 with SMTP id v11-20020a05600c444b00b003b4cb9ebd93mr13574576wmn.39.1665421014075;
-        Mon, 10 Oct 2022 09:56:54 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM5fXr93j8YeAAeRCYTP9zLYutOx0m1LJxEDAvCjw5S6wtZzJyM7dyyUi1MAqv5PuSdt+EaZ9A==
-X-Received: by 2002:a05:600c:444b:b0:3b4:cb9e:bd93 with SMTP id v11-20020a05600c444b00b003b4cb9ebd93mr13574567wmn.39.1665421013879;
-        Mon, 10 Oct 2022 09:56:53 -0700 (PDT)
-Received: from ibm-p9z-18-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com (ti0005q162-1960.bb.online.no. [212.251.164.190])
-        by smtp.gmail.com with ESMTPSA id v132-20020a1cac8a000000b003a541d893desm10924420wme.38.2022.10.10.09.56.51
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uitibauigOgCccEn2okfAVkQvelKUvNuPxyBgEXlDaY=;
+        b=FEy2WkT/q43hyp9n99Wy0qy2AZSXremelfxBmaBKsXraagZSpMPRH3Tq62dOOo6YlN
+         HVMhx1MlebhOC+ZT7/lQOwaqXeD7xeuhfWRRO6PJfCtyMV62Nz1guTJDxfLZuu2R6jhP
+         iQo/FALh/9BN572jFEKOWMcsnemxblJpOOoFK7an+ADs8BrF/QCsZGfMTuxfRcO0U431
+         v1AqstTbbloGRCCNJ52qTXbEXIN0R+jqxZar1xGHlTSwTJ9ag/8PJc9pIiOCOtHb0IWj
+         3lVsurgKfnK6t9TmIJdX5i43Y3TiuHFaQGfaEh1ZPCqb9sx58p5weQvhGN/WPmeB1Rel
+         5sLg==
+X-Gm-Message-State: ACrzQf3yAkW5Il5MAGI5hH0BXw1KC3/5VgCdVEe+vpBOGHzKcznfUSbY
+        qNFOziqgGHhCWqGupo463Hs=
+X-Google-Smtp-Source: AMsMyM7Ctoqe0b6wcneTHB7G8Dcs49YteOlWsepr5gtSZfUY+ICA0db2I9hR1ZA93IKJGc06hwuWFw==
+X-Received: by 2002:a05:600c:3492:b0:3b4:9fcc:cbb6 with SMTP id a18-20020a05600c349200b003b49fcccbb6mr21690521wmq.42.1665433465419;
+        Mon, 10 Oct 2022 13:24:25 -0700 (PDT)
+Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
+        by smtp.gmail.com with ESMTPSA id u16-20020adfdd50000000b002238ea5750csm12193769wrm.72.2022.10.10.13.24.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 09:56:52 -0700 (PDT)
-Date:   Mon, 10 Oct 2022 18:56:50 +0200
-From:   Guillaume Nault <gnault@redhat.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        Benjamin Coddington <bcodding@redhat.com>
-Subject: Re: [PATCH v2] sunrpc: Use GFP_NOFS to prevent use of
- current->task_frag.
-Message-ID: <20221010165650.GA3456@ibm-p9z-18-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com>
-References: <de6d99321d1dcaa2ad456b92b3680aa77c07a747.1665401788.git.gnault@redhat.com>
- <Y0QyYV1Wyo4vof70@infradead.org>
+        Mon, 10 Oct 2022 13:24:24 -0700 (PDT)
+From:   Colin Ian King <colin.i.king@gmail.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFSD: Remove redundant assignment to variable host_err
+Date:   Mon, 10 Oct 2022 21:24:23 +0100
+Message-Id: <20221010202423.3221664-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y0QyYV1Wyo4vof70@infradead.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 10, 2022 at 07:55:29AM -0700, Christoph Hellwig wrote:
-> On Mon, Oct 10, 2022 at 01:41:57PM +0200, Guillaume Nault wrote:
-> > However, ->sk_allocation isn't used just by the memory allocator.
-> > In particular, sk_page_frag() uses it to figure out if it can return
-> > the page_frag from current or if it has to use the socket one.
-> 
-> Well, that just means sk_page_frag really needs to look at
-> PF_MEMALLOC_* as well.  So instead of reverting the proper change
-> please fix that.  A helper that looks at sk_allocation and
-> current->flags is probably the right way to deal with that.
+Variable host_err is assigned a value that is never read, it is being
+re-assigned a value in every different execution path in the following
+switch statement. The assignment is redundant and can be removed.
 
-That's what my RFC patch did. It was rejected because reading
-current->flags may incur a cache miss thus slowing down TCP fast path.
-See the discussion in the Link tag:
-https://lore.kernel.org/netdev/b4d8cb09c913d3e34f853736f3f5628abfd7f4b6.1656699567.git.gnault@redhat.com/
+Cleans up clang-scan warning:
+warning: Value stored to 'host_err' is never read [deadcode.DeadStores]
+
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
+ fs/nfsd/vfs.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+index f650afedd67f..5093ae788f53 100644
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1304,7 +1304,6 @@ nfsd_create_locked(struct svc_rqst *rqstp, struct svc_fh *fhp,
+ 		iap->ia_mode &= ~current_umask();
+ 
+ 	err = 0;
+-	host_err = 0;
+ 	switch (type) {
+ 	case S_IFREG:
+ 		host_err = vfs_create(&init_user_ns, dirp, dchild, iap->ia_mode, true);
+-- 
+2.37.3
 
