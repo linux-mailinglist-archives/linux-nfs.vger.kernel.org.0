@@ -2,165 +2,92 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6B885FCC39
-	for <lists+linux-nfs@lfdr.de>; Wed, 12 Oct 2022 22:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0DF15FCCF1
+	for <lists+linux-nfs@lfdr.de>; Wed, 12 Oct 2022 23:18:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbiJLUmE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 12 Oct 2022 16:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59950 "EHLO
+        id S230097AbiJLVSw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 12 Oct 2022 17:18:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229927AbiJLUln (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Oct 2022 16:41:43 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F20010451E
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Oct 2022 13:41:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230119AbiJLVSo (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Oct 2022 17:18:44 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDEF211877B
+        for <linux-nfs@vger.kernel.org>; Wed, 12 Oct 2022 14:18:43 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 24AB1B81BD6
-        for <linux-nfs@vger.kernel.org>; Wed, 12 Oct 2022 20:40:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85460C43470;
-        Wed, 12 Oct 2022 20:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665607232;
-        bh=EKZtu62Ww0Aq8Nk0cclgzrrmRTjg/Luh/ZFBMuqyNSg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KPsUlhrak3q72HEhd3bQ6R73hxKX2ugLnBYti18yU7M8IGYGuRyn9BKNSbgOdj21M
-         EsfJIdNCNp/qSdL730TTKxlc+223lVxXdVYfrigQeo1JlZAEE3tgXvdqorNlk+GEWM
-         NpchJCH+racISCxYPk9SS0ybDv05SX1qprpYQ0VwgTikWf0DvF8lv1JxaWR7b/z6dK
-         qtps3AoxdqQPtu8JvLNxYV0Q6IYgOUYfIsqZoWsO3QmfM25nzih4jNSlPOOB3ogXz7
-         yZDBXvkdJkHnSz1PRjD07az3ufq6hSH23lB2b/Cd13NZPv+bB+Hsk/dZm+on1hiBh+
-         9wBjrb8jJYP1A==
-From:   Anna Schumaker <anna@kernel.org>
-To:     linux-nfs@vger.kernel.org, torvalds@linux-foundation.org
-Cc:     anna@kernel.org
-Subject: [GIT PULL] Please Pull NFS Client Updates for Linux 6.1
-Date:   Wed, 12 Oct 2022 16:40:31 -0400
-Message-Id: <20221012204031.657633-1-anna@kernel.org>
-X-Mailer: git-send-email 2.38.0
+        by smtp-out2.suse.de (Postfix) with ESMTPS id C7E5120CA8;
+        Wed, 12 Oct 2022 21:18:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1665609521; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6cdKD9Lozob1RAMDq3dO22DM9KeuLQPZJy7dHFq+GoE=;
+        b=kjv2vfCQfubuK+QJx/cNOwhbn++a8UQaciNwP9vbMQTMOjzIO7TBthlRW3rcS1GUvU7myc
+        /cFkOPUMEcwXDZot2jgu2Pp4BxnrlhzggFkZM/l78u/4qeTGoMPQgm99Jt1fadKkSmLnhA
+        +cJvD0E+hNPZW+ydjqcPuM2gmWR3wt0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1665609521;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6cdKD9Lozob1RAMDq3dO22DM9KeuLQPZJy7dHFq+GoE=;
+        b=CxebmIuDHRyua01yGzhX4BgRzXSj5bKMpDlYxy6ni3H/fq24IKx4K1Yr45CteorqLpOvy8
+        oS2mKoQxERUkMaBg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id C425813ACD;
+        Wed, 12 Oct 2022 21:18:40 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id ImIlHDAvR2POdQAAMHmgww
+        (envelope-from <neilb@suse.de>); Wed, 12 Oct 2022 21:18:40 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Chuck Lever III" <chuck.lever@oracle.com>
+Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH v2 7/9] NFSD: Use rhashtable for managing nfs4_file objects
+In-reply-to: <4004BFE1-C887-4A53-9512-8A264E0361FF@oracle.com>
+References: <166507275951.1802.13184584115155050247.stgit@manet.1015granger.net>,
+ <166507324882.1802.884870684212914640.stgit@manet.1015granger.net>,
+ <166544739751.14457.9018300177489236723@noble.neil.brown.name>,
+ <EB08B095-BF02-4B5E-8CD2-12B0201328D2@oracle.com>,
+ <166553144435.32740.14940127200777208215@noble.neil.brown.name>,
+ <4004BFE1-C887-4A53-9512-8A264E0361FF@oracle.com>
+Date:   Thu, 13 Oct 2022 08:18:36 +1100
+Message-id: <166560951668.32740.3528791072339550207@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+On Thu, 13 Oct 2022, Chuck Lever III wrote:
+> 
+> I think I stopped at the non-list variant of rhashtable because
+> using rhl was more complex, and the non-list variant seemed to
+> work fine. There's no architectural reason either file_hashtbl
+> or the filecache must use the non-list variant.
+> 
+> In any event, it's worth taking the trouble now to change the
+> nfs4_file implementation proposed here as you suggest.
 
-The following changes since commit f76349cf41451c5c42a99f18a9163377e4b364ff:
-
-  Linux 6.0-rc7 (2022-09-25 14:01:02 -0700)
-
-are available in the Git repository at:
-
-  git://git.linux-nfs.org/projects/anna/linux-nfs.git tags/nfs-for-6.1-1
-
-for you to fetch changes up to b739a5bd9d9f18cc69dced8db128ef7206e000cd:
-
-  NFSv4/flexfiles: Cancel I/O if the layout is recalled or revoked (2022-10-06 09:52:09 -0400)
-
-----------------------------------------------------------------
-NFS Client Updates for Linux 6.1
-
-- New Features:
-  - Add NFSv4.2 xattr tracepoints
-  - Replace xprtiod WQ in rpcrdma
-  - Flexfiles cancels I/O on layout recall or revoke
-
-- Bugfixes and Cleanups:
-  - Directly use ida_alloc() / ida_free()
-  - Don't open-code max_t()
-  - Prefer using strscpy over strlcpy
-  - Remove unused forward declarations
-  - Always return layout states on flexfiles layout return
-  - Have LISTXATTR treat NFS4ERR_NOXATTR as an empty reply instead of error
-  - Allow more xprtrdma memory allocations to fail without triggering a reclaim
-  - Various other xprtrdma clean ups
-  - Fix rpc_killall_tasks() races
+If you like you could leave it as-is for now and I can provide a patch
+to convert to rhl-tables later (won't be until late October).
+There is one thing I would need to understand though: why are the
+nfsd_files per-filehandle instead of per-inode?  There is probably a
+good reason, but I cannot think of one.
 
 Thanks,
-Anna
-
-----------------------------------------------------------------
-Anna Schumaker (4):
-      NFSv4.2: Add special handling for LISTXATTR receiving NFS4ERR_NOXATTR
-      NFSv4.2: Move TRACE_DEFINE_ENUM(NFS4_CONTENT_*) under CONFIG_NFS_V4_2
-      NFSv4.2: Add tracepoints for getxattr, setxattr, and removexattr
-      NFSv4.2: Add a tracepoint for listxattr
-
-Bo Liu (2):
-      SUNRPC: Directly use ida_alloc()/free()
-      NFSv4: Directly use ida_alloc()/free()
-
-Chuck Lever (8):
-      SUNRPC: Replace the use of the xprtiod WQ in rpcrdma
-      svcrdma: Clean up RPCRDMA_DEF_GFP
-      xprtrdma: Clean up synopsis of rpcrdma_req_create()
-      xprtrdma: Clean up synopsis of rpcrdma_regbuf_alloc()
-      xprtrdma: MR-related memory allocation should be allowed to fail
-      xprtrdma: Memory allocation should be allowed to fail during connect
-      xprtrdma: Prevent memory allocations from driving a reclaim
-      xprtrdma: Fix uninitialized variable
-
-Gaosheng Cui (2):
-      NFSv4: remove nfs4_renewd_prepare_shutdown() declaration
-      nfs: remove nfs_wait_atomic_killable() and nfs_write_prepare() declaration
-
-Jiangshan Yi (1):
-      fs/nfs/pnfs_nfs.c: fix spelling typo and syntax error in comment
-
-Lukas Bulwahn (1):
-      NFS: clean up a needless assignment in nfs_file_write()
-
-Trond Myklebust (5):
-      NFSv4/pNFS: Always return layout stats on layout return for flexfiles
-      SUNRPC: Fix races with rpc_killall_tasks()
-      SUNRPC: Add a helper to allow pNFS drivers to selectively cancel RPC calls
-      SUNRPC: Add API to force the client to disconnect
-      NFSv4/flexfiles: Cancel I/O if the layout is recalled or revoked
-
-Wolfram Sang (2):
-      SUNRPC: move from strlcpy with unused retval to strscpy
-      NFS: move from strlcpy with unused retval to strscpy
-
-Ziyang Xuan (1):
-      SUNRPC: use max_t() to simplify open code
-
-yuzhe (1):
-      nfs: remove unnecessary (void*) conversions.
-
- fs/nfs/file.c                              |   6 +-
- fs/nfs/flexfilelayout/flexfilelayout.c     | 109 ++++++++++++++++++++++++++---
- fs/nfs/inode.c                             |   6 +-
- fs/nfs/internal.h                          |   2 -
- fs/nfs/nfs42proc.c                         |   4 ++
- fs/nfs/nfs42xattr.c                        |   2 +-
- fs/nfs/nfs42xdr.c                          |   8 +++
- fs/nfs/nfs4_fs.h                           |   1 -
- fs/nfs/nfs4client.c                        |   2 +-
- fs/nfs/nfs4idmap.c                         |   2 +-
- fs/nfs/nfs4proc.c                          |   4 +-
- fs/nfs/nfs4state.c                         |  10 ++-
- fs/nfs/nfs4trace.h                         |  50 ++++++++++++-
- fs/nfs/nfsroot.c                           |   2 +-
- fs/nfs/pnfs.c                              |   9 ++-
- fs/nfs/pnfs.h                              |   9 +++
- fs/nfs/pnfs_nfs.c                          |   4 +-
- include/linux/sunrpc/clnt.h                |   1 +
- include/linux/sunrpc/sched.h               |   6 ++
- net/sunrpc/clnt.c                          |  61 ++++++++++++++--
- net/sunrpc/sched.c                         |  51 ++++++++++----
- net/sunrpc/xprt.c                          |   9 +--
- net/sunrpc/xprtmultipath.c                 |   4 +-
- net/sunrpc/xprtrdma/backchannel.c          |   2 +-
- net/sunrpc/xprtrdma/frwr_ops.c             |  20 +++---
- net/sunrpc/xprtrdma/svc_rdma_backchannel.c |   4 +-
- net/sunrpc/xprtrdma/transport.c            |   3 +-
- net/sunrpc/xprtrdma/verbs.c                |  52 +++++++-------
- net/sunrpc/xprtrdma/xprt_rdma.h            |  10 ++-
- net/sunrpc/xprtsock.c                      |   5 +-
- 30 files changed, 342 insertions(+), 116 deletions(-)
+NeilBrown
