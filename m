@@ -2,152 +2,259 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C73975FD2D6
-	for <lists+linux-nfs@lfdr.de>; Thu, 13 Oct 2022 03:43:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 545605FD916
+	for <lists+linux-nfs@lfdr.de>; Thu, 13 Oct 2022 14:18:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbiJMBn0 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-nfs@lfdr.de>); Wed, 12 Oct 2022 21:43:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52382 "EHLO
+        id S229612AbiJMMSn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 13 Oct 2022 08:18:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbiJMBnV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 12 Oct 2022 21:43:21 -0400
-Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7678936DEB;
-        Wed, 12 Oct 2022 18:43:19 -0700 (PDT)
-Received: from omf20.hostedemail.com (a10.router.float.18 [10.200.18.1])
-        by unirelay02.hostedemail.com (Postfix) with ESMTP id 640C9120237;
-        Thu, 13 Oct 2022 01:37:28 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf20.hostedemail.com (Postfix) with ESMTPA id 56EDD20026;
-        Thu, 13 Oct 2022 01:37:01 +0000 (UTC)
-Message-ID: <3f527ec95a12135eb40f5f2d156a2954feb7fbfe.camel@perches.com>
-Subject: Re: [PATCH v1 3/5] treewide: use get_random_u32() when possible
-From:   Joe Perches <joe@perches.com>
-To:     David Laight <David.Laight@ACULAB.COM>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-sctp@vger.kernel.org" <linux-sctp@vger.kernel.org>,
-        "target-devel@vger.kernel.org" <target-devel@vger.kernel.org>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "drbd-dev@lists.linbit.com" <drbd-dev@lists.linbit.com>,
-        "dev@openvswitch.org" <dev@openvswitch.org>,
-        "rds-devel@oss.oracle.com" <rds-devel@oss.oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "dccp@vger.kernel.org" <dccp@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>,
-        "lvs-devel@vger.kernel.org" <lvs-devel@vger.kernel.org>,
-        "SHA-cyfmac-dev-list@infineon.com" <SHA-cyfmac-dev-list@infineon.com>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "tipc-discussion@lists.sourceforge.net" 
-        <tipc-discussion@lists.sourceforge.net>,
-        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-actions@lists.infradead.org" 
-        <linux-actions@lists.infradead.org>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-hams@vger.kernel.org" <linux-hams@vger.kernel.org>,
-        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "cake@lists.bufferbloat.net" <cake@lists.bufferbloat.net>,
-        "brcm80211-dev-list.pdl@broadcom.com" 
-        <brcm80211-dev-list.pdl@broadcom.com>,
-        "linux-raid@vger.kernel.org" <linux-raid@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Date:   Wed, 12 Oct 2022 18:37:11 -0700
-In-Reply-To: <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
-References: <20221005214844.2699-1-Jason@zx2c4.com>
-         <20221005214844.2699-4-Jason@zx2c4.com>
-         <f8ad3ba44d28dec1a5f7626b82c5e9c2aeefa729.camel@perches.com>
-         <d45bd258e033453b85a137112e7694e1@AcuMS.aculab.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        with ESMTP id S229567AbiJMMSm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 13 Oct 2022 08:18:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FAAE4B0E8
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Oct 2022 05:18:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1665663520;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=fkrJGvLv/zRxpOuQIQamH8XmYyze3emoi97+UvjPoh4=;
+        b=UT5PrOAqx9vk4BhX+Ep2uihegSyHQMumxPJ8o4scPbz2QtFSoLPmD7f6Cf3hxDwCk47LS+
+        U8F2gJ/guV6XV50JD8pLjzoVgk3KgfdhJaV2aNbuWXOGnp4GkOmyXiIQHmsrTsd8STflmA
+        kud/dd930UrC8zs7xtq06uW133gWlWE=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-669-LMICryUBOjSENuYBnrbyYw-1; Thu, 13 Oct 2022 08:18:39 -0400
+X-MC-Unique: LMICryUBOjSENuYBnrbyYw-1
+Received: by mail-wm1-f70.google.com with SMTP id t20-20020a7bc3d4000000b003c6bfea856aso749413wmj.1
+        for <linux-nfs@vger.kernel.org>; Thu, 13 Oct 2022 05:18:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fkrJGvLv/zRxpOuQIQamH8XmYyze3emoi97+UvjPoh4=;
+        b=uo9CGuMjXqoSnbocQKdak0k8uQwX/y46nVoNOlvH06RHFkH++XamDGWGLJo5jFnvEp
+         i/qHDN6tDyyNfyoKt9q2vJ8+EjGMua1u4sMp28e6D065cKAxoYGDP4/HMZjEdOndK0C8
+         X1Os86GWgk1Zv0MoialvvV/Lr+prN3qhZQfwjZYeTHPY6MaLObJO9rPQLlorhfLdkb+O
+         UvBdN4/Dbg0qKVm//YRUktCLVb/nrNiIJjd4erT6zfrDyLsrlsTAJJwq6g6IuD/25RmA
+         vDrVnSICKvAGLeSy7FpxDh7iE0UZ1Hfvz9rOLGLw9kkwvY4/rNTIF8jbpoevByv2etpT
+         EZxw==
+X-Gm-Message-State: ACrzQf3XtY3OHKUSvS3CRXBk95nSGI/2Ho310vWFAg8jg51bDkbYTOwC
+        SdvGSv6wg/Gm/9RnWCSAh8QFL/wc8nkmwG+zlFpSlYbFgqw+/Vy+mBvqUcpArH/Nj/wgWSJn0DY
+        6qjNidlFptPeyPqPB8N8b
+X-Received: by 2002:a5d:6c62:0:b0:230:5aa7:6771 with SMTP id r2-20020a5d6c62000000b002305aa76771mr12896293wrz.158.1665663518055;
+        Thu, 13 Oct 2022 05:18:38 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM6yVX1OqJKHJSOzeCcGLgBgJ27RIgvJuSlrfma5WfGCZTbILZjo4IXllC8mm/0b40yq1UDZ6A==
+X-Received: by 2002:a5d:6c62:0:b0:230:5aa7:6771 with SMTP id r2-20020a5d6c62000000b002305aa76771mr12896275wrz.158.1665663517813;
+        Thu, 13 Oct 2022 05:18:37 -0700 (PDT)
+Received: from localhost.localdomain ([92.62.32.42])
+        by smtp.gmail.com with ESMTPSA id bh15-20020a05600c3d0f00b003b31c560a0csm4507586wmb.12.2022.10.13.05.18.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Oct 2022 05:18:37 -0700 (PDT)
+Date:   Thu, 13 Oct 2022 14:18:34 +0200
+From:   Guillaume Nault <gnault@redhat.com>
+To:     Trond Myklebust <trondmy@kernel.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH v2] sunrpc: Use GFP_NOFS to prevent use of
+ current->task_frag.
+Message-ID: <20221013121834.GA3353@localhost.localdomain>
+References: <de6d99321d1dcaa2ad456b92b3680aa77c07a747.1665401788.git.gnault@redhat.com>
+ <Y0QyYV1Wyo4vof70@infradead.org>
+ <20221010165650.GA3456@ibm-p9z-18-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com>
+ <Y0UKq62ByUGNQpuY@infradead.org>
+ <20221011150057.GB3606@localhost.localdomain>
+ <a0bf0d49a7a69d20cfe007d66586a2649557a30b.camel@kernel.org>
+ <20221011211433.GA13385@ibm-p9z-18-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,
-        SPF_NONE,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-        version=3.4.6
-X-Stat-Signature: jmxt1u5agdpi9w76hr4tp6uotie3p373
-X-Rspamd-Server: rspamout03
-X-Rspamd-Queue-Id: 56EDD20026
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX18KEIRmyyr9pSEavQqF5X0dTzAEITyiJq4=
-X-HE-Tag: 1665625021-540494
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221011211433.GA13385@ibm-p9z-18-fsp.mgmt.pnr.lab.eng.rdu2.redhat.com>
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 2022-10-12 at 21:29 +0000, David Laight wrote:
-> From: Joe Perches
-> > Sent: 12 October 2022 20:17
+
+[Adding netdev and Eric, who commented on the original RFC.]
+
+On Tue, Oct 11, 2022 at 11:14:36PM +0200, Guillaume Nault wrote:
+> On Tue, Oct 11, 2022 at 11:57:53AM -0400, Trond Myklebust wrote:
+> > On Tue, 2022-10-11 at 17:00 +0200, Guillaume Nault wrote:
+> > > On Mon, Oct 10, 2022 at 11:18:19PM -0700, Christoph Hellwig wrote:
+> > > > On Mon, Oct 10, 2022 at 06:56:50PM +0200, Guillaume Nault wrote:
+> > > > > That's what my RFC patch did. It was rejected because reading
+> > > > > current->flags may incur a cache miss thus slowing down TCP fast
+> > > > > path.
+> > > > > See the discussion in the Link tag:
+> > > > > https://lore.kernel.org/netdev/b4d8cb09c913d3e34f853736f3f5628abfd7f4b6.1656699567.git.gnault@redhat.com/
+> > > > 
+> > > > As GFP_NOFS/NOIO are on their way out the networking people will
+> > > > have to
+> > > > do this anyway.
+> > > 
+> > > We can always think of a nicer solution in the future. But right now
+> > > we
+> > > have a real bug to fix.
+> > > 
+> > > Commit a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all
+> > > rpciod/xprtiod jobs") introduces a bug that crashes the kernel. I
+> > > can't
+> > > see anything wrong with a partial revert.
+> > > 
 > > 
-> > On Wed, 2022-10-05 at 23:48 +0200, Jason A. Donenfeld wrote:
-> > > The prandom_u32() function has been a deprecated inline wrapper around
-> > > get_random_u32() for several releases now, and compiles down to the
-> > > exact same code. Replace the deprecated wrapper with a direct call to
-> > > the real function.
-> > []
-> > > diff --git a/drivers/infiniband/hw/cxgb4/cm.c b/drivers/infiniband/hw/cxgb4/cm.c
-> > []
-> > > @@ -734,7 +734,7 @@ static int send_connect(struct c4iw_ep *ep)
-> > >  				   &ep->com.remote_addr;
-> > >  	int ret;
-> > >  	enum chip_type adapter_type = ep->com.dev->rdev.lldi.adapter_type;
-> > > -	u32 isn = (prandom_u32() & ~7UL) - 1;
-> > > +	u32 isn = (get_random_u32() & ~7UL) - 1;
+> > How about instead just adding a dedicated flag to the socket that
+> > switches between the two page_frag modes?
 > > 
-> > trivia:
-> > 
-> > There are somewhat odd size mismatches here.
-> > 
-> > I had to think a tiny bit if random() returned a value from 0 to 7
-> > and was promoted to a 64 bit value then truncated to 32 bit.
-> > 
-> > Perhaps these would be clearer as ~7U and not ~7UL
+> > That would remain future proofed, and it would give kernel users a
+> > lever with which to do the right thing without unnecessarily
+> > constraining the allocation modes.
 > 
-> That makes no difference - the compiler will generate the same code.
+> The problem is to find a hole in struct sock, in a cacheline that
+> wouldn't incur a cache miss.
 
-True, more or less.  It's more a question for the reader.
+Okay, so I have this patch that adds a flag in struct sock. The cache
+line is shared with ->sk_shutdown and should be hot as ->sk_shutdown is
+is tested just before the while() loop in tcp_sendmsg_locked().
 
-> The real question is WTF is the code doing?
+Still, that looks like net-next material to me. Reverting sunrpc to use
+GFP_NOFS looks better for an immediate bug fix.
 
-True.
+------------ >8 ------------
+net: Introduce sk_use_task_frag in struct sock.
 
-> The '& ~7u' clears the bottom 3 bits.
-> The '- 1' then sets the bottom 3 bits and decrements the
-> (random) high bits.
+Sockets that can be used while recursing into memory reclaim, like
+those used by network block devices and file systems, mustn't use
+current->task_frag: if the current process is already using it, then
+the inner memory reclaim call would corrupt the task_frag structure.
 
-Right.
+To avoid this, sk_page_frag() uses ->sk_allocation to detect sockets
+that mustn't use current->task_frag, assuming that those used during
+memory reclaim had their allocation constraints reflected in
+->sk_allocation.
 
-> So is the same as get_random_u32() | 7.
+This unfortunately doesn't cover all cases: in an attempt to remove all
+usage of GFP_NOFS and GFP_NOIO, sunrpc stopped setting these flags in
+->sk_allocation, and used memalloc_nofs critical sections instead.
+This breaks the sk_page_frag() heuristic since the allocation
+constraints are now stored in current->flags, which sk_page_frag()
+can't read without risking triggering a cache miss and slowing down
+TCP's fast path.
 
-True, it's effectively the same as the upper 29 bits are random
-anyway and the bottom 3 bits are always set.
+This patch creates a new field in struct sock, named sk_use_task_frag,
+which sockets with memory reclaim constraints can set to false if they
+can't safely use current->task_frag. In such cases, sk_page_frag() now
+always returns the socket's page_frag (->sk_frag). The first user is
+sunrpc, which needs to avoid using current->task_frag but can keep
+->sk_allocation set to GFP_KERNEL otherwise.
 
-> But I bet the coder had something else in mind.
+Eventually, it might be possible to simplify sk_page_frag() by only
+testing ->sk_use_task_frag and avoid relying on the ->sk_allocation
+heuristic entirely (assuming other sockets will set ->sk_use_task_frag
+according to their constraints in the future).
 
-Likely.
+The new ->sk_use_task_frag field is placed in a hole in struct sock and
+belongs to a cache line shared with ->sk_shutdown. Therefore it should
+be hot and shouldn't have negative performance impacts on TCP's fast
+path (sk_shutdown is tested just before the while() loop in
+tcp_sendmsg_locked()).
 
-And it was also likely copy/pasted a few times.
+Fixes: a1231fda7e94 ("SUNRPC: Set memalloc_nofs_save() on all rpciod/xprtiod jobs")
+Link: https://lore.kernel.org/netdev/b4d8cb09c913d3e34f853736f3f5628abfd7f4b6.1656699567.git.gnault@redhat.com/
+
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 08038a385ef2..bd3eef3afb92 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -318,6 +318,9 @@ struct sk_filter;
+   *	@sk_stamp: time stamp of last packet received
+   *	@sk_stamp_seq: lock for accessing sk_stamp on 32 bit architectures only
+   *	@sk_tsflags: SO_TIMESTAMPING flags
++  *	@sk_use_task_frag: allow sk_page_frag() to use current->task_frag.
++                           Sockets that can be used under memory reclaim should
++                           set this to false.
+   *	@sk_bind_phc: SO_TIMESTAMPING bind PHC index of PTP virtual clock
+   *	              for timestamping
+   *	@sk_tskey: counter to disambiguate concurrent tstamp requests
+@@ -505,6 +508,7 @@ struct sock {
+ #endif
+ 	u16			sk_tsflags;
+ 	u8			sk_shutdown;
++	bool			sk_use_task_frag;
+ 	atomic_t		sk_tskey;
+ 	atomic_t		sk_zckey;
+ 
+@@ -2554,14 +2558,17 @@ static inline void sk_stream_moderate_sndbuf(struct sock *sk)
+  * socket operations and end up recursing into sk_page_frag()
+  * while it's already in use: explicitly avoid task page_frag
+  * usage if the caller is potentially doing any of them.
+- * This assumes that page fault handlers use the GFP_NOFS flags.
++ * This assumes that page fault handlers use the GFP_NOFS flags or
++ * explicitely disable sk_use_task_frag.
+  *
+  * Return: a per task page_frag if context allows that,
+  * otherwise a per socket one.
+  */
+ static inline struct page_frag *sk_page_frag(struct sock *sk)
+ {
+-	if ((sk->sk_allocation & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC | __GFP_FS)) ==
++	if (sk->sk_use_task_frag &&
++	    (sk->sk_allocation & (__GFP_DIRECT_RECLAIM | __GFP_MEMALLOC |
++				  __GFP_FS)) ==
+ 	    (__GFP_DIRECT_RECLAIM | __GFP_FS))
+ 		return &current->task_frag;
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index a3ba0358c77c..cc113500d442 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3368,6 +3368,7 @@ void sock_init_data(struct socket *sock, struct sock *sk)
+ 	sk->sk_rcvbuf		=	READ_ONCE(sysctl_rmem_default);
+ 	sk->sk_sndbuf		=	READ_ONCE(sysctl_wmem_default);
+ 	sk->sk_state		=	TCP_CLOSE;
++	sk->sk_use_task_frag	=	true;
+ 	sk_set_socket(sk, sock);
+ 
+ 	sock_set_flag(sk, SOCK_ZAPPED);
+diff --git a/net/sunrpc/xprtsock.c b/net/sunrpc/xprtsock.c
+index e976007f4fd0..d3170b753dfc 100644
+--- a/net/sunrpc/xprtsock.c
++++ b/net/sunrpc/xprtsock.c
+@@ -1882,6 +1882,7 @@ static int xs_local_finish_connecting(struct rpc_xprt *xprt,
+ 		sk->sk_write_space = xs_udp_write_space;
+ 		sk->sk_state_change = xs_local_state_change;
+ 		sk->sk_error_report = xs_error_report;
++		sk->sk_use_task_frag = false;
+ 
+ 		xprt_clear_connected(xprt);
+ 
+@@ -2083,6 +2084,7 @@ static void xs_udp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
+ 		sk->sk_user_data = xprt;
+ 		sk->sk_data_ready = xs_data_ready;
+ 		sk->sk_write_space = xs_udp_write_space;
++		sk->sk_use_task_frag = false;
+ 
+ 		xprt_set_connected(xprt);
+ 
+@@ -2250,6 +2252,7 @@ static int xs_tcp_finish_connecting(struct rpc_xprt *xprt, struct socket *sock)
+ 		sk->sk_state_change = xs_tcp_state_change;
+ 		sk->sk_write_space = xs_tcp_write_space;
+ 		sk->sk_error_report = xs_error_report;
++		sk->sk_use_task_frag = false;
+ 
+ 		/* socket options */
+ 		sock_reset_flag(sk, SOCK_LINGER);
+
