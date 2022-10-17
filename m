@@ -2,39 +2,40 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C132600CE4
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 12:52:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5BB6600CEB
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 12:52:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230035AbiJQKwa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Oct 2022 06:52:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34096 "EHLO
+        id S229887AbiJQKwc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Oct 2022 06:52:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229897AbiJQKw2 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 06:52:28 -0400
+        with ESMTP id S230061AbiJQKwb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 06:52:31 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC52E60698
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 03:52:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1211760698
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 03:52:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666003947;
+        s=mimecast20190719; t=1666003950;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=UZgpfT1ihrb4tmucogijnth9alvHHFNUJzzi/QB60Ww=;
-        b=aigcOc8e6YHHPJ0MORqTv9siWSTHpreUoxinfKp+r3LGnhIcdkeAw0vI89U7H0Y4pZqu/E
-        7KZHP5SKa9pWbHtfVFDYR5Lagq5ASjqBzcHQ+BzjFhlKcAg1+FfQXQk+z6xWATaRcxPeIE
-        8L1XSHuIWw5SPw6SRuPLmG+9cWyoieM=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QPbW0Esww+n7KzM4XoHJMPjD26OFWFqNl0Aq83pM10s=;
+        b=Hv6LG4w4eNdKBB/7fyX1vC3mRSIjtSkbqZTAxMXkmOXCE0MRkjMYz6KkMwEvCbRBgspWfe
+        dh9nDuQtf2anyC25ExhMrPYGSW7aNu0QvIlhI2BvBLEO6eL6Z1f3vOorJWTf8z57SIBcAa
+        sZv1apZnxfd0Ub/VjQzOW6wHBYKMkwA=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-5-HjSH5NwUMHqUoKAl-M_HKQ-1; Mon, 17 Oct 2022 06:52:25 -0400
-X-MC-Unique: HjSH5NwUMHqUoKAl-M_HKQ-1
+ us-mta-197-1o-uJjilNDSibCbTeSonPA-1; Mon, 17 Oct 2022 06:52:26 -0400
+X-MC-Unique: 1o-uJjilNDSibCbTeSonPA-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7D3CC3C138BD;
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C76363C138B5;
         Mon, 17 Oct 2022 10:52:25 +0000 (UTC)
 Received: from dwysocha.rdu.csb (unknown [10.22.8.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 16C381121319;
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 87A641121319;
         Mon, 17 Oct 2022 10:52:25 +0000 (UTC)
 From:   Dave Wysochanski <dwysocha@redhat.com>
 To:     Anna Schumaker <anna.schumaker@netapp.com>,
@@ -43,9 +44,11 @@ To:     Anna Schumaker <anna.schumaker@netapp.com>,
 Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
         Benjamin Maynard <benmaynard@google.com>,
         Daire Byrne <daire.byrne@gmail.com>
-Subject: [PATCH v9 0/5] Convert NFS with fscache to the netfs API
-Date:   Mon, 17 Oct 2022 06:52:07 -0400
-Message-Id: <20221017105212.77588-1-dwysocha@redhat.com>
+Subject: [PATCH v9 1/5] NFS: Rename readpage_async_filler to nfs_pageio_add_page
+Date:   Mon, 17 Oct 2022 06:52:08 -0400
+Message-Id: <20221017105212.77588-2-dwysocha@redhat.com>
+In-Reply-To: <20221017105212.77588-1-dwysocha@redhat.com>
+References: <20221017105212.77588-1-dwysocha@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
@@ -59,110 +62,170 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This patchset converts NFS with fscache non-direct READ IO paths to
-use the netfs API with a non-invasive approach.  The existing NFS pgio
-layer does not need extensive changes, and is the best way so far I've
-found to address Trond's concerns about modifying the IO path [1] as
-well as only enabling netfs when fscache is configured and enabled [2].
-I have not attempted performance comparisions to address Chuck
-Lever's concern [3] because we are not converting the non-fscache
-enabled NFS IO paths to netfs.
+Rename readpage_async_filler to nfs_pageio_add_page to
+better reflect what this function does (add a page to
+the nfs_pageio_descriptor), and simplify arguments to
+this function by removing struct nfs_readdesc.
 
-No new issues found at BakeAthon testing NFSv4.2 with Hammerspace
-(pNFS flexfiles) and NetApp (pNFS filelayout).
+Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfs/read.c | 60 +++++++++++++++++++++++++--------------------------
+ 1 file changed, 30 insertions(+), 30 deletions(-)
 
-The patchset is based on 6.0 and has been pushed to github at:
-https://github.com/DaveWysochanskiRH/kernel/commits/nfs-fscache-netfs
-https://github.com/DaveWysochanskiRH/kernel/commit/c222ed8cd042d003ca22d890af98d9c76ec8650e
-
-Changes since v8 [7]
-====================
-PATCH3-PATCH5: Add Jeff Layton Revewied-by
-
-Testing
-=======
-The patches are fairly stable as evidenced with xfstests generic with
-various servers, both with and without fscache enabled, with no hangs
-or crashes seen: 
-- hammerspace(pNFS flexfiles): NFS4.1, NFS4.2
-- NetApp(pNFS filelayout): NFS3, NFS4.0, NFS4.1, NFS4.2
-- RHEL8: NFS3,NFS4.0,NFS4.2
-
-Known issues
-============
-1. Unit test setting rsize < readahead does not properly read from
-fscache but re-reads data from the NFS server
-* This will be fixed with another linux-cachefs [4] patch to resolve
-"Stop read optimisation when folio removed from pagecache"
-* Daire Byrne also verified the patch fixes his issue as well
-
-2. "Cache volume key already in use" after xfstest runs
-* xfstests (hammerspace with vers=4.2,fsc) shows the following on the
-console after some tests:
-"NFS: Cache volume key already in use (nfs,4.1,2,c50,cfe0100a,3,,,8000,100000,100000,bb8,ea60,7530,ea60,1)"
-* This may be fixed with another patch [5] that is in progress
-
-3. Daire Byrne reported a NULL pointer oops at cachefiles_prepare_write+0x28/0x90
-* harder to reproduce/debug but under investigation [6]
-* only reproduced on RHEL7.9 based NFS re-export server using fscache with upstream kernel plus
-the previous patches
-* thought to be a bug in netfs or cachefiles exposed by NFS patches
-
-[58710.346376] BUG: kernel NULL pointer dereference, address: 0000000000000008
-[58710.371212] CPU: 12 PID: 9134 Comm: kworker/u129:0 Tainted: G E      6.0.0-2.dneg.x86_64 #1
-...
-[58710.389995] Workqueue: events_unbound netfs_rreq_write_to_cache_work [netfs]
-[58710.397188] RIP: 0010:cachefiles_prepare_write+0x28/0x90 [cachefiles]
-...
-[58710.500316] Call Trace:
-[58710.502894]  <TASK>
-[58710.505126]  netfs_rreq_write_to_cache_work+0x11c/0x320 [netfs]
-[58710.511201]  process_one_work+0x217/0x3e0
-[58710.515358]  worker_thread+0x4a/0x3b0
-[58710.519152]  ? process_one_work+0x3e0/0x3e0
-[58710.523467]  kthread+0xd6/0x100
-[58710.526740]  ? kthread_complete_and_exit+0x20/0x20
-[58710.531659]  ret_from_fork+0x1f/0x30
-
-
-
-References
-==========
-[1] https://lore.kernel.org/linux-nfs/9cfd5bc3cfc6abc2d3316b0387222e708d67f595.camel@hammerspace.com/
-[2] https://lore.kernel.org/linux-nfs/da9200f1bded9b8b078a7aef227fd6b92eb028fb.camel@hammerspace.com/
-[3] https://marc.info/?l=linux-nfs&m=160597917525083&w=4
-[4] https://www.mail-archive.com/linux-cachefs@redhat.com/msg03043.html
-[5] https://marc.info/?l=linux-nfs&m=165962662200679&w=4
-[6] https://listman.redhat.com/archives/linux-cachefs/2022-September/007183.html
-[7] https://marc.info/?l=linux-nfs&m=166385481714542&w=4
-
-Dave Wysochanski (5):
-  NFS: Rename readpage_async_filler to nfs_pageio_add_page
-  NFS: Configure support for netfs when NFS fscache is configured
-  NFS: Convert buffered read paths to use netfs when fscache is enabled
-  NFS: Remove all NFSIOS_FSCACHE counters due to conversion to netfs API
-  NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
-
- fs/nfs/Kconfig             |   1 +
- fs/nfs/delegation.c        |   2 +-
- fs/nfs/dir.c               |   2 +-
- fs/nfs/fscache.c           | 242 ++++++++++++++++++++++---------------
- fs/nfs/fscache.h           | 111 +++++++++++------
- fs/nfs/inode.c             |   8 +-
- fs/nfs/internal.h          |  11 +-
- fs/nfs/iostat.h            |  17 ---
- fs/nfs/nfstrace.h          |  91 --------------
- fs/nfs/pagelist.c          |  12 ++
- fs/nfs/pnfs.c              |  12 +-
- fs/nfs/read.c              | 110 +++++++++--------
- fs/nfs/super.c             |  11 --
- fs/nfs/write.c             |   2 +-
- include/linux/nfs_fs.h     |  35 ++++--
- include/linux/nfs_iostat.h |  12 --
- include/linux/nfs_page.h   |   3 +
- include/linux/nfs_xdr.h    |   3 +
- 18 files changed, 335 insertions(+), 350 deletions(-)
-
+diff --git a/fs/nfs/read.c b/fs/nfs/read.c
+index 8ae2c8d1219d..525e82ea9a9e 100644
+--- a/fs/nfs/read.c
++++ b/fs/nfs/read.c
+@@ -127,11 +127,6 @@ static void nfs_readpage_release(struct nfs_page *req, int error)
+ 	nfs_release_request(req);
+ }
+ 
+-struct nfs_readdesc {
+-	struct nfs_pageio_descriptor pgio;
+-	struct nfs_open_context *ctx;
+-};
+-
+ static void nfs_page_group_set_uptodate(struct nfs_page *req)
+ {
+ 	if (nfs_page_group_sync_on_bit(req, PG_UPTODATE))
+@@ -153,7 +148,8 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
+ 
+ 		if (test_bit(NFS_IOHDR_EOF, &hdr->flags)) {
+ 			/* note: regions of the page not covered by a
+-			 * request are zeroed in readpage_async_filler */
++			 * request are zeroed in nfs_pageio_add_page
++			 */
+ 			if (bytes > hdr->good_bytes) {
+ 				/* nothing in this request was good, so zero
+ 				 * the full extent of the request */
+@@ -281,8 +277,10 @@ static void nfs_readpage_result(struct rpc_task *task,
+ 		nfs_readpage_retry(task, hdr);
+ }
+ 
+-static int
+-readpage_async_filler(struct nfs_readdesc *desc, struct page *page)
++int
++nfs_pageio_add_page(struct nfs_pageio_descriptor *pgio,
++		    struct nfs_open_context *ctx,
++		    struct page *page)
+ {
+ 	struct inode *inode = page_file_mapping(page)->host;
+ 	unsigned int rsize = NFS_SERVER(inode)->rsize;
+@@ -302,15 +300,15 @@ readpage_async_filler(struct nfs_readdesc *desc, struct page *page)
+ 			goto out_unlock;
+ 	}
+ 
+-	new = nfs_create_request(desc->ctx, page, 0, aligned_len);
++	new = nfs_create_request(ctx, page, 0, aligned_len);
+ 	if (IS_ERR(new))
+ 		goto out_error;
+ 
+ 	if (len < PAGE_SIZE)
+ 		zero_user_segment(page, len, PAGE_SIZE);
+-	if (!nfs_pageio_add_request(&desc->pgio, new)) {
++	if (!nfs_pageio_add_request(pgio, new)) {
+ 		nfs_list_remove_request(new);
+-		error = desc->pgio.pg_error;
++		error = pgio->pg_error;
+ 		nfs_readpage_release(new, error);
+ 		goto out;
+ 	}
+@@ -332,7 +330,8 @@ readpage_async_filler(struct nfs_readdesc *desc, struct page *page)
+ int nfs_read_folio(struct file *file, struct folio *folio)
+ {
+ 	struct page *page = &folio->page;
+-	struct nfs_readdesc desc;
++	struct nfs_pageio_descriptor pgio;
++	struct nfs_open_context *ctx;
+ 	struct inode *inode = page_file_mapping(page)->host;
+ 	int ret;
+ 
+@@ -358,29 +357,29 @@ int nfs_read_folio(struct file *file, struct folio *folio)
+ 
+ 	if (file == NULL) {
+ 		ret = -EBADF;
+-		desc.ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
+-		if (desc.ctx == NULL)
++		ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
++		if (ctx == NULL)
+ 			goto out_unlock;
+ 	} else
+-		desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
++		ctx = get_nfs_open_context(nfs_file_open_context(file));
+ 
+-	xchg(&desc.ctx->error, 0);
+-	nfs_pageio_init_read(&desc.pgio, inode, false,
++	xchg(&ctx->error, 0);
++	nfs_pageio_init_read(&pgio, inode, false,
+ 			     &nfs_async_read_completion_ops);
+ 
+-	ret = readpage_async_filler(&desc, page);
++	ret = nfs_pageio_add_page(&pgio, ctx, page);
+ 	if (ret)
+ 		goto out;
+ 
+-	nfs_pageio_complete_read(&desc.pgio);
+-	ret = desc.pgio.pg_error < 0 ? desc.pgio.pg_error : 0;
++	nfs_pageio_complete_read(&pgio);
++	ret = pgio.pg_error < 0 ? pgio.pg_error : 0;
+ 	if (!ret) {
+ 		ret = wait_on_page_locked_killable(page);
+ 		if (!PageUptodate(page) && !ret)
+-			ret = xchg(&desc.ctx->error, 0);
++			ret = xchg(&ctx->error, 0);
+ 	}
+ out:
+-	put_nfs_open_context(desc.ctx);
++	put_nfs_open_context(ctx);
+ 	trace_nfs_aop_readpage_done(inode, page, ret);
+ 	return ret;
+ out_unlock:
+@@ -391,9 +390,10 @@ int nfs_read_folio(struct file *file, struct folio *folio)
+ 
+ void nfs_readahead(struct readahead_control *ractl)
+ {
++	struct nfs_pageio_descriptor pgio;
++	struct nfs_open_context *ctx;
+ 	unsigned int nr_pages = readahead_count(ractl);
+ 	struct file *file = ractl->file;
+-	struct nfs_readdesc desc;
+ 	struct inode *inode = ractl->mapping->host;
+ 	struct page *page;
+ 	int ret;
+@@ -407,25 +407,25 @@ void nfs_readahead(struct readahead_control *ractl)
+ 
+ 	if (file == NULL) {
+ 		ret = -EBADF;
+-		desc.ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
+-		if (desc.ctx == NULL)
++		ctx = nfs_find_open_context(inode, NULL, FMODE_READ);
++		if (ctx == NULL)
+ 			goto out;
+ 	} else
+-		desc.ctx = get_nfs_open_context(nfs_file_open_context(file));
++		ctx = get_nfs_open_context(nfs_file_open_context(file));
+ 
+-	nfs_pageio_init_read(&desc.pgio, inode, false,
++	nfs_pageio_init_read(&pgio, inode, false,
+ 			     &nfs_async_read_completion_ops);
+ 
+ 	while ((page = readahead_page(ractl)) != NULL) {
+-		ret = readpage_async_filler(&desc, page);
++		ret = nfs_pageio_add_page(&pgio, ctx, page);
+ 		put_page(page);
+ 		if (ret)
+ 			break;
+ 	}
+ 
+-	nfs_pageio_complete_read(&desc.pgio);
++	nfs_pageio_complete_read(&pgio);
+ 
+-	put_nfs_open_context(desc.ctx);
++	put_nfs_open_context(ctx);
+ out:
+ 	trace_nfs_aop_readahead_done(inode, nr_pages, ret);
+ }
 -- 
 2.31.1
 
