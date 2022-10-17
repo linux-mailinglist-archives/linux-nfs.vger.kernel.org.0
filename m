@@ -2,197 +2,99 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54251600CEE
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 12:52:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DDEE600D01
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 12:57:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbiJQKwg (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Oct 2022 06:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34158 "EHLO
+        id S229810AbiJQK5U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Oct 2022 06:57:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbiJQKwe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 06:52:34 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD7160C80
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 03:52:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666003952;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A6BR26WY45da2HKwNJhtAF7JVmHpbn/c+XtR1jiBgmA=;
-        b=jRfqkeJzBfyLtU2oUCAV9t+EeDZyR4+sRBX2T4uA5dj2o1c80b0i21ytsTj4xaZu2bH8Pw
-        YU82GVs94vEYR8Ka68IjaGzB/kPaDXhwTYbwr4mw3QU/MUhq+1bvqR2AxObOWtb6xde3n2
-        KKqEPWMZCI8PZWPncEsjkexjSSi8H/0=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-73-e8kxTfKlOrO7atD_KZqokA-1; Mon, 17 Oct 2022 06:52:27 -0400
-X-MC-Unique: e8kxTfKlOrO7atD_KZqokA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S230144AbiJQK5P (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 06:57:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D1845C9D7;
+        Mon, 17 Oct 2022 03:57:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 344EE1C06642;
-        Mon, 17 Oct 2022 10:52:27 +0000 (UTC)
-Received: from dwysocha.rdu.csb (unknown [10.22.8.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBEE51121319;
-        Mon, 17 Oct 2022 10:52:26 +0000 (UTC)
-From:   Dave Wysochanski <dwysocha@redhat.com>
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
-        Benjamin Maynard <benmaynard@google.com>,
-        Daire Byrne <daire.byrne@gmail.com>
-Subject: [PATCH v9 5/5] NFS: Remove fscache specific trace points and NFS_INO_FSCACHE bit
-Date:   Mon, 17 Oct 2022 06:52:12 -0400
-Message-Id: <20221017105212.77588-6-dwysocha@redhat.com>
-In-Reply-To: <20221017105212.77588-1-dwysocha@redhat.com>
-References: <20221017105212.77588-1-dwysocha@redhat.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A0D66103A;
+        Mon, 17 Oct 2022 10:57:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F241C433C1;
+        Mon, 17 Oct 2022 10:57:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666004233;
+        bh=6YT8a4bXoeXs8XCfVDx3M0Me+DkkbCjCyiu7tCiJL+s=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Gj7zxfDuAX7XjOBrXuruhtxnquTTTafw/403MMHjD9isqBeJP2M9YniIOu5CZ1rHj
+         urP61o2T+SVbkLdDx4Kd4xuw55ioynZlC4Lts975BLgtdZjhxrBrXpWc907xShB3RC
+         2ZtNUB7vJ3PGARKYGkDXHUC8mlqaFGHy/HCM1lXgkJYGBdj96W0XXcWMLrWc4m1lFy
+         uriZS+qEWlw2JfLC10mtBf4dpwQp2BpxhMSFxWgOepFJiQxd3HvBBFvhpJSHu3/Osg
+         XvQn8aLxzoFoN6LtpkL6PD5Y3unGQ4WVbpFaN7RMDEA+ldANE+GjmmbKMMjYkCMBnr
+         9I+ZFiT+pBJSA==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
+        david@fromorbit.com, trondmy@hammerspace.com, neilb@suse.de,
+        viro@zeniv.linux.org.uk, zohar@linux.ibm.com, xiubli@redhat.com,
+        chuck.lever@oracle.com, lczerner@redhat.com, jack@suse.cz,
+        bfields@fieldses.org, brauner@kernel.org, fweimer@redhat.com
+Cc:     linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
+        linux-xfs@vger.kernel.org
+Subject: [PATCH v7 0/9] fs: clean up handling of i_version counter
+Date:   Mon, 17 Oct 2022 06:57:00 -0400
+Message-Id: <20221017105709.10830-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The NFS specific trace points are no longer needed as tracing is well
-covered by netfs and fscache.
+This patchset is intended to clean up the handling of the i_version
+counter by nfsd. Most of the changes are to internal interfaces.
 
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfs/nfstrace.h      | 91 ------------------------------------------
- include/linux/nfs_fs.h |  1 -
- 2 files changed, 92 deletions(-)
+This set is not intended to address crash resilience, or the fact that
+the counter is bumped before a change and not after. I intend to tackle
+those in follow-on patchsets.
 
-diff --git a/fs/nfs/nfstrace.h b/fs/nfs/nfstrace.h
-index 8c6cc58679ff..6b56abe49ec2 100644
---- a/fs/nfs/nfstrace.h
-+++ b/fs/nfs/nfstrace.h
-@@ -39,7 +39,6 @@
- 			{ BIT(NFS_INO_STALE), "STALE" }, \
- 			{ BIT(NFS_INO_ACL_LRU_SET), "ACL_LRU_SET" }, \
- 			{ BIT(NFS_INO_INVALIDATING), "INVALIDATING" }, \
--			{ BIT(NFS_INO_FSCACHE), "FSCACHE" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMIT), "NEED_LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTCOMMITTING), "LAYOUTCOMMIT" }, \
- 			{ BIT(NFS_INO_LAYOUTSTATS), "LAYOUTSTATS" }, \
-@@ -1213,96 +1212,6 @@ TRACE_EVENT(nfs_readpage_short,
- 		)
- );
- 
--DECLARE_EVENT_CLASS(nfs_fscache_page_event,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page
--		),
--
--		TP_ARGS(inode, page),
--
--		TP_STRUCT__entry(
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset
--		)
--);
--DECLARE_EVENT_CLASS(nfs_fscache_page_event_done,
--		TP_PROTO(
--			const struct inode *inode,
--			struct page *page,
--			int error
--		),
--
--		TP_ARGS(inode, page, error),
--
--		TP_STRUCT__entry(
--			__field(int, error)
--			__field(dev_t, dev)
--			__field(u32, fhandle)
--			__field(u64, fileid)
--			__field(loff_t, offset)
--		),
--
--		TP_fast_assign(
--			const struct nfs_inode *nfsi = NFS_I(inode);
--			const struct nfs_fh *fh = &nfsi->fh;
--
--			__entry->offset = page_index(page) << PAGE_SHIFT;
--			__entry->dev = inode->i_sb->s_dev;
--			__entry->fileid = nfsi->fileid;
--			__entry->fhandle = nfs_fhandle_hash(fh);
--			__entry->error = error;
--		),
--
--		TP_printk(
--			"fileid=%02x:%02x:%llu fhandle=0x%08x "
--			"offset=%lld error=%d",
--			MAJOR(__entry->dev), MINOR(__entry->dev),
--			(unsigned long long)__entry->fileid,
--			__entry->fhandle,
--			(long long)__entry->offset, __entry->error
--		)
--);
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT(name) \
--	DEFINE_EVENT(nfs_fscache_page_event, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page \
--			), \
--			TP_ARGS(inode, page))
--#define DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(name) \
--	DEFINE_EVENT(nfs_fscache_page_event_done, name, \
--			TP_PROTO( \
--				const struct inode *inode, \
--				struct page *page, \
--				int error \
--			), \
--			TP_ARGS(inode, page, error))
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_read_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_read_page_exit);
--DEFINE_NFS_FSCACHE_PAGE_EVENT(nfs_fscache_write_page);
--DEFINE_NFS_FSCACHE_PAGE_EVENT_DONE(nfs_fscache_write_page_exit);
- 
- TRACE_EVENT(nfs_pgio_error,
- 	TP_PROTO(
-diff --git a/include/linux/nfs_fs.h b/include/linux/nfs_fs.h
-index a1c402e26abf..0150a5673419 100644
---- a/include/linux/nfs_fs.h
-+++ b/include/linux/nfs_fs.h
-@@ -281,7 +281,6 @@ struct nfs4_copy_state {
- #define NFS_INO_ACL_LRU_SET	(2)		/* Inode is on the LRU list */
- #define NFS_INO_INVALIDATING	(3)		/* inode is being invalidated */
- #define NFS_INO_PRESERVE_UNLINKED (4)		/* preserve file if removed while open */
--#define NFS_INO_FSCACHE		(5)		/* inode can be cached by FS-Cache */
- #define NFS_INO_LAYOUTCOMMIT	(9)		/* layoutcommit required */
- #define NFS_INO_LAYOUTCOMMITTING (10)		/* layoutcommit inflight */
- #define NFS_INO_LAYOUTSTATS	(11)		/* layoutstats inflight */
+My intention is to get this series included into linux-next soon, with
+an eye toward merging most of it during the v6.2 merge window. The last
+patch in the series is probably not suitable for merge as-is, at least
+until we sort out the semantics we want to present to userland for it.
+
+Jeff Layton (9):
+  fs: uninline inode_query_iversion
+  fs: clarify when the i_version counter must be updated
+  vfs: plumb i_version handling into struct kstat
+  nfs: report the inode version in getattr if requested
+  ceph: report the inode version in getattr if requested
+  nfsd: move nfsd4_change_attribute to nfsfh.c
+  nfsd: use the getattr operation to fetch i_version
+  nfsd: remove fetch_iversion export operation
+  vfs: expose STATX_VERSION to userland
+
+ fs/ceph/inode.c           | 16 +++++++----
+ fs/libfs.c                | 36 ++++++++++++++++++++++++
+ fs/nfs/export.c           |  7 -----
+ fs/nfs/inode.c            | 15 +++++++---
+ fs/nfsd/nfs4xdr.c         |  4 ++-
+ fs/nfsd/nfsfh.c           | 42 ++++++++++++++++++++++++++++
+ fs/nfsd/nfsfh.h           | 29 +-------------------
+ fs/nfsd/vfs.h             |  7 ++++-
+ fs/stat.c                 |  7 +++++
+ include/linux/exportfs.h  |  1 -
+ include/linux/iversion.h  | 58 ++++++++++++++-------------------------
+ include/linux/stat.h      |  2 +-
+ include/uapi/linux/stat.h |  6 ++--
+ samples/vfs/test-statx.c  |  8 ++++--
+ 14 files changed, 148 insertions(+), 90 deletions(-)
+
 -- 
-2.31.1
+2.37.3
 
