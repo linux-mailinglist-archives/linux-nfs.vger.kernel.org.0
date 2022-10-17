@@ -2,168 +2,241 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9814D601C28
+	by mail.lfdr.de (Postfix) with ESMTP id E4853601C29
 	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 00:15:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbiJQWOv (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Oct 2022 18:14:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46908 "EHLO
+        id S229778AbiJQWOw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Oct 2022 18:14:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230179AbiJQWOp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 18:14:45 -0400
-Received: from mail105.syd.optusnet.com.au (mail105.syd.optusnet.com.au [211.29.132.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6F5D11A223;
-        Mon, 17 Oct 2022 15:14:42 -0700 (PDT)
-Received: from dread.disaster.area (pa49-181-106-210.pa.nsw.optusnet.com.au [49.181.106.210])
-        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id E29F0110211B;
-        Tue, 18 Oct 2022 09:14:35 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1okYNV-003Do8-W5; Tue, 18 Oct 2022 09:14:34 +1100
-Date:   Tue, 18 Oct 2022 09:14:33 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     tytso@mit.edu, adilger.kernel@dilger.ca, djwong@kernel.org,
-        trondmy@hammerspace.com, neilb@suse.de, viro@zeniv.linux.org.uk,
-        zohar@linux.ibm.com, xiubli@redhat.com, chuck.lever@oracle.com,
-        lczerner@redhat.com, jack@suse.cz, bfields@fieldses.org,
-        brauner@kernel.org, fweimer@redhat.com,
-        linux-btrfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-nfs@vger.kernel.org,
-        linux-xfs@vger.kernel.org, Jeff Layton <jlayton@redhat.com>
-Subject: Re: [RFC PATCH v7 9/9] vfs: expose STATX_VERSION to userland
-Message-ID: <20221017221433.GT3600936@dread.disaster.area>
-References: <20221017105709.10830-1-jlayton@kernel.org>
- <20221017105709.10830-10-jlayton@kernel.org>
+        with ESMTP id S229793AbiJQWOu (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 18:14:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBE2618B24
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 15:14:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D11EE612A1
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 22:14:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B04C433B5;
+        Mon, 17 Oct 2022 22:14:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666044885;
+        bh=IKpqErjack3+HUdMbZG+zUzu5Nmm6XwqapMOO2+yvm4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=pyKUcYF0w5CrOgxNYQhb7+X2NOvJwpt2Fjy7chMQTpixrnhf9NcuQMuJf9V0rJOTg
+         hlRCuGkavPHWf20i82WoqtE9bMu1qt+6lpjZaFVQDDN1/CmGTJONQ1L7chmZO+vOSL
+         Op8L8cp73o2MHudpZemTWFPN77n913sHRVmvf4RTD8mnOKbWuRf/QoLgGD7t/MFNmf
+         BpTb/UccU+Ae1Sl60LR0jmuNp0A3wzw+4bA/7MNgNOtswktATA76tCXHAB/+s/o7JH
+         yH/mff9Xnwof6XuKCs4EBMQfGZlvjXQxMN8QRUAxWA+gr07azy6zwCNdvcwfLOoEX4
+         cokJIDNHvlbfA==
+Message-ID: <88469313a5ac32984bfc08bfe13851d27f6472c9.camel@kernel.org>
+Subject: Re: [PATCH v2 2/2] nfsd: allow disabling NFSv2 at compile time
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Tom Talpey <tom@talpey.com>,
+        Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Date:   Mon, 17 Oct 2022 18:14:43 -0400
+In-Reply-To: <5a3646b2-685b-1fbb-ab8a-2c4a8449a647@talpey.com>
+References: <20221017201436.487627-1-jlayton@kernel.org>
+         <20221017201436.487627-2-jlayton@kernel.org>
+         <0A1BE7DD-070F-4427-823A-92866DC7C9A9@oracle.com>
+         <5a3646b2-685b-1fbb-ab8a-2c4a8449a647@talpey.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221017105709.10830-10-jlayton@kernel.org>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.4 cv=VuxAv86n c=1 sm=1 tr=0 ts=634dd3d0
-        a=j6JUzzrSC7wlfFge/rmVbg==:117 a=j6JUzzrSC7wlfFge/rmVbg==:17
-        a=kj9zAlcOel0A:10 a=Qawa6l4ZSaYA:10 a=20KFwNOVAAAA:8 a=VwQbUJbxAAAA:8
-        a=7-415B0cAAAA:8 a=-cKyABg0kL-CqEoa6E0A:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=biEYGPWJfzWAr4FL6Ov7:22
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, Oct 17, 2022 at 06:57:09AM -0400, Jeff Layton wrote:
-> From: Jeff Layton <jlayton@redhat.com>
-> 
-> Claim one of the spare fields in struct statx to hold a 64-bit inode
-> version attribute. When userland requests STATX_VERSION, copy the
-> value from the kstat struct there, and stop masking off
-> STATX_ATTR_VERSION_MONOTONIC.
+On Mon, 2022-10-17 at 17:22 -0400, Tom Talpey wrote:
+> On 10/17/2022 4:25 PM, Chuck Lever III wrote:
+> >=20
+> >=20
+> > > On Oct 17, 2022, at 4:14 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> > >=20
+> > > rpc.nfsd stopped supporting NFSv2 a year ago. Take the next logical
+> > > step toward deprecating it and allow NFSv2 support to be compiled out=
+.
+> > >=20
+> > > Add a new CONFIG_NFSD_V2 option that can be turned off and rework the
+> > > CONFIG_NFSD_V?_ACL option dependencies. Add a description that
+> > > discourages enabling it.
+> > >=20
+> > > Also, change the description of CONFIG_NFSD to state that the always-=
+on
+> > > version is now 3 instead of 2.
+> >=20
+> > This works for me. I'll wait for more comments, but I plan
+> > to pull this into for-next soon.
+>=20
+> It's a worthy change, but it's only a small step along the way.
+> Distros will still be forced to set NFSD_V2, because they'll
+> want a way to allow V2 support but there's only one V2/V3
+> module to package it in. So, they're stuck turning it on.
+>=20
+> But, shouldn't this at least squawk if the admin attempts to
+> enable V2 when it's not configured? I don't usually suggest
+> a message in the kernel log, but this one seems important.
+>=20
 
-Can we please make the name more sepcific than "version"? It's way
-too generic and - we already have userspace facing "version" fields
-for inodes that refer to the on-disk format version exposed in
-various UAPIs. It's common for UAPI structures used for file
-operations to have a "version" field that refers to the *UAPI
-structure version* rather than file metadata or data being retrieved
-from the file in question.
+rpc.nfsd already syslogs a message when it hits an error writing to the
+versions file, AFAICT. The main problem is that /usr/bin/rpc.nfsd will
+write a string like this to /proc/fs/nfsd/versions (depending on
+options):
 
-The need for an explanatory comment like this:
+    -2 +3 +4.0 -4.1 +4.2
 
-> +	__u64	stx_version; /* Inode change attribute */
+...and if the kernel errors out on the -2, it'll abort and not apply the
+other settings in that string. rpc.nfsd then logs and ignores the error
+and nfsd runs anyway.
 
-demonstrates it is badly named. If you want it known as an inode
-change attribute, then don't name the variable "version". In
-reality, it really needs to be an opaque cookie, not something
-applications need to decode directly to make sense of.
+ISTM that the kernel probably ought to ignore requests to disable the
+versions that it doesn't support, but error out when you try to enable a
+version that isn't supported. That should make rpc.nfsd still work as
+expected, at least as far as disabling v2.
 
-> Update the test-statx sample program to output the change attr and
-> MountId.
-> 
-> Reviewed-by: NeilBrown <neilb@suse.de>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/stat.c                 | 12 +++---------
->  include/linux/stat.h      |  9 ---------
->  include/uapi/linux/stat.h |  6 ++++--
->  samples/vfs/test-statx.c  |  8 ++++++--
->  4 files changed, 13 insertions(+), 22 deletions(-)
-> 
-> Posting this as an RFC as we're still trying to sort out what semantics
-> we want to present to userland. In particular, this patch leaves the
-> problem of crash resilience in to userland applications on filesystems
-> that don't report as MONOTONIC.
+I'll plan to do one more respin with that approach.
 
-Firstly, if userspace wants to use the change attribute, they are
-going to have to detect crashes themselves anyway because no fs in
-the kernel can set the MONOTONIC flag right now and it may be years
-before kernels/filesystems actually support it in production
-systems.
+>=20
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > > fs/nfsd/Kconfig  | 19 +++++++++++++++----
+> > > fs/nfsd/Makefile |  5 +++--
+> > > fs/nfsd/nfsd.h   |  3 +--
+> > > fs/nfsd/nfssvc.c |  6 ++++++
+> > > 4 files changed, 25 insertions(+), 8 deletions(-)
+> > >=20
+> > > v2: split out nfserrno move into separate patch
+> > >     add help text to CONFIG_NFSD_V2 Kconfig option
+> > >     don't error out in __write_versions
+> > >=20
+> > > diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+> > > index f6a2fd3015e7..7c441f2bd444 100644
+> > > --- a/fs/nfsd/Kconfig
+> > > +++ b/fs/nfsd/Kconfig
+> > > @@ -8,6 +8,7 @@ config NFSD
+> > > 	select SUNRPC
+> > > 	select EXPORTFS
+> > > 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
+> > > +	select NFS_ACL_SUPPORT if NFSD_V3_ACL
+> > > 	depends on MULTIUSER
+> > > 	help
+> > > 	  Choose Y here if you want to allow other computers to access
+> > > @@ -26,19 +27,29 @@ config NFSD
+> > >=20
+> > > 	  Below you can choose which versions of the NFS protocol are
+> > > 	  available to clients mounting the NFS server on this system.
+> > > -	  Support for NFS version 2 (RFC 1094) is always available when
+> > > +	  Support for NFS version 3 (RFC 1813) is always available when
+> > > 	  CONFIG_NFSD is selected.
+> > >=20
+> > > 	  If unsure, say N.
+> > >=20
+> > > -config NFSD_V2_ACL
+> > > -	bool
+> > > +config NFSD_V2
+> > > +	bool "NFS server support for NFS version 2 (DEPRECATED)"
+> > > 	depends on NFSD
+> > > +	default n
+> > > +	help
+> > > +	  NFSv2 (RFC 1094) was the first publicly-released version of NFS.
+> > > +	  Unless you are hosting ancient (1990's era) NFS clients, you don'=
+t
+> > > +	  need this.
+> > > +
+> > > +	  If unsure, say N.
+> > > +
+> > > +config NFSD_V2_ACL
+> > > +	bool "NFS server support for the NFSv2 ACL protocol extension"
+> > > +	depends on NFSD_V2
+> > >=20
+> > > config NFSD_V3_ACL
+> > > 	bool "NFS server support for the NFSv3 ACL protocol extension"
+> > > 	depends on NFSD
+> > > -	select NFSD_V2_ACL
+> > > 	help
+> > > 	  Solaris NFS servers support an auxiliary NFSv3 ACL protocol that
+> > > 	  never became an official part of the NFS version 3 protocol.
+> > > diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+> > > index 805c06d5f1b4..6fffc8f03f74 100644
+> > > --- a/fs/nfsd/Makefile
+> > > +++ b/fs/nfsd/Makefile
+> > > @@ -10,9 +10,10 @@ obj-$(CONFIG_NFSD)	+=3D nfsd.o
+> > > # this one should be compiled first, as the tracing macros can easily=
+ blow up
+> > > nfsd-y			+=3D trace.o
+> > >=20
+> > > -nfsd-y 			+=3D nfssvc.o nfsctl.o nfsproc.o nfsfh.o vfs.o \
+> > > -			   export.o auth.o lockd.o nfscache.o nfsxdr.o \
+> > > +nfsd-y 			+=3D nfssvc.o nfsctl.o nfsfh.o vfs.o \
+> > > +			   export.o auth.o lockd.o nfscache.o \
+> > > 			   stats.o filecache.o nfs3proc.o nfs3xdr.o
+> > > +nfsd-$(CONFIG_NFSD_V2) +=3D nfsproc.o nfsxdr.o
+> > > nfsd-$(CONFIG_NFSD_V2_ACL) +=3D nfs2acl.o
+> > > nfsd-$(CONFIG_NFSD_V3_ACL) +=3D nfs3acl.o
+> > > nfsd-$(CONFIG_NFSD_V4)	+=3D nfs4proc.o nfs4xdr.o nfs4state.o nfs4idma=
+p.o \
+> > > diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+> > > index 09726c5b9a31..93b42ef9ed91 100644
+> > > --- a/fs/nfsd/nfsd.h
+> > > +++ b/fs/nfsd/nfsd.h
+> > > @@ -64,8 +64,7 @@ struct readdir_cd {
+> > >=20
+> > >=20
+> > > extern struct svc_program	nfsd_program;
+> > > -extern const struct svc_version	nfsd_version2, nfsd_version3,
+> > > -				nfsd_version4;
+> > > +extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_v=
+ersion4;
+> > > extern struct mutex		nfsd_mutex;
+> > > extern spinlock_t		nfsd_drc_lock;
+> > > extern unsigned long		nfsd_drc_max_mem;
+> > > diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+> > > index bfbd9f672f59..62e473b0ca52 100644
+> > > --- a/fs/nfsd/nfssvc.c
+> > > +++ b/fs/nfsd/nfssvc.c
+> > > @@ -91,8 +91,12 @@ unsigned long	nfsd_drc_mem_used;
+> > > #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+> > > static struct svc_stat	nfsd_acl_svcstats;
+> > > static const struct svc_version *nfsd_acl_version[] =3D {
+> > > +# if defined(CONFIG_NFSD_V2_ACL)
+> > > 	[2] =3D &nfsd_acl_version2,
+> > > +# endif
+> > > +# if defined(CONFIG_NFSD_V3_ACL)
+> > > 	[3] =3D &nfsd_acl_version3,
+> > > +# endif
+> > > };
+> > >=20
+> > > #define NFSD_ACL_MINVERS            2
+> > > @@ -116,7 +120,9 @@ static struct svc_stat	nfsd_acl_svcstats =3D {
+> > > #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) =
+*/
+> > >=20
+> > > static const struct svc_version *nfsd_version[] =3D {
+> > > +#if defined(CONFIG_NFSD_V2)
+> > > 	[2] =3D &nfsd_version2,
+> > > +#endif
+> > > 	[3] =3D &nfsd_version3,
+> > > #if defined(CONFIG_NFSD_V4)
+> > > 	[4] =3D &nfsd_version4,
+> > > --=20
+> > > 2.37.3
+> > >=20
+> >=20
+> > --
+> > Chuck Lever
+> >=20
+> >=20
+> >=20
+> >=20
 
-But more fundamentally, I think this monotonic increase guarantee is
-completely broken by the presence of snapshots and snapshot
-rollbacks. If you change something, then a while later decide it
-broke (e.g. a production system upgrade went awry) and you roll back
-the filesystem to the pre-upgrade snapshot, then all the change
-counters and m/ctimes are guaranteed to go backwards because they
-will revert to the snapshot values. Maybe the filesystem can bump
-some internal counter for the snapshot when the revert happens, but
-until that is implemented, filesystems that support snapshots and
-rollback can't assert MONOTONIC.
-
-And that's worse for other filesystems, because if you put them on
-dm-thinp and roll them back, they are completely unaware of the fact
-that a rollback happened and there's *nothing* the filesystem can do
-about this. Indeed, snapshots are suppose to be done on clean
-filesystems so snapshot images don't require journal recovery, so
-any crash detection put in the filesystem recovery code to guarantee
-MONOTONIC behaviour will be soundly defeated by such block device
-snapshot rollbacks.
-
-Hence I think MONOTONIC is completely unworkable for most existing
-filesystems because snapshots and rollbacks completely break the
-underlying assumption MONOTONIC relies on: that filesystem
-modifications always move forwards in both the time and modification
-order dimensions....
-
-This means that monotonicity is probably not acheivable by any
-existing filesystem and so should not ever be mentioned in the UAPI.
-I think userspace semantics can be simplified down to "if the change
-cookie does not match exactly, caches are invalid" combined with
-"applications are responsible for detecting temporal discontiguities
-in filesystem presentation at start up (e.g. after a crash, unclean
-shutdown, restoration from backup, snapshot rollback, etc) for
-persistent cache invalidation purposes"....
-
-> Trond is of the opinion that monotonicity is a hard requirement, and
-> that we should not allow filesystems that can't provide that quality to
-> report STATX_VERSION at all.  His rationale is that one of the main uses
-> for this is for backup applications, and for those a counter that could
-> go backward is worse than useless.
-
-From the perspective of a backup program doing incremental backups,
-an inode with a change counter that has a different value to the
-current backup inventory means the file contains different
-information than what the current backup inventory holds. Again,
-snapshots, rollbacks, etc.
-
-Therefore, regardless of whether the change counter has gone
-forwards or backwards, the backup program needs to back up this
-current version of the file in this backup because it is different
-to the inventory copy.  Hence if the backup program fails to back it
-up, it will not be creating an exact backup of the user's data at
-the point in time the backup is run...
-
-Hence I don't see that MONOTONIC is a requirement for backup
-programs - they really do have to be able to handle filesystems that
-have modifications that move backwards in time as well as forwards...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+--=20
+Jeff Layton <jlayton@kernel.org>
