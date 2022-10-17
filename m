@@ -2,42 +2,44 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9530600F9A
-	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 14:55:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CD11600FC4
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 15:03:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230462AbiJQMzj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 17 Oct 2022 08:55:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
+        id S230197AbiJQNDH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 17 Oct 2022 09:03:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbiJQMzi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 08:55:38 -0400
+        with ESMTP id S230159AbiJQNCs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 17 Oct 2022 09:02:48 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B470D42E65
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 05:55:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE11F5FAE2
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 06:02:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2FB52B8167E
-        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 12:55:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E7CC433C1;
-        Mon, 17 Oct 2022 12:55:34 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1F51B80D0B
+        for <linux-nfs@vger.kernel.org>; Mon, 17 Oct 2022 13:02:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056C2C433D6;
+        Mon, 17 Oct 2022 13:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666011334;
-        bh=6jYfa+aWoAwoOHiEOCdQ1jS5Q92cPK2kehIivy86RGU=;
+        s=k20201202; t=1666011754;
+        bh=94U6fTnYKtNCesLWxMn7l4EWJoutFavG9yrS3dB585w=;
         h=Subject:From:To:Date:In-Reply-To:References:From;
-        b=Xt7vOZfZWNwkSgnEGbrZ02nFAA/ow56w1w4ZPDnWC1u0ICsZewIK/VY6I4j4731SX
-         WGzhQk8y1CjjILqVU1Aw5oskWpal4ul7HjMFsztDEevtqABD2LMimp+rVXnpzwGSJq
-         8Uj2pwLbPaxsLj5GFsZCZ8zx+SHe9P8gZweEVOrXzcsqs49tuHtCxvg1906WF66PXQ
-         ewFb83PyHathJ8cpqmF1ENSL1WUTZFB6jalXHlVv3RkTaBOSLmY8YEc6nbEZZmExVE
-         PySNO/V1201BciyrWo0WzBjfwbX4/pUNTTeKtCqWMfY3GtiqKd+Salx5H2nFm7lDcn
-         bs3rKvYThnZuw==
-Message-ID: <355a0d843130bad8fc743b19fec2b829aed6b326.camel@kernel.org>
-Subject: Re: [PATCH 1 1/3] SUNRPC: Remove unused svc_rqst::rq_lock field
+        b=rkSTZngBZgDmXGTutrOOArx9U4+Qw/L9gZHchqVC/3YnACezp56Trxhgr1uzRSIKx
+         mGUcbznPumfWdyBFSV+JpkufNcrWVoNxsvk8lH4R8/rPDAZATIBgygmnBYLzjmD9vS
+         BsGUZyxfhDSoujpHSyHo84UZCxHDdfHP6KJChKutBVwsqrfj+LUER3RCXqd4Y7Rm8m
+         1ZvBHDFBKdsteP14AiHBTHtfCiTkf1i8gr4Cu/ITpFv9YFRZ0REhuCokA7V+/t+IsR
+         aqxo9DjyZOAYFUW2pMxPEhwqLdbP/OOKIJKpjBcZq2ETWQNCiAbEje8BsNC1xv3GWz
+         KGHIEDZgO3jMg==
+Message-ID: <f636f0470c83d7b39a7a223dbb20d2e7cb6b5f86.camel@kernel.org>
+Subject: Re: [PATCH 1 2/3] NFSD: Finish converting the NFSv2 GETACL result
+ encoder
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
-Date:   Mon, 17 Oct 2022 08:55:33 -0400
-In-Reply-To: <166593521604.1710.10648202421284171508.stgit@klimt.1015granger.net>
+Date:   Mon, 17 Oct 2022 09:02:32 -0400
+In-Reply-To: <166593522241.1710.1607659813797998942.stgit@klimt.1015granger.net>
 References: <166593521604.1710.10648202421284171508.stgit@klimt.1015granger.net>
+         <166593522241.1710.1607659813797998942.stgit@klimt.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
@@ -51,42 +53,55 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, 2022-10-16 at 11:46 -0400, Chuck Lever wrote:
-> Clean up after commit 22700f3c6df5 ("SUNRPC: Improve ordering of
-> transport processing").
+On Sun, 2022-10-16 at 11:47 -0400, Chuck Lever wrote:
+> The xdr_stream conversion inadvertently left some code that set the
+> page_len of the send buffer. The XDR stream encoders should handle
+> this automatically now.
 >=20
+> This oversight adds garbage past the end of the Reply message.
+> Clients typically ignore the garbage, but NFSD does not need to send
+> it, as it leaks stale memory contents onto the wire.
+>=20
+> Fixes: f8cba47344f7 ("NFSD: Update the NFSv2 GETACL result encoder to use=
+ struct xdr_stream")
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  include/linux/sunrpc/svc.h |    1 -
->  net/sunrpc/svc.c           |    1 -
->  2 files changed, 2 deletions(-)
+>  fs/nfsd/nfs2acl.c |   10 ----------
+>  1 file changed, 10 deletions(-)
 >=20
-> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
-> index daecb009c05b..3b59eb9cf884 100644
-> --- a/include/linux/sunrpc/svc.h
-> +++ b/include/linux/sunrpc/svc.h
-> @@ -311,7 +311,6 @@ struct svc_rqst {
->  	struct auth_domain *	rq_gssclient;	/* "gss/"-style peer info */
->  	struct svc_cacherep *	rq_cacherep;	/* cache info */
->  	struct task_struct	*rq_task;	/* service thread */
-> -	spinlock_t		rq_lock;	/* per-request lock */
->  	struct net		*rq_bc_net;	/* pointer to backchannel's
->  						 * net namespace
->  						 */
-> diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
-> index 7c9a0d0b1230..d2bb1d04c524 100644
-> --- a/net/sunrpc/svc.c
-> +++ b/net/sunrpc/svc.c
-> @@ -638,7 +638,6 @@ svc_rqst_alloc(struct svc_serv *serv, struct svc_pool=
- *pool, int node)
->  		return rqstp;
+> diff --git a/fs/nfsd/nfs2acl.c b/fs/nfsd/nfs2acl.c
+> index 9edd3c1a30fb..87f224cd30a8 100644
+> --- a/fs/nfsd/nfs2acl.c
+> +++ b/fs/nfsd/nfs2acl.c
+> @@ -246,7 +246,6 @@ nfsaclsvc_encode_getaclres(struct svc_rqst *rqstp, st=
+ruct xdr_stream *xdr)
+>  	struct nfsd3_getaclres *resp =3D rqstp->rq_resp;
+>  	struct dentry *dentry =3D resp->fh.fh_dentry;
+>  	struct inode *inode;
+> -	int w;
 > =20
->  	__set_bit(RQ_BUSY, &rqstp->rq_flags);
-> -	spin_lock_init(&rqstp->rq_lock);
->  	rqstp->rq_server =3D serv;
->  	rqstp->rq_pool =3D pool;
+>  	if (!svcxdr_encode_stat(xdr, resp->status))
+>  		return false;
+> @@ -260,15 +259,6 @@ nfsaclsvc_encode_getaclres(struct svc_rqst *rqstp, s=
+truct xdr_stream *xdr)
+>  	if (xdr_stream_encode_u32(xdr, resp->mask) < 0)
+>  		return false;
 > =20
+> -	rqstp->rq_res.page_len =3D w =3D nfsacl_size(
+> -		(resp->mask & NFS_ACL)   ? resp->acl_access  : NULL,
+> -		(resp->mask & NFS_DFACL) ? resp->acl_default : NULL);
+> -	while (w > 0) {
+> -		if (!*(rqstp->rq_next_page++))
+> -			return true;
+> -		w -=3D PAGE_SIZE;
+> -	}
+> -
+>  	if (!nfs_stream_encode_acl(xdr, inode, resp->acl_access,
+>  				   resp->mask & NFS_ACL, 0))
+>  		return false;
 >=20
 >=20
+
+That makes a lot more sense now.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
