@@ -2,80 +2,140 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D5576002F2
-	for <lists+linux-nfs@lfdr.de>; Sun, 16 Oct 2022 20:51:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 238596005CC
+	for <lists+linux-nfs@lfdr.de>; Mon, 17 Oct 2022 05:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229464AbiJPSvG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 16 Oct 2022 14:51:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
+        id S232550AbiJQDl1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 16 Oct 2022 23:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbiJPSvF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Oct 2022 14:51:05 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074FD31369
-        for <linux-nfs@vger.kernel.org>; Sun, 16 Oct 2022 11:51:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AB8BEB80D2F
-        for <linux-nfs@vger.kernel.org>; Sun, 16 Oct 2022 18:51:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D1AC433C1;
-        Sun, 16 Oct 2022 18:51:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1665946261;
-        bh=R+pbfQYQg9KAfOO2B8frGp5NhKlHbUIMaSxfrz1yx0w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NDhDOp6b7PLwVOCweC+A4/GyPe5HMGpwCiHt66lNlIhO3RZczlWzx1byXbZLUaGMP
-         pwUtmtAcgbfO/p9hotTa8MYS7/GGiodTH4imaxnJs6OCkRZd1dx0U4glOtxFT3oxuK
-         3IPgn5XCCpyLX6iqOLPuEpNPBxa7lquyiUCqpo4/czAUalz7uqF2DfCcu7p8362ixs
-         ZMzEFSYl0a1HzPQvFoakSkjd2WC2NGOxNITCvb7QGDm71LVhurCqVLaLlPG1ddY+y/
-         C5O17luLIXbzI1hkFINHd6Ol12NZPH4Fdbz8ETH7bkWD5gl/kxa/MOlMezcyi/6TxK
-         U/LAEPDezmRag==
-From:   trondmy@kernel.org
-To:     Anna Schumaker <anna.schumaker@netapp.com>
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH 3/3] NFSv4.1: We must always send RECLAIM_COMPLETE after a reboot
-Date:   Sun, 16 Oct 2022 14:44:33 -0400
-Message-Id: <20221016184433.31213-3-trondmy@kernel.org>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221016184433.31213-2-trondmy@kernel.org>
-References: <20221016184433.31213-1-trondmy@kernel.org>
- <20221016184433.31213-2-trondmy@kernel.org>
+        with ESMTP id S232552AbiJQDlY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 16 Oct 2022 23:41:24 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 465494F19F
+        for <linux-nfs@vger.kernel.org>; Sun, 16 Oct 2022 20:41:23 -0700 (PDT)
+Received: from dggpeml500023.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MrN4F4RxyzpWR7;
+        Mon, 17 Oct 2022 11:38:05 +0800 (CST)
+Received: from dggpeml500016.china.huawei.com (7.185.36.70) by
+ dggpeml500023.china.huawei.com (7.185.36.114) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 17 Oct 2022 11:41:21 +0800
+Received: from [10.174.176.102] (10.174.176.102) by
+ dggpeml500016.china.huawei.com (7.185.36.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 17 Oct 2022 11:41:21 +0800
+Message-ID: <7f766982-5719-03bf-2d2e-044996e09f7a@huawei.com>
+Date:   Mon, 17 Oct 2022 11:41:20 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH] nfs-blkmapd: PID file read by systemd failed
+From:   zhanchengbin <zhanchengbin1@huawei.com>
+To:     <steved@redhat.com>
+CC:     <linux-nfs@vger.kernel.org>, <liuzhiqiang26@huawei.com>,
+        linfeilong <linfeilong@huawei.com>
+References: <68672de3-9fb5-e90b-814f-850185762029@huawei.com>
+In-Reply-To: <68672de3-9fb5-e90b-814f-850185762029@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.174.176.102]
+X-ClientProxiedBy: dggpeml500012.china.huawei.com (7.185.36.15) To
+ dggpeml500016.china.huawei.com (7.185.36.70)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+friendly ping, thanks.
 
-Currently, we are only guaranteed to send RECLAIM_COMPLETE if we have
-open state to recover. Fix the client to always send RECLAIM_COMPLETE
-after setting up the lease.
-
-Fixes: fce5c838e133 ("nfs41: RECLAIM_COMPLETE functionality")
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/nfs4state.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-index 0b6bd6336c98..a629d7db9420 100644
---- a/fs/nfs/nfs4state.c
-+++ b/fs/nfs/nfs4state.c
-@@ -1787,6 +1787,7 @@ static void nfs4_state_mark_reclaim_helper(struct nfs_client *clp,
- 
- static void nfs4_state_start_reclaim_reboot(struct nfs_client *clp)
- {
-+	set_bit(NFS4CLNT_RECLAIM_REBOOT, &clp->cl_state);
- 	/* Mark all delegations for reclaim */
- 	nfs_delegation_mark_reclaim(clp);
- 	nfs4_state_mark_reclaim_helper(clp, nfs4_state_mark_reclaim_reboot);
--- 
-2.37.3
-
+On 2022/10/11 17:33, zhanchengbin wrote:
+> When started nfs-blkmap.service, the PID file can't be opened, The
+> cause is that the child process does not create the PID file before
+> the systemd reads the PID file.
+> Adding "ExecStartPost=/bin/sleep 0.1" to
+> /usr/lib/systemd/system/nfs-blkmap.service will probably solve this
+> problem, However, there is no guarantee that the above solutions are
+> effective under high cpu pressure.So replace the daemon function with
+> the fork function, and put the behavior of creating the PID file in
+> the parent process to solve the above problems.
+> 
+> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
+> Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> ---
+>   utils/blkmapd/device-discovery.c | 48 +++++++++++++++++++++-----------
+>   1 file changed, 32 insertions(+), 16 deletions(-)
+> 
+> diff --git a/utils/blkmapd/device-discovery.c 
+> b/utils/blkmapd/device-discovery.c
+> index 2736ac89..4d97ac72 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -507,28 +507,44 @@ int main(int argc, char **argv)
+>       if (fg) {
+>           openlog("blkmapd", LOG_PERROR, 0);
+>       } else {
+> -        if (daemon(0, 0) != 0) {
+> -            fprintf(stderr, "Daemonize failed\n");
+> +        pid_t pid = fork();
+> +        if (pid < 0) {
+> +            fprintf(stderr, "fork error\n");
+>               exit(1);
+> +        } else if (pid != 0) {
+> +            pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> +            if (pidfd < 0) {
+> +                fprintf(stderr, "Create pid file %s failed\n", PID_FILE);
+> +                exit(1);
+> +            }
+> +
+> +            if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> +                fprintf(stderr, "Already running; Exiting!");
+> +                close(pidfd);
+> +                exit(1);
+> +            }
+> +            if (ftruncate(pidfd, 0) < 0)
+> +                fprintf(stderr, "ftruncate on %s failed: m\n", PID_FILE);
+> +            sprintf(pidbuf, "%d\n", pid);
+> +            if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> +                fprintf(stderr, "write on %s failed: m\n", PID_FILE);
+> +            exit(0);
+>           }
+> 
+> -        openlog("blkmapd", LOG_PID, 0);
+> -        pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> -        if (pidfd < 0) {
+> -            BL_LOG_ERR("Create pid file %s failed\n", PID_FILE);
+> -            exit(1);
+> +        (void)setsid();
+> +        if (chdir("/")) {
+> +            fprintf(stderr, "chdir error\n");
+>           }
+> +        int fd = open("/dev/null", O_RDWR, 0);
+> +        if (fd >= 0) {
+> +            (void)dup2(fd, STDIN_FILENO);
+> +            (void)dup2(fd, STDOUT_FILENO);
+> +            (void)dup2(fd, STDERR_FILENO);
+> 
+> -        if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> -            BL_LOG_ERR("Already running; Exiting!");
+> -            close(pidfd);
+> -            exit(1);
+> +            (void)close(fd);
+>           }
+> -        if (ftruncate(pidfd, 0) < 0)
+> -            BL_LOG_WARNING("ftruncate on %s failed: m\n", PID_FILE);
+> -        sprintf(pidbuf, "%d\n", getpid());
+> -        if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> -            BL_LOG_WARNING("write on %s failed: m\n", PID_FILE);
+> +
+> +        openlog("blkmapd", LOG_PID, 0);
+>       }
+> 
+>       signal(SIGINT, sig_die);
