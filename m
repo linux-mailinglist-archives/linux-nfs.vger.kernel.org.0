@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21C9E6033AA
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 21:59:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D12F6033A9
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 21:59:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229959AbiJRT7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        id S229947AbiJRT7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
         Tue, 18 Oct 2022 15:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37630 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230059AbiJRT7D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 15:59:03 -0400
+        with ESMTP id S230097AbiJRT7I (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 15:59:08 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C03959AFDE
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 12:59:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE20915CF
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 12:59:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6D975B82102
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 19:58:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE8DC433C1;
-        Tue, 18 Oct 2022 19:58:57 +0000 (UTC)
-Subject: [PATCH v4 6/7] NFSD: Clean up nfs4_preprocess_stateid_op() call sites
+        by ams.source.kernel.org (Postfix) with ESMTPS id AD878B82103
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 19:59:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CEEC433C1;
+        Tue, 18 Oct 2022 19:59:04 +0000 (UTC)
+Subject: [PATCH v4 7/7] NFSD: Trace delegation revocations
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de
-Date:   Tue, 18 Oct 2022 15:58:57 -0400
-Message-ID: <166612313715.1291.18336518330196681476.stgit@manet.1015granger.net>
+Date:   Tue, 18 Oct 2022 15:59:03 -0400
+Message-ID: <166612314338.1291.6816037057097504104.stgit@manet.1015granger.net>
 In-Reply-To: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
 References: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
 User-Agent: StGit/1.5.dev2+g9ce680a5
@@ -42,101 +42,102 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove the lame-duck dprintk()s around nfs4_preprocess_stateid_op()
-call sites.
+Delegation revocation is an exceptional event that is not otherwise
+visible externally (eg, no network traffic is emitted). Generate a
+trace record when it occurs so that revocation can be observed or
+other activity can be triggered. Example:
+
+nfsd-1104  [005]  1912.002544: nfsd_stid_revoke:        client 633c9343:4e82788d stateid 00000003:00000001 ref=2 type=DELEG
+
+Trace infrastructure is provided for subsequent additional tracing
+related to nfs4_stid activity.
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
 Tested-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c |   31 +++++++------------------------
- 1 file changed, 7 insertions(+), 24 deletions(-)
+ fs/nfsd/nfs4state.c |    2 ++
+ fs/nfsd/trace.h     |   55 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index d0d976f847ca..42b81e88ea14 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -951,12 +951,7 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					&read->rd_stateid, RD_STATE,
- 					&read->rd_nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_read: couldn't process stateid!\n");
--		goto out;
--	}
--	status = nfs_ok;
--out:
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index a63334ad61f6..c37f07bb874d 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -1401,6 +1401,8 @@ static void revoke_delegation(struct nfs4_delegation *dp)
+ 
+ 	WARN_ON(!list_empty(&dp->dl_recall_lru));
+ 
++	trace_nfsd_stid_revoke(&dp->dl_stid);
 +
- 	read->rd_rqstp = rqstp;
- 	read->rd_fhp = &cstate->current_fh;
- 	return status;
-@@ -1125,10 +1120,8 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		status = nfs4_preprocess_stateid_op(rqstp, cstate,
- 				&cstate->current_fh, &setattr->sa_stateid,
- 				WR_STATE, NULL, NULL);
--		if (status) {
--			dprintk("NFSD: nfsd4_setattr: couldn't process stateid!\n");
-+		if (status)
- 			return status;
--		}
- 	}
- 	err = fh_want_write(&cstate->current_fh);
- 	if (err)
-@@ -1176,10 +1169,8 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			       write->wr_offset, cnt);
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 						stateid, WR_STATE, &nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_write: couldn't process stateid!\n");
-+	if (status)
- 		return status;
--	}
+ 	if (clp->cl_minorversion) {
+ 		dp->dl_stid.sc_type = NFS4_REVOKED_DELEG_STID;
+ 		refcount_inc(&dp->dl_stid.sc_count);
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index 4921144880d3..23fb39c957af 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -561,6 +561,61 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
+ DEFINE_STATESEQID_EVENT(preprocess);
+ DEFINE_STATESEQID_EVENT(open_confirm);
  
- 	write->wr_how_written = write->wr_stable_how;
- 
-@@ -1210,17 +1201,13 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->save_fh,
- 					    src_stateid, RD_STATE, src, NULL);
--	if (status) {
--		dprintk("NFSD: %s: couldn't process src stateid!\n", __func__);
-+	if (status)
- 		goto out;
--	}
- 
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    dst_stateid, WR_STATE, dst, NULL);
--	if (status) {
--		dprintk("NFSD: %s: couldn't process dst stateid!\n", __func__);
-+	if (status)
- 		goto out_put_src;
--	}
- 
- 	/* fix up for NFS-specific error code */
- 	if (!S_ISREG(file_inode((*src)->nf_file)->i_mode) ||
-@@ -1955,10 +1942,8 @@ nfsd4_fallocate(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    &fallocate->falloc_stateid,
- 					    WR_STATE, &nf, NULL);
--	if (status != nfs_ok) {
--		dprintk("NFSD: nfsd4_fallocate: couldn't process stateid!\n");
-+	if (status != nfs_ok)
- 		return status;
--	}
- 
- 	status = nfsd4_vfs_fallocate(rqstp, &cstate->current_fh, nf->nf_file,
- 				     fallocate->falloc_offset,
-@@ -2014,10 +1999,8 @@ nfsd4_seek(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    &seek->seek_stateid,
- 					    RD_STATE, &nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_seek: couldn't process stateid!\n");
-+	if (status)
- 		return status;
--	}
- 
- 	switch (seek->seek_whence) {
- 	case NFS4_CONTENT_DATA:
++TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
++TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
++TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
++TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
++TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
++TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
++TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
++
++#define show_stid_type(x)						\
++	__print_flags(x, "|",						\
++		{ NFS4_OPEN_STID,		"OPEN" },		\
++		{ NFS4_LOCK_STID,		"LOCK" },		\
++		{ NFS4_DELEG_STID,		"DELEG" },		\
++		{ NFS4_CLOSED_STID,		"CLOSED" },		\
++		{ NFS4_REVOKED_DELEG_STID,	"REVOKED" },		\
++		{ NFS4_CLOSED_DELEG_STID,	"CLOSED_DELEG" },	\
++		{ NFS4_LAYOUT_STID,		"LAYOUT" })
++
++DECLARE_EVENT_CLASS(nfsd_stid_class,
++	TP_PROTO(
++		const struct nfs4_stid *stid
++	),
++	TP_ARGS(stid),
++	TP_STRUCT__entry(
++		__field(unsigned long, sc_type)
++		__field(int, sc_count)
++		__field(u32, cl_boot)
++		__field(u32, cl_id)
++		__field(u32, si_id)
++		__field(u32, si_generation)
++	),
++	TP_fast_assign(
++		const stateid_t *stp = &stid->sc_stateid;
++
++		__entry->sc_type = stid->sc_type;
++		__entry->sc_count = refcount_read(&stid->sc_count);
++		__entry->cl_boot = stp->si_opaque.so_clid.cl_boot;
++		__entry->cl_id = stp->si_opaque.so_clid.cl_id;
++		__entry->si_id = stp->si_opaque.so_id;
++		__entry->si_generation = stp->si_generation;
++	),
++	TP_printk("client %08x:%08x stateid %08x:%08x ref=%d type=%s",
++		__entry->cl_boot, __entry->cl_id,
++		__entry->si_id, __entry->si_generation,
++		__entry->sc_count, show_stid_type(__entry->sc_type)
++	)
++);
++
++#define DEFINE_STID_EVENT(name)					\
++DEFINE_EVENT(nfsd_stid_class, nfsd_stid_##name,			\
++	TP_PROTO(const struct nfs4_stid *stid),			\
++	TP_ARGS(stid))
++
++DEFINE_STID_EVENT(revoke);
++
+ DECLARE_EVENT_CLASS(nfsd_clientid_class,
+ 	TP_PROTO(const clientid_t *clid),
+ 	TP_ARGS(clid),
 
 
