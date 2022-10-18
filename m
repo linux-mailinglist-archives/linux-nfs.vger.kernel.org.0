@@ -2,41 +2,41 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F9A5602A88
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 13:48:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B24602A87
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 13:48:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbiJRLsG (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Oct 2022 07:48:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36676 "EHLO
+        id S229621AbiJRLsC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Oct 2022 07:48:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230166AbiJRLsF (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 07:48:05 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F4197BBE19
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 04:48:03 -0700 (PDT)
+        with ESMTP id S229692AbiJRLsB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 07:48:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABB366A4A
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 04:48:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 74889CE1D31
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1728861500
         for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 11:48:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E44C433D6;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11CA1C433D7;
         Tue, 18 Oct 2022 11:47:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666093678;
-        bh=dRSValb3GeJrjio1J4qkphMyw1UK1EVNoTEVN+pM+2k=;
+        s=k20201202; t=1666093679;
+        bh=FfsSVlPrH2TcBzSsTWCOr8rajYOFPeh5IshXhO5BkEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oEWcMWtOIhupcV2/rJYgfjY27Mha+5GPnr0Ivr1kb/Q6W5TNobPk6iWOmmRrC6RQM
-         YFC8geIO0x7XJDg2h11bkXux/TQ36UhpFagpiXNVLw1ierBAMpE5BRYaFbS7L6vlsl
-         aH3bAWZEt/+dhPzCxc4MZlN0hWiiAbpTRp0dbq6+Aahd+wmq2BSipHz1v4EsBIojGJ
-         1TxD1J+AEWI90oIRlp8paqzwXCNFD3guNLl0ernrXGdd9qMgGLNyexDT773Ww+UU5D
-         /aKkY410JdvlcAbgmNYfWYF39NjcqyrDmNe4Xc1Kl/e0c2WqFUSQ1wBKj4MFF6qCUv
-         rt3cu8phgFIFw==
+        b=GS/yxqfRRJHhlGL5ZsbCJ0vzxqG+5RMEBjs3Zb6LQzIU/lg73ewX1sv2KrwAAKNVL
+         exzpqmvbHBdl9U7GAVy0Y8e7QUP1j4vo8wsiidEzPGkEOJT0I+sxK7NR3bVIVhtMSW
+         4+4tKgVvMx4plUNwwHJkYbT4HhaX/KiRWPobe6jZ6z3QfcuBeZ6qYc0MzqAbVQjbmd
+         VB44gxsraVf7ugV5SKf7CyaXIsTnxOeBDY5T/8LxrZgnDzz0BB2kLb3dspwvw/akTS
+         kYextrJdPiN3p9XabPwtXrjqmRAsTwW7NjVL+C6CqmSsBsmQRLfH3rLQzBFNCILJlq
+         wuhoNHKZKWv3w==
 From:   Jeff Layton <jlayton@kernel.org>
 To:     chuck.lever@oracle.com
 Cc:     tom@talpey.com, linux-nfs@vger.kernel.org
-Subject: [PATCH v3 2/3] nfsd: move nfserrno() to vfs.c
-Date:   Tue, 18 Oct 2022 07:47:55 -0400
-Message-Id: <20221018114756.23679-2-jlayton@kernel.org>
+Subject: [PATCH v3 3/3] nfsd: allow disabling NFSv2 at compile time
+Date:   Tue, 18 Oct 2022 07:47:56 -0400
+Message-Id: <20221018114756.23679-3-jlayton@kernel.org>
 X-Mailer: git-send-email 2.37.3
 In-Reply-To: <20221018114756.23679-1-jlayton@kernel.org>
 References: <20221018114756.23679-1-jlayton@kernel.org>
@@ -51,242 +51,147 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-nfserrno() is common to all nfs versions, but nfsproc.c is specifically
-for NFSv2. Move it to vfs.c, and the prototype to vfs.h.
+rpc.nfsd stopped supporting NFSv2 a year ago. Take the next logical
+step toward deprecating it and allow NFSv2 support to be compiled out.
 
-While we're in here, remove the #ifdef EDQUOT check in this function.
-It's apparently a holdover from the initial merge of the nfsd code in
-1997. No other place in the kernel checks that that symbol is defined
-before using it, so I think we can dispense with it here.
+Add a new CONFIG_NFSD_V2 option that can be turned off and rework the
+CONFIG_NFSD_V?_ACL option dependencies. Add a description that
+discourages enabling it.
+
+Also, change the description of CONFIG_NFSD to state that the always-on
+version is now 3 instead of 2.
+
+Finally, add an #ifdef around "case 2:" in __write_versions. When NFSv2
+is disabled at compile time, this should make the kernel ignore attempts
+to disable it at runtime, but still error out when trying to enable it.
 
 Signed-off-by: Jeff Layton <jlayton@kernel.org>
 ---
- fs/nfsd/blocklayout.c    |  1 +
- fs/nfsd/blocklayoutxdr.c |  1 +
- fs/nfsd/export.h         |  1 -
- fs/nfsd/flexfilelayout.c |  1 +
- fs/nfsd/nfs4idmap.c      |  1 +
- fs/nfsd/nfsproc.c        | 62 ---------------------------------------
- fs/nfsd/vfs.c            | 63 ++++++++++++++++++++++++++++++++++++++++
- fs/nfsd/vfs.h            |  1 +
- 8 files changed, 68 insertions(+), 63 deletions(-)
+ fs/nfsd/Kconfig  | 19 +++++++++++++++----
+ fs/nfsd/Makefile |  5 +++--
+ fs/nfsd/nfsctl.c |  2 ++
+ fs/nfsd/nfsd.h   |  3 +--
+ fs/nfsd/nfssvc.c |  6 ++++++
+ 5 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/fs/nfsd/blocklayout.c b/fs/nfsd/blocklayout.c
-index b6d01d51a746..04697f8dc37d 100644
---- a/fs/nfsd/blocklayout.c
-+++ b/fs/nfsd/blocklayout.c
-@@ -12,6 +12,7 @@
- #include "blocklayoutxdr.h"
- #include "pnfs.h"
- #include "filecache.h"
-+#include "vfs.h"
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index f6a2fd3015e7..7c441f2bd444 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -8,6 +8,7 @@ config NFSD
+ 	select SUNRPC
+ 	select EXPORTFS
+ 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
++	select NFS_ACL_SUPPORT if NFSD_V3_ACL
+ 	depends on MULTIUSER
+ 	help
+ 	  Choose Y here if you want to allow other computers to access
+@@ -26,19 +27,29 @@ config NFSD
  
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
+ 	  Below you can choose which versions of the NFS protocol are
+ 	  available to clients mounting the NFS server on this system.
+-	  Support for NFS version 2 (RFC 1094) is always available when
++	  Support for NFS version 3 (RFC 1813) is always available when
+ 	  CONFIG_NFSD is selected.
  
-diff --git a/fs/nfsd/blocklayoutxdr.c b/fs/nfsd/blocklayoutxdr.c
-index 442543304930..8e9c1a0f8d38 100644
---- a/fs/nfsd/blocklayoutxdr.c
-+++ b/fs/nfsd/blocklayoutxdr.c
-@@ -9,6 +9,7 @@
+ 	  If unsure, say N.
  
- #include "nfsd.h"
- #include "blocklayoutxdr.h"
-+#include "vfs.h"
+-config NFSD_V2_ACL
+-	bool
++config NFSD_V2
++	bool "NFS server support for NFS version 2 (DEPRECATED)"
+ 	depends on NFSD
++	default n
++	help
++	  NFSv2 (RFC 1094) was the first publicly-released version of NFS.
++	  Unless you are hosting ancient (1990's era) NFS clients, you don't
++	  need this.
++
++	  If unsure, say N.
++
++config NFSD_V2_ACL
++	bool "NFS server support for the NFSv2 ACL protocol extension"
++	depends on NFSD_V2
  
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
+ config NFSD_V3_ACL
+ 	bool "NFS server support for the NFSv3 ACL protocol extension"
+ 	depends on NFSD
+-	select NFSD_V2_ACL
+ 	help
+ 	  Solaris NFS servers support an auxiliary NFSv3 ACL protocol that
+ 	  never became an official part of the NFS version 3 protocol.
+diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
+index 805c06d5f1b4..6fffc8f03f74 100644
+--- a/fs/nfsd/Makefile
++++ b/fs/nfsd/Makefile
+@@ -10,9 +10,10 @@ obj-$(CONFIG_NFSD)	+= nfsd.o
+ # this one should be compiled first, as the tracing macros can easily blow up
+ nfsd-y			+= trace.o
  
-diff --git a/fs/nfsd/export.h b/fs/nfsd/export.h
-index ee0e3aba4a6e..d03f7f6a8642 100644
---- a/fs/nfsd/export.h
-+++ b/fs/nfsd/export.h
-@@ -115,7 +115,6 @@ struct svc_export *	rqst_find_fsidzero_export(struct svc_rqst *);
- int			exp_rootfh(struct net *, struct auth_domain *,
- 					char *path, struct knfsd_fh *, int maxsize);
- __be32			exp_pseudoroot(struct svc_rqst *, struct svc_fh *);
--__be32			nfserrno(int errno);
+-nfsd-y 			+= nfssvc.o nfsctl.o nfsproc.o nfsfh.o vfs.o \
+-			   export.o auth.o lockd.o nfscache.o nfsxdr.o \
++nfsd-y 			+= nfssvc.o nfsctl.o nfsfh.o vfs.o \
++			   export.o auth.o lockd.o nfscache.o \
+ 			   stats.o filecache.o nfs3proc.o nfs3xdr.o
++nfsd-$(CONFIG_NFSD_V2) += nfsproc.o nfsxdr.o
+ nfsd-$(CONFIG_NFSD_V2_ACL) += nfs2acl.o
+ nfsd-$(CONFIG_NFSD_V3_ACL) += nfs3acl.o
+ nfsd-$(CONFIG_NFSD_V4)	+= nfs4proc.o nfs4xdr.o nfs4state.o nfs4idmap.o \
+diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
+index 68ed42fd29fc..d1e581a60480 100644
+--- a/fs/nfsd/nfsctl.c
++++ b/fs/nfsd/nfsctl.c
+@@ -581,7 +581,9 @@ static ssize_t __write_versions(struct file *file, char *buf, size_t size)
  
- static inline void exp_put(struct svc_export *exp)
- {
-diff --git a/fs/nfsd/flexfilelayout.c b/fs/nfsd/flexfilelayout.c
-index 070f90ed09b6..3ca5304440ff 100644
---- a/fs/nfsd/flexfilelayout.c
-+++ b/fs/nfsd/flexfilelayout.c
-@@ -15,6 +15,7 @@
+ 			cmd = sign == '-' ? NFSD_CLEAR : NFSD_SET;
+ 			switch(num) {
++#ifdef CONFIG_NFSD_V2
+ 			case 2:
++#endif
+ 			case 3:
+ 				nfsd_vers(nn, num, cmd);
+ 				break;
+diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
+index 09726c5b9a31..93b42ef9ed91 100644
+--- a/fs/nfsd/nfsd.h
++++ b/fs/nfsd/nfsd.h
+@@ -64,8 +64,7 @@ struct readdir_cd {
  
- #include "flexfilelayoutxdr.h"
- #include "pnfs.h"
-+#include "vfs.h"
  
- #define NFSDDBG_FACILITY	NFSDDBG_PNFS
- 
-diff --git a/fs/nfsd/nfs4idmap.c b/fs/nfsd/nfs4idmap.c
-index e70a1a2999b7..5e9809aff37e 100644
---- a/fs/nfsd/nfs4idmap.c
-+++ b/fs/nfsd/nfs4idmap.c
-@@ -41,6 +41,7 @@
- #include "idmap.h"
- #include "nfsd.h"
- #include "netns.h"
-+#include "vfs.h"
- 
- /*
-  * Turn off idmapping when using AUTH_SYS.
-diff --git a/fs/nfsd/nfsproc.c b/fs/nfsd/nfsproc.c
-index 82b3ddeacc33..52fc222c34f2 100644
---- a/fs/nfsd/nfsproc.c
-+++ b/fs/nfsd/nfsproc.c
-@@ -848,65 +848,3 @@ const struct svc_version nfsd_version2 = {
- 	.vs_dispatch	= nfsd_dispatch,
- 	.vs_xdrsize	= NFS2_SVC_XDRSIZE,
+ extern struct svc_program	nfsd_program;
+-extern const struct svc_version	nfsd_version2, nfsd_version3,
+-				nfsd_version4;
++extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
+ extern struct mutex		nfsd_mutex;
+ extern spinlock_t		nfsd_drc_lock;
+ extern unsigned long		nfsd_drc_max_mem;
+diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
+index bfbd9f672f59..62e473b0ca52 100644
+--- a/fs/nfsd/nfssvc.c
++++ b/fs/nfsd/nfssvc.c
+@@ -91,8 +91,12 @@ unsigned long	nfsd_drc_mem_used;
+ #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
+ static struct svc_stat	nfsd_acl_svcstats;
+ static const struct svc_version *nfsd_acl_version[] = {
++# if defined(CONFIG_NFSD_V2_ACL)
+ 	[2] = &nfsd_acl_version2,
++# endif
++# if defined(CONFIG_NFSD_V3_ACL)
+ 	[3] = &nfsd_acl_version3,
++# endif
  };
--
--/*
-- * Map errnos to NFS errnos.
-- */
--__be32
--nfserrno (int errno)
--{
--	static struct {
--		__be32	nfserr;
--		int	syserr;
--	} nfs_errtbl[] = {
--		{ nfs_ok, 0 },
--		{ nfserr_perm, -EPERM },
--		{ nfserr_noent, -ENOENT },
--		{ nfserr_io, -EIO },
--		{ nfserr_nxio, -ENXIO },
--		{ nfserr_fbig, -E2BIG },
--		{ nfserr_stale, -EBADF },
--		{ nfserr_acces, -EACCES },
--		{ nfserr_exist, -EEXIST },
--		{ nfserr_xdev, -EXDEV },
--		{ nfserr_mlink, -EMLINK },
--		{ nfserr_nodev, -ENODEV },
--		{ nfserr_notdir, -ENOTDIR },
--		{ nfserr_isdir, -EISDIR },
--		{ nfserr_inval, -EINVAL },
--		{ nfserr_fbig, -EFBIG },
--		{ nfserr_nospc, -ENOSPC },
--		{ nfserr_rofs, -EROFS },
--		{ nfserr_mlink, -EMLINK },
--		{ nfserr_nametoolong, -ENAMETOOLONG },
--		{ nfserr_notempty, -ENOTEMPTY },
--#ifdef EDQUOT
--		{ nfserr_dquot, -EDQUOT },
--#endif
--		{ nfserr_stale, -ESTALE },
--		{ nfserr_jukebox, -ETIMEDOUT },
--		{ nfserr_jukebox, -ERESTARTSYS },
--		{ nfserr_jukebox, -EAGAIN },
--		{ nfserr_jukebox, -EWOULDBLOCK },
--		{ nfserr_jukebox, -ENOMEM },
--		{ nfserr_io, -ETXTBSY },
--		{ nfserr_notsupp, -EOPNOTSUPP },
--		{ nfserr_toosmall, -ETOOSMALL },
--		{ nfserr_serverfault, -ESERVERFAULT },
--		{ nfserr_serverfault, -ENFILE },
--		{ nfserr_io, -EREMOTEIO },
--		{ nfserr_stale, -EOPENSTALE },
--		{ nfserr_io, -EUCLEAN },
--		{ nfserr_perm, -ENOKEY },
--		{ nfserr_no_grace, -ENOGRACE},
--	};
--	int	i;
--
--	for (i = 0; i < ARRAY_SIZE(nfs_errtbl); i++) {
--		if (nfs_errtbl[i].syserr == errno)
--			return nfs_errtbl[i].nfserr;
--	}
--	WARN_ONCE(1, "nfsd: non-standard errno: %d\n", errno);
--	return nfserr_io;
--}
--
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index 83be89905cbf..bee6f4a32f3b 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -49,6 +49,69 @@
  
- #define NFSDDBG_FACILITY		NFSDDBG_FILEOP
+ #define NFSD_ACL_MINVERS            2
+@@ -116,7 +120,9 @@ static struct svc_stat	nfsd_acl_svcstats = {
+ #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
  
-+/**
-+ * nfserrno - Map Linux errnos to NFS errnos
-+ * @errno: POSIX(-ish) error code to be mapped
-+ *
-+ * Returns the appropriate (net-endian) nfserr_* (or nfs_ok if errno is 0). If
-+ * it's an error we don't expect, log it once and return nfserr_io.
-+ */
-+__be32
-+nfserrno (int errno)
-+{
-+	static struct {
-+		__be32	nfserr;
-+		int	syserr;
-+	} nfs_errtbl[] = {
-+		{ nfs_ok, 0 },
-+		{ nfserr_perm, -EPERM },
-+		{ nfserr_noent, -ENOENT },
-+		{ nfserr_io, -EIO },
-+		{ nfserr_nxio, -ENXIO },
-+		{ nfserr_fbig, -E2BIG },
-+		{ nfserr_stale, -EBADF },
-+		{ nfserr_acces, -EACCES },
-+		{ nfserr_exist, -EEXIST },
-+		{ nfserr_xdev, -EXDEV },
-+		{ nfserr_mlink, -EMLINK },
-+		{ nfserr_nodev, -ENODEV },
-+		{ nfserr_notdir, -ENOTDIR },
-+		{ nfserr_isdir, -EISDIR },
-+		{ nfserr_inval, -EINVAL },
-+		{ nfserr_fbig, -EFBIG },
-+		{ nfserr_nospc, -ENOSPC },
-+		{ nfserr_rofs, -EROFS },
-+		{ nfserr_mlink, -EMLINK },
-+		{ nfserr_nametoolong, -ENAMETOOLONG },
-+		{ nfserr_notempty, -ENOTEMPTY },
-+		{ nfserr_dquot, -EDQUOT },
-+		{ nfserr_stale, -ESTALE },
-+		{ nfserr_jukebox, -ETIMEDOUT },
-+		{ nfserr_jukebox, -ERESTARTSYS },
-+		{ nfserr_jukebox, -EAGAIN },
-+		{ nfserr_jukebox, -EWOULDBLOCK },
-+		{ nfserr_jukebox, -ENOMEM },
-+		{ nfserr_io, -ETXTBSY },
-+		{ nfserr_notsupp, -EOPNOTSUPP },
-+		{ nfserr_toosmall, -ETOOSMALL },
-+		{ nfserr_serverfault, -ESERVERFAULT },
-+		{ nfserr_serverfault, -ENFILE },
-+		{ nfserr_io, -EREMOTEIO },
-+		{ nfserr_stale, -EOPENSTALE },
-+		{ nfserr_io, -EUCLEAN },
-+		{ nfserr_perm, -ENOKEY },
-+		{ nfserr_no_grace, -ENOGRACE},
-+	};
-+	int	i;
-+
-+	for (i = 0; i < ARRAY_SIZE(nfs_errtbl); i++) {
-+		if (nfs_errtbl[i].syserr == errno)
-+			return nfs_errtbl[i].nfserr;
-+	}
-+	WARN_ONCE(1, "nfsd: non-standard errno: %d\n", errno);
-+	return nfserr_io;
-+}
-+
- /* 
-  * Called from nfsd_lookup and encode_dirent. Check if we have crossed 
-  * a mount point.
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index c98e13ec37b2..b556e9307d37 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -60,6 +60,7 @@ static inline void nfsd_attrs_free(struct nfsd_attrs *attrs)
- 	posix_acl_release(attrs->na_dpacl);
- }
- 
-+__be32		nfserrno (int errno);
- int		nfsd_cross_mnt(struct svc_rqst *rqstp, struct dentry **dpp,
- 		                struct svc_export **expp);
- __be32		nfsd_lookup(struct svc_rqst *, struct svc_fh *,
+ static const struct svc_version *nfsd_version[] = {
++#if defined(CONFIG_NFSD_V2)
+ 	[2] = &nfsd_version2,
++#endif
+ 	[3] = &nfsd_version3,
+ #if defined(CONFIG_NFSD_V4)
+ 	[4] = &nfsd_version4,
 -- 
 2.37.3
 
