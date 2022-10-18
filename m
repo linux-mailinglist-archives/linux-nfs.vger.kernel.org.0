@@ -2,326 +2,350 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23998602CE5
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 15:26:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E0C6602CED
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 15:28:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230502AbiJRN0c (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Oct 2022 09:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45806 "EHLO
+        id S229707AbiJRN2N (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Oct 2022 09:28:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230520AbiJRN0D (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 09:26:03 -0400
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2040.outbound.protection.outlook.com [40.107.95.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915531FFAD
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 06:25:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=faodUMIbG7dHWFcLiqaT4Frh5PHuXBENeSOiVauLOa3tiSOCRj/rWFBKUGv/IGIRU7iS3XfAnEJdJ83LO5YQlYkFElI08xuUdc1Fqk0pFG6zBpqm5DAaKzl9ty2+nru2lPJKQPTysPXyKuNoJnEBUtEqGgdTdPhVCV2qfaCPkGr7h9aRO6rrDNvz2aGfDLgPTVm9oyPcrWGJ8TUvMbpxDXe1bujyEkNkllT5lnLvUEW1QsDNJwe6qxw/kPUwH9rsWG3Wo20KH365KjIGmXssZvAxQBzNXgP6s9wla/XJG4uX66a+enFk0zaS6UY7wd5ERZ1toDXORZlRbWRmbIYVug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mJ06f/GHVNevz55w2cq5KSj/2d6Zb3fKScVuFxPPBI4=;
- b=PYDj9mYHSW1rROW8DPPuULK4UVhtGvXwDox76myI/fd43Ct4DkWZkPehO5nqFrNvhzXx8+IKTTDkQHupOE8XPR7Qc5wDPYjrB40RGcuMLUHkogA62Q+2BHM+A+2HxdclAshZ1hJiuluC9uQCUOYAAjRajIEPbTv4IiEQK21WRjE6EgF2q8A1o3POKniAWmtwRfwMoIIWbNdP/vACRyWssD3KzVXY6qnMRTC8Ci1xqK03aefb56Y4oOljnako1RrZyZIRoPZ9WXrforOfhA50LUqaJDlj8MvQozNde2KYv0iEDXhmwuUx5qmfDRd7KTRIWVc/SU+nBQsmuS8pPSKN2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
- dkim=pass header.d=talpey.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=talpey.com;
-Received: from SN6PR01MB4445.prod.exchangelabs.com (2603:10b6:805:e2::33) by
- CH0PR01MB7138.prod.exchangelabs.com (2603:10b6:610:eb::16) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.5723.26; Tue, 18 Oct 2022 13:25:19 +0000
-Received: from SN6PR01MB4445.prod.exchangelabs.com
- ([fe80::454c:df56:b524:13ef]) by SN6PR01MB4445.prod.exchangelabs.com
- ([fe80::454c:df56:b524:13ef%5]) with mapi id 15.20.5723.033; Tue, 18 Oct 2022
- 13:25:19 +0000
-Message-ID: <2b3d2faa-c430-b456-f7fb-25dd6273d71a@talpey.com>
-Date:   Tue, 18 Oct 2022 09:25:18 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.3
-Subject: Re: [PATCH 1/2] NFSD: add support for sending CB_RECALL_ANY
-Content-Language: en-US
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
-References: <1666070139-18843-1-git-send-email-dai.ngo@oracle.com>
- <1666070139-18843-2-git-send-email-dai.ngo@oracle.com>
-From:   Tom Talpey <tom@talpey.com>
-In-Reply-To: <1666070139-18843-2-git-send-email-dai.ngo@oracle.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BL1PR13CA0381.namprd13.prod.outlook.com
- (2603:10b6:208:2c0::26) To SN6PR01MB4445.prod.exchangelabs.com
- (2603:10b6:805:e2::33)
+        with ESMTP id S230413AbiJRN2J (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 09:28:09 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A72FA9B871
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 06:27:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 83590B81F29
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 13:27:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99D1C433C1;
+        Tue, 18 Oct 2022 13:27:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666099638;
+        bh=Hw25iHYy9Ln6C1+/UJkL5nQTGb6vLR25cK5bDQw59YY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=cGW0eMiQzW13bhYFVPWTFTqzlIIflM5l2hZBVRpqFRnRPoT0LdI2zuHdh7qlkLjrX
+         qqWcyV4WZb0SUj4a2aCtqnV9wFVs7zSFZ9fyJRvi9buXCUf1BSZYbc3QqEySadaR3W
+         dy/np8DUrMsVyEMcL5J0yzMaLuW0Rjw0rA78C7uGCa62LeiaoI4tIX7wDNDI0x58yv
+         SLSCU7kqPC1HpiTZJhV/MQ1cevZ3c5t0/7RqkzzTCCyYagdGC8xDZAfl5AVTXj1z8u
+         FW/DcXtGLoglIS8g3RlTIMWb8TJ5iWfZuio0s88+lsh2L/rQ9zR5Eiqbhfs2S42qsH
+         EMnTa+FZ9NqkQ==
+Message-ID: <f39180dcf51e2fa63ef61898cb0e046152b12558.camel@kernel.org>
+Subject: Re: [PATCH RFC] SUNRPC: Add support for RFC 8009 encryption types
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Cc:     dhowells@redhat.com, simo@redhat.com
+Date:   Tue, 18 Oct 2022 09:27:16 -0400
+In-Reply-To: <166603945959.14665.12642421516208884.stgit@manet.1015granger.net>
+References: <166603945959.14665.12642421516208884.stgit@manet.1015granger.net>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR01MB4445:EE_|CH0PR01MB7138:EE_
-X-MS-Office365-Filtering-Correlation-Id: 514765fb-55ed-4345-cee6-08dab10c33f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lnMo52XTmHay3ikT53TJ3Nj9D4/Y3PQ5cjNbnzlJgB9U0daoGsVUJGmkGmlSe0H7UJFUPz8EQCMHRyCPCg17bkdZAFFplHuXyRNUXlSQ2vRH0WJ8NxzrprpVQn0l1IUTy8oWqizi2RmynAnUY5kajqeQVWVzzgC+SVWBjjD92/UN4AG280HQm8DHABXCGhIqjaS1Ui0GZMD8iz4WbjGRsCN+f6yLKxyKLgRWK1xHfK+z8cqWKjJhi+/wItHJZGvmkb6DZ62UaYDvdt1z5YyMOqduZxUvv3xM4YNnEa19z3QMRugXm+hsagRCvenpzznzDN7+CffOybxptOwNfY2nnPUvWbYgW4yDKVZlri8C9ptNBHfQfimaQ5TKi0iedyhwn8XLmv0j7fOzcSBFLpkbChq3ooj+V52/fr2fv+kDpvKfXIXXupjWACeGA6fJexgvjZOOuHZfMIkcNr2llNZ40JB0WqFC89Et44cksdpuhIgWu000SEDOwCfRLQvHXk6Jg6kaxxPzJGvEzZnMjNjLLfKtoccPuBsnvveHTQvMUotnducuJV9xrcrNwAkULq70nozEEMEzELWQdvWxJOUILwyPUMBo2xwIY0lDgBeUHG9H6NhnIU344VSLB52Wo/g4OZRACLrSVWA4w2ARRggsG+tHJK5/dT3Fi+GcrNyuV6UcjFykzf6b+g5sLnuGQlzdZAcmHLYDgChQEvh201hiVGoWwlvdQwGYZtGi4dcWo7C/cr7cELxWLEOYsj12+ggp8S41Mu5CEXG+xgEtPqbPB3sifrs0j+/KLeX8IG45lSA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR01MB4445.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(39830400003)(346002)(366004)(376002)(396003)(451199015)(8936002)(26005)(6512007)(316002)(186003)(66556008)(66946007)(66476007)(36756003)(53546011)(4326008)(5660300002)(6506007)(52116002)(86362001)(31696002)(83380400001)(2906002)(41300700001)(8676002)(2616005)(6486002)(31686004)(38100700002)(38350700002)(478600001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cGF3cFBsbXlpT3pPbCsyWG1pZ0laWjFsb3JGMDVrU1hKOVR2NU9makVNM2di?=
- =?utf-8?B?dm0yT0RLMmI2aENSeVA1RXp2OVNiU3lZQW1pcnliM0FMTDBUcDR3N1ZRalg5?=
- =?utf-8?B?K3JwdlV6aHgvNFZjOFlOeHdMbm1COXFzMUN2Z1AxZEhUMlh0YTdrTE1qdE5W?=
- =?utf-8?B?Q1NNeHBhS0FSZUx5ZHFPLzJFU0FZb1hKWStpVk80Q29LeFNOdUJxYXJHamJE?=
- =?utf-8?B?QU9vb3BGSVI2bWlla3c2Qmx3TVpuc1lzcDFqWTRqUi9UTG5yNHF5VVpNNjhF?=
- =?utf-8?B?b0dndS9PcmYvcU5MT1JHZWNjZlBZTVhjL1lTMzUrYVNFNm1uRDdFM2RPRUQ2?=
- =?utf-8?B?ajBWTFovWFQyejRZcXZwMjdUZ2tGVGJyOUlyODZNc21RM2hkTVoydi8yWFlp?=
- =?utf-8?B?V3NqQmxTMHRSaFBBOC9HZ1ZPZjhGZUJQS0xPcCtIcWlDUUdVNUxPeU5nK0lV?=
- =?utf-8?B?eFBQVFlYVjhjb2RvWXRuaGdJOXhYNXg5NjcxUlU3NSt3dzBkWDRNTVRkUnlw?=
- =?utf-8?B?N0ZCK3lRMzhKaEN5emR0eGI3Q1VuUUxYeDhERVNmTjZrQ01pZVVxc1dsbGFE?=
- =?utf-8?B?VnhyUVJBU2xCRWd3aXkreW1pMG9kV0k5YjQ0VW1CRkdpWGhZYzJsNnhmc2pS?=
- =?utf-8?B?aTFDRGpiWVM5L3NDN0RwemJXUXRYMlJhSCszV2llM2RXbkowcGVWVU1BWWd3?=
- =?utf-8?B?WkRDWFRYK0NLZi9sVWU2bS9FTGFKLzhnMk5XVnJpeWRMMnFLUXhRbVdsdWpK?=
- =?utf-8?B?cnNxUmhnWXZ3blVaYkcrVDJKMVVSRnh6Y0pFSC9CSU9JU0c4NkJBUDhwbkJw?=
- =?utf-8?B?S3NEaFZUMzN6dXBZdmkxNWZWMHhJVFc2ZjJhUkN3ZEdWTlBZU2RneEsya0hQ?=
- =?utf-8?B?Q3pnc1JCdlFoTVF0TkZCb0RPVzk4aXhPY3Jwd1RIbnoxM09kSVJWNEU1eVF6?=
- =?utf-8?B?U2ZPVW9oUGRITVdiaklZN3U2V21SYXhUQndta2pIMGMvNk1TenVRdVBERThK?=
- =?utf-8?B?aWFKV2xWRUcwQ0NaakRtcnkyNWhFQms3bnhDYitPQWptWHM2Rmxoc2dRdkU2?=
- =?utf-8?B?Y1pjalRNdlFNWHlzSlBOUHRkUmU2Tnc1NVh5WlNiaUw4M2Z5MHZQem9tM0hF?=
- =?utf-8?B?MWdRUXhQL1ZaVFVxRnhmeldXVG43Z3crU055SVpCQmxMRnhJTVhJcU05T1Vt?=
- =?utf-8?B?VXdrTTdETm42UllhUU9SS2VOVlhBVnMrZ3QvdGlLWDlyemowWmR6MFErbUJK?=
- =?utf-8?B?cnh4V1Y5Q2ltdnVlMlpGcDZ5aktHNDh6OHV1SUE0YTlkQURDTlUwdXkwbHhS?=
- =?utf-8?B?dTgyUHlhSGt1ZzZzOEdlTlZnT3V3SkQ2SUluT3lLQ21lYWdhZExmWHhjYmkw?=
- =?utf-8?B?RzdJaEpieVEvMkM5QTA2ejJucW1QY1RFTVoxSnJudEtjd2cwL0EwdTJ4UFRt?=
- =?utf-8?B?U2Y3ajJHeEZBS1VwZW5xWkRTbjF6bVpnK0dZU1krSWRpSXBFODRpVWdpVzVk?=
- =?utf-8?B?aTJBQng2enVQWVNZRnJQLzllR1F3TVdWSlZTQ1h3R1VBZlk3NXFhY2RXN1pM?=
- =?utf-8?B?WEhrMVZ0ZzltNGc2bXI4UTdZNGNkTWJJWmpxSmtrd1lUWE5MSTBnbmxIZGhX?=
- =?utf-8?B?YTVtN2xUNDl4U0VIVXB6QmZ0eGdmUkFiamJUTk1adnlidnlKMGNGb2Q0UmtW?=
- =?utf-8?B?MVJienk4SmxPaUxYVmVHS3VVL0l3alZOS3l1b1k0bFVlTXg4WXUrNjJ4RWdT?=
- =?utf-8?B?ZDBka0F1b0htNnczVkd6bHFXMTJHSVRMcVpMR1dYZ3gvSCtXelI0aWlDdG5w?=
- =?utf-8?B?OTA3Um1jOWloOGdSSWFkcXhxN3pxWjNGdERPRitjMi9sbENham43SXp1VzZr?=
- =?utf-8?B?Ykd1YzZBQmVSc1NsZVNyYllLakRCTDZoTmlPa1dwYjlrVEczMjBiU0xsVTBT?=
- =?utf-8?B?b29GNGFmMlVTMThIWnBnZWdvNThhNjlHb2pzOTVqRktnd3NPR1ROeG1iV2Jz?=
- =?utf-8?B?M2pFVExsRERoQTFJQ2pzcTZIVXoveTRCWitTWUhDeXJ1WjZ6L1NvbVFxek1S?=
- =?utf-8?B?Uk9tamZlQ1hzakw1bzg2Z2pXc0lueWdRL0VnUTZ4UU5GOWZQODNSNEU4SWVx?=
- =?utf-8?Q?NkGZ8Jl+5pKSiTun+aBV5h5/6?=
-X-OriginatorOrg: talpey.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 514765fb-55ed-4345-cee6-08dab10c33f0
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR01MB4445.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 13:25:19.7208
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sS+lryZv54oDGCgMQbuoH1/pUyv1psgGFCUeJonZrpxliFouvy8vNUUU8R44chW8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR01MB7138
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 10/18/2022 1:15 AM, Dai Ngo wrote:
-> There is only one nfsd4_callback, cl_recall_any, added for each
-> nfs4_client. Access to it must be serialized. For now it's done
-> by the cl_recall_any_busy flag since it's used only by the
-> delegation shrinker. If there is another consumer of CB_RECALL_ANY
-> then a spinlock must be used.
-
-I'm curious if clients have shown any quirks with the operation in
-your testing. If the (Linux) server hasn't ever been sending it,
-then I'd expect some possible issues/quirks in the client.
-
-For example, do they really start handing back a significant number
-of useful delegations? Enough to satisfy the server's need without
-going to specific resource-based recalls?
-
-Tom.
-
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+On Mon, 2022-10-17 at 16:51 -0400, Chuck Lever wrote:
+> These new encryption types provide stronger security by replacing
+> the deprecated SHA-1 algorithm with SHA-2 in several key areas.
+> There already appears to be support for these new types in Linux
+> user space libraries and some KDCs.
+>=20
+> Quoting from RFC 8009 Section 1:
+> > The encryption and checksum types defined in this document are
+> > intended to support environments that desire to use SHA-256 or
+> > SHA-384 (defined in [FIPS180]) as the hash algorithm.  Differences
+> > between the encryption and checksum types defined in this document
+> > and the pre-existing Kerberos AES encryption and checksum types
+> > specified in [RFC3962] are:
+> >=20
+> > o The pseudorandom function (PRF) used by PBKDF2 is HMAC-SHA-256 or
+> >   HMAC-SHA-384.
+> >=20
+> > o A key derivation function from [SP800-108] using the SHA-256 or
+> >   SHA-384 hash algorithm is used to produce keys for encryption,
+> >   integrity protection, and checksum operations.
+> >=20
+> > o The HMAC is calculated over the cipher state concatenated with
+> >   the AES output, instead of being calculated over the confounder
+> >   and plaintext.  This allows the message receiver to verify the
+> >   integrity of the message before decrypting the message.
+> >=20
+> > o The HMAC algorithm uses the SHA-256 or SHA-384 hash algorithm for
+> >   integrity protection and checksum operations.
+>=20
+> I suspect that the third bullet point means that some code changes
+> (rather than just new encryption type parameters) will be needed.
+>=20
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->   fs/nfsd/nfs4callback.c | 64 ++++++++++++++++++++++++++++++++++++++++++++++++++
->   fs/nfsd/nfs4state.c    | 27 +++++++++++++++++++++
->   fs/nfsd/state.h        |  8 +++++++
->   fs/nfsd/xdr4cb.h       |  6 +++++
->   4 files changed, 105 insertions(+)
-> 
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index f0e69edf5f0f..03587e1397f4 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -329,6 +329,29 @@ static void encode_cb_recall4args(struct xdr_stream *xdr,
->   }
->   
->   /*
-> + * CB_RECALLANY4args
+>=20
+> The purpose of this RFC is to figure out the code. Testing and
+> resolving interoperability issues amongst clients and servers that
+> might or might not support these new enctypes will be the next step.
+>=20
+> This patch has been only been compile-tested for now.
+>=20
+>  include/linux/sunrpc/gss_krb5.h          |   16 +++++++++
+>  include/linux/sunrpc/gss_krb5_enctypes.h |   22 +++++++------
+>  net/sunrpc/auth_gss/gss_krb5_mech.c      |   52 ++++++++++++++++++++++++=
+++++++
+>  net/sunrpc/auth_gss/gss_krb5_seal.c      |    2 +
+>  net/sunrpc/auth_gss/gss_krb5_unseal.c    |    2 +
+>  net/sunrpc/auth_gss/gss_krb5_wrap.c      |    4 ++
+>  6 files changed, 87 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/include/linux/sunrpc/gss_krb5.h b/include/linux/sunrpc/gss_k=
+rb5.h
+> index 91f43d86879d..72ded91b7a86 100644
+> --- a/include/linux/sunrpc/gss_krb5.h
+> +++ b/include/linux/sunrpc/gss_krb5.h
+> @@ -150,6 +150,12 @@ enum seal_alg {
+>  	SEAL_ALG_DES3KD =3D 0x0002
+>  };
+> =20
+> +/*
+> + * These values are assigned by IANA and published via the
+> + * subregistry at the link below:
 > + *
-> + *	struct CB_RECALLANY4args {
-> + *		uint32_t	craa_objects_to_keep;
-> + *		bitmap4		craa_type_mask;
-> + *	};
+> + * https://www.iana.org/assignments/kerberos-parameters/kerberos-paramet=
+ers.xhtml#kerberos-parameters-2
 > + */
-> +static void
-> +encode_cb_recallany4args(struct xdr_stream *xdr,
-> +			struct nfs4_cb_compound_hdr *hdr, uint32_t bmval)
-> +{
-> +	__be32 *p;
-> +
-> +	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
-> +	p = xdr_reserve_space(xdr, 4);
-> +	*p++ = xdr_zero;	/* craa_objects_to_keep */
-> +	p = xdr_reserve_space(xdr, 8);
-> +	*p++ = cpu_to_be32(1);
-> +	*p++ = cpu_to_be32(bmval);
-> +	hdr->nops++;
-> +}
-> +
-> +/*
->    * CB_SEQUENCE4args
->    *
->    *	struct CB_SEQUENCE4args {
-> @@ -482,6 +505,24 @@ static void nfs4_xdr_enc_cb_recall(struct rpc_rqst *req, struct xdr_stream *xdr,
->   	encode_cb_nops(&hdr);
->   }
->   
-> +/*
-> + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
-> + */
-> +static void
-> +nfs4_xdr_enc_cb_recall_any(struct rpc_rqst *req,
-> +		struct xdr_stream *xdr, const void *data)
-> +{
-> +	const struct nfsd4_callback *cb = data;
-> +	struct nfs4_cb_compound_hdr hdr = {
-> +		.ident = cb->cb_clp->cl_cb_ident,
-> +		.minorversion = cb->cb_clp->cl_minorversion,
-> +	};
-> +
-> +	encode_cb_compound4args(xdr, &hdr);
-> +	encode_cb_sequence4args(xdr, cb, &hdr);
-> +	encode_cb_recallany4args(xdr, &hdr, cb->cb_clp->cl_recall_any_bm);
-> +	encode_cb_nops(&hdr);
-> +}
->   
->   /*
->    * NFSv4.0 and NFSv4.1 XDR decode functions
-> @@ -520,6 +561,28 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *rqstp,
->   	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
->   }
->   
-> +/*
-> + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
-> + */
-> +static int
-> +nfs4_xdr_dec_cb_recall_any(struct rpc_rqst *rqstp,
-> +				  struct xdr_stream *xdr,
-> +				  void *data)
-> +{
-> +	struct nfsd4_callback *cb = data;
-> +	struct nfs4_cb_compound_hdr hdr;
-> +	int status;
-> +
-> +	status = decode_cb_compound4res(xdr, &hdr);
-> +	if (unlikely(status))
-> +		return status;
-> +	status = decode_cb_sequence4res(xdr, cb);
-> +	if (unlikely(status || cb->cb_seq_status))
-> +		return status;
-> +	status =  decode_cb_op_status(xdr, OP_CB_RECALL_ANY, &cb->cb_status);
-> +	return status;
-> +}
-> +
->   #ifdef CONFIG_NFSD_PNFS
->   /*
->    * CB_LAYOUTRECALL4args
-> @@ -783,6 +846,7 @@ static const struct rpc_procinfo nfs4_cb_procedures[] = {
->   #endif
->   	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock),
->   	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
-> +	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
->   };
->   
->   static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 4e718500a00c..c60c937dece6 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2854,6 +2854,31 @@ static const struct tree_descr client_files[] = {
->   	[3] = {""},
->   };
->   
-> +static int
-> +nfsd4_cb_recall_any_done(struct nfsd4_callback *cb,
-> +			struct rpc_task *task)
-> +{
-> +	switch (task->tk_status) {
-> +	case -NFS4ERR_DELAY:
-> +		rpc_delay(task, 2 * HZ);
-> +		return 0;
-> +	default:
-> +		return 1;
+>  #define CKSUMTYPE_CRC32			0x0001
+>  #define CKSUMTYPE_RSA_MD4		0x0002
+>  #define CKSUMTYPE_RSA_MD4_DES		0x0003
+> @@ -160,6 +166,8 @@ enum seal_alg {
+>  #define CKSUMTYPE_HMAC_SHA1_DES3	0x000c
+>  #define CKSUMTYPE_HMAC_SHA1_96_AES128   0x000f
+>  #define CKSUMTYPE_HMAC_SHA1_96_AES256   0x0010
+> +#define CKSUMTYPE_HMAC_SHA256_128_AES128	0x0013
+> +#define CKSUMTYPE_HMAC_SHA384_192_AES256	0x0014
+>  #define CKSUMTYPE_HMAC_MD5_ARCFOUR      -138 /* Microsoft md5 hmac cksum=
+type */
+> =20
+>  /* from gssapi_err_krb5.h */
+> @@ -180,19 +188,25 @@ enum seal_alg {
+> =20
+>  /* per Kerberos v5 protocol spec crypto types from the wire.=20
+>   * these get mapped to linux kernel crypto routines. =20
+> + *
+> + * These values are assigned by IANA and published via the
+> + * subregistry at the link below:
+> + *
+> + * https://www.iana.org/assignments/kerberos-parameters/kerberos-paramet=
+ers.xhtml#kerberos-parameters-1
+>   */
+>  #define ENCTYPE_NULL            0x0000
+>  #define ENCTYPE_DES_CBC_CRC     0x0001	/* DES cbc mode with CRC-32 */
+>  #define ENCTYPE_DES_CBC_MD4     0x0002	/* DES cbc mode with RSA-MD4 */
+>  #define ENCTYPE_DES_CBC_MD5     0x0003	/* DES cbc mode with RSA-MD5 */
+>  #define ENCTYPE_DES_CBC_RAW     0x0004	/* DES cbc mode raw */
+> -/* XXX deprecated? */
+>  #define ENCTYPE_DES3_CBC_SHA    0x0005	/* DES-3 cbc mode with NIST-SHA *=
+/
+>  #define ENCTYPE_DES3_CBC_RAW    0x0006	/* DES-3 cbc mode raw */
+>  #define ENCTYPE_DES_HMAC_SHA1   0x0008
+>  #define ENCTYPE_DES3_CBC_SHA1   0x0010
+>  #define ENCTYPE_AES128_CTS_HMAC_SHA1_96 0x0011
+>  #define ENCTYPE_AES256_CTS_HMAC_SHA1_96 0x0012
+> +#define ENCTYPE_AES128_CTS_HMAC_SHA256_128	0x0013
+> +#define ENCTYPE_AES256_CTS_HMAC_SHA384_192	0x0014
+>  #define ENCTYPE_ARCFOUR_HMAC            0x0017
+>  #define ENCTYPE_ARCFOUR_HMAC_EXP        0x0018
+>  #define ENCTYPE_UNKNOWN         0x01ff
+> diff --git a/include/linux/sunrpc/gss_krb5_enctypes.h b/include/linux/sun=
+rpc/gss_krb5_enctypes.h
+> index 87eea679d750..82aa74f1f2cf 100644
+> --- a/include/linux/sunrpc/gss_krb5_enctypes.h
+> +++ b/include/linux/sunrpc/gss_krb5_enctypes.h
+> @@ -15,11 +15,13 @@
+>  /*
+>   * NB: This list includes DES3_CBC_SHA1, which was deprecated by RFC 842=
+9.
+>   *
+> - * ENCTYPE_AES256_CTS_HMAC_SHA1_96
+> - * ENCTYPE_AES128_CTS_HMAC_SHA1_96
+> - * ENCTYPE_DES3_CBC_SHA1
+> + * ENCTYPE_AES128_CTS_HMAC_SHA256_192	20
+> + * ENCTYPE_AES128_CTS_HMAC_SHA256_128	19
+> + * ENCTYPE_AES256_CTS_HMAC_SHA1_96	18
+> + * ENCTYPE_AES128_CTS_HMAC_SHA1_96	17
+> + * ENCTYPE_DES3_CBC_SHA1		16
+>   */
+> -#define KRB5_SUPPORTED_ENCTYPES "18,17,16"
+> +#define KRB5_SUPPORTED_ENCTYPES "20,19,18,17,16"
+> =20
+>  #else	/* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+> =20
+> @@ -27,12 +29,12 @@
+>   * NB: This list includes encryption types that were deprecated
+>   * by RFC 8429 and RFC 6649.
+>   *
+> - * ENCTYPE_AES256_CTS_HMAC_SHA1_96
+> - * ENCTYPE_AES128_CTS_HMAC_SHA1_96
+> - * ENCTYPE_DES3_CBC_SHA1
+> - * ENCTYPE_DES_CBC_MD5
+> - * ENCTYPE_DES_CBC_CRC
+> - * ENCTYPE_DES_CBC_MD4
+> + * ENCTYPE_AES256_CTS_HMAC_SHA1_96	18
+> + * ENCTYPE_AES128_CTS_HMAC_SHA1_96	17
+> + * ENCTYPE_DES3_CBC_SHA1		16
+> + * ENCTYPE_DES_CBC_MD5			3
+> + * ENCTYPE_DES_CBC_CRC			1
+> + * ENCTYPE_DES_CBC_MD4			2
+>   */
+>  #define KRB5_SUPPORTED_ENCTYPES "18,17,16,3,1,2"
+> =20
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_mech.c b/net/sunrpc/auth_gss/gs=
+s_krb5_mech.c
+> index 1c092b05c2bb..2c5a11693e55 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_mech.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_mech.c
+> @@ -120,6 +120,54 @@ static const struct gss_krb5_enctype supported_gss_k=
+rb5_enctypes[] =3D {
+>  	  .cksumlength =3D 12,
+>  	  .keyed_cksum =3D 1,
+>  	},
+> +#ifdef CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES
+
+
+So you only want to define these if insecure enctypes are disabled?
+What's the rationale behind that?
+
+If these are newer and more secure then it seems like they should always
+be enabled regardless of whether the insecure ones are.
+
+> +	/*
+> +	 * AES-128 with SHA-2. See RFC 8009.
+> +	 */
+> +	{
+> +		.etype		=3D ENCTYPE_AES128_CTS_HMAC_SHA256_128,
+> +		.ctype		=3D CKSUMTYPE_HMAC_SHA256_128_AES128,
+> +		.name		=3D "aes128-cts-hmac-sha256-128",
+> +		.encrypt_name	=3D "cts(cbc(aes))",
+> +		.cksum_name	=3D "hmac(sha256)",
+> +		.encrypt	=3D krb5_encrypt,
+> +		.decrypt	=3D krb5_decrypt,
+> +		.mk_key		=3D gss_krb5_aes_make_key,
+> +		.encrypt_v2	=3D gss_krb5_aes_encrypt,
+> +		.decrypt_v2	=3D gss_krb5_aes_decrypt,
+> +		.signalg	=3D -1,
+> +		.sealalg	=3D -1,
+> +		.keybytes	=3D 16,
+> +		.keylength	=3D 16,
+> +		.blocksize	=3D 16,
+> +		.conflen	=3D 16,
+> +		.cksumlength	=3D 16,
+> +		.keyed_cksum	=3D 1,
 > +	}
-> +}
-> +
-> +static void
-> +nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
-> +{
-> +	cb->cb_clp->cl_recall_any_busy = false;
-> +	atomic_dec(&cb->cb_clp->cl_rpc_users);
-> +}
-> +
-> +static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops = {
-> +	.done		= nfsd4_cb_recall_any_done,
-> +	.release	= nfsd4_cb_recall_any_release,
-> +};
-> +
->   static struct nfs4_client *create_client(struct xdr_netobj name,
->   		struct svc_rqst *rqstp, nfs4_verifier *verf)
->   {
-> @@ -2891,6 +2916,8 @@ static struct nfs4_client *create_client(struct xdr_netobj name,
->   		free_client(clp);
->   		return NULL;
->   	}
-> +	nfsd4_init_cb(&clp->cl_recall_any, clp, &nfsd4_cb_recall_any_ops,
-> +			NFSPROC4_CLNT_CB_RECALL_ANY);
->   	return clp;
->   }
->   
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index e2daef3cc003..49ca06169642 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -411,6 +411,10 @@ struct nfs4_client {
->   
->   	unsigned int		cl_state;
->   	atomic_t		cl_delegs_in_recall;
-> +
-> +	bool			cl_recall_any_busy;
-> +	uint32_t		cl_recall_any_bm;
-> +	struct nfsd4_callback	cl_recall_any;
->   };
->   
->   /* struct nfs4_client_reset
-> @@ -639,8 +643,12 @@ enum nfsd4_cb_op {
->   	NFSPROC4_CLNT_CB_OFFLOAD,
->   	NFSPROC4_CLNT_CB_SEQUENCE,
->   	NFSPROC4_CLNT_CB_NOTIFY_LOCK,
-> +	NFSPROC4_CLNT_CB_RECALL_ANY,
->   };
->   
-> +#define RCA4_TYPE_MASK_RDATA_DLG	0
-> +#define RCA4_TYPE_MASK_WDATA_DLG	1
-> +
->   /* Returns true iff a is later than b: */
->   static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_t *b)
->   {
-> diff --git a/fs/nfsd/xdr4cb.h b/fs/nfsd/xdr4cb.h
-> index 547cf07cf4e0..0d39af1b00a0 100644
-> --- a/fs/nfsd/xdr4cb.h
-> +++ b/fs/nfsd/xdr4cb.h
-> @@ -48,3 +48,9 @@
->   #define NFS4_dec_cb_offload_sz		(cb_compound_dec_hdr_sz  +      \
->   					cb_sequence_dec_sz +            \
->   					op_dec_sz)
-> +#define NFS4_enc_cb_recall_any_sz	(cb_compound_enc_hdr_sz +       \
-> +					cb_sequence_enc_sz +            \
-> +					1 + 1 + 1)
-> +#define NFS4_dec_cb_recall_any_sz	(cb_compound_dec_hdr_sz  +      \
-> +					cb_sequence_dec_sz +            \
-> +					op_dec_sz)
+> +	/*
+> +	 * AES-256 with SHA-3. See RFC 8009.
+> +	 */
+> +	{
+> +		.etype		=3D ENCTYPE_AES256_CTS_HMAC_SHA384_192,
+> +		.ctype		=3D CKSUMTYPE_HMAC_SHA384_192_AES256,
+> +		.name		=3D "aes256-cts-hmac-sha384-192",
+> +		.encrypt_name	=3D "cts(cbc(aes))",
+> +		.cksum_name	=3D "hmac(sha384)",
+> +		.encrypt	=3D krb5_encrypt,
+> +		.decrypt	=3D krb5_decrypt,
+> +		.mk_key		=3D gss_krb5_aes_make_key,
+> +		.encrypt_v2	=3D gss_krb5_aes_encrypt,
+> +		.decrypt_v2	=3D gss_krb5_aes_decrypt,
+> +		.signalg	=3D -1,
+> +		.sealalg	=3D -1,
+> +		.keybytes	=3D 32,
+> +		.keylength	=3D 32,
+> +		.blocksize	=3D 16,
+> +		.conflen	=3D 16,
+> +		.cksumlength	=3D 24,
+> +		.keyed_cksum	=3D 1,
+> +	}
+> +#endif /* CONFIG_SUNRPC_DISABLE_INSECURE_ENCTYPES */
+>  };
+> =20
+>  static const int num_supported_enctypes =3D
+> @@ -440,6 +488,8 @@ context_derive_keys_new(struct krb5_ctx *ctx, gfp_t g=
+fp_mask)
+>  	switch (ctx->enctype) {
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		ctx->initiator_enc_aux =3D
+>  			context_v2_alloc_cipher(ctx, "cbc(aes)",
+>  						ctx->initiator_seal);
+> @@ -531,6 +581,8 @@ gss_import_v2_context(const void *p, const void *end,=
+ struct krb5_ctx *ctx,
+>  		return context_derive_keys_des3(ctx, gfp_mask);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		return context_derive_keys_new(ctx, gfp_mask);
+>  	default:
+>  		return -EINVAL;
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_seal.c b/net/sunrpc/auth_gss/gs=
+s_krb5_seal.c
+> index 33061417ec97..252bc30e09aa 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_seal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_seal.c
+> @@ -217,6 +217,8 @@ gss_get_mic_kerberos(struct gss_ctx *gss_ctx, struct =
+xdr_buf *text,
+>  		return gss_get_mic_v1(ctx, text, token);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		return gss_get_mic_v2(ctx, text, token);
+>  	}
+>  }
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_unseal.c b/net/sunrpc/auth_gss/=
+gss_krb5_unseal.c
+> index ba04e3ec970a..58d7b49a6a9a 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_unseal.c
+> @@ -221,6 +221,8 @@ gss_verify_mic_kerberos(struct gss_ctx *gss_ctx,
+>  		return gss_verify_mic_v1(ctx, message_buffer, read_token);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		return gss_verify_mic_v2(ctx, message_buffer, read_token);
+>  	}
+>  }
+> diff --git a/net/sunrpc/auth_gss/gss_krb5_wrap.c b/net/sunrpc/auth_gss/gs=
+s_krb5_wrap.c
+> index 5f96e75f9eec..36659ab5bd58 100644
+> --- a/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> +++ b/net/sunrpc/auth_gss/gss_krb5_wrap.c
+> @@ -571,6 +571,8 @@ gss_wrap_kerberos(struct gss_ctx *gctx, int offset,
+>  		return gss_wrap_kerberos_v1(kctx, offset, buf, pages);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		return gss_wrap_kerberos_v2(kctx, offset, buf, pages);
+>  	}
+>  }
+> @@ -590,6 +592,8 @@ gss_unwrap_kerberos(struct gss_ctx *gctx, int offset,
+>  					      &gctx->slack, &gctx->align);
+>  	case ENCTYPE_AES128_CTS_HMAC_SHA1_96:
+>  	case ENCTYPE_AES256_CTS_HMAC_SHA1_96:
+> +	case ENCTYPE_AES128_CTS_HMAC_SHA256_128:
+> +	case ENCTYPE_AES256_CTS_HMAC_SHA384_192:
+>  		return gss_unwrap_kerberos_v2(kctx, offset, len, buf,
+>  					      &gctx->slack, &gctx->align);
+>  	}
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
