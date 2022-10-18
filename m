@@ -2,142 +2,84 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D12F6033A9
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 21:59:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEE30603627
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Oct 2022 00:43:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229947AbiJRT7Q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Oct 2022 15:59:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37632 "EHLO
+        id S230047AbiJRWny (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Oct 2022 18:43:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230097AbiJRT7I (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 15:59:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CE20915CF
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 12:59:07 -0700 (PDT)
+        with ESMTP id S230044AbiJRWnw (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 18:43:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B65D8B7EEE
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 15:43:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD878B82103
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 19:59:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57CEEC433C1;
-        Tue, 18 Oct 2022 19:59:04 +0000 (UTC)
-Subject: [PATCH v4 7/7] NFSD: Trace delegation revocations
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     neilb@suse.de
-Date:   Tue, 18 Oct 2022 15:59:03 -0400
-Message-ID: <166612314338.1291.6816037057097504104.stgit@manet.1015granger.net>
-In-Reply-To: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
-References: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
-User-Agent: StGit/1.5.dev2+g9ce680a5
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4AABB6170E
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 22:43:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70921C433D6;
+        Tue, 18 Oct 2022 22:43:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666133029;
+        bh=zhorUzccnj4fCYEMYcILKuGLYfRQ/Z25KahCPnqRaX8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=odfFc63xtigsTnfnTrAALBdlwigpQWcz8ngnG2AVafHF/4N+B7diiuY2FjUUpvK1P
+         V56pTCZFHHYx7RY9GV9Za28j+eNCpn2pdKGnL3X5KC3dNyDrtIXaFx4fn2JUsKk2pb
+         ZNtvVR/WS7SfU1j3KD3+0wNEXj397M8fgULtXLI2tNYNzkZaObxI5gSR9wFRrB1gJj
+         412rhypn8tVL51Jvihdo9h5yhx0Cq7Lo7Qgh0RKTQafkUBkJ2BOXJ8arVTZSfxYlW9
+         bQ77ol51g4ZntrM6qC1Mdb+fu5cq9p+k0COmC52VSUp7nuZOnSlhcpaARtjVPRaZdO
+         BCz3hf8l+wmOA==
+From:   trondmy@kernel.org
+To:     Anna Schumaker <anna.schumaker@netapp.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH 1/3] NFSv4.2: Clear FATTR4_WORD2_SECURITY_LABEL when done decoding
+Date:   Tue, 18 Oct 2022 18:37:21 -0400
+Message-Id: <20221018223723.21242-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Delegation revocation is an exceptional event that is not otherwise
-visible externally (eg, no network traffic is emitted). Generate a
-trace record when it occurs so that revocation can be observed or
-other activity can be triggered. Example:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-nfsd-1104  [005]  1912.002544: nfsd_stid_revoke:        client 633c9343:4e82788d stateid 00000003:00000001 ref=2 type=DELEG
+We need to clear the FATTR4_WORD2_SECURITY_LABEL bitmap flag
+irrespective of whether or not the label is too long.
 
-Trace infrastructure is provided for subsequent additional tracing
-related to nfs4_stid activity.
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Tested-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fixes: aa9c2669626c ("NFS: Client implementation of Labeled-NFS")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
 ---
- fs/nfsd/nfs4state.c |    2 ++
- fs/nfsd/trace.h     |   55 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ fs/nfs/nfs4xdr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index a63334ad61f6..c37f07bb874d 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -1401,6 +1401,8 @@ static void revoke_delegation(struct nfs4_delegation *dp)
- 
- 	WARN_ON(!list_empty(&dp->dl_recall_lru));
- 
-+	trace_nfsd_stid_revoke(&dp->dl_stid);
-+
- 	if (clp->cl_minorversion) {
- 		dp->dl_stid.sc_type = NFS4_REVOKED_DELEG_STID;
- 		refcount_inc(&dp->dl_stid.sc_count);
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 4921144880d3..23fb39c957af 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -561,6 +561,61 @@ DEFINE_EVENT(nfsd_stateseqid_class, nfsd_##name, \
- DEFINE_STATESEQID_EVENT(preprocess);
- DEFINE_STATESEQID_EVENT(open_confirm);
- 
-+TRACE_DEFINE_ENUM(NFS4_OPEN_STID);
-+TRACE_DEFINE_ENUM(NFS4_LOCK_STID);
-+TRACE_DEFINE_ENUM(NFS4_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_CLOSED_STID);
-+TRACE_DEFINE_ENUM(NFS4_REVOKED_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_CLOSED_DELEG_STID);
-+TRACE_DEFINE_ENUM(NFS4_LAYOUT_STID);
-+
-+#define show_stid_type(x)						\
-+	__print_flags(x, "|",						\
-+		{ NFS4_OPEN_STID,		"OPEN" },		\
-+		{ NFS4_LOCK_STID,		"LOCK" },		\
-+		{ NFS4_DELEG_STID,		"DELEG" },		\
-+		{ NFS4_CLOSED_STID,		"CLOSED" },		\
-+		{ NFS4_REVOKED_DELEG_STID,	"REVOKED" },		\
-+		{ NFS4_CLOSED_DELEG_STID,	"CLOSED_DELEG" },	\
-+		{ NFS4_LAYOUT_STID,		"LAYOUT" })
-+
-+DECLARE_EVENT_CLASS(nfsd_stid_class,
-+	TP_PROTO(
-+		const struct nfs4_stid *stid
-+	),
-+	TP_ARGS(stid),
-+	TP_STRUCT__entry(
-+		__field(unsigned long, sc_type)
-+		__field(int, sc_count)
-+		__field(u32, cl_boot)
-+		__field(u32, cl_id)
-+		__field(u32, si_id)
-+		__field(u32, si_generation)
-+	),
-+	TP_fast_assign(
-+		const stateid_t *stp = &stid->sc_stateid;
-+
-+		__entry->sc_type = stid->sc_type;
-+		__entry->sc_count = refcount_read(&stid->sc_count);
-+		__entry->cl_boot = stp->si_opaque.so_clid.cl_boot;
-+		__entry->cl_id = stp->si_opaque.so_clid.cl_id;
-+		__entry->si_id = stp->si_opaque.so_id;
-+		__entry->si_generation = stp->si_generation;
-+	),
-+	TP_printk("client %08x:%08x stateid %08x:%08x ref=%d type=%s",
-+		__entry->cl_boot, __entry->cl_id,
-+		__entry->si_id, __entry->si_generation,
-+		__entry->sc_count, show_stid_type(__entry->sc_type)
-+	)
-+);
-+
-+#define DEFINE_STID_EVENT(name)					\
-+DEFINE_EVENT(nfsd_stid_class, nfsd_stid_##name,			\
-+	TP_PROTO(const struct nfs4_stid *stid),			\
-+	TP_ARGS(stid))
-+
-+DEFINE_STID_EVENT(revoke);
-+
- DECLARE_EVENT_CLASS(nfsd_clientid_class,
- 	TP_PROTO(const clientid_t *clid),
- 	TP_ARGS(clid),
-
+diff --git a/fs/nfs/nfs4xdr.c b/fs/nfs/nfs4xdr.c
+index acfe5f4bda48..8c5298e37f0f 100644
+--- a/fs/nfs/nfs4xdr.c
++++ b/fs/nfs/nfs4xdr.c
+@@ -4234,6 +4234,7 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 		p = xdr_inline_decode(xdr, len);
+ 		if (unlikely(!p))
+ 			return -EIO;
++		bitmap[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
+ 		if (len < NFS4_MAXLABELLEN) {
+ 			if (label) {
+ 				if (label->len) {
+@@ -4246,7 +4247,6 @@ static int decode_attr_security_label(struct xdr_stream *xdr, uint32_t *bitmap,
+ 				label->lfs = lfs;
+ 				status = NFS_ATTR_FATTR_V4_SECURITY_LABEL;
+ 			}
+-			bitmap[2] &= ~FATTR4_WORD2_SECURITY_LABEL;
+ 		} else
+ 			printk(KERN_WARNING "%s: label too long (%u)!\n",
+ 					__func__, len);
+-- 
+2.37.3
 
