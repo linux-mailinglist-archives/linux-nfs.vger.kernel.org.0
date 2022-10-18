@@ -2,46 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B24602A87
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 13:48:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6522D602C6C
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 15:07:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbiJRLsC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Oct 2022 07:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36638 "EHLO
+        id S229619AbiJRNHr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Oct 2022 09:07:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229692AbiJRLsB (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 07:48:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABB366A4A
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 04:48:00 -0700 (PDT)
+        with ESMTP id S229520AbiJRNHp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 09:07:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64E2FC5897
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 06:07:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1728861500
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 11:48:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11CA1C433D7;
-        Tue, 18 Oct 2022 11:47:58 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C8406B81F1D
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 13:07:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E6CFC433C1;
+        Tue, 18 Oct 2022 13:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666093679;
-        bh=FfsSVlPrH2TcBzSsTWCOr8rajYOFPeh5IshXhO5BkEY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GS/yxqfRRJHhlGL5ZsbCJ0vzxqG+5RMEBjs3Zb6LQzIU/lg73ewX1sv2KrwAAKNVL
-         exzpqmvbHBdl9U7GAVy0Y8e7QUP1j4vo8wsiidEzPGkEOJT0I+sxK7NR3bVIVhtMSW
-         4+4tKgVvMx4plUNwwHJkYbT4HhaX/KiRWPobe6jZ6z3QfcuBeZ6qYc0MzqAbVQjbmd
-         VB44gxsraVf7ugV5SKf7CyaXIsTnxOeBDY5T/8LxrZgnDzz0BB2kLb3dspwvw/akTS
-         kYextrJdPiN3p9XabPwtXrjqmRAsTwW7NjVL+C6CqmSsBsmQRLfH3rLQzBFNCILJlq
-         wuhoNHKZKWv3w==
+        s=k20201202; t=1666098461;
+        bh=FnRVeG/qCCThLsTV97E3VMbWP8nkHqfmsSSLmP88rbI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Ys/jql1hjeLZ6t1GUGD8kSThztHvj/ZZv6To7KSvIFzJqyw4FvyNLrRZBipc5x77U
+         vhd4e4M3WIpamO6UmRUbVuk+Kbkj5x1JSe0sa25f/CVUKcnGvd+cKYHsBvrZc5D41s
+         JrLgkPefdspciieG2vK7Q005K/VDPTjjoNPyXb5OBVQGWsLuITrRgVVSkVj580neHO
+         5MaBjZLKaTOc0+FRTN52uZmJNb0gEzGXVwpq2HhSu+CHXOklaqqQt5aTMCYMZ73f1u
+         7urBc/jGzr9tdjQIsNtoAs5mEfV2BGBe0CHuHaPJzxp/1sFq8WInEiqAhc/4Yr4zRz
+         Lg3KRPjpgrkSg==
+Message-ID: <9d1be93452dc03f911c684946464b0862c93b965.camel@kernel.org>
+Subject: Re: [PATCH 2/2] NFSD: add delegation shrinker to react to low
+ memory condition
 From:   Jeff Layton <jlayton@kernel.org>
-To:     chuck.lever@oracle.com
-Cc:     tom@talpey.com, linux-nfs@vger.kernel.org
-Subject: [PATCH v3 3/3] nfsd: allow disabling NFSv2 at compile time
-Date:   Tue, 18 Oct 2022 07:47:56 -0400
-Message-Id: <20221018114756.23679-3-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
-In-Reply-To: <20221018114756.23679-1-jlayton@kernel.org>
-References: <20221018114756.23679-1-jlayton@kernel.org>
+To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 18 Oct 2022 09:07:39 -0400
+In-Reply-To: <1666070139-18843-3-git-send-email-dai.ngo@oracle.com>
+References: <1666070139-18843-1-git-send-email-dai.ngo@oracle.com>
+         <1666070139-18843-3-git-send-email-dai.ngo@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -51,147 +54,180 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-rpc.nfsd stopped supporting NFSv2 a year ago. Take the next logical
-step toward deprecating it and allow NFSv2 support to be compiled out.
+On Mon, 2022-10-17 at 22:15 -0700, Dai Ngo wrote:
+> The delegation shrinker is scheduled to run on every shrinker's
+> 'count' callback. It scans the client list and sends the
+> courtesy CB_RECALL_ANY to the clients that hold delegations.
+>=20
+> To avoid flooding the clients with CB_RECALL_ANY requests, the
+> delegation shrinker is scheduled to run after a 5 seconds delay.
+>=20
 
-Add a new CONFIG_NFSD_V2 option that can be turned off and rework the
-CONFIG_NFSD_V?_ACL option dependencies. Add a description that
-discourages enabling it.
+But...when the kernel needs memory, it generally needs it _now_, and 5s
+is a long time. It'd be better to not delay the initial sending of
+CB_RECALL_ANY callbacks this much.
 
-Also, change the description of CONFIG_NFSD to state that the always-on
-version is now 3 instead of 2.
+Maybe the logic should be changed such that it runs no more frequently
+than once every 5s, but don't delay the initial sending of
+CB_RECALL_ANYs.
 
-Finally, add an #ifdef around "case 2:" in __write_versions. When NFSv2
-is disabled at compile time, this should make the kernel ignore attempts
-to disable it at runtime, but still error out when trying to enable it.
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/netns.h     |  3 +++
+>  fs/nfsd/nfs4state.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++=
++++++-
+>  fs/nfsd/state.h     |  1 +
+>  3 files changed, 73 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
+> index 8c854ba3285b..394a05fb46d8 100644
+> --- a/fs/nfsd/netns.h
+> +++ b/fs/nfsd/netns.h
+> @@ -196,6 +196,9 @@ struct nfsd_net {
+>  	atomic_t		nfsd_courtesy_clients;
+>  	struct shrinker		nfsd_client_shrinker;
+>  	struct delayed_work	nfsd_shrinker_work;
+> +
+> +	struct shrinker		nfsd_deleg_shrinker;
+> +	struct delayed_work	nfsd_deleg_shrinker_work;
+>  };
+> =20
+>  /* Simple check to find out if a given net was properly initialized */
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index c60c937dece6..bdaea0e6e72f 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -4392,11 +4392,32 @@ nfsd_courtesy_client_scan(struct shrinker *shrink=
+, struct shrink_control *sc)
+>  	return SHRINK_STOP;
+>  }
+> =20
+> +static unsigned long
+> +nfsd_deleg_shrinker_count(struct shrinker *shrink, struct shrink_control=
+ *sc)
+> +{
+> +	unsigned long cnt;
+> +	struct nfsd_net *nn =3D container_of(shrink,
+> +				struct nfsd_net, nfsd_deleg_shrinker);
+> +
+> +	cnt =3D atomic_long_read(&num_delegations);
+> +	if (cnt)
+> +		mod_delayed_work(laundry_wq,
+> +			&nn->nfsd_deleg_shrinker_work, 5 * HZ);
+> +	return cnt;
+> +}
+> +
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/Kconfig  | 19 +++++++++++++++----
- fs/nfsd/Makefile |  5 +++--
- fs/nfsd/nfsctl.c |  2 ++
- fs/nfsd/nfsd.h   |  3 +--
- fs/nfsd/nfssvc.c |  6 ++++++
- 5 files changed, 27 insertions(+), 8 deletions(-)
+What's the rationale for doing all of this in the count callback? Why
+not just return the value here and leave scheduling to the scan
+callback?
 
-diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-index f6a2fd3015e7..7c441f2bd444 100644
---- a/fs/nfsd/Kconfig
-+++ b/fs/nfsd/Kconfig
-@@ -8,6 +8,7 @@ config NFSD
- 	select SUNRPC
- 	select EXPORTFS
- 	select NFS_ACL_SUPPORT if NFSD_V2_ACL
-+	select NFS_ACL_SUPPORT if NFSD_V3_ACL
- 	depends on MULTIUSER
- 	help
- 	  Choose Y here if you want to allow other computers to access
-@@ -26,19 +27,29 @@ config NFSD
- 
- 	  Below you can choose which versions of the NFS protocol are
- 	  available to clients mounting the NFS server on this system.
--	  Support for NFS version 2 (RFC 1094) is always available when
-+	  Support for NFS version 3 (RFC 1813) is always available when
- 	  CONFIG_NFSD is selected.
- 
- 	  If unsure, say N.
- 
--config NFSD_V2_ACL
--	bool
-+config NFSD_V2
-+	bool "NFS server support for NFS version 2 (DEPRECATED)"
- 	depends on NFSD
-+	default n
-+	help
-+	  NFSv2 (RFC 1094) was the first publicly-released version of NFS.
-+	  Unless you are hosting ancient (1990's era) NFS clients, you don't
-+	  need this.
-+
-+	  If unsure, say N.
-+
-+config NFSD_V2_ACL
-+	bool "NFS server support for the NFSv2 ACL protocol extension"
-+	depends on NFSD_V2
- 
- config NFSD_V3_ACL
- 	bool "NFS server support for the NFSv3 ACL protocol extension"
- 	depends on NFSD
--	select NFSD_V2_ACL
- 	help
- 	  Solaris NFS servers support an auxiliary NFSv3 ACL protocol that
- 	  never became an official part of the NFS version 3 protocol.
-diff --git a/fs/nfsd/Makefile b/fs/nfsd/Makefile
-index 805c06d5f1b4..6fffc8f03f74 100644
---- a/fs/nfsd/Makefile
-+++ b/fs/nfsd/Makefile
-@@ -10,9 +10,10 @@ obj-$(CONFIG_NFSD)	+= nfsd.o
- # this one should be compiled first, as the tracing macros can easily blow up
- nfsd-y			+= trace.o
- 
--nfsd-y 			+= nfssvc.o nfsctl.o nfsproc.o nfsfh.o vfs.o \
--			   export.o auth.o lockd.o nfscache.o nfsxdr.o \
-+nfsd-y 			+= nfssvc.o nfsctl.o nfsfh.o vfs.o \
-+			   export.o auth.o lockd.o nfscache.o \
- 			   stats.o filecache.o nfs3proc.o nfs3xdr.o
-+nfsd-$(CONFIG_NFSD_V2) += nfsproc.o nfsxdr.o
- nfsd-$(CONFIG_NFSD_V2_ACL) += nfs2acl.o
- nfsd-$(CONFIG_NFSD_V3_ACL) += nfs3acl.o
- nfsd-$(CONFIG_NFSD_V4)	+= nfs4proc.o nfs4xdr.o nfs4state.o nfs4idmap.o \
-diff --git a/fs/nfsd/nfsctl.c b/fs/nfsd/nfsctl.c
-index 68ed42fd29fc..d1e581a60480 100644
---- a/fs/nfsd/nfsctl.c
-+++ b/fs/nfsd/nfsctl.c
-@@ -581,7 +581,9 @@ static ssize_t __write_versions(struct file *file, char *buf, size_t size)
- 
- 			cmd = sign == '-' ? NFSD_CLEAR : NFSD_SET;
- 			switch(num) {
-+#ifdef CONFIG_NFSD_V2
- 			case 2:
-+#endif
- 			case 3:
- 				nfsd_vers(nn, num, cmd);
- 				break;
-diff --git a/fs/nfsd/nfsd.h b/fs/nfsd/nfsd.h
-index 09726c5b9a31..93b42ef9ed91 100644
---- a/fs/nfsd/nfsd.h
-+++ b/fs/nfsd/nfsd.h
-@@ -64,8 +64,7 @@ struct readdir_cd {
- 
- 
- extern struct svc_program	nfsd_program;
--extern const struct svc_version	nfsd_version2, nfsd_version3,
--				nfsd_version4;
-+extern const struct svc_version	nfsd_version2, nfsd_version3, nfsd_version4;
- extern struct mutex		nfsd_mutex;
- extern spinlock_t		nfsd_drc_lock;
- extern unsigned long		nfsd_drc_max_mem;
-diff --git a/fs/nfsd/nfssvc.c b/fs/nfsd/nfssvc.c
-index bfbd9f672f59..62e473b0ca52 100644
---- a/fs/nfsd/nfssvc.c
-+++ b/fs/nfsd/nfssvc.c
-@@ -91,8 +91,12 @@ unsigned long	nfsd_drc_mem_used;
- #if defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL)
- static struct svc_stat	nfsd_acl_svcstats;
- static const struct svc_version *nfsd_acl_version[] = {
-+# if defined(CONFIG_NFSD_V2_ACL)
- 	[2] = &nfsd_acl_version2,
-+# endif
-+# if defined(CONFIG_NFSD_V3_ACL)
- 	[3] = &nfsd_acl_version3,
-+# endif
- };
- 
- #define NFSD_ACL_MINVERS            2
-@@ -116,7 +120,9 @@ static struct svc_stat	nfsd_acl_svcstats = {
- #endif /* defined(CONFIG_NFSD_V2_ACL) || defined(CONFIG_NFSD_V3_ACL) */
- 
- static const struct svc_version *nfsd_version[] = {
-+#if defined(CONFIG_NFSD_V2)
- 	[2] = &nfsd_version2,
-+#endif
- 	[3] = &nfsd_version3,
- #if defined(CONFIG_NFSD_V4)
- 	[4] = &nfsd_version4,
--- 
-2.37.3
+> +static unsigned long
+> +nfsd_deleg_shrinker_scan(struct shrinker *shrink, struct shrink_control =
+*sc)
+> +{
+> +	return SHRINK_STOP;
+> +}
+> +
+>  int
+>  nfsd4_init_leases_net(struct nfsd_net *nn)
+>  {
+>  	struct sysinfo si;
+>  	u64 max_clients;
+> +	int retval;
+> =20
+>  	nn->nfsd4_lease =3D 90;	/* default lease time */
+>  	nn->nfsd4_grace =3D 90;
+> @@ -4417,13 +4438,23 @@ nfsd4_init_leases_net(struct nfsd_net *nn)
+>  	nn->nfsd_client_shrinker.scan_objects =3D nfsd_courtesy_client_scan;
+>  	nn->nfsd_client_shrinker.count_objects =3D nfsd_courtesy_client_count;
+>  	nn->nfsd_client_shrinker.seeks =3D DEFAULT_SEEKS;
+> -	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
+> +	retval =3D register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
+> +	if (retval)
+> +		return retval;
+> +	nn->nfsd_deleg_shrinker.scan_objects =3D nfsd_deleg_shrinker_scan;
+> +	nn->nfsd_deleg_shrinker.count_objects =3D nfsd_deleg_shrinker_count;
+> +	nn->nfsd_deleg_shrinker.seeks =3D DEFAULT_SEEKS;
+> +	retval =3D register_shrinker(&nn->nfsd_deleg_shrinker, "nfsd-delegation=
+");
+> +	if (retval)
+> +		unregister_shrinker(&nn->nfsd_client_shrinker);
+> +	return retval;
+>  }
+> =20
+>  void
+>  nfsd4_leases_net_shutdown(struct nfsd_net *nn)
+>  {
+>  	unregister_shrinker(&nn->nfsd_client_shrinker);
+> +	unregister_shrinker(&nn->nfsd_deleg_shrinker);
+>  }
+> =20
+>  static void init_nfs4_replay(struct nfs4_replay *rp)
+> @@ -6162,6 +6193,42 @@ courtesy_client_reaper(struct work_struct *reaper)
+>  	nfs4_process_client_reaplist(&reaplist);
+>  }
+> =20
+> +static void
+> +deleg_reaper(struct work_struct *deleg_work)
+> +{
+> +	struct list_head *pos, *next;
+> +	struct nfs4_client *clp;
+> +	struct list_head cblist;
+> +	struct delayed_work *dwork =3D to_delayed_work(deleg_work);
+> +	struct nfsd_net *nn =3D container_of(dwork, struct nfsd_net,
+> +					nfsd_deleg_shrinker_work);
+> +
+> +	INIT_LIST_HEAD(&cblist);
+> +	spin_lock(&nn->client_lock);
+> +	list_for_each_safe(pos, next, &nn->client_lru) {
+> +		clp =3D list_entry(pos, struct nfs4_client, cl_lru);
+> +		if (clp->cl_state !=3D NFSD4_ACTIVE ||
+> +				list_empty(&clp->cl_delegations) ||
+> +				atomic_read(&clp->cl_delegs_in_recall) ||
+> +				clp->cl_recall_any_busy) {
+> +			continue;
+> +		}
+> +		clp->cl_recall_any_busy =3D true;
+> +		list_add(&clp->cl_recall_any_cblist, &cblist);
+> +
+> +		/* release in nfsd4_cb_recall_any_release */
+> +		atomic_inc(&clp->cl_rpc_users);
+> +	}
+> +	spin_unlock(&nn->client_lock);
+> +	list_for_each_safe(pos, next, &cblist) {
+> +		clp =3D list_entry(pos, struct nfs4_client, cl_recall_any_cblist);
+> +		list_del_init(&clp->cl_recall_any_cblist);
+> +		clp->cl_recall_any_bm =3D BIT(RCA4_TYPE_MASK_RDATA_DLG) |
+> +						BIT(RCA4_TYPE_MASK_WDATA_DLG);
+> +		nfsd4_run_cb(&clp->cl_recall_any);
+> +	}
+> +}
+> +
+>  static inline __be32 nfs4_check_fh(struct svc_fh *fhp, struct nfs4_stid =
+*stp)
+>  {
+>  	if (!fh_match(&fhp->fh_handle, &stp->sc_file->fi_fhandle))
+> @@ -7985,6 +8052,7 @@ static int nfs4_state_create_net(struct net *net)
+> =20
+>  	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
+>  	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, courtesy_client_reaper);
+> +	INIT_DELAYED_WORK(&nn->nfsd_deleg_shrinker_work, deleg_reaper);
+>  	get_net(net);
+> =20
+>  	return 0;
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index 49ca06169642..05b572ce6605 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -415,6 +415,7 @@ struct nfs4_client {
+>  	bool			cl_recall_any_busy;
+>  	uint32_t		cl_recall_any_bm;
+>  	struct nfsd4_callback	cl_recall_any;
+> +	struct list_head	cl_recall_any_cblist;
+>  };
+> =20
+>  /* struct nfs4_client_reset
 
+--=20
+Jeff Layton <jlayton@kernel.org>
