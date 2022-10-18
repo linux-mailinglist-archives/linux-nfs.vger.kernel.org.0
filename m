@@ -2,150 +2,151 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA4A6603032
-	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 17:52:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E55660303C
+	for <lists+linux-nfs@lfdr.de>; Tue, 18 Oct 2022 17:53:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbiJRPwn (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 18 Oct 2022 11:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37062 "EHLO
+        id S231203AbiJRPxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 18 Oct 2022 11:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229885AbiJRPwk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 11:52:40 -0400
+        with ESMTP id S230226AbiJRPxV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 18 Oct 2022 11:53:21 -0400
 Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BA4C1D98
-        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 08:52:28 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29IDxj1c006034;
-        Tue, 18 Oct 2022 15:51:10 GMT
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD332D7E0C
+        for <linux-nfs@vger.kernel.org>; Tue, 18 Oct 2022 08:53:18 -0700 (PDT)
+Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29IDxiR9000857;
+        Tue, 18 Oct 2022 15:52:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
  subject : to : cc : references : from : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=cpJwdkone2a59Gbzib8/hRHXheTjcZYasrtOtuAyOrs=;
- b=fahOdYkS5yWxPwANc9aGJpxpr+/KrKJRBtwuX6htxQdjYvNcGiRLZj94Fh2COMsUnkfz
- wkEnSPsrjrHjxEX/bv9lQ10acjfS9IWTd8tTr196e7MXpg12Y1uXjGf3jx6g5OoB9aLX
- pfbFWurNSbVzMSuUjksrXT3KQp5GZOlKVhKsEDhs1O27AIMCiWeMAuYi/bd6uHmjfiB8
- A6q862L9m1vs4I4Cj0mRmixE6DJTODLBIyY2UcH7u0xkfmLcbPiwoJ/QftEahO/VUKxG
- USyc5OjDhHKgaikqvEWm/W5Uk26XDbUT3tKe5nLMcgflXXzobPJqhnQ87ynBQDHKJVmE vQ== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3k99ntba6g-1
+ bh=3ZIlOQz8j0dPHvzZDaikuuEhkiKVKcVWhm4WLT4KyRA=;
+ b=CCeyiYaLs1iwASfXlzJ/x/3h/rPzYxWlytg/7ctO2fhE9YPFqnUInZsMeKOqBZ4YqlwZ
+ 6E0E5X6ssM3fIj4XHetmqbdQl64AZ/c4rmyB/sdhltHl0Y45VMNLEernXd5m0hFD+skt
+ mZWgOrwNUs6hfz49z3nEC1VewE6IATkXR4DQxNaMTssauFeJP6FWrnV7oC1l8LnYniRf
+ pLcF378iQwInBQY0DLhLc4wH8R2HhC6rYsLbr13FTvv9xICW6vjdWf+0jbS0v+N5e9Oj
+ w7fD95mqt9GevlSUnkEg4GxOJHr0XpacvDqGYPiFlI3JXAEiAk+wcucEDx9V9jyva4QW 9A== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3k7ndtfhep-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Oct 2022 15:51:10 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29IF4Rf6028861;
-        Tue, 18 Oct 2022 15:51:09 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3k8hqyw0ya-1
+        Tue, 18 Oct 2022 15:52:38 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29IEtjLI033230;
+        Tue, 18 Oct 2022 15:52:36 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2172.outbound.protection.outlook.com [104.47.57.172])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3k8hrae6ar-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Oct 2022 15:51:09 +0000
+        Tue, 18 Oct 2022 15:52:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gou+ZaTtIqCQB8aTpRUsnlaog5VHzRVb/nVJ5Q/Ix/D5zuYUrlrYiUPh+iZ+Hnf4tA0Y2Bd580Z3okR3fXsKo3MTBomVmqUIjZk6WxzooDYURHjlGdFNXWx4+VKG1ClLJCkTylfAhHIBKj4/sgEBrTFQL2pOZsJU7DD6TPJ+MCVS7NzIu9xdyY23e4cgyRH+dDRsQ7OhltHBpB/qObi/lLNQqKDJpkX7t8ZHdHOD/gXEVl+kjIuyKwgJYysieS+IT56+qbs9F+uaCwo0YPHMEs5aXcYM+FHsEn+vU7YozLhGrlDJUY+vuSLs+a0IAISxOXwxEtvorcLTTTAufITzyA==
+ b=RYFCmr/aNyzgEEzgTu3vjoJcGZAqCheBDvSVIZtTvN+/zBPx7MjwvkdCz81bSiVkn9l/9Hd9gG9mxhoWzaYRulEBDgQ8DqPukeGBc9BqF7ILdMBPlPLAj18UYIl/4WGVVmQ3JVVfqqlBLgh8K0ugaFC2fGl6oCNBSbqHVALHh1dEeT92ubSxy0/uYXDzdlga3fUuTkJLyvJjvMHStQja12obJ0s1RMLvtXKksvGCg9zFXARaBXAnIns2g8qjjA4DXaupyevVLX69EwcsycyEID4Fv/hAVP0EYsPadGvm0FY76GQ3An9Q6N61MLQqc3eklZH7lQyBnqipWECnNxJBDA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cpJwdkone2a59Gbzib8/hRHXheTjcZYasrtOtuAyOrs=;
- b=DBsBQOFXbS/Jh0HZl2JLWsLYkYIGnNrGLxENVAbjsrvjsVm/AuA1493Zfzsjq2aRtHuQ+Pxem/NHWbB2Bdd6tF6iP5161s8pwuwAm58XcE0n337asA8WibLX9BoeCo0oYLpT+ymsl4KWg+XV/Ct+r9Ck6CY5tbj7RJNBhkeCrB5PC/szBqMIjDrcNzhosCHDlf2o+jmGiE6SLzaZ8J86vJ49IIwMj4FEIwxOpoCUwfLV69Pk/CkwxAn0V4ojaCSaALlrz4ls2iCejIFeJKkZFr+FX4ZBxCcyX8s8bMZ33TThL8VMbH37+FPFoUGhc3Y84lpWOT2thHLnZiNCkD2zDw==
+ bh=3ZIlOQz8j0dPHvzZDaikuuEhkiKVKcVWhm4WLT4KyRA=;
+ b=e0Iz0HFKna6RO0kQQidlFXosjIa7GfXakGgILK0AUvqRXg0Z7Y+18m4KzxgbOvtwiZr4RCuyW1CwpdV3dbADZ/4R0t/nE6a4SEMKCzTR3YF1VzYIV51tqbb0uWqbvCmP6JHyIEWfmRdkzE+SwSdc/UfIZsD82jwX0GW56c8uGc4BlTh8NtGNE3Ia3vTTgF2GaTAuLUOYuX06n/Y2z6vXmFJzjrz/Y9duI7TLHN5XcftYQQKRePGXzcDYZ0ZHbiOLNlfhdi9C+SOsXpfNPRiNzPp1k40dKU06DSdX/6sYmyNRrjmk3RTwW4qxmTTtFHONrWycdM8F6b/vbwyM4CvKZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cpJwdkone2a59Gbzib8/hRHXheTjcZYasrtOtuAyOrs=;
- b=VMPpjbFi3He5umghF1rjGLTYr9cnf6KJSGNcRs5EHkFKaZadKWA4MUowb67FcMlXNlXIQyNRhEfn98i+++51BmxbcIdVitCso8Ayh76dJzRqjv3BQTQvC8+LOZbL4o5J/QMiTcRHCSBVbW3ICJ1g8YaZbaNzQj68wGllBsibUiU=
+ bh=3ZIlOQz8j0dPHvzZDaikuuEhkiKVKcVWhm4WLT4KyRA=;
+ b=rB/aeJ8eg2KFSSpXbTSDRJ53Aci7d4ozm/eEMzHzHXUphdtthAnxzVKWYUUd3hPEOesSDs5giy6DpQGW0NexK/pQcVkMSRZcNytJ68s3S4vRQ425kQ0OJW8q3ka+sSR+PmpO/ey9yMpSxNO7WvoY+AJkpEkCq/31+lONVBUOsvI=
 Received: from BY5PR10MB4257.namprd10.prod.outlook.com (2603:10b6:a03:211::21)
- by PH7PR10MB6356.namprd10.prod.outlook.com (2603:10b6:510:1b7::8) with
+ by CH0PR10MB4955.namprd10.prod.outlook.com (2603:10b6:610:c2::7) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.29; Tue, 18 Oct
- 2022 15:51:05 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5723.33; Tue, 18 Oct
+ 2022 15:52:34 +0000
 Received: from BY5PR10MB4257.namprd10.prod.outlook.com
  ([fe80::21ec:d1ee:2a59:a1d0]) by BY5PR10MB4257.namprd10.prod.outlook.com
  ([fe80::21ec:d1ee:2a59:a1d0%6]) with mapi id 15.20.5723.033; Tue, 18 Oct 2022
- 15:51:05 +0000
-Message-ID: <b42e1cc3-2eba-9494-79bb-2574f785b1b3@oracle.com>
-Date:   Tue, 18 Oct 2022 08:51:04 -0700
+ 15:52:34 +0000
+Message-ID: <3a63e298-534e-9073-adb3-28ad25a6e596@oracle.com>
+Date:   Tue, 18 Oct 2022 08:52:32 -0700
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.3.3
-Subject: Re: [PATCH 2/2] NFSD: add delegation shrinker to react to low memory
- condition
+Subject: Re: [PATCH 1/2] NFSD: add support for sending CB_RECALL_ANY
 Content-Language: en-US
-To:     Jeff Layton <jlayton@kernel.org>, chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org
+To:     Chuck Lever III <chuck.lever@oracle.com>,
+        Tom Talpey <tom@talpey.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
 References: <1666070139-18843-1-git-send-email-dai.ngo@oracle.com>
- <1666070139-18843-3-git-send-email-dai.ngo@oracle.com>
- <9d1be93452dc03f911c684946464b0862c93b965.camel@kernel.org>
+ <1666070139-18843-2-git-send-email-dai.ngo@oracle.com>
+ <2b3d2faa-c430-b456-f7fb-25dd6273d71a@talpey.com>
+ <AD39E6DC-F52D-49A0-8405-7ECB517B64BA@oracle.com>
 From:   dai.ngo@oracle.com
-In-Reply-To: <9d1be93452dc03f911c684946464b0862c93b965.camel@kernel.org>
+In-Reply-To: <AD39E6DC-F52D-49A0-8405-7ECB517B64BA@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0064.namprd05.prod.outlook.com
- (2603:10b6:a03:332::9) To BY5PR10MB4257.namprd10.prod.outlook.com
+X-ClientProxiedBy: BY3PR03CA0020.namprd03.prod.outlook.com
+ (2603:10b6:a03:39a::25) To BY5PR10MB4257.namprd10.prod.outlook.com
  (2603:10b6:a03:211::21)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|PH7PR10MB6356:EE_
-X-MS-Office365-Filtering-Correlation-Id: 176b16de-2623-4cc3-0dc6-08dab1209106
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4257:EE_|CH0PR10MB4955:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6209367a-7f00-4aec-e7a8-08dab120c5cd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: HtQUot0JWHwgaTutq7MRnEOQX7s60oWrwQGpm/LCo4JSSVeKXpMSEQFIXI5tiXauO2pEptdkPz0UoYTMrfW3Xmhc2DK5jEgAOdZ0p48FIeCMS+fdNuha9aH+o2Tz6nCODwK12igGMrO5cDYk//Qb5JsDs7Msp2aW2j79NI5T7uPCX7ghDQoSebxApFJNkXEpYqAI1FLE+eCs4CUgNnRRX5IBj1g9AKIERWe5XYW3BOiIbRDXG1jU8AgbX5dgydjDu4S+uGopjvncB9dimirBrfpXNMCE5tu9zUunDr4oKIsg8Zl2LSe2dINp+9SV91iHaE55J0PJQ/Q0EKj++QdfVAvlBCknokYzDf9je/Mgfnm9ViQeJmzH6EnJ5+1fuGGT0EBkcUXmO0gjDWXBxbM6e7rkNp46jRIeS83TGnrni9x9v1m4ISNMriJoj3mIh/bQMAjJkDLZgz+QJzdozDnzk07nbVtjicyBiyj2xFYuXMS/6idY3gyoa4HZwycJMO38eJ9hQ8L2IFvS7xdZT2P8WjW321kR7lrCS9AK9BYYdaV5Mhk8W+tCLbt79LhrFcx0PjKwMzQqc354qv3Kebzgx+JtPOhV4YCGeQNJkOA63sSry8Lo6bfdK6EpITxpyqk0qUhd5Yq03glzMXNEbBtzB/QOKgegPOf4Z8sWXTWkpSNd2qOGPmXpcjrfsqz1UlIgEieAjWRCdx+paBFNjPMxJlyM4n4CKsx3TYcMpGmckY1PaljCKRD2+tro2YmhIE4y0bLiKj+c1dMKPylLTV7dfg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(376002)(136003)(39860400002)(366004)(396003)(451199015)(36756003)(86362001)(31696002)(31686004)(38100700002)(2906002)(4001150100001)(186003)(5660300002)(2616005)(9686003)(53546011)(6506007)(26005)(6512007)(478600001)(83380400001)(6486002)(316002)(66946007)(66556008)(8676002)(66476007)(41300700001)(8936002)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: tnP2BUsq4qJIkFzSqORi0c6cNh7Mk+5kFkRRjLkiIwDdlrSfrJax3cxrMzDlcTpDtVwDS7LSM0m65UXhRjtgw85F7CrBQf4Av1t4U8WZi0Ap+QlDEMnyBbnNlZsbxjCX8eePfEHu+9uC6UR1zAKBAYnHeWwGvotI9Vb/k394g/V6/P5tEBmSW8FB4Fwb6mJph/p/MsWld/94f16EE3cGNzftkezut4CdU7IPjWkNl6QCukwGtBNzEZ3UXVXwo2372Mj3L/JOBZf7fl8ceDW5n2vGp8XJ/GXPgm24Hg16Fa/5zzVwwqux2Ql03TY0cWERvvHLElMU/85fcGfkji81aDjKaYOP7vPnOTO02py8Yydi/+X0io3K2gfVA096ToSD2Ou6lRwBd0ZxLsWRqeEzFburR/GZ5ZMKD8AnZlNaTJZ79/m8bFwnjU98S9s2IVhRFrmP8bhtL1J0eCAh2+COV/h1Orr52rrrh8NNYfcvawmYiTF9gvrD8TqviVOsVun52l596QaWJHAFKGDHCrhFtOkq5k1+HgDfl1QDyXBXisyF5Oz3UyDSDUcNWrnKO9NdcJED59ptogzCanmmsvLgwmEz2QqlooKOwkTBNy4VGsz36B2i9SDi0XZ38QOI2VRIMlxlCRe8DSUypdNO4QwTkO1BQEeEqpvnEBVb1K69xb4PmqqY2Pr/9K+8U63hAG6hzWcZ1Wsd0woeArUwOiAD0YIR2asoVhgY+d4c1JNA51dbhEWIgBQRDj1VkAT4ALoMBV2t3UqxttCS0xTNOhQDiA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4257.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(39860400002)(396003)(376002)(136003)(366004)(346002)(451199015)(478600001)(5660300002)(83380400001)(36756003)(6486002)(6506007)(66946007)(66556008)(66476007)(4326008)(31696002)(8676002)(8936002)(41300700001)(86362001)(53546011)(6512007)(9686003)(26005)(110136005)(31686004)(2616005)(38100700002)(316002)(186003)(2906002)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TnhGY2NSLzF6c0ozWkV0VUJmbEt6Tk9lWmUzNTJSRFB5WDYvUTl2VHNZMmZp?=
- =?utf-8?B?a2laQ0h3QnNxbnpnUVdqeU9oWkp2L21kSzltR0w1NnJmSkJUNThJWEkxTjZR?=
- =?utf-8?B?TC9yZGVuejNNUlo1MmZYTGhMUTZQZnlRR0tkb1FPZW9PeExoVG1HOWgrYTEz?=
- =?utf-8?B?Ykg0K2ljVi9ieElsMjdyYWpmQ0xDTkkvT2VlN3ZSQnZvTHpiNWhZZFduUVcr?=
- =?utf-8?B?RkF6QjBjSWxqV29jd1ZUa0w4VnBUOS8xNkNVSE9yWDZxU2RSaWxGRHpqOXl5?=
- =?utf-8?B?SkxUQ1JUMFNrZGxMYThFL3lBbFVQYVg4aXhIdDAzSFlTSHRjY09oMG9ETTJK?=
- =?utf-8?B?VjBmdmY0ODBLZjFLMjZXWGltdTE2TXNvUkhUdVN6WEcxaWFNaWpRVVk3Rmov?=
- =?utf-8?B?em9idGJZZkg2ODZrdWR6L0RYZWcvY1l6VFpYUWY3dHZKckJyWWZ4WndxRW95?=
- =?utf-8?B?cWtadWdrN3g1SGRNVW1JdW5BNjl3T201alVVbU5LeVA3OW0zNkllS1Nzc2p2?=
- =?utf-8?B?WEVkaGtEK0hkQVpjK29KN29CeDV0VHNHSCtTTHM1aHlGWFlyekw1VHEwbnI2?=
- =?utf-8?B?VVV4K2VXd29hOCtlVEk4SXNIYkp5cjkwNnZnUVFEMWU4aitkRkF2ajhxMVRu?=
- =?utf-8?B?ZGkwNGFpc3FsQWt3R1cxaVQ4VTFSaTl6VjZ3U2t1b0RUci9LQVVpTWdHamkx?=
- =?utf-8?B?WVdMNzNnUHJ6OE1sY1YwdmdsY2RnYnF1c24rZ2tNMzBLTkVSc2ZYYVExZ0p3?=
- =?utf-8?B?UlZoY3Fmb3kzbE44U3N5SGt0aVlGVUMxOExybGVRYnJIWlBjLzllRTN4blVk?=
- =?utf-8?B?MlVFNmVWbFpheHloaWs0U0lVNUhkVU5PeW8xeXowaGxNK2k4OTJiaGhWYWt4?=
- =?utf-8?B?RytGZGlSWEtZZ1VDVzJXVGZpWWt2eGxCdjUvS1JKWWY3T2d0Ym4zZkxkZUQ5?=
- =?utf-8?B?OFFBYkpZTjZKYU5BOG11a1dKQ0xBYTJKZ2wvTld2NU8xaGVOUEgwZE4yMkdW?=
- =?utf-8?B?LzhKTFU0OWVYVmNSbDRyck4zMktxSjBITGFNY2VUbGFaMDdSaU01OHJBc0NL?=
- =?utf-8?B?Y3UvK0xTaU5uNnJacFNOaUljNy9MbG5oZ0o2Z2xDSFNGWHl3aFFUbTVZQWxr?=
- =?utf-8?B?SnFmWmlmMUppcTBkSWt4RnUvQjM5Sm5VRkc1ck5Mck5yV2ZDZVhRSUVTcmRW?=
- =?utf-8?B?Rk90ZTNEK1NGZFJpeFZtTWhwTUtva1RIN3FtTis5UXRobmFOcU9Pb3NDZ0xV?=
- =?utf-8?B?bkhjRFJYME9TOTM2VnQ3andwUGtkVDc2dkJ0azhHeVlHQ0FPWmlwcnIyVktm?=
- =?utf-8?B?VE0xUWJHVHZBUXp6c1MrTEY5VGt3eFJ0Z2xFS2tCZi9yQ09YL2RoeW1JcWNF?=
- =?utf-8?B?OGNxOTc5LzN1VGNGbjVLUGJTQkFsdWhCenNMY3lOSmlGNVgwRUpsVUphb3lQ?=
- =?utf-8?B?NVI1ZTBUSnZ5cFJZRldIVTZsQ3p2MHpEeWlodVZHNW5tTlB1OGpFRlhzY2Jm?=
- =?utf-8?B?b3BDeDhLUmZlQ3A4aHB4a0RHeExMckg1L1RiQ1UxSFlyYkpGQkhWL3JzNmsy?=
- =?utf-8?B?NllpRUVRVG5XT3YvOUVtM2NYQ2dSN0dTM1VGc242VXRnbzl2ZmdzcDBzT2pn?=
- =?utf-8?B?bGt3RkpzL1RCeldIcFR6bGhTZlpzZ1J6V1NFRm1lMENPUmswZmZDcGFESmxr?=
- =?utf-8?B?N0lBbjNrR2MwNEZMZmZPQWR5SHErUit2K1F0dTZpTnN0dHJrVm9HbFgyWkpH?=
- =?utf-8?B?eC80MUIwajBJd1BjVjVkZWNnQUx5VHFGbWpmUkxGaXBxNFkxbGhUMjZDWk5T?=
- =?utf-8?B?L1kyeW9pKzB4a09rRzJiZjBFVU5yUGdhVDNmUDJ2RXh3TmdpeDFmbG9IUnB6?=
- =?utf-8?B?TTczRHNGazh1TEVURUd5dU9mWnhuZHBOdThnS2tIa1phRDYyK24yQ2dOSjlF?=
- =?utf-8?B?ZVVUZDZzYXNZU0VvN2FGbXRtRkpUeXBjS3ZYc1dsNVFQc24wU0FKUjZ1RStB?=
- =?utf-8?B?VThPYURncDBvM2hqLytxcXdpQUphOUNSS3dxY1pLdmVyK0pNWnFKYjVaa1Jw?=
- =?utf-8?B?MDN0Mmo3c0hWbEhtUHAyQkdjcytzQUVzRjRreFRMSDJHekdwcEZzMjBPU1ZP?=
- =?utf-8?Q?GA6RzRlEJw+53pAC/esvWgO9F?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K0FCL04zL1hMQ0xKZE16WitSYW1mN0QwLzYxNnkyam03OWdPN1h1VHVmYjVs?=
+ =?utf-8?B?ZlhhaEFjYzF5c1EyWXI2Zy9FbnA0NzI1TTZpc09IeWw2cG9vd3RGaGM5cm1j?=
+ =?utf-8?B?MytjNnJlZWVFV2w4cDVYN1UwRkczK01qaVFqZldPdlE0cGlKQTFpb01UYVFD?=
+ =?utf-8?B?Y0FvVG9iVS9velFjS2xKYmFnMzQrMURIdXJITTBMYmUvQkE5eDI5Mzcrbkk5?=
+ =?utf-8?B?eVEvdlN1ejB1TzcwNjNwVG9RM3dFckllUnVaVjJObkNMbXg5bnpmeE15ZlBG?=
+ =?utf-8?B?ejVId1pLWFY5M05GcDVNb3puQ2lTckVsYlF0RXM3K1pZRkpieXpaaDJuZ0Vp?=
+ =?utf-8?B?S1ZXck92T1dJa0hrQWpmQVpYRmQxUWxIM3RQS0ZheUZzZnBieXFNNmQvVmtn?=
+ =?utf-8?B?T2RTU1VMUjNwSjdUWitVMzFxWkJ4QVJzeEVVR2dhNFZ3K0VhTTYyek5ZOFJQ?=
+ =?utf-8?B?R1g5NG5kU0NYVXZVeGRFOFdJd0orYzdRNWRHVUJBZUhoSElHbkJ5VHBORFVO?=
+ =?utf-8?B?YzZuUjc1Slh6cWQzdC8vc2tETm9OeXBSWGRwZmpEZjFIQ3g4TURkRVpZQXVm?=
+ =?utf-8?B?b2lhUlZzMVpMcHA5dDhFTEpwd2wzclArWW5OdTh0UTJtRFZodHNCY0IrWHpJ?=
+ =?utf-8?B?Wm9GTkZWWkpvSVp3VDZqblVhdi9SSXBRTmFiTUh5TWtUc21XcDBtRWxPNVZM?=
+ =?utf-8?B?LzVybWpBTjNyNEZqY0t0SmZnOHpoajBLb1BQUmh5U1Bqb25wRENMNWRBM1lo?=
+ =?utf-8?B?UmNuWWJiLzVzYmlPUmk3d1JNWmVyYjk2MmJodDdTbHRuYko0aDlZSHdESjI5?=
+ =?utf-8?B?QXdLWUtFZnFtRWxUWG5ONXdyOHZjNSt1NFZhL003bG11V3dmVHB5QUJ6bkhX?=
+ =?utf-8?B?aXZnd2pIWDhZNnpQRGpybnVoYnBsU2ROeldWdTlReWZlc0tuTUpCdHBTNUZQ?=
+ =?utf-8?B?dUtNeTVGTkhRWFQwNm8yNmJFWDU4OVBaL2s2bm4vRmNONnpwOHZtakJpQm0v?=
+ =?utf-8?B?YXFTZjkvaWI4SmJuLzZ5NWVJbFZHUEZjN21YT1BjdzY4V3psZGk3ZWVHcFAw?=
+ =?utf-8?B?RXBnWE1GanN1NUdHUURUTEtBSEpUa2Jiakp0cHcvMkswZFVUNE1JbC91S0p0?=
+ =?utf-8?B?c1ZNUXV1VG1Sc0U1ejJSdUJnSDBQV1BKVFNvcmY1YWxuaE9RU3c4RnR4dHN1?=
+ =?utf-8?B?bEJQb29DUkpWZHB6MHc3dmtwMzJYdWJaQzQ2V3NRdm0xTTlLUmswNUMzRGw1?=
+ =?utf-8?B?VEloY2dyK203d2huZWhWSUU1eW4zc2h4TEdwWjIyS2pWeGxTVnVUVVR2dERS?=
+ =?utf-8?B?RHFDck1mLzdoWmM5NzEwQzBqNWE1ME5SYmFDbkZzM3Y1N1BCdjdNN2tBVEZ6?=
+ =?utf-8?B?R09na3lkZUxBMVQrQ2s1dDRRL0NkY0FNTmk1eFJ4aGc3akRvSW9VbDZMeTlj?=
+ =?utf-8?B?cHJaemlBQjZPNVhvbEZrTVc0MUlGdExveE50VHR5ckVrR2d6b3BMWml3YWxh?=
+ =?utf-8?B?UW40RlJ5UXV2NU5FbXd6a09JNDlHYmRTYnRoUnAyQW1jbHhMS0ZQRXpXa2xv?=
+ =?utf-8?B?QjRidU9jdVF0Y1Bxc1Y2OCtDYk1GK0ZEY3FEU2xMTEltOGlUS0hHTDhvdmRs?=
+ =?utf-8?B?cHpjN1k5VkdnUXRMU09ldGt5aDFQVTEreTFiMHE1RmxLc0FWb3dURGNUdW1X?=
+ =?utf-8?B?dUg2Nm0vOTJIZlIwT25rYzN0UkFpVDE3RU5kQStHYjFqdjI2R0F3TGgwdlM0?=
+ =?utf-8?B?L3V0VGU1U0ZrRWNjRHRXSzZEQjRNbXFmeHRxeWl2bTFlcklnUzRxVEEyWU5j?=
+ =?utf-8?B?Qm45bUZtZjMvVkF0RllybnFBRVZLWlB0L3BVSUMwNElUZktPdnlLZmxvYVVk?=
+ =?utf-8?B?em8vQlBKbCs1WjhEa1d2Ym1BWWI1WFNHeU1KY0g3SDhLcThFV1A3UTk0amtE?=
+ =?utf-8?B?cytHd3YxcVV2Y1lFWjRJZHdPMGsrZjY5M0N5OHlpaWo0NURQd0NvcEcxd20w?=
+ =?utf-8?B?U29DRlF0OGJJWmlkbmt1dVFuMnJvMGVCaThtM011cklRK3VxSEJ0VWs2aW9P?=
+ =?utf-8?B?T2x5RWJEb2F1QmZ0UzIwMkQ4ZGtua2tIR0phVWZLUE11d2hzdmFTTTJnWXla?=
+ =?utf-8?Q?eRVT5Dn2fyTnisDRUZM8SRWwx?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 176b16de-2623-4cc3-0dc6-08dab1209106
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6209367a-7f00-4aec-e7a8-08dab120c5cd
 X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4257.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 15:51:05.7759
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Oct 2022 15:52:34.2959
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qalObNOayXmt2wRMULSrYT0cxhpc9ReiO9EpAflotpGS1GpXJv2B5esXkbE1PsQRTI+tE2d6+YHDnO4qwToutQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6356
+X-MS-Exchange-CrossTenant-UserPrincipalName: JGElFRs88wvqj4U8PZj3+t5+jQe3OYPkstx7Qat0Bz23q1kkf4H9yXK1Nnhm5xteFpF6sXYdqX6LozX1TNIyPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4955
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-10-18_06,2022-10-18_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 bulkscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 spamscore=0 bulkscore=0
+ mlxscore=0 phishscore=0 suspectscore=0 adultscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
  definitions=main-2210180090
-X-Proofpoint-ORIG-GUID: kzLiVCWuUcFr_0Cs4to0IJC8ewtNJGMY
-X-Proofpoint-GUID: kzLiVCWuUcFr_0Cs4to0IJC8ewtNJGMY
+X-Proofpoint-ORIG-GUID: 3oHRdKHRyH3GmlqA-gfjEX6pbPa3rJ14
+X-Proofpoint-GUID: 3oHRdKHRyH3GmlqA-gfjEX6pbPa3rJ14
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -157,179 +158,48 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
-On 10/18/22 6:07 AM, Jeff Layton wrote:
-> On Mon, 2022-10-17 at 22:15 -0700, Dai Ngo wrote:
->> The delegation shrinker is scheduled to run on every shrinker's
->> 'count' callback. It scans the client list and sends the
->> courtesy CB_RECALL_ANY to the clients that hold delegations.
->>
->> To avoid flooding the clients with CB_RECALL_ANY requests, the
->> delegation shrinker is scheduled to run after a 5 seconds delay.
->>
-> But...when the kernel needs memory, it generally needs it _now_, and 5s
-> is a long time. It'd be better to not delay the initial sending of
-> CB_RECALL_ANY callbacks this much.
-
-yes, makes sense.
-
+On 10/18/22 7:03 AM, Chuck Lever III wrote:
 >
-> Maybe the logic should be changed such that it runs no more frequently
-> than once every 5s, but don't delay the initial sending of
-> CB_RECALL_ANYs.
+>> On Oct 18, 2022, at 9:25 AM, Tom Talpey <tom@talpey.com> wrote:
+>>
+>> On 10/18/2022 1:15 AM, Dai Ngo wrote:
+>>> There is only one nfsd4_callback, cl_recall_any, added for each
+>>> nfs4_client. Access to it must be serialized. For now it's done
+>>> by the cl_recall_any_busy flag since it's used only by the
+>>> delegation shrinker. If there is another consumer of CB_RECALL_ANY
+>>> then a spinlock must be used.
+>> I'm curious if clients have shown any quirks with the operation in
+>> your testing. If the (Linux) server hasn't ever been sending it,
+>> then I'd expect some possible issues/quirks in the client.
+> Is Linux NFSD the first implementation of CB_RECALL_ANY? If other
+> servers already have this capability, I would expect clients to
+> work adequately.
+>
+> Of course, if the community doesn't have any unit tests for
+> CB_RECALL_ANY... "what's not tested is broken" -- Brian Wong.
+>
+>
+>> For example, do they really start handing back a significant number
+>> of useful delegations? Enough to satisfy the server's need without
+>> going to specific resource-based recalls?
+> I don't think of CB_RECALL_ANY as heroic, it's more of a hint. So
+> if a client doesn't return anything, that's not really a problem --
+> NFSD is not relying on it, and it certainly does take some time
+> before server-side state resources are eventually released.
+>
+> Another possible use case is for the server to start sending
+> CB_RECALL_ANY when a client hits the max per-client delegation
+> limit.
 
-I'll make this adjustment.
+Yes, this is what I plan to do once we get the mechanism works
+correctly.
 
-Thanks,
 -Dai
 
 >
->> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
->> ---
->>   fs/nfsd/netns.h     |  3 +++
->>   fs/nfsd/nfs4state.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++++++++-
->>   fs/nfsd/state.h     |  1 +
->>   3 files changed, 73 insertions(+), 1 deletion(-)
->>
->> diff --git a/fs/nfsd/netns.h b/fs/nfsd/netns.h
->> index 8c854ba3285b..394a05fb46d8 100644
->> --- a/fs/nfsd/netns.h
->> +++ b/fs/nfsd/netns.h
->> @@ -196,6 +196,9 @@ struct nfsd_net {
->>   	atomic_t		nfsd_courtesy_clients;
->>   	struct shrinker		nfsd_client_shrinker;
->>   	struct delayed_work	nfsd_shrinker_work;
->> +
->> +	struct shrinker		nfsd_deleg_shrinker;
->> +	struct delayed_work	nfsd_deleg_shrinker_work;
->>   };
->>   
->>   /* Simple check to find out if a given net was properly initialized */
->> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
->> index c60c937dece6..bdaea0e6e72f 100644
->> --- a/fs/nfsd/nfs4state.c
->> +++ b/fs/nfsd/nfs4state.c
->> @@ -4392,11 +4392,32 @@ nfsd_courtesy_client_scan(struct shrinker *shrink, struct shrink_control *sc)
->>   	return SHRINK_STOP;
->>   }
->>   
->> +static unsigned long
->> +nfsd_deleg_shrinker_count(struct shrinker *shrink, struct shrink_control *sc)
->> +{
->> +	unsigned long cnt;
->> +	struct nfsd_net *nn = container_of(shrink,
->> +				struct nfsd_net, nfsd_deleg_shrinker);
->> +
->> +	cnt = atomic_long_read(&num_delegations);
->> +	if (cnt)
->> +		mod_delayed_work(laundry_wq,
->> +			&nn->nfsd_deleg_shrinker_work, 5 * HZ);
->> +	return cnt;
->> +}
->> +
-> What's the rationale for doing all of this in the count callback? Why
-> not just return the value here and leave scheduling to the scan
-> callback?
 >
->> +static unsigned long
->> +nfsd_deleg_shrinker_scan(struct shrinker *shrink, struct shrink_control *sc)
->> +{
->> +	return SHRINK_STOP;
->> +}
->> +
->>   int
->>   nfsd4_init_leases_net(struct nfsd_net *nn)
->>   {
->>   	struct sysinfo si;
->>   	u64 max_clients;
->> +	int retval;
->>   
->>   	nn->nfsd4_lease = 90;	/* default lease time */
->>   	nn->nfsd4_grace = 90;
->> @@ -4417,13 +4438,23 @@ nfsd4_init_leases_net(struct nfsd_net *nn)
->>   	nn->nfsd_client_shrinker.scan_objects = nfsd_courtesy_client_scan;
->>   	nn->nfsd_client_shrinker.count_objects = nfsd_courtesy_client_count;
->>   	nn->nfsd_client_shrinker.seeks = DEFAULT_SEEKS;
->> -	return register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
->> +	retval = register_shrinker(&nn->nfsd_client_shrinker, "nfsd-client");
->> +	if (retval)
->> +		return retval;
->> +	nn->nfsd_deleg_shrinker.scan_objects = nfsd_deleg_shrinker_scan;
->> +	nn->nfsd_deleg_shrinker.count_objects = nfsd_deleg_shrinker_count;
->> +	nn->nfsd_deleg_shrinker.seeks = DEFAULT_SEEKS;
->> +	retval = register_shrinker(&nn->nfsd_deleg_shrinker, "nfsd-delegation");
->> +	if (retval)
->> +		unregister_shrinker(&nn->nfsd_client_shrinker);
->> +	return retval;
->>   }
->>   
->>   void
->>   nfsd4_leases_net_shutdown(struct nfsd_net *nn)
->>   {
->>   	unregister_shrinker(&nn->nfsd_client_shrinker);
->> +	unregister_shrinker(&nn->nfsd_deleg_shrinker);
->>   }
->>   
->>   static void init_nfs4_replay(struct nfs4_replay *rp)
->> @@ -6162,6 +6193,42 @@ courtesy_client_reaper(struct work_struct *reaper)
->>   	nfs4_process_client_reaplist(&reaplist);
->>   }
->>   
->> +static void
->> +deleg_reaper(struct work_struct *deleg_work)
->> +{
->> +	struct list_head *pos, *next;
->> +	struct nfs4_client *clp;
->> +	struct list_head cblist;
->> +	struct delayed_work *dwork = to_delayed_work(deleg_work);
->> +	struct nfsd_net *nn = container_of(dwork, struct nfsd_net,
->> +					nfsd_deleg_shrinker_work);
->> +
->> +	INIT_LIST_HEAD(&cblist);
->> +	spin_lock(&nn->client_lock);
->> +	list_for_each_safe(pos, next, &nn->client_lru) {
->> +		clp = list_entry(pos, struct nfs4_client, cl_lru);
->> +		if (clp->cl_state != NFSD4_ACTIVE ||
->> +				list_empty(&clp->cl_delegations) ||
->> +				atomic_read(&clp->cl_delegs_in_recall) ||
->> +				clp->cl_recall_any_busy) {
->> +			continue;
->> +		}
->> +		clp->cl_recall_any_busy = true;
->> +		list_add(&clp->cl_recall_any_cblist, &cblist);
->> +
->> +		/* release in nfsd4_cb_recall_any_release */
->> +		atomic_inc(&clp->cl_rpc_users);
->> +	}
->> +	spin_unlock(&nn->client_lock);
->> +	list_for_each_safe(pos, next, &cblist) {
->> +		clp = list_entry(pos, struct nfs4_client, cl_recall_any_cblist);
->> +		list_del_init(&clp->cl_recall_any_cblist);
->> +		clp->cl_recall_any_bm = BIT(RCA4_TYPE_MASK_RDATA_DLG) |
->> +						BIT(RCA4_TYPE_MASK_WDATA_DLG);
->> +		nfsd4_run_cb(&clp->cl_recall_any);
->> +	}
->> +}
->> +
->>   static inline __be32 nfs4_check_fh(struct svc_fh *fhp, struct nfs4_stid *stp)
->>   {
->>   	if (!fh_match(&fhp->fh_handle, &stp->sc_file->fi_fhandle))
->> @@ -7985,6 +8052,7 @@ static int nfs4_state_create_net(struct net *net)
->>   
->>   	INIT_DELAYED_WORK(&nn->laundromat_work, laundromat_main);
->>   	INIT_DELAYED_WORK(&nn->nfsd_shrinker_work, courtesy_client_reaper);
->> +	INIT_DELAYED_WORK(&nn->nfsd_deleg_shrinker_work, deleg_reaper);
->>   	get_net(net);
->>   
->>   	return 0;
->> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
->> index 49ca06169642..05b572ce6605 100644
->> --- a/fs/nfsd/state.h
->> +++ b/fs/nfsd/state.h
->> @@ -415,6 +415,7 @@ struct nfs4_client {
->>   	bool			cl_recall_any_busy;
->>   	uint32_t		cl_recall_any_bm;
->>   	struct nfsd4_callback	cl_recall_any;
->> +	struct list_head	cl_recall_any_cblist;
->>   };
->>   
->>   /* struct nfs4_client_reset
+> --
+> Chuck Lever
+>
+>
+>
