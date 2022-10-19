@@ -2,52 +2,70 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66EB0604464
-	for <lists+linux-nfs@lfdr.de>; Wed, 19 Oct 2022 14:02:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C529E604471
+	for <lists+linux-nfs@lfdr.de>; Wed, 19 Oct 2022 14:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232362AbiJSMCy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 19 Oct 2022 08:02:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37978 "EHLO
+        id S229658AbiJSMFV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 19 Oct 2022 08:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232363AbiJSMCK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Oct 2022 08:02:10 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6FF3188AA6
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Oct 2022 04:39:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9DB5BB82398
-        for <linux-nfs@vger.kernel.org>; Wed, 19 Oct 2022 11:24:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5C7C433C1;
-        Wed, 19 Oct 2022 11:24:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666178642;
-        bh=UD8jOVkyCoPixVVcIvIgacUnk2ZfKuY0SFHX5VSkyqk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=mLklJkMkLmcf29k7Ja9yd9rgnGi+xjL+oCalX2UHIn76EJk9WVzfum/y7U75JsBSn
-         soz80L3aDHB9D5f60Ipm1kxEh22t6S6+Iak7gNUCBKqJ0HfuFlXiarSHPl4RbCYxfi
-         U211YL8zZ0uBPvGjOq0HKge78Vix31QCeNerE314GAcAyI0KB3yy+HpxX/LtbGjmjM
-         dN5L+PPXhTuwd+O/N/RCD10X1QsKu+nssKnxVy3dGWLSkrhiJ6NFRt6vaWw6eFdiL4
-         0YUYWI3Td5vXI7ccvnSfXWWlOXbDwg3XejsjO6vLaS9QWtYsoDDi+Np5bQ5S3H5xOC
-         1+hv/1qEmqehA==
-Message-ID: <c7d649582724d8f2fd165ecd24697ef06c87a0fb.camel@kernel.org>
-Subject: Re: [PATCH v4 3/7] NFSD: Add an NFSD_FILE_GC flag to enable
- nfsd_file garbage collection
-From:   Jeff Layton <jlayton@kernel.org>
+        with ESMTP id S231271AbiJSMEx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 19 Oct 2022 08:04:53 -0400
+Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C55418DD47
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Oct 2022 04:40:59 -0700 (PDT)
+Received: by mail-qt1-x831.google.com with SMTP id z8so11431416qtv.5
+        for <linux-nfs@vger.kernel.org>; Wed, 19 Oct 2022 04:40:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poochiereds-net.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=kt4bBTVbXW81YAenwRldgzFfhVYXZdpeKJjNUxSlOeU=;
+        b=s6iUeH+w4n4Ls7LtfummMV7p+bd31M+wBWLZGj2aUXfFA8LIb5uTTJ7Xr8X4vA24a9
+         OM7IktSapN4qGr5v8AC5WnjH+Y+owKx10z0eBdq28kG6rEAeFWnt9N8hLxX0yWSLsxqv
+         NtY77tFxE2oyLa25ICs4PyXUyWZjBScSUcbttZ8jyFwp+CS5A0ooYeXB+CVr8s2GIFd8
+         qeRIls/05VNVyH6xT5lTwhGOqyFA1TSiITfwDz8Ivr6l++70SL+MijcUYU8Z8y/qhUGO
+         KCnrIhKwKfYU6CePGr6cq2owfDGQqX86vcELTwPYny7YupfHv8C79ZDI4OJGL35YFPYI
+         4cqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kt4bBTVbXW81YAenwRldgzFfhVYXZdpeKJjNUxSlOeU=;
+        b=Bki7kF8h941Mj1szzLe+ZgLUs8iNKRcC8uJk0DT+m4u7rCUPcn8i28LWLNHKa8am6v
+         jBOCbpzK7GQP39Csr5UKzeE9okHqTKnbU5jpeAfl+6tIm+0fNsWNEHm4yGuhRL5BfTOs
+         mn7I0aSyl53/cYCRKf+KjbHdaLPGKgq4uhfgCLM9cSB5qK/YOFwYMdlpoS863Lt/6f0R
+         I0yCy3yO9jc+IIgHRwF0HxWsaVyXB3bP5UK4eEEyM3yeQZsT5vuLavps3/CDgD8iQ1iQ
+         p+nEZLLIINY9xWc0x90jf/TzN9esD6pIFiGsgzpWzYhlj93lA0lMFnYI9VVNI4NIv8Xk
+         hECA==
+X-Gm-Message-State: ACrzQf2ErN9b6vusSF/NoA0sVnPvQCNmPkSkpvKhz4v57+MhqvqDbHar
+        /zn9It1ve7cw9Bmy935IN6r1KQ==
+X-Google-Smtp-Source: AMsMyM7Aazc/LwzjGvVi+Bu9/RAgelv4B6HsFDzOr7IzMSNs8AClE/FJaIVWC1sBuhj1WIawxhQU6w==
+X-Received: by 2002:ac8:5745:0:b0:35c:9f9b:9d56 with SMTP id 5-20020ac85745000000b0035c9f9b9d56mr5905199qtx.103.1666179581917;
+        Wed, 19 Oct 2022 04:39:41 -0700 (PDT)
+Received: from [192.168.1.3] (68-20-15-154.lightspeed.rlghnc.sbcglobal.net. [68.20.15.154])
+        by smtp.gmail.com with ESMTPSA id de38-20020a05620a372600b006ce30a5f892sm4927509qkb.102.2022.10.19.04.39.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Oct 2022 04:39:39 -0700 (PDT)
+Message-ID: <cdad5af44b1c62c8e2ceae27cb2b646f7b2ec0bd.camel@poochiereds.net>
+Subject: Re: [PATCH v4 5/7] NFSD: Use rhashtable for managing nfs4_file
+ objects
+From:   Jeff Layton <jlayton@poochiereds.net>
 To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de
-Date:   Wed, 19 Oct 2022 07:24:00 -0400
-In-Reply-To: <166612311828.1291.6808456808715954510.stgit@manet.1015granger.net>
+Date:   Wed, 19 Oct 2022 07:39:38 -0400
+In-Reply-To: <166612313084.1291.5764156173845222109.stgit@manet.1015granger.net>
 References: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
-         <166612311828.1291.6808456808715954510.stgit@manet.1015granger.net>
+         <166612313084.1291.5764156173845222109.stgit@manet.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,T_SPF_PERMERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -55,281 +73,406 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Tue, 2022-10-18 at 15:58 -0400, Chuck Lever wrote:
-> NFSv4 operations manage the lifetime of nfsd_file items they use by
-> means of NFSv4 OPEN and CLOSE. Hence there's no need for them to be
-> garbage collected.
+> fh_match() is costly, especially when filehandles are large (as is
+> the case for NFSv4). It needs to be used sparingly when searching
+> data structures. Unfortunately, with common workloads, I see
+> multiple thousands of objects stored in file_hashtbl[], which always
+> has only 256 buckets, which makes the hash chains quite lengthy.
 >=20
-> Introduce a mechanism to enable garbage collection for nfsd_file
-> items used only by NFSv2/3 callers.
+> Walking long hash chains with the state_lock held blocks other
+> activity that needs that lock.
 >=20
-> Note that the change in nfsd_file_put() ensures that both CLOSE and
-> DELEGRETURN will actually close out and free an nfsd_file on last
-> reference of a non-garbage-collected file.
+> To help mitigate the cost of searching with fh_match(), replace the
+> nfs4_file hash table with an rhashtable, which can dynamically
+> resize its bucket array to minimize hash chain length. The ideal for
+> this use case is one bucket per inode.
 >=20
-> Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D394
-> Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Tested-by: Jeff Layton <jlayton@kernel.org>
+> The result is an improvement in the latency of NFSv4 operations
+> and the reduction of nfsd CPU utilization due to the cost of
+> fh_match() and the CPU cache misses incurred while walking long
+> hash chains in the nfs4_file hash table.
+>=20
+> Note that hash removal is no longer protected by the state_lock.
+> This is because insert_nfs4_file() takes the RCU read lock then the
+> state_lock. rhltable_remove() takes the RCU read lock internally;
+> if remove_nfs4_file() took the state_lock before calling
+> rhltable_remove(), that would result in a lock inversion.
+>=20
 > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/filecache.c |   61 +++++++++++++++++++++++++++++++++++++++++++++=
+>  fs/nfsd/nfs4state.c |  215 +++++++++++++++++++++++++++++++++++----------=
 ------
->  fs/nfsd/filecache.h |    3 +++
->  fs/nfsd/nfs3proc.c  |    4 ++-
->  fs/nfsd/trace.h     |    3 ++-
->  fs/nfsd/vfs.c       |    4 ++-
->  5 files changed, 63 insertions(+), 12 deletions(-)
+>  fs/nfsd/state.h     |    5 -
+>  2 files changed, 147 insertions(+), 73 deletions(-)
 >=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index b7aa523c2010..87fce5c95726 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -63,6 +63,7 @@ struct nfsd_file_lookup_key {
->  	struct net			*net;
->  	const struct cred		*cred;
->  	unsigned char			need;
-> +	unsigned char			gc:1;
-
-Is it worth it to mess around with bitfields here? There are exising
-holes in this struct, so you're really not saving anything by using one
-here.
-
-Also, it seems like "need" is used as a bool anyway. Maybe both of those
-fields should just be bools? It looks like changing that won't change
-the size of the struct anyway. You might even be able to shrink it by
-moving the "type" above "need".
-=20
->  	enum nfsd_file_lookup_type	type;
->  };
-> =20
-> @@ -162,6 +163,8 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_comp=
-are_arg *arg,
->  			return 1;
->  		if (!nfsd_match_cred(nf->nf_cred, key->cred))
->  			return 1;
-> +		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D key->gc)
-> +			return 1;
->  		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
->  			return 1;
->  		break;
-> @@ -297,6 +300,8 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, uns=
-igned int may)
->  		nf->nf_flags =3D 0;
->  		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
->  		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
-> +		if (key->gc)
-> +			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
->  		nf->nf_inode =3D key->inode;
->  		/* nf_ref is pre-incremented for hash table */
->  		refcount_set(&nf->nf_ref, 2);
-> @@ -428,16 +433,27 @@ nfsd_file_put_noref(struct nfsd_file *nf)
->  	}
->  }
-> =20
-> +static void
-> +nfsd_file_unhash_and_put(struct nfsd_file *nf)
-> +{
-> +	if (nfsd_file_unhash(nf))
-> +		nfsd_file_put_noref(nf);
-> +}
+> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> index 2b850de288cf..a63334ad61f6 100644
+> --- a/fs/nfsd/nfs4state.c
+> +++ b/fs/nfsd/nfs4state.c
+> @@ -44,7 +44,9 @@
+>  #include <linux/jhash.h>
+>  #include <linux/string_helpers.h>
+>  #include <linux/fsnotify.h>
+> +#include <linux/rhashtable.h>
+>  #include <linux/nfs_ssc.h>
 > +
+>  #include "xdr4.h"
+>  #include "xdr4cb.h"
+>  #include "vfs.h"
+> @@ -84,6 +86,7 @@ static bool check_for_locks(struct nfs4_file *fp, struc=
+t nfs4_lockowner *lowner)
+>  static void nfs4_free_ol_stateid(struct nfs4_stid *stid);
+>  void nfsd4_end_grace(struct nfsd_net *nn);
+>  static void _free_cpntf_state_locked(struct nfsd_net *nn, struct nfs4_cp=
+ntf_state *cps);
+> +static void remove_nfs4_file(struct nfs4_file *fi);
+> =20
+>  /* Locking: */
+> =20
+> @@ -577,11 +580,8 @@ static void nfsd4_free_file_rcu(struct rcu_head *rcu=
+)
 >  void
->  nfsd_file_put(struct nfsd_file *nf)
+>  put_nfs4_file(struct nfs4_file *fi)
 >  {
->  	might_sleep();
-> =20
-> -	nfsd_file_lru_add(nf);
-> +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)
-> +		nfsd_file_lru_add(nf);
-> +	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
-> +		nfsd_file_unhash_and_put(nf);
-> +
->  	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
->  		nfsd_file_flush(nf);
->  		nfsd_file_put_noref(nf);
-> -	} else if (nf->nf_file) {
-> +	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D =
-1) {
->  		nfsd_file_put_noref(nf);
->  		nfsd_file_schedule_laundrette();
->  	} else
-> @@ -1017,12 +1033,14 @@ nfsd_file_is_cached(struct inode *inode)
-> =20
->  static __be32
->  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> -		     unsigned int may_flags, struct nfsd_file **pnf, bool open)
-> +		     unsigned int may_flags, struct nfsd_file **pnf,
-> +		     bool open, int want_gc)
->  {
->  	struct nfsd_file_lookup_key key =3D {
->  		.type	=3D NFSD_FILE_KEY_FULL,
->  		.need	=3D may_flags & NFSD_FILE_MAY_MASK,
->  		.net	=3D SVC_NET(rqstp),
-> +		.gc	=3D want_gc,
->  	};
->  	bool open_retry =3D true;
->  	struct nfsd_file *nf;
-> @@ -1117,14 +1135,35 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
-ct svc_fh *fhp,
->  	 * then unhash.
->  	 */
->  	if (status !=3D nfs_ok || key.inode->i_nlink =3D=3D 0)
-> -		if (nfsd_file_unhash(nf))
-> -			nfsd_file_put_noref(nf);
-> +		nfsd_file_unhash_and_put(nf);
->  	clear_bit_unlock(NFSD_FILE_PENDING, &nf->nf_flags);
->  	smp_mb__after_atomic();
->  	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
->  	goto out;
+> -	might_lock(&state_lock);
+> -
+> -	if (refcount_dec_and_lock(&fi->fi_ref, &state_lock)) {
+> -		hlist_del_rcu(&fi->fi_hash);
+> -		spin_unlock(&state_lock);
+> +	if (refcount_dec_and_test(&fi->fi_ref)) {
+> +		remove_nfs4_file(fi);
+>  		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
+>  		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
+>  		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
+> @@ -695,19 +695,82 @@ static unsigned int ownerstr_hashval(struct xdr_net=
+obj *ownername)
+>  	return ret & OWNER_HASH_MASK;
 >  }
 > =20
-> +/**
-> + * nfsd_file_acquire_gc - Get a struct nfsd_file with an open file
-> + * @rqstp: the RPC transaction being executed
-> + * @fhp: the NFS filehandle of the file to be opened
-> + * @may_flags: NFSD_MAY_ settings for the file
-> + * @pnf: OUT: new or found "struct nfsd_file" object
-> + *
-> + * The nfsd_file object returned by this API is reference-counted
-> + * and garbage-collected. The object is retained for a few
-> + * seconds after the final nfsd_file_put() in case the caller
-> + * wants to re-use it.
-> + *
-> + * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
-> + * network byte order is returned.
+> -/* hash table for nfs4_file */
+> -#define FILE_HASH_BITS                   8
+> -#define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
+> +static struct rhltable nfs4_file_rhltable ____cacheline_aligned_in_smp;
+> +
+> +/*
+> + * The returned hash value is based solely on the address of an in-code
+> + * inode, a pointer to a slab-allocated object. The entropy in such a
+> + * pointer is concentrated in its middle bits.
 > + */
-> +__be32
-> +nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> +		     unsigned int may_flags, struct nfsd_file **pnf)
+> +static u32 nfs4_file_inode_hash(const struct inode *inode, u32 seed)
 > +{
-> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true, 1);
+> +	u32 k;
+> +
+> +	k =3D ((unsigned long)inode) >> L1_CACHE_SHIFT;
+> +	return jhash2(&k, 1, seed);
+> +}
+> =20
+> -static unsigned int file_hashval(struct svc_fh *fh)
+> +/**
+> + * nfs4_file_key_hashfn - Compute the hash value of a lookup key
+> + * @data: key on which to compute the hash value
+> + * @len: rhash table's key_len parameter (unused)
+> + * @seed: rhash table's random seed of the day
+> + *
+> + * Return value:
+> + *   Computed 32-bit hash value
+> + */
+> +static u32 nfs4_file_key_hashfn(const void *data, u32 len, u32 seed)
+>  {
+> -	struct inode *inode =3D d_inode(fh->fh_dentry);
+> +	const struct svc_fh *fhp =3D data;
+> =20
+> -	/* XXX: why not (here & in file cache) use inode? */
+> -	return (unsigned int)hash_long(inode->i_ino, FILE_HASH_BITS);
+> +	return nfs4_file_inode_hash(d_inode(fhp->fh_dentry), seed);
+>  }
+> =20
+> -static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
+> +/**
+> + * nfs4_file_obj_hashfn - Compute the hash value of an nfs4_file object
+> + * @data: object on which to compute the hash value
+> + * @len: rhash table's key_len parameter (unused)
+> + * @seed: rhash table's random seed of the day
+> + *
+> + * Return value:
+> + *   Computed 32-bit hash value
+> + */
+> +static u32 nfs4_file_obj_hashfn(const void *data, u32 len, u32 seed)
+> +{
+> +	const struct nfs4_file *fi =3D data;
+> +
+> +	return nfs4_file_inode_hash(fi->fi_inode, seed);
 > +}
 > +
->  /**
->   * nfsd_file_acquire - Get a struct nfsd_file with an open file
->   * @rqstp: the RPC transaction being executed
-> @@ -1132,6 +1171,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, struc=
-t svc_fh *fhp,
->   * @may_flags: NFSD_MAY_ settings for the file
->   * @pnf: OUT: new or found "struct nfsd_file" object
->   *
-> + * The nfsd_file_object returned by this API is reference-counted
-> + * but not garbage-collected. The object is unhashed after the
-> + * final nfsd_file_put().
+> +/**
+> + * nfs4_file_obj_cmpfn - Match a cache item against search criteria
+> + * @arg: search criteria
+> + * @ptr: cache item to check
 > + *
->   * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
->   * network byte order is returned.
->   */
-> @@ -1139,7 +1182,7 @@ __be32
->  nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  		  unsigned int may_flags, struct nfsd_file **pnf)
->  {
-> -	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true);
-> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, true, 0);
+> + * Return values:
+> + *   %0 - Success; item matches search criteria
+> + */
+> +static int nfs4_file_obj_cmpfn(struct rhashtable_compare_arg *arg,
+> +			       const void *ptr)
+> +{
+> +	const struct svc_fh *fhp =3D arg->key;
+> +	const struct nfs4_file *fi =3D ptr;
+> +
+> +	return fh_match(&fi->fi_fhandle, &fhp->fh_handle) ? 0 : 1;
+> +}
+> +
+> +static const struct rhashtable_params nfs4_file_rhash_params =3D {
+> +	.key_len		=3D sizeof_field(struct nfs4_file, fi_inode),
+> +	.key_offset		=3D offsetof(struct nfs4_file, fi_inode),
+> +	.head_offset		=3D offsetof(struct nfs4_file, fi_rhash),
+> +	.hashfn			=3D nfs4_file_key_hashfn,
+> +	.obj_hashfn		=3D nfs4_file_obj_hashfn,
+> +	.obj_cmpfn		=3D nfs4_file_obj_cmpfn,
+> +
+> +	/* Reduce resizing churn on light workloads */
+> +	.min_size		=3D 512,		/* buckets */
+> +	.automatic_shrinking	=3D true,
+> +};
+> =20
+>  /*
+>   * Check if courtesy clients have conflicting access and resolve it if p=
+ossible
+> @@ -4251,11 +4314,8 @@ static struct nfs4_file *nfsd4_alloc_file(void)
 >  }
 > =20
->  /**
-> @@ -1149,6 +1192,10 @@ nfsd_file_acquire(struct svc_rqst *rqstp, struct s=
-vc_fh *fhp,
->   * @may_flags: NFSD_MAY_ settings for the file
->   * @pnf: OUT: new or found "struct nfsd_file" object
->   *
-> + * The nfsd_file_object returned by this API is reference-counted
-> + * but not garbage-collected. The object is released immediately
-> + * one RCU grace period after the final nfsd_file_put().
-> + *
->   * Returns nfs_ok and sets @pnf on success; otherwise an nfsstat in
->   * network byte order is returned.
->   */
-> @@ -1156,7 +1203,7 @@ __be32
->  nfsd_file_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  		 unsigned int may_flags, struct nfsd_file **pnf)
+>  /* OPEN Share state helper functions */
+> -static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
+> -				struct nfs4_file *fp)
+> +static void init_nfs4_file(const struct svc_fh *fh, struct nfs4_file *fp=
+)
 >  {
-> -	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, false);
-> +	return nfsd_file_do_acquire(rqstp, fhp, may_flags, pnf, false, 0);
+> -	lockdep_assert_held(&state_lock);
+> -
+>  	refcount_set(&fp->fi_ref, 1);
+>  	spin_lock_init(&fp->fi_lock);
+>  	INIT_LIST_HEAD(&fp->fi_stateids);
+> @@ -4273,7 +4333,6 @@ static void nfsd4_init_file(struct svc_fh *fh, unsi=
+gned int hashval,
+>  	INIT_LIST_HEAD(&fp->fi_lo_states);
+>  	atomic_set(&fp->fi_lo_recalls, 0);
+>  #endif
+> -	hlist_add_head_rcu(&fp->fi_hash, &file_hashtbl[hashval]);
+>  }
+> =20
+>  void
+> @@ -4626,71 +4685,75 @@ move_to_close_lru(struct nfs4_ol_stateid *s, stru=
+ct net *net)
+>  		nfs4_put_stid(&last->st_stid);
+>  }
+> =20
+> -/* search file_hashtbl[] for file */
+> -static struct nfs4_file *
+> -find_file_locked(struct svc_fh *fh, unsigned int hashval)
+> +static struct nfs4_file *find_nfs4_file(const struct svc_fh *fhp)
+>  {
+> -	struct nfs4_file *fp;
+> +	struct rhlist_head *tmp, *list;
+> +	struct nfs4_file *fi =3D NULL;
+> =20
+> -	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
+> -				lockdep_is_held(&state_lock)) {
+> -		if (fh_match(&fp->fi_fhandle, &fh->fh_handle)) {
+> -			if (refcount_inc_not_zero(&fp->fi_ref))
+> -				return fp;
+> +	list =3D rhltable_lookup(&nfs4_file_rhltable, fhp,
+> +			       nfs4_file_rhash_params);
+> +	rhl_for_each_entry_rcu(fi, tmp, list, fi_rhash)
+> +		if (fh_match(&fi->fi_fhandle, &fhp->fh_handle)) {
+> +			if (!refcount_inc_not_zero(&fi->fi_ref))
+> +				fi =3D NULL;
+> +			break;
+>  		}
+> -	}
+> -	return NULL;
+> +	return fi;
+>  }
+> =20
+> -static struct nfs4_file *insert_file(struct nfs4_file *new, struct svc_f=
+h *fh,
+> -				     unsigned int hashval)
+> +/*
+> + * On hash insertion, identify entries with the same inode but
+> + * distinct filehandles. They will all be in the same hash bucket
+> + * because we hash by the address of the nfs4_file's struct inode.
+> + */
+> +static struct nfs4_file *insert_file(struct nfs4_file *new,
+> +				     const struct svc_fh *fhp)
+>  {
+> -	struct nfs4_file *fp;
+> -	struct nfs4_file *ret =3D NULL;
+> -	bool alias_found =3D false;
+> +	struct rhlist_head *tmp, *list;
+> +	struct nfs4_file *fi;
+> +	int err;
+> =20
+>  	spin_lock(&state_lock);
+> -	hlist_for_each_entry_rcu(fp, &file_hashtbl[hashval], fi_hash,
+> -				 lockdep_is_held(&state_lock)) {
+> -		if (fh_match(&fp->fi_fhandle, &fh->fh_handle)) {
+> -			if (refcount_inc_not_zero(&fp->fi_ref))
+> -				ret =3D fp;
+> -		} else if (d_inode(fh->fh_dentry) =3D=3D fp->fi_inode)
+> -			fp->fi_aliased =3D alias_found =3D true;
+> -	}
+> -	if (likely(ret =3D=3D NULL)) {
+> -		nfsd4_init_file(fh, hashval, new);
+> -		new->fi_aliased =3D alias_found;
+> -		ret =3D new;
+> +
+> +	err =3D rhltable_insert_key(&nfs4_file_rhltable, fhp,
+> +				  &new->fi_rhash,
+> +				  nfs4_file_rhash_params);
+> +	if (err) {
+> +		spin_unlock(&state_lock);
+> +		return NULL;
+>  	}
+> +
+> +	list =3D rhltable_lookup(&nfs4_file_rhltable, fhp,
+> +			       nfs4_file_rhash_params);
+> +	rhl_for_each_entry_rcu(fi, tmp, list, fi_rhash)
+> +		if (fi->fi_inode =3D=3D d_inode(fhp->fh_dentry) &&
+> +		    !fh_match(&fi->fi_fhandle, &fhp->fh_handle)) {
+> +			fi->fi_aliased =3D true;
+> +			new->fi_aliased =3D true;
+> +		}
+> +
+>  	spin_unlock(&state_lock);
+> -	return ret;
+> +	return new;
+>  }
+> =20
+> -static struct nfs4_file * find_file(struct svc_fh *fh)
+> +static noinline struct nfs4_file *
+> +insert_nfs4_file(struct nfs4_file *new, const struct svc_fh *fhp)
+>  {
+> -	struct nfs4_file *fp;
+> -	unsigned int hashval =3D file_hashval(fh);
+> +	struct nfs4_file *fi;
+> =20
+> -	rcu_read_lock();
+> -	fp =3D find_file_locked(fh, hashval);
+> -	rcu_read_unlock();
+> -	return fp;
+> +	/* Do not hash the same filehandle more than once */
+> +	fi =3D find_nfs4_file(fhp);
+> +	if (unlikely(fi))
+> +		return fi;
+> +
+> +	init_nfs4_file(fhp, new);
+> +	return insert_file(new, fhp);
+>  }
+> =20
+> -static struct nfs4_file *
+> -find_or_add_file(struct nfs4_file *new, struct svc_fh *fh)
+> +static noinline void remove_nfs4_file(struct nfs4_file *fi)
+>  {
+> -	struct nfs4_file *fp;
+> -	unsigned int hashval =3D file_hashval(fh);
+> -
+> -	rcu_read_lock();
+> -	fp =3D find_file_locked(fh, hashval);
+> -	rcu_read_unlock();
+> -	if (fp)
+> -		return fp;
+> -
+> -	return insert_file(new, fh, hashval);
+> +	rhltable_remove(&nfs4_file_rhltable, &fi->fi_rhash,
+> +			nfs4_file_rhash_params);
 >  }
 > =20
 >  /*
-> diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> index f81c198f4ed6..0f6546bcd3e0 100644
-> --- a/fs/nfsd/filecache.h
-> +++ b/fs/nfsd/filecache.h
-> @@ -38,6 +38,7 @@ struct nfsd_file {
->  #define NFSD_FILE_HASHED	(0)
->  #define NFSD_FILE_PENDING	(1)
->  #define NFSD_FILE_REFERENCED	(2)
-> +#define NFSD_FILE_GC		(3)
->  	unsigned long		nf_flags;
->  	struct inode		*nf_inode;	/* don't deref */
->  	refcount_t		nf_ref;
-> @@ -55,6 +56,8 @@ void nfsd_file_put(struct nfsd_file *nf);
->  struct nfsd_file *nfsd_file_get(struct nfsd_file *nf);
->  void nfsd_file_close_inode_sync(struct inode *inode);
->  bool nfsd_file_is_cached(struct inode *inode);
-> +__be32 nfsd_file_acquire_gc(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> +		  unsigned int may_flags, struct nfsd_file **nfp);
->  __be32 nfsd_file_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
->  		  unsigned int may_flags, struct nfsd_file **nfp);
->  __be32 nfsd_file_create(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> diff --git a/fs/nfsd/nfs3proc.c b/fs/nfsd/nfs3proc.c
-> index d12823371857..6a5ad6c91d8e 100644
-> --- a/fs/nfsd/nfs3proc.c
-> +++ b/fs/nfsd/nfs3proc.c
-> @@ -779,8 +779,8 @@ nfsd3_proc_commit(struct svc_rqst *rqstp)
->  				(unsigned long long) argp->offset);
+> @@ -4703,9 +4766,12 @@ nfs4_share_conflict(struct svc_fh *current_fh, uns=
+igned int deny_type)
+>  	struct nfs4_file *fp;
+>  	__be32 ret =3D nfs_ok;
 > =20
->  	fh_copy(&resp->fh, &argp->fh);
-> -	resp->status =3D nfsd_file_acquire(rqstp, &resp->fh, NFSD_MAY_WRITE |
-> -					 NFSD_MAY_NOT_BREAK_LEASE, &nf);
-> +	resp->status =3D nfsd_file_acquire_gc(rqstp, &resp->fh, NFSD_MAY_WRITE =
-|
-> +					    NFSD_MAY_NOT_BREAK_LEASE, &nf);
->  	if (resp->status)
->  		goto out;
->  	resp->status =3D nfsd_commit(rqstp, &resp->fh, nf, argp->offset,
-> diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-> index 9ebd67d461f9..4921144880d3 100644
-> --- a/fs/nfsd/trace.h
-> +++ b/fs/nfsd/trace.h
-> @@ -742,7 +742,8 @@ DEFINE_CLID_EVENT(confirmed_r);
->  	__print_flags(val, "|",						\
->  		{ 1 << NFSD_FILE_HASHED,	"HASHED" },		\
->  		{ 1 << NFSD_FILE_PENDING,	"PENDING" },		\
-> -		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"})
-> +		{ 1 << NFSD_FILE_REFERENCED,	"REFERENCED"},		\
-> +		{ 1 << NFSD_FILE_GC,		"GC"})
+> -	fp =3D find_file(current_fh);
+> +	rcu_read_lock();
+> +	fp =3D find_nfs4_file(current_fh);
+> +	rcu_read_unlock();
+>  	if (!fp)
+>  		return ret;
+> +
+>  	/* Check for conflicting share reservations */
+>  	spin_lock(&fp->fi_lock);
+>  	if (fp->fi_share_deny & deny_type)
+> @@ -5548,7 +5614,11 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct=
+ svc_fh *current_fh, struct nf
+>  	 * and check for delegations in the process of being recalled.
+>  	 * If not found, create the nfs4_file struct
+>  	 */
+> -	fp =3D find_or_add_file(open->op_file, current_fh);
+> +	rcu_read_lock();
+> +	fp =3D insert_nfs4_file(open->op_file, current_fh);
+> +	rcu_read_unlock();
+
+It'd probably be better to push this rcu_read_lock down into
+insert_nfs4_file. You don't need to hold it over the actual insertion,
+since that requires the state_lock.
+
+
+> +	if (unlikely(!fp))
+> +		return nfserr_jukebox;
+>  	if (fp !=3D open->op_file) {
+>  		status =3D nfs4_check_deleg(cl, open, &dp);
+>  		if (status)
+> @@ -7905,10 +7975,16 @@ nfs4_state_start(void)
+>  {
+>  	int ret;
 > =20
->  DECLARE_EVENT_CLASS(nfsd_file_class,
->  	TP_PROTO(struct nfsd_file *nf),
-> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-> index 44f210ba17cc..89d682a56fc4 100644
-> --- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -1060,7 +1060,7 @@ __be32 nfsd_read(struct svc_rqst *rqstp, struct svc=
-_fh *fhp,
->  	__be32 err;
+> -	ret =3D nfsd4_create_callback_queue();
+> +	ret =3D rhltable_init(&nfs4_file_rhltable, &nfs4_file_rhash_params);
+>  	if (ret)
+>  		return ret;
 > =20
->  	trace_nfsd_read_start(rqstp, fhp, offset, *count);
-> -	err =3D nfsd_file_acquire(rqstp, fhp, NFSD_MAY_READ, &nf);
-> +	err =3D nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_READ, &nf);
->  	if (err)
->  		return err;
+> +	ret =3D nfsd4_create_callback_queue();
+> +	if (ret) {
+> +		rhltable_destroy(&nfs4_file_rhltable);
+> +		return ret;
+> +	}
+> +
+>  	set_max_delegations();
+>  	return 0;
+>  }
+> @@ -7939,6 +8015,7 @@ nfs4_state_shutdown_net(struct net *net)
 > =20
-> @@ -1092,7 +1092,7 @@ nfsd_write(struct svc_rqst *rqstp, struct svc_fh *f=
-hp, loff_t offset,
-> =20
->  	trace_nfsd_write_start(rqstp, fhp, offset, *cnt);
-> =20
-> -	err =3D nfsd_file_acquire(rqstp, fhp, NFSD_MAY_WRITE, &nf);
-> +	err =3D nfsd_file_acquire_gc(rqstp, fhp, NFSD_MAY_WRITE, &nf);
->  	if (err)
->  		goto out;
-> =20
+>  	nfsd4_client_tracking_exit(net);
+>  	nfs4_state_destroy_net(net);
+> +	rhltable_destroy(&nfs4_file_rhltable);
+>  #ifdef CONFIG_NFSD_V4_2_INTER_SSC
+>  	nfsd4_ssc_shutdown_umount(nn);
+>  #endif
+> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> index ae596dbf8667..ad20467c9dee 100644
+> --- a/fs/nfsd/state.h
+> +++ b/fs/nfsd/state.h
+> @@ -536,16 +536,13 @@ struct nfs4_clnt_odstate {
+>   * inode can have multiple filehandles associated with it, so there is
+>   * (potentially) a many to one relationship between this struct and stru=
+ct
+>   * inode.
+> - *
+> - * These are hashed by filehandle in the file_hashtbl, which is protecte=
+d by
+> - * the global state_lock spinlock.
+>   */
+>  struct nfs4_file {
+>  	refcount_t		fi_ref;
+>  	struct inode *		fi_inode;
+>  	bool			fi_aliased;
+>  	spinlock_t		fi_lock;
+> -	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
+> +	struct rhlist_head	fi_rhash;
+>  	struct list_head        fi_stateids;
+>  	union {
+>  		struct list_head	fi_delegations;
 >=20
 >=20
 
-Patch itself looks fine though. You can add:
-
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-
-...but I'd probably prefer to see the flags in that struct as bools
-instead if you're amenable to the change.
+--=20
+Jeff Layton <jlayton@poochiereds.net>
