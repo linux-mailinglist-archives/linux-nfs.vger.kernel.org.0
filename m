@@ -2,111 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E23F46076DA
-	for <lists+linux-nfs@lfdr.de>; Fri, 21 Oct 2022 14:24:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 995A8607724
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Oct 2022 14:42:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbiJUMYB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Oct 2022 08:24:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58372 "EHLO
+        id S229770AbiJUMmU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 21 Oct 2022 08:42:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbiJUMYA (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Oct 2022 08:24:00 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 570DF132258
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Oct 2022 05:23:59 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S230024AbiJUMl7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Oct 2022 08:41:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A587257DFA
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Oct 2022 05:41:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666356113;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=PqnOVYHkZryyX1p0+BUcFBzKM5ph1pZpZeIV39/Xw0w=;
+        b=W1i2kESgYbnZQlxQcxtDHjsnVZXT4M10eD1rdheQb9F691vj2ZqobhkWNmJgllTAgflXWX
+        yuUjvHiz+KAupUUs0OoOBIlCV8yGQTbz9qZmJM/NbJGvlxKbBuyqOXW68Z/N4bxIxAYDhU
+        VkoFma3m7Gpyy5jj4YdToHYA7f/5Gx8=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-383-zS6VNDFPOG-fEyjYCv4dZw-1; Fri, 21 Oct 2022 08:41:52 -0400
+X-MC-Unique: zS6VNDFPOG-fEyjYCv4dZw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id A1B6E21FA6;
-        Fri, 21 Oct 2022 12:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1666355037; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=W7sGysXuTWvdYu2hT9y4eGhEIx0EIX5/uMDrorU+zGM=;
-        b=C9ykRMFBaNBQPui56UHCpwv7YW0TffFuIIL/rz+7MoB+bowFM0Nj0t9WCYmAn0jAuigh8n
-        JCFZhUTINwxq8UYB6d5hRO+09BLvBQZji4HKScq8bORTKkDqZbjgEzmvh1ByHqXAkQ5Cl3
-        j4VJxcaBL9a4c6+ECDU4NoenZ7avUZc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1666355037;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=W7sGysXuTWvdYu2hT9y4eGhEIx0EIX5/uMDrorU+zGM=;
-        b=OhP8pZ1KNWeih2k15TgINkRWp2zsr5/ptGgqhPN2X2/8GI7uJo5mBhvxR77L6ERlCfR3MY
-        LFMWO0pXDK5JLwDg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7D6FB13A0E;
-        Fri, 21 Oct 2022 12:23:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id NsM4HV2PUmOEXQAAMHmgww
-        (envelope-from <ddiss@suse.de>); Fri, 21 Oct 2022 12:23:57 +0000
-From:   David Disseldorp <ddiss@suse.de>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5D9923C0F420
+        for <linux-nfs@vger.kernel.org>; Fri, 21 Oct 2022 12:41:52 +0000 (UTC)
+Received: from localhost (unknown [10.66.60.126])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B4FC149BB60;
+        Fri, 21 Oct 2022 12:41:51 +0000 (UTC)
+From:   Zhi Li <yieli@redhat.com>
 To:     linux-nfs@vger.kernel.org
-Cc:     neilb@suse.de, David Disseldorp <ddiss@suse.de>
-Subject: [PATCH] exportfs: use pr_debug for unreachable debug statements
-Date:   Fri, 21 Oct 2022 14:24:14 +0200
-Message-Id: <20221021122414.20555-1-ddiss@suse.de>
-X-Mailer: git-send-email 2.35.3
+Cc:     steved@redhat.com, Zhi Li <yieli@redhat.com>
+Subject: [PATCH] [nfs/nfs-utils] mount.nfs: fix NULL pointer derefernce in nfs_parse_square_bracket
+Date:   Fri, 21 Oct 2022 20:41:48 +0800
+Message-Id: <20221021124148.4035709-1-yieli@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-expfs.c has a bunch of dprintk statements which are unusable due to:
- #define dprintk(fmt, args...) do{}while(0)
-Use pr_debug so that they can be enabled dynamically.
-Also make some minor changes to the debug statements to fix some
-incorrect types, and remove __func__ which can be handled by dynamic
-debug separately.
+In function nfs_parse_square_bracket, hostname could be NULL,
+dereferencing it in free(*hostname) may cause an unexpected segfault.
 
-Signed-off-by: David Disseldorp <ddiss@suse.de>
+Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2136807
+Signed-off-by: Zhi Li <yieli@redhat.com>
 ---
- fs/exportfs/expfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ utils/mount/parse_dev.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
-index c648a493faf23..3204bd33e4e8a 100644
---- a/fs/exportfs/expfs.c
-+++ b/fs/exportfs/expfs.c
-@@ -18,7 +18,7 @@
- #include <linux/sched.h>
- #include <linux/cred.h>
- 
--#define dprintk(fmt, args...) do{}while(0)
-+#define dprintk(fmt, args...) pr_debug(fmt, ##args)
- 
- 
- static int get_name(const struct path *path, char *name, struct dentry *child);
-@@ -132,8 +132,8 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
- 	inode_unlock(dentry->d_inode);
- 
- 	if (IS_ERR(parent)) {
--		dprintk("%s: get_parent of %ld failed, err %d\n",
--			__func__, dentry->d_inode->i_ino, PTR_ERR(parent));
-+		dprintk("get_parent of %lu failed, err %ld\n",
-+			dentry->d_inode->i_ino, PTR_ERR(parent));
- 		return parent;
- 	}
- 
-@@ -147,7 +147,7 @@ static struct dentry *reconnect_one(struct vfsmount *mnt,
- 	dprintk("%s: found name: %s\n", __func__, nbuf);
- 	tmp = lookup_one_unlocked(mnt_user_ns(mnt), nbuf, parent, strlen(nbuf));
- 	if (IS_ERR(tmp)) {
--		dprintk("%s: lookup failed: %d\n", __func__, PTR_ERR(tmp));
-+		dprintk("lookup failed: %ld\n", PTR_ERR(tmp));
- 		err = PTR_ERR(tmp);
- 		goto out_err;
+diff --git a/utils/mount/parse_dev.c b/utils/mount/parse_dev.c
+index 0d3bcb95..2ade5d5d 100644
+--- a/utils/mount/parse_dev.c
++++ b/utils/mount/parse_dev.c
+@@ -170,7 +170,8 @@ static int nfs_parse_square_bracket(const char *dev,
+ 	if (pathname) {
+ 		*pathname = strndup(cbrace, path_len);
+ 		if (*pathname == NULL) {
+-			free(*hostname);
++			if (hostname)
++				free(*hostname);
+ 			return nfs_pdn_nomem_err();
+ 		}
  	}
 -- 
-2.35.3
+2.37.3
 
