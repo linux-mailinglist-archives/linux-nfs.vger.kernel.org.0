@@ -2,65 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D10B6067F2
-	for <lists+linux-nfs@lfdr.de>; Thu, 20 Oct 2022 20:10:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 82D8C606E35
+	for <lists+linux-nfs@lfdr.de>; Fri, 21 Oct 2022 05:13:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229996AbiJTSKb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 20 Oct 2022 14:10:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39546 "EHLO
+        id S229714AbiJUDNm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 20 Oct 2022 23:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230115AbiJTSK1 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Oct 2022 14:10:27 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6847F49B62
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Oct 2022 11:10:15 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id e15so85160qvo.4
-        for <linux-nfs@vger.kernel.org>; Thu, 20 Oct 2022 11:10:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mkMthEm2w0aWOa9HYP74wfwhuMeK5omBYFuu27xFlQU=;
-        b=cACv2TqaQIvZr0DwJs0ElQVefpREW93nhJoayfLqodLHdKiwQgPWd2cmx+3OtTXEKH
-         S70Y2qCNerUeDd8p/CKyY5c63CotrkdsHeyfmjrC0Y/xMuIDQY51XZl6iX8xCqIbjoce
-         thSdFCDg47wk7NWr1Jpze9fioSRAXr3m6iGG3mik5c/kxY19uEdMBuu5k0G/ni1SgePp
-         rGaRDGKaPY0Sh3W0+X8+8y9ZOOCgP/aVDmaAKhrnPq5QC26akQ96KBygT5+JVrXcOcuQ
-         SgbXhSjEpT3o2zH/36BTqKrETqRvA42/GmkYwbcxgmhUqxcqbBTJcvIYeChl58AmZ8Vh
-         kWzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mkMthEm2w0aWOa9HYP74wfwhuMeK5omBYFuu27xFlQU=;
-        b=XvPw+bUDhuf8Z9az2tx/ECEAJgdDUmezi4UZc022fGBShaxHP0hyxFwAEUia9vldkd
-         Fpczgr5IFm3daGW9cHwBFWz5sMDpMLr/cLPFaeOY8HxSqmfODxDfeKpTZLlpwWyrSbbk
-         V2CqqEJm5kDD+j1eHm6zctIIAOs2T43mH643ZiFqGFF95r5bfNO7bzkFQv/Xmlpg59Oi
-         xt+SED3n19j0s6mCF6vkC6oB1HfqgzCHLpLD8lZw2lQqpHrX7XfsgrP7+HZcFhXXPSBq
-         SHPu0zGW61MjCPFuGdN/QPmyIdAnpM7EwWAvTM28CEPrwafKKzLdwUwrGGISxTp+zldc
-         42Rw==
-X-Gm-Message-State: ACrzQf1FxLH+18bPXKgD1JkDCc+iTf5ytruACy6fPP4QE1mnGZzPIIQw
-        W3vdCA4VSa1iFkZa1fARALaTnS+4+oOo3N5z0x0=
-X-Google-Smtp-Source: AMsMyM45RUervJIZ1x557wV9NTz8vA8CjatIYJvJzJvpSCCqEL8fIUy/7SL5041PP7eEtcVAWM0WWOdFdJkq/sshaqY=
-X-Received: by 2002:a0c:8086:0:b0:4b1:cfa1:3c35 with SMTP id
- 6-20020a0c8086000000b004b1cfa13c35mr12843879qvb.47.1666289356390; Thu, 20 Oct
- 2022 11:09:16 -0700 (PDT)
+        with ESMTP id S229936AbiJUDN2 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 20 Oct 2022 23:13:28 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF3F91D101D
+        for <linux-nfs@vger.kernel.org>; Thu, 20 Oct 2022 20:13:25 -0700 (PDT)
+Received: from dggpeml500024.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4MtqG367CFzpVd0;
+        Fri, 21 Oct 2022 11:10:03 +0800 (CST)
+Received: from dggpeml500016.china.huawei.com (7.185.36.70) by
+ dggpeml500024.china.huawei.com (7.185.36.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 11:13:24 +0800
+Received: from [10.174.176.102] (10.174.176.102) by
+ dggpeml500016.china.huawei.com (7.185.36.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 21 Oct 2022 11:13:23 +0800
+Message-ID: <dae2ff7c-df1d-7b2e-5e48-8e8af3e5f68d@huawei.com>
+Date:   Fri, 21 Oct 2022 11:13:23 +0800
 MIME-Version: 1.0
-References: <166525550985.1954655.13884581337321315995.stgit@morisot.1015granger.net>
- <7AADFC73-5748-4D80-BED3-CF8D6A92D510@oracle.com>
-In-Reply-To: <7AADFC73-5748-4D80-BED3-CF8D6A92D510@oracle.com>
-From:   Anna Schumaker <schumaker.anna@gmail.com>
-Date:   Thu, 20 Oct 2022 14:09:00 -0400
-Message-ID: <CAFX2Jf=zCF5_5q1yDMWgEABvgqQb9_HyDJ=5sRw1+6W4bAG33g@mail.gmail.com>
-Subject: Re: [PATCH] SUNRPC: Fix crasher in gss_unwrap_resp_integ()
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.3.2
+Subject: Re: [PATCH v2] nfs-blkmapd: PID file read by systemd failed
+From:   zhanchengbin <zhanchengbin1@huawei.com>
+To:     <steved@redhat.com>
+CC:     <linux-nfs@vger.kernel.org>, <liuzhiqiang26@huawei.com>,
+        linfeilong <linfeilong@huawei.com>
+References: <f81e71f4-ea7b-c512-573f-ac1f6e4bcefd@huawei.com>
+In-Reply-To: <f81e71f4-ea7b-c512-573f-ac1f6e4bcefd@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.176.102]
+X-ClientProxiedBy: dggpeml500024.china.huawei.com (7.185.36.10) To
+ dggpeml500016.china.huawei.com (7.185.36.70)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,52 +52,93 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Chuck,
+ping...
 
-On Wed, Oct 19, 2022 at 11:50 AM Chuck Lever III <chuck.lever@oracle.com> wrote:
->
->
->
-> > On Oct 8, 2022, at 2:58 PM, Chuck Lever <chuck.lever@oracle.com> wrote:
-> >
-> > If a zero length is passed to kmalloc() it returns 0x10, which is
-> > not a valid address. gss_unwrap_resp_integ() subsequently crashes
-> > when it attempts to dereference that pointer.
-> >
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
->
-> Hi, is there a plan to merge this patch, or does the fix need
-> a different approach?
-
-Thanks for following up. I'm planning to include it in my next
-bugfixes pull request.
-
-Anna
-
->
->
-> > ---
-> > net/sunrpc/auth_gss/auth_gss.c |    2 +-
-> > 1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-> > index a31a27816cc0..7bb247c51e2f 100644
-> > --- a/net/sunrpc/auth_gss/auth_gss.c
-> > +++ b/net/sunrpc/auth_gss/auth_gss.c
-> > @@ -1989,7 +1989,7 @@ gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
-> >               goto unwrap_failed;
-> >       mic.len = len;
-> >       mic.data = kmalloc(len, GFP_KERNEL);
-> > -     if (!mic.data)
-> > +     if (ZERO_OR_NULL_PTR(mic.data))
-> >               goto unwrap_failed;
-> >       if (read_bytes_from_xdr_buf(rcv_buf, offset, mic.data, mic.len))
-> >               goto unwrap_failed;
-> >
-> >
->
-> --
-> Chuck Lever
->
->
->
+On 2022/10/18 11:05, zhanchengbin wrote:
+> When started nfs-blkmap.service, the PID file can't be opened, The
+> cause is that the child process does not create the PID file before
+> the systemd reads the PID file.
+> Adding "ExecStartPost=/bin/sleep 0.1" to
+> /usr/lib/systemd/system/nfs-blkmap.service will probably solve this
+> problem, However, there is no guarantee that the above solutions are
+> effective under high cpu pressure.So replace the daemon function with
+> the fork function, and put the behavior of creating the PID file in
+> the parent process to solve the above problems.
+> 
+> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
+> Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> ---
+> V1->V2:
+>   2.27.0 -> 2.33.0
+> 
+>   utils/blkmapd/device-discovery.c | 48 +++++++++++++++++++++-----------
+>   1 file changed, 32 insertions(+), 16 deletions(-)
+> 
+> diff --git a/utils/blkmapd/device-discovery.c 
+> b/utils/blkmapd/device-discovery.c
+> index 49935c2e..dcced5c3 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -507,28 +507,44 @@ int main(int argc, char **argv)
+>       if (fg) {
+>           openlog("blkmapd", LOG_PERROR, 0);
+>       } else {
+> -        if (daemon(0, 0) != 0) {
+> -            fprintf(stderr, "Daemonize failed\n");
+> +        pid_t pid = fork();
+> +        if (pid < 0) {
+> +            fprintf(stderr, "fork error\n");
+>               exit(1);
+> +        } else if (pid != 0) {
+> +            pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> +            if (pidfd < 0) {
+> +                fprintf(stderr, "Create pid file %s failed\n", PID_FILE);
+> +                exit(1);
+> +            }
+> +
+> +            if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> +                fprintf(stderr, "Already running; Exiting!");
+> +                close(pidfd);
+> +                exit(1);
+> +            }
+> +            if (ftruncate(pidfd, 0) < 0)
+> +                fprintf(stderr, "ftruncate on %s failed: m\n", PID_FILE);
+> +            sprintf(pidbuf, "%d\n", pid);
+> +            if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> +                fprintf(stderr, "write on %s failed: m\n", PID_FILE);
+> +            exit(0);
+>           }
+> 
+> -        openlog("blkmapd", LOG_PID, 0);
+> -        pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> -        if (pidfd < 0) {
+> -            BL_LOG_ERR("Create pid file %s failed\n", PID_FILE);
+> -            exit(1);
+> +        (void)setsid();
+> +        if (chdir("/")) {
+> +            fprintf(stderr, "chdir error\n");
+>           }
+> +        int fd = open("/dev/null", O_RDWR, 0);
+> +        if (fd >= 0) {
+> +            (void)dup2(fd, STDIN_FILENO);
+> +            (void)dup2(fd, STDOUT_FILENO);
+> +            (void)dup2(fd, STDERR_FILENO);
+> 
+> -        if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> -            BL_LOG_ERR("Already running; Exiting!");
+> -            close(pidfd);
+> -            exit(1);
+> +            (void)close(fd);
+>           }
+> -        if (ftruncate(pidfd, 0) < 0)
+> -            BL_LOG_WARNING("ftruncate on %s failed: m\n", PID_FILE);
+> -        sprintf(pidbuf, "%d\n", getpid());
+> -        if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> -            BL_LOG_WARNING("write on %s failed: m\n", PID_FILE);
+> +
+> +        openlog("blkmapd", LOG_PID, 0);
+>       }
+> 
+>       signal(SIGINT, sig_die);
