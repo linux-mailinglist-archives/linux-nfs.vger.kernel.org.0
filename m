@@ -2,73 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 565606081F6
-	for <lists+linux-nfs@lfdr.de>; Sat, 22 Oct 2022 01:03:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C4D8608EED
+	for <lists+linux-nfs@lfdr.de>; Sat, 22 Oct 2022 20:09:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbiJUXDt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 21 Oct 2022 19:03:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40170 "EHLO
+        id S229885AbiJVSJl (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 22 Oct 2022 14:09:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbiJUXDs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 21 Oct 2022 19:03:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA1B2AD9CC
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Oct 2022 16:03:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 654CD61FA5
-        for <linux-nfs@vger.kernel.org>; Fri, 21 Oct 2022 23:03:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CCCF7C433C1;
-        Fri, 21 Oct 2022 23:03:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666393424;
-        bh=NmI65qGU3Rjv5pE5h4S6+mE1ZE+POh/NVMNcAXIgH4s=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=dNVm9+FcHsXv9W9m4KKoHMzn0TR5K2UEXvN4VhqtDF/FiFZcmL06RK+LxAd9r2FQ7
-         crxmzxw+/eQ2/1MNI6K+aSBvShu7qN1sa5O/mPOyqDY9foBsB/tBO+oWdFy/9XNXGn
-         VSXO4/dp03F4vfE1LjWeYgfftp+JL4uwNiKtGFV4gbJlz9tYHxwTFaIH5e5PtkSxdB
-         RMgJAqmXQfOx40Xh1JldPm4X6uV+4/q4mwAa1A4fb6E4LHMJfIw+97hsQ2chd1sEIx
-         t+r23YjRrRqtOakUfbg0kfNXENQSEnwgvj8rg0P/XnJCnCSkkjOKi5rQEEr6AntfaX
-         CxucbUWzfP6jw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AC544E270DF;
-        Fri, 21 Oct 2022 23:03:44 +0000 (UTC)
-Subject: Re: [GIT PULL] NFSD fixes for v6.1-rc
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <FE0137AB-C9D9-4496-9CA9-8869A581F889@oracle.com>
-References: <FE0137AB-C9D9-4496-9CA9-8869A581F889@oracle.com>
-X-PR-Tracked-List-Id: <linux-nfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <FE0137AB-C9D9-4496-9CA9-8869A581F889@oracle.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.1-2
-X-PR-Tracked-Commit-Id: 93c128e709aec23b10f3a2f78a824080d4085318
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 022c028f4cfd6af728fcb9314712257a327d47e0
-Message-Id: <166639342470.3847.11744686588476146401.pr-tracker-bot@kernel.org>
-Date:   Fri, 21 Oct 2022 23:03:44 +0000
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@kernel.org>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229904AbiJVSJg (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 22 Oct 2022 14:09:36 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D388D11C3E
+        for <linux-nfs@vger.kernel.org>; Sat, 22 Oct 2022 11:09:29 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29MBGPo1012741;
+        Sat, 22 Oct 2022 18:09:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2022-7-12;
+ bh=gPIADgwm6BjCAyQJC42EGDI4dztVun3rPaxP4YoDsQ4=;
+ b=yL/v7hs/7z+W5DUdwnR4UsDjMOIMdR7PETDhAwf5ezjyykNVg7Ranj2zbBll5j1Q1mvQ
+ AOim8fm8aipNhyWuXxILET0nBI9Hrtdsiqe929qXXcyZFM8r46AgKSexnJ2x/x2gsIoy
+ ItoqwTb6y2PbEoQsE7hloY64FaApyfxbMq9JoAii3F59lewKqWf1DPF0pa9ckUuBrB0r
+ vW7pI9gDyDSfRxrvvro8L6ho/3y0dGzY6Sf16lP3iDi/MqAqmtDNsrIi9adQ3PrTRi2S
+ LuDmf3lmLroSEuNSNz0QSA14KnIum3XFIs7SQShnFS2/9byrVAjaWvUMAwBH9Pjye81L 5w== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kc84srqru-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Oct 2022 18:09:25 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29M9a4m3032064;
+        Sat, 22 Oct 2022 18:09:24 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kc6y2u3wx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 22 Oct 2022 18:09:24 +0000
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 29MI9OHg026867;
+        Sat, 22 Oct 2022 18:09:24 GMT
+Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3kc6y2u3wv-1;
+        Sat, 22 Oct 2022 18:09:23 +0000
+From:   Dai Ngo <dai.ngo@oracle.com>
+To:     chuck.lever@oracle.com, jlayton@kernel.org
+Cc:     linux-nfs@vger.kernel.org
+Subject: [PATCH v2 0/2] add support for CB_RECALL_ANY and the delegation shrinker
+Date:   Sat, 22 Oct 2022 11:09:08 -0700
+Message-Id: <1666462150-11736-1-git-send-email-dai.ngo@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-10-21_04,2022-10-21_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 malwarescore=0 spamscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2209130000
+ definitions=main-2210220114
+X-Proofpoint-ORIG-GUID: UpYfqRDxDUGl5AtOcU_p9VKjj5hv2kIj
+X-Proofpoint-GUID: UpYfqRDxDUGl5AtOcU_p9VKjj5hv2kIj
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-The pull request you sent on Fri, 21 Oct 2022 13:40:46 +0000:
+This patch series adds:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git tags/nfsd-6.1-2
+    . support for sending the CB_RECALL_ANY op.
+      There is only one nfsd4_callback, cl_recall_any, added for each
+      nfs4_client. Access to it must be serialized. For now it's done
+      by the cl_recall_any_busy flag since it's used only by the
+      delegation shrinker. If there is another consumer of cl_recall_any
+      then a spinlock must be used.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/022c028f4cfd6af728fcb9314712257a327d47e0
+    . the delegation shrinker that sends the advisory CB_RECALL_ANY 
+      to the clients to release unused delegations.
 
-Thank you!
+v2:
+    . modify deleg_reaper to check and send CB_RECALL_ANY to client
+      only once per 5 secs.
+---
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Dai Ngo (2):
+     NFSD: add support for sending CB_RECALL_ANY
+     NFSD: add delegation shrinker to react to low memory condition
+
+ fs/nfsd/netns.h        |   3 ++
+ fs/nfsd/nfs4callback.c |  64 ++++++++++++++++++++++++++++
+ fs/nfsd/nfs4state.c    | 101 +++++++++++++++++++++++++++++++++++++++++++-
+ fs/nfsd/state.h        |  10 +++++
+ fs/nfsd/xdr4cb.h       |   6 +++
+ 5 files changed, 183 insertions(+), 1 deletion(-)
