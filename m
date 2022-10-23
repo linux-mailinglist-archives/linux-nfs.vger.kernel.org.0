@@ -2,124 +2,96 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA3AB6094CA
-	for <lists+linux-nfs@lfdr.de>; Sun, 23 Oct 2022 18:41:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A6C66096F3
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Oct 2022 00:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbiJWQln (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 23 Oct 2022 12:41:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45106 "EHLO
+        id S229449AbiJWWGI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 23 Oct 2022 18:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230355AbiJWQlm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Oct 2022 12:41:42 -0400
-Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3CB665667;
-        Sun, 23 Oct 2022 09:41:41 -0700 (PDT)
-Received: by mail-pg1-x52f.google.com with SMTP id q71so6804037pgq.8;
-        Sun, 23 Oct 2022 09:41:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y2bDAIefZxbRVSM/SaH1NL1oBBLTDGxU2sWjuEVySo0=;
-        b=Al/bcK0raH1SRXE3/4nftiI+qFU0z7u3k5IRgL6icE1yDmPYX2WINBttZZWg6W9gdw
-         qHV+4EGaMiArBjM6MvF2wwY6mN2LVba5NOMZj/QrP/5+Bryf2WTfQlW+08VUjSMr5MG/
-         13kG3W3i7TdUKHtJrSytliHcOPp9cuLRBFRAuhlht3va1ku6Xf1g7XQFZMHBzKnqsAMH
-         Ae21n34Q7N6EUO2YWsClQUHKZZwnQnTl2NdNcEAbjYYplZ6LBpjtKQj1EwcNKC750YTE
-         uI7vtK/s1V8cusDsD9AUW+bkBmYF9/UMTyhRCRsXOxv79AISblKjdYeq2okdLegW+Jpw
-         MZ8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y2bDAIefZxbRVSM/SaH1NL1oBBLTDGxU2sWjuEVySo0=;
-        b=rxm/W7eI9a0komlZLMZWCKPXIs/fD8BKPFgqGSUU0vcG/NAta5SUHft2TQlSoq/os8
-         AtD0T+C5m+JxcaIXFDGnFgdf4xm2Y+RZSxyqGyOhgUxVH6B9vnB9p+BZm9HOnTF7Am+C
-         aDijTa3+TxsHf6urxkHIt4AB/HTv1OVR3993BfJcP6CvRkmASiIkgqQQB1imri+/3zCj
-         n7gPTwfI8l0AOGZu/iWjz9P/vetGn6tNc9Viqr5jj3RgH6rz0EL7lza5gzi3ddPW09ba
-         GK35aLFVoKjzObqrleU6QKU/s3Ibe7R2ZiDzzOoI8GrHMiiHgkCAZiTbCpLTVoZXx9dl
-         cHjQ==
-X-Gm-Message-State: ACrzQf0I3brjG7BhCcw15Y7QxNdUXqE5/1urXm8Uy5E3KiyoK2J3d2pX
-        jYzMYtgMaLA9li44uSueZMA=
-X-Google-Smtp-Source: AMsMyM7irLWDlav1VeIiY5mui3ckyNhI3n2zU5dxXGRJ0JYZXVfYymRXmX9OmNkmEthf8F8HB6u5Zw==
-X-Received: by 2002:a05:6a00:27a1:b0:566:8937:27c2 with SMTP id bd33-20020a056a0027a100b00566893727c2mr29010630pfb.24.1666543301375;
-        Sun, 23 Oct 2022 09:41:41 -0700 (PDT)
-Received: from localhost ([223.104.41.250])
-        by smtp.gmail.com with ESMTPSA id f7-20020a170902684700b0017a04542a45sm5618366pln.159.2022.10.23.09.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Oct 2022 09:41:41 -0700 (PDT)
-From:   Hawkins Jiawei <yin31149@gmail.com>
-To:     yin31149@gmail.com,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>
-Cc:     18801353760@163.com, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: [PATCH -next 2/5] nfs: fix possible null-ptr-deref when parsing param
-Date:   Mon, 24 Oct 2022 00:39:45 +0800
-Message-Id: <20221023163945.39920-3-yin31149@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20221023163945.39920-1-yin31149@gmail.com>
-References: <20221023163945.39920-1-yin31149@gmail.com>
+        with ESMTP id S229707AbiJWWGI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 23 Oct 2022 18:06:08 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC6B6D573
+        for <linux-nfs@vger.kernel.org>; Sun, 23 Oct 2022 15:06:04 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 31B1921EF9;
+        Sun, 23 Oct 2022 22:06:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1666562763; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LRiJiTPqOqwlqaydST6lPYccLqFZrWc8lnObmpHnE9w=;
+        b=JaCMSP6mvCTFH2y6T1WPYY9xzkhT5frIl3w0YXmB1l4tq6yt6ho7qpvI7bjJ/jKBcoQVKL
+        zUnjiYM3Z0QbMqYLQbK2TyPAjl10T13t29URE2WNsFd0qzeICEjf2sE9/bKaGKWy16gMuR
+        CX3e3tjS+3SxSGcsFfrLjj33WN7r5BM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1666562763;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LRiJiTPqOqwlqaydST6lPYccLqFZrWc8lnObmpHnE9w=;
+        b=uuV8tsFQTd6HyZG570ERORrRvwlUkIfkb6qtFsTg+y6gaIPfgcCgEmFraraqEICdo9f1XA
+        g1pyjYKopm4awfDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EB6F2139F0;
+        Sun, 23 Oct 2022 22:06:01 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id 1lcIJ8m6VWPJVAAAMHmgww
+        (envelope-from <neilb@suse.de>); Sun, 23 Oct 2022 22:06:01 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     "Salvatore Bonaccorso" <carnil@debian.org>
+Cc:     "Steve Dickson" <steved@redhat.com>, linux-nfs@vger.kernel.org
+Subject: Re: systemd/50-nfs.conf and interoperability issue with
+ intramfs-tools not including sunrpc into initrd
+In-reply-to: <Y1KoKwu88PulcokW@eldamar.lan>
+References: <Y1KoKwu88PulcokW@eldamar.lan>
+Date:   Mon, 24 Oct 2022 09:05:57 +1100
+Message-id: <166656275785.12462.14027406790454668194@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-According to commit "vfs: parse: deal with zero length string value",
-kernel will set the param->string to null pointer in vfs_parse_fs_string()
-if fs string has zero length.
+On Sat, 22 Oct 2022, Salvatore Bonaccorso wrote:
+> Hi Neil, hi Steve,
+> 
+> In Debian for the update including the systemd/50-nfs.conf there was a
+> report that sunrpc is not included anymore in the initrd through the
+> initramfs-tools hooks. 
+> 
+> The report is at https://bugs.debian.org/1022172
+> 
+> As we would not start to diverge again from nfs-utils upstream and
+> keep in sync with upstream as much as possible I would like to retain
+> whatever is from nfs-utils upstream downstream as well.
+> 
+> Marco d'Intri suggested there three possible solutions, of which one
+> could be done in nfs-utils (whereas the other two are either in kmod
+> upstream or initramfs-tools upstream). The nfs-utils one would be to
+> replace the modprobe configuration with a set of udev rules instead.
+> 
+> What do you think?
 
-Yet the problem is that, nfs_fs_context_parse_param() will dereferences the
-param->string, without checking whether it is a null pointer, which may
-trigger a null-ptr-deref bug.
+I don't object to nfs-utils being changed to install an appropriate udev
+rules file instead of the modprobe.d file.  Would you be willing to
+develop, test, and post a patch?
 
-This patch solves it by adding sanity check on param->string
-in nfs_fs_context_parse_param().
-
-Signed-off-by: Hawkins Jiawei <yin31149@gmail.com>
----
- fs/nfs/fs_context.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/nfs/fs_context.c b/fs/nfs/fs_context.c
-index 4da701fd1424..0c330bc13ef2 100644
---- a/fs/nfs/fs_context.c
-+++ b/fs/nfs/fs_context.c
-@@ -684,6 +684,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 			return ret;
- 		break;
- 	case Opt_vers:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		ret = nfs_parse_version_string(fc, param->string);
- 		if (ret < 0)
-@@ -696,6 +698,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		break;
- 
- 	case Opt_proto:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		protofamily = AF_INET;
- 		switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
-@@ -732,6 +736,8 @@ static int nfs_fs_context_parse_param(struct fs_context *fc,
- 		break;
- 
- 	case Opt_mountproto:
-+		if (!param->string)
-+			goto out_invalid_value;
- 		trace_nfs_mount_assign(param->key, param->string);
- 		mountfamily = AF_INET;
- 		switch (lookup_constant(nfs_xprt_protocol_tokens, param->string, -1)) {
--- 
-2.25.1
-
+Thanks,
+NeilBrown
