@@ -2,44 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A209660A7DE
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Oct 2022 15:00:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B95C760B551
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Oct 2022 20:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234742AbiJXNAX (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Oct 2022 09:00:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54094 "EHLO
+        id S229934AbiJXSVE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Oct 2022 14:21:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235032AbiJXM7L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 08:59:11 -0400
+        with ESMTP id S231433AbiJXSUl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 14:20:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE999A2A7
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 05:18:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894A32892D4
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 10:01:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CCEEE6126B
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 12:16:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC1D4C433C1;
-        Mon, 24 Oct 2022 12:16:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D383C611DE
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 16:57:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC172C433C1;
+        Mon, 24 Oct 2022 16:57:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666613815;
-        bh=0rEIHx70j0+On4cph0cTnYin+nsRkELB1WOkrKTXQEM=;
+        s=k20201202; t=1666630668;
+        bh=tMLx2ghURjVpSRRmmIl7TeLn4//QuMdeI5jFZAA6Vvw=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=TP+lqbLsXY12ADbjGMr6FJSgiEN1akpWAgTexORgGvOKuPviSekKaOMaoE7H2+ATF
-         Qh6I9I8GhPoJOm6Z2VP0PVbFBQNKk6PnMD7zn8EuJ8Zw7GgozuCE6KJq8dVG35LgqJ
-         Er1SXD8Flttu83DjCxPbC1CrMZWZHx/PHhaCat8B+vheZvB4kAGJAfQ3i0fbBuO0Gu
-         kw/0DTywB5+99h0Ony2OUfhc6reI7t7uzqZm7jrMl4i3le8gAPehTTx3mCWjRD4gM/
-         2wj0pPdRlkFqOO0PFlsV4P09r79PV7n0Hr/bR5fZkSblo0fz4gyxEbcnI4AxZLx6cH
-         OUoEW/tVVbr7w==
-Message-ID: <d43a3dac01f8c4211ec7634a0d78dae70468f39b.camel@kernel.org>
-Subject: Re: [PATCH v2 1/2] NFSD: add support for sending CB_RECALL_ANY
+        b=ouh0lbgeWFtneicQ5M49BjQ9A7a0uyqKc2W3n0I6Bj9yzntIbsBHbDxjthNGFgChv
+         JvSwlqMs0XBIpS5CcP0RL/QzdHqnORXxabh0oqjWopeuBTu8ZIZienkdQoVOIEBQmQ
+         DLRXlowiI71w+dWR4w9PWD7+OINvzOkUwdTD9Mvj/km8ESFDJwCwt8Z0tst/MkQAF+
+         hj4t13PcNaFMyjUypwRcTRJLkVAl2xn4TNRA45wuA5E+yS+PdYbAuHBjBdD/gfzSN1
+         bMQedlxt5Ki+EPQigLUSjqv+hjKKek4ZUefSKdk+kfm8fq7MS8WjKHGCACARxk5W3l
+         U6PF2JVs8uC7g==
+Message-ID: <3d86628c75009a4feb3d20804e6f190dee8b83a3.camel@kernel.org>
+Subject: Re: [PATCH v4 3/7] NFSD: Add an NFSD_FILE_GC flag to enable
+ nfsd_file garbage collection
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
+To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 24 Oct 2022 08:16:53 -0400
-In-Reply-To: <1666462150-11736-2-git-send-email-dai.ngo@oracle.com>
-References: <1666462150-11736-1-git-send-email-dai.ngo@oracle.com>
-         <1666462150-11736-2-git-send-email-dai.ngo@oracle.com>
+Date:   Mon, 24 Oct 2022 12:57:46 -0400
+In-Reply-To: <166657883468.12462.7206160925496863213@noble.neil.brown.name>
+References: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
+        , <166612311828.1291.6808456808715954510.stgit@manet.1015granger.net>
+         <166657883468.12462.7206160925496863213@noble.neil.brown.name>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
@@ -53,227 +55,144 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 2022-10-22 at 11:09 -0700, Dai Ngo wrote:
-> There is only one nfsd4_callback, cl_recall_any, added for each
-> nfs4_client. Access to it must be serialized. For now it's done
-> by the cl_recall_any_busy flag since it's used only by the
-> delegation shrinker. If there is another consumer of CB_RECALL_ANY
-> then a spinlock must be used.
+On Mon, 2022-10-24 at 13:33 +1100, NeilBrown wrote:
+> On Wed, 19 Oct 2022, Chuck Lever wrote:
+> > NFSv4 operations manage the lifetime of nfsd_file items they use by
+> > means of NFSv4 OPEN and CLOSE. Hence there's no need for them to be
+> > garbage collected.
+> >=20
+> > Introduce a mechanism to enable garbage collection for nfsd_file
+> > items used only by NFSv2/3 callers.
+> >=20
+> > Note that the change in nfsd_file_put() ensures that both CLOSE and
+> > DELEGRETURN will actually close out and free an nfsd_file on last
+> > reference of a non-garbage-collected file.
+> >=20
+> > Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D394
+> > Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > Tested-by: Jeff Layton <jlayton@kernel.org>
+> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> > ---
+> >  fs/nfsd/filecache.c |   61 +++++++++++++++++++++++++++++++++++++++++++=
+++------
+> >  fs/nfsd/filecache.h |    3 +++
+> >  fs/nfsd/nfs3proc.c  |    4 ++-
+> >  fs/nfsd/trace.h     |    3 ++-
+> >  fs/nfsd/vfs.c       |    4 ++-
+> >  5 files changed, 63 insertions(+), 12 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index b7aa523c2010..87fce5c95726 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -63,6 +63,7 @@ struct nfsd_file_lookup_key {
+> >  	struct net			*net;
+> >  	const struct cred		*cred;
+> >  	unsigned char			need;
+> > +	unsigned char			gc:1;
+> >  	enum nfsd_file_lookup_type	type;
+> >  };
+> > =20
+> > @@ -162,6 +163,8 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_co=
+mpare_arg *arg,
+> >  			return 1;
+> >  		if (!nfsd_match_cred(nf->nf_cred, key->cred))
+> >  			return 1;
+> > +		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D key->gc)
+> > +			return 1;
+> >  		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
+> >  			return 1;
+> >  		break;
+> > @@ -297,6 +300,8 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, u=
+nsigned int may)
+> >  		nf->nf_flags =3D 0;
+> >  		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
+> >  		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
+> > +		if (key->gc)
+> > +			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
+> >  		nf->nf_inode =3D key->inode;
+> >  		/* nf_ref is pre-incremented for hash table */
+> >  		refcount_set(&nf->nf_ref, 2);
+> > @@ -428,16 +433,27 @@ nfsd_file_put_noref(struct nfsd_file *nf)
+> >  	}
+> >  }
+> > =20
+> > +static void
+> > +nfsd_file_unhash_and_put(struct nfsd_file *nf)
+> > +{
+> > +	if (nfsd_file_unhash(nf))
+> > +		nfsd_file_put_noref(nf);
+> > +}
+> > +
+> >  void
+> >  nfsd_file_put(struct nfsd_file *nf)
+> >  {
+> >  	might_sleep();
+> > =20
+> > -	nfsd_file_lru_add(nf);
+> > +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)
 >=20
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
-> ---
->  fs/nfsd/nfs4callback.c | 64 ++++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  fs/nfsd/nfs4state.c    | 27 +++++++++++++++++++++
->  fs/nfsd/state.h        |  8 +++++++
->  fs/nfsd/xdr4cb.h       |  6 +++++
->  4 files changed, 105 insertions(+)
+> Clearly this is a style choice on which sensible people might disagree,
+> but I much prefer to leave out the "=3D=3D 1" That is what most callers i=
+n
+> fs/nfsd/ do - only exceptions are here in filecache.c.
+> Even "!=3D 0" would be better than "=3D=3D 1".
+> I think test_bit() is declared as a bool, but it is hard to be certain.
 >=20
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index f0e69edf5f0f..03587e1397f4 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -329,6 +329,29 @@ static void encode_cb_recall4args(struct xdr_stream =
-*xdr,
->  }
-> =20
->  /*
-> + * CB_RECALLANY4args
-> + *
-> + *	struct CB_RECALLANY4args {
-> + *		uint32_t	craa_objects_to_keep;
-> + *		bitmap4		craa_type_mask;
-> + *	};
-> + */
-> +static void
-> +encode_cb_recallany4args(struct xdr_stream *xdr,
-> +			struct nfs4_cb_compound_hdr *hdr, uint32_t bmval)
-> +{
-> +	__be32 *p;
-> +
-> +	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
-> +	p =3D xdr_reserve_space(xdr, 4);
-> +	*p++ =3D xdr_zero;	/* craa_objects_to_keep */
-> +	p =3D xdr_reserve_space(xdr, 8);
-> +	*p++ =3D cpu_to_be32(1);
-> +	*p++ =3D cpu_to_be32(bmval);
-> +	hdr->nops++;
-> +}
-> +
-> +/*
->   * CB_SEQUENCE4args
->   *
->   *	struct CB_SEQUENCE4args {
-> @@ -482,6 +505,24 @@ static void nfs4_xdr_enc_cb_recall(struct rpc_rqst *=
-req, struct xdr_stream *xdr,
->  	encode_cb_nops(&hdr);
->  }
-> =20
-> +/*
-> + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
-> + */
-> +static void
-> +nfs4_xdr_enc_cb_recall_any(struct rpc_rqst *req,
-> +		struct xdr_stream *xdr, const void *data)
-> +{
-> +	const struct nfsd4_callback *cb =3D data;
-> +	struct nfs4_cb_compound_hdr hdr =3D {
-> +		.ident =3D cb->cb_clp->cl_cb_ident,
-> +		.minorversion =3D cb->cb_clp->cl_minorversion,
-> +	};
-> +
-> +	encode_cb_compound4args(xdr, &hdr);
-> +	encode_cb_sequence4args(xdr, cb, &hdr);
-> +	encode_cb_recallany4args(xdr, &hdr, cb->cb_clp->cl_recall_any_bm);
-> +	encode_cb_nops(&hdr);
-> +}
-> =20
->  /*
->   * NFSv4.0 and NFSv4.1 XDR decode functions
-> @@ -520,6 +561,28 @@ static int nfs4_xdr_dec_cb_recall(struct rpc_rqst *r=
-qstp,
->  	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status);
->  }
-> =20
-> +/*
-> + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Objects
-> + */
-> +static int
-> +nfs4_xdr_dec_cb_recall_any(struct rpc_rqst *rqstp,
-> +				  struct xdr_stream *xdr,
-> +				  void *data)
-> +{
-> +	struct nfsd4_callback *cb =3D data;
-> +	struct nfs4_cb_compound_hdr hdr;
-> +	int status;
-> +
-> +	status =3D decode_cb_compound4res(xdr, &hdr);
-> +	if (unlikely(status))
-> +		return status;
-> +	status =3D decode_cb_sequence4res(xdr, cb);
-> +	if (unlikely(status || cb->cb_seq_status))
-> +		return status;
-> +	status =3D  decode_cb_op_status(xdr, OP_CB_RECALL_ANY, &cb->cb_status);
-> +	return status;
-> +}
-> +
->  #ifdef CONFIG_NFSD_PNFS
->  /*
->   * CB_LAYOUTRECALL4args
-> @@ -783,6 +846,7 @@ static const struct rpc_procinfo nfs4_cb_procedures[]=
- =3D {
->  #endif
->  	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock),
->  	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
-> +	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
->  };
-> =20
->  static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedures)];
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 4e718500a00c..c60c937dece6 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -2854,6 +2854,31 @@ static const struct tree_descr client_files[] =3D =
-{
->  	[3] =3D {""},
->  };
-> =20
-> +static int
-> +nfsd4_cb_recall_any_done(struct nfsd4_callback *cb,
-> +			struct rpc_task *task)
-> +{
-> +	switch (task->tk_status) {
-> +	case -NFS4ERR_DELAY:
-> +		rpc_delay(task, 2 * HZ);
-> +		return 0;
-> +	default:
-> +		return 1;
-> +	}
-> +}
-> +
-> +static void
-> +nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
-> +{
-> +	cb->cb_clp->cl_recall_any_busy =3D false;
-> +	atomic_dec(&cb->cb_clp->cl_rpc_users);
-> +}
+> > +		nfsd_file_lru_add(nf);
+> > +	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
+> > +		nfsd_file_unhash_and_put(nf);
+>=20
+> Tests on the value of a refcount are almost always racy.
 
+Agreed, and there's a clear race above, now that I look more closely. If
+nf_ref is 3 and two puts are racing then neither of them will call
+nfsd_file_unhash_and_put. We really should be letting the outcome of the
+decrement drive things (like you say below).
 
-This series probably ought to be one big patch. The problem is that
-you're adding a bunch of code to do CB_RECALL_ANY, but there is no way
-to call it without patch #2.
+> I suspect there is an implication that as NFSD_FILE_GC is not set, this
+> *must* be hashed which implies there is guaranteed to be a refcount from
+> the hashtable.  So this is really a test to see if the pre-biased
+> refcount is one.  The safe way to test if a refcount is 1 is dec_and_test=
+.
+>=20
+> i.e. linkage from the hash table should not count as a reference (in the
+> not-GC case).  Lookup in the hash table should fail if the found entry
+> cannot achieve an inc_not_zero.  When dec_and_test says the refcount is
+> zero, we remove from the hash table (certain that no new references will
+> be taken).
+>=20
 
-That makes it hard to judge whether there could be races and locking
-issues around the handling of cb_recall_any_busy, in particular. From
-patch #2, it looks like cb_recall_any_busy is protected by the
-nn->client_lock, but I don't think ->release is called with that held.
+This does seem a more sensible approach. That would go a long way toward
+simplifying nfsd_file_put.
 
-Also, cl_rpc_users is a refcount (though we don't necessarily free the
-object when it goes to zero). I think you need to call
-put_client_renew_locked here instead of just decrementing the counter.
-
-> +
-> +static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops =3D {
-> +	.done		=3D nfsd4_cb_recall_any_done,
-> +	.release	=3D nfsd4_cb_recall_any_release,
-> +};
-> +
->  static struct nfs4_client *create_client(struct xdr_netobj name,
->  		struct svc_rqst *rqstp, nfs4_verifier *verf)
->  {
-> @@ -2891,6 +2916,8 @@ static struct nfs4_client *create_client(struct xdr=
-_netobj name,
->  		free_client(clp);
->  		return NULL;
->  	}
-> +	nfsd4_init_cb(&clp->cl_recall_any, clp, &nfsd4_cb_recall_any_ops,
-> +			NFSPROC4_CLNT_CB_RECALL_ANY);
->  	return clp;
->  }
-> =20
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index e2daef3cc003..49ca06169642 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -411,6 +411,10 @@ struct nfs4_client {
-> =20
->  	unsigned int		cl_state;
->  	atomic_t		cl_delegs_in_recall;
-> +
-> +	bool			cl_recall_any_busy;
-> +	uint32_t		cl_recall_any_bm;
-> +	struct nfsd4_callback	cl_recall_any;
->  };
-> =20
->  /* struct nfs4_client_reset
-> @@ -639,8 +643,12 @@ enum nfsd4_cb_op {
->  	NFSPROC4_CLNT_CB_OFFLOAD,
->  	NFSPROC4_CLNT_CB_SEQUENCE,
->  	NFSPROC4_CLNT_CB_NOTIFY_LOCK,
-> +	NFSPROC4_CLNT_CB_RECALL_ANY,
->  };
-> =20
-> +#define RCA4_TYPE_MASK_RDATA_DLG	0
-> +#define RCA4_TYPE_MASK_WDATA_DLG	1
-> +
->  /* Returns true iff a is later than b: */
->  static inline bool nfsd4_stateid_generation_after(stateid_t *a, stateid_=
-t *b)
->  {
-> diff --git a/fs/nfsd/xdr4cb.h b/fs/nfsd/xdr4cb.h
-> index 547cf07cf4e0..0d39af1b00a0 100644
-> --- a/fs/nfsd/xdr4cb.h
-> +++ b/fs/nfsd/xdr4cb.h
-> @@ -48,3 +48,9 @@
->  #define NFS4_dec_cb_offload_sz		(cb_compound_dec_hdr_sz  +      \
->  					cb_sequence_dec_sz +            \
->  					op_dec_sz)
-> +#define NFS4_enc_cb_recall_any_sz	(cb_compound_enc_hdr_sz +       \
-> +					cb_sequence_enc_sz +            \
-> +					1 + 1 + 1)
-> +#define NFS4_dec_cb_recall_any_sz	(cb_compound_dec_hdr_sz  +      \
-> +					cb_sequence_dec_sz +            \
-> +					op_dec_sz)
+>=20
+> > +
+> >  	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
+> >  		nfsd_file_flush(nf);
+> >  		nfsd_file_put_noref(nf);
+>=20
+> This seems weird.  If the file was unhashed above (because nf_ref was
+> 2), it would now not be flushed.  Why don't we want it to be flushed in
+> that case?
+>
+> > -	} else if (nf->nf_file) {
+> > +	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=
+=3D 1) {
+> >  		nfsd_file_put_noref(nf);
+> >  		nfsd_file_schedule_laundrette();
+> >  	} else
+> > @@ -1017,12 +1033,14 @@ nfsd_file_is_cached(struct inode *inode)
+> > =20
+> >  static __be32
+> >  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
+> > -		     unsigned int may_flags, struct nfsd_file **pnf, bool open)
+> > +		     unsigned int may_flags, struct nfsd_file **pnf,
+> > +		     bool open, int want_gc)
+>=20
+> I too would prefer "bool" for all intstance of gc and want_gc.
+>=20
+> NeilBrown
 
 --=20
 Jeff Layton <jlayton@kernel.org>
