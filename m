@@ -2,32 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5399A60BF62
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Oct 2022 02:18:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A76560BF64
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Oct 2022 02:18:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiJYAR6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Oct 2022 20:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56764 "EHLO
+        id S230236AbiJYASC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Oct 2022 20:18:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbiJYARn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 20:17:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D675CA89D
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 15:37:33 -0700 (PDT)
+        with ESMTP id S230225AbiJYARp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 20:17:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059F7915FE
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 15:37:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C07E9615ED
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 22:37:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4D1C433D7;
-        Mon, 24 Oct 2022 22:37:31 +0000 (UTC)
-Subject: [PATCH v5 06/13] NFSD: Use const pointers as parameters to fh_
- helpers
+        by ams.source.kernel.org (Postfix) with ESMTPS id B3BCBB810B2
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 22:37:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47F58C433D6;
+        Mon, 24 Oct 2022 22:37:38 +0000 (UTC)
+Subject: [PATCH v5 07/13] NFSD: Update file_hashtbl() helpers
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de
-Date:   Mon, 24 Oct 2022 18:37:31 -0400
-Message-ID: <166665105111.50761.7942577719601324860.stgit@klimt.1015granger.net>
+Date:   Mon, 24 Oct 2022 18:37:37 -0400
+Message-ID: <166665105737.50761.10180321804226640809.stgit@klimt.1015granger.net>
 In-Reply-To: <166664935937.50761.7812494396457965637.stgit@klimt.1015granger.net>
 References: <166664935937.50761.7812494396457965637.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev3+g9561319
@@ -43,56 +42,34 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Enable callers to use const pointers where they are able to.
+Enable callers to use const pointers for type safety.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Tested-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfsfh.h |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ fs/nfsd/nfs4state.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
-index c3ae6414fc5c..513e028b0bbe 100644
---- a/fs/nfsd/nfsfh.h
-+++ b/fs/nfsd/nfsfh.h
-@@ -220,7 +220,7 @@ __be32	fh_update(struct svc_fh *);
- void	fh_put(struct svc_fh *);
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index db58d5c0bba8..90c991e500a8 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -710,7 +710,7 @@ static unsigned int ownerstr_hashval(struct xdr_netobj *ownername)
+ #define FILE_HASH_BITS                   8
+ #define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
  
- static __inline__ struct svc_fh *
--fh_copy(struct svc_fh *dst, struct svc_fh *src)
-+fh_copy(struct svc_fh *dst, const struct svc_fh *src)
+-static unsigned int file_hashval(struct svc_fh *fh)
++static unsigned int file_hashval(const struct svc_fh *fh)
  {
- 	WARN_ON(src->fh_dentry);
+ 	struct inode *inode = d_inode(fh->fh_dentry);
  
-@@ -229,7 +229,7 @@ fh_copy(struct svc_fh *dst, struct svc_fh *src)
- }
+@@ -4671,7 +4671,7 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
  
- static inline void
--fh_copy_shallow(struct knfsd_fh *dst, struct knfsd_fh *src)
-+fh_copy_shallow(struct knfsd_fh *dst, const struct knfsd_fh *src)
+ /* search file_hashtbl[] for file */
+ static struct nfs4_file *
+-find_file_locked(struct svc_fh *fh, unsigned int hashval)
++find_file_locked(const struct svc_fh *fh, unsigned int hashval)
  {
- 	dst->fh_size = src->fh_size;
- 	memcpy(&dst->fh_raw, &src->fh_raw, src->fh_size);
-@@ -243,7 +243,8 @@ fh_init(struct svc_fh *fhp, int maxsize)
- 	return fhp;
- }
+ 	struct nfs4_file *fp;
  
--static inline bool fh_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
-+static inline bool fh_match(const struct knfsd_fh *fh1,
-+			    const struct knfsd_fh *fh2)
- {
- 	if (fh1->fh_size != fh2->fh_size)
- 		return false;
-@@ -252,7 +253,8 @@ static inline bool fh_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
- 	return true;
- }
- 
--static inline bool fh_fsid_match(struct knfsd_fh *fh1, struct knfsd_fh *fh2)
-+static inline bool fh_fsid_match(const struct knfsd_fh *fh1,
-+				 const struct knfsd_fh *fh2)
- {
- 	if (fh1->fh_fsid_type != fh2->fh_fsid_type)
- 		return false;
 
 
