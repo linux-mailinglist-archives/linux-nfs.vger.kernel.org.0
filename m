@@ -2,197 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B95C760B551
-	for <lists+linux-nfs@lfdr.de>; Mon, 24 Oct 2022 20:21:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC41960B6E0
+	for <lists+linux-nfs@lfdr.de>; Mon, 24 Oct 2022 21:13:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229934AbiJXSVE (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Oct 2022 14:21:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60912 "EHLO
+        id S232957AbiJXTNK (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 24 Oct 2022 15:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231433AbiJXSUl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 14:20:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 894A32892D4
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 10:01:48 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D383C611DE
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 16:57:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC172C433C1;
-        Mon, 24 Oct 2022 16:57:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666630668;
-        bh=tMLx2ghURjVpSRRmmIl7TeLn4//QuMdeI5jFZAA6Vvw=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ouh0lbgeWFtneicQ5M49BjQ9A7a0uyqKc2W3n0I6Bj9yzntIbsBHbDxjthNGFgChv
-         JvSwlqMs0XBIpS5CcP0RL/QzdHqnORXxabh0oqjWopeuBTu8ZIZienkdQoVOIEBQmQ
-         DLRXlowiI71w+dWR4w9PWD7+OINvzOkUwdTD9Mvj/km8ESFDJwCwt8Z0tst/MkQAF+
-         hj4t13PcNaFMyjUypwRcTRJLkVAl2xn4TNRA45wuA5E+yS+PdYbAuHBjBdD/gfzSN1
-         bMQedlxt5Ki+EPQigLUSjqv+hjKKek4ZUefSKdk+kfm8fq7MS8WjKHGCACARxk5W3l
-         U6PF2JVs8uC7g==
-Message-ID: <3d86628c75009a4feb3d20804e6f190dee8b83a3.camel@kernel.org>
-Subject: Re: [PATCH v4 3/7] NFSD: Add an NFSD_FILE_GC flag to enable
- nfsd_file garbage collection
-From:   Jeff Layton <jlayton@kernel.org>
-To:     NeilBrown <neilb@suse.de>, Chuck Lever <chuck.lever@oracle.com>
-Cc:     linux-nfs@vger.kernel.org
-Date:   Mon, 24 Oct 2022 12:57:46 -0400
-In-Reply-To: <166657883468.12462.7206160925496863213@noble.neil.brown.name>
-References: <166612295223.1291.11761205673682408148.stgit@manet.1015granger.net>
-        , <166612311828.1291.6808456808715954510.stgit@manet.1015granger.net>
-         <166657883468.12462.7206160925496863213@noble.neil.brown.name>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        with ESMTP id S233061AbiJXTMc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 15:12:32 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C40E5B2748
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 10:50:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666633776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0QFzMPOVhlSWF5NJr8yaXnz5DygEX2t8aC7JOeR+QXE=;
+        b=KNlqNiq/qFm4FGiqzcvgAXXPBvdN43grndjdMnYg84cR0oyHmjtQqbJR+xqrVlHLrUY85r
+        l/lmtBJGLUcb9nnb8gqRmmA4YRvDGjMzWmKoA1B2Lqhc8K8D2cWUUmCEJSOeA0S0X/0qje
+        cNhaFaj26dlDyrXB7TM3vBccDi9dr04=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-501-ScpMgtj2Mz26m26_p-ePFA-1; Mon, 24 Oct 2022 13:25:03 -0400
+X-MC-Unique: ScpMgtj2Mz26m26_p-ePFA-1
+Received: by mail-qk1-f199.google.com with SMTP id o13-20020a05620a2a0d00b006cf9085682dso9396355qkp.7
+        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 10:25:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0QFzMPOVhlSWF5NJr8yaXnz5DygEX2t8aC7JOeR+QXE=;
+        b=Ast5O0wLTRTwukbLTanzbfjIBdFB0Kdlpr5k6qK1EeYUNfEu9XXy8d3XmVaX6lQaTz
+         UKEKYk7Y34dg+wqZZftzKqvv3G8Wqa+spQx8bbBu4dGazRy1QiMcROv2rzKCNsr8H+Zb
+         9CFBGZLzPEq+OWshYNVCn/1puOIg3SfBn/PoEwwWKq54HWtfuWJnkBHF4GuGEJ8GwUep
+         Mwqm+lSKS3vSb6Leu/P6F+iKkP4u4PwtaXYu026ZNTNozn0rO2dyP7JLTA2HSLobY8R6
+         OLmRb7vOL/QPSMdlzqveUR91vuiRTTElalBk8d3cFMOmRILN4bADeaoB41NDwVEjb8f6
+         1Lig==
+X-Gm-Message-State: ACrzQf3DiBf3TWSoHWo1vjw+hPo81gaV+GFVhHNyNl5qyWdDne064kaE
+        R44CuALOo3ehfyMoNKqkI63/6lQ8VTx4MDTsQ/ffv9sOLgc6vJRTjB1ClDF6A4ktDdjBW5wXwNs
+        my4d1SvPT0Uc1VVDmd4ET
+X-Received: by 2002:a05:620a:46a0:b0:6ee:afc7:d9dc with SMTP id bq32-20020a05620a46a000b006eeafc7d9dcmr22828199qkb.189.1666632302303;
+        Mon, 24 Oct 2022 10:25:02 -0700 (PDT)
+X-Google-Smtp-Source: AMsMyM7pW2yjruP5el4yeBOcfYfF1qlMHB2k0cZdMQqO5yLugc6j5UI5xWynds2pRQc5lxZKX9xI3Q==
+X-Received: by 2002:a05:620a:46a0:b0:6ee:afc7:d9dc with SMTP id bq32-20020a05620a46a000b006eeafc7d9dcmr22828172qkb.189.1666632301966;
+        Mon, 24 Oct 2022 10:25:01 -0700 (PDT)
+Received: from ?IPV6:2603:6000:d605:db00:db8c:7bbd:f449:802d? (2603-6000-d605-db00-db8c-7bbd-f449-802d.res6.spectrum.com. [2603:6000:d605:db00:db8c:7bbd:f449:802d])
+        by smtp.gmail.com with ESMTPSA id he19-20020a05622a601300b0039cc7ebf46bsm216508qtb.93.2022.10.24.10.25.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Oct 2022 10:25:01 -0700 (PDT)
+Message-ID: <c6568a8b-7d55-6185-54f3-721c0a664de9@redhat.com>
+Date:   Mon, 24 Oct 2022 13:25:00 -0400
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Subject: Re: [PATCH v2] nfs-blkmapd: PID file read by systemd failed
+Content-Language: en-US
+To:     zhanchengbin <zhanchengbin1@huawei.com>
+Cc:     linux-nfs@vger.kernel.org, liuzhiqiang26@huawei.com,
+        linfeilong <linfeilong@huawei.com>
+References: <f81e71f4-ea7b-c512-573f-ac1f6e4bcefd@huawei.com>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <f81e71f4-ea7b-c512-573f-ac1f6e4bcefd@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-10-24 at 13:33 +1100, NeilBrown wrote:
-> On Wed, 19 Oct 2022, Chuck Lever wrote:
-> > NFSv4 operations manage the lifetime of nfsd_file items they use by
-> > means of NFSv4 OPEN and CLOSE. Hence there's no need for them to be
-> > garbage collected.
-> >=20
-> > Introduce a mechanism to enable garbage collection for nfsd_file
-> > items used only by NFSv2/3 callers.
-> >=20
-> > Note that the change in nfsd_file_put() ensures that both CLOSE and
-> > DELEGRETURN will actually close out and free an nfsd_file on last
-> > reference of a non-garbage-collected file.
-> >=20
-> > Link: https://bugzilla.linux-nfs.org/show_bug.cgi?id=3D394
-> > Suggested-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-> > Tested-by: Jeff Layton <jlayton@kernel.org>
-> > Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> > ---
-> >  fs/nfsd/filecache.c |   61 +++++++++++++++++++++++++++++++++++++++++++=
-++------
-> >  fs/nfsd/filecache.h |    3 +++
-> >  fs/nfsd/nfs3proc.c  |    4 ++-
-> >  fs/nfsd/trace.h     |    3 ++-
-> >  fs/nfsd/vfs.c       |    4 ++-
-> >  5 files changed, 63 insertions(+), 12 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index b7aa523c2010..87fce5c95726 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -63,6 +63,7 @@ struct nfsd_file_lookup_key {
-> >  	struct net			*net;
-> >  	const struct cred		*cred;
-> >  	unsigned char			need;
-> > +	unsigned char			gc:1;
-> >  	enum nfsd_file_lookup_type	type;
-> >  };
-> > =20
-> > @@ -162,6 +163,8 @@ static int nfsd_file_obj_cmpfn(struct rhashtable_co=
-mpare_arg *arg,
-> >  			return 1;
-> >  		if (!nfsd_match_cred(nf->nf_cred, key->cred))
-> >  			return 1;
-> > +		if (test_bit(NFSD_FILE_GC, &nf->nf_flags) !=3D key->gc)
-> > +			return 1;
-> >  		if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0)
-> >  			return 1;
-> >  		break;
-> > @@ -297,6 +300,8 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, u=
-nsigned int may)
-> >  		nf->nf_flags =3D 0;
-> >  		__set_bit(NFSD_FILE_HASHED, &nf->nf_flags);
-> >  		__set_bit(NFSD_FILE_PENDING, &nf->nf_flags);
-> > +		if (key->gc)
-> > +			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
-> >  		nf->nf_inode =3D key->inode;
-> >  		/* nf_ref is pre-incremented for hash table */
-> >  		refcount_set(&nf->nf_ref, 2);
-> > @@ -428,16 +433,27 @@ nfsd_file_put_noref(struct nfsd_file *nf)
-> >  	}
-> >  }
-> > =20
-> > +static void
-> > +nfsd_file_unhash_and_put(struct nfsd_file *nf)
-> > +{
-> > +	if (nfsd_file_unhash(nf))
-> > +		nfsd_file_put_noref(nf);
-> > +}
-> > +
-> >  void
-> >  nfsd_file_put(struct nfsd_file *nf)
-> >  {
-> >  	might_sleep();
-> > =20
-> > -	nfsd_file_lru_add(nf);
-> > +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)
->=20
-> Clearly this is a style choice on which sensible people might disagree,
-> but I much prefer to leave out the "=3D=3D 1" That is what most callers i=
-n
-> fs/nfsd/ do - only exceptions are here in filecache.c.
-> Even "!=3D 0" would be better than "=3D=3D 1".
-> I think test_bit() is declared as a bool, but it is hard to be certain.
->=20
-> > +		nfsd_file_lru_add(nf);
-> > +	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
-> > +		nfsd_file_unhash_and_put(nf);
->=20
-> Tests on the value of a refcount are almost always racy.
+Hello,
 
-Agreed, and there's a clear race above, now that I look more closely. If
-nf_ref is 3 and two puts are racing then neither of them will call
-nfsd_file_unhash_and_put. We really should be letting the outcome of the
-decrement drive things (like you say below).
+This still does not apply.. at all.. but
+did take a look.
 
-> I suspect there is an implication that as NFSD_FILE_GC is not set, this
-> *must* be hashed which implies there is guaranteed to be a refcount from
-> the hashtable.  So this is really a test to see if the pre-biased
-> refcount is one.  The safe way to test if a refcount is 1 is dec_and_test=
-.
->=20
-> i.e. linkage from the hash table should not count as a reference (in the
-> not-GC case).  Lookup in the hash table should fail if the found entry
-> cannot achieve an inc_not_zero.  When dec_and_test says the refcount is
-> zero, we remove from the hash table (certain that no new references will
-> be taken).
->=20
+On 10/17/22 11:05 PM, zhanchengbin wrote:
+> When started nfs-blkmap.service, the PID file can't be opened, The
+> cause is that the child process does not create the PID file before
+> the systemd reads the PID file.
+> Adding "ExecStartPost=/bin/sleep 0.1" to
+> /usr/lib/systemd/system/nfs-blkmap.service will probably solve this
+> problem, However, there is no guarantee that the above solutions are
+> effective under high cpu pressure.So replace the daemon function with
+> the fork function, and put the behavior of creating the PID file in
+> the parent process to solve the above problems.
+> 
+> Signed-off-by: zhanchengbin <zhanchengbin1@huawei.com>
+> Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+> ---
+> V1->V2:
+>   2.27.0 -> 2.33.0
+> 
+>   utils/blkmapd/device-discovery.c | 48 +++++++++++++++++++++-----------
+>   1 file changed, 32 insertions(+), 16 deletions(-)
+> 
+> diff --git a/utils/blkmapd/device-discovery.c 
+> b/utils/blkmapd/device-discovery.c
+> index 49935c2e..dcced5c3 100644
+> --- a/utils/blkmapd/device-discovery.c
+> +++ b/utils/blkmapd/device-discovery.c
+> @@ -507,28 +507,44 @@ int main(int argc, char **argv)
+>       if (fg) {
+>           openlog("blkmapd", LOG_PERROR, 0);
+>       } else {
+> -        if (daemon(0, 0) != 0) {
+> -            fprintf(stderr, "Daemonize failed\n");
+> +        pid_t pid = fork();
+> +        if (pid < 0) {
+> +            fprintf(stderr, "fork error\n");
+use BL_LOG_ERR("fork error: %s\n", strerror(errno)) or
+something similar which tells why the fork failed.
 
-This does seem a more sensible approach. That would go a long way toward
-simplifying nfsd_file_put.
+>               exit(1);
+> +        } else if (pid != 0) {
+> +            pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> +            if (pidfd < 0) {
+> +                fprintf(stderr, "Create pid file %s failed\n", PID_FILE);
+Same thing here... it is good you are showing the failed file
+but you are not showing my it failed.
 
->=20
-> > +
-> >  	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
-> >  		nfsd_file_flush(nf);
-> >  		nfsd_file_put_noref(nf);
->=20
-> This seems weird.  If the file was unhashed above (because nf_ref was
-> 2), it would now not be flushed.  Why don't we want it to be flushed in
-> that case?
->
-> > -	} else if (nf->nf_file) {
-> > +	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=
-=3D 1) {
-> >  		nfsd_file_put_noref(nf);
-> >  		nfsd_file_schedule_laundrette();
-> >  	} else
-> > @@ -1017,12 +1033,14 @@ nfsd_file_is_cached(struct inode *inode)
-> > =20
-> >  static __be32
-> >  nfsd_file_do_acquire(struct svc_rqst *rqstp, struct svc_fh *fhp,
-> > -		     unsigned int may_flags, struct nfsd_file **pnf, bool open)
-> > +		     unsigned int may_flags, struct nfsd_file **pnf,
-> > +		     bool open, int want_gc)
->=20
-> I too would prefer "bool" for all intstance of gc and want_gc.
->=20
-> NeilBrown
+> +                exit(1);
+> +            }
+> +
+> +            if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> +                fprintf(stderr, "Already running; Exiting!");
+> +                close(pidfd);
+> +                exit(1);
+> +            }
+> +            if (ftruncate(pidfd, 0) < 0)
+> +                fprintf(stderr, "ftruncate on %s failed: m\n", PID_FILE);
+> +            sprintf(pidbuf, "%d\n", pid);
+> +            if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> +                fprintf(stderr, "write on %s failed: m\n", PID_FILE);
+> +            exit(0);
+>           }
+> 
+> -        openlog("blkmapd", LOG_PID, 0);
+> -        pidfd = open(PID_FILE, O_WRONLY | O_CREAT, 0644);
+> -        if (pidfd < 0) {
+> -            BL_LOG_ERR("Create pid file %s failed\n", PID_FILE);
+> -            exit(1);
+> +        (void)setsid();
+> +        if (chdir("/")) {
+> +            fprintf(stderr, "chdir error\n");
+>           }
+> +        int fd = open("/dev/null", O_RDWR, 0);
+> +        if (fd >= 0) {
+> +            (void)dup2(fd, STDIN_FILENO);
+> +            (void)dup2(fd, STDOUT_FILENO);
+> +            (void)dup2(fd, STDERR_FILENO);
+not clear this is necessary but it is
+probably the safest since that's what
+daemon() does.
 
---=20
-Jeff Layton <jlayton@kernel.org>
+steved.
+> 
+> -        if (lockf(pidfd, F_TLOCK, 0) < 0) {
+> -            BL_LOG_ERR("Already running; Exiting!");
+> -            close(pidfd);
+> -            exit(1);
+> +            (void)close(fd);
+>           }
+> -        if (ftruncate(pidfd, 0) < 0)
+> -            BL_LOG_WARNING("ftruncate on %s failed: m\n", PID_FILE);
+> -        sprintf(pidbuf, "%d\n", getpid());
+> -        if (write(pidfd, pidbuf, strlen(pidbuf)) != 
+> (ssize_t)strlen(pidbuf))
+> -            BL_LOG_WARNING("write on %s failed: m\n", PID_FILE);
+> +
+> +        openlog("blkmapd", LOG_PID, 0);
+>       }
+> 
+>       signal(SIGINT, sig_die);
+
