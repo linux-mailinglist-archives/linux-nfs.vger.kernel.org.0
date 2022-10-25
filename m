@@ -2,254 +2,425 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3197E60C1AD
-	for <lists+linux-nfs@lfdr.de>; Tue, 25 Oct 2022 04:27:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C41D860C82C
+	for <lists+linux-nfs@lfdr.de>; Tue, 25 Oct 2022 11:33:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbiJYC07 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 24 Oct 2022 22:26:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59798 "EHLO
+        id S231224AbiJYJdm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 25 Oct 2022 05:33:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231217AbiJYC04 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 24 Oct 2022 22:26:56 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DDA4334
-        for <linux-nfs@vger.kernel.org>; Mon, 24 Oct 2022 19:26:55 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        with ESMTP id S229763AbiJYJdl (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 25 Oct 2022 05:33:41 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D88E5FB727
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Oct 2022 02:33:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 9548C1F388;
-        Tue, 25 Oct 2022 02:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1666664814; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yhYUBZgsiKZvonG/IykHEUZdnIFFg+4uyOtg93z9sjA=;
-        b=vpKXgyDpQ0AFJMG26DE4X4sfyKhm0uw5sKsvgnwUJIdsAh85AaqWtZjNf4i4wMVO8ZAtnt
-        FFWED7XeZZrcBFKh5jI7fM+PGppOSkY+VJm2gxZmreGeqKAeHQMNZjFMNC0o+TOJSs2gdi
-        WgnReCuFDjVt2V6LXqqkUO9OLV278Zw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1666664814;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yhYUBZgsiKZvonG/IykHEUZdnIFFg+4uyOtg93z9sjA=;
-        b=ZbPLmoejkxDlv+LxbdgkSkRYmi87KVjeuA74L21D6Scj8yN++046efDylLEQ/0HAs3FIK9
-        9m9PbhP60XyW2DCw==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id B243D134CA;
-        Tue, 25 Oct 2022 02:26:53 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id E7OBGm1JV2MrfwAAMHmgww
-        (envelope-from <neilb@suse.de>); Tue, 25 Oct 2022 02:26:53 +0000
-Content-Type: text/plain; charset="utf-8"
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 310E26171A
+        for <linux-nfs@vger.kernel.org>; Tue, 25 Oct 2022 09:33:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3625AC433D6;
+        Tue, 25 Oct 2022 09:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666690418;
+        bh=ExeGc7Id44/HfNY24BHUmpDfH8X0hTQXxeNLW02bmO0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=lAUC1masFis3dRej0ZR6Gq2dDf7CK7wZKavR/tfLQH4ejqxfxn+eVHx+G+szCxQ6n
+         xdYIX6v9zp2PBk3XDOv9FcDp91GdVf1zf/p4G4+p7ytwbBDUaQPPgXPE9DK8d7mDmm
+         8ZVRaTBLrFSHFxnA3pzsqH/nYshO83gI7avAAZT4qCPvxEaiUK1QicUW4qYMeXnIvB
+         eNun5QkiEI/FkS6vVWFNbZSL4oRdAthBml+Lc7EbOWwi/LMjBNv3bEzL9xzd8j+ZYb
+         cUzH4J66Q+K1JM60RkGPJ5/imRn8E4I3xas6MeWPXzSQqG6AXG93ykZUti2Xmp/gag
+         QojUbF8iPUP8Q==
+Message-ID: <df4ee39e5cda843416e7a88addabcba25594d618.camel@kernel.org>
+Subject: Re: [PATCH v2 1/2] NFSD: add support for sending CB_RECALL_ANY
+From:   Jeff Layton <jlayton@kernel.org>
+To:     dai.ngo@oracle.com, chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org
+Date:   Tue, 25 Oct 2022 05:33:36 -0400
+In-Reply-To: <ffcf7b71-8afd-bea1-9757-e7e0dc36f187@oracle.com>
+References: <1666462150-11736-1-git-send-email-dai.ngo@oracle.com>
+         <1666462150-11736-2-git-send-email-dai.ngo@oracle.com>
+         <d43a3dac01f8c4211ec7634a0d78dae70468f39b.camel@kernel.org>
+         <efbea8dd-1998-fe2a-1a94-6becc5ea691f@oracle.com>
+         <342dd03eea9a1eccf1848c1e2f5f92791c4c42f2.camel@kernel.org>
+         <ffcf7b71-8afd-bea1-9757-e7e0dc36f187@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Chuck Lever III" <chuck.lever@oracle.com>
-Cc:     "Linux NFS Mailing List" <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH v5 12/13] NFSD: Allocate an rhashtable for nfs4_file objects
-In-reply-to: <C1C6B958-A138-42A0-B39E-D8CCEB3D79F7@oracle.com>
-References: <166664935937.50761.7812494396457965637.stgit@klimt.1015granger.net>,
- <166665108857.50761.11874625810370383309.stgit@klimt.1015granger.net>,
- <166665465494.12462.9078997979555811271@noble.neil.brown.name>,
- <C1C6B958-A138-42A0-B39E-D8CCEB3D79F7@oracle.com>
-Date:   Tue, 25 Oct 2022 13:26:50 +1100
-Message-id: <166666481063.12462.2536448442617799527@noble.neil.brown.name>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 25 Oct 2022, Chuck Lever III wrote:
+On Mon, 2022-10-24 at 18:30 -0700, dai.ngo@oracle.com wrote:
+> On 10/24/22 2:09 PM, Jeff Layton wrote:
+> > On Mon, 2022-10-24 at 12:44 -0700, dai.ngo@oracle.com wrote:
+> > > On 10/24/22 5:16 AM, Jeff Layton wrote:
+> > > > On Sat, 2022-10-22 at 11:09 -0700, Dai Ngo wrote:
+> > > > > There is only one nfsd4_callback, cl_recall_any, added for each
+> > > > > nfs4_client. Access to it must be serialized. For now it's done
+> > > > > by the cl_recall_any_busy flag since it's used only by the
+> > > > > delegation shrinker. If there is another consumer of CB_RECALL_AN=
+Y
+> > > > > then a spinlock must be used.
+> > > > >=20
+> > > > > Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> > > > > ---
+> > > > >    fs/nfsd/nfs4callback.c | 64 ++++++++++++++++++++++++++++++++++=
+++++++++++++++++
+> > > > >    fs/nfsd/nfs4state.c    | 27 +++++++++++++++++++++
+> > > > >    fs/nfsd/state.h        |  8 +++++++
+> > > > >    fs/nfsd/xdr4cb.h       |  6 +++++
+> > > > >    4 files changed, 105 insertions(+)
+> > > > >=20
+> > > > > diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+> > > > > index f0e69edf5f0f..03587e1397f4 100644
+> > > > > --- a/fs/nfsd/nfs4callback.c
+> > > > > +++ b/fs/nfsd/nfs4callback.c
+> > > > > @@ -329,6 +329,29 @@ static void encode_cb_recall4args(struct xdr=
+_stream *xdr,
+> > > > >    }
+> > > > >   =20
+> > > > >    /*
+> > > > > + * CB_RECALLANY4args
+> > > > > + *
+> > > > > + *	struct CB_RECALLANY4args {
+> > > > > + *		uint32_t	craa_objects_to_keep;
+> > > > > + *		bitmap4		craa_type_mask;
+> > > > > + *	};
+> > > > > + */
+> > > > > +static void
+> > > > > +encode_cb_recallany4args(struct xdr_stream *xdr,
+> > > > > +			struct nfs4_cb_compound_hdr *hdr, uint32_t bmval)
+> > > > > +{
+> > > > > +	__be32 *p;
+> > > > > +
+> > > > > +	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
+> > > > > +	p =3D xdr_reserve_space(xdr, 4);
+> > > > > +	*p++ =3D xdr_zero;	/* craa_objects_to_keep */
+> > > > > +	p =3D xdr_reserve_space(xdr, 8);
+> > > > > +	*p++ =3D cpu_to_be32(1);
+> > > > > +	*p++ =3D cpu_to_be32(bmval);
+> > > > > +	hdr->nops++;
+> > > > > +}
+> > > > > +
+> > > > > +/*
+> > > > >     * CB_SEQUENCE4args
+> > > > >     *
+> > > > >     *	struct CB_SEQUENCE4args {
+> > > > > @@ -482,6 +505,24 @@ static void nfs4_xdr_enc_cb_recall(struct rp=
+c_rqst *req, struct xdr_stream *xdr,
+> > > > >    	encode_cb_nops(&hdr);
+> > > > >    }
+> > > > >   =20
+> > > > > +/*
+> > > > > + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Obje=
+cts
+> > > > > + */
+> > > > > +static void
+> > > > > +nfs4_xdr_enc_cb_recall_any(struct rpc_rqst *req,
+> > > > > +		struct xdr_stream *xdr, const void *data)
+> > > > > +{
+> > > > > +	const struct nfsd4_callback *cb =3D data;
+> > > > > +	struct nfs4_cb_compound_hdr hdr =3D {
+> > > > > +		.ident =3D cb->cb_clp->cl_cb_ident,
+> > > > > +		.minorversion =3D cb->cb_clp->cl_minorversion,
+> > > > > +	};
+> > > > > +
+> > > > > +	encode_cb_compound4args(xdr, &hdr);
+> > > > > +	encode_cb_sequence4args(xdr, cb, &hdr);
+> > > > > +	encode_cb_recallany4args(xdr, &hdr, cb->cb_clp->cl_recall_any_b=
+m);
+> > > > > +	encode_cb_nops(&hdr);
+> > > > > +}
+> > > > >   =20
+> > > > >    /*
+> > > > >     * NFSv4.0 and NFSv4.1 XDR decode functions
+> > > > > @@ -520,6 +561,28 @@ static int nfs4_xdr_dec_cb_recall(struct rpc=
+_rqst *rqstp,
+> > > > >    	return decode_cb_op_status(xdr, OP_CB_RECALL, &cb->cb_status)=
+;
+> > > > >    }
+> > > > >   =20
+> > > > > +/*
+> > > > > + * 20.6. Operation 8: CB_RECALL_ANY - Keep Any N Recallable Obje=
+cts
+> > > > > + */
+> > > > > +static int
+> > > > > +nfs4_xdr_dec_cb_recall_any(struct rpc_rqst *rqstp,
+> > > > > +				  struct xdr_stream *xdr,
+> > > > > +				  void *data)
+> > > > > +{
+> > > > > +	struct nfsd4_callback *cb =3D data;
+> > > > > +	struct nfs4_cb_compound_hdr hdr;
+> > > > > +	int status;
+> > > > > +
+> > > > > +	status =3D decode_cb_compound4res(xdr, &hdr);
+> > > > > +	if (unlikely(status))
+> > > > > +		return status;
+> > > > > +	status =3D decode_cb_sequence4res(xdr, cb);
+> > > > > +	if (unlikely(status || cb->cb_seq_status))
+> > > > > +		return status;
+> > > > > +	status =3D  decode_cb_op_status(xdr, OP_CB_RECALL_ANY, &cb->cb_=
+status);
+> > > > > +	return status;
+> > > > > +}
+> > > > > +
+> > > > >    #ifdef CONFIG_NFSD_PNFS
+> > > > >    /*
+> > > > >     * CB_LAYOUTRECALL4args
+> > > > > @@ -783,6 +846,7 @@ static const struct rpc_procinfo nfs4_cb_proc=
+edures[] =3D {
+> > > > >    #endif
+> > > > >    	PROC(CB_NOTIFY_LOCK,	COMPOUND,	cb_notify_lock,	cb_notify_lock=
+),
+> > > > >    	PROC(CB_OFFLOAD,	COMPOUND,	cb_offload,	cb_offload),
+> > > > > +	PROC(CB_RECALL_ANY,	COMPOUND,	cb_recall_any,	cb_recall_any),
+> > > > >    };
+> > > > >   =20
+> > > > >    static unsigned int nfs4_cb_counts[ARRAY_SIZE(nfs4_cb_procedur=
+es)];
+> > > > > diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+> > > > > index 4e718500a00c..c60c937dece6 100644
+> > > > > --- a/fs/nfsd/nfs4state.c
+> > > > > +++ b/fs/nfsd/nfs4state.c
+> > > > > @@ -2854,6 +2854,31 @@ static const struct tree_descr client_file=
+s[] =3D {
+> > > > >    	[3] =3D {""},
+> > > > >    };
+> > > > >   =20
+> > > > > +static int
+> > > > > +nfsd4_cb_recall_any_done(struct nfsd4_callback *cb,
+> > > > > +			struct rpc_task *task)
+> > > > > +{
+> > > > > +	switch (task->tk_status) {
+> > > > > +	case -NFS4ERR_DELAY:
+> > > > > +		rpc_delay(task, 2 * HZ);
+> > > > > +		return 0;
+> > > > > +	default:
+> > > > > +		return 1;
+> > > > > +	}
+> > > > > +}
+> > > > > +
+> > > > > +static void
+> > > > > +nfsd4_cb_recall_any_release(struct nfsd4_callback *cb)
+> > > > > +{
+> > > > > +	cb->cb_clp->cl_recall_any_busy =3D false;
+> > > > > +	atomic_dec(&cb->cb_clp->cl_rpc_users);
+> > > > > +}
+> > > > This series probably ought to be one big patch. The problem is that
+> > > > you're adding a bunch of code to do CB_RECALL_ANY, but there is no =
+way
+> > > > to call it without patch #2.
+> > > The reason I separated these patches is that the 1st patch, adding su=
+pport
+> > > CB_RECALL_ANY can be called for other purposes than just for delegati=
+on such
+> > > as to recall pnfs layouts, or when the max number of delegation is re=
+ached.
+> > > So that was why I did not combined this patches. However, I understan=
+d your
+> > > concern about not being able to test individual patch. So as Chuck su=
+ggested,
+> > > perhaps we can leave these as separate patches for easier review and =
+when it's
+> > > finalized we can decide to combine them in to one big patch.  BTW, I =
+plan to
+> > > add a third patch to this series to send CB_RECALL_ANY to clients whe=
+n the
+> > > max number of delegations is reached.
+> > >=20
+> > I think we should get this bit sorted out first,
 >=20
-> > On Oct 24, 2022, at 7:37 PM, NeilBrown <neilb@suse.de> wrote:
+> ok
+>=20
+> >   but that sounds
+> > reasonable eventually.
 > >=20
-> > On Tue, 25 Oct 2022, Chuck Lever wrote:
-> >> Introduce the infrastructure for managing nfs4_file objects in an
-> >> rhashtable. This infrastructure will be used by the next patch.
-> >>=20
-> >> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> >> ---
-> >> fs/nfsd/nfs4state.c |   23 ++++++++++++++++++++++-
-> >> fs/nfsd/state.h     |    1 +
-> >> 2 files changed, 23 insertions(+), 1 deletion(-)
-> >>=20
-> >> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> >> index abed795bb4ec..681cb2daa843 100644
-> >> --- a/fs/nfsd/nfs4state.c
-> >> +++ b/fs/nfsd/nfs4state.c
-> >> @@ -44,7 +44,9 @@
-> >> #include <linux/jhash.h>
-> >> #include <linux/string_helpers.h>
-> >> #include <linux/fsnotify.h>
-> >> +#include <linux/rhashtable.h>
-> >> #include <linux/nfs_ssc.h>
-> >> +
-> >> #include "xdr4.h"
-> >> #include "xdr4cb.h"
-> >> #include "vfs.h"
-> >> @@ -721,6 +723,18 @@ static unsigned int file_hashval(const struct svc_f=
-h *fh)
-> >>=20
-> >> static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
-> >>=20
-> >> +static struct rhltable nfs4_file_rhltable ____cacheline_aligned_in_smp;
-> >> +
-> >> +static const struct rhashtable_params nfs4_file_rhash_params =3D {
-> >> +	.key_len		=3D sizeof_field(struct nfs4_file, fi_inode),
-> >> +	.key_offset		=3D offsetof(struct nfs4_file, fi_inode),
-> >> +	.head_offset		=3D offsetof(struct nfs4_file, fi_rlist),
-> >> +
-> >> +	/* Reduce resizing churn on light workloads */
-> >> +	.min_size		=3D 256,		/* buckets */
+> > > > That makes it hard to judge whether there could be races and lockin=
+g
+> > > > issues around the handling of cb_recall_any_busy, in particular. Fr=
+om
+> > > > patch #2, it looks like cb_recall_any_busy is protected by the
+> > > > nn->client_lock, but I don't think ->release is called with that he=
+ld.
+> > > I don't intended to use the nn->client_lock, I think the scope of thi=
+s
+> > > lock is too big for what's needed to serialize access to struct nfsd4=
+_callback.
+> > > As I mentioned in the cover email, since the cb_recall_any_busy is on=
+ly
+> > > used by the deleg_reaper we do not need a lock to protect this flag.
+> > > But if there is another of consumer, other than deleg_reaper, of this
+> > > nfsd4_callback then we can add a simple spinlock for it.
+> > >=20
+> > > My question is do you think we need to add the spinlock now instead o=
+f
+> > > delaying it until there is real need?
+> > >=20
+> > I don't see the need for a dedicated spinlock here. You said above that
+> > there is only one of these per client, so you could use the
+> > client->cl_lock.
 > >=20
-> > Every time I see this line a groan a little bit.  Probably I'm groaning
-> > at rhashtable - you shouldn't need to have to worry about these sorts of
-> > details when using an API...  but I agree that avoiding churn is likely
-> > a good idea.
-> >=20
-> > Where did 256 come from?
+> > But...I don't see the problem with doing just using the nn->client_lock
+> > here. It's not like we're likely to be calling this that often, and if
+> > we do then the contention for the nn->client_lock is probably the least
+> > of our worries.
 >=20
-> Here's the current file_hashtbl definition:
+> If the contention on nn->client_lock is not a concern then I just
+> leave the patch to use the nn->client_lock as it current does.
 >=20
->  710 /* hash table for nfs4_file */
->  711 #define FILE_HASH_BITS                   8
->  712 #define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
->  713=20
->  714 static unsigned int file_hashval(const struct svc_fh *fh)
->  715 {
->  716         struct inode *inode =3D d_inode(fh->fh_dentry);
->  717=20
->  718         /* XXX: why not (here & in file cache) use inode? */
->  719         return (unsigned int)hash_long(inode->i_ino, FILE_HASH_BITS);
->  720 }
->  721=20
->  722 static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
->=20
-> 256 buckets is the size of the existing file_hashtbl.
->=20
->=20
-> >  Would PAGE_SIZE/sizeof(void*) make more sense
-> > (though that is 512).
->=20
-> For rhashtable, you need to account for sizeof(struct bucket_table),
-> if I'm reading nested_bucket_table_alloc() correctly.
->=20
-> 256 is 2048 bytes + sizeof(struct bucket_table). 512 buckets would
-> push us over a page.
 
-Ah yes, of course.  The does suggest that 256 is a better choice.
+Except you aren't taking the client_lock in ->release. That's what needs
+to be added if you want to keep this boolean.
 
->=20
->=20
-> > How much churn is too much?  The default is 4 and we grow at >75% and
-> > shrink at <30%, so at 4 entries the table would resize to 8, and that 2
-> > entries it  would shrink back.  That does sound like churn.
-> > If we choose 8, then at 7 we grow to 16 and at 4 we go back to 8.
-> > If we choose 16, then at 13 we grow to 32 and at 9 we go back to 16.
 > >=20
-> > If we choose 64, then at 49 we grow to 128 and at 39 we go back to 64.
-> >=20
-> > The margin seems rather narrow.  May 30% is too high - 15% might be a
-> > lot better.  But changing that might be difficult.
+> > Honestly, do we need this boolean at all? The only place it's checked i=
+s
+> > in deleg_reaper. Why not just try to submit the work and if it's alread=
+y
+> > queued, let it fail?
 >=20
-> I could go a little smaller. Basically table resizing is OK when we're
-> talking about a lot of buckets because that overhead is very likely to
-> be amortized over many insertions and removals.
+> There is nothing in the existing code to prevent the nfs4_callback from
+> being used again before the current CB_RECALL_ANY request completes. This
+> resulted in se_cb_seq_nr becomes out of sync with the client and server
+> starts getting NFS4ERR_SEQ_MISORDERED then eventually NFS4ERR_BADSESSION
+> from the client.
 >=20
->=20
-> > So I don't have a good recommendation, but I don't like magic numbers.
-> > Maybe PAGE_SIZE/sizeof(void*) ??
->=20
-> The only thing I can think of would be
->=20
-> #define NFS4_FILE_HASH_SIZE  (some number or constant calculation)
->=20
-> which to me isn't much better than
->=20
-> 	.size	=3D 256,	/* buckets */
->=20
-> I will ponder some more.
+> nfsd4_recall_file_layout has similar usage of nfs4_callback and it uses
+> the ls_lock to make sure the current request is done before allowing new
+> one to proceed.
 >=20
 
-Maybe just a comment saying that this number will allow the
-struct bucket_table to fit in one 4K page.
+That's a little different. The ls_lock protects ls_recalled, which is
+set when a recall is issued. We only want to issue a recall for a
+delegation once and that's what ensures that it's only issued once.
 
-Thanks,
-NeilBrown
+CB_RECALL_ANY could be called more than once per client. We don't need
+to ensure "exactly once" semantics there. All of the callbacks are run
+out of workqueues.
+
+If a workqueue job is already scheduled then queue_work will return
+false when called. Could you just do away with this boolean and rely on
+the return code from queue_work to ensure that it doesn't get scheduled
+too often?
+
+> >=20
+> > > > Also, cl_rpc_users is a refcount (though we don't necessarily free =
+the
+> > > > object when it goes to zero). I think you need to call
+> > > > put_client_renew_locked here instead of just decrementing the count=
+er.
+> > > Since put_client_renew_locked() also renews the client lease, I don't
+> > > think it's right nfsd4_cb_recall_any_release to renew the lease becau=
+se
+> > > because this is a callback so the client is not actually sending any
+> > > request that causes the lease to renewed, and nfsd4_cb_recall_any_rel=
+ease
+> > > is also alled even if the client is completely dead and did not reply=
+, or
+> > > reply with some errors.
+> > >=20
+> > What happens when this atomic_inc makes the cl_rpc_count go to zero?
+>=20
+> Do you mean atomic_dec of cl_rpc_users?
+>=20
+
+Yes, sorry.
+
+> > What actually triggers the cleanup activities in put_client_renew /
+> > put_client_renew_locked in that situation?
+>=20
+> maybe I'm missing something, but I don't see any client cleanup
+> in put_client_renew/put_client_renew_locked other than renewing
+> the lease?
+>=20
+>=20
+
+        if (!is_client_expired(clp))
+                renew_client_locked(clp);
+        else                                        =20
+                wake_up_all(&expiry_wq);
 
 
->=20
-> > But either way
-> >  Reviewed-by: NeilBrown <neilb@suse.de>
+...unless the client has already expired, in which case you need to wake
+up the waitqueue. My guess is that if the atomic_dec you're calling here
+goes to zero then any tasks on the expiry_wq will hang indefinitely.
+
 > >=20
-> > Thanks,
-> > NeilBrown
-> >=20
-> >=20
-> >> +	.automatic_shrinking	=3D true,
-> >> +};
-> >> +
-> >> /*
-> >>  * Check if courtesy clients have conflicting access and resolve it if p=
-ossible
-> >>  *
-> >> @@ -8023,10 +8037,16 @@ nfs4_state_start(void)
-> >> {
-> >> 	int ret;
-> >>=20
-> >> -	ret =3D nfsd4_create_callback_queue();
-> >> +	ret =3D rhltable_init(&nfs4_file_rhltable, &nfs4_file_rhash_params);
-> >> 	if (ret)
-> >> 		return ret;
-> >>=20
-> >> +	ret =3D nfsd4_create_callback_queue();
-> >> +	if (ret) {
-> >> +		rhltable_destroy(&nfs4_file_rhltable);
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> 	set_max_delegations();
-> >> 	return 0;
-> >> }
-> >> @@ -8057,6 +8077,7 @@ nfs4_state_shutdown_net(struct net *net)
-> >>=20
-> >> 	nfsd4_client_tracking_exit(net);
-> >> 	nfs4_state_destroy_net(net);
-> >> +	rhltable_destroy(&nfs4_file_rhltable);
-> >> #ifdef CONFIG_NFSD_V4_2_INTER_SSC
-> >> 	nfsd4_ssc_shutdown_umount(nn);
-> >> #endif
-> >> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> >> index e2daef3cc003..190fc7e418a4 100644
-> >> --- a/fs/nfsd/state.h
-> >> +++ b/fs/nfsd/state.h
-> >> @@ -546,6 +546,7 @@ struct nfs4_file {
-> >> 	bool			fi_aliased;
-> >> 	spinlock_t		fi_lock;
-> >> 	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
-> >> +	struct rhlist_head	fi_rlist;
-> >> 	struct list_head        fi_stateids;
-> >> 	union {
-> >> 		struct list_head	fi_delegations;
-> >>=20
-> >>=20
-> >>=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
->=20
+> > > > > +
+> > > > > +static const struct nfsd4_callback_ops nfsd4_cb_recall_any_ops =
+=3D {
+> > > > > +	.done		=3D nfsd4_cb_recall_any_done,
+> > > > > +	.release	=3D nfsd4_cb_recall_any_release,
+> > > > > +};
+> > > > > +
+> > > > >    static struct nfs4_client *create_client(struct xdr_netobj nam=
+e,
+> > > > >    		struct svc_rqst *rqstp, nfs4_verifier *verf)
+> > > > >    {
+> > > > > @@ -2891,6 +2916,8 @@ static struct nfs4_client *create_client(st=
+ruct xdr_netobj name,
+> > > > >    		free_client(clp);
+> > > > >    		return NULL;
+> > > > >    	}
+> > > > > +	nfsd4_init_cb(&clp->cl_recall_any, clp, &nfsd4_cb_recall_any_op=
+s,
+> > > > > +			NFSPROC4_CLNT_CB_RECALL_ANY);
+> > > > >    	return clp;
+> > > > >    }
+> > > > >   =20
+> > > > > diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
+> > > > > index e2daef3cc003..49ca06169642 100644
+> > > > > --- a/fs/nfsd/state.h
+> > > > > +++ b/fs/nfsd/state.h
+> > > > > @@ -411,6 +411,10 @@ struct nfs4_client {
+> > > > >   =20
+> > > > >    	unsigned int		cl_state;
+> > > > >    	atomic_t		cl_delegs_in_recall;
+> > > > > +
+> > > > > +	bool			cl_recall_any_busy;
+> > > > > +	uint32_t		cl_recall_any_bm;
+> > > > > +	struct nfsd4_callback	cl_recall_any;
+> > > > >    };
+> > > > >   =20
+> > > > >    /* struct nfs4_client_reset
+> > > > > @@ -639,8 +643,12 @@ enum nfsd4_cb_op {
+> > > > >    	NFSPROC4_CLNT_CB_OFFLOAD,
+> > > > >    	NFSPROC4_CLNT_CB_SEQUENCE,
+> > > > >    	NFSPROC4_CLNT_CB_NOTIFY_LOCK,
+> > > > > +	NFSPROC4_CLNT_CB_RECALL_ANY,
+> > > > >    };
+> > > > >   =20
+> > > > > +#define RCA4_TYPE_MASK_RDATA_DLG	0
+> > > > > +#define RCA4_TYPE_MASK_WDATA_DLG	1
+> > > > > +
+> > > > >    /* Returns true iff a is later than b: */
+> > > > >    static inline bool nfsd4_stateid_generation_after(stateid_t *a=
+, stateid_t *b)
+> > > > >    {
+> > > > > diff --git a/fs/nfsd/xdr4cb.h b/fs/nfsd/xdr4cb.h
+> > > > > index 547cf07cf4e0..0d39af1b00a0 100644
+> > > > > --- a/fs/nfsd/xdr4cb.h
+> > > > > +++ b/fs/nfsd/xdr4cb.h
+> > > > > @@ -48,3 +48,9 @@
+> > > > >    #define NFS4_dec_cb_offload_sz		(cb_compound_dec_hdr_sz  +    =
+  \
+> > > > >    					cb_sequence_dec_sz +            \
+> > > > >    					op_dec_sz)
+> > > > > +#define NFS4_enc_cb_recall_any_sz	(cb_compound_enc_hdr_sz +     =
+  \
+> > > > > +					cb_sequence_enc_sz +            \
+> > > > > +					1 + 1 + 1)
+> > > > > +#define NFS4_dec_cb_recall_any_sz	(cb_compound_dec_hdr_sz  +    =
+  \
+> > > > > +					cb_sequence_dec_sz +            \
+> > > > > +					op_dec_sz)
+
+--=20
+Jeff Layton <jlayton@kernel.org>
