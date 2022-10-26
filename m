@@ -2,257 +2,301 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A595F60EB99
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 00:32:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B045060EC9D
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 01:31:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbiJZWcN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Oct 2022 18:32:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33380 "EHLO
+        id S233871AbiJZXbR (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 26 Oct 2022 19:31:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232773AbiJZWcN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Oct 2022 18:32:13 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E805D11F4B9
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Oct 2022 15:32:11 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 6994F22014;
-        Wed, 26 Oct 2022 22:32:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1666823530; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V0Wfg63vK4X/COYrC/Y2FVeyUssFvR1qJgFivnciyMM=;
-        b=GvpVsCZGNvurbBfDoXPM62CPw2ROD1cBs8dTegRbU2nXXatqwAu4wRg5VfrMlk9bDx+jN4
-        JonLiJtEnfMJIbrdrniQ6yJc04LiPRGfakCr62S7WWXYYun6yWubWewUIoOl2dzZQPxJZm
-        XC0qYw+0ffC/65glZJBMBDLUq2cDdMw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1666823530;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V0Wfg63vK4X/COYrC/Y2FVeyUssFvR1qJgFivnciyMM=;
-        b=ySLG71o/l4F7DlebY9aixz90K0C5xbvAd1SFrIegrnXNz2gxd6aVvncpMKi0kuSSR+2PYC
-        xr8N8Njl3gulA9BQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 31A3313A77;
-        Wed, 26 Oct 2022 22:32:08 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id Lm3iNWi1WWPoWwAAMHmgww
-        (envelope-from <neilb@suse.de>); Wed, 26 Oct 2022 22:32:08 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S233790AbiJZXbQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Oct 2022 19:31:16 -0400
+Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C0866C967
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
+Received: by mail-pg1-x52e.google.com with SMTP id e129so16560023pgc.9
+        for <linux-nfs@vger.kernel.org>; Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uTiXMEJ/CoY33sLKioTuUer5OYA6lSASj5Z7HOYEvCU=;
+        b=TOuwrDc0bbdix70NhE1jKBzdwfVRAzTyQxtqVBPa5MjSN3paOlzKdWiUm3alKS1AER
+         GJuCFhCCGyBSB8FRaoN33yIBrnTdeQBOlwE6/cnyaBtoJ0WEs2N7SyR03AxvtmkQSDJF
+         6YH8IhvHf3aJ+V+x5xOQjrOfyofdMYu+nJpfM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uTiXMEJ/CoY33sLKioTuUer5OYA6lSASj5Z7HOYEvCU=;
+        b=FQ7h1kNfuAj0EvTyJW4cVzHMzaVqsqBfcK/bgiNGsqqlpFHQzMgAzYYAMzUZQ9ip34
+         8V+sXBTYU3mwn6esQ9QTVnDUaD7rrJ6O8L1TKqUPtRbYI97cxBiVXocqmhmVd30ZbCJX
+         dMBt8XJKZCAeNmanJXLSIsVW2U9zlZlNV9F7LsgrrOB1GPsD5a7ckuy7gUP6/r5e3p3M
+         5ZwsCRmaLmAEqaSGoyffO+oDL1ZYBYmqULbxl2n0+T/XLGLEWt1LnOug6NywaEV7/mAc
+         fCGnm4z9FTwxB1BshcyqTwWA1rCK5GDuS6IpK7GEYkDsVBdEGwY6M6qq81yrxMN0tmpP
+         OXbQ==
+X-Gm-Message-State: ACrzQf3x3Rd4935kH2DJ7Qs15wrCki1crpgi2F3zusTbXSEzQokBrG2u
+        ZI+uKZwYw+q3bCjMh4dxF/CGvg==
+X-Google-Smtp-Source: AMsMyM6vUS8k1RZW8rkiZJ/NtfbRT4JleOwKZRGiZoKyUq7elbWpv7uakSgQFP+Ri49oMPf/cyWaWw==
+X-Received: by 2002:a63:5b5c:0:b0:461:8ba9:457e with SMTP id l28-20020a635b5c000000b004618ba9457emr40053088pgm.218.1666827074080;
+        Wed, 26 Oct 2022 16:31:14 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k15-20020a170902760f00b001785a72d285sm3445937pll.48.2022.10.26.16.31.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Oct 2022 16:31:13 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Russ Weight <russell.h.weight@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: [PATCH] cred: Do not default to init_cred in prepare_kernel_cred()
+Date:   Wed, 26 Oct 2022 16:31:11 -0700
+Message-Id: <20221026232943.never.775-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-From:   "NeilBrown" <neilb@suse.de>
-To:     "Jeff Layton" <jlayton@kernel.org>
-Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 2/2] nfsd: rework refcounting in filecache
-In-reply-to: <20221026081539.219755-2-jlayton@kernel.org>
-References: <20221026081539.219755-1-jlayton@kernel.org>,
- <20221026081539.219755-2-jlayton@kernel.org>
-Date:   Thu, 27 Oct 2022 09:32:00 +1100
-Message-id: <166682352064.7585.2289386406163662548@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7754; h=from:subject:message-id; bh=F4siOobAlkuq3vezhEE05wQ9UmMUALp3i2I2789BOdA=; b=owEBbQKS/ZANAwAKAYly9N/cbcAmAcsmYgBjWcM+V/jGXvCdTmkC/+MaJu/23cacFAOA4bsmrw+9 tYo1k2iJAjMEAAEKAB0WIQSlw/aPIp3WD3I+bhOJcvTf3G3AJgUCY1nDPgAKCRCJcvTf3G3AJuRND/ 4+bzoCJCTyzFdDCx6K9xror4+DURVGRLcw2WN6OrzqgY0x4JDkjxt8NJVq1Kn7+2xI1YMgKvN60xlN AZ+iiQNDji7xT6i72/meJLeccjXUbc8oESTEUsSfVksoPzG2mWDBndu7ysJ0dEpuiyzJkOxyWWly/V cWlSxN5yj9A3qqBoS9lCmT2CZbjQ8J2NTvo07H4vXHaniOcNFwyDQWTqJO2xBe+H2OgPxOGDCMphc9 f/dvg0aOvj58P8PvVOmSK68yN2I7jC8KY8OUQhU69SNADTpkcqQEX3fZHIBfhgpHsqEAWElvVxw1uz ZQmFfMwSJWUZhKkP4MUeSVzQfA87auPZwC2pKAdiyKt9qTvVhspNQT4v0FdLZJiBKEbkTtSBICRxdo 1e8MRF9EmCimdBuKzmSa8EI5UTtcU+qvW5jtX0LHJIZFf7stmWh5DChTIPlx66Tp0valgWi4lDrtvl HZNz2zVfxkc6OVdGijlHFBRSipuQyQsTqIw8oInMBl6IORzlu8MAbDCpR/ZXKseWMv6W2YpDy9MW2E lRiiCRzUQ5HFnZNp1oARy59W6BAwE1cHQkqgphJdCKsNowlVLvg5MJliUli6YGMPNqjVfXwqMPRLD/ J0fNFuBOkRbsE5nnE9MVDabfkwWWK3RJpoWBiYLyeIZDeokSu8kaOhx7mgsA==
+X-Developer-Key: i=keescook@chromium.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, 26 Oct 2022, Jeff Layton wrote:
-> The filecache refcounting is a bit non-standard for something searchable
-> by RCU, in that we maintain a sentinel reference while it's hashed.
-> This in turn requires that we have to do things differently in the "put"
-> depending on whether its hashed, etc.
->=20
-> Another issue: nfsd_file_close_inode_sync can end up freeing an
-> nfsd_file while there are still outstanding references to it.
->=20
-> Rework the code so that the refcount is what drives the lifecycle. When
-> the refcount goes to zero, then unhash and rcu free the object.
+A common exploit pattern for ROP attacks is to abuse prepare_kernel_cred()
+in order to construct escalated privileges[1]. Instead of providing a
+short-hand argument (NULL) to the "daemon" argument to indicate using
+init_cred as the base cred, require that "daemon" is always set to
+an actual task. Replace all existing callers that were passing NULL
+with &init_task.
 
-I think the lru reference needs to be counted.  Otherwise the nfsd_file
-will be freed (and removed from the LRU) as soon as not active request
-is referencing it (in the NFSv3 case).  This makes the LRU ineffective.
+Future attacks will need to have sufficiently powerful read/write
+primitives to have found an appropriately privileged task and written it
+to the ROP stack as an argument to succeed, which is similarly difficult
+to the prior effort needed to escalate privileges before struct cred
+existed: locate the current cred and overwrite the uid member.
 
-Looking more closely at the patch, it seems to sometimes treat the LRU
-reference as counted, but sometimes not.
+This has the added benefit of meaning that prepare_kernel_cred() can no
+longer exceed the privileges of the init task, which may have changed from
+the original init_cred (e.g. dropping capabilities from the bounding set).
 
->=20
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/nfsd/filecache.c | 202 ++++++++++++++++++++------------------------
->  1 file changed, 92 insertions(+), 110 deletions(-)
->=20
-> This passes some basic smoke testing and I think closes a number of
-> races in this code. I also think the result is a bit simpler and easier
-> to follow now.
->=20
-> I looked for some ways to break this up into multiple patches, but I
-> didn't find any. This changes the underlying rules of how the
-> refcounting works, and I didn't see a way to split that up and still
-> have it remain bisectable.
->=20
-> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> index 918d67cec1ad..6c2f4f2c56a6 100644
-> --- a/fs/nfsd/filecache.c
-> +++ b/fs/nfsd/filecache.c
-> @@ -1,7 +1,6 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
-> - * Open file cache.
-> - *
-> - * (c) 2015 - Jeff Layton <jeff.layton@primarydata.com>
-> + * The NFSD open file cache.
->   */
-> =20
->  #include <linux/hash.h>
-> @@ -303,8 +302,7 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, unsig=
-ned int may)
->  		if (key->gc)
->  			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
->  		nf->nf_inode =3D key->inode;
-> -		/* nf_ref is pre-incremented for hash table */
-> -		refcount_set(&nf->nf_ref, 2);
-> +		refcount_set(&nf->nf_ref, 1);
->  		nf->nf_may =3D key->need;
->  		nf->nf_mark =3D NULL;
->  	}
-> @@ -376,11 +374,15 @@ nfsd_file_flush(struct nfsd_file *nf)
->  		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
->  }
-> =20
-> -static void nfsd_file_lru_add(struct nfsd_file *nf)
-> +static bool nfsd_file_lru_add(struct nfsd_file *nf)
->  {
->  	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> -	if (list_lru_add(&nfsd_file_lru, &nf->nf_lru))
-> +	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags) &&
+[1] https://google.com/search?q=commit_creds(prepare_kernel_cred(0))
 
-Not only is this test inverted (as you already noted) but it is racy.
-The file could get unhashed immediately after the test.  That possibly
-gets handled somewhere.  If not it should be.  If so, this test isn't
-really needed.
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Russ Weight <russell.h.weight@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@cjr.nz>
+Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+Cc: Shyam Prasad N <sprasad@microsoft.com>
+Cc: Tom Talpey <tom@talpey.com>
+Cc: Namjae Jeon <linkinjeon@kernel.org>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Cc: Chuck Lever <chuck.lever@oracle.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: "Michal Koutný" <mkoutny@suse.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-cifs@vger.kernel.org
+Cc: samba-technical@lists.samba.org
+Cc: linux-nfs@vger.kernel.org
+Cc: netdev@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ drivers/base/firmware_loader/main.c    |  2 +-
+ fs/cifs/cifs_spnego.c                  |  2 +-
+ fs/cifs/cifsacl.c                      |  2 +-
+ fs/ksmbd/smb_common.c                  |  2 +-
+ fs/nfs/flexfilelayout/flexfilelayout.c |  4 ++--
+ fs/nfs/nfs4idmap.c                     |  2 +-
+ fs/nfsd/nfs4callback.c                 |  2 +-
+ kernel/cred.c                          | 15 +++++++--------
+ net/dns_resolver/dns_key.c             |  2 +-
+ 9 files changed, 16 insertions(+), 17 deletions(-)
 
-> +	    list_lru_add(&nfsd_file_lru, &nf->nf_lru)) {
->  		trace_nfsd_file_lru_add(nf);
-> +		return true;
-> +	}
-> +	return false;
->  }
-> =20
->  static void nfsd_file_lru_remove(struct nfsd_file *nf)
-> @@ -410,7 +412,7 @@ nfsd_file_unhash(struct nfsd_file *nf)
->  	return false;
->  }
-> =20
-> -static void
-> +static bool
->  nfsd_file_unhash_and_dispose(struct nfsd_file *nf, struct list_head *dispo=
-se)
->  {
->  	trace_nfsd_file_unhash_and_dispose(nf);
-> @@ -418,46 +420,48 @@ nfsd_file_unhash_and_dispose(struct nfsd_file *nf, st=
-ruct list_head *dispose)
->  		/* caller must call nfsd_file_dispose_list() later */
->  		nfsd_file_lru_remove(nf);
->  		list_add(&nf->nf_lru, dispose);
-> +		return true;
->  	}
-> +	return false;
->  }
-> =20
-> -static void
-> -nfsd_file_put_noref(struct nfsd_file *nf)
-> +static bool
-> +__nfsd_file_put(struct nfsd_file *nf)
->  {
-> -	trace_nfsd_file_put(nf);
-> -
-> +	/* v4 case: don't wait for GC */
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 7c3590fd97c2..017c4cdb219e 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -821,7 +821,7 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+ 	 * called by a driver when serving an unrelated request from userland, we use
+ 	 * the kernel credentials to read the file.
+ 	 */
+-	kern_cred = prepare_kernel_cred(NULL);
++	kern_cred = prepare_kernel_cred(&init_task);
+ 	if (!kern_cred) {
+ 		ret = -ENOMEM;
+ 		goto out;
+diff --git a/fs/cifs/cifs_spnego.c b/fs/cifs/cifs_spnego.c
+index 342717bf1dc2..6f3285f1dfee 100644
+--- a/fs/cifs/cifs_spnego.c
++++ b/fs/cifs/cifs_spnego.c
+@@ -189,7 +189,7 @@ init_cifs_spnego(void)
+ 	 * spnego upcalls.
+ 	 */
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index fa480d62f313..574de2b225ae 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -465,7 +465,7 @@ init_cifs_idmap(void)
+ 	 * this is used to prevent malicious redirections from being installed
+ 	 * with add_key().
+ 	 */
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/ksmbd/smb_common.c b/fs/ksmbd/smb_common.c
+index d96da872d70a..2a4fbbd55b91 100644
+--- a/fs/ksmbd/smb_common.c
++++ b/fs/ksmbd/smb_common.c
+@@ -623,7 +623,7 @@ int ksmbd_override_fsids(struct ksmbd_work *work)
+ 	if (share->force_gid != KSMBD_SHARE_INVALID_GID)
+ 		gid = share->force_gid;
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 1ec79ccf89ad..7deb3cd76abe 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -493,10 +493,10 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
+ 		gid = make_kgid(&init_user_ns, id);
+ 
+ 		if (gfp_flags & __GFP_FS)
+-			kcred = prepare_kernel_cred(NULL);
++			kcred = prepare_kernel_cred(&init_task);
+ 		else {
+ 			unsigned int nofs_flags = memalloc_nofs_save();
+-			kcred = prepare_kernel_cred(NULL);
++			kcred = prepare_kernel_cred(&init_task);
+ 			memalloc_nofs_restore(nofs_flags);
+ 		}
+ 		rc = -ENOMEM;
+diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
+index e3fdd2f45b01..25a7c771cfd8 100644
+--- a/fs/nfs/nfs4idmap.c
++++ b/fs/nfs/nfs4idmap.c
+@@ -203,7 +203,7 @@ int nfs_idmap_init(void)
+ 	printk(KERN_NOTICE "NFS: Registering the %s key type\n",
+ 		key_type_id_resolver.name);
+ 
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
+index f0e69edf5f0f..4a9e8d17e56a 100644
+--- a/fs/nfsd/nfs4callback.c
++++ b/fs/nfsd/nfs4callback.c
+@@ -870,7 +870,7 @@ static const struct cred *get_backchannel_cred(struct nfs4_client *clp, struct r
+ 	} else {
+ 		struct cred *kcred;
+ 
+-		kcred = prepare_kernel_cred(NULL);
++		kcred = prepare_kernel_cred(&init_task);
+ 		if (!kcred)
+ 			return NULL;
+ 
+diff --git a/kernel/cred.c b/kernel/cred.c
+index e10c15f51c1f..811ad654abd1 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -701,9 +701,9 @@ void __init cred_init(void)
+  * override a task's own credentials so that work can be done on behalf of that
+  * task that requires a different subjective context.
+  *
+- * @daemon is used to provide a base for the security record, but can be NULL.
+- * If @daemon is supplied, then the security data will be derived from that;
+- * otherwise they'll be set to 0 and no groups, full capabilities and no keys.
++ * @daemon is used to provide a base cred, with the security data derived from
++ * that; if this is "&init_task", they'll be set to 0, no groups, full
++ * capabilities, and no keys.
+  *
+  * The caller may change these controls afterwards if desired.
+  *
+@@ -714,17 +714,16 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
+ 	const struct cred *old;
+ 	struct cred *new;
+ 
++	if (WARN_ON_ONCE(!daemon))
++		return NULL;
++
+ 	new = kmem_cache_alloc(cred_jar, GFP_KERNEL);
+ 	if (!new)
+ 		return NULL;
+ 
+ 	kdebug("prepare_kernel_cred() alloc %p", new);
+ 
+-	if (daemon)
+-		old = get_task_cred(daemon);
+-	else
+-		old = get_cred(&init_cred);
+-
++	old = get_task_cred(daemon);
+ 	validate_creds(old);
+ 
+ 	*new = *old;
+diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
+index 3aced951d5ab..01e54b46ae0b 100644
+--- a/net/dns_resolver/dns_key.c
++++ b/net/dns_resolver/dns_key.c
+@@ -337,7 +337,7 @@ static int __init init_dns_resolver(void)
+ 	 * this is used to prevent malicious redirections from being installed
+ 	 * with add_key().
+ 	 */
+-	cred = prepare_kernel_cred(NULL);
++	cred = prepare_kernel_cred(&init_task);
+ 	if (!cred)
+ 		return -ENOMEM;
+ 
+-- 
+2.34.1
 
-This comment suggests this code is only for the v4 case ....
-
->  	if (refcount_dec_and_test(&nf->nf_ref)) {
-> -		WARN_ON(test_bit(NFSD_FILE_HASHED, &nf->nf_flags));
-> +		nfsd_file_unhash(nf);
->  		nfsd_file_lru_remove(nf);
-
-but v4 doesn't use the lru, so this line is pointless.
-And if the LRU does hold a counted reference, nf cannot possibly be on
-the LRU at this point.
-
-In fact, this function can be called for the v3 case, so the comment is
-just misleading .... or maybe the code is poorly structured.
-
->  		nfsd_file_free(nf);
-> +		return true;
->  	}
-> +	return false;
->  }
-> =20
-> -static void
-> -nfsd_file_unhash_and_put(struct nfsd_file *nf)
-> -{
-> -	if (nfsd_file_unhash(nf))
-> -		nfsd_file_put_noref(nf);
-> -}
-> -
-> +/**
-> + * nfsd_file_put - put the reference to a nfsd_file
-> + * @nf: nfsd_file of which to put the reference
-> + *
-> + * Put a reference to a nfsd_file. In the v4 case, we just put the
-> + * reference immediately. In the v2/3 case, if the reference would be
-> + * the last one, the put it on the LRU instead to be cleaned up later.
-> + */
->  void
->  nfsd_file_put(struct nfsd_file *nf)
->  {
-> -	might_sleep();
-> -
-> -	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)
-> -		nfsd_file_lru_add(nf);
-> -	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
-> -		nfsd_file_unhash_and_put(nf);
-> +	trace_nfsd_file_put(nf);
-> =20
-> -	if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags) =3D=3D 0) {
-> -		nfsd_file_flush(nf);
-> -		nfsd_file_put_noref(nf);
-> -	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags) =3D=3D 1)=
- {
-> -		nfsd_file_put_noref(nf);
-> -		nfsd_file_schedule_laundrette();
-> -	} else
-> -		nfsd_file_put_noref(nf);
-> +	/* NFSv2/3 case */
-> +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
-> +		/*
-> +		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
-> +		 * it to the LRU. If the add to the LRU fails, just put it as
-> +		 * usual.
-> +		 */
-> +		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
-> +			return;
-
-This is one place that looks like you are refcounting entries on the lru.
-If this is the last reference and you can transfer it to use LRU, then
-you don't need to drop the reference.
-
-> +	}
-> +	__nfsd_file_put(nf);
->  }
-> =20
-
-NeilBrown
