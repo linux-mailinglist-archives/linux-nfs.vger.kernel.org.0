@@ -2,83 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C1ABC6100A9
+	by mail.lfdr.de (Postfix) with ESMTP id E8E8D6100AA
 	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 20:51:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234947AbiJ0Svs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 14:51:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
+        id S235333AbiJ0Svt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 14:51:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236528AbiJ0Svh (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 14:51:37 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3355AC40
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:51:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666896696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TR4HqfQeWYLPodwoI+HMP5Np8zgtGnTeMnHyDuUJ5PU=;
-        b=ZCMqILL59iyc4+NSb349wGupYCOpPNvIXuELTJwSEBvdhtOnw/3Rn11aKUVjqjN8L9IRs1
-        b7eDer09CpXLTGcgd8eKM/V+Drf0BDIQ4DB7ndrwOFpoTRBYczzb2CV4cG5X0AB6vfjvHf
-        1O48n3SaYbi662vvmpilDlL1AE5zME4=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-116-6o2areM3Nm2ehBxtRFk-yA-1; Thu, 27 Oct 2022 14:51:34 -0400
-X-MC-Unique: 6o2areM3Nm2ehBxtRFk-yA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S236545AbiJ0Svn (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 14:51:43 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0740B5AA3B
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:51:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CAC28582B9
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 18:51:33 +0000 (UTC)
-Received: from madhat.boston.devel.redhat.com (madhat.boston.devel.redhat.com [10.19.60.33])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A19A40C94AA
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 18:51:25 +0000 (UTC)
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-Subject: [PATCH 1/1] nfsd: Set v4 version when only a minor version is set
-Date:   Thu, 27 Oct 2022 14:51:21 -0400
-Message-Id: <20221027185121.15044-2-steved@redhat.com>
-In-Reply-To: <20221027185121.15044-1-steved@redhat.com>
-References: <20221027185121.15044-1-steved@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id B38B8B8274E
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 18:51:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32DBAC433C1;
+        Thu, 27 Oct 2022 18:51:39 +0000 (UTC)
+Subject: [PATCH v6 00/14] Series short description
+From:   Chuck Lever <chuck.lever@oracle.com>
+To:     linux-nfs@vger.kernel.org
+Cc:     neilb@suse.de, jlayton@redhat.com
+Date:   Thu, 27 Oct 2022 14:51:38 -0400
+Message-ID: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>
+User-Agent: StGit/1.5.dev3+g9561319
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make sure the v4 version is set when only a minor
-version is set in /etc/nfs.conf
+I'm proposing this series for v6.2 (for-next).
 
-Signed-off-by: Steve Dickson <steved@redhat.com>
+For quite some time, we've been encouraged to disable filecache
+garbage collection for NFSv4 files, and I think I found a surgical
+way to do just that. That is presented in "NFSD: Add an NFSD_FILE_GC
+flag to enable nfsd_file garbage collection".
+
+The other major change in this set is reworking the file_hashtbl to
+resize itself dynamically. This reduces the average size of its
+bucket chains, greatly speeding up hash insertion, which holds the
+state_lock.
+
+This version seems to pass thread-intensive testing so far.
+
+Comments and opinions are welcome.
+
+Changes since v5:
+- Wrap hash insertion with inode->i_lock
+- Replace hashfn and friends with in-built rhashtable functions
+- Add a tracepoint to report delegation return
+
+Changes since v4:
+- Addressed some comments in the GC patch; more to come
+- Split clean-ups out of the rhashtable patch, reordered the series
+- Removed state_lock from the rhashtable helpers
+
+Changes since v3:
+- the new filehandle alias check was still not right
+
+Changes since v2:
+- Converted nfs4_file_rhashtbl to nfs4_file_rhltable
+- Addressed most or all other review comments
+
+Changes since RFC:
+- checking nfs4_files for inode aliases is now done only on hash
+  insertion
+- the nfs4_file reference count is now bumped only while the RCU
+  read lock is held
+- comments and function names have been revised and clarified
+
 ---
- utils/nfsd/nfsd.c | 3 +++
- 1 file changed, 3 insertions(+)
 
-diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
-index 4016a76..87c5ce9 100644
---- a/utils/nfsd/nfsd.c
-+++ b/utils/nfsd/nfsd.c
-@@ -154,6 +154,9 @@ main(int argc, char **argv)
- 		if (conf_get_bool("nfsd", tag, 0)) {
- 			NFSCTL_MINORSET(minorversset, i);
- 			NFSCTL_MINORSET(minorvers, i);
-+			/* Make sure v4 is set */
-+			if (!NFSCTL_VERISSET(versbits, 4))
-+				NFSCTL_VERSET(versbits, 4);
- 			if (i == 0)
- 				force4dot0 = 1;
- 		}
--- 
-2.37.3
+Chuck Lever (14):
+      NFSD: Pass the target nfsd_file to nfsd_commit()
+      NFSD: Revert "NFSD: NFSv4 CLOSE should release an nfsd_file immediately"
+      NFSD: Add an NFSD_FILE_GC flag to enable nfsd_file garbage collection
+      NFSD: Clean up nfs4_preprocess_stateid_op() call sites
+      NFSD: Trace stateids returned via DELEGRETURN
+      NFSD: Trace delegation revocations
+      NFSD: Use const pointers as parameters to fh_ helpers
+      NFSD: Update file_hashtbl() helpers
+      NFSD: Clean up nfsd4_init_file()
+      NFSD: Add a remove_nfs4_file() helper
+      NFSD: Clean up find_or_add_file()
+      NFSD: Refactor find_file()
+      NFSD: Allocate an rhashtable for nfs4_file objects
+      NFSD: Use rhashtable for managing nfs4_file objects
+
+
+ fs/nfsd/filecache.c |  81 +++++++++++++++-------
+ fs/nfsd/filecache.h |   4 +-
+ fs/nfsd/nfs3proc.c  |  10 ++-
+ fs/nfsd/nfs4proc.c  |  42 +++++------
+ fs/nfsd/nfs4state.c | 165 ++++++++++++++++++++++++--------------------
+ fs/nfsd/nfsfh.h     |  10 +--
+ fs/nfsd/state.h     |   5 +-
+ fs/nfsd/trace.h     |  59 +++++++++++++++-
+ fs/nfsd/vfs.c       |  19 ++---
+ fs/nfsd/vfs.h       |   3 +-
+ 10 files changed, 249 insertions(+), 149 deletions(-)
+
+--
+Chuck Lever
 
