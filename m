@@ -2,66 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61FF6610654
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 01:24:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CBD9610666
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 01:29:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234879AbiJ0XYu (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 19:24:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33386 "EHLO
+        id S235279AbiJ0X3O (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 19:29:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233946AbiJ0XYs (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 19:24:48 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 678B3360B1
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 16:24:39 -0700 (PDT)
+        with ESMTP id S229616AbiJ0X3N (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 19:29:13 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B67D984E66
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 16:29:12 -0700 (PDT)
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id AF3861F747;
-        Thu, 27 Oct 2022 23:24:37 +0000 (UTC)
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 789101F461;
+        Thu, 27 Oct 2022 23:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1666913077; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+        t=1666913351; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=l5t6SJz0yRdAWEtwRuc1GVv2/pPXnIPWP34FVR3TuLc=;
-        b=omsBkxVx7kIzq8NVuJWAyScU/E4Q0/+hsGmqnkm6Io8wxPD/1XGxieT8Mh6GqD42rqUTnT
-        iwhqpOW/6gn6nyDTRyfdwKe127FQ7Hd8s+QB2AQZSnWD0dnFvXuj/Lhy6ipxG3jIE9jzVk
-        ZL5F+XRQKaCgQgP/0o2BAr53nTSMNhQ=
+        bh=sTTAZbHvhHhkABswGdCyVPAFcWeeW/2GRLauayyG2NY=;
+        b=uoLWMY44LKx7+zPkesCWqbzcdDfSQ/5hD81JXyotmr+lSBkO75o/rq0/qQhQyMuD+cToB8
+        6siwKoTXD7vTGwTl7Z/ZLYrIcAaJ3o1BST+QdKnpijcRc9qVLfYIOjoSinvvk9vTVK1KYy
+        1E4wA/TZSi4RujX8AGpI+5QIsCHhMmo=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1666913077;
+        s=susede2_ed25519; t=1666913351;
         h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
          mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=l5t6SJz0yRdAWEtwRuc1GVv2/pPXnIPWP34FVR3TuLc=;
-        b=Mwag1u+dFy54uGElblTdkKzpD9fIhsxrZO2zwVi/JfZWAlFE0L5zCEOi8rXPTunJL59jU/
-        EGp0GkCLKBGz8GCQ==
+        bh=sTTAZbHvhHhkABswGdCyVPAFcWeeW/2GRLauayyG2NY=;
+        b=3PlVZ8b+GzLZ4WyFLSEV4JAhvaoD/8FxdGInWu+ZDBSA77mef6hm2bjwA457GOR/8j5viE
+        GZNFpNF4ZbRmW2CA==
 Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7220B13357;
-        Thu, 27 Oct 2022 23:24:36 +0000 (UTC)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 464AA13357;
+        Thu, 27 Oct 2022 23:29:09 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([192.168.254.65])
         by imap2.suse-dmz.suse.de with ESMTPSA
-        id +kqjCTQTW2PWEQAAMHmgww
-        (envelope-from <neilb@suse.de>); Thu, 27 Oct 2022 23:24:36 +0000
+        id AqYqO0UUW2OGEwAAMHmgww
+        (envelope-from <neilb@suse.de>); Thu, 27 Oct 2022 23:29:09 +0000
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 From:   "NeilBrown" <neilb@suse.de>
 To:     "Chuck Lever" <chuck.lever@oracle.com>
 Cc:     linux-nfs@vger.kernel.org, jlayton@redhat.com
-Subject: Re: [PATCH v6 13/14] NFSD: Allocate an rhashtable for nfs4_file objects
-In-reply-to: <166689678047.90991.16096403318324605089.stgit@klimt.1015granger.net>
-References: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>,
- <166689678047.90991.16096403318324605089.stgit@klimt.1015granger.net>
-Date:   Fri, 28 Oct 2022 10:24:33 +1100
-Message-id: <166691307319.13915.11000056177725554613@noble.neil.brown.name>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+Subject: Re: [PATCH v6 00/14] Series short description
+In-reply-to: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>
+References: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>
+Date:   Fri, 28 Oct 2022 10:29:07 +1100
+Message-id: <166691334702.13915.10147957275207365905@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,97 +69,90 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 On Fri, 28 Oct 2022, Chuck Lever wrote:
-> Introduce the infrastructure for managing nfs4_file objects in an
-> rhashtable. This infrastructure will be used by the next patch.
+> I'm proposing this series for v6.2 (for-next).
 >=20
-> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-> Reviewed-by: NeilBrown <neilb@suse.de>
-> ---
->  fs/nfsd/nfs4state.c |   26 +++++++++++++++++++++++++-
->  fs/nfsd/state.h     |    1 +
->  2 files changed, 26 insertions(+), 1 deletion(-)
+> For quite some time, we've been encouraged to disable filecache
+> garbage collection for NFSv4 files, and I think I found a surgical
+> way to do just that. That is presented in "NFSD: Add an NFSD_FILE_GC
+> flag to enable nfsd_file garbage collection".
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index a07fbbe289cf..3afb73750d2d 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -44,7 +44,9 @@
->  #include <linux/jhash.h>
->  #include <linux/string_helpers.h>
->  #include <linux/fsnotify.h>
-> +#include <linux/rhashtable.h>
->  #include <linux/nfs_ssc.h>
-> +
->  #include "xdr4.h"
->  #include "xdr4cb.h"
->  #include "vfs.h"
-> @@ -721,6 +723,21 @@ static unsigned int file_hashval(const struct svc_fh *=
-fh)
-> =20
->  static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
-> =20
-> +static struct rhltable nfs4_file_rhltable ____cacheline_aligned_in_smp;
-> +
-> +static const struct rhashtable_params nfs4_file_rhash_params =3D {
-> +	.key_len		=3D sizeof_field(struct nfs4_file, fi_inode),
-> +	.key_offset		=3D offsetof(struct nfs4_file, fi_inode),
-> +	.head_offset		=3D offsetof(struct nfs4_file, fi_rlist),
-> +
-> +	/*
-> +	 * Start with a single page hash table to reduce resizing churn
-> +	 * on light workloads.
-> +	 */
+> The other major change in this set is reworking the file_hashtbl to
+> resize itself dynamically. This reduces the average size of its
+> bucket chains, greatly speeding up hash insertion, which holds the
+> state_lock.
+>=20
+> This version seems to pass thread-intensive testing so far.
+>=20
+> Comments and opinions are welcome.
 
-Nice :-)
+All looks good to me - with the understanding that refcount fixes will
+follow.
+I cannot comment on the tracepoint changes as I'm not particularly
+familiar with that code, but for everything else
+  Reviewed-by: NeilBrown <neilb@suse.de>
 
+Thanks,
 NeilBrown
 
-> +	.min_size		=3D 256,
-> +	.automatic_shrinking	=3D true,
-> +};
-> +
->  /*
->   * Check if courtesy clients have conflicting access and resolve it if pos=
-sible
->   *
-> @@ -8025,10 +8042,16 @@ nfs4_state_start(void)
->  {
->  	int ret;
-> =20
-> -	ret =3D nfsd4_create_callback_queue();
-> +	ret =3D rhltable_init(&nfs4_file_rhltable, &nfs4_file_rhash_params);
->  	if (ret)
->  		return ret;
-> =20
-> +	ret =3D nfsd4_create_callback_queue();
-> +	if (ret) {
-> +		rhltable_destroy(&nfs4_file_rhltable);
-> +		return ret;
-> +	}
-> +
->  	set_max_delegations();
->  	return 0;
->  }
-> @@ -8059,6 +8082,7 @@ nfs4_state_shutdown_net(struct net *net)
-> =20
->  	nfsd4_client_tracking_exit(net);
->  	nfs4_state_destroy_net(net);
-> +	rhltable_destroy(&nfs4_file_rhltable);
->  #ifdef CONFIG_NFSD_V4_2_INTER_SSC
->  	nfsd4_ssc_shutdown_umount(nn);
->  #endif
-> diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-> index e2daef3cc003..190fc7e418a4 100644
-> --- a/fs/nfsd/state.h
-> +++ b/fs/nfsd/state.h
-> @@ -546,6 +546,7 @@ struct nfs4_file {
->  	bool			fi_aliased;
->  	spinlock_t		fi_lock;
->  	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
-> +	struct rhlist_head	fi_rlist;
->  	struct list_head        fi_stateids;
->  	union {
->  		struct list_head	fi_delegations;
+
 >=20
+> Changes since v5:
+> - Wrap hash insertion with inode->i_lock
+> - Replace hashfn and friends with in-built rhashtable functions
+> - Add a tracepoint to report delegation return
+>=20
+> Changes since v4:
+> - Addressed some comments in the GC patch; more to come
+> - Split clean-ups out of the rhashtable patch, reordered the series
+> - Removed state_lock from the rhashtable helpers
+>=20
+> Changes since v3:
+> - the new filehandle alias check was still not right
+>=20
+> Changes since v2:
+> - Converted nfs4_file_rhashtbl to nfs4_file_rhltable
+> - Addressed most or all other review comments
+>=20
+> Changes since RFC:
+> - checking nfs4_files for inode aliases is now done only on hash
+>   insertion
+> - the nfs4_file reference count is now bumped only while the RCU
+>   read lock is held
+> - comments and function names have been revised and clarified
+>=20
+> ---
+>=20
+> Chuck Lever (14):
+>       NFSD: Pass the target nfsd_file to nfsd_commit()
+>       NFSD: Revert "NFSD: NFSv4 CLOSE should release an nfsd_file immediate=
+ly"
+>       NFSD: Add an NFSD_FILE_GC flag to enable nfsd_file garbage collection
+>       NFSD: Clean up nfs4_preprocess_stateid_op() call sites
+>       NFSD: Trace stateids returned via DELEGRETURN
+>       NFSD: Trace delegation revocations
+>       NFSD: Use const pointers as parameters to fh_ helpers
+>       NFSD: Update file_hashtbl() helpers
+>       NFSD: Clean up nfsd4_init_file()
+>       NFSD: Add a remove_nfs4_file() helper
+>       NFSD: Clean up find_or_add_file()
+>       NFSD: Refactor find_file()
+>       NFSD: Allocate an rhashtable for nfs4_file objects
+>       NFSD: Use rhashtable for managing nfs4_file objects
+>=20
+>=20
+>  fs/nfsd/filecache.c |  81 +++++++++++++++-------
+>  fs/nfsd/filecache.h |   4 +-
+>  fs/nfsd/nfs3proc.c  |  10 ++-
+>  fs/nfsd/nfs4proc.c  |  42 +++++------
+>  fs/nfsd/nfs4state.c | 165 ++++++++++++++++++++++++--------------------
+>  fs/nfsd/nfsfh.h     |  10 +--
+>  fs/nfsd/state.h     |   5 +-
+>  fs/nfsd/trace.h     |  59 +++++++++++++++-
+>  fs/nfsd/vfs.c       |  19 ++---
+>  fs/nfsd/vfs.h       |   3 +-
+>  10 files changed, 249 insertions(+), 149 deletions(-)
+>=20
+> --
+> Chuck Lever
 >=20
 >=20
