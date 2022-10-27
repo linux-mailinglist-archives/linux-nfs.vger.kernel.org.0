@@ -2,277 +2,529 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E40360FA54
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 16:23:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B94260FB75
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 17:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235094AbiJ0OXa (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 10:23:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42056 "EHLO
+        id S236427AbiJ0PKj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 11:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235195AbiJ0OX3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 10:23:29 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0BFF7E810
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 07:23:27 -0700 (PDT)
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 29RDxPOW026776;
-        Thu, 27 Oct 2022 14:23:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=Cv7xp47SrkGYk1p5PIuLGsY5uTmYjXDyKFNzfck+9t0=;
- b=PtSDyJlP0YHthH9+lfBdR4kGA7LsSR7YWMUfX4SmsgOKqAhC7AwatfhImWu/E3KpPmVR
- n71zsmE//srPHKk1SHZweNvugJq3mhHxle6o5NHH58AHJzUqRlHZFrmJc/aXyRGiqyFU
- tPkkQWeHHpJFN3xZB6k/IG5VRwqI6m9fZaDhOPOaOXNGoRJHvpPsrj+s+Zg2+dAw6dGz
- IUua/g6t9LeKLOj882YfwcGTTel43fUpJg+zdqFI7axAO1eNK7EXk6OeCmmpHsF1SW0/
- F5tOzhwN2MBSONg+tGISfP7huwpJs6qHynn5Lz+6tMNyKrKCG6AdQBfwTUp8sNUZ3Tzg xg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kfaheaevb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Oct 2022 14:23:18 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 29RCYbVj033387;
-        Thu, 27 Oct 2022 14:23:17 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2177.outbound.protection.outlook.com [104.47.56.177])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kfagn1kq0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Oct 2022 14:23:17 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DiREB92rPSygfWt46NUXBEimTaEsWZO61ld0SDpUm09abS0HAadBdbd6gpQ9o9XZFl2VmVqtb4rsHZGVm/rMIAdE2M99WJR3VecKzMFYOEAQnQWNryP3Wl2lD5Ds0lHT7ABErLAfA36aa+WxXPIP6bzm10IIO+vkE07Q/oLXvAPoLqgML2vPpx95nNDpQWSX39hY0Dgjl7wxA3er2/y6ZJ/g81TeKU3djb1MG/CoiBFXeBcmoFyVEkM6/D9r2UBkjJi6z5eH1m4cNgInMmmSWKBclWsWIQUI/ih3GildVp4dq9GBR4Ndciixj+Q6UcHv15+itqQSNeexToTIC2fwfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Cv7xp47SrkGYk1p5PIuLGsY5uTmYjXDyKFNzfck+9t0=;
- b=LBTp/2IyblSrRFsga64VIE+FFXoKYAjKNjsKLOSnz4tlNRfVjM2l/gap6k8drYhY7woLSnJPswVO5/EjjyyUEC/LWeaaUgAYjQIeYpk2Rj9KrvAd//oSoBDfSoYpMYKodAkmE6cXx01/i+cx2T+3ubBoBHsfG6TFwxR0Q4ZCzGESi1Xadsh52vgfJhxa+dYGjzu/LTCYIMgHezqdOru50LIkyKMYp5tGvlbjtoA4HWr2TWbm94ZeI0OrzUQ9uhza9qj80ZyfMslsPxRHfvaeqjMumkmsqCMLL6+SDiYFqAWTQvR4njIzY85UfEUgNDU9y86a1JpoUDg/vi0Bdrt4kw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Cv7xp47SrkGYk1p5PIuLGsY5uTmYjXDyKFNzfck+9t0=;
- b=K/g6zG31q0TVplF6cXemBZcI14bs7QEoU2U6iuIBb9gyQ0VIIfploSGYeki4R4RuWwy9pU48v+yZ3O3kCQBX8S5DhpxFm/7lOpiJcFyKKgAGYKvP6fnsBGf7+CLtrNrOYkWd7Kpx6NTykP3/1hKzDeyYnvjar+UkpRAyLJ1hUYE=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB5087.namprd10.prod.outlook.com (2603:10b6:5:3b0::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Thu, 27 Oct
- 2022 14:23:14 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5403:3164:f6c3:d48a]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::5403:3164:f6c3:d48a%3]) with mapi id 15.20.5746.021; Thu, 27 Oct 2022
- 14:23:14 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Neil Brown <neilb@suse.de>
-CC:     David Disseldorp <ddiss@suse.de>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Jeff Layton <jlayton@redhat.com>
-Subject: Re: [PATCH] exportfs: use pr_debug for unreachable debug statements
-Thread-Topic: [PATCH] exportfs: use pr_debug for unreachable debug statements
-Thread-Index: AQHY5UgGkwnmp58/L0OX2xyj/M+Kj64cjjqAgAE8nYCAAFVLAIAENJmA
-Date:   Thu, 27 Oct 2022 14:23:14 +0000
-Message-ID: <1D5F6D51-DE1C-4486-8907-12B9993CCAB7@oracle.com>
-References: <20221021122414.20555-1-ddiss@suse.de>
- <166656308707.12462.9861114416829680469@noble.neil.brown.name>
- <000A2614-4C72-444A-A1D3-7B259D99C70A@oracle.com>
- <166664939677.12462.18426253960350585268@noble.neil.brown.name>
-In-Reply-To: <166664939677.12462.18426253960350585268@noble.neil.brown.name>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|DS7PR10MB5087:EE_
-x-ms-office365-filtering-correlation-id: 4fe050eb-e1db-449a-d682-08dab826c90c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: izhD3KaqBOSTgo5vlJmFfXlpzqPNtJHpN0dm6XpqGEv65vmuXMzzRgl7Gd46OGl6W5HEjqQTBCfM+/LT2oIdwfM9e4Ewf+YJkPsumClSLe8U0OfXYGWvfhQhNpkKa3ILJwpDTQ0ibs+s7d2rJ3CYYmi81akQs5T/Bxx75V2Urw0ynsuCynvLEuSXg2GPwmOqRqHin4FL45R8RTCkF44QE64ZpWjef4q4uWr/E0lFHaJeQHSkE5CAKTJ7TDzRZaG/N6An3aAs/uwr+f+HSdwNbXTrWospxLQLktOyK1xYjyoxQGba/S6CjoDou8F+5CH6t1ayEHaQszs8/lXBWmc6l7c06un8gX1yhroZU/lRCYoSK0T2sO9sMFMiX+DwdfZJ5UMoolPQtBvWG8jdrdBUdSR9BQyxy40IUq1kRPClgu7znlTt5fWcw7/0jewrwkxgUoKNERKXRbnQLmWNR+tqS1G5+Ulx2MaKdHlKOKQMQzWtdudbSDUP9aTbyMTCdy7SD3PPvKbzf0tv18LU24q972V0fKFtv26tV1JzVNqXBPbuvC7lZUUtwGTwNh7fz5kG7sjheFfva4uyYBngjhTC4z/3BOXoyOEr/UOvA9LYOIxzZ7OSqyw47xv2a9EupqEWuCE6BG7U/xM74wgjI6td0KzF5B293QB2kFKawQUKlEm082c4MiNafkwubOPHR4TJj8ZAf8BytauBptHt5RmAePvHqHw4hClNPJiqT8nT4IWjmKaPxN2vG1ZZUNbLx6kDch5xUlBRWWp4+onDQOhkCtAnGyU+lPcYgwfc3qh+ED0=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(376002)(346002)(39860400002)(136003)(451199015)(2616005)(26005)(6506007)(186003)(8676002)(53546011)(83380400001)(2906002)(5660300002)(8936002)(6512007)(4326008)(91956017)(6916009)(54906003)(66946007)(66556008)(64756008)(76116006)(316002)(71200400001)(41300700001)(66476007)(6486002)(478600001)(66446008)(33656002)(36756003)(86362001)(122000001)(38100700002)(38070700005)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?6NdsQGGmilcLKOq3gAeS9FZWuhg+9X6hUI+AE4ywwksAnmp2L7UwqLVsx/nJ?=
- =?us-ascii?Q?qntKNgbo/6CkDYFqgujau64YgW5y//BYCwUN/QOmsy8QPPotda+thUNsdwNt?=
- =?us-ascii?Q?f1kfS5bD0srvFePB/8lZ0fg8tlSA1etf6CjRvSm+pC0Y73rwWMm/LeylyO72?=
- =?us-ascii?Q?D0uIg4Y6LkMBaoSUZemFWK71IAdccztIfAQmFjMEiXWF7yanv40mSCXkCUUC?=
- =?us-ascii?Q?NGjEEtECwWlW4CuScP+jZkIg0YZYDwvrknEUlq5rdLrWCyNXnJFZ/r3j8uuX?=
- =?us-ascii?Q?ug4wkx8kXuDeM2E6L+7w7JH5bSChBee05amlr//z90geLE2830PaLF8j+NSq?=
- =?us-ascii?Q?xY7WtwFoWqjTz4HK91tJrm0phPtzhjprojh39CaQgX0JL2Xk4HBw9fVOz6o6?=
- =?us-ascii?Q?aFV5Pz2UdLXGoTkjW4Ry3oSuqeUCrnCnWKifr9eDMalWmpsE3LwIIgxxtqKa?=
- =?us-ascii?Q?O83Tizf3cfhp9njmS5BAUV2PuJRpw8yhr0mSppgA7HeaML3kvzP/nrO+kFYC?=
- =?us-ascii?Q?0/NlquQtiwte+8q48N7WNRtxd2bRA4Q1WS/0Cu1f6r3aBjXZvUWsdyf2/art?=
- =?us-ascii?Q?/KW6cRZP1+3HuR59gzkk1qfdJ1E/QaHwdbnnYoaAct9+zjbfd26+rEbhwg0x?=
- =?us-ascii?Q?ZPHOWinBAg/NQNlrNEgrLeh39EJq7xzH9NTsX1FkCISnzm3FV2OzPFjXd2o0?=
- =?us-ascii?Q?3K0qJqh5tkLT2x+ivf4zqDcFIP6MBbmKLuHzVrRaMMbUWH5t0AM1WCyn8wCl?=
- =?us-ascii?Q?tyywtOpBQJvxwG6H4efLBdbU/zTXFM77n+eyIYkDKA/5J+hv/RAV5P9LA4Rx?=
- =?us-ascii?Q?pom9Mqci4VPB7FaW255QX0L/ZSoYyv2oSsX/hEZiUrw135kDOTA1J/T9wP4z?=
- =?us-ascii?Q?YapAtmLirA/oXGVJm7esePuZowNcHhfVWzX4mbmQmOely5lKGdQUn5GfURvI?=
- =?us-ascii?Q?basHMsMHL6X6yhsvwYH/lT2zRP28Ea66F2x0RnNp5Fs09uB4svf9cjjWjjA3?=
- =?us-ascii?Q?h7rE9gb0NuoTwqMWRQSMKWhTQw3AHtDys+e9rvoKj08NIukxsPtZE0ZbXhGS?=
- =?us-ascii?Q?RPtcEZXT5RAuiYC8OIdqh6qKL0C/n42/axtxVxcIUww4KvWSN6b7UoRl3xHF?=
- =?us-ascii?Q?99X9BeTuxgEboxar5W9caxvb2vgUbzv4uoGAUujOUGl6GiYVvgy4/3aJAqHw?=
- =?us-ascii?Q?vOrrA42Aqyj0OCZaUk5Npk38rAuZUGkinc/UEBy/a2S+3A3/8RYNhOK4HklD?=
- =?us-ascii?Q?tB11B+Bi/9HrXOhqZ5kqQtTlaLgCqcZsA8/hQOzmnKZ027K/DYIHC3PLTsqW?=
- =?us-ascii?Q?S4Mqa+h5fWIc6gQaEMzG9IrvDCnH8PhFiEihLayrxfpj3ILV0SIoQNvO9BY2?=
- =?us-ascii?Q?CG9V1650Nx9zfKFcrWR+tqIFEdCuixtamiQu7TkeE9c63MTRF2IfRpM5p/d+?=
- =?us-ascii?Q?WphKC/SZ0sdism2Cp3Bv0+H6exqVoUBKhcR6wMN5Ob3NC0ZpgM7Jul3GAGWp?=
- =?us-ascii?Q?VhG49HYlAwIab57Vgj3FbwKmtjgNKOxwNGT6DLXy1kEh8MwN42HTfUZKG6XG?=
- =?us-ascii?Q?tre2YwgNNuNX0tsU0slKtnjRVGioDgul+gvjBfwM+5Q0pO/WUtKC99x5gnOX?=
- =?us-ascii?Q?QA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <91DA2B81512DC84DB1BC0296CACBC9D7@namprd10.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S236108AbiJ0PJS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 11:09:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0323118F924;
+        Thu, 27 Oct 2022 08:09:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80390623A5;
+        Thu, 27 Oct 2022 15:09:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0333C43141;
+        Thu, 27 Oct 2022 15:09:13 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1oo4Vc-00BvcD-37;
+        Thu, 27 Oct 2022 11:09:28 -0400
+Message-ID: <20221027150928.780676863@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Thu, 27 Oct 2022 11:05:44 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Martin KaFai Lau <martin.lau@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kuniyuki Iwashima <kuniyu@amazon.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        bridge@lists.linux-foundation.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, lvs-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net
+Subject: [RFC][PATCH v2 19/31] timers: net: Use del_timer_shutdown() before freeing timer
+References: <20221027150525.753064657@goodmis.org>
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4fe050eb-e1db-449a-d682-08dab826c90c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Oct 2022 14:23:14.7051
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rg3zw5kbHiNcV0wcOebKqruTOCKCuX5HN+x9KcYTZpPhqk2J8C9TjXGma9vxH4wJ2sc1kUhsgkp0hjQjI4Rvag==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5087
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-10-27_07,2022-10-27_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0
- mlxlogscore=999 malwarescore=0 suspectscore=0 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2210170000 definitions=main-2210270078
-X-Proofpoint-GUID: _p95on3-wb_EbAg0O2w2sP_KbUU-YDJz
-X-Proofpoint-ORIG-GUID: _p95on3-wb_EbAg0O2w2sP_KbUU-YDJz
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
+Before a timer is freed, del_timer_shutdown() must be called.
 
-> On Oct 24, 2022, at 6:09 PM, NeilBrown <neilb@suse.de> wrote:
->=20
-> On Tue, 25 Oct 2022, Chuck Lever III wrote:
->>=20
->>> On Oct 23, 2022, at 6:11 PM, NeilBrown <neilb@suse.de> wrote:
->>>=20
->>> On Fri, 21 Oct 2022, David Disseldorp wrote:
->>>> expfs.c has a bunch of dprintk statements which are unusable due to:
->>>> #define dprintk(fmt, args...) do{}while(0)
->>>> Use pr_debug so that they can be enabled dynamically.
->>>> Also make some minor changes to the debug statements to fix some
->>>> incorrect types, and remove __func__ which can be handled by dynamic
->>>> debug separately.
->>>>=20
->>>> Signed-off-by: David Disseldorp <ddiss@suse.de>
->>>=20
->>> Reviewed-by: NeilBrown <neilb@suse.de>
->>>=20
->>> Thanks,
->>> NeilBrown
->>=20
->> I don't think we're the maintainers of expfs.c ?
->>=20
->> $ scripts/get_maintainer.pl fs/exportfs/expfs.c
->> Christian Brauner <brauner@kernel.org> (commit_signer:2/2=3D100%,authore=
-d:1/2=3D50%,added_lines:3/6=3D50%,removed_lines:2/6=3D33%)
->> Al Viro <viro@zeniv.linux.org.uk> (commit_signer:1/2=3D50%,authored:1/2=
-=3D50%,added_lines:3/6=3D50%,removed_lines:4/6=3D67%)
->> Miklos Szeredi <mszeredi@redhat.com> (commit_signer:1/2=3D50%)
->> Amir Goldstein <amir73il@gmail.com> (commit_signer:1/2=3D50%)
->> linux-kernel@vger.kernel.org (open list)
->>=20
->> But maybe MAINTAINERS needs to be fixed. There's no entry
->> there for fs/exportfs.
->=20
-> Looking at recent commits, patches come in through multiple different
-> trees.
-> nfsd certainly has an interest in expfs.c.  The only other user is
-> name_to_handle/open_by_handle API.
-> I see it as primarily nfsd functionality which is useful enough to be
-> exported directly to user-space.
-> (It was created by me when I was nfsd maintainer - does that count?)
+Link: https://lore.kernel.org/all/20220407161745.7d6754b3@gandalf.local.home/
 
-I can mechanically take the patch through nfsd if no-one objects.
-My concern now is that it gets proper review. It's not an area
-I'm especially familiar with.
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Mirko Lindner <mlindner@marvell.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Martin KaFai Lau <martin.lau@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Menglong Dong <imagedong@tencent.com>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Cc: bridge@lists.linux-foundation.org
+Cc: netfilter-devel@vger.kernel.org
+Cc: coreteam@netfilter.org
+Cc: lvs-devel@vger.kernel.org
+Cc: linux-afs@lists.infradead.org
+Cc: linux-nfs@vger.kernel.org
+Cc: tipc-discussion@lists.sourceforge.net
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ drivers/net/ethernet/intel/i40e/i40e_main.c      | 6 +++---
+ drivers/net/ethernet/marvell/sky2.c              | 2 +-
+ drivers/net/ethernet/sun/sunvnet.c               | 2 +-
+ drivers/net/usb/sierra_net.c                     | 2 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 2 +-
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ drivers/net/wireless/marvell/mwifiex/main.c      | 2 +-
+ drivers/net/wireless/microchip/wilc1000/hif.c    | 8 ++++----
+ net/802/garp.c                                   | 2 +-
+ net/802/mrp.c                                    | 2 +-
+ net/bridge/br_multicast.c                        | 6 +++---
+ net/bridge/br_multicast_eht.c                    | 4 ++--
+ net/core/gen_estimator.c                         | 2 +-
+ net/core/sock.c                                  | 2 +-
+ net/ipv4/inet_timewait_sock.c                    | 2 +-
+ net/ipv4/ipmr.c                                  | 2 +-
+ net/ipv6/ip6mr.c                                 | 2 +-
+ net/mac80211/mesh_pathtbl.c                      | 2 +-
+ net/netfilter/ipset/ip_set_list_set.c            | 2 +-
+ net/netfilter/ipvs/ip_vs_lblc.c                  | 2 +-
+ net/netfilter/ipvs/ip_vs_lblcr.c                 | 2 +-
+ net/netfilter/xt_LED.c                           | 2 +-
+ net/rxrpc/conn_object.c                          | 2 +-
+ net/sched/cls_flow.c                             | 2 +-
+ net/sunrpc/svc.c                                 | 2 +-
+ net/tipc/discover.c                              | 2 +-
+ net/tipc/monitor.c                               | 2 +-
+ 27 files changed, 35 insertions(+), 35 deletions(-)
 
-
-> So I would support the suggestion of updating MAINTAINERS to include
-> fs/exportfs/ in the NFSD section.
-
-No problem with that, if my co-maintainer agrees.
-
-
-> Having said that - given your apparent preference of tracepoints for
-> tracing in nfsd - I suspect you might ask for a somewhat different patch
-> :-)
-
-I've certainly had that thought, but I don't think there currently is
-a trace subsystem defined for exportfs.
-
-
-> Thanks,
-> NeilBrown
->=20
->=20
->>=20
->>=20
->>>> ---
->>>> fs/exportfs/expfs.c | 8 ++++----
->>>> 1 file changed, 4 insertions(+), 4 deletions(-)
->>>>=20
->>>> diff --git a/fs/exportfs/expfs.c b/fs/exportfs/expfs.c
->>>> index c648a493faf23..3204bd33e4e8a 100644
->>>> --- a/fs/exportfs/expfs.c
->>>> +++ b/fs/exportfs/expfs.c
->>>> @@ -18,7 +18,7 @@
->>>> #include <linux/sched.h>
->>>> #include <linux/cred.h>
->>>>=20
->>>> -#define dprintk(fmt, args...) do{}while(0)
->>>> +#define dprintk(fmt, args...) pr_debug(fmt, ##args)
->>>>=20
->>>>=20
->>>> static int get_name(const struct path *path, char *name, struct dentry=
- *child);
->>>> @@ -132,8 +132,8 @@ static struct dentry *reconnect_one(struct vfsmoun=
-t *mnt,
->>>> 	inode_unlock(dentry->d_inode);
->>>>=20
->>>> 	if (IS_ERR(parent)) {
->>>> -		dprintk("%s: get_parent of %ld failed, err %d\n",
->>>> -			__func__, dentry->d_inode->i_ino, PTR_ERR(parent));
->>>> +		dprintk("get_parent of %lu failed, err %ld\n",
->>>> +			dentry->d_inode->i_ino, PTR_ERR(parent));
->>>> 		return parent;
->>>> 	}
->>>>=20
->>>> @@ -147,7 +147,7 @@ static struct dentry *reconnect_one(struct vfsmoun=
-t *mnt,
->>>> 	dprintk("%s: found name: %s\n", __func__, nbuf);
->>>> 	tmp =3D lookup_one_unlocked(mnt_user_ns(mnt), nbuf, parent, strlen(nb=
-uf));
->>>> 	if (IS_ERR(tmp)) {
->>>> -		dprintk("%s: lookup failed: %d\n", __func__, PTR_ERR(tmp));
->>>> +		dprintk("lookup failed: %ld\n", PTR_ERR(tmp));
->>>> 		err =3D PTR_ERR(tmp);
->>>> 		goto out_err;
->>>> 	}
->>>> --=20
->>>> 2.35.3
->>>>=20
->>>>=20
->>=20
->> --
->> Chuck Lever
-
---
-Chuck Lever
-
-
-
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index 2c07fa8ecfc8..81e9f232ca69 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -15528,7 +15528,7 @@ static int i40e_init_recovery_mode(struct i40e_pf *pf, struct i40e_hw *hw)
+ 
+ err_switch_setup:
+ 	i40e_reset_interrupt_capability(pf);
+-	del_timer_sync(&pf->service_timer);
++	del_timer_shutdown(&pf->service_timer);
+ 	i40e_shutdown_adminq(hw);
+ 	iounmap(hw->hw_addr);
+ 	pci_disable_pcie_error_reporting(pf->pdev);
+@@ -16147,7 +16147,7 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	kfree(pf->vsi);
+ err_switch_setup:
+ 	i40e_reset_interrupt_capability(pf);
+-	del_timer_sync(&pf->service_timer);
++	del_timer_shutdown(&pf->service_timer);
+ err_mac_addr:
+ err_configure_lan_hmc:
+ 	(void)i40e_shutdown_lan_hmc(hw);
+@@ -16209,7 +16209,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 	set_bit(__I40E_SUSPENDED, pf->state);
+ 	set_bit(__I40E_DOWN, pf->state);
+ 	if (pf->service_timer.function)
+-		del_timer_sync(&pf->service_timer);
++		del_timer_shutdown(&pf->service_timer);
+ 	if (pf->service_task.func)
+ 		cancel_work_sync(&pf->service_task);
+ 
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index ab33ba1c3023..9d8a9ae64681 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -5013,7 +5013,7 @@ static void sky2_remove(struct pci_dev *pdev)
+ 	if (!hw)
+ 		return;
+ 
+-	del_timer_sync(&hw->watchdog_timer);
++	del_timer_shutdown(&hw->watchdog_timer);
+ 	cancel_work_sync(&hw->restart_work);
+ 
+ 	for (i = hw->ports-1; i >= 0; --i)
+diff --git a/drivers/net/ethernet/sun/sunvnet.c b/drivers/net/ethernet/sun/sunvnet.c
+index acda6cbd0238..f008812356ef 100644
+--- a/drivers/net/ethernet/sun/sunvnet.c
++++ b/drivers/net/ethernet/sun/sunvnet.c
+@@ -524,7 +524,7 @@ static void vnet_port_remove(struct vio_dev *vdev)
+ 		hlist_del_rcu(&port->hash);
+ 
+ 		synchronize_rcu();
+-		del_timer_sync(&port->clean_timer);
++		del_timer_shutdown(&port->clean_timer);
+ 		sunvnet_port_rm_txq_common(port);
+ 		netif_napi_del(&port->napi);
+ 		sunvnet_port_free_tx_bufs_common(port);
+diff --git a/drivers/net/usb/sierra_net.c b/drivers/net/usb/sierra_net.c
+index b3ae949e6f1c..75d4956fc1e6 100644
+--- a/drivers/net/usb/sierra_net.c
++++ b/drivers/net/usb/sierra_net.c
+@@ -759,7 +759,7 @@ static void sierra_net_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	dev_dbg(&dev->udev->dev, "%s", __func__);
+ 
+ 	/* kill the timer and work */
+-	del_timer_sync(&priv->sync_timer);
++	del_timer_shutdown(&priv->sync_timer);
+ 	cancel_work_sync(&priv->sierra_net_kevent);
+ 
+ 	/* tell modem we are going away */
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+index 3237d4b528b5..dced4d0384c7 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+@@ -371,7 +371,7 @@ void iwl_dbg_tlv_del_timers(struct iwl_trans *trans)
+ 	struct iwl_dbg_tlv_timer_node *node, *tmp;
+ 
+ 	list_for_each_entry_safe(node, tmp, timer_list, list) {
+-		del_timer_sync(&node->timer);
++		del_timer_shutdown(&node->timer);
+ 		list_del(&node->list);
+ 		kfree(node);
+ 	}
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index 462ccc7d7d1a..34236d793b80 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -135,7 +135,7 @@ static void ap_free_sta(struct ap_data *ap, struct sta_info *sta)
+ 
+ 	if (!sta->ap)
+ 		kfree(sta->u.sta.challenge);
+-	del_timer_sync(&sta->timer);
++	del_timer_shutdown(&sta->timer);
+ #endif /* PRISM2_NO_KERNEL_IEEE80211_MGMT */
+ 
+ 	kfree(sta);
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index da2e6557e684..8fd4d603fe37 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -123,7 +123,7 @@ static int mwifiex_unregister(struct mwifiex_adapter *adapter)
+ 	if (adapter->if_ops.cleanup_if)
+ 		adapter->if_ops.cleanup_if(adapter);
+ 
+-	del_timer_sync(&adapter->cmd_timer);
++	del_timer_shutdown(&adapter->cmd_timer);
+ 
+ 	/* Free private structures */
+ 	for (i = 0; i < adapter->priv_num; i++) {
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
+index eb1d1ba3a443..7a96f9828c97 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.c
++++ b/drivers/net/wireless/microchip/wilc1000/hif.c
+@@ -1520,10 +1520,10 @@ int wilc_deinit(struct wilc_vif *vif)
+ 
+ 	mutex_lock(&vif->wilc->deinit_lock);
+ 
+-	del_timer_sync(&hif_drv->scan_timer);
+-	del_timer_sync(&hif_drv->connect_timer);
+-	del_timer_sync(&vif->periodic_rssi);
+-	del_timer_sync(&hif_drv->remain_on_ch_timer);
++	del_timer_shutdown(&hif_drv->scan_timer);
++	del_timer_shutdown(&hif_drv->connect_timer);
++	del_timer_shutdown(&vif->periodic_rssi);
++	del_timer_shutdown(&hif_drv->remain_on_ch_timer);
+ 
+ 	if (hif_drv->usr_scan_req.scan_result) {
+ 		hif_drv->usr_scan_req.scan_result(SCAN_EVENT_ABORTED, NULL,
+diff --git a/net/802/garp.c b/net/802/garp.c
+index fc9eb02a912f..610753f269ca 100644
+--- a/net/802/garp.c
++++ b/net/802/garp.c
+@@ -618,7 +618,7 @@ void garp_uninit_applicant(struct net_device *dev, struct garp_application *appl
+ 
+ 	/* Delete timer and generate a final TRANSMIT_PDU event to flush out
+ 	 * all pending messages before the applicant is gone. */
+-	del_timer_sync(&app->join_timer);
++	del_timer_shutdown(&app->join_timer);
+ 
+ 	spin_lock_bh(&app->lock);
+ 	garp_gid_event(app, GARP_EVENT_TRANSMIT_PDU);
+diff --git a/net/802/mrp.c b/net/802/mrp.c
+index 155f74d8b14f..72d4680ce170 100644
+--- a/net/802/mrp.c
++++ b/net/802/mrp.c
+@@ -904,7 +904,7 @@ void mrp_uninit_applicant(struct net_device *dev, struct mrp_application *appl)
+ 	 * all pending messages before the applicant is gone.
+ 	 */
+ 	del_timer_sync(&app->join_timer);
+-	del_timer_sync(&app->periodic_timer);
++	del_timer_shutdown(&app->periodic_timer);
+ 
+ 	spin_lock_bh(&app->lock);
+ 	mrp_mad_event(app, MRP_EVENT_TX);
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index db4f2641d1cd..0724c45049e4 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -605,7 +605,7 @@ static void br_multicast_destroy_mdb_entry(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!hlist_unhashed(&mp->mdb_node));
+ 	WARN_ON(mp->ports);
+ 
+-	del_timer_sync(&mp->timer);
++	del_timer_shutdown(&mp->timer);
+ 	kfree_rcu(mp, rcu);
+ }
+ 
+@@ -646,7 +646,7 @@ static void br_multicast_destroy_group_src(struct net_bridge_mcast_gc *gc)
+ 	src = container_of(gc, struct net_bridge_group_src, mcast_gc);
+ 	WARN_ON(!hlist_unhashed(&src->node));
+ 
+-	del_timer_sync(&src->timer);
++	del_timer_shutdown(&src->timer);
+ 	kfree_rcu(src, rcu);
+ }
+ 
+@@ -671,7 +671,7 @@ static void br_multicast_destroy_port_group(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!hlist_empty(&pg->src_list));
+ 
+ 	del_timer_sync(&pg->rexmit_timer);
+-	del_timer_sync(&pg->timer);
++	del_timer_shutdown(&pg->timer);
+ 	kfree_rcu(pg, rcu);
+ }
+ 
+diff --git a/net/bridge/br_multicast_eht.c b/net/bridge/br_multicast_eht.c
+index f91c071d1608..78dcfba2b16c 100644
+--- a/net/bridge/br_multicast_eht.c
++++ b/net/bridge/br_multicast_eht.c
+@@ -142,7 +142,7 @@ static void br_multicast_destroy_eht_set_entry(struct net_bridge_mcast_gc *gc)
+ 	set_h = container_of(gc, struct net_bridge_group_eht_set_entry, mcast_gc);
+ 	WARN_ON(!RB_EMPTY_NODE(&set_h->rb_node));
+ 
+-	del_timer_sync(&set_h->timer);
++	del_timer_shutdown(&set_h->timer);
+ 	kfree(set_h);
+ }
+ 
+@@ -154,7 +154,7 @@ static void br_multicast_destroy_eht_set(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!RB_EMPTY_NODE(&eht_set->rb_node));
+ 	WARN_ON(!RB_EMPTY_ROOT(&eht_set->entry_tree));
+ 
+-	del_timer_sync(&eht_set->timer);
++	del_timer_shutdown(&eht_set->timer);
+ 	kfree(eht_set);
+ }
+ 
+diff --git a/net/core/gen_estimator.c b/net/core/gen_estimator.c
+index 4fcbdd71c59f..834287d0675e 100644
+--- a/net/core/gen_estimator.c
++++ b/net/core/gen_estimator.c
+@@ -208,7 +208,7 @@ void gen_kill_estimator(struct net_rate_estimator __rcu **rate_est)
+ 
+ 	est = xchg((__force struct net_rate_estimator **)rate_est, NULL);
+ 	if (est) {
+-		del_timer_sync(&est->timer);
++		del_timer_shutdown(&est->timer);
+ 		kfree_rcu(est, rcu);
+ 	}
+ }
+diff --git a/net/core/sock.c b/net/core/sock.c
+index a3ba0358c77c..10cc84379d75 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -3352,7 +3352,7 @@ EXPORT_SYMBOL(sk_stop_timer);
+ 
+ void sk_stop_timer_sync(struct sock *sk, struct timer_list *timer)
+ {
+-	if (del_timer_sync(timer))
++	if (del_timer_shutdown(timer))
+ 		__sock_put(sk);
+ }
+ EXPORT_SYMBOL(sk_stop_timer_sync);
+diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+index 66fc940f9521..549a4c1990ea 100644
+--- a/net/ipv4/inet_timewait_sock.c
++++ b/net/ipv4/inet_timewait_sock.c
+@@ -208,7 +208,7 @@ EXPORT_SYMBOL_GPL(inet_twsk_alloc);
+  */
+ void inet_twsk_deschedule_put(struct inet_timewait_sock *tw)
+ {
+-	if (del_timer_sync(&tw->tw_timer))
++	if (del_timer_shutdown(&tw->tw_timer))
+ 		inet_twsk_kill(tw);
+ 	inet_twsk_put(tw);
+ }
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index e04544ac4b45..459a80325247 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -412,7 +412,7 @@ static struct mr_table *ipmr_new_table(struct net *net, u32 id)
+ 
+ static void ipmr_free_table(struct mr_table *mrt)
+ {
+-	del_timer_sync(&mrt->ipmr_expire_timer);
++	del_timer_shutdown(&mrt->ipmr_expire_timer);
+ 	mroute_clean_tables(mrt, MRT_FLUSH_VIFS | MRT_FLUSH_VIFS_STATIC |
+ 				 MRT_FLUSH_MFC | MRT_FLUSH_MFC_STATIC);
+ 	rhltable_destroy(&mrt->mfc_hash);
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index facdc78a43e5..9bd993046ebe 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -392,7 +392,7 @@ static struct mr_table *ip6mr_new_table(struct net *net, u32 id)
+ 
+ static void ip6mr_free_table(struct mr_table *mrt)
+ {
+-	del_timer_sync(&mrt->ipmr_expire_timer);
++	del_timer_shutdown(&mrt->ipmr_expire_timer);
+ 	mroute_clean_tables(mrt, MRT6_FLUSH_MIFS | MRT6_FLUSH_MIFS_STATIC |
+ 				 MRT6_FLUSH_MFC | MRT6_FLUSH_MFC_STATIC);
+ 	rhltable_destroy(&mrt->mfc_hash);
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index acc1c299f1ae..d4c7c67a4dee 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -512,7 +512,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
+ 	mpath->flags |= MESH_PATH_RESOLVING | MESH_PATH_DELETED;
+ 	mesh_gate_del(tbl, mpath);
+ 	spin_unlock_bh(&mpath->state_lock);
+-	del_timer_sync(&mpath->timer);
++	del_timer_shutdown(&mpath->timer);
+ 	atomic_dec(&sdata->u.mesh.mpaths);
+ 	atomic_dec(&tbl->entries);
+ 	mesh_path_flush_pending(mpath);
+diff --git a/net/netfilter/ipset/ip_set_list_set.c b/net/netfilter/ipset/ip_set_list_set.c
+index 5a67f7966574..6a8b0e80385b 100644
+--- a/net/netfilter/ipset/ip_set_list_set.c
++++ b/net/netfilter/ipset/ip_set_list_set.c
+@@ -427,7 +427,7 @@ list_set_destroy(struct ip_set *set)
+ 	struct set_elem *e, *n;
+ 
+ 	if (SET_WITH_TIMEOUT(set))
+-		del_timer_sync(&map->gc);
++		del_timer_shutdown(&map->gc);
+ 
+ 	list_for_each_entry_safe(e, n, &map->members, list) {
+ 		list_del(&e->list);
+diff --git a/net/netfilter/ipvs/ip_vs_lblc.c b/net/netfilter/ipvs/ip_vs_lblc.c
+index 7ac7473e3804..1f08ba927d0e 100644
+--- a/net/netfilter/ipvs/ip_vs_lblc.c
++++ b/net/netfilter/ipvs/ip_vs_lblc.c
+@@ -384,7 +384,7 @@ static void ip_vs_lblc_done_svc(struct ip_vs_service *svc)
+ 	struct ip_vs_lblc_table *tbl = svc->sched_data;
+ 
+ 	/* remove periodic timer */
+-	del_timer_sync(&tbl->periodic_timer);
++	del_timer_shutdown(&tbl->periodic_timer);
+ 
+ 	/* got to clean up table entries here */
+ 	ip_vs_lblc_flush(svc);
+diff --git a/net/netfilter/ipvs/ip_vs_lblcr.c b/net/netfilter/ipvs/ip_vs_lblcr.c
+index 77c323c36a88..f939a00826d6 100644
+--- a/net/netfilter/ipvs/ip_vs_lblcr.c
++++ b/net/netfilter/ipvs/ip_vs_lblcr.c
+@@ -547,7 +547,7 @@ static void ip_vs_lblcr_done_svc(struct ip_vs_service *svc)
+ 	struct ip_vs_lblcr_table *tbl = svc->sched_data;
+ 
+ 	/* remove periodic timer */
+-	del_timer_sync(&tbl->periodic_timer);
++	del_timer_shutdown(&tbl->periodic_timer);
+ 
+ 	/* got to clean up table entries here */
+ 	ip_vs_lblcr_flush(svc);
+diff --git a/net/netfilter/xt_LED.c b/net/netfilter/xt_LED.c
+index 0371c387b0d1..0093fa1d07c6 100644
+--- a/net/netfilter/xt_LED.c
++++ b/net/netfilter/xt_LED.c
+@@ -166,7 +166,7 @@ static void led_tg_destroy(const struct xt_tgdtor_param *par)
+ 
+ 	list_del(&ledinternal->list);
+ 
+-	del_timer_sync(&ledinternal->timer);
++	del_timer_shutdown(&ledinternal->timer);
+ 
+ 	led_trigger_unregister(&ledinternal->netfilter_led_trigger);
+ 
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 22089e37e97f..3f353f1f38ee 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -358,7 +358,7 @@ static void rxrpc_destroy_connection(struct rcu_head *rcu)
+ 
+ 	_net("DESTROY CONN %d", conn->debug_id);
+ 
+-	del_timer_sync(&conn->timer);
++	del_timer_shutdown(&conn->timer);
+ 	rxrpc_purge_queue(&conn->rx_queue);
+ 
+ 	conn->security->clear(conn);
+diff --git a/net/sched/cls_flow.c b/net/sched/cls_flow.c
+index 014cd3de7b5d..b23fbd2d4b5a 100644
+--- a/net/sched/cls_flow.c
++++ b/net/sched/cls_flow.c
+@@ -367,7 +367,7 @@ static const struct nla_policy flow_policy[TCA_FLOW_MAX + 1] = {
+ 
+ static void __flow_destroy_filter(struct flow_filter *f)
+ {
+-	del_timer_sync(&f->perturb_timer);
++	del_timer_shutdown(&f->perturb_timer);
+ 	tcf_exts_destroy(&f->exts);
+ 	tcf_em_tree_destroy(&f->ematches);
+ 	tcf_exts_put_net(&f->exts);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 149171774bc6..b07bc9f9b3bd 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -567,7 +567,7 @@ svc_destroy(struct kref *ref)
+ 	struct svc_serv *serv = container_of(ref, struct svc_serv, sv_refcnt);
+ 
+ 	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
+-	del_timer_sync(&serv->sv_temptimer);
++	del_timer_shutdown(&serv->sv_temptimer);
+ 
+ 	/*
+ 	 * The last user is gone and thus all sockets have to be destroyed to
+diff --git a/net/tipc/discover.c b/net/tipc/discover.c
+index da69e1abf68f..09d69670506e 100644
+--- a/net/tipc/discover.c
++++ b/net/tipc/discover.c
+@@ -385,7 +385,7 @@ int tipc_disc_create(struct net *net, struct tipc_bearer *b,
+  */
+ void tipc_disc_delete(struct tipc_discoverer *d)
+ {
+-	del_timer_sync(&d->timer);
++	del_timer_shutdown(&d->timer);
+ 	kfree_skb(d->skb);
+ 	kfree(d);
+ }
+diff --git a/net/tipc/monitor.c b/net/tipc/monitor.c
+index 9618e4429f0f..cedc4a468315 100644
+--- a/net/tipc/monitor.c
++++ b/net/tipc/monitor.c
+@@ -700,7 +700,7 @@ void tipc_mon_delete(struct net *net, int bearer_id)
+ 	}
+ 	mon->self = NULL;
+ 	write_unlock_bh(&mon->lock);
+-	del_timer_sync(&mon->timer);
++	del_timer_shutdown(&mon->timer);
+ 	kfree(self->domain);
+ 	kfree(self);
+ 	kfree(mon);
+-- 
+2.35.1
