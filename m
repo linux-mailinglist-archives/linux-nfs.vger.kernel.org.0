@@ -2,115 +2,124 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22AE860ECFD
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 02:27:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A81D60F095
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 08:48:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233301AbiJ0A1M (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 26 Oct 2022 20:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42958 "EHLO
+        id S234477AbiJ0GsZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 02:48:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232946AbiJ0A1L (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 26 Oct 2022 20:27:11 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B9BB40D2
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Oct 2022 17:27:00 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id pb15so15703610pjb.5
-        for <linux-nfs@vger.kernel.org>; Wed, 26 Oct 2022 17:27:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iU2i0PMrQVnQ4ps+4iiQB08KfiN0l0KhLG1V0BD4MR8=;
-        b=KCih+xkAe4vXcs1RPlE/MAQ0fRxNKf7uYv1wRgmqATVL1Sai0cU8gTy3hnWBzXKED6
-         q8znnfXEfw+K2vZzBUqTN2L3ReyNNk7Jf5nt1UhKidWXupCSRHWk5jGugt7L1XX+bNAR
-         y8SYEeRYt6FK6R9ktnpaPQjgrJ4TbIlvMavtA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iU2i0PMrQVnQ4ps+4iiQB08KfiN0l0KhLG1V0BD4MR8=;
-        b=oRQBC+HR0rbikYv2CJiHI+mPxSl0S9ANTbyhmydkAU+Rst1G1qxCKX+B+5JApPz/Ys
-         b/TzeFamOkYwp79opaC2b4CNCUkajAXAp9AJKGIHsvva7A0FsrKhN0FZClqKti3D90MC
-         XZT/cUM3ew8UQTtv6KFPvSZ5N6vEaChUy18wu7KBqg2EGxXx/9wnqUUDztNN22V+ZsBF
-         wxX1zgktDrI6WTimXXeYxDTb9d4Dw8dhPKjeECth+HAYC/VjKD0IjrFF1jUr+p6Mp985
-         sR4CFdNM2NxVg22ZwDqcQflleayLE1FOPYeuoCAAaCtiQXh7/lKTUQgGsh4bY8dUUfod
-         sycw==
-X-Gm-Message-State: ACrzQf3vEbBjE3bepKYZpuTx/dVl455nzFbCue0fMAJ8qCstKmzua99K
-        dJVBDcKc27lpUBxZpQdQXGtTnLKiAxF1zQ==
-X-Google-Smtp-Source: AMsMyM7VsJD190gpaQTJ5WFpnQi4RBlK40obMsTRqlE685n13au3G2J0/Tl7P4D/ZJQ2KwEEllsXVQ==
-X-Received: by 2002:a17:903:3293:b0:186:867b:e24 with SMTP id jh19-20020a170903329300b00186867b0e24mr27117567plb.127.1666830420450;
-        Wed, 26 Oct 2022 17:27:00 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id ik29-20020a170902ab1d00b001868ba9a867sm3437772plb.303.2022.10.26.17.26.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 17:26:59 -0700 (PDT)
-Date:   Wed, 26 Oct 2022 17:26:58 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Anna Schumaker <anna@kernel.org>
-Cc:     Trond Myklebust <trondmy@hammerspace.com>,
-        kernel test robot <yujie.liu@intel.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Dave Jones <davej@codemonkey.org.uk>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>
-Subject: Re: [PATCH v2] NFS: Avoid memcpy() run-time warning for struct
- sockaddr overflows
-Message-ID: <202210261726.554CBDC55@keescook>
-References: <20221017043107.never.457-kees@kernel.org>
- <202210261631.DE7E4761E@keescook>
- <35A4B422-29FF-4294-8596-D75FC60E55DE@hammerspace.com>
+        with ESMTP id S234457AbiJ0GsY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 02:48:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B98148FE4;
+        Wed, 26 Oct 2022 23:48:23 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0D40621A6;
+        Thu, 27 Oct 2022 06:48:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD611C433C1;
+        Thu, 27 Oct 2022 06:48:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1666853302;
+        bh=WfnvbZ0ZCG3kuH4jEsDaJ1/vqilkTKeoMzcOu0I4SPs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Kysx0dc6L/J0j3nGVVM2jJFOtqJIRbGQx5Y3yxQpNzm7DLQpaQQZjKTg4Iv01dVxS
+         ALAPc63FhXCIsLFO3+dSkJEfWZwktJpfSSygdudzkl2vgFq6o4YbPdQAIrSqkj22Cu
+         d2S2Dr8xeqVfH7UfulHYlNpfKSyx9LYqSRuGJzko=
+Date:   Thu, 27 Oct 2022 08:49:15 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Howells <dhowells@redhat.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Russ Weight <russell.h.weight@intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-nfs@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] cred: Do not default to init_cred in
+ prepare_kernel_cred()
+Message-ID: <Y1op6wgDSPu4MGB8@kroah.com>
+References: <20221026232943.never.775-kees@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <35A4B422-29FF-4294-8596-D75FC60E55DE@hammerspace.com>
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20221026232943.never.775-kees@kernel.org>
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 12:03:07AM +0000, Trond Myklebust wrote:
+On Wed, Oct 26, 2022 at 04:31:11PM -0700, Kees Cook wrote:
+> A common exploit pattern for ROP attacks is to abuse prepare_kernel_cred()
+> in order to construct escalated privileges[1]. Instead of providing a
+> short-hand argument (NULL) to the "daemon" argument to indicate using
+> init_cred as the base cred, require that "daemon" is always set to
+> an actual task. Replace all existing callers that were passing NULL
+> with &init_task.
 > 
+> Future attacks will need to have sufficiently powerful read/write
+> primitives to have found an appropriately privileged task and written it
+> to the ROP stack as an argument to succeed, which is similarly difficult
+> to the prior effort needed to escalate privileges before struct cred
+> existed: locate the current cred and overwrite the uid member.
 > 
-> > On Oct 26, 2022, at 19:32, Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > On Sun, Oct 16, 2022 at 09:36:50PM -0700, Kees Cook wrote:
-> >> The 'nfs_server' and 'mount_server' structures include a union of
-> >> 'struct sockaddr' (with the older 16 bytes max address size) and
-> >> 'struct sockaddr_storage' which is large enough to hold all the
-> >> supported sa_family types (128 bytes max size). The runtime memcpy()
-> >> buffer overflow checker is seeing attempts to write beyond the 16
-> >> bytes as an overflow, but the actual expected size is that of 'struct
-> >> sockaddr_storage'. Plumb the use of 'struct sockaddr_storage' more
-> >> completely through-out NFS, which results in adjusting the memcpy()
-> >> buffers to the correct union members. Avoids this false positive run-time
-> >> warning under CONFIG_FORTIFY_SOURCE:
-> >> 
-> >>  memcpy: detected field-spanning write (size 28) of single field "&ctx->nfs_server.address" at fs/nfs/namespace.c:178 (size 16)
-> >> 
-> >> Reported-by: kernel test robot <yujie.liu@intel.com>
-> >> Link: https://lore.kernel.org/all/202210110948.26b43120-yujie.liu@intel.com
-> >> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> >> Cc: Anna Schumaker <anna@kernel.org>
-> > 
-> > Friendly ping -- this needs to land in v6.1 to avoid these warnings.
-> > Should I carry this in the hardening tree instead?
-> > 
-> > Thanks!
+> This has the added benefit of meaning that prepare_kernel_cred() can no
+> longer exceed the privileges of the init task, which may have changed from
+> the original init_cred (e.g. dropping capabilities from the bounding set).
 > 
-> Anna, this is your call since you’re the ‘6.1 nfs client maintainer’...
+> [1] https://google.com/search?q=commit_creds(prepare_kernel_cred(0))
+> 
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Luis Chamberlain <mcgrof@kernel.org>
+> Cc: Russ Weight <russell.h.weight@intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Steve French <sfrench@samba.org>
+> Cc: Paulo Alcantara <pc@cjr.nz>
+> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
+> Cc: Shyam Prasad N <sprasad@microsoft.com>
+> Cc: Tom Talpey <tom@talpey.com>
+> Cc: Namjae Jeon <linkinjeon@kernel.org>
+> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+> Cc: Anna Schumaker <anna@kernel.org>
+> Cc: Chuck Lever <chuck.lever@oracle.com>
+> Cc: Jeff Layton <jlayton@kernel.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: Paolo Abeni <pabeni@redhat.com>
+> Cc: "Michal Koutn�" <mkoutny@suse.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: linux-cifs@vger.kernel.org
+> Cc: samba-technical@lists.samba.org
+> Cc: linux-nfs@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-And just to remind, this came up in -rc1 as well:
-https://lore.kernel.org/lkml/202210162144.76FBC7271@keescook/
-
-
--- 
-Kees Cook
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
