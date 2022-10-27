@@ -2,30 +2,67 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63122610208
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 21:55:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D64B61027A
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 22:15:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236662AbiJ0TzH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 15:55:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55696 "EHLO
+        id S236249AbiJ0UPy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 16:15:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235691AbiJ0TzG (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 15:55:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2AE722515;
-        Thu, 27 Oct 2022 12:55:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7099A61F1F;
-        Thu, 27 Oct 2022 19:55:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 093E6C433C1;
-        Thu, 27 Oct 2022 19:54:58 +0000 (UTC)
-Date:   Thu, 27 Oct 2022 15:55:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        with ESMTP id S236101AbiJ0UPx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 16:15:53 -0400
+Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2BE660680
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 13:15:51 -0700 (PDT)
+Received: by mail-qk1-x730.google.com with SMTP id t25so1975719qkm.2
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 13:15:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PkxtUHaGFDycP6D2luIHLSXJkXOzlvpiMUNbGq0VIDw=;
+        b=AiYRsbNPUrZt3HPq+xtJfDrvafoV3sgbBvDsYvDt8alNybjtz3OkR1xymRkE3QILqj
+         mmJ4n9e+K/PVts3cQ2eJ5htk2mJ+mPxzhWMdsaeW6GINZP2CIccvVT49FekPjg7PRFXI
+         92WGHwoPAVqBkaMzcdjnmCw5MEE1uFvTm34eA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PkxtUHaGFDycP6D2luIHLSXJkXOzlvpiMUNbGq0VIDw=;
+        b=TpfEswtjDlxTi+ByyRNvJRzyOTF62Pd10qe/c8fHzWg/qDx6iG/ol0h3vv59skgbJ+
+         my3FUc5/bgOFIcSwDjJmqnSSbgiTujTA2Kuw6I/rDqnX2fwK4pzk+IrRU/6hQGxnQBrM
+         +h5nzjnThA6FRwhDUKyp5AOeU6sXoDrYIEU6zCPiaL/88AUcopnCCMuygn4y58jm+ARd
+         mgTxDqZRveJc8stF7h9j2r5OYxLgIsFwQH/JZg/kwC0esCKlFZKGUJclZI5JZ3wyDdQU
+         yMq5MxGKAjOI8860cJIe9hHO2c71M3tcNrvr8tWMk+kiOzB685xRrnoWyudTEC8rayFh
+         Pjvw==
+X-Gm-Message-State: ACrzQf0Jr4UOjTR0qPkhWbtoDR9UlkzpirVvs5INqRtdqmAB3evi4MnM
+        d3uGUYvbHRVIDByrjOqSvMd6SxN5l4AlDQ==
+X-Google-Smtp-Source: AMsMyM54BnNvKEaFGVB3fXdJD3XLuM4EMyWizZTQwep/gJBUesuhrXx281yXal9ZTO3H4hNKY6efGw==
+X-Received: by 2002:a05:620a:4081:b0:6ee:80ab:25b6 with SMTP id f1-20020a05620a408100b006ee80ab25b6mr36660285qko.517.1666901750599;
+        Thu, 27 Oct 2022 13:15:50 -0700 (PDT)
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com. [209.85.219.173])
+        by smtp.gmail.com with ESMTPSA id b19-20020ac86bd3000000b0035bafecff78sm1340631qtt.74.2022.10.27.13.15.50
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 27 Oct 2022 13:15:50 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id j7so3646579ybb.8
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 13:15:50 -0700 (PDT)
+X-Received: by 2002:a81:d34c:0:b0:349:1e37:ce4e with SMTP id
+ d12-20020a81d34c000000b003491e37ce4emr46057341ywl.112.1666901739776; Thu, 27
+ Oct 2022 13:15:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <20221027150525.753064657@goodmis.org> <20221027150928.780676863@goodmis.org>
+ <20221027155513.60b211e2@gandalf.local.home>
+In-Reply-To: <20221027155513.60b211e2@gandalf.local.home>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Thu, 27 Oct 2022 13:15:23 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjAjW2P5To82+CAM0Rx8RexQBHPTVZBWBPHyEPGm37oFA@mail.gmail.com>
+Message-ID: <CAHk-=wjAjW2P5To82+CAM0Rx8RexQBHPTVZBWBPHyEPGm37oFA@mail.gmail.com>
+Subject: Re: [RFC][PATCH v2 19/31] timers: net: Use del_timer_shutdown()
+ before freeing timer
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
         Stephen Boyd <sboyd@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Jesse Brandeburg <jesse.brandeburg@intel.com>,
@@ -46,133 +83,49 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         coreteam@netfilter.org, lvs-devel@vger.kernel.org,
         linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
         tipc-discussion@lists.sourceforge.net
-Subject: Re: [RFC][PATCH v2 19/31] timers: net: Use del_timer_shutdown()
- before freeing timer
-Message-ID: <20221027155513.60b211e2@gandalf.local.home>
-In-Reply-To: <20221027150928.780676863@goodmis.org>
-References: <20221027150525.753064657@goodmis.org>
-        <20221027150928.780676863@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, 27 Oct 2022 12:38:16 -0700
-Guenter Roeck <linux@roeck-us.net> wrote:
+On Thu, Oct 27, 2022 at 12:55 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> I think we need to update this code to squeeze in a del_timer_shutdown() to
+> make sure that the timers are never restarted.
 
-> On 10/27/22 12:27, Steven Rostedt wrote:
-> > On Thu, 27 Oct 2022 15:20:58 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >   
-> >>> (many more of those)
-> >>> ...
-> >>> [   16.329989]  timer_fixup_free+0x40/0x54  
-> >>
-> >> Ah, I see the issue here. Looks like the timer_fixup_free() is calling
-> >> itself and crashing.
-> >>
-> >> Let me take a look into that. I didn't touch the fixup code, and there
-> >> could be an assumption there that it's behaving with the old approach.  
-> > 
-> > Can you add this and see if it makes this issue go away?
-> >   
-> 
-> Yes, that fixes the crash. However, it still reports
-> 
-> [   12.235054] ------------[ cut here ]------------
-> [   12.235240] ODEBUG: free active (active state 0) object type: timer_list hint: tcp_write_timer+0x0/0x190
-> [   12.237331] WARNING: CPU: 0 PID: 310 at lib/debugobjects.c:502 debug_print_object+0xb8/0x100
-> ...
-> [   12.255251] Call trace:
-> [   12.255305]  debug_print_object+0xb8/0x100
-> [   12.255385]  __debug_check_no_obj_freed+0x1d0/0x25c
-> [   12.255474]  debug_check_no_obj_freed+0x20/0x90
-> [   12.255555]  slab_free_freelist_hook.constprop.0+0xac/0x1b0
-> [   12.255650]  kmem_cache_free+0x1ac/0x500
-> [   12.255728]  __sk_destruct+0x140/0x2a0
-> [   12.255805]  sk_destruct+0x54/0x64
-> [   12.255877]  __sk_free+0x74/0x120
-> [   12.255944]  sk_free+0x64/0x8c
-> [   12.256009]  tcp_close+0x94/0xc0
-> [   12.256076]  inet_release+0x50/0xb0
-> [   12.256145]  __sock_release+0x44/0xbc
-> [   12.256219]  sock_close+0x18/0x30
-> [   12.256292]  __fput+0x84/0x270
-> [   12.256361]  ____fput+0x10/0x20
-> [   12.256426]  task_work_run+0x88/0xf0
-> [   12.256499]  do_exit+0x334/0xafc
-> [   12.256566]  do_group_exit+0x34/0x90
-> [   12.256634]  __arm64_sys_exit_group+0x18/0x20
-> [   12.256713]  invoke_syscall+0x48/0x114
-> [   12.256789]  el0_svc_common.constprop.0+0x60/0x11c
-> [   12.256874]  do_el0_svc+0x30/0xd0
-> [   12.256943]  el0_svc+0x48/0xc0
-> [   12.257008]  el0t_64_sync_handler+0xbc/0x13c
-> [   12.257086]  el0t_64_sync+0x18c/0x190
-> 
-> Is that a real problem or a false positive ? I didn't see that
-> without your patch series (which of course might be the whole point
-> of the series).
-> 
+So the reason the networking code does this is that it can't just do
+the old 'sync()' thing, the timers are deleted in contexts where that
+isn't valid.
 
-I think this is indeed an issue, and I'm replying to the net patch as it
-has the necessary folks Cc'd.
+Which is also afaik why the networking code does that whole "timer
+implies a refcount to the socket" and then does the
 
-The ipv4 tcp code has:
+    if (del_timer(timer))
+           sock_put()
 
-void tcp_init_xmit_timers(struct sock *sk)
-{
-	inet_csk_init_xmit_timers(sk, &tcp_write_timer, &tcp_delack_timer,
-				  &tcp_keepalive_timer);
+thing (ie if the del_timer failed - possibly because it was already
+running - you leave the refcount alone).
 
-And from the above back trace:
+So the networking code cannot do the del_timer_shutdown() for the same
+reason it cannot do the del_timer_sync(): it can't afford to wait for
+the timer to stop running.
 
-tcp_close() where I'm assuming that tcp_disconnect() or tcp_done() was
-called that both calls:
+I suspect it needs something like a new "del_timer_shutdown_async()"
+that isn't synchronous, but does that
 
-  tcp_clear_xmit_timers(sk);
+ - acts as del_timer in that it doesn't wait, and returns a success if
+it could just remove the pending case
 
-That calls:
+ - does that "mark timer for shutdown" in that success case
 
-	inet_csk_clear_xmit_timers(sk);
+or something similar.
 
-That has:
+But the networking people will know better.
 
-void inet_csk_clear_xmit_timers(struct sock *sk)
-{
-	struct inet_connection_sock *icsk = inet_csk(sk);
-
-	icsk->icsk_pending = icsk->icsk_ack.pending = 0;
-
-	sk_stop_timer(sk, &icsk->icsk_retransmit_timer);
-	sk_stop_timer(sk, &icsk->icsk_delack_timer);
-	sk_stop_timer(sk, &sk->sk_timer);
-}
-
-Where:
-
-void sk_stop_timer(struct sock *sk, struct timer_list* timer)
-{
-	if (del_timer(timer))
-		__sock_put(sk);
-}
-
-
-Hence, this is a case where we have timers that have been disabled with
-only del_timer() before the timers are freed.
-
-I think we need to update this code to squeeze in a del_timer_shutdown() to
-make sure that the timers are never restarted.
-
-There is a sk_stop_timer_sync() that I changed to use del_timer_shutdown()
-but that's only used in one file: net/mptcp/pm_netlink.c
-
--- Steve
+               Linus
