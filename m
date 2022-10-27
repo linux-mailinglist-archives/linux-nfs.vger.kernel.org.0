@@ -2,32 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE4B26100AE
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 20:52:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E85D96100B0
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 20:52:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235350AbiJ0SwL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 14:52:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45072 "EHLO
+        id S234965AbiJ0SwN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 14:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234239AbiJ0SwJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 14:52:09 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BCAF55C7A
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:52:08 -0700 (PDT)
+        with ESMTP id S235277AbiJ0SwM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 14:52:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360955AA2E
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:52:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 85254CE280B
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 18:52:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0591C433D7;
-        Thu, 27 Oct 2022 18:52:04 +0000 (UTC)
-Subject: [PATCH v6 04/14] NFSD: Clean up nfs4_preprocess_stateid_op() call
- sites
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C62D7623EE
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 18:52:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07243C43470;
+        Thu, 27 Oct 2022 18:52:10 +0000 (UTC)
+Subject: [PATCH v6 05/14] NFSD: Trace stateids returned via DELEGRETURN
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de, jlayton@redhat.com
-Date:   Thu, 27 Oct 2022 14:52:03 -0400
-Message-ID: <166689672369.90991.16333201441928422795.stgit@klimt.1015granger.net>
+Date:   Thu, 27 Oct 2022 14:52:10 -0400
+Message-ID: <166689673005.90991.6059374701914648691.stgit@klimt.1015granger.net>
 In-Reply-To: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>
 References: <166689625728.90991.15067635142973595248.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev3+g9561319
@@ -43,101 +42,39 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Remove the lame-duck dprintk()s around nfs4_preprocess_stateid_op()
-call sites.
+Handing out a delegation stateid is recorded with the
+nfsd_deleg_read tracepoint, but there isn't a matching tracepoint
+for recording when the stateid is returned.
 
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Tested-by: Jeff Layton <jlayton@kernel.org>
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/nfs4proc.c |   31 +++++++------------------------
- 1 file changed, 7 insertions(+), 24 deletions(-)
+ fs/nfsd/nfs4state.c |    1 +
+ fs/nfsd/trace.h     |    1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-index 42db62413890..6f7e0c5e62d2 100644
---- a/fs/nfsd/nfs4proc.c
-+++ b/fs/nfsd/nfs4proc.c
-@@ -943,12 +943,7 @@ nfsd4_read(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					&read->rd_stateid, RD_STATE,
- 					&read->rd_nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_read: couldn't process stateid!\n");
--		goto out;
--	}
--	status = nfs_ok;
--out:
-+
- 	read->rd_rqstp = rqstp;
- 	read->rd_fhp = &cstate->current_fh;
- 	return status;
-@@ -1117,10 +1112,8 @@ nfsd4_setattr(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 		status = nfs4_preprocess_stateid_op(rqstp, cstate,
- 				&cstate->current_fh, &setattr->sa_stateid,
- 				WR_STATE, NULL, NULL);
--		if (status) {
--			dprintk("NFSD: nfsd4_setattr: couldn't process stateid!\n");
-+		if (status)
- 			return status;
--		}
- 	}
- 	err = fh_want_write(&cstate->current_fh);
- 	if (err)
-@@ -1168,10 +1161,8 @@ nfsd4_write(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 			       write->wr_offset, cnt);
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 						stateid, WR_STATE, &nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_write: couldn't process stateid!\n");
-+	if (status)
- 		return status;
--	}
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index c829b828b6fd..93cfae7cd391 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6901,6 +6901,7 @@ nfsd4_delegreturn(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ 	if (status)
+ 		goto put_stateid;
  
- 	write->wr_how_written = write->wr_stable_how;
++	trace_nfsd_deleg_return(stateid);
+ 	wake_up_var(d_inode(cstate->current_fh.fh_dentry));
+ 	destroy_delegation(dp);
+ put_stateid:
+diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+index b065a4b1e0dc..477c2b035872 100644
+--- a/fs/nfsd/trace.h
++++ b/fs/nfsd/trace.h
+@@ -601,6 +601,7 @@ DEFINE_STATEID_EVENT(layout_recall_release);
  
-@@ -1202,17 +1193,13 @@ nfsd4_verify_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+ DEFINE_STATEID_EVENT(open);
+ DEFINE_STATEID_EVENT(deleg_read);
++DEFINE_STATEID_EVENT(deleg_return);
+ DEFINE_STATEID_EVENT(deleg_recall);
  
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->save_fh,
- 					    src_stateid, RD_STATE, src, NULL);
--	if (status) {
--		dprintk("NFSD: %s: couldn't process src stateid!\n", __func__);
-+	if (status)
- 		goto out;
--	}
- 
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    dst_stateid, WR_STATE, dst, NULL);
--	if (status) {
--		dprintk("NFSD: %s: couldn't process dst stateid!\n", __func__);
-+	if (status)
- 		goto out_put_src;
--	}
- 
- 	/* fix up for NFS-specific error code */
- 	if (!S_ISREG(file_inode((*src)->nf_file)->i_mode) ||
-@@ -1957,10 +1944,8 @@ nfsd4_fallocate(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    &fallocate->falloc_stateid,
- 					    WR_STATE, &nf, NULL);
--	if (status != nfs_ok) {
--		dprintk("NFSD: nfsd4_fallocate: couldn't process stateid!\n");
-+	if (status != nfs_ok)
- 		return status;
--	}
- 
- 	status = nfsd4_vfs_fallocate(rqstp, &cstate->current_fh, nf->nf_file,
- 				     fallocate->falloc_offset,
-@@ -2016,10 +2001,8 @@ nfsd4_seek(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
- 	status = nfs4_preprocess_stateid_op(rqstp, cstate, &cstate->current_fh,
- 					    &seek->seek_stateid,
- 					    RD_STATE, &nf, NULL);
--	if (status) {
--		dprintk("NFSD: nfsd4_seek: couldn't process stateid!\n");
-+	if (status)
- 		return status;
--	}
- 
- 	switch (seek->seek_whence) {
- 	case NFS4_CONTENT_DATA:
+ DECLARE_EVENT_CLASS(nfsd_stateseqid_class,
 
 
