@@ -2,59 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D81960F8B2
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 15:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3460460F8C6
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 15:14:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235778AbiJ0NMh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 09:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
+        id S235083AbiJ0NO2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 09:14:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236050AbiJ0NME (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 09:12:04 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8437C1C3
-        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 06:11:32 -0700 (PDT)
+        with ESMTP id S236180AbiJ0NOF (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 09:14:05 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02C87C1C3
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 06:13:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666876291;
+        s=mimecast20190719; t=1666876421;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=08qQCOq6HXtPu07yJoUG1gykaILDIdfjGgF17Vne+y0=;
-        b=ZSXBTSW5Ps2alxXwI9WYzPsg89Mg6UooXJIkTv2NLQCa+zJgawt5oiMLosZlg0+c1YKHMo
-        AhiYgRS2FcjoajDw+EvrKRfSJvH24QYatpH5OdnKUVcOz9KmxGhLGEJe5bTYd6ku3+NpJ0
-        U9pYqJVXxnTeEmF1l30J47HBsRwjvck=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=dQxbSjhqzSOLM0ahZEXNwS5QfLD56iw/ahD7kkiNphg=;
+        b=g2mbWNvo/LwZV7yiWGNRv2+JnZT4HCUjy0BJqzeqJlr7XqJzp942H2ung3oS/sqrS7nasf
+        rnYWdrAFIqMWUWPaFWS/1O8h5/FovK4SlqVRb0qr9MM36j1Gc4oef9CiTd5tfIEixUaRKu
+        iWOauN+EqkQdjfNrFiDJsZ1llwJXenA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-649-YAG-GrF1PNKY9HcojBWvQA-1; Thu, 27 Oct 2022 09:11:26 -0400
-X-MC-Unique: YAG-GrF1PNKY9HcojBWvQA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
+ us-mta-214-IoArZIJpNemIDmIp9PCBzA-1; Thu, 27 Oct 2022 09:13:34 -0400
+X-MC-Unique: IoArZIJpNemIDmIp9PCBzA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8D41E811E75;
-        Thu, 27 Oct 2022 13:11:25 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3415F3C0ED55;
+        Thu, 27 Oct 2022 13:13:18 +0000 (UTC)
 Received: from warthog.procyon.org.uk (unknown [10.33.36.73])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 66BC01121333;
-        Thu, 27 Oct 2022 13:11:24 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97E181415117;
+        Thu, 27 Oct 2022 13:13:04 +0000 (UTC)
 Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
         Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
         Kingdom.
         Registered in England and Wales under Company Registration No. 3798903
 From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20221027083547.46933-8-jefflexu@linux.alibaba.com>
-References: <20221027083547.46933-8-jefflexu@linux.alibaba.com> <20221027083547.46933-1-jefflexu@linux.alibaba.com>
+In-Reply-To: <20221027083547.46933-10-jefflexu@linux.alibaba.com>
+References: <20221027083547.46933-10-jefflexu@linux.alibaba.com> <20221027083547.46933-1-jefflexu@linux.alibaba.com>
 To:     Jingbo Xu <jefflexu@linux.alibaba.com>
 Cc:     dhowells@redhat.com, jlayton@kernel.org, linux-cachefs@redhat.com,
         linux-erofs@lists.ozlabs.org, linux-cifs@vger.kernel.org,
         linux-nfs@vger.kernel.org, linux-afs@lists.infradead.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/9] fscache,netfs: define flags for prepare_read()
+Subject: Re: [PATCH 9/9] fscache,netfs: move "fscache_" prefixed structures to fscache.h
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3306594.1666876283.1@warthog.procyon.org.uk>
-Date:   Thu, 27 Oct 2022 14:11:23 +0100
-Message-ID: <3306595.1666876283@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.3
+Content-ID: <3306695.1666876383.1@warthog.procyon.org.uk>
+Date:   Thu, 27 Oct 2022 14:13:03 +0100
+Message-ID: <3306696.1666876383@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
 X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
@@ -67,11 +67,19 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 Jingbo Xu <jefflexu@linux.alibaba.com> wrote:
 
-> +		if (test_bit(FSCACHE_REQ_COPY_TO_CACHE, &flags))
-> +			__set_bit(NETFS_SREQ_COPY_TO_CACHE, &subreq->flags);
+> diff --git a/include/linux/netfs.h b/include/linux/netfs.h
+> index 2ad4e1e88106..1977f953633a 100644
+> --- a/include/linux/netfs.h
+> +++ b/include/linux/netfs.h
+> @@ -16,19 +16,10 @@
+>  
+>  #include <linux/workqueue.h>
+>  #include <linux/fs.h>
+> +#include <linux/fscache.h>
 
-Please don't do that in netfslib.  Netfslib shouldn't know about fscache's
-inner workings.
+Please don't do that.  fscache is based on netfslib, not the other way around.
+
+If anything, I'm tempted to move fscache into netfslib.
 
 David
 
