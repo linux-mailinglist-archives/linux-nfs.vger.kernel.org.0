@@ -2,392 +2,216 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3459A60FF26
-	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 19:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A4860FFD7
+	for <lists+linux-nfs@lfdr.de>; Thu, 27 Oct 2022 20:07:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235925AbiJ0RQt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 27 Oct 2022 13:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35652 "EHLO
+        id S235824AbiJ0SHd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 27 Oct 2022 14:07:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235717AbiJ0RQc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 13:16:32 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5A62102DFD;
-        Thu, 27 Oct 2022 10:16:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1666890987; x=1698426987;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=mJyf/w8NhBu33f8BUseSEzjr0oCdwuL6kRfCcvWSJlw=;
-  b=igO2eXX3YSI3uMFcZ24/DOdG7MJZDzsKOv+1iVDqE4KHSN513OXyXKka
-   zIQzwG6l8vsHZJY5LI7/VHKfW1Sqta2hUAhtkTyiITgGOdWeTrAl3H2jX
-   kNUPs95ddJBpZBbtB72yyMYYfVwme8MYuN/tFT937/mQayUai9Ybyag2L
-   lL9L0aCsyVpqQrhB9m8isBrOJzoMghxVOM9UzSJhonJhff2ctVIXnxqmp
-   GHn9KNGY4wGhXiWBiikt52Zj0FNJptzaM2BbdPIteCcAUpsDsKesGvo+g
-   u9/KQfYhGeRm7ysBISsOMPh3gHjs919POikwgw+B9KNuI5fC6M+NgTdUV
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="309375014"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="309375014"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Oct 2022 10:16:25 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10513"; a="737772005"
-X-IronPort-AV: E=Sophos;i="5.95,218,1661842800"; 
-   d="scan'208";a="737772005"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga002.fm.intel.com with ESMTP; 27 Oct 2022 10:16:21 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 27 Oct 2022 10:16:20 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31 via Frontend Transport; Thu, 27 Oct 2022 10:16:20 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.107)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.31; Thu, 27 Oct 2022 10:16:19 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QD1ihJ2MX4Pxf00Y07v7JMcV2w3FMW1CTwlQCy+RlWWhZiBCZRaA+E7S+NG30jOR+jvBdD486uodpi/0RbAFf6/x9U3pzXK1lAabfasMLbH3JafsAKlvYpGzE4jL+MmQL987piJG3XNJFO4LCa5JhO1NCoBMkxU/g8M3T7Wf5CmLv8JNNo0cOk5DHMRdCCa7MZn6/WqXnxv4YtD2aP1Yge+m084Cj8tp95J5PnnfmC1Hk9DgcmeQAy2WYr45xIgiM4MSMinn/cNPVPneEF31IiocnYnGdKpCmuQBsoAD0n1W4MGt9qOXmqFf7L5BXiieVblhiSTWTXfcuwn7ZVq+YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mmA1bAZVW3972c1fllDQwAOrWZMy/E6OZyO5abB3BsY=;
- b=gckNNMV73QwtBG0D1dS8fvd2P0VtwOs3nMMEuSScWOoB+rl0VXqT/BVg0XoW0cIVfcl1qDBkk8yoloAbI7cvcAEGFmzDOofN49rZ0D45S0AWVoNrPw5pfT4VK5r37xmt2CQ3x6kKUMkYTfZKVTcgeRmoQYMzU0xCKxCXbKUH+cggSNrIVU3/Plj/HvWYn+CeLEz6tAkv95jjJJfojgAJk6qfrB/upxOqomJMuTmPg6EmfrGrNWA6cRAGVEbewCFBi2WCfB6QyCZwr232l5ffKvMSZJwpt7QqgxOkZ3LWW1qNYSgWWkdV1ZlLCAx94lMpsaRqWV4iSmLwFVRoGxuL+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM5PR11MB1899.namprd11.prod.outlook.com (2603:10b6:3:10b::14)
- by DM6PR11MB4660.namprd11.prod.outlook.com (2603:10b6:5:2ad::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5746.28; Thu, 27 Oct
- 2022 17:16:18 +0000
-Received: from DM5PR11MB1899.namprd11.prod.outlook.com
- ([fe80::552f:d94f:b6bf:e339]) by DM5PR11MB1899.namprd11.prod.outlook.com
- ([fe80::552f:d94f:b6bf:e339%2]) with mapi id 15.20.5769.015; Thu, 27 Oct 2022
- 17:16:18 +0000
-Message-ID: <d675d189-2e22-aa0b-f95d-9973aa812fde@intel.com>
-Date:   Thu, 27 Oct 2022 10:16:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Firefox/91.0 Thunderbird/91.11.0
-Subject: Re: [PATCH] cred: Do not default to init_cred in
- prepare_kernel_cred()
-Content-Language: en-US
-To:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-CC:     David Howells <dhowells@redhat.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        "Trond Myklebust" <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
-        <linux-nfs@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
-References: <20221026232943.never.775-kees@kernel.org>
-From:   Russ Weight <russell.h.weight@intel.com>
-In-Reply-To: <20221026232943.never.775-kees@kernel.org>
+        with ESMTP id S235332AbiJ0SHc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 27 Oct 2022 14:07:32 -0400
+Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD565F9B3
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:07:31 -0700 (PDT)
+Received: by mail-io1-f52.google.com with SMTP id l127so2309658iof.12
+        for <linux-nfs@vger.kernel.org>; Thu, 27 Oct 2022 11:07:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZSTg5WDEogpwMvmvDQgPRmGzIngl/kf86SqKZ7twN/o=;
+        b=sYTCFNSWPX/AQ7D/S2mYKVJvZitYd4VTb0NyMqLqLaA+nPuqCXCh0aKgimTSVamZcM
+         mrXAriglRv70f9X3wGzSp6f6asPpsCzTapmBNjCZH+sUbiIbHrl+VSLLaQqYEwgUD1fo
+         k8+ceklfEoCt4Da6JhquhwvYNs+6QaIwJdlU8t9gerpyV5mfMAv4h6/Od6JNrt2Azr/3
+         PknYlVW6j5KTPxWrksI3BTF0+ycG6R8tBqqTr9pKQGCKMRa6wJmeaKs3ee4dV6RGjFMr
+         E8KqtP2AFFVsYD5D0WscHTXcRhsukGzvncTkep2SBkMPyw4Yc8twE9hIkGsMiQbKWQUP
+         fqrA==
+X-Gm-Message-State: ACrzQf1bZ0xcrFLkImA6tFN2knlwuS5CSCX3s7FSNahITa6LHSsuzH4+
+        r4qh53GZKG5LVzgA+ueSvsCZPXchKg==
+X-Google-Smtp-Source: AMsMyM46CsjBdMO2+Xj3fab4GP57zuYnjt2yNLvJ9ONTK5S5gY77ax8l7n2dDIVOX2jThKewSSgLfg==
+X-Received: by 2002:a05:6602:2e8d:b0:6bd:543c:6fd7 with SMTP id m13-20020a0566022e8d00b006bd543c6fd7mr13867980iow.134.1666894050530;
+        Thu, 27 Oct 2022 11:07:30 -0700 (PDT)
+Received: from [192.168.75.138] (50-36-85-28.alma.mi.frontiernet.net. [50.36.85.28])
+        by smtp.gmail.com with ESMTPSA id o17-20020a0566022e1100b006bb57cfcb88sm790793iow.44.2022.10.27.11.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Oct 2022 11:07:29 -0700 (PDT)
+Message-ID: <010f7996fde7dc4aa7a21e4b2b835d5ae7084771.camel@kernel.org>
+Subject: Re: [PATCH v9 1/5] NFS: Rename readpage_async_filler to
+ nfs_pageio_add_page
+From:   Trond Myklebust <trondmy@kernel.org>
+To:     Dave Wysochanski <dwysocha@redhat.com>,
+        Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        David Howells <dhowells@redhat.com>
+Cc:     linux-nfs@vger.kernel.org, linux-cachefs@redhat.com,
+        Benjamin Maynard <benmaynard@google.com>,
+        Daire Byrne <daire.byrne@gmail.com>
+Date:   Thu, 27 Oct 2022 14:07:28 -0400
+In-Reply-To: <20221017105212.77588-2-dwysocha@redhat.com>
+References: <20221017105212.77588-1-dwysocha@redhat.com>
+         <20221017105212.77588-2-dwysocha@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MW4P223CA0024.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:303:80::29) To DM5PR11MB1899.namprd11.prod.outlook.com
- (2603:10b6:3:10b::14)
+Content-Transfer-Encoding: base64
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM5PR11MB1899:EE_|DM6PR11MB4660:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85ffa0d3-3a17-406b-73a2-08dab83ef5f6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: iNgzYmpg0NYeAJTry0qNOD7APEYFE/7Z4o5Hu+4a1Qy1U1tS3914PWY7+K9pT+vN7+RZ1TUjWKP2HroF+5PEq2PNYAr3N8JYKbZhat6ATNJs8fc4AvA0KqYQTPAvwpyu/MZT4EC9zwYIL4DcMKIPzUOXVKSlPx0MQ5mmncoEpre8zPAn7CrUozKYgz1sumk+X4iGDegUppoFMlo1HcZn1D/jeZjDvmItDRlq20V5/1M44l94MgC7sCeF5IVB+DP6zzY3A1V/FDoUAzFTcjDWJo6ru9jslLDRoPPle00A4dijQm38STHRK7NaPwCWScPGgHDuvWvgaXNzhUv7L/71u35YquwRlr8knXaaY/XbguwffOWU2c6btWkB/UFoNRTmipUpXx/Jjfskr9Q8x5ZUtQpU9BjQ3hwH6FaVz6sv0Ho539DwObgla7l+NLOg2QYVPbxfgVVgl+S1RukC9/XP+0J2PSh4al273IEqoa/d0sLFOn28St0FSocddj7GiqcpSJTgdQRYrfzPh0X4Ae77y0XCUxQYwFk4zI+lE4YwQAvLVjzaDdkazld5Tfpy79tV1bifyIBRGruMWYIi+5tZ4QRn6AydWBW34fARVYoT7VydKEwRG4oNJL4q5WnHdFp1fBW3CtRn7X0uS95tl6zSwkuXXrbw4wucWhCoPM3Zz9eEsKmDkf9hUJDZ8Y6olyJuED738OpxwCJKDtQFGCvBYNfR4572oAMOLVeuCNzTriZFboo5Wo4BkttVV/81pjL0wu/1A1ttQ+5LCuY03/VnJqH0u1lP3kDhisT7F84MxVWdB0kpbP0ZPTYrwukMHuAd
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1899.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(136003)(396003)(39860400002)(366004)(346002)(451199015)(31696002)(186003)(86362001)(82960400001)(110136005)(8936002)(7416002)(38100700002)(2906002)(5660300002)(45080400002)(66556008)(8676002)(4326008)(41300700001)(6506007)(66946007)(6486002)(6666004)(2616005)(26005)(54906003)(6512007)(966005)(478600001)(83380400001)(66476007)(53546011)(36756003)(316002)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cy9NMFJqenU5RW9pOWwvR0xTc2ZQQlFlYnFHek0ybVJRendXUWFab1VoMDc2?=
- =?utf-8?B?RFZWYjd4U1J2SStOYXZxc0YyNUtoRjhRVjAwbndqa2R5bGtsdHNpSU9CYnhL?=
- =?utf-8?B?eVBBZnl4Zko1RzVUOEZ5V2xIeXR1d1UxckQ1UjJUREN5eVJGaUJsa2Vta285?=
- =?utf-8?B?SnRra2QrWmFRVVErR1h3aUNxMlBEMDZ2UzEzQXA0Y2RwdWZRUGRlL0xicU96?=
- =?utf-8?B?Nk5WYTV6VmtPTWVORFJlTGZ1cVhPakNKSjlOdFdVQ2hxcEw5Qm0rdzJJa244?=
- =?utf-8?B?WEpqQ1d3N0l3cWVNc2szQjZGL3RjYUFEL2NQcHRuNVpURnZwR2hseUtqTGV5?=
- =?utf-8?B?SFZsSWRyY3k0Ry9GR0ZRVlhkNXZvb2o2MkJISHhaVWwwUkpHVGVudElXczBM?=
- =?utf-8?B?MFpUR2Z0Skd6c2tpV2RmOHJJUHpVSStvRnB4Q1lzc1g1MW1nbWw2NTNkdUhx?=
- =?utf-8?B?Q08ySm5Ddmg2VU51eXZ4RGRnUm1yTkZjOVo4M3FJNHJVNE1nWCtpNnJrdjZS?=
- =?utf-8?B?SG9FSmszbll4bHI1LzRMMUlhdGp2ajFmTko0ZjJrRDR1aGJSQms2eW9WdjhF?=
- =?utf-8?B?eHpIOVAxNzBTYXpyUkRVVXRGbFoxSXNCS2hTTEtKKzY5Y04zTkE2eW5xdWtj?=
- =?utf-8?B?ZGJPcFpPMml2MmF4OTFLK2pyd04wUDZYancraHhhczZMZTc0L3JQL3RUSmd0?=
- =?utf-8?B?aU1QSjBYUmxncDRFazJyT0FYRC85bDIxcXdQNXE1Q3YwSm9tTEpFQXZwMzdX?=
- =?utf-8?B?TXRBK2cvS3NoTiszakVnZ1g5WHA2YjRkSG15WExBNkYvRWZJVUhhZllrOHo5?=
- =?utf-8?B?bnZENVVZQVUvR1lZVE5CR3pESlgrTy9rblpQbWRKQ0RBWUJmaXIxd0cydDBz?=
- =?utf-8?B?d2V1V1kxWll5SGw4YUNPeW5EVEUxd1N4d1g0T0R1TVVod2tacSt3MFdMNEo2?=
- =?utf-8?B?ZElzUXE5eTU4K2hXSkJpL1lwajUrS1M4ZGhEbDVVSGdGclhrZEk1OGFjQTIw?=
- =?utf-8?B?R0FPRThkSXRpbHZoZS92bU5jaDFCUXlQVEVqbHFxSzAyUlFuKzJDM2JBMk1p?=
- =?utf-8?B?dzVpM0R0LzZmNzFycnhWeW9IaWIvWHNKOTNDWGpTZ3J0cXhidFlrdEVaay9k?=
- =?utf-8?B?eFl3ZG5sL1I2bnYwR281Uy83TEc4MDFXUzhZUnlRSlBlOWpPVzZrcEk5UEpS?=
- =?utf-8?B?VEh2UzFibEVCd1dZVzZZREFPbk1ET0J5NnBrSFdHOVZnWVZYbVpFK3BPWTJh?=
- =?utf-8?B?SXYzM2FnanArdThPVVg1VU1FbHN2N1h4ckZiVDNsNHRuS0s1WkVxVVhuaUpC?=
- =?utf-8?B?dnFYUS9VSjk5R29aWWF2bUpUdUNCKytvZE5hNGphV1hRZ0ZMamFhUFpyM0Q5?=
- =?utf-8?B?Y0JoQS9hbEhqOFVKSS9XZG5LLzdHNmthSFE3eklvUWVCczAzNnhkbkVrbjNH?=
- =?utf-8?B?ZjdVOFVwNWRaS2I4UU9CVmpZaUUyYS90dlo4RWpDM3hoWEhlUGhLRW9hd0JY?=
- =?utf-8?B?M3lvRWJnbnk0cGRrQVMyWFRIR3lRUE1tQkxxMmc1alJleEc1TUxsbzBlamlq?=
- =?utf-8?B?L0JyVE94dkR2UEhaMUYwaW5DQXQ0c3RvMFMwV0FGVkNhQkxyM0V2eTUra3dL?=
- =?utf-8?B?cVd4cllhMDlNWUJmZGIvWXdPSFgyWVVZTCtId0ZGZWJ5M1M4WFNSVFQyTnQx?=
- =?utf-8?B?QmdUMmVhZ0pBMkdRL2hvaXQ0NURDdk9HanlacTUvS1VZNDFBVUF5ditHc2k4?=
- =?utf-8?B?THVyZmtHbFE3RkN4S1FOZDN6c0llYkJmWUl6d0NTakMwSEgrbXRSY2JxeWZr?=
- =?utf-8?B?UmkxMUlQZElCdG13Qjk2d3lvQzBXVXdsM2diMWtNQnhhMXVRSThkTmpkR1JE?=
- =?utf-8?B?NUtCUEl2dkpORUt6SFR4dmoyeGt0Vk1TZjJpVGx2VzMzWDhoeGZ3bGRoRlAx?=
- =?utf-8?B?RDQ3eU9QdHB0bG92bDdmZFlOdHZ2UHBVdmcxUmQ3SGw4eU9YYmZvYlc5M2xW?=
- =?utf-8?B?Zmw1c0NHOVRha1lHdEIvcVkyM0xaRGM4SURPU05UVzFJYUhHWTNGL3ZYbnNB?=
- =?utf-8?B?d0ZQWmNjRWorYkd2U2ZZckVSK0pUaFU1SVM2UkNQS2ZlSmU3eGZpbWFTN3gw?=
- =?utf-8?B?UzcrM3dPZzFYSzc3Q1h5dVlpOGYxQVZVQlFCdHZ3SmFCN1kyRWNibWs5QnZ1?=
- =?utf-8?B?OUE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85ffa0d3-3a17-406b-73a2-08dab83ef5f6
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1899.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Oct 2022 17:16:18.2117
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: XLAhcqUhhpO6CD+t/9+R7ahEShUtChK2OcfPjRR315HYoOF3E6k0xNo3McOWlSi59hIE0DuqNDVsY9XNdW2cWRh0XvtJuBeiow/uBfhZM9M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4660
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+T24gTW9uLCAyMDIyLTEwLTE3IGF0IDA2OjUyIC0wNDAwLCBEYXZlIFd5c29jaGFuc2tpIHdyb3Rl
+Ogo+IFJlbmFtZSByZWFkcGFnZV9hc3luY19maWxsZXIgdG8gbmZzX3BhZ2Vpb19hZGRfcGFnZSB0
+bwo+IGJldHRlciByZWZsZWN0IHdoYXQgdGhpcyBmdW5jdGlvbiBkb2VzIChhZGQgYSBwYWdlIHRv
+Cj4gdGhlIG5mc19wYWdlaW9fZGVzY3JpcHRvciksIGFuZCBzaW1wbGlmeSBhcmd1bWVudHMgdG8K
+PiB0aGlzIGZ1bmN0aW9uIGJ5IHJlbW92aW5nIHN0cnVjdCBuZnNfcmVhZGRlc2MuCj4gCj4gU2ln
+bmVkLW9mZi1ieTogRGF2ZSBXeXNvY2hhbnNraSA8ZHd5c29jaGFAcmVkaGF0LmNvbT4KPiBSZXZp
+ZXdlZC1ieTogSmVmZiBMYXl0b24gPGpsYXl0b25Aa2VybmVsLm9yZz4KPiAtLS0KPiDCoGZzL25m
+cy9yZWFkLmMgfCA2MCArKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tCj4gLS0KPiDCoDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspLCAzMCBkZWxl
+dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZnMvbmZzL3JlYWQuYyBiL2ZzL25mcy9yZWFkLmMK
+PiBpbmRleCA4YWUyYzhkMTIxOWQuLjUyNWU4MmVhOWE5ZSAxMDA2NDQKPiAtLS0gYS9mcy9uZnMv
+cmVhZC5jCj4gKysrIGIvZnMvbmZzL3JlYWQuYwo+IEBAIC0xMjcsMTEgKzEyNyw2IEBAIHN0YXRp
+YyB2b2lkIG5mc19yZWFkcGFnZV9yZWxlYXNlKHN0cnVjdCBuZnNfcGFnZQo+ICpyZXEsIGludCBl
+cnJvcikKPiDCoMKgwqDCoMKgwqDCoMKgbmZzX3JlbGVhc2VfcmVxdWVzdChyZXEpOwo+IMKgfQo+
+IMKgCj4gLXN0cnVjdCBuZnNfcmVhZGRlc2Mgewo+IC3CoMKgwqDCoMKgwqDCoHN0cnVjdCBuZnNf
+cGFnZWlvX2Rlc2NyaXB0b3IgcGdpbzsKPiAtwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgbmZzX29wZW5f
+Y29udGV4dCAqY3R4Owo+IC19Owo+IC0KPiDCoHN0YXRpYyB2b2lkIG5mc19wYWdlX2dyb3VwX3Nl
+dF91cHRvZGF0ZShzdHJ1Y3QgbmZzX3BhZ2UgKnJlcSkKPiDCoHsKPiDCoMKgwqDCoMKgwqDCoMKg
+aWYgKG5mc19wYWdlX2dyb3VwX3N5bmNfb25fYml0KHJlcSwgUEdfVVBUT0RBVEUpKQo+IEBAIC0x
+NTMsNyArMTQ4LDggQEAgc3RhdGljIHZvaWQgbmZzX3JlYWRfY29tcGxldGlvbihzdHJ1Y3QKPiBu
+ZnNfcGdpb19oZWFkZXIgKmhkcikKPiDCoAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgaWYgKHRlc3RfYml0KE5GU19JT0hEUl9FT0YsICZoZHItPmZsYWdzKSkgewo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIG5vdGU6IHJlZ2lvbnMg
+b2YgdGhlIHBhZ2Ugbm90IGNvdmVyZWQgYnkgYQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgICogcmVxdWVzdCBhcmUgemVyb2VkIGluCj4gcmVhZHBhZ2Vf
+YXN5bmNfZmlsbGVyICovCj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgKiByZXF1ZXN0IGFyZSB6ZXJvZWQgaW4gbmZzX3BhZ2Vpb19hZGRfcGFnZQo+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICovCj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWYgKGJ5dGVzID4gaGRy
+LT5nb29kX2J5dGVzKSB7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC8qIG5vdGhpbmcgaW4gdGhpcyByZXF1ZXN0IHdhcyBn
+b29kLAo+IHNvIHplcm8KPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICogdGhlIGZ1bGwgZXh0ZW50IG9mIHRoZSByZXF1ZXN0
+ICovCj4gQEAgLTI4MSw4ICsyNzcsMTAgQEAgc3RhdGljIHZvaWQgbmZzX3JlYWRwYWdlX3Jlc3Vs
+dChzdHJ1Y3QgcnBjX3Rhc2sKPiAqdGFzaywKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoG5mc19yZWFkcGFnZV9yZXRyeSh0YXNrLCBoZHIpOwo+IMKgfQo+IMKgCj4gLXN0YXRpYyBp
+bnQKPiAtcmVhZHBhZ2VfYXN5bmNfZmlsbGVyKHN0cnVjdCBuZnNfcmVhZGRlc2MgKmRlc2MsIHN0
+cnVjdCBwYWdlICpwYWdlKQo+ICtpbnQKPiArbmZzX3BhZ2Vpb19hZGRfcGFnZShzdHJ1Y3QgbmZz
+X3BhZ2Vpb19kZXNjcmlwdG9yICpwZ2lvLAo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqAgc3RydWN0IG5mc19vcGVuX2NvbnRleHQgKmN0eCwKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cnVjdCBwYWdlICpwYWdlKQoKSWYgd2UncmUgZ29pbmcg
+dG8gcmVuYW1lIHRoaXMgZnVuY3Rpb24sIHRoZW4gbGV0J3Mgbm90IGdpdmUgaXQgYSBuYW1lCnRo
+YXQgc3VnZ2VzdHMgaXQgYmVsb25ncyBpbiBwYWdlbGlzdC5jLiBJdCdzIG5vdCBhIGdlbmVyaWMg
+aGVscGVyCmZ1bmN0aW9uLCBidXQgaXMgc3RpbGwgdmVyeSBtdWNoIHNwZWNpZmljIHRvIHRoZSBw
+YWdlY2FjaGUgcmVhZApmdW5jdGlvbmFsaXR5LgoKPiDCoHsKPiDCoMKgwqDCoMKgwqDCoMKgc3Ry
+dWN0IGlub2RlICppbm9kZSA9IHBhZ2VfZmlsZV9tYXBwaW5nKHBhZ2UpLT5ob3N0Owo+IMKgwqDC
+oMKgwqDCoMKgwqB1bnNpZ25lZCBpbnQgcnNpemUgPSBORlNfU0VSVkVSKGlub2RlKS0+cnNpemU7
+Cj4gQEAgLTMwMiwxNSArMzAwLDE1IEBAIHJlYWRwYWdlX2FzeW5jX2ZpbGxlcihzdHJ1Y3QgbmZz
+X3JlYWRkZXNjCj4gKmRlc2MsIHN0cnVjdCBwYWdlICpwYWdlKQo+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gb3V0X3VubG9jazsKPiDCoMKgwqDC
+oMKgwqDCoMKgfQo+IMKgCj4gLcKgwqDCoMKgwqDCoMKgbmV3ID0gbmZzX2NyZWF0ZV9yZXF1ZXN0
+KGRlc2MtPmN0eCwgcGFnZSwgMCwgYWxpZ25lZF9sZW4pOwo+ICvCoMKgwqDCoMKgwqDCoG5ldyA9
+IG5mc19jcmVhdGVfcmVxdWVzdChjdHgsIHBhZ2UsIDAsIGFsaWduZWRfbGVuKTsKPiDCoMKgwqDC
+oMKgwqDCoMKgaWYgKElTX0VSUihuZXcpKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgZ290byBvdXRfZXJyb3I7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKGxlbiA8IFBBR0Vf
+U0laRSkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHplcm9fdXNlcl9zZWdtZW50
+KHBhZ2UsIGxlbiwgUEFHRV9TSVpFKTsKPiAtwqDCoMKgwqDCoMKgwqBpZiAoIW5mc19wYWdlaW9f
+YWRkX3JlcXVlc3QoJmRlc2MtPnBnaW8sIG5ldykpIHsKPiArwqDCoMKgwqDCoMKgwqBpZiAoIW5m
+c19wYWdlaW9fYWRkX3JlcXVlc3QocGdpbywgbmV3KSkgewo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgbmZzX2xpc3RfcmVtb3ZlX3JlcXVlc3QobmV3KTsKPiAtwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgZXJyb3IgPSBkZXNjLT5wZ2lvLnBnX2Vycm9yOwo+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBlcnJvciA9IHBnaW8tPnBnX2Vycm9yOwo+IMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbmZzX3JlYWRwYWdlX3JlbGVhc2UobmV3LCBlcnJvcik7
+Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBnb3RvIG91dDsKPiDCoMKgwqDCoMKg
+wqDCoMKgfQo+IEBAIC0zMzIsNyArMzMwLDggQEAgcmVhZHBhZ2VfYXN5bmNfZmlsbGVyKHN0cnVj
+dCBuZnNfcmVhZGRlc2MgKmRlc2MsCj4gc3RydWN0IHBhZ2UgKnBhZ2UpCj4gwqBpbnQgbmZzX3Jl
+YWRfZm9saW8oc3RydWN0IGZpbGUgKmZpbGUsIHN0cnVjdCBmb2xpbyAqZm9saW8pCj4gwqB7Cj4g
+wqDCoMKgwqDCoMKgwqDCoHN0cnVjdCBwYWdlICpwYWdlID0gJmZvbGlvLT5wYWdlOwo+IC3CoMKg
+wqDCoMKgwqDCoHN0cnVjdCBuZnNfcmVhZGRlc2MgZGVzYzsKPiArwqDCoMKgwqDCoMKgwqBzdHJ1
+Y3QgbmZzX3BhZ2Vpb19kZXNjcmlwdG9yIHBnaW87Cj4gK8KgwqDCoMKgwqDCoMKgc3RydWN0IG5m
+c19vcGVuX2NvbnRleHQgKmN0eDsKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGlub2RlICppbm9k
+ZSA9IHBhZ2VfZmlsZV9tYXBwaW5nKHBhZ2UpLT5ob3N0Owo+IMKgwqDCoMKgwqDCoMKgwqBpbnQg
+cmV0Owo+IMKgCj4gQEAgLTM1OCwyOSArMzU3LDI5IEBAIGludCBuZnNfcmVhZF9mb2xpbyhzdHJ1
+Y3QgZmlsZSAqZmlsZSwgc3RydWN0Cj4gZm9saW8gKmZvbGlvKQo+IMKgCj4gwqDCoMKgwqDCoMKg
+wqDCoGlmIChmaWxlID09IE5VTEwpIHsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oHJldCA9IC1FQkFERjsKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy5jdHgg
+PSBuZnNfZmluZF9vcGVuX2NvbnRleHQoaW5vZGUsIE5VTEwsCj4gRk1PREVfUkVBRCk7Cj4gLcKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChkZXNjLmN0eCA9PSBOVUxMKQo+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjdHggPSBuZnNfZmluZF9vcGVuX2NvbnRleHQoaW5v
+ZGUsIE5VTEwsIEZNT0RFX1JFQUQpOwo+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBp
+ZiAoY3R4ID09IE5VTEwpCj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgZ290byBvdXRfdW5sb2NrOwo+IMKgwqDCoMKgwqDCoMKgwqB9IGVsc2UKPiAtwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy5jdHggPQo+IGdldF9uZnNfb3Blbl9jb250
+ZXh0KG5mc19maWxlX29wZW5fY29udGV4dChmaWxlKSk7Cj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGN0eCA9Cj4gZ2V0X25mc19vcGVuX2NvbnRleHQobmZzX2ZpbGVfb3Blbl9jb250
+ZXh0KGZpbGUpKTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoHhjaGcoJmRlc2MuY3R4LT5lcnJvciwg
+MCk7Cj4gLcKgwqDCoMKgwqDCoMKgbmZzX3BhZ2Vpb19pbml0X3JlYWQoJmRlc2MucGdpbywgaW5v
+ZGUsIGZhbHNlLAo+ICvCoMKgwqDCoMKgwqDCoHhjaGcoJmN0eC0+ZXJyb3IsIDApOwo+ICvCoMKg
+wqDCoMKgwqDCoG5mc19wYWdlaW9faW5pdF9yZWFkKCZwZ2lvLCBpbm9kZSwgZmFsc2UsCj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgJm5m
+c19hc3luY19yZWFkX2NvbXBsZXRpb25fb3BzKTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoHJldCA9
+IHJlYWRwYWdlX2FzeW5jX2ZpbGxlcigmZGVzYywgcGFnZSk7Cj4gK8KgwqDCoMKgwqDCoMKgcmV0
+ID0gbmZzX3BhZ2Vpb19hZGRfcGFnZSgmcGdpbywgY3R4LCBwYWdlKTsKPiDCoMKgwqDCoMKgwqDC
+oMKgaWYgKHJldCkKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gb3V0Owo+
+IMKgCj4gLcKgwqDCoMKgwqDCoMKgbmZzX3BhZ2Vpb19jb21wbGV0ZV9yZWFkKCZkZXNjLnBnaW8p
+Owo+IC3CoMKgwqDCoMKgwqDCoHJldCA9IGRlc2MucGdpby5wZ19lcnJvciA8IDAgPyBkZXNjLnBn
+aW8ucGdfZXJyb3IgOiAwOwo+ICvCoMKgwqDCoMKgwqDCoG5mc19wYWdlaW9fY29tcGxldGVfcmVh
+ZCgmcGdpbyk7Cj4gK8KgwqDCoMKgwqDCoMKgcmV0ID0gcGdpby5wZ19lcnJvciA8IDAgPyBwZ2lv
+LnBnX2Vycm9yIDogMDsKPiDCoMKgwqDCoMKgwqDCoMKgaWYgKCFyZXQpIHsKPiDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IHdhaXRfb25fcGFnZV9sb2NrZWRfa2lsbGFibGUo
+cGFnZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoIVBhZ2VVcHRvZGF0
+ZShwYWdlKSAmJiAhcmV0KQo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgcmV0ID0geGNoZygmZGVzYy5jdHgtPmVycm9yLCAwKTsKPiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IHhjaGcoJmN0eC0+ZXJyb3Is
+IDApOwo+IMKgwqDCoMKgwqDCoMKgwqB9Cj4gwqBvdXQ6Cj4gLcKgwqDCoMKgwqDCoMKgcHV0X25m
+c19vcGVuX2NvbnRleHQoZGVzYy5jdHgpOwo+ICvCoMKgwqDCoMKgwqDCoHB1dF9uZnNfb3Blbl9j
+b250ZXh0KGN0eCk7Cj4gwqDCoMKgwqDCoMKgwqDCoHRyYWNlX25mc19hb3BfcmVhZHBhZ2VfZG9u
+ZShpbm9kZSwgcGFnZSwgcmV0KTsKPiDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsKPiDCoG91
+dF91bmxvY2s6Cj4gQEAgLTM5MSw5ICszOTAsMTAgQEAgaW50IG5mc19yZWFkX2ZvbGlvKHN0cnVj
+dCBmaWxlICpmaWxlLCBzdHJ1Y3QKPiBmb2xpbyAqZm9saW8pCj4gwqAKPiDCoHZvaWQgbmZzX3Jl
+YWRhaGVhZChzdHJ1Y3QgcmVhZGFoZWFkX2NvbnRyb2wgKnJhY3RsKQo+IMKgewo+ICvCoMKgwqDC
+oMKgwqDCoHN0cnVjdCBuZnNfcGFnZWlvX2Rlc2NyaXB0b3IgcGdpbzsKPiArwqDCoMKgwqDCoMKg
+wqBzdHJ1Y3QgbmZzX29wZW5fY29udGV4dCAqY3R4Owo+IMKgwqDCoMKgwqDCoMKgwqB1bnNpZ25l
+ZCBpbnQgbnJfcGFnZXMgPSByZWFkYWhlYWRfY291bnQocmFjdGwpOwo+IMKgwqDCoMKgwqDCoMKg
+wqBzdHJ1Y3QgZmlsZSAqZmlsZSA9IHJhY3RsLT5maWxlOwo+IC3CoMKgwqDCoMKgwqDCoHN0cnVj
+dCBuZnNfcmVhZGRlc2MgZGVzYzsKPiDCoMKgwqDCoMKgwqDCoMKgc3RydWN0IGlub2RlICppbm9k
+ZSA9IHJhY3RsLT5tYXBwaW5nLT5ob3N0Owo+IMKgwqDCoMKgwqDCoMKgwqBzdHJ1Y3QgcGFnZSAq
+cGFnZTsKPiDCoMKgwqDCoMKgwqDCoMKgaW50IHJldDsKPiBAQCAtNDA3LDI1ICs0MDcsMjUgQEAg
+dm9pZCBuZnNfcmVhZGFoZWFkKHN0cnVjdCByZWFkYWhlYWRfY29udHJvbAo+ICpyYWN0bCkKPiDC
+oAo+IMKgwqDCoMKgwqDCoMKgwqBpZiAoZmlsZSA9PSBOVUxMKSB7Cj4gwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqByZXQgPSAtRUJBREY7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoGRlc2MuY3R4ID0gbmZzX2ZpbmRfb3Blbl9jb250ZXh0KGlub2RlLCBOVUxMLAo+IEZN
+T0RFX1JFQUQpOwo+IC3CoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpZiAoZGVzYy5jdHgg
+PT0gTlVMTCkKPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY3R4ID0gbmZzX2ZpbmRf
+b3Blbl9jb250ZXh0KGlub2RlLCBOVUxMLCBGTU9ERV9SRUFEKTsKPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgaWYgKGN0eCA9PSBOVUxMKQo+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGdvdG8gb3V0Owo+IMKgwqDCoMKgwqDCoMKgwqB9IGVs
+c2UKPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgZGVzYy5jdHggPQo+IGdldF9uZnNf
+b3Blbl9jb250ZXh0KG5mc19maWxlX29wZW5fY29udGV4dChmaWxlKSk7Cj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoGN0eCA9Cj4gZ2V0X25mc19vcGVuX2NvbnRleHQobmZzX2ZpbGVf
+b3Blbl9jb250ZXh0KGZpbGUpKTsKPiDCoAo+IC3CoMKgwqDCoMKgwqDCoG5mc19wYWdlaW9faW5p
+dF9yZWFkKCZkZXNjLnBnaW8sIGlub2RlLCBmYWxzZSwKPiArwqDCoMKgwqDCoMKgwqBuZnNfcGFn
+ZWlvX2luaXRfcmVhZCgmcGdpbywgaW5vZGUsIGZhbHNlLAo+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICZuZnNfYXN5bmNfcmVhZF9jb21w
+bGV0aW9uX29wcyk7Cj4gwqAKPiDCoMKgwqDCoMKgwqDCoMKgd2hpbGUgKChwYWdlID0gcmVhZGFo
+ZWFkX3BhZ2UocmFjdGwpKSAhPSBOVUxMKSB7Cj4gLcKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHJldCA9IHJlYWRwYWdlX2FzeW5jX2ZpbGxlcigmZGVzYywgcGFnZSk7Cj4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJldCA9IG5mc19wYWdlaW9fYWRkX3BhZ2UoJnBnaW8sIGN0
+eCwgcGFnZSk7Cj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBwdXRfcGFnZShwYWdl
+KTsKPiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGlmIChyZXQpCj4gwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYnJlYWs7Cj4gwqDCoMKgwqDC
+oMKgwqDCoH0KPiDCoAo+IC3CoMKgwqDCoMKgwqDCoG5mc19wYWdlaW9fY29tcGxldGVfcmVhZCgm
+ZGVzYy5wZ2lvKTsKPiArwqDCoMKgwqDCoMKgwqBuZnNfcGFnZWlvX2NvbXBsZXRlX3JlYWQoJnBn
+aW8pOwo+IMKgCj4gLcKgwqDCoMKgwqDCoMKgcHV0X25mc19vcGVuX2NvbnRleHQoZGVzYy5jdHgp
+Owo+ICvCoMKgwqDCoMKgwqDCoHB1dF9uZnNfb3Blbl9jb250ZXh0KGN0eCk7Cj4gwqBvdXQ6Cj4g
+wqDCoMKgwqDCoMKgwqDCoHRyYWNlX25mc19hb3BfcmVhZGFoZWFkX2RvbmUoaW5vZGUsIG5yX3Bh
+Z2VzLCByZXQpOwo+IMKgfQoKLS0gClRyb25kIE15a2xlYnVzdApMaW51eCBORlMgY2xpZW50IG1h
+aW50YWluZXIsIEhhbW1lcnNwYWNlCnRyb25kLm15a2xlYnVzdEBoYW1tZXJzcGFjZS5jb20KCgo=
 
-
-On 10/26/22 16:31, Kees Cook wrote:
-> A common exploit pattern for ROP attacks is to abuse prepare_kernel_cred()
-> in order to construct escalated privileges[1]. Instead of providing a
-> short-hand argument (NULL) to the "daemon" argument to indicate using
-> init_cred as the base cred, require that "daemon" is always set to
-> an actual task. Replace all existing callers that were passing NULL
-> with &init_task.
->
-> Future attacks will need to have sufficiently powerful read/write
-> primitives to have found an appropriately privileged task and written it
-> to the ROP stack as an argument to succeed, which is similarly difficult
-> to the prior effort needed to escalate privileges before struct cred
-> existed: locate the current cred and overwrite the uid member.
->
-> This has the added benefit of meaning that prepare_kernel_cred() can no
-> longer exceed the privileges of the init task, which may have changed from
-> the original init_cred (e.g. dropping capabilities from the bounding set).
->
-> [1] https://google.com/search?q=commit_creds(prepare_kernel_cred(0))
->
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Russ Weight <russell.h.weight@intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Steve French <sfrench@samba.org>
-> Cc: Paulo Alcantara <pc@cjr.nz>
-> Cc: Ronnie Sahlberg <lsahlber@redhat.com>
-> Cc: Shyam Prasad N <sprasad@microsoft.com>
-> Cc: Tom Talpey <tom@talpey.com>
-> Cc: Namjae Jeon <linkinjeon@kernel.org>
-> Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
-> Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
-> Cc: Anna Schumaker <anna@kernel.org>
-> Cc: Chuck Lever <chuck.lever@oracle.com>
-> Cc: Jeff Layton <jlayton@kernel.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: Paolo Abeni <pabeni@redhat.com>
-> Cc: "Michal Koutný" <mkoutny@suse.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: linux-cifs@vger.kernel.org
-> Cc: samba-technical@lists.samba.org
-> Cc: linux-nfs@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  drivers/base/firmware_loader/main.c    |  2 +-
->  fs/cifs/cifs_spnego.c                  |  2 +-
->  fs/cifs/cifsacl.c                      |  2 +-
->  fs/ksmbd/smb_common.c                  |  2 +-
->  fs/nfs/flexfilelayout/flexfilelayout.c |  4 ++--
->  fs/nfs/nfs4idmap.c                     |  2 +-
->  fs/nfsd/nfs4callback.c                 |  2 +-
->  kernel/cred.c                          | 15 +++++++--------
->  net/dns_resolver/dns_key.c             |  2 +-
->  9 files changed, 16 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-> index 7c3590fd97c2..017c4cdb219e 100644
-> --- a/drivers/base/firmware_loader/main.c
-> +++ b/drivers/base/firmware_loader/main.c
-> @@ -821,7 +821,7 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
->  	 * called by a driver when serving an unrelated request from userland, we use
->  	 * the kernel credentials to read the file.
->  	 */
-> -	kern_cred = prepare_kernel_cred(NULL);
-> +	kern_cred = prepare_kernel_cred(&init_task);
->  	if (!kern_cred) {
->  		ret = -ENOMEM;
->  		goto out;
-> diff --git a/fs/cifs/cifs_spnego.c b/fs/cifs/cifs_spnego.c
-> index 342717bf1dc2..6f3285f1dfee 100644
-> --- a/fs/cifs/cifs_spnego.c
-> +++ b/fs/cifs/cifs_spnego.c
-> @@ -189,7 +189,7 @@ init_cifs_spnego(void)
->  	 * spnego upcalls.
->  	 */
->  
-> -	cred = prepare_kernel_cred(NULL);
-> +	cred = prepare_kernel_cred(&init_task);
->  	if (!cred)
->  		return -ENOMEM;
->  
-> diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-> index fa480d62f313..574de2b225ae 100644
-> --- a/fs/cifs/cifsacl.c
-> +++ b/fs/cifs/cifsacl.c
-> @@ -465,7 +465,7 @@ init_cifs_idmap(void)
->  	 * this is used to prevent malicious redirections from being installed
->  	 * with add_key().
->  	 */
-> -	cred = prepare_kernel_cred(NULL);
-> +	cred = prepare_kernel_cred(&init_task);
->  	if (!cred)
->  		return -ENOMEM;
->  
-> diff --git a/fs/ksmbd/smb_common.c b/fs/ksmbd/smb_common.c
-> index d96da872d70a..2a4fbbd55b91 100644
-> --- a/fs/ksmbd/smb_common.c
-> +++ b/fs/ksmbd/smb_common.c
-> @@ -623,7 +623,7 @@ int ksmbd_override_fsids(struct ksmbd_work *work)
->  	if (share->force_gid != KSMBD_SHARE_INVALID_GID)
->  		gid = share->force_gid;
->  
-> -	cred = prepare_kernel_cred(NULL);
-> +	cred = prepare_kernel_cred(&init_task);
->  	if (!cred)
->  		return -ENOMEM;
->  
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-> index 1ec79ccf89ad..7deb3cd76abe 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayout.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-> @@ -493,10 +493,10 @@ ff_layout_alloc_lseg(struct pnfs_layout_hdr *lh,
->  		gid = make_kgid(&init_user_ns, id);
->  
->  		if (gfp_flags & __GFP_FS)
-> -			kcred = prepare_kernel_cred(NULL);
-> +			kcred = prepare_kernel_cred(&init_task);
->  		else {
->  			unsigned int nofs_flags = memalloc_nofs_save();
-> -			kcred = prepare_kernel_cred(NULL);
-> +			kcred = prepare_kernel_cred(&init_task);
->  			memalloc_nofs_restore(nofs_flags);
->  		}
->  		rc = -ENOMEM;
-> diff --git a/fs/nfs/nfs4idmap.c b/fs/nfs/nfs4idmap.c
-> index e3fdd2f45b01..25a7c771cfd8 100644
-> --- a/fs/nfs/nfs4idmap.c
-> +++ b/fs/nfs/nfs4idmap.c
-> @@ -203,7 +203,7 @@ int nfs_idmap_init(void)
->  	printk(KERN_NOTICE "NFS: Registering the %s key type\n",
->  		key_type_id_resolver.name);
->  
-> -	cred = prepare_kernel_cred(NULL);
-> +	cred = prepare_kernel_cred(&init_task);
->  	if (!cred)
->  		return -ENOMEM;
->  
-> diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-> index f0e69edf5f0f..4a9e8d17e56a 100644
-> --- a/fs/nfsd/nfs4callback.c
-> +++ b/fs/nfsd/nfs4callback.c
-> @@ -870,7 +870,7 @@ static const struct cred *get_backchannel_cred(struct nfs4_client *clp, struct r
->  	} else {
->  		struct cred *kcred;
->  
-> -		kcred = prepare_kernel_cred(NULL);
-> +		kcred = prepare_kernel_cred(&init_task);
->  		if (!kcred)
->  			return NULL;
->  
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index e10c15f51c1f..811ad654abd1 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -701,9 +701,9 @@ void __init cred_init(void)
->   * override a task's own credentials so that work can be done on behalf of that
->   * task that requires a different subjective context.
->   *
-> - * @daemon is used to provide a base for the security record, but can be NULL.
-> - * If @daemon is supplied, then the security data will be derived from that;
-> - * otherwise they'll be set to 0 and no groups, full capabilities and no keys.
-> + * @daemon is used to provide a base cred, with the security data derived from
-> + * that; if this is "&init_task", they'll be set to 0, no groups, full
-> + * capabilities, and no keys.
->   *
->   * The caller may change these controls afterwards if desired.
->   *
-> @@ -714,17 +714,16 @@ struct cred *prepare_kernel_cred(struct task_struct *daemon)
->  	const struct cred *old;
->  	struct cred *new;
->  
-> +	if (WARN_ON_ONCE(!daemon))
-> +		return NULL;
-> +
->  	new = kmem_cache_alloc(cred_jar, GFP_KERNEL);
->  	if (!new)
->  		return NULL;
->  
->  	kdebug("prepare_kernel_cred() alloc %p", new);
->  
-> -	if (daemon)
-> -		old = get_task_cred(daemon);
-> -	else
-> -		old = get_cred(&init_cred);
-> -
-> +	old = get_task_cred(daemon);
->  	validate_creds(old);
->  
->  	*new = *old;
-> diff --git a/net/dns_resolver/dns_key.c b/net/dns_resolver/dns_key.c
-> index 3aced951d5ab..01e54b46ae0b 100644
-> --- a/net/dns_resolver/dns_key.c
-> +++ b/net/dns_resolver/dns_key.c
-> @@ -337,7 +337,7 @@ static int __init init_dns_resolver(void)
->  	 * this is used to prevent malicious redirections from being installed
->  	 * with add_key().
->  	 */
-> -	cred = prepare_kernel_cred(NULL);
-> +	cred = prepare_kernel_cred(&init_task);
->  	if (!cred)
->  		return -ENOMEM;
->  
-Acked-by: Russ Weight <russell.h.weight@intel.com>
-
-- Russ
