@@ -2,243 +2,212 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EADD611B5A
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 22:04:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE22C611B70
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 22:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229706AbiJ1UEm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 16:04:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39370 "EHLO
+        id S229738AbiJ1UMf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 16:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230080AbiJ1UEm (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 16:04:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8976BD59
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 13:04:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04F6162A4A
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 20:04:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1477DC433D6;
-        Fri, 28 Oct 2022 20:04:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666987478;
-        bh=IxowU0ZvwZsk/vbv32treX0xxaOVEynlwGXuDbwM6Rc=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ka087CIvahs2IHc+tNVWidFXFB4NScJYRA7+16gRFaIWq3KCxsoofbKvgbNp1Ywqo
-         /he62UbhHmdCDMFWTBYHto5x6XoLns9j1LGdSIHnswa5rEJIYk+HxJ0Wdvs1qp49cY
-         gnv7oO8Ik3vcfO2xRJZS0Xsr5ZFdq7Av2C4/0AwoPldElAQrB7AfzgZj5L6xrkmN/Q
-         L9gY2sxfNTV+FWb/JbeXZsiKzTxuQkTpXwa72HeHhJ4HS8fJELzoZ7hnehIIZ8jngM
-         UoA32y+Y5R3RX0TJQ3g44BYliCFuVlJzMYGNmF1I+sh5ZshdiGy00tZEYdCI9OwChs
-         z4PPvwpDmYquQ==
-Message-ID: <aa20ef22ffa125076f35b8c1ecb508852c0bb073.camel@kernel.org>
-Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
- nfsd_file to the LRU
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Neil Brown <neilb@suse.de>
-Date:   Fri, 28 Oct 2022 16:04:36 -0400
-In-Reply-To: <2D64526B-6270-49B9-AC2C-F0118DCF2AF9@oracle.com>
-References: <20221027215213.138304-1-jlayton@kernel.org>
-         <20221027215213.138304-4-jlayton@kernel.org>
-         <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
-         <ae07f54d107cf1848c0a36dd16e437185a0304c3.camel@kernel.org>
-         <65194BBE-F4C7-4CD6-A618-690D1CCE235C@oracle.com>
-         <cc4bfa448efedd0017fc7b20b8b7475907acbc5e.camel@kernel.org>
-         <A040CDCA-5E3F-470F-8D69-8FF9DA4325FE@oracle.com>
-         <098163d8067962f84a06af5d03379e2157974625.camel@kernel.org>
-         <2D64526B-6270-49B9-AC2C-F0118DCF2AF9@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
+        with ESMTP id S229636AbiJ1UMe (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 16:12:34 -0400
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2109.outbound.protection.outlook.com [40.107.95.109])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32A6D27176;
+        Fri, 28 Oct 2022 13:12:32 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SsF+C/XbTYfyDisaB+YY+Svf/djXN4NZ4UcCyAM85KPE6c74Ex8bkDasQzYR9p/n+V65gRUG7ifKQv/OcMeTBz3c9FwYuKN4gUUwAW3EGoYSwPze9+QEeCPUAItp1bQckVViX5oAOM5jc8Cd1IEThmBKVQnCaYH9E1wtcbMyKhMFWV1dphNNwlLD0TVCYTgfmX3FigJMvXkSKtHzsILeZMfBRWIwm9MiHpFatXSaAfJqXVmWABKOpJMbA0rIkR0vxTfWl2FKiVNPVeZonfQ5Z451xOFk9GaZTIvxYFD/m8HDK9AEccWUVH5uFUuB+m/Jpz1BBPi4waytx0HK9Gtepw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=N+11px2V5e0KDc8oLGpfDKBKTHgoZf6AfqCbh3p/rdk=;
+ b=SD92stcn70OorSUjyHztxT++Iu6i1Qefze6IIKUp+Nv8h1fjDfI8+LpJmEYlJ/6/TdL8YPlbH290um0vamd8MEdikFE9J37j8qw3NHBb//myjRhZ7tb0/3syzcE5rnAuFxRfNxtOkF6qP6hnPNEZMTluUMxXZNzeECzoKQEU9cvwpFmj8Gml0pDmA5yvY7vKU5Duw/veKg8yT9L26rg5PeaVloMKZwrviWAayr2MKP6W+NpIbVHXiBuzAYWwNC+WLxQno60/3jFRuKGwx0Ejbr5TMJDiZ/oyX1Bev1p57SayyYxUvRMJcLOpJE4g+MS8fWD4xIraW8NWsohUfgPFAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=N+11px2V5e0KDc8oLGpfDKBKTHgoZf6AfqCbh3p/rdk=;
+ b=BUM0FKn2IeMGhCZuXwEojsm0mCGcgDZwVyBBQzUFYgCrAPr90+zJ0gk9kXfM6KWOaj43QrdEWGQXgg2skBNlBWkOt3KVye8Hh0BWhExq28d3BSVv8yO+D/gQaO/xLOqJF7sUJcFdxG+XusG0iUto5EKLCUaGtvzcU9dMCD88tZc=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by MN2PR13MB4069.namprd13.prod.outlook.com (2603:10b6:208:269::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.9; Fri, 28 Oct
+ 2022 20:12:30 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::9927:a5a2:43a2:4801]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::9927:a5a2:43a2:4801%4]) with mapi id 15.20.5791.009; Fri, 28 Oct 2022
+ 20:12:30 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anna Schumaker <anna@kernel.org>,
+        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>
+Subject: Re: [RFC][PATCH v2 00/31] timers: Use del_timer_shutdown() before
+ freeing timers
+Thread-Topic: [RFC][PATCH v2 00/31] timers: Use del_timer_shutdown() before
+ freeing timers
+Thread-Index: AQHY6v4TOWSLEQmUbESsXe/9l99ZN64kPS2A
+Date:   Fri, 28 Oct 2022 20:12:30 +0000
+Message-ID: <A016D74D-CDFC-4CAB-9AE4-C1688C9A49A1@hammerspace.com>
+References: <20221027150525.753064657@goodmis.org>
+ <20221028145005.28bc324d@gandalf.local.home>
+In-Reply-To: <20221028145005.28bc324d@gandalf.local.home>
+Accept-Language: en-US, en-GB
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.200.110.1.12)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|MN2PR13MB4069:EE_
+x-ms-office365-filtering-correlation-id: da85e3c4-df41-4523-1d52-08dab920bdee
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TCLKFAR9ZtD5z2ry3JQYiJxdjn43jcwsOhqT58xQQcnqHuj3u5EKr5hcOFFBJ6wYP+sED5YP665Z/H6XVvEqsVzW82EROMxmUo9rPADOAt7ntc+Lu39dULes4RsRiC8FgPJCHLfdMAD5LsF6OrW5V+17B7Osc0P1+BiasbuiAxHnP6LNI4+qe6QgrWkAYI4xlRtiRlgFikAaGLXOEb60dCf+enuiVXUxQgoIGR3COn54K9VWHWnSKIfYxQrdmOwB10oDNhVG9mt9a7e+RhaZy2FFsy2b1B/Sx2yrd5AOACjYOy7/THS5LTEsXxMs8hq7ck2o3PoFt1UHFB9TvjZ0D9VJ4X6kAdHx4nv1jnm4jdEMkZnsum6curmq9x3WbaJ5ve85ursT9q4Rs79gVGcWJcU4Wc5O0Yl4vV0McQkMDKf5O9zoZEg6la88mAcCLgcm00D42uPMOrAUgdYwf1wdcrypY63+MjWYRwu2E224Z3mYIl+iyp2CcV8MS4w5lvY1qUFMPXiZ+p52jRYhhA1SglKS+c+AcLm0kBEnxEcG0FV0l1whNVCb3Ecyc+IR1ReniInBylN44vuVWwpQOjEtkiadebASGh4267goWFYXVzj1ouO2k68GkR16E9pUSpkV3Nh/L4Nu3L0KgBHYSYdIr1D9A4ipynoAe24s8L10LYSz6J82pPLbpABkfMm7mzTZ43TL8OV98IjlMMo2GQnrMihIHrkTVxG9LjRqM2wlvDN9Rr8SDFKWBwbB6JH79WBIriTvSyZoPIPpCb/ZP5svWno1WTGSfQ0itnldopo+agE=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(39840400004)(376002)(396003)(346002)(136003)(451199015)(38070700005)(122000001)(6506007)(2906002)(64756008)(66556008)(66946007)(76116006)(66476007)(6916009)(4326008)(36756003)(53546011)(66446008)(316002)(8676002)(54906003)(83380400001)(2616005)(33656002)(86362001)(6512007)(26005)(41300700001)(186003)(5660300002)(8936002)(478600001)(6486002)(71200400001)(38100700002)(45980500001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?QyoMXgykAtlZg1pRHzO62i1/bPZSkZx37mnPrSnWeVabUDM9a/rqAVR3S/wP?=
+ =?us-ascii?Q?te53wPAEWT1ybOT5y8XeqI+/kkh47lcKYxdMqn+uqyYznOojVaEpGjWQykk7?=
+ =?us-ascii?Q?StJuCqLawFP93s1620oiDnacg6MLBT2lXYu9BhWFtvjYj6dBv+kbIH4PQsjS?=
+ =?us-ascii?Q?ijUBCSxWNwyrEqZiKn7h9oqZ6FqzeCf12UOZyJ8cUXjOFDf91TRcADF2x9/k?=
+ =?us-ascii?Q?3UzJ9SnmwzeOGcxzoi/DPRkveqS5cxx7vnViNICEaDRNAKSL0ziFkIGO/e9R?=
+ =?us-ascii?Q?qNIjqrPRkB4yIjP5EebTgsvS5OFxI+7erAtasrpaY9ALbhhTcMvE2FwnGZ1G?=
+ =?us-ascii?Q?a4tBPogOeNqBn1AHTqXVWwPX43ApCPtKZAlI94cbsZvIIvX36kdUem5/4IVb?=
+ =?us-ascii?Q?cBBa5lKkNuZpYp9MRCJTHYM7Z/lMm9/6cdBnnrUWTIbGYFUUAYH17jR8z7R5?=
+ =?us-ascii?Q?c/jJE/Qop4kg1F4Qppr6c4Y3RELqF2FF65it3E9bIDwr8xV5Wt6smS1LE4H7?=
+ =?us-ascii?Q?1PE+fKomYHchS1FrsqRy7kjPPCn2lIPUQ4gNbeTdU40Id/JsRGvkidbUN4Sq?=
+ =?us-ascii?Q?5VxkcvG8TURcwbnmSH6t2E+WfyCRTqzloEpqB9XJOnwkFCgxuChXQ9ynWRag?=
+ =?us-ascii?Q?jaMVhfr1/v+VziKwGhFPt9EmlH1fva13V9AyMRBaEtrlEIccOGXPv2HjRJju?=
+ =?us-ascii?Q?YHQzirTKRK6FSkLTJMsS3dS2j7+Lb4zXKG/0cUbf/m6c/h6kMPYE/NXn6X1d?=
+ =?us-ascii?Q?onwMnH6quSlMXYJaFbLMqqELdXx24N5mvwhJ0jzd+oOjcLY87HWInP9zW40i?=
+ =?us-ascii?Q?Gg0/YE0PpFaGOt/2QGBBteA8Z78BwpZcXNcbDF1c8DIJMryZNEwIM8hjIMEb?=
+ =?us-ascii?Q?9sRFdi7bflOotY7p0ofHx0NFGYvXpSGueD0zaaCUsbTahSlmP7LNxQOrXnGi?=
+ =?us-ascii?Q?Vol6hfA2vE3GAO5u2eT4BaKjSYzjTlL7vuv+l0H4e4Rg/00C2vzw2qP4iQgr?=
+ =?us-ascii?Q?DUn8OiduzodJ0NLUShLLrWSywMzwxyDo0Wx3J9wulUF6lExIOMJjmqJrmVHY?=
+ =?us-ascii?Q?CeJEeYcbSriCBQo7kyDsydlj0pway6czMMnI1KlrdVBy0OWq7iEfbA4FEp9L?=
+ =?us-ascii?Q?To6/mlJzjadv+NJy8Ky5AhLGkoHLoGAXzDhqXVWWhU4bYehM6797+c05DA4f?=
+ =?us-ascii?Q?uYv/ko7S57Wv5hv+RFV90mQX5OLpdQpbX2sbVHWBsbh16mCO/N6ANQzfw5l+?=
+ =?us-ascii?Q?BOO3IDbPEQH79ch3kXziBV9Fr6ezt21O5EgUeVmSHO2EcC857yrT+BgoBmBQ?=
+ =?us-ascii?Q?8978Q2GlxxUwop1SwghbzhH9KswXr4HmduB2i2OiteT5fUWphrzsPUKV0Hgy?=
+ =?us-ascii?Q?9FNN4PNAHzY+9YB2srrwng2YsKuVsmBVmxoaeHO7fABVlFp8fIWLHXfivG8A?=
+ =?us-ascii?Q?7ypFcw9rQJzPOfts9lsLT7pSq8Mt1rjiGv4CbCyiseKfd+5Jh0+5MKSSLbEW?=
+ =?us-ascii?Q?pmbACCdzN3RI7t0c07BxWHnEyG92d8+YSuHFpFQeMxpGco6rGranTEqkl+Pw?=
+ =?us-ascii?Q?4fh2Paczb+mDXgMpRmfMhNRdeV63Dj5SDBoQMSYkgu1NuE2Hq11SgQ9i/Kj8?=
+ =?us-ascii?Q?/Q=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <20ED1770BD05FD43BE4C650BFFE777F4@namprd13.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: hammerspace.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: da85e3c4-df41-4523-1d52-08dab920bdee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Oct 2022 20:12:30.2625
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 82kz8xueak2RBpGcXSpavVgfQgsJ39b6jRknBx8FDcx29vIvEOYk3FF48HMxPYuzeAQ4iJ0hH1hHNEtJO8jFfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR13MB4069
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-10-28 at 18:53 +0000, Chuck Lever III wrote:
+Hi Steve,
+
+> On Oct 28, 2022, at 14:50, Steven Rostedt <rostedt@goodmis.org> wrote:
 >=20
-> > On Oct 28, 2022, at 1:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Fri, 2022-10-28 at 17:21 +0000, Chuck Lever III wrote:
-> > >=20
-> > > > On Oct 28, 2022, at 11:51 AM, Jeff Layton <jlayton@kernel.org> wrot=
-e:
-> > > >=20
-> > > > On Fri, 2022-10-28 at 15:29 +0000, Chuck Lever III wrote:
-> > > > >=20
-> > > > > > On Oct 28, 2022, at 11:05 AM, Jeff Layton <jlayton@kernel.org> =
-wrote:
-> > > > > >=20
-> > > > > > The problem with not calling vfs_fsync is that we might miss wr=
-iteback
-> > > > > > errors. The nfsd_file could get reaped before a v3 COMMIT ever =
-comes in.
-> > > > > > nfsd would eventually reopen the file but it could miss seeing =
-the error
-> > > > > > if it got opened locally in the interim.
-> > > > >=20
-> > > > > That helps. So we're surfacing writeback errors for local writers=
-?
-> > > > >=20
-> > > >=20
-> > > > Well for non-v3 writers anyway. I suppose you could hit the same
-> > > > scenario with a mixed v3 and v4 workload if you were unlucky enough=
-, or
-> > > > mixed v3 and ksmbd workload, etc...
-> > > >=20
-> > > > > I guess I would like this flushing to interfere as little as poss=
-ible
-> > > > > with the server's happy zone, since it's not something clients ne=
-ed to
-> > > > > wait for, and an error is exceptionally rare.
-> > > > >=20
-> > > > > But also, we can't let writeback errors hold onto a bunch of memo=
-ry
-> > > > > indefinitely. How much nfsd_file and page cache memory might be b=
+> Trond,
+>=20
+> I'm looking at a commit from 2005:
+>=20
+> 0f9dc2b16884b ("RPC: Clean up socket autodisconnect")
+>=20
+>     Cancel autodisconnect requests inside xprt_transmit() in order to avo=
+id
+>     races.
+>     Use more efficient del_singleshot_timer_sync()
+>=20
+>=20
+> I'm working on adding a "shutdown" state to timers, making it required fo=
+r
+> freeing the timer. This is to address the numerous bugs we hit where time=
+rs
+> get rearmed just before freeing and then cause a crash in the timer code,
+> without knowing what timer it was that caused it.
+>=20
+> Having a specific shutdown state for timers will remove this problem
+> because if something tries to rearm a shutdown timer, it will fail and a
+> WARN_ON_ONCE() is triggered. See below in the "reply" part for a
+> description of this effort.
+>=20
+> The reason for this email, is because that WARN_ON_ONCE() triggered on th=
 e
-> > > > > pinned by a writeback error, and for how long?
-> > > > >=20
-> > > >=20
-> > > > You mean if we were to stop trying to fsync out when closing? We do=
-n't
-> > > > keep files in the cache indefinitely, even if they have writeback
-> > > > errors.
-> > > >=20
-> > > > In general, the kernel attempts to write things out, and if it fail=
-s it
-> > > > sets a writeback error in the mapping and marks the pages clean. So=
- if
-> > > > we're talking about files that are no longer being used (since they=
-'re
-> > > > being GC'ed), we only block reaping them for as long as writeback i=
-s in
-> > > > progress.
-> > > >=20
-> > > > Once writeback ends and it's eligible for reaping, we'll call vfs_f=
-sync
-> > > > a final time, grab the error and reset the write verifier when it's
-> > > > non-zero.
-> > > >=20
-> > > > If we stop doing fsyncs, then that model sort of breaks down. I'm n=
-ot
-> > > > clear on what you'd like to do instead.
-> > >=20
-> > > I'm not clear either. I think I just have some hand-wavy requirements=
-.
-> > >=20
-> > > I think keeping the flushes in the nfsd threads and away from single-
-> > > threaded garbage collection makes sense. Keep I/O in nfsd context, no=
-t
-> > > in the filecache garbage collector. I'm not sure that's guaranteed
-> > > if the garbage collection thread does an nfsd_file_put() that flushes=
-.
-> > >=20
-> >=20
-> > The garbage collector doesn't call nfsd_file_put directly, though it
-> > will call nfsd_file_free, which now does a vfs_fsync.
+> mod_timer() from:
 >=20
-> OK, thought I saw some email fly by that suggested using nfsd_file_put
-> in the garbage collector. But... the vfs_fsync you mention can possibly
-> trigger I/O and wait for it (it's not the SYNC_NONE flush) in the GC
-> thread. Rare, but I'd rather not have even that possibility if we can
-> avoid it.
+> static void
+> xprt_schedule_autodisconnect(struct rpc_xprt *xprt)
+> __must_hold(&xprt->transport_lock)
+> {
+> xprt->last_used =3D jiffies;
+> if (RB_EMPTY_ROOT(&xprt->recv_queue) && xprt_has_timer(xprt))
+> mod_timer(&xprt->timer, xprt->last_used + xprt->idle_timeout);
+> }
 >=20
+> That's because xptr->timer was shutdown due to:
 >=20
-> > > But, back to the topic of this patch: my own experiments with backgro=
-und
-> > > syncing showed that it introduces significant overhead and it wasn't
-> > > really worth the trouble. Basically, on intensive workloads, the garb=
-age
-> > > collector must not stall or live-lock because it's walking through
-> > > millions of pages trying to figure out which ones are dirty.
-> > >=20
-> >=20
-> > If this is what you want, then kicking off SYNC_NONE writeback when we
-> > put it on the LRU is the right thing to do.
-> >=20
-> > We want to ensure that when the thing is reaped from the LRU, that the
-> > final vfs_fsync has to write nothing back. The penultimate put that add=
-s
-> > it to the LRU is almost certainly going to come in the context of an
-> > nfsd thread, so kicking off background writeback at that point seems
-> > reasonable.
+> int
+> xprt_request_enqueue_receive(struct rpc_task *task)
+> {
+> [..]
+> /* Turn off autodisconnect */
+> del_singleshot_timer_sync(&xprt->timer);
+> return 0;
+> }
 >=20
-> IIUC the opposing idea is to do a synchronous writeback in nfsd_file_put
-> and then nothing in nfsd_file_free. Why isn't that adequate to achieve
-> the same result ?
+> Now singleshot means just that. It's a single shot and calling
+> del_singleshot_timer_sync() will shut it down so that it can be freed. Th=
+at
+> also means that it can no longer be re-armed.
 >=20
+> I'm not sure what you meant by "Use more efficient del_singleshot_timer_s=
+ync()"
+> but I'm guessing since that was written in 2005, it is no longer relevant=
+,
+> and del_timer_sync() should now be used.
+>=20
+> After replacing that with del_timer_sync(), the warning goes away.
+>=20
+> I just want to confirm that's OK with you.
 
-To make sure I understand:
+I seem to vaguely remember that at the time, del_timer_sync() would loop in=
+ order to catch re-arming timers, whereas del_singleshot_timer_sync() would=
+ not, hence the commit message. The expectation for del_singleshot_timer_sy=
+nc() was simply that the caller would ensure safety against re-arming, whic=
+h was indeed the case for this code.
 
-For the GC case (v3), you basically want to do a vfs_fsync after we put
-it onto the LRU list? We'd also do a vfs_fsync after the refcount goes
-to 0 in nfsd_file_put.
+However if that del_singleshot_timer_sync() expectation has been strengthen=
+ed to mean that you guarantee never to re-arm the timer at all, then I agre=
+e that we should switch to del_timer_sync().
 
-That seems...worse than what I'm proposing. We'll end up with a bunch of
-blocked nfsd threads for no reason. The writeback in most cases could
-proceed asynchronously, and we'll be idling an nfsd thread for the sole
-purpose of getting the result of that writeback.
+Thanks!
+  Trond
 
-I see no need to block an nfsd thread for this. If we kick off
-WB_SYNC_NONE writeback when we put it on the list, then by the time we
-get around to calling vfs_fsync for reaping the thing, it'll basically
-be a no-op. PAGECACHE_TAG_DIRTY should be clear and vfs_fsync will just
-scrape the wb error code and return without walking anything.
+_________________________________
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
-I get the goal of not idling the garbage collector for too long, but
-some of that may just be unavoidable. Tearing down a nfsd_file can just
-take a significant amount of time, between flushing data and close.
-
-> Thinking aloud:
->=20
-> - Suppose a client does some UNSTABLE NFSv3 WRITEs to a file
-> - The client then waits long enough for the nfsd_file to get aged out
->   of the filecache
-> - A local writer on the server triggers a writeback error on the file
-> - The error is cleared by other activity
-> - The client sends a COMMIT
->=20
-> Wouldn't the server miss the chance to bump its write verifier in that
-> case?
->=20
-
-Yep. That is the danger.
-
->=20
-> > Only files that aren't touched again get reaped off the LRU eventually,
-> > so there should be no danger of nfsd redirtying it again.
->=20
-> At the risk of rat-holing... IIUC the only case we should care about
-> is if there are outstanding NFSv3 WRITEs that haven't been COMMITed.
-> Seems like NFSv3-specific code, and not the filecache, should deal
-> with that case, and leave nfsd_file_put/free out of it...? Again, no
-> clear idea how it would, but just thinking about the layering here.
->=20
-
-No idea how we'd do that. The filecache is what gives us persistent
-"state" across disparate RPCs with v3. I think this is where the
-solution has to be handled.
-
-
->=20
-> > By the time we
-> > get to reaping it, everything should be written back and the inode will
-> > be ready to close with little delay.
->=20
->=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
