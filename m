@@ -2,31 +2,31 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4230261151D
+	by mail.lfdr.de (Postfix) with ESMTP id 9325C61151F
 	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 16:49:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231553AbiJ1OtH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 10:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38528 "EHLO
+        id S229730AbiJ1OtI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 10:49:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231283AbiJ1Os3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 10:48:29 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C15A1F8128
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 07:47:28 -0700 (PDT)
+        with ESMTP id S231310AbiJ1Osb (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 10:48:31 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564231F8103
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 07:47:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 38E6CCE2BD5
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 14:47:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F743C433C1;
-        Fri, 28 Oct 2022 14:47:23 +0000 (UTC)
-Subject: [PATCH v7 08/14] NFSD: Update file_hashtbl() helpers
+        by ams.source.kernel.org (Postfix) with ESMTPS id 14364B82AA2
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 14:47:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BCE0C433D6;
+        Fri, 28 Oct 2022 14:47:29 +0000 (UTC)
+Subject: [PATCH v7 09/14] NFSD: Clean up nfsd4_init_file()
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
 Cc:     neilb@suse.de, jlayton@redhat.com
-Date:   Fri, 28 Oct 2022 10:47:22 -0400
-Message-ID: <166696844244.106044.9547058764290901363.stgit@klimt.1015granger.net>
+Date:   Fri, 28 Oct 2022 10:47:28 -0400
+Message-ID: <166696844871.106044.39412279713347759.stgit@klimt.1015granger.net>
 In-Reply-To: <166696812922.106044.679812521105874329.stgit@klimt.1015granger.net>
 References: <166696812922.106044.679812521105874329.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev3+g9561319
@@ -42,35 +42,56 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Enable callers to use const pointers for type safety.
+Name this function more consistently. I'm going to use nfsd4_file_
+and nfsd4_file_hash_ for these helpers.
+
+Change the @fh parameter to be const pointer for better type safety.
+
+Finally, move the hash insertion operation to the caller. This is
+typical for most other "init_object" type helpers, and it is where
+most of the other nfs4_file hash table operations are located.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 Reviewed-by: NeilBrown <neilb@suse.de>
 ---
- fs/nfsd/nfs4state.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/nfsd/nfs4state.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 2e6e1ee096b5..60f1aa2c5442 100644
+index 60f1aa2c5442..3132e4844ef8 100644
 --- a/fs/nfsd/nfs4state.c
 +++ b/fs/nfsd/nfs4state.c
-@@ -710,7 +710,7 @@ static unsigned int ownerstr_hashval(struct xdr_netobj *ownername)
- #define FILE_HASH_BITS                   8
- #define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
+@@ -4262,11 +4262,9 @@ static struct nfs4_file *nfsd4_alloc_file(void)
+ }
  
--static unsigned int file_hashval(struct svc_fh *fh)
-+static unsigned int file_hashval(const struct svc_fh *fh)
- {
- 	struct inode *inode = d_inode(fh->fh_dentry);
+ /* OPEN Share state helper functions */
+-static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
+-				struct nfs4_file *fp)
+-{
+-	lockdep_assert_held(&state_lock);
  
-@@ -4671,7 +4671,7 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
++static void nfsd4_file_init(const struct svc_fh *fh, struct nfs4_file *fp)
++{
+ 	refcount_set(&fp->fi_ref, 1);
+ 	spin_lock_init(&fp->fi_lock);
+ 	INIT_LIST_HEAD(&fp->fi_stateids);
+@@ -4284,7 +4282,6 @@ static void nfsd4_init_file(struct svc_fh *fh, unsigned int hashval,
+ 	INIT_LIST_HEAD(&fp->fi_lo_states);
+ 	atomic_set(&fp->fi_lo_recalls, 0);
+ #endif
+-	hlist_add_head_rcu(&fp->fi_hash, &file_hashtbl[hashval]);
+ }
  
- /* search file_hashtbl[] for file */
- static struct nfs4_file *
--find_file_locked(struct svc_fh *fh, unsigned int hashval)
-+find_file_locked(const struct svc_fh *fh, unsigned int hashval)
- {
- 	struct nfs4_file *fp;
- 
+ void
+@@ -4702,7 +4699,8 @@ static struct nfs4_file *insert_file(struct nfs4_file *new, struct svc_fh *fh,
+ 			fp->fi_aliased = alias_found = true;
+ 	}
+ 	if (likely(ret == NULL)) {
+-		nfsd4_init_file(fh, hashval, new);
++		nfsd4_file_init(fh, new);
++		hlist_add_head_rcu(&new->fi_hash, &file_hashtbl[hashval]);
+ 		new->fi_aliased = alias_found;
+ 		ret = new;
+ 	}
 
 
