@@ -2,377 +2,186 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FDE961100B
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 13:51:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9460D6110F6
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 14:14:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbiJ1Lvm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 07:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46256 "EHLO
+        id S229877AbiJ1MOC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 08:14:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229597AbiJ1Lvl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 07:51:41 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D0F0E1976
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 04:50:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666957839;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zrsABDzhoZ0tYKN2ksxnP6hS+6QOXpVoJUDTkvvNLjI=;
-        b=bRCNYn6fTs4a7Rf0d0egXmmuZCbT75FC+25taXcGd4327Oi7gRruOrGHKNIGJnNKk+O5Zw
-        oUTGoHl0UCdDwHucHR0qONyDbbqD0nqc3xRL+Uu8R7ratyBmtgfaQzO+txAiIQa+wA+pHs
-        uj27a7A5ZJWlKFVroJK4FroQTYbhado=
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com
- [209.85.215.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-675-2NZp_pYNMby1lq1KOAJnQg-1; Fri, 28 Oct 2022 07:50:38 -0400
-X-MC-Unique: 2NZp_pYNMby1lq1KOAJnQg-1
-Received: by mail-pg1-f200.google.com with SMTP id g66-20020a636b45000000b0043a256d3639so2445463pgc.12
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 04:50:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zrsABDzhoZ0tYKN2ksxnP6hS+6QOXpVoJUDTkvvNLjI=;
-        b=GOFmPZ3pftxgEY9B57XFOh4dCp3YvDuOOLzuyDNgYVReNRg504ouqkliTuzEFBKF/N
-         q2hGtFLluARpSaS7BCYAyJ7JuSLDStWVxIeXMJSexnLPZybxt88Zdeq1EDZqJBUlDLD3
-         QUg5mpdQxqMPtMMqTHG0SVoTUN33iYOpINoUvZYUQrAYx848COtzUToXsfG7VNOdVfnh
-         QBkW1PmWVXeiL9IX7/cAaXt72HnXtFBLGuIJo6Pr5UhIbumoIXqZgYpGTB9yJ0lJQljU
-         q2r5N3uKeIw59yIO0ghM/hnTK0G+DhnY6N8Aahc8rfEnZ6PkNpti/oDwBrJc5ZoxjBoC
-         o0lg==
-X-Gm-Message-State: ACrzQf1oc7UHuWQ6JwVzbc0IWxysV7guj/304uA6naekOw2Y1EtM2M29
-        emrz6EVBfJvjL6ogyW25gdOk3/SzLEmzny4p1oUCQxPebQNLZJiP02f56+bV0fNcMmg8pWvZcAA
-        O4a1hewpkWzSoUVnDWrzRIlbtXT2sbw4efB/s
-X-Received: by 2002:a05:6a00:224c:b0:56c:40ff:7709 with SMTP id i12-20020a056a00224c00b0056c40ff7709mr15574015pfu.59.1666957836861;
-        Fri, 28 Oct 2022 04:50:36 -0700 (PDT)
-X-Google-Smtp-Source: AMsMyM7xVRotpB8OS+oDZKXttm1TzqQmuAxhaCXH5xm1m6qGWmq0G8V6l9apLDeAif4QZrTlyIaaYonoarxaKRU4k+k=
-X-Received: by 2002:a05:6a00:224c:b0:56c:40ff:7709 with SMTP id
- i12-20020a056a00224c00b0056c40ff7709mr15573974pfu.59.1666957836460; Fri, 28
- Oct 2022 04:50:36 -0700 (PDT)
+        with ESMTP id S230372AbiJ1MN5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 08:13:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BE1DB55A
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 05:13:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CDD4D62406
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 12:13:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6D9C433C1;
+        Fri, 28 Oct 2022 12:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666959235;
+        bh=DXkS6Q6aZhglA8HoJx1goLAEaaCiiXjSiqYHA7tG1ok=;
+        h=From:To:Cc:Subject:Date:From;
+        b=GfyumwwPTWYeyCwKavL85QdweeB8wYpVdzk2DVnVMapcMlfu8ybjyNIIJofEJBXbZ
+         yJKQOul27lB/gYPz3vDGGAU7PJaQqf9HVJx5WlTQq8nbWwW/qBFcB3JgBGPNANvQ4e
+         airARP13RfH4DdD6VbDUi2Ch0yLE8bhaCUcCQkfx4o1P7aMKZv6YctnwEhwoRE7zlO
+         0GpbglGR/NPj1RnFnwp6Lo3gfWmKB5IXZ7TtFxkCiwhM5sE7vAEXMI34YMNKAO+hPl
+         pHpGH7MDiCb5f89ll+a1FR8KpZdKCviFb3QUc68LkPovrr/NJ2ZLWf2uHaEID52OJu
+         R09TSq+Ffq64w==
+From:   Jeff Layton <jlayton@kernel.org>
+To:     chuck.lever@oracle.com
+Cc:     linux-nfs@vger.kernel.org, Zhi Li <yieli@redhat.com>
+Subject: [PATCH] nfsd: don't call nfsd_file_put from client states seqfile display
+Date:   Fri, 28 Oct 2022 08:13:53 -0400
+Message-Id: <20221028121353.33567-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-References: <20221017105212.77588-1-dwysocha@redhat.com> <20221017105212.77588-4-dwysocha@redhat.com>
- <870684b35a45b94c426554a62b63f80f421dbb08.camel@kernel.org>
-In-Reply-To: <870684b35a45b94c426554a62b63f80f421dbb08.camel@kernel.org>
-From:   David Wysochanski <dwysocha@redhat.com>
-Date:   Fri, 28 Oct 2022 07:50:00 -0400
-Message-ID: <CALF+zOm+-2QLOMu4J7NAK++xfjZ8SQqmMh8zNFcM2H78_qYAzA@mail.gmail.com>
-Subject: Re: [PATCH v9 3/5] NFS: Convert buffered read paths to use netfs when
- fscache is enabled
-To:     Trond Myklebust <trondmy@kernel.org>
-Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
-        linux-cachefs@redhat.com, Benjamin Maynard <benmaynard@google.com>,
-        Daire Byrne <daire.byrne@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Thu, Oct 27, 2022 at 3:16 PM Trond Myklebust <trondmy@kernel.org> wrote:
->
-> On Mon, 2022-10-17 at 06:52 -0400, Dave Wysochanski wrote:
-> > Convert the NFS buffered read code paths to corresponding netfs APIs,
-> > but only when fscache is configured and enabled.
-> >
-> > The netfs API defines struct netfs_request_ops which must be filled
-> > in by the network filesystem.  For NFS, we only need to define 5 of
-> > the functions, the main one being the issue_read() function.
-> > The issue_read() function is called by the netfs layer when a read
-> > cannot be fulfilled locally, and must be sent to the server (either
-> > the cache is not active, or it is active but the data is not
-> > available).
-> > Once the read from the server is complete, netfs requires a call to
-> > netfs_subreq_terminated() which conveys either how many bytes were
-> > read
-> > successfully, or an error.  Note that issue_read() is called with a
-> > structure, netfs_io_subrequest, which defines the IO requested, and
-> > contains a start and a length (both in bytes), and assumes the
-> > underlying
-> > netfs will return a either an error on the whole region, or the
-> > number
-> > of bytes successfully read.
-> >
-> > The NFS IO path is page based and the main APIs are the pgio APIs
-> > defined
-> > in pagelist.c.  For the pgio APIs, there is no way for the caller to
-> > know how many RPCs will be sent and how the pages will be broken up
-> > into underlying RPCs, each of which will have their own completion
-> > and
-> > return code.  In contrast, netfs is subrequest based, a single
-> > subrequest may contain multiple pages, and a single subrequest is
-> > initiated with issue_read() and terminated with
-> > netfs_subreq_terminated().
-> > Thus, to utilze the netfs APIs, NFS needs some way to accommodate
-> > the netfs API requirement on the single response to the whole
-> > subrequest, while also minimizing disruptive changes to the NFS
-> > pgio layer.
-> >
-> > The approach taken with this patch is to allocate a small structure
-> > for each nfs_netfs_issue_read() call, store the final error and
-> > number
-> > of bytes successfully transferred in the structure, and update these
-> > values
-> > as each RPC completes.  The refcount on the structure is used as a
-> > marker
-> > for the last RPC completion, is incremented in
-> > nfs_netfs_read_initiate(),
-> > and decremented inside nfs_netfs_read_completion(), when a
-> > nfs_pgio_header
-> > contains a valid pointer to the data.  On the final put (which
-> > signals
-> > the final outstanding RPC is complete) in
-> > nfs_netfs_read_completion(),
-> > call netfs_subreq_terminated() with either the final error value (if
-> > one or more READs complete with an error) or the number of bytes
-> > successfully transferred (if all RPCs complete successfully).  Note
-> > that when all RPCs complete successfully, the number of bytes
-> > transferred
-> > is capped to the length of the subrequest.  Capping the transferred
-> > length
-> > to the subrequest length prevents "Subreq overread" warnings from
-> > netfs.
-> > This is due to the "aligned_len" in nfs_pageio_add_page(), and the
-> > corner case where NFS requests a full page at the end of the file,
-> > even when i_size reflects only a partial page (NFS overread).
-> >
-> > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> > Reviewed-by: Jeff Layton <jlayton@kernel.org>
->
->
-> This is not doing what I asked for, which was to separate out the
-> fscache functionality, so that we can call that if and when it is
-> available.
->
-I must have misunderstood then.
+We had a report of this:
 
-The last feedback I have from you was that you wanted it to be
-an opt-in feature, and it was a comment on a previous patch
-to Kconfig.  I was proceeding the best I knew how, but
-let me try to get back on track.
+    BUG: sleeping function called from invalid context at fs/nfsd/filecache.c:440
 
-> Instead, it is just wrapping the NFS requests inside netfs requests. As
-> it stands, that means it is just duplicating information, and adding
-> unnecessary overhead to the standard I/O path (extra allocations, extra
-> indirect calls, and extra bloat to the inode).
->
-I think I understand what you're saying but I'm not sure.  Let me
-ask some clarifying questions.
+...with a stack trace showing nfsd_file_put being called from
+nfs4_show_open. This code has always tried to call fput while holding a
+spinlock, but we recently changed this to use the filecache, and that
+started triggering the might_sleep() in nfsd_file_put.
 
-Are you objecting to the code when CONFIG_NFS_FSCACHE is
-configured?  Or when it is not?  Or both?  I think you're objecting
-when it's configured, but not enabled (we mount without 'fsc').
-Am I right?
+states_start takes and holds the cl_lock while iterating over the
+client's states, and we can't sleep with that held.
 
-Also, are you objecting to the design that to use fcache we now
-have to use netfs, specifically:
-- call into netfs via either netfs_read_folio or netfs_readahead
-- if fscache is enabled, then the IO can be satisfied from fscache
-- if fscache is not enabled, or some of the IO cannot be satisfied
-from the cache, then NFS is called back via netfs_issue_read
-and we use the normal NFS read pageio interface.  This requires
-we call netfs_subreq_terminated() when all the RPCs complete,
-which is the reason for the small changes to pagelist.c
+Have the various nfs4_show_* functions instead hold the fi_lock instead
+of taking a nfsd_file reference.
 
-Can you be more specific as to the portions of the patch you don't like
-so I can move it in the right direction?
+Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2138357
+Reported-by: Zhi Li <yieli@redhat.com>
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+---
+ fs/nfsd/nfs4state.c | 51 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 33 insertions(+), 18 deletions(-)
 
-This is from patch #2 which you didn't comment on.  I'm not sure you're
-ok with it though, since you mention "extra bloat to the inode".
-Do you object to this even though it's wrapped in an
-#ifdef CONFIG_NFS_FSCACHE?  If so, do you require no
-extra size be added to nfs_inode?
-
-@@ -204,9 +208,11 @@ struct nfs_inode {
-        __u64 write_io;
-        __u64 read_io;
- #ifdef CONFIG_NFS_FSCACHE
--       struct fscache_cookie   *fscache;
--#endif
-+       struct netfs_inode      netfs; /* netfs context and VFS inode */
-+#else
-        struct inode            vfs_inode;
-+#endif
+diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
+index 1ded89235111..dde621debeb2 100644
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -675,15 +675,26 @@ find_any_file(struct nfs4_file *f)
+ 	return ret;
+ }
+ 
+-static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
++static struct nfsd_file *find_any_file_locked(struct nfs4_file *f)
+ {
+-	struct nfsd_file *ret = NULL;
++	lockdep_assert_held(&f->fi_lock);
 +
-
-
-Are you ok with the stub functions which are placed in fscache.h, and
-when CONFIG_NFS_FSCACHE is not set, become either a no-op
-or a 1-liner (nfs_netfs_readpage_release)?
-
- #else /* CONFIG_NFS_FSCACHE */
-+static inline void nfs_netfs_inode_init(struct nfs_inode *nfsi) {}
-+static inline void nfs_netfs_initiate_read(struct nfs_pgio_header *hdr) {}
-+static inline void nfs_netfs_read_completion(struct nfs_pgio_header *hdr) {}
-+static inline void nfs_netfs_readpage_release(struct nfs_page *req)
-+{
-+       unlock_page(req->wb_page);
++	if (f->fi_fds[O_RDWR])
++		return f->fi_fds[O_RDWR];
++	if (f->fi_fds[O_WRONLY])
++		return f->fi_fds[O_WRONLY];
++	if (f->fi_fds[O_RDONLY])
++		return f->fi_fds[O_RDONLY];
++	return NULL;
 +}
- static inline void nfs_fscache_release_super_cookie(struct super_block *sb) {}
- static inline void nfs_fscache_init_inode(struct inode *inode) {}
-
-
-Do you object to the below?  If so, then do you want
-#ifdef CONFIG_NFS_FSCACHE here?
-
--- a/fs/nfs/inode.c
-+++ b/fs/nfs/inode.c
-@@ -2249,6 +2249,8 @@ struct inode *nfs_alloc_inode(struct super_block *sb)
- #ifdef CONFIG_NFS_V4_2
-        nfsi->xattr_cache = NULL;
- #endif
-+       nfs_netfs_inode_init(nfsi);
 +
-        return VFS_I(nfsi);
++static struct nfsd_file *find_deleg_file_locked(struct nfs4_file *f)
++{
++	lockdep_assert_held(&f->fi_lock);
+ 
+-	spin_lock(&f->fi_lock);
+ 	if (f->fi_deleg_file)
+-		ret = nfsd_file_get(f->fi_deleg_file);
+-	spin_unlock(&f->fi_lock);
+-	return ret;
++		return f->fi_deleg_file;
++	return NULL;
  }
- EXPORT_SYMBOL_GPL(nfs_alloc_i
-node);
-
-
-Do you object to the changes in fs/nfs/read.c?  Specifically,
-how about the below calls to netfs from nfs_read_folio and
-nfs_readahead into equivalent netfs calls?  So when
-NFS_CONFIG_FSCACHE is set, but fscache is not enabled
-('fsc' not on mount), these netfs functions do immediately call
-netfs_alloc_request().  But I wonder if we could simply add a
-check to see if fscache is enabled on the mount, and skip
-over to satisfy what you want.  Am I understanding what you
-want?
-
-@@ -355,6 +343,10 @@ int nfs_read_folio(struct file *file, struct folio *folio)
-        if (NFS_STALE(inode))
-                goto out_unlock;
-
-+       ret = nfs_netfs_read_folio(file, folio);
-+       if (!ret)
-+               goto out;
+ 
+ static atomic_long_t num_delegations;
+@@ -2616,9 +2627,11 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ 	ols = openlockstateid(st);
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+-	file = find_any_file(nf);
 +
-
-@@ -405,6 +399,10 @@ void nfs_readahead(struct readahead_control *ractl)
-        if (NFS_STALE(inode))
-                goto out;
-
-+       ret = nfs_netfs_readahead(ractl);
-+       if (!ret)
-+               goto out;
-+
-
-
-And how about these calls from different points in the read
-path to the earlier mentioned stub functions?
-
-@@ -110,20 +110,13 @@ EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
-
- static void nfs_readpage_release(struct nfs_page *req, int error)
- {
--       struct inode *inode = d_inode(nfs_req_openctx(req)->dentry);
-        struct page *page = req->wb_page;
-
--       dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb->s_id,
--               (unsigned long long)NFS_FILEID(inode), req->wb_bytes,
--               (long long)req_offset(req));
++	spin_lock(&nf->fi_lock);
++	file = find_any_file_locked(nf);
+ 	if (!file)
+-		return 0;
++		goto out;
+ 
+ 	seq_printf(s, "- ");
+ 	nfs4_show_stateid(s, &st->sc_stateid);
+@@ -2640,8 +2653,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
+ 	seq_printf(s, ", ");
+ 	nfs4_show_owner(s, oo);
+ 	seq_printf(s, " }\n");
+-	nfsd_file_put(file);
 -
-        if (nfs_error_is_fatal_on_server(error) && error != -ETIMEDOUT)
-                SetPageError(page);
--       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
--               if (PageUptodate(page))
--                       nfs_fscache_write_page(inode, page);
--               unlock_page(page);
--       }
-+       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE))
-+               nfs_netfs_readpage_release(req);
-+
-        nfs_release_request(req);
++out:
++	spin_unlock(&nf->fi_lock);
+ 	return 0;
  }
-
-@@ -177,6 +170,8 @@ static void nfs_read_completion(struct nfs_pgio_header *hdr)
-                nfs_list_remove_request(req);
-                nfs_readpage_release(req, error);
-        }
-+       nfs_netfs_read_completion(hdr);
-+
- out:
-        hdr->release(hdr);
+ 
+@@ -2655,9 +2668,10 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	ols = openlockstateid(st);
+ 	oo = ols->st_stateowner;
+ 	nf = st->sc_file;
+-	file = find_any_file(nf);
++	spin_lock(&nf->fi_lock);
++	file = find_any_file_locked(nf);
+ 	if (!file)
+-		return 0;
++		goto out;
+ 
+ 	seq_printf(s, "- ");
+ 	nfs4_show_stateid(s, &st->sc_stateid);
+@@ -2677,8 +2691,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
+ 	seq_printf(s, ", ");
+ 	nfs4_show_owner(s, oo);
+ 	seq_printf(s, " }\n");
+-	nfsd_file_put(file);
+-
++out:
++	spin_unlock(&nf->fi_lock);
+ 	return 0;
  }
-@@ -187,6 +182,7 @@ static void nfs_initiate_read(struct nfs_pgio_header *hdr,
-                              struct rpc_task_setup *task_setup_data, int how)
- {
-        rpc_ops->read_setup(hdr, msg);
-+       nfs_netfs_initiate_read(hdr);
-        trace_nfs_initiate_read(hdr);
+ 
+@@ -2690,9 +2704,10 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 
+ 	ds = delegstateid(st);
+ 	nf = st->sc_file;
+-	file = find_deleg_file(nf);
++	spin_lock(&nf->fi_lock);
++	file = find_deleg_file_locked(nf);
+ 	if (!file)
+-		return 0;
++		goto out;
+ 
+ 	seq_printf(s, "- ");
+ 	nfs4_show_stateid(s, &st->sc_stateid);
+@@ -2708,8 +2723,8 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
+ 	seq_printf(s, ", ");
+ 	nfs4_show_fname(s, file);
+ 	seq_printf(s, " }\n");
+-	nfsd_file_put(file);
+-
++out:
++	spin_unlock(&nf->fi_lock);
+ 	return 0;
  }
-
-
-Are you ok with these additions?  Something like this would
-be required in the case of fscache configured and enabled,
-because we could have some of the data in a read in
-fscache, and some not.  That is the reason for the netfs
-design, and why we need to be able to call the normal
-NFS read IO path (netfs calls into issue_read, and we call
-back via netfs_subreq_terminated)?
-
-@@ -101,6 +101,9 @@ struct nfs_pageio_descriptor {
-        struct pnfs_layout_segment *pg_lseg;
-        struct nfs_io_completion *pg_io_completion;
-        struct nfs_direct_req   *pg_dreq;
-+#ifdef CONFIG_NFS_FSCACHE
-+       void                    *pg_netfs;
-+#endif
-
-@@ -1619,6 +1619,9 @@ struct nfs_pgio_header {
-        const struct nfs_rw_ops *rw_ops;
-        struct nfs_io_completion *io_completion;
-        struct nfs_direct_req   *dreq;
-+#ifdef CONFIG_NFS_FSCACHE
-+       void                    *netfs;
-+#endif
-
-
-And these additions to pagelist.c?
-
-@@ -68,6 +69,10 @@ void nfs_pgheader_init(struct nfs_pageio_descriptor *desc,
-        hdr->good_bytes = mirror->pg_count;
-        hdr->io_completion = desc->pg_io_completion;
-        hdr->dreq = desc->pg_dreq;
-+#ifdef CONFIG_NFS_FSCACHE
-+       if (desc->pg_netfs)
-+               hdr->netfs = desc->pg_netfs;
-+#endif
-
-
-@@ -846,6 +851,9 @@ void nfs_pageio_init(struct nfs_pageio_descriptor *desc,
-        desc->pg_lseg = NULL;
-        desc->pg_io_completion = NULL;
-        desc->pg_dreq = NULL;
-+#ifdef CONFIG_NFS_FSCACHE
-+       desc->pg_netfs = NULL;
-+#endif
-
-
-@@ -1360,6 +1369,9 @@ int nfs_pageio_resend(struct nfs_pageio_descriptor *desc,
-
-        desc->pg_io_completion = hdr->io_completion;
-        desc->pg_dreq = hdr->dreq;
-+#ifdef CONFIG_NFS_FSCACHE
-+       desc->pg_netfs = hdr->netfs;
-+#endif
-
-
-> My expectation is that the standard I/O path should have minimal
-> overhead, and should certainly not increase the overhead that we
-> already have. Will this be addressed in future iterations of these
-> patches?
->
-
-I will do what I can to satisfy what you want, either by fixing up
-this patch or follow-on patches.  Hopefully the above questions
-will clarify the next steps.
+ 
+-- 
+2.37.3
 
