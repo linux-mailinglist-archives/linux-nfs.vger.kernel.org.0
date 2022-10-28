@@ -2,233 +2,203 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1FBE7611526
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 16:49:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C2B2611571
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 17:05:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231418AbiJ1Ot0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 10:49:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
+        id S231214AbiJ1PFW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 11:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231528AbiJ1OtE (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 10:49:04 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3331A202701
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 07:48:03 -0700 (PDT)
+        with ESMTP id S229817AbiJ1PFS (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 11:05:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5461D5C95B
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 08:05:11 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9766DB82AA2
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 14:48:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23B67C433D6;
-        Fri, 28 Oct 2022 14:48:01 +0000 (UTC)
-Subject: [PATCH v7 14/14] NFSD: Use rhashtable for managing nfs4_file objects
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     neilb@suse.de, jlayton@redhat.com
-Date:   Fri, 28 Oct 2022 10:48:00 -0400
-Message-ID: <166696848023.106044.12150149492678240864.stgit@klimt.1015granger.net>
-In-Reply-To: <166696812922.106044.679812521105874329.stgit@klimt.1015granger.net>
-References: <166696812922.106044.679812521105874329.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5.dev3+g9561319
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EA64262906
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 15:05:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9169C433D6;
+        Fri, 28 Oct 2022 15:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666969510;
+        bh=q6qbx9E39EZoCKWS4VIzviiamLW0NoH2CRzvecowd58=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=B2qNITlYHfz8uIwSFqlTUq2YWTS+n5lZHdq5in22uWDlWG2G4h26IQOxssyDxUHt4
+         1UHZVl+6C6qKHhZul1spse4qxXj2jHvnU3MZ1eFoby6nCIheodD5ryY9/hvP329Z30
+         QDEFUnrOyDyv9PM8lT4eWIXAosBNi5EtRGIZq1kxI6hJD5G7ie18g51XmMLEAATSbK
+         n4D5xwiTcA07yeKustTN8l/BZBTvi0+mxJVqNR0w48ddnTNh5C+r6EvT4klnIHR91/
+         Y3OT47tbut6Ktgb+KjYU/lLGdf5kc3LcZ5vr7WaR6gi9R/qIA0rKD7t+MIGJIvNwGD
+         Bi9nzkUydTbmg==
+Message-ID: <ae07f54d107cf1848c0a36dd16e437185a0304c3.camel@kernel.org>
+Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
+ nfsd_file to the LRU
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        Neil Brown <neilb@suse.de>
+Date:   Fri, 28 Oct 2022 11:05:08 -0400
+In-Reply-To: <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
+References: <20221027215213.138304-1-jlayton@kernel.org>
+         <20221027215213.138304-4-jlayton@kernel.org>
+         <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-fh_match() is costly, especially when filehandles are large (as is
-the case for NFSv4). It needs to be used sparingly when searching
-data structures. Unfortunately, with common workloads, I see
-multiple thousands of objects stored in file_hashtbl[], which has
-just 256 buckets, making its bucket hash chains quite lengthy.
-
-Walking long hash chains with the state_lock held blocks other
-activity that needs that lock. Sizable hash chains are a common
-occurrance once the server has handed out some delegations, for
-example -- IIUC, each delegated file is held open on the server by
-an nfs4_file object.
-
-To help mitigate the cost of searching with fh_match(), replace the
-nfs4_file hash table with an rhashtable, which can dynamically
-resize its bucket array to minimize hash chain length.
-
-The result of this modification is an improvement in the latency of
-NFSv4 operations, and the reduction of nfsd CPU utilization due to
-eliminating the cost of multiple calls to fh_match() and reducing
-the CPU cache misses incurred while walking long hash chains in the
-nfs4_file hash table.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Reviewed-by: NeilBrown <neilb@suse.de>
----
- fs/nfsd/nfs4state.c |   77 ++++++++++++++++++++++++++-------------------------
- fs/nfsd/state.h     |    4 ---
- 2 files changed, 40 insertions(+), 41 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index c2ef2db9c84c..c78b66e678dd 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -591,11 +591,8 @@ static void nfsd4_free_file_rcu(struct rcu_head *rcu)
- void
- put_nfs4_file(struct nfs4_file *fi)
- {
--	might_lock(&state_lock);
--
--	if (refcount_dec_and_lock(&fi->fi_ref, &state_lock)) {
-+	if (refcount_dec_and_test(&fi->fi_ref)) {
- 		nfsd4_file_hash_remove(fi);
--		spin_unlock(&state_lock);
- 		WARN_ON_ONCE(!list_empty(&fi->fi_clnt_odstate));
- 		WARN_ON_ONCE(!list_empty(&fi->fi_delegations));
- 		call_rcu(&fi->fi_rcu, nfsd4_free_file_rcu);
-@@ -709,20 +706,6 @@ static unsigned int ownerstr_hashval(struct xdr_netobj *ownername)
- 	return ret & OWNER_HASH_MASK;
- }
- 
--/* hash table for nfs4_file */
--#define FILE_HASH_BITS                   8
--#define FILE_HASH_SIZE                  (1 << FILE_HASH_BITS)
--
--static unsigned int file_hashval(const struct svc_fh *fh)
--{
--	struct inode *inode = d_inode(fh->fh_dentry);
--
--	/* XXX: why not (here & in file cache) use inode? */
--	return (unsigned int)hash_long(inode->i_ino, FILE_HASH_BITS);
--}
--
--static struct hlist_head file_hashtbl[FILE_HASH_SIZE];
--
- static struct rhltable nfs4_file_rhltable ____cacheline_aligned_in_smp;
- 
- static const struct rhashtable_params nfs4_file_rhash_params = {
-@@ -4687,12 +4670,14 @@ move_to_close_lru(struct nfs4_ol_stateid *s, struct net *net)
- static noinline_for_stack struct nfs4_file *
- nfsd4_file_hash_lookup(const struct svc_fh *fhp)
- {
--	unsigned int hashval = file_hashval(fhp);
-+	struct inode *inode = d_inode(fhp->fh_dentry);
-+	struct rhlist_head *tmp, *list;
- 	struct nfs4_file *fi;
- 
- 	rcu_read_lock();
--	hlist_for_each_entry_rcu(fi, &file_hashtbl[hashval], fi_hash,
--				 lockdep_is_held(&state_lock)) {
-+	list = rhltable_lookup(&nfs4_file_rhltable, &inode,
-+			       nfs4_file_rhash_params);
-+	rhl_for_each_entry_rcu(fi, tmp, list, fi_rlist) {
- 		if (fh_match(&fi->fi_fhandle, &fhp->fh_handle)) {
- 			if (refcount_inc_not_zero(&fi->fi_ref)) {
- 				rcu_read_unlock();
-@@ -4706,40 +4691,56 @@ nfsd4_file_hash_lookup(const struct svc_fh *fhp)
- 
- /*
-  * On hash insertion, identify entries with the same inode but
-- * distinct filehandles. They will all be in the same hash bucket
-- * because nfs4_file's are hashed by the address in the fi_inode
-- * field.
-+ * distinct filehandles. They will all be on the list returned
-+ * by rhltable_lookup().
-+ *
-+ * inode->i_lock prevents racing insertions from adding an entry
-+ * for the same inode/fhp pair twice.
-  */
- static noinline_for_stack struct nfs4_file *
- nfsd4_file_hash_insert(struct nfs4_file *new, const struct svc_fh *fhp)
- {
--	unsigned int hashval = file_hashval(fhp);
-+	struct inode *inode = d_inode(fhp->fh_dentry);
-+	struct rhlist_head *tmp, *list;
- 	struct nfs4_file *ret = NULL;
- 	bool alias_found = false;
- 	struct nfs4_file *fi;
-+	int err;
- 
--	spin_lock(&state_lock);
--	hlist_for_each_entry_rcu(fi, &file_hashtbl[hashval], fi_hash,
--				 lockdep_is_held(&state_lock)) {
-+	rcu_read_lock();
-+	spin_lock(&inode->i_lock);
-+
-+	list = rhltable_lookup(&nfs4_file_rhltable, &inode,
-+			       nfs4_file_rhash_params);
-+	rhl_for_each_entry_rcu(fi, tmp, list, fi_rlist) {
- 		if (fh_match(&fi->fi_fhandle, &fhp->fh_handle)) {
- 			if (refcount_inc_not_zero(&fi->fi_ref))
- 				ret = fi;
--		} else if (d_inode(fhp->fh_dentry) == fi->fi_inode)
-+		} else
- 			fi->fi_aliased = alias_found = true;
- 	}
--	if (likely(ret == NULL)) {
--		nfsd4_file_init(fhp, new);
--		hlist_add_head_rcu(&new->fi_hash, &file_hashtbl[hashval]);
--		new->fi_aliased = alias_found;
--		ret = new;
--	}
--	spin_unlock(&state_lock);
-+	if (ret)
-+		goto out_unlock;
-+
-+	nfsd4_file_init(fhp, new);
-+	err = rhltable_insert(&nfs4_file_rhltable, &new->fi_rlist,
-+			      nfs4_file_rhash_params);
-+	if (err)
-+		goto out_unlock;
-+
-+	new->fi_aliased = alias_found;
-+	ret = new;
-+
-+out_unlock:
-+	spin_unlock(&inode->i_lock);
-+	rcu_read_unlock();
- 	return ret;
- }
- 
- static noinline_for_stack void nfsd4_file_hash_remove(struct nfs4_file *fi)
- {
--	hlist_del_rcu(&fi->fi_hash);
-+	rhltable_remove(&nfs4_file_rhltable, &fi->fi_rlist,
-+			nfs4_file_rhash_params);
- }
- 
- /*
-@@ -5629,6 +5630,8 @@ nfsd4_process_open2(struct svc_rqst *rqstp, struct svc_fh *current_fh, struct nf
- 	 * If not found, create the nfs4_file struct
- 	 */
- 	fp = nfsd4_file_hash_insert(open->op_file, current_fh);
-+	if (unlikely(!fp))
-+		return nfserr_jukebox;
- 	if (fp != open->op_file) {
- 		status = nfs4_check_deleg(cl, open, &dp);
- 		if (status)
-diff --git a/fs/nfsd/state.h b/fs/nfsd/state.h
-index 190fc7e418a4..eadd7f465bf5 100644
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -536,16 +536,12 @@ struct nfs4_clnt_odstate {
-  * inode can have multiple filehandles associated with it, so there is
-  * (potentially) a many to one relationship between this struct and struct
-  * inode.
-- *
-- * These are hashed by filehandle in the file_hashtbl, which is protected by
-- * the global state_lock spinlock.
-  */
- struct nfs4_file {
- 	refcount_t		fi_ref;
- 	struct inode *		fi_inode;
- 	bool			fi_aliased;
- 	spinlock_t		fi_lock;
--	struct hlist_node       fi_hash;	/* hash on fi_fhandle */
- 	struct rhlist_head	fi_rlist;
- 	struct list_head        fi_stateids;
- 	union {
+On Fri, 2022-10-28 at 13:16 +0000, Chuck Lever III wrote:
+>=20
+> > On Oct 27, 2022, at 5:52 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> >=20
+> > When a GC entry gets added to the LRU, kick off SYNC_NONE writeback
+> > so that we can be ready to close it out when the time comes.
+>=20
+> For a large file, a background flush still has to walk the file's
+> pages to see if they are dirty, and that consumes time, CPU, and
+> memory bandwidth. We're talking hundreds of microseconds for a
+> large file.
+>=20
+> Then the final flush does all that again.
+>=20
+> Basically, two (or more!) passes through the file for exactly the
+> same amount of work. Is there any measured improvement in latency
+> or throughput?
+>=20
+> And then... for a GC file, no-one is waiting on data persistence
+> during nfsd_file_put() so I'm not sure what is gained by taking
+> control of the flushing process away from the underlying filesystem.
+>=20
+>=20
+> Remind me why the filecache is flushing? Shouldn't NFSD rely on
+> COMMIT operations for that? (It's not obvious reading the code,
+> maybe there should be a documenting comment somewhere that
+> explains this arrangement).
+>=20
 
 
+Fair point. I was trying to replicate the behaviors introduced in these
+patches:
+
+b6669305d35a nfsd: Reduce the number of calls to nfsd_file_gc()
+6b8a94332ee4 nfsd: Fix a write performance regression
+
+AFAICT, the fsync is there to catch writeback errors so that we can
+reset the write verifiers (AFAICT). The rationale for that is described
+here:
+
+055b24a8f230 nfsd: Don't garbage collect files that might contain write err=
+ors
+
+The problem with not calling vfs_fsync is that we might miss writeback
+errors. The nfsd_file could get reaped before a v3 COMMIT ever comes in.
+nfsd would eventually reopen the file but it could miss seeing the error
+if it got opened locally in the interim.
+
+I'm not sure we need to worry about that so much for v4 though. Maybe we
+should just do this for GC files?
+
+>=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> > fs/nfsd/filecache.c | 37 +++++++++++++++++++++++++++++++------
+> > 1 file changed, 31 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index d2bbded805d4..491d3d9a1870 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -316,7 +316,7 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, u=
+nsigned int may)
+> > }
+> >=20
+> > static void
+> > -nfsd_file_flush(struct nfsd_file *nf)
+> > +nfsd_file_fsync(struct nfsd_file *nf)
+> > {
+> > 	struct file *file =3D nf->nf_file;
+> >=20
+> > @@ -327,6 +327,22 @@ nfsd_file_flush(struct nfsd_file *nf)
+> > 		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+> > }
+> >=20
+> > +static void
+> > +nfsd_file_flush(struct nfsd_file *nf)
+> > +{
+> > +	struct file *file =3D nf->nf_file;
+> > +	unsigned long nrpages;
+> > +
+> > +	if (!file || !(file->f_mode & FMODE_WRITE))
+> > +		return;
+> > +
+> > +	nrpages =3D file->f_mapping->nrpages;
+> > +	if (nrpages) {
+> > +		this_cpu_add(nfsd_file_pages_flushed, nrpages);
+> > +		filemap_flush(file->f_mapping);
+> > +	}
+> > +}
+> > +
+> > static void
+> > nfsd_file_free(struct nfsd_file *nf)
+> > {
+> > @@ -337,7 +353,7 @@ nfsd_file_free(struct nfsd_file *nf)
+> > 	this_cpu_inc(nfsd_file_releases);
+> > 	this_cpu_add(nfsd_file_total_age, age);
+> >=20
+> > -	nfsd_file_flush(nf);
+> > +	nfsd_file_fsync(nf);
+> >=20
+> > 	if (nf->nf_mark)
+> > 		nfsd_file_mark_put(nf->nf_mark);
+> > @@ -500,12 +516,21 @@ nfsd_file_put(struct nfsd_file *nf)
+> >=20
+> > 	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
+> > 		/*
+> > -		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
+> > -		 * it to the LRU. If the add to the LRU fails, just put it as
+> > -		 * usual.
+> > +		 * If this is the last reference (nf_ref =3D=3D 1), then try
+> > +		 * to transfer it to the LRU.
+> > +		 */
+> > +		if (refcount_dec_not_one(&nf->nf_ref))
+> > +			return;
+> > +
+> > +		/*
+> > +		 * If the add to the list succeeds, try to kick off SYNC_NONE
+> > +		 * writeback. If the add fails, then just fall through to
+> > +		 * decrement as usual.
+>=20
+> These comments simply repeat what the code does, so they seem
+> redundant to me. Could they instead explain why?
+>=20
+>=20
+> > 		 */
+> > -		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
+> > +		if (nfsd_file_lru_add(nf)) {
+> > +			nfsd_file_flush(nf);
+> > 			return;
+> > +		}
+> > 	}
+> > 	__nfsd_file_put(nf);
+> > }
+> > --=20
+> > 2.37.3
+> >=20
+>=20
+> --
+> Chuck Lever
+>=20
+>=20
+>=20
+
+--=20
+Jeff Layton <jlayton@kernel.org>
