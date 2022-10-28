@@ -2,44 +2,50 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9460D6110F6
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 14:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 03ED161121F
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 15:01:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229877AbiJ1MOC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 08:14:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
+        id S230119AbiJ1NBx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 09:01:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230372AbiJ1MN5 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 08:13:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52BE1DB55A
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 05:13:56 -0700 (PDT)
+        with ESMTP id S230188AbiJ1NBv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 09:01:51 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B5F75FDD2
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 06:01:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CDD4D62406
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 12:13:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB6D9C433C1;
-        Fri, 28 Oct 2022 12:13:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6992062844
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 13:01:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D10AC433C1;
+        Fri, 28 Oct 2022 13:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666959235;
-        bh=DXkS6Q6aZhglA8HoJx1goLAEaaCiiXjSiqYHA7tG1ok=;
-        h=From:To:Cc:Subject:Date:From;
-        b=GfyumwwPTWYeyCwKavL85QdweeB8wYpVdzk2DVnVMapcMlfu8ybjyNIIJofEJBXbZ
-         yJKQOul27lB/gYPz3vDGGAU7PJaQqf9HVJx5WlTQq8nbWwW/qBFcB3JgBGPNANvQ4e
-         airARP13RfH4DdD6VbDUi2Ch0yLE8bhaCUcCQkfx4o1P7aMKZv6YctnwEhwoRE7zlO
-         0GpbglGR/NPj1RnFnwp6Lo3gfWmKB5IXZ7TtFxkCiwhM5sE7vAEXMI34YMNKAO+hPl
-         pHpGH7MDiCb5f89ll+a1FR8KpZdKCviFb3QUc68LkPovrr/NJ2ZLWf2uHaEID52OJu
-         R09TSq+Ffq64w==
+        s=k20201202; t=1666962108;
+        bh=gtLdtfk8X8Ts8aTOnA2TfG+8MKCo4F9YDnwuyjMTXMM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=U40QhOY/sBzAPL1L3gM+gn5SRlPzktq8CGg5lPT3yA1iQHT101Tr9OiucwO9yUCNK
+         ofP9Uk2cmvp+LXflaqMsTnZORjwgZomh2ftGnx2q+zP1vJeyRBNXR9nYceQvYmslil
+         mVCw9p5eIJaAkWuNHH2FQPIFXuc98AIvCvwtAj965u7vFofn6I4+PJedAb5DLGx0/X
+         OiEempRBOcYt2TcO+/sti9pE5c7OuwjaME1HkD/ByyoeJZxb83xGx2gvmPsNIzHkyh
+         H0BkrcOQoPmo4BuNh7GAZ/y0t9dqT1mfcvAW8g/uaAPpTKixCoDVmQYeEYQ1VNOZRz
+         f/VWj4L5wozwQ==
+Message-ID: <efe2a6483eee267a3ae55ec5b4f388a22194559e.camel@kernel.org>
+Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
+ nfsd_file to the LRU
 From:   Jeff Layton <jlayton@kernel.org>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, Zhi Li <yieli@redhat.com>
-Subject: [PATCH] nfsd: don't call nfsd_file_put from client states seqfile display
-Date:   Fri, 28 Oct 2022 08:13:53 -0400
-Message-Id: <20221028121353.33567-1-jlayton@kernel.org>
-X-Mailer: git-send-email 2.37.3
+To:     NeilBrown <neilb@suse.de>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Date:   Fri, 28 Oct 2022 09:01:47 -0400
+In-Reply-To: <166690952613.13915.11556395606559286695@noble.neil.brown.name>
+References: <20221027215213.138304-1-jlayton@kernel.org>
+        , <20221027215213.138304-4-jlayton@kernel.org>
+         <166690952613.13915.11556395606559286695@noble.neil.brown.name>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -49,139 +55,110 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-We had a report of this:
+On Fri, 2022-10-28 at 09:25 +1100, NeilBrown wrote:
+> On Fri, 28 Oct 2022, Jeff Layton wrote:
+> > When a GC entry gets added to the LRU, kick off SYNC_NONE writeback
+> > so that we can be ready to close it out when the time comes.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+>=20
+> This looks sensible.
+> Reviewed-by: NeilBrown <neilb@suse.de>
+>=20
+> Thanks,
+> NeilBrown
+>=20
+>=20
+> > ---
+> >  fs/nfsd/filecache.c | 37 +++++++++++++++++++++++++++++++------
+> >  1 file changed, 31 insertions(+), 6 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index d2bbded805d4..491d3d9a1870 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -316,7 +316,7 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, u=
+nsigned int may)
+> >  }
+> > =20
+> >  static void
+> > -nfsd_file_flush(struct nfsd_file *nf)
+> > +nfsd_file_fsync(struct nfsd_file *nf)
+> >  {
+> >  	struct file *file =3D nf->nf_file;
+> > =20
+> > @@ -327,6 +327,22 @@ nfsd_file_flush(struct nfsd_file *nf)
+> >  		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+> >  }
+> > =20
+> > +static void
+> > +nfsd_file_flush(struct nfsd_file *nf)
+> > +{
+> > +	struct file *file =3D nf->nf_file;
+> > +	unsigned long nrpages;
+> > +
+> > +	if (!file || !(file->f_mode & FMODE_WRITE))
+> > +		return;
+> > +
+> > +	nrpages =3D file->f_mapping->nrpages;
+> > +	if (nrpages) {
+> >=20
 
-    BUG: sleeping function called from invalid context at fs/nfsd/filecache.c:440
+I may change this to:
 
-...with a stack trace showing nfsd_file_put being called from
-nfs4_show_open. This code has always tried to call fput while holding a
-spinlock, but we recently changed this to use the filecache, and that
-started triggering the might_sleep() in nfsd_file_put.
+    if (mapping_tagged(mapping, PAGECACHE_TAG_DIRTY)) {
 
-states_start takes and holds the cl_lock while iterating over the
-client's states, and we can't sleep with that held.
+I'm not sure here...Does nrpages count all of the pages in the mapping,
+or just the dirty ones? I'm wondering if we're overcounting in
+nfsd_file_pages_flushed?
 
-Have the various nfs4_show_* functions instead hold the fi_lock instead
-of taking a nfsd_file reference.
+> > +		this_cpu_add(nfsd_file_pages_flushed, nrpages);
+> > +		filemap_flush(file->f_mapping);
+> > +	}
+> > +}
+> > +
+> >  static void
+> >  nfsd_file_free(struct nfsd_file *nf)
+> >  {
+> > @@ -337,7 +353,7 @@ nfsd_file_free(struct nfsd_file *nf)
+> >  	this_cpu_inc(nfsd_file_releases);
+> >  	this_cpu_add(nfsd_file_total_age, age);
+> > =20
+> > -	nfsd_file_flush(nf);
+> > +	nfsd_file_fsync(nf);
+> > =20
+> >  	if (nf->nf_mark)
+> >  		nfsd_file_mark_put(nf->nf_mark);
+> > @@ -500,12 +516,21 @@ nfsd_file_put(struct nfsd_file *nf)
+> > =20
+> >  	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
+> >  		/*
+> > -		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
+> > -		 * it to the LRU. If the add to the LRU fails, just put it as
+> > -		 * usual.
+> > +		 * If this is the last reference (nf_ref =3D=3D 1), then try
+> > +		 * to transfer it to the LRU.
+> > +		 */
+> > +		if (refcount_dec_not_one(&nf->nf_ref))
+> > +			return;
+> > +
+> > +		/*
+> > +		 * If the add to the list succeeds, try to kick off SYNC_NONE
+> > +		 * writeback. If the add fails, then just fall through to
+> > +		 * decrement as usual.
+> >  		 */
+> > -		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
+> > +		if (nfsd_file_lru_add(nf)) {
+> > +			nfsd_file_flush(nf);
+> >  			return;
+> > +		}
+> >  	}
+> >  	__nfsd_file_put(nf);
+> >  }
+> > --=20
+> > 2.37.3
+> >=20
+> >=20
 
-Fixes: 78599c42ae3c ("nfsd4: add file to display list of client's opens")
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2138357
-Reported-by: Zhi Li <yieli@redhat.com>
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
----
- fs/nfsd/nfs4state.c | 51 +++++++++++++++++++++++++++++----------------
- 1 file changed, 33 insertions(+), 18 deletions(-)
-
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 1ded89235111..dde621debeb2 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -675,15 +675,26 @@ find_any_file(struct nfs4_file *f)
- 	return ret;
- }
- 
--static struct nfsd_file *find_deleg_file(struct nfs4_file *f)
-+static struct nfsd_file *find_any_file_locked(struct nfs4_file *f)
- {
--	struct nfsd_file *ret = NULL;
-+	lockdep_assert_held(&f->fi_lock);
-+
-+	if (f->fi_fds[O_RDWR])
-+		return f->fi_fds[O_RDWR];
-+	if (f->fi_fds[O_WRONLY])
-+		return f->fi_fds[O_WRONLY];
-+	if (f->fi_fds[O_RDONLY])
-+		return f->fi_fds[O_RDONLY];
-+	return NULL;
-+}
-+
-+static struct nfsd_file *find_deleg_file_locked(struct nfs4_file *f)
-+{
-+	lockdep_assert_held(&f->fi_lock);
- 
--	spin_lock(&f->fi_lock);
- 	if (f->fi_deleg_file)
--		ret = nfsd_file_get(f->fi_deleg_file);
--	spin_unlock(&f->fi_lock);
--	return ret;
-+		return f->fi_deleg_file;
-+	return NULL;
- }
- 
- static atomic_long_t num_delegations;
-@@ -2616,9 +2627,11 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
- 	ols = openlockstateid(st);
- 	oo = ols->st_stateowner;
- 	nf = st->sc_file;
--	file = find_any_file(nf);
-+
-+	spin_lock(&nf->fi_lock);
-+	file = find_any_file_locked(nf);
- 	if (!file)
--		return 0;
-+		goto out;
- 
- 	seq_printf(s, "- ");
- 	nfs4_show_stateid(s, &st->sc_stateid);
-@@ -2640,8 +2653,8 @@ static int nfs4_show_open(struct seq_file *s, struct nfs4_stid *st)
- 	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
--	nfsd_file_put(file);
--
-+out:
-+	spin_unlock(&nf->fi_lock);
- 	return 0;
- }
- 
-@@ -2655,9 +2668,10 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
- 	ols = openlockstateid(st);
- 	oo = ols->st_stateowner;
- 	nf = st->sc_file;
--	file = find_any_file(nf);
-+	spin_lock(&nf->fi_lock);
-+	file = find_any_file_locked(nf);
- 	if (!file)
--		return 0;
-+		goto out;
- 
- 	seq_printf(s, "- ");
- 	nfs4_show_stateid(s, &st->sc_stateid);
-@@ -2677,8 +2691,8 @@ static int nfs4_show_lock(struct seq_file *s, struct nfs4_stid *st)
- 	seq_printf(s, ", ");
- 	nfs4_show_owner(s, oo);
- 	seq_printf(s, " }\n");
--	nfsd_file_put(file);
--
-+out:
-+	spin_unlock(&nf->fi_lock);
- 	return 0;
- }
- 
-@@ -2690,9 +2704,10 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 
- 	ds = delegstateid(st);
- 	nf = st->sc_file;
--	file = find_deleg_file(nf);
-+	spin_lock(&nf->fi_lock);
-+	file = find_deleg_file_locked(nf);
- 	if (!file)
--		return 0;
-+		goto out;
- 
- 	seq_printf(s, "- ");
- 	nfs4_show_stateid(s, &st->sc_stateid);
-@@ -2708,8 +2723,8 @@ static int nfs4_show_deleg(struct seq_file *s, struct nfs4_stid *st)
- 	seq_printf(s, ", ");
- 	nfs4_show_fname(s, file);
- 	seq_printf(s, " }\n");
--	nfsd_file_put(file);
--
-+out:
-+	spin_unlock(&nf->fi_lock);
- 	return 0;
- }
- 
--- 
-2.37.3
-
+--=20
+Jeff Layton <jlayton@kernel.org>
