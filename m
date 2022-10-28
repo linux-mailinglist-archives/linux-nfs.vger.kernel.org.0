@@ -2,106 +2,715 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C8E3610CCF
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 11:11:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0327E610DFA
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 11:58:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229997AbiJ1JLz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 05:11:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44188 "EHLO
+        id S229744AbiJ1J6U (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 05:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbiJ1JLg (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 05:11:36 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB4E59737
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 02:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1666948239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=5F5IpR4CpWAl33ymNkl13hfpK7vfwoAzsrMvewKPWKg=;
-        b=gEWw2KcpBg8LhbYF13t5O+QwbqucOwCJfZTfGwBXI5u3AnQyfiZ8uRxbtF/kU8XlHxdpct
-        jqhdwyCV5c9BVAD2MXaU+NwGd6soxMmHCquQYsgGzuRNOt8tshNtYzio+wLo33pBW+5Dmh
-        rqgZB1ylWNvvO1fg3aJ0Wc2n3haTQMA=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-592-GBBtgDEwPBmElbVKPVxiog-1; Fri, 28 Oct 2022 05:10:36 -0400
-X-MC-Unique: GBBtgDEwPBmElbVKPVxiog-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S230365AbiJ1J5w (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 05:57:52 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E373796A7
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 02:57:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 93170811E67
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 09:10:36 +0000 (UTC)
-Received: from localhost (unknown [10.66.60.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E44B540C206B;
-        Fri, 28 Oct 2022 09:10:35 +0000 (UTC)
-From:   Zhi Li <yieli@redhat.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     steved@redhat.com, Zhi Li <yieli@redhat.com>
-Subject: [PATCH V2] [nfs/nfs-utils/libtirpc] clnt_raw.c: fix a possible null pointer dereference
-Date:   Fri, 28 Oct 2022 17:10:33 +0800
-Message-Id: <20221028091033.278199-1-yieli@redhat.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 309BBB827D5
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 09:57:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CD09C433B5;
+        Fri, 28 Oct 2022 09:57:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666951025;
+        bh=++fh6kRiurbxc22Q0aJ2G55tYzgg39rfA77YUsuCWG8=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=s78yotuate6+wnW38rrWfF1NxBBGTlC3tpxm6e8zU6fhvLKpwodxav5sbbeNReiko
+         JSM8J4MsF7d8X83770nL/E+HOgPsTrk90f92rigLXRsnR74lCOrpNzo8FzP6eOPXH0
+         45llMPig/xlepHZXaM6msHXi6HDSWrNVmeRJmjTqY95cGwAMI31PUbXkV427cJUHe5
+         vnAJI1CJMkeHEylMh61o1rOkaOjxVzRJmIoVmAHwYrHRJwoRsdcactWk30c8mAXBC4
+         dc8UvQTYPlg/B2bVYmXMQnCZ+06CpCy2P5EqXRofV0O4no4tyWRIYGs/e3P7vTEFM8
+         VNKZDK04lRemg==
+Message-ID: <e164a83246e311ffb5b22944d6fccd110c1494e2.camel@kernel.org>
+Subject: Re: [PATCH v2 1/3] nfsd: rework refcounting in filecache
+From:   Jeff Layton <jlayton@kernel.org>
+To:     NeilBrown <neilb@suse.de>
+Cc:     chuck.lever@oracle.com, linux-nfs@vger.kernel.org
+Date:   Fri, 28 Oct 2022 05:57:03 -0400
+In-Reply-To: <166691108885.13915.13997292493521001238@noble.neil.brown.name>
+References: <20221027215213.138304-1-jlayton@kernel.org>
+        , <20221027215213.138304-2-jlayton@kernel.org>
+         <166691108885.13915.13997292493521001238@noble.neil.brown.name>
+Content-Type: text/plain; charset="ISO-8859-15"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Since clntraw_private could be dereferenced before
-allocated, protect it by checking its value in advance.
+On Fri, 2022-10-28 at 09:51 +1100, NeilBrown wrote:
+> On Fri, 28 Oct 2022, Jeff Layton wrote:
+> > The filecache refcounting is a bit non-standard for something searchabl=
+e
+> > by RCU, in that we maintain a sentinel reference while it's hashed. Thi=
+s
+> > in turn requires that we have to do things differently in the "put"
+> > depending on whether its hashed, which we believe to have led to races.
+> >=20
+> > There are other problems in here too. nfsd_file_close_inode_sync can en=
+d
+> > up freeing an nfsd_file while there are still outstanding references to
+> > it, and the handling
+>=20
+> -EINTR ??? (you got interrupted and didn't finish the sentence?)
+>=20
 
-Fixes: https://bugzilla.redhat.com/show_bug.cgi?id=2138317
-Signed-off-by: Zhi Li <yieli@redhat.com>
----
- src/clnt_raw.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Yes, I meant to go back and flesh that out, and forgot before posting.
 
-diff --git a/src/clnt_raw.c b/src/clnt_raw.c
-index 31f9d0c..03f839d 100644
---- a/src/clnt_raw.c
-+++ b/src/clnt_raw.c
-@@ -142,7 +142,7 @@ clnt_raw_call(h, proc, xargs, argsp, xresults, resultsp, timeout)
- 	struct timeval timeout;
- {
- 	struct clntraw_private *clp = clntraw_private;
--	XDR *xdrs = &clp->xdr_stream;
-+	XDR *xdrs;
- 	struct rpc_msg msg;
- 	enum clnt_stat status;
- 	struct rpc_err error;
-@@ -154,6 +154,7 @@ clnt_raw_call(h, proc, xargs, argsp, xresults, resultsp, timeout)
- 		mutex_unlock(&clntraw_lock);
- 		return (RPC_FAILED);
- 	}
-+	xdrs = &clp->xdr_stream;
- 	mutex_unlock(&clntraw_lock);
- 
- call_again:
-@@ -245,7 +246,7 @@ clnt_raw_freeres(cl, xdr_res, res_ptr)
- 	void *res_ptr;
- {
- 	struct clntraw_private *clp = clntraw_private;
--	XDR *xdrs = &clp->xdr_stream;
-+	XDR *xdrs;
- 	bool_t rval;
- 
- 	mutex_lock(&clntraw_lock);
-@@ -254,6 +255,7 @@ clnt_raw_freeres(cl, xdr_res, res_ptr)
- 		mutex_unlock(&clntraw_lock);
- 		return (rval);
- 	}
-+	xdrs = &clp->xdr_stream;
- 	mutex_unlock(&clntraw_lock);
- 	xdrs->x_op = XDR_FREE;
- 	return ((*xdr_res)(xdrs, res_ptr));
--- 
-2.37.3
+> >=20
+> > Rework the code so that the refcount is what drives the lifecycle. When
+> > the refcount goes to zero, then unhash and rcu free the object.
+> >=20
+> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > ---
+> >  fs/nfsd/filecache.c | 291 +++++++++++++++++++++-----------------------
+> >  fs/nfsd/trace.h     |   5 +-
+> >  2 files changed, 144 insertions(+), 152 deletions(-)
+> >=20
+> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
+> > index 98c6b5f51bc8..e63534f4b9f8 100644
+> > --- a/fs/nfsd/filecache.c
+> > +++ b/fs/nfsd/filecache.c
+> > @@ -1,6 +1,12 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /*
+> >   * The NFSD open file cache.
+> > + *
+> > + * Each nfsd_file is created in response to client activity -- either =
+regular
+> > + * file I/O for v2/v3, or opening a file for v4. Files opened via v4 a=
+re
+> > + * cleaned up as soon as their refcount goes to 0.  Entries for v2/v3 =
+are
+> > + * flagged with NFSD_FILE_GC. On their last put, they are added to the=
+ LRU for
+> > + * eventual disposal if they aren't used again within a short time per=
+iod.
+> >   */
+> > =20
+> >  #include <linux/hash.h>
+> > @@ -302,31 +308,43 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key,=
+ unsigned int may)
+> >  		if (key->gc)
+> >  			__set_bit(NFSD_FILE_GC, &nf->nf_flags);
+> >  		nf->nf_inode =3D key->inode;
+> > -		/* nf_ref is pre-incremented for hash table */
+> > -		refcount_set(&nf->nf_ref, 2);
+> > +		refcount_set(&nf->nf_ref, 1);
+> >  		nf->nf_may =3D key->need;
+> >  		nf->nf_mark =3D NULL;
+> >  	}
+> >  	return nf;
+> >  }
+> > =20
+> > -static bool
+> > +static void
+> > +nfsd_file_flush(struct nfsd_file *nf)
+> > +{
+> > +	struct file *file =3D nf->nf_file;
+> > +
+> > +	if (!file || !(file->f_mode & FMODE_WRITE))
+> > +		return;
+> > +	this_cpu_add(nfsd_file_pages_flushed, file->f_mapping->nrpages);
+> > +	if (vfs_fsync(file, 1) !=3D 0)
+> > +		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+> > +}
+> > +
+> > +static void
+> >  nfsd_file_free(struct nfsd_file *nf)
+> >  {
+> >  	s64 age =3D ktime_to_ms(ktime_sub(ktime_get(), nf->nf_birthtime));
+> > -	bool flush =3D false;
+> > +
+> > +	trace_nfsd_file_free(nf);
+> > =20
+> >  	this_cpu_inc(nfsd_file_releases);
+> >  	this_cpu_add(nfsd_file_total_age, age);
+> > =20
+> > -	trace_nfsd_file_put_final(nf);
+> > +	nfsd_file_flush(nf);
+> > +
+> >  	if (nf->nf_mark)
+> >  		nfsd_file_mark_put(nf->nf_mark);
+> >  	if (nf->nf_file) {
+> >  		get_file(nf->nf_file);
+> >  		filp_close(nf->nf_file, NULL);
+> >  		fput(nf->nf_file);
+> > -		flush =3D true;
+> >  	}
+> > =20
+> >  	/*
+> > @@ -334,10 +352,9 @@ nfsd_file_free(struct nfsd_file *nf)
+> >  	 * WARN and leak it to preserve system stability.
+> >  	 */
+> >  	if (WARN_ON_ONCE(!list_empty(&nf->nf_lru)))
+> > -		return flush;
+> > +		return;
+> > =20
+> >  	call_rcu(&nf->nf_rcu, nfsd_file_slab_free);
+> > -	return flush;
+> >  }
+> > =20
+> >  static bool
+> > @@ -363,29 +380,23 @@ nfsd_file_check_write_error(struct nfsd_file *nf)
+> >  	return filemap_check_wb_err(file->f_mapping, READ_ONCE(file->f_wb_err=
+));
+> >  }
+> > =20
+> > -static void
+> > -nfsd_file_flush(struct nfsd_file *nf)
+> > -{
+> > -	struct file *file =3D nf->nf_file;
+> > -
+> > -	if (!file || !(file->f_mode & FMODE_WRITE))
+> > -		return;
+> > -	this_cpu_add(nfsd_file_pages_flushed, file->f_mapping->nrpages);
+> > -	if (vfs_fsync(file, 1) !=3D 0)
+> > -		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+> > -}
+> > -
+> > -static void nfsd_file_lru_add(struct nfsd_file *nf)
+> > +static bool nfsd_file_lru_add(struct nfsd_file *nf)
+> >  {
+> >  	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
+> > -	if (list_lru_add(&nfsd_file_lru, &nf->nf_lru))
+> > +	if (list_lru_add(&nfsd_file_lru, &nf->nf_lru)) {
+> >  		trace_nfsd_file_lru_add(nf);
+> > +		return true;
+> > +	}
+> > +	return false;
+> >  }
+> > =20
+> > -static void nfsd_file_lru_remove(struct nfsd_file *nf)
+> > +static bool nfsd_file_lru_remove(struct nfsd_file *nf)
+> >  {
+> > -	if (list_lru_del(&nfsd_file_lru, &nf->nf_lru))
+> > +	if (list_lru_del(&nfsd_file_lru, &nf->nf_lru)) {
+> >  		trace_nfsd_file_lru_del(nf);
+> > +		return true;
+> > +	}
+> > +	return false;
+> >  }
+> > =20
+> >  static void
+> > @@ -409,94 +420,89 @@ nfsd_file_unhash(struct nfsd_file *nf)
+> >  	return false;
+> >  }
+> > =20
+> > -static void
+> > -nfsd_file_unhash_and_dispose(struct nfsd_file *nf, struct list_head *d=
+ispose)
+> > +struct nfsd_file *
+> > +nfsd_file_get(struct nfsd_file *nf)
+> >  {
+> > -	trace_nfsd_file_unhash_and_dispose(nf);
+> > +	if (likely(refcount_inc_not_zero(&nf->nf_ref)))
+> > +		return nf;
+> > +	return NULL;
+> > +}
+> > +
+> > +/**
+> > + * nfsd_file_unhash_and_queue - unhash a file and queue it to the disp=
+ose list
+> > + * @nf: nfsd_file to be unhashed and queued
+> > + * @dispose: list to which it should be queued
+> > + *
+> > + * Attempt to unhash a nfsd_file and queue it to the given list. Each =
+file
+> > + * will have a reference held on behalf of the list. That reference ma=
+y come
+> > + * from the LRU, or we may need to take one. If we can't get a referen=
+ce,
+> > + * ignore it altogether.
+> > + */
+> > +static bool
+> > +nfsd_file_unhash_and_queue(struct nfsd_file *nf, struct list_head *dis=
+pose)
+> > +{
+> > +	trace_nfsd_file_unhash_and_queue(nf);
+> >  	if (nfsd_file_unhash(nf)) {
+> > -		/* caller must call nfsd_file_dispose_list() later */
+> > -		nfsd_file_lru_remove(nf);
+> > +		/*
+> > +		 * If we remove it from the LRU, then just use that
+> > +		 * reference for the dispose list. Otherwise, we need
+> > +		 * to take a reference. If that fails, just ignore
+> > +		 * the file altogether.
+> > +		 */
+> > +		if (!nfsd_file_lru_remove(nf) && !nfsd_file_get(nf))
+> > +			return false;
+> >  		list_add(&nf->nf_lru, dispose);
+> > +		return true;
+> >  	}
+> > +	return false;
+> >  }
+> > =20
+> > -static void
+> > -nfsd_file_put_noref(struct nfsd_file *nf)
+> > +static bool
+> > +__nfsd_file_put(struct nfsd_file *nf)
+>=20
+> The return value of this function is never tested.
+> Maybe it should return void.
+>=20
+> Further, I don't think this is a useful abstraction.
+> I would rather move the refcount_dec_and_test to the caller, and move
+> the lru_remove and unash into nfsd_file_free.
+>=20
 
+Ok, sounds reasonable.
+
+> >  {
+> > -	trace_nfsd_file_put(nf);
+> > -
+> >  	if (refcount_dec_and_test(&nf->nf_ref)) {
+> > -		WARN_ON(test_bit(NFSD_FILE_HASHED, &nf->nf_flags));
+> > -		nfsd_file_lru_remove(nf);
+> > +		nfsd_file_unhash(nf);
+> >  		nfsd_file_free(nf);
+> > +		return true;
+> >  	}
+> > +	return false;
+> >  }
+> > =20
+> > -static void
+> > -nfsd_file_unhash_and_put(struct nfsd_file *nf)
+> > -{
+> > -	if (nfsd_file_unhash(nf))
+> > -		nfsd_file_put_noref(nf);
+> > -}
+> > -
+> > +/**
+> > + * nfsd_file_put - put the reference to a nfsd_file
+> > + * @nf: nfsd_file of which to put the reference
+> > + *
+> > + * Put a reference to a nfsd_file. In the v4 case, we just put the
+> > + * reference immediately. In the v2/3 case, if the reference would be
+> > + * the last one, the put it on the LRU instead to be cleaned up later.
+> > + */
+> >  void
+> >  nfsd_file_put(struct nfsd_file *nf)
+> >  {
+> > -	might_sleep();
+> > -
+> > -	if (test_bit(NFSD_FILE_GC, &nf->nf_flags))
+> > -		nfsd_file_lru_add(nf);
+> > -	else if (refcount_read(&nf->nf_ref) =3D=3D 2)
+> > -		nfsd_file_unhash_and_put(nf);
+> > -
+> > -	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> > -		nfsd_file_flush(nf);
+> > -		nfsd_file_put_noref(nf);
+> > -	} else if (nf->nf_file && test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
+> > -		nfsd_file_put_noref(nf);
+> > -		nfsd_file_schedule_laundrette();
+> > -	} else
+> > -		nfsd_file_put_noref(nf);
+> > -}
+> > -
+> > -struct nfsd_file *
+> > -nfsd_file_get(struct nfsd_file *nf)
+> > -{
+> > -	if (likely(refcount_inc_not_zero(&nf->nf_ref)))
+> > -		return nf;
+> > -	return NULL;
+> > -}
+> > -
+> > -static void
+> > -nfsd_file_dispose_list(struct list_head *dispose)
+> > -{
+> > -	struct nfsd_file *nf;
+> > +	trace_nfsd_file_put(nf);
+> > =20
+> > -	while(!list_empty(dispose)) {
+> > -		nf =3D list_first_entry(dispose, struct nfsd_file, nf_lru);
+> > -		list_del_init(&nf->nf_lru);
+> > -		nfsd_file_flush(nf);
+> > -		nfsd_file_put_noref(nf);
+> > +	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
+>=20
+> I would prefer this included a test on NFSD_FILE_HASHED as well so that
+> if the file isn't hashed, we don't consider it for the lru.
+> This would me we can simple called nfsd_file_put() for things on the
+> dispose list, rather then needing __nfsd_file_put()
+>=20
+
+I had an incorrectly reversed test for that in the previous version in
+nfsd_file_lru_add and you mentioned that it was racy. Why would that not
+be the case here?
+
+> > +		/*
+> > +		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
+> > +		 * it to the LRU. If the add to the LRU fails, just put it as
+> > +		 * usual.
+> > +		 */
+> > +		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
+> > +			return;
+> >  	}
+> > +	__nfsd_file_put(nf);
+>=20
+> As suggested above, this would become
+>    if (refcount_dec_and_test(&nf->nf_ref))
+> 	nfsd_file_free(nf);
+>=20
+
+Ok.
+
+> >  }
+> > =20
+> >  static void
+> > -nfsd_file_dispose_list_sync(struct list_head *dispose)
+> > +nfsd_file_dispose_list(struct list_head *dispose)
+> >  {
+> > -	bool flush =3D false;
+> >  	struct nfsd_file *nf;
+> > =20
+> >  	while(!list_empty(dispose)) {
+> >  		nf =3D list_first_entry(dispose, struct nfsd_file, nf_lru);
+> >  		list_del_init(&nf->nf_lru);
+> > -		nfsd_file_flush(nf);
+> > -		if (!refcount_dec_and_test(&nf->nf_ref))
+> > -			continue;
+> > -		if (nfsd_file_free(nf))
+> > -			flush =3D true;
+> > +		nfsd_file_free(nf);
+> >  	}
+> > -	if (flush)
+> > -		flush_delayed_fput();
+> >  }
+> > =20
+> >  static void
+> > @@ -566,21 +572,8 @@ nfsd_file_lru_cb(struct list_head *item, struct li=
+st_lru_one *lru,
+> >  	struct list_head *head =3D arg;
+> >  	struct nfsd_file *nf =3D list_entry(item, struct nfsd_file, nf_lru);
+> > =20
+> > -	/*
+> > -	 * Do a lockless refcount check. The hashtable holds one reference, s=
+o
+> > -	 * we look to see if anything else has a reference, or if any have
+> > -	 * been put since the shrinker last ran. Those don't get unhashed and
+> > -	 * released.
+> > -	 *
+> > -	 * Note that in the put path, we set the flag and then decrement the
+> > -	 * counter. Here we check the counter and then test and clear the fla=
+g.
+> > -	 * That order is deliberate to ensure that we can do this locklessly.
+> > -	 */
+> > -	if (refcount_read(&nf->nf_ref) > 1) {
+> > -		list_lru_isolate(lru, &nf->nf_lru);
+> > -		trace_nfsd_file_gc_in_use(nf);
+> > -		return LRU_REMOVED;
+> > -	}
+> > +	/* We should only be dealing with v2/3 entries here */
+> > +	WARN_ON_ONCE(!test_bit(NFSD_FILE_GC, &nf->nf_flags));
+> > =20
+> >  	/*
+> >  	 * Don't throw out files that are still undergoing I/O or
+> > @@ -591,40 +584,30 @@ nfsd_file_lru_cb(struct list_head *item, struct l=
+ist_lru_one *lru,
+> >  		return LRU_SKIP;
+> >  	}
+> > =20
+> > +	/* If it was recently added to the list, skip it */
+> >  	if (test_and_clear_bit(NFSD_FILE_REFERENCED, &nf->nf_flags)) {
+> >  		trace_nfsd_file_gc_referenced(nf);
+> >  		return LRU_ROTATE;
+> >  	}
+> > =20
+> > -	if (!test_and_clear_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
+> > -		trace_nfsd_file_gc_hashed(nf);
+> > -		return LRU_SKIP;
+> > +	/*
+> > +	 * Put the reference held on behalf of the LRU. If it wasn't the last
+> > +	 * one, then just remove it from the LRU and ignore it.
+> > +	 */
+> > +	if (!refcount_dec_and_test(&nf->nf_ref)) {
+> > +		trace_nfsd_file_gc_in_use(nf);
+> > +		list_lru_isolate(lru, &nf->nf_lru);
+> > +		return LRU_REMOVED;
+> >  	}
+> > =20
+> > +	/* Refcount went to zero. Unhash it and queue it to the dispose list =
+*/
+> > +	nfsd_file_unhash(nf);
+> >  	list_lru_isolate_move(lru, &nf->nf_lru, head);
+> >  	this_cpu_inc(nfsd_file_evictions);
+> >  	trace_nfsd_file_gc_disposed(nf);
+> >  	return LRU_REMOVED;
+> >  }
+> > =20
+> > -/*
+> > - * Unhash items on @dispose immediately, then queue them on the
+> > - * disposal workqueue to finish releasing them in the background.
+> > - *
+> > - * cel: Note that between the time list_lru_shrink_walk runs and
+> > - * now, these items are in the hash table but marked unhashed.
+> > - * Why release these outside of lru_cb ? There's no lock ordering
+> > - * problem since lru_cb currently takes no lock.
+> > - */
+> > -static void nfsd_file_gc_dispose_list(struct list_head *dispose)
+> > -{
+> > -	struct nfsd_file *nf;
+> > -
+> > -	list_for_each_entry(nf, dispose, nf_lru)
+> > -		nfsd_file_hash_remove(nf);
+> > -	nfsd_file_dispose_list_delayed(dispose);
+> > -}
+> > -
+> >  static void
+> >  nfsd_file_gc(void)
+> >  {
+> > @@ -634,7 +617,7 @@ nfsd_file_gc(void)
+> >  	ret =3D list_lru_walk(&nfsd_file_lru, nfsd_file_lru_cb,
+> >  			    &dispose, list_lru_count(&nfsd_file_lru));
+> >  	trace_nfsd_file_gc_removed(ret, list_lru_count(&nfsd_file_lru));
+> > -	nfsd_file_gc_dispose_list(&dispose);
+> > +	nfsd_file_dispose_list_delayed(&dispose);
+> >  }
+> > =20
+> >  static void
+> > @@ -659,7 +642,7 @@ nfsd_file_lru_scan(struct shrinker *s, struct shrin=
+k_control *sc)
+> >  	ret =3D list_lru_shrink_walk(&nfsd_file_lru, sc,
+> >  				   nfsd_file_lru_cb, &dispose);
+> >  	trace_nfsd_file_shrinker_removed(ret, list_lru_count(&nfsd_file_lru))=
+;
+> > -	nfsd_file_gc_dispose_list(&dispose);
+> > +	nfsd_file_dispose_list_delayed(&dispose);
+> >  	return ret;
+> >  }
+> > =20
+> > @@ -670,8 +653,11 @@ static struct shrinker	nfsd_file_shrinker =3D {
+> >  };
+> > =20
+> >  /*
+> > - * Find all cache items across all net namespaces that match @inode an=
+d
+> > - * move them to @dispose. The lookup is atomic wrt nfsd_file_acquire()=
+.
+> > + * Find all cache items across all net namespaces that match @inode, u=
+nhash
+> > + * them, take references and then put them on @dispose if that was suc=
+cessful.
+> > + *
+> > + * The nfsd_file objects on the list will be unhashed, and each will h=
+ave a
+> > + * reference taken.
+> >   */
+> >  static unsigned int
+> >  __nfsd_file_close_inode(struct inode *inode, struct list_head *dispose=
+)
+> > @@ -689,52 +675,58 @@ __nfsd_file_close_inode(struct inode *inode, stru=
+ct list_head *dispose)
+> >  				       nfsd_file_rhash_params);
+> >  		if (!nf)
+> >  			break;
+> > -		nfsd_file_unhash_and_dispose(nf, dispose);
+> > -		count++;
+> > +
+> > +		if (nfsd_file_unhash_and_queue(nf, dispose))
+> > +			count++;
+> >  	} while (1);
+> >  	rcu_read_unlock();
+> >  	return count;
+> >  }
+> > =20
+> >  /**
+> > - * nfsd_file_close_inode_sync - attempt to forcibly close a nfsd_file
+> > + * nfsd_file_close_inode - attempt a delayed close of a nfsd_file
+> >   * @inode: inode of the file to attempt to remove
+> >   *
+> > - * Unhash and put, then flush and fput all cache items associated with=
+ @inode.
+> > + * Unhash and put all cache item associated with @inode.
+> >   */
+> > -void
+> > -nfsd_file_close_inode_sync(struct inode *inode)
+> > +static unsigned int
+> > +nfsd_file_close_inode(struct inode *inode)
+> >  {
+> > -	LIST_HEAD(dispose);
+> > +	struct nfsd_file *nf;
+> >  	unsigned int count;
+> > +	LIST_HEAD(dispose);
+> > =20
+> >  	count =3D __nfsd_file_close_inode(inode, &dispose);
+> > -	trace_nfsd_file_close_inode_sync(inode, count);
+> > -	nfsd_file_dispose_list_sync(&dispose);
+> > +	trace_nfsd_file_close_inode(inode, count);
+> > +	if (count) {
+> > +		while(!list_empty(&dispose)) {
+> > +			nf =3D list_first_entry(&dispose, struct nfsd_file, nf_lru);
+> > +			list_del_init(&nf->nf_lru);
+> > +			trace_nfsd_file_closing(nf);
+> > +			__nfsd_file_put(nf);
+>=20
+> If nfsd_file_put() didn't add unhashed files to the lru, this can be
+> nfsd_file_put().=20
+>=20
+> > +		}
+> > +	}
+> > +	return count;
+> >  }
+> > =20
+> >  /**
+> > - * nfsd_file_close_inode - attempt a delayed close of a nfsd_file
+> > + * nfsd_file_close_inode_sync - attempt to forcibly close a nfsd_file
+> >   * @inode: inode of the file to attempt to remove
+> >   *
+> > - * Unhash and put all cache item associated with @inode.
+> > + * Unhash and put, then flush and fput all cache items associated with=
+ @inode.
+> >   */
+> > -static void
+> > -nfsd_file_close_inode(struct inode *inode)
+> > +void
+> > +nfsd_file_close_inode_sync(struct inode *inode)
+> >  {
+> > -	LIST_HEAD(dispose);
+> > -	unsigned int count;
+> > -
+> > -	count =3D __nfsd_file_close_inode(inode, &dispose);
+> > -	trace_nfsd_file_close_inode(inode, count);
+> > -	nfsd_file_dispose_list_delayed(&dispose);
+> > +	if (nfsd_file_close_inode(inode))
+> > +		flush_delayed_fput();
+> >  }
+> > =20
+> >  /**
+> >   * nfsd_file_delayed_close - close unused nfsd_files
+> >   * @work: dummy
+> >   *
+> > - * Walk the LRU list and close any entries that have not been used sin=
+ce
+> > + * Walk the LRU list and destroy any entries that have not been used s=
+ince
+> >   * the last scan.
+> >   */
+> >  static void
+> > @@ -892,7 +884,7 @@ __nfsd_file_cache_purge(struct net *net)
+> >  		while (!IS_ERR_OR_NULL(nf)) {
+> >  			if (net && nf->nf_net !=3D net)
+> >  				continue;
+> > -			nfsd_file_unhash_and_dispose(nf, &dispose);
+> > +			nfsd_file_unhash_and_queue(nf, &dispose);
+> >  			nf =3D rhashtable_walk_next(&iter);
+> >  		}
+> > =20
+> > @@ -1093,11 +1085,10 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, st=
+ruct svc_fh *fhp,
+> >  			goto out;
+> >  		}
+> >  		open_retry =3D false;
+> > -		nfsd_file_put_noref(nf);
+> > +		__nfsd_file_put(nf);
+>=20
+> This nf is not hashed, and I think it has no other reference.  So we
+> could use nfsd_file_free() - but nfsd_file_put() would be just as good
+> and safer.
+>=20
+> >  		goto retry;
+> >  	}
+> > =20
+> > -	nfsd_file_lru_remove(nf);
+>=20
+> Hmmm...  why not remove from the lru.  I guess this justifies patch 2/3,
+> but it might be cleaner to make this
+>=20
+>   if (nfsd_file_lru_remove(nf))
+>         nffsd_file_put(nf);
+> ??
+>=20
+
+Removing from the LRU means putting a reference now. The last "put" of a
+nfsd_file can be rather expensive (you might need to flush data, and
+issue a close()).
+
+In this particular codepath, that's not so much a danger, but avoiding
+excess "put" calls is still a good thing to do. That's the main reason
+I've tried to "transfer" references to and from the LRU where possible.
+
+> >  	this_cpu_inc(nfsd_file_cache_hits);
+> > =20
+> >  	status =3D nfserrno(nfsd_open_break_lease(file_inode(nf->nf_file), ma=
+y_flags));
+> > @@ -1107,7 +1098,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+> >  			this_cpu_inc(nfsd_file_acquisitions);
+> >  		*pnf =3D nf;
+> >  	} else {
+> > -		nfsd_file_put(nf);
+> > +		__nfsd_file_put(nf);
+>=20
+> I don't see the justification for this change.
+> If status =3D=3D nfserr_jukebox, then it is OK.
+> If status is whatever we might get from break_lease(), then it seems
+> wrong.=20
+> If we modify nfsd_file_put() as I suggest, it will handle both cases.
+>=20
+>=20
+
+The justification is that when we're dealing with an error from an open,
+we don't want to put the nfsd_file onto the LRU. So, a direct call to
+__nfsd_file_put is what's needed here.
+
+I'll plan to open-code those like you suggest in the next iteration.
+
+> >  		nf =3D NULL;
+> >  	}
+> > =20
+> > @@ -1134,7 +1125,7 @@ nfsd_file_do_acquire(struct svc_rqst *rqstp, stru=
+ct svc_fh *fhp,
+> >  	 * then unhash.
+> >  	 */
+> >  	if (status !=3D nfs_ok || key.inode->i_nlink =3D=3D 0)
+> > -		nfsd_file_unhash_and_put(nf);
+> > +		nfsd_file_unhash(nf);
+> >  	clear_bit_unlock(NFSD_FILE_PENDING, &nf->nf_flags);
+> >  	smp_mb__after_atomic();
+> >  	wake_up_bit(&nf->nf_flags, NFSD_FILE_PENDING);
+> > diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
+> > index b09ab4f92d43..a44ded06af87 100644
+> > --- a/fs/nfsd/trace.h
+> > +++ b/fs/nfsd/trace.h
+> > @@ -903,10 +903,11 @@ DEFINE_EVENT(nfsd_file_class, name, \
+> >  	TP_PROTO(struct nfsd_file *nf), \
+> >  	TP_ARGS(nf))
+> > =20
+> > -DEFINE_NFSD_FILE_EVENT(nfsd_file_put_final);
+> > +DEFINE_NFSD_FILE_EVENT(nfsd_file_free);
+> >  DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash);
+> >  DEFINE_NFSD_FILE_EVENT(nfsd_file_put);
+> > -DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash_and_dispose);
+> > +DEFINE_NFSD_FILE_EVENT(nfsd_file_closing);
+> > +DEFINE_NFSD_FILE_EVENT(nfsd_file_unhash_and_queue);
+> > =20
+> >  TRACE_EVENT(nfsd_file_alloc,
+> >  	TP_PROTO(
+> > --=20
+> > 2.37.3
+> >=20
+> >=20
+>=20
+> Thanks,
+> NeilBrown
+
+--=20
+Jeff Layton <jlayton@kernel.org>
