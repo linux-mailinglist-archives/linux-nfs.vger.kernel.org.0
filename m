@@ -2,47 +2,53 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B15EB611B59
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 22:04:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EADD611B5A
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 22:04:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230127AbiJ1UE1 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 16:04:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
+        id S229706AbiJ1UEm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 16:04:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbiJ1UE0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 16:04:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53983C4C06
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 13:04:25 -0700 (PDT)
+        with ESMTP id S230080AbiJ1UEm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 16:04:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8976BD59
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 13:04:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3DDA62A4C
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 20:04:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCE25C433C1;
-        Fri, 28 Oct 2022 20:04:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 04F6162A4A
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 20:04:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1477DC433D6;
+        Fri, 28 Oct 2022 20:04:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666987464;
-        bh=PnxOJgVy7lSdCDYOe10bFRPKv8e/m6B9Vcor8b2k5j0=;
+        s=k20201202; t=1666987478;
+        bh=IxowU0ZvwZsk/vbv32treX0xxaOVEynlwGXuDbwM6Rc=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=PnDE6PqVFLIi5u1dqkAJ+rZhjPvBU4tJis1A0BddwW5Q9P13TZNcV5AwIjyz5o751
-         Fbk70SMtMoDd9W+83N+DEmrS7Pgk8hAOAZAaQTv6zleyasOrNLfNgwMmHVsAKF+2sv
-         5iRC8Bzi+01YLB/TqDCIkYnwrWCAQE2vTzRi7pZkt8norVIQCi4godVntqFxYmEUcf
-         hry6On6oQZDxUsZ6nMQwMA82IGSkM/QL8IVeVoKk7W4YaUjIGpdu8crMBwUWX+CGvb
-         +PXlGphBYbUnowzbl6yoQoCL0puVzVfek2ND0II1Yncj4G/BGPyxjVN2er9sam5hxd
-         Qr0nkdMkuZ0hg==
-Message-ID: <e64b1d579f4846331fdedad9bcdfe5eb52a7105c.camel@kernel.org>
-Subject: Re: [PATCH v3 3/4] nfsd: close race between unhashing and LRU
- addition
+        b=ka087CIvahs2IHc+tNVWidFXFB4NScJYRA7+16gRFaIWq3KCxsoofbKvgbNp1Ywqo
+         /he62UbhHmdCDMFWTBYHto5x6XoLns9j1LGdSIHnswa5rEJIYk+HxJ0Wdvs1qp49cY
+         gnv7oO8Ik3vcfO2xRJZS0Xsr5ZFdq7Av2C4/0AwoPldElAQrB7AfzgZj5L6xrkmN/Q
+         L9gY2sxfNTV+FWb/JbeXZsiKzTxuQkTpXwa72HeHhJ4HS8fJELzoZ7hnehIIZ8jngM
+         UoA32y+Y5R3RX0TJQ3g44BYliCFuVlJzMYGNmF1I+sh5ZshdiGy00tZEYdCI9OwChs
+         z4PPvwpDmYquQ==
+Message-ID: <aa20ef22ffa125076f35b8c1ecb508852c0bb073.camel@kernel.org>
+Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
+ nfsd_file to the LRU
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
 Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
         Neil Brown <neilb@suse.de>
-Date:   Fri, 28 Oct 2022 16:04:22 -0400
-In-Reply-To: <08778EE0-CBDC-467B-ACA6-9D8E6719E1BB@oracle.com>
-References: <20221028185712.79863-1-jlayton@kernel.org>
-         <20221028185712.79863-4-jlayton@kernel.org>
-         <08778EE0-CBDC-467B-ACA6-9D8E6719E1BB@oracle.com>
+Date:   Fri, 28 Oct 2022 16:04:36 -0400
+In-Reply-To: <2D64526B-6270-49B9-AC2C-F0118DCF2AF9@oracle.com>
+References: <20221027215213.138304-1-jlayton@kernel.org>
+         <20221027215213.138304-4-jlayton@kernel.org>
+         <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
+         <ae07f54d107cf1848c0a36dd16e437185a0304c3.camel@kernel.org>
+         <65194BBE-F4C7-4CD6-A618-690D1CCE235C@oracle.com>
+         <cc4bfa448efedd0017fc7b20b8b7475907acbc5e.camel@kernel.org>
+         <A040CDCA-5E3F-470F-8D69-8FF9DA4325FE@oracle.com>
+         <098163d8067962f84a06af5d03379e2157974625.camel@kernel.org>
+         <2D64526B-6270-49B9-AC2C-F0118DCF2AF9@oracle.com>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
@@ -56,136 +62,177 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-10-28 at 19:50 +0000, Chuck Lever III wrote:
+On Fri, 2022-10-28 at 18:53 +0000, Chuck Lever III wrote:
 >=20
-> > On Oct 28, 2022, at 2:57 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> > On Oct 28, 2022, at 1:43 PM, Jeff Layton <jlayton@kernel.org> wrote:
 > >=20
-> > The list_lru_add and list_lru_del functions use list_empty checks to se=
+> > On Fri, 2022-10-28 at 17:21 +0000, Chuck Lever III wrote:
+> > >=20
+> > > > On Oct 28, 2022, at 11:51 AM, Jeff Layton <jlayton@kernel.org> wrot=
+e:
+> > > >=20
+> > > > On Fri, 2022-10-28 at 15:29 +0000, Chuck Lever III wrote:
+> > > > >=20
+> > > > > > On Oct 28, 2022, at 11:05 AM, Jeff Layton <jlayton@kernel.org> =
+wrote:
+> > > > > >=20
+> > > > > > The problem with not calling vfs_fsync is that we might miss wr=
+iteback
+> > > > > > errors. The nfsd_file could get reaped before a v3 COMMIT ever =
+comes in.
+> > > > > > nfsd would eventually reopen the file but it could miss seeing =
+the error
+> > > > > > if it got opened locally in the interim.
+> > > > >=20
+> > > > > That helps. So we're surfacing writeback errors for local writers=
+?
+> > > > >=20
+> > > >=20
+> > > > Well for non-v3 writers anyway. I suppose you could hit the same
+> > > > scenario with a mixed v3 and v4 workload if you were unlucky enough=
+, or
+> > > > mixed v3 and ksmbd workload, etc...
+> > > >=20
+> > > > > I guess I would like this flushing to interfere as little as poss=
+ible
+> > > > > with the server's happy zone, since it's not something clients ne=
+ed to
+> > > > > wait for, and an error is exceptionally rare.
+> > > > >=20
+> > > > > But also, we can't let writeback errors hold onto a bunch of memo=
+ry
+> > > > > indefinitely. How much nfsd_file and page cache memory might be b=
 e
-> > whether the object is already on the LRU. That's fine in most cases, bu=
+> > > > > pinned by a writeback error, and for how long?
+> > > > >=20
+> > > >=20
+> > > > You mean if we were to stop trying to fsync out when closing? We do=
+n't
+> > > > keep files in the cache indefinitely, even if they have writeback
+> > > > errors.
+> > > >=20
+> > > > In general, the kernel attempts to write things out, and if it fail=
+s it
+> > > > sets a writeback error in the mapping and marks the pages clean. So=
+ if
+> > > > we're talking about files that are no longer being used (since they=
+'re
+> > > > being GC'ed), we only block reaping them for as long as writeback i=
+s in
+> > > > progress.
+> > > >=20
+> > > > Once writeback ends and it's eligible for reaping, we'll call vfs_f=
+sync
+> > > > a final time, grab the error and reset the write verifier when it's
+> > > > non-zero.
+> > > >=20
+> > > > If we stop doing fsyncs, then that model sort of breaks down. I'm n=
+ot
+> > > > clear on what you'd like to do instead.
+> > >=20
+> > > I'm not clear either. I think I just have some hand-wavy requirements=
+.
+> > >=20
+> > > I think keeping the flushes in the nfsd threads and away from single-
+> > > threaded garbage collection makes sense. Keep I/O in nfsd context, no=
 t
-> > we occasionally repurpose nf_lru after unhashing. It's possible for an
-> > LRU removal to remove it from a different list altogether if we lose a
-> > race.
+> > > in the filecache garbage collector. I'm not sure that's guaranteed
+> > > if the garbage collection thread does an nfsd_file_put() that flushes=
+.
+> > >=20
+> >=20
+> > The garbage collector doesn't call nfsd_file_put directly, though it
+> > will call nfsd_file_free, which now does a vfs_fsync.
 >=20
-> I've never seen that happen. lru field re-use is actually used in other
-> places in the kernel. Shouldn't we try to find and fix such races?
+> OK, thought I saw some email fly by that suggested using nfsd_file_put
+> in the garbage collector. But... the vfs_fsync you mention can possibly
+> trigger I/O and wait for it (it's not the SYNC_NONE flush) in the GC
+> thread. Rare, but I'd rather not have even that possibility if we can
+> avoid it.
 >=20
-> Wasn't the idea to reduce the complexity of nfsd_file_put ?
+>=20
+> > > But, back to the topic of this patch: my own experiments with backgro=
+und
+> > > syncing showed that it introduces significant overhead and it wasn't
+> > > really worth the trouble. Basically, on intensive workloads, the garb=
+age
+> > > collector must not stall or live-lock because it's walking through
+> > > millions of pages trying to figure out which ones are dirty.
+> > >=20
+> >=20
+> > If this is what you want, then kicking off SYNC_NONE writeback when we
+> > put it on the LRU is the right thing to do.
+> >=20
+> > We want to ensure that when the thing is reaped from the LRU, that the
+> > final vfs_fsync has to write nothing back. The penultimate put that add=
+s
+> > it to the LRU is almost certainly going to come in the context of an
+> > nfsd thread, so kicking off background writeback at that point seems
+> > reasonable.
+>=20
+> IIUC the opposing idea is to do a synchronous writeback in nfsd_file_put
+> and then nothing in nfsd_file_free. Why isn't that adequate to achieve
+> the same result ?
 >=20
 
-It certainly seems theoretically possible here. Maybe those other places
-have other ways to ensure that it doesn't occur. We are dealing with RCU
-freed structures here, so we can't always rely on locks to keep things
-nice and serialized.
+To make sure I understand:
+
+For the GC case (v3), you basically want to do a vfs_fsync after we put
+it onto the LRU list? We'd also do a vfs_fsync after the refcount goes
+to 0 in nfsd_file_put.
+
+That seems...worse than what I'm proposing. We'll end up with a bunch of
+blocked nfsd threads for no reason. The writeback in most cases could
+proceed asynchronously, and we'll be idling an nfsd thread for the sole
+purpose of getting the result of that writeback.
+
+I see no need to block an nfsd thread for this. If we kick off
+WB_SYNC_NONE writeback when we put it on the list, then by the time we
+get around to calling vfs_fsync for reaping the thing, it'll basically
+be a no-op. PAGECACHE_TAG_DIRTY should be clear and vfs_fsync will just
+scrape the wb error code and return without walking anything.
+
+I get the goal of not idling the garbage collector for too long, but
+some of that may just be unavoidable. Tearing down a nfsd_file can just
+take a significant amount of time, between flushing data and close.
+
+> Thinking aloud:
+>=20
+> - Suppose a client does some UNSTABLE NFSv3 WRITEs to a file
+> - The client then waits long enough for the nfsd_file to get aged out
+>   of the filecache
+> - A local writer on the server triggers a writeback error on the file
+> - The error is cleared by other activity
+> - The client sends a COMMIT
+>=20
+> Wouldn't the server miss the chance to bump its write verifier in that
+> case?
+>=20
+
+Yep. That is the danger.
+
+>=20
+> > Only files that aren't touched again get reaped off the LRU eventually,
+> > so there should be no danger of nfsd redirtying it again.
+>=20
+> At the risk of rat-holing... IIUC the only case we should care about
+> is if there are outstanding NFSv3 WRITEs that haven't been COMMITed.
+> Seems like NFSv3-specific code, and not the filecache, should deal
+> with that case, and leave nfsd_file_put/free out of it...? Again, no
+> clear idea how it would, but just thinking about the layering here.
+>=20
+
+No idea how we'd do that. The filecache is what gives us persistent
+"state" across disparate RPCs with v3. I think this is where the
+solution has to be handled.
 
 
-FWIW, I left this as a separate patch just to illustrate the race and
-fix, but we probably would want to squash this one into the first.
-
-> > Add a new NFSD_FILE_LRU flag, which indicates that the object actually
-> > resides on the LRU and not some other list. Use that when adding and
-> > removing it from the LRU instead of just relying on list_empty checks.
-> >=20
-> > Add an extra HASHED check after adding the entry to the LRU. If it's no=
-w
-> > clear, just remove it from the LRU again and put the reference if that
-> > remove is successful.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > fs/nfsd/filecache.c | 44 +++++++++++++++++++++++++++++---------------
-> > fs/nfsd/filecache.h |  1 +
-> > 2 files changed, 30 insertions(+), 15 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index d928c5e38eeb..47cdc6129a7b 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -403,18 +403,22 @@ nfsd_file_check_writeback(struct nfsd_file *nf)
-> > static bool nfsd_file_lru_add(struct nfsd_file *nf)
-> > {
-> > 	set_bit(NFSD_FILE_REFERENCED, &nf->nf_flags);
-> > -	if (list_lru_add(&nfsd_file_lru, &nf->nf_lru)) {
-> > -		trace_nfsd_file_lru_add(nf);
-> > -		return true;
-> > +	if (!test_and_set_bit(NFSD_FILE_LRU, &nf->nf_flags)) {
-> > +		if (list_lru_add(&nfsd_file_lru, &nf->nf_lru)) {
-> > +			trace_nfsd_file_lru_add(nf);
-> > +			return true;
-> > +		}
-> > 	}
-> > 	return false;
-> > }
-> >=20
-> > static bool nfsd_file_lru_remove(struct nfsd_file *nf)
-> > {
-> > -	if (list_lru_del(&nfsd_file_lru, &nf->nf_lru)) {
-> > -		trace_nfsd_file_lru_del(nf);
-> > -		return true;
-> > +	if (test_and_clear_bit(NFSD_FILE_LRU, &nf->nf_flags)) {
-> > +		if (list_lru_del(&nfsd_file_lru, &nf->nf_lru)) {
-> > +			trace_nfsd_file_lru_del(nf);
-> > +			return true;
-> > +		}
-> > 	}
-> > 	return false;
-> > }
-> > @@ -469,20 +473,30 @@ nfsd_file_put(struct nfsd_file *nf)
-> > {
-> > 	trace_nfsd_file_put(nf);
-> >=20
-> > -	/*
-> > -	 * The HASHED check is racy. We may end up with the occasional
-> > -	 * unhashed entry on the LRU, but they should get cleaned up
-> > -	 * like any other.
-> > -	 */
-> > 	if (test_bit(NFSD_FILE_GC, &nf->nf_flags) &&
-> > 	    test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-> > 		/*
-> > -		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
-> > -		 * it to the LRU. If the add to the LRU fails, just put it as
-> > -		 * usual.
-> > +		 * If this is the last reference (nf_ref =3D=3D 1), then try to
-> > +		 * transfer it to the LRU.
-> > 		 */
-> > -		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
-> > +		if (refcount_dec_not_one(&nf->nf_ref))
-> > 			return;
-> > +
-> > +		/* Try to add it to the LRU.  If that fails, decrement. */
-> > +		if (nfsd_file_lru_add(nf)) {
-> > +			/* If it's still hashed, we're done */
-> > +			if (test_bit(NFSD_FILE_HASHED, &nf->nf_flags))
-> > +				return;
-> > +
-> > +			/*
-> > +			 * We're racing with unhashing, so try to remove it from
-> > +			 * the LRU. If removal fails, then someone else already
-> > +			 * has our reference and we're done. If it succeeds,
-> > +			 * fall through to decrement.
-> > +			 */
-> > +			if (!nfsd_file_lru_remove(nf))
-> > +				return;
-> > +		}
-> > 	}
-> > 	if (refcount_dec_and_test(&nf->nf_ref))
-> > 		nfsd_file_free(nf);
-> > diff --git a/fs/nfsd/filecache.h b/fs/nfsd/filecache.h
-> > index b7efb2c3ddb1..e52ab7d5a44c 100644
-> > --- a/fs/nfsd/filecache.h
-> > +++ b/fs/nfsd/filecache.h
-> > @@ -39,6 +39,7 @@ struct nfsd_file {
-> > #define NFSD_FILE_PENDING	(1)
-> > #define NFSD_FILE_REFERENCED	(2)
-> > #define NFSD_FILE_GC		(3)
-> > +#define NFSD_FILE_LRU		(4)	/* file is on LRU */
-> > 	unsigned long		nf_flags;
-> > 	struct inode		*nf_inode;	/* don't deref */
-> > 	refcount_t		nf_ref;
-> > --=20
-> > 2.37.3
-> >=20
+>=20
+> > By the time we
+> > get to reaping it, everything should be written back and the inode will
+> > be ready to close with little delay.
+>=20
+>=20
 >=20
 > --
 > Chuck Lever
