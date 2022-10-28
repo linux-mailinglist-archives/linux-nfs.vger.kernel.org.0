@@ -2,203 +2,81 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C2B2611571
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 17:05:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCC1A611581
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 17:07:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231214AbiJ1PFW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 11:05:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48910 "EHLO
+        id S229652AbiJ1PG6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 28 Oct 2022 11:06:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiJ1PFS (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 11:05:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5461D5C95B
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 08:05:11 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229742AbiJ1PGt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 11:06:49 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B52D1BB55C
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 08:05:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1666969549;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=0H7SxGpFvl3T5WJVmn5971FabcUd4rpwdMYKjpJF7Ac=;
+        b=L0YGHv4R6LEtBj28xuVfT6nuHp9z8cMRTlgfY8NrH7HKm1TRXDTzolOl/RZkebX3YvFZOk
+        adtvxTsB5D0pBqopXa3NocIckaJY/2snMKpfcH3Yb8OAr3y4lFyQ+T7Tu8sKzwQmbDfjgL
+        YOO7igp2mKIscZZ8v91i3MsYT/3EzVI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-326-95Dzu1VJO7a4NbANASTQ6Q-1; Fri, 28 Oct 2022 11:05:48 -0400
+X-MC-Unique: 95Dzu1VJO7a4NbANASTQ6Q-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EA64262906
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 15:05:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9169C433D6;
-        Fri, 28 Oct 2022 15:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666969510;
-        bh=q6qbx9E39EZoCKWS4VIzviiamLW0NoH2CRzvecowd58=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=B2qNITlYHfz8uIwSFqlTUq2YWTS+n5lZHdq5in22uWDlWG2G4h26IQOxssyDxUHt4
-         1UHZVl+6C6qKHhZul1spse4qxXj2jHvnU3MZ1eFoby6nCIheodD5ryY9/hvP329Z30
-         QDEFUnrOyDyv9PM8lT4eWIXAosBNi5EtRGIZq1kxI6hJD5G7ie18g51XmMLEAATSbK
-         n4D5xwiTcA07yeKustTN8l/BZBTvi0+mxJVqNR0w48ddnTNh5C+r6EvT4klnIHR91/
-         Y3OT47tbut6Ktgb+KjYU/lLGdf5kc3LcZ5vr7WaR6gi9R/qIA0rKD7t+MIGJIvNwGD
-         Bi9nzkUydTbmg==
-Message-ID: <ae07f54d107cf1848c0a36dd16e437185a0304c3.camel@kernel.org>
-Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
- nfsd_file to the LRU
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Neil Brown <neilb@suse.de>
-Date:   Fri, 28 Oct 2022 11:05:08 -0400
-In-Reply-To: <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
-References: <20221027215213.138304-1-jlayton@kernel.org>
-         <20221027215213.138304-4-jlayton@kernel.org>
-         <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DDFF0101A56D
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 15:05:47 +0000 (UTC)
+Received: from madhat.boston.devel.redhat.com (unknown [10.2.16.125])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B1C41492B06
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 15:05:47 +0000 (UTC)
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+Subject: [PATCH] nfsd.man: Explain that setting nfsv4=n turns off all v4 versions
+Date:   Fri, 28 Oct 2022 11:05:47 -0400
+Message-Id: <20221028150547.19646-1-steved@redhat.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-10-28 at 13:16 +0000, Chuck Lever III wrote:
->=20
-> > On Oct 27, 2022, at 5:52 PM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > When a GC entry gets added to the LRU, kick off SYNC_NONE writeback
-> > so that we can be ready to close it out when the time comes.
->=20
-> For a large file, a background flush still has to walk the file's
-> pages to see if they are dirty, and that consumes time, CPU, and
-> memory bandwidth. We're talking hundreds of microseconds for a
-> large file.
->=20
-> Then the final flush does all that again.
->=20
-> Basically, two (or more!) passes through the file for exactly the
-> same amount of work. Is there any measured improvement in latency
-> or throughput?
->=20
-> And then... for a GC file, no-one is waiting on data persistence
-> during nfsd_file_put() so I'm not sure what is gained by taking
-> control of the flushing process away from the underlying filesystem.
->=20
->=20
-> Remind me why the filecache is flushing? Shouldn't NFSD rely on
-> COMMIT operations for that? (It's not obvious reading the code,
-> maybe there should be a documenting comment somewhere that
-> explains this arrangement).
->=20
+Update the man page to explicitly say setting
+nfsv4=n turns off all v4 versions
 
+Signed-off-by: Steve Dickson <steved@redhat.com>
+---
+ utils/nfsd/nfsd.man | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Fair point. I was trying to replicate the behaviors introduced in these
-patches:
+diff --git a/utils/nfsd/nfsd.man b/utils/nfsd/nfsd.man
+index 634b8a6..bb99fe2 100644
+--- a/utils/nfsd/nfsd.man
++++ b/utils/nfsd/nfsd.man
+@@ -159,7 +159,9 @@ Enable or disable TCP support.
+ .B vers3
+ .TP
+ .B vers4
+-Enable or disable a major NFS version.  3 and 4 are normally enabled
++Enable or disable 
++.B all 
++NFSv4 versions.  All versions are normally enabled
+ by default.
+ .TP
+ .B vers4.1
+-- 
+2.37.3
 
-b6669305d35a nfsd: Reduce the number of calls to nfsd_file_gc()
-6b8a94332ee4 nfsd: Fix a write performance regression
-
-AFAICT, the fsync is there to catch writeback errors so that we can
-reset the write verifiers (AFAICT). The rationale for that is described
-here:
-
-055b24a8f230 nfsd: Don't garbage collect files that might contain write err=
-ors
-
-The problem with not calling vfs_fsync is that we might miss writeback
-errors. The nfsd_file could get reaped before a v3 COMMIT ever comes in.
-nfsd would eventually reopen the file but it could miss seeing the error
-if it got opened locally in the interim.
-
-I'm not sure we need to worry about that so much for v4 though. Maybe we
-should just do this for GC files?
-
->=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> > fs/nfsd/filecache.c | 37 +++++++++++++++++++++++++++++++------
-> > 1 file changed, 31 insertions(+), 6 deletions(-)
-> >=20
-> > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > index d2bbded805d4..491d3d9a1870 100644
-> > --- a/fs/nfsd/filecache.c
-> > +++ b/fs/nfsd/filecache.c
-> > @@ -316,7 +316,7 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *key, u=
-nsigned int may)
-> > }
-> >=20
-> > static void
-> > -nfsd_file_flush(struct nfsd_file *nf)
-> > +nfsd_file_fsync(struct nfsd_file *nf)
-> > {
-> > 	struct file *file =3D nf->nf_file;
-> >=20
-> > @@ -327,6 +327,22 @@ nfsd_file_flush(struct nfsd_file *nf)
-> > 		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
-> > }
-> >=20
-> > +static void
-> > +nfsd_file_flush(struct nfsd_file *nf)
-> > +{
-> > +	struct file *file =3D nf->nf_file;
-> > +	unsigned long nrpages;
-> > +
-> > +	if (!file || !(file->f_mode & FMODE_WRITE))
-> > +		return;
-> > +
-> > +	nrpages =3D file->f_mapping->nrpages;
-> > +	if (nrpages) {
-> > +		this_cpu_add(nfsd_file_pages_flushed, nrpages);
-> > +		filemap_flush(file->f_mapping);
-> > +	}
-> > +}
-> > +
-> > static void
-> > nfsd_file_free(struct nfsd_file *nf)
-> > {
-> > @@ -337,7 +353,7 @@ nfsd_file_free(struct nfsd_file *nf)
-> > 	this_cpu_inc(nfsd_file_releases);
-> > 	this_cpu_add(nfsd_file_total_age, age);
-> >=20
-> > -	nfsd_file_flush(nf);
-> > +	nfsd_file_fsync(nf);
-> >=20
-> > 	if (nf->nf_mark)
-> > 		nfsd_file_mark_put(nf->nf_mark);
-> > @@ -500,12 +516,21 @@ nfsd_file_put(struct nfsd_file *nf)
-> >=20
-> > 	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
-> > 		/*
-> > -		 * If this is the last reference (nf_ref =3D=3D 1), then transfer
-> > -		 * it to the LRU. If the add to the LRU fails, just put it as
-> > -		 * usual.
-> > +		 * If this is the last reference (nf_ref =3D=3D 1), then try
-> > +		 * to transfer it to the LRU.
-> > +		 */
-> > +		if (refcount_dec_not_one(&nf->nf_ref))
-> > +			return;
-> > +
-> > +		/*
-> > +		 * If the add to the list succeeds, try to kick off SYNC_NONE
-> > +		 * writeback. If the add fails, then just fall through to
-> > +		 * decrement as usual.
->=20
-> These comments simply repeat what the code does, so they seem
-> redundant to me. Could they instead explain why?
->=20
->=20
-> > 		 */
-> > -		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
-> > +		if (nfsd_file_lru_add(nf)) {
-> > +			nfsd_file_flush(nf);
-> > 			return;
-> > +		}
-> > 	}
-> > 	__nfsd_file_put(nf);
-> > }
-> > --=20
-> > 2.37.3
-> >=20
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
