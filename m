@@ -2,291 +2,452 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C075B61165A
-	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 17:52:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2B7E611885
+	for <lists+linux-nfs@lfdr.de>; Fri, 28 Oct 2022 18:59:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbiJ1PwJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 28 Oct 2022 11:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56038 "EHLO
+        id S230336AbiJ1Q7l convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-nfs@lfdr.de>); Fri, 28 Oct 2022 12:59:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbiJ1Pvy (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 11:51:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D89A81C43C
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 08:51:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2E742B82996
-        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 15:51:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659ADC433D6;
-        Fri, 28 Oct 2022 15:51:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666972265;
-        bh=SORGXLJ3IgkMOk7lfcqTVd6Sl1D0olVpF/7sP++uNGI=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=oXPmAAbj0IQYhR6f/tfOnoixqfxAE3m8bASnRVR25RzjJ0RZiW3Rdzo8S7pa6Qhh6
-         Uitc8br+r3IjtV+5fCq6d9toLqO+yBg0kNHrjTJmb5JoFvvOSezKt0Ehg57m4HZMQs
-         rF95vaJoDVlhKhqidUv9jNnlh7rg8v5ltBBD6Asd+tnC8/nBI4DLS06IKok2iB5wCq
-         esDoS10sZ2JzqAhsUYmypWdZwqGubVR1WPQvkuIyUfAvqsfvJ+GiTsywFDV/wBUSbL
-         d4U524Hp0q3mP313Lfv2fX5YxsBL0voX40lyMzSQRqYk1sIOh8EqOUA6dw1it2fyv8
-         vyxM+tykqfocQ==
-Message-ID: <cc4bfa448efedd0017fc7b20b8b7475907acbc5e.camel@kernel.org>
-Subject: Re: [PATCH v2 3/3] nfsd: start non-blocking writeback after adding
- nfsd_file to the LRU
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Chuck Lever III <chuck.lever@oracle.com>
-Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Neil Brown <neilb@suse.de>
-Date:   Fri, 28 Oct 2022 11:51:04 -0400
-In-Reply-To: <65194BBE-F4C7-4CD6-A618-690D1CCE235C@oracle.com>
-References: <20221027215213.138304-1-jlayton@kernel.org>
-         <20221027215213.138304-4-jlayton@kernel.org>
-         <D32F829C-434C-4BA4-9057-C9769C2F4655@oracle.com>
-         <ae07f54d107cf1848c0a36dd16e437185a0304c3.camel@kernel.org>
-         <65194BBE-F4C7-4CD6-A618-690D1CCE235C@oracle.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230236AbiJ1Q7R (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 28 Oct 2022 12:59:17 -0400
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF7D201BF
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 09:59:15 -0700 (PDT)
+Received: by mail-io1-f50.google.com with SMTP id n191so5054077iod.13
+        for <linux-nfs@vger.kernel.org>; Fri, 28 Oct 2022 09:59:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=F+c0RrXob86GQMOgizni3Jp+3zaFITWpeDgo3UiqSg0=;
+        b=5uXOUwxGoTm0v+NSIKD3zXTa7yGeiffQIDlorB9RbmD3yvMtVrZ8Rx5es3j1srrOYP
+         yq4iBzYKDtbIHVJ84oAr9uLMojw9VaquFBMh0IqEMx8EdUaozKz1S9ii1ZkPyQFghSjV
+         6Rwdso7kd0Qjw3YufDsm5ipZCqsyc3k4rq6oB72RPNeFmZdPmd4D/yI34giUvSaZcoh8
+         ticHQ2x/HjRGFCuc+B2r65ghxnHGqn2pFwtx9p5Eb6mf4N4+N0lZrurxZ757qXmcQifH
+         tKg40NDxeeFQ4PA9vUKBNuU2UU+Oss4dUkMlNvjKbKURfBWRjP/MrtnadYMVKzF1yzm1
+         Sf9w==
+X-Gm-Message-State: ACrzQf1QwC43/L1x2ioKt0B2O6Ewnv2JsGdFBrtrKFHov7HmFBihGL2Y
+        SdHyQ/mD8fBVHbKkqkipcjSDa1FThg==
+X-Google-Smtp-Source: AMsMyM4EzC+N29Wk2WNLPcWAoRAU/08L4/IvIrjOZ/P7COIe2VnCCc8s1RIDFY4Z79lNOQfmTMN20w==
+X-Received: by 2002:a02:a1c5:0:b0:372:d180:fbc1 with SMTP id o5-20020a02a1c5000000b00372d180fbc1mr211122jah.297.1666976354079;
+        Fri, 28 Oct 2022 09:59:14 -0700 (PDT)
+Received: from [192.168.75.138] (50-36-85-28.alma.mi.frontiernet.net. [50.36.85.28])
+        by smtp.gmail.com with ESMTPSA id r20-20020a92c5b4000000b002f584a19a79sm1774172ilt.34.2022.10.28.09.59.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 28 Oct 2022 09:59:13 -0700 (PDT)
+Message-ID: <0676ecb2bb708e6fc29dbbe6b44551d6a0d021dc.camel@kernel.org>
+Subject: Re: [PATCH v9 3/5] NFS: Convert buffered read paths to use netfs
+ when fscache is enabled
+From:   Trond Myklebust <trondmy@kernel.org>
+To:     David Wysochanski <dwysocha@redhat.com>
+Cc:     Anna Schumaker <anna.schumaker@netapp.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        David Howells <dhowells@redhat.com>, linux-nfs@vger.kernel.org,
+        linux-cachefs@redhat.com, Benjamin Maynard <benmaynard@google.com>,
+        Daire Byrne <daire.byrne@gmail.com>
+Date:   Fri, 28 Oct 2022 12:59:12 -0400
+In-Reply-To: <CALF+zOm+-2QLOMu4J7NAK++xfjZ8SQqmMh8zNFcM2H78_qYAzA@mail.gmail.com>
+References: <20221017105212.77588-1-dwysocha@redhat.com>
+         <20221017105212.77588-4-dwysocha@redhat.com>
+         <870684b35a45b94c426554a62b63f80f421dbb08.camel@kernel.org>
+         <CALF+zOm+-2QLOMu4J7NAK++xfjZ8SQqmMh8zNFcM2H78_qYAzA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-10-28 at 15:29 +0000, Chuck Lever III wrote:
->=20
-> > On Oct 28, 2022, at 11:05 AM, Jeff Layton <jlayton@kernel.org> wrote:
-> >=20
-> > On Fri, 2022-10-28 at 13:16 +0000, Chuck Lever III wrote:
-> > >=20
-> > > > On Oct 27, 2022, at 5:52 PM, Jeff Layton <jlayton@kernel.org> wrote=
-:
-> > > >=20
-> > > > When a GC entry gets added to the LRU, kick off SYNC_NONE writeback
-> > > > so that we can be ready to close it out when the time comes.
-> > >=20
-> > > For a large file, a background flush still has to walk the file's
-> > > pages to see if they are dirty, and that consumes time, CPU, and
-> > > memory bandwidth. We're talking hundreds of microseconds for a
-> > > large file.
-> > >=20
-> > > Then the final flush does all that again.
-> > >=20
-> > > Basically, two (or more!) passes through the file for exactly the
-> > > same amount of work. Is there any measured improvement in latency
-> > > or throughput?
-> > >=20
-> > > And then... for a GC file, no-one is waiting on data persistence
-> > > during nfsd_file_put() so I'm not sure what is gained by taking
-> > > control of the flushing process away from the underlying filesystem.
-> > >=20
-> > >=20
-> > > Remind me why the filecache is flushing? Shouldn't NFSD rely on
-> > > COMMIT operations for that? (It's not obvious reading the code,
-> > > maybe there should be a documenting comment somewhere that
-> > > explains this arrangement).
-> > >=20
-> >=20
-> >=20
-> > Fair point. I was trying to replicate the behaviors introduced in these
-> > patches:
-> >=20
-> > b6669305d35a nfsd: Reduce the number of calls to nfsd_file_gc()
-> > 6b8a94332ee4 nfsd: Fix a write performance regression
-> >=20
-> > AFAICT, the fsync is there to catch writeback errors so that we can
-> > reset the write verifiers (AFAICT). The rationale for that is described
-> > here:
-> >=20
-> > 055b24a8f230 nfsd: Don't garbage collect files that might contain write=
- errors
->=20
-> Yes, I've been confused about this since then :-)
->=20
-> So, the patch description says:
->=20
->     If a file may contain unstable writes that can error out, then we wan=
-t
->     to avoid garbage collecting the struct nfsd_file that may be
->     tracking those errors.
->=20
-> That doesn't explain why that's a problem, it just says what we plan to
-> do about it.
->=20
->=20
-> > The problem with not calling vfs_fsync is that we might miss writeback
-> > errors. The nfsd_file could get reaped before a v3 COMMIT ever comes in=
-.
-> > nfsd would eventually reopen the file but it could miss seeing the erro=
-r
-> > if it got opened locally in the interim.
->=20
-> That helps. So we're surfacing writeback errors for local writers?
->=20
+On Fri, 2022-10-28 at 07:50 -0400, David Wysochanski wrote:
+> On Thu, Oct 27, 2022 at 3:16 PM Trond Myklebust <trondmy@kernel.org>
+> wrote:
+> > 
+> > On Mon, 2022-10-17 at 06:52 -0400, Dave Wysochanski wrote:
+> > > Convert the NFS buffered read code paths to corresponding netfs
+> > > APIs,
+> > > but only when fscache is configured and enabled.
+> > > 
+> > > The netfs API defines struct netfs_request_ops which must be
+> > > filled
+> > > in by the network filesystem.  For NFS, we only need to define 5
+> > > of
+> > > the functions, the main one being the issue_read() function.
+> > > The issue_read() function is called by the netfs layer when a
+> > > read
+> > > cannot be fulfilled locally, and must be sent to the server
+> > > (either
+> > > the cache is not active, or it is active but the data is not
+> > > available).
+> > > Once the read from the server is complete, netfs requires a call
+> > > to
+> > > netfs_subreq_terminated() which conveys either how many bytes
+> > > were
+> > > read
+> > > successfully, or an error.  Note that issue_read() is called with
+> > > a
+> > > structure, netfs_io_subrequest, which defines the IO requested,
+> > > and
+> > > contains a start and a length (both in bytes), and assumes the
+> > > underlying
+> > > netfs will return a either an error on the whole region, or the
+> > > number
+> > > of bytes successfully read.
+> > > 
+> > > The NFS IO path is page based and the main APIs are the pgio APIs
+> > > defined
+> > > in pagelist.c.  For the pgio APIs, there is no way for the caller
+> > > to
+> > > know how many RPCs will be sent and how the pages will be broken
+> > > up
+> > > into underlying RPCs, each of which will have their own
+> > > completion
+> > > and
+> > > return code.  In contrast, netfs is subrequest based, a single
+> > > subrequest may contain multiple pages, and a single subrequest is
+> > > initiated with issue_read() and terminated with
+> > > netfs_subreq_terminated().
+> > > Thus, to utilze the netfs APIs, NFS needs some way to accommodate
+> > > the netfs API requirement on the single response to the whole
+> > > subrequest, while also minimizing disruptive changes to the NFS
+> > > pgio layer.
+> > > 
+> > > The approach taken with this patch is to allocate a small
+> > > structure
+> > > for each nfs_netfs_issue_read() call, store the final error and
+> > > number
+> > > of bytes successfully transferred in the structure, and update
+> > > these
+> > > values
+> > > as each RPC completes.  The refcount on the structure is used as
+> > > a
+> > > marker
+> > > for the last RPC completion, is incremented in
+> > > nfs_netfs_read_initiate(),
+> > > and decremented inside nfs_netfs_read_completion(), when a
+> > > nfs_pgio_header
+> > > contains a valid pointer to the data.  On the final put (which
+> > > signals
+> > > the final outstanding RPC is complete) in
+> > > nfs_netfs_read_completion(),
+> > > call netfs_subreq_terminated() with either the final error value
+> > > (if
+> > > one or more READs complete with an error) or the number of bytes
+> > > successfully transferred (if all RPCs complete successfully). 
+> > > Note
+> > > that when all RPCs complete successfully, the number of bytes
+> > > transferred
+> > > is capped to the length of the subrequest.  Capping the
+> > > transferred
+> > > length
+> > > to the subrequest length prevents "Subreq overread" warnings from
+> > > netfs.
+> > > This is due to the "aligned_len" in nfs_pageio_add_page(), and
+> > > the
+> > > corner case where NFS requests a full page at the end of the
+> > > file,
+> > > even when i_size reflects only a partial page (NFS overread).
+> > > 
+> > > Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
+> > > Reviewed-by: Jeff Layton <jlayton@kernel.org>
+> > 
+> > 
+> > This is not doing what I asked for, which was to separate out the
+> > fscache functionality, so that we can call that if and when it is
+> > available.
+> > 
+> I must have misunderstood then.
+> 
+> The last feedback I have from you was that you wanted it to be
+> an opt-in feature, and it was a comment on a previous patch
+> to Kconfig.  I was proceeding the best I knew how, but
+> let me try to get back on track.
+> 
+> > Instead, it is just wrapping the NFS requests inside netfs
+> > requests. As
+> > it stands, that means it is just duplicating information, and
+> > adding
+> > unnecessary overhead to the standard I/O path (extra allocations,
+> > extra
+> > indirect calls, and extra bloat to the inode).
+> > 
+> I think I understand what you're saying but I'm not sure.  Let me
+> ask some clarifying questions.
+> 
+> Are you objecting to the code when CONFIG_NFS_FSCACHE is
+> configured?  Or when it is not?  Or both?  I think you're objecting
+> when it's configured, but not enabled (we mount without 'fsc').
+> Am I right?
+> 
+> Also, are you objecting to the design that to use fcache we now
+> have to use netfs, specifically:
+> - call into netfs via either netfs_read_folio or netfs_readahead
+> - if fscache is enabled, then the IO can be satisfied from fscache
+> - if fscache is not enabled, or some of the IO cannot be satisfied
+> from the cache, then NFS is called back via netfs_issue_read
+> and we use the normal NFS read pageio interface.  This requires
+> we call netfs_subreq_terminated() when all the RPCs complete,
+> which is the reason for the small changes to pagelist.c
 
-Well for non-v3 writers anyway. I suppose you could hit the same
-scenario with a mixed v3 and v4 workload if you were unlucky enough, or
-mixed v3 and ksmbd workload, etc...
+I'm objecting to any middle layer "solution" that adds overhead to the
+NFS I/O paths.
 
-> I guess I would like this flushing to interfere as little as possible
-> with the server's happy zone, since it's not something clients need to
-> wait for, and an error is exceptionally rare.
->=20
-> But also, we can't let writeback errors hold onto a bunch of memory
-> indefinitely. How much nfsd_file and page cache memory might be be
-> pinned by a writeback error, and for how long?
->=20
+I'm willing to consider solutions that are specific only to the fscache
+use case (i.e. when the 'fsc' mount option is specified). However when
+I perform a normal NFS mount, and do I/O, then I don't want to see
+extra memory allocations, extra indirect calls and larger inode
+footprints.
 
-You mean if we were to stop trying to fsync out when closing? We don't
-keep files in the cache indefinitely, even if they have writeback
-errors.
+IOW: I want the code to optimise for the case of standard NFS, not for
+the case of 'NFS with cachefs additions'.
 
-In general, the kernel attempts to write things out, and if it fails it
-sets a writeback error in the mapping and marks the pages clean. So if
-we're talking about files that are no longer being used (since they're
-being GC'ed), we only block reaping them for as long as writeback is in
-progress.
+> 
+> Can you be more specific as to the portions of the patch you don't
+> like
+> so I can move it in the right direction?
+> 
+> This is from patch #2 which you didn't comment on.  I'm not sure
+> you're
+> ok with it though, since you mention "extra bloat to the inode".
+> Do you object to this even though it's wrapped in an
+> #ifdef CONFIG_NFS_FSCACHE?  If so, do you require no
+> extra size be added to nfs_inode?
+> 
+> @@ -204,9 +208,11 @@ struct nfs_inode {
+>         __u64 write_io;
+>         __u64 read_io;
+>  #ifdef CONFIG_NFS_FSCACHE
+> -       struct fscache_cookie   *fscache;
+> -#endif
+> +       struct netfs_inode      netfs; /* netfs context and VFS inode
+> */
+> +#else
+>         struct inode            vfs_inode;
+> +#endif
+> +
 
-Once writeback ends and it's eligible for reaping, we'll call vfs_fsync
-a final time, grab the error and reset the write verifier when it's
-non-zero.
+Ideally, I'd prefer no extra size. I can live with it up to a certain
+point, however for now NFS is not unconditionally opting into the netfs
+project. If we're to ever do that, then I want to see streamlined code
+for the standard I/O case.
 
-If we stop doing fsyncs, then that model sort of breaks down. I'm not
-clear on what you'd like to do instead.
+> 
+> 
+> Are you ok with the stub functions which are placed in fscache.h, and
+> when CONFIG_NFS_FSCACHE is not set, become either a no-op
+> or a 1-liner (nfs_netfs_readpage_release)?
+> 
+>  #else /* CONFIG_NFS_FSCACHE */
+> +static inline void nfs_netfs_inode_init(struct nfs_inode *nfsi) {}
+> +static inline void nfs_netfs_initiate_read(struct nfs_pgio_header
+> *hdr) {}
+> +static inline void nfs_netfs_read_completion(struct nfs_pgio_header
+> *hdr) {}
+> +static inline void nfs_netfs_readpage_release(struct nfs_page *req)
+> +{
+> +       unlock_page(req->wb_page);
+> +}
+>  static inline void nfs_fscache_release_super_cookie(struct
+> super_block *sb) {}
+>  static inline void nfs_fscache_init_inode(struct inode *inode) {}
+> 
+> 
+> Do you object to the below?  If so, then do you want
+> #ifdef CONFIG_NFS_FSCACHE here?
+> 
+> -- a/fs/nfs/inode.c
+> +++ b/fs/nfs/inode.c
+> @@ -2249,6 +2249,8 @@ struct inode *nfs_alloc_inode(struct
+> super_block *sb)
+>  #ifdef CONFIG_NFS_V4_2
+>         nfsi->xattr_cache = NULL;
+>  #endif
+> +       nfs_netfs_inode_init(nfsi);
+> +
+>         return VFS_I(nfsi);
+>  }
+>  EXPORT_SYMBOL_GPL(nfs_alloc_i
+> node);
+> 
+> 
+> Do you object to the changes in fs/nfs/read.c?  Specifically,
+> how about the below calls to netfs from nfs_read_folio and
+> nfs_readahead into equivalent netfs calls?  So when
+> NFS_CONFIG_FSCACHE is set, but fscache is not enabled
+> ('fsc' not on mount), these netfs functions do immediately call
+> netfs_alloc_request().  But I wonder if we could simply add a
+> check to see if fscache is enabled on the mount, and skip
+> over to satisfy what you want.  Am I understanding what you
+> want?
 
->=20
-> > I'm not sure we need to worry about that so much for v4 though. Maybe w=
-e
-> > should just do this for GC files?
->=20
-> I'm not caffeinated yet. Why is it not a problem for v4? Is it because
-> an open or delegation stateid will prevent the nfsd_file from going
-> away?
->=20
+Quite frankly, I'd prefer that we just split out the functionality that
+is needed from the netfs code so that it can be optimised. However I'm
+not interested enough in the cachefs functionality to work on that
+myself. ...and as I indicated above, I might be OK with opting into the
+netfs project, once the overhead can be made to disappear.
+
+> 
+> @@ -355,6 +343,10 @@ int nfs_read_folio(struct file *file, struct
+> folio *folio)
+>         if (NFS_STALE(inode))
+>                 goto out_unlock;
+> 
+> +       ret = nfs_netfs_read_folio(file, folio);
+> +       if (!ret)
+> +               goto out;
+> +
+> 
+> @@ -405,6 +399,10 @@ void nfs_readahead(struct readahead_control
+> *ractl)
+>         if (NFS_STALE(inode))
+>                 goto out;
+> 
+> +       ret = nfs_netfs_readahead(ractl);
+> +       if (!ret)
+> +               goto out;
+> +
+> 
+> 
+> And how about these calls from different points in the read
+> path to the earlier mentioned stub functions?
+> 
+> @@ -110,20 +110,13 @@ EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
+> 
+>  static void nfs_readpage_release(struct nfs_page *req, int error)
+>  {
+> -       struct inode *inode = d_inode(nfs_req_openctx(req)->dentry);
+>         struct page *page = req->wb_page;
+> 
+> -       dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb-
+> >s_id,
+> -               (unsigned long long)NFS_FILEID(inode), req->wb_bytes,
+> -               (long long)req_offset(req));
+> -
+>         if (nfs_error_is_fatal_on_server(error) && error != -
+> ETIMEDOUT)
+>                 SetPageError(page);
+> -       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
+> -               if (PageUptodate(page))
+> -                       nfs_fscache_write_page(inode, page);
+> -               unlock_page(page);
+> -       }
+> +       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE))
+> +               nfs_netfs_readpage_release(req);
+> +
+
+I'm not seeing the value of wrapping unlock_page(), no... That code is
+going to need to change when we move it to use folios natively anyway.
+
+>         nfs_release_request(req);
+>  }
+> 
+> @@ -177,6 +170,8 @@ static void nfs_read_completion(struct
+> nfs_pgio_header *hdr)
+>                 nfs_list_remove_request(req);
+>                 nfs_readpage_release(req, error);
+>         }
+> +       nfs_netfs_read_completion(hdr);
+> +
+>  out:
+>         hdr->release(hdr);
+>  }
+> @@ -187,6 +182,7 @@ static void nfs_initiate_read(struct
+> nfs_pgio_header *hdr,
+>                               struct rpc_task_setup *task_setup_data,
+> int how)
+>  {
+>         rpc_ops->read_setup(hdr, msg);
+> +       nfs_netfs_initiate_read(hdr);
+>         trace_nfs_initiate_read(hdr);
+>  }
+> 
+> 
+> Are you ok with these additions?  Something like this would
+> be required in the case of fscache configured and enabled,
+> because we could have some of the data in a read in
+> fscache, and some not.  That is the reason for the netfs
+> design, and why we need to be able to call the normal
+> NFS read IO path (netfs calls into issue_read, and we call
+> back via netfs_subreq_terminated)?
+> 
+> @@ -101,6 +101,9 @@ struct nfs_pageio_descriptor {
+>         struct pnfs_layout_segment *pg_lseg;
+>         struct nfs_io_completion *pg_io_completion;
+>         struct nfs_direct_req   *pg_dreq;
+> +#ifdef CONFIG_NFS_FSCACHE
+> +       void                    *pg_netfs;
+> +#endif
+> 
+> @@ -1619,6 +1619,9 @@ struct nfs_pgio_header {
+>         const struct nfs_rw_ops *rw_ops;
+>         struct nfs_io_completion *io_completion;
+>         struct nfs_direct_req   *dreq;
+> +#ifdef CONFIG_NFS_FSCACHE
+> +       void                    *netfs;
+> +#endif
+> 
+> 
+> And these additions to pagelist.c?
+> 
+> @@ -68,6 +69,10 @@ void nfs_pgheader_init(struct
+> nfs_pageio_descriptor *desc,
+>         hdr->good_bytes = mirror->pg_count;
+>         hdr->io_completion = desc->pg_io_completion;
+>         hdr->dreq = desc->pg_dreq;
+> +#ifdef CONFIG_NFS_FSCACHE
+> +       if (desc->pg_netfs)
+> +               hdr->netfs = desc->pg_netfs;
+> +#endif
+
+Why the conditional?
+
+> 
+> 
+> @@ -846,6 +851,9 @@ void nfs_pageio_init(struct nfs_pageio_descriptor
+> *desc,
+>         desc->pg_lseg = NULL;
+>         desc->pg_io_completion = NULL;
+>         desc->pg_dreq = NULL;
+> +#ifdef CONFIG_NFS_FSCACHE
+> +       desc->pg_netfs = NULL;
+> +#endif
+> 
+> 
+> @@ -1360,6 +1369,9 @@ int nfs_pageio_resend(struct
+> nfs_pageio_descriptor *desc,
+> 
+>         desc->pg_io_completion = hdr->io_completion;
+>         desc->pg_dreq = hdr->dreq;
+> +#ifdef CONFIG_NFS_FSCACHE
+> +       desc->pg_netfs = hdr->netfs;
+> +#endif
+
+Those all need wrapper functions instead of embedding #ifdefs.
+
+> 
+> 
+> > My expectation is that the standard I/O path should have minimal
+> > overhead, and should certainly not increase the overhead that we
+> > already have. Will this be addressed in future iterations of these
+> > patches?
+> > 
+> 
+> I will do what I can to satisfy what you want, either by fixing up
+> this patch or follow-on patches.  Hopefully the above questions
+> will clarify the next steps.
+> 
+
+-- 
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
 
-Yeah, more or less.
-
-I think that for a error to be lost with v4, it would require the client
-to have an application access pattern that would expose it to that
-possibility on a local filesystem as well. I don't think we have any
-obligation to do more there.
-
-Maybe that's a false assumption though.
-
-> Sorry for the noise. It's all a little subtle.
->=20
-
-Very subtle. The more we can get this fleshed out into comments the
-better, so I welcome the questions.
-
->=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > > fs/nfsd/filecache.c | 37 +++++++++++++++++++++++++++++++------
-> > > > 1 file changed, 31 insertions(+), 6 deletions(-)
-> > > >=20
-> > > > diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-> > > > index d2bbded805d4..491d3d9a1870 100644
-> > > > --- a/fs/nfsd/filecache.c
-> > > > +++ b/fs/nfsd/filecache.c
-> > > > @@ -316,7 +316,7 @@ nfsd_file_alloc(struct nfsd_file_lookup_key *ke=
-y, unsigned int may)
-> > > > }
-> > > >=20
-> > > > static void
-> > > > -nfsd_file_flush(struct nfsd_file *nf)
-> > > > +nfsd_file_fsync(struct nfsd_file *nf)
-> > > > {
-> > > > 	struct file *file =3D nf->nf_file;
-> > > >=20
-> > > > @@ -327,6 +327,22 @@ nfsd_file_flush(struct nfsd_file *nf)
-> > > > 		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
-> > > > }
-> > > >=20
-> > > > +static void
-> > > > +nfsd_file_flush(struct nfsd_file *nf)
-> > > > +{
-> > > > +	struct file *file =3D nf->nf_file;
-> > > > +	unsigned long nrpages;
-> > > > +
-> > > > +	if (!file || !(file->f_mode & FMODE_WRITE))
-> > > > +		return;
-> > > > +
-> > > > +	nrpages =3D file->f_mapping->nrpages;
-> > > > +	if (nrpages) {
-> > > > +		this_cpu_add(nfsd_file_pages_flushed, nrpages);
-> > > > +		filemap_flush(file->f_mapping);
-> > > > +	}
-> > > > +}
-> > > > +
-> > > > static void
-> > > > nfsd_file_free(struct nfsd_file *nf)
-> > > > {
-> > > > @@ -337,7 +353,7 @@ nfsd_file_free(struct nfsd_file *nf)
-> > > > 	this_cpu_inc(nfsd_file_releases);
-> > > > 	this_cpu_add(nfsd_file_total_age, age);
-> > > >=20
-> > > > -	nfsd_file_flush(nf);
-> > > > +	nfsd_file_fsync(nf);
-> > > >=20
-> > > > 	if (nf->nf_mark)
-> > > > 		nfsd_file_mark_put(nf->nf_mark);
-> > > > @@ -500,12 +516,21 @@ nfsd_file_put(struct nfsd_file *nf)
-> > > >=20
-> > > > 	if (test_bit(NFSD_FILE_GC, &nf->nf_flags)) {
-> > > > 		/*
-> > > > -		 * If this is the last reference (nf_ref =3D=3D 1), then transfe=
-r
-> > > > -		 * it to the LRU. If the add to the LRU fails, just put it as
-> > > > -		 * usual.
-> > > > +		 * If this is the last reference (nf_ref =3D=3D 1), then try
-> > > > +		 * to transfer it to the LRU.
-> > > > +		 */
-> > > > +		if (refcount_dec_not_one(&nf->nf_ref))
-> > > > +			return;
-> > > > +
-> > > > +		/*
-> > > > +		 * If the add to the list succeeds, try to kick off SYNC_NONE
-> > > > +		 * writeback. If the add fails, then just fall through to
-> > > > +		 * decrement as usual.
-> > >=20
-> > > These comments simply repeat what the code does, so they seem
-> > > redundant to me. Could they instead explain why?
-> > >=20
-> > >=20
-> > > > 		 */
-> > > > -		if (refcount_dec_not_one(&nf->nf_ref) || nfsd_file_lru_add(nf))
-> > > > +		if (nfsd_file_lru_add(nf)) {
-> > > > +			nfsd_file_flush(nf);
-> > > > 			return;
-> > > > +		}
-> > > > 	}
-> > > > 	__nfsd_file_put(nf);
-> > > > }
-> > > > --=20
-> > > > 2.37.3
-> > > >=20
-> > >=20
-> > > --
-> > > Chuck Lever
-> > >=20
-> > >=20
-> > >=20
-> >=20
-> > --=20
-> > Jeff Layton <jlayton@kernel.org>
->=20
-> --
-> Chuck Lever
->=20
->=20
->=20
-
---=20
-Jeff Layton <jlayton@kernel.org>
