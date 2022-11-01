@@ -2,42 +2,42 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EB49615137
-	for <lists+linux-nfs@lfdr.de>; Tue,  1 Nov 2022 19:03:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0031461515A
+	for <lists+linux-nfs@lfdr.de>; Tue,  1 Nov 2022 19:15:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230395AbiKASDd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 1 Nov 2022 14:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
+        id S229761AbiKASPz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 1 Nov 2022 14:15:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230363AbiKASDd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Nov 2022 14:03:33 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F9B14D03
-        for <linux-nfs@vger.kernel.org>; Tue,  1 Nov 2022 11:03:31 -0700 (PDT)
+        with ESMTP id S229740AbiKASPs (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 1 Nov 2022 14:15:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C90D813E09
+        for <linux-nfs@vger.kernel.org>; Tue,  1 Nov 2022 11:15:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E2FAAB81E95
-        for <linux-nfs@vger.kernel.org>; Tue,  1 Nov 2022 18:03:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B16FC433C1;
-        Tue,  1 Nov 2022 18:03:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55EFC6156C
+        for <linux-nfs@vger.kernel.org>; Tue,  1 Nov 2022 18:15:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57E20C433D6;
+        Tue,  1 Nov 2022 18:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667325808;
-        bh=csCfWu/7/qQ8glDjlcNCB/d8KZGNyCzjDg+EHHHg8JI=;
+        s=k20201202; t=1667326543;
+        bh=KhXSmMcjsNF1tVZw0TT+OB1EKucVVea1h4mBTQ8QwPI=;
         h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=RJGFN3HdS9Ygar07tVVcymvn/acoYv4To0epY2voJro4+9a/e0rw+ecPgaf8lu/K/
-         ILaH0el0aeYPZiR79IIhYEair63DDSfYnIHAg45ZATlAgzrn+pG119h0W1m6cXUFE0
-         tbuZ1JMp1kxHo591i5GcWPoLUBrtuuUJeFa8TC/von1FYVrGppQUQSPVPNPDCYh3hn
-         qyCPzAJ7ouAqHiCrOUGMlh5yWG7nMjalQLC9osJWnVAOgCfDUnpp42vhuMfgFldzwZ
-         STGLiDn5xAtaES/Pozh9rE4DEHeSvRiKnEPVAt608YQVdzpTmlf9A2MmRwo0rzIVSc
-         6IZ6mHHkuGe4w==
-Message-ID: <17bf0292cbd63b6bb13f6595b5d82c2a173b3ee4.camel@kernel.org>
+        b=PePTEZXZ19eqzT0dg3vNrLICg+LJNZH23t5kRWVL17sKEoKU0N643BjyLwHdjcDyk
+         YIyrAg4IGvi6SDRe13UGCorN5N8+mGe1dJJK0OMCeC2nHK5GopiZbKwFljvohl4SDp
+         BmTkAsEjGUV8fy4vl0F7VvtsWDUwKWhhumJeAWwA6WO2uRi06yJ+MctbQ4CiImgy67
+         FrkTXpBBlM5Ru5cHzgYMfUQmzeeiXEHfUYBAR4gmDryuKHX5G5OGMu6zdj58X33aRc
+         YDymbM+XV/YsGVvdEvU73j0veDy3gnrm+U4Y7gnJ6GEzPEaXwo8vYPd9JlgLxvNaog
+         ZIcK+J0zlmzeA==
+Message-ID: <1e1ee3552f09e70d543c61af01cc3d6aca41e025.camel@kernel.org>
 Subject: Re: [PATCH v5 3/5] nfsd: rework refcounting in filecache
 From:   Jeff Layton <jlayton@kernel.org>
 To:     Chuck Lever III <chuck.lever@oracle.com>
 Cc:     Neil Brown <neilb@suse.de>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Date:   Tue, 01 Nov 2022 14:03:26 -0400
+Date:   Tue, 01 Nov 2022 14:15:41 -0400
 In-Reply-To: <42F8EAC1-7383-4B98-BAD1-D676950718E0@oracle.com>
 References: <20221101144647.136696-1-jlayton@kernel.org>
          <20221101144647.136696-4-jlayton@kernel.org>
@@ -88,30 +88,15 @@ d
 > NFSv3. It's showing worse eviction behavior than the current
 > code.
 >=20
-
-What do you mean by "worse" here?
-
 > Basically all cached items appear to be immediately placed on
 > the LRU. Do you expect this behavior change? We want to keep
 > the LRU as short as possible; but maybe the LRU callback is
 > stopping after a few items, so it might not matter.
 >=20
-
-Could be. I'm not sure how that works.
-
 > Can you look into it before I apply? I suspect it's because
 > the list_lru_isolate() call is moved after the REFERENCED
 > check.
 >=20
-
-I don't see how we can change the order of operations in the LRU
-callback without reintroducing race conditions. The existing check is:
-
-	if (refcount_read(&nf->nf_ref) > 1) {
-		list_lru_isolate(lru, &nf->nf_lru);
-
-...which was racy, of course...
-
 >=20
 > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
 > > ---
@@ -172,7 +157,18 @@ nsigned int may)
 >=20
 > as you suggested last week.
 >=20
->=20
+
+We could.
+
+The way I look at it is that for v4, a client that is interested in
+writeback errors should maintain an open stateid, which prevents the
+above scenario. So, the above is really just for v3, due to its
+stateless nature.
+
+The existing filecache code doesn't make that distinction well though,
+so maybe that would be best left to a follow-on patch, alongside with
+the SYNC_NONE change you wanted to wait on.
+
 > > +
 > > 	if (nf->nf_mark)
 > > 		nfsd_file_mark_put(nf->nf_mark);
@@ -354,6 +350,9 @@ lready
 > to mollify it.
 >=20
 >=20
+
+Sounds reasonable. I'll go with your version.
+
 > > 	}
 > > +	if (refcount_dec_and_test(&nf->nf_ref))
 > > +		nfsd_file_free(nf);
@@ -536,6 +535,9 @@ ct list_head *dispose)
 > and "(!list_empty())".
 >=20
 >=20
+
+My bad. Fixed.
+
 > > +		nf =3D list_first_entry(&dispose, struct nfsd_file, nf_lru);
 > > +		list_del_init(&nf->nf_lru);
 > > +		trace_nfsd_file_closing(nf);
