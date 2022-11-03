@@ -2,30 +2,30 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26B7C61897D
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Nov 2022 21:22:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DCF3861897E
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Nov 2022 21:22:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231336AbiKCUWy (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Nov 2022 16:22:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38388 "EHLO
+        id S231334AbiKCUW5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Nov 2022 16:22:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230306AbiKCUWv (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Nov 2022 16:22:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112341F2D2
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 13:22:50 -0700 (PDT)
+        with ESMTP id S229770AbiKCUW5 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Nov 2022 16:22:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D1511F2DC
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 13:22:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2B4361F3E
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 20:22:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3E00C433D6
-        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 20:22:48 +0000 (UTC)
-Subject: [PATCH v1 1/2] NFSD: Add an nfsd_file_fsync tracepoint
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF79B61FC4
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 20:22:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D641C433D6
+        for <linux-nfs@vger.kernel.org>; Thu,  3 Nov 2022 20:22:55 +0000 (UTC)
+Subject: [PATCH v1 2/2] NFSD: Re-arrange file_close_inode tracepoints
 From:   Chuck Lever <chuck.lever@oracle.com>
 To:     linux-nfs@vger.kernel.org
-Date:   Thu, 03 Nov 2022 16:22:48 -0400
-Message-ID: <166750696798.1646.13192363976207504637.stgit@klimt.1015granger.net>
+Date:   Thu, 03 Nov 2022 16:22:54 -0400
+Message-ID: <166750697425.1646.11770177003223505657.stgit@klimt.1015granger.net>
 In-Reply-To: <166750689663.1646.10478083854261038468.stgit@klimt.1015granger.net>
 References: <166750689663.1646.10478083854261038468.stgit@klimt.1015granger.net>
 User-Agent: StGit/1.5.dev3+g9561319
@@ -41,83 +41,138 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add a tracepoint to capture the number of filecache-triggered fsync
-calls and which files needed it. Also, record when an fsync might
-trigger a write verifier reset.
-
-Examples:
-
-<...>-97    [007]   262.505611: nfsd_file_free:       inode=0xffff888171e08140 ref=0 flags=GC may=WRITE nf_file=0xffff8881373d2400
-<...>-97    [007]   262.505612: nfsd_file_fsync:      inode=0xffff888171e08140 ref=0 flags=GC may=WRITE nf_file=0xffff8881373d2400 ret=0
-<...>-97    [007]   262.505623: nfsd_file_free:       inode=0xffff888171e08dc0 ref=0 flags=GC may=WRITE nf_file=0xffff8881373d1e00
-<...>-97    [007]   262.505624: nfsd_file_fsync:      inode=0xffff888171e08dc0 ref=0 flags=GC may=WRITE nf_file=0xffff8881373d1e00 ret=0
+Now that we have trace_nfsd_file_closing, all we really need to
+capture is when an external caller has requested a close/sync.
 
 Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 ---
- fs/nfsd/filecache.c |    5 ++++-
- fs/nfsd/trace.h     |   31 +++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+), 1 deletion(-)
+ fs/nfsd/filecache.c |   17 ++++++-----------
+ fs/nfsd/trace.h     |   45 ++++++++++++++++-----------------------------
+ 2 files changed, 22 insertions(+), 40 deletions(-)
 
 diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
-index 19af18d386a2..cf1a8f1d1349 100644
+index cf1a8f1d1349..7be62af4bfb7 100644
 --- a/fs/nfsd/filecache.c
 +++ b/fs/nfsd/filecache.c
-@@ -334,10 +334,13 @@ static void
- nfsd_file_fsync(struct nfsd_file *nf)
+@@ -706,14 +706,13 @@ static struct shrinker	nfsd_file_shrinker = {
+  * The nfsd_file objects on the list will be unhashed, and each will have a
+  * reference taken.
+  */
+-static unsigned int
++static void
+ __nfsd_file_close_inode(struct inode *inode, struct list_head *dispose)
  {
- 	struct file *file = nf->nf_file;
-+	int ret;
+ 	struct nfsd_file_lookup_key key = {
+ 		.type	= NFSD_FILE_KEY_INODE,
+ 		.inode	= inode,
+ 	};
+-	unsigned int count = 0;
+ 	struct nfsd_file *nf;
  
- 	if (!file || !(file->f_mode & FMODE_WRITE))
- 		return;
--	if (vfs_fsync(file, 1) != 0)
-+	ret = vfs_fsync(file, 1);
-+	trace_nfsd_file_fsync(nf, ret);
-+	if (ret)
- 		nfsd_reset_write_verifier(net_generic(nf->nf_net, nfsd_net_id));
+ 	rcu_read_lock();
+@@ -723,11 +722,9 @@ __nfsd_file_close_inode(struct inode *inode, struct list_head *dispose)
+ 		if (!nf)
+ 			break;
+ 
+-		if (nfsd_file_unhash_and_queue(nf, dispose))
+-			count++;
++		nfsd_file_unhash_and_queue(nf, dispose);
+ 	} while (1);
+ 	rcu_read_unlock();
+-	return count;
  }
  
+ /**
+@@ -742,11 +739,9 @@ static void
+ nfsd_file_close_inode(struct inode *inode)
+ {
+ 	struct nfsd_file *nf, *tmp;
+-	unsigned int count;
+ 	LIST_HEAD(dispose);
+ 
+-	count = __nfsd_file_close_inode(inode, &dispose);
+-	trace_nfsd_file_close_inode(inode, count);
++	__nfsd_file_close_inode(inode, &dispose);
+ 	list_for_each_entry_safe(nf, tmp, &dispose, nf_lru) {
+ 		trace_nfsd_file_closing(nf);
+ 		if (!refcount_dec_and_test(&nf->nf_ref))
+@@ -765,11 +760,11 @@ void
+ nfsd_file_close_inode_sync(struct inode *inode)
+ {
+ 	struct nfsd_file *nf;
+-	unsigned int count;
+ 	LIST_HEAD(dispose);
+ 
+-	count = __nfsd_file_close_inode(inode, &dispose);
+-	trace_nfsd_file_close_inode(inode, count);
++	trace_nfsd_file_close(inode);
++
++	__nfsd_file_close_inode(inode, &dispose);
+ 	while (!list_empty(&dispose)) {
+ 		nf = list_first_entry(&dispose, struct nfsd_file, nf_lru);
+ 		list_del_init(&nf->nf_lru);
 diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 736a99448d66..e41007807b7e 100644
+index e41007807b7e..ef01ecd3eec6 100644
 --- a/fs/nfsd/trace.h
 +++ b/fs/nfsd/trace.h
-@@ -1238,6 +1238,37 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, name,				\
+@@ -1099,35 +1099,6 @@ TRACE_EVENT(nfsd_file_open,
+ 		__entry->nf_file)
+ )
+ 
+-DECLARE_EVENT_CLASS(nfsd_file_search_class,
+-	TP_PROTO(
+-		const struct inode *inode,
+-		unsigned int count
+-	),
+-	TP_ARGS(inode, count),
+-	TP_STRUCT__entry(
+-		__field(const struct inode *, inode)
+-		__field(unsigned int, count)
+-	),
+-	TP_fast_assign(
+-		__entry->inode = inode;
+-		__entry->count = count;
+-	),
+-	TP_printk("inode=%p count=%u",
+-		__entry->inode, __entry->count)
+-);
+-
+-#define DEFINE_NFSD_FILE_SEARCH_EVENT(name)				\
+-DEFINE_EVENT(nfsd_file_search_class, name,				\
+-	TP_PROTO(							\
+-		const struct inode *inode,				\
+-		unsigned int count					\
+-	),								\
+-	TP_ARGS(inode, count))
+-
+-DEFINE_NFSD_FILE_SEARCH_EVENT(nfsd_file_close_inode_sync);
+-DEFINE_NFSD_FILE_SEARCH_EVENT(nfsd_file_close_inode);
+-
+ TRACE_EVENT(nfsd_file_is_cached,
+ 	TP_PROTO(
+ 		const struct inode *inode,
+@@ -1238,6 +1209,22 @@ DEFINE_EVENT(nfsd_file_lruwalk_class, name,				\
  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_gc_removed);
  DEFINE_NFSD_FILE_LRUWALK_EVENT(nfsd_file_shrinker_removed);
  
-+TRACE_EVENT(nfsd_file_fsync,
++TRACE_EVENT(nfsd_file_close,
 +	TP_PROTO(
-+		const struct nfsd_file *nf,
-+		int ret
++		const struct inode *inode
 +	),
-+	TP_ARGS(nf,ret),
++	TP_ARGS(inode),
 +	TP_STRUCT__entry(
-+		__field(void *, nf_inode)
-+		__field(int, nf_ref)
-+		__field(int, ret)
-+		__field(unsigned long, nf_flags)
-+		__field(unsigned char, nf_may)
-+		__field(struct file *, nf_file)
++		__field(const void *, inode)
 +	),
 +	TP_fast_assign(
-+		__entry->nf_inode = nf->nf_inode;
-+		__entry->nf_ref = refcount_read(&nf->nf_ref);
-+		__entry->ret = ret;
-+		__entry->nf_flags = nf->nf_flags;
-+		__entry->nf_may = nf->nf_may;
-+		__entry->nf_file = nf->nf_file;
++		__entry->inode = inode;
 +	),
-+	TP_printk("inode=%p ref=%d flags=%s may=%s nf_file=%p ret=%d",
-+		__entry->nf_inode,
-+		__entry->nf_ref,
-+		show_nf_flags(__entry->nf_flags),
-+		show_nfsd_may_flags(__entry->nf_may),
-+		__entry->nf_file, __entry->ret
++	TP_printk("inode=%p",
++		__entry->inode
 +	)
 +);
 +
- #include "cache.h"
- 
- TRACE_DEFINE_ENUM(RC_DROPIT);
+ TRACE_EVENT(nfsd_file_fsync,
+ 	TP_PROTO(
+ 		const struct nfsd_file *nf,
 
 
