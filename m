@@ -2,146 +2,160 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 23DCD617D88
-	for <lists+linux-nfs@lfdr.de>; Thu,  3 Nov 2022 14:10:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13023618311
+	for <lists+linux-nfs@lfdr.de>; Thu,  3 Nov 2022 16:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230296AbiKCNKj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 3 Nov 2022 09:10:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50390 "EHLO
+        id S232145AbiKCPms (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 3 Nov 2022 11:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbiKCNKi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Nov 2022 09:10:38 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1894D61;
-        Thu,  3 Nov 2022 06:10:36 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3D4eJU014527;
-        Thu, 3 Nov 2022 13:07:29 GMT
+        with ESMTP id S231610AbiKCPmp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 3 Nov 2022 11:42:45 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8126613E3C;
+        Thu,  3 Nov 2022 08:42:44 -0700 (PDT)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3FY0a9007655;
+        Thu, 3 Nov 2022 15:42:19 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : references : in-reply-to : content-type :
  content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=noVknW+oWM0DXWJgUEniwbyA+ADWcMVuFZOhGjedrBc=;
- b=BjOONbL37LIMsEwXo5QKGb6mLTVGfVpZg9egKN2jvBNXWKhX+LLgLHDc8kHEswNNh+Nu
- GH3V6aS5BIrXdBFLTox2GEw4gbBpXT4H8VlaV6qeWtKW2upEB7z1BBCCQdxhTIqoIh+U
- ELvjrpoRuBG/NOHRyRk3p7sU1T96+MqAXGT4hcLOwNGSHfZdvxoqxDPWju4yMZ0/i5up
- 196GmxLMt5rkYMjCN5exc+WEg56qMlmlXA6598fGpL5NKyhzhM1L+b13tj4TNbl6+Hi9
- iDp4S9ikNMPpYcKAvuqA78qfvOjQJlRguHST9cC+uarWfooEpi6GtsX2DlEKBo4ZXbdg yg== 
+ bh=fxAU+KO3uMconJE/g3g8kkRVxAdEZwYV0zGrp5YbguE=;
+ b=BXvZbIcLHYpEZ/pbSKvN/rsbku3WZw4aEQuJNLsdvYYUgrTSl1iDQAseACkLWysTOJaK
+ oc+x+zu2F0byDQLN1zVl+MpPC6/uTblFkHB0pBNVg0/I2PYgZAFabatcSc7xAXvKJlLT
+ iCAwsWZTF/0Zc8nNfFq5ksIvn04yA+X2okRhfG0wnW6TC4sBK5PH+LTB0/zyGigw9OHu
+ uj3kqoIYUtpBYLBk23+SGH/92jKk+SuBnytBhvWiY2Ngb0LyYurvP7rn0Tl3qHoDo/Rq
+ Xwg1A7F/rD6PIZt+sRPhio37nyrPi34lZcoXdhJBoPwaTfU+nsZToXCVLXa34klrhrtI +w== 
 Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kgty34ra3-1
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kgv2an43x-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Nov 2022 13:07:27 +0000
+        Thu, 03 Nov 2022 15:42:19 +0000
 Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3CbJ0W029761;
-        Thu, 3 Nov 2022 13:07:26 GMT
-Received: from nam10-dm6-obe.outbound.protection.outlook.com (mail-dm6nam10lp2106.outbound.protection.outlook.com [104.47.58.106])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kgtm6kgwp-1
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A3EoF6h029711;
+        Thu, 3 Nov 2022 15:42:18 GMT
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2171.outbound.protection.outlook.com [104.47.57.171])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kgtm6rde6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 03 Nov 2022 13:07:26 +0000
+        Thu, 03 Nov 2022 15:42:18 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FHHWWEuD5TDLi6z54+a4XGYZauoJvdrsYZbveO8b5FTSkeceQM0FdivI60lKB5nNYHR1vxfSne7Sd7S8VPjL8JXqvJYnZIZDemP097qeYcgLGmPdNETGkxgvxUt8PaG3TRbZygtJC4QDk9ZfzcPV+ONhKqPsZlyHNHKGfui85DsqMGMv2suhGy0tdxpGoYemvZ5vTBLRljXB6djMaMolgAoZjzX1DJOjoVEtxZID6nMDZ62Xkcf7MQ6ZgZTcsr5ZTkvzGxWBg2cDgjwGKPEIGBFAfDc/DCflELCedPrzSVXpC8shUo+WwBoiZq1GSS9PzB81pQ7/4xgU62uhdgvUQA==
+ b=n9E2IpiyZ725xisJSJwToP1Enj5yiHhRsdSQDIJmAPrp+2NL2oGnKfD0d3VY9YLfl96CL82ayT2ktMBIlMtc15/ZJ9XdfibUyPrybAn+ZSsIcQ1mfe3tpK/WADMgA7WNA3yufNnCN89SOgUC8VpWRLxaunriUd+U6v1/uHBZ8ORvFP88/Z0PG2BHugziZ3I8voQW7Qfb7sXw9mLuQ6msy19c+DT5HaGRry1p3E6IMmM1tc1FRmeDmrej+F9YCk2Xbdd253HP7Mwy+9Tw8XotY1iuGxo2pWSTVOBstAvnNX8QR/DwKiOjA+LHqJM00RJ2RKBOt4dqpDa1S2AdR2u5lg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=noVknW+oWM0DXWJgUEniwbyA+ADWcMVuFZOhGjedrBc=;
- b=XVzF9/7K9HxDsF11zKFA5KjB6sDSMN21DFPE4NvIAQYMnnv7ZkYMFezQLnlIaXjr3p0+EPyOSjsK2RYEg04PVBgoxo5V1wEs91YeGerppSboxPYavBowmAfp9+5q41FKwkEl3pfChURDKmxCNnx0r1P1732yMVlZ0y8HPrRvSE4WS5roEjePrktyC4gAx9PNS9W3CR6JMFmJxVDlvddu8hP8HjVuSl+bAUWUMBp6jOeOMEIyeGyZ+754vkjzm6ygBCF+y8udD5nVX0gdq4ZzZxdFiorZNjHLpJqCw+mLLZ29TaQRtuBP8/vlzBGI9f+S1mPqtWiYgUtSao73fZCHsA==
+ bh=fxAU+KO3uMconJE/g3g8kkRVxAdEZwYV0zGrp5YbguE=;
+ b=CsM40I7EsBbpneA3G/rUNzrjssObKRC9X6RnCmQ5ILQ5nzHXwLMkQPQ50N+zBgzmdgz68Qt07bo1V8sKswT8ioHMLBFdhwuYqNIyXX8JawDJlBRqJ2skNvfFszAhWTFB+Z+WJGmhC4BSxYoRrr6i1zMxpW5PGbgBfM+2Tq4ZpBwAq/R9bbDtQ/y5ctkiFc0ZPPJIO6UZs1JUt03mWVgxemaX3GHHy2NV84Vca3XMcxLmzybWdimfYyA4/u1bFElIKxfcq43zvfbi7me3hRF8OvrcVTxfIBNTfJre648ffjbcgy38Waf4NUBP96QOoKRUBUxHpimuY2hTuturNFPwuw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=noVknW+oWM0DXWJgUEniwbyA+ADWcMVuFZOhGjedrBc=;
- b=ADkj24C9yAjzfOGjZyOocIeN3nfmaq86Di2dazuCpp3j7EMip4j6iKGkikrgbkd8mjDSCZDobgkO2zkrNACtQF70CGpUuCMdHWsowpXmNgy7H8y2RL75aJYhlFAjQs63tqUmlGIjm0YNtTxR9Be+PaByvT4wpUMIy9c7J1aDgmM=
+ bh=fxAU+KO3uMconJE/g3g8kkRVxAdEZwYV0zGrp5YbguE=;
+ b=eVHdWE02IN08zKKrutk4Rv4Fxb6BQAhkR4KhtybrZ34lAyHPlVseQDAQhDUDragedM+PNcgQ2CpTPs/nqguuuLYtjWyclz4+f4hYS7/zjoqZUIVCQKprAlLesXme1XPSa/hFQ4hpgzp199tzq4UckpqUljv5/EWB+TffTtVA3rc=
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB5136.namprd10.prod.outlook.com (2603:10b6:5:38d::11) with
+ by CY5PR10MB6144.namprd10.prod.outlook.com (2603:10b6:930:34::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.22; Thu, 3 Nov
- 2022 13:07:24 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5769.19; Thu, 3 Nov
+ 2022 15:42:16 +0000
 Received: from BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::5403:3164:f6c3:d48a]) by BN0PR10MB5128.namprd10.prod.outlook.com
  ([fe80::5403:3164:f6c3:d48a%3]) with mapi id 15.20.5791.022; Thu, 3 Nov 2022
- 13:07:24 +0000
+ 15:42:16 +0000
 From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Li zeming <zeming@nfschina.com>
-CC:     Jeff Layton <jlayton@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
+To:     Jeff Layton <jlayton@kernel.org>
+CC:     Theodore Ts'o <tytso@mit.edu>,
+        "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Dave Chinner <david@fromorbit.com>,
+        Trond Myklebust <trondmy@hammerspace.com>,
+        Neil Brown <neilb@suse.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "xiubli@redhat.com" <xiubli@redhat.com>,
+        Lukas Czerner <lczerner@redhat.com>, Jan Kara <jack@suse.cz>,
+        Bruce Fields <bfields@fieldses.org>,
+        Christian Brauner <brauner@kernel.org>,
+        "fweimer@redhat.com" <fweimer@redhat.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+        "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
         Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] sunrpc: svc: Remove unnecessary (void*) conversions
-Thread-Topic: [PATCH] sunrpc: svc: Remove unnecessary (void*) conversions
-Thread-Index: AQHY7ySNZudTEDZRlUCQuYzh7drgj64tJx0AgAAFBoA=
-Date:   Thu, 3 Nov 2022 13:07:24 +0000
-Message-ID: <52658929-14AE-49AB-80DE-F0C68DD29D3D@oracle.com>
-References: <20221103013510.3062-1-zeming@nfschina.com>
- <229b424a647bfbd18942eefef4cbf6332607ca2b.camel@kernel.org>
-In-Reply-To: <229b424a647bfbd18942eefef4cbf6332607ca2b.camel@kernel.org>
+        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
+Subject: Re: [PATCH v7 6/9] nfsd: move nfsd4_change_attribute to nfsfh.c
+Thread-Topic: [PATCH v7 6/9] nfsd: move nfsd4_change_attribute to nfsfh.c
+Thread-Index: AQHY4hdBdnRn2o/trUW2gl8SzYdhC64tcYOA
+Date:   Thu, 3 Nov 2022 15:42:15 +0000
+Message-ID: <732CF94B-CB0C-44E4-8292-F5E248B6560F@oracle.com>
+References: <20221017105709.10830-1-jlayton@kernel.org>
+ <20221017105709.10830-7-jlayton@kernel.org>
+In-Reply-To: <20221017105709.10830-7-jlayton@kernel.org>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 x-mailer: Apple Mail (2.3696.120.41.1.1)
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|DS7PR10MB5136:EE_
-x-ms-office365-filtering-correlation-id: ad12c70b-ceac-43f7-48fb-08dabd9c5999
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|CY5PR10MB6144:EE_
+x-ms-office365-filtering-correlation-id: 54de6bc9-6d90-4e5f-3f0e-08dabdb1fbf8
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: q5NanRAoyiup2UGIqU4pprgKCPlIt0hRSfdBcwKILw86pc3DdZfXxdJ3rN9U7tKPPmU6BDGWDv0U4LinC4FYbpiL4aNPi4JP8rBn9Q/P0r4N1CoI4xB86GgPNOhldoz5S2dbz29W2kGIiTSygZQaUY215lvc+vC6YHtcWjfr+v2sKzvO5fnq+9ejbl92cplTZ/AgMg0gRrEMkWbX2oTg/3p1Gf+nxbe/PXi/JCf97Kgtclj7Vlx8DVk4dWXS6zNN0XNfriT+RKQlajBQLGK2wzgc0TOv+7N85P4Wk3DTkfRCo7WMbuDtMS36gAgEwDKBRqpRyWrLnZ+mwMeWwI8LDUohpi2t5bIEUydOZgtuhYoGPQ7hsOXVhvJQDEaQaTlZO42W229SV5+I5XtldkuFK8OP/M8prb0rSOIdKwxHscMBdZRgfLihg0uZZL0FPN/t+VTX0M8vL1UcspAns9eZZAy9KbDGynjHKnwPCb4NUKYIZsAfHasdpNt46oflt4UcBFzj6UUH56hoytJd/2IMRhM55jw7alSRKP6O4CU1XkdpyuiPt7oj88lCZV5nSr4pJu0jEJ0s9wi9MF9HzQ6/bRckHbQl+hDplAjBneNpGhhUwj26/5fRCTUIiJLUSdvTWPC6TzLIz8a7K7b0mSTlDbx4Bgrqsf1B5YtprHRaoZ0H7WaTdkIwmTUsc0tQWIf9CnHYj+wyZ+q6gGH3qmqC0CDg+5csnVlFXQmUxr+aa1gW4vJ7Ptir8cVf8sIMJtfUgxxCJ3ZB0QvJitZ3y/U+oss4uyPnuzL7BywHxMC2Mes=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(39860400002)(366004)(396003)(376002)(451199015)(478600001)(38100700002)(122000001)(71200400001)(6486002)(6506007)(86362001)(83380400001)(38070700005)(316002)(2906002)(54906003)(186003)(6916009)(2616005)(36756003)(5660300002)(64756008)(8936002)(66446008)(76116006)(66946007)(4326008)(6512007)(66556008)(8676002)(66476007)(53546011)(91956017)(26005)(33656002)(41300700001)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: /LfD6AAbXsA3eHvVrFOjfc/vhoQ0ex/Pyz6389jHS9kDLz1F23e3jp35P59Bg1BEWCBzJigQE8eQm06uXubhdepUpE+ajCYvFvd+cTLr8UzMRLiLBaljUyNuj8Xux3PLDPjRJABRDiea3z0AoitIeIT2vkNXpTixrvHJlKkOljomWNNMkW5DuBE92EwIb30Z8B+XJ57POE/JNdUSp5LdSTkHQdbTfesI2L79EFffKn+0wYCvgZqRhtAcd34uwhVpackKnykhqMBXX1/Kh3NeKe7MZxVFy+5eFlnplbmnPTzXRxMcq/0bFdx0RgkovBPm6EBfvj5/BiiGYNJEznphZfZjLfKCDsYv5gQx8pBjdTy/+8apnHMPHHHk1sjmi1E/TqPgFegTmm8YO9ienmoXG8lSouCf806ACEuMsZOZmoj6R77cd+k4cK23W02fYtyNs8fx0z85/cbjmeDucpnu1VYDC1OZ/iC28v4VckD64llv3ubM2Hes6qLeZozUxU7MBO+5qxfOuJs0sZxRk2NAS4P6QuCveEFX5INZk5bw6Dpj4b3d1l3opXo1fgRwLooCS36DEmk+8+GGv0KxmB6DQrwjASzoanJQ5R3Du5gC+DC6QeisxGSnbFfTCX2E7ZvxlN+48NKoi/TrI/mkYIUdNgqyjGZb3XWMrQ0WKPP/U6DNMayPO41M8diwsgxQSBpxsGOshuWJygOYavllvIxDHbbeCvbB52GlGDqd/kQYawqGUhZsj1mMUOFYbmdQ8POMJCySf0nYDBfCMbz/cfv0dbwGECL9kYBp03kkGjqB0i84Dh8AZyXpkYoC4cZxEUeOEDcYlYh83jUxXE6GHbi5Pw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(39860400002)(136003)(346002)(396003)(376002)(451199015)(6916009)(2906002)(38070700005)(66476007)(7416002)(71200400001)(41300700001)(76116006)(91956017)(6506007)(6486002)(8936002)(66946007)(33656002)(86362001)(5660300002)(53546011)(66556008)(36756003)(8676002)(38100700002)(2616005)(478600001)(54906003)(6512007)(64756008)(26005)(122000001)(186003)(83380400001)(66446008)(316002)(4326008)(60764002)(45980500001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?TZiX/ahCfasZ6bIYweBLh/GTcIehykz7Czi+14VvL9/2PHOjEuv5ObmMsUQW?=
- =?us-ascii?Q?+jpSk/wkFxCxkvUtwwcqr0TnbqOQ4GFhc2xguLol/XfiVuXwNWKwEWZ8M62K?=
- =?us-ascii?Q?WGMy98owaV8RRy60WPJQV8fTceDeKAASXQ1mI5Kg/nLfSOagqSLuUq52GrnF?=
- =?us-ascii?Q?V1RrcLeKxgEfM63GxKxJCLKkKj1CK6rIfStYkSE6lZcVg0Y3rViTZ1bTRMnV?=
- =?us-ascii?Q?d6J4ITZktgEsXjX0Iy9me9tDJi//efJZ3qGGhTz9ERsgFV+p7C4c5EWr0NED?=
- =?us-ascii?Q?vSrftIaQT5C2cFr+OABquXyz9VsDnWH86dsW1zUC1iFsqOGgLXMN9u8gVD8Q?=
- =?us-ascii?Q?rbBpN3DM1Xm6gY+OYdd1fSv62BBZMLIXZOJQzF4nvq2JMBOPa5410J95ZntY?=
- =?us-ascii?Q?NtK+xtWKH6Rg8TwFyjNYEBcS4ApzRlvOEISb2D5L93KSUGXdaoVMWkMPQWE+?=
- =?us-ascii?Q?be8IJOFBhU+Xt6i3nIcHksn9Gt9RXQqM285qAnapjXnfRQ0VUIOLM59iCpPC?=
- =?us-ascii?Q?aM7uMY024DmoUfPVdvXZoNNhAmEuebufsUSYWS0pi4k8L5rRPNqLMoG2oRyG?=
- =?us-ascii?Q?uZ7dCzJ0R0hxuvpmhp41/5jGTHQR+lkZkgWH48EariCe6gac9jKW3Dxbwk5y?=
- =?us-ascii?Q?od9vW6AHH7dFcNrDupci+sllirAquQ/914pOG/fuE/fOe05daOzTj8zJlqGa?=
- =?us-ascii?Q?Np8GxyUYRD7GzgM7+bHNiXE1NG98KS9QiJJST1CvuGPK268wVPi+zgMOxuef?=
- =?us-ascii?Q?2DZbY2VG4YRveLmlZ6gs8iakYetkGD9j9zQNfWq+hx4epL1bsgrnqB2WL3j1?=
- =?us-ascii?Q?/zayVipexWgmRp0x9P4hWN1uI2GBjQE3KAZEtxr+bmqMftXzDQV5knRFzn5/?=
- =?us-ascii?Q?BWJT1ig8B/UAn95McJZpt41rOwWidHZ0vnEQ8VkoKRDRtL8lXZNqbJqAbuKK?=
- =?us-ascii?Q?O2cN9/Xv+nt1uQfrlcVFfGw00jekerRkBQzj+/pmms8VCUIqYMyVASqpikMs?=
- =?us-ascii?Q?msx14ugAcERwb3nDS0LmwLU9zRk8QJlQv3ZDwewG94oRLRoluGjyN4aV31Ms?=
- =?us-ascii?Q?ZmLLbBZ9vF7R1EJNo942ayUY2HKpl7KUCj+xomNLgAcnJDwIioyIaLRi+YCy?=
- =?us-ascii?Q?nWZIJ5it1wZm2sV2buIsU5EEb70RWa/66iK5tvYqP6fR4UCEHcrGfriIS5J4?=
- =?us-ascii?Q?SVCd42IH2vuAMxUqZTu6mUxTf+GBjNRrvJOMFVM7G1C5hFuiMhmMVLtCpxqJ?=
- =?us-ascii?Q?e5mCrHJDKWCXuYX2ruP+9Z4EDbhQcyDxo3dwQjrzS8MRy0RaYAkfuQTH7w/5?=
- =?us-ascii?Q?3irme8g4DIJ+iME5aj6xbQx0CPNY8Q27T8QHU+MGqQlb0oE/x8J410JfT2YY?=
- =?us-ascii?Q?6IT2og0+JSHe9Unb9mWCJ7YrQeyrHMQh3XT/hr25Jsv1qrj4raDhL4TkH7BM?=
- =?us-ascii?Q?aWpxlKXdtzqlD9BF3KIaV4+HGoWXiP9gVp1eaiphFYe23QQlzDOqJydcYYDC?=
- =?us-ascii?Q?rNJk9gTl5Wb/YqOcAGR5qYZJjbznDXCdZwk3K1zTyrztPLLmh40XdlSf5m9m?=
- =?us-ascii?Q?GmQXNASsnKoWIhXNZEjfMO1Wwok6wDCZeW5iCRv+JC+IQIBZqDbpRZSYtwxd?=
- =?us-ascii?Q?cw=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?abGmgR/UEV90rqSmOspPe8qmNAkahamH+nH6Z9RlT6xmfyi3q8VOqIyk41da?=
+ =?us-ascii?Q?+5LceHyToz9k+stVZpkpbwDihwcYPiqGNImSJlaOrxzfo6xBxFY8L7kvPWjj?=
+ =?us-ascii?Q?0wzqLMJPRCnrF9xAaWjeJpXJt34XS/cGrFQatoIiGhQLBu+b8yn8HHY5+0c+?=
+ =?us-ascii?Q?RAuYWo8+DIPTskyOpPh/cYE6pcOM17uDCUE5z8ay19+PXMs5uGMwpH4NpMAv?=
+ =?us-ascii?Q?ybxB6y9P8QeB5IjDCPY3ZOXbjIEGCgNlQZSXyiRYPApTZSfU8lWKv0SwvOHI?=
+ =?us-ascii?Q?8kLwPHNTYBFhSfWetFNveIMYCuYRPUVSaxIdJG87rwqx5aEbOAB4HPVif/4T?=
+ =?us-ascii?Q?UO91IWtYoK/Yei/feMBRWz0QsxCByR33HllxtSOCB/MZg0K9vS9tNNTq1+6U?=
+ =?us-ascii?Q?NU559ssC5iIy9iNTpzjQujO0FXYE+ovKXsQZT52K651BUdNRxm7v9Q9yM97K?=
+ =?us-ascii?Q?JX7dS88aICVEk9Eba0zPBNa6pAHT/Lur0Tmj7k3l7sY+PWLzh8BDMqE8x8io?=
+ =?us-ascii?Q?REXh+UrIgxEE7FMskFQyeU1a84PrZe+631D/KYPdefBSgaI2HVpqVIMB24It?=
+ =?us-ascii?Q?JqR5I1hzM3TVito5m6cNohib44G5IRCIKJCw7U5WZ6jkexDCe+c+6pTKvDZJ?=
+ =?us-ascii?Q?olGCoPVJ3ozKLFfxYSdrm+YmSX4ihTZEJ7yL0ICEHuO4KLjOPYAgDYdM8Ytq?=
+ =?us-ascii?Q?IKgG7CTgPdijPnl9vNiMFiZ0txU5+rBbfigYI05vL1fYGAq3l2q5cHPBlv8a?=
+ =?us-ascii?Q?IYn83fleloVKxgTI7sjwoy0NFYTM18ZMTQR925N1/BBKg2vaHD1GAJV7DAMR?=
+ =?us-ascii?Q?BzxEzlahMZTmVlz+axQvfQjyJ24We4ck91zeh7hHsmckqzWo5Qyy3Tv+Zmy6?=
+ =?us-ascii?Q?o6gR6nXOieKFzkThFmk45mtBCo+VC4TeT92P50xbnyp8FpqAzmm3NCNuSc+s?=
+ =?us-ascii?Q?Q8XnMvuei7bvlNPfkQ1mOW2LxpORjCq5AsL5Ur1Kn9KkaU0+31v9pFsAE2x2?=
+ =?us-ascii?Q?YvmjNAdpI5ojWVnd0gY0oeppYhd6HhCP8vJj1xeZRv9ACLJXvrvl/169GC5R?=
+ =?us-ascii?Q?hLnVDXL9A4pTULvdYhL4b7CnqtjVBjTACsuihZYk2nmXkdWd3UazRXtyqbtm?=
+ =?us-ascii?Q?c5eyd/OlZaLVuHaQvOju5SuOhwFlW1HwIMXglXZD31VgaSCJ7AnmZ3YldnFW?=
+ =?us-ascii?Q?102ZHuX0cmJrPkHTJGPcdOoCpefsbF1YedjoHCq3sdp4PZ6+rL1XPJSwB/3h?=
+ =?us-ascii?Q?WUXKqMMjevVmcKdZZ2RsLtjAQXKw8aQFmbjgb4y8fYVlv0GI4sE90m3fpoGo?=
+ =?us-ascii?Q?RY6C5ww/FxAQIEUERQ1vKbqswzzoQbHkgsTfEQV7ZmGpRDJOULMqAyTxcvv9?=
+ =?us-ascii?Q?U5nQ9+8kYjvYXul8R+v8slUcf0ZJH9TUnGAXnOF0me8T1nTFrdLQmasw34S2?=
+ =?us-ascii?Q?IgrFJK1zrbJZRpOO4tXEyqHFmzAhfrrR8q7spgbC6mbZk1FPaKmmYhAMmAGO?=
+ =?us-ascii?Q?GtLi+79fHrGk/gsK2CCUC98P/CJifIxE0bhdGGqscCMfHYZQuQZErArsRtvh?=
+ =?us-ascii?Q?SFEQ1R7CCUwrsPCyjWAPFMptmh/Fcjx9lWiHdKLo8P4DxMDAdOUQ+MJQ8673?=
+ =?us-ascii?Q?9Q=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <0154365F4F71F74D87C92E39DBCB920D@namprd10.prod.outlook.com>
+Content-ID: <F01F2D9B0B0D4344BFEED4B60804205A@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: oracle.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ad12c70b-ceac-43f7-48fb-08dabd9c5999
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2022 13:07:24.1799
+X-MS-Exchange-CrossTenant-Network-Message-Id: 54de6bc9-6d90-4e5f-3f0e-08dabdb1fbf8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Nov 2022 15:42:15.9932
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S2PFDUR8ggqBl+4T8mhVyfMkOWQ63vgzlQDsw2Z08pmXSZocHFWEKwb06DS319JPoJjlpqfsmDwA/NHp1ckORA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5136
+X-MS-Exchange-CrossTenant-userprincipalname: w/hhV4nPXgNDBLv8lfAqgq3RvxeAFNYwn3qDAU7EhFjPcK5EyoCwK0fNpn0aaaS12iDh1jzvh8bRYDn2q0eAIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR10MB6144
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-11-03_04,2022-11-03_01,2022-06-22_01
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 spamscore=0 bulkscore=0
  suspectscore=0 phishscore=0 malwarescore=0 mlxscore=0 mlxlogscore=999
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211030090
-X-Proofpoint-ORIG-GUID: NHrYJjhLFR0Ra7Kt2iAOsN8e6F27FaSo
-X-Proofpoint-GUID: NHrYJjhLFR0Ra7Kt2iAOsN8e6F27FaSo
+ definitions=main-2211030104
+X-Proofpoint-ORIG-GUID: 9b5jv_YYu7nUuywBYPAT5lf6mS8X43Dk
+X-Proofpoint-GUID: 9b5jv_YYu7nUuywBYPAT5lf6mS8X43Dk
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -154,44 +168,102 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Nov 3, 2022, at 8:49 AM, Trond Myklebust <trondmy@kernel.org> wrote:
+> On Oct 17, 2022, at 6:57 AM, Jeff Layton <jlayton@kernel.org> wrote:
 >=20
-> On Thu, 2022-11-03 at 09:35 +0800, Li zeming wrote:
->> The iov_base pointer does not need to cast the type.
->>=20
->> Signed-off-by: Li zeming <zeming@nfschina.com>
->> ---
->>  include/linux/sunrpc/svc.h | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>=20
->> diff --git a/include/linux/sunrpc/svc.h b/include/linux/sunrpc/svc.h
->> index daecb009c05b..4b0eead91c94 100644
->> --- a/include/linux/sunrpc/svc.h
->> +++ b/include/linux/sunrpc/svc.h
->> @@ -222,7 +222,7 @@ static inline __be32 svc_getu32(struct kvec *iov)
->> =20
->>  static inline void svc_ungetu32(struct kvec *iov)
->>  {
->> -       __be32 *vp =3D (__be32 *)iov->iov_base;
->> +       __be32 *vp =3D iov->iov_base;
->>         iov->iov_base =3D (void *)(vp - 1);
->>         iov->iov_len +=3D sizeof(*vp);
->>  }
+> This is a pretty big function for inlining. Move it to being
+> non-inlined.
 >=20
-> If you're going to submit a patch just in order to strip unnecessary
-> casts, then why are you leaving the equally unnecessary cast in the
-> next line?
+> Reviewed-by: NeilBrown <neilb@suse.de>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+
+Acked-by: Chuck Lever <chuck.lever@oracle.com>
+
+
+> ---
+> fs/nfsd/nfsfh.c | 27 +++++++++++++++++++++++++++
+> fs/nfsd/nfsfh.h | 29 +----------------------------
+> 2 files changed, 28 insertions(+), 28 deletions(-)
 >=20
-> That said, why waste time "fixing" an inlined function that is not
-> actually called anywhere in the kernel? svc_ungetu32() should just be
-> removed.
-
-Sorry for the delay, I was expecting an electrical service outage
-here at home yesterday, so the lab was powered off.
-
-So, Li, can you drop this one, and instead send a patch that removes
-the definition of svc_ungetu32 ?
-
+> diff --git a/fs/nfsd/nfsfh.c b/fs/nfsd/nfsfh.c
+> index d73434200df9..7030d9209903 100644
+> --- a/fs/nfsd/nfsfh.c
+> +++ b/fs/nfsd/nfsfh.c
+> @@ -748,3 +748,30 @@ enum fsid_source fsid_source(const struct svc_fh *fh=
+p)
+> 		return FSIDSOURCE_UUID;
+> 	return FSIDSOURCE_DEV;
+> }
+> +
+> +/*
+> + * We could use i_version alone as the change attribute.  However,
+> + * i_version can go backwards after a reboot.  On its own that doesn't
+> + * necessarily cause a problem, but if i_version goes backwards and then
+> + * is incremented again it could reuse a value that was previously used
+> + * before boot, and a client who queried the two values might
+> + * incorrectly assume nothing changed.
+> + *
+> + * By using both ctime and the i_version counter we guarantee that as
+> + * long as time doesn't go backwards we never reuse an old value.
+> + */
+> +u64 nfsd4_change_attribute(struct kstat *stat, struct inode *inode)
+> +{
+> +	if (inode->i_sb->s_export_op->fetch_iversion)
+> +		return inode->i_sb->s_export_op->fetch_iversion(inode);
+> +	else if (IS_I_VERSION(inode)) {
+> +		u64 chattr;
+> +
+> +		chattr =3D  stat->ctime.tv_sec;
+> +		chattr <<=3D 30;
+> +		chattr +=3D stat->ctime.tv_nsec;
+> +		chattr +=3D inode_query_iversion(inode);
+> +		return chattr;
+> +	} else
+> +		return time_to_chattr(&stat->ctime);
+> +}
+> diff --git a/fs/nfsd/nfsfh.h b/fs/nfsd/nfsfh.h
+> index c3ae6414fc5c..4c223a7a91d4 100644
+> --- a/fs/nfsd/nfsfh.h
+> +++ b/fs/nfsd/nfsfh.h
+> @@ -291,34 +291,7 @@ static inline void fh_clear_pre_post_attrs(struct sv=
+c_fh *fhp)
+> 	fhp->fh_pre_saved =3D false;
+> }
+>=20
+> -/*
+> - * We could use i_version alone as the change attribute.  However,
+> - * i_version can go backwards after a reboot.  On its own that doesn't
+> - * necessarily cause a problem, but if i_version goes backwards and then
+> - * is incremented again it could reuse a value that was previously used
+> - * before boot, and a client who queried the two values might
+> - * incorrectly assume nothing changed.
+> - *
+> - * By using both ctime and the i_version counter we guarantee that as
+> - * long as time doesn't go backwards we never reuse an old value.
+> - */
+> -static inline u64 nfsd4_change_attribute(struct kstat *stat,
+> -					 struct inode *inode)
+> -{
+> -	if (inode->i_sb->s_export_op->fetch_iversion)
+> -		return inode->i_sb->s_export_op->fetch_iversion(inode);
+> -	else if (IS_I_VERSION(inode)) {
+> -		u64 chattr;
+> -
+> -		chattr =3D  stat->ctime.tv_sec;
+> -		chattr <<=3D 30;
+> -		chattr +=3D stat->ctime.tv_nsec;
+> -		chattr +=3D inode_query_iversion(inode);
+> -		return chattr;
+> -	} else
+> -		return time_to_chattr(&stat->ctime);
+> -}
+> -
+> +u64 nfsd4_change_attribute(struct kstat *stat, struct inode *inode);
+> extern void fh_fill_pre_attrs(struct svc_fh *fhp);
+> extern void fh_fill_post_attrs(struct svc_fh *fhp);
+> extern void fh_fill_both_attrs(struct svc_fh *fhp);
+> --=20
+> 2.37.3
+>=20
 
 --
 Chuck Lever
