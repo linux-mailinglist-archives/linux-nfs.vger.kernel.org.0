@@ -2,32 +2,32 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F62861903C
-	for <lists+linux-nfs@lfdr.de>; Fri,  4 Nov 2022 06:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53EA5619042
+	for <lists+linux-nfs@lfdr.de>; Fri,  4 Nov 2022 06:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231417AbiKDFs5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 4 Nov 2022 01:48:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55654 "EHLO
+        id S231443AbiKDFs6 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 4 Nov 2022 01:48:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231150AbiKDFsu (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Nov 2022 01:48:50 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FBA28E11;
-        Thu,  3 Nov 2022 22:48:48 -0700 (PDT)
+        with ESMTP id S231336AbiKDFsx (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 4 Nov 2022 01:48:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253BA25EBC;
+        Thu,  3 Nov 2022 22:48:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 460CCB82BFA;
-        Fri,  4 Nov 2022 05:48:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4911C433D6;
-        Fri,  4 Nov 2022 05:48:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 55408620D0;
+        Fri,  4 Nov 2022 05:48:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F41D5C433C1;
+        Fri,  4 Nov 2022 05:48:48 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1oqpZo-0070xm-08;
-        Fri, 04 Nov 2022 01:49:12 -0400
-Message-ID: <20221104054053.431922658@goodmis.org>
+        id 1oqpZr-00718S-1k;
+        Fri, 04 Nov 2022 01:49:15 -0400
+Message-ID: <20221104054915.376624143@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Fri, 04 Nov 2022 01:40:53 -0400
+Date:   Fri, 04 Nov 2022 01:41:12 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
@@ -35,27 +35,29 @@ Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Stephen Boyd <sboyd@kernel.org>,
         Guenter Roeck <linux@roeck-us.net>,
         Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-edac@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-pm@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bluetooth@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, intel-gfx@lists.freedesktop.org,
-        linux-input@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-leds@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Mirko Lindner <mlindner@marvell.com>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Martin KaFai Lau <martin.lau@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kuniyuki Iwashima <kuniyu@amazon.com>,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Menglong Dong <imagedong@tencent.com>,
         linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-ext4@vger.kernel.org, linux-nilfs@vger.kernel.org,
         bridge@lists.linux-foundation.org, netfilter-devel@vger.kernel.org,
         coreteam@netfilter.org, lvs-devel@vger.kernel.org,
         linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
-Subject: [RFC][PATCH v3 00/33] timers: Use timer_shutdown*() before freeing timers
+        tipc-discussion@lists.sourceforge.net
+Subject: [RFC][PATCH v3 19/33] timers: net: Use timer_shutdown_sync() before freeing timer
+References: <20221104054053.431922658@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
         autolearn=ham autolearn_force=no version=3.4.6
@@ -65,194 +67,505 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Back in April, I posted an RFC patch set to help mitigate a common issue
-where a timer gets armed just before it is freed, and when the timer
-goes off, it crashes in the timer code without any evidence of who the
-culprit was. I got side tracked and never finished up on that patch set.
-Since this type of crash is still our #1 crash we are seeing in the field,
-it has become a priority again to finish it.
+Before a timer is freed, timer_shutdown_sync() must be called.
 
-This is v3 of that patch set. Thomas Gleixner posted an untested version
-that makes timer->function NULL as the flag that it is shutdown. I took that
-code, tested it (fixed it up), added more comments, and changed the
-name to timer_shutdown_sync(). I also converted it to use WARN_ON_ONCE()
-instead of just WARN_ON() as Linus asked for.
+And if synchronization is already done, then at least timer_shutdown()
+needs to be called.
 
-I then created a trivial coccinelle script to find where del_timer*()
-is called before being freed, and converted them all to timer_shutdown*()
-(There was a couple that still used del_timer() instead of del_timer_sync()).
+Link: https://lore.kernel.org/all/20220407161745.7d6754b3@gandalf.local.home/
 
-I also updated DEBUG_OBJECTS_TIMERS to check from where the timer is ever
-armed, to calling of timer_shutdown_sync(), and it will trigger if a timer
-is freed in between. The current way is to only check if the timer is armed,
-but that means it only triggers if the race condition is hit, and with
-experience, it's not run on enough machines to catch all of them. By triggering
-it from the time the timer is armed to the time it is shutdown, it catches
-all potential cases even if the race condition is not hit.
+Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>
+Cc: Mirko Lindner <mlindner@marvell.com>
+Cc: Stephen Hemminger <stephen@networkplumber.org>
+Cc: Martin KaFai Lau <martin.lau@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: Pavel Begunkov <asml.silence@gmail.com>
+Cc: Menglong Dong <imagedong@tencent.com>
+Cc: linux-usb@vger.kernel.org
+Cc: linux-wireless@vger.kernel.org
+Cc: bridge@lists.linux-foundation.org
+Cc: netfilter-devel@vger.kernel.org
+Cc: coreteam@netfilter.org
+Cc: lvs-devel@vger.kernel.org
+Cc: linux-afs@lists.infradead.org
+Cc: linux-nfs@vger.kernel.org
+Cc: tipc-discussion@lists.sourceforge.net
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ drivers/net/ethernet/intel/i40e/i40e_main.c      | 6 +++---
+ drivers/net/ethernet/marvell/sky2.c              | 2 +-
+ drivers/net/ethernet/sun/sunvnet.c               | 2 +-
+ drivers/net/usb/sierra_net.c                     | 2 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c | 2 +-
+ drivers/net/wireless/intersil/hostap/hostap_ap.c | 2 +-
+ drivers/net/wireless/marvell/mwifiex/main.c      | 2 +-
+ drivers/net/wireless/microchip/wilc1000/hif.c    | 8 ++++----
+ net/802/garp.c                                   | 2 +-
+ net/802/mrp.c                                    | 2 +-
+ net/bridge/br_multicast.c                        | 6 +++---
+ net/bridge/br_multicast_eht.c                    | 4 ++--
+ net/core/gen_estimator.c                         | 2 +-
+ net/core/neighbour.c                             | 2 ++
+ net/ipv4/inet_connection_sock.c                  | 2 +-
+ net/ipv4/inet_timewait_sock.c                    | 3 ++-
+ net/ipv4/ipmr.c                                  | 2 +-
+ net/ipv6/ip6mr.c                                 | 2 +-
+ net/mac80211/mesh_pathtbl.c                      | 2 +-
+ net/netfilter/ipset/ip_set_list_set.c            | 2 +-
+ net/netfilter/ipvs/ip_vs_lblc.c                  | 2 +-
+ net/netfilter/ipvs/ip_vs_lblcr.c                 | 2 +-
+ net/netfilter/xt_LED.c                           | 2 +-
+ net/rxrpc/conn_object.c                          | 2 +-
+ net/sched/cls_flow.c                             | 2 +-
+ net/sunrpc/svc.c                                 | 2 +-
+ net/sunrpc/xprt.c                                | 2 +-
+ net/tipc/discover.c                              | 2 +-
+ net/tipc/monitor.c                               | 2 +-
+ 29 files changed, 39 insertions(+), 36 deletions(-)
 
-I went though the result of the cocinelle script, and updated the locations.
-Some locations were caught by DEBUG_OBJECTS_TIMERS as the coccinelle script
-only checked for timers being freed in the same function as the del_timer*().
-
-Ideally, I would have the first patch go into this rc cycle, which is mostly
-non functional as it will allow the other patches to come in via the respective
-subsystems in the next merge window.
-
-Changes since v2: https://lore.kernel.org/all/20221027150525.753064657@goodmis.org/
-
- - Talking with Thomas Gleixner, he wanted a better name space and to remove
-   the "del_" portion of the API.
-
- - Since there's now a shutdown interface that does not synchronize, to keep
-   it closer to del_timer() and del_timer_sync(), the API is now:
-
-    timer_shutdown() - same as del_timer() but deactivates the timer.
-
-    timer_shutdown_sync() - same as del_timer_sync() but deactivates the timer.
-
- - Added a few more locations that got converted.
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
-trace/timers
-
-Head SHA1: 25106f0bb7968b3e8c746a7853f44b51840746c3
-
-
-Steven Rostedt (Google) (33):
-      timers: Add timer_shutdown_sync() and timer_shutdown() to be called before freeing timers
-      timers: s390/cmm: Use timer_shutdown_sync() before freeing timer
-      timers: sh: Use timer_shutdown_sync() before freeing timer
-      timers: block: Use timer_shutdown_sync() before freeing timer
-      timers: ACPI: Use timer_shutdown_sync() before freeing timer
-      timers: atm: Use timer_shutdown_sync() before freeing timer
-      timers: PM: Use timer_shutdown_sync()
-      timers: Bluetooth: Use timer_shutdown_sync() before freeing timer
-      timers: hangcheck: Use timer_shutdown_sync() before freeing timer
-      timers: ipmi: Use timer_shutdown_sync() before freeing timer
-      random: use timer_shutdown_sync() before freeing timer
-      timers: dma-buf: Use timer_shutdown_sync() before freeing timer
-      timers: drm: Use timer_shutdown_sync() before freeing timer
-      timers: HID: Use timer_shutdown_sync() before freeing timer
-      timers: Input: Use timer_shutdown_sync() before freeing timer
-      timers: mISDN: Use timer_shutdown_sync() before freeing timer
-      timers: leds: Use timer_shutdown_sync() before freeing timer
-      timers: media: Use timer_shutdown_sync() before freeing timer
-      timers: net: Use timer_shutdown_sync() before freeing timer
-      timers: usb: Use timer_shutdown_sync() before freeing timer
-      timers: cgroup: Use timer_shutdown_sync() before freeing timer
-      timers: workqueue: Use timer_shutdown_sync() before freeing timer
-      timers: nfc: pn533: Use timer_shutdown_sync() before freeing timer
-      timers: pcmcia: Use timer_shutdown_sync() before freeing timer
-      timers: scsi: Use timer_shutdown_sync() and timer_shutdown() before freeing timer
-      timers: tty: Use timer_shutdown_sync() before freeing timer
-      timers: ext4: Use timer_shutdown_sync() before freeing timer
-      timers: fs/nilfs2: Use timer_shutdown_sync() before freeing timer
-      timers: ALSA: Use timer_shutdown_sync() before freeing timer
-      timers: jbd2: Use timer_shutdown() before freeing timer
-      timers: sched/psi: Use timer_shutdown_sync() before freeing timer
-      timers: x86/mce: Use __init_timer() for resetting timers
-      timers: Expand DEBUG_OBJECTS_TIMER to check if it ever was used
-
-----
- .../RCU/Design/Requirements/Requirements.rst       |   2 +-
- Documentation/core-api/local_ops.rst               |   2 +-
- Documentation/kernel-hacking/locking.rst           |   5 +
- arch/s390/mm/cmm.c                                 |   4 +-
- arch/sh/drivers/push-switch.c                      |   2 +-
- arch/x86/kernel/cpu/mce/core.c                     |  14 ++-
- block/blk-iocost.c                                 |   2 +-
- block/blk-iolatency.c                              |   2 +-
- block/blk-stat.c                                   |   2 +-
- block/blk-throttle.c                               |   2 +-
- block/kyber-iosched.c                              |   2 +-
- drivers/acpi/apei/ghes.c                           |   2 +-
- drivers/atm/idt77105.c                             |   4 +-
- drivers/atm/idt77252.c                             |   4 +-
- drivers/atm/iphase.c                               |   2 +-
- drivers/base/power/wakeup.c                        |   7 +-
- drivers/block/drbd/drbd_main.c                     |   2 +-
- drivers/block/loop.c                               |   2 +-
- drivers/block/sunvdc.c                             |   2 +-
- drivers/bluetooth/hci_bcsp.c                       |   2 +-
- drivers/bluetooth/hci_h5.c                         |   2 +-
- drivers/bluetooth/hci_qca.c                        |   4 +-
- drivers/char/hangcheck-timer.c                     |   4 +-
- drivers/char/ipmi/ipmi_msghandler.c                |   2 +-
- drivers/char/ipmi/ipmi_ssif.c                      |   4 +-
- drivers/char/random.c                              |   2 +-
- drivers/dma-buf/st-dma-fence.c                     |   2 +-
- drivers/gpu/drm/gud/gud_pipe.c                     |   2 +-
- drivers/gpu/drm/i915/i915_sw_fence.c               |   2 +-
- drivers/hid/hid-wiimote-core.c                     |   2 +-
- drivers/input/keyboard/locomokbd.c                 |   2 +-
- drivers/input/keyboard/omap-keypad.c               |   2 +-
- drivers/input/mouse/alps.c                         |   2 +-
- drivers/input/serio/hil_mlc.c                      |   2 +-
- drivers/input/serio/hp_sdc.c                       |   2 +-
- drivers/isdn/hardware/mISDN/hfcmulti.c             |   6 +-
- drivers/isdn/mISDN/l1oip_core.c                    |   4 +-
- drivers/isdn/mISDN/timerdev.c                      |   4 +-
- drivers/leds/trigger/ledtrig-activity.c            |   2 +-
- drivers/leds/trigger/ledtrig-heartbeat.c           |   2 +-
- drivers/leds/trigger/ledtrig-pattern.c             |   2 +-
- drivers/leds/trigger/ledtrig-transient.c           |   2 +-
- drivers/media/pci/ivtv/ivtv-driver.c               |   2 +-
- drivers/media/usb/pvrusb2/pvrusb2-hdw.c            |  18 ++--
- drivers/media/usb/s2255/s2255drv.c                 |   4 +-
- drivers/net/ethernet/intel/i40e/i40e_main.c        |   6 +-
- drivers/net/ethernet/marvell/sky2.c                |   2 +-
- drivers/net/ethernet/sun/sunvnet.c                 |   2 +-
- drivers/net/usb/sierra_net.c                       |   2 +-
- drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c   |   2 +-
- drivers/net/wireless/intersil/hostap/hostap_ap.c   |   2 +-
- drivers/net/wireless/marvell/mwifiex/main.c        |   2 +-
- drivers/net/wireless/microchip/wilc1000/hif.c      |   8 +-
- drivers/nfc/pn533/pn533.c                          |   2 +-
- drivers/nfc/pn533/uart.c                           |   2 +-
- drivers/pcmcia/bcm63xx_pcmcia.c                    |   2 +-
- drivers/pcmcia/electra_cf.c                        |   2 +-
- drivers/pcmcia/omap_cf.c                           |   2 +-
- drivers/pcmcia/pd6729.c                            |   4 +-
- drivers/pcmcia/yenta_socket.c                      |   4 +-
- drivers/scsi/qla2xxx/qla_edif.c                    |   4 +-
- drivers/scsi/scsi_lib.c                            |   1 +
- drivers/staging/media/atomisp/i2c/atomisp-lm3554.c |   2 +-
- drivers/tty/n_gsm.c                                |   2 +-
- drivers/tty/sysrq.c                                |   2 +-
- drivers/usb/gadget/udc/m66592-udc.c                |   2 +-
- drivers/usb/serial/garmin_gps.c                    |   2 +-
- drivers/usb/serial/mos7840.c                       |   2 +-
- fs/ext4/super.c                                    |   2 +-
- fs/jbd2/journal.c                                  |   2 +
- fs/nilfs2/segment.c                                |   2 +-
- include/linux/timer.h                              | 100 +++++++++++++++++--
- include/linux/workqueue.h                          |   4 +-
- kernel/cgroup/cgroup.c                             |   2 +-
- kernel/sched/psi.c                                 |   1 +
- kernel/time/timer.c                                | 106 ++++++++++++++-------
- kernel/workqueue.c                                 |   4 +-
- net/802/garp.c                                     |   2 +-
- net/802/mrp.c                                      |   2 +-
- net/bridge/br_multicast.c                          |   6 +-
- net/bridge/br_multicast_eht.c                      |   4 +-
- net/core/gen_estimator.c                           |   2 +-
- net/core/neighbour.c                               |   2 +
- net/ipv4/inet_connection_sock.c                    |   2 +-
- net/ipv4/inet_timewait_sock.c                      |   3 +-
- net/ipv4/ipmr.c                                    |   2 +-
- net/ipv6/ip6mr.c                                   |   2 +-
- net/mac80211/mesh_pathtbl.c                        |   2 +-
- net/netfilter/ipset/ip_set_list_set.c              |   2 +-
- net/netfilter/ipvs/ip_vs_lblc.c                    |   2 +-
- net/netfilter/ipvs/ip_vs_lblcr.c                   |   2 +-
- net/netfilter/xt_LED.c                             |   2 +-
- net/rxrpc/conn_object.c                            |   2 +-
- net/sched/cls_flow.c                               |   2 +-
- net/sunrpc/svc.c                                   |   2 +-
- net/sunrpc/xprt.c                                  |   2 +-
- net/tipc/discover.c                                |   2 +-
- net/tipc/monitor.c                                 |   2 +-
- sound/i2c/other/ak4117.c                           |   2 +-
- sound/synth/emux/emux.c                            |   2 +-
- 100 files changed, 310 insertions(+), 175 deletions(-)
+diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
+index b5dcd15ced36..54d5eed32743 100644
+--- a/drivers/net/ethernet/intel/i40e/i40e_main.c
++++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
+@@ -15530,7 +15530,7 @@ static int i40e_init_recovery_mode(struct i40e_pf *pf, struct i40e_hw *hw)
+ 
+ err_switch_setup:
+ 	i40e_reset_interrupt_capability(pf);
+-	del_timer_sync(&pf->service_timer);
++	timer_shutdown_sync(&pf->service_timer);
+ 	i40e_shutdown_adminq(hw);
+ 	iounmap(hw->hw_addr);
+ 	pci_disable_pcie_error_reporting(pf->pdev);
+@@ -16149,7 +16149,7 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	kfree(pf->vsi);
+ err_switch_setup:
+ 	i40e_reset_interrupt_capability(pf);
+-	del_timer_sync(&pf->service_timer);
++	timer_shutdown_sync(&pf->service_timer);
+ err_mac_addr:
+ err_configure_lan_hmc:
+ 	(void)i40e_shutdown_lan_hmc(hw);
+@@ -16211,7 +16211,7 @@ static void i40e_remove(struct pci_dev *pdev)
+ 	set_bit(__I40E_SUSPENDED, pf->state);
+ 	set_bit(__I40E_DOWN, pf->state);
+ 	if (pf->service_timer.function)
+-		del_timer_sync(&pf->service_timer);
++		timer_shutdown_sync(&pf->service_timer);
+ 	if (pf->service_task.func)
+ 		cancel_work_sync(&pf->service_task);
+ 
+diff --git a/drivers/net/ethernet/marvell/sky2.c b/drivers/net/ethernet/marvell/sky2.c
+index ab33ba1c3023..dc571e076180 100644
+--- a/drivers/net/ethernet/marvell/sky2.c
++++ b/drivers/net/ethernet/marvell/sky2.c
+@@ -5013,7 +5013,7 @@ static void sky2_remove(struct pci_dev *pdev)
+ 	if (!hw)
+ 		return;
+ 
+-	del_timer_sync(&hw->watchdog_timer);
++	timer_shutdown_sync(&hw->watchdog_timer);
+ 	cancel_work_sync(&hw->restart_work);
+ 
+ 	for (i = hw->ports-1; i >= 0; --i)
+diff --git a/drivers/net/ethernet/sun/sunvnet.c b/drivers/net/ethernet/sun/sunvnet.c
+index acda6cbd0238..fe86fbd58586 100644
+--- a/drivers/net/ethernet/sun/sunvnet.c
++++ b/drivers/net/ethernet/sun/sunvnet.c
+@@ -524,7 +524,7 @@ static void vnet_port_remove(struct vio_dev *vdev)
+ 		hlist_del_rcu(&port->hash);
+ 
+ 		synchronize_rcu();
+-		del_timer_sync(&port->clean_timer);
++		timer_shutdown_sync(&port->clean_timer);
+ 		sunvnet_port_rm_txq_common(port);
+ 		netif_napi_del(&port->napi);
+ 		sunvnet_port_free_tx_bufs_common(port);
+diff --git a/drivers/net/usb/sierra_net.c b/drivers/net/usb/sierra_net.c
+index b3ae949e6f1c..673d3aa83792 100644
+--- a/drivers/net/usb/sierra_net.c
++++ b/drivers/net/usb/sierra_net.c
+@@ -759,7 +759,7 @@ static void sierra_net_unbind(struct usbnet *dev, struct usb_interface *intf)
+ 	dev_dbg(&dev->udev->dev, "%s", __func__);
+ 
+ 	/* kill the timer and work */
+-	del_timer_sync(&priv->sync_timer);
++	timer_shutdown_sync(&priv->sync_timer);
+ 	cancel_work_sync(&priv->sierra_net_kevent);
+ 
+ 	/* tell modem we are going away */
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+index 3237d4b528b5..119d83acafd1 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c
+@@ -371,7 +371,7 @@ void iwl_dbg_tlv_del_timers(struct iwl_trans *trans)
+ 	struct iwl_dbg_tlv_timer_node *node, *tmp;
+ 
+ 	list_for_each_entry_safe(node, tmp, timer_list, list) {
+-		del_timer_sync(&node->timer);
++		timer_shutdown_sync(&node->timer);
+ 		list_del(&node->list);
+ 		kfree(node);
+ 	}
+diff --git a/drivers/net/wireless/intersil/hostap/hostap_ap.c b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+index 462ccc7d7d1a..9b546a71e7a2 100644
+--- a/drivers/net/wireless/intersil/hostap/hostap_ap.c
++++ b/drivers/net/wireless/intersil/hostap/hostap_ap.c
+@@ -135,7 +135,7 @@ static void ap_free_sta(struct ap_data *ap, struct sta_info *sta)
+ 
+ 	if (!sta->ap)
+ 		kfree(sta->u.sta.challenge);
+-	del_timer_sync(&sta->timer);
++	timer_shutdown_sync(&sta->timer);
+ #endif /* PRISM2_NO_KERNEL_IEEE80211_MGMT */
+ 
+ 	kfree(sta);
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index da2e6557e684..ea22a08e6c08 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -123,7 +123,7 @@ static int mwifiex_unregister(struct mwifiex_adapter *adapter)
+ 	if (adapter->if_ops.cleanup_if)
+ 		adapter->if_ops.cleanup_if(adapter);
+ 
+-	del_timer_sync(&adapter->cmd_timer);
++	timer_shutdown_sync(&adapter->cmd_timer);
+ 
+ 	/* Free private structures */
+ 	for (i = 0; i < adapter->priv_num; i++) {
+diff --git a/drivers/net/wireless/microchip/wilc1000/hif.c b/drivers/net/wireless/microchip/wilc1000/hif.c
+index eb1d1ba3a443..b76b5ce95961 100644
+--- a/drivers/net/wireless/microchip/wilc1000/hif.c
++++ b/drivers/net/wireless/microchip/wilc1000/hif.c
+@@ -1520,10 +1520,10 @@ int wilc_deinit(struct wilc_vif *vif)
+ 
+ 	mutex_lock(&vif->wilc->deinit_lock);
+ 
+-	del_timer_sync(&hif_drv->scan_timer);
+-	del_timer_sync(&hif_drv->connect_timer);
+-	del_timer_sync(&vif->periodic_rssi);
+-	del_timer_sync(&hif_drv->remain_on_ch_timer);
++	timer_shutdown_sync(&hif_drv->scan_timer);
++	timer_shutdown_sync(&hif_drv->connect_timer);
++	timer_shutdown_sync(&vif->periodic_rssi);
++	timer_shutdown_sync(&hif_drv->remain_on_ch_timer);
+ 
+ 	if (hif_drv->usr_scan_req.scan_result) {
+ 		hif_drv->usr_scan_req.scan_result(SCAN_EVENT_ABORTED, NULL,
+diff --git a/net/802/garp.c b/net/802/garp.c
+index fc9eb02a912f..87b2ddfe86ac 100644
+--- a/net/802/garp.c
++++ b/net/802/garp.c
+@@ -618,7 +618,7 @@ void garp_uninit_applicant(struct net_device *dev, struct garp_application *appl
+ 
+ 	/* Delete timer and generate a final TRANSMIT_PDU event to flush out
+ 	 * all pending messages before the applicant is gone. */
+-	del_timer_sync(&app->join_timer);
++	timer_shutdown_sync(&app->join_timer);
+ 
+ 	spin_lock_bh(&app->lock);
+ 	garp_gid_event(app, GARP_EVENT_TRANSMIT_PDU);
+diff --git a/net/802/mrp.c b/net/802/mrp.c
+index 155f74d8b14f..a744a28477dd 100644
+--- a/net/802/mrp.c
++++ b/net/802/mrp.c
+@@ -904,7 +904,7 @@ void mrp_uninit_applicant(struct net_device *dev, struct mrp_application *appl)
+ 	 * all pending messages before the applicant is gone.
+ 	 */
+ 	del_timer_sync(&app->join_timer);
+-	del_timer_sync(&app->periodic_timer);
++	timer_shutdown_sync(&app->periodic_timer);
+ 
+ 	spin_lock_bh(&app->lock);
+ 	mrp_mad_event(app, MRP_EVENT_TX);
+diff --git a/net/bridge/br_multicast.c b/net/bridge/br_multicast.c
+index db4f2641d1cd..16d2a7064e44 100644
+--- a/net/bridge/br_multicast.c
++++ b/net/bridge/br_multicast.c
+@@ -605,7 +605,7 @@ static void br_multicast_destroy_mdb_entry(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!hlist_unhashed(&mp->mdb_node));
+ 	WARN_ON(mp->ports);
+ 
+-	del_timer_sync(&mp->timer);
++	timer_shutdown_sync(&mp->timer);
+ 	kfree_rcu(mp, rcu);
+ }
+ 
+@@ -646,7 +646,7 @@ static void br_multicast_destroy_group_src(struct net_bridge_mcast_gc *gc)
+ 	src = container_of(gc, struct net_bridge_group_src, mcast_gc);
+ 	WARN_ON(!hlist_unhashed(&src->node));
+ 
+-	del_timer_sync(&src->timer);
++	timer_shutdown_sync(&src->timer);
+ 	kfree_rcu(src, rcu);
+ }
+ 
+@@ -671,7 +671,7 @@ static void br_multicast_destroy_port_group(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!hlist_empty(&pg->src_list));
+ 
+ 	del_timer_sync(&pg->rexmit_timer);
+-	del_timer_sync(&pg->timer);
++	timer_shutdown_sync(&pg->timer);
+ 	kfree_rcu(pg, rcu);
+ }
+ 
+diff --git a/net/bridge/br_multicast_eht.c b/net/bridge/br_multicast_eht.c
+index f91c071d1608..c126aa4e7551 100644
+--- a/net/bridge/br_multicast_eht.c
++++ b/net/bridge/br_multicast_eht.c
+@@ -142,7 +142,7 @@ static void br_multicast_destroy_eht_set_entry(struct net_bridge_mcast_gc *gc)
+ 	set_h = container_of(gc, struct net_bridge_group_eht_set_entry, mcast_gc);
+ 	WARN_ON(!RB_EMPTY_NODE(&set_h->rb_node));
+ 
+-	del_timer_sync(&set_h->timer);
++	timer_shutdown_sync(&set_h->timer);
+ 	kfree(set_h);
+ }
+ 
+@@ -154,7 +154,7 @@ static void br_multicast_destroy_eht_set(struct net_bridge_mcast_gc *gc)
+ 	WARN_ON(!RB_EMPTY_NODE(&eht_set->rb_node));
+ 	WARN_ON(!RB_EMPTY_ROOT(&eht_set->entry_tree));
+ 
+-	del_timer_sync(&eht_set->timer);
++	timer_shutdown_sync(&eht_set->timer);
+ 	kfree(eht_set);
+ }
+ 
+diff --git a/net/core/gen_estimator.c b/net/core/gen_estimator.c
+index 4fcbdd71c59f..fae9c4694186 100644
+--- a/net/core/gen_estimator.c
++++ b/net/core/gen_estimator.c
+@@ -208,7 +208,7 @@ void gen_kill_estimator(struct net_rate_estimator __rcu **rate_est)
+ 
+ 	est = xchg((__force struct net_rate_estimator **)rate_est, NULL);
+ 	if (est) {
+-		del_timer_sync(&est->timer);
++		timer_shutdown_sync(&est->timer);
+ 		kfree_rcu(est, rcu);
+ 	}
+ }
+diff --git a/net/core/neighbour.c b/net/core/neighbour.c
+index 3c4786b99907..68edfd46781c 100644
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -895,6 +895,8 @@ void neigh_destroy(struct neighbour *neigh)
+ 	if (neigh_del_timer(neigh))
+ 		pr_warn("Impossible event\n");
+ 
++	timer_shutdown(&neigh->timer);
++
+ 	write_lock_bh(&neigh->lock);
+ 	__skb_queue_purge(&neigh->arp_queue);
+ 	write_unlock_bh(&neigh->lock);
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index 4e84ed21d16f..5e70228c5ae9 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -917,7 +917,7 @@ static bool reqsk_queue_unlink(struct request_sock *req)
+ 		found = __sk_nulls_del_node_init_rcu(sk);
+ 		spin_unlock(lock);
+ 	}
+-	if (timer_pending(&req->rsk_timer) && del_timer_sync(&req->rsk_timer))
++	if (timer_pending(&req->rsk_timer) && timer_shutdown_sync(&req->rsk_timer))
+ 		reqsk_put(req);
+ 	return found;
+ }
+diff --git a/net/ipv4/inet_timewait_sock.c b/net/ipv4/inet_timewait_sock.c
+index 66fc940f9521..8a70bb726bcb 100644
+--- a/net/ipv4/inet_timewait_sock.c
++++ b/net/ipv4/inet_timewait_sock.c
+@@ -66,6 +66,7 @@ static void inet_twsk_kill(struct inet_timewait_sock *tw)
+ void inet_twsk_free(struct inet_timewait_sock *tw)
+ {
+ 	struct module *owner = tw->tw_prot->owner;
++	timer_shutdown(&tw->tw_timer);
+ 	twsk_destructor((struct sock *)tw);
+ #ifdef SOCK_REFCNT_DEBUG
+ 	pr_debug("%s timewait_sock %p released\n", tw->tw_prot->name, tw);
+@@ -208,7 +209,7 @@ EXPORT_SYMBOL_GPL(inet_twsk_alloc);
+  */
+ void inet_twsk_deschedule_put(struct inet_timewait_sock *tw)
+ {
+-	if (del_timer_sync(&tw->tw_timer))
++	if (timer_shutdown_sync(&tw->tw_timer))
+ 		inet_twsk_kill(tw);
+ 	inet_twsk_put(tw);
+ }
+diff --git a/net/ipv4/ipmr.c b/net/ipv4/ipmr.c
+index e04544ac4b45..dbaf4c33b155 100644
+--- a/net/ipv4/ipmr.c
++++ b/net/ipv4/ipmr.c
+@@ -412,7 +412,7 @@ static struct mr_table *ipmr_new_table(struct net *net, u32 id)
+ 
+ static void ipmr_free_table(struct mr_table *mrt)
+ {
+-	del_timer_sync(&mrt->ipmr_expire_timer);
++	timer_shutdown_sync(&mrt->ipmr_expire_timer);
+ 	mroute_clean_tables(mrt, MRT_FLUSH_VIFS | MRT_FLUSH_VIFS_STATIC |
+ 				 MRT_FLUSH_MFC | MRT_FLUSH_MFC_STATIC);
+ 	rhltable_destroy(&mrt->mfc_hash);
+diff --git a/net/ipv6/ip6mr.c b/net/ipv6/ip6mr.c
+index facdc78a43e5..474b862039e0 100644
+--- a/net/ipv6/ip6mr.c
++++ b/net/ipv6/ip6mr.c
+@@ -392,7 +392,7 @@ static struct mr_table *ip6mr_new_table(struct net *net, u32 id)
+ 
+ static void ip6mr_free_table(struct mr_table *mrt)
+ {
+-	del_timer_sync(&mrt->ipmr_expire_timer);
++	timer_shutdown_sync(&mrt->ipmr_expire_timer);
+ 	mroute_clean_tables(mrt, MRT6_FLUSH_MIFS | MRT6_FLUSH_MIFS_STATIC |
+ 				 MRT6_FLUSH_MFC | MRT6_FLUSH_MFC_STATIC);
+ 	rhltable_destroy(&mrt->mfc_hash);
+diff --git a/net/mac80211/mesh_pathtbl.c b/net/mac80211/mesh_pathtbl.c
+index acc1c299f1ae..ec72756075f5 100644
+--- a/net/mac80211/mesh_pathtbl.c
++++ b/net/mac80211/mesh_pathtbl.c
+@@ -512,7 +512,7 @@ static void mesh_path_free_rcu(struct mesh_table *tbl,
+ 	mpath->flags |= MESH_PATH_RESOLVING | MESH_PATH_DELETED;
+ 	mesh_gate_del(tbl, mpath);
+ 	spin_unlock_bh(&mpath->state_lock);
+-	del_timer_sync(&mpath->timer);
++	timer_shutdown_sync(&mpath->timer);
+ 	atomic_dec(&sdata->u.mesh.mpaths);
+ 	atomic_dec(&tbl->entries);
+ 	mesh_path_flush_pending(mpath);
+diff --git a/net/netfilter/ipset/ip_set_list_set.c b/net/netfilter/ipset/ip_set_list_set.c
+index 5a67f7966574..e162636525cf 100644
+--- a/net/netfilter/ipset/ip_set_list_set.c
++++ b/net/netfilter/ipset/ip_set_list_set.c
+@@ -427,7 +427,7 @@ list_set_destroy(struct ip_set *set)
+ 	struct set_elem *e, *n;
+ 
+ 	if (SET_WITH_TIMEOUT(set))
+-		del_timer_sync(&map->gc);
++		timer_shutdown_sync(&map->gc);
+ 
+ 	list_for_each_entry_safe(e, n, &map->members, list) {
+ 		list_del(&e->list);
+diff --git a/net/netfilter/ipvs/ip_vs_lblc.c b/net/netfilter/ipvs/ip_vs_lblc.c
+index 7ac7473e3804..1b87214d385e 100644
+--- a/net/netfilter/ipvs/ip_vs_lblc.c
++++ b/net/netfilter/ipvs/ip_vs_lblc.c
+@@ -384,7 +384,7 @@ static void ip_vs_lblc_done_svc(struct ip_vs_service *svc)
+ 	struct ip_vs_lblc_table *tbl = svc->sched_data;
+ 
+ 	/* remove periodic timer */
+-	del_timer_sync(&tbl->periodic_timer);
++	timer_shutdown_sync(&tbl->periodic_timer);
+ 
+ 	/* got to clean up table entries here */
+ 	ip_vs_lblc_flush(svc);
+diff --git a/net/netfilter/ipvs/ip_vs_lblcr.c b/net/netfilter/ipvs/ip_vs_lblcr.c
+index 77c323c36a88..ad8f5fea6d3a 100644
+--- a/net/netfilter/ipvs/ip_vs_lblcr.c
++++ b/net/netfilter/ipvs/ip_vs_lblcr.c
+@@ -547,7 +547,7 @@ static void ip_vs_lblcr_done_svc(struct ip_vs_service *svc)
+ 	struct ip_vs_lblcr_table *tbl = svc->sched_data;
+ 
+ 	/* remove periodic timer */
+-	del_timer_sync(&tbl->periodic_timer);
++	timer_shutdown_sync(&tbl->periodic_timer);
+ 
+ 	/* got to clean up table entries here */
+ 	ip_vs_lblcr_flush(svc);
+diff --git a/net/netfilter/xt_LED.c b/net/netfilter/xt_LED.c
+index 0371c387b0d1..66b0f941d8fb 100644
+--- a/net/netfilter/xt_LED.c
++++ b/net/netfilter/xt_LED.c
+@@ -166,7 +166,7 @@ static void led_tg_destroy(const struct xt_tgdtor_param *par)
+ 
+ 	list_del(&ledinternal->list);
+ 
+-	del_timer_sync(&ledinternal->timer);
++	timer_shutdown_sync(&ledinternal->timer);
+ 
+ 	led_trigger_unregister(&ledinternal->netfilter_led_trigger);
+ 
+diff --git a/net/rxrpc/conn_object.c b/net/rxrpc/conn_object.c
+index 22089e37e97f..307d6d480e78 100644
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -358,7 +358,7 @@ static void rxrpc_destroy_connection(struct rcu_head *rcu)
+ 
+ 	_net("DESTROY CONN %d", conn->debug_id);
+ 
+-	del_timer_sync(&conn->timer);
++	timer_shutdown_sync(&conn->timer);
+ 	rxrpc_purge_queue(&conn->rx_queue);
+ 
+ 	conn->security->clear(conn);
+diff --git a/net/sched/cls_flow.c b/net/sched/cls_flow.c
+index 014cd3de7b5d..cd90a3083b9f 100644
+--- a/net/sched/cls_flow.c
++++ b/net/sched/cls_flow.c
+@@ -367,7 +367,7 @@ static const struct nla_policy flow_policy[TCA_FLOW_MAX + 1] = {
+ 
+ static void __flow_destroy_filter(struct flow_filter *f)
+ {
+-	del_timer_sync(&f->perturb_timer);
++	timer_shutdown_sync(&f->perturb_timer);
+ 	tcf_exts_destroy(&f->exts);
+ 	tcf_em_tree_destroy(&f->ematches);
+ 	tcf_exts_put_net(&f->exts);
+diff --git a/net/sunrpc/svc.c b/net/sunrpc/svc.c
+index 149171774bc6..42663e240ec5 100644
+--- a/net/sunrpc/svc.c
++++ b/net/sunrpc/svc.c
+@@ -567,7 +567,7 @@ svc_destroy(struct kref *ref)
+ 	struct svc_serv *serv = container_of(ref, struct svc_serv, sv_refcnt);
+ 
+ 	dprintk("svc: svc_destroy(%s)\n", serv->sv_program->pg_name);
+-	del_timer_sync(&serv->sv_temptimer);
++	timer_shutdown_sync(&serv->sv_temptimer);
+ 
+ 	/*
+ 	 * The last user is gone and thus all sockets have to be destroyed to
+diff --git a/net/sunrpc/xprt.c b/net/sunrpc/xprt.c
+index ab453ede54f0..311718ce26d0 100644
+--- a/net/sunrpc/xprt.c
++++ b/net/sunrpc/xprt.c
+@@ -2118,7 +2118,7 @@ static void xprt_destroy(struct rpc_xprt *xprt)
+ 	 * can only run *before* del_time_sync(), never after.
+ 	 */
+ 	spin_lock(&xprt->transport_lock);
+-	del_timer_sync(&xprt->timer);
++	timer_shutdown_sync(&xprt->timer);
+ 	spin_unlock(&xprt->transport_lock);
+ 
+ 	/*
+diff --git a/net/tipc/discover.c b/net/tipc/discover.c
+index e8630707901e..d9efbee90fb4 100644
+--- a/net/tipc/discover.c
++++ b/net/tipc/discover.c
+@@ -385,7 +385,7 @@ int tipc_disc_create(struct net *net, struct tipc_bearer *b,
+  */
+ void tipc_disc_delete(struct tipc_discoverer *d)
+ {
+-	del_timer_sync(&d->timer);
++	timer_shutdown_sync(&d->timer);
+ 	kfree_skb(d->skb);
+ 	kfree(d);
+ }
+diff --git a/net/tipc/monitor.c b/net/tipc/monitor.c
+index 9618e4429f0f..77a3d016cade 100644
+--- a/net/tipc/monitor.c
++++ b/net/tipc/monitor.c
+@@ -700,7 +700,7 @@ void tipc_mon_delete(struct net *net, int bearer_id)
+ 	}
+ 	mon->self = NULL;
+ 	write_unlock_bh(&mon->lock);
+-	del_timer_sync(&mon->timer);
++	timer_shutdown_sync(&mon->timer);
+ 	kfree(self->domain);
+ 	kfree(self);
+ 	kfree(mon);
+-- 
+2.35.1
