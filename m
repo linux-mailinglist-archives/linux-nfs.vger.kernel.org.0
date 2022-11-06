@@ -2,93 +2,108 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD11661DEEC
-	for <lists+linux-nfs@lfdr.de>; Sat,  5 Nov 2022 22:48:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39DA661E575
+	for <lists+linux-nfs@lfdr.de>; Sun,  6 Nov 2022 20:09:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230043AbiKEVsH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 5 Nov 2022 17:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39598 "EHLO
+        id S230083AbiKFTJI (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 6 Nov 2022 14:09:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiKEVsD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 5 Nov 2022 17:48:03 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CB6F13CCD;
-        Sat,  5 Nov 2022 14:48:02 -0700 (PDT)
+        with ESMTP id S229641AbiKFTJI (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Nov 2022 14:09:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295206464
+        for <linux-nfs@vger.kernel.org>; Sun,  6 Nov 2022 11:09:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 264E6B801BF;
-        Sat,  5 Nov 2022 21:48:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37383C433D6;
-        Sat,  5 Nov 2022 21:47:58 +0000 (UTC)
-Date:   Sat, 5 Nov 2022 17:47:56 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Andrew Morton <akpm@linux-foundation.org>, rcu@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-edac@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-acpi@vger.kernel.org,
-        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
-        linux-pm@vger.kernel.org, drbd-dev@lists.linbit.com,
-        linux-bluetooth@vger.kernel.org,
-        openipmi-developer@lists.sourceforge.net,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linaro-mm-sig@lists.linaro.org, intel-gfx@lists.freedesktop.org,
-        linux-input@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-leds@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
-        linux-ext4@vger.kernel.org, linux-nilfs@vger.kernel.org,
-        bridge@lists.linux-foundation.org, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, lvs-devel@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
-        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
-Subject: Re: [PATCH v4a 00/38] timers: Use timer_shutdown*() before freeing
- timers
-Message-ID: <20221105174756.38062fce@rorschach.local.home>
-In-Reply-To: <CAHk-=wjkkomrdcrAxxFijs-Lih6vHze+A2TgM+v7-Z7ZkXT+WA@mail.gmail.com>
-References: <20221105060024.598488967@goodmis.org>
-        <CAHk-=wi95dGkg7DiuOZ27gGW+mxJipn9ykB6LHB-HrbbLG6OMQ@mail.gmail.com>
-        <20221105123642.596371c7@rorschach.local.home>
-        <Y2bPlllkHo5DUmLY@zx2c4.com>
-        <CAHk-=wjkkomrdcrAxxFijs-Lih6vHze+A2TgM+v7-Z7ZkXT+WA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5C5460CF5
+        for <linux-nfs@vger.kernel.org>; Sun,  6 Nov 2022 19:09:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C106CC433D6;
+        Sun,  6 Nov 2022 19:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667761746;
+        bh=QunM5lI6lxdAhZd95G3NK9COwpbDdh+RMwxj3rOUJwg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=AmvB2OkbuSVezfseVmd/2dVOVAHx/xvBg8h071tzpnnXbLjuWCeoIvD1gZAUFD2gM
+         RvoBAWTmQlx6hLFBDDdQgQBr/3Dpf0cqukCDfRUYFiptlVOOjFjCfd4Z33pgTcCfKO
+         rfcKrD/2xWDUkuh2zDf9P8Iuw3Pnhvvcpk/+YsUuJ+DG2KnVlaqxuZBhQr4uSvOTQW
+         1pY2Fvz4EvkOUmhqd8pSROHGbzVmbmoalcccaW3yUxNpemK8BYrKYPcl2QdnVIBmVA
+         g9qHwOXilYHM0G2/W8DVWEJpeE5FJCmhbQskZMNkuaKjtsXQhx3j6jN2J2j2g2wULc
+         e6qGsrfoQ6/Fg==
+From:   trondmy@kernel.org
+To:     Chuck Lever <chuck.lever@oracle.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, linux-nfs@vger.kernel.org
+Subject: [PATCH] lockd: set other missing fields when unlocking files
+Date:   Sun,  6 Nov 2022 14:02:39 -0500
+Message-Id: <20221106190239.404803-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sat, 5 Nov 2022 14:13:14 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-> (Comparing output is also fun because the ordering of the patches is
-> random, so consecutive runs with the same rule will give different
-> patches. I assume that it's just because it's done in parallel, but it
-> doesn't help the "try to see what changes when you change the script"
-> ;)
+vfs_lock_file() expects the struct file_lock to be fully initialised by
+the caller. Re-exported NFSv3 has been seen to Oops if the fl_file field
+is NULL.
 
-What I do to compare is:
+Fixes: aec158242b87 ("lockd: set fl_owner when unlocking files")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/lockd/svcsubs.c | 17 ++++++++++-------
+ 1 file changed, 10 insertions(+), 7 deletions(-)
 
- patch -p1 < cocci1.patch
- git commit -a
- git show | patch -p1 -R
- patch -p1 < cocci2.patch
- git diff
+diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
+index e1c4617de771..3515f17eaf3f 100644
+--- a/fs/lockd/svcsubs.c
++++ b/fs/lockd/svcsubs.c
+@@ -176,7 +176,7 @@ nlm_delete_file(struct nlm_file *file)
+ 	}
+ }
+ 
+-static int nlm_unlock_files(struct nlm_file *file, fl_owner_t owner)
++static int nlm_unlock_files(struct nlm_file *file, const struct file_lock *fl)
+ {
+ 	struct file_lock lock;
+ 
+@@ -184,12 +184,15 @@ static int nlm_unlock_files(struct nlm_file *file, fl_owner_t owner)
+ 	lock.fl_type  = F_UNLCK;
+ 	lock.fl_start = 0;
+ 	lock.fl_end   = OFFSET_MAX;
+-	lock.fl_owner = owner;
+-	if (file->f_file[O_RDONLY] &&
+-	    vfs_lock_file(file->f_file[O_RDONLY], F_SETLK, &lock, NULL))
++	lock.fl_owner = fl->fl_owner;
++	lock.fl_pid   = fl->fl_pid;
++	lock.fl_flags = FL_POSIX;
++
++	lock.fl_file = file->f_file[O_RDONLY];
++	if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, NULL))
+ 		goto out_err;
+-	if (file->f_file[O_WRONLY] &&
+-	    vfs_lock_file(file->f_file[O_WRONLY], F_SETLK, &lock, NULL))
++	lock.fl_file = file->f_file[O_WRONLY];
++	if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, NULL))
+ 		goto out_err;
+ 	return 0;
+ out_err:
+@@ -226,7 +229,7 @@ nlm_traverse_locks(struct nlm_host *host, struct nlm_file *file,
+ 		if (match(lockhost, host)) {
+ 
+ 			spin_unlock(&flctx->flc_lock);
+-			if (nlm_unlock_files(file, fl->fl_owner))
++			if (nlm_unlock_files(file, fl))
+ 				return 1;
+ 			goto again;
+ 		}
+-- 
+2.38.1
 
-Then I see how things changed. This is how I was able to show you the
-tweaks I made.
-
--- Steve
