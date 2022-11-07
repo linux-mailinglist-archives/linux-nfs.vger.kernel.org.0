@@ -2,145 +2,118 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 71B1661FD32
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Nov 2022 19:18:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0622F61FDC8
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Nov 2022 19:42:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232380AbiKGSSb (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 7 Nov 2022 13:18:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34120 "EHLO
+        id S231635AbiKGSmf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 7 Nov 2022 13:42:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232768AbiKGSSJ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Nov 2022 13:18:09 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC074632B
-        for <linux-nfs@vger.kernel.org>; Mon,  7 Nov 2022 10:16:53 -0800 (PST)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A7HNd6l028802;
-        Mon, 7 Nov 2022 18:16:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=ozKkNjT5cl5TiO6u/P0AruXwFOwqYXwD7PMJYBhwo1Q=;
- b=xnKeXD/TysYtFaqyvdG4q6XtTtxWsFiywQFq6wDtL1CJ1jLyx8x3CVPXRnEOPuY6KnEa
- 7ACk2EANmlXvlPcSQzYnK+mJUeFeepZ6sckYFQKTCATrvhoFbrKFo9L3wvKZSTpMLoOq
- LYwQUyNJwRVbHTnU8IOLcUq9AWh8horkO8r3J0+CAARmQZIkcY6NzIw+rnCbY3lwonUN
- 2e7LZpMzIukyhn4JfzogOSwgsLi1DAA7Nvcr71xzbKkDQ9yI2oDoxuspu9V1nj3C3/aS
- yK002+4gxnatW1eOUUYzG3xelGKZhKceI2/hzkmanIx0IA4iS87wmqzf578diQfYnLvM eg== 
-Received: from iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta01.appoci.oracle.com [130.35.100.223])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kngnuvst5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Nov 2022 18:16:50 +0000
-Received: from pps.filterd (iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A7IF9fM010818;
-        Mon, 7 Nov 2022 18:16:49 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
-        by iadpaimrmta01.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kpcymue43-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 07 Nov 2022 18:16:49 +0000
+        with ESMTP id S231302AbiKGSmd (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 7 Nov 2022 13:42:33 -0500
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2111.outbound.protection.outlook.com [40.107.220.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D30A18E2D
+        for <linux-nfs@vger.kernel.org>; Mon,  7 Nov 2022 10:42:29 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BQxNRxX76HFp4cnfr6QhrMgb4lG2W5B0jDfIIfpHd/ENNqNuwCJyUE2cKdfd6a6WdC3rWbtz7+Iz6A9y2bfc1/Q5AAsEV0EHQhGM+YvpILaqy/MmgKXcfWukuCRYF13Z1kGYcnrObkIUHMngApNWX634hPdRL4/LH4JhGPnojzAKQL3v1qFB11EcY8Uk8Kc3/y6YHhFrgfr5yid/DvgFde9+hXVukEG9wrT2oxsgxSIg4zMzaoxpbc2tp+eOHnwVIttKw4e3xmt8aSVlNB/lWwwAnWQPuJ/ccq8+A0P5QP8uTMmDqykoYxHtNzHpoDW8HayswrTvdRj9KVolDfS0sA==
+ b=bM6CrwY7UgAQDIbxNHy0m6MtkgxgdzSV8TjHnf4IXYgKVpY4qb17TwdmFlfy7zRVc+i0+A07LOv3eTXOfzjIcfkieYqQfiYsnGOsYYWAY2XbcZQUXueX2XDVaQOYF7uDNELXDyRT/7oT9O5Xiwp0xXJlDnHv15JYmF5YLBkXKzg2rQCuBfcVUP5GVSJ2FfQ3ofCUX/YzOG9GXQaBnWmkHREVOkkOaR+w29VWlzbGpQJxRjAer6TQnPx+sUuI6hHoyGkjiehUAJilBRIM7amvWl07t7fFymBvinVUM73v5Kh3l8vTOrl5Ls+c+sL7f+wuh/FmvHOaPtOw8rC9+PQTxw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ozKkNjT5cl5TiO6u/P0AruXwFOwqYXwD7PMJYBhwo1Q=;
- b=I6Egm/7HfR+RIfuJdGzok+7s1ufNJpR3zcJ6hbMcSb6WshpBhNVJ0dRhm/nMBdSRAwpdtjHjQsOgLnlJ9/N60HEL1LZyVAP8ECZgdYUvomAXp7mhss9Yktb2POX7cN5bYF6YbMBJMHfzrL/YsFua51edQux8uryehc65sOS5RblyoQycSThu1S83Cw96xw7VgoZWQcUrFqScONf58HzhlBpcyNRuSMmSJamJaV1e3g2QbC6IhaiaOq77iJ9+ScZQ3BHgvK3r5lwU1zzqDdGDVf/zuU58fu8UH0h4X7j3Hj43NE79vzoEizweEwGueT4zEFAMi5OazBlvThNC/effYg==
+ bh=jL6Po3LqMe+bdWO+PIjAzHift1a0AXXYJvDbAJ+qM9I=;
+ b=nv8A1BtiPhn0oJd03bzeWn8yfQl+/jHiaG0+BFnTrCbjSFfFD32H5DFjitUD/nfQNHFJJ2bvbcHX9WRmdbwJZ/1cX2T7hMviqGCOMkmSCtzPu8xIfVTe5MO0Guom/IRRAxOhVg4d4yxsOXoK0w5LaCkUapyx8mk2JYsrRxws2qUrN+g0ZYq/Ji0hG2x7oinj2ElD+Dt/cXladJ4X/rzkjm3vgpSv6tfjLrls4RMNFcpYiNXtjATtogkH+2kqIWS5BsCuINs/swkqBKE8Uh1UDRAd+CErw0vZ8dKTh2lQKPuQhDFUEXu0TynqRSOQqt9VGDFPV3DOtRqLkH29hmOd6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=hammerspace.com; dmarc=pass action=none
+ header.from=hammerspace.com; dkim=pass header.d=hammerspace.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hammerspace.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ozKkNjT5cl5TiO6u/P0AruXwFOwqYXwD7PMJYBhwo1Q=;
- b=dMHb63x73+A/yVwmQciL4a1Ua9xEXxPkGUSXUlWKi5tVcCVmo52JMEc/Q7MvL2YRnBiPHhjRw9eN4ossTZy3MRoO1dA984jBdf3tJ7TrUkEEcIvoydyDWJva5LycV65cRib5VG/LcmOTJ/Cry0bFqmj/z+u4LwsM+m75ckehgIY=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by DS7PR10MB5247.namprd10.prod.outlook.com (2603:10b6:5:297::13) with
+ bh=jL6Po3LqMe+bdWO+PIjAzHift1a0AXXYJvDbAJ+qM9I=;
+ b=NEKky4r4WcSlA6aPenLLyBB/Zt6zShE+4yrgw3XgtSZlSceACGftkR1c/qeOxKdAHA1nEVx4INZowiNIgFklMdTunDZxQlqauX8kVmZc5yDo2ZsZEd2drqKX8Eje7/e5YrNc7c1S7HZlrHvKsHnN7oBdDpMWz10RZiEtte6Z0xo=
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com (2603:10b6:610:111::7)
+ by SA0PR13MB3952.namprd13.prod.outlook.com (2603:10b6:806:72::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.26; Mon, 7 Nov
- 2022 18:16:47 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::b500:ee42:3ca6:8a9e]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::b500:ee42:3ca6:8a9e%5]) with mapi id 15.20.5791.026; Mon, 7 Nov 2022
- 18:16:47 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: remove dedicated nfsd_filecache_wq
-Thread-Topic: [PATCH] nfsd: remove dedicated nfsd_filecache_wq
-Thread-Index: AQHY8svsfDGR9gO670+nD/CKFPOHBq4ztxuAgAANfgA=
-Date:   Mon, 7 Nov 2022 18:16:47 +0000
-Message-ID: <CDEA2A36-B0EC-426B-8489-2BB524C6266A@oracle.com>
-References: <20221107171056.64564-1-jlayton@kernel.org>
- <61876142ab0115a7bf39556e5caebfd1a635f945.camel@kernel.org>
-In-Reply-To: <61876142ab0115a7bf39556e5caebfd1a635f945.camel@kernel.org>
-Accept-Language: en-US
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.25; Mon, 7 Nov
+ 2022 18:42:25 +0000
+Received: from CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::9927:a5a2:43a2:4801]) by CH0PR13MB5084.namprd13.prod.outlook.com
+ ([fe80::9927:a5a2:43a2:4801%4]) with mapi id 15.20.5791.026; Mon, 7 Nov 2022
+ 18:42:25 +0000
+From:   Trond Myklebust <trondmy@hammerspace.com>
+To:     Charles Edward Lever <chuck.lever@oracle.com>
+CC:     Jeffrey Layton <jlayton@kernel.org>,
+        "trondmy@kernel.org" <trondmy@kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: [PATCH] lockd: set other missing fields when unlocking files
+Thread-Topic: [PATCH] lockd: set other missing fields when unlocking files
+Thread-Index: AQHY8hNCCVE1uG9XTE231alNVaBdka4zSOCAgAA5BICAAEtDAA==
+Date:   Mon, 7 Nov 2022 18:42:25 +0000
+Message-ID: <3E5DCADE-432D-4CAA-88E8-DD413EDE3626@hammerspace.com>
+References: <20221106190239.404803-1-trondmy@kernel.org>
+ <2b5cffddf1d4d5791758e267b7184f0263519335.camel@kernel.org>
+ <D25AE1CE-E8D2-4BD3-83DA-A5C3222C5E03@oracle.com>
+In-Reply-To: <D25AE1CE-E8D2-4BD3-83DA-A5C3222C5E03@oracle.com>
+Accept-Language: en-US, en-GB
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-mailer: Apple Mail (2.3731.200.110.1.12)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=hammerspace.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|DS7PR10MB5247:EE_
-x-ms-office365-filtering-correlation-id: 0e6d96f7-1da7-461a-ef82-08dac0ec3b95
+x-ms-traffictypediagnostic: CH0PR13MB5084:EE_|SA0PR13MB3952:EE_
+x-ms-office365-filtering-correlation-id: 3d434330-2e1b-41ef-8bf6-08dac0efd088
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: X5sF2r+YvN0qsGdCwg0fuRZB2zfkdslLTvGBGlrs3ThYyCc5t5cge0wEaCGLjSSOQ9X8bJQZm7rIO1A7qj/dPcxpQ9PxFEDwCXdm89QhJ6h4D/Tj4jGoh45Rr4lXcehzE58W6N/IQKkmUg5rJbo/dU6OKBx+nbCEuq6e7ZOyZ9yZB+2Rkd7YxN73NYn2MV36SLb3GzRHCt9ba9Kbm9gpWvEumE/ZanDKxA5Fdcfg7bprRsgbar1JAM2nbpAJn0C1G92uAuaCJFTTSGLWDwgTxCBXFbmCY2J1xuPZ1YeTrfFAcDauk7SQsemVTz1LeiYfdhSng3RqKb6f6/IfDET4jJW280aD9jHxagWi7O1R1xfQcy9KkTmoZ6T/wVCw7waQHkZ4JH7HZcCJh/ldq4+rdqzU48PRz7gRFhI9Zqf0fv61+bUzgKvfklpmuUGz1MFmAvsKV3yDFr8D3e0uVlLKroU97ejJR3CB0+g82dbvlQ7o3UqmdLxXlKM//pk5ebwGh3SomJ7pZO6iM/Ekdj++I1cMTEDWQPNAJ8J3G3ED7c3i8pUYMo35jYEOGpSsQKhYANclCMnE6U+xwgkl75QE5GA/yED5EaRujXJrvJPCS7bPpHR+JVwDFeMXwvIGv9anbeFdmLxhU+NrF7qRQH49GR+YTcXLEoEFCMPm3LEnFM0Bd9KR1r08DpFWioI9Ozcao+AiOy4GPpFJhAlLQ1yW/JL7prgDJwBIEmZtq9L0FJ0EpP9S6zblIKOhyxpHDQ0f7rySuYLmrVT0fIb9wsMmhnBc9uq159CpJrho394pgyw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(376002)(39860400002)(346002)(136003)(396003)(451199015)(2616005)(83380400001)(33656002)(186003)(122000001)(38100700002)(38070700005)(2906002)(8936002)(86362001)(5660300002)(478600001)(6486002)(26005)(53546011)(6512007)(6506007)(66476007)(66446008)(66556008)(8676002)(64756008)(91956017)(316002)(76116006)(4326008)(41300700001)(71200400001)(6916009)(66946007)(36756003)(45980500001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: 86cuVhbPr1GH5HnKHjIgcPOGg3OeC3/3tLqowMy9lIjACXse2oGRwhtIKi/Amu71C0mTYRv8mTrqkhtmVZ7lAXx7Q6s9rFq9kYGBORF807e+o8trJqRddB5lHUmgL5GHrkU1qI3RADR+HhBj6HV+Hh+O58no6WNEt3NI2gbYq5REsltil2L2ZxzErOhAQuX0g2xgS4KgVvC4tub/ZL8AvU3TajjZJgs8QQPeE1/oOczalN1FPIHShD7EyOfaDSpTP6oFo+Gw9SgKBNjYBB0rINoKzwVr1VDCgKUJiAYc3pyU19rjwrMqFfpWkcsv1eUn8J7nvgfCZTdjaI5rTAGw2gRDsMuLduD4N6kHjrdVJ+vMl1u+59yyxSht8DrrvhVF49XDu23/gfqAAERx8O9q5WnLfw1YozsWf53rgKyjYDEEMda/WDRu9u/LkW71f2r73VL84rkIXt2GSEwFcX4I4480I6mt6ZMwUFo1V2RucS+IsIh/SLg9sHf+UdMcpSSnmaEzk+SHTp7UkIfUAc01xLoCaxgoqa/dv+Gu4ESxkiLdHju4VujFLz20M3BDJtq0HconBQ6S15obxuxj2wNkZYsKFH3dKeODWHmStOQNkooFBpJ/23qNjd3j0+2haxqRFD7th+vjAPt77eEkqlTCp7lrBXTE7PfTy9bcNNqIQj+kfZkLXxvN+SVIQJMhFvM9qxG0HLpNgnBjb41UZMoEhQAb3loUuHz7AJeUxbqM2vsq1BOyCyBXhh+OUNeLQqbBnpWSA0pDdj/gS4uAwzF4px52UZ83Z1I9HHyDUHoK0eJgAdG2XlIEThlHBoxqO5X0xFxOLvBDH5soTaJFfLiKQw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR13MB5084.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(376002)(396003)(39840400004)(136003)(346002)(451199015)(86362001)(5660300002)(41300700001)(8936002)(6506007)(8676002)(53546011)(38070700005)(33656002)(66476007)(2906002)(66946007)(4326008)(66556008)(76116006)(64756008)(36756003)(66446008)(54906003)(6486002)(316002)(478600001)(71200400001)(186003)(83380400001)(2616005)(6916009)(122000001)(966005)(38100700002)(6512007)(26005)(45980500001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?x2WaqJeVgdianeqcFQaZ+qpArHJLWsMT56RFMmXel3tt4uSyUy6h5XwdITce?=
- =?us-ascii?Q?gsTSX9duBwB26SjgeF5mVS7YvH/oacZB/l02vVLi0jtJl8s6mGbRJ84Zhvm7?=
- =?us-ascii?Q?6crI6LzkZqGZYDriIAAey3JkfauRU7pswwvfAia4beduwwXa6+Jozfc6MRT9?=
- =?us-ascii?Q?HYudkbYi0Z+1j+H/cAR9AGySr+2yFgp5gaI78w6urtepTZmNtyitWrguOz9M?=
- =?us-ascii?Q?mgv0zfyTfk7MN5LKCLmr8YbCWyPf2esV+TKU3Byxy/HCad3OTzLav6tG7Ldn?=
- =?us-ascii?Q?U2kvtUKQkBp1tEb+z80YSjZUvTNsq08IwGIeBARWIrBGrePvpkcLTDGtYg6b?=
- =?us-ascii?Q?Qd+Krsk/g2D2JT1WjxENWCuM4uACTVpGy3uCnO1Q4IcqaROwXawba27eK2tI?=
- =?us-ascii?Q?0tgqIHi7KCHC//bAWO3f/JpFMACabuFqd7ZSaRJvjQu3cVd6hC2iSFGgW949?=
- =?us-ascii?Q?hlbN5OQWSe4TSH1IxcKKq5WY4zVvlPmmpk0Di6SZWRhcW7fBkI7LnZ0u4u6X?=
- =?us-ascii?Q?bferIIFFlwConisNlYdyhWqkGTQXwiCVPKfaWaAg9ABOvbSC0f/MrZkCQBHc?=
- =?us-ascii?Q?CMXuq6cUCbQv8ejoXLtvV1vdn3nGPrQ4HLOBybXcGazFUepMeBcjjfX9LLXq?=
- =?us-ascii?Q?v6MLjD/vtp6q8Syy6y48HUdHKl/JxZJ9nEGrYcU6kwkyF0ZHRDkbgSzb28LD?=
- =?us-ascii?Q?PXJr5A84v8NvGDu7f2P2bns4sH/3FtDPw48ocjxvKczt2yOpSCNSlV2GsOPS?=
- =?us-ascii?Q?XpMy8VkmJQCHhJEVN3UOpHFqAn4GlEo9EhjRuJSmT9Ja8n7/FShlMA3TroE1?=
- =?us-ascii?Q?wKsJlfYRixvP7LlJXKTb1z562u1z7My4PA5m+y/ZtaigAnXmS5f5fT5wQM8b?=
- =?us-ascii?Q?SXMmOAjWmLmIISXMhvjT0eAnrpR/sHxi3YiIIO0xT6l0IOOeuCOwlWH/fYiP?=
- =?us-ascii?Q?fr+5mx1X47bsB8lbNUcaGgbDFbdep/SjzMurjW6rwHwGqjUQZ16s1oJ2KZsN?=
- =?us-ascii?Q?jaCuKH0FkegOzshhec+57H57VH2GFJj9SZ2kfEVGVfVbqkY+99YcMfiT0igZ?=
- =?us-ascii?Q?Bw3MFdih2h2G3hEBfokVyPy5eLc6+fx4D34eJfWy6WDkGV+1RCzd1Q4cIVI3?=
- =?us-ascii?Q?+mqZhdecRzuD8kgDfqQ4pMUeyOhlA90ZpdJ4VgPSCP0/d4HPmVmVhXnxtsQa?=
- =?us-ascii?Q?XyNF6TNVcxwEHm73c83nSWnAyJhMEzCk9i9xKx5iW6hbm3TpxOVv7XXmaCqw?=
- =?us-ascii?Q?y30QWsflkIjUB2Lv3rRj3H8KDBkCwsml1bHIEVxjxqR/JGKj2UZAM+4cKIOI?=
- =?us-ascii?Q?zm/ScQR+Uqaj/W8PavzAZmbP2NvdS5Tf93easwRHZVL4zs7vjXz9MNsIXuLR?=
- =?us-ascii?Q?k7/Pn7Coj7OYjduUs+jb7Sn0mACVtegjPQUNevwoW3bf0PYP8zvjBP9yLAYb?=
- =?us-ascii?Q?YLV5pXnEYgTntmtpv3ZNp1vIu8AnBl1n56FePp7+FEgqIRQwpukVA5ZOM5qx?=
- =?us-ascii?Q?87e89lW3k46DUva0LLEU6IdYos3lH1nfRvwFmbkOdqLZHN9gQIgrpqEWUmtN?=
- =?us-ascii?Q?PUNWHYn6BpxwbYva9eTmjSGb1DcVdIV+gWhZKa3v+v66bzPvBPFB9u9uuaZd?=
- =?us-ascii?Q?2w=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?VJzwNL66Kg2ttrej7mBSB7wDg/AQIa7ogkqjltOkHEshBs5fOmjRvaLnQSfL?=
+ =?us-ascii?Q?RbK4tSziltbU7ZINjQRLGIsWcpRl5B+KugwIJnX1vtli1DPVvT3hr2Rovtcn?=
+ =?us-ascii?Q?K1JXTS1eCv3kpmYvLntbfAFwE/BNMA7JWRF3zmjOL3g2CVlARvwEt/wVd13z?=
+ =?us-ascii?Q?ikhci5gqqDlKihfmpX48ev6w+de0yV4MSS3SioOSwINZ8v8yFgDl3Oo+pN6I?=
+ =?us-ascii?Q?UdikyU6bO9rt8h9NQGrya8taZl7tx6JHqvLR686mHauFF9Sj8IoEkHGFmliq?=
+ =?us-ascii?Q?ImqmDjmUiEk3Bw00XimR7luwvQgrwsb/i/gHXRZHa2puo8mGHCWtlbiUt+li?=
+ =?us-ascii?Q?VRAEOi7vAcTZ1eRQcCZ69gUbGWl0ZfzB+HKugt+j6S5PxaJ1y9utABq/Z4hR?=
+ =?us-ascii?Q?wRPfmpJaIdUV8YHDVuMUhrT9M3f8Ql+edgPRDNW1Ja/lT+valaOcd6CNRDnK?=
+ =?us-ascii?Q?X2wXlv6/MvRlf+A/yiqx9xyuDI/eDpZBWhcKQgC6Mu87bNBgEgo4ctQZoT7w?=
+ =?us-ascii?Q?GQMuDv0sNLVVBu0qMHbdlIwQSr4+NXi/umzjD83KyVqcBagke2/4EKDjjQfn?=
+ =?us-ascii?Q?ibAfGVejIWaKD0ZcLQmvV7FW/74z5/2Oj99FEp1tSc4LX5SFZ6atblLV9va9?=
+ =?us-ascii?Q?5ahYkElEEcqKFhML2sQG7CfHQ0XZz9FiXmUdpzKXA4//Uy9fRLggsvW47uOx?=
+ =?us-ascii?Q?MAhWpvNR9PJSndnwl8rmGcI0jP3HRgMznUYIcFkM8pitHFKWoDrO+0whadH0?=
+ =?us-ascii?Q?xXdC/ppVqLiFNTnWX4cKDCXYhIr8SWg4GvWYaqxVBC53S5R8momAXLnEfD1f?=
+ =?us-ascii?Q?T40vkZVQhErbRpmpRFqbzlPglTf1sJq8VLckCOckUCXjHSVkl1csQ3EfGaHr?=
+ =?us-ascii?Q?8V3SISITN4JG6+1ir6q2cIjzhoaoCsheIxbH7+T2LuYpRAq3FmVXSFI9BZM/?=
+ =?us-ascii?Q?ODpSiABnsv7AizVwt3Oj7A0jyJE7H4PN/yLSfRyfCNEyZxbzNDXU7oLpcH3M?=
+ =?us-ascii?Q?QzU3BpUg80rCXqOuNpkKBfaGnuq/0C+cDJE7qgDb0dMyZVX5BgQgGFJZxt9T?=
+ =?us-ascii?Q?Q73dLAXVsqPqAQ4HP8ShNYf5AjfJ0rr11qz58WE9ozTozwjZNL9fEFd1HQC3?=
+ =?us-ascii?Q?sxwq/cOjCAm8SCDekQrpRbl3z8sCYJArEXzg+Vin9q3Fd426yFthbXpda7KR?=
+ =?us-ascii?Q?5Vp30qojJaoeJrPi4nTsYpvkeKeuEGiojhOU3GY0bnTC7Q/VqC9FBAaxc9jI?=
+ =?us-ascii?Q?gSYa7QcNXYJ+j9t2s5U6ksgkVevZTuHSabtI5jVsqThc8+h5VDKjVIJ25BNY?=
+ =?us-ascii?Q?0QMck0gABigKobbRgRxYaF0EcLT0LN/CPmADxvLehT3kTJM5huSc5V+IVnSP?=
+ =?us-ascii?Q?8bHiUDj2Geo5LZVLmbGQKQimOEkLonlp9R5IWbWTez2wfBgulw9xap8pptSV?=
+ =?us-ascii?Q?I8+kZYViFEGtXQG+fyN9BCFNhDwfe5v4xDfq8sZeMr1bUhRfEdPJigQ/e9jU?=
+ =?us-ascii?Q?skRfCWb0uu0haASC5/abqAbEc+f2O70i1tuN/zv1Rgv1XqrSmP1B3HZBl9Ec?=
+ =?us-ascii?Q?CSnGkYTusZDDsqzjpGul5vTpEp4sC6xqkl9HXOd8JEQzxf1KiFanUDzrRGsF?=
+ =?us-ascii?Q?uw=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <17634EEC2C80F745BB2ECAA8B6ED7B65@namprd10.prod.outlook.com>
+Content-ID: <A20703830EF09C4EB70AA6C9FA596441@namprd13.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
+X-OriginatorOrg: hammerspace.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0e6d96f7-1da7-461a-ef82-08dac0ec3b95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2022 18:16:47.0531
+X-MS-Exchange-CrossTenant-AuthSource: CH0PR13MB5084.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d434330-2e1b-41ef-8bf6-08dac0efd088
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2022 18:42:25.4203
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-id: 0d4fed5c-3a70-46fe-9430-ece41741f59e
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9ZnOce+ibAyZ8pwdAgzBCghlPbR712r7Gt/rlRiE+PzEKtUN4fuGQZxIuFGnkJE4etywCRYbO2NBI6U5gptwuQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB5247
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-07_09,2022-11-07_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 malwarescore=0
- adultscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211070146
-X-Proofpoint-GUID: 9RMpziMlhg0-Z1NpT-kUbkUO4L19DuDn
-X-Proofpoint-ORIG-GUID: 9RMpziMlhg0-Z1NpT-kUbkUO4L19DuDn
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-MS-Exchange-CrossTenant-userprincipalname: dWn4SEjKUsbjvA8ynuKBRl5KinH5OJ7gLvjCZhHSHBteHdEhywFEVrcBF2Bdfw5Nec6F2cAc3QEIjI6IhGg/yQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR13MB3952
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -150,108 +123,98 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-> On Nov 7, 2022, at 12:28 PM, Jeff Layton <jlayton@kernel.org> wrote:
+> On Nov 7, 2022, at 09:12, Chuck Lever III <chuck.lever@oracle.com> wrote:
 >=20
-> On Mon, 2022-11-07 at 12:10 -0500, Jeff Layton wrote:
->> There's no clear benefit to allocating our own over just using the
->> system_wq. This also fixes a minor bug in nfsd_file_cache_init(). In the
->> current code, if allocating the wq fails, then the nfsd_file_rhash_tbl
->> is leaked.
->>=20
->> Signed-off-by: Jeff Layton <jlayton@kernel.org>
->> ---
->> fs/nfsd/filecache.c | 13 +------------
->> 1 file changed, 1 insertion(+), 12 deletions(-)
->>=20
 >=20
-> I'm playing with this and it seems to be ok, but reading further into
-> the workqueue doc, it says this:
 >=20
-> * A wq serves as a domain for forward progress guarantee
->  (``WQ_MEM_RECLAIM``, flush and work item attributes.  Work items
->  which are not involved in memory reclaim and don't need to be
->  flushed as a part of a group of work items, and don't require any
->  special attribute, can use one of the system wq.  There is no
->  difference in execution characteristics between using a dedicated wq
->  and a system wq.
+>> On Nov 7, 2022, at 5:48 AM, Jeff Layton <jlayton@kernel.org> wrote:
+>>=20
+>> On Sun, 2022-11-06 at 14:02 -0500, trondmy@kernel.org wrote:
+>>> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>>=20
+>>> vfs_lock_file() expects the struct file_lock to be fully initialised by
+>>> the caller. Re-exported NFSv3 has been seen to Oops if the fl_file fiel=
+d
+>>> is NULL.
+>>>=20
+>>> Fixes: aec158242b87 ("lockd: set fl_owner when unlocking files")
+>>> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+>>> ---
+>>> fs/lockd/svcsubs.c | 17 ++++++++++-------
+>>> 1 file changed, 10 insertions(+), 7 deletions(-)
+>>>=20
+>>> diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
+>>> index e1c4617de771..3515f17eaf3f 100644
+>>> --- a/fs/lockd/svcsubs.c
+>>> +++ b/fs/lockd/svcsubs.c
+>>> @@ -176,7 +176,7 @@ nlm_delete_file(struct nlm_file *file)
+>>> }
+>>> }
+>>>=20
+>>> -static int nlm_unlock_files(struct nlm_file *file, fl_owner_t owner)
+>>> +static int nlm_unlock_files(struct nlm_file *file, const struct file_l=
+ock *fl)
+>>> {
+>>> struct file_lock lock;
+>>>=20
+>>> @@ -184,12 +184,15 @@ static int nlm_unlock_files(struct nlm_file *file=
+, fl_owner_t owner)
+>>> lock.fl_type  =3D F_UNLCK;
+>>> lock.fl_start =3D 0;
+>>> lock.fl_end   =3D OFFSET_MAX;
+>>> - lock.fl_owner =3D owner;
+>>> - if (file->f_file[O_RDONLY] &&
+>>> -    vfs_lock_file(file->f_file[O_RDONLY], F_SETLK, &lock, NULL))
+>>> + lock.fl_owner =3D fl->fl_owner;
+>>> + lock.fl_pid   =3D fl->fl_pid;
+>>> + lock.fl_flags =3D FL_POSIX;
+>>> +
+>>> + lock.fl_file =3D file->f_file[O_RDONLY];
+>>> + if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, NULL)=
+)
+>>> goto out_err;
+>>> - if (file->f_file[O_WRONLY] &&
+>>> -    vfs_lock_file(file->f_file[O_WRONLY], F_SETLK, &lock, NULL))
+>>> + lock.fl_file =3D file->f_file[O_WRONLY];
+>>> + if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, NULL)=
+)
+>>> goto out_err;
+>>> return 0;
+>>> out_err:
+>>> @@ -226,7 +229,7 @@ nlm_traverse_locks(struct nlm_host *host, struct nl=
+m_file *file,
+>>> if (match(lockhost, host)) {
+>>>=20
+>>> spin_unlock(&flctx->flc_lock);
+>>> - if (nlm_unlock_files(file, fl->fl_owner))
+>>> + if (nlm_unlock_files(file, fl))
+>>> return 1;
+>>> goto again;
+>>> }
+>>=20
+>> Good catch.
+>>=20
+>> I wonder if we ought to roll an initializer function for file_locks to
+>> make it harder for callers to miss setting some fields like this? One
+>> idea: we could change vfs_lock_file to *not* take a file argument, and
+>> insist that the caller fill out fl_file when calling it? That would make
+>> it harder to screw this up.
+>>=20
+>> In any case, let's take this patch in the interim while we consider
+>> whether and how to clean this up.
+>>=20
+>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
 >=20
-> These jobs are involved in mem reclaim however, due to the shrinker.
-> OTOH, the existing nfsd_filecache_wq doesn't set WQ_MEM_RECLAIM.
->=20
-> In any case, we aren't flushing the work or anything as part of mem
-> reclaim, so maybe the above bullet point doesn't apply here?
-
-In the steady state, deferring writeback seems like the right
-thing to do, and I don't see the need for a special WQ for that
-case -- hence nfsd_file_schedule_laundrette() can use the
-system_wq.
-
-That might explain the dual WQ arrangement in the current code.
-
-But I'd feel better if the shrinker skipped files that require
-writeback to avoid a potential deadlock scenario for some
-filesystems.
+> Since this doesn't fix breakage in 6.1-rc, I plan to take it for 6.2.
+> If all y'all feel the fix is more urgent than that, let me know.
 
 
->> diff --git a/fs/nfsd/filecache.c b/fs/nfsd/filecache.c
->> index 1e76b0d3b83a..59e06d68d20c 100644
->> --- a/fs/nfsd/filecache.c
->> +++ b/fs/nfsd/filecache.c
->> @@ -66,8 +66,6 @@ struct nfsd_fcache_disposal {
->> 	struct list_head freeme;
->> };
->>=20
->> -static struct workqueue_struct *nfsd_filecache_wq __read_mostly;
->> -
->> static struct kmem_cache		*nfsd_file_slab;
->> static struct kmem_cache		*nfsd_file_mark_slab;
->> static struct list_lru			nfsd_file_lru;
->> @@ -564,7 +562,7 @@ nfsd_file_list_add_disposal(struct list_head *files,=
- struct net *net)
->> 	spin_lock(&l->lock);
->> 	list_splice_tail_init(files, &l->freeme);
->> 	spin_unlock(&l->lock);
->> -	queue_work(nfsd_filecache_wq, &l->work);
->> +	queue_work(system_wq, &l->work);
->> }
->>=20
->> static void
->> @@ -855,11 +853,6 @@ nfsd_file_cache_init(void)
->> 	if (ret)
->> 		return ret;
->>=20
->> -	ret =3D -ENOMEM;
->> -	nfsd_filecache_wq =3D alloc_workqueue("nfsd_filecache", 0, 0);
->> -	if (!nfsd_filecache_wq)
->> -		goto out;
->> -
->> 	nfsd_file_slab =3D kmem_cache_create("nfsd_file",
->> 				sizeof(struct nfsd_file), 0, 0, NULL);
->> 	if (!nfsd_file_slab) {
->> @@ -917,8 +910,6 @@ nfsd_file_cache_init(void)
->> 	nfsd_file_slab =3D NULL;
->> 	kmem_cache_destroy(nfsd_file_mark_slab);
->> 	nfsd_file_mark_slab =3D NULL;
->> -	destroy_workqueue(nfsd_filecache_wq);
->> -	nfsd_filecache_wq =3D NULL;
->> 	rhashtable_destroy(&nfsd_file_rhash_tbl);
->> 	goto out;
->> }
->> @@ -1034,8 +1025,6 @@ nfsd_file_cache_shutdown(void)
->> 	fsnotify_wait_marks_destroyed();
->> 	kmem_cache_destroy(nfsd_file_mark_slab);
->> 	nfsd_file_mark_slab =3D NULL;
->> -	destroy_workqueue(nfsd_filecache_wq);
->> -	nfsd_filecache_wq =3D NULL;
->> 	rhashtable_destroy(&nfsd_file_rhash_tbl);
->>=20
->> 	for_each_possible_cpu(i) {
->=20
-> --=20
-> Jeff Layton <jlayton@kernel.org>
+It is relevant to fixing https://bugzilla.kernel.org/show_bug.cgi?id=3D2165=
+82
+No idea how urgent that is...
 
---
-Chuck Lever
-
-
+_________________________________
+Trond Myklebust
+Linux NFS client maintainer, Hammerspace
+trond.myklebust@hammerspace.com
 
