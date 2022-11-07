@@ -2,62 +2,59 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3408D61E871
-	for <lists+linux-nfs@lfdr.de>; Mon,  7 Nov 2022 02:51:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B309B61E9B2
+	for <lists+linux-nfs@lfdr.de>; Mon,  7 Nov 2022 04:33:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbiKGBvk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 6 Nov 2022 20:51:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45232 "EHLO
+        id S231213AbiKGDdD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 6 Nov 2022 22:33:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230348AbiKGBvi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Nov 2022 20:51:38 -0500
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A39B0DF21
-        for <linux-nfs@vger.kernel.org>; Sun,  6 Nov 2022 17:51:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1667785896; x=1699321896;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=Rfr9dcjP5uzZrwYIFMe66CtwoPmdDOwi6R3P8nAK/+M=;
-  b=l9407L/r6QYnWpimJyyKgpnWPC4S7MuOAT8EzytgB4iwylKkQLkkDW0G
-   UeZZTh3vUmERGfvd5wTBBAese+wJwul3Vmob0skuYjT6ELFDUCjVOB03V
-   cJSlfd63pq0GkcEAJgMJCPhBCfu2IEP4WiG39Ouqcv/sTeCaNeNNdztMf
-   VqNi/8huOOFFCBvVjVrQa3XtmlUe/ZljWksArf3+JrxQbQFJoka7EQvNd
-   I9HXzG0fqYiOAOaLvJryMJiXDwQCm8K3mR7qRrqHI77V0np91gwBZYooh
-   Zb8wx7RY8EW7VqAivPNrha29M4quygbddRfJ2v8rRultK+ae63OP8ZrOL
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="293646109"
-X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
-   d="scan'208";a="293646109"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 17:51:23 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10523"; a="668965976"
-X-IronPort-AV: E=Sophos;i="5.96,143,1665471600"; 
-   d="scan'208";a="668965976"
-Received: from rongch2-mobl.ccr.corp.intel.com (HELO [10.254.214.37]) ([10.254.214.37])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Nov 2022 17:51:22 -0800
-Subject: Re: [cel:topic-rpc-with-tls-upcall 12/16] net/sunrpc/xprtsock.c:2544:
- undefined reference to `tls_client_hello_x509'
-To:     Chuck Lever III <chuck.lever@oracle.com>,
-        kernel test robot <lkp@intel.com>
-Cc:     "oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-References: <202211051449.mnJj6fib-lkp@intel.com>
- <55C1634B-3B7E-4671-8A81-F92495256F1E@oracle.com>
-From:   "Chen, Rong A" <rong.a.chen@intel.com>
-Message-ID: <aa3b8fc7-598c-08e7-a9f0-b5760ca8c2f5@intel.com>
-Date:   Mon, 7 Nov 2022 09:51:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.12.0
+        with ESMTP id S230265AbiKGDdC (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 6 Nov 2022 22:33:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D587D9FCC;
+        Sun,  6 Nov 2022 19:33:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6628D60EA7;
+        Mon,  7 Nov 2022 03:33:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 780BFC433C1;
+        Mon,  7 Nov 2022 03:32:58 +0000 (UTC)
+Date:   Sun, 6 Nov 2022 22:32:56 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Anna-Maria Gleixner <anna-maria@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        drbd-dev@lists.linbit.com, linux-bluetooth@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-input@vger.kernel.org, linux-leds@vger.kernel.org,
+        linux-media@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-staging@lists.linux.dev,
+        linux-ext4@vger.kernel.org, linux-nilfs@vger.kernel.org,
+        bridge@lists.linux-foundation.org, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, lvs-devel@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-nfs@vger.kernel.org,
+        tipc-discussion@lists.sourceforge.net, alsa-devel@alsa-project.org
+Subject: [GIT PULL] treewide: timers: Use timer_shutdown*() before freeing
+ timers
+Message-ID: <20221106223256.4bbdb018@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <55C1634B-3B7E-4671-8A81-F92495256F1E@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -66,111 +63,127 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 
 
-On 11/6/2022 12:00 AM, Chuck Lever III wrote:
-> 
-> 
->> On Nov 5, 2022, at 2:05 AM, kernel test robot <lkp@intel.com> wrote:
->>
->> tree:   git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux topic-rpc-with-tls-upcall
->> head:   92abd0e9e73597857455026e8312192264aaabf9
->> commit: b39cc345e2d6ed4f37bea31528ccbfaa3dec4f69 [12/16] SUNRPC: Add RPC-with-TLS support to xprtsock.c
->> config: x86_64-rhel-8.3-kvm
->> compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
->> reproduce (this is a W=1 build):
->>         # https://git.kernel.org/pub/scm/linux/kernel/git/cel/linux.git/commit/?id=b39cc345e2d6ed4f37bea31528ccbfaa3dec4f69
->>         git remote add cel git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux
->>         git fetch --no-tags cel topic-rpc-with-tls-upcall
->>         git checkout b39cc345e2d6ed4f37bea31528ccbfaa3dec4f69
->>         # save the config file
->>         mkdir build_dir && cp config build_dir/.config
->>         make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
->>
->> If you fix the issue, kindly add following tag where applicable
->> | Reported-by: kernel test robot <lkp@intel.com>
->>
->> All errors (new ones prefixed by >>):
->>
->>    ld: net/sunrpc/xprtsock.o: in function `xs_tls_handshake_sync':
->>>> net/sunrpc/xprtsock.c:2544: undefined reference to `tls_client_hello_x509'
->>>> ld: net/sunrpc/xprtsock.c:2539: undefined reference to `tls_client_hello_anon'
->>    pahole: .tmp_vmlinux.btf: No such file or directory
->>    .btf.vmlinux.bin.o: file not recognized: file format not recognized
-> 
-> I am not able to reproduce this build failure.
-> 
-> I'm on Fedora 36 with gcc-12.2.1-2
-> 
-> CONFIG_TLS=m
-> CONFIG_TLS_DEVICE=y
-> 
-> CONFIG_SUNRPC=y
-> 
-> Any help appreciated!
+Linus,
 
-Hi Chuck,
+As discussed here:
 
-I can reproduce it with gcc-11/gcc-12 on ubuntu 21.10,
-and this issue disappeared if CONFIG_TLS=y.
+  https://lore.kernel.org/all/20221106212427.739928660@goodmis.org/
 
-Best Regards,
-Rong Chen
+Add a "shutdown" state for timers. This is performed by the new
+timer_shutdown_sync() and timer_shutdown() function calls. When this is
+called on a timer, it will no longer be able to be re-armed. This should
+be called before a timer is freed to prevent it from being re-armed after
+being removed from the timer queue and then causing a crash in the timer
+code when the timer triggers.
 
-> 
-> 
->> vim +2544 net/sunrpc/xprtsock.c
->>
->>   2526	
->>   2527	static int xs_tls_handshake_sync(struct rpc_xprt *lower_xprt, struct xprtsec_parms *xprtsec)
->>   2528	{
->>   2529		struct sock_xprt *lower_transport =
->>   2530					container_of(lower_xprt, struct sock_xprt, xprt);
->>   2531		int rc;
->>   2532	
->>   2533		init_completion(&lower_transport->handshake_done);
->>   2534		set_bit(XPRT_SOCK_IGNORE_RECV, &lower_transport->sock_state);
->>   2535	
->>   2536		lower_transport->xprt_err = -ETIMEDOUT;
->>   2537		switch (xprtsec->policy) {
->>   2538		case RPC_XPRTSEC_TLS_ANON:
->>> 2539			rc = tls_client_hello_anon(lower_transport->sock,
->>   2540						   xs_tls_handshake_done, xprt_get(lower_xprt),
->>   2541						   TLSH_DEFAULT_PRIORITIES);
->>   2542			break;
->>   2543		case RPC_XPRTSEC_TLS_X509:
->>> 2544			rc = tls_client_hello_x509(lower_transport->sock,
->>   2545						   xs_tls_handshake_done, xprt_get(lower_xprt),
->>   2546						   TLSH_DEFAULT_PRIORITIES,
->>   2547						   xprtsec->cert_serial,
->>   2548						   xprtsec->privkey_serial);
->>   2549			break;
->>   2550		default:
->>   2551			rc = -EACCES;
->>   2552		}
->>   2553		if (rc)
->>   2554			goto out;
->>   2555	
->>   2556		rc = wait_for_completion_interruptible_timeout(&lower_transport->handshake_done,
->>   2557							       XS_TLS_HANDSHAKE_TO);
->>   2558		if (rc < 0)
->>   2559			goto out;
->>   2560	
->>   2561		rc = lower_transport->xprt_err;
->>   2562	
->>   2563	out:
->>   2564		xs_stream_reset_connect(lower_transport);
->>   2565		clear_bit(XPRT_SOCK_IGNORE_RECV, &lower_transport->sock_state);
->>   2566		return rc;
->>   2567	}
->>   2568	
->>
->> -- 
->> 0-DAY CI Kernel Test Service
->> https://01.org/lkp
->> <config.txt>
-> 
-> --
-> Chuck Lever
-> 
-> 
-> 
-> 
+This required renaming some functions that were using the name
+timer_shutdown() statically to something more appropriate.
+
+Then a coccinelle script was executed on the entire kernel tree to find
+the trivial locations that remove the timer and then frees the object that
+the timer exists on.
+
+These changes are not enough to solve all the locations where timers may
+be of an issue. But by adding the shutdown infrastructure and the obvious
+cases, the more complex cases can be added after they have been reviewed
+more closely.
+
+
+Please pull the following tree, which can be found at:
+
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace.git
+add-timer-shutdown
+
+Tag SHA1: 7685328352dfd2908e23048f563e328dbd3526e9
+Head SHA1: 870556da63870e01ade9bb8418ac5a21862f2f10
+
+
+Steven Rostedt (Google) (5):
+      ARM: spear: Do not use timer namespace for timer_shutdown() function
+      clocksource/drivers/arm_arch_timer: Do not use timer namespace for timer_shutdown() function
+      clocksource/drivers/sp804: Do not use timer namespace for timer_shutdown() function
+      timers: Add timer_shutdown_sync() and timer_shutdown() to be called before freeing timers
+      treewide: Convert del_timer*() to timer_shutdown*()
+
+----
+ .../RCU/Design/Requirements/Requirements.rst       |  2 +-
+ Documentation/core-api/local_ops.rst               |  2 +-
+ Documentation/kernel-hacking/locking.rst           |  5 ++
+ arch/arm/mach-spear/time.c                         |  8 +--
+ arch/sh/drivers/push-switch.c                      |  2 +-
+ block/blk-iocost.c                                 |  2 +-
+ block/blk-iolatency.c                              |  2 +-
+ block/kyber-iosched.c                              |  2 +-
+ drivers/acpi/apei/ghes.c                           |  2 +-
+ drivers/atm/idt77252.c                             |  6 +-
+ drivers/block/drbd/drbd_main.c                     |  2 +-
+ drivers/block/loop.c                               |  2 +-
+ drivers/bluetooth/hci_bcsp.c                       |  2 +-
+ drivers/bluetooth/hci_qca.c                        |  4 +-
+ drivers/clocksource/arm_arch_timer.c               | 12 ++--
+ drivers/clocksource/timer-sp804.c                  |  6 +-
+ drivers/gpu/drm/i915/i915_sw_fence.c               |  2 +-
+ drivers/hid/hid-wiimote-core.c                     |  2 +-
+ drivers/input/keyboard/locomokbd.c                 |  2 +-
+ drivers/input/keyboard/omap-keypad.c               |  2 +-
+ drivers/input/mouse/alps.c                         |  2 +-
+ drivers/isdn/mISDN/l1oip_core.c                    |  4 +-
+ drivers/isdn/mISDN/timerdev.c                      |  4 +-
+ drivers/leds/trigger/ledtrig-activity.c            |  2 +-
+ drivers/leds/trigger/ledtrig-heartbeat.c           |  2 +-
+ drivers/leds/trigger/ledtrig-pattern.c             |  2 +-
+ drivers/leds/trigger/ledtrig-transient.c           |  2 +-
+ drivers/media/pci/ivtv/ivtv-driver.c               |  2 +-
+ drivers/media/usb/pvrusb2/pvrusb2-hdw.c            | 16 +++---
+ drivers/media/usb/s2255/s2255drv.c                 |  4 +-
+ drivers/net/ethernet/intel/i40e/i40e_main.c        |  6 +-
+ drivers/net/ethernet/marvell/sky2.c                |  2 +-
+ drivers/net/ethernet/sun/sunvnet.c                 |  2 +-
+ drivers/net/usb/sierra_net.c                       |  2 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/btcoex.c  |  2 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-dbg-tlv.c   |  2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c       |  2 +-
+ drivers/net/wireless/intersil/hostap/hostap_ap.c   |  2 +-
+ drivers/net/wireless/marvell/mwifiex/main.c        |  2 +-
+ drivers/net/wireless/microchip/wilc1000/hif.c      |  6 +-
+ drivers/nfc/pn533/pn533.c                          |  2 +-
+ drivers/nfc/pn533/uart.c                           |  2 +-
+ drivers/pcmcia/bcm63xx_pcmcia.c                    |  2 +-
+ drivers/pcmcia/electra_cf.c                        |  2 +-
+ drivers/pcmcia/omap_cf.c                           |  2 +-
+ drivers/pcmcia/pd6729.c                            |  4 +-
+ drivers/pcmcia/yenta_socket.c                      |  4 +-
+ drivers/scsi/qla2xxx/qla_edif.c                    |  4 +-
+ drivers/staging/media/atomisp/i2c/atomisp-lm3554.c |  2 +-
+ drivers/tty/n_gsm.c                                |  2 +-
+ drivers/tty/sysrq.c                                |  2 +-
+ drivers/usb/gadget/udc/m66592-udc.c                |  2 +-
+ drivers/usb/serial/garmin_gps.c                    |  2 +-
+ drivers/usb/serial/mos7840.c                       |  4 +-
+ fs/ext4/super.c                                    |  2 +-
+ fs/nilfs2/segment.c                                |  2 +-
+ include/linux/timer.h                              | 62 +++++++++++++++++++--
+ kernel/time/timer.c                                | 64 ++++++++++++----------
+ net/802/garp.c                                     |  2 +-
+ net/802/mrp.c                                      |  4 +-
+ net/bridge/br_multicast.c                          |  8 +--
+ net/bridge/br_multicast_eht.c                      |  4 +-
+ net/core/gen_estimator.c                           |  2 +-
+ net/ipv4/ipmr.c                                    |  2 +-
+ net/ipv6/ip6mr.c                                   |  2 +-
+ net/mac80211/mesh_pathtbl.c                        |  2 +-
+ net/netfilter/ipset/ip_set_list_set.c              |  2 +-
+ net/netfilter/ipvs/ip_vs_lblc.c                    |  2 +-
+ net/netfilter/ipvs/ip_vs_lblcr.c                   |  2 +-
+ net/netfilter/xt_IDLETIMER.c                       |  4 +-
+ net/netfilter/xt_LED.c                             |  2 +-
+ net/rxrpc/conn_object.c                            |  2 +-
+ net/sched/cls_flow.c                               |  2 +-
+ net/sunrpc/svc.c                                   |  2 +-
+ net/tipc/discover.c                                |  2 +-
+ net/tipc/monitor.c                                 |  2 +-
+ sound/i2c/other/ak4117.c                           |  2 +-
+ sound/synth/emux/emux.c                            |  2 +-
+ 78 files changed, 207 insertions(+), 148 deletions(-)
+---------------------------
