@@ -2,193 +2,223 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17D4F6219D4
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Nov 2022 17:53:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 500086219AF
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Nov 2022 17:42:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233972AbiKHQxV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Nov 2022 11:53:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38776 "EHLO
+        id S234402AbiKHQmD (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Nov 2022 11:42:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233816AbiKHQxV (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Nov 2022 11:53:21 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE21857B50
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 08:53:19 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2A8Gl1MF013716;
-        Tue, 8 Nov 2022 16:53:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
- bh=WglwFPyjDAxReilsZUVJWB3vFJPwAnuhYZk/IlIbHhA=;
- b=IEHuOn0tmFlQqgnHg6CTuG17LrwvWNHu8CWmwgE31e7pXmyVJevuMNAVjLRgkQgr9dz8
- Kx7Y8d+Jq9KGCrTHWkSmG90tBPQxBmirxKaY0E+ZqI8qaJ0ePmHCsPrW90/CwI/fs1kh
- VfKgRPyIuCfSZ9CTSupkkphbYmbX5EE3X/bYGMD0dchsILKgGOfyQ9czq9jwJEQDVJiy
- eov18xUdJW2fFKosLC6j6EixCQsWwNgxNIvGUzXQL8zOTKelC4YYQUhOBCBWDeWjof8o
- whFmk7BHXsc4nklhcfTAUPLAuzVc/wIqr73GTt0aG0rIyr3vFes4V2KOlufMeSHoxXUL EQ== 
-Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kqtxeg134-20
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Nov 2022 16:53:12 +0000
-Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2A8GcFlQ000385;
-        Tue, 8 Nov 2022 16:39:46 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kpcsdp131-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 08 Nov 2022 16:39:46 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mw7TCjWWgmvF7JuuX+J40OALCxR7IbmemUW2GI9cJJIbJULOFr2/aprRLUexDhhTo8ZGmKbBGe9L0DYb/KwA3mMuaeP9RV+dfw5UQmPWB6pXS0xJAI2YR7pxhKEszeuLREE+qM2WeB2rPjEplzl23LFtoQzd+tMjf71QyCkdZ9c9FyRXYWDYdtlEhYaOR4Ir3ihlMnsXZScaxafr/B2Bf4ns2ptDO4OfI8vwFkgDcfJR/8CIyd21zs+VmYFr8pnZiP7e6ccIoYaaYLev68Il635BiPoJ0gTFvhcbB5Mfe5vKWiOPpzCZayLo/QCwDjQHUZA+FpoyXEw7c9FhV7eyDw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WglwFPyjDAxReilsZUVJWB3vFJPwAnuhYZk/IlIbHhA=;
- b=X6hLIdyUC0C202W+fy1miyzAmeX/rWGsH4cLqDIho2ywspFz3F9KOjARB2aea3XLWDI5dWKwgHPOqsE6O44qWOYRdp+Nr4JiTI4q1caTNkeWHyczssaQ4CtsXCjV4Zp+beJPj0r3UVUqDR3EUPovD/QrTMyxlCy3l2aNH9YF1Z7DSIlTg0pzcE4AFPtTN+Zzeb3zCZmljt6f1e9j8WFF81b01b5Q3Xzgz1j1UsgGToG8B/rAABFhA6xWRfwHPGDokTH9zIeugA47pA9yz4Ml4wwAWy0otqNAIrc3obASN8X+grJYmmHAxqBGMh+VQ95soyY7EEYf+UIzFNyId7K5fQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WglwFPyjDAxReilsZUVJWB3vFJPwAnuhYZk/IlIbHhA=;
- b=VWNN7CvYBC+FaR6Bd3LsJ4B13QNQeZFAuuy21nr0zCo8o8XiLCZ+B3ct+qat4OtIw+xG8QMDaOnPdja9Jk9u7LGQDgLG9X/9gLSIKZnOfNdTFJ69CQCtHi9buVf9Ds9UCJ0GFhm5mVtO2rCT8OBCcTvVHxgbStfpPn6+Yt1O27o=
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
- by PH0PR10MB6960.namprd10.prod.outlook.com (2603:10b6:510:26e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5791.26; Tue, 8 Nov
- 2022 16:39:44 +0000
-Received: from BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::b500:ee42:3ca6:8a9e]) by BN0PR10MB5128.namprd10.prod.outlook.com
- ([fe80::b500:ee42:3ca6:8a9e%4]) with mapi id 15.20.5791.027; Tue, 8 Nov 2022
- 16:39:44 +0000
-From:   Chuck Lever III <chuck.lever@oracle.com>
-To:     Jeff Layton <jlayton@kernel.org>,
-        Yongcheng Yang <yoyang@redhat.com>
-CC:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
-Subject: Re: [PATCH] nfsd: put the export reference in
- nfsd4_verify_deleg_dentry
-Thread-Topic: [PATCH] nfsd: put the export reference in
- nfsd4_verify_deleg_dentry
-Thread-Index: AQHY845pDsdDj46Z8UGbnOuwZh9Al641OkwA
-Date:   Tue, 8 Nov 2022 16:39:44 +0000
-Message-ID: <A91EAEB8-4EDE-4AEE-AA5A-6DBBE6AA6866@oracle.com>
-References: <20221108162311.320755-1-jlayton@kernel.org>
-In-Reply-To: <20221108162311.320755-1-jlayton@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3696.120.41.1.1)
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|PH0PR10MB6960:EE_
-x-ms-office365-filtering-correlation-id: 2d4c623e-370e-447f-1d1b-08dac1a7d78f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZQtPCHntF+U+NOkcwiEBKFgIquRGL0NSms1qgzXNkW32H6tkf1BU2chzzMCujNFd9EZYC/40zRyGjywp+ibb9GauwWvzhc5i85b0SKGKR86EIqkaUeJOxfUetIBvuzkzniAA+xDLZl+ip/7txrD79fulBFvbRlzQyi7TqXtU+QIHRD0u2QaAvY8yQrLmTsuEQxn+V4u9QQDv+AwW5wV9e3J7NdwDfh9aWSoNAVDXNVcR5EUMOBkIrLKEcQU4Bx4ltf/pgAyVIkpRfMNt/RVUHC8cS8g+c5GqG+aeJwTbBzWNOERfOQlgCvA7mqrZ62dELQNdRooDsWvr64gIgvv3usYun81OlGS6VeN7JDXHEWL5omGXirpy6uLFQGxNQ+4g8tQScWTQC9HVYgYvE8VF0I+h8YamtrM0nv9/x6wqqdxs+Yi/NZfk4eq2XFQbqnOMJHcyMeeu8GYrOW0D+nsDeVAfppJAZQCiEWZ+xKP45+8VHnZsODdPKHiAwMY2vp2i0TftMF/N6qgaGp9M2an32dQavgEXtJkhu6aqVdZQ6y3nMzoMJqov/hU+aqJOankoEzXQ9cLvvd5UO2CffQAxeCQz7HLGy+xl6v+pSeZQQWgwQY+mCSTpCUbX1JhNUSS0q56m93LmXq5vD5kACL880cPOTueB2EPGZTpAnlOznxBWzB4lT+NPdM4nUQ5wV9Ty+Aq1QS2neLaXn4bNWCoFmuuy6TqulHaANjAXVznuvxcfZK2NNMTHJr1N0j1BPkRKGf/OuTU44PNjPPO7miNAt9uIHd5xMdYu6GfOBexQyLUsFQQdEfkRREUha5L9XgESb5BfFVdmvpNeFcVYPQ9Zrw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(366004)(396003)(39860400002)(346002)(136003)(376002)(451199015)(2616005)(186003)(83380400001)(86362001)(110136005)(316002)(33656002)(122000001)(38100700002)(38070700005)(36756003)(41300700001)(6512007)(6506007)(26005)(53546011)(76116006)(6486002)(66476007)(66556008)(5660300002)(8936002)(966005)(4744005)(2906002)(66946007)(478600001)(8676002)(4326008)(66446008)(64756008)(91956017)(71200400001)(45980500001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?/gmRFuUkksTE0YRjRzHpcEiT+SEhp+DEEI0v2xcTBpGeEL2vQuxrrjZ7T3tB?=
- =?us-ascii?Q?p5iAW71fVtc8fKgvFxcrg62MghynvsjBNpOqAShRvQiDkAxQMlprDURB2XHB?=
- =?us-ascii?Q?/imKKIiNRAtWOP7YekJ3mRpi5n89IgKgaqOGRwujfILmBEDPvaJSUICWtTsm?=
- =?us-ascii?Q?o1pqMh6S4tW5fCGfr6lvF8HfQjl2wtH/txjgRfA291Wmq8Au0O0hC7UQbVkW?=
- =?us-ascii?Q?UdIYA7wYQwEz9uH476Np2LHXDr679hfjW+CuBsCDEJvWmjqfx2s+Gz7jOOyt?=
- =?us-ascii?Q?NkCuw3iyivAbxbtEd54bgHdj/KnzQwZDwMMRMm/E+RYm9AuKDAnDTLS5nZmn?=
- =?us-ascii?Q?G6LBhe2A49jKWvbd7nzA09Ov4JtpM4Jmk2G7MGqL4xeeLNfCEnsKxJUBacgy?=
- =?us-ascii?Q?XZMZpspT3kcfFm7HyWWPy+eVoQMnmB0yIcGw+p6st5zp+Rq6gC6zB6ohKhg3?=
- =?us-ascii?Q?Aku9gmRFpyP8gpSeB/tms+LOgpGPXBuwfX7qlZ07hyKWux235PqXwIKsqANO?=
- =?us-ascii?Q?joiib4DklSdOr7ZGRDyhVf//qGwljAlO9+F9pjCXoOAq8qhjpydLq403m9P2?=
- =?us-ascii?Q?1Wr9I4cqxEdN53GhRfA37pA5bW4KoN/gHbidLxsOuF1szJqxprJxLJSwwsJU?=
- =?us-ascii?Q?UV6MyQmbkWY2ioyLgHp31exjlsU32nLYwGZgBs+h39IapTETgsHH2lEB4DbH?=
- =?us-ascii?Q?xdi0GIztJeJw4WmLDE7HgifhoJUuGE1m0kyP1BSFq+ZpVBd8dvBP0YkWp1/C?=
- =?us-ascii?Q?c+zI/OEveOwMb71k+gj+dsBMEOqj0gBqtWfnfxV76VcLtUy9DRbenvASb+GD?=
- =?us-ascii?Q?E0vt96t/vRk+eWkNhGugbuIC+cOH7gOfNISVkhBKeKOCBqmMhz813iycnMLm?=
- =?us-ascii?Q?binmLlD7tgbylbThg7FlZnPGPIBNIKWkFfar9hdd8CbVx+C5rMDott/aYmt+?=
- =?us-ascii?Q?+TDx6YkCpk426SV0lFxyejjHE26ZWiknL1ij3VsXNHjVN7cFMruNL8ZmTTNu?=
- =?us-ascii?Q?+2ZK8dAkx6Z7eqAILFlRnRkNzKlA7BFtKtG028mzo0kmSLivpppjfIxYoJiE?=
- =?us-ascii?Q?q8IrOeVPC1M2AYD8wsVr08SYezwcE2PgE0E1YQhuQIIOtc3nIOgDWJ+fy+Gg?=
- =?us-ascii?Q?aY9BbqLzaeTohwLbQfbiSFCVo1IyVmbne53NtjXByM94UO9zxxYUgm6UarNY?=
- =?us-ascii?Q?FXGvAv1ofFMh+uGAnQQuS4PTrqEIWd7NOVKx1keJGUC8C0yiQZS0HZhllEiG?=
- =?us-ascii?Q?fJ0WC0lgxbD3EkIYuecCdZLnM+Au0gSHc3yKMYaKptdbmrIs3Nwr9xYpvWqs?=
- =?us-ascii?Q?HtLRfRtPkcoVFBpsJvIt9LjU1Ex7+BIVFZYVE+3uhofXUtEyR3OspuQbdy5j?=
- =?us-ascii?Q?fJ4b9HnN/mLR8lWGRRvKjrNlXOV0o3+Z7LEHK5D6hfwxfrbZkN0IfPr7/Nib?=
- =?us-ascii?Q?MR4rrqMbSyHcMFSXYTcOYxz/TI8H4WfMt0NtFcdP3ERpty666/aRp/9TZ4o2?=
- =?us-ascii?Q?BjPrekAgPtkOqvWEYBtgCMjsPF4wLup5/Q7SJmOSTVDFzKMHmWvkj2idQyZN?=
- =?us-ascii?Q?E/yy4eCoYvDGhL1FoH4+1oPGfQVn838B8x0K5AC1WLCo4vrz2cVyNqDKKlz4?=
- =?us-ascii?Q?Pg=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F6C12283B9F3654B98F9622A52596762@namprd10.prod.outlook.com>
+        with ESMTP id S233592AbiKHQmB (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Nov 2022 11:42:01 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C705957B61
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 08:42:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2FA30616B5
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 16:42:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3059DC43149;
+        Tue,  8 Nov 2022 16:41:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667925719;
+        bh=Js9CbGUFJqxoAwt7b1S6Dz8vcg5Al2/eK4UjHjjy9dI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=CjQUABJz63H9/NZrDDqGusNoi+NthSIChYnQcm+KA91MgypPM8y0gliuWneAPM3x2
+         TcF/JHB3299ntjpwAZAi29oyNHscqOsguZU7CEuRB/Zelk904qq7F17WsIi8udcIyx
+         bNr5iOij2EGdDWj8sa3dqhDYGkx03KJkhRrESbKmRkl0jK5mqjezeeKgcuIrUc4f0j
+         MnF7YWiEUZ4QejCDLJVaSlz1dxrgeNRIvYWdYp9zRy4BRgOBPqoD5z+u6OjcvTa4RI
+         n8O6JPjETmkU/S3cqQE1c4bZ++aO/icjrDfd2IEMaRgBRiRYcMkUE1S4uHFYV5N0WY
+         WdKEgyAsGjmrA==
+Message-ID: <a77a62bad91ad53fd896ba2a752e0f0cc5ced47f.camel@kernel.org>
+Subject: Re: [PATCH] lockd: set other missing fields when unlocking files
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Chuck Lever III <chuck.lever@oracle.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        "trondmy@kernel.org" <trondmy@kernel.org>
+Date:   Tue, 08 Nov 2022 11:41:57 -0500
+In-Reply-To: <B6C6DFDF-3AEC-4BAD-8810-76A47824E282@oracle.com>
+References: <20221106190239.404803-1-trondmy@kernel.org>
+         <2b5cffddf1d4d5791758e267b7184f0263519335.camel@kernel.org>
+         <6D002058-C292-4F77-A1B7-C943B3A203C5@oracle.com>
+         <B6C6DFDF-3AEC-4BAD-8810-76A47824E282@oracle.com>
+Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
 MIME-Version: 1.0
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2d4c623e-370e-447f-1d1b-08dac1a7d78f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 Nov 2022 16:39:44.5900
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: W0iXY6CHtZswcZpnYOkWhYQjhgeLPqsHGI6TYBcWMGH6ox4yYdcd/OZLdMrcdNoG8Ycsd+L5mJ9rG8Emu4tJJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB6960
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-07_11,2022-11-08_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 spamscore=0
- adultscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211080103
-X-Proofpoint-GUID: Ycn-9rDWKj015Rd-nQ-pDLz6wFDGgeJR
-X-Proofpoint-ORIG-GUID: Ycn-9rDWKj015Rd-nQ-pDLz6wFDGgeJR
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-
-
-> On Nov 8, 2022, at 11:23 AM, Jeff Layton <jlayton@kernel.org> wrote:
+On Tue, 2022-11-08 at 14:57 +0000, Chuck Lever III wrote:
 >=20
-> nfsd_lookup_dentry returns an export reference in addition to the dentry
-> ref. Ensure that we put it too.
+> > On Nov 7, 2022, at 4:55 PM, Chuck Lever III <chuck.lever@oracle.com> wr=
+ote:
+> >=20
+> > > On Nov 7, 2022, at 5:48 AM, Jeff Layton <jlayton@kernel.org> wrote:
+> > >=20
+> > > On Sun, 2022-11-06 at 14:02 -0500, trondmy@kernel.org wrote:
+> > > > From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > >=20
+> > > > vfs_lock_file() expects the struct file_lock to be fully initialise=
+d by
+> > > > the caller.
+> >=20
+> > As a reviewer, I don't see anything in the vfs_lock_file() kdoc
+> > comment that suggests this, and vfs_lock_file() itself is just
+> > a wrapper around each filesystem's f_ops->lock method. That
+> > expectation is a bit deeper into NFS-specific code. A few more
+> > observations below.
+> >=20
+> >=20
+> > > > Re-exported NFSv3 has been seen to Oops if the fl_file field
+> > > > is NULL.
+> >=20
+> > Needs a Link: to the bug report. Which I can add.
+> >=20
+> > This will also give us a call trace we can reference, so I won't
+> > add that here.
+> >=20
+> >=20
+> > > > Fixes: aec158242b87 ("lockd: set fl_owner when unlocking files")
+> > > > Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> > > > ---
+> > > > fs/lockd/svcsubs.c | 17 ++++++++++-------
+> > > > 1 file changed, 10 insertions(+), 7 deletions(-)
+> > > >=20
+> > > > diff --git a/fs/lockd/svcsubs.c b/fs/lockd/svcsubs.c
+> > > > index e1c4617de771..3515f17eaf3f 100644
+> > > > --- a/fs/lockd/svcsubs.c
+> > > > +++ b/fs/lockd/svcsubs.c
+> > > > @@ -176,7 +176,7 @@ nlm_delete_file(struct nlm_file *file)
+> > > > 	}
+> > > > }
+> > > >=20
+> > > > -static int nlm_unlock_files(struct nlm_file *file, fl_owner_t owne=
+r)
+> > > > +static int nlm_unlock_files(struct nlm_file *file, const struct fi=
+le_lock *fl)
+> > > > {
+> > > > 	struct file_lock lock;
+> > > >=20
+> > > > @@ -184,12 +184,15 @@ static int nlm_unlock_files(struct nlm_file *=
+file, fl_owner_t owner)
+> > > > 	lock.fl_type  =3D F_UNLCK;
+> > > > 	lock.fl_start =3D 0;
+> > > > 	lock.fl_end   =3D OFFSET_MAX;
+> > > > -	lock.fl_owner =3D owner;
+> > > > -	if (file->f_file[O_RDONLY] &&
+> > > > -	    vfs_lock_file(file->f_file[O_RDONLY], F_SETLK, &lock, NULL))
+> > > > +	lock.fl_owner =3D fl->fl_owner;
+> > > > +	lock.fl_pid   =3D fl->fl_pid;
+> > > > +	lock.fl_flags =3D FL_POSIX;
+> > > > +
+> > > > +	lock.fl_file =3D file->f_file[O_RDONLY];
+> > > > +	if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, N=
+ULL))
+> > > > 		goto out_err;
+> > > > -	if (file->f_file[O_WRONLY] &&
+> > > > -	    vfs_lock_file(file->f_file[O_WRONLY], F_SETLK, &lock, NULL))
+> > > > +	lock.fl_file =3D file->f_file[O_WRONLY];
+> > > > +	if (lock.fl_file && vfs_lock_file(lock.fl_file, F_SETLK, &lock, N=
+ULL))
+> > > > 		goto out_err;
+> > > > 	return 0;
+> > > > out_err:
+> > > > @@ -226,7 +229,7 @@ nlm_traverse_locks(struct nlm_host *host, struc=
+t nlm_file *file,
+> > > > 		if (match(lockhost, host)) {
+> > > >=20
+> > > > 			spin_unlock(&flctx->flc_lock);
+> > > > -			if (nlm_unlock_files(file, fl->fl_owner))
+> > > > +			if (nlm_unlock_files(file, fl))
+> > > > 				return 1;
+> > > > 			goto again;
+> > > > 		}
+> > >=20
+> > > Good catch.
+> > >=20
+> > > I wonder if we ought to roll an initializer function for file_locks t=
+o
+> > > make it harder for callers to miss setting some fields like this? One
+> > > idea: we could change vfs_lock_file to *not* take a file argument, an=
+d
+> > > insist that the caller fill out fl_file when calling it? That would m=
+ake
+> > > it harder to screw this up.
+> >=20
+> > Commit history shows that, at least as far back as the beginning of
+> > the git era, the vfs_lock_file() call site here did not initialize
+> > the fl_file field. So, this code has been working without fully
+> > initializing @fl for, like, forever.
+> >=20
+> >=20
+> > Trond later says:
+> > > The regression occurs in 5.16, because that was when Bruce merged his
+> > > patches to enable locking when doing NFS re-exporting.
+> >=20
+> > That means the Fixes: tag above is misleading. The proposed patch
+> > doesn't actually fix that commit (which went into v5.19), it simply
+> > applies on that commit.
+> >=20
+> > I haven't been able to find the locking patches mentioned here. I think
+> > those bear mentioning (by commit ID) in the patch description, at least=
+.
+> > If you know the commit ID, Trond, can you pass it along?
+> >=20
+> > Though I would say that, in agreement with Jeff, the true cause of this
+> > issue is the awkward synopsis for vfs_lock_file().
 >=20
-> Link: https://bugzilla.redhat.com/show_bug.cgi?id=3D2138866
-> Fixes: 876c553cb410 ("NFSD: verify the opened dentry after setting a dele=
-gation")
-> Reported-by: Yongcheng Yang <yoyang@redhat.com>
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-
-Applied to nfsd's for-rc (-> 6.1-rc). Thank you both!
-
-
-> ---
-> fs/nfsd/nfs4state.c | 1 +
-> 1 file changed, 1 insertion(+)
+> Since Trond has re-assigned the kernel.org bug to me... I'll blather on
+> a bit more. (Yesterday's patch is still queued up, I can replace it or
+> move it depending on the outcome of this discussion).
 >=20
-> diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-> index 554c4e50caf8..2ec981fd2985 100644
-> --- a/fs/nfsd/nfs4state.c
-> +++ b/fs/nfsd/nfs4state.c
-> @@ -5407,6 +5407,7 @@ nfsd4_verify_deleg_dentry(struct nfsd4_open *open, =
-struct nfs4_file *fp,
-> 	if (err)
-> 		return -EAGAIN;
->=20
-> +	exp_put(exp);
-> 	dput(child);
-> 	if (child !=3D file_dentry(fp->fi_deleg_file->nf_file))
-> 		return -EAGAIN;
-> --=20
-> 2.38.1
+> -> The vfs_{test,lock,cancel}_file APIs all take a file argument. Maybe
+> we shouldn't remove the @filp argument from vfs_lock_file().
 >=20
 
---
-Chuck Lever
+They all take a file_lock argument as well. @filp is redundant in all of
+them. Keeping both just increases the ambiguity. I move that we drop the
+explicit argument since we need to set it in the struct anyway.
 
+We could also consider adding a @filp arguments to locks_alloc_lock and
+locks_init_lock, to make it a bit more evident that it needs to be set.
 
+> -> The struct file_lock * argument of vfs_lock_file() is not a const.
+>=20
 
+That might be tough. Even for "request" fl's we modify some fields in
+them (for example, fl_wait and fl_blocked_member). fl_file should never
+change though, once it has been assigned. We could potentially make that
+const.
+=20
+> After auditing the call sites, I think it would be safe for vfs_lock_file=
+()
+> to explicitly overwrite the fl->fl_file field with the value of the @filp
+> argument before calling f_ops->lock. At the very least, it should sanity-
+> check that the two pointer values are the same, and document that as an
+> API requirement.
+>=20
+> Alternatively we could cook up an NFS-specific fix... but the vfs_lock_fi=
+le
+> API would still look dodgy.
+>=20
+
+I see no reason to do anything NFS-specific here. I'd be fine with
+WARN_ONs in locks.c for now, until we decide what to do longer term.
+It's possible we have some other call chains that are not setting that
+field correctly.
+
+If we can audit all of the call sites and ensure that they are properly
+setting fl_file in the struct, we should be able to painlessly drop the
+separate @filp argument from all of those functions.
+
+I'll toss it onto my to-do pile.
+--=20
+Jeff Layton <jlayton@kernel.org>
