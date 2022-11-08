@@ -2,200 +2,105 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 257E2620CC9
-	for <lists+linux-nfs@lfdr.de>; Tue,  8 Nov 2022 11:01:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB266620E99
+	for <lists+linux-nfs@lfdr.de>; Tue,  8 Nov 2022 12:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233613AbiKHKBx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 8 Nov 2022 05:01:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
+        id S233708AbiKHLUr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 8 Nov 2022 06:20:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233835AbiKHKBw (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Nov 2022 05:01:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64F3F2A264
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 02:01:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EE80061236
-        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 10:01:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA56C433D6;
-        Tue,  8 Nov 2022 10:01:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667901710;
-        bh=ckxXE+cHw0w92spMIniZ49V1lwe1HS3THCgxaqcWm2Y=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=hOrhgN8A+wLo9a/BcvsltgtZGG7VJ6xl5EEsObgNMEgC+49OVohGDbkV8PH/CCOwE
-         Zj732QWk3vstOCdjpNlqOnW+cKWsN2lrEN9txTMbHsrJ/xDVzsw6N6o57+ZEQ3eSD3
-         zgdyi6/UZLq4fPCqDpVQ3m5Rrun/bFcs0j1myZ3zvkycXpFUiqCllNfknC/hdM8Ad3
-         cY4CIq1A2niBYqS+OkccFvMesO4TY+18G3+Z3iAT9F2w/v4OXxqO0X9/6fsECS/VyO
-         z8lAZH3Wx2YhYvVC7xs6ohHYyzdm/TPSBLz5zjfzPZHC3PPsv4jlQhI+5Xgxrwgw5g
-         URfFvSpgX1TBA==
-Message-ID: <9c9363ccabfa9906bcfd2604ec25994b57ee0f44.camel@kernel.org>
-Subject: Re: [PATCH] NFS: Allow setting rsize / wsize to a multiple of
- PAGE_SIZE
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-        trond.myklebust@hammerspace.com
-Cc:     Jianhong Yin <jiyin@redhat.com>,
-        Olga Kornieskaia <kolga@netapp.com>
-Date:   Tue, 08 Nov 2022 05:01:48 -0500
-In-Reply-To: <20220617202336.1099702-1-anna@kernel.org>
-References: <20220617202336.1099702-1-anna@kernel.org>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4 (3.44.4-2.fc36) 
+        with ESMTP id S233805AbiKHLUj (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 8 Nov 2022 06:20:39 -0500
+Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7451C49B7B
+        for <linux-nfs@vger.kernel.org>; Tue,  8 Nov 2022 03:20:37 -0800 (PST)
+Received: by mail-yb1-xb2b.google.com with SMTP id g127so16996257ybg.8
+        for <linux-nfs@vger.kernel.org>; Tue, 08 Nov 2022 03:20:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
+        b=J4BNN7jKfVfT0aL+JmOkjuoB8t6+kSq+FK+qtmRP1DScVaKYSfpiIdvKdYE9swFUQY
+         XtHjWaqnZFsSXqYA0o+q8CHye3arwTjr+hJBusI7mFqLyj6iQwnPEZnxpt7jEFXDv67C
+         i1RnWN77TDRD4R5bcXZk31BtpxWQI5F6il/aa7D6YEvXraa0x5EmFHE7S5DfyEv8K6Mr
+         sqvmxMR+LFYCNchTyksG6bgH4YMBdFO7Jyo5yt1Gfv8N5WpJHQg7liyYPj6Ln7TcsJ1M
+         7IF7H63JmVDaojfGa4RBrUx2qi70wmC2uC2C6sS9nlgayiVSuogPYEW3OyiZYJzoef10
+         VIFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jD/YBCtOhOa1ipEyheDVa6geA3XolzkSqDbroMLmTEw=;
+        b=HguS9SR6cq4Ewkc0XObCfDAbVypabqbEDY7B57oLSxol+a92hzfFiagzuGELCuEnbT
+         dWbsDJpmzOm5B7OiluxREkQKYj0xdPyAWFfAyGP+LR1+crJ8gQO7U8EYzuw9QF9gkE1B
+         CfaBX9DDufgSVD99m+IlkGleT97zF8c7dEzbdicYcMsWlrBFyYvwjWBblh6itb/XcHBx
+         js1oABscBuDgpdJhHYpk3bYKnt8i7to73V3uzNFTMrtfPinvQZenyp7iDEA0/zrBfspA
+         qnCJaxYmwXZe0L+qqEKNU0g9D0xjwjBvKRs4gtzb+7Nber2sp/usWmYKha24AvG8LXsg
+         m6FA==
+X-Gm-Message-State: ACrzQf39o06qDb9LqWx70SMVW4ncEVV+KiMzgMQwyf8BNAE2n2om9lXN
+        3vdJa4KWdosq0CDopp4icelS/0koyumiFh0PrvQ=
+X-Google-Smtp-Source: AMsMyM6xKqU5Rjh4+2+AxAqC0U0YC7Pv+rLQ5ILVu1L9p+G2RCExT06n9hL8M7TD2Z3SGUMSH2B3gfKMmkK13680VKQ=
+X-Received: by 2002:a25:a088:0:b0:6ca:33ff:5b30 with SMTP id
+ y8-20020a25a088000000b006ca33ff5b30mr54330551ybh.242.1667906436602; Tue, 08
+ Nov 2022 03:20:36 -0800 (PST)
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a05:7010:a38a:b0:313:c983:1d7e with HTTP; Tue, 8 Nov 2022
+ 03:20:36 -0800 (PST)
+Reply-To: mrinvest1010@gmail.com
+From:   "K. A. Mr. Kairi" <ctocik2@gmail.com>
+Date:   Tue, 8 Nov 2022 03:20:36 -0800
+Message-ID: <CAC9COZf4gVM4aT_ghoemxu3B8PtJ41D3GAMuMHbW-Zm3a0vanw@mail.gmail.com>
+Subject: Re: My Response..
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.0 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b2b listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5001]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrinvest1010[at]gmail.com]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [ctocik2[at]gmail.com]
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [ctocik2[at]gmail.com]
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-06-17 at 16:23 -0400, Anna Schumaker wrote:
-> From: Anna Schumaker <Anna.Schumaker@Netapp.com>
->=20
-> Previously, we required this to value to be a power of 2 for UDP related
-> reasons. This patch keeps the power of 2 rule for UDP but allows more
-> flexibility for TCP and RDMA.
->=20
-> Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-> ---
->  fs/nfs/client.c                           | 13 +++++++------
->  fs/nfs/flexfilelayout/flexfilelayoutdev.c |  6 ++++--
->  fs/nfs/internal.h                         | 18 ++++++++++++++++++
->  fs/nfs/nfs4client.c                       |  4 ++--
->  4 files changed, 31 insertions(+), 10 deletions(-)
->=20
-> diff --git a/fs/nfs/client.c b/fs/nfs/client.c
-> index e828504cc396..da8da5cdbbc1 100644
-> --- a/fs/nfs/client.c
-> +++ b/fs/nfs/client.c
-> @@ -708,9 +708,9 @@ static int nfs_init_server(struct nfs_server *server,
->  	}
-> =20
->  	if (ctx->rsize)
-> -		server->rsize =3D nfs_block_size(ctx->rsize, NULL);
-> +		server->rsize =3D nfs_io_size(ctx->rsize, clp->cl_proto);
->  	if (ctx->wsize)
-> -		server->wsize =3D nfs_block_size(ctx->wsize, NULL);
-> +		server->wsize =3D nfs_io_size(ctx->wsize, clp->cl_proto);
-> =20
->  	server->acregmin =3D ctx->acregmin * HZ;
->  	server->acregmax =3D ctx->acregmax * HZ;
-> @@ -755,18 +755,19 @@ static int nfs_init_server(struct nfs_server *serve=
-r,
->  static void nfs_server_set_fsinfo(struct nfs_server *server,
->  				  struct nfs_fsinfo *fsinfo)
->  {
-> +	struct nfs_client *clp =3D server->nfs_client;
->  	unsigned long max_rpc_payload, raw_max_rpc_payload;
-> =20
->  	/* Work out a lot of parameters */
->  	if (server->rsize =3D=3D 0)
-> -		server->rsize =3D nfs_block_size(fsinfo->rtpref, NULL);
-> +		server->rsize =3D nfs_io_size(fsinfo->rtpref, clp->cl_proto);
->  	if (server->wsize =3D=3D 0)
-> -		server->wsize =3D nfs_block_size(fsinfo->wtpref, NULL);
-> +		server->wsize =3D nfs_io_size(fsinfo->wtpref, clp->cl_proto);
-> =20
->  	if (fsinfo->rtmax >=3D 512 && server->rsize > fsinfo->rtmax)
-> -		server->rsize =3D nfs_block_size(fsinfo->rtmax, NULL);
-> +		server->rsize =3D nfs_io_size(fsinfo->rtmax, clp->cl_proto);
->  	if (fsinfo->wtmax >=3D 512 && server->wsize > fsinfo->wtmax)
-> -		server->wsize =3D nfs_block_size(fsinfo->wtmax, NULL);
-> +		server->wsize =3D nfs_io_size(fsinfo->wtmax, clp->cl_proto);
-> =20
->  	raw_max_rpc_payload =3D rpc_max_payload(server->client);
->  	max_rpc_payload =3D nfs_block_size(raw_max_rpc_payload, NULL);
-> diff --git a/fs/nfs/flexfilelayout/flexfilelayoutdev.c b/fs/nfs/flexfilel=
-ayout/flexfilelayoutdev.c
-> index bfa7202ca7be..e028f5a0ef5f 100644
-> --- a/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-> +++ b/fs/nfs/flexfilelayout/flexfilelayoutdev.c
-> @@ -113,8 +113,10 @@ nfs4_ff_alloc_deviceid_node(struct nfs_server *serve=
-r, struct pnfs_device *pdev,
->  			goto out_err_drain_dsaddrs;
->  		ds_versions[i].version =3D be32_to_cpup(p++);
->  		ds_versions[i].minor_version =3D be32_to_cpup(p++);
-> -		ds_versions[i].rsize =3D nfs_block_size(be32_to_cpup(p++), NULL);
-> -		ds_versions[i].wsize =3D nfs_block_size(be32_to_cpup(p++), NULL);
-> +		ds_versions[i].rsize =3D nfs_io_size(be32_to_cpup(p++),
-> +						   server->nfs_client->cl_proto);
-> +		ds_versions[i].wsize =3D nfs_io_size(be32_to_cpup(p++),
-> +						   server->nfs_client->cl_proto);
->  		ds_versions[i].tightly_coupled =3D be32_to_cpup(p);
-> =20
->  		if (ds_versions[i].rsize > NFS_MAX_FILE_IO_SIZE)
-> diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
-> index 8f8cd6e2d4db..af6d261241ff 100644
-> --- a/fs/nfs/internal.h
-> +++ b/fs/nfs/internal.h
-> @@ -704,6 +704,24 @@ unsigned long nfs_block_size(unsigned long bsize, un=
-signed char *nrbitsp)
->  	return nfs_block_bits(bsize, nrbitsp);
->  }
-> =20
-> +/*
-> + * Compute and set NFS server rsize / wsize
-> + */
-> +static inline
-> +unsigned long nfs_io_size(unsigned long iosize, enum xprt_transports pro=
-to)
-> +{
-> +	if (iosize < NFS_MIN_FILE_IO_SIZE)
-> +		iosize =3D NFS_DEF_FILE_IO_SIZE;
-> +	else if (iosize >=3D NFS_MAX_FILE_IO_SIZE)
-> +		iosize =3D NFS_MAX_FILE_IO_SIZE;
-> +	else
-> +		iosize =3D iosize & PAGE_MASK;
-> +
-> +	if (proto =3D=3D XPRT_TRANSPORT_UDP)
-> +		return nfs_block_bits(iosize, NULL);
-> +	return iosize;
-> +}
-> +
->  /*
->   * Determine the maximum file size for a superblock
->   */
-> diff --git a/fs/nfs/nfs4client.c b/fs/nfs/nfs4client.c
-> index 47a6cf892c95..3c5678aec006 100644
-> --- a/fs/nfs/nfs4client.c
-> +++ b/fs/nfs/nfs4client.c
-> @@ -1161,9 +1161,9 @@ static int nfs4_init_server(struct nfs_server *serv=
-er, struct fs_context *fc)
->  		return error;
-> =20
->  	if (ctx->rsize)
-> -		server->rsize =3D nfs_block_size(ctx->rsize, NULL);
-> +		server->rsize =3D nfs_io_size(ctx->rsize, server->nfs_client->cl_proto=
-);
->  	if (ctx->wsize)
-> -		server->wsize =3D nfs_block_size(ctx->wsize, NULL);
-> +		server->wsize =3D nfs_io_size(ctx->wsize, server->nfs_client->cl_proto=
-);
-> =20
->  	server->acregmin =3D ctx->acregmin * HZ;
->  	server->acregmax =3D ctx->acregmax * HZ;
+-- 
+Hi
 
-This patch seems to have caused a regression. With this patch in place,
-I can't set an rsize/wsize value that is less than 4k:
+How are you with your family, I have a serious client, whom will be
+interested to invest in your country, I got your Details through the
+Investment Network and world Global Business directory.
 
-    # mount server:/export /mnt -o rsize=3D1024,wsize=3D1024
+If you are interested for more details.....
 
-...now yields:
-
-    server:/export on /mnt type nfs4 (rw,relatime,vers=3D4.2,rsize=3D104857=
-6,wsize=3D1048576,namlen=3D255,hard,proto=3Dtcp,timeo=3D600,retrans=3D2,sec=
-=3Dsys,clientaddr=3D192.168.1.210,local_lock=3Dnone,addr=3D192.168.1.3)
-
-...such that the requested sizes were ignored.
-
-Was this an intended effect? If we really do want to deprecate the use
-of small rsize/wsize with TCP/RDMA, then we probably ought to reject
-these mount attempts with -EINVAL.
---=20
-Jeff Layton <jlayton@kernel.org>
+Sincerely,
+Kairi Andrew
