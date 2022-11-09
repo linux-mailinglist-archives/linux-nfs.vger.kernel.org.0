@@ -2,118 +2,115 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E09A4622890
-	for <lists+linux-nfs@lfdr.de>; Wed,  9 Nov 2022 11:36:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75B5B622B83
+	for <lists+linux-nfs@lfdr.de>; Wed,  9 Nov 2022 13:28:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbiKIKgp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 9 Nov 2022 05:36:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52766 "EHLO
+        id S229651AbiKIM21 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 9 Nov 2022 07:28:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbiKIKgn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Nov 2022 05:36:43 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D962C19C15;
-        Wed,  9 Nov 2022 02:36:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229590AbiKIM20 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 9 Nov 2022 07:28:26 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4C92C11C
+        for <linux-nfs@vger.kernel.org>; Wed,  9 Nov 2022 04:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1667996850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7WXiclAYoJ7uWURPKEcMedmxWv7P5d2eqAf3c29ZlSg=;
+        b=Pib/9KjEdLNgaMNNu0mfosLBB6VRLqYiJLdDEID5SyFn9FiuLlRadf7ypWPArf7fyEGYfG
+        p1QGq5EQfrLmGlLLxBoXMqXaBF7uTufiV6goTQtxLDDC6sImPxcGh0VKYFjkv9swMd/wwW
+        6YeVDy11GbOxnVXUtJK+y6rOQEeMuyM=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-531-3YK-aZx0MIuqaIDjnQcn9A-1; Wed, 09 Nov 2022 07:27:26 -0500
+X-MC-Unique: 3YK-aZx0MIuqaIDjnQcn9A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 675E46190F;
-        Wed,  9 Nov 2022 10:36:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD062C433D6;
-        Wed,  9 Nov 2022 10:36:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667990201;
-        bh=EZN+bucgSCncTbUChCqJU3pLyG23nkFP4VgBICU1Bro=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WWgbHNbZOPbmab1+kb94N0AOYgPwHiZTFtqeJZAc36pkSD15ZcyWf+qPnkkHi+zHx
-         5D0J5yCH/FPR0RG9UTX8p1YOLC0CUtE31rZrIViTSdvXl9s1pnF7D+PjGOllRW5Yqy
-         OMp0973M4DinvvfJd28wf9nM/Gm7cjWhPc3jCCP9PA/mmPPF92Q7gr99FIgn+4oaFe
-         fMdXZzeqIDuKyxFFYxlNO/uaZrOxXllsffinAImWyD5MTykb9j/0umdQRHoHN8w6Hq
-         TooZeNpio8+bJU0XWLsR++e/W1/bGuKdq9CeaO4jlrAMDDojeAVo706TtXRrOzsOly
-         MJJtuB3ipq12Q==
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-13ae8117023so19160333fac.9;
-        Wed, 09 Nov 2022 02:36:41 -0800 (PST)
-X-Gm-Message-State: ACrzQf3yS1T3zhTL18DfLcDYecldPuZTzZn+01UgDSa/4oAEGTRlKnoI
-        iKZeU8JFUWpZYZOd1t7Uu6ihifPR5HFFemVP7iY=
-X-Google-Smtp-Source: AMsMyM4N+KhWKZerEhlVcbom9YLzJ1VSJWSTjKt/pg1gK7cgcpMBY8qJlVPTddlprhevGiKxkK3I86bQs6VfA+viujM=
-X-Received: by 2002:a05:6870:2052:b0:132:7b2:2fe6 with SMTP id
- l18-20020a056870205200b0013207b22fe6mr35805370oad.98.1667990200947; Wed, 09
- Nov 2022 02:36:40 -0800 (PST)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 10742101A528;
+        Wed,  9 Nov 2022 12:27:26 +0000 (UTC)
+Received: from [10.22.32.142] (unknown [10.22.32.142])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BAC440C2086;
+        Wed,  9 Nov 2022 12:27:25 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     Chuck Lever <chuck.lever@oracle.com>,
+        trond.myklebust@primarydata.com
+Cc:     anna.schumaker@netapp.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v2] Documentation: Add an explanation of NFSv4 client
+ identifiers
+Date:   Wed, 09 Nov 2022 07:27:24 -0500
+Message-ID: <BC4D4B10-93F7-4B91-B998-87B0E2D3D551@redhat.com>
+In-Reply-To: <165029751204.8305.958477650360928356.stgit@bazille.1015granger.net>
+References: <165029751204.8305.958477650360928356.stgit@bazille.1015granger.net>
 MIME-Version: 1.0
-References: <3E21DFEA-8DF7-484B-8122-D578BFF7F9E0@oracle.com>
- <20220904131553.bqdsfbfhmdpuujd3@zlang-mailbox> <20221109041951.wlgxac3buutvettq@shindev>
-In-Reply-To: <20221109041951.wlgxac3buutvettq@shindev>
-From:   Filipe Manana <fdmanana@kernel.org>
-Date:   Wed, 9 Nov 2022 10:36:04 +0000
-X-Gmail-Original-Message-ID: <CAL3q7H5eV9Sb1axmNgvcbG7UrgGTH3AovaibQuWMz44Jfo-8_w@mail.gmail.com>
-Message-ID: <CAL3q7H5eV9Sb1axmNgvcbG7UrgGTH3AovaibQuWMz44Jfo-8_w@mail.gmail.com>
-Subject: Re: generic/650 makes v6.0-rc client unusable
-To:     Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>
-Cc:     Zorro Lang <zlang@redhat.com>,
-        "fstests@vger.kernel.org" <fstests@vger.kernel.org>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        Chuck Lever III <chuck.lever@oracle.com>,
-        "djwong@vger.kernel.org" <djwong@vger.kernel.org>,
-        "linux-xfs@vger.kernel.org" <linux-xfs@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Wed, Nov 9, 2022 at 4:22 AM Shinichiro Kawasaki
-<shinichiro.kawasaki@wdc.com> wrote:
+On 18 Apr 2022, at 11:58, Chuck Lever wrote:
+
+> To enable NFSv4 to work correctly, NFSv4 client identifiers have
+> to be globally unique and persistent over client reboots. We
+> believe that in many cases, a good default identifier can be
+> chosen and set when a client system is imaged.
 >
-> On Sep 04, 2022 / 21:15, Zorro Lang wrote:
-> > On Sat, Sep 03, 2022 at 06:43:29PM +0000, Chuck Lever III wrote:
-> > > While investigating some of the other issues that have been
-> > > reported lately, I've found that my v6.0-rc3 NFS/TCP client
-> > > goes off the rails often (but not always) during generic/650.
-> > >
-> > > This is the test that runs a workload while offlining and
-> > > onlining CPUs. My test client has 12 physical cores.
-> > >
-> > > The test appears to start normally, but then after a bit
-> > > the NFS server workload drops to zero and the NFS mount
-> > > disappears. I can't run programs (sudo, for example) on
-> > > the client. Can't log in, even on the console. The console
-> > > has a constant stream of "can't rotate log: Input/Output
-> > > error" type messages.
+> Because there are many different ways a system can be imaged,
+> provide an explanation of how NFSv4 client identifiers and
+> principals can be set by install scripts and imaging tools.
 >
-> I also observe this failure when I ran fstests using btrfs on my HDDs.
-> The failure is recreated almost always.
-
-I'm wondering what do you get in dmesg, any traces?
-
-I've excluded the test from my runs for over an year now, due to some
-crash that I reported
-to the mm and cpu hotplug people here:
-
-https://lore.kernel.org/linux-mm/CAL3q7H4AyrZ5erimDyO7mOVeppd5BeMw3CS=wGbzrMZrp56ktA@mail.gmail.com/
-
-Unfortunately I had no reply from anyone who works or maintains those
-subsystems.
-
-It didn't happen very often, and I haven't tested again with recent kernels.
-
+> Additional cases, such as NFSv4 clients running in containers, also
+> need unique and persistent identifiers. The Linux NFS community
+> sets forth this explanation to aid those who create and manage
+> container environments.
 >
-> > >
-> > > I haven't looked further into this yet. Actually I'm not
-> > > quite sure where to start looking.
-> > >
-> > > I recently switched this client from a local /home to an
-> > > NFS-mounted one, and that's where the xfstests are built
-> > > and run from, fwiw.
-> >
-> > If most of users complain generic/650, I'd like to exclude g/650 from the
-> > "auto" default run group. Any more points?
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+> ---
+>  .../filesystems/nfs/client-identifier.rst          |  216 ++++++++++++++++++++
+>  Documentation/filesystems/nfs/index.rst            |    2
+>  2 files changed, 218 insertions(+)
+>  create mode 100644 Documentation/filesystems/nfs/client-identifier.rst
 >
-> +1. I wish to remove it from the "auto" group. Since I can not login to the test
-> machine after the failure, I suggest to put it in the "dangerous" group.
->
-> --
-> Shin'ichiro Kawasaki
+
+8< ---
+
+> +Linux provides two mechanisms to add uniqueness to its "co_ownerid"
+> +string:
+> +
+> +    nfs.nfs4_unique_id
+> +      This module parameter can set an arbitrary uniquifier string
+> +      via the kernel command line, or when the "nfs" module is
+> +      loaded.
+> +
+> +    /sys/fs/nfs/client/net/identifier
+> +      This virtual file, available since Linux 5.3, is local to the
+> +      network namespace in which it is accessed and so can provide
+> +      distinction between network namespaces (containers) when the
+> +      hostname remains uniform.
+
+Docs are currently wrong because the path is actually:
+
+/sys/fs/nfs/net/nfs_client/identifier
+
+as originally created on bf11fbdb20b38.
+
+It would be trivial to change the docs, but I have to say I think the
+"nfs_client" path component is redundant.  The docs version with "client"
+also seems redundant, since /sys/fs/nfs should only every contain client
+things.
+
+Is it too late to move things a bit?
+
+Ben
+
