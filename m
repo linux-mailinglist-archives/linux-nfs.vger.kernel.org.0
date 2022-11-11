@@ -2,35 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A8ED66250E3
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Nov 2022 03:38:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F9AE6250D2
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Nov 2022 03:38:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232968AbiKKCiA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Nov 2022 21:38:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48204 "EHLO
+        id S232889AbiKKCi0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Nov 2022 21:38:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232959AbiKKCg4 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 21:36:56 -0500
+        with ESMTP id S232992AbiKKCg6 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 21:36:58 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 191EE67F68;
-        Thu, 10 Nov 2022 18:35:49 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1A3A686B3;
+        Thu, 10 Nov 2022 18:35:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9C1861E7E;
-        Fri, 11 Nov 2022 02:35:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281B8C433D6;
-        Fri, 11 Nov 2022 02:35:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 603E061E8E;
+        Fri, 11 Nov 2022 02:35:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D542CC433D6;
+        Fri, 11 Nov 2022 02:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668134148;
-        bh=81g+KZ2MVQmCits8iZFpT3D2MWr8qIA2KP/zxhVyrx4=;
+        s=k20201202; t=1668134158;
+        bh=jfynGGSVh5zaIsDDbet+xvwFBxlcF950vurb84kfsXQ=;
         h=From:To:Cc:Subject:Date:From;
-        b=tB859zhpaHTWLERginA2BYUu9F7OufQC5Ter53eQUKrZd4tXwAvPAJ5bTTupFH0J1
-         lE1ldJxngCdk+xlhSr1h0gaRO+SnhxWgvv0ZIn6nlfyG5rK/S6Awdbm8F0THzQogzR
-         iEkIm1Vn1g/kQF7zrU4cVbDj8Yr5qwT/vCrqMNeTU93tFDRY2tppEI5J3H09XrMiHj
-         RNh2gM1U6qtIl6hgnWlfjOVoriQ2Ma2n2chkDaskqojy4jeQzOI0pDqp1NzDEw9uqg
-         MQglciPW798edWp7zEd4fHxfx7SBRlQSHri+ym/Vb+jZ58Tl7+44z5i6zLTBjKzN8J
-         I5DAQv48fMy4A==
+        b=Xv9JZGOZBCjbqBq3Gro1eJJGzkmxSO7GKM11/mKSYv4TAIh6e6zwHfmkMgSaxCoN1
+         A/zjv+SQ9aM8z/HpdYMM1/iRBU3SZ9pvFb+LF64EnlB1e0L/45MIfhzzVFNio/Isou
+         mOx4GDRV0/bRO9psohLcBq+ZqVBqgwQHVa8XZWInY6iGpSCQ8uRVR/6Vc7J6J5OSCO
+         kS3ZbPlULAdvZSK19op2xNyzglcWhrkLzbbAMWTG4YqtPXvkzs0wm6KHJQd1IKjvUD
+         uIks7lJlO5NizCs5gGdp3MrVVQCo0MRB7r/jdvmVEpHtOPmSKdDn7WX6eRdh9PJekg
+         bzhMKrwzD728w==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benjamin Coddington <bcodding@redhat.com>,
@@ -39,9 +39,9 @@ Cc:     Benjamin Coddington <bcodding@redhat.com>,
         Sasha Levin <sashal@kernel.org>,
         trond.myklebust@hammerspace.com, anna@kernel.org,
         linux-nfs@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 1/5] NFSv4: Retry LOCK on OLD_STATEID during delegation return
-Date:   Thu, 10 Nov 2022 21:35:41 -0500
-Message-Id: <20221111023545.228051-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 1/4] NFSv4: Retry LOCK on OLD_STATEID during delegation return
+Date:   Thu, 10 Nov 2022 21:35:53 -0500
+Message-Id: <20221111023556.228125-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
 X-stable: review
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
-index 7c5dfed0437f..77c2c88621be 100644
+index f9f76594b866..9a0f48f7f2b8 100644
 --- a/fs/nfs/nfs4proc.c
 +++ b/fs/nfs/nfs4proc.c
-@@ -6854,6 +6854,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+@@ -6613,6 +6613,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
  {
  	struct nfs4_lockdata *data = calldata;
  	struct nfs4_lock_state *lsp = data->lsp;
@@ -91,7 +91,7 @@ index 7c5dfed0437f..77c2c88621be 100644
  
  	dprintk("%s: begin!\n", __func__);
  
-@@ -6863,8 +6864,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+@@ -6622,8 +6623,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
  	data->rpc_status = task->tk_status;
  	switch (task->tk_status) {
  	case 0:
@@ -101,7 +101,7 @@ index 7c5dfed0437f..77c2c88621be 100644
  		if (data->arg.new_lock && !data->cancelled) {
  			data->fl.fl_flags &= ~(FL_SLEEP | FL_ACCESS);
  			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
-@@ -6885,6 +6885,8 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+@@ -6644,6 +6644,8 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
  			if (!nfs4_stateid_match(&data->arg.open_stateid,
  						&lsp->ls_state->open_stateid))
  				goto out_restart;
