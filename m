@@ -2,244 +2,214 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ED25D624665
-	for <lists+linux-nfs@lfdr.de>; Thu, 10 Nov 2022 16:55:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 338A0624F87
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Nov 2022 02:28:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231728AbiKJPzc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Nov 2022 10:55:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37048 "EHLO
+        id S229688AbiKKB2u (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Nov 2022 20:28:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231715AbiKJPza (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 10:55:30 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E6F2B1B3;
-        Thu, 10 Nov 2022 07:55:29 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id ay14-20020a05600c1e0e00b003cf6ab34b61so3747071wmb.2;
-        Thu, 10 Nov 2022 07:55:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+EdQPE3FmfPtSVPDfrx8UgxIukmWt6408vScCtnW74=;
-        b=lUP3Okf+FRY4BzN9hFG5Qf0hV92d+T/gDAYw7goZP2Bcuro6EZP4qHHD2XZNYQVULH
-         X0QHGxXOhofA2EHDa8pab6foedYSSMUuxSii7NhkRKsMt1dXdX5377OU8Sys0gyw7nXb
-         JM39h445WmaM798KmtfhovoeWMvsUys67mS5uGRlq29KeNsg937Pov0vQcYRTUQYmDKp
-         yK+X3aA86M9aBknwklQRWZU9VTt/p80aaoQxN//xN3PCgpoJfR8muT40PykhxsJMuwx0
-         iA1a7n0vz0rj/Ci7rGtxEXmNnjdRXfCdd3JyWHczmASmGzDaVFXlNQUlkv1d0qvMqHYL
-         JRwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s+EdQPE3FmfPtSVPDfrx8UgxIukmWt6408vScCtnW74=;
-        b=amdMoVzlqav8YtFXjzE4lRz9oEL8xKT7D4pG+dkeNc4jA2KrJHXOSozRbhEvcsN2ZG
-         8fD2QH51G6zSIGXxAmPGQJBEAbUGfgMWd6BOGCcas1jyYfJv9SJA0KnSyx9qX2ttgr+T
-         CyukOvjXZjnLGdistf40HmDczXlFUMz5emIIPtmxhd/8S1WGtcK9MDG9+ALhwrWvgFpJ
-         EyyN7xy0nR8ORQ9SRNOzxxxLUxTPs/mLuf6MkeiggAQT1FKGvFEnNroUxgWyEdRZbz/T
-         GEM73Uoyz2QLtbnnmg791Z2oHc6QAuFS0jeUU6ncyx2dLwHjHiFEgrmfDxZrQD+xDLpp
-         yo4A==
-X-Gm-Message-State: ACrzQf1BPELfPBm21besEo/OkbGoQJMoXqjRXEVMrSttMyjKgV1aR2bO
-        IfPLsM5qlCigN4xcEe/rmws=
-X-Google-Smtp-Source: AMsMyM7jCZizpAbDzaiI/65KNKAhENrYNXK7szU2FN8y+yOYgD+vPb50Ppl0Hc9rCl0bPReG4UKPmw==
-X-Received: by 2002:a05:600c:1ca5:b0:3cf:550f:0 with SMTP id k37-20020a05600c1ca500b003cf550f0000mr45563088wms.23.1668095727472;
-        Thu, 10 Nov 2022 07:55:27 -0800 (PST)
-Received: from amir-ThinkPad-T480.lan ([5.29.249.86])
-        by smtp.gmail.com with ESMTPSA id i5-20020adffc05000000b0023660f6cecfsm16292106wrr.80.2022.11.10.07.55.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Nov 2022 07:55:26 -0800 (PST)
-From:   Amir Goldstein <amir73il@gmail.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Luis Henriques <lhenriques@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        linux-nfs@vger.kernel.org
-Subject: [PATCH] vfs: fix copy_file_range() averts filesystem freeze protection
-Date:   Thu, 10 Nov 2022 17:55:22 +0200
-Message-Id: <20221110155522.556225-1-amir73il@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229536AbiKKB2t (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 20:28:49 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BA3A5FE8
+        for <linux-nfs@vger.kernel.org>; Thu, 10 Nov 2022 17:28:48 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 268FF2279A;
+        Fri, 11 Nov 2022 01:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1668130127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6RoUN3x67sUJKpOqXFxkLv+bOeFBl8ci/5ikFzhqnPU=;
+        b=mCJhLY/eRUkR0q6Y9ToaTlj1VdjjLmtzAiRHRPC4gnzwoFgOxKPdnLqL1UTQa2X6b570pQ
+        hfU12BsSCU21jEs6tyWgHLTDCG6bvq9VEUJdY9+8ShyTXhyhraNUVECJegOXFPPv+qxfKH
+        +oi+rxq5SZfZ9gzewrHLEthI6iy15hQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1668130127;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6RoUN3x67sUJKpOqXFxkLv+bOeFBl8ci/5ikFzhqnPU=;
+        b=/WBSSUP0+6w3RygWpN7dZxMWO6c2aaBYB8RHlAlC3oQxWB+3krdztZd7r18oTtWS9fy374
+        kJ7ueq1b5mGMzKAA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 413A713357;
+        Fri, 11 Nov 2022 01:28:45 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id YB50Ok2lbWP8dQAAMHmgww
+        (envelope-from <neilb@suse.de>); Fri, 11 Nov 2022 01:28:45 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   "NeilBrown" <neilb@suse.de>
+To:     Steve Dickson <steved@redhat.com>
+Cc:     Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: [PATCH nfs-utils] nfsd: allow server scope to be set with config or
+ command line.
+Date:   Fri, 11 Nov 2022 12:28:32 +1100
+Message-id: <166813011417.19313.12216066495338584736@noble.neil.brown.name>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Commit 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs
-copies") removed fallback to generic_copy_file_range() for cross-fs
-cases inside vfs_copy_file_range().
 
-To preserve behavior of nfsd and ksmbd server-side-copy, the fallback to
-generic_copy_file_range() was added in nfsd and ksmbd code, but that
-call is missing sb_start_write(), fsnotify hooks and more.
+NFSv4.1 and later require the server to report a "scope".  Servers with
+the same scope are expected to understand each other's state ids etc,
+though may not accept them - this ensure there can be no
+misunderstanding.  This is helpful for migration.
 
-Ideally, nfsd and ksmbd would pass a flag to vfs_copy_file_range() that
-will take care of the fallback, but that code would be subtle and we got
-vfs_copy_file_range() logic wrong too many times already.
+Servers with different scope are known to be different and if a server
+appears to change scope on a restart, lock recovery must not be
+attempted.
 
-Instead, add a flag to explicitly request vfs_copy_file_range() to
-perform only generic_copy_file_range() and let nfsd and ksmbd use this
-flag only in the fallback path.
+It is important for fail-over configurations to have the same scope for
+all server instances.  Linux NFSD sets scope to host name.  It is common
+for fail-over configurations to use different host names on different
+server nodes.  So the default is not good for these configurations and
+must be over-ridden.
 
-This choise keeps the logic changes to minimum in the non-nfsd/ksmbd code
-paths to reduce the risk of further regressions.
+As discussed in
+  https://github.com/ClusterLabs/resource-agents/issues/1644
+some HA management tools attempt to address this with calls to "unshare"
+and "hostname" before running "rpc.nfsd".  This is unnecessarily
+cumbersome.
 
-Fixes: 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs copies")
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+This patch adds a "-S" command-line option and nfsd.scope config value
+so that the scope can be set easily for nfsd.
+
+Signed-off-by: NeilBrown <neilb@suse.de>
 ---
+ systemd/nfs.conf.man |  1 +
+ utils/nfsd/nfsd.c    | 19 ++++++++++++++++++-
+ utils/nfsd/nfsd.man  | 13 ++++++++++++-
+ 3 files changed, 31 insertions(+), 2 deletions(-)
 
-Hi Al,
-
-Another fix for the long tradition of copy_file_range() regressions.
-This one only affected cross-fs server-side-copy from nfsd/ksmbd.
-
-I ran the copy_range fstests group on ext4/xfs/overlay to verify no
-regressions in local fs and nfsv3/nfsv4 to test server-side-copy.
-
-I also patched copy_file_range() to test the nfsd fallback code on
-local fs.
-
-Namje, could you please test ksmbd.
-
-Thanks,
-Amir.
-
- fs/ksmbd/vfs.c     |  6 +++---
- fs/nfsd/vfs.c      |  4 ++--
- fs/read_write.c    | 19 +++++++++++++++----
- include/linux/fs.h |  8 ++++++++
- 4 files changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/fs/ksmbd/vfs.c b/fs/ksmbd/vfs.c
-index 8de970d6146f..94b8ed4ef870 100644
---- a/fs/ksmbd/vfs.c
-+++ b/fs/ksmbd/vfs.c
-@@ -1794,9 +1794,9 @@ int ksmbd_vfs_copy_file_ranges(struct ksmbd_work *work,
- 		ret = vfs_copy_file_range(src_fp->filp, src_off,
- 					  dst_fp->filp, dst_off, len, 0);
- 		if (ret == -EOPNOTSUPP || ret == -EXDEV)
--			ret = generic_copy_file_range(src_fp->filp, src_off,
--						      dst_fp->filp, dst_off,
--						      len, 0);
-+			ret = vfs_copy_file_range(src_fp->filp, src_off,
-+						  dst_fp->filp, dst_off, len,
-+						  COPY_FILE_SPLICE);
- 		if (ret < 0)
- 			return ret;
- 
-diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
-index f650afedd67f..5cf11cde51f8 100644
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -596,8 +596,8 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 src_pos, struct file *dst,
- 	ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
- 
- 	if (ret == -EOPNOTSUPP || ret == -EXDEV)
--		ret = generic_copy_file_range(src, src_pos, dst, dst_pos,
--					      count, 0);
-+		ret = vfs_copy_file_range(src, src_pos, dst, dst_pos, count,
-+					  COPY_FILE_SPLICE);
- 	return ret;
- }
- 
-diff --git a/fs/read_write.c b/fs/read_write.c
-index 328ce8cf9a85..24b9668d6377 100644
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1388,6 +1388,8 @@ ssize_t generic_copy_file_range(struct file *file_in, loff_t pos_in,
- 				struct file *file_out, loff_t pos_out,
- 				size_t len, unsigned int flags)
+diff --git a/systemd/nfs.conf.man b/systemd/nfs.conf.man
+index b95c05a68759..bfd3380ff081 100644
+--- a/systemd/nfs.conf.man
++++ b/systemd/nfs.conf.man
+@@ -172,6 +172,7 @@ for details.
+ Recognized values:
+ .BR threads ,
+ .BR host ,
++.BR scope ,
+ .BR port ,
+ .BR grace-time ,
+ .BR lease-time ,
+diff --git a/utils/nfsd/nfsd.c b/utils/nfsd/nfsd.c
+index 4016a761293b..169e02a84f7b 100644
+--- a/utils/nfsd/nfsd.c
++++ b/utils/nfsd/nfsd.c
+@@ -23,6 +23,7 @@
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
++#include <sched.h>
+=20
+ #include "conffile.h"
+ #include "nfslib.h"
+@@ -39,6 +40,7 @@ static void	usage(const char *);
+ static struct option longopts[] =3D
  {
-+	lockdep_assert(sb_write_started(file_inode(file_out)->i_sb));
-+
- 	return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
- 				len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
- }
-@@ -1424,7 +1426,9 @@ static int generic_copy_file_checks(struct file *file_in, loff_t pos_in,
- 	 * and several different sets of file_operations, but they all end up
- 	 * using the same ->copy_file_range() function pointer.
- 	 */
--	if (file_out->f_op->copy_file_range) {
-+	if (flags & COPY_FILE_SPLICE) {
-+		/* cross sb splice is allowed */
-+	} else if (file_out->f_op->copy_file_range) {
- 		if (file_in->f_op->copy_file_range !=
- 		    file_out->f_op->copy_file_range)
- 			return -EXDEV;
-@@ -1474,8 +1478,9 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 			    size_t len, unsigned int flags)
- {
- 	ssize_t ret;
-+	bool splice = flags & COPY_FILE_SPLICE;
- 
--	if (flags != 0)
-+	if (flags & ~COPY_FILE_SPLICE)
- 		return -EINVAL;
- 
- 	ret = generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &len,
-@@ -1501,14 +1506,14 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	 * same sb using clone, but for filesystems where both clone and copy
- 	 * are supported (e.g. nfs,cifs), we only call the copy method.
- 	 */
--	if (file_out->f_op->copy_file_range) {
-+	if (!splice && file_out->f_op->copy_file_range) {
- 		ret = file_out->f_op->copy_file_range(file_in, pos_in,
- 						      file_out, pos_out,
- 						      len, flags);
- 		goto done;
+ 	{ "host", 1, 0, 'H' },
++	{ "scope", 1, 0, 'S'},
+ 	{ "help", 0, 0, 'h' },
+ 	{ "no-nfs-version", 1, 0, 'N' },
+ 	{ "nfs-version", 1, 0, 'V' },
+@@ -69,6 +71,7 @@ main(int argc, char **argv)
+ 	int	count =3D NFSD_NPROC, c, i, error =3D 0, portnum, fd, found_one;
+ 	char *p, *progname, *port, *rdma_port =3D NULL;
+ 	char **haddr =3D NULL;
++	char *scope =3D NULL;
+ 	int hcounter =3D 0;
+ 	struct conf_list *hosts;
+ 	int	socket_up =3D 0;
+@@ -168,8 +171,9 @@ main(int argc, char **argv)
+ 			hcounter++;
+ 		}
  	}
- 
--	if (file_in->f_op->remap_file_range &&
-+	if (!splice && file_in->f_op->remap_file_range &&
- 	    file_inode(file_in)->i_sb == file_inode(file_out)->i_sb) {
- 		ret = file_in->f_op->remap_file_range(file_in, pos_in,
- 				file_out, pos_out,
-@@ -1528,6 +1533,8 @@ ssize_t vfs_copy_file_range(struct file *file_in, loff_t pos_in,
- 	 * consistent story about which filesystems support copy_file_range()
- 	 * and which filesystems do not, that will allow userspace tools to
- 	 * make consistent desicions w.r.t using copy_file_range().
-+	 *
-+	 * We also get here if caller (e.g. nfsd) requested COPY_FILE_SPLICE.
- 	 */
- 	ret = generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
- 				      flags);
-@@ -1582,6 +1589,10 @@ SYSCALL_DEFINE6(copy_file_range, int, fd_in, loff_t __user *, off_in,
- 		pos_out = f_out.file->f_pos;
- 	}
- 
-+	ret = -EINVAL;
-+	if (flags != 0)
-+		goto out;
-+
- 	ret = vfs_copy_file_range(f_in.file, pos_in, f_out.file, pos_out, len,
- 				  flags);
- 	if (ret > 0) {
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index e654435f1651..59ae95ddb679 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2089,6 +2089,14 @@ struct dir_context {
-  */
- #define REMAP_FILE_ADVISORY		(REMAP_FILE_CAN_SHORTEN)
- 
-+/*
-+ * These flags control the behavior of vfs_copy_file_range().
-+ * They are not available to the user via syscall.
-+ *
-+ * COPY_FILE_SPLICE: call splice direct instead of fs clone/copy ops
-+ */
-+#define COPY_FILE_SPLICE		(1 << 0)
-+
- struct iov_iter;
- struct io_uring_cmd;
- 
--- 
-2.25.1
++	scope =3D conf_get_str("nfsd", "scope");
+=20
+-	while ((c =3D getopt_long(argc, argv, "dH:hN:V:p:P:stTuUrG:L:", longopts, N=
+ULL)) !=3D EOF) {
++	while ((c =3D getopt_long(argc, argv, "dH:S:hN:V:p:P:stTuUrG:L:", longopts,=
+ NULL)) !=3D EOF) {
+ 		switch(c) {
+ 		case 'd':
+ 			xlog_config(D_ALL, 1);
+@@ -190,6 +194,9 @@ main(int argc, char **argv)
+ 			haddr[hcounter] =3D optarg;
+ 			hcounter++;
+ 			break;
++		case 'S':
++			scope =3D optarg;
++			break;
+ 		case 'P':	/* XXX for nfs-server compatibility */
+ 		case 'p':
+ 			/* only the last -p option has any effect */
+@@ -367,6 +374,16 @@ main(int argc, char **argv)
+ 	if (lease  > 0)
+ 		nfssvc_set_time("lease", lease);
+=20
++	if (!scope && hcounter =3D=3D 1)
++		scope =3D haddr[0];
++	if (scope) {
++		if (unshare(CLONE_NEWUTS) < 0 ||
++		    sethostname(scope, strlen(scope)) < 0) {
++			xlog(L_ERROR, "Unable to set server scope: %m");
++			error =3D -1;
++			goto out;
++		}
++	}
+ 	i =3D 0;
+ 	do {
+ 		error =3D nfssvc_set_sockets(protobits, haddr[i], port);
+diff --git a/utils/nfsd/nfsd.man b/utils/nfsd/nfsd.man
+index bb99fe2b1d89..dc05f3623465 100644
+--- a/utils/nfsd/nfsd.man
++++ b/utils/nfsd/nfsd.man
+@@ -35,9 +35,17 @@ Note that
+ .B lockd
+ (which performs file locking services for NFS) may still accept
+ request on all known network addresses.  This may change in future
+-releases of the Linux Kernel. This option can be used multiple time=20
++releases of the Linux Kernel. This option can be used multiple times
+ to listen to more than one interface.
+ .TP
++.B \S " or " \-\-scope scope
++NFSv4.1 and later require the server to report a "scope" which is used
++by the clients to detect if two connections are to the same server.
++By default Linux NFSD uses the host name as the scope.
++.sp
++It is particularly important for high-availablity configurations to ensure
++that all potential server nodes report the same server scope.
++.TP
+ .B \-p " or " \-\-port  port
+ specify a different port to listen on for NFS requests. By default,
+ .B rpc.nfsd
+@@ -134,6 +142,9 @@ will listen on.  Use of the
+ .B --host
+ option replaces all host names listed here.
+ .TP
++.B scope
++Set the server scope.
++.TP
+ .B grace-time
+ The grace time, for both NFSv4 and NLM, in seconds.
+ .TP
+--=20
+2.38.1
 
