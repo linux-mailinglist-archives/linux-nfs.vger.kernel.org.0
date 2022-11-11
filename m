@@ -2,50 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A51E625039
-	for <lists+linux-nfs@lfdr.de>; Fri, 11 Nov 2022 03:34:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 850DA62509B
+	for <lists+linux-nfs@lfdr.de>; Fri, 11 Nov 2022 03:37:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232574AbiKKCeF (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 10 Nov 2022 21:34:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46860 "EHLO
+        id S232994AbiKKChL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 10 Nov 2022 21:37:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232507AbiKKCd6 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 21:33:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE5DBC18;
-        Thu, 10 Nov 2022 18:33:52 -0800 (PST)
+        with ESMTP id S232903AbiKKCgk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 10 Nov 2022 21:36:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC15F64FE;
+        Thu, 10 Nov 2022 18:35:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E288261E8C;
-        Fri, 11 Nov 2022 02:33:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2440C433C1;
-        Fri, 11 Nov 2022 02:33:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 68F3F61E92;
+        Fri, 11 Nov 2022 02:35:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBBF2C433C1;
+        Fri, 11 Nov 2022 02:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668134031;
-        bh=KqR3IwAImF6SSQJBFCNKIYOr1z71vch5MANtyqJIblM=;
+        s=k20201202; t=1668134116;
+        bh=PYL/nQAO2PYW4pgpL3sg76ck0kjdTsKBR/rN967rIQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rslz6ERswiY2L9Ag1uDQKuP/svcMiBuAuDc7hc4GkeP+QmTSWTtThHHjMdTOqygf9
-         dk1+7TmopH4m5Xks4oAUCRYFoMLsZcMkGi14GUGvsfYS9zvCqkWVO5W/1lHm4ez7XF
-         pzn/1paq0ScAvkAUXqth9NK9RrOzR80wUjX2PFApkk413jLWYRev11CBJ6nnTCpjpH
-         EbAj3TddLV5Uexjuad630xf9SLCzzq1SVTMRUT/sk10RNBbDKua6f9R6u1D7Wc9WI4
-         KcE9N8hKTmXr69Gpn7J23ZMAcojTSvgsywnf7LmI8hM15qqDjGSK9Wk0st6x9Zw3AD
-         8MIgCoQK0GKWA==
+        b=X9Ptc/g7YwyYew+bEDwyr9BRmZtg6bwIHxm7ukghZWQVpWNRPEjjq359A4trfaIk3
+         7HNhFOD9Q0OlsPD0RxTJzmPYYNtBl+AfPXZewmf0VhAcTDEiPe/vcDUDb3QSKXUXhf
+         reircQBYKdHr7ADsLG2oqQh8wFPIM6HUc6GPZLxGGaBozuhzLceP+nznJGBI//wvdT
+         sEtnD3CHdLIPLq8JnIcmUXCC2Sprmb7g70p0m2hvu6Us1Evcuv3C8SKXv2iVDJCcTW
+         hpdFl0p/OjL5N+GT6vpgPfq0HZIKv1X5u2TUTg4UdpB5VhICHR0ZkQ6hlIKJOTjGTf
+         VgU5LcGY/xbDg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
+Cc:     Benjamin Coddington <bcodding@redhat.com>,
+        Gonzalo Siero Humet <gsierohu@redhat.com>,
         Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>, jlayton@kernel.org,
+        Sasha Levin <sashal@kernel.org>,
         trond.myklebust@hammerspace.com, anna@kernel.org,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, neilb@suse.de, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.0 05/30] SUNRPC: Fix crasher in gss_unwrap_resp_integ()
-Date:   Thu, 10 Nov 2022 21:33:13 -0500
-Message-Id: <20221111023340.227279-5-sashal@kernel.org>
+        linux-nfs@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 03/11] NFSv4: Retry LOCK on OLD_STATEID during delegation return
+Date:   Thu, 10 Nov 2022 21:35:03 -0500
+Message-Id: <20221111023511.227800-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20221111023340.227279-1-sashal@kernel.org>
-References: <20221111023340.227279-1-sashal@kernel.org>
+In-Reply-To: <20221111023511.227800-1-sashal@kernel.org>
+References: <20221111023511.227800-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,34 +58,60 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Benjamin Coddington <bcodding@redhat.com>
 
-[ Upstream commit 8a0fa3ff3b606b55c4edc71ad133e61529b64549 ]
+[ Upstream commit f5ea16137a3fa2858620dc9084466491c128535f ]
 
-If a zero length is passed to kmalloc() it returns 0x10, which is
-not a valid address. gss_unwrap_resp_integ() subsequently crashes
-when it attempts to dereference that pointer.
+There's a small window where a LOCK sent during a delegation return can
+race with another OPEN on client, but the open stateid has not yet been
+updated.  In this case, the client doesn't handle the OLD_STATEID error
+from the server and will lose this lock, emitting:
+"NFS: nfs4_handle_delegation_recall_error: unhandled error -10024".
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Fix this by sending the task through the nfs4 error handling in
+nfs4_lock_done() when we may have to reconcile our stateid with what the
+server believes it to be.  For this case, the result is a retry of the
+LOCK operation with the updated stateid.
+
+Reported-by: Gonzalo Siero Humet <gsierohu@redhat.com>
+Signed-off-by: Benjamin Coddington <bcodding@redhat.com>
 Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/auth_gss/auth_gss.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/nfs4proc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index a31a27816cc0..7bb247c51e2f 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -1989,7 +1989,7 @@ gss_unwrap_resp_integ(struct rpc_task *task, struct rpc_cred *cred,
- 		goto unwrap_failed;
- 	mic.len = len;
- 	mic.data = kmalloc(len, GFP_KERNEL);
--	if (!mic.data)
-+	if (ZERO_OR_NULL_PTR(mic.data))
- 		goto unwrap_failed;
- 	if (read_bytes_from_xdr_buf(rcv_buf, offset, mic.data, mic.len))
- 		goto unwrap_failed;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index b42e332775fe..dc03924b6b71 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7118,6 +7118,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ {
+ 	struct nfs4_lockdata *data = calldata;
+ 	struct nfs4_lock_state *lsp = data->lsp;
++	struct nfs_server *server = NFS_SERVER(d_inode(data->ctx->dentry));
+ 
+ 	dprintk("%s: begin!\n", __func__);
+ 
+@@ -7127,8 +7128,7 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ 	data->rpc_status = task->tk_status;
+ 	switch (task->tk_status) {
+ 	case 0:
+-		renew_lease(NFS_SERVER(d_inode(data->ctx->dentry)),
+-				data->timestamp);
++		renew_lease(server, data->timestamp);
+ 		if (data->arg.new_lock && !data->cancelled) {
+ 			data->fl.fl_flags &= ~(FL_SLEEP | FL_ACCESS);
+ 			if (locks_lock_inode_wait(lsp->ls_state->inode, &data->fl) < 0)
+@@ -7149,6 +7149,8 @@ static void nfs4_lock_done(struct rpc_task *task, void *calldata)
+ 			if (!nfs4_stateid_match(&data->arg.open_stateid,
+ 						&lsp->ls_state->open_stateid))
+ 				goto out_restart;
++			else if (nfs4_async_handle_error(task, server, lsp->ls_state, NULL) == -EAGAIN)
++				goto out_restart;
+ 		} else if (!nfs4_stateid_match(&data->arg.lock_stateid,
+ 						&lsp->ls_stateid))
+ 				goto out_restart;
 -- 
 2.35.1
 
