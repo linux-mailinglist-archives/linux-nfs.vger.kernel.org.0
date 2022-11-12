@@ -2,78 +2,148 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D2E262697E
-	for <lists+linux-nfs@lfdr.de>; Sat, 12 Nov 2022 13:47:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A756626A5C
+	for <lists+linux-nfs@lfdr.de>; Sat, 12 Nov 2022 16:58:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234317AbiKLMrj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 12 Nov 2022 07:47:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54168 "EHLO
+        id S231534AbiKLP6I (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 12 Nov 2022 10:58:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbiKLMri (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 12 Nov 2022 07:47:38 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F6519C07
-        for <linux-nfs@vger.kernel.org>; Sat, 12 Nov 2022 04:47:35 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id 7so3692906ilg.11
-        for <linux-nfs@vger.kernel.org>; Sat, 12 Nov 2022 04:47:35 -0800 (PST)
+        with ESMTP id S230257AbiKLP6H (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 12 Nov 2022 10:58:07 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0829713D20;
+        Sat, 12 Nov 2022 07:58:04 -0800 (PST)
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2ACFidvi008699;
+        Sat, 12 Nov 2022 15:58:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=nq5ciP+26oEmHid4ijMxLNOIxZzaeR9yf46lGRGp0fY=;
+ b=rDd4ndX8nXga6Io9Qq6gwVFmcIzd6n2VbKxszyg6kUIB9CbULePZEx8BXOc09uQbQ0OF
+ qNpbr965fROD/tJ+bWiLUKB6J2+iOFmdgfgx5blhqgE9TJ87bKbQ9H5UiWQoNGrFAzvL
+ ziJkHyuG0ijzt+P6fwiEBzpxlv4Jd9MHlxvqbtdvOdfqWWwzJy0DdO3mEGAgWtOmaD4s
+ aMp6QsgO4tvVBB9Cm+fe8ZaVC0PzDcbZQ4UMlY5kbt8geGZ/8C8DmMORBGUG3xA8IDwW
+ U1Op3CTph4CJ7VnaMiuyFseKFEmpxijmZNvsB24FVCroefV4VexTIH5xHYdEQCgyX2kp gQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kted4g09v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 12 Nov 2022 15:58:00 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2ACE4VqF016504;
+        Sat, 12 Nov 2022 15:58:00 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2048.outbound.protection.outlook.com [104.47.56.48])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3kt1x8q4e2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 12 Nov 2022 15:57:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Q/Msv0NTLHcmAubtYUWs8NPZEFkC3rvZbMcz001j2LZ/Vit1kRH3F7VROq09vBrToENZqy0Vd+Q0kxaOM7S1cc8E0hVdphk2nZklFL+jQCY180/pgblVGZpS242AIw8k3nkwmqy+x99Yj+3lZ/M5xRmCFRFdIe6TcIOSNr9UpPl4Vn3u9s+Eifc21qwV/8hcPnWwPOCCabmF11PHAVB3ugMHgjTxo9qSbWCZjWrX9NW92Nx723AKLTqxQWeJn7Okv8eHscQMrxbAe2U7UV0ntB1ZuKLqyr/SJuXWdr+wZOrKiKKX1JzNymjFI7wmViCsFi6+lVXAFEgz2hw0EuGnYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nq5ciP+26oEmHid4ijMxLNOIxZzaeR9yf46lGRGp0fY=;
+ b=YZ0p9oD+U7mxznAsd5UAg5C8v7JIQYWbPZGuCQ+qdsSEagmCD0JnUhVjfzRLio09/Fi7267DHaoSVZNrqexyaxJRQVsGa1FYSnaOTMYxk77lxbkk7jiPUWnOseamO6zDZY9uw+b1KQK333UZSdSn3WaRnDeoLWsuvODnfxQ97C0uhSqW3aGYa790haAoPe1iSIRLDi6txukypENCDG8RydMZDsYDfwBp1VreM90Q1t7kUm5P41s+eGMv2iCMeOHUjtaWJblowK0zkDo5bSAWjFywGo0QJOaKeBr8JnEFWIOkDr7d9Z9Gch8MQfMdv3vngYfV6DuxyRcmfZ41BIUriw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+SeBiXsqRQ/pdomR4bQcoVJlGugC71e1dgWIICPz4no=;
-        b=DBjVv1OrHYocPHoIwkbeaqzMmg1dvWFV0GglhkNoZ5VbofLneFrZsNgAVEj3iyVxck
-         9eBl9ZQJlgAGCRzDBlpp7ls1V7s/3kwSW1ycAn65ZsQHyt7KF2yzY8pry/JIuTo4E4iP
-         G7hORI9sWCa2nyJS67USbruZibvzUrxMVQexl4ueOAmfkvVVwat9ynVZ4NtJ3YjJ0oDc
-         yd+IpzWRtUuxv0JoRzwdVY9tK8tbhMj8X31W3zKJVFT1qQ+5EDiRt6ITHV2XX6M1U5KR
-         WCXGt3DJ5j0AjZee1C93++EtfuPrVLD+RL0mqUQLC0sjvGzTi4+u6hv1kSlDFY30DMLp
-         uQoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+SeBiXsqRQ/pdomR4bQcoVJlGugC71e1dgWIICPz4no=;
-        b=BTQNwsxLberAbByctuDaICjzFL5gPcG6Z//izfssrAkd4qqOFmLbH9ZJl2agtzg3Q2
-         oeoYGLm/W2EaySR1t2TFAtF91DoPjkeoPYJqe/miN8+ciZmhX4cU02k3jTAypzRODjba
-         nxTTVKD2qBJQ7FVajAGbEQ1gs2y97qYRtr0aTa9JUOBQLBx3gZfxS/yzv2+aCErMq+sA
-         Y8VhVQKKpNrSYt57q9XF6AAXA7NJN/Bxh9QHkm51MZeiqYeVKESZdvXJAFtDjYrGYU9s
-         3ORRyJB2TFAQoG29DU31H0mco4efkKN0DFaLQ2wmF6kpuiTLT3bm1yINVKPsbnQTmQAI
-         aFvQ==
-X-Gm-Message-State: ANoB5pmERP688ou0+w3sCMv7bJCaZiEqipRuB/glMf8negTdr4UY82g6
-        4W8K7MgDpoBbeRVK0YtOSEt/CkB5UKGRlR4SNcD0Tw==
-X-Google-Smtp-Source: AA0mqf5Pma29JEsZReu1J3l/GKjgTPI8qcLVmkofhEt/Jng1Hp63wHbh3t8HTsuGiXh4VHgaCRA+VJhgO7VUuFavtHs=
-X-Received: by 2002:a92:c749:0:b0:302:3a05:d570 with SMTP id
- y9-20020a92c749000000b003023a05d570mr3052665ilp.249.1668257254613; Sat, 12
- Nov 2022 04:47:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20221017105212.77588-1-dwysocha@redhat.com> <20221017105212.77588-4-dwysocha@redhat.com>
- <870684b35a45b94c426554a62b63f80f421dbb08.camel@kernel.org>
- <CALF+zOm+-2QLOMu4J7NAK++xfjZ8SQqmMh8zNFcM2H78_qYAzA@mail.gmail.com>
- <0676ecb2bb708e6fc29dbbe6b44551d6a0d021dc.camel@kernel.org>
- <CALF+zOnRH_GiZooiNm1=J+gOpLMEncO72SA4jAmL+agG9RjbYg@mail.gmail.com>
- <CALF+zOmDzp-UhLC0Dk4fmsjEzWgM75m5uOMBjv6TjTFYtbWPAQ@mail.gmail.com> <1B2E1442-EB0A-43E3-96BB-15C717E966E5@hammerspace.com>
-In-Reply-To: <1B2E1442-EB0A-43E3-96BB-15C717E966E5@hammerspace.com>
-From:   Benjamin Maynard <benmaynard@google.com>
-Date:   Sat, 12 Nov 2022 12:46:58 +0000
-Message-ID: <CA+QRt4vM3NncgCWjKncorHmiWpCrJ7FsLC=y+v7gnEwYpM3PSw@mail.gmail.com>
-Subject: Re: [PATCH v9 3/5] NFS: Convert buffered read paths to use netfs when
- fscache is enabled
-To:     Trond Myklebust <trondmy@hammerspace.com>
-Cc:     David Wysochanski <dwysocha@redhat.com>,
-        Trond Myklebust <trondmy@kernel.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>,
-        David Howells <dhowells@redhat.com>,
-        "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-cachefs@redhat.com" <linux-cachefs@redhat.com>,
-        Daire Byrne <daire.byrne@gmail.com>,
-        Brennan Doyle <brennandoyle@google.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nq5ciP+26oEmHid4ijMxLNOIxZzaeR9yf46lGRGp0fY=;
+ b=r3udz1liA6tayc6MPyr63+UcIjMKloj1ea2dkGYoWQg0xmOXvpN7DmUPJYpJXxVet2Zxw8jmrZ7+K1lDxo2bp5S2VSeHOTNtGBKGTmhJtrjj9k6B5NqQ8fMmDEHXcr8HwfhxF1a5K/jdtCmxQDdBp6vDKEyaWOMjWJrABUjNFqk=
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com (2603:10b6:408:117::24)
+ by MW5PR10MB5807.namprd10.prod.outlook.com (2603:10b6:303:19a::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5813.13; Sat, 12 Nov
+ 2022 15:57:57 +0000
+Received: from BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::b500:ee42:3ca6:8a9e]) by BN0PR10MB5128.namprd10.prod.outlook.com
+ ([fe80::b500:ee42:3ca6:8a9e%6]) with mapi id 15.20.5813.016; Sat, 12 Nov 2022
+ 15:57:57 +0000
+From:   Chuck Lever III <chuck.lever@oracle.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>
+Subject: Re: Files in include/trace/events
+Thread-Topic: Files in include/trace/events
+Thread-Index: AQHY9pIxS7zdpDkDakqjuyvnBhQ08K47ceuA
+Date:   Sat, 12 Nov 2022 15:57:57 +0000
+Message-ID: <23D84506-BC58-4269-BD71-A88DDBCC92BA@oracle.com>
+References: <20221112072742.065df70a@rorschach.local.home>
+In-Reply-To: <20221112072742.065df70a@rorschach.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BN0PR10MB5128:EE_|MW5PR10MB5807:EE_
+x-ms-office365-filtering-correlation-id: dc09041d-5cb1-4c5d-6809-08dac4c6ab07
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: XkRhQL1eP0Dlk4OHLvOqoQVYWdmUO3g5RBpWQ+8pT2OSRHm8hsDXcLMhfRwhbz4G1Uf87DUbH/5ZMxEO7cM0txampV/n5rwljDLV+RchnIRnHL03JU1C4FKxR1RHsQFBrdEkbFvjzhNB7sA1ckeWUjbE5F0xbJ0sxToeezVtozpQKoNw0kDQxWsgyUX/JTcbQqFN31sCFwk6hVOTSP06exnNx/vT+WfUQJGSR/cI+ZET9lIQSWAZqIbHObK0C4SxB0auVOtNbehR66B7gfYc4gK8osIaSREBf5qCBuMmm1teoRyXwEPF5Y4jIXSOdRZTp8CKySObGfGliQ7Hu5KTmltQ/c4wJiYuXtkoR14nZRIcfiQTGebQ2KVAybdTD2Tg9r/oYq4w6Ds2XJp16yxhHGsXhA6xwuvyRz5qbNrgKO1sXZmoImSvI2E5ketFxZleGbxbeRIKRuKNyrf5kgq0wNHW9gQHXurSFupt7IV9Yky7S0dOaQ0RN2TPmyeK5rOetb72y9O02+/C2+Lw5L0MbG1rJKuE6DktyD3PU0+XMf4u0foWcROS3/XkCITC4FAbZiHOAgjmPbgDVIa7SbCP47w9YqzbnD8y0ho5KM6dbDCbHPMaO4uZ4l0C+mTZhGHj2VxKyQWwvZWTy9mhT2+tfmXPNXPaSX7rfY0YDETR5EPl+xumC9Hz3tiEaOdUZo7j+MaRMnm9Nbc8V8gjQ+CRqdA7Hn+GAUDpKOOFVRMA+MCXLThENshaJICxvpPVbdy9le3VpzfVSBgvpBwhfPUZPoPRBlJJzxcNW1kpCWw6fhk=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN0PR10MB5128.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(136003)(346002)(39860400002)(366004)(376002)(451199015)(316002)(6506007)(53546011)(83380400001)(4744005)(6916009)(54906003)(8936002)(2616005)(66946007)(33656002)(5660300002)(2906002)(186003)(91956017)(4326008)(8676002)(6512007)(41300700001)(66476007)(64756008)(76116006)(66446008)(36756003)(26005)(66556008)(86362001)(38100700002)(71200400001)(6486002)(478600001)(38070700005)(122000001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?7P2CPPXTM9XlUN1JGXKM+ufGcfpJTLWvFux1q9x7gDqBTwZxlr4ol3U1sfMo?=
+ =?us-ascii?Q?iwhP/Os45r770IKvMVx1Pc2vyJr8M25ccjNQYSzVksBufx3Aj39VdegiiBQl?=
+ =?us-ascii?Q?7Fgr//kKJPaTdiN+GicWNcKJmfYWIbmf+mSmES9NDrd77cVQqTS/YUbjprkZ?=
+ =?us-ascii?Q?F9bXS0h782+28uF73MBoimLNKBGA9BSj2M7q4B4cRJ4XrWPT8rW1PkPj5yEC?=
+ =?us-ascii?Q?0WV3q9ML4oNMmusSJC8u0AXaEiS9dKM6DWW9Hv3Yb7+oTZVKf/IphLqWQne7?=
+ =?us-ascii?Q?fU0Yn4uFnmsQAJeNXXm74nAgaiY4zxPE59/lgyeCBXm3w+Coodwb9UU4Cc6/?=
+ =?us-ascii?Q?FAv/tkgMSQLZBr40+F4KVNt6zJ47CY6hk9Z95VBkCbqWcGgrbNRt//iEC1Or?=
+ =?us-ascii?Q?cj9RwfJqWvDr4PRb3PGjlAV1qla4/HhCmK7mglYJ7+bHov2XbWutZut6+UTN?=
+ =?us-ascii?Q?/XPrUj4S/q9v4kxGehHgslJQ+to30Z/d8akdZg3afa82trDcURpv/h4kSiPr?=
+ =?us-ascii?Q?EJ10kLZinXVh2q6Izfc/yqQZrgaynZIa0M7Zm4dLWfw4iV4CvQjXJ5QN/2+h?=
+ =?us-ascii?Q?CusHFShui2Y7EN2yStE4zMLKd8xXwt0TNaSC9YP1mJs3Ohuy2FyPH4lrU/x5?=
+ =?us-ascii?Q?zsxFC8kZHYVVRwke4M89t3VTlY8m8fCRQlz6Bs+E3/AgMPrkSrHACKX5yf8z?=
+ =?us-ascii?Q?LMOkuK/ToAQgWcVQWZToBtSmjF1hnXTgap+I9+iAyKw3sa3oiYWGprgrGHkx?=
+ =?us-ascii?Q?XNrCPKoBYQF5ZOPHF42hhr5gfT4xtX71EokjMJwUd6yC7rZfneJsSpcCz2am?=
+ =?us-ascii?Q?sN8QZnKQEN3TyLuRmNGefGzMfEgXSZTwkaUr615V6fVhYKHqLbWVoCjVYTFv?=
+ =?us-ascii?Q?5G9k8rw/6wyB9niGSh/psbsD4TUnkfrSd3juBMku2v01ywqQmAqAMpp0fe+b?=
+ =?us-ascii?Q?SVz+ecQt5/GCGHqCN4C41ibQnUpN5NxpqOhgVrbxR8Zl344D6mkAeHH5O4AL?=
+ =?us-ascii?Q?7Seq6IJUj+CmBQrKPP4unOsmeE189OJjVwrYbXy56R2Rstri7DS0ajj8MuvC?=
+ =?us-ascii?Q?ydd/LgsaXgo8+lN2OvKD8Ok416UePlnrZ/fAm1HPU5b0vQKwR5QNGcisKy+l?=
+ =?us-ascii?Q?vAgHBwNWMCQW5itFY1r2SIbzI/CAPGnG3YG+d6CVBMP/K0XBU+9wMaplEN0l?=
+ =?us-ascii?Q?l71ro4bf8qUEQNKk0YfpC9Ir2n0M3WJvnnzgtxa9/Oinh+dPmGodAmAbrRzM?=
+ =?us-ascii?Q?mP0jLypgMe2Hwde4JMS/qYwCXOmyEdgARimS4qH517Vgpw83bqX7riRlKemx?=
+ =?us-ascii?Q?wjRKShK59i7f3bGEenzUqXbVoQseuEImG7UR1mtiyOH1z2Muw9kknXCXW+0d?=
+ =?us-ascii?Q?oVI7e18ZaW/MrVwt+YxGRl9/moFfU1BhZygz4D+iAwQhiG/fEGVq+vV4QXyE?=
+ =?us-ascii?Q?cCWwwGhkFiCnslMoZHNyYBlZauX5cMESmRfFaRwL2QK+eqCqiuaP/QKAaHdn?=
+ =?us-ascii?Q?HpG0z5dF1yfCiNXsDWt3XOkoLKc2YyDtlYgSdQt5zg+WyTQgHT6rYhHWByyE?=
+ =?us-ascii?Q?AJgVfoM6kTw7QFKCSqIcStLrkpHoiE8rKU5DW4ew8QP7bZLlVcCOK+tWRLCB?=
+ =?us-ascii?Q?RQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <42A8DF03D99ADA43AB084A4076C53E1C@namprd10.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+MIME-Version: 1.0
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: df4KsYIYFfRwpy2Y+KuqKqTtKGzMZotPtmhCh32rHEb4iWvTTZM7icp0svQi92OwSZ6uYH9WDqBttE/8sB+BKDEoQtYNDklvJOfZpyvMJ8u74nv5tSkc1RAjXSKcC02dVjtDJDIIwGaPbyaPWux8e5QthyttDC7rk2tvm6+SS4qX0R1HZJw+wezPSlZbZX61OIcK6KCdI0ENAsyg4Jlhiax/JrHtEgN1ns2bYwPSWpjOP7WrOwaZ6iOfbYHGvaf55tsZPSNQ+GyWILiEoJ6rM3ypRbctJ6yl2Vy47l/paBrkXHztQDM4Adyq8RY5XNsuTYGyBCqldkzN+13WU5qXIXV9nd8YCh34lTwEfLospYCqOekb5U9jz0eE5JKoDnG+iyiXTssUtuqFEOs7FOcBYdwjhxrM9q9BvdYQQc4MbjaP4JQu67P2uVuLBS2AyhRTrm4ffVk5Z/XnzFtOo7wmCGK46rnIucrGKXTMXyvj6Dly3Mk9ivJf4mn27Piqy3wEqBlqj3qERlfGVepr3uExqgaJfj9PKZfjOdw6NDCVP2WTsomLp84nbOXiqM6uAy4T44XSOXn1CToLlRePcIj9107pRuKOe1z2z3LxkRa3v6v94Mrh4M8XUcDRBFdXFrVeChgRQXnqDgd8JhAFbcJ2mDkv/VT9QdlyvEPFQR/SIC4ywxwU55CXcFvOrh4tCV/Svo59gSu1Bb9G0SsqJpe6l/LLa/L4qvq35D+RDeaMzoba8RcXAd4+TA4Z1WfLOy+xDfyAm1dCjbQ5MJUNPO2IzYj3bYzZneJBdTY27TyG7ewq8z71maHSB+M0c84JDn+TK3+WWzU/Pc0xN8y89dW/JNXuHYaoYQx57+IA/2E1vCp4J1K8UfxzZVAGLgGFUSqN
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BN0PR10MB5128.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc09041d-5cb1-4c5d-6809-08dac4c6ab07
+X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Nov 2022 15:57:57.8148
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jzcGF3GlBAKXw665cdLOninZh1m1pwurWzGwRNZVck3fL/6hEDvrUVjhHBhWsYb7GFiUiOsI9JXpe86DXHovrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR10MB5807
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
+ definitions=2022-11-12_11,2022-11-11_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 malwarescore=0 adultscore=0
+ spamscore=0 mlxlogscore=976 mlxscore=0 phishscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
+ definitions=main-2211120122
+X-Proofpoint-GUID: cf6-YenKW6UUPuJ1DfSMuSOT96iYdr07
+X-Proofpoint-ORIG-GUID: cf6-YenKW6UUPuJ1DfSMuSOT96iYdr07
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,719 +151,37 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi all,
-
-I've been doing some more testing with these patches, I applied all of
-the patches (v10 from
-https://patchwork.kernel.org/project/linux-nfs/list/?series=3D691729)
-apart from Patch 6 (the RFC patch) to version 6.0.8 of the kernel.
-
-I have the following setup:
-
-Source NFS Server <-- Re-Export Server (with FS-Cache) <-- NFS Client.
-
-I have a 500Gb file on the Source NFS Server, which I am then copying
-to the NFS Client via the Re-Export Server.
-
-On the first copy, I see heavy writes to /var/cache/fscache on the
-re-export server, and once the file copy completes I see that
-/var/cache/fscache is approximately 500Gb in size. All good so far.
-
-I then deleted that file from the NFS Client, and dropped the caches
-just to be safe (echo 3 > /proc/sys/vm/drop_caches on the NFS Client).
-
-I then performed another copy of the 500Gb file on the NFS Client,
-again via the Re-Export Server. What I expected would happen is that I
-would see heavy reads from the /var/cache/fscache volume as the file
-should be served from FS-Cache.
-
-However what I actually saw was no reads whatsoever, FS-Cache seems to
-be ignored and the file is pulled from the Source NFS Filer again. I
-also see heavy writes to /var/cache/fscache, so it appears that
-FS-Cache is overwriting its existing cache, and never using it.
-
-I only have 104Gb of memory on the Re-Export Server (with FS-Cache) so
-it is not possible that the file is being served from the page cache.
-
-We saw this behaviour before on an older set of the patches when our
-mount between the Re-Export Server and the Source NFS Filer was using
-the "sync" option, but we are now using the "async" option and the
-same is happening.
-
-Mount options:
-
-Source NFS Server <-- Re-Export Server (with FS-Cache):
-
-10.0.0.49:/files /srv/nfs/files nfs
-rw,noatime,vers=3D3,rsize=3D1048576,wsize=3D1048576,namlen=3D255,acregmin=
-=3D600,acregmax=3D600,acdirmin=3D600,acdirmax=3D600,hard,nocto,proto=3Dtcp,=
-nconnect=3D16,timeo=3D600,retrans=3D2,sec=3Dsys,mountaddr=3D10.0.0.49,mount=
-vers=3D3,mountport=3D37485,mountproto=3Dtcp,fsc,local_lock=3Dnone,addr=3D10=
-.0.0.49
-
-Re-Export Server (with FS-Cache) <-- NFS Client:
-
-10.0.0.3:/files /mnt/nfs nfs
-rw,relatime,vers=3D3,rsize=3D1048576,wsize=3D1048576,namlen=3D255,hard,prot=
-o=3Dtcp,timeo=3D600,retrans=3D2,sec=3Dsys,mountaddr=3D10.0.0.3,mountvers=3D=
-3,mountport=3D20048,mountproto=3Dtcp,local_lock=3Dnone,addr=3D10.0.0.3
-
-It is also worth noting this behaviour is not unique to the re-export
-use case. I see FS-Cache not being used with the following setup:
-
-Source NFS Server <-- Client (with FS-Cache).
-
-Thanks,
-Ben
 
 
-Kind Regards
+> On Nov 12, 2022, at 7:27 AM, Steven Rostedt <rostedt@goodmis.org> wrote:
+>=20
+> Hi Chuck,
+>=20
+> I was just looking over some files in include/trace/events/ and noticed
+> that there's sunrpc_base.h, fs.h and nfs.h that are not event files.
+>=20
+> The include/trace/events/ directory should only hold files that are to
+> create events, not headers that hold helper functions.
+>=20
+> Can you please move them out of include/trace/events/ as that directory
+> is "special" in the creation of events.
+>=20
+> Perhaps we could create a new directory include/linux/trace/ or
+> include/trace/linux/ specific for these types of files?
 
-Benjamin Maynard
+I can take responsibility for moving the helper files I created.
+IIRC there are a few from the RDMA core subsystem as well.
 
-Customer Engineer
+But let's first decide on a proper destination for such files.
+A sister directory to include/trace/events, like
 
-benmaynard@google.com
+  include/trace/ < something >
 
-Google, Inc.
+makes sense to me.
+
+
+--
+Chuck Lever
 
 
 
-
-On Mon, 31 Oct 2022 at 22:22, Trond Myklebust <trondmy@hammerspace.com> wro=
-te:
->
->
->
-> > On Oct 30, 2022, at 19:25, David Wysochanski <dwysocha@redhat.com> wrot=
-e:
-> >
-> > On Sat, Oct 29, 2022 at 12:46 PM David Wysochanski <dwysocha@redhat.com=
-> wrote:
-> >>
-> >> On Fri, Oct 28, 2022 at 12:59 PM Trond Myklebust <trondmy@kernel.org> =
-wrote:
-> >>>
-> >>> On Fri, 2022-10-28 at 07:50 -0400, David Wysochanski wrote:
-> >>>> On Thu, Oct 27, 2022 at 3:16 PM Trond Myklebust <trondmy@kernel.org>
-> >>>> wrote:
-> >>>>>
-> >>>>> On Mon, 2022-10-17 at 06:52 -0400, Dave Wysochanski wrote:
-> >>>>>> Convert the NFS buffered read code paths to corresponding netfs
-> >>>>>> APIs,
-> >>>>>> but only when fscache is configured and enabled.
-> >>>>>>
-> >>>>>> The netfs API defines struct netfs_request_ops which must be
-> >>>>>> filled
-> >>>>>> in by the network filesystem.  For NFS, we only need to define 5
-> >>>>>> of
-> >>>>>> the functions, the main one being the issue_read() function.
-> >>>>>> The issue_read() function is called by the netfs layer when a
-> >>>>>> read
-> >>>>>> cannot be fulfilled locally, and must be sent to the server
-> >>>>>> (either
-> >>>>>> the cache is not active, or it is active but the data is not
-> >>>>>> available).
-> >>>>>> Once the read from the server is complete, netfs requires a call
-> >>>>>> to
-> >>>>>> netfs_subreq_terminated() which conveys either how many bytes
-> >>>>>> were
-> >>>>>> read
-> >>>>>> successfully, or an error.  Note that issue_read() is called with
-> >>>>>> a
-> >>>>>> structure, netfs_io_subrequest, which defines the IO requested,
-> >>>>>> and
-> >>>>>> contains a start and a length (both in bytes), and assumes the
-> >>>>>> underlying
-> >>>>>> netfs will return a either an error on the whole region, or the
-> >>>>>> number
-> >>>>>> of bytes successfully read.
-> >>>>>>
-> >>>>>> The NFS IO path is page based and the main APIs are the pgio APIs
-> >>>>>> defined
-> >>>>>> in pagelist.c.  For the pgio APIs, there is no way for the caller
-> >>>>>> to
-> >>>>>> know how many RPCs will be sent and how the pages will be broken
-> >>>>>> up
-> >>>>>> into underlying RPCs, each of which will have their own
-> >>>>>> completion
-> >>>>>> and
-> >>>>>> return code.  In contrast, netfs is subrequest based, a single
-> >>>>>> subrequest may contain multiple pages, and a single subrequest is
-> >>>>>> initiated with issue_read() and terminated with
-> >>>>>> netfs_subreq_terminated().
-> >>>>>> Thus, to utilze the netfs APIs, NFS needs some way to accommodate
-> >>>>>> the netfs API requirement on the single response to the whole
-> >>>>>> subrequest, while also minimizing disruptive changes to the NFS
-> >>>>>> pgio layer.
-> >>>>>>
-> >>>>>> The approach taken with this patch is to allocate a small
-> >>>>>> structure
-> >>>>>> for each nfs_netfs_issue_read() call, store the final error and
-> >>>>>> number
-> >>>>>> of bytes successfully transferred in the structure, and update
-> >>>>>> these
-> >>>>>> values
-> >>>>>> as each RPC completes.  The refcount on the structure is used as
-> >>>>>> a
-> >>>>>> marker
-> >>>>>> for the last RPC completion, is incremented in
-> >>>>>> nfs_netfs_read_initiate(),
-> >>>>>> and decremented inside nfs_netfs_read_completion(), when a
-> >>>>>> nfs_pgio_header
-> >>>>>> contains a valid pointer to the data.  On the final put (which
-> >>>>>> signals
-> >>>>>> the final outstanding RPC is complete) in
-> >>>>>> nfs_netfs_read_completion(),
-> >>>>>> call netfs_subreq_terminated() with either the final error value
-> >>>>>> (if
-> >>>>>> one or more READs complete with an error) or the number of bytes
-> >>>>>> successfully transferred (if all RPCs complete successfully).
-> >>>>>> Note
-> >>>>>> that when all RPCs complete successfully, the number of bytes
-> >>>>>> transferred
-> >>>>>> is capped to the length of the subrequest.  Capping the
-> >>>>>> transferred
-> >>>>>> length
-> >>>>>> to the subrequest length prevents "Subreq overread" warnings from
-> >>>>>> netfs.
-> >>>>>> This is due to the "aligned_len" in nfs_pageio_add_page(), and
-> >>>>>> the
-> >>>>>> corner case where NFS requests a full page at the end of the
-> >>>>>> file,
-> >>>>>> even when i_size reflects only a partial page (NFS overread).
-> >>>>>>
-> >>>>>> Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-> >>>>>> Reviewed-by: Jeff Layton <jlayton@kernel.org>
-> >>>>>
-> >>>>>
-> >>>>> This is not doing what I asked for, which was to separate out the
-> >>>>> fscache functionality, so that we can call that if and when it is
-> >>>>> available.
-> >>>>>
-> >>>> I must have misunderstood then.
-> >>>>
-> >>>> The last feedback I have from you was that you wanted it to be
-> >>>> an opt-in feature, and it was a comment on a previous patch
-> >>>> to Kconfig.  I was proceeding the best I knew how, but
-> >>>> let me try to get back on track.
-> >>>>
-> >>>>> Instead, it is just wrapping the NFS requests inside netfs
-> >>>>> requests. As
-> >>>>> it stands, that means it is just duplicating information, and
-> >>>>> adding
-> >>>>> unnecessary overhead to the standard I/O path (extra allocations,
-> >>>>> extra
-> >>>>> indirect calls, and extra bloat to the inode).
-> >>>>>
-> >>>> I think I understand what you're saying but I'm not sure.  Let me
-> >>>> ask some clarifying questions.
-> >>>>
-> >>>> Are you objecting to the code when CONFIG_NFS_FSCACHE is
-> >>>> configured?  Or when it is not?  Or both?  I think you're objecting
-> >>>> when it's configured, but not enabled (we mount without 'fsc').
-> >>>> Am I right?
-> >>>>
-> >>>> Also, are you objecting to the design that to use fcache we now
-> >>>> have to use netfs, specifically:
-> >>>> - call into netfs via either netfs_read_folio or netfs_readahead
-> >>>> - if fscache is enabled, then the IO can be satisfied from fscache
-> >>>> - if fscache is not enabled, or some of the IO cannot be satisfied
-> >>>> from the cache, then NFS is called back via netfs_issue_read
-> >>>> and we use the normal NFS read pageio interface.  This requires
-> >>>> we call netfs_subreq_terminated() when all the RPCs complete,
-> >>>> which is the reason for the small changes to pagelist.c
-> >>>
-> >>> I'm objecting to any middle layer "solution" that adds overhead to th=
-e
-> >>> NFS I/O paths.
-> >>>
-> >> Got it.
-> >>
-> >>> I'm willing to consider solutions that are specific only to the fscac=
-he
-> >>> use case (i.e. when the 'fsc' mount option is specified). However whe=
-n
-> >>> I perform a normal NFS mount, and do I/O, then I don't want to see
-> >>> extra memory allocations, extra indirect calls and larger inode
-> >>> footprints.
-> >>>
-> >>> IOW: I want the code to optimise for the case of standard NFS, not fo=
-r
-> >>> the case of 'NFS with cachefs additions'.
-> >>>
-> >> I agree completely.  Are you seeing extra memory allocations
-> >> happen on mounts without 'fsc' or is it more a concern or how
-> >> some of the patches look?  We should not be calling any netfs or
-> >> fscache code if 'fsc' is not on the mount and I don't see any in my
-> >> testing. So either there's a misunderstanding here, or there's a
-> >> bug I'm missing.
-> >>
-> >> If fscache is not configured, then nfs_netfs_read_folio() and
-> >> nfs_netfs_readahead() is a wrapper that returns -ENOBUFS.
-> >> If it's configured but not enabled, then the checks for
-> >> netfs_inode(inode)->cache should skip over any netfs code.
-> >> But maybe there's a non-obvious bug you're seeing and
-> >> somehow netfs is still getting called?  Because I cannot
-> >> see netfs getting called if 'fsc' is not on the mount in my
-> >> tests.
-> >>
-> >> int nfs_netfs_read_folio(struct file *file, struct folio *folio)
-> >> {
-> >>       if (!netfs_inode(folio_inode(folio))->cache)
-> >>               return -ENOBUFS;
-> >>
-> >>       return netfs_read_folio(file, folio);
-> >> }
-> >>
-> >> int nfs_netfs_readahead(struct readahead_control *ractl)
-> >> {
-> >>       struct inode *inode =3D ractl->mapping->host;
-> >>
-> >>       if (!netfs_inode(inode)->cache)
-> >>               return -ENOBUFS;
-> >>
-> >>       netfs_readahead(ractl);
-> >>       return 0;
-> >> }
-> >>
-> >>
-> >>>>
-> >>>> Can you be more specific as to the portions of the patch you don't
-> >>>> like
-> >>>> so I can move it in the right direction?
-> >>>>
-> >>>> This is from patch #2 which you didn't comment on.  I'm not sure
-> >>>> you're
-> >>>> ok with it though, since you mention "extra bloat to the inode".
-> >>>> Do you object to this even though it's wrapped in an
-> >>>> #ifdef CONFIG_NFS_FSCACHE?  If so, do you require no
-> >>>> extra size be added to nfs_inode?
-> >>>>
-> >>>> @@ -204,9 +208,11 @@ struct nfs_inode {
-> >>>>       __u64 write_io;
-> >>>>       __u64 read_io;
-> >>>> #ifdef CONFIG_NFS_FSCACHE
-> >>>> -       struct fscache_cookie   *fscache;
-> >>>> -#endif
-> >>>> +       struct netfs_inode      netfs; /* netfs context and VFS inod=
-e
-> >>>> */
-> >>>> +#else
-> >>>>       struct inode            vfs_inode;
-> >>>> +#endif
-> >>>> +
-> >>>
-> >>> Ideally, I'd prefer no extra size. I can live with it up to a certain
-> >>> point, however for now NFS is not unconditionally opting into the net=
-fs
-> >>> project. If we're to ever do that, then I want to see streamlined cod=
-e
-> >>> for the standard I/O case.
-> >>>
-> >> Ok and understood about standard I/O case.
-> >>
-> >> I was thinking how we might not increase the size, but I don't think
-> >> I can make it work.
-> >>
-> >> I thought we could change to something like the below, without an
-> >> embedded struct inode:
-> >>
-> >> @@ -204,9 +208,11 @@ struct nfs_inode {
-> >>       __u64 write_io;
-> >>       __u64 read_io;
-> >> #ifdef CONFIG_NFS_FSCACHE
-> >> -       struct fscache_cookie   *fscache;
-> >> -#endif
-> >> +       struct netfs_inode      *netfs; /* netfs context and VFS inode=
- */
-> >> +#else
-> >>       struct inode            vfs_inode;
-> >> +#endif
-> >> +
-> >>
-> >> Then I would need to alloc/free a netfs_inode at the time of
-> >> nfs_inode initiation.  Unfortunately this has the issue that the NFS_I=
-()
-> >> macro cannot work, because it requires an embedded "struct inode"
-> >> due to "container_of" use:
-> >>
-> >> +#ifdef CONFIG_NFS_FSCACHE
-> >> +static inline struct inode *VFS_I(struct nfs_inode *nfsi)
-> >> +{
-> >> +       return &nfsi->netfs.inode;
-> >> +}
-> >> +static inline struct nfs_inode *NFS_I(const struct inode *inode)
-> >> +{
-> >> +       return container_of(inode, struct nfs_inode, netfs.inode);
-> >> +}
-> >> +#else
-> >> +static inline struct inode *VFS_I(struct nfs_inode *nfsi)
-> >> +{
-> >> +       return &nfsi->vfs_inode;
-> >> +}
-> >> static inline struct nfs_inode *NFS_I(const struct inode *inode)
-> >> {
-> >>       return container_of(inode, struct nfs_inode, vfs_inode);
-> >> }
-> >> +#endif
-> >>
-> >>
-> >
-> > Actually Trond maybe we can achieve a "0 length increase" of
-> > nfs_inode if dhowells would take a patch to modify the definition
-> > of struct netfs_inode and netfs_inode_init(), something like the WIP
-> > patch below.  What do you think?
->
-> That works for me.
->
-> >
-> > I think maybe this could be a follow-on patch and if you/dhowells
-> > think it's an ok idea I can try to work out what is needed across
-> > the tree.  I thought about it more and I kinda agree that in the
-> > case for NFS where fscache is "configured but not enabled",
-> > then even though we're only adding 24 bytes to the nfs_inode
-> > each time, it will add up so it is worth at least a discussion.
-> >
-> > diff --git a/include/linux/netfs.h b/include/linux/netfs.h
-> > index f2402ddeafbf..195714f1c355 100644
-> > --- a/include/linux/netfs.h
-> > +++ b/include/linux/netfs.h
-> > @@ -118,11 +118,7 @@ enum netfs_io_source {
-> > typedef void (*netfs_io_terminated_t)(void *priv, ssize_t transferred_o=
-r_error,
-> >                                     bool was_async);
-> >
-> > -/*
-> > - * Per-inode context.  This wraps the VFS inode.
-> > - */
-> > -struct netfs_inode {
-> > -       struct inode            inode;          /* The VFS inode */
-> > +struct netfs_info {
-> >       const struct netfs_request_ops *ops;
-> > #if IS_ENABLED(CONFIG_FSCACHE)
-> >       struct fscache_cookie   *cache;
-> > @@ -130,6 +126,14 @@ struct netfs_inode {
-> >       loff_t                  remote_i_size;  /* Size of the remote fil=
-e */
-> > };
-> >
-> > +/*
-> > + * Per-inode context.  This wraps the VFS inode.
-> > + */
-> > +struct netfs_inode {
-> > +       struct inode            inode;          /* The VFS inode */
-> > +       struct netfs_info       *netfs;         /* Rest of netfs data *=
-/
-> > +};
-> > +
-> > /*
-> > * Resources required to do operations on a cache.
-> > */
-> > @@ -312,10 +316,12 @@ static inline struct netfs_inode
-> > *netfs_inode(struct inode *inode)
-> > static inline void netfs_inode_init(struct netfs_inode *ctx,
-> >                                   const struct netfs_request_ops *ops)
-> > {
-> > -       ctx->ops =3D ops;
-> > -       ctx->remote_i_size =3D i_size_read(&ctx->inode);
-> > +       ctx->netfs =3D kzalloc(sizeof(struct netfs_info)), GFP_KERNEL);
-> > +       /* FIXME: Check for NULL */
-> > +       ctx->netfs->ops =3D ops;
-> > +       ctx->netfs->remote_i_size =3D i_size_read(&ctx->inode);
-> > #if IS_ENABLED(CONFIG_FSCACHE)
-> > -       ctx->cache =3D NULL;
-> > +       ctx->netfs->cache =3D NULL;
-> > #endif
-> > }
-> >
-> >
-> >
-> >>
-> >>>>
-> >>>>
-> >>>> Are you ok with the stub functions which are placed in fscache.h, an=
-d
-> >>>> when CONFIG_NFS_FSCACHE is not set, become either a no-op
-> >>>> or a 1-liner (nfs_netfs_readpage_release)?
-> >>>>
-> >>>> #else /* CONFIG_NFS_FSCACHE */
-> >>>> +static inline void nfs_netfs_inode_init(struct nfs_inode *nfsi) {}
-> >>>> +static inline void nfs_netfs_initiate_read(struct nfs_pgio_header
-> >>>> *hdr) {}
-> >>>> +static inline void nfs_netfs_read_completion(struct nfs_pgio_header
-> >>>> *hdr) {}
-> >>>> +static inline void nfs_netfs_readpage_release(struct nfs_page *req)
-> >>>> +{
-> >>>> +       unlock_page(req->wb_page);
-> >>>> +}
-> >>>> static inline void nfs_fscache_release_super_cookie(struct
-> >>>> super_block *sb) {}
-> >>>> static inline void nfs_fscache_init_inode(struct inode *inode) {}
-> >>>>
-> >>>>
-> >>>> Do you object to the below?  If so, then do you want
-> >>>> #ifdef CONFIG_NFS_FSCACHE here?
-> >>>>
-> >>>> -- a/fs/nfs/inode.c
-> >>>> +++ b/fs/nfs/inode.c
-> >>>> @@ -2249,6 +2249,8 @@ struct inode *nfs_alloc_inode(struct
-> >>>> super_block *sb)
-> >>>> #ifdef CONFIG_NFS_V4_2
-> >>>>       nfsi->xattr_cache =3D NULL;
-> >>>> #endif
-> >>>> +       nfs_netfs_inode_init(nfsi);
-> >>>> +
-> >>>>       return VFS_I(nfsi);
-> >>>> }
-> >>>> EXPORT_SYMBOL_GPL(nfs_alloc_i
-> >>>> node);
-> >>>>
-> >>>>
-> >>>> Do you object to the changes in fs/nfs/read.c?  Specifically,
-> >>>> how about the below calls to netfs from nfs_read_folio and
-> >>>> nfs_readahead into equivalent netfs calls?  So when
-> >>>> NFS_CONFIG_FSCACHE is set, but fscache is not enabled
-> >>>> ('fsc' not on mount), these netfs functions do immediately call
-> >>>> netfs_alloc_request().  But I wonder if we could simply add a
-> >>>> check to see if fscache is enabled on the mount, and skip
-> >>>> over to satisfy what you want.  Am I understanding what you
-> >>>> want?
-> >>>
-> >>> Quite frankly, I'd prefer that we just split out the functionality th=
-at
-> >>> is needed from the netfs code so that it can be optimised. However I'=
-m
-> >>> not interested enough in the cachefs functionality to work on that
-> >>> myself. ...and as I indicated above, I might be OK with opting into t=
-he
-> >>> netfs project, once the overhead can be made to disappear.
-> >>>
-> >> Understood.
-> >>
-> >> If you think it makes more sense, I can move some of the nfs_netfs_*
-> >> functions into a netfs.c file as a starting point.  Or that can maybe
-> >> be done in a future patchset?
-> >>
-> >> For now I was equating netfs and fscache together so we can
-> >> move on from the much older and single-page limiting fscache
-> >> interface that is likely to go away soon.
-> >>
-> >>>>
-> >>>> @@ -355,6 +343,10 @@ int nfs_read_folio(struct file *file, struct
-> >>>> folio *folio)
-> >>>>       if (NFS_STALE(inode))
-> >>>>               goto out_unlock;
-> >>>>
-> >>>> +       ret =3D nfs_netfs_read_folio(file, folio);
-> >>>> +       if (!ret)
-> >>>> +               goto out;
-> >>>> +
-> >>>>
-> >>>> @@ -405,6 +399,10 @@ void nfs_readahead(struct readahead_control
-> >>>> *ractl)
-> >>>>       if (NFS_STALE(inode))
-> >>>>               goto out;
-> >>>>
-> >>>> +       ret =3D nfs_netfs_readahead(ractl);
-> >>>> +       if (!ret)
-> >>>> +               goto out;
-> >>>> +
-> >>>>
-> >> The above wrappers should prevent any additional overhead when fscache
-> >> is not enabled.  As far as I know these work to avoid calling netfs
-> >> when 'fsc' is not on the mount.
-> >>
-> >>>>
-> >>>> And how about these calls from different points in the read
-> >>>> path to the earlier mentioned stub functions?
-> >>>>
-> >>>> @@ -110,20 +110,13 @@ EXPORT_SYMBOL_GPL(nfs_pageio_reset_read_mds);
-> >>>>
-> >>>> static void nfs_readpage_release(struct nfs_page *req, int error)
-> >>>> {
-> >>>> -       struct inode *inode =3D d_inode(nfs_req_openctx(req)->dentry=
-);
-> >>>>       struct page *page =3D req->wb_page;
-> >>>>
-> >>>> -       dprintk("NFS: read done (%s/%llu %d@%lld)\n", inode->i_sb-
-> >>>>> s_id,
-> >>>> -               (unsigned long long)NFS_FILEID(inode), req->wb_bytes=
-,
-> >>>> -               (long long)req_offset(req));
-> >>>> -
-> >>>>       if (nfs_error_is_fatal_on_server(error) && error !=3D -
-> >>>> ETIMEDOUT)
-> >>>>               SetPageError(page);
-> >>>> -       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE)) {
-> >>>> -               if (PageUptodate(page))
-> >>>> -                       nfs_fscache_write_page(inode, page);
-> >>>> -               unlock_page(page);
-> >>>> -       }
-> >>>> +       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE))
-> >>>> +               nfs_netfs_readpage_release(req);
-> >>>> +
-> >>>
-> >>> I'm not seeing the value of wrapping unlock_page(), no... That code i=
-s
-> >>> going to need to change when we move it to use folios natively anyway=
-.
-> >>>
-> >> Ok, how about I make it conditional on whether fscache is configured
-> >> and enabled then, similar to the nfs_netfs_read_folio() and
-> >> nfs_netfs_readahead()?  Below is what that would look like.
-> >> I could inline the code in nfs_netfs_readpage_release() if you
-> >> think it would be clearer.
-> >>
-> >> static void nfs_readpage_release(struct nfs_page *req, int error)
-> >> {
-> >>       struct page *page =3D req->wb_page;
-> >>
-> >>       if (nfs_error_is_fatal_on_server(error) && error !=3D -ETIMEDOUT=
-)
-> >>               SetPageError(page);
-> >>       if (nfs_page_group_sync_on_bit(req, PG_UNLOCKPAGE))
-> >> #ifndef CONFIG_NFS_FSCACHE
-> >>               unlock_page(req->wb_page);
-> >> #else
-> >>               nfs_netfs_readpage_release(req);
-> >> #endif
-> >>       nfs_release_request(req);
-> >> }
-> >>
-> >>
-> >> void nfs_netfs_readpage_release(struct nfs_page *req)
-> >> {
-> >>   struct inode *inode =3D d_inode(nfs_req_openctx(req)->dentry);
-> >>
-> >>   /*
-> >>    * If fscache is enabled, netfs will unlock pages.
-> >>    */
-> >>   if (netfs_inode(inode)->cache)
-> >>       return;
-> >>
-> >>   unlock_page(req->wb_page);
-> >> }
-> >>
-> >>
-> >>>>       nfs_release_request(req);
-> >>>> }
-> >>>>
-> >>>> @@ -177,6 +170,8 @@ static void nfs_read_completion(struct
-> >>>> nfs_pgio_header *hdr)
-> >>>>               nfs_list_remove_request(req);
-> >>>>               nfs_readpage_release(req, error);
-> >>>>       }
-> >>>> +       nfs_netfs_read_completion(hdr);
-> >>>> +
-> >>>> out:
-> >>>>       hdr->release(hdr);
-> >>>> }
-> >>>> @@ -187,6 +182,7 @@ static void nfs_initiate_read(struct
-> >>>> nfs_pgio_header *hdr,
-> >>>>                             struct rpc_task_setup *task_setup_data,
-> >>>> int how)
-> >>>> {
-> >>>>       rpc_ops->read_setup(hdr, msg);
-> >>>> +       nfs_netfs_initiate_read(hdr);
-> >>>>       trace_nfs_initiate_read(hdr);
-> >>>> }
-> >>>>
-> >>>>
-> >>>> Are you ok with these additions?  Something like this would
-> >>>> be required in the case of fscache configured and enabled,
-> >>>> because we could have some of the data in a read in
-> >>>> fscache, and some not.  That is the reason for the netfs
-> >>>> design, and why we need to be able to call the normal
-> >>>> NFS read IO path (netfs calls into issue_read, and we call
-> >>>> back via netfs_subreq_terminated)?
-> >>>>
-> >>>> @@ -101,6 +101,9 @@ struct nfs_pageio_descriptor {
-> >>>>       struct pnfs_layout_segment *pg_lseg;
-> >>>>       struct nfs_io_completion *pg_io_completion;
-> >>>>       struct nfs_direct_req   *pg_dreq;
-> >>>> +#ifdef CONFIG_NFS_FSCACHE
-> >>>> +       void                    *pg_netfs;
-> >>>> +#endif
-> >>>>
-> >>>> @@ -1619,6 +1619,9 @@ struct nfs_pgio_header {
-> >>>>       const struct nfs_rw_ops *rw_ops;
-> >>>>       struct nfs_io_completion *io_completion;
-> >>>>       struct nfs_direct_req   *dreq;
-> >>>> +#ifdef CONFIG_NFS_FSCACHE
-> >>>> +       void                    *netfs;
-> >>>> +#endif
-> >>>>
-> >>>>
-> >>>> And these additions to pagelist.c?
-> >>>>
-> >>>> @@ -68,6 +69,10 @@ void nfs_pgheader_init(struct
-> >>>> nfs_pageio_descriptor *desc,
-> >>>>       hdr->good_bytes =3D mirror->pg_count;
-> >>>>       hdr->io_completion =3D desc->pg_io_completion;
-> >>>>       hdr->dreq =3D desc->pg_dreq;
-> >>>> +#ifdef CONFIG_NFS_FSCACHE
-> >>>> +       if (desc->pg_netfs)
-> >>>> +               hdr->netfs =3D desc->pg_netfs;
-> >>>> +#endif
-> >>>
-> >>> Why the conditional?
-> >>>
-> >> Not really needed and I was thinking of removing it, so I'll do that.
-> >>
-> >>>>
-> >>>>
-> >>>> @@ -846,6 +851,9 @@ void nfs_pageio_init(struct nfs_pageio_descripto=
-r
-> >>>> *desc,
-> >>>>       desc->pg_lseg =3D NULL;
-> >>>>       desc->pg_io_completion =3D NULL;
-> >>>>       desc->pg_dreq =3D NULL;
-> >>>> +#ifdef CONFIG_NFS_FSCACHE
-> >>>> +       desc->pg_netfs =3D NULL;
-> >>>> +#endif
-> >>>>
-> >>>>
-> >>>> @@ -1360,6 +1369,9 @@ int nfs_pageio_resend(struct
-> >>>> nfs_pageio_descriptor *desc,
-> >>>>
-> >>>>       desc->pg_io_completion =3D hdr->io_completion;
-> >>>>       desc->pg_dreq =3D hdr->dreq;
-> >>>> +#ifdef CONFIG_NFS_FSCACHE
-> >>>> +       desc->pg_netfs =3D hdr->netfs;
-> >>>> +#endif
-> >>>
-> >>> Those all need wrapper functions instead of embedding #ifdefs.
-> >>>
-> >> Ok.
-> >>
-> >>
-> >>
-> >>>>
-> >>>>
-> >>>>> My expectation is that the standard I/O path should have minimal
-> >>>>> overhead, and should certainly not increase the overhead that we
-> >>>>> already have. Will this be addressed in future iterations of these
-> >>>>> patches?
-> >>>>>
-> >>>>
-> >>>> I will do what I can to satisfy what you want, either by fixing up
-> >>>> this patch or follow-on patches.  Hopefully the above questions
-> >>>> will clarify the next steps.
-> >>>>
-> >>>
-> >>> --
-> >>> Trond Myklebust
-> >>> Linux NFS client maintainer, Hammerspace
-> >>> trond.myklebust@hammerspace.com
->
->
->
-> Trond Myklebust
-> CTO, Hammerspace Inc
-> 1900 S Norfolk St, Suite 350 - #45
-> San Mateo, CA 94403
->
-> www.hammer.space
->
->
