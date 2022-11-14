@@ -2,84 +2,275 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A665B627BEC
-	for <lists+linux-nfs@lfdr.de>; Mon, 14 Nov 2022 12:18:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CB11627C62
+	for <lists+linux-nfs@lfdr.de>; Mon, 14 Nov 2022 12:32:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230079AbiKNLRd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Nov 2022 06:17:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41856 "EHLO
+        id S236211AbiKNLck (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Nov 2022 06:32:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236800AbiKNLQk (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Nov 2022 06:16:40 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4D63B84E
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Nov 2022 03:13:41 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id y14so27417968ejd.9
-        for <linux-nfs@vger.kernel.org>; Mon, 14 Nov 2022 03:13:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20210112;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E9S9Sru0Ne2Q+DTJ/+/XcQvOZOXdre75IkBEdH/mDks=;
-        b=Rcs+vxNL/6YbQ873RuKvAijDo4YhzIxI7WhmTZf1eeYJyBVkWG0Dt6Cq17N57ZB4mg
-         KRsxnyOZ0iBHv4LaAOfXIyfkpLJHI3RpCviC1RtENc5ZQGWK/k0IJ3vqDPKo0TgDpn1A
-         e70bXEde974DKPqfyDmjxPDf5NQjwbwzuUu9r8VBPCrvjHoJtA6B2lm2nTwUbwPq+lsM
-         RnaNBQRdHoOgkRm7gJYv3+ANIoOsBLkWVsl07hnp/CoipPvlq3Z5+h+99Vndh4slOMPF
-         yApxj1HsuxAP6R8qTPgc3PrQFX2UHamlUzr3lwxs/Cmw1jEyisqCdFjdXhuefq4LoD4j
-         m3KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=E9S9Sru0Ne2Q+DTJ/+/XcQvOZOXdre75IkBEdH/mDks=;
-        b=JrgLgdnq1HuRJaXoKimwp02TDdk9zjBvJgbgRpA0G43j/M/Bc5YDscG4Gn84O0CIrM
-         PRAOzAEBDxnM87fC3NysXsk5zQGu83UXhMOcEzBfvs5zkHSgTn+eW43tZzOEBwtqcw9N
-         872MgcCF6kwSOAbeJAtnj3gWnZun18PgNixt14EE1n04KY2klprlgUbtlc22DNKJSiNR
-         ofUN2NmMYP4ijxikJT1l9ly+8XMrXJZHfYglwxLcnf/Qt4OE9Fbaxs4yn6i8qwinZ4PV
-         h93CTgASxGHLcRdZH8RnnH46c075k9flxotZ4aDgfdKUjzNujj68MdnPY3Xi1IZsEEkY
-         JX2w==
-X-Gm-Message-State: ANoB5plhGS4deBqfeugds+Zf9hXC2oG9z9Ouf/t0qLt5jsN6Y0TRomF2
-        3mv0kb9pnvqv5Ql1tnEZ9WLagRuORYM=
-X-Google-Smtp-Source: AA0mqf7UmuRJwKkHI9IunR+Nm68utuvm0xN9PENN8b4R1B7B0k097yurBYU9298jILErxGkJyhJ5xQ==
-X-Received: by 2002:a17:906:f915:b0:78d:c7fd:f755 with SMTP id lc21-20020a170906f91500b0078dc7fdf755mr10204832ejb.702.1668424419845;
-        Mon, 14 Nov 2022 03:13:39 -0800 (PST)
-Received: from development1.visionsystems.de (mail.visionsystems.de. [213.209.99.202])
-        by smtp.gmail.com with ESMTPSA id la8-20020a170907780800b00781b589a1afsm4052059ejc.159.2022.11.14.03.13.38
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Nov 2022 03:13:39 -0800 (PST)
-From:   yegorslists@googlemail.com
-To:     linux-nfs@vger.kernel.org
-Cc:     Yegor Yefremov <yegorslists@googlemail.com>
-Subject: [PATCH] .gitignore: ignore ctags generated file
-Date:   Mon, 14 Nov 2022 12:13:33 +0100
-Message-Id: <20221114111333.10838-1-yegorslists@googlemail.com>
-X-Mailer: git-send-email 2.17.0
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229484AbiKNLcW (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Nov 2022 06:32:22 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2DDF264A;
+        Mon, 14 Nov 2022 03:32:20 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 793BD22154;
+        Mon, 14 Nov 2022 11:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1668425539; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xCp2FLnHV48qc8WbEJswrBVN0V4a5iE3kG9lCUWVaQM=;
+        b=iLMOepeRsQUPz74YqIGAatxyIeS0i7bdGE1cTM7o5LXEXJvEYarrdnyXzkBl69CrXN+r9b
+        2ojRa3xVVIYDR1A8sYhPXxMgZtDn3LNqTmqqUKCOPQIBvaKeEgJn1CQgN/SGBDVmbYSJUR
+        MRnelYOdv9yHKoRY57sB0sHBoZXGBqE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1668425539;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xCp2FLnHV48qc8WbEJswrBVN0V4a5iE3kG9lCUWVaQM=;
+        b=g5u6Gu+DWAC81gcL3HvriHavxgMirXPFvai9XRgZp0iHwmGmWtIh3moIMZV33V5t2gjpN5
+        jpBt99diVES3k5Dg==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id E55F513A92;
+        Mon, 14 Nov 2022 11:32:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id ZHcjNUIncmMkfAAAMHmgww
+        (envelope-from <lhenriques@suse.de>); Mon, 14 Nov 2022 11:32:18 +0000
+Received: from localhost (brahms.olymp [local])
+        by brahms.olymp (OpenSMTPD) with ESMTPA id 73d269cf;
+        Mon, 14 Nov 2022 11:33:18 +0000 (UTC)
+From:   =?utf-8?Q?Lu=C3=ADs_Henriques?= <lhenriques@suse.de>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Luis Henriques <lhenriques@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        linux-nfs@vger.kernel.org
+Subject: Re: [PATCH] vfs: fix copy_file_range() averts filesystem freeze
+ protection
+References: <20221110155522.556225-1-amir73il@gmail.com>
+Date:   Mon, 14 Nov 2022 11:33:18 +0000
+In-Reply-To: <20221110155522.556225-1-amir73il@gmail.com> (Amir Goldstein's
+        message of "Thu, 10 Nov 2022 17:55:22 +0200")
+Message-ID: <877czx22kh.fsf@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+Amir Goldstein <amir73il@gmail.com> writes:
 
----
- .gitignore | 2 ++
- 1 file changed, 2 insertions(+)
+> Commit 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs
+> copies") removed fallback to generic_copy_file_range() for cross-fs
+> cases inside vfs_copy_file_range().
+>
+> To preserve behavior of nfsd and ksmbd server-side-copy, the fallback to
+> generic_copy_file_range() was added in nfsd and ksmbd code, but that
+> call is missing sb_start_write(), fsnotify hooks and more.
+>
+> Ideally, nfsd and ksmbd would pass a flag to vfs_copy_file_range() that
+> will take care of the fallback, but that code would be subtle and we got
+> vfs_copy_file_range() logic wrong too many times already.
+>
+> Instead, add a flag to explicitly request vfs_copy_file_range() to
+> perform only generic_copy_file_range() and let nfsd and ksmbd use this
+> flag only in the fallback path.
+>
+> This choise keeps the logic changes to minimum in the non-nfsd/ksmbd code
+> paths to reduce the risk of further regressions.
+>
+> Fixes: 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs c=
+opies")
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+> ---
+>
+> Hi Al,
+>
+> Another fix for the long tradition of copy_file_range() regressions.
+> This one only affected cross-fs server-side-copy from nfsd/ksmbd.
+>
+> I ran the copy_range fstests group on ext4/xfs/overlay to verify no
+> regressions in local fs and nfsv3/nfsv4 to test server-side-copy.
+>
+> I also patched copy_file_range() to test the nfsd fallback code on
+> local fs.
+>
+> Namje, could you please test ksmbd.
 
-diff --git a/.gitignore b/.gitignore
-index df791a83..682153d5 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -86,3 +86,5 @@ systemd/rpc-gssd.service
- cscope.*
- # generic editor backup et al
- *~
-+# file generated by ctags
-+tags
--- 
-2.17.0
+For what is worth, I've also done some testing with ceph and I didn't saw
+any regression either.  So, feel free to add my
+
+Tested-by: Lu=C3=ADs Henriques <lhenriques@suse.de>
+
+Cheers,
+--=20
+Lu=C3=ADs
+
+>
+> Thanks,
+> Amir.
+>
+>  fs/ksmbd/vfs.c     |  6 +++---
+>  fs/nfsd/vfs.c      |  4 ++--
+>  fs/read_write.c    | 19 +++++++++++++++----
+>  include/linux/fs.h |  8 ++++++++
+>  4 files changed, 28 insertions(+), 9 deletions(-)
+>
+> diff --git a/fs/ksmbd/vfs.c b/fs/ksmbd/vfs.c
+> index 8de970d6146f..94b8ed4ef870 100644
+> --- a/fs/ksmbd/vfs.c
+> +++ b/fs/ksmbd/vfs.c
+> @@ -1794,9 +1794,9 @@ int ksmbd_vfs_copy_file_ranges(struct ksmbd_work *w=
+ork,
+>  		ret =3D vfs_copy_file_range(src_fp->filp, src_off,
+>  					  dst_fp->filp, dst_off, len, 0);
+>  		if (ret =3D=3D -EOPNOTSUPP || ret =3D=3D -EXDEV)
+> -			ret =3D generic_copy_file_range(src_fp->filp, src_off,
+> -						      dst_fp->filp, dst_off,
+> -						      len, 0);
+> +			ret =3D vfs_copy_file_range(src_fp->filp, src_off,
+> +						  dst_fp->filp, dst_off, len,
+> +						  COPY_FILE_SPLICE);
+>  		if (ret < 0)
+>  			return ret;
+>=20=20
+> diff --git a/fs/nfsd/vfs.c b/fs/nfsd/vfs.c
+> index f650afedd67f..5cf11cde51f8 100644
+> --- a/fs/nfsd/vfs.c
+> +++ b/fs/nfsd/vfs.c
+> @@ -596,8 +596,8 @@ ssize_t nfsd_copy_file_range(struct file *src, u64 sr=
+c_pos, struct file *dst,
+>  	ret =3D vfs_copy_file_range(src, src_pos, dst, dst_pos, count, 0);
+>=20=20
+>  	if (ret =3D=3D -EOPNOTSUPP || ret =3D=3D -EXDEV)
+> -		ret =3D generic_copy_file_range(src, src_pos, dst, dst_pos,
+> -					      count, 0);
+> +		ret =3D vfs_copy_file_range(src, src_pos, dst, dst_pos, count,
+> +					  COPY_FILE_SPLICE);
+>  	return ret;
+>  }
+>=20=20
+> diff --git a/fs/read_write.c b/fs/read_write.c
+> index 328ce8cf9a85..24b9668d6377 100644
+> --- a/fs/read_write.c
+> +++ b/fs/read_write.c
+> @@ -1388,6 +1388,8 @@ ssize_t generic_copy_file_range(struct file *file_i=
+n, loff_t pos_in,
+>  				struct file *file_out, loff_t pos_out,
+>  				size_t len, unsigned int flags)
+>  {
+> +	lockdep_assert(sb_write_started(file_inode(file_out)->i_sb));
+> +
+>  	return do_splice_direct(file_in, &pos_in, file_out, &pos_out,
+>  				len > MAX_RW_COUNT ? MAX_RW_COUNT : len, 0);
+>  }
+> @@ -1424,7 +1426,9 @@ static int generic_copy_file_checks(struct file *fi=
+le_in, loff_t pos_in,
+>  	 * and several different sets of file_operations, but they all end up
+>  	 * using the same ->copy_file_range() function pointer.
+>  	 */
+> -	if (file_out->f_op->copy_file_range) {
+> +	if (flags & COPY_FILE_SPLICE) {
+> +		/* cross sb splice is allowed */
+> +	} else if (file_out->f_op->copy_file_range) {
+>  		if (file_in->f_op->copy_file_range !=3D
+>  		    file_out->f_op->copy_file_range)
+>  			return -EXDEV;
+> @@ -1474,8 +1478,9 @@ ssize_t vfs_copy_file_range(struct file *file_in, l=
+off_t pos_in,
+>  			    size_t len, unsigned int flags)
+>  {
+>  	ssize_t ret;
+> +	bool splice =3D flags & COPY_FILE_SPLICE;
+>=20=20
+> -	if (flags !=3D 0)
+> +	if (flags & ~COPY_FILE_SPLICE)
+>  		return -EINVAL;
+>=20=20
+>  	ret =3D generic_copy_file_checks(file_in, pos_in, file_out, pos_out, &l=
+en,
+> @@ -1501,14 +1506,14 @@ ssize_t vfs_copy_file_range(struct file *file_in,=
+ loff_t pos_in,
+>  	 * same sb using clone, but for filesystems where both clone and copy
+>  	 * are supported (e.g. nfs,cifs), we only call the copy method.
+>  	 */
+> -	if (file_out->f_op->copy_file_range) {
+> +	if (!splice && file_out->f_op->copy_file_range) {
+>  		ret =3D file_out->f_op->copy_file_range(file_in, pos_in,
+>  						      file_out, pos_out,
+>  						      len, flags);
+>  		goto done;
+>  	}
+>=20=20
+> -	if (file_in->f_op->remap_file_range &&
+> +	if (!splice && file_in->f_op->remap_file_range &&
+>  	    file_inode(file_in)->i_sb =3D=3D file_inode(file_out)->i_sb) {
+>  		ret =3D file_in->f_op->remap_file_range(file_in, pos_in,
+>  				file_out, pos_out,
+> @@ -1528,6 +1533,8 @@ ssize_t vfs_copy_file_range(struct file *file_in, l=
+off_t pos_in,
+>  	 * consistent story about which filesystems support copy_file_range()
+>  	 * and which filesystems do not, that will allow userspace tools to
+>  	 * make consistent desicions w.r.t using copy_file_range().
+> +	 *
+> +	 * We also get here if caller (e.g. nfsd) requested COPY_FILE_SPLICE.
+>  	 */
+>  	ret =3D generic_copy_file_range(file_in, pos_in, file_out, pos_out, len,
+>  				      flags);
+> @@ -1582,6 +1589,10 @@ SYSCALL_DEFINE6(copy_file_range, int, fd_in, loff_=
+t __user *, off_in,
+>  		pos_out =3D f_out.file->f_pos;
+>  	}
+>=20=20
+> +	ret =3D -EINVAL;
+> +	if (flags !=3D 0)
+> +		goto out;
+> +
+>  	ret =3D vfs_copy_file_range(f_in.file, pos_in, f_out.file, pos_out, len,
+>  				  flags);
+>  	if (ret > 0) {
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index e654435f1651..59ae95ddb679 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2089,6 +2089,14 @@ struct dir_context {
+>   */
+>  #define REMAP_FILE_ADVISORY		(REMAP_FILE_CAN_SHORTEN)
+>=20=20
+> +/*
+> + * These flags control the behavior of vfs_copy_file_range().
+> + * They are not available to the user via syscall.
+> + *
+> + * COPY_FILE_SPLICE: call splice direct instead of fs clone/copy ops
+> + */
+> +#define COPY_FILE_SPLICE		(1 << 0)
+> +
+>  struct iov_iter;
+>  struct io_uring_cmd;
+>=20=20
+> --=20
+>
+> 2.25.1
+>
 
