@@ -2,57 +2,57 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CE3FC6294DD
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 10:53:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA3AF6294F8
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 10:55:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238182AbiKOJxk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Nov 2022 04:53:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
+        id S238200AbiKOJzx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Nov 2022 04:55:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238157AbiKOJxi (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Nov 2022 04:53:38 -0500
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E429273E
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:53:30 -0800 (PST)
-Received: by mail-ej1-x62c.google.com with SMTP id y14so34715569ejd.9
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:53:30 -0800 (PST)
+        with ESMTP id S238211AbiKOJzk (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Nov 2022 04:55:40 -0500
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D4618E29
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:55:35 -0800 (PST)
+Received: by mail-ed1-x52a.google.com with SMTP id f7so21106502edc.6
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:55:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20210112;
         h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=myU/5arNNk7NvvHfrDishNpqGempS8a7AqzbQlwYl3c=;
-        b=hOVnphEP94dWWBDUUXZ3qxaAeA0pvpDQFgPB4DlG1C7V262I/DIUgjvdnvSlQwZZqa
-         R1Cxk+LYZ+9J25DVjqMo2Xq3qP5CVR5akuLUC+Sm9bm2gtocow2Iod1KgjDJtfZGhET6
-         GPFZF+kLKh9xLbHbPNtUqbcTszUW/UD3i3bQU46JkWcrJP6Wapo5joe60FwOuhdGf3Zz
-         7iOfAIOaS/I6QmY/U7PLDlzhKlOgnR9BZzMmcId5ZKkiDOWseJ/fBYM5gKxfOrBQKik0
-         ZK6gJee6k3VLeVgqIN5IZ7jT4A6Uv2PIK8DsBoGYzqR7E/isWFUGgFYU+uOKVxdRVxSg
-         mTOQ==
+        bh=PR+7UkFAtWz1oRb3Qi+vB8T3fOamthZexS2nO0+AFCo=;
+        b=Syzl7++EZLItNMMprSEhmGj+Vh2rQSStWA96sWx9I/NzGj/BZv0QZpscwXr7RzezR1
+         SSgknkCfsL60uF1Ve+Xrv8kPJnnJluTQtmH+nQUU4gzG3kW3dxkObPxsq8eLMRtDZckb
+         t7iDixW7hksYicwAhMLun8pqA6hRrtSADJ3iJ+rLzrFFckb2lfcKpcOt3/Ek4UK7uxzY
+         uianBWiLPoFrTf1AK+zLzSyBkJlYjY407nOIeICMyhuBBe4LvNo1n09sErzU5JBuYaNx
+         0fq+i00QigmHK6SAoNkKI5q2d5SEGT3ir+bFnaUiB30qhtqgEXO6ay1vKFP582oHkogq
+         l/Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=myU/5arNNk7NvvHfrDishNpqGempS8a7AqzbQlwYl3c=;
-        b=VGXFvsbtdkyW1Fif94FFk3j2+DfSObJOSd6cg/BP32l/RDj+//3ryxEuDOO7ORe9sa
-         LWyAOTJk9Swnme50GsVxJ26VrcRhywwPMhRPW3GW7VO5f/eTNaNdrLthcJ1o8semFXE/
-         2xMDMDuWlrrCnYAEq28U81qYPp3Y7SqXOakM4RqUYwT+ZV1x5YM4D9EN2vssVOScespd
-         N3EWFfhyC8GnnkaYam1IXKkWkSEXyA0id+QUGk+vlA8//gMORUWGhndbggFFNpiHbKoy
-         s2zMPh1qRFDCPA01uezdJ2+Ynhw5VUH3GNRfBEbET1j5CVt65U/jftSYo79f0bSEf0qP
-         yKKw==
-X-Gm-Message-State: ANoB5pn0/UUiK5FS1F4ibNIB2I7HAT+5L82Cr4tzdZgx2fa46IwiZBPt
-        0B5prhlrUDvBE90HU2M/MbmI/6rmW70=
-X-Google-Smtp-Source: AA0mqf6eq99LBsAXJXmOG/Gag1QktS68zvPKcWxaYIYN5lQO69+kGwxODazEWQh83Ayj8WFud1yriQ==
-X-Received: by 2002:a17:906:1f0c:b0:78d:cd72:8e3e with SMTP id w12-20020a1709061f0c00b0078dcd728e3emr12719346ejj.212.1668506008790;
-        Tue, 15 Nov 2022 01:53:28 -0800 (PST)
+        bh=PR+7UkFAtWz1oRb3Qi+vB8T3fOamthZexS2nO0+AFCo=;
+        b=Zh3eHmiSnV2pxtK9Pam8/Q7kZzHGbZA9W4U98Iq9Aqw1pFHc77xd9Eoz9ArM/9HoHX
+         kCT57pLKE8R1QEoVOZyMCEb4M4UzKMQQVVaiAAa2Rw4Fe0+eC0wg1NrjB82e6PdhL48M
+         8aXJUNlQlQdLhVjbAgRa0PLwyQKbq1bHu9+cm11y5Xo7GgoXlHXPAHHrCyH8nDi7/yJk
+         ouVlwDjo+k2I+gA+tMdZg/nqNagQM3zoFW5W5RjwRWEmLjU6Rq3tzqRDG2uJCLPyCsP+
+         1kgIbUIWunecyu/Tj+g5HDhf9UVoHyVATPr1QOBa/QtpR2oD4Cu4e0SgZbN3EAN+Fl/X
+         KXJw==
+X-Gm-Message-State: ANoB5pnNGOFA5vtv443PbScphmCv0WJ5xmb9omCMQb7Nh/ZUCjNb/0px
+        RsortBTAIODmuz7z8YQhGIWKdJpWdT0=
+X-Google-Smtp-Source: AA0mqf7E7bC5M3o8L+7owKzOr8YUb/XhH5sJtkPbi/VJnmQrFbguVmZhay6cFDCa1kMBb2Gd0ljikA==
+X-Received: by 2002:a50:fa87:0:b0:467:4a80:719b with SMTP id w7-20020a50fa87000000b004674a80719bmr14884572edr.174.1668506133810;
+        Tue, 15 Nov 2022 01:55:33 -0800 (PST)
 Received: from development1.visionsystems.de (mail.visionsystems.de. [213.209.99.202])
-        by smtp.gmail.com with ESMTPSA id n28-20020a056402515c00b00458dc7e8ecasm5943106edd.72.2022.11.15.01.53.28
+        by smtp.gmail.com with ESMTPSA id n11-20020a170906118b00b0078cb06c2ef9sm5268457eja.8.2022.11.15.01.55.33
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Nov 2022 01:53:28 -0800 (PST)
+        Tue, 15 Nov 2022 01:55:33 -0800 (PST)
 From:   yegorslists@googlemail.com
 To:     linux-nfs@vger.kernel.org
 Cc:     Yegor Yefremov <yegorslists@googlemail.com>
-Subject: [PATCH] README: fix mount command
-Date:   Tue, 15 Nov 2022 10:53:20 +0100
-Message-Id: <20221115095320.10261-1-yegorslists@googlemail.com>
+Subject: [PATCH v2] .gitignore: ignore ctags generated file
+Date:   Tue, 15 Nov 2022 10:55:32 +0100
+Message-Id: <20221115095532.10850-1-yegorslists@googlemail.com>
 X-Mailer: git-send-email 2.17.0
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -66,28 +66,24 @@ X-Mailing-List: linux-nfs@vger.kernel.org
 
 From: Yegor Yefremov <yegorslists@googlemail.com>
 
-Without device specification, mount tries to mount an entry
-from the /etc/fstab file. Hence, specify target "nfsd" to
-make this command executable from the command line.
-
 Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
 ---
- README | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes v1 -> v2:
+	- add SoB line
 
-diff --git a/README b/README
-index 7034c009..1c19ecd0 100644
---- a/README
-+++ b/README
-@@ -70,7 +70,7 @@ scripts can be written to work correctly.
- 3.1.  SERVER STARTUP
- 
- 
--   A/  mount -t nfsd /proc/fs/nfsd
-+   A/  mount -t nfsd nfsd /proc/fs/nfsd
-       This filesystem needs to be mount before most daemons,
-       particularly exportfs, mountd, svcgssd, idmapd.
-       It could be mounted once, or the script that starts each daemon
+ .gitignore | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/.gitignore b/.gitignore
+index df791a83..682153d5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -86,3 +86,5 @@ systemd/rpc-gssd.service
+ cscope.*
+ # generic editor backup et al
+ *~
++# file generated by ctags
++tags
 -- 
 2.17.0
 
