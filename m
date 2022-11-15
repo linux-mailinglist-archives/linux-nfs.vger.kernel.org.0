@@ -2,70 +2,61 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4768629493
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 10:42:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE3FC6294DD
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 10:53:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229716AbiKOJmA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 15 Nov 2022 04:42:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34436 "EHLO
+        id S238182AbiKOJxk (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 15 Nov 2022 04:53:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237824AbiKOJl7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Nov 2022 04:41:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9841B14038
-        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:40:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668505258;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/jXxnn30oH1htkAEq4c8BajVXG6A/m7p7p9RvVlC1SI=;
-        b=EviAlKCKYWUF9OYZVeuI0GNJbbQOYYGBJAT/vPhgbEFrH74Alpd5zlU+7bF75HEmxVqip0
-        VvY5S3dMoNRDx9w9KJlp/aAchLcsQWV+2H7dMSFWJrKoMG7PyghyCyFRK61Uk8q5GvMO2K
-        gotJwYuxyFQSQndcv7nmiwe0pIy33GI=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-373-MkvcghZ8OraPCsSquUNZLw-1; Tue, 15 Nov 2022 04:40:54 -0500
-X-MC-Unique: MkvcghZ8OraPCsSquUNZLw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id F0E008027EB;
-        Tue, 15 Nov 2022 09:40:53 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E9A352024CC0;
-        Tue, 15 Nov 2022 09:40:51 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <Y3MQ4l1AJOgniprT@casper.infradead.org>
-References: <Y3MQ4l1AJOgniprT@casper.infradead.org> <166844174069.1124521.10890506360974169994.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, dwysocha@redhat.com,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
-        Steve French <sfrench@samba.org>,
-        Shyam Prasad N <nspmangalore@gmail.com>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
-        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
-        v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
-        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v2] mm, netfs, fscache: Stop read optimisation when folio removed from pagecache
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1493971.1668505249.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date:   Tue, 15 Nov 2022 09:40:49 +0000
-Message-ID: <1493972.1668505249@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        with ESMTP id S238157AbiKOJxi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 15 Nov 2022 04:53:38 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E429273E
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:53:30 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id y14so34715569ejd.9
+        for <linux-nfs@vger.kernel.org>; Tue, 15 Nov 2022 01:53:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20210112;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=myU/5arNNk7NvvHfrDishNpqGempS8a7AqzbQlwYl3c=;
+        b=hOVnphEP94dWWBDUUXZ3qxaAeA0pvpDQFgPB4DlG1C7V262I/DIUgjvdnvSlQwZZqa
+         R1Cxk+LYZ+9J25DVjqMo2Xq3qP5CVR5akuLUC+Sm9bm2gtocow2Iod1KgjDJtfZGhET6
+         GPFZF+kLKh9xLbHbPNtUqbcTszUW/UD3i3bQU46JkWcrJP6Wapo5joe60FwOuhdGf3Zz
+         7iOfAIOaS/I6QmY/U7PLDlzhKlOgnR9BZzMmcId5ZKkiDOWseJ/fBYM5gKxfOrBQKik0
+         ZK6gJee6k3VLeVgqIN5IZ7jT4A6Uv2PIK8DsBoGYzqR7E/isWFUGgFYU+uOKVxdRVxSg
+         mTOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=myU/5arNNk7NvvHfrDishNpqGempS8a7AqzbQlwYl3c=;
+        b=VGXFvsbtdkyW1Fif94FFk3j2+DfSObJOSd6cg/BP32l/RDj+//3ryxEuDOO7ORe9sa
+         LWyAOTJk9Swnme50GsVxJ26VrcRhywwPMhRPW3GW7VO5f/eTNaNdrLthcJ1o8semFXE/
+         2xMDMDuWlrrCnYAEq28U81qYPp3Y7SqXOakM4RqUYwT+ZV1x5YM4D9EN2vssVOScespd
+         N3EWFfhyC8GnnkaYam1IXKkWkSEXyA0id+QUGk+vlA8//gMORUWGhndbggFFNpiHbKoy
+         s2zMPh1qRFDCPA01uezdJ2+Ynhw5VUH3GNRfBEbET1j5CVt65U/jftSYo79f0bSEf0qP
+         yKKw==
+X-Gm-Message-State: ANoB5pn0/UUiK5FS1F4ibNIB2I7HAT+5L82Cr4tzdZgx2fa46IwiZBPt
+        0B5prhlrUDvBE90HU2M/MbmI/6rmW70=
+X-Google-Smtp-Source: AA0mqf6eq99LBsAXJXmOG/Gag1QktS68zvPKcWxaYIYN5lQO69+kGwxODazEWQh83Ayj8WFud1yriQ==
+X-Received: by 2002:a17:906:1f0c:b0:78d:cd72:8e3e with SMTP id w12-20020a1709061f0c00b0078dcd728e3emr12719346ejj.212.1668506008790;
+        Tue, 15 Nov 2022 01:53:28 -0800 (PST)
+Received: from development1.visionsystems.de (mail.visionsystems.de. [213.209.99.202])
+        by smtp.gmail.com with ESMTPSA id n28-20020a056402515c00b00458dc7e8ecasm5943106edd.72.2022.11.15.01.53.28
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 15 Nov 2022 01:53:28 -0800 (PST)
+From:   yegorslists@googlemail.com
+To:     linux-nfs@vger.kernel.org
+Cc:     Yegor Yefremov <yegorslists@googlemail.com>
+Subject: [PATCH] README: fix mount command
+Date:   Tue, 15 Nov 2022 10:53:20 +0100
+Message-Id: <20221115095320.10261-1-yegorslists@googlemail.com>
+X-Mailer: git-send-email 2.17.0
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -73,91 +64,30 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+From: Yegor Yefremov <yegorslists@googlemail.com>
 
-> On Mon, Nov 14, 2022 at 04:02:20PM +0000, David Howells wrote:
-> > +++ b/mm/filemap.c
-> > @@ -3941,6 +3941,10 @@ bool filemap_release_folio(struct folio *folio,=
- gfp_t gfp)
-> >  	struct address_space * const mapping =3D folio->mapping;
-> >  =
+Without device specification, mount tries to mount an entry
+from the /etc/fstab file. Hence, specify target "nfsd" to
+make this command executable from the command line.
 
-> >  	BUG_ON(!folio_test_locked(folio));
-> > +	if ((!mapping || !mapping_release_always(mapping))
-> > +	    && !folio_test_private(folio) &&
-> > +	    !folio_test_private_2(folio))
-> > +		return true;
-> =
+Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+---
+ README | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> Why do you need to test 'mapping' here?
-
-Why does the function do:
-
-	if (mapping && mapping->a_ops->release_folio)
-
-later then?  There are callers of the function, such as shrink_folio_list(=
-),
-that seem to think that folio->mapping might be NULL.
-
-> Also this is the most inconsistent style ...
-
-Yeah, I accidentally pushed the '&&' onto the next line.
-
-> > @@ -276,7 +275,7 @@ static long mapping_evict_folio(struct address_spa=
-ce *mapping,
-> >  	if (folio_ref_count(folio) >
-> >  			folio_nr_pages(folio) + folio_has_private(folio) + 1)
-> =
-
-> I think this line is incorrect, right?  You don't increment the folio
-> refcount just because the folio has private2 set, do you?
-
-Errr, yes:
-
-	static inline void folio_start_fscache(struct folio *folio)
-	{
-		VM_BUG_ON_FOLIO(folio_test_private_2(folio), folio);
-		folio_get(folio);
-		folio_set_private_2(folio);
-	}
-
-Someone insisted - might even have been you;-)
-
-I'm working on getting rid of the use of PG_private_2 from the network
-filesystems, but it's still in progress.  Kind of blocked on the iov_iter
-stuff.
-
-> >  		return 0;
-> > -	if (folio_has_private(folio) && !filemap_release_folio(folio, 0))
-> > +	if (!filemap_release_folio(folio, 0))
-> >  		return 0;
-> >  =
-
-> >  	return remove_mapping(mapping, folio);
-> =
-
-> Can we get rid of folio_has_private()
-
-That would be nice, but there are still places that check it, and until we=
- get
-rid of the use of PG_private_2, we can't reduce it to just a check on
-PG_private.  Truncate, for example, checks it to see if it should can
-->invalidate_folio().
-
-It's only used in mm/, so it could be moved into mm/internal.h.
-
-> / page_has_private() now?
-
-That's used in some a number of places outside of mm/.  The arch/s390/ usa=
-ge
-is just to calculate the expected refcount.  I wonder if calculation of th=
-e
-expected refcount could be potted into a function as it's performed in a
-number of places - though the expectation isn't always the same.
-
-Ext3 and fuse both use it - but those probably need to check PG_private_2 =
-and
-could use a "folio_test_private()" function when fully foliated.
-
-David
+diff --git a/README b/README
+index 7034c009..1c19ecd0 100644
+--- a/README
++++ b/README
+@@ -70,7 +70,7 @@ scripts can be written to work correctly.
+ 3.1.  SERVER STARTUP
+ 
+ 
+-   A/  mount -t nfsd /proc/fs/nfsd
++   A/  mount -t nfsd nfsd /proc/fs/nfsd
+       This filesystem needs to be mount before most daemons,
+       particularly exportfs, mountd, svcgssd, idmapd.
+       It could be mounted once, or the script that starts each daemon
+-- 
+2.17.0
 
