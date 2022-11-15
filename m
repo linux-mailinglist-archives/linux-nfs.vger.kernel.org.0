@@ -2,57 +2,37 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5CB9628FFB
-	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 03:35:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79FF7629115
+	for <lists+linux-nfs@lfdr.de>; Tue, 15 Nov 2022 05:09:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232381AbiKOCfB (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 14 Nov 2022 21:35:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33858 "EHLO
+        id S231497AbiKOEJZ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 14 Nov 2022 23:09:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232197AbiKOCe7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Nov 2022 21:34:59 -0500
-Received: from nautica.notk.org (ipv6.notk.org [IPv6:2001:41d0:1:7a93::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DD1C140F0;
-        Mon, 14 Nov 2022 18:34:57 -0800 (PST)
-Received: by nautica.notk.org (Postfix, from userid 108)
-        id 6C689C01F; Tue, 15 Nov 2022 03:35:00 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1668479700; bh=nbL/xZDPCL8jmbEEnRtWHyMrAnIAlzzCW9ltmbNEdmY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BTubEyb88pK+tsFm7mlAIi0fLDfKqvqQliCRntOPeC4bJA7GiR8kUDT7tiQCWJIiS
-         u0yKZzPzdUkxqS4ycN4tcYIjo+s5sw92WqHr8NaO7GbCjD3sgqG4vrudrxEhFOrT9f
-         +T8bbOugd7Dg7OSLKsblTaJ9E/kMNnh6rnyRX7sIEznZDN5dyWBWm7rjvVYYPfL8Ur
-         aGrU8o9oMCKHmT4nvvDedDxlMj92pLGNV+MnictvtnaosvsSfGqroOpH2OV3ziZ/E9
-         INWP10dOAk+5o4VIlIZbWsChdcJCuG+0QBDXAaLx8Rp1dTjjERzVmfrvQTLaxM64pK
-         r7cxJX4SQt5WQ==
-X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
-        lindbergh.monkeyblade.net
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
-Received: from odin.codewreck.org (localhost [127.0.0.1])
-        by nautica.notk.org (Postfix) with ESMTPS id D917EC009;
-        Tue, 15 Nov 2022 03:34:54 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org; s=2;
-        t=1668479699; bh=nbL/xZDPCL8jmbEEnRtWHyMrAnIAlzzCW9ltmbNEdmY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ODuILm6w+muG3YeYXeL/B2w4v4ALouBB7EV1VWeD79EfdWs/VXHiGECni9EG7SqsI
-         agXPtCjW3dGG4vr5u/QKL9H6P16bSuKD0imiXCGlAD0h2CLVsb8gZ+zbmNmMIOJRTR
-         Wv09VHJNaZty+f1IPSOoZ8PvXKpoig+0zjZjTZ2n4NhZJ2PqeRmn25Xf5lQgrMAo6M
-         mxOKmEx83Okrxey+BEMqnxazd9KX0jdhVii/ypx6Z171SAn5mV7jqq5K5IfgQrcRqn
-         HlAUbhC42z9d7SAJrThRyyEAOysG0Cja0bVY4Y2pkA+slZ0Jh+0maC+cdYHAkDORZO
-         rKrJwJ3Gb50hg==
-Received: from localhost (odin.codewreck.org [local])
-        by odin.codewreck.org (OpenSMTPD) with ESMTPA id ea3428a8;
-        Tue, 15 Nov 2022 02:34:46 +0000 (UTC)
-Date:   Tue, 15 Nov 2022 11:34:31 +0900
-From:   Dominique Martinet <asmadeus@codewreck.org>
+        with ESMTP id S230120AbiKOEJY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 14 Nov 2022 23:09:24 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5E31A82F;
+        Mon, 14 Nov 2022 20:09:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=j/xUVrD8mPcSbyQHk615wZHvvK1z2hXuDfFCa4PiwtI=; b=cqcPHDV+eY3ifO9g3vqqcV+Bnh
+        zsVmJpaFiflf5AYEOG3Gk8yCOvxY2VdVW1IHUEvxNgWPziM1+s7iQWCyjRwtqWOztJWjco+wIE8+/
+        JAszRx1WSMGrgfhPxUKltG0mJzXigO2CzTqvQCN0Q3HVnio9l5kV7sxhHrOccZCnn8Cy7fh3vQHHk
+        qM7aIAWE419vYSVxB5x5f2zCN2lWsovAQiBqh9msxwhjWhlT12x0nsBLDANysPmO7exwN52iTGj2e
+        ijqiE0P7vjJQpO6DIyXSI0xgg+e0DxJ/Z5xGIsfiwcPbNKl3PxKsNMEMxE+mpSFr4xxXC7ElQ+PUq
+        RJbOqsQw==;
+Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1ounFy-00G84y-Gg; Tue, 15 Nov 2022 04:09:06 +0000
+Date:   Tue, 15 Nov 2022 04:09:06 +0000
+From:   Matthew Wilcox <willy@infradead.org>
 To:     David Howells <dhowells@redhat.com>
-Cc:     willy@infradead.org, dwysocha@redhat.com,
-        Rohith Surabattula <rohiths.msft@gmail.com>,
+Cc:     dwysocha@redhat.com, Rohith Surabattula <rohiths.msft@gmail.com>,
         Steve French <sfrench@samba.org>,
         Shyam Prasad N <nspmangalore@gmail.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
         Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
         linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
         v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
@@ -60,54 +40,56 @@ Cc:     willy@infradead.org, dwysocha@redhat.com,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Subject: Re: [RFC PATCH v2] mm, netfs, fscache: Stop read optimisation when
  folio removed from pagecache
-Message-ID: <Y3L6t0U89o27gJru@codewreck.org>
-References: <Y3Lbul7FZncNVwVZ@codewreck.org>
- <166844174069.1124521.10890506360974169994.stgit@warthog.procyon.org.uk>
- <1457985.1668472862@warthog.procyon.org.uk>
+Message-ID: <Y3MQ4l1AJOgniprT@casper.infradead.org>
+References: <166844174069.1124521.10890506360974169994.stgit@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1457985.1668472862@warthog.procyon.org.uk>
+In-Reply-To: <166844174069.1124521.10890506360974169994.stgit@warthog.procyon.org.uk>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
+        lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-David Howells wrote on Tue, Nov 15, 2022 at 12:41:02AM +0000:
-> Dominique Martinet <asmadeus@codewreck.org> wrote:
-> > any harm in setting this if netfs isn't enabled?
-> > (just asking because you checked in fs/9p/cache.c above)
-> 
-> Well, it forces a call to ->release_folio() every time a folio is released, if
-> set, rather than just if PG_private/PG_private_2 is set.
+On Mon, Nov 14, 2022 at 04:02:20PM +0000, David Howells wrote:
+> +++ b/mm/filemap.c
+> @@ -3941,6 +3941,10 @@ bool filemap_release_folio(struct folio *folio, gfp_t gfp)
+>  	struct address_space * const mapping = folio->mapping;
+>  
+>  	BUG_ON(!folio_test_locked(folio));
+> +	if ((!mapping || !mapping_release_always(mapping))
+> +	    && !folio_test_private(folio) &&
+> +	    !folio_test_private_2(folio))
+> +		return true;
 
-Yes, that's what I gathered from your explanation, but I don't
-understand what release_folio() actually implies in practice which is
-why I asked -- it looked a bit odd that you're checking for
-v9inode->netfs.cache in one case and not in the other; especially as all
-inodes should go through both v9fs_cache_inode_get_cookie() (when
-created) and v9fs_evict_inode() so I was a bit curious.
+Why do you need to test 'mapping' here?  Also this is the most
+inconsistent style ...
 
-In the 9p-without-cache case, we're normally not going through page
-cache at all, so I guess there won't be any mapping and this will be
-free anyway...
+	if ((!mapping || !mapping_release_always(mapping)) &&
+	    !folio_test_private(folio) && !folio_test_private_2(folio))
 
-> > > -	if (folio_has_private(folio) && !filemap_release_folio(folio, 0))
-> > > +	if (!filemap_release_folio(folio, 0))
-> > 
-> > should this (and all others) check for folio_needs_release instead of has_private?
-> > filemap_release_folio doesn't check as far as I can see, but perhaps
-> > it's already fast and noop for another reason I didn't see.
-> 
-> Willy suggested merging the checks from folio_has_private() into
-> filemap_release_folio():
-> 
-> 	https://lore.kernel.org/r/Yk9V/03wgdYi65Lb@casper.infradead.org/
+works fine, but if you insist on splitting over three lines, then:
 
-Ah, I didn't understand the suggestion in your patch was a separate
-patch and didn't follow the link.
-It doesn't look like a patch per se, perhaps sending both together would
-make sense -- but on top of this change these should indeed be fine,
-thanks.
+	if ((!mapping || !mapping_release_always(mapping)) &&
+	    !folio_test_private(folio) && 
+	    !folio_test_private_2(folio))
 
---
-Dominique
+> @@ -276,7 +275,7 @@ static long mapping_evict_folio(struct address_space *mapping,
+>  	if (folio_ref_count(folio) >
+>  			folio_nr_pages(folio) + folio_has_private(folio) + 1)
+
+I think this line is incorrect, right?  You don't increment the folio
+refcount just because the folio has private2 set, do you?
+
+>  		return 0;
+> -	if (folio_has_private(folio) && !filemap_release_folio(folio, 0))
+> +	if (!filemap_release_folio(folio, 0))
+>  		return 0;
+>  
+>  	return remove_mapping(mapping, folio);
+
+Can we get rid of folio_has_private() / page_has_private() now?
