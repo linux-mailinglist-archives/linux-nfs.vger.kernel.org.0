@@ -2,87 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 745B462DCEA
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 14:37:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E02962DD4B
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 14:53:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239628AbiKQNhd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Nov 2022 08:37:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50388 "EHLO
+        id S234299AbiKQNxh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Nov 2022 08:53:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240136AbiKQNhc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Nov 2022 08:37:32 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052CF716E5
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 05:36:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1668692195;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nBqq6MkgH5sErymzvb4GgeAOGwNxrvye29zE4sqCkdM=;
-        b=clARRpSdTTJrygFSsAu47wYM01iBTtGbrXDjEteW0S8tEMWes2Rw4PAZHQCw/Ea0ZYAZJe
-        5KqKo4wiruA6oFo88e2HO59aO1zSdYenvMsIqom9rkwBo205j0URSKcZzP6YdbnMNX3bC8
-        RXiSzSQVqPIPKOwbp4mknDgP1J5Yue8=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-12-bAaXkbKiNIyAjGr5fbbtQQ-1; Thu, 17 Nov 2022 08:36:31 -0500
-X-MC-Unique: bAaXkbKiNIyAjGr5fbbtQQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        with ESMTP id S240201AbiKQNxY (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Nov 2022 08:53:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7003C40905
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 05:53:21 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5BEDA101A52A;
-        Thu, 17 Nov 2022 13:36:31 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 970342166B29;
-        Thu, 17 Nov 2022 13:36:30 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20221117115023.1350181-2-dwysocha@redhat.com>
-References: <20221117115023.1350181-2-dwysocha@redhat.com> <20221117115023.1350181-1-dwysocha@redhat.com>
-To:     Dave Wysochanski <dwysocha@redhat.com>
-Cc:     dhowells@redhat.com, Daire Byrne <daire.byrne@gmail.com>,
-        Benjamin Maynard <benmaynard@google.com>,
-        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH 1/1] fscache: Fix oops due to race with cookie_lru and use_cookie
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2482FB8206C
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 13:53:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2AA6C433D6
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 13:53:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1668693198;
+        bh=LUOIINk5ghp8dtH/txOTyiGBaZw7R9e/2CYiSyzKc64=;
+        h=From:To:Subject:Date:From;
+        b=dSYuOCJEFhJD4b2sBgyX3dtQb+EMIXknLdq/omzYjatEgh9xKzjXmbb41dtLHcgfs
+         aXcJkG5DMuzZmOmOIdepRmq/rDxbd/Up8Aq9DLa1LDB1/mLkYsmwHqX1ewETnfvTnN
+         EPqeQ8wSPJIsbu+MUFNz7kroIc0v5LRZ8Yny0ALLmaeclhcxhwsZRS8/Nyl8QXdmK4
+         y7wxMTr97yQ8/tjXt6C1DImdTJdgVPbc6CoAVWh7BmAK5u4D3oevSQUvteXUxXJT/F
+         XxrcsYwKloIb4hhTnO9KE3FobAmdEf5weBPj14o/AJqatB6bgXddbvXam90RFoCpvc
+         lUNai5zGcCc8w==
+From:   trondmy@kernel.org
+To:     linux-nfs@vger.kernel.org
+Subject: [PATCH] NFS: Fix an Oops in nfs_d_automount()
+Date:   Thu, 17 Nov 2022 08:47:12 -0500
+Message-Id: <20221117134713.9069-1-trondmy@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3716090.1668692187.1@warthog.procyon.org.uk>
-Date:   Thu, 17 Nov 2022 13:36:27 +0000
-Message-ID: <3716091.1668692187@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-You can probably make this easier to trigger by putting a delay in the state
-machine if the flag is set:
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[fs/fscache/cookie.c]
-+#include <linux/delay.h>
-...
- static void fscache_cookie_state_machine(struct fscache_cookie *cookie)
- {
- 	enum fscache_cookie_state state;
- 	bool wake = false;
+When mounting from a NFSv4 referral, path->dentry can end up being a
+negative dentry, so derive the struct nfs_server from the dentry
+itself instead.
 
- 	_enter("c=%x", cookie->debug_id);
+Fixes: 2b0143b5c986 ("VFS: normal filesystems (and lustre): d_inode() annotations")
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+---
+ fs/nfs/namespace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- again:
-+	if (test_bit(FSCACHE_COOKIE_DO_LRU_DISCARD, &cookie->flags))
-+		msleep(100);
- again_locked:
- 	state = cookie->state;
- 	switch (state) {
-
-David
+diff --git a/fs/nfs/namespace.c b/fs/nfs/namespace.c
+index 2f336ace7555..88a23af2bd5c 100644
+--- a/fs/nfs/namespace.c
++++ b/fs/nfs/namespace.c
+@@ -147,7 +147,7 @@ struct vfsmount *nfs_d_automount(struct path *path)
+ 	struct nfs_fs_context *ctx;
+ 	struct fs_context *fc;
+ 	struct vfsmount *mnt = ERR_PTR(-ENOMEM);
+-	struct nfs_server *server = NFS_SERVER(d_inode(path->dentry));
++	struct nfs_server *server = NFS_SB(path->dentry->d_sb);
+ 	struct nfs_client *client = server->nfs_client;
+ 	int timeout = READ_ONCE(nfs_mountpoint_expiry_timeout);
+ 	int ret;
+-- 
+2.38.1
 
