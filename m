@@ -2,75 +2,77 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 383B362DD4C
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 14:53:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AE0C62DD52
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 14:54:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240034AbiKQNxi (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Nov 2022 08:53:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33604 "EHLO
+        id S240288AbiKQNyA (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 17 Nov 2022 08:54:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240215AbiKQNxY (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Nov 2022 08:53:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2E4251C39
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 05:53:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S240264AbiKQNxy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Nov 2022 08:53:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E0A4419B8
+        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 05:52:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668693174;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9uTDN8yDdd59yB3p902edftBDL/evWgAWIO0a4zUQ4Y=;
+        b=aIm+I6xY2gAMDnZIxOASb5ENGOfEHUPpUdaOUP/npv09dw+uuC2FGrPJxcYrbFV8j7jg3R
+        XyYdPoGnsnE6vi1JwwMB/aKWKl1FvSaGdT+nArcnJRSia+67iO2foBKy2vOeZNss172Vju
+        sBoEyFrgFMCL4hNPtzmyYNy+waWOHmA=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-151-K-Id08TtP4G3Hf4UKLQS3A-1; Thu, 17 Nov 2022 08:52:51 -0500
+X-MC-Unique: K-Id08TtP4G3Hf4UKLQS3A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9F694B81FB8
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 13:53:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CA7C433C1
-        for <linux-nfs@vger.kernel.org>; Thu, 17 Nov 2022 13:53:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668693199;
-        bh=nskT2tP8NUFzeSciyMIfLU61mc2ruDj9SW1lHSw0PX0=;
-        h=From:To:Subject:Date:From;
-        b=OEwcX+iWutBdruhAFz20ysu22f5DK2j8ReNaoStT4bgqi46jFPD9+LiT+nPtbPhW/
-         gNe1KzSEC+DgDOrOF+UWO0DALA/tecVvdil5w9B6gQILhxO4UdcsDMUiiGMIN2N8JA
-         UN2ABWJTkKFDpaYOHMAXJ5YOYfQQ7WixfE0EDwKg5nuOx69hKFOol8TLZhd7JQoe1D
-         /OW5SJWXdJrvNAwHP9lVnF6kmJMT2tzrg0Xs6PGjAXwC6jqUrCYinyKyiHw6KmO3yh
-         4snmE0FAuS+wFNjEesv3wRujABDTmLVEI/M6Yf+wS5Y1GM8ppsuL+9iNqoqeVVFL/9
-         h+dPbV6f5wvnQ==
-From:   trondmy@kernel.org
-To:     linux-nfs@vger.kernel.org
-Subject: [PATCH] NFS: Fix a race in nfs_call_unlink()
-Date:   Thu, 17 Nov 2022 08:47:13 -0500
-Message-Id: <20221117134713.9069-2-trondmy@kernel.org>
-X-Mailer: git-send-email 2.38.1
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5A7E3810D40;
+        Thu, 17 Nov 2022 13:52:50 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.24])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12734C1E87F;
+        Thu, 17 Nov 2022 13:52:49 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20221117115023.1350181-2-dwysocha@redhat.com>
+References: <20221117115023.1350181-2-dwysocha@redhat.com> <20221117115023.1350181-1-dwysocha@redhat.com>
+To:     Dave Wysochanski <dwysocha@redhat.com>
+Cc:     dhowells@redhat.com, Daire Byrne <daire.byrne@gmail.com>,
+        Benjamin Maynard <benmaynard@google.com>,
+        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH 1/1] fscache: Fix oops due to race with cookie_lru and use_cookie
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3716829.1668693167.1@warthog.procyon.org.uk>
+Date:   Thu, 17 Nov 2022 13:52:47 +0000
+Message-ID: <3716830.1668693167@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+Dave Wysochanski <dwysocha@redhat.com> wrote:
 
-We should check that the filehandles match before transferring the
-sillyrename data to the newly looked-up dentry in case the name was
-reused on the server.
+> +		clear_bit(FSCACHE_COOKIE_DO_LRU_DISCARD, &cookie->flags);
 
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
----
- fs/nfs/unlink.c | 1 +
- 1 file changed, 1 insertion(+)
+Actually, can you do test_and_clear_bit() and then log a trace point, say:
 
-diff --git a/fs/nfs/unlink.c b/fs/nfs/unlink.c
-index 9697cd5d2561..150a953a8be9 100644
---- a/fs/nfs/unlink.c
-+++ b/fs/nfs/unlink.c
-@@ -139,6 +139,7 @@ static int nfs_call_unlink(struct dentry *dentry, struct inode *inode, struct nf
- 		 */
- 		spin_lock(&alias->d_lock);
- 		if (d_really_is_positive(alias) &&
-+		    !nfs_compare_fh(NFS_FH(inode), NFS_FH(d_inode(alias))) &&
- 		    !(alias->d_flags & DCACHE_NFSFS_RENAMED)) {
- 			devname_garbage = alias->d_fsdata;
- 			alias->d_fsdata = data;
--- 
-2.38.1
+	fscache_see_cookie(cookie, fscache_cookie_see_lru_discard_cancel);
+
+if the bit was set.
+
+David
 
