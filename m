@@ -2,172 +2,123 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9719A62D1D5
-	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 04:45:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E657A62D26C
+	for <lists+linux-nfs@lfdr.de>; Thu, 17 Nov 2022 05:58:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234730AbiKQDpP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 16 Nov 2022 22:45:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57308 "EHLO
+        id S233563AbiKQE6D (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 16 Nov 2022 23:58:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234313AbiKQDpK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Nov 2022 22:45:10 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80B726BDF9
-        for <linux-nfs@vger.kernel.org>; Wed, 16 Nov 2022 19:45:02 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2AH1wjkX006514;
-        Thu, 17 Nov 2022 03:44:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2022-7-12;
- bh=l54oJ88i+fLePgcDBvWBKS6hlTX/rW3eo5HtSkiPv7s=;
- b=qaliFYkNZ4wOVQrsJWh72vwqBfc26QG4m198lw73XTgKl5jK3amICERhZQrS6mckifqj
- +HVDwuGQkVnKyXUBNeBCu/bPAThc9bFM3xt+Oky8/kj/jY7oyKyyEAp2Y0cteufpsaGY
- V3UfeK9mvm3+pg36d0w0gCgZeIUp7pmaynrk8Rs8rFyoWcWQJjjBM22NRPAOcEs9drBj
- ORj33ZtS5IiSJV9Bj7B9W0w0lcnfhN9sG4frsLCkuaF7jX5OpvRQsQp3mJODECBYcsDV
- KGzBJCmXo2+CsKH/k3CfEDwWgnpZR7pmtVWpE2yvNmUyaJcPSUR7qVyM4zfIw7MSvywX lQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3kv3htyshc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Nov 2022 03:44:59 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2AH3iT7o016812;
-        Thu, 17 Nov 2022 03:44:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3kuk1ya27n-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 17 Nov 2022 03:44:58 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 2AH3iutl030624;
-        Thu, 17 Nov 2022 03:44:58 GMT
-Received: from ca-common-hq.us.oracle.com (ca-common-hq.us.oracle.com [10.211.9.209])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3kuk1ya262-5;
-        Thu, 17 Nov 2022 03:44:58 +0000
-From:   Dai Ngo <dai.ngo@oracle.com>
-To:     chuck.lever@oracle.com, jlayton@kernel.org
-Cc:     linux-nfs@vger.kernel.org
-Subject: [PATCH v5 4/4] NFSD: add CB_RECALL_ANY tracepoints
-Date:   Wed, 16 Nov 2022 19:44:48 -0800
-Message-Id: <1668656688-22507-5-git-send-email-dai.ngo@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1668656688-22507-1-git-send-email-dai.ngo@oracle.com>
-References: <1668656688-22507-1-git-send-email-dai.ngo@oracle.com>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.895,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2022-11-16_03,2022-11-16_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxlogscore=999 phishscore=0 mlxscore=0 adultscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2211170024
-X-Proofpoint-GUID: FQPpjg3fAj4KS3ZEZs6-C1WYzDGhPyjd
-X-Proofpoint-ORIG-GUID: FQPpjg3fAj4KS3ZEZs6-C1WYzDGhPyjd
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S233151AbiKQE6B (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 16 Nov 2022 23:58:01 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 311E92B180
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Nov 2022 20:57:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1668661026;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cRNgsje5v+iSsOtKxKODca+zMELkto4gAPpZd/JZ4Wo=;
+        b=UWDu68h1PVK3ShlNTALbY4GMc4uIKbPm4lEOI5019Vxd6JSranyUHHyg45d2+jHR/cGw2K
+        a78q3+A43mO2u/xjEoSNA0HHDcHfYepa1BYhF/J4iQezb5U1UHKzR7SxCfGdtvznH4jslg
+        Oy+E2yeZFCUKBv/5BAZSJSZgoGh0rEg=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-588-zIJJf7eDMxSPxbwJ8dbw_Q-1; Wed, 16 Nov 2022 23:57:04 -0500
+X-MC-Unique: zIJJf7eDMxSPxbwJ8dbw_Q-1
+Received: by mail-pg1-f199.google.com with SMTP id g193-20020a636bca000000b00476a2298bd1so629007pgc.12
+        for <linux-nfs@vger.kernel.org>; Wed, 16 Nov 2022 20:57:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-language:content-transfer-encoding:in-reply-to:mime-version
+         :user-agent:date:message-id:from:references:cc:to:subject
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cRNgsje5v+iSsOtKxKODca+zMELkto4gAPpZd/JZ4Wo=;
+        b=2FXwyLheuedNNttgnHl+1Gnx/CkUd1RYlbUBSJqZv2urnLEOuJRhS4B70/U+udxSU1
+         kztjbFpfM3Foe1enV/F9daYC6IDbsJHS6WJCnNHH7we7mhZvIIhe5GrJxPSSy9DxaHAe
+         owBV8kJ+IFxNF61/12gh9Xii8CuIQLBnUQUaUJ7K/pFOeAi2Pj1KCj8BoMDmZwBnJT6r
+         F3r6ey3FlzBrc0zi4fDQ7VLrszDT9ugpscPYHArbWlkYOCsGYHkqnIFrHtQUEdQrRqcD
+         UDgn5UZdTpyXFuA8hzAqUQLMKZOYi6eQNwe0Wyr/bt/maIyp6n7WqGF8QBKBDE7I1K8W
+         4t0Q==
+X-Gm-Message-State: ANoB5pkXlHSMiptXn7iNPmJce4kWJev/sQ6zWR5U0eEBZDU+fo45lSAE
+        pSQJkub67ff71gwsoimXHEdE4sxmx6famjdU0IyTiDiIJFtp2VwfDHGmy3N+I5kPggA28JPpXCP
+        q98maykU9fKskxXi23FHp
+X-Received: by 2002:a63:5f14:0:b0:43c:969f:18a7 with SMTP id t20-20020a635f14000000b0043c969f18a7mr635972pgb.12.1668661023832;
+        Wed, 16 Nov 2022 20:57:03 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf63NoWprGlJIf07cPSVNjoTzWwiwPuTUjMvYVGNkdFlaO5oAfTME7Qg7XG1sR+f67MLmbpQ7Q==
+X-Received: by 2002:a63:5f14:0:b0:43c:969f:18a7 with SMTP id t20-20020a635f14000000b0043c969f18a7mr635959pgb.12.1668661023555;
+        Wed, 16 Nov 2022 20:57:03 -0800 (PST)
+Received: from [10.72.12.148] ([43.228.180.230])
+        by smtp.gmail.com with ESMTPSA id o6-20020a17090a55c600b0021870b3e4casm438628pjm.47.2022.11.16.20.57.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 16 Nov 2022 20:57:03 -0800 (PST)
+Subject: Re: [PATCH 2/7] ceph: use locks_inode_context helper
+To:     Jeff Layton <jlayton@kernel.org>, linux-fsdevel@vger.kernel.org
+Cc:     linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, chuck.lever@oracle.com,
+        viro@zeniv.linux.org.uk, hch@lst.de
+References: <20221116151726.129217-1-jlayton@kernel.org>
+ <20221116151726.129217-3-jlayton@kernel.org>
+From:   Xiubo Li <xiubli@redhat.com>
+Message-ID: <589a0fcc-569f-e5b2-0877-c1639736ae5e@redhat.com>
+Date:   Thu, 17 Nov 2022 12:56:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.10.1
+MIME-Version: 1.0
+In-Reply-To: <20221116151726.129217-3-jlayton@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Add tracepoints to trace start and end of CB_RECALL_ANY operation.
 
-Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
----
- fs/nfsd/nfs4state.c |  2 ++
- fs/nfsd/trace.h     | 49 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
+On 16/11/2022 23:17, Jeff Layton wrote:
+> ceph currently doesn't access i_flctx safely. This requires a
+> smp_load_acquire, as the pointer is set via cmpxchg (a release
+> operation).
+>
+> Cc: Xiubo Li <xiubli@redhat.com>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>   fs/ceph/locks.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/ceph/locks.c b/fs/ceph/locks.c
+> index 3e2843e86e27..f3b461c708a8 100644
+> --- a/fs/ceph/locks.c
+> +++ b/fs/ceph/locks.c
+> @@ -364,7 +364,7 @@ void ceph_count_locks(struct inode *inode, int *fcntl_count, int *flock_count)
+>   	*fcntl_count = 0;
+>   	*flock_count = 0;
+>   
+> -	ctx = inode->i_flctx;
+> +	ctx = locks_inode_context(inode);
+>   	if (ctx) {
+>   		spin_lock(&ctx->flc_lock);
+>   		list_for_each_entry(lock, &ctx->flc_posix, fl_list)
+> @@ -418,7 +418,7 @@ int ceph_encode_locks_to_buffer(struct inode *inode,
+>   				int num_fcntl_locks, int num_flock_locks)
+>   {
+>   	struct file_lock *lock;
+> -	struct file_lock_context *ctx = inode->i_flctx;
+> +	struct file_lock_context *ctx = locks_inode_context(inode);
+>   	int err = 0;
+>   	int seen_fcntl = 0;
+>   	int seen_flock = 0;
 
-diff --git a/fs/nfsd/nfs4state.c b/fs/nfsd/nfs4state.c
-index 13f326ae928c..935d669e2526 100644
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -2859,6 +2859,7 @@ static int
- nfsd4_cb_recall_any_done(struct nfsd4_callback *cb,
- 				struct rpc_task *task)
- {
-+	trace_nfsd_cb_recall_any_done(cb, task);
- 	switch (task->tk_status) {
- 	case -NFS4ERR_DELAY:
- 		rpc_delay(task, 2 * HZ);
-@@ -6209,6 +6210,7 @@ deleg_reaper(struct nfsd_net *nn)
- 		clp->cl_ra->ra_keep = 0;
- 		clp->cl_ra->ra_bmval[0] = BIT(RCA4_TYPE_MASK_RDATA_DLG) |
- 						BIT(RCA4_TYPE_MASK_WDATA_DLG);
-+		trace_nfsd_cb_recall_any(clp->cl_ra);
- 		nfsd4_run_cb(&clp->cl_ra->ra_cb);
- 	}
- }
-diff --git a/fs/nfsd/trace.h b/fs/nfsd/trace.h
-index 06a96e955bd0..bee951c335f1 100644
---- a/fs/nfsd/trace.h
-+++ b/fs/nfsd/trace.h
-@@ -9,9 +9,11 @@
- #define _NFSD_TRACE_H
- 
- #include <linux/tracepoint.h>
-+#include <linux/sunrpc/xprt.h>
- 
- #include "export.h"
- #include "nfsfh.h"
-+#include "xdr4.h"
- 
- #define NFSD_TRACE_PROC_RES_FIELDS \
- 		__field(unsigned int, netns_ino) \
-@@ -1471,6 +1473,53 @@ TRACE_EVENT(nfsd_cb_offload,
- 		__entry->fh_hash, __entry->count, __entry->status)
- );
- 
-+TRACE_EVENT(nfsd_cb_recall_any,
-+	TP_PROTO(
-+		const struct nfsd4_cb_recall_any *ra
-+	),
-+	TP_ARGS(ra),
-+	TP_STRUCT__entry(
-+		__field(u32, cl_boot)
-+		__field(u32, cl_id)
-+		__field(u32, ra_keep)
-+		__field(u32, ra_bmval)
-+		__sockaddr(addr, sizeof(struct sockaddr_storage))
-+	),
-+	TP_fast_assign(
-+		__entry->cl_boot = ra->ra_cb.cb_clp->cl_clientid.cl_boot;
-+		__entry->cl_id = ra->ra_cb.cb_clp->cl_clientid.cl_id;
-+		__entry->ra_keep = ra->ra_keep;
-+		__entry->ra_bmval = ra->ra_bmval[0];
-+		__assign_sockaddr(addr, &ra->ra_cb.cb_clp->cl_addr,
-+				  sizeof(struct sockaddr_storage))
-+	),
-+	TP_printk("Client %08x:%08x addr=%pISpc ra_keep=%d ra_bmval=0x%x",
-+		__entry->cl_boot, __entry->cl_id,
-+		__get_sockaddr(addr), __entry->ra_keep, __entry->ra_bmval
-+	)
-+);
-+
-+TRACE_EVENT(nfsd_cb_recall_any_done,
-+	TP_PROTO(
-+		const struct nfsd4_callback *cb,
-+		const struct rpc_task *task
-+	),
-+	TP_ARGS(cb, task),
-+	TP_STRUCT__entry(
-+		__field(u32, cl_boot)
-+		__field(u32, cl_id)
-+		__field(int, status)
-+	),
-+	TP_fast_assign(
-+		__entry->status = task->tk_status;
-+		__entry->cl_boot = cb->cb_clp->cl_clientid.cl_boot;
-+		__entry->cl_id = cb->cb_clp->cl_clientid.cl_id;
-+	),
-+	TP_printk("client %08x:%08x status=%d",
-+		__entry->cl_boot, __entry->cl_id, __entry->status
-+	)
-+);
-+
- DECLARE_EVENT_CLASS(nfsd_cb_done_class,
- 	TP_PROTO(
- 		const stateid_t *stp,
--- 
-2.9.5
+Thanks Jeff!
+
+Reviewed-by: Xiubo Li <xiubli@redhat.com>
+
 
