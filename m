@@ -2,154 +2,113 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B41462E9AC
-	for <lists+linux-nfs@lfdr.de>; Fri, 18 Nov 2022 00:37:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7585462FAF7
+	for <lists+linux-nfs@lfdr.de>; Fri, 18 Nov 2022 18:00:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiKQXho (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 17 Nov 2022 18:37:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44842 "EHLO
+        id S241979AbiKRRAU (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 18 Nov 2022 12:00:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbiKQXhn (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 17 Nov 2022 18:37:43 -0500
-Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB29769CC;
-        Thu, 17 Nov 2022 15:37:42 -0800 (PST)
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id 924E05C0078;
-        Thu, 17 Nov 2022 18:37:40 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute1.internal (MEProxy); Thu, 17 Nov 2022 18:37:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm3; t=1668728260; x=
-        1668814660; bh=TQyOyG2RKffQ9pXKTnrCZ6HzkCFg11bWWiOyqc7MfsU=; b=T
-        tbFlz1KMJ1hg/tbPjSGig49v6z8K3cnuDZHY9J4Int0sG89oAmPd4hh5Pd/PrNKk
-        bFgcW/wO6gY+lSAd+bhCqdFGc6vGWgAT9GotNr0ZHTqIzSnoVCS5A36uGwSg8GDS
-        eiJajrqT6oou1tPRIuXl2V9SON/pSWIWD19q5dGvcrBcteIF6yChEdM32onFJIw7
-        +5aJAI4yz/WmqfvyU+q5apFRcL/YozUvpolbQoS98MuSojjuyMpdn5PCeg5xP//J
-        mFj7P08aIj7NT8f/6Y5oG2LI60l4wCjPVVz7YE38D/LY3gAruPQFwFJgVKTvZqYb
-        wWcxZDExy08sZAaBw4t8w==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1668728260; x=
-        1668814660; bh=TQyOyG2RKffQ9pXKTnrCZ6HzkCFg11bWWiOyqc7MfsU=; b=r
-        r5LL3vVMj8j2W/zONnBHYNJBRUCVTSfv5mM4hT7zgH6XPCx6bkjvoUISYHqsVJsN
-        hBHKRtq6gxOQ2o4WZHphRyJDB2NeTgfPZG2L+cjqRtCsR+kG+0w8Pw9cbKpShm/i
-        DxiwRnoevRNrWyZBZvTNvQkASasEElhnYYRqo9vEqJP+sQVq/Y4vkMcse5ZW/4cS
-        ZBF+pfO6LNYr4LK9ZFNP8nJZN16XsyzxAL+afgO1oAZauy3ScHATiq6+5p4pApYj
-        Fl0J316JLZ34J3+ETtvucm79XrFTb+EQa4zw0WwTRb0f51ojJ48aI8oebjeQsIp4
-        hiQdbc/lGOcJr+YFyKBcw==
-X-ME-Sender: <xms:w8V2Y9j1C1JGw928FNnajKQLa5KeKrpVmhaV3tJm8cBgmzf1zqGugw>
-    <xme:w8V2YyDZDen1Y0VK2eQwT9iqF-n8_W2lfeEALTXMa0B0QRw0nR6mNb1v-g1qpgoj6
-    ZmaWAEzZ-4->
-X-ME-Received: <xmr:w8V2Y9GK2IysCjF3zwvoUti8WBtKIt3iH4Gem64vhY-Evsm3k20QbTYaEC3jbePZyViqY2Og7gvK8mo5QWH3sNpp_dIm7iYTIEKBRO0XdE6aF9OcMVC4>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvgedrgeelgdduudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkffggfgfuvfevfhfhjggtgfesthekredttdefjeenucfhrhhomhepkfgrnhcu
-    mfgvnhhtuceorhgrvhgvnhesthhhvghmrgifrdhnvghtqeenucggtffrrghtthgvrhhnpe
-    egvdetvedvfeeivdeuueejgeetvdehlefhheethfekgfejueffgeeugfekudfhjeenucev
-    lhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehrrghvvghnse
-    hthhgvmhgrfidrnhgvth
-X-ME-Proxy: <xmx:w8V2YyRNegCeR8hE_ThZPxUkN0opfOnI3-MPSA8a6x0ppuAYvD1hBA>
-    <xmx:w8V2Y6z01KZ-uAV3qVR-YoYdYgXH2zgRqFosvuKpAxgQXysFF8eUuA>
-    <xmx:w8V2Y45R9ZP5Ee5T7QiaqS58F7RELwZ4LyEmd87dtdqOzHT7huAldA>
-    <xmx:xMV2Y_oJUvRBhGznxF-CMZef1ggFC0IMlaCOF0ChhKXB-gTwlIo2sQ>
-Feedback-ID: i31e841b0:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 17 Nov 2022 18:37:34 -0500 (EST)
-Message-ID: <459307a8-cb64-265e-7112-feafaec6a32f@themaw.net>
-Date:   Fri, 18 Nov 2022 07:37:30 +0800
+        with ESMTP id S242169AbiKRRAT (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 18 Nov 2022 12:00:19 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7693A87A40
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Nov 2022 09:00:18 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id h14so5006299pjv.4
+        for <linux-nfs@vger.kernel.org>; Fri, 18 Nov 2022 09:00:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/TThN9EjghGiN/tuFc6wPX6GqaW/hzqaujSE2kp1eBs=;
+        b=eygPz9dT5zVZTbgpWAHY1wME0OfRDovtVRGYQqwVShoGa80yBlHlieQFim7CsakxqX
+         fDMll4oHXXBUP6E8waKvG83ciP3NU2XiVtAoPF6EpTNOPJ3OJMVfWHhacPuaIwYVQwug
+         kuHuEDxaPmOPnanz4g5nBvSVTTchZje4v4pjc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/TThN9EjghGiN/tuFc6wPX6GqaW/hzqaujSE2kp1eBs=;
+        b=cfl2UyU7aV8IyI8PF7h2jV6DIy6Ppt9E8tOz+TlySEUD0MPhy7UTqMkUC4pPxSjEba
+         XUI5DfsQscFzPIYQAmaEt6aB05JlJdsfWLQaFAcrEK016J2KLqb2mzgjVZvST+Xkn4RT
+         Sk12CO4YXNADnO5P1aO7jFP2HQFhxrZy8l3IibL8D+LadgM/Q8H/SvHKDIbE4Iej7wcn
+         hunCCk0RhcyN2MstgR+0AKp37YTOeLX7xqVjW5jYTdGccKSnnXz1DxbBWl+lUrZA3PUC
+         dS3H4hcqk3Y41oh1jvfr3v9OZe4HXcDbYPGpOIlscEGUFQbNxpF+SzX/CkWryueZFsdR
+         7L3A==
+X-Gm-Message-State: ANoB5pk0DPQMWNhwLT0huHwBWMN5mo8hUBN0dDCgVyS8xjJxcwjLOUQk
+        WlpZJf7Ah4+UGhAykwfx2AHkYg==
+X-Google-Smtp-Source: AA0mqf5QvHv11UC9twhA6JD4pceg2EobzmHdMqKKh3Naitc4xc3SRR7TJucJpCtXoSecmx9CZqphkw==
+X-Received: by 2002:a17:90a:294f:b0:213:d04:7529 with SMTP id x15-20020a17090a294f00b002130d047529mr14331588pjf.181.1668790817961;
+        Fri, 18 Nov 2022 09:00:17 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d17-20020a170903231100b00178b77b7e71sm475429plh.188.2022.11.18.09.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 18 Nov 2022 09:00:17 -0800 (PST)
+From:   coverity-bot <keescook@chromium.org>
+X-Google-Original-From: coverity-bot <keescook+coverity-bot@chromium.org>
+Date:   Fri, 18 Nov 2022 09:00:16 -0800
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     linux-kernel@vger.kernel.org, Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        linux-nfs@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-next@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Coverity: encode_cb_recallany4args(): Error handling issues
+Message-ID: <202211180900.6F94436@keescook>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.1
-Subject: Re: [PATCH 2/3] fs: namei: Allow follow_down() to uncover auto mounts
-To:     Jeff Layton <jlayton@kernel.org>,
-        Richard Weinberger <richard@nod.at>, linux-nfs@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        chuck.lever@oracle.com, anna@kernel.org,
-        trond.myklebust@hammerspace.com, viro@zeniv.linux.org.uk,
-        chris.chilvers@appsbroker.com, david.young@appsbroker.com,
-        luis.turcitu@appsbroker.com, david@sigma-star.at
-References: <20221117191151.14262-1-richard@nod.at>
- <20221117191151.14262-3-richard@nod.at>
- <f31d4114f363ed9de0eba66ad6a730fe013896a6.camel@kernel.org>
-Content-Language: en-US
-From:   Ian Kent <raven@themaw.net>
-In-Reply-To: <f31d4114f363ed9de0eba66ad6a730fe013896a6.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Hello!
 
-On 18/11/22 05:01, Jeff Layton wrote:
-> On Thu, 2022-11-17 at 20:11 +0100, Richard Weinberger wrote:
->> This function is only used by NFSD to cross mount points.
->> If a mount point is of type auto mount, follow_down() will
->> not uncover it. Add LOOKUP_AUTOMOUNT to the lookup flags
->> to have ->d_automount() called when NFSD walks down the
->> mount tree.
->>
->> Signed-off-by: Richard Weinberger <richard@nod.at>
->> ---
->>   fs/namei.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/fs/namei.c b/fs/namei.c
->> index 578c2110df02..000c4b84e6be 100644
->> --- a/fs/namei.c
->> +++ b/fs/namei.c
->> @@ -1462,7 +1462,7 @@ int follow_down(struct path *path)
->>   {
->>   	struct vfsmount *mnt = path->mnt;
->>   	bool jumped;
->> -	int ret = traverse_mounts(path, &jumped, NULL, 0);
->> +	int ret = traverse_mounts(path, &jumped, NULL, LOOKUP_AUTOMOUNT);
->>   
->>   	if (path->mnt != mnt)
->>   		mntput(mnt);
->
-> What happens when CROSSMOUNT isn't enabled and someone tries to stroll
-> into an automount point? I'm guessing the automount happens but the
-> export is denied? It seems like LOOKUP_AUTOMOUNT ought to be conditional
-> on the parent export having CROSSMOUNT set.
->
-> There's also another caller of follow_down too, the UNIX98 pty code.
-> This may be harmless for it, but it'd be best not to perturb that if we
-> can help it.
->
-> Maybe follow_down can grow a lookupflags argument?es, I think that's needed too.
+This is an experimental semi-automated report about issues detected by
+Coverity from a scan of next-20221118 as part of the linux-next scan project:
+https://scan.coverity.com/projects/linux-next-weekly-scan
 
+You're getting this email because you were associated with the identified
+lines of code (noted below) that were touched by commits:
 
-Changing the core VFS unconditionally ricks breaking things.
+  Thu Nov 17 11:55:28 2022 -0500
+    32dce0f9611b ("NFSD: add support for sending CB_RECALL_ANY")
 
+Coverity reported the following:
 
-For example this:
+*** CID 1527365:  Error handling issues  (CHECKED_RETURN)
+fs/nfsd/nfs4callback.c:344 in encode_cb_recallany4args()
+338      */
+339     static void
+340     encode_cb_recallany4args(struct xdr_stream *xdr,
+341     	struct nfs4_cb_compound_hdr *hdr, struct nfsd4_cb_recall_any *ra)
+342     {
+343     	encode_nfs_cb_opnum4(xdr, OP_CB_RECALL_ANY);
+vvv     CID 1527365:  Error handling issues  (CHECKED_RETURN)
+vvv     Calling "xdr_stream_encode_u32" without checking return value (as is done elsewhere 23 out of 24 times).
+344     	xdr_stream_encode_u32(xdr, ra->ra_keep);
+345     	xdr_stream_encode_uint32_array(xdr, ra->ra_bmval,
+346     				       ARRAY_SIZE(ra->ra_bmval));
+347     	hdr->nops++;
+348     }
+349
 
-         if (!(lookup_flags & (LOOKUP_PARENT | LOOKUP_DIRECTORY |
-                            LOOKUP_OPEN | LOOKUP_CREATE | 
-LOOKUP_AUTOMOUNT)) &&
-             dentry->d_inode)
+If this is a false positive, please let us know so we can mark it as
+such, or teach the Coverity rules to be smarter. If not, please make
+sure fixes get into linux-next. :) For patches fixing this, please
+include these lines (but double-check the "Fixes" first):
 
-will never be true now so that, at the least, the handling of this case
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 1527365 ("Error handling issues")
+Fixes: 32dce0f9611b ("NFSD: add support for sending CB_RECALL_ANY")
 
-will change for automount(8). I don't remember now the reasons behind
+Thanks for your attention!
 
-doing this but I do remember there was a special case that needed to
-
-be handled by it.
-
-
-Ian
-
+-- 
+Coverity-bot
