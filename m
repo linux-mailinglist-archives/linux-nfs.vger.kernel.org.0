@@ -2,48 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B00D632F7C
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Nov 2022 23:03:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B215632FDB
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Nov 2022 23:32:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231797AbiKUWDL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Nov 2022 17:03:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
+        id S231747AbiKUWcH (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Nov 2022 17:32:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41330 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230161AbiKUWDK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 17:03:10 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24D9BDB87A
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Nov 2022 14:02:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669068134;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YMKd/Bs7qgKxK3d2yDLuSvYLpTNEB6rexVneY8E6It8=;
-        b=J9UbiYc/SxnBN1Q4GYUNXqPoHIQoZz3s0CMMTfMeLrQpY46MEy+rvt5XkKYejLJGUQbubI
-        2/o0ezqglDL8pqHTdaQeIclsMB4sDG2+yOdwknNdkSz62YJ7V52069EInm+mwhICvqtctg
-        AYU2WoT5C99V18BEVJOlGZhogdJIjOQ=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-97-BCJecrIfN9ORT1g62yEryw-1; Mon, 21 Nov 2022 17:02:12 -0500
-X-MC-Unique: BCJecrIfN9ORT1g62yEryw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B4575101A5C0;
-        Mon, 21 Nov 2022 22:02:03 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.50.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B2304EA47;
-        Mon, 21 Nov 2022 22:01:46 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
+        with ESMTP id S229460AbiKUWcG (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 17:32:06 -0500
+Received: from mail-io1-xd33.google.com (mail-io1-xd33.google.com [IPv6:2607:f8b0:4864:20::d33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194C8C6BCB
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Nov 2022 14:32:06 -0800 (PST)
+Received: by mail-io1-xd33.google.com with SMTP id h206so9695892iof.10
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Nov 2022 14:32:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C14m+5yBrv+u7QhAN78BFentZAFfnah8l0PUC4om7m8=;
+        b=Hffgzad5MotJq5EstTpwFVQ55zJ2m4sb3dYfhAhqq6QB33wEMcRLHmm2P2eeaxcyl7
+         AuWzz1/l9u/1PZyxMCWxsiA0Q6e5fRCsSvqJb8QkirXxS7f+WkWGHtcgrG5qSrXeSLS7
+         dJYa3L0ToHNG/CDOCknNOKSmu/izuTLa+EFwY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C14m+5yBrv+u7QhAN78BFentZAFfnah8l0PUC4om7m8=;
+        b=d4MQbkS+r+sLmgZHReLtCT2l5drpp7D/KMAv0SFU7TTvc9Zm0NjzgKeF0cSQ982Bl1
+         Ur7e6vg+m0srqlgmn0ETdyn40fweQztB7hKucr9VwSijaoIZi1fS37q5JMeCTC/mFb1u
+         M1gqYounMnUQYty7aQUEezI3dKAhb//220zTRy+UXNdtRFlHvDzuUpDRIdvT3h5yfTEK
+         RSVZ9BAaEL4lPLcp5nm33IwLhktkxFO1CgXADB3Brb8maizJMQ2FT8a5heZbI8dfT2Rb
+         opqJpoA6+wE/aUo9+nEaR9At0nYON6gp62Naj9yZKGsKbAD8ZxMWXCOMa3N+/NUcRmaY
+         TQ8w==
+X-Gm-Message-State: ANoB5pl8rxTgt91UWqWU0MHpls2b4fXr7q4f0sYQu6T7iLzfVg01NeM3
+        Wq81EyPG50Vn/hv3S1j3ZSMohg==
+X-Google-Smtp-Source: AA0mqf7LzJaZLZ7BN/ieedWyHJVfNYy1D/3fvJQ9uHDra09xLMDQnM+TgsskrmQ988UMBIXzYDc/Wg==
+X-Received: by 2002:a02:cba6:0:b0:375:a360:a130 with SMTP id v6-20020a02cba6000000b00375a360a130mr9477313jap.307.1669069925449;
+        Mon, 21 Nov 2022 14:32:05 -0800 (PST)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id f15-20020a056638112f00b0037502ffac71sm4612316jar.18.2022.11.21.14.32.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 21 Nov 2022 14:32:04 -0800 (PST)
+Message-ID: <96114bec-1df7-0dcb-ec99-4f907587658d@linuxfoundation.org>
+Date:   Mon, 21 Nov 2022 15:32:02 -0700
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
+Content-Language: en-US
+To:     Benjamin Coddington <bcodding@redhat.com>
 Cc:     David Howells <dhowells@redhat.com>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Philipp Reisner <philipp.reisner@linbit.com>,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
-        =?utf-8?q?Christoph_B=C3=B6hmwalder?= 
+        =?UTF-8?Q?Christoph_B=c3=b6hmwalder?= 
         <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
         Josef Bacik <josef@toxicpanda.com>,
         Keith Busch <kbusch@kernel.org>,
@@ -82,24 +97,22 @@ Cc:     David Howells <dhowells@redhat.com>, netdev@vger.kernel.org,
         linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
         samba-technical@lists.samba.org, cluster-devel@redhat.com,
         ocfs2-devel@oss.oracle.com, v9fs-developer@lists.sourceforge.net,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
-Date:   Mon, 21 Nov 2022 17:01:42 -0500
-Message-ID: <A860595D-5BAB-461B-B449-8975C0424311@redhat.com>
-In-Reply-To: <26d98c8f-372b-b9c8-c29f-096cddaff149@linuxfoundation.org>
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
 References: <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
  <cover.1669036433.git.bcodding@redhat.com>
  <382872.1669039019@warthog.procyon.org.uk>
  <51B5418D-34FB-4E87-B87A-6C3FCDF8B21C@redhat.com>
  <4585e331-03ad-959f-e715-29af15f63712@linuxfoundation.org>
  <26d98c8f-372b-b9c8-c29f-096cddaff149@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+ <A860595D-5BAB-461B-B449-8975C0424311@redhat.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <A860595D-5BAB-461B-B449-8975C0424311@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -107,41 +120,45 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 21 Nov 2022, at 16:43, Shuah Khan wrote:
-
-> On 11/21/22 14:40, Shuah Khan wrote:
->> On 11/21/22 07:34, Benjamin Coddington wrote:
->>> On 21 Nov 2022, at 8:56, David Howells wrote:
->>>
->>>> Benjamin Coddington <bcodding@redhat.com> wrote:
+On 11/21/22 15:01, Benjamin Coddington wrote:
+> On 21 Nov 2022, at 16:43, Shuah Khan wrote:
+> 
+>> On 11/21/22 14:40, Shuah Khan wrote:
+>>> On 11/21/22 07:34, Benjamin Coddington wrote:
+>>>> On 21 Nov 2022, at 8:56, David Howells wrote:
 >>>>
->>>>> Since moving to memalloc_nofs_save/restore, SUNRPC has stopped sett=
-ing the
->>>>> GFP_NOIO flag on sk_allocation which the networking system uses to =
-decide
->>>>> when it is safe to use current->task_frag.
+>>>>> Benjamin Coddington <bcodding@redhat.com> wrote:
+>>>>>
+>>>>>> Since moving to memalloc_nofs_save/restore, SUNRPC has stopped setting the
+>>>>>> GFP_NOIO flag on sk_allocation which the networking system uses to decide
+>>>>>> when it is safe to use current->task_frag.
+>>>>>
+>>>>> Um, what's task_frag?
 >>>>
->>>> Um, what's task_frag?
+>>>> Its a per-task page_frag used to coalesce small writes for networking -- see:
+>>>>
+>>>> 5640f7685831 net: use a per task frag allocator
+>>>>
+>>>> Ben
+>>>>
+>>>>
 >>>
->>> Its a per-task page_frag used to coalesce small writes for networking=
- -- see:
->>>
->>> 5640f7685831 net: use a per task frag allocator
->>>
->>> Ben
->>>
+>>> I am not seeing this in the mainline. Where can find this commit?
 >>>
 >>
->> I am not seeing this in the mainline. Where can find this commit?
->>
->
-> Okay. I see this commit in the mainline. However, I don't see the
-> sk_use_task_frag in mainline.
+>> Okay. I see this commit in the mainline. However, I don't see the
+>> sk_use_task_frag in mainline.
+> 
+> sk_use_task_frag is in patch 1/3 in this posting.
+> 
+> https://lore.kernel.org/netdev/26d98c8f-372b-b9c8-c29f-096cddaff149@linuxfoundation.org/T/#m3271959c4cf8dcff1c0c6ba023b2b3821d9e7e99
+> 
 
-sk_use_task_frag is in patch 1/3 in this posting.
+Aha. I don't have 1/3 in my Inbox - I think it would make
+sense to cc people on the first patch so we can understand
+the premise for the change.
 
-https://lore.kernel.org/netdev/26d98c8f-372b-b9c8-c29f-096cddaff149@linux=
-foundation.org/T/#m3271959c4cf8dcff1c0c6ba023b2b3821d9e7e99
-
-Ben
+thanks,
+-- Shuah
+  
 
