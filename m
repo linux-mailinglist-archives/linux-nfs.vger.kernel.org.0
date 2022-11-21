@@ -2,52 +2,46 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3BF8632483
-	for <lists+linux-nfs@lfdr.de>; Mon, 21 Nov 2022 14:58:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5AA6325F9
+	for <lists+linux-nfs@lfdr.de>; Mon, 21 Nov 2022 15:35:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbiKUN6m (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Nov 2022 08:58:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34626 "EHLO
+        id S229480AbiKUOfz (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Nov 2022 09:35:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231570AbiKUN6H (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 08:58:07 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E387BF80A
-        for <linux-nfs@vger.kernel.org>; Mon, 21 Nov 2022 05:57:12 -0800 (PST)
+        with ESMTP id S229447AbiKUOfy (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 09:35:54 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAB6063CC
+        for <linux-nfs@vger.kernel.org>; Mon, 21 Nov 2022 06:35:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669039031;
+        s=mimecast20190719; t=1669041299;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=ZDwjBu4RghRAGfAihvi/wXSTBbp9s9Q2lKXWhxCyRLY=;
-        b=ZaLwmcYJIA16PNHL8XXxF6UJjlUhqsqoWDqcwuGkS2Jnq0GHV822EM4QEG0wLoLytAoHmP
-        eSqXY6WR475v271j5oXoX8hsEEJp0RfrccqoFw+y9njHuyCZeFRi12jP0Mjd6hjC4bRv8y
-        F9PIyWYoYWivQw6zgQsqDI1fLmeYu58=
+        bh=181ZHweS4wHRSdLySvK3fpfT7WMJLPwn/rNHBgW8rAk=;
+        b=fxt1T7Fn/Jp1aKcoJT9kSwIAdNSxyQyq0EQU5puz4xvZhS2BtpUTYPU+a+Z6A3G6ZFjthf
+        Zk5aqRa0oZW1p5nx0rz/F97IakMwvtDfcdY1BYYsiKJDijNxmU9vxJmBujJCvCNicBdyrR
+        PaH3G+zBcIORxbNzIpjFjk6mls0oWIc=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-357-r7ih-rJfOeutGzbihEzMtw-1; Mon, 21 Nov 2022 08:57:10 -0500
-X-MC-Unique: r7ih-rJfOeutGzbihEzMtw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.rdu2.redhat.com [10.11.54.4])
+ us-mta-220-cKpJPG72PVO5ijDDtOCqbA-1; Mon, 21 Nov 2022 09:34:58 -0500
+X-MC-Unique: cKpJPG72PVO5ijDDtOCqbA-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 2049F811E67;
-        Mon, 21 Nov 2022 13:57:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14F9D2027062;
-        Mon, 21 Nov 2022 13:57:01 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
-References: <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com> <cover.1669036433.git.bcodding@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1521B811E7A;
+        Mon, 21 Nov 2022 14:34:56 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.50.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 61D8E492B06;
+        Mon, 21 Nov 2022 14:34:47 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Philipp Reisner <philipp.reisner@linbit.com>,
         Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Christoph =?utf-8?Q?B=C3=B6hmwalder?= 
+        =?utf-8?q?Christoph_B=C3=B6hmwalder?= 
         <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
         Josef Bacik <josef@toxicpanda.com>,
         Keith Busch <kbusch@kernel.org>,
@@ -88,11 +82,15 @@ cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         ocfs2-devel@oss.oracle.com, v9fs-developer@lists.sourceforge.net,
         ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
 Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
+Date:   Mon, 21 Nov 2022 09:34:43 -0500
+Message-ID: <51B5418D-34FB-4E87-B87A-6C3FCDF8B21C@redhat.com>
+In-Reply-To: <382872.1669039019@warthog.procyon.org.uk>
+References: <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
+ <cover.1669036433.git.bcodding@redhat.com>
+ <382872.1669039019@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain
-Date:   Mon, 21 Nov 2022 13:56:59 +0000
-Message-ID: <382872.1669039019@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.4
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.10
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -103,14 +101,19 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+On 21 Nov 2022, at 8:56, David Howells wrote:
 
-Benjamin Coddington <bcodding@redhat.com> wrote:
+> Benjamin Coddington <bcodding@redhat.com> wrote:
+>
+>> Since moving to memalloc_nofs_save/restore, SUNRPC has stopped setting the
+>> GFP_NOIO flag on sk_allocation which the networking system uses to decide
+>> when it is safe to use current->task_frag.
+>
+> Um, what's task_frag?
 
-> Since moving to memalloc_nofs_save/restore, SUNRPC has stopped setting the
-> GFP_NOIO flag on sk_allocation which the networking system uses to decide
-> when it is safe to use current->task_frag.
+Its a per-task page_frag used to coalesce small writes for networking -- see:
 
-Um, what's task_frag?
+5640f7685831 net: use a per task frag allocator
 
-David
+Ben
 
