@@ -2,117 +2,94 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F9A8633262
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 02:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D87D633295
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 03:03:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231441AbiKVBvp (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 21 Nov 2022 20:51:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52654 "EHLO
+        id S232427AbiKVCDs (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 21 Nov 2022 21:03:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231661AbiKVBvo (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 20:51:44 -0500
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 123FCE123B;
-        Mon, 21 Nov 2022 17:51:41 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=joseph.qi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0VVPgoyJ_1669081895;
-Received: from 30.222.0.245(mailfrom:joseph.qi@linux.alibaba.com fp:SMTPD_---0VVPgoyJ_1669081895)
-          by smtp.aliyun-inc.com;
-          Tue, 22 Nov 2022 09:51:37 +0800
-Message-ID: <0c6a44ff-409e-99b2-eaa9-fd6e87a9e104@linux.alibaba.com>
-Date:   Tue, 22 Nov 2022 09:51:35 +0800
+        with ESMTP id S231788AbiKVCDr (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 21 Nov 2022 21:03:47 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CB0DDF93;
+        Mon, 21 Nov 2022 18:03:46 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id p81so8025694yba.4;
+        Mon, 21 Nov 2022 18:03:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=1b8HPjIVanvIpx3mpSwXbKcufI9SFau4CSmq1BJRqyg=;
+        b=ZSeuBNVyJ2rnz+faE/E2bxffcQP5dJVUl/DV0FbPI7pwyjwtiab2XX2ZLiEjZ/f9pV
+         D9IqD5ZAG7yODHAxDC1xo2nVVqCtiMQJkFonw5VBzX1M3K1dE1LpuVApdRuAnHDshqXO
+         IRLHyKUTLatTlKiXHCTuDu7Zyls3nSDOsql3hCsj0CS/1/Y42qyutcV2Gj44kdd5wX64
+         fgmcmrm8j8exxUU/cqtXynSiot0wEDmXygia3P3TiDAGxLnuxrVcjgJS2hbVHs/1d6XG
+         NIJRUEVON4847ka7NQ3A3E7iJTNoNS/eUy3kuUwfzwEK11QksWfQDFkp+XI39aq8C8wN
+         bLtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1b8HPjIVanvIpx3mpSwXbKcufI9SFau4CSmq1BJRqyg=;
+        b=evA8tPjqC9yNZVQYubZaZsPWUM6dh8e7geJUYtlAfBnq8+F9+59Sui+yJepvbU9/xO
+         FQqLkytNIXpNaXTeyugO1qrpW1h7V/y3che/Tq+TmiAepTRyBOlG+DMEedeP1u9DV/nZ
+         GkDVBj3ydy+uztfWoBC99sqzrj4cbR8ngQrke2avaVMDX+poGHVgEw3ZxlgrCnODxqtX
+         uCV9sswSEL9aQksIFskhi57/iSWnYInegLsOrGh6F2SIMi4uKuLvtG6c+9jqx2cq0zg+
+         621XU2MBJvy2Msnmei5mLgVPemwiOPtlBlTLPyd/RBFX5BBzL3XgCD1TzIP5QGpcNmfG
+         zCWA==
+X-Gm-Message-State: ANoB5pmDGKbALlnAKJeBAGFmzCBrVQw8KuD/mLlbPDv7Wyk+3oQkKFda
+        jVg0WdYcWv7CXgfVFbhZivSI7Z7T9q3gHLzzDOgmOv2zbwZa1w==
+X-Google-Smtp-Source: AA0mqf4M+JvX5tIp8DVHLRmVAkEFiriwAW+Ex9lSHaXG4z1lYU/E2yxUomjYbAre9IHK3TBIBs0yN8hqF8qYa/knN8M=
+X-Received: by 2002:a25:a304:0:b0:6d3:2de2:af93 with SMTP id
+ d4-20020a25a304000000b006d32de2af93mr2160213ybi.161.1669082625457; Mon, 21
+ Nov 2022 18:03:45 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.4.2
-Subject: Re: [PATCH] filelock: move file locking definitions to separate
- header file
-Content-Language: en-US
-To:     Jeff Layton <jlayton@kernel.org>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>
-Cc:     hch@lst.de, linux-kernel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
-References: <20221120210004.381842-1-jlayton@kernel.org>
-From:   Joseph Qi <joseph.qi@linux.alibaba.com>
-In-Reply-To: <20221120210004.381842-1-jlayton@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-        USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no version=3.4.6
+Received: by 2002:a25:9f88:0:0:0:0:0 with HTTP; Mon, 21 Nov 2022 18:03:45
+ -0800 (PST)
+From:   Felipe Bedetti <felipebedetticosta@gmail.com>
+Date:   Mon, 21 Nov 2022 23:03:45 -0300
+Message-ID: <CAFO8usxQ-j7YQTeho2f53_humwPgsR++6hs1mmFOocpmNArHyg@mail.gmail.com>
+Subject: Norah Colly
+To:     linux mmc <linux-mmc@vger.kernel.org>,
+        linux mtd <linux-mtd@lists.infradead.org>,
+        linux net drivers <linux-net-drivers@solarflare.com>,
+        linux nfs <linux-nfs@vger.kernel.org>,
+        linux nilfs <linux-nilfs@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,BODY_SINGLE_URI,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SHORT_SHORTNER,SPF_HELO_NONE,SPF_PASS,
+        SUSPICIOUS_RECIPS,TVD_SPACE_RATIO autolearn=no autolearn_force=no
+        version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:b2f listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.4999]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  2.5 SUSPICIOUS_RECIPS Similar addresses in recipient list
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [felipebedetticosta[at]gmail.com]
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.0 TVD_SPACE_RATIO No description available.
+        *  1.6 SHORT_SHORTNER Short body with little more than a link to a
+        *      shortener
+        *  0.7 BODY_SINGLE_URI Message body is only a URI
+X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi,
-
-On 11/21/22 4:59 AM, Jeff Layton wrote:
-> The file locking definitions have lived in fs.h since the dawn of time,
-> but they are only used by a small subset of the source files that
-> include it.
-> 
-> Move the file locking definitions to a new header file, and add the
-> appropriate #include directives to the source files that need them. By
-> doing this we trim down fs.h a bit and limit the amount of rebuilding
-> that has to be done when we make changes to the file locking APIs.
-> 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> ---
->  fs/9p/vfs_file.c          |   1 +
->  fs/afs/internal.h         |   1 +
->  fs/attr.c                 |   1 +
->  fs/ceph/locks.c           |   1 +
->  fs/cifs/cifsfs.c          |   1 +
->  fs/cifs/cifsglob.h        |   1 +
->  fs/cifs/cifssmb.c         |   1 +
->  fs/cifs/file.c            |   1 +
->  fs/cifs/smb2file.c        |   1 +
->  fs/dlm/plock.c            |   1 +
->  fs/fcntl.c                |   1 +
->  fs/file_table.c           |   1 +
->  fs/fuse/file.c            |   1 +
->  fs/gfs2/file.c            |   1 +
->  fs/inode.c                |   1 +
->  fs/ksmbd/smb2pdu.c        |   1 +
->  fs/ksmbd/vfs.c            |   1 +
->  fs/ksmbd/vfs_cache.c      |   1 +
->  fs/lockd/clntproc.c       |   1 +
->  fs/lockd/netns.h          |   1 +
->  fs/locks.c                |   1 +
->  fs/namei.c                |   1 +
->  fs/nfs/nfs4_fs.h          |   1 +
->  fs/nfs_common/grace.c     |   1 +
->  fs/nfsd/netns.h           |   1 +
->  fs/ocfs2/locks.c          |   1 +
->  fs/ocfs2/stack_user.c     |   1 +
-
-Seems it misses the related changes in:
-fs/ocfs2/stackglue.c
-
-Thanks,
-Joseph
-
->  fs/open.c                 |   1 +
->  fs/orangefs/file.c        |   1 +
->  fs/proc/fd.c              |   1 +
->  fs/utimes.c               |   1 +
->  fs/xattr.c                |   1 +
->  fs/xfs/xfs_buf.h          |   1 +
->  fs/xfs/xfs_file.c         |   1 +
->  fs/xfs/xfs_inode.c        |   1 +
->  include/linux/filelock.h  | 428 ++++++++++++++++++++++++++++++++++++++
->  include/linux/fs.h        | 421 -------------------------------------
->  include/linux/lockd/xdr.h |   1 +
->  38 files changed, 464 insertions(+), 421 deletions(-)
->  create mode 100644 include/linux/filelock.h
-> 
-> Unless anyone has objections, I'll plan to merge this in via the file
-> locking tree for v6.3. I'd appreciate Acked-bys or Reviewed-bys from
-> maintainers, however.
-> 
+https://bit.ly/3EKzbum
