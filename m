@@ -2,109 +2,95 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C572633D3F
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 14:13:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9D36633DA3
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 14:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233291AbiKVNNJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Nov 2022 08:13:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
+        id S231773AbiKVN24 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Nov 2022 08:28:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233248AbiKVNM7 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Nov 2022 08:12:59 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91BF1403D
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Nov 2022 05:11:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669122716;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bTv+o4yZTAgl32c+kR+AWaVr2rTAKK5pjCk87JiFUXA=;
-        b=Q0ut0gPhqPrPY3LUaO/QWrF1oTfpUiW9MM+bPEA2FqZLJJt+FEczDoa8g9bpuzHsoATQSo
-        zcDSevMD4/IRl2OT5BKfCKt6Z05az1O3h19AWidxULx6xd+blWLCiuKoEkNZhiLVHjh6N4
-        xrBIpGaNc2MAfyQ/rhY6uzuotrwdVmU=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-214--Lx0DSFQMvaDiapE4v8nrg-1; Tue, 22 Nov 2022 08:11:55 -0500
-X-MC-Unique: -Lx0DSFQMvaDiapE4v8nrg-1
-Received: by mail-qt1-f200.google.com with SMTP id fz10-20020a05622a5a8a00b003a4f466998cso14591439qtb.16
-        for <linux-nfs@vger.kernel.org>; Tue, 22 Nov 2022 05:11:55 -0800 (PST)
+        with ESMTP id S232626AbiKVN24 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Nov 2022 08:28:56 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80FD64547;
+        Tue, 22 Nov 2022 05:28:51 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id b1-20020a17090a7ac100b00213fde52d49so14342889pjl.3;
+        Tue, 22 Nov 2022 05:28:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=95bxvB3m1WUxDVxDgwyJI7abCy5JBWykIIuSBhM3v5c=;
+        b=qltDiL46ZrbgP8NaY3ll908jwySCkQARbcOCWypjMjQQctaGmfP416MwFYa25trYjS
+         gpwOmyjHsHJBGiOA7wAQJZBabbF2Qw9PakW6X1A2jUNCSMwSNHl0ywhMzeGhkMUN8HA6
+         98v1p/9ky7jCOd0YKW5XkUXhtx4lZteE5HP810Av20WpJJcVcvjX4Amj5T8L8Pti6kMX
+         rWyUPzgXPXsmADpky4ltumvueC+UVCL+qHcL+weIpIbHKhxNtji7M3haLCKg4vn1JsPq
+         AgmGdRATW4BqdyCcNDzWuQfnrnyTUrLirrQAKsxqWrprnQz6HBmd5pVZzLLKnUNQiGEu
+         XLGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:references:to:from
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bTv+o4yZTAgl32c+kR+AWaVr2rTAKK5pjCk87JiFUXA=;
-        b=FSJWgLcYAmbFMNzW8UEzs55iYyfwRLx6CuIC4UiWc9F6xijdGoUuELICTAmNCkaF5F
-         3YO8hFDU/6PnYWFIVPsTA1BMUkxFNqGNsoIW5OTc7W0my/a0YgahH0kSg/yvYNlI3hDY
-         XnracHhHTNs2yG0o32jF3f7qt3ILq5w+OauB1SMm/KJmpWl3cvO+vkJLLjDy+SRQ/0k+
-         6+8IyuBhTkIotSsFQ7OVGulZBOFVLLGWtXT5kve1F+C5dDYQaePvFishozYFNjdzgke2
-         HIuCzuPkOKnTRraKv9z+N7UVlLQOvTXwDT1z0J73DMjZHCzVkKPTNBnjK3eaBLJ6pjqz
-         vtaw==
-X-Gm-Message-State: ANoB5pkEjlO4HiaNZDa3R8Nny6DBvkIVt0eEk9N0PhkHsFd12RkcXjO6
-        uqr0zIU3Mr331adA3F45Ncpy0FQOGeiPuvxRhaQj2TZ7kuN1AaDrEf12PoElFeiDwXxjrmeKGgu
-        ZOOosTw6MOitcMZwU3p3jAL/IUVx4fTcr1dBI6aGDVRi7V4jODCBuW1/E63cj+S0sR2eRnw==
-X-Received: by 2002:a05:620a:112d:b0:6fa:26d8:77d with SMTP id p13-20020a05620a112d00b006fa26d8077dmr21274870qkk.354.1669122714536;
-        Tue, 22 Nov 2022 05:11:54 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf5HmuUQ+v6MbJ3K/6wlqLxjY97+rSanRBt8yWotPqJSuAVdtCzgdriAPt5KbCR1RA2B7TZsRw==
-X-Received: by 2002:a05:620a:112d:b0:6fa:26d8:77d with SMTP id p13-20020a05620a112d00b006fa26d8077dmr21274834qkk.354.1669122714072;
-        Tue, 22 Nov 2022 05:11:54 -0800 (PST)
-Received: from [172.31.1.6] ([70.105.255.216])
-        by smtp.gmail.com with ESMTPSA id az42-20020a05620a172a00b006cfaee39ccesm10120863qkb.114.2022.11.22.05.11.53
-        for <linux-nfs@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 22 Nov 2022 05:11:53 -0800 (PST)
-Message-ID: <692cd1bc-eff1-e207-b682-bfc6ec35f90d@redhat.com>
-Date:   Tue, 22 Nov 2022 08:11:52 -0500
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=95bxvB3m1WUxDVxDgwyJI7abCy5JBWykIIuSBhM3v5c=;
+        b=QXeSZG6iw9ve8lq+opOBrGO3GUrX7mQky7jHZemsakC+oFQw0fwvm0iP515grV/gSG
+         3APGxYGO0xHO60FGJbtlQT47a+GlQG6XL/uNszhV49XeD2JW1124K73CgpIvMvZugEO2
+         VV1sRA0VeH18lMo2F5U3p3qDy10jIVawSFs6I/Nk8dX/WAfL7bikFg6B9EjnW1Rx6BMn
+         nj80rVR98ZJJmkj9M1jvTtN57AUDvkfwDXdWJYWl8RsW+ZTHJ+1Gkd++Qktu7/1x4O1g
+         0MKWHbSFGdLR9QgmwyiJLg8ZNSnPNlP6v2T1fxxXJTpCmGR96kXHahSOUA1sfcKaw31s
+         s33A==
+X-Gm-Message-State: ANoB5pnhF2rBbk1gFRfOBYui/oZH5FJ2JPy4/2gfokLT8UdG0LxoqhQK
+        R2VHjOC4MBOJEPej/IPtKzQ=
+X-Google-Smtp-Source: AA0mqf58ilSK1bCjxTI07jOEmp2NfJhoo2bgX3p6z04IKiPwMaM8Mlny8JhaZku9TFC/hGLWF+vLxw==
+X-Received: by 2002:a17:902:cf0e:b0:17c:5b01:f227 with SMTP id i14-20020a170902cf0e00b0017c5b01f227mr3766303plg.3.1669123731346;
+        Tue, 22 Nov 2022 05:28:51 -0800 (PST)
+Received: from ubuntu.localdomain ([60.221.110.5])
+        by smtp.gmail.com with ESMTPSA id x3-20020aa79403000000b0056d2317455bsm10652181pfo.7.2022.11.22.05.28.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Nov 2022 05:28:50 -0800 (PST)
+From:   Donglin Peng <dolinux.peng@gmail.com>
+To:     trond.myklebust@hammerspace.com, anna@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Donglin Peng <dolinux.peng@gmail.com>
+Subject: [PATCH] NFS: dprintk() should not print negative inode number
+Date:   Tue, 22 Nov 2022 05:28:15 -0800
+Message-Id: <20221122132815.15673-1-dolinux.peng@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.1
-Subject: Re: [PATCH] nfs4_getfacl: Initialize acl pointer to NULL
-Content-Language: en-US
-From:   Steve Dickson <steved@redhat.com>
-To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
-References: <20221121191427.132409-1-steved@redhat.com>
-In-Reply-To: <20221121191427.132409-1-steved@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+The type of the i_ino member of the inode structure is unsigned long.
+There are some occurrences where dprintk() outputs a negative inode
+number.This leads to confusion and more difficult to read debugging.
 
+Fixes: 9e6e70f8d8b6 ("NFSv4: Support NFSv4 optional attributes in the struct nfs_fattr")
+Signed-off-by: Donglin Peng <dolinux.peng@gmail.com>
+---
+ fs/nfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 11/21/22 2:14 PM, Steve Dickson wrote:
-> nfs4_getfacl.c: scope_hint: In function 'print_acl_from_path'
-> nfs4_getfacl.c:168:17: warning[-Wmaybe-uninitialized]:
->      'acl' may be used uninitialized in this function
-> 
-> Signed-off-by: Steve Dickson <steved@redhat.com>
-Committed... (tag: nfs4-acl-tools-0.4.3-rc1)
-
-steved.
-> ---
->   nfs4_getfacl/nfs4_getfacl.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/nfs4_getfacl/nfs4_getfacl.c b/nfs4_getfacl/nfs4_getfacl.c
-> index 954cf7e..ddb3005 100644
-> --- a/nfs4_getfacl/nfs4_getfacl.c
-> +++ b/nfs4_getfacl/nfs4_getfacl.c
-> @@ -148,7 +148,7 @@ out:
->   
->   static void print_acl_from_path(const char *fpath, enum acl_type type)
->   {
-> -	struct nfs4_acl *acl;
-> +	struct nfs4_acl *acl = NULL;
->   
->   	switch (type) {
->   	case ACL_TYPE_ACL:
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 6b2cfa59a1a2..53d8704e07c5 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -2081,7 +2081,7 @@ static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+ 				if (S_ISDIR(inode->i_mode))
+ 					nfs_force_lookup_revalidate(inode);
+ 				attr_changed = true;
+-				dprintk("NFS: change_attr change on server for file %s/%ld\n",
++				dprintk("NFS: change_attr change on server for file %s/%lu\n",
+ 						inode->i_sb->s_id,
+ 						inode->i_ino);
+ 			} else if (!have_delegation)
+-- 
+2.25.1
 
