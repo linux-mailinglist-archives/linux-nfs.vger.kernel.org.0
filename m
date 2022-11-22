@@ -2,115 +2,109 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9952633C48
-	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 13:20:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C572633D3F
+	for <lists+linux-nfs@lfdr.de>; Tue, 22 Nov 2022 14:13:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233648AbiKVMUm (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 22 Nov 2022 07:20:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33980 "EHLO
+        id S233291AbiKVNNJ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 22 Nov 2022 08:13:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233605AbiKVMUl (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Nov 2022 07:20:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF86D4AF08;
-        Tue, 22 Nov 2022 04:20:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 97E89B81A52;
-        Tue, 22 Nov 2022 12:20:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BB3C433C1;
-        Tue, 22 Nov 2022 12:20:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669119638;
-        bh=omBfWXmMhLMm+WJGcOqaotuYzo99NcFtkFUjLGTxJkU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lCqeNISkHr5FV5oUA/uF7cCqbH3pbaJZzL0H/JeQImnqkxBP/qna4Vwgxuxwwf4kc
-         djCzx51ajPQzJsx7t6fcFaQ3CPrg1HyiCa0H584zbvwYZVAhxyYK9KeJP/cZSm7jN0
-         AEQFZIjKudut9Bn5O9uHSqMDAio5e4wG5sa2i3DoX7eTRf+obcb5zEzndUU3Fwo275
-         rIYFdUuTfDxxMV446wuHU7u2FLiPhi/QMUcdaTapUWa++/h/6C38Q3lKoDzCYdb8Qd
-         YelQN+YEM82ey5KUKNOPaXvgHVIDzs2zei/oxdiPIwrOhlWjLs2M+5ia9+Ld6VGXMR
-         y+AjrCDtny9iA==
-Message-ID: <a731e688122d1a6fdb2f7bdbd71d403fa110e9f2.camel@kernel.org>
-Subject: Re: [PATCH] filelock: move file locking definitions to separate
- header file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>
-Cc:     hch@lst.de, linux-kernel@vger.kernel.org,
-        v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
-Date:   Tue, 22 Nov 2022 07:20:35 -0500
-In-Reply-To: <0c6a44ff-409e-99b2-eaa9-fd6e87a9e104@linux.alibaba.com>
-References: <20221120210004.381842-1-jlayton@kernel.org>
-         <0c6a44ff-409e-99b2-eaa9-fd6e87a9e104@linux.alibaba.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
+        with ESMTP id S233248AbiKVNM7 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 22 Nov 2022 08:12:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91BF1403D
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Nov 2022 05:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669122716;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bTv+o4yZTAgl32c+kR+AWaVr2rTAKK5pjCk87JiFUXA=;
+        b=Q0ut0gPhqPrPY3LUaO/QWrF1oTfpUiW9MM+bPEA2FqZLJJt+FEczDoa8g9bpuzHsoATQSo
+        zcDSevMD4/IRl2OT5BKfCKt6Z05az1O3h19AWidxULx6xd+blWLCiuKoEkNZhiLVHjh6N4
+        xrBIpGaNc2MAfyQ/rhY6uzuotrwdVmU=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-214--Lx0DSFQMvaDiapE4v8nrg-1; Tue, 22 Nov 2022 08:11:55 -0500
+X-MC-Unique: -Lx0DSFQMvaDiapE4v8nrg-1
+Received: by mail-qt1-f200.google.com with SMTP id fz10-20020a05622a5a8a00b003a4f466998cso14591439qtb.16
+        for <linux-nfs@vger.kernel.org>; Tue, 22 Nov 2022 05:11:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:references:to:from
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bTv+o4yZTAgl32c+kR+AWaVr2rTAKK5pjCk87JiFUXA=;
+        b=FSJWgLcYAmbFMNzW8UEzs55iYyfwRLx6CuIC4UiWc9F6xijdGoUuELICTAmNCkaF5F
+         3YO8hFDU/6PnYWFIVPsTA1BMUkxFNqGNsoIW5OTc7W0my/a0YgahH0kSg/yvYNlI3hDY
+         XnracHhHTNs2yG0o32jF3f7qt3ILq5w+OauB1SMm/KJmpWl3cvO+vkJLLjDy+SRQ/0k+
+         6+8IyuBhTkIotSsFQ7OVGulZBOFVLLGWtXT5kve1F+C5dDYQaePvFishozYFNjdzgke2
+         HIuCzuPkOKnTRraKv9z+N7UVlLQOvTXwDT1z0J73DMjZHCzVkKPTNBnjK3eaBLJ6pjqz
+         vtaw==
+X-Gm-Message-State: ANoB5pkEjlO4HiaNZDa3R8Nny6DBvkIVt0eEk9N0PhkHsFd12RkcXjO6
+        uqr0zIU3Mr331adA3F45Ncpy0FQOGeiPuvxRhaQj2TZ7kuN1AaDrEf12PoElFeiDwXxjrmeKGgu
+        ZOOosTw6MOitcMZwU3p3jAL/IUVx4fTcr1dBI6aGDVRi7V4jODCBuW1/E63cj+S0sR2eRnw==
+X-Received: by 2002:a05:620a:112d:b0:6fa:26d8:77d with SMTP id p13-20020a05620a112d00b006fa26d8077dmr21274870qkk.354.1669122714536;
+        Tue, 22 Nov 2022 05:11:54 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf5HmuUQ+v6MbJ3K/6wlqLxjY97+rSanRBt8yWotPqJSuAVdtCzgdriAPt5KbCR1RA2B7TZsRw==
+X-Received: by 2002:a05:620a:112d:b0:6fa:26d8:77d with SMTP id p13-20020a05620a112d00b006fa26d8077dmr21274834qkk.354.1669122714072;
+        Tue, 22 Nov 2022 05:11:54 -0800 (PST)
+Received: from [172.31.1.6] ([70.105.255.216])
+        by smtp.gmail.com with ESMTPSA id az42-20020a05620a172a00b006cfaee39ccesm10120863qkb.114.2022.11.22.05.11.53
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 22 Nov 2022 05:11:53 -0800 (PST)
+Message-ID: <692cd1bc-eff1-e207-b682-bfc6ec35f90d@redhat.com>
+Date:   Tue, 22 Nov 2022 08:11:52 -0500
 MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.1
+Subject: Re: [PATCH] nfs4_getfacl: Initialize acl pointer to NULL
+Content-Language: en-US
+From:   Steve Dickson <steved@redhat.com>
+To:     Linux NFS Mailing list <linux-nfs@vger.kernel.org>
+References: <20221121191427.132409-1-steved@redhat.com>
+In-Reply-To: <20221121191427.132409-1-steved@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, 2022-11-22 at 09:51 +0800, Joseph Qi wrote:
-> Hi,
->=20
-> On 11/21/22 4:59 AM, Jeff Layton wrote:
-> > The file locking definitions have lived in fs.h since the dawn of time,
-> > but they are only used by a small subset of the source files that
-> > include it.
-> >=20
-> > Move the file locking definitions to a new header file, and add the
-> > appropriate #include directives to the source files that need them. By
-> > doing this we trim down fs.h a bit and limit the amount of rebuilding
-> > that has to be done when we make changes to the file locking APIs.
-> >=20
-> > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > ---
-> >  fs/9p/vfs_file.c          |   1 +
-> >  fs/afs/internal.h         |   1 +
-> >  fs/attr.c                 |   1 +
-> >  fs/ceph/locks.c           |   1 +
-> >  fs/cifs/cifsfs.c          |   1 +
-> >  fs/cifs/cifsglob.h        |   1 +
-> >  fs/cifs/cifssmb.c         |   1 +
-> >  fs/cifs/file.c            |   1 +
-> >  fs/cifs/smb2file.c        |   1 +
-> >  fs/dlm/plock.c            |   1 +
-> >  fs/fcntl.c                |   1 +
-> >  fs/file_table.c           |   1 +
-> >  fs/fuse/file.c            |   1 +
-> >  fs/gfs2/file.c            |   1 +
-> >  fs/inode.c                |   1 +
-> >  fs/ksmbd/smb2pdu.c        |   1 +
-> >  fs/ksmbd/vfs.c            |   1 +
-> >  fs/ksmbd/vfs_cache.c      |   1 +
-> >  fs/lockd/clntproc.c       |   1 +
-> >  fs/lockd/netns.h          |   1 +
-> >  fs/locks.c                |   1 +
-> >  fs/namei.c                |   1 +
-> >  fs/nfs/nfs4_fs.h          |   1 +
-> >  fs/nfs_common/grace.c     |   1 +
-> >  fs/nfsd/netns.h           |   1 +
-> >  fs/ocfs2/locks.c          |   1 +
-> >  fs/ocfs2/stack_user.c     |   1 +
->=20
-> Seems it misses the related changes in:
-> fs/ocfs2/stackglue.c
->=20
 
-I was able to build ocfs2.ko just fine without any changes to
-stackglue.c. What problem do you see here?
 
-Thanks,
---=20
-Jeff Layton <jlayton@kernel.org>
+On 11/21/22 2:14 PM, Steve Dickson wrote:
+> nfs4_getfacl.c: scope_hint: In function 'print_acl_from_path'
+> nfs4_getfacl.c:168:17: warning[-Wmaybe-uninitialized]:
+>      'acl' may be used uninitialized in this function
+> 
+> Signed-off-by: Steve Dickson <steved@redhat.com>
+Committed... (tag: nfs4-acl-tools-0.4.3-rc1)
+
+steved.
+> ---
+>   nfs4_getfacl/nfs4_getfacl.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/nfs4_getfacl/nfs4_getfacl.c b/nfs4_getfacl/nfs4_getfacl.c
+> index 954cf7e..ddb3005 100644
+> --- a/nfs4_getfacl/nfs4_getfacl.c
+> +++ b/nfs4_getfacl/nfs4_getfacl.c
+> @@ -148,7 +148,7 @@ out:
+>   
+>   static void print_acl_from_path(const char *fpath, enum acl_type type)
+>   {
+> -	struct nfs4_acl *acl;
+> +	struct nfs4_acl *acl = NULL;
+>   
+>   	switch (type) {
+>   	case ACL_TYPE_ACL:
+
