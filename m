@@ -2,62 +2,68 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61C2463696A
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Nov 2022 20:00:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91750636A7C
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Nov 2022 21:05:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236940AbiKWTAQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Nov 2022 14:00:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58280 "EHLO
+        id S237539AbiKWUE5 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Nov 2022 15:04:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236748AbiKWTAP (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Nov 2022 14:00:15 -0500
-Received: from wedge010.net.lu.se (wedge010.net.lu.se [130.235.56.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD2988FE5C;
-        Wed, 23 Nov 2022 11:00:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; d=control.lth.se; s=edge;
-        c=relaxed/relaxed; t=1669230010; h=from:subject:to:date:message-id;
-        bh=kSHuC6LXb+PE+chwjpVMprQcFyficGssjG266e/qJ7w=;
-        b=dxrq+8mrvfFC7sKa9pReD2C66KhbInKE4TwtMIIxK+y+jRqGRJrBlY3QT8jS96tCiBqklzrK1+Z
-        G91MHAYJXosSpsLN3cY4ghFYj6Ko/rSDUAy8s6ub3oZ/YiE0L1XGUbYp6IjJpLolfnM104ciFCf2A
-        Yo06wq4YH+t9Lt8I/5oiuAzpvAl6Rcj8wsYZibxOGuGfbl7kUpvaw6rkZrFcEr8rl8a3Cg3e/IZG4
-        oJ/dbiZnPKtL31IfCXfOpnHOx9YLY/9yvBWK0tihE61U+QNAhHCcPlmrUyOgJfZ5iT/EtsNgxrqMc
-        z4Xanr0d/fXLo8SN41XRz7uxO+G+U5KtywkA==
-Received: from wexc007.uw.lu.se (130.235.59.251) by mail.lu.se
- (130.235.56.200) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.2507.13; Wed, 23
- Nov 2022 20:00:09 +0100
-Received: from [130.235.83.196] (130.235.139.100) by wexc007.uw.lu.se
- (130.235.59.251) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521) id 15.1.2507.13; Wed, 23
- Nov 2022 20:00:10 +0100
-Message-ID: <9e45fed2-f9e9-8c5e-3c33-993de330f11e@control.lth.se>
-Date:   Wed, 23 Nov 2022 20:00:10 +0100
+        with ESMTP id S236820AbiKWUEv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Nov 2022 15:04:51 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C720623A7
+        for <linux-nfs@vger.kernel.org>; Wed, 23 Nov 2022 12:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669233793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FyF91lZbMxrHn5anVwrCryKb88DRm4Sm24TF8WqfMn8=;
+        b=CMisdcVai6BZZeZDynbJiEBD+a6ebD2+Pwzq9oGjERQpsYuvenl3l+wriYDbpzzQnOWL/8
+        C9PvE0obcf2puw7U9P0XJgyr8NNIyBVGf4v3p+zIqsY4kkQk2zHfDPV03JQNYlCxhtOTQn
+        zkGbV37I3JES9uZ8ijTzMd3dGtnwcL8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-599-WfiQ4PvGNeam6muHEfvymg-1; Wed, 23 Nov 2022 15:03:09 -0500
+X-MC-Unique: WfiQ4PvGNeam6muHEfvymg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CB7E087B2A1;
+        Wed, 23 Nov 2022 20:03:08 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.14])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B49AF40C83C5;
+        Wed, 23 Nov 2022 20:03:06 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wghJtq-952e_8jd=vtV68y_HsDJ8=e0=C3-AsU2WL-8YA@mail.gmail.com>
+References: <CAHk-=wghJtq-952e_8jd=vtV68y_HsDJ8=e0=C3-AsU2WL-8YA@mail.gmail.com> <1459152.1669208550@warthog.procyon.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dhowells@redhat.com, willy@infradead.org, dwysocha@redhat.com,
+        Rohith Surabattula <rohiths.msft@gmail.com>,
+        Steve French <sfrench@samba.org>,
+        Shyam Prasad N <nspmangalore@gmail.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Ilya Dryomov <idryomov@gmail.com>, linux-cachefs@redhat.com,
+        linux-cifs@vger.kernel.org, linux-afs@lists.infradead.org,
+        v9fs-developer@lists.sourceforge.net, ceph-devel@vger.kernel.org,
+        linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] mm, netfs, fscache: Stop read optimisation when folio removed from pagecache
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-From:   Anders Blomdell <anders.blomdell@control.lth.se>
-Subject: [PATCH v2 1/1] Make nfsd_splice_actor work with reads with a non-zero
- offset that doesn't end on a page boundary
-To:     Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>
-CC:     <linux-nfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
-Content-Language: en-US
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [130.235.139.100]
-X-ClientProxiedBy: wexc012.uw.lu.se (130.235.59.234) To wexc007.uw.lu.se
- (130.235.59.251)
-X-CrossPremisesHeadersFilteredBySendConnector: wexc007.uw.lu.se
-X-OrganizationHeadersPreserved: wexc007.uw.lu.se
-Received-SPF: Pass (wedge010.net.lu.se: domain of
- anders.blomdell@control.lth.se designates 130.235.59.251 as permitted sender)
- receiver=wedge010.net.lu.se; client-ip=130.235.59.251; helo=wexc007.uw.lu.se;
-X-CrossPremisesHeadersFilteredBySendConnector: wedge010.net.lu.se
-X-OrganizationHeadersPreserved: wedge010.net.lu.se
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
-        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1619342.1669233783.1@warthog.procyon.org.uk>
+Date:   Wed, 23 Nov 2022 20:03:03 +0000
+Message-ID: <1619343.1669233783@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,40 +71,119 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Make nfsd_splice_actor work with reads with a non-zero offset that doesn't end on a page boundary.
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-This was found when virtual machines with nfs-mounted qcow2 disks failed to boot properly (originally found
-on v6.0.5, fix also needed and tested on v6.0.9 and v6.1-rc6).
+> But I also think it's strange in another way, with that odd placement of
+> 
+>         mapping_clear_release_always(inode->i_mapping);
+> 
+> at inode eviction time. That just feels very random.
 
-Signed-off-by: Anders Blomdell <anders.blomdell@control.lth.se>
-Link: https://bugzilla.redhat.com/show_bug.cgi?id=2142132
-Fixes: bfbfb6182ad1 "nfsd_splice_actor(): handle compound pages"
-Cc: stable@vger.kernel.org # v6.0+
+I was under the impression that a warning got splashed if unexpected
+address_space flags were set when ->evict_inode() returned.  I may be thinking
+of page flags.  If it doesn't, fine, this isn't required.
 
--- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -869,12 +869,13 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
-  		  struct splice_desc *sd)
-  {
-  	struct svc_rqst *rqstp = sd->u.data;
--	struct page *page = buf->page;	// may be a compound one
-+	// buf->page may be a compound one
-  	unsigned offset = buf->offset;
-+	struct page *first = buf->page + offset / PAGE_SIZE;
-+	struct page *last = buf->page + (offset + sd->len - 1) / PAGE_SIZE;
+> Similarly, that change to shrink_folio_list() looks strange, with the
+> nasty folio_needs_release() helper. It seems entirely pointless, with
+> the use then being
+> 
+>                 if (folio_needs_release(folio)) {
+>                         if (!filemap_release_folio(folio, sc->gfp_mask))
+>                                 goto activate_locked;
 
--	page += offset / PAGE_SIZE;
--	for (int i = sd->len; i > 0; i -= PAGE_SIZE)
--		svc_rqst_replace_page(rqstp, page++);
-+	for (struct page *page = first; page <= last; page++)
-+		svc_rqst_replace_page(rqstp, page);
-  	if (rqstp->rq_res.page_len == 0)	// first call
-  		rqstp->rq_res.page_base = offset % PAGE_SIZE;
-  	rqstp->rq_res.page_len += sd->len;
+Unfortunately, that can't be simply folded down.  It actually does something
+extra if folio_has_private() was set, filemap_release_folio() succeeds but
+there was no mapping:
 
--- 
-Anders Blomdell                  Email: anders.blomdell@control.lth.se
-Department of Automatic Control
-Lund University                  Phone:    +46 46 222 4625
-P.O. Box 118
-SE-221 00 Lund, Sweden
+		 * Rarely, folios can have buffers and no ->mapping.
+		 * These are the folios which were not successfully
+		 * invalidated in truncate_cleanup_folio().  We try to
+		 * drop those buffers here and if that worked, and the
+		 * folio is no longer mapped into process address space
+		 * (refcount == 1) it can be freed.  Otherwise, leave
+		 * the folio on the LRU so it is swappable.
+
+Possibly I could split the if-statement and make it two separate cases:
+
+		/*
+		 * If the folio has buffers, try to free the buffer
+		 * mappings associated with this folio. If we succeed
+		 * we try to free the folio as well.
+		 *
+		 * We do this even if the folio is dirty.
+		 * filemap_release_folio() does not perform I/O, but it
+		 * is possible for a folio to have the dirty flag set,
+		 * but it is actually clean (all its buffers are clean).
+		 * This happens if the buffers were written out directly,
+		 * with submit_bh(). ext3 will do this, as well as
+		 * the blockdev mapping.  filemap_release_folio() will
+		 * discover that cleanness and will drop the buffers
+		 * and mark the folio clean - it can be freed.
+		 */
+		if (!filemap_release_folio(folio, sc->gfp_mask))
+			goto activate_locked;
+
+filemap_release_folio() will return true if folio_has_private() is false,
+which would allow us to reach the next part, which we would then skip.
+
+		/*
+		 * Rarely, folios can have buffers and no ->mapping.
+		 * These are the folios which were not successfully
+		 * invalidated in truncate_cleanup_folio().  We try to
+		 * drop those buffers here and if that worked, and the
+		 * folio is no longer mapped into process address space
+		 * (refcount == 1) it can be freed.  Otherwise, leave
+		 * the folio on the LRU so it is swappable.
+		 */
+		if (!mapping && folio_has_private(folio) &&
+		    folio_ref_count(folio) == 1) {
+			folio_unlock(folio);
+			if (folio_put_testzero(folio))
+				goto free_it;
+			 /*
+			  * rare race with speculative reference.
+			  * the speculative reference will free
+			  * this folio shortly, so we may
+			  * increment nr_reclaimed here (and
+			  * leave it off the LRU).
+			  */
+			nr_reclaimed += nr_pages;
+			continue;
+		}
+
+But that will malfunction if try_to_free_buffers(), as called from
+folio_has_private(), manages to clear the private bits.  I wonder if it might
+be possible to fold this bit into filemap_release_folio() somehow.
+
+I really need a three-state return from filemap_release_folio() - maybe:
+
+	0	couldn't release
+	1	released
+	2	there was no private
+
+The ordinary "if (filemap_release_folio()) { ... }" would work as expected.
+shrink_folio_list() could do something different between case 1 and case 2.
+
+> And the change to mm/filemap.c is completely unacceptable in all
+> forms, and this added test
+> 
+> +       if ((!mapping || !mapping_release_always(mapping)) &&
+> +           !folio_test_private(folio) &&
+> +           !folio_test_private_2(folio))
+> +               return true;
+> 
+> will not be accepted even during the merge window. That code makes no
+> sense what-so-ever, and is in no way acceptable.
+>
+> That code makes no sense what-so-ever. Why isn't it using
+> "folio_has_private()"?
+
+It should be, yes.
+
+> Why is this done as an open-coded - and *badly* so - version of
+> !folio_needs_release() that you for some reason made private to mm/vmscan.c?
+
+Yeah, in retrospect, I should have put that in mm/internal.h.
+
+David
+
