@@ -2,63 +2,63 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DE16367A6
-	for <lists+linux-nfs@lfdr.de>; Wed, 23 Nov 2022 18:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5501E6367AF
+	for <lists+linux-nfs@lfdr.de>; Wed, 23 Nov 2022 18:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239297AbiKWRuh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 23 Nov 2022 12:50:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40664 "EHLO
+        id S239202AbiKWRx2 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 23 Nov 2022 12:53:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239267AbiKWRuN (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Nov 2022 12:50:13 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9A32AEA6A
-        for <linux-nfs@vger.kernel.org>; Wed, 23 Nov 2022 09:49:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669225756;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=rsAMOUXepEnJIhAN4V1Pv6Dlf2eanLN0uoZgg0e1ZrE=;
-        b=SDeN6nT8/3DoIPek5b1ec7/YXAxkFh4rrIRJth3amGmfnRAM8CRjoJT/3RAqrskspx1ZZv
-        5pG1zFLueVNswypx9TFUsvltSXzCe4uJgLRGQPsOPdLTOA+NWDiJSVC9Xg1faIrhrTCY2H
-        1l8WfE/mkuuWlwBiaOdiJl67U/LZ/sA=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-179-w6P7b-snMbyGairNAw2xew-1; Wed, 23 Nov 2022 12:49:11 -0500
-X-MC-Unique: w6P7b-snMbyGairNAw2xew-1
-Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 48B62381494C;
-        Wed, 23 Nov 2022 17:49:10 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.50.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D6FC94A9254;
-        Wed, 23 Nov 2022 17:49:08 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Anders Blomdell <anders.blomdell@control.lth.se>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Anna Schumaker <anna@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Subject: Re: Kernel 6.0.5 breaks virtual machines that boot from nfs mounted
- qcow2 images
-Date:   Wed, 23 Nov 2022 12:49:04 -0500
-Message-ID: <A0F05ED3-14B0-4AE7-B4F7-82398033CA34@redhat.com>
-In-Reply-To: <0abaa41e-79e1-3c0c-6d1b-47d4e21f2296@control.lth.se>
-References: <65115206-ec17-443e-8495-91661a2fd9be@control.lth.se>
- <0abaa41e-79e1-3c0c-6d1b-47d4e21f2296@control.lth.se>
+        with ESMTP id S239159AbiKWRx1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 23 Nov 2022 12:53:27 -0500
+X-Greylist: delayed 83 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 23 Nov 2022 09:53:22 PST
+Received: from wedge010.net.lu.se (wedge010.net.lu.se [130.235.56.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4EF0532F6;
+        Wed, 23 Nov 2022 09:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; d=control.lth.se; s=edge;
+        c=relaxed/relaxed; t=1669225831; h=from:subject:to:date:message-id;
+        bh=NXkC0w2qN7VbeeKptq9p/JRTcNBvFhYe5qpUNxa79Bo=;
+        b=ilRKbS3EatBmhFqVqO++b0HSTfTjjsmqR7DOnB1eeU4ZXh5ap8a3oQ1zppbrp/4qOp7FKbBqC2K
+        HUUq1oPrTounI53EdJ/L1C7KVrioPUQggULqnG0EFga4/UoGpcVt3gDylT/ANY0WslYSa41EvfI5M
+        rFHKtNP62USTk8Edg2Qx+oOX2F/xUTj7VYx7G7JQ+Opwn27HzR8igi2qLx4EyKRMZ3j8IkpGYuz1w
+        0mCpkIUdhG0u7z+FiFvQF/nq3GaWlodrkjyy25/7Vv+i6uFWdkUfNBtC1cHTKPQdmDAad1QaXu/4V
+        J7ZB59Vr06JymhC8KxEuBgeSZDal2vF6sIEg==
+Received: from wexc007.uw.lu.se (130.235.59.251) by mail.lu.se
+ (130.235.56.200) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P256) id 15.1.2507.13; Wed, 23
+ Nov 2022 18:50:25 +0100
+Received: from [130.235.83.196] (130.235.139.100) by wexc007.uw.lu.se
+ (130.235.59.251) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P521) id 15.1.2507.13; Wed, 23
+ Nov 2022 18:50:11 +0100
+Message-ID: <ba550d60-7fd2-a68f-0ea1-798fd9eb3315@control.lth.se>
+Date:   Wed, 23 Nov 2022 18:50:10 +0100
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.0
+Content-Language: en-US
+From:   Anders Blomdell <anders.blomdell@control.lth.se>
+Subject: [PATCH 1/1] Make nfsd_splice_actor work with reads with a non-zero
+ offset that doesn't end on a page boundary
+To:     Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>
+CC:     <linux-nfs@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [130.235.139.100]
+X-ClientProxiedBy: wexc009.uw.lu.se (130.235.59.253) To wexc007.uw.lu.se
+ (130.235.59.251)
+X-CrossPremisesHeadersFilteredBySendConnector: wexc007.uw.lu.se
+X-OrganizationHeadersPreserved: wexc007.uw.lu.se
+Received-SPF: Pass (wedge010.net.lu.se: domain of
+ anders.blomdell@control.lth.se designates 130.235.59.251 as permitted sender)
+ receiver=wedge010.net.lu.se; client-ip=130.235.59.251; helo=wexc007.uw.lu.se;
+X-CrossPremisesHeadersFilteredBySendConnector: wedge010.net.lu.se
+X-OrganizationHeadersPreserved: wedge010.net.lu.se
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_INVALID,
+        DKIM_SIGNED,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,33 +66,32 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 23 Nov 2022, at 5:08, Anders Blomdell wrote:
+Make nfsd_splice_actor work with reads with a non-zero offset that doesn't end on a page boundary.
 
-> Our problems turned out to be a fallout of Al Viros's splice rework, wh=
-ere nfsd reads with non-zero offsets and not ending
-> on a page boundary failed to remap the last page. I belive that this is=
- a decent fix for that problem (tested on v6.1-rc6,
-> 6.0.7 and 6.0.9)
->
-> ---- a/fs/nfsd/vfs.c
-> +++ b/fs/nfsd/vfs.c
-> @@ -873,7 +873,7 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, str=
-uct pipe_buffer *buf,
->         unsigned offset =3D buf->offset;
->          page +=3D offset / PAGE_SIZE;
-> -       for (int i =3D sd->len; i > 0; i -=3D PAGE_SIZE)
-> +       for (int i =3D sd->len + offset % PAGE_SIZE; i > 0; i -=3D PAGE=
-_SIZE)
->                 svc_rqst_replace_page(rqstp, page++);
->         if (rqstp->rq_res.page_len =3D=3D 0)        // first call
->                 rqstp->rq_res.page_base =3D offset % PAGE_SIZE;
+This was found when virtual machines with nfs-mounted qcow2 disks failed to boot properly (originally found
+on v6.0.5, fix also needed and tested on v6.0.9 and v6.1-rc6).
+
+Signed-off-by: Anders Blomdell <anders.blomdell@control.lth.se>
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=2142132
+Fixes: bfbfb6182ad1 "nfsd_splice_actor(): handle compound pages"
+Cc: stable@vger.kernel.org # v6.0+
+
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -873,7 +873,7 @@ nfsd_splice_actor(struct pipe_inode_info *pipe, struct pipe_buffer *buf,
+         unsigned offset = buf->offset;
+  
+         page += offset / PAGE_SIZE;
+-       for (int i = sd->len; i > 0; i -= PAGE_SIZE)
++       for (int i = sd->len + offset % PAGE_SIZE; i > 0; i -= PAGE_SIZE)
+                 svc_rqst_replace_page(rqstp, page++);
+         if (rqstp->rq_res.page_len == 0)        // first call
+                 rqstp->rq_res.page_base = offset % PAGE_SIZE;
 
 
-Does anyone have insight into how we could possibly have caught this in t=
-esting?
-
-I have been unable to make my knfsd hit this problem: it returns unaligne=
-d READs all day long, no problems.
-
-Ben
-
+-- 
+Anders Blomdell                  Email: anders.blomdell@control.lth.se
+Department of Automatic Control
+Lund University                  Phone:    +46 46 222 4625
+P.O. Box 118
+SE-221 00 Lund, Sweden
