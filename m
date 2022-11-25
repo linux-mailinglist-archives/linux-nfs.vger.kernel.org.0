@@ -2,65 +2,65 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BADD638AE4
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 14:08:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 13C85638AE6
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 14:08:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbiKYNIS (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Nov 2022 08:08:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41156 "EHLO
+        id S229554AbiKYNIW (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Nov 2022 08:08:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbiKYNIR (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 08:08:17 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811A22D1
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Nov 2022 05:08:15 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id fy37so10185161ejc.11
-        for <linux-nfs@vger.kernel.org>; Fri, 25 Nov 2022 05:08:15 -0800 (PST)
+        with ESMTP id S229477AbiKYNIV (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 08:08:21 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9142C63E0
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Nov 2022 05:08:20 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id v8so6338694edi.3
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Nov 2022 05:08:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=y4UPRNgYkTTgkIOvGTjmVSedLlvmZSyOq0T81C3zGQQ=;
-        b=li3RvOfMk4XyI7OF5bateRXK0Ev0fSi7unzVhCnXohZM/noQ9TmvmLPT6JRwyzL6oo
-         Q6iUMIzM9fjUCPCOGF3kP/CncpP1WViMl5Cfpgn2mPwVaTl+IAgZUFzNnZUXzr4cl42Z
-         Vx8qe7vqnaptr21WV2xbiaL0SDoVSHHXkX3AmfJaiiO7lknNM9qoJ6uljPfBhQZ/95BE
-         ypmq7hh0vAkgyUAEmg1AbNCPs8EIyftwRO5qrdW+USlbds1Rk3rqx44jBe4KtpUm1GWy
-         b7Fa+ftRjg2xnNPvwhZMTi4WAQ/U7zYNNBrak/g56qJRDH/cwpASJFwnioOPEoacwrzc
-         nJYQ==
+        bh=Au2Jln13q6UAwXwfIAB1ZDUVfQ/b9kFSlTxuCZ/p3Sk=;
+        b=lTRzkHDU/MwwtzsQihvxsqHY3MFYwGiVyJjJWqEgXrhJ75QgJr+MuJEerzqwPr0HYE
+         rCfcudCkDdXP+OMXqVfc7jsVI49KMoHvWDA+Ljs/8Yo/q5FMUYyaMrjvKeBwziSykZtk
+         H1FMVkBDl7QoWtxsapSmpaum+AXyzY9noNKHxB0FPTqUt5dybTO3NcMezWHY1HPOCmnG
+         tdXsQQ8g7elbSai/MaykUI6nDkcJ6tvA7exFTEHQeXu6VvrisUnYOlqKZc/etSpFLLQB
+         yYKJ2/qrd0fAPaD4xZnHj9yKm+Ha8ax0PO5coDtLW+ZdM1ANjWnlGs3U1uG3QmK273Ws
+         +JNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=y4UPRNgYkTTgkIOvGTjmVSedLlvmZSyOq0T81C3zGQQ=;
-        b=NKTJWljY6PLDwA+3zw3tEWxslKbBWkBu1fGJ72KQ+a8TONgDR3GV1RRC7mqaKVC3w4
-         tFdcbt1xhSVZyf5oegU3rQdr+MjD/0ReCzlTvfFn0tVSGtrZs8rUZmANMEnrfn2ICZNa
-         JlXX+br8JV2bhdQX47tndH85cb1uIWcowEKjFuYWHiAcRKh9blp1c/0OiRUDBPKIpra3
-         WjzPK1wbWF3zO68KY4RBTxOezfuqNMrqV6RKdNZxyHlGm6pDzvI54/dVEeZ1mYIZCyhE
-         EGYdBQPcmuCeA2eskjaYZcOwqVisRfi/xH9pbt7Y6SyE67OoE/Dn+tFpplvfinvGtFCo
-         CSDg==
-X-Gm-Message-State: ANoB5pnXa2M6E6iELidznrXuzbgLcrBRWXPKT+2wN5oixOqSTh476gfX
-        q9IHmWSa1vhRO++Sl2gnfN+8hgtuTSJmdw==
-X-Google-Smtp-Source: AA0mqf4RVc/bugMEEbfhBijTlb6yZTVCcV8m0eiN3FOX6RpxqNLLZ8FwRhVbBFQpqsgduZLM9zeqcw==
-X-Received: by 2002:a17:906:398b:b0:7ad:b868:f096 with SMTP id h11-20020a170906398b00b007adb868f096mr32352998eje.295.1669381694005;
-        Fri, 25 Nov 2022 05:08:14 -0800 (PST)
+        bh=Au2Jln13q6UAwXwfIAB1ZDUVfQ/b9kFSlTxuCZ/p3Sk=;
+        b=PzPWL6TJ2b8qqnLUYXVJmsVEwLopwhlc7C70t54HOempC5VSs1mAyLdN1Zer0c/vPB
+         r/wJHg8waozRJnxEl2GYWIhgB+H1V9OlMbE8BAz6g3p43saASd5ZE61pKyTmBVCo1n7U
+         aU5xQvnHLRP8/ewsI4Uq5EsorlGPhiNxSW/yP2glw6NZ0R0Lcz1R1ZejaeftKC1Mz606
+         nexEBX/MT5QL9bdJTM5PfzY0l8RM7DXilVfyuMM4oWnzHbCGitiuv4LlnFcUkExo7mS7
+         X0WyPKWZ8wBv2a6UbH621C1OSk8mGE/0e9wnamlOajpcW5mEOAkN/nIrzkqLfTOC+n0H
+         mlFA==
+X-Gm-Message-State: ANoB5pnm0w99MSSxoLsGnaCjSkfI/TRVTwjTyjAdX8I3ghpv3sOLnWz9
+        X9l6Jd/QEDTUjjxH7cmRWGA=
+X-Google-Smtp-Source: AA0mqf5qjtJDZK4gKEWcaaY7vr92uKbEg4wS1hGFjuamPY2nMk5Zn0B+TxPLwe2oo2AvrCwzPIaK9Q==
+X-Received: by 2002:a05:6402:2b8b:b0:468:cae8:f5a6 with SMTP id fj11-20020a0564022b8b00b00468cae8f5a6mr35733980edb.263.1669381695649;
+        Fri, 25 Nov 2022 05:08:15 -0800 (PST)
 Received: from eldamar.lan (c-82-192-242-114.customer.ggaweb.ch. [82.192.242.114])
-        by smtp.gmail.com with ESMTPSA id ta19-20020a1709078c1300b0078d46aa3b82sm1545365ejc.21.2022.11.25.05.08.13
+        by smtp.gmail.com with ESMTPSA id nb12-20020a1709071c8c00b0078df3b4464fsm1587671ejc.19.2022.11.25.05.08.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Nov 2022 05:08:13 -0800 (PST)
+        Fri, 25 Nov 2022 05:08:14 -0800 (PST)
 Sender: Salvatore Bonaccorso <salvatore.bonaccorso@gmail.com>
 Received: by eldamar.lan (Postfix, from userid 1000)
-        id AB0FEBE2DE0; Fri, 25 Nov 2022 14:08:12 +0100 (CET)
+        id 24CC8BE2DE0; Fri, 25 Nov 2022 14:08:14 +0100 (CET)
 From:   Salvatore Bonaccorso <carnil@debian.org>
 To:     NeilBrown <neilb@suse.de>, Steve Dickson <steved@redhat.com>,
         linux-nfs@vger.kernel.org
 Cc:     Andras Korn <korn-debbugs@elan.rulez.org>,
         Marco d'Itri <md@linux.it>, Michael Prokop <mika@debian.org>,
         Salvatore Bonaccorso <carnil@debian.org>
-Subject: [PATCH 3/4] Revert "systemd: Apply all sysctl settings when NFS-related modules are loaded"
-Date:   Fri, 25 Nov 2022 14:07:24 +0100
-Message-Id: <20221125130725.1977606-4-carnil@debian.org>
+Subject: [PATCH 4/4] systemd: Apply all sysctl settings through udev rule  when NFS-related modules are loaded
+Date:   Fri, 25 Nov 2022 14:07:25 +0100
+Message-Id: <20221125130725.1977606-5-carnil@debian.org>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20221125130725.1977606-1-carnil@debian.org>
 References: <20221125130725.1977606-1-carnil@debian.org>
@@ -76,76 +76,93 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-This reverts commit afc7132dfb212ac1f676a5ac36d29a9e06325645.
+sysctl settings (e.g.  /etc/sysctl.conf and others) are normally loaded
+once at boot.  If the module that implements some settings is no yet
+loaded, those settings don't get applied.
 
-The approach caused problems with sysctl from busybox and with kmod as
-reported in Debian (https://bugs.debian.org/1024082).
+Various NFS modules support various sysctl settings.  If they are loaded
+after boot, they miss out.
 
+Add a new udev rule configuration to udev/rules.d/60-nfs.rules to apply
+the relevant settings when the module is loaded.
+
+Placing it in the systemd directory similarly as the coice for the
+original commit afc7132dfb21 ("systemd: Apply all sysctl settings when
+NFS-related modules are loaded").
+
+Link: https://lore.kernel.org/linux-nfs/Y1KoKwu88PulcokW@eldamar.lan/
+Link: https://bugs.debian.org/1022172
+Link: https://bugs.debian.org/1024082
+Suggested-by: Marco d'Itri <md@linux.it>
 Signed-off-by: Salvatore Bonaccorso <carnil@debian.org>
 ---
- systemd/50-nfs.conf | 16 ----------------
- systemd/Makefile.am | 10 ++--------
- 2 files changed, 2 insertions(+), 24 deletions(-)
- delete mode 100644 systemd/50-nfs.conf
+ systemd/60-nfs.rules | 21 +++++++++++++++++++++
+ systemd/Makefile.am  |  9 +++++++--
+ 2 files changed, 28 insertions(+), 2 deletions(-)
+ create mode 100644 systemd/60-nfs.rules
 
-diff --git a/systemd/50-nfs.conf b/systemd/50-nfs.conf
-deleted file mode 100644
-index b56b2d765969..000000000000
---- a/systemd/50-nfs.conf
-+++ /dev/null
-@@ -1,16 +0,0 @@
--# Ensure all NFS systctl settings get applied when modules load
--
--# sunrpc module supports "sunrpc.*" sysctls
--install sunrpc /sbin/modprobe --ignore-install sunrpc $CMDLINE_OPTS && /sbin/sysctl -q --pattern sunrpc --system
--
--# rpcrdma module supports sunrpc.svc_rdma.*
--install rpcrdma /sbin/modprobe --ignore-install rpcrdma $CMDLINE_OPTS && /sbin/sysctl -q --pattern sunrpc.svc_rdma --system
--
--# lockd module supports "fs.nfs.nlm*" and "fs.nfs.nsm*" sysctls
--install lockd /sbin/modprobe --ignore-install lockd $CMDLINE_OPTS && /sbin/sysctl -q --pattern fs.nfs.n[sl]m --system
--
--# nfsv4 module supports "fs.nfs.*" sysctls (nfs_callback_tcpport and idmap_cache_timeout)
--install nfsv4 /sbin/modprobe --ignore-install nfsv4 $CMDLINE_OPTS && /sbin/sysctl -q --pattern 'fs.nfs.(nfs_callback_tcpport|idmap_cache_timeout)' --system
--
--# nfs module supports "fs.nfs.*" sysctls
--install nfs /sbin/modprobe --ignore-install nfs $CMDLINE_OPTS && /sbin/sysctl -q --pattern fs.nfs --system
+diff --git a/systemd/60-nfs.rules b/systemd/60-nfs.rules
+new file mode 100644
+index 000000000000..188423c1d2e3
+--- /dev/null
++++ b/systemd/60-nfs.rules
+@@ -0,0 +1,21 @@
++# Ensure all NFS systctl settings get applied when modules load
++
++# sunrpc module supports "sunrpc.*" sysctls
++ACTION=="add", SUBSYSTEM=="module", KERNEL=="sunrpc", \
++  RUN+="/sbin/sysctl -q --pattern ^sunrpc --system"
++
++# rpcrdma module supports sunrpc.svc_rdma.*
++ACTION=="add", SUBSYSTEM=="module", KERNEL=="rpcrdma", \
++  RUN+="/sbin/sysctl -q --pattern ^sunrpc.svc_rdma --system"
++
++# lockd module supports "fs.nfs.nlm*" and "fs.nfs.nsm*" sysctls
++ACTION=="add", SUBSYSTEM=="module", KERNEL=="lockd", \
++  RUN+="/sbin/sysctl -q --pattern ^fs.nfs.n[sl]m --system"
++
++# nfsv4 module supports "fs.nfs.*" sysctls (nfs_callback_tcpport and idmap_cache_timeout)
++ACTION=="add", SUBSYSTEM=="module", KERNEL=="nfsv4", \
++  RUN+="/sbin/sysctl -q --pattern ^fs.nfs.(nfs_callback_tcpport|idmap_cache_timeout) --system"
++
++# nfs module supports "fs.nfs.*" sysctls
++ACTION=="add", SUBSYSTEM=="module", KERNEL=="nfs", \
++  RUN+="/sbin/sysctl -q --pattern ^fs.nfs --system"
 diff --git a/systemd/Makefile.am b/systemd/Makefile.am
-index 63a50bf2c07e..e7f5d818a913 100644
+index e7f5d818a913..577c6a2286c0 100644
 --- a/systemd/Makefile.am
 +++ b/systemd/Makefile.am
-@@ -2,8 +2,6 @@
+@@ -2,6 +2,9 @@
  
  MAINTAINERCLEANFILES = Makefile.in
  
--modprobe_files = 50-nfs.conf
--
++udev_rulesdir = /usr/lib/udev/rules.d/
++udev_files = 60-nfs.rules
++
  unit_files =  \
      nfs-client.target \
      rpc_pipefs.target \
-@@ -53,7 +51,7 @@ endif
+@@ -51,7 +54,7 @@ endif
  
  man5_MANS	= nfs.conf.man
  man7_MANS	= nfs.systemd.man
--EXTRA_DIST = $(unit_files) $(modprobe_files) $(man5_MANS) $(man7_MANS)
-+EXTRA_DIST = $(unit_files) $(man5_MANS) $(man7_MANS)
+-EXTRA_DIST = $(unit_files) $(man5_MANS) $(man7_MANS)
++EXTRA_DIST = $(unit_files) $(udev_files) $(man5_MANS) $(man7_MANS)
  
  generator_dir = $(unitdir)/../system-generators
  
-@@ -75,12 +73,8 @@ rpc_pipefs_generator_LDADD = ../support/nfs/libnfs.la
+@@ -73,8 +76,10 @@ rpc_pipefs_generator_LDADD = ../support/nfs/libnfs.la
  
  if INSTALL_SYSTEMD
  genexec_PROGRAMS = nfs-server-generator rpc-pipefs-generator
--install-data-hook: $(unit_files) $(modprobe_files)
-+install-data-hook: $(unit_files)
+-install-data-hook: $(unit_files)
++install-data-hook: $(unit_files) $(udev_files)
  	mkdir -p $(DESTDIR)/$(unitdir)
  	cp $(unit_files) $(DESTDIR)/$(unitdir)
  	cp $(rpc_pipefs_mount_file) $(DESTDIR)/$(unitdir)/$(rpc_pipefsmount)
--else
--install-data-hook: $(modprobe_files)
++	mkdir -p $(DESTDIR)/$(udev_rulesdir)
++	cp $(udev_files) $(DESTDIR)/$(udev_rulesdir)
  endif
--	mkdir -p $(DESTDIR)/usr/lib/modprobe.d
--	cp $(modprobe_files) $(DESTDIR)/usr/lib/modprobe.d/
 -- 
 2.38.1
 
