@@ -2,76 +2,49 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AA336382DB
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 04:49:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA9E3638385
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 06:36:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbiKYDtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Nov 2022 22:49:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
+        id S229450AbiKYFgV (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Nov 2022 00:36:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiKYDtQ (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Nov 2022 22:49:16 -0500
+        with ESMTP id S229529AbiKYFgU (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 00:36:20 -0500
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D82B26117;
-        Thu, 24 Nov 2022 19:49:15 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D524B1F2E2;
+        Thu, 24 Nov 2022 21:36:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=I2TD8YnyUVRKaNNBGvfs3pUWZDwIFw5kNMaApqkurhc=; b=LNV2e8UbAEOQw/T25Fn0zcJFtt
-        fNpKOR7AmYQmyKebyHLdQkC/VRgO+jC6IaDUeHAjw4EL0DsbkFM6Iqc2wV96JeHEovMJKBTXDZmhv
-        ZBw2xsCMnqYGB42wL+ylBtaiFvmXn4+q48vjcw+DG90eOjgZU2/9rcOSLcqiIsrxuWaDw1SMMEzx7
-        t7JkkxZCAEJ97Erz/o4KvknT6QpkedMLh6PAKj8gLWbA+2hlrTJV8E/LgdR9rDoShxcJCoTpm912V
-        ABkJ97xsSUr6RQZKyn8cXzXou9+2BUXYywgtCMyz0UPAL3QT8v6w4dSbpiqIhsoN4SGRxmTtMbclh
-        leUGm6UQ==;
+        bh=/Fy8IK15qJEgUw8XxuI3itfGpmDfS+C65ciFIe4IOEs=; b=DJkkcB9+bPhlo5VEmHPEHPOJXO
+        TYAZUlKV4rHswxZ0Cx6RrOzm0QRB9AOYhhnvj+b5UvoWy4ix+CpY09sDKezlqGCkSPSiueHH7XXXC
+        VNLNgoPZAglozigfkez0BXchLSpnH3acekVgBZMcjI0gT6zexLKD0I8qLoX4tK5hb2e04mCm2aSkH
+        Z8UkSY7YMcdZXhj28gpqcwE0sUJ7m2YrruZufQjF1Uk9rcFfu05mJ2GSAXpxG2+vq+EVHjS3jyTRk
+        IRO/dPbSu5GRyT1c6fgEat+6jv1aY0UIT4Baux4543rh2UXCIChk3o7FIjm2hpfezf9PTZ/xeixEE
+        xjX8k4SQ==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1oyPhG-006aFN-28;
-        Fri, 25 Nov 2022 03:48:14 +0000
-Date:   Fri, 25 Nov 2022 03:48:14 +0000
+        id 1oyRNk-006bGd-1M;
+        Fri, 25 Nov 2022 05:36:12 +0000
+Date:   Fri, 25 Nov 2022 05:36:12 +0000
 From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
         Namjae Jeon <linkinjeon@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-        linux-kernel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] filelock: move file locking definitions to separate
- header file
-Message-ID: <Y4A6/ozhUncxbimi@ZenIV>
-References: <20221120210004.381842-1-jlayton@kernel.org>
+        Luis Henriques <lhenriques@suse.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.de>
+Subject: Re: [PATCH v2] vfs: fix copy_file_range() averts filesystem freeze
+ protection
+Message-ID: <Y4BUTK/pJAbBkUkW@ZenIV>
+References: <20221117205249.1886336-1-amir73il@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221120210004.381842-1-jlayton@kernel.org>
+In-Reply-To: <20221117205249.1886336-1-amir73il@gmail.com>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -82,35 +55,29 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Sun, Nov 20, 2022 at 03:59:57PM -0500, Jeff Layton wrote:
+On Thu, Nov 17, 2022 at 10:52:49PM +0200, Amir Goldstein wrote:
+> Commit 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs
+> copies") removed fallback to generic_copy_file_range() for cross-fs
+> cases inside vfs_copy_file_range().
+> 
+> To preserve behavior of nfsd and ksmbd server-side-copy, the fallback to
+> generic_copy_file_range() was added in nfsd and ksmbd code, but that
+> call is missing sb_start_write(), fsnotify hooks and more.
+> 
+> Ideally, nfsd and ksmbd would pass a flag to vfs_copy_file_range() that
+> will take care of the fallback, but that code would be subtle and we got
+> vfs_copy_file_range() logic wrong too many times already.
+> 
+> Instead, add a flag to explicitly request vfs_copy_file_range() to
+> perform only generic_copy_file_range() and let nfsd and ksmbd use this
+> flag only in the fallback path.
+> 
+> This choise keeps the logic changes to minimum in the non-nfsd/ksmbd code
+> paths to reduce the risk of further regressions.
+> 
+> Fixes: 868f9f2f8e00 ("vfs: fix copy_file_range() regression in cross-fs copies")
+> Tested-by: Namjae Jeon <linkinjeon@kernel.org>
+> Tested-by: Luis Henriques <lhenriques@suse.de>
+> Signed-off-by: Amir Goldstein <amir73il@gmail.com>
 
-> --- /dev/null
-> +++ b/include/linux/filelock.h
-> @@ -0,0 +1,428 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _LINUX_FILELOCK_H
-> +#define _LINUX_FILELOCK_H
-> +
-> +#include <linux/list.h>
-> +#include <linux/nfs_fs_i.h>
-
-Umm... I'd add a comment along the lines of "struct file_lock has
-a BS union by fs type; NFS side of things needs nfs_fs_i.h"
-
-> +struct lock_manager_operations {
-> +	void *lm_mod_owner;
-> +	fl_owner_t (*lm_get_owner)(fl_owner_t);
-
-Probably take fl_owner_t to some more neutral header...
-
-> +#define locks_inode(f) file_inode(f)
-
-Why do we still have that one, anyway?  Separate patch, obviously,
-but I would take Occam's Razor to that entity...
-
-> +struct files_struct;
-> +extern void show_fd_locks(struct seq_file *f,
-> +			 struct file *filp, struct files_struct *files);
-
-If anything, that would be better off as fl_owner_t...  Again, a separate
-patch.
+Applied...
