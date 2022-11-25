@@ -2,36 +2,35 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B30456382B8
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 04:35:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA336382DB
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 04:49:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229507AbiKYDf0 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 24 Nov 2022 22:35:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55008 "EHLO
+        id S229679AbiKYDtQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 24 Nov 2022 22:49:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiKYDf0 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Nov 2022 22:35:26 -0500
+        with ESMTP id S229450AbiKYDtQ (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 24 Nov 2022 22:49:16 -0500
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B753C2982C;
-        Thu, 24 Nov 2022 19:35:24 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D82B26117;
+        Thu, 24 Nov 2022 19:49:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
         MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=f8/x32fER3aRdejEpsCx+wOLDBv/ItD+V8F3NbSrtbc=; b=r01ynWszvCOW0gRReJc0mPmaeT
-        4udkpjpGBia+sXIkLIOXBsuaTlBVVkhuppKmpDdjkBhDkp9t+rxXxKEZfC7Fah0vLuWEsX16J14kQ
-        iTDi+/xmZDYDDpRiJO3Ln80mvbANCN9dZ1YHac6GOcrRJjA/aE2lJaIL/tDDVCfEUylL4CZlZXZZX
-        nbCeFUeaVpnHpD9IQVhtUafE52qEQizDsH/bqXEg2ls1U9f8Vd+QBwZpM706f8WpTgGDI09nTdvx6
-        baGfSswMUU47TynqNM8QZmdIAaIBUdKFdNBuvYwagQEw9nbEwfjDKkq/hBZ4WObbqHj0I0Imkq+By
-        1qK4U+Ig==;
+        bh=I2TD8YnyUVRKaNNBGvfs3pUWZDwIFw5kNMaApqkurhc=; b=LNV2e8UbAEOQw/T25Fn0zcJFtt
+        fNpKOR7AmYQmyKebyHLdQkC/VRgO+jC6IaDUeHAjw4EL0DsbkFM6Iqc2wV96JeHEovMJKBTXDZmhv
+        ZBw2xsCMnqYGB42wL+ylBtaiFvmXn4+q48vjcw+DG90eOjgZU2/9rcOSLcqiIsrxuWaDw1SMMEzx7
+        t7JkkxZCAEJ97Erz/o4KvknT6QpkedMLh6PAKj8gLWbA+2hlrTJV8E/LgdR9rDoShxcJCoTpm912V
+        ABkJ97xsSUr6RQZKyn8cXzXou9+2BUXYywgtCMyz0UPAL3QT8v6w4dSbpiqIhsoN4SGRxmTtMbclh
+        leUGm6UQ==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1oyPTi-006a41-0t;
-        Fri, 25 Nov 2022 03:34:14 +0000
-Date:   Fri, 25 Nov 2022 03:34:14 +0000
+        id 1oyPhG-006aFN-28;
+        Fri, 25 Nov 2022 03:48:14 +0000
+Date:   Fri, 25 Nov 2022 03:48:14 +0000
 From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
         Latchesar Ionkov <lucho@ionkov.net>,
         Dominique Martinet <asmadeus@codewreck.org>,
         Christian Schoenebeck <linux_oss@crudebyte.com>,
@@ -67,13 +66,12 @@ Cc:     Jeff Layton <jlayton@kernel.org>,
         devel@lists.orangefs.org, linux-xfs@vger.kernel.org
 Subject: Re: [PATCH] filelock: move file locking definitions to separate
  header file
-Message-ID: <Y4A3tmISFIR7ERfE@ZenIV>
+Message-ID: <Y4A6/ozhUncxbimi@ZenIV>
 References: <20221120210004.381842-1-jlayton@kernel.org>
- <Y3xHQwM3UiD/SK0K@casper.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y3xHQwM3UiD/SK0K@casper.infradead.org>
+In-Reply-To: <20221120210004.381842-1-jlayton@kernel.org>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
@@ -84,29 +82,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 22, 2022 at 03:51:31AM +0000, Matthew Wilcox wrote:
-> On Sun, Nov 20, 2022 at 03:59:57PM -0500, Jeff Layton wrote:
-> > Move the file locking definitions to a new header file, and add the
-> > appropriate #include directives to the source files that need them. By
-> > doing this we trim down fs.h a bit and limit the amount of rebuilding
-> > that has to be done when we make changes to the file locking APIs.
-> 
-> I'm in favour of this in general, but I think there's a few implicit
-> includes.  Can you create a test.c that only #include
-> <linnux/filelock.h> and see if there's anything missing?
-> 
-> > +	wait_queue_head_t fl_wait;
-> > +	struct file *fl_file;
-> 
-> These two seem undefined at this point.
-> 
-> > +	struct fasync_struct *	fl_fasync; /* for lease break notifications */
-> 
-> Likewise.
+On Sun, Nov 20, 2022 at 03:59:57PM -0500, Jeff Layton wrote:
 
-#include <linux/wait.h>
+> --- /dev/null
+> +++ b/include/linux/filelock.h
+> @@ -0,0 +1,428 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_FILELOCK_H
+> +#define _LINUX_FILELOCK_H
+> +
+> +#include <linux/list.h>
+> +#include <linux/nfs_fs_i.h>
 
-struct file;
-struct fasync_struct;
+Umm... I'd add a comment along the lines of "struct file_lock has
+a BS union by fs type; NFS side of things needs nfs_fs_i.h"
 
+> +struct lock_manager_operations {
+> +	void *lm_mod_owner;
+> +	fl_owner_t (*lm_get_owner)(fl_owner_t);
 
+Probably take fl_owner_t to some more neutral header...
+
+> +#define locks_inode(f) file_inode(f)
+
+Why do we still have that one, anyway?  Separate patch, obviously,
+but I would take Occam's Razor to that entity...
+
+> +struct files_struct;
+> +extern void show_fd_locks(struct seq_file *f,
+> +			 struct file *filp, struct files_struct *files);
+
+If anything, that would be better off as fl_owner_t...  Again, a separate
+patch.
