@@ -2,145 +2,120 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A748F638B14
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 14:23:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DAA3638B5F
+	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 14:38:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229538AbiKYNX4 (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Nov 2022 08:23:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52742 "EHLO
+        id S229730AbiKYNiN (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Fri, 25 Nov 2022 08:38:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiKYNXz (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 08:23:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACCC940931;
-        Fri, 25 Nov 2022 05:23:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 490D5623FB;
-        Fri, 25 Nov 2022 13:23:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC855C433C1;
-        Fri, 25 Nov 2022 13:23:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669382630;
-        bh=EGJ1sbVmh8zfuee638fIF/XO+8/weuDlINdqpi5zZtE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ITYmgIWGeb/7tfCFFc4kVDpIzqmupq1CVJap5fhBl/OT/PtkT4fvz+47vLok2k5y+
-         9CRsV+JeWA0KEW85LVZu0FSIZep4yXbkGkq4EGBqpjWl9J4R07ZmdftvaN+jO6GvVh
-         UV+8CnZQsig9drGP5ocCBKCwdeh2CEjv01ouksVCHxKjEnYvQ0VQOwyYDVIftWVHKE
-         GsZuPwqfzHVqHsCgI2NSiNlqWlCXseI+0MB2Oq49i12gvBk+OTgmkxmQgpHo2z4CO0
-         KgxgBErlyuKDTZUoexdSzNPrYs0i7nPI8jo2JLFO4nl05cBpvzph4ae7XpMCDCSp+4
-         bOGw2Qy+6YgWg==
-Message-ID: <1d474f53670771f324745f597ec94b63a006d687.camel@kernel.org>
-Subject: Re: [PATCH] filelock: move file locking definitions to separate
- header file
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-        linux-kernel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
-Date:   Fri, 25 Nov 2022 08:23:45 -0500
-In-Reply-To: <Y4A6/ozhUncxbimi@ZenIV>
-References: <20221120210004.381842-1-jlayton@kernel.org>
-         <Y4A6/ozhUncxbimi@ZenIV>
-Content-Type: text/plain; charset="ISO-8859-15"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.1 (3.46.1-1.fc37) 
-MIME-Version: 1.0
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229453AbiKYNiM (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 08:38:12 -0500
+X-Greylist: delayed 498 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 25 Nov 2022 05:38:09 PST
+Received: from odysseus.grml.info (odysseus.grml.info [136.243.234.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E76B212A92
+        for <linux-nfs@vger.kernel.org>; Fri, 25 Nov 2022 05:38:09 -0800 (PST)
+Received: by odysseus.grml.info (Postfix, from userid 105)
+        id B8AA3416F8; Fri, 25 Nov 2022 14:29:48 +0100 (CET)
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by odysseus.grml.info (Postfix) with ESMTP id 52D0C40283;
+        Fri, 25 Nov 2022 14:29:35 +0100 (CET)
+Date:   Fri, 25 Nov 2022 14:29:35 +0100
+From:   Michael Prokop <mika@debian.org>
+To:     Salvatore Bonaccorso <carnil@debian.org>
+Cc:     NeilBrown <neilb@suse.de>, Steve Dickson <steved@redhat.com>,
+        linux-nfs@vger.kernel.org,
+        Andras Korn <korn-debbugs@elan.rulez.org>,
+        Marco d'Itri <md@linux.it>
+Subject: Re: [PATCH 4/4] systemd: Apply all sysctl settings through udev rule
+ when NFS-related modules are loaded
+Message-ID: <2022-11-25T14-20-47@devnull.michael-prokop.at>
+References: <20221125130725.1977606-1-carnil@debian.org>
+ <20221125130725.1977606-5-carnil@debian.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7NwO/uecqw5YxyZh"
+Content-Disposition: inline
+In-Reply-To: <20221125130725.1977606-5-carnil@debian.org>
+User-Agent: Mutt/2.0.5 (2021-01-21)
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, 2022-11-25 at 03:48 +0000, Al Viro wrote:
-> On Sun, Nov 20, 2022 at 03:59:57PM -0500, Jeff Layton wrote:
+
+--7NwO/uecqw5YxyZh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+* Salvatore Bonaccorso [Fri Nov 25, 2022 at 02:07:25PM +0100]:
+
+> sysctl settings (e.g.  /etc/sysctl.conf and others) are normally loaded
+> once at boot.  If the module that implements some settings is no yet
+> loaded, those settings don't get applied.
 >=20
-> > --- /dev/null
-> > +++ b/include/linux/filelock.h
-> > @@ -0,0 +1,428 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef _LINUX_FILELOCK_H
-> > +#define _LINUX_FILELOCK_H
-> > +
-> > +#include <linux/list.h>
-> > +#include <linux/nfs_fs_i.h>
+> Various NFS modules support various sysctl settings.  If they are loaded
+> after boot, they miss out.
 >=20
-> Umm... I'd add a comment along the lines of "struct file_lock has
-> a BS union by fs type; NFS side of things needs nfs_fs_i.h"
+> Add a new udev rule configuration to udev/rules.d/60-nfs.rules to apply
+> the relevant settings when the module is loaded.
 >=20
+> Placing it in the systemd directory similarly as the coice for the
+> original commit afc7132dfb21 ("systemd: Apply all sysctl settings when
+> NFS-related modules are loaded").
+[...]
 
-Ok.
+> --- /dev/null
+> +++ b/systemd/60-nfs.rules
+> @@ -0,0 +1,21 @@
+> +# Ensure all NFS systctl settings get applied when modules load
+> +
+> +# sunrpc module supports "sunrpc.*" sysctls
+> +ACTION=3D=3D"add", SUBSYSTEM=3D=3D"module", KERNEL=3D=3D"sunrpc", \
+> +  RUN+=3D"/sbin/sysctl -q --pattern ^sunrpc --system"
+[...]
 
-> > +struct lock_manager_operations {
-> > +	void *lm_mod_owner;
-> > +	fl_owner_t (*lm_get_owner)(fl_owner_t);
->=20
-> Probably take fl_owner_t to some more neutral header...
->=20
+Thanks for taking care of this problem, Salvatore!
 
-I left it in fs.h for now. Some of the file_operations prototypes need
-that typedef, and I figure that anyone who is including filelock.h will
-almost certainly need to include fs.h anyway. We could move it into a
-separate header too, but it's probably not worth it.
+AFAICT even latest busybox's sysctl does not support the `--pattern`
+option yet:
 
-HCH mentioned years ago though that we should just get rid of fl_owner_t
-altogether and just use 'void *'. I didn't do it at the time because I
-was focused on other changes, but this might be a good time to change
-it.
+| sysctl: unrecognized option '--pattern'
+| BusyBox v1.35.0 (Debian 1:1.35.0-4) multi-call binary.
+| [....]
 
-> > +#define locks_inode(f) file_inode(f)
->=20
-> Why do we still have that one, anyway?  Separate patch, obviously,
-> but I would take Occam's Razor to that entity...
->=20
+So any initramfs that uses busybox and its sysctl (like in Debian)
+and trying to apply above udev rules might fail?
 
-I can spin up a patch to nuke that too. I count only 30 callsites
-remaining anyway.
+regards
+-mika-
 
-> > +struct files_struct;
-> > +extern void show_fd_locks(struct seq_file *f,
-> > +			 struct file *filp, struct files_struct *files);
->=20
-> If anything, that would be better off as fl_owner_t...  Again, a separate
-> patch.
+--7NwO/uecqw5YxyZh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I'm not sure what you mean here. This prototype hasn't changed, and is
-only called from procfs.
+-----BEGIN PGP SIGNATURE-----
 
---=20
-Jeff Layton <jlayton@kernel.org>
+iQIzBAABCAAdFiEEM8yxNkAa/shDo4djlqh4crfqNzcFAmOAwzwACgkQlqh4crfq
+NzcsBBAAndEOIhSMBIOEl+jjmL4XsloDjW3B5EjE6942goTBloxukF09rZi6DZeS
+79pnlvVtOFQ48HGG4v87q1G0MXVU+8GezMQSDVVphJyHGJjdKCUKOlcXdkZAiU9F
+kRXMicfJISSrEYovkho/vFMQRAbvv5a1kCcCkE6vIWRnVupu7wjVlZ3wvr0ckd5P
+ThZhpkEsIMQys+VW/6RZwSBVaYDe/Ieu9NDDHf2PqXSY4U9oloK+CreIrLKn3dpF
+QFybUOjq2x0wwF7AgwzbYqviXzw086+Lq4e93jdV8ispQ9FHF7I5VrDp2RYbbqSk
+LjhTQaLrvxv85S/fwENEE3aHdWsvd6FBxjbcB+PtefbUty2ClRkHgQ22QZ3/CfXd
+ozGLPPa97zIOztnQ53ck9+sK7N4V3L4AcIwFaiah0phT75sFcNnEgrDD2Wyjk/EX
+WOEyVT09zyQ0CogUoCIRhYb3v5qly3ATVT2FEon1yFRs38BAKsQajrgVnXJMyfiJ
+1/Xp5goTU7xVdtysSCHjrFNO0dcA5AK/WB3wdHmXJTf/xtjFpNHIhr1gz7oOpoi5
+5uHRZ+J/xiNmNre5ALlENwd8t/IieKF/H8s1sfUUBWdSIlOgFqDgzLHOm13dMCAO
+5cUiDpWpvS1t1ooSrE/1ghwCgGQ/NwDd1EJs5hOGgz8Q8N9guYM=
+=4KJg
+-----END PGP SIGNATURE-----
+
+--7NwO/uecqw5YxyZh--
