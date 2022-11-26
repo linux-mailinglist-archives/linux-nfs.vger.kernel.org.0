@@ -2,86 +2,103 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 81C766394C2
-	for <lists+linux-nfs@lfdr.de>; Sat, 26 Nov 2022 10:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F7C0639512
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Nov 2022 10:56:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbiKZJAM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sat, 26 Nov 2022 04:00:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
+        id S229523AbiKZJ4q (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 26 Nov 2022 04:56:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbiKZJAK (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Nov 2022 04:00:10 -0500
-X-Greylist: delayed 1290 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Nov 2022 01:00:05 PST
-Received: from sp13.canonet.ne.jp (sp13.canonet.ne.jp [210.134.168.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBC802098C;
-        Sat, 26 Nov 2022 01:00:05 -0800 (PST)
-Received: from csp13.canonet.ne.jp (unknown [172.21.160.133])
-        by sp13.canonet.ne.jp (Postfix) with ESMTP id 099161E03D3;
-        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
-Received: from echeck13.canonet.ne.jp ([172.21.160.123])
-        by csp3 with ESMTP
-        id yqNVovGVhxJr5yqNVocUA4; Sat, 26 Nov 2022 17:17:37 +0900
-X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=S49nfKgP c=1 sm=1 tr=0
- ts=6381cba1 cx=g_jp:t_eml p=JJaDG7uySNsA:10 p=Ik1pXvdftEAPl7FGfynI:22
- a=c8wCX2VJ6RehaN9m5YqYzw==:117 a=yr9NA9NbXb0B05yJHQEWeQ==:17
- a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10 a=9xFQ1JgjjksA:10 a=x7bEGLp0ZPQA:10
- a=JQiPw2jszkcqZPIXoVMA:9 a=CjuIK1q_8ugA:10"
-X-CNT-CMCheck-Score: 100.00
-Received: from echeck13.canonet.ne.jp (localhost [127.0.0.1])
-        by esets.canonet.ne.jp (Postfix) with ESMTP id 9B11A1C0251;
-        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
-X-Virus-Scanner: This message was checked by ESET Mail Security
-        for Linux/BSD. For more information on ESET Mail Security,
-        please, visit our website: http://www.eset.com/.
-Received: from smtp13.canonet.ne.jp (unknown [172.21.160.103])
-        by echeck13.canonet.ne.jp (Postfix) with ESMTP id 6BA4E1C0263;
-        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
-Received: from eikohnet.co.jp (webmail.canonet.ne.jp [210.134.169.250])
-        by smtp13.canonet.ne.jp (Postfix) with ESMTPA id A506115F964;
-        Sat, 26 Nov 2022 17:17:36 +0900 (JST)
+        with ESMTP id S229475AbiKZJ4p (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Nov 2022 04:56:45 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D404121E3E
+        for <linux-nfs@vger.kernel.org>; Sat, 26 Nov 2022 01:56:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1669456598; bh=yHnNWKtSSzDVa3fYcwEBTQuZKONm7vmROfbExzHQJEw=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=ISyFH/TnzjbnBli8UL7T66+FfCaYCI6hySJPWJd7buxoVTWa3n+xFn7exB5GfxDMe
+         i3IHKJyRynMQO94z5cfQTNNZJYE2MeVDdiIbOKuw0BL7EuylmJWU4IOwsXf8EKc/XD
+         m53eh58tkrKS+3zxjwxl5uUk/CMyhUEgZEOXz/rh0eSho/E3eDnXh9vAQvyQsCBPeq
+         QdMoW6LDHZIiuRBy1E1CqfOhAtyemdC7pfBzEs8hzi2zd9peLDNxBX6z1dGPlAG3/8
+         1dPNfHG/kgWpe/CiNlAa2asENBVX9d5sb3U8t+G0N6oradfCqUDH6f7SnIC8MdoYi2
+         vZA13RFh3/NOA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from xook.jfalk.de ([91.15.234.204]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MRCK6-1pLv500Vim-00NA1H; Sat, 26
+ Nov 2022 10:56:38 +0100
+From:   Joachim Falk <joachim.falk@gmx.de>
+To:     linux-nfs@vger.kernel.org
+Cc:     Joachim Falk <joachim.falk@gmx.de>, NeilBrown <neilb@suse.com>,
+        Steve Dickson <steved@redhat.com>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH] auth-rpcgss-module.service: Don't fail inside linux container.
+Date:   Sat, 26 Nov 2022 10:55:50 +0100
+Message-Id: <20221126095550.174062-1-joachim.falk@gmx.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Message-ID: <20221126081736.00001C7B.0156@eikohnet.co.jp>
-Date:   Sat, 26 Nov 2022 17:17:36 +0900
-From:   "Mrs Zainab Abbas" <toda@eikohnet.co.jp>
-To:     <Inbox@eikohnet.co.jp>
-Reply-To: <mrs.zainababbas75@gmail.com>
-Subject: Hi
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-ORGANIZATION: Mrs Zainab Abbas
-X-MAILER: Active! mail
-X-EsetResult: clean, %VIRUSNAME%
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1669450657;VERSION=7940;MC=3218539519;TRN=0;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
-X-I-ESET-AS: RN=0;RNP=
-X-ESET-Antispam: OK
-X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_MR_MRS,
-        SPF_HELO_NONE,SPF_PASS,UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5018]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [mrs.zainababbas75[at]gmail.com]
-        *  1.0 HK_NAME_MR_MRS No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-        *  2.4 XPRIO_SHORT_SUBJ Has X Priority header + short subject
-X-Spam-Level: *******
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:X0ulXe1maUCB4Ac854tuUKdH0Zpdv1MzjXQpyfdNRaa2R7XxFyq
+ ceG0lrTyxzf9nvplODaXq16p7aDspKBKSg7DJG+cpaV78etm55wIj94rT41OsIE3xWMyzIp
+ czRwZ5jFmRa+xCUVg5RL1Klqgm/oF/uZ6Tstbgdfkx6p9v2SsmH0AKgdSYSZWUCdV8Ygy0T
+ I/FGqGEuq/8U1c/78TOsQ==
+UI-OutboundReport: notjunk:1;M01:P0:feKd9h14f4o=;MHJSuCUC03visKdcchXC54TxW+U
+ 26D32lRdDsTxHuZceiyX1lDjr5xuyIswWD+Vn9DaUtNoo3F2KXQ/qpIxhmhF6eSiO4cqKK7ka
+ uCdkE926yqctgf3zk8diW8oX4VKw3qY5EmksYY2UwhP8O9IlAW87GBcDMYSl5BIgJPWJk5DKT
+ TVTRDEWiFim4W5Le9SlDQAuaSS2Y4koxHwyubgCIVLY7QWsg9jRsHfMNRMOh53iISh2bV/8KF
+ 5rrAnQS5qr0A600sjghzn40GuSHiRn+tOsdosioxY/sfMRiDlUt8cQ3Dvsdqpkz8Zb6OTYPrl
+ O3BoRGX/Lk7HkpRRsnM8+u4BLGZv2VPG292MBpVfoVxUhsJTNNXnqHUqQQWnt7NqzcZULlL09
+ E96ZIYRVEWFsAIQYWrhwGJ7ALxmrJSajkgZlLF8xgd51hzVxBkYpevDqPEYgOtnnAqpEUzIah
+ rAqHBmWUFlowiva27K3u435dFGij2o0LkljP1Qj3zj7IDl7w8kcf3QBnZon+1inlLD+u54OMZ
+ nLDLlOHIlK8FpByBwZgrl9+bSPKVpBwKQEUpFmbKcVAESaEgo4Ax4DU9+fyXgWOWJ99Ph+AlM
+ mgQqgjwnzxk2eOcj5bjB3VvVU7KrMsrDR6TSoosgyuZXWjjj8v07GTn58Nj03mYn7wqiOX1Qi
+ +pgRp0JiGSppihC5qRaWAHyxsNKxHiioUVs9qo+ZxhIzZZCWjUkBnSuYRoo2Atbc5tLEaWbY7
+ ItFRgPSBZ+hTXjHbWglrmbFAoA4D+LtUbsZYMOJkruVJMLQOHQRnocCOK0esg1/I4QNQiFx88
+ XEd/CPBCBWho+oe2WglEzHXY4ZA8pn6qnQEQGZbPPaDYY2OcigYZrF6h/74Lli4FmoKwjx8tv
+ nwkjnxp3eyFghoF8I60oxxmn7CNEqPST9k2wYJ4v2r8BGoV8NQU84TPgaYwkaDKD+CL//Adts
+ dNqJFawmVBrL7ldJOZtH8HiEJs8=
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
+Only try to load the auth_rpcgss kernel module if we are not executing
+inside a Linux container. Otherwise, the auth-rpcgss-module service will
+fail inside a Linux container as the loading of kernel modules is
+forbidden for the container. Thus, the "/sbin/modprobe -q auth_rpcgss"
+call will fail even if the auth_rpcgss kernel module is already loaded.
+This situation occurs when the container host has already loaded the
+auth_rpcgss kernel module to enable kerberized NFS service for its
+containers. This behavior has been tested with kmod up to version
+30+20220630-3 (current in bookworm as of 2022-09-20).
 
-Hello,
-Good day, I am still waiting for your reply to my previous email, hope you see the email?
+Bug-Debian: http://bugs.debian.org/985000
+Discussion-Debian: https://salsa.debian.org/kernel-team/nfs-utils/-/merge_=
+requests/7
 
-Regards
-Mrs Zainab Abbas
+Signed-off-by: Joachim Falk <joachim.falk@gmx.de>
+=2D--
+ systemd/auth-rpcgss-module.service | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/systemd/auth-rpcgss-module.service b/systemd/auth-rpcgss-modu=
+le.service
+index 45482833..25c9de80 100644
+=2D-- a/systemd/auth-rpcgss-module.service
++++ b/systemd/auth-rpcgss-module.service
+@@ -10,6 +10,7 @@ DefaultDependencies=3Dno
+ Before=3Dgssproxy.service rpc-svcgssd.service rpc-gssd.service
+ Wants=3Dgssproxy.service rpc-svcgssd.service rpc-gssd.service
+ ConditionPathExists=3D/etc/krb5.keytab
++ConditionVirtualization=3D!container
+
+ [Service]
+ Type=3Doneshot
+=2D-
+2.35.1
 
