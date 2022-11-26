@@ -2,117 +2,86 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 422F2638E70
-	for <lists+linux-nfs@lfdr.de>; Fri, 25 Nov 2022 17:45:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81C766394C2
+	for <lists+linux-nfs@lfdr.de>; Sat, 26 Nov 2022 10:00:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbiKYQpd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Fri, 25 Nov 2022 11:45:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53592 "EHLO
+        id S229558AbiKZJAM (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sat, 26 Nov 2022 04:00:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbiKYQpd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Fri, 25 Nov 2022 11:45:33 -0500
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [IPv6:2a03:a000:7:0:5054:ff:fe1c:15ff])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFB262BB38;
-        Fri, 25 Nov 2022 08:45:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=x53sQaWDa/88sDZr4eyy32ZPwwt0aIb86EtvxNAGN44=; b=FgIlSpJUVdmZH0PghTbL44P7IF
-        e4NY5MC1spnQ/Hghs2BPEnAn4l+90NGdQnegTxnvF3OJ+U61eJwM1xO7mu1dExG7v6tzYFJlIwp6P
-        B2aUL8HMJfhwXPEFKGEUx8W81rpFniQnI/SO1y7EbgaIaJZ1BUdY5gveE/1N4GNXa8B97uvPu85K6
-        Yklhfru9ymFK8ftcM08F8KvpHHcaOQRkbEAd2Tsqc4ddBcwjQEZAIlZg7vNI/YdzW+wA2axEbhN4Z
-        espCpyFT59uiQWc205hVxBxnTMNyu5Rhgwc6LnCyra/HjzGVoTTOmo0NKot9JbtDIoan182Jla8Wi
-        UlV/To0w==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1oyboR-006i8e-1U;
-        Fri, 25 Nov 2022 16:44:27 +0000
-Date:   Fri, 25 Nov 2022 16:44:27 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Steve French <sfrench@samba.org>, Paulo Alcantara <pc@cjr.nz>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        "Darrick J. Wong" <djwong@kernel.org>, hch@lst.de,
-        linux-kernel@vger.kernel.org, v9fs-developer@lists.sourceforge.net,
-        linux-afs@lists.infradead.org, linux-fsdevel@vger.kernel.org,
-        ceph-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        linux-nfs@vger.kernel.org, ocfs2-devel@oss.oracle.com,
-        devel@lists.orangefs.org, linux-xfs@vger.kernel.org
-Subject: Re: [PATCH] filelock: move file locking definitions to separate
- header file
-Message-ID: <Y4Dw65Nzt4bX9esd@ZenIV>
-References: <20221120210004.381842-1-jlayton@kernel.org>
- <Y4A6/ozhUncxbimi@ZenIV>
- <1d474f53670771f324745f597ec94b63a006d687.camel@kernel.org>
+        with ESMTP id S229450AbiKZJAK (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sat, 26 Nov 2022 04:00:10 -0500
+X-Greylist: delayed 1290 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 26 Nov 2022 01:00:05 PST
+Received: from sp13.canonet.ne.jp (sp13.canonet.ne.jp [210.134.168.90])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BBC802098C;
+        Sat, 26 Nov 2022 01:00:05 -0800 (PST)
+Received: from csp13.canonet.ne.jp (unknown [172.21.160.133])
+        by sp13.canonet.ne.jp (Postfix) with ESMTP id 099161E03D3;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+Received: from echeck13.canonet.ne.jp ([172.21.160.123])
+        by csp3 with ESMTP
+        id yqNVovGVhxJr5yqNVocUA4; Sat, 26 Nov 2022 17:17:37 +0900
+X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=S49nfKgP c=1 sm=1 tr=0
+ ts=6381cba1 cx=g_jp:t_eml p=JJaDG7uySNsA:10 p=Ik1pXvdftEAPl7FGfynI:22
+ a=c8wCX2VJ6RehaN9m5YqYzw==:117 a=yr9NA9NbXb0B05yJHQEWeQ==:17
+ a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10 a=9xFQ1JgjjksA:10 a=x7bEGLp0ZPQA:10
+ a=JQiPw2jszkcqZPIXoVMA:9 a=CjuIK1q_8ugA:10"
+X-CNT-CMCheck-Score: 100.00
+Received: from echeck13.canonet.ne.jp (localhost [127.0.0.1])
+        by esets.canonet.ne.jp (Postfix) with ESMTP id 9B11A1C0251;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+X-Virus-Scanner: This message was checked by ESET Mail Security
+        for Linux/BSD. For more information on ESET Mail Security,
+        please, visit our website: http://www.eset.com/.
+Received: from smtp13.canonet.ne.jp (unknown [172.21.160.103])
+        by echeck13.canonet.ne.jp (Postfix) with ESMTP id 6BA4E1C0263;
+        Sat, 26 Nov 2022 17:17:37 +0900 (JST)
+Received: from eikohnet.co.jp (webmail.canonet.ne.jp [210.134.169.250])
+        by smtp13.canonet.ne.jp (Postfix) with ESMTPA id A506115F964;
+        Sat, 26 Nov 2022 17:17:36 +0900 (JST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1d474f53670771f324745f597ec94b63a006d687.camel@kernel.org>
-Sender: Al Viro <viro@ftp.linux.org.uk>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Message-ID: <20221126081736.00001C7B.0156@eikohnet.co.jp>
+Date:   Sat, 26 Nov 2022 17:17:36 +0900
+From:   "Mrs Zainab Abbas" <toda@eikohnet.co.jp>
+To:     <Inbox@eikohnet.co.jp>
+Reply-To: <mrs.zainababbas75@gmail.com>
+Subject: Hi
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Priority: 3
+ORGANIZATION: Mrs Zainab Abbas
+X-MAILER: Active! mail
+X-EsetResult: clean, %VIRUSNAME%
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1669450657;VERSION=7940;MC=3218539519;TRN=0;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
+X-I-ESET-AS: RN=0;RNP=
+X-ESET-Antispam: OK
+X-Spam-Status: Yes, score=7.8 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,HK_NAME_MR_MRS,
+        SPF_HELO_NONE,SPF_PASS,UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ
+        autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5018]
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [mrs.zainababbas75[at]gmail.com]
+        *  1.0 HK_NAME_MR_MRS No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  2.4 XPRIO_SHORT_SUBJ Has X Priority header + short subject
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Fri, Nov 25, 2022 at 08:23:45AM -0500, Jeff Layton wrote:
 
-> I left it in fs.h for now. Some of the file_operations prototypes need
-> that typedef, and I figure that anyone who is including filelock.h will
-> almost certainly need to include fs.h anyway. We could move it into a
-> separate header too, but it's probably not worth it.
-> 
-> HCH mentioned years ago though that we should just get rid of fl_owner_t
-> altogether and just use 'void *'. I didn't do it at the time because I
-> was focused on other changes, but this might be a good time to change
-> it.
+Hello,
+Good day, I am still waiting for your reply to my previous email, hope you see the email?
 
-Might be...
+Regards
+Mrs Zainab Abbas
 
-> > > +extern void show_fd_locks(struct seq_file *f,
-> > > +			 struct file *filp, struct files_struct *files);
-> > 
-> > If anything, that would be better off as fl_owner_t...  Again, a separate
-> > patch.
-> 
-> I'm not sure what you mean here. This prototype hasn't changed, and is
-> only called from procfs.
 
-Take a look at that function and its caller.  The use of 'files' argument there
-is (and can be) only as an opaque pointer to be compared to ->fl_owner; at that
-point it might be pointing to freed memory, for all we know (and give false
-positives if already reused).
-
-TBH, I'd never been able to finish the audit of files_struct pointers passed
-into locks subsystem; there definitely are moments when code from fs/locks.c
-is dealing with pointers to already freed instances - show_fd_locks() at the
-very least.  They are not dereferenced, but beyond that...
