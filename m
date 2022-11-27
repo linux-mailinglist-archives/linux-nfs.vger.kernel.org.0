@@ -2,166 +2,82 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22FB6639BEC
-	for <lists+linux-nfs@lfdr.de>; Sun, 27 Nov 2022 18:17:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1118D639CF6
+	for <lists+linux-nfs@lfdr.de>; Sun, 27 Nov 2022 21:49:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbiK0RRe (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Sun, 27 Nov 2022 12:17:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47520 "EHLO
+        id S229707AbiK0Utx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Sun, 27 Nov 2022 15:49:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229500AbiK0RRe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Nov 2022 12:17:34 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD0CABD5
-        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 09:17:31 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 4C807CE0B16
-        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 17:17:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D78C433D6
-        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 17:17:28 +0000 (UTC)
-Subject: [PATCH] SUNRPC: Fix crasher in unwrap_integ_data()
-From:   Chuck Lever <chuck.lever@oracle.com>
-To:     linux-nfs@vger.kernel.org
-Date:   Sun, 27 Nov 2022 12:17:27 -0500
-Message-ID: <166956944745.113279.2771726273440100988.stgit@klimt.1015granger.net>
-User-Agent: StGit/1.5.dev3+g9561319
+        with ESMTP id S229590AbiK0Utt (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Sun, 27 Nov 2022 15:49:49 -0500
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADED3DF09
+        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 12:49:48 -0800 (PST)
+Received: by mail-qv1-xf29.google.com with SMTP id mn15so2313470qvb.13
+        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 12:49:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=0EcRsn3mpfYpm/vhZ/v7NRpfbut+cY/FRel9FddrnfI=;
+        b=KBcUhnkE30+t44sLhT0QIA/TKDoVVcw2IDATdES6KfLCITZM1dINmG7lHKlIAtF5Bv
+         XYen05Yj2oFW9mtHJEXYSDUF20MEYEfNCJOIA7Ao4ErgCMxXzNeUrFhRHU4n0UR5efBV
+         NPgtVWwXuMjsplabdQq4ltrd1s/IVTuK0fB6M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0EcRsn3mpfYpm/vhZ/v7NRpfbut+cY/FRel9FddrnfI=;
+        b=HnFNHe+kSYPvoAzgeRENNoScA4wgqdMys1jszlTD8L3vlmwIcWgYzeKegbb7Y6BAdb
+         X0z/3DRaE2bd9PZXFm2g0/9YlorDVwQRshUAbQJqP0E70k/IOHXAvnXqRkn+0H0GwGVn
+         7UtMelO9CWfic4I18tYrIXPkV3v7Hk57ok0yfs6clpSMLaRCGV0GmD/3qRdnFKMlAO6E
+         Qnyw9AFGC6pNDSp+Lck/Ple1jU9olBTpuVVKOyuDDScQp2Sp63sC3FCuxgiBRqmJfbK1
+         KGGIsSrMroRHsqSbexMfTKSCgJul0i/5npFqIPzU20sDO0D1XcN+iwjoiX2vBHlWThKO
+         kBGw==
+X-Gm-Message-State: ANoB5pnCHCN+qNbsgAAvY4LRtNdGSkEPddn8JWK021nb7cRAOYw6/u0e
+        zhoUt9AriZpMsy8mUIgfPRsHzxUGMKJ4pA==
+X-Google-Smtp-Source: AA0mqf4tIcXlZQ9n/Ryt+bFTv0578K8BnDO83rZgZ5SihK5Hym/FXYkU/tgdFoPa6ICXjDfgPFqJ1A==
+X-Received: by 2002:a0c:fec3:0:b0:4c6:86be:a0c9 with SMTP id z3-20020a0cfec3000000b004c686bea0c9mr26513747qvs.123.1669582187545;
+        Sun, 27 Nov 2022 12:49:47 -0800 (PST)
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com. [209.85.222.178])
+        by smtp.gmail.com with ESMTPSA id w10-20020a05620a424a00b006cfc9846594sm7051379qko.93.2022.11.27.12.49.46
+        for <linux-nfs@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 27 Nov 2022 12:49:46 -0800 (PST)
+Received: by mail-qk1-f178.google.com with SMTP id g10so6004885qkl.6
+        for <linux-nfs@vger.kernel.org>; Sun, 27 Nov 2022 12:49:46 -0800 (PST)
+X-Received: by 2002:ae9:e00c:0:b0:6f8:1e47:8422 with SMTP id
+ m12-20020ae9e00c000000b006f81e478422mr43523021qkk.72.1669582186451; Sun, 27
+ Nov 2022 12:49:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20221117205249.1886336-1-amir73il@gmail.com>
+In-Reply-To: <20221117205249.1886336-1-amir73il@gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Sun, 27 Nov 2022 12:49:30 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wgnnhUqO8mv4=0ri=Q8xYd9dpHm+_r61CTMCkQKj9fN=w@mail.gmail.com>
+Message-ID: <CAHk-=wgnnhUqO8mv4=0ri=Q8xYd9dpHm+_r61CTMCkQKj9fN=w@mail.gmail.com>
+Subject: Re: [PATCH v2] vfs: fix copy_file_range() averts filesystem freeze protection
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Luis Henriques <lhenriques@suse.com>,
+        Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Jan Kara <jack@suse.cz>, linux-fsdevel@vger.kernel.org,
+        linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        Luis Henriques <lhenriques@suse.de>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-If a zero length is passed to kmalloc() it returns 0x10, which is
-not a valid address. gss_verify_mic() subsequently crashes when it
-attempts to dereference that pointer.
+Ok, this is finally in my tree now. Thanks,
 
-Instead of allocating this memory on every call based on an
-untrusted size value, use a piece of dynamically-allocated scratch
-memory that is always available.
-
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
----
- net/sunrpc/auth_gss/svcauth_gss.c |   55 ++++++++++++++++++++++---------------
- 1 file changed, 32 insertions(+), 23 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/svcauth_gss.c b/net/sunrpc/auth_gss/svcauth_gss.c
-index 9a5db285d4ae..148bb0a7fa5b 100644
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -49,11 +49,36 @@
- #include <linux/sunrpc/svcauth.h>
- #include <linux/sunrpc/svcauth_gss.h>
- #include <linux/sunrpc/cache.h>
-+#include <linux/sunrpc/gss_krb5.h>
- 
- #include <trace/events/rpcgss.h>
- 
- #include "gss_rpc_upcall.h"
- 
-+/*
-+ * Unfortunately there isn't a maximum checksum size exported via the
-+ * GSS API. Manufacture one based on GSS mechanisms supported by this
-+ * implementation.
-+ */
-+#define GSS_MAX_CKSUMSIZE (GSS_KRB5_TOK_HDR_LEN + GSS_KRB5_MAX_CKSUM_LEN)
-+
-+/*
-+ * This value may be increased in the future to accommodate other
-+ * usage of the scratch buffer.
-+ */
-+#define GSS_SCRATCH_SIZE GSS_MAX_CKSUMSIZE
-+
-+struct gss_svc_data {
-+	/* decoded gss client cred: */
-+	struct rpc_gss_wire_cred	clcred;
-+	/* save a pointer to the beginning of the encoded verifier,
-+	 * for use in encryption/checksumming in svcauth_gss_release: */
-+	__be32				*verf_start;
-+	struct rsc			*rsci;
-+
-+	/* for temporary results */
-+	u8				gsd_scratch[GSS_SCRATCH_SIZE];
-+};
- 
- /* The rpcsec_init cache is used for mapping RPCSEC_GSS_{,CONT_}INIT requests
-  * into replies.
-@@ -887,13 +912,11 @@ read_u32_from_xdr_buf(struct xdr_buf *buf, int base, u32 *obj)
- static int
- unwrap_integ_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct gss_ctx *ctx)
- {
-+	struct gss_svc_data *gsd = rqstp->rq_auth_data;
- 	u32 integ_len, rseqno, maj_stat;
--	int stat = -EINVAL;
- 	struct xdr_netobj mic;
- 	struct xdr_buf integ_buf;
- 
--	mic.data = NULL;
--
- 	/* NFS READ normally uses splice to send data in-place. However
- 	 * the data in cache can change after the reply's MIC is computed
- 	 * but before the RPC reply is sent. To prevent the client from
-@@ -917,11 +940,9 @@ unwrap_integ_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct g
- 	/* copy out mic... */
- 	if (read_u32_from_xdr_buf(buf, integ_len, &mic.len))
- 		goto unwrap_failed;
--	if (mic.len > RPC_MAX_AUTH_SIZE)
--		goto unwrap_failed;
--	mic.data = kmalloc(mic.len, GFP_KERNEL);
--	if (!mic.data)
-+	if (mic.len > sizeof(gsd->gsd_scratch))
- 		goto unwrap_failed;
-+	mic.data = gsd->gsd_scratch;
- 	if (read_bytes_from_xdr_buf(buf, integ_len + 4, mic.data, mic.len))
- 		goto unwrap_failed;
- 	maj_stat = gss_verify_mic(ctx, &integ_buf, &mic);
-@@ -932,20 +953,17 @@ unwrap_integ_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct g
- 		goto bad_seqno;
- 	/* trim off the mic and padding at the end before returning */
- 	xdr_buf_trim(buf, round_up_to_quad(mic.len) + 4);
--	stat = 0;
--out:
--	kfree(mic.data);
--	return stat;
-+	return 0;
- 
- unwrap_failed:
- 	trace_rpcgss_svc_unwrap_failed(rqstp);
--	goto out;
-+	return -EINVAL;
- bad_seqno:
- 	trace_rpcgss_svc_seqno_bad(rqstp, seq, rseqno);
--	goto out;
-+	return -EINVAL;
- bad_mic:
- 	trace_rpcgss_svc_mic(rqstp, maj_stat);
--	goto out;
-+	return -EINVAL;
- }
- 
- static inline int
-@@ -1023,15 +1041,6 @@ unwrap_priv_data(struct svc_rqst *rqstp, struct xdr_buf *buf, u32 seq, struct gs
- 	return -EINVAL;
- }
- 
--struct gss_svc_data {
--	/* decoded gss client cred: */
--	struct rpc_gss_wire_cred	clcred;
--	/* save a pointer to the beginning of the encoded verifier,
--	 * for use in encryption/checksumming in svcauth_gss_release: */
--	__be32				*verf_start;
--	struct rsc			*rsci;
--};
--
- static int
- svcauth_gss_set_client(struct svc_rqst *rqstp)
- {
-
-
+             Linus
