@@ -2,118 +2,66 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A72F663D53C
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Nov 2022 13:08:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3446863D8F8
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Nov 2022 16:12:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233789AbiK3MIx (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Nov 2022 07:08:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56282 "EHLO
+        id S229533AbiK3PMq (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Nov 2022 10:12:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233577AbiK3MIj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Nov 2022 07:08:39 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 793A07643
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 04:07:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1669810058;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=jnVdlteFV26Z76cEF4gxE55CdPW4P3QACX8nQF2ZXTo=;
-        b=W/dSB4qs5hwMfYN4TjxxFnqFD4auu9K07/woj4RDIZunyWcd9qT2g9XoFZvOSjAqfTe4Ga
-        sPDuA5GKhAnz1PJtE0E805fwucXHtgi6wF0TyYucotzcJnBT4lkI2YNflsI6f5EEvixFEq
-        5X6WL3hpHvkVlHRo2bXgnkAdSZ4Yo+A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-518-ez1_AMZFPeC1O7R5m-sHXA-1; Wed, 30 Nov 2022 07:07:37 -0500
-X-MC-Unique: ez1_AMZFPeC1O7R5m-sHXA-1
-Received: by mail-wm1-f71.google.com with SMTP id l42-20020a05600c1d2a00b003cf8e70c1ecso907959wms.4
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 04:07:37 -0800 (PST)
+        with ESMTP id S229468AbiK3PMp (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Nov 2022 10:12:45 -0500
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FAB513E36;
+        Wed, 30 Nov 2022 07:12:43 -0800 (PST)
+Received: by mail-ed1-x530.google.com with SMTP id r26so22366030edc.10;
+        Wed, 30 Nov 2022 07:12:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kbYKqspQq7ax4MDUswX1OjlUU8+p93WbjYLSRqwiJew=;
+        b=R+t5y81JP4tgtEYyEMxlPy4LqoSox4tKP3eUfV+5syyytXLwBi7PhD90AFmswGXJDA
+         FNEsd+5b5Pa58ulNBsfUQenKqV9MW3boePe5OgmEc5Z/kErbP+6IqopIUIzil5rxkfeF
+         4SDGwe2GPPGLCRuxXY5B/o5n0gp2B7wifG722mDxzf4ByUIX965oY4Y69LwqQ2aIxTe6
+         H4AyOgN1ztVgTRYzJDsoRJ7tDPhXlQVBx0aWBXH5osBOONpbSU0o68DosQneFzKgDW2n
+         z2Eav0WbcuICMujTojxConyeXGrOFYV5laACz6p5ylpNI78RYkvIq9kzW0O5HFoNWiGQ
+         J0Bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jnVdlteFV26Z76cEF4gxE55CdPW4P3QACX8nQF2ZXTo=;
-        b=OvRGd68qPpLcrxbAV0SetMDJ1tpPjS1VuVr1ZgONPuLznM25q3hZ05BeNa0o4FJFa4
-         ShEH9ZjuCGEiy35NDZou5PJYykoWrihEfqTfVbgJcdc7715Tp3Y93Mj1xVFRiLW7zjPm
-         g+krT2BhYaO+K0ArwPmzKs4UAdksxw7sw5jN4KrO7CWzNovhPgCgJ35Qv3gl7w4ze2At
-         eiXojWVPk0lKuKcZzxbRwlh0/BwWeVezkho6wc7P55griUr3LxyEcYQD/xC05dgD1M48
-         wwLGFmTAlUTdch7Rh1P/hVDgoXSGw7Jv/4D14Rd2UZNCPdcwXwwomj9oJ+og2jnKBA1d
-         6Jhg==
-X-Gm-Message-State: ANoB5pn3cG47/7BAg6NfRP85Gg6SvT1WrqIAH5AOtjIV7wpHzOfElIP3
-        ebfthVvpXPz8OPJmS2PUEQiOWfoUs9BfmSX/wAmCruxJ1xodV7hTpgzbgXj3pNPklIGXbI3T+FM
-        XWrWBNQrHjzOsJQgSJBOx
-X-Received: by 2002:a05:600c:3c8e:b0:3d0:69f4:d3d0 with SMTP id bg14-20020a05600c3c8e00b003d069f4d3d0mr4598111wmb.93.1669810056147;
-        Wed, 30 Nov 2022 04:07:36 -0800 (PST)
-X-Google-Smtp-Source: AA0mqf4PpVsPubG71ps8rgagttNzK50w8zECDxzJfF2enqQnAPQgsvcgKe3HBaErdsIeSxrgevrHjQ==
-X-Received: by 2002:a05:600c:3c8e:b0:3d0:69f4:d3d0 with SMTP id bg14-20020a05600c3c8e00b003d069f4d3d0mr4598054wmb.93.1669810055886;
-        Wed, 30 Nov 2022 04:07:35 -0800 (PST)
-Received: from pc-4.home (2a01cb058918ce00dd1a5a4f9908f2d5.ipv6.abo.wanadoo.fr. [2a01:cb05:8918:ce00:dd1a:5a4f:9908:f2d5])
-        by smtp.gmail.com with ESMTPSA id j3-20020adfd203000000b002366c3eefccsm1368822wrh.109.2022.11.30.04.07.33
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kbYKqspQq7ax4MDUswX1OjlUU8+p93WbjYLSRqwiJew=;
+        b=l0Fyo7zlu8ftqxnCPw9Oi+NtiQvKZTk8gGBaJaTCXHPHIR4ciXw2Q53QJWY0sd1jHZ
+         ts9xYv4D0A11CBgf6O+hGidlHp218UHzw0JXzBwaQFb0t9mTQ/sFCeNEW2Jh1afU3sPN
+         f4S/gw5/ESomVlV3csvT9Kd4UPSz1JDpW7gRs135182ss6hwDhWbBGmtP+oGqIdgNBxJ
+         WTxAjg/CP5adORm2WCS/QjZLzanYHX66nwR35YOVCMu5s1b1f2tg4WBEJoDYp8VW0d8Z
+         hRWod4+ebPbyGZ73rW2pJelKnZfJG7ExR6s/OgqOt8pk3Fzf6+7+6Ek8u7mLE5qccM70
+         25dw==
+X-Gm-Message-State: ANoB5pm0dTtY2fmCF6Z7T8R9tIVckKqz47CUqTNhYuo1YuGX+k2CA1H7
+        jod/cb1G3Hosudjii0DpK/TGN/rCnRyszw==
+X-Google-Smtp-Source: AA0mqf7F36Mv0uwEK+8irgzU5CyMDX+bQ+SuiB2XyAm50r+HZ0J17Gbcdw7lVqhIRAqGAgkxn16zSA==
+X-Received: by 2002:a05:6402:2074:b0:46a:bb9e:40d1 with SMTP id bd20-20020a056402207400b0046abb9e40d1mr23446050edb.242.1669821161602;
+        Wed, 30 Nov 2022 07:12:41 -0800 (PST)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id j9-20020a17090623e900b007bf24b8f80csm743494ejg.63.2022.11.30.07.12.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Nov 2022 04:07:35 -0800 (PST)
-Date:   Wed, 30 Nov 2022 13:07:32 +0100
-From:   Guillaume Nault <gnault@redhat.com>
-To:     Benjamin Coddington <bcodding@redhat.com>
-Cc:     Christoph Hellwig <hch@lst.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Christoph =?iso-8859-1?Q?B=F6hmwalder?= 
-        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Valentina Manea <valentina.manea.m@gmail.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Steve French <sfrench@samba.org>,
-        Christine Caulfield <ccaulfie@redhat.com>,
-        David Teigland <teigland@redhat.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Eric Van Hensbergen <ericvh@gmail.com>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Xiubo Li <xiubli@redhat.com>,
+        Wed, 30 Nov 2022 07:12:41 -0800 (PST)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Jeff Layton <jlayton@kernel.org>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, nbd@other.debian.org,
-        linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com,
-        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org, cluster-devel@redhat.com,
-        ocfs2-devel@oss.oracle.com, v9fs-developer@lists.sourceforge.net,
-        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
-Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
-Message-ID: <20221130120732.GB29316@pc-4.home>
-References: <cover.1669036433.git.bcodding@redhat.com>
- <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
- <20221129140242.GA15747@lst.de>
- <794DBAB0-EDAF-4DA2-A837-C1F99916BC8E@redhat.com>
+        Anna Schumaker <anna@kernel.org>
+Subject: [PATCH] nfs: Remove empty if statement from nfs3_prepare_get_acl
+Date:   Wed, 30 Nov 2022 16:12:31 +0100
+Message-Id: <20221130151231.3654-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <794DBAB0-EDAF-4DA2-A837-C1F99916BC8E@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -121,27 +69,35 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Tue, Nov 29, 2022 at 11:47:47AM -0500, Benjamin Coddington wrote:
-> On 29 Nov 2022, at 9:02, Christoph Hellwig wrote:
-> 
-> > Hmm.  Having to set a flag to not accidentally corrupt per-task
-> > state seems a bit fragile.  Wouldn't it make sense to find a way to opt
-> > into the feature only for sockets created from the syscall layer?
-> 
-> It's totally fragile, and that's why it's currently broken in production.
-> The fragile ship sailed when networking decided to depend on users setting
-> the socket's GFP_ flags correctly to avoid corruption.
-> 
-> Meantime, this problem needs fixing in a way that makes everyone happy.
-> This fix doesn't make it less fragile, but it may (hopefully) address the
-> previous criticisms enough that something gets done to fix it.
+Remove empty if statement from nfs3_prepare_get_acl and
+update comment to follow the one from the referred
+fs/posix_acl.c:get_acl().
 
-Also, let's remember that while we're discussing how the kernel sould
-work in an ideal world, the reality is that production NFS systems
-crash randomly upon memory reclaim since commit a1231fda7e94 ("SUNRPC:
-Set memalloc_nofs_save() on all rpciod/xprtiod jobs"). Fixing that is
-just a matter of re-introducing GFP_NOFS on SUNRPC sockets (which has
-been proposed several times already). Then we'll have plenty of time
-to argue about how networking should use the per-task page_frag and
-how to remove GFP_NOFS in the long term.
+No functional change intended.
+
+Cc: Trond Myklebust <trond.myklebust@hammerspace.com>
+Cc: Anna Schumaker <anna@kernel.org>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+ fs/nfs/nfs3acl.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/fs/nfs/nfs3acl.c b/fs/nfs/nfs3acl.c
+index 93de0b58647a..957f954d3805 100644
+--- a/fs/nfs/nfs3acl.c
++++ b/fs/nfs/nfs3acl.c
+@@ -21,9 +21,8 @@ static void nfs3_prepare_get_acl(struct posix_acl **p)
+ {
+ 	struct posix_acl *sentinel = uncached_acl_sentinel(current);
+ 
+-	if (cmpxchg(p, ACL_NOT_CACHED, sentinel) != ACL_NOT_CACHED) {
+-		/* Not the first reader or sentinel already in place. */
+-	}
++	/* If the ACL isn't being read yet, set our sentinel. */
++	cmpxchg(p, ACL_NOT_CACHED, sentinel);
+ }
+ 
+ static void nfs3_complete_get_acl(struct posix_acl **p, struct posix_acl *acl)
+-- 
+2.38.1
 
