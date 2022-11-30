@@ -2,91 +2,130 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8538C63D11C
-	for <lists+linux-nfs@lfdr.de>; Wed, 30 Nov 2022 09:52:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD38563D4EB
+	for <lists+linux-nfs@lfdr.de>; Wed, 30 Nov 2022 12:49:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236239AbiK3IwL (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 30 Nov 2022 03:52:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55668 "EHLO
+        id S233365AbiK3Ltr (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 30 Nov 2022 06:49:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236290AbiK3IwD (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Nov 2022 03:52:03 -0500
-Received: from mail.ettrick.pl (mail.ettrick.pl [141.94.21.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18DA92C12B
-        for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 00:52:02 -0800 (PST)
-Received: by mail.ettrick.pl (Postfix, from userid 1002)
-        id D232CA5615; Wed, 30 Nov 2022 08:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ettrick.pl; s=mail;
-        t=1669798320; bh=ChRcLNpIfKnVgp03/tSyWuRw1tWSTk/OEiEnuZMWs58=;
-        h=Date:From:To:Subject:From;
-        b=Xq24BjM/JZbV+V9w5YPnj5hf09qusFFXR8lAbNS9Xh0LoTgO7nuPzkwd7AACpmzEg
-         5eK3v5XqfhaOr5iGaNCc6TJciv01c9rGofKtPO+WSoBCicKPl+wtJa3ZETEnDLZkg/
-         Q0tetW3RB7h+Nxhsr8ZdMzAhc7DLWw5pJ8f1YPcwMzeTJsGP4USnkOkeub7NW3bHVC
-         tlTMYxhCx+/HYUc1g4vQWIqgBT+zDnXHlr35aoOIhh+1OW9Fu2QhfRZrawKri1s9rj
-         uPYFNlKPJ1iPVMDKxsnqPeNHSlNoPuYQf/d23XEWhyJhVM1lH25P4jQwUyAXJMcVaa
-         I/GZfDsEGtm3w==
-Received: by mail.ettrick.pl for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 08:50:45 GMT
-Message-ID: <20221130074500-0.1.7a.1ymzg.0.tp7ku0d8hj@ettrick.pl>
-Date:   Wed, 30 Nov 2022 08:50:45 GMT
-From:   "Norbert Karecki" <norbert.karecki@ettrick.pl>
-To:     <linux-nfs@vger.kernel.org>
-Subject: Wycena paneli fotowoltaicznych
-X-Mailer: mail.ettrick.pl
+        with ESMTP id S230222AbiK3Ltm (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 30 Nov 2022 06:49:42 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2668421A2
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 03:48:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1669808923;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ew+rmcqxH2n7lRVyzxgZ+S2EuF0zHGkt1auf+7rBZUw=;
+        b=SPT4oTfwIt1rjeeG26/DGLH9R8z/tNQSCV9rCLn+0zOfI4n2SbMf2Q0pRbKfXtKzl0Ytsq
+        M3voI+W5ou2bX51k+zJcT/o4TAcx9mPG/I0L1Q8nm4Osb0KVPP0cRa194lKGAX+cknsVX6
+        7dBiVuDsQ6R2ucPUtr139o0KLFUeRGI=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-67-I0GtpP3XNL2M3HLdLQmJmg-1; Wed, 30 Nov 2022 06:48:40 -0500
+X-MC-Unique: I0GtpP3XNL2M3HLdLQmJmg-1
+Received: by mail-wm1-f69.google.com with SMTP id c187-20020a1c35c4000000b003cfee3c91cdso9285084wma.6
+        for <linux-nfs@vger.kernel.org>; Wed, 30 Nov 2022 03:48:40 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ew+rmcqxH2n7lRVyzxgZ+S2EuF0zHGkt1auf+7rBZUw=;
+        b=BpmPr/SeMF+Hq6Eoo/wNkYeAlArEmCK9Gi3XLMN/YprAZQz/orBLfiuwjAsb5I+BYF
+         FP5o9EiZwH+vPXoxJRuYY9D/Oj71RGDnqaaTatKl+ntFU47V33niFGMoUHTQL1CstfcP
+         ahma6jgvgBmYNhtgf9MQ8uVRmSOMy5EVdX5NUDVeMaoJYr640giGO7zwNeJmqbMjreeP
+         i8VJZ5KJaPuesxxjrTo8I24rxF9/bHJbpSw/ZfAf05KFBMIZon+6RlHvHoJur5sZ8ueX
+         UmpdhXbf7HxmI0Av9Zvcq6ZFSFIhoaPnmcjne1q43MWrmWO8RDRc8gvwxFDNF/dfDZxk
+         8PFw==
+X-Gm-Message-State: ANoB5pkvd1tRzI5iS27urCTqF6WiJ7zzuEU9efqrSNynN45oGERgm490
+        b+qT7pF/LbgDDrPzg9mPZGkizVkGh/DmD9Wgk5wCiM/uSzyckW/vVHE8yaiDRSwFcob4lpPwXBF
+        /oyJrA1a8T1LWLf+hCs2x
+X-Received: by 2002:a5d:5f04:0:b0:241:e9a6:fb3 with SMTP id cl4-20020a5d5f04000000b00241e9a60fb3mr22408073wrb.462.1669808919570;
+        Wed, 30 Nov 2022 03:48:39 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf71i1QvnhhrXaTwa+I+8EpX/qnDqrYR4GbrQTWzEGi7bUvVncNy/xc2a74B4erNgTJKDcQn3Q==
+X-Received: by 2002:a5d:5f04:0:b0:241:e9a6:fb3 with SMTP id cl4-20020a5d5f04000000b00241e9a60fb3mr22408062wrb.462.1669808919318;
+        Wed, 30 Nov 2022 03:48:39 -0800 (PST)
+Received: from pc-4.home (2a01cb058918ce00dd1a5a4f9908f2d5.ipv6.abo.wanadoo.fr. [2a01:cb05:8918:ce00:dd1a:5a4f:9908:f2d5])
+        by smtp.gmail.com with ESMTPSA id 16-20020a05600c22d000b003b497138093sm1620841wmg.47.2022.11.30.03.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Nov 2022 03:48:38 -0800 (PST)
+Date:   Wed, 30 Nov 2022 12:48:35 +0100
+From:   Guillaume Nault <gnault@redhat.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Benjamin Coddington <bcodding@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Christoph =?iso-8859-1?Q?B=F6hmwalder?= 
+        <christoph.boehmwalder@linbit.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lee Duncan <lduncan@suse.com>, Chris Leech <cleech@redhat.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Steve French <sfrench@samba.org>,
+        Christine Caulfield <ccaulfie@redhat.com>,
+        David Teigland <teigland@redhat.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Xiubo Li <xiubli@redhat.com>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Jeff Layton <jlayton@kernel.org>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, nbd@other.debian.org,
+        linux-nvme@lists.infradead.org, open-iscsi@googlegroups.com,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, cluster-devel@redhat.com,
+        ocfs2-devel@oss.oracle.com, v9fs-developer@lists.sourceforge.net,
+        ceph-devel@vger.kernel.org, linux-nfs@vger.kernel.org
+Subject: Re: [PATCH v1 2/3] Treewide: Stop corrupting socket's task_frag
+Message-ID: <20221130114835.GA29316@pc-4.home>
+References: <cover.1669036433.git.bcodding@redhat.com>
+ <c2ec184226acd21a191ccc1aa46a1d7e43ca7104.1669036433.git.bcodding@redhat.com>
+ <20221129140242.GA15747@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SBL,RCVD_IN_SBL_CSS,
-        RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_PASS,URIBL_ABUSE_SURBL,
-        URIBL_CSS_A,URIBL_DBL_SPAM,URIBL_SBL_A autolearn=no autolearn_force=no
-        version=3.4.6
-X-Spam-Report: *  1.2 URIBL_ABUSE_SURBL Contains an URL listed in the ABUSE SURBL
-        *      blocklist
-        *      [URIs: ettrick.pl]
-        *  2.5 URIBL_DBL_SPAM Contains a spam URL listed in the Spamhaus DBL
-        *      blocklist
-        *      [URIs: ettrick.pl]
-        *  0.1 RCVD_IN_SBL RBL: Received via a relay in Spamhaus SBL
-        *      [141.94.21.111 listed in zen.spamhaus.org]
-        *  3.3 RCVD_IN_SBL_CSS RBL: Received via a relay in Spamhaus SBL-CSS
-        *  0.1 URIBL_CSS_A Contains URL's A record listed in the Spamhaus CSS
-        *      blocklist
-        *      [URIs: ettrick.pl]
-        *  0.1 URIBL_SBL_A Contains URL's A record listed in the Spamhaus SBL
-        *      blocklist
-        *      [URIs: ettrick.pl]
-        *  1.3 RCVD_IN_VALIDITY_RPBL RBL: Relay in Validity RPBL,
-        *      https://senderscore.org/blocklistlookup/
-        *      [141.94.21.111 listed in bl.score.senderscore.com]
-        * -1.9 BAYES_00 BODY: Bayes spam probability is 0 to 1%
-        *      [score: 0.0000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221129140242.GA15747@lst.de>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Dzie=C5=84 dobry,
+On Tue, Nov 29, 2022 at 03:02:42PM +0100, Christoph Hellwig wrote:
+> Hmm.  Having to set a flag to not accidentally corrupt per-task
+> state seems a bit fragile.  Wouldn't it make sense to find a way to opt
+> into the feature only for sockets created from the syscall layer?
 
-dostrzegam mo=C5=BCliwo=C5=9B=C4=87 wsp=C3=B3=C5=82pracy z Pa=C5=84stwa f=
-irm=C4=85.
+That's something I originally considered. But, as far as I can see, nbd
+needs this flag _and_ uses sockets created in user space. So it'd still
+need to opt out manually.
 
-=C5=9Awiadczymy kompleksow=C4=85 obs=C5=82ug=C4=99 inwestycji w fotowolta=
-ik=C4=99, kt=C3=B3ra obni=C5=BCa koszty energii elektrycznej nawet o 90%.
-
-Czy s=C4=85 Pa=C5=84stwo zainteresowani weryfikacj=C4=85 wst=C4=99pnych p=
-ropozycji?
-
-
-Pozdrawiam,
-Norbert Karecki
