@@ -2,77 +2,80 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 988ED642D9B
-	for <lists+linux-nfs@lfdr.de>; Mon,  5 Dec 2022 17:50:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 360A8642EFB
+	for <lists+linux-nfs@lfdr.de>; Mon,  5 Dec 2022 18:39:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232776AbiLEQuQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 5 Dec 2022 11:50:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47270 "EHLO
+        id S230307AbiLERjQ (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 5 Dec 2022 12:39:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232118AbiLEQtp (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Dec 2022 11:49:45 -0500
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C322ECE1
-        for <linux-nfs@vger.kernel.org>; Mon,  5 Dec 2022 08:49:04 -0800 (PST)
-Received: by mail-wm1-x344.google.com with SMTP id ay27-20020a05600c1e1b00b003d070f4060bso10531458wmb.2
-        for <linux-nfs@vger.kernel.org>; Mon, 05 Dec 2022 08:49:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=Z2wBWagY9UnEZ+M5YPDdGkg6nVUsQfYS1BhjpcwGEao2GhG01+Mm/qvV+1fKOq1lbu
-         EFS78qR+UGfEwXQVt6IRXk6jTGT8mo+KAwwjj0fZxBmjE1jztugOoJP4/rka0x6XFhxu
-         W6iUCvsIDO6eHcdCHFvdIDlIVpJCsES5SD3xSnapoHClZmLcHlXbjXoeix+TX99ab7ry
-         BqOOHDFzUlmJeyU3OvUitATOsPkFA0DOczbi/Afsjm9NHI/YtApk72ny0qjFhFTXO+XP
-         yKXAtBeMHMlIwSKvmuRpEfOfWiK9b959mo8P7Fx64Ot+uHxQXUUrd10S+RG2s/yWLOX2
-         BSUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O4WPtqOs6pYDke8VCfpzwsIX+8zN33o8tLS2XMy/lFU=;
-        b=sS7V/dX9y3e6hcKZ3VuGy7fUj1BODcoPEdMKwt9A63Q2fKN2HdkSPEONw91yjBt1mu
-         pmYnBUeyvXPg58FWbc8Mf5V2IlonubvkLikDnSMHYFb0IvJ5n1UsVv2vueUTekIW9pd7
-         XBO0Nypm8H4W6+/mTQI34CDp+yrmOslqvLNB5ZjVbxSqnF3bDdAIInzSnpc28g2LxdH5
-         0MExfMefqoncxSrFCzGXL6vhjiBvUOTKjElCp3aEw0GYHuqCulw46VDxZMGLWZr7ji/O
-         CESIpF5sptkx8dKLQzHCyOjuCujbU6bYPyF1/OZfNQcWw+BghncomGf6/sd6hT6NqtLB
-         9Dbw==
-X-Gm-Message-State: ANoB5pmdwh/Py1b62rcZZud7ctwP5ktYKiEpVAV24zQp7LG5t76XwAtc
-        l0xh3kuq74hQS/oK2pQ/XhZykT4yWYDdo+phBJ0=
-X-Google-Smtp-Source: AA0mqf6LlThRqxALxahU+d5CDCL5XgA0Iri4oQFEx6hETTBFBZxUw9iI5CXyM5b3WvWotoaM22oBvK+CwFtVO/zgxX4=
-X-Received: by 2002:a7b:c8d0:0:b0:3cf:ca91:7094 with SMTP id
- f16-20020a7bc8d0000000b003cfca917094mr60628535wml.24.1670258943314; Mon, 05
- Dec 2022 08:49:03 -0800 (PST)
+        with ESMTP id S230123AbiLERjP (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 5 Dec 2022 12:39:15 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C31C42
+        for <linux-nfs@vger.kernel.org>; Mon,  5 Dec 2022 09:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670261899;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=474Veck1VYB4rPLuZHOcu9oupe9hsVxc3fxdcRWFKn0=;
+        b=SEOmf7JqiRYpNi4G/bgt87MtZaMhj6WLDj0uGBPC0e1ZmtdVyD8x1MTxbZJf4UXRTHAFwF
+        qsLTGnFgImUPpDRH7SD3rS9vLsODTRM8EF0VTY8HlgtXWwkZjkt4ceI3uEpRvrkgSziJDd
+        iD264cqg+etx5TuMjOaaJTLvnHEITNs=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-623-T3r9giCIPkC2n9rlrDiGmw-1; Mon, 05 Dec 2022 12:38:08 -0500
+X-MC-Unique: T3r9giCIPkC2n9rlrDiGmw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CE59C2823805;
+        Mon,  5 Dec 2022 17:38:07 +0000 (UTC)
+Received: from [172.16.176.1] (unknown [10.22.50.6])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 573C240C206B;
+        Mon,  5 Dec 2022 17:38:07 +0000 (UTC)
+From:   Benjamin Coddington <bcodding@redhat.com>
+To:     Jidong Xiao <jidong.xiao@gmail.com>
+Cc:     linux-nfs@vger.kernel.org
+Subject: Re: Is Linux NFS block size 512 bytes or is this a bug?
+Date:   Mon, 05 Dec 2022 12:38:01 -0500
+Message-ID: <60C55655-4A83-4B93-AEEB-89C69EBEE472@redhat.com>
+In-Reply-To: <CAG4AFWYGYtYOoi8BuFos__GSNrLVXBwcaDpVR0D6fRv3ibPkmA@mail.gmail.com>
+References: <CAG4AFWYGYtYOoi8BuFos__GSNrLVXBwcaDpVR0D6fRv3ibPkmA@mail.gmail.com>
 MIME-Version: 1.0
-Received: by 2002:a05:6000:5c1:0:0:0:0 with HTTP; Mon, 5 Dec 2022 08:49:02
- -0800 (PST)
-Reply-To: phmanu14@hotmail.com
-From:   Philip Manul <zagbamdjala@gmail.com>
-Date:   Mon, 5 Dec 2022 08:49:02 -0800
-Message-ID: <CAPCnorG0wZz4L65xmUUzHEvxvuhrsq0nQnSPJqno3Ah89AhSwA@mail.gmail.com>
-Subject: REP:
-To:     in <in@proposal.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=1.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
---=20
-Guten tag,
-Mein Name ist Philip Manul. Ich bin von Beruf Rechtsanwalt. Ich habe
-einen verstorbenen Kunden, der zuf=C3=A4llig denselben Namen mit Ihnen
-teilt. Ich habe alle Papierdokumente in meinem Besitz. Ihr Verwandter,
-mein verstorbener Kunde, hat hier in meinem Land einen nicht
-beanspruchten Fonds zur=C3=BCckgelassen. Ich warte auf Ihre Antwort zum
-Verfahren.
-Philip Manul.
+On 5 Dec 2022, at 0:44, Jidong Xiao wrote:
+
+> Hi,
+>
+> I saw this line in fs/nfsd/nfs3xdr.c:
+>
+> /* used */
+> p = xdr_encode_hyper(p, ((u64)stat->blocks) << 9);
+>
+> It seems we are left-shifting the blocks 9 bits, to get the number of
+> bytes used. Is this a bug or we know the block size is always 512
+> bytes?
+
+By calling vfs_getattr(), which needs to behave for stat(2) syscall as
+returning the number of 512 byte blocks.  I think we're stuck with the
+traditional idea that blocks are always 512 bytes in linux, at least from
+the perspective of stat().
+
+The history of such is beyond my time, but I don't think this is a bug.
+
+Ben
+
