@@ -2,132 +2,131 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C27864447A
-	for <lists+linux-nfs@lfdr.de>; Tue,  6 Dec 2022 14:22:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DF1B64449C
+	for <lists+linux-nfs@lfdr.de>; Tue,  6 Dec 2022 14:33:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233317AbiLFNWf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 6 Dec 2022 08:22:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58384 "EHLO
+        id S233563AbiLFNdj (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 6 Dec 2022 08:33:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231168AbiLFNWe (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Dec 2022 08:22:34 -0500
+        with ESMTP id S231144AbiLFNdi (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 6 Dec 2022 08:33:38 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4655FD120
-        for <linux-nfs@vger.kernel.org>; Tue,  6 Dec 2022 05:21:37 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794D9222AD
+        for <linux-nfs@vger.kernel.org>; Tue,  6 Dec 2022 05:32:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670332896;
+        s=mimecast20190719; t=1670333548;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=E9zY2/ptng73F64GgnuIHyLrbZldcFmxMWaInNFT/+8=;
-        b=MBEyuKllbn0DINB5gIBeMf54psaTW1AMnnOVQnS/kMVLZZXwbB3+jocLVnkegCtllxxaKW
-        asXG4eCOMjbGjxUfO56ph65WmKEr/9Fu2h2vyBHgMQHdtrvWcokpFvbuztAZE4IyWvpYO/
-        uqXW0BeAAgR42lNaBdrsTK4RS084L0k=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-397-z1xuBA92N0-Zdcfu8CAChQ-1; Tue, 06 Dec 2022 08:21:33 -0500
-X-MC-Unique: z1xuBA92N0-Zdcfu8CAChQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B2A5486EB20;
-        Tue,  6 Dec 2022 13:21:32 +0000 (UTC)
-Received: from [172.16.176.1] (unknown [10.22.50.6])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5651B40C6EC3;
-        Tue,  6 Dec 2022 13:21:32 +0000 (UTC)
-From:   Benjamin Coddington <bcodding@redhat.com>
-To:     Theodor Mittermair <tmittermair@cvl.tuwien.ac.at>
-Cc:     linux-nfs@vger.kernel.org
-Subject: Re: NFS performance problem (readdir, getattr, actimeo, lookupcache)
-Date:   Tue, 06 Dec 2022 08:21:27 -0500
-Message-ID: <0193C32D-D74A-423C-AF08-58EB436FABDD@redhat.com>
-In-Reply-To: <dc3b95d2-93d0-992f-8f02-75c5bbb3bdff@cvl.tuwien.ac.at>
-References: <dc3b95d2-93d0-992f-8f02-75c5bbb3bdff@cvl.tuwien.ac.at>
+        bh=3rh7ndl+wYJ7ekIywz+KOL6WXucwVR9zBDjKA4kWFpA=;
+        b=dce/Yj1bTDKrpQ6M+tWc0ihco7dBmvKyutX8lZ2LrhwZmsw4niV1mRvQcfQImT2sFHJG8v
+        FhDPkGtNoU9NApje3RuatECNDI/GRiRgF+i9ZREfeUm1bPh+wnLYLGxdd/z1rJ/Or0N6E8
+        77sInFzl86+tP0XVu24iBWo5/xCs7pE=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-115-JZErIWMcNR-Cgd-8NnnC4w-1; Tue, 06 Dec 2022 08:32:27 -0500
+X-MC-Unique: JZErIWMcNR-Cgd-8NnnC4w-1
+Received: by mail-qk1-f198.google.com with SMTP id i4-20020a05620a248400b006febc1651bbso9064439qkn.4
+        for <linux-nfs@vger.kernel.org>; Tue, 06 Dec 2022 05:32:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3rh7ndl+wYJ7ekIywz+KOL6WXucwVR9zBDjKA4kWFpA=;
+        b=x0WOrbt9YzJHWuiC7XEJvSTCU1V1wEhD7Wek0VfpKULT0sijUYlkMJYUz3BsWYZbpK
+         qe7n7flYglUy8ZA748kyCp6Aam+QpLbIMXIrFawuz2115YeLs7zVm+A1fSL24Q6yfK9L
+         riZDnb/TS7897AylI+pw7PFCXf/ng47DpUd29x27qSJ0lD0CIZp3tHda5uHvnmnVMZLg
+         hoWzqM5j9EmI8IjKGHOlGaLgVqEIB56CoQ667TF9R+yphGH/M0VZ/dEuKzuRScDWRS7N
+         J91Czb+SDpKhvQNFWxUPe32trJXBIasyQVCyIYWkHYoyPW7fifyOYZcqRisoQ6MnTNyZ
+         Q8kw==
+X-Gm-Message-State: ANoB5pn8FdvkcUnhh18BHhM+LX0MbTa/OCvmdPFxnIRNUjcP9RdUL8Cx
+        nHvXWQnZP1w2h5rv/BD4rXLimdwTtNQIuokZ2lANf47KjfNvTH/VefPtU5QrblsMo8ePU5L7VSi
+        DE+kyoed+YCrirHtIz8DG
+X-Received: by 2002:a0c:e248:0:b0:4c6:ed60:795 with SMTP id x8-20020a0ce248000000b004c6ed600795mr389144qvl.21.1670333547032;
+        Tue, 06 Dec 2022 05:32:27 -0800 (PST)
+X-Google-Smtp-Source: AA0mqf47TsB0+XqF0MAm2TyasdMVdFfSemDSSDI4nThKB3LHxdkH8ojuNJaCy0btYk0stbYAl/KSQw==
+X-Received: by 2002:a0c:e248:0:b0:4c6:ed60:795 with SMTP id x8-20020a0ce248000000b004c6ed600795mr389142qvl.21.1670333546743;
+        Tue, 06 Dec 2022 05:32:26 -0800 (PST)
+Received: from [172.31.1.6] ([70.105.255.216])
+        by smtp.gmail.com with ESMTPSA id bj7-20020a05620a190700b006cfc1d827cbsm14657411qkb.9.2022.12.06.05.32.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 06 Dec 2022 05:32:26 -0800 (PST)
+Message-ID: <b4474890-4d36-730c-af29-2d4541a9c362@redhat.com>
+Date:   Tue, 6 Dec 2022 08:32:24 -0500
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 0/4] Replace sysctl setting invocations triggered from
+ udev rule instead of modprobe configuration
+Content-Language: en-US
+To:     Salvatore Bonaccorso <carnil@debian.org>,
+        NeilBrown <neilb@suse.de>, linux-nfs@vger.kernel.org
+Cc:     Andras Korn <korn-debbugs@elan.rulez.org>,
+        Marco d'Itri <md@linux.it>, Michael Prokop <mika@debian.org>
+References: <20221125140656.1985137-1-carnil@debian.org>
+From:   Steve Dickson <steved@redhat.com>
+In-Reply-To: <20221125140656.1985137-1-carnil@debian.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On 5 Dec 2022, at 21:18, Theodor Mittermair wrote:
 
-> Hello,
 
-Hi Theodor,
+On 11/25/22 9:06 AM, Salvatore Bonaccorso wrote:
+> Hi Neil, hi Steve
+> 
+> In Debian for the update including the systemd/50-nfs.conf there was a
+> report that sunrpc is not included anymore in the initrd through the
+> initramfs-tools hooks.
+> 
+> The report is at https://bugs.debian.org/1022172
+> 
+> Marco d'Itri suggested there three possible solutions, of which one
+> could be done in nfs-utils (whereas the other two are either in kmod
+> upstream or initramfs-tools upstream). The nfs-utils one would be to
+> replace the modprobe configuration with a set of udev rules instead.
+> 
+> This series reverts the commits which introduce the use of the modprobe
+> configuration and instead replaces it with an udev rule which triggers
+> setting the sysctl settings when the respective modules are loaded.
+> 
+> Regards,
+> Salvatore
+> 
+> Changes:
+> --------
+> v2:
+>   - Fix a series of spelling and typos in the commit messages.
+Committed... (tag: nfs-utils-2-6-3-rc5)
 
-.. snip ..
-
-> From what i gathered around the internet and understood, there seem to be
-> heuristics involved when the client decides what operations to transmit to
-> the server.  Also, the timed-out cache seems to be creating what some
-> called a "getattr storm", which i understand in theory.
-
-When `du` gathers information, it does so by switching between two syscalls:
-getdents() and stat() (or some equivalents).  The getdents() syscall causes
-the NFS client to perform either READDIR or READDIRPLUS - the choice of
-which is governed by a heuristic.  The heuristic can only intelligently
-determine which readdir operation to use based on whether the program is
-performing this pattern of getdents(), stat(), stat(), stat(), getdents(),
-stat(), stat(), stat().  The way it can tell is by checking if each inode's
-attributes have been cached, so the cache timeouts end up coming into play.
-
-> But why does the first request manage to be smarter about it, since it
-> gathers the same information about the exact same files?
-
-It's not smarter, it just optimistically uses READDIRPLUS on the very first
-call of getdents() for a directory, but can only do so if the directory's
-dentries have not yet been cached.  If they /are/ cached, but each dentry's
-individual attributes have timed out, then the client must send an
-individual GETATTR for each entry.
-
-What is happening for you is that your attribute caches for each inode are
-timing out, but the overall directory's dentry list is not changing.
-There's no need to send /any/ readdir operations - so the heuristic doesn't
-send READDIRPLUS and you end up with one full pile of getdents() results of
-individual GETATTRs for every entry.
-
-If your server is returning a large dtpref (the preferred data transfer size
-for readdir), and there's some latency for round-trip operations, you'll see
-this stack up quickly in exactly the results you've presented.
-
-There's a patch that may go into v6.2 to help this:
-https://lore.kernel.org/linux-nfs/20220920170021.1391560-1-bcodding@redhat.com/
-
-.. if you have the ability to test it in your setup, I'd be interested in
-the results.
-
-This heuristic's behavior is becoming harder to change, because over time we
-have a lot of setups depending on certain performance characteristics and
-changes in this area create unexpected performance regressions.
-
-> I would be happy if i could maintain the initial-non-cached time (in the
-> examples above 1.5 seconds) but none of
-> "noac","lookupcache=none","actimeo=0" would let me achieve that seemingly.
->
-> Is there a way to improve that situation, and if so, how?
-
-Hopefully, the above patch will help.  We've all had wild ideas: maybe we
-should also only do uncached readdir if lookupcache=none?  Its a bit
-surprising that you'd opt to forego all caching just to optmize this `du`
-case.  I don't think that's what you want, as it will negatively impact
-other workloads.
-
-I also think that if you were to dump all the directories' page caches
-in between your calls to `du` you'd get consistent performance as in your
-first pass.. something with POSIX_FADV_DONTNEED to fadvise(), but I'd be
-leery of depending on this behavior, since its only a hint.
-
-I also wonder if glibc() might be willing to check a hint (like an
-environment variable?) about how big a buffer to send to getdents(), since I
-suspect it might also be nice for some fuse filesystems.
-
-Ben
+steved.
+> 
+> Salvatore Bonaccorso (4):
+>    Revert "configure: make modprobe.d directory configurable."
+>    Revert "modprobe: protect against sysctl errors"
+>    Revert "systemd: Apply all sysctl settings when NFS-related modules
+>      are loaded"
+>    systemd: Apply all sysctl settings through udev rule when NFS-related
+>      modules are loaded
+> 
+>   configure.ac         | 12 ------------
+>   systemd/50-nfs.conf  | 16 ----------------
+>   systemd/60-nfs.rules | 21 +++++++++++++++++++++
+>   systemd/Makefile.am  | 15 ++++++---------
+>   4 files changed, 27 insertions(+), 37 deletions(-)
+>   delete mode 100644 systemd/50-nfs.conf
+>   create mode 100644 systemd/60-nfs.rules
+> 
 
