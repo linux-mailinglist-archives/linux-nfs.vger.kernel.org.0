@@ -2,62 +2,64 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67AA9645B62
-	for <lists+linux-nfs@lfdr.de>; Wed,  7 Dec 2022 14:50:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29001646263
+	for <lists+linux-nfs@lfdr.de>; Wed,  7 Dec 2022 21:31:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230025AbiLGNuc (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Wed, 7 Dec 2022 08:50:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45726 "EHLO
+        id S229828AbiLGUbP (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Wed, 7 Dec 2022 15:31:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230106AbiLGNuT (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Dec 2022 08:50:19 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B96405B59D
-        for <linux-nfs@vger.kernel.org>; Wed,  7 Dec 2022 05:49:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1670420962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=I/Q1ZC0666M/joFWQlCN9lqG3/HMmtk+XlUWPgiJ26M=;
-        b=hWKkhcLRH1gLx28rTACw+DyGfQrWiraDR6T9QY/jNVOT7c/IO34qn/U4CIzis5KfEIr3aY
-        XJnK4LCTyUhH5kLKRkpn13tEUni5FCqB9pwlFRF2/gVmMGJbnZOvEw6LB0OMAeATvjPkMK
-        IMF45B81GtFrN9ReuBFYCAs1Q94Chws=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-270-X3Xu_TEOOP-EuEvY-wnVbg-1; Wed, 07 Dec 2022 08:49:19 -0500
-X-MC-Unique: X3Xu_TEOOP-EuEvY-wnVbg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.rdu2.redhat.com [10.11.54.6])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4C9E685A588;
-        Wed,  7 Dec 2022 13:49:19 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.17])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F7DC2166B26;
-        Wed,  7 Dec 2022 13:49:18 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-To:     torvalds@linux-foundation.org
-cc:     dhowells@redhat.com, Dave Wysochanski <dwysocha@redhat.com>,
-        Daire Byrne <daire.byrne@gmail.com>,
-        Benjamin Maynard <benmaynard@google.com>,
-        linux-cachefs@redhat.com, linux-nfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] fscache: Fix oops due to race with cookie_lru and use_cookie
+        with ESMTP id S229603AbiLGUbO (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Wed, 7 Dec 2022 15:31:14 -0500
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7D3045EEC
+        for <linux-nfs@vger.kernel.org>; Wed,  7 Dec 2022 12:31:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1670445063; bh=wpUYdY9bcC4lBSZ5xLSLRB79XMm8JvkzNc09vxFVHUM=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=rfC0wJkBxL87yMzNtHAVHZq8vyay8ZlFGfaQCYt0g4b1pRznx0xTKZ+5qAwnQMUmL
+         CV6iCQ8H8oAXvB7Cje/A5WpaIZw8cUnmWQG4IH6GvOyn5P4SvsddtLVqJUhHJ+RAEE
+         6YOpVAykkqvLEsdAgJD0Q25zbZKiut1bf9MAYqkuinmNrbu69OwkwhpGlJO4Wb7Du6
+         +YG6Tgxj6msqvCV79ABspgfwbCdCdp3I3o60vWle2p8WxISj/NEXhERX2ZXBvMhnnv
+         +OZVZo92bsb3K+XtuirkQHz7lHcvQv1aF/Ov2b5d35x/zH9PpmrB0DSoPX4vsAh42/
+         LgG3efUxLlASA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from xook.jfalk.de ([91.55.245.212]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4z6q-1ov56Z3Dqm-010phU; Wed, 07
+ Dec 2022 21:31:03 +0100
+From:   Joachim Falk <joachim.falk@gmx.de>
+To:     linux-nfs@vger.kernel.org
+Cc:     Joachim Falk <joachim.falk@gmx.de>,
+        Steve Dickson <steved@redhat.com>,
+        Salvatore Bonaccorso <carnil@debian.org>
+Subject: [PATCH] systemd: Don't degrade system state for nfs-clients when krb5 keytab present but not containing the nfs/<FQDN> principal.
+Date:   Wed,  7 Dec 2022 21:28:41 +0100
+Message-Id: <20221207202841.525930-1-joachim.falk@gmx.de>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1432089.1670420955.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
-Date:   Wed, 07 Dec 2022 13:49:15 +0000
-Message-ID: <1432090.1670420955@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.6
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
+X-Provags-ID: V03:K1:xGaH1lumlh9e5OB3hc7Biijx9ljxOpN58zELvfTZxg85hSAeb9/
+ Cx2+pI7iUw9gTPcxIdZ9YxToqrfrxatfNrl2rxXP/a1pJmZinMxvsSuV/zng1VBhoWXTUJ6
+ I2sTDPwjOyTmrFpyIJyZTP4j47uG9e8Li2WmMdxFD4QKdh5jNUHrHolqEb6IWoHNmElGR2y
+ GZHXS8aifiDOuyRp3yt7w==
+UI-OutboundReport: notjunk:1;M01:P0:8CciwcB+Mrw=;cB36i7zchQscovKiZuDPBHbCdxz
+ VOGnkIzDNPUCQKjjRzYx1Fp9hueX27VUBKy7HdIY4EnqmYDuS08uWsUs+FkCdzGLBzFECLfnx
+ XFZ5Vu0gTTSiWT3Ek9GR1fyrmzg+HX0d9zaYG+xp1pYDLTccmf7PCNaJ9oxNeoUKyzAy/aXtV
+ 6/Nm8/kCCeZmXrWAgeySav7hv63Xb8F+aQYRB+Txk9acp5WD58c9bMbDrNCpKBJfTdgbhiS9G
+ +BacB475Y61Z2kaAeBfLweaN6WWFuF8YD9sPkr3VIhjciWABum9GZ2FbUXh0AzP+NOjppUTh5
+ fBKcV5p23eUUuslj4+QsMdqXhRHLg6iqZaZPg+YdBV4jA61Ryy3m1IfUsP7WUE3SsviSdg5Tk
+ qI3q+9D+szVNOGYZacKjltO3uOzEO+u0UM08CPJwttIP9/AHGu1rw2l94r4woG+LOvIq4g4cG
+ j9gmMOvaY9VqohU25vk4T2hzYSTWjGAo5duwRoKwgV74tvpnDFwZasc7A1VJytv23JLsyM9un
+ 6lgabDqGPMpHDu+SVjAsUtrLTK64rpcfcaI0lXPVbi0PwXBwWDhvksvpYS1yNVnSLUTy/4Ypv
+ nmzjh++2BjDfnno3i/NDGlVDHl6SaGF28gT4cFoRmcYiePK2lnJuDxs1QKkEojiDxxzo06met
+ 1YrcYbHc7LI3fEeUM5Z5Uc0WWloHpEvMOr1DQFf+YQe13NzyrvYxLQPdrTy92rxEjCy+FmkwI
+ KhuP7XmMeIa/DydNdQ7wsR1XhQ6Cz5Wzipf5FQaMLr0oNKinNvQKRX22VIArjjfpiWFJCh8EC
+ aw3Wlc8sh+obrcEeJCg4ur6+wEIxRPRzM2V3nW3NfYygPQiMEWNv9BD1Ar29gCV3/ytRJonCX
+ ylAWr7PqkU+psgqY+ogaF053z3i2dt8DOL3NndVLH/D1QdaI6dRJVS7Y+2KpyAC95+u2QzEV+
+ epOrgg==
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,100 +67,56 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-Hi Linus,
+The nfs-client.target requires the auth-rpcgss-module.service, which in
+turn requires the rpc-svcgssd.service. However, the rpc.svcgssd daemon
+is unnecessary for an NFS client, even when using Kerberos security.
+Moreover, starting this daemon with its default configuration will fail
+when no nfs/<host>@REALM principal is in the Kerberos keytab. Thus,
+resulting in a degraded system state for NFS client configurations
+without nfs/<host>@REALM principal in the Kerberos keytab. However, this
+is a perfectly valid NFS client configuration as the nfs/<host>@REALM
+principal is not required for mounting NFS file systems. This is even
+the case when Kerberos security is enabled for the mount!
 
-Could you apply this, please?
+Installing the gssproxy package hides this problem as this disables the
+rpc-svcgssd.service.
 
-Thanks,
-David
----
-From: Dave Wysochanski <dwysocha@redhat.com>
+Link: http://bugs.debian.org/985002
+Link: https://salsa.debian.org/kernel-team/nfs-utils/-/merge_requests/23
 
-If a cookie expires from the LRU and the LRU_DISCARD flag is set,
-but the state machine has not run yet, it's possible another thread
-can call fscache_use_cookie and begin to use it.  When the
-cookie_worker finally runs, it will see the LRU_DISCARD flag set,
-transition the cookie->state to LRU_DISCARDING, which will then
-withdraw the cookie.  Once the cookie is withdrawn the object is
-removed the below oops will occur because the object associated
-with the cookie is now NULL.
+Signed-off-by: Joachim Falk <joachim.falk@gmx.de>
+=2D--
+ systemd/auth-rpcgss-module.service | 2 +-
+ systemd/nfs-server.service         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Fix the oops by clearing the LRU_DISCARD bit if another thread
-uses the cookie before the cookie_worker runs.
+diff --git a/systemd/auth-rpcgss-module.service b/systemd/auth-rpcgss-modu=
+le.service
+index 25c9de80..4a69a7b7 100644
+=2D-- a/systemd/auth-rpcgss-module.service
++++ b/systemd/auth-rpcgss-module.service
+@@ -8,7 +8,7 @@
+ Description=3DKernel Module supporting RPCSEC_GSS
+ DefaultDependencies=3Dno
+ Before=3Dgssproxy.service rpc-svcgssd.service rpc-gssd.service
+-Wants=3Dgssproxy.service rpc-svcgssd.service rpc-gssd.service
++Wants=3Dgssproxy.service rpc-gssd.service
+ ConditionPathExists=3D/etc/krb5.keytab
+ ConditionVirtualization=3D!container
 
-  BUG: kernel NULL pointer dereference, address: 0000000000000008
-  ...
-  CPU: 31 PID: 44773 Comm: kworker/u130:1 Tainted: G     E    6.0.0-5.dneg=
-.x86_64 #1
-  Hardware name: Google Compute Engine/Google Compute Engine, BIOS Google =
-08/26/2022
-  Workqueue: events_unbound netfs_rreq_write_to_cache_work [netfs]
-  RIP: 0010:cachefiles_prepare_write+0x28/0x90 [cachefiles]
-  ...
-  Call Trace:
-   netfs_rreq_write_to_cache_work+0x11c/0x320 [netfs]
-   process_one_work+0x217/0x3e0
-   worker_thread+0x4a/0x3b0
-   ? process_one_work+0x3e0/0x3e0
-   kthread+0xd6/0x100
-   ? kthread_complete_and_exit+0x20/0x20
-   ret_from_fork+0x1f/0x30
+diff --git a/systemd/nfs-server.service b/systemd/nfs-server.service
+index b432f910..2cdd7868 100644
+=2D-- a/systemd/nfs-server.service
++++ b/systemd/nfs-server.service
+@@ -15,7 +15,7 @@ After=3Dnfsdcld.service
+ Before=3Drpc-statd-notify.service
 
-Fixes: 12bb21a29c19 ("fscache: Implement cookie user counting and resource=
- pinning")
-Reported-by: Daire Byrne <daire.byrne@gmail.com>
-Signed-off-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: David Howells <dhowells@redhat.com>
-Tested-by: Daire Byrne <daire@dneg.com>
-Link: https://lore.kernel.org/r/20221117115023.1350181-1-dwysocha@redhat.c=
-om/ # v1
-Link: https://lore.kernel.org/r/20221117142915.1366990-1-dwysocha@redhat.c=
-om/ # v2
----
- fs/fscache/cookie.c            | 8 ++++++++
- include/trace/events/fscache.h | 2 ++
- 2 files changed, 10 insertions(+)
+ # GSS services dependencies and ordering
+-Wants=3Dauth-rpcgss-module.service
++Wants=3Dauth-rpcgss-module.service rpc-svcgssd.service
+ After=3Drpc-gssd.service gssproxy.service rpc-svcgssd.service
 
-diff --git a/fs/fscache/cookie.c b/fs/fscache/cookie.c
-index 451d8a077e12..bce2492186d0 100644
---- a/fs/fscache/cookie.c
-+++ b/fs/fscache/cookie.c
-@@ -605,6 +605,14 @@ void __fscache_use_cookie(struct fscache_cookie *cook=
-ie, bool will_modify)
- 			set_bit(FSCACHE_COOKIE_DO_PREP_TO_WRITE, &cookie->flags);
- 			queue =3D true;
- 		}
-+		/*
-+		 * We could race with cookie_lru which may set LRU_DISCARD bit
-+		 * but has yet to run the cookie state machine.  If this happens
-+		 * and another thread tries to use the cookie, clear LRU_DISCARD
-+		 * so we don't end up withdrawing the cookie while in use.
-+		 */
-+		if (test_and_clear_bit(FSCACHE_COOKIE_DO_LRU_DISCARD, &cookie->flags))
-+			fscache_see_cookie(cookie, fscache_cookie_see_lru_discard_clear);
- 		break;
- =
-
- 	case FSCACHE_COOKIE_STATE_FAILED:
-diff --git a/include/trace/events/fscache.h b/include/trace/events/fscache=
-.h
-index c078c48a8e6d..a6190aa1b406 100644
---- a/include/trace/events/fscache.h
-+++ b/include/trace/events/fscache.h
-@@ -66,6 +66,7 @@ enum fscache_cookie_trace {
- 	fscache_cookie_put_work,
- 	fscache_cookie_see_active,
- 	fscache_cookie_see_lru_discard,
-+	fscache_cookie_see_lru_discard_clear,
- 	fscache_cookie_see_lru_do_one,
- 	fscache_cookie_see_relinquish,
- 	fscache_cookie_see_withdraw,
-@@ -149,6 +150,7 @@ enum fscache_access_trace {
- 	EM(fscache_cookie_put_work,		"PQ  work ")		\
- 	EM(fscache_cookie_see_active,		"-   activ")		\
- 	EM(fscache_cookie_see_lru_discard,	"-   x-lru")		\
-+	EM(fscache_cookie_see_lru_discard_clear,"-   lrudc")            \
- 	EM(fscache_cookie_see_lru_do_one,	"-   lrudo")		\
- 	EM(fscache_cookie_see_relinquish,	"-   x-rlq")		\
- 	EM(fscache_cookie_see_withdraw,		"-   x-wth")		\
+ [Service]
+=2D-
+2.35.1
 
