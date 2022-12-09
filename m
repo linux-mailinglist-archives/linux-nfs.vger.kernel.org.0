@@ -2,188 +2,78 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 647B2647ACB
-	for <lists+linux-nfs@lfdr.de>; Fri,  9 Dec 2022 01:32:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DB628647B6D
+	for <lists+linux-nfs@lfdr.de>; Fri,  9 Dec 2022 02:28:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbiLIAcf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Thu, 8 Dec 2022 19:32:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59136 "EHLO
+        id S229521AbiLIB2F (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Thu, 8 Dec 2022 20:28:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbiLIAcd (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Dec 2022 19:32:33 -0500
-Received: from mail.valinux.co.jp (mail.valinux.co.jp [210.128.90.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EC0E94191
-        for <linux-nfs@vger.kernel.org>; Thu,  8 Dec 2022 16:32:31 -0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.valinux.co.jp (Postfix) with ESMTP id EE401A8F61;
-        Fri,  9 Dec 2022 09:32:29 +0900 (JST)
-X-Virus-Scanned: Debian amavisd-new at valinux.co.jp
-Received: from mail.valinux.co.jp ([127.0.0.1])
-        by localhost (mail.valinux.co.jp [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id TIZsrqp1lrbX; Fri,  9 Dec 2022 09:32:29 +0900 (JST)
-Received: from brer.quest.tech.valinux.jp (vagw.valinux.co.jp [210.128.90.14])
-        by mail.valinux.co.jp (Postfix) with ESMTP id D086CA8A96;
-        Fri,  9 Dec 2022 09:32:29 +0900 (JST)
-From:   Hiroshi Shimamoto <h-shimamoto@nec.com>
-To:     linux-nfs@vger.kernel.org
-Cc:     minoura <minoura@valinux.co.jp>,
-        Hiroshi Shimamoto <h-shimamoto@nec.com>
-Subject: [PATCH v2] SUNRPC: serialize gss upcalls for the same uid
-Date:   Fri,  9 Dec 2022 09:30:33 +0900
-Message-Id: <20221209003032.3211581-1-h-shimamoto@nec.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229498AbiLIB2F (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Thu, 8 Dec 2022 20:28:05 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D71801E4
+        for <linux-nfs@vger.kernel.org>; Thu,  8 Dec 2022 17:28:04 -0800 (PST)
+Received: from kwepemm600015.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4NStbY5cf4zJp6q;
+        Fri,  9 Dec 2022 09:24:25 +0800 (CST)
+Received: from [10.174.176.52] (10.174.176.52) by
+ kwepemm600015.china.huawei.com (7.193.23.52) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Fri, 9 Dec 2022 09:27:57 +0800
+Message-ID: <127311ec-74ad-1e8b-57f7-64daf313aefe@huawei.com>
+Date:   Fri, 9 Dec 2022 09:27:57 +0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.2.1
+Subject: Re: [PATCH] NFSv4.x: Fail client initialisation if state manager
+ thread can't run
+To:     <trondmy@kernel.org>, <linux-nfs@vger.kernel.org>
+References: <20221206190249.438037-1-trondmy@kernel.org>
+From:   ChenXiaoSong <chenxiaosong2@huawei.com>
+In-Reply-To: <20221206190249.438037-1-trondmy@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,RCVD_IN_SORBS_DUL,
-        SPF_HELO_NONE,SPF_SOFTFAIL autolearn=no autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.174.176.52]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemm600015.china.huawei.com (7.193.23.52)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-From: minoura <minoura@valinux.co.jp>
+NFSv4.0 do not have this bug, maybe the subject shoud begin with "NFS4.1".
 
-Commit 9130b8dbc6ac ("SUNRPC: allow for upcalls for the same uid
-but different gss service") introduced `auth` argument to
-__gss_find_upcall(), but in gss_pipe_downcall() it was left as NULL
-since it (and auth->service) was not (yet) determined.
-
-When multiple upcalls with the same uid and different service are
-ongoing, it could happen that __gss_find_upcall(), which returns the
-first match found in the pipe->in_downcall list, could not find the
-correct gss_msg corresponding to the downcall we are looking for due
-to two reasons:
-
-- the order of the msgs in pipe->in_downcall and those in pipe->pipe
-  (that is, the order of the upcalls sent to rpc.gssd) might be
-  different because pipe->lock is dropped between adding one to each
-  list.
-- rpc.gssd uses threads to write responses, which means we cannot
-  guarantee the order of responses.
-
-We could see mount.nfs process hung in D state with multiple mount.nfs
-are executed in parallel.  The call trace below is of CentOS 7.9
-kernel-3.10.0-1160.24.1.el7.x86_64 but we observed the same hang w/
-elrepo kernel-ml-6.0.7-1.el7.
-
-PID: 71258  TASK: ffff91ebd4be0000  CPU: 36  COMMAND: "mount.nfs"
- #0 [ffff9203ca3234f8] __schedule at ffffffffa3b8899f
- #1 [ffff9203ca323580] schedule at ffffffffa3b88eb9
- #2 [ffff9203ca323590] gss_cred_init at ffffffffc0355818 [auth_rpcgss]
- #3 [ffff9203ca323658] rpcauth_lookup_credcache at ffffffffc0421ebc [sunrpc]
- #4 [ffff9203ca3236d8] gss_lookup_cred at ffffffffc0353633 [auth_rpcgss]
- #5 [ffff9203ca3236e8] rpcauth_lookupcred at ffffffffc0421581 [sunrpc]
- #6 [ffff9203ca323740] rpcauth_refreshcred at ffffffffc04223d3 [sunrpc]
- #7 [ffff9203ca3237a0] call_refresh at ffffffffc04103dc [sunrpc]
- #8 [ffff9203ca3237b8] __rpc_execute at ffffffffc041e1c9 [sunrpc]
- #9 [ffff9203ca323820] rpc_execute at ffffffffc0420a48 [sunrpc]
-
-The scenario is like this. Let's say there are two upcalls for
-services A and B, A -> B in pipe->in_downcall, B -> A in pipe->pipe.
-
-When rpc.gssd reads pipe to get the upcall msg corresponding to
-service B from pipe->pipe and then writes the response, in
-gss_pipe_downcall the msg corresponding to service A will be picked
-because only uid is used to find the msg and it is before the one for
-B in pipe->in_downcall.  And the process waiting for the msg
-corresponding to service A will be woken up.
-
-Actual scheduing of that process might be after rpc.gssd processes the
-next msg.  In rpc_pipe_generic_upcall it clears msg->errno (for A).
-The process is scheduled to see gss_msg->ctx == NULL and
-gss_msg->msg.errno == 0, therefore it cannot break the loop in
-gss_create_upcall and is never woken up after that.
-
-This patch introduces wait and retry at gss_add_msg() to serialize
-when requests with the same uid but different service comes.
-
-Fixes: Commit 9130b8dbc6ac ("SUNRPC: allow for upcalls for the same uid but different gss service")
-Cc: minoura makoto <minoura@valinux.co.jp>
-Signed-off-by: Hiroshi Shimamoto <h-shimamoto@nec.com>
-Signed-off-by: minoura makoto <minoura@valinux.co.jp>
-Tested-by: minoura makoto <minoura@valinux.co.jp>
----
-v2: use gss_release_msg instead of refcount_dec in fatal_signal_pending case
----
- net/sunrpc/auth_gss/auth_gss.c | 31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
-
-diff --git a/net/sunrpc/auth_gss/auth_gss.c b/net/sunrpc/auth_gss/auth_gss.c
-index 7bb247c51e2f..8f9b6ac7990b 100644
---- a/net/sunrpc/auth_gss/auth_gss.c
-+++ b/net/sunrpc/auth_gss/auth_gss.c
-@@ -296,14 +296,12 @@ gss_release_msg(struct gss_upcall_msg *gss_msg)
- }
- 
- static struct gss_upcall_msg *
--__gss_find_upcall(struct rpc_pipe *pipe, kuid_t uid, const struct gss_auth *auth)
-+__gss_find_upcall(struct rpc_pipe *pipe, kuid_t uid)
- {
- 	struct gss_upcall_msg *pos;
- 	list_for_each_entry(pos, &pipe->in_downcall, list) {
- 		if (!uid_eq(pos->uid, uid))
- 			continue;
--		if (auth && pos->auth->service != auth->service)
--			continue;
- 		refcount_inc(&pos->count);
- 		return pos;
- 	}
-@@ -319,14 +317,31 @@ gss_add_msg(struct gss_upcall_msg *gss_msg)
- {
- 	struct rpc_pipe *pipe = gss_msg->pipe;
- 	struct gss_upcall_msg *old;
-+	DEFINE_WAIT(wait);
- 
- 	spin_lock(&pipe->lock);
--	old = __gss_find_upcall(pipe, gss_msg->uid, gss_msg->auth);
-+retry:
-+	old = __gss_find_upcall(pipe, gss_msg->uid);
- 	if (old == NULL) {
- 		refcount_inc(&gss_msg->count);
- 		list_add(&gss_msg->list, &pipe->in_downcall);
--	} else
-+	} else {
-+		if (old->auth->service != gss_msg->auth->service) {
-+			prepare_to_wait(&old->waitqueue, &wait, TASK_KILLABLE);
-+			spin_unlock(&pipe->lock);
-+			if (fatal_signal_pending(current)) {
-+				finish_wait(&old->waitqueue, &wait);
-+				gss_release_msg(old);
-+				return ERR_PTR(-ERESTARTSYS);
-+			}
-+			schedule();
-+			finish_wait(&old->waitqueue, &wait);
-+			gss_release_msg(old);
-+			spin_lock(&pipe->lock);
-+			goto retry;
-+		}
- 		gss_msg = old;
-+	}
- 	spin_unlock(&pipe->lock);
- 	return gss_msg;
- }
-@@ -554,6 +569,10 @@ gss_setup_upcall(struct gss_auth *gss_auth, struct rpc_cred *cred)
- 	if (IS_ERR(gss_new))
- 		return gss_new;
- 	gss_msg = gss_add_msg(gss_new);
-+	if (IS_ERR(gss_msg)) {
-+		gss_release_msg(gss_new);
-+		return gss_msg;
-+	}
- 	if (gss_msg == gss_new) {
- 		int res;
- 		refcount_inc(&gss_msg->count);
-@@ -732,7 +751,7 @@ gss_pipe_downcall(struct file *filp, const char __user *src, size_t mlen)
- 	err = -ENOENT;
- 	/* Find a matching upcall */
- 	spin_lock(&pipe->lock);
--	gss_msg = __gss_find_upcall(pipe, uid, NULL);
-+	gss_msg = __gss_find_upcall(pipe, uid);
- 	if (gss_msg == NULL) {
- 		spin_unlock(&pipe->lock);
- 		goto err_put_ctx;
--- 
-2.25.1
-
+在 2022/12/7 3:02, trondmy@kernel.org 写道:
+> From: Trond Myklebust <trond.myklebust@hammerspace.com>
+> 
+> If the state manager thread fails to start, then we should just mark the
+> client initialisation as failed so that other processes or threads don't
+> get stuck in nfs_wait_client_init_complete().
+> 
+> Reported-by: ChenXiaoSong <chenxiaosong2@huawei.com>
+> Fixes: 4697bd5e9419 ("NFSv4: Fix a race in the net namespace mount notification")
+> Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+> ---
+>   fs/nfs/nfs4state.c | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
+> index 7c1f43507813..5720196141e1 100644
+> --- a/fs/nfs/nfs4state.c
+> +++ b/fs/nfs/nfs4state.c
+> @@ -1230,6 +1230,8 @@ void nfs4_schedule_state_manager(struct nfs_client *clp)
+>   	if (IS_ERR(task)) {
+>   		printk(KERN_ERR "%s: kthread_run: %ld\n",
+>   			__func__, PTR_ERR(task));
+> +		if (!nfs_client_init_is_complete(clp))
+> +			nfs_mark_client_ready(clp, PTR_ERR(task));
+>   		nfs4_clear_state_manager_bit(clp);
+>   		clear_bit(NFS4CLNT_MANAGER_AVAILABLE, &clp->cl_state);
+>   		nfs_put_client(clp);
+> 
