@@ -2,143 +2,152 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FE94649D4E
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Dec 2022 12:17:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0BB4649D7E
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Dec 2022 12:23:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231633AbiLLLRh (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Dec 2022 06:17:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
+        id S231926AbiLLLXt (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Dec 2022 06:23:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231673AbiLLLQj (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 06:16:39 -0500
-Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 039941FB
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 03:11:10 -0800 (PST)
-Received: by mail-wm1-x32e.google.com with SMTP id o15so4961370wmr.4
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 03:11:09 -0800 (PST)
+        with ESMTP id S231951AbiLLLX1 (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 06:23:27 -0500
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3D6226C0
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 03:22:49 -0800 (PST)
+Received: by mail-pj1-x1043.google.com with SMTP id fa4-20020a17090af0c400b002198d1328a0so13625902pjb.0
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 03:22:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vastdata.com; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=aqskvl17vvu2XfbsvcHv/TsCaOQbTMCpXCIk1dWD0Z8=;
-        b=BhlV40pSQRpChkq3wguWD18XaMOcHus8eMDjGyuvOiUfFUG5orjKIRq9x22UHynQXE
-         UeYY8cVIHaeY1kV1O5MHvzRBwQFjiofx2z8oDb7NGXxyUw/RGvjM2Inf9XxFYTx2heJT
-         QhWbovzWy15d7LowReYIRchbh5PYG7q/8NIHKmgaasujx7Rnh1VKlJXm+kSFIhaAsxnl
-         BLCx7OXhbd1hax3p4ZeSkaft+/1YpcbrncjGY2g1PD7jXAqHO4MTollK3unBz4QK6UgF
-         U3gwTd65sg2RDy+/cA8SjIJWHp8qZsjIaTurGKz7hGiaEhmGofiviJv3MLURo97KWEu5
-         Q49Q==
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=XXB/aQ1KI3TUt8awhqzv0sGPGhdvap9bGuhaC5H6Qrc=;
+        b=HU4he0rjFXPYEWZKMENlB1iULduovU2bn3MJwO2HdFN2tGEuradCIB7rjHy91FPgJW
+         jdMWDiyyA6jC1xpPcRf9VpqmfD7UG9X716ZCKqlStujzfYLubh+uiw5FxPrF1ianG6tK
+         byt2aI3qyHafzPYnr8BPdJmXr7c8rBwfVUmWas8GOHM6AmAMevPeAJvFaarQzTDP1Ns1
+         /zaBk9G5YAa3HrqJAgINdyw65VdckJhsMfSdoY0z4jmVu2pLFpiUHAcTsUf7FwCQUcbh
+         rFh/zyQyJ402yGn1s0dziOtvU5MgXMwIPaYjcHlJnMx4DAL3s/louuTVjDKAEECsNPi6
+         Hl4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=aqskvl17vvu2XfbsvcHv/TsCaOQbTMCpXCIk1dWD0Z8=;
-        b=MuNVwQdkDubgAvfhxU1yhH6u3WRyInzdqTAXHubvsTeg613vaH9AOwDfcPJ+b3y6fN
-         oJw1XJ4OHMXEJ2gmwoIqEJ8NZ+FWBEffuQnuiKFsxLbOMdQSeRNJM9uNkoeSxfMcID79
-         P5yoWlcmVSBt24TW/UjBv3QZUfnPjfLozD4j/MwnGQs30jTBctoBcgW/SZfkQMeDiFVH
-         wxY/pl3vHGDeWiSK43Jx0JbT8H3o84cavnzjTBvSL32JTgYJRQFo67CbnYyD6f3c7BkK
-         gLcUzizNUWQxA2ekgjD2wPnuY5NW9lc0mScF+iYz9Hr7j7U93T9ZgeWeOKS9pic11YoI
-         6p7A==
-X-Gm-Message-State: ANoB5pm19kR84xkeeqmcSfKAMYLa4HJMPrH04Z8XE0/4IDFVukr4IpT8
-        699psnv7zpSWmhhW+bnPQqTbcQ==
-X-Google-Smtp-Source: AA0mqf6tfnHNfscK69p9owUCP7aXiqd6BFauf3oYI2BCZ8KuGPJqbNXQIJZG9/W2WWQbZjuC0tsmtA==
-X-Received: by 2002:a05:600c:3496:b0:3d0:878b:d005 with SMTP id a22-20020a05600c349600b003d0878bd005mr12005429wmq.41.1670843468521;
-        Mon, 12 Dec 2022 03:11:08 -0800 (PST)
-Received: from jupiter.vstd.int ([2a0d:6fc2:6ab0:d100:2250:f444:10cb:55cb])
-        by smtp.gmail.com with ESMTPSA id o12-20020a05600c4fcc00b003b4868eb71bsm9479222wmq.25.2022.12.12.03.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Dec 2022 03:11:08 -0800 (PST)
-From:   Dan Aloni <dan.aloni@vastdata.com>
-To:     chuck.lever@oracle.com
-Cc:     linux-nfs@vger.kernel.org, Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        "J . Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH] nfsd: under NFSv4.1, fix double svc_xprt_put on rpc_create failure
-Date:   Mon, 12 Dec 2022 13:11:06 +0200
-Message-Id: <20221212111106.131472-1-dan.aloni@vastdata.com>
-X-Mailer: git-send-email 2.23.0
+        bh=XXB/aQ1KI3TUt8awhqzv0sGPGhdvap9bGuhaC5H6Qrc=;
+        b=it+2/6cCrAexf9GC4fgkXDBYdo8UiBNKTmR+PS8Xh1xadp0DJxQ0ZJrBZA2s9y/mA9
+         WUIwGet4t1ZFWiBt6tSDTDFphb5OhNIbSILJN2ebToW3y0vFQDrZCj2sOJsqqecA7KO2
+         n0eD8Dfr5nPYJ9+lq+tmfz9qYRPFaJ5kgy04z4tmxbbFYlrrxvbWARMdyXjjQF+5hoM+
+         raLtLUupaU3bsmOQoQgyKvB9B6yKgrJRcnsv88g9Q80VZt/iBojgAMgZZaJmT7wqarga
+         Qpj/k1NjtT7+xjksaK/YcVLgmbd/PoB/1i8Tnmf7x734jcPnVRfRMzTjdXfgEzV9dHDw
+         VQWQ==
+X-Gm-Message-State: ANoB5pnB2PWS47lMeGZlR9yVj8K34hwfwHjTXp/QTHQcFVRO4bi8QUgn
+        M3u1+1Y6FnTQW64S4aawmG5ZOrqcUOenmIFh+NA=
+X-Google-Smtp-Source: AA0mqf5tc7bNIgeuFHkQqU719aWTrcQrM20X7WdXXDQGdO03e6vO+dv2nwY3yXKPlsstKSHrV6027y53D9oYOqzValc=
+X-Received: by 2002:a17:90a:d681:b0:213:d08f:a455 with SMTP id
+ x1-20020a17090ad68100b00213d08fa455mr111906052pju.130.1670844169397; Mon, 12
+ Dec 2022 03:22:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <1670786549-27041-1-git-send-email-dai.ngo@oracle.com>
+In-Reply-To: <1670786549-27041-1-git-send-email-dai.ngo@oracle.com>
+From:   Xingyuan Mo <hdthky0@gmail.com>
+Date:   Mon, 12 Dec 2022 19:22:38 +0800
+Message-ID: <CALV6CNOO-Ppv7QfqHo9RKivv-1NUrezbuYN2krrNu4REuchtMA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
+To:     Dai Ngo <dai.ngo@oracle.com>
+Cc:     chuck.lever@oracle.com, jlayton@kernel.org, kolga@netapp.com,
+        linux-nfs@vger.kernel.org, security@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On error situation `clp->cl_cb_conn.cb_xprt` should not be given
-a reference to the xprt otherwise both client cleanup and the
-error handling path of the caller call to put it. Better to
-delay handing over the reference to a later branch.
+Can I share the patch with the linux-distros list, so that
+distros can do their own testing and preparations?
 
-[   72.530665] refcount_t: underflow; use-after-free.
-[   72.531933] WARNING: CPU: 0 PID: 173 at lib/refcount.c:28 refcount_warn_saturate+0xcf/0x120
-[   72.533075] Modules linked in: nfsd(OE) nfsv4(OE) nfsv3(OE) nfs(OE) lockd(OE) compat_nfs_ssc(OE) nfs_acl(OE) rpcsec_gss_krb5(OE) auth_rpcgss(OE) rpcrdma(OE) dns_resolver fscache netfs grace rdma_cm iw_cm ib_cm sunrpc(OE) mlx5_ib mlx5_core mlxfw pci_hyperv_intf ib_uverbs ib_core xt_MASQUERADE nf_conntrack_netlink nft_counter xt_addrtype nft_compat br_netfilter bridge stp llc nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 nft_reject nft_ct nft_chain_nat nf_nat nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 ip_set overlay nf_tables nfnetlink crct10dif_pclmul crc32_pclmul ghash_clmulni_intel xfs serio_raw virtio_net virtio_blk net_failover failover fuse [last unloaded: sunrpc]
-[   72.540389] CPU: 0 PID: 173 Comm: kworker/u16:5 Tainted: G           OE     5.15.82-dan #1
-[   72.541511] Hardware name: Red Hat KVM/RHEL-AV, BIOS 1.16.0-3.module+el8.7.0+1084+97b81f61 04/01/2014
-[   72.542717] Workqueue: nfsd4_callbacks nfsd4_run_cb_work [nfsd]
-[   72.543575] RIP: 0010:refcount_warn_saturate+0xcf/0x120
-[   72.544299] Code: 55 00 0f 0b 5d e9 01 50 98 00 80 3d 75 9e 39 08 00 0f 85 74 ff ff ff 48 c7 c7 e8 d1 60 8e c6 05 61 9e 39 08 01 e8 f6 51 55 00 <0f> 0b 5d e9 d9 4f 98 00 80 3d 4b 9e 39 08 00 0f 85 4c ff ff ff 48
-[   72.546666] RSP: 0018:ffffb3f841157cf0 EFLAGS: 00010286
-[   72.547393] RAX: 0000000000000026 RBX: ffff89ac6231d478 RCX: 0000000000000000
-[   72.548324] RDX: ffff89adb7c2c2c0 RSI: ffff89adb7c205c0 RDI: ffff89adb7c205c0
-[   72.549271] RBP: ffffb3f841157cf0 R08: 0000000000000000 R09: c0000000ffefffff
-[   72.550209] R10: 0000000000000001 R11: ffffb3f841157ad0 R12: ffff89ac6231d180
-[   72.551142] R13: ffff89ac6231d478 R14: ffff89ac40c06180 R15: ffff89ac6231d4b0
-[   72.552089] FS:  0000000000000000(0000) GS:ffff89adb7c00000(0000) knlGS:0000000000000000
-[   72.553175] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   72.553934] CR2: 0000563a310506a8 CR3: 0000000109a66000 CR4: 0000000000350ef0
-[   72.554874] Call Trace:
-[   72.555278]  <TASK>
-[   72.555614]  svc_xprt_put+0xaf/0xe0 [sunrpc]
-[   72.556276]  nfsd4_process_cb_update.isra.11+0xb7/0x410 [nfsd]
-[   72.557087]  ? update_load_avg+0x82/0x610
-[   72.557652]  ? cpuacct_charge+0x60/0x70
-[   72.558212]  ? dequeue_entity+0xdb/0x3e0
-[   72.558765]  ? queued_spin_unlock+0x9/0x20
-[   72.559358]  nfsd4_run_cb_work+0xfc/0x270 [nfsd]
-[   72.560031]  process_one_work+0x1df/0x390
-[   72.560600]  worker_thread+0x37/0x3b0
-[   72.561644]  ? process_one_work+0x390/0x390
-[   72.562247]  kthread+0x12f/0x150
-[   72.562710]  ? set_kthread_struct+0x50/0x50
-[   72.563309]  ret_from_fork+0x22/0x30
-[   72.563818]  </TASK>
-[   72.564189] ---[ end trace 031117b1c72ec616 ]---
-[   72.566019] list_add corruption. next->prev should be prev (ffff89ac4977e538), but was ffff89ac4763e018. (next=ffff89ac4763e018).
-[   72.567647] ------------[ cut here ]------------
+Regards,
+Xingyuan Mo
 
-Fixes: a4abc6b12eb1 ('nfsd: Fix svc_xprt refcnt leak when setup callback client failed')
-Cc: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Cc: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Dan Aloni <dan.aloni@vastdata.com>
----
- fs/nfsd/nfs4callback.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index f0e69edf5f0f..6253cbe5f81b 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -916,7 +916,6 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 	} else {
- 		if (!conn->cb_xprt)
- 			return -EINVAL;
--		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
- 		clp->cl_cb_session = ses;
- 		args.bc_xprt = conn->cb_xprt;
- 		args.prognumber = clp->cl_cb_session->se_cb_prog;
-@@ -936,6 +935,9 @@ static int setup_callback_client(struct nfs4_client *clp, struct nfs4_cb_conn *c
- 		rpc_shutdown_client(client);
- 		return -ENOMEM;
- 	}
-+
-+	if (clp->cl_minorversion != 0)
-+		clp->cl_cb_conn.cb_xprt = conn->cb_xprt;
- 	clp->cl_cb_client = client;
- 	clp->cl_cb_cred = cred;
- 	rcu_read_lock();
--- 
-2.23.0
-
+On Mon, Dec 12, 2022 at 3:22 AM Dai Ngo <dai.ngo@oracle.com> wrote:
+>
+> Problem caused by source's vfsmount being unmounted but remains
+> on the delayed unmount list. This happens when nfs42_ssc_open()
+> return errors.
+> Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
+> for the laundromat to unmount when idle time expires.
+>
+> Reported-by: Xingyuan Mo <hdthky0@gmail.com>
+> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> ---
+>  fs/nfsd/nfs4proc.c | 23 +++++++----------------
+>  1 file changed, 7 insertions(+), 16 deletions(-)
+>
+> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
+> index 8beb2bc4c328..756e42cf0d01 100644
+> --- a/fs/nfsd/nfs4proc.c
+> +++ b/fs/nfsd/nfs4proc.c
+> @@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, struct svc_rqst *rqstp,
+>         return status;
+>  }
+>
+> -static void
+> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+> -{
+> -       nfs_do_sb_deactive(ss_mnt->mnt_sb);
+> -       mntput(ss_mnt);
+> -}
+> -
+>  /*
+>   * Verify COPY destination stateid.
+>   *
+> @@ -1572,11 +1565,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, struct file *filp,
+>  {
+>  }
+>
+> -static void
+> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
+> -{
+> -}
+> -
+>  static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
+>                                    struct nfs_fh *src_fh,
+>                                    nfs4_stateid *stateid)
+> @@ -1762,7 +1750,8 @@ static int nfsd4_do_async_copy(void *data)
+>                 struct file *filp;
+>
+>                 filp = nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
+> -                                     &copy->stateid);
+> +                                       &copy->stateid);
+> +
+>                 if (IS_ERR(filp)) {
+>                         switch (PTR_ERR(filp)) {
+>                         case -EBADF:
+> @@ -1771,7 +1760,7 @@ static int nfsd4_do_async_copy(void *data)
+>                         default:
+>                                 nfserr = nfserr_offload_denied;
+>                         }
+> -                       nfsd4_interssc_disconnect(copy->ss_mnt);
+> +                       /* ss_mnt will be unmounted by the laundromat */
+>                         goto do_callback;
+>                 }
+>                 nfserr = nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
+> @@ -1852,8 +1841,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_compound_state *cstate,
+>         if (async_copy)
+>                 cleanup_async_copy(async_copy);
+>         status = nfserrno(-ENOMEM);
+> -       if (nfsd4_ssc_is_inter(copy))
+> -               nfsd4_interssc_disconnect(copy->ss_mnt);
+> +       /*
+> +        * source's vfsmount of inter-copy will be unmounted
+> +        * by the laundromat
+> +        */
+>         goto out;
+>  }
+>
+> --
+> 2.9.5
+>
