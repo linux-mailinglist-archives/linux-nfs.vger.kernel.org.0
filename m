@@ -2,44 +2,43 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C8D664A402
-	for <lists+linux-nfs@lfdr.de>; Mon, 12 Dec 2022 16:19:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFC464A54E
+	for <lists+linux-nfs@lfdr.de>; Mon, 12 Dec 2022 17:53:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231715AbiLLPTd (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Mon, 12 Dec 2022 10:19:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36928 "EHLO
+        id S232412AbiLLQxf (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Mon, 12 Dec 2022 11:53:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229923AbiLLPTc (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 10:19:32 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E2EDF024
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 07:19:31 -0800 (PST)
+        with ESMTP id S232797AbiLLQxc (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Mon, 12 Dec 2022 11:53:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E3710554
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 08:53:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CB66D61122
-        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 15:19:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8774FC433EF;
-        Mon, 12 Dec 2022 15:19:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E00B5B80DCB
+        for <linux-nfs@vger.kernel.org>; Mon, 12 Dec 2022 16:53:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D7AEC433F0;
+        Mon, 12 Dec 2022 16:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670858370;
-        bh=8yX4KFu5pxQ1x3qxpRtT8Cq/GultLKCEJcjFwnpSq/8=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=lZtEvtZuRkMHa34eT2Z6BUEEPYWYYdMC6Q5x+JYaBNwLzGs75YpIqQ9RTLyARVQaP
-         jhaoLbFgJ1tuf3wWHu6IcykUVYM50CYJZi/vKfCHQlTp6tQnlyrJSGOUGayNsx4fdO
-         YHM0N5HuEAJWbyMC1tnHS6kwoa2ctRNwN2aTno8BMlCRxK/GzOoBBvFMAl++cPQ1hJ
-         20TwfecMAaUkrMNDjeYQlWiphReosVR9AczBDH/pEUAKiwoobfN5IhxAEVY8DWA6OW
-         /xh/V+JLdH2cmPUTEA8UzeVQt+WQiWOx+YVF94ms3Ahm2hegsR7nf6tVik03oxkEB2
-         SMaLjHj4MaEpw==
-Message-ID: <bfd07fb72616b5c634ec52c46e33cc562cb92dfa.camel@kernel.org>
-Subject: Re: [PATCH v2 1/1] NFSD: fix use-after-free in __nfs42_ssc_open()
+        s=k20201202; t=1670864009;
+        bh=4HTU3ktIC54yMoLta98PeQJHJVrTCM/5i0Lq1yLmqXA=;
+        h=Subject:From:To:Date:In-Reply-To:References:From;
+        b=JYRv2NiY56OKlHlOmrPxlFtV1XFDPosCo+oOOtM0WR51kb49S7kEpvNquP/VAqlsE
+         wQF0hTN9qFFA/2u+E9u5hUBpEzipRpCWMWO5NMexTuXOJT5We5rJagFMevWoGdPRbr
+         2cajviLIWxNNANDx15FT0Na04eyAeZtB2amVq83i6mFAEXsS23pmTWW4fzirkIc+xv
+         suZiv+mxXrRq+ugA3qV1MUT0c1ZJiOVCFiiAPBEl/SmFeYOaEH8aUUNwLKZyMDpm3n
+         YhiSNw3ahdWREH6vWuUkZSMmaAWyjOE/5Fs6WeWHHff14jL8ORSiDhQDrGqb7UwDn4
+         tCPAO7HtXWPuA==
+Message-ID: <2f8af9190926ac682121a9c75808240fea0e580e.camel@kernel.org>
+Subject: Re: [PATCH 2/4] SUNRPC: Clean up xdr_write_pages()
 From:   Jeff Layton <jlayton@kernel.org>
-To:     Dai Ngo <dai.ngo@oracle.com>, chuck.lever@oracle.com
-Cc:     kolga@netapp.com, hdthky0@gmail.com, linux-nfs@vger.kernel.org,
-        security@kernel.org
-Date:   Mon, 12 Dec 2022 10:19:28 -0500
-In-Reply-To: <1670857869-14618-1-git-send-email-dai.ngo@oracle.com>
-References: <1670857869-14618-1-git-send-email-dai.ngo@oracle.com>
+To:     Chuck Lever <chuck.lever@oracle.com>, linux-nfs@vger.kernel.org
+Date:   Mon, 12 Dec 2022 11:53:27 -0500
+In-Reply-To: <166949612452.106845.16079864294324208424.stgit@klimt.1015granger.net>
+References: <166949601705.106845.10614964159272504008.stgit@klimt.1015granger.net>
+         <166949612452.106845.16079864294324208424.stgit@klimt.1015granger.net>
 Content-Type: text/plain; charset="ISO-8859-15"
 Content-Transfer-Encoding: quoted-printable
 User-Agent: Evolution 3.46.2 (3.46.2-1.fc37) 
@@ -53,113 +52,69 @@ Precedence: bulk
 List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
-On Mon, 2022-12-12 at 07:11 -0800, Dai Ngo wrote:
-> Problem caused by source's vfsmount being unmounted but remains
-> on the delayed unmount list. This happens when nfs42_ssc_open()
-> return errors.
+On Sat, 2022-11-26 at 15:55 -0500, Chuck Lever wrote:
+> Make it more evident how xdr_write_pages() updates the tail buffer
+> by using the convention of naming the iov pointer variable "tail".
+> I spent more than a couple of hours chasing through code to
+> understand this, so someone is likely to find this useful later.
 >=20
-> Fixed by removing nfsd4_interssc_connect(), leave the vfsmount
-> for the laundromat to unmount when idle time expires.
->=20
-> Removed unneeded check for NULL nfsd_net and added pr_warn
-> if vfsmount not found on delayed unmount list.
->=20
-> Reported-by: Xingyuan Mo <hdthky0@gmail.com>
-> Signed-off-by: Dai Ngo <dai.ngo@oracle.com>
+> Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
 > ---
->  fs/nfsd/nfs4proc.c | 32 ++++++++------------------------
->  1 file changed, 8 insertions(+), 24 deletions(-)
+>  net/sunrpc/xdr.c |   22 +++++++++++++---------
+>  1 file changed, 13 insertions(+), 9 deletions(-)
 >=20
-> diff --git a/fs/nfsd/nfs4proc.c b/fs/nfsd/nfs4proc.c
-> index 8beb2bc4c328..84646df60212 100644
-> --- a/fs/nfsd/nfs4proc.c
-> +++ b/fs/nfsd/nfs4proc.c
-> @@ -1463,13 +1463,6 @@ nfsd4_interssc_connect(struct nl4_server *nss, str=
-uct svc_rqst *rqstp,
->  	return status;
->  }
-> =20
-> -static void
-> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
-> -{
-> -	nfs_do_sb_deactive(ss_mnt->mnt_sb);
-> -	mntput(ss_mnt);
-> -}
-> -
->  /*
->   * Verify COPY destination stateid.
+> diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
+> index 336a7c7833e4..f7767bf22406 100644
+> --- a/net/sunrpc/xdr.c
+> +++ b/net/sunrpc/xdr.c
+> @@ -1224,30 +1224,34 @@ EXPORT_SYMBOL(xdr_restrict_buflen);
+>  /**
+>   * xdr_write_pages - Insert a list of pages into an XDR buffer for sendi=
+ng
+>   * @xdr: pointer to xdr_stream
+> - * @pages: list of pages
+> - * @base: offset of first byte
+> - * @len: length of data in bytes
+> + * @pages: array of pages to insert
+> + * @base: starting offset of first data byte in @pages
+> + * @len: number of data bytes in @pages to insert
 >   *
-> @@ -1526,10 +1519,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, s=
-truct file *filp,
->  	nfsd_file_put(dst);
->  	fput(filp);
-> =20
-> -	if (!nn) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
->  	spin_lock(&nn->nfsd_ssc_lock);
->  	timeout =3D msecs_to_jiffies(nfsd4_ssc_umount_timeout);
->  	list_for_each_entry_safe(ni, tmp, &nn->nfsd_ssc_mount_list, nsui_list) =
-{
-> @@ -1548,10 +1537,8 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, s=
-truct file *filp,
->  		}
->  	}
->  	spin_unlock(&nn->nfsd_ssc_lock);
-> -	if (!found) {
-> -		mntput(ss_mnt);
-> -		return;
-> -	}
-> +	if (!found)
-> +		pr_warn("vfsmount not found on delayed unmount list\n");
->  }
-> =20
->  #else /* CONFIG_NFSD_V4_2_INTER_SSC */
-> @@ -1572,11 +1559,6 @@ nfsd4_cleanup_inter_ssc(struct vfsmount *ss_mnt, s=
-truct file *filp,
+> + * After the @pages are added, the tail iovec is instantiated pointing t=
+o
+> + * end of the head buffer, and the stream is set up to encode subsequent
+> + * items into the tail.
+>   */
+>  void xdr_write_pages(struct xdr_stream *xdr, struct page **pages, unsign=
+ed int base,
+>  		 unsigned int len)
 >  {
->  }
+>  	struct xdr_buf *buf =3D xdr->buf;
+> -	struct kvec *iov =3D buf->tail;
+> +	struct kvec *tail =3D buf->tail;
+> +
+>  	buf->pages =3D pages;
+>  	buf->page_base =3D base;
+>  	buf->page_len =3D len;
 > =20
-> -static void
-> -nfsd4_interssc_disconnect(struct vfsmount *ss_mnt)
-> -{
-> -}
-> -
->  static struct file *nfs42_ssc_open(struct vfsmount *ss_mnt,
->  				   struct nfs_fh *src_fh,
->  				   nfs4_stateid *stateid)
-> @@ -1762,7 +1744,7 @@ static int nfsd4_do_async_copy(void *data)
->  		struct file *filp;
+> -	iov->iov_base =3D (char *)xdr->p;
+> -	iov->iov_len  =3D 0;
+> -	xdr->iov =3D iov;
+> +	tail->iov_base =3D xdr->p;
+> +	tail->iov_len =3D 0;
+> +	xdr->iov =3D tail;
 > =20
->  		filp =3D nfs42_ssc_open(copy->ss_mnt, &copy->c_fh,
-> -				      &copy->stateid);
-> +					&copy->stateid);
->  		if (IS_ERR(filp)) {
->  			switch (PTR_ERR(filp)) {
->  			case -EBADF:
-> @@ -1771,7 +1753,7 @@ static int nfsd4_do_async_copy(void *data)
->  			default:
->  				nfserr =3D nfserr_offload_denied;
->  			}
-> -			nfsd4_interssc_disconnect(copy->ss_mnt);
-> +			/* ss_mnt will be unmounted by the laundromat */
->  			goto do_callback;
->  		}
->  		nfserr =3D nfsd4_do_copy(copy, filp, copy->nf_dst->nf_file,
-> @@ -1852,8 +1834,10 @@ nfsd4_copy(struct svc_rqst *rqstp, struct nfsd4_co=
-mpound_state *cstate,
->  	if (async_copy)
->  		cleanup_async_copy(async_copy);
->  	status =3D nfserrno(-ENOMEM);
-> -	if (nfsd4_ssc_is_inter(copy))
-> -		nfsd4_interssc_disconnect(copy->ss_mnt);
-> +	/*
-> +	 * source's vfsmount of inter-copy will be unmounted
-> +	 * by the laundromat
-> +	 */
->  	goto out;
->  }
+>  	if (len & 3) {
+>  		unsigned int pad =3D 4 - (len & 3);
 > =20
+>  		BUG_ON(xdr->p >=3D xdr->end);
+> -		iov->iov_base =3D (char *)xdr->p + (len & 3);
+> -		iov->iov_len  +=3D pad;
+> +		tail->iov_base =3D (char *)xdr->p + (len & 3);
+> +		tail->iov_len +=3D pad;
+>  		len +=3D pad;
+>  		*xdr->p++ =3D 0;
+>  	}
+>=20
+>=20
 
 Reviewed-by: Jeff Layton <jlayton@kernel.org>
