@@ -2,47 +2,47 @@ Return-Path: <linux-nfs-owner@vger.kernel.org>
 X-Original-To: lists+linux-nfs@lfdr.de
 Delivered-To: lists+linux-nfs@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 781B564B4F6
-	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 13:17:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3418364B580
+	for <lists+linux-nfs@lfdr.de>; Tue, 13 Dec 2022 13:54:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235561AbiLMMRC (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
-        Tue, 13 Dec 2022 07:17:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33970 "EHLO
+        id S235205AbiLMMyw (ORCPT <rfc822;lists+linux-nfs@lfdr.de>);
+        Tue, 13 Dec 2022 07:54:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235553AbiLMMQ3 (ORCPT
-        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 07:16:29 -0500
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B20E11;
-        Tue, 13 Dec 2022 04:14:45 -0800 (PST)
+        with ESMTP id S235326AbiLMMyv (ORCPT
+        <rfc822;linux-nfs@vger.kernel.org>); Tue, 13 Dec 2022 07:54:51 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C96ADD1;
+        Tue, 13 Dec 2022 04:54:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1670933685; x=1702469685;
+  t=1670936088; x=1702472088;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=etSC/re2uiJQH9e4Mj7PfaRA1TtzIP0sLnEOOvFAJic=;
-  b=H9BMTui+GgukeaIZzbir3YLjwUdsEq1QULmFHI4l5/GLJY+PnBKwgXVd
-   2CiPO2h5hEBFmF8Syp6gT3HupmsHgpUQ+aFGoIdAcJ0G/uyFFSkmp7tMG
-   U/6oYvUdVU/r4Rp8TWtLJkwfEWaGQnIMi3ATNQTlOdRV3a9CpoHflZdt1
-   VOLvsEW0OFC+Of1E+TK0m9pGlDZflWDdhjrX4jbFd4hBqDClJ5MkII+q4
-   mXNovcYmyqQ4R/gsJoidGLnn2czmfnvpMU+S2n/0kMVaO077QRVrcPY6M
-   2mbVpvpepTF213hG0XmhMQ+MCnvHjrPp1QBUa1JgoU7Lq46THNBzh9YqE
+  bh=4DJi2k8skPKGHvQ3MmLrNe2IUXQSzFjGCf2Qh8JRucs=;
+  b=iiBOiE1kP5LCXv31URP1H0CfQanWrqUQ+I55dRJtZ7WAgPJGmeLHXvLy
+   Kv2mbwjxgdWDC+dTyj3j3Dm7J9/OALr7aZ6nDZk7xZMDMgbQP6derMBIg
+   yEuDwjYbcH0jmwEg81Z5Li483rXGzYnJuzu2wcZjt87fylk2YhbobVZSQ
+   REcIYEydCGcvxm+GwZ5kiRoieWkTUDE1GNp8v/NH3dIi3Qg2cJUQqK6QT
+   WoNEKbLEFNduDkjdnbJphEC4JwAJhq7wP3s5ddeYGNOv8/42GZSF3cwSo
+   ev7Ivpx6bdtFh9sjyr/JJM45QnMXvnnrSHhfVgvEAspFh/D+v/P5+55X7
    w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="319974505"
+X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="298463148"
 X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="319974505"
+   d="scan'208";a="298463148"
 Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 04:14:44 -0800
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2022 04:54:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="650706288"
+X-IronPort-AV: E=McAfee;i="6500,9779,10559"; a="650710394"
 X-IronPort-AV: E=Sophos;i="5.96,241,1665471600"; 
-   d="scan'208";a="650706288"
+   d="scan'208";a="650710394"
 Received: from lkp-server01.sh.intel.com (HELO b5d47979f3ad) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Dec 2022 04:14:42 -0800
+  by fmsmga007.fm.intel.com with ESMTP; 13 Dec 2022 04:54:44 -0800
 Received: from kbuild by b5d47979f3ad with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1p54BF-0004JN-2N;
-        Tue, 13 Dec 2022 12:14:41 +0000
-Date:   Tue, 13 Dec 2022 20:13:57 +0800
+        id 1p54nz-0004LP-2Z;
+        Tue, 13 Dec 2022 12:54:43 +0000
+Date:   Tue, 13 Dec 2022 20:54:26 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Chengen Du <chengen.du@canonical.com>,
         trond.myklebust@hammerspace.com
@@ -52,10 +52,10 @@ Cc:     oe-kbuild-all@lists.linux.dev, anna@kernel.org,
         Chengen Du <chengen.du@canonical.com>
 Subject: Re: [PATCH] NFS: fix client permission error after adding user to
  permissible group
-Message-ID: <202212132034.EMKd5oLj-lkp@intel.com>
+Message-ID: <202212132050.Na6BkFmL-lkp@intel.com>
 References: <20221213100241.254681-1-chengen.du@canonical.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="cd04hOlFa130ywkr"
+Content-Type: multipart/mixed; boundary="9i3/bizQJZvX72dF"
 Content-Disposition: inline
 In-Reply-To: <20221213100241.254681-1-chengen.du@canonical.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -69,16 +69,16 @@ List-ID: <linux-nfs.vger.kernel.org>
 X-Mailing-List: linux-nfs@vger.kernel.org
 
 
---cd04hOlFa130ywkr
+--9i3/bizQJZvX72dF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 Hi Chengen,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on trondmy-nfs/linux-next]
-[also build test WARNING on linus/master v6.1 next-20221213]
+[auto build test ERROR on trondmy-nfs/linux-next]
+[also build test ERROR on linus/master v6.1 next-20221213]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use '--base' as documented in
 https://git-scm.com/docs/git-format-patch#_base_tree_information]
@@ -98,55 +98,308 @@ reproduce (this is a W=1 build):
         git checkout 7206036f9265a95f957d3f58a973c9ab27979284
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash fs/nfs/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
->> fs/nfs/dir.c:2937:26: warning: no previous prototype for 'nfs_access_search_rbtree' [-Wmissing-prototypes]
-    2937 | struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, const struct cred *cred)
-         |                          ^~~~~~~~~~~~~~~~~~~~~~~~
---
    fs/nfs/inode.c: In function 'nfs_update_inode':
-   fs/nfs/inode.c:2186:33: error: implicit declaration of function 'nfs_access_search_rbtree' [-Werror=implicit-function-declaration]
+>> fs/nfs/inode.c:2186:33: error: implicit declaration of function 'nfs_access_search_rbtree' [-Werror=implicit-function-declaration]
     2186 |                         cache = nfs_access_search_rbtree(inode, cred);
          |                                 ^~~~~~~~~~~~~~~~~~~~~~~~
->> fs/nfs/inode.c:2186:31: warning: assignment to 'struct nfs_access_entry *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
+   fs/nfs/inode.c:2186:31: warning: assignment to 'struct nfs_access_entry *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
     2186 |                         cache = nfs_access_search_rbtree(inode, cred);
          |                               ^
    cc1: some warnings being treated as errors
 
 
-vim +/nfs_access_search_rbtree +2937 fs/nfs/dir.c
+vim +/nfs_access_search_rbtree +2186 fs/nfs/inode.c
 
-  2936	
-> 2937	struct nfs_access_entry *nfs_access_search_rbtree(struct inode *inode, const struct cred *cred)
-  2938	{
-  2939		struct rb_node *n = NFS_I(inode)->access_cache.rb_node;
-  2940	
-  2941		while (n != NULL) {
-  2942			struct nfs_access_entry *entry =
-  2943				rb_entry(n, struct nfs_access_entry, rb_node);
-  2944			int cmp = access_cmp(cred, entry);
-  2945	
-  2946			if (cmp < 0)
-  2947				n = n->rb_left;
-  2948			else if (cmp > 0)
-  2949				n = n->rb_right;
-  2950			else
-  2951				return entry;
-  2952		}
-  2953		return NULL;
-  2954	}
-  2955	
+  1970	
+  1971	
+  1972	/*
+  1973	 * Many nfs protocol calls return the new file attributes after
+  1974	 * an operation.  Here we update the inode to reflect the state
+  1975	 * of the server's inode.
+  1976	 *
+  1977	 * This is a bit tricky because we have to make sure all dirty pages
+  1978	 * have been sent off to the server before calling invalidate_inode_pages.
+  1979	 * To make sure no other process adds more write requests while we try
+  1980	 * our best to flush them, we make them sleep during the attribute refresh.
+  1981	 *
+  1982	 * A very similar scenario holds for the dir cache.
+  1983	 */
+  1984	static int nfs_update_inode(struct inode *inode, struct nfs_fattr *fattr)
+  1985	{
+  1986		struct nfs_server *server = NFS_SERVER(inode);
+  1987		struct nfs_inode *nfsi = NFS_I(inode);
+  1988		loff_t cur_isize, new_isize;
+  1989		u64 fattr_supported = server->fattr_valid;
+  1990		unsigned long invalid = 0;
+  1991		unsigned long now = jiffies;
+  1992		unsigned long save_cache_validity;
+  1993		bool have_writers = nfs_file_has_buffered_writers(nfsi);
+  1994		bool cache_revalidated = true;
+  1995		bool attr_changed = false;
+  1996		bool have_delegation;
+  1997	
+  1998		dfprintk(VFS, "NFS: %s(%s/%lu fh_crc=0x%08x ct=%d info=0x%x)\n",
+  1999				__func__, inode->i_sb->s_id, inode->i_ino,
+  2000				nfs_display_fhandle_hash(NFS_FH(inode)),
+  2001				atomic_read(&inode->i_count), fattr->valid);
+  2002	
+  2003		if (!(fattr->valid & NFS_ATTR_FATTR_FILEID)) {
+  2004			/* Only a mounted-on-fileid? Just exit */
+  2005			if (fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID)
+  2006				return 0;
+  2007		/* Has the inode gone and changed behind our back? */
+  2008		} else if (nfsi->fileid != fattr->fileid) {
+  2009			/* Is this perhaps the mounted-on fileid? */
+  2010			if ((fattr->valid & NFS_ATTR_FATTR_MOUNTED_ON_FILEID) &&
+  2011			    nfsi->fileid == fattr->mounted_on_fileid)
+  2012				return 0;
+  2013			printk(KERN_ERR "NFS: server %s error: fileid changed\n"
+  2014				"fsid %s: expected fileid 0x%Lx, got 0x%Lx\n",
+  2015				NFS_SERVER(inode)->nfs_client->cl_hostname,
+  2016				inode->i_sb->s_id, (long long)nfsi->fileid,
+  2017				(long long)fattr->fileid);
+  2018			goto out_err;
+  2019		}
+  2020	
+  2021		/*
+  2022		 * Make sure the inode's type hasn't changed.
+  2023		 */
+  2024		if ((fattr->valid & NFS_ATTR_FATTR_TYPE) && inode_wrong_type(inode, fattr->mode)) {
+  2025			/*
+  2026			* Big trouble! The inode has become a different object.
+  2027			*/
+  2028			printk(KERN_DEBUG "NFS: %s: inode %lu mode changed, %07o to %07o\n",
+  2029					__func__, inode->i_ino, inode->i_mode, fattr->mode);
+  2030			goto out_err;
+  2031		}
+  2032	
+  2033		/* Update the fsid? */
+  2034		if (S_ISDIR(inode->i_mode) && (fattr->valid & NFS_ATTR_FATTR_FSID) &&
+  2035				!nfs_fsid_equal(&server->fsid, &fattr->fsid) &&
+  2036				!IS_AUTOMOUNT(inode))
+  2037			server->fsid = fattr->fsid;
+  2038	
+  2039		/* Save the delegation state before clearing cache_validity */
+  2040		have_delegation = nfs_have_delegated_attributes(inode);
+  2041	
+  2042		/*
+  2043		 * Update the read time so we don't revalidate too often.
+  2044		 */
+  2045		nfsi->read_cache_jiffies = fattr->time_start;
+  2046	
+  2047		save_cache_validity = nfsi->cache_validity;
+  2048		nfsi->cache_validity &= ~(NFS_INO_INVALID_ATTR
+  2049				| NFS_INO_INVALID_ATIME
+  2050				| NFS_INO_REVAL_FORCED
+  2051				| NFS_INO_INVALID_BLOCKS);
+  2052	
+  2053		/* Do atomic weak cache consistency updates */
+  2054		nfs_wcc_update_inode(inode, fattr);
+  2055	
+  2056		if (pnfs_layoutcommit_outstanding(inode)) {
+  2057			nfsi->cache_validity |=
+  2058				save_cache_validity &
+  2059				(NFS_INO_INVALID_CHANGE | NFS_INO_INVALID_CTIME |
+  2060				 NFS_INO_INVALID_MTIME | NFS_INO_INVALID_SIZE |
+  2061				 NFS_INO_INVALID_BLOCKS);
+  2062			cache_revalidated = false;
+  2063		}
+  2064	
+  2065		/* More cache consistency checks */
+  2066		if (fattr->valid & NFS_ATTR_FATTR_CHANGE) {
+  2067			if (!inode_eq_iversion_raw(inode, fattr->change_attr)) {
+  2068				/* Could it be a race with writeback? */
+  2069				if (!(have_writers || have_delegation)) {
+  2070					invalid |= NFS_INO_INVALID_DATA
+  2071						| NFS_INO_INVALID_ACCESS
+  2072						| NFS_INO_INVALID_ACL
+  2073						| NFS_INO_INVALID_XATTR;
+  2074					/* Force revalidate of all attributes */
+  2075					save_cache_validity |= NFS_INO_INVALID_CTIME
+  2076						| NFS_INO_INVALID_MTIME
+  2077						| NFS_INO_INVALID_SIZE
+  2078						| NFS_INO_INVALID_BLOCKS
+  2079						| NFS_INO_INVALID_NLINK
+  2080						| NFS_INO_INVALID_MODE
+  2081						| NFS_INO_INVALID_OTHER;
+  2082					if (S_ISDIR(inode->i_mode))
+  2083						nfs_force_lookup_revalidate(inode);
+  2084					attr_changed = true;
+  2085					dprintk("NFS: change_attr change on server for file %s/%ld\n",
+  2086							inode->i_sb->s_id,
+  2087							inode->i_ino);
+  2088				} else if (!have_delegation)
+  2089					nfsi->cache_validity |= NFS_INO_DATA_INVAL_DEFER;
+  2090				inode_set_iversion_raw(inode, fattr->change_attr);
+  2091			}
+  2092		} else {
+  2093			nfsi->cache_validity |=
+  2094				save_cache_validity & NFS_INO_INVALID_CHANGE;
+  2095			if (!have_delegation ||
+  2096			    (nfsi->cache_validity & NFS_INO_INVALID_CHANGE) != 0)
+  2097				cache_revalidated = false;
+  2098		}
+  2099	
+  2100		if (fattr->valid & NFS_ATTR_FATTR_MTIME)
+  2101			inode->i_mtime = fattr->mtime;
+  2102		else if (fattr_supported & NFS_ATTR_FATTR_MTIME)
+  2103			nfsi->cache_validity |=
+  2104				save_cache_validity & NFS_INO_INVALID_MTIME;
+  2105	
+  2106		if (fattr->valid & NFS_ATTR_FATTR_CTIME)
+  2107			inode->i_ctime = fattr->ctime;
+  2108		else if (fattr_supported & NFS_ATTR_FATTR_CTIME)
+  2109			nfsi->cache_validity |=
+  2110				save_cache_validity & NFS_INO_INVALID_CTIME;
+  2111	
+  2112		/* Check if our cached file size is stale */
+  2113		if (fattr->valid & NFS_ATTR_FATTR_SIZE) {
+  2114			new_isize = nfs_size_to_loff_t(fattr->size);
+  2115			cur_isize = i_size_read(inode);
+  2116			if (new_isize != cur_isize && !have_delegation) {
+  2117				/* Do we perhaps have any outstanding writes, or has
+  2118				 * the file grown beyond our last write? */
+  2119				if (!nfs_have_writebacks(inode) || new_isize > cur_isize) {
+  2120					trace_nfs_size_update(inode, new_isize);
+  2121					i_size_write(inode, new_isize);
+  2122					if (!have_writers)
+  2123						invalid |= NFS_INO_INVALID_DATA;
+  2124				}
+  2125			}
+  2126			if (new_isize == 0 &&
+  2127			    !(fattr->valid & (NFS_ATTR_FATTR_SPACE_USED |
+  2128					      NFS_ATTR_FATTR_BLOCKS_USED))) {
+  2129				fattr->du.nfs3.used = 0;
+  2130				fattr->valid |= NFS_ATTR_FATTR_SPACE_USED;
+  2131			}
+  2132		} else
+  2133			nfsi->cache_validity |=
+  2134				save_cache_validity & NFS_INO_INVALID_SIZE;
+  2135	
+  2136		if (fattr->valid & NFS_ATTR_FATTR_ATIME)
+  2137			inode->i_atime = fattr->atime;
+  2138		else if (fattr_supported & NFS_ATTR_FATTR_ATIME)
+  2139			nfsi->cache_validity |=
+  2140				save_cache_validity & NFS_INO_INVALID_ATIME;
+  2141	
+  2142		if (fattr->valid & NFS_ATTR_FATTR_MODE) {
+  2143			if ((inode->i_mode & S_IALLUGO) != (fattr->mode & S_IALLUGO)) {
+  2144				umode_t newmode = inode->i_mode & S_IFMT;
+  2145				newmode |= fattr->mode & S_IALLUGO;
+  2146				inode->i_mode = newmode;
+  2147				invalid |= NFS_INO_INVALID_ACCESS
+  2148					| NFS_INO_INVALID_ACL;
+  2149			}
+  2150		} else if (fattr_supported & NFS_ATTR_FATTR_MODE)
+  2151			nfsi->cache_validity |=
+  2152				save_cache_validity & NFS_INO_INVALID_MODE;
+  2153	
+  2154		if (fattr->valid & NFS_ATTR_FATTR_OWNER) {
+  2155			if (!uid_eq(inode->i_uid, fattr->uid)) {
+  2156				invalid |= NFS_INO_INVALID_ACCESS
+  2157					| NFS_INO_INVALID_ACL;
+  2158				inode->i_uid = fattr->uid;
+  2159			}
+  2160		} else if (fattr_supported & NFS_ATTR_FATTR_OWNER)
+  2161			nfsi->cache_validity |=
+  2162				save_cache_validity & NFS_INO_INVALID_OTHER;
+  2163	
+  2164		if (fattr->valid & NFS_ATTR_FATTR_GROUP) {
+  2165			if (!gid_eq(inode->i_gid, fattr->gid)) {
+  2166				invalid |= NFS_INO_INVALID_ACCESS
+  2167					| NFS_INO_INVALID_ACL;
+  2168				inode->i_gid = fattr->gid;
+  2169			}
+  2170		} else if (fattr_supported & NFS_ATTR_FATTR_GROUP)
+  2171			nfsi->cache_validity |=
+  2172				save_cache_validity & NFS_INO_INVALID_OTHER;
+  2173	
+  2174		if (fattr->valid & NFS_ATTR_FATTR_NLINK) {
+  2175			if (inode->i_nlink != fattr->nlink)
+  2176				set_nlink(inode, fattr->nlink);
+  2177		} else if (fattr_supported & NFS_ATTR_FATTR_NLINK)
+  2178			nfsi->cache_validity |=
+  2179				save_cache_validity & NFS_INO_INVALID_NLINK;
+  2180	
+  2181		if (fattr->valid & NFS_ATTR_FATTR_ACCESS) {
+  2182			if (!(invalid & NFS_INO_INVALID_ACCESS)) {
+  2183				const struct cred *cred = current_cred();
+  2184				struct nfs_access_entry *cache;
+  2185	
+> 2186				cache = nfs_access_search_rbtree(inode, cred);
+  2187				if (cache != NULL && cache->mask != fattr->access) {
+  2188					invalid |= NFS_INO_INVALID_ACCESS;
+  2189				}
+  2190			}
+  2191		}
+  2192	
+  2193		if (fattr->valid & NFS_ATTR_FATTR_SPACE_USED) {
+  2194			/*
+  2195			 * report the blocks in 512byte units
+  2196			 */
+  2197			inode->i_blocks = nfs_calc_block_size(fattr->du.nfs3.used);
+  2198		} else if (fattr_supported & NFS_ATTR_FATTR_SPACE_USED)
+  2199			nfsi->cache_validity |=
+  2200				save_cache_validity & NFS_INO_INVALID_BLOCKS;
+  2201	
+  2202		if (fattr->valid & NFS_ATTR_FATTR_BLOCKS_USED)
+  2203			inode->i_blocks = fattr->du.nfs2.blocks;
+  2204		else if (fattr_supported & NFS_ATTR_FATTR_BLOCKS_USED)
+  2205			nfsi->cache_validity |=
+  2206				save_cache_validity & NFS_INO_INVALID_BLOCKS;
+  2207	
+  2208		/* Update attrtimeo value if we're out of the unstable period */
+  2209		if (attr_changed) {
+  2210			nfs_inc_stats(inode, NFSIOS_ATTRINVALIDATE);
+  2211			nfsi->attrtimeo = NFS_MINATTRTIMEO(inode);
+  2212			nfsi->attrtimeo_timestamp = now;
+  2213			/* Set barrier to be more recent than all outstanding updates */
+  2214			nfsi->attr_gencount = nfs_inc_attr_generation_counter();
+  2215		} else {
+  2216			if (cache_revalidated) {
+  2217				if (!time_in_range_open(now, nfsi->attrtimeo_timestamp,
+  2218					nfsi->attrtimeo_timestamp + nfsi->attrtimeo)) {
+  2219					nfsi->attrtimeo <<= 1;
+  2220					if (nfsi->attrtimeo > NFS_MAXATTRTIMEO(inode))
+  2221						nfsi->attrtimeo = NFS_MAXATTRTIMEO(inode);
+  2222				}
+  2223				nfsi->attrtimeo_timestamp = now;
+  2224			}
+  2225			/* Set the barrier to be more recent than this fattr */
+  2226			if ((long)(fattr->gencount - nfsi->attr_gencount) > 0)
+  2227				nfsi->attr_gencount = fattr->gencount;
+  2228		}
+  2229	
+  2230		/* Don't invalidate the data if we were to blame */
+  2231		if (!(S_ISREG(inode->i_mode) || S_ISDIR(inode->i_mode)
+  2232					|| S_ISLNK(inode->i_mode)))
+  2233			invalid &= ~NFS_INO_INVALID_DATA;
+  2234		nfs_set_cache_invalid(inode, invalid);
+  2235	
+  2236		return 0;
+  2237	 out_err:
+  2238		/*
+  2239		 * No need to worry about unhashing the dentry, as the
+  2240		 * lookup validation will know that the inode is bad.
+  2241		 * (But we fall through to invalidate the caches.)
+  2242		 */
+  2243		nfs_set_inode_stale_locked(inode);
+  2244		return -ESTALE;
+  2245	}
+  2246	
 
 -- 
 0-DAY CI Kernel Test Service
 https://01.org/lkp
 
---cd04hOlFa130ywkr
+--9i3/bizQJZvX72dF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=config
 
@@ -1869,4 +2122,4 @@ CONFIG_RUNTIME_TESTING_MENU=y
 # end of Rust hacking
 # end of Kernel hacking
 
---cd04hOlFa130ywkr--
+--9i3/bizQJZvX72dF--
